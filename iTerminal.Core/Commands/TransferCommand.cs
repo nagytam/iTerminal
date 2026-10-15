@@ -164,6 +164,65 @@ public abstract class TransferCommand(
         await dialog.ShowPopUpWindowAsync(progressWindow);
     }
 
+    /// <summary>
+    /// Copies or moves <paramref name="sources"/> to <paramref name="targets"/> (one URL each, already
+    /// named) without a dialog — what Ctrl+V does. One entry is one task, several are one
+    /// <see cref="BatchOperationTask"/>; either way a progress window is shown over
+    /// <paramref name="host"/> and the panels are re-read when it ends.
+    /// </summary>
+    internal async Task StartAsync(iConsole.Controls.Control host, IReadOnlyList<Url> sources, IReadOnlyList<Url> targets, Url targetFolder, bool overwrite)
+    {
+        if (sources.Count == 1)
+        {
+            var (discoveryTask, task) = CreateTasks(sources[0], targets[0], overwrite);
+            if (task is null)
+            {
+                return;
+            }
+
+            PanelRefreshHelper.RefreshWhenFinished(task, contentModelService, RemovesSource ? sources[0] : null, targets[0]);
+            if (discoveryTask is not null)
+            {
+                await taskManager.Add(discoveryTask);
+            }
+
+            await taskManager.Add(task);
+            await host.ShowPopUpWindowAsync(progressWindowFactory.Create(task));
+            return;
+        }
+
+        var steps = new List<BatchStep>();
+        for (int i = 0; i < sources.Count; i++)
+        {
+            var (discoveryTask, task) = CreateTasks(sources[i], targets[i], overwrite);
+            if (task is not null)
+            {
+                steps.Add(new BatchStep(FocusedEntry.NameOf(sources[i]), task, discoveryTask));
+            }
+        }
+
+        if (steps.Count == 0)
+        {
+            return;
+        }
+
+        var target = ResolveFileSystem(targetFolder);
+        var batch = new BatchOperationTask(OperationName, steps, async () =>
+        {
+            var folderUrl = targetFolder.FullUrl.EndsWith('/') || targetFolder.FullUrl.EndsWith('\\')
+                ? targetFolder
+                : new Url(targetFolder.FullUrl + "/");
+            if (!target.ExistsFolder(folderUrl))
+            {
+                await target.CreateFolderAsync(folderUrl);
+            }
+        });
+
+        PanelRefreshHelper.RefreshWhenFinished(batch, contentModelService, RemovesSource ? sources[0] : null, targets[0]);
+        await taskManager.Add(batch);
+        await host.ShowPopUpWindowAsync(progressWindowFactory.Create(batch));
+    }
+
     internal static void ConsumeMarks(IContentModel? model)
     {
         if (model is Model.ContentModels.IMarkableContentModel { MarkedCount: > 0 } marks)

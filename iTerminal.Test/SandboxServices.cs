@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Runtime.CompilerServices;
 using iTerminal.Core.Model.Network;
 using iTerminal.Core.Model.PackageManager;
@@ -319,5 +319,59 @@ public static class SandboxServices
         public void InvalidateInstalled(string id)
         {
         }
+    }
+    /// <summary>
+    /// Does nothing to a drive: records what was asked. A test that pressed E in the disk manager
+    /// would otherwise eject a real drive of the machine running the suite.
+    /// </summary>
+    public sealed class DriveActions : Core.Services.Drives.IDriveActionsService
+    {
+        private readonly Lock _lock = new();
+        private readonly List<string> _calls = [];
+
+        public bool IsSupported => true;
+
+        public bool CanFormat => true;
+
+        /// <summary>When set, <see cref="WhyCannotFormat"/> answers with it.</summary>
+        public string? FormatRefusal { get; set; }
+
+        public IReadOnlyList<string> Calls
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return [.. _calls];
+                }
+            }
+        }
+
+        private Task<Core.Services.Drives.DriveActionResult> Record(string call, string message)
+        {
+            lock (_lock)
+            {
+                _calls.Add(call);
+            }
+
+            return Task.FromResult(new Core.Services.Drives.DriveActionResult(true, message));
+        }
+
+        public Task<Core.Services.Drives.DriveActionResult> EjectAsync(string root, CancellationToken cancellationToken = default) =>
+            Record($"eject {root}", $"{root} can be removed safely.");
+
+        public Task<Core.Services.Drives.DriveActionResult> FormatAsync(string root, Core.Services.Drives.DriveFormatOptions options, CancellationToken cancellationToken = default) =>
+            Record($"format {root} {options.FileSystem} '{options.Label}' quick={options.Quick}", $"{root} was formatted as {options.FileSystem}.");
+
+        public Task<Core.Services.Drives.DriveActionResult> MountImageAsync(string imagePath, CancellationToken cancellationToken = default) =>
+            Record($"mount {imagePath}", $"{Path.GetFileName(imagePath)} is mounted as Z:");
+
+        public Task<Core.Services.Drives.DriveActionResult> UnmountImageAsync(string imagePath, CancellationToken cancellationToken = default) =>
+            Record($"unmount {imagePath}", $"{Path.GetFileName(imagePath)} is unmounted.");
+
+        public Task<Core.Services.Drives.BitLockerStatus> GetBitLockerStatusAsync(string root, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Drives.BitLockerStatus(Core.Services.Drives.BitLockerState.Off, "Off (sandbox)"));
+
+        public string? WhyCannotFormat(string root, IEnumerable<string> foldersInUse) => FormatRefusal;
     }
 }

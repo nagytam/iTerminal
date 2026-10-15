@@ -188,6 +188,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<RenameDialog>();
         services.AddTransient<MarkPatternDialog>();
         services.AddTransient<DiskManagerDialog>();
+        services.AddTransient<FormatDriveDialog>();
+        services.AddTransient<DiskImageDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Drives.IDriveActionsService, iTerminal.Core.Services.Drives.DriveActionsService>();
         services.AddTransient<ThemeManagerDialog>();
         services.AddTransient<SettingsDialog>();
         services.AddSingleton<FolderHistoryService>();
@@ -263,6 +266,19 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<NetworkInfoModel>();
         services.AddTransient<FolderSelectorDialog>();
         services.AddSingleton<ProgressWindowFactory>();
+        // The system clipboard, for Ctrl+C/X/V on files; the in-process one answers where it cannot be reached.
+        services.AddSingleton<iTerminal.Core.Services.Clipboard.IFileClipboardService>(provider =>
+        {
+            iTerminal.Core.Services.Clipboard.IFileClipboardService system = OperatingSystem.IsWindows()
+                ? new iTerminal.Core.Services.Clipboard.WindowsFileClipboardService()
+                : OperatingSystem.IsLinux()
+                    ? new iTerminal.Core.Services.Clipboard.LinuxFileClipboardService(
+                        provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>())
+                    : new iTerminal.Core.Services.Clipboard.InProcessFileClipboardService();
+            return new iTerminal.Core.Services.Clipboard.FallbackFileClipboardService(
+                system, new iTerminal.Core.Services.Clipboard.InProcessFileClipboardService());
+        });
+        services.AddSingleton<iTerminal.Core.Services.Clipboard.FileClipboardOperations>();
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddTransient<IFileSystemService, FileSystemService>();
         services.AddSingleton<IMemoryDriveService, MemoryDriveService>();

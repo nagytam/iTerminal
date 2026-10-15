@@ -53,6 +53,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private SortDialog? _sortDialog { get; set; }
     private UserMenuDialog? _userMenuDialog { get; set; }
     private FileDiffDialog? _fileDiffDialog { get; set; }
+    private iTerminal.Core.Services.Clipboard.FileClipboardOperations? _clipboard { get; set; }
+    private DiskImageDialog? _diskImageDialog { get; set; }
 
     public ContentBrowser(
         string name,
@@ -83,9 +85,13 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         FileSystemResolver? fileSystemResolver = null,
         SortDialog? sortDialog = null,
         UserMenuDialog? userMenuDialog = null,
-        FileDiffDialog? fileDiffDialog = null)
+        FileDiffDialog? fileDiffDialog = null,
+        iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null,
+        DiskImageDialog? diskImageDialog = null)
         : base(themeService)
     {
+        _diskImageDialog = diskImageDialog;
+        _clipboard = clipboardOperations;
         _fileDiffDialog = fileDiffDialog;
         Name = name;
         _sortDialog = sortDialog;
@@ -194,6 +200,19 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
             AddCommand(new MarkByPatternDialogCommand(_unmarkPatternDialog, ContentModelService, marking: false, ContentModel));
         }
 
+        // The system clipboard: Ctrl+C/X/V as in Explorer, with the CUA twins for a terminal that keeps
+        // one of them for itself. Each declines on ".." and where there is nothing to act on, which
+        // leaves Ctrl+C to quit and Ctrl+X to the password manager there.
+        if (_clipboard is not null)
+        {
+            AddCommand(new Commands.Clipboard.ClipboardCopyCommand(_clipboard, ContentModelService, ContentModel));
+            AddCommand(new Commands.Clipboard.ClipboardCopyCommand(_clipboard, ContentModelService, ContentModel, new Key(ConsoleKey.Insert, false, false, true)));
+            AddCommand(new Commands.Clipboard.ClipboardCutCommand(_clipboard, ContentModelService, ContentModel));
+            AddCommand(new Commands.Clipboard.ClipboardCutCommand(_clipboard, ContentModelService, ContentModel, new Key(ConsoleKey.Delete, true, false, false)));
+            AddCommand(new Commands.Clipboard.ClipboardPasteCommand(_clipboard, ContentModelService, ContentModel));
+            AddCommand(new Commands.Clipboard.ClipboardPasteCommand(_clipboard, ContentModelService, ContentModel, new Key(ConsoleKey.Insert, true, false, false)));
+        }
+
         // Enter on the recycle drive restores; inert anywhere else, and on that drive's ".." row.
         AddCommand(new Commands.Drives.RestoreRecycledCommand(ContentModelService));
 
@@ -224,6 +243,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_createLinkDialog is not null)
         {
             AddCommand(new CreateLinkDialogCommand(_createLinkDialog, ContentModelService));
+        }
+        if (_diskImageDialog is not null)
+        {
+            AddCommand(new MountDiskImageDialogCommand(_diskImageDialog, ContentModelService));
         }
         if (_userMenuDialog is not null)
         {
