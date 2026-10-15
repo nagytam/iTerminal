@@ -1,4 +1,5 @@
-using iConsole.Commands;
+﻿using iConsole.Commands;
+using iConsole.Controls;
 using iConsole.Controls.Buttons;
 using iConsole.Controls.StatusBar;
 using iConsole.Controls.Viewers;
@@ -18,6 +19,9 @@ public class FileViewerDialog : Dialog
     private readonly IFileToTextConverterService _fileToTextConverterService;
     private readonly TextViewerControl _textViewerControl;
     private readonly ViewerStatusBar _statusBar;
+    private readonly HexViewer _hexViewer;
+    private bool _hexMode;
+    private bool _hexLoaded;
 
     public FileViewerDialog(
         IContentModelService contentModelService,
@@ -37,8 +41,54 @@ public class FileViewerDialog : Dialog
             beepService,
             dateTimeProviderService,
             themeService);
+        _hexViewer = new HexViewer(themeService);
         AddControl(_textViewerControl);
+        AddControl(_hexViewer);
         AddControl(_statusBar);
+    }
+
+    /// <summary>True while the file is shown as a hex dump instead of text (F4 toggles).</summary>
+    public bool IsHexMode => _hexMode;
+
+    /// <summary>The hex dump control; exposed so tests can read the loaded bytes.</summary>
+    public HexViewer HexViewer => _hexViewer;
+
+    public override async Task ShowAsync()
+    {
+        await base.ShowAsync();
+        // ShowAsync makes every child visible; the hex dump is on demand.
+        _hexMode = false;
+        _hexViewer.IsVisible = false;
+        _textViewerControl.IsVisible = true;
+    }
+
+    /// <summary>Switches between the text view and the hex dump of the file's raw bytes.</summary>
+    public async Task ToggleHexModeAsync()
+    {
+        if (!_hexMode && !_hexLoaded)
+        {
+            var fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
+            var file = Url is not null && fileSystem is not null
+                ? await fileSystem.ReadFileAsync(Url)
+                : null;
+            _hexViewer.Data = file?.Content ?? [];
+            _hexLoaded = true;
+        }
+
+        _hexMode = !_hexMode;
+        _textViewerControl.IsVisible = !_hexMode;
+        _hexViewer.IsVisible = _hexMode;
+        if (_hexMode)
+        {
+            _hexViewer.SetFocus();
+        }
+        else
+        {
+            _textViewerControl.SetFocus();
+        }
+        Title = (Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer")
+            + (_hexMode ? " [HEX]" : "  F4:Hex");
+        StateHasChanged();
     }
 
     public override void OnInitializeActionButtons()
@@ -53,6 +103,14 @@ public class FileViewerDialog : Dialog
             && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt)
         {
             Close();
+            return true;
+        }
+
+        if (keyEvent.KeyPressType == KeyPressType.Down
+            && keyEvent.ConsoleKey == ConsoleKey.F4
+            && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt)
+        {
+            await ToggleHexModeAsync();
             return true;
         }
 
@@ -122,12 +180,16 @@ public class FileViewerDialog : Dialog
         {
             ViewSize = Parent.ViewSize;
             Position = new Position(0, 0);
-            Title = Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 4 - CloseActionView.Length)) ?? "Viewer";
+            Title = Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer";
+            Title += _hexMode ? " [HEX]" : "  F4:Hex";
         }
 
         _textViewerControl.Position = new(1, 1);
         _textViewerControl.ViewSize =
             new(ViewSize.Width - 2, ViewSize.Height - 3);
+
+        _hexViewer.Position = new(1, 1);
+        _hexViewer.ViewSize = new(ViewSize.Width - 2, ViewSize.Height - 3);
 
         _statusBar.Position = new Position(1, ViewSize.Height - 2);
         _statusBar.ViewSize = new(ViewSize.Width - 3, 1);

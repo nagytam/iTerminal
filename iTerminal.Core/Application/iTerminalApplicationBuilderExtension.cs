@@ -210,6 +210,12 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<CreateLinkDialog>();
         // Shift+F11: the order of a panel's rows.
         services.AddTransient<SortDialog>();
+        services.AddSingleton<iTerminal.Core.Services.UserMenu.IUserMenuService>(sp =>
+            new iTerminal.Core.Services.UserMenu.UserMenuService(
+                Path.Combine(databaseDirectory, iTerminal.Core.Services.UserMenu.UserMenuService.FileName),
+                sp.GetRequiredService<iTerminal.Core.Services.Shell.IInteractiveShellService>(),
+                sp.GetRequiredService<iConsole.Interfaces.IContentModelService>()));
+        services.AddTransient<UserMenuDialog>();
         // Ctrl+F8: the recycle bin as a drive. The store is the operating system's way of keeping
         // deleted files; a test registers one built in a folder of its own.
         services.AddSingleton<iTerminal.Core.Services.Recycle.IRecycleBinStore>(_ => iTerminal.Core.Services.Recycle.RecycleBinService.CreateStore());
@@ -261,6 +267,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IMemoryDriveService, MemoryDriveService>();
         services.AddTransient<ISshFileSystemService, SshFileSystemService>();
         services.AddTransient<ISmbFileSystemService, SmbFileSystemService>();
+        // One connection for the run: both panels may be on the same FTP server.
+        services.AddSingleton<IFtpFileSystemService, FtpFileSystemService>();
         services.AddSingleton<IIPhoneFileSystemService, IPhoneFileSystemService>();
         services.AddSingleton<IIPhoneDeviceService, IPhoneDeviceService>();
         services.AddTransient<IArchiveFileSystemService, ArchiveFileSystemService>();

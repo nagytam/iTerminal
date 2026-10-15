@@ -34,7 +34,8 @@ public class ContentModelService(
     iTerminal.Core.Services.Search.IFileSearchService? fileSearchService = null,
     iTerminal.Core.Services.Preview.IFilePreviewService? filePreviewService = null,
     iTerminal.Core.Services.Archives.IArchiveDriveService? archiveDriveService = null,
-    iTerminal.Core.Services.Recycle.IRecycleBinService? recycleBinService = null)
+    iTerminal.Core.Services.Recycle.IRecycleBinService? recycleBinService = null,
+    IFtpFileSystemService? ftpFileSystemService = null)
     : IContentModelService, IDisposable
 {
     /// <summary>The singletons the music drives are views over, resolved together.</summary>
@@ -154,6 +155,11 @@ public class ContentModelService(
             case ContainerType.SmbFileSystem:
                 {
                     contentModel = new ContentModelSmbDrive(name, settingsService, smbFileSystemService, networkProfileService, passwordManager, folderHistoryService, frequentExecutionGuardService, memoryCacheService, logger);
+                    break;
+                }
+            case ContainerType.FtpFileSystem when ftpFileSystemService is not null:
+                {
+                    contentModel = new ContentModelFtpDrive(name, settingsService, ftpFileSystemService, folderHistoryService, frequentExecutionGuardService, memoryCacheService, logger, networkProfileService, passwordManager);
                     break;
                 }
             case ContainerType.IPhoneFileSystem:

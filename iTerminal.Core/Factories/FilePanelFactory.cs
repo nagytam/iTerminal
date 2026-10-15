@@ -39,7 +39,8 @@ public class FilePanelFactory(
     PropertiesDialog? propertiesDialog = null,
     ChecksumDialog? checksumDialog = null,
     FileSystemResolver? fileSystemResolver = null,
-    SortDialog? sortDialog = null)
+    SortDialog? sortDialog = null,
+    UserMenuDialog? userMenuDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -73,7 +74,8 @@ public class FilePanelFactory(
             propertiesDialog: propertiesDialog,
             checksumDialog: checksumDialog,
             fileSystemResolver: fileSystemResolver,
-            sortDialog: sortDialog);
+            sortDialog: sortDialog,
+            userMenuDialog: userMenuDialog);
         contentModelService.AddContentBrowser(name, contentBrowser);
         return new FilePanel(
             name,

@@ -51,6 +51,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private ChecksumDialog? _checksumDialog { get; set; }
     private FileSystemResolver? _fileSystemResolver { get; set; }
     private SortDialog? _sortDialog { get; set; }
+    private UserMenuDialog? _userMenuDialog { get; set; }
 
     public ContentBrowser(
         string name,
@@ -79,11 +80,13 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         PropertiesDialog? propertiesDialog = null,
         ChecksumDialog? checksumDialog = null,
         FileSystemResolver? fileSystemResolver = null,
-        SortDialog? sortDialog = null)
+        SortDialog? sortDialog = null,
+        UserMenuDialog? userMenuDialog = null)
         : base(themeService)
     {
         Name = name;
         _sortDialog = sortDialog;
+        _userMenuDialog = userMenuDialog;
         _propertiesDialog = propertiesDialog;
         _checksumDialog = checksumDialog;
         _fileSystemResolver = fileSystemResolver;
@@ -177,6 +180,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         CommandHelper.AddVerticalScrollingCommands(this, ContentModel, true);
         AddCommand(new NavigateToFolderCommand(ContentModel, ContentModelService));
         AddCommand(new RefreshCommand(ContentModel));
+        AddCommand(new CalculateFolderSizeCommand(ContentModelService, ContentModel));
         AddCommand(new NavigateToRootFolderCommand(ContentModel));
         // Ahead of the other things Enter does to a file — open an archive as a folder, run it in
         // the command log: a program the user chose for the file is what they meant by Enter.
@@ -200,6 +204,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         {
             AddCommand(new CreateLinkDialogCommand(_createLinkDialog, ContentModelService));
         }
+        if (_userMenuDialog is not null)
+        {
+            AddCommand(new UserMenuDialogCommand(_userMenuDialog, ContentModelService));
+        }
+
         if (_sortDialog is not null)
         {
             AddCommand(new SortDialogCommand(_sortDialog, ContentModelService));
