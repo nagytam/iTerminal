@@ -15,6 +15,7 @@ using iTerminal.Core.Factories;
 using iTerminal.Core.Jobs;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.RuntimeDependencies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
@@ -289,6 +290,13 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<INetworkProfileService, NetworkProfileService>();
         services.AddSingleton<INetworkDiscoveryService, NetworkDiscoveryService>();
         services.AddSingleton<OnlineQuoteService>();
+        // Components downloaded into the data folder instead of shipped (see RuntimeDependencyService). The
+        // Playwright driver and its Chromium are what the quote indicator needs; the list is one entry per component.
+        string runtimesDirectory = Path.Combine(databaseDirectory, "runtimes");
+        services.AddSingleton<IRuntimeDependency>(_ => new PlaywrightRuntimeDependency(runtimesDirectory));
+        services.AddSingleton<IRuntimeDependencyService, RuntimeDependencyService>();
+        services.AddSingleton<IJob, RuntimeDependencyCheckJob>();
+        services.AddTransient<RuntimeDependencyDialog>();
         services.AddSingleton<WeatherService>();
         services.AddSingleton<FolderIndexModel>();
         services.AddTransient<TerminalWindow>();

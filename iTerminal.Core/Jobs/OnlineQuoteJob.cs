@@ -1,19 +1,23 @@
 ﻿using iConsole.Jobs;
 using iTerminal.Core.Data;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.RuntimeDependencies;
 using Microsoft.Playwright;
-using System.Diagnostics;
 using System.Globalization;
 
 namespace iTerminal.Core.Jobs;
 
-public class OnlineQuoteJob(OnlineQuoteService onlineQuoteService, ICacheService cacheService) : Job
+public class OnlineQuoteJob(
+    OnlineQuoteService onlineQuoteService,
+    ICacheService cacheService,
+    IRuntimeDependencyService runtimeDependencies) : Job
 {
     internal const string BTCUrl = @"https://www.swissquote.ch/trading-platform/#fullQuote/EX0X00XBT000/31337_USD";
     internal const string ETHUrl = @"https://www.swissquote.ch/trading-platform/#fullQuote/EX0X00ETH000/31337_USD";
 
     private readonly OnlineQuoteService _onlineQuoteService = onlineQuoteService;
     private readonly ICacheService _cacheService = cacheService;
+    private readonly IRuntimeDependencyService _runtimeDependencies = runtimeDependencies;
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
@@ -27,6 +31,13 @@ public class OnlineQuoteJob(OnlineQuoteService onlineQuoteService, ICacheService
 
         while (!cancellationToken.IsCancellationRequested)
         {
+            // Playwright is installed by the setup dialog, not by this job: until it is, there is nothing to drive.
+            if (!_runtimeDependencies.IsInstalled(PlaywrightRuntimeDependency.DependencyId))
+            {
+                await Task.Delay(15000, cancellationToken);
+                continue;
+            }
+
             try
             {
                 _onlineQuoteService.IsRefreshing = true;
@@ -60,7 +71,8 @@ public class OnlineQuoteJob(OnlineQuoteService onlineQuoteService, ICacheService
             }
             catch (PlaywrightException)
             {
-                InstallPlaywrightBrowser();
+                // The browser did not start: its install is no longer complete, so the dialog offers it again.
+                _runtimeDependencies.InvalidateInstalled(PlaywrightRuntimeDependency.DependencyId);
             }
             catch 
             {
@@ -70,30 +82,6 @@ public class OnlineQuoteJob(OnlineQuoteService onlineQuoteService, ICacheService
                 _onlineQuoteService.IsRefreshing = false;
             }
             await Task.Delay(15000, cancellationToken);
-        }
-    }
-
-    internal static void InstallPlaywrightBrowser()
-    {
-        try
-        {
-            var baseDirectory = AppContext.BaseDirectory;
-            var scriptPath = Path.Combine(baseDirectory, "playwright.ps1");
-
-            Process process = new();
-            process.StartInfo.WorkingDirectory = baseDirectory;
-            process.StartInfo.FileName = "pwsh";
-            process.StartInfo.Arguments = $"-NoProfile -File \"{scriptPath}\" install";
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.RedirectStandardInput = true;
-            process.StartInfo.RedirectStandardOutput = true;
-            _ = process.Start();
-            process.WaitForExit();
-        }
-        catch
-        {
         }
     }
 

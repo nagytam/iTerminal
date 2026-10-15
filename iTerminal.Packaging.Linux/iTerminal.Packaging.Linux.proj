@@ -93,7 +93,7 @@
     <MakeDir Directories="$(RuntimeStagingDir);$(OutputDir)" />
 
     <PropertyGroup>
-      <InnerBuild>dotnet msbuild &quot;$(AppProject)&quot; -p:Configuration=Release -p:RuntimeIdentifier=$(Rid) -p:SelfContained=true -p:LinuxPackaging=true -p:Version=$(Version) -p:Release=$(Release) -p:TarballPrefix=/iterminal-$(Version) -p:PlaywrightPlatform=$(Rid) -p:DebugType=none -p:DebugSymbols=false &quot;-p:PackageDir=$(RuntimeStagingDir.TrimEnd('\'))&quot; -nologo -v:m</InnerBuild>
+      <InnerBuild>dotnet msbuild &quot;$(AppProject)&quot; -p:Configuration=Release -p:RuntimeIdentifier=$(Rid) -p:SelfContained=true -p:LinuxPackaging=true -p:Version=$(Version) -p:Release=$(Release) -p:TarballPrefix=/iterminal-$(Version) -p:DebugType=none -p:DebugSymbols=false &quot;-p:PackageDir=$(RuntimeStagingDir.TrimEnd('\'))&quot; -nologo -v:m</InnerBuild>
     </PropertyGroup>
 
     <!-- Twice: the RPM alone gets a remove script (LinuxPackagingRpm, see iTerminal.csproj). The second publish is incremental. -->
@@ -102,11 +102,10 @@
 
     <!--
       TarballPrefix starts with a slash because the task writes "." in front of it: without one the
-      top folder is ".iterminal-1.2.3", hidden. PlaywrightPlatform is said outright because the
-      referenced projects are built without a runtime identifier and would add the build machine's
-      own Node binary — node.exe, 90 MB of it, in a Linux package. The debug switches are on the
-      command line for the same reason: set in iTerminal.csproj they would cover that project only,
-      and the referenced projects' .pdb files would still be packed.
+      top folder is ".iterminal-1.2.3", hidden. The debug switches are on the command line because
+      set in iTerminal.csproj they would cover that project only, and the referenced projects' .pdb
+      files would still be packed. The Playwright driver is not in the package at all: the app
+      downloads it on the first start (see RuntimeDependencyService).
     -->
 
     <!-- The names each format's own tools and repositories expect. -->

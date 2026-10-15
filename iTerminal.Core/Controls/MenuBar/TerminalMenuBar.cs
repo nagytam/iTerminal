@@ -89,7 +89,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         ExtractDialog? extractDialog = null,
         CommandPaletteDialog? commandPaletteDialog = null,
         CompareFoldersDialog? compareFoldersDialog = null,
-        iTerminal.Core.Commands.InteractiveShellCommand? shellCommand = null
+        iTerminal.Core.Commands.InteractiveShellCommand? shellCommand = null,
+        iTerminal.Core.Dialogs.RuntimeDependencyDialog? runtimeDependencyDialog = null
         )
         : base([], themeService)
     {
@@ -159,7 +160,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             toDoListDialog,
             mailDialog,
             passwordManagerDialog,
-            settingsService));
+            settingsService,
+            runtimeDependencyDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 

@@ -1,0 +1,105 @@
+using iConsole.Data;
+using iTerminal.Core.Dialogs;
+using iTerminal.Core.Services.RuntimeDependencies;
+using Moq;
+using static iTerminal.Core.Test.Helper.UiTestHelper;
+
+namespace iTerminal.Core.Test.Dialogs;
+
+[TestClass]
+public class RuntimeDependencyDialogTest
+{
+    private static Mock<IRuntimeDependencyService> NewService(RuntimeDependencyState state, bool busy = false)
+    {
+        var service = new Mock<IRuntimeDependencyService>();
+        RuntimeDependencyStatus status = state switch
+        {
+            RuntimeDependencyState.Missing => new RuntimeDependencyStatus("playwright", "Playwright", "Chromium for the quote indicator", null, "1.63.0", state),
+            RuntimeDependencyState.UpdateAvailable => new RuntimeDependencyStatus("playwright", "Playwright", "Chromium for the quote indicator", "1.63.0", "1.63.2", state),
+            _ => new RuntimeDependencyStatus("playwright", "Playwright", "Chromium for the quote indicator", "1.63.0", null, state),
+        };
+        service.SetupGet(s => s.Statuses).Returns([status]);
+        service.SetupGet(s => s.Log).Returns(new List<string>());
+        service.SetupGet(s => s.IsBusy).Returns(busy);
+        service.SetupGet(s => s.ShouldOfferAtStartup).Returns(state != RuntimeDependencyState.Installed);
+        return service;
+    }
+
+    [TestMethod]
+    public async Task AMissingComponentSaysWhatInstallingWillDo()
+    {
+        var service = NewService(RuntimeDependencyState.Missing);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+
+        await ShowAsync(dialog);
+
+        var screen = Render(dialog);
+        AssertScreenContains(screen, "Playwright - Chromium for the quote indicator");
+        AssertScreenContains(screen, "Not installed. Install 1.63.0.");
+        AssertScreenContains(screen, "Enter: install   S: skip this version   Esc: later");
+        Assert.IsTrue(dialog.ShouldOpenAtStartup);
+    }
+
+    [TestMethod]
+    public async Task AnUpdateSaysWhichVersionItReplaces()
+    {
+        var service = NewService(RuntimeDependencyState.UpdateAvailable);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+
+        await ShowAsync(dialog);
+
+        AssertScreenContains(Render(dialog), "Installed 1.63.0. Update to 1.63.2.");
+    }
+
+    [TestMethod]
+    public async Task EnterStartsTheInstallWhenThereIsWork()
+    {
+        var service = NewService(RuntimeDependencyState.Missing);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        service.Verify(s => s.StartInstall(), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task EnterDoesNotStartAnotherInstallWhileOneRuns()
+    {
+        var service = NewService(RuntimeDependencyState.Missing, busy: true);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        service.Verify(s => s.StartInstall(), Times.Never);
+        AssertScreenContains(Render(dialog), "Installing... Esc: hide this (it keeps going)");
+    }
+
+    [TestMethod]
+    public async Task SkipRemembersTheOffer()
+    {
+        var service = NewService(RuntimeDependencyState.UpdateAvailable);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.S, 'S'));
+
+        service.Verify(s => s.SkipOffers(), Times.Once);
+        service.Verify(s => s.StartInstall(), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task WhenNothingIsLeftEnterOnlyCloses()
+    {
+        var service = NewService(RuntimeDependencyState.Installed);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        AssertScreenContains(Render(dialog), "Enter or Esc: close");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        service.Verify(s => s.StartInstall(), Times.Never);
+        Assert.IsFalse(dialog.ShouldOpenAtStartup);
+    }
+}

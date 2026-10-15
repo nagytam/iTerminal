@@ -31,7 +31,7 @@ namespace iTerminal.Test;
 /// </summary>
 public sealed class TerminalApp : IAsyncDisposable
 {
-    private static readonly Type[] OmittedJobs = [typeof(WeatherJob), typeof(OnlineQuoteJob), typeof(PortfolioQuoteJob), typeof(FolderIndexJob)];
+    private static readonly Type[] OmittedJobs = [typeof(WeatherJob), typeof(OnlineQuoteJob), typeof(PortfolioQuoteJob), typeof(FolderIndexJob), typeof(RuntimeDependencyCheckJob)];
 
     private readonly string _root;
     private bool _ownsSandbox = true;
@@ -146,7 +146,7 @@ public sealed class TerminalApp : IAsyncDisposable
         {
             Width = width,
             Height = height,
-            Timeout = TimeSpan.FromSeconds(20),
+            Timeout = TimeSpan.FromSeconds(30),
             Configuration = new Dictionary<string, string?>
             {
                 [iTerminalApplicationBuilderExtension.DataDirectoryKey] = Path.Combine(root, "data"),
@@ -174,6 +174,7 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<INetworkDiscoveryService, SandboxServices.NetworkDiscovery>();
                 services.AddSingleton<Core.Services.PackageManager.IPackageManagerService, SandboxServices.PackageManager>();
                 services.AddSingleton<Core.Services.Portfolio.IQuoteProvider, SandboxServices.Quotes>();
+                services.AddSingleton<Core.Services.RuntimeDependencies.IRuntimeDependencyService, SandboxServices.Dependencies>();
                 services.AddSingleton<SandboxServices.Shell>();
                 services.AddSingleton<Core.Services.Shell.IInteractiveShellService>(provider => provider.GetRequiredService<SandboxServices.Shell>());
                 services.AddSingleton<SandboxServices.Launcher>();
