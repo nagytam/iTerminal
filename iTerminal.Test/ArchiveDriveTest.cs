@@ -54,7 +54,7 @@ public class ArchiveDriveTest
         await _app.WaitForTextAsync("Copy");
         await _app.PressAsync("Enter");
         var copy = Path.Combine(_app.RightRoot, "b.md");
-        await _app.WaitUntilAsync(() => File.Exists(copy) && File.ReadAllText(copy) == "beta from the archive", "the entry to be copied out");
+        await _app.WaitUntilAsync(() => File.Exists(copy) && SharedFileReader.ReadAllText(copy) == "beta from the archive", "the entry to be copied out");
         await _app.WaitForNoDialogAsync();
 
         // ".." up to the archive's top, ".." again out of it: back in the folder, on the archive.
