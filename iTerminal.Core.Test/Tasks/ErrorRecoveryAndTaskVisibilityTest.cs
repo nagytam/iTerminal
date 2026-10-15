@@ -10,7 +10,7 @@ namespace iTerminal.Core.Tasks.Test;
 /// Wraps a real <see cref="IFileSystem"/> but makes reading one specific file always fail, or — with
 /// <paramref name="failFirstRead"/> — whichever file is read first.
 /// </summary>
-file sealed class FailingFileSystem(IFileSystem inner, string failingFileName, TimeSpan? goodFileDelay = null, bool failFirstRead = false) : IFileSystem
+file sealed class FailingFileSystem(IFileSystem inner, string failingFileName, TimeSpan? goodFileDelay = null, bool failFirstRead = false, TimeSpan? createFolderDelay = null) : IFileSystem
 {
     private int _reads;
 
@@ -24,7 +24,14 @@ file sealed class FailingFileSystem(IFileSystem inner, string failingFileName, T
     public string GetAvailableDiskSpace() => inner.GetAvailableDiskSpace();
     public Task MoveAsync(Url sourceUrl, Url targetUrl, bool overwrite) => inner.MoveAsync(sourceUrl, targetUrl, overwrite);
     public Task CopyAsync(Url sourceUrl, Url targetUrl, bool overwrite) => inner.CopyAsync(sourceUrl, targetUrl, overwrite);
-    public Task CreateFolderAsync(Url url) => inner.CreateFolderAsync(url);
+    public async Task CreateFolderAsync(Url url)
+    {
+        if (createFolderDelay is { } delay)
+        {
+            await Task.Delay(delay);
+        }
+        await inner.CreateFolderAsync(url);
+    }
     public Task StreamFromAsync(Url url, Stream source, IProgress<long>? progress, CancellationToken cancellationToken) =>
         inner.StreamFromAsync(url, source, progress, cancellationToken);
 
@@ -167,7 +174,11 @@ public class ErrorRecoveryAndTaskVisibilityTest
         }
 
         var source = new FailingFileSystem(new FileSystemService(), failingFileName: "no-such-file", goodFileDelay: TimeSpan.FromMilliseconds(300));
-        var target = new FileSystemService();
+        // Discovery creates the target folder first, so slowing that down keeps the discovery task
+        // listed for as long as it takes to see it next to the processing task. Five tiny files are
+        // discovered in microseconds on a fast machine, and the test then raced the task manager
+        // removing the finished discovery task.
+        var target = new FailingFileSystem(new FileSystemService(), failingFileName: "no-such-file", createFolderDelay: TimeSpan.FromMilliseconds(500));
         var sourceUrl = new Url(srcDir);
         var targetUrl = new Url(dstDir + Path.DirectorySeparatorChar);
         var discoveryTask = new FolderDiscoveryTask(source, target, sourceUrl, targetUrl);

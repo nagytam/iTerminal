@@ -84,6 +84,15 @@ public class TerminalPanel : Window
             isHandled = true;
         }
 
+        if (!isHandled && keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift
+            && keyEvent.ConsoleKey is ConsoleKey.P or ConsoleKey.N)
+        {
+            // The same Alt+P / Alt+N the panels have: the history, one command at a time.
+            isHandled = keyEvent.ConsoleKey == ConsoleKey.P
+                ? _terminalModel.RecallPrevious()
+                : _terminalModel.RecallNext();
+        }
+
         if (!isHandled)
         {
             switch (keyEvent.ConsoleKey)

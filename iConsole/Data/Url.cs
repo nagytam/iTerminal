@@ -27,11 +27,11 @@ public partial class Url
     private static partial Regex RegexSshUrl();
 
     // ftp://user@host/path  (with credentials)
-    [GeneratedRegex("ftp://([a-zA-Z0-9]*)@([a-zA-Z0-9.\\-]*)(\\/[\\\\/a-zA-Z0-9.\\-_@]*)")]
+    [GeneratedRegex("ftp://([^@/:]*)@([a-zA-Z0-9.\\-]*(?::[0-9]+)?)(\\/.*)")]
     private static partial Regex RegexFtpUrlWithUser();
 
     // ftp://host/path  (anonymous / no credentials)
-    [GeneratedRegex("ftp://([a-zA-Z0-9.\\-]*)(\\/[\\\\/a-zA-Z0-9.\\-_@]*)")]
+    [GeneratedRegex("ftp://([a-zA-Z0-9.\\-]*(?::[0-9]+)?)(\\/.*)")]
     private static partial Regex RegexFtpUrl();
 
     // smb://user@host/share/path  (with credentials)
