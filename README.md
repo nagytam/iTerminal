@@ -52,7 +52,7 @@ A two-panel, keyboard-driven file manager and developer toolbox for the terminal
 
 ## Requirements
 - .NET 10 SDK to build; released packages are self-contained
-- Optional: `git`, `docker`, `ffmpeg`, 7-Zip, Tesseract, Ollama for the features that use them
+- Optional: `git`, `docker`, `ffmpeg`, 7-Zip, Tesseract for the features that use them. The AI bar's Ollama server and its model are downloaded by iTerminal (Tools > Runtime Dependencies) unless one already answers at the configured address
 
 ## Build, test and run
 
