@@ -41,7 +41,9 @@ public class FilePanelFactory(
     FileSystemResolver? fileSystemResolver = null,
     SortDialog? sortDialog = null,
     UserMenuDialog? userMenuDialog = null,
-    FileDiffDialog? fileDiffDialog = null)
+    FileDiffDialog? fileDiffDialog = null,
+    Services.Clipboard.FileClipboardOperations? clipboardOperations = null,
+    DiskImageDialog? diskImageDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -77,7 +79,9 @@ public class FilePanelFactory(
             fileSystemResolver: fileSystemResolver,
             sortDialog: sortDialog,
             userMenuDialog: userMenuDialog,
-            fileDiffDialog: fileDiffDialog);
+            fileDiffDialog: fileDiffDialog,
+            clipboardOperations: clipboardOperations,
+            diskImageDialog: diskImageDialog);
         contentModelService.AddContentBrowser(name, contentBrowser);
         return new FilePanel(
             name,

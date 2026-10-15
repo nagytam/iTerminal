@@ -180,6 +180,13 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.Launcher>();
                 services.AddSingleton<Core.Services.FileAssociations.IFileLauncher>(provider => provider.GetRequiredService<SandboxServices.Launcher>());
                 services.AddSingleton<SandboxServices.DockerCli>();
+
+                // The clipboard stays in the process — a run must neither overwrite what the person
+                // running it had copied nor paste what they had — and no test ejects, formats or
+                // mounts anything of the machine it runs on.
+                services.AddSingleton<Core.Services.Clipboard.IFileClipboardService, Core.Services.Clipboard.InProcessFileClipboardService>();
+                services.AddSingleton<SandboxServices.DriveActions>();
+                services.AddSingleton<Core.Services.Drives.IDriveActionsService>(provider => provider.GetRequiredService<SandboxServices.DriveActions>());
                 services.AddSingleton<Core.Services.Mail.IMailService, SandboxServices.Mail>();
 
                 // A recycle bin of the sandbox's own, in the Windows format on every system: the

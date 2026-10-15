@@ -19,10 +19,21 @@ public class EditMenuItem : MenuItem
         MarkPatternDialog? markPatternDialog = null,
         MarkPatternDialog? unmarkPatternDialog = null,
         CompareFoldersDialog? compareFoldersDialog = null,
-        FileDiffDialog? fileDiffDialog = null)
+        FileDiffDialog? fileDiffDialog = null,
+        iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null)
         : base("Edit", null, [], themeService)
     {
         HotKeyChar = 'E';
+
+        if (clipboardOperations is not null)
+        {
+            // The system clipboard: what another program (Explorer, a mail client, an upload dialog)
+            // can paste, and what it copied can be pasted here.
+            AddMenuItem(new MenuItem("Copy to Clipboard	Ctrl+C",    new Commands.Clipboard.ClipboardCopyCommand(clipboardOperations, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem("Cut to Clipboard	Ctrl+X",     new Commands.Clipboard.ClipboardCutCommand(clipboardOperations, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem("Paste from Clipboard	Ctrl+V", new Commands.Clipboard.ClipboardPasteCommand(clipboardOperations, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem("-", null, [], themeService));
+        }
 
         AddMenuItem(new MenuItem("Copy\tF5",        new CopyDialogCommand(copyDialog, contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Move\tShift+F6",  new MoveDialogCommand(moveDialog, contentModelService), [], themeService));
