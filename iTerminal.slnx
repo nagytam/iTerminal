@@ -7,8 +7,8 @@
     <Build Project="false" />
   </Project>
   <Project Path="iConsole.Inputs.Posix\iConsole.Inputs.Posix.csproj" />
-  <Project Path="iConsole.Inputs.Windows\iConsole.Inputs.Windows.csproj" />
   <Project Path="iConsole.Inputs.Windows.Test\iConsole.Inputs.Windows.Test.csproj" />
+  <Project Path="iConsole.Inputs.Windows\iConsole.Inputs.Windows.csproj" />
   <Project Path="iConsole.Test.Core\iConsole.Test.Core.csproj" />
   <Project Path="iConsole.Test\iConsole.Test.csproj">
     <BuildDependency Project="iConsole\iConsole.csproj" />
@@ -19,12 +19,10 @@
     <BuildDependency Project="iTerminal.Core\iTerminal.Core.csproj" />
   </Project>
   <Project Path="iTerminal.Core\iTerminal.Core.csproj" />
+  <Project Path="iTerminal.Installer\iTerminal.Installer.wixproj" Id="84e72354-d0ba-4634-a59a-9b676582ab1e" />
   <Project Path="iTerminal.Test\iTerminal.Test.csproj">
     <BuildDependency Project="iConsole.Test.Core\iConsole.Test.Core.csproj" />
     <BuildDependency Project="iTerminal.Core\iTerminal.Core.csproj" />
   </Project>
   <Project Path="iTerminal\iTerminal.csproj" />
-  <Project Path="iTerminal.Installer\iTerminal.Installer.wixproj">
-    <Build Project="false" />
-  </Project>
 </Solution>
