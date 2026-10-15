@@ -24,9 +24,6 @@ dotnet test iTerminal.Core.Test/iTerminal.Core.Test.csproj --filter "FullyQualif
 # Run the app
 dotnet run --project iTerminal/iTerminal.csproj
 
-# Run micro-benchmarks (not part of CI — produces timing reports only)
-dotnet run --project BenchmarkSuite1/BenchmarkSuite1.csproj -c Release
-
 # Build the Windows installer (Windows only; publishes the app first, ~5 minutes)
 dotnet build iTerminal.Installer/iTerminal.Installer.wixproj -c Release -p:Version=1.2.3
 
