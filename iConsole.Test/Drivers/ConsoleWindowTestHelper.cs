@@ -25,15 +25,20 @@ internal static class ConsoleWindowTestHelper
             return false;
         }
 
+        // Without a console there is no visible window to compare against. GetVisibleWindowSize would
+        // answer with its 80x24 default, and Normalize (which reads the same properties) would leave
+        // the size alone: the two fallbacks disagree, so the tests must take the no-console branch.
         try
         {
-            size = ConsoleWindowSizeHelper.GetVisibleWindowSize();
-            return true;
+            _ = Console.WindowWidth;
         }
-        catch (IOException)
+        catch (Exception exception) when (exception is IOException or ArgumentOutOfRangeException)
         {
             size = default;
             return false;
         }
+
+        size = ConsoleWindowSizeHelper.GetVisibleWindowSize();
+        return true;
     }
 }
