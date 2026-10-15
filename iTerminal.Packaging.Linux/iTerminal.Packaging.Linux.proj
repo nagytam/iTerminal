@@ -1,0 +1,134 @@
+<Project DefaultTargets="Build">
+
+  <!--
+    Linux packages for iTerminal: a tarball, a Debian package and an RPM, for each runtime asked for.
+
+      dotnet build iTerminal.Packaging.Linux/iTerminal.Packaging.Linux.proj -p:Version=1.2.3
+      dotnet build iTerminal.Packaging.Linux/iTerminal.Packaging.Linux.proj -p:Version=1.2.3 -p:Runtimes="linux-x64;linux-arm64"
+
+    into bin/Release:
+
+      iterminal-1.2.3-linux-x64.tar.gz     unpack anywhere and run ./iTerminal
+      iterminal_1.2.3_amd64.deb            apt install ./iterminal_1.2.3_amd64.deb
+      iterminal-1.2.3-0.x86_64.rpm         dnf install ./iterminal-1.2.3-0.x86_64.rpm
+
+    All three hold the app self-contained (no .NET runtime to install). The packages put it in
+    /usr/share/iterminal with /usr/local/bin/iTerminal linking to it, and depend on the handful of system
+    libraries the runtime itself needs.
+
+    The work is done by Packaging.Targets, MSBuild targets that write the three formats in managed
+    code — so this builds on Windows as well as on Linux, with no dpkg or rpmbuild. Those targets
+    have to live in the project being packaged, which is why ../iTerminal/iTerminal.csproj
+    references them — only when LinuxPackaging is set, which only this project does. This project is
+    the loop over the runtimes and the names the files end up with; it is not in the solution, and
+    an ordinary build knows nothing of it.
+  -->
+  <PropertyGroup>
+    <Version Condition="'$(Version)' == ''">1.0.0</Version>
+    <Release Condition="'$(Release)' == ''">0</Release>
+    <Runtimes Condition="'$(Runtimes)' == ''">linux-x64</Runtimes>
+    <AppProject>$(MSBuildProjectDirectory)\..\iTerminal\iTerminal.csproj</AppProject>
+    <OutputDir>$(MSBuildProjectDirectory)\bin\Release\</OutputDir>
+    <!-- Packaging.Targets writes its packages here under its own names; they are renamed into OutputDir. -->
+    <StagingDir>$(MSBuildProjectDirectory)\obj\staging\</StagingDir>
+  </PropertyGroup>
+
+  <!--
+    What the RPM depends on, as shared-library names rather than package names: Fedora calls the
+    OpenSSL package openssl-libs and openSUSE libopenssl3, but both provide libssl.so.3()(64bit).
+    These replace the tool's own list (RpmFinisher.cs), which is Fedora's names and so not installable
+    on openSUSE at all. ICU's library carries its version in its name, so it is a rich dependency:
+    any one of the versions .NET can use. On aarch64 the names are the same.
+  -->
+  <ItemGroup>
+    <RpmRequire Include="libssl.so.3()(64bit)" />
+    <RpmRequire Include="libgssapi_krb5.so.2()(64bit)" />
+    <RpmRequire Include="libz.so.1()(64bit)" />
+    <RpmRequire Include="libstdc++.so.6()(64bit)" />
+    <RpmRequire Include="(libicuuc.so.80()(64bit) or libicuuc.so.79()(64bit) or libicuuc.so.78()(64bit) or libicuuc.so.77()(64bit) or libicuuc.so.76()(64bit) or libicuuc.so.75()(64bit) or libicuuc.so.74()(64bit) or libicuuc.so.73()(64bit) or libicuuc.so.72()(64bit) or libicuuc.so.71()(64bit) or libicuuc.so.70()(64bit) or libicuuc.so.69()(64bit) or libicuuc.so.68()(64bit) or libicuuc.so.67()(64bit) or libicuuc.so.66()(64bit) or libicuuc.so.65()(64bit) or libicuuc.so.64()(64bit) or libicuuc.so.63()(64bit) or libicuuc.so.62()(64bit) or libicuuc.so.61()(64bit) or libicuuc.so.60()(64bit))" />
+  </ItemGroup>
+
+  <!-- RpmFinisher.cs: the digests a current rpm asks for, and the dependencies above. -->
+  <UsingTask TaskName="RpmFinisher" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <Task>
+      <Code Type="Class" Language="cs" Source="$(MSBuildThisFileDirectory)RpmFinisher.cs" />
+    </Task>
+  </UsingTask>
+
+  <!-- What each runtime is called by Debian and by RPM. A runtime not listed here is refused by name. -->
+  <ItemGroup>
+    <KnownRuntime Include="linux-x64" DebArchitecture="amd64" RpmArchitecture="x86_64" />
+    <KnownRuntime Include="linux-arm64" DebArchitecture="arm64" RpmArchitecture="aarch64" />
+    <RequestedRuntime Include="$(Runtimes)" />
+    <!-- The known runtimes that were asked for, with their metadata: known, minus the ones not asked for. -->
+    <NotRequestedRuntime Include="@(KnownRuntime)" Exclude="@(RequestedRuntime)" />
+    <Runtime Include="@(KnownRuntime)" Exclude="@(NotRequestedRuntime)" />
+    <UnknownRuntime Include="@(RequestedRuntime)" Exclude="@(KnownRuntime)" />
+  </ItemGroup>
+
+  <Target Name="Build" DependsOnTargets="CheckRuntimes;PackageRuntime">
+    <Message Importance="high" Text="Linux packages are in $(OutputDir)" />
+  </Target>
+
+  <Target Name="CheckRuntimes">
+    <Error Condition="'@(UnknownRuntime)' != ''" Text="No packaging is set up for the runtime(s) @(UnknownRuntime). Known: @(KnownRuntime)." />
+    <Error Condition="'@(Runtime)' == ''" Text="No runtime to package. Pass -p:Runtimes=linux-x64 (or several, separated by semicolons)." />
+  </Target>
+
+  <!--
+    Once per runtime (the Outputs attribute is what makes MSBuild run the target for each item).
+    A separate msbuild process rather than an MSBuild task: the runtime identifier and the rest must
+    not leak into anything else being built, and the restore has to be for that runtime.
+  -->
+  <Target Name="PackageRuntime" Outputs="%(Runtime.Identity)">
+    <PropertyGroup>
+      <Rid>%(Runtime.Identity)</Rid>
+      <DebArchitecture>%(Runtime.DebArchitecture)</DebArchitecture>
+      <RpmArchitecture>%(Runtime.RpmArchitecture)</RpmArchitecture>
+      <RuntimeStagingDir>$(StagingDir)$(Rid)\</RuntimeStagingDir>
+      <StagedName>iterminal.$(Version).$(Rid)</StagedName>
+    </PropertyGroup>
+
+    <RemoveDir Directories="$(RuntimeStagingDir)" />
+    <MakeDir Directories="$(RuntimeStagingDir);$(OutputDir)" />
+
+    <PropertyGroup>
+      <InnerBuild>dotnet msbuild &quot;$(AppProject)&quot; -p:Configuration=Release -p:RuntimeIdentifier=$(Rid) -p:SelfContained=true -p:LinuxPackaging=true -p:Version=$(Version) -p:Release=$(Release) -p:TarballPrefix=/iterminal-$(Version) -p:PlaywrightPlatform=$(Rid) -p:DebugType=none -p:DebugSymbols=false &quot;-p:PackageDir=$(RuntimeStagingDir.TrimEnd('\'))&quot; -nologo -v:m</InnerBuild>
+    </PropertyGroup>
+
+    <!-- Twice: the RPM alone gets a remove script (LinuxPackagingRpm, see iTerminal.csproj). The second publish is incremental. -->
+    <Exec Command="$(InnerBuild) -restore &quot;-t:CreateTarball;CreateDeb&quot;" />
+    <Exec Command="$(InnerBuild) -t:CreateRpm -p:LinuxPackagingRpm=true" />
+
+    <!--
+      TarballPrefix starts with a slash because the task writes "." in front of it: without one the
+      top folder is ".iterminal-1.2.3", hidden. PlaywrightPlatform is said outright because the
+      referenced projects are built without a runtime identifier and would add the build machine's
+      own Node binary — node.exe, 90 MB of it, in a Linux package. The debug switches are on the
+      command line for the same reason: set in iTerminal.csproj they would cover that project only,
+      and the referenced projects' .pdb files would still be packed.
+    -->
+
+    <!-- The names each format's own tools and repositories expect. -->
+    <Copy SourceFiles="$(RuntimeStagingDir)$(StagedName).tar.gz" DestinationFiles="$(OutputDir)iterminal-$(Version)-$(Rid).tar.gz" />
+    <Copy SourceFiles="$(RuntimeStagingDir)$(StagedName).deb" DestinationFiles="$(OutputDir)iterminal_$(Version)_$(DebArchitecture).deb" />
+    <Copy SourceFiles="$(RuntimeStagingDir)$(StagedName).rpm" DestinationFiles="$(OutputDir)iterminal-$(Version)-$(Release).$(RpmArchitecture).rpm" />
+    <RpmFinisher RpmPath="$(OutputDir)iterminal-$(Version)-$(Release).$(RpmArchitecture).rpm" Requires="@(RpmRequire)" />
+  </Target>
+
+  <!-- Finishes one RPM that is already built: -t:FinishRpm -p:RpmToFinish=path. For trying RpmFinisher.cs without rebuilding the app. -->
+  <Target Name="FinishRpm">
+    <Error Condition="'$(RpmToFinish)' == ''" Text="Pass -p:RpmToFinish=&lt;path to an .rpm&gt;." />
+    <RpmFinisher RpmPath="$(RpmToFinish)" Requires="@(RpmRequire)" />
+  </Target>
+
+  <Target Name="Clean">
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\bin;$(MSBuildProjectDirectory)\obj" />
+  </Target>
+
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+
+  <!-- dotnet build restores first; there is nothing of this project's own to restore. -->
+  <Target Name="Restore" />
+
+</Project>

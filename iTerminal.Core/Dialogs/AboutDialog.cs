@@ -1,0 +1,107 @@
+using System.Reflection;
+using System.Runtime.InteropServices;
+using iConsole.Buffers;
+using iConsole.Data;
+using iConsole.Dialogs;
+using iConsole.Display;
+using iConsole.Helper;
+using iConsole.Services;
+
+namespace iTerminal.Core.Dialogs;
+
+/// <summary>
+/// What this is, which build of it, and where to go next. It used to be an empty 80×15 frame with
+/// nothing in it but its title.
+/// </summary>
+public class AboutDialog : Dialog
+{
+    public AboutDialog(IThemeService themeService)
+        : base(nameof(AboutDialog), themeService)
+    {
+        Title = "About";
+    }
+
+    /// <summary>The version of the running app, as the build stamped it.</summary>
+    internal static string Version
+    {
+        get
+        {
+            var assembly = Assembly.GetEntryAssembly() ?? typeof(AboutDialog).Assembly;
+            var informational = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            if (!string.IsNullOrWhiteSpace(informational))
+            {
+                // Drop the "+<commit hash>" the SDK appends; it is noise in a dialog.
+                var plus = informational.IndexOf('+');
+                return plus > 0 ? informational[..plus] : informational;
+            }
+
+            return assembly.GetName().Version?.ToString() ?? "unknown";
+        }
+    }
+
+    internal static IReadOnlyList<string> Lines =>
+    [
+        "iTerminal",
+        "A keyboard-driven file manager and terminal for the console.",
+        string.Empty,
+        .. DetailLines,
+        string.Empty,
+        "F1 on a file panel lists its keys; the hot key bar shows the rest.",
+        string.Empty,
+        "Esc: close",
+    ];
+
+    /// <summary>
+    /// The label/value block, padded to one width: every line is centred on its own, so lines of
+    /// different lengths left the labels in three different columns.
+    /// </summary>
+    private static IEnumerable<string> DetailLines
+    {
+        get
+        {
+            string[] lines =
+            [
+                $"Version   {Version}",
+                $"Runtime   {RuntimeInformation.FrameworkDescription}",
+                $"System    {RuntimeInformation.OSDescription}",
+            ];
+            var width = lines.Max(l => l.Length);
+            return lines.Select(l => l.PadRight(width));
+        }
+    }
+
+    public override void OnInitializeLayout()
+    {
+        base.OnInitializeLayout();
+
+        if (Parent != null)
+        {
+            CenterInParent(new Size(80, Lines.Count + 4));
+        }
+    }
+
+    public override void Draw(IBuffer buffer)
+    {
+        base.Draw(buffer);
+
+        var innerWidth = (int)ViewSize.Width - 2;
+        var innerHeight = (int)ViewSize.Height - 2;
+        if (innerWidth <= 0 || innerHeight <= 0)
+        {
+            return;
+        }
+
+        var colorScheme = ThemeService.CurrentColorScheme;
+        var lines = Lines;
+        for (var i = 0; i < lines.Count && i + 1 < innerHeight; i++)
+        {
+            var text = lines[i].Length <= innerWidth ? lines[i].Expand(innerWidth) : lines[i].Cut(innerWidth);
+            var foreground = i == 0 ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
+            buffer.Write(
+                ZOrder,
+                new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + 1 + i + 1),
+                new Size(innerWidth, 1),
+                new ConxelString(text, foreground, colorScheme.Background));
+        }
+    }
+}

@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\iConsole.Inputs.Posix\iConsole.Inputs.Posix.csproj" />
+    <ProjectReference Include="..\iConsole.Inputs.Windows\iConsole.Inputs.Windows.csproj" />
+    <ProjectReference Include="..\iConsole\iConsole.csproj" />
+    <ProjectReference Include="..\iTerminal.Core\iTerminal.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!--
+    Linux packages (tar.gz, deb, rpm) are made by Packaging.Targets, a build-time-only package of
+    MSBuild targets. It is referenced only when iTerminal.Packaging.Linux asks for it, so an
+    ordinary build neither restores nor loads it.
+  -->
+  <ItemGroup Condition="'$(LinuxPackaging)' == 'true'">
+    <PackageReference Include="Packaging.Targets" Version="0.1.232" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(LinuxPackaging)' == 'true'">
+    <!-- Debian and RPM package names are lower case; the command stays iTerminal. -->
+    <PackagePrefix>iterminal</PackagePrefix>
+    <PackageMaintainer Condition="'$(PackageMaintainer)' == ''">Tamas Nagy &lt;mail@tamas-nagy.net&gt;</PackageMaintainer>
+    <PackageDescription>A two-panel file manager for the terminal</PackageDescription>
+    <RpmVendor>Tamas Nagy</RpmVendor>
+    <DebSection>utils</DebSection>
+    <DebPriority>optional</DebPriority>
+    <!-- The RPM's dependencies are written by RpmFinisher in iTerminal.Packaging.Linux instead. -->
+    <SkipRpmDependencies>true</SkipRpmDependencies>
+  </PropertyGroup>
+
+  <!--
+    The RPM's %postun. rpm removes the files it installed but not the folders, which the tool never
+    lists, so a removed package left /usr/share/iterminal behind as a tree of empty folders. $1 is
+    the number of versions left installed: 0 is an uninstall, 1 an upgrade (when the new version's
+    files are already in that folder). The app writes nothing there, so the folder holds only what
+    the package put in it. Not `find -empty -delete`: openSUSE's base system has no find.
+    RPM only (iTerminal.Packaging.Linux sets LinuxPackagingRpm for that build alone): dpkg removes
+    its folders itself, and a .deb with a postrm is kept as "config-files" after dpkg -r until purged.
+  -->
+  <PropertyGroup Condition="'$(LinuxPackaging)' == 'true' AND '$(LinuxPackagingRpm)' == 'true'">
+    <PostRemoveScript>if [ "$1" = 0 ]; then rm -rf /usr/share/iterminal; fi</PostRemoveScript>
+  </PropertyGroup>
+
+  <!--
+    What a self-contained .NET app needs from a Debian or Ubuntu system. Packaging.Targets' own
+    list stops at libssl1.1 and libicu70, which no release since Ubuntu 22.04 ships: with it the
+    package cannot be installed there at all. Each line is "any one of these".
+  -->
+  <ItemGroup Condition="'$(LinuxPackaging)' == 'true'">
+    <DebDotNetDependencies Include="libc6" />
+    <DebDotNetDependencies Include="libgcc-s1 | libgcc1" />
+    <DebDotNetDependencies Include="libgssapi-krb5-2" />
+    <DebDotNetDependencies Include="libstdc++6" />
+    <DebDotNetDependencies Include="zlib1g" />
+    <DebDotNetDependencies Include="libssl3t64 | libssl3 | libssl1.1" />
+    <DebDotNetDependencies Include="libicu76 | libicu74 | libicu72 | libicu71 | libicu70 | libicu69 | libicu67 | libicu66" />
+  </ItemGroup>
+
+</Project>

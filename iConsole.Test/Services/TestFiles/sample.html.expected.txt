@@ -1,0 +1,4 @@
+﻿  Sample Page
+  Welcome
+  This is a sample HTML file for testing.
+  It has & special entities <like this>.

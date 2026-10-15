@@ -1,0 +1,726 @@
+﻿using iConsole.Buffers;
+using iConsole.Commands;
+using iConsole.Controls;
+using iConsole.Controls.ScrollBar;
+using iConsole.Data;
+using iConsole.Dialogs;
+using iConsole.Display;
+using iConsole.Helper;
+using iConsole.Interfaces;
+using iConsole.Services;
+using iConsole.Tasks;
+using iTerminal.Core.Commands;
+using iTerminal.Core.Commands.Marks;
+using iTerminal.Core.Commands.Music;
+using iTerminal.Core.Controls.Lenses;
+using iTerminal.Core.Controls.Terminals;
+using iTerminal.Core.Dialogs;
+using iTerminal.Core.Model;
+using iTerminal.Core.Model.ContentModels;
+using iTerminal.Core.Services;
+using System.ComponentModel;
+
+namespace iTerminal.Core.Controls.Contents;
+
+public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
+{
+    private TerminalModel _terminalModel { get; set; }
+    private TaskManager _taskManager { get; set; }
+    public IContentModelService ContentModelService { get; set; }
+    public IContentModel? ContentModel { get; set; }
+    private ScrollBar ScrollBar { get; set; }
+    private IReadOnlyList<IContentLens> _contentLenses { get; set; }
+    private CreateFolderDialog? _createFolderDialog { get; set; }
+    private CopyDialog? _copyDialog { get; set; }
+    private DeleteDialog? _deleteDialog { get; set; }
+    private MoveDialog? _moveDialog { get; set; }
+    private TextFileEditorDialog? _textFileEditorDialog { get; set; }
+    private HelpDialog? _helpDialog { get; set; }
+    private FileViewerDialog? _fileViewerDialog { get; set; }
+    private iTerminal.Core.Dialogs.Dotnet.SolutionViewerDialog? _solutionViewerDialog { get; set; }
+    private iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? _musicFileViewerDialog { get; set; }
+    private MarkPatternDialog? _markPatternDialog { get; set; }
+    private MarkPatternDialog? _unmarkPatternDialog { get; set; }
+    private CompressDialog? _compressDialog { get; set; }
+    private ExtractDialog? _extractDialog { get; set; }
+    private Services.FileAssociations.FileAssociationRunner? _fileAssociations { get; set; }
+    private OpenWithDialog? _openWithDialog { get; set; }
+    private OpenWithDialog? _editWithDialog { get; set; }
+    private CreateLinkDialog? _createLinkDialog { get; set; }
+    private PropertiesDialog? _propertiesDialog { get; set; }
+    private ChecksumDialog? _checksumDialog { get; set; }
+    private FileSystemResolver? _fileSystemResolver { get; set; }
+    private SortDialog? _sortDialog { get; set; }
+
+    public ContentBrowser(
+        string name,
+        IContentModelService contentModelService,
+        TerminalModel terminalModel,
+        TaskManager taskManager,
+        IThemeService themeService,
+        CreateFolderDialog? createFolderDialog = null,
+        CopyDialog? copyDialog = null,
+        DeleteDialog? deleteDialog = null,
+        MoveDialog? moveDialog = null,
+        TextFileEditorDialog? textFileEditorDialog = null,
+        HelpDialog? helpDialog = null,
+        FileViewerDialog? fileViewerDialog = null,
+        iTerminal.Core.Dialogs.Dotnet.SolutionViewerDialog? solutionViewerDialog = null,
+        IEnumerable<IContentLens>? contentLenses = null,
+        iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
+        MarkPatternDialog? markPatternDialog = null,
+        MarkPatternDialog? unmarkPatternDialog = null,
+        CompressDialog? compressDialog = null,
+        ExtractDialog? extractDialog = null,
+        Services.FileAssociations.FileAssociationRunner? fileAssociations = null,
+        OpenWithDialog? openWithDialog = null,
+        OpenWithDialog? editWithDialog = null,
+        CreateLinkDialog? createLinkDialog = null,
+        PropertiesDialog? propertiesDialog = null,
+        ChecksumDialog? checksumDialog = null,
+        FileSystemResolver? fileSystemResolver = null,
+        SortDialog? sortDialog = null)
+        : base(themeService)
+    {
+        Name = name;
+        _sortDialog = sortDialog;
+        _propertiesDialog = propertiesDialog;
+        _checksumDialog = checksumDialog;
+        _fileSystemResolver = fileSystemResolver;
+        _createLinkDialog = createLinkDialog;
+        _fileAssociations = fileAssociations;
+        _openWithDialog = openWithDialog;
+        _editWithDialog = editWithDialog;
+        ContentModelService = contentModelService ?? NullContentModelService.Instance;
+        ContentModelService.ModelChanged += OnContentModelServiceModelChanged;
+        _terminalModel = terminalModel ?? new TerminalModel(new iConsole.Tasks.TaskManager(), NullContentModelService.Instance);
+        _taskManager = taskManager ?? new TaskManager();
+        _contentLenses = contentLenses?.ToArray() ?? [];
+        _createFolderDialog = createFolderDialog;
+        _copyDialog = copyDialog;
+        _deleteDialog = deleteDialog;
+        _moveDialog = moveDialog;
+        _textFileEditorDialog = textFileEditorDialog;
+        _helpDialog = helpDialog;
+        _fileViewerDialog = fileViewerDialog;
+        _solutionViewerDialog = solutionViewerDialog;
+        _musicFileViewerDialog = musicFileViewerDialog;
+        _markPatternDialog = markPatternDialog;
+        _unmarkPatternDialog = unmarkPatternDialog;
+        _compressDialog = compressDialog;
+        _extractDialog = extractDialog;
+        ViewSize = new Size(0, 0);
+        CanFocus = true;
+        ScrollBar = new ScrollBar(themeService);
+        AddControl(ScrollBar);
+    }
+
+    private void OnContentModelServiceModelChanged(object? sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    public override async Task OnInitializeAsync()
+    {
+        await base.OnInitializeAsync();
+        if (ContentModel is not null)
+        {
+            // -= first: this runs again on every model change, and a second subscription repainted
+            // the panel twice for every change of the model.
+            ContentModel.PropertyChanged -= OnContentModelChanged;
+            ContentModel.PropertyChanged += OnContentModelChanged;
+            ScrollBar.ScrollableModel = ContentModel;
+        }
+    }
+
+    public override void OnInitializeCommands()
+    {
+        ArgumentNullException.ThrowIfNull(ContentModel);
+        ArgumentNullException.ThrowIfNull(ContentModelService);
+
+        base.OnInitializeCommands();
+
+        // The music commands go first so Enter, F5 and Delete mean the music thing on a music drive.
+        // Each is inert unless this browser's model is the focused music model, so on every other
+        // drive the file-system commands below behave exactly as they always have.
+        AddCommand(new ActivateMusicEntryCommand(ContentModel, ContentModelService));
+        AddCommand(new ToggleMusicSelectionCommand(ContentModel, ContentModelService));
+        AddCommand(new AddToMusicPlaylistCommand(ContentModel, ContentModelService));
+        AddCommand(new RemoveFromMusicPlaylistCommand(ContentModel, ContentModelService));
+        AddCommand(new MusicPlayPauseCommand(ContentModel, ContentModelService));
+        AddCommand(new MusicVolumeUpCommand(ContentModel, ContentModelService));
+        AddCommand(new MusicVolumeDownCommand(ContentModel, ContentModelService));
+
+        // Operating a container from its row on the docker:// root; inert anywhere else.
+        AddCommand(new Commands.Docker.StartStopContainerCommand(ContentModel, ContentModelService));
+        AddCommand(new Commands.Docker.RestartContainerCommand(ContentModel, ContentModelService));
+
+        // Marking rows. After the music commands, so Insert on the catalog keeps marking albums
+        // there; each is inert unless this browser's model is the focused one.
+        AddCommand(new ToggleMarkCommand(ContentModelService, ContentModel));
+        AddCommand(new MarkAndMoveCommand(ContentModelService, 1, ContentModel));
+        AddCommand(new MarkAndMoveCommand(ContentModelService, -1, ContentModel));
+        AddCommand(new InvertMarksCommand(ContentModelService, ContentModel));
+        if (_markPatternDialog is not null)
+        {
+            AddCommand(new MarkByPatternDialogCommand(_markPatternDialog, ContentModelService, marking: true, ContentModel));
+        }
+        if (_unmarkPatternDialog is not null)
+        {
+            AddCommand(new MarkByPatternDialogCommand(_unmarkPatternDialog, ContentModelService, marking: false, ContentModel));
+        }
+
+        // Enter on the recycle drive restores; inert anywhere else, and on that drive's ".." row.
+        AddCommand(new Commands.Drives.RestoreRecycledCommand(ContentModelService));
+
+        AddCommand(new NavigateToParentFolderCommand(ContentModel, ContentModelService));
+        CommandHelper.AddVerticalScrollingCommands(this, ContentModel, true);
+        AddCommand(new NavigateToFolderCommand(ContentModel, ContentModelService));
+        AddCommand(new RefreshCommand(ContentModel));
+        AddCommand(new NavigateToRootFolderCommand(ContentModel));
+        // Ahead of the other things Enter does to a file — open an archive as a folder, run it in
+        // the command log: a program the user chose for the file is what they meant by Enter.
+        if (_fileAssociations is not null)
+        {
+            AddCommand(new OpenAssociatedFileCommand(ContentModelService, _fileAssociations));
+        }
+        AddCommand(new NavigateToArchiveCommand(ContentModelService));
+        AddCommand(new TabForwardCommand());
+        AddCommand(new TabBackwardCommand());
+        AddCommand(new ExecuteCommand(ContentModel, _terminalModel, _taskManager));
+        if (_createFolderDialog is not null)
+        {
+            AddCommand(new CreateFolderDialogCommand(_createFolderDialog, ContentModelService));
+        }
+        if (_copyDialog is not null)
+        {
+            AddCommand(new CopyDialogCommand(_copyDialog, ContentModelService));
+        }
+        if (_createLinkDialog is not null)
+        {
+            AddCommand(new CreateLinkDialogCommand(_createLinkDialog, ContentModelService));
+        }
+        if (_sortDialog is not null)
+        {
+            AddCommand(new SortDialogCommand(_sortDialog, ContentModelService));
+        }
+        if (_propertiesDialog is not null)
+        {
+            AddCommand(new PropertiesDialogCommand(_propertiesDialog, ContentModelService));
+        }
+        if (_checksumDialog is not null)
+        {
+            AddCommand(new ChecksumDialogCommand(_checksumDialog, ContentModelService, _fileSystemResolver));
+        }
+        if (_deleteDialog is not null)
+        {
+            AddCommand(new DeleteDialogCommand(_deleteDialog, ContentModelService));
+        }
+        if (_moveDialog is not null)
+        {
+            AddCommand(new MoveDialogCommand(_moveDialog, ContentModelService));
+        }
+        if (_compressDialog is not null)
+        {
+            AddCommand(new CompressDialogCommand(_compressDialog, ContentModelService));
+        }
+        if (_extractDialog is not null)
+        {
+            AddCommand(new ExtractDialogCommand(_extractDialog, ContentModelService));
+        }
+        if (_fileViewerDialog is not null)
+        {
+            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog));
+        }
+        if (_textFileEditorDialog is not null)
+        {
+            AddCommand(new EditTextFileDialogCommand(_textFileEditorDialog, ContentModelService, _fileAssociations));
+        }
+        if (_openWithDialog is not null)
+        {
+            AddCommand(new OpenWithDialogCommand(_openWithDialog, ContentModelService, Services.FileAssociations.FileAssociationKind.Open));
+        }
+        if (_editWithDialog is not null)
+        {
+            AddCommand(new OpenWithDialogCommand(_editWithDialog, ContentModelService, Services.FileAssociations.FileAssociationKind.Edit, _textFileEditorDialog));
+        }
+        if (_helpDialog is not null)
+        {
+            AddCommand(new HelpDialogCommand(_helpDialog));
+        }
+    }
+
+    public override void OnInitializeLayout()
+    {
+        base.OnInitializeLayout();
+        if (Parent is not null && ContentModel is not null)
+        {
+            var contentWidth = Math.Max(0, ViewSize.Width - 2);
+            var contentHeight = Math.Max(0, ViewSize.Height - 2);
+            ContentModel.ViewSize = new Size(contentWidth, contentHeight);
+        }
+
+        ScrollBar.Position = new Position(Position.X + ViewSize.Width - 1, Position.Y + 1);
+        ScrollBar.ViewSize = new Size(1, Math.Max(0, ViewSize.Height - 2));
+    }
+
+    private void OnContentModelChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    public override void Draw(IBuffer buffer)
+    {
+        var colorScheme = ThemeService.CurrentColorScheme;
+        var visualState = GetVisualState();
+        var contentModel = ContentModel;
+
+        string header = Name;
+        var footer = string.Empty;
+        if (contentModel is not null)
+        {
+            header = contentModel.GetHeader((int)ViewSize.Width - 3);
+
+            // Shrunk to the border it is drawn into, because a footer that does not fit is not
+            // truncated by the border — it is dropped whole (AlignCenter only writes a title
+            // shorter than the line), and a panel silently loses its counts and its key hints.
+            // GetFooter has no width to work with; the control that draws it does.
+            footer = contentModel.GetFooter().Shrink((int)ViewSize.Width - 3) ?? string.Empty;
+            header = BuildHeaderWithLensIndicators(contentModel, header);
+        }
+
+        DrawBorder(buffer, ZOrder, AbsolutePosition, ViewSize, header, footer, colorScheme, visualState);
+        base.Draw(buffer);
+
+        if (contentModel is not null)
+        {
+            var filteredEntries = contentModel.FilteredEntries;
+            var width = Math.Max(0, (int)ViewSize.Width);
+            var rowCount = Math.Max(0, (int)ViewSize.Height - 2);
+            var size = new Size(Math.Max(0, width - 2), 1);
+            var positionX = AbsolutePosition.X + 1;
+            var positionY = AbsolutePosition.Y + 1;
+            var scrollPositionY = (int)contentModel.ScrollPosition.Y;
+            var cursorPositionY = (int)contentModel.CursorPosition.Y;
+            var visibleEntryCount = Math.Min(rowCount, Math.Max(0, filteredEntries.Count - scrollPositionY));
+
+            for (var y = 0; y < visibleEntryCount; y++)
+            {
+                var entryIndex = scrollPositionY + y;
+                var entry = filteredEntries[entryIndex];
+                var isCursor = entryIndex == cursorPositionY;
+                var text = contentModel.FormatItemName(
+                    entry,
+                    width,
+                    isCursor,
+                    colorScheme,
+                    visualState);
+                DecorateRow(contentModel, entry, text, isCursor, colorScheme, visualState);
+                if (contentModel is IMarkableContentModel marks && marks.IsMarked(entry))
+                {
+                    PaintMarked(text, isCursor);
+                }
+                PadRow(text, (int)size.Width, colorScheme);
+                buffer.Write(ZOrder,
+                    new Position(positionX, positionY + y),
+                    size,
+                    text);
+            }
+
+            for (var y = visibleEntryCount; y < rowCount; y++)
+            {
+                var text = contentModel.FormatItemName(null, width, false, colorScheme, visualState);
+                DecorateRow(contentModel, null, text, false, colorScheme, visualState);
+                buffer.Write(ZOrder,
+                    new Position(positionX, positionY + y),
+                    size,
+                    text);
+            }
+
+            ScrollBar.Draw(buffer);
+        }
+    }
+
+    /// <summary>
+    /// A row shorter than the panel would leave the previous frame's cells beside it — the layer is
+    /// never cleared between frames — so whatever an entry formats, the row is padded to the full
+    /// width, in the colours of its last cell so a cursor row stays one bar.
+    /// </summary>
+    internal static void PadRow(ConxelString row, int width, ColorScheme colorScheme)
+    {
+        if (row.Count >= width)
+        {
+            return;
+        }
+
+        var foreground = row.Count > 0 ? row.String[^1].ForegroundColor : colorScheme.Foreground;
+        var background = row.Count > 0 ? row.String[^1].BackgroundColor : colorScheme.Background;
+        row.Expand(width, foreground, background);
+    }
+
+    private string BuildHeaderWithLensIndicators(IContentModel contentModel, string header)
+    {
+        if (_contentLenses.Count == 0)
+        {
+            return header;
+        }
+
+        List<string> indicators = [];
+        foreach (var lens in _contentLenses)
+        {
+            var indicator = lens.GetHeaderIndicator(contentModel);
+            if (!string.IsNullOrWhiteSpace(indicator))
+            {
+                indicators.Add(indicator);
+            }
+        }
+
+        if (indicators.Count == 0)
+        {
+            return header;
+        }
+
+        return string.Join(' ', indicators) + " " + header;
+    }
+
+    /// <summary>
+    /// A marked row is drawn in yellow — the colour every commander marks with — and, under the
+    /// cursor, whose background is yellow already, in dark red. Painted after the lenses so a git
+    /// status colour cannot hide a mark: the mark is what the next F5 or F8 will act on.
+    /// </summary>
+    internal static void PaintMarked(ConxelString row, bool isCursor)
+    {
+        var color = isCursor ? Color.DarkRed : Color.Yellow;
+        for (var i = 0; i < row.Count; i++)
+        {
+            var cell = row.String[i];
+            cell.ForegroundColor = color;
+            cell.IsBold = true;
+            row.String[i] = cell;
+        }
+    }
+
+    private void DecorateRow(
+        IContentModel contentModel,
+        IEntry? entry,
+        ConxelString row,
+        bool isCursor,
+        ColorScheme colorScheme,
+        VisualState visualState)
+    {
+        foreach (var lens in _contentLenses)
+        {
+            lens.DecorateRow(contentModel, entry, row, isCursor, colorScheme, visualState);
+        }
+    }
+
+    public override void OnHandleTabForward()
+    {
+        var parentPanel = Parent?.Parent;
+        if (parentPanel != null)
+        {
+            var focusableControls = parentPanel.Controls.Where(c => (c is FilePanel || c is TerminalWindow || c is AiPromptBar || c is TerminalPanel) && c.IsVisible).ToList();
+            var index = focusableControls.IndexOf(Parent);
+            var nextIndex = (index + 1) % focusableControls.Count;
+            var nextPanel = focusableControls[nextIndex];
+            if (nextPanel != null)
+            {
+                nextPanel?.SetFocus();
+            }
+        }
+    }
+
+    public override void OnHandleTabBackward()
+    {
+        var parentPanel = Parent?.Parent;
+        if (parentPanel != null)
+        {
+            var focusableControls = parentPanel.Controls.Where(c => (c is FilePanel || c is TerminalWindow || c is AiPromptBar || c is TerminalPanel) && c.IsVisible).ToList();
+            var index = focusableControls.IndexOf(Parent);
+            var nextIndex = (index - 1 + focusableControls.Count) % focusableControls.Count;
+            var nextPanel = focusableControls[nextIndex];
+            nextPanel?.SetFocus();
+        }
+    }
+
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (ContentModel is null)
+        {
+            return await base.HandleMouseEventAsync(mouseEvent);
+        }
+
+        var hasAction = mouseEvent.WheelDelta != 0
+            || mouseEvent.LeftClicked
+            || mouseEvent.RightClicked;
+        if (!hasAction || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            return await base.HandleMouseEventAsync(mouseEvent);
+        }
+
+        var lx = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
+        var ly = (int)mouseEvent.Position.Y - (int)AbsolutePosition.Y;
+
+        if (mouseEvent.WheelDelta != 0)
+        {
+            SetFocus();
+            ScrollByWheelDelta(mouseEvent.WheelDelta);
+            StateHasChanged();
+            return true;
+        }
+
+        SetFocus();
+
+        if (IsScrollBarHit(lx, ly))
+        {
+            await HandleScrollBarClickAsync(lx, ly);
+            StateHasChanged();
+            return true;
+        }
+
+        if (IsListHit(lx, ly))
+        {
+            var row = ly - 1;
+            var filteredCount = ContentModel.FilteredEntries.Count;
+            var openEntry = false;
+            if (filteredCount > 0)
+            {
+                var index = (int)(ContentModel.ScrollPosition.Y + row);
+                index = Math.Clamp(index, 0, filteredCount - 1);
+                openEntry = mouseEvent.LeftClicked && IsDoubleClick(index);
+                ContentModel.CursorPosition.Y = (uint)index;
+                ContentModel.ScrollToVisible();
+                ContentModel.Update();
+            }
+
+            StateHasChanged();
+
+            if (openEntry)
+            {
+                // A second click on the same row opens it — exactly what Enter does on that row,
+                // so a folder is entered, an archive opened, a file executed.
+                await HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+            }
+
+            return true;
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
+    /// <summary>Two clicks on one row within this long are a double-click.</summary>
+    internal static readonly TimeSpan DoubleClickInterval = TimeSpan.FromMilliseconds(500);
+
+    /// <summary>Clock for double-click detection, in milliseconds; replaceable so a test need not race it.</summary>
+    internal Func<long> TickSource { get; set; } = () => Environment.TickCount64;
+
+    private long _lastClickTick = long.MinValue;
+    private int _lastClickIndex = -1;
+
+    private bool IsDoubleClick(int index)
+    {
+        var now = TickSource();
+        var isDouble = index == _lastClickIndex
+            && _lastClickTick != long.MinValue
+            && now - _lastClickTick <= (long)DoubleClickInterval.TotalMilliseconds;
+
+        // A double-click consumes both clicks, so a third click starts a new pair rather than
+        // opening the entry that was just opened a second time.
+        _lastClickTick = isDouble ? long.MinValue : now;
+        _lastClickIndex = isDouble ? -1 : index;
+        return isDouble;
+    }
+
+    private void ScrollByWheelDelta(int wheelDelta)
+    {
+        if (ContentModel is null || wheelDelta == 0)
+        {
+            return;
+        }
+
+        var itemCount = ContentModel.FilteredEntries.Count;
+        if (itemCount <= 0)
+        {
+            ContentModel.ScrollPosition = new Position(0, 0);
+            ContentModel.CursorPosition = new Position(0, 0);
+            ContentModel.Update();
+            return;
+        }
+
+        var maxIndex = itemCount - 1;
+        var targetCursor = Math.Clamp(
+            (int)ContentModel.CursorPosition.Y - wheelDelta,
+            0,
+            maxIndex);
+
+        var viewHeight = Math.Max(1, (int)ContentModel.ViewSize.Height);
+        var targetScroll = (int)ContentModel.ScrollPosition.Y;
+        if (targetCursor < targetScroll)
+        {
+            targetScroll = targetCursor;
+        }
+        else if (targetCursor > targetScroll + viewHeight - 1)
+        {
+            targetScroll = targetCursor - viewHeight + 1;
+        }
+
+        targetScroll = Math.Clamp(targetScroll, 0, Math.Max(0, itemCount - viewHeight));
+
+        ContentModel.ScrollPosition = new Position(ContentModel.ScrollPosition.X, targetScroll);
+        ContentModel.CursorPosition = new Position(ContentModel.CursorPosition.X, targetCursor);
+        ContentModel.Update();
+    }
+
+    private bool IsScrollBarHit(int lx, int ly) =>
+        lx == (int)ViewSize.Width - 1
+        && ly >= 1
+        && ly <= (int)ViewSize.Height - 2;
+
+    private bool IsListHit(int lx, int ly) =>
+        lx >= 1
+        && lx <= (int)ViewSize.Width - 2
+        && ly >= 1
+        && ly <= (int)ViewSize.Height - 2;
+
+    private async Task HandleScrollBarClickAsync(int lx, int ly)
+    {
+        _ = lx;
+        var sbH = (int)ViewSize.Height - 2;
+        if (sbH < 1 || ContentModel is null)
+        {
+            return;
+        }
+
+        var sy = ly - 1;
+        if (sy < 0 || sy >= sbH)
+        {
+            return;
+        }
+
+        if (sbH < 3)
+        {
+            await new ScrollDownCommand(ContentModel).ExecuteAsync(null);
+            return;
+        }
+
+        if (sy == 0)
+        {
+            await new ScrollUpCommand(ContentModel).ExecuteAsync(null);
+            return;
+        }
+
+        if (sy == sbH - 1)
+        {
+            await new ScrollDownCommand(ContentModel).ExecuteAsync(null);
+            return;
+        }
+
+        var trackH = sbH - 2;
+        if (trackH <= 0)
+        {
+            return;
+        }
+
+        var rel = (sy - 1) / (double)trackH;
+        var max = Math.Max(0, (int)ContentModel.ScrollableSize.Height - 1);
+        var target = (int)Math.Round(rel * max);
+        target = Math.Clamp(target, 0, max);
+        ContentModel.CursorPosition.Y = (uint)target;
+        ContentModel.ScrollToVisible();
+        ContentModel.Update();
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        // ALT + printable character starts a new search (first key requires ALT).
+        if (ContentModel is not null && ContentModel.Filter is null
+            && keyEvent.Alt && IsFilterCharacter(keyEvent))
+        {
+            UpdateFilter(_ => string.Empty + keyEvent.KeyChar);
+            return true;
+        }
+
+        // While a search is active subsequent printable keys extend the pattern (no ALT required).
+        if (ContentModel?.Filter is not null && !keyEvent.Alt
+            && IsFilterCharacter(keyEvent))
+        {
+            UpdateFilter(filter => (filter ?? string.Empty) + keyEvent.KeyChar);
+            return true;
+        }
+
+        if (ContentModel?.Filter is not null && keyEvent.ConsoleKey == ConsoleKey.Backspace)
+        {
+            UpdateFilter(filter => string.IsNullOrEmpty(filter) ? null : filter[..^1]);
+            return true;
+        }
+
+        if (ContentModel?.Filter is not null && keyEvent.ConsoleKey == ConsoleKey.Escape)
+        {
+            UpdateFilter(_ => null);
+            return true;
+        }
+
+        return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    private static bool IsFilterCharacter(KeyEvent keyEvent) =>
+        keyEvent.ConsoleKey != 0
+        && (keyEvent.ConsoleKey < ConsoleKey.F1 || keyEvent.ConsoleKey > ConsoleKey.F12)
+        && !char.IsControl(keyEvent.KeyChar);
+
+    private void UpdateFilter(Func<string?, string?> updateFilter)
+    {
+        ArgumentNullException.ThrowIfNull(ContentModel);
+
+        var contentModel = ContentModel;
+        var filterableContentModel = contentModel as ContentModelBase;
+
+        if (filterableContentModel is not null)
+        {
+            filterableContentModel.RememberFocusedEntry();
+            filterableContentModel.RememberFilterRestoreEntry();
+        }
+
+        contentModel.Filter = updateFilter(contentModel.Filter);
+
+        if (filterableContentModel is not null)
+        {
+            if (contentModel.Filter is not null)
+            {
+                var firstMatchingIndex = filterableContentModel.GetFirstMatchingIndex();
+                if (firstMatchingIndex >= 0)
+                {
+                    contentModel.CursorPosition.Y = firstMatchingIndex;
+                    contentModel.ScrollToVisible();
+                }
+            }
+            else
+            {
+                filterableContentModel.RestoreFocusedEntry();
+            }
+        }
+        else if (contentModel.Filter is not null)
+        {
+            contentModel.ScrollPosition.Y = 0;
+            contentModel.CursorPosition.Y = 0;
+            contentModel.ScrollToVisible();
+        }
+
+        contentModel.Update();
+        StateHasChanged();
+    }
+
+    public async Task ChangeModelAsync(string name)
+    {
+        // The old model outlives this browser's interest in it; left subscribed, every change to it
+        // kept repainting this panel. OnInitializeAsync below subscribes to the new one.
+        if (ContentModel is not null)
+        {
+            ContentModel.PropertyChanged -= OnContentModelChanged;
+        }
+
+        ContentModel = ContentModelService.ContentModels.SingleOrDefault(m => m.Name == name);
+        Commands.Clear();
+        await OnInitializeAsync();
+    }
+}

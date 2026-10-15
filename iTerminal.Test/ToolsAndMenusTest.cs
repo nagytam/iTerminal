@@ -1,0 +1,133 @@
+namespace iTerminal.Test;
+
+/// <summary>The menu bar and the small tools, used the way a person uses them.</summary>
+[TestClass]
+public class ToolsAndMenusTest
+{
+    private TerminalApp _app = null!;
+
+    [TestInitialize]
+    public async Task StartAsync() => _app = await TerminalApp.StartAsync();
+
+    [TestCleanup]
+    public async Task StopAsync() => await _app.DisposeAsync();
+
+    [TestMethod]
+    public async Task TheCalculatorAddsTypedNumbers()
+    {
+        await _app.PressAsync("Ctrl+A");
+        await _app.WaitForTextAsync(" Calculator ");
+
+        await _app.TypeAsync("12+30");
+        await _app.PressAsync("Enter");
+
+        await _app.WaitUntilAsync(s => s.Lines.Any(line => line.Contains(" 42║", StringComparison.Ordinal)),
+            "the display to show 42, right-aligned against the frame");
+    }
+
+    [TestMethod]
+    public async Task CtrlEOpensTheUnitConverterNotTheEditMenu()
+    {
+        Assert.IsTrue(await _app.PressAsync("Ctrl+E"));
+
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.UnitConverter.UnitConverterDialog,
+            "Ctrl+E — the key on the converter's own button and in the Tools menu — to open the converter");
+    }
+
+    [TestMethod]
+    public async Task CtrlFOpensTheFileMenu()
+    {
+        await _app.PressAsync("Ctrl+F");
+
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar, "the menu to take the keyboard");
+        await _app.WaitForTextAsync("Create Folder");
+    }
+
+    [TestMethod]
+    public async Task RightFromTheFileMenuReachesTheEditMenu()
+    {
+        await _app.PressAsync("Ctrl+F");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar, "the File menu");
+
+        await _app.PressAsync("Right");
+
+        await _app.WaitForTextAsync("Shift+F6", TimeSpan.FromSeconds(5));
+    }
+
+    [TestMethod]
+    public async Task EscClosesTheMenuAndLeavesNothingBehind()
+    {
+        await _app.PressAsync("Ctrl+F");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar, "the File menu");
+
+        await _app.PressAsync("Esc");
+
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
+    [TestMethod]
+    public async Task TheFileViewerShowsTheFile()
+    {
+        await _app.SelectEntryAsync("readme.txt");
+
+        await _app.PressAsync("F3");
+
+        await _app.WaitForTextAsync("Hello from the left panel.");
+        await _app.WaitForTextAsync("Second line.");
+        await _app.PressAsync("Esc");
+        await _app.WaitForTextGoneAsync("Hello from the left panel.");
+    }
+
+    [TestMethod]
+    public async Task F4OpensAMarkdownFileInTheEditor()
+    {
+        await _app.SelectEntryAsync("notes.md");
+
+        Assert.IsTrue(await _app.PressAsync("F4"), "F4 on a .md file used to do nothing but beep");
+
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.TextFileEditorDialog, "the editor to open");
+        await _app.WaitForTextAsync("# Notes");
+    }
+
+    [TestMethod]
+    public async Task CtrlShiftOTogglesTheFullScreenCommandLog()
+    {
+        await _app.PressAsync("Ctrl+Shift+O");
+
+        await _app.WaitUntilAsync(s => !s.Contains("readme.txt"), "the panels to make way for the terminal");
+
+        await _app.PressAsync("Ctrl+Shift+O");
+
+        await _app.WaitUntilAsync(s => _app.LeftPanelLists("readme.txt", s), "the panels to come back");
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
+    [TestMethod]
+    public async Task CtrlOHandsTheTerminalToAShellAndTakesItBack()
+    {
+        var shell = _app.Driver.GetRequiredService<SandboxServices.Shell>();
+        var ownership = _app.Driver.GetRequiredService<iConsole.Services.ConsoleOwnership>();
+
+        await _app.PressAsync("Ctrl+O");
+        await _app.WaitUntilAsync(() => ownership.IsLent, "the terminal to be lent to the shell");
+        Assert.AreEqual(_app.LeftRoot, shell.LastLaunch!.WorkingDirectory?.TrimEnd(Path.DirectorySeparatorChar), "the shell starts in the focused panel's folder");
+
+        // The shell has the screen: the app's repaints — the clock ticks every second — must not
+        // draw over it, and its keys are the shell's.
+        await _app.WaitForTextAsync(SandboxServices.Shell.Prompt);
+        await Task.Delay(1500);
+        StringAssert.Contains(_app.Screen.Lines[0], SandboxServices.Shell.Prompt, "the renderer drew over the shell");
+
+        shell.Exit();
+        await _app.WaitUntilAsync(() => !ownership.IsLent, "the terminal to come back");
+
+        // Everything is repainted — not diffed against a frame the shell has overwritten.
+        await _app.WaitForTextGoneAsync(SandboxServices.Shell.Prompt);
+        await _app.WaitUntilAsync(s => _app.LeftPanelLists("readme.txt", s) && s.Lines[0].StartsWith("File Edit"), "the panels and the menu to be back");
+
+        // And the keyboard is the app's again.
+        await _app.PressAsync("Down");
+        await _app.WaitUntilAsync(() => _app.FocusedEntryName is not null and not "..", "the cursor to move");
+    }
+}

@@ -1,0 +1,19 @@
+using iConsole.Data;
+using iConsole.Interfaces;
+
+namespace iTerminal.Core.Tasks;
+
+/// <summary>
+/// Copies a single file between two <see cref="IFileSystem"/> implementations. See
+/// <see cref="ContentModelFileTransferTask"/> for the shared streaming engine.
+/// </summary>
+public class ContentModelCopyFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite)
+    : ContentModelFileTransferTask(source, target, sourceUrl, targetUrl, overwrite)
+{
+    protected override string Verb => "Copy";
+    protected override string ProgressVerb => "Copying";
+    protected override bool DeletesSource => false;
+
+    protected override Task SameFileSystemTransferAsync(IFileSystem fileSystem, Url sourceUrl, Url targetUrl, bool overwrite) =>
+        fileSystem.CopyAsync(sourceUrl, targetUrl, overwrite);
+}

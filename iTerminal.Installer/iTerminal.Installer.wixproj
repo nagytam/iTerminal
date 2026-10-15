@@ -1,0 +1,41 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+
+  <!--
+    The Windows installer for iTerminal: an MSI that installs the app self-contained (no .NET runtime
+    needed on the target machine) into Program Files, with a Start menu shortcut and, optionally, the
+    install folder on the PATH.
+
+      dotnet build iTerminal.Installer/iTerminal.Installer.wixproj -c Release -p:Version=1.2.3
+
+    Building it publishes ../iTerminal first (PublishApp below) and packs what was published, so the
+    MSI always holds the app as it is in this checkout. Windows only: the WiX toolset does not build
+    MSIs anywhere else. It is in the solution but not part of a solution build, for the same reason
+    and because it publishes and compresses the whole app each time.
+  -->
+  <PropertyGroup>
+    <Version Condition="'$(Version)' == ''">1.0.0</Version>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <OutputName>iTerminal-$(Version)-x64</OutputName>
+
+    <!-- Under obj, so it is ignored by git and wiped by Tools/clean.cmd like every other build output. -->
+    <AppPublishDir>$(MSBuildProjectDirectory)\obj\publish\</AppPublishDir>
+    <DefineConstants>PublishDir=$(AppPublishDir);ProductVersion=$(Version)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+  </ItemGroup>
+
+  <!--
+    The folder is emptied first: Package.wxs packs everything it finds there, and a file left over
+    from an earlier publish (a dependency since removed) would be installed for ever.
+    A separate dotnet publish rather than an MSBuild task call: the runtime identifier and the
+    self-contained switch must not leak into this project's own evaluation.
+  -->
+  <Target Name="PublishApp" BeforeTargets="BeforeBuild">
+    <RemoveDir Directories="$(AppPublishDir)" />
+    <Exec Command="dotnet publish &quot;$(MSBuildProjectDirectory)\..\iTerminal\iTerminal.csproj&quot; -c Release -r $(RuntimeIdentifier) --self-contained true -o &quot;$(AppPublishDir.TrimEnd('\'))&quot; -p:Version=$(Version) -nologo -v q" />
+  </Target>
+
+</Project>

@@ -1,0 +1,3 @@
+﻿── Sheet1 ──────────────────────────────────────────────────────
+Sample Spreadsheet Content
+Row2Col1	42

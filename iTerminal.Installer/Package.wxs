@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <!--
+    UpgradeCode identifies iTerminal across versions and must never change: it is what lets a newer
+    MSI find and replace an older install. Everything else that needs a GUID gets a stable one from
+    WiX (Guid omitted) or is fixed below.
+  -->
+  <Package Name="iTerminal"
+           Manufacturer="Tamas Nagy"
+           Version="$(var.ProductVersion)"
+           UpgradeCode="0e27bcad-3940-4a25-b391-e316a54eacf9"
+           Scope="perMachine"
+           Compressed="yes">
+
+    <SummaryInformation Description="iTerminal — a two-panel file manager for the terminal" />
+
+    <!-- A newer version replaces the older one in place; an older MSI refuses to run over a newer install. -->
+    <MajorUpgrade DowngradeErrorMessage="A newer version of iTerminal is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Shown in Apps & features. -->
+    <Property Id="ARPCOMMENTS" Value="A two-panel file manager for the terminal." />
+
+    <!--
+      The wizard: welcome, install folder, progress. WixUI_InstallDir also has a licence page, which
+      is skipped — the repository has no licence text to show, and an invented one would be worse
+      than none. Add a License.rtf and remove the two Publish elements to bring the page back.
+    -->
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+    <UI>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="99" />
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="99" />
+    </UI>
+
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="INSTALLFOLDER" Name="iTerminal" />
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder" />
+    <StandardDirectory Id="PersonalFolder" />
+
+    <Feature Id="Application" Title="iTerminal" Description="The application and its Start menu shortcut." Level="1" AllowAbsent="no">
+      <ComponentGroupRef Id="ApplicationFiles" />
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+
+    <!--
+      On by default: iTerminal is started from a shell at least as often as from the Start menu.
+      msiexec /i iTerminal.msi ADDLOCAL=Application installs without it.
+    -->
+    <Feature Id="PathEntry" Title="Add to PATH" Description="Run iTerminal from any terminal by name." Level="1">
+      <ComponentRef Id="PathEntry" />
+    </Feature>
+
+    <!--
+      Everything dotnet publish produced, whatever that is in this version: the app, the .NET
+      runtime, the native libraries. Listing files here by name would have to be kept in step with
+      every package the app references. The executable is authored by itself only because the
+      shortcut needs to point at it.
+    -->
+    <ComponentGroup Id="ApplicationFiles" Directory="INSTALLFOLDER">
+      <Component Id="ApplicationExecutable">
+        <File Id="iTerminalExe" Source="$(var.PublishDir)iTerminal.exe" KeyPath="yes" />
+      </Component>
+      <Files Include="$(var.PublishDir)**">
+        <Exclude Files="$(var.PublishDir)iTerminal.exe" />
+        <!-- Debug symbols and the log a development run leaves behind are not part of the product. -->
+        <Exclude Files="$(var.PublishDir)**\*.pdb" />
+        <Exclude Files="$(var.PublishDir)**\*.log" />
+      </Files>
+    </ComponentGroup>
+
+    <!--
+      The shortcut starts in the user's Documents folder, not in the install folder: the app opens
+      its panels where it was last, but it writes iTerminal.log into its working directory, and
+      Program Files is not the user's to write to.
+      The registry value is the component's key path — Windows Installer needs one it can find per
+      user for a shortcut, and a shortcut cannot be it.
+    -->
+    <Component Id="StartMenuShortcut" Directory="ProgramMenuFolder" Guid="00ab6925-a97c-4f24-9276-857346473090">
+      <Shortcut Id="StartMenuShortcut"
+                Name="iTerminal"
+                Description="A two-panel file manager for the terminal"
+                Target="[INSTALLFOLDER]iTerminal.exe"
+                WorkingDirectory="PersonalFolder" />
+      <RegistryValue Root="HKCU" Key="Software\iTerminal\Installer" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+
+    <!-- Appended to the machine PATH, and taken out again on uninstall. -->
+    <Component Id="PathEntry" Directory="INSTALLFOLDER" Guid="4286c9f9-dac8-42a6-9bba-fe33ea05942b">
+      <Environment Id="PathEntry" Name="PATH" Value="[INSTALLFOLDER]" Part="last" Action="set" System="yes" Permanent="no" />
+      <RegistryValue Root="HKLM" Key="Software\iTerminal\Installer" Name="PathEntry" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+
+  </Package>
+</Wix>

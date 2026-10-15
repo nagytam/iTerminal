@@ -1,0 +1,86 @@
+﻿using iConsole.Dialogs;
+using iConsole.Interfaces;
+using iConsole.Services;
+using iConsole.Tasks;
+using iTerminal.Core.Controls.Contents;
+using iTerminal.Core.Controls.Lenses;
+using iTerminal.Core.Dialogs;
+using iTerminal.Core.Model;
+using iTerminal.Core.Services;
+using Serilog;
+
+namespace iTerminal.Core.Factories;
+
+public class FilePanelFactory(
+    TaskManager taskManager,
+    IContentModelService contentModelService,
+    TerminalModel terminalModel,
+    IMemoryCacheService memoryCacheService,
+    ISettingsService settingsService,
+    ILogger logger,
+    IThemeService themeService,
+    CreateFolderDialog? createFolderDialog = null,
+    CopyDialog? copyDialog = null,
+    DeleteDialog? deleteDialog = null,
+    MoveDialog? moveDialog = null,
+    FileViewerDialog? fileViewerDialog = null,
+    TextFileEditorDialog? textFileEditorDialog = null,
+    HelpDialog? helpDialog = null,
+    iTerminal.Core.Dialogs.Dotnet.SolutionViewerDialog? solutionViewerDialog = null,
+    IEnumerable<IContentLens>? contentLenses = null,
+    iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
+    MarkPatternDialog? markPatternDialog = null,
+    MarkPatternDialog? unmarkPatternDialog = null,
+    CompressDialog? compressDialog = null,
+    ExtractDialog? extractDialog = null,
+    Services.FileAssociations.FileAssociationRunner? fileAssociations = null,
+    Func<OpenWithDialog>? openWithDialogFactory = null,
+    CreateLinkDialog? createLinkDialog = null,
+    PropertiesDialog? propertiesDialog = null,
+    ChecksumDialog? checksumDialog = null,
+    FileSystemResolver? fileSystemResolver = null,
+    SortDialog? sortDialog = null)
+{
+    private TaskManager _taskManager { get; set; } = taskManager;
+
+    public FilePanel Create(string name)
+    {
+        var contentBrowser = new ContentBrowser(
+            name,
+            contentModelService,
+            terminalModel,
+            taskManager,
+            themeService,
+            createFolderDialog: createFolderDialog,
+            copyDialog: copyDialog,
+            deleteDialog: deleteDialog,
+            moveDialog: moveDialog,
+            textFileEditorDialog: textFileEditorDialog,
+            helpDialog: helpDialog,
+            fileViewerDialog: fileViewerDialog,
+            solutionViewerDialog: solutionViewerDialog,
+            contentLenses: contentLenses,
+            musicFileViewerDialog: musicFileViewerDialog,
+            markPatternDialog: markPatternDialog,
+            unmarkPatternDialog: unmarkPatternDialog,
+            compressDialog: compressDialog,
+            extractDialog: extractDialog,
+            fileAssociations: fileAssociations,
+            // One each: a dialog instance is one control, and "Open with" and "Edit with" are two.
+            openWithDialog: openWithDialogFactory?.Invoke(),
+            editWithDialog: openWithDialogFactory?.Invoke(),
+            createLinkDialog: createLinkDialog,
+            propertiesDialog: propertiesDialog,
+            checksumDialog: checksumDialog,
+            fileSystemResolver: fileSystemResolver,
+            sortDialog: sortDialog);
+        contentModelService.AddContentBrowser(name, contentBrowser);
+        return new FilePanel(
+            name,
+            contentBrowser,
+            new ItemInformation(contentModelService, _taskManager, memoryCacheService, themeService, logger),
+            contentModelService,
+            settingsService,
+            themeService);
+    }
+}

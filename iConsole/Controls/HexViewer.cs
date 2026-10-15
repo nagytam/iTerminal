@@ -1,0 +1,140 @@
+using iConsole.Buffers;
+using iConsole.Commands;
+using iConsole.Data;
+using iConsole.Display;
+using iConsole.Model;
+using iConsole.Services;
+using System.Text;
+
+namespace iConsole.Controls;
+
+/// <summary>
+/// Displays <see cref="Data"/> as a classic hex dump:
+/// <code>
+/// 00000000  48 65 6C 6C 6F 2C 20 57  6F 72 6C 64 21 0A 00 00  |Hello, World!...|
+/// </code>
+/// Up/Down/PgUp/PgDn/Home/End scroll by row; <see cref="SelectedOffset"/> reflects the
+/// first byte of the cursor row.
+/// </summary>
+public class HexViewer : Control
+{
+    private byte[] _data = [];
+
+    public HexViewer(IThemeService themeService) : base(themeService)
+    {
+        ScrollableModel = new ScrollableModel();
+        CanFocus = true;
+
+        AddCommand(new ScrollDownCommand(ScrollableModel));
+        AddCommand(new ScrollUpCommand(ScrollableModel));
+        AddCommand(new ScrollPageDownCommand(ScrollableModel));
+        AddCommand(new ScrollPageUpCommand(ScrollableModel));
+        AddCommand(new ScrollToHomeVerticalCommand(ScrollableModel));
+        AddCommand(new ScrollToEndVerticalCommand(ScrollableModel));
+    }
+
+    /// <summary>The bytes to display. Setting this resets the cursor to row 0.</summary>
+    public byte[] Data
+    {
+        get => _data;
+        set
+        {
+            _data = value ?? [];
+            ScrollableModel.CursorPosition.Y = 0;
+            ScrollableModel.ScrollPosition.Y = 0;
+            ScrollableModel.ScrollableSize = new Size(ViewSize.Width, RowCount);
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>Number of bytes shown per row. Default is 16.</summary>
+    public int BytesPerRow { get; set; } = 16;
+
+    public ScrollableModel ScrollableModel { get; }
+
+    /// <summary>Byte offset of the first byte in the cursor row.</summary>
+    public int SelectedOffset => (int)ScrollableModel.CursorPosition.Y * BytesPerRow;
+
+    private int RowCount => _data.Length == 0 ? 0 : (_data.Length + BytesPerRow - 1) / BytesPerRow;
+
+    public override void OnInitializeLayout()
+    {
+        base.OnInitializeLayout();
+        ScrollableModel.ViewSize = ViewSize;
+        ScrollableModel.ScrollableSize = new Size(ViewSize.Width, RowCount);
+    }
+
+    public override void Draw(IBuffer buffer)
+    {
+        base.Draw(buffer);
+
+        var colorScheme = ThemeService.CurrentColorScheme;
+        var scrollOffset = (int)ScrollableModel.ScrollPosition.Y;
+        var cursorRow = (int)ScrollableModel.CursorPosition.Y;
+
+        for (int y = 0; y < (int)ViewSize.Height; y++)
+        {
+            var rowIndex = scrollOffset + y;
+            if (rowIndex >= RowCount) break;
+
+            var rowText = FormatRow(rowIndex);
+            var isCursor = rowIndex == cursorRow;
+
+            Color fg, bg;
+            if (isCursor)
+            {
+                fg = IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.SelectedForeground;
+                bg = IsFocused ? colorScheme.SelectedFocusedBackground : colorScheme.SelectedBackground;
+            }
+            else
+            {
+                fg = colorScheme.Foreground;
+                bg = colorScheme.Background;
+            }
+
+            buffer.Write(ZOrder,
+                new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + y)),
+                ViewSize,
+                new ConxelString(rowText, fg, bg));
+        }
+    }
+
+    private string FormatRow(int rowIndex)
+    {
+        var offset = rowIndex * BytesPerRow;
+        var sb = new StringBuilder();
+
+        // Offset column
+        sb.Append(offset.ToString("X8"));
+        sb.Append("  ");
+
+        // Hex columns — two groups of BytesPerRow/2, separated by an extra space
+        int half = BytesPerRow / 2;
+        for (int i = 0; i < BytesPerRow; i++)
+        {
+            if (i > 0) sb.Append(' ');
+            if (i == half) sb.Append(' '); // mid-row gap
+            var byteOffset = offset + i;
+            sb.Append(byteOffset < _data.Length ? _data[byteOffset].ToString("X2") : "  ");
+        }
+
+        // ASCII column
+        sb.Append("  |");
+        for (int i = 0; i < BytesPerRow; i++)
+        {
+            var byteOffset = offset + i;
+            if (byteOffset < _data.Length)
+            {
+                var b = _data[byteOffset];
+                sb.Append(b >= 32 && b < 127 ? (char)b : '.');
+            }
+            else
+            {
+                sb.Append(' ');
+            }
+        }
+        sb.Append('|');
+
+        return sb.ToString().PadRight((int)ViewSize.Width);
+    }
+}

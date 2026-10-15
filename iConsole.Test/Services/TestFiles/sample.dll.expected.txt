@@ -1,0 +1,25 @@
+﻿── File ────────────────────────────────────────────────────────
+  Name                  sample.dll
+  Size                  5,632 bytes
+
+── File Version Info ───────────────────────────────────────────
+  File Description      Sample Fixture Assembly
+  File Version          1.2.3.0
+  Product Name          iTerminal Test Fixtures
+  Product Version       1.2.3
+  Company Name          iTerminal
+  Legal Copyright       Test fixture — no copyright claimed
+  Comments              Minimal assembly used as a viewer test fixture for the assembly-metadata code path.
+  Internal Name         SampleFixtureAssembly.dll
+  Original Filename     SampleFixtureAssembly.dll
+  Language              Language Neutral
+
+── Assembly Identity ───────────────────────────────────────────
+  Assembly Name         SampleFixtureAssembly
+  Version               1.2.3.0
+  Culture               neutral
+  Public Key Token      null
+  Architecture          None
+  Content Type          Default
+  Flags                 None
+
