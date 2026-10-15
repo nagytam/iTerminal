@@ -110,17 +110,21 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
         Rebuild();
     }
 
-    public void StartInstall()
+    public void StartInstall() => StartInstall(null);
+
+    public void StartInstall(IReadOnlyCollection<string>? ids)
     {
         if (IsBusy)
         {
             return;
         }
 
-        _ = Task.Run(() => InstallAsync(CancellationToken.None));
+        _ = Task.Run(() => InstallAsync(CancellationToken.None, ids));
     }
 
-    public async Task InstallAsync(CancellationToken cancellationToken)
+    public Task InstallAsync(CancellationToken cancellationToken) => InstallAsync(cancellationToken, null);
+
+    public async Task InstallAsync(CancellationToken cancellationToken, IReadOnlyCollection<string>? ids)
     {
         lock (_gate)
         {
@@ -134,7 +138,7 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
 
         try
         {
-            foreach (RuntimeDependencyStatus status in _statuses.Where(status => status.State != RuntimeDependencyState.Installed).ToList())
+            foreach (RuntimeDependencyStatus status in _statuses.Where(status => status.State != RuntimeDependencyState.Installed && Wanted(ids, status.Id)).ToList())
             {
                 IRuntimeDependency dependency = _dependencies.First(d => d.Id == status.Id);
                 string target = status.TargetVersion ?? dependency.ExpectedVersion;
@@ -165,9 +169,11 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
         }
     }
 
-    public void SkipOffers()
+    public void SkipOffers() => SkipOffers(null);
+
+    public void SkipOffers(IReadOnlyCollection<string>? ids)
     {
-        foreach (RuntimeDependencyStatus status in _statuses.Where(status => status.TargetVersion is not null))
+        foreach (RuntimeDependencyStatus status in _statuses.Where(status => status.TargetVersion is not null && Wanted(ids, status.Id)))
         {
             _settings.Set(SkippedSettingPrefix + status.Id, status.TargetVersion!);
         }
@@ -180,6 +186,9 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
         _dependencies.FirstOrDefault(d => d.Id == id)?.Invalidate();
         Rebuild();
     }
+
+    /// <summary>Whether a dependency is among those asked for; no list at all means every one.</summary>
+    private static bool Wanted(IReadOnlyCollection<string>? ids, string id) => ids is null || ids.Contains(id);
 
     private bool IsOffered(RuntimeDependencyStatus status) =>
         status.State != RuntimeDependencyState.Installed
@@ -210,7 +219,21 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
                 InstalledVersion: null,
                 TargetVersion: check.Latest ?? dependency.ExpectedVersion,
                 State: RuntimeDependencyState.Missing,
-                Note: check.NewerLine is null ? null : NewerLineNote(dependency, check.NewerLine),
+                Note: dependency.ExistingInstallNote ?? (check.NewerLine is null ? null : NewerLineNote(dependency, check.NewerLine)),
+                Problem: check.Problem);
+        }
+
+        if (dependency.IsExistingInstall)
+        {
+            // Somebody else's install: used as it is, so there is nothing of ours to update.
+            return new RuntimeDependencyStatus(
+                dependency.Id,
+                dependency.Name,
+                dependency.Purpose,
+                installed,
+                TargetVersion: null,
+                State: RuntimeDependencyState.Installed,
+                Note: dependency.ExistingInstallNote,
                 Problem: check.Problem);
         }
 

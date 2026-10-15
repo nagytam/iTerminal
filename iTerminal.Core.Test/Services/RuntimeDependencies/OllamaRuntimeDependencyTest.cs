@@ -215,6 +215,7 @@ public class OllamaRuntimeDependencyTest
             ] }
             """;
         var pulls = new List<string>();
+        bool downloaded = false;
         var handler = new StubHandler(request =>
         {
             string url = request.RequestUri!.ToString();
@@ -225,10 +226,12 @@ public class OllamaRuntimeDependencyTest
 
             if (url == $"{Downloads}ollama.tar.zst")
             {
+                downloaded = true;
                 return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(archive) };
             }
 
-            if (url == "http://localhost:11434/api/version")
+            // A server that answers before anything is downloaded is an existing install, which is used instead.
+            if (url == "http://localhost:11434/api/version" && downloaded)
             {
                 return Json("{\"version\":\"0.40.4\"}");
             }

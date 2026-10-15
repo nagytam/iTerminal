@@ -10,6 +10,35 @@ public class RuntimeDependencyServiceTest
         new(settings, [dependency]);
 
     [TestMethod]
+    public async Task OnlyTheDependenciesNamedAreInstalled()
+    {
+        var first = new FakeRuntimeDependency("1.63.0", "first");
+        var second = new FakeRuntimeDependency("2.0.0", "second");
+        var service = new RuntimeDependencyService(new SettingsService(), [first, second]);
+
+        await service.InstallAsync(CancellationToken.None, ["second"]);
+
+        Assert.AreEqual(0, first.Installs.Count);
+        CollectionAssert.AreEqual(new[] { "2.0.0" }, second.Installs);
+        Assert.AreEqual(RuntimeDependencyState.Missing, service.Statuses.Single(status => status.Id == "first").State);
+    }
+
+    [TestMethod]
+    public void OnlyTheDependenciesNamedAreSkipped()
+    {
+        var settings = new SettingsService();
+        var service = new RuntimeDependencyService(
+            settings,
+            [new FakeRuntimeDependency("1.63.0", "first"), new FakeRuntimeDependency("2.0.0", "second")]);
+
+        service.SkipOffers(["first"]);
+
+        Assert.AreEqual("1.63.0", settings.Get(RuntimeDependencyService.SkippedSettingPrefix + "first"));
+        Assert.IsNull(settings.Get(RuntimeDependencyService.SkippedSettingPrefix + "second"));
+        Assert.IsTrue(service.ShouldOfferAtStartup, "The one not skipped is still offered.");
+    }
+
+    [TestMethod]
     public void AMissingDependencyIsOfferedAtTheVersionTheBuildWasCompiledAgainst()
     {
         var dependency = new FakeRuntimeDependency("1.63.0");

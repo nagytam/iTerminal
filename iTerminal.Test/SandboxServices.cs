@@ -300,9 +300,19 @@ public static class SandboxServices
         {
         }
 
+        public void StartInstall(IReadOnlyCollection<string>? ids)
+        {
+        }
+
         public Task InstallAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
+        public Task InstallAsync(CancellationToken cancellationToken, IReadOnlyCollection<string>? ids) => Task.CompletedTask;
+
         public void SkipOffers()
+        {
+        }
+
+        public void SkipOffers(IReadOnlyCollection<string>? ids)
         {
         }
 

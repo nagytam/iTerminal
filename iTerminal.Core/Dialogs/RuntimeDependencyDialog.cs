@@ -22,6 +22,8 @@ public class RuntimeDependencyDialog : Dialog
     private const int FixedRows = 10; // Borders, intro, blanks, the log and the hint.
 
     private readonly IRuntimeDependencyService _service;
+    private readonly HashSet<string> _unticked = [];
+    private int _cursor;
 
     public RuntimeDependencyDialog(IRuntimeDependencyService service, IThemeService themeService)
         : base("Runtime dependencies", themeService)
@@ -32,6 +34,19 @@ public class RuntimeDependencyDialog : Dialog
 
     /// <summary>Whether anything is left to install or update.</summary>
     internal bool HasWork => _service.Statuses.Any(status => status.State != RuntimeDependencyState.Installed);
+
+    /// <summary>The dependencies that have something to install or update, in list order.</summary>
+    private List<RuntimeDependencyStatus> Actionable() =>
+        _service.Statuses.Where(status => status.State != RuntimeDependencyState.Installed).ToList();
+
+    /// <summary>Whether a dependency is ticked for installing. Everything that needs work starts ticked.</summary>
+    internal bool IsTicked(string id) => !_unticked.Contains(id);
+
+    /// <summary>The ids Enter would install: the ones that need work and are still ticked.</summary>
+    private List<string> TickedIds() => Actionable().Where(status => IsTicked(status.Id)).Select(status => status.Id).ToList();
+
+    /// <summary>With a single dependency to act on there is nothing to choose between, so no ticks are drawn.</summary>
+    private bool ChoiceIsOffered => Actionable().Count > 1;
 
     /// <summary>Whether the start-up should open this dialog: something is missing, or newer, and not skipped.</summary>
     public bool ShouldOpenAtStartup => _service.ShouldOfferAtStartup;
@@ -65,15 +80,70 @@ public class RuntimeDependencyDialog : Dialog
                 return true;
             }
 
-            _service.StartInstall();
+            List<string> ticked = TickedIds();
+            if (ticked.Count == 0)
+            {
+                return true; // Everything was unticked: there is nothing to install.
+            }
+
+            if (ticked.Count == Actionable().Count)
+            {
+                _service.StartInstall();
+            }
+            else
+            {
+                _service.StartInstall(ticked);
+            }
+
             return true;
         }
 
         if (keyEvent.ConsoleKey == ConsoleKey.S && plain && HasWork && !_service.IsBusy)
         {
-            _service.SkipOffers();
+            List<string> ticked = TickedIds();
+            if (ticked.Count == 0)
+            {
+                return true;
+            }
+
+            if (ticked.Count == Actionable().Count)
+            {
+                _service.SkipOffers();
+            }
+            else
+            {
+                _service.SkipOffers(ticked);
+            }
+
             Close();
             return true;
+        }
+
+        if (plain && ChoiceIsOffered && !_service.IsBusy)
+        {
+            int count = _service.Statuses.Count;
+            if (keyEvent.ConsoleKey == ConsoleKey.UpArrow && count > 0)
+            {
+                _cursor = (_cursor + count - 1) % count;
+                return true;
+            }
+
+            if (keyEvent.ConsoleKey == ConsoleKey.DownArrow && count > 0)
+            {
+                _cursor = (_cursor + 1) % count;
+                return true;
+            }
+
+            if (keyEvent.ConsoleKey == ConsoleKey.Spacebar && _cursor < count)
+            {
+                RuntimeDependencyStatus current = _service.Statuses[_cursor];
+                if (current.State != RuntimeDependencyState.Installed && !_unticked.Remove(current.Id))
+                {
+                    _unticked.Add(current.Id);
+                }
+
+                return true;
+            }
         }
 
         return await base.HandleKeyEventAsync(keyEvent);
@@ -91,9 +161,20 @@ public class RuntimeDependencyDialog : Dialog
             (string.Empty, scheme.Foreground),
         ];
 
+        bool choice = ChoiceIsOffered;
+        int index = 0;
         foreach (RuntimeDependencyStatus status in _service.Statuses)
         {
-            rows.Add(($"{status.Name} - {status.Purpose}", scheme.Foreground));
+            string prefix = string.Empty;
+            if (choice)
+            {
+                string pointer = index == _cursor ? ">" : " ";
+                string box = status.State == RuntimeDependencyState.Installed ? "   " : IsTicked(status.Id) ? "[x]" : "[ ]";
+                prefix = $"{pointer} {box} ";
+            }
+
+            index++;
+            rows.Add(($"{prefix}{status.Name} - {status.Purpose}", scheme.Foreground));
             rows.Add((StateText(status), status.State == RuntimeDependencyState.Installed ? scheme.Foreground : Color.DarkYellow));
             rows.Add(status.Problem is not null
                 ? (status.Problem, Color.DarkRed)
@@ -125,7 +206,9 @@ public class RuntimeDependencyDialog : Dialog
     internal string Hint => _service.IsBusy
         ? "Installing... Esc: hide this (it keeps going)"
         : HasWork
-            ? "Enter: install   S: skip this version   Esc: later"
+            ? ChoiceIsOffered
+                ? "Up/Down: move  Space: tick  Enter: install  S: skip  Esc: later"
+                : "Enter: install   S: skip this version   Esc: later"
             : "Enter or Esc: close";
 
     public override void Draw(IBuffer buffer)

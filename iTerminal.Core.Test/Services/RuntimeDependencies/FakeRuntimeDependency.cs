@@ -3,11 +3,11 @@ using iTerminal.Core.Services.RuntimeDependencies;
 namespace iTerminal.Core.Test.Services.RuntimeDependencies;
 
 /// <summary>A dependency whose disk, network and install are plain fields the test sets.</summary>
-internal sealed class FakeRuntimeDependency(string expectedVersion) : IRuntimeDependency
+internal sealed class FakeRuntimeDependency(string expectedVersion, string id = "fake") : IRuntimeDependency
 {
     private readonly Version _expected = Version.Parse(expectedVersion);
 
-    public string Id => "fake";
+    public string Id => id;
     public string Name => "Fake";
     public string Purpose => "A stand-in for a real component";
     public string ExpectedVersion => expectedVersion;

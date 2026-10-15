@@ -1,6 +1,8 @@
 using System.Formats.Tar;
 using System.IO.Compression;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using iTerminal.Core.AI;
 using ZstdSharp;
 
@@ -37,19 +39,31 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
     private readonly OllamaServer _server;
     private readonly GitHubReleaseFeed _feed;
     private readonly Version _expected;
+    private readonly IReadOnlyList<string> _searchDirectories;
+    private readonly object _existingGate = new();
+    private ExistingInstall? _existing;
+    private bool _existingResolved;
 
     public OllamaRuntimeDependency(string rootDirectory, string model, OllamaServer server)
-        : this(rootDirectory, model, server, new GitHubReleaseFeed(new HttpClient { Timeout = Timeout.InfiniteTimeSpan }), Built)
+        : this(rootDirectory, model, server, new GitHubReleaseFeed(new HttpClient { Timeout = Timeout.InfiniteTimeSpan }), Built, DefaultSearchDirectories())
     {
     }
 
-    internal OllamaRuntimeDependency(string rootDirectory, string model, OllamaServer server, GitHubReleaseFeed feed, Version expected)
+    /// <param name="existingSearchDirectories">Where an Ollama installed outside iTerminal is looked for; null looks nowhere, which is what a test wants.</param>
+    internal OllamaRuntimeDependency(
+        string rootDirectory,
+        string model,
+        OllamaServer server,
+        GitHubReleaseFeed feed,
+        Version expected,
+        IEnumerable<string>? existingSearchDirectories = null)
     {
         _root = rootDirectory;
         _model = model;
         _server = server;
         _feed = feed;
         _expected = expected;
+        _searchDirectories = existingSearchDirectories?.ToList() ?? [];
     }
 
     public string Id => DependencyId;
@@ -71,30 +85,237 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
     /// </summary>
     public string? InstalledVersion()
     {
-        if (!ModelDownloaded())
+        if (OwnCompleteVersion() is { } own)
+        {
+            return own;
+        }
+
+        // An Ollama that was there already counts too, once the configured model is in it.
+        ExistingInstall? existing = Existing();
+        return existing is not null && (ModelDownloaded() || existing.HasModel) ? existing.Version : null;
+    }
+
+    /// <summary>True when the version reported is an install outside the data folder, which is never updated from here.</summary>
+    public bool IsExistingInstall => OwnCompleteVersion() is null && InstalledVersion() is not null;
+
+    public string? ExistingInstallNote
+    {
+        get
+        {
+            if (OwnCompleteVersion() is not null || Existing() is not { } existing)
+            {
+                return null;
+            }
+
+            string where = existing.BinaryPath ?? _server.Address;
+            return InstalledVersion() is null
+                ? $"Ollama is already installed ({where}); only the {_model} model is downloaded."
+                : $"Using the Ollama that is already installed ({where}).";
+        }
+    }
+
+    /// <summary>The newest complete version in the data folder with the model downloaded, or null.</summary>
+    private string? OwnCompleteVersion() =>
+        ModelDownloaded() ? CompleteVersions().OrderDescending().Select(v => v.ToString(3)).FirstOrDefault() : null;
+
+    /// <summary>
+    /// The program to start the server from: the newest one downloaded by iTerminal, otherwise an Ollama that
+    /// was installed before. Null when there is none.
+    /// </summary>
+    internal string? BinaryPath()
+    {
+        string? installed = CompleteVersions().OrderDescending().Select(v => v.ToString(3)).FirstOrDefault();
+        if (installed is not null)
+        {
+            return FindBinary(VersionDirectory(installed));
+        }
+
+        return Existing()?.BinaryPath;
+    }
+
+    /// <summary>
+    /// The models folder to start a given program with: the shared one for a program iTerminal downloaded, and
+    /// null for an existing install, which keeps its models where it always did.
+    /// </summary>
+    internal string? ModelsDirectoryFor(string binaryPath) =>
+        Path.GetFullPath(binaryPath).StartsWith(Path.GetFullPath(_root) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+            ? ModelsDirectory
+            : null;
+
+    public async Task<IReadOnlyList<string>> ListVersionsAsync(CancellationToken cancellationToken)
+    {
+        // The check is also where a running server is looked for: asking it is a network call, which
+        // InstalledVersion (read from the render thread) must never make.
+        await ProbeExistingAsync(cancellationToken);
+        return await _feed.ListVersionsAsync(Repository, cancellationToken);
+    }
+
+    private async Task ProbeExistingAsync(CancellationToken cancellationToken)
+    {
+        OllamaServerInfo? info = await _server.GetInfoAsync(cancellationToken);
+        ExistingInstall? existing = BuildExisting(info);
+        lock (_existingGate)
+        {
+            _existing = existing;
+            _existingResolved = true;
+        }
+    }
+
+    /// <summary>What is known of an Ollama outside the data folder: a running server's answer, and/or a program on disk.</summary>
+    private ExistingInstall? Existing()
+    {
+        lock (_existingGate)
+        {
+            if (_existingResolved)
+            {
+                return _existing;
+            }
+        }
+
+        // Nothing has asked a server yet: what is on disk is what is known.
+        ExistingInstall? onDisk = BuildExisting(null);
+        lock (_existingGate)
+        {
+            if (!_existingResolved)
+            {
+                _existing = onDisk;
+                _existingResolved = true;
+            }
+
+            return _existing;
+        }
+    }
+
+    private ExistingInstall? BuildExisting(OllamaServerInfo? info)
+    {
+        string? binary = FindExistingBinary(_searchDirectories, _root);
+        if (binary is null && info is null)
         {
             return null;
         }
 
-        return CompleteVersions().OrderDescending().Select(v => v.ToString(3)).FirstOrDefault();
+        string? version = info?.Version;
+        if (!Version.TryParse(version, out _) && binary is not null)
+        {
+            version = ReadProgramVersion(binary);
+        }
+
+        // A version that cannot be read still means "installed": 0.0.0 is only the placeholder shown for it.
+        version = Version.TryParse(version, out Version? parsed) ? parsed.ToString(3) : "0.0.0";
+        return new ExistingInstall(binary, version, info?.HasModel(_model) ?? false);
     }
 
-    /// <summary>The program of the newest complete version, or null when none is installed.</summary>
-    internal string? BinaryPath()
+    /// <summary>The places an Ollama installed outside iTerminal is looked for: the PATH, then each system's usual folders.</summary>
+    internal static IEnumerable<string> DefaultSearchDirectories()
     {
-        string? installed = CompleteVersions().OrderDescending().Select(v => v.ToString(3)).FirstOrDefault();
-        return installed is null ? null : FindBinary(VersionDirectory(installed));
+        List<string> directories = (Environment.GetEnvironmentVariable("PATH") ?? string.Empty)
+            .Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .ToList();
+
+        if (OperatingSystem.IsWindows())
+        {
+            string local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            directories.Add(Path.Combine(local, "Programs", "Ollama"));
+            directories.Add(Path.Combine(programFiles, "Ollama"));
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            directories.AddRange(["/Applications/Ollama.app/Contents/Resources", "/usr/local/bin", "/opt/homebrew/bin"]);
+        }
+        else
+        {
+            directories.AddRange(["/usr/local/bin", "/usr/bin", "/opt/ollama/bin", "/snap/bin"]);
+        }
+
+        return directories.Where(directory => directory.Length > 0);
     }
 
-    public async Task<IReadOnlyList<string>> ListVersionsAsync(CancellationToken cancellationToken) =>
-        await _feed.ListVersionsAsync(Repository, cancellationToken);
+    /// <summary>The first <c>ollama</c> program in <paramref name="directories"/> that is not inside <paramref name="ownRoot"/>.</summary>
+    internal static string? FindExistingBinary(IEnumerable<string> directories, string ownRoot)
+    {
+        string own = Path.GetFullPath(ownRoot) + Path.DirectorySeparatorChar;
+        string name = OperatingSystem.IsWindows() ? "ollama.exe" : "ollama";
+        foreach (string directory in directories)
+        {
+            try
+            {
+                string candidate = Path.GetFullPath(Path.Combine(directory, name));
+                if (!candidate.StartsWith(own, StringComparison.OrdinalIgnoreCase) && File.Exists(candidate))
+                {
+                    return candidate;
+                }
+            }
+            catch (Exception exception) when (exception is ArgumentException or NotSupportedException or PathTooLongException)
+            {
+                // A malformed PATH entry.
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>The version an Ollama program reports: from its file when that carries one, otherwise by asking it.</summary>
+    private static string? ReadProgramVersion(string binary)
+    {
+        try
+        {
+            string? fromFile = FileVersionInfo.GetVersionInfo(binary).ProductVersion;
+            if (Version.TryParse(fromFile, out Version? fileVersion) && fileVersion > new Version(0, 0, 0))
+            {
+                return fileVersion.ToString(3);
+            }
+
+            using Process? process = Process.Start(new ProcessStartInfo(binary, "--version")
+            {
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+            });
+            if (process is null)
+            {
+                return null;
+            }
+
+            Task<string> output = process.StandardOutput.ReadToEndAsync();
+            Task<string> error = process.StandardError.ReadToEndAsync();
+            if (!process.WaitForExit(3000))
+            {
+                process.Kill(entireProcessTree: true);
+                return null;
+            }
+
+            Match match = Regex.Match(output.GetAwaiter().GetResult() + " " + error.GetAwaiter().GetResult(), @"\d+\.\d+\.\d+");
+            return match.Success ? match.Value : null;
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or System.ComponentModel.Win32Exception or IOException)
+        {
+            return null;
+        }
+    }
+
+    private sealed record ExistingInstall(string? BinaryPath, string Version, bool HasModel);
 
     public async Task InstallAsync(string version, IProgress<string> progress, CancellationToken cancellationToken)
     {
         Version.Parse(version); // A malformed version is refused before anything is written.
         string target = VersionDirectory(version);
 
+        // Ollama that is already on this computer (a program, or a server that answers) is used instead of a second copy.
+        bool useExisting = false;
+        string? existingBinary = null;
         if (FindBinary(target) is null)
+        {
+            existingBinary = FindExistingBinary(_searchDirectories, _root);
+            useExisting = existingBinary is not null || await _server.IsReachableAsync(cancellationToken);
+        }
+
+        if (useExisting)
+        {
+            progress.Report($"Ollama is already installed ({existingBinary ?? _server.Address}); it is used as it is");
+        }
+        else if (FindBinary(target) is null)
         {
             GitHubRelease release = await _feed.GetReleaseAsync(Repository, version, cancellationToken);
             GitHubAsset asset = AssetFor(release, OperatingSystem.IsWindows(), OperatingSystem.IsMacOS(), RuntimeInformation.ProcessArchitecture)
@@ -127,13 +348,40 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
 
         if (!ModelDownloaded())
         {
-            string binary = FindBinary(target)!;
-            progress.Report($"Starting Ollama {version} to download {_model}");
-            bool started = await _server.EnsureRunningAsync(binary, ModelsDirectory, cancellationToken);
+            bool started = false;
             try
             {
-                progress.Report($"Downloading {_model}");
-                await _server.PullAsync(_model, progress, cancellationToken);
+                if (useExisting)
+                {
+                    // A server that answers is used as it is; otherwise the program found is started with its own models folder.
+                    if (existingBinary is not null)
+                    {
+                        progress.Report($"Starting {existingBinary} to download {_model}");
+                        started = await _server.EnsureRunningAsync(existingBinary, null, cancellationToken);
+                    }
+
+                    OllamaServerInfo? info = await _server.GetInfoAsync(cancellationToken);
+                    if (info is not null && info.HasModel(_model))
+                    {
+                        progress.Report($"{_model} is already downloaded");
+                    }
+                    else
+                    {
+                        progress.Report($"Downloading {_model}");
+                        await _server.PullAsync(_model, progress, cancellationToken);
+                    }
+
+                    // Looked at while the server is up, so the install is reported with its version and model afterwards.
+                    await ProbeExistingAsync(cancellationToken);
+                }
+                else
+                {
+                    string binary = FindBinary(target)!;
+                    progress.Report($"Starting Ollama {version} to download {_model}");
+                    started = await _server.EnsureRunningAsync(binary, ModelsDirectory, cancellationToken);
+                    progress.Report($"Downloading {_model}");
+                    await _server.PullAsync(_model, progress, cancellationToken);
+                }
             }
             finally
             {
@@ -146,6 +394,12 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
             await File.WriteAllTextAsync(Path.Combine(_root, ModelMarker), _model, cancellationToken);
         }
 
+        if (useExisting)
+        {
+            progress.Report($"Ollama is ready with {_model}");
+            return;
+        }
+
         PruneOlderVersions(version);
         progress.Report($"Ollama {version} is ready with {_model}");
     }
@@ -156,7 +410,16 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
     }
 
     /// <summary>Forgets the model download, so the dependency is reported missing and downloaded again.</summary>
-    public void Invalidate() => TryDeleteFile(Path.Combine(_root, ModelMarker));
+    public void Invalidate()
+    {
+        TryDeleteFile(Path.Combine(_root, ModelMarker));
+        lock (_existingGate)
+        {
+            // The next check looks again: the model a server held may be gone as well.
+            _existing = null;
+            _existingResolved = false;
+        }
+    }
 
     private bool ModelDownloaded()
     {

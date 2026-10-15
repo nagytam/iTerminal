@@ -89,6 +89,67 @@ public class RuntimeDependencyDialogTest
         service.Verify(s => s.StartInstall(), Times.Never);
     }
 
+    private static Mock<IRuntimeDependencyService> NewTwoMissing()
+    {
+        var service = new Mock<IRuntimeDependencyService>();
+        service.SetupGet(s => s.Statuses).Returns(
+        [
+            new RuntimeDependencyStatus("playwright", "Playwright", "Chromium", null, "1.63.0", RuntimeDependencyState.Missing),
+            new RuntimeDependencyStatus("ollama", "Ollama", "Local AI", null, "0.40.4", RuntimeDependencyState.Missing),
+        ]);
+        service.SetupGet(s => s.Log).Returns(new List<string>());
+        service.SetupGet(s => s.IsBusy).Returns(false);
+        service.SetupGet(s => s.ShouldOfferAtStartup).Returns(true);
+        return service;
+    }
+
+    [TestMethod]
+    public async Task EveryDependencyStartsTickedAndEnterInstallsAll()
+    {
+        var service = NewTwoMissing();
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        AssertScreenContains(Render(dialog), "[x] Playwright");
+        AssertScreenContains(Render(dialog), "[x] Ollama");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        service.Verify(s => s.StartInstall(), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task SpaceUnticksTheDependencyUnderTheCursorAndOnlyTheTickedOnesAreInstalled()
+    {
+        var service = NewTwoMissing();
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
+
+        AssertScreenContains(Render(dialog), "[ ] Ollama");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        service.Verify(s => s.StartInstall(), Times.Never);
+        service.Verify(s => s.StartInstall(It.Is<IReadOnlyCollection<string>?>(ids => ids != null && ids.Count == 1 && ids.Contains("playwright"))), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task WithEverythingUntickedEnterInstallsNothing()
+    {
+        var service = NewTwoMissing();
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        service.Verify(s => s.StartInstall(), Times.Never);
+        service.Verify(s => s.StartInstall(It.IsAny<IReadOnlyCollection<string>?>()), Times.Never);
+    }
+
     [TestMethod]
     public async Task WhenNothingIsLeftEnterOnlyCloses()
     {

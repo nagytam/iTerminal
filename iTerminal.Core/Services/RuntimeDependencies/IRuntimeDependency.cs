@@ -30,6 +30,15 @@ public interface IRuntimeDependency
     /// <summary>The newest complete installed version, or null when there is none.</summary>
     string? InstalledVersion();
 
+    /// <summary>
+    /// True when <see cref="InstalledVersion"/> describes an installation that was there before iTerminal and is
+    /// not in its data folder. Such an install is used as it is and never offered an update.
+    /// </summary>
+    bool IsExistingInstall => false;
+
+    /// <summary>What was found outside the data folder, for the dialog's note row; null when nothing was.</summary>
+    string? ExistingInstallNote => null;
+
     /// <summary>Every version the publisher offers, as published (stable and pre-release alike).</summary>
     Task<IReadOnlyList<string>> ListVersionsAsync(CancellationToken cancellationToken);
 
