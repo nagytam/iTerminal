@@ -30,6 +30,7 @@ public class OnlineQuoteJobTest
 
     [TestMethod]
     [TestCategory("Integration")]
+    [Ignore("Needs live Swissquote pages and a Playwright Chromium install, which CI does not have.")]
     [Timeout(120_000)]
     public async Task ParseQuotePageAsync_FetchesBitcoinQuote_FromSwissquote()
     {
@@ -61,6 +62,7 @@ public class OnlineQuoteJobTest
 
     [TestMethod]
     [TestCategory("Integration")]
+    [Ignore("Needs live Swissquote pages and a Playwright Chromium install, which CI does not have.")]
     [Timeout(120_000)]
     public async Task ParseQuotePageAsync_FetchesEthereumQuote_FromSwissquote()
     {
@@ -92,6 +94,7 @@ public class OnlineQuoteJobTest
 
     [TestMethod]
     [TestCategory("Integration")]
+    [Ignore("Needs live Swissquote pages and a Playwright Chromium install, which CI does not have.")]
     [Timeout(180_000)]
     public async Task ParseQuotePageAsync_FetchesBothQuotes_AccumulatesInService()
     {

@@ -576,7 +576,10 @@ public partial class Url
                             : Folder;
                 _exists = fileInfo.Exists;
                 LinkTarget = fileInfo.LinkTarget;
-                IsHidden = fileInfo.IsHidden;
+                // A folder URL keeps its trailing separator, and on Unix a name's leading dot is what makes it
+                // hidden, which for "dir/" is the empty name. Take the name without the separator.
+                IsHidden = fileInfo.IsHidden || (!OperatingSystem.IsWindows()
+                    && System.IO.Path.GetFileName(System.IO.Path.TrimEndingDirectorySeparator(_path)).StartsWith('.'));
             }
             else
             {

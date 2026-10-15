@@ -86,7 +86,10 @@ public class ToastHostTest
         Assert.AreNotEqual(treeVersion, Control.TreeVersion);
     }
 
+    // Control.TreeVersion is process-wide, and every other test builds control trees, so this one
+    // must not run alongside them or their changes read as the host's.
     [TestMethod]
+    [DoNotParallelize]
     public void Idle_WithNothingNew_LeavesTheTreeAlone()
     {
         var (root, host) = CreateRoot();

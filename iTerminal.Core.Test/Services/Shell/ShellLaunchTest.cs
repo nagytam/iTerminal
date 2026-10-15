@@ -100,7 +100,7 @@ public class ShellLaunchTest
         var ownership = new ConsoleOwnership();
         var service = new InteractiveShellService(ownership);
 
-        var outcome = await service.RunAsync(new ShellLaunch("no-such-shell-" + Guid.NewGuid().ToString("N"), [], null, "nowhere"));
+        var outcome = await RunWithoutConsoleInputAsync(service, new ShellLaunch("no-such-shell-" + Guid.NewGuid().ToString("N"), [], null, "nowhere"));
 
         Assert.IsFalse(outcome.Started);
         StringAssert.Contains(outcome.Failure, "Cannot start no-such-shell-");
@@ -116,10 +116,29 @@ public class ShellLaunchTest
             ? new ShellLaunch("cmd.exe", ["/c", "exit 4"], Path.GetTempPath(), "temp")
             : new ShellLaunch("/bin/sh", ["-c", "exit 4"], Path.GetTempPath(), "temp");
 
-        var outcome = await new InteractiveShellService(new ConsoleOwnership()).RunAsync(launch);
+        var outcome = await RunWithoutConsoleInputAsync(new InteractiveShellService(new ConsoleOwnership()), launch);
 
         Assert.IsTrue(outcome.Started);
         Assert.AreEqual(4, outcome.ExitCode);
+    }
+
+    /// <summary>
+    /// A failed start or a quick non-zero exit waits for Enter before the panels come back. Under a
+    /// terminal that wait is the test host's own keyboard, and it runs into the test timeout; redirected
+    /// input ends it at once, as it does on a CI runner.
+    /// </summary>
+    private static async Task<ShellOutcome> RunWithoutConsoleInputAsync(InteractiveShellService service, ShellLaunch launch)
+    {
+        var originalInput = Console.In;
+        Console.SetIn(TextReader.Null);
+        try
+        {
+            return await service.RunAsync(launch);
+        }
+        finally
+        {
+            Console.SetIn(originalInput);
+        }
     }
 
     private static InteractiveShellCommand CommandOver(IContentModel model)

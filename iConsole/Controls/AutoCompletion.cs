@@ -146,8 +146,6 @@ public class AutoCompletion : Window, ITransientOverlayHost
 
     public override void Hide()
     {
-        base.Hide();
-
         // A dismissal has to *stick*. Matching runs on a background task — two of them per keystroke
         // as a matter of course, one from the text-changed handler and one from the ShowAsync the same
         // keystroke triggers — so without this an Esc (or a page switch, or a completed Tab) landing
@@ -159,13 +157,18 @@ public class AutoCompletion : Window, ITransientOverlayHost
         // before the work starts, so cancelling cannot stop the update that is already past that
         // point — which is exactly the one that resurrects the list — while it *can* leave
         // `CompletionModel.UpdateTask` cancelled under everything that awaits it.
-        Interlocked.Increment(ref _generation);
+        // Under the same lock as the check in UpdateMatches, so the two cannot interleave.
+        lock (_updateGate)
+        {
+            Interlocked.Increment(ref _generation);
+            base.Hide();
 
-        // Unconditionally, not only when IsOpen: the popup attaches itself to the root, so a show
-        // that was interrupted before it finished has already put it there. Close is what detaches
-        // it either way, and it is the only thing standing between a closed dialog and a suggestion
-        // list left floating over the panels.
-        _popup.Close();
+            // Unconditionally, not only when IsOpen: the popup attaches itself to the root, so a show
+            // that was interrupted before it finished has already put it there. Close is what detaches
+            // it either way, and it is the only thing standing between a closed dialog and a suggestion
+            // list left floating over the panels.
+            _popup.Close();
+        }
     }
 
     private void OnTextModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -212,10 +215,16 @@ public class AutoCompletion : Window, ITransientOverlayHost
             _listBox.ListModel.UpdateTask.Wait();
         }
 
-        var visible = CompletionModel.MatchingValues.Any()
-            && generation == CurrentGeneration
-            && Interlocked.Exchange(ref _suppressVisibilityUpdates, 0) == 0;
-        ApplyVisibility(visible);
+        // The generation is checked and acted on under the lock Hide takes to move it on. Checking
+        // outside it let a dismissal land in between: the check passed, Hide closed the list, and then
+        // this update showed it again.
+        lock (_updateGate)
+        {
+            var visible = CompletionModel.MatchingValues.Any()
+                && generation == CurrentGeneration
+                && Interlocked.Exchange(ref _suppressVisibilityUpdates, 0) == 0;
+            ApplyVisibility(visible);
+        }
     }
 
     private void ApplyVisibility(bool visible)

@@ -166,7 +166,9 @@ public class FolderSelectorDialogTest
         await FolderSelectorTestHarness.PressAsync(root, FolderSelectorTestHarness.Key(ConsoleKey.D6, control: true));
         var pathPage = (FolderSelectorPathTabPage)dialog.TabPages[6];
         var autoCompletion = pathPage.TextBoxPath.AutoCompletion!;
-        autoCompletion.CompletionModel.InsertCompletion(Path.GetTempPath());
+        // The planted completion has to contain the character typed after it, wherever the temp folder
+        // is: matching is a substring test, and the temp path only has a 'C' on Windows.
+        autoCompletion.CompletionModel.InsertCompletion(Path.Combine(Path.GetTempPath(), "Completion"));
         await FolderSelectorTestHarness.PressAsync(root, new KeyEvent('C', ConsoleKey.C, false, false, false));
         await WaitForAsync(() => autoCompletion.IsPopupOpen);
         Assert.IsTrue(autoCompletion.IsPopupOpen, "The suggestion list should be up before the key under test.");
