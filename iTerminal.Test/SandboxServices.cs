@@ -4,6 +4,7 @@ using iTerminal.Core.Model.Network;
 using iTerminal.Core.Model.PackageManager;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.PackageManager;
+using iTerminal.Core.Services.RuntimeDependencies;
 using iTerminal.Core.Services.Portfolio;
 
 namespace iTerminal.Test;
@@ -275,5 +276,38 @@ public static class SandboxServices
         public Task<IReadOnlyDictionary<string, StooqQuote>> GetQuotesAsync(IReadOnlyList<string> symbols, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<string, StooqQuote>>(
                 symbols.ToDictionary(s => s, s => new StooqQuote(s, 123.45m, DateTime.Now)));
+    }
+
+    /// <summary>
+    /// Nothing to install and nothing to check: no test downloads Playwright, and the start-up offer never
+    /// opens over the panels. The dialog itself is still reachable from the Tools menu, with nothing in it.
+    /// </summary>
+    public sealed class Dependencies : IRuntimeDependencyService
+    {
+        public IReadOnlyList<RuntimeDependencyStatus> Statuses { get; } = [];
+
+        public IReadOnlyList<string> Log { get; } = [];
+
+        public bool IsBusy => false;
+
+        public bool ShouldOfferAtStartup => false;
+
+        public bool IsInstalled(string id) => false;
+
+        public Task CheckAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+        public void StartInstall()
+        {
+        }
+
+        public Task InstallAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+        public void SkipOffers()
+        {
+        }
+
+        public void InvalidateInstalled(string id)
+        {
+        }
     }
 }

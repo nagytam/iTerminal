@@ -31,7 +31,8 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.ToDo.ToDoListDialog? toDoListDialog = null,
         iTerminal.Core.Dialogs.Mail.MailDialog? mailDialog = null,
         iTerminal.Core.Dialogs.PasswordManager.PasswordManagerDialog? passwordManagerDialog = null,
-        iTerminal.Core.Services.ISettingsService? settingsService = null)
+        iTerminal.Core.Services.ISettingsService? settingsService = null,
+        iTerminal.Core.Dialogs.RuntimeDependencyDialog? runtimeDependencyDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -69,13 +70,17 @@ public class ToolsMenuItem : MenuItem
         if (toDoListDialog is not null) features.Add(new ToDoListDialogCommand(toDoListDialog));
         if (mailDialog is not null) features.Add(new MailDialogCommand(mailDialog));
         if (passwordManagerDialog is not null) features.Add(new PasswordManagerDialogCommand(passwordManagerDialog));
+        if (runtimeDependencyDialog is not null) features.Add(new RuntimeDependencyDialogCommand(runtimeDependencyDialog));
 
         if (features.Count > 0)
         {
             AddMenuItem(new MenuItem("-", null, [], themeService));
             foreach (var command in features)
             {
-                AddMenuItem(new MenuItem($"{command.Title}\t{command.KeyDisplayText}", command, [], themeService));
+                string label = string.IsNullOrEmpty(command.KeyDisplayText)
+                    ? command.Title
+                    : $"{command.Title}\t{command.KeyDisplayText}";
+                AddMenuItem(new MenuItem(label, command, [], themeService));
             }
         }
     }

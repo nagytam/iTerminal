@@ -38,4 +38,19 @@ public class ToolsMenuItemTest
         CollectionAssert.Contains(entries, "Calculator" + (char)9 + "Ctrl+A");
         CollectionAssert.Contains(entries, "Unit Converter" + (char)9 + "Ctrl+E");
     }
+
+    [TestMethod]
+    public void RuntimeDependenciesIsListedWithoutAHotKey()
+    {
+        // Reached from here and the command palette only, so the label carries no key and no tab.
+        var theme = iTerminal.Core.Test.Helper.UiTestHelper.TestTheme();
+        var service = Moq.Mock.Of<iTerminal.Core.Services.RuntimeDependencies.IRuntimeDependencyService>();
+        var menu = new ToolsMenuItem(
+            null!, null!, null!, null!, Moq.Mock.Of<iConsole.Interfaces.IContentModelService>(), null!, null!, null!, null!, null!, theme,
+            runtimeDependencyDialog: new iTerminal.Core.Dialogs.RuntimeDependencyDialog(service, theme));
+
+        var entries = menu.Controls.AsSnapshot().OfType<MenuItem>().Select(m => m.Text).ToList();
+
+        CollectionAssert.Contains(entries, "Runtime Dependencies");
+    }
 }

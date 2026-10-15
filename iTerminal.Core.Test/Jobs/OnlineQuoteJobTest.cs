@@ -1,6 +1,8 @@
 using iTerminal.Core.Data;
 using iTerminal.Core.Jobs;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.RuntimeDependencies;
+using Moq;
 using Microsoft.Playwright;
 
 namespace iTerminal.Core.Test.Jobs;
@@ -36,7 +38,7 @@ public class OnlineQuoteJobTest
     {
         var service = new OnlineQuoteService();
         var cacheService = new MockCacheService();
-        var job = new OnlineQuoteJob(service, cacheService);
+        var job = new OnlineQuoteJob(service, cacheService, new Mock<IRuntimeDependencyService>().Object);
 
         var page = await _browser!.NewPageAsync();
         try
@@ -68,7 +70,7 @@ public class OnlineQuoteJobTest
     {
         var service = new OnlineQuoteService();
         var cacheService = new MockCacheService();
-        var job = new OnlineQuoteJob(service, cacheService);
+        var job = new OnlineQuoteJob(service, cacheService, new Mock<IRuntimeDependencyService>().Object);
 
         var page = await _browser!.NewPageAsync();
         try
@@ -100,7 +102,7 @@ public class OnlineQuoteJobTest
     {
         var service = new OnlineQuoteService();
         var cacheService = new MockCacheService();
-        var job = new OnlineQuoteJob(service, cacheService);
+        var job = new OnlineQuoteJob(service, cacheService, new Mock<IRuntimeDependencyService>().Object);
 
         foreach (var url in new[] { OnlineQuoteJob.BTCUrl, OnlineQuoteJob.ETHUrl })
         {

@@ -11,6 +11,7 @@ using iTerminal.Core.Dialogs;
 using iTerminal.Core.Dialogs.Git;
 using iTerminal.Core.Dialogs.PasswordManager;
 using iTerminal.Core.Dialogs.Portfolio;
+using iTerminal.Core.Services.RuntimeDependencies;
 using iTerminal.Core.Services;
 using System.Collections.Generic;
 
@@ -30,6 +31,7 @@ public class TerminalScreen : iConsole.Screens.Screen
     private readonly ISettingsService _settingsService;
     private readonly ToastHost? _toastHost;
     private readonly PasswordManagerStartupDialog? _passwordManagerStartupDialog;
+    private readonly RuntimeDependencyDialog? _runtimeDependencyDialog;
 
     public TerminalScreen(
         IConsoleDriver consoleDriver,
@@ -44,7 +46,8 @@ public class TerminalScreen : iConsole.Screens.Screen
         NetworkBrowserDialog networkBrowserDialog,
         ISettingsService settingsService,
         ToastHost? toastHost = null,
-        PasswordManagerStartupDialog? passwordManagerStartupDialog = null)
+        PasswordManagerStartupDialog? passwordManagerStartupDialog = null,
+        RuntimeDependencyDialog? runtimeDependencyDialog = null)
         : base(consoleDriver, themeService)
     {
         _consoleDriver = consoleDriver ?? NullConsoleDriver.Instance;
@@ -59,6 +62,7 @@ public class TerminalScreen : iConsole.Screens.Screen
         _settingsService = settingsService;
         _toastHost = toastHost;
         _passwordManagerStartupDialog = passwordManagerStartupDialog;
+        _runtimeDependencyDialog = runtimeDependencyDialog;
         if (menuBar is not null)
         {
             AddControl(menuBar);
@@ -157,6 +161,13 @@ public class TerminalScreen : iConsole.Screens.Screen
         {
             _passwordManagerStartupDialog.OnStopped = StopApplication;
             await ShowDialogAsync(_passwordManagerStartupDialog);
+        }
+
+        // Offered before the panels open: a component the features need is missing, or a newer one can be installed.
+        // Skipping a version, or installing, keeps it from being offered again.
+        if (_runtimeDependencyDialog is not null && _runtimeDependencyDialog.ShouldOpenAtStartup)
+        {
+            await ShowDialogAsync(_runtimeDependencyDialog);
         }
 
         await base.OnInitializeAsync();
