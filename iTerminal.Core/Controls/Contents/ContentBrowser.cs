@@ -154,6 +154,24 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         AddCommand(new MusicVolumeUpCommand(ContentModel, ContentModelService));
         AddCommand(new MusicVolumeDownCommand(ContentModel, ContentModelService));
 
+        // Enter runs what is on the command line before it opens anything; Alt+Enter, Ctrl+Enter,
+        // Shift+Enter and Ctrl+Shift+Enter copy names to it. Ctrl+X T/P of mc is not available:
+        // the password manager has Ctrl+X.
+        AddCommand(new iTerminal.Core.Commands.CommandLine.RunCommandLineCommand(ContentModel, ContentModelService, _terminalModel, IsCommandLineVisible));
+        void Reveal() => FindContent()?.RevealCommandLine();
+        AddCommand(new iTerminal.Core.Commands.CommandLine.InsertIntoCommandLineCommand(
+            iTerminal.Core.Commands.CommandLine.CommandLineInsert.FileName, new Key(ConsoleKey.Enter, false, true, false),
+            ContentModel, ContentModelService, _terminalModel, Reveal));
+        AddCommand(new iTerminal.Core.Commands.CommandLine.InsertIntoCommandLineCommand(
+            iTerminal.Core.Commands.CommandLine.CommandLineInsert.FileName, new Key(ConsoleKey.Enter, false, false, true),
+            ContentModel, ContentModelService, _terminalModel, Reveal));
+        AddCommand(new iTerminal.Core.Commands.CommandLine.InsertIntoCommandLineCommand(
+            iTerminal.Core.Commands.CommandLine.CommandLineInsert.Marked, new Key(ConsoleKey.Enter, true, false, false),
+            ContentModel, ContentModelService, _terminalModel, Reveal));
+        AddCommand(new iTerminal.Core.Commands.CommandLine.InsertIntoCommandLineCommand(
+            iTerminal.Core.Commands.CommandLine.CommandLineInsert.FolderPath, new Key(ConsoleKey.Enter, true, false, true),
+            ContentModel, ContentModelService, _terminalModel, Reveal));
+
         // Operating a container from its row on the docker:// root; inert anywhere else.
         AddCommand(new Commands.Docker.StartStopContainerCommand(ContentModel, ContentModelService));
         AddCommand(new Commands.Docker.RestartContainerCommand(ContentModel, ContentModelService));
@@ -639,8 +657,39 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         ContentModel.Update();
     }
 
+    /// <summary>The <see cref="Content"/> this panel is shown in, or null in a test that built the panel alone.</summary>
+    private Content? FindContent()
+    {
+        IControl? control = Parent;
+        while (control is not null && control is not Content)
+        {
+            control = control.Parent;
+        }
+
+        return control as Content;
+    }
+
+    private bool IsCommandLineVisible() => FindContent()?.IsCommandLineVisible ?? false;
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // Alt+P / Alt+N walk the command history, as in mc, where Alt+letter is not a search
+        // either. They come before the search below, so a search cannot be started with P or N
+        // (any other letter, or a search already running, is unaffected).
+        if (keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift
+            && keyEvent.ConsoleKey is ConsoleKey.P or ConsoleKey.N
+            && ContentModel is not null && ContentModel.Filter is null)
+        {
+            var handled = keyEvent.ConsoleKey == ConsoleKey.P
+                ? _terminalModel.RecallPrevious()
+                : _terminalModel.RecallNext();
+            if (handled)
+            {
+                FindContent()?.RevealCommandLine();
+                return true;
+            }
+        }
+
         // ALT + printable character starts a new search (first key requires ALT).
         if (ContentModel is not null && ContentModel.Filter is null
             && keyEvent.Alt && IsFilterCharacter(keyEvent))

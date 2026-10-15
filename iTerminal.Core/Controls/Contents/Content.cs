@@ -162,6 +162,29 @@ public class Content : Window, IContent
         StateHasChanged();
     }
 
+    /// <summary>Whether the command line is on screen: the terminal bar, or the full-screen terminal.</summary>
+    public bool IsCommandLineVisible =>
+        _terminalPanel is not null && _terminalPanel.IsVisible;
+
+    /// <summary>
+    /// Shows the terminal bar when the AI bar is up, without moving focus - what a name copied
+    /// from a panel to the command line needs, since the user stays in the panel. A no-op while
+    /// the command line is already on screen.
+    /// </summary>
+    public void RevealCommandLine()
+    {
+        if (_terminalPanel is null || IsCommandLineVisible)
+        {
+            return;
+        }
+
+        _showTerminalPanel = false;
+        _bottomBarMode = BottomBarMode.Terminal;
+        ApplyVisibility();
+        OnInitializeLayout();
+        StateHasChanged();
+    }
+
     public void FocusLeftPanel() => _leftPanel?.SetFocus();
     public void FocusRightPanel() => _rightPanel?.SetFocus();
     public void FocusAiBar() => _aiPromptBar?.SetFocus();
