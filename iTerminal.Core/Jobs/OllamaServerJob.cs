@@ -44,7 +44,7 @@ public class OllamaServerJob(
                     try
                     {
                         // Returns once the server answers, so it is reachable from here on.
-                        await server.EnsureRunningAsync(binary, dependency.ModelsDirectory, cancellationToken);
+                        await server.EnsureRunningAsync(binary, dependency.ModelsDirectoryFor(binary), cancellationToken);
                         reachable = true;
                     }
                     catch (Exception exception) when (exception is not OperationCanceledException)

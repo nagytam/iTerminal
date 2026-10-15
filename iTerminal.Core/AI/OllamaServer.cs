@@ -33,6 +33,9 @@ public sealed class OllamaServer
         _http = httpClient ?? new HttpClient { Timeout = Timeout.InfiniteTimeSpan };
     }
 
+    /// <summary>The server's address as shown to the person, e.g. <c>http://localhost:11434</c>.</summary>
+    public string Address => _address.GetLeftPart(UriPartial.Authority);
+
     /// <summary>True when the address is this computer, the only place a server is started.</summary>
     public bool IsLocal => _address.IsLoopback;
 
@@ -57,11 +60,66 @@ public sealed class OllamaServer
     }
 
     /// <summary>
+    /// The version of a server that answers at the address and the models it holds, or null when nothing answers.
+    /// This is how an Ollama that is already installed and running (a service, the desktop app) is recognised.
+    /// </summary>
+    public async Task<OllamaServerInfo?> GetInfoAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            timeout.CancelAfter(ProbeTimeout);
+
+            using HttpResponseMessage versionResponse = await _http.GetAsync(new Uri(_address, "api/version"), timeout.Token);
+            if (!versionResponse.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            string? version = null;
+            using (JsonDocument document = JsonDocument.Parse(await versionResponse.Content.ReadAsStringAsync(timeout.Token)))
+            {
+                if (document.RootElement.TryGetProperty("version", out JsonElement element))
+                {
+                    version = element.GetString();
+                }
+            }
+
+            List<string> models = [];
+            using HttpResponseMessage tagsResponse = await _http.GetAsync(new Uri(_address, "api/tags"), timeout.Token);
+            if (tagsResponse.IsSuccessStatusCode)
+            {
+                using JsonDocument tags = JsonDocument.Parse(await tagsResponse.Content.ReadAsStringAsync(timeout.Token));
+                if (tags.RootElement.TryGetProperty("models", out JsonElement list) && list.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (JsonElement item in list.EnumerateArray())
+                    {
+                        if (item.TryGetProperty("name", out JsonElement name) && name.GetString() is { } text)
+                        {
+                            models.Add(text);
+                        }
+                    }
+                }
+            }
+
+            return new OllamaServerInfo(version, models);
+        }
+        catch (Exception exception) when (exception is HttpRequestException or JsonException)
+        {
+            return null;
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
     /// Makes sure a server answers: returns false at once when one already does, otherwise starts
     /// <c>ollama serve</c> from <paramref name="binaryPath"/> with its models in <paramref name="modelsDirectory"/>
     /// and waits for it to answer. Returns true when this call started it.
     /// </summary>
-    public async Task<bool> EnsureRunningAsync(string binaryPath, string modelsDirectory, CancellationToken cancellationToken)
+    public async Task<bool> EnsureRunningAsync(string binaryPath, string? modelsDirectory, CancellationToken cancellationToken)
     {
         await _startGate.WaitAsync(cancellationToken);
         try
@@ -200,9 +258,14 @@ public sealed class OllamaServer
         }
     }
 
-    private Process Start(string binaryPath, string modelsDirectory)
+    private Process Start(string binaryPath, string? modelsDirectory)
     {
-        Directory.CreateDirectory(modelsDirectory);
+        // Null leaves the models where that Ollama keeps them by itself (an existing install's own folder).
+        if (modelsDirectory is not null)
+        {
+            Directory.CreateDirectory(modelsDirectory);
+        }
+
         var start = new ProcessStartInfo(binaryPath)
         {
             UseShellExecute = false,
@@ -213,7 +276,10 @@ public sealed class OllamaServer
         };
         start.ArgumentList.Add("serve");
         start.Environment["OLLAMA_HOST"] = $"{_address.Host}:{_address.Port}";
-        start.Environment["OLLAMA_MODELS"] = modelsDirectory;
+        if (modelsDirectory is not null)
+        {
+            start.Environment["OLLAMA_MODELS"] = modelsDirectory;
+        }
 
         Process process = Process.Start(start)
             ?? throw new InvalidOperationException($"The Ollama program could not be started: {binaryPath}");
@@ -252,4 +318,13 @@ public sealed class OllamaServer
     }
 
     private static string Megabytes(long bytes) => (bytes / 1048576.0).ToString("0.0");
+}
+
+/// <summary>What a running Ollama server reports: its version (when it says) and the names of the models it holds.</summary>
+public sealed record OllamaServerInfo(string? Version, IReadOnlyList<string> Models)
+{
+    /// <summary>Whether a model is held, by Ollama's naming: a name without a tag means <c>:latest</c>.</summary>
+    public bool HasModel(string model) =>
+        Models.Any(name => string.Equals(name, model, StringComparison.OrdinalIgnoreCase)
+            || (!model.Contains(':') && string.Equals(name, model + ":latest", StringComparison.OrdinalIgnoreCase)));
 }
