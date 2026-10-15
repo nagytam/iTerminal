@@ -4,7 +4,7 @@
     Linux packages for iTerminal: a tarball, a Debian package and an RPM, for each runtime asked for.
 
       dotnet build iTerminal.Packaging.Linux/iTerminal.Packaging.Linux.proj -p:Version=1.2.3
-      dotnet build iTerminal.Packaging.Linux/iTerminal.Packaging.Linux.proj -p:Version=1.2.3 -p:Runtimes="linux-x64;linux-arm64"
+      dotnet build iTerminal.Packaging.Linux/iTerminal.Packaging.Linux.proj -p:Version=1.2.3 -p:Runtimes="linux-x64+linux-arm64"
 
     into bin/Release:
 
@@ -59,7 +59,8 @@
   <ItemGroup>
     <KnownRuntime Include="linux-x64" DebArchitecture="amd64" RpmArchitecture="x86_64" />
     <KnownRuntime Include="linux-arm64" DebArchitecture="arm64" RpmArchitecture="aarch64" />
-    <RequestedRuntime Include="$(Runtimes)" />
+    <!-- MSBuild's command line splits a -p value on ';' and ',', so the list is given with '+' and split here. -->
+    <RequestedRuntime Include="$([System.String]::Copy('$(Runtimes)').Split('+'))" />
     <!-- The known runtimes that were asked for, with their metadata: known, minus the ones not asked for. -->
     <NotRequestedRuntime Include="@(KnownRuntime)" Exclude="@(RequestedRuntime)" />
     <Runtime Include="@(KnownRuntime)" Exclude="@(NotRequestedRuntime)" />
@@ -72,7 +73,7 @@
 
   <Target Name="CheckRuntimes">
     <Error Condition="'@(UnknownRuntime)' != ''" Text="No packaging is set up for the runtime(s) @(UnknownRuntime). Known: @(KnownRuntime)." />
-    <Error Condition="'@(Runtime)' == ''" Text="No runtime to package. Pass -p:Runtimes=linux-x64 (or several, separated by semicolons)." />
+    <Error Condition="'@(Runtime)' == ''" Text="No runtime to package. Pass -p:Runtimes=linux-x64 (or several, separated by plus signs)." />
   </Target>
 
   <!--
