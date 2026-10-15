@@ -147,6 +147,15 @@ public class FilePanelRefreshTask : BackgroundTask
             if (phases is not null && enumSw is not null)
                 phases["Enumeration"] = enumSw.Elapsed;
 
+            // A cancelled enumeration returns the entries it had read, which is not the folder. Caching it
+            // would serve a partial listing as complete to the next panel (and to the next start-up), so
+            // nothing is cached or shown; the refresh that replaced this one reads the whole folder.
+            if (CancellationToken.IsCancellationRequested)
+            {
+                PhaseDurations = phases;
+                return;
+            }
+
             _memoryCacheService.Set(key, entries, MemoryCacheTtl);
 
             // ── Phase: UI update ───────────────────────────────────────────────
