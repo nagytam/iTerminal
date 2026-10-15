@@ -39,6 +39,13 @@ public class Popup : Window
     public IControl? Owner { get; private set; }
     public bool IsOpen { get; private set; }
     public PopupPlacement Placement { get; set; } = PopupPlacement.Below;
+
+    /// <summary>
+    /// Where a <see cref="PopupPlacement.Manual"/> popup's top-left corner goes, in the root's
+    /// coordinates — a context menu opens at the pointer. Kept on screen like every other placement.
+    /// Without it a manual popup is left wherever it was last put.
+    /// </summary>
+    public Position? Anchor { get; set; }
     public bool HasBorder { get; set; } = true;
     public bool CloseOnOutsideClick { get; set; } = true;
     public bool CloseOnEscape { get; set; } = true;
@@ -275,7 +282,7 @@ public class Popup : Window
 
     private void PlaceRelativeToOwner()
     {
-        if (Owner is null || Placement == PopupPlacement.Manual)
+        if (Owner is null || (Placement == PopupPlacement.Manual && Anchor is null))
         {
             return;
         }
@@ -291,6 +298,7 @@ public class Popup : Window
             PopupPlacement.Above => (ownerX, ownerY - (int)ViewSize.Height),
             PopupPlacement.Right => (ownerX + ownerWidth, ownerY),
             PopupPlacement.Left => (ownerX - (int)ViewSize.Width, ownerY),
+            PopupPlacement.Manual => ((int)Anchor!.X, (int)Anchor.Y),
             _ => (ownerX, ownerY),
         };
 

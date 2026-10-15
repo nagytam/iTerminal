@@ -18,7 +18,8 @@ public class EditMenuItem : MenuItem
         IThemeService themeService,
         MarkPatternDialog? markPatternDialog = null,
         MarkPatternDialog? unmarkPatternDialog = null,
-        CompareFoldersDialog? compareFoldersDialog = null)
+        CompareFoldersDialog? compareFoldersDialog = null,
+        FileDiffDialog? fileDiffDialog = null)
         : base("Edit", null, [], themeService)
     {
         HotKeyChar = 'E';
@@ -49,6 +50,10 @@ public class EditMenuItem : MenuItem
             // Comparing ends in marks — what each side should copy across — so it lives with them.
             AddMenuItem(new MenuItem("-", null, [], themeService));
             AddMenuItem(new MenuItem("Compare Folders\tShift+F2", new CompareFoldersDialogCommand(compareFoldersDialog, contentModelService), [], themeService));
+        }
+        if (fileDiffDialog is not null)
+        {
+            AddMenuItem(new MenuItem("Compare Files	Ctrl+F10", new DiffFilesDialogCommand(fileDiffDialog, contentModelService), [], themeService));
         }
     }
 }

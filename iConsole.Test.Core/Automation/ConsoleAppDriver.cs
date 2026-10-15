@@ -188,6 +188,15 @@ public sealed class ConsoleAppDriver : IAsyncDisposable
             $"the click at ({x},{y}) to be handled");
     }
 
+    /// <summary>Right-clicks the cell at (<paramref name="x"/>, <paramref name="y"/>).</summary>
+    public async Task<bool> RightClickAsync(int x, int y)
+    {
+        ThrowIfExited();
+        return await WithTimeout(
+            Input.SendMouseAsync(new MouseEvent { Position = new Position(x, y), RightClicked = true }),
+            $"the right click at ({x},{y}) to be handled");
+    }
+
     /// <summary>Left-clicks the first character of <paramref name="text"/>, waiting for it to appear.</summary>
     public async Task<bool> ClickAsync(string text)
     {

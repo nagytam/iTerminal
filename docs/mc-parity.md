@@ -14,6 +14,8 @@ before work starts.
 | Multiple selection: Insert, `+`, `-`, `*` | `Commands/Marks/*`, pattern dialog |
 | Find file | F7 `FindFilesDialog` (name + content), results as `search://` panel |
 | Compare directories | Shift+F2 `CompareFoldersDialog`, ends in marks |
+| Compare files (diff viewer) | Ctrl+F10 `FileDiffDialog`, side by side, N/P between differences |
+| Context menu | right-click a row: open, open/edit with, copy, move, delete, compress, properties… |
 | Sort order, hidden files | Shift+F11, Panels settings page |
 | Symlinks / hard links | Ctrl+L `CreateLinkDialog` |
 | Properties / chmod | Ctrl+F12 (permission bits as octal on Unix, attributes on Windows) |

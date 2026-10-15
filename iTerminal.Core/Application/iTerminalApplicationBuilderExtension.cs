@@ -236,6 +236,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<Func<OpenWithDialog>>(provider => () => provider.GetRequiredService<OpenWithDialog>());
         services.AddSingleton<FileSystemResolver>();
         services.AddTransient<CompareFoldersDialog>();
+        services.AddTransient<FileDiffDialog>();
         // Ctrl+O: the terminal handed to an interactive shell. One per control it is attached to (the
         // content and the Navigate menu); the service, which knows whether a shell is running, is one.
         services.AddSingleton<iTerminal.Core.Services.Shell.IInteractiveShellService, iTerminal.Core.Services.Shell.InteractiveShellService>();
