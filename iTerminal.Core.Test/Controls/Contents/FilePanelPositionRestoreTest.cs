@@ -174,6 +174,12 @@ public class FilePanelPositionRestoreTest
         ContentModelFileSystem leftModel = await LoadedModelAsync(left);
         ContentModelFileSystem rightModel = await LoadedModelAsync(right);
 
+        // Both listings must be whole and settled before the cursors are moved by hand: a refresh
+        // landing afterwards applies the start-up restore (cursor 0) over whatever was assigned here.
+        // 30 files and the ".." row.
+        Assert.IsTrue(await SettlesOnAsync(() => leftModel.FilteredEntries.Count == 31), "Precondition: left listing");
+        Assert.IsTrue(await SettlesOnAsync(() => rightModel.FilteredEntries.Count == 31), "Precondition: right listing");
+
         leftModel.CursorPosition.Y = 5;
         rightModel.CursorPosition.Y = 12;
         left.Close();

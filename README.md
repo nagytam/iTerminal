@@ -83,7 +83,7 @@ dotnet build iTerminal.Packaging.Linux/iTerminal.Packaging.Linux.proj -p:Version
 | `iTerminal` | Composition root and executable |
 | `iConsole.Demo` | Standalone sample app for `iConsole` |
 | `iTerminal.Installer`, `iTerminal.Packaging.Linux` | Windows MSI and Linux packages |
-| `*.Test`, `iConsole.Test.Core`, `BenchmarkSuite1` | Tests, test helpers, micro-benchmarks |
+| `*.Test`, `iConsole.Test.Core` | Tests and test helpers |
 
 See [CLAUDE.md](CLAUDE.md) for detailed architecture notes.
 
