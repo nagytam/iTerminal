@@ -52,6 +52,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private FileSystemResolver? _fileSystemResolver { get; set; }
     private SortDialog? _sortDialog { get; set; }
     private UserMenuDialog? _userMenuDialog { get; set; }
+    private FileDiffDialog? _fileDiffDialog { get; set; }
 
     public ContentBrowser(
         string name,
@@ -81,9 +82,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         ChecksumDialog? checksumDialog = null,
         FileSystemResolver? fileSystemResolver = null,
         SortDialog? sortDialog = null,
-        UserMenuDialog? userMenuDialog = null)
+        UserMenuDialog? userMenuDialog = null,
+        FileDiffDialog? fileDiffDialog = null)
         : base(themeService)
     {
+        _fileDiffDialog = fileDiffDialog;
         Name = name;
         _sortDialog = sortDialog;
         _userMenuDialog = userMenuDialog;
@@ -238,6 +241,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_checksumDialog is not null)
         {
             AddCommand(new ChecksumDialogCommand(_checksumDialog, ContentModelService, _fileSystemResolver));
+        }
+        if (_fileDiffDialog is not null)
+        {
+            AddCommand(new DiffFilesDialogCommand(_fileDiffDialog, ContentModelService, _fileSystemResolver));
         }
         if (_deleteDialog is not null)
         {
@@ -522,6 +529,13 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
 
             StateHasChanged();
 
+            if (mouseEvent.RightClicked && filteredCount > 0)
+            {
+                // The row is under the cursor now, so every command the menu offers acts on it.
+                await ShowContextMenuAsync(mouseEvent.Position);
+                return true;
+            }
+
             if (openEntry)
             {
                 // A second click on the same row opens it — exactly what Enter does on that row,
@@ -533,6 +547,60 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
 
         return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
+    /// <summary>
+    /// The right-click menu: what the panel can do with the row under the cursor, as a list that opens
+    /// at the pointer. Choosing a row runs the command after the menu has closed and handed focus
+    /// back, so the command finds the panel focused as it would for its key.
+    /// </summary>
+    internal async Task ShowContextMenuAsync(Position position)
+    {
+        var items = FileContextMenu.Build(
+            ContentModel,
+            Commands.AsSnapshot(),
+            _fileAssociations,
+            () => HandleKeyEventAsync(new KeyEvent((char)13, ConsoleKey.Enter, false, false, false)));
+        if (items.Count == 0)
+        {
+            return;
+        }
+
+        Popup? popup = null;
+        var list = new PopupListView(ThemeService)
+        {
+            Committed = index =>
+            {
+                popup?.Close();
+                _ = RunMenuItemAsync(items[index]);
+            },
+            Cancelled = () => popup?.Close(),
+        };
+        list.SetItems([.. items.Select(i => i.Label)]);
+
+        var width = items.Max(i => i.Label.Length) + 3;
+        popup = new Popup(ThemeService)
+        {
+            Placement = PopupPlacement.Manual,
+            Anchor = new Position(Math.Max(0, (int)position.X), Math.Max(0, (int)position.Y)),
+            HasBorder = true,
+            ViewSize = new Size(width + 2, items.Count + 2),
+        };
+        popup.SetContent(list);
+
+        await popup.ShowAsync(this);
+    }
+
+    private static async Task RunMenuItemAsync(ContextMenuItem item)
+    {
+        try
+        {
+            await item.Run();
+        }
+        catch
+        {
+            // A command contains its own failures; this only keeps a stray one off the input loop.
+        }
     }
 
     /// <summary>Two clicks on one row within this long are a double-click.</summary>

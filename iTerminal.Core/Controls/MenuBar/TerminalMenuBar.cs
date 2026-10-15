@@ -90,7 +90,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         CommandPaletteDialog? commandPaletteDialog = null,
         CompareFoldersDialog? compareFoldersDialog = null,
         iTerminal.Core.Commands.InteractiveShellCommand? shellCommand = null,
-        iTerminal.Core.Dialogs.RuntimeDependencyDialog? runtimeDependencyDialog = null
+        iTerminal.Core.Dialogs.RuntimeDependencyDialog? runtimeDependencyDialog = null,
+        FileDiffDialog? fileDiffDialog = null
         )
         : base([], themeService)
     {
@@ -120,7 +121,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             themeService,
             markPatternDialog,
             unmarkPatternDialog,
-            compareFoldersDialog));
+            compareFoldersDialog,
+            fileDiffDialog));
 
         AddMenuItem(new NavigateMenuItem(
             contentModelService,
