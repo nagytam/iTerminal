@@ -54,7 +54,7 @@ jobs:
       - name: Build the packages
         run: >-
           dotnet build iTerminal.Packaging.Linux/iTerminal.Packaging.Linux.proj
-          -p:Version=$VERSION -p:Runtimes="linux-x64%3Blinux-arm64"
+          -p:Version=$VERSION -p:Runtimes="linux-x64+linux-arm64"
 
       - name: Upload the packages
         uses: actions/upload-artifact@v4
