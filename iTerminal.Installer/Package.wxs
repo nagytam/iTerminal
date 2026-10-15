@@ -16,8 +16,13 @@
 
     <SummaryInformation Description="iTerminal — a two-panel file manager for the terminal" />
 
-    <!-- A newer version replaces the older one in place; an older MSI refuses to run over a newer install. -->
-    <MajorUpgrade DowngradeErrorMessage="A newer version of iTerminal is already installed." />
+    <!--
+      A newer version replaces the older one in place; an older MSI refuses to run over a newer install.
+      Windows Installer compares only the first three parts of the version, and release builds are
+      0.0.0.<build number>, so every build is "the same version": AllowSameVersionUpgrades lets each one
+      replace the last instead of being refused.
+    -->
+    <MajorUpgrade DowngradeErrorMessage="A newer version of iTerminal is already installed." AllowSameVersionUpgrades="yes" />
     <MediaTemplate EmbedCab="yes" />
 
     <!-- Shown in Apps & features. -->
