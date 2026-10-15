@@ -125,13 +125,30 @@ public class FilePanelPositionRestoreTest
     /// </summary>
     private static async Task<bool> SettlesOnAsync(Func<bool> condition)
     {
+        // Met, and still met for a quiet window: a position that is right for one poll and moves
+        // again is not a restored position. The window is a deadline's worth of polls, not a fixed
+        // delay, so a loaded machine that runs the refreshes late still gets to the settled state.
+        const int quietMs = 400;
         var deadline = DateTime.UtcNow.AddMilliseconds(LoadTimeoutMs);
-        while (DateTime.UtcNow < deadline && !condition())
+        DateTime? metSince = null;
+        while (DateTime.UtcNow < deadline)
         {
+            if (condition())
+            {
+                metSince ??= DateTime.UtcNow;
+                if (DateTime.UtcNow - metSince.Value >= TimeSpan.FromMilliseconds(quietMs))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                metSince = null;
+            }
+
             await Task.Delay(20);
         }
 
-        await Task.Delay(300);
         return condition();
     }
 
@@ -158,7 +175,9 @@ public class FilePanelPositionRestoreTest
             await SettlesOnAsync(() => restoredModel.CursorPosition.Y == 20),
             $"The cursor came back at {restoredModel.CursorPosition.Y} instead of 20");
         Assert.AreEqual(expectedEntry, restoredModel.GetFocusedEntry()?.Url.FullUrl);
-        Assert.AreEqual(10u, restoredModel.ScrollPosition.Y, "The first visible row is part of the position");
+        Assert.IsTrue(
+            await SettlesOnAsync(() => restoredModel.ScrollPosition.Y == 10),
+            $"The first visible row came back at {restoredModel.ScrollPosition.Y} instead of 10");
     }
 
     /// <summary>
@@ -173,6 +192,14 @@ public class FilePanelPositionRestoreTest
         FilePanel right = StartPanel(ContentModelService.Right);
         ContentModelFileSystem leftModel = await LoadedModelAsync(left);
         ContentModelFileSystem rightModel = await LoadedModelAsync(right);
+
+        // Both listings complete before either cursor moves: closing a panel while its folder is still
+        // streaming in saves a position against rows that are still arriving, and under load that made
+        // the restore land on the wrong row.
+        const int everyRow = 31; // .. and the 30 files in each folder
+        Assert.IsTrue(
+            await SettlesOnAsync(() => leftModel.FilteredEntries.Count == everyRow && rightModel.FilteredEntries.Count == everyRow),
+            $"Precondition: both folders must be listed (left {leftModel.FilteredEntries.Count}, right {rightModel.FilteredEntries.Count})");
 
         leftModel.CursorPosition.Y = 5;
         rightModel.CursorPosition.Y = 12;
