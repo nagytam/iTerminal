@@ -46,6 +46,13 @@ public class AiChatService : IAiChatService
 
     public async Task CheckAvailabilityAsync(AiChatModel model)
     {
+        if (_aiOptions.Provider == AiProvider.None)
+        {
+            model.IsAvailable = false;
+            model.ModelInfo = "AI is off (AI:Provider)";
+            return;
+        }
+
         try
         {
             using var http = new System.Net.Http.HttpClient { Timeout = TimeSpan.FromSeconds(5) };
