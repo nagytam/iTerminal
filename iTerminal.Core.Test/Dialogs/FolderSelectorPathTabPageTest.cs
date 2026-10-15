@@ -62,7 +62,7 @@ public class FolderSelectorPathTabPageTest
         CollectionAssert.AreEqual(new[] { new Url(tempPath).FullUrl }, harness.Navigations);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("ssh://tamas@example.com:/home/tamas/")]
     [DataRow("smb://server/share/folder/")]
     [DataRow("iphone://0123456789abcdef/DCIM/")]

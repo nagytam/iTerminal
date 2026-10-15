@@ -35,10 +35,23 @@ public class UrlTest
     public void FolderRelative()
     {
         if (!OperatingSystem.IsWindows()) return;
-        var url = new Url(@"\windows\system32\drivers");
-        Assert.AreEqual(PathType.Folder, url.PathType);
-        Assert.AreEqual(ContainerType.FileSystem, url.ContainerType);
-        Assert.AreEqual(iConsole.Data.Container.FILE, url.Container);
+
+        // A path with no drive is resolved on the current drive, which is not always C: (the CI runner's
+        // workspace is on D:), so the folder is made here rather than assumed to exist.
+        var currentDirectory = Environment.CurrentDirectory;
+        var folder = Directory.CreateDirectory(Path.Combine(currentDirectory, "UrlFolderRelative_" + Guid.NewGuid().ToString("N")));
+        try
+        {
+            var relativeToDriveRoot = Path.GetRelativePath(Path.GetPathRoot(currentDirectory)!, folder.FullName);
+            var url = new Url(@"\" + relativeToDriveRoot);
+            Assert.AreEqual(PathType.Folder, url.PathType);
+            Assert.AreEqual(ContainerType.FileSystem, url.ContainerType);
+            Assert.AreEqual(iConsole.Data.Container.FILE, url.Container);
+        }
+        finally
+        {
+            folder.Delete(recursive: true);
+        }
     }
 
     [TestMethod]

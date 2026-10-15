@@ -26,24 +26,31 @@ public class FilePanelPositionRestoreTest
 
     private string _tempRoot = string.Empty;
     private string _folder = string.Empty;
+    private string _rightFolder = string.Empty;
     private SettingsService _settingsService = null!;
 
     [TestInitialize]
     public void Initialize()
     {
         _tempRoot = Path.Combine(Path.GetTempPath(), "FilePanelRestoreTest_" + Guid.NewGuid().ToString("N")[..8]);
+        // One folder each: the two panels share a per-URL cursor memory (ContentModelService.CursorPositions),
+        // so panels on the same folder would restore each other's row rather than their own.
         _folder = Path.Combine(_tempRoot, "folder");
-        Directory.CreateDirectory(_folder);
-
-        // Enough rows that a cursor half way down is a position and not an accident.
-        for (var index = 0; index < 30; index++)
+        _rightFolder = Path.Combine(_tempRoot, "right");
+        foreach (var folder in new[] { _folder, _rightFolder })
         {
-            File.WriteAllText(Path.Combine(_folder, $"file_{index:00}.txt"), "x");
+            Directory.CreateDirectory(folder);
+
+            // Enough rows that a cursor half way down is a position and not an accident.
+            for (var index = 0; index < 30; index++)
+            {
+                File.WriteAllText(Path.Combine(folder, $"file_{index:00}.txt"), "x");
+            }
         }
 
         _settingsService = new SettingsService();
         _settingsService.Set(ContentModelService.Left, "file://" + _folder);
-        _settingsService.Set(ContentModelService.Right, "file://" + _folder);
+        _settingsService.Set(ContentModelService.Right, "file://" + _rightFolder);
     }
 
     [TestCleanup]

@@ -6,9 +6,14 @@ using iTerminal.Core.Test.Helper;
 
 namespace iTerminal.Core.Tasks.Test;
 
-/// <summary>Wraps a real <see cref="IFileSystem"/> but makes reading one specific file always fail.</summary>
-file sealed class FailingFileSystem(IFileSystem inner, string failingFileName, TimeSpan? goodFileDelay = null) : IFileSystem
+/// <summary>
+/// Wraps a real <see cref="IFileSystem"/> but makes reading one specific file always fail, or — with
+/// <paramref name="failFirstRead"/> — whichever file is read first.
+/// </summary>
+file sealed class FailingFileSystem(IFileSystem inner, string failingFileName, TimeSpan? goodFileDelay = null, bool failFirstRead = false) : IFileSystem
 {
+    private int _reads;
+
     public bool IsReadOnly => inner.IsReadOnly;
     public bool ExistsFile(Url url) => inner.ExistsFile(url);
     public bool ExistsFolder(Url url) => inner.ExistsFolder(url);
@@ -25,7 +30,10 @@ file sealed class FailingFileSystem(IFileSystem inner, string failingFileName, T
 
     public async Task StreamToAsync(Url url, Stream destination, IProgress<long>? progress, CancellationToken cancellationToken)
     {
-        if (url.Name == failingFileName)
+        // The directory lists files in whatever order the file system likes, so "the first read" is the
+        // only failure whose timing the copy cannot be ahead of.
+        bool fails = failFirstRead ? Interlocked.Increment(ref _reads) == 1 : url.Name == failingFileName;
+        if (fails)
         {
             throw new IOException($"Simulated failure reading {url.Name}");
         }
@@ -119,17 +127,15 @@ public class ErrorRecoveryAndTaskVisibilityTest
         var dstDir = Path.Combine(_tempDir, "dst");
         Directory.CreateDirectory(srcDir);
 
-        const int goodFileCount = 6;
-        File.WriteAllText(Path.Combine(srcDir, "bad.txt"), "bad");
-        for (var i = 0; i < goodFileCount; i++)
+        // Far more files than copy workers. The first read fails, so the other workers are still in their
+        // delay when the cancel lands, and the files not yet picked up never start.
+        const int fileCount = 100;
+        for (var i = 0; i < fileCount; i++)
         {
             File.WriteAllText(Path.Combine(srcDir, $"good{i}.txt"), $"content {i}");
         }
 
-        // The failing file throws immediately; slowing down the good files gives the cancellation
-        // triggered by the "bad.txt" prompt a real chance to stop some of them before they finish,
-        // regardless of exactly which order the channel happens to yield items in.
-        var source = new FailingFileSystem(new FileSystemService(), "bad.txt", goodFileDelay: TimeSpan.FromMilliseconds(300));
+        var source = new FailingFileSystem(new FileSystemService(), failingFileName: string.Empty, goodFileDelay: TimeSpan.FromMilliseconds(50), failFirstRead: true);
         var target = new FileSystemService();
         var sourceUrl = new Url(srcDir);
         var targetUrl = new Url(dstDir + Path.DirectorySeparatorChar);
@@ -141,8 +147,12 @@ public class ErrorRecoveryAndTaskVisibilityTest
         await task.ExecuteAsync();
 
         StringAssert.Contains(task.Description, "cancelled");
-        var copiedCount = Directory.Exists(dstDir) ? Directory.GetFiles(dstDir).Length : 0;
-        Assert.IsTrue(copiedCount < goodFileCount, $"Expected the cancel choice to stop some remaining work, but {copiedCount}/{goodFileCount} good files were copied");
+        // A file is created in the target before its bytes arrive, so a cancelled copy leaves an empty
+        // one behind: only the files that received their content count as copied.
+        var copiedCount = Directory.Exists(dstDir)
+            ? Directory.GetFiles(dstDir).Count(file => new FileInfo(file).Length > 0)
+            : 0;
+        Assert.IsTrue(copiedCount < fileCount, $"Expected the cancel choice to stop some remaining work, but {copiedCount}/{fileCount} files were copied");
     }
 
     [TestMethod]

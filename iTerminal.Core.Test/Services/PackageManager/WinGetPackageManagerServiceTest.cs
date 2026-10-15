@@ -64,7 +64,14 @@ public class WinGetPackageManagerServiceTest
             return;
         }
 
-        Assert.IsTrue(result.Packages.Count > 0, "Expected at least one installed package on a real machine.");
+        if (result.Packages.Count == 0)
+        {
+            // Whether anything is installed is a property of the machine (a clean CI runner has nothing),
+            // not of the parser: the parsing is what this test is for.
+            Assert.Inconclusive("winget lists no installed packages on this machine.");
+            return;
+        }
+
         Assert.IsTrue(result.Packages.All(p => !string.IsNullOrWhiteSpace(p.Id)), "Every parsed row must have an Id.");
     }
 

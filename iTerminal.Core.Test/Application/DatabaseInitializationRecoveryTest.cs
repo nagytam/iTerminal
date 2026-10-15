@@ -78,15 +78,29 @@ public class DatabaseInitializationRecoveryTest
     public async Task StartAsync_ValidDatabase_DoesNotRecreate()
     {
         // Create a valid DB first
-        var svc = new DatabaseInitializationHostedService(BuildFactory(), new iTerminal.Core.Services.StartupWarningService());
+        var factory = BuildFactory();
+        var svc = new DatabaseInitializationHostedService(factory, new iTerminal.Core.Services.StartupWarningService());
         await svc.StartAsync(CancellationToken.None);
-        var sizeBefore = new FileInfo(_dbPath).Length;
+
+        // A row written in between is the evidence: a recreated database would not have it. The file size
+        // is not, since SQLite moves pages between the main file and its write-ahead log on its own.
+        await using (iTerminalDbContext seed = await factory.CreateDbContextAsync())
+        {
+            seed.MusicLibraryEntries.Add(new iTerminal.Core.Data.Music.MusicLibraryEntry
+            {
+                Path = @"C:\Music\kept.mp3",
+                Title = "Kept",
+                Artist = "Artist",
+                Album = "Album",
+            });
+            await seed.SaveChangesAsync();
+        }
 
         // Run again — should not recreate
-        var svc2 = new DatabaseInitializationHostedService(BuildFactory(), new iTerminal.Core.Services.StartupWarningService());
+        var svc2 = new DatabaseInitializationHostedService(factory, new iTerminal.Core.Services.StartupWarningService());
         await svc2.StartAsync(CancellationToken.None);
-        var sizeAfter = new FileInfo(_dbPath).Length;
 
-        Assert.AreEqual(sizeBefore, sizeAfter, "Valid DB should not be recreated");
+        await using iTerminalDbContext check = await factory.CreateDbContextAsync();
+        Assert.IsTrue(await check.MusicLibraryEntries.AnyAsync(entry => entry.Path == @"C:\Music\kept.mp3"), "Valid DB should not be recreated");
     }
 }

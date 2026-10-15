@@ -28,14 +28,20 @@ public class TaskManagerTest
     [TestMethod]
     public async Task Add_ShouldInsertAndCancelByType()
     {
-        using var manager = new TaskManager();
+        // A single worker held busy by a gated blocker keeps the task queued: an idle worker would
+        // run and remove it before the assertions below, and CancelTask would find nothing to cancel.
+        using var manager = new TaskManager(workerCount: 1);
+        var release = new SemaphoreSlim(0, 1);
         var task = new FakeTask();
 
+        await manager.Add(new FakeTask(() => release.WaitAsync()));
         await manager.Add(task);
         Assert.IsTrue(manager.Tasks.Any(t => t == task));
 
         manager.CancelTask(typeof(FakeTask));
         Assert.IsTrue(task.CancellationTokenSource.IsCancellationRequested);
+
+        release.Release();
     }
 
     [TestMethod]

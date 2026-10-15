@@ -29,7 +29,7 @@ public class FolderUrlValidationModelTest
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(validationModel.ErrorMessage, "path");
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("file://C:/Windows")]
     [DataRow("ssh://tamas@example.com:/home/")]
     [DataRow("ftp://example.com/pub/")]

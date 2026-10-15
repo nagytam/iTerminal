@@ -90,7 +90,7 @@ public class CompressTest
 
         var unpacked = Path.Combine(_app.LeftRoot, "readme", "readme.txt");
         var original = File.ReadAllText(Path.Combine(_app.LeftRoot, "readme.txt"));
-        await _app.WaitUntilAsync(() => File.Exists(unpacked) && File.ReadAllText(unpacked) == original, "the file to come back out");
+        await _app.WaitUntilAsync(() => File.Exists(unpacked) && SharedFileReader.ReadAllText(unpacked) == original, "the file to come back out");
         await _app.WaitUntilAsync(s => _app.LeftPanelLists("readme", s), "the left panel to list the new folder");
         await _app.WaitForNoDialogAsync();
     }
