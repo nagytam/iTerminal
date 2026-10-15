@@ -302,7 +302,7 @@ public class DesktopTest
         Assert.IsTrue(buffer.MergedLayer.AsString().Contains("VISIBLE"));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(JobPriority.Rendering, ThreadPriority.Highest)]
     [DataRow(JobPriority.Input, ThreadPriority.AboveNormal)]
     [DataRow(JobPriority.Background, ThreadPriority.BelowNormal)]
