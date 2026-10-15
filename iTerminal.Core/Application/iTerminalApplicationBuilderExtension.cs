@@ -72,11 +72,11 @@ public static class iTerminalApplicationBuilderExtension
             var aiOptions = sp.GetRequiredService<IOptions<AiOptions>>().Value;
 
             IChatClient inner;
-            if (aiOptions.DisableThinking)
+            if (aiOptions.Provider == AiProvider.Ollama)
             {
-                // Ollama's OpenAI-compatible endpoint ignores the think flag; only the native
-                // /api/chat honours it, so use a dedicated client to keep reasoning models fast.
-                inner = new OllamaChatClient(new Uri(aiOptions.ApiBaseUrl), aiOptions.ModelId, think: false);
+                // Ollama's OpenAI-compatible endpoint ignores the think flag; only the native /api/chat
+                // honours it, so the dedicated client serves every Ollama chat.
+                inner = new OllamaChatClient(new Uri(aiOptions.ApiBaseUrl), aiOptions.ModelId, think: !aiOptions.DisableThinking);
             }
             else
             {
@@ -294,6 +294,21 @@ public static class iTerminalApplicationBuilderExtension
         // Playwright driver and its Chromium are what the quote indicator needs; the list is one entry per component.
         string runtimesDirectory = Path.Combine(databaseDirectory, "runtimes");
         services.AddSingleton<IRuntimeDependency>(_ => new PlaywrightRuntimeDependency(runtimesDirectory));
+
+        // Ollama is a dependency only when the AI prompt is configured to use it. Registration cannot be skipped
+        // from inside a factory, so the configured value is read here, once.
+        AiOptions ai = new();
+        configuration?.GetSection("AI").Bind(ai);
+        if (ai.Provider == AiProvider.Ollama)
+        {
+            services.AddSingleton(_ => new OllamaServer(new Uri(ai.ApiBaseUrl)));
+            services.AddSingleton<IRuntimeDependency>(sp => new OllamaRuntimeDependency(
+                Path.Combine(runtimesDirectory, "ollama"),
+                ai.ModelId,
+                sp.GetRequiredService<OllamaServer>()));
+            services.AddSingleton<IJob, OllamaServerJob>();
+        }
+
         services.AddSingleton<IRuntimeDependencyService, RuntimeDependencyService>();
         services.AddSingleton<IJob, RuntimeDependencyCheckJob>();
         services.AddTransient<RuntimeDependencyDialog>();

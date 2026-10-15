@@ -164,10 +164,13 @@ public sealed class PlaywrightRuntimeDependency : IRuntimeDependency
 
     private static string CliPath(string directory) => Path.Combine(directory, DriverFolder, "package", "cli.js");
 
-    private static string NodePath(string directory) =>
-        Path.Combine(directory, DriverFolder, "node", PlatformFolder(), NodeFileName());
+    private static string NodePath(string directory) => NodePath(directory, PlatformFolder());
 
-    private static string NodeFileName() => OperatingSystem.IsWindows() ? "node.exe" : "node";
+    /// <summary>The Node.js executable the package holds for <paramref name="platformFolder"/> — which need not be this machine's.</summary>
+    private static string NodePath(string directory, string platformFolder) =>
+        Path.Combine(directory, DriverFolder, "node", platformFolder, NodeFileName(platformFolder));
+
+    private static string NodeFileName(string platformFolder) => platformFolder.StartsWith("win32", StringComparison.Ordinal) ? "node.exe" : "node";
 
     /// <summary>The folder inside the package's <c>.playwright/node</c> that holds this machine's Node.js.</summary>
     internal static string PlatformFolder()
@@ -224,7 +227,7 @@ public sealed class PlaywrightRuntimeDependency : IRuntimeDependency
             }
         }
 
-        if (!File.Exists(NodePath(destination)))
+        if (!File.Exists(NodePath(destination, platformFolder)))
         {
             throw new InvalidOperationException($"The Playwright package has no Node.js for {platformFolder}.");
         }
