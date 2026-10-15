@@ -96,6 +96,11 @@ public class MultiSelectionTest
     [TestMethod]
     public async Task NumPlusMarksByPatternAndF8DeletesTheMarkedFiles()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Inconclusive("The Recycle Bin option is a Windows feature.");
+        }
+
         await _app.PressAsync("NumPlus");
         await _app.WaitForTextAsync("Mark files");
         await _app.PressAsync("End");

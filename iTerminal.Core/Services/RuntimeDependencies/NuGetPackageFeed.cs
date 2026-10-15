@@ -48,24 +48,25 @@ public sealed class NuGetPackageFeed(
 
         long? total = response.Content.Headers.ContentLength;
         await using Stream source = await response.Content.ReadAsStreamAsync(cancellationToken);
-        await using FileStream target = File.Create(destinationPath);
-
-        byte[] buffer = new byte[81920];
         long received = 0;
-        var clock = Stopwatch.StartNew();
-        TimeSpan? lastReport = null;
-        int read;
-        while ((read = await source.ReadAsync(buffer, cancellationToken)) > 0)
+        await using (FileStream target = File.Create(destinationPath))
         {
-            await target.WriteAsync(buffer.AsMemory(0, read), cancellationToken);
-            received += read;
-
-            if (progress is not null && (lastReport is null || clock.Elapsed - lastReport.Value >= ProgressInterval))
+            byte[] buffer = new byte[81920];
+            var clock = Stopwatch.StartNew();
+            TimeSpan? lastReport = null;
+            int read;
+            while ((read = await source.ReadAsync(buffer, cancellationToken)) > 0)
             {
-                lastReport = clock.Elapsed;
-                progress.Report(total is > 0
-                    ? $"Downloading {packageId} {version}: {Megabytes(received)} of {Megabytes(total.Value)} MB"
-                    : $"Downloading {packageId} {version}: {Megabytes(received)} MB");
+                await target.WriteAsync(buffer.AsMemory(0, read), cancellationToken);
+                received += read;
+
+                if (progress is not null && (lastReport is null || clock.Elapsed - lastReport.Value >= ProgressInterval))
+                {
+                    lastReport = clock.Elapsed;
+                    progress.Report(total is > 0
+                        ? $"Downloading {packageId} {version}: {Megabytes(received)} of {Megabytes(total.Value)} MB"
+                        : $"Downloading {packageId} {version}: {Megabytes(received)} MB");
+                }
             }
         }
 

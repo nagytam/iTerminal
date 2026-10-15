@@ -146,7 +146,7 @@ public sealed class TerminalApp : IAsyncDisposable
         {
             Width = width,
             Height = height,
-            Timeout = TimeSpan.FromSeconds(20),
+            Timeout = TimeSpan.FromSeconds(30),
             Configuration = new Dictionary<string, string?>
             {
                 [iTerminalApplicationBuilderExtension.DataDirectoryKey] = Path.Combine(root, "data"),

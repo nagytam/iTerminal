@@ -35,7 +35,7 @@ public class ContentModelService(
     iTerminal.Core.Services.Preview.IFilePreviewService? filePreviewService = null,
     iTerminal.Core.Services.Archives.IArchiveDriveService? archiveDriveService = null,
     iTerminal.Core.Services.Recycle.IRecycleBinService? recycleBinService = null)
-    : IContentModelService
+    : IContentModelService, IDisposable
 {
     /// <summary>The singletons the music drives are views over, resolved together.</summary>
     private sealed record MusicServices(
@@ -87,6 +87,20 @@ public class ContentModelService(
         filePreviewService ?? new iTerminal.Core.Services.Preview.FilePreviewService());
 
     public ConcurrentList<IContentModel> ContentModels { get; private set; } = [];
+
+    /// <summary>
+    /// Disposes the models still on screen when the application stops. A file panel's folder watcher is an
+    /// operating-system handle — on Linux an inotify instance, of which a user has 128 — and nothing else
+    /// releases it: the service is a singleton, so the models outlived the application's host and the
+    /// instances piled up across every run in one process until new watchers could not be created.
+    /// </summary>
+    public void Dispose()
+    {
+        foreach (IContentModel contentModel in ContentModels.ToList())
+        {
+            (contentModel as IDisposable)?.Dispose();
+        }
+    }
     public ConcurrentList<IContentBrowser> ContentBrowsers { get; private set; } = [];
     public ConcurrentDictionary<string, long> CursorPositions { get; private set; } = [];
     public string FocusedPanel { get; set; }

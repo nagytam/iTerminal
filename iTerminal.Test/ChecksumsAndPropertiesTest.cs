@@ -10,7 +10,14 @@ public class ChecksumsAndPropertiesTest
     private TerminalApp _app = null!;
 
     [TestCleanup]
-    public async Task StopAsync() => await _app.DisposeAsync();
+    public async Task StopAsync()
+    {
+        // A test that skips itself before starting an app (Assert.Inconclusive below) has none to stop.
+        if (_app is not null)
+        {
+            await _app.DisposeAsync();
+        }
+    }
 
     private string ReadmePath => Path.Combine(_app.LeftRoot, "readme.txt");
 

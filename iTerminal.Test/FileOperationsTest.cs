@@ -204,6 +204,11 @@ public class FileOperationsTest
     [TestMethod]
     public async Task F8DeletesAFilePermanentlyWhenTheRecycleBinIsUnticked()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Inconclusive("The Recycle Bin option is a Windows feature.");
+        }
+
         await _app.SelectEntryAsync("readme.txt");
 
         await _app.PressAsync("F8");
