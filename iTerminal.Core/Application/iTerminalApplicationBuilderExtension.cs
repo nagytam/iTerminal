@@ -22,7 +22,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using iTerminal.Core.Tasks;
-using OpenAI;
 
 namespace iTerminal.Core.Application;
 
@@ -70,33 +69,15 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IChatClient>(sp =>
         {
             var aiOptions = sp.GetRequiredService<IOptions<AiOptions>>().Value;
-
-            IChatClient inner;
-            if (aiOptions.Provider == AiProvider.Ollama)
+            string? apiKey = null;
+            if (aiOptions.Provider != AiProvider.None)
             {
-                // Ollama's OpenAI-compatible endpoint ignores the think flag; only the native /api/chat
-                // honours it, so the dedicated client serves every Ollama chat.
-                inner = new OllamaChatClient(new Uri(aiOptions.ApiBaseUrl), aiOptions.ModelId, think: !aiOptions.DisableThinking);
-            }
-            else
-            {
-                var apiKey = Environment.GetEnvironmentVariable(aiOptions.ApiKeyEnvVar);
+                apiKey = Environment.GetEnvironmentVariable(aiOptions.ApiKeyEnvVar);
                 if (string.IsNullOrEmpty(apiKey))
                     apiKey = sp.GetRequiredService<IPasswordManager>().GetSecret(AiOptions.ApiKeyPasswordId);
-                if (string.IsNullOrEmpty(apiKey))
-                    apiKey = "no-api-key-configured";
-                var openAiClient = new OpenAIClient(
-                    new System.ClientModel.ApiKeyCredential(apiKey),
-                    new OpenAIClientOptions { Endpoint = new Uri(aiOptions.ApiBaseUrl) });
-                inner = openAiClient
-                    .GetChatClient(aiOptions.ModelId)
-                    .AsIChatClient();
             }
 
-            return inner
-                .AsBuilder()
-                .UseFunctionInvocation()
-                .Build();
+            return AiChatClientFactory.Create(aiOptions, apiKey);
         });
 
         services.AddSingleton<AiChatModel>();
