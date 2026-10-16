@@ -233,6 +233,11 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();
         services.AddTransient<PropertiesDialog>();
         services.AddTransient<ChecksumDialog>();
+        // Ctrl+Shift+F8 secure wipe, Ctrl+Shift+F7 signatures (sign and verify).
+        services.AddSingleton<iTerminal.Core.Services.Wipe.ISecureWipeService, iTerminal.Core.Services.Wipe.SecureWipeService>();
+        services.AddSingleton<iTerminal.Core.Services.Signing.ISignatureService, iTerminal.Core.Services.Signing.SignatureService>();
+        services.AddTransient<SecureWipeDialog>();
+        services.AddTransient<SignatureDialog>();
         // File associations: Enter and F4 open a file with the program chosen for it; Shift+F3 and
         // Ctrl+F4 choose. The dialogs are handed out by a factory because one consumer needs two —
         // "Open with" and "Edit with" are separate controls.

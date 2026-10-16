@@ -55,6 +55,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private FileDiffDialog? _fileDiffDialog { get; set; }
     private iTerminal.Core.Services.Clipboard.FileClipboardOperations? _clipboard { get; set; }
     private DiskImageDialog? _diskImageDialog { get; set; }
+    private SecureWipeDialog? _secureWipeDialog { get; set; }
+    private SignatureDialog? _signatureDialog { get; set; }
 
     public ContentBrowser(
         string name,
@@ -87,10 +89,14 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         UserMenuDialog? userMenuDialog = null,
         FileDiffDialog? fileDiffDialog = null,
         iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null,
-        DiskImageDialog? diskImageDialog = null)
+        DiskImageDialog? diskImageDialog = null,
+        SecureWipeDialog? secureWipeDialog = null,
+        SignatureDialog? signatureDialog = null)
         : base(themeService)
     {
         _diskImageDialog = diskImageDialog;
+        _secureWipeDialog = secureWipeDialog;
+        _signatureDialog = signatureDialog;
         _clipboard = clipboardOperations;
         _fileDiffDialog = fileDiffDialog;
         Name = name;
@@ -264,6 +270,14 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_checksumDialog is not null)
         {
             AddCommand(new ChecksumDialogCommand(_checksumDialog, ContentModelService, _fileSystemResolver));
+        }
+        if (_secureWipeDialog is not null)
+        {
+            AddCommand(new SecureWipeDialogCommand(_secureWipeDialog, ContentModelService));
+        }
+        if (_signatureDialog is not null)
+        {
+            AddCommand(new SignatureDialogCommand(_signatureDialog, ContentModelService));
         }
         if (_fileDiffDialog is not null)
         {

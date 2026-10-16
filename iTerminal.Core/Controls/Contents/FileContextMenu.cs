@@ -82,6 +82,8 @@ public static class FileContextMenu
         AddCommands<ExtractDialogCommand>(items, snapshot, "Extract");
         AddCommands<CreateLinkDialogCommand>(items, snapshot, "Create link");
         AddCommands<ChecksumDialogCommand>(items, snapshot, "Checksums");
+        AddCommands<SignatureDialogCommand>(items, snapshot, "Signatures");
+        AddCommands<SecureWipeDialogCommand>(items, snapshot, "Secure wipe");
         AddCommands<PropertiesDialogCommand>(items, snapshot, "Properties");
 
         // A panel's commands are initialised more than once as its model changes, so the same
