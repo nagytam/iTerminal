@@ -308,58 +308,93 @@ public sealed class WindowsRecycleBinStore(Func<IEnumerable<string>> binFolders)
 /// <summary>
 /// The freedesktop.org trash most Linux desktops use: <c>~/.local/share/Trash/files/&lt;name&gt;</c>
 /// is the deleted file and <c>info/&lt;name&gt;.trashinfo</c> a record of its original path and when
-/// it was deleted. Only this home trash is read — the per-volume <c>.Trash-&lt;uid&gt;</c> folders
-/// of other mounts are not.
+/// it was deleted. Reads the home trash and the per-volume <c>.Trash-&lt;uid&gt;</c> folders of the
+/// other mounted volumes, where a record holds its path relative to the volume's root; the files
+/// themselves are put there by <see cref="FreedesktopTrash"/>.
 /// </summary>
-public sealed class FreedesktopTrashStore(string trashFolder) : IRecycleBinStore
+public sealed class FreedesktopTrashStore : IRecycleBinStore
 {
     private const string InfoExtension = ".trashinfo";
 
-    public FreedesktopTrashStore() : this(DefaultTrashFolder())
+    private readonly Func<IReadOnlyList<(string Folder, string? TopDirectory)>> _locations;
+
+    /// <summary>Reads one trash folder and nothing else.</summary>
+    public FreedesktopTrashStore(string trashFolder)
+        : this(() => [(trashFolder, null)])
     {
+    }
+
+    /// <summary>The current user's trashes on this system.</summary>
+    public FreedesktopTrashStore()
+        : this(new FreedesktopTrash())
+    {
+    }
+
+    public FreedesktopTrashStore(FreedesktopTrash trash)
+        : this(trash.Locations)
+    {
+    }
+
+    private FreedesktopTrashStore(Func<IReadOnlyList<(string Folder, string? TopDirectory)>> locations)
+    {
+        _locations = locations;
     }
 
     public string Unavailable => string.Empty;
 
-    private static string DefaultTrashFolder()
-    {
-        var dataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME");
-        if (string.IsNullOrEmpty(dataHome))
-        {
-            dataHome = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local", "share");
-        }
-
-        return Path.Combine(dataHome, "Trash");
-    }
-
-    private string InfoFolder => Path.Combine(trashFolder, "info");
-
-    private string FilesFolder => Path.Combine(trashFolder, "files");
-
     public IReadOnlyList<RecycledItem> List()
     {
         var items = new List<RecycledItem>();
-        if (!Directory.Exists(InfoFolder))
+        foreach (var (folder, topDirectory) in _locations())
         {
-            return items;
+            ListFolder(folder, topDirectory, items);
         }
 
-        foreach (var record in Directory.EnumerateFiles(InfoFolder, "*" + InfoExtension))
+        return items;
+    }
+
+    private static void ListFolder(string trashFolder, string? topDirectory, List<RecycledItem> items)
+    {
+        var infoFolder = Path.Combine(trashFolder, "info");
+        var filesFolder = Path.Combine(trashFolder, "files");
+        IEnumerable<string> records;
+        try
+        {
+            if (!Directory.Exists(infoFolder))
+            {
+                return;
+            }
+
+            records = Directory.EnumerateFiles(infoFolder, "*" + InfoExtension).ToList();
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            // A volume whose trash cannot be read costs that volume, not the listing.
+            return;
+        }
+
+        foreach (var record in records)
         {
             try
             {
-                var contentPath = Path.Combine(FilesFolder, Path.GetFileName(record)[..^InfoExtension.Length]);
+                var contentPath = Path.Combine(filesFolder, Path.GetFileName(record)[..^InfoExtension.Length]);
                 var info = new FileInfo(contentPath);
                 if ((int)info.Attributes == -1 || ParseRecord(File.ReadAllText(record)) is not { } parsed)
                 {
                     continue;
                 }
 
+                var originalPath = parsed.OriginalPath;
+                if (!Path.IsPathRooted(originalPath) && topDirectory is not null)
+                {
+                    originalPath = Path.Combine(topDirectory, originalPath.Replace('/', Path.DirectorySeparatorChar));
+                }
+
                 var isFolder = (info.Attributes & FileAttributes.Directory) != 0;
                 items.Add(new RecycledItem(
                     record,
-                    Path.GetFileName(Path.TrimEndingDirectorySeparator(parsed.OriginalPath)),
-                    parsed.OriginalPath,
+                    Path.GetFileName(Path.TrimEndingDirectorySeparator(originalPath)),
+                    originalPath,
                     parsed.Deleted,
                     isFolder ? 0 : info.Length,
                     isFolder,
@@ -369,8 +404,6 @@ public sealed class FreedesktopTrashStore(string trashFolder) : IRecycleBinStore
             {
             }
         }
-
-        return items;
     }
 
     /// <summary>Reads a <c>.trashinfo</c> record: <c>Path=</c>, percent-encoded, and <c>DeletionDate=</c>, local time.</summary>

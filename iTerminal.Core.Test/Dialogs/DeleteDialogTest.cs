@@ -78,7 +78,7 @@ public class DeleteDialogTest
         var screen = Render(dialog);
 
         AssertScreenContains(screen, "report.txt");
-        AssertScreenContains(screen, "Move to Recycle bin");
+        AssertScreenContains(screen, OperatingSystem.IsLinux() ? "Move to Trash" : "Move to Recycle bin");
         AssertScreenContains(screen, "Delete");
         AssertScreenContains(screen, "Cancel", "the Cancel button reads Cancel, not a cut-off command name");
     }
@@ -113,7 +113,7 @@ public class DeleteDialogTest
         var dialog = Create(Path.Combine(_folder, "report.txt"));
         await ShowAsync(dialog);
 
-        Assert.AreEqual(OperatingSystem.IsWindows(), dialog.MoveToRecycleBin);
+        Assert.AreEqual(OperatingSystem.IsWindows() || OperatingSystem.IsLinux(), dialog.MoveToRecycleBin);
     }
 
     [TestMethod]
@@ -128,9 +128,9 @@ public class DeleteDialogTest
     }
 
     [TestMethod]
-    public void OnlyLocalFilesOnWindowsCanBeRecycled()
+    public void OnlyLocalFilesOnWindowsAndLinuxCanBeRecycled()
     {
-        Assert.AreEqual(OperatingSystem.IsWindows(), DeleteDialog.CanRecycle(new Url(Path.GetTempPath())));
+        Assert.AreEqual(OperatingSystem.IsWindows() || OperatingSystem.IsLinux(), DeleteDialog.CanRecycle(new Url(Path.GetTempPath())));
         Assert.IsFalse(DeleteDialog.CanRecycle(new Url("memdrive://notes.txt")));
     }
 }

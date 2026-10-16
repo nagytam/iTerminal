@@ -2,12 +2,31 @@
 using iConsole.Interfaces;
 using iTerminal.Core.Helper;
 using iTerminal.Core.Model.ContentModels;
+using iTerminal.Core.Services.Recycle;
 using Microsoft.VisualBasic.FileIO;
 
 namespace iTerminal.Core.Services;
 
 public class FileSystemService : IFileSystemService
 {
+    private ITrashService? _trash;
+
+    public FileSystemService()
+    {
+    }
+
+    /// <param name="trash">
+    /// Where a delete with "move to the bin" ticked goes on Linux. Unused on Windows, where the
+    /// shell's Recycle Bin is asked.
+    /// </param>
+    public FileSystemService(ITrashService trash)
+    {
+        _trash = trash;
+    }
+
+    /// <summary>The current user's freedesktop Trash unless one was given.</summary>
+    private ITrashService Trash => _trash ??= new FreedesktopTrash();
+
     public bool IsReadOnly => false;
 
     public bool DeleteFile(Url url, bool moveToRecycleBin)
@@ -23,6 +42,10 @@ public class FileSystemService : IFileSystemService
         if (moveToRecycleBin && OperatingSystem.IsWindows())
         {
             FileSystem.DeleteFile(url.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+        }
+        else if (moveToRecycleBin && OperatingSystem.IsLinux() && Trash.TryMoveToTrash(url.FullName))
+        {
+            // In the Trash; false means it was already in one, and is deleted for good below.
         }
         else
         {
@@ -71,6 +94,10 @@ public class FileSystemService : IFileSystemService
         if (moveToRecycleBin && OperatingSystem.IsWindows())
         {
             FileSystem.DeleteDirectory(url.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+        }
+        else if (moveToRecycleBin && OperatingSystem.IsLinux() && Trash.TryMoveToTrash(url.FullName))
+        {
+            // As for a file, above: the whole folder is one entry in the Trash.
         }
         else
         {

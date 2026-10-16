@@ -80,7 +80,7 @@ public abstract class ContentModelAsyncDrive : ContentModelBase, IFileSystemProv
     public static bool IsAsyncDrive(ContainerType containerType) =>
         containerType is ContainerType.Docker or ContainerType.Git
             or ContainerType.SearchResults or ContainerType.Preview or ContainerType.Archive
-            or ContainerType.Recycle;
+            or ContainerType.Recycle or ContainerType.Mtp;
 
     /// <summary>
     /// Records where <paramref name="panelName"/> was when it crossed into one of these drives, so

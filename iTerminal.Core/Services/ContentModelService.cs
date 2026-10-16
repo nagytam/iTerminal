@@ -35,7 +35,9 @@ public class ContentModelService(
     iTerminal.Core.Services.Preview.IFilePreviewService? filePreviewService = null,
     iTerminal.Core.Services.Archives.IArchiveDriveService? archiveDriveService = null,
     iTerminal.Core.Services.Recycle.IRecycleBinService? recycleBinService = null,
-    IFtpFileSystemService? ftpFileSystemService = null)
+    IFtpFileSystemService? ftpFileSystemService = null,
+    IWebDavFileSystemService? webDavFileSystemService = null,
+    iTerminal.Core.Services.Mtp.IMtpDriveService? mtpDriveService = null)
     : IContentModelService, IDisposable
 {
     /// <summary>The singletons the music drives are views over, resolved together.</summary>
@@ -162,6 +164,11 @@ public class ContentModelService(
                     contentModel = new ContentModelFtpDrive(name, settingsService, ftpFileSystemService, folderHistoryService, frequentExecutionGuardService, memoryCacheService, logger, networkProfileService, passwordManager);
                     break;
                 }
+            case ContainerType.WebDav when webDavFileSystemService is not null:
+                {
+                    contentModel = new ContentModelWebDavDrive(name, settingsService, webDavFileSystemService, folderHistoryService, frequentExecutionGuardService, memoryCacheService, logger, networkProfileService, passwordManager);
+                    break;
+                }
             case ContainerType.IPhoneFileSystem:
                 {
                     contentModel = new ContentModelIPhoneDrive(name, settingsService, iPhoneFileSystemService, folderHistoryService, frequentExecutionGuardService, memoryCacheService, logger);
@@ -203,6 +210,11 @@ public class ContentModelService(
             case ContainerType.Archive:
                 {
                     contentModel = new ContentModelArchiveDrive(name, settingsService, _archiveDriveService.Value, folderHistoryService, frequentExecutionGuardService, logger);
+                    break;
+                }
+            case ContainerType.Mtp when mtpDriveService is not null:
+                {
+                    contentModel = new ContentModelMtpDrive(name, settingsService, mtpDriveService, folderHistoryService, frequentExecutionGuardService, logger);
                     break;
                 }
             case ContainerType.Recycle:
