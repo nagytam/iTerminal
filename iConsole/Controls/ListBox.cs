@@ -32,8 +32,14 @@ public class ListBox<T> : Control
         AddCommand(new ScrollToHomeVerticalCommand(ScrollableModel));
         AddCommand(new ScrollToEndVerticalCommand(ScrollableModel));
         AddCommand(new InvertSelectionCommand<T>(ScrollableModel, ListModel));
-        AddCommand(new SelectListItemCommand<T>(ScrollableModel, ListModel));
+        _selectItemCommand = new SelectListItemCommand<T>(ScrollableModel, ListModel);
+        AddCommand(_selectItemCommand);
     }
+
+    /// <summary>Rows the wheel moves the cursor by in one notch.</summary>
+    private const int WheelRows = 3;
+
+    private readonly SelectListItemCommand<T> _selectItemCommand;
 
     public IListBoxModel<T> ListModel { get; }
 
@@ -82,6 +88,54 @@ public class ListBox<T> : Control
         ScrollableModel.ScrollableSize = new Size(ViewSize.Width, ListModel.ListItems.Count);
         ScrollableModel.Update();
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// A click on a row moves the cursor there and selects it, as Enter does on the cursor row, and
+    /// takes the keyboard focus. The wheel moves the cursor. Before this a list could only be driven
+    /// from the keyboard: a mouse click on a row did nothing, and the wheel scrolled the dialog's
+    /// neighbours instead of the list.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        var isHandled = await base.HandleMouseEventAsync(mouseEvent);
+
+        var relativeX = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
+        var relativeY = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+        var isInside = relativeX >= 0 && relativeX < ViewSize.Width
+            && relativeY >= 0 && relativeY < ViewSize.Height;
+        if (!isInside || Count == 0)
+        {
+            return isHandled;
+        }
+
+        if (mouseEvent.WheelDelta != 0)
+        {
+            var target = ScrollableModel.CursorPosition.Y + (mouseEvent.WheelDelta > 0 ? -WheelRows : WheelRows);
+            ScrollableModel.CursorPosition.Y = Math.Clamp(target, 0, Count - 1);
+            ScrollableModel.ScrollToVisible();
+            StateHasChanged();
+            return true;
+        }
+
+        if (mouseEvent.LeftClicked || mouseEvent.RightClicked)
+        {
+            var index = ScrollableModel.ScrollPosition.Y + relativeY;
+            if (index < Count)
+            {
+                if (!IsFocused)
+                {
+                    SetFocus();
+                }
+                ScrollableModel.CursorPosition.Y = index;
+                ScrollableModel.ScrollToVisible();
+                await _selectItemCommand.RunAsync(null);
+                StateHasChanged();
+                return true;
+            }
+        }
+
+        return isHandled;
     }
 
     public override void OnIdle()

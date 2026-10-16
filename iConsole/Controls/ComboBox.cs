@@ -201,7 +201,8 @@ public class ComboBox<T> : Control, IReadOnly
 
     private void DrawClosedLine(IBuffer buffer, ColorScheme colorScheme, Color foreground, Color background, int width)
     {
-        var prefix = string.IsNullOrEmpty(Label) ? string.Empty : Label + ": ";
+        // The same label rule as TextBox, so "Path:" does not draw as "Path: :" next to a text box.
+        var prefix = TextBox.FormatLabelPrefix(Label);
         var line = new ConxelString(prefix, foreground, background);
         line.HighlightHotKey(HotConsoleKey, HotKeyChar, colorScheme.SelectedFocusedForeground, background);
 
