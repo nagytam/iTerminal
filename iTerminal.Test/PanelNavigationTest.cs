@@ -41,7 +41,12 @@ public class PanelNavigationTest
     {
         await _app.SelectEntryAsync("notes.md");
 
-        var screen = await _app.Driver.WaitForIdleAsync();
+        // The cursor has moved in the model; the repaint is a separate job. A snapshot taken once the
+        // screen merely stops changing can still be the frame from before the move on a loaded machine
+        // (the old cursor row highlighted, notes.md not), so wait for the frame that draws it.
+        var screen = await _app.Driver.WaitUntilAsync(
+            s => s.BackgroundAt(5, s.RowOf("notes.md")) != s.BackgroundAt(5, s.RowOf("readme.txt")),
+            "the cursor row to have a background of its own");
         var cursorRow = screen.RowOf("notes.md");
         var otherRow = screen.RowOf("readme.txt");
         Assert.AreNotEqual(screen.BackgroundAt(5, otherRow), screen.BackgroundAt(5, cursorRow),

@@ -665,6 +665,8 @@ One command produces, per runtime, `iterminal-<v>-linux-x64.tar.gz`, `iterminal_
 
 **Stale-result guarding**: A refresh task compares its own `Url` against the model's current `Url` (`IsCurrentUrl()`) before every UI write, so a task that outlives a fast navigation cannot repaint the panel with the old folder. Any new async producer that writes into a content model needs the same check.
 
+**A cached listing never replaces a fresh one** (`ReplaceEntriesAndRestoreFocus(..., isFromCache: true)`): the navigation and the panel's start-up each enqueue a refresh task for the same folder, and the slower one's cache lookup could land after the other's fresh listing, showing the folder as of the last run until a later refresh. `ResetNavigation` clears the "fresh listing landed" flag.
+
 **UI update batching**: `ContentModelBase.Update()` is guarded by `FrequentExecutionGuardService` (max ~20 `PropertyChanged` per second). `Entries.ReplaceAll(list)` is the only safe way to do a bulk atomic swap of the entry list.
 
 **`FilteredEntries` is a snapshot stamped with the entries version it was taken under**: the cache used to be invalidated by setting it to null, and a reader that took its snapshot just before a listing landed on a worker thread stored that stale snapshot *after* the invalidation — it was then served until the next change. A panel restoring its cursor (`RestoreNavigation`) read one row where there were several and parked the restore for a listing that had already arrived; the search panel's "go to this hit" intermittently landed on `..`. Don't reintroduce a cache that is invalidated by clearing.

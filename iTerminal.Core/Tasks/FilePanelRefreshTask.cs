@@ -97,7 +97,7 @@ public class FilePanelRefreshTask : BackgroundTask
                 {
                     if (_contentModel is not null && IsCurrentUrl())
                     {
-                        ReplaceEntriesAndRestoreFocus(cached, isComplete: true);
+                        ReplaceEntriesAndRestoreFocus(cached, isComplete: true, isFromCache: true);
                     }
                 }
                 else if (_dbContextFactory is not null)
@@ -116,7 +116,7 @@ public class FilePanelRefreshTask : BackgroundTask
                                 _memoryCacheService.Set(key, list, MemoryCacheTtl);
                                 if (_contentModel is not null && IsCurrentUrl())
                                 {
-                                    ReplaceEntriesAndRestoreFocus(list, isComplete: true);
+                                    ReplaceEntriesAndRestoreFocus(list, isComplete: true, isFromCache: true);
                                 }
                             }
                         }
@@ -267,8 +267,8 @@ ON CONFLICT(Path) DO UPDATE SET
     }
 
     /// <param name="isComplete">True for the whole folder, false for a streamed batch; see <see cref="ContentModelBase.ReplaceEntriesAndRestoreFocus"/>.</param>
-    private void ReplaceEntriesAndRestoreFocus(List<IEntry> entries, bool isComplete) =>
-        _contentModel?.ReplaceEntriesAndRestoreFocus(entries, isComplete);
+    private void ReplaceEntriesAndRestoreFocus(List<IEntry> entries, bool isComplete, bool isFromCache = false) =>
+        _contentModel?.ReplaceEntriesAndRestoreFocus(entries, isComplete, isFromCache);
 
     private bool IsCurrentUrl() =>
         _contentModel is not null && string.Equals(_contentModel.Url.FullUrl, Url.FullUrl, StringComparison.Ordinal);

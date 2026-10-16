@@ -60,14 +60,21 @@ public class ContentModelDockerDriveTest
     public async Task ShiftF9StopsARunningContainerAndTheRowShowsIt()
     {
         var stopped = false;
+        using var dockerAnswers = new ManualResetEventSlim();
         var runner = new FakeProcessRunner();
-        runner.Answer("docker stop web", "web\n");
+        // docker stop takes seconds on a real container; held here so the footer is read while it runs.
+        runner.AnswerWith("docker stop web", () =>
+        {
+            dockerAnswers.Wait(TimeSpan.FromSeconds(30));
+            return "web\n";
+        });
         var model = await OnTheContainerAsync(runner.AnswerWith("docker ps", () => stopped ? Stopped : Running));
         var row = (DockerContainerEntry)model.GetFocusedEntry()!;
 
         stopped = true;
         model.RunContainerAction(row, row.IsRunning ? DockerContainerAction.Stop : DockerContainerAction.Start);
         StringAssert.Contains(model.GetFooter(), "Stopping web…", "said at once, before docker answers");
+        dockerAnswers.Set();
         await model.ContainerActionTask;
 
         Assert.IsTrue(runner.Calls.Any(c => c.CommandLine == "docker stop web"));
