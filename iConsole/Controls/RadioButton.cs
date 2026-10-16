@@ -81,7 +81,7 @@ public class RadioButton : Control, IReadOnly
         if (!IsReadOnly
             && AbsoluteBoundRect.Contains(mouseEvent.Position)
             && mouseEvent.WheelDelta == 0
-            && (mouseEvent.LeftClicked || mouseEvent.RightClicked))
+            && mouseEvent.LeftClicked)
         {
             Select();
             isHandled = true;

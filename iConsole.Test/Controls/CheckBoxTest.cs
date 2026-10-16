@@ -82,4 +82,20 @@ public class CheckBoxTest
         checkBox.Draw(buffer);
         Assert.AreEqual("▣ Label   " + Environment.NewLine, buffer.ContentAsString);
     }
+
+    [TestMethod]
+    public async Task RightClickDoesNotToggleCheckBox()
+    {
+        var mockThemeService = new Mock<IThemeService>();
+        var checkBox = new CheckBox(mockThemeService.Object)
+        {
+            Label = "Label",
+            Position = new Position(0, 0),
+            ViewSize = new Size(25, 1)
+        };
+
+        await checkBox.HandleMouseEventAsync(new MouseEvent { Position = new Position(3, 0), RightClicked = true });
+
+        Assert.IsFalse(checkBox.IsChecked);
+    }
 }

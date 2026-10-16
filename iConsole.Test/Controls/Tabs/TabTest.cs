@@ -1138,4 +1138,122 @@ public class TabTest
         Assert.IsTrue(strip.StartsWith("║< A >│ B │ C │ ", StringComparison.Ordinal), strip);
         Assert.IsFalse(strip.Contains("││"));
     }
+
+    private static async Task<(Tab Tab, MockBuffer Buffer)> CreateOverflowingStripAsync(IThemeService themeService)
+    {
+        // Cells are name + 4 wide: Alpha 9, Bravo 9, Charlie 11, Delta 9, Echo 8 — 46 columns of
+        // names on a strip that has 28 between its borders.
+        var buffer = new MockBuffer(new Size(30, 8));
+        var tab = new Tab(themeService) { ViewSize = buffer.Size };
+        foreach (var name in new[] { "Alpha", "Bravo", "Charlie", "Delta", "Echo" })
+        {
+            tab.AddTabPage(new TabPage(name, themeService));
+        }
+        await tab.OnInitializeAsync();
+        return (tab, buffer);
+    }
+
+    private static string StripOf(Tab tab, MockBuffer buffer)
+    {
+        tab.Draw(buffer);
+        return buffer.ContentAsString.Split(Environment.NewLine)[1];
+    }
+
+    [TestMethod]
+    public async Task DrawHorizontal_NamesThatDoNotFit_AreCutOffWithAMarkerOnTheHiddenSide()
+    {
+        var (tab, buffer) = await CreateOverflowingStripAsync(CreateMockThemeService().Object);
+
+        var strip = StripOf(tab, buffer);
+
+        Assert.AreEqual(30, strip.Length, strip);
+        Assert.IsTrue(strip.Contains("Alpha") && strip.Contains("Bravo"), strip);
+        Assert.IsFalse(strip.Contains("Charlie"), strip);
+        Assert.IsTrue(strip.EndsWith("\u203a"), "A marker says there are more names to the right: " + strip);
+        Assert.IsFalse(strip.StartsWith("\u2039"), strip);
+    }
+
+    [TestMethod]
+    public async Task DrawHorizontal_FocusingAHiddenPage_ScrollsTheStripToIt()
+    {
+        var (tab, buffer) = await CreateOverflowingStripAsync(CreateMockThemeService().Object);
+
+        tab.FocusedTabPage = 4;
+        var strip = StripOf(tab, buffer);
+
+        Assert.AreEqual(30, strip.Length, strip);
+        Assert.IsTrue(strip.Contains("Echo"), strip);
+        Assert.IsFalse(strip.Contains("Alpha"), strip);
+        Assert.IsTrue(strip.StartsWith("\u2039"), "A marker says there are more names to the left: " + strip);
+        Assert.IsFalse(strip.EndsWith("\u203a"), strip);
+    }
+
+    [TestMethod]
+    public async Task DrawHorizontal_NamesThatFit_HaveNoMarkers()
+    {
+        var themeService = CreateMockThemeService().Object;
+        var buffer = new MockBuffer(new Size(60, 8));
+        var tab = new Tab(themeService) { ViewSize = buffer.Size };
+        tab.AddTabPage(new TabPage("Alpha", themeService));
+        tab.AddTabPage(new TabPage("Bravo", themeService));
+        await tab.OnInitializeAsync();
+
+        var strip = StripOf(tab, buffer);
+
+        Assert.IsFalse(strip.Contains("\u2039") || strip.Contains("\u203a"), strip);
+    }
+
+    [TestMethod]
+    public async Task DrawHorizontal_ANameWiderThanTheStrip_IsCutWithAnEllipsis()
+    {
+        var themeService = CreateMockThemeService().Object;
+        var buffer = new MockBuffer(new Size(20, 8));
+        var tab = new Tab(themeService) { ViewSize = buffer.Size };
+        tab.AddTabPage(new TabPage("A name far too long for the strip", themeService));
+        await tab.OnInitializeAsync();
+
+        var strip = StripOf(tab, buffer);
+
+        Assert.AreEqual(20, strip.Length, strip);
+        Assert.IsTrue(strip.Contains("\u2026"), strip);
+    }
+
+    [TestMethod]
+    public async Task HandleMouseEventAsync_HorizontalStrip_ClickingTheRightMarkerGoesToTheNextPage()
+    {
+        var (tab, buffer) = await CreateOverflowingStripAsync(CreateMockThemeService().Object);
+        tab.Draw(buffer);
+
+        var handled = await tab.HandleMouseEventAsync(Click(29, 1));
+
+        Assert.IsTrue(handled);
+        Assert.AreEqual(1, tab.FocusedTabPage);
+    }
+
+    [TestMethod]
+    public async Task HandleMouseEventAsync_HorizontalStrip_ClickingTheLeftMarkerGoesToThePreviousPage()
+    {
+        var (tab, buffer) = await CreateOverflowingStripAsync(CreateMockThemeService().Object);
+        tab.FocusedTabPage = 4;
+        tab.Draw(buffer);
+
+        var handled = await tab.HandleMouseEventAsync(Click(0, 1));
+
+        Assert.IsTrue(handled);
+        Assert.AreEqual(3, tab.FocusedTabPage);
+    }
+
+    [TestMethod]
+    public async Task HandleMouseEventAsync_HorizontalStrip_AScrolledStripMapsClicksToWhatIsDrawn()
+    {
+        var (tab, buffer) = await CreateOverflowingStripAsync(CreateMockThemeService().Object);
+        tab.FocusedTabPage = 4;
+        tab.Draw(buffer);
+
+        // Scrolled to Charlie, Delta, Echo: Charlie's cell starts at column 1 after the marker.
+        var handled = await tab.HandleMouseEventAsync(Click(3, 1));
+
+        Assert.IsTrue(handled);
+        Assert.AreEqual(2, tab.FocusedTabPage);
+    }
 }
