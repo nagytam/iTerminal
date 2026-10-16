@@ -41,6 +41,12 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
     /// </summary>
     private bool _listingIncomplete;
 
+    /// <summary>
+    /// A complete listing read from the folder itself has landed for the URL being shown. A copy
+    /// served from a cache is older than that by definition and must not replace it.
+    /// </summary>
+    private bool _freshListingLanded;
+
     private string? _pendingEntryUrl;
     private long _pendingCursorPositionY;
     private long _pendingScrollPositionY;
@@ -399,10 +405,28 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
     /// complete listing can land a restore: a batch of the first 50 rows would clamp a cursor that
     /// belongs at row 300.
     /// </param>
-    public void ReplaceEntriesAndRestoreFocus(IList<IEntry> entries, bool isComplete)
+    /// <param name="isFromCache">
+    /// True when <paramref name="entries"/> was served from a cache rather than read from the folder.
+    /// Two refresh tasks can be running for one URL (the navigation's and the panel's start-up), and
+    /// the slower one's cache lookup can land after the other's fresh listing: the panel then showed
+    /// the folder as it was last run — without the files added since — until some later refresh, and
+    /// forever when that task was cancelled before it enumerated. A cached listing is therefore
+    /// dropped once a fresh one has landed.
+    /// </param>
+    public void ReplaceEntriesAndRestoreFocus(IList<IEntry> entries, bool isComplete, bool isFromCache = false)
     {
         lock (_navigationLock)
         {
+            if (isFromCache && _freshListingLanded)
+            {
+                return;
+            }
+
+            if (isComplete && !isFromCache)
+            {
+                _freshListingLanded = true;
+            }
+
             var position = CursorPosition;
             var cursorBefore = CursorPosition.Y;
             RememberFocusedEntry();
@@ -636,6 +660,7 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
             _hasPendingNavigation = false;
             _pendingEntryUrl = null;
             _listingIncomplete = false;
+            _freshListingLanded = false;
 
             // Marks describe rows of the folder being left; an operation must never act on rows the
             // user can no longer see. Every drive's SetUrl comes through here.

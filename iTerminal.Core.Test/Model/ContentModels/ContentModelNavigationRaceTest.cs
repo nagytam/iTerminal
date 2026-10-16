@@ -70,6 +70,33 @@ public class ContentModelNavigationRaceTest
     }
 
     [TestMethod]
+    public void ACachedListingDoesNotReplaceAFreshOneThatLandedFirst()
+    {
+        // Two refresh tasks for one folder: the faster one's enumeration lands, then the slower one's
+        // cache lookup — a copy of the folder from the last run, without the file added since.
+        var model = MarkableTestModel.Create(_root);
+        var fresh = model.FilteredEntries.ToList();
+        var stale = fresh.Skip(1).ToList();
+        model.ReplaceEntriesAndRestoreFocus(fresh, isComplete: true);
+
+        model.ReplaceEntriesAndRestoreFocus(stale, isComplete: true, isFromCache: true);
+
+        Assert.AreEqual(fresh.Count, model.FilteredEntries.Count);
+    }
+
+    [TestMethod]
+    public void ACachedListingStillLandsBeforeAnyFreshOne()
+    {
+        var model = MarkableTestModel.Create(_root);
+        var cached = model.FilteredEntries.Skip(1).ToList();
+        model.ResetNavigation();
+
+        model.ReplaceEntriesAndRestoreFocus(cached, isComplete: true, isFromCache: true);
+
+        Assert.AreEqual(cached.Count, model.FilteredEntries.Count);
+    }
+
+    [TestMethod]
     public void ARestoreWaitsOutAStreamedBatchThatDoesNotHoldItsRow()
     {
         // A big folder arrives in batches of 50; the hit being revealed is in a later one. Settling
