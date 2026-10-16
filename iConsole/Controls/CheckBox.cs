@@ -48,12 +48,13 @@ public class CheckBox : Control, IReadOnly
     {
         var isHandled = await base.HandleMouseEventAsync(mouseEvent);
 
-        // Mirror Button: a click anywhere on the control toggles it, so the checkbox is operable
-        // by mouse as well as the Space key. Read-only checkboxes stay inert, matching the command.
+        // Mirror Button: a left click anywhere on the control toggles it, so the checkbox is operable
+        // by mouse as well as the Space key. The right button is left alone, as on Button, so a
+        // stray right-click cannot flip a setting. Read-only checkboxes stay inert, matching the command.
         if (!IsReadOnly
             && AbsoluteBoundRect.Contains(mouseEvent.Position)
             && mouseEvent.WheelDelta == 0
-            && (mouseEvent.LeftClicked || mouseEvent.RightClicked))
+            && mouseEvent.LeftClicked)
         {
             IsChecked = !IsChecked;
             isHandled = true;

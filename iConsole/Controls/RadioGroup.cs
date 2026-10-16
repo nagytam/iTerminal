@@ -135,7 +135,7 @@ public class RadioGroup<T> : Control, IReadOnly
         // The group hit-tests its own rows. Adjacent single-row child controls overlap by one cell
         // at their shared boundary (Rectangle.Contains is inclusive on both edges), so delegating
         // clicks to the children would let the upper option steal a click meant for the lower one.
-        if (!IsReadOnly && mouseEvent.WheelDelta == 0 && (mouseEvent.LeftClicked || mouseEvent.RightClicked))
+        if (!IsReadOnly && mouseEvent.WheelDelta == 0 && mouseEvent.LeftClicked)
         {
             var index = HitTest(
                 (int)mouseEvent.Position.X - (int)AbsolutePosition.X,

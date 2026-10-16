@@ -45,6 +45,18 @@ public class Button : Control
         }
     }
 
+    /// <summary>How long a click leaves the button drawn as pressed.</summary>
+    public static readonly TimeSpan PressFeedback = TimeSpan.FromMilliseconds(150);
+
+    private long _pressedAt;
+
+    /// <summary>
+    /// True for a moment after a mouse click. A click runs the command on the press, as it always
+    /// has, so there is no held-down state to show; the flash is what tells the user the button
+    /// took the click — most of all for one that closes the dialog it is in a frame later.
+    /// </summary>
+    public bool IsPressed => Volatile.Read(ref _pressedAt) != 0;
+
     public override bool IsEnabled
     {
         get
@@ -81,6 +93,11 @@ public class Button : Control
         var visualState = GetVisualState();
         var colorScheme = ThemeService.CurrentColorScheme;
         GetColor(colorScheme, visualState, out var foregroundColor, out var backgroundColor);
+        if (IsPressed && visualState != VisualState.Disabled)
+        {
+            foregroundColor = colorScheme.SelectedFocusedForeground;
+            backgroundColor = colorScheme.SelectedFocusedBackground;
+        }
         var inner = Math.Max(0, (int)ViewSize.Width - 2);
         var title = inner == 0
             ? string.Empty
@@ -90,6 +107,17 @@ public class Button : Control
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, titleLine);
     }
 
+
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        var pressedAt = Volatile.Read(ref _pressedAt);
+        if (pressedAt != 0 && Environment.TickCount64 - pressedAt >= PressFeedback.TotalMilliseconds)
+        {
+            Volatile.Write(ref _pressedAt, 0);
+            StateHasChanged();
+        }
+    }
 
     public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)
     {
@@ -136,10 +164,17 @@ public class Button : Control
     {
         var isHandled = await base.HandleMouseEventAsync(mouseEvent);
 
+        // Only the left button presses a button. The right one is the context-menu button
+        // everywhere else, and an accidental right-click on "Delete" must not run it.
         if (AbsoluteBoundRect.Contains(mouseEvent.Position)
             && mouseEvent.WheelDelta == 0
-            && (mouseEvent.LeftClicked || mouseEvent.RightClicked))
+            && mouseEvent.LeftClicked)
         {
+            if (IsEnabled)
+            {
+                Volatile.Write(ref _pressedAt, Math.Max(1, Environment.TickCount64));
+                StateHasChanged();
+            }
             await RunFirstCommandAsync();
             isHandled = true;
         }

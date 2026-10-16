@@ -68,6 +68,13 @@ public class Tab(IThemeService themeService) : Control(themeService)
 
     public Orientation Orientation { get; set; } = Orientation.Horizontal;
 
+    /// <summary>
+    /// Index of the first page whose name is drawn on a horizontal strip. It only moves when the
+    /// names do not all fit: <see cref="LayoutHorizontalStrip"/> keeps the focused page inside the
+    /// window and slides it by the least amount that does so.
+    /// </summary>
+    private int _firstVisibleTab;
+
     public void AddTabPage(TabPage tabPage)
     {
         tabPage.Parent = this;
@@ -204,40 +211,113 @@ public class Tab(IThemeService themeService) : Control(themeService)
         TabPages[FocusedTabPage].Draw(buffer);
     }
 
+    /// <summary>Columns a page's name takes on a horizontal strip: its length plus a space and a divider each side, never more than the strip.</summary>
+    private static int HorizontalCellWidth(TabPage tabPage, int available)
+        => Math.Min(tabPage.Name.Length + 4, available);
+
+    private static int HorizontalSpan(IList<TabPage> tabPages, int first, int last, int available)
+    {
+        var width = 0;
+        for (var i = first; i <= last; i++)
+        {
+            width += HorizontalCellWidth(tabPages[i], available);
+        }
+        return width;
+    }
+
+    /// <summary>
+    /// Decides which names a horizontal strip shows and returns the index of the last one. When they
+    /// do not all fit, the window starts as far left as it can while still holding the focused page,
+    /// so switching page with the keyboard or a click scrolls the strip by itself. Called from both
+    /// <see cref="DrawHorizontal"/> and <see cref="GetTabStripPageAt"/>: they must agree on what is
+    /// where, and the arithmetic is idempotent, so neither has to run first.
+    /// </summary>
+    private int LayoutHorizontalStrip(IList<TabPage> tabPages, out int first)
+    {
+        var available = Math.Max(0, (int)ViewSize.Width - 2);
+        var focused = Math.Clamp(FocusedTabPage, 0, tabPages.Count - 1);
+        var start = Math.Clamp(_firstVisibleTab, 0, tabPages.Count - 1);
+
+        if (HorizontalSpan(tabPages, 0, tabPages.Count - 1, available) <= available)
+        {
+            start = 0;
+        }
+        else
+        {
+            start = Math.Min(start, focused);
+            while (start < focused && HorizontalSpan(tabPages, start, focused, available) > available)
+            {
+                start++;
+            }
+        }
+        _firstVisibleTab = start;
+
+        var last = start;
+        var used = HorizontalCellWidth(tabPages[start], available);
+        while (last + 1 < tabPages.Count)
+        {
+            var next = HorizontalCellWidth(tabPages[last + 1], available);
+            if (used + next > available)
+            {
+                break;
+            }
+            used += next;
+            last++;
+        }
+        first = start;
+        return last;
+    }
+
+    private const string OverflowLeftMarker = "‹";
+    private const string OverflowRightMarker = "›";
+
     public void DrawHorizontal(IBuffer buffer)
     {
         var consoleColor = ThemeService.CurrentColorScheme;
-        var line1 = Border.TopLeft + Border.Horizontal.Repeat((int)ViewSize.Width - 2) + Border.TopRight;
-        ConxelString line2 = new(Border.Vertical, consoleColor.Foreground, consoleColor.Background);
         var tabPages = TabPages.AsSnapshot();
-        for (int i = 0; i < tabPages.Count; i++)
+        var available = Math.Max(0, (int)ViewSize.Width - 2);
+        var lastVisible = LayoutHorizontalStrip(tabPages, out var firstVisible);
+        var line1 = Border.TopLeft + Border.Horizontal.Repeat((int)ViewSize.Width - 2) + Border.TopRight;
+
+        // A marker takes the place of the strip's own side border while names are cut off that
+        // side, so the strip never grows and a click on it can be told from a click on a name.
+        var hiddenLeft = firstVisible > 0;
+        var hiddenRight = lastVisible < tabPages.Count - 1;
+        ConxelString line2 = new(hiddenLeft ? OverflowLeftMarker : Border.Vertical,
+            hiddenLeft ? consoleColor.SelectedFocusedForeground : consoleColor.Foreground, consoleColor.Background);
+        for (int i = firstVisible; i <= lastVisible; i++)
         {
             var tabPage = tabPages[i];
             tabPage.GetColor(out var foregroundColor, out var backgroundColor);
             var tabName = new ConxelString();
-            if (i != FocusedTabPage && i > 0 && i - 1 != FocusedTabPage)
+            // A name wider than the whole strip is cut with an ellipsis rather than pushed off it.
+            var name = tabPage.Name.Length + 4 > available
+                ? (available > 5 ? tabPage.Name.Cut(available - 5) + "…" : string.Empty)
+                : tabPage.Name;
+            if (i != FocusedTabPage && i > firstVisible && i - 1 != FocusedTabPage)
             {
                 // The tab before this one already drew the divider between them; drawing another
                 // made "│ Scientific ││ Programming │". The cell keeps its width (name + 4) —
                 // GetTabStripPageAt maps clicks with that arithmetic — by ending in a space.
-                tabName.Append(" " + tabPage.Name + " " + Border.VerticalSingle + " ",
+                tabName.Append(" " + name + " " + Border.VerticalSingle + " ",
                     foregroundColor, backgroundColor);
             }
             else if (i != FocusedTabPage)
             {
-                tabName.Append(Border.VerticalSingle + " " + tabPage.Name + " " + Border.VerticalSingle,
+                tabName.Append(Border.VerticalSingle + " " + name + " " + Border.VerticalSingle,
                     foregroundColor, backgroundColor);
             }
             else
             {
-                tabName.Append(Border.OpenToLeft + " " + tabPage.Name + " " + Border.OpenToRight,
+                tabName.Append(Border.OpenToLeft + " " + name + " " + Border.OpenToRight,
                     foregroundColor, backgroundColor);
             }
             tabName.HighlightHotKey(tabPage.HotConsoleKey, tabPage.HotKeyChar, Color.Green, Color.Blue);
             line2.Append(tabName);
         }
         line2.Expand((int)ViewSize.Width - 1, consoleColor.Foreground, consoleColor.Background);
-        line2.Append(Border.Vertical, consoleColor.Foreground, consoleColor.Background);
+        line2.Append(hiddenRight ? OverflowRightMarker : Border.Vertical,
+            hiddenRight ? consoleColor.SelectedFocusedForeground : consoleColor.Foreground, consoleColor.Background);
         var line3 = Border.BottomLeft + Border.Horizontal.Repeat((int)ViewSize.Width - 2) + Border.BottomRight;
         var line1String = new ConxelString(line1, Color.White, Color.Blue);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, line1String);
@@ -460,15 +540,26 @@ public class Tab(IThemeService themeService) : Control(themeService)
         }
 
         // Horizontal: a single row of names between the two border rows, each name taking its own
-        // length plus a space and a divider on either side.
+        // length plus a space and a divider on either side. Only the names the strip is showing
+        // count, and the marker cell at either end stands for the neighbouring page.
         if (y != 1)
         {
             return -1;
         }
-        var left = 1;
-        for (var i = 0; i < tabPages.Count; i++)
+        var lastVisible = LayoutHorizontalStrip(tabPages, out var firstVisible);
+        var available = Math.Max(0, (int)ViewSize.Width - 2);
+        if (x == 0 && firstVisible > 0)
         {
-            var width = tabPages[i].Name.Length + 4;
+            return Math.Max(0, FocusedTabPage - 1);
+        }
+        if (x == (int)ViewSize.Width - 1 && lastVisible < tabPages.Count - 1)
+        {
+            return Math.Min(tabPages.Count - 1, FocusedTabPage + 1);
+        }
+        var left = 1;
+        for (var i = firstVisible; i <= lastVisible; i++)
+        {
+            var width = HorizontalCellWidth(tabPages[i], available);
             if (x >= left && x < left + width)
             {
                 return i;
