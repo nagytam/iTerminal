@@ -95,7 +95,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null,
         DiskUsageDialog? diskUsageDialog = null,
         iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
-        iConsole.Services.INotificationService? notificationService = null
+        iConsole.Services.INotificationService? notificationService = null,
+        DuplicateFinderDialog? duplicateFinderDialog = null
         )
         : base([], themeService)
     {
@@ -171,7 +172,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             runtimeDependencyDialog,
             diskUsageDialog,
             elevationService,
-            notificationService));
+            notificationService,
+            duplicateFinderDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 

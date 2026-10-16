@@ -191,6 +191,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<MarkPatternDialog>();
         services.AddTransient<DiskManagerDialog>();
         services.AddTransient<DiskUsageDialog>();
+        services.AddTransient<DuplicateFinderDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Duplicates.IDuplicateFinderService, iTerminal.Core.Services.Duplicates.DuplicateFinderService>();
         services.AddSingleton<iTerminal.Core.Services.DiskUsage.IDiskUsageService, iTerminal.Core.Services.DiskUsage.DiskUsageService>();
         services.AddSingleton<iTerminal.Core.Services.Elevation.IElevationService, iTerminal.Core.Services.Elevation.ElevationService>();
         services.AddTransient<FormatDriveDialog>();
