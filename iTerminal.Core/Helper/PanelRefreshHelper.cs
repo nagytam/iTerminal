@@ -100,6 +100,49 @@ public static class PanelRefreshHelper
         task.PropertyChanged += OnTaskChanged;
     }
 
+    /// <summary>
+    /// Like <see cref="RefreshWhenFinished"/>, but for operations that change the contents of whole
+    /// folders (a synchronisation): the URLs are the folders themselves, not entries inside them.
+    /// </summary>
+    public static void RefreshFoldersWhenFinished(
+        BackgroundTask task,
+        IContentModelService? contentModelService,
+        params Url?[] folders)
+    {
+        ArgumentNullException.ThrowIfNull(task);
+
+        if (contentModelService is null)
+        {
+            return;
+        }
+
+        var normalized = folders
+            .Select(Normalize)
+            .Where(f => f.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (normalized.Count == 0)
+        {
+            return;
+        }
+
+        void OnTaskChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(BackgroundTask.Status)
+                || task.Status == iConsole.Data.TaskStatus.Started)
+            {
+                return;
+            }
+
+            task.PropertyChanged -= OnTaskChanged;
+
+            // Unlike a failed copy, a synchronisation that failed part-way did change the folders.
+            RefreshPanels(contentModelService, normalized);
+        }
+
+        task.PropertyChanged += OnTaskChanged;
+    }
+
     private static void RefreshPanels(IContentModelService contentModelService, IReadOnlyList<string> folders)
     {
         foreach (var contentModel in contentModelService.ContentModels.AsSnapshot())
