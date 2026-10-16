@@ -376,6 +376,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IRuntimeDependencyService, RuntimeDependencyService>();
         services.AddSingleton<IJob, RuntimeDependencyCheckJob>();
         services.AddTransient<RuntimeDependencyDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Updates.IUpdateService, iTerminal.Core.Services.Updates.UpdateService>();
+        services.AddSingleton<IJob, UpdateCheckJob>();
+        services.AddTransient<UpdateDialog>();
         services.AddSingleton<WeatherService>();
         services.AddSingleton<FolderIndexModel>();
         services.AddTransient<TerminalWindow>();
