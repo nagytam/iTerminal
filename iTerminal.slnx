@@ -18,7 +18,10 @@
     <BuildDependency Project="iTerminal.Core\iTerminal.Core.csproj" />
   </Project>
   <Project Path="iTerminal.Core\iTerminal.Core.csproj" />
-  <Project Path="iTerminal.Installer\iTerminal.Installer.wixproj" Id="84e72354-d0ba-4634-a59a-9b676582ab1e" />
+  <Project Path="iTerminal.Installer\iTerminal.Installer.wixproj" Id="ed840b27-92eb-4f97-b8d4-f24376a23d59">
+    <Platform Project="x86" />
+    <Build />
+  </Project>
   <Project Path="iTerminal.Test\iTerminal.Test.csproj">
     <BuildDependency Project="iConsole.Test.Core\iConsole.Test.Core.csproj" />
     <BuildDependency Project="iTerminal.Core\iTerminal.Core.csproj" />

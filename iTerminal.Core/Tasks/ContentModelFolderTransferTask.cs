@@ -70,18 +70,50 @@ public abstract class ContentModelFolderTransferTask(
                 // (e.g. the progress window's Cancel button) must also cancel discovery, or it
                 // could block forever writing to a channel nobody's draining anymore.
                 using var cancelDiscoveryOnCancel = CancellationToken.Register(discoveryTask.CancellationTokenSource.Cancel);
+                var bytesThrottle = System.Diagnostics.Stopwatch.StartNew();
+                string currentFile = string.Empty;
+
+                void UpdateProgress()
+                {
+                    var discovered = discoveryTask.ItemsProcessed;
+                    var processed = ItemsProcessed;
+                    var bytes = Interlocked.Read(ref _bytesCopied);
+                    ReportBytes(bytes, discoveryTask.TotalBytes);
+                    UpdatePercentage(discoveryTask, processed, discovered);
+                    Description = processed == 0 && bytes == 0
+                        ? $"Discovering…{Environment.NewLine}{discovered} file(s) found so far"
+                        : $"{ProgressVerb} {processed}/{discovered} file(s){Environment.NewLine}{currentFile}";
+                }
+
                 failedItems = await FolderCopyPipeline.RunAsync(
                     source, target, discoveryTask, errorPromptService, Verb, CancellationToken,
                     (processed, discovered) =>
                     {
                         ReportItems(processed, discovered);
-                        Description = processed == 0
-                            ? $"Discovering…{Environment.NewLine}{discovered} file(s) found so far"
-                            : $"{ProgressVerb} {processed}/{discovered} file(s){Environment.NewLine}{sourceUrl.FullName.Shrink(60)}";
+                        UpdateProgress();
                     },
                     onItemSucceeded: DeletesSource
                         ? url => source.DeleteFile(url, moveToRecycleBin: false)
-                        : null);
+                        : null,
+                    reportBytes: bytes =>
+                    {
+                        // Raised for every buffer of every file: throttled so a fast copy does not
+                        // flood the progress window with change notifications.
+                        Interlocked.Exchange(ref _bytesCopied, bytes);
+                        if (bytesThrottle.ElapsedMilliseconds < 100)
+                        {
+                            return;
+                        }
+                        bytesThrottle.Restart();
+                        ReportBytes(bytes, discoveryTask.TotalBytes);
+                        UpdatePercentage(discoveryTask, ItemsProcessed, discoveryTask.ItemsProcessed);
+                    },
+                    onFileStarted: url =>
+                    {
+                        currentFile = url.FullName.Shrink(60) ?? string.Empty;
+                        Description = $"{ProgressVerb} {ItemsProcessed}/{discoveryTask.ItemsProcessed} file(s){Environment.NewLine}{currentFile}";
+                    });
+                ReportBytes(Interlocked.Read(ref _bytesCopied), discoveryTask.TotalBytes);
 
                 if (DeletesSource && failedItems.Count == 0)
                 {
@@ -107,6 +139,26 @@ public abstract class ContentModelFolderTransferTask(
         {
             Description = $"{Verb} folder failed: {ex.Message}";
             Error = ex.Message;
+        }
+    }
+
+    private long _bytesCopied;
+
+    /// <summary>
+    /// Bar position from bytes when the sizes are known, else from files. While discovery is still
+    /// running the total keeps growing, so the bar never goes backwards and stops short of 100
+    /// until the whole tree has been found and copied.
+    /// </summary>
+    private void UpdatePercentage(FolderDiscoveryTask discoveryTask, long processedFiles, long discoveredFiles)
+    {
+        var totalBytes = discoveryTask.TotalBytes;
+        var percentage = totalBytes > 0
+            ? 100L * Interlocked.Read(ref _bytesCopied) / totalBytes
+            : discoveredFiles > 0 ? 100L * processedFiles / discoveredFiles : 0;
+        percentage = Math.Clamp(percentage, 0, 99);
+        if (percentage > ProgressPercentage)
+        {
+            OnProgressChanged(percentage);
         }
     }
 

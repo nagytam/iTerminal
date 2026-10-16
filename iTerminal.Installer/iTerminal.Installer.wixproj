@@ -1,5 +1,4 @@
-<Project Sdk="WixToolset.Sdk/5.0.2">
-
+<Project Sdk="WixToolset.Sdk/5.0.2" ToolsVersion="4.0">
   <!--
     The Windows installer for iTerminal: an MSI that installs the app self-contained (no .NET runtime
     needed on the target machine) into Program Files, with a Start menu shortcut and, optionally, the
@@ -17,17 +16,14 @@
     <InstallerPlatform>x64</InstallerPlatform>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <OutputName>iTerminal-$(Version)-x64</OutputName>
-
     <!-- Under obj, so it is ignored by git and wiped by Tools/clean.cmd like every other build output. -->
     <AppPublishDir>$(MSBuildProjectDirectory)\obj\publish\</AppPublishDir>
     <DefineConstants>PublishDir=$(AppPublishDir);ProductVersion=$(Version);IconPath=$(MSBuildProjectDirectory)\..\iTerminal\Assets\iTerminal.ico</DefineConstants>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
     <PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
   </ItemGroup>
-
   <!--
     The folder is emptied first: Package.wxs packs everything it finds there, and a file left over
     from an earlier publish (a dependency since removed) would be installed for ever.
@@ -38,5 +34,4 @@
     <RemoveDir Directories="$(AppPublishDir)" />
     <Exec Command="dotnet publish &quot;$(MSBuildProjectDirectory)\..\iTerminal\iTerminal.csproj&quot; -c Release -r $(RuntimeIdentifier) --self-contained true -o &quot;$(AppPublishDir.TrimEnd('\'))&quot; -p:Version=$(Version) -nologo -v q" />
   </Target>
-
 </Project>
