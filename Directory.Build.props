@@ -1,5 +1,7 @@
 <Project>
   <PropertyGroup>
+    <!-- Release builds pass 0.0.0.<build number>; a local build is 0.0.0.0. -->
+    <Version Condition="'$(Version)' == ''">0.0.0.0</Version>
     <!-- imobiledevice-net ships assets for ubuntu.16.04-x64; .NET 8+ ignores distribution-specific identifiers, so the notice is noise. -->
     <NoWarn>$(NoWarn);NETSDK1206</NoWarn>
   </PropertyGroup>

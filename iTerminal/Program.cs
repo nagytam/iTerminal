@@ -53,7 +53,7 @@ if (elevation.IsElevated)
 {
     try
     {
-        Console.Title = "iTerminal (administrator)";
+        Console.Title = $"{ApplicationInfo.Title} (administrator)";
     }
     catch (IOException)
     {
