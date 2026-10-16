@@ -85,7 +85,7 @@ public class MemoryFolder(Url url)
                 Folders.TryAdd(sourceUrl.Name, folder);
                 throw new IOException($"Target folder already exists: {targetUrl.FullUrl}");
             }
-            folder.Rebase(targetUrl);
+            folder.Rebase(AsFolderUrl(targetUrl));
             targetParent.Folders[targetUrl.Name] = folder;
         }
         else
@@ -122,7 +122,7 @@ public class MemoryFolder(Url url)
             {
                 throw new IOException($"Target folder already exists: {targetUrl.FullUrl}");
             }
-            targetParent.Folders[targetUrl.Name] = folder.DeepClone(targetUrl);
+            targetParent.Folders[targetUrl.Name] = folder.DeepClone(AsFolderUrl(targetUrl));
         }
         else
         {
@@ -178,6 +178,13 @@ public class MemoryFolder(Url url)
         }
         return clone;
     }
+
+    /// <summary>
+    /// A folder's URL always ends with '/': without it the URL parses as a file, and the folder is
+    /// then listed, entered and copied as one. A target typed in a dialog usually has no slash.
+    /// </summary>
+    private static Url AsFolderUrl(Url url)
+        => url.FullUrl.EndsWith('/') ? url : new Url(url.FullUrl + "/");
 
     private static string CombinePath(string basePath, string name)
         => string.IsNullOrEmpty(basePath) ? name : basePath + "/" + name;

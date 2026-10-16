@@ -123,4 +123,39 @@ public class MemoryDriveServiceTest
         CollectionAssert.AreEqual(new byte[] { 4, 2 }, copiedFile.Content);
         Assert.IsTrue(memoryDrive.ExistsFile(new Url("memdrive://a/file.txt")));
     }
+
+    /// <summary>
+    /// The copy dialog hands over the target as typed, without a trailing slash. The copied folder
+    /// must still be a folder: its URL used to keep the missing slash, so it parsed as a file and the
+    /// panel listed it as one, could not enter it, and a later copy of it failed.
+    /// </summary>
+    [TestMethod]
+    public async Task CopyFolderToATargetWithoutATrailingSlashStaysAFolder()
+    {
+        var memoryDrive = new MemoryDriveService();
+        await memoryDrive.CreateFolderAsync(new Url("memdrive://a/"));
+        await memoryDrive.WriteFileAsync(new Url("memdrive://a/file.txt"), new MemoryStream([1]));
+
+        await memoryDrive.CopyAsync(new Url("memdrive://a/"), new Url("memdrive://acopy"), false);
+
+        var copy = memoryDrive.GetFolder(new Url("memdrive://acopy/"));
+        Assert.IsNotNull(copy);
+        Assert.AreEqual(PathType.Folder, copy.Url.PathType);
+        Assert.IsTrue(memoryDrive.ExistsFile(new Url("memdrive://acopy/file.txt")));
+    }
+
+    [TestMethod]
+    public async Task MoveFolderToATargetWithoutATrailingSlashStaysAFolder()
+    {
+        var memoryDrive = new MemoryDriveService();
+        await memoryDrive.CreateFolderAsync(new Url("memdrive://a/"));
+        await memoryDrive.WriteFileAsync(new Url("memdrive://a/file.txt"), new MemoryStream([1]));
+
+        await memoryDrive.MoveAsync(new Url("memdrive://a/"), new Url("memdrive://moved"), false);
+
+        var moved = memoryDrive.GetFolder(new Url("memdrive://moved/"));
+        Assert.IsNotNull(moved);
+        Assert.AreEqual(PathType.Folder, moved.Url.PathType);
+        Assert.IsTrue(memoryDrive.ExistsFile(new Url("memdrive://moved/file.txt")));
+    }
 }
