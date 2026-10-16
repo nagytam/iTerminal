@@ -113,6 +113,7 @@ public partial class Url
             else if (ContainerType == ContainerType.SshFileSystem
                      || ContainerType == ContainerType.FtpFileSystem
                      || ContainerType == ContainerType.SmbFileSystem
+                     || IsHttpPathDrive
                      || ContainerType == ContainerType.IPhoneFileSystem)
             {
                 var fullName = FullName;
@@ -150,6 +151,7 @@ public partial class Url
             else if (ContainerType == ContainerType.SshFileSystem
                      || ContainerType == ContainerType.FtpFileSystem
                      || ContainerType == ContainerType.SmbFileSystem
+                     || IsHttpPathDrive
                      || ContainerType == ContainerType.IPhoneFileSystem)
             {
                 var fullName = FullUrl;
@@ -183,6 +185,11 @@ public partial class Url
                 var target = Data.Container.FTP + userPart + Host + "/";
                 return new Url(target);
             }
+            else if (IsHttpPathDrive)
+            {
+                var userPart = string.IsNullOrEmpty(Username) ? string.Empty : Username + "@";
+                return new Url(UrlScheme + userPart + Host + "/");
+            }
             else if (ContainerType == ContainerType.SmbFileSystem)
             {
                 var userPart = string.IsNullOrEmpty(Username) ? string.Empty : Username + "@";
@@ -204,6 +211,14 @@ public partial class Url
             {
                 // The archive's own top level, not the (empty) drive root: archive://<archive>/.
                 return new Url(Data.Container.ARCHIVE + Host + "/");
+            }
+            else if (ContainerType == ContainerType.Mtp)
+            {
+                // The storage's own root (mtp://<device>/<storage>/), or the device's list of storages.
+                var segments = Path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+                return segments.Length >= 2
+                    ? new Url(Data.Container.MTP + segments[0] + "/" + segments[1] + "/")
+                    : new Url(Data.Container.MTP + (segments.Length == 1 ? segments[0] + "/" : string.Empty));
             }
             else if (ContainerType == ContainerType.Git)
             {
@@ -529,6 +544,62 @@ public partial class Url
                 _container = Data.Container.SMB;
                 _directorySeparatorChar = DirectorySeparatorSlashChar;
             }
+            else if (_url.StartsWith(Data.Container.WEBDAV) || _url.StartsWith(Data.Container.WEBDAV_SECURE))
+            {
+                // dav://[user@]host[:port]/path (HTTP) and davs://… (HTTPS). The path is the raw,
+                // unescaped one — the service escapes each segment when it builds a request — and the
+                // password is never part of a URL.
+                var scheme = _url.StartsWith(Data.Container.WEBDAV_SECURE) ? Data.Container.WEBDAV_SECURE : Data.Container.WEBDAV;
+                var rest = _url[scheme.Length..];
+                var slashIndex = rest.IndexOf('/');
+                var authority = slashIndex < 0 ? rest : rest[..slashIndex];
+                var davPath = slashIndex < 0 ? "/" : rest[slashIndex..];
+                var atIndex = authority.LastIndexOf('@');
+                _username = atIndex >= 0 ? authority[..atIndex] : string.Empty;
+                _host = atIndex >= 0 ? authority[(atIndex + 1)..] : authority;
+                _path = davPath;
+                _fullName = davPath;
+                _directoryName = davPath;
+                _displayName = davPath.TrimEnd('/').Split('/').Last();
+                _name = _displayName;
+                PathType = davPath.EndsWith('/') ? PathType.Folder : PathType.File;
+                var davDot = _name.LastIndexOf('.');
+                _extension = PathType == PathType.File && davDot > 0 && davDot < _name.Length - 1 ? _name[(davDot + 1)..] : string.Empty;
+                ContainerType = ContainerType.WebDav;
+                _container = scheme;
+                _directorySeparatorChar = DirectorySeparatorSlashChar;
+            }
+            else if (_url.StartsWith(Data.Container.S3)
+                     || _url.StartsWith(Data.Container.ONEDRIVE)
+                     || _url.StartsWith(Data.Container.GOOGLE_DRIVE))
+            {
+                // s3://[accessKeyId@]bucket/key, onedrive://[account]/path and gdrive://[account]/path.
+                // The authority is the bucket or the account label (empty lists the buckets / uses the
+                // default account); the path is raw, as for WebDAV; no secret is ever part of a URL.
+                var (cloudScheme, cloudType) = _url.StartsWith(Data.Container.S3)
+                    ? (Data.Container.S3, ContainerType.S3)
+                    : _url.StartsWith(Data.Container.ONEDRIVE)
+                        ? (Data.Container.ONEDRIVE, ContainerType.OneDrive)
+                        : (Data.Container.GOOGLE_DRIVE, ContainerType.GoogleDrive);
+                var cloudRest = _url[cloudScheme.Length..];
+                var cloudSlash = cloudRest.IndexOf('/');
+                var cloudAuthority = cloudSlash < 0 ? cloudRest : cloudRest[..cloudSlash];
+                var cloudPath = cloudSlash < 0 ? "/" : cloudRest[cloudSlash..];
+                var cloudAt = cloudAuthority.LastIndexOf('@');
+                _username = cloudAt >= 0 ? cloudAuthority[..cloudAt] : string.Empty;
+                _host = cloudAt >= 0 ? cloudAuthority[(cloudAt + 1)..] : cloudAuthority;
+                _path = cloudPath;
+                _fullName = cloudPath;
+                _directoryName = cloudPath;
+                _displayName = cloudPath.TrimEnd('/').Split('/').Last();
+                _name = _displayName;
+                PathType = cloudPath.EndsWith('/') ? PathType.Folder : PathType.File;
+                var cloudDot = _name.LastIndexOf('.');
+                _extension = PathType == PathType.File && cloudDot > 0 && cloudDot < _name.Length - 1 ? _name[(cloudDot + 1)..] : string.Empty;
+                ContainerType = cloudType;
+                _container = cloudScheme;
+                _directorySeparatorChar = DirectorySeparatorSlashChar;
+            }
             else if (_url.StartsWith(Data.Container.IPHONE))
             {
                 // iphone://<udid>/<afc-path> — <udid> is the device identifier (treated as the
@@ -737,6 +808,11 @@ public partial class Url
             && !url.StartsWith(Data.Container.SSH)
             && !url.StartsWith(Data.Container.FTP)
             && !url.StartsWith(Data.Container.SMB)
+            && !url.StartsWith(Data.Container.WEBDAV)
+            && !url.StartsWith(Data.Container.WEBDAV_SECURE)
+            && !url.StartsWith(Data.Container.S3)
+            && !url.StartsWith(Data.Container.ONEDRIVE)
+            && !url.StartsWith(Data.Container.GOOGLE_DRIVE)
             && !url.StartsWith(Data.Container.IPHONE)
             && !url.StartsWith(Data.Container.ZIP_ARCHIVE)
             && !url.StartsWith(Data.Container.GZ_ARCHIVE)
@@ -761,6 +837,7 @@ public partial class Url
             (Data.Container.PREVIEW, ContainerType.Preview),
             (Data.Container.ARCHIVE, ContainerType.Archive),
             (Data.Container.RECYCLE, ContainerType.Recycle),
+            (Data.Container.MTP, ContainerType.Mtp),
         ];
         foreach (var (candidate, type) in drives)
         {
@@ -787,7 +864,12 @@ public partial class Url
             or ContainerType.SearchResults
             or ContainerType.Preview
             or ContainerType.Archive
-            or ContainerType.Recycle;
+            or ContainerType.Recycle
+            or ContainerType.Mtp;
+
+    /// <summary>The HTTP-backed drives whose URL is <c>scheme://[user@]authority/raw/path</c>.</summary>
+    private bool IsHttpPathDrive =>
+        ContainerType is ContainerType.WebDav or ContainerType.S3 or ContainerType.OneDrive or ContainerType.GoogleDrive;
 
     private void UpdatePathType()
     {
@@ -814,6 +896,7 @@ public partial class Url
         else if ((ContainerType == ContainerType.SshFileSystem
                     || ContainerType == ContainerType.FtpFileSystem
                     || ContainerType == ContainerType.SmbFileSystem
+                    || IsHttpPathDrive
                     || ContainerType == ContainerType.IPhoneFileSystem)
                 && (_path.EndsWith(DirectorySeparatorSlashChar)))
         {

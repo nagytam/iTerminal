@@ -61,10 +61,12 @@ public static class iTerminalApplicationBuilderExtension
         {
             services.Configure<FileInformationRefreshOptions>(configuration.GetSection("FileInformationRefresh"));
             services.Configure<AiOptions>(configuration.GetSection("AI"));
+            services.Configure<iTerminal.Core.Services.Cloud.CloudOptions>(configuration.GetSection("Cloud"));
         }
 
         services.AddOptions<FileInformationRefreshOptions>();
         services.AddOptions<AiOptions>();
+        services.AddOptions<iTerminal.Core.Services.Cloud.CloudOptions>();
 
         services.AddSingleton<IChatClient>(sp =>
         {
@@ -188,6 +190,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<RenameDialog>();
         services.AddTransient<MarkPatternDialog>();
         services.AddTransient<DiskManagerDialog>();
+        services.AddTransient<DiskUsageDialog>();
+        services.AddSingleton<iTerminal.Core.Services.DiskUsage.IDiskUsageService, iTerminal.Core.Services.DiskUsage.DiskUsageService>();
+        services.AddSingleton<iTerminal.Core.Services.Elevation.IElevationService, iTerminal.Core.Services.Elevation.ElevationService>();
         services.AddTransient<FormatDriveDialog>();
         services.AddTransient<DiskImageDialog>();
         services.AddSingleton<iTerminal.Core.Services.Drives.IDriveActionsService, iTerminal.Core.Services.Drives.DriveActionsService>();
@@ -280,12 +285,55 @@ public static class iTerminalApplicationBuilderExtension
         });
         services.AddSingleton<iTerminal.Core.Services.Clipboard.FileClipboardOperations>();
         services.AddSingleton<ISettingsService, SettingsService>();
+        // Where a local delete with the bin ticked goes on Linux: the freedesktop Trash, home or per-volume.
+        services.AddSingleton<iTerminal.Core.Services.Recycle.ITrashService, iTerminal.Core.Services.Recycle.FreedesktopTrash>();
         services.AddTransient<IFileSystemService, FileSystemService>();
         services.AddSingleton<IMemoryDriveService, MemoryDriveService>();
         services.AddTransient<ISshFileSystemService, SshFileSystemService>();
         services.AddTransient<ISmbFileSystemService, SmbFileSystemService>();
         // One connection for the run: both panels may be on the same FTP server.
         services.AddSingleton<IFtpFileSystemService, FtpFileSystemService>();
+        // Likewise for WebDAV (dav:// and davs://): one HttpClient, replaced when the host or user changes.
+        services.AddSingleton<IWebDavFileSystemService, WebDavFileSystemService>();
+        // mtp://: phones and cameras, through the platform's own stack — GVfs's gio on Linux, the
+        // shell namespace on Windows. A test registers a backend of its own.
+        services.AddSingleton<iTerminal.Core.Services.Mtp.IMtpBackend>(provider =>
+        {
+            var runner = provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>();
+            if (OperatingSystem.IsWindows())
+            {
+                return new iTerminal.Core.Services.Mtp.ShellMtpBackend(runner);
+            }
+
+            return OperatingSystem.IsLinux()
+                ? new iTerminal.Core.Services.Mtp.GioMtpBackend(runner)
+                : new iTerminal.Core.Services.Mtp.UnavailableMtpBackend("MTP devices cannot be browsed on this system.");
+        });
+        services.AddSingleton<iTerminal.Core.Services.Mtp.IMtpDriveService, iTerminal.Core.Services.Mtp.MtpDriveService>();
+        // The cloud drives: s3://, onedrive:// and gdrive://. One client for the run each; the OAuth
+        // ones sign in through the device flow and keep their refresh token in the password manager.
+        services.AddSingleton<iTerminal.Core.Services.Cloud.IS3FileSystemService>(provider =>
+            new iTerminal.Core.Services.Cloud.S3FileSystemService(provider.GetService<Serilog.ILogger>()));
+        services.AddSingleton<iTerminal.Core.Services.Cloud.IOneDriveFileSystemService>(provider =>
+        {
+            var options = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<iTerminal.Core.Services.Cloud.CloudOptions>>().Value;
+            var tokens = new iTerminal.Core.Services.Cloud.OAuthTokenProvider(
+                iTerminal.Core.Services.Cloud.OAuthTokenProvider.OneDrive(options.OneDrive),
+                provider.GetService<IPasswordManager>(),
+                provider.GetService<iConsole.Services.INotificationService>(),
+                provider.GetService<Serilog.ILogger>());
+            return new iTerminal.Core.Services.Cloud.OneDriveFileSystemService(tokens, provider.GetService<Serilog.ILogger>());
+        });
+        services.AddSingleton<iTerminal.Core.Services.Cloud.IGoogleDriveFileSystemService>(provider =>
+        {
+            var options = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<iTerminal.Core.Services.Cloud.CloudOptions>>().Value;
+            var tokens = new iTerminal.Core.Services.Cloud.OAuthTokenProvider(
+                iTerminal.Core.Services.Cloud.OAuthTokenProvider.GoogleDrive(options.GoogleDrive),
+                provider.GetService<IPasswordManager>(),
+                provider.GetService<iConsole.Services.INotificationService>(),
+                provider.GetService<Serilog.ILogger>());
+            return new iTerminal.Core.Services.Cloud.GoogleDriveFileSystemService(tokens, provider.GetService<Serilog.ILogger>());
+        });
         services.AddSingleton<IIPhoneFileSystemService, IPhoneFileSystemService>();
         services.AddSingleton<IIPhoneDeviceService, IPhoneDeviceService>();
         services.AddTransient<IArchiveFileSystemService, ArchiveFileSystemService>();

@@ -9,6 +9,12 @@ public static class Container
     public const string SSH = "ssh://";
     public const string FTP = "ftp://";
     public const string SMB = "smb://";
+
+    /// <summary>WebDAV over HTTP: <c>dav://[user@]host[:port]/path</c>.</summary>
+    public const string WEBDAV = "dav://";
+
+    /// <summary>WebDAV over HTTPS: <c>davs://[user@]host[:port]/path</c>.</summary>
+    public const string WEBDAV_SECURE = "davs://";
     public const string IPHONE = "iphone://";
     public const string MEMORY_DRIVE = "memdrive://";
 
@@ -44,4 +50,19 @@ public static class Container
     /// deleted file's own, numbered when two share it.
     /// </summary>
     public const string RECYCLE = "recycle://";
+
+    /// <summary>
+    /// Phones and cameras that speak MTP: <c>mtp://&lt;device&gt;/&lt;storage&gt;/&lt;path&gt;</c> — the
+    /// root lists the connected devices, a device lists its storages.
+    /// </summary>
+    public const string MTP = "mtp://";
+
+    /// <summary>An S3 bucket (or any S3-compatible store): <c>s3://[accessKeyId@]bucket/key</c>; an empty bucket lists them.</summary>
+    public const string S3 = "s3://";
+
+    /// <summary>Microsoft OneDrive through Microsoft Graph: <c>onedrive://[account]/path</c>.</summary>
+    public const string ONEDRIVE = "onedrive://";
+
+    /// <summary>Google Drive: <c>gdrive://[account]/path</c>.</summary>
+    public const string GOOGLE_DRIVE = "gdrive://";
 }

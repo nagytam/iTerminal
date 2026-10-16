@@ -52,6 +52,10 @@ public class FolderSelectorSpecialFoldersTabPage : FolderSelectorTabPage
         Container.GIT,
         Container.SEARCH_RESULTS,
         Container.RECYCLE,
+        Container.MTP,
+        Container.S3,
+        Container.ONEDRIVE,
+        Container.GOOGLE_DRIVE,
     ];
 
     public FolderSelectorSpecialFoldersTabPage(

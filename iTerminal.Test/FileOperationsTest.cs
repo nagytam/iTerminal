@@ -204,18 +204,18 @@ public class FileOperationsTest
     [TestMethod]
     public async Task F8DeletesAFilePermanentlyWhenTheRecycleBinIsUnticked()
     {
-        if (!OperatingSystem.IsWindows())
+        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux())
         {
-            Assert.Inconclusive("The Recycle Bin option is a Windows feature.");
+            Assert.Inconclusive("The Recycle Bin option is a Windows and Linux feature.");
         }
 
         await _app.SelectEntryAsync("readme.txt");
 
         await _app.PressAsync("F8");
         await _app.WaitForTextAsync("Delete file");
-        await _app.PressAsync("Tab");      // onto "Move to Recycle bin"
+        await _app.PressAsync("Tab");      // onto the recycle box
         await _app.PressAsync("Space");    // untick it: the test must not fill the user's Recycle Bin
-        await _app.WaitForTextAsync("□ Move to Recycle bin");
+        await _app.WaitForTextAsync("□ " + BinLabel);
         await _app.PressAsync("Enter");
 
         await _app.WaitUntilAsync(() => !File.Exists(Path.Combine(_app.LeftRoot, "readme.txt")), "the file to be deleted");
@@ -226,17 +226,20 @@ public class FileOperationsTest
     [TestMethod]
     public async Task OnALocalFolderTheRecycleBinIsOfferedAndTicked()
     {
-        if (!OperatingSystem.IsWindows())
+        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux())
         {
-            Assert.Inconclusive("The Recycle Bin is a Windows feature.");
+            Assert.Inconclusive("The Recycle Bin is a Windows and Linux feature.");
         }
 
         await _app.SelectEntryAsync("readme.txt");
 
         await _app.PressAsync("F8");
 
-        await _app.WaitForTextAsync("▣ Move to Recycle bin");
+        await _app.WaitForTextAsync("▣ " + BinLabel);
     }
+
+    /// <summary>What the Delete dialog calls the place a delete can be undone from, on this system.</summary>
+    private static string BinLabel => OperatingSystem.IsLinux() ? "Move to Trash" : "Move to Recycle bin";
 
     [TestMethod]
     public async Task EscCancelsTheDeleteAndKeepsTheFile()

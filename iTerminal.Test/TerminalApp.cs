@@ -181,6 +181,10 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<Core.Services.FileAssociations.IFileLauncher>(provider => provider.GetRequiredService<SandboxServices.Launcher>());
                 services.AddSingleton<SandboxServices.DockerCli>();
 
+                // No test asks the machine it runs on for its phones: mtp:// is there, and empty-handed.
+                services.AddSingleton<Core.Services.Mtp.IMtpBackend>(
+                    new Core.Services.Mtp.UnavailableMtpBackend("No MTP devices in the test sandbox."));
+
                 // The clipboard stays in the process — a run must neither overwrite what the person
                 // running it had copied nor paste what they had — and no test ejects, formats or
                 // mounts anything of the machine it runs on.
@@ -193,6 +197,11 @@ public sealed class TerminalApp : IAsyncDisposable
                 // drive restores and deletes for good, and must never be let near the real one.
                 services.AddSingleton<Core.Services.Recycle.IRecycleBinStore>(
                     new Core.Services.Recycle.WindowsRecycleBinStore(() => [Path.Combine(root, "bin")]));
+
+                // Where a local delete with the bin ticked goes on Linux: a Trash of the sandbox's own,
+                // and no per-volume ones, so a run never puts anything in the user's real one.
+                services.AddSingleton<Core.Services.Recycle.ITrashService>(
+                    new Core.Services.Recycle.FreedesktopTrash(Path.Combine(root, "trash"), () => [], 0));
                 services.AddSingleton<Core.Services.Docker.IDockerDriveService>(provider =>
                     new Core.Services.Docker.DockerDriveService(provider.GetRequiredService<SandboxServices.DockerCli>()));
 

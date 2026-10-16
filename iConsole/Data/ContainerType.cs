@@ -20,5 +20,10 @@ public enum ContainerType
     SearchResults,
     Preview,
     Archive,
-    Recycle
+    Recycle,
+    WebDav,
+    Mtp,
+    S3,
+    OneDrive,
+    GoogleDrive
 }

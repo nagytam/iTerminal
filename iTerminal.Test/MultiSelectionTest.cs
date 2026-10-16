@@ -96,9 +96,9 @@ public class MultiSelectionTest
     [TestMethod]
     public async Task NumPlusMarksByPatternAndF8DeletesTheMarkedFiles()
     {
-        if (!OperatingSystem.IsWindows())
+        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux())
         {
-            Assert.Inconclusive("The Recycle Bin option is a Windows feature.");
+            Assert.Inconclusive("The Recycle Bin option is a Windows and Linux feature.");
         }
 
         await _app.PressAsync("NumPlus");
@@ -111,9 +111,9 @@ public class MultiSelectionTest
 
         await _app.PressAsync("F8");
         await _app.WaitForTextAsync("Delete 2 items");
-        await _app.PressAsync("Tab");      // onto "Move to Recycle bin"
+        await _app.PressAsync("Tab");      // onto the recycle box
         await _app.PressAsync("Space");    // untick it: the test must not fill the user's Recycle Bin
-        await _app.WaitForTextAsync("□ Move to Recycle bin");
+        await _app.WaitForTextAsync("□ " + (OperatingSystem.IsLinux() ? "Move to Trash" : "Move to Recycle bin"));
         await _app.PressAsync("Enter");
 
         await _app.WaitUntilAsync(() => Directory.GetFiles(_app.LeftRoot).Length == 0, "both files to be deleted");
