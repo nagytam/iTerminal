@@ -12,7 +12,7 @@ namespace iConsole.Test.Controls.Tabs;
 [TestClass]
 public class TabTest
 {
-    private Mock<IThemeService> CreateMockThemeService(ColorScheme colorScheme = null)
+    private Mock<IThemeService> CreateMockThemeService(ColorScheme? colorScheme = null)
     {
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(colorScheme ?? new ColorScheme());

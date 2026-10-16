@@ -8,7 +8,7 @@ public class Drive
 {
     public DriveInfo? DriveInfo { get; set; }
     public string Name { get; set; } = string.Empty;
-    public Url Url { get; set; }
+    public Url Url { get; set; } = null!;
 
     public bool IsEnabled
     {

@@ -22,8 +22,8 @@ public class RenameDialogCommand(
 
     protected override void OnBeforeShow(RenameDialog dialog)
     {
-        var model = contentModelService.GetFocusedModel();
-        var url = model.GetFocusedEntry().Url;
+        var model = contentModelService.GetFocusedModel()!;
+        var url = model.GetFocusedEntry()!.Url;
         dialog.BaseUrl = model.Url;
         dialog.SourceUrl = url;
 

@@ -14,7 +14,6 @@ public class TerminalExecuteCommandTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

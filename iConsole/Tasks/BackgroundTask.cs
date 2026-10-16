@@ -115,7 +115,7 @@ public abstract class BackgroundTask : IBackgroundTask, INotifyPropertyChanged
 
     protected BackgroundTask()
     {
-        Name = GetType()?.FullName;
+        Name = GetType().FullName ?? string.Empty;
         Progress = new Progress<uint>((value) => OnProgressChanged(value));
         CancellationTokenSource = new CancellationTokenSource();
         CancellationToken = CancellationTokenSource.Token;

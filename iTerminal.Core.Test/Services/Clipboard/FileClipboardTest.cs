@@ -1,3 +1,4 @@
+#pragma warning disable CA1416 // The drop-block code under test is pure byte layout; it makes no Win32 call.
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;

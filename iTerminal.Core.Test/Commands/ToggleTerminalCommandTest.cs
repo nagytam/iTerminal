@@ -14,7 +14,6 @@ public class ToggleTerminalCommandTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

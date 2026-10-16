@@ -261,7 +261,7 @@ public class DiskManagerDialog : Dialog
             switch (char.ToUpperInvariant(keyEvent.KeyChar))
             {
                 case 'E':
-                    Eject();
+                    _ = Eject();
                     return true;
                 case 'F':
                     await FormatAsync();

@@ -110,12 +110,10 @@ public class ContentModelService(
     }
     public ConcurrentList<IContentBrowser> ContentBrowsers { get; private set; } = [];
     public ConcurrentDictionary<string, long> CursorPositions { get; private set; } = [];
-    public string FocusedPanel { get; set; }
-    public string LastFocusedPanel { get; set; }
+    public string FocusedPanel { get; set; } = string.Empty;
+    public string LastFocusedPanel { get; set; } = string.Empty;
 
-    public event EventHandler ModelChanged;
-
-    private readonly Microsoft.EntityFrameworkCore.IDbContextFactory<iTerminal.Core.Data.iTerminalDbContext>? _dbContextFactory = dbContextFactory;
+    public event EventHandler? ModelChanged;
 
     protected virtual void OnModelChanged(EventArgs e)
     {
@@ -273,7 +271,7 @@ public class ContentModelService(
             CursorPositions[currentContentModel.Url.FullUrl] = currentContentModel.CursorPosition.Y;
         }
         var contentBrowser = ContentBrowsers.FirstOrDefault(b => b.Name == name);
-        contentModel.ContentBrowser = contentBrowser;
+        contentModel!.ContentBrowser = contentBrowser!;
 
         // The sort is the panel's, not the drive's: a navigation that crosses drive kinds makes a
         // new model, and it starts in the order the panel was in.
@@ -335,11 +333,11 @@ public class ContentModelService(
         if (contentModel is not null)
         {
             var left = contentModel.Url;
-            if (contentModel?.Url?.FullUrl is not null)
+            if (contentModel.Url?.FullUrl is not null)
             {
                 CursorPositions[contentModel.Url.FullUrl] = contentModel.CursorPosition.Y;
             }
-            if (url.ContainerType != contentModel.Url.ContainerType)
+            if (url.ContainerType != left!.ContainerType)
             {
                 ContentModelAsyncDrive.RememberReturnUrl(settingsService, contentModel.Name, contentModel.Url, url);
                 contentModel = AddContentModel(contentModel.Name, url);
@@ -363,11 +361,11 @@ public class ContentModelService(
         if (contentModel is not null)
         {
             var left = contentModel.Url;
-            if (contentModel?.Url?.FullUrl is not null)
+            if (contentModel.Url?.FullUrl is not null)
             {
                 CursorPositions[contentModel.Url.FullUrl] = contentModel.CursorPosition.Y;
             }
-            if (url.ContainerType != contentModel.Url.ContainerType)
+            if (url.ContainerType != left!.ContainerType)
             {
                 ContentModelAsyncDrive.RememberReturnUrl(settingsService, name, contentModel.Url, url);
                 contentModel = AddContentModel(name, url);
@@ -486,11 +484,11 @@ public class ContentModelService(
             var rightModel = ContentModels.FirstOrDefault(m => m.Name == Right);
             try
             {
-                if (leftModel.ContentBrowser.IsFocused && leftModel.CursorPosition.Y < leftModel.FilteredEntries.Count)
+                if (leftModel!.ContentBrowser.IsFocused && leftModel.CursorPosition.Y < leftModel.FilteredEntries.Count)
                 {
                     filePath = leftModel.GetFocusedEntry()?.Url;
                 }
-                else if (rightModel.ContentBrowser.IsFocused && rightModel.CursorPosition.Y < rightModel.FilteredEntries.Count)
+                else if (rightModel!.ContentBrowser.IsFocused && rightModel.CursorPosition.Y < rightModel.FilteredEntries.Count)
                 {
                     filePath = rightModel.GetFocusedEntry()?.Url;
                 }
@@ -515,11 +513,11 @@ public class ContentModelService(
             var rightModel = ContentModels.FirstOrDefault(m => m.Name == Right);
             try
             {
-                if (leftModel.ContentBrowser.IsFocused)
+                if (leftModel!.ContentBrowser.IsFocused)
                 {
-                    filePath = rightModel.Url;
+                    filePath = rightModel!.Url;
                 }
-                else if (rightModel.ContentBrowser.IsFocused)
+                else if (rightModel!.ContentBrowser.IsFocused)
                 {
                     filePath = leftModel.Url;
                 }

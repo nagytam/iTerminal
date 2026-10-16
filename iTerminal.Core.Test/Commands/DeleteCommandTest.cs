@@ -14,7 +14,6 @@ public class DeleteCommandTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

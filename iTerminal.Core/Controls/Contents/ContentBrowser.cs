@@ -491,7 +491,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (parentPanel != null)
         {
             var focusableControls = parentPanel.Controls.Where(c => (c is FilePanel || c is TerminalWindow || c is AiPromptBar || c is TerminalPanel) && c.IsVisible).ToList();
-            var index = focusableControls.IndexOf(Parent);
+            var index = focusableControls.IndexOf(Parent!);
             var nextIndex = (index + 1) % focusableControls.Count;
             var nextPanel = focusableControls[nextIndex];
             if (nextPanel != null)
@@ -507,7 +507,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (parentPanel != null)
         {
             var focusableControls = parentPanel.Controls.Where(c => (c is FilePanel || c is TerminalWindow || c is AiPromptBar || c is TerminalPanel) && c.IsVisible).ToList();
-            var index = focusableControls.IndexOf(Parent);
+            var index = focusableControls.IndexOf(Parent!);
             var nextIndex = (index - 1 + focusableControls.Count) % focusableControls.Count;
             var nextPanel = focusableControls[nextIndex];
             nextPanel?.SetFocus();

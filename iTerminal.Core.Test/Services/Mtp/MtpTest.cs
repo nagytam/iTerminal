@@ -134,7 +134,7 @@ public class MtpTest
         var cat = new Url("mtp://Pixel 7/Internal storage/DCIM/cat.jpg");
         var copy = new Url("mtp://Pixel 7/Internal storage/Pictures/cat.jpg");
 
-        Assert.AreEqual("meow", Encoding.UTF8.GetString((await service.ReadFileAsync(cat))!.Content));
+        Assert.AreEqual("meow", Encoding.UTF8.GetString((await service.ReadFileAsync(cat))!.Content!));
         await service.CopyAsync(cat, copy, overwrite: false);
         await service.WriteFileAsync(new Url("mtp://Pixel 7/Internal storage/new.txt"), new MemoryStream(Encoding.UTF8.GetBytes("new")));
 

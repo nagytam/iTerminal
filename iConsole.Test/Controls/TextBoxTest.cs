@@ -135,7 +135,7 @@ public class TextBoxTest
 
         await textBox.HandleKeyEventAsync(new KeyEvent('H', ConsoleKey.H, false, false, false));
         Assert.AreEqual("H", textBox.Text);
-        Task.WaitAll([autoCompletion.CompletionModel.UpdateTask]);
+        Task.WaitAll([autoCompletion.CompletionModel.UpdateTask!]);
         Assert.IsTrue(autoCompletion.IsVisible, "typing puts the list up");
         textBox.Draw(buffer);
         Assert.AreEqual("Country: [Haiti   ] ", buffer.ContentAsString.Split(Environment.NewLine)[0]);
@@ -143,7 +143,7 @@ public class TextBoxTest
 
         await textBox.HandleKeyEventAsync(new KeyEvent('u', ConsoleKey.U, false, false, false));
         Assert.AreEqual("Hu", textBox.Text);
-        Task.WaitAll([autoCompletion.CompletionModel.UpdateTask]);
+        Task.WaitAll([autoCompletion.CompletionModel.UpdateTask!]);
         Assert.IsTrue(autoCompletion.IsVisible);
         textBox.Draw(buffer);
         Assert.AreEqual("Country: [Hungary ] ", buffer.ContentAsString.Split(Environment.NewLine)[0]);
@@ -151,7 +151,7 @@ public class TextBoxTest
 
         await textBox.HandleKeyEventAsync(new KeyEvent(' ', ConsoleKey.Tab, false, false, false));
         Assert.AreEqual("Hungary", textBox.Text);
-        Task.WaitAll([autoCompletion.CompletionModel.UpdateTask]);
+        Task.WaitAll([autoCompletion.CompletionModel.UpdateTask!]);
         Assert.AreEqual(1, autoCompletion.CompletionModel.MatchingValues.Count);
     }
 

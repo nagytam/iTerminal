@@ -30,7 +30,7 @@ public class CheckBox : Control, IReadOnly
     public string Label { get; set; }
     private string CheckedText { get; set; }
     private string UncheckedText { get; set; }
-    public event EventHandler CheckedChanged;
+    public event EventHandler? CheckedChanged;
 
     public CheckBox(IThemeService themeService) : base(themeService)
     {

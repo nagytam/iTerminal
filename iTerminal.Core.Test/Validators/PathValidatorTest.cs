@@ -12,7 +12,7 @@ public class PathValidatorTest
     public void IsValidWithNullValueReturnsFalse()
     {
         var mockDateTimeProviderService = new Mock<DateTimeProviderService>();
-        var validator = new PathValidationModel(null, mockDateTimeProviderService.Object);
+        var validator = new PathValidationModel(null!, mockDateTimeProviderService.Object);
         Assert.IsFalse(validator.IsValid);
     }
 

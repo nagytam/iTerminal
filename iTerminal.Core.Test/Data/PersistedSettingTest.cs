@@ -14,7 +14,6 @@ public class PersistedSettingTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

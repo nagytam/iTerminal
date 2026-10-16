@@ -26,7 +26,7 @@ public class CreateFileDialog : CreateEntryDialog
             nameof(CreateFileDialog),
             "Create file",
             textBoxName,
-            new CreateFileCommand(textBoxName.ValidationModel as NewFileValidationModel, contentModelService),
+            new CreateFileCommand((NewFileValidationModel)textBoxName.ValidationModel!, contentModelService),
             themeService)
     {
     }

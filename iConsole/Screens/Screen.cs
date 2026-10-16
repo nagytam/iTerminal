@@ -9,7 +9,7 @@ namespace iConsole.Screens;
 public class Screen : Control, IScreen
 {
     private readonly IConsoleDriver _consoleDriver;
-    public IDesktop Desktop { get; set; }
+    public IDesktop Desktop { get; set; } = null!;
 
     public string Title
     {

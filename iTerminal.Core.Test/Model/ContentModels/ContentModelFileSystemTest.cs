@@ -14,7 +14,6 @@ public class ContentModelFileSystemTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

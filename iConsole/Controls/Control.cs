@@ -102,7 +102,7 @@ public class Control : INotifyPropertyChanged, IControl
                     }
                 }
             }
-            return cursorPosition;
+            return cursorPosition!;
         }
         set
         {
@@ -139,7 +139,7 @@ public class Control : INotifyPropertyChanged, IControl
                 _isCursorVisible = value;
                 if (!_isCursorVisible)
                 {
-                    CursorPosition = null;
+                    CursorPosition = null!;
                 }
                 OnPropertyChanged(nameof(IsCursorVisible));
             }
@@ -620,7 +620,7 @@ public class Control : INotifyPropertyChanged, IControl
     }
 
     #region 
-    public Task AutoRefreshTask { get; set; }
+    public Task AutoRefreshTask { get; set; } = Task.CompletedTask;
     private ConcurrentStack<IControl>? _focusedStack;
 
     /// <summary>
@@ -748,7 +748,7 @@ public class Control : INotifyPropertyChanged, IControl
     {
         if (HotKeyChar is not null)
         {
-            if ((HotKeyChar.ToString()).Equals(keyEvent.ConsoleKey.ToString(), StringComparison.InvariantCultureIgnoreCase)
+            if ((HotKeyChar.Value.ToString()).Equals(keyEvent.ConsoleKey.ToString(), StringComparison.InvariantCultureIgnoreCase)
                 && keyEvent.Control)
             {
                 await TriggerHotKeyAsync();

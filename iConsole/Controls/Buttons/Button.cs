@@ -117,10 +117,19 @@ public class Button : Control
         }
     }
 
+    private async Task RunFirstCommandAsync()
+    {
+        ICommand? command = Commands.FirstOrDefault();
+        if (command is not null)
+        {
+            await command.RunAsync(null);
+        }
+    }
+
     public override async Task TriggerHotKeyAsync()
     {
         await base.TriggerHotKeyAsync();
-        await Commands.FirstOrDefault()?.RunAsync(null);
+        await RunFirstCommandAsync();
     }
 
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
@@ -131,7 +140,7 @@ public class Button : Control
             && mouseEvent.WheelDelta == 0
             && (mouseEvent.LeftClicked || mouseEvent.RightClicked))
         {
-            await Commands.FirstOrDefault()?.RunAsync(null);
+            await RunFirstCommandAsync();
             isHandled = true;
         }
         return isHandled;

@@ -19,7 +19,7 @@ public class DesktopAdditionalTest
         public int WindowSizeChangedCount { get; private set; }
         public Size? LastSize { get; private set; }
 
-        public void OnWindowSizeChanged(object? sender, Size e)
+        public override void OnWindowSizeChanged(object? sender, Size e)
         {
             WindowSizeChangedCount++;
             LastSize = e;

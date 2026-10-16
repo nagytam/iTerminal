@@ -81,7 +81,6 @@ dotnet build iTerminal.Packaging.Linux/iTerminal.Packaging.Linux.proj -p:Version
 | `iConsole.Inputs.Windows`, `iConsole.Inputs.Posix` | Platform input plug-ins |
 | `iTerminal.Core` | File-manager behavior, drives, dialogs, services |
 | `iTerminal` | Composition root and executable |
-| `iConsole.Demo` | Standalone sample app for `iConsole` |
 | `iTerminal.Installer`, `iTerminal.Packaging.Linux` | Windows MSI and Linux packages |
 | `*.Test`, `iConsole.Test.Core` | Tests and test helpers |
 

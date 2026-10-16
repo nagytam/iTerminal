@@ -14,7 +14,6 @@ public class FolderValidationModelTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

@@ -1,3 +1,4 @@
+#pragma warning disable MSTEST0032 // These tests pin a constant's value on purpose.
 using iTerminal.Core.Data;
 
 namespace iTerminal.Core.Test.Data;
@@ -29,6 +30,6 @@ public class SettingsTest
     public void Settings_IsQuotesIndicatorEnabled_MatchesNameof()
     {
         var expected = nameof(Settings.IsQuotesIndicatorEnabled);
-        Assert.AreEqual(expected, Settings.IsQuotesIndicatorEnabled);
+        Assert.AreEqual(Settings.IsQuotesIndicatorEnabled, expected);
     }
 }

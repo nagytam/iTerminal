@@ -16,7 +16,7 @@ public record ArchiveEntry : EntryBase, IEntry
     public override string DisplayName => ZipArchiveEntry?.Name ?? Url.Name;
     public override string Name => ZipArchiveEntry?.Name ?? Url.Name;
     public override string DirectoryName => Url.Directory;
-    public ZipArchiveEntry ZipArchiveEntry { get; set; }
+    public ZipArchiveEntry? ZipArchiveEntry { get; set; }
     public override bool Exists => ZipArchiveEntry != null;
 
     public ArchiveEntry(string displayName, string url)

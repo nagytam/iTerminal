@@ -110,7 +110,7 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel) : Job
         }
         catch
         {
-            drive.Name = drive.DriveInfo?.Name.PadRight(16);
+            drive.Name = drive.DriveInfo?.Name.PadRight(16) ?? string.Empty;
             drive.Name += " Label: " + string.Empty.PadRight(15);
             if (cancellationToken.IsCancellationRequested)
             {

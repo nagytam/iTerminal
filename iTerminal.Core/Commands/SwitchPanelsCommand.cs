@@ -21,8 +21,8 @@ public class SwitchPanelsCommand(
     {
         var left = Content.Left;
         var right = Content.Right;
-        var contentModelLeft = contentModelService.ContentModels.FirstOrDefault(m => m.Name == left);
-        var contentModelRight = contentModelService.ContentModels.FirstOrDefault(m => m.Name == right);
+        var contentModelLeft = contentModelService.ContentModels.First(m => m.Name == left);
+        var contentModelRight = contentModelService.ContentModels.First(m => m.Name == right);
 
         var leftUrl = contentModelLeft.Url;
         var rightUrl = contentModelRight.Url;

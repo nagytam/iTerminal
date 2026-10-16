@@ -14,7 +14,6 @@ public class TaskManagerDialogCommandTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

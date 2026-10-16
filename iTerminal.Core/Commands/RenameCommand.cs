@@ -38,7 +38,7 @@ public class RenameCommand(IContentModelService contentModelService)
 
                 try
                 {
-                    await contentModel.MoveAsync(sourceUrl, targetUrl, overwrite);
+                    await contentModel.MoveAsync(sourceUrl!, targetUrl, overwrite);
 
                     renameDialog.Refresh();
                     renameDialog.Close();

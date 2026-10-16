@@ -14,7 +14,6 @@ public class PathValidationModelTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

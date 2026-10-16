@@ -221,7 +221,7 @@ public class Desktop : IHostedService, IDesktop
                 Dump.AppendSessionTrace($"desktop:initial-state:screen:rendered;screen={screen.GetType().FullName}");
                 if (screen.IsCursorVisible)
                 {
-                    Buffer.SetCursorPosition(screen.CursorPosition, true);
+                    Buffer.SetCursorPosition(screen.CursorPosition!, true);
                     Dump.AppendSessionTrace($"desktop:initial-state:screen:cursor;position={screen.CursorPosition?.X},{screen.CursorPosition?.Y}");
                 }
             }

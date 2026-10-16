@@ -20,6 +20,6 @@ public class MemoryCacheService : IMemoryCacheService
 
     public object Get(string key)
     {
-        return memoryCache.Get(key);
+        return memoryCache.Get(key)!;
     }
 }

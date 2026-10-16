@@ -13,7 +13,6 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Presentation;
-using DocumentFormat.OpenXml.Spreadsheet;
 using System.Reflection;
 
 namespace iConsole.Services;
@@ -170,7 +169,7 @@ public class FileToTextConverterService : IFileToTextConverterService
             foreach (Sheet sheet in workbookPart.Workbook.Sheets.Cast<Sheet>())
             {
                 var sheetName = sheet.Name ?? "(sheet)";
-                AddHeading(textModel, sheetName);
+                AddHeading(textModel, sheetName!);
 
                 WorksheetPart? worksheetPart = workbookPart.GetPartById(sheet.Id!) as WorksheetPart;
                 if (worksheetPart?.Worksheet == null)
@@ -241,7 +240,7 @@ public class FileToTextConverterService : IFileToTextConverterService
                 if (string.IsNullOrEmpty(relId))
                     continue;
 
-                var slidePart = presPart.GetPartById(relId) as SlidePart;
+                var slidePart = presPart.GetPartById(relId!) as SlidePart;
                 if (slidePart?.Slide == null)
                     continue;
 
@@ -554,7 +553,6 @@ public class FileToTextConverterService : IFileToTextConverterService
             AddField(textModel, "Public Key Token", pkt is { Length: > 0 }
                 ? BitConverter.ToString(pkt).Replace("-", string.Empty).ToLowerInvariant()
                 : "null");
-            AddField(textModel, "Architecture",     asmName.ProcessorArchitecture.ToString());
             AddField(textModel, "Content Type",     asmName.ContentType.ToString());
             AddField(textModel, "Flags",            asmName.Flags.ToString());
             textModel.Lines.Add(string.Empty);

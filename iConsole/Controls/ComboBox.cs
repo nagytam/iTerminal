@@ -110,7 +110,7 @@ public class ComboBox<T> : Control, IReadOnly
         StateHasChanged();
     }
 
-    public void Close() => _popup?.Close();
+    public new void Close() => _popup?.Close();
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {

@@ -31,7 +31,7 @@ public class FilePanelRefreshTaskTest
         public string DirectoryName { get; }
         public string? NumberOfFiles { get; set; }
         public bool Exists => true;
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged { add { } remove { } }
         public string GetDisplayName(int width) => DisplayName;
         public string GetDisplayFileSize(int width) => FileSize;
         public ConxelString FormatItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState)

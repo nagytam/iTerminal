@@ -168,7 +168,7 @@ public class FilePanelTest
         // Unreadable settings restore nothing rather than something arbitrary, and the panel never
         // writes the position itself — that is the model's to place once its listing exists.
         contentModel.Verify(m => m.RestoreNavigation(null, 0, 0), Times.Once);
-        Assert.AreEqual(5, sut.Model.ScrollPosition.Y);
+        Assert.AreEqual(5, sut.Model!.ScrollPosition.Y);
         Assert.AreEqual(7, sut.Model.CursorPosition.Y);
         contentModel.Verify(m => m.ReadUrl(), Times.Once);
     }
@@ -200,7 +200,7 @@ public class FilePanelTest
         await sut.OnInitializeAsync();
 
         // simulate user moving the scroll/cursor after initialization
-        sut.Model.ScrollPosition.Y = 9;
+        sut.Model!.ScrollPosition.Y = 9;
         sut.Model.CursorPosition.Y = 8;
 
         typeof(FilePanel)

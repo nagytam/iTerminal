@@ -9,7 +9,7 @@ public class ListItem<T> : IListItem<T>
 
     public ListItem(T? item)
     {
-        Item = item;
-        Value = Item.ToString();
+        Item = item!;
+        Value = Item?.ToString() ?? string.Empty;
     }
 }

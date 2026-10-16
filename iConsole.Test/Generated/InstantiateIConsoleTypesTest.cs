@@ -37,7 +37,7 @@ public class InstantiateIConsoleTypesTest
             {
                 try
                 {
-                    return System.Runtime.Serialization.FormatterServices.GetUninitializedObject(t);
+                    return System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(t);
                 }
                 catch
                 {
@@ -54,14 +54,14 @@ public class InstantiateIConsoleTypesTest
                     if (instance == null)
                     {
                         // As a final fallback, allocate without running constructors.
-                        instance = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type);
+                        instance = System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(type);
                     }
                 }
                 catch
                 {
                     try
                     {
-                        instance = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type);
+                        instance = System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(type);
                     }
                     catch
                     {

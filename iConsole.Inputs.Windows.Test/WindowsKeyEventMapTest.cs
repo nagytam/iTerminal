@@ -54,7 +54,6 @@ public class WindowsKeyEventMapTest
     public void MapConsoleKey_ModifierKeys_ReturnNone(ushort vKeyCode)
     {
         // Modifier keys should map to None
-        Assert.IsNotNull(ConsoleKey.None);
     }
 
     [TestMethod]

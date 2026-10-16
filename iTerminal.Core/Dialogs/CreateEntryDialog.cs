@@ -56,7 +56,7 @@ public abstract class CreateEntryDialog : FormDialog
         _textBoxName = textBoxName;
         _textBoxName.Label = "Name";
         _textBoxName.HotKeyChar = 'N';
-        _errorMessage = new ErrorMessage(textBoxName.ValidationModel, themeService);
+        _errorMessage = new ErrorMessage(textBoxName.ValidationModel!, themeService);
 
         AddCommand(createCommand);
         _createButton = new Button(title, createCommand, themeService) { HotKeyChar = 'f' };

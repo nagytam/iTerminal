@@ -14,7 +14,6 @@ public class ExecuteCommandTaskTest
         // Act
         // TODO: implement test
         // Assert basic pass for now
-        Assert.IsTrue(true);
     }
 }
 

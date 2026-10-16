@@ -14,7 +14,6 @@ public class ThemeManagerDialogCommandTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

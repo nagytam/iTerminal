@@ -25,7 +25,7 @@ public class Buffer : IBuffer
             {
                 AddMergedLayer();
             }
-            return _mergedLayer;
+            return _mergedLayer!;
         }
     }
 

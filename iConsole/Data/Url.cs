@@ -43,15 +43,15 @@ public partial class Url
     private static partial Regex RegexSmbUrl();
 
     private readonly string _url;
-    private string _urlScheme;
-    private string _drive;
+    private string _urlScheme = null!;
+    private string _drive = null!;
     private string? _path;
-    private readonly string _date;
-    private readonly string _time;
-    private readonly string _fullName;
-    private readonly string _directoryName;
-    private readonly string _host;
-    private readonly string _username;
+    private readonly string _date = null!;
+    private readonly string _time = null!;
+    private readonly string _fullName = null!;
+    private readonly string _directoryName = null!;
+    private readonly string _host = null!;
+    private readonly string _username = null!;
     private readonly string? _container;
     private readonly string? _containerFilePath;
     private readonly Url? _innerUrl;
@@ -794,7 +794,7 @@ public partial class Url
         }
     }
 
-    private static string AppendUrlPrefix(string url)
+    private static string AppendUrlPrefix(string? url)
     {
         if (string.IsNullOrEmpty(url))
         {

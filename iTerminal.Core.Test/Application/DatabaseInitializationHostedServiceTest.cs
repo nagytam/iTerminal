@@ -130,7 +130,6 @@ public class DatabaseInitializationHostedServiceTest
 
             await service.StopAsync(CancellationToken.None);
 
-            Assert.IsTrue(true);
         }
         finally
         {

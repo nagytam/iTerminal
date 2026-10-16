@@ -279,15 +279,6 @@ public class DatePopUpWindowTest
             IsVisible = true
         };
 
-        var stateChangedCalled = false;
-        dateWindow.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(dateWindow.HasStateChanged))
-            {
-                stateChangedCalled = true;
-            }
-        };
-
         dateWindow.OnIdle();
     }
 

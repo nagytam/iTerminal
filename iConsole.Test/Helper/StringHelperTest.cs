@@ -103,6 +103,7 @@ public class StringHelperTest
     public void StringShrinkNormal()
     {
         var result = "Hello World".Shrink(7);
+        Assert.IsNotNull(result);
         Assert.AreEqual(7, result.Length);
         Assert.IsTrue(result.Contains("..."));
     }

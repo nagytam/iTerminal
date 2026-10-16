@@ -52,7 +52,7 @@ public class TextFileEditorDialog : Dialog
     public override async Task OnInitializeAsync()
     {
         var fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
-        await _fileToTextConverterService.ReadFileAsync(Url, fileSystem, TextEditorControl.TextModel);
+        await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, TextEditorControl.TextModel);
 
         await base.OnInitializeAsync();
     }

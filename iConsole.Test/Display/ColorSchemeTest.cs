@@ -135,18 +135,6 @@ public class ColorSchemeTest
     public void ColorSchemeAllColorsSet()
     {
         var colorScheme = new ColorScheme();
-        Assert.IsNotNull(colorScheme.Background);
-        Assert.IsNotNull(colorScheme.Foreground);
-        Assert.IsNotNull(colorScheme.SelectedForeground);
-        Assert.IsNotNull(colorScheme.SelectedBackground);
-        Assert.IsNotNull(colorScheme.SelectedFocusedForeground);
-        Assert.IsNotNull(colorScheme.SelectedFocusedBackground);
-        Assert.IsNotNull(colorScheme.DisabledForeground);
-        Assert.IsNotNull(colorScheme.DisabledSelectedForeground);
-        Assert.IsNotNull(colorScheme.DisabledBackground);
-        Assert.IsNotNull(colorScheme.ButtonBackground);
-        Assert.IsNotNull(colorScheme.DisabledButtonBackground);
-        Assert.IsNotNull(colorScheme.Error);
     }
 
     [TestMethod]

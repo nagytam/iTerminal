@@ -136,7 +136,7 @@ public class InstantiateAllTypesTest
 
             try
             {
-                return FormatterServices.GetUninitializedObject(type);
+                return System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(type);
             }
             catch
             {
@@ -238,7 +238,7 @@ public class InstantiateAllTypesTest
     {
         if (type == typeof(SystemConsoleDriver) || type == typeof(VirtualSequenceConsoleDriver))
         {
-            value = FormatterServices.GetUninitializedObject(type);
+            value = System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(type);
             return true;
         }
 
@@ -302,7 +302,7 @@ public class InstantiateAllTypesTest
         {
             try
             {
-                value = FormatterServices.GetUninitializedObject(type);
+                value = System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(type);
                 return true;
             }
             catch
@@ -320,7 +320,7 @@ public class InstantiateAllTypesTest
         {
             try
             {
-                value = FormatterServices.GetUninitializedObject(type);
+                value = System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(type);
                 return true;
             }
             catch

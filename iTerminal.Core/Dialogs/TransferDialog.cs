@@ -20,7 +20,7 @@ public abstract class TransferDialog : FormDialog
     readonly IContentModelService _contentModelService;
     private readonly string _operationName;
 
-    public Url SourceUrl { get; set; }
+    public Url SourceUrl { get; set; } = null!;
 
     /// <summary>
     /// Everything the operation acts on: the marked rows of the source panel, or just
@@ -65,7 +65,7 @@ public abstract class TransferDialog : FormDialog
     public ErrorMessage ErrorMessage { get; private set; }
     private Button _primaryButton { get; set; }
     private Button _cancelButton { get; set; }
-    public Url BaseUrl { get; internal set; }
+    public Url BaseUrl { get; internal set; } = null!;
 
     protected TransferDialog(
         string name,
@@ -96,7 +96,7 @@ public abstract class TransferDialog : FormDialog
         };
         TextBoxTarget.PropertyChanged += (_, _) => UpdateTargetPreview();
         var validator = (TextBoxTarget.ValidationModel as FolderOrNewFilesValidationModel);
-        ErrorMessage = new ErrorMessage(validator, themeService);
+        ErrorMessage = new ErrorMessage(validator!, themeService);
 
         _labelTarget = new Label("Target: ", themeService);
         _checkBoxOverwrite = new CheckBox(themeService)
@@ -127,7 +127,7 @@ public abstract class TransferDialog : FormDialog
         ArgumentNullException.ThrowIfNull(url);
         SourceUrl = url;
         SourceUrls = sources.Count > 0 ? sources : [url];
-        TargetUrl = IsMultiple ? new Url(targetFolder) : new Url(targetFolder).Combine(url.Name);
+        TargetUrl = IsMultiple ? new Url(targetFolder!) : new Url(targetFolder!).Combine(url.Name);
         TextBoxTarget.Text = TargetUrl.FullUrl;
         TextBoxTarget.ScrollableModel.Reset();
         TextBoxTarget.ScrollableModel.ScrollableSize = new Size(TextBoxTarget.Text.Length, 1);

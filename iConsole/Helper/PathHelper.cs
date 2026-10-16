@@ -28,7 +28,7 @@ public static class PathHelper
 
         if (Path.IsPathRooted(clearedPath))
         {
-            var root = Path.GetPathRoot(clearedPath);
+            var root = Path.GetPathRoot(clearedPath) ?? string.Empty;
             if (clearedPath.IndexOf(root) > 0)
             {
                 return false;

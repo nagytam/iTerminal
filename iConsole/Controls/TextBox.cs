@@ -57,7 +57,7 @@ public class TextBox : Control, IReadOnly
     /// <summary>Whether this box accepts <paramref name="c"/>; any printable character by default.</summary>
     protected virtual bool IsAllowedCharacter(char c) => ConsoleKeyHelper.IsTypeable(c);
 
-    public bool IsValid => (_validationModel is null || ValidationModel.IsValid);
+    public bool IsValid => (_validationModel is null || _validationModel.IsValid);
 
     public AutoCompletion? AutoCompletion
     {

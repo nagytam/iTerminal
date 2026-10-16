@@ -65,7 +65,7 @@ public class FolderSelectorHistoryTabPage : FolderSelectorTabPage
     {
         var transformedItem = new ListItem<string>(item)
         {
-            Value = item.Shrink((int)_listBox.ViewSize.Width - 2),
+            Value = item.Shrink((int)_listBox.ViewSize.Width - 2)!,
             IsEnabled = true
         };
         return transformedItem;

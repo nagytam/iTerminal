@@ -21,7 +21,6 @@ public partial class MouseEventPublisherJob : Job, ITerminalInputSource, IConsol
     public ConcurrentQueue<MouseEvent> MouseQueue { get; } = new();
     public ConcurrentQueue<KeyEvent> KeyQueue { get; } = new();
     public SemaphoreSlim InputAvailableSignal { get; } = new(0);
-    public event EventHandler<MouseEvent> MouseEvent;
     public override JobPriority Priority => JobPriority.Input;
 
     public MouseEventPublisherJob(ConsoleOwnership? consoleOwnership = null)
