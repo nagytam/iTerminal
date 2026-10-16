@@ -70,7 +70,8 @@ public class HotKeys : StatusBarItem
         iTerminal.Core.Services.FileAssociations.FileAssociationRunner? fileAssociations = null,
         DiskUsageDialog? diskUsageDialog = null,
         iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
-        INotificationService? notificationService = null)
+        INotificationService? notificationService = null,
+        DuplicateFinderDialog? duplicateFinderDialog = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -91,6 +92,11 @@ public class HotKeys : StatusBarItem
         if (diskUsageDialog is not null)
         {
             AddCommand(new DiskUsageDialogCommand(diskUsageDialog, contentModelService));
+        }
+
+        if (duplicateFinderDialog is not null)
+        {
+            AddCommand(new DuplicateFinderDialogCommand(duplicateFinderDialog, contentModelService));
         }
 
         if (elevationService is not null)
