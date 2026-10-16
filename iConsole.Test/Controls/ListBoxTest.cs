@@ -150,4 +150,72 @@ public class ListBoxTest
 
         Assert.AreEqual(VisualState.Normal, state);
     }
+
+    [TestMethod]
+    public async Task HandleMouseEvent_ClickOnRow_MovesCursorAndSelectsItem()
+    {
+        var theme = CreateTheme();
+        var listBox = CreateListBox(theme.Object, ["Alpha", "Beta", "Gamma"], new Size(20, 3));
+
+        var handled = await listBox.HandleMouseEventAsync(new MouseEvent
+        {
+            Position = new Position(2, 1),
+            LeftClicked = true
+        });
+
+        Assert.IsTrue(handled);
+        Assert.AreEqual(1, listBox.ScrollableModel.CursorPosition.Y);
+        Assert.AreEqual("Beta", listBox.SelectedItem?.Value);
+    }
+
+    [TestMethod]
+    public async Task HandleMouseEvent_ClickOnRowBelowLastItem_SelectsNothing()
+    {
+        var theme = CreateTheme();
+        var listBox = CreateListBox(theme.Object, ["Alpha", "Beta"], new Size(20, 4));
+
+        var handled = await listBox.HandleMouseEventAsync(new MouseEvent
+        {
+            Position = new Position(2, 3),
+            LeftClicked = true
+        });
+
+        Assert.IsFalse(handled);
+        Assert.IsNull(listBox.SelectedItem);
+    }
+
+    [TestMethod]
+    public async Task HandleMouseEvent_ClickOnScrolledRow_SelectsTheItemUnderIt()
+    {
+        var theme = CreateTheme();
+        var listBox = CreateListBox(theme.Object, ["R0", "R1", "R2", "R3", "R4"], new Size(20, 2));
+        listBox.ScrollableModel.CursorPosition.Y = 4;
+        listBox.ScrollableModel.ScrollToVisible();
+
+        var scrolledBy = listBox.ScrollableModel.ScrollPosition.Y;
+        await listBox.HandleMouseEventAsync(new MouseEvent
+        {
+            Position = new Position(0, 0),
+            LeftClicked = true
+        });
+
+        Assert.AreEqual(scrolledBy, listBox.ScrollableModel.CursorPosition.Y);
+        Assert.AreEqual("R" + scrolledBy, listBox.SelectedItem?.Value);
+    }
+
+    [TestMethod]
+    public async Task HandleMouseEvent_Wheel_MovesCursorAndClampsAtTheEnds()
+    {
+        var theme = CreateTheme();
+        var listBox = CreateListBox(theme.Object, ["A", "B", "C", "D", "E"], new Size(20, 2));
+
+        await listBox.HandleMouseEventAsync(new MouseEvent { Position = new Position(1, 1), WheelDelta = -1 });
+        Assert.AreEqual(3, listBox.ScrollableModel.CursorPosition.Y);
+
+        await listBox.HandleMouseEventAsync(new MouseEvent { Position = new Position(1, 1), WheelDelta = -1 });
+        Assert.AreEqual(4, listBox.ScrollableModel.CursorPosition.Y);
+
+        await listBox.HandleMouseEventAsync(new MouseEvent { Position = new Position(1, 1), WheelDelta = 1 });
+        Assert.AreEqual(1, listBox.ScrollableModel.CursorPosition.Y);
+    }
 }

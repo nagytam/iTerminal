@@ -28,6 +28,20 @@ public class ToggleControlsRenderTest
     };
 
     [TestMethod]
+    public void CheckBox_HotKey_IsPickedOutInTheLabel()
+    {
+        var checkBox = CreateCheckBox("Include subfolders");
+        checkBox.HotKeyChar = 'S';
+
+        var screen = ScreenBuffer.Render(checkBox, 20, 1);
+
+        // "□ Include subfolders": the 's' at column 10 is recoloured, its neighbours are not.
+        Assert.AreEqual('s', screen.CharAt(10, 0));
+        Assert.AreEqual(Scheme.SelectedFocusedForeground, screen.ForegroundAt(10, 0));
+        Assert.AreEqual(Scheme.Foreground, screen.ForegroundAt(9, 0));
+    }
+
+    [TestMethod]
     public void CheckBox_UncheckedAndChecked_UseDistinctGlyphs()
     {
         Assert.AreEqual("□ Hidden files", ScreenBuffer.Render(CreateCheckBox("Hidden files"), 20, 1).Lines[0]);

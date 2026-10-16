@@ -74,6 +74,9 @@ public class CheckBox : Control, IReadOnly
         GetColor(colorScheme, visualState, out Color foreground, out Color background);
         var isStrikeThrough = !IsEnabled;
         var lineString = new ConxelString(line, foreground, background, isStrikeThrough: isStrikeThrough);
+        // The hot key is shown in the label, as on TextBox and ComboBox: without the underline a
+        // checkbox answers its hot key with nothing on screen to say which key that is.
+        lineString.HighlightHotKey(HotConsoleKey, HotKeyChar, ThemeService.CurrentColorScheme.SelectedFocusedForeground, background);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, lineString);
     }
 
