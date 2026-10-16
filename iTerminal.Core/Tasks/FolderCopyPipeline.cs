@@ -29,9 +29,12 @@ internal static class FolderCopyPipeline
         string operationName,
         CancellationToken cancellationToken,
         Action<long, long> reportProgress,
-        Action<Url>? onItemSucceeded = null)
+        Action<Url>? onItemSucceeded = null,
+        Action<long>? reportBytes = null,
+        Action<Url>? onFileStarted = null)
     {
         long processedFiles = 0;
+        long processedBytes = 0;
         Exception? firstError = null;
         int userCancelledAfterError = 0;
         var progressThrottle = System.Diagnostics.Stopwatch.StartNew();
@@ -70,7 +73,21 @@ internal static class FolderCopyPipeline
                 {
                     try
                     {
-                        await PipelinedFileCopyHelper.CopyAsync(source, target, item.Source, item.Target, null, linkedCts.Token);
+                        onFileStarted?.Invoke(item.Source);
+
+                        // Each file reports its own running total; the delta since its last report
+                        // is what joins the shared count, so concurrent workers add up correctly.
+                        long reportedForFile = 0;
+                        var fileProgress = reportBytes is null
+                            ? null
+                            : new SynchronousProgress<long>(bytesSoFar =>
+                            {
+                                var delta = bytesSoFar - reportedForFile;
+                                reportedForFile = bytesSoFar;
+                                reportBytes(Interlocked.Add(ref processedBytes, delta));
+                            });
+
+                        await PipelinedFileCopyHelper.CopyAsync(source, target, item.Source, item.Target, fileProgress, linkedCts.Token);
                         onItemSucceeded?.Invoke(item.Source);
                     }
                     catch (OperationCanceledException)

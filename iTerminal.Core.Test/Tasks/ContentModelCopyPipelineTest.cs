@@ -152,6 +152,34 @@ public class ContentModelCopyPipelineTest
     }
 
     [TestMethod]
+    public async Task ContentModelCopyFolderTask_ToMemoryDrive_CopiesSubfoldersAndReportsBytes()
+    {
+        var srcDir = Path.Combine(_tempDir, "src");
+        Directory.CreateDirectory(Path.Combine(srcDir, "a", "b"));
+        Directory.CreateDirectory(Path.Combine(srcDir, "empty"));
+        File.WriteAllBytes(Path.Combine(srcDir, "root.bin"), new byte[200_000]);
+        File.WriteAllBytes(Path.Combine(srcDir, "a", "mid.bin"), new byte[300_000]);
+        File.WriteAllBytes(Path.Combine(srcDir, "a", "b", "deep.bin"), new byte[100_000]);
+
+        var source = new FileSystemService();
+        var target = new MemoryDriveService();
+        var sourceUrl = new Url(srcDir);
+        var targetUrl = new Url("memdrive://copy/");
+        var discoveryTask = new FolderDiscoveryTask(source, target, sourceUrl, targetUrl);
+        var task = new ContentModelCopyFolderTask(source, target, sourceUrl, targetUrl, overwrite: true, discoveryTask, new FakeErrorPromptService());
+
+        _ = discoveryTask.ExecuteAsync();
+        await task.ExecuteAsync();
+
+        Assert.IsTrue(target.ExistsFile(new Url("memdrive://copy/a/b/deep.bin")));
+        Assert.IsTrue(target.ExistsFolder(new Url("memdrive://copy/empty/")));
+        Assert.AreEqual(3, task.ItemsProcessed);
+        Assert.AreEqual(600_000, task.TotalBytes);
+        Assert.AreEqual(600_000, task.BytesProcessed);
+        Assert.AreEqual(100, task.ProgressPercentage);
+    }
+
+    [TestMethod]
     public async Task ContentModelCopyFolderTask_CopiesFilesConcurrently()
     {
         var srcDir = Path.Combine(_tempDir, "src");
