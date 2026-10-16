@@ -95,7 +95,7 @@ public class SolutionViewerDialog : SplitPaneDialog
     private bool _followTail = true;
     private bool _syncingScroll;
 
-    private bool _busy;
+    private volatile bool _busy;
     private string _status = string.Empty;
     private StatusSeverity _statusSeverity = StatusSeverity.Info;
     private CancellationTokenSource? _runCts;
@@ -440,8 +440,10 @@ public class SolutionViewerDialog : SplitPaneDialog
                 AppendOutput(string.Empty);
             }
 
-            _busy = false;
+            // Busy ends last: whoever sees the run as over (a test, the next key) must find its outcome
+            // already in the status line, not the text of the run before.
             ReportRunOutcome(verb, targets.Count, overallExitCode, cts.IsCancellationRequested);
+            _busy = false;
             StateHasChanged();
         });
     }
