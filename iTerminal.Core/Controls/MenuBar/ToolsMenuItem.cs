@@ -32,7 +32,10 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Mail.MailDialog? mailDialog = null,
         iTerminal.Core.Dialogs.PasswordManager.PasswordManagerDialog? passwordManagerDialog = null,
         iTerminal.Core.Services.ISettingsService? settingsService = null,
-        iTerminal.Core.Dialogs.RuntimeDependencyDialog? runtimeDependencyDialog = null)
+        iTerminal.Core.Dialogs.RuntimeDependencyDialog? runtimeDependencyDialog = null,
+        DiskUsageDialog? diskUsageDialog = null,
+        iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
+        INotificationService? notificationService = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -71,6 +74,12 @@ public class ToolsMenuItem : MenuItem
         if (mailDialog is not null) features.Add(new MailDialogCommand(mailDialog));
         if (passwordManagerDialog is not null) features.Add(new PasswordManagerDialogCommand(passwordManagerDialog));
         if (runtimeDependencyDialog is not null) features.Add(new RuntimeDependencyDialogCommand(runtimeDependencyDialog));
+        if (diskUsageDialog is not null) features.Add(new DiskUsageDialogCommand(diskUsageDialog, contentModelService));
+        if (elevationService is not null)
+        {
+            features.Add(new RestartAsAdministratorCommand(elevationService, notificationService));
+            features.Add(new RunAsAdministratorCommand(contentModelService, elevationService, notificationService));
+        }
 
         if (features.Count > 0)
         {

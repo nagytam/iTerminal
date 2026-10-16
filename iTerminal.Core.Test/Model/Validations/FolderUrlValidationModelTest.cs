@@ -97,6 +97,7 @@ public class FolderUrlValidationModelTest
             Container.MUSIC_CATALOG, Container.MUSIC_PLAYLIST, Container.DOCKER, Container.GIT,
             Container.SEARCH_RESULTS, Container.PREVIEW, Container.ARCHIVE, Container.RECYCLE,
             Container.WEBDAV, Container.WEBDAV_SECURE, Container.MTP,
+            Container.S3, Container.ONEDRIVE, Container.GOOGLE_DRIVE,
         ];
 
         CollectionAssert.AreEquivalent(declaredSchemes, FolderUrlValidationModel.SupportedSchemes);

@@ -92,7 +92,10 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Commands.InteractiveShellCommand? shellCommand = null,
         iTerminal.Core.Dialogs.RuntimeDependencyDialog? runtimeDependencyDialog = null,
         FileDiffDialog? fileDiffDialog = null,
-        iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null
+        iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null,
+        DiskUsageDialog? diskUsageDialog = null,
+        iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
+        iConsole.Services.INotificationService? notificationService = null
         )
         : base([], themeService)
     {
@@ -165,7 +168,10 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             mailDialog,
             passwordManagerDialog,
             settingsService,
-            runtimeDependencyDialog));
+            runtimeDependencyDialog,
+            diskUsageDialog,
+            elevationService,
+            notificationService));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 

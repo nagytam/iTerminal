@@ -37,7 +37,11 @@ public class ContentModelService(
     iTerminal.Core.Services.Recycle.IRecycleBinService? recycleBinService = null,
     IFtpFileSystemService? ftpFileSystemService = null,
     IWebDavFileSystemService? webDavFileSystemService = null,
-    iTerminal.Core.Services.Mtp.IMtpDriveService? mtpDriveService = null)
+    iTerminal.Core.Services.Mtp.IMtpDriveService? mtpDriveService = null,
+    iTerminal.Core.Services.Cloud.IS3FileSystemService? s3FileSystemService = null,
+    iTerminal.Core.Services.Cloud.IOneDriveFileSystemService? oneDriveFileSystemService = null,
+    iTerminal.Core.Services.Cloud.IGoogleDriveFileSystemService? googleDriveFileSystemService = null,
+    Microsoft.Extensions.Options.IOptions<iTerminal.Core.Services.Cloud.CloudOptions>? cloudOptions = null)
     : IContentModelService, IDisposable
 {
     /// <summary>The singletons the music drives are views over, resolved together.</summary>
@@ -167,6 +171,21 @@ public class ContentModelService(
             case ContainerType.WebDav when webDavFileSystemService is not null:
                 {
                     contentModel = new ContentModelWebDavDrive(name, settingsService, webDavFileSystemService, folderHistoryService, frequentExecutionGuardService, memoryCacheService, logger, networkProfileService, passwordManager);
+                    break;
+                }
+            case ContainerType.S3 when s3FileSystemService is not null:
+                {
+                    contentModel = new ContentModelS3Drive(name, settingsService, s3FileSystemService, folderHistoryService, frequentExecutionGuardService, logger, passwordManager, cloudOptions?.Value.S3);
+                    break;
+                }
+            case ContainerType.OneDrive when oneDriveFileSystemService is not null:
+                {
+                    contentModel = new ContentModelOneDriveDrive(name, settingsService, oneDriveFileSystemService, folderHistoryService, frequentExecutionGuardService, logger);
+                    break;
+                }
+            case ContainerType.GoogleDrive when googleDriveFileSystemService is not null:
+                {
+                    contentModel = new ContentModelGoogleDriveDrive(name, settingsService, googleDriveFileSystemService, folderHistoryService, frequentExecutionGuardService, logger);
                     break;
                 }
             case ContainerType.IPhoneFileSystem:

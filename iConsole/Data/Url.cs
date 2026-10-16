@@ -113,7 +113,7 @@ public partial class Url
             else if (ContainerType == ContainerType.SshFileSystem
                      || ContainerType == ContainerType.FtpFileSystem
                      || ContainerType == ContainerType.SmbFileSystem
-                     || ContainerType == ContainerType.WebDav
+                     || IsHttpPathDrive
                      || ContainerType == ContainerType.IPhoneFileSystem)
             {
                 var fullName = FullName;
@@ -151,7 +151,7 @@ public partial class Url
             else if (ContainerType == ContainerType.SshFileSystem
                      || ContainerType == ContainerType.FtpFileSystem
                      || ContainerType == ContainerType.SmbFileSystem
-                     || ContainerType == ContainerType.WebDav
+                     || IsHttpPathDrive
                      || ContainerType == ContainerType.IPhoneFileSystem)
             {
                 var fullName = FullUrl;
@@ -185,7 +185,7 @@ public partial class Url
                 var target = Data.Container.FTP + userPart + Host + "/";
                 return new Url(target);
             }
-            else if (ContainerType == ContainerType.WebDav)
+            else if (IsHttpPathDrive)
             {
                 var userPart = string.IsNullOrEmpty(Username) ? string.Empty : Username + "@";
                 return new Url(UrlScheme + userPart + Host + "/");
@@ -569,6 +569,37 @@ public partial class Url
                 _container = scheme;
                 _directorySeparatorChar = DirectorySeparatorSlashChar;
             }
+            else if (_url.StartsWith(Data.Container.S3)
+                     || _url.StartsWith(Data.Container.ONEDRIVE)
+                     || _url.StartsWith(Data.Container.GOOGLE_DRIVE))
+            {
+                // s3://[accessKeyId@]bucket/key, onedrive://[account]/path and gdrive://[account]/path.
+                // The authority is the bucket or the account label (empty lists the buckets / uses the
+                // default account); the path is raw, as for WebDAV; no secret is ever part of a URL.
+                var (cloudScheme, cloudType) = _url.StartsWith(Data.Container.S3)
+                    ? (Data.Container.S3, ContainerType.S3)
+                    : _url.StartsWith(Data.Container.ONEDRIVE)
+                        ? (Data.Container.ONEDRIVE, ContainerType.OneDrive)
+                        : (Data.Container.GOOGLE_DRIVE, ContainerType.GoogleDrive);
+                var cloudRest = _url[cloudScheme.Length..];
+                var cloudSlash = cloudRest.IndexOf('/');
+                var cloudAuthority = cloudSlash < 0 ? cloudRest : cloudRest[..cloudSlash];
+                var cloudPath = cloudSlash < 0 ? "/" : cloudRest[cloudSlash..];
+                var cloudAt = cloudAuthority.LastIndexOf('@');
+                _username = cloudAt >= 0 ? cloudAuthority[..cloudAt] : string.Empty;
+                _host = cloudAt >= 0 ? cloudAuthority[(cloudAt + 1)..] : cloudAuthority;
+                _path = cloudPath;
+                _fullName = cloudPath;
+                _directoryName = cloudPath;
+                _displayName = cloudPath.TrimEnd('/').Split('/').Last();
+                _name = _displayName;
+                PathType = cloudPath.EndsWith('/') ? PathType.Folder : PathType.File;
+                var cloudDot = _name.LastIndexOf('.');
+                _extension = PathType == PathType.File && cloudDot > 0 && cloudDot < _name.Length - 1 ? _name[(cloudDot + 1)..] : string.Empty;
+                ContainerType = cloudType;
+                _container = cloudScheme;
+                _directorySeparatorChar = DirectorySeparatorSlashChar;
+            }
             else if (_url.StartsWith(Data.Container.IPHONE))
             {
                 // iphone://<udid>/<afc-path> — <udid> is the device identifier (treated as the
@@ -779,6 +810,9 @@ public partial class Url
             && !url.StartsWith(Data.Container.SMB)
             && !url.StartsWith(Data.Container.WEBDAV)
             && !url.StartsWith(Data.Container.WEBDAV_SECURE)
+            && !url.StartsWith(Data.Container.S3)
+            && !url.StartsWith(Data.Container.ONEDRIVE)
+            && !url.StartsWith(Data.Container.GOOGLE_DRIVE)
             && !url.StartsWith(Data.Container.IPHONE)
             && !url.StartsWith(Data.Container.ZIP_ARCHIVE)
             && !url.StartsWith(Data.Container.GZ_ARCHIVE)
@@ -833,6 +867,10 @@ public partial class Url
             or ContainerType.Recycle
             or ContainerType.Mtp;
 
+    /// <summary>The HTTP-backed drives whose URL is <c>scheme://[user@]authority/raw/path</c>.</summary>
+    private bool IsHttpPathDrive =>
+        ContainerType is ContainerType.WebDav or ContainerType.S3 or ContainerType.OneDrive or ContainerType.GoogleDrive;
+
     private void UpdatePathType()
     {
         if (TryGetVirtualDrive(_url, out _, out _))
@@ -858,7 +896,7 @@ public partial class Url
         else if ((ContainerType == ContainerType.SshFileSystem
                     || ContainerType == ContainerType.FtpFileSystem
                     || ContainerType == ContainerType.SmbFileSystem
-                    || ContainerType == ContainerType.WebDav
+                    || IsHttpPathDrive
                     || ContainerType == ContainerType.IPhoneFileSystem)
                 && (_path.EndsWith(DirectorySeparatorSlashChar)))
         {

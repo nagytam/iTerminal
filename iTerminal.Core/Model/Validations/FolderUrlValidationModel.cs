@@ -42,6 +42,9 @@ public class FolderUrlValidationModel(ITextModel model, IDateTimeProviderService
         Container.ARCHIVE,
         Container.RECYCLE,
         Container.MTP,
+        Container.S3,
+        Container.ONEDRIVE,
+        Container.GOOGLE_DRIVE,
     ];
 
     /// <summary>True when <paramref name="path"/> names one of <see cref="SupportedSchemes"/>.</summary>

@@ -22,5 +22,8 @@ public enum ContainerType
     Archive,
     Recycle,
     WebDav,
-    Mtp
+    Mtp,
+    S3,
+    OneDrive,
+    GoogleDrive
 }

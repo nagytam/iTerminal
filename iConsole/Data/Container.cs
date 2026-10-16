@@ -57,4 +57,12 @@ public static class Container
     /// </summary>
     public const string MTP = "mtp://";
 
+    /// <summary>An S3 bucket (or any S3-compatible store): <c>s3://[accessKeyId@]bucket/key</c>; an empty bucket lists them.</summary>
+    public const string S3 = "s3://";
+
+    /// <summary>Microsoft OneDrive through Microsoft Graph: <c>onedrive://[account]/path</c>.</summary>
+    public const string ONEDRIVE = "onedrive://";
+
+    /// <summary>Google Drive: <c>gdrive://[account]/path</c>.</summary>
+    public const string GOOGLE_DRIVE = "gdrive://";
 }

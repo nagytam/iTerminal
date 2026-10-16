@@ -67,7 +67,10 @@ public class HotKeys : StatusBarItem
         ExtractDialog? extractDialog = null,
         CommandPaletteDialog? commandPaletteDialog = null,
         CompareFoldersDialog? compareFoldersDialog = null,
-        iTerminal.Core.Services.FileAssociations.FileAssociationRunner? fileAssociations = null)
+        iTerminal.Core.Services.FileAssociations.FileAssociationRunner? fileAssociations = null,
+        DiskUsageDialog? diskUsageDialog = null,
+        iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
+        INotificationService? notificationService = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -85,6 +88,16 @@ public class HotKeys : StatusBarItem
         var deleteDialogCommand = new DeleteDialogCommand(deleteDialog, contentModelService);
         var renameDialogCommand = new RenameDialogCommand(renameDialog, contentModelService);
         AddCommand(new DiskManagerDialogCommand(diskManagerDialog));
+        if (diskUsageDialog is not null)
+        {
+            AddCommand(new DiskUsageDialogCommand(diskUsageDialog, contentModelService));
+        }
+
+        if (elevationService is not null)
+        {
+            AddCommand(new RestartAsAdministratorCommand(elevationService, notificationService));
+            AddCommand(new RunAsAdministratorCommand(contentModelService, elevationService, notificationService));
+        }
         AddCommand(new IPhoneBrowserDialogCommand(iPhoneBrowserDialog));
         AddCommand(new iTerminal.Core.Commands.Music.MusicPanelsCommand(contentModelService));
         var quitCommand = new QuitCommand();
