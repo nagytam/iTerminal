@@ -8,7 +8,21 @@ namespace iConsole.Model;
 public class TextModel : ITextModel, INotifyPropertyChanged
 {
     public ConcurrentList<string> Lines { get; set; } = [];
-    public Encoding Encoding { get; set; } = Encoding.UTF8;
+
+    private Encoding _encoding = Encoding.UTF8;
+
+    public Encoding Encoding
+    {
+        get => _encoding;
+        set
+        {
+            if (!ReferenceEquals(_encoding, value))
+            {
+                _encoding = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     public TextModel()
     {

@@ -31,7 +31,7 @@ public class EncodingIndicatorTest
 
         var indicator = new EncodingIndicator(textModel, mockThemeService.Object);
 
-        Assert.AreEqual(10, indicator.ViewSize.Width);
+        Assert.AreEqual(14, indicator.ViewSize.Width);
         Assert.AreEqual(1, indicator.ViewSize.Height);
     }
 

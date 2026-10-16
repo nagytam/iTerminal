@@ -1,4 +1,5 @@
-﻿using iConsole.Model;
+﻿using iConsole.Helper;
+using iConsole.Model;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;
 using UglyToad.PdfPig;
 using iConsole.Data;
@@ -33,6 +34,22 @@ public class FileToTextConverterService : IFileToTextConverterService
     // Native binary extensions whose metadata is displayed rather than raw bytes.
     private static readonly HashSet<string> AssemblyExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "dll", "exe", "so" };
+
+    private static readonly HashSet<string> NonTextExtensions =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            "pdf", "docx", "xlsx", "xlsm", "xltx", "xltm", "pptx", "pptm", "potx", "potm",
+        };
+
+    /// <summary>
+    /// True when the viewer shows this file's bytes as text, so that a code page means something for
+    /// it — not for a PDF, an Office document, an image or a binary, whose text is read by other means.
+    /// </summary>
+    public static bool IsEncodingRelevant(Url? url) =>
+        url is not null
+        && !NonTextExtensions.Contains(url.Extension)
+        && !ImageExtensions.Contains(url.Extension)
+        && !AssemblyExtensions.Contains(url.Extension);
 
     public async Task ReadFileAsync(Url? url, IFileSystem fileSystem, ITextModel textModel)
     {
@@ -272,13 +289,8 @@ public class FileToTextConverterService : IFileToTextConverterService
         var memoryFile = await fileSystem.ReadFileAsync(url);
         if (memoryFile?.Content is not null)
         {
-            string htmlContent;
-            using (var ms = new MemoryStream(memoryFile.Content))
-            using (var sr = new StreamReader(ms, encoding: Encoding.Default, detectEncodingFromByteOrderMarks: true))
-            {
-                htmlContent = await sr.ReadToEndAsync();
-                textModel.Encoding = sr.CurrentEncoding;
-            }
+            string htmlContent = TextEncodings.Decode(memoryFile.Content, out var htmlEncoding);
+            textModel.Encoding = htmlEncoding;
 
             var doc = new HtmlDocument();
             doc.LoadHtml(htmlContent);
@@ -310,14 +322,8 @@ public class FileToTextConverterService : IFileToTextConverterService
         var memoryFile = await fileSystem.ReadFileAsync(url);
         if (memoryFile?.Content is not null)
         {
-            var memoryStream = new MemoryStream(memoryFile.Content);
-            using (var streamReader = new StreamReader(memoryStream,
-                encoding: Encoding.Default,
-                detectEncodingFromByteOrderMarks: true))
-            {
-                memoryString = streamReader.ReadToEnd();
-                textModel.Encoding = streamReader.CurrentEncoding;
-            }
+            memoryString = TextEncodings.Decode(memoryFile.Content, out var encoding);
+            textModel.Encoding = encoding;
             memoryString = memoryString.ReplaceLineEndings();
             lines = memoryString.Split(Environment.NewLine);
             foreach (var line in lines)
