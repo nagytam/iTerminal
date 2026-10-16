@@ -19,7 +19,7 @@ public class EncodingIndicator : StatusBarItem
         _textModel = textModel;
         _textModel.PropertyChanged += OnTextModelPropertyChanged;
         Name = nameof(EncodingIndicator);
-        ViewSize = new Size(10, 1);
+        ViewSize = new Size(14, 1);
     }
 
     private void OnTextModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -33,7 +33,7 @@ public class EncodingIndicator : StatusBarItem
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
-        var line = $"{_textModel.Encoding.WebName.ToUpper()}";
+        var line = $"{iConsole.Helper.TextEncodings.DisplayName(_textModel.Encoding)}";
         var s = new ConxelString(line, Color.Green, Color.Blue);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, s);
     }

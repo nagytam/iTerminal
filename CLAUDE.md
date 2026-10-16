@@ -121,6 +121,12 @@ real pause/seek/volume and a working output-device selector possible on both pla
 - **Tag reading** has two shapes off one parser. `MusicTagReader.Read` returns title/artist/album for the playlist and the library index; `MusicTagReader.ReadAll` returns the whole ID3 block (every text frame, comments, cover-art size, numeric genres resolved) for the F3 viewer. `FlacTagReader` covers what ID3 cannot: FLAC's Vorbis comments *and* its STREAMINFO, which is also where a FLAC's duration and bit depth come from without forking ffmpeg. Ogg/Opus/M4A tags are not read — those files show their name, size and "needs ffmpeg" instead of inventing metadata.
 - **`IMusicMetadataService`** (→ `MusicMetadataService`) is what the viewer actually calls: it picks the tag reader by container and probes duration/format with the managed decoders only, for the same reason `MusicLibraryService.ProbeDuration` does. Async by contract; the dialog awaits it on a background task and repaints when it lands.
 
+### Code pages in the viewer and the editor (`TextEncodings`)
+**F8 / Shift+F8** in the F3 viewer and the F4 editor re-read the text under the next / previous code page (UTF-8, UTF-16, Windows-1250/1251/1252/1253/1254/1257, ISO-8859-1/2/15, DOS 437/852/866, KOI8-R, Shift-JIS, GBK, Korean, Big5); the status bar's encoding indicator shows the current one and the editor saves with it.
+
+- **A file nobody chose a code page for is decoded by `TextEncodings.Decode`**: a BOM decides, else UTF-8 if the bytes are valid UTF-8, else the system's ANSI code page (Latin-1 where there is none). It used to be `Encoding.Default`, i.e. UTF-8 *with replacement characters*, which showed a Windows-1250 file as `�` and — worse — saved it back that way.
+- **Switching is `TextEncodings.Reinterpret`, in memory**: the lines are turned back into the bytes the current encoding made of them and decoded under the new one. That is exact for what `Decode` yields (valid UTF-8 and single-byte pages round-trip), needs no second read of the file (any drive), and keeps the editor's unsaved edits; the editor counts the file as changed because saving now writes other bytes. Only text is switchable (`FileToTextConverterService.IsEncodingRelevant`): not a hex dump, PDF, Office document, image or binary.
+
 ### The F3 music file viewer
 F3 on a local audio file opens `MusicFileViewerDialog` (`iTerminal.Core/Dialogs/Music/`): artist, title,
 album and format at the top, every tag in a scrollable list, and a transport with a progress bar at

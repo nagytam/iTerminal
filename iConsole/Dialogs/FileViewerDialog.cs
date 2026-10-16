@@ -6,6 +6,7 @@ using iConsole.Controls.Viewers;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Layouts;
+using iConsole.Helper;
 using iConsole.Services;
 
 namespace iConsole.Dialogs;
@@ -87,7 +88,24 @@ public class FileViewerDialog : Dialog
             _textViewerControl.SetFocus();
         }
         Title = (Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer")
-            + (_hexMode ? " [HEX]" : "  F4:Hex");
+            + (_hexMode ? " [HEX]" : "  F4:Hex F8:Codepage");
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// F8 / Shift+F8: reads the text again under the next / previous code page. Only for what is shown
+    /// as text — a hex dump has no code page, and a PDF or an image no bytes that are text.
+    /// </summary>
+    public void SwitchEncoding(bool backwards = false)
+    {
+        if (_hexMode || !FileToTextConverterService.IsEncodingRelevant(Url))
+        {
+            return;
+        }
+
+        TextEncodings.Reinterpret(
+            _textViewerControl.TextModel,
+            TextEncodings.Next(_textViewerControl.TextModel.Encoding, backwards));
         StateHasChanged();
     }
 
@@ -103,6 +121,14 @@ public class FileViewerDialog : Dialog
             && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt)
         {
             Close();
+            return true;
+        }
+
+        if (keyEvent.KeyPressType == KeyPressType.Down
+            && keyEvent.ConsoleKey == ConsoleKey.F8
+            && !keyEvent.Control && !keyEvent.Alt)
+        {
+            SwitchEncoding(backwards: keyEvent.Shift);
             return true;
         }
 
@@ -181,7 +207,7 @@ public class FileViewerDialog : Dialog
             ViewSize = Parent.ViewSize;
             Position = new Position(0, 0);
             Title = Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer";
-            Title += _hexMode ? " [HEX]" : "  F4:Hex";
+            Title += _hexMode ? " [HEX]" : "  F4:Hex F8:Codepage";
         }
 
         _textViewerControl.Position = new(1, 1);

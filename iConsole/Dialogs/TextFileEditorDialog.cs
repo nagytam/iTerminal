@@ -4,6 +4,7 @@ using iConsole.Controls.Viewers;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Layouts;
+using iConsole.Helper;
 using iConsole.Services;
 
 namespace iConsole.Dialogs;
@@ -54,6 +55,38 @@ public class TextFileEditorDialog : Dialog
         await _fileToTextConverterService.ReadFileAsync(Url, fileSystem, TextEditorControl.TextModel);
 
         await base.OnInitializeAsync();
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        if (keyEvent.KeyPressType == KeyPressType.Down
+            && keyEvent.ConsoleKey == ConsoleKey.F8
+            && !keyEvent.Control && !keyEvent.Alt)
+        {
+            SwitchEncoding(backwards: keyEvent.Shift);
+            return true;
+        }
+
+        return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    /// <summary>
+    /// F8 / Shift+F8: reads the text under the next / previous code page, and saves with it. Unsaved
+    /// changes are kept — the text is re-read in memory, not from the disk — and the file counts as
+    /// changed, since saving now writes different bytes.
+    /// </summary>
+    public void SwitchEncoding(bool backwards = false)
+    {
+        if (!FileToTextConverterService.IsEncodingRelevant(Url))
+        {
+            return;
+        }
+
+        var model = TextEditorControl.TextModel;
+        TextEncodings.Reinterpret(model, TextEncodings.Next(model.Encoding, backwards));
+        TextEditorControl.IsDirty = true;
+        TextEditorControl.Refresh();
+        StateHasChanged();
     }
 
     public override void OnInitializeLayout()

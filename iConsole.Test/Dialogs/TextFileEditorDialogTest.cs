@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using iConsole.Dialogs;
 using iConsole.Interfaces;
@@ -29,5 +29,37 @@ public class TextFileEditorDialogTest
 
         dlg.TextEditorControl.IsDirty = true;
         Assert.IsTrue(dlg.Title.Contains("(*)") || dlg.Title.Contains("Text file editor"));
+    }
+
+    private static TextFileEditorDialog NewDialog() =>
+        new(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
+            Mock.Of<IDateTimeProviderService>(), new ThemeService());
+
+    [TestMethod]
+    public void SwitchEncoding_RereadsTheTextAndMarksItChanged()
+    {
+        var dlg = NewDialog();
+        dlg.Url = new iConsole.Data.Url("file://C:/x/note.txt");
+        var model = dlg.TextEditorControl.TextModel;
+        model.Encoding = System.Text.Encoding.Latin1;
+        model.Lines.Add("tûrõ");
+        dlg.TextEditorControl.IsDirty = false;
+
+        dlg.SwitchEncoding();
+
+        Assert.AreNotEqual(System.Text.Encoding.Latin1.CodePage, model.Encoding.CodePage);
+        Assert.IsTrue(dlg.TextEditorControl.IsDirty);
+    }
+
+    [TestMethod]
+    public void SwitchEncoding_LeavesAPdfAlone()
+    {
+        var dlg = NewDialog();
+        dlg.Url = new iConsole.Data.Url("file://C:/x/doc.pdf");
+        var before = dlg.TextEditorControl.TextModel.Encoding;
+
+        dlg.SwitchEncoding();
+
+        Assert.AreSame(before, dlg.TextEditorControl.TextModel.Encoding);
     }
 }
