@@ -195,10 +195,11 @@ public class DeleteDialog : FormDialog
 
     internal const string RecycleBinLabel = "Move to Recycle bin";
     internal const string NoRecycleBinLabel = "Move to Recycle bin — not available here, deleted for good";
+    internal const string TrashLabel = "Move to Trash";
 
-    /// <summary>Whether a delete of <paramref name="url"/> can go to the Recycle bin: local files on Windows only.</summary>
+    /// <summary>Whether a delete of <paramref name="url"/> can be undone: local files on Windows (Recycle bin) and Linux (Trash).</summary>
     internal static bool CanRecycle(Url url) =>
-        OperatingSystem.IsWindows() && url.ContainerType == ContainerType.FileSystem;
+        (OperatingSystem.IsWindows() || OperatingSystem.IsLinux()) && url.ContainerType == ContainerType.FileSystem;
 
     /// <summary>
     /// Recoverable by default where that exists, and honest where it does not. The box used to start
@@ -210,7 +211,7 @@ public class DeleteDialog : FormDialog
         var canRecycle = CanRecycle(url);
         _checkBoxRecycleBin.IsEnabled = canRecycle;
         _checkBoxRecycleBin.IsChecked = canRecycle;
-        _checkBoxRecycleBin.Label = canRecycle ? RecycleBinLabel : NoRecycleBinLabel;
+        _checkBoxRecycleBin.Label = !canRecycle ? NoRecycleBinLabel : OperatingSystem.IsLinux() ? TrashLabel : RecycleBinLabel;
     }
 
     public void Reset()

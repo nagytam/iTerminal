@@ -29,6 +29,8 @@ public class FolderUrlValidationModel(ITextModel model, IDateTimeProviderService
         Container.SSH,
         Container.FTP,
         Container.SMB,
+        Container.WEBDAV,
+        Container.WEBDAV_SECURE,
         Container.IPHONE,
         Container.MEMORY_DRIVE,
         Container.MUSIC_CATALOG,
@@ -39,6 +41,7 @@ public class FolderUrlValidationModel(ITextModel model, IDateTimeProviderService
         Container.PREVIEW,
         Container.ARCHIVE,
         Container.RECYCLE,
+        Container.MTP,
     ];
 
     /// <summary>True when <paramref name="path"/> names one of <see cref="SupportedSchemes"/>.</summary>

@@ -9,6 +9,12 @@ public static class Container
     public const string SSH = "ssh://";
     public const string FTP = "ftp://";
     public const string SMB = "smb://";
+
+    /// <summary>WebDAV over HTTP: <c>dav://[user@]host[:port]/path</c>.</summary>
+    public const string WEBDAV = "dav://";
+
+    /// <summary>WebDAV over HTTPS: <c>davs://[user@]host[:port]/path</c>.</summary>
+    public const string WEBDAV_SECURE = "davs://";
     public const string IPHONE = "iphone://";
     public const string MEMORY_DRIVE = "memdrive://";
 
@@ -44,4 +50,11 @@ public static class Container
     /// deleted file's own, numbered when two share it.
     /// </summary>
     public const string RECYCLE = "recycle://";
+
+    /// <summary>
+    /// Phones and cameras that speak MTP: <c>mtp://&lt;device&gt;/&lt;storage&gt;/&lt;path&gt;</c> — the
+    /// root lists the connected devices, a device lists its storages.
+    /// </summary>
+    public const string MTP = "mtp://";
+
 }

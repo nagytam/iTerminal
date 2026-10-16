@@ -280,12 +280,31 @@ public static class iTerminalApplicationBuilderExtension
         });
         services.AddSingleton<iTerminal.Core.Services.Clipboard.FileClipboardOperations>();
         services.AddSingleton<ISettingsService, SettingsService>();
+        // Where a local delete with the bin ticked goes on Linux: the freedesktop Trash, home or per-volume.
+        services.AddSingleton<iTerminal.Core.Services.Recycle.ITrashService, iTerminal.Core.Services.Recycle.FreedesktopTrash>();
         services.AddTransient<IFileSystemService, FileSystemService>();
         services.AddSingleton<IMemoryDriveService, MemoryDriveService>();
         services.AddTransient<ISshFileSystemService, SshFileSystemService>();
         services.AddTransient<ISmbFileSystemService, SmbFileSystemService>();
         // One connection for the run: both panels may be on the same FTP server.
         services.AddSingleton<IFtpFileSystemService, FtpFileSystemService>();
+        // Likewise for WebDAV (dav:// and davs://): one HttpClient, replaced when the host or user changes.
+        services.AddSingleton<IWebDavFileSystemService, WebDavFileSystemService>();
+        // mtp://: phones and cameras, through the platform's own stack — GVfs's gio on Linux, the
+        // shell namespace on Windows. A test registers a backend of its own.
+        services.AddSingleton<iTerminal.Core.Services.Mtp.IMtpBackend>(provider =>
+        {
+            var runner = provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>();
+            if (OperatingSystem.IsWindows())
+            {
+                return new iTerminal.Core.Services.Mtp.ShellMtpBackend(runner);
+            }
+
+            return OperatingSystem.IsLinux()
+                ? new iTerminal.Core.Services.Mtp.GioMtpBackend(runner)
+                : new iTerminal.Core.Services.Mtp.UnavailableMtpBackend("MTP devices cannot be browsed on this system.");
+        });
+        services.AddSingleton<iTerminal.Core.Services.Mtp.IMtpDriveService, iTerminal.Core.Services.Mtp.MtpDriveService>();
         services.AddSingleton<IIPhoneFileSystemService, IPhoneFileSystemService>();
         services.AddSingleton<IIPhoneDeviceService, IPhoneDeviceService>();
         services.AddTransient<IArchiveFileSystemService, ArchiveFileSystemService>();
