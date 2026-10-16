@@ -1,4 +1,4 @@
-namespace iTerminal.Test;
+﻿namespace iTerminal.Test;
 
 /// <summary>
 /// Create, copy, move, rename and delete, end to end: the key opens the dialog, the dialog's Enter
@@ -164,6 +164,36 @@ public class FileOperationsTest
 
         await _app.WaitUntilAsync(() => File.Exists(Path.Combine(_app.RightRoot, "alpha", "inside_alpha.txt")), "the folder's file to be copied");
         await _app.WaitUntilAsync(s => _app.RightPanelLists("alpha", s), "the target panel to list the folder");
+    }
+
+    [TestMethod]
+    public async Task F5CopiesAFileToTheMemoryDrive()
+    {
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Right, new iConsole.Data.Url("memdrive://"));
+        await _app.SelectEntryAsync("readme.txt");
+
+        await _app.PressAsync("F5");
+        await _app.WaitForTextAsync("Copy");
+        await _app.PressAsync("Enter");
+
+        var memory = _app.Driver.GetRequiredService<Core.Services.IMemoryDriveService>();
+        await _app.WaitUntilAsync(() => memory.ExistsFile(new iConsole.Data.Url("memdrive://readme.txt")), "the file to land on the memory drive");
+        await _app.WaitUntilAsync(s => _app.RightPanelLists("readme.txt", s), "the memory panel to list the copy");
+    }
+
+    [TestMethod]
+    public async Task F5CopiesAFolderToTheMemoryDrive()
+    {
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Right, new iConsole.Data.Url("memdrive://"));
+        await _app.SelectEntryAsync("alpha");
+
+        await _app.PressAsync("F5");
+        await _app.WaitForTextAsync("Copy");
+        await _app.PressAsync("Enter");
+
+        var memory = _app.Driver.GetRequiredService<Core.Services.IMemoryDriveService>();
+        await _app.WaitUntilAsync(() => memory.ExistsFile(new iConsole.Data.Url("memdrive://alpha/inside_alpha.txt")), "the folder's file to land on the memory drive");
+        await _app.WaitUntilAsync(s => _app.RightPanelLists("alpha", s), "the memory panel to list the folder");
     }
 
     [TestMethod]
