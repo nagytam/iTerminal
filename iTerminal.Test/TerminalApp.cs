@@ -31,7 +31,7 @@ namespace iTerminal.Test;
 /// </summary>
 public sealed class TerminalApp : IAsyncDisposable
 {
-    private static readonly Type[] OmittedJobs = [typeof(WeatherJob), typeof(OnlineQuoteJob), typeof(PortfolioQuoteJob), typeof(FolderIndexJob), typeof(RuntimeDependencyCheckJob), typeof(OllamaServerJob)];
+    private static readonly Type[] OmittedJobs = [typeof(WeatherJob), typeof(OnlineQuoteJob), typeof(PortfolioQuoteJob), typeof(FolderIndexJob), typeof(RuntimeDependencyCheckJob), typeof(UpdateCheckJob), typeof(OllamaServerJob)];
 
     private readonly string _root;
     private bool _ownsSandbox = true;
