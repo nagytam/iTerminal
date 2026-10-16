@@ -11,8 +11,6 @@ namespace iTerminal.Core.Test.Dialogs.PasswordManager;
 [TestClass]
 public class PasswordManagerDialogTest
 {
-    private const string Master = "correct horse battery";
-
     private sealed class SqliteDbContextFactory(string databasePath) : IDbContextFactory<iTerminalDbContext>
     {
         private readonly DbContextOptions<iTerminalDbContext> _options = new DbContextOptionsBuilder<iTerminalDbContext>()
@@ -38,42 +36,48 @@ public class PasswordManagerDialogTest
     }
 
     [TestMethod]
-    public async Task BeforeTheStoreIsSetUpItSaysSo()
+    public async Task TheStoreOpensItselfWithoutAskingForAPassword()
     {
         var dialog = new PasswordManagerDialog(NewManager(), TestTheme());
 
         await ShowAsync(dialog);
 
-        Assert.AreEqual("NotSetUp", dialog.ModeForTest);
-        AssertScreenContains(Render(dialog), "not set up yet");
+        Assert.AreEqual("List", dialog.ModeForTest);
     }
 
     [TestMethod]
-    public async Task ALockedStoreAsksForTheMasterPasswordAndOpensOnTheRightOne()
+    public async Task ALockedStoreIsOpenedAgainWhenTheDialogShows()
     {
         var manager = NewManager();
-        manager.Setup(Master);
+        manager.Unlock();
         manager.Lock();
         var dialog = new PasswordManagerDialog(manager, TestTheme());
 
         await ShowAsync(dialog);
-        Assert.AreEqual("Locked", dialog.ModeForTest);
 
-        await TypeAsync(dialog, "wrong");
-        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
-        Assert.AreEqual("Locked", dialog.ModeForTest);
-        StringAssert.Contains(dialog.StatusForTest, "not the master password");
-
-        await TypeAsync(dialog, Master);
-        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
         Assert.AreEqual("List", dialog.ModeForTest);
+        Assert.IsTrue(manager.IsUnlocked);
+    }
+
+    [TestMethod]
+    public async Task AStoreWhoseKeyIsLostSaysSo()
+    {
+        var databasePath = Path.Combine(Path.GetTempPath(), $"iTerminal.PmDialog.{Guid.NewGuid():N}.sqlite");
+        new iTerminal.Core.Services.PasswordManager(databasePath, Path.Combine(Path.GetTempPath(), $"iTerminal.PmDialogKeys.{Guid.NewGuid():N}")).Unlock();
+        var other = new iTerminal.Core.Services.PasswordManager(databasePath, Path.Combine(Path.GetTempPath(), $"iTerminal.PmDialogKeys.{Guid.NewGuid():N}"));
+        var dialog = new PasswordManagerDialog(other, TestTheme());
+
+        await ShowAsync(dialog);
+
+        Assert.AreEqual("Unavailable", dialog.ModeForTest);
+        AssertScreenContains(Render(dialog), "cannot be opened");
     }
 
     [TestMethod]
     public async Task ANewPasswordIsSavedWithItsFields()
     {
         var manager = NewManager();
-        manager.Setup(Master);
+        manager.Unlock();
         var dialog = new PasswordManagerDialog(manager, TestTheme());
         await ShowAsync(dialog);
 
@@ -97,7 +101,7 @@ public class PasswordManagerDialogTest
     public async Task ThePasswordStaysHiddenUntilVShowsIt()
     {
         var manager = NewManager();
-        manager.Setup(Master);
+        manager.Unlock();
         manager.Save(new PasswordEntry { Id = "p1", Title = "Mail", Password = "visible-when-asked" });
         var dialog = new PasswordManagerDialog(manager, TestTheme());
         await ShowAsync(dialog);
@@ -114,7 +118,7 @@ public class PasswordManagerDialogTest
     public async Task DeleteNeedsAYesAndAnyOtherKeyCancelsIt()
     {
         var manager = NewManager();
-        manager.Setup(Master);
+        manager.Unlock();
         manager.Save(new PasswordEntry { Id = "p1", Title = "Keep me", Password = "x" });
         var dialog = new PasswordManagerDialog(manager, TestTheme());
         await ShowAsync(dialog);
@@ -127,43 +131,5 @@ public class PasswordManagerDialogTest
         await dialog.HandleKeyEventAsync(Char('d'));
         await dialog.HandleKeyEventAsync(Char('y'));
         Assert.AreEqual(0, manager.List().Count);
-    }
-
-    [TestMethod]
-    public async Task LockClosesTheStoreUntilItIsUnlockedAgain()
-    {
-        var manager = NewManager();
-        manager.Setup(Master);
-        manager.Save(new PasswordEntry { Id = "p1", Title = "Mail", Password = "x" });
-        var dialog = new PasswordManagerDialog(manager, TestTheme());
-        await ShowAsync(dialog);
-
-        await dialog.HandleKeyEventAsync(Char('l'));
-
-        Assert.AreEqual("Locked", dialog.ModeForTest);
-        Assert.IsFalse(manager.IsUnlocked);
-    }
-
-    [TestMethod]
-    public async Task TheMasterPasswordCanBeChanged()
-    {
-        var manager = NewManager();
-        manager.Setup(Master);
-        manager.Save(new PasswordEntry { Id = "p1", Title = "Mail", Password = "kept" });
-        var dialog = new PasswordManagerDialog(manager, TestTheme());
-        await ShowAsync(dialog);
-
-        await dialog.HandleKeyEventAsync(Char('m'));
-        await TypeAsync(dialog, Master);
-        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab, '\t'));
-        await TypeAsync(dialog, "a brand new master");
-        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab, '\t'));
-        await TypeAsync(dialog, "a brand new master");
-        await dialog.HandleKeyEventAsync(Key(ConsoleKey.S, 's', control: true));
-
-        StringAssert.Contains(dialog.StatusForTest, "changed");
-        manager.Lock();
-        Assert.IsTrue(manager.Unlock("a brand new master"));
-        Assert.AreEqual("kept", manager.GetSecret("p1"));
     }
 }

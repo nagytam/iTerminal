@@ -30,7 +30,6 @@ public class TerminalScreen : iConsole.Screens.Screen
     private readonly NetworkBrowserDialog? _networkBrowserDialog;
     private readonly ISettingsService _settingsService;
     private readonly ToastHost? _toastHost;
-    private readonly PasswordManagerStartupDialog? _passwordManagerStartupDialog;
     private readonly RuntimeDependencyDialog? _runtimeDependencyDialog;
 
     public TerminalScreen(
@@ -46,7 +45,6 @@ public class TerminalScreen : iConsole.Screens.Screen
         NetworkBrowserDialog networkBrowserDialog,
         ISettingsService settingsService,
         ToastHost? toastHost = null,
-        PasswordManagerStartupDialog? passwordManagerStartupDialog = null,
         RuntimeDependencyDialog? runtimeDependencyDialog = null)
         : base(consoleDriver, themeService)
     {
@@ -61,7 +59,6 @@ public class TerminalScreen : iConsole.Screens.Screen
         _networkBrowserDialog = networkBrowserDialog;
         _settingsService = settingsService;
         _toastHost = toastHost;
-        _passwordManagerStartupDialog = passwordManagerStartupDialog;
         _runtimeDependencyDialog = runtimeDependencyDialog;
         if (menuBar is not null)
         {
@@ -143,25 +140,10 @@ public class TerminalScreen : iConsole.Screens.Screen
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
-    /// <summary>The person gave up on the master password: the app does not start, and the exit code says so.</summary>
-    private void StopApplication()
-    {
-        Environment.ExitCode = 1;
-        Desktop?.CancellationTokenSource.Cancel();
-    }
-
     public override async Task OnInitializeAsync()
     {
         // Before anything is drawn, so the first frame is already in the chosen colours.
         ThemePersistence.Restore(ThemeService, _settingsService);
-
-        // Before the panels initialise: they restore their folders in base.OnInitializeAsync, and a remote one
-        // must not try to connect while the saved passwords are still locked.
-        if (_passwordManagerStartupDialog is not null && !_passwordManagerStartupDialog.IsUnlocked)
-        {
-            _passwordManagerStartupDialog.OnStopped = StopApplication;
-            await ShowDialogAsync(_passwordManagerStartupDialog);
-        }
 
         // Offered before the panels open: a component the features need is missing, or a newer one can be installed.
         // Skipping a version, or installing, keeps it from being offered again.

@@ -12,18 +12,16 @@ namespace iTerminal.Core.Services;
 /// <see cref="IPasswordManager"/> in its own SQLite file, <c>passwords.sqlite</c>, next to the main database. It is
 /// not in the main database because that one is recreated whenever the app's data model changes, and a recreation
 /// would take every saved password with it. This file has no EF model: two tables, written with plain SQL.
-/// <c>PasswordManagerMeta</c> holds the salt, the iteration count and a verifier (a known phrase sealed under the
-/// key, so a wrong master password is recognised without opening an entry); <c>PasswordEntries</c> holds one sealed
+/// <c>PasswordManagerMeta</c> holds the generated key, sealed under the app's Data Protection keys (on Windows
+/// those are protected by the user's DPAPI), and a verifier (a known phrase sealed under the key, so a key that
+/// does not belong to the file is recognised without opening an entry); <c>PasswordEntries</c> holds one sealed
 /// JSON document per entry. While unlocked, the decrypted entries are kept in memory, so a lookup never touches the
-/// file or the key derivation.
+/// file or the Data Protection keys.
 /// </summary>
 public sealed class PasswordManager : IPasswordManager
 {
-    public const int MinimumMasterPasswordLength = 8;
-
     private const string Verifier = "iTerminal password manager";
-    private const string MetaSalt = "salt";
-    private const string MetaIterations = "iterations";
+    private const string MetaKey = "key";
     private const string MetaVerifier = "verifier";
     private const string MetaRemembered = "remembered";
     private const string MailPrefix = "mail:";
@@ -37,12 +35,12 @@ public sealed class PasswordManager : IPasswordManager
     private Dictionary<string, PasswordEntry>? _entries;
 
     /// <param name="databasePath">The password file. Created on first use.</param>
-    /// <param name="legacyKeyDirectory">The Data Protection keys the old vault was sealed with, read once at set-up.</param>
+    /// <param name="keyDirectory">The Data Protection keys the generated key is sealed with. The old vault was sealed with them too, and is read once on the first unlock.</param>
     /// <param name="legacyVault">The main database, where the old vault's rows are; null when there are none to bring across.</param>
-    public PasswordManager(string databasePath, string legacyKeyDirectory, IDbContextFactory<iTerminalDbContext>? legacyVault = null)
+    public PasswordManager(string databasePath, string keyDirectory, IDbContextFactory<iTerminalDbContext>? legacyVault = null)
     {
         _databasePath = databasePath;
-        _legacyKeyDirectory = legacyKeyDirectory;
+        _legacyKeyDirectory = keyDirectory;
         _legacyVault = legacyVault;
         using var connection = Open();
     }
@@ -51,18 +49,6 @@ public sealed class PasswordManager : IPasswordManager
         : this(Path.Combine(Path.GetTempPath(), $"iTerminal.Passwords.{Guid.NewGuid():N}.sqlite"),
             Path.Combine(Path.GetTempPath(), $"iTerminal.PasswordKeys.{Guid.NewGuid():N}"))
     {
-    }
-
-    public bool IsSetUp
-    {
-        get
-        {
-            lock (_lock)
-            {
-                using var connection = Open();
-                return ReadMeta(connection).ContainsKey(MetaVerifier);
-            }
-        }
     }
 
     public bool IsUnlocked
@@ -76,55 +62,45 @@ public sealed class PasswordManager : IPasswordManager
         }
     }
 
-    public void Setup(string masterPassword)
+    public bool Unlock()
     {
-        ValidateMasterPassword(masterPassword);
         lock (_lock)
         {
-            using var connection = Open();
-            if (ReadMeta(connection).ContainsKey(MetaVerifier))
+            if (_key is not null)
             {
-                throw new InvalidOperationException("The password manager is already set up.");
+                return true;
             }
 
-            var salt = PasswordCrypto.NewSalt();
-            var key = PasswordCrypto.DeriveKey(masterPassword, salt, PasswordCrypto.DefaultIterations);
-            var entries = new Dictionary<string, PasswordEntry>(StringComparer.Ordinal);
-            foreach (var legacy in ReadLegacyVault())
+            var connection = Open();
+            try
             {
-                entries[legacy.Id] = legacy;
-            }
-
-            using (var transaction = connection.BeginTransaction())
-            {
-                WriteMeta(connection, transaction, salt, PasswordCrypto.DefaultIterations, PasswordCrypto.Seal(key, Verifier));
-                foreach (var entry in entries.Values)
+                var meta = ReadMeta(connection);
+                if (meta.ContainsKey(MetaKey))
                 {
-                    WriteEntry(connection, transaction, key, entry);
+                    return TryOpenGeneratedKey(connection, meta);
                 }
 
-                transaction.Commit();
+                if (meta.ContainsKey(MetaVerifier) && TryAdoptRememberedKey(connection, meta))
+                {
+                    return true;
+                }
+
+                if (meta.ContainsKey(MetaVerifier))
+                {
+                    // Sealed under a typed master password that nothing remembers: set the file aside and start again.
+                    connection.Dispose();
+                    SqliteConnection.ClearAllPools();
+                    File.Move(_databasePath, $"{_databasePath}.master-password.bak", overwrite: true);
+                    connection = Open();
+                }
+
+                CreateStore(connection);
+                return true;
             }
-
-            DeleteLegacyRows(entries.Keys);
-            _key = key;
-            _entries = entries;
-        }
-    }
-
-    public bool Unlock(string masterPassword)
-    {
-        lock (_lock)
-        {
-            using var connection = Open();
-            if (!TryDeriveKey(connection, masterPassword, out var key))
+            finally
             {
-                return false;
+                connection.Dispose();
             }
-
-            _key = key;
-            _entries = ReadEntries(connection, key);
-            return true;
         }
     }
 
@@ -139,111 +115,120 @@ public sealed class PasswordManager : IPasswordManager
 
             _key = null;
             _entries = null;
-
-            // A lock is a request to be asked again, so the remembered key goes too.
-            using var connection = Open();
-            ForgetRemembered(connection);
         }
     }
 
-    public void Remember(TimeSpan lifetime)
+    /// <summary>A new store: a random key, sealed on this machine, with the old vault's passwords brought across.</summary>
+    private void CreateStore(SqliteConnection connection)
     {
-        lock (_lock)
+        var key = PasswordCrypto.NewKey();
+        var entries = new Dictionary<string, PasswordEntry>(StringComparer.Ordinal);
+        foreach (var legacy in ReadLegacyVault())
         {
-            if (_key is null)
+            entries[legacy.Id] = legacy;
+        }
+
+        using (var transaction = connection.BeginTransaction())
+        {
+            WriteMeta(connection, transaction, key);
+            foreach (var entry in entries.Values)
             {
-                throw new InvalidOperationException("Unlock the password manager before remembering it.");
+                WriteEntry(connection, transaction, key, entry);
             }
 
-            var payload = JsonSerializer.Serialize(new RememberedKey(Convert.ToBase64String(_key), DateTimeOffset.UtcNow.Add(lifetime)));
-            using var connection = Open();
-            Run(connection, null, "INSERT OR REPLACE INTO PasswordManagerMeta (Key, Value) VALUES ($k, $v)",
-                ("$k", MetaRemembered), ("$v", RememberProtector().Protect(payload)));
+            transaction.Commit();
         }
+
+        DeleteLegacyRows(entries.Keys);
+        _key = key;
+        _entries = entries;
     }
 
-    public bool UnlockRemembered()
+    private bool TryOpenGeneratedKey(SqliteConnection connection, Dictionary<string, string> meta)
     {
-        lock (_lock)
+        byte[] key;
+        try
         {
-            using var connection = Open();
-            if (!ReadMeta(connection).TryGetValue(MetaRemembered, out var sealedValue))
-            {
-                return false;
-            }
-
-            RememberedKey? remembered;
-            try
-            {
-                remembered = JsonSerializer.Deserialize<RememberedKey>(RememberProtector().Unprotect(sealedValue));
-            }
-            catch (CryptographicException)
-            {
-                remembered = null;
-            }
-
-            if (remembered is null || remembered.Until <= DateTimeOffset.UtcNow)
-            {
-                ForgetRemembered(connection);
-                return false;
-            }
-
-            _key = Convert.FromBase64String(remembered.Key);
-            _entries = ReadEntries(connection, _key);
-            return true;
+            key = Convert.FromBase64String(KeyProtector().Unprotect(meta[MetaKey]));
         }
-    }
+        catch (Exception exception) when (exception is CryptographicException or FormatException)
+        {
+            // The Data Protection keys are gone (another user, a wiped profile): the file cannot be opened again.
+            return false;
+        }
 
-    private void ForgetRemembered(SqliteConnection connection) =>
-        Run(connection, null, "DELETE FROM PasswordManagerMeta WHERE Key = $k", ("$k", MetaRemembered));
+        return TryUse(connection, meta, key);
+    }
 
     /// <summary>
-    /// Seals the remembered key under the app's Data Protection keys — the same ones the old vault used, under
-    /// their own purpose. On Windows those keys are protected by the user's DPAPI; elsewhere they are only as
-    /// private as the folder they are kept in.
+    /// A store set up under a master password whose key was remembered keeps working: that key is 32 random bytes
+    /// like a generated one, so it becomes the permanent key. Without it the entries cannot be read.
     /// </summary>
-    private IDataProtector RememberProtector() =>
+    private bool TryAdoptRememberedKey(SqliteConnection connection, Dictionary<string, string> meta)
+    {
+        if (!meta.TryGetValue(MetaRemembered, out var sealedValue))
+        {
+            return false;
+        }
+
+        byte[] key;
+        try
+        {
+            var remembered = JsonSerializer.Deserialize<RememberedKey>(KeyProtector("iTerminal.PasswordManager.Remember.v1").Unprotect(sealedValue));
+            if (remembered is null || remembered.Until <= DateTimeOffset.UtcNow)
+            {
+                return false;
+            }
+
+            key = Convert.FromBase64String(remembered.Key);
+        }
+        catch (Exception exception) when (exception is CryptographicException or FormatException or JsonException)
+        {
+            return false;
+        }
+
+        if (PasswordCrypto.Open(key, meta[MetaVerifier]) != Verifier)
+        {
+            CryptographicOperations.ZeroMemory(key);
+            return false;
+        }
+
+        using (var transaction = connection.BeginTransaction())
+        {
+            WriteMeta(connection, transaction, key);
+            transaction.Commit();
+        }
+
+        _key = key;
+        _entries = ReadEntries(connection, key);
+        return true;
+    }
+
+    private bool TryUse(SqliteConnection connection, Dictionary<string, string> meta, byte[] key)
+    {
+        if (!meta.TryGetValue(MetaVerifier, out var verifier) || PasswordCrypto.Open(key, verifier) != Verifier)
+        {
+            CryptographicOperations.ZeroMemory(key);
+            return false;
+        }
+
+        _key = key;
+        _entries = ReadEntries(connection, key);
+        return true;
+    }
+
+    /// <summary>
+    /// Seals the key under the app's Data Protection keys — the same ones the old vault used, under their own
+    /// purpose. On Windows those keys are protected by the user's DPAPI; elsewhere they are only as private as the
+    /// folder they are kept in.
+    /// </summary>
+    private IDataProtector KeyProtector(string purpose = "iTerminal.PasswordManager.Key.v1") =>
         DataProtectionProvider.Create(
             new DirectoryInfo(_legacyKeyDirectory),
             builder => builder.SetApplicationName("iTerminal"))
-            .CreateProtector("iTerminal.PasswordManager.Remember.v1");
+            .CreateProtector(purpose);
 
     private sealed record RememberedKey(string Key, DateTimeOffset Until);
-
-    public void ChangeMasterPassword(string currentPassword, string newPassword)
-    {
-        ValidateMasterPassword(newPassword);
-        lock (_lock)
-        {
-            if (_key is null || _entries is null)
-            {
-                throw new InvalidOperationException("Unlock the password manager before changing its master password.");
-            }
-
-            using var connection = Open();
-            if (!TryDeriveKey(connection, currentPassword, out var currentKey))
-            {
-                throw new UnauthorizedAccessException("The current master password is wrong.");
-            }
-
-            CryptographicOperations.ZeroMemory(currentKey);
-            var salt = PasswordCrypto.NewSalt();
-            var key = PasswordCrypto.DeriveKey(newPassword, salt, PasswordCrypto.DefaultIterations);
-            using (var transaction = connection.BeginTransaction())
-            {
-                WriteMeta(connection, transaction, salt, PasswordCrypto.DefaultIterations, PasswordCrypto.Seal(key, Verifier));
-                foreach (var entry in _entries.Values)
-                {
-                    WriteEntry(connection, transaction, key, entry);
-                }
-
-                transaction.Commit();
-            }
-
-            CryptographicOperations.ZeroMemory(_key);
-            _key = key;
-        }
-    }
 
     public IReadOnlyList<PasswordEntry> List()
     {
@@ -325,38 +310,6 @@ public sealed class PasswordManager : IPasswordManager
         }
     }
 
-    private static void ValidateMasterPassword(string masterPassword)
-    {
-        if (masterPassword.Length < MinimumMasterPasswordLength)
-        {
-            throw new ArgumentException($"The master password needs at least {MinimumMasterPasswordLength} characters.", nameof(masterPassword));
-        }
-    }
-
-    /// <summary>Derives the key for <paramref name="masterPassword"/> and checks it against the verifier.</summary>
-    private static bool TryDeriveKey(SqliteConnection connection, string masterPassword, out byte[] key)
-    {
-        key = [];
-        var meta = ReadMeta(connection);
-        if (!meta.TryGetValue(MetaSalt, out var saltText)
-            || !meta.TryGetValue(MetaIterations, out var iterationsText)
-            || !meta.TryGetValue(MetaVerifier, out var verifier)
-            || !int.TryParse(iterationsText, out var iterations))
-        {
-            return false;
-        }
-
-        var candidate = PasswordCrypto.DeriveKey(masterPassword, Convert.FromBase64String(saltText), iterations);
-        if (PasswordCrypto.Open(candidate, verifier) != Verifier)
-        {
-            CryptographicOperations.ZeroMemory(candidate);
-            return false;
-        }
-
-        key = candidate;
-        return true;
-    }
-
     private static Dictionary<string, PasswordEntry> ReadEntries(SqliteConnection connection, byte[] key)
     {
         var entries = new Dictionary<string, PasswordEntry>(StringComparer.Ordinal);
@@ -395,12 +348,11 @@ public sealed class PasswordManager : IPasswordManager
         return meta;
     }
 
-    private static void WriteMeta(SqliteConnection connection, SqliteTransaction transaction, byte[] salt, int iterations, string verifier)
+    private void WriteMeta(SqliteConnection connection, SqliteTransaction transaction, byte[] key)
     {
         Run(connection, transaction, "DELETE FROM PasswordManagerMeta");
-        Run(connection, transaction, "INSERT INTO PasswordManagerMeta (Key, Value) VALUES ($k, $v)", ("$k", MetaSalt), ("$v", Convert.ToBase64String(salt)));
-        Run(connection, transaction, "INSERT INTO PasswordManagerMeta (Key, Value) VALUES ($k, $v)", ("$k", MetaIterations), ("$v", iterations.ToString(System.Globalization.CultureInfo.InvariantCulture)));
-        Run(connection, transaction, "INSERT INTO PasswordManagerMeta (Key, Value) VALUES ($k, $v)", ("$k", MetaVerifier), ("$v", verifier));
+        Run(connection, transaction, "INSERT INTO PasswordManagerMeta (Key, Value) VALUES ($k, $v)", ("$k", MetaKey), ("$v", KeyProtector().Protect(Convert.ToBase64String(key))));
+        Run(connection, transaction, "INSERT INTO PasswordManagerMeta (Key, Value) VALUES ($k, $v)", ("$k", MetaVerifier), ("$v", PasswordCrypto.Seal(key, Verifier)));
     }
 
     private static void WriteEntry(SqliteConnection connection, SqliteTransaction? transaction, byte[] key, PasswordEntry entry) =>

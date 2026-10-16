@@ -9,8 +9,6 @@ namespace iTerminal.Core.Test.Services;
 [TestClass]
 public class PasswordManagerTest
 {
-    private const string Master = "correct horse battery";
-
     private sealed class SqliteDbContextFactory(string databasePath) : IDbContextFactory<iTerminalDbContext>
     {
         private readonly DbContextOptions<iTerminalDbContext> _options = new DbContextOptionsBuilder<iTerminalDbContext>()
@@ -53,44 +51,33 @@ public class PasswordManagerTest
     private static PasswordManager Open(Store store) => new(store.DatabasePath, store.KeyDirectory);
 
     [TestMethod]
-    public void SetupCreatesTheStoreAndLeavesItUnlocked()
+    public void TheFirstUnlockCreatesTheStoreAndLeavesItUnlocked()
     {
         var manager = Open(NewStore());
 
-        Assert.IsFalse(manager.IsSetUp);
-
-        manager.Setup(Master);
-
-        Assert.IsTrue(manager.IsSetUp);
+        Assert.IsFalse(manager.IsUnlocked);
+        Assert.IsTrue(manager.Unlock());
         Assert.IsTrue(manager.IsUnlocked);
     }
 
     [TestMethod]
-    public void AShortMasterPasswordIsRefused()
+    public void ALockedStoreUnlocksAgainWithoutAnyPassword()
     {
         var manager = Open(NewStore());
-
-        Throws<ArgumentException>(() => manager.Setup("short"));
-        Assert.IsFalse(manager.IsSetUp);
-    }
-
-    [TestMethod]
-    public void AWrongMasterPasswordDoesNotUnlock()
-    {
-        var manager = Open(NewStore());
-        manager.Setup(Master);
+        manager.Unlock();
+        manager.SaveSecret("ssh-1", "hunter2!");
         manager.Lock();
 
-        Assert.IsFalse(manager.Unlock("not the master password"));
         Assert.IsFalse(manager.IsUnlocked);
-        Assert.IsTrue(manager.Unlock(Master));
+        Assert.IsTrue(manager.Unlock());
+        Assert.AreEqual("hunter2!", manager.GetSecret("ssh-1"));
     }
 
     [TestMethod]
     public void WhileLockedNothingIsReadAndNothingIsWritten()
     {
         var manager = Open(NewStore());
-        manager.Setup(Master);
+        manager.Unlock();
         manager.SaveSecret("ssh-1", "hunter2!");
         manager.Lock();
 
@@ -104,13 +91,12 @@ public class PasswordManagerTest
     {
         var store = NewStore();
         var first = Open(store);
-        first.Setup(Master);
+        first.Unlock();
         first.Save(new PasswordEntry { Id = "ssh-1", Title = "SSH ada@host", Username = "ada", Category = PasswordCategory.Network, Password = "hunter2!" });
 
         var reopened = Open(store);
-        Assert.IsTrue(reopened.IsSetUp);
         Assert.IsFalse(reopened.IsUnlocked);
-        Assert.IsTrue(reopened.Unlock(Master));
+        Assert.IsTrue(reopened.Unlock());
 
         var entry = reopened.Get("ssh-1");
         Assert.IsNotNull(entry);
@@ -123,7 +109,7 @@ public class PasswordManagerTest
     public void SaveSecretKeepsTheTitleOfAnEntryThatAlreadyHasOne()
     {
         var manager = Open(NewStore());
-        manager.Setup(Master);
+        manager.Unlock();
         manager.Save(new PasswordEntry { Id = "smb-1", Title = "SMB ada@files/photos", Password = "old" });
 
         manager.SaveSecret("smb-1", "new");
@@ -136,7 +122,7 @@ public class PasswordManagerTest
     public void MailSecretsAreCategorisedAsMail()
     {
         var manager = Open(NewStore());
-        manager.Setup(Master);
+        manager.Unlock();
 
         manager.SaveSecret("mail:abc", "pw");
 
@@ -147,7 +133,7 @@ public class PasswordManagerTest
     public void DeletingAnEntryForgetsIt()
     {
         var manager = Open(NewStore());
-        manager.Setup(Master);
+        manager.Unlock();
         manager.SaveSecret("gone", "pw");
 
         manager.DeleteSecret("gone");
@@ -161,7 +147,7 @@ public class PasswordManagerTest
     {
         var store = NewStore();
         var manager = Open(store);
-        manager.Setup(Master);
+        manager.Unlock();
         manager.SaveSecret("ssh-1", "plaintext-canary-value");
 
         using var connection = new Microsoft.Data.Sqlite.SqliteConnection($"Data Source={store.DatabasePath}");
@@ -174,32 +160,7 @@ public class PasswordManagerTest
     }
 
     [TestMethod]
-    public void ChangingTheMasterPasswordResealsEverything()
-    {
-        var store = NewStore();
-        var manager = Open(store);
-        manager.Setup(Master);
-        manager.SaveSecret("ssh-1", "hunter2!");
-
-        manager.ChangeMasterPassword(Master, "a brand new master");
-        manager.Lock();
-
-        Assert.IsFalse(manager.Unlock(Master));
-        Assert.IsTrue(manager.Unlock("a brand new master"));
-        Assert.AreEqual("hunter2!", manager.GetSecret("ssh-1"));
-    }
-
-    [TestMethod]
-    public void ChangingTheMasterPasswordNeedsTheCurrentOne()
-    {
-        var manager = Open(NewStore());
-        manager.Setup(Master);
-
-        Throws<UnauthorizedAccessException>(() => manager.ChangeMasterPassword("wrong current", "a brand new master"));
-    }
-
-    [TestMethod]
-    public void TheOldVaultsSecretsAreBroughtAcrossAtSetup()
+    public void TheOldVaultsSecretsAreBroughtAcrossOnTheFirstUnlock()
     {
         var store = NewStore();
         var mainDatabase = Path.Combine(Path.GetTempPath(), $"iTerminal.MainDb.{Guid.NewGuid():N}.sqlite");
@@ -214,7 +175,7 @@ public class PasswordManagerTest
         }
 
         var manager = new PasswordManager(store.DatabasePath, store.KeyDirectory, mainFactory);
-        manager.Setup(Master);
+        manager.Unlock();
 
         Assert.AreEqual("saved before the password manager", manager.GetSecret("legacy-profile"));
         using var check = mainFactory.CreateDbContext();
@@ -222,53 +183,89 @@ public class PasswordManagerTest
     }
 
     [TestMethod]
-    public void ARememberedKeyUnlocksAfterReopening()
+    public void TheKeyIsSealedOnDiskNotStoredRaw()
     {
         var store = NewStore();
-        var first = Open(store);
-        first.Setup(Master);
-        first.Save(new PasswordEntry { Id = "ssh:box", Title = "Box", Password = "hunter2" });
-        first.Remember(TimeSpan.FromDays(30));
+        Open(store).Unlock();
+
+        using var connection = new Microsoft.Data.Sqlite.SqliteConnection($"Data Source={store.DatabasePath}");
+        connection.Open();
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT Value FROM PasswordManagerMeta WHERE Key = 'key'";
+        var sealedKey = (string?)command.ExecuteScalar();
+        Assert.IsNotNull(sealedKey);
+        // A raw 32-byte key is 44 base64 characters; the sealed one carries the Data Protection envelope.
+        Assert.IsTrue(sealedKey.Length > 44);
+    }
+
+    [TestMethod]
+    public void AStoreWithoutItsDataProtectionKeysStaysLocked()
+    {
+        var store = NewStore();
+        Open(store).Unlock();
+
+        var elsewhere = new PasswordManager(store.DatabasePath, Path.Combine(Path.GetTempPath(), $"iTerminal.PasswordKeys.{Guid.NewGuid():N}"));
+
+        Assert.IsFalse(elsewhere.Unlock());
+        Assert.IsFalse(elsewhere.IsUnlocked);
+    }
+
+    [TestMethod]
+    public void ARememberedMasterPasswordKeyBecomesThePermanentKey()
+    {
+        var store = NewStore();
+        var key = System.Security.Cryptography.RandomNumberGenerator.GetBytes(32);
+        var protector = DataProtectionProvider.Create(new DirectoryInfo(store.KeyDirectory), builder => builder.SetApplicationName("iTerminal"));
+        var remembered = System.Text.Json.JsonSerializer.Serialize(new { Key = Convert.ToBase64String(key), Until = DateTimeOffset.UtcNow.AddDays(1) });
+        using (var connection = new Microsoft.Data.Sqlite.SqliteConnection($"Data Source={store.DatabasePath}"))
+        {
+            connection.Open();
+            Exec(connection, "CREATE TABLE PasswordManagerMeta (Key TEXT NOT NULL PRIMARY KEY, Value TEXT NOT NULL)");
+            Exec(connection, "CREATE TABLE PasswordEntries (Id TEXT NOT NULL PRIMARY KEY, Blob TEXT NOT NULL)");
+            Exec(connection, "INSERT INTO PasswordManagerMeta VALUES ('verifier', $v)", ("$v", PasswordCrypto.Seal(key, "iTerminal password manager")));
+            Exec(connection, "INSERT INTO PasswordManagerMeta VALUES ('remembered', $v)", ("$v", protector.CreateProtector("iTerminal.PasswordManager.Remember.v1").Protect(remembered)));
+            Exec(connection, "INSERT INTO PasswordEntries VALUES ('ssh:box', $b)", ("$b", PasswordCrypto.Seal(key, System.Text.Json.JsonSerializer.Serialize(new PasswordEntry { Id = "ssh:box", Title = "Box", Password = "hunter2" }))));
+        }
+
+        Assert.IsTrue(Open(store).Unlock());
 
         var later = Open(store);
-        Assert.IsTrue(later.UnlockRemembered());
+        Assert.IsTrue(later.Unlock());
         Assert.AreEqual("hunter2", later.GetSecret("ssh:box"));
     }
 
     [TestMethod]
-    public void AnExpiredRememberedKeyIsForgottenAndTheMasterPasswordIsAskedFor()
+    public void AMasterPasswordStoreNothingRemembersIsSetAsideAndReplaced()
     {
         var store = NewStore();
-        var first = Open(store);
-        first.Setup(Master);
-        first.Remember(TimeSpan.Zero);
+        var key = System.Security.Cryptography.RandomNumberGenerator.GetBytes(32);
+        using (var connection = new Microsoft.Data.Sqlite.SqliteConnection($"Data Source={store.DatabasePath}"))
+        {
+            connection.Open();
+            Exec(connection, "CREATE TABLE PasswordManagerMeta (Key TEXT NOT NULL PRIMARY KEY, Value TEXT NOT NULL)");
+            Exec(connection, "CREATE TABLE PasswordEntries (Id TEXT NOT NULL PRIMARY KEY, Blob TEXT NOT NULL)");
+            Exec(connection, "INSERT INTO PasswordManagerMeta VALUES ('verifier', $v)", ("$v", PasswordCrypto.Seal(key, "iTerminal password manager")));
+        }
 
+        var manager = Open(store);
+
+        Assert.IsTrue(manager.Unlock());
+        Assert.IsTrue(File.Exists($"{store.DatabasePath}.master-password.bak"));
+        manager.SaveSecret("ssh-1", "x");
         var later = Open(store);
-        Assert.IsFalse(later.UnlockRemembered());
-        Assert.IsFalse(later.IsUnlocked);
-        Assert.IsFalse(Open(store).UnlockRemembered());
-        Assert.IsTrue(later.Unlock(Master));
+        Assert.IsTrue(later.Unlock());
+        Assert.AreEqual("x", later.GetSecret("ssh-1"));
     }
 
-    [TestMethod]
-    public void LockingForgetsTheRememberedKey()
+    private static void Exec(Microsoft.Data.Sqlite.SqliteConnection connection, string sql, params (string Name, object Value)[] parameters)
     {
-        var store = NewStore();
-        var first = Open(store);
-        first.Setup(Master);
-        first.Remember(TimeSpan.FromDays(30));
-        first.Lock();
+        using var command = connection.CreateCommand();
+        command.CommandText = sql;
+        foreach (var (name, value) in parameters)
+        {
+            command.Parameters.AddWithValue(name, value);
+        }
 
-        Assert.IsFalse(Open(store).UnlockRemembered());
-    }
-
-    [TestMethod]
-    public void WhileLockedThereIsNothingToRemember()
-    {
-        var manager = Open(NewStore());
-        manager.Setup(Master);
-        manager.Lock();
-
-        Throws<InvalidOperationException>(() => manager.Remember(TimeSpan.FromDays(30)));
+        command.ExecuteNonQuery();
     }
 }

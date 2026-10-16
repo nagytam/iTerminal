@@ -205,8 +205,8 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<Core.Services.Docker.IDockerDriveService>(provider =>
                     new Core.Services.Docker.DockerDriveService(provider.GetRequiredService<SandboxServices.DockerCli>()));
 
-                // The sandbox has no person to type a master password, so it sets one up and unlocks the store itself,
-                // on every launch — a restart unlocks again, as the console prompt would.
+                // Program.cs unlocks the store before the screen opens; the sandbox builds its own host, so it does the same,
+                // on every launch.
                 services.AddSingleton<IHostedService>(provider => new UnlockPasswordManager(provider.GetRequiredService<IPasswordManager>()));
 
                 if (firstRun)
@@ -444,16 +444,9 @@ public sealed class TerminalApp : IAsyncDisposable
     /// <summary>Writes settings after the database exists and before the desktop starts.</summary>
     private sealed class UnlockPasswordManager(IPasswordManager passwordManager) : IHostedService
     {
-        private const string SandboxMasterPassword = "sandbox master password";
-
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            if (!passwordManager.IsSetUp)
-            {
-                passwordManager.Setup(SandboxMasterPassword);
-            }
-
-            passwordManager.Unlock(SandboxMasterPassword);
+            passwordManager.Unlock();
             return Task.CompletedTask;
         }
 
