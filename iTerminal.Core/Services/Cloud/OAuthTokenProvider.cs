@@ -72,7 +72,7 @@ public sealed record OAuthProviderConfig(
 /// OAuth 2.0 for a terminal: the device authorization grant. The user is shown a short code and an
 /// address, approves in any browser — on this machine or another — and the app polls until it is
 /// granted; no redirect URI, no embedded browser. The refresh token is kept in the password manager
-/// (sealed with the master password) and only in memory while that is locked; access tokens never
+/// (sealed with the key the app generated) and only in memory while that is locked; access tokens never
 /// leave memory.
 ///
 /// <para>A sign-in cannot be waited for from a listing, so the first call starts the grant on a

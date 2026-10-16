@@ -3,44 +3,24 @@ using iTerminal.Core.Model.Passwords;
 namespace iTerminal.Core.Services;
 
 /// <summary>
-/// The password manager: every password the app keeps for a network or a service, sealed under a master
-/// password the person types when the app starts. Features ask for a password by an id they own
-/// (<see cref="GetSecret"/>); the dialog lists and edits the whole set. While the manager is locked, nothing
-/// can be read or written, and reads answer null rather than throw, so a feature can say "unlock first".
+/// The password manager: every password the app keeps for a network or a service, sealed under a key the app
+/// generates and keeps on this machine, so nobody types a master password. Features ask for a password by an id
+/// they own (<see cref="GetSecret"/>); the dialog lists and edits the whole set. While the manager is locked,
+/// nothing can be read or written, and reads answer null rather than throw, so a feature can say "unlock first".
 /// </summary>
 public interface IPasswordManager
 {
-    /// <summary>True once a master password has been chosen.</summary>
-    bool IsSetUp { get; }
-
     bool IsUnlocked { get; }
 
     /// <summary>
-    /// Chooses the master password and creates the store. Passwords the vault held before this — written
-    /// before there was a master password — are brought across at the same time.
+    /// Opens the store with its generated key, creating the store and the key on the first call. Passwords the
+    /// vault held before this are brought across when it is created. False when the key cannot be recovered, for
+    /// example because the Data Protection keys it was sealed with are gone.
     /// </summary>
-    void Setup(string masterPassword);
+    bool Unlock();
 
-    /// <summary>False when the master password is wrong.</summary>
-    bool Unlock(string masterPassword);
-
-    /// <summary>
-    /// Keeps the key of the unlocked store sealed on this machine for <paramref name="lifetime"/>, so
-    /// <see cref="UnlockRemembered"/> can open it without the master password until then. Throws while locked.
-    /// </summary>
-    void Remember(TimeSpan lifetime);
-
-    /// <summary>
-    /// Unlocks from a remembered key that has not expired. An expired or unreadable one is forgotten and false
-    /// is returned, so the master password is asked for again.
-    /// </summary>
-    bool UnlockRemembered();
-
-    /// <summary>Forgets the key and the passwords in memory. They are sealed on disk, so the store is unreadable again. A remembered key is forgotten too.</summary>
+    /// <summary>Forgets the key and the passwords in memory. They are sealed on disk, so the store is unreadable until <see cref="Unlock"/>.</summary>
     void Lock();
-
-    /// <summary>Re-seals every entry under a key from the new master password. The current one must be given.</summary>
-    void ChangeMasterPassword(string currentPassword, string newPassword);
 
     /// <summary>Every entry, by title. Empty while locked.</summary>
     IReadOnlyList<PasswordEntry> List();

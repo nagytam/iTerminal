@@ -104,7 +104,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Git.IGitService, iTerminal.Core.Services.Git.GitService>();
         services.AddSingleton<IContentLens, GitLens>();
         services.AddTransient<iTerminal.Core.Dialogs.Git.GitClientDialog>();
-        services.AddTransient<iTerminal.Core.Dialogs.PasswordManager.PasswordManagerStartupDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Calculator.CalculatorDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog>();
         services.AddSingleton<iTerminal.Core.Model.Calendar.MeetingStore>();

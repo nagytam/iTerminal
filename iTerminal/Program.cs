@@ -45,9 +45,8 @@ builder.UseScreen<TerminalScreen>();
 
 var app = builder.Build();
 
-// A remembered master password that has not expired unlocks the saved passwords here. Otherwise the
-// start-up dialog asks for it once the screen opens.
-app.Services.GetRequiredService<IPasswordManager>().UnlockRemembered();
+// The saved passwords open with the key the app generated for them, before any panel restores a remote folder.
+app.Services.GetRequiredService<IPasswordManager>().Unlock();
 
 var elevation = app.Services.GetRequiredService<IElevationService>();
 if (elevation.IsElevated)

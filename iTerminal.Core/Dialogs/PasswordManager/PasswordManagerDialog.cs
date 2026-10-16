@@ -10,25 +10,21 @@ namespace iTerminal.Core.Dialogs.PasswordManager;
 
 /// <summary>
 /// The saved passwords: every login a network connection, a mail account or a service keeps, listed by title,
-/// with the password hidden until V shows it. N adds one, Enter edits, D removes (after a y), L locks the store
-/// and M changes the master password. The store is unlocked when the app starts; this dialog can lock it again
-/// and unlock it with the master password.
+/// with the password hidden until V shows it. N adds one, Enter edits and D removes (after a y). The store is
+/// unlocked when the app starts, with a key the app generated; the dialog only says so when that key is lost.
 /// </summary>
 public class PasswordManagerDialog : Dialog
 {
     private enum Mode
     {
-        NotSetUp,
-        Locked,
+        Unavailable,
         List,
         Edit,
-        ChangeMaster,
     }
 
     private enum FieldKind
     {
         Text,
-        Secret,
         Password,
         Category,
     }
@@ -50,7 +46,7 @@ public class PasswordManagerDialog : Dialog
     private readonly IPasswordManager _passwords;
     private readonly Lock _sync = new();
 
-    private Mode _mode = Mode.Locked;
+    private Mode _mode = Mode.Unavailable;
     private IReadOnlyList<PasswordEntry> _list = [];
     private int _cursor;
     private string? _selectedId;
@@ -77,15 +73,11 @@ public class PasswordManagerDialog : Dialog
         {
             _reveal = false;
             _confirmDelete = false;
-            if (!_passwords.IsSetUp)
+            if (!_passwords.IsUnlocked && !_passwords.Unlock())
             {
-                _mode = Mode.NotSetUp;
+                _mode = Mode.Unavailable;
             }
-            else if (!_passwords.IsUnlocked)
-            {
-                OpenLocked();
-            }
-            else if (_mode is Mode.Locked or Mode.NotSetUp)
+            else if (_mode == Mode.Unavailable)
             {
                 _mode = Mode.List;
                 Reload();
@@ -111,8 +103,6 @@ public class PasswordManagerDialog : Dialog
         {
             switch (_mode)
             {
-                case Mode.Locked:
-                    return HandleLockedKey(keyEvent);
                 case Mode.List:
                     if (keyEvent.ConsoleKey == ConsoleKey.Escape && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
                     {
@@ -122,8 +112,6 @@ public class PasswordManagerDialog : Dialog
                     return HandleListKey(keyEvent);
                 case Mode.Edit:
                     return HandleEditKey(keyEvent);
-                case Mode.ChangeMaster:
-                    return HandleChangeMasterKey(keyEvent);
             }
         }
 
@@ -131,45 +119,6 @@ public class PasswordManagerDialog : Dialog
     }
 
     #region Keys
-
-    private bool HandleLockedKey(KeyEvent keyEvent)
-    {
-        if (keyEvent.ConsoleKey == ConsoleKey.Enter)
-        {
-            var master = _fields[0].Text;
-            _fields[0].Text = string.Empty;
-            if (_passwords.Unlock(master))
-            {
-                _mode = Mode.List;
-                Reload();
-                SetStatus("Unlocked.", false);
-            }
-            else
-            {
-                SetStatus("That is not the master password.", true);
-            }
-
-            StateHasChanged();
-            return true;
-        }
-
-        if (keyEvent.Control || keyEvent.Alt)
-        {
-            return false;
-        }
-
-        if (keyEvent.ConsoleKey == ConsoleKey.Backspace)
-        {
-            TrimLast(_fields[0]);
-        }
-        else
-        {
-            AppendPrintable(_fields[0], keyEvent);
-        }
-
-        StateHasChanged();
-        return true;
-    }
 
     private bool HandleListKey(KeyEvent keyEvent)
     {
@@ -222,12 +171,6 @@ public class PasswordManagerDialog : Dialog
                 _reveal = !_reveal;
                 StateHasChanged();
                 return true;
-            case 'l':
-                Lock();
-                return true;
-            case 'm':
-                OpenChangeMaster();
-                return true;
         }
 
         return false;
@@ -253,25 +196,6 @@ public class PasswordManagerDialog : Dialog
         {
             _reveal = !_reveal;
             StateHasChanged();
-            return true;
-        }
-
-        return EditField(keyEvent);
-    }
-
-    private bool HandleChangeMasterKey(KeyEvent keyEvent)
-    {
-        if (keyEvent.ConsoleKey == ConsoleKey.Escape)
-        {
-            _mode = Mode.List;
-            SetStatus(string.Empty, false);
-            StateHasChanged();
-            return true;
-        }
-
-        if (keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.S)
-        {
-            ApplyNewMasterPassword();
             return true;
         }
 
@@ -368,23 +292,6 @@ public class PasswordManagerDialog : Dialog
         return true;
     }
 
-    private void OpenLocked()
-    {
-        _mode = Mode.Locked;
-        _fields = [new Field("Master password", FieldKind.Secret)];
-        _field = 0;
-        SetStatus("The passwords are locked. Type the master password and press Enter.", false);
-    }
-
-    private void Lock()
-    {
-        _passwords.Lock();
-        _list = [];
-        _reveal = false;
-        OpenLocked();
-        StateHasChanged();
-    }
-
     private void OpenEdit(PasswordEntry? entry)
     {
         _editingId = entry?.Id;
@@ -474,50 +381,6 @@ public class PasswordManagerDialog : Dialog
         StateHasChanged();
     }
 
-    private void OpenChangeMaster()
-    {
-        _fields =
-        [
-            new Field("Current master", FieldKind.Secret),
-            new Field("New master", FieldKind.Secret),
-            new Field("Repeat new", FieldKind.Secret),
-        ];
-        _field = 0;
-        _mode = Mode.ChangeMaster;
-        SetStatus($"Every saved password is sealed again under the new master password (at least {iTerminal.Core.Services.PasswordManager.MinimumMasterPasswordLength} characters). Ctrl+S applies.", false);
-        StateHasChanged();
-    }
-
-    private void ApplyNewMasterPassword()
-    {
-        var current = _fields[0].Text;
-        var next = _fields[1].Text;
-        if (next != _fields[2].Text)
-        {
-            SetStatus("The new master password does not match its repeat.", true);
-            StateHasChanged();
-            return;
-        }
-
-        try
-        {
-            _passwords.ChangeMasterPassword(current, next);
-            _mode = Mode.List;
-            Reload();
-            SetStatus("The master password is changed.", false);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            SetStatus("The current master password is wrong.", true);
-        }
-        catch (ArgumentException exception)
-        {
-            SetStatus(exception.Message, true);
-        }
-
-        StateHasChanged();
-    }
-
     private void SetStatus(string text, bool isError)
     {
         _status = text;
@@ -554,21 +417,15 @@ public class PasswordManagerDialog : Dialog
 
             switch (_mode)
             {
-                case Mode.NotSetUp:
-                    Put(buffer, 1, 1, iw - 2, "The password manager is not set up yet.", colorScheme.Foreground, colorScheme.Background);
-                    Put(buffer, 1, 2, iw - 2, "It is set up the first time iTerminal starts, from the console.", colorScheme.DisabledForeground, colorScheme.Background);
-                    break;
-                case Mode.Locked:
-                    DrawLocked(buffer, iw, colorScheme);
+                case Mode.Unavailable:
+                    Put(buffer, 1, 1, iw - 2, "The saved passwords cannot be opened.", colorScheme.Foreground, colorScheme.Background);
+                    Put(buffer, 1, 2, iw - 2, "The key they were sealed with is gone from this account, so they cannot be read again.", colorScheme.DisabledForeground, colorScheme.Background);
                     break;
                 case Mode.List:
                     DrawList(buffer, iw, colorScheme);
                     break;
                 case Mode.Edit:
                     DrawForm(buffer, iw, "Saved password", colorScheme);
-                    break;
-                case Mode.ChangeMaster:
-                    DrawForm(buffer, iw, "Change master password", colorScheme);
                     break;
             }
 
@@ -579,19 +436,11 @@ public class PasswordManagerDialog : Dialog
 
     private string Hints() => _mode switch
     {
-        Mode.NotSetUp => "Esc close",
-        Mode.Locked => "Enter unlock  Esc close",
+        Mode.Unavailable => "Esc close",
         Mode.List => _confirmDelete ? "y delete  any other key cancels"
-            : "Enter edit  N new  D delete  V show  L lock  M master password  Esc close",
-        Mode.Edit => "Tab field  Space category  Ctrl+R show password  Ctrl+S save  Esc back",
-        _ => "Tab field  Ctrl+S change  Esc back",
+            : "Enter edit  N new  D delete  V show  Esc close",
+        _ => "Tab field  Space category  Ctrl+R show password  Ctrl+S save  Esc back",
     };
-
-    private void DrawLocked(IBuffer buffer, int iw, ColorScheme colorScheme)
-    {
-        Put(buffer, 1, 1, iw - 2, "Locked", Color.Cyan, colorScheme.Background);
-        DrawField(buffer, iw, 3, _fields[0], true, colorScheme);
-    }
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
@@ -645,7 +494,6 @@ public class PasswordManagerDialog : Dialog
         var value = field.Kind switch
         {
             FieldKind.Category => field.Category.ToString() + "  (Space changes)",
-            FieldKind.Secret => new string('*', field.Text.Length),
             FieldKind.Password when !_reveal => new string('*', field.Text.Length),
             _ => field.Text,
         };
