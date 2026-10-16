@@ -40,7 +40,7 @@ Runtime state lives outside the repo: the SQLite database (settings, folder cach
 
 ## Architecture
 
-The core dependency chain is three layers: `iConsole` ← `iTerminal.Core` ← `iTerminal`. Two platform input plug-ins (`iConsole.Inputs.Posix`, `iConsole.Inputs.Windows`) also depend on `iConsole` and are selected at startup. `iConsole.Demo` is a standalone sample app for `iConsole` in isolation.
+The core dependency chain is three layers: `iConsole` ← `iTerminal.Core` ← `iTerminal`. Two platform input plug-ins (`iConsole.Inputs.Posix`, `iConsole.Inputs.Windows`) also depend on `iConsole` and are selected at startup.
 
 ### `iConsole` — reusable terminal UI framework
 General-purpose TUI infrastructure with no knowledge of file managers. Key subsystems:
