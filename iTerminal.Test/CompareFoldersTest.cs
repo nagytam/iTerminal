@@ -26,7 +26,7 @@ public class CompareFoldersTest
         var screen = await _app.WaitForTextAsync("only on the left");
         Assert.IsTrue(screen.Contains("◀ only left") && screen.Contains("only right ▶"), screen.Dump());
         Assert.AreEqual((4, 2), dialog.Marked);
-        StringAssert.Contains(dialog.Status, "F5 copies them across");
+        StringAssert.Contains(dialog.Status, "F5 here synchronises");
 
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();
@@ -40,6 +40,40 @@ public class CompareFoldersTest
         await _app.PressAsync("Enter");
         await _app.WaitUntilAsync(() => File.Exists(Path.Combine(_app.RightRoot, "readme.txt"))
                                         && Directory.Exists(Path.Combine(_app.RightRoot, "alpha")), "the left side's files to arrive");
+    }
+
+    [TestMethod]
+    public async Task F5InTheDialogSynchronisesBothWaysAfterAConfirmation()
+    {
+        await _app.PressAsync("Shift+F2");
+        var dialog = await _app.Driver.WaitForModalAsync<Core.Dialogs.CompareFoldersDialog>();
+        await _app.WaitForTextAsync("F5:synchronise");
+
+        // Nothing has been compared yet: F5 says so and changes nothing.
+        await _app.PressAsync("F5");
+        await _app.WaitForTextAsync("Compare first");
+
+        await _app.PressAsync("Enter");
+        await dialog.CompareTask;
+
+        // The first F5 only says what it would do; any other key withdraws it.
+        await _app.PressAsync("F5");
+        await _app.WaitForTextAsync("F5 again to do it");
+        Assert.IsNotNull(dialog.PendingPlan);
+        Assert.IsFalse(File.Exists(Path.Combine(_app.RightRoot, "readme.txt")));
+        await _app.PressAsync("Down");
+        await _app.WaitForTextAsync("nothing was changed");
+        Assert.IsNull(dialog.PendingPlan);
+
+        await _app.PressAsync("F5");
+        await _app.WaitForTextAsync("F5 again to do it");
+        await _app.PressAsync("F5");
+        await _app.WaitForNoDialogAsync();
+
+        await _app.WaitUntilAsync(() => File.Exists(Path.Combine(_app.RightRoot, "readme.txt"))
+                                        && Directory.Exists(Path.Combine(_app.RightRoot, "alpha"))
+                                        && File.Exists(Path.Combine(_app.LeftRoot, "right_only.txt")), "both sides to receive what the other had");
+        await _app.WaitForNoStrayFramesAsync();
     }
 
     [TestMethod]

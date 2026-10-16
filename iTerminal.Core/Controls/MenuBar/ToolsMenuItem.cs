@@ -35,7 +35,8 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.RuntimeDependencyDialog? runtimeDependencyDialog = null,
         DiskUsageDialog? diskUsageDialog = null,
         iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
-        INotificationService? notificationService = null)
+        INotificationService? notificationService = null,
+        DuplicateFinderDialog? duplicateFinderDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -75,6 +76,7 @@ public class ToolsMenuItem : MenuItem
         if (passwordManagerDialog is not null) features.Add(new PasswordManagerDialogCommand(passwordManagerDialog));
         if (runtimeDependencyDialog is not null) features.Add(new RuntimeDependencyDialogCommand(runtimeDependencyDialog));
         if (diskUsageDialog is not null) features.Add(new DiskUsageDialogCommand(diskUsageDialog, contentModelService));
+        if (duplicateFinderDialog is not null) features.Add(new DuplicateFinderDialogCommand(duplicateFinderDialog, contentModelService));
         if (elevationService is not null)
         {
             features.Add(new RestartAsAdministratorCommand(elevationService, notificationService));

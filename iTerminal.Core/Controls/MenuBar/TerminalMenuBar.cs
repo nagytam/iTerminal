@@ -97,7 +97,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
         iConsole.Services.INotificationService? notificationService = null,
         SecureWipeDialog? secureWipeDialog = null,
-        SignatureDialog? signatureDialog = null
+        SignatureDialog? signatureDialog = null,
+        DuplicateFinderDialog? duplicateFinderDialog = null
         )
         : base([], themeService)
     {
@@ -175,7 +176,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             runtimeDependencyDialog,
             diskUsageDialog,
             elevationService,
-            notificationService));
+            notificationService,
+            duplicateFinderDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 

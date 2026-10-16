@@ -191,6 +191,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<MarkPatternDialog>();
         services.AddTransient<DiskManagerDialog>();
         services.AddTransient<DiskUsageDialog>();
+        services.AddTransient<DuplicateFinderDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Duplicates.IDuplicateFinderService, iTerminal.Core.Services.Duplicates.DuplicateFinderService>();
         services.AddSingleton<iTerminal.Core.Services.DiskUsage.IDiskUsageService, iTerminal.Core.Services.DiskUsage.DiskUsageService>();
         services.AddSingleton<iTerminal.Core.Services.Elevation.IElevationService, iTerminal.Core.Services.Elevation.ElevationService>();
         services.AddTransient<FormatDriveDialog>();
@@ -353,6 +355,9 @@ public static class iTerminalApplicationBuilderExtension
         // Playwright driver and its Chromium are what the quote indicator needs; the list is one entry per component.
         string runtimesDirectory = Path.Combine(databaseDirectory, "runtimes");
         services.AddSingleton<IRuntimeDependency>(_ => new PlaywrightRuntimeDependency(runtimesDirectory));
+
+        // git is not downloaded into the data folder: when it is missing the system's package manager installs it.
+        services.AddSingleton<IRuntimeDependency, GitRuntimeDependency>();
 
         // Ollama is a dependency only when the AI prompt is configured to use it. Registration cannot be skipped
         // from inside a factory, so the configured value is read here, once.

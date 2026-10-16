@@ -7,10 +7,14 @@ using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Services;
+using iConsole.Tasks;
 using iTerminal.Core.Commands;
+using iTerminal.Core.Factories;
+using iTerminal.Core.Helper;
 using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Compare;
+using iTerminal.Core.Tasks;
 
 namespace iTerminal.Core.Dialogs;
 
@@ -19,6 +23,10 @@ namespace iTerminal.Core.Dialogs;
 /// panel what that side has and the other lacks or holds an older copy of — so F5 from either panel
 /// copies exactly those across. What differs with no newer side (same date, different bytes; a file
 /// against a folder) is listed but marked on neither: which copy should win is the user's call.
+///
+/// <para><b>F5 in the dialog synchronises</b> what the comparison found (<see cref="FolderSynchronizer"/>,
+/// <see cref="FolderSyncTask"/>): both ways with the newer copy winning, or one way with an option to
+/// delete what the target has extra. The first F5 shows what would happen, the second does it.</para>
 ///
 /// <para>The comparison runs on a background task — with subfolders or by content it can read a
 /// great deal — and the dialog shows how far it has got. Closing it stops the comparison.</para>
@@ -30,21 +38,35 @@ public class CompareFoldersDialog : Dialog
     private readonly FormPanel _form;
     private readonly ComboBox<CompareMode> _comboMode;
     private readonly CheckBox _checkBoxSubfolders;
+    private readonly TaskManager? _taskManager;
+    private readonly ProgressWindowFactory? _progressWindowFactory;
+    private readonly FormPanel _syncForm;
+    private readonly ComboBox<SyncDirection> _comboDirection;
+    private readonly CheckBox _checkBoxDeleteExtras;
     private readonly DiffList _list;
     private CancellationTokenSource? _cancellation;
     private volatile string _status = string.Empty;
     private volatile bool _statusIsError;
     private volatile string _progress = string.Empty;
+    private volatile ComparedFolders? _compared;
+    private SyncPlan? _pendingPlan;
+
+    /// <summary>What the last comparison looked at — everything a synchronisation needs to act on it.</summary>
+    private sealed record ComparedFolders(Url Left, IFileSystem LeftFileSystem, Url Right, IFileSystem RightFileSystem);
 
     public CompareFoldersDialog(
         IContentModelService contentModelService,
         FileSystemResolver resolver,
-        IThemeService themeService)
+        IThemeService themeService,
+        TaskManager? taskManager = null,
+        ProgressWindowFactory? progressWindowFactory = null)
         : base(nameof(CompareFoldersDialog), themeService)
     {
         _contentModelService = contentModelService;
         _resolver = resolver;
-        Title = "Compare folders";
+        _taskManager = taskManager;
+        _progressWindowFactory = progressWindowFactory;
+        Title = "Compare and synchronise folders";
 
         _comboMode = new ComboBox<CompareMode>(themeService) { DisplaySelector = DescribeMode };
         _comboMode.SetItems([CompareMode.SizeAndDate, CompareMode.SizeOnly, CompareMode.Content]);
@@ -56,13 +78,51 @@ public class CompareFoldersDialog : Dialog
             IsChecked = false,
             HotKeyChar = 'S',
         };
+        _comboDirection = new ComboBox<SyncDirection>(themeService) { DisplaySelector = DescribeDirection };
+        _comboDirection.SetItems([SyncDirection.Both, SyncDirection.LeftToRight, SyncDirection.RightToLeft]);
+        _syncForm = new FormPanel(themeService);
+        _syncForm.AddField("Sync (F5)", _comboDirection);
+        _checkBoxDeleteExtras = new CheckBox(themeService)
+        {
+            Label = "Delete what the target has and the source lacks (one-way only)",
+            IsChecked = false,
+            HotKeyChar = 'D',
+        };
         _list = new DiffList(themeService);
 
         AddControl(_form);
         AddControl(_checkBoxSubfolders);
+        AddControl(_syncForm);
+        AddControl(_checkBoxDeleteExtras);
         AddControl(_list);
         AddCommand(new CompareCommand());
     }
+
+    private static string DescribeDirection(SyncDirection direction) => direction switch
+    {
+        SyncDirection.Both => "Both ways — newer copy wins",
+        SyncDirection.LeftToRight => "Left to right — left is the source",
+        SyncDirection.RightToLeft => "Right to left — right is the source",
+        _ => direction.ToString(),
+    };
+
+    public SyncDirection Direction
+    {
+        get => _comboDirection.SelectedItem;
+        set => _comboDirection.SelectedIndex = _comboDirection.Items.ToList().IndexOf(value);
+    }
+
+    public bool DeleteExtras
+    {
+        get => _checkBoxDeleteExtras.IsChecked;
+        set => _checkBoxDeleteExtras.IsChecked = value;
+    }
+
+    /// <summary>The synchronisation F5 has proposed and is waiting to have confirmed, if any.</summary>
+    public SyncPlan? PendingPlan => _pendingPlan;
+
+    /// <summary>The synchronisation started last — nothing waits on it; it exists so a test can.</summary>
+    public FolderSyncTask? SyncTask { get; private set; }
 
     private static string DescribeMode(CompareMode mode) => mode switch
     {
@@ -101,6 +161,8 @@ public class CompareFoldersDialog : Dialog
     {
         await base.OnInitializeAsync();
         Result = null;
+        _compared = null;
+        _pendingPlan = null;
         _list.SetItems([]);
         _status = "Enter compares.";
         _statusIsError = false;
@@ -112,7 +174,7 @@ public class CompareFoldersDialog : Dialog
         if (Parent is not null)
         {
             var width = Math.Clamp((int)Parent.ViewSize.Width - 8, 60, 110);
-            var height = Math.Clamp((int)Parent.ViewSize.Height - 4, 16, 34);
+            var height = Math.Clamp((int)Parent.ViewSize.Height - 4, 19, 36);
             CenterInParent(new Size(width, height));
         }
 
@@ -121,8 +183,12 @@ public class CompareFoldersDialog : Dialog
         _form.ViewSize = new Size(inner, 1);
         _checkBoxSubfolders.Position = new Position(2, 5);
         _checkBoxSubfolders.ViewSize = new Size(inner, 1);
-        _list.Position = new Position(1, 7);
-        _list.ViewSize = new Size(Math.Max(1, ViewSize.Width - 2), Math.Max(1, ViewSize.Height - 10));
+        _syncForm.Position = new Position(2, 6);
+        _syncForm.ViewSize = new Size(inner, 1);
+        _checkBoxDeleteExtras.Position = new Position(2, 7);
+        _checkBoxDeleteExtras.ViewSize = new Size(inner, 1);
+        _list.Position = new Position(1, 9);
+        _list.ViewSize = new Size(Math.Max(1, ViewSize.Width - 2), Math.Max(1, ViewSize.Height - 12));
         base.OnInitializeLayout();
     }
 
@@ -160,6 +226,8 @@ public class CompareFoldersDialog : Dialog
         var cancellation = new CancellationTokenSource();
         Interlocked.Exchange(ref _cancellation, cancellation)?.Cancel();
         Result = null;
+        _compared = null;
+        _pendingPlan = null;
         _list.SetItems([]);
         SetStatus("Comparing…", isError: false);
         var progress = new Helper.SynchronousProgress<string>(path => _progress = path);
@@ -170,11 +238,12 @@ public class CompareFoldersDialog : Dialog
             {
                 var result = await FolderComparer.CompareAsync(leftFolder, leftFileSystem, rightFolder, rightFileSystem, options, progress, cancellation.Token);
                 Result = result;
+                _compared = new ComparedFolders(leftFolder, leftFileSystem, rightFolder, rightFileSystem);
                 _list.SetItems([.. result.Differences]);
                 Marked = ApplyMarks(result, left, leftFolder, right, rightFolder);
                 var marked = Marked.Left + Marked.Right == 0
                     ? string.Empty
-                    : $" Marked {Marked.Left} on the left and {Marked.Right} on the right — F5 copies them across (tick Overwrite to replace older copies).";
+                    : $" Marked {Marked.Left} on the left and {Marked.Right} on the right — F5 here synchronises; Esc, then F5 in a panel, copies just the marked rows.";
                 SetStatus(result.Summary() + marked, isError: false);
             }
             catch (OperationCanceledException)
@@ -191,6 +260,75 @@ public class CompareFoldersDialog : Dialog
                 StateHasChanged();
             }
         });
+    }
+
+    /// <summary>
+    /// F5: proposes what a synchronisation would do and waits for a second F5 — it can delete, and
+    /// "recoverable by default" includes not doing it on one keystroke. Any other key withdraws it.
+    /// </summary>
+    public async Task RequestSyncAsync()
+    {
+        if (_compared is null || Result is null)
+        {
+            SetStatus("Compare first (Enter), then F5 synchronises what it found.", isError: true);
+            return;
+        }
+
+        if (!CompareTask.IsCompleted)
+        {
+            return;
+        }
+
+        if (_pendingPlan is { } pending)
+        {
+            _pendingPlan = null;
+            await RunSyncAsync(pending);
+            return;
+        }
+
+        var plan = FolderSynchronizer.Plan(Result, new SyncOptions(Direction, DeleteExtras));
+        if (plan.IsEmpty)
+        {
+            SetStatus(plan.Summary(), isError: false);
+            return;
+        }
+
+        if (_compared.LeftFileSystem.IsReadOnly && (plan.CopiesToLeft > 0 || plan.Actions.Any(a => a.Kind == SyncActionKind.DeleteLeft))
+            || _compared.RightFileSystem.IsReadOnly && (plan.CopiesToRight > 0 || plan.Actions.Any(a => a.Kind == SyncActionKind.DeleteRight)))
+        {
+            SetStatus("One of the folders is read-only, so this synchronisation cannot be carried out.", isError: true);
+            return;
+        }
+
+        _pendingPlan = plan;
+        var recycle = plan.Deletes > 0 ? " Deletions go to the recycle bin where there is one." : string.Empty;
+        SetStatus($"{plan.Summary()}{recycle} F5 again to do it, any other key to cancel.", isError: plan.Deletes > 0);
+    }
+
+    private async Task RunSyncAsync(SyncPlan plan)
+    {
+        var compared = _compared;
+        if (compared is null || _taskManager is null || _progressWindowFactory is null)
+        {
+            SetStatus("Synchronising is not available here.", isError: true);
+            return;
+        }
+
+        try
+        {
+            var task = new FolderSyncTask(plan, compared.Left, compared.LeftFileSystem, compared.Right, compared.RightFileSystem);
+            SyncTask = task;
+
+            // Before the task is queued: a small synchronisation is regularly over before Add returns.
+            PanelRefreshHelper.RefreshFoldersWhenFinished(task, _contentModelService, compared.Left, compared.Right);
+            await _taskManager.Add(task);
+            await ShowPopUpWindowAsync(_progressWindowFactory.Create(task));
+            Close();
+        }
+        catch (Exception exception)
+        {
+            SetStatus($"Could not synchronise: {exception.Message}", isError: true);
+        }
     }
 
     private void SetStatus(string status, bool isError)
@@ -250,6 +388,19 @@ public class CompareFoldersDialog : Dialog
     /// </summary>
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        var isSyncKey = keyEvent.ConsoleKey == ConsoleKey.F5 && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift;
+        if (isSyncKey)
+        {
+            await RequestSyncAsync();
+            return true;
+        }
+
+        if (_pendingPlan is not null && keyEvent.ConsoleKey != ConsoleKey.Escape)
+        {
+            _pendingPlan = null;
+            SetStatus("Synchronisation cancelled — nothing was changed.", isError: false);
+        }
+
         if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift && !_comboMode.IsOpen)
         {
             StartCompare();
@@ -293,13 +444,13 @@ public class CompareFoldersDialog : Dialog
         Line(2, "Right: " + (RightModel?.Url?.FullUrl ?? "—"), foreground);
 
         var rule = new ConxelString(Border.Horizontal.Repeat(Math.Max(0, width - 2)), foreground, colorScheme.Background);
-        buffer.Write(ZOrder, new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + 6), new Size(rule.Count, 1), rule);
+        buffer.Write(ZOrder, new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + 8), new Size(rule.Count, 1), rule);
 
         var status = _progress.Length > 0 ? $"Comparing… {_progress}" : _status;
         Line((int)ViewSize.Height - 3, status, _statusIsError ? colorScheme.Error : foreground);
         Line((int)ViewSize.Height - 2, string.Empty, foreground);
 
-        var hints = " Enter:compare  ↑↓:scroll  Esc:close ".FitHints(Math.Max(0, width - 4));
+        var hints = " Enter:compare  F5:synchronise  ↑↓:scroll  Esc:close ".FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, hints), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);
