@@ -349,6 +349,9 @@ public static class iTerminalApplicationBuilderExtension
         string runtimesDirectory = Path.Combine(databaseDirectory, "runtimes");
         services.AddSingleton<IRuntimeDependency>(_ => new PlaywrightRuntimeDependency(runtimesDirectory));
 
+        // git is not downloaded into the data folder: when it is missing the system's package manager installs it.
+        services.AddSingleton<IRuntimeDependency, GitRuntimeDependency>();
+
         // Ollama is a dependency only when the AI prompt is configured to use it. Registration cannot be skipped
         // from inside a factory, so the configured value is read here, once.
         AiOptions ai = new();
