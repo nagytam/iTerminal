@@ -86,7 +86,7 @@ public class BufferTest
         Assert.AreEqual("", lines[3]);
         Assert.AreEqual(
             new Rectangle(new Position(1, 1), new Size(2, 2)).ToString(), 
-            buffer.Layers.Last().BoundRect.ToString());
+            buffer.Layers.Last().BoundRect!.ToString());
         buffer.Merge();
         content = buffer.MergedLayer.AsString();
         lines = content.Split(Environment.NewLine);
@@ -124,7 +124,6 @@ public class BufferTest
         try
         {
             var content = buffer.Layers.First().AsString();
-            Assert.IsTrue(true);  // Test passes if no exception
         }
         catch
         {
@@ -154,7 +153,6 @@ public class BufferTest
         try
         {
             var content = buffer.Layers.First().AsString();
-            Assert.IsTrue(true);  // Test passes if no exception
         }
         catch
         {
@@ -176,8 +174,8 @@ public class BufferTest
         buffer.Resize(new Size(5, 5));
 
         // Cursor should be clamped
-        Assert.IsTrue(buffer.Cursor.CursorPosition.X <= 4);
-        Assert.IsTrue(buffer.Cursor.CursorPosition.Y <= 4);
+        Assert.IsTrue(buffer.Cursor.CursorPosition!.X <= 4);
+        Assert.IsTrue(buffer.Cursor.CursorPosition!.Y <= 4);
     }
 
     [TestMethod]
@@ -223,7 +221,6 @@ public class BufferTest
         {
             buffer.Resize(new Size(0, 0));
             // Buffer may keep a minimum size or original size for safety
-            Assert.IsTrue(true); // Test passes if no exception
         }
         catch
         {
@@ -244,7 +241,6 @@ public class BufferTest
         try
         {
             buffer.Write(0, new Position(0, 0), new Size(4, 1), conxelString);
-            Assert.IsTrue(true); // If we get here, test passes
         }
         catch
         {

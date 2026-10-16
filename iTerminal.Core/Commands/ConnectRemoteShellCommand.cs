@@ -40,7 +40,7 @@ public class ConnectRemoteShellCommand(
                 host = Container.SSH + host;
             }
             await contentModelService.SetUrlAsync(host);
-            (Control?.Parent as FolderSelectorRemoteShellTabPage).TextBoxHost.AutoCompletion.CompletionModel.InsertCompletion(host);
+            (Control?.Parent as FolderSelectorRemoteShellTabPage)?.TextBoxHost.AutoCompletion?.CompletionModel.InsertCompletion(host);
             CloseContainingDialog();
         }
     }

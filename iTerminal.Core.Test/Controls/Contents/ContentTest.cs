@@ -1,3 +1,4 @@
+#pragma warning disable MSTEST0032 // These tests pin a constant's value on purpose.
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Interfaces;

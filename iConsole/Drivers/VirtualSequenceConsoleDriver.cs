@@ -254,7 +254,7 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
         {
             Console.SetCursorPosition((int)bufferPosition.X, (int)bufferPosition.Y);
         }
-        catch (ArgumentOutOfRangeException exception)
+        catch (ArgumentOutOfRangeException)
         {
 
         }

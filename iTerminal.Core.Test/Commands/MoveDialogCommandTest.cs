@@ -9,7 +9,6 @@ using iTerminal.Core.Dialogs;
 using iTerminal.Core.Factories;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
-using iTerminal.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Serilog;

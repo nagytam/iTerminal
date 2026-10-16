@@ -32,7 +32,7 @@ public sealed class PulseAudioOutputBackend : IAudioOutputBackend
 
     public int Priority => 10;
 
-    public bool IsAvailable() => PulseAudioSink.IsAvailable();
+    public bool IsAvailable() => OperatingSystem.IsLinux() && PulseAudioSink.IsAvailable();
 
     public IReadOnlyList<AudioDevice> GetDevices() =>
         OperatingSystem.IsLinux() ? PulseAudioSink.GetDevices() : [];
@@ -55,7 +55,7 @@ public sealed class AplayAudioOutputBackend : IAudioOutputBackend
 
     public int Priority => 20;
 
-    public bool IsAvailable() => AplayAudioSink.IsAvailable();
+    public bool IsAvailable() => OperatingSystem.IsLinux() && AplayAudioSink.IsAvailable();
 
     public IReadOnlyList<AudioDevice> GetDevices() =>
         OperatingSystem.IsLinux() ? AplayAudioSink.GetDevices() : [];

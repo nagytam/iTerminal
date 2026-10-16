@@ -25,7 +25,7 @@ public class SearchTextDialogTest
 
         // set internal textbox text via reflection
         var field = dlg.GetType().GetField("_textBoxSearch", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var textBox = (iConsole.Controls.TextBox)field.GetValue(dlg)!;
+        var textBox = (iConsole.Controls.TextBox)field!.GetValue(dlg)!;
         textBox.Text = "needle";
 
         Assert.AreEqual("needle", dlg.SearchValue);

@@ -14,6 +14,6 @@ public class TerminalCommand : ITerminalCommand
     public string? Error { get; set; } = null;
     public string? EnvironmentVariables { get; set; } = null;
     public Task? CommandTask { get; set; } = null;
-    public string Host { get; set; }
-    public string Username { get; set; }
+    public string Host { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
 }

@@ -14,7 +14,6 @@ public class FolderIndexCacheEntryTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

@@ -14,7 +14,6 @@ public class FolderIndexModelTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

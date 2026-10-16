@@ -26,7 +26,7 @@ public class CreateFolderDialog : CreateEntryDialog
             nameof(CreateFolderDialog),
             "Create folder",
             textBoxName,
-            new CreateFolderCommand(textBoxName.ValidationModel as FolderValidationModel, contentModelService),
+            new CreateFolderCommand((FolderValidationModel)textBoxName.ValidationModel!, contentModelService),
             themeService)
     {
     }

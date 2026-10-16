@@ -11,7 +11,7 @@ namespace iConsole.Test.Controls.Tabs;
 [TestClass]
 public class TabPageTest
 {
-    private Mock<IThemeService> CreateMockThemeService(ColorScheme colorScheme = null)
+    private Mock<IThemeService> CreateMockThemeService(ColorScheme? colorScheme = null)
     {
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(colorScheme ?? new ColorScheme());
@@ -391,7 +391,7 @@ public class TabPageTest
     public void TabPageCanHandleNullNameInConstructor()
     {
         var mockThemeService = CreateMockThemeService();
-        var tabPage = new TabPage(null, mockThemeService.Object);
+        var tabPage = new TabPage(null!, mockThemeService.Object);
 
         Assert.IsNull(tabPage.Name);
     }

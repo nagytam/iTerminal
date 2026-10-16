@@ -14,7 +14,6 @@ public class SystemInfoDialogCommandTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

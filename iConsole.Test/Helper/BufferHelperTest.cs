@@ -73,7 +73,7 @@ public class BufferHelperTest
         var tempFile = Path.GetTempFileName();
         try
         {
-            BufferHelper.DumpBufferToHtml(null, tempFile);
+            BufferHelper.DumpBufferToHtml(null!, tempFile);
             var content = File.ReadAllText(tempFile);
             StringAssert.Contains(content, "<html>");
             Assert.IsFalse(content.Contains("<span"), "No spans expected for null layer");

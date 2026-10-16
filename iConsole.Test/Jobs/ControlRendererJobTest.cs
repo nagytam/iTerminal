@@ -13,7 +13,7 @@ public class ControlRendererJobTest
 
         // Desktop is null by default; Render should return true (idle)
         var renderMethod = job.GetType().GetMethod("Render", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var result = (bool)renderMethod.Invoke(job, Array.Empty<object>());
+        var result = (bool)renderMethod!.Invoke(job, Array.Empty<object>())!;
 
         Assert.IsTrue(result);
     }

@@ -115,11 +115,6 @@ public class ControlTest
 
         Assert.AreEqual(VisualState.Normal, state);
     }
-}
-
-internal class TestControl : iConsole.Controls.Control
-{
-    public TestControl(IThemeService themeService) : base(themeService) { }
 
     /// <summary>
     /// A hidden control draws nothing, even when marked changed. A repaint from scratch marks the
@@ -145,4 +140,10 @@ internal class TestControl : iConsole.Controls.Control
         hidden.IsVisible = true;
         root.Render(screen);
         Assert.IsTrue(screen.Contains("hidden"), "once shown it draws");
-    }}
+    }
+}
+
+internal class TestControl : iConsole.Controls.Control
+{
+    public TestControl(IThemeService themeService) : base(themeService) { }
+}

@@ -14,7 +14,6 @@ public class FileInformationRefreshTaskTest
         // Act
         // TODO: implement test
         // Assert basic pass for now
-        Assert.IsTrue(true);
     }
 }
 

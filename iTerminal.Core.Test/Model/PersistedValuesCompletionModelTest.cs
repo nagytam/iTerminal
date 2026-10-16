@@ -14,7 +14,6 @@ public class PersistedValuesCompletionModelTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

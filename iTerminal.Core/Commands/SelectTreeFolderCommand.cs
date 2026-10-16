@@ -39,7 +39,7 @@ public class SelectTreeFolderCommand(IContentModelService contentModelService, F
                 if (contentModel is not null)
                 {
                     var focusedPath = focusedItem.Name;
-                    await contentModelService?.SetUrlAsync(contentModel.Name, focusedPath);
+                    await contentModelService.SetUrlAsync(contentModel.Name, focusedPath);
                     CloseContainingDialog();
                 }
             }

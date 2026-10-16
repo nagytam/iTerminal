@@ -69,7 +69,7 @@ public class TaskManager : INotifyPropertyChanged, IDisposable
 
     public IEnumerable<IBackgroundTask?> GetTasks<T>(Func<T, bool> compare) where T : class
     {
-        return Tasks.AsSnapshot().Where(t => t is T && compare(t as T));
+        return Tasks.AsSnapshot().Where(t => t is T typed && compare(typed));
     }
 
     private async Task ProcessQueueAsync()

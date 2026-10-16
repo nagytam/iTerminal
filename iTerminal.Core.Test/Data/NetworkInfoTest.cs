@@ -23,7 +23,7 @@ public class NetworkInfoTest
     [TestMethod]
     public void Name_CanBeNull()
     {
-        var networkInfo = new NetworkInfo { Name = null };
+        var networkInfo = new NetworkInfo { Name = null! };
         Assert.IsNull(networkInfo.Name);
     }
 

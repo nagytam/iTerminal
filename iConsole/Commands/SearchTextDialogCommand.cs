@@ -15,7 +15,7 @@ public class SearchTextDialogCommand(
     : Command
 {
     public override string Title => "F7-Search";
-    private SearchTextDialog _searchTextDialog { get; set; } 
+    private SearchTextDialog? _searchTextDialog { get; set; } 
 
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F7, false, false, false);
@@ -35,6 +35,9 @@ public class SearchTextDialogCommand(
             dateTimeProviderService,
             themeService);
         var textFileViewerDialog = Control?.Parent?.Parent;
-        await Control?.ShowDialogAsync(_searchTextDialog, textFileViewerDialog);
+        if (Control is not null)
+        {
+            await Control.ShowDialogAsync(_searchTextDialog, textFileViewerDialog);
+        }
     }
 }

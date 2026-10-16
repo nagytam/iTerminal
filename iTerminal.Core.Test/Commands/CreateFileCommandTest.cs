@@ -14,7 +14,6 @@ public class CreateFileCommandTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

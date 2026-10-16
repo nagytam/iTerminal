@@ -31,7 +31,7 @@ public abstract record EntryBase : IEntry
     public virtual string FullName => Url.FullName;
     public virtual string DisplayName => Url.DisplayName;
     public virtual string Name => Url.Name;
-    public virtual Url Url { get; protected set; }
+    public virtual Url Url { get; protected set; } = null!;
     public virtual string DirectoryName => Url.Directory;
     public virtual bool Exists => Url.Exists;
 
@@ -83,7 +83,7 @@ public abstract record EntryBase : IEntry
                 }
             case PathType.Folder:
                 {
-                    return DirectoryName?.PadRight(width);
+                    return DirectoryName?.PadRight(width) ?? string.Empty;
                 }
         }
         return string.Empty.PadRight(width);

@@ -14,7 +14,6 @@ public class NetworkInfoModelTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

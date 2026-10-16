@@ -342,7 +342,7 @@ public class PackageManagerDialog : SplitPaneDialog
         StateHasChanged();
     }
 
-    private void Refresh()
+    private new void Refresh()
     {
         if (_busy)
         {

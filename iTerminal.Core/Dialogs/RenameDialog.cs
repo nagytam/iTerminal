@@ -13,7 +13,7 @@ namespace iTerminal.Core.Dialogs;
 public class RenameDialog : FormDialog
 {
     private readonly IContentModelService _contentModelService;
-    public Url SourceUrl { get; set; }
+    public Url SourceUrl { get; set; } = null!;
     public Url TargetUrl
     {
         get => ResolveTarget(_textBoxName?.Text ?? string.Empty);
@@ -58,13 +58,13 @@ public class RenameDialog : FormDialog
     }
 
     private RenameCommand _renameCommand { get; set; }
-    private CancelDialogCommand _cancelCommand { get; set; }
+    private CancelDialogCommand _cancelCommand { get; set; } = null!;
     private TextBox _textBoxName { get; set; }
     private CheckBox _checkBoxOverwrite { get; set; }
     public bool Overwrite => _checkBoxOverwrite.IsChecked;
     private Button _renameButton { get; set; }
     private Button _cancelButton { get; set; }
-    public Url BaseUrl { get; internal set; }
+    public Url BaseUrl { get; internal set; } = null!;
     private Label _errorLabel { get; set; }
     public Label ErrorMessage => _errorLabel;
 

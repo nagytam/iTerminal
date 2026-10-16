@@ -179,7 +179,7 @@ public class WebDavFileSystemServiceTest
         var file = await service.ReadFileAsync(url);
         await service.CreateFolderAsync(new Url("dav://example.org/docs/new/"));
 
-        Assert.AreEqual("hello", Encoding.UTF8.GetString(file!.Content));
+        Assert.AreEqual("hello", Encoding.UTF8.GetString(file!.Content!));
         Assert.AreEqual("http://example.org/docs/a%20b.txt", handler.Requests[0].Uri.AbsoluteUri);
         Assert.AreEqual("MKCOL", handler.Requests[2].Method.Method, "an existing folder (405) is not an error");
     }

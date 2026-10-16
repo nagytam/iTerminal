@@ -10,7 +10,6 @@ public class DateTimeProviderServiceTest
     {
         var service = new DateTimeProviderService();
         var now = service.Now;
-        Assert.IsNotNull(now);
         Assert.IsTrue(now > DateTime.MinValue);
         Assert.IsTrue(now <= DateTime.Now.AddMilliseconds(500));
     }
@@ -20,7 +19,6 @@ public class DateTimeProviderServiceTest
     {
         var service = new DateTimeProviderService();
         var utcNow = service.UtcNow;
-        Assert.IsNotNull(utcNow);
         Assert.IsTrue(utcNow > DateTime.MinValue);
         Assert.IsTrue(utcNow <= DateTime.UtcNow.AddMilliseconds(500));
     }

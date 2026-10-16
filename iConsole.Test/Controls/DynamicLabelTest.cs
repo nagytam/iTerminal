@@ -142,15 +142,6 @@ public class DynamicLabelTest
             IsVisible = true
         };
 
-        var stateChangedInvoked = false;
-        dynamicLabel.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(dynamicLabel.HasStateChanged))
-            {
-                stateChangedInvoked = true;
-            }
-        };
-
         model.Value = "Second";
 
         // Give event handling time to process

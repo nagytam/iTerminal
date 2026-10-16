@@ -45,7 +45,7 @@ public class FolderSelectorRemoteShellTabPage : FolderSelectorTabPage
         TextBoxHost.ValidationModel = new HostValidationModel(TextBoxHost.TextModel, dateTimeProviderService);
         _errorMessage = new ErrorMessage(TextBoxHost.ValidationModel, themeService);
 
-        var hostValidator = (TextBoxHost.ValidationModel as HostValidationModel);
+        var hostValidator = (HostValidationModel)TextBoxHost.ValidationModel!;
 
         _connectCommand = new ConnectRemoteShellCommand(hostValidator, contentModelService);
         _buttonConnect = new Button("Connect", _connectCommand, themeService)

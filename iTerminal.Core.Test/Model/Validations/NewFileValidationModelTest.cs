@@ -14,7 +14,6 @@ public class NewFileValidationModelTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

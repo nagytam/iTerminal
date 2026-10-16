@@ -16,6 +16,9 @@ public class ScreenManagerDialogCommand(IThemeService themeService) : Command
     public override async Task ExecuteAsync(object? arg)
     {
         var dialog = new ScreenManagerDialog(themeService);
-        await Control?.ShowDialogAsync(dialog);
+        if (Control is not null)
+        {
+            await Control.ShowDialogAsync(dialog);
+        }
     }
 }

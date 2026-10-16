@@ -16,7 +16,7 @@ public class MemoryDriveSynchronizationJob
         _settingsService = settingsService ?? NullSettingsService.Instance;
         _memoryDriveService = memoryDriveService ?? new MemoryDriveService();
         var key = nameof(MemoryDriveSynchronizationJob) + nameof(SyncPath);
-        SyncPath = _settingsService.Get(key);
+        SyncPath = _settingsService.Get(key)!;
         if (string.IsNullOrEmpty(SyncPath))
         {
             SyncPath = Path.Combine(Path.GetTempPath(), "MemoryDrive");
@@ -76,7 +76,7 @@ public class MemoryDriveSynchronizationJob
                 var dateDisk = fileInfo.LastWriteTime;
                 if (!fileInfo.Exists || dateDisk.CompareTo(dateMemory) < 0)
                 {
-                    File.WriteAllBytes(fileInfo.FullName, file.Value.Content);
+                    File.WriteAllBytes(fileInfo.FullName, file.Value.Content!);
                     fileInfo.LastWriteTime = dateMemory;
                 }
             }

@@ -14,7 +14,6 @@ public class iTerminalDbContextTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

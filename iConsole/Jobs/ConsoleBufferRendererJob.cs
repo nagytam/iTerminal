@@ -28,7 +28,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
     public IBuffer Buffer { get; init; }
     public BufferLayer LastBuffer { get; init; }
     public Cursor LastBufferCursor { get; init; }
-    public event EventHandler<Data.Size> WindowSizeChanged;
+    public event EventHandler<Data.Size>? WindowSizeChanged;
 
     private Color ConsoleForegroundColor;
     private Color ConsoleBackgroundColor;
@@ -124,9 +124,6 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
             catch (Exception exception)
             {
                 WriteDiagnosticError(exception);
-            }
-            catch
-            {
             }
             finally
             {
@@ -388,7 +385,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                 // Flush the accumulated run of consecutive changed cells as one write.
                 pendingWrites.Add((batchStartX, y, batch!));
                 displayWrites?.Add(new ConsoleDisplayWrite(
-                    batchStartX, y, batch.Text,
+                    batchStartX, y, batch!.Text,
                     batch[0].ForegroundColor, batch[0].BackgroundColor, "batch"));
                 batchStartX = -1;
                 batch = null;

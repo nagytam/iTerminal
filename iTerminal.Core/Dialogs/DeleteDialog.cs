@@ -52,7 +52,7 @@ public class DeleteDialog : FormDialog
     private CheckBox _checkBoxRecursive { get; set; }
     private Button _deleteButton { get; set; }
     private Button _cancelButton { get; set; }
-    public Url BasePath { get; internal set; }
+    public Url BasePath { get; internal set; } = null!;
     private Label _errorLabel { get; set; }
     public Label ErrorMessage => _errorLabel;
 

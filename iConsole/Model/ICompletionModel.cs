@@ -4,7 +4,7 @@ namespace iConsole.Model;
 
 public interface ICompletionModel
 {
-    Task UpdateTask { get; set; }
+    Task? UpdateTask { get; set; }
     ConcurrentObservableCollection<string> MatchingValues { get; }
     IEnumerable<string> Completions { get; }
 

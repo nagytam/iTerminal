@@ -55,7 +55,7 @@ public class FilePanelFactory(
             name,
             contentModelService,
             terminalModel,
-            taskManager,
+            _taskManager,
             themeService,
             createFolderDialog: createFolderDialog,
             copyDialog: copyDialog,

@@ -24,7 +24,7 @@ public class ConsoleBufferRendererJobTest
         var job = new ConsoleBufferRendererJob(mockDriver.Object, buffer);
 
         var method = job.GetType().GetMethod("RenderBuffer", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var result = (bool)method.Invoke(job, Array.Empty<object>());
+        var result = (bool)method!.Invoke(job, Array.Empty<object>())!;
 
         Assert.IsTrue(result);
     }

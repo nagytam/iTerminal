@@ -14,7 +14,6 @@ public class MemoryCacheServiceTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 

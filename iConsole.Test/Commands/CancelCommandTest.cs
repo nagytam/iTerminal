@@ -11,7 +11,7 @@ public class CancelCommandTest
     {
         public bool WasClosed { get; private set; }
         public FakeParent() : base(new Moq.Mock<iConsole.Services.IThemeService>().Object) { }
-        public void Close() => WasClosed = true;
+        public override void Close() => WasClosed = true;
     }
 
     [TestMethod]

@@ -5,7 +5,7 @@ using iConsole.Services;
 namespace iConsole.Controls;
 
 public class Label(string text, IThemeService themeService) 
-    : Control(themeService)
+    : Control(themeService ?? NullThemeService.Instance)
 {
     public virtual string Text { get; set; } = text;
     public virtual Color ForegroundColor { get; set; } = (themeService ?? NullThemeService.Instance).CurrentColorScheme.Foreground;

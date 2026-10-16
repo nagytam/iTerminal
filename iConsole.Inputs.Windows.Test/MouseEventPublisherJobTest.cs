@@ -183,7 +183,6 @@ public class MouseEventPublisherJobTest
         // This test verifies that special key codes are mapped to the correct ConsoleKey values
         // The mapping is done internally in the MouseEventPublisherJob.RunAsync method
         // We're testing the logic that would occur when processing a KEY_EVENT
-        Assert.IsNotNull(record);
     }
 
     [TestMethod]
@@ -194,10 +193,9 @@ public class MouseEventPublisherJobTest
     [DataRow((ushort)0xA1, ConsoleKey.None)] // RSHIFT
     [DataRow((ushort)0xA2, ConsoleKey.None)] // LCONTROL
     [DataRow((ushort)0xA3, ConsoleKey.None)] // RCONTROL
-    [DataRow((ushort)0x12, ConsoleKey.None)] // MENU
     public void MapConsoleKey_ModifierKeys_ReturnNone(ushort vKeyCode, ConsoleKey expectedKey)
     {
-        Assert.AreEqual(expectedKey, ConsoleKey.None);
+        Assert.AreEqual(ConsoleKey.None, expectedKey);
     }
 
     [TestMethod]
@@ -296,7 +294,6 @@ public class MouseEventPublisherJobTest
 
         // The flags are set based on control key state
         // These tests document the expected behavior of control key state interpretation
-        Assert.IsNotNull(record);
     }
 
     [TestMethod]
@@ -314,7 +311,6 @@ public class MouseEventPublisherJobTest
             }
         };
 
-        Assert.IsNotNull(record);
     }
 
     [TestMethod]

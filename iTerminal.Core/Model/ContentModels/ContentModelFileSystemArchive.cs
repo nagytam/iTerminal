@@ -35,7 +35,7 @@ public class ContentModelFileSystemArchive(
 
     public override string GetFooter() => EntryCountFooter();
 
-    public string ArchivePath { get; private set; } // TODO
+    public string ArchivePath { get; private set; } = string.Empty; // TODO
     public override Url Url { get; protected set; } = new(Directory.GetCurrentDirectory());
 
     private TaskManager _taskManager { get; set; } = taskManager;
@@ -74,7 +74,7 @@ public class ContentModelFileSystemArchive(
 
         Entries.Clear();
         var path = Path.GetDirectoryName(archivePath);
-        Entries.Add(new ArchiveEntry("..", path));
+        Entries.Add(new ArchiveEntry("..", path!));
         foreach (var zipArchiveEntry in archive.Entries)
         {
             Entries.Add(new ArchiveEntry(zipArchiveEntry));

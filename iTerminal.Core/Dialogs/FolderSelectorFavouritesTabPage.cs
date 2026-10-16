@@ -166,7 +166,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
     {
         var transformedItem = new ListItem<Url>(item.FullUrl)
         {
-            Value = item.FullUrl.Shrink((int)_listBox.ViewSize.Width - 2),
+            Value = item.FullUrl.Shrink((int)_listBox.ViewSize.Width - 2)!,
             IsEnabled = true
         };
         return transformedItem;

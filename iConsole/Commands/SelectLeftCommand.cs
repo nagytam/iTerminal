@@ -15,23 +15,23 @@ public class SelectLeftCommand(bool isCursorEnabled, IScrollableModel scrollable
         var cursorPositionX = _scrollableModel.CursorPosition.X;
         var cursorPositionY = _scrollableModel.CursorPosition.Y;
 
-        if (scrollableModel.CursorPosition.X > 0)
+        if (_scrollableModel.CursorPosition.X > 0)
         {
-            scrollableModel.CursorPosition.X--;
+            _scrollableModel.CursorPosition.X--;
         }
 
         if (isCursorEnabled)
         {
-            if (scrollableModel.ScrollPosition.X > 0 && scrollableModel.ScrollPosition.X == scrollableModel.CursorPosition.X)
+            if (_scrollableModel.ScrollPosition.X > 0 && _scrollableModel.ScrollPosition.X == _scrollableModel.CursorPosition.X)
             {
-                scrollableModel.ScrollPosition.X--;
+                _scrollableModel.ScrollPosition.X--;
             }
         }
         else
         {
-            if (scrollableModel.ScrollPosition.X > 0)
+            if (_scrollableModel.ScrollPosition.X > 0)
             {
-                scrollableModel.ScrollPosition.X--;
+                _scrollableModel.ScrollPosition.X--;
             }
         }
         if (!_selectionTextModel.IsSelected)

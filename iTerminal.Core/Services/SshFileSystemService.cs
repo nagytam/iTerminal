@@ -20,9 +20,9 @@ public partial class SshFileSystemService : ISshFileSystemService
     private ILogger _logger { get; set; }
     public bool IsReadOnly => false;
     private SshClient? _client { get; set; } = null;
-    private Url _url { get; set; }
-    private string _host { get; set; }
-    private string _username { get; set; }
+    private Url _url { get; set; } = null!;
+    private string _host { get; set; } = string.Empty;
+    private string _username { get; set; } = string.Empty;
     private AuthenticationMethod[] _authMethods { get; set; } = [];
     public bool IsConnected => _client?.IsConnected ?? false;
 
@@ -67,7 +67,7 @@ public partial class SshFileSystemService : ISshFileSystemService
 
     public ScpClient ScpConnect()
     {
-        var scpClient = new ScpClient(new ConnectionInfo(_host, _username, _authMethods));
+        var scpClient = new ScpClient(new ConnectionInfo(_host, _username, _authMethods), RemotePathTransformation.ShellQuote);
         if (!scpClient.IsConnected)
         {
             scpClient.Connect();
@@ -269,7 +269,7 @@ public partial class SshFileSystemService : ISshFileSystemService
     public async Task CreateFolderAsync(Url url)
     {
         var folderName = url.Directory;
-        using SshCommand command = _client.CreateCommand("mkdir " + url.Path);
+        using SshCommand command = _client!.CreateCommand("mkdir " + url.Path);
         await command.ExecuteAsync(CancellationToken.None);
     }
 

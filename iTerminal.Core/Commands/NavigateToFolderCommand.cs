@@ -74,7 +74,7 @@ public class NavigateToFolderCommand(
         {
             var name = contentModel.Name;
             var entry = contentModel.GetFocusedEntry();
-            contentModel = contentModelService.AddContentModel(contentModel.Name, entry.Url);
+            contentModel = contentModelService.AddContentModel(contentModel.Name, entry!.Url)!;
             await contentModelService.SetUrlAsync(name, entry.Url);
             await contentModel.ContentBrowser.ChangeModelAsync(name);
         }

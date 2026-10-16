@@ -18,25 +18,25 @@ public class SelectRightCommand(bool isCursorEnabled, IScrollableModel scrollabl
 
         if (isCursorEnabled)
         {
-            if (scrollableModel.CursorPosition.X < scrollableModel.ScrollableSize.Width)
+            if (_scrollableModel.CursorPosition.X < _scrollableModel.ScrollableSize.Width)
             {
-                scrollableModel.CursorPosition.X++;
+                _scrollableModel.CursorPosition.X++;
             }
-            if (scrollableModel.ScrollPosition.X < scrollableModel.ScrollableSize.Width - scrollableModel.ViewSize.Width &&
-                scrollableModel.CursorPosition.X == scrollableModel.ScrollPosition.X + scrollableModel.ScrollableSize.Width - 1)
+            if (_scrollableModel.ScrollPosition.X < _scrollableModel.ScrollableSize.Width - _scrollableModel.ViewSize.Width &&
+                _scrollableModel.CursorPosition.X == _scrollableModel.ScrollPosition.X + _scrollableModel.ScrollableSize.Width - 1)
             {
-                scrollableModel.ScrollPosition.X++;
+                _scrollableModel.ScrollPosition.X++;
             }
         }
         else
         {
-            if (scrollableModel.CursorPosition.X < scrollableModel.ScrollableSize.Width - scrollableModel.ViewSize.Width - 1)
+            if (_scrollableModel.CursorPosition.X < _scrollableModel.ScrollableSize.Width - _scrollableModel.ViewSize.Width - 1)
             {
-                scrollableModel.CursorPosition.X++;
+                _scrollableModel.CursorPosition.X++;
             }
-            if (scrollableModel.ScrollPosition.X < scrollableModel.ScrollableSize.Width - scrollableModel.ViewSize.Width)
+            if (_scrollableModel.ScrollPosition.X < _scrollableModel.ScrollableSize.Width - _scrollableModel.ViewSize.Width)
             {
-                scrollableModel.ScrollPosition.X++;
+                _scrollableModel.ScrollPosition.X++;
             }
         }
         if (!_selectionTextModel.IsSelected)

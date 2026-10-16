@@ -8,7 +8,7 @@ public class KeyboardEventPublisherJob(ConsoleOwnership? consoleOwnership = null
 {
     public ConcurrentQueue<KeyEvent> KeyQueue { get; } = new();
     public SemaphoreSlim InputAvailableSignal { get; } = new(0);
-    public event EventHandler<KeyEvent> KeyEvent;
+    public event EventHandler<KeyEvent>? KeyEvent;
     public override JobPriority Priority => JobPriority.Input;
 
     protected override Task RunAsync(CancellationToken cancellationToken)

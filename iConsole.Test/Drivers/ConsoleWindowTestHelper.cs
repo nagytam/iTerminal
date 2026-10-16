@@ -21,7 +21,7 @@ internal static class ConsoleWindowTestHelper
                 }
             }
 
-            size = default;
+            size = null!;
             return false;
         }
 
@@ -33,13 +33,13 @@ internal static class ConsoleWindowTestHelper
         {
             if (Console.WindowWidth <= 0 || Console.WindowHeight <= 0)
             {
-                size = default;
+                size = null!;
                 return false;
             }
         }
         catch (Exception exception) when (exception is IOException or ArgumentOutOfRangeException)
         {
-            size = default;
+            size = null!;
             return false;
         }
 

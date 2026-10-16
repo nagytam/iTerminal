@@ -21,7 +21,7 @@ public class ProgressWindowFactory(
         }
 
         return new ProgressWindow(
-            task,
+            task!,
             themeService);
     }
 }

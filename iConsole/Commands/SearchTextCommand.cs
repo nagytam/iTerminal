@@ -23,14 +23,15 @@ public class SearchTextCommand(ISearchModel searchModel, ITextModel textModel, I
     public override Task ExecuteAsync(object? arg)
     {
         var searchTextDialog = Control?.Parent as SearchTextDialog;
-        _searchModel.Search = searchTextDialog?.SearchValue;
+        string search = searchTextDialog?.SearchValue ?? string.Empty;
+        _searchModel.Search = search;
 
         _searchModel.Hits.Clear();
         int y = 0;
         foreach (var line in _textModel.Lines)
         {
             int x = 0;
-            while ((x = line.IndexOf(_searchModel.Search, x)) != -1)
+            while (search.Length > 0 && (x = line.IndexOf(search, x)) != -1)
             {
                 _searchModel.Hits.Add(new Position(x, y));
                 x++;

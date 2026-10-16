@@ -47,7 +47,7 @@ public class ExecuteCommand(
         //}
         terminalModel.Command.Command = command;
 
-        terminalModel.Command.WorkingDirectoryUrl = Path.GetDirectoryName(entry.FullName); // TODO entry.Directory
+        terminalModel.Command.WorkingDirectoryUrl = Path.GetDirectoryName(entry.FullName) ?? string.Empty; // TODO entry.Directory
         var executeCommandTask = new ExecuteCommandTask() 
         { 
             TerminalModel = terminalModel 

@@ -18,7 +18,7 @@ public class KeyboardEventConsumerJob(
     public override void OnInitialize(IDesktop desktop)
     {
         base.OnInitialize(desktop);
-        _keyboardEventPublisherJob = Desktop?.Jobs?.FirstOrDefault(j => j is KeyboardEventPublisherJob) as KeyboardEventPublisherJob;
+        _keyboardEventPublisherJob = (Desktop?.Jobs?.FirstOrDefault(j => j is KeyboardEventPublisherJob) as KeyboardEventPublisherJob)!;
     }
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
@@ -44,7 +44,7 @@ public class KeyboardEventConsumerJob(
     public async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = false;
-        var modalControl = Desktop.GetModalChildControl();
+        var modalControl = Desktop?.GetModalChildControl();
         if (modalControl is not null)
         {
             isHandled = await modalControl.HandleKeyEventAsync(keyEvent);

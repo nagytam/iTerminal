@@ -72,7 +72,7 @@ public abstract class ContentPanel : Window
         ContentModel = _contentModelService.AddContentModel(Name, url);
         if (ContentModel != null)
         {
-            ContentModel.ContentBrowser = _contentBrowser;
+            ContentModel.ContentBrowser = _contentBrowser!;
 
             // Preserve model defaults (some tests rely on pre-seeded values).
             if (ViewSize.Width > 0 && ViewSize.Height > 0)
@@ -83,8 +83,8 @@ public abstract class ContentPanel : Window
             // IMPORTANT: don't reset navigation (scroll/cursor) here. That should happen
             // when content is loaded/refreshed, otherwise it overwrites defaults.
 
-            _contentBrowser.ContentModel = ContentModel;
-            _itemInformation.ContentModel = ContentModel;
+            _contentBrowser!.ContentModel = ContentModel;
+            _itemInformation!.ContentModel = ContentModel;
         }
 
         await base.OnInitializeAsync();

@@ -52,7 +52,7 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
     private long _pendingScrollPositionY;
     private bool _hasPendingNavigation;
 
-    public IContentBrowser ContentBrowser { get; set; }
+    public IContentBrowser ContentBrowser { get; set; } = null!;
     public virtual IList<IEntry> FilteredEntries
     {
         get
@@ -180,7 +180,7 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
     #endregion
 
     public virtual string Name { get; private set; }
-    public virtual Url Url { get; protected set; }
+    public virtual Url Url { get; protected set; } = null!;
     public ConcurrentObservableCollection<IEntry> Entries { get; private set; } = [];
     public abstract bool IsReadOnly { get; }
 

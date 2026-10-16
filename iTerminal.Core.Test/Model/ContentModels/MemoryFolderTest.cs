@@ -14,7 +14,6 @@ public class MemoryFolderTest
         // Act
         // TODO: implement test
         // Assert
-        Assert.IsTrue(true);
     }
 }
 
