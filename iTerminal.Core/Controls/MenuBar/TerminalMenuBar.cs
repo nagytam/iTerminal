@@ -96,6 +96,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         DiskUsageDialog? diskUsageDialog = null,
         iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
         iConsole.Services.INotificationService? notificationService = null,
+        SecureWipeDialog? secureWipeDialog = null,
+        SignatureDialog? signatureDialog = null,
         DuplicateFinderDialog? duplicateFinderDialog = null
         )
         : base([], themeService)
@@ -115,7 +117,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             musicFileViewerDialog: musicFileViewerDialog,
             findFilesDialog: findFilesDialog,
             compressDialog: compressDialog,
-            extractDialog: extractDialog));
+            extractDialog: extractDialog,
+            secureWipeDialog: secureWipeDialog,
+            signatureDialog: signatureDialog));
 
         AddMenuItem(new EditMenuItem(
             contentModelService,

@@ -29,7 +29,9 @@ public class FileMenuItem : MenuItem
         CreateLinkDialog? createLinkDialog = null,
         PropertiesDialog? propertiesDialog = null,
         ChecksumDialog? checksumDialog = null,
-        iTerminal.Core.Services.FileSystemResolver? fileSystemResolver = null)
+        iTerminal.Core.Services.FileSystemResolver? fileSystemResolver = null,
+        SecureWipeDialog? secureWipeDialog = null,
+        SignatureDialog? signatureDialog = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
@@ -62,6 +64,14 @@ public class FileMenuItem : MenuItem
         if (checksumDialog is not null)
         {
             AddMenuItem(new MenuItem("Checksums\tShift+F12", new ChecksumDialogCommand(checksumDialog, contentModelService, fileSystemResolver), [], themeService));
+        }
+        if (signatureDialog is not null)
+        {
+            AddMenuItem(new MenuItem("Signatures	Ctrl+Shift+F7", new SignatureDialogCommand(signatureDialog, contentModelService), [], themeService));
+        }
+        if (secureWipeDialog is not null)
+        {
+            AddMenuItem(new MenuItem("Secure Wipe	Ctrl+Shift+F8", new SecureWipeDialogCommand(secureWipeDialog, contentModelService), [], themeService));
         }
         if (propertiesDialog is not null)
         {
