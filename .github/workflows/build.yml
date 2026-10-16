@@ -34,8 +34,12 @@ jobs:
       - name: Restore
         run: dotnet restore iTerminal.slnx
 
+      # The WiX installer project only builds on Windows.
       - name: Build
-        run: dotnet build iTerminal.slnx -c Release --no-restore
+        run: >-
+          dotnet build iConsole.Test/iConsole.Test.csproj -c Release --no-restore
+          && dotnet build iTerminal.Core.Test/iTerminal.Core.Test.csproj -c Release --no-restore
+          && dotnet build iTerminal/iTerminal.csproj -c Release --no-restore
 
       - name: Unit tests
         run: >-
