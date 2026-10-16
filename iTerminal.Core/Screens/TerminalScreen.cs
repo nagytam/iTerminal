@@ -12,6 +12,7 @@ using iTerminal.Core.Dialogs.Git;
 using iTerminal.Core.Dialogs.PasswordManager;
 using iTerminal.Core.Dialogs.Portfolio;
 using iTerminal.Core.Services.RuntimeDependencies;
+using iTerminal.Core.Application;
 using iTerminal.Core.Services;
 using System.Collections.Generic;
 
@@ -49,6 +50,7 @@ public class TerminalScreen : iConsole.Screens.Screen
         : base(consoleDriver, themeService)
     {
         _consoleDriver = consoleDriver ?? NullConsoleDriver.Instance;
+        Title = ApplicationInfo.Title;
         _menuBar = menuBar;
         _content = content;
         _statusBar = statusBar;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
-     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
 
   <!--
     UpgradeCode identifies iTerminal across versions and must never change: it is what lets a newer
@@ -25,6 +26,10 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of iTerminal is already installed." AllowSameVersionUpgrades="yes" />
     <MediaTemplate EmbedCab="yes" />
 
+    <!-- One icon for the installer, Apps & features and the shortcut. -->
+    <Icon Id="iTerminal.ico" SourceFile="$(var.IconPath)" />
+    <Property Id="ARPPRODUCTICON" Value="iTerminal.ico" />
+
     <!-- Shown in Apps & features. -->
     <Property Id="ARPCOMMENTS" Value="A two-panel file manager for the terminal." />
 
@@ -34,7 +39,23 @@
       than none. Add a License.rtf and remove the two Publish elements to bring the page back.
     -->
     <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+
+    <!--
+      A checkbox on the last page, ticked by default. It opens the Start menu shortcut rather than the
+      executable so the app starts in Documents like any other launch, and as the user who ran the
+      installer, not as the elevated installer process (Impersonate="yes").
+    -->
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start iTerminal now" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+    <!-- A property value is not formatted, so the path is built by an action that runs before the wizard. -->
+    <CustomAction Id="SetLaunchTarget" Property="WixShellExecTarget" Value="[ProgramMenuFolder]iTerminal.lnk" />
+    <InstallUISequence>
+      <Custom Action="SetLaunchTarget" After="CostFinalize" />
+    </InstallUISequence>
+    <CustomAction Id="LaunchApplication" DllEntry="WixShellExec" Impersonate="yes" BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)" />
+
     <UI>
+      <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchApplication" Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 AND NOT Installed" />
       <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="99" />
       <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="99" />
     </UI>
@@ -86,6 +107,7 @@
     <Component Id="StartMenuShortcut" Directory="ProgramMenuFolder" Guid="00ab6925-a97c-4f24-9276-857346473090">
       <Shortcut Id="StartMenuShortcut"
                 Name="iTerminal"
+                Icon="iTerminal.ico"
                 Description="A two-panel file manager for the terminal"
                 Target="[INSTALLFOLDER]iTerminal.exe"
                 WorkingDirectory="PersonalFolder" />

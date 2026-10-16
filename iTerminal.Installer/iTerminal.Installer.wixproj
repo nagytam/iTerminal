@@ -20,11 +20,12 @@
 
     <!-- Under obj, so it is ignored by git and wiped by Tools/clean.cmd like every other build output. -->
     <AppPublishDir>$(MSBuildProjectDirectory)\obj\publish\</AppPublishDir>
-    <DefineConstants>PublishDir=$(AppPublishDir);ProductVersion=$(Version)</DefineConstants>
+    <DefineConstants>PublishDir=$(AppPublishDir);ProductVersion=$(Version);IconPath=$(MSBuildProjectDirectory)\..\iTerminal\Assets\iTerminal.ico</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
   </ItemGroup>
 
   <!--
