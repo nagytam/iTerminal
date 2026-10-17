@@ -93,8 +93,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddDbContextFactory<iTerminalDbContext>(options =>
             options.UseSqlite($"Data Source={databasePath}"));
         services.AddScoped<ICacheService, CacheService>();
-        services.AddScoped<iTerminal.Core.Services.Portfolio.IPortfolioService, iTerminal.Core.Services.Portfolio.PortfolioService>();
-        services.AddSingleton<iTerminal.Core.Services.Portfolio.IQuoteProvider, iTerminal.Core.Services.Portfolio.StooqQuoteProvider>();
         services.AddHostedService<DatabaseInitializationHostedService>();
         services.AddTransient<TerminalMenuBar>();
         services.AddSingleton<Content>();
@@ -117,8 +115,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Web.WebBrowserStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Web.WebBrowserDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.PasswordManager.PasswordManagerDialog>();
-        services.AddTransient<iTerminal.Core.Dialogs.Portfolio.PortfolioManagerDialog>();
-        services.AddTransient<iTerminal.Core.Dialogs.Portfolio.PortfolioSetupWizardDialog>();
         services.AddTransient<ItemInformation>();
         services.AddTransient<TerminalStatusBar>();
         services.AddTransient<ScreenManagerDialog>();
@@ -278,7 +274,6 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IJob, MemoryDriveSynchronizationJob>();
         services.AddSingleton<IJob, FolderIndexJob>();
         services.AddSingleton<IJob, OnlineQuoteJob>();
-        services.AddSingleton<IJob, PortfolioQuoteJob>();
         services.AddSingleton<IJob, WeatherJob>();
         services.AddSingleton<DriveInfoModel>();
         services.AddTransient<CopyDialog>();

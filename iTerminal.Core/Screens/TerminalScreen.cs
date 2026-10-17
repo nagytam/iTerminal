@@ -10,7 +10,6 @@ using iTerminal.Core.Controls.StatusBar;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Dialogs.Git;
 using iTerminal.Core.Dialogs.PasswordManager;
-using iTerminal.Core.Dialogs.Portfolio;
 using iTerminal.Core.Services.RuntimeDependencies;
 using iTerminal.Core.Application;
 using iTerminal.Core.Services;
@@ -26,8 +25,6 @@ public class TerminalScreen : iConsole.Screens.Screen
     private readonly TerminalStatusBar? _statusBar;
     private readonly StartupWarningService _startupWarningService;
     private readonly GitClientDialog? _gitClientDialog;
-    private readonly PortfolioManagerDialog? _portfolioManagerDialog;
-    private readonly PortfolioSetupWizardDialog? _portfolioSetupWizardDialog;
     private readonly NetworkBrowserDialog? _networkBrowserDialog;
     private readonly ISettingsService _settingsService;
     private readonly ToastHost? _toastHost;
@@ -41,8 +38,6 @@ public class TerminalScreen : iConsole.Screens.Screen
         IThemeService themeService,
         StartupWarningService startupWarningService,
         GitClientDialog gitClientDialog,
-        PortfolioManagerDialog portfolioManagerDialog,
-        PortfolioSetupWizardDialog portfolioSetupWizardDialog,
         NetworkBrowserDialog networkBrowserDialog,
         ISettingsService settingsService,
         ToastHost? toastHost = null,
@@ -56,8 +51,6 @@ public class TerminalScreen : iConsole.Screens.Screen
         _statusBar = statusBar;
         _startupWarningService = startupWarningService;
         _gitClientDialog = gitClientDialog;
-        _portfolioManagerDialog = portfolioManagerDialog;
-        _portfolioSetupWizardDialog = portfolioSetupWizardDialog;
         _networkBrowserDialog = networkBrowserDialog;
         _settingsService = settingsService;
         _toastHost = toastHost;
@@ -108,25 +101,6 @@ public class TerminalScreen : iConsole.Screens.Screen
             && keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt)
         {
             await ShowDialogAsync(_gitClientDialog);
-            return true;
-        }
-
-        // Global shortcut: Ctrl+P opens the Portfolio Manager, same reasoning as Ctrl+G above.
-        // First run: walk the user through the setup wizard (quote source + default stocks)
-        // before ever showing the manager, then chain straight into it once it completes.
-        if (_portfolioManagerDialog is not null
-            && keyEvent.ConsoleKey == ConsoleKey.P
-            && keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt)
-        {
-            if (_portfolioSetupWizardDialog is not null
-                && _settingsService.GetAsBool(PortfolioSetupWizardDialog.ConfiguredSettingKey, false) != true)
-            {
-                _portfolioSetupWizardDialog.OnCompleted = () => ShowDialogAsync(_portfolioManagerDialog);
-                await ShowDialogAsync(_portfolioSetupWizardDialog);
-                return true;
-            }
-
-            await ShowDialogAsync(_portfolioManagerDialog);
             return true;
         }
 

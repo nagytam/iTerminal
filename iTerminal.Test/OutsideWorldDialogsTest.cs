@@ -1,8 +1,8 @@
 namespace iTerminal.Test;
 
 /// <summary>
-/// The three dialogs whose work happens outside the machine — the network browser, the package
-/// manager and the portfolio — driven end to end against the sandbox's fakes (<see cref="SandboxServices"/>).
+/// The dialogs whose work happens outside the machine — the network browser, the stock browser and the package
+/// manager — driven end to end against the sandbox's fakes (<see cref="SandboxServices"/>).
 /// </summary>
 [TestClass]
 public class OutsideWorldDialogsTest
@@ -118,40 +118,5 @@ public class OutsideWorldDialogsTest
         await _app.PressAsync("y");
         await _app.WaitForTextAsync("7 on the list");
         await CloseAndCheckAsync();
-    }
-
-    /// <summary>The first Ctrl+P walks through the setup wizard, and Finish leads into the manager.</summary>
-    [TestMethod]
-    public async Task TheFirstCtrlPRunsTheSetupWizardThenOpensThePortfolio()
-    {
-        Assert.IsTrue(await _app.PressAsync("Ctrl+P"));
-        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Portfolio.PortfolioSetupWizardDialog, "the setup wizard");
-
-        await _app.PressAsync("Enter");
-        await _app.WaitForTextAsync("Step 2 of 2");
-        await _app.PressAsync("Ctrl+F");
-
-        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Portfolio.PortfolioManagerDialog, "the portfolio once set up");
-        await _app.WaitForTextAsync("═ Portfolio");
-        await CloseAndCheckAsync();
-    }
-
-    [TestMethod]
-    public async Task OnceSetUpCtrlPGoesStraightToThePortfolioEvenAfterARestart()
-    {
-        await _app.PressAsync("Ctrl+P");
-        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Portfolio.PortfolioSetupWizardDialog, "the setup wizard");
-        await _app.PressAsync("Enter");
-        await _app.WaitForTextAsync("Step 2 of 2");
-        await _app.PressAsync("Ctrl+F");
-        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Portfolio.PortfolioManagerDialog, "the portfolio");
-        await _app.PressAsync("Esc");
-        await _app.WaitForNoDialogAsync();
-
-        _app = await _app.RestartAsync();
-        await _app.PressAsync("Ctrl+P");
-
-        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Portfolio.PortfolioManagerDialog,
-            "the portfolio itself, not the wizard a second time");
     }
 }

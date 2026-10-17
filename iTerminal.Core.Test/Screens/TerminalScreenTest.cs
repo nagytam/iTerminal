@@ -4,12 +4,10 @@ using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Dialogs.Git;
-using iTerminal.Core.Dialogs.Portfolio;
 using iTerminal.Core.Model.Network;
 using iTerminal.Core.Screens;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Git;
-using iTerminal.Core.Services.Portfolio;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -18,7 +16,7 @@ namespace iTerminal.Core.Screens.Test;
 [TestClass]
 public class TerminalScreenTest
 {
-    private static (TerminalScreen Screen, GitClientDialog GitDialog, PortfolioManagerDialog PortfolioDialog, NetworkBrowserDialog NetworkBrowserDialog) CreateScreen()
+    private static (TerminalScreen Screen, GitClientDialog GitDialog, NetworkBrowserDialog NetworkBrowserDialog) CreateScreen()
     {
         var themeService = NullThemeService.Instance;
         var gitDialog = new GitClientDialog(
@@ -27,23 +25,7 @@ public class TerminalScreenTest
             Mock.Of<IBeepService>(),
             new DateTimeProviderService(),
             themeService);
-        var portfolioDialog = new PortfolioManagerDialog(
-            Mock.Of<IPortfolioService>(),
-            new OnlineQuoteService(),
-            Mock.Of<IQuoteProvider>(),
-            Mock.Of<IBeepService>(),
-            new DateTimeProviderService(),
-            themeService);
         var settingsService = new SettingsService();
-        // Mark the wizard as already completed so these tests exercise the direct Ctrl+P path;
-        // the wizard-gating behavior itself is covered separately.
-        settingsService.Set(PortfolioSetupWizardDialog.ConfiguredSettingKey, "true");
-        var portfolioSetupWizardDialog = new PortfolioSetupWizardDialog(
-            Mock.Of<IPortfolioService>(),
-            settingsService,
-            Mock.Of<IBeepService>(),
-            new DateTimeProviderService(),
-            themeService);
         var networkDiscoveryService = new Mock<INetworkDiscoveryService>();
         networkDiscoveryService.Setup(s => s.ScanAsync(It.IsAny<CancellationToken>())).Returns(EmptyDiscoveredHosts());
         var networkProfileService = new Mock<INetworkProfileService>();
@@ -64,11 +46,9 @@ public class TerminalScreenTest
             themeService,
             new StartupWarningService(),
             gitDialog,
-            portfolioDialog,
-            portfolioSetupWizardDialog,
             networkBrowserDialog,
             settingsService);
-        return (screen, gitDialog, portfolioDialog, networkBrowserDialog);
+        return (screen, gitDialog, networkBrowserDialog);
     }
 
     private static async IAsyncEnumerable<DiscoveredHost> EmptyDiscoveredHosts()
@@ -80,7 +60,7 @@ public class TerminalScreenTest
     [TestMethod]
     public async Task HandleKeyEventAsync_CtrlG_OpensGitClientDialog()
     {
-        var (screen, gitDialog, _, _) = CreateScreen();
+        var (screen, gitDialog, _) = CreateScreen();
         Assert.IsFalse(screen.Controls.AsSnapshot().Contains(gitDialog), "dialog should not be open initially");
 
         var handled = await screen.HandleKeyEventAsync(
@@ -93,7 +73,7 @@ public class TerminalScreenTest
     [TestMethod]
     public async Task HandleKeyEventAsync_PlainG_DoesNotOpenGitClientDialog()
     {
-        var (screen, gitDialog, _, _) = CreateScreen();
+        var (screen, gitDialog, _) = CreateScreen();
 
         await screen.HandleKeyEventAsync(
             new KeyEvent('g', ConsoleKey.G, shift: false, alt: false, control: false));
@@ -105,7 +85,7 @@ public class TerminalScreenTest
     [TestMethod]
     public async Task HandleKeyEventAsync_CtrlShiftG_DoesNotOpenGitClientDialog()
     {
-        var (screen, gitDialog, _, _) = CreateScreen();
+        var (screen, gitDialog, _) = CreateScreen();
 
         await screen.HandleKeyEventAsync(
             new KeyEvent('\a', ConsoleKey.G, shift: true, alt: false, control: true));
@@ -115,34 +95,9 @@ public class TerminalScreenTest
     }
 
     [TestMethod]
-    public async Task HandleKeyEventAsync_CtrlP_OpensPortfolioManagerDialog()
-    {
-        var (screen, _, portfolioDialog, _) = CreateScreen();
-        Assert.IsFalse(screen.Controls.AsSnapshot().Contains(portfolioDialog), "dialog should not be open initially");
-
-        var handled = await screen.HandleKeyEventAsync(
-            new KeyEvent('\u0010', ConsoleKey.P, shift: false, alt: false, control: true));
-
-        Assert.IsTrue(handled, "Ctrl+P should be handled by the screen");
-        Assert.IsTrue(screen.Controls.AsSnapshot().Contains(portfolioDialog), "Ctrl+P should open the Portfolio Manager dialog");
-    }
-
-    [TestMethod]
-    public async Task HandleKeyEventAsync_PlainP_DoesNotOpenPortfolioManagerDialog()
-    {
-        var (screen, _, portfolioDialog, _) = CreateScreen();
-
-        await screen.HandleKeyEventAsync(
-            new KeyEvent('p', ConsoleKey.P, shift: false, alt: false, control: false));
-
-        Assert.IsFalse(screen.Controls.AsSnapshot().Contains(portfolioDialog),
-            "the Portfolio Manager must only open on Ctrl+P, not a plain 'p'");
-    }
-
-    [TestMethod]
     public async Task HandleKeyEventAsync_CtrlN_OpensNetworkBrowserDialog()
     {
-        var (screen, _, _, networkBrowserDialog) = CreateScreen();
+        var (screen, _, networkBrowserDialog) = CreateScreen();
         Assert.IsFalse(screen.Controls.AsSnapshot().Contains(networkBrowserDialog), "dialog should not be open initially");
 
         var handled = await screen.HandleKeyEventAsync(
@@ -155,7 +110,7 @@ public class TerminalScreenTest
     [TestMethod]
     public async Task HandleKeyEventAsync_PlainN_DoesNotOpenNetworkBrowserDialog()
     {
-        var (screen, _, _, networkBrowserDialog) = CreateScreen();
+        var (screen, _, networkBrowserDialog) = CreateScreen();
 
         await screen.HandleKeyEventAsync(
             new KeyEvent('n', ConsoleKey.N, shift: false, alt: false, control: false));
@@ -167,7 +122,7 @@ public class TerminalScreenTest
     [TestMethod]
     public async Task HandleKeyEventAsync_CtrlShiftN_DoesNotOpenNetworkBrowserDialog()
     {
-        var (screen, _, _, networkBrowserDialog) = CreateScreen();
+        var (screen, _, networkBrowserDialog) = CreateScreen();
 
         await screen.HandleKeyEventAsync(
             new KeyEvent('', ConsoleKey.N, shift: true, alt: false, control: true));

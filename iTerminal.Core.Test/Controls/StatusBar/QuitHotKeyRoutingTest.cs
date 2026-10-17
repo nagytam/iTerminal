@@ -76,7 +76,7 @@ public class QuitHotKeyRoutingTest
 
         // ── Real status bar / hot keys, wired exactly like TerminalStatusBar's fallback ──
         var hotKeys = new iTerminal.Core.Controls.StatusBar.HotKeys(
-            null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
+            null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
             contentModelService, folderHistory, null!, null!, null!, null!, settingsService, null!, themeService);
         var statusBar = new iTerminal.Core.Controls.StatusBar.TerminalStatusBar(
             new iConsole.Controls.PopUpWindows.DatePopUpWindow(themeService), hotKeys, themeService);

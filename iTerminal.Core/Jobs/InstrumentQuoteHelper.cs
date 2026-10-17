@@ -4,7 +4,7 @@ using iTerminal.Core.Services;
 namespace iTerminal.Core.Jobs;
 
 /// <summary>
-/// Shared plumbing for quote jobs (<see cref="OnlineQuoteJob"/>, <see cref="PortfolioQuoteJob"/>):
+/// Shared plumbing for quote jobs (<see cref="OnlineQuoteJob"/>):
 /// hydrating <see cref="OnlineQuoteService.Instruments"/> from the SQLite instrument cache at
 /// startup, and recording a freshly fetched quote (get-or-create the instrument, prepend the
 /// value, persist it back to the cache).

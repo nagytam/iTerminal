@@ -78,7 +78,7 @@ public class DriveSelectorHotKeyRoutingTest
         var folderIndexModel = new FolderIndexModel();
 
         var hotKeys = new iTerminal.Core.Controls.StatusBar.HotKeys(
-            null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
+            null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
             contentModelService, folderHistory, driveInfoModel, folderIndexModel, Mock.Of<IBeepService>(), new DateTimeProviderService(),
             settingsService, frequentGuard.Object, themeService);
         var statusBar = new iTerminal.Core.Controls.StatusBar.TerminalStatusBar(

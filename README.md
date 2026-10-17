@@ -48,7 +48,7 @@ A two-panel, keyboard-driven file manager and developer toolbox for the terminal
 - Local AI assistant bar through Ollama
 
 ### Utilities
-- Calculator, unit converter, portfolio tracker with online quotes, weather, process/task/disk/network/system managers, network browser, toast notifications
+- Calculator, unit converter, weather, process/task/disk/network/system managers, network browser, toast notifications
 
 ## Requirements
 - .NET 10 SDK to build; released packages are self-contained

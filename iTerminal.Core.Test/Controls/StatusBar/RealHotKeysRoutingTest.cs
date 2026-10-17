@@ -48,7 +48,7 @@ public class RealHotKeysRoutingTest
         // the dialog under test and the services HotKeys dereferences need to be real.
         var hotKeys = new HotKeys(
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
-            null!, iPhoneDialog, null!, null!, null!, null!, null!, null!, null!, null!,
+            null!, iPhoneDialog, null!, null!, null!, null!, null!, null!,
             contentModelService.Object, null!, null!, null!, null!, null!, NullSettingsService.Instance, null!, themeService);
 
         var statusBar = new iConsole.Controls.StatusBar.StatusBar(themeService) { ViewSize = new Size(120, 1) };

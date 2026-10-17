@@ -12,7 +12,6 @@ using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Dialogs.Dotnet;
 using iTerminal.Core.Dialogs.Git;
-using iTerminal.Core.Dialogs.Portfolio;
 using iTerminal.Core.Dialogs.PackageManager;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
@@ -48,8 +47,6 @@ public class HotKeys : StatusBarItem
         iTerminal.Core.Dialogs.Calculator.CalculatorDialog calculatorDialog,
         iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog unitConverterDialog,
         PackageManagerDialog packageManagerDialog,
-        PortfolioManagerDialog portfolioManagerDialog,
-        PortfolioSetupWizardDialog portfolioSetupWizardDialog,
         iTerminal.Core.Dialogs.Documents.DocumentManagerDialog documentManagerDialog,
         IContentModelService contentModelService,
         FolderHistoryService folderHistoryService,
@@ -329,14 +326,6 @@ public class HotKeys : StatusBarItem
             IsVisible = false
         };
         AddControl(packageManagerDialogButton);
-
-        var portfolioManagerDialogButton = new Button("Ctrl-P-Portfolio", new PortfolioManagerDialogCommand(portfolioManagerDialog, portfolioSetupWizardDialog, settingsService), themeService)
-        {
-            Position = new Position(0, 0),
-            ViewSize = new Size(18, 1),
-            IsVisible = false
-        };
-        AddControl(portfolioManagerDialogButton);
 
         var documentManagerDialogButton = new Button("Alt-F3-Documents", new DocumentManagerDialogCommand(documentManagerDialog), themeService)
         {
