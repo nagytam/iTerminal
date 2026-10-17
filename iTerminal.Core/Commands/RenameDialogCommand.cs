@@ -28,6 +28,6 @@ public class RenameDialogCommand(
         dialog.SourceUrl = url;
 
         // Just the name: that is what is being changed, and it is where the cursor should be.
-        dialog.NewName = url.Name;
+        dialog.NewName = FocusedEntry.NameOf(url);
     }
 }

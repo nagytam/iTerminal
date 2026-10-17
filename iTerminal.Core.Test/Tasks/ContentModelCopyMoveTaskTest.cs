@@ -51,6 +51,39 @@ public class ContentModelCopyMoveTaskTest
     }
 
     [TestMethod]
+    public async Task ContentModelCopyFileTask_TargetIsAnExistingFolder_PutsTheFileInsideIt()
+    {
+        var sourcePath = Path.Combine(_tempDir, "photo@2x.png");
+        File.WriteAllText(sourcePath, "pixels");
+        var targetFolder = Path.Combine(_tempDir, "dest");
+        Directory.CreateDirectory(targetFolder);
+        var fileSystemService = new FileSystemService();
+
+        var task = new ContentModelCopyFileTask(fileSystemService, fileSystemService, new Url(sourcePath), new Url(targetFolder), overwrite: false);
+
+        await task.ExecuteAsync();
+
+        Assert.IsNull(task.Error);
+        Assert.AreEqual("pixels", File.ReadAllText(Path.Combine(targetFolder, "photo@2x.png")));
+    }
+
+    [TestMethod]
+    public async Task ContentModelCopyFileTask_TargetIsAnExistingFolderInTheMemoryDrive_PutsTheFileInsideIt()
+    {
+        var sourcePath = Path.Combine(_tempDir, "a b.txt");
+        File.WriteAllText(sourcePath, "blank in name");
+        var memoryDriveService = new MemoryDriveService();
+        await memoryDriveService.CreateFolderAsync(new Url("memdrive://docs/"));
+
+        var task = new ContentModelCopyFileTask(new FileSystemService(), memoryDriveService, new Url(sourcePath), new Url("memdrive://docs"), overwrite: false);
+
+        await task.ExecuteAsync();
+
+        Assert.IsNull(task.Error);
+        Assert.IsTrue(memoryDriveService.ExistsFile(new Url("memdrive://docs/a b.txt")));
+    }
+
+    [TestMethod]
     public async Task ContentModelCopyFileTask_MemDriveToRealFile_CopiesContent()
     {
         var memoryDriveService = new MemoryDriveService();

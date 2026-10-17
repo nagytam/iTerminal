@@ -32,7 +32,25 @@ public sealed class FileSystemResolver(
                  .OfType<IFileSystemProvider>()
                  .FirstOrDefault(provider => provider.ContainerType == url.ContainerType)
                  ?.FileSystem
+             ?? PanelServing(url)
              ?? model
              ?? throw new NotSupportedException($"{operation ?? "This"} is not supported on {url.ContainerType} drives."),
     };
+
+    /// <summary>
+    /// The panel that is showing the same remote account as <paramref name="url"/> — FTP, SMB, WebDAV and
+    /// the iPhone have a connection per panel (the SMB service is even transient), so the panel's own model,
+    /// which delegates to that connection, is the one file system that can reach it. Matched on the host
+    /// (and the share): handing a URL to a panel on another server would write to the wrong machine.
+    /// </summary>
+    private IFileSystem? PanelServing(Url url) => url.ContainerType is ContainerType.FtpFileSystem
+        or ContainerType.SmbFileSystem
+        or ContainerType.WebDav
+        or ContainerType.IPhoneFileSystem
+            ? contentModelService.ContentModels.FirstOrDefault(panel =>
+                panel.Url is { } shown
+                && shown.ContainerType == url.ContainerType
+                && string.Equals(shown.Host, url.Host, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(shown.Share, url.Share, StringComparison.OrdinalIgnoreCase))
+            : null;
 }

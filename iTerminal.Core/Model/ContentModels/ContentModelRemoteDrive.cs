@@ -24,7 +24,7 @@ public abstract class ContentModelRemoteDrive(
     IFrequentExecutionGuardService frequentExecutionGuardService,
     IMemoryCacheService memoryCacheService,
     ILogger logger)
-    : ContentModelBase(name, frequentExecutionGuardService), IContentModel
+    : ContentModelBase(name, frequentExecutionGuardService), IContentModel, IFolderListingFileSystem
 {
     private readonly Lock _lock = new();
 
@@ -64,6 +64,14 @@ public abstract class ContentModelRemoteDrive(
 
     public override void SetUrl(Url url)
     {
+        // A panel always shows a folder, but "ftp://host/pub" typed without the slash parses as a
+        // file — and then nothing built on the panel's URL (a new file or folder, a copy target)
+        // could be put inside it.
+        if (url.PathType != PathType.Folder && !url.FullUrl.EndsWith('/'))
+        {
+            url = new Url(url.FullUrl + "/");
+        }
+
         settingsService.Set(Name, url);
         folderHistoryService.Add(url);
         try
@@ -188,4 +196,14 @@ public abstract class ContentModelRemoteDrive(
     {
         await remoteFileSystemService.CopyAsync(sourceUrl, targetUrl, overwrite);
     }
+
+    /// <summary>
+    /// The folder's children, which is what a folder copy to another drive and a recursive delete walk
+    /// with — so every remote drive supports both, not only the ones that said so. A drive whose service
+    /// lists children more cheaply overrides this.
+    /// </summary>
+    public virtual IEnumerable<Url> ListChildren(Url folderUrl) =>
+        remoteFileSystemService.List(folderUrl)
+            .Where(entry => entry.DisplayName != ".." && entry.Url.DisplayName != "..")
+            .Select(entry => entry.Url);
 }

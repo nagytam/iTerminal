@@ -127,7 +127,7 @@ public abstract class TransferDialog : FormDialog
         ArgumentNullException.ThrowIfNull(url);
         SourceUrl = url;
         SourceUrls = sources.Count > 0 ? sources : [url];
-        TargetUrl = IsMultiple ? new Url(targetFolder!) : new Url(targetFolder!).Combine(url.Name);
+        TargetUrl = IsMultiple ? new Url(targetFolder!) : new Url(targetFolder!).Combine(iTerminal.Core.Commands.FocusedEntry.NameOf(url));
         TextBoxTarget.Text = TargetUrl.FullUrl;
         TextBoxTarget.ScrollableModel.Reset();
         TextBoxTarget.ScrollableModel.ScrollableSize = new Size(TextBoxTarget.Text.Length, 1);

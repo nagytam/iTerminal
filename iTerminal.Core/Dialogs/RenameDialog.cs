@@ -51,7 +51,10 @@ public class RenameDialog : FormDialog
         var cut = source.LastIndexOfAny(['/', '\\']);
         if (cut > 0)
         {
-            return new Url(source[..(cut + 1)] + text);
+            // A folder on a remote or virtual drive is told from a file by its trailing slash (an S3
+            // prefix, a WebDAV collection, an FTP directory): without it the new name was a file's.
+            var isRemoteFolder = SourceUrl!.PathType == PathType.Folder && SourceUrl.ContainerType != ContainerType.FileSystem;
+            return new Url(source[..(cut + 1)] + text + (isRemoteFolder ? "/" : string.Empty));
         }
 
         return BaseUrl is not null ? BaseUrl.Combine(text) : text;
