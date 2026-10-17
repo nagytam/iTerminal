@@ -40,6 +40,15 @@ public class MemoryDriveSynchronizationJob
         Initialize();
         while (!cancellationToken.IsCancellationRequested)
         {
+            // The settings may finish loading after this job starts, so the folder can change under
+            // it: the one just found is then the one to mirror, and what it holds is loaded.
+            var previousSyncPath = SyncPath;
+            ResolveSyncPath();
+            if (SyncPath != previousSyncPath)
+            {
+                Initialize();
+            }
+
             WriteIfDirty();
             if (!cancellationToken.IsCancellationRequested)
             {
