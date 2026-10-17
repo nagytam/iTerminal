@@ -1,14 +1,21 @@
 name: Release builds
 
-# Builds the Windows installer and the Linux packages. Nothing is published as a GitHub Release:
-# the packages are attached to the run as artifacts, to be downloaded and checked before anyone
-# hands them out.
+# Builds the Windows installer and the Linux packages. Merging a pull request into main runs it
+# and publishes the packages as a GitHub Release tagged v<version>; a manual run only attaches
+# them to the run as artifacts.
 
 on:
+  pull_request:
+    types: [closed]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: release-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: false
 
 env:
   DOTNET_NOLOGO: true
@@ -21,10 +28,13 @@ env:
 jobs:
   windows:
     name: Windows installer (MSI)
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
     runs-on: windows-latest
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
 
       - uses: actions/setup-dotnet@v4
         with:
@@ -42,10 +52,13 @@ jobs:
 
   linux:
     name: Linux packages (tar.gz, deb, rpm)
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
 
       - uses: actions/setup-dotnet@v4
         with:
@@ -65,3 +78,32 @@ jobs:
             iTerminal.Packaging.Linux/bin/Release/*.deb
             iTerminal.Packaging.Linux/bin/Release/*.rpm
           if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    needs: [windows, linux]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Download the packages
+        uses: actions/download-artifact@v4
+        with:
+          path: packages
+          pattern: iTerminal-${{ env.VERSION }}-*
+          merge-multiple: true
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: >-
+          gh release create "v$VERSION" packages/*
+          --repo "$GITHUB_REPOSITORY"
+          --target "${{ github.event.pull_request.merge_commit_sha }}"
+          --title "iTerminal $VERSION"
+          --notes "Built from #$PR_NUMBER: $PR_TITLE"
+          --generate-notes
