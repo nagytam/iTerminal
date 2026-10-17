@@ -59,8 +59,17 @@ public abstract class ContentModelFolderTransferTask(
 
             IReadOnlyList<(Url Url, string Error)> failedItems = [];
 
+            // Room for everything written; none is needed for a move within one volume (a rename).
+            var spaceGuard = TransferSpaceGuard.For(source, sourceUrl, target, targetUrl, DeletesSource, errorPromptService);
+
             if (ReferenceEquals(source, target))
             {
+                if (spaceGuard is not null)
+                {
+                    var totalBytes = TreeSize(source, sourceUrl, CancellationToken);
+                    await spaceGuard.EnsureAsync(() => totalBytes, CancellationToken);
+                }
+
                 await SameFileSystemTransferAsync(source, sourceUrl, targetUrl, overwrite);
             }
             else
@@ -108,6 +117,10 @@ public abstract class ContentModelFolderTransferTask(
                         ReportBytes(bytes, discoveryTask.TotalBytes);
                         UpdatePercentage(discoveryTask, ItemsProcessed, discoveryTask.ItemsProcessed);
                     },
+                    beforeFile: spaceGuard is null
+                        ? null
+                        : token => spaceGuard.EnsureAsync(
+                            () => discoveryTask.TotalBytes - Interlocked.Read(ref _bytesCopied), token),
                     onFileStarted: url =>
                     {
                         currentFile = url.FullName.Shrink(60) ?? string.Empty;
@@ -143,6 +156,34 @@ public abstract class ContentModelFolderTransferTask(
     }
 
     private long _bytesCopied;
+
+    /// <summary>Total size in bytes of the files under <paramref name="folderUrl"/>.</summary>
+    private static long TreeSize(IFileSystem fileSystem, Url folderUrl, CancellationToken cancellationToken)
+    {
+        long total = 0;
+        foreach (var child in ContentModelFolderTaskHelper.ListChildren(fileSystem, folderUrl))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (child.PathType == PathType.Folder)
+            {
+                // A link back to a folder it is inside would be walked for ever.
+                if (child.ContainerType == ContainerType.FileSystem
+                    && child.IsLink
+                    && iConsole.Helper.FileLinkHelper.LeadsToAnAncestor(child.FullName))
+                {
+                    continue;
+                }
+
+                total += TreeSize(fileSystem, child, cancellationToken);
+            }
+            else if (child.Length > 0)
+            {
+                total += child.Length;
+            }
+        }
+
+        return total;
+    }
 
     /// <summary>
     /// Bar position from bytes when the sizes are known, else from files. While discovery is still

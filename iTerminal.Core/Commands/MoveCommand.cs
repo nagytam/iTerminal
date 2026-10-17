@@ -22,7 +22,7 @@ public class MoveCommand(
     protected override bool RemovesSource => true;
 
     protected override BackgroundTask CreateFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite) =>
-        new ContentModelMoveFileTask(source, target, sourceUrl, targetUrl, overwrite);
+        new ContentModelMoveFileTask(source, target, sourceUrl, targetUrl, overwrite, ErrorPromptService);
 
     protected override TransferTask CreateFolderTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite, FolderDiscoveryTask? discoveryTask) =>
         new ContentModelMoveFolderTask(source, target, sourceUrl, targetUrl, overwrite, discoveryTask, ErrorPromptService);

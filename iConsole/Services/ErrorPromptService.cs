@@ -16,13 +16,16 @@ public class ErrorPromptService(IServiceProvider serviceProvider, IThemeService 
     // dialog at a time instead of stacking overlapping popups.
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-    public async Task<bool> ConfirmContinueAsync(string title, string message, CancellationToken cancellationToken)
+    public Task<bool> ConfirmContinueAsync(string title, string message, CancellationToken cancellationToken) =>
+        ConfirmAsync(title, message, "Continue", "Cancel", cancellationToken);
+
+    public async Task<bool> ConfirmAsync(string title, string message, string acceptLabel, string declineLabel, CancellationToken cancellationToken)
     {
         await _semaphore.WaitAsync(cancellationToken);
         try
         {
             var desktop = serviceProvider.GetRequiredService<IDesktop>();
-            var dialog = new ErrorPromptDialog(title, message, themeService);
+            var dialog = new ErrorPromptDialog(title, message, themeService, acceptLabel, declineLabel);
             var root = desktop.Screens.First();
             await root.ShowDialogAsync(dialog);
             return await dialog.WaitForChoiceAsync(cancellationToken);
