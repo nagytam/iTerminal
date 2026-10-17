@@ -97,9 +97,11 @@ public class TerminalInputUtf8DecoderCoverageTest
     }
 
     [TestMethod]
-    public void Drain_CsiOneZ_IsShiftTab()
+    [DataRow("\u001b[Z")]
+    [DataRow("\u001b[1Z")]
+    public void Drain_BackTab_IsShiftTab(string sequence)
     {
-        (List<KeyEvent> keys, _) = Decode("[1Z");
+        (List<KeyEvent> keys, _) = Decode(sequence);
         Assert.HasCount(1, keys);
         Assert.AreEqual(ConsoleKey.Tab, keys[0].ConsoleKey);
         Assert.IsTrue(keys[0].Shift);

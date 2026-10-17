@@ -181,7 +181,7 @@ public class ImageMetadataReaderTest
     [TestMethod]
     public void Png_WithTruncatedChunk_StopsCleanly()
     {
-        byte[] truncated = Concat(Png(TextChunk("Title", "Kept")), [0x00, 0xFF, 0xFF, 0xFF, (byte)'t', (byte)'E', (byte)'X', (byte)'t']);
+        byte[] truncated = Concat(Png(TextChunk("Title", "Kept")), [0x7F, 0xFF, 0xFF, 0xFF, (byte)'t', (byte)'E', (byte)'X', (byte)'t']);
 
         Assert.AreEqual("Kept", ImageMetadataReader.Read(Save(truncated)).Title);
     }

@@ -267,6 +267,13 @@ public sealed class TerminalInputUtf8Decoder
         var tail = csi[2..];
         var last = tail[^1];
 
+        // Back-tab is "ESC [ Z"; some terminals send the "ESC [ 1 Z" form.
+        if (last == (byte)'Z' && tail.Length <= 2)
+        {
+            emitKey(new KeyEvent('\t', ConsoleKey.Tab, shift: true, alt: false, control: false));
+            return true;
+        }
+
         if (tail.Length == 1)
         {
             return last switch
@@ -284,12 +291,6 @@ public sealed class TerminalInputUtf8Decoder
         if (tail.Length >= 2 && last == (byte)'~')
         {
             return TryParseCsiTildeFunctionKey(tail[..^1], emitKey);
-        }
-
-        if (tail.Length == 2 && last == (byte)'Z')
-        {
-            emitKey(new KeyEvent('\t', ConsoleKey.Tab, shift: true, alt: false, control: false));
-            return true;
         }
 
         if (tail.Length >= 2 && TryMapCsiLetterKeyId(last, out var modifiedKey))
