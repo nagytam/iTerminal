@@ -56,7 +56,7 @@ public class FolderDiscoveryTask(IFileSystem source, IFileSystem target, Url sou
         foreach (var childUrl in ContentModelFolderTaskHelper.ListChildren(source, currentSourceUrl))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var childTargetUrl = currentTargetUrl.Combine(childUrl.Name + (childUrl.PathType == PathType.Folder ? "/" : string.Empty));
+            var childTargetUrl = currentTargetUrl.Combine(Commands.FocusedEntry.NameOf(childUrl) + (childUrl.PathType == PathType.Folder ? "/" : string.Empty));
 
             if (childUrl.PathType == PathType.Folder)
             {

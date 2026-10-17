@@ -68,7 +68,7 @@ public class ContentModelFileSystemArchive(
             return;
         }
         var archivePath = ArchivePath.Replace(Container.ZIP_ARCHIVE, string.Empty);
-        archivePath = archivePath[..archivePath.IndexOf('@')];
+        archivePath = archivePath[..archivePath.IndexOf("@/", StringComparison.Ordinal)];
         using FileStream zipToOpen = new(archivePath, FileMode.Open, FileAccess.Read);
         using ZipArchive archive = new(zipToOpen, ZipArchiveMode.Read);
 

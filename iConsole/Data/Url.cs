@@ -23,7 +23,7 @@ public partial class Url
         string? LinkTarget = null,
         bool IsHidden = false);
 
-    [GeneratedRegex("ssh://([a-zA-Z0-9]*)@([a-zA-Z0-9.]*):([\\\\/a-zA-Z0-9.\\-_@]*)")]
+    [GeneratedRegex("ssh://([^@/:]*)@([^@/:]*):(.*)")]
     private static partial Regex RegexSshUrl();
 
     // ftp://user@host/path  (with credentials)
@@ -35,12 +35,18 @@ public partial class Url
     private static partial Regex RegexFtpUrl();
 
     // smb://user@host/share/path  (with credentials)
-    [GeneratedRegex("smb://([a-zA-Z0-9]*)@([a-zA-Z0-9.\\-]*)(\\/[\\\\/a-zA-Z0-9.\\-_@]*)")]
+    [GeneratedRegex("smb://([^@/:]*)@([a-zA-Z0-9.\\-]*)(\\/.*)")]
     private static partial Regex RegexSmbUrlWithUser();
 
     // smb://host/share/path  (anonymous / no credentials)
-    [GeneratedRegex("smb://([a-zA-Z0-9.\\-]*)(\\/[\\\\/a-zA-Z0-9.\\-_@]*)")]
+    [GeneratedRegex("smb://([a-zA-Z0-9.\\-]*)(\\/.*)")]
     private static partial Regex RegexSmbUrl();
+
+    /// <summary>
+    /// What ends an archive file's path and starts the path inside it (<c>a.zip@/entry</c>). A bare '@' is
+    /// just a character of a name (<c>photo@2x.png</c>); inner paths always start with a slash.
+    /// </summary>
+    private const string ArchiveSeparator = "@/";
 
     private readonly string _url;
     private string _urlScheme = null!;
@@ -374,7 +380,7 @@ public partial class Url
                     _username = match.Groups[1].Value;
                     var fullPath = match.Groups[3].Value; // may contain @
 
-                    var atIndex = fullPath.IndexOf('@');
+                    var atIndex = fullPath.IndexOf(ArchiveSeparator, StringComparison.Ordinal);
                     if (atIndex >= 0)
                     {
                         // Embedded archive inside an SSH path
@@ -382,12 +388,12 @@ public partial class Url
                         _containerFilePath = fullPath[..atIndex];
                         var innerPath = fullPath[(atIndex + 1)..];
 
-                        var innerAtIndex = innerPath.IndexOf('@');
+                        var innerAtIndex = innerPath.IndexOf(ArchiveSeparator, StringComparison.Ordinal);
                         if (innerAtIndex >= 0)
                         {
                             var nestedRaw = innerPath.TrimStart('/');
                             _innerUrl = new Url(nestedRaw);
-                            var innerArchiveName = nestedRaw[..nestedRaw.IndexOf('@')];
+                            var innerArchiveName = nestedRaw[..nestedRaw.IndexOf(ArchiveSeparator, StringComparison.Ordinal)];
                             var innerFileInfo = GetFileInfoCached(innerArchiveName);
                             _name = innerFileInfo.Name;
                             _extension = (innerFileInfo.Extension.Length > 1) ? innerFileInfo.Extension[1..] : string.Empty;
@@ -423,7 +429,12 @@ public partial class Url
                         _directoryName = fullPath;
                         _fullName = fullPath;
                         _displayName = fullPath.Replace("/", string.Empty);
+                        // The entry's own name, as on every other remote drive: a copy or a rename
+                        // that reads it would otherwise land on the folder itself.
+                        _name = fullPath.TrimEnd('/').Split('/').Last();
                         PathType = (_url.EndsWith('/')) ? PathType.Folder : PathType.File;
+                        var sshDot = _name.LastIndexOf('.');
+                        _extension = PathType == PathType.File && sshDot > 0 && sshDot < _name.Length - 1 ? _name[(sshDot + 1)..] : string.Empty;
                         ContainerType = ContainerType.SshFileSystem;
                         _container = Data.Container.SSH;
                     }
@@ -457,19 +468,19 @@ public partial class Url
                 _host = ftpHost;
                 _username = ftpUser;
 
-                var atIndex = ftpPath.IndexOf('@');
+                var atIndex = ftpPath.IndexOf(ArchiveSeparator, StringComparison.Ordinal);
                 if (atIndex >= 0)
                 {
                     // Embedded archive over FTP: /remote/archive.zip@/entry.txt
                     _containerFilePath = ftpPath[..atIndex];
                     var innerPath = ftpPath[(atIndex + 1)..];
 
-                    var innerAtIndex = innerPath.IndexOf('@');
+                    var innerAtIndex = innerPath.IndexOf(ArchiveSeparator, StringComparison.Ordinal);
                     if (innerAtIndex >= 0)
                     {
                         var nestedRaw = innerPath.TrimStart('/');
                         _innerUrl = new Url(nestedRaw);
-                        var innerArchiveName = nestedRaw[..nestedRaw.IndexOf('@')];
+                        var innerArchiveName = nestedRaw[..nestedRaw.IndexOf(ArchiveSeparator, StringComparison.Ordinal)];
                         var innerFileInfo = GetFileInfoCached(innerArchiveName);
                         _name = innerFileInfo.Name;
                         _extension = (innerFileInfo.Extension.Length > 1) ? innerFileInfo.Extension[1..] : string.Empty;
@@ -627,7 +638,7 @@ public partial class Url
                 _container = Data.Container.IPHONE;
                 _directorySeparatorChar = DirectorySeparatorSlashChar;
             }
-            else if (!_path.Contains('@'))
+            else if (!_path.Contains(ArchiveSeparator, StringComparison.Ordinal))
             {
                 var fileInfo = GetFileInfoCached(_path);
                 _date = fileInfo.LastWriteTime.ToString("yyyy-MM-dd");
@@ -655,13 +666,13 @@ public partial class Url
             else
             {
                 // Split at the FIRST '@' to get the archive file path and the inner path
-                var atIndex = _path.IndexOf('@');
+                var atIndex = _path.IndexOf(ArchiveSeparator, StringComparison.Ordinal);
                 _containerFilePath = _path[..atIndex];
                 var innerPath = _path[(atIndex + 1)..];
 
                 // Determine name/extension from the innermost entry in the inner path
                 // The inner path may itself contain '@' for further recursion (e.g. /inner.zip@/file.txt)
-                var innerAtIndex = innerPath.IndexOf('@');
+                var innerAtIndex = innerPath.IndexOf(ArchiveSeparator, StringComparison.Ordinal);
                 if (innerAtIndex >= 0)
                 {
                     // There are more levels: build a nested Url from the inner path.
@@ -672,7 +683,7 @@ public partial class Url
 
                     // Name/extension come from the outermost archive file of the nested URL,
                     // which is the segment up to the first '@' in innerPath.
-                    var innerArchiveName = innerPath.TrimStart('/')[ ..innerPath.TrimStart('/').IndexOf('@')];
+                    var innerArchiveName = innerPath.TrimStart('/')[..innerPath.TrimStart('/').IndexOf(ArchiveSeparator, StringComparison.Ordinal)];
                     var innerFileInfo = GetFileInfoCached(innerArchiveName);
                     _name = innerFileInfo.Name;
                     _extension = (innerFileInfo.Extension.Length > 1) ? innerFileInfo.Extension[1..] : string.Empty;

@@ -49,7 +49,7 @@ public class ContentModelWebDavDrive(
     protected override string FormatConnectionError(Url url, Exception exception) =>
         $"WebDAV connection error: {url.Host}: {exception.Message}";
 
-    public IEnumerable<Url> ListChildren(Url folderUrl) =>
+    public override IEnumerable<Url> ListChildren(Url folderUrl) =>
         webDavFileSystemService is IFolderListingFileSystem listing
             ? listing.ListChildren(folderUrl)
             : [];

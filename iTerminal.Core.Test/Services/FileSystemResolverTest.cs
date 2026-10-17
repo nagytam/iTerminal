@@ -53,6 +53,28 @@ public class FileSystemResolverTest
     }
 
     [TestMethod]
+    [DataRow("ftp://me@files.example.com/pub/a.txt")]
+    [DataRow("smb://me@nas/share/My Documents/a.txt")]
+    [DataRow("dav://me@cloud.example.com/dir/a.txt")]
+    [DataRow("iphone://0000-1111/DCIM/a.jpg")]
+    public void ARemoteAccountWithNoSharedServiceIsServedByThePanelShowingIt(string url)
+    {
+        var panel = new Mock<IContentModel>();
+        panel.SetupGet(p => p.Url).Returns(new Url(url).ParentUrl);
+
+        Assert.AreSame(panel.Object, Create(panel.Object).Resolve(new Url(url)));
+    }
+
+    [TestMethod]
+    public void APanelOnAnotherServerIsNeverUsed()
+    {
+        var panel = new Mock<IContentModel>();
+        panel.SetupGet(p => p.Url).Returns(new Url("ftp://me@other.example.com/pub/"));
+
+        Assert.ThrowsExactly<NotSupportedException>(() => Create(panel.Object).Resolve(new Url("ftp://me@files.example.com/pub/a.txt")));
+    }
+
+    [TestMethod]
     public void NothingToServeSaysWhatWasBeingDone()
     {
         var exception = Assert.ThrowsExactly<NotSupportedException>(() => Create().Resolve(new Url("docker://web/"), operation: "Copy"));

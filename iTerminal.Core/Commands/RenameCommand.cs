@@ -21,7 +21,11 @@ public class RenameCommand(IContentModelService contentModelService)
                 return;
             }
 
-            if (string.Equals(renameDialog.TargetUrl.FullUrl, renameDialog.SourceUrl?.FullUrl, StringComparison.Ordinal))
+            // Compared without trailing separators: a folder is listed with one and a name typed in the box has none.
+            if (string.Equals(
+                    Helper.UrlPath.TrimFolder(renameDialog.TargetUrl.FullUrl),
+                    Helper.UrlPath.TrimFolder(renameDialog.SourceUrl?.FullUrl ?? string.Empty),
+                    StringComparison.Ordinal))
             {
                 // Unchanged: nothing to do, and a move onto itself would only produce an error.
                 renameDialog.Close();

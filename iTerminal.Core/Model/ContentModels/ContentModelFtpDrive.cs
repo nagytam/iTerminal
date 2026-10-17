@@ -44,7 +44,7 @@ public class ContentModelFtpDrive(
     protected override string FormatConnectionError(Url url, Exception exception) =>
         $"FTP connection error: {url.Host}: {exception.Message}";
 
-    public IEnumerable<Url> ListChildren(Url folderUrl) =>
+    public override IEnumerable<Url> ListChildren(Url folderUrl) =>
         ftpFileSystemService is IFolderListingFileSystem listing
             ? listing.ListChildren(folderUrl)
             : [];

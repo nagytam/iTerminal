@@ -44,6 +44,34 @@ public class ContentModelSmbDriveTest
     }
 
     [TestMethod]
+    public void SetUrl_WithoutTrailingSlash_ShowsAFolder()
+    {
+        var model = CreateModel(new Mock<ISmbFileSystemService>());
+
+        model.SetUrl(new Url("smb://user@host/Share/My Documents"));
+
+        Assert.AreEqual("smb://user@host/Share/My Documents/", model.Url.FullUrl);
+        Assert.AreEqual(PathType.Folder, model.Url.PathType);
+    }
+
+    [TestMethod]
+    public void ListChildren_LeavesOutTheParentRow()
+    {
+        var smbFileSystemService = new Mock<ISmbFileSystemService>();
+        smbFileSystemService.Setup(s => s.List(It.IsAny<Url>())).Returns(
+        [
+            new FileSystemEntry("..", "smb://host/Share/"),
+            new FileSystemEntry("a b.txt", "smb://host/Share/dir/a b.txt"),
+        ]);
+        var model = CreateModel(smbFileSystemService);
+
+        var children = model.ListChildren(new Url("smb://host/Share/dir/")).ToList();
+
+        Assert.AreEqual(1, children.Count);
+        Assert.AreEqual("smb://host/Share/dir/a b.txt", children[0].FullUrl);
+    }
+
+    [TestMethod]
     public void SetUrl_NoMatchingProfile_ConnectsAnonymously()
     {
         var smbFileSystemService = new Mock<ISmbFileSystemService>();

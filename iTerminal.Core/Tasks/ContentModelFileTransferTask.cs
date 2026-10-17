@@ -2,6 +2,7 @@ using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Tasks;
+using iTerminal.Core.Commands;
 using iTerminal.Core.Helper;
 
 namespace iTerminal.Core.Tasks;
@@ -16,8 +17,10 @@ namespace iTerminal.Core.Tasks;
 /// Copy and move differ only in the verb, the native fast path, and whether the source is deleted
 /// afterwards (<see cref="DeletesSource"/>).
 /// </summary>
-public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite) : BackgroundTask
+public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url requestedTargetUrl, bool overwrite) : BackgroundTask
 {
+    private Url _targetUrl = requestedTargetUrl;
+
     /// <summary>Verb for task descriptions, e.g. "Copy".</summary>
     protected abstract string Verb { get; }
 
@@ -34,8 +37,17 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
     {
         try
         {
-            Subject = TaskNotificationHelper.TransferSubject(sourceUrl, targetUrl);
-            Description = $"{Verb} file{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}{Environment.NewLine}to{Environment.NewLine}{targetUrl.FullName.Shrink(60)}{Environment.NewLine}started";
+            // A file sent to a folder goes inside it under its own name, as in every commander, rather
+            // than being written to a path that is the folder's. Asked here, on the task's thread: on a
+            // remote drive it is a round trip.
+            var asFolder = new Url(UrlPath.TrimFolder(requestedTargetUrl.FullUrl) + UrlPath.SeparatorOf(requestedTargetUrl.FullUrl));
+            if (target.ExistsFolder(asFolder) && !target.ExistsFile(requestedTargetUrl))
+            {
+                _targetUrl = new Url(UrlPath.Child(requestedTargetUrl.FullUrl, FocusedEntry.NameOf(sourceUrl), isFolder: false));
+            }
+
+            Subject = TaskNotificationHelper.TransferSubject(sourceUrl, _targetUrl);
+            Description = $"{Verb} file{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}{Environment.NewLine}to{Environment.NewLine}{_targetUrl.FullName.Shrink(60)}{Environment.NewLine}started";
 
             if (target.IsReadOnly)
             {
@@ -46,14 +58,14 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
                 throw new NotSupportedException($"Cannot {Verb.ToLowerInvariant()} from a read-only source; use copy instead.");
             }
 
-            if (!overwrite && target.ExistsFile(targetUrl))
+            if (!overwrite && target.ExistsFile(_targetUrl))
             {
-                throw new IOException($"The file '{targetUrl.FullName}' already exists.");
+                throw new IOException($"The file '{_targetUrl.FullName}' already exists.");
             }
 
             if (ReferenceEquals(source, target))
             {
-                await SameFileSystemTransferAsync(source, sourceUrl, targetUrl, overwrite);
+                await SameFileSystemTransferAsync(source, sourceUrl, _targetUrl, overwrite);
             }
             else
             {
@@ -73,7 +85,7 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
 
                 try
                 {
-                    await PipelinedFileCopyHelper.CopyAsync(source, target, sourceUrl, targetUrl, progress, CancellationToken);
+                    await PipelinedFileCopyHelper.CopyAsync(source, target, sourceUrl, _targetUrl, progress, CancellationToken);
                 }
                 catch (OperationCanceledException)
                 {
@@ -87,7 +99,7 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
                 }
             }
 
-            Description = $"{Verb} file{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}{Environment.NewLine}to{Environment.NewLine}{targetUrl.FullName.Shrink(60)}{Environment.NewLine}finished";
+            Description = $"{Verb} file{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}{Environment.NewLine}to{Environment.NewLine}{_targetUrl.FullName.Shrink(60)}{Environment.NewLine}finished";
             ProgressPercentage = 100;
         }
         catch (OperationCanceledException)
@@ -105,7 +117,7 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
     {
         try
         {
-            target.DeleteFile(targetUrl, moveToRecycleBin: false);
+            target.DeleteFile(_targetUrl, moveToRecycleBin: false);
         }
         catch
         {
