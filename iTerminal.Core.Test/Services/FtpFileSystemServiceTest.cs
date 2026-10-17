@@ -1,4 +1,5 @@
 using FluentFTP;
+using FluentFTP.Exceptions;
 using iConsole.Data;
 using iTerminal.Core.Services;
 using Moq;
@@ -13,18 +14,80 @@ public class FtpFileSystemServiceTest
     private int _port;
     private string? _user;
     private string? _password;
+    private readonly List<bool> _secureRequests = [];
 
     private FtpFileSystemService CreateService()
     {
         _client.SetupGet(c => c.IsConnected).Returns(true);
-        return new FtpFileSystemService((host, port, user, password) =>
+        return new FtpFileSystemService((host, port, user, password, secure) =>
         {
             _host = host;
             _port = port;
             _user = user;
             _password = password;
+            _secureRequests.Add(secure);
             return _client.Object;
         });
+    }
+
+    [TestMethod]
+    public void Connect_AsksForAnEncryptedClientFirst()
+    {
+        _client.SetupGet(c => c.IsConnected).Returns(false);
+        using var service = new FtpFileSystemService((_, _, _, _, secure) =>
+        {
+            _secureRequests.Add(secure);
+            return _client.Object;
+        });
+
+        service.Connect("ftp.example.org", "alice", "pw");
+
+        CollectionAssert.AreEqual(new[] { true }, _secureRequests);
+    }
+
+    [TestMethod]
+    public void Connect_WithAPasswordRefusesPlainFtpUnlessAllowed()
+    {
+        _client.SetupGet(c => c.IsConnected).Returns(false);
+        _client.Setup(c => c.Connect()).Throws(new FtpSecurityNotAvailableException("no TLS"));
+        using var service = new FtpFileSystemService((_, _, _, _, secure) =>
+        {
+            _secureRequests.Add(secure);
+            return _client.Object;
+        });
+
+        var exception = Assert.ThrowsExactly<IOException>(() => service.Connect("ftp.example.org", "alice", "pw"));
+
+        StringAssert.Contains(exception.Message, FtpFileSystemService.AllowPlainSetting);
+        CollectionAssert.AreEqual(new[] { true }, _secureRequests);
+    }
+
+    [TestMethod]
+    public void Connect_FallsBackToPlainWhenAllowedOrAnonymous()
+    {
+        _client.SetupGet(c => c.IsConnected).Returns(false);
+        _client.SetupSequence(c => c.Connect())
+            .Throws(new FtpSecurityNotAvailableException("no TLS"))
+            .Pass()
+            .Throws(new FtpSecurityNotAvailableException("no TLS"))
+            .Pass();
+        Func<string, int, string, string, bool, IFtpClient> factory = (_, _, _, _, secure) =>
+        {
+            _secureRequests.Add(secure);
+            return _client.Object;
+        };
+
+        using (var allowed = new FtpFileSystemService(factory, () => true))
+        {
+            allowed.Connect("ftp.example.org", "alice", "pw");
+        }
+
+        using (var anonymous = new FtpFileSystemService(factory))
+        {
+            anonymous.Connect("ftp.example.org", null, null);
+        }
+
+        CollectionAssert.AreEqual(new[] { true, false, true, false }, _secureRequests);
     }
 
     [TestMethod]

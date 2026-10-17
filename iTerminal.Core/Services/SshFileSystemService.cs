@@ -26,9 +26,13 @@ public partial class SshFileSystemService : ISshFileSystemService
     private AuthenticationMethod[] _authMethods { get; set; } = [];
     public bool IsConnected => _client?.IsConnected ?? false;
 
-    public SshFileSystemService(ILogger logger)
+    private readonly ITrustedHostStore _knownHosts;
+    private string? _hostKeyProblem;
+
+    public SshFileSystemService(ILogger logger, ITrustedHostStore? knownHosts = null)
     {
         _logger = logger;
+        _knownHosts = knownHosts ?? new TrustedHostStore();
     }
 
     public void Connect(string host, string username, string? password, string? privateKeyFilePath)
@@ -39,12 +43,51 @@ public partial class SshFileSystemService : ISshFileSystemService
         if (_client is null)
         {
             _client = new SshClient(new ConnectionInfo(host, username, _authMethods));
+            _client.HostKeyReceived += OnHostKeyReceived;
         }
         if (!_client.IsConnected)
         {
-            _client.Connect();
+            ConnectVerified(_client.Connect);
         }
         _url = new Url(Container.SSH + username + "@" + host + ":/");
+    }
+
+    /// <summary>Trust on first use: a new host key is remembered, a different one for a known host is refused.</summary>
+    private void OnHostKeyReceived(object? sender, HostKeyEventArgs e)
+    {
+        var connection = sender is BaseClient client ? client.ConnectionInfo : null;
+        var hostId = $"ssh:{connection?.Host ?? _host}:{connection?.Port ?? 22}";
+        var fingerprint = $"{e.HostKeyName} SHA256:{e.FingerPrintSHA256.TrimEnd('=')}";
+        switch (_knownHosts.Check(hostId, fingerprint, out var recorded))
+        {
+            case HostTrust.Changed:
+                _hostKeyProblem = $"The SSH host key of {_host} has changed. Expected {recorded}, the server presented {fingerprint}. "
+                    + $"This can mean the server was reinstalled, or that someone is intercepting the connection. Connection refused; forget {hostId} to accept the new key.";
+                _logger.Warning("SSH host key mismatch for {Host}: expected {Expected}, got {Actual}", hostId, recorded, fingerprint);
+                e.CanTrust = false;
+                break;
+            case HostTrust.New:
+                _logger.Information("SSH host key of {Host} recorded: {Fingerprint}", hostId, fingerprint);
+                e.CanTrust = true;
+                break;
+            default:
+                e.CanTrust = true;
+                break;
+        }
+    }
+
+    /// <summary>Runs a connect and, when the host key was the reason it failed, says so instead of SSH.NET's generic message.</summary>
+    private void ConnectVerified(Action connect)
+    {
+        _hostKeyProblem = null;
+        try
+        {
+            connect();
+        }
+        catch (Exception) when (_hostKeyProblem is not null)
+        {
+            throw new IOException(_hostKeyProblem);
+        }
     }
 
     private static AuthenticationMethod[] BuildAuthenticationMethods(string username, string? password, string? privateKeyFilePath)
@@ -68,9 +111,10 @@ public partial class SshFileSystemService : ISshFileSystemService
     public ScpClient ScpConnect()
     {
         var scpClient = new ScpClient(new ConnectionInfo(_host, _username, _authMethods), RemotePathTransformation.ShellQuote);
+        scpClient.HostKeyReceived += OnHostKeyReceived;
         if (!scpClient.IsConnected)
         {
-            scpClient.Connect();
+            ConnectVerified(scpClient.Connect);
         }
         return scpClient;
     }
