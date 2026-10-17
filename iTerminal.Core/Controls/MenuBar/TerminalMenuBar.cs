@@ -1,4 +1,4 @@
-﻿using iConsole.Controls.StatusBar;
+using iConsole.Controls.StatusBar;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Interfaces;
@@ -101,7 +101,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         SecureWipeDialog? secureWipeDialog = null,
         SignatureDialog? signatureDialog = null,
         DuplicateFinderDialog? duplicateFinderDialog = null,
-        iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null
+        iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
+        SystemSettingsDialog? systemSettingsDialog = null
         )
         : base([], themeService)
     {
@@ -184,7 +185,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             diskUsageDialog,
             elevationService,
             notificationService,
-            duplicateFinderDialog));
+            duplicateFinderDialog,
+            systemSettingsDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 
