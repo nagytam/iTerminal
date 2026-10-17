@@ -174,6 +174,7 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<INetworkDiscoveryService, SandboxServices.NetworkDiscovery>();
                 services.AddSingleton<Core.Services.PackageManager.IPackageManagerService, SandboxServices.PackageManager>();
                 services.AddSingleton<Core.Services.RuntimeDependencies.IRuntimeDependencyService, SandboxServices.Dependencies>();
+                services.AddSingleton<Core.Services.Stocks.IStockQuoteProvider, SandboxServices.StockQuotes>();
                 services.AddSingleton<SandboxServices.Shell>();
                 services.AddSingleton<Core.Services.Shell.IInteractiveShellService>(provider => provider.GetRequiredService<SandboxServices.Shell>());
                 services.AddSingleton<SandboxServices.Launcher>();
@@ -191,6 +192,11 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.DriveActions>();
                 services.AddSingleton<Core.Services.Drives.IDriveActionsService>(provider => provider.GetRequiredService<SandboxServices.DriveActions>());
                 services.AddSingleton<Core.Services.Mail.IMailService, SandboxServices.Mail>();
+                services.AddSingleton<Core.Services.Web.IWebFetcher, SandboxServices.Web>();
+                services.AddSingleton<SandboxServices.SystemSettings>();
+                services.AddSingleton<Core.Services.SystemSettings.ISystemSettingsService>(provider => provider.GetRequiredService<SandboxServices.SystemSettings>());
+                services.AddSingleton<SandboxServices.MalwareScanner>();
+                services.AddSingleton<Core.Services.Defender.IMalwareScanService>(provider => provider.GetRequiredService<SandboxServices.MalwareScanner>());
 
                 // A recycle bin of the sandbox's own, in the Windows format on every system: the
                 // drive restores and deletes for good, and must never be let near the real one.

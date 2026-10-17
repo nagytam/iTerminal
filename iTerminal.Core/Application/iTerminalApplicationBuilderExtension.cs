@@ -1,4 +1,4 @@
-﻿using iConsole.Dialogs;
+using iConsole.Dialogs;
 using iConsole.Interfaces;
 using iConsole.Jobs;
 using iConsole.Services;
@@ -111,6 +111,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Model.Mail.MailAccountStore>();
         services.AddSingleton<iTerminal.Core.Services.Mail.IMailService, iTerminal.Core.Services.Mail.MailService>();
         services.AddTransient<iTerminal.Core.Dialogs.Mail.MailDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Web.IWebFetcher, iTerminal.Core.Services.Web.WebFetcher>();
+        services.AddSingleton<iTerminal.Core.Services.Web.WebBrowserStore>();
+        services.AddTransient<iTerminal.Core.Dialogs.Web.WebBrowserDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.PasswordManager.PasswordManagerDialog>();
         services.AddTransient<ItemInformation>();
         services.AddTransient<TerminalStatusBar>();
@@ -229,6 +232,11 @@ public static class iTerminalApplicationBuilderExtension
         // deleted files; a test registers one built in a folder of its own.
         services.AddSingleton<iTerminal.Core.Services.Recycle.IRecycleBinStore>(_ => iTerminal.Core.Services.Recycle.RecycleBinService.CreateStore());
         services.AddSingleton<iTerminal.Core.Services.Recycle.IRecycleBinService, iTerminal.Core.Services.Recycle.RecycleBinService>();
+        // Alt+F7: the full-screen stock browser. Quotes come from Yahoo Finance; a test replaces the
+        // provider so no run reaches the network.
+        services.AddSingleton<iTerminal.Core.Services.Stocks.IStockQuoteProvider, iTerminal.Core.Services.Stocks.YahooStockQuoteProvider>();
+        services.AddSingleton<iTerminal.Core.Services.Stocks.IStockService, iTerminal.Core.Services.Stocks.StockService>();
+        services.AddTransient<iTerminal.Core.Dialogs.Stocks.StockBrowserDialog>();
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();
@@ -237,6 +245,8 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+Shift+F8 secure wipe, Ctrl+Shift+F7 signatures (sign and verify).
         services.AddSingleton<iTerminal.Core.Services.Wipe.ISecureWipeService, iTerminal.Core.Services.Wipe.SecureWipeService>();
         services.AddSingleton<iTerminal.Core.Services.Signing.ISignatureService, iTerminal.Core.Services.Signing.SignatureService>();
+        // Scan with Microsoft Defender (Windows): the file panel's context menu and the File menu.
+        services.AddSingleton<iTerminal.Core.Services.Defender.IMalwareScanService, iTerminal.Core.Services.Defender.DefenderScanService>();
         services.AddTransient<SecureWipeDialog>();
         services.AddTransient<SignatureDialog>();
         // File associations: Enter and F4 open a file with the program chosen for it; Shift+F3 and
@@ -270,6 +280,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<MoveDialog>();
         services.AddTransient<AboutDialog>();
         services.AddTransient<SystemInfoDialog>();
+        services.AddSingleton<iTerminal.Core.Services.SystemSettings.ISystemSettingsService, iTerminal.Core.Services.SystemSettings.SystemSettingsService>();
+        services.AddTransient<SystemSettingsDialog>();
         services.AddTransient<NetworkManagerDialog>();
         services.AddTransient<NetworkBrowserDialog>();
         services.AddTransient<IPhoneBrowserDialog>();

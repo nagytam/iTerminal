@@ -1,4 +1,4 @@
-﻿using iConsole.Buffers;
+using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
 using iConsole.Controls.StatusBar;
@@ -70,7 +70,9 @@ public class HotKeys : StatusBarItem
         DiskUsageDialog? diskUsageDialog = null,
         iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
         INotificationService? notificationService = null,
-        DuplicateFinderDialog? duplicateFinderDialog = null)
+        DuplicateFinderDialog? duplicateFinderDialog = null,
+        SystemSettingsDialog? systemSettingsDialog = null,
+        iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -365,6 +367,28 @@ public class HotKeys : StatusBarItem
             IsVisible = false
         };
         AddControl(systemInfoDialogButton);
+
+        if (systemSettingsDialog is not null)
+        {
+            var systemSettingsDialogButton = new Button("Shift-Ctrl-F10-SysSet", new SystemSettingsDialogCommand(systemSettingsDialog), themeService)
+            {
+                Position = new Position(0, 0),
+                ViewSize = new Size(17, 1),
+                IsVisible = false
+            };
+            AddControl(systemSettingsDialogButton);
+        }
+
+        if (stockBrowserDialog is not null)
+        {
+            var stockBrowserDialogButton = new Button("Alt-F7-Stocks", new StockBrowserDialogCommand(stockBrowserDialog), themeService)
+            {
+                Position = new Position(0, 0),
+                ViewSize = new Size(15, 1),
+                IsVisible = false
+            };
+            AddControl(stockBrowserDialogButton);
+        }
     }
 
     /// <summary>

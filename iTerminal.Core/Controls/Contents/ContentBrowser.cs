@@ -59,6 +59,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private DiskImageDialog? _diskImageDialog { get; set; }
     private SecureWipeDialog? _secureWipeDialog { get; set; }
     private SignatureDialog? _signatureDialog { get; set; }
+    private iTerminal.Core.Services.Defender.IMalwareScanService? _malwareScanService { get; set; }
+    private INotificationService? _notificationService { get; set; }
 
     public ContentBrowser(
         string name,
@@ -95,9 +97,13 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null,
         DiskImageDialog? diskImageDialog = null,
         SecureWipeDialog? secureWipeDialog = null,
-        SignatureDialog? signatureDialog = null)
+        SignatureDialog? signatureDialog = null,
+        iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
+        INotificationService? notificationService = null)
         : base(themeService)
     {
+        _malwareScanService = malwareScanService;
+        _notificationService = notificationService;
         _diskImageDialog = diskImageDialog;
         _secureWipeDialog = secureWipeDialog;
         _signatureDialog = signatureDialog;
@@ -280,6 +286,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_secureWipeDialog is not null)
         {
             AddCommand(new SecureWipeDialogCommand(_secureWipeDialog, ContentModelService));
+        }
+        if (_malwareScanService is { IsAvailable: true })
+        {
+            AddCommand(new ScanWithDefenderCommand(ContentModelService, _malwareScanService, _notificationService));
         }
         if (_signatureDialog is not null)
         {

@@ -34,7 +34,10 @@ public class ToolsMenuItem : MenuItem
         DiskUsageDialog? diskUsageDialog = null,
         iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
         INotificationService? notificationService = null,
-        DuplicateFinderDialog? duplicateFinderDialog = null)
+        DuplicateFinderDialog? duplicateFinderDialog = null,
+        SystemSettingsDialog? systemSettingsDialog = null,
+        iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
+        iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -62,12 +65,15 @@ public class ToolsMenuItem : MenuItem
         if (documentManagerDialog is not null) features.Add(new DocumentManagerDialogCommand(documentManagerDialog));
         if (networkBrowserDialog is not null) features.Add(new NetworkBrowserDialogCommand(networkBrowserDialog));
         if (packageManagerDialog is not null) features.Add(new PackageManagerDialogCommand(packageManagerDialog));
+        if (stockBrowserDialog is not null) features.Add(new StockBrowserDialogCommand(stockBrowserDialog));
         if (calculatorDialog is not null) features.Add(new CalculatorDialogCommand(calculatorDialog));
         if (unitConverterDialog is not null) features.Add(new UnitConverterDialogCommand(unitConverterDialog));
         if (calendarDialog is not null) features.Add(new CalendarDialogCommand(calendarDialog));
         if (toDoListDialog is not null) features.Add(new ToDoListDialogCommand(toDoListDialog));
         if (mailDialog is not null) features.Add(new MailDialogCommand(mailDialog));
+        if (webBrowserDialog is not null) features.Add(new WebBrowserDialogCommand(webBrowserDialog));
         if (passwordManagerDialog is not null) features.Add(new PasswordManagerDialogCommand(passwordManagerDialog));
+        if (systemSettingsDialog is not null) features.Add(new SystemSettingsDialogCommand(systemSettingsDialog));
         if (runtimeDependencyDialog is not null) features.Add(new RuntimeDependencyDialogCommand(runtimeDependencyDialog));
         if (diskUsageDialog is not null) features.Add(new DiskUsageDialogCommand(diskUsageDialog, contentModelService));
         if (duplicateFinderDialog is not null) features.Add(new DuplicateFinderDialogCommand(duplicateFinderDialog, contentModelService));

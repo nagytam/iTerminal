@@ -482,3 +482,5 @@ profile.*.json
 
 *.class
 *.~lock.*
+
+CoverageReport/

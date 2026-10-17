@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Runtime.CompilerServices;
 using iTerminal.Core.Model.Network;
 using iTerminal.Core.Model.PackageManager;
@@ -52,6 +52,138 @@ public static class SandboxServices
 
         public Task<IReadOnlyList<Core.Model.Mail.DirectoryPerson>> SearchDirectoryAsync(Core.Model.Mail.MailAccount account, string password, string term, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<Core.Model.Mail.DirectoryPerson>>([new("Ada Lovelace", "ada@example.test", string.Empty)]);
+    }
+
+    /// <summary>
+    /// A web fetcher that answers every address from memory, so the Web Browser can be driven without a network:
+    /// the page names the address it was asked for.
+    /// </summary>
+    public sealed class Web : Core.Services.Web.IWebFetcher
+    {
+        public List<string> Requested { get; } = [];
+
+        public Task<Core.Services.Web.WebFetchResponse> FetchAsync(Core.Services.Web.WebFetchRequest request, CancellationToken cancellationToken = default)
+        {
+            Requested.Add(request.Url);
+            var html = $"<html><head><title>Sandbox page</title></head><body><h1>Sandbox page</h1><p>You asked for {request.Url}</p><a href=\"/next\">next page</a></body></html>";
+            return Task.FromResult(new Core.Services.Web.WebFetchResponse(request.Url, 200, "OK", "text/html; charset=utf-8", System.Text.Encoding.UTF8.GetBytes(html)));
+        }
+    }
+
+    /// <summary>
+    /// A machine called SANDBOX in the workgroup TESTGROUP, with two variables in each scope and three
+    /// time zones, all in memory — recording nothing but keeping what it was told, so a test can read it back.
+    /// </summary>
+    public sealed class SystemSettings : Core.Services.SystemSettings.ISystemSettingsService
+    {
+        private readonly Dictionary<Core.Services.SystemSettings.EnvironmentScope, SortedDictionary<string, string>> _environment = new()
+        {
+            [Core.Services.SystemSettings.EnvironmentScope.User] = new(StringComparer.Ordinal) { ["EDITOR"] = "vim", ["SANDBOX_USER"] = "yes" },
+            [Core.Services.SystemSettings.EnvironmentScope.Machine] = new(StringComparer.Ordinal) { ["SANDBOX_MACHINE"] = "yes", ["TEMP_ROOT"] = "/tmp" },
+        };
+
+        private Core.Services.SystemSettings.ComputerIdentity _identity =
+            new("SANDBOX", "TESTGROUP", false, "The test machine", true, true);
+
+        public bool IsElevated => true;
+
+        public bool SupportsTimeZone => true;
+
+        public string CurrentTimeZoneId { get; private set; } = "Test/Zone-A";
+
+        public bool SupportsEnvironment(Core.Services.SystemSettings.EnvironmentScope scope) => true;
+
+        public Task<Core.Services.SystemSettings.ComputerIdentity> GetComputerAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(_identity);
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> SetComputerNameAsync(string name, CancellationToken cancellationToken = default)
+        {
+            _identity = _identity with { ComputerName = name };
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok("Renamed.", restartRequired: true));
+        }
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> SetMembershipAsync(string workgroup, CancellationToken cancellationToken = default)
+        {
+            _identity = _identity with { Membership = workgroup };
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok("Workgroup changed.", restartRequired: true));
+        }
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> SetDescriptionAsync(string description, CancellationToken cancellationToken = default)
+        {
+            _identity = _identity with { Description = description };
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok("Description saved."));
+        }
+
+        public Task<IReadOnlyList<Core.Services.SystemSettings.SystemEnvironmentVariable>> GetEnvironmentAsync(
+            Core.Services.SystemSettings.EnvironmentScope scope, CancellationToken cancellationToken = default)
+        {
+            lock (_environment)
+            {
+                return Task.FromResult<IReadOnlyList<Core.Services.SystemSettings.SystemEnvironmentVariable>>(
+                    [.. _environment[scope].Select(pair => new Core.Services.SystemSettings.SystemEnvironmentVariable(pair.Key, pair.Value))]);
+            }
+        }
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> SetEnvironmentVariableAsync(
+            Core.Services.SystemSettings.EnvironmentScope scope, string name, string value, CancellationToken cancellationToken = default)
+        {
+            lock (_environment)
+            {
+                _environment[scope][name] = value;
+            }
+
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok(name + " was saved."));
+        }
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> RemoveEnvironmentVariableAsync(
+            Core.Services.SystemSettings.EnvironmentScope scope, string name, CancellationToken cancellationToken = default)
+        {
+            lock (_environment)
+            {
+                _environment[scope].Remove(name);
+            }
+
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok(name + " was removed."));
+        }
+
+        public IReadOnlyList<Core.Services.SystemSettings.TimeZoneChoice> GetTimeZones() =>
+            [new("Test/Zone-A", "(UTC+00:00) Zone A"), new("Test/Zone-B", "(UTC+01:00) Zone B"), new("Test/Zone-C", "(UTC+02:00) Zone C")];
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> SetTimeZoneAsync(string id, CancellationToken cancellationToken = default)
+        {
+            CurrentTimeZoneId = id;
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok("The time zone is now " + id + "."));
+        }
+    }
+
+    /// <summary>A malware scanner that is always installed, scans nothing and finds nothing — recording what it was asked to scan.</summary>
+    public sealed class MalwareScanner : Core.Services.Defender.IMalwareScanService
+    {
+        private readonly List<string> _scanned = [];
+
+        public bool IsAvailable => true;
+
+        /// <summary>The paths scanned so far, in order.</summary>
+        public IReadOnlyList<string> Scanned
+        {
+            get
+            {
+                lock (_scanned)
+                {
+                    return [.. _scanned];
+                }
+            }
+        }
+
+        public Task<Core.Services.Defender.ScanResult> ScanAsync(string path, CancellationToken cancellationToken = default)
+        {
+            lock (_scanned)
+            {
+                _scanned.Add(path);
+            }
+
+            return Task.FromResult(new Core.Services.Defender.ScanResult(Core.Services.Defender.ScanOutcome.Clean, "No threats found."));
+        }
     }
 
     /// <summary>Two packages installed, two to be found, and an install that reports and succeeds.</summary>
@@ -267,6 +399,27 @@ public static class SandboxServices
                 ? Core.Services.FileAssociations.LaunchOutcome.Success
                 : Core.Services.FileAssociations.LaunchOutcome.Failed(failure));
         }
+    }
+
+    /// <summary>
+    /// The stock quote source with no network: every symbol trades at 100.00 after closing at 99.00 on the
+    /// "Sandbox" exchange, except <see cref="Unknown"/> ones, and a search finds two fixed hits.
+    /// </summary>
+    public sealed class StockQuotes : Core.Services.Stocks.IStockQuoteProvider
+    {
+        public HashSet<string> Unknown { get; } = new(StringComparer.OrdinalIgnoreCase) { "NOPE" };
+
+        public Task<IReadOnlyDictionary<string, Core.Services.Stocks.StockQuote>> GetQuotesAsync(IReadOnlyList<string> symbols, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<string, Core.Services.Stocks.StockQuote>>(
+                symbols.Where(s => !Unknown.Contains(s)).ToDictionary(
+                    s => s,
+                    s => new Core.Services.Stocks.StockQuote(s, s + " Inc.", 100.00m, 99.00m, "USD", "Sandbox", DateTime.Now),
+                    StringComparer.OrdinalIgnoreCase));
+
+        public Task<IReadOnlyList<Core.Services.Stocks.StockSearchHit>> SearchAsync(string query, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Core.Services.Stocks.StockSearchHit>>(
+                [new Core.Services.Stocks.StockSearchHit("ACME.L", "Acme Holdings plc", "London", "EQUITY"),
+                 new Core.Services.Stocks.StockSearchHit("ACME", "Acme Holdings Inc", "NASDAQ", "EQUITY")]);
     }
 
     /// <summary>
