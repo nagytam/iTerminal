@@ -65,6 +65,9 @@ public sealed class FfmpegAudioDecoder : IAudioDecoder
         return available;
     }
 
+    /// <summary>Forgets the cached probe, so the next <see cref="IsAvailable"/> looks again. Called after ffmpeg is installed.</summary>
+    internal static void ResetAvailability() => _isAvailable = null;
+
     /// <summary>Test seam: forces the cached availability result.</summary>
     internal static void SetAvailabilityForTest(bool? available) => _isAvailable = available;
 

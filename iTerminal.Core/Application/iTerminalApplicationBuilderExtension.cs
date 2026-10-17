@@ -155,6 +155,10 @@ public static class iTerminalApplicationBuilderExtension
         // Tag/format reading for the F3 music viewer. Stateless, so a singleton costs nothing.
         services.AddSingleton<iTerminal.Core.Services.Music.IMusicMetadataService, iTerminal.Core.Services.Music.MusicMetadataService>();
         services.AddTransient<iTerminal.Core.Dialogs.Music.MusicFileViewerDialog>();
+        // F3 on a video or a picture. Both decode through ffmpeg; the factory holds no state.
+        services.AddSingleton<iTerminal.Core.Video.IVideoDecoderFactory, iTerminal.Core.Video.FfmpegVideoDecoderFactory>();
+        services.AddTransient<iTerminal.Core.Dialogs.Video.VideoFileViewerDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Video.ImageFileViewerDialog>();
         // The library index is a singleton so the in-memory copy of the table is shared by the
         // indexing job and every dialog that searches it.
         services.AddSingleton<iTerminal.Core.Services.Music.IMusicLibraryService, iTerminal.Core.Services.Music.MusicLibraryService>();
@@ -357,6 +361,9 @@ public static class iTerminalApplicationBuilderExtension
 
         // git is not downloaded into the data folder: when it is missing the system's package manager installs it.
         services.AddSingleton<IRuntimeDependency, GitRuntimeDependency>();
+
+        // Likewise ffmpeg and ffprobe, for the video and picture viewers and the audio formats without a managed decoder.
+        services.AddSingleton<IRuntimeDependency, FfmpegRuntimeDependency>();
 
         // Ollama is a dependency only when the AI prompt is configured to use it. Registration cannot be skipped
         // from inside a factory, so the configured value is read here, once.

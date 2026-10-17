@@ -69,6 +69,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         HelpDialog helpDialog,
         AboutDialog aboutDialog,
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
+        iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
+        iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? imageFileViewerDialog = null,
         // Tools, the larger features (optional so the menu can be built without them)
         iTerminal.Core.Dialogs.Git.GitClientDialog? gitClientDialog = null,
         iTerminal.Core.Dialogs.Documents.DocumentManagerDialog? documentManagerDialog = null,
@@ -115,6 +117,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             renameDialog,
             themeService,
             musicFileViewerDialog: musicFileViewerDialog,
+            videoFileViewerDialog: videoFileViewerDialog,
+            imageFileViewerDialog: imageFileViewerDialog,
             findFilesDialog: findFilesDialog,
             compressDialog: compressDialog,
             extractDialog: extractDialog,
