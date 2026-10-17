@@ -21,6 +21,7 @@
     <PackageReference Include="Microsoft.FeatureManagement" Version="4.8.0" />
     <PackageReference Include="PdfPig" Version="0.1.16" />
     <PackageReference Include="SkiaSharp" Version="4.153.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.153.1" />
   </ItemGroup>
 
 </Project>
