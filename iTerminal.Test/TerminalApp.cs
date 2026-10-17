@@ -192,6 +192,8 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.DriveActions>();
                 services.AddSingleton<Core.Services.Drives.IDriveActionsService>(provider => provider.GetRequiredService<SandboxServices.DriveActions>());
                 services.AddSingleton<Core.Services.Mail.IMailService, SandboxServices.Mail>();
+                services.AddSingleton<SandboxServices.MalwareScanner>();
+                services.AddSingleton<Core.Services.Defender.IMalwareScanService>(provider => provider.GetRequiredService<SandboxServices.MalwareScanner>());
 
                 // A recycle bin of the sandbox's own, in the Windows format on every system: the
                 // drive restores and deletes for good, and must never be let near the real one.
