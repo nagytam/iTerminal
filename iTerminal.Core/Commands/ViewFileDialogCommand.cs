@@ -5,6 +5,8 @@ using iConsole.Interfaces;
 using iTerminal.Core.Audio;
 using iTerminal.Core.Dialogs.Dotnet;
 using iTerminal.Core.Dialogs.Music;
+using iTerminal.Core.Dialogs.Video;
+using iTerminal.Core.Video;
 
 namespace iTerminal.Core.Commands;
 
@@ -12,8 +14,12 @@ public class ViewFileDialogCommand(
     FileViewerDialog fileViewerDialog,
     IContentModelService contentModelService,
     SolutionViewerDialog? solutionViewerDialog = null,
-    MusicFileViewerDialog? musicFileViewerDialog = null) : Command
+    MusicFileViewerDialog? musicFileViewerDialog = null,
+    VideoFileViewerDialog? videoFileViewerDialog = null,
+    ImageFileViewerDialog? imageFileViewerDialog = null) : Command
 {
+    private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
+    private readonly ImageFileViewerDialog? _imageFileViewerDialog = imageFileViewerDialog;
     private readonly FileViewerDialog _fileViewerDialog = fileViewerDialog;
     private readonly IContentModelService _contentModelService = contentModelService;
     private readonly SolutionViewerDialog? _solutionViewerDialog = solutionViewerDialog;
@@ -35,7 +41,7 @@ public class ViewFileDialogCommand(
                 var model = _contentModelService.GetFocusedModel();
                 if (url is not null && model is not null && model.ExistsFile(url))
                 {
-                    return IsMusicFile(url) || IsSupportedFileType(url.Extension);
+                    return IsVideoFile(url) || IsImageFile(url) || IsMusicFile(url) || IsSupportedFileType(url.Extension);
                 }
             }
             catch
@@ -65,6 +71,17 @@ public class ViewFileDialogCommand(
         && AudioDecoderFactory.IsAudioFile(url.Path)
         && File.Exists(url.Path);
 
+    /// <summary>Video and pictures are decoded by ffmpeg from a path, so like audio they need a real local file.</summary>
+    private bool IsVideoFile(Url url) =>
+        _videoFileViewerDialog is not null
+        && VideoFileTypes.IsVideoFile(url.Path)
+        && File.Exists(url.Path);
+
+    private bool IsImageFile(Url url) =>
+        _imageFileViewerDialog is not null
+        && ImageFileTypes.IsImageFile(url.Path)
+        && File.Exists(url.Path);
+
     private static bool IsSolutionFile(string extension) =>
         extension.ToLowerInvariant() is "slnx" or "sln";
 
@@ -86,6 +103,26 @@ public class ViewFileDialogCommand(
         {
             _solutionViewerDialog.SolutionPath = focusedFileUrl.Path;
             await (Control?.ShowDialogAsync(_solutionViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // Ahead of the music viewer: .mp4 and .webm are in the audio list too, and a file that has a
+        // picture is meant to be watched.
+        if (_videoFileViewerDialog is not null
+            && focusedFileUrl is not null
+            && IsVideoFile(focusedFileUrl))
+        {
+            _videoFileViewerDialog.FilePath = focusedFileUrl.Path;
+            await (Control?.ShowDialogAsync(_videoFileViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        if (_imageFileViewerDialog is not null
+            && focusedFileUrl is not null
+            && IsImageFile(focusedFileUrl))
+        {
+            _imageFileViewerDialog.FilePath = focusedFileUrl.Path;
+            await (Control?.ShowDialogAsync(_imageFileViewerDialog) ?? Task.CompletedTask);
             return;
         }
 

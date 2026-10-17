@@ -62,6 +62,8 @@ public class HotKeys : StatusBarItem
         IThemeService themeService,
         SolutionViewerDialog? solutionViewerDialog = null,
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
+        iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
+        iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? imageFileViewerDialog = null,
         iTerminal.Core.Dialogs.Search.FindFilesDialog? findFilesDialog = null,
         CompressDialog? compressDialog = null,
         ExtractDialog? extractDialog = null,
@@ -82,7 +84,7 @@ public class HotKeys : StatusBarItem
         var themeManagerDialogCommand = new ThemeManagerDialogCommand(themeManagerDialog);
         AddCommand(new ProcessManagerDialogCommand(processManagerDialog));
         var screenManagerDialogCommand = new ScreenManagerDialogCommand(themeService);
-        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog);
+        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog);
         var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations);
         var createFolderDialogCommand = new CreateFolderDialogCommand(createFolderDialog, contentModelService);
         var createFileDialogCommand = new CreateFileDialogCommand(createFileDialog, contentModelService);
