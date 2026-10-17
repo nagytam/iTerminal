@@ -335,7 +335,9 @@ public class ContentModelFileSystem(
                 await Task.Delay(FileWatcherRefreshDelay, cancellationTokenSource.Token);
                 if (!cancellationTokenSource.Token.IsCancellationRequested)
                 {
-                    Refresh();
+                    // Forced: a listing already under way may have read the folder before this change
+                    // landed, and a plain refresh is skipped while one is running, losing the change.
+                    Refresh(forceRefresh: true);
                 }
             }
             catch (TaskCanceledException)

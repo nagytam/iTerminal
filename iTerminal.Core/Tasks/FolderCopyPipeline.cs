@@ -31,7 +31,8 @@ internal static class FolderCopyPipeline
         Action<long, long> reportProgress,
         Action<Url>? onItemSucceeded = null,
         Action<long>? reportBytes = null,
-        Action<Url>? onFileStarted = null)
+        Action<Url>? onFileStarted = null,
+        Func<CancellationToken, Task>? beforeFile = null)
     {
         long processedFiles = 0;
         long processedBytes = 0;
@@ -73,6 +74,12 @@ internal static class FolderCopyPipeline
                 {
                     try
                     {
+                        if (beforeFile is not null)
+                        {
+                            // May hold this worker (and, behind one prompt, the others) while the user frees space.
+                            await beforeFile(linkedCts.Token);
+                        }
+
                         onFileStarted?.Invoke(item.Source);
 
                         // Each file reports its own running total; the delta since its last report

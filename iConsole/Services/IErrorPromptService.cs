@@ -14,4 +14,12 @@ public interface IErrorPromptService
     /// <paramref name="cancellationToken"/> fires before the user responds.
     /// </summary>
     Task<bool> ConfirmContinueAsync(string title, string message, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Like <see cref="ConfirmContinueAsync"/>, with the two buttons named by the caller. Returns
+    /// true for <paramref name="acceptLabel"/>, false for <paramref name="declineLabel"/>. The
+    /// default falls back to the Continue/Cancel prompt so existing implementations keep working.
+    /// </summary>
+    Task<bool> ConfirmAsync(string title, string message, string acceptLabel, string declineLabel, CancellationToken cancellationToken) =>
+        ConfirmContinueAsync(title, message, cancellationToken);
 }
