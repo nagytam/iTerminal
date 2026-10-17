@@ -299,6 +299,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Recycle.ITrashService, iTerminal.Core.Services.Recycle.FreedesktopTrash>();
         services.AddTransient<IFileSystemService, FileSystemService>();
         services.AddSingleton<IMemoryDriveService, MemoryDriveService>();
+        // SSH host keys and FTPS certificates seen so far: trusted on first use, refused when they change.
+        services.AddSingleton<ITrustedHostStore>(new TrustedHostStore(Path.Combine(databaseDirectory, "known_hosts.json")));
         services.AddTransient<ISshFileSystemService, SshFileSystemService>();
         services.AddTransient<ISmbFileSystemService, SmbFileSystemService>();
         // One connection for the run: both panels may be on the same FTP server.

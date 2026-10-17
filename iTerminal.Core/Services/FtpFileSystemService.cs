@@ -1,4 +1,5 @@
 using FluentFTP;
+using FluentFTP.Exceptions;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -19,24 +20,71 @@ public class FtpFileSystemService : IFtpFileSystemService, IFolderListingFileSys
     public const string AnonymousUser = "anonymous";
     public const string AnonymousPassword = "anonymous@";
 
-    /// <summary>Opens a client for the host, port, user and password; replaced by a fake in tests.</summary>
-    private readonly Func<string, int, string, string, IFtpClient> _clientFactory;
+    /// <summary>The setting that lets a login with a password fall back to unencrypted FTP when the server offers no TLS.</summary>
+    public const string AllowPlainSetting = "Ftp.AllowPlain";
+
+    /// <summary>Opens a client for the host, port, user and password, encrypted (explicit FTPS) or plain; replaced by a fake in tests.</summary>
+    private readonly Func<string, int, string, string, bool, IFtpClient> _clientFactory;
+    private readonly Func<bool> _allowPlain;
     private readonly ILogger? _logger;
     private readonly Lock _gate = new();
     private IFtpClient? _client;
     private string _host = string.Empty;
     private string _user = string.Empty;
 
-    public FtpFileSystemService(ILogger? logger = null)
-        : this((host, port, user, password) => new FtpClient(host, user, password, port), logger)
+    public FtpFileSystemService(ILogger? logger = null, ITrustedHostStore? knownHosts = null, ISettingsService? settings = null)
+        : this(CreateClientFactory(knownHosts ?? new TrustedHostStore(), logger),
+            () => settings?.GetAsBool(AllowPlainSetting, false) == true,
+            logger)
     {
     }
 
-    public FtpFileSystemService(Func<string, int, string, string, IFtpClient> clientFactory, ILogger? logger = null)
+    public FtpFileSystemService(Func<string, int, string, string, bool, IFtpClient> clientFactory, Func<bool>? allowPlain = null, ILogger? logger = null)
     {
         _clientFactory = clientFactory;
+        _allowPlain = allowPlain ?? (() => false);
         _logger = logger;
     }
+
+    /// <summary>
+    /// Encrypted clients use explicit FTPS (AUTH TLS) for the control and data connections. A certificate that
+    /// chains to a trusted root is accepted; any other (self-signed, expired, wrong name) is trusted on first
+    /// use by its SHA-256 and refused if it later changes.
+    /// </summary>
+    private static Func<string, int, string, string, bool, IFtpClient> CreateClientFactory(ITrustedHostStore knownHosts, ILogger? logger) =>
+        (host, port, user, password, secure) =>
+        {
+            var client = new FtpClient(host, user, password, port);
+            if (secure)
+            {
+                client.Config.EncryptionMode = FtpEncryptionMode.Explicit;
+                client.Config.DataConnectionEncryption = true;
+                client.ValidateCertificate += (_, e) =>
+                {
+                    if (e.PolicyErrors == System.Net.Security.SslPolicyErrors.None)
+                    {
+                        e.Accept = true;
+                        return;
+                    }
+
+                    var fingerprint = "SHA256:" + new System.Security.Cryptography.X509Certificates.X509Certificate2(e.Certificate!)
+                        .GetCertHashString(System.Security.Cryptography.HashAlgorithmName.SHA256);
+                    var hostId = $"ftps:{host}:{port}";
+                    var trust = knownHosts.Check(hostId, fingerprint, out var recorded);
+                    e.Accept = trust != HostTrust.Changed;
+                    if (trust == HostTrust.New)
+                    {
+                        logger?.Information("FTPS certificate of {Host} recorded: {Fingerprint} ({Errors})", hostId, fingerprint, e.PolicyErrors);
+                    }
+                    else if (trust == HostTrust.Changed)
+                    {
+                        logger?.Warning("FTPS certificate mismatch for {Host}: expected {Expected}, got {Actual}", hostId, recorded, fingerprint);
+                    }
+                };
+            }
+
+            return client;
+        };
 
     public bool IsReadOnly => false;
 
@@ -66,11 +114,32 @@ public class FtpFileSystemService : IFtpFileSystemService, IFolderListingFileSys
                 Disconnect();
             }
 
-            _client ??= _clientFactory(name, port, user, secret);
             _host = host;
             _user = user;
-            if (!_client.IsConnected)
+            _client ??= _clientFactory(name, port, user, secret, true);
+            if (_client.IsConnected)
             {
+                return;
+            }
+
+            try
+            {
+                _client.Connect();
+            }
+            catch (FtpSecurityNotAvailableException exception)
+            {
+                // The server has no TLS. Plain FTP is for logins with nothing to protect, or when the user has said so.
+                if (user != AnonymousUser && !_allowPlain())
+                {
+                    Disconnect();
+                    throw new IOException(
+                        $"{name} does not offer FTPS (encrypted FTP), and a password would cross the network in clear text. " +
+                        $"Set {AllowPlainSetting} to true in the settings to allow plain FTP.", exception);
+                }
+
+                _logger?.Warning("{Host} offers no FTPS; continuing with plain FTP", host);
+                Disconnect();
+                _client = _clientFactory(name, port, user, secret, false);
                 _client.Connect();
             }
         }
