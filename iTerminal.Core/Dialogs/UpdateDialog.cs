@@ -1,4 +1,6 @@
 using iConsole.Buffers;
+using iConsole.Commands;
+using iConsole.Controls.Buttons;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
@@ -12,19 +14,28 @@ namespace iTerminal.Core.Dialogs;
 /// Offers a newer release of iTerminal. On Windows Enter downloads the installer and starts it; elsewhere the
 /// dialog only says where the release is. S skips that release, Esc asks again at the next start.
 /// </summary>
-public class UpdateDialog : Dialog
+public class UpdateDialog : FormDialog
 {
     private const int PreferredWidth = 74;
     private const int LogRows = 3;
-    private const int Rows = 9; // Borders, three text rows, blanks, the log and the hint.
+    private const int Rows = 10; // Borders, three text rows, blanks, the log, the hint and the buttons.
 
     private readonly IUpdateService _service;
+    private readonly Button _installButton;
+    private readonly Button _cancelButton;
 
     public UpdateDialog(IUpdateService service, IThemeService themeService)
         : base("Update", themeService)
     {
         _service = service;
         Title = "Update available";
+
+        var installCommand = new InstallCommand();
+        AddCommand(installCommand);
+        _installButton = new Button("Install updates", installCommand, themeService);
+        _cancelButton = new CancelDialogButton(themeService);
+        AddControl(_installButton);
+        AddControl(_cancelButton);
     }
 
     /// <summary>Called once the installer is running: whoever owns the application closes it so the installer can replace its files.</summary>
@@ -43,6 +54,7 @@ public class UpdateDialog : Dialog
         }
 
         base.OnInitializeLayout();
+        LayoutButtonRow(_installButton, _cancelButton);
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -51,20 +63,7 @@ public class UpdateDialog : Dialog
 
         if (keyEvent.ConsoleKey == ConsoleKey.Enter && plain)
         {
-            if (_service.IsBusy)
-            {
-                return true;
-            }
-
-            if (_service.CanInstall && _service.Available is not null)
-            {
-                _ = Task.Run(InstallAsync);
-            }
-            else
-            {
-                Close();
-            }
-
+            Install();
             return true;
         }
 
@@ -76,6 +75,24 @@ public class UpdateDialog : Dialog
         }
 
         return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    /// <summary>Enter, or the Install updates button: downloads and starts the installer, or just closes when there is none to run.</summary>
+    private void Install()
+    {
+        if (_service.IsBusy)
+        {
+            return;
+        }
+
+        if (_service.CanInstall && _service.Available is not null)
+        {
+            _ = Task.Run(InstallAsync);
+        }
+        else
+        {
+            Close();
+        }
     }
 
     private async Task InstallAsync()
@@ -130,13 +147,13 @@ public class UpdateDialog : Dialog
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
         List<(string Text, Color Color)> rows = TextRows(innerWidth, colorScheme);
-        for (int i = 0; i < rows.Count && i + 1 < ViewSize.Height - 2; i++)
+        for (int i = 0; i < rows.Count && i + 1 < ViewSize.Height - 3; i++)
         {
             WriteRow(buffer, colorScheme, innerWidth, i + 1, rows[i].Text, rows[i].Color);
         }
 
         string hint = Hint.Length <= innerWidth ? Hint : Hint.Cut(innerWidth);
-        WriteRow(buffer, colorScheme, innerWidth, (int)ViewSize.Height - 2, hint, colorScheme.DisabledForeground);
+        WriteRow(buffer, colorScheme, innerWidth, (int)ViewSize.Height - 3, hint, colorScheme.DisabledForeground);
     }
 
     private void WriteRow(IBuffer buffer, ColorScheme colorScheme, int innerWidth, int row, string text, Color color)
@@ -146,5 +163,18 @@ public class UpdateDialog : Dialog
             new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + row),
             new Size(innerWidth, 1),
             new ConxelString(text.ExpandRight(innerWidth), color, colorScheme.Background));
+    }
+
+    private sealed class InstallCommand : Command
+    {
+        public override string Title => "Install updates";
+        public override string Description => "Download the new release and run its installer.";
+
+        public override Task ExecuteAsync(object? args)
+        {
+            var dialog = Control as UpdateDialog ?? Control?.Parent as UpdateDialog;
+            dialog?.Install();
+            return Task.CompletedTask;
+        }
     }
 }
