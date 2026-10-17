@@ -25,6 +25,23 @@ public class TaskManagerTest
         public Task RunAsync() => _runAsync?.Invoke() ?? Task.CompletedTask;
     }
 
+    /// <summary>
+    /// The container used to pick the constructor with the defaulted worker count, which ran the app
+    /// on one worker: a folder copy's discovery task then starved the copy that drains it.
+    /// </summary>
+    [TestMethod]
+    public void ResolvedFromTheContainer_RunsSeveralTasksAtOnce()
+    {
+        var services = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
+        Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<TaskManager>(services);
+        using var provider = Microsoft.Extensions.DependencyInjection.ServiceCollectionContainerBuilderExtensions.BuildServiceProvider(services);
+
+        var manager = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<TaskManager>(provider);
+
+        Assert.IsTrue(manager.WorkerCount >= 2, $"{manager.WorkerCount} worker(s)");
+        manager.Dispose();
+    }
+
     [TestMethod]
     public async Task Add_ShouldInsertAndCancelByType()
     {

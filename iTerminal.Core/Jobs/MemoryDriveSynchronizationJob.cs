@@ -9,23 +9,34 @@ public class MemoryDriveSynchronizationJob
 {
     private ISettingsService _settingsService { get; set; } 
     private IMemoryDriveService _memoryDriveService { get; set; }
-    private string SyncPath { get; set; }
+    private string SyncPath { get; set; } = string.Empty;
+    private static readonly string SyncPathKey = nameof(MemoryDriveSynchronizationJob) + nameof(SyncPath);
 
     public MemoryDriveSynchronizationJob(ISettingsService settingsService, IMemoryDriveService memoryDriveService)
     {
         _settingsService = settingsService ?? NullSettingsService.Instance;
         _memoryDriveService = memoryDriveService ?? new MemoryDriveService();
-        var key = nameof(MemoryDriveSynchronizationJob) + nameof(SyncPath);
-        SyncPath = _settingsService.Get(key)!;
+        ResolveSyncPath();
+    }
+
+    /// <summary>
+    /// The folder the memory drive mirrors itself to. Asked again when the job starts: the job is built
+    /// with the container, before the settings are read from the database, so a value stored there (or
+    /// seeded by a sandbox) was missed and the shared temp folder used instead.
+    /// </summary>
+    private void ResolveSyncPath()
+    {
+        SyncPath = _settingsService.Get(SyncPathKey)!;
         if (string.IsNullOrEmpty(SyncPath))
         {
             SyncPath = Path.Combine(Path.GetTempPath(), "MemoryDrive");
         }
-        _settingsService.Set(key, SyncPath);
+        _settingsService.Set(SyncPathKey, SyncPath);
     }
 
     protected override Task RunAsync(CancellationToken cancellationToken)
     {
+        ResolveSyncPath();
         Initialize();
         while (!cancellationToken.IsCancellationRequested)
         {

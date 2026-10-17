@@ -181,6 +181,135 @@ public class FileOperationsTest
         await _app.WaitUntilAsync(s => _app.RightPanelLists("readme.txt", s), "the memory panel to list the copy");
     }
 
+    private Core.Services.IMemoryDriveService Memory => _app.Driver.GetRequiredService<Core.Services.IMemoryDriveService>();
+
+    private async Task PutInMemoryAsync(string url, string text) =>
+        await Memory.WriteFileAsync(new iConsole.Data.Url(url), new MemoryStream(System.Text.Encoding.UTF8.GetBytes(text)));
+
+    private async Task CopyFocusedEntryAsync()
+    {
+        await _app.PressAsync("F5");
+        await _app.WaitForTextAsync("Copy");
+        await _app.PressAsync("Enter");
+    }
+
+    [TestMethod]
+    public async Task F5CopiesAFileFromTheMemoryDriveToTheDisk()
+    {
+        await PutInMemoryAsync("memdrive://note.txt", "from memory");
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Left, new iConsole.Data.Url("memdrive://"));
+        await _app.SelectEntryAsync("note.txt");
+
+        await CopyFocusedEntryAsync();
+
+        await _app.WaitUntilAsync(() => ReadIfFinished(Path.Combine(_app.RightRoot, "note.txt")) == "from memory", "the file to land on the disk");
+        await _app.WaitForNoDialogAsync();
+    }
+
+    [TestMethod]
+    public async Task F5CopiesAFolderFromTheMemoryDriveToTheDisk()
+    {
+        await Memory.CreateFolderAsync(new iConsole.Data.Url("memdrive://box/"));
+        await PutInMemoryAsync("memdrive://box/one.txt", "one");
+        await Memory.CreateFolderAsync(new iConsole.Data.Url("memdrive://box/inner/"));
+        await PutInMemoryAsync("memdrive://box/inner/two.txt", "two");
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Left, new iConsole.Data.Url("memdrive://"));
+        await _app.SelectEntryAsync("box");
+
+        await CopyFocusedEntryAsync();
+
+        await _app.WaitUntilAsync(() => ReadIfFinished(Path.Combine(_app.RightRoot, "box", "inner", "two.txt")) == "two", "the nested file to land on the disk");
+        Assert.AreEqual("one", ReadIfFinished(Path.Combine(_app.RightRoot, "box", "one.txt")));
+        await _app.WaitForNoDialogAsync();
+    }
+
+    [TestMethod]
+    public async Task F5CopiesAFileWithinTheMemoryDrive()
+    {
+        await PutInMemoryAsync("memdrive://note.txt", "from memory");
+        await Memory.CreateFolderAsync(new iConsole.Data.Url("memdrive://docs/"));
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Left, new iConsole.Data.Url("memdrive://"));
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Right, new iConsole.Data.Url("memdrive://docs/"));
+        await _app.SelectEntryAsync("note.txt");
+
+        await CopyFocusedEntryAsync();
+
+        await _app.WaitUntilAsync(() => Memory.ExistsFile(new iConsole.Data.Url("memdrive://docs/note.txt")), "the file to land in the memory folder");
+        await _app.WaitForNoDialogAsync();
+    }
+
+    [TestMethod]
+    public async Task F5CopiesAFolderWithinTheMemoryDrive()
+    {
+        await Memory.CreateFolderAsync(new iConsole.Data.Url("memdrive://box/"));
+        await PutInMemoryAsync("memdrive://box/one.txt", "one");
+        await Memory.CreateFolderAsync(new iConsole.Data.Url("memdrive://docs/"));
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Left, new iConsole.Data.Url("memdrive://"));
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Right, new iConsole.Data.Url("memdrive://docs/"));
+        await _app.SelectEntryAsync("box");
+
+        await CopyFocusedEntryAsync();
+
+        await _app.WaitUntilAsync(() => Memory.ExistsFile(new iConsole.Data.Url("memdrive://docs/box/one.txt")), "the folder to land in the memory folder");
+        await _app.WaitForNoDialogAsync();
+    }
+
+    [TestMethod]
+    public async Task F5CopiesABigFileToTheMemoryDriveAndShowsProgress()
+    {
+        var big = new byte[40 * 1024 * 1024];
+        new Random(1).NextBytes(big);
+        File.WriteAllBytes(Path.Combine(_app.LeftRoot, "big.bin"), big);
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Right, new iConsole.Data.Url("memdrive://"));
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Left, new iConsole.Data.Url(_app.LeftRoot));
+        await _app.SelectEntryAsync("big.bin");
+
+        await CopyFocusedEntryAsync();
+
+        await _app.WaitUntilAsync(() => Memory.ExistsFile(new iConsole.Data.Url("memdrive://big.bin")), "the big file to land on the memory drive");
+        await _app.WaitForNoDialogAsync();
+    }
+
+    /// <summary>The memory drive loads what it mirrored last time after the panel may already have listed it.</summary>
+    [TestMethod]
+    public async Task TheMemoryPanelListsFilesMirroredFromAnEarlierRun()
+    {
+        await _app.DisposeAsync();
+        _app = await TerminalApp.StartAsync((left, _) =>
+        {
+            var memory = Path.Combine(Path.GetDirectoryName(left)!, "memory");
+            Directory.CreateDirectory(memory);
+            File.WriteAllText(Path.Combine(memory, "kept.txt"), "kept");
+        });
+
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Right, new iConsole.Data.Url("memdrive://"));
+
+        await _app.WaitUntilAsync(s => _app.RightPanelLists("kept.txt", s), "the memory panel to list the mirrored file");
+    }
+
+    [TestMethod]
+    public async Task F5CopiesALargeNestedFolderToTheMemoryDrive()
+    {
+        var year = Path.Combine(_app.LeftRoot, "2025");
+        for (var month = 1; month <= 12; month++)
+        {
+            var folder = Path.Combine(year, $"month {month:00}", "scans");
+            Directory.CreateDirectory(folder);
+            for (var i = 0; i < 30; i++)
+            {
+                File.WriteAllBytes(Path.Combine(folder, $"doc {i:000} (copy).pdf"), new byte[(i + 1) * 20_000]);
+            }
+        }
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Right, new iConsole.Data.Url("memdrive://"));
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Left, new iConsole.Data.Url(_app.LeftRoot));
+        await _app.SelectEntryAsync("2025");
+
+        await CopyFocusedEntryAsync();
+
+        await _app.WaitUntilAsync(() => Memory.ExistsFile(new iConsole.Data.Url("memdrive://2025/month 12/scans/doc 029 (copy).pdf")), "the last file to land on the memory drive");
+        await _app.WaitForNoDialogAsync();
+    }
+
     [TestMethod]
     public async Task F5CopiesAFolderToTheMemoryDrive()
     {

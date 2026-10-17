@@ -221,6 +221,9 @@ public sealed class TerminalApp : IAsyncDisposable
                             [Core.Services.ContentModelService.Right] = "file://" + Path.Combine(root, "right"),
                             [Settings.MusicFolder] = Path.Combine(root, "music"),
                             [Settings.DocumentsFolder] = Path.Combine(root, "documents"),
+                            // The memory drive mirrors itself to a folder under the system temp; left at its
+                            // default, files copied onto it by one run were loaded by the next.
+                            [nameof(Core.Jobs.MemoryDriveSynchronizationJob) + "SyncPath"] = Path.Combine(root, "memory"),
                         }));
                 }
             }, options);
