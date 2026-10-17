@@ -37,6 +37,9 @@ public class FileToTextConverterService : IFileToTextConverterService
     private static readonly HashSet<string> WordExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "docx", "docm", "dotx", "dotm" };
 
+    private static readonly HashSet<string> OpenDocumentTextExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "odt", "ott" };
+
     private static readonly HashSet<string> SpreadsheetExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "xlsx", "xlsm", "xltx", "xltm" };
 
@@ -45,6 +48,7 @@ public class FileToTextConverterService : IFileToTextConverterService
 
     private static bool IsOfficeExtension(string extension) =>
         WordExtensions.Contains(extension)
+        || OpenDocumentTextExtensions.Contains(extension)
         || SpreadsheetExtensions.Contains(extension)
         || PresentationExtensions.Contains(extension);
 
@@ -92,6 +96,10 @@ public class FileToTextConverterService : IFileToTextConverterService
             else if (WordExtensions.Contains(url.Extension))
             {
                 AddLines(textModel, OfficeTextRenderer.RenderWord(url.Path));
+            }
+            else if (OpenDocumentTextExtensions.Contains(url.Extension))
+            {
+                AddLines(textModel, OfficeTextRenderer.RenderOpenDocumentText(url.Path));
             }
             else if (SpreadsheetExtensions.Contains(url.Extension))
             {

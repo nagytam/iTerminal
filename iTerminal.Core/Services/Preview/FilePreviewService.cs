@@ -59,7 +59,7 @@ public sealed class FilePreviewService(
 
     private static readonly HashSet<string> RenderedExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        "pdf", "docx", "xlsx", "xlsm", "xltx", "xltm", "pptx", "pptm", "potx", "potm",
+        "pdf", "docx", "odt", "xlsx", "xlsm", "xltx", "xltm", "pptx", "pptm", "potx", "potm",
         "html", "htm",
         "bmp", "png", "jpg", "jpeg", "gif", "tiff", "tif", "webp", "ico",
         "dll", "exe", "so",
