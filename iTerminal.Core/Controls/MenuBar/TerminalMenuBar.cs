@@ -101,7 +101,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         SecureWipeDialog? secureWipeDialog = null,
         SignatureDialog? signatureDialog = null,
         DuplicateFinderDialog? duplicateFinderDialog = null,
-        iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null
+        iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
+        iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null
         )
         : base([], themeService)
     {
@@ -184,7 +185,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             diskUsageDialog,
             elevationService,
             notificationService,
-            duplicateFinderDialog));
+            duplicateFinderDialog,
+            webBrowserDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 

@@ -36,7 +36,8 @@ public class ToolsMenuItem : MenuItem
         DiskUsageDialog? diskUsageDialog = null,
         iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
         INotificationService? notificationService = null,
-        DuplicateFinderDialog? duplicateFinderDialog = null)
+        DuplicateFinderDialog? duplicateFinderDialog = null,
+        iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -73,6 +74,7 @@ public class ToolsMenuItem : MenuItem
         if (calendarDialog is not null) features.Add(new CalendarDialogCommand(calendarDialog));
         if (toDoListDialog is not null) features.Add(new ToDoListDialogCommand(toDoListDialog));
         if (mailDialog is not null) features.Add(new MailDialogCommand(mailDialog));
+        if (webBrowserDialog is not null) features.Add(new WebBrowserDialogCommand(webBrowserDialog));
         if (passwordManagerDialog is not null) features.Add(new PasswordManagerDialogCommand(passwordManagerDialog));
         if (runtimeDependencyDialog is not null) features.Add(new RuntimeDependencyDialogCommand(runtimeDependencyDialog));
         if (diskUsageDialog is not null) features.Add(new DiskUsageDialogCommand(diskUsageDialog, contentModelService));

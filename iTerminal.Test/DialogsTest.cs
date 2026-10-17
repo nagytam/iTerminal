@@ -49,6 +49,7 @@ public class DialogsTest
     [DataRow("Ctrl+D", "CalendarDialog")]
     [DataRow("Ctrl+Y", "ToDoListDialog")]
     [DataRow("Ctrl+W", "MailDialog")]
+    [DataRow("Ctrl+S", "WebBrowserDialog")]
     [DataRow("Ctrl+X", "PasswordManagerDialog")]
     [DataRow("Ctrl+G", "GitClientDialog")]
     [DataRow("F2", "TerminalDialog")]
@@ -67,6 +68,28 @@ public class DialogsTest
     public async Task AGlobalDialogOpensOnTopAndClosesCleanly(string chord, string dialogTypeName)
     {
         await OpenAndCloseAsync(chord, dialogTypeName);
+    }
+
+    /// <summary>The Web Browser through the whole app: opens on its home page, takes an address, follows a link and closes.</summary>
+    [TestMethod]
+    public async Task TheWebBrowserOpensAnAddressAndFollowsALink()
+    {
+        await _app.PressAsync("Ctrl+S");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal?.GetType().Name == "WebBrowserDialog", "the Web Browser to open");
+        await _app.WaitForTextAsync("You asked for about:home");
+
+        await _app.PressAsync("Ctrl+L");
+        await _app.TypeAsync("example.test");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("You asked for https://example.test");
+
+        await _app.PressAsync("Tab");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("You asked for https://example.test/next");
+
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
     }
 
     [TestMethod]

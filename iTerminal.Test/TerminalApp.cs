@@ -192,6 +192,7 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.DriveActions>();
                 services.AddSingleton<Core.Services.Drives.IDriveActionsService>(provider => provider.GetRequiredService<SandboxServices.DriveActions>());
                 services.AddSingleton<Core.Services.Mail.IMailService, SandboxServices.Mail>();
+                services.AddSingleton<Core.Services.Web.IWebFetcher, SandboxServices.Web>();
                 services.AddSingleton<SandboxServices.MalwareScanner>();
                 services.AddSingleton<Core.Services.Defender.IMalwareScanService>(provider => provider.GetRequiredService<SandboxServices.MalwareScanner>());
 
