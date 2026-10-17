@@ -37,7 +37,8 @@ public class ToolsMenuItem : MenuItem
         DuplicateFinderDialog? duplicateFinderDialog = null,
         SystemSettingsDialog? systemSettingsDialog = null,
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
-        iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null)
+        iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null,
+        iTerminal.Core.Dialogs.Map.MapDialog? mapDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -72,6 +73,7 @@ public class ToolsMenuItem : MenuItem
         if (toDoListDialog is not null) features.Add(new ToDoListDialogCommand(toDoListDialog));
         if (mailDialog is not null) features.Add(new MailDialogCommand(mailDialog));
         if (webBrowserDialog is not null) features.Add(new WebBrowserDialogCommand(webBrowserDialog));
+        if (mapDialog is not null) features.Add(new MapDialogCommand(mapDialog));
         if (passwordManagerDialog is not null) features.Add(new PasswordManagerDialogCommand(passwordManagerDialog));
         if (systemSettingsDialog is not null) features.Add(new SystemSettingsDialogCommand(systemSettingsDialog));
         if (runtimeDependencyDialog is not null) features.Add(new RuntimeDependencyDialogCommand(runtimeDependencyDialog));
