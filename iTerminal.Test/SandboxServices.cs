@@ -411,6 +411,27 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// The stock quote source with no network: every symbol trades at 100.00 after closing at 99.00 on the
+    /// "Sandbox" exchange, except <see cref="Unknown"/> ones, and a search finds two fixed hits.
+    /// </summary>
+    public sealed class StockQuotes : Core.Services.Stocks.IStockQuoteProvider
+    {
+        public HashSet<string> Unknown { get; } = new(StringComparer.OrdinalIgnoreCase) { "NOPE" };
+
+        public Task<IReadOnlyDictionary<string, Core.Services.Stocks.StockQuote>> GetQuotesAsync(IReadOnlyList<string> symbols, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<string, Core.Services.Stocks.StockQuote>>(
+                symbols.Where(s => !Unknown.Contains(s)).ToDictionary(
+                    s => s,
+                    s => new Core.Services.Stocks.StockQuote(s, s + " Inc.", 100.00m, 99.00m, "USD", "Sandbox", DateTime.Now),
+                    StringComparer.OrdinalIgnoreCase));
+
+        public Task<IReadOnlyList<Core.Services.Stocks.StockSearchHit>> SearchAsync(string query, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Core.Services.Stocks.StockSearchHit>>(
+                [new Core.Services.Stocks.StockSearchHit("ACME.L", "Acme Holdings plc", "London", "EQUITY"),
+                 new Core.Services.Stocks.StockSearchHit("ACME", "Acme Holdings Inc", "NASDAQ", "EQUITY")]);
+    }
+
+    /// <summary>
     /// Nothing to install and nothing to check: no test downloads Playwright, and the start-up offer never
     /// opens over the panels. The dialog itself is still reachable from the Tools menu, with nothing in it.
     /// </summary>
