@@ -14,6 +14,9 @@ public class TaskManager : INotifyPropertyChanged, IDisposable
     private readonly Task[] _workers;
     private long _sequence;
 
+    /// <summary>How many tasks can run at once.</summary>
+    public int WorkerCount => _workers.Length;
+
     public ConcurrentObservableCollection<IBackgroundTask> Tasks { get; private set; } = [];
 
     // Default to several workers so a high-priority visible refresh can run concurrently with
@@ -25,7 +28,11 @@ public class TaskManager : INotifyPropertyChanged, IDisposable
     {
     }
 
-    public TaskManager(int workerCount = 1)
+    // No default for workerCount: with one, the container saw a constructor it could satisfy that
+    // takes more parameters than the parameterless one, picked it, and ran the whole app on a single
+    // worker — a folder copy's discovery task then held that worker while the copy that drains it
+    // never started.
+    public TaskManager(int workerCount)
     {
         workerCount = Math.Max(1, workerCount);
         _workers = new Task[workerCount];
