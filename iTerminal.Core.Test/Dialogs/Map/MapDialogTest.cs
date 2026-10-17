@@ -41,10 +41,7 @@ public class MapDialogTest
     [TestCleanup]
     public void Cleanup()
     {
-        if (Directory.Exists(_folder))
-        {
-            Directory.Delete(_folder, true);
-        }
+        MapTestSupport.DeleteFolder(_folder);
     }
 
     private async Task<Fixture> OpenAsync(Func<string, IReadOnlyList<MapPlace>>? search = null, bool online = true)

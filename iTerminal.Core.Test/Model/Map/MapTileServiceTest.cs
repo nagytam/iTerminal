@@ -16,10 +16,7 @@ public class MapTileServiceTest
     public void Cleanup()
     {
         SqliteConnection.ClearAllPools();
-        if (Directory.Exists(_folder))
-        {
-            Directory.Delete(_folder, true);
-        }
+        MapTestSupport.DeleteFolder(_folder);
     }
 
     private MapTileService Create(FakeTileFetcher fetcher) => new(fetcher, new MapStore(new MemorySettings()), _folder);

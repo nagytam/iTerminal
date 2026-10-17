@@ -24,6 +24,25 @@ internal static class MapTestSupport
         return image.Encode(SKEncodedImageFormat.Png, 100).ToArray();
     }
 
+    /// <summary>
+    /// Deletes a test folder. A background tile load that outlives its test can still be writing into it, so
+    /// a failed delete is tried again a few times before giving up quietly.
+    /// </summary>
+    public static void DeleteFolder(string folder)
+    {
+        for (var attempt = 0; attempt < 20 && Directory.Exists(folder); attempt++)
+        {
+            try
+            {
+                Directory.Delete(folder, true);
+            }
+            catch (IOException)
+            {
+                Thread.Sleep(50);
+            }
+        }
+    }
+
     /// <summary>A land tile with a dark road across its middle.</summary>
     public static byte[] RoadPng() => Png(Land, canvas =>
     {

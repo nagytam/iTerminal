@@ -15,10 +15,7 @@ public class MapModelTest
     [TestCleanup]
     public void Cleanup()
     {
-        if (Directory.Exists(_folder))
-        {
-            Directory.Delete(_folder, true);
-        }
+        MapTestSupport.DeleteFolder(_folder);
     }
 
     private (MapModel Model, FakeTileFetcher Fetcher, MapTileService Tiles, MemorySettings Settings) Create(Func<string, byte[]?>? answer = null)
