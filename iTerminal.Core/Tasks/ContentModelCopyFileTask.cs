@@ -1,5 +1,6 @@
 using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Services;
 
 namespace iTerminal.Core.Tasks;
 
@@ -7,8 +8,8 @@ namespace iTerminal.Core.Tasks;
 /// Copies a single file between two <see cref="IFileSystem"/> implementations. See
 /// <see cref="ContentModelFileTransferTask"/> for the shared streaming engine.
 /// </summary>
-public class ContentModelCopyFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite)
-    : ContentModelFileTransferTask(source, target, sourceUrl, targetUrl, overwrite)
+public class ContentModelCopyFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite, IErrorPromptService? errorPromptService = null)
+    : ContentModelFileTransferTask(source, target, sourceUrl, targetUrl, overwrite, errorPromptService)
 {
     protected override string Verb => "Copy";
     protected override string ProgressVerb => "Copying";

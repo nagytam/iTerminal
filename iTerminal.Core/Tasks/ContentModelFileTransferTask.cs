@@ -1,6 +1,7 @@
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
+using iConsole.Services;
 using iConsole.Tasks;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Helper;
@@ -17,7 +18,7 @@ namespace iTerminal.Core.Tasks;
 /// Copy and move differ only in the verb, the native fast path, and whether the source is deleted
 /// afterwards (<see cref="DeletesSource"/>).
 /// </summary>
-public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url requestedTargetUrl, bool overwrite) : BackgroundTask
+public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url requestedTargetUrl, bool overwrite, IErrorPromptService? errorPromptService = null) : BackgroundTask
 {
     private Url _targetUrl = requestedTargetUrl;
 
@@ -61,6 +62,16 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
             if (!overwrite && target.ExistsFile(_targetUrl))
             {
                 throw new IOException($"The file '{_targetUrl.FullName}' already exists.");
+            }
+
+            if (sourceUrl.Length > 0)
+            {
+                // Before anything is written: a file that does not fit warns instead of failing half way.
+                var spaceGuard = TransferSpaceGuard.For(source, sourceUrl, target, _targetUrl, DeletesSource, errorPromptService);
+                if (spaceGuard is not null)
+                {
+                    await spaceGuard.EnsureAsync(() => sourceUrl.Length, CancellationToken);
+                }
             }
 
             if (ReferenceEquals(source, target))

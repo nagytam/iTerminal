@@ -7,7 +7,7 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace iTerminal.Core.Services;
 
-public class FileSystemService : IFileSystemService
+public class FileSystemService : IFileSystemService, IFreeSpaceFileSystem
 {
     private ITrashService? _trash;
 
@@ -109,6 +109,40 @@ public class FileSystemService : IFileSystemService
     public string GetAvailableDiskSpace()
     {
         throw new NotImplementedException();
+    }
+
+    public virtual long? GetFreeBytes(Url url) => VolumeOf(url)?.AvailableFreeSpace;
+
+    public virtual string? GetVolumeId(Url url) => VolumeOf(url)?.Name;
+
+    private static DriveInfo? VolumeOf(Url url)
+    {
+        try
+        {
+            var path = url.FullName;
+            if (string.IsNullOrEmpty(path))
+            {
+                return null;
+            }
+
+            // The target usually does not exist yet: ask the nearest folder that does.
+            var folder = Path.GetFullPath(path);
+            while (!Directory.Exists(folder))
+            {
+                folder = Path.GetDirectoryName(folder) ?? string.Empty;
+                if (folder.Length == 0)
+                {
+                    return null;
+                }
+            }
+
+            var root = OperatingSystem.IsWindows() ? Path.GetPathRoot(folder) ?? folder : folder;
+            return new DriveInfo(root);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public Task<IMemoryFile?> ReadFileAsync(Url url)
