@@ -66,17 +66,28 @@ public class EditTextFileDialogCommand(
     private static bool IsSupportedFileType(string extension) =>
         SupportedExtensions.Contains(extension.TrimStart('.'));
 
-    public override Task ExecuteAsync(object? args)
+    public override async Task ExecuteAsync(object? args)
     {
-        var url = contentModelService?.GetFocusedModel()?.GetFocusedEntry()?.Url;
+        var model = contentModelService?.GetFocusedModel();
+        var url = model?.GetFocusedEntry()?.Url;
         if (fileAssociations?.DefaultFor(url, FileAssociationKind.Edit) is { } association
             && FileAssociationRunner.LocalFilePath(url) is { } path)
         {
             _ = fileAssociations.Start(association, path);
-            return Task.CompletedTask;
+            return;
         }
 
-        return base.ExecuteAsync(args);
+        await base.ExecuteAsync(args);
+
+        // The editor may have changed the file's size and date; the panel only notices on a re-read.
+        try
+        {
+            model?.Refresh(forceRefresh: true);
+        }
+        catch
+        {
+            // A panel that cannot be re-read must not turn a finished edit into a failure.
+        }
     }
 
     protected override void OnBeforeShow(TextFileEditorDialog dialog)
