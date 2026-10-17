@@ -383,6 +383,39 @@ public class FileOperationsTest
     }
 
     [TestMethod]
+    public async Task F8DeletesAFolderTreeOnTheMemoryDrive()
+    {
+        await Memory.CreateFolderAsync(new iConsole.Data.Url("memdrive://box/"));
+        await PutInMemoryAsync("memdrive://box/one.txt", "one");
+        await Memory.CreateFolderAsync(new iConsole.Data.Url("memdrive://box/inner/"));
+        await PutInMemoryAsync("memdrive://box/inner/two.txt", "two");
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Left, new iConsole.Data.Url("memdrive://"));
+        await _app.SelectEntryAsync("box");
+
+        await _app.PressAsync("F8");
+        await _app.WaitForTextAsync("Delete");
+        await _app.PressAsync("Enter");
+
+        await _app.WaitUntilAsync(() => !Memory.ExistsFolder(new iConsole.Data.Url("memdrive://box/")), "the folder tree to be deleted");
+        await _app.WaitForNoDialogAsync();
+    }
+
+    [TestMethod]
+    public async Task F8DeletesAnEmptyFolderOnTheMemoryDrive()
+    {
+        await Memory.CreateFolderAsync(new iConsole.Data.Url("memdrive://empty/"));
+        await _app.ContentModels.SetUrlAsync(Core.Services.ContentModelService.Left, new iConsole.Data.Url("memdrive://"));
+        await _app.SelectEntryAsync("empty");
+
+        await _app.PressAsync("F8");
+        await _app.WaitForTextAsync("Delete");
+        await _app.PressAsync("Enter");
+
+        await _app.WaitUntilAsync(() => !Memory.ExistsFolder(new iConsole.Data.Url("memdrive://empty/")), "the folder to be deleted");
+        await _app.WaitForNoDialogAsync();
+    }
+
+    [TestMethod]
     public async Task OnALocalFolderTheRecycleBinIsOfferedAndTicked()
     {
         if (!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux())

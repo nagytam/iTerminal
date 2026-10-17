@@ -12,6 +12,10 @@ public class MemoryDriveService : IMemoryDriveService
 
     public MemoryFolder Root { get; private set; } = new MemoryFolder(new Url(Container.MEMORY_DRIVE));
 
+    public event EventHandler? MirrorLoaded;
+
+    public void NotifyMirrorLoaded() => MirrorLoaded?.Invoke(this, EventArgs.Empty);
+
     public string GetAvailableDiskSpace()
     {
         var availableDiskSpace = (SystemHelper.GetAvailableMemoryInMBs() * 1024 * 1024).ToFileSize();
