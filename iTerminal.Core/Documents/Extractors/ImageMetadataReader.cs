@@ -85,7 +85,7 @@ internal static class ImageMetadataReader
         while (offset + 8 <= bytes.Length)
         {
             int length = ReadBigEndianInt32(bytes, offset);
-            if (length < 0 || offset + 12 + length > bytes.Length)
+            if (length < 0 || length > bytes.Length - offset - 12)
             {
                 break;
             }
