@@ -11,17 +11,20 @@ using iTerminal.Core.Services.Updates;
 namespace iTerminal.Core.Dialogs;
 
 /// <summary>
-/// Offers a newer release of iTerminal. On Windows Enter downloads the installer and starts it; elsewhere the
-/// dialog only says where the release is. S skips that release, Esc asks again at the next start.
+/// Offers a newer release of iTerminal. On Windows the Install updates button, focused when the dialog opens,
+/// downloads the installer and starts it; elsewhere the dialog only says where the release is. S skips that
+/// release, Esc asks again at the next start.
 /// </summary>
 public class UpdateDialog : FormDialog
 {
     private const int PreferredWidth = 74;
     private const int LogRows = 3;
+    private const int SkipButtonWidth = 21;
     private const int Rows = 10; // Borders, three text rows, blanks, the log, the hint and the buttons.
 
     private readonly IUpdateService _service;
     private readonly Button _installButton;
+    private readonly Button _skipButton;
     private readonly Button _cancelButton;
 
     public UpdateDialog(IUpdateService service, IThemeService themeService)
@@ -33,8 +36,12 @@ public class UpdateDialog : FormDialog
         var installCommand = new InstallCommand();
         AddCommand(installCommand);
         _installButton = new Button("Install updates", installCommand, themeService);
+        var skipCommand = new SkipCommand();
+        AddCommand(skipCommand);
+        _skipButton = new Button("Skip this version", skipCommand, themeService) { HotKeyChar = 'S' };
         _cancelButton = new CancelDialogButton(themeService);
         AddControl(_installButton);
+        AddControl(_skipButton);
         AddControl(_cancelButton);
     }
 
@@ -55,6 +62,13 @@ public class UpdateDialog : FormDialog
 
         base.OnInitializeLayout();
         LayoutButtonRow(_installButton, _cancelButton);
+
+        // Between the other two, as far from both as the row allows.
+        long gapStart = _installButton.Position.X + _installButton.ViewSize.Width;
+        long skipWidth = Math.Min(SkipButtonWidth, Math.Max(1, _cancelButton.Position.X - gapStart));
+        long skipX = gapStart + Math.Max(0, (_cancelButton.Position.X - gapStart - skipWidth) / 2);
+        _skipButton.Position = new Position((int)skipX, _installButton.Position.Y);
+        _skipButton.ViewSize = new Size((int)skipWidth, 1);
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -67,10 +81,9 @@ public class UpdateDialog : FormDialog
             return true;
         }
 
-        if (keyEvent.ConsoleKey == ConsoleKey.S && plain && !_service.IsBusy)
+        if (keyEvent.ConsoleKey == ConsoleKey.S && plain)
         {
-            _service.Skip();
-            Close();
+            Skip();
             return true;
         }
 
@@ -95,6 +108,18 @@ public class UpdateDialog : FormDialog
         }
     }
 
+    /// <summary>S, or the Skip button: stops offering this release until a newer one appears.</summary>
+    private void Skip()
+    {
+        if (_service.IsBusy)
+        {
+            return;
+        }
+
+        _service.Skip();
+        Close();
+    }
+
     private async Task InstallAsync()
     {
         if (await _service.InstallAsync(CancellationToken.None))
@@ -110,7 +135,7 @@ public class UpdateDialog : FormDialog
         [
             ($"iTerminal {latest} is available. You have {_service.CurrentVersion}.", scheme.Foreground),
             (_service.CanInstall
-                ? _service.Available?.Installer is null ? "This release has no Windows installer yet." : "Enter downloads the installer and runs it; iTerminal closes while it does."
+                ? _service.Available?.Installer is null ? "This release has no Windows installer yet." : "iTerminal closes while the installer runs."
                 : $"Download it from {_service.ReleasesAddress}", scheme.DisabledForeground),
             (string.Empty, scheme.Foreground),
         ];
@@ -129,11 +154,7 @@ public class UpdateDialog : FormDialog
         return rows.Select(row => (row.Text.Length > innerWidth ? row.Text.Cut(innerWidth) : row.Text, row.Color)).ToList();
     }
 
-    internal string Hint => _service.IsBusy
-        ? "Working..."
-        : _service.CanInstall && _service.Available?.Installer is not null
-            ? "Enter: install   S: skip this version   Esc: later"
-            : "S: skip this version   Esc: later";
+    internal string Hint => _service.IsBusy ? "Working..." : string.Empty;
 
     public override void Draw(IBuffer buffer)
     {
@@ -174,6 +195,19 @@ public class UpdateDialog : FormDialog
         {
             var dialog = Control as UpdateDialog ?? Control?.Parent as UpdateDialog;
             dialog?.Install();
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class SkipCommand : Command
+    {
+        public override string Title => "Skip this version";
+        public override string Description => "Do not offer this release again.";
+
+        public override Task ExecuteAsync(object? args)
+        {
+            var dialog = Control as UpdateDialog ?? Control?.Parent as UpdateDialog;
+            dialog?.Skip();
             return Task.CompletedTask;
         }
     }
