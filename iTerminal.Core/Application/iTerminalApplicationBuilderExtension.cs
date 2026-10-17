@@ -113,6 +113,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Model.Mail.MailAccountStore>();
         services.AddSingleton<iTerminal.Core.Services.Mail.IMailService, iTerminal.Core.Services.Mail.MailService>();
         services.AddTransient<iTerminal.Core.Dialogs.Mail.MailDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Web.IWebFetcher, iTerminal.Core.Services.Web.WebFetcher>();
+        services.AddSingleton<iTerminal.Core.Services.Web.WebBrowserStore>();
+        services.AddTransient<iTerminal.Core.Dialogs.Web.WebBrowserDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.PasswordManager.PasswordManagerDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Portfolio.PortfolioManagerDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Portfolio.PortfolioSetupWizardDialog>();

@@ -56,6 +56,22 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// A web fetcher that answers every address from memory, so the Web Browser can be driven without a network:
+    /// the page names the address it was asked for.
+    /// </summary>
+    public sealed class Web : Core.Services.Web.IWebFetcher
+    {
+        public List<string> Requested { get; } = [];
+
+        public Task<Core.Services.Web.WebFetchResponse> FetchAsync(Core.Services.Web.WebFetchRequest request, CancellationToken cancellationToken = default)
+        {
+            Requested.Add(request.Url);
+            var html = $"<html><head><title>Sandbox page</title></head><body><h1>Sandbox page</h1><p>You asked for {request.Url}</p><a href=\"/next\">next page</a></body></html>";
+            return Task.FromResult(new Core.Services.Web.WebFetchResponse(request.Url, 200, "OK", "text/html; charset=utf-8", System.Text.Encoding.UTF8.GetBytes(html)));
+        }
+    }
+
+    /// <summary>
     /// A machine called SANDBOX in the workgroup TESTGROUP, with two variables in each scope and three
     /// time zones, all in memory — recording nothing but keeping what it was told, so a test can read it back.
     /// </summary>

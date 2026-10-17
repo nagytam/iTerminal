@@ -102,7 +102,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         SignatureDialog? signatureDialog = null,
         DuplicateFinderDialog? duplicateFinderDialog = null,
         iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
-        SystemSettingsDialog? systemSettingsDialog = null
+        SystemSettingsDialog? systemSettingsDialog = null,
+        iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null
         )
         : base([], themeService)
     {
@@ -186,7 +187,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             elevationService,
             notificationService,
             duplicateFinderDialog,
-            systemSettingsDialog));
+            systemSettingsDialog,
+            webBrowserDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 
