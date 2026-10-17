@@ -11,8 +11,9 @@ using iTerminal.Core.Services.Updates;
 namespace iTerminal.Core.Dialogs;
 
 /// <summary>
-/// Offers a newer release of iTerminal. On Windows Enter downloads the installer and starts it; elsewhere the
-/// dialog only says where the release is. S skips that release, Esc asks again at the next start.
+/// Offers a newer release of iTerminal. On Windows the Install updates button, focused when the dialog opens,
+/// downloads the installer and starts it; elsewhere the dialog only says where the release is. S skips that
+/// release, Esc asks again at the next start.
 /// </summary>
 public class UpdateDialog : FormDialog
 {
@@ -110,7 +111,7 @@ public class UpdateDialog : FormDialog
         [
             ($"iTerminal {latest} is available. You have {_service.CurrentVersion}.", scheme.Foreground),
             (_service.CanInstall
-                ? _service.Available?.Installer is null ? "This release has no Windows installer yet." : "Enter downloads the installer and runs it; iTerminal closes while it does."
+                ? _service.Available?.Installer is null ? "This release has no Windows installer yet." : "iTerminal closes while the installer runs."
                 : $"Download it from {_service.ReleasesAddress}", scheme.DisabledForeground),
             (string.Empty, scheme.Foreground),
         ];
@@ -129,11 +130,7 @@ public class UpdateDialog : FormDialog
         return rows.Select(row => (row.Text.Length > innerWidth ? row.Text.Cut(innerWidth) : row.Text, row.Color)).ToList();
     }
 
-    internal string Hint => _service.IsBusy
-        ? "Working..."
-        : _service.CanInstall && _service.Available?.Installer is not null
-            ? "Enter: install   S: skip this version   Esc: later"
-            : "S: skip this version   Esc: later";
+    internal string Hint => _service.IsBusy ? "Working..." : string.Empty;
 
     public override void Draw(IBuffer buffer)
     {
