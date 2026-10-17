@@ -37,6 +37,60 @@ public class OfficeTextRendererTest
     }
 
     [TestMethod]
+    public void OpenDocumentText_RendersHeadingsBulletsAndTables()
+    {
+        string path = Path.Combine(_directory, "doc.odt");
+        const string content = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <office:document-content
+                xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+                xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+                xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0">
+              <office:body><office:text>
+                <text:h text:outline-level="1">Intro</text:h>
+                <text:p>Body<text:s text:c="2"/>text</text:p>
+                <text:list><text:list-item><text:p>first point</text:p></text:list-item></text:list>
+                <table:table>
+                  <table:table-row>
+                    <table:table-cell><text:p>Name</text:p></table:table-cell>
+                    <table:table-cell><text:p>Qty</text:p></table:table-cell>
+                  </table:table-row>
+                  <table:table-row>
+                    <table:table-cell><text:p>Apple</text:p></table:table-cell>
+                    <table:table-cell><text:p>3</text:p></table:table-cell>
+                  </table:table-row>
+                </table:table>
+              </office:text></office:body>
+            </office:document-content>
+            """;
+        using (System.IO.Compression.ZipArchive zip = System.IO.Compression.ZipFile.Open(
+            path, System.IO.Compression.ZipArchiveMode.Create))
+        {
+            using StreamWriter writer = new(zip.CreateEntry("content.xml").Open());
+            writer.Write(content);
+        }
+
+        IReadOnlyList<string> lines = OfficeTextRenderer.RenderOpenDocumentText(path);
+
+        CollectionAssert.Contains(lines.ToList(), "# Intro");
+        CollectionAssert.Contains(lines.ToList(), "Body  text");
+        CollectionAssert.Contains(lines.ToList(), "  • first point");
+        Assert.IsTrue(lines.Any(l => l.StartsWith('┌')));
+        Assert.IsTrue(lines.Any(l => l.Contains("│ Apple") && l.Contains("3")), string.Join("\n", lines));
+    }
+
+    [TestMethod]
+    public void OpenDocumentText_DamagedFile_ReportsInsteadOfThrowing()
+    {
+        string path = Path.Combine(_directory, "bad.odt");
+        File.WriteAllText(path, "not a zip");
+
+        IReadOnlyList<string> lines = OfficeTextRenderer.RenderOpenDocumentText(path);
+
+        Assert.IsTrue(lines.Single().StartsWith("[Could not read the document"));
+    }
+
+    [TestMethod]
     public void Word_RendersHeadingsBulletsAndTables()
     {
         string path = Path.Combine(_directory, "doc.docx");

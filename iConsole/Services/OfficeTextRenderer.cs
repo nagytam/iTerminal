@@ -1,5 +1,7 @@
 using System.Globalization;
+using System.IO.Compression;
 using System.Text;
+using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using A = DocumentFormat.OpenXml.Drawing;
@@ -55,6 +57,44 @@ public static class OfficeTextRenderer
                 {
                     AppendWordBlocks(lines, footerRoot, "Footer");
                 }
+            }
+        }
+        catch (Exception exception)
+        {
+            lines.Add($"[Could not read the document: {exception.Message}]");
+        }
+
+        return Trim(lines);
+    }
+
+    /// <summary>
+    /// Renders an OpenDocument text file (.odt/.ott) the way <see cref="RenderWord"/> renders Word: headings,
+    /// bullets and box-drawn tables. An ODT is a zip whose <c>content.xml</c> holds the body; it is read with
+    /// the BCL's zip and XML readers.
+    /// </summary>
+    public static IReadOnlyList<string> RenderOpenDocumentText(string path)
+    {
+        List<string> lines = [];
+        try
+        {
+            using ZipArchive archive = ZipFile.OpenRead(path);
+            ZipArchiveEntry? entry = archive.GetEntry("content.xml");
+            if (entry is null)
+            {
+                lines.Add("[Could not read the document: content.xml is missing]");
+                return lines;
+            }
+
+            XDocument content;
+            using (Stream stream = entry.Open())
+            {
+                content = XDocument.Load(stream);
+            }
+
+            XElement? body = content.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "text");
+            if (body is not null)
+            {
+                AppendOdfBlocks(lines, body, 0);
             }
         }
         catch (Exception exception)
@@ -251,6 +291,145 @@ public static class OfficeTextRenderer
             rows.Add([.. row.Elements<W.TableCell>().Select(cell =>
                 new GridCell(string.Join(" ", cell.Descendants<W.Paragraph>()
                     .Select(ParagraphText).Where(text => text.Length > 0))))]);
+        }
+
+        AppendGrid(lines, rows, headerRows: 0, widthCap: null);
+    }
+
+    #endregion
+
+    #region OpenDocument
+
+    private static readonly XNamespace OfficeNs = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";
+    private static readonly XNamespace TextNs = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+    private static readonly XNamespace TableNs = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
+
+    private static void AppendOdfBlocks(List<string> lines, XElement container, int listDepth)
+    {
+        foreach (XElement child in container.Elements())
+        {
+            if (child.Name == TextNs + "h")
+            {
+                string text = OdfText(child);
+                if (text.Trim().Length > 0)
+                {
+                    if (lines.Count > 0 && lines[^1].Length > 0)
+                    {
+                        lines.Add(string.Empty);
+                    }
+
+                    int level = int.TryParse((string?)child.Attribute(TextNs + "outline-level"), out int l) ? l : 1;
+                    lines.Add($"{new string('#', Math.Clamp(level, 1, 6))} {text}");
+                }
+            }
+            else if (child.Name == TextNs + "p")
+            {
+                AppendOdfParagraph(lines, child, listDepth);
+            }
+            else if (child.Name == TextNs + "list")
+            {
+                AppendOdfBlocks(lines, child, listDepth + 1);
+            }
+            else if (child.Name == TextNs + "list-item" || child.Name == TextNs + "list-header")
+            {
+                AppendOdfBlocks(lines, child, listDepth);
+            }
+            else if (child.Name == TextNs + "section")
+            {
+                AppendOdfBlocks(lines, child, listDepth);
+            }
+            else if (child.Name == TableNs + "table")
+            {
+                AppendOdfTable(lines, child);
+                lines.Add(string.Empty);
+            }
+        }
+    }
+
+    private static void AppendOdfParagraph(List<string> lines, XElement paragraph, int listDepth)
+    {
+        string text = OdfText(paragraph);
+        if (text.Trim().Length == 0)
+        {
+            if (lines.Count > 0 && lines[^1].Length > 0)
+            {
+                lines.Add(string.Empty);
+            }
+
+            return;
+        }
+
+        string style = (string?)paragraph.Attribute(TextNs + "style-name") ?? string.Empty;
+        if (style.Equals("Title", StringComparison.OrdinalIgnoreCase))
+        {
+            lines.Add(text);
+            lines.Add(new string('═', Math.Min(text.Length, TableBudgetWidth)));
+        }
+        else if (listDepth > 0)
+        {
+            lines.Add($"{new string(' ', 2 + (listDepth - 1) * 2)}• {text}");
+        }
+        else
+        {
+            lines.Add(text);
+        }
+    }
+
+    private static string OdfText(XElement element)
+    {
+        StringBuilder builder = new();
+        AppendOdfText(builder, element);
+        return builder.ToString();
+    }
+
+    private static void AppendOdfText(StringBuilder builder, XElement element)
+    {
+        foreach (XNode node in element.Nodes())
+        {
+            switch (node)
+            {
+                case XText text:
+                    builder.Append(text.Value);
+                    break;
+                case XElement child when child.Name == TextNs + "s":
+                    builder.Append(' ', int.TryParse((string?)child.Attribute(TextNs + "c"), out int count) ? Math.Clamp(count, 1, 200) : 1);
+                    break;
+                case XElement child when child.Name == TextNs + "tab":
+                    builder.Append("    ");
+                    break;
+                case XElement child when child.Name == TextNs + "line-break":
+                    builder.Append(' ');
+                    break;
+                case XElement child when child.Name == TextNs + "note" || child.Name == TextNs + "tracked-changes":
+                    break;
+                case XElement child:
+                    AppendOdfText(builder, child);
+                    break;
+            }
+        }
+    }
+
+    private static void AppendOdfTable(List<string> lines, XElement table)
+    {
+        List<GridCell[]> rows = [];
+        foreach (XElement row in table.Descendants(TableNs + "table-row"))
+        {
+            List<GridCell> cells = [];
+            foreach (XElement cell in row.Elements(TableNs + "table-cell"))
+            {
+                string text = string.Join(" ", cell.Elements(TextNs + "p").Select(OdfText).Where(t => t.Length > 0));
+                int repeat = int.TryParse((string?)cell.Attribute(TableNs + "number-columns-repeated"), out int r)
+                    ? Math.Clamp(r, 1, MaxSheetColumns) : 1;
+                for (int i = 0; i < repeat; i++)
+                {
+                    cells.Add(new GridCell(text));
+                }
+            }
+
+            if (cells.Count > 0)
+            {
+                rows.Add([.. cells]);
+            }
         }
 
         AppendGrid(lines, rows, headerRows: 0, widthCap: null);
