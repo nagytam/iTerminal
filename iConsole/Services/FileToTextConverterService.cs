@@ -34,11 +34,27 @@ public class FileToTextConverterService : IFileToTextConverterService
     private static readonly HashSet<string> AssemblyExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "dll", "exe", "so" };
 
-    private static readonly HashSet<string> NonTextExtensions =
-        new(StringComparer.OrdinalIgnoreCase)
+    private static readonly HashSet<string> WordExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "docx", "docm", "dotx", "dotm" };
+
+    private static readonly HashSet<string> SpreadsheetExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "xlsx", "xlsm", "xltx", "xltm" };
+
+    private static readonly HashSet<string> PresentationExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "pptx", "pptm", "potx", "potm", "ppsx", "ppsm" };
+
+    private static bool IsOfficeExtension(string extension) =>
+        WordExtensions.Contains(extension)
+        || SpreadsheetExtensions.Contains(extension)
+        || PresentationExtensions.Contains(extension);
+
+    private static void AddLines(ITextModel textModel, IReadOnlyList<string> lines)
+    {
+        foreach (string line in lines)
         {
-            "pdf", "docx", "xlsx", "xlsm", "xltx", "xltm", "pptx", "pptm", "potx", "potm",
-        };
+            textModel.Lines.Add(line);
+        }
+    }
 
     /// <summary>
     /// True when the viewer shows this file's bytes as text, so that a code page means something for
@@ -46,7 +62,8 @@ public class FileToTextConverterService : IFileToTextConverterService
     /// </summary>
     public static bool IsEncodingRelevant(Url? url) =>
         url is not null
-        && !NonTextExtensions.Contains(url.Extension)
+        && !url.Extension.Equals("pdf", StringComparison.OrdinalIgnoreCase)
+        && !IsOfficeExtension(url.Extension)
         && !ImageExtensions.Contains(url.Extension)
         && !AssemblyExtensions.Contains(url.Extension);
 
@@ -72,197 +89,22 @@ public class FileToTextConverterService : IFileToTextConverterService
             {
                 await ReadAssemblyMetadataAsync(url, fileSystem, textModel);
             }
-            else if (url.Extension.Equals("docx", StringComparison.OrdinalIgnoreCase))
+            else if (WordExtensions.Contains(url.Extension))
             {
-                ReadDocxFile(url, textModel);
+                AddLines(textModel, OfficeTextRenderer.RenderWord(url.Path));
             }
-            else if (url.Extension.Equals("xlsx", StringComparison.OrdinalIgnoreCase)
-                  || url.Extension.Equals("xlsm", StringComparison.OrdinalIgnoreCase)
-                  || url.Extension.Equals("xltx", StringComparison.OrdinalIgnoreCase)
-                  || url.Extension.Equals("xltm", StringComparison.OrdinalIgnoreCase))
+            else if (SpreadsheetExtensions.Contains(url.Extension))
             {
-                ReadSpreadsheetFile(url, textModel);
+                AddLines(textModel, OfficeTextRenderer.RenderSpreadsheet(url.Path));
             }
-            else if (url.Extension.Equals("pptx", StringComparison.OrdinalIgnoreCase)
-                  || url.Extension.Equals("pptm", StringComparison.OrdinalIgnoreCase)
-                  || url.Extension.Equals("potx", StringComparison.OrdinalIgnoreCase)
-                  || url.Extension.Equals("potm", StringComparison.OrdinalIgnoreCase))
+            else if (PresentationExtensions.Contains(url.Extension))
             {
-                ReadPresentationFile(url, textModel);
+                AddLines(textModel, OfficeTextRenderer.RenderPresentation(url.Path));
             }
             else
             {
                 await ReadTextFileAsync(url, fileSystem, textModel);
             }
-        }
-    }
-
-    private static void ReadDocxFile(Url url, ITextModel textModel)
-    {
-        try
-        {
-            using var doc = WordprocessingDocument.Open(url.Path, false);
-            var mainPart = doc.MainDocumentPart;
-            if (mainPart?.Document?.Body != null)
-            {
-                foreach (var para in mainPart.Document.Body.Elements<Paragraph>())
-                {
-                    var text = para.InnerText?.ReplaceLineEndings();
-                    if (!string.IsNullOrWhiteSpace(text))
-                    {
-                        var lines = text.Split(Environment.NewLine);
-                        foreach (var line in lines)
-                        {
-                            if (!string.IsNullOrWhiteSpace(line))
-                                textModel.Lines.Add(line.Trim());
-                        }
-                    }
-                }
-            }
-
-            // Also include headers and footers if present
-            if (mainPart?.HeaderParts != null)
-            {
-                foreach (var header in mainPart.HeaderParts)
-                {
-                    var headerText = header.Header?.InnerText?.ReplaceLineEndings();
-                    if (!string.IsNullOrWhiteSpace(headerText))
-                    {
-                        foreach (var line in headerText.Split(Environment.NewLine))
-                            if (!string.IsNullOrWhiteSpace(line))
-                                textModel.Lines.Add(line.Trim());
-                    }
-                }
-            }
-
-            if (mainPart?.FooterParts != null)
-            {
-                foreach (var footer in mainPart.FooterParts)
-                {
-                    var footerText = footer.Footer?.InnerText?.ReplaceLineEndings();
-                    if (!string.IsNullOrWhiteSpace(footerText))
-                    {
-                        foreach (var line in footerText.Split(Environment.NewLine))
-                            if (!string.IsNullOrWhiteSpace(line))
-                                textModel.Lines.Add(line.Trim());
-                    }
-                }
-            }
-        }
-        catch (Exception)
-        {
-            // If OpenXml parsing fails, skip with no lines added.
-        }
-    }
-
-    private static void ReadSpreadsheetFile(Url url, ITextModel textModel)
-    {
-        try
-        {
-            using var doc = SpreadsheetDocument.Open(url.Path, false);
-            var workbookPart = doc.WorkbookPart;
-            if (workbookPart?.Workbook?.Sheets == null)
-                return;
-
-            var sst = workbookPart.SharedStringTablePart?.SharedStringTable;
-
-            foreach (Sheet sheet in workbookPart.Workbook.Sheets.Cast<Sheet>())
-            {
-                var sheetName = sheet.Name ?? "(sheet)";
-                AddHeading(textModel, sheetName!);
-
-                WorksheetPart? worksheetPart = workbookPart.GetPartById(sheet.Id!) as WorksheetPart;
-                if (worksheetPart?.Worksheet == null)
-                    continue;
-
-                var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
-                if (sheetData == null)
-                    continue;
-
-                foreach (Row row in sheetData.Elements<Row>())
-                {
-                    var cells = new List<string>();
-                    foreach (Cell cell in row.Elements<Cell>())
-                    {
-                        string value = string.Empty;
-                        if (cell.DataType != null)
-                        {
-                            if (cell.DataType.Value == CellValues.SharedString)
-                            {
-                                if (int.TryParse(cell.CellValue?.Text, out int sstIndex) && sst != null)
-                                {
-                                    var item = sst.Elements<SharedStringItem>().ElementAtOrDefault(sstIndex);
-                                    value = item?.InnerText ?? string.Empty;
-                                }
-                            }
-                            else if (cell.DataType.Value == CellValues.Boolean)
-                            {
-                                value = cell.CellValue?.Text == "1" ? "TRUE" : "FALSE";
-                            }
-                            else
-                            {
-                                value = cell.CellValue?.Text ?? string.Empty;
-                            }
-                        }
-                        else
-                        {
-                            // No explicit datatype: typically a number or formula result
-                            value = cell.CellValue?.Text ?? string.Empty;
-                        }
-
-                        cells.Add(value);
-                    }
-
-                    if (cells.Count > 0)
-                        textModel.Lines.Add(string.Join('\t', cells));
-                }
-            }
-        }
-        catch (Exception)
-        {
-            // Silently ignore spreadsheet parse errors
-        }
-    }
-
-    private static void ReadPresentationFile(Url url, ITextModel textModel)
-    {
-        try
-        {
-            using var doc = PresentationDocument.Open(url.Path, false);
-            var presPart = doc.PresentationPart;
-            if (presPart?.Presentation?.SlideIdList == null)
-                return;
-
-            int slideIndex = 1;
-            foreach (var slideId in presPart.Presentation.SlideIdList.Elements<SlideId>())
-            {
-                var relId = slideId.RelationshipId;
-                if (string.IsNullOrEmpty(relId))
-                    continue;
-
-                var slidePart = presPart.GetPartById(relId!) as SlidePart;
-                if (slidePart?.Slide == null)
-                    continue;
-
-                AddHeading(textModel, $"Slide {slideIndex}");
-
-                var texts = slidePart.Slide.Descendants<DocumentFormat.OpenXml.Drawing.Text>()
-                    .Select(t => t.Text)
-                    .Where(s => !string.IsNullOrWhiteSpace(s));
-
-                foreach (var t in texts)
-                {
-                    var line = t.ReplaceLineEndings().Trim();
-                    if (!string.IsNullOrWhiteSpace(line))
-                        textModel.Lines.Add(line);
-                }
-
-                slideIndex++;
-            }
-        }
-        catch (Exception)
-        {
-            // Ignore presentation parse errors to avoid viewer crashes
         }
     }
 
