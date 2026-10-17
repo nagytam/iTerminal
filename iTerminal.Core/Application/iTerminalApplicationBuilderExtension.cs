@@ -1,4 +1,4 @@
-﻿using iConsole.Dialogs;
+using iConsole.Dialogs;
 using iConsole.Interfaces;
 using iConsole.Jobs;
 using iConsole.Services;
@@ -280,6 +280,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<MoveDialog>();
         services.AddTransient<AboutDialog>();
         services.AddTransient<SystemInfoDialog>();
+        services.AddSingleton<iTerminal.Core.Services.SystemSettings.ISystemSettingsService, iTerminal.Core.Services.SystemSettings.SystemSettingsService>();
+        services.AddTransient<SystemSettingsDialog>();
         services.AddTransient<NetworkManagerDialog>();
         services.AddTransient<NetworkBrowserDialog>();
         services.AddTransient<IPhoneBrowserDialog>();

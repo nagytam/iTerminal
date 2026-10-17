@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Runtime.CompilerServices;
 using iTerminal.Core.Model.Network;
 using iTerminal.Core.Model.PackageManager;
@@ -68,6 +68,92 @@ public static class SandboxServices
             Requested.Add(request.Url);
             var html = $"<html><head><title>Sandbox page</title></head><body><h1>Sandbox page</h1><p>You asked for {request.Url}</p><a href=\"/next\">next page</a></body></html>";
             return Task.FromResult(new Core.Services.Web.WebFetchResponse(request.Url, 200, "OK", "text/html; charset=utf-8", System.Text.Encoding.UTF8.GetBytes(html)));
+        }
+    }
+
+    /// <summary>
+    /// A machine called SANDBOX in the workgroup TESTGROUP, with two variables in each scope and three
+    /// time zones, all in memory — recording nothing but keeping what it was told, so a test can read it back.
+    /// </summary>
+    public sealed class SystemSettings : Core.Services.SystemSettings.ISystemSettingsService
+    {
+        private readonly Dictionary<Core.Services.SystemSettings.EnvironmentScope, SortedDictionary<string, string>> _environment = new()
+        {
+            [Core.Services.SystemSettings.EnvironmentScope.User] = new(StringComparer.Ordinal) { ["EDITOR"] = "vim", ["SANDBOX_USER"] = "yes" },
+            [Core.Services.SystemSettings.EnvironmentScope.Machine] = new(StringComparer.Ordinal) { ["SANDBOX_MACHINE"] = "yes", ["TEMP_ROOT"] = "/tmp" },
+        };
+
+        private Core.Services.SystemSettings.ComputerIdentity _identity =
+            new("SANDBOX", "TESTGROUP", false, "The test machine", true, true);
+
+        public bool IsElevated => true;
+
+        public bool SupportsTimeZone => true;
+
+        public string CurrentTimeZoneId { get; private set; } = "Test/Zone-A";
+
+        public bool SupportsEnvironment(Core.Services.SystemSettings.EnvironmentScope scope) => true;
+
+        public Task<Core.Services.SystemSettings.ComputerIdentity> GetComputerAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(_identity);
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> SetComputerNameAsync(string name, CancellationToken cancellationToken = default)
+        {
+            _identity = _identity with { ComputerName = name };
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok("Renamed.", restartRequired: true));
+        }
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> SetMembershipAsync(string workgroup, CancellationToken cancellationToken = default)
+        {
+            _identity = _identity with { Membership = workgroup };
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok("Workgroup changed.", restartRequired: true));
+        }
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> SetDescriptionAsync(string description, CancellationToken cancellationToken = default)
+        {
+            _identity = _identity with { Description = description };
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok("Description saved."));
+        }
+
+        public Task<IReadOnlyList<Core.Services.SystemSettings.SystemEnvironmentVariable>> GetEnvironmentAsync(
+            Core.Services.SystemSettings.EnvironmentScope scope, CancellationToken cancellationToken = default)
+        {
+            lock (_environment)
+            {
+                return Task.FromResult<IReadOnlyList<Core.Services.SystemSettings.SystemEnvironmentVariable>>(
+                    [.. _environment[scope].Select(pair => new Core.Services.SystemSettings.SystemEnvironmentVariable(pair.Key, pair.Value))]);
+            }
+        }
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> SetEnvironmentVariableAsync(
+            Core.Services.SystemSettings.EnvironmentScope scope, string name, string value, CancellationToken cancellationToken = default)
+        {
+            lock (_environment)
+            {
+                _environment[scope][name] = value;
+            }
+
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok(name + " was saved."));
+        }
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> RemoveEnvironmentVariableAsync(
+            Core.Services.SystemSettings.EnvironmentScope scope, string name, CancellationToken cancellationToken = default)
+        {
+            lock (_environment)
+            {
+                _environment[scope].Remove(name);
+            }
+
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok(name + " was removed."));
+        }
+
+        public IReadOnlyList<Core.Services.SystemSettings.TimeZoneChoice> GetTimeZones() =>
+            [new("Test/Zone-A", "(UTC+00:00) Zone A"), new("Test/Zone-B", "(UTC+01:00) Zone B"), new("Test/Zone-C", "(UTC+02:00) Zone C")];
+
+        public Task<Core.Services.SystemSettings.SystemSettingResult> SetTimeZoneAsync(string id, CancellationToken cancellationToken = default)
+        {
+            CurrentTimeZoneId = id;
+            return Task.FromResult(Core.Services.SystemSettings.SystemSettingResult.Ok("The time zone is now " + id + "."));
         }
     }
 

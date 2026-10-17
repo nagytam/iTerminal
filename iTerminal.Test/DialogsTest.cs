@@ -55,6 +55,7 @@ public class DialogsTest
     [DataRow("F2", "TerminalDialog")]
     [DataRow("Alt+F11", "IPhoneBrowserDialog")]
     [DataRow("Ctrl+F11", "SystemInfoDialog")]
+    [DataRow("Ctrl+Shift+F10", "SystemSettingsDialog")]
     [DataRow("Alt+F9", "DiskManagerDialog")]
     [DataRow("Alt+F12", "ProcessManagerDialog")]
     [DataRow("Alt+F3", "DocumentManagerDialog")]
