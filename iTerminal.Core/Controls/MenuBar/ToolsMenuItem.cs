@@ -38,7 +38,8 @@ public class ToolsMenuItem : MenuItem
         INotificationService? notificationService = null,
         DuplicateFinderDialog? duplicateFinderDialog = null,
         SystemSettingsDialog? systemSettingsDialog = null,
-        iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null)
+        iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
+        iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -70,6 +71,7 @@ public class ToolsMenuItem : MenuItem
         {
             features.Add(new PortfolioManagerDialogCommand(portfolioManagerDialog, portfolioSetupWizardDialog, settingsService));
         }
+        if (stockBrowserDialog is not null) features.Add(new StockBrowserDialogCommand(stockBrowserDialog));
         if (calculatorDialog is not null) features.Add(new CalculatorDialogCommand(calculatorDialog));
         if (unitConverterDialog is not null) features.Add(new UnitConverterDialogCommand(unitConverterDialog));
         if (calendarDialog is not null) features.Add(new CalendarDialogCommand(calendarDialog));

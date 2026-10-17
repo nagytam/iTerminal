@@ -81,6 +81,45 @@ public class OutsideWorldDialogsTest
         Assert.IsFalse(_app.Screen.Contains("Successfully installed"));
     }
 
+    [TestMethod]
+    public async Task AltF7OpensTheStockBrowserWithTheDefaultStocksQuoted()
+    {
+        Assert.IsTrue(await _app.PressAsync("Alt+F7"));
+
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Stocks.StockBrowserDialog, "the stock browser");
+        await _app.WaitForTextAsync("SPCX");
+        await _app.WaitForTextAsync("Sandbox");
+        foreach (var symbol in new[] { "AAPL", "MSFT", "TSLA", "GOOGL", "NVDA", "INTC" })
+        {
+            await _app.WaitForTextAsync(symbol);
+        }
+
+        await _app.WaitForTextAsync("+1.01%");
+        await CloseAndCheckAsync();
+    }
+
+    [TestMethod]
+    public async Task AStockIsFoundOnAnExchangeAddedAndRemoved()
+    {
+        await _app.PressAsync("Alt+F7");
+        await _app.WaitForTextAsync("+1.01%");
+
+        await _app.PressAsync("a");
+        await _app.TypeAsync("acme");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("Acme Holdings plc");
+        await _app.WaitForTextAsync("London");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("Added ACME.L");
+        await _app.WaitForTextAsync("8 on the list");
+
+        await _app.PressAsync("d");
+        await _app.WaitForTextAsync("from the list?");
+        await _app.PressAsync("y");
+        await _app.WaitForTextAsync("7 on the list");
+        await CloseAndCheckAsync();
+    }
+
     /// <summary>The first Ctrl+P walks through the setup wizard, and Finish leads into the manager.</summary>
     [TestMethod]
     public async Task TheFirstCtrlPRunsTheSetupWizardThenOpensThePortfolio()

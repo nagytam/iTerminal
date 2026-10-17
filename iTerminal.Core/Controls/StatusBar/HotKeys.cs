@@ -74,7 +74,8 @@ public class HotKeys : StatusBarItem
         iTerminal.Core.Services.Elevation.IElevationService? elevationService = null,
         INotificationService? notificationService = null,
         DuplicateFinderDialog? duplicateFinderDialog = null,
-        SystemSettingsDialog? systemSettingsDialog = null)
+        SystemSettingsDialog? systemSettingsDialog = null,
+        iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -387,6 +388,17 @@ public class HotKeys : StatusBarItem
                 IsVisible = false
             };
             AddControl(systemSettingsDialogButton);
+        }
+
+        if (stockBrowserDialog is not null)
+        {
+            var stockBrowserDialogButton = new Button("Alt-F7-Stocks", new StockBrowserDialogCommand(stockBrowserDialog), themeService)
+            {
+                Position = new Position(0, 0),
+                ViewSize = new Size(15, 1),
+                IsVisible = false
+            };
+            AddControl(stockBrowserDialogButton);
         }
     }
 
