@@ -19,10 +19,12 @@ public class UpdateDialog : FormDialog
 {
     private const int PreferredWidth = 74;
     private const int LogRows = 3;
+    private const int SkipButtonWidth = 21;
     private const int Rows = 10; // Borders, three text rows, blanks, the log, the hint and the buttons.
 
     private readonly IUpdateService _service;
     private readonly Button _installButton;
+    private readonly Button _skipButton;
     private readonly Button _cancelButton;
 
     public UpdateDialog(IUpdateService service, IThemeService themeService)
@@ -34,8 +36,12 @@ public class UpdateDialog : FormDialog
         var installCommand = new InstallCommand();
         AddCommand(installCommand);
         _installButton = new Button("Install updates", installCommand, themeService);
+        var skipCommand = new SkipCommand();
+        AddCommand(skipCommand);
+        _skipButton = new Button("Skip this version", skipCommand, themeService) { HotKeyChar = 'S' };
         _cancelButton = new CancelDialogButton(themeService);
         AddControl(_installButton);
+        AddControl(_skipButton);
         AddControl(_cancelButton);
     }
 
@@ -56,6 +62,13 @@ public class UpdateDialog : FormDialog
 
         base.OnInitializeLayout();
         LayoutButtonRow(_installButton, _cancelButton);
+
+        // Between the other two, as far from both as the row allows.
+        long gapStart = _installButton.Position.X + _installButton.ViewSize.Width;
+        long skipWidth = Math.Min(SkipButtonWidth, Math.Max(1, _cancelButton.Position.X - gapStart));
+        long skipX = gapStart + Math.Max(0, (_cancelButton.Position.X - gapStart - skipWidth) / 2);
+        _skipButton.Position = new Position((int)skipX, _installButton.Position.Y);
+        _skipButton.ViewSize = new Size((int)skipWidth, 1);
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -68,10 +81,9 @@ public class UpdateDialog : FormDialog
             return true;
         }
 
-        if (keyEvent.ConsoleKey == ConsoleKey.S && plain && !_service.IsBusy)
+        if (keyEvent.ConsoleKey == ConsoleKey.S && plain)
         {
-            _service.Skip();
-            Close();
+            Skip();
             return true;
         }
 
@@ -94,6 +106,18 @@ public class UpdateDialog : FormDialog
         {
             Close();
         }
+    }
+
+    /// <summary>S, or the Skip button: stops offering this release until a newer one appears.</summary>
+    private void Skip()
+    {
+        if (_service.IsBusy)
+        {
+            return;
+        }
+
+        _service.Skip();
+        Close();
     }
 
     private async Task InstallAsync()
@@ -171,6 +195,19 @@ public class UpdateDialog : FormDialog
         {
             var dialog = Control as UpdateDialog ?? Control?.Parent as UpdateDialog;
             dialog?.Install();
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class SkipCommand : Command
+    {
+        public override string Title => "Skip this version";
+        public override string Description => "Do not offer this release again.";
+
+        public override Task ExecuteAsync(object? args)
+        {
+            var dialog = Control as UpdateDialog ?? Control?.Parent as UpdateDialog;
+            dialog?.Skip();
             return Task.CompletedTask;
         }
     }
