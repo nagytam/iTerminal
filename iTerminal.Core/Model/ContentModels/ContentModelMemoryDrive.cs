@@ -42,8 +42,24 @@ public class ContentModelMemoryDrive(
     private FolderHistoryService _folderHistoryService { get; set; } = folderHistoryService;
     private ISettingsService _settingsService { get; set; } = settingsService;
 
+    private bool _listensForMirror;
+
     public override void SetUrl(Url url)
     {
+        if (!_listensForMirror)
+        {
+            _listensForMirror = true;
+            // Files mirrored from an earlier run are loaded in the background, possibly after the
+            // first listing: list again once they are in.
+            memoryDriveService.MirrorLoaded += (_, _) =>
+            {
+                if (Url is not null)
+                {
+                    Refresh();
+                }
+            };
+        }
+
         _settingsService.Set(Name, url);
         _folderHistoryService.Add(url);
         Entries.Clear();
@@ -65,23 +81,25 @@ public class ContentModelMemoryDrive(
             return;
         }
 
-        Entries.Clear();
-
         var currentFolder = memoryDriveService.GetFolder(Url) ?? memoryDriveService.Root;
 
+        // Built aside and swapped in whole: this can run on the job's thread as well as the UI's.
+        var entries = new List<IEntry>();
         if (!string.IsNullOrEmpty(Url.Path?.Trim('/')))
         {
-            Entries.Add(new MemoryDriveEntry("..", Url.ParentUrl));
+            entries.Add(new MemoryDriveEntry("..", Url.ParentUrl));
         }
 
         foreach (var folder in currentFolder.Folders)
         {
-            Entries.Add(new MemoryDriveEntry(folder.Value));
+            entries.Add(new MemoryDriveEntry(folder.Value));
         }
         foreach (var file in currentFolder.Files)
         {
-            Entries.Add(new MemoryDriveEntry(file.Value));
+            entries.Add(new MemoryDriveEntry(file.Value));
         }
+
+        Entries.ReplaceAll(entries);
     }
 
     public override async Task CreateFolderAsync(Url url)

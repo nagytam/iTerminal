@@ -14,4 +14,19 @@ public interface IMemoryDriveService : IFileSystem
     /// is missing.
     /// </summary>
     MemoryFolder? GetFolder(Url url);
+
+    /// <summary>
+    /// Raised when files mirrored from an earlier run have been loaded into the drive, which can be
+    /// after a panel has already listed it. The default does nothing.
+    /// </summary>
+    event EventHandler? MirrorLoaded
+    {
+        add { }
+        remove { }
+    }
+
+    /// <summary>Raises <see cref="MirrorLoaded"/>.</summary>
+    void NotifyMirrorLoaded()
+    {
+    }
 }

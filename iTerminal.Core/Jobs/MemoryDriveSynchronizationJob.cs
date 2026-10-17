@@ -38,6 +38,7 @@ public class MemoryDriveSynchronizationJob
     {
         ResolveSyncPath();
         Initialize();
+        _memoryDriveService.NotifyMirrorLoaded();
         while (!cancellationToken.IsCancellationRequested)
         {
             // The settings may finish loading after this job starts, so the folder can change under
@@ -47,6 +48,7 @@ public class MemoryDriveSynchronizationJob
             if (SyncPath != previousSyncPath)
             {
                 Initialize();
+                _memoryDriveService.NotifyMirrorLoaded();
             }
 
             WriteIfDirty();
