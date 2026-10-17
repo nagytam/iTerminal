@@ -21,7 +21,7 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel) : Job
                 var memDrive = new Drive
                 {
                     DriveInfo = null,
-                    Name = Container.MEMORY_DRIVE.PadRight(16),
+                    Name = Fit(Container.MEMORY_DRIVE, NameWidth),
                     Url = Container.MEMORY_DRIVE
                 };
                 if (!_driveInfoModel.Drives.Any(d => d.Name.StartsWith(Container.MEMORY_DRIVE)))
@@ -57,7 +57,7 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel) : Job
                         var drive = new Drive
                         {
                             DriveInfo = driveInfo,
-                            Name = driveInfo.Name.PadRight(16),
+                            Name = Fit(driveInfo.Name, NameWidth),
                             Url = new Url(driveInfo.Name)
                         };
                         Update(drive, cancellationToken);
@@ -80,19 +80,31 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel) : Job
         return Task.CompletedTask;
     }
 
+    // The list shows the drive as one string, so each column has a fixed width: a long mount point or
+    // label is cut with an ellipsis instead of pushing the type and the sizes out of line.
+    private const int NameWidth = 20;
+    private const int LabelWidth = 16;
+    private const int TypeWidth = 10;
+
+    private static string Fit(string? text, int width)
+    {
+        text ??= string.Empty;
+        return text.Length <= width ? text.PadRight(width) : text[..(width - 1)] + "…";
+    }
+
     private void Update(Drive drive, CancellationToken cancellationToken)
     {
         try
         {
             if (drive.IsEnabled)
             {
-                drive.Name += " Label: " + drive.DriveInfo?.VolumeLabel.PadRight(10);
-                drive.Name += " " + drive.DriveInfo?.DriveType.ToString().PadRight(10);
+                drive.Name += " Label: " + Fit(drive.DriveInfo?.VolumeLabel, LabelWidth);
+                drive.Name += " " + Fit(drive.DriveInfo?.DriveType.ToString(), TypeWidth);
             }
             else
             {
-                drive.Name += " Label: " + string.Empty.PadRight(15);
-                drive.Name += " " + string.Empty.PadRight(10);
+                drive.Name += " Label: " + Fit(string.Empty, LabelWidth);
+                drive.Name += " " + Fit(string.Empty, TypeWidth);
             }
             if (cancellationToken.IsCancellationRequested)
             {
@@ -110,13 +122,13 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel) : Job
         }
         catch
         {
-            drive.Name = drive.DriveInfo?.Name.PadRight(16) ?? string.Empty;
-            drive.Name += " Label: " + string.Empty.PadRight(15);
+            drive.Name = Fit(drive.DriveInfo?.Name, NameWidth);
+            drive.Name += " Label: " + Fit(string.Empty, LabelWidth);
             if (cancellationToken.IsCancellationRequested)
             {
                 return;
             }
-            drive.Name += " " + drive.DriveInfo?.DriveType.ToString().PadRight(10);
+            drive.Name += " " + Fit(drive.DriveInfo?.DriveType.ToString(), TypeWidth);
         }
 
         var oldDrive = _driveInfoModel.Drives.AsSnapshot().FirstOrDefault(d => 

@@ -48,7 +48,7 @@ public class AboutDialog : Dialog
         string.Empty,
         "F1 on a file panel lists its keys; the hot key bar shows the rest.",
         string.Empty,
-        "Esc: close",
+        "Esc:close",
     ];
 
     /// <summary>

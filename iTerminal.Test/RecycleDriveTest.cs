@@ -48,7 +48,7 @@ public class RecycleDriveTest
 
         var screen = await _app.WaitForTextAsync("old report.txt");
         Assert.IsTrue(screen.Contains("Recycle bin"), screen.Dump());
-        Assert.IsTrue(screen.Contains("Enter: restore"), screen.Dump());
+        Assert.IsTrue(screen.Contains("Enter:restore"), screen.Dump());
         Assert.IsTrue(screen.RowOf("newer.md") < screen.RowOf("photos"), screen.Dump());
         Assert.IsTrue(screen.RowOf("photos") < screen.RowOf("old report.txt"), screen.Dump());
         Assert.IsTrue(screen.Contains("2026-10-06"), "dated by when it was deleted" + Environment.NewLine + screen.Dump());

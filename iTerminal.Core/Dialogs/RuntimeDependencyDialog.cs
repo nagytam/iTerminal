@@ -204,12 +204,12 @@ public class RuntimeDependencyDialog : Dialog
     };
 
     internal string Hint => _service.IsBusy
-        ? "Installing... Esc: hide this (it keeps going)"
+        ? "Installing... Esc:hide this (it keeps going)"
         : HasWork
             ? ChoiceIsOffered
-                ? "Up/Down: move  Space: tick  Enter: install  S: skip  Esc: later"
-                : "Enter: install   S: skip this version   Esc: later"
-            : "Enter or Esc: close";
+                ? "Up/Down:move  Space:tick  Enter:install  S:skip  Esc:later"
+                : "Enter:install   S:skip this version   Esc:later"
+            : "Enter or Esc:close";
 
     public override void Draw(IBuffer buffer)
     {

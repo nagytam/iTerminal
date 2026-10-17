@@ -74,7 +74,7 @@ public class TerminalDialog : Dialog
         _terminalCommand = null;
     }
 
-    internal const string KeyHints = "Ctrl+1..4 or Ctrl+Left/Right: page   Up/Down: scroll   Esc: close";
+    internal const string KeyHints = "Ctrl+1..4 or Ctrl+Left/Right:page   Up/Down:scroll   Esc:close";
 
     internal Tab TabForTest => _tab;
 
