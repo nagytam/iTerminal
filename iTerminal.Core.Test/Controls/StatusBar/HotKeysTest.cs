@@ -18,7 +18,7 @@ public class HotKeysTest
     /// <summary>Exposes the modifier state the bar otherwise reads from the physical keyboard.</summary>
     private sealed class TestHotKeys() : HotKeys(
         null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
-        null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
+        null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
         NullSettingsService.Instance, null!, TestTheme())
     {
         public void Hold(bool shift = false, bool control = false, bool alt = false)

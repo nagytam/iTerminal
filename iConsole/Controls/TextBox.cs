@@ -125,7 +125,7 @@ public class TextBox : Control, IReadOnly
     /// What is drawn ahead of the input well: the label and a <c>": "</c> separator, or nothing at
     /// all when there is no label. A label that already ends in a colon ("Path or URL: ") keeps its
     /// own — appending another drew "Path or URL: : [", and an unlabelled box (the one-line inputs
-    /// of the Git, package and portfolio dialogs, or any field hosted in a <see cref="FormPanel"/>,
+    /// of the Git and package dialogs, or any field hosted in a <see cref="FormPanel"/>,
     /// which draws the labels itself) drew a stray ": " in front of its well.
     /// </summary>
     public virtual string LabelPrefix => FormatLabelPrefix(Label);

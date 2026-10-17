@@ -5,7 +5,6 @@ using iTerminal.Core.Model.PackageManager;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.PackageManager;
 using iTerminal.Core.Services.RuntimeDependencies;
-using iTerminal.Core.Services.Portfolio;
 
 namespace iTerminal.Test;
 
@@ -268,14 +267,6 @@ public static class SandboxServices
                 ? Core.Services.FileAssociations.LaunchOutcome.Success
                 : Core.Services.FileAssociations.LaunchOutcome.Failed(failure));
         }
-    }
-
-    /// <summary>Every symbol trades at 123.45.</summary>
-    public sealed class Quotes : IQuoteProvider
-    {
-        public Task<IReadOnlyDictionary<string, StooqQuote>> GetQuotesAsync(IReadOnlyList<string> symbols, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<string, StooqQuote>>(
-                symbols.ToDictionary(s => s, s => new StooqQuote(s, 123.45m, DateTime.Now)));
     }
 
     /// <summary>

@@ -31,7 +31,7 @@ namespace iTerminal.Test;
 /// </summary>
 public sealed class TerminalApp : IAsyncDisposable
 {
-    private static readonly Type[] OmittedJobs = [typeof(WeatherJob), typeof(OnlineQuoteJob), typeof(PortfolioQuoteJob), typeof(FolderIndexJob), typeof(RuntimeDependencyCheckJob), typeof(UpdateCheckJob), typeof(OllamaServerJob)];
+    private static readonly Type[] OmittedJobs = [typeof(WeatherJob), typeof(OnlineQuoteJob), typeof(FolderIndexJob), typeof(RuntimeDependencyCheckJob), typeof(UpdateCheckJob), typeof(OllamaServerJob)];
 
     private readonly string _root;
     private bool _ownsSandbox = true;
@@ -173,7 +173,6 @@ public sealed class TerminalApp : IAsyncDisposable
                 // Nothing reaches outside the machine: no network scan, no WinGet, no quote server.
                 services.AddSingleton<INetworkDiscoveryService, SandboxServices.NetworkDiscovery>();
                 services.AddSingleton<Core.Services.PackageManager.IPackageManagerService, SandboxServices.PackageManager>();
-                services.AddSingleton<Core.Services.Portfolio.IQuoteProvider, SandboxServices.Quotes>();
                 services.AddSingleton<Core.Services.RuntimeDependencies.IRuntimeDependencyService, SandboxServices.Dependencies>();
                 services.AddSingleton<SandboxServices.Shell>();
                 services.AddSingleton<Core.Services.Shell.IInteractiveShellService>(provider => provider.GetRequiredService<SandboxServices.Shell>());

@@ -23,8 +23,6 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Documents.DocumentManagerDialog? documentManagerDialog = null,
         NetworkBrowserDialog? networkBrowserDialog = null,
         iTerminal.Core.Dialogs.PackageManager.PackageManagerDialog? packageManagerDialog = null,
-        iTerminal.Core.Dialogs.Portfolio.PortfolioManagerDialog? portfolioManagerDialog = null,
-        iTerminal.Core.Dialogs.Portfolio.PortfolioSetupWizardDialog? portfolioSetupWizardDialog = null,
         iTerminal.Core.Dialogs.Calculator.CalculatorDialog? calculatorDialog = null,
         iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog? unitConverterDialog = null,
         iTerminal.Core.Dialogs.Calendar.CalendarDialog? calendarDialog = null,
@@ -64,10 +62,6 @@ public class ToolsMenuItem : MenuItem
         if (documentManagerDialog is not null) features.Add(new DocumentManagerDialogCommand(documentManagerDialog));
         if (networkBrowserDialog is not null) features.Add(new NetworkBrowserDialogCommand(networkBrowserDialog));
         if (packageManagerDialog is not null) features.Add(new PackageManagerDialogCommand(packageManagerDialog));
-        if (portfolioManagerDialog is not null && portfolioSetupWizardDialog is not null && settingsService is not null)
-        {
-            features.Add(new PortfolioManagerDialogCommand(portfolioManagerDialog, portfolioSetupWizardDialog, settingsService));
-        }
         if (calculatorDialog is not null) features.Add(new CalculatorDialogCommand(calculatorDialog));
         if (unitConverterDialog is not null) features.Add(new UnitConverterDialogCommand(unitConverterDialog));
         if (calendarDialog is not null) features.Add(new CalendarDialogCommand(calendarDialog));

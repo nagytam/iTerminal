@@ -14,7 +14,6 @@ public class iTerminalDbContext(DbContextOptions<iTerminalDbContext> options) : 
 
     public DbSet<CachedWeatherInfo> CachedWeatherInfos => Set<CachedWeatherInfo>();
     public DbSet<CachedInstrumentValue> CachedInstrumentValues => Set<CachedInstrumentValue>();
-    public DbSet<PortfolioHolding> PortfolioHoldings => Set<PortfolioHolding>();
 
     public DbSet<VaultEntry> VaultEntries => Set<VaultEntry>();
 
@@ -79,16 +78,6 @@ public class iTerminalDbContext(DbContextOptions<iTerminalDbContext> options) : 
             entity.HasKey(item => item.Id);
             entity.Property(item => item.InstrumentName).HasMaxLength(256);
             entity.Property(item => item.Currency).HasMaxLength(50);
-        });
-
-        modelBuilder.Entity<PortfolioHolding>(entity =>
-        {
-            entity.ToTable("PortfolioHoldings");
-            entity.HasKey(item => item.Id);
-            entity.Property(item => item.Symbol).HasMaxLength(32);
-            entity.Property(item => item.Exchange).HasMaxLength(16);
-            entity.Property(item => item.Currency).HasMaxLength(8);
-            entity.Property(item => item.Notes).HasMaxLength(1024);
         });
 
         modelBuilder.Entity<VaultEntry>(entity =>
