@@ -33,7 +33,9 @@ public class FileMenuItem : MenuItem
         ChecksumDialog? checksumDialog = null,
         iTerminal.Core.Services.FileSystemResolver? fileSystemResolver = null,
         SecureWipeDialog? secureWipeDialog = null,
-        SignatureDialog? signatureDialog = null)
+        SignatureDialog? signatureDialog = null,
+        iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
+        INotificationService? notificationService = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
@@ -74,6 +76,10 @@ public class FileMenuItem : MenuItem
         if (secureWipeDialog is not null)
         {
             AddMenuItem(new MenuItem("Secure Wipe	Ctrl+Shift+F8", new SecureWipeDialogCommand(secureWipeDialog, contentModelService), [], themeService));
+        }
+        if (malwareScanService is { IsAvailable: true })
+        {
+            AddMenuItem(new MenuItem("Scan with Microsoft Defender", new ScanWithDefenderCommand(contentModelService, malwareScanService, notificationService), [], themeService));
         }
         if (propertiesDialog is not null)
         {

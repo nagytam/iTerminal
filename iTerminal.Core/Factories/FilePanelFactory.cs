@@ -47,7 +47,9 @@ public class FilePanelFactory(
     Services.Clipboard.FileClipboardOperations? clipboardOperations = null,
     DiskImageDialog? diskImageDialog = null,
     SecureWipeDialog? secureWipeDialog = null,
-    SignatureDialog? signatureDialog = null)
+    SignatureDialog? signatureDialog = null,
+    iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
+    INotificationService? notificationService = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -89,7 +91,9 @@ public class FilePanelFactory(
             clipboardOperations: clipboardOperations,
             diskImageDialog: diskImageDialog,
             secureWipeDialog: secureWipeDialog,
-            signatureDialog: signatureDialog);
+            signatureDialog: signatureDialog,
+            malwareScanService: malwareScanService,
+            notificationService: notificationService);
         contentModelService.AddContentBrowser(name, contentBrowser);
         return new FilePanel(
             name,

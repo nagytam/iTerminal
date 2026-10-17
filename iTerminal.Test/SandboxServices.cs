@@ -55,6 +55,36 @@ public static class SandboxServices
             Task.FromResult<IReadOnlyList<Core.Model.Mail.DirectoryPerson>>([new("Ada Lovelace", "ada@example.test", string.Empty)]);
     }
 
+    /// <summary>A malware scanner that is always installed, scans nothing and finds nothing — recording what it was asked to scan.</summary>
+    public sealed class MalwareScanner : Core.Services.Defender.IMalwareScanService
+    {
+        private readonly List<string> _scanned = [];
+
+        public bool IsAvailable => true;
+
+        /// <summary>The paths scanned so far, in order.</summary>
+        public IReadOnlyList<string> Scanned
+        {
+            get
+            {
+                lock (_scanned)
+                {
+                    return [.. _scanned];
+                }
+            }
+        }
+
+        public Task<Core.Services.Defender.ScanResult> ScanAsync(string path, CancellationToken cancellationToken = default)
+        {
+            lock (_scanned)
+            {
+                _scanned.Add(path);
+            }
+
+            return Task.FromResult(new Core.Services.Defender.ScanResult(Core.Services.Defender.ScanOutcome.Clean, "No threats found."));
+        }
+    }
+
     /// <summary>Two packages installed, two to be found, and an install that reports and succeeds.</summary>
     public sealed class PackageManager : IPackageManagerService
     {

@@ -100,7 +100,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iConsole.Services.INotificationService? notificationService = null,
         SecureWipeDialog? secureWipeDialog = null,
         SignatureDialog? signatureDialog = null,
-        DuplicateFinderDialog? duplicateFinderDialog = null
+        DuplicateFinderDialog? duplicateFinderDialog = null,
+        iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null
         )
         : base([], themeService)
     {
@@ -123,7 +124,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             compressDialog: compressDialog,
             extractDialog: extractDialog,
             secureWipeDialog: secureWipeDialog,
-            signatureDialog: signatureDialog));
+            signatureDialog: signatureDialog,
+            malwareScanService: malwareScanService,
+            notificationService: notificationService));
 
         AddMenuItem(new EditMenuItem(
             contentModelService,
