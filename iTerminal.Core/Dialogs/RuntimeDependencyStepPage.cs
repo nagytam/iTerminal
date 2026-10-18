@@ -41,7 +41,9 @@ public class RuntimeDependencyStepPage(
         WriteRow(buffer, 0, $"{status.Name} - {status.Purpose}", scheme.Foreground, width, scheme);
         WriteRow(buffer, 1, StateText(status), Color.DarkYellow, width, scheme);
         WriteRow(buffer, 2, note, noteColor, width, scheme);
-        WriteRow(buffer, 3, tick, scheme.Foreground, width, scheme);
+        // A blank row sets the choice apart from the facts above it; a left-out one is dimmed so it reads as off.
+        WriteRow(buffer, 3, string.Empty, scheme.Foreground, width, scheme);
+        WriteRow(buffer, 4, tick, isTicked(id) ? Color.DarkGreen : scheme.DisabledForeground, width, scheme);
     }
 
     internal static string StateText(RuntimeDependencyStatus status) => status.State switch
