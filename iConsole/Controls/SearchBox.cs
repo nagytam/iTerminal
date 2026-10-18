@@ -21,6 +21,12 @@ public class SearchBox : TextBox
     /// <summary>Fired whenever the search text changes, with the current text as the argument.</summary>
     public event EventHandler<string>? SearchChanged;
 
+    /// <summary>
+    /// Fired when the user presses Enter in the box, with the current text. Enter is only consumed
+    /// while someone listens, so a dialog's default button still gets it otherwise.
+    /// </summary>
+    public event EventHandler<string>? Submitted;
+
     /// <summary>Fired when the user presses Escape, after the text has been cleared.</summary>
     public event EventHandler? Cleared;
 
@@ -46,6 +52,11 @@ public class SearchBox : TextBox
     {
         var before = Text;
         var handled = await base.HandleKeyEventAsync(keyEvent);
+        if (!handled && IsFocused && IsEnabled && keyEvent.ConsoleKey == ConsoleKey.Enter && Submitted is not null)
+        {
+            Submitted.Invoke(this, Text);
+            handled = true;
+        }
         if (Text != before)
         {
             SearchChanged?.Invoke(this, Text);
