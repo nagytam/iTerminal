@@ -91,6 +91,71 @@ public class ListBox<T> : Control
     }
 
     /// <summary>
+    /// Opt-in incremental search: typing letters moves the cursor to the next row whose text starts with
+    /// them (typed within <see cref="TypeAheadTimeout"/> of each other they build a longer prefix, a repeated
+    /// single letter cycles through the rows it starts). Off by default because lists in dialogs share the
+    /// letter keys with the dialog's own hot keys.
+    /// </summary>
+    public bool EnableTypeAhead { get; set; }
+
+    /// <summary>How long a pause starts a new prefix.</summary>
+    public TimeSpan TypeAheadTimeout { get; set; } = TimeSpan.FromMilliseconds(900);
+
+    private string _typeAheadPrefix = string.Empty;
+    private long _typeAheadTick;
+
+    /// <summary>
+    /// The index of the row to move to for <paramref name="prefix"/>, searching from <paramref name="start"/>
+    /// (inclusive) and wrapping; leading punctuation and spaces (markers like "● ") are ignored. -1 for none.
+    /// </summary>
+    public static int FindPrefix(IReadOnlyList<string> values, string prefix, int start)
+    {
+        for (var offset = 0; offset < values.Count; offset++)
+        {
+            var index = (start + offset) % values.Count;
+            var text = values[index].TrimStart(' ', '●', '○', '▶', '>', '*', '-', '•');
+            if (text.StartsWith(prefix, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        var isHandled = await base.HandleKeyEventAsync(keyEvent);
+        if (isHandled || !EnableTypeAhead || !IsFocused || !IsEnabled || Count == 0
+            || keyEvent.Control || keyEvent.Alt || !char.IsLetterOrDigit(keyEvent.KeyChar))
+        {
+            return isHandled;
+        }
+
+        var now = Environment.TickCount64;
+        var continuing = _typeAheadPrefix.Length > 0 && now - _typeAheadTick < TypeAheadTimeout.TotalMilliseconds;
+        _typeAheadTick = now;
+        var typed = keyEvent.KeyChar.ToString();
+        var cursor = (int)ScrollableModel.CursorPosition.Y;
+        var values = ListModel.ListItems.Select(item => item?.Value ?? string.Empty).ToList();
+
+        // A letter typed again, on its own, steps to the next row with that letter rather than searching for "aa".
+        var repeating = continuing && _typeAheadPrefix.Length == 1 && string.Equals(_typeAheadPrefix, typed, StringComparison.CurrentCultureIgnoreCase);
+        _typeAheadPrefix = continuing && !repeating ? _typeAheadPrefix + typed : typed;
+
+        var index = FindPrefix(values, _typeAheadPrefix, repeating || _typeAheadPrefix.Length == 1 ? cursor + 1 : cursor);
+        if (index < 0)
+        {
+            return false;
+        }
+
+        ScrollableModel.CursorPosition.Y = index;
+        ScrollableModel.ScrollToVisible();
+        StateHasChanged();
+        return true;
+    }
+
+    /// <summary>
     /// A click on a row moves the cursor there and selects it, as Enter does on the cursor row, and
     /// takes the keyboard focus. The wheel moves the cursor. Before this a list could only be driven
     /// from the keyboard: a mouse click on a row did nothing, and the wheel scrolled the dialog's

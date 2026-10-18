@@ -15,7 +15,8 @@ public class SettingsDialog : Dialog
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
-        iConsole.Interfaces.IContentModelService? contentModelService = null
+        iConsole.Interfaces.IContentModelService? contentModelService = null,
+        iTerminal.Core.Services.Music.IMusicPlayerService? musicPlayerService = null
         )
         : base(nameof(SettingsDialog), themeService)
     {
@@ -28,7 +29,7 @@ public class SettingsDialog : Dialog
         _tab.AddTabPage(tabPageNetwork);
         var tabPageQuotes = new SettingsQuotesTabPage(settingsService, themeService);
         _tab.AddTabPage(tabPageQuotes);
-        var tabPageMusic = new SettingsMusicTabPage(settingsService, beepService, dateTimeProviderService, themeService);
+        var tabPageMusic = new SettingsMusicTabPage(settingsService, beepService, dateTimeProviderService, themeService, musicPlayerService);
         _tab.AddTabPage(tabPageMusic);
         var tabPageDocuments = new SettingsDocumentsTabPage(settingsService, beepService, dateTimeProviderService, themeService);
         _tab.AddTabPage(tabPageDocuments);

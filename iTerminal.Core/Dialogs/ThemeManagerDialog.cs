@@ -43,6 +43,7 @@ public class ThemeManagerDialog : Dialog
         {
             EmptyText = " No themes available.",
         };
+        _listBoxThemes.EnableTypeAhead = true;
         AddControl(_listBoxThemes);
     }
 
