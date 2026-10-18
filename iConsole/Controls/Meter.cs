@@ -35,6 +35,9 @@ public class Meter(IThemeService themeService) : Control(themeService)
     /// <summary>Character used for the empty portion of the bar.</summary>
     public char EmptyChar { get; set; } = '░';
 
+    /// <summary>Overlays the value as a percentage (<c> 42% </c>) centred on the bar, so the number can be read, not counted.</summary>
+    public bool ShowPercent { get; set; }
+
     /// <summary>Optional label shown to the left of the bar, separated by a space.</summary>
     public string Label { get; set; } = string.Empty;
 
@@ -56,6 +59,10 @@ public class Meter(IThemeService themeService) : Control(themeService)
         var filled = (int)(barWidth * _value);
         var empty = barWidth - filled;
         var bar = StringHelper.Repeat(FillChar, filled) + StringHelper.Repeat(EmptyChar, empty);
+        if (ShowPercent && barWidth >= 6)
+        {
+            bar = StringHelper.AlignCenter(bar, $" {(int)Math.Round(_value * 100)}% ");
+        }
         var line = prefix + bar;
 
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, new ConxelString(line, fg, bg));
