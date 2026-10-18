@@ -443,6 +443,17 @@ public static class SandboxServices
             Task.FromResult<Core.Services.Translation.LanguageDetection?>(new Core.Services.Translation.LanguageDetection("de", 0.99));
     }
 
+    /// <summary>Exchange rates with no network: one euro is exactly two dollars, so a conversion is easy to read.</summary>
+    public sealed class CurrencyRates : Core.Services.Currency.ICurrencyRateProvider
+    {
+        public string Name => "Sandbox";
+
+        public Task<Core.Services.Currency.CurrencyRates> FetchAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Currency.CurrencyRates(
+                new DateOnly(2026, 10, 16),
+                new Dictionary<string, decimal> { ["USD"] = 2m, ["GBP"] = 0.5m, ["JPY"] = 100m }));
+    }
+
     /// <summary>
     /// Nothing to install and nothing to check: no test downloads Playwright, and the start-up offer never
     /// opens over the panels. The dialog itself is still reachable from the Tools menu, with nothing in it.

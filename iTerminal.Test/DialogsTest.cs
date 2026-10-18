@@ -58,6 +58,7 @@ public class DialogsTest
     [DataRow("Ctrl+Shift+F10", "SystemSettingsDialog")]
     [DataRow("Alt+F7", "StockBrowserDialog")]
     [DataRow("Ctrl+Shift+F4", "TranslatorDialog")]
+    [DataRow("Ctrl+Shift+F5", "CurrencyConverterDialog")]
     [DataRow("Alt+F2", "RemoteConnectionManagerDialog")]
     [DataRow("Alt+F9", "DiskManagerDialog")]
     [DataRow("Alt+F12", "ProcessManagerDialog")]
@@ -112,6 +113,24 @@ public class DialogsTest
 
         await _app.WaitForTextAsync("[en] Guten Tag");
         await _app.WaitForTextAsync("German (detected) → English");
+
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
+    /// <summary>The currency converter through the whole app: the rates download on opening, and the amount is converted with them.</summary>
+    [TestMethod]
+    public async Task TheCurrencyConverterConvertsWithTheDownloadedRates()
+    {
+        await _app.PressAsync("Ctrl+Shift+F5");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.CurrencyConverter.CurrencyConverterDialog, "the currency converter to open");
+
+        await _app.WaitForTextAsync("1.00 EUR  =  2.00 USD");
+        await _app.WaitForTextAsync("Rates of 2026-10-16 downloaded.");
+
+        await _app.PressAsync("F6");
+        await _app.WaitForTextAsync("1.00 USD  =  0.50 EUR");
 
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();

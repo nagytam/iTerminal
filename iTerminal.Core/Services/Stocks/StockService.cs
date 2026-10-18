@@ -53,7 +53,7 @@ public sealed class StockService : IStockService, IDisposable
 
     public static readonly TimeSpan DefaultRefreshInterval = TimeSpan.FromSeconds(15);
 
-    /// <summary>What a fresh install watches. SpaceX trades on Nasdaq as SPCX.</summary>
+    /// <summary>What a fresh install watches. SpaceX trades on Nasdaq as SPCX; Yahoo quotes Ethereum and Bitcoin in dollars as ETH-USD and BTC-USD.</summary>
     public static readonly IReadOnlyList<WatchedStock> Defaults =
     [
         new("AAPL", "Apple"),
@@ -63,6 +63,8 @@ public sealed class StockService : IStockService, IDisposable
         new("NVDA", "Nvidia"),
         new("INTC", "Intel"),
         new("SPCX", "SpaceX"),
+        new("ETH-USD", "Ethereum"),
+        new("BTC-USD", "Bitcoin"),
     ];
 
     private readonly ISettingsService _settingsService;
