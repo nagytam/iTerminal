@@ -483,6 +483,18 @@ public class FolderSelectorDialogTest
     }
 
     [TestMethod]
+    public void GetFooter_OnANarrowBorder_LeavesHintsOutWholeAndKeepsGoHelpAndCancel()
+    {
+        var footer = FolderSelectorDialog.GetFooter(60);
+
+        Assert.IsTrue(footer.Length <= 60, footer);
+        Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(footer, "Enter go");
+        Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(footer, "F1 help");
+        Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(footer, "Esc cancel");
+        Assert.IsFalse(footer.Contains("Ctrl+Up/Down", StringComparison.Ordinal), footer);
+    }
+
+    [TestMethod]
     public async Task Draw_PutsTheKeyHintsOnTheBottomBorder()
     {
         var harness = new FolderSelectorTestHarness();

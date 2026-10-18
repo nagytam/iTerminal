@@ -490,4 +490,19 @@ public class WebBrowserDialogTest
             }
         }
     }
+
+    [TestMethod]
+    public void FitHints_DropsTheLeastUsefulHintsWholeAndKeepsEscClose()
+    {
+        string[] hints = ["F1:help", "Ctrl+L:address", "Tab:links", "Ctrl+T:new tab", "F2:bookmarks", "Esc:close"];
+        int[] dropOrder = [4, 3, 2, 1, 0, 5];
+
+        string wide = WebBrowserDialog.FitHints(hints, dropOrder, 200);
+        string narrow = WebBrowserDialog.FitHints(hints, dropOrder, 40);
+
+        Assert.AreEqual(string.Join("  ", hints), wide);
+        Assert.IsTrue(narrow.Length <= 40, narrow);
+        Assert.IsTrue(narrow.EndsWith("Esc:close", StringComparison.Ordinal), narrow);
+        Assert.IsFalse(narrow.Contains("bookmarks", StringComparison.Ordinal), narrow);
+    }
 }

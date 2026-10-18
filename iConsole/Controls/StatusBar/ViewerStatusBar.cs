@@ -65,13 +65,22 @@ public class ViewerStatusBar : StatusBar
         _cursorPositionIndicator.ViewSize = new Size(20, 1);
         _searchResultsIndicator.ViewSize = new Size(20, 1);
 
-        Layout.StackHorizontal([
-            _findNextButton,
-            _findPreviousButton,
-            _searchTextDialogButton,
-            _encodingIndicator,
-            _cursorPositionIndicator,
-            _searchResultsIndicator
-        ]);
+        StackFitting(
+            [
+                _findNextButton,
+                _findPreviousButton,
+                _searchTextDialogButton,
+                _encodingIndicator,
+                _cursorPositionIndicator,
+                _searchResultsIndicator
+            ],
+            [
+                _cursorPositionIndicator,
+                _encodingIndicator,
+                _searchTextDialogButton,
+                _findNextButton,
+                _searchResultsIndicator,
+                _findPreviousButton
+            ]);
     }
 }

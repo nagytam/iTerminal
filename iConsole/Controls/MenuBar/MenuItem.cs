@@ -1,4 +1,4 @@
-using iConsole.Buffers;
+﻿using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
 using iConsole.Controls.PopUpWindows;
@@ -138,13 +138,56 @@ public class MenuItem : PopUpWindow
         {
             width = (uint)Text.Length + 1;
         }
-        var height = IsOpened ? (uint)(subMenuItems.Count() + 2) : 1;
+        var height = IsOpened ? (uint)(VisibleRowCount(subMenuItems.Count()) + 2) : 1;
         ViewSize = new Size(width, height);
         Position = new Position(0, 0);
         if (Parent is MenuBar menuBar)
         {
             Position = new Position(menuBar.GetDropDownColumn(this, width), 1);
         }
+    }
+
+    /// <summary>First entry drawn when the drop-down is taller than the screen allows.</summary>
+    private int _firstVisibleEntry;
+
+    /// <summary>
+    /// How many entries the drop-down shows: all of them, unless the screen is too short — the Tools
+    /// menu has more entries than an 80x24 terminal has rows, and its tail (and bottom border) was
+    /// drawn off screen. Then it shows a window of the list that follows the selection.
+    /// </summary>
+    private int VisibleRowCount(int entryCount)
+    {
+        if (this is MenuBar || entryCount == 0)
+        {
+            return entryCount;
+        }
+        var rootHeight = (int)GetRootControl().ViewSize.Height;
+        if (rootHeight <= 0)
+        {
+            return entryCount;
+        }
+        // Row 0 is the menu bar, then the drop-down's two border rows.
+        var room = Math.Max(3, rootHeight - 1 - 2);
+        return Math.Min(entryCount, room);
+    }
+
+    /// <summary>Moves the window so the selected entry is inside it.</summary>
+    private void KeepSelectionVisible(int visibleRows)
+    {
+        var selected = MenuItems.AsSnapshot().ToList().FindIndex(m => m.IsSelected);
+        var maxFirst = Math.Max(0, MenuItems.Count - visibleRows);
+        if (selected >= 0)
+        {
+            if (selected < _firstVisibleEntry)
+            {
+                _firstVisibleEntry = selected;
+            }
+            else if (selected >= _firstVisibleEntry + visibleRows)
+            {
+                _firstVisibleEntry = selected - visibleRows + 1;
+            }
+        }
+        _firstVisibleEntry = Math.Clamp(_firstVisibleEntry, 0, maxFirst);
     }
 
     /// <summary>
@@ -568,6 +611,10 @@ public class MenuItem : PopUpWindow
             buffer.Write(ZOrder, AbsolutePosition, new Size(s.Count, 1), s);
             var (labelWidth, hotKeyWidth) = GetEntryColumns();
             var innerWidth = (int)ViewSize.Width - 2;
+            var visibleRows = (int)ViewSize.Height - 2;
+            KeepSelectionVisible(visibleRows);
+            var hiddenAbove = _firstVisibleEntry > 0;
+            var hiddenBelow = _firstVisibleEntry + visibleRows < MenuItems.Count;
             for (uint y = 1; y < ViewSize.Height - 1; y++)
             {
                 s = new ConxelString(Border.Vertical, colorScheme.Foreground, colorScheme.Background);
@@ -575,9 +622,10 @@ public class MenuItem : PopUpWindow
                     new Position(AbsolutePosition.X, y + AbsolutePosition.Y),
                     new Size(s.Count, 1), s
                     );
-                if (y - 1 < MenuItems.Count)
+                var entryIndex = _firstVisibleEntry + (int)y - 1;
+                if (entryIndex < MenuItems.Count)
                 {
-                    var item = MenuItems[(int)y - 1];
+                    var item = MenuItems[entryIndex];
                     if (item.IsSeparator)
                     {
                         s = new ConxelString(Border.Horizontal.Repeat(innerWidth), colorScheme.Foreground, colorScheme.Background);
@@ -597,7 +645,9 @@ public class MenuItem : PopUpWindow
                         new Size(s.Count, 1), s
                         );
                 }
-                s = new ConxelString(Border.Vertical, colorScheme.Foreground, colorScheme.Background);
+                // A "▲" / "▼" in the right border says the list goes on beyond the screen.
+                var rightEdge = y == 1 && hiddenAbove ? "▲" : y == ViewSize.Height - 2 && hiddenBelow ? "▼" : Border.Vertical;
+                s = new ConxelString(rightEdge, colorScheme.Foreground, colorScheme.Background);
                 buffer.Write(ZOrder,
                     new Position(AbsolutePosition.X + ViewSize.Width - 1, y + AbsolutePosition.Y), 
                     new Size(s.Count, 1), s
