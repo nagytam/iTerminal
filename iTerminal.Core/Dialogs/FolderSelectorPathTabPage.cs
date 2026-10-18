@@ -53,6 +53,7 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         {
             Label = "Path or URL: ",
             MaxLength = 1024,
+            Placeholder = "e.g. /home/me, C:\\Users, ssh://host/path",
         }.WithAutoCompletion(completionModel);
         PathValidator = new FolderUrlValidationModel(TextBoxPath.TextModel, dateTimeProviderService);
         TextBoxPath.ValidationModel = PathValidator;

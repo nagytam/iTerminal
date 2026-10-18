@@ -78,9 +78,9 @@ public class FindFilesDialog : SplitPaneDialog
         _contentModelService = contentModelService;
         Title = "Find Files";
 
-        _namesBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Find", MaxLength = 512 };
-        _textBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Containing", MaxLength = 512 };
-        _folderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "In", MaxLength = 1024 };
+        _namesBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Find", MaxLength = 512, Placeholder = "name or pattern, e.g. *.log" };
+        _textBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Containing", MaxLength = 512, Placeholder = "text inside the files (optional)" };
+        _folderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "In", MaxLength = 1024, Placeholder = "folder to search" };
         _subfoldersBox = new CheckBox(themeService) { Label = "Include subfolders", IsChecked = true, HotKeyChar = 'I' };
         _resultListBox = new HitListBox(new ListBoxModel<FileSearchHit>(_resultItems), themeService)
         {

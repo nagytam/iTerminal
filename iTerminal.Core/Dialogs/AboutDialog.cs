@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using iConsole.Buffers;
+using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
@@ -15,11 +16,31 @@ namespace iTerminal.Core.Dialogs;
 /// </summary>
 public class AboutDialog : Dialog
 {
+    /// <summary>Index, in <see cref="Lines"/>, of the first label/value row.</summary>
+    private const int DetailStart = 3;
+
+    private const int DetailGap = 3;
+
+    private readonly KeyValueList _details;
+
     public AboutDialog(IThemeService themeService)
         : base(nameof(AboutDialog), themeService)
     {
         Title = "About";
+
+        // The label/value block is a KeyValueList rather than pre-padded strings: it aligns the values
+        // itself, so a new row ("Commit", "Data folder") is one more pair, not another PadRight.
+        _details = new KeyValueList(themeService) { Gap = DetailGap };
+        _details.SetItems(DetailPairs);
+        AddControl(_details);
     }
+
+    internal static IReadOnlyList<(string Key, string Value)> DetailPairs =>
+    [
+        ("Version", Version),
+        ("Runtime", RuntimeInformation.FrameworkDescription),
+        ("System", RuntimeInformation.OSDescription),
+    ];
 
     /// <summary>The version of the running app, as the build stamped it.</summary>
     internal static string Version
@@ -59,12 +80,9 @@ public class AboutDialog : Dialog
     {
         get
         {
-            string[] lines =
-            [
-                $"Version   {Version}",
-                $"Runtime   {RuntimeInformation.FrameworkDescription}",
-                $"System    {RuntimeInformation.OSDescription}",
-            ];
+            var pairs = DetailPairs;
+            var keyWidth = pairs.Max(p => p.Key.Length);
+            var lines = pairs.Select(p => p.Key.PadRight(keyWidth) + new string(' ', DetailGap) + p.Value).ToList();
             var width = lines.Max(l => l.Length);
             return lines.Select(l => l.PadRight(width));
         }
@@ -78,6 +96,12 @@ public class AboutDialog : Dialog
         {
             CenterInParent(new Size(80, Lines.Count + 4));
         }
+
+        // The block sits where the centred text used to: as wide as its longest row, in the middle.
+        var innerWidth = Math.Max(1, (int)ViewSize.Width - 2);
+        var blockWidth = Math.Min(innerWidth, Lines.Skip(DetailStart).Take(DetailPairs.Count).Max(l => l.Length));
+        _details.ViewSize = new Size(blockWidth, DetailPairs.Count);
+        _details.Position = new Position(1 + (innerWidth - blockWidth) / 2, DetailStart + 2);
     }
 
     public override void Draw(IBuffer buffer)
@@ -95,6 +119,11 @@ public class AboutDialog : Dialog
         var lines = Lines;
         for (var i = 0; i < lines.Count && i + 1 < innerHeight; i++)
         {
+            if (i >= DetailStart && i < DetailStart + DetailPairs.Count)
+            {
+                continue; // drawn by the KeyValueList
+            }
+
             var text = lines[i].Length <= innerWidth ? lines[i].Expand(innerWidth) : lines[i].Cut(innerWidth);
             var foreground = i == 0 ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
             buffer.Write(

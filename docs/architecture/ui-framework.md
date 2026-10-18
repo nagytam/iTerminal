@@ -50,8 +50,12 @@ A notification is a short message the app shows without stopping the user: a tit
 - **`Countdown`**: `MM:SS` (or `H:MM:SS`) until `Target`, counting down on the injected clock; `Start(duration)` / `Stop()`, raises `Finished` once. Redraws only when the displayed text changes; yellow under 10 s, red at zero, `--:--` while idle.
 - **`Alert.IsDismissible`**: draws a `×` in the last column; a click on it, or Esc while the alert has focus, clears the message and raises `Dismissed`. Off by default, so existing alerts keep their width and are not focusable.
 - **`StepIndicator.StepClicked`**: raised with the index when a step glyph is clicked; the host decides whether that step may be jumped to and sets `Current`.
+- **`Toolbar`**: one-row action strip `Open F3  Save  Close` of `ToolbarItem(Text, Hint, IsEnabled)`. Left/Right/Home/End move over the enabled items, Enter/Space or a click raise `ItemInvoked(index)`.
+- **`Table<T>` sorting**: a click on a header cell raises `SortRequested(column)`; the host sorts its rows and sets `SortColumn` / `SortDescending`, which draw ▲/▼ in that header.
 - **`TextBox.Placeholder`**: greyed hint drawn in the well while the box is empty; never part of `Text`.
 - **`Table<T>` mouse support**: a click on a body row moves the cursor (a second click on the cursor row raises `RowActivated`), the wheel moves it by three rows, the header row ignores clicks — the same behaviour as `ListBox`.
+
+**Where the app uses them (the rest are available, not yet wired in):** `Gauge` + `LineChart` + `BarChart` in `SystemInfoDialog`; `BarChart` + `BreakdownChart` + `Badge` in `DiskUsageDialog` (`BarChart` also in the stock browser); `Slider` in `CompressDialog`; `Wizard` + `Alert` in `RuntimeDependencyDialog`; `KeyValueList` in `AboutDialog`; `TextBox.Placeholder` in the command palette, process manager, find-files, checksum, file-association, document search, folder-selector path and SSH host inputs. Not used by any dialog yet: `SegmentedControl`, `Breadcrumb`, `Expander`, `Accordion`, `Pagination`, `Rating`, `LinkLabel`, `Chips`, `CheckList`, `Timeline`, `Calendar` (the calendar dialog has its own `CalendarModel` grid), `TimePicker`, `ColorPicker`, `Skeleton`, `Countdown`, `Toolbar`, `Table<T>`. When a dialog needs one of these, prefer it over a hand-drawn equivalent.
 
 ### Rendering pipeline
 Two `JobPriority.Rendering` jobs run continuously and are deliberately decoupled — nothing renders synchronously from a key handler:

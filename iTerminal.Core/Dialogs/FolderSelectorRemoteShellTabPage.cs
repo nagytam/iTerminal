@@ -41,6 +41,7 @@ public class FolderSelectorRemoteShellTabPage : FolderSelectorTabPage
         TextBoxHost = new TextBox(beepService, dateTimeProviderService, themeService)
         {
             Label = "SSH username@host: ",
+            Placeholder = "user@host",
         }.WithAutoCompletion(completionModel);
         TextBoxHost.ValidationModel = new HostValidationModel(TextBoxHost.TextModel, dateTimeProviderService);
         _errorMessage = new ErrorMessage(TextBoxHost.ValidationModel, themeService);

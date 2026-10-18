@@ -50,7 +50,7 @@ public class ChecksumDialog : Dialog
     {
         _checksumService = checksumService;
         Title = "Checksums";
-        _textBoxCompare = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Compare" };
+        _textBoxCompare = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Compare", Placeholder = "paste the expected hash" };
         _info = new InfoLines(themeService);
         _verdict = new InfoLines(themeService);
 

@@ -160,6 +160,7 @@ public class DocumentManagerDialog : SplitPaneDialog
         {
             Label = "Search",
             MaxLength = 512,
+            Placeholder = "words to look for in your documents",
         };
         _searchBox.PropertyChanged += OnSearchTextChanged;
 

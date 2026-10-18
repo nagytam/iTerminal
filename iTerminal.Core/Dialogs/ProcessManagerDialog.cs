@@ -25,7 +25,7 @@ public class ProcessManagerDialog : Dialog
         processService ??= new ProcessService();
 
         Title = "Process manager";
-        _textbox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Filter" };
+        _textbox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Filter", Placeholder = "process name or id" };
         AddControl(_textbox);
         var listModel = new ListBoxModel<Process>(processService.Processes)
         {
