@@ -40,6 +40,9 @@ A notification is a short message the app shows without stopping the user: a tit
 - **`Accordion`**: stacked `Expander` sections with at most one open. `AddSection(header, content, contentHeight)` appends one; opening a section closes the others and the sections re-flow (`Open(index)` / `Open(-1)` drive it from code); `ViewSize.Height` follows the total.
 - **`Timeline`**: read-only vertical history, `● 10:02  Build` joined by `│` connectors; the dot takes the `BadgeKind` colour. Shows the newest events when they do not all fit (`FirstVisibleEvent`).
 - **`SearchBox.Submitted`**: raised with the text on Enter. Enter is consumed only while someone listens, so a dialog's default button still gets it otherwise.
+- **`Calendar`**: 20×8 month grid for picking a date (`SelectedDate`, `Today`, `FirstDayOfWeek`, `Culture`). Arrows move a day/week, PageUp/PageDown a month (clamped to the shorter month), Home/End the first/last day, Enter raises `DateActivated`; a click selects a day or steps the month via the header arrows, the wheel steps months. `GridStart` is the pure layout helper.
+- **`Separator.Title`**: sets a heading into a horizontal rule (`⎯⎯ Advanced ⎯⎯⎯⎯`) to divide a form into named groups without a `GroupBox`; `Separator.BuildRule` builds the text.
+- **`Meter.ShowPercent`**: overlays the value as ` 42% ` centred on the bar (skipped when the bar is under 6 cells).
 - **`TextBox.Placeholder`**: greyed hint drawn in the well while the box is empty; never part of `Text`.
 - **`Table<T>` mouse support**: a click on a body row moves the cursor (a second click on the cursor row raises `RowActivated`), the wheel moves it by three rows, the header row ignores clicks — the same behaviour as `ListBox`.
 

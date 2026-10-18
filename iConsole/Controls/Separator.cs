@@ -10,13 +10,37 @@ public class Separator(IThemeService themeService) : Control(themeService)
 {
     public Orientation Orientation { get; set; } = Orientation.Horizontal;
 
+    /// <summary>
+    /// Optional heading set into a horizontal rule (<c>── Advanced ─────</c>), so a form can be
+    /// divided into named groups without a <see cref="GroupBox"/>. Ignored by vertical separators.
+    /// </summary>
+    public string Title { get; set; } = string.Empty;
+
+    /// <summary>The text of a horizontal rule <paramref name="width"/> cells wide, with the title (if any) set in.</summary>
+    public static string BuildRule(string title, int width)
+    {
+        if (width <= 0)
+        {
+            return string.Empty;
+        }
+
+        string rule = Border.HorizontalSingle;
+        if (string.IsNullOrEmpty(title) || width < 7)
+        {
+            return rule.Repeat(width);
+        }
+
+        string label = " " + (title.Length > width - 6 ? title[..(width - 6)] : title) + " ";
+        return (rule.Repeat(2) + label + rule.Repeat(width - 2 - label.Length)).PadRight(width);
+    }
+
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
         var colorScheme = ThemeService.CurrentColorScheme;
         if (Orientation == Orientation.Horizontal)
         {
-            var line = Border.HorizontalSingle.Repeat((int)ViewSize.Width);
+            var line = BuildRule(Title, (int)ViewSize.Width);
             var s = new ConxelString(line, colorScheme.Foreground, colorScheme.Background);
             buffer.Write(ZOrder, AbsolutePosition, ViewSize, s);
         }
