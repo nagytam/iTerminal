@@ -115,6 +115,13 @@ public class DocumentManagerDialog : SplitPaneDialog
 
     private readonly ResultListBox _resultListBox;
     private readonly PreviewListBox _previewListBox;
+
+    /// <summary>
+    /// Stands in for the preview while its text is being read, shaped like the paragraph that is coming.
+    /// Shown and hidden from <see cref="OnIdle"/>: the read finishes on a worker thread, which must not touch
+    /// the control tree.
+    /// </summary>
+    private readonly Skeleton _previewSkeleton;
     private readonly TextBox _searchBox;
 
     /// <summary>
@@ -169,6 +176,9 @@ public class DocumentManagerDialog : SplitPaneDialog
         AddControl(_searchBox);
         AddControl(_resultListBox);
         AddControl(_previewListBox);
+
+        _previewSkeleton = new Skeleton(themeService, dateTimeProviderService) { IsVisible = false };
+        AddControl(_previewSkeleton);
     }
 
     public override async Task OnInitializeAsync()
@@ -649,6 +659,7 @@ public class DocumentManagerDialog : SplitPaneDialog
     {
         SyncPreview();
         WrapPreview();
+        _previewSkeleton.IsVisible = _previewLoading && _isPreviewVisible && !_previewSkeleton.ViewSize.IsEmpty;
         base.OnIdle();
     }
 
@@ -658,6 +669,7 @@ public class DocumentManagerDialog : SplitPaneDialog
 
     internal string? SelectedPathForTest => SelectedHit()?.Entry.Path;
     internal int ResultCountForTest => _resultListBox.ListModel.ListItems.Count;
+    internal bool IsPreviewSkeletonVisibleForTest => _previewSkeleton.IsVisible;
     internal bool IsSearchingForTest => _searching;
     internal string MessageForTest => _message;
     internal IReadOnlyList<string> PreviewLinesForTest => [.. _previewItems.AsSnapshot()];
@@ -707,6 +719,9 @@ public class DocumentManagerDialog : SplitPaneDialog
             {
                 _previewListBox.ViewSize = new Size(0, 0);
             }
+
+            _previewSkeleton.Position = _previewListBox.Position;
+            _previewSkeleton.ViewSize = _previewListBox.ViewSize;
         }
 
         // Children must have their Position/ViewSize assigned before base.OnInitializeLayout()

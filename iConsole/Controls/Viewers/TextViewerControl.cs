@@ -15,6 +15,7 @@ public class TextViewerControl : Control
     public ISearchModel SearchModel { get; private set; } = new SearchModel();
     public ITextModel TextModel { get; private set; } = new TextModel();
     public ISelectionTextModel SelectionTextModel { get; private set; } = new SelectionTextModel();
+    private readonly bool _isCursorEnabled;
     private ScrollBar.ScrollBar _verticalScrollBar { get; set; }
     private ScrollBar.ScrollBar _horizontalScrollBar { get; set; }
     public override Position CursorPosition
@@ -52,6 +53,7 @@ public class TextViewerControl : Control
     public TextViewerControl(bool isCursorEnabled, IThemeService themeService) 
         : base(themeService)
     {
+        _isCursorEnabled = isCursorEnabled;
         ScrollableModel.PropertyChanged += OnPropertyChanged;
         _verticalScrollBar = new ScrollBar.ScrollBar(themeService) { ScrollBarOrientation = Orientation.Vertical };
         _horizontalScrollBar = new ScrollBar.ScrollBar(themeService) { ScrollBarOrientation = Orientation.Horizontal };
@@ -115,9 +117,42 @@ public class TextViewerControl : Control
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        if (isHandled || mouseEvent.WheelDelta == 0 || TextModel.Lines.Count == 0 || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        if (isHandled || TextModel.Lines.Count == 0 || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;
+        }
+
+        // A click in the text moves the cursor there: the highlighted row always, and — in an editor,
+        // where the cursor is a caret — the column too, clamped to the end of the line. The scroll bars
+        // (the last column and the last row) took their own clicks above.
+        if (mouseEvent.LeftClicked && mouseEvent.WheelDelta == 0)
+        {
+            long column = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
+            long row = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+            if (column >= ViewSize.Width - 1 || row >= ViewSize.Height - 1)
+            {
+                return false;
+            }
+
+            if (!IsFocused)
+            {
+                SetFocus();
+            }
+
+            long line = Math.Clamp((long)ScrollableModel.ScrollPosition.Y + row, 0, TextModel.Lines.Count - 1);
+            ScrollableModel.CursorPosition.Y = line;
+            if (_isCursorEnabled)
+            {
+                ScrollableModel.CursorPosition.X = Math.Clamp((long)ScrollableModel.ScrollPosition.X + column, 0, TextModel.Lines[(int)line].Length);
+            }
+
+            StateHasChanged();
+            return true;
+        }
+
+        if (mouseEvent.WheelDelta == 0)
+        {
+            return false;
         }
 
         long target = ScrollableModel.CursorPosition.Y + (mouseEvent.WheelDelta > 0 ? -WheelRows : WheelRows);

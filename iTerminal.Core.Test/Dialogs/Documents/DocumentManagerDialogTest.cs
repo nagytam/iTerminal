@@ -93,8 +93,18 @@ public class DocumentManagerDialogTest
             return Task.FromResult(hits);
         }
 
-        public Task<string> GetTextAsync(string path, CancellationToken cancellationToken = default) =>
-            Task.FromResult(Texts.TryGetValue(path, out var text) ? text : string.Empty);
+        /// <summary>When set, the text is not returned until the gate opens: a preview that is still loading.</summary>
+        public TaskCompletionSource? TextGate { get; set; }
+
+        public async Task<string> GetTextAsync(string path, CancellationToken cancellationToken = default)
+        {
+            if (TextGate is not null)
+            {
+                await TextGate.Task;
+            }
+
+            return Texts.TryGetValue(path, out var text) ? text : string.Empty;
+        }
     }
 
     private static DocumentEntry Doc(string name, int textLength = 10, string note = "", DocumentExtractionStatus status = DocumentExtractionStatus.Extracted) => new()
@@ -298,6 +308,32 @@ public class DocumentManagerDialogTest
             dialog.OnIdle();
             return dialog.PreviewLinesForTest.Contains("Hello preview");
         }, "the preview to load");
+    }
+
+    [TestMethod]
+    public async Task ASkeletonStandsInForThePreviewWhileItsTextLoads()
+    {
+        var service = new FakeDocumentLibraryService { TextGate = new TaskCompletionSource() };
+        var doc = Doc("a.txt");
+        service.Documents.Add(doc);
+        service.Texts[doc.Path] = "Hello preview";
+        var dialog = CreateDialog(service);
+        await ShowAsync(dialog);
+        await SettleAsync(dialog, 1);
+
+        await WaitUntilAsync(() =>
+        {
+            dialog.OnIdle();
+            return dialog.IsPreviewSkeletonVisibleForTest;
+        }, "the skeleton to show while the text loads");
+
+        service.TextGate.SetResult();
+
+        await WaitUntilAsync(() =>
+        {
+            dialog.OnIdle();
+            return !dialog.IsPreviewSkeletonVisibleForTest && dialog.PreviewLinesForTest.Contains("Hello preview");
+        }, "the skeleton to give way to the text");
     }
 
     [TestMethod]
