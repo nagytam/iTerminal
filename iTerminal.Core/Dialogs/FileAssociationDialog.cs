@@ -37,9 +37,9 @@ public class FileAssociationDialog : FormDialog
         AddCommand(saveCommand);
 
         // Captions padded to one width, so the three boxes start in the same column.
-        _textBoxCommand = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Command   " };
+        _textBoxCommand = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Command   ", Placeholder = "e.g. code %f" };
         _textBoxName = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Name      " };
-        _textBoxPatterns = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Applies to" };
+        _textBoxPatterns = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Applies to", Placeholder = "e.g. *.txt;*.md" };
         _checkBoxTerminal = new CheckBox(themeService) { Label = "Runs in the terminal (vim, nano, less…)" };
         _hintLabel = new Label("%f file  %d folder  %n name — without %f the file goes last", themeService);
         _errorLabel = new Label(string.Empty, themeService);

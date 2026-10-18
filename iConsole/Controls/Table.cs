@@ -58,6 +58,49 @@ public class Table<T> : Control
     /// </summary>
     public string EmptyText { get; set; } = string.Empty;
 
+    /// <summary>The column the host has sorted the rows by, or -1; its header shows ▲ or ▼.</summary>
+    public int SortColumn { get; set; } = -1;
+
+    /// <summary>Whether <see cref="SortColumn"/> is sorted descending (▼).</summary>
+    public bool SortDescending { get; set; }
+
+    /// <summary>
+    /// Raised with the column index when the user clicks a header cell. The table does not reorder its
+    /// rows — they belong to the host's collection — so the host sorts them and sets
+    /// <see cref="SortColumn"/> / <see cref="SortDescending"/> to show the arrow.
+    /// </summary>
+    public event EventHandler<int>? SortRequested;
+
+    /// <summary>The column whose header cell covers <paramref name="x"/> (relative to the table), or -1.</summary>
+    public int ColumnAt(int x)
+    {
+        int start = 0;
+        for (int i = 0; i < Columns.Count; i++)
+        {
+            if (x >= start && x < start + Columns[i].Width)
+            {
+                return i;
+            }
+
+            start += Columns[i].Width + 1;
+        }
+
+        return -1;
+    }
+
+    /// <summary>The header text of column <paramref name="index"/>, with the sort arrow at the cell's right edge.</summary>
+    public string HeaderText(int index)
+    {
+        string header = Columns[index].Header;
+        if (index != SortColumn || Columns[index].Width < 2)
+        {
+            return header;
+        }
+
+        int room = Columns[index].Width - 1;
+        return header.Cut(room).PadRight(room) + (SortDescending ? "▼" : "▲");
+    }
+
     /// <summary>Raised when the user presses Enter on a row.</summary>
     public event EventHandler<T?>? RowActivated;
 
@@ -101,6 +144,16 @@ public class Table<T> : Control
         long relativeX = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
         long relativeY = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
         bool isInside = relativeX >= 0 && relativeX < ViewSize.Width && relativeY >= 0 && relativeY < ViewSize.Height;
+        if (isInside && relativeY == 0 && mouseEvent.LeftClicked)
+        {
+            int column = ColumnAt((int)relativeX);
+            if (column >= 0)
+            {
+                SortRequested?.Invoke(this, column);
+                return true;
+            }
+        }
+
         if (!isInside || _rows.Count == 0 || relativeY == 0)
         {
             return isHandled;
@@ -145,7 +198,7 @@ public class Table<T> : Control
         var colorScheme = ThemeService.CurrentColorScheme;
 
         // Header row
-        var header = BuildRow(Columns.Select(c => c.Header), Columns.Select(c => c.Width));
+        var header = BuildRow(Columns.Select((c, i) => HeaderText(i)), Columns.Select(c => c.Width));
         buffer.Write(ZOrder, AbsolutePosition, ViewSize,
             new ConxelString(header, colorScheme.SelectedForeground, colorScheme.SelectedBackground));
 

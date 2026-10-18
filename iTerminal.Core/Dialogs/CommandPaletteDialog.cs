@@ -43,7 +43,7 @@ public class CommandPaletteDialog : Dialog
     {
         _settingsService = settingsService;
         Title = "Commands";
-        _query = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Run", IsReadOnly = false };
+        _query = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Run", IsReadOnly = false, Placeholder = "type to filter commands" };
         _list = new PaletteList(themeService);
         AddControl(_query);
         AddControl(_list);
