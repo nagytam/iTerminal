@@ -37,6 +37,12 @@ public class TextBox : Control, IReadOnly
     public IScrollableModel ScrollableModel { get; private set; } = new ScrollableModel();
     public ISelectionTextModel SelectionTextModel { get; private set; } = new SelectionTextModel();
     public long MaxLength { get; set; } = 256;
+
+    /// <summary>
+    /// Hint drawn greyed inside the well while the box is empty, so a field says what it wants
+    /// ("Search…", "host:port") without a label. It is never part of <see cref="Text"/>.
+    /// </summary>
+    public string Placeholder { get; set; } = string.Empty;
     public bool IsReadOnly { get; set; } = false;
     private IValidationModel? _validationModel;
     public IValidationModel? ValidationModel 
@@ -200,7 +206,9 @@ public class TextBox : Control, IReadOnly
         // The typed part in the value colour and the suggested remainder greyed after it — both cut
         // to the well, so a long value cannot push the closing bracket off the control.
         var visibleValue = displayText[scrollX..].Cut(visibleWidth);
-        var completion = GetCompletionSuffix(displayText[scrollX..]).Cut(visibleWidth - visibleValue.Length);
+        var completion = (displayText.Length == 0 && Placeholder.Length > 0
+            ? Placeholder
+            : GetCompletionSuffix(displayText[scrollX..])).Cut(visibleWidth - visibleValue.Length);
         text.Append(visibleValue, foregroundColor, backgroundColor);
         text.Append(completion, Color.Gray, backgroundColor);
         text.Append(string.Empty.ExpandRight(visibleWidth - visibleValue.Length - completion.Length), foregroundColor, backgroundColor);

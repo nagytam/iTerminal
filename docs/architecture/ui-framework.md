@@ -23,6 +23,13 @@ A notification is a short message the app shows without stopping the user: a tit
 - **Every operation with a progress window announces how it ended** (`TaskNotificationHelper.NotifyWhenFinished`, armed by `ProgressWindowFactory.Create`): copy, move, delete, compress, extract and their batches — success, cancelled (warning) or failed (error, with `BackgroundTask.Error`). The window is gone the moment the task succeeds, or earlier when the user closed it to get on with something else, which is the case a notification is for. It checks the status when armed as well as subscribing: a small local copy is over before the window is built. The text comes from the task's `Description` (a heading, what it was done to, and a last line saying how it ended — or one sentence that says everything) and from `BackgroundTask.Subject`, the few-word form ("readme.txt to target") a task sets because two whole paths do not fit a toast. A new task meant for a progress window should set `Subject`.
 - **Post a notification for what finishes behind the user's back, not for what they are looking at.** A dialog's own footer or the panel's footer is still the place for the result of a key just pressed there.
 
+### Small input and navigation controls
+- **`SegmentedControl`**: one-row pick-one (` Day  Week  Month `). Left/Right/Home/End, wheel and click on an option; `IndexAtColumn` maps a click to an option. Use it where a `RadioGroup` would waste rows.
+- **`Breadcrumb`**: a clickable trail (`Home › Docs › App`). `Breadcrumb.Layout` folds the middle into `…` when the trail is wider than the control, keeping the first and last segments. Left/Right move the highlight, Enter or a click raises `SegmentActivated(index)`.
+- **`Expander`**: a collapsible section with a `▶`/`▼` header. `Content` is attached with `AddControl` only while expanded (and detached when collapsed), so hidden children never draw or take keys; `ViewSize.Height` follows (`1` or `1 + ContentHeight`).
+- **`TextBox.Placeholder`**: greyed hint drawn in the well while the box is empty; never part of `Text`.
+- **`Table<T>` mouse support**: a click on a body row moves the cursor (a second click on the cursor row raises `RowActivated`), the wheel moves it by three rows, the header row ignores clicks — the same behaviour as `ListBox`.
+
 ### Rendering pipeline
 Two `JobPriority.Rendering` jobs run continuously and are deliberately decoupled — nothing renders synchronously from a key handler:
 
