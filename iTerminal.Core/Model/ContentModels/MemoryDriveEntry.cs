@@ -17,7 +17,7 @@ public record MemoryDriveEntry : EntryBase, IEntry
 
     public MemoryDriveEntry(MemoryFolder memoryFolder)
     {
-        Url = memoryFolder.Url;
+        Url = memoryFolder.Url.FullUrl.EndsWith('/') ? memoryFolder.Url : new Url(memoryFolder.Url.FullUrl + "/");
         Date = memoryFolder.CreationTime.ToString("yyyy-MM-dd HH:mm:ss");
         FileSize = "Folder";
     }

@@ -58,6 +58,27 @@ public class ContentModelMemoryDriveTest
     }
 
     [TestMethod]
+    public async Task CreateFolderAsync_WithoutTrailingSlash_ListsAFolderThatCanBeEntered()
+    {
+        var memoryDriveService = new MemoryDriveService();
+        var model = CreateModel(memoryDriveService);
+        model.SetUrl(new Url(Container.MEMORY_DRIVE));
+
+        await model.CreateFolderAsync(new Url("memdrive://docs"));
+        await memoryDriveService.WriteFileAsync(new Url("memdrive://docs/a.txt"), new MemoryStream([1]));
+        model.Refresh();
+
+        var folder = model.Entries.AsSnapshot().Single(e => e.Url.DisplayName == "docs");
+        Assert.AreEqual(PathType.Folder, folder.Url.PathType);
+
+        model.SetUrl(folder.Url);
+
+        var names = model.Entries.AsSnapshot().Select(e => e.Url.DisplayName).ToList();
+        CollectionAssert.Contains(names, "a.txt");
+        CollectionAssert.Contains(names, "..");
+    }
+
+    [TestMethod]
     public async Task CreateFolderAsync_ThenSetUrl_ShowsNewSubfolder()
     {
         var memoryDriveService = new MemoryDriveService();

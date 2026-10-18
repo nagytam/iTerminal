@@ -95,7 +95,9 @@ public class MemoryDriveService : IMemoryDriveService
     public Task CreateFolderAsync(Url url)
     {
         var folder = ResolveParentFolder(url) ?? throw new DirectoryNotFoundException($"Memory folder not found: {url.FullUrl}");
-        folder.Folders.AddOrUpdate(url.Name, new MemoryFolder(url), (key, oldValue) => oldValue);
+        // A folder's URL ends with '/': without it the URL parses as a file and Enter cannot enter it.
+        var folderUrl = url.FullUrl.EndsWith('/') ? url : new Url(url.FullUrl + "/");
+        folder.Folders.AddOrUpdate(folderUrl.Name, new MemoryFolder(folderUrl), (key, oldValue) => oldValue);
         return Task.CompletedTask;
     }
 
