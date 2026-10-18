@@ -46,6 +46,10 @@ A notification is a short message the app shows without stopping the user: a tit
 - **`TimePicker`**: `[14:05]` / `[14:05:30]` (`ShowSeconds`) time-of-day field, `Value` is a `TimeOnly`. Left/Right pick the field, Up/Down/wheel step it (wrapping within the field, PageUp/PageDown by 10), digits type a value (two digits, then the next field), a click picks a field.
 - **`ColorPicker`**: 4×4 grid of the sixteen console colours as swatches; arrows move the cursor (brackets), Enter/Space or a click pick (✓ marks `SelectedColor`).
 - **`ComboBox` type-ahead**: with the list closed, a printable key jumps to the next item whose text starts with it (wrapping); Home/End select the first/last item.
+- **`Skeleton`**: loading placeholder — grey bars (the last line shorter) with a lighter band sweeping across, advanced from `OnIdle` by the injected `IDateTimeProviderService` (like `Spinner`, time gates the sweep, not idle-pass count). Set `IsActive = false` to blank it when the data lands.
+- **`Countdown`**: `MM:SS` (or `H:MM:SS`) until `Target`, counting down on the injected clock; `Start(duration)` / `Stop()`, raises `Finished` once. Redraws only when the displayed text changes; yellow under 10 s, red at zero, `--:--` while idle.
+- **`Alert.IsDismissible`**: draws a `×` in the last column; a click on it, or Esc while the alert has focus, clears the message and raises `Dismissed`. Off by default, so existing alerts keep their width and are not focusable.
+- **`StepIndicator.StepClicked`**: raised with the index when a step glyph is clicked; the host decides whether that step may be jumped to and sets `Current`.
 - **`TextBox.Placeholder`**: greyed hint drawn in the well while the box is empty; never part of `Text`.
 - **`Table<T>` mouse support**: a click on a body row moves the cursor (a second click on the cursor row raises `RowActivated`), the wheel moves it by three rows, the header row ignores clicks — the same behaviour as `ListBox`.
 
