@@ -81,17 +81,30 @@ public class EditorStatusBar : StatusBar
         _dirtyIndicator.ViewSize = new Size(10, 1);
         _searchResultsIndicator.ViewSize = new Size(20, 1);
 
-        Layout.StackHorizontal([
-            _saveButton,
-            _findNextButton,
-            _findPreviousButton,
-            _toggleReadOnlyButton,
-            _searchTextDialogButton,
-            _encodingIndicator,
-            _cursorPositionIndicator,
-            _readOnlyIndicator,
-            _dirtyIndicator,
-            _searchResultsIndicator
-        ]);
+        StackFitting(
+            [
+                _saveButton,
+                _findNextButton,
+                _findPreviousButton,
+                _toggleReadOnlyButton,
+                _searchTextDialogButton,
+                _encodingIndicator,
+                _cursorPositionIndicator,
+                _readOnlyIndicator,
+                _dirtyIndicator,
+                _searchResultsIndicator
+            ],
+            [
+                _saveButton,
+                _cursorPositionIndicator,
+                _dirtyIndicator,
+                _readOnlyIndicator,
+                _encodingIndicator,
+                _searchTextDialogButton,
+                _findNextButton,
+                _toggleReadOnlyButton,
+                _searchResultsIndicator,
+                _findPreviousButton
+            ]);
     }
 }

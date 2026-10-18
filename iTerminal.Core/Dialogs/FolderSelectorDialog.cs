@@ -98,9 +98,29 @@ public class FolderSelectorDialog : Dialog
     /// for it — each one is a full-height list — and a dialog whose whole job is navigation should
     /// not need F1 pressed before it says how to navigate.
     /// </summary>
-    public static string GetFooter() =>
-        " Enter go " + Border.Vertical + " Up/Down move " + Border.Vertical +
-        " Ctrl+Up/Down page " + Border.Vertical + " F1 help " + Border.Vertical + " Esc cancel ";
+    public static string GetFooter() => GetFooter(int.MaxValue);
+
+    /// <summary>
+    /// The footer for a border <paramref name="maxWidth"/> wide. Hints that do not fit are left out whole,
+    /// paging first, then moving — shrinking the line cut the last words of a hint mid-word ("C...page").
+    /// Go, help and cancel stay.
+    /// </summary>
+    public static string GetFooter(int maxWidth)
+    {
+        string[] hints = ["Enter go", "Up/Down move", "Ctrl+Up/Down page", "F1 help", "Esc cancel"];
+        List<string> kept = [.. hints];
+        string Join() => " " + string.Join(" " + Border.Vertical + " ", kept) + " ";
+        foreach (string drop in new[] { "Ctrl+Up/Down page", "Up/Down move" })
+        {
+            if (Join().Length <= maxWidth)
+            {
+                break;
+            }
+            kept.Remove(drop);
+        }
+
+        return Join();
+    }
 
     protected override void DrawChrome(IBuffer buffer)
     {
@@ -111,7 +131,7 @@ public class FolderSelectorDialog : Dialog
         // border would silently lose its key hints — so it is shrunk to fit first.
         var colorScheme = ThemeService.CurrentColorScheme;
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
-        var footer = GetFooter().Shrink(Math.Max(0, (int)ViewSize.Width - 4));
+        var footer = GetFooter(Math.Max(0, (int)ViewSize.Width - 4)).Shrink(Math.Max(0, (int)ViewSize.Width - 4));
         if (string.IsNullOrEmpty(footer))
         {
             return;

@@ -35,6 +35,29 @@ public class ToolsAndMenusTest
     }
 
     [TestMethod]
+    public async Task TheToolsMenuStaysOnAShortScreenAndScrollsToItsLastEntry()
+    {
+        await using TerminalApp small = await TerminalApp.StartAsync(width: 80, height: 24);
+        await small.PressAsync("Ctrl+F");
+        await small.WaitUntilAsync(() => small.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar, "the menu");
+        await small.PressSequenceAsync("Right", "Right", "Right");
+        await small.WaitForTextAsync("Calculator");
+
+        // Its entries are more than the screen has rows: the bottom border and a "more below" mark must show.
+        await small.WaitUntilAsync(
+            s => s.Lines[s.Height - 1].Contains("╚", StringComparison.Ordinal) && s.Lines.Any(l => l.Contains('▼')),
+            "the drop-down to end on its bottom border inside the screen, marked as continuing");
+
+        for (int i = 0; i < 40; i++)
+        {
+            await small.PressAsync("Down");
+        }
+
+        await small.WaitForTextAsync("Remote connections");
+        await small.WaitUntilAsync(s => s.Lines.Any(l => l.Contains('▲')), "a mark that entries are hidden above");
+    }
+
+    [TestMethod]
     public async Task CtrlFOpensTheFileMenu()
     {
         await _app.PressAsync("Ctrl+F");

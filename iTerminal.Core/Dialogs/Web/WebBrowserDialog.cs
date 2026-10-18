@@ -1399,7 +1399,12 @@ public class WebBrowserDialog : Dialog
                 }
                 else
                 {
-                    left = " F1:help  Ctrl+L:address  Tab:links  Ctrl+T:new tab  F2:bookmarks  Esc:close";
+                    // Hints that no longer fit are dropped, least useful first — the line used to be
+                    // cut at the right edge, which on 80 columns took "Esc:close" with it.
+                    left = " " + FitHints(
+                        ["F1:help", "Ctrl+L:address", "Tab:links", "Ctrl+T:new tab", "F2:bookmarks", "Esc:close"],
+                        [4, 3, 2, 1, 0, 5],
+                        Math.Max(1, width - 8));
                     color = scheme.DisabledForeground;
                 }
 
@@ -1423,6 +1428,26 @@ public class WebBrowserDialog : Dialog
     {
         text = text.Length > width ? text[..width] : text.PadRight(width);
         buffer.Write(ZOrder, new Position(x, y), new Size(width, 1), new ConxelString(text, foreground, background, bold));
+    }
+
+    /// <summary>
+    /// Joins the hints with two spaces, leaving out the ones named first in <paramref name="dropOrder"/>
+    /// (indexes into <paramref name="hints"/>) until the line fits in <paramref name="max"/> columns.
+    /// </summary>
+    internal static string FitHints(IReadOnlyList<string> hints, IReadOnlyList<int> dropOrder, int max)
+    {
+        var kept = Enumerable.Range(0, hints.Count).ToList();
+        string Join() => string.Join("  ", kept.Select(i => hints[i]));
+        foreach (int index in dropOrder)
+        {
+            if (Join().Length <= max || kept.Count <= 1)
+            {
+                break;
+            }
+            kept.Remove(index);
+        }
+
+        return Join();
     }
 
     private static string Shorten(string text, int max)
