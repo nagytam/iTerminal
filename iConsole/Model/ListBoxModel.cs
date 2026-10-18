@@ -103,15 +103,10 @@ public class ListBoxModel<T> : IListBoxModel<T>, INotifyPropertyChanged
             return;
         }
 
-        while (_listItems.Count > 0)
-        {
-            _listItems.RemoveAt(_listItems.Count - 1);
-        }
-
-        foreach (var item in projectedItems)
-        {
-            _listItems.Add(item);
-        }
+        // One swap, not "empty it, then add the rows": a draw on another thread between those two steps saw
+        // an empty list (the empty text flashing up, or a test reading no rows) while quotes, tasks or search
+        // results were being refreshed from a worker.
+        _listItems.ReplaceAll(projectedItems);
 
         OnPropertyChanged(nameof(ListItems));
         OnPropertyChanged(nameof(SelectedItem));

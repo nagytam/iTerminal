@@ -63,8 +63,17 @@ public class ProgressWindow : PopUpWindow
     private void OnTaskChanged(object? sender, PropertyChangedEventArgs e)
     {
         _progressBar.Current = (int)_task.ProgressPercentage;
+        _progressBar.IsIndeterminate = ShowsBusyBar(_task);
         StateHasChanged();
     }
+
+    /// <summary>
+    /// Until a task reports its first progress the bar has nothing to fill, and a bar parked at 0 % reads as
+    /// stuck (a big folder being counted before a copy, an archive being opened). It sweeps instead, then
+    /// turns into the usual fill the moment real progress arrives; a finished task never shows it.
+    /// </summary>
+    internal static bool ShowsBusyBar(BackgroundTask task) =>
+        task.Status == iConsole.Data.TaskStatus.Started && task.ProgressPercentage <= 0;
 
     /// <summary>
     /// The base's [X] only clears <see cref="iConsole.Controls.Control.IsVisible"/>. This window is modal, and
@@ -93,6 +102,7 @@ public class ProgressWindow : PopUpWindow
         _progressBar.Min = 0;
         _progressBar.Max = 100;
         _progressBar.Current = 0;
+        _progressBar.IsIndeterminate = ShowsBusyBar(_task);
 
         _progressTime.Position = new Position(1, 2);
         _progressTime.ViewSize = new Size(ViewSize.Width - 2, 1);

@@ -31,6 +31,8 @@ public class SettingsPanelsTabPage : TabPage
     private readonly CheckBox _foldersFirst;
     private readonly CheckBox _naturalOrder;
     private readonly Label _hintLabel;
+    private readonly Separator _orderRule;
+    private readonly Separator _listingRule;
 
     /// <summary>True while the controls are being filled from the settings, so that filling them is not read as the user changing them.</summary>
     private bool _loading;
@@ -54,11 +56,17 @@ public class SettingsPanelsTabPage : TabPage
         _naturalOrder = CreateCheckBox("Sort numbers in names by value (file2 before file10)", themeService);
         _hintLabel = new Label("Shift+F11 changes the focused panel's order without coming here.", themeService);
 
+        // Two titled rules group the page: what orders the panels, and what both of them list.
+        _orderRule = new Separator(themeService) { Title = "Order" };
+        _listingRule = new Separator(themeService) { Title = "Listing" };
+
         // The first focusable control is where the cursor lands when the page is chosen.
+        AddControl(_orderRule);
         AddControl(_leftSort);
         AddControl(_leftReversed);
         AddControl(_rightSort);
         AddControl(_rightReversed);
+        AddControl(_listingRule);
         AddControl(_showHidden);
         AddControl(_foldersFirst);
         AddControl(_naturalOrder);
@@ -183,17 +191,23 @@ public class SettingsPanelsTabPage : TabPage
         const int ReversedWidth = 14;
         var sortWidth = Math.Max(20, ViewSize.Width - ReversedWidth - 2);
 
-        _leftSort.Position = new Position(0, 0);
+        _orderRule.Position = new Position(0, 0);
+        _orderRule.ViewSize = new Size(ViewSize.Width, 1);
+
+        _leftSort.Position = new Position(0, 1);
         _leftSort.ViewSize = new Size(sortWidth, 1);
-        _leftReversed.Position = new Position(sortWidth + 2, 0);
+        _leftReversed.Position = new Position(sortWidth + 2, 1);
         _leftReversed.ViewSize = new Size(ReversedWidth, 1);
 
-        _rightSort.Position = new Position(0, 2);
+        _rightSort.Position = new Position(0, 3);
         _rightSort.ViewSize = new Size(sortWidth, 1);
-        _rightReversed.Position = new Position(sortWidth + 2, 2);
+        _rightReversed.Position = new Position(sortWidth + 2, 3);
         _rightReversed.ViewSize = new Size(ReversedWidth, 1);
 
-        var row = 4;
+        _listingRule.Position = new Position(0, 5);
+        _listingRule.ViewSize = new Size(ViewSize.Width, 1);
+
+        var row = 6;
         foreach (var checkBox in new[] { _showHidden, _foldersFirst, _naturalOrder })
         {
             checkBox.Position = new Position(0, row++);

@@ -58,6 +58,21 @@ public class ConcurrentList<T> : IList<T> where T : class
         }
     }
 
+    /// <summary>
+    /// Swaps the whole content in one step. A reader (a snapshot taken by a draw on another thread) sees the
+    /// old list or the new one, never the empty or half-filled list that <see cref="Clear"/> followed by
+    /// <see cref="Add"/> calls would expose in between.
+    /// </summary>
+    public void ReplaceAll(IEnumerable<T> items)
+    {
+        List<T> replacement = [.. items];
+        lock (_lock)
+        {
+            _list.Clear();
+            _list.AddRange(replacement);
+        }
+    }
+
     public void Clear()
     {
         lock (_lock)
