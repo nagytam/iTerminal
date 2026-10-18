@@ -64,6 +64,49 @@ public class HexViewer : Control
         ScrollableModel.ScrollableSize = new Size(ViewSize.Width, RowCount);
     }
 
+    /// <summary>Rows the wheel moves the cursor by in one notch.</summary>
+    private const int WheelRows = 3;
+
+    /// <summary>A click on a row moves the cursor there and takes the focus; the wheel moves it three rows.</summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        long relativeX = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
+        long relativeY = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+        if (RowCount == 0 || relativeX < 0 || relativeX >= ViewSize.Width || relativeY < 0 || relativeY >= ViewSize.Height)
+        {
+            return isHandled;
+        }
+
+        if (mouseEvent.WheelDelta != 0)
+        {
+            long target = ScrollableModel.CursorPosition.Y + (mouseEvent.WheelDelta > 0 ? -WheelRows : WheelRows);
+            ScrollableModel.CursorPosition.Y = Math.Clamp(target, 0, RowCount - 1);
+            ScrollableModel.ScrollToVisible();
+            StateHasChanged();
+            return true;
+        }
+
+        if (mouseEvent.LeftClicked)
+        {
+            long row = (long)ScrollableModel.ScrollPosition.Y + relativeY;
+            if (row < RowCount)
+            {
+                if (!IsFocused)
+                {
+                    SetFocus();
+                }
+
+                ScrollableModel.CursorPosition.Y = row;
+                ScrollableModel.ScrollToVisible();
+                StateHasChanged();
+                return true;
+            }
+        }
+
+        return isHandled;
+    }
+
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
@@ -75,7 +118,16 @@ public class HexViewer : Control
         for (int y = 0; y < (int)ViewSize.Height; y++)
         {
             var rowIndex = scrollOffset + y;
-            if (rowIndex >= RowCount) break;
+            if (rowIndex >= RowCount)
+            {
+                // Every row is painted, the ones past the data blank: a layer is not cleared
+                // between frames, so a shorter dump would keep showing the rows it no longer has.
+                buffer.Write(ZOrder,
+                    new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + y)),
+                    ViewSize,
+                    new ConxelString(string.Empty.PadRight((int)ViewSize.Width), colorScheme.Foreground, colorScheme.Background));
+                continue;
+            }
 
             var rowText = FormatRow(rowIndex);
             var isCursor = rowIndex == cursorRow;
