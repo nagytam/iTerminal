@@ -79,6 +79,12 @@ public class Content : Window, IContent
         GetRootControl()?.Refresh();
     }
 
+    /// <summary>What fills the bottom of the screen now; a workspace saves it and puts it back.</summary>
+    public iTerminal.Core.Model.Workspaces.WorkspaceBar CurrentBar =>
+        _showTerminalPanel ? iTerminal.Core.Model.Workspaces.WorkspaceBar.FullTerminal
+        : _bottomBarMode == BottomBarMode.Terminal ? iTerminal.Core.Model.Workspaces.WorkspaceBar.Terminal
+        : iTerminal.Core.Model.Workspaces.WorkspaceBar.Ai;
+
     public void ToggleTerminalPanel()
     {
         if (!_showTerminalPanel)
