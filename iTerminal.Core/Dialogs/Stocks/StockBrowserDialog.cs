@@ -1,5 +1,6 @@
 using System.Globalization;
 using iConsole.Buffers;
+using iConsole.Controls.Charts;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Display;
@@ -596,7 +597,8 @@ public class StockBrowserDialog : SplitPaneDialog
 
             if (quote is { YearLow: { } yearLow, YearHigh: { } yearHigh })
             {
-                parts.Add($"52w {FormatPrice(yearLow)}–{FormatPrice(yearHigh)}");
+                var position = yearHigh > yearLow ? (double)((quote.Price - yearLow) / (yearHigh - yearLow)) : 0;
+                parts.Add($"52w {FormatPrice(yearLow)} ▕{BarChart.BuildBar(position, 8)}▏ {FormatPrice(yearHigh)}");
             }
 
             parts.Add($"prev close {FormatPrice(quote.PreviousClose)} {quote.Currency}");

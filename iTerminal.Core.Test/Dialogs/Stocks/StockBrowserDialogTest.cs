@@ -108,7 +108,7 @@ public class StockBrowserDialogTest
         var screen = Render(dialog);
 
         AssertScreenContains(screen, "day 95.00–115.00");
-        AssertScreenContains(screen, "52w 50.00–200.00");
+        AssertScreenContains(screen, "52w 50.00 ▕███▎    ▏ 200.00");
         AssertScreenContains(screen, "vol 1,234,567");
         dialog.Close();
     }

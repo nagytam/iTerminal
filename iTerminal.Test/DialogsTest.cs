@@ -57,6 +57,7 @@ public class DialogsTest
     [DataRow("Ctrl+F11", "SystemInfoDialog")]
     [DataRow("Ctrl+Shift+F10", "SystemSettingsDialog")]
     [DataRow("Alt+F7", "StockBrowserDialog")]
+    [DataRow("Alt+F2", "RemoteConnectionManagerDialog")]
     [DataRow("Alt+F9", "DiskManagerDialog")]
     [DataRow("Alt+F12", "ProcessManagerDialog")]
     [DataRow("Alt+F3", "DocumentManagerDialog")]

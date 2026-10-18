@@ -6,6 +6,9 @@ public static class Settings
     public const string IsWeatherIndicatorEnabled = nameof(IsWeatherIndicatorEnabled);
     public const string NetworkConnectionProfiles = nameof(NetworkConnectionProfiles);
 
+    /// <summary>The saved SSH and PowerShell remoting connections of the remote connection manager, as JSON.</summary>
+    public const string RemoteConnections = nameof(RemoteConnections);
+
     /// <summary>The colour theme chosen in the theme manager, restored at start-up.</summary>
     public const string Theme = nameof(Theme);
 

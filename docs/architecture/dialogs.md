@@ -136,3 +136,31 @@ A full-screen `SplitPaneDialog` (like the Git client) showing a live watchlist: 
 - **Quotes and search come from `IStockQuoteProvider`** (`YahooStockQuoteProvider`: the public chart endpoint, one request per symbol, and the search endpoint). These are unofficial endpoints, so a symbol that cannot be reached is left out and the old quote stays; no quotes at all is shown in the footer. The former portfolio's Stooq provider answered 404 when this was written, which is why it is not reused. Symbols are Yahoo's: a bare ticker for the US, a suffix elsewhere (`VOD.L`, `SAP.DE`).
 - **Adding searches every exchange.** `a` opens a query box; Enter searches by symbol or company name and lists each hit with its exchange, since one company trades on several; Enter on a hit adds it. A search with no hit offers the text as a symbol on the second Enter. `AddAsync` asks the provider for a quote first, so a typo is refused in words instead of sitting on the list.
 - **The end-to-end suite replaces the provider** (`SandboxServices.StockQuotes`): no run reaches the network.
+
+### The remote connection manager (`iTerminal.Core/Dialogs/Remote/`, `Services/Remote/`, `Model/Remote/`)
+Alt+F2 (Tools > Remote connections) opens `RemoteConnectionManagerDialog`: saved SSH and PowerShell
+remoting targets, each a keypress from a live session. Enter lends the whole terminal to the session through
+`IInteractiveShellService` — the same hand-over as Ctrl+O — so it is a real `ssh` or `Enter-PSSession` with
+its prompt, colours, full-screen programs and Ctrl+C; `exit` comes back to the manager. B opens an SSH
+connection in the active panel as the existing SFTP drive. N / E / D add, edit and delete (D asks y/n).
+
+- **No password is ever stored.** The session gets the real terminal and asks there — password, key
+  passphrase and host-key question alike. `RemoteConnection` has no secret field on purpose.
+- **`RemoteShellLaunch` builds the program from the entry.** SSH is `ssh [-p port] [-i key] [user@]host`
+  with no remote command, so the server starts the login shell. PowerShell is `pwsh|powershell.exe -NoLogo
+  -NoProfile -Command "Enter-PSSession …"` — no `-NoExit`, so leaving the remote session ends the process.
+  Transport `WinRm` uses `-ComputerName` (and `-Credential 'user'`, which makes PowerShell ask for the
+  password) and is refused off Windows; transport `Ssh` uses `-HostName/-UserName/-KeyFilePath` and needs
+  `pwsh` (7+) on PATH. `TryCreate` returns the reason instead of a launch, and the dialog shows it.
+- **Host and user are validated before they reach any command line.** A host must start with a letter or
+  digit (a leading dash would be an `ssh` option) and may hold only name characters or an IP address; a
+  user name may not hold quotes, spaces or a leading dash. PowerShell values are also single-quoted with
+  `'` doubled. `RemoteConnection.Validate` is the one gate, used by the form, the service and the launch.
+- **The session runs on a thread of its own** (`PendingOperation`), never in the key handler; the result
+  lands in the footer under the dialog's lock. The dialog stays open while the terminal is lent, so exit
+  returns to the manager, and `MarkConnected` stamps "last connected".
+- **The panel drive (B) has the drive's limits**: SSH only, port 22 only (the `ssh://` URL has no port), and
+  credentials resolved by `ContentModelSshDrive` (a network profile or `~/.ssh/id_rsa`), not by this entry's
+  key file. The dialog says so rather than opening a drive that would connect somewhere else.
+- Entries are JSON in the `RemoteConnections` setting (`IRemoteConnectionService`), separate from the
+  network browser's profiles.

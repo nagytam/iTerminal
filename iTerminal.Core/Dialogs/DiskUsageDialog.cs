@@ -1,4 +1,5 @@
 using iConsole.Buffers;
+using iConsole.Controls.Charts;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
@@ -147,12 +148,8 @@ public class DiskUsageDialog : Dialog
     private static string Percent(long part, long whole) =>
         whole <= 0 ? "  0%" : $"{Math.Min(100d, 100d * part / whole),3:0}%";
 
-    private static string Bar(long part, long whole)
-    {
-        var filled = whole <= 0 ? 0 : (int)Math.Round(BarWidth * (double)part / whole);
-        filled = Math.Clamp(filled, 0, BarWidth);
-        return new string('█', filled) + new string('░', BarWidth - filled);
-    }
+    private static string Bar(long part, long whole) =>
+        BarChart.BuildBar(whole <= 0 ? 0 : (double)part / whole, BarWidth).Replace(' ', '░');
 
     private void UpdateLines()
     {
