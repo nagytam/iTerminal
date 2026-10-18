@@ -52,6 +52,10 @@ public class WizardTest
 
         MockBuffer buffer = new(new Size(40, 8));
         wizard.Draw(buffer);
+        foreach (IControl child in wizard.Controls)
+        {
+            child.Draw(buffer);
+        }
         Assert.IsTrue(buffer.ContentAsString.Contains("Step 1 of 3: Name"));
         Assert.IsTrue(buffer.ContentAsString.Contains("Name is required"));
     }

@@ -18,7 +18,7 @@ public class SystemInfoDialog : Dialog
 
     private readonly TextViewerControl _textViewerControl;
     private readonly Gauge _memoryGauge;
-    private readonly Sparkline _memoryTrend;
+    private readonly LineChart _memoryTrend;
     private readonly List<double> _memoryHistory = [];
     private long _lastSampleTick = long.MinValue;
 
@@ -31,7 +31,7 @@ public class SystemInfoDialog : Dialog
 
         // A live strip under the report: how much of the machine's memory this process holds, and the trend.
         _memoryGauge = new Gauge(themeService) { Label = "Memory (this process)", ViewSize = new Size(1, 1) };
-        _memoryTrend = new Sparkline(themeService) { Foreground = Color.Cyan, ViewSize = new Size(1, 1) };
+        _memoryTrend = new LineChart(themeService) { Foreground = Color.Cyan, ViewSize = new Size(1, 2) };
         AddControl(_memoryGauge);
         AddControl(_memoryTrend);
     }
@@ -96,13 +96,13 @@ public class SystemInfoDialog : Dialog
         }
 
         _textViewerControl.Position = new Position(1, 1);
-        const int stripHeight = 2;
+        const int stripHeight = 3;
         _textViewerControl.ViewSize = new Size(ViewSize.Width - 2, Math.Max(1, ViewSize.Height - 2 - stripHeight));
         long stripY = ViewSize.Height - 1 - stripHeight;
         _memoryGauge.Position = new Position(2, stripY);
         _memoryGauge.ViewSize = new Size(Math.Max(1, ViewSize.Width - 4), 1);
         _memoryTrend.Position = new Position(2, stripY + 1);
-        _memoryTrend.ViewSize = new Size(Math.Max(1, ViewSize.Width - 4), 1);
+        _memoryTrend.ViewSize = new Size(Math.Max(1, ViewSize.Width - 4), 2);
 
         base.OnInitializeLayout();
     }

@@ -33,7 +33,9 @@ public class RuntimeDependencyStepPage(
         }
 
         ColorScheme scheme = ThemeService.CurrentColorScheme;
-        string note = status.Problem ?? status.Note ?? string.Empty;
+        string note = status.Problem is not null
+            ? $"{Alert.GlyphFor(BadgeKind.Error)} {status.Problem}"
+            : status.Note is { Length: > 0 } ? $"{Alert.GlyphFor(BadgeKind.Info)} {status.Note}" : string.Empty;
         Color noteColor = status.Problem is not null ? Color.DarkRed : scheme.DisabledForeground;
         string tick = isTicked(id) ? "[x] Install this one   (Space: leave it out)" : "[ ] Left out   (Space: install it)";
         WriteRow(buffer, 0, $"{status.Name} - {status.Purpose}", scheme.Foreground, width, scheme);
