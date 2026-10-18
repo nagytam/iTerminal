@@ -27,6 +27,10 @@ A notification is a short message the app shows without stopping the user: a tit
 - **`SegmentedControl`**: one-row pick-one (` Day  Week  Month `). Left/Right/Home/End, wheel and click on an option; `IndexAtColumn` maps a click to an option. Use it where a `RadioGroup` would waste rows.
 - **`Breadcrumb`**: a clickable trail (`Home › Docs › App`). `Breadcrumb.Layout` folds the middle into `…` when the trail is wider than the control, keeping the first and last segments. Left/Right move the highlight, Enter or a click raises `SegmentActivated(index)`.
 - **`Expander`**: a collapsible section with a `▶`/`▼` header. `Content` is attached with `AddControl` only while expanded (and detached when collapsed), so hidden children never draw or take keys; `ViewSize.Height` follows (`1` or `1 + ContentHeight`).
+- **`Pagination`**: `‹ Page 3 of 12 ›` for paged results. `TotalItems` and `PageSize` give `PageCount` (an empty list has one page); `Page` is clamped and raises `PageChanged`, `FirstItemIndex` is the offset to load. Arrows, PageUp/PageDown, Home/End, the wheel and a click on either arrow change the page.
+- **`Rating`**: `★★★☆☆`, `Maximum` stars. Left/Right, digit keys or a click set `Value`; clicking the current star clears it.
+- **`TextBox` click**: a click in the well takes focus and puts the cursor under the pointer (past the end it lands on the end).
+- **`TreeView` mouse**: a click focuses a row; a click on the glyph, or a second click on the focused row, toggles the node; the wheel scrolls three rows.
 - **`TextBox.Placeholder`**: greyed hint drawn in the well while the box is empty; never part of `Text`.
 - **`Table<T>` mouse support**: a click on a body row moves the cursor (a second click on the cursor row raises `RowActivated`), the wheel moves it by three rows, the header row ignores clicks — the same behaviour as `ListBox`.
 
