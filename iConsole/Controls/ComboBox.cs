@@ -144,6 +144,35 @@ public class ComboBox<T> : Control, IReadOnly
             case ConsoleKey.UpArrow:
                 MoveSelection(-1);
                 return true;
+            case ConsoleKey.Home:
+                SelectedIndex = 0;
+                return true;
+            case ConsoleKey.End:
+                SelectedIndex = _items.Count - 1;
+                return true;
+        }
+
+        // Type-ahead: a printable key jumps to the next item whose text starts with it (wrapping), so a
+        // long list can be reached without opening it. Space opened the list above, so it never lands here.
+        if (Helper.ConsoleKeyHelper.IsTypingKey(keyEvent) && TypeAhead(keyEvent.KeyChar))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TypeAhead(char c)
+    {
+        for (int offset = 1; offset <= _items.Count; offset++)
+        {
+            int index = ((_selectedIndex < 0 ? -1 : _selectedIndex) + offset) % _items.Count;
+            string text = DisplaySelector(_items[index]);
+            if (text.Length > 0 && char.ToUpperInvariant(text[0]) == char.ToUpperInvariant(c))
+            {
+                SelectedIndex = index;
+                return true;
+            }
         }
 
         return false;

@@ -43,6 +43,9 @@ A notification is a short message the app shows without stopping the user: a tit
 - **`Calendar`**: 20×8 month grid for picking a date (`SelectedDate`, `Today`, `FirstDayOfWeek`, `Culture`). Arrows move a day/week, PageUp/PageDown a month (clamped to the shorter month), Home/End the first/last day, Enter raises `DateActivated`; a click selects a day or steps the month via the header arrows, the wheel steps months. `GridStart` is the pure layout helper.
 - **`Separator.Title`**: sets a heading into a horizontal rule (`⎯⎯ Advanced ⎯⎯⎯⎯`) to divide a form into named groups without a `GroupBox`; `Separator.BuildRule` builds the text.
 - **`Meter.ShowPercent`**: overlays the value as ` 42% ` centred on the bar (skipped when the bar is under 6 cells).
+- **`TimePicker`**: `[14:05]` / `[14:05:30]` (`ShowSeconds`) time-of-day field, `Value` is a `TimeOnly`. Left/Right pick the field, Up/Down/wheel step it (wrapping within the field, PageUp/PageDown by 10), digits type a value (two digits, then the next field), a click picks a field.
+- **`ColorPicker`**: 4×4 grid of the sixteen console colours as swatches; arrows move the cursor (brackets), Enter/Space or a click pick (✓ marks `SelectedColor`).
+- **`ComboBox` type-ahead**: with the list closed, a printable key jumps to the next item whose text starts with it (wrapping); Home/End select the first/last item.
 - **`TextBox.Placeholder`**: greyed hint drawn in the well while the box is empty; never part of `Text`.
 - **`Table<T>` mouse support**: a click on a body row moves the cursor (a second click on the cursor row raises `RowActivated`), the wheel moves it by three rows, the header row ignores clicks — the same behaviour as `ListBox`.
 
