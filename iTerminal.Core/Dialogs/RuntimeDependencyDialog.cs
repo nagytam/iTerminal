@@ -1,4 +1,5 @@
 using iConsole.Buffers;
+using iConsole.Controls.Wizard;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Dialogs;
@@ -13,6 +14,12 @@ namespace iTerminal.Core.Dialogs;
 /// at start-up when something is missing or newer than what is installed, and from Tools at any time.
 /// Each dependency takes three rows — its name, its state, and a note or problem — so the dialog keeps
 /// the same size while an install runs and the list changes under it.
+///
+/// <para>When something needs work the dialog opens as a wizard with one step per dependency (what it is,
+/// what is installed, a tick for whether to include it) and, when there is more than one, a last step
+/// that sums up what Finish will install. Enter moves on and installs on the last step, Backspace or Left
+/// goes back, Space ticks, S skips the ticked versions. Once an install has started, or when there is
+/// nothing to do, the dialog shows the plain list with the install log.</para>
 /// </summary>
 public class RuntimeDependencyDialog : Dialog
 {
@@ -23,7 +30,8 @@ public class RuntimeDependencyDialog : Dialog
 
     private readonly IRuntimeDependencyService _service;
     private readonly HashSet<string> _unticked = [];
-    private int _cursor;
+    private Wizard? _wizard;
+    private bool _wizardActive;
 
     public RuntimeDependencyDialog(IRuntimeDependencyService service, IThemeService themeService)
         : base("Runtime dependencies", themeService)
@@ -45,9 +53,6 @@ public class RuntimeDependencyDialog : Dialog
     /// <summary>The ids Enter would install: the ones that need work and are still ticked.</summary>
     private List<string> TickedIds() => Actionable().Where(status => IsTicked(status.Id)).Select(status => status.Id).ToList();
 
-    /// <summary>With a single dependency to act on there is nothing to choose between, so no ticks are drawn.</summary>
-    private bool ChoiceIsOffered => Actionable().Count > 1;
-
     /// <summary>Whether the start-up should open this dialog: something is missing, or newer, and not skipped.</summary>
     public bool ShouldOpenAtStartup => _service.ShouldOfferAtStartup;
 
@@ -60,90 +65,156 @@ public class RuntimeDependencyDialog : Dialog
             CenterInParent(new Size(width, height));
         }
 
+        PlaceWizard();
         base.OnInitializeLayout();
+    }
+
+    private void PlaceWizard()
+    {
+        if (_wizard is not null)
+        {
+            _wizard.Position = new Position(1, 1);
+            _wizard.ViewSize = new Size(Math.Max(1, ViewSize.Width - 2), Math.Max(1, ViewSize.Height - 3));
+            _wizard.OnInitializeLayout();
+        }
+    }
+
+    /// <summary>Whether the wizard is what the dialog shows now (rather than the list with the install log).</summary>
+    internal bool IsWizardActive => _wizardActive && _wizard is not null;
+
+    /// <summary>The wizard, for a test to inspect.</summary>
+    internal Wizard? WizardForTest => _wizard;
+
+    public override async Task OnInitializeAsync()
+    {
+        await base.OnInitializeAsync();
+        BuildWizard();
+    }
+
+    public override async Task ShowAsync()
+    {
+        await base.ShowAsync();
+
+        // The base makes every child visible; the wizard shows only while it is the active view.
+        if (_wizard is not null)
+        {
+            _wizard.IsVisible = _wizardActive;
+        }
+    }
+
+    private void BuildWizard()
+    {
+        if (_wizard is not null)
+        {
+            RemoveControl(_wizard);
+            _wizard = null;
+        }
+
+        _unticked.Clear();
+        List<RuntimeDependencyStatus> actionable = Actionable();
+        _wizardActive = actionable.Count > 0 && !_service.IsBusy;
+        if (!_wizardActive)
+        {
+            return;
+        }
+
+        _wizard = new Wizard(ThemeService);
+        foreach (RuntimeDependencyStatus status in actionable)
+        {
+            _wizard.AddStep(new WizardStep(status.Name, new RuntimeDependencyStepPage(status.Id, _service, IsTicked, ThemeService)));
+        }
+
+        if (actionable.Count > 1)
+        {
+            _wizard.AddStep(new WizardStep("Install", new RuntimeDependencySummaryPage(_service, TickedIds, ThemeService), ValidateSomethingTicked));
+        }
+
+        _wizard.Finished += (_, _) => FinishWizard();
+        AddControl(_wizard);
+        PlaceWizard();
+    }
+
+    private Task<string?> ValidateSomethingTicked() =>
+        Task.FromResult<string?>(TickedIds().Count == 0 ? "Nothing is ticked. Go back and tick what to install." : null);
+
+    private void FinishWizard()
+    {
+        List<string> ticked = TickedIds();
+        _wizardActive = false;
+        if (_wizard is not null)
+        {
+            _wizard.IsVisible = false;
+        }
+
+        if (ticked.Count == 0)
+        {
+            Close();
+            return;
+        }
+
+        if (ticked.Count == Actionable().Count)
+        {
+            _service.StartInstall();
+        }
+        else
+        {
+            _service.StartInstall(ticked);
+        }
+
+        StateHasChanged();
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool plain = !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift;
 
-        if (keyEvent.ConsoleKey == ConsoleKey.Enter && plain)
+        if (IsWizardActive && plain && !_service.IsBusy)
         {
-            if (_service.IsBusy)
+            Wizard wizard = _wizard!;
+            switch (keyEvent.ConsoleKey)
             {
-                return true;
-            }
+                case ConsoleKey.Enter:
+                case ConsoleKey.RightArrow:
+                    await wizard.NextAsync();
+                    return true;
+                case ConsoleKey.Backspace:
+                case ConsoleKey.LeftArrow:
+                    wizard.Back();
+                    return true;
+                case ConsoleKey.Spacebar:
+                    if (wizard.CurrentStep?.Content is RuntimeDependencyStepPage page && !_unticked.Remove(page.Id))
+                    {
+                        _unticked.Add(page.Id);
+                    }
 
-            if (!HasWork)
+                    StateHasChanged();
+                    return true;
+                case ConsoleKey.S:
+                    List<string> ticked = TickedIds();
+                    if (ticked.Count > 0)
+                    {
+                        if (ticked.Count == Actionable().Count)
+                        {
+                            _service.SkipOffers();
+                        }
+                        else
+                        {
+                            _service.SkipOffers(ticked);
+                        }
+                        Close();
+                    }
+
+                    return true;
+            }
+        }
+        else if (keyEvent.ConsoleKey == ConsoleKey.Enter && plain)
+        {
+            if (!_service.IsBusy)
             {
                 Close();
-                return true;
-            }
-
-            List<string> ticked = TickedIds();
-            if (ticked.Count == 0)
-            {
-                return true; // Everything was unticked: there is nothing to install.
-            }
-
-            if (ticked.Count == Actionable().Count)
-            {
-                _service.StartInstall();
-            }
-            else
-            {
-                _service.StartInstall(ticked);
             }
 
             return true;
-        }
-
-        if (keyEvent.ConsoleKey == ConsoleKey.S && plain && HasWork && !_service.IsBusy)
-        {
-            List<string> ticked = TickedIds();
-            if (ticked.Count == 0)
-            {
-                return true;
-            }
-
-            if (ticked.Count == Actionable().Count)
-            {
-                _service.SkipOffers();
-            }
-            else
-            {
-                _service.SkipOffers(ticked);
-            }
-
-            Close();
-            return true;
-        }
-
-        if (plain && ChoiceIsOffered && !_service.IsBusy)
-        {
-            int count = _service.Statuses.Count;
-            if (keyEvent.ConsoleKey == ConsoleKey.UpArrow && count > 0)
-            {
-                _cursor = (_cursor + count - 1) % count;
-                return true;
-            }
-
-            if (keyEvent.ConsoleKey == ConsoleKey.DownArrow && count > 0)
-            {
-                _cursor = (_cursor + 1) % count;
-                return true;
-            }
-
-            if (keyEvent.ConsoleKey == ConsoleKey.Spacebar && _cursor < count)
-            {
-                RuntimeDependencyStatus current = _service.Statuses[_cursor];
-                if (current.State != RuntimeDependencyState.Installed && !_unticked.Remove(current.Id))
-                {
-                    _unticked.Add(current.Id);
-                }
-
-                return true;
-            }
         }
 
         return await base.HandleKeyEventAsync(keyEvent);
@@ -161,20 +232,9 @@ public class RuntimeDependencyDialog : Dialog
             (string.Empty, scheme.Foreground),
         ];
 
-        bool choice = ChoiceIsOffered;
-        int index = 0;
         foreach (RuntimeDependencyStatus status in _service.Statuses)
         {
-            string prefix = string.Empty;
-            if (choice)
-            {
-                string pointer = index == _cursor ? ">" : " ";
-                string box = status.State == RuntimeDependencyState.Installed ? "   " : IsTicked(status.Id) ? "[x]" : "[ ]";
-                prefix = $"{pointer} {box} ";
-            }
-
-            index++;
-            rows.Add(($"{prefix}{status.Name} - {status.Purpose}", scheme.Foreground));
+            rows.Add(($"{status.Name} - {status.Purpose}", scheme.Foreground));
             rows.Add((StateText(status), status.State == RuntimeDependencyState.Installed ? scheme.Foreground : Color.DarkYellow));
             rows.Add(status.Problem is not null
                 ? (status.Problem, Color.DarkRed)
@@ -205,11 +265,11 @@ public class RuntimeDependencyDialog : Dialog
 
     internal string Hint => _service.IsBusy
         ? "Installing... Esc: hide this (it keeps going)"
-        : HasWork
-            ? ChoiceIsOffered
-                ? "Up/Down: move  Space: tick  Enter: install  S: skip  Esc: later"
-                : "Enter: install   S: skip this version   Esc: later"
-            : "Enter or Esc: close";
+        : IsWizardActive
+            ? "Enter: next  Backspace: back  Space: tick  S: skip  Esc: later"
+            : HasWork
+                ? "Enter or Esc: close"
+                : "Enter or Esc: close";
 
     public override void Draw(IBuffer buffer)
     {
@@ -222,7 +282,7 @@ public class RuntimeDependencyDialog : Dialog
         }
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
-        List<(string Text, Color Color)> rows = Rows(innerWidth, colorScheme);
+        List<(string Text, Color Color)> rows = IsWizardActive ? [] : Rows(innerWidth, colorScheme);
         // Stops above the hint row: on a screen too short for every row, the last ones are cut, not the hint.
         for (int i = 0; i < rows.Count && i + 1 < ViewSize.Height - 2; i++)
         {
