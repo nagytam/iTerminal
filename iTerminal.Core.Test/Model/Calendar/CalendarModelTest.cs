@@ -125,4 +125,55 @@ public class CalendarModelTest
 
         Assert.AreEqual(expected, CalendarModel.RelativeTo(today.AddDays(days), today));
     }
+
+    [TestMethod]
+    public void EveryChangeOfTheSelectionRaisesChanged()
+    {
+        var model = new CalendarModel(new DateOnly(2026, 10, 14));
+        var raised = 0;
+        model.Changed += (_, _) => raised++;
+
+        model.MoveDays(1);
+        model.MoveMonths(1);
+        model.Select(new DateOnly(2027, 3, 3));
+        model.GoToToday();
+
+        Assert.AreEqual(4, raised);
+    }
+
+    [TestMethod]
+    public void SelectingTheSameDayIsNotAChange()
+    {
+        var model = new CalendarModel(new DateOnly(2026, 10, 14));
+        var raised = 0;
+        model.Changed += (_, _) => raised++;
+
+        model.Select(new DateOnly(2026, 10, 14));
+        model.MoveDays(0);
+
+        Assert.AreEqual(0, raised);
+    }
+
+    [TestMethod]
+    public void ResetToANewTodayIsAChangeEvenWhenTheSelectionStays()
+    {
+        var model = new CalendarModel(new DateOnly(2026, 10, 14));
+        var raised = 0;
+        model.Changed += (_, _) => raised++;
+
+        model.Reset(new DateOnly(2026, 10, 15));
+
+        Assert.AreEqual(1, raised);
+        Assert.AreEqual(new DateOnly(2026, 10, 15), model.SelectedDate);
+    }
+
+    [TestMethod]
+    public void TheModelIsACalendarControlModel()
+    {
+        iConsole.Model.ICalendarModel model = new CalendarModel(new DateOnly(2026, 10, 14));
+        model.Select(new DateOnly(2026, 10, 20));
+
+        Assert.AreEqual(new DateOnly(2026, 10, 20), model.SelectedDate);
+        Assert.AreEqual(new DateOnly(2026, 10, 14), model.Today);
+    }
 }

@@ -4,6 +4,7 @@ using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Services;
+using System.Globalization;
 using iTerminal.Core.Model.Calendar;
 
 namespace iTerminal.Core.Dialogs.Calendar;
@@ -18,15 +19,14 @@ public class CalendarDialog : Dialog
 {
     private const int DialogWidth = 72;
     private const int DialogHeight = 25;
-    private const int WeekNumberWidth = 3;
-    private const int GridCellWidth = 4;
-    private const int GridWidth = WeekNumberWidth + 1 + 7 * GridCellWidth;
+    private const int GridWidth = iConsole.Controls.Calendar.Columns + iConsole.Controls.Calendar.WeekNumberWidth;
     private const int MeetingRows = 4;
     private const int MaxEntryLength = 80;
 
     private readonly IDateTimeProviderService _dateTimeProviderService;
     private readonly MeetingStore _meetings;
     private readonly CalendarModel _calendar;
+    private readonly iConsole.Controls.Calendar _grid;
 
     /// <summary>What is being typed for a new meeting, or null when no entry is open.</summary>
     private string? _entry;
@@ -44,6 +44,28 @@ public class CalendarDialog : Dialog
         _meetings = meetings;
         _calendar = new CalendarModel(Today());
         _cursorDate = _calendar.SelectedDate;
+
+        // The month grid is the shared Calendar control, bound to the same model the keys below move. The
+        // dialog keeps the keyboard (meetings are typed here, and the entry line must see every key), so the
+        // grid takes no focus; it is what a click lands on and what the model's changes redraw.
+        _grid = new iConsole.Controls.Calendar(themeService)
+        {
+            Model = _calendar,
+            ShowWeekNumbers = true,
+            ShowAdjacentDays = false,
+            AlwaysEmphasizeSelection = true,
+            CanFocus = false,
+            Culture = CultureInfo.CurrentCulture,
+        };
+        _grid.SelectedDateChanged += (_, _) => OnSelectionChanged();
+        AddControl(_grid);
+    }
+
+    /// <summary>A click on the grid (or any other change of the model) shows the new day's meetings.</summary>
+    private void OnSelectionChanged()
+    {
+        SyncCursorToSelectedDate();
+        StateHasChanged();
     }
 
     private DateOnly Today() => DateOnly.FromDateTime(_dateTimeProviderService.Now);
@@ -67,6 +89,10 @@ public class CalendarDialog : Dialog
         {
             CenterInParent(new Size(DialogWidth, DialogHeight));
         }
+
+        // Centred in the dialog, one row down from the top edge like the month heading it replaces.
+        var innerWidth = Math.Max(0, (int)ViewSize.Width - 2);
+        _grid.Position = new Position(1 + Math.Max(0, (innerWidth - GridWidth) / 2), 1);
 
         base.OnInitializeLayout();
     }
@@ -261,64 +287,25 @@ public class CalendarDialog : Dialog
         }
 
         var colorScheme = ThemeService.CurrentColorScheme;
+        var gridX = (int)_grid.Position.X - 1;
+        var gridRows = (int)_grid.ViewSize.Height;
         for (var row = 0; row < ih; row++)
         {
+            if (row < gridRows)
+            {
+                // The grid paints its own cells; only the margins beside it are blanked here.
+                Put(buffer, 0, row, gridX, string.Empty, colorScheme.Foreground, colorScheme.Background);
+                var rightX = gridX + (int)_grid.ViewSize.Width;
+                Put(buffer, rightX, row, iw - rightX, string.Empty, colorScheme.Foreground, colorScheme.Background);
+                continue;
+            }
+
             Put(buffer, 0, row, iw, string.Empty, colorScheme.Foreground, colorScheme.Background);
         }
 
-        DrawMonth(buffer, iw, colorScheme);
         DrawSelectedDay(buffer, iw, colorScheme);
         DrawMeetings(buffer, iw, colorScheme);
         DrawHints(buffer, iw, ih, colorScheme);
-    }
-
-    private void DrawMonth(IBuffer buffer, int iw, ColorScheme colorScheme)
-    {
-        var selected = _calendar.SelectedDate;
-        Put(buffer, 0, 0, iw, Center(selected.ToString("MMMM yyyy"), iw), colorScheme.Foreground, colorScheme.Background);
-
-        var gridX = Math.Max(0, (iw - GridWidth) / 2);
-        var cellsX = gridX + WeekNumberWidth + 1;
-
-        Put(buffer, gridX, 2, WeekNumberWidth + 1, "Wk ", Color.Cyan, colorScheme.Background);
-        string[] weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-        for (var column = 0; column < 7; column++)
-        {
-            Put(buffer, cellsX + column * GridCellWidth, 2, GridCellWidth, weekdays[column] + "  ", Color.Cyan, colorScheme.Background);
-        }
-
-        var weeks = _calendar.MonthGrid();
-        for (var row = 0; row < weeks.Count; row++)
-        {
-            var week = weeks[row];
-            var y = 3 + row;
-            Put(buffer, gridX, y, WeekNumberWidth, $"{week.WeekNumber,2}", colorScheme.DisabledForeground, colorScheme.Background);
-
-            for (var column = 0; column < 7; column++)
-            {
-                var day = week.Days[column];
-                var x = cellsX + column * GridCellWidth;
-                if (day is null)
-                {
-                    Put(buffer, x, y, GridCellWidth, string.Empty, colorScheme.Foreground, colorScheme.Background);
-                    continue;
-                }
-
-                var text = $"{day.Value.Day,2}  ";
-                if (day.Value == selected)
-                {
-                    Put(buffer, x, y, GridCellWidth, text, colorScheme.SelectedFocusedForeground, colorScheme.SelectedFocusedBackground);
-                }
-                else if (day.Value == _calendar.Today)
-                {
-                    Put(buffer, x, y, GridCellWidth, text, Color.Cyan, colorScheme.Background);
-                }
-                else
-                {
-                    Put(buffer, x, y, GridCellWidth, text, colorScheme.Foreground, colorScheme.Background);
-                }
-            }
-        }
     }
 
     private void DrawSelectedDay(IBuffer buffer, int iw, ColorScheme colorScheme)
@@ -405,6 +392,7 @@ public class CalendarDialog : Dialog
     #region Test seams
 
     internal CalendarModel CalendarForTest => _calendar;
+    internal iConsole.Controls.Calendar GridForTest => _grid;
     internal string? EntryForTest => _entry;
     internal string? EntryErrorForTest => _entryError;
     internal int MeetingCursorForTest => _meetingCursor;

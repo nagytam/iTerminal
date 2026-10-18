@@ -120,4 +120,93 @@ public class CalendarAndRuleTest
         new Meter(Theme()) { Value = 0.5, ShowPercent = true, Position = new Position(0, 0), ViewSize = new Size(20, 1) }.Draw(buffer);
         Assert.IsTrue(Lines(buffer)[0].Contains(" 50% "));
     }
+    [TestMethod]
+    public void Calendar_ShowWeekNumbers_AddsIsoWeekColumn()
+    {
+        MockBuffer buffer = new(new Size(23, 8));
+        Calendar calendar = Create();
+        calendar.ShowWeekNumbers = true;
+        calendar.Draw(buffer);
+        string[] lines = Lines(buffer);
+        Assert.AreEqual(23, (int)calendar.ViewSize.Width);
+        Assert.IsTrue(lines[1].StartsWith("Wk Mo Tu"));
+        Assert.AreEqual("40 28 29 30  1  2  3  4", lines[2].TrimEnd());
+        Assert.AreEqual("42 12 13 14 15 16 17 18", lines[4].TrimEnd().Substring(0, 23));
+    }
+
+    [TestMethod]
+    public void Calendar_AdjacentDaysOff_LeavesThemBlank()
+    {
+        MockBuffer buffer = new(new Size(20, 8));
+        Calendar calendar = Create();
+        calendar.ShowAdjacentDays = false;
+        calendar.Draw(buffer);
+        Assert.AreEqual("          1  2  3  4", Lines(buffer)[2].TrimEnd());
+    }
+
+    [TestMethod]
+    public async Task Calendar_ClickOnBlankAdjacentDay_DoesNothing()
+    {
+        Calendar calendar = Create();
+        calendar.ShowAdjacentDays = false;
+        await calendar.HandleMouseEventAsync(Click(0, 2));
+        Assert.AreEqual(new DateOnly(2026, 10, 18), calendar.SelectedDate);
+    }
+
+    [TestMethod]
+    public async Task Calendar_WeekNumbersShiftTheClickColumns()
+    {
+        Calendar calendar = Create();
+        calendar.ShowWeekNumbers = true;
+        await calendar.HandleMouseEventAsync(Click(3, 2));
+        Assert.AreEqual(new DateOnly(2026, 9, 28), calendar.SelectedDate);
+        await calendar.HandleMouseEventAsync(Click(22, 0));
+        Assert.AreEqual(new DateOnly(2026, 10, 28), calendar.SelectedDate);
+    }
+
+    private sealed class SharedModel : iConsole.Model.ICalendarModel
+    {
+        public DateOnly Today { get; set; } = new(2026, 10, 1);
+
+        public DateOnly SelectedDate { get; private set; } = new(2026, 10, 1);
+
+        public event EventHandler? Changed;
+
+        public void Select(DateOnly date)
+        {
+            SelectedDate = date;
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void Raise() => Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    [TestMethod]
+    public void Calendar_BoundModel_IsTheSourceOfTheSelection()
+    {
+        SharedModel model = new();
+        Calendar calendar = new(Theme()) { Model = model };
+        int changed = 0;
+        calendar.SelectedDateChanged += (_, _) => changed++;
+        model.Select(new DateOnly(2026, 11, 5));
+        Assert.AreEqual(new DateOnly(2026, 11, 5), calendar.SelectedDate);
+        Assert.AreEqual(1, changed);
+        calendar.SelectedDate = new DateOnly(2026, 12, 1);
+        Assert.AreEqual(new DateOnly(2026, 12, 1), model.SelectedDate);
+    }
+
+    [TestMethod]
+    public void Calendar_ReplacedModel_StopsListeningToTheOldOne()
+    {
+        SharedModel first = new();
+        SharedModel second = new();
+        Calendar calendar = new(Theme()) { Model = first };
+        calendar.Model = second;
+        int changed = 0;
+        calendar.SelectedDateChanged += (_, _) => changed++;
+        first.Raise();
+        Assert.AreEqual(0, changed);
+        second.Raise();
+        Assert.AreEqual(1, changed);
+    }
 }

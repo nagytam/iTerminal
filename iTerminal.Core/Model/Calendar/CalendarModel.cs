@@ -1,3 +1,4 @@
+using iConsole.Model;
 using System.Globalization;
 
 namespace iTerminal.Core.Model.Calendar;
@@ -12,8 +13,13 @@ public sealed record CalendarWeek(int WeekNumber, DateOnly?[] Days);
 /// The date state behind <see cref="Dialogs.Calendar.CalendarDialog"/>: which day is selected, which
 /// day is today, and the month grid around the selection. Holds no UI and reads no clock, so the
 /// dialog hands it today's date and every rule here can be tested on fixed dates.
+///
+/// <para>It is also the <see cref="ICalendarModel"/> the dialog's <see cref="iConsole.Controls.Calendar"/>
+/// grid is bound to: the dialog moves the selection with its keys, a click on the grid selects through
+/// <see cref="Select"/>, and <see cref="Changed"/> tells the other side — so there is one selected day, not
+/// a copy in the grid that has to be kept in step.</para>
 /// </summary>
-public sealed class CalendarModel
+public sealed class CalendarModel : ICalendarModel
 {
     private static readonly DateOnly MinDate = DateOnly.MinValue;
     private static readonly DateOnly MaxDate = DateOnly.MaxValue;
@@ -24,15 +30,44 @@ public sealed class CalendarModel
         SelectedDate = today;
     }
 
-    public DateOnly Today { get; private set; }
+    private DateOnly _today;
+    private DateOnly _selectedDate;
 
-    public DateOnly SelectedDate { get; private set; }
+    public event EventHandler? Changed;
+
+    public DateOnly Today
+    {
+        get => _today;
+        private set => _today = value;
+    }
+
+    public DateOnly SelectedDate
+    {
+        get => _selectedDate;
+        private set
+        {
+            if (_selectedDate != value)
+            {
+                _selectedDate = value;
+                Changed?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
+
+    /// <summary>Selects <paramref name="date"/> (a click on the grid); the same day is not a change.</summary>
+    public void Select(DateOnly date) => SelectedDate = date;
 
     /// <summary>Starts again from <paramref name="today"/>. Done each time the calendar is opened.</summary>
     public void Reset(DateOnly today)
     {
+        var todayChanged = Today != today;
         Today = today;
+        var before = SelectedDate;
         SelectedDate = today;
+        if (todayChanged && before == today)
+        {
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public void MoveDays(int days) => SelectedDate = AddDays(SelectedDate, days);
