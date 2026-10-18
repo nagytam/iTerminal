@@ -123,6 +123,9 @@ public static class iTerminalApplicationBuilderExtension
             provider.GetRequiredService<iTerminal.Core.Services.Map.MapStore>(),
             Path.Combine(databaseDirectory, "maps")));
         services.AddTransient<iTerminal.Core.Dialogs.Map.MapDialog>();
+        // Alt+F2: saved SSH and PowerShell remoting connections, each a keypress from a live session on the lent terminal.
+        services.AddSingleton<iTerminal.Core.Services.Remote.IRemoteConnectionService, iTerminal.Core.Services.Remote.RemoteConnectionService>();
+        services.AddTransient<iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.PasswordManager.PasswordManagerDialog>();
         services.AddTransient<ItemInformation>();
         services.AddTransient<TerminalStatusBar>();
