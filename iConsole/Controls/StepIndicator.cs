@@ -40,6 +40,32 @@ public class StepIndicator : Control
         }
     }
 
+    /// <summary>
+    /// Raised with the step's index when the user clicks one of the glyphs. The indicator does not move by
+    /// itself — the host decides whether that step may be jumped to and sets <see cref="Current"/>.
+    /// </summary>
+    public event EventHandler<int>? StepClicked;
+
+    /// <summary>The step whose glyph is at <paramref name="column"/>, or -1 on a joint or outside the steps.</summary>
+    public int StepAtColumn(int column)
+        => column >= 0 && column % 2 == 0 && column / 2 < _count ? column / 2 : -1;
+
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (mouseEvent.LeftClicked && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            int step = StepAtColumn((int)mouseEvent.Position.X - (int)AbsolutePosition.X);
+            if (step >= 0)
+            {
+                StepClicked?.Invoke(this, step);
+                return true;
+            }
+        }
+
+        return isHandled;
+    }
+
     /// <summary>Cells needed for <paramref name="count"/> steps: one glyph each and a joint between neighbours.</summary>
     public static int WidthFor(int count) => count <= 0 ? 0 : count * 2 - 1;
 

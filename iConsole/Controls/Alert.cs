@@ -35,6 +35,60 @@ public class Alert(IThemeService themeService) : Control(themeService)
         }
     }
 
+    /// <summary>
+    /// Draws a <c>×</c> in the last column; a click on it, or Esc while the alert has focus, clears the
+    /// message and raises <see cref="Dismissed"/>. Off by default, so existing alerts keep their width.
+    /// </summary>
+    public bool IsDismissible
+    {
+        get => _isDismissible;
+        set
+        {
+            _isDismissible = value;
+            CanFocus = value;
+            StateHasChanged();
+        }
+    }
+
+    private bool _isDismissible;
+
+    public event EventHandler? Dismissed;
+
+    public void Dismiss()
+    {
+        if (_text.Length > 0)
+        {
+            Text = string.Empty;
+            Dismissed?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        bool isHandled = await base.HandleKeyEventAsync(keyEvent);
+        if (!isHandled && _isDismissible && IsFocused && IsEnabled && _text.Length > 0 && keyEvent.ConsoleKey == ConsoleKey.Escape)
+        {
+            Dismiss();
+            return true;
+        }
+
+        return isHandled;
+    }
+
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (_isDismissible && _text.Length > 0 && mouseEvent.LeftClicked
+            && mouseEvent.Position.Y == AbsolutePosition.Y
+            && mouseEvent.Position.X == AbsolutePosition.X + ViewSize.Width - 1)
+        {
+            Dismiss();
+            return true;
+        }
+
+        return isHandled;
+    }
+
     public static char GlyphFor(BadgeKind kind) => kind switch
     {
         BadgeKind.Success => '✔',
@@ -62,10 +116,17 @@ public class Alert(IThemeService themeService) : Control(themeService)
 
         Color accent = Badge.BackgroundFor(_kind, colorScheme.Foreground);
         buffer.Write(ZOrder, AbsolutePosition, new Size(2, 1), new ConxelString(GlyphFor(_kind) + " ", accent, colorScheme.Background));
-        if (width > 2)
+        int messageWidth = width - 2 - (_isDismissible ? 2 : 0);
+        if (messageWidth > 0)
         {
-            string message = _text.Length > width - 2 ? _text.Cut(width - 2) : _text;
-            buffer.Write(ZOrder, new Position(AbsolutePosition.X + 2, AbsolutePosition.Y), new Size((uint)(width - 2), 1), new ConxelString(message.ExpandRight(width - 2), colorScheme.Foreground, colorScheme.Background));
+            string message = _text.Length > messageWidth ? _text.Cut(messageWidth) : _text;
+            buffer.Write(ZOrder, new Position(AbsolutePosition.X + 2, AbsolutePosition.Y), new Size((uint)messageWidth, 1), new ConxelString(message.ExpandRight(messageWidth), colorScheme.Foreground, colorScheme.Background));
+        }
+
+        if (_isDismissible && width > 2)
+        {
+            buffer.Write(ZOrder, new Position(AbsolutePosition.X + width - 2, AbsolutePosition.Y), new Size(2, 1),
+                new ConxelString(" ×", IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.DisabledForeground, colorScheme.Background));
         }
     }
 }
