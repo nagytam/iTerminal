@@ -26,6 +26,13 @@ public class Slider : Control, IReadOnly
     public long Step { get; set; } = 1;
     public long LargeStep { get; set; } = 10;
 
+    /// <summary>Draws the current value right of the track, so the number is readable without counting cells.</summary>
+    public bool ShowValue { get; set; }
+
+    private int ValueColumns => ShowValue ? Math.Max(_maximum.ToString().Length, _minimum.ToString().Length) + 1 : 0;
+
+    private int TrackWidth => Math.Max(1, (int)ViewSize.Width - ValueColumns);
+
     public event EventHandler? ValueChanged;
 
     public long Minimum
@@ -147,7 +154,7 @@ public class Slider : Control, IReadOnly
         if (mouseEvent.LeftClicked)
         {
             int column = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
-            Value = ValueAt(column, _minimum, _maximum, (int)ViewSize.Width);
+            Value = ValueAt(Math.Min(column, TrackWidth - 1), _minimum, _maximum, TrackWidth);
             return true;
         }
 
@@ -166,14 +173,21 @@ public class Slider : Control, IReadOnly
         GetColor(colorScheme, GetVisualState(), out Color foreground, out Color background);
 
         int width = (int)ViewSize.Width;
-        int thumb = ThumbColumn(_value, _minimum, _maximum, width);
-        char[] track = new char[width];
-        for (int i = 0; i < width; i++)
+        int trackWidth = TrackWidth;
+        int thumb = ThumbColumn(_value, _minimum, _maximum, trackWidth);
+        char[] track = new char[trackWidth];
+        for (int i = 0; i < trackWidth; i++)
         {
             track[i] = i < thumb ? '━' : i == thumb ? '●' : '─';
         }
 
-        buffer.Write(ZOrder, AbsolutePosition, ViewSize, new ConxelString(new string(track), foreground, background));
+        string line = new string(track);
+        if (ShowValue)
+        {
+            line = (line + " " + _value.ToString().PadLeft(ValueColumns - 1)).PadRight(width);
+        }
+
+        buffer.Write(ZOrder, AbsolutePosition, ViewSize, new ConxelString(line, foreground, background));
     }
 
     public override void GetColor(ColorScheme colorScheme, VisualState visualState, out Color foregroundColor, out Color backgroundColor)

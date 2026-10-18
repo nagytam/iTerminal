@@ -1,8 +1,10 @@
 using iConsole.Controls.Viewers;
 using iConsole.Data;
+using iConsole.Display;
 using iConsole.Dialogs;
 using iConsole.Services;
 using iConsole.Controls.Charts;
+using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,7 +13,14 @@ namespace iTerminal.Core.Dialogs;
 
 public class SystemInfoDialog : Dialog
 {
+    private const int HistoryLength = 120;
+    private const long SampleIntervalMs = 1000;
+
     private readonly TextViewerControl _textViewerControl;
+    private readonly Gauge _memoryGauge;
+    private readonly Sparkline _memoryTrend;
+    private readonly List<double> _memoryHistory = [];
+    private long _lastSampleTick = long.MinValue;
 
     public SystemInfoDialog(IThemeService themeService)
         : base(nameof(SystemInfoDialog), themeService)
@@ -19,6 +28,39 @@ public class SystemInfoDialog : Dialog
         Title = "System Information";
         _textViewerControl = new TextViewerControl(false, themeService);
         AddControl(_textViewerControl);
+
+        // A live strip under the report: how much of the machine's memory this process holds, and the trend.
+        _memoryGauge = new Gauge(themeService) { Label = "Memory (this process)", ViewSize = new Size(1, 1) };
+        _memoryTrend = new Sparkline(themeService) { Foreground = Color.Cyan, ViewSize = new Size(1, 1) };
+        AddControl(_memoryGauge);
+        AddControl(_memoryTrend);
+    }
+
+    internal IReadOnlyList<double> MemoryHistoryForTest => _memoryHistory;
+
+    internal void SampleMemory()
+    {
+        double available = Math.Max(1, GC.GetGCMemoryInfo().TotalAvailableMemoryBytes);
+        double ratio = Math.Clamp(Environment.WorkingSet / available, 0, 1);
+        _memoryHistory.Add(ratio);
+        if (_memoryHistory.Count > HistoryLength)
+        {
+            _memoryHistory.RemoveAt(0);
+        }
+
+        _memoryGauge.Value = ratio;
+        _memoryTrend.Values = _memoryHistory.ToArray();
+    }
+
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        long now = Environment.TickCount64;
+        if (now - _lastSampleTick >= SampleIntervalMs)
+        {
+            _lastSampleTick = now;
+            SampleMemory();
+        }
     }
 
     internal const string CollectingText = "  Collecting system information…";
@@ -54,7 +96,13 @@ public class SystemInfoDialog : Dialog
         }
 
         _textViewerControl.Position = new Position(1, 1);
-        _textViewerControl.ViewSize = new Size(ViewSize.Width - 2, ViewSize.Height - 2);
+        const int stripHeight = 2;
+        _textViewerControl.ViewSize = new Size(ViewSize.Width - 2, Math.Max(1, ViewSize.Height - 2 - stripHeight));
+        long stripY = ViewSize.Height - 1 - stripHeight;
+        _memoryGauge.Position = new Position(2, stripY);
+        _memoryGauge.ViewSize = new Size(Math.Max(1, ViewSize.Width - 4), 1);
+        _memoryTrend.Position = new Position(2, stripY + 1);
+        _memoryTrend.ViewSize = new Size(Math.Max(1, ViewSize.Width - 4), 1);
 
         base.OnInitializeLayout();
     }

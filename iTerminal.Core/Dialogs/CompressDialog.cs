@@ -34,7 +34,7 @@ public class CompressDialog : FormDialog
     private readonly FormPanel _form;
     private readonly TextBox _textBoxArchive;
     private readonly ComboBox<ArchiveFormat> _comboFormat;
-    private readonly NumericUpDown _level;
+    private readonly Slider _level;
     private readonly PasswordBox _password;
     private readonly PasswordBox _confirm;
     private readonly ComboBox<ArchiveEncryption> _comboEncryption;
@@ -156,7 +156,7 @@ public class CompressDialog : FormDialog
         _comboFormat.SetItems(compressionService.AvailableFormats);
         _comboFormat.SelectionChanged += (_, _) => OnFormatChanged();
 
-        _level = new NumericUpDown(themeService);
+        _level = new Slider(themeService) { Step = 1, LargeStep = 3, ShowValue = true };
         _password = new PasswordBox(beepService, dateTimeProviderService, themeService);
         _password.PropertyChanged += (_, _) => UpdateEnabledFields();
         _confirm = new PasswordBox(beepService, dateTimeProviderService, themeService);

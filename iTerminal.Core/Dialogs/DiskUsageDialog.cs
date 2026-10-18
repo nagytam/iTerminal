@@ -1,4 +1,5 @@
 using iConsole.Buffers;
+using iConsole.Controls;
 using iConsole.Controls.Charts;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -29,6 +30,8 @@ public class DiskUsageDialog : Dialog
     private readonly IDiskUsageService _service;
     private readonly IContentModelService? _contentModelService;
     private readonly InfoLines _lines;
+    private readonly BreakdownChart _chart;
+    private readonly Badge _badge;
     private DiskUsageScan? _scan;
     private DiskUsageNode? _current;
     private string? _panelName;
@@ -49,7 +52,15 @@ public class DiskUsageDialog : Dialog
         Title = "Disk usage";
         _lines = new InfoLines(themeService);
         AddControl(_lines);
+
+        // Sits on the blank row under the header: one stacked bar of how the folder's biggest children share it.
+        _chart = new BreakdownChart(themeService) { IsVisible = false, ViewSize = new Size(1, 1) };
+        AddControl(_chart);
+        _badge = new Badge(themeService) { IsVisible = false };
+        AddControl(_badge);
     }
+
+    private static readonly Color[] SliceColors = [Color.Cyan, Color.Green, Color.Yellow, Color.DarkMagenta, Color.Blue, Color.Red];
 
     /// <summary>The scan behind the dialog, for a test to wait on.</summary>
     public DiskUsageScan? Scan => _scan;
@@ -99,7 +110,42 @@ public class DiskUsageDialog : Dialog
         _lines.Position = new Position(2, 1);
         _lines.ViewSize = new Size(Math.Max(1, ViewSize.Width - 4), Math.Max(1, ViewSize.Height - 2));
         base.OnInitializeLayout();
+        PlaceChart();
         UpdateLines();
+    }
+
+    private const int BadgeRoom = 12;
+
+    private void PlaceChart()
+    {
+        long width = Math.Max(1, _lines.ViewSize.Width);
+        _chart.Position = new Position(_lines.Position.X, _lines.Position.Y + 2);
+        _chart.ViewSize = new Size(Math.Max(1, width - BadgeRoom), 1);
+        _badge.Position = new Position(_lines.Position.X + width - (_badge.ViewSize.Width), _lines.Position.Y + 2);
+    }
+
+    private void UpdateChart(List<DiskUsageNode> rows, bool visible)
+    {
+        if (!visible || _current is null || _current.Size <= 0)
+        {
+            _chart.IsVisible = false;
+            _badge.IsVisible = false;
+            return;
+        }
+
+        var items = rows
+            .Where(r => r.Size > 0)
+            .OrderByDescending(r => r.Size)
+            .Take(SliceColors.Length)
+            .Select((r, i) => new BreakdownChartItem(r.Name, r.Size, r.IsOther ? Color.Gray : SliceColors[i]))
+            .ToList();
+        _chart.Items = items;
+        _chart.IsVisible = items.Count > 0;
+
+        _badge.Text = _current.Inaccessible ? "PARTIAL" : _sortByName ? "BY NAME" : "BY SIZE";
+        _badge.Kind = _current.Inaccessible ? BadgeKind.Warning : BadgeKind.Info;
+        PlaceChart();
+        _badge.IsVisible = true;
     }
 
     public override void OnIdle()
@@ -157,6 +203,7 @@ public class DiskUsageDialog : Dialog
         var width = (int)Math.Max(20, _lines.ViewSize.Width);
         var lines = new List<InfoLines.Line>();
 
+        UpdateChart([], false);
         if (_scan is null)
         {
             lines.Add(new("Nothing to measure.", Color.Yellow));
@@ -228,6 +275,7 @@ public class DiskUsageDialog : Dialog
         }
 
         _lines.Lines = lines;
+        UpdateChart(rows, true);
         StateHasChanged();
     }
 
