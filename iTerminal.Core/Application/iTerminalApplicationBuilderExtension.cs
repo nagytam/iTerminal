@@ -441,7 +441,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<TerminalPanel>();
         services.AddSingleton<TerminalModel>();
         services.AddTransient<TerminalDialog>();
-        services.AddSingleton<Serilog.ILogger, Logger.Logger>();
+        services.AddSingleton<Serilog.ILogger>(provider =>
+            new Logger.Logger(provider.GetRequiredService<ISettingsService>(), databaseDirectory));
         services.AddSingleton<IMemoryCacheService, MemoryCacheService>();
         return services;
     }

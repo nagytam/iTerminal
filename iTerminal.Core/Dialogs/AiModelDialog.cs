@@ -118,7 +118,7 @@ public class AiModelDialog : Dialog
         }
 
         sb.AppendLine();
-        sb.AppendLine("  Esc: close");
+        sb.AppendLine("  Esc:close");
 
         return sb.ToString();
     }

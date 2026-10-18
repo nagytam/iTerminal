@@ -43,7 +43,7 @@ public class ContentModelRecycleDrive(
     {
         // The two keys that mean something else here than on a folder are named: no row says them.
         var footer = base.GetFooter();
-        return StatusMessage.Length == 0 ? $"{footer}│ Enter: restore  F8: delete for good " : footer;
+        return StatusMessage.Length == 0 ? $"{footer}│ Enter:restore  F8:delete for good " : footer;
     }
 
     /// <summary>

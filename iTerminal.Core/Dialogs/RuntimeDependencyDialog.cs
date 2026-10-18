@@ -264,12 +264,12 @@ public class RuntimeDependencyDialog : Dialog
     };
 
     internal string Hint => _service.IsBusy
-        ? "Installing... Esc: hide this (it keeps going)"
+        ? "Installing... Esc:hide this (it keeps going)"
         : IsWizardActive
-            ? "Enter: next  Backspace: back  Space: tick  S: skip  Esc: later"
+            ? "Enter:next  Backspace:back  Space:tick  S:skip  Esc:later"
             : HasWork
-                ? "Enter or Esc: close"
-                : "Enter or Esc: close";
+                ? "Enter or Esc:close"
+                : "Enter or Esc:close";
 
     public override void Draw(IBuffer buffer)
     {

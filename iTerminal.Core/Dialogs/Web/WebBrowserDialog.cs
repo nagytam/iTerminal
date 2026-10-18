@@ -1307,8 +1307,8 @@ public class WebBrowserDialog : Dialog
     {
         var heading = _mode == Mode.Bookmarks ? "Bookmarks" : "History";
         var hint = _mode == Mode.Bookmarks
-            ? "Enter: open   Ctrl+Enter: new tab   Del: remove   Esc: back"
-            : "Enter: open   Ctrl+Enter: new tab   Del: forget   Esc: back";
+            ? "Enter:open   Ctrl+Enter:new tab   Del:remove   Esc:back"
+            : "Enter:open   Ctrl+Enter:new tab   Del:forget   Esc:back";
         WriteText(buffer, x, y, width, $" {heading} ({_list.Count})   {hint}", Color.Yellow, scheme.Background, true);
 
         var rows = Math.Max(0, height - 1);
@@ -1357,13 +1357,13 @@ public class WebBrowserDialog : Dialog
         switch (_mode)
         {
             case Mode.Find:
-                left = " Find: " + _findText + "█   Enter: search   Esc: cancel";
+                left = " Find: " + _findText + "█   Enter:search   Esc:cancel";
                 break;
             case Mode.Field:
-                left = " Editing — type, Enter: send form, Tab: next, Esc: done";
+                left = " Editing — type, Enter:send form, Tab:next, Esc:done";
                 break;
             case Mode.Address:
-                left = " Enter: go   Esc: cancel   Ctrl+U: clear";
+                left = " Enter:go   Esc:cancel   Ctrl+U:clear";
                 break;
             default:
                 string message;

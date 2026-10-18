@@ -663,7 +663,7 @@ public class MapDialog : Dialog
     private void DrawList(IBuffer buffer, ColorScheme scheme, int x, int y, int width, int height)
     {
         var heading = _listKind == ListKind.Places ? "Saved places" : "Search results";
-        var hint = _listKind == ListKind.Places ? "Enter: go   Del: remove   Esc: back" : "Enter: go   Esc: back";
+        var hint = _listKind == ListKind.Places ? "Enter:go   Del:remove   Esc:back" : "Enter:go   Esc:back";
         WriteText(buffer, x, y, width, $" {heading} ({_list.Count})   {hint}", Color.Yellow, scheme.Background, true);
         for (var row = 0; row < height - 1; row++)
         {
@@ -700,11 +700,11 @@ public class MapDialog : Dialog
         var color = scheme.Foreground;
         if (_mode == Mode.Search)
         {
-            left = " Search or coordinates: " + _input + "█   Enter: go   Esc: cancel";
+            left = " Search or coordinates: " + _input + "█   Enter:go   Esc:cancel";
         }
         else if (_mode == Mode.Help)
         {
-            left = " Up/Down: scroll   any other key: back";
+            left = " Up/Down:scroll   any other key:back";
             color = scheme.DisabledForeground;
         }
         else if (_status.Length > 0)

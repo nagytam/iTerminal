@@ -38,7 +38,7 @@ public class RuntimeDependencyDialogTest
         AssertScreenContains(screen, "Not installed. Install 1.63.0.");
         AssertScreenContains(screen, "Step 1 of 1: Playwright");
         AssertScreenContains(screen, "[x] Install this one");
-        AssertScreenContains(screen, "Enter: next  Backspace: back  Space: tick  S: skip  Esc: later");
+        AssertScreenContains(screen, "Enter:next  Backspace:back  Space:tick  S:skip  Esc:later");
         Assert.IsTrue(dialog.ShouldOpenAtStartup);
     }
 
@@ -75,7 +75,7 @@ public class RuntimeDependencyDialogTest
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
         service.Verify(s => s.StartInstall(), Times.Never);
-        AssertScreenContains(Render(dialog), "Installing... Esc: hide this (it keeps going)");
+        AssertScreenContains(Render(dialog), "Installing... Esc:hide this (it keeps going)");
     }
 
     [TestMethod]
@@ -184,7 +184,7 @@ public class RuntimeDependencyDialogTest
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
-        AssertScreenContains(Render(dialog), "Enter or Esc: close");
+        AssertScreenContains(Render(dialog), "Enter or Esc:close");
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
         service.Verify(s => s.StartInstall(), Times.Never);

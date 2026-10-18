@@ -19,7 +19,7 @@ public class AboutDialogTest
         AssertScreenContains(screen, "iTerminal");
         AssertScreenContains(screen, "Version   " + AboutDialog.Version);
         AssertScreenContains(screen, "Runtime   .NET");
-        AssertScreenContains(screen, "Esc: close");
+        AssertScreenContains(screen, "Esc:close");
     }
 
     [TestMethod]

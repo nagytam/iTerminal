@@ -59,7 +59,7 @@ public class SecureWipeAndSignaturesTest
 
         await _app.PressAsync("Space");
 
-        await _app.WaitForTextAsync("Enter: continue");
+        await _app.WaitForTextAsync("Enter:continue");
         Assert.IsTrue(File.Exists(ReadmePath));
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();
