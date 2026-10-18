@@ -17,11 +17,12 @@ namespace iTerminal.Core.Dialogs;
 /// Each dependency takes three rows — its name, its state, and a note or problem — so the dialog keeps
 /// the same size while an install runs and the list changes under it.
 ///
-/// <para>When something needs work the dialog opens as a wizard with one step per dependency (what it is,
-/// what is installed, a tick for whether to include it) and, when there is more than one, a last step
-/// that sums up what Finish will install. Enter moves on and installs on the last step, Backspace or Left
-/// goes back, Space ticks, S skips the ticked versions. Once an install has started, or when there is
-/// nothing to do, the dialog shows the plain list with the install log.</para>
+/// <para>The dialog opens as a wizard: an overview of every component first (so the first page is never
+/// empty), then one step per dependency, up to date or not (what it is, what is installed, and for the
+/// ones that need work a tick for whether to include it) and, when anything needs work, a last step
+/// that sums up what Finish will install. The wizard's header and step indicator say where you are. Enter moves on and installs on the last step, Backspace or Left
+/// goes back, Space ticks, S skips the ticked versions. Once an install has started
+/// the dialog shows the plain list with the install log.</para>
 /// </summary>
 public class RuntimeDependencyDialog : Dialog
 {
@@ -114,19 +115,23 @@ public class RuntimeDependencyDialog : Dialog
 
         _unticked.Clear();
         List<RuntimeDependencyStatus> actionable = Actionable();
-        _wizardActive = actionable.Count > 0 && !_service.IsBusy;
+        // Always a wizard unless an install is running: an overview first, then one page for every
+        // component (the up-to-date ones too, so the person sees what is on the machine), and a last
+        // page that sums up what Finish does.
+        _wizardActive = !_service.IsBusy;
         if (!_wizardActive)
         {
             return;
         }
 
         _wizard = new Wizard(ThemeService);
-        foreach (RuntimeDependencyStatus status in actionable)
+        _wizard.AddStep(new WizardStep("Overview", new RuntimeDependencyOverviewPage(_service, ThemeService)));
+        foreach (RuntimeDependencyStatus status in _service.Statuses)
         {
             _wizard.AddStep(new WizardStep(status.Name, new RuntimeDependencyStepPage(status.Id, _service, IsTicked, ThemeService)));
         }
 
-        if (actionable.Count > 1)
+        if (actionable.Count > 0)
         {
             _wizard.AddStep(new WizardStep("Install", new RuntimeDependencySummaryPage(_service, TickedIds, ThemeService), ValidateSomethingTicked));
         }
@@ -191,7 +196,10 @@ public class RuntimeDependencyDialog : Dialog
                     wizard.Back();
                     return true;
                 case ConsoleKey.Spacebar:
-                    if (wizard.CurrentStep?.Content is RuntimeDependencyStepPage page && !_unticked.Remove(page.Id))
+                    // Only a component that has something to install can be left out.
+                    if (wizard.CurrentStep?.Content is RuntimeDependencyStepPage page
+                        && Actionable().Any(status => status.Id == page.Id)
+                        && !_unticked.Remove(page.Id))
                     {
                         _unticked.Add(page.Id);
                     }
@@ -276,8 +284,12 @@ public class RuntimeDependencyDialog : Dialog
         ? "Installing... Esc:hide this (it keeps going)"
         : IsWizardActive
             ? IsOnLastStep
-                ? "Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later"
-                : "Enter:next  Backspace:back  Space:tick  S:don't ask again  Esc:later"
+                ? HasWork
+                    ? "Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later"
+                    : "Enter:close  Backspace:back  Esc:close"
+                : HasWork
+                    ? "Enter:next  Backspace:back  Space:tick  S:don't ask again  Esc:later"
+                    : "Enter:next  Backspace:back  Esc:close"
             : "Enter or Esc:close";
 
     private static (string Glyph, Color Color) StateMarker(RuntimeDependencyStatus status, ColorScheme scheme) =>
