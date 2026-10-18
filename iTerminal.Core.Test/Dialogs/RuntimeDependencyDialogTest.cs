@@ -33,12 +33,21 @@ public class RuntimeDependencyDialogTest
 
         await ShowAsync(dialog);
 
+        // The first page is the overview, never an empty one: it names every component and its state.
+        var overview = Render(dialog);
+        AssertScreenContains(overview, "Step 1 of 3: Overview");
+        AssertScreenContains(overview, "Playwright  Not installed. Install 1.63.0.");
+        AssertScreenContains(overview, "Enter:next  Backspace:back  Space:tick  S:don't ask again  Esc:later");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         var screen = Render(dialog);
         AssertScreenContains(screen, "Playwright - Chromium for the quote indicator");
         AssertScreenContains(screen, "Not installed. Install 1.63.0.");
-        AssertScreenContains(screen, "Step 1 of 1: Playwright");
+        AssertScreenContains(screen, "Step 2 of 3: Playwright");
         AssertScreenContains(screen, "[x] Install this one");
-        AssertScreenContains(screen, "Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        AssertScreenContains(Render(dialog), "Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later");
         Assert.IsTrue(dialog.ShouldOpenAtStartup);
     }
 
@@ -60,6 +69,10 @@ public class RuntimeDependencyDialogTest
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
+        // Overview, the component, the summary: the third Enter installs.
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        service.Verify(s => s.StartInstall(), Times.Never);
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
         service.Verify(s => s.StartInstall(), Times.Once);
@@ -112,12 +125,14 @@ public class RuntimeDependencyDialogTest
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
-        AssertScreenContains(Render(dialog), "Step 1 of 3: Playwright");
+        AssertScreenContains(Render(dialog), "Step 1 of 4: Overview");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        AssertScreenContains(Render(dialog), "Step 2 of 4: Playwright");
         AssertScreenContains(Render(dialog), "[x] Install this one");
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
-        AssertScreenContains(Render(dialog), "Step 2 of 3: Ollama");
+        AssertScreenContains(Render(dialog), "Step 3 of 4: Ollama");
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
-        AssertScreenContains(Render(dialog), "Step 3 of 3: Install");
+        AssertScreenContains(Render(dialog), "Step 4 of 4: Install");
         AssertScreenContains(Render(dialog), "Playwright: Not installed. Install 1.63.0.");
         AssertScreenContains(Render(dialog), "Ollama: Not installed. Install 0.40.4.");
         service.Verify(s => s.StartInstall(), Times.Never);
@@ -136,9 +151,10 @@ public class RuntimeDependencyDialogTest
         await ShowAsync(dialog);
 
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Backspace));
 
-        AssertScreenContains(Render(dialog), "Step 1 of 3: Playwright");
+        AssertScreenContains(Render(dialog), "Step 2 of 4: Playwright");
     }
 
     [TestMethod]
@@ -148,6 +164,7 @@ public class RuntimeDependencyDialogTest
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
         AssertScreenContains(Render(dialog), "[ ] Left out");
@@ -166,6 +183,7 @@ public class RuntimeDependencyDialogTest
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
@@ -178,16 +196,71 @@ public class RuntimeDependencyDialogTest
     }
 
     [TestMethod]
-    public async Task WhenNothingIsLeftEnterOnlyCloses()
+    public async Task WhenNothingIsLeftTheWizardStillListsEveryComponentAndOnlyCloses()
     {
         var service = NewService(RuntimeDependencyState.Installed);
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
-        AssertScreenContains(Render(dialog), "Enter or Esc:close");
+        var overview = Render(dialog);
+        AssertScreenContains(overview, "Step 1 of 2: Overview");
+        AssertScreenContains(overview, "All 1 are installed and up to date.");
+        AssertScreenContains(overview, "Enter:next  Backspace:back  Esc:close");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        var page = Render(dialog);
+        AssertScreenContains(page, "Step 2 of 2: Playwright");
+        AssertScreenContains(page, "Installed 1.63.0. Up to date.");
+        AssertScreenContains(page, "Nothing to do here.");
+        AssertScreenContains(page, "Enter:close  Backspace:back  Esc:close");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
+        Assert.IsTrue(dialog.IsTicked("playwright"));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
         service.Verify(s => s.StartInstall(), Times.Never);
+        service.Verify(s => s.StartInstall(It.IsAny<IReadOnlyCollection<string>?>()), Times.Never);
         Assert.IsFalse(dialog.ShouldOpenAtStartup);
+    }
+
+    [TestMethod]
+    public async Task AnUpToDateComponentIsNeverOnTheSummary()
+    {
+        var service = new Mock<IRuntimeDependencyService>();
+        service.SetupGet(s => s.Statuses).Returns(
+        [
+            new RuntimeDependencyStatus("playwright", "Playwright", "Chromium", "1.63.0", null, RuntimeDependencyState.Installed),
+            new RuntimeDependencyStatus("ollama", "Ollama", "Local AI", null, "0.40.4", RuntimeDependencyState.Missing),
+        ]);
+        service.SetupGet(s => s.Log).Returns(new List<string>());
+        service.SetupGet(s => s.IsBusy).Returns(false);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        for (int i = 0; i < 3; i++)
+        {
+            await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        }
+
+        var summary = Render(dialog);
+        AssertScreenContains(summary, "Step 4 of 4: Install");
+        AssertScreenContains(summary, "Ollama: Not installed. Install 0.40.4.");
+        Assert.IsFalse(summary.Contains("Playwright: Installed"), summary.ToString());
+    }
+
+    [TestMethod]
+    public async Task WithNothingToCheckTheFirstPageStillSaysSo()
+    {
+        var service = new Mock<IRuntimeDependencyService>();
+        service.SetupGet(s => s.Statuses).Returns([]);
+        service.SetupGet(s => s.Log).Returns(new List<string>());
+        service.SetupGet(s => s.IsBusy).Returns(false);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+
+        await ShowAsync(dialog);
+
+        var screen = Render(dialog);
+        AssertScreenContains(screen, "Step 1 of 1: Overview");
+        AssertScreenContains(screen, "There is nothing to set up.");
     }
 }
