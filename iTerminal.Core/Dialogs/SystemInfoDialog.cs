@@ -2,6 +2,7 @@ using iConsole.Controls.Viewers;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Services;
+using iConsole.Controls.Charts;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -111,6 +112,7 @@ public class SystemInfoDialog : Dialog
                     var usedGb   = (drive.TotalSize - drive.TotalFreeSpace) / 1024.0 / 1024 / 1024;
                     sb.AppendLine($"  {drive.Name,-6} {drive.DriveType,-10} {drive.DriveFormat,-8}  " +
                                   $"Total: {totalGb,8:N2} GB  Used: {usedGb,8:N2} GB  Free: {freeGb,8:N2} GB  " +
+                                  $"{BarChart.BuildBar(drive.TotalSize == 0 ? 0 : (double)(drive.TotalSize - drive.TotalFreeSpace) / drive.TotalSize, 10).Replace(' ', '░')}  " +
                                   $"Label: {drive.VolumeLabel}");
                 }
                 else
