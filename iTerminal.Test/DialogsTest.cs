@@ -57,6 +57,7 @@ public class DialogsTest
     [DataRow("Ctrl+F11", "SystemInfoDialog")]
     [DataRow("Ctrl+Shift+F10", "SystemSettingsDialog")]
     [DataRow("Alt+F7", "StockBrowserDialog")]
+    [DataRow("Ctrl+Shift+F4", "TranslatorDialog")]
     [DataRow("Alt+F2", "RemoteConnectionManagerDialog")]
     [DataRow("Alt+F9", "DiskManagerDialog")]
     [DataRow("Alt+F12", "ProcessManagerDialog")]
@@ -89,6 +90,28 @@ public class DialogsTest
         await _app.PressAsync("Tab");
         await _app.PressAsync("Enter");
         await _app.WaitForTextAsync("You asked for https://example.test/next");
+
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
+    /// <summary>The translator through the whole app: type a text, translate it, read the result and the language it was found to be in.</summary>
+    [TestMethod]
+    public async Task TheTranslatorTranslatesATypedText()
+    {
+        await _app.PressAsync("Ctrl+Shift+F4");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Translator.TranslatorDialog, "the translator to open");
+
+        // From, To and Engine come first; the text field is the fourth stop.
+        await _app.PressAsync("Tab");
+        await _app.PressAsync("Tab");
+        await _app.PressAsync("Tab");
+        await _app.TypeAsync("Guten Tag");
+        await _app.PressAsync("F5");
+
+        await _app.WaitForTextAsync("[en] Guten Tag");
+        await _app.WaitForTextAsync("German (detected) → English");
 
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();

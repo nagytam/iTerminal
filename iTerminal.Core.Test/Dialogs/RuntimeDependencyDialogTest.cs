@@ -36,7 +36,9 @@ public class RuntimeDependencyDialogTest
         var screen = Render(dialog);
         AssertScreenContains(screen, "Playwright - Chromium for the quote indicator");
         AssertScreenContains(screen, "Not installed. Install 1.63.0.");
-        AssertScreenContains(screen, "Enter:install   S:skip this version   Esc:later");
+        AssertScreenContains(screen, "Step 1 of 1: Playwright");
+        AssertScreenContains(screen, "[x] Install this one");
+        AssertScreenContains(screen, "Enter:next  Backspace:back  Space:tick  S:skip  Esc:later");
         Assert.IsTrue(dialog.ShouldOpenAtStartup);
     }
 
@@ -104,30 +106,53 @@ public class RuntimeDependencyDialogTest
     }
 
     [TestMethod]
-    public async Task EveryDependencyStartsTickedAndEnterInstallsAll()
+    public async Task EachDependencyGetsItsOwnStepAndTheLastStepSumsUp()
     {
         var service = NewTwoMissing();
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
-        AssertScreenContains(Render(dialog), "[x] Playwright");
-        AssertScreenContains(Render(dialog), "[x] Ollama");
+        AssertScreenContains(Render(dialog), "Step 1 of 3: Playwright");
+        AssertScreenContains(Render(dialog), "[x] Install this one");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        AssertScreenContains(Render(dialog), "Step 2 of 3: Ollama");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        AssertScreenContains(Render(dialog), "Step 3 of 3: Install");
+        AssertScreenContains(Render(dialog), "Playwright: Not installed. Install 1.63.0.");
+        AssertScreenContains(Render(dialog), "Ollama: Not installed. Install 0.40.4.");
+        service.Verify(s => s.StartInstall(), Times.Never);
+
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
         service.Verify(s => s.StartInstall(), Times.Once);
+        Assert.IsFalse(dialog.IsWizardActive);
     }
 
     [TestMethod]
-    public async Task SpaceUnticksTheDependencyUnderTheCursorAndOnlyTheTickedOnesAreInstalled()
+    public async Task BackspaceGoesBackAStep()
     {
         var service = NewTwoMissing();
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
-        await dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
-        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Backspace));
 
-        AssertScreenContains(Render(dialog), "[ ] Ollama");
+        AssertScreenContains(Render(dialog), "Step 1 of 3: Playwright");
+    }
+
+    [TestMethod]
+    public async Task SpaceLeavesTheDependencyOnTheStepOutAndOnlyTheTickedOnesAreInstalled()
+    {
+        var service = NewTwoMissing();
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
+        AssertScreenContains(Render(dialog), "[ ] Left out");
+        Assert.IsFalse(dialog.IsTicked("ollama"));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
         service.Verify(s => s.StartInstall(), Times.Never);
@@ -135,17 +160,19 @@ public class RuntimeDependencyDialogTest
     }
 
     [TestMethod]
-    public async Task WithEverythingUntickedEnterInstallsNothing()
+    public async Task WithEverythingLeftOutTheSummaryRefusesToFinish()
     {
         var service = NewTwoMissing();
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
-        await dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
+        AssertScreenContains(Render(dialog), "Nothing is ticked. Go back and tick what to install.");
         service.Verify(s => s.StartInstall(), Times.Never);
         service.Verify(s => s.StartInstall(It.IsAny<IReadOnlyCollection<string>?>()), Times.Never);
     }

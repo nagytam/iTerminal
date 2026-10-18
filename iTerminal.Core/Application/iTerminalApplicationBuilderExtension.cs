@@ -62,8 +62,10 @@ public static class iTerminalApplicationBuilderExtension
             services.Configure<FileInformationRefreshOptions>(configuration.GetSection("FileInformationRefresh"));
             services.Configure<AiOptions>(configuration.GetSection("AI"));
             services.Configure<iTerminal.Core.Services.Cloud.CloudOptions>(configuration.GetSection("Cloud"));
+            services.Configure<iTerminal.Core.Services.Translation.TranslationOptions>(configuration.GetSection("Translation"));
         }
 
+        services.AddOptions<iTerminal.Core.Services.Translation.TranslationOptions>();
         services.AddOptions<FileInformationRefreshOptions>();
         services.AddOptions<AiOptions>();
         services.AddOptions<iTerminal.Core.Services.Cloud.CloudOptions>();
@@ -249,6 +251,33 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Stocks.IStockQuoteProvider, iTerminal.Core.Services.Stocks.YahooStockQuoteProvider>();
         services.AddSingleton<iTerminal.Core.Services.Stocks.IStockService, iTerminal.Core.Services.Stocks.StockService>();
         services.AddTransient<iTerminal.Core.Dialogs.Stocks.StockBrowserDialog>();
+        // Ctrl+Shift+F4: the translator. A LibreTranslate-compatible API (Translation:ApiUrl) and the connected AI
+        // model are two providers behind one service; a test replaces the providers so no run reaches the network.
+        services.AddSingleton<iTerminal.Core.Services.Translation.ILanguageDetector, iTerminal.Core.Services.Translation.LanguageDetector>();
+        services.AddSingleton<iTerminal.Core.Services.Translation.ITranslationProvider>(provider =>
+        {
+            var translation = provider.GetRequiredService<IOptions<iTerminal.Core.Services.Translation.TranslationOptions>>().Value;
+            return new iTerminal.Core.Services.Translation.LibreTranslateProvider(translation.ApiUrl, () =>
+            {
+                string? key = Environment.GetEnvironmentVariable(translation.ApiKeyEnvVar);
+                if (!string.IsNullOrEmpty(key))
+                {
+                    return key;
+                }
+
+                try
+                {
+                    return provider.GetRequiredService<IPasswordManager>().GetSecret(iTerminal.Core.Services.Translation.TranslationOptions.ApiKeyPasswordId);
+                }
+                catch (Exception exception) when (exception is InvalidOperationException or IOException)
+                {
+                    return null;
+                }
+            });
+        });
+        services.AddSingleton<iTerminal.Core.Services.Translation.ITranslationProvider, iTerminal.Core.Services.Translation.LlmTranslationProvider>();
+        services.AddSingleton<iTerminal.Core.Services.Translation.ITranslationService, iTerminal.Core.Services.Translation.TranslationService>();
+        services.AddTransient<iTerminal.Core.Dialogs.Translator.TranslatorDialog>();
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();

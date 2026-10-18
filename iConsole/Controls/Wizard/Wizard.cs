@@ -19,6 +19,8 @@ public class Wizard : Control
     private readonly List<WizardStep> _steps = [];
     private readonly Button _backButton;
     private readonly Button _nextButton;
+    private readonly StepIndicator _indicator;
+    private readonly Alert _alert;
     private int _currentIndex;
     private string _error = string.Empty;
 
@@ -26,6 +28,10 @@ public class Wizard : Control
     {
         _backButton = new Button(string.Empty, new WizardBackCommand(this), themeService) { ViewSize = new Size(8, 1) };
         _nextButton = new Button(string.Empty, new WizardNextCommand(this), themeService) { ViewSize = new Size(10, 1) };
+        _indicator = new StepIndicator(themeService);
+        _alert = new Alert(themeService) { Kind = BadgeKind.Error };
+        AddControl(_indicator);
+        AddControl(_alert);
         AddControl(_backButton);
         AddControl(_nextButton);
     }
@@ -51,6 +57,7 @@ public class Wizard : Control
         _steps.Add(step);
         step.Content.IsVisible = _steps.Count == 1;
         AddControl(step.Content);
+        _indicator.Count = _steps.Count;
         OnInitializeLayout();
         StateHasChanged();
     }
@@ -83,6 +90,7 @@ public class Wizard : Control
         if (!string.IsNullOrEmpty(error))
         {
             _error = error;
+            _alert.Text = error;
             StateHasChanged();
             return false;
         }
@@ -90,6 +98,7 @@ public class Wizard : Control
         if (IsLastStep)
         {
             _error = string.Empty;
+            _alert.Text = string.Empty;
             IsFinished = true;
             Finished?.Invoke(this, EventArgs.Empty);
             StateHasChanged();
@@ -104,6 +113,8 @@ public class Wizard : Control
     {
         _currentIndex = index;
         _error = string.Empty;
+        _alert.Text = string.Empty;
+        _indicator.Current = index;
         for (int i = 0; i < _steps.Count; i++)
         {
             _steps[i].Content.IsVisible = i == index;
@@ -135,6 +146,11 @@ public class Wizard : Control
             step.Content.ViewSize = new Size(width, contentHeight);
         }
 
+        long errorRow = height > 1 ? height - 2 : 0;
+        _alert.Position = new Position(0, errorRow);
+        _alert.ViewSize = new Size(width, 1);
+        _indicator.Position = new Position(Math.Max(0, width - _indicator.ViewSize.Width), 0);
+
         long buttonRow = height > 0 ? height - 1 : 0;
         long nextX = width > _nextButton.ViewSize.Width ? width - _nextButton.ViewSize.Width : 0;
         _nextButton.Position = new Position(nextX, buttonRow);
@@ -154,10 +170,8 @@ public class Wizard : Control
         string header = CurrentStep is null
             ? string.Empty
             : $"Step {_currentIndex + 1} of {_steps.Count}: {CurrentStep.Title}";
-        WriteLine(buffer, 0, header, colorScheme.Foreground, colorScheme.Background, width);
-
-        long errorRow = ViewSize.Height > 1 ? ViewSize.Height - 2 : 0;
-        WriteLine(buffer, errorRow, _error, Color.Red, colorScheme.Background, width);
+        int headerWidth = Math.Max(0, width - (int)_indicator.ViewSize.Width - 1);
+        WriteLine(buffer, 0, header.Length > headerWidth ? header[..headerWidth] : header, colorScheme.Foreground, colorScheme.Background, width);
 
         base.Draw(buffer);
     }
