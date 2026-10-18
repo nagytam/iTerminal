@@ -423,6 +423,27 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// The translation engines with no network and no model: the one provider says it is the translation API,
+    /// "translates" by putting the target language in front of the text, and finds every text to be German.
+    /// </summary>
+    public sealed class Translation : Core.Services.Translation.ITranslationProvider
+    {
+        public string Id => "api";
+
+        public string Name => "Translation API";
+
+        public int MaxChunkLength => 4000;
+
+        public string? UnavailableReason => null;
+
+        public Task<Core.Services.Translation.TranslationResult> TranslateAsync(string text, string? sourceCode, string targetCode, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Translation.TranslationResult($"[{targetCode}] {text}", "de", Name));
+
+        public Task<Core.Services.Translation.LanguageDetection?> DetectAsync(string text, CancellationToken cancellationToken = default) =>
+            Task.FromResult<Core.Services.Translation.LanguageDetection?>(new Core.Services.Translation.LanguageDetection("de", 0.99));
+    }
+
+    /// <summary>
     /// Nothing to install and nothing to check: no test downloads Playwright, and the start-up offer never
     /// opens over the panels. The dialog itself is still reachable from the Tools menu, with nothing in it.
     /// </summary>

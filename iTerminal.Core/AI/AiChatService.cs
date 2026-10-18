@@ -149,7 +149,7 @@ public class AiChatService : IAiChatService
     private static readonly Regex ThinkTagRegex = new(@"<think>.*?</think>", RegexOptions.Singleline | RegexOptions.Compiled);
     private static readonly Regex AnsiEscapeRegex = new(@"\x1b(\[[0-9;]*[A-Za-z]|[^[])", RegexOptions.Compiled);
 
-    private static string Sanitize(string text)
+    internal static string Sanitize(string text)
     {
         text = ThinkTagRegex.Replace(text, string.Empty);
         text = AnsiEscapeRegex.Replace(text, string.Empty);
@@ -263,7 +263,7 @@ public class AiChatService : IAiChatService
                 return $"Opened {dialog_name}.";
             },
             "open_dialog",
-            "Open a dialog by name. Available names: settings, help, about, disk_manager, process_manager, network_manager, system_info, task_manager, theme_manager, screen_manager, ai_model, git (the Git client: changed files, staging area, commit history)."),
+            "Open a dialog by name. Available names: settings, help, about, disk_manager, process_manager, network_manager, system_info, task_manager, theme_manager, screen_manager, ai_model, git (the Git client: changed files, staging area, commit history), translator (translate text and detect its language)."),
 
         AIFunctionFactory.Create(
             () => { _uiService.Quit(); return "Closing iTerminal. Goodbye!"; },

@@ -175,6 +175,10 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<Core.Services.PackageManager.IPackageManagerService, SandboxServices.PackageManager>();
                 services.AddSingleton<Core.Services.RuntimeDependencies.IRuntimeDependencyService, SandboxServices.Dependencies>();
                 services.AddSingleton<Core.Services.Stocks.IStockQuoteProvider, SandboxServices.StockQuotes>();
+                // Neither the translation API nor the local model is asked: both providers give way to one that answers at once.
+                Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
+                    .RemoveAll<Core.Services.Translation.ITranslationProvider>(services);
+                services.AddSingleton<Core.Services.Translation.ITranslationProvider, SandboxServices.Translation>();
                 services.AddSingleton<SandboxServices.Shell>();
                 services.AddSingleton<Core.Services.Shell.IInteractiveShellService>(provider => provider.GetRequiredService<SandboxServices.Shell>());
                 services.AddSingleton<SandboxServices.Launcher>();

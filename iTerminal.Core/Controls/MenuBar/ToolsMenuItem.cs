@@ -39,7 +39,8 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
         iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null,
         iTerminal.Core.Dialogs.Map.MapDialog? mapDialog = null,
-        iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog? remoteConnectionManagerDialog = null)
+        iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog? remoteConnectionManagerDialog = null,
+        iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -75,6 +76,7 @@ public class ToolsMenuItem : MenuItem
         if (mailDialog is not null) features.Add(new MailDialogCommand(mailDialog));
         if (webBrowserDialog is not null) features.Add(new WebBrowserDialogCommand(webBrowserDialog));
         if (mapDialog is not null) features.Add(new MapDialogCommand(mapDialog));
+        if (translatorDialog is not null) features.Add(new TranslatorDialogCommand(translatorDialog));
         if (remoteConnectionManagerDialog is not null) features.Add(new RemoteConnectionManagerDialogCommand(remoteConnectionManagerDialog));
         if (passwordManagerDialog is not null) features.Add(new PasswordManagerDialogCommand(passwordManagerDialog));
         if (systemSettingsDialog is not null) features.Add(new SystemSettingsDialogCommand(systemSettingsDialog));

@@ -72,7 +72,8 @@ public class HotKeys : StatusBarItem
         INotificationService? notificationService = null,
         DuplicateFinderDialog? duplicateFinderDialog = null,
         SystemSettingsDialog? systemSettingsDialog = null,
-        iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null)
+        iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null,
+        iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -388,6 +389,17 @@ public class HotKeys : StatusBarItem
                 IsVisible = false
             };
             AddControl(stockBrowserDialogButton);
+        }
+
+        if (translatorDialog is not null)
+        {
+            var translatorDialogButton = new Button("Shift-Ctrl-F4-Translate", new TranslatorDialogCommand(translatorDialog), themeService)
+            {
+                Position = new Position(0, 0),
+                ViewSize = new Size(18, 1),
+                IsVisible = false
+            };
+            AddControl(translatorDialogButton);
         }
     }
 

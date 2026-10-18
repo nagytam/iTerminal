@@ -104,7 +104,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
         iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null,
         iTerminal.Core.Dialogs.Map.MapDialog? mapDialog = null,
-        iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog? remoteConnectionManagerDialog = null
+        iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog? remoteConnectionManagerDialog = null,
+        iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null
         )
         : base([], themeService)
     {
@@ -190,7 +191,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             webBrowserDialog,
             stockBrowserDialog,
             mapDialog,
-            remoteConnectionManagerDialog));
+            remoteConnectionManagerDialog,
+            translatorDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 

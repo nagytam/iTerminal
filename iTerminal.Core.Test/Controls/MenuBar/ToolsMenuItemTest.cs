@@ -40,6 +40,25 @@ public class ToolsMenuItemTest
     }
 
     [TestMethod]
+    public void TheTranslatorIsListedWithItsKey()
+    {
+        var theme = iTerminal.Core.Test.Helper.UiTestHelper.TestTheme();
+        var translator = new iTerminal.Core.Dialogs.Translator.TranslatorDialog(
+            Moq.Mock.Of<iTerminal.Core.Services.Translation.ITranslationService>(),
+            Moq.Mock.Of<iTerminal.Core.Services.ISettingsService>(),
+            Microsoft.Extensions.Options.Options.Create(new iTerminal.Core.Services.Translation.TranslationOptions()),
+            theme);
+        var menu = new ToolsMenuItem(
+            null!, null!, null!, null!, Moq.Mock.Of<iConsole.Interfaces.IContentModelService>(), null!, null!, null!, null!, null!, theme,
+            translatorDialog: translator);
+
+        var entries = menu.Controls.AsSnapshot().OfType<MenuItem>().Select(m => m.Text).ToList();
+
+        Assert.IsTrue(entries.Any(e => e.StartsWith("Translator" + (char)9, StringComparison.Ordinal) && e.Contains("F4", StringComparison.Ordinal)),
+            string.Join(" | ", entries));
+    }
+
+    [TestMethod]
     public void RuntimeDependenciesIsListedWithoutAHotKey()
     {
         // Reached from here and the command palette only, so the label carries no key and no tab.
