@@ -108,6 +108,25 @@ public class TextViewerControl : Control
         }
     }
 
+    /// <summary>Rows the wheel moves the view by in one notch.</summary>
+    private const int WheelRows = 3;
+
+    /// <summary>The wheel scrolls the text three rows; the scroll bars handle their own clicks.</summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (isHandled || mouseEvent.WheelDelta == 0 || TextModel.Lines.Count == 0 || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            return isHandled;
+        }
+
+        long target = ScrollableModel.CursorPosition.Y + (mouseEvent.WheelDelta > 0 ? -WheelRows : WheelRows);
+        ScrollableModel.CursorPosition.Y = Math.Clamp(target, 0, TextModel.Lines.Count - 1);
+        ScrollableModel.ScrollToVisible();
+        StateHasChanged();
+        return true;
+    }
+
     public override void Draw(IBuffer buffer)
     {
         var colorScheme = ThemeService.CurrentColorScheme;
@@ -149,6 +168,15 @@ public class TextViewerControl : Control
                     size,
                     conxelLine
                     );
+            }
+            else
+            {
+                // Blank the rows past the end of the text: a layer is not cleared between frames.
+                buffer.Write(
+                    ZOrder,
+                    new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + i)),
+                    size,
+                    new ConxelString(string.Empty.PadRight((int)size.Width), Color.White, colorScheme.Background));
             }
         }
 
