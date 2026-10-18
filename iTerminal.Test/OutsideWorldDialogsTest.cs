@@ -111,12 +111,12 @@ public class OutsideWorldDialogsTest
         await _app.WaitForTextAsync("London");
         await _app.PressAsync("Enter");
         await _app.WaitForTextAsync("Added ACME.L");
-        await _app.WaitForTextAsync("8 on the list");
+        await _app.WaitForTextAsync("10 on the list");
 
         await _app.PressAsync("d");
         await _app.WaitForTextAsync("from the list?");
         await _app.PressAsync("y");
-        await _app.WaitForTextAsync("7 on the list");
+        await _app.WaitForTextAsync("9 on the list");
         await CloseAndCheckAsync();
     }
 }
