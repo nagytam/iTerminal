@@ -161,12 +161,31 @@ public abstract record EntryBase : IEntry
         return color;
     }
 
+    internal const int DateLength = 10;
+    internal const int TimeLength = 5;
+    internal const int SizeLength = 6;
+
+    /// <summary>
+    /// How a panel row of <paramref name="width"/> is divided. A narrow panel gives the name its room
+    /// back: time goes first, then date. At 60 columns the name column was 4 wide ("alph}"), so no
+    /// file could be told from another.
+    /// </summary>
+    internal static (int NameLength, bool ShowDate, bool ShowTime) ColumnLayout(int width)
+    {
+        const int minNameLength = 14;
+        var showTime = width - 2 - 1 - SizeLength - 1 - DateLength - 1 - TimeLength >= minNameLength;
+        var showDate = showTime || width - 2 - 1 - SizeLength - 1 - DateLength >= minNameLength;
+        var nameLength = Math.Max(0, width - 2 - 1 - SizeLength
+            - (showDate ? 1 + DateLength : 0) - (showTime ? 1 + TimeLength : 0));
+        return (nameLength, showDate, showTime);
+    }
+
     public virtual ConxelString FormatItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState)
     {
-        const int dateLength = 10;
-        const int timeLength = 5;
-        const int sizeLength = 6;
-        var nameLength = Math.Max(0, width - 2 - 1 - sizeLength - 1 - dateLength - 1 - timeLength);
+        const int dateLength = DateLength;
+        const int timeLength = TimeLength;
+        const int sizeLength = SizeLength;
+        var (nameLength, showDate, showTime) = ColumnLayout(width);
 
         ConxelString conxelString = new();
         if (Url is not null)
@@ -181,12 +200,19 @@ public abstract record EntryBase : IEntry
             AppendRightPadded(conxelString, displayName, nameLength, foregroundColor, backgroundColor, isItalic);
             conxelString.Append(displayName.Length <= nameLength ? Border.VerticalSingle : "}", foregroundColor, backgroundColor, isItalic: isItalic);
             AppendLeftPadded(conxelString, FileSize, sizeLength, foregroundColor, backgroundColor, isItalic);
-            conxelString.Append(Border.VerticalSingle, foregroundColor, backgroundColor, isItalic: isItalic);
             // Padded to their columns: a row that has no date (the '..' of a tool-backed drive) must
             // still paint every cell, or the previous frame's date stays on screen beside it.
-            AppendRightPadded(conxelString, Date, dateLength, foregroundColor, backgroundColor, isItalic);
-            conxelString.Append(Border.VerticalSingle, foregroundColor, backgroundColor, isItalic: isItalic);
-            AppendRightPadded(conxelString, Time, timeLength, foregroundColor, backgroundColor, isItalic);
+            if (showDate)
+            {
+                conxelString.Append(Border.VerticalSingle, foregroundColor, backgroundColor, isItalic: isItalic);
+                AppendRightPadded(conxelString, Date, dateLength, foregroundColor, backgroundColor, isItalic);
+            }
+
+            if (showTime)
+            {
+                conxelString.Append(Border.VerticalSingle, foregroundColor, backgroundColor, isItalic: isItalic);
+                AppendRightPadded(conxelString, Time, timeLength, foregroundColor, backgroundColor, isItalic);
+            }
         }
         return conxelString;
     }

@@ -30,6 +30,21 @@ public class StatusBar : Control
     /// the ones that no longer fit. The fixed-width items of the editor and viewer bars add up to more
     /// than 80 columns, so on a standard terminal the last of them was cut off mid-word.
     /// </summary>
+    private readonly List<Control> _leftOut = [];
+
+    /// <summary>
+    /// <see cref="Control.ShowAsync"/> makes every child visible after the layout pass, which put back
+    /// the items the layout had just left out — stacked on top of the first one.
+    /// </summary>
+    public override async Task ShowAsync()
+    {
+        await base.ShowAsync();
+        foreach (var item in _leftOut.ToList())
+        {
+            item.IsVisible = false;
+        }
+    }
+
     protected void StackFitting(IReadOnlyList<Control> inOrder, IReadOnlyList<Control> byPriority)
     {
         var room = (long)ViewSize.Width;
@@ -44,16 +59,21 @@ public class StatusBar : Control
         }
 
         var visible = new List<Control>();
+        _leftOut.Clear();
         foreach (var item in inOrder)
         {
             var fits = shown.Contains(item);
-            if (item.IsVisible != fits)
-            {
-                item.IsVisible = fits;
-            }
+            // Assigned unconditionally: the getter also reports a hidden parent, and comparing against
+            // it left an item that did not fit visible, stacked over the first one, whenever the bar was
+            // laid out before its dialog was shown. The setter ignores a value it already holds.
+            item.IsVisible = fits;
             if (fits)
             {
                 visible.Add(item);
+            }
+            else
+            {
+                _leftOut.Add(item);
             }
         }
         Layout.StackHorizontal(visible);
