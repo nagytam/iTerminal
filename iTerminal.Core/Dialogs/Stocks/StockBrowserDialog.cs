@@ -650,6 +650,13 @@ public class StockBrowserDialog : SplitPaneDialog
     internal bool IsAddingForTest => _adding;
     internal bool IsConfirmingForTest => _confirmAction is not null;
     internal IReadOnlyList<StockRow> RowsForTest => [.. _rowItems.AsSnapshot()];
+    /// <summary>
+    /// How many stock and hit rows the lists have actually taken up. The collections above are filled first and
+    /// the list boxes rebuilt right after on the same worker, so a test that renders as soon as the collection
+    /// is full can draw the list before it has caught up; it waits on these instead.
+    /// </summary>
+    internal int StockRowsShownForTest => _stockListBox.Count;
+    internal int HitRowsShownForTest => _hitListBox.Count;
     internal IReadOnlyList<StockSearchHit> HitsForTest => [.. _hitItems.AsSnapshot()];
     internal TextBox InputBoxForTest => _inputBox;
 

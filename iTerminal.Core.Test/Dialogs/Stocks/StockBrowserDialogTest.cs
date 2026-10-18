@@ -45,7 +45,7 @@ public class StockBrowserDialogTest
     }
 
     private static Task QuotesLandedAsync(StockBrowserDialog dialog) =>
-        WaitUntilAsync(() => dialog.RowsForTest.Count > 0 && dialog.RowsForTest.All(r => r.Quote is not null), "every stock to be quoted");
+        WaitUntilAsync(() => dialog.RowsForTest.Count > 0 && dialog.RowsForTest.All(r => r.Quote is not null) && dialog.StockRowsShownForTest == dialog.RowsForTest.Count, "every stock to be quoted and listed");
 
     [TestMethod]
     public async Task ItListsTheDefaultStocksWithLivePrices()
@@ -147,7 +147,7 @@ public class StockBrowserDialogTest
         Assert.IsTrue(dialog.IsAddingForTest);
         dialog.InputBoxForTest.Text = "vodafone";
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
-        await WaitUntilAsync(() => dialog.HitsForTest.Count == 2, "the hits to be listed");
+        await WaitUntilAsync(() => dialog.HitsForTest.Count == 2 && dialog.HitRowsShownForTest == 2, "the hits to be listed");
 
         var screen = Render(dialog);
         AssertScreenContains(screen, "London");

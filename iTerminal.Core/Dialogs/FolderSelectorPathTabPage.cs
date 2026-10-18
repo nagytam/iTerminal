@@ -29,6 +29,10 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
     private ErrorMessage _errorMessage { get; set; }
     private Label _schemesLabel { get; set; }
     private Button _goButton { get; set; }
+    private Breadcrumb _crumbs { get; set; }
+
+    /// <summary>Where each segment of the typed path ends: clicking crumb <c>i</c> cuts the text back to <c>_crumbPrefixes[i]</c>.</summary>
+    private List<string> _crumbPrefixes = [];
 
     /// <summary>What has been typed, untrimmed. <see cref="GoToPathCommand"/> trims it.</summary>
     public string Path => TextBoxPath.Text;
@@ -67,10 +71,86 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
             HotKeyChar = 'G'
         };
 
+        // The typed path, one clickable crumb per folder: a click cuts the box back to that folder, which is
+        // how one goes up a few levels without holding Backspace.
+        _crumbs = new Breadcrumb(themeService);
+        _crumbs.SegmentActivated += OnCrumbActivated;
+        TextBoxPath.TextModel.PropertyChanged += (_, _) => UpdateCrumbs();
+
         AddControl(TextBoxPath);
+        AddControl(_crumbs);
         AddControl(_errorMessage);
         AddControl(_schemesLabel);
         AddControl(_goButton);
+    }
+
+    /// <summary>
+    /// The folders of a typed path or URL as (name, text up to and including it) pairs: a Windows path is its
+    /// drive, then each folder; <c>/home/me</c> is <c>/</c>, <c>home</c>, <c>me</c>; <c>ssh://host/a/b</c> starts at
+    /// <c>ssh://host</c>. Nothing is resolved or checked — it is only where the separators are.
+    /// </summary>
+    public static List<(string Name, string Prefix)> SplitPath(string text)
+    {
+        List<(string, string)> parts = [];
+        var trimmed = text.Trim();
+        if (trimmed.Length == 0)
+        {
+            return parts;
+        }
+
+        var start = 0;
+        var schemeEnd = trimmed.IndexOf("://", StringComparison.Ordinal);
+        if (schemeEnd > 0)
+        {
+            var hostEnd = trimmed.IndexOf('/', schemeEnd + 3);
+            var end = hostEnd < 0 ? trimmed.Length : hostEnd;
+            parts.Add((trimmed[..end], trimmed[..end]));
+            start = end;
+        }
+        else if (trimmed[0] is '/' or '\\')
+        {
+            parts.Add((trimmed[..1], trimmed[..1]));
+            start = 1;
+        }
+
+        while (start < trimmed.Length)
+        {
+            if (trimmed[start] is '/' or '\\')
+            {
+                start++;
+                continue;
+            }
+
+            var next = trimmed.IndexOfAny(['/', '\\'], start);
+            var end = next < 0 ? trimmed.Length : next;
+            var prefix = trimmed[..end];
+            // A drive letter keeps its separator, so its crumb cuts back to the drive root and not to a relative "C:".
+            if (parts.Count == 0 && end - start == 2 && trimmed[start + 1] == ':' && next >= 0)
+            {
+                prefix = trimmed[..(next + 1)];
+            }
+
+            parts.Add((trimmed[start..end], prefix));
+            start = end;
+        }
+
+        return parts;
+    }
+
+    private void UpdateCrumbs()
+    {
+        var parts = SplitPath(TextBoxPath.Text ?? string.Empty);
+        _crumbPrefixes = [.. parts.Select(part => part.Prefix)];
+        _crumbs.Segments = [.. parts.Select(part => part.Name)];
+    }
+
+    private void OnCrumbActivated(object? sender, int index)
+    {
+        if (index >= 0 && index < _crumbPrefixes.Count)
+        {
+            TextBoxPath.Text = _crumbPrefixes[index];
+            TextBoxPath.ScrollableModel.CursorPosition.X = TextBoxPath.Text.Length;
+        }
     }
 
     /// <summary>
@@ -104,6 +184,9 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         TextBoxPath.ViewSize = new Size(innerWidth, 1);
         TextBoxPath.ScrollableModel.ScrollableSize = new Size(TextBoxPath.MaxLength, 1);
         TextBoxPath.ScrollableModel.ViewSize = new Size(Math.Max(0, TextBoxPath.EditableWidth), 1);
+
+        _crumbs.Position = new Position(1, 2);
+        _crumbs.ViewSize = new Size(innerWidth, 1);
 
         _errorMessage.Position = new Position(1, 1);
         _errorMessage.ViewSize = new Size(Math.Max(0, ViewSize.Width - 6), 1);
