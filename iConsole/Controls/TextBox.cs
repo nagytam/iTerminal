@@ -128,6 +128,31 @@ public class TextBox : Control, IReadOnly
     }
 
     /// <summary>
+    /// A click in the well takes the focus and puts the cursor under the pointer (past the end of
+    /// the text it lands on the end), as in any text field. Before this the mouse could not place
+    /// the cursor in a long value.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (isHandled || !mouseEvent.LeftClicked || !IsEnabled || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            return isHandled;
+        }
+
+        if (!IsFocused)
+        {
+            SetFocus();
+        }
+
+        long column = (long)mouseEvent.Position.X - (long)AbsolutePosition.X - WellTextOffset;
+        long target = Math.Clamp(column + (long)ScrollableModel.ScrollPosition.X, 0, TextLength);
+        ScrollableModel.CursorPosition.X = target;
+        StateHasChanged();
+        return true;
+    }
+
+    /// <summary>
     /// What is drawn ahead of the input well: the label and a <c>": "</c> separator, or nothing at
     /// all when there is no label. A label that already ends in a colon ("Path or URL: ") keeps its
     /// own — appending another drew "Path or URL: : [", and an unlabelled box (the one-line inputs

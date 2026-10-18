@@ -266,6 +266,65 @@ public class TreeView : Control
         }
     }
 
+    /// <summary>Rows the wheel scrolls the view by in one notch.</summary>
+    private const int WheelRows = 3;
+
+    /// <summary>
+    /// A click on a row moves the focus there; a click on the expand/collapse glyph of a node with
+    /// children toggles it, and a second click on the focused row does the same. The wheel scrolls
+    /// the view. Before this a tree could only be driven from the keyboard.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        long relativeX = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
+        long relativeY = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+        if (relativeX < 0 || relativeX >= ViewSize.Width || relativeY < 0 || relativeY >= ViewSize.Height)
+        {
+            return isHandled;
+        }
+
+        List<(IHierarchicalItemModel Item, int Depth)> rows = GetVisibleRows();
+        if (mouseEvent.WheelDelta != 0)
+        {
+            int max = Math.Max(0, rows.Count - (int)ViewSize.Height);
+            ScrollOffset = Math.Clamp(ScrollOffset + (mouseEvent.WheelDelta > 0 ? -WheelRows : WheelRows), 0, max);
+            StateHasChanged();
+            return true;
+        }
+
+        if (mouseEvent.LeftClicked)
+        {
+            int index = ScrollOffset + (int)relativeY;
+            if (index < rows.Count)
+            {
+                (IHierarchicalItemModel item, int depth) = rows[index];
+                if (!IsFocused)
+                {
+                    SetFocus();
+                }
+
+                bool wasFocused = item.IsFocused;
+                IHierarchicalItemModel? previous = Root.GetFocusedItem();
+                if (previous is not null && previous != item)
+                {
+                    previous.IsFocused = false;
+                }
+
+                item.IsFocused = true;
+                if (relativeX == depth * IndentWidth || wasFocused)
+                {
+                    ToggleItem(item);
+                }
+
+                StateHasChanged();
+                return true;
+            }
+        }
+
+        return isHandled;
+    }
+
     /// <summary>The visible nodes in drawing order, each with its depth below the root.</summary>
     public List<(IHierarchicalItemModel Item, int Depth)> GetVisibleRows()
     {
