@@ -68,6 +68,30 @@ public class ToolsAndMenusTest
     }
 
     [TestMethod]
+    public async Task TheViewerStatusBarKeepsOnlyWhatFitsOn80Columns()
+    {
+        await using TerminalApp small = await TerminalApp.StartAsync(width: 80, height: 24);
+        await small.SelectEntryAsync("readme.txt");
+
+        await small.PressAsync("F3");
+
+        await small.WaitForTextAsync("Hello from the left panel.");
+        await small.WaitUntilAsync(
+            s => s.Lines.Any(l => l.Contains("[F3-FindNext][F7-Search]", StringComparison.Ordinal) && l.Contains("X: 0/", StringComparison.Ordinal)),
+            "the buttons that fit to be stacked from the left, with nothing drawn over them");
+    }
+
+    [TestMethod]
+    public async Task APanelOn60ColumnsDropsDateAndTimeSoNamesStayReadable()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.WaitForTextAsync("readme.txt");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains("2026-", StringComparison.Ordinal) && l.Contains("readme", StringComparison.Ordinal)),
+            narrow.Screen.Dump());
+    }
+
+    [TestMethod]
     public async Task CtrlFOpensTheFileMenu()
     {
         await _app.PressAsync("Ctrl+F");

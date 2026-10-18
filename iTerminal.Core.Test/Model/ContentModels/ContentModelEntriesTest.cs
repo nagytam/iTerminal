@@ -75,9 +75,9 @@ public class EntryBaseFormattingTest
             Time = "12:34"
         };
 
-        var result = entry.FormatItemName(33, false, new ColorScheme(), VisualState.Normal);
+        var result = entry.FormatItemName(40, false, new ColorScheme(), VisualState.Normal);
 
-        Assert.AreEqual("LongDis}123456│2025-05-15│12:34", result.Text);
+        Assert.AreEqual("LongDisplayNam}123456│2025-05-15│12:34", result.Text);
     }
 
     [TestMethod]

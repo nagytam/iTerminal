@@ -233,7 +233,7 @@ public class SecureWipeDialog : Dialog
             case WipePhase.Choosing:
                 lines.Add(default);
                 lines.Add(new($"Method  {PatternName(Pattern)}"));
-                lines.Add(new("        1: one pass   3: three passes   7: seven passes", colors.DisabledForeground));
+                lines.Add(new("        1: one pass   3: three   7: seven", colors.DisabledForeground));
                 lines.Add(default);
                 // Short lines: the one-line form was 72 columns, and "undone." was cut off on 80.
                 lines.Add(new("The contents are overwritten and the names removed."));

@@ -696,10 +696,7 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
 
     public virtual ConxelString FormatItemName(IEntry? entry, int width, bool cursor, ColorScheme colorScheme, VisualState visualState)
     {
-        var dateLength = 10;
-        var timeLength = 5;
-        var sizeLength = 6;
-        var nameLength = Math.Max(0, width - 2 - 1 - sizeLength - 1 - dateLength - 1 - timeLength);
+        var (nameLength, showDate, showTime) = EntryBase.ColumnLayout(width);
 
         ConxelString conxelString;
         if (entry is not null)
@@ -722,9 +719,9 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
             var foregroundColor = colorScheme.Foreground;
             var backgroundColor = colorScheme.Background;
             var text = StringHelper.Repeat(' ', nameLength) + Border.VerticalSingle
-                       + StringHelper.Repeat(' ', sizeLength) + Border.VerticalSingle
-                       + StringHelper.Repeat(' ', dateLength) + Border.VerticalSingle
-                       + StringHelper.Repeat(' ', timeLength);
+                       + StringHelper.Repeat(' ', EntryBase.SizeLength)
+                       + (showDate ? Border.VerticalSingle + StringHelper.Repeat(' ', EntryBase.DateLength) : string.Empty)
+                       + (showTime ? Border.VerticalSingle + StringHelper.Repeat(' ', EntryBase.TimeLength) : string.Empty);
             conxelString.Append(text, foregroundColor, backgroundColor);
         }
         return conxelString;
