@@ -87,6 +87,58 @@ public class Table<T> : Control
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
+    /// <summary>Rows the wheel moves the cursor by in one notch.</summary>
+    private const int WheelRows = 3;
+
+    /// <summary>
+    /// A click on a body row moves the cursor there and takes the focus; a double click is not
+    /// distinguished, so a second click on the cursor row activates it. The wheel moves the cursor.
+    /// Before this a table could only be driven from the keyboard.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        long relativeX = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
+        long relativeY = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
+        bool isInside = relativeX >= 0 && relativeX < ViewSize.Width && relativeY >= 0 && relativeY < ViewSize.Height;
+        if (!isInside || _rows.Count == 0 || relativeY == 0)
+        {
+            return isHandled;
+        }
+
+        if (mouseEvent.WheelDelta != 0)
+        {
+            long target = ScrollableModel.CursorPosition.Y + (mouseEvent.WheelDelta > 0 ? -WheelRows : WheelRows);
+            ScrollableModel.CursorPosition.Y = Math.Clamp(target, 0, _rows.Count - 1);
+            ScrollableModel.ScrollToVisible();
+            StateHasChanged();
+            return true;
+        }
+
+        if (mouseEvent.LeftClicked)
+        {
+            long index = (long)ScrollableModel.ScrollPosition.Y + relativeY - 1;
+            if (index < _rows.Count)
+            {
+                if (!IsFocused)
+                {
+                    SetFocus();
+                }
+                bool wasCursor = index == CursorRow;
+                ScrollableModel.CursorPosition.Y = index;
+                ScrollableModel.ScrollToVisible();
+                if (wasCursor)
+                {
+                    RowActivated?.Invoke(this, SelectedRow);
+                }
+                StateHasChanged();
+                return true;
+            }
+        }
+
+        return isHandled;
+    }
+
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
