@@ -239,7 +239,7 @@ public class SecureWipeDialog : Dialog
                 lines.Add(new("It cannot reach copies that snapshots, backups,", colors.DisabledForeground));
                 lines.Add(new("copy-on-write file systems or SSDs keep.", colors.DisabledForeground));
                 lines.Add(default);
-                lines.Add(new("Enter: continue", colors.DisabledForeground));
+                lines.Add(new("Enter:continue", colors.DisabledForeground));
                 break;
             case WipePhase.Armed:
                 lines.Add(default);

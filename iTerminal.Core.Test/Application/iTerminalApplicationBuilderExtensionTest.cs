@@ -24,7 +24,7 @@ public class iTerminalApplicationBuilderExtensionTest
         Assert.IsTrue(services.Any(service => service.ServiceType == typeof(IContentModelService) && service.ImplementationType == typeof(ContentModelService)));
         Assert.IsTrue(services.Any(service => service.ServiceType == typeof(ISettingsService) && service.ImplementationType == typeof(SettingsService)));
         Assert.IsTrue(services.Any(service => service.ServiceType == typeof(IMemoryCacheService) && service.ImplementationType == typeof(MemoryCacheService)));
-        Assert.IsTrue(services.Any(service => service.ServiceType == typeof(Serilog.ILogger) && service.ImplementationType == typeof(iTerminal.Core.Logger.Logger)));
+        Assert.IsTrue(services.Any(service => service.ServiceType == typeof(Serilog.ILogger) && service.ImplementationFactory is not null));
         Assert.IsTrue(services.Any(service => service.ServiceType == typeof(ContentBrowser)));
         Assert.IsTrue(services.Any(service => service.ServiceType == typeof(IDbContextFactory<iTerminalDbContext>)));
     }

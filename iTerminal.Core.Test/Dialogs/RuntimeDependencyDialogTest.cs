@@ -36,7 +36,7 @@ public class RuntimeDependencyDialogTest
         var screen = Render(dialog);
         AssertScreenContains(screen, "Playwright - Chromium for the quote indicator");
         AssertScreenContains(screen, "Not installed. Install 1.63.0.");
-        AssertScreenContains(screen, "Enter: install   S: skip this version   Esc: later");
+        AssertScreenContains(screen, "Enter:install   S:skip this version   Esc:later");
         Assert.IsTrue(dialog.ShouldOpenAtStartup);
     }
 
@@ -73,7 +73,7 @@ public class RuntimeDependencyDialogTest
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
         service.Verify(s => s.StartInstall(), Times.Never);
-        AssertScreenContains(Render(dialog), "Installing... Esc: hide this (it keeps going)");
+        AssertScreenContains(Render(dialog), "Installing... Esc:hide this (it keeps going)");
     }
 
     [TestMethod]
@@ -157,7 +157,7 @@ public class RuntimeDependencyDialogTest
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
-        AssertScreenContains(Render(dialog), "Enter or Esc: close");
+        AssertScreenContains(Render(dialog), "Enter or Esc:close");
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
         service.Verify(s => s.StartInstall(), Times.Never);

@@ -143,7 +143,7 @@ public class AiModelDialogTest
         CollectionAssert.Contains(lines, "  Model ID       : qwen3");
         CollectionAssert.Contains(lines, "  API Key Set    : No (unauthenticated)");
         CollectionAssert.Contains(lines, "  Messages       : 2 (1 user, 1 assistant)");
-        CollectionAssert.Contains(lines, "  Esc: close");
+        CollectionAssert.Contains(lines, "  Esc:close");
         await dialog.DetailsTask;
     }
 
