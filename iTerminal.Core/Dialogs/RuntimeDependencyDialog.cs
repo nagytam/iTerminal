@@ -1,4 +1,6 @@
 using iConsole.Buffers;
+using iConsole.Controls;
+using iConsole.Controls.Progress;
 using iConsole.Controls.Wizard;
 using iConsole.Data;
 using iConsole.Display;
@@ -174,8 +176,15 @@ public class RuntimeDependencyDialog : Dialog
             switch (keyEvent.ConsoleKey)
             {
                 case ConsoleKey.Enter:
-                case ConsoleKey.RightArrow:
                     await wizard.NextAsync();
+                    return true;
+                case ConsoleKey.RightArrow:
+                    // Right only browses: on the last step "next" is the install, which wants a deliberate Enter.
+                    if (!IsOnLastStep)
+                    {
+                        await wizard.NextAsync();
+                    }
+
                     return true;
                 case ConsoleKey.Backspace:
                 case ConsoleKey.LeftArrow:
@@ -234,14 +243,18 @@ public class RuntimeDependencyDialog : Dialog
 
         foreach (RuntimeDependencyStatus status in _service.Statuses)
         {
+            (string glyph, Color glyphColor) = StateMarker(status, scheme);
             rows.Add(($"{status.Name} - {status.Purpose}", scheme.Foreground));
-            rows.Add((StateText(status), status.State == RuntimeDependencyState.Installed ? scheme.Foreground : Color.DarkYellow));
+            rows.Add(($"{glyph} {RuntimeDependencyStepPage.StateText(status)}", glyphColor));
             rows.Add(status.Problem is not null
-                ? (status.Problem, Color.DarkRed)
-                : (status.Note ?? string.Empty, scheme.DisabledForeground));
+                ? ($"  {status.Problem}", Color.DarkRed)
+                : ($"  {status.Note}", scheme.DisabledForeground));
         }
 
-        rows.Add((string.Empty, scheme.Foreground));
+        // The separator row doubles as the busy indicator: a sweeping block while an install runs.
+        rows.Add(_service.IsBusy
+            ? (ProgressBar.BuildIndeterminateBar(Math.Max(1, Math.Min(innerWidth, 40)), (int)(Environment.TickCount64 / 90)), Color.DarkYellow)
+            : (string.Empty, scheme.Foreground));
         IReadOnlyList<string> log = _service.Log;
         for (int i = Math.Max(0, log.Count - LogRows); i < log.Count; i++)
         {
@@ -256,20 +269,34 @@ public class RuntimeDependencyDialog : Dialog
         return rows.Select(row => (row.Text.Length > innerWidth ? row.Text.Cut(innerWidth) : row.Text, row.Color)).ToList();
     }
 
-    private static string StateText(RuntimeDependencyStatus status) => status.State switch
-    {
-        RuntimeDependencyState.Missing => $"Not installed. Install {status.TargetVersion}.",
-        RuntimeDependencyState.UpdateAvailable => $"Installed {status.InstalledVersion}. Update to {status.TargetVersion}.",
-        _ => $"Installed {status.InstalledVersion}. Up to date.",
-    };
+    /// <summary>Whether Enter on the wizard's current step would install rather than move on.</summary>
+    private bool IsOnLastStep => _wizard is { CurrentStep: { } step } wizard && wizard.Steps.Count > 0 && ReferenceEquals(step, wizard.Steps[^1]);
 
     internal string Hint => _service.IsBusy
         ? "Installing... Esc:hide this (it keeps going)"
         : IsWizardActive
-            ? "Enter:next  Backspace:back  Space:tick  S:skip  Esc:later"
-            : HasWork
-                ? "Enter or Esc:close"
-                : "Enter or Esc:close";
+            ? IsOnLastStep
+                ? "Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later"
+                : "Enter:next  Backspace:back  Space:tick  S:don't ask again  Esc:later"
+            : "Enter or Esc:close";
+
+    private static (string Glyph, Color Color) StateMarker(RuntimeDependencyStatus status, ColorScheme scheme) =>
+        status.Problem is not null
+            ? (Alert.GlyphFor(BadgeKind.Error).ToString(), Color.DarkRed)
+            : status.State == RuntimeDependencyState.Installed
+                ? ("✓", Color.DarkGreen)
+                : ("●", Color.DarkYellow);
+
+    public override void OnIdle()
+    {
+        // The busy sweep below moves with the clock, so a running install repaints on its own.
+        if (_service.IsBusy)
+        {
+            StateHasChanged();
+        }
+
+        base.OnIdle();
+    }
 
     public override void Draw(IBuffer buffer)
     {

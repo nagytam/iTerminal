@@ -38,7 +38,7 @@ public class RuntimeDependencyDialogTest
         AssertScreenContains(screen, "Not installed. Install 1.63.0.");
         AssertScreenContains(screen, "Step 1 of 1: Playwright");
         AssertScreenContains(screen, "[x] Install this one");
-        AssertScreenContains(screen, "Enter:next  Backspace:back  Space:tick  S:skip  Esc:later");
+        AssertScreenContains(screen, "Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later");
         Assert.IsTrue(dialog.ShouldOpenAtStartup);
     }
 
