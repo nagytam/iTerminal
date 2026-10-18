@@ -177,4 +177,57 @@ public class CalendarDialogTest
         AssertScreenContains(screen, "today");
         AssertScreenContains(screen, "No meetings on this day");
     }
+
+    private static iConsole.Data.MouseEvent ClickOn(CalendarDialog dialog, int column, int row) => new()
+    {
+        Position = new iConsole.Data.Position(dialog.GridForTest.AbsolutePosition.X + (uint)column, dialog.GridForTest.AbsolutePosition.Y + (uint)row),
+        LeftClicked = true,
+    };
+
+    [TestMethod]
+    public async Task TheMonthGridIsTheCalendarControlBoundToTheModel()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+
+        Assert.AreSame(fixture.Dialog.CalendarForTest, fixture.Dialog.GridForTest.Model);
+        Assert.AreEqual(fixture.Dialog.CalendarForTest.SelectedDate, fixture.Dialog.GridForTest.SelectedDate);
+    }
+
+    [TestMethod]
+    public async Task AKeyMovesTheGridSelectionToo()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+
+        Assert.AreEqual(new DateOnly(2026, 10, 21), fixture.Dialog.GridForTest.SelectedDate);
+    }
+
+    [TestMethod]
+    public async Task AClickOnADaySelectsItAndShowsItsMeetings()
+    {
+        var fixture = Create();
+        fixture.Meetings.Add(Meeting.TryParse("09:00 30 Review", new DateOnly(2026, 10, 20), out var meeting, out _) ? meeting! : throw new InvalidOperationException());
+        await ShowAsync(fixture.Dialog);
+
+        // 20 October 2026 is a Tuesday in the fourth grid row; the week-number column takes three cells.
+        await fixture.Dialog.HandleMouseEventAsync(ClickOn(fixture.Dialog, 3 + 1 * 3, 2 + 3));
+
+        Assert.AreEqual(new DateOnly(2026, 10, 20), fixture.Dialog.CalendarForTest.SelectedDate);
+        AssertScreenContains(Render(fixture.Dialog), "Review");
+    }
+
+    [TestMethod]
+    public async Task TheGridShowsWeekNumbersAndLeavesNeighbouringDaysBlank()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+
+        var screen = Render(fixture.Dialog);
+
+        AssertScreenContains(screen, "Wk");
+        AssertScreenContains(screen, "42");
+    }
 }
