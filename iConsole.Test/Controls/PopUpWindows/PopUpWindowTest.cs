@@ -11,6 +11,39 @@ namespace iConsole.Test.Controls.PopUpWindows;
 [TestClass]
 public class PopUpWindowTest
 {
+    private sealed class CenteredPopUp(IThemeService themeService) : PopUpWindow("Centered", themeService)
+    {
+        public void Center(Size size) => CenterInParent(size);
+    }
+
+    [TestMethod]
+    public void CenterInParent_NeverMakesThePopupBiggerThanItsParent()
+    {
+        var theme = new Mock<IThemeService>().Object;
+        var parent = new Window(theme) { ViewSize = new Size(80, 24) };
+        var popUp = new CenteredPopUp(theme);
+        parent.AddControl(popUp);
+
+        popUp.Center(new Size(84, 30));
+
+        Assert.AreEqual(new Size(80, 24), popUp.ViewSize);
+        Assert.AreEqual(new Position(0, 0), popUp.Position);
+    }
+
+    [TestMethod]
+    public void CenterInParent_KeepsASmallerPopupAndCentersIt()
+    {
+        var theme = new Mock<IThemeService>().Object;
+        var parent = new Window(theme) { ViewSize = new Size(80, 24) };
+        var popUp = new CenteredPopUp(theme);
+        parent.AddControl(popUp);
+
+        popUp.Center(new Size(40, 10));
+
+        Assert.AreEqual(new Size(40, 10), popUp.ViewSize);
+        Assert.AreEqual(new Position(20, 7), popUp.Position);
+    }
+
     [TestMethod]
     public void PopUpWindowCanBeCreated()
     {
