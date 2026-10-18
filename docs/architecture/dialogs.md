@@ -131,7 +131,7 @@ A full-screen, text-mode browser (Tools > Web Browser, Ctrl+S; Ctrl+T would open
 ### Stock browser (`StockBrowserDialog`, Alt+F7)
 A full-screen `SplitPaneDialog` (like the Git client) showing a live watchlist: symbol, name, price, change and change %, exchange, with the cursor stock's day and 52-week range, volume and last trade below the list. `a` adds, `d`/Delete removes (y/n in the footer), `r` refreshes now.
 
-- **`IStockService` owns the list and the quotes; the dialog only views them.** The watchlist is JSON in the `Stocks.Watchlist` setting. Absent means "never touched" and gives the defaults (Apple, Microsoft, Tesla, Google, Nvidia, Intel, SpaceX = `SPCX`); an emptied list is stored as `[]` and stays empty. Quotes live in memory.
+- **`IStockService` owns the list and the quotes; the dialog only views them.** The watchlist is JSON in the `Stocks.Watchlist` setting. Absent means "never touched" and gives the defaults (Apple, Microsoft, Tesla, Google, Nvidia, Intel, SpaceX = `SPCX`, Ethereum = `ETH-USD`, Bitcoin = `BTC-USD`; an existing saved list is left as it is); an emptied list is stored as `[]` and stays empty. Quotes live in memory.
 - **Live means a refresh loop that exists only while someone is watching.** `Watch()` returns a handle; the first starts a `PeriodicTimer` loop (15 s), the last stops it. The dialog takes a handle in `OnInitializeAsync` and drops it in `Close`. A change raises `Changed` from the loop's thread and the dialog re-reads the rows in memory — no I/O on the key handler or in `Draw`.
 - **Quotes and search come from `IStockQuoteProvider`** (`YahooStockQuoteProvider`: the public chart endpoint, one request per symbol, and the search endpoint). These are unofficial endpoints, so a symbol that cannot be reached is left out and the old quote stays; no quotes at all is shown in the footer. The former portfolio's Stooq provider answered 404 when this was written, which is why it is not reused. Symbols are Yahoo's: a bare ticker for the US, a suffix elsewhere (`VOD.L`, `SAP.DE`).
 - **Adding searches every exchange.** `a` opens a query box; Enter searches by symbol or company name and lists each hit with its exchange, since one company trades on several; Enter on a hit adds it. A search with no hit offers the text as a symbol on the second Enter. `AddAsync` asks the provider for a quote first, so a typo is refused in words instead of sitting on the list.
@@ -146,6 +146,14 @@ Tools > Translator: a text box, a From language (or *Detect language*), a To lan
 - **Nothing waits on the network.** A request runs on a background task and parks its outcome; `OnIdle` applies it on the UI thread, and only the newest request (by generation) may land. Closing cancels the one in flight.
 - **Layout gotcha.** `TextViewerControl` (and the editor) centre themselves in their parent on every layout, so two side by side need the position-preserving `PaneEditor`/`PaneViewer` subclasses, and both must be `CanFocus` for Tab to reach them. Tab only moves among siblings, so they are direct children of the dialog, not of a wrapper pane.
 - **The end-to-end suite replaces the providers** (`SandboxServices.Translation`): no run reaches the network or the model.
+
+### Currency converter (`CurrencyConverterDialog`, Ctrl+Shift+F5, `Services/Currency/`)
+Tools > Currency Converter: an amount, a From and a To currency; the result and the rate both ways are shown as you type. F5 downloads the rates again, F6 swaps the currencies. The choices are kept in the `CurrencyConverter.*` settings.
+
+- **Rates are the ECB's daily reference file** (`EcbCurrencyRateProvider`: `eurofxref-daily.xml`, no key, about 30 currencies per euro, published on working days). `CurrencyRates` converts any pair through the euro. Behind `ICurrencyRateProvider`, so another source is one class.
+- **Works offline.** `CurrencyService` keeps the last download in the `CurrencyConverter.Rates` setting and loads it at start-up; the dialog shows it at once and still downloads when the rates were not downloaded in this run (`IsStale`, six hours). A failed download never replaces the kept rates and the status says which ones are in use.
+- **Nothing waits on the network.** Like the translator, the download runs on a background task, parks its outcome, and `OnIdle` applies it; only the newest download (by generation) may land.
+- **The end-to-end suite replaces the provider** (`SandboxServices.CurrencyRates`: one euro is two dollars): no run reaches the network.
 
 ### The remote connection manager (`iTerminal.Core/Dialogs/Remote/`, `Services/Remote/`, `Model/Remote/`)
 Alt+F2 (Tools > Remote connections) opens `RemoteConnectionManagerDialog`: saved SSH and PowerShell

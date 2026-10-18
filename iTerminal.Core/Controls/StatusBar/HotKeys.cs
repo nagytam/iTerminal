@@ -73,7 +73,8 @@ public class HotKeys : StatusBarItem
         DuplicateFinderDialog? duplicateFinderDialog = null,
         SystemSettingsDialog? systemSettingsDialog = null,
         iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null,
-        iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null)
+        iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null,
+        iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -400,6 +401,17 @@ public class HotKeys : StatusBarItem
                 IsVisible = false
             };
             AddControl(translatorDialogButton);
+        }
+
+        if (currencyConverterDialog is not null)
+        {
+            var currencyConverterDialogButton = new Button("Shift-Ctrl-F5-Currency", new CurrencyConverterDialogCommand(currencyConverterDialog), themeService)
+            {
+                Position = new Position(0, 0),
+                ViewSize = new Size(22, 1),
+                IsVisible = false
+            };
+            AddControl(currencyConverterDialogButton);
         }
     }
 

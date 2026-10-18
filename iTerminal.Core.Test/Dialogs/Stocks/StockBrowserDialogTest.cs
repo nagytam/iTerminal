@@ -58,7 +58,7 @@ public class StockBrowserDialogTest
 
         AssertScreenContains(screen, "Symbol");
         AssertScreenContains(screen, "Exchange");
-        foreach (var name in new[] { "AAPL", "MSFT", "TSLA", "GOOGL", "NVDA", "INTC", "SPCX" })
+        foreach (var name in new[] { "AAPL", "MSFT", "TSLA", "GOOGL", "NVDA", "INTC", "SPCX", "ETH-USD", "BTC-USD" })
         {
             AssertScreenContains(screen, name);
         }
@@ -124,12 +124,12 @@ public class StockBrowserDialogTest
         Assert.IsTrue(dialog.IsConfirmingForTest);
         AssertScreenContains(Render(dialog), "Remove AAPL from the list?");
         await dialog.HandleKeyEventAsync(Char('n'));
-        Assert.AreEqual(7, service.Watchlist.Count);
+        Assert.AreEqual(9, service.Watchlist.Count);
 
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Delete));
         await dialog.HandleKeyEventAsync(Char('y'));
 
-        await WaitUntilAsync(() => service.Watchlist.Count == 6 && dialog.RowsForTest.Count == 6, "AAPL to leave the list");
+        await WaitUntilAsync(() => service.Watchlist.Count == 8 && dialog.RowsForTest.Count == 8, "AAPL to leave the list");
         Assert.IsFalse(dialog.RowsForTest.Any(r => r.Stock.Symbol == "AAPL"));
         dialog.Close();
     }
@@ -190,7 +190,7 @@ public class StockBrowserDialogTest
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
 
         await WaitUntilAsync(() => dialog.MessageForTest.StartsWith("Error: No quote for NOPE"), "the refusal");
-        Assert.AreEqual(7, service.Watchlist.Count);
+        Assert.AreEqual(9, service.Watchlist.Count);
         dialog.Close();
     }
 

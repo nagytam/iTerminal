@@ -179,6 +179,7 @@ public sealed class TerminalApp : IAsyncDisposable
                 Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
                     .RemoveAll<Core.Services.Translation.ITranslationProvider>(services);
                 services.AddSingleton<Core.Services.Translation.ITranslationProvider, SandboxServices.Translation>();
+                services.AddSingleton<Core.Services.Currency.ICurrencyRateProvider, SandboxServices.CurrencyRates>();
                 services.AddSingleton<SandboxServices.Shell>();
                 services.AddSingleton<Core.Services.Shell.IInteractiveShellService>(provider => provider.GetRequiredService<SandboxServices.Shell>());
                 services.AddSingleton<SandboxServices.Launcher>();

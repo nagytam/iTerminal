@@ -42,6 +42,7 @@ public class UiService : IUiService
             "screen_manager" or "screens" => _serviceProvider.GetRequiredService<ScreenManagerDialog>(),
             "ai_model" or "ai_info" or "ai" => _serviceProvider.GetRequiredService<AiModelDialog>(),
             "git" or "git_client" or "source_control" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Git.GitClientDialog>(),
+            "currency" or "currencyconverter" or "currency converter" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog>(),
             "translator" or "translate" or "translation" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Translator.TranslatorDialog>(),
             _ => null
         };

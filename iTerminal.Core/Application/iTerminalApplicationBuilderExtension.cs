@@ -278,6 +278,11 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Translation.ITranslationProvider, iTerminal.Core.Services.Translation.LlmTranslationProvider>();
         services.AddSingleton<iTerminal.Core.Services.Translation.ITranslationService, iTerminal.Core.Services.Translation.TranslationService>();
         services.AddTransient<iTerminal.Core.Dialogs.Translator.TranslatorDialog>();
+        // Ctrl+Shift+F5: the currency converter. Rates are the European Central Bank's daily file; a test replaces
+        // the provider so no run reaches the network.
+        services.AddSingleton<iTerminal.Core.Services.Currency.ICurrencyRateProvider, iTerminal.Core.Services.Currency.EcbCurrencyRateProvider>();
+        services.AddSingleton<iTerminal.Core.Services.Currency.ICurrencyService, iTerminal.Core.Services.Currency.CurrencyService>();
+        services.AddTransient<iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog>();
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();

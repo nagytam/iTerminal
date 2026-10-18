@@ -53,14 +53,14 @@ public class StockServiceTest
     }
 
     [TestMethod]
-    public void TheDefaultWatchlistIsAppleMicrosoftTeslaGoogleNvidiaIntelAndSpaceX()
+    public void TheDefaultWatchlistIsTheTechStocksSpaceXEthereumAndBitcoin()
     {
         var (service, _, _) = Create();
 
         CollectionAssert.AreEqual(
-            new[] { "AAPL", "MSFT", "TSLA", "GOOGL", "NVDA", "INTC", "SPCX" },
+            new[] { "AAPL", "MSFT", "TSLA", "GOOGL", "NVDA", "INTC", "SPCX", "ETH-USD", "BTC-USD" },
             service.Watchlist.Select(s => s.Symbol).ToArray());
-        Assert.AreEqual("SpaceX", service.Watchlist.Last().Name);
+        Assert.AreEqual("Bitcoin", service.Watchlist.Last().Name);
     }
 
     [TestMethod]
@@ -74,7 +74,7 @@ public class StockServiceTest
         Assert.AreEqual("VOD.L Corp", stock.Name);
         var restarted = new StockService(settings, provider);
         Assert.AreEqual("VOD.L", restarted.Watchlist.Last().Symbol);
-        Assert.AreEqual(8, restarted.Watchlist.Count);
+        Assert.AreEqual(10, restarted.Watchlist.Count);
     }
 
     [TestMethod]
@@ -86,7 +86,7 @@ public class StockServiceTest
         var exception = await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => service.AddAsync("nope"));
 
         StringAssert.Contains(exception.Message, "No quote for NOPE");
-        Assert.AreEqual(7, service.Watchlist.Count);
+        Assert.AreEqual(9, service.Watchlist.Count);
     }
 
     [TestMethod]
@@ -109,7 +109,7 @@ public class StockServiceTest
 
         var restarted = new StockService(settings, provider);
         Assert.IsFalse(restarted.Watchlist.Any(s => s.Symbol == "TSLA"));
-        Assert.AreEqual(6, restarted.Watchlist.Count);
+        Assert.AreEqual(8, restarted.Watchlist.Count);
     }
 
     [TestMethod]
