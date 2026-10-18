@@ -106,7 +106,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Map.MapDialog? mapDialog = null,
         iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog? remoteConnectionManagerDialog = null,
         iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null,
-        iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null
+        iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null,
+        iTerminal.Core.Dialogs.Workspaces.WorkspaceManagerDialog? workspaceManagerDialog = null
         )
         : base([], themeService)
     {
@@ -194,7 +195,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             mapDialog,
             remoteConnectionManagerDialog,
             translatorDialog,
-            currencyConverterDialog));
+            currencyConverterDialog,
+            workspaceManagerDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 

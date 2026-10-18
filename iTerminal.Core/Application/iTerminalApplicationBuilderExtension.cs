@@ -128,6 +128,9 @@ public static class iTerminalApplicationBuilderExtension
         // Alt+F2: saved SSH and PowerShell remoting connections, each a keypress from a live session on the lent terminal.
         services.AddSingleton<iTerminal.Core.Services.Remote.IRemoteConnectionService, iTerminal.Core.Services.Remote.RemoteConnectionService>();
         services.AddTransient<iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Workspaces.IWorkspaceLayoutService, iTerminal.Core.Services.Workspaces.WorkspaceLayoutService>();
+        services.AddSingleton<iTerminal.Core.Services.Workspaces.IWorkspaceService, iTerminal.Core.Services.Workspaces.WorkspaceService>();
+        services.AddTransient<iTerminal.Core.Dialogs.Workspaces.WorkspaceManagerDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.PasswordManager.PasswordManagerDialog>();
         services.AddTransient<ItemInformation>();
         services.AddTransient<TerminalStatusBar>();

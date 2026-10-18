@@ -155,6 +155,28 @@ Tools > Currency Converter: an amount, a From and a To currency; the result and 
 - **Nothing waits on the network.** Like the translator, the download runs on a background task, parks its outcome, and `OnIdle` applies it; only the newest download (by generation) may land.
 - **The end-to-end suite replaces the provider** (`SandboxServices.CurrencyRates`: one euro is two dollars): no run reaches the network.
 
+### The workspace manager (`iTerminal.Core/Dialogs/Workspaces/`, `Services/Workspaces/`, `Model/Workspaces/`)
+Ctrl+Shift+F2 (Tools > Workspaces) opens `WorkspaceManagerDialog`: named screen layouts. A workspace is a
+`WorkspaceLayout` — the left and right panel locations, each panel's sort order, what is under the panels
+(`WorkspaceBar`: AI bar, command line, full-screen terminal) and which panel had the cursor — so one Enter
+puts a whole working context back.
+
+- **The list is in save order and the first nine are on the 1-9 keys.** A row's mark says where the screen
+  stands against it: `●` it is what is on screen now, `○` it was the last one used but the screen has moved
+  on (the detail pane says so and offers U). "Now" ignores the cursor's panel, which moves constantly.
+- **Keys:** Enter / 1-9 switch (the dialog closes first, so the cursor can go back into a panel), S (or N)
+  saves the screen under a name, U overwrites the selected one, R renames, D / Del deletes. U and D ask y/n in
+  the status row; a save under a name that exists needs a second Enter. The prefilled name is selected, so
+  typing replaces it and End/arrows keep it to edit.
+- **`IWorkspaceService` owns the list** (JSON in the `Workspaces` setting, the active name in
+  `ActiveWorkspace`, the way the remote connections are kept: no schema change). `IWorkspaceLayoutService`
+  is the only code that knows panels and bars: `Capture()` reads them, `ApplyAsync()` writes the panel's
+  sort setting, then the location (`SetUrlAsync(name, url)`), then the sort on the model, then the bar, then
+  gives the focus back to the saved panel. `Content.CurrentBar` exposes the bar.
+- **Restoring never fails the whole workspace.** A local folder that is gone is left as the panel has it and
+  reported in the toast ("Left panel: C:\x no longer exists"); an unreachable remote reports the same.
+  Nothing secret is stored — a remote panel is only its URL.
+
 ### The remote connection manager (`iTerminal.Core/Dialogs/Remote/`, `Services/Remote/`, `Model/Remote/`)
 Alt+F2 (Tools > Remote connections) opens `RemoteConnectionManagerDialog`: saved SSH and PowerShell
 remoting targets, each a keypress from a live session. Enter lends the whole terminal to the session through

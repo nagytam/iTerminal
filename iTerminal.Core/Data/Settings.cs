@@ -9,6 +9,12 @@ public static class Settings
     /// <summary>The saved SSH and PowerShell remoting connections of the remote connection manager, as JSON.</summary>
     public const string RemoteConnections = nameof(RemoteConnections);
 
+    /// <summary>The saved workspaces (named screen layouts) of the workspace manager, as JSON, in the order they were saved.</summary>
+    public const string Workspaces = nameof(Workspaces);
+
+    /// <summary>The name of the workspace last saved or switched to.</summary>
+    public const string ActiveWorkspace = nameof(ActiveWorkspace);
+
     /// <summary>The colour theme chosen in the theme manager, restored at start-up.</summary>
     public const string Theme = nameof(Theme);
 
