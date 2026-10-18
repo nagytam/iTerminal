@@ -19,14 +19,19 @@ public class SettingsMusicTabPage : TabPage
     private readonly TextBox _musicFolderTextBox;
     private readonly Label _musicFolderLabel;
     private readonly Label _hintLabel;
+    private readonly IMusicPlayerService? _musicPlayerService;
+    private readonly Label _volumeLabel;
+    private readonly Slider _volumeSlider;
 
     public SettingsMusicTabPage(
         ISettingsService settingsService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        IMusicPlayerService? musicPlayerService = null)
         : base("4-Music ", themeService)
     {
+        _musicPlayerService = musicPlayerService;
         HotConsoleKey = ConsoleKey.D4;
         _settingsService = settingsService ?? NullSettingsService.Instance;
 
@@ -42,6 +47,37 @@ public class SettingsMusicTabPage : TabPage
 
         _hintLabel = new Label(string.Empty, themeService);
         AddControl(_hintLabel);
+
+        // The playback volume, the same 0-100 the + and - keys move in steps of 5. The player persists it
+        // (MusicSessionJob), so the slider only has to set it; without a player there is nothing to set.
+        _volumeLabel = new Label("Volume:", themeService) { IsVisible = _musicPlayerService is not null };
+        _volumeSlider = new Slider(themeService)
+        {
+            Minimum = 0,
+            Maximum = 100,
+            Step = 5,
+            LargeStep = 20,
+            ShowValue = true,
+            IsVisible = _musicPlayerService is not null,
+        };
+        _volumeSlider.ValueChanged += OnVolumeChanged;
+        AddControl(_volumeLabel);
+        AddControl(_volumeSlider);
+    }
+
+    /// <summary>The volume the slider shows, 0-100.</summary>
+    public int Volume
+    {
+        get => (int)_volumeSlider.Value;
+        set => _volumeSlider.Value = value;
+    }
+
+    private void OnVolumeChanged(object? sender, EventArgs e)
+    {
+        if (_musicPlayerService is not null && _musicPlayerService.Volume != Volume)
+        {
+            _musicPlayerService.Volume = Volume;
+        }
     }
 
     /// <summary>The configured folder, or an empty string when the platform default is in use.</summary>
@@ -68,6 +104,12 @@ public class SettingsMusicTabPage : TabPage
     public override Task OnInitializeAsync()
     {
         _musicFolderTextBox.Text = _settingsService.Get(Settings.MusicFolder) ?? string.Empty;
+        if (_musicPlayerService is not null)
+        {
+            // Show where the player is now; setting it back to the same value changes nothing.
+            _volumeSlider.Value = _musicPlayerService.Volume;
+        }
+
         UpdateHint();
         return base.OnInitializeAsync();
     }
@@ -93,5 +135,10 @@ public class SettingsMusicTabPage : TabPage
 
         _hintLabel.Position = new Position(0, 3);
         _hintLabel.ViewSize = new Size(ViewSize.Width, 1);
+
+        _volumeLabel.Position = new Position(0, 5);
+        _volumeLabel.ViewSize = new Size(Math.Min(ViewSize.Width, 7), 1);
+        _volumeSlider.Position = new Position(8, 5);
+        _volumeSlider.ViewSize = new Size(Math.Max(1, Math.Min(40, (long)ViewSize.Width - 8)), 1);
     }
 }

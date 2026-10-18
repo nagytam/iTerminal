@@ -1,4 +1,5 @@
 using iConsole.Buffers;
+using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
@@ -60,11 +61,19 @@ public class PasswordManagerDialog : Dialog
     private string _status = string.Empty;
     private bool _statusIsError;
 
+    /// <summary>
+    /// How strong the password being typed is. Not in the control tree: this dialog paints its whole
+    /// interior itself, after its children, so the meter is drawn by <see cref="DrawForm"/> at the
+    /// position it computes.
+    /// </summary>
+    private readonly StrengthMeter _strengthMeter;
+
     public PasswordManagerDialog(IPasswordManager passwords, IThemeService themeService)
         : base(nameof(PasswordManagerDialog), themeService)
     {
         Title = "Passwords";
         _passwords = passwords;
+        _strengthMeter = new StrengthMeter(themeService);
     }
 
     public override async Task ShowAsync()
@@ -486,6 +495,17 @@ public class PasswordManagerDialog : Dialog
         {
             DrawField(buffer, iw, 2 + i * 2, _fields[i], i == _field, colorScheme);
         }
+
+        // The rating sits on the blank row under the password, as wide as the value column.
+        var passwordIndex = Array.FindIndex(_fields, f => f.Kind == FieldKind.Password);
+        if (passwordIndex >= 0 && iw > 18)
+        {
+            _strengthMeter.Password = _fields[passwordIndex].Text;
+            _strengthMeter.ZOrder = ZOrder;
+            _strengthMeter.Position = new Position(AbsolutePosition.X + 1 + 17, AbsolutePosition.Y + 1 + 2 + passwordIndex * 2 + 1);
+            _strengthMeter.ViewSize = new Size(iw - 18, 1);
+            _strengthMeter.Draw(buffer);
+        }
     }
 
     private void DrawField(IBuffer buffer, int iw, int row, Field field, bool focused, ColorScheme colorScheme)
@@ -525,6 +545,7 @@ public class PasswordManagerDialog : Dialog
     internal string ModeForTest { get { lock (_sync) return _mode.ToString(); } }
     internal string StatusForTest { get { lock (_sync) return _status; } }
     internal int ListCountForTest { get { lock (_sync) return _list.Count; } }
+    internal PasswordStrength StrengthForTest => _strengthMeter.Strength;
     internal bool RevealForTest { get { lock (_sync) return _reveal; } }
     internal string FieldForTest(string label) { lock (_sync) return _fields.First(f => f.Label == label).Text; }
 
