@@ -31,6 +31,9 @@ A notification is a short message the app shows without stopping the user: a tit
 - **`Rating`**: `★★★☆☆`, `Maximum` stars. Left/Right, digit keys or a click set `Value`; clicking the current star clears it.
 - **`TextBox` click**: a click in the well takes focus and puts the cursor under the pointer (past the end it lands on the end).
 - **`TreeView` mouse**: a click focuses a row; a click on the glyph, or a second click on the focused row, toggles the node; the wheel scrolls three rows.
+- **`LinkLabel`**: frameless hyperlink-style text; Enter, Space or a click raise `Activated` (the host decides what it does; `Target` carries what it points at). Width follows `Text`.
+- **`Chips`**: removable tags `[rock ×] [jazz ×] [+]` for multi-value fields. `Add` ignores blanks and case-insensitive duplicates; Delete/Backspace or a click on × removes; Enter or a click on `[+]` raises `AddRequested`. `Visible(width)` slides the window so the highlighted chip stays on screen.
+- **`ScrollBar` mouse**: the arrows step the cursor one cell, a click on the track jumps to the matching position (`ScrollBar.CursorForClick`, the inverse of where the thumb is drawn), the wheel moves three. Works for both orientations on the bound `ScrollableModel`.
 - **`TextBox.Placeholder`**: greyed hint drawn in the well while the box is empty; never part of `Text`.
 - **`Table<T>` mouse support**: a click on a body row moves the cursor (a second click on the cursor row raises `RowActivated`), the wheel moves it by three rows, the header row ignores clicks — the same behaviour as `ListBox`.
 

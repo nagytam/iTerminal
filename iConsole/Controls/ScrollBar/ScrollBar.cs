@@ -14,6 +14,88 @@ public class ScrollBar(IThemeService themeService)
     public IScrollableModel? ScrollableModel { get; set; }
     public Orientation ScrollBarOrientation { get; set; } = Orientation.Vertical;
 
+    /// <summary>Rows (columns) a wheel notch moves the cursor by.</summary>
+    private const int WheelStep = 3;
+
+    /// <summary>
+    /// The cursor position a click <paramref name="offset"/> cells along a bar <paramref name="length"/>
+    /// cells long stands for — the inverse of where the thumb is drawn. The first and last cells are the
+    /// arrows (one step either way); the cells between them are the track, spread over
+    /// <paramref name="total"/> positions.
+    /// </summary>
+    public static long CursorForClick(long offset, long length, long total, long current)
+    {
+        if (total <= 0)
+        {
+            return 0;
+        }
+
+        if (offset <= 0)
+        {
+            return Math.Clamp(current - 1, 0, total - 1);
+        }
+
+        if (offset >= length - 1)
+        {
+            return Math.Clamp(current + 1, 0, total - 1);
+        }
+
+        long track = length - 3;
+        if (track <= 0 || total == 1)
+        {
+            return current;
+        }
+
+        return Math.Clamp((long)Math.Round((offset - 1) / (double)track * (total - 1)), 0, total - 1);
+    }
+
+    /// <summary>
+    /// The arrows step the cursor one cell, a click on the track jumps to the matching position and
+    /// the wheel moves it three. Before this the bar only showed where you were.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (ScrollableModel is null || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            return isHandled;
+        }
+
+        bool vertical = ScrollBarOrientation == Orientation.Vertical;
+        long total = (long)(vertical ? ScrollableModel.ScrollableSize.Height : ScrollableModel.ScrollableSize.Width);
+        long current = vertical ? ScrollableModel.CursorPosition.Y : ScrollableModel.CursorPosition.X;
+        long target;
+        if (mouseEvent.WheelDelta != 0)
+        {
+            target = Math.Clamp(current + (mouseEvent.WheelDelta > 0 ? -WheelStep : WheelStep), 0, Math.Max(0, total - 1));
+        }
+        else if (mouseEvent.LeftClicked)
+        {
+            long offset = vertical
+                ? (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y
+                : (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
+            long length = vertical ? (long)ViewSize.Height : (long)ViewSize.Width;
+            target = CursorForClick(offset, length, total, current);
+        }
+        else
+        {
+            return isHandled;
+        }
+
+        if (vertical)
+        {
+            ScrollableModel.CursorPosition.Y = target;
+        }
+        else
+        {
+            ScrollableModel.CursorPosition.X = target;
+        }
+
+        ScrollableModel.ScrollToVisible();
+        StateHasChanged();
+        return true;
+    }
+
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
