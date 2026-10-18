@@ -48,13 +48,23 @@ public class ToolsAndMenusTest
             s => s.Lines[s.Height - 1].Contains("╚", StringComparison.Ordinal) && s.Lines.Any(l => l.Contains('▼')),
             "the drop-down to end on its bottom border inside the screen, marked as continuing");
 
-        for (int i = 0; i < 40; i++)
-        {
-            await small.PressAsync("Down");
-        }
+        // Up from the first entry wraps to the last one, whatever the menu's length.
+        await small.PressAsync("Up");
 
         await small.WaitForTextAsync("Remote connections");
         await small.WaitUntilAsync(s => s.Lines.Any(l => l.Contains('▲')), "a mark that entries are hidden above");
+    }
+
+    [TestMethod]
+    public async Task ARemoteConnectionsDialogWrittenFor84ColumnsKeepsItsRightBorderOn80()
+    {
+        await using TerminalApp small = await TerminalApp.StartAsync(width: 80, height: 24);
+
+        await small.PressAsync("Alt+F2");
+
+        await small.WaitUntilAsync(
+            s => s.Lines.Any(l => l.Contains("Remote connections", StringComparison.Ordinal) && l.TrimEnd().EndsWith('╗')),
+            "the dialog's top border to end in a corner inside the screen");
     }
 
     [TestMethod]

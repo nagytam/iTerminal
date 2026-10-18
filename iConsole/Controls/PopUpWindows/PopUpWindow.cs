@@ -71,6 +71,13 @@ public class PopUpWindow : Window
     /// </summary>
     protected void CenterInParent(Size size)
     {
+        // A dialog written for 84 columns lost its right border (and its last column of text) on an
+        // 80-column terminal; no popup is ever wider or taller than the screen it sits on.
+        if (Parent is { ViewSize: { Width: > 0, Height: > 0 } parentSize })
+        {
+            size = new Size(Math.Min(size.Width, parentSize.Width), Math.Min(size.Height, parentSize.Height));
+        }
+
         ViewSize = size;
         Layout.Center(this);
     }
