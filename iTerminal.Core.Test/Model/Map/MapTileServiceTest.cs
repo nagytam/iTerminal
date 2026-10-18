@@ -159,12 +159,11 @@ public class MapTileServiceTest
 
         var saved = await service.DownloadAsync(
             [new MapTileKey(2, 0, 0), new MapTileKey(2, 1, 0), new MapTileKey(2, 2, 0)],
-            new Progress<int>(n => reported = n));
+            new SyncProgress(n => reported = n));
 
         Assert.AreEqual(2, saved);
         Assert.AreEqual(3, fetcher.Requests);
         Assert.IsTrue(service.IsAvailableOffline(new MapTileKey(2, 2, 0)));
-        await Task.Delay(50);
         Assert.AreEqual(3, reported);
     }
 
@@ -179,5 +178,11 @@ public class MapTileServiceTest
         await service.LoadAsync(new MapTileKey(1, 1, 0), online: true);
 
         Assert.AreEqual("https://tiles.example/1/1/0.png?key=1", fetcher.Urls.Single());
+    }
+
+    /// <summary><see cref="Progress{T}"/> posts each report to the thread pool, so reports can arrive out of order; this one runs inline.</summary>
+    private sealed class SyncProgress(Action<int> report) : IProgress<int>
+    {
+        public void Report(int value) => report(value);
     }
 }
