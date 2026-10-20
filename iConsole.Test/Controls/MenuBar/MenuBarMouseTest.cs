@@ -134,4 +134,24 @@ public class MenuBarMouseTest
         await rig.Bar.HandleMouseEventAsync(new MouseEvent { Position = new Position(1, 0), WheelDelta = 1 });
         Assert.IsFalse(rig.File.IsOpened);
     }
+
+    [TestMethod]
+    public async Task ClickOnTheCloseButtonInTheBorder_ClosesTheMenu()
+    {
+        Rig rig = NewRig();
+        await rig.Bar.HandleMouseEventAsync(Click(1, 0));
+        long x = rig.File.AbsolutePosition.X + rig.File.ViewSize.Width - 3;
+        Assert.IsTrue(await rig.Bar.HandleMouseEventAsync(Click(x, rig.File.AbsolutePosition.Y)));
+        Assert.IsFalse(rig.File.IsOpened);
+        Assert.IsFalse(rig.Bar.IsModal);
+    }
+
+    [TestMethod]
+    public async Task ClickOnTheBorderBesideTheCloseButton_KeepsTheMenuOpen()
+    {
+        Rig rig = NewRig();
+        await rig.Bar.HandleMouseEventAsync(Click(1, 0));
+        Assert.IsTrue(await rig.Bar.HandleMouseEventAsync(Click(rig.File.AbsolutePosition.X + 1, rig.File.AbsolutePosition.Y)));
+        Assert.IsTrue(rig.File.IsOpened);
+    }
 }
