@@ -139,7 +139,7 @@ public class NumericUpDown : Control, IReadOnly
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         var isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        if (IsReadOnly || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        if (IsReadOnly || !IsEnabled || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;
         }
@@ -153,6 +153,11 @@ public class NumericUpDown : Control, IReadOnly
         if (mouseEvent.LeftClicked || mouseEvent.RightClicked)
         {
             var x = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
+            if ((x == _upArrowOffset || x == _downArrowOffset) && !IsFocused)
+            {
+                SetFocus();
+            }
+
             if (x == _upArrowOffset)
             {
                 Increment(Step);

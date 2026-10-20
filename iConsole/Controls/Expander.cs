@@ -117,6 +117,7 @@ public class Expander : Control
         }
 
         if (mouseEvent.LeftClicked
+            && IsEnabled
             && mouseEvent.Position.Y == AbsolutePosition.Y
             && AbsoluteBoundRect.Contains(mouseEvent.Position))
         {

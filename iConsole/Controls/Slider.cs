@@ -140,7 +140,7 @@ public class Slider : Control, IReadOnly
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        if (IsReadOnly || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        if (IsReadOnly || !IsEnabled || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;
         }
@@ -153,6 +153,11 @@ public class Slider : Control, IReadOnly
 
         if (mouseEvent.LeftClicked)
         {
+            if (!IsFocused)
+            {
+                SetFocus();
+            }
+
             int column = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
             Value = ValueAt(Math.Min(column, TrackWidth - 1), _minimum, _maximum, TrackWidth);
             return true;
