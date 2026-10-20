@@ -100,9 +100,9 @@ public class ScrollBar(IThemeService themeService)
     {
         base.Draw(buffer);
 
-        if (ViewSize.IsEmpty)
+        if (ViewSize.IsEmpty || ScrollableModel is null)
         {
-            return; // TODO
+            return; // nothing to show until a model is attached
         }
         switch (ScrollBarOrientation)
         {
