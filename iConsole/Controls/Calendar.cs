@@ -121,14 +121,36 @@ public class Calendar : Control, IReadOnly
     {
         DateOnly first = new(date.Year, date.Month, 1);
         int back = ((int)first.DayOfWeek - (int)firstDayOfWeek + 7) % 7;
-        return first.AddDays(-back);
+        return AddDays(first, -back);
     }
 
     /// <summary>Moves a date by whole months, keeping the day where the target month has it (31 Jan + 1 → 28/29 Feb).</summary>
-    public static DateOnly AddMonths(DateOnly date, int months) => date.AddMonths(months);
+    public static DateOnly AddMonths(DateOnly date, int months)
+    {
+        try
+        {
+            return date.AddMonths(months);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            return months < 0 ? DateOnly.MinValue : DateOnly.MaxValue;
+        }
+    }
+
+    /// <summary>Moves a date by whole days, stopping at the first or last date that exists instead of throwing.</summary>
+    public static DateOnly AddDays(DateOnly date, int days)
+    {
+        long target = (long)date.DayNumber + days;
+        if (target <= DateOnly.MinValue.DayNumber)
+        {
+            return DateOnly.MinValue;
+        }
+
+        return target >= DateOnly.MaxValue.DayNumber ? DateOnly.MaxValue : DateOnly.FromDayNumber((int)target);
+    }
 
     /// <summary>The date shown in grid cell (<paramref name="row"/>, <paramref name="column"/>) for a given selection.</summary>
-    public DateOnly CellDate(int row, int column) => GridStart(_selected, FirstDayOfWeek).AddDays(row * 7 + column);
+    public DateOnly CellDate(int row, int column) => AddDays(GridStart(_selected, FirstDayOfWeek), row * 7 + column);
 
     /// <summary>The ISO week number of grid row <paramref name="row"/>, taken from the row's Thursday so any first weekday works.</summary>
     public int WeekNumberOfRow(int row)
@@ -156,16 +178,16 @@ public class Calendar : Control, IReadOnly
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.LeftArrow when !IsReadOnly:
-                SelectedDate = _selected.AddDays(-1);
+                SelectedDate = AddDays(_selected, -1);
                 return true;
             case ConsoleKey.RightArrow when !IsReadOnly:
-                SelectedDate = _selected.AddDays(1);
+                SelectedDate = AddDays(_selected, 1);
                 return true;
             case ConsoleKey.UpArrow when !IsReadOnly:
-                SelectedDate = _selected.AddDays(-7);
+                SelectedDate = AddDays(_selected, -7);
                 return true;
             case ConsoleKey.DownArrow when !IsReadOnly:
-                SelectedDate = _selected.AddDays(7);
+                SelectedDate = AddDays(_selected, 7);
                 return true;
             case ConsoleKey.PageUp when !IsReadOnly:
                 SelectedDate = AddMonths(_selected, -1);
