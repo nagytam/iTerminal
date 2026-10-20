@@ -8,7 +8,7 @@ namespace iConsole.Controls;
 /// <summary>
 /// An elapsed-time readout (<c>00:42</c>, <c>1:02:03</c> from an hour up) that runs between
 /// <see cref="Start"/> and <see cref="Stop"/> and adds up across restarts until <see cref="Reset"/>. Space
-/// toggles it and R resets it while it has the focus. The clock is the injected
+/// toggles it and R resets it while it has the focus; a click focuses it and toggles it too. The clock is the injected
 /// <see cref="IDateTimeProviderService"/> and the control redraws only when the shown text changes, so an idle
 /// pass costs a subtraction.
 /// </summary>
@@ -120,6 +120,31 @@ public class ElapsedClock : Control
         }
 
         return false;
+    }
+
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (isHandled || !IsEnabled || !mouseEvent.LeftClicked || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            return isHandled;
+        }
+
+        if (!IsFocused)
+        {
+            SetFocus();
+        }
+
+        if (IsRunning)
+        {
+            Stop();
+        }
+        else
+        {
+            Start();
+        }
+
+        return true;
     }
 
     public override void Draw(IBuffer buffer)

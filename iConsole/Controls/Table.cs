@@ -144,7 +144,7 @@ public class Table<T> : Control
         long relativeX = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
         long relativeY = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
         bool isInside = relativeX >= 0 && relativeX < ViewSize.Width && relativeY >= 0 && relativeY < ViewSize.Height;
-        if (isInside && relativeY == 0 && mouseEvent.LeftClicked)
+        if (isInside && IsEnabled && relativeY == 0 && mouseEvent.LeftClicked)
         {
             int column = ColumnAt((int)relativeX);
             if (column >= 0)
@@ -168,7 +168,7 @@ public class Table<T> : Control
             return true;
         }
 
-        if (mouseEvent.LeftClicked)
+        if (mouseEvent.LeftClicked && IsEnabled)
         {
             long index = (long)ScrollableModel.ScrollPosition.Y + relativeY - 1;
             if (index < _rows.Count)
