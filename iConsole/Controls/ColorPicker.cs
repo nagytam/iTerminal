@@ -40,7 +40,11 @@ public class ColorPicker : Control, IReadOnly
             if (_selected != value)
             {
                 _selected = value;
-                _cursor = Array.IndexOf(Colors, value);
+                int index = Array.IndexOf(Colors, value);
+                if (index >= 0)
+                {
+                    _cursor = index;
+                }
                 SelectedColorChanged?.Invoke(this, EventArgs.Empty);
                 StateHasChanged();
             }
