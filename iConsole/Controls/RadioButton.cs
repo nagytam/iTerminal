@@ -79,6 +79,7 @@ public class RadioButton : Control, IReadOnly
         var isHandled = await base.HandleMouseEventAsync(mouseEvent);
 
         if (!IsReadOnly
+            && IsEnabled
             && AbsoluteBoundRect.Contains(mouseEvent.Position)
             && mouseEvent.WheelDelta == 0
             && mouseEvent.LeftClicked)

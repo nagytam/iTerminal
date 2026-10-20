@@ -106,7 +106,7 @@ public class RadioGroup<T> : Control, IReadOnly
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         // Only with focus: a key the focused control declines is offered to every control.
-        if (!IsReadOnly && IsFocused && _items.Count > 0)
+        if (!IsReadOnly && IsEnabled && IsFocused && _items.Count > 0)
         {
             switch (keyEvent.ConsoleKey)
             {
@@ -135,6 +135,11 @@ public class RadioGroup<T> : Control, IReadOnly
         // The group hit-tests its own rows. Adjacent single-row child controls overlap by one cell
         // at their shared boundary (Rectangle.Contains is inclusive on both edges), so delegating
         // clicks to the children would let the upper option steal a click meant for the lower one.
+        if (!IsEnabled)
+        {
+            return false;
+        }
+
         if (!IsReadOnly && mouseEvent.WheelDelta == 0 && mouseEvent.LeftClicked)
         {
             var index = HitTest(
@@ -174,7 +179,7 @@ public class RadioGroup<T> : Control, IReadOnly
 
     private int HitTest(int relativeX, int relativeY)
     {
-        if (relativeX < 0 || _items.Count == 0)
+        if (relativeX < 0 || relativeX >= (int)ViewSize.Width || _items.Count == 0)
         {
             return -1;
         }

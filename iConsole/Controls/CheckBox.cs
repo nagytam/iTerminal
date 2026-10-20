@@ -52,6 +52,7 @@ public class CheckBox : Control, IReadOnly
         // by mouse as well as the Space key. The right button is left alone, as on Button, so a
         // stray right-click cannot flip a setting. Read-only checkboxes stay inert, matching the command.
         if (!IsReadOnly
+            && IsEnabled
             && AbsoluteBoundRect.Contains(mouseEvent.Position)
             && mouseEvent.WheelDelta == 0
             && mouseEvent.LeftClicked)
