@@ -1,4 +1,4 @@
-using iConsole.Buffers;
+﻿using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Display;
@@ -93,6 +93,23 @@ public class TextBox : Control, IReadOnly
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        KeepCursorVisible();
+
+        // The scrolling command for Right stops at the edge of the well, which the cursor may reach but not pass, so
+        // it is handled here: one step right, and the view follows.
+        if (IsFocused && IsEnabled && keyEvent.ConsoleKey == ConsoleKey.RightArrow
+            && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
+        {
+            if (ScrollableModel.CursorPosition.X < TextLength)
+            {
+                ScrollableModel.CursorPosition.X++;
+            }
+
+            KeepCursorVisible();
+            StateHasChanged();
+            return true;
+        }
+
         var isHandled = await base.HandleKeyEventAsync(keyEvent);
         if (!isHandled && !IsReadOnly &&
             ConsoleKeyHelper.IsTypingKey(keyEvent) &&
@@ -108,10 +125,6 @@ public class TextBox : Control, IReadOnly
                 newValue = newValue.Insert((int)ScrollableModel.CursorPosition.X, keyEvent.KeyChar.ToString());
                 Text = newValue;
                 ScrollableModel.CursorPosition.X++;
-                if (ScrollableModel.CursorPosition.X > ScrollableModel.ScrollPosition.X + ScrollableModel.ViewSize.Width)
-                {
-                    ScrollableModel.ScrollPosition.X++;
-                }
                 isHandled = true;
                 Parent?.Refresh();
                 if (AutoCompletion is not null && !AutoCompletion.IsVisible)
@@ -124,7 +137,53 @@ public class TextBox : Control, IReadOnly
                 _beepService.Beep();
             }
         }
+        if (isHandled)
+        {
+            KeepCursorVisible();
+        }
+
         return isHandled;
+    }
+
+    /// <summary>
+    /// Brings the cursor back onto the text and the view round it: the cursor is kept between the first and the last
+    /// character (a value shortened from outside left it past the end), the scrollable size follows the length so the
+    /// scrolling commands — which stop at it — know how far they may go, and the view scrolls to keep the cursor in
+    /// the well. Before this the cursor could not move right of the well's edge in a long value, End did not scroll to
+    /// the end of it, and a value shortened while scrolled drew an empty well.
+    /// </summary>
+    private void KeepCursorVisible() => ClampToText(followCursor: true);
+
+    /// <summary>
+    /// The part of <see cref="KeepCursorVisible"/> that is safe on every frame: the cursor on the text, the scrollable
+    /// size following the length and the scroll no further than the end of the value. Only after a key does the view
+    /// also follow the cursor, so a scroll position set from outside is not undone by drawing.
+    /// </summary>
+    private void ClampToText(bool followCursor)
+    {
+        SyncScrollViewport();
+        ScrollableModel.ScrollableSize = new Size(TextLength, 1);
+        ScrollableModel.CursorPosition.Y = 0;
+        ScrollableModel.CursorPosition.X = Math.Clamp(ScrollableModel.CursorPosition.X, 0, TextLength);
+        var well = ScrollableModel.ViewSize.Width;
+        if (well > 0)
+        {
+            // The cursor may sit on the cell after the last visible character (the closing bracket), as it does at the
+            // end of a value that just fits. The value is never scrolled further than leaves its end at the right edge:
+            // a value shortened while scrolled drew an empty well.
+            var cursor = ScrollableModel.CursorPosition.X;
+            var scroll = ScrollableModel.ScrollPosition.X;
+            if (followCursor && cursor < scroll)
+            {
+                scroll = cursor;
+            }
+            else if (followCursor && cursor > scroll + well)
+            {
+                scroll = cursor - well;
+            }
+
+            ScrollableModel.ScrollPosition.X = Math.Clamp(scroll, 0, Math.Max(0, TextLength - well));
+        }
     }
 
     /// <summary>
@@ -187,7 +246,7 @@ public class TextBox : Control, IReadOnly
     public override void OnInitializeLayout()
     {
         base.OnInitializeLayout();
-        SyncScrollViewport();
+        ClampToText(followCursor: false);
     }
 
     /// <summary>
@@ -207,7 +266,7 @@ public class TextBox : Control, IReadOnly
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
-        SyncScrollViewport();
+        ClampToText(followCursor: false);
 
         var colorScheme = ThemeService.CurrentColorScheme;
         var visualState = GetVisualState();
