@@ -103,10 +103,10 @@ public class TextViewerControl : Control
 
         if (!ViewSize.IsEmpty)
         {
-            _verticalScrollBar.Position = new Position(ViewSize.Width - 1, 0);
-            _verticalScrollBar.ViewSize = new Size(1, ViewSize.Height - 1);
-            _horizontalScrollBar.Position = new Position(0, ViewSize.Height - 1);
-            _horizontalScrollBar.ViewSize = new Size(ViewSize.Width - 2, 1);
+            _verticalScrollBar.Position = new Position(Math.Max(0, ViewSize.Width - 1), 0);
+            _verticalScrollBar.ViewSize = new Size(1, Math.Max(0, ViewSize.Height - 1));
+            _horizontalScrollBar.Position = new Position(0, Math.Max(0, ViewSize.Height - 1));
+            _horizontalScrollBar.ViewSize = new Size(Math.Max(0, ViewSize.Width - 2), 1);
         }
     }
 
@@ -174,7 +174,7 @@ public class TextViewerControl : Control
 
         Color foregroundColor;
         Color backgroundColor;
-        var size = new Size(ViewSize.Width - 2, 1);
+        var size = new Size(Math.Max(0, ViewSize.Width - 2), 1);
         for (int i = 0; i < ViewSize.Height - 1; i++)
         {
             var indexY = ScrollableModel.ScrollPosition.Y + i;
@@ -193,7 +193,7 @@ public class TextViewerControl : Control
                 var line = TextModel.Lines[(int)indexY];
                 var positionX = Math.Min((int)ScrollableModel.ScrollPosition.X, line.Length);
                 line = line[positionX..]
-                    .PadRight((int)ViewSize.Width - 2);
+                    .PadRight(Math.Max(0, (int)ViewSize.Width - 2));
                 var conxelLine = new ConxelString(line, foregroundColor, backgroundColor);
                 var highlightPositionX = (int)(positionX - ScrollableModel.ScrollPosition.X);
                 HighlightSearchResults(conxelLine, highlightPositionX, (int)indexY);

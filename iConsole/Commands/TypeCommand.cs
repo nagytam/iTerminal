@@ -6,94 +6,96 @@ namespace iConsole.Commands;
 
 public class TypeCommand : Command
 {
+    /// <summary>
+    /// The editor's lines and the row the cursor is on, with the document given a first line if it has none and the
+    /// cursor brought back onto a row that exists.
+    /// </summary>
+    private static (iConsole.Data.ConcurrentList<string> Lines, int Row) Prepare(TextEditorControl editor)
+    {
+        var lines = editor.TextModel.Lines;
+        if (lines.Count == 0)
+        {
+            lines.Add(string.Empty);
+        }
+
+        var row = (int)Math.Clamp(editor.ScrollableModel.CursorPosition.Y, 0, lines.Count - 1);
+        editor.ScrollableModel.CursorPosition.Y = row;
+        return (lines, row);
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (Control is TextEditorControl editor && !editor.IsReadOnly)
         {
             if (ConsoleKeyHelper.IsTypingKey(keyEvent))
             {
-                long cursorY = editor.ScrollableModel.CursorPosition.Y;
-                if (cursorY >= editor.TextModel.Lines.Count)
-                {
-                    editor.TextModel.Lines.Add(string.Empty);
-                }
-                var line = editor.TextModel.Lines[(int)cursorY];
-                long cursorX = editor.ScrollableModel.CursorPosition.X;
-                line = line.Insert((int)cursorX, keyEvent.KeyChar.ToString());
-                editor.TextModel.Lines[(int)cursorY] = line;
+                var (lines, y) = Prepare(editor);
+                var line = lines[y];
+                var x = Math.Min((int)editor.ScrollableModel.CursorPosition.X, line.Length);
+                lines[y] = line.Insert(x, keyEvent.KeyChar.ToString());
                 editor.IsDirty = true;
-                editor.ScrollableModel.CursorPosition.X++;
+                editor.ScrollableModel.CursorPosition.X = x + 1;
                 editor.Refresh();
                 return true;
             }
             else if (keyEvent.ConsoleKey == ConsoleKey.Enter)
             {
-                long cursorX = editor.ScrollableModel.CursorPosition.X;
-                long cursorY = editor.ScrollableModel.CursorPosition.Y;
-                var line = editor.TextModel.Lines[(int)cursorY];
-                if (cursorY >= editor.TextModel.Lines.Count)
-                {
-                    editor.TextModel.Lines.Add(string.Empty);
-                }
-                else
-                {
-                    editor.TextModel.Lines.Insert((int)cursorY, string.Empty);
-                }
-                var lineBefore = line[..Math.Min((int)cursorX, line.Length-1)];
-                var lineAfter = line[Math.Min((int)cursorX, line.Length-1)..];
-
-                editor.TextModel.Lines[(int)cursorY] = lineBefore;
-                editor.TextModel.Lines[(int)cursorY + 1] = lineAfter;
+                // Splits the line at the cursor; the cursor goes to the start of the new line.
+                var (lines, y) = Prepare(editor);
+                var line = lines[y];
+                var x = Math.Min((int)editor.ScrollableModel.CursorPosition.X, line.Length);
+                lines[y] = line[..x];
+                lines.Insert(y + 1, line[x..]);
                 editor.IsDirty = true;
-                editor.ScrollableModel.CursorPosition.X++;
+                editor.ScrollableModel.CursorPosition.X = 0;
+                editor.ScrollableModel.CursorPosition.Y = y + 1;
                 editor.Refresh();
+                editor.ScrollableModel.ScrollToVisible();
                 return true;
             }
             else if (keyEvent.ConsoleKey == ConsoleKey.Backspace)
             {
-                long cursorX = editor.ScrollableModel.CursorPosition.X;
-                long cursorY = editor.ScrollableModel.CursorPosition.Y;
-                var line = editor.TextModel.Lines[(int)cursorY];
-                if (cursorX > 0)
+                // Removes the character before the cursor; at the start of a line, joins it onto the one above.
+                var (lines, y) = Prepare(editor);
+                var line = lines[y];
+                var x = Math.Min((int)editor.ScrollableModel.CursorPosition.X, line.Length);
+                if (x > 0)
                 {
-                    var pos = Math.Min(line.Length - 1, (int)cursorX - 1);
-                    var newline = line[0..pos];
-                    if (cursorX >= 0 && pos < line.Length)
-                    {
-                        newline += line[pos..line.Length];
-                    }
-                    line = newline;
-                    editor.TextModel.Lines[(int)cursorY] = line;
+                    lines[y] = line.Remove(x - 1, 1);
+                    editor.ScrollableModel.CursorPosition.X = x - 1;
                     editor.IsDirty = true;
-                    editor.ScrollableModel.CursorPosition.X--;
                 }
-                else if (string.IsNullOrEmpty(line))
+                else if (y > 0)
                 {
-                    editor.TextModel.Lines.RemoveAt((int)cursorY);
+                    var above = lines[y - 1];
+                    lines[y - 1] = above + line;
+                    lines.RemoveAt(y);
+                    editor.ScrollableModel.CursorPosition.X = above.Length;
+                    editor.ScrollableModel.CursorPosition.Y = y - 1;
+                    editor.IsDirty = true;
                 }
                 editor.Refresh();
+                editor.ScrollableModel.ScrollToVisible();
                 return true;
             }
             else if (keyEvent.ConsoleKey == ConsoleKey.Delete)
             {
-                long cursorX = editor.ScrollableModel.CursorPosition.X;
-                long cursorY = editor.ScrollableModel.CursorPosition.Y;
-                var line = editor.TextModel.Lines[(int)cursorY];
-                if (cursorX < line.Length)
+                // Removes the character under the cursor; at the end of a line, pulls the next line up onto it.
+                var (lines, y) = Prepare(editor);
+                var line = lines[y];
+                var x = Math.Min((int)editor.ScrollableModel.CursorPosition.X, line.Length);
+                if (x < line.Length)
                 {
-                    var newline = line[0..(int)cursorX];
-                    if (cursorX >= 0)
-                    {
-                        newline += line[((int)cursorX + 1)..line.Length];
-                    }
-                    line = newline;
-                    editor.TextModel.Lines[(int)cursorY] = line;
+                    lines[y] = line.Remove(x, 1);
                     editor.IsDirty = true;
                 }
-                else if (string.IsNullOrEmpty(line))
+                else if (y + 1 < lines.Count)
                 {
-                    editor.TextModel.Lines.RemoveAt((int)cursorY);
+                    lines[y] = line + lines[y + 1];
+                    lines.RemoveAt(y + 1);
+                    editor.IsDirty = true;
                 }
+                editor.ScrollableModel.CursorPosition.X = x;
                 editor.Refresh();
                 return true;
             }

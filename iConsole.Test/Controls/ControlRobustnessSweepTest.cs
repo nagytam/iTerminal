@@ -25,10 +25,64 @@ public class ControlRobustnessSweepTest
 
     private static IEnumerable<Type> SimpleControlTypes() => typeof(Control).Assembly.GetTypes()
         .Where(t => t.IsPublic && !t.IsAbstract && !t.IsGenericTypeDefinition && typeof(Control).IsAssignableFrom(t))
-        .Where(t => t.Namespace is "iConsole.Controls" or "iConsole.Controls.Charts" or "iConsole.Controls.Progress")
-        .Where(t => t.GetConstructor([typeof(IThemeService)]) is not null)
+        .Where(t => t.Namespace is not null && t.Namespace.StartsWith("iConsole.Controls", StringComparison.Ordinal))
         .Where(t => t != typeof(iConsole.Controls.Experimental.BouncingLabel) && !typeof(Window).IsAssignableFrom(t))
+        .Where(t => FindConstructor(t) is not null)
         .OrderBy(t => t.FullName, StringComparer.Ordinal);
+
+    /// <summary>A constructor whose parameters can all be filled with the theme, a mock or a default.</summary>
+    private static (ConstructorInfo Constructor, object?[] Arguments)? FindConstructor(Type type)
+    {
+        foreach (ConstructorInfo constructor in type.GetConstructors().OrderBy(c => c.GetParameters().Length))
+        {
+            object?[] arguments = new object?[constructor.GetParameters().Length];
+            bool resolved = true;
+            for (int i = 0; i < arguments.Length && resolved; i++)
+            {
+                resolved = TryResolve(constructor.GetParameters()[i].ParameterType, out arguments[i]);
+            }
+
+            if (resolved)
+            {
+                return (constructor, arguments);
+            }
+        }
+
+        return null;
+    }
+
+    private static bool TryResolve(Type parameter, out object? value)
+    {
+        value = null;
+        if (parameter == typeof(IThemeService))
+        {
+            value = Theme();
+        }
+        else if (parameter == typeof(string))
+        {
+            value = string.Empty;
+        }
+        else if (parameter.IsValueType)
+        {
+            value = Activator.CreateInstance(parameter);
+        }
+        else if (parameter.IsInterface && parameter.Name.EndsWith("Service", StringComparison.Ordinal))
+        {
+            // Services only: a mocked model answers null where the real one never does, which is the mock's doing.
+            object mock = Activator.CreateInstance(typeof(Mock<>).MakeGenericType(parameter))!;
+            value = ((Mock)mock).Object;
+        }
+        else if (parameter.GetConstructor(Type.EmptyTypes) is not null && !parameter.IsAbstract)
+        {
+            value = Activator.CreateInstance(parameter);
+        }
+        else
+        {
+            return false;
+        }
+
+        return true;
+    }
 
     private static readonly (uint Width, uint Height)[] Sizes = [(0, 0), (1, 1), (2, 1), (3, 2), (7, 3), (40, 5), (200, 60)];
 
@@ -38,6 +92,15 @@ public class ControlRobustnessSweepTest
         ConsoleKey.PageUp, ConsoleKey.PageDown, ConsoleKey.Enter, ConsoleKey.Spacebar, ConsoleKey.Escape, ConsoleKey.Backspace,
         ConsoleKey.Delete, ConsoleKey.Tab, ConsoleKey.D5, ConsoleKey.A, ConsoleKey.F4,
     ];
+
+    private static string Describe(Exception exception)
+    {
+        string where = (exception.StackTrace ?? string.Empty)
+            .Split(Environment.NewLine)
+            .Select(l => l.Trim())
+            .FirstOrDefault(l => l.Contains("iConsole.", StringComparison.Ordinal)) ?? string.Empty;
+        return $"{exception.GetType().Name}: {exception.Message.Split(Environment.NewLine)[0]} @ {where}";
+    }
 
     [TestMethod]
     public async Task EveryControl_SurvivesDrawKeysAndClicks_AtAwkwardSizes()
@@ -51,7 +114,8 @@ public class ControlRobustnessSweepTest
                 {
                     try
                     {
-                        Control control = (Control)Activator.CreateInstance(type, Theme())!;
+                        (ConstructorInfo constructor, object?[] arguments) = FindConstructor(type)!.Value;
+                        Control control = (Control)constructor.Invoke(arguments);
                         control.Position = new Position(0, 0);
                         control.ViewSize = new Size(width, height);
                         control.IsEnabled = state != 1;
@@ -80,20 +144,20 @@ public class ControlRobustnessSweepTest
                     }
                     catch (Exception exception)
                     {
-                        failures.Add($"{type.Name} {width}x{height} state {state}: {exception.GetType().Name}: {exception.Message}");
+                        failures.Add($"{type.Name} {width}x{height} state {state}: {Describe(exception)}");
                     }
                 }
             }
         }
 
-        Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures.Distinct().Take(40)));
+        Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures.GroupBy(f => f[..f.IndexOf(' ')]).Select(g => g.First()).Take(40)));
     }
 
     [TestMethod]
     public void TheSweepCoversTheSimpleControls()
     {
         List<Type> types = SimpleControlTypes().ToList();
-        Assert.IsTrue(types.Count >= 30, $"only {types.Count} control types were found");
+        Assert.IsTrue(types.Count >= 45, $"only {types.Count} control types were found");
         CollectionAssert.IsSubsetOf(new[] { typeof(Slider), typeof(Rating), typeof(Calendar), typeof(Toolbar) }, types);
     }
 }
