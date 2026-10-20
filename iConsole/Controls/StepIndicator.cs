@@ -53,7 +53,7 @@ public class StepIndicator : Control
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        if (mouseEvent.LeftClicked && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        if (IsEnabled && mouseEvent.LeftClicked && AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             int step = StepAtColumn((int)mouseEvent.Position.X - (int)AbsolutePosition.X);
             if (step >= 0)

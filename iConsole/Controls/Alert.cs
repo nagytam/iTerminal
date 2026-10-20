@@ -78,7 +78,7 @@ public class Alert(IThemeService themeService) : Control(themeService)
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        if (_isDismissible && _text.Length > 0 && mouseEvent.LeftClicked
+        if (_isDismissible && IsEnabled && _text.Length > 0 && mouseEvent.LeftClicked
             && mouseEvent.Position.Y == AbsolutePosition.Y
             && mouseEvent.Position.X == AbsolutePosition.X + ViewSize.Width - 1)
         {

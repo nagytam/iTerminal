@@ -107,6 +107,11 @@ public class BreakdownChart(IThemeService themeService) : Control(themeService)
             string text = $" {item.Label} {value}{share}";
             if (width < 2)
             {
+                if (width == 1)
+                {
+                    buffer.Write(ZOrder, rowPosition, new Size(1, 1), new ConxelString(" ", colorScheme.Foreground, colorScheme.Background));
+                }
+
                 continue;
             }
 

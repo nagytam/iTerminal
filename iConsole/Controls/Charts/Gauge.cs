@@ -58,7 +58,11 @@ public class Gauge(IThemeService themeService) : Control(themeService)
         long y = AbsolutePosition.Y;
         if (barWidth == 0)
         {
-            string only = (prefix + percent).PadRight(width);
+            // Too narrow for a bar: the percentage is what the gauge is for, so it is the label that gives way.
+            string figure = percent.TrimStart();
+            int room = Math.Max(0, width - figure.Length);
+            string head = prefix.Length > room ? prefix[..room] : prefix;
+            string only = (head.PadRight(room) + figure).PadRight(width);
             buffer.Write(ZOrder, AbsolutePosition, ViewSize, new ConxelString(only[..width], colorScheme.Foreground, colorScheme.Background));
             return;
         }
