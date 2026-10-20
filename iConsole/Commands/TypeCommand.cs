@@ -53,31 +53,6 @@ public class TypeCommand : Command
                 editor.ScrollableModel.ScrollToVisible();
                 return true;
             }
-            else if (keyEvent.ConsoleKey == ConsoleKey.Backspace)
-            {
-                // Removes the character before the cursor; at the start of a line, joins it onto the one above.
-                var (lines, y) = Prepare(editor);
-                var line = lines[y];
-                var x = Math.Min((int)editor.ScrollableModel.CursorPosition.X, line.Length);
-                if (x > 0)
-                {
-                    lines[y] = line.Remove(x - 1, 1);
-                    editor.ScrollableModel.CursorPosition.X = x - 1;
-                    editor.IsDirty = true;
-                }
-                else if (y > 0)
-                {
-                    var above = lines[y - 1];
-                    lines[y - 1] = above + line;
-                    lines.RemoveAt(y);
-                    editor.ScrollableModel.CursorPosition.X = above.Length;
-                    editor.ScrollableModel.CursorPosition.Y = y - 1;
-                    editor.IsDirty = true;
-                }
-                editor.Refresh();
-                editor.ScrollableModel.ScrollToVisible();
-                return true;
-            }
             else if (keyEvent.ConsoleKey == ConsoleKey.Delete)
             {
                 // Removes the character under the cursor; at the end of a line, pulls the next line up onto it.
