@@ -17,7 +17,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var position = new Position(5, 5);
-        var bouncingLabel = new BouncingLabel(position, "Bouncing", mockThemeService.Object);
+        var bouncingLabel = new BouncingLabel(position, "Bouncing", mockThemeService.Object, autoStart: false);
 
         Assert.IsNotNull(bouncingLabel);
         Assert.IsInstanceOfType(bouncingLabel, typeof(Label));
@@ -29,7 +29,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var position = new Position(0, 0);
-        var bouncingLabel = new BouncingLabel(position, "Test Label", mockThemeService.Object);
+        var bouncingLabel = new BouncingLabel(position, "Test Label", mockThemeService.Object, autoStart: false);
 
         Assert.AreEqual("Test Label", bouncingLabel.Text);
     }
@@ -40,7 +40,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var position = new Position(10, 20);
-        var bouncingLabel = new BouncingLabel(position, "Test", mockThemeService.Object);
+        var bouncingLabel = new BouncingLabel(position, "Test", mockThemeService.Object, autoStart: false);
 
         Assert.AreEqual(10U, bouncingLabel.Position.X);
         Assert.AreEqual(20U, bouncingLabel.Position.Y);
@@ -52,7 +52,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var position = new Position(0, 0);
-        var bouncingLabel = new BouncingLabel(position, "Test", mockThemeService.Object);
+        var bouncingLabel = new BouncingLabel(position, "Test", mockThemeService.Object, autoStart: false);
 
         var newPosition = new Position(15, 10);
         bouncingLabel.Position = newPosition;
@@ -67,7 +67,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var position = new Position(0, 0);
-        var bouncingLabel = new BouncingLabel(position, "Test", mockThemeService.Object);
+        var bouncingLabel = new BouncingLabel(position, "Test", mockThemeService.Object, autoStart: false);
 
         Assert.IsTrue(bouncingLabel.IsVisible);
     }
@@ -78,7 +78,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var position = new Position(0, 0);
-        var bouncingLabel = new BouncingLabel(position, "Test", mockThemeService.Object);
+        var bouncingLabel = new BouncingLabel(position, "Test", mockThemeService.Object, autoStart: false);
 
         Assert.IsTrue(bouncingLabel.IsEnabled);
     }
@@ -89,7 +89,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var position = new Position(0, 0);
-        var bouncingLabel = new BouncingLabel(position, "", mockThemeService.Object);
+        var bouncingLabel = new BouncingLabel(position, "", mockThemeService.Object, autoStart: false);
 
         Assert.AreEqual("", bouncingLabel.Text);
     }
@@ -100,7 +100,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var position = new Position(0, 0);
-        var bouncingLabel = new BouncingLabel(position, "Corner", mockThemeService.Object);
+        var bouncingLabel = new BouncingLabel(position, "Corner", mockThemeService.Object, autoStart: false);
 
         Assert.AreEqual(0U, bouncingLabel.Position.X);
         Assert.AreEqual(0U, bouncingLabel.Position.Y);
@@ -112,7 +112,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var position = new Position(0, 0);
-        var bouncingLabel = new BouncingLabel(position, "Test", mockThemeService.Object);
+        var bouncingLabel = new BouncingLabel(position, "Test", mockThemeService.Object, autoStart: false);
 
         Assert.IsInstanceOfType(bouncingLabel, typeof(Label));
     }
@@ -123,7 +123,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var buffer = new MockBuffer(new Size(20, 5));
-        var bouncingLabel = new BouncingLabel(new Position(0, 0), "Hello", mockThemeService.Object)
+        var bouncingLabel = new BouncingLabel(new Position(0, 0), "Hello", mockThemeService.Object, autoStart: false)
         {
             Position = new Position(0, 2),
             ViewSize = new Size(10, 1)
@@ -140,7 +140,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var buffer = new MockBuffer(new Size(20, 5));
-        var bouncingLabel = new BouncingLabel(new Position(0, 0), "Hi", mockThemeService.Object)
+        var bouncingLabel = new BouncingLabel(new Position(0, 0), "Hi", mockThemeService.Object, autoStart: false)
         {
             Position = new Position(0, 1),
             ViewSize = new Size(10, 1)
@@ -158,7 +158,7 @@ public class BouncingLabelTest
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
         var buffer = new MockBuffer(new Size(20, 1));
-        var bouncingLabel = new BouncingLabel(new Position(0, 0), "Test", mockThemeService.Object)
+        var bouncingLabel = new BouncingLabel(new Position(0, 0), "Test", mockThemeService.Object, autoStart: false)
         {
             Position = new Position(0, 0),
             ViewSize = new Size(10, 1)
