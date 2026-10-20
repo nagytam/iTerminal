@@ -19,6 +19,7 @@ namespace iConsole.Controls;
 public class HexViewer : Control
 {
     private byte[] _data = [];
+    private int _bytesPerRow = 16;
 
     public HexViewer(IThemeService themeService) : base(themeService)
     {
@@ -48,7 +49,16 @@ public class HexViewer : Control
     }
 
     /// <summary>Number of bytes shown per row. Default is 16.</summary>
-    public int BytesPerRow { get; set; } = 16;
+    public int BytesPerRow
+    {
+        get => _bytesPerRow;
+        set
+        {
+            _bytesPerRow = Math.Max(1, value);
+            ScrollableModel.ScrollableSize = new Size(ViewSize.Width, RowCount);
+            StateHasChanged();
+        }
+    }
 
     public ScrollableModel ScrollableModel { get; }
 
