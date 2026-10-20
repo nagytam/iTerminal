@@ -190,7 +190,7 @@ public class Calendar : Control, IReadOnly
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        if (IsReadOnly || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        if (IsReadOnly || !IsEnabled || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;
         }

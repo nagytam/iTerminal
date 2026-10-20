@@ -56,6 +56,7 @@ public class ToggleButton : Control, IReadOnly
     {
         var handled = await base.HandleMouseEventAsync(mouseEvent);
         if (!IsReadOnly
+            && IsEnabled
             && AbsoluteBoundRect.Contains(mouseEvent.Position)
             && mouseEvent.WheelDelta == 0
             && mouseEvent.LeftClicked)
