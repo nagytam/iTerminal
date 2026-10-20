@@ -92,6 +92,46 @@ public class PopUpWindow : Window
         return actionButtons;
     }
 
+    /// <summary>
+    /// A left click on one of the title bar's action buttons (<c>[X]</c>) presses it. The buttons are drawn by the
+    /// window, in the last cells of the top border, and have no place of their own, so the one under the pointer is
+    /// put there first and then given the click. Returns false when the click is not on a button.
+    /// </summary>
+    protected async Task<bool> TryClickActionButtonAsync(MouseEvent mouseEvent)
+    {
+        if (!mouseEvent.LeftClicked || mouseEvent.Position.Y != AbsolutePosition.Y)
+        {
+            return false;
+        }
+
+        var buttons = Controls.AsSnapshot().OfType<ActionButton>().ToList();
+        var start = (long)AbsolutePosition.X + (long)ViewSize.Width - 1 - buttons.Sum(b => b.ActionView.Length);
+        foreach (var button in buttons)
+        {
+            var length = button.ActionView.Length;
+            if (mouseEvent.Position.X >= start && mouseEvent.Position.X < start + length)
+            {
+                button.Position = new Position(start - (long)AbsolutePosition.X, 0);
+                button.ViewSize = new Size(length, 1);
+                return await button.HandleMouseEventAsync(mouseEvent);
+            }
+
+            start += length;
+        }
+
+        return false;
+    }
+
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (await TryClickActionButtonAsync(mouseEvent))
+        {
+            return true;
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
     protected override void DrawChrome(IBuffer buffer)
     {
         var colorScheme = _themeService.CurrentColorScheme;

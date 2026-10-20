@@ -395,6 +395,11 @@ public class MenuItem : PopUpWindow
             return false;
         }
 
+        if (await TryClickActionButtonAsync(mouseEvent))
+        {
+            return true;
+        }
+
         var row = (int)(mouseEvent.Position.Y - AbsolutePosition.Y);
         var column = (int)(mouseEvent.Position.X - AbsolutePosition.X);
         var entryIndex = _firstVisibleEntry + row - 1;
