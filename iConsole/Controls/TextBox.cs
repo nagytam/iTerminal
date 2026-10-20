@@ -28,6 +28,7 @@ public class TextBox : Control, IReadOnly
             if (TextModel.Lines[0] != value)
             {
                 TextModel.Lines[0] = value;
+                ClearSelection();
                 TextModel.TriggerPropertyChanged();
                 OnPropertyChanged(Text);
             }
@@ -91,9 +92,143 @@ public class TextBox : Control, IReadOnly
         ScrollableModel.CursorPosition.X = Text.Length;
     }
 
+    /// <summary>Where the selection started; the selection runs from here to the cursor. Null when nothing is selected.</summary>
+    private long? _selectionAnchor;
+
+    /// <summary>Whether any characters are selected.</summary>
+    public bool HasSelection => _selectionAnchor is long anchor && anchor != ScrollableModel.CursorPosition.X;
+
+    /// <summary>The selected text, or an empty string.</summary>
+    public string SelectedText
+    {
+        get
+        {
+            if (!HasSelection)
+            {
+                return string.Empty;
+            }
+
+            var (start, end) = SelectedRange;
+            return Text[start..end];
+        }
+    }
+
+    private (int Start, int End) SelectedRange
+    {
+        get
+        {
+            var anchor = Math.Clamp(_selectionAnchor ?? 0, 0, TextLength);
+            var cursor = Math.Clamp(ScrollableModel.CursorPosition.X, 0, TextLength);
+            return ((int)Math.Min(anchor, cursor), (int)Math.Max(anchor, cursor));
+        }
+    }
+
+    private void ClearSelection()
+    {
+        _selectionAnchor = null;
+        SelectionTextModel.IsSelected = false;
+        SelectionTextModel.Start = null;
+        SelectionTextModel.End = null;
+    }
+
+    /// <summary>Publishes the selection to <see cref="SelectionTextModel"/>, whose end is the last selected column.</summary>
+    private void UpdateSelectionModel()
+    {
+        if (!HasSelection)
+        {
+            ClearSelection();
+            return;
+        }
+
+        var (start, end) = SelectedRange;
+        SelectionTextModel.IsSelected = true;
+        SelectionTextModel.Start = new Position(start, 0);
+        SelectionTextModel.End = new Position(end - 1, 0);
+    }
+
+    /// <summary>Removes the selected characters and puts the cursor where they were.</summary>
+    private void DeleteSelection()
+    {
+        var (start, end) = SelectedRange;
+        var remaining = Text.Remove(start, end - start);
+        ClearSelection();
+        Text = remaining;
+        ScrollableModel.CursorPosition.X = start;
+        KeepCursorVisible();
+    }
+
+    /// <summary>
+    /// Shift with Left, Right, Home or End extends the selection from where it began (the cursor, at the first press);
+    /// with a selection up, Left and Right collapse it to its start or end, and Backspace and Delete remove it. Typing
+    /// replaces it. Any other key that acts clears it.
+    /// </summary>
+    private bool HandleSelectionKey(KeyEvent keyEvent)
+    {
+        if (keyEvent.Alt || keyEvent.Control)
+        {
+            return false;
+        }
+
+        var cursor = ScrollableModel.CursorPosition.X;
+        if (keyEvent.Shift)
+        {
+            long? target = keyEvent.ConsoleKey switch
+            {
+                ConsoleKey.LeftArrow => Math.Max(0, cursor - 1),
+                ConsoleKey.RightArrow => Math.Min(TextLength, cursor + 1),
+                ConsoleKey.Home => 0,
+                ConsoleKey.End => TextLength,
+                _ => null,
+            };
+            if (target is null)
+            {
+                return false;
+            }
+
+            _selectionAnchor ??= cursor;
+            ScrollableModel.CursorPosition.X = target.Value;
+            UpdateSelectionModel();
+            KeepCursorVisible();
+            StateHasChanged();
+            return true;
+        }
+
+        if (!HasSelection)
+        {
+            return false;
+        }
+
+        var (start, end) = SelectedRange;
+        switch (keyEvent.ConsoleKey)
+        {
+            case ConsoleKey.LeftArrow:
+                ClearSelection();
+                ScrollableModel.CursorPosition.X = start;
+                break;
+            case ConsoleKey.RightArrow:
+                ClearSelection();
+                ScrollableModel.CursorPosition.X = end;
+                break;
+            case ConsoleKey.Backspace or ConsoleKey.Delete when !IsReadOnly:
+                DeleteSelection();
+                break;
+            default:
+                return false;
+        }
+
+        KeepCursorVisible();
+        StateHasChanged();
+        return true;
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         KeepCursorVisible();
+        if (IsFocused && IsEnabled && HandleSelectionKey(keyEvent))
+        {
+            return true;
+        }
+
 
         // The scrolling command for Right stops at the edge of the well, which the cursor may reach but not pass, so
         // it is handled here: one step right, and the view follows.
@@ -115,6 +250,11 @@ public class TextBox : Control, IReadOnly
             ConsoleKeyHelper.IsTypingKey(keyEvent) &&
             IsAllowedCharacter(keyEvent.KeyChar))
         {
+            if (HasSelection && !IsReadOnly)
+            {
+                DeleteSelection();
+            }
+
             if (TextLength < MaxLength)
             {
                 var newValue = Text;
@@ -139,6 +279,12 @@ public class TextBox : Control, IReadOnly
         }
         if (isHandled)
         {
+            // A key that acted other than by selecting (Shift is the selecting modifier) ends the selection.
+            if (!keyEvent.Shift)
+            {
+                ClearSelection();
+            }
+
             KeepCursorVisible();
         }
 
@@ -204,6 +350,7 @@ public class TextBox : Control, IReadOnly
             SetFocus();
         }
 
+        ClearSelection();
         long column = (long)mouseEvent.Position.X - (long)AbsolutePosition.X - WellTextOffset;
         long target = Math.Clamp(column + (long)ScrollableModel.ScrollPosition.X, 0, TextLength);
         ScrollableModel.CursorPosition.X = target;
