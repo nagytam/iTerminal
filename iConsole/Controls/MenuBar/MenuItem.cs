@@ -379,6 +379,35 @@ public class MenuItem : PopUpWindow
         CloseWholeMenu();
     }
 
+    /// <summary>The submenu of this item that is currently open, if any.</summary>
+    internal MenuItem? OpenChild => MenuItems.FirstOrDefault(m => m.IsOpened);
+
+    /// <summary>
+    /// A left click inside this open drop-down: the entry under the pointer is selected and activated, as
+    /// Enter would do — a leaf runs its command and closes the menu, a branch opens its submenu. A click on
+    /// a separator, the border or the empty rows is swallowed. Returns false when the click is not on this
+    /// drop-down at all.
+    /// </summary>
+    internal async Task<bool> HandleDropDownClickAsync(MouseEvent mouseEvent)
+    {
+        if (this is MenuBar || !IsOpened || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            return false;
+        }
+
+        var row = (int)(mouseEvent.Position.Y - AbsolutePosition.Y);
+        var column = (int)(mouseEvent.Position.X - AbsolutePosition.X);
+        var entryIndex = _firstVisibleEntry + row - 1;
+        if (row >= 1 && row <= (int)ViewSize.Height - 2 && column >= 1 && column <= (int)ViewSize.Width - 2
+            && entryIndex >= 0 && entryIndex < MenuItems.Count && !MenuItems[entryIndex].IsSeparator)
+        {
+            MenuItems[entryIndex].SetSelected();
+            await ActivateSelectedAsync();
+        }
+
+        return true;
+    }
+
     private async Task OpenOrAdvanceAsync()
     {
         var selected = MenuItems.FirstOrDefault(m => m.IsSelected);

@@ -1,4 +1,5 @@
 using iConsole.Buffers;
+using iConsole.Data;
 using iConsole.Services;
 using System.Diagnostics;
 
@@ -34,6 +35,64 @@ public class MenuBar : MenuItem
     public void SyncModalState()
     {
         IsModal = MenuItems.Any(m => m.IsOpened);
+    }
+
+    /// <summary>
+    /// Makes the bar usable with the mouse. A click on a title opens its drop-down (or closes it when it is
+    /// already open, or switches from the one that is), a click on an entry of an open drop-down runs it, and
+    /// a click anywhere else closes the menu — and is swallowed, so it does not also act on what is beneath.
+    /// With no menu open, clicks off the titles go on to the bar's other children.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (!mouseEvent.LeftClicked)
+        {
+            return await base.HandleMouseEventAsync(mouseEvent);
+        }
+
+        var chain = new List<MenuItem>();
+        for (var open = OpenChild; open is not null; open = open.OpenChild)
+        {
+            chain.Add(open);
+        }
+
+        for (var i = chain.Count - 1; i >= 0; i--)
+        {
+            if (await chain[i].HandleDropDownClickAsync(mouseEvent))
+            {
+                return true;
+            }
+        }
+
+        if (mouseEvent.Position.Y == AbsolutePosition.Y && mouseEvent.Position.X >= AbsolutePosition.X)
+        {
+            var column = (int)(mouseEvent.Position.X - AbsolutePosition.X);
+            var start = 0;
+            foreach (var title in MenuItems)
+            {
+                if (column >= start && column < start + title.Text.Length)
+                {
+                    var wasOpen = title.IsOpened;
+                    CloseMenu();
+                    if (!wasOpen && title.Text != "-")
+                    {
+                        title.OpenMenu();
+                    }
+
+                    return true;
+                }
+
+                start += title.Text.Length + 1;
+            }
+        }
+
+        if (chain.Count > 0)
+        {
+            CloseMenu();
+            return true;
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
     }
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
