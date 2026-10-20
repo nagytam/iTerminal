@@ -45,12 +45,13 @@ public class Chips : Control, IReadOnly
 
     public bool Add(string item)
     {
-        if (string.IsNullOrWhiteSpace(item) || _items.Contains(item, StringComparer.OrdinalIgnoreCase))
+        string trimmed = item?.Trim() ?? string.Empty;
+        if (trimmed.Length == 0 || _items.Contains(trimmed, StringComparer.OrdinalIgnoreCase))
         {
             return false;
         }
 
-        _items.Add(item.Trim());
+        _items.Add(trimmed);
         ItemsChanged?.Invoke(this, EventArgs.Empty);
         StateHasChanged();
         return true;
@@ -146,7 +147,7 @@ public class Chips : Control, IReadOnly
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        if (!mouseEvent.LeftClicked || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        if (!IsEnabled || !mouseEvent.LeftClicked || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;
         }

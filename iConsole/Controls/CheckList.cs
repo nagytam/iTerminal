@@ -65,6 +65,11 @@ public class CheckList : Control, IReadOnly
 
     public void InvertAll()
     {
+        if (_items.Count == 0)
+        {
+            return;
+        }
+
         for (int i = 0; i < _items.Count; i++)
         {
             _items[i] = (_items[i].Text, !_items[i].Checked);
@@ -143,7 +148,7 @@ public class CheckList : Control, IReadOnly
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        if (_items.Count == 0 || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        if (_items.Count == 0 || !IsEnabled || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;
         }
