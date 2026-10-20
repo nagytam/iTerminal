@@ -293,7 +293,7 @@ public class TreeView : Control
             return true;
         }
 
-        if (mouseEvent.LeftClicked)
+        if (mouseEvent.LeftClicked && IsEnabled)
         {
             int index = ScrollOffset + (int)relativeY;
             if (index < rows.Count)
