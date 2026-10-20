@@ -88,7 +88,7 @@ public class Slider : Control, IReadOnly
             return 0;
         }
 
-        double ratio = Math.Clamp((value - min) / (double)(max - min), 0.0, 1.0);
+        double ratio = Math.Clamp(((double)value - min) / ((double)max - min), 0.0, 1.0);
         return (int)Math.Round(ratio * (width - 1));
     }
 
@@ -101,7 +101,20 @@ public class Slider : Control, IReadOnly
         }
 
         double ratio = Math.Clamp(column / (double)(width - 1), 0.0, 1.0);
-        return min + (long)Math.Round(ratio * (max - min));
+        double offset = Math.Round(ratio * ((double)max - min));
+        return offset >= (double)max - min ? max : min + (long)offset;
+    }
+
+    /// <summary>Adds without wrapping around: a step past <see cref="long.MaxValue"/> stays there instead of jumping to the minimum.</summary>
+    private static long SaturatingAdd(long value, long delta)
+    {
+        long sum = unchecked(value + delta);
+        if (delta > 0 && sum < value)
+        {
+            return long.MaxValue;
+        }
+
+        return delta < 0 && sum > value ? long.MinValue : sum;
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -115,16 +128,16 @@ public class Slider : Control, IReadOnly
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.RightArrow:
-                Value += Step;
+                Value = SaturatingAdd(_value, Step);
                 return true;
             case ConsoleKey.LeftArrow:
-                Value -= Step;
+                Value = SaturatingAdd(_value, -Step);
                 return true;
             case ConsoleKey.PageUp:
-                Value += LargeStep;
+                Value = SaturatingAdd(_value, LargeStep);
                 return true;
             case ConsoleKey.PageDown:
-                Value -= LargeStep;
+                Value = SaturatingAdd(_value, -LargeStep);
                 return true;
             case ConsoleKey.Home:
                 Value = _minimum;
@@ -147,7 +160,7 @@ public class Slider : Control, IReadOnly
 
         if (mouseEvent.WheelDelta != 0)
         {
-            Value += mouseEvent.WheelDelta > 0 ? Step : -Step;
+            Value = SaturatingAdd(_value, mouseEvent.WheelDelta > 0 ? Step : -Step);
             return true;
         }
 
