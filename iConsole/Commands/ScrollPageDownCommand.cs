@@ -15,7 +15,7 @@ public class ScrollPageDownCommand(IScrollableModel scrollableModel) : Command
     {
         scrollableModel.CursorPosition.Y = (uint)Math.Min(
             scrollableModel.CursorPosition.Y + scrollableModel.ViewSize.Height,
-            (int)scrollableModel.ScrollableSize.Height - 1);
+            Math.Max(0, (int)scrollableModel.ScrollableSize.Height - 1));
         scrollableModel.ScrollPosition.Y = (uint)Math.Min(
             scrollableModel.ScrollPosition.Y + scrollableModel.ViewSize.Height,
             Math.Max(0,

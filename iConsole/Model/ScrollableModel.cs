@@ -120,7 +120,7 @@ public class ScrollableModel : IScrollableModel, INotifyPropertyChanged
         }
         else if (CursorPosition.X > ScrollPosition.X + ViewSize.Width - 1)
         {
-            ScrollPosition.X = Math.Max(0, CursorPosition.X - ViewSize.Width - 1);
+            ScrollPosition.X = Math.Max(0, CursorPosition.X - ViewSize.Width + 1);
         }
     }
 
