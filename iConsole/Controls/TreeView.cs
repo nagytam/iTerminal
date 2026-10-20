@@ -1,4 +1,4 @@
-using iConsole.Buffers;
+﻿using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Display;
@@ -264,6 +264,56 @@ public class TreeView : Control
             var line = new ConxelString(text.Length > width ? text[..width] : text.PadRight(width), foreground, background);
             buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + (uint)y), new Size(width, 1), line);
         }
+    }
+
+    /// <summary>
+    /// Home and End focus the first and last visible row, PageUp and PageDown move by a page (one row less than the
+    /// view shows, so the row the page ends on stays in sight). The arrows are the commands'; without these a tall tree
+    /// could only be crossed one row at a time. The view scrolls to the focused row when it is drawn.
+    /// </summary>
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        if (await base.HandleKeyEventAsync(keyEvent))
+        {
+            return true;
+        }
+
+        if (!IsFocused || !IsEnabled || keyEvent.Control || keyEvent.Alt || keyEvent.Shift)
+        {
+            return false;
+        }
+
+        var page = Math.Max(1, (int)ViewSize.Height - 1);
+        int? step = keyEvent.ConsoleKey switch
+        {
+            ConsoleKey.Home => int.MinValue,
+            ConsoleKey.End => int.MaxValue,
+            ConsoleKey.PageUp => -page,
+            ConsoleKey.PageDown => page,
+            _ => null,
+        };
+        if (step is null)
+        {
+            return false;
+        }
+
+        var rows = GetVisibleRows();
+        var current = rows.FindIndex(row => row.Item.IsFocused);
+        var target = step == int.MinValue ? 0
+            : step == int.MaxValue ? rows.Count - 1
+            : Math.Clamp((current < 0 ? 0 : current) + step.Value, 0, rows.Count - 1);
+        if (target != current)
+        {
+            if (current >= 0)
+            {
+                rows[current].Item.IsFocused = false;
+            }
+
+            rows[target].Item.IsFocused = true;
+            StateHasChanged();
+        }
+
+        return true;
     }
 
     /// <summary>Rows the wheel scrolls the view by in one notch.</summary>
