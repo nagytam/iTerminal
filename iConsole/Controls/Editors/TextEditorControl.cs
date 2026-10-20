@@ -72,6 +72,7 @@ public class TextEditorControl
         {
             ScrollableModel.ScrollableSize = new Data.Size(0, 0);
         }
+        KeepCursorInText();
         base.Refresh();
     }
 }

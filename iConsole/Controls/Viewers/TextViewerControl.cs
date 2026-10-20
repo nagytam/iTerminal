@@ -65,6 +65,78 @@ public class TextViewerControl : Control
         CommandHelper.AddHorizontalScrollingCommands(this, ScrollableModel, TextModel, SelectionTextModel, isCursorEnabled);
     }
 
+    /// <summary>
+    /// With a caret (an editor), brings the cursor back onto the text it is editing: a row that exists, a column no
+    /// further than the end of that line — Up/Down onto a shorter line, or Right across a short one, used to leave it
+    /// floating in the empty space — and the view scrolled so it is on screen.
+    /// </summary>
+    protected void KeepCursorInText()
+    {
+        if (!_isCursorEnabled || TextModel.Lines.Count == 0 || ScrollableModel.ViewSize.IsEmpty)
+        {
+            return;
+        }
+
+        var row = Math.Clamp(ScrollableModel.CursorPosition.Y, 0, TextModel.Lines.Count - 1);
+        ScrollableModel.CursorPosition.Y = row;
+        ScrollableModel.CursorPosition.X = Math.Clamp(ScrollableModel.CursorPosition.X, 0, TextModel.Lines[(int)row].Length);
+        ScrollableModel.ScrollToVisible();
+    }
+
+    /// <summary>
+    /// In an editor, Left at the start of a line goes to the end of the one above, Right at the end of a line to the
+    /// start of the next, and End goes to the end of the line the cursor is on (the scrolling command it replaces used
+    /// the first visible line). Everything else is the commands' to handle; afterwards the cursor is kept in the text.
+    /// </summary>
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        // No IsFocused test: the editor never takes the focus itself (its dialog hands it the keys), and its own
+        // commands act without it too.
+        if (_isCursorEnabled && IsEnabled && TextModel.Lines.Count > 0
+            && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
+        {
+            var row = (int)Math.Clamp(ScrollableModel.CursorPosition.Y, 0, TextModel.Lines.Count - 1);
+            var length = TextModel.Lines[row].Length;
+            var column = Math.Min(ScrollableModel.CursorPosition.X, length);
+            var handled = true;
+            switch (keyEvent.ConsoleKey)
+            {
+                case ConsoleKey.LeftArrow when column == 0 && row > 0:
+                    ScrollableModel.CursorPosition.Y = row - 1;
+                    ScrollableModel.CursorPosition.X = TextModel.Lines[row - 1].Length;
+                    break;
+                case ConsoleKey.RightArrow when column >= length && row + 1 < TextModel.Lines.Count:
+                    ScrollableModel.CursorPosition.Y = row + 1;
+                    ScrollableModel.CursorPosition.X = 0;
+                    break;
+                case ConsoleKey.End:
+                    ScrollableModel.CursorPosition.Y = row;
+                    ScrollableModel.CursorPosition.X = length;
+                    break;
+                default:
+                    handled = false;
+                    break;
+            }
+
+            if (handled)
+            {
+                KeepCursorInText();
+                StateHasChanged();
+                return true;
+            }
+
+            ScrollableModel.CursorPosition.X = column;
+        }
+
+        var result = await base.HandleKeyEventAsync(keyEvent);
+        if (result)
+        {
+            KeepCursorInText();
+        }
+
+        return result;
+    }
+
     private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         StateHasChanged();
