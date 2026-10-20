@@ -26,7 +26,7 @@ public class ControlRobustnessSweepTest
     private static IEnumerable<Type> SimpleControlTypes() => typeof(Control).Assembly.GetTypes()
         .Where(t => t.IsPublic && !t.IsAbstract && !t.IsGenericTypeDefinition && typeof(Control).IsAssignableFrom(t))
         .Where(t => t.Namespace is not null && t.Namespace.StartsWith("iConsole.Controls", StringComparison.Ordinal))
-        .Where(t => t != typeof(iConsole.Controls.Experimental.BouncingLabel) && !typeof(Window).IsAssignableFrom(t))
+        .Where(t => !typeof(Window).IsAssignableFrom(t))
         .Where(t => FindConstructor(t) is not null)
         .OrderBy(t => t.FullName, StringComparer.Ordinal);
 

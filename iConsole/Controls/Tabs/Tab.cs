@@ -491,7 +491,7 @@ public class Tab(IThemeService themeService) : Control(themeService)
     /// </summary>
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
-        if (mouseEvent.LeftClicked)
+        if (mouseEvent.LeftClicked && IsEnabled)
         {
             var clickedPage = GetTabStripPageAt(mouseEvent.Position);
             if (clickedPage >= 0)

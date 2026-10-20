@@ -3,6 +3,10 @@ using iConsole.Model;
 
 namespace iConsole.Commands;
 
+/// <summary>
+/// Delete in a text editor: removes the character under the cursor, or — at the end of a line — pulls the next line
+/// up onto it. The cursor stays where it is. Nothing happens at the very end of the document.
+/// </summary>
 public class DeleteCharacterCommand(ITextModel textModel, IScrollableModel scrollableModel)
     : Command
 {
@@ -20,21 +24,41 @@ public class DeleteCharacterCommand(ITextModel textModel, IScrollableModel scrol
 
     public override Task ExecuteAsync(object? arg)
     {
-        int cursorY = (int)scrollableModel.CursorPosition.Y;
-        var text = textModel.Lines[cursorY];
-        if (!string.IsNullOrEmpty(text))
+        var lines = textModel.Lines;
+        if (lines.Count == 0)
         {
-            // Delete the character before the cursor (backspace-like behavior).
-            if (scrollableModel.CursorPosition.X > 0)
-            {
-                var removeIndex = (int)scrollableModel.CursorPosition.X - 1;
-                text = text.Remove(removeIndex, 1);
-                textModel.Lines[cursorY] = text;
-                textModel.TriggerPropertyChanged();
-
-                scrollableModel.CursorPosition.X--;
-            }
+            return Task.CompletedTask;
         }
+
+        var row = (int)Math.Clamp(scrollableModel.CursorPosition.Y, 0, lines.Count - 1);
+        var text = lines[row];
+        var column = (int)Math.Min(scrollableModel.CursorPosition.X, text.Length);
+        var changed = false;
+        if (column < text.Length)
+        {
+            lines[row] = text.Remove(column, 1);
+            changed = true;
+        }
+        else if (row + 1 < lines.Count)
+        {
+            lines[row] = text + lines[row + 1];
+            lines.RemoveAt(row + 1);
+            changed = true;
+        }
+
+        scrollableModel.CursorPosition.Y = row;
+        scrollableModel.CursorPosition.X = column;
+        if (changed)
+        {
+            if (Control is IDirtyModel dirtyModel)
+            {
+                dirtyModel.IsDirty = true;
+            }
+
+            textModel.TriggerPropertyChanged();
+            Control?.Refresh();
+        }
+
         return Task.CompletedTask;
     }
 }
