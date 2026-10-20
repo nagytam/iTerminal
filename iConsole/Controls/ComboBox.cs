@@ -181,7 +181,7 @@ public class ComboBox<T> : Control, IReadOnly
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         var isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        if (IsReadOnly || IsOpen)
+        if (IsReadOnly || !IsEnabled || IsOpen)
         {
             return isHandled;
         }

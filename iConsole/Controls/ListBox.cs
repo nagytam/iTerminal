@@ -183,7 +183,7 @@ public class ListBox<T> : Control
             return true;
         }
 
-        if (mouseEvent.LeftClicked || mouseEvent.RightClicked)
+        if ((mouseEvent.LeftClicked || mouseEvent.RightClicked) && IsEnabled)
         {
             var index = ScrollableModel.ScrollPosition.Y + relativeY;
             if (index < Count)
