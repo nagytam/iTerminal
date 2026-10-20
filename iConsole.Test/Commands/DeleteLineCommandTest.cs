@@ -1,7 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using iConsole.Commands;
-using iConsole.Model;
+using iConsole.Controls.Editors;
 using iConsole.Data;
+using iConsole.Display;
+using iConsole.Model;
+using iConsole.Services;
+using Moq;
 
 namespace iConsole.Commands.Test;
 
@@ -23,5 +27,73 @@ public class DeleteLineCommandTest
         Assert.AreEqual(0, scrollable.CursorPosition.X);
         Assert.AreEqual(0, scrollable.ScrollPosition.X);
     }
-}
 
+    [TestMethod]
+    public async Task ExecuteAsync_OnlyClearsTheCursorLine_AndKeepsTheLinesBelowInPlace()
+    {
+        var textModel = new TextModel("one");
+        textModel.Lines.Add("two");
+        textModel.Lines.Add("three");
+        var scrollable = new ScrollableModel();
+        scrollable.CursorPosition = new Position(2, 1);
+
+        await new DeleteLineCommand(textModel, scrollable).ExecuteAsync(null);
+
+        CollectionAssert.AreEqual(new[] { "one", string.Empty, "three" }, textModel.Lines.AsSnapshot().ToArray());
+        Assert.AreEqual(1, scrollable.CursorPosition.Y);
+        Assert.AreEqual(0, scrollable.CursorPosition.X);
+    }
+
+    [TestMethod]
+    public async Task ExecuteAsync_OnAnEmptyDocument_DoesNothing()
+    {
+        var textModel = new TextModel();
+        textModel.Lines.Clear();
+
+        await new DeleteLineCommand(textModel, new ScrollableModel()).ExecuteAsync(null);
+
+        Assert.AreEqual(0, textModel.Lines.Count);
+    }
+
+    [TestMethod]
+    public async Task ExecuteAsync_WithACursorBelowTheLastLine_ClearsTheLastLine()
+    {
+        var textModel = new TextModel("one");
+        textModel.Lines.Add("two");
+        var scrollable = new ScrollableModel();
+        scrollable.CursorPosition = new Position(0, 9);
+
+        await new DeleteLineCommand(textModel, scrollable).ExecuteAsync(null);
+
+        CollectionAssert.AreEqual(new[] { "one", string.Empty }, textModel.Lines.AsSnapshot().ToArray());
+        Assert.AreEqual(1, scrollable.CursorPosition.Y);
+    }
+
+    [TestMethod]
+    public async Task ExecuteAsync_MarksTheEditorDirty_OnlyWhenTheLineHadText()
+    {
+        var theme = new Mock<IThemeService>();
+        theme.Setup(t => t.CurrentColorScheme).Returns(new ColorScheme());
+        var editor = new TextEditorControl(theme.Object);
+        editor.TextModel.Lines.Add(string.Empty);
+        var cmd = new DeleteLineCommand(editor.TextModel, editor.ScrollableModel) { Control = editor };
+
+        await cmd.ExecuteAsync(null);
+        Assert.IsFalse(editor.IsDirty);
+
+        editor.TextModel.Lines[0] = "text";
+        await cmd.ExecuteAsync(null);
+        Assert.IsTrue(editor.IsDirty);
+    }
+
+    [TestMethod]
+    public void CanExecute_IsFalseInAReadOnlyEditor()
+    {
+        var theme = new Mock<IThemeService>();
+        theme.Setup(t => t.CurrentColorScheme).Returns(new ColorScheme());
+        var editor = new TextEditorControl(theme.Object) { IsReadOnly = true };
+        var cmd = new DeleteLineCommand(editor.TextModel, editor.ScrollableModel) { Control = editor };
+
+        Assert.IsFalse(cmd.CanExecute());
+    }
+}
