@@ -95,6 +95,9 @@ public class TextBox : Control, IReadOnly
     /// <summary>Where the selection started; the selection runs from here to the cursor. Null when nothing is selected.</summary>
     private long? _selectionAnchor;
 
+    /// <summary>True from a press in the well until the button is released: movement then selects.</summary>
+    private bool _dragSelecting;
+
     /// <summary>Whether any characters are selected.</summary>
     public bool HasSelection => _selectionAnchor is long anchor && anchor != ScrollableModel.CursorPosition.X;
 
@@ -459,6 +462,28 @@ public class TextBox : Control, IReadOnly
     /// </summary>
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
+        // Dragging from a press in the well selects: the cursor follows the pointer, and past either end of the well
+        // it moves a step with each movement, scrolling the value, so a long value can be selected beyond what shows.
+        if (mouseEvent.IsDrag && _dragSelecting && IsEnabled)
+        {
+            long dragColumn = (long)mouseEvent.Position.X - (long)AbsolutePosition.X - WellTextOffset;
+            var well = ScrollableModel.ViewSize.Width;
+            long cursor = ScrollableModel.CursorPosition.X;
+            long moved = dragColumn < 0 ? cursor - 1
+                : dragColumn >= well ? cursor + 1
+                : dragColumn + (long)ScrollableModel.ScrollPosition.X;
+            ScrollableModel.CursorPosition.X = Math.Clamp(moved, 0, TextLength);
+            UpdateSelectionModel();
+            KeepCursorVisible();
+            StateHasChanged();
+            return true;
+        }
+
+        if (mouseEvent.IsRelease)
+        {
+            _dragSelecting = false;
+        }
+
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
         if (isHandled || !mouseEvent.LeftClicked || !IsEnabled || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
@@ -474,6 +499,8 @@ public class TextBox : Control, IReadOnly
         long column = (long)mouseEvent.Position.X - (long)AbsolutePosition.X - WellTextOffset;
         long target = Math.Clamp(column + (long)ScrollableModel.ScrollPosition.X, 0, TextLength);
         ScrollableModel.CursorPosition.X = target;
+        _selectionAnchor = target;
+        _dragSelecting = true;
         StateHasChanged();
         return true;
     }

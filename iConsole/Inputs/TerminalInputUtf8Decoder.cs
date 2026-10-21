@@ -1,4 +1,4 @@
-using System.Buffers;
+﻿using System.Buffers;
 using System.Runtime.InteropServices;
 using System.Text;
 using iConsole.Data;
@@ -202,10 +202,12 @@ public sealed class TerminalInputUtf8Decoder
         var motion = (pb & 32) != 0;
         var left = !release && wheelDelta == 0 && !motion && btn == 0;
         var right = !release && wheelDelta == 0 && !motion && btn == 2;
+        var drag = !release && wheelDelta == 0 && motion && btn == 0;
         var pos = new Position(px - 1, py - 1);
         emitMouse(new MouseEvent
         {
             Position = pos,
+            IsDrag = drag,
             LeftClicked = left,
             RightClicked = right,
             IsRelease = release,
