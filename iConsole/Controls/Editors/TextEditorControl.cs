@@ -1,4 +1,6 @@
 ﻿using iConsole.Commands;
+using iConsole.Helper;
+using iConsole.Data;
 using iConsole.Controls.Viewers;
 using iConsole.Model;
 using iConsole.Services;
@@ -58,6 +60,31 @@ public class TextEditorControl
     private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// With text selected, Backspace and Delete remove it, and typing or Enter replaces it (the key then goes on to
+    /// type or split the line at the cursor the removal left). A read-only editor can select but not change.
+    /// </summary>
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        if (HasSelection && !IsReadOnly && IsEnabled && !keyEvent.Control && !keyEvent.Alt)
+        {
+            if (!keyEvent.Shift && keyEvent.ConsoleKey is ConsoleKey.Backspace or ConsoleKey.Delete)
+            {
+                RemoveSelectedText();
+                IsDirty = true;
+                return true;
+            }
+
+            if (ConsoleKeyHelper.IsTypingKey(keyEvent) || keyEvent.ConsoleKey == ConsoleKey.Enter)
+            {
+                RemoveSelectedText();
+                IsDirty = true;
+            }
+        }
+
+        return await base.HandleKeyEventAsync(keyEvent);
     }
 
     public override void Refresh()
