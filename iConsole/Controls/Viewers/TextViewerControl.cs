@@ -155,6 +155,22 @@ public class TextViewerControl : Control
         }
     }
 
+    /// <summary>Selects the whole text, with the cursor at its end. Only an editor (a text cursor) selects.</summary>
+    public void SelectAll()
+    {
+        if (!_isCursorEnabled || TextModel.Lines.Count == 0)
+        {
+            return;
+        }
+
+        _selectionAnchor = (0, 0);
+        ScrollableModel.CursorPosition.Y = TextModel.Lines.Count - 1;
+        ScrollableModel.CursorPosition.X = TextModel.Lines[TextModel.Lines.Count - 1].Length;
+        UpdateSelectionModel();
+        KeepCursorInText();
+        StateHasChanged();
+    }
+
     protected void ClearSelection()
     {
         _selectionAnchor = null;

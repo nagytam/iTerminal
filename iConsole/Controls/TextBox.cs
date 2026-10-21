@@ -221,10 +221,130 @@ public class TextBox : Control, IReadOnly
         return true;
     }
 
+    private ITextClipboardService? _clipboard;
+
+    /// <summary>The clipboard Copy, Cut and Paste use: the application's (<see cref="TextClipboard.Current"/>) unless one is given.</summary>
+    public ITextClipboardService Clipboard
+    {
+        get => _clipboard ?? TextClipboard.Current;
+        set => _clipboard = value;
+    }
+
+    /// <summary>Whether a selection may be copied or cut out of the box. A password box says no.</summary>
+    protected virtual bool AllowsCopyOut => true;
+
+    /// <summary>Selects the whole value, with the cursor at its end.</summary>
+    public void SelectAll()
+    {
+        if (TextLength == 0)
+        {
+            return;
+        }
+
+        _selectionAnchor = 0;
+        ScrollableModel.CursorPosition.X = TextLength;
+        UpdateSelectionModel();
+        KeepCursorVisible();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Puts <paramref name="text"/> in the box at the cursor, in place of a selection. A one-line box has no line
+    /// breaks: each becomes a blank. Characters the box does not accept are dropped, and what would pass
+    /// <see cref="MaxLength"/> is cut off (with a beep, as typing would give).
+    /// </summary>
+    public void InsertText(string text)
+    {
+        if (IsReadOnly)
+        {
+            return;
+        }
+
+        var cleaned = new System.Text.StringBuilder();
+        foreach (var c in ClipboardKeys.NormalizeLineBreaks(text))
+        {
+            if (c == '\n')
+            {
+                cleaned.Append(' ');
+            }
+            else if (IsAllowedCharacter(c))
+            {
+                cleaned.Append(c);
+            }
+        }
+
+        if (cleaned.Length == 0)
+        {
+            return;
+        }
+
+        if (HasSelection)
+        {
+            DeleteSelection();
+        }
+
+        var room = (int)Math.Max(0, MaxLength - TextLength);
+        var insert = cleaned.Length > room ? cleaned.ToString(0, room) : cleaned.ToString();
+        if (insert.Length < cleaned.Length)
+        {
+            _beepService.Beep();
+        }
+
+        var position = (int)Math.Min(ScrollableModel.CursorPosition.X, TextLength);
+        Text = Text.Insert(position, insert);
+        ScrollableModel.CursorPosition.X = position + insert.Length;
+        KeepCursorVisible();
+        Parent?.Refresh();
+        StateHasChanged();
+    }
+
+    /// <summary>Copy, Cut, Paste and Select all, on the keys <see cref="ClipboardKeys"/> names. A key the box cannot act on is left alone.</summary>
+    private async Task<bool> HandleClipboardKeyAsync(KeyEvent keyEvent)
+    {
+        switch (ClipboardKeys.ActionFor(keyEvent))
+        {
+            case ClipboardKeyAction.SelectAll:
+                if (TextLength == 0)
+                {
+                    return false;
+                }
+
+                SelectAll();
+                return true;
+            case ClipboardKeyAction.Copy when HasSelection && AllowsCopyOut:
+                await ClipboardKeys.TrySetAsync(Clipboard, SelectedText);
+                return true;
+            case ClipboardKeyAction.Cut when HasSelection && AllowsCopyOut:
+                await ClipboardKeys.TrySetAsync(Clipboard, SelectedText);
+                if (!IsReadOnly)
+                {
+                    DeleteSelection();
+                }
+
+                return true;
+            case ClipboardKeyAction.Paste when !IsReadOnly:
+                var text = await ClipboardKeys.TryGetAsync(Clipboard);
+                if (string.IsNullOrEmpty(text))
+                {
+                    return false;
+                }
+
+                InsertText(text);
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         KeepCursorVisible();
         if (IsFocused && IsEnabled && HandleSelectionKey(keyEvent))
+        {
+            return true;
+        }
+
+        if (IsFocused && IsEnabled && await HandleClipboardKeyAsync(keyEvent))
         {
             return true;
         }

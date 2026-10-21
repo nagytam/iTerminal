@@ -1,4 +1,4 @@
-using iConsole.Interfaces;
+﻿using iConsole.Interfaces;
 using iConsole.Jobs;
 using iConsole.Test.Core.Automation;
 using iTerminal.Core.Application;
@@ -194,6 +194,7 @@ public sealed class TerminalApp : IAsyncDisposable
                 // running it had copied nor paste what they had — and no test ejects, formats or
                 // mounts anything of the machine it runs on.
                 services.AddSingleton<Core.Services.Clipboard.IFileClipboardService, Core.Services.Clipboard.InProcessFileClipboardService>();
+                services.AddSingleton<iConsole.Services.ITextClipboardService, iConsole.Services.InProcessTextClipboardService>();
                 services.AddSingleton<SandboxServices.DriveActions>();
                 services.AddSingleton<Core.Services.Drives.IDriveActionsService>(provider => provider.GetRequiredService<SandboxServices.DriveActions>());
                 services.AddSingleton<Core.Services.Mail.IMailService, SandboxServices.Mail>();

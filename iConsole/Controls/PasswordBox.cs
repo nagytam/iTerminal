@@ -1,4 +1,4 @@
-using iConsole.Services;
+﻿using iConsole.Services;
 
 namespace iConsole.Controls;
 
@@ -24,4 +24,7 @@ public class PasswordBox : TextBox
     protected override string DisplayText => new(MaskChar, Text.Length);
 
     protected override bool ShowsCompletion => false;
+
+    /// <summary>What is typed here is hidden, so it is not copied out either.</summary>
+    protected override bool AllowsCopyOut => false;
 }

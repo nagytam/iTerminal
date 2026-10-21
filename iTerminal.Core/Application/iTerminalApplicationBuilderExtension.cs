@@ -1,4 +1,4 @@
-using iConsole.Dialogs;
+﻿using iConsole.Dialogs;
 using iConsole.Interfaces;
 using iConsole.Jobs;
 using iConsole.Services;
@@ -349,6 +349,18 @@ public static class iTerminalApplicationBuilderExtension
             return new iTerminal.Core.Services.Clipboard.FallbackFileClipboardService(
                 system, new iTerminal.Core.Services.Clipboard.InProcessFileClipboardService());
         });
+        // The text clipboard of the text boxes and the editor (Ctrl+C/X/V/A, Ctrl+Insert, Shift+Delete/Insert); a hosted
+        // service hands it to the controls, which otherwise copy to an in-process one.
+        services.AddSingleton<iConsole.Services.ITextClipboardService>(provider =>
+        {
+            iConsole.Services.ITextClipboardService system = OperatingSystem.IsWindows()
+                ? new iTerminal.Core.Services.Clipboard.WindowsTextClipboardService()
+                : new iTerminal.Core.Services.Clipboard.ProcessTextClipboardService(
+                    provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>());
+            return new iTerminal.Core.Services.Clipboard.FallbackTextClipboardService(
+                system, new iConsole.Services.InProcessTextClipboardService());
+        });
+        services.AddHostedService<iTerminal.Core.Services.Clipboard.TextClipboardHostedService>();
         services.AddSingleton<iTerminal.Core.Services.Clipboard.FileClipboardOperations>();
         services.AddSingleton<ISettingsService, SettingsService>();
         // Where a local delete with the bin ticked goes on Linux: the freedesktop Trash, home or per-volume.
