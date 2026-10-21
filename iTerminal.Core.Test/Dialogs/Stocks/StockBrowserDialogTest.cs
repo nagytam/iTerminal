@@ -44,8 +44,34 @@ public class StockBrowserDialogTest
         return (dialog, service, provider);
     }
 
+    /// <summary>
+    /// Whether a render of the dialog shows no "…" price placeholder. The quotes arrive on a worker that is still
+    /// changing the lists it is drawn from, so a render that lands in the middle of an update throws; that is "not
+    /// yet", and the wait tries again.
+    /// </summary>
+    private static bool IsDrawnWithPrices(StockBrowserDialog dialog)
+    {
+        try
+        {
+            return !Render(dialog).Contains("…");
+        }
+        catch (InvalidOperationException)
+        {
+            return false;
+        }
+    }
+
+    /// <remarks>
+    /// Also waits for the drawn rows to lose their "…" price placeholder: the model's rows can all hold a quote
+    /// while the list box has still to redraw from them, and a test that rendered in that gap saw an unpriced list.
+    /// </remarks>
     private static Task QuotesLandedAsync(StockBrowserDialog dialog) =>
-        WaitUntilAsync(() => dialog.RowsForTest.Count > 0 && dialog.RowsForTest.All(r => r.Quote is not null) && dialog.StockRowsShownForTest == dialog.RowsForTest.Count, "every stock to be quoted and listed");
+        WaitUntilAsync(
+            () => dialog.RowsForTest.Count > 0
+                && dialog.RowsForTest.All(r => r.Quote is not null)
+                && dialog.StockRowsShownForTest == dialog.RowsForTest.Count
+                && IsDrawnWithPrices(dialog),
+            "every stock to be quoted, listed and drawn with its price");
 
     [TestMethod]
     public async Task ItListsTheDefaultStocksWithLivePrices()

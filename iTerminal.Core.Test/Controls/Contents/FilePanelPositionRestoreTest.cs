@@ -158,10 +158,12 @@ public class FilePanelPositionRestoreTest
         FilePanel panel = StartPanel(ContentModelService.Left);
         ContentModelFileSystem model = await LoadedModelAsync(panel);
 
-        // The listing streams in batches, so "more than the .. row" is not yet "row 20 exists".
+        // The listing streams in batches, so "more than the .. row" is not yet "row 20 exists" — and while it streams
+        // the rows are not yet in their final order, so the entry read from row 20 below could be another one by the
+        // time the folder is complete. The whole listing (.. and the 30 files) is waited for.
         Assert.IsTrue(
-            await SettlesOnAsync(() => model.FilteredEntries.Count > 20),
-            $"Precondition: row 20 must have loaded (have {model.FilteredEntries.Count})");
+            await SettlesOnAsync(() => model.FilteredEntries.Count >= 31),
+            $"Precondition: the whole folder must have loaded (have {model.FilteredEntries.Count})");
 
         model.CursorPosition.Y = 20;
         model.ScrollPosition.Y = 10;
@@ -227,10 +229,12 @@ public class FilePanelPositionRestoreTest
         FilePanel panel = StartPanel(ContentModelService.Left);
         ContentModelFileSystem model = await LoadedModelAsync(panel);
 
-        // The listing streams in batches, so "more than the .. row" is not yet "row 20 exists".
+        // The listing streams in batches, so "more than the .. row" is not yet "row 20 exists" — and while it streams
+        // the rows are not yet in their final order, so the entry read from row 20 below could be another one by the
+        // time the folder is complete. The whole listing (.. and the 30 files) is waited for.
         Assert.IsTrue(
-            await SettlesOnAsync(() => model.FilteredEntries.Count > 20),
-            $"Precondition: row 20 must have loaded (have {model.FilteredEntries.Count})");
+            await SettlesOnAsync(() => model.FilteredEntries.Count >= 31),
+            $"Precondition: the whole folder must have loaded (have {model.FilteredEntries.Count})");
 
         model.CursorPosition.Y = 20;
         var expectedEntry = model.FilteredEntries[20].Url.FullUrl;
