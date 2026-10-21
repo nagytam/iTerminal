@@ -52,11 +52,12 @@ public class ViewerStatusBar : StatusBar
 
     public override void OnInitializeLayout()
     {
-        if (Parent != null)
-        {
-            ViewSize = new Size(Parent.ViewSize.Width - 2, 1);
-        }
+        // The width the dialog gave the bar (or, before it has, the parent's interior). The base layout would
+        // replace it with the parent's full width, which put the last items on or past the dialog's border and let
+        // too many of them count as fitting.
+        var width = ViewSize.Width > 0 ? ViewSize.Width : Math.Max(0L, (Parent?.ViewSize.Width ?? 0) - 2);
         base.OnInitializeLayout();
+        ViewSize = new Size(width, 1);
 
         _findNextButton.ViewSize = new Size(13, 1);
         _findPreviousButton.ViewSize = new Size(18, 1);
