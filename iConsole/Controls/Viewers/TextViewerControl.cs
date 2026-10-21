@@ -83,6 +83,170 @@ public class TextViewerControl : Control
         ScrollableModel.ScrollToVisible();
     }
 
+    // ---- Selection (a text cursor only: the editor) ----
+
+    /// <summary>Where the selection began; it runs from here to the cursor. Null when nothing is selected.</summary>
+    private (long Row, long Column)? _selectionAnchor;
+
+    /// <summary>True while a Shift+movement key is being carried out as the plain movement, so it does not end the selection.</summary>
+    private bool _extendingSelection;
+
+    private (long Row, long Column) ClampedCursor()
+    {
+        if (TextModel.Lines.Count == 0)
+        {
+            return (0, 0);
+        }
+
+        var row = Math.Clamp(ScrollableModel.CursorPosition.Y, 0, TextModel.Lines.Count - 1);
+        return (row, Math.Clamp(ScrollableModel.CursorPosition.X, 0, TextModel.Lines[(int)row].Length));
+    }
+
+    private (long Row, long Column) ClampedAnchor()
+    {
+        var anchor = _selectionAnchor ?? ClampedCursor();
+        if (TextModel.Lines.Count == 0)
+        {
+            return (0, 0);
+        }
+
+        var row = Math.Clamp(anchor.Row, 0, TextModel.Lines.Count - 1);
+        return (row, Math.Clamp(anchor.Column, 0, TextModel.Lines[(int)row].Length));
+    }
+
+    /// <summary>Whether any text is selected.</summary>
+    public bool HasSelection => _selectionAnchor is not null && ClampedAnchor() != ClampedCursor();
+
+    /// <summary>The first and the last position of the selection, in reading order; the end is just past the last selected character.</summary>
+    public ((long Row, long Column) Start, (long Row, long Column) End) SelectionRange
+    {
+        get
+        {
+            var anchor = ClampedAnchor();
+            var cursor = ClampedCursor();
+            return anchor.CompareTo(cursor) <= 0 ? (anchor, cursor) : (cursor, anchor);
+        }
+    }
+
+    /// <summary>The selected text, lines joined with a line feed; empty when nothing is selected.</summary>
+    public string SelectedText
+    {
+        get
+        {
+            if (!HasSelection)
+            {
+                return string.Empty;
+            }
+
+            var ((startRow, startColumn), (endRow, endColumn)) = SelectionRange;
+            if (startRow == endRow)
+            {
+                return TextModel.Lines[(int)startRow][(int)startColumn..(int)endColumn];
+            }
+
+            var parts = new List<string> { TextModel.Lines[(int)startRow][(int)startColumn..] };
+            for (var row = startRow + 1; row < endRow; row++)
+            {
+                parts.Add(TextModel.Lines[(int)row]);
+            }
+
+            parts.Add(TextModel.Lines[(int)endRow][..(int)endColumn]);
+            return string.Join('\n', parts);
+        }
+    }
+
+    /// <summary>Selects the whole text, with the cursor at its end. Only an editor (a text cursor) selects.</summary>
+    public void SelectAll()
+    {
+        if (!_isCursorEnabled || TextModel.Lines.Count == 0)
+        {
+            return;
+        }
+
+        _selectionAnchor = (0, 0);
+        ScrollableModel.CursorPosition.Y = TextModel.Lines.Count - 1;
+        ScrollableModel.CursorPosition.X = TextModel.Lines[TextModel.Lines.Count - 1].Length;
+        UpdateSelectionModel();
+        KeepCursorInText();
+        StateHasChanged();
+    }
+
+    protected void ClearSelection()
+    {
+        _selectionAnchor = null;
+        SelectionTextModel.IsSelected = false;
+        SelectionTextModel.Start = null;
+        SelectionTextModel.End = null;
+    }
+
+    private void UpdateSelectionModel()
+    {
+        if (!HasSelection)
+        {
+            ClearSelection();
+            return;
+        }
+
+        var ((startRow, startColumn), (endRow, endColumn)) = SelectionRange;
+        SelectionTextModel.IsSelected = true;
+        SelectionTextModel.Start = new Position(startColumn, startRow);
+        SelectionTextModel.End = new Position(endColumn, endRow);
+    }
+
+    /// <summary>Removes the selected text and puts the cursor where it began. The editor calls this; the viewer has no cursor.</summary>
+    protected void RemoveSelectedText()
+    {
+        if (!HasSelection)
+        {
+            return;
+        }
+
+        var ((startRow, startColumn), (endRow, endColumn)) = SelectionRange;
+        var lines = TextModel.Lines;
+        lines[(int)startRow] = lines[(int)startRow][..(int)startColumn] + lines[(int)endRow][(int)endColumn..];
+        for (var row = endRow; row > startRow; row--)
+        {
+            lines.RemoveAt((int)row);
+        }
+
+        ClearSelection();
+        ScrollableModel.CursorPosition.Y = startRow;
+        ScrollableModel.CursorPosition.X = startColumn;
+        TextModel.TriggerPropertyChanged();
+        Refresh();
+        KeepCursorInText();
+    }
+
+    private static bool IsSelectionMovementKey(ConsoleKey key) => key is ConsoleKey.LeftArrow or ConsoleKey.RightArrow
+        or ConsoleKey.UpArrow or ConsoleKey.DownArrow or ConsoleKey.Home or ConsoleKey.End
+        or ConsoleKey.PageUp or ConsoleKey.PageDown;
+
+    /// <summary>Colours the part of row <paramref name="row"/> that is selected, in a line drawn from the scroll position on.</summary>
+    private void HighlightSelectedPart(ConxelString drawn, int row, int lineLength, ColorScheme colorScheme)
+    {
+        if (!HasSelection)
+        {
+            return;
+        }
+
+        var ((startRow, startColumn), (endRow, endColumn)) = SelectionRange;
+        if (row < startRow || row > endRow)
+        {
+            return;
+        }
+
+        // A row the selection runs on past takes one more cell, which stands for its line break.
+        var from = row == startRow ? startColumn : 0;
+        var to = row == endRow ? endColumn : lineLength + 1;
+        var scroll = ScrollableModel.ScrollPosition.X;
+        var start = (int)Math.Max(0, from - scroll);
+        var end = (int)(to - scroll);
+        if (end > start)
+        {
+            drawn.HighlightRange(start, end, colorScheme.SelectedFocusedForeground, colorScheme.SelectedFocusedBackground);
+        }
+    }
+
     /// <summary>
     /// In an editor, Left at the start of a line goes to the end of the one above, Right at the end of a line to the
     /// start of the next, and End goes to the end of the line the cursor is on (the scrolling command it replaces used
@@ -92,6 +256,42 @@ public class TextViewerControl : Control
     {
         // No IsFocused test: the editor never takes the focus itself (its dialog hands it the keys), and its own
         // commands act without it too.
+        if (_isCursorEnabled && IsEnabled && TextModel.Lines.Count > 0 && !_extendingSelection
+            && !keyEvent.Control && !keyEvent.Alt)
+        {
+            // Shift with a movement key moves as the plain key does, from an anchor, and the selection follows.
+            if (keyEvent.Shift && IsSelectionMovementKey(keyEvent.ConsoleKey))
+            {
+                _selectionAnchor ??= ClampedCursor();
+                _extendingSelection = true;
+                try
+                {
+                    await HandleKeyEventAsync(new KeyEvent(keyEvent.KeyChar, keyEvent.ConsoleKey, false, false, false));
+                }
+                finally
+                {
+                    _extendingSelection = false;
+                }
+
+                UpdateSelectionModel();
+                StateHasChanged();
+                return true;
+            }
+
+            // With a selection up, Left and Right collapse it to its start and its end.
+            if (!keyEvent.Shift && HasSelection && keyEvent.ConsoleKey is ConsoleKey.LeftArrow or ConsoleKey.RightArrow)
+            {
+                var (start, end) = SelectionRange;
+                var target = keyEvent.ConsoleKey == ConsoleKey.LeftArrow ? start : end;
+                ClearSelection();
+                ScrollableModel.CursorPosition.Y = target.Row;
+                ScrollableModel.CursorPosition.X = target.Column;
+                KeepCursorInText();
+                StateHasChanged();
+                return true;
+            }
+        }
+
         if (_isCursorEnabled && IsEnabled && TextModel.Lines.Count > 0
             && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
         {
@@ -120,6 +320,11 @@ public class TextViewerControl : Control
 
             if (handled)
             {
+                if (!_extendingSelection)
+                {
+                    ClearSelection();
+                }
+
                 KeepCursorInText();
                 StateHasChanged();
                 return true;
@@ -131,6 +336,12 @@ public class TextViewerControl : Control
         var result = await base.HandleKeyEventAsync(keyEvent);
         if (result)
         {
+            // Any key that acted other than by selecting ends the selection.
+            if (!_extendingSelection)
+            {
+                ClearSelection();
+            }
+
             KeepCursorInText();
         }
 
@@ -199,6 +410,7 @@ public class TextViewerControl : Control
         // (the last column and the last row) took their own clicks above.
         if (mouseEvent.LeftClicked && mouseEvent.WheelDelta == 0)
         {
+            ClearSelection();
             long column = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
             long row = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
             if (column >= ViewSize.Width - 1 || row >= ViewSize.Height - 1)
@@ -269,6 +481,7 @@ public class TextViewerControl : Control
                 var conxelLine = new ConxelString(line, foregroundColor, backgroundColor);
                 var highlightPositionX = (int)(positionX - ScrollableModel.ScrollPosition.X);
                 HighlightSearchResults(conxelLine, highlightPositionX, (int)indexY);
+                HighlightSelectedPart(conxelLine, (int)indexY, TextModel.Lines[(int)indexY].Length, colorScheme);
                 buffer.Write(
                     ZOrder,
                     new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + i)),

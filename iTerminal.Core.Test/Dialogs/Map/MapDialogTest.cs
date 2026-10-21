@@ -358,7 +358,10 @@ public class MapDialogTest
 
     private static async Task WaitUntil(Fixture f, Func<bool> condition)
     {
-        for (var i = 0; i < 300 && !condition(); i++)
+        // A deadline rather than a count of short sleeps: Task.Delay(10) takes 15 ms or far more on a busy machine, so
+        // 300 of them were sometimes only a couple of seconds, and the tile download behind this runs on the pool.
+        var deadline = DateTime.UtcNow.AddSeconds(30);
+        while (!condition() && DateTime.UtcNow < deadline)
         {
             f.Dialog.OnIdle();
             await Task.Delay(10);
