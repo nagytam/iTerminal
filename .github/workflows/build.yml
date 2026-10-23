@@ -94,8 +94,10 @@ jobs:
       - name: Restore
         run: dotnet restore iTerminal.slnx
 
+      # One project at a time: the installer project publishes the app with a nested dotnet
+      # publish, which compiles iConsole into the same obj folder as the build around it.
       - name: Build
-        run: dotnet build iTerminal.slnx -c Release --no-restore
+        run: dotnet build iTerminal.slnx -c Release --no-restore -m:1
 
       - name: Test (including end-to-end suite)
         run: >-
