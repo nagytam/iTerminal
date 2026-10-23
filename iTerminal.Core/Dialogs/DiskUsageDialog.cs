@@ -126,10 +126,22 @@ public class DiskUsageDialog : Dialog
 
     private void UpdateChart(List<DiskUsageNode> rows, bool visible)
     {
-        if (!visible || _current is null || _current.Size <= 0)
+        if (!visible || _current is null || (_current.Size <= 0 && !_current.Inaccessible))
         {
             _chart.IsVisible = false;
             _badge.IsVisible = false;
+            return;
+        }
+
+        // A folder that could not be read (so is empty as far as can be seen) has no chart to show, but its badge
+        // still says the picture is partial.
+        if (_current.Size <= 0)
+        {
+            _chart.IsVisible = false;
+            _badge.Text = "PARTIAL";
+            _badge.Kind = BadgeKind.Warning;
+            PlaceChart();
+            _badge.IsVisible = true;
             return;
         }
 

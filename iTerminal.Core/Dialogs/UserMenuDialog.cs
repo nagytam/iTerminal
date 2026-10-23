@@ -27,6 +27,7 @@ public class UserMenuDialog : Dialog
     private IReadOnlyList<UserMenuItem> _items = [];
     private UserMenuContext _context = new(string.Empty, string.Empty, string.Empty, []);
     private int _cursor;
+    private int _top;
 
     public UserMenuDialog(
         IUserMenuService menuService,
@@ -43,6 +44,8 @@ public class UserMenuDialog : Dialog
         AddControl(_lines);
     }
 
+    private string EmptyMessage => "  (no entries - F4 edits " + Path.GetFileName(_menuService.FilePath) + ")";
+
     /// <summary>The entries on offer, for a test.</summary>
     public IReadOnlyList<UserMenuItem> Items => _items;
 
@@ -58,6 +61,7 @@ public class UserMenuDialog : Dialog
         _context = context;
         _items = _menuService.GetItems(context.CurrentFile);
         _cursor = 0;
+        _top = 0;
         UpdateLines();
     }
 
@@ -66,7 +70,9 @@ public class UserMenuDialog : Dialog
         if (Parent is not null)
         {
             var rows = Math.Max(3, _items.Count + 1);
-            var width = Math.Max(40, _items.Select(i => i.Title.Length).DefaultIfEmpty(0).Max() + 12);
+            // Wide enough for the longest title — or, with no entries, for the message that says where to add some,
+            // which was cut off in a dialog sized for nothing.
+            var width = Math.Max(Math.Max(40, EmptyMessage.Length + 6), _items.Select(i => i.Title.Length).DefaultIfEmpty(0).Max() + 12);
             CenterInParent(new Size(
                 Math.Min(width, Math.Max(20, (int)Parent.ViewSize.Width - 4)),
                 Math.Min(rows + 4, Math.Max(6, (int)Parent.ViewSize.Height - 2))));
@@ -83,12 +89,24 @@ public class UserMenuDialog : Dialog
         var lines = new List<InfoLines.Line>();
         if (_items.Count == 0)
         {
-            lines.Add(new("  (no entries - F4 edits " + Path.GetFileName(_menuService.FilePath) + ")", null));
+            lines.Add(new(EmptyMessage, null));
         }
 
         var visible = Math.Max(1, (int)_lines.ViewSize.Height);
-        var first = Math.Clamp(_cursor - visible + 1, 0, Math.Max(0, _items.Count - visible));
-        for (var i = first; i < _items.Count && lines.Count < visible; i++)
+
+        // The window moves only when the cursor leaves it: it used to be placed so the cursor was on its last row, so
+        // every Up in a long menu scrolled the list a row instead of moving the cursor.
+        if (_cursor < _top)
+        {
+            _top = _cursor;
+        }
+        else if (_cursor >= _top + visible)
+        {
+            _top = _cursor - visible + 1;
+        }
+
+        _top = Math.Clamp(_top, 0, Math.Max(0, _items.Count - visible));
+        for (var i = _top; i < _items.Count && lines.Count < visible; i++)
         {
             var item = _items[i];
             var key = item.Hotkey == ' ' ? " " : item.Hotkey.ToString();
