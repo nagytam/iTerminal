@@ -321,6 +321,13 @@ public class ChecksumDialog : Dialog
             return true;
         }
 
+        // With nothing typed there is nothing for Enter to do in the box, so it dismisses the report.
+        if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift && Compare.Length == 0)
+        {
+            Close();
+            return true;
+        }
+
         var handled = await base.HandleKeyEventAsync(keyEvent);
         UpdateLines();
         return handled;

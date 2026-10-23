@@ -92,6 +92,8 @@ public class SecureWipeDialog : Dialog
         _current = string.Empty;
     }
 
+    private static readonly WipePattern[] Methods = [WipePattern.Random, WipePattern.ThreePass, WipePattern.SevenPass];
+
     public static string PatternName(WipePattern pattern) => pattern switch
     {
         WipePattern.ThreePass => "3 passes (zeros, ones, random)",
@@ -233,7 +235,7 @@ public class SecureWipeDialog : Dialog
             case WipePhase.Choosing:
                 lines.Add(default);
                 lines.Add(new($"Method  {PatternName(Pattern)}"));
-                lines.Add(new("        1: one pass   3: three   7: seven", colors.DisabledForeground));
+                lines.Add(new("        1: one pass   3: three   7: seven   (or ↑↓)", colors.DisabledForeground));
                 lines.Add(default);
                 // Short lines: the one-line form was 72 columns, and "undone." was cut off on 80.
                 lines.Add(new("The contents are overwritten and the names removed."));
@@ -319,10 +321,21 @@ public class SecureWipeDialog : Dialog
                 case ConsoleKey.D7 or ConsoleKey.NumPad7:
                     ChoosePattern(WipePattern.SevenPass);
                     return true;
+                case ConsoleKey.UpArrow or ConsoleKey.LeftArrow:
+                    ChoosePattern(Methods[Math.Max(0, Array.IndexOf(Methods, Pattern) - 1)]);
+                    return true;
+                case ConsoleKey.DownArrow or ConsoleKey.RightArrow:
+                    ChoosePattern(Methods[Math.Min(Methods.Length - 1, Array.IndexOf(Methods, Pattern) + 1)]);
+                    return true;
                 case ConsoleKey.Enter:
                     Arm();
                     return true;
             }
+        }
+        else if (Phase == WipePhase.Finished && plain && keyEvent.ConsoleKey == ConsoleKey.Enter)
+        {
+            Close();
+            return true;
         }
 
         var handled = await base.HandleKeyEventAsync(keyEvent);
@@ -343,7 +356,7 @@ public class SecureWipeDialog : Dialog
         var colorScheme = ThemeService.CurrentColorScheme;
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
         var width = (int)ViewSize.Width;
-        var footer = " Enter:wipe  1/3/7:passes  Esc:close ".FitHints(Math.Max(0, width - 4));
+        var footer = " Enter:wipe  1/3/7 or ↑↓:passes  Esc:close ".FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);

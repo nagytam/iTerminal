@@ -15,7 +15,7 @@ namespace iTerminal.Core.Dialogs;
 /// downloads the installer and starts it; elsewhere the dialog only says where the release is. S skips that
 /// release, Esc asks again at the next start.
 /// </summary>
-public class UpdateDialog : FormDialog
+public partial class UpdateDialog : FormDialog
 {
     private const int PreferredWidth = 74;
     private const int LogRows = 3;
@@ -176,6 +176,59 @@ public class UpdateDialog : FormDialog
 
     internal string Hint => _service.IsBusy ? "Working..." : string.Empty;
 
+    /// <summary>How far the download is, read from the service's log: a fraction from 0 to 1 and the words that go beside the bar.</summary>
+    internal readonly record struct UpdateProgress(double Fraction, string Label);
+
+    /// <summary>
+    /// The newest progress the log reports. The download says "Downloading name: 12.3 of 29.2 MB" as it goes, then
+    /// "Downloaded name (29.2 MB, checksum verified)", then that the installer is starting; the last two mean it is
+    /// all there. A download of unknown size, or no download yet, has no fraction: null.
+    /// </summary>
+    internal static UpdateProgress? ParseProgress(IReadOnlyList<string> log)
+    {
+        for (int i = log.Count - 1; i >= 0; i--)
+        {
+            string line = log[i];
+            if (line.StartsWith("Starting the installer", StringComparison.Ordinal) || line.StartsWith("Downloaded ", StringComparison.Ordinal))
+            {
+                return new UpdateProgress(1, "download complete");
+            }
+
+            System.Text.RegularExpressions.Match match = DownloadLine().Match(line);
+            if (match.Success
+                && double.TryParse(match.Groups[1].Value.Replace(',', '.'), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double received)
+                && double.TryParse(match.Groups[2].Value.Replace(',', '.'), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double total)
+                && total > 0)
+            {
+                return new UpdateProgress(Math.Clamp(received / total, 0, 1), $"{match.Groups[1].Value} of {match.Groups[2].Value} MB");
+            }
+
+            if (line.StartsWith("The update could not be installed", StringComparison.Ordinal))
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"^Downloading .*: ([0-9][0-9.,]*) of ([0-9][0-9.,]*) MB$")]
+    private static partial System.Text.RegularExpressions.Regex DownloadLine();
+
+    /// <summary>The bar row: <c>[██████░░░░]  42%  12.3 of 29.2 MB</c>, cut to fit <paramref name="width"/>.</summary>
+    internal static (string Filled, string Empty, string Tail) ProgressBar(UpdateProgress progress, int width)
+    {
+        string tail = $"  {(int)Math.Round(progress.Fraction * 100),3}%  {progress.Label}";
+        int barWidth = Math.Clamp(width - tail.Length - 2, 0, 30);
+        if (barWidth < 4)
+        {
+            return (string.Empty, string.Empty, $"{(int)Math.Round(progress.Fraction * 100)}%".Cut(width));
+        }
+
+        int filled = (int)Math.Round(progress.Fraction * barWidth);
+        return ("[" + new string('█', filled), new string('░', barWidth - filled) + "]", tail);
+    }
+
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
@@ -193,8 +246,27 @@ public class UpdateDialog : FormDialog
             WriteRow(buffer, colorScheme, innerWidth, i + 1, rows[i].Text, rows[i].Color);
         }
 
+        int hintRow = (int)ViewSize.Height - 3;
+        UpdateProgress? progress = _service.IsBusy ? ParseProgress(_service.Log) : null;
+        if (progress is { } known)
+        {
+            (string filled, string empty, string tail) = ProgressBar(known, innerWidth);
+            WriteRow(buffer, colorScheme, innerWidth, hintRow, string.Empty, colorScheme.Foreground);
+            long x = AbsolutePosition.X + 1;
+            foreach ((string text, Color color) in new[] { (filled, Color.Green), (empty, colorScheme.DisabledForeground), (tail, colorScheme.Foreground) })
+            {
+                if (text.Length > 0)
+                {
+                    buffer.Write(ZOrder, new Position(x, AbsolutePosition.Y + hintRow), new Size(text.Length, 1), new ConxelString(text, color, colorScheme.Background));
+                    x += text.Length;
+                }
+            }
+
+            return;
+        }
+
         string hint = Hint.Length <= innerWidth ? Hint : Hint.Cut(innerWidth);
-        WriteRow(buffer, colorScheme, innerWidth, (int)ViewSize.Height - 3, hint, colorScheme.DisabledForeground);
+        WriteRow(buffer, colorScheme, innerWidth, hintRow, hint, colorScheme.DisabledForeground);
     }
 
     private void WriteRow(IBuffer buffer, ColorScheme colorScheme, int innerWidth, int row, string text, Color color)

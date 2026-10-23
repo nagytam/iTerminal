@@ -71,6 +71,8 @@ public class RenameDialog : FormDialog
     private Label _errorLabel { get; set; }
     public Label ErrorMessage => _errorLabel;
 
+    protected override void ClearError() => _errorLabel.Text = string.Empty;
+
     public RenameDialog(
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,

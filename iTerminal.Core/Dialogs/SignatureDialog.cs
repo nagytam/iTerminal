@@ -313,6 +313,10 @@ public class SignatureDialog : Dialog
                 case ConsoleKey.F5:
                     StartVerifying();
                     break;
+                case ConsoleKey.Enter when _busy.Length == 0:
+                    // A report with nothing to type: Enter dismisses it, as it does a message box.
+                    Close();
+                    return true;
                 default:
                     handled = false;
                     break;

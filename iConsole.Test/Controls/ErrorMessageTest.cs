@@ -175,4 +175,59 @@ public class ErrorMessageTest
 
         Assert.AreEqual("Error: Not a valid name or path.", errorMessage.Text);
     }
+
+    [TestMethod]
+    public void AMessageSetByTheCaller_ShowsWhenValidationHasNone_AndCanBeWithdrawn()
+    {
+        var mockThemeService = new Mock<IThemeService>();
+        mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
+        var mockValidationModel = new Mock<IValidationModel>();
+        mockValidationModel.Setup(m => m.ErrorMessage).Returns("");
+        var errorMessage = new ErrorMessage(mockValidationModel.Object, mockThemeService.Object);
+
+        errorMessage.Text = "The disk is full.";
+        Assert.AreEqual("Error: The disk is full.", errorMessage.Text);
+
+        errorMessage.Text = "";
+        Assert.AreEqual("", errorMessage.Text);
+
+        errorMessage.Text = null!;
+        Assert.AreEqual("", errorMessage.Text);
+    }
+
+    [TestMethod]
+    public void ValidationsOwnMessage_WinsOverOneSetByTheCaller()
+    {
+        var mockThemeService = new Mock<IThemeService>();
+        mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
+        var mockValidationModel = new Mock<IValidationModel>();
+        mockValidationModel.Setup(m => m.ErrorMessage).Returns("Name is taken");
+        var errorMessage = new ErrorMessage(mockValidationModel.Object, mockThemeService.Object);
+
+        errorMessage.Text = "The disk is full.";
+
+        Assert.AreEqual("Error: Name is taken", errorMessage.Text);
+        mockValidationModel.Setup(m => m.ErrorMessage).Returns("");
+        Assert.AreEqual("Error: The disk is full.", errorMessage.Text);
+    }
+
+    [TestMethod]
+    public void AMessageSetByTheCaller_IsDrawn()
+    {
+        var mockThemeService = new Mock<IThemeService>();
+        mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
+        var mockValidationModel = new Mock<IValidationModel>();
+        mockValidationModel.Setup(m => m.ErrorMessage).Returns("");
+        var buffer = new MockBuffer(new Size(40, 1));
+        var errorMessage = new ErrorMessage(mockValidationModel.Object, mockThemeService.Object)
+        {
+            Position = new Position(0, 0),
+            ViewSize = new Size(40, 1),
+        };
+        errorMessage.Text = "Access denied";
+
+        errorMessage.Draw(buffer);
+
+        Assert.IsTrue(buffer.ContentAsString.Contains("Error: Access denied"));
+    }
 }
