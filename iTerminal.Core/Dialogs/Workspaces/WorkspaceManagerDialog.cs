@@ -74,6 +74,7 @@ public class WorkspaceManagerDialog : Dialog
     }
 
     /// <summary>The names in the list, in order. Exposed for tests.</summary>
+    internal int CursorForTest => _cursor;
     internal IReadOnlyList<string> NamesForTest => [.. _list.Select(w => w.Name)];
 
     /// <summary>The name the cursor is on. Exposed for tests.</summary>
@@ -327,6 +328,35 @@ public class WorkspaceManagerDialog : Dialog
 
         SetStatus(string.Empty, false);
         return true;
+    }
+
+    /// <summary>
+    /// The wheel moves the highlight three workspaces; a click highlights the one under the pointer (Enter switches to
+    /// it). Only the list answers, and not while a question or a name is being asked.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (_mode == Mode.List && _pending == Pending.None && _list.Count > 0)
+        {
+            if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+            {
+                return MoveCursor(mouseEvent.WheelDelta > 0 ? -3 : 3);
+            }
+
+            if (mouseEvent.LeftClicked)
+            {
+                long row = mouseEvent.Position.Y - (AbsolutePosition.Y + 3);
+                long column = mouseEvent.Position.X - (AbsolutePosition.X + 2);
+                int rows = ListRows;
+                int first = _cursor >= rows ? _cursor - rows + 1 : 0;
+                if (row >= 0 && row < rows && column >= 0 && column < ViewSize.Width - 4 && first + (int)row < _list.Count)
+                {
+                    return MoveCursor(first + (int)row - _cursor);
+                }
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
     }
 
     private bool MoveCursor(int delta)

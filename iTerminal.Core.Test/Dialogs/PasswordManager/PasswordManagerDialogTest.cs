@@ -194,4 +194,66 @@ public class PasswordManagerDialogTest
         Assert.AreEqual("pw", dialog.FieldForTest("Password"));
         Assert.AreEqual(string.Empty, dialog.FieldForTest("Title"));
     }
+
+    // The list starts after the border, the heading and the column header: three rows down, two columns in.
+    private static iConsole.Data.MouseEvent At(iConsole.Controls.Control dialog, int row, int column = 8, int wheel = 0, bool click = true) => new()
+    {
+        Position = new iConsole.Data.Position(dialog.AbsolutePosition.X + 2 + column, dialog.AbsolutePosition.Y + 3 + row),
+        LeftClicked = click && wheel == 0,
+        WheelDelta = wheel,
+    };
+
+    private static async Task<(PasswordManagerDialog Dialog, iTerminal.Core.Services.PasswordManager Manager)> OpenWithAsync(int count)
+    {
+        var manager = NewManager();
+        manager.Unlock();
+        for (int i = 0; i < count; i++)
+        {
+            manager.Save(new PasswordEntry { Id = "p" + i, Title = "Entry " + i.ToString("00"), Password = "x" });
+        }
+
+        var dialog = new PasswordManagerDialog(manager, TestTheme());
+        await ShowAsync(dialog);
+        return (dialog, manager);
+    }
+
+    [TestMethod]
+    public async Task AClickHighlightsAnEntry_AndTheWheelMovesThreeAtATime()
+    {
+        var (dialog, _) = await OpenWithAsync(10);
+        int start = dialog.CursorForTest;
+
+        Assert.IsTrue(await dialog.HandleMouseEventAsync(At(dialog, 4)));
+        Assert.AreEqual(4, dialog.CursorForTest);
+
+        await dialog.HandleMouseEventAsync(At(dialog, 0, wheel: -1));
+        Assert.AreEqual(7, dialog.CursorForTest);
+        await dialog.HandleMouseEventAsync(At(dialog, 0, wheel: 1));
+        Assert.AreEqual(4, dialog.CursorForTest);
+        Assert.AreNotEqual(start, dialog.CursorForTest);
+    }
+
+    [TestMethod]
+    public async Task AClickBelowTheLastEntryOrOutsideTheDialogDoesNothing()
+    {
+        var (dialog, _) = await OpenWithAsync(3);
+
+        await dialog.HandleMouseEventAsync(At(dialog, 9));
+        Assert.IsFalse(await dialog.HandleMouseEventAsync(new iConsole.Data.MouseEvent { Position = new iConsole.Data.Position(0, 0), WheelDelta = -1 }));
+
+        Assert.AreEqual(0, dialog.CursorForTest);
+    }
+
+    [TestMethod]
+    public async Task TheMouseLeavesTheListAloneWhileDeletionIsAsked()
+    {
+        var (dialog, manager) = await OpenWithAsync(5);
+        await dialog.HandleKeyEventAsync(Char('d'));
+
+        await dialog.HandleMouseEventAsync(At(dialog, 3));
+        Assert.AreEqual(0, dialog.CursorForTest);
+        await dialog.HandleKeyEventAsync(Char('y'));
+
+        Assert.AreEqual(4, manager.List().Count);
+    }
 }

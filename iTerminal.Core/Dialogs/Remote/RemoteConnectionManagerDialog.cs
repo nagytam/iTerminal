@@ -322,6 +322,34 @@ public class RemoteConnectionManagerDialog : Dialog
         _selectedId = _list.ElementAtOrDefault(_cursor)?.Id;
     }
 
+    /// <summary>
+    /// The wheel moves the highlight three connections; a click highlights the one under the pointer. Only the list
+    /// answers, and not while "delete?" is on screen.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (_mode == Mode.List && !_confirmDelete && _list.Count > 0)
+        {
+            if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+            {
+                return MoveCursor(mouseEvent.WheelDelta > 0 ? -3 : 3);
+            }
+
+            if (mouseEvent.LeftClicked)
+            {
+                long row = mouseEvent.Position.Y - (AbsolutePosition.Y + 3);
+                long column = mouseEvent.Position.X - (AbsolutePosition.X + 2);
+                int first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
+                if (row >= 0 && row < ListRows && column >= 0 && column < ViewSize.Width - 4 && first + (int)row < _list.Count)
+                {
+                    return MoveCursor(first + (int)row - _cursor);
+                }
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
     private bool MoveCursor(int delta)
     {
         _confirmDelete = false;
@@ -677,6 +705,7 @@ public class RemoteConnectionManagerDialog : Dialog
 
     internal string ModeForTest { get { lock (_sync) return _mode.ToString(); } }
     internal string StatusForTest { get { lock (_sync) return _status; } }
+    internal int CursorForTest { get { lock (_sync) return _cursor; } }
     internal int ListCountForTest { get { lock (_sync) return _list.Count; } }
 
     #endregion
