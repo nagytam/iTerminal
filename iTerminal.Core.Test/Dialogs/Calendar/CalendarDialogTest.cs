@@ -1,3 +1,4 @@
+using iConsole.Data;
 using iConsole.Services;
 using iTerminal.Core.Dialogs.Calendar;
 using iTerminal.Core.Model.Calendar;
@@ -161,8 +162,166 @@ public class CalendarDialogTest
 
         await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow, shift: false, alt: true));
         await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Delete));
+        Assert.AreEqual(2, fixture.Meetings.On(day).Count, "Delete only asks");
+        AssertScreenContains(Render(fixture.Dialog), "Delete \"Remove\"? (y/n)");
+        await fixture.Dialog.HandleKeyEventAsync(Char('y'));
 
         CollectionAssert.AreEqual(new[] { "Keep" }, fixture.Meetings.On(day).Select(m => m.Title).ToArray());
+    }
+
+    [TestMethod]
+    public async Task AnyKeyButYWithdrawsTheDeletion()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+        var day = new DateOnly(2026, 10, 14);
+        fixture.Meetings.Add(new Meeting(day, new TimeOnly(9, 0), 30, "Keep"));
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('d'));
+        Assert.IsTrue(fixture.Dialog.ConfirmingDeleteForTest);
+        await fixture.Dialog.HandleKeyEventAsync(Char('n'));
+        Assert.IsFalse(fixture.Dialog.ConfirmingDeleteForTest);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('d'));
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
+        Assert.AreEqual(1, fixture.Meetings.On(day).Count);
+    }
+
+    [TestMethod]
+    public async Task DeleteOnADayWithoutMeetingsAsksNothing()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Delete));
+
+        Assert.IsFalse(fixture.Dialog.ConfirmingDeleteForTest);
+    }
+
+    [TestMethod]
+    public async Task EPutsTheHighlightedMeetingInTheEntryLine_AndEnterReplacesIt()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+        var day = new DateOnly(2026, 10, 14);
+        fixture.Meetings.Add(new Meeting(day, new TimeOnly(9, 30), 45, "Standup"));
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('e'));
+        Assert.AreEqual("09:30 45 Standup", fixture.Dialog.EntryForTest);
+        AssertScreenContains(Render(fixture.Dialog), "Change meeting: 09:30 45 Standup");
+        for (int i = 0; i < "Standup".Length; i++)
+        {
+            await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Backspace));
+        }
+
+        await TypeAsync(fixture.Dialog, "Retro");
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        var meetings = fixture.Meetings.On(day);
+        Assert.AreEqual(1, meetings.Count);
+        Assert.AreEqual("Retro", meetings[0].Title);
+        Assert.AreEqual(45, meetings[0].DurationMinutes);
+        Assert.IsNull(fixture.Dialog.EntryForTest);
+    }
+
+    [TestMethod]
+    public async Task ARefusedChange_LosesNothing_AndEscapeKeepsTheOriginal()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+        var day = new DateOnly(2026, 10, 14);
+        fixture.Meetings.Add(new Meeting(day, new TimeOnly(9, 30), 45, "Standup"));
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F2));
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Home));
+        for (int i = 0; i < 40; i++)
+        {
+            await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Backspace));
+        }
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+        Assert.IsNotNull(fixture.Dialog.EntryErrorForTest);
+        Assert.AreEqual("Standup", fixture.Meetings.On(day).Single().Title);
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
+        Assert.IsNull(fixture.Dialog.EntryForTest);
+        Assert.AreEqual("Standup", fixture.Meetings.On(day).Single().Title);
+        await fixture.Dialog.HandleKeyEventAsync(Char('n'));
+        AssertScreenContains(Render(fixture.Dialog), "New meeting:");
+    }
+
+    [TestMethod]
+    public async Task EWithNoMeetingDoesNothing()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('e'));
+
+        Assert.IsNull(fixture.Dialog.EntryForTest);
+    }
+
+    // The meetings list starts 15 rows into the dialog (border + 14).
+    private static MouseEvent AtMeeting(CalendarDialog dialog, int row, int wheel = 0, bool click = true) => new()
+    {
+        Position = new iConsole.Data.Position(dialog.AbsolutePosition.X + 6, dialog.AbsolutePosition.Y + 15 + row),
+        LeftClicked = click && wheel == 0,
+        WheelDelta = wheel,
+    };
+
+    private static void AddThree(Fixture fixture)
+    {
+        var day = new DateOnly(2026, 10, 14);
+        fixture.Meetings.Add(new Meeting(day, new TimeOnly(9, 0), 30, "One"));
+        fixture.Meetings.Add(new Meeting(day, new TimeOnly(10, 0), 30, "Two"));
+        fixture.Meetings.Add(new Meeting(day, new TimeOnly(11, 0), 30, "Three"));
+    }
+
+    [TestMethod]
+    public async Task AClickOnAMeetingHighlightsIt()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+        AddThree(fixture);
+
+        Assert.IsTrue(await fixture.Dialog.HandleMouseEventAsync(AtMeeting(fixture.Dialog, 2)));
+
+        Assert.AreEqual(2, fixture.Dialog.MeetingCursorForTest);
+        await fixture.Dialog.HandleMouseEventAsync(AtMeeting(fixture.Dialog, 3));
+        Assert.AreEqual(2, fixture.Dialog.MeetingCursorForTest, "a click below the last meeting changes nothing");
+    }
+
+    [TestMethod]
+    public async Task TheWheelOverTheMeetingsMovesTheHighlight_AndStopsAtTheEnds()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+        AddThree(fixture);
+
+        await fixture.Dialog.HandleMouseEventAsync(AtMeeting(fixture.Dialog, 0, wheel: -1));
+        await fixture.Dialog.HandleMouseEventAsync(AtMeeting(fixture.Dialog, 0, wheel: -1));
+        await fixture.Dialog.HandleMouseEventAsync(AtMeeting(fixture.Dialog, 0, wheel: -1));
+        Assert.AreEqual(2, fixture.Dialog.MeetingCursorForTest);
+
+        await fixture.Dialog.HandleMouseEventAsync(AtMeeting(fixture.Dialog, 0, wheel: 1));
+        Assert.AreEqual(1, fixture.Dialog.MeetingCursorForTest);
+    }
+
+    [TestMethod]
+    public async Task TheMouseLeavesTheMeetingsAloneWhileTypingOrAsking()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+        AddThree(fixture);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('n'));
+        await fixture.Dialog.HandleMouseEventAsync(AtMeeting(fixture.Dialog, 2));
+        Assert.AreEqual(0, fixture.Dialog.MeetingCursorForTest);
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('d'));
+        await fixture.Dialog.HandleMouseEventAsync(AtMeeting(fixture.Dialog, 2));
+        Assert.AreEqual(0, fixture.Dialog.MeetingCursorForTest);
     }
 
     [TestMethod]

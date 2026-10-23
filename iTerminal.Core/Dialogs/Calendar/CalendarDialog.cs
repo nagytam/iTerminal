@@ -32,6 +32,12 @@ public class CalendarDialog : Dialog
     private string? _entry;
     private string? _entryError;
 
+    /// <summary>The meeting the entry line is changing, or null when it is typing a new one.</summary>
+    private Meeting? _editing;
+
+    /// <summary>True while "Delete this meeting? (y/n)" is up: the next key answers it.</summary>
+    private bool _confirmingDelete;
+
     /// <summary>The highlighted meeting in the selected day's list.</summary>
     private int _meetingCursor;
     private DateOnly _cursorDate;
@@ -79,6 +85,8 @@ public class CalendarDialog : Dialog
         _calendar.Reset(Today());
         _entry = null;
         _entryError = null;
+        _editing = null;
+        _confirmingDelete = false;
         SyncCursorToSelectedDate();
         await base.ShowAsync();
     }
@@ -103,6 +111,21 @@ public class CalendarDialog : Dialog
         {
             return HandleEntryKey(keyEvent);
         }
+
+        if (_confirmingDelete && keyEvent.ConsoleKey != ConsoleKey.Escape)
+        {
+            // Any key but y withdraws the question; Esc is the dialog's own and leaves it as it closes.
+            _confirmingDelete = false;
+            if (keyEvent.ConsoleKey == ConsoleKey.Y && !keyEvent.Control && !keyEvent.Alt)
+            {
+                DeleteHighlightedMeeting();
+            }
+
+            StateHasChanged();
+            return true;
+        }
+
+        _confirmingDelete = false;
 
         var plain = !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift;
         var alt = keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift;
@@ -138,7 +161,10 @@ public class CalendarDialog : Dialog
                 OpenEntry();
                 return true;
             case ConsoleKey.Delete when plain:
-                DeleteHighlightedMeeting();
+                AskToDelete();
+                return true;
+            case ConsoleKey.F2 when plain:
+                EditHighlightedMeeting();
                 return true;
         }
 
@@ -150,7 +176,13 @@ public class CalendarDialog : Dialog
 
         if (plain && char.ToLowerInvariant(keyEvent.KeyChar) == 'd')
         {
-            DeleteHighlightedMeeting();
+            AskToDelete();
+            return true;
+        }
+
+        if (plain && char.ToLowerInvariant(keyEvent.KeyChar) == 'e')
+        {
+            EditHighlightedMeeting();
             return true;
         }
 
@@ -168,6 +200,7 @@ public class CalendarDialog : Dialog
             case ConsoleKey.Escape:
                 _entry = null;
                 _entryError = null;
+                _editing = null;
                 break;
             case ConsoleKey.Enter:
                 CommitEntry();
@@ -202,6 +235,13 @@ public class CalendarDialog : Dialog
         var date = _calendar.SelectedDate;
         if (Meeting.TryParse(_entry!, date, out var meeting, out var error) && meeting is not null)
         {
+            // Changing a meeting is removing the old one as the new one goes in, so a refused line loses nothing.
+            if (_editing is not null)
+            {
+                _meetings.Remove(_editing);
+                _editing = null;
+            }
+
             _meetings.Add(meeting);
             _entry = null;
             _entryError = null;
@@ -212,6 +252,72 @@ public class CalendarDialog : Dialog
         {
             _entryError = error;
         }
+    }
+
+    /// <summary>E or F2: the highlighted meeting goes into the entry line as it would be typed, to be changed.</summary>
+    private void EditHighlightedMeeting()
+    {
+        var list = _meetings.On(_calendar.SelectedDate);
+        if (_meetingCursor < 0 || _meetingCursor >= list.Count)
+        {
+            return;
+        }
+
+        var meeting = list[_meetingCursor];
+        _editing = meeting;
+        _entry = $"{meeting.Start:HH\\:mm} {meeting.DurationMinutes} {meeting.Title}";
+        _entryError = null;
+        StateHasChanged();
+    }
+
+    private void AskToDelete()
+    {
+        var list = _meetings.On(_calendar.SelectedDate);
+        if (_meetingCursor >= 0 && _meetingCursor < list.Count)
+        {
+            _confirmingDelete = true;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// The wheel over the meetings moves the highlight; a click on one highlights it. Nothing answers while a meeting
+    /// is being typed or a deletion asked. Over the month grid the grid's own wheel and clicks apply.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (_entry is null && !_confirmingDelete && IsOverMeetings(mouseEvent.Position))
+        {
+            if (mouseEvent.WheelDelta != 0)
+            {
+                return MoveMeetingCursor(mouseEvent.WheelDelta > 0 ? -1 : 1);
+            }
+
+            if (mouseEvent.LeftClicked)
+            {
+                int row = (int)(mouseEvent.Position.Y - (AbsolutePosition.Y + 1 + MeetingFirstRow));
+                int first = _meetingCursor >= MeetingRows ? _meetingCursor - MeetingRows + 1 : 0;
+                var count = _meetings.On(_calendar.SelectedDate).Count;
+                int index = first + row;
+                if (index < count)
+                {
+                    _meetingCursor = index;
+                    StateHasChanged();
+                    return true;
+                }
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
+    private const int MeetingFirstRow = 14;
+
+    private bool IsOverMeetings(Position position)
+    {
+        long row = position.Y - (AbsolutePosition.Y + 1 + MeetingFirstRow);
+        long column = position.X - (AbsolutePosition.X + 1);
+        return row >= 0 && row < MeetingRows && column >= 0 && column < ViewSize.Width - 2;
     }
 
     private void DeleteHighlightedMeeting()
@@ -350,9 +456,13 @@ public class CalendarDialog : Dialog
             Put(buffer, 1, y, iw - 2, text, foreground, background);
         }
 
-        if (_entry is not null)
+        if (_confirmingDelete && _meetingCursor < list.Count)
         {
-            Put(buffer, 1, 18, iw - 2, $"New meeting: {_entry}_", colorScheme.SelectedFocusedForeground, colorScheme.Background);
+            Put(buffer, 1, 18, iw - 2, $"Delete \"{list[_meetingCursor].Title}\"? (y/n)", colorScheme.Error, colorScheme.Background);
+        }
+        else if (_entry is not null)
+        {
+            Put(buffer, 1, 18, iw - 2, $"{(_editing is null ? "New" : "Change")} meeting: {_entry}_", colorScheme.SelectedFocusedForeground, colorScheme.Background);
             if (_entryError is not null)
             {
                 Put(buffer, 1, 19, iw - 2, _entryError, colorScheme.Error, colorScheme.Background);
@@ -368,7 +478,7 @@ public class CalendarDialog : Dialog
     {
         var first = ih - 2;
         Put(buffer, 1, first, iw - 2, "Arrows day/week  PgUp/PgDn month  Ctrl+PgUp/PgDn year", colorScheme.Foreground, colorScheme.Background);
-        Put(buffer, 1, first + 1, iw - 2, "Home today  N add  Alt+Up/Down choose  D remove  Esc close", colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, first + 1, iw - 2, "Home today  N add  E change  Alt+Up/Down choose  D remove  Esc close", colorScheme.Foreground, colorScheme.Background);
     }
 
     private void Put(IBuffer buffer, int x, int y, int width, string text, Color foreground, Color background)
@@ -394,6 +504,7 @@ public class CalendarDialog : Dialog
     internal CalendarModel CalendarForTest => _calendar;
     internal iConsole.Controls.Calendar GridForTest => _grid;
     internal string? EntryForTest => _entry;
+    internal bool ConfirmingDeleteForTest => _confirmingDelete;
     internal string? EntryErrorForTest => _entryError;
     internal int MeetingCursorForTest => _meetingCursor;
 

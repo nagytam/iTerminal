@@ -226,4 +226,27 @@ public class DuplicateFinderDialogTest
         Assert.AreEqual(cursor, dialog.Selected!.Path);
         Assert.IsTrue(dialog.IsConfirmingDelete);
     }
+
+    [TestMethod]
+    public async Task EnterGoesToTheFilesFolderInThePanel_AsGDoes_AndClosesTheDialog()
+    {
+        var panels = new Mock<IContentModelService>();
+        var fileSystem = new Mock<IFileSystemService>();
+        var dialog = new DuplicateFinderDialog(new DuplicateFinderService(), TestTheme(), panels.Object, fileSystem.Object);
+        dialog.Load(_root, "LeftPanel");
+        await ShowAsync(dialog);
+        await dialog.Scan!.Completion;
+        await WaitUntilAsync(() =>
+        {
+            dialog.OnIdle();
+            return dialog.Groups.Count > 0;
+        }, "the groups to be listed");
+        string folder = dialog.Selected!.Folder;
+        AssertScreenContains(Render(dialog), "Enter or g:go to");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        panels.Verify(p => p.SetUrlAsync("LeftPanel", It.Is<Url>(u => u.FullName.TrimEnd(Path.DirectorySeparatorChar) == folder.TrimEnd(Path.DirectorySeparatorChar))), Times.Once);
+        Assert.IsFalse(dialog.IsVisible);
+    }
 }

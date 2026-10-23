@@ -259,11 +259,21 @@ public class RuntimeDependencyDialog : Dialog
                 : ($"  {status.Note}", scheme.DisabledForeground));
         }
 
-        // The separator row doubles as the busy indicator: a sweeping block while an install runs.
-        rows.Add(_service.IsBusy
-            ? (ProgressBar.BuildIndeterminateBar(Math.Max(1, Math.Min(innerWidth, 40)), (int)(Environment.TickCount64 / 90)), Color.DarkYellow)
-            : (string.Empty, scheme.Foreground));
+        // The separator row doubles as the busy indicator: a real bar once a download says how far it is
+        // (the same "Downloading name: 12.3 of 29.2 MB" lines the update dialog reads), else a sweeping block.
         IReadOnlyList<string> log = _service.Log;
+        if (_service.IsBusy && UpdateDialog.ParseProgress(log) is { } progress)
+        {
+            (string filled, string empty, string tail) = UpdateDialog.ProgressBar(progress, innerWidth);
+            rows.Add((filled + empty + tail, Color.DarkYellow));
+        }
+        else
+        {
+            rows.Add(_service.IsBusy
+                ? (ProgressBar.BuildIndeterminateBar(Math.Max(1, Math.Min(innerWidth, 40)), (int)(Environment.TickCount64 / 90)), Color.DarkYellow)
+                : (string.Empty, scheme.Foreground));
+        }
+
         for (int i = Math.Max(0, log.Count - LogRows); i < log.Count; i++)
         {
             rows.Add((log[i], scheme.DisabledForeground));

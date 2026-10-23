@@ -36,6 +36,9 @@ public class ToDoListDialog : Dialog
     private string? _entry;
     private string? _entryError;
 
+    /// <summary>The task the entry line is changing, or null when it is typing a new one.</summary>
+    private ToDoTask? _editing;
+
     /// <summary>True while "Delete this task? (y/n)" is up: the next key answers it.</summary>
     private bool _confirmingDelete;
 
@@ -56,6 +59,7 @@ public class ToDoListDialog : Dialog
         _today = Today();
         _entry = null;
         _entryError = null;
+        _editing = null;
         _confirmingDelete = false;
         await base.ShowAsync();
     }
@@ -128,6 +132,9 @@ public class ToDoListDialog : Dialog
             case ConsoleKey.Delete when plain:
                 AskToDelete();
                 return true;
+            case ConsoleKey.F2 when plain:
+                EditSelected();
+                return true;
             case ConsoleKey.Spacebar when plain:
                 ToggleSelected();
                 return true;
@@ -142,6 +149,9 @@ public class ToDoListDialog : Dialog
                     return true;
                 case 'd':
                     AskToDelete();
+                    return true;
+                case 'e':
+                    EditSelected();
                     return true;
                 case 'p':
                     CyclePriority();
@@ -167,6 +177,7 @@ public class ToDoListDialog : Dialog
             case ConsoleKey.Escape:
                 _entry = null;
                 _entryError = null;
+                _editing = null;
                 break;
             case ConsoleKey.Enter:
                 CommitEntry();
@@ -252,6 +263,22 @@ public class ToDoListDialog : Dialog
         return true;
     }
 
+    /// <summary>E or F2: the highlighted task goes into the entry line as it would be typed, to be changed.</summary>
+    private void EditSelected()
+    {
+        if (Selected is not { } task)
+        {
+            return;
+        }
+
+        _editing = task;
+        _entry = (task.Priority == ToDoPriority.High ? "!" : string.Empty)
+            + task.Subject
+            + (task.DueDate is { } due ? " @" + due.ToString("yyyy-MM-dd") : string.Empty);
+        _entryError = null;
+        StateHasChanged();
+    }
+
     private void AskToDelete()
     {
         if (Selected is not null)
@@ -270,10 +297,23 @@ public class ToDoListDialog : Dialog
 
     private void CommitEntry()
     {
-        var id = Guid.NewGuid();
+        var id = _editing?.Id ?? Guid.NewGuid();
         if (ToDoTask.TryParse(_entry!, id, out var task, out var error) && task is not null)
         {
-            _store.Add(task);
+            if (_editing is { } original)
+            {
+                // Done stays done. The line can only say "!" (high): without it a high task becomes normal, and a low one stays low.
+                var priority = task.Priority == ToDoPriority.High ? ToDoPriority.High
+                    : original.Priority == ToDoPriority.High ? ToDoPriority.Normal
+                    : original.Priority;
+                _store.Update(task with { IsComplete = original.IsComplete, Priority = priority });
+                _editing = null;
+            }
+            else
+            {
+                _store.Add(task);
+            }
+
             _selectedId = id;
             _entry = null;
             _entryError = null;
@@ -375,7 +415,7 @@ public class ToDoListDialog : Dialog
         DrawHeader(buffer, iw, colorScheme);
         DrawRows(buffer, iw, colorScheme);
         DrawEntry(buffer, iw, colorScheme);
-        Put(buffer, 1, ih - 1, iw - 2, "Space done  N new  P priority  D delete  H show done  PgUp/PgDn  Esc close", colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, ih - 1, iw - 2, "Space done  N new  E change  P priority  D delete  H show done  Esc close", colorScheme.Foreground, colorScheme.Background);
     }
 
     private void DrawHeader(IBuffer buffer, int iw, ColorScheme colorScheme)
@@ -439,7 +479,7 @@ public class ToDoListDialog : Dialog
         }
         else if (_entry is not null)
         {
-            Put(buffer, 1, y, iw - 2, $"New task: {_entry}_", colorScheme.SelectedFocusedForeground, colorScheme.Background);
+            Put(buffer, 1, y, iw - 2, $"{(_editing is null ? "New" : "Change")} task: {_entry}_", colorScheme.SelectedFocusedForeground, colorScheme.Background);
             if (_entryError is not null)
             {
                 Put(buffer, 1, y + 1, iw - 2, _entryError, colorScheme.Error, colorScheme.Background);

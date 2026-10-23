@@ -283,8 +283,35 @@ public class MapDialogTest
 
         await PressAsync(f, ConsoleKey.B, 'b');
         await PressAsync(f, ConsoleKey.Delete);
+        Assert.AreEqual(1, f.Store.Places.Count, "Delete only asks");
+        Assert.IsTrue(f.Dialog.ConfirmingRemovePlace);
+        AssertScreenContains(Render(f.Root), "? (y/n)");
+        await PressAsync(f, ConsoleKey.Y, 'y');
         Assert.AreEqual(0, f.Store.Places.Count);
         Assert.IsFalse(f.Dialog.ShowsList);
+        Assert.IsFalse(f.Dialog.ConfirmingRemovePlace);
+    }
+
+    [TestMethod]
+    public async Task AnyKeyButYWithdrawsTheRemovalOfAPlace_AndEscapeAlsoClosesTheList()
+    {
+        var f = await OpenAsync();
+        f.Model.CenterOn(10, 20, 9);
+        await PressAsync(f, ConsoleKey.M, 'm');
+        await PressAsync(f, ConsoleKey.B, 'b');
+
+        await PressAsync(f, ConsoleKey.Delete);
+        await PressAsync(f, ConsoleKey.N, 'n');
+        Assert.AreEqual(1, f.Store.Places.Count);
+        Assert.IsTrue(f.Dialog.ShowsList);
+        Assert.IsFalse(f.Dialog.ConfirmingRemovePlace);
+        AssertScreenDoesNotContain(Render(f.Root), "(y/n)");
+
+        await PressAsync(f, ConsoleKey.Delete);
+        await PressAsync(f, ConsoleKey.Escape);
+        Assert.AreEqual(1, f.Store.Places.Count);
+        Assert.IsFalse(f.Dialog.ShowsList);
+        Assert.IsFalse(f.Dialog.ConfirmingRemovePlace);
     }
 
     [TestMethod]

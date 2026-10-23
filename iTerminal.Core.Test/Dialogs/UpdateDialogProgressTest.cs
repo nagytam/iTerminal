@@ -120,7 +120,9 @@ public class UpdateDialogProgressTest
         AssertScreenContains(screen, "░");
         AssertScreenContains(screen, " 50%");
         AssertScreenContains(screen, "5.0 of 10.0 MB");
+        AssertScreenContains(screen, "Downloading iTerminal-2.0.msi");
         AssertScreenDoesNotContain(screen, "Working...");
+        AssertScreenDoesNotContain(screen, "msi: 5.0 of 10.0", "the raw console line is replaced by the bar");
 
         service.AddLog("Downloading iTerminal-2.0.msi: 10.0 of 10.0 MB");
         dialog.OnIdle();
@@ -138,5 +140,47 @@ public class UpdateDialogProgressTest
         idle.AddLog("Downloading a.msi: 5.0 of 10.0 MB");
         (_, Control idleRoot) = await OpenAsync(idle);
         AssertScreenDoesNotContain(Render(idleRoot), "50%");
+    }
+
+    [TestMethod]
+    public async Task TheBar_ReplacesTheLogLines_ButAFailureAfterwardsShowsTheLogAgain()
+    {
+        FakeUpdateService service = new() { IsBusy = true };
+        service.AddLog("Checking the release");
+        service.AddLog("Downloading a.msi: 5.0 of 10.0 MB");
+        (UpdateDialog dialog, Control root) = await OpenAsync(service);
+        ScreenBuffer screen = Render(root);
+        AssertScreenDoesNotContain(screen, "Checking the release");
+        AssertScreenContains(screen, " 50%");
+
+        service.AddLog("The update could not be installed: no space left");
+        service.IsBusy = false;
+        dialog.OnIdle();
+
+        screen = Render(root);
+        AssertScreenContains(screen, "The update could not be installed: no space left");
+        AssertScreenContains(screen, "Downloading a.msi: 5.0 of 10.0 MB");
+        AssertScreenDoesNotContain(screen, "█");
+    }
+
+    [TestMethod]
+    public async Task BusyWithLogLinesThatAreNotProgress_StillShowsThem_AndWorking()
+    {
+        FakeUpdateService service = new() { IsBusy = true };
+        service.AddLog("Contacting the server");
+        (_, Control root) = await OpenAsync(service);
+
+        ScreenBuffer screen = Render(root);
+
+        AssertScreenContains(screen, "Contacting the server");
+        AssertScreenContains(screen, "Working...");
+    }
+
+    [TestMethod]
+    public void TheStage_NamesWhatIsHappening()
+    {
+        Assert.AreEqual("Downloading a.msi", UpdateDialog.ParseProgress(["Downloading a.msi: 1.0 of 10.0 MB"])!.Value.Stage);
+        Assert.AreEqual("Download complete", UpdateDialog.ParseProgress(["Downloaded a.msi (10.0 MB, checksum verified)"])!.Value.Stage);
+        Assert.AreEqual("Starting the installer", UpdateDialog.ParseProgress(["Starting the installer. iTerminal closes so its files can be replaced."])!.Value.Stage);
     }
 }

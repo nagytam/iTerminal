@@ -92,6 +92,39 @@ public class RuntimeDependencyDialogTest
     }
 
     [TestMethod]
+    public async Task WhileInstalling_ADownloadsProgressShowsAsARealBar_ElseTheSweepRemains()
+    {
+        var service = NewService(RuntimeDependencyState.Missing, busy: true);
+        List<string> log = [];
+        service.SetupGet(s => s.Log).Returns(log);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        log.Add("Preparing the download");
+        var before = Render(dialog);
+        AssertScreenDoesNotContain(before, "%");
+
+        log.Add("Downloading playwright.zip: 3.0 of 12.0 MB");
+        dialog.OnIdle();
+        var screen = Render(dialog);
+        AssertScreenContains(screen, " 25%");
+        AssertScreenContains(screen, "3.0 of 12.0 MB");
+        AssertScreenContains(screen, "[");
+    }
+
+    [TestMethod]
+    public async Task OnceTheInstallIsOver_NoBarIsLeftOnScreen()
+    {
+        var service = NewService(RuntimeDependencyState.Installed);
+        List<string> log = ["Downloading playwright.zip: 12.0 of 12.0 MB"];
+        service.SetupGet(s => s.Log).Returns(log);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        AssertScreenDoesNotContain(Render(dialog), "100%");
+    }
+
+    [TestMethod]
     public async Task SkipRemembersTheOffer()
     {
         var service = NewService(RuntimeDependencyState.UpdateAvailable);
