@@ -295,4 +295,75 @@ public class DiskUsageDialogTest
         await dialog.GoToPanelAsync();
         dialog.Close();
     }
+
+    private static MouseEvent ClickRow(Fixture f, int row) => new()
+    {
+        Position = new Position(f.Dialog.AbsolutePosition.X + 6, f.Dialog.AbsolutePosition.Y + 1 + 3 + row),
+        LeftClicked = true,
+    };
+
+    [TestMethod]
+    public async Task AClickOnARow_PutsTheCursorThere_AndASecondClickGoesIn()
+    {
+        Fixture f = await OpenAsync();
+
+        Assert.IsTrue(await f.Dialog.HandleMouseEventAsync(ClickRow(f, 1)));
+        Assert.AreEqual("small", f.Dialog.Selected!.Name);
+        Assert.AreEqual(Path.GetFileName(_folder), f.Dialog.Current!.Name);
+
+        await f.Dialog.HandleMouseEventAsync(ClickRow(f, 1));
+        Assert.AreEqual("small", f.Dialog.Current!.Name);
+        f.Dialog.Close();
+    }
+
+    [TestMethod]
+    public async Task AClickOnAFile_OnlySelectsIt()
+    {
+        Fixture f = await OpenAsync();
+
+        await f.Dialog.HandleMouseEventAsync(ClickRow(f, 2));
+        await f.Dialog.HandleMouseEventAsync(ClickRow(f, 2));
+
+        Assert.AreEqual("top.txt", f.Dialog.Selected!.Name);
+        Assert.AreEqual(Path.GetFileName(_folder), f.Dialog.Current!.Name);
+        f.Dialog.Close();
+    }
+
+    [TestMethod]
+    public async Task AClickOutsideTheRows_DoesNothing()
+    {
+        Fixture f = await OpenAsync();
+
+        await f.Dialog.HandleMouseEventAsync(ClickRow(f, 9));
+        await f.Dialog.HandleMouseEventAsync(ClickRow(f, -2));
+        await f.Dialog.HandleMouseEventAsync(new MouseEvent { Position = new Position(0, 0), LeftClicked = true });
+
+        Assert.AreEqual("big", f.Dialog.Selected!.Name);
+        f.Dialog.Close();
+    }
+
+    [TestMethod]
+    public async Task TheWheel_MovesTheCursorThreeRows_AndStopsAtTheEnds()
+    {
+        Fixture f = await OpenAsync();
+        Position inside = new(f.Dialog.AbsolutePosition.X + 6, f.Dialog.AbsolutePosition.Y + 4);
+
+        await f.Dialog.HandleMouseEventAsync(new MouseEvent { Position = inside, WheelDelta = -1 });
+        Assert.AreEqual("top.txt", f.Dialog.Selected!.Name);
+        await f.Dialog.HandleMouseEventAsync(new MouseEvent { Position = inside, WheelDelta = 1 });
+        Assert.AreEqual("big", f.Dialog.Selected!.Name);
+        f.Dialog.Close();
+    }
+
+    [TestMethod]
+    public async Task WhileScanning_TheMouseDoesNothing()
+    {
+        Fixture f = await OpenAsync(service: new NeverFinishingService(), waitForScan: false);
+
+        await f.Dialog.HandleMouseEventAsync(ClickRow(f, 0));
+        await f.Dialog.HandleMouseEventAsync(new MouseEvent { Position = new Position(f.Dialog.AbsolutePosition.X + 6, f.Dialog.AbsolutePosition.Y + 4), WheelDelta = -1 });
+
+        Assert.IsNull(f.Dialog.Current);
+        f.Dialog.Close();
+    }
 }

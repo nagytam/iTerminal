@@ -156,6 +156,33 @@ public class CommandPaletteDialog : Dialog
         return handled;
     }
 
+    /// <summary>Rows the wheel moves the choice by in one notch.</summary>
+    private const int WheelRows = 3;
+
+    /// <summary>
+    /// The mouse works the list as the keys do: the wheel moves the choice, a click on a row runs that command (the way
+    /// every command palette behaves — the query box is where one types, so a click has nothing else to mean). Before
+    /// this the palette could only be driven from the keyboard.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            _list.Move(mouseEvent.WheelDelta > 0 ? -WheelRows : WheelRows);
+            StateHasChanged();
+            return true;
+        }
+
+        if (mouseEvent.LeftClicked && _list.TryGetIndexAt(mouseEvent.Position, out var index))
+        {
+            _list.Select(index);
+            await RunSelectedAsync();
+            return true;
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
     /// <summary>Closes the palette, then runs the chosen command where focus has gone back to.</summary>
     public async Task<bool> RunSelectedAsync()
     {
@@ -218,6 +245,30 @@ public class CommandPaletteDialog : Dialog
             SelectedIndex = items.Count == 0 ? -1 : 0;
             _top = 0;
             StateHasChanged();
+        }
+
+        /// <summary>The item drawn under <paramref name="position"/>, if there is one.</summary>
+        public bool TryGetIndexAt(Position position, out int index)
+        {
+            long column = (long)position.X - (long)AbsolutePosition.X;
+            long row = (long)position.Y - (long)AbsolutePosition.Y;
+            index = -1;
+            if (column < 0 || column >= ViewSize.Width || row < 0 || row >= ViewSize.Height)
+            {
+                return false;
+            }
+
+            index = _top + (int)row;
+            return index < Items.Count;
+        }
+
+        public void Select(int index)
+        {
+            if (index >= 0 && index < Items.Count)
+            {
+                SelectedIndex = index;
+                StateHasChanged();
+            }
         }
 
         public void Move(int step)

@@ -163,6 +163,36 @@ public class UserMenuDialog : Dialog
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
+    /// <summary>
+    /// The wheel moves the cursor a row; a click on an entry runs it, as its key or Enter would. Before this the menu
+    /// could only be driven from the keyboard.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            _cursor = Math.Clamp(_cursor + (mouseEvent.WheelDelta > 0 ? -1 : 1), 0, Math.Max(0, _items.Count - 1));
+            UpdateLines();
+            return true;
+        }
+
+        if (mouseEvent.LeftClicked
+            && (long)mouseEvent.Position.X >= (long)_lines.AbsolutePosition.X
+            && (long)mouseEvent.Position.X < (long)_lines.AbsolutePosition.X + _lines.ViewSize.Width)
+        {
+            var row = (int)((long)mouseEvent.Position.Y - (long)_lines.AbsolutePosition.Y);
+            var index = _top + row;
+            if (row >= 0 && row < _lines.ViewSize.Height && index < _items.Count)
+            {
+                _cursor = index;
+                RunSelected();
+                return true;
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
     /// <summary>Closes the menu and runs the entry under the cursor.</summary>
     public void RunSelected()
     {

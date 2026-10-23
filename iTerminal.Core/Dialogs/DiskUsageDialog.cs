@@ -348,6 +348,49 @@ public class DiskUsageDialog : Dialog
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
+    /// <summary>
+    /// The wheel moves the cursor three rows. A click on a row puts the cursor there, and a click on the row the cursor
+    /// is already on goes into that folder — the way a tree opens on a second click. Before this the view could only be
+    /// driven from the keyboard.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (_scan is { IsComplete: true } && _current is not null)
+        {
+            if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+            {
+                _cursor = Math.Clamp(_cursor + (mouseEvent.WheelDelta > 0 ? -3 : 3), 0, Math.Max(0, Rows().Count - 1));
+                UpdateLines();
+                return true;
+            }
+
+            if (mouseEvent.LeftClicked
+                && (long)mouseEvent.Position.X >= (long)_lines.AbsolutePosition.X
+                && (long)mouseEvent.Position.X < (long)_lines.AbsolutePosition.X + _lines.ViewSize.Width)
+            {
+                // Three lines of heading (the folder, its totals, a blank) come before the first row.
+                var row = (int)((long)mouseEvent.Position.Y - (long)_lines.AbsolutePosition.Y) - 3;
+                var index = _top + row;
+                if (row >= 0 && row < VisibleRows && index < Rows().Count)
+                {
+                    if (index == _cursor)
+                    {
+                        Enter();
+                    }
+                    else
+                    {
+                        _cursor = index;
+                        UpdateLines();
+                    }
+
+                    return true;
+                }
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
     /// <summary>Goes into the folder under the cursor.</summary>
     public void Enter()
     {
