@@ -48,6 +48,26 @@ public class UpdateDialog : FormDialog
     /// <summary>Called once the installer is running: whoever owns the application closes it so the installer can replace its files.</summary>
     public Action? OnInstallerStarted { get; set; }
 
+    private int _shownLogCount = -1;
+    private bool _shownBusy;
+
+    /// <summary>
+    /// Redraws when the service has something new to say. The download runs on a worker and the dialog only reads the
+    /// service when it draws, so without this the log and "Working..." stood still until a key was pressed.
+    /// </summary>
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        int logCount = _service.Log.Count;
+        bool busy = _service.IsBusy;
+        if (logCount != _shownLogCount || busy != _shownBusy)
+        {
+            _shownLogCount = logCount;
+            _shownBusy = busy;
+            StateHasChanged();
+        }
+    }
+
     /// <summary>Whether the dialog has anything to offer: a newer release the person did not skip.</summary>
     public bool ShouldOpen => _service.Available is not null && !_service.IsSkipped;
 
