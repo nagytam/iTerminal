@@ -357,4 +357,94 @@ public class MailDialogTest
         await PressKeyAsync(fixture.Dialog, ConsoleKey.V, 'v', control: true);
         Assert.AreEqual("Work account", fixture.Dialog.SetupValueForTest("Account name"));
     }
+
+    // The list starts after the border, the heading and the column header: three rows down, two columns in.
+    private static iConsole.Data.MouseEvent At(iConsole.Controls.Control dialog, int row, int column = 8, int wheel = 0, bool click = true) => new()
+    {
+        Position = new iConsole.Data.Position(dialog.AbsolutePosition.X + 2 + column, dialog.AbsolutePosition.Y + 3 + row),
+        LeftClicked = click && wheel == 0,
+        WheelDelta = wheel,
+    };
+
+    [TestMethod]
+    public async Task AClickHighlightsAMessage_AndTheWheelMovesThreeAtATime()
+    {
+        var fixture = await OpenInboxAsync(messages: 30);
+
+        Assert.IsTrue(await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 4)));
+        Assert.AreEqual(4, fixture.Dialog.CursorForTest);
+
+        await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 0, wheel: -1));
+        Assert.AreEqual(7, fixture.Dialog.CursorForTest);
+        await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 0, wheel: 1));
+        Assert.AreEqual(4, fixture.Dialog.CursorForTest);
+    }
+
+    [TestMethod]
+    public async Task AClickOnTheShownRowOfAScrolledInbox_PicksThatMessage()
+    {
+        var fixture = await OpenInboxAsync(messages: 40);
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.End);
+        int last = fixture.Dialog.CursorForTest;
+
+        await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 0));
+
+        Assert.IsTrue(fixture.Dialog.CursorForTest < last);
+        Assert.IsTrue(fixture.Dialog.CursorForTest > 0);
+    }
+
+    [TestMethod]
+    public async Task AClickBelowTheLastMessageDoesNothing()
+    {
+        var fixture = await OpenInboxAsync(messages: 3);
+
+        await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 9));
+
+        Assert.AreEqual(0, fixture.Dialog.CursorForTest);
+    }
+
+    [TestMethod]
+    public async Task TheWheelScrollsAnOpenMessageThreeLinesAtATime()
+    {
+        string body = string.Join((char)10, Enumerable.Range(0, 80).Select(i => "line " + i));
+        var fixture = await OpenInboxAsync(body: body);
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Enter, (char)13);
+        await WaitUntilAsync(() => fixture.Dialog.ModeForTest == "View", "the message to open");
+
+        await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 0, wheel: -1));
+        Assert.AreEqual(3, fixture.Dialog.ScrollForTest);
+        await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 0, wheel: 1));
+        await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 0, wheel: 1));
+        Assert.AreEqual(0, fixture.Dialog.ScrollForTest);
+    }
+
+    [TestMethod]
+    public async Task InTheAddressBookAClickPicksAPersonAndTheWheelMovesThrough()
+    {
+        var fixture = await OpenInboxAsync();
+        fixture.Mail.People = [.. Enumerable.Range(0, 6).Select(i => new DirectoryPerson("Person " + i, "p" + i + "@example.test", string.Empty))];
+        await fixture.Dialog.HandleKeyEventAsync(Char('c'));
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.L, 'l', control: true);
+        await TypeAsync(fixture.Dialog, "p");
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Enter, (char)13);
+        await WaitUntilAsync(() => fixture.Dialog.PeopleForTest.Count == 6, "the people to be found");
+
+        await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 2));
+        Assert.AreEqual(2, fixture.Dialog.PersonCursorForTest);
+        await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 0, wheel: -1));
+        Assert.AreEqual(5, fixture.Dialog.PersonCursorForTest);
+        await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 0, wheel: 1));
+        Assert.AreEqual(2, fixture.Dialog.PersonCursorForTest);
+    }
+
+    [TestMethod]
+    public async Task TheMouseDoesNothingInTheComposerOrOutsideTheDialog()
+    {
+        var fixture = await OpenInboxAsync(messages: 5);
+        await fixture.Dialog.HandleKeyEventAsync(Char('c'));
+
+        await fixture.Dialog.HandleMouseEventAsync(At(fixture.Dialog, 3));
+        Assert.AreEqual("Compose", fixture.Dialog.ModeForTest);
+        Assert.IsFalse(await fixture.Dialog.HandleMouseEventAsync(new iConsole.Data.MouseEvent { Position = new iConsole.Data.Position(0, 0), WheelDelta = -1 }));
+    }
 }

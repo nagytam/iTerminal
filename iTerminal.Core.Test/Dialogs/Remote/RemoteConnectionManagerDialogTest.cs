@@ -268,4 +268,64 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual("srv", saved.Host);
         Assert.AreEqual(RemoteProtocol.Ssh, saved.Protocol);
     }
+
+    // The list starts after the border, the heading and the column header: three rows down, two columns in.
+    private static iConsole.Data.MouseEvent At(iConsole.Controls.Control dialog, int row, int column = 8, int wheel = 0, bool click = true) => new()
+    {
+        Position = new iConsole.Data.Position(dialog.AbsolutePosition.X + 2 + column, dialog.AbsolutePosition.Y + 3 + row),
+        LeftClicked = click && wheel == 0,
+        WheelDelta = wheel,
+    };
+
+    private static async Task<Harness> OpenWithAsync(int count)
+    {
+        var h = Create();
+        for (int i = 0; i < count; i++)
+        {
+            h.Connections.Save(new RemoteConnection { Name = "host" + i.ToString("00"), Host = "h" + i + ".example.com", Username = "alice" });
+        }
+
+        await ShowAsync(h.Dialog);
+        return h;
+    }
+
+    [TestMethod]
+    public async Task AClickHighlightsAConnection_AndTheWheelMovesThreeAtATime()
+    {
+        var h = await OpenWithAsync(10);
+
+        Assert.IsTrue(await h.Dialog.HandleMouseEventAsync(At(h.Dialog, 4)));
+        Assert.AreEqual(4, h.Dialog.CursorForTest);
+
+        await h.Dialog.HandleMouseEventAsync(At(h.Dialog, 0, wheel: -1));
+        Assert.AreEqual(7, h.Dialog.CursorForTest);
+        await h.Dialog.HandleMouseEventAsync(At(h.Dialog, 0, wheel: 1));
+        Assert.AreEqual(4, h.Dialog.CursorForTest);
+    }
+
+    [TestMethod]
+    public async Task AClickBelowTheLastConnectionDoesNothing_AndTheWheelStopsAtTheEnds()
+    {
+        var h = await OpenWithAsync(3);
+
+        await h.Dialog.HandleMouseEventAsync(At(h.Dialog, 9));
+        Assert.AreEqual(0, h.Dialog.CursorForTest);
+        await h.Dialog.HandleMouseEventAsync(At(h.Dialog, 0, wheel: -1));
+        Assert.AreEqual(2, h.Dialog.CursorForTest);
+        await h.Dialog.HandleMouseEventAsync(At(h.Dialog, 0, wheel: 1));
+        await h.Dialog.HandleMouseEventAsync(At(h.Dialog, 0, wheel: 1));
+        Assert.AreEqual(0, h.Dialog.CursorForTest);
+    }
+
+    [TestMethod]
+    public async Task TheMouseLeavesTheListAloneInTheEditForm()
+    {
+        var h = await OpenWithAsync(5);
+        await h.Dialog.HandleKeyEventAsync(Char('n'));
+
+        await h.Dialog.HandleMouseEventAsync(At(h.Dialog, 3));
+
+        Assert.AreEqual("Edit", h.Dialog.ModeForTest);
+        Assert.AreEqual(0, h.Dialog.CursorForTest);
+    }
 }

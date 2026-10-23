@@ -303,4 +303,56 @@ public class WorkspaceManagerDialogTest
 
         Assert.AreEqual(iTerminal.Core.Services.Workspaces.IWorkspaceService.MaxNameLength, service.GetAll().Single().Name.Length);
     }
+
+    // The list starts after the border, the heading and the column header: three rows down, two columns in.
+    private static iConsole.Data.MouseEvent At(iConsole.Controls.Control dialog, int row, int column = 8, int wheel = 0, bool click = true) => new()
+    {
+        Position = new iConsole.Data.Position(dialog.AbsolutePosition.X + 2 + column, dialog.AbsolutePosition.Y + 3 + row),
+        LeftClicked = click && wheel == 0,
+        WheelDelta = wheel,
+    };
+
+    [TestMethod]
+    public async Task AClickHighlightsAWorkspace_AndTheWheelMovesThreeAtATime()
+    {
+        var (dialog, _, _) = Create("A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8");
+        await ShowAsync(dialog);
+
+        Assert.IsTrue(await dialog.HandleMouseEventAsync(At(dialog, 2)));
+        Assert.AreEqual(2, dialog.CursorForTest);
+
+        await dialog.HandleMouseEventAsync(At(dialog, 0, wheel: -1));
+        Assert.AreEqual(5, dialog.CursorForTest);
+        await dialog.HandleMouseEventAsync(At(dialog, 0, wheel: 1));
+        await dialog.HandleMouseEventAsync(At(dialog, 0, wheel: 1));
+        Assert.AreEqual(0, dialog.CursorForTest);
+    }
+
+    [TestMethod]
+    public async Task AClickDoesNotSwitchWorkspaces_EnterDoes_AndAClickBelowTheListDoesNothing()
+    {
+        var (dialog, _, layout) = Create("Alpha", "Beta");
+        await ShowAsync(dialog);
+        string before = layout.Current.LeftUrl;
+
+        await dialog.HandleMouseEventAsync(At(dialog, 1));
+        Assert.AreEqual(1, dialog.CursorForTest);
+        Assert.AreEqual(before, layout.Current.LeftUrl, "a click only highlights");
+
+        await dialog.HandleMouseEventAsync(At(dialog, 6));
+        Assert.AreEqual(1, dialog.CursorForTest);
+    }
+
+    [TestMethod]
+    public async Task TheMouseLeavesTheListAloneWhileANameIsBeingTyped()
+    {
+        var (dialog, _, _) = Create("Alpha", "Beta", "Gamma");
+        await ShowAsync(dialog);
+        await dialog.HandleKeyEventAsync(Char('s'));
+        int before = dialog.CursorForTest;
+
+        await dialog.HandleMouseEventAsync(At(dialog, before == 0 ? 2 : 0));
+
+        Assert.AreEqual(before, dialog.CursorForTest);
+    }
 }

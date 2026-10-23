@@ -500,6 +500,67 @@ public class MailDialog : Dialog
 
     #region Actions
 
+    /// <summary>
+    /// The wheel moves the highlight in the inbox (three messages), scrolls an open message (three lines) and moves
+    /// through the address-book results; a click highlights a message or a person.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool handled = false;
+        lock (_sync)
+        {
+            if (!AbsoluteBoundRect.Contains(mouseEvent.Position))
+            {
+                handled = false;
+            }
+            else if (mouseEvent.WheelDelta != 0)
+            {
+                int step = mouseEvent.WheelDelta > 0 ? -3 : 3;
+                switch (_mode)
+                {
+                    case Mode.List:
+                        handled = MoveCursor(step);
+                        break;
+                    case Mode.View:
+                        _scroll = Math.Clamp(_scroll + step, 0, Math.Max(0, _bodyLines.Count - 1));
+                        StateHasChanged();
+                        handled = true;
+                        break;
+                    case Mode.Directory when _people.Count > 0:
+                        _personCursor = Math.Clamp(_personCursor + step, 0, _people.Count - 1);
+                        StateHasChanged();
+                        handled = true;
+                        break;
+                }
+            }
+            else if (mouseEvent.LeftClicked)
+            {
+                long row = mouseEvent.Position.Y - (AbsolutePosition.Y + 3);
+                long column = mouseEvent.Position.X - (AbsolutePosition.X + 2);
+                int visible = (int)ViewSize.Height - 7;
+                if (column >= 0 && column < ViewSize.Width - 4 && row >= 0 && row < visible)
+                {
+                    if (_mode == Mode.List)
+                    {
+                        int first = _cursor >= visible ? _cursor - visible + 1 : 0;
+                        if (first + (int)row < _listings.Count)
+                        {
+                            handled = MoveCursor(first + (int)row - _cursor);
+                        }
+                    }
+                    else if (_mode == Mode.Directory && row < _people.Count)
+                    {
+                        _personCursor = (int)row;
+                        StateHasChanged();
+                        handled = true;
+                    }
+                }
+            }
+        }
+
+        return handled || await base.HandleMouseEventAsync(mouseEvent);
+    }
+
     private bool MoveCursor(int delta)
     {
         _pendingDelete = null;
@@ -1035,6 +1096,7 @@ public class MailDialog : Dialog
     internal int ListingCountForTest { get { lock (_sync) return _listings.Count; } }
     internal string BodyForTest { get { lock (_sync) return string.Join("\n", _bodyLines); } }
     internal string[] DraftForTest { get { lock (_sync) return [.. _draft]; } }
+    internal int PersonCursorForTest { get { lock (_sync) return _personCursor; } }
     internal int CursorForTest { get { lock (_sync) return _cursor; } }
     internal int ScrollForTest { get { lock (_sync) return _scroll; } }
     internal int DraftFieldForTest { get { lock (_sync) return _draftField; } }
