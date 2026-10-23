@@ -1,3 +1,4 @@
+using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -337,6 +338,12 @@ public class MapDialog : Dialog
 
     private bool HandleSearchKey(KeyEvent key)
     {
+        if (PasteHelper.IsPasteKey(key))
+        {
+            PasteHelper.Paste(text => _input += PasteHelper.SingleLine(text), StateHasChanged);
+            return true;
+        }
+
         switch (key.ConsoleKey)
         {
             case ConsoleKey.Escape:

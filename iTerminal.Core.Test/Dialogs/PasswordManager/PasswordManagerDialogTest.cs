@@ -8,6 +8,8 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.PasswordManager;
 
+// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
+[DoNotParallelize]
 [TestClass]
 public class PasswordManagerDialogTest
 {
@@ -131,5 +133,65 @@ public class PasswordManagerDialogTest
         await dialog.HandleKeyEventAsync(Char('d'));
         await dialog.HandleKeyEventAsync(Char('y'));
         Assert.AreEqual(0, manager.List().Count);
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesIntoTheFieldUnderTheCursor_OnOneLine_AndNotIntoTheCategory()
+    {
+        var manager = NewManager();
+        manager.Unlock();
+        var dialog = new PasswordManagerDialog(manager, TestTheme());
+        await ShowAsync(dialog);
+        await dialog.HandleKeyEventAsync(Char('n'));
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("Bank" + (char)10 + "login");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.V, 'v', control: true));
+        Assert.AreEqual("Bank login", dialog.FieldForTest("Title"));
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab, (char)9));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab, (char)9));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.V, 'v', control: true));
+        Assert.AreEqual(string.Empty, dialog.FieldForTest("Username"));
+        Assert.AreEqual(string.Empty, dialog.FieldForTest("Password"));
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab, (char)9));
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("p4ss w0rd");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Insert, shift: true));
+        Assert.AreEqual("p4ss w0rd", dialog.FieldForTest("Password"));
+    }
+
+    [TestMethod]
+    public async Task CtrlUClearsTheFieldUnderTheCursor()
+    {
+        var manager = NewManager();
+        manager.Unlock();
+        var dialog = new PasswordManagerDialog(manager, TestTheme());
+        await ShowAsync(dialog);
+        await dialog.HandleKeyEventAsync(Char('n'));
+        await TypeAsync(dialog, "Bank");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.U, 'u', control: true));
+
+        Assert.AreEqual(string.Empty, dialog.FieldForTest("Title"));
+    }
+
+    [TestMethod]
+    public async Task ShiftTabGoesBackAFieldAndWraps()
+    {
+        var manager = NewManager();
+        manager.Unlock();
+        var dialog = new PasswordManagerDialog(manager, TestTheme());
+        await ShowAsync(dialog);
+        await dialog.HandleKeyEventAsync(Char('n'));
+
+        // From the first field back to the last (Notes): typing lands there.
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab, (char)9, shift: true));
+        await TypeAsync(dialog, "memo");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab, (char)9, shift: true));
+        await TypeAsync(dialog, "pw");
+
+        Assert.AreEqual("memo", dialog.FieldForTest("Notes"));
+        Assert.AreEqual("pw", dialog.FieldForTest("Password"));
+        Assert.AreEqual(string.Empty, dialog.FieldForTest("Title"));
     }
 }

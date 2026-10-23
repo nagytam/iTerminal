@@ -1,3 +1,4 @@
+using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -195,6 +196,24 @@ public class CalendarDialog : Dialog
     /// </summary>
     private bool HandleEntryKey(KeyEvent keyEvent)
     {
+        if (PasteHelper.IsPasteKey(keyEvent))
+        {
+            PasteHelper.Paste(text =>
+            {
+                _entry = ((_entry ?? string.Empty) + PasteHelper.SingleLine(text)) is { Length: > MaxEntryLength } longer ? longer[..MaxEntryLength] : (_entry ?? string.Empty) + PasteHelper.SingleLine(text);
+                _entryError = null;
+            }, StateHasChanged);
+            return true;
+        }
+
+        if (keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.U)
+        {
+            _entry = string.Empty;
+            _entryError = null;
+            StateHasChanged();
+            return true;
+        }
+
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.Escape:

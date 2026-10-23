@@ -9,6 +9,8 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Map;
 
+// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
+[DoNotParallelize]
 [TestClass]
 public class MapDialogTest
 {
@@ -395,5 +397,17 @@ public class MapDialogTest
         }
 
         Assert.IsTrue(condition(), "timed out waiting");
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesIntoTheSearch()
+    {
+        var f = await OpenAsync(online: false);
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("48.2 16.37");
+        await PressAsync(f, ConsoleKey.Oem2, '/');
+
+        await PressAsync(f, ConsoleKey.V, 'v', control: true);
+
+        AssertScreenContains(Render(f.Root), "Search or coordinates: 48.2 16.37");
     }
 }

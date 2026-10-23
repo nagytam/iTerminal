@@ -7,6 +7,8 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Workspaces;
 
+// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
+[DoNotParallelize]
 [TestClass]
 public class WorkspaceManagerDialogTest
 {
@@ -270,5 +272,35 @@ public class WorkspaceManagerDialogTest
     {
         Assert.AreEqual("project", WorkspaceManagerDialog.Short(@"file://C:\work\project"));
         Assert.AreEqual("-", WorkspaceManagerDialog.Short(string.Empty));
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesTheNameInPlaceOfTheSuggestion_OnOneLine()
+    {
+        var (dialog, service, _) = Create();
+        await ShowAsync(dialog);
+        await dialog.HandleKeyEventAsync(Char('s'));
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("Build" + (char)10 + "box");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.V, 'v', control: true));
+        AssertScreenContains(Render(dialog), "Build box");
+        AssertScreenDoesNotContain(Render(dialog), "Workspace 1");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        Assert.AreEqual("Build box", service.GetAll().Single().Name);
+    }
+
+    [TestMethod]
+    public async Task APastedNameIsCutToTheLongestAllowed()
+    {
+        var (dialog, service, _) = Create();
+        await ShowAsync(dialog);
+        await dialog.HandleKeyEventAsync(Char('s'));
+        await iConsole.Services.TextClipboard.Current.SetTextAsync(new string('x', 500));
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.V, 'v', control: true));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        Assert.AreEqual(iTerminal.Core.Services.Workspaces.IWorkspaceService.MaxNameLength, service.GetAll().Single().Name.Length);
     }
 }

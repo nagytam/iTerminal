@@ -1,3 +1,4 @@
+using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -271,6 +272,23 @@ public class WorkspaceManagerDialog : Dialog
         if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Control && !keyEvent.Alt)
         {
             CommitName();
+            return true;
+        }
+
+        if (PasteHelper.IsPasteKey(keyEvent))
+        {
+            PasteHelper.Paste(text =>
+            {
+                string line = PasteHelper.SingleLine(text);
+                if (_textIsSelected)
+                {
+                    _text = string.Empty;
+                    _textIsSelected = false;
+                }
+
+                _pending = Pending.None;
+                _text = (_text + line) is { Length: > IWorkspaceService.MaxNameLength } longer ? longer[..IWorkspaceService.MaxNameLength] : _text + line;
+            }, StateHasChanged);
             return true;
         }
 

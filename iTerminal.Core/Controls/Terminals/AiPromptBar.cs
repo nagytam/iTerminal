@@ -1,3 +1,4 @@
+using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls;
@@ -130,6 +131,12 @@ public class AiPromptBar : Window
         if (isHandled) return true;
 
         if (!_model.IsAvailable) return false;
+
+        if (PasteHelper.IsPasteKey(keyEvent))
+        {
+            PasteHelper.Paste(text => _model.Input += PasteHelper.SingleLine(text), StateHasChanged);
+            return true;
+        }
 
         switch (keyEvent.ConsoleKey)
         {
