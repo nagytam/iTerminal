@@ -49,6 +49,7 @@ public interface IControl
     void SetParentFocus();
     void RemoveControl(IControl control);
     IControl GetRootControl();
+    IEnumerable<IControl> GetTabStops();
     IControl? GetNextFocusableControl(IControl control);
     IControl? GetPreviousFocusableControl(IControl control);
     void AddControl(IControl control, string name = "");
