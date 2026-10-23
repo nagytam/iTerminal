@@ -345,6 +345,7 @@ public class DuplicateFinderDialog : Dialog
                     StartScan(_scan.Path);
                     return true;
                 case ConsoleKey.G:
+                case ConsoleKey.Enter:
                     await GoToPanelAsync();
                     return true;
             }
@@ -564,7 +565,7 @@ public class DuplicateFinderDialog : Dialog
         var width = (int)ViewSize.Width;
         var footer = (_confirming
                 ? " y:delete  any other key:cancel "
-                : " Space or click:mark  a:keep oldest  n:keep newest  u:unmark  Del:delete  g:go to  r:rescan  Esc:close ")
+                : " Space or click:mark  a:keep oldest  n:keep newest  u:unmark  Del:delete  Enter or g:go to  r:rescan  Esc:close ")
             .FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);

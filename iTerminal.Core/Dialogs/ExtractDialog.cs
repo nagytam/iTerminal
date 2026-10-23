@@ -163,7 +163,8 @@ public class ExtractDialog : FormDialog
         // Said up front, before Enter: an archive this machine cannot open is better named now than
         // listed as a failure after the others have been unpacked.
         var blocked = Archives.Select(u => _extractionService.WhyCannotExtract(FocusedEntry.NameOf(u))).FirstOrDefault(r => r is not null);
-        _errorLabel.Text = blocked ?? string.Empty;
+        _blockedNotice = blocked ?? string.Empty;
+        _errorLabel.Text = _blockedNotice;
 
         UpdateLanding();
         await base.OnInitializeAsync();
@@ -249,11 +250,17 @@ public class ExtractDialog : FormDialog
         return (new ExtractionOptions(Password.Length > 0 ? Password : null, Overwrite), null);
     }
 
+    /// <summary>What was said up front about an archive this machine cannot open; typing on withdraws an error, not this.</summary>
+    private string _blockedNotice = string.Empty;
+
+    protected override void ClearError() => _errorLabel.Text = _blockedNotice;
+
     public void Reset()
     {
         SourceModel = null;
         Archives = [];
         Password = string.Empty;
+        _blockedNotice = string.Empty;
         _errorLabel.Text = string.Empty;
     }
 

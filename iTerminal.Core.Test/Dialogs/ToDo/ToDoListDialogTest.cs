@@ -241,6 +241,99 @@ public class ToDoListDialogTest
     }
 
     [TestMethod]
+    public async Task EPutsTheHighlightedTaskInTheEntryLine_AndEnterReplacesIt()
+    {
+        var fixture = Create();
+        var id = Guid.NewGuid();
+        fixture.Store.Add(new ToDoTask(id, "Renew passport", new DateOnly(2026, 11, 1), ToDoPriority.High, false));
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('e'));
+        Assert.AreEqual("!Renew passport @2026-11-01", fixture.Dialog.EntryForTest);
+        AssertScreenContains(Render(fixture.Dialog), "Change task: !Renew passport @2026-11-01");
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Backspace));
+        await TypeAsync(fixture.Dialog, "9");
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        var tasks = fixture.Store.Visible(true);
+        Assert.AreEqual(1, tasks.Count);
+        Assert.AreEqual(id, tasks[0].Id);
+        Assert.AreEqual(new DateOnly(2026, 11, 9), tasks[0].DueDate);
+        Assert.AreEqual(ToDoPriority.High, tasks[0].Priority);
+        Assert.AreEqual(id, fixture.Dialog.SelectedForTest!.Id);
+    }
+
+    [TestMethod]
+    public async Task ChangingATask_KeepsItDone_DropsHighWhenTheBangGoes_AndKeepsLow()
+    {
+        var fixture = Create();
+        var done = Guid.NewGuid();
+        var low = Guid.NewGuid();
+        fixture.Store.Add(new ToDoTask(done, "Shipped", null, ToDoPriority.High, true));
+        fixture.Store.Add(new ToDoTask(low, "Maybe", null, ToDoPriority.Low, false));
+        await ShowAsync(fixture.Dialog);
+
+        // Open tasks sort first: "Maybe" is highlighted.
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F2));
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+        Assert.AreEqual(ToDoPriority.Low, fixture.Store.Visible(true).First(t => t.Id == low).Priority);
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await fixture.Dialog.HandleKeyEventAsync(Char('e'));
+        Assert.AreEqual("!Shipped", fixture.Dialog.EntryForTest);
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Home));
+        // The entry line takes no cursor keys; the bang goes by retyping the line.
+        for (int i = 0; i < 8; i++)
+        {
+            await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Backspace));
+        }
+
+        await TypeAsync(fixture.Dialog, "Shipped");
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        var changed = fixture.Store.Visible(true).First(t => t.Id == done);
+        Assert.IsTrue(changed.IsComplete);
+        Assert.AreEqual(ToDoPriority.Normal, changed.Priority);
+    }
+
+    [TestMethod]
+    public async Task ARefusedChange_LosesNothing_AndEscapeKeepsTheTask()
+    {
+        var fixture = Create();
+        var id = Guid.NewGuid();
+        fixture.Store.Add(new ToDoTask(id, "Keep me", null, ToDoPriority.Normal, false));
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('e'));
+        for (int i = 0; i < 20; i++)
+        {
+            await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Backspace));
+        }
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+        Assert.IsNotNull(fixture.Dialog.EntryErrorForTest);
+        Assert.AreEqual("Keep me", fixture.Store.Visible(true).Single().Subject);
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
+        Assert.IsNull(fixture.Dialog.EntryForTest);
+        Assert.AreEqual("Keep me", fixture.Store.Visible(true).Single().Subject);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('n'));
+        AssertScreenContains(Render(fixture.Dialog), "New task:");
+    }
+
+    [TestMethod]
+    public async Task EWithNothingListedDoesNothing()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('e'));
+
+        Assert.IsNull(fixture.Dialog.EntryForTest);
+    }
+
+    [TestMethod]
     public async Task HHidesAndShowsDoneTasks()
     {
         var fixture = Create();

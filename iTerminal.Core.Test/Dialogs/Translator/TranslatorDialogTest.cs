@@ -234,10 +234,41 @@ public class TranslatorDialogTest
         await SettleAsync(dialog);
 
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+        Assert.AreEqual("Hello", dialog.InputText, "the first F8 only asks");
+        StringAssert.Contains(dialog.Status, "Press F8 again");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
 
         Assert.AreEqual(string.Empty, dialog.InputText);
         Assert.AreEqual(string.Empty, dialog.TranslationText);
         Assert.AreEqual(0, dialog.Output.TextModel.Lines.Count);
+    }
+
+    [TestMethod]
+    public async Task AnotherKeyWithdrawsTheClear_SoTheNextF8AsksAgain()
+    {
+        var (dialog, _, _, _) = Create();
+        await ShowAsync(dialog);
+        dialog.InputText = "Hello";
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.RightArrow));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+
+        Assert.AreEqual("Hello", dialog.InputText);
+        StringAssert.Contains(dialog.Status, "Press F8 again");
+    }
+
+    [TestMethod]
+    public async Task F8WithNothingTypedClearsAtOnce_ThereIsNothingToLose()
+    {
+        var (dialog, _, _, _) = Create();
+        await ShowAsync(dialog);
+        dialog.InputText = string.Empty;
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F8));
+
+        Assert.AreEqual(string.Empty, dialog.InputText);
+        Assert.IsFalse(dialog.Status.Contains("Press F8 again"));
     }
 
     [TestMethod]

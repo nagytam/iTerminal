@@ -87,6 +87,35 @@ public class ExtractDialogTest
     }
 
     [TestMethod]
+    public async Task TypingWithdrawsAnErrorButNotTheNoticeAboutAMissingTool()
+    {
+        var (dialog, model, _) = Create();
+        model.SetMarks("*", marked: true, includeFolders: true);
+        await ShowAsync(dialog);
+        Assert.AreEqual(".rar archives need 7-Zip installed.", dialog.ErrorMessage.Text);
+
+        dialog.ErrorMessage.Text = "The disk is full.";
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
+        Assert.AreEqual("The disk is full.", dialog.ErrorMessage.Text, "moving on does not clear it");
+
+        await dialog.HandleKeyEventAsync(Char('x'));
+        Assert.AreEqual(".rar archives need 7-Zip installed.", dialog.ErrorMessage.Text);
+    }
+
+    [TestMethod]
+    public async Task TypingClearsAnErrorWhenNothingWasBlocked()
+    {
+        var (dialog, model, _) = Create();
+        model.CursorPosition.Y = model.FilteredEntries.ToList().FindIndex(e => e.DisplayName == "a.zip");
+        await ShowAsync(dialog);
+        dialog.ErrorMessage.Text = "The disk is full.";
+
+        await dialog.HandleKeyEventAsync(Char('x'));
+
+        Assert.AreEqual(string.Empty, dialog.ErrorMessage.Text);
+    }
+
+    [TestMethod]
     public async Task WithoutOwnFoldersTheFilesLandInTheTargetItself()
     {
         var (dialog, model, _) = Create();

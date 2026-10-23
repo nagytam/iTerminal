@@ -214,8 +214,16 @@ public class TranslatorDialog : SplitPaneDialog
         ShowTranslation();
     }
 
+    /// <summary>True after the first F8 over a text: the second one clears; any other key withdraws it.</summary>
+    private bool _clearArmed;
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        if (keyEvent.KeyPressType == KeyPressType.Down && keyEvent.ConsoleKey != ConsoleKey.F8)
+        {
+            _clearArmed = false;
+        }
+
         if (keyEvent.KeyPressType == KeyPressType.Down && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift && !_from.IsOpen && !_to.IsOpen && !_engine.IsOpen)
         {
             switch (keyEvent.ConsoleKey)
@@ -230,6 +238,14 @@ public class TranslatorDialog : SplitPaneDialog
                     StartDetect();
                     return true;
                 case ConsoleKey.F8:
+                    if (InputText.Length > 0 && !_clearArmed)
+                    {
+                        // A text that was typed or pasted is gone for good: the key asks once.
+                        _clearArmed = true;
+                        SetStatus("Press F8 again to clear the text, any other key to keep it.", isError: false);
+                        return true;
+                    }
+
                     Clear();
                     return true;
             }
@@ -345,6 +361,7 @@ public class TranslatorDialog : SplitPaneDialog
     /// <summary>F8: empties both texts.</summary>
     internal void Clear()
     {
+        _clearArmed = false;
         _cancellation?.Cancel();
         _generation++;
         _busy = false;

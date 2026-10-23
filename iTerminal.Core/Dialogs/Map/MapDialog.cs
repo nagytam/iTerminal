@@ -80,6 +80,9 @@ public class MapDialog : Dialog
     private string _input = string.Empty;
     private ListKind _listKind = ListKind.Places;
     private List<MapPlace> _list = [];
+
+    /// <summary>True while "Remove this saved place? (y/n)" is on the status line: the next key answers it.</summary>
+    private bool _confirmingRemovePlace;
     private int _listIndex;
     private int _listScroll;
     private int _helpScroll;
@@ -115,6 +118,8 @@ public class MapDialog : Dialog
     internal bool IsTyping => _mode == Mode.Search;
 
     internal bool ShowsList => _mode == Mode.List;
+
+    internal bool ConfirmingRemovePlace => _confirmingRemovePlace;
 
     internal bool ShowsHelp => _mode == Mode.Help;
 
@@ -422,6 +427,7 @@ public class MapDialog : Dialog
         _listIndex = 0;
         _listScroll = 0;
         _mode = Mode.List;
+        _confirmingRemovePlace = false;
     }
 
     private void GoTo(MapPlace place)
@@ -444,6 +450,18 @@ public class MapDialog : Dialog
         }
 
         _mode = Mode.List;
+        _confirmingRemovePlace = false;
+    }
+
+    private void RemoveSelectedPlace()
+    {
+        _model.Store.RemovePlace(_list[_listIndex]);
+        _list.RemoveAt(_listIndex);
+        _listIndex = Math.Min(_listIndex, _list.Count - 1);
+        if (_list.Count == 0)
+        {
+            _mode = Mode.Browse;
+        }
     }
 
     private void SaveCenterAsPlace()
@@ -458,6 +476,23 @@ public class MapDialog : Dialog
 
     private bool HandleListKey(KeyEvent key)
     {
+        if (_confirmingRemovePlace)
+        {
+            // Esc is the list's own and leaves it as it closes the question; any other key but y withdraws it.
+            _confirmingRemovePlace = false;
+            _status = string.Empty;
+            if (key.ConsoleKey == ConsoleKey.Y && !key.Control && !key.Alt)
+            {
+                RemoveSelectedPlace();
+                return true;
+            }
+
+            if (key.ConsoleKey != ConsoleKey.Escape)
+            {
+                return true;
+            }
+        }
+
         var page = Math.Max(1, _mapRows - 2);
         switch (key.ConsoleKey)
         {
@@ -487,14 +522,8 @@ public class MapDialog : Dialog
                 GoTo(_list[_listIndex]);
                 return true;
             case ConsoleKey.Delete when _listKind == ListKind.Places && _list.Count > 0:
-                _model.Store.RemovePlace(_list[_listIndex]);
-                _list.RemoveAt(_listIndex);
-                _listIndex = Math.Min(_listIndex, _list.Count - 1);
-                if (_list.Count == 0)
-                {
-                    _mode = Mode.Browse;
-                }
-
+                _confirmingRemovePlace = true;
+                _status = $"Remove the saved place \"{_list[_listIndex].Name}\"? (y/n)";
                 return true;
             default:
                 return true;

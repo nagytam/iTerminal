@@ -161,23 +161,35 @@ public partial class UpdateDialog : FormDialog
         ];
 
         IReadOnlyList<string> log = _service.Log;
-        for (int i = Math.Max(0, log.Count - LogRows); i < log.Count; i++)
+        if (_service.IsBusy && ParseProgress(log) is { } progress)
         {
-            rows.Add((log[i], scheme.DisabledForeground));
-        }
-
-        for (int i = log.Count; i < LogRows; i++)
-        {
+            // The download's own words are the console output; what the person wants from them is how far it is.
+            (string filled, string empty, string tail) = ProgressBar(progress, innerWidth);
+            rows.Add((progress.Stage, scheme.Foreground));
+            rows.Add((filled + empty + tail, Color.Green));
             rows.Add((string.Empty, scheme.DisabledForeground));
+        }
+        else
+        {
+            for (int i = Math.Max(0, log.Count - LogRows); i < log.Count; i++)
+            {
+                rows.Add((log[i], scheme.DisabledForeground));
+            }
+
+            for (int i = log.Count; i < LogRows; i++)
+            {
+                rows.Add((string.Empty, scheme.DisabledForeground));
+            }
         }
 
         return rows.Select(row => (row.Text.Length > innerWidth ? row.Text.Cut(innerWidth) : row.Text, row.Color)).ToList();
     }
 
-    internal string Hint => _service.IsBusy ? "Working..." : string.Empty;
+    /// <summary>"Working..." while something runs and nothing can be shown as progress yet; the bar says it all otherwise.</summary>
+    internal string Hint => _service.IsBusy && ParseProgress(_service.Log) is null ? "Working..." : string.Empty;
 
     /// <summary>How far the download is, read from the service's log: a fraction from 0 to 1 and the words that go beside the bar.</summary>
-    internal readonly record struct UpdateProgress(double Fraction, string Label);
+    internal readonly record struct UpdateProgress(double Fraction, string Label, string Stage = "");
 
     /// <summary>
     /// The newest progress the log reports. The download says "Downloading name: 12.3 of 29.2 MB" as it goes, then
@@ -191,7 +203,7 @@ public partial class UpdateDialog : FormDialog
             string line = log[i];
             if (line.StartsWith("Starting the installer", StringComparison.Ordinal) || line.StartsWith("Downloaded ", StringComparison.Ordinal))
             {
-                return new UpdateProgress(1, "download complete");
+                return new UpdateProgress(1, "download complete", line.StartsWith("Starting", StringComparison.Ordinal) ? "Starting the installer" : "Download complete");
             }
 
             System.Text.RegularExpressions.Match match = DownloadLine().Match(line);
@@ -200,7 +212,7 @@ public partial class UpdateDialog : FormDialog
                 && double.TryParse(match.Groups[2].Value.Replace(',', '.'), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double total)
                 && total > 0)
             {
-                return new UpdateProgress(Math.Clamp(received / total, 0, 1), $"{match.Groups[1].Value} of {match.Groups[2].Value} MB");
+                return new UpdateProgress(Math.Clamp(received / total, 0, 1), $"{match.Groups[1].Value} of {match.Groups[2].Value} MB", line[..line.LastIndexOf(": ", StringComparison.Ordinal)]);
             }
 
             if (line.StartsWith("The update could not be installed", StringComparison.Ordinal))
@@ -247,24 +259,6 @@ public partial class UpdateDialog : FormDialog
         }
 
         int hintRow = (int)ViewSize.Height - 3;
-        UpdateProgress? progress = _service.IsBusy ? ParseProgress(_service.Log) : null;
-        if (progress is { } known)
-        {
-            (string filled, string empty, string tail) = ProgressBar(known, innerWidth);
-            WriteRow(buffer, colorScheme, innerWidth, hintRow, string.Empty, colorScheme.Foreground);
-            long x = AbsolutePosition.X + 1;
-            foreach ((string text, Color color) in new[] { (filled, Color.Green), (empty, colorScheme.DisabledForeground), (tail, colorScheme.Foreground) })
-            {
-                if (text.Length > 0)
-                {
-                    buffer.Write(ZOrder, new Position(x, AbsolutePosition.Y + hintRow), new Size(text.Length, 1), new ConxelString(text, color, colorScheme.Background));
-                    x += text.Length;
-                }
-            }
-
-            return;
-        }
-
         string hint = Hint.Length <= innerWidth ? Hint : Hint.Cut(innerWidth);
         WriteRow(buffer, colorScheme, innerWidth, hintRow, hint, colorScheme.DisabledForeground);
     }
