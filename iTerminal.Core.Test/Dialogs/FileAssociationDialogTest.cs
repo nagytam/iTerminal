@@ -110,14 +110,15 @@ public class FileAssociationDialogTest
     public async Task ANewProgramWithoutAName_TakesTheProgramsName()
     {
         Rig rig = await OpenAsync(d => d.LoadNew(FileAssociationKind.Open, " *.md "));
-        rig.Dialog.Command = "\"C:\\Tools\\typora.exe\" %f";
+        string command = "\"" + Path.Combine(Path.GetTempPath(), "Tools", "typora.exe") + "\" %f";
+        rig.Dialog.Command = command;
 
         Assert.IsTrue(rig.Dialog.Save());
 
         FileAssociation saved = rig.Saved.Single();
         Assert.AreEqual("typora", saved.Name);
         Assert.AreEqual("*.md", saved.Patterns);
-        Assert.AreEqual("\"C:\\Tools\\typora.exe\" %f", saved.Command);
+        Assert.AreEqual(command, saved.Command);
         Assert.AreEqual(FileAssociationKind.Open, saved.Kind);
         Assert.IsFalse(string.IsNullOrEmpty(saved.Id));
     }
