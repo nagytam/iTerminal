@@ -194,9 +194,12 @@ public class FileAssociationDialogTest
         await rig.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         StringAssert.Contains(rig.Dialog.Error, "Type the command");
 
+        await rig.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab, '\t'));
+        StringAssert.Contains(rig.Dialog.Error, "Type the command");
+
         await rig.Dialog.HandleKeyEventAsync(Char('n'));
 
         Assert.AreEqual(string.Empty, rig.Dialog.Error);
-        Assert.AreEqual("n", rig.Dialog.Command);
+        Assert.AreEqual("n", rig.Dialog.AssociationName, "Tab moved on to the name box, which got the letter");
     }
 }

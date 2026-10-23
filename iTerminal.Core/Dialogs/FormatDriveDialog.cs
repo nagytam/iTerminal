@@ -158,6 +158,8 @@ public class FormatDriveDialog : FormDialog
         LayoutButtonRow(_formatButton, _cancelButton);
     }
 
+    protected override void ClearError() => SetError(string.Empty);
+
     private void SetError(string message)
     {
         var lines = message.Length == 0 ? [] : ("Error: " + message).WrapWords((int)Math.Max(10, FieldWidth));

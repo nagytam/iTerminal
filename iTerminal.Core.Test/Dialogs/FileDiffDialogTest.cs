@@ -161,4 +161,38 @@ public class FileDiffDialogTest
         Assert.AreEqual("café", FileDiffDialog.Decode([0x63, 0x61, 0x66, 0xE9]));
         Assert.AreEqual("café", FileDiffDialog.Decode([0xEF, 0xBB, 0xBF, 0x63, 0x61, 0x66, 0xC3, 0xA9]));
     }
+
+    [TestMethod]
+    [Timeout(30_000)]
+    public async Task TheWheelScrollsTheComparisonThreeLinesAtATime_AndStopsAtTheEnds()
+    {
+        string many = string.Join("\n", Enumerable.Range(0, 120).Select(i => "line" + i.ToString("000"))) + "\n";
+        var (dialog, root) = await ShowAsync(Write("a.txt", many), Write("b.txt", many + "extra\n"));
+        Position inside = new(dialog.AbsolutePosition.X + 10, dialog.AbsolutePosition.Y + 8);
+
+        // The view opens on the first difference, which here is the last line.
+        await dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Home));
+        UiTestHelper.AssertScreenContains(UiTestHelper.Render(root), "line000");
+        UiTestHelper.AssertScreenDoesNotContain(UiTestHelper.Render(root), "line100");
+
+        await dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.End));
+        UiTestHelper.AssertScreenContains(UiTestHelper.Render(root), "line119");
+
+        await dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Home));
+        Assert.IsTrue(await dialog.HandleMouseEventAsync(new MouseEvent { Position = inside, WheelDelta = 1 }));
+        UiTestHelper.AssertScreenContains(UiTestHelper.Render(root), "line000");
+
+        await dialog.HandleMouseEventAsync(new MouseEvent { Position = inside, WheelDelta = -1 });
+        UiTestHelper.AssertScreenDoesNotContain(UiTestHelper.Render(root), "line000");
+        UiTestHelper.AssertScreenContains(UiTestHelper.Render(root), "line003");
+    }
+
+    [TestMethod]
+    [Timeout(30_000)]
+    public async Task TheWheelOutsideTheDialog_IsNotTheDialogs()
+    {
+        var (dialog, _) = await ShowAsync(Write("a.txt", "x\n"), Write("b.txt", "y\n"));
+
+        Assert.IsFalse(await dialog.HandleMouseEventAsync(new MouseEvent { Position = new Position(0, 0), WheelDelta = -1 }));
+    }
 }

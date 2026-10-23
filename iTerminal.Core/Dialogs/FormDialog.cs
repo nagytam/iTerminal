@@ -26,6 +26,28 @@ public abstract class FormDialog : Dialog
     /// <summary>Width for a field control starting at <see cref="FieldX"/>, clamped to at least 1.</summary>
     protected long FieldWidth => Math.Max(1, ViewSize.Width - FieldX - FieldRightMargin);
 
+    /// <summary>Whether a key changes the text of a box: a character, Backspace or Delete — not Tab, the arrows, Enter or a chord.</summary>
+    protected static bool IsEditingKey(KeyEvent keyEvent) =>
+        !keyEvent.Control && !keyEvent.Alt
+        && (keyEvent.ConsoleKey is ConsoleKey.Backspace or ConsoleKey.Delete
+            || (keyEvent.KeyChar >= ' ' && keyEvent.KeyChar != '' && keyEvent.ConsoleKey is not (ConsoleKey.Enter or ConsoleKey.Escape or ConsoleKey.Tab)));
+
+    /// <summary>Drops the error line. Called when the user starts typing again, which is the answer to what it said.</summary>
+    protected virtual void ClearError()
+    {
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        bool handled = await base.HandleKeyEventAsync(keyEvent);
+        if (IsEditingKey(keyEvent))
+        {
+            ClearError();
+        }
+
+        return handled;
+    }
+
     /// <summary>Positions the primary action button (bottom-left) and Cancel button (bottom-right) on the same row.</summary>
     protected void LayoutButtonRow(IControl primaryButton, IControl cancelButton)
     {

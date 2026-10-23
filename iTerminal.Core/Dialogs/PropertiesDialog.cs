@@ -98,6 +98,8 @@ public class PropertiesDialog : FormDialog
 
     public string Error => _errorLabel.Text;
 
+    protected override void ClearError() => _errorLabel.Text = string.Empty;
+
     public bool IsReadOnlyChecked { get => _checkBoxReadOnly.IsChecked; set => _checkBoxReadOnly.IsChecked = value; }
     public bool IsHiddenChecked { get => _checkBoxHidden.IsChecked; set => _checkBoxHidden.IsChecked = value; }
     public bool IsSystemChecked { get => _checkBoxSystem.IsChecked; set => _checkBoxSystem.IsChecked = value; }

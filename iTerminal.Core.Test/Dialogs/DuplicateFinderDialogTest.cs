@@ -150,4 +150,80 @@ public class DuplicateFinderDialogTest
         Assert.AreEqual(2, dialog.MarkedPaths.Count);
         Assert.IsFalse(dialog.MarkedPaths.Any(p => p.Contains(Path.Combine("three", "report.txt"))));
     }
+
+    // The list starts after the dialog's border, the folder, the summary and a blank line.
+    private static MouseEvent AtRow(DuplicateFinderDialog dialog, int row, int column = 20, bool click = true, int wheel = 0) => new()
+    {
+        Position = new Position(dialog.AbsolutePosition.X + 2 + column, dialog.AbsolutePosition.Y + 1 + 3 + row),
+        LeftClicked = click && wheel == 0,
+        WheelDelta = wheel,
+    };
+
+    [TestMethod]
+    public async Task AClickOnAFile_PutsTheCursorOnIt()
+    {
+        var (dialog, _) = await OpenAsync();
+        string first = dialog.Selected!.Path;
+
+        Assert.IsTrue(await dialog.HandleMouseEventAsync(AtRow(dialog, 3)));
+
+        Assert.AreNotEqual(first, dialog.Selected!.Path);
+        Assert.AreEqual(dialog.Groups[0].Files[2].Path, dialog.Selected.Path);
+        Assert.AreEqual(0, dialog.MarkedPaths.Count);
+    }
+
+    [TestMethod]
+    public async Task AClickOnTheBox_MarksAndUnmarksThatFile()
+    {
+        var (dialog, _) = await OpenAsync();
+
+        await dialog.HandleMouseEventAsync(AtRow(dialog, 1, column: 3));
+        Assert.AreEqual(1, dialog.MarkedPaths.Count);
+        Assert.AreEqual(dialog.Groups[0].Files[0].Path, dialog.MarkedPaths.Single());
+
+        await dialog.HandleMouseEventAsync(AtRow(dialog, 1, column: 3));
+        Assert.AreEqual(0, dialog.MarkedPaths.Count);
+    }
+
+    [TestMethod]
+    public async Task AClickOnAGroupHeading_OrBelowTheList_ChangesNothing()
+    {
+        var (dialog, _) = await OpenAsync();
+        string first = dialog.Selected!.Path;
+
+        await dialog.HandleMouseEventAsync(AtRow(dialog, 0));
+        await dialog.HandleMouseEventAsync(AtRow(dialog, 40));
+
+        Assert.AreEqual(first, dialog.Selected!.Path);
+        Assert.AreEqual(0, dialog.MarkedPaths.Count);
+    }
+
+    [TestMethod]
+    public async Task TheWheel_MovesTheCursorThreeFilesAtATime_AndStopsAtTheEnds()
+    {
+        var (dialog, _) = await OpenAsync();
+
+        Assert.IsTrue(await dialog.HandleMouseEventAsync(AtRow(dialog, 1, wheel: -1)));
+        Assert.AreEqual(dialog.Groups[0].Files[2].Path, dialog.Selected!.Path);
+
+        await dialog.HandleMouseEventAsync(AtRow(dialog, 1, wheel: 1));
+        Assert.AreEqual(dialog.Groups[0].Files[0].Path, dialog.Selected!.Path);
+        await dialog.HandleMouseEventAsync(AtRow(dialog, 1, wheel: 1));
+        Assert.AreEqual(dialog.Groups[0].Files[0].Path, dialog.Selected!.Path);
+    }
+
+    [TestMethod]
+    public async Task WhileTheDeletionIsBeingAsked_TheMouseLeavesTheListAlone()
+    {
+        var (dialog, _) = await OpenAsync();
+        await PressAsync(dialog, ConsoleKey.A);
+        await PressAsync(dialog, ConsoleKey.Delete);
+        Assert.IsTrue(dialog.IsConfirmingDelete);
+        string cursor = dialog.Selected!.Path;
+
+        await dialog.HandleMouseEventAsync(AtRow(dialog, 3));
+
+        Assert.AreEqual(cursor, dialog.Selected!.Path);
+        Assert.IsTrue(dialog.IsConfirmingDelete);
+    }
 }

@@ -270,6 +270,19 @@ public class FileDiffDialog : Dialog
         base.Close();
     }
 
+    /// <summary>The wheel scrolls the comparison three lines a notch, wherever in the dialog the pointer is.</summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            _view.ScrollBy(mouseEvent.WheelDelta > 0 ? -3 : 3);
+            StateHasChanged();
+            return true;
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (!keyEvent.Alt && !keyEvent.Control)
@@ -356,7 +369,7 @@ public class FileDiffDialog : Dialog
         var position = Result is { HunkStarts.Count: > 0 } result ? $"  ({_view.CurrentDifference(result)}/{result.HunkStarts.Count})" : string.Empty;
         Write(1, (int)ViewSize.Height - 2, " " + _status + position + options, inner, _statusIsError ? colorScheme.Error : foreground);
 
-        var hints = " N/P:next/prev difference  W:whitespace  C:case  ↑↓ PgUp PgDn ←→:scroll  Esc:close ".FitHints(Math.Max(0, width - 4));
+        var hints = " N/P:next/prev difference  W:whitespace  C:case  ↑↓ PgUp PgDn wheel ←→:scroll  Esc:close ".FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, hints), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);
