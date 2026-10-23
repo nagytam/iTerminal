@@ -327,6 +327,74 @@ public class SystemSettingsDialog : Dialog
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);
     }
 
+    // ── Mouse ───────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// The wheel moves the highlight three rows; a click on a row highlights it, and a click on a section's name in
+    /// the strip at the top opens that section. Nothing answers while a value is being typed, a question is up or a
+    /// change is under way.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (!_inputActive && _confirmPrompt is null && !_busy && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            if (mouseEvent.WheelDelta != 0)
+            {
+                MoveCursor(mouseEvent.WheelDelta > 0 ? -3 : 3);
+                return true;
+            }
+
+            if (mouseEvent.LeftClicked)
+            {
+                long row = mouseEvent.Position.Y - (AbsolutePosition.Y + 1);
+                long column = mouseEvent.Position.X - (AbsolutePosition.X + 1);
+                if (row == 0 && SectionAt(column) is { } section)
+                {
+                    SwitchSection(section - (int)_section);
+                    return true;
+                }
+
+                if (row >= HeaderRows && row < HeaderRows + ContentRows && ItemAt((int)row - HeaderRows) is { } index)
+                {
+                    _cursors[(int)_section] = index;
+                    Render();
+                    return true;
+                }
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
+    /// <summary>The section whose name the strip shows at <paramref name="column"/>: each is drawn as " Name " (or "[Name]"), two spaces apart.</summary>
+    private static int? SectionAt(long column)
+    {
+        long start = 0;
+        for (var i = 0; i < SectionNames.Length; i++)
+        {
+            long width = SectionNames[i].Length + 2;
+            if (column >= start && column < start + width)
+            {
+                return i;
+            }
+
+            start += width + 2;
+        }
+
+        return null;
+    }
+
+    /// <summary>The item drawn on body row <paramref name="bodyRow"/> of the current section, or null for an empty row.</summary>
+    private int? ItemAt(int bodyRow)
+    {
+        var count = ItemCount;
+        int first = _section == SettingsSection.Computer
+            ? 0
+            : Math.Clamp(_cursors[(int)_section] - ContentRows / 2, 0, Math.Max(0, count - ContentRows));
+        int index = first + bodyRow;
+        return index >= 0 && index < count ? index : null;
+    }
+
     // ── Keys ────────────────────────────────────────────────────────────────
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

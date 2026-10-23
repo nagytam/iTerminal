@@ -220,4 +220,43 @@ public class SecureWipeDialogTest
 
         Assert.IsFalse(_dialog.IsVisible);
     }
+
+    private iConsole.Data.MouseEvent ClickOnRow(int row) => new()
+    {
+        Position = new iConsole.Data.Position(_dialog.AbsolutePosition.X + 2 + 3, _dialog.AbsolutePosition.Y + 1 + row),
+        LeftClicked = true,
+    };
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task AClickOnTheMethod_StepsToTheNextOne_RoundToTheFirst()
+    {
+        await OpenAsync(@"C:\data\a.txt");
+        Assert.AreEqual(WipePattern.Random, _dialog.Pattern);
+
+        Assert.IsTrue(await _dialog.HandleMouseEventAsync(ClickOnRow(2)));
+        Assert.AreEqual(WipePattern.ThreePass, _dialog.Pattern);
+        await _dialog.HandleMouseEventAsync(ClickOnRow(3));
+        Assert.AreEqual(WipePattern.SevenPass, _dialog.Pattern);
+        await _dialog.HandleMouseEventAsync(ClickOnRow(2));
+        Assert.AreEqual(WipePattern.Random, _dialog.Pattern);
+        Assert.AreEqual(WipePhase.Choosing, _dialog.Phase);
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task AClickElsewhere_OrOnceArmed_DoesNotChangeTheMethod()
+    {
+        await OpenAsync(@"C:\data\a.txt");
+
+        await _dialog.HandleMouseEventAsync(ClickOnRow(6));
+        Assert.AreEqual(WipePattern.Random, _dialog.Pattern);
+
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+        Assert.AreEqual(WipePhase.Armed, _dialog.Phase);
+        await _dialog.HandleMouseEventAsync(ClickOnRow(2));
+
+        Assert.AreEqual(WipePattern.Random, _dialog.Pattern);
+        Assert.AreEqual(WipePhase.Armed, _dialog.Phase);
+    }
 }

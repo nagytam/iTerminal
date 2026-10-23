@@ -188,4 +188,22 @@ public class CalculatorDialogTest
 
         Assert.IsTrue(buttonA.IsEnabled);
     }
+
+    [TestMethod]
+    public async Task AClickOnAModesTab_SwitchesTheEngineAtOnce_NotAtTheNextKey()
+    {
+        var dialog = new CalculatorDialog(CreateThemeService());
+        await ShowAsync(dialog);
+        Assert.AreEqual(CalculatorMode.Basic, dialog.EngineForTest.Mode);
+        var tab = dialog.TabForTest;
+
+        // The names sit on the row under the tab's top border; try along it until one of them is hit.
+        for (long x = tab.AbsolutePosition.X; x < tab.AbsolutePosition.X + tab.ViewSize.Width && tab.FocusedTabPage == 0; x++)
+        {
+            await dialog.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, tab.AbsolutePosition.Y + 1), LeftClicked = true });
+        }
+
+        Assert.AreEqual(1, tab.FocusedTabPage);
+        Assert.AreEqual(CalculatorMode.Scientific, dialog.EngineForTest.Mode);
+    }
 }

@@ -12,6 +12,8 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 namespace iTerminal.Core.Test.Dialogs;
 
 /// <summary>Shift+F12: reading a file, comparing a typed checksum, saving name.sha256 and fitting a narrow terminal.</summary>
+// Some tests put text on the ambient clipboard and read it back, so the class does not run beside others that do.
+[DoNotParallelize]
 [TestClass]
 public class ChecksumDialogTest
 {
@@ -229,5 +231,78 @@ public class ChecksumDialogTest
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
 
         Assert.IsFalse(dialog.IsVisible);
+    }
+
+    private static MouseEvent ClickOnRow(ChecksumDialog dialog, int row) => new()
+    {
+        Position = new iConsole.Data.Position(dialog.AbsolutePosition.X + 2 + 14, dialog.AbsolutePosition.Y + 1 + row),
+        LeftClicked = true,
+    };
+
+    private static int RowOf(ChecksumDialog dialog, string startsWith) =>
+        dialog.Details.Split(Environment.NewLine).ToList().FindIndex(line => line.StartsWith(startsWith, StringComparison.Ordinal));
+
+    [TestMethod]
+    public async Task AClickOnAChecksum_CopiesItToTheClipboard_AndSaysSo()
+    {
+        (ChecksumDialog dialog, Control root) = await OpenAsync(Hashes);
+
+        Assert.IsTrue(await dialog.HandleMouseEventAsync(ClickOnRow(dialog, RowOf(dialog, "MD5"))));
+        Assert.AreEqual(new string('a', 32), await iConsole.Services.TextClipboard.Current.GetTextAsync());
+        StringAssert.Contains(dialog.Verdict, "Copied the MD5 to the clipboard.");
+        AssertScreenContains(Render(root), "Copied the MD5");
+
+        // A SHA-512 is drawn over two rows; either one copies the whole checksum.
+        int sha512 = RowOf(dialog, "SHA-512");
+        await dialog.HandleMouseEventAsync(ClickOnRow(dialog, sha512 + 1));
+        Assert.AreEqual(new string('d', 128), await iConsole.Services.TextClipboard.Current.GetTextAsync());
+    }
+
+    [TestMethod]
+    public async Task AClickOnTheFileLineOrAGapCopiesNothing()
+    {
+        (ChecksumDialog dialog, _) = await OpenAsync(Hashes);
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("before");
+
+        await dialog.HandleMouseEventAsync(ClickOnRow(dialog, 0));
+        await dialog.HandleMouseEventAsync(ClickOnRow(dialog, 2));
+
+        Assert.AreEqual("before", await iConsole.Services.TextClipboard.Current.GetTextAsync());
+    }
+
+    [TestMethod]
+    public async Task F3_CopiesTheSha256()
+    {
+        (ChecksumDialog dialog, _) = await OpenAsync(Hashes);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F3));
+
+        Assert.AreEqual(new string('c', 64), await iConsole.Services.TextClipboard.Current.GetTextAsync());
+        StringAssert.Contains(dialog.Verdict, "Copied the SHA-256");
+    }
+
+    [TestMethod]
+    public async Task F3_BeforeTheFileIsRead_SaysThereIsNothingToCopy()
+    {
+        (ChecksumDialog dialog, _) = await OpenAsync(null, new IOException("disk gone"));
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("before");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F3));
+
+        StringAssert.Contains(dialog.Verdict, "Nothing to copy yet");
+        Assert.AreEqual("before", await iConsole.Services.TextClipboard.Current.GetTextAsync());
+    }
+
+    [TestMethod]
+    public async Task TheFooterNamesTheCopy_AndTypingInTheCompareBoxClearsTheCopiedNotice()
+    {
+        (ChecksumDialog dialog, Control root) = await OpenAsync(Hashes);
+        AssertScreenContains(Render(root), "F3 or click:copy");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F3));
+        StringAssert.Contains(dialog.Verdict, "Copied");
+
+        await dialog.HandleKeyEventAsync(Char('a'));
+
+        Assert.IsFalse(dialog.Verdict.Contains("Copied"));
     }
 }

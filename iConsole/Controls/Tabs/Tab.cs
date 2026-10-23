@@ -491,6 +491,14 @@ public class Tab(IThemeService themeService) : Control(themeService)
     /// </summary>
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
+        // The wheel over the page names steps through the pages, up for the previous; over a page's own content it
+        // belongs to that content.
+        if (mouseEvent.WheelDelta != 0 && IsEnabled && GetTabStripPageAt(mouseEvent.Position) >= 0)
+        {
+            SwitchToPage(FocusedTabPage + (mouseEvent.WheelDelta > 0 ? -1 : 1));
+            return true;
+        }
+
         if (mouseEvent.LeftClicked && IsEnabled)
         {
             var clickedPage = GetTabStripPageAt(mouseEvent.Position);

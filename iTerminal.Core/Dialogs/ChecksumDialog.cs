@@ -38,6 +38,7 @@ public class ChecksumDialog : Dialog
     private CancellationTokenSource? _cancellation;
     private long _bytesRead;
     private string _lastCompare = string.Empty;
+    private Dictionary<int, ChecksumAlgorithm> _hashRows = [];
     private string _saveStatus = string.Empty;
     private bool _saveFailed;
 
@@ -234,6 +235,7 @@ public class ChecksumDialog : Dialog
         }
 
         lines.Add(default);
+        Dictionary<int, ChecksumAlgorithm> hashRows = [];
         foreach (var algorithm in ChecksumService.Algorithms)
         {
             var caption = ChecksumService.DisplayName(algorithm);
@@ -247,6 +249,7 @@ public class ChecksumDialog : Dialog
             var hash = result.Hashes[algorithm];
             for (var start = 0; start < hash.Length; start += valueWidth)
             {
+                hashRows[lines.Count] = algorithm;
                 lines.Add(new(Row(start == 0 ? caption : string.Empty, hash.Substring(start, Math.Min(valueWidth, hash.Length - start)))));
             }
         }
@@ -261,6 +264,7 @@ public class ChecksumDialog : Dialog
                     : new(Row("Written", $"✗ does NOT match {written.Source}"), colorScheme.Error));
         }
 
+        _hashRows = hashRows;
         _info.Lines = lines;
 
         var compare = Compare;
@@ -321,6 +325,12 @@ public class ChecksumDialog : Dialog
             return true;
         }
 
+        if (keyEvent.ConsoleKey == ConsoleKey.F3 && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)
+        {
+            CopyHash(ChecksumAlgorithm.Sha256);
+            return true;
+        }
+
         // With nothing typed there is nothing for Enter to do in the box, so it dismisses the report.
         if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift && Compare.Length == 0)
         {
@@ -331,6 +341,53 @@ public class ChecksumDialog : Dialog
         var handled = await base.HandleKeyEventAsync(keyEvent);
         UpdateLines();
         return handled;
+    }
+
+    /// <summary>A click on a checksum copies it to the clipboard, to be pasted where it is compared.</summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (mouseEvent.LeftClicked && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            long row = mouseEvent.Position.Y - _info.AbsolutePosition.Y;
+            long column = mouseEvent.Position.X - _info.AbsolutePosition.X;
+            if (column >= 0 && column < _info.ViewSize.Width && _hashRows.TryGetValue((int)row, out ChecksumAlgorithm algorithm))
+            {
+                CopyHash(algorithm);
+                return true;
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
+    /// <summary>Puts one of the checksums on the clipboard and says so.</summary>
+    public bool CopyHash(ChecksumAlgorithm algorithm)
+    {
+        if (Result is not { } result)
+        {
+            _saveStatus = "Nothing to copy yet: the file is still being read.";
+            _saveFailed = true;
+            UpdateLines();
+            StateHasChanged();
+            return false;
+        }
+
+        string name = ChecksumService.DisplayName(algorithm);
+        Task copy = TextClipboard.Current.SetTextAsync(result.Hashes[algorithm]);
+        _saveStatus = $"Copied the {name} to the clipboard.";
+        _saveFailed = false;
+        _ = copy.ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                _saveStatus = $"Could not copy the {name}: {task.Exception?.GetBaseException().Message}";
+                _saveFailed = true;
+                StateHasChanged();
+            }
+        }, TaskScheduler.Default);
+        UpdateLines();
+        StateHasChanged();
+        return true;
     }
 
     /// <summary>
@@ -394,7 +451,7 @@ public class ChecksumDialog : Dialog
         var colorScheme = ThemeService.CurrentColorScheme;
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
         var width = (int)ViewSize.Width;
-        var footer = " F2:save .sha256  Esc:close ".FitHints(Math.Max(0, width - 4));
+        var footer = " F2:save .sha256  F3 or click:copy  Esc:close ".FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);
