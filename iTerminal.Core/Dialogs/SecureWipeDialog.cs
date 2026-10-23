@@ -343,6 +343,23 @@ public class SecureWipeDialog : Dialog
         return handled;
     }
 
+    /// <summary>A click on the method (or the line of choices under it) steps to the next method, round to the first.</summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (Phase == WipePhase.Choosing && mouseEvent.LeftClicked && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            long row = mouseEvent.Position.Y - _info.AbsolutePosition.Y;
+            long column = mouseEvent.Position.X - _info.AbsolutePosition.X;
+            if (row is 2 or 3 && column >= 0 && column < _info.ViewSize.Width)
+            {
+                ChoosePattern(Methods[(Array.IndexOf(Methods, Pattern) + 1) % Methods.Length]);
+                return true;
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
     public override void Close()
     {
         // Stops after the file under way; what was wiped stays wiped.

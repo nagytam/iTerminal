@@ -78,6 +78,14 @@ public class CalculatorDialog : SplitPaneDialog
         return handled;
     }
 
+    /// <summary>A click on a mode's tab switches the page as the arrows do, and the engine has to follow at once.</summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool handled = await base.HandleMouseEventAsync(mouseEvent);
+        SyncEngineMode();
+        return handled;
+    }
+
     private void SyncEngineMode()
     {
         var mode = _tab.FocusedTabPage switch

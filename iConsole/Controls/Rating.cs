@@ -87,6 +87,13 @@ public class Rating : Control, IReadOnly
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (!IsReadOnly && IsEnabled && mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            // Up for more, as on the numeric box.
+            Value += mouseEvent.WheelDelta > 0 ? 1 : -1;
+            return true;
+        }
+
         if (IsReadOnly || !IsEnabled || !mouseEvent.LeftClicked || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;

@@ -1256,4 +1256,39 @@ public class TabTest
         Assert.IsTrue(handled);
         Assert.AreEqual(2, tab.FocusedTabPage);
     }
+
+    private static MouseEvent Wheel(int x, int y, int delta) =>
+        new() { Position = new Position(x, y), WheelDelta = delta };
+
+    [TestMethod]
+    public async Task HandleMouseEventAsync_TheWheelOverTheStrip_StepsThroughThePages()
+    {
+        var mockThemeService = CreateMockThemeService();
+        var (tab, firstList) = CreateTabWithLists(Orientation.Vertical, mockThemeService.Object);
+        await tab.OnInitializeAsync();
+        SettleList(firstList);
+
+        Assert.IsTrue(await tab.HandleMouseEventAsync(Wheel(3, 1, -1)));
+        Assert.AreEqual(1, tab.FocusedTabPage, "down goes to the next page");
+
+        Assert.IsTrue(await tab.HandleMouseEventAsync(Wheel(3, 3, 1)));
+        Assert.AreEqual(0, tab.FocusedTabPage, "up goes back");
+
+        Assert.IsTrue(await tab.HandleMouseEventAsync(Wheel(3, 1, 1)));
+        Assert.AreEqual(0, tab.FocusedTabPage, "and stops at the first page");
+    }
+
+    [TestMethod]
+    public async Task HandleMouseEventAsync_TheWheelAwayFromThePageNames_IsNotTheStrips()
+    {
+        var mockThemeService = CreateMockThemeService();
+        var (tab, firstList) = CreateTabWithLists(Orientation.Vertical, mockThemeService.Object);
+        await tab.OnInitializeAsync();
+        SettleList(firstList);
+
+        // The rule row between two names stands for no page.
+        await tab.HandleMouseEventAsync(Wheel(3, 2, -1));
+
+        Assert.AreEqual(0, tab.FocusedTabPage);
+    }
 }

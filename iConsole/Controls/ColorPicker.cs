@@ -103,6 +103,13 @@ public class ColorPicker : Control, IReadOnly
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (!IsReadOnly && IsEnabled && mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            // A row up or down, as the arrow keys move; choosing is still a click, Enter or Space.
+            MoveCursor(0, mouseEvent.WheelDelta > 0 ? -1 : 1);
+            return true;
+        }
+
         if (IsReadOnly || !IsEnabled || !mouseEvent.LeftClicked || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;
