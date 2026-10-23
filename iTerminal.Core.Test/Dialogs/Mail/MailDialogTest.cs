@@ -9,6 +9,8 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Mail;
 
+// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
+[DoNotParallelize]
 [TestClass]
 public class MailDialogTest
 {
@@ -232,5 +234,127 @@ public class MailDialogTest
         Assert.AreEqual("Home", saved.Name);
         Assert.AreEqual("pop.example.test", saved.PopHost);
         fixture.Vault.Verify(v => v.Save(It.Is<PasswordEntry>(e => e.Id == saved.SecretProfileId && e.Password == "pw")), Times.Once);
+    }
+
+    private static async Task<Fixture> OpenInboxAsync(int messages = 1, string body = "Hello from the test.")
+    {
+        var fixture = Create();
+        fixture.Mail.Listings = [.. Enumerable.Range(1, messages).Select(i => new MailListing(i, 100, "Ada <ada@example.test>", "Subject " + i, "Tue, 14 Oct 2026 09:00:00 +0200"))];
+        fixture.Mail.Item = new MailItem(1, "Ada <ada@example.test>", "you@example.test", "Welcome", "Tue, 14 Oct 2026 09:00:00 +0200", body);
+        await ShowAsync(fixture.Dialog);
+        await WaitUntilAsync(() => fixture.Dialog.ListingCountForTest == messages, "the inbox to load");
+        return fixture;
+    }
+
+    private static Task PressKeyAsync(MailDialog dialog, ConsoleKey key, char c = (char)0, bool shift = false, bool control = false) =>
+        dialog.HandleKeyEventAsync(Key(key, c, shift, control: control));
+
+    [TestMethod]
+    public async Task HomeAndEndJumpToTheFirstAndLastMessage()
+    {
+        var fixture = await OpenInboxAsync(messages: 30);
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.End);
+        Assert.AreEqual(29, fixture.Dialog.CursorForTest);
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Home);
+        Assert.AreEqual(0, fixture.Dialog.CursorForTest);
+    }
+
+    [TestMethod]
+    public async Task HomeAndEndScrollAMessageToItsTopAndBottom()
+    {
+        string body = string.Join((char)10, Enumerable.Range(0, 80).Select(i => "line " + i));
+        var fixture = await OpenInboxAsync(body: body);
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Enter, (char)13);
+        await WaitUntilAsync(() => fixture.Dialog.ModeForTest == "View", "the message to open");
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.End);
+        Assert.IsTrue(fixture.Dialog.ScrollForTest > 40, fixture.Dialog.ScrollForTest.ToString());
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Home);
+        Assert.AreEqual(0, fixture.Dialog.ScrollForTest);
+    }
+
+    [TestMethod]
+    public async Task ShiftTabGoesBackAFieldInTheComposer_AndWrapsFromTheFirst()
+    {
+        var fixture = await OpenInboxAsync();
+        await fixture.Dialog.HandleKeyEventAsync(Char('c'));
+        Assert.AreEqual(0, fixture.Dialog.DraftFieldForTest);
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Tab, (char)9, shift: true);
+        Assert.AreEqual(2, fixture.Dialog.DraftFieldForTest);
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Tab, (char)9, shift: true);
+        Assert.AreEqual(1, fixture.Dialog.DraftFieldForTest);
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Tab, (char)9);
+        Assert.AreEqual(2, fixture.Dialog.DraftFieldForTest);
+    }
+
+    [TestMethod]
+    public async Task ShiftTabGoesBackAFieldInTheAccountForm()
+    {
+        var fixture = Create(withAccount: false);
+        await ShowAsync(fixture.Dialog);
+        Assert.AreEqual(0, fixture.Dialog.SetupCursorForTest);
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Tab, (char)9);
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Tab, (char)9);
+        Assert.AreEqual(2, fixture.Dialog.SetupCursorForTest);
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Tab, (char)9, shift: true);
+        Assert.AreEqual(1, fixture.Dialog.SetupCursorForTest);
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesIntoTheComposer_OneLineForTheAddressAndSubject_LineBreaksForTheBody()
+    {
+        var fixture = await OpenInboxAsync();
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("ada@example.test" + (char)10 + "second");
+        await fixture.Dialog.HandleKeyEventAsync(Char('c'));
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.V, 'v', control: true);
+        Assert.AreEqual("ada@example.test second", fixture.Dialog.DraftForTest[0]);
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Tab, (char)9);
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Tab, (char)9);
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("one" + (char)13 + (char)10 + "two");
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Insert, shift: true);
+        Assert.AreEqual("one" + (char)10 + "two", fixture.Dialog.DraftForTest[2]);
+    }
+
+    [TestMethod]
+    public async Task PastingNothingIntoTheComposerChangesNothing()
+    {
+        var fixture = await OpenInboxAsync();
+        await iConsole.Services.TextClipboard.Current.SetTextAsync(string.Empty);
+        await fixture.Dialog.HandleKeyEventAsync(Char('c'));
+        await TypeAsync(fixture.Dialog, "x");
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.V, 'v', control: true);
+
+        Assert.AreEqual("x", fixture.Dialog.DraftForTest[0]);
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesIntoTheAddressBookSearch()
+    {
+        var fixture = await OpenInboxAsync();
+        await fixture.Dialog.HandleKeyEventAsync(Char('c'));
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.L, 'l', control: true);
+        Assert.AreEqual("Directory", fixture.Dialog.ModeForTest);
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("Lovelace");
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.V, 'v', control: true);
+
+        Assert.AreEqual("Lovelace", fixture.Dialog.DirectoryTermForTest);
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesIntoTheCurrentAccountField()
+    {
+        var fixture = Create(withAccount: false);
+        await ShowAsync(fixture.Dialog);
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("Work account");
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.V, 'v', control: true);
+        Assert.AreEqual("Work account", fixture.Dialog.SetupValueForTest("Account name"));
     }
 }
