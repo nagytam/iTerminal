@@ -164,6 +164,21 @@ public class UnitConverterDialog : SplitPaneDialog
         return handled;
     }
 
+    /// <summary>
+    /// A click or the wheel on a list moves its cursor as a key does, and the result has to follow: before, picking a
+    /// unit with the mouse left the old result on screen until some key was pressed.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        bool handled = await base.HandleMouseEventAsync(mouseEvent);
+        if (handled)
+        {
+            SyncEngineFromControls();
+        }
+
+        return handled;
+    }
+
     private void SyncEngineFromControls()
     {
         var categories = _categoryListBox.ListModel.ListItems;

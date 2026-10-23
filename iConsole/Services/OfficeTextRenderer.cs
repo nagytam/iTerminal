@@ -105,6 +105,47 @@ public static class OfficeTextRenderer
         return Trim(lines);
     }
 
+    /// <summary>
+    /// Renders an OpenDocument spreadsheet (.ods/.ots) the way <see cref="RenderSpreadsheet"/> renders Excel: one
+    /// grid per sheet with column letters and row numbers. Cells show the text the spreadsheet displays (so a
+    /// date or a percentage looks as it does there), falling back to the stored value. Empty rows and columns,
+    /// which an ODS repeats by the million to fill out a sheet, are skipped, not expanded.
+    /// </summary>
+    public static IReadOnlyList<string> RenderOpenDocumentSpreadsheet(string path)
+    {
+        List<string> lines = [];
+        try
+        {
+            using ZipArchive archive = ZipFile.OpenRead(path);
+            ZipArchiveEntry? entry = archive.GetEntry("content.xml");
+            if (entry is null)
+            {
+                lines.Add("[Could not read the workbook: content.xml is missing]");
+                return lines;
+            }
+
+            XDocument content;
+            using (Stream stream = entry.Open())
+            {
+                content = XDocument.Load(stream);
+            }
+
+            XElement? spreadsheet = content.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "spreadsheet");
+            foreach (XElement table in spreadsheet?.Elements(TableNs + "table") ?? [])
+            {
+                AppendHeading(lines, (string?)table.Attribute(TableNs + "name") ?? "(sheet)");
+                AppendOdfSheet(lines, table);
+                lines.Add(string.Empty);
+            }
+        }
+        catch (Exception exception)
+        {
+            lines.Add($"[Could not read the workbook: {exception.Message}]");
+        }
+
+        return Trim(lines);
+    }
+
     public static IReadOnlyList<string> RenderSpreadsheet(string path)
     {
         List<string> lines = [];
@@ -409,6 +450,113 @@ public static class OfficeTextRenderer
         }
     }
 
+    private static int OdfRepeat(XElement element, string attribute) =>
+        int.TryParse((string?)element.Attribute(TableNs + attribute), NumberStyles.None, CultureInfo.InvariantCulture, out int repeat)
+            ? Math.Max(1, repeat) : 1;
+
+    private static void AppendOdfSheet(List<string> lines, XElement table)
+    {
+        List<(uint Row, Dictionary<int, GridCell> Cells)> rows = [];
+        int columns = 0;
+        long rowNumber = 0;
+        bool truncatedRows = false;
+        bool truncatedColumns = false;
+
+        foreach (XElement row in table.Descendants(TableNs + "table-row"))
+        {
+            int rowRepeat = OdfRepeat(row, "number-rows-repeated");
+            Dictionary<int, GridCell> cells = [];
+            int column = 0;
+            foreach (XElement cell in row.Elements().Where(e => e.Name == TableNs + "table-cell" || e.Name == TableNs + "covered-table-cell"))
+            {
+                int columnRepeat = OdfRepeat(cell, "number-columns-repeated");
+                GridCell value = cell.Name == TableNs + "table-cell" ? ReadOdfCell(cell) : default;
+                if (string.IsNullOrEmpty(value.Text))
+                {
+                    column += columnRepeat;
+                    continue;
+                }
+
+                for (int i = 0; i < columnRepeat; i++, column++)
+                {
+                    if (column >= MaxSheetColumns)
+                    {
+                        truncatedColumns = true;
+                        break;
+                    }
+
+                    cells[column] = value;
+                    columns = Math.Max(columns, column + 1);
+                }
+            }
+
+            if (cells.Count == 0)
+            {
+                rowNumber += rowRepeat;
+                continue;
+            }
+
+            for (int i = 0; i < rowRepeat; i++)
+            {
+                rowNumber++;
+                if (rows.Count >= MaxSheetRows)
+                {
+                    truncatedRows = true;
+                    break;
+                }
+
+                rows.Add(((uint)rowNumber, cells));
+            }
+
+            if (truncatedRows)
+            {
+                break;
+            }
+        }
+
+        AppendCellGrid(lines, rows, columns, truncatedRows, truncatedColumns);
+    }
+
+    /// <summary>One spreadsheet cell: the text it displays, else its stored value, right-aligned when it is a number, date, time or flag.</summary>
+    private static GridCell ReadOdfCell(XElement cell)
+    {
+        string? type = (string?)cell.Attribute(OfficeNs + "value-type");
+        bool numeric = type is "float" or "percentage" or "currency" or "date" or "time" or "boolean";
+        string shown = string.Join(" ", cell.Elements(TextNs + "p").Select(OdfText).Where(t => t.Length > 0));
+        if (shown.Length > 0)
+        {
+            return new GridCell(shown, numeric);
+        }
+
+        string? stored = type switch
+        {
+            "float" or "percentage" or "currency" => double.TryParse((string?)cell.Attribute(OfficeNs + "value"), NumberStyles.Float, CultureInfo.InvariantCulture, out double number)
+                ? number.ToString("G12", CultureInfo.InvariantCulture) : null,
+            "date" => ((string?)cell.Attribute(OfficeNs + "date-value"))?.Replace("T00:00:00", string.Empty).Replace('T', ' '),
+            "time" => OdfTime((string?)cell.Attribute(OfficeNs + "time-value")),
+            "boolean" => ((string?)cell.Attribute(OfficeNs + "boolean-value"))?.ToUpperInvariant(),
+            "string" => (string?)cell.Attribute(OfficeNs + "string-value"),
+            _ => null,
+        };
+        return new GridCell(stored ?? string.Empty, numeric);
+    }
+
+    /// <summary>An ISO 8601 duration such as <c>PT01H30M05S</c> as <c>01:30:05</c>; anything else as it is.</summary>
+    private static string? OdfTime(string? value)
+    {
+        if (value is null)
+        {
+            return null;
+        }
+
+        System.Text.RegularExpressions.Match match = System.Text.RegularExpressions.Regex.Match(value, @"^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:\.\d+)?S)?$");
+        return match.Success
+            ? string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}", Group(1), Group(2), Group(3))
+            : value;
+
+        int Group(int index) => match.Groups[index].Success ? int.Parse(match.Groups[index].Value, CultureInfo.InvariantCulture) : 0;
+    }
+
     private static void AppendOdfTable(List<string> lines, XElement table)
     {
         List<GridCell[]> rows = [];
@@ -487,6 +635,12 @@ public static class OfficeTextRenderer
             }
         }
 
+        AppendCellGrid(lines, rows, columns, truncatedRows, truncatedColumns);
+    }
+
+    /// <summary>The grid of a sheet: a header row of column letters, then each non-empty row under its number.</summary>
+    private static void AppendCellGrid(List<string> lines, List<(uint Row, Dictionary<int, GridCell> Cells)> rows, int columns, bool truncatedRows, bool truncatedColumns)
+    {
         if (rows.Count == 0)
         {
             lines.Add("  (empty)");
