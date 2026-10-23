@@ -152,6 +152,18 @@ public class FileAssociationDialog : FormDialog
         LayoutButtonRow(_saveButton, _cancelButton);
     }
 
+    /// <summary>Typing on is the answer to what the error said: it goes, rather than staying beside a form that is now fine.</summary>
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        bool handled = await base.HandleKeyEventAsync(keyEvent);
+        if (keyEvent.ConsoleKey is not (ConsoleKey.Enter or ConsoleKey.Escape) && _errorLabel.Text.Length > 0)
+        {
+            _errorLabel.Text = string.Empty;
+        }
+
+        return handled;
+    }
+
     /// <summary>
     /// Saves the form. False, with <see cref="Error"/> saying why, when there is no command or
     /// nothing it applies to. A name left empty is taken from the program.
