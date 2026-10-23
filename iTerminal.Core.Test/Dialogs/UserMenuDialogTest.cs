@@ -1,6 +1,7 @@
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Services;
+using iTerminal.Core.Controls;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Services.FileAssociations;
 using iTerminal.Core.Services.UserMenu;
@@ -202,5 +203,65 @@ public class UserMenuDialogTest
 
         Assert.IsFalse(f.Dialog.IsVisible);
         f.Menu.Verify(m => m.RunAsync(It.IsAny<UserMenuItem>(), It.IsAny<UserMenuContext>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    private static MouseEvent ClickRow(Fixture f, int row) => new()
+    {
+        Position = new Position(f.Dialog.AbsolutePosition.X + 4, f.Dialog.AbsolutePosition.Y + 1 + row),
+        LeftClicked = true,
+    };
+
+    [TestMethod]
+    public async Task AClickOnAnEntry_RunsIt()
+    {
+        Fixture f = await OpenAsync(Three);
+
+        Assert.IsTrue(await f.Dialog.HandleMouseEventAsync(ClickRow(f, 1)));
+        await f.Dialog.LastRun;
+
+        f.Menu.Verify(m => m.RunAsync(Three[1], Context, It.IsAny<CancellationToken>()), Times.Once);
+        Assert.IsFalse(f.Dialog.IsVisible);
+    }
+
+    [TestMethod]
+    public async Task AClickBelowTheLastEntry_OrOutsideTheList_RunsNothing()
+    {
+        Fixture f = await OpenAsync(Three);
+
+        await f.Dialog.HandleMouseEventAsync(ClickRow(f, 2 + 1));
+        await f.Dialog.HandleMouseEventAsync(new MouseEvent { Position = new Position(0, 0), LeftClicked = true });
+
+        f.Menu.Verify(m => m.RunAsync(It.IsAny<UserMenuItem>(), It.IsAny<UserMenuContext>(), It.IsAny<CancellationToken>()), Times.Never);
+        Assert.IsTrue(f.Dialog.IsVisible);
+    }
+
+    [TestMethod]
+    public async Task TheWheel_MovesTheCursorARow_AndStopsAtTheEnds()
+    {
+        Fixture f = await OpenAsync(Three);
+        Position inside = new(f.Dialog.AbsolutePosition.X + 4, f.Dialog.AbsolutePosition.Y + 1);
+
+        await f.Dialog.HandleMouseEventAsync(new MouseEvent { Position = inside, WheelDelta = -1 });
+        Assert.AreEqual("Build", f.Dialog.Selected!.Title);
+        await f.Dialog.HandleMouseEventAsync(new MouseEvent { Position = inside, WheelDelta = -1 });
+        await f.Dialog.HandleMouseEventAsync(new MouseEvent { Position = inside, WheelDelta = -1 });
+        Assert.AreEqual("Clean", f.Dialog.Selected!.Title);
+        await f.Dialog.HandleMouseEventAsync(new MouseEvent { Position = inside, WheelDelta = 1 });
+        Assert.AreEqual("Build", f.Dialog.Selected!.Title);
+    }
+
+    [TestMethod]
+    public async Task AClickInAScrolledMenu_RunsTheEntryUnderThePointer()
+    {
+        UserMenuItem[] many = Enumerable.Range(0, 30).Select(i => Item((char)('a' + i % 26), "Entry " + i.ToString("00"))).ToArray();
+        Fixture f = await OpenAsync(many, screen: new Size(60, 12));
+        await PressAsync(f, ConsoleKey.End);
+
+        // The window now ends at the last entry; its last row is the entry under the bottom row of the list.
+        int rows = (int)f.Dialog.Controls.AsSnapshot().OfType<InfoLines>().First().ViewSize.Height;
+        await f.Dialog.HandleMouseEventAsync(ClickRow(f, rows - 1));
+        await f.Dialog.LastRun;
+
+        f.Menu.Verify(m => m.RunAsync(many[29], Context, It.IsAny<CancellationToken>()), Times.Once);
     }
 }
