@@ -284,16 +284,31 @@ public class DiskManagerDialog : Dialog
 
     private Task Eject()
     {
-        if (_driveActions is null || SelectedDrive is not { DriveInfo: not null } drive)
+        if (_driveActions is null)
+        {
+            SetStatus("Ejecting is not available here.", isError: true);
+            return Task.CompletedTask;
+        }
+
+        if (SelectedDrive is null)
         {
             SetStatus("Choose a drive to eject.", isError: true);
             return Task.CompletedTask;
         }
 
+        if (SelectedDrive.DriveInfo is null)
+        {
+            SetStatus("A memory drive is part of this program: there is nothing to eject.", isError: true);
+            return Task.CompletedTask;
+        }
+
         if (_isBusy)
         {
+            SetStatus("Still working on the last request.", isError: true);
             return PendingOperation;
         }
+
+        var drive = SelectedDrive;
 
         var root = RootOf(drive);
         _isBusy = true;
@@ -318,11 +333,31 @@ public class DiskManagerDialog : Dialog
     /// <summary>Opens the format dialog for the drive under the cursor, unless it must not be formatted.</summary>
     public async Task FormatAsync()
     {
-        if (_driveActions is null || _formatDialog is null || SelectedDrive is not { DriveInfo: not null } drive)
+        if (_driveActions is null || _formatDialog is null || !_driveActions.CanFormat)
+        {
+            SetStatus("Formatting is not available on this system.", isError: true);
+            return;
+        }
+
+        if (SelectedDrive is null)
         {
             SetStatus("Choose a drive to format.", isError: true);
             return;
         }
+
+        if (SelectedDrive.DriveInfo is null)
+        {
+            SetStatus("A memory drive cannot be formatted: it lives in this program's database.", isError: true);
+            return;
+        }
+
+        if (_isBusy)
+        {
+            SetStatus("Still working on the last request.", isError: true);
+            return;
+        }
+
+        var drive = SelectedDrive;
 
         var root = RootOf(drive);
         var inUse = (_contentModelService?.ContentModels ?? [])

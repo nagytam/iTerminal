@@ -40,6 +40,9 @@ public class FileToTextConverterService : IFileToTextConverterService
     private static readonly HashSet<string> OpenDocumentTextExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "odt", "ott" };
 
+    private static readonly HashSet<string> OpenDocumentSpreadsheetExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "ods", "ots" };
+
     private static readonly HashSet<string> SpreadsheetExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "xlsx", "xlsm", "xltx", "xltm" };
 
@@ -50,6 +53,7 @@ public class FileToTextConverterService : IFileToTextConverterService
         WordExtensions.Contains(extension)
         || OpenDocumentTextExtensions.Contains(extension)
         || SpreadsheetExtensions.Contains(extension)
+        || OpenDocumentSpreadsheetExtensions.Contains(extension)
         || PresentationExtensions.Contains(extension);
 
     private static void AddLines(ITextModel textModel, IReadOnlyList<string> lines)
@@ -104,6 +108,10 @@ public class FileToTextConverterService : IFileToTextConverterService
             else if (SpreadsheetExtensions.Contains(url.Extension))
             {
                 AddLines(textModel, OfficeTextRenderer.RenderSpreadsheet(url.Path));
+            }
+            else if (OpenDocumentSpreadsheetExtensions.Contains(url.Extension))
+            {
+                AddLines(textModel, OfficeTextRenderer.RenderOpenDocumentSpreadsheet(url.Path));
             }
             else if (PresentationExtensions.Contains(url.Extension))
             {

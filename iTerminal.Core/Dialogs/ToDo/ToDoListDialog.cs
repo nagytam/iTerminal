@@ -36,6 +36,9 @@ public class ToDoListDialog : Dialog
     private string? _entry;
     private string? _entryError;
 
+    /// <summary>True while "Delete this task? (y/n)" is up: the next key answers it.</summary>
+    private bool _confirmingDelete;
+
     public ToDoListDialog(IDateTimeProviderService dateTimeProviderService, ToDoStore store, IThemeService themeService)
         : base(nameof(ToDoListDialog), themeService)
     {
@@ -53,6 +56,7 @@ public class ToDoListDialog : Dialog
         _today = Today();
         _entry = null;
         _entryError = null;
+        _confirmingDelete = false;
         await base.ShowAsync();
     }
 
@@ -84,9 +88,31 @@ public class ToDoListDialog : Dialog
             return HandleEntryKey(keyEvent);
         }
 
+        if (_confirmingDelete)
+        {
+            // Esc is the dialog's own: it leaves the question as it closes the list. Any other key but y withdraws it.
+            if (keyEvent.ConsoleKey != ConsoleKey.Escape)
+            {
+                _confirmingDelete = false;
+                if (keyEvent.ConsoleKey == ConsoleKey.Y && !keyEvent.Control && !keyEvent.Alt)
+                {
+                    DeleteSelected();
+                }
+
+                StateHasChanged();
+                return true;
+            }
+
+            _confirmingDelete = false;
+        }
+
         var plain = !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift;
         switch (keyEvent.ConsoleKey)
         {
+            case ConsoleKey.PageUp when plain:
+                return MoveSelection(-ListRows);
+            case ConsoleKey.PageDown when plain:
+                return MoveSelection(ListRows);
             case ConsoleKey.UpArrow when plain:
                 return MoveSelection(-1);
             case ConsoleKey.DownArrow when plain:
@@ -100,7 +126,7 @@ public class ToDoListDialog : Dialog
                 OpenEntry();
                 return true;
             case ConsoleKey.Delete when plain:
-                DeleteSelected();
+                AskToDelete();
                 return true;
             case ConsoleKey.Spacebar when plain:
                 ToggleSelected();
@@ -115,7 +141,7 @@ public class ToDoListDialog : Dialog
                     OpenEntry();
                     return true;
                 case 'd':
-                    DeleteSelected();
+                    AskToDelete();
                     return true;
                 case 'p':
                     CyclePriority();
@@ -161,6 +187,78 @@ public class ToDoListDialog : Dialog
 
         StateHasChanged();
         return true;
+    }
+
+    /// <summary>
+    /// The wheel moves the highlight three tasks. A click highlights the task under the pointer, and a click on its
+    /// [ ] box marks it done or open, as Space does. Nothing answers the mouse while a task is being typed or a
+    /// deletion is being asked.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (_entry is null && !_confirmingDelete)
+        {
+            if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+            {
+                return MoveSelection(mouseEvent.WheelDelta > 0 ? -3 : 3);
+            }
+
+            if (mouseEvent.LeftClicked && TaskAt(mouseEvent.Position, out ToDoTask? task, out bool onBox))
+            {
+                _selectedId = task!.Id;
+                if (onBox)
+                {
+                    ToggleSelected();
+                }
+                else
+                {
+                    StateHasChanged();
+                }
+
+                return true;
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
+    /// <summary>The first listed task, which the list scrolls to keep the highlight in view.</summary>
+    private int FirstVisibleIndex(IReadOnlyList<ToDoTask> visible)
+    {
+        var selectedIndex = visible.ToList().FindIndex(t => t.Id == Selected?.Id);
+        return selectedIndex >= ListRows ? selectedIndex - ListRows + 1 : 0;
+    }
+
+    private bool TaskAt(Position position, out ToDoTask? task, out bool onBox)
+    {
+        task = null;
+        onBox = false;
+        long row = position.Y - (AbsolutePosition.Y + 2);
+        long column = position.X - (AbsolutePosition.X + 2);
+        var visible = Visible;
+        if (row < 0 || row >= ListRows || column < 0 || column >= ViewSize.Width - 4)
+        {
+            return false;
+        }
+
+        int index = FirstVisibleIndex(visible) + (int)row;
+        if (index >= visible.Count)
+        {
+            return false;
+        }
+
+        task = visible[index];
+        onBox = column <= 2;
+        return true;
+    }
+
+    private void AskToDelete()
+    {
+        if (Selected is not null)
+        {
+            _confirmingDelete = true;
+            StateHasChanged();
+        }
     }
 
     private void OpenEntry()
@@ -277,7 +375,7 @@ public class ToDoListDialog : Dialog
         DrawHeader(buffer, iw, colorScheme);
         DrawRows(buffer, iw, colorScheme);
         DrawEntry(buffer, iw, colorScheme);
-        Put(buffer, 1, ih - 1, iw - 2, "Space done  N new  P priority  D delete  H show done  Esc close", colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, ih - 1, iw - 2, "Space done  N new  P priority  D delete  H show done  PgUp/PgDn  Esc close", colorScheme.Foreground, colorScheme.Background);
     }
 
     private void DrawHeader(IBuffer buffer, int iw, ColorScheme colorScheme)
@@ -298,12 +396,7 @@ public class ToDoListDialog : Dialog
             return;
         }
 
-        var first = 0;
-        var selectedIndex = visible.ToList().FindIndex(t => t.Id == selectedId);
-        if (selectedIndex >= ListRows)
-        {
-            first = selectedIndex - ListRows + 1;
-        }
+        var first = FirstVisibleIndex(visible);
 
         for (var i = 0; i < ListRows; i++)
         {
@@ -340,7 +433,11 @@ public class ToDoListDialog : Dialog
     private void DrawEntry(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
         var y = 1 + ListRows + 1;
-        if (_entry is not null)
+        if (_confirmingDelete && Selected is { } doomed)
+        {
+            Put(buffer, 1, y, iw - 2, $"Delete \"{doomed.Subject}\"? (y/n)", colorScheme.Error, colorScheme.Background);
+        }
+        else if (_entry is not null)
         {
             Put(buffer, 1, y, iw - 2, $"New task: {_entry}_", colorScheme.SelectedFocusedForeground, colorScheme.Background);
             if (_entryError is not null)
@@ -372,6 +469,7 @@ public class ToDoListDialog : Dialog
     #region Test seams
 
     internal string? EntryForTest => _entry;
+    internal bool ConfirmingDeleteForTest => _confirmingDelete;
     internal string? EntryErrorForTest => _entryError;
     internal ToDoTask? SelectedForTest => Selected;
 
