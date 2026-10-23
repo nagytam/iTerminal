@@ -415,6 +415,8 @@ public class CompareFoldersDialog : Dialog
                 ConsoleKey.DownArrow => 1,
                 ConsoleKey.PageUp => -_list.PageSize,
                 ConsoleKey.PageDown => _list.PageSize,
+                ConsoleKey.Home => -int.MaxValue / 2,
+                ConsoleKey.End => int.MaxValue / 2,
                 _ => 0,
             };
             if (step != 0)
@@ -426,6 +428,19 @@ public class CompareFoldersDialog : Dialog
         }
 
         return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    /// <summary>The wheel scrolls the differences, three rows a notch, wherever in the dialog the pointer is.</summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            _list.Scroll(mouseEvent.WheelDelta > 0 ? -3 : 3);
+            StateHasChanged();
+            return true;
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
     }
 
     protected override void DrawChrome(IBuffer buffer)
@@ -450,7 +465,7 @@ public class CompareFoldersDialog : Dialog
         Line((int)ViewSize.Height - 3, status, _statusIsError ? colorScheme.Error : foreground);
         Line((int)ViewSize.Height - 2, string.Empty, foreground);
 
-        var hints = " Enter:compare  F5:synchronise  ↑↓:scroll  Esc:close ".FitHints(Math.Max(0, width - 4));
+        var hints = " Enter:compare  F5:synchronise  ↑↓/wheel:scroll  Esc:close ".FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, hints), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);
