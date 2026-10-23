@@ -597,27 +597,62 @@ public class Control : INotifyPropertyChanged, IControl
         return previousControl;
     }
 
-    public virtual void OnHandleTabForward()
+    /// <summary>
+    /// The controls Tab visits below this one, in the order they are listed: those that can take the focus, are enabled
+    /// and are on screen. A container that cannot take the focus itself is looked into — a group box or a form panel is
+    /// not a stop, what is inside it is — while a control that can take it is one stop, whatever it holds.
+    /// </summary>
+    public IEnumerable<IControl> GetTabStops()
     {
-        var focusedControl = GetFocusedControl();
-        var nextFocusableControl = focusedControl?.GetNextFocusableControl(focusedControl);
-        if (nextFocusableControl is not null)
+        foreach (var control in Controls.AsSnapshot())
         {
-            focusedControl?.ResetFocus();
-            nextFocusableControl.SetFocus();
+            if (control is null || !control.IsVisible)
+            {
+                continue;
+            }
+
+            if (control.CanFocus)
+            {
+                if (control.IsEnabled)
+                {
+                    yield return control;
+                }
+
+                continue;
+            }
+
+            foreach (var inner in control.GetTabStops())
+            {
+                yield return inner;
+            }
         }
     }
 
-    public virtual void OnHandleTabBackward()
+    private void MoveFocus(int direction)
     {
-        var focusedControl = GetFocusedControl();
-        var previousFocusableControl = focusedControl?.GetPreviousFocusableControl(focusedControl);
-        if (previousFocusableControl is not null)
+        var stops = GetTabStops().ToList();
+        if (stops.Count == 0)
         {
-            focusedControl?.ResetFocus();
-            previousFocusableControl.SetFocus();
+            return;
         }
+
+        var current = GetFocusedControl();
+        var index = current is null ? -1 : stops.IndexOf(current);
+        var next = index < 0
+            ? (direction > 0 ? stops[0] : stops[^1])
+            : stops[(index + direction + stops.Count) % stops.Count];
+        if (ReferenceEquals(next, current))
+        {
+            return;
+        }
+
+        current?.ResetFocus();
+        next.SetFocus();
     }
+
+    public virtual void OnHandleTabForward() => MoveFocus(1);
+
+    public virtual void OnHandleTabBackward() => MoveFocus(-1);
 
     #region 
     public Task AutoRefreshTask { get; set; } = Task.CompletedTask;
