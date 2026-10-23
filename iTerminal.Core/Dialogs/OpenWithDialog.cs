@@ -169,6 +169,14 @@ public class OpenWithDialog : Dialog
                     _list.Move(_list.Items.Count);
                     StateHasChanged();
                     return true;
+                case ConsoleKey.PageUp:
+                    _list.Move(-_list.PageSize);
+                    StateHasChanged();
+                    return true;
+                case ConsoleKey.PageDown:
+                    _list.Move(_list.PageSize);
+                    StateHasChanged();
+                    return true;
                 case ConsoleKey.Enter:
                     await OpenSelectedAsync();
                     return true;
@@ -192,6 +200,32 @@ public class OpenWithDialog : Dialog
         }
 
         return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    /// <summary>
+    /// The wheel moves the choice three rows; a click on a row opens the file with it, as Enter does. While the
+    /// remove question is up the mouse leaves it alone: only a key answers it.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (_pendingRemoval is null)
+        {
+            if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+            {
+                _list.Move(mouseEvent.WheelDelta > 0 ? -3 : 3);
+                StateHasChanged();
+                return true;
+            }
+
+            if (mouseEvent.LeftClicked && _list.TryGetIndexAt(mouseEvent.Position, out var index))
+            {
+                _list.Select(index);
+                await OpenSelectedAsync();
+                return true;
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
     }
 
     /// <summary>Closes the dialog and opens the file with the selected row. False when there is no row.</summary>
@@ -286,6 +320,32 @@ public class OpenWithDialog : Dialog
 
         public Choice? SelectedItem => SelectedIndex >= 0 && SelectedIndex < Items.Count ? Items[SelectedIndex] : null;
 
+        public int PageSize => Math.Max(1, (int)ViewSize.Height - 1);
+
+        /// <summary>The row drawn under <paramref name="position"/>, if there is one.</summary>
+        public bool TryGetIndexAt(Position position, out int index)
+        {
+            long column = (long)position.X - (long)AbsolutePosition.X;
+            long row = (long)position.Y - (long)AbsolutePosition.Y;
+            index = -1;
+            if (column < 0 || column >= ViewSize.Width || row < 0 || row >= ViewSize.Height)
+            {
+                return false;
+            }
+
+            index = _top + (int)row;
+            return index < Items.Count;
+        }
+
+        public void Select(int index)
+        {
+            if (index >= 0 && index < Items.Count)
+            {
+                SelectedIndex = index;
+                StateHasChanged();
+            }
+        }
+
         public void SetItems(IReadOnlyList<Choice> items, int selectedIndex)
         {
             Items = items;
@@ -324,7 +384,7 @@ public class OpenWithDialog : Dialog
             for (var row = 0; row < height; row++)
             {
                 var index = _top + row;
-                var text = string.Empty;
+                var text = index == 0 && Items.Count == 0 ? " No program yet - Ins adds one." : string.Empty;
                 Color foreground = colorScheme.Foreground, background = colorScheme.Background;
                 if (index < Items.Count)
                 {
