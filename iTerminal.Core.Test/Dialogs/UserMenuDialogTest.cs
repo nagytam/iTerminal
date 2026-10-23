@@ -14,6 +14,8 @@ namespace iTerminal.Core.Test.Dialogs;
 [TestClass]
 public class UserMenuDialogTest
 {
+    private static readonly string MenuFile = Path.Combine(Path.GetTempPath(), "data", "usermenu.txt");
+
     private static readonly UserMenuContext Context = new("notes.txt", @"C:\work", @"C:\other", []);
 
     private static UserMenuItem Item(char hotkey, string title) => new(hotkey, title, "*", [title.ToLowerInvariant()]);
@@ -28,7 +30,7 @@ public class UserMenuDialogTest
     private static async Task<Fixture> OpenAsync(IReadOnlyList<UserMenuItem> items, Size? screen = null, string? failure = null)
     {
         Mock<IUserMenuService> menu = new();
-        menu.SetupGet(m => m.FilePath).Returns(@"C:\data\usermenu.txt");
+        menu.SetupGet(m => m.FilePath).Returns(MenuFile);
         menu.Setup(m => m.GetItems(It.IsAny<string?>())).Returns(items);
         menu.Setup(m => m.RunAsync(It.IsAny<UserMenuItem>(), It.IsAny<UserMenuContext>(), It.IsAny<CancellationToken>())).ReturnsAsync(failure);
         Mock<IFileLauncher> launcher = new();
@@ -131,7 +133,7 @@ public class UserMenuDialogTest
         await PressAsync(f, ConsoleKey.F4);
         await f.Dialog.LastRun;
 
-        f.Launcher.Verify(l => l.OpenWithSystemDefaultAsync(@"C:\data\usermenu.txt"), Times.Once);
+        f.Launcher.Verify(l => l.OpenWithSystemDefaultAsync(MenuFile), Times.Once);
         Assert.IsFalse(f.Dialog.IsVisible);
     }
 
