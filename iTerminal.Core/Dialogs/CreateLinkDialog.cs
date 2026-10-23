@@ -162,6 +162,8 @@ public class CreateLinkDialog : FormDialog
         LayoutButtonRow(_createButton, _cancelButton);
     }
 
+    protected override void ClearError() => SetError(string.Empty);
+
     /// <summary>A failure's message is a sentence or two: wrapped over the rows kept for it, not cut at the border.</summary>
     private void SetError(string message)
     {

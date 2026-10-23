@@ -198,6 +198,27 @@ public class CompareFoldersDialogTest
     }
 
     [TestMethod]
+    public async Task ThePageKeysScrollTheDifferences_EvenWhileTheCompareModeListHasFocus()
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            Write("L", "file" + i.ToString("00") + ".txt", "x", Noon);
+        }
+
+        (CompareFoldersDialog dialog, Control root) = await OpenAsync();
+        await CompareAsync(dialog);
+        AssertScreenContains(Render(root, Small), "file00.txt");
+
+        await PressAsync(dialog, ConsoleKey.PageDown);
+
+        AssertScreenDoesNotContain(Render(root, Small), "file00.txt");
+        Assert.AreEqual(CompareMode.SizeAndDate, dialog.Mode, "the page key must not change the compare mode");
+
+        await PressAsync(dialog, ConsoleKey.PageUp);
+        AssertScreenContains(Render(root, Small), "file00.txt");
+    }
+
+    [TestMethod]
     public async Task TheWheelOutsideTheDialog_IsNotTheDialogs()
     {
         (CompareFoldersDialog dialog, _) = await OpenAsync();

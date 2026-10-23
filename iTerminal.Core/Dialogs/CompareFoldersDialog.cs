@@ -407,16 +407,18 @@ public class CompareFoldersDialog : Dialog
             return true;
         }
 
-        if (!keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift && !_comboMode.IsFocused)
+        if (!keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)
         {
+            // The compare-mode list wants the arrows, Home and End while it has focus; it has no use
+            // for the page keys, so those scroll the differences from anywhere.
             var step = keyEvent.ConsoleKey switch
             {
-                ConsoleKey.UpArrow => -1,
-                ConsoleKey.DownArrow => 1,
+                ConsoleKey.UpArrow when !_comboMode.IsFocused => -1,
+                ConsoleKey.DownArrow when !_comboMode.IsFocused => 1,
                 ConsoleKey.PageUp => -_list.PageSize,
                 ConsoleKey.PageDown => _list.PageSize,
-                ConsoleKey.Home => -int.MaxValue / 2,
-                ConsoleKey.End => int.MaxValue / 2,
+                ConsoleKey.Home when !_comboMode.IsFocused => -int.MaxValue / 2,
+                ConsoleKey.End when !_comboMode.IsFocused => int.MaxValue / 2,
                 _ => 0,
             };
             if (step != 0)

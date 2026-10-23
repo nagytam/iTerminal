@@ -353,6 +353,62 @@ public class DuplicateFinderDialog : Dialog
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
+    /// <summary>Lines above the first listed row: the folder, the summary and a blank.</summary>
+    private const int HeaderLines = 3;
+
+    /// <summary>Whether the list answers keys and the mouse: the scan is over, the list is built and nothing is being deleted or asked.</summary>
+    private bool IsListActive => !_confirming && _scan is { IsComplete: true } && _loaded && Interlocked.CompareExchange(ref _deleting, 0, 0) == 0;
+
+    /// <summary>
+    /// The wheel moves the cursor three files; a click puts it on a file, and a click on the [ ] box
+    /// marks or unmarks that file — the same as Space, without the move to the next row.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (IsListActive && _fileRows.Count > 0)
+        {
+            if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+            {
+                MoveCursor(mouseEvent.WheelDelta > 0 ? -3 : 3);
+                return true;
+            }
+
+            if (mouseEvent.LeftClicked && TryGetFileAt(mouseEvent.Position, out int fileIndex, out bool onBox))
+            {
+                _cursor = fileIndex;
+                if (onBox)
+                {
+                    ToggleMark();
+                }
+                else
+                {
+                    UpdateLines();
+                }
+
+                return true;
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
+    private bool TryGetFileAt(Position position, out int fileIndex, out bool onBox)
+    {
+        fileIndex = -1;
+        onBox = false;
+        long row = position.Y - _lines.AbsolutePosition.Y - HeaderLines;
+        long column = position.X - _lines.AbsolutePosition.X;
+        if (row < 0 || row >= VisibleRows || column < 0 || column >= _lines.ViewSize.Width)
+        {
+            return false;
+        }
+
+        int rowIndex = _top + (int)row;
+        fileIndex = _fileRows.IndexOf(rowIndex);
+        onBox = column is >= 2 and <= 4;
+        return fileIndex >= 0;
+    }
+
     private void MoveCursor(int step)
     {
         _cursor = Math.Clamp(_cursor + step, 0, Math.Max(0, _fileRows.Count - 1));
@@ -508,7 +564,7 @@ public class DuplicateFinderDialog : Dialog
         var width = (int)ViewSize.Width;
         var footer = (_confirming
                 ? " y:delete  any other key:cancel "
-                : " Space:mark  a:keep oldest  n:keep newest  u:unmark  Del:delete  g:go to  r:rescan  Esc:close ")
+                : " Space or click:mark  a:keep oldest  n:keep newest  u:unmark  Del:delete  g:go to  r:rescan  Esc:close ")
             .FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);

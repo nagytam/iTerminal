@@ -120,6 +120,8 @@ public class DiskImageDialog : FormDialog
         _unmountButton.ViewSize = new Size(SecondButtonWidth, 1);
     }
 
+    protected override void ClearError() => SetError(string.Empty);
+
     private void SetError(string message)
     {
         var lines = message.Length == 0 ? [] : ("Error: " + message).WrapWords((int)Math.Max(10, FieldWidth));
