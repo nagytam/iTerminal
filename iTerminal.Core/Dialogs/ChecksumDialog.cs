@@ -161,18 +161,22 @@ public class ChecksumDialog : Dialog
 
     public override void OnInitializeLayout()
     {
+        // A SHA-512 wraps over more rows the narrower the dialog is, so the facts block grows
+        // with it: the verdict about a written checksum is the last row, and the first to be lost.
+        var width = Parent is not null ? Math.Clamp((int)Parent.ViewSize.Width - 4, 50, 80) : (int)ViewSize.Width;
+        var infoHeight = InfoHeight(Math.Max(16, width - 4 - CaptionWidth));
         if (Parent is not null)
         {
-            CenterInParent(new Size(Math.Clamp((int)Parent.ViewSize.Width - 4, 50, 80), 17));
+            CenterInParent(new Size(width, Math.Min(infoHeight + 7, Math.Max(17, (int)Parent.ViewSize.Height - 2))));
         }
 
         var inner = Math.Max(1, ViewSize.Width - 4);
         _info.Position = new Position(2, 1);
-        _info.ViewSize = new Size(inner, 10);
-        _textBoxCompare.Position = new Position(2, 12);
+        _info.ViewSize = new Size(inner, infoHeight);
+        _textBoxCompare.Position = new Position(2, infoHeight + 2);
         _textBoxCompare.ViewSize = new Size(inner, 1);
         _textBoxCompare.ScrollableModel.ViewSize = _textBoxCompare.ViewSize;
-        _verdict.Position = new Position(2, 13);
+        _verdict.Position = new Position(2, infoHeight + 3);
         _verdict.ViewSize = new Size(inner, 2);
         base.OnInitializeLayout();
     }
@@ -182,6 +186,18 @@ public class ChecksumDialog : Dialog
     {
         base.OnIdle();
         UpdateLines();
+    }
+
+    /// <summary>Rows the facts need at most: file, size, a gap, every hash wrapped to <paramref name="valueWidth"/>, a gap and the written checksum's verdict.</summary>
+    internal static int InfoHeight(int valueWidth)
+    {
+        int rows = 5;
+        foreach (int length in new[] { 32, 40, 64, 128 })
+        {
+            rows += (length + valueWidth - 1) / valueWidth;
+        }
+
+        return Math.Max(10, rows);
     }
 
     private static string Row(string caption, string value) => caption.PadRight(CaptionWidth) + value;
