@@ -9,6 +9,9 @@ public record MouseEvent
     /// <summary>SGR mouse release (<c>m</c> suffix) or other release semantics.</summary>
     public bool IsRelease { get; set; }
 
+    /// <summary>The pointer moved while the left button was held (SGR motion with button 0, or a Windows move with the button down).</summary>
+    public bool IsDrag { get; set; }
+
     /// <summary>Vertical wheel: +1 up, -1 down, 0 none (SGR buttons 64/65).</summary>
     public int WheelDelta { get; set; }
 }

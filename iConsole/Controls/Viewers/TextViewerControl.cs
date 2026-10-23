@@ -88,6 +88,34 @@ public class TextViewerControl : Control
     /// <summary>Where the selection began; it runs from here to the cursor. Null when nothing is selected.</summary>
     private (long Row, long Column)? _selectionAnchor;
 
+    /// <summary>True from a press in the text until the button is released: movement then selects.</summary>
+    private bool _dragSelecting;
+
+    /// <summary>Moves the cursor to the text under <paramref name="pointer"/> — or a step towards it, past an edge of the view — and extends the selection to it.</summary>
+    private void ExtendSelectionTo(Position pointer)
+    {
+        var (cursorRow, cursorColumn) = ClampedCursor();
+        long column = (long)pointer.X - (long)AbsolutePosition.X;
+        long row = (long)pointer.Y - (long)AbsolutePosition.Y;
+        var viewWidth = ViewSize.Width - 1;
+        var viewHeight = ViewSize.Height - 1;
+
+        var newRow = row < 0 ? cursorRow - 1
+            : row >= viewHeight ? cursorRow + 1
+            : (long)ScrollableModel.ScrollPosition.Y + row;
+        newRow = Math.Clamp(newRow, 0, TextModel.Lines.Count - 1);
+        var newColumn = column < 0 ? cursorColumn - 1
+            : column >= viewWidth ? cursorColumn + 1
+            : (long)ScrollableModel.ScrollPosition.X + column;
+        newColumn = Math.Clamp(newColumn, 0, TextModel.Lines[(int)newRow].Length);
+
+        ScrollableModel.CursorPosition.Y = newRow;
+        ScrollableModel.CursorPosition.X = newColumn;
+        UpdateSelectionModel();
+        KeepCursorInText();
+        StateHasChanged();
+    }
+
     /// <summary>True while a Shift+movement key is being carried out as the plain movement, so it does not end the selection.</summary>
     private bool _extendingSelection;
 
@@ -399,6 +427,19 @@ public class TextViewerControl : Control
     /// <summary>The wheel scrolls the text three rows; the scroll bars handle their own clicks.</summary>
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
+        // Dragging from a press in the text selects: the cursor follows the pointer, and past an edge of the view it
+        // moves a step with each movement, so the view scrolls and a selection can run beyond what shows.
+        if (mouseEvent.IsDrag && _isCursorEnabled && _dragSelecting && IsEnabled && TextModel.Lines.Count > 0)
+        {
+            ExtendSelectionTo(mouseEvent.Position);
+            return true;
+        }
+
+        if (mouseEvent.IsRelease)
+        {
+            _dragSelecting = false;
+        }
+
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
         if (isHandled || TextModel.Lines.Count == 0 || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
@@ -428,6 +469,8 @@ public class TextViewerControl : Control
             if (_isCursorEnabled)
             {
                 ScrollableModel.CursorPosition.X = Math.Clamp((long)ScrollableModel.ScrollPosition.X + column, 0, TextModel.Lines[(int)line].Length);
+                _selectionAnchor = ClampedCursor();
+                _dragSelecting = true;
             }
 
             StateHasChanged();
