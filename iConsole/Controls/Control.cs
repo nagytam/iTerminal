@@ -899,7 +899,8 @@ public class Control : INotifyPropertyChanged, IControl
                 }
             case VisualState.SelectedDisabled:
                 {
-                    foreground = colorScheme.SelectedForeground;
+                    // The selected row of a disabled control keeps the disabled look, as ListBox and SegmentedControl give it.
+                    foreground = colorScheme.DisabledSelectedForeground;
                     background = colorScheme.DisabledBackground;
                     break;
                 }
