@@ -136,6 +136,43 @@ public class SortDialog : Dialog
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
+    /// <summary>
+    /// A click on an order applies it, as its letter does; a click on the Reversed line flips it and leaves the dialog
+    /// open, as <c>r</c> does; the wheel moves the cursor. Before this the dialog could only be driven from the keyboard.
+    /// </summary>
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            _cursor = Math.Clamp(_cursor + (mouseEvent.WheelDelta > 0 ? -1 : 1), 0, Modes.Count - 1);
+            UpdateLines();
+            return true;
+        }
+
+        if (mouseEvent.LeftClicked
+            && (long)mouseEvent.Position.X >= (long)_lines.AbsolutePosition.X
+            && (long)mouseEvent.Position.X < (long)_lines.AbsolutePosition.X + _lines.ViewSize.Width)
+        {
+            var row = (int)((long)mouseEvent.Position.Y - (long)_lines.AbsolutePosition.Y);
+            if (row >= 0 && row < Modes.Count)
+            {
+                _cursor = row;
+                Apply();
+                return true;
+            }
+
+            // The orders, a blank line, then the Reversed line.
+            if (row == Modes.Count + 1)
+            {
+                Descending = !Descending;
+                UpdateLines();
+                return true;
+            }
+        }
+
+        return await base.HandleMouseEventAsync(mouseEvent);
+    }
+
     /// <summary>Puts the panel in the chosen order, saves it for the panel, and closes.</summary>
     public void Apply()
     {
