@@ -166,4 +166,58 @@ public class SecureWipeDialogTest
         Assert.AreEqual(WipePhase.Choosing, _dialog.Phase);
         Assert.AreEqual(WipePattern.SevenPass, _dialog.Pattern);
     }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task TheArrows_StepThroughTheMethods_AndStopAtTheEnds()
+    {
+        await OpenAsync(@"C:\data.txt");
+        Assert.AreEqual(WipePattern.Random, _dialog.Pattern);
+
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.UpArrow));
+        Assert.AreEqual(WipePattern.Random, _dialog.Pattern);
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.DownArrow));
+        Assert.AreEqual(WipePattern.ThreePass, _dialog.Pattern);
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.RightArrow));
+        Assert.AreEqual(WipePattern.SevenPass, _dialog.Pattern);
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.DownArrow));
+        Assert.AreEqual(WipePattern.SevenPass, _dialog.Pattern);
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.LeftArrow));
+        Assert.AreEqual(WipePattern.ThreePass, _dialog.Pattern);
+        UiTestHelper.AssertScreenContains(Screen(), "3 passes");
+        UiTestHelper.AssertScreenContains(Screen(), "(or ↑↓)");
+        Assert.AreEqual(WipePhase.Choosing, _dialog.Phase);
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task WhenArmed_AnArrowWithdrawsInsteadOfChangingTheMethod()
+    {
+        await OpenAsync(@"C:\data.txt");
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+        Assert.AreEqual(WipePhase.Armed, _dialog.Phase);
+
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.DownArrow));
+
+        Assert.AreEqual(WipePhase.Choosing, _dialog.Phase);
+        Assert.AreEqual(WipePattern.Random, _dialog.Pattern);
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task Enter_ClosesTheDialogOnceTheWipeIsOver()
+    {
+        _wipe.Setup(w => w.WipeAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<WipePattern>(), It.IsAny<IProgress<WipeProgress>?>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new WipeResult(1, 0, 10, [], Cancelled: false));
+        await OpenAsync(@"C:\data.txt");
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+        await _dialog.WipeTask;
+        Assert.AreEqual(WipePhase.Finished, _dialog.Phase);
+        Assert.IsTrue(_dialog.IsVisible);
+
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+
+        Assert.IsFalse(_dialog.IsVisible);
+    }
 }

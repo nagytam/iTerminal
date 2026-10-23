@@ -18,8 +18,19 @@ public class ErrorMessage(
     /// visible without a message: a hidden control draws nothing, so hiding it would leave the last
     /// message on screen instead of clearing it.
     /// </summary>
-    public override string Text =>
-        validationModel.ErrorMessage is { Length: > 0 } message ? $"Error: {message}" : string.Empty;
+    public override string Text
+    {
+        get => validationModel.ErrorMessage is { Length: > 0 } message
+            ? $"Error: {message}"
+            : _failure.Length > 0 ? $"Error: {_failure}" : string.Empty;
+
+        // What a command that failed says: the validation model knows nothing of it. It was once
+        // dropped, so a copy that threw left the dialog open with no word why. Validation's own
+        // message wins while there is one; setting the text empty withdraws this one.
+        set => _failure = value ?? string.Empty;
+    }
+
+    private string _failure = string.Empty;
 
     public override void Draw(IBuffer buffer)
     {

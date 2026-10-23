@@ -187,4 +187,17 @@ public class SignatureDialogTest
         _signatures.Verify(s => s.SignAsync(It.IsAny<string>(), SignatureMethod.Authenticode, "0123456789ABCDEF0123456789ABCDEF01234567", null, It.IsAny<CancellationToken>()), Times.Once);
         Assert.AreEqual("Signed.", _dialog.Status);
     }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    public async Task Enter_DismissesTheReport()
+    {
+        Verdicts();
+        await OpenAsync();
+        Assert.IsTrue(_dialog.IsVisible);
+
+        await _dialog.HandleKeyEventAsync(UiTestHelper.Key(ConsoleKey.Enter));
+
+        Assert.IsFalse(_dialog.IsVisible);
+    }
 }

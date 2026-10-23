@@ -216,4 +216,18 @@ public class ChecksumDialogTest
 
         Assert.IsFalse(dialog.IsVisible);
     }
+
+    [TestMethod]
+    public async Task Enter_DismissesTheReport_WhenNothingIsTyped_AndLeavesTheBoxAloneWhenSomethingIs()
+    {
+        (ChecksumDialog dialog, _) = await OpenAsync(Hashes);
+        dialog.Compare = new string('c', 64);
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        Assert.IsTrue(dialog.IsVisible);
+
+        dialog.Compare = string.Empty;
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        Assert.IsFalse(dialog.IsVisible);
+    }
 }

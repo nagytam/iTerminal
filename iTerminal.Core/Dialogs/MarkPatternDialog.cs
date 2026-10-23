@@ -43,6 +43,8 @@ public class MarkPatternDialog : FormDialog
 
     public Label ErrorMessage => _errorLabel;
 
+    protected override void ClearError() => _errorLabel.Text = string.Empty;
+
     public MarkPatternDialog(
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,

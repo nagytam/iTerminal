@@ -56,6 +56,8 @@ public class DeleteDialog : FormDialog
     private Label _errorLabel { get; set; }
     public Label ErrorMessage => _errorLabel;
 
+    protected override void ClearError() => _errorLabel.Text = string.Empty;
+
     public DeleteDialog(
         IContentModelService contentModelService,
         IBeepService beepService,

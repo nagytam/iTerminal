@@ -112,6 +112,8 @@ public class CompressDialog : FormDialog
 
     public Label ErrorMessage => _errorLabel;
 
+    protected override void ClearError() => _errorLabel.Text = string.Empty;
+
     internal string HintForTest => _labelHint.Text;
     internal string SourceLabelForTest => _labelSource.Text;
     internal bool IsLevelEnabledForTest => _level.IsEnabled;

@@ -62,6 +62,8 @@ public abstract class TransferDialog : FormDialog
     public bool Overwrite => _checkBoxOverwrite.IsChecked;
     private Label _labelSource { get; set; }
     private Label _labelTarget { get; set; }
+    protected override void ClearError() => ErrorMessage.Text = string.Empty;
+
     public ErrorMessage ErrorMessage { get; private set; }
     private Button _primaryButton { get; set; }
     private Button _cancelButton { get; set; }
