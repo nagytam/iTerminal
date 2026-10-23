@@ -1,3 +1,4 @@
+using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -174,6 +175,10 @@ public class MailDialog : Dialog
                 return MoveCursor(-ListRows);
             case ConsoleKey.PageDown when plain:
                 return MoveCursor(ListRows);
+            case ConsoleKey.Home when plain:
+                return MoveCursor(-int.MaxValue / 2);
+            case ConsoleKey.End when plain:
+                return MoveCursor(int.MaxValue / 2);
             case ConsoleKey.Enter when plain:
                 ReadSelected();
                 return true;
@@ -231,6 +236,14 @@ public class MailDialog : Dialog
                 _scroll = Math.Min(Math.Max(0, _bodyLines.Count - 1), _scroll + ListRows);
                 StateHasChanged();
                 return true;
+            case ConsoleKey.Home when plain:
+                _scroll = 0;
+                StateHasChanged();
+                return true;
+            case ConsoleKey.End when plain:
+                _scroll = Math.Max(0, _bodyLines.Count - 1);
+                StateHasChanged();
+                return true;
         }
 
         if (plain && char.ToLowerInvariant(keyEvent.KeyChar) == 'r' && _item is { } item)
@@ -263,9 +276,18 @@ public class MailDialog : Dialog
             return true;
         }
 
+        if (PasteHelper.IsPasteKey(keyEvent))
+        {
+            // The body keeps the clipboard's line breaks; the address and subject are one line.
+            PasteHelper.Paste(
+                text => AppendToDraft(_draftField == 2 ? text.Replace("\r\n", "\n").Replace('\r', '\n') : PasteHelper.SingleLine(text)),
+                StateHasChanged);
+            return true;
+        }
+
         if (keyEvent.ConsoleKey == ConsoleKey.Tab)
         {
-            _draftField = (_draftField + 1) % _draft.Length;
+            _draftField = (_draftField + (keyEvent.Shift ? _draft.Length - 1 : 1)) % _draft.Length;
             StateHasChanged();
             return true;
         }
@@ -317,6 +339,17 @@ public class MailDialog : Dialog
         {
             _mode = Mode.Compose;
             StateHasChanged();
+            return true;
+        }
+
+        if (PasteHelper.IsPasteKey(keyEvent))
+        {
+            PasteHelper.Paste(text =>
+            {
+                _directoryTerm = (_directoryTerm + PasteHelper.SingleLine(text)) is { Length: > MaxFieldLength } longer ? longer[..MaxFieldLength] : _directoryTerm + PasteHelper.SingleLine(text);
+                _people = [];
+                _personCursor = 0;
+            }, StateHasChanged);
             return true;
         }
 
@@ -382,8 +415,27 @@ public class MailDialog : Dialog
             return true;
         }
 
+        if (PasteHelper.IsPasteKey(keyEvent))
+        {
+            SetupField target = _setup[_setupCursor];
+            if (!target.IsToggle)
+            {
+                PasteHelper.Paste(text =>
+                {
+                    string line = PasteHelper.SingleLine(text);
+                    target.Text = (target.Text + line) is { Length: > MaxFieldLength } longer ? longer[..MaxFieldLength] : target.Text + line;
+                }, StateHasChanged);
+            }
+
+            return true;
+        }
+
         switch (keyEvent.ConsoleKey)
         {
+            case ConsoleKey.Tab when keyEvent.Shift:
+                _setupCursor = (_setupCursor - 1 + _setup.Length) % _setup.Length;
+                StateHasChanged();
+                return true;
             case ConsoleKey.Tab:
             case ConsoleKey.DownArrow:
                 _setupCursor = (_setupCursor + 1) % _setup.Length;
@@ -835,10 +887,10 @@ public class MailDialog : Dialog
 
     private string Hints() => _mode switch
     {
-        Mode.Setup => "Tab/Up/Down field  Space toggle  Ctrl+S save  Esc back",
+        Mode.Setup => "Tab/Up/Down field  Space toggle  Ctrl+V paste  Ctrl+S save  Esc back",
         Mode.List => "Enter read  R refresh  C compose  D delete  S setup  Esc close",
         Mode.View => "Up/Down scroll  R reply  Esc back to the list",
-        Mode.Compose => "Tab field  Enter newline  Ctrl+S send  Ctrl+L address book  Esc back",
+        Mode.Compose => "Tab field  Enter newline  Ctrl+V paste  Ctrl+S send  Ctrl+L address book  Esc back",
         _ => "Type a name, Enter search, Enter again adds the highlighted person  Esc back",
     };
 
@@ -983,6 +1035,10 @@ public class MailDialog : Dialog
     internal int ListingCountForTest { get { lock (_sync) return _listings.Count; } }
     internal string BodyForTest { get { lock (_sync) return string.Join("\n", _bodyLines); } }
     internal string[] DraftForTest { get { lock (_sync) return [.. _draft]; } }
+    internal int CursorForTest { get { lock (_sync) return _cursor; } }
+    internal int ScrollForTest { get { lock (_sync) return _scroll; } }
+    internal int DraftFieldForTest { get { lock (_sync) return _draftField; } }
+    internal int SetupCursorForTest { get { lock (_sync) return _setupCursor; } }
     internal string DirectoryTermForTest { get { lock (_sync) return _directoryTerm; } }
     internal IReadOnlyList<DirectoryPerson> PeopleForTest { get { lock (_sync) return _people.ToList(); } }
     internal string SetupValueForTest(string label)

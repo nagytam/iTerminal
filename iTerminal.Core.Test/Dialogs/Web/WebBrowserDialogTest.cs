@@ -9,6 +9,8 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Web;
 
+// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
+[DoNotParallelize]
 [TestClass]
 public class WebBrowserDialogTest
 {
@@ -347,6 +349,10 @@ public class WebBrowserDialogTest
 
         await PressAsync(f, ConsoleKey.F2);
         await PressAsync(f, ConsoleKey.Delete);
+        Assert.IsTrue(f.Dialog.ConfirmingRemoveBookmark);
+        Assert.IsTrue(f.Store.IsBookmarked("https://a.test/two"), "Delete only asks");
+        AssertScreenContains(await DrawAsync(f), "Remove the bookmark \"Second\"? (y/n)");
+        await PressAsync(f, ConsoleKey.Y, 'y');
         var empty = await DrawAsync(f);
         AssertScreenContains(empty, "No bookmarks yet");
         Assert.IsFalse(f.Store.IsBookmarked("https://a.test/two"));
@@ -504,5 +510,119 @@ public class WebBrowserDialogTest
         Assert.IsTrue(narrow.Length <= 40, narrow);
         Assert.IsTrue(narrow.EndsWith("Esc:close", StringComparison.Ordinal), narrow);
         Assert.IsFalse(narrow.Contains("bookmarks", StringComparison.Ordinal), narrow);
+    }
+
+    [TestMethod]
+    public async Task AnyKeyButYWithdrawsTheBookmarkRemoval_AndEscapeAlsoLeavesTheList()
+    {
+        var f = await OpenAsync();
+        await GoToAsync(f, "https://a.test/two");
+        await PressAsync(f, ConsoleKey.D, 'd', control: true);
+        await PressAsync(f, ConsoleKey.F2);
+
+        await PressAsync(f, ConsoleKey.Delete);
+        await PressAsync(f, ConsoleKey.N, 'n');
+        Assert.IsFalse(f.Dialog.ConfirmingRemoveBookmark);
+        Assert.IsTrue(f.Store.IsBookmarked("https://a.test/two"));
+        Assert.IsTrue(f.Dialog.ShowsBookmarks);
+        AssertScreenContains(await DrawAsync(f), "Bookmarks (1)");
+
+        await PressAsync(f, ConsoleKey.Delete);
+        await PressAsync(f, ConsoleKey.Escape);
+        Assert.IsTrue(f.Store.IsBookmarked("https://a.test/two"));
+        Assert.IsFalse(f.Dialog.ShowsBookmarks);
+        Assert.IsFalse(f.Dialog.ConfirmingRemoveBookmark);
+    }
+
+    [TestMethod]
+    public async Task ForgettingAVisitInHistoryNeedsNoQuestion()
+    {
+        var f = await OpenAsync();
+        await GoToAsync(f, "https://a.test/two");
+        await PressAsync(f, ConsoleKey.F4);
+        Assert.IsTrue(f.Dialog.ShowsHistory);
+
+        await PressAsync(f, ConsoleKey.Delete);
+
+        Assert.IsFalse(f.Dialog.ConfirmingRemoveBookmark);
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesIntoTheAddressBar_AtTheCursor_OnOneLine()
+    {
+        var f = await OpenAsync();
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("a.test/" + (char)10 + "two ");
+        await PressAsync(f, ConsoleKey.L, 'l', control: true);
+        await TypeTextAsync(f, "https://");
+        await PressAsync(f, ConsoleKey.LeftArrow);
+        await PressAsync(f, ConsoleKey.LeftArrow);
+
+        await PressAsync(f, ConsoleKey.V, 'v', control: true);
+
+        Assert.AreEqual("https:a.test/ two//", f.Dialog.AddressText);
+        AssertScreenContains(await DrawAsync(f), "Ctrl+V:paste");
+    }
+
+    [TestMethod]
+    public async Task ShiftInsertPastesToo_AndAFreshAddressBarIsReplacedNotAppendedTo()
+    {
+        var f = await OpenAsync();
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("https://a.test/two");
+        await PressAsync(f, ConsoleKey.L, 'l', control: true);
+
+        await PressAsync(f, ConsoleKey.Insert, shift: true);
+        Assert.AreEqual("https://a.test/two", f.Dialog.AddressText);
+        await PressAsync(f, ConsoleKey.Enter, (char)13);
+        await f.Tab.LoadTask;
+
+        Assert.AreEqual("https://a.test/two", f.Tab.Url);
+    }
+
+    [TestMethod]
+    public async Task PastingAnEmptyClipboardChangesNothing()
+    {
+        var f = await OpenAsync();
+        await iConsole.Services.TextClipboard.Current.SetTextAsync(string.Empty);
+        await PressAsync(f, ConsoleKey.L, 'l', control: true);
+        await TypeTextAsync(f, "abc");
+
+        await PressAsync(f, ConsoleKey.V, 'v', control: true);
+
+        Assert.AreEqual("abc", f.Dialog.AddressText);
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesIntoTheFindBox()
+    {
+        var f = await OpenAsync();
+        await GoToAsync(f, "https://a.test/long");
+        await DrawAsync(f);
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("number 77");
+        await PressAsync(f, ConsoleKey.F, 'f', control: true);
+
+        await PressAsync(f, ConsoleKey.V, 'v', control: true);
+
+        AssertScreenContains(await DrawAsync(f), "Find: number 77");
+        await PressAsync(f, ConsoleKey.Enter, (char)13);
+        AssertScreenContains(await DrawAsync(f), "line number 77");
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesIntoAFormField()
+    {
+        var f = await OpenAsync();
+        await GoToAsync(f, "https://a.test/form");
+        await DrawAsync(f);
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("black cats" + (char)10 + "and dogs");
+        await PressAsync(f, ConsoleKey.Tab, (char)9);
+        await PressAsync(f, ConsoleKey.Enter, (char)13);
+
+        await PressAsync(f, ConsoleKey.V, 'v', control: true);
+        await PressAsync(f, ConsoleKey.Enter, (char)13);
+        await f.Tab.LoadTask;
+
+        string url = f.Fetcher.Requests[^1].Url;
+        Assert.IsTrue(url.StartsWith("https://a.test/results?q=black"), url);
+        Assert.IsTrue(url.Contains("dogs"), url);
     }
 }

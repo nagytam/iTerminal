@@ -3,6 +3,7 @@ using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Helper;
+using iTerminal.Core.Helper;
 using iConsole.Services;
 using iTerminal.Core.Model.Web;
 using iTerminal.Core.Services.Web;
@@ -371,6 +372,24 @@ public class WebBrowserDialog : Dialog
 
     private bool HandleAddressKey(KeyEvent key)
     {
+        if (PasteHelper.IsPasteKey(key))
+        {
+            PasteHelper.Paste(text =>
+            {
+                string line = PasteHelper.SingleLine(text);
+                if (_addressReplace)
+                {
+                    _address = string.Empty;
+                    _addressCursor = 0;
+                    _addressReplace = false;
+                }
+
+                _address = _address.Insert(_addressCursor, line);
+                _addressCursor += line.Length;
+            }, StateHasChanged);
+            return true;
+        }
+
         switch (key.ConsoleKey)
         {
             case ConsoleKey.Escape:
@@ -454,6 +473,12 @@ public class WebBrowserDialog : Dialog
 
     private bool HandleFindKey(KeyEvent key)
     {
+        if (PasteHelper.IsPasteKey(key))
+        {
+            PasteHelper.Paste(text => _findText += PasteHelper.SingleLine(text), StateHasChanged);
+            return true;
+        }
+
         switch (key.ConsoleKey)
         {
             case ConsoleKey.Escape:
@@ -493,6 +518,14 @@ public class WebBrowserDialog : Dialog
         {
             _mode = Mode.Browse;
             return false;
+        }
+
+        if (PasteHelper.IsPasteKey(key))
+        {
+            PasteHelper.Paste(
+                text => _model.SetValue(tab, field, field.Value + (field.Kind == WebFieldKind.TextArea ? text.Replace("\r\n", "\n").Replace('\r', '\n') : PasteHelper.SingleLine(text))),
+                StateHasChanged);
+            return true;
         }
 
         switch (key.ConsoleKey)
@@ -538,9 +571,30 @@ public class WebBrowserDialog : Dialog
         return !(key.Control || key.Alt);
     }
 
+    /// <summary>True while "Remove this bookmark? (y/n)" is up in the bookmark list: the next key answers it.</summary>
+    private bool _confirmingRemoveBookmark;
+
+    internal bool ConfirmingRemoveBookmark => _confirmingRemoveBookmark;
+
     private bool HandleListKey(KeyEvent key)
     {
         var rows = Math.Max(1, ViewHeight - 2);
+        if (_confirmingRemoveBookmark)
+        {
+            // Esc is the list's own and leaves it as it closes the question; any other key but y withdraws it.
+            _confirmingRemoveBookmark = false;
+            if (key.ConsoleKey == ConsoleKey.Y && !key.Control && !key.Alt)
+            {
+                RemoveListEntry();
+                return true;
+            }
+
+            if (key.ConsoleKey != ConsoleKey.Escape)
+            {
+                return true;
+            }
+        }
+
         switch (key.ConsoleKey)
         {
             case ConsoleKey.Escape:
@@ -568,6 +622,13 @@ public class WebBrowserDialog : Dialog
                 OpenListEntry(newTab: key.Control);
                 return true;
             case ConsoleKey.Delete:
+                if (_mode == Mode.Bookmarks && _listIndex >= 0 && _listIndex < _list.Count)
+                {
+                    // A bookmark is something the person made; a visit is only remembered.
+                    _confirmingRemoveBookmark = true;
+                    return true;
+                }
+
                 RemoveListEntry();
                 return true;
             default:
@@ -1309,7 +1370,15 @@ public class WebBrowserDialog : Dialog
         var hint = _mode == Mode.Bookmarks
             ? "Enter:open   Ctrl+Enter:new tab   Del:remove   Esc:back"
             : "Enter:open   Ctrl+Enter:new tab   Del:forget   Esc:back";
-        WriteText(buffer, x, y, width, $" {heading} ({_list.Count})   {hint}", Color.Yellow, scheme.Background, true);
+        if (_confirmingRemoveBookmark && _listIndex >= 0 && _listIndex < _list.Count)
+        {
+            var entry = _list[_listIndex];
+            WriteText(buffer, x, y, width, $" Remove the bookmark \"{(entry.Title.Length > 0 ? entry.Title : entry.Url)}\"? (y/n)", Color.Red, scheme.Background, true);
+        }
+        else
+        {
+            WriteText(buffer, x, y, width, $" {heading} ({_list.Count})   {hint}", Color.Yellow, scheme.Background, true);
+        }
 
         var rows = Math.Max(0, height - 1);
         for (var row = 0; row < rows; row++)
@@ -1357,13 +1426,13 @@ public class WebBrowserDialog : Dialog
         switch (_mode)
         {
             case Mode.Find:
-                left = " Find: " + _findText + "█   Enter:search   Esc:cancel";
+                left = " Find: " + _findText + "█   Enter:search   Esc:cancel   Ctrl+V:paste";
                 break;
             case Mode.Field:
                 left = " Editing — type, Enter:send form, Tab:next, Esc:done";
                 break;
             case Mode.Address:
-                left = " Enter:go   Esc:cancel   Ctrl+U:clear";
+                left = " Enter:go   Esc:cancel   Ctrl+U:clear   Ctrl+V:paste";
                 break;
             default:
                 string message;
