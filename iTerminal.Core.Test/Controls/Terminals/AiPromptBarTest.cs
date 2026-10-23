@@ -14,6 +14,8 @@ namespace iTerminal.Core.Test.Controls.Terminals;
 /// The AI prompt bar: one prompt row and, below it, the last answer. What is pinned down is what the
 /// user can see of what they type and of what comes back.
 /// </summary>
+// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
+[DoNotParallelize]
 [TestClass]
 public class AiPromptBarTest
 {
@@ -278,5 +280,28 @@ public class AiPromptBarTest
         Assert.AreEqual(ConsoleKey.F2, command.Key!.ConsoleKey);
         Assert.IsTrue(command.Key.Control);
         Assert.IsFalse(command.Key.Alt);
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesIntoThePrompt_OnOneLine()
+    {
+        var (bar, model, _) = Create();
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("explain" + (char)10 + "this error");
+        model.Input = "please ";
+
+        await bar.HandleKeyEventAsync(new KeyEvent('v', ConsoleKey.V, false, false, true));
+
+        Assert.AreEqual("please explain this error", model.Input);
+    }
+
+    [TestMethod]
+    public async Task PastingWhileTheModelIsUnavailableDoesNothing()
+    {
+        var (bar, model, _) = Create(available: false);
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("text");
+
+        await bar.HandleKeyEventAsync(new KeyEvent('v', ConsoleKey.V, false, false, true));
+
+        Assert.AreEqual(string.Empty, model.Input);
     }
 }

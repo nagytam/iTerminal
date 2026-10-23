@@ -10,6 +10,8 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Remote;
 
+// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
+[DoNotParallelize]
 [TestClass]
 public class RemoteConnectionManagerDialogTest
 {
@@ -218,5 +220,52 @@ public class RemoteConnectionManagerDialogTest
         await h.Dialog.HandleKeyEventAsync(Char('y'));
 
         Assert.AreEqual(1, h.Connections.GetAll().Count);
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesIntoTheHost_AndOnlyDigitsIntoThePort()
+    {
+        var h = Create();
+        await ShowAsync(h.Dialog);
+        await h.Dialog.HandleKeyEventAsync(Char('n'));
+        await TypeAsync(h.Dialog, "web");
+        await TabAsync(h.Dialog); // Type
+        await TabAsync(h.Dialog); // Host
+        await iConsole.Services.TextClipboard.Current.SetTextAsync(" example.com" + (char)10);
+        await h.Dialog.HandleKeyEventAsync(Key(ConsoleKey.V, 'v', control: true));
+        await TabAsync(h.Dialog); // Port
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("port 2200!");
+        await h.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Insert, shift: true));
+        await TabAsync(h.Dialog); // User
+        await TypeAsync(h.Dialog, "alice");
+        await EnterAsync(h.Dialog);
+
+        var saved = h.Connections.GetAll().Single();
+        Assert.AreEqual("example.com", saved.Host);
+        Assert.AreEqual(2200, saved.Port);
+    }
+
+    [TestMethod]
+    public async Task CtrlVOnTheTypeFieldDoesNothing_AndCtrlUClearsAField()
+    {
+        var h = Create();
+        await ShowAsync(h.Dialog);
+        await h.Dialog.HandleKeyEventAsync(Char('n'));
+        await TypeAsync(h.Dialog, "web");
+        await h.Dialog.HandleKeyEventAsync(Key(ConsoleKey.U, 'u', control: true));
+        await TypeAsync(h.Dialog, "db");
+        await TabAsync(h.Dialog); // Type
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("ignored");
+
+        await h.Dialog.HandleKeyEventAsync(Key(ConsoleKey.V, 'v', control: true));
+        await h.Dialog.HandleKeyEventAsync(Key(ConsoleKey.U, 'u', control: true));
+        await TabAsync(h.Dialog); // Host
+        await TypeAsync(h.Dialog, "srv");
+        await EnterAsync(h.Dialog);
+
+        var saved = h.Connections.GetAll().Single();
+        Assert.AreEqual("db", saved.Name);
+        Assert.AreEqual("srv", saved.Host);
+        Assert.AreEqual(RemoteProtocol.Ssh, saved.Protocol);
     }
 }

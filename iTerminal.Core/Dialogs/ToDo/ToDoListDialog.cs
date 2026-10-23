@@ -1,3 +1,4 @@
+using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -172,6 +173,24 @@ public class ToDoListDialog : Dialog
     /// <summary>While a task is being typed every key belongs to the entry; Esc abandons it rather than closing the list.</summary>
     private bool HandleEntryKey(KeyEvent keyEvent)
     {
+        if (PasteHelper.IsPasteKey(keyEvent))
+        {
+            PasteHelper.Paste(text =>
+            {
+                _entry = ((_entry ?? string.Empty) + PasteHelper.SingleLine(text)) is { Length: > MaxEntryLength } longer ? longer[..MaxEntryLength] : (_entry ?? string.Empty) + PasteHelper.SingleLine(text);
+                _entryError = null;
+            }, StateHasChanged);
+            return true;
+        }
+
+        if (keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.U)
+        {
+            _entry = string.Empty;
+            _entryError = null;
+            StateHasChanged();
+            return true;
+        }
+
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.Escape:

@@ -1,3 +1,4 @@
+using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -224,6 +225,29 @@ public class RemoteConnectionManagerDialog : Dialog
     /// <summary>Tab and the arrows move between fields; the field under the cursor takes the typing.</summary>
     private bool EditField(KeyEvent keyEvent)
     {
+        if (PasteHelper.IsPasteKey(keyEvent) && _fields[_field].Kind is not (FieldKind.Protocol or FieldKind.Transport))
+        {
+            Field target = _fields[_field];
+            PasteHelper.Paste(text =>
+            {
+                string line = PasteHelper.SingleLine(text);
+                if (target.Kind == FieldKind.Number)
+                {
+                    line = new string([.. line.Where(char.IsAsciiDigit)]);
+                }
+
+                target.Text = (target.Text + line) is { Length: > MaxFieldLength } longer ? longer[..MaxFieldLength] : target.Text + line;
+            }, StateHasChanged);
+            return true;
+        }
+
+        if (keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.U && _fields[_field].Kind is not (FieldKind.Protocol or FieldKind.Transport))
+        {
+            _fields[_field].Text = string.Empty;
+            StateHasChanged();
+            return true;
+        }
+
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.Tab when !keyEvent.Shift:

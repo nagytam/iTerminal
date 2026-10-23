@@ -8,6 +8,8 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.ToDo;
 
+// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
+[DoNotParallelize]
 [TestClass]
 public class ToDoListDialogTest
 {
@@ -372,5 +374,24 @@ public class ToDoListDialogTest
         await ShowAsync(fixture.Dialog);
 
         AssertScreenContains(Render(fixture.Dialog), "No tasks. Press N to add one");
+    }
+
+    [TestMethod]
+    public async Task CtrlVPastesTheTaskLine_AndCtrlUClearsIt()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+        await iConsole.Services.TextClipboard.Current.SetTextAsync("!Renew passport" + (char)10 + "@2026-11-01");
+        await fixture.Dialog.HandleKeyEventAsync(Char('n'));
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.V, 'v', control: true));
+        Assert.AreEqual("!Renew passport @2026-11-01", fixture.Dialog.EntryForTest);
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, (char)13));
+        Assert.AreEqual("Renew passport", fixture.Dialog.SelectedForTest!.Subject);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('n'));
+        await TypeAsync(fixture.Dialog, "oops");
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.U, 'u', control: true));
+        Assert.AreEqual(string.Empty, fixture.Dialog.EntryForTest);
     }
 }

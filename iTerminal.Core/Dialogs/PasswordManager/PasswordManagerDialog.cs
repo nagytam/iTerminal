@@ -1,3 +1,4 @@
+using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -214,8 +215,34 @@ public class PasswordManagerDialog : Dialog
     /// <summary>Tab and the arrows move between fields; the field under the cursor takes the typing.</summary>
     private bool EditField(KeyEvent keyEvent)
     {
+        if (PasteHelper.IsPasteKey(keyEvent))
+        {
+            Field target = _fields[_field];
+            if (target.Kind != FieldKind.Category)
+            {
+                PasteHelper.Paste(text =>
+                {
+                    string line = PasteHelper.SingleLine(text);
+                    target.Text = (target.Text + line) is { Length: > MaxFieldLength } longer ? longer[..MaxFieldLength] : target.Text + line;
+                }, StateHasChanged);
+            }
+
+            return true;
+        }
+
+        if (keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.U && _fields[_field].Kind != FieldKind.Category)
+        {
+            _fields[_field].Text = string.Empty;
+            StateHasChanged();
+            return true;
+        }
+
         switch (keyEvent.ConsoleKey)
         {
+            case ConsoleKey.Tab when keyEvent.Shift:
+                _field = (_field - 1 + _fields.Length) % _fields.Length;
+                StateHasChanged();
+                return true;
             case ConsoleKey.Tab:
             case ConsoleKey.DownArrow:
                 _field = (_field + 1) % _fields.Length;
