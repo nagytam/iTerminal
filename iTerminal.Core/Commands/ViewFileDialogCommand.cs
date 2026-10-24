@@ -1,6 +1,7 @@
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Dialogs;
+using iConsole.Json;
 using iConsole.Xml;
 using iConsole.Interfaces;
 using iTerminal.Core.Audio;
@@ -18,7 +19,8 @@ public class ViewFileDialogCommand(
     MusicFileViewerDialog? musicFileViewerDialog = null,
     VideoFileViewerDialog? videoFileViewerDialog = null,
     ImageFileViewerDialog? imageFileViewerDialog = null,
-    XmlViewerDialog? xmlViewerDialog = null) : Command
+    XmlViewerDialog? xmlViewerDialog = null,
+    JsonViewerDialog? jsonViewerDialog = null) : Command
 {
     private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
     private readonly ImageFileViewerDialog? _imageFileViewerDialog = imageFileViewerDialog;
@@ -27,6 +29,7 @@ public class ViewFileDialogCommand(
     private readonly SolutionViewerDialog? _solutionViewerDialog = solutionViewerDialog;
     private readonly MusicFileViewerDialog? _musicFileViewerDialog = musicFileViewerDialog;
     private readonly XmlViewerDialog? _xmlViewerDialog = xmlViewerDialog;
+    private readonly JsonViewerDialog? _jsonViewerDialog = jsonViewerDialog;
 
     public override string Title => "View";
     public override string Description => "Open the selected file in the viewer.";
@@ -116,6 +119,16 @@ public class ViewFileDialogCommand(
         {
             _xmlViewerDialog.Url = focusedFileUrl;
             await (Control?.ShowDialogAsync(_xmlViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // A JSON document opens in the JSON viewer, from any drive, like an XML one.
+        if (_jsonViewerDialog is not null
+            && focusedFileUrl is not null
+            && JsonFileTypes.IsJsonFile(focusedFileUrl.Path))
+        {
+            _jsonViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_jsonViewerDialog) ?? Task.CompletedTask);
             return;
         }
 
