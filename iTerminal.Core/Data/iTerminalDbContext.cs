@@ -17,6 +17,8 @@ public class iTerminalDbContext(DbContextOptions<iTerminalDbContext> options) : 
 
     public DbSet<VaultEntry> VaultEntries => Set<VaultEntry>();
 
+    public DbSet<FileLabelEntry> FileLabels => Set<FileLabelEntry>();
+
     public DbSet<Music.MusicLibraryEntry> MusicLibraryEntries => Set<Music.MusicLibraryEntry>();
     public DbSet<Music.MusicPlaylistEntry> MusicPlaylistEntries => Set<Music.MusicPlaylistEntry>();
 
@@ -78,6 +80,15 @@ public class iTerminalDbContext(DbContextOptions<iTerminalDbContext> options) : 
             entity.HasKey(item => item.Id);
             entity.Property(item => item.InstrumentName).HasMaxLength(256);
             entity.Property(item => item.Currency).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<FileLabelEntry>(entity =>
+        {
+            entity.ToTable("FileLabels");
+            entity.HasKey(item => item.Path);
+            entity.Property(item => item.Path).HasMaxLength(4096);
+            entity.Property(item => item.Colour).HasMaxLength(16);
+            entity.Property(item => item.Tags).HasMaxLength(1000);
         });
 
         modelBuilder.Entity<VaultEntry>(entity =>

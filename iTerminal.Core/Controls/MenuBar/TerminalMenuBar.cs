@@ -91,6 +91,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         CompareFoldersDialog? compareFoldersDialog = null,
         SynchronizeFoldersDialog? synchronizeFoldersDialog = null,
         StripMetadataDialog? stripMetadataDialog = null,
+        FileLabelsDialog? fileLabelsDialog = null,
         iTerminal.Core.Commands.InteractiveShellCommand? shellCommand = null,
         iTerminal.Core.Dialogs.RuntimeDependencyDialog? runtimeDependencyDialog = null,
         FileDiffDialog? fileDiffDialog = null,
@@ -149,6 +150,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             fileDiffDialog,
             synchronizeFoldersDialog,
             stripMetadataDialog,
+            fileLabelsDialog,
             clipboardOperations));
 
         AddMenuItem(new NavigateMenuItem(
