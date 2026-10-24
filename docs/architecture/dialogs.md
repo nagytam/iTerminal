@@ -210,6 +210,8 @@ connection in the active panel as the existing SFTP drive. N / E / D add, edit a
 - **Mark by pattern** (`MarkPatternDialog`, Num+ / Num-): a pattern that matches no row, or a panel that cannot be marked in, keeps the dialog open with the reason on its error line. It closes only when at least one row changed.
 - **Format drive** (`FormatDriveDialog`): the drive letter must be typed back before anything is erased. A second Enter while a format is running says it is already running, rather than doing nothing.
 - **Form dialogs** (`FormDialog`): the two buttons never share columns, even on a narrow dialog — Cancel is kept clear of the primary button.
+- **Disk and network lists** (`DiskManagerDialog`, `NetworkManagerDialog`): `IsLoaded` means the first pass is over, whether or not every item answered. The job sets it in a `finally`; before, a failing pass left the list on "Reading…" for good.
+- **Folder size counts** (`FileInformationRefreshTask`): a count that could not finish (a folder that is missing or unreadable) shows `?`, not the part that was counted.
 
 ### The XML viewer (`XmlViewerDialog`, F3 on an XML file, `iConsole/Xml/`)
 F3 on an `.xml`, `.xaml`, `.csproj`, `.config`, `.resx`, `.svg` and the other XML types in `XmlFileTypes` opens the
@@ -232,4 +234,3 @@ indexes each XML node to its item. An element whose only content is text shows t
 The document is parsed on a background task when the dialog opens, and a query runs on one too; both results are
 applied on the idle pass, on the thread that owns the controls. The tree is the dialog's first focusable control, since
 `Dialog` gives the keyboard to the first one that can take it.
-
