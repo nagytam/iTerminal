@@ -271,6 +271,7 @@ public class ListControlsRenderTest
         var table = CreateTable([new("a", "1")]);
         Row? activated = null;
         table.RowActivated += (_, row) => activated = row;
+        table.SetFocus();
 
         Assert.IsTrue(await table.HandleKeyEventAsync(Key(ConsoleKey.Enter)));
         Assert.AreEqual("a", activated?.Name);

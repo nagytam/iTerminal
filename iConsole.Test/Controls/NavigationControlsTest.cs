@@ -114,4 +114,29 @@ public class NavigationControlsTest
         await expander.HandleKeyEventAsync(Key(ConsoleKey.Spacebar));
         Assert.IsTrue(expander.IsExpanded);
     }
+
+    [TestMethod]
+    public async Task Expander_PlusOpensAndMinusCloses_WhenFocused()
+    {
+        Expander expander = new(Theme()) { Header = "More" };
+        expander.SetFocus();
+
+        Assert.IsTrue(await expander.HandleKeyEventAsync(new KeyEvent('+', ConsoleKey.Add, false, false, false)));
+        Assert.IsTrue(expander.IsExpanded);
+        Assert.IsTrue(await expander.HandleKeyEventAsync(new KeyEvent('+', ConsoleKey.Add, false, false, false)));
+        Assert.IsTrue(expander.IsExpanded, "plus never closes");
+
+        Assert.IsTrue(await expander.HandleKeyEventAsync(new KeyEvent('-', ConsoleKey.Subtract, false, false, false)));
+        Assert.IsFalse(expander.IsExpanded);
+    }
+
+    [TestMethod]
+    public async Task Expander_PlusMinus_AreIgnoredWithoutFocus()
+    {
+        Expander expander = new(Theme()) { Header = "More" };
+
+        await expander.HandleKeyEventAsync(new KeyEvent('+', ConsoleKey.Add, false, false, false));
+
+        Assert.IsFalse(expander.IsExpanded);
+    }
 }

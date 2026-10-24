@@ -105,6 +105,12 @@ public class Expander : Control
                 return true;
         }
 
+        if (keyEvent.KeyChar is '+' or '-')
+        {
+            IsExpanded = keyEvent.KeyChar == '+';
+            return true;
+        }
+
         return false;
     }
 

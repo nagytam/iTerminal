@@ -156,4 +156,72 @@ public class LinkChipsScrollBarTest
         await bar.HandleMouseEventAsync(new MouseEvent { Position = new Position(0, 4), WheelDelta = -1 });
         Assert.AreEqual(3, (int)model.CursorPosition.Y);
     }
+
+    private static Chips ThreeChips()
+    {
+        Chips chips = new(Theme()) { Position = new Position(0, 0), ViewSize = new Size(40, 1) };
+        chips.Add("a");
+        chips.Add("b");
+        chips.Add("c");
+        chips.SetFocus();
+        return chips;
+    }
+
+    [TestMethod]
+    public async Task Chips_HomeAndEnd_JumpToTheFirstChipAndThePlus()
+    {
+        Chips chips = ThreeChips();
+        chips.ActiveIndex = 1;
+
+        Assert.IsTrue(await chips.HandleKeyEventAsync(Key(ConsoleKey.End)));
+        Assert.AreEqual(3, chips.ActiveIndex, "End lands on [+]");
+
+        Assert.IsTrue(await chips.HandleKeyEventAsync(Key(ConsoleKey.Home)));
+        Assert.AreEqual(0, chips.ActiveIndex);
+    }
+
+    [TestMethod]
+    public async Task Chips_ReadOnly_EndStopsAtTheLastChip()
+    {
+        Chips chips = ThreeChips();
+        chips.IsReadOnly = true;
+
+        await chips.HandleKeyEventAsync(Key(ConsoleKey.End));
+
+        Assert.AreEqual(2, chips.ActiveIndex, "a read-only list has no [+]");
+    }
+
+    [TestMethod]
+    public async Task Chips_TheWheel_StepsTheActiveChip_AndStopsAtTheEnds()
+    {
+        Chips chips = ThreeChips();
+        chips.ActiveIndex = 0;
+        MouseEvent down = new() { Position = new Position(1, 0), WheelDelta = -1 };
+        MouseEvent up = new() { Position = new Position(1, 0), WheelDelta = 1 };
+
+        Assert.IsTrue(await chips.HandleMouseEventAsync(down));
+        Assert.AreEqual(1, chips.ActiveIndex);
+        for (int i = 0; i < 6; i++)
+        {
+            await chips.HandleMouseEventAsync(down);
+        }
+
+        Assert.AreEqual(3, chips.ActiveIndex);
+        await chips.HandleMouseEventAsync(up);
+        Assert.AreEqual(2, chips.ActiveIndex);
+    }
+
+    [TestMethod]
+    public async Task Chips_TheWheelElsewhereOrDisabled_IsIgnored()
+    {
+        Chips chips = ThreeChips();
+        chips.ActiveIndex = 1;
+
+        await chips.HandleMouseEventAsync(new MouseEvent { Position = new Position(30, 5), WheelDelta = -1 });
+        Assert.AreEqual(1, chips.ActiveIndex);
+
+        chips.IsEnabled = false;
+        await chips.HandleMouseEventAsync(new MouseEvent { Position = new Position(1, 0), WheelDelta = -1 });
+        Assert.AreEqual(1, chips.ActiveIndex);
+    }
 }
