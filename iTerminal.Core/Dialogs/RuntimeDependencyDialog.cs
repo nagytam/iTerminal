@@ -17,12 +17,14 @@ namespace iTerminal.Core.Dialogs;
 /// Each dependency takes three rows — its name, its state, and a note or problem — so the dialog keeps
 /// the same size while an install runs and the list changes under it.
 ///
-/// <para>The dialog opens as a wizard: an overview of every component first (so the first page is never
-/// empty), then one step per dependency, up to date or not (what it is, what is installed, and for the
-/// ones that need work a tick for whether to include it) and, when anything needs work, a last step
-/// that sums up what Finish will install. The wizard's header and step indicator say where you are. Enter moves on and installs on the last step, Backspace or Left
-/// goes back, Space ticks, S skips the ticked versions. Once an install has started
-/// the dialog shows the plain list with the install log.</para>
+/// <para>The dialog opens as a wizard with one page per dependency, in list order: the first page is the first
+/// dependency. Each page says what it is, what is installed, and for the ones that need work a tick for whether to
+/// include it. When anything needs work, a last page sums up what Finish will install. The wizard's header and step
+/// indicator say where you are. Enter moves on and installs on the last page, Backspace or Left goes back, Space ticks,
+/// S skips the ticked versions. Once an install has started the dialog shows the plain list with the install log.</para>
+///
+/// <para>The dialog is only shown when something is missing or can be updated: at start-up when it is offered, and from
+/// Tools only while <see cref="HasWork"/> (the command is unavailable otherwise).</para>
 /// </summary>
 public class RuntimeDependencyDialog : Dialog
 {
@@ -44,7 +46,7 @@ public class RuntimeDependencyDialog : Dialog
     }
 
     /// <summary>Whether anything is left to install or update.</summary>
-    internal bool HasWork => _service.Statuses.Any(status => status.State != RuntimeDependencyState.Installed);
+    public bool HasWork => _service.Statuses.Any(status => status.State != RuntimeDependencyState.Installed);
 
     /// <summary>The dependencies that have something to install or update, in list order.</summary>
     private List<RuntimeDependencyStatus> Actionable() =>
@@ -125,7 +127,12 @@ public class RuntimeDependencyDialog : Dialog
         }
 
         _wizard = new Wizard(ThemeService);
-        _wizard.AddStep(new WizardStep("Overview", new RuntimeDependencyOverviewPage(_service, ThemeService)));
+        // One page for each dependency. Only with no dependency at all is there nothing to show but the overview, which says so.
+        if (_service.Statuses.Count == 0)
+        {
+            _wizard.AddStep(new WizardStep("Overview", new RuntimeDependencyOverviewPage(_service, ThemeService)));
+        }
+
         foreach (RuntimeDependencyStatus status in _service.Statuses)
         {
             _wizard.AddStep(new WizardStep(status.Name, new RuntimeDependencyStepPage(status.Id, _service, IsTicked, ThemeService)));
