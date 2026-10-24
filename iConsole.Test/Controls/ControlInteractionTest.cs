@@ -1,3 +1,5 @@
+using iConsole.Commands;
+using iConsole.Controls.Buttons;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Display;
@@ -1047,5 +1049,147 @@ public class ControlInteractionTest
         await list.HandleKeyEventAsync(Key(ConsoleKey.OemMinus, '-'));
 
         CollectionAssert.AreEqual(new[] { "b" }, list.CheckedItems.ToArray());
+    }
+
+    // ---- Click takes the focus (CheckBox, RadioButton, ToggleButton, Button) ----
+
+    [TestMethod]
+    public async Task CheckBox_Click_TakesFocusFromSibling()
+    {
+        Window root = new(Theme()) { ViewSize = new Size(30, 4) };
+        CheckBox first = new(Theme()) { Label = "first", Position = new Position(0, 0), ViewSize = new Size(12, 1) };
+        CheckBox second = new(Theme()) { Label = "second", Position = new Position(0, 1), ViewSize = new Size(12, 1) };
+        root.AddControl(first);
+        root.AddControl(second);
+        first.SetFocus();
+
+        await second.HandleMouseEventAsync(Click(3, 1));
+
+        Assert.IsTrue(second.IsChecked);
+        Assert.IsTrue(second.IsFocused);
+        Assert.IsFalse(first.IsFocused);
+    }
+
+    [TestMethod]
+    public async Task RadioButton_Click_TakesFocusFromSibling()
+    {
+        Window root = new(Theme()) { ViewSize = new Size(30, 4) };
+        RadioButton first = new(Theme()) { Label = "first", Position = new Position(0, 0), ViewSize = new Size(12, 1) };
+        RadioButton second = new(Theme()) { Label = "second", Position = new Position(0, 1), ViewSize = new Size(12, 1) };
+        root.AddControl(first);
+        root.AddControl(second);
+        first.SetFocus();
+
+        await second.HandleMouseEventAsync(Click(3, 1));
+
+        Assert.IsTrue(second.IsSelected);
+        Assert.IsTrue(second.IsFocused);
+        Assert.IsFalse(first.IsFocused);
+    }
+
+    [TestMethod]
+    public async Task ToggleButton_Click_TakesFocusAndFlips()
+    {
+        ToggleButton toggle = new(Theme()) { Position = new Position(0, 0), ViewSize = new Size(10, 1) };
+
+        await toggle.HandleMouseEventAsync(Click(2));
+
+        Assert.IsTrue(toggle.IsOn);
+        Assert.IsTrue(toggle.IsFocused);
+    }
+
+    [TestMethod]
+    public async Task ReadOnlyToggleButton_Click_DoesNotTakeFocus()
+    {
+        ToggleButton toggle = new(Theme()) { IsReadOnly = true, Position = new Position(0, 0), ViewSize = new Size(10, 1) };
+
+        await toggle.HandleMouseEventAsync(Click(2));
+
+        Assert.IsFalse(toggle.IsOn);
+        Assert.IsFalse(toggle.IsFocused);
+    }
+
+    [TestMethod]
+    public async Task Button_Click_TakesFocusFromSibling()
+    {
+        Window root = new(Theme()) { ViewSize = new Size(30, 4) };
+        Mock<ICommand> command = new();
+        command.Setup(c => c.CanExecute()).Returns(true);
+        Button first = new("First", command.Object, Theme()) { Position = new Position(0, 0), ViewSize = new Size(10, 1) };
+        Button second = new("Second", command.Object, Theme()) { Position = new Position(0, 1), ViewSize = new Size(10, 1) };
+        root.AddControl(first);
+        root.AddControl(second);
+        first.SetFocus();
+
+        await second.HandleMouseEventAsync(Click(2, 1));
+
+        Assert.IsTrue(second.IsFocused);
+        Assert.IsFalse(first.IsFocused);
+    }
+
+    // ---- Key hints in Help (Rating, Expander, Toolbar, Slider, SegmentedControl, Chips) ----
+
+    [TestMethod]
+    public void Rating_KeyHints_ListedOnlyWhenEditable()
+    {
+        Rating rating = new(Theme()) { Maximum = 5 };
+        CollectionAssert.Contains(rating.GetKeyHints().Select(h => h.Key).ToList(), "Left/Right");
+
+        rating.IsReadOnly = true;
+        Assert.AreEqual(0, rating.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public void Expander_KeyHints_NameEveryToggleKey()
+    {
+        var keys = NewExpander().GetKeyHints().Select(h => h.Key).ToList();
+
+        CollectionAssert.AreEquivalent(new[] { "Enter/Space", "Right/Left", "+/-" }, keys);
+    }
+
+    [TestMethod]
+    public void Toolbar_KeyHints_EmptyWithoutItems_ListedWithItems()
+    {
+        Toolbar toolbar = new(Theme()) { Position = new Position(0, 0), ViewSize = new Size(40, 1) };
+        Assert.AreEqual(0, toolbar.GetKeyHints().Count());
+
+        toolbar.Items = [new ToolbarItem("Open"), new ToolbarItem("Save")];
+
+        CollectionAssert.Contains(toolbar.GetKeyHints().Select(h => h.Key).ToList(), "Enter/Space");
+    }
+
+    [TestMethod]
+    public void Slider_KeyHints_EmptyWhenReadOnly()
+    {
+        Slider slider = NewSlider();
+        CollectionAssert.Contains(slider.GetKeyHints().Select(h => h.Key).ToList(), "PageUp/PageDown");
+
+        slider.IsReadOnly = true;
+        Assert.AreEqual(0, slider.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public void SegmentedControl_KeyHints_EmptyWhenDisabled()
+    {
+        SegmentedControl control = NewSegments();
+        CollectionAssert.Contains(control.GetKeyHints().Select(h => h.Key).ToList(), "Home/End");
+
+        control.IsEnabled = false;
+        Assert.AreEqual(0, control.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public void Chips_KeyHints_OmitEditKeysWhenReadOnly()
+    {
+        Chips chips = NewChips();
+        var editable = chips.GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.Contains(editable, "Delete/Backspace");
+        CollectionAssert.Contains(editable, "Enter");
+
+        chips.IsReadOnly = true;
+        var readOnly = chips.GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.Contains(readOnly, "Left/Right");
+        CollectionAssert.DoesNotContain(readOnly, "Delete/Backspace");
+        CollectionAssert.DoesNotContain(readOnly, "Enter");
     }
 }

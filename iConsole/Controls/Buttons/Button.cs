@@ -172,6 +172,13 @@ public class Button : Control
         {
             if (IsEnabled)
             {
+                // A clicked button takes the focus, as a clicked list or text box does, so Enter
+                // after the click reaches the button the user just pressed.
+                if (!IsFocused)
+                {
+                    SetFocus();
+                }
+
                 Volatile.Write(ref _pressedAt, Math.Max(1, Environment.TickCount64));
                 StateHasChanged();
             }

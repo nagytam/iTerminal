@@ -74,6 +74,17 @@ public class SegmentedControl : Control, IReadOnly
         return -1;
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (IsReadOnly || !IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Left/Right", "Choose the previous or next segment");
+        yield return ("Home/End", "Choose the first or last segment");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

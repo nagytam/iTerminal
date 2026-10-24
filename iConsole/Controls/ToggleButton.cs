@@ -61,6 +61,11 @@ public class ToggleButton : Control, IReadOnly
             && mouseEvent.WheelDelta == 0
             && mouseEvent.LeftClicked)
         {
+            if (!IsFocused)
+            {
+                SetFocus();
+            }
+
             Toggle();
             handled = true;
         }

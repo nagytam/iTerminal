@@ -83,6 +83,13 @@ public class Expander : Control
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Enter/Space", "Expand or collapse the section");
+        yield return ("Right/Left", "Expand or collapse the section");
+        yield return ("+/-", "Expand or collapse the section");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);
