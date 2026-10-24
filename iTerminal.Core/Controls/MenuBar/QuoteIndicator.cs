@@ -70,7 +70,10 @@ public class QuoteIndicator(string instrumentName, OnlineQuoteService onlineQuot
         // identical "Fetch quote" strings said nothing about which was which.
         if (instrument is null)
         {
-            return (Fit($"{_instrumentName} {ProgressChar()}", width), colorScheme.Background);
+            // Once an attempt has failed and none is running, say so rather than spin.
+            var nothingComing = _onlineQuoteService.LastRefreshFailed && !_onlineQuoteService.IsRefreshing;
+            var status = nothingComing ? "unavailable" : ProgressChar();
+            return (Fit($"{_instrumentName} {status}", width), colorScheme.Background);
         }
 
         var lastValue = instrument.InstrumentValues.FirstOrDefault();
