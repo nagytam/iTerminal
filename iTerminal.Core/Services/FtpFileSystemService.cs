@@ -174,24 +174,26 @@ public class FtpFileSystemService : IFtpFileSystemService, IFolderListingFileSys
 
     public IEnumerable<IEntry> List(Url url)
     {
-        var entries = new List<FileSystemEntry>();
-        if (_client is null)
-        {
-            return entries;
-        }
-
-        FtpListItem[] listing;
         try
         {
-            lock (_gate)
-            {
-                listing = Client.GetListing(RemotePath(url));
-            }
+            return Listing(url);
         }
         catch (Exception exception)
         {
+            // The panel shows an empty folder, and the log says why; a walk that must know uses ListChildren, which throws.
             _logger?.Error(exception, "FTP list error for {Url}", url.FullUrl);
-            return entries;
+            return [];
+        }
+    }
+
+    /// <summary>Reads the folder and throws when it cannot be read, so a copy, delete or size walk never takes a failed listing for an empty folder.</summary>
+    private List<FileSystemEntry> Listing(Url url)
+    {
+        var entries = new List<FileSystemEntry>();
+        FtpListItem[] listing;
+        lock (_gate)
+        {
+            listing = Client.GetListing(RemotePath(url));
         }
 
         var folderUrl = url.FullUrl.EndsWith('/') ? url.FullUrl : url.FullUrl + "/";
@@ -227,9 +229,10 @@ public class FtpFileSystemService : IFtpFileSystemService, IFolderListingFileSys
     }
 
     public IEnumerable<Url> ListChildren(Url folderUrl) =>
-        List(folderUrl)
+        Listing(folderUrl)
             .Where(e => e.Url.DisplayName != FocusedEntryParentName && e.DisplayName != FocusedEntryParentName)
-            .Select(e => e.Url);
+            .Select(e => e.Url)
+            .ToList();
 
     private const string FocusedEntryParentName = "..";
 

@@ -181,4 +181,26 @@ public class FtpFileSystemServiceTest
     }
 
     private delegate void DownloadBytesCallback(out byte[]? bytes, string remotePath, long restartPosition, Action<FtpProgress>? progress, long length);
+
+    [TestMethod]
+    public void ListChildren_WhenTheListingFails_Throws_SoAWalkDoesNotMistakeItForAnEmptyFolder()
+    {
+        using var service = CreateService();
+        service.Connect("ftp.example.org", "alice", "secret");
+        _client.Setup(c => c.GetListing("/pub/")).Throws(new IOException("550 Permission denied"));
+
+        Assert.Throws<IOException>(() => service.ListChildren(new Url("ftp://alice@ftp.example.org/pub/")).ToList());
+    }
+
+    [TestMethod]
+    public void List_WhenTheListingFails_IsAnEmptyPanel()
+    {
+        using var service = CreateService();
+        service.Connect("ftp.example.org", "alice", "secret");
+        _client.Setup(c => c.GetListing("/pub/")).Throws(new IOException("550 Permission denied"));
+
+        var entries = service.List(new Url("ftp://alice@ftp.example.org/pub/")).ToList();
+
+        Assert.AreEqual(0, entries.Count);
+    }
 }

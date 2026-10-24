@@ -230,29 +230,41 @@ public class WebDavFileSystemService : IWebDavFileSystemService, IFolderListingF
 
     public IEnumerable<IEntry> List(Url url)
     {
-        var entries = new List<FileSystemEntry>();
         if (_client is null)
         {
-            return entries;
+            return [];
         }
 
-        List<Resource>? resources;
         try
         {
-            lock (_gate)
-            {
-                resources = PropFindAt(url, 1);
-            }
+            return Listing(url);
         }
         catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException)
         {
+            // The panel shows an empty folder, and the log says why; a walk that must know uses ListChildren, which throws.
             _logger?.Error(exception, "WebDAV list error for {Url}", url.FullUrl);
-            return entries;
+            return [];
+        }
+    }
+
+    /// <summary>Reads the folder and throws when it cannot be read, so a copy, delete or size walk never takes a failed listing for an empty folder.</summary>
+    private List<FileSystemEntry> Listing(Url url)
+    {
+        var entries = new List<FileSystemEntry>();
+        if (_client is null)
+        {
+            throw new IOException("Not connected to a WebDAV server.");
+        }
+
+        List<Resource>? resources;
+        lock (_gate)
+        {
+            resources = PropFindAt(url, 1);
         }
 
         if (resources is null)
         {
-            return entries;
+            throw new IOException($"{url.FullUrl} could not be listed.");
         }
 
         var folderUrl = url.FullUrl.EndsWith('/') ? url.FullUrl : url.FullUrl + "/";
@@ -293,9 +305,10 @@ public class WebDavFileSystemService : IWebDavFileSystemService, IFolderListingF
     }
 
     public IEnumerable<Url> ListChildren(Url folderUrl) =>
-        List(folderUrl)
+        Listing(folderUrl)
             .Where(e => e.Url.DisplayName != ".." && e.DisplayName != "..")
-            .Select(e => e.Url);
+            .Select(e => e.Url)
+            .ToList();
 
     private bool Exists(Url url, bool folder)
     {
