@@ -447,4 +447,49 @@ public class MailDialogTest
         Assert.AreEqual("Compose", fixture.Dialog.ModeForTest);
         Assert.IsFalse(await fixture.Dialog.HandleMouseEventAsync(new iConsole.Data.MouseEvent { Position = new iConsole.Data.Position(0, 0), WheelDelta = -1 }));
     }
+
+    [TestMethod]
+    public async Task CtrlWAndCtrlUEditTheCurrentComposerField()
+    {
+        var fixture = await OpenInboxAsync();
+        await fixture.Dialog.HandleKeyEventAsync(Char('c'));
+        await TypeAsync(fixture.Dialog, "ada lovelace");
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.W, 'w', control: true);
+        Assert.AreEqual("ada ", fixture.Dialog.DraftForTest[0]);
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Backspace, control: true);
+        Assert.AreEqual(string.Empty, fixture.Dialog.DraftForTest[0]);
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.Tab, (char)9);
+        await TypeAsync(fixture.Dialog, "subject line");
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.U, 'u', control: true);
+        Assert.AreEqual(string.Empty, fixture.Dialog.DraftForTest[1]);
+    }
+
+    [TestMethod]
+    public async Task CtrlWAndCtrlUEditTheAddressBookSearch_AndDropTheOldResults()
+    {
+        var fixture = await OpenInboxAsync();
+        await fixture.Dialog.HandleKeyEventAsync(Char('c'));
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.L, 'l', control: true);
+        await TypeAsync(fixture.Dialog, "ada love");
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.W, 'w', control: true);
+        Assert.AreEqual("ada ", fixture.Dialog.DirectoryTermForTest);
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.U, 'u', control: true);
+        Assert.AreEqual(string.Empty, fixture.Dialog.DirectoryTermForTest);
+    }
+
+    [TestMethod]
+    public async Task CtrlWAndCtrlUEditTheCurrentAccountField()
+    {
+        var fixture = Create(withAccount: false);
+        await ShowAsync(fixture.Dialog);
+        await TypeAsync(fixture.Dialog, "Work account");
+
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.W, 'w', control: true);
+        Assert.AreEqual("Work ", fixture.Dialog.SetupValueForTest("Account name"));
+        await PressKeyAsync(fixture.Dialog, ConsoleKey.U, 'u', control: true);
+        Assert.AreEqual(string.Empty, fixture.Dialog.SetupValueForTest("Account name"));
+    }
 }

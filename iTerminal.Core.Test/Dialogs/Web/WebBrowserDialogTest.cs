@@ -625,4 +625,64 @@ public class WebBrowserDialogTest
         Assert.IsTrue(url.StartsWith("https://a.test/results?q=black"), url);
         Assert.IsTrue(url.Contains("dogs"), url);
     }
+
+    [TestMethod]
+    public async Task CtrlWDeletesTheWordBeforeTheCursorInTheAddressBar()
+    {
+        var f = await OpenAsync();
+        await PressAsync(f, ConsoleKey.L, 'l', control: true);
+        await TypeTextAsync(f, "alpha beta gamma");
+        await PressAsync(f, ConsoleKey.LeftArrow);
+        await PressAsync(f, ConsoleKey.LeftArrow);
+
+        await PressAsync(f, ConsoleKey.W, 'w', control: true);
+
+        Assert.AreEqual("alpha beta ma", f.Dialog.AddressText);
+        await PressAsync(f, ConsoleKey.Backspace, control: true);
+        Assert.AreEqual("alpha ma", f.Dialog.AddressText);
+    }
+
+    [TestMethod]
+    public async Task CtrlWOnAFreshAddressBarClearsItAll()
+    {
+        var f = await OpenAsync();
+        await PressAsync(f, ConsoleKey.L, 'l', control: true);
+
+        await PressAsync(f, ConsoleKey.W, 'w', control: true);
+
+        Assert.AreEqual(string.Empty, f.Dialog.AddressText);
+    }
+
+    [TestMethod]
+    public async Task CtrlWDeletesTheLastWordOfTheFindBox()
+    {
+        var f = await OpenAsync();
+        await GoToAsync(f, "https://a.test/long");
+        await DrawAsync(f);
+        await PressAsync(f, ConsoleKey.F, 'f', control: true);
+        await TypeTextAsync(f, "line number");
+
+        await PressAsync(f, ConsoleKey.W, 'w', control: true);
+
+        AssertScreenContains(await DrawAsync(f), "Find: line ");
+    }
+
+    [TestMethod]
+    public async Task CtrlWDeletesTheLastWordOfAFormField()
+    {
+        var f = await OpenAsync();
+        await GoToAsync(f, "https://a.test/form");
+        await DrawAsync(f);
+        await PressAsync(f, ConsoleKey.Tab, (char)9);
+        await PressAsync(f, ConsoleKey.Enter, (char)13);
+        await TypeTextAsync(f, "black cats");
+
+        await PressAsync(f, ConsoleKey.W, 'w', control: true);
+        await PressAsync(f, ConsoleKey.Enter, (char)13);
+        await f.Tab.LoadTask;
+
+        string url = f.Fetcher.Requests[^1].Url;
+        Assert.IsTrue(url.Contains("q=black"), url);
+        Assert.IsFalse(url.Contains("cats"), url);
+    }
 }

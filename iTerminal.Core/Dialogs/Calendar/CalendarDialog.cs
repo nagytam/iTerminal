@@ -196,6 +196,14 @@ public class CalendarDialog : Dialog
     /// </summary>
     private bool HandleEntryKey(KeyEvent keyEvent)
     {
+        if (PasteHelper.IsDeleteWordKey(keyEvent))
+        {
+            _entry = PasteHelper.DeleteLastWord(_entry ?? string.Empty);
+            _entryError = null;
+            StateHasChanged();
+            return true;
+        }
+
         if (PasteHelper.IsPasteKey(keyEvent))
         {
             PasteHelper.Paste(text =>

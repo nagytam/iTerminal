@@ -162,6 +162,10 @@ public class RemoteConnectionManagerDialog : Dialog
                 return MoveCursor(-ListRows);
             case ConsoleKey.PageDown when plain:
                 return MoveCursor(ListRows);
+            case ConsoleKey.Home:
+                return MoveCursor(-int.MaxValue / 2);
+            case ConsoleKey.End:
+                return MoveCursor(int.MaxValue / 2);
             case ConsoleKey.Enter when plain:
                 Connect();
                 return true;
@@ -225,6 +229,13 @@ public class RemoteConnectionManagerDialog : Dialog
     /// <summary>Tab and the arrows move between fields; the field under the cursor takes the typing.</summary>
     private bool EditField(KeyEvent keyEvent)
     {
+        if (PasteHelper.IsDeleteWordKey(keyEvent) && _fields[_field].Kind is not (FieldKind.Protocol or FieldKind.Transport))
+        {
+            _fields[_field].Text = PasteHelper.DeleteLastWord(_fields[_field].Text);
+            StateHasChanged();
+            return true;
+        }
+
         if (PasteHelper.IsPasteKey(keyEvent) && _fields[_field].Kind is not (FieldKind.Protocol or FieldKind.Transport))
         {
             Field target = _fields[_field];

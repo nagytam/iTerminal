@@ -276,6 +276,15 @@ public class WorkspaceManagerDialog : Dialog
             return true;
         }
 
+        if (PasteHelper.IsDeleteWordKey(keyEvent) || PasteHelper.IsClearKey(keyEvent))
+        {
+            _text = _textIsSelected || PasteHelper.IsClearKey(keyEvent) ? string.Empty : PasteHelper.DeleteLastWord(_text);
+            _textIsSelected = false;
+            _pending = Pending.None;
+            StateHasChanged();
+            return true;
+        }
+
         if (PasteHelper.IsPasteKey(keyEvent))
         {
             PasteHelper.Paste(text =>

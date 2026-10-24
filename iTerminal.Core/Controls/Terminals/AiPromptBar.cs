@@ -132,6 +132,12 @@ public class AiPromptBar : Window
 
         if (!_model.IsAvailable) return false;
 
+        if (PasteHelper.IsDeleteWordKey(keyEvent) || PasteHelper.IsClearKey(keyEvent))
+        {
+            _model.Input = PasteHelper.IsClearKey(keyEvent) ? string.Empty : PasteHelper.DeleteLastWord(_model.Input);
+            return true;
+        }
+
         if (PasteHelper.IsPasteKey(keyEvent))
         {
             PasteHelper.Paste(text => _model.Input += PasteHelper.SingleLine(text), StateHasChanged);

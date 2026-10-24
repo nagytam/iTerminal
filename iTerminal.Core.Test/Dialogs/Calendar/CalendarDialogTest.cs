@@ -410,4 +410,17 @@ public class CalendarDialogTest
         await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.U, 'u', control: true));
         Assert.AreEqual(string.Empty, fixture.Dialog.EntryForTest);
     }
+
+    [TestMethod]
+    public async Task CtrlWDeletesTheLastWordOfTheEntryLine()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+        await fixture.Dialog.HandleKeyEventAsync(Char('n'));
+        await TypeAsync(fixture.Dialog, "14:30 45 Team standup");
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.W, 'w', control: true));
+
+        Assert.AreEqual("14:30 45 Team ", fixture.Dialog.EntryForTest);
+    }
 }

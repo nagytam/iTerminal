@@ -338,6 +338,12 @@ public class MapDialog : Dialog
 
     private bool HandleSearchKey(KeyEvent key)
     {
+        if (PasteHelper.IsDeleteWordKey(key))
+        {
+            _input = PasteHelper.DeleteLastWord(_input);
+            return true;
+        }
+
         if (PasteHelper.IsPasteKey(key))
         {
             PasteHelper.Paste(text => _input += PasteHelper.SingleLine(text), StateHasChanged);
