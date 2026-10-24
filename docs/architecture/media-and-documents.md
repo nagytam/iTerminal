@@ -201,3 +201,21 @@ F3 on a video (`VideoFileTypes`) opens `VideoFileViewerDialog`; F3 on a picture 
 - **Resizing is driven from `Draw`**: it fits the picture to the room and calls `Resize`, which is a no-op when nothing changed. The image dialog does the same by starting a background load for the newest size only.
 - **The transport buttons are mouse-only** (`CanFocus = false`) with the keys bound on the dialog (Space, ←/→, Shift+←/→, Home, `s`, `c`); a focusable button would make Space mean "press the focused button". Clicking the progress bar seeks.
 - Tests use `FakeVideoDecoder`, so they need no ffmpeg; the real decoder's output parsing (`ParseProbe`) is tested separately.
+
+### Viewer navigation, image metadata and audio tags
+- **Wrap (F2)**: `TextViewerControl.WrapLines` breaks long lines to the view's width. Its vertical scroll counts screen
+  rows (`ScreenRows`), the cursor stays on its line, and a line's rows are highlighted together. Only the viewer wraps; the
+  editor keeps lines whole. Hex mode has no wrap.
+- **Go to line (F5)**: `GoToLineDialog` takes a number and calls `TextViewerControl.ShowLine`, which puts the line a third
+  of the way down the view. A number past the end goes to the last line.
+- **Search hits**: F3 and Ctrl+F3 step through the hits and reveal them through `ShowLine`, so a wrapped hit is shown on its
+  own row. The status bar's counter reads "Hit n/N": n is the hit the cursor is on, or the last one before it.
+- **Image metadata (`i` in the image viewer)**: `ImageInfoReader` reads a 1 MB prefix of a PNG, JPEG, GIF, BMP, WebP or
+  TIFF file: its format and dimensions, PNG text chunks and JPEG comments, and the EXIF fields (make, model, lens,
+  exposure, aperture, focal length, ISO, date taken, GPS position and altitude). Nothing is decoded; the dialog scrolls the
+  list with the arrow and page keys.
+- **Audio tags (`e` in the music viewer)**: `MusicTagEditorDialog` edits title, artist, album, year, track, genre and
+  comment of an MP3 or FLAC. `AudioTagWriter` rewrites only the tag block: in an MP3 the ID3v2 block (other frames such as
+  cover art, and comments with a description, are kept, and the audio is copied byte for byte); in a FLAC the Vorbis comment
+  block (other comments and metadata blocks are kept). The file is written beside the original and moved over it, so a
+  failed save leaves the original intact. ID3v2.2 tags and other formats are not written.

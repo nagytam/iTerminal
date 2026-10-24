@@ -1,5 +1,6 @@
 ﻿using iConsole.Commands;
 using iConsole.Controls.Buttons;
+using iConsole.Controls.Viewers;
 using iConsole.Data;
 using iConsole.Layouts;
 using iConsole.Model;
@@ -22,21 +23,24 @@ public class ViewerStatusBar : StatusBar
         ITextModel textModel,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        TextViewerControl? viewer = null)
         : base(themeService)
     {
         Name = nameof(ViewerStatusBar);
         ViewSize = new Size(0, 1);
+        // The viewer reveals a hit itself: its lines may be wrapped, so a hit's row is not its line.
+        Action<long, long>? reveal = viewer is null ? null : viewer.ShowLine;
 
         _searchTextDialogButton = new Button(
             new SearchTextDialogCommand(searchModel, textModel, scrollableModel, beepService, dateTimeProviderService, themeService), themeService);
         _findNextButton = new Button(
-            new FindNextCommand(searchModel, scrollableModel), themeService);
+            new FindNextCommand(searchModel, scrollableModel, reveal), themeService);
         _findPreviousButton = new Button(
-            new FindPreviousCommand(searchModel, scrollableModel), themeService);
+            new FindPreviousCommand(searchModel, scrollableModel, reveal), themeService);
         _encodingIndicator = new EncodingIndicator(textModel, themeService);
         _cursorPositionIndicator = new CursorPositionIndicator(scrollableModel, themeService);
-        _searchResultsIndicator = new SearchResultsIndicator(searchModel, themeService);
+        _searchResultsIndicator = new SearchResultsIndicator(searchModel, themeService, scrollableModel);
         AddControl(_findNextButton);
         AddControl(_findPreviousButton);
         AddControl(_searchTextDialogButton);

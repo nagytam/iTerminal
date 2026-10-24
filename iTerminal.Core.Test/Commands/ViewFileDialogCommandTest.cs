@@ -408,6 +408,8 @@ public class ViewFileDialogCommandTest
             player: Mock.Of<iTerminal.Core.Services.Music.IMusicPlayerService>(),
             deviceService: Mock.Of<iTerminal.Core.Services.Music.IAudioDeviceService>(),
             metadataService: new iTerminal.Core.Services.Music.MusicMetadataService(),
+            beepService: Mock.Of<iConsole.Services.IBeepService>(),
+            dateTimeProviderService: Mock.Of<iConsole.Services.IDateTimeProviderService>(),
             themeService: themeService);
     }
 

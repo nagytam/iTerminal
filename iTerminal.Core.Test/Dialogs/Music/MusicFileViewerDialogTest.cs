@@ -59,7 +59,7 @@ public class MusicFileViewerDialogTest
     {
         var devices = new FakeAudioDeviceService();
         var player = new MusicPlayerService(devices);
-        var dialog = new MusicFileViewerDialog(player, devices, new MusicMetadataService(), CreateThemeService())
+        var dialog = new MusicFileViewerDialog(player, devices, new MusicMetadataService(), Mock.Of<iConsole.Services.IBeepService>(), Mock.Of<iConsole.Services.IDateTimeProviderService>(), CreateThemeService())
         {
             FilePath = path,
         };
@@ -323,7 +323,7 @@ public class MusicFileViewerDialogTest
             await dialog.HandleKeyEventAsync(Key(' ', ConsoleKey.Spacebar));
             await WaitForAsync(() => player.State == PlaybackState.Playing, "playback to start");
 
-            var otherViewer = new MusicFileViewerDialog(player, devices, new MusicMetadataService(), CreateThemeService())
+            var otherViewer = new MusicFileViewerDialog(player, devices, new MusicMetadataService(), Mock.Of<iConsole.Services.IBeepService>(), Mock.Of<iConsole.Services.IDateTimeProviderService>(), CreateThemeService())
             {
                 FilePath = other,
             };

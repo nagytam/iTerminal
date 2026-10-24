@@ -10,12 +10,17 @@ namespace iConsole.Controls.StatusBar;
 public class SearchResultsIndicator : StatusBarItem
 {
     private ISearchModel _searchModel { get; set; }
+    private IScrollableModel? _scrollableModel { get; set; }
+
     public SearchResultsIndicator(
         ISearchModel searchModel,
-        IThemeService themeService)
+        IThemeService themeService,
+        IScrollableModel? scrollableModel = null)
         : base(themeService)
     {
         _searchModel = searchModel;
+        _scrollableModel = scrollableModel;
+        _scrollableModel?.PropertyChanged += OnPropertyChanged;
         _searchModel.PropertyChanged += OnPropertyChanged;
         Name = nameof(SearchResultsIndicator);
         ViewSize = new Size(10, 1);
@@ -26,10 +31,27 @@ public class SearchResultsIndicator : StatusBarItem
         StateHasChanged();
     }
 
+    /// <summary>
+    /// "Hit n/N": n counts the hits up to the cursor, so the hit the cursor is on is the one it names, and a cursor
+    /// between two hits names the one before it. Without a cursor to go by, the total alone.
+    /// </summary>
+    public string HitText()
+    {
+        var hits = _searchModel.Hits.AsSnapshot();
+        if (_scrollableModel is null)
+        {
+            return $"Search: {hits.Count}";
+        }
+
+        var cursor = _scrollableModel.CursorPosition;
+        int upToCursor = hits.Count(h => h.Y < cursor.Y || (h.Y == cursor.Y && h.X <= cursor.X));
+        return $"Hit {upToCursor}/{hits.Count}";
+    }
+
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
-        var s = new ConxelString($"Search: {_searchModel.Hits.Count}", Color.Green, Color.Blue);
+        var s = new ConxelString(HitText(), Color.Green, Color.Blue);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, s);
     }
 }

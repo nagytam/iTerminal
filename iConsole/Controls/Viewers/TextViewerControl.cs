@@ -83,6 +83,128 @@ public class TextViewerControl : Control
         ScrollableModel.ScrollToVisible();
     }
 
+    // ---- Wrapping (the viewer; an editor keeps each line whole) ----
+
+    private bool _wrapLines;
+
+    /// <summary>
+    /// Wraps long lines to the width of the view, so every part of a line can be read without scrolling sideways. The
+    /// vertical scroll then counts screen rows; the cursor stays on its line, and the line's rows are highlighted together.
+    /// </summary>
+    public bool WrapLines
+    {
+        get => _wrapLines;
+        set
+        {
+            if (_wrapLines == value)
+            {
+                return;
+            }
+
+            _wrapLines = value;
+            ScrollableModel.ScrollPosition.X = 0;
+            _rowsKey = (-1, -1, false);
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>One screen row: the line it shows, and the part of that line it shows.</summary>
+    internal readonly record struct TextRow(int Line, int Start, int Length);
+
+    private List<TextRow> _rows = [];
+    private (int Lines, int Width, bool Wrap) _rowsKey = (-1, -1, false);
+
+    /// <summary>The screen rows for the current text and width. Rebuilt when either changes.</summary>
+    internal IReadOnlyList<TextRow> ScreenRows
+    {
+        get
+        {
+            int width = Math.Max(1, (int)ViewSize.Width - 2);
+            if (_rowsKey != (TextModel.Lines.Count, width, _wrapLines))
+            {
+                RebuildRows(width);
+            }
+
+            return _rows;
+        }
+    }
+
+    private void RebuildRows(int width)
+    {
+        _rows = new List<TextRow>(TextModel.Lines.Count);
+        for (int line = 0; line < TextModel.Lines.Count; line++)
+        {
+            int length = TextModel.Lines[line].Length;
+            if (!_wrapLines || length <= width)
+            {
+                _rows.Add(new TextRow(line, 0, length));
+                continue;
+            }
+
+            for (int start = 0; start < length; start += width)
+            {
+                _rows.Add(new TextRow(line, start, Math.Min(width, length - start)));
+            }
+        }
+
+        _rowsKey = (TextModel.Lines.Count, width, _wrapLines);
+        if (_wrapLines)
+        {
+            ScrollableModel.ScrollableSize = new Size(0, _rows.Count);
+        }
+    }
+
+    /// <summary>
+    /// Brings a line, and the column in it, onto the screen and puts the cursor there. The line lands a third of the way
+    /// down the view, so the text before it stays in sight. This is how search hits and go-to-line show their place.
+    /// </summary>
+    public void ShowLine(long line, long column)
+    {
+        if (TextModel.Lines.Count == 0)
+        {
+            return;
+        }
+
+        long row = Math.Clamp(line, 0, TextModel.Lines.Count - 1);
+        long col = Math.Clamp(column, 0, TextModel.Lines[(int)row].Length);
+        ScrollableModel.CursorPosition.Y = row;
+        ScrollableModel.CursorPosition.X = col;
+
+        int visibleRows = Math.Max(1, (int)ViewSize.Height - 1);
+        int visibleColumns = Math.Max(1, (int)ViewSize.Width - 2);
+        long index;
+        long total;
+        if (_wrapLines)
+        {
+            IReadOnlyList<TextRow> rows = ScreenRows;
+            total = rows.Count;
+            int found = rows.ToList().FindIndex(r => r.Line == row && col >= r.Start && col < r.Start + r.Length);
+            if (found < 0)
+            {
+                // The end of a line, which sits just past its last row's text.
+                found = rows.ToList().FindLastIndex(r => r.Line == row);
+            }
+
+            index = Math.Max(0, found);
+        }
+        else
+        {
+            total = TextModel.Lines.Count;
+            index = row;
+            if (col < ScrollableModel.ScrollPosition.X || col >= ScrollableModel.ScrollPosition.X + visibleColumns)
+            {
+                ScrollableModel.ScrollPosition.X = Math.Max(0, col - visibleColumns / 3);
+            }
+        }
+
+        long maxScroll = Math.Max(0, total - visibleRows);
+        ScrollableModel.ScrollPosition.Y = Math.Clamp(index - visibleRows / 3, 0, maxScroll);
+        StateHasChanged();
+    }
+
+    /// <summary>The number of the line the cursor is on, counting from 1.</summary>
+    public long CursorLine => ClampedCursor().Row + 1;
+
     // ---- Selection (a text cursor only: the editor) ----
 
     /// <summary>Where the selection began; it runs from here to the cursor. Null when nothing is selected.</summary>
@@ -410,6 +532,11 @@ public class TextViewerControl : Control
             }
         }
 
+        if (Parent != null && _wrapLines && !ViewSize.IsEmpty)
+        {
+            RebuildRows(Math.Max(1, (int)ViewSize.Width - 2));
+        }
+
         Layout.Center(this);
 
         if (!ViewSize.IsEmpty)
@@ -499,6 +626,12 @@ public class TextViewerControl : Control
             return; // TODO
         }
 
+        if (_wrapLines)
+        {
+            DrawWrapped(buffer, colorScheme);
+            return;
+        }
+
         Color foregroundColor;
         Color backgroundColor;
         var size = new Size(Math.Max(0, ViewSize.Width - 2), 1);
@@ -545,6 +678,63 @@ public class TextViewerControl : Control
 
         _verticalScrollBar.Draw(buffer);
         _horizontalScrollBar.Draw(buffer);
+    }
+
+    /// <summary>The wrapped view: one screen row for each row of the scroll position, each showing its part of a line.</summary>
+    private void DrawWrapped(IBuffer buffer, ColorScheme colorScheme)
+    {
+        int width = Math.Max(0, (int)ViewSize.Width - 2);
+        var size = new Size(width, 1);
+        IReadOnlyList<TextRow> rows = ScreenRows;
+        for (int i = 0; i < ViewSize.Height - 1; i++)
+        {
+            var index = ScrollableModel.ScrollPosition.Y + i;
+            if (index < rows.Count)
+            {
+                TextRow row = rows[(int)index];
+                string line = TextModel.Lines[row.Line];
+                int start = Math.Min(row.Start, line.Length);
+                string text = line.Substring(start, Math.Min(row.Length, line.Length - start)).PadRight(width);
+                bool cursorLine = ScrollableModel.CursorPosition.Y == row.Line;
+                var conxelLine = new ConxelString(
+                    text,
+                    cursorLine ? colorScheme.SelectedFocusedForeground : Color.White,
+                    cursorLine ? Color.Yellow : colorScheme.Background);
+                HighlightSearchHitsInRow(conxelLine, row);
+                buffer.Write(
+                    ZOrder,
+                    new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + i)),
+                    size,
+                    conxelLine);
+            }
+            else
+            {
+                buffer.Write(
+                    ZOrder,
+                    new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + i)),
+                    size,
+                    new ConxelString(string.Empty.PadRight(width), Color.White, colorScheme.Background));
+            }
+        }
+
+        _verticalScrollBar.Draw(buffer);
+        _horizontalScrollBar.Draw(buffer);
+    }
+
+    /// <summary>Highlights the hits that fall in a wrapped row: a hit that crosses the row's edge is cut where it is cut.</summary>
+    private void HighlightSearchHitsInRow(ConxelString conxelLine, TextRow row)
+    {
+        var colorScheme = ThemeService.CurrentColorScheme;
+        var searchLength = SearchModel.Search.Length;
+        foreach (var hit in SearchModel.Hits.AsSnapshot().Where(h => h.Y == row.Line))
+        {
+            long from = Math.Max(hit.X, row.Start);
+            long to = Math.Min(hit.X + searchLength, row.Start + row.Length);
+            if (to > from)
+            {
+                conxelLine.HighlightRange((int)(from - row.Start), (int)(to - row.Start), colorScheme.SelectedForeground, colorScheme.SelectedFocusedBackground);
+            }
+        }
     }
 
     private void HighlightSearchResults(ConxelString conxelLine, int x, int y)

@@ -41,7 +41,10 @@ public class FileViewerDialog : Dialog
             _textViewerControl.TextModel,
             beepService,
             dateTimeProviderService,
-            themeService);
+            themeService,
+            _textViewerControl);
+        AddCommand(new ViewerWrapLinesCommand(_textViewerControl));
+        AddCommand(new ViewerGoToLineCommand(_textViewerControl, beepService, dateTimeProviderService, themeService));
         _hexViewer = new HexViewer(themeService);
         AddControl(_textViewerControl);
         AddControl(_hexViewer);
@@ -88,7 +91,7 @@ public class FileViewerDialog : Dialog
             _textViewerControl.SetFocus();
         }
         Title = (Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer")
-            + (_hexMode ? " [HEX]" : "  F4:Hex F8:Codepage");
+            + (_hexMode ? " [HEX]" : TextHints());
         StateHasChanged();
     }
 
@@ -108,6 +111,10 @@ public class FileViewerDialog : Dialog
             TextEncodings.Next(_textViewerControl.TextModel.Encoding, backwards));
         StateHasChanged();
     }
+
+    /// <summary>The keys the text view adds; the wrap key says whether wrapping is on.</summary>
+    private string TextHints() =>
+        $"  F2:Wrap{(_textViewerControl.WrapLines ? "[on]" : string.Empty)}  F4:Hex  F5:Line  F8:Codepage";
 
     public override void OnInitializeActionButtons()
     {
@@ -207,7 +214,7 @@ public class FileViewerDialog : Dialog
             ViewSize = Parent.ViewSize;
             Position = new Position(0, 0);
             Title = Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer";
-            Title += _hexMode ? " [HEX]" : "  F4:Hex F8:Codepage";
+            Title += _hexMode ? " [HEX]" : TextHints();
         }
 
         _textViewerControl.Position = new(1, 1);
