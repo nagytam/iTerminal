@@ -549,4 +549,76 @@ public class ListControlsRenderTest
 
         Assert.IsFalse(home.IsOpened);
     }
+
+    [TestMethod]
+    public async Task TreeView_Right_OnAClosedNode_OpensItInPlace_ThenEntersIt()
+    {
+        var root = Node(null, "/", isOpened: true);
+        var home = Node(root, "home");
+        var tamas = Node(home, "tamas");
+        home.IsFocused = true;
+        var tree = CreateTree(root);
+        tree.SetFocus();
+
+        await tree.HandleKeyEventAsync(Key(ConsoleKey.RightArrow));
+        Assert.IsTrue(home.IsOpened);
+        Assert.IsTrue(home.IsFocused, "the first Right only opens the node");
+        Assert.IsFalse(tamas.IsFocused);
+
+        await tree.HandleKeyEventAsync(Key(ConsoleKey.RightArrow));
+        Assert.IsTrue(tamas.IsFocused, "the second Right steps into the first child");
+        Assert.IsTrue(home.IsOpened);
+    }
+
+    [TestMethod]
+    public async Task TreeView_Left_OnAnOpenNode_ClosesItInPlace()
+    {
+        var root = Node(null, "/", isOpened: true);
+        var home = Node(root, "home", isOpened: true);
+        Node(home, "tamas");
+        home.IsFocused = true;
+        var tree = CreateTree(root);
+        tree.SetFocus();
+
+        await tree.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
+
+        Assert.IsFalse(home.IsOpened);
+        Assert.IsTrue(home.IsFocused, "the focus stays on the node that closed");
+        Assert.IsTrue(root.IsOpened, "and its parent is untouched");
+    }
+
+    [TestMethod]
+    public async Task TreeView_Left_OnAClosedNodeOrALeaf_StepsUpToTheParent_WhichStaysOpen()
+    {
+        var root = Node(null, "/", isOpened: true);
+        var home = Node(root, "home", isOpened: true);
+        var tamas = Node(home, "tamas");
+        var other = Node(home, "other");
+        tamas.IsFocused = true;
+        var tree = CreateTree(root);
+        tree.SetFocus();
+
+        await tree.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
+
+        Assert.IsTrue(home.IsFocused);
+        Assert.IsFalse(tamas.IsFocused);
+        Assert.IsTrue(home.IsOpened, "the siblings stay in view");
+        Assert.IsNotNull(other);
+    }
+
+    [TestMethod]
+    public async Task TreeView_Left_OnTheRoot_DoesNothing()
+    {
+        var root = Node(null, "/", isOpened: true);
+        Node(root, "etc");
+        root.IsFocused = true;
+        var tree = CreateTree(root);
+        tree.SetFocus();
+
+        await tree.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
+        Assert.IsTrue(root.IsOpened || root.IsFocused);
+
+        await tree.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
+        Assert.IsTrue(root.IsFocused, "a root has no parent to step up to");
+    }
 }

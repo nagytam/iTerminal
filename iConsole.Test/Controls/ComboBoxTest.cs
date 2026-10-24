@@ -182,4 +182,53 @@ public class ComboBoxTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Red"));
         Assert.IsTrue(buffer.ContentAsString.Contains("▾"));
     }
+
+    [TestMethod]
+    public async Task ClosedPageKeys_MoveTheSelectionByAPage_AndStopAtTheEnds()
+    {
+        var theme = ThemeMock().Object;
+        var root = new Window(theme) { Position = new Position(0, 0), ViewSize = new Size(80, 25) };
+        var combo = new ComboBox<string>(theme) { Position = new Position(2, 2), ViewSize = new Size(20, 1) };
+        root.AddControl(combo);
+        combo.SetItems(Enumerable.Range(0, 12).Select(i => $"item{i}").ToList());
+        combo.SetFocus();
+
+        Assert.IsTrue(await combo.HandleKeyEventAsync(Key(ConsoleKey.PageDown)));
+        Assert.AreEqual(5, combo.SelectedIndex);
+        await combo.HandleKeyEventAsync(Key(ConsoleKey.PageDown));
+        await combo.HandleKeyEventAsync(Key(ConsoleKey.PageDown));
+        Assert.AreEqual(11, combo.SelectedIndex);
+        Assert.IsFalse(combo.IsOpen);
+
+        await combo.HandleKeyEventAsync(Key(ConsoleKey.PageUp));
+        Assert.AreEqual(6, combo.SelectedIndex);
+        await combo.HandleKeyEventAsync(Key(ConsoleKey.PageUp));
+        await combo.HandleKeyEventAsync(Key(ConsoleKey.PageUp));
+        Assert.AreEqual(0, combo.SelectedIndex);
+    }
+
+    [TestMethod]
+    public async Task ClosedPageKeys_ReadOnlyOrUnfocused_AreIgnored()
+    {
+        var harness = CreateHarness();
+        harness.Combo.IsReadOnly = true;
+
+        await harness.Combo.HandleKeyEventAsync(Key(ConsoleKey.PageDown));
+        Assert.AreEqual(0, harness.Combo.SelectedIndex);
+
+        harness.Combo.IsReadOnly = false;
+        harness.Root.ResetFocus();
+        Assert.IsFalse(await harness.Combo.HandleKeyEventAsync(Key(ConsoleKey.PageDown)));
+        Assert.AreEqual(0, harness.Combo.SelectedIndex);
+    }
+
+    [TestMethod]
+    public async Task ClosedPageKeys_OnAShortList_GoToTheLastItem()
+    {
+        var harness = CreateHarness();
+
+        await harness.Combo.HandleKeyEventAsync(Key(ConsoleKey.PageDown));
+
+        Assert.AreEqual(2, harness.Combo.SelectedIndex);
+    }
 }

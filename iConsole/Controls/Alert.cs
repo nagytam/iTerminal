@@ -66,7 +66,8 @@ public class Alert(IThemeService themeService) : Control(themeService)
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);
-        if (!isHandled && _isDismissible && IsFocused && IsEnabled && _text.Length > 0 && keyEvent.ConsoleKey == ConsoleKey.Escape)
+        if (!isHandled && _isDismissible && IsFocused && IsEnabled && _text.Length > 0
+            && keyEvent.ConsoleKey is ConsoleKey.Escape or ConsoleKey.Enter)
         {
             Dismiss();
             return true;

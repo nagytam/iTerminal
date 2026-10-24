@@ -283,4 +283,30 @@ public class ComboChartsAndIndicatorsInteractionTest
         Assert.AreEqual(1, dismissed);
         Assert.AreEqual(string.Empty, alert.Text);
     }
+
+    [TestMethod]
+    public async Task Alert_Enter_DismissesLikeEscape_WhenFocusedAndDismissible()
+    {
+        Alert alert = new(Theme()) { Text = "Saved", IsDismissible = true, Position = new Position(0, 0), ViewSize = new Size(20, 1) };
+        int dismissed = 0;
+        alert.Dismissed += (_, _) => dismissed++;
+
+        Assert.IsFalse(await alert.HandleKeyEventAsync(Key(ConsoleKey.Enter)), "not focused");
+        Assert.AreEqual(0, dismissed);
+
+        alert.SetFocus();
+        Assert.IsTrue(await alert.HandleKeyEventAsync(Key(ConsoleKey.Enter)));
+        Assert.AreEqual(1, dismissed);
+        Assert.AreEqual(string.Empty, alert.Text);
+    }
+
+    [TestMethod]
+    public async Task Alert_Enter_IsLeftAloneWhenNotDismissible()
+    {
+        Alert alert = new(Theme()) { Text = "Saved", Position = new Position(0, 0), ViewSize = new Size(20, 1) };
+
+        Assert.IsFalse(await alert.HandleKeyEventAsync(Key(ConsoleKey.Enter)));
+
+        Assert.AreEqual("Saved", alert.Text);
+    }
 }
