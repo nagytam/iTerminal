@@ -85,6 +85,7 @@ public static class FileContextMenu
         AddCommands<SignatureDialogCommand>(items, snapshot, "Signatures");
         AddCommands<SecureWipeDialogCommand>(items, snapshot, "Secure wipe");
         AddCommands<ScanWithDefenderCommand>(items, snapshot, "Scan with Microsoft Defender");
+        AddCommands<GitPullRebaseCommand>(items, snapshot, null);
         AddCommands<PropertiesDialogCommand>(items, snapshot, "Properties");
 
         // A panel's commands are initialised more than once as its model changes, so the same

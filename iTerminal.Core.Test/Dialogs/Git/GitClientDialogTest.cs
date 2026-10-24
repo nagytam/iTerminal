@@ -112,6 +112,9 @@ public class GitClientDialogTest
         public Task<GitResult> PullAsync(string repositoryRoot, CancellationToken cancellationToken = default)
             => Record("pull");
 
+        public Task<GitResult> PullRebaseAsync(string repositoryRoot, CancellationToken cancellationToken = default)
+            => Record("pull:rebase");
+
         public Task<GitResult> PushAsync(string repositoryRoot, bool setUpstream = false, CancellationToken cancellationToken = default)
             => Record($"push:set-upstream={setUpstream}");
 
