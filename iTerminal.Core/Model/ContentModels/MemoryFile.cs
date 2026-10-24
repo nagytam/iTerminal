@@ -21,9 +21,4 @@ public class MemoryFile : MemoryBase, IMemoryFile
         FileName = fileName;
         Content = inputArray;
     }
-
-    public static bool Rename(Url sourceUrl, Url targetUrl, bool overwrite)
-    {
-        return false;
-    }
 }

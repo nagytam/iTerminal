@@ -74,6 +74,7 @@ public class MemoryFolder(Url url)
     /// </summary>
     public void MoveEntryTo(Url sourceUrl, Url targetUrl, MemoryFolder targetParent, bool overwrite)
     {
+        RefuseMoveIntoItself(sourceUrl, targetUrl);
         if (sourceUrl.PathType == PathType.Folder)
         {
             if (!Folders.TryRemove(sourceUrl.Name, out var folder))
@@ -185,6 +186,25 @@ public class MemoryFolder(Url url)
     /// </summary>
     private static Url AsFolderUrl(Url url)
         => url.FullUrl.EndsWith('/') ? url : new Url(url.FullUrl + "/");
+
+    /// <summary>
+    /// A folder moved into one of its own subfolders would be detached from the tree and nested inside itself: its
+    /// contents unreachable, and any walk of that loop never ending. Refused before anything is removed.
+    /// </summary>
+    private static void RefuseMoveIntoItself(Url sourceUrl, Url targetUrl)
+    {
+        if (sourceUrl.PathType != PathType.Folder)
+        {
+            return;
+        }
+
+        var source = AsFolderUrl(sourceUrl).FullUrl;
+        var target = AsFolderUrl(targetUrl).FullUrl;
+        if (target.Length > source.Length && target.StartsWith(source, StringComparison.Ordinal))
+        {
+            throw new IOException($"A folder cannot be moved into itself: {targetUrl.FullUrl}");
+        }
+    }
 
     private static string CombinePath(string basePath, string name)
         => string.IsNullOrEmpty(basePath) ? name : basePath + "/" + name;

@@ -243,13 +243,6 @@ public class MemoryFileTest
     }
 
     [TestMethod]
-    public void Rename_ReturnsFalse()
-    {
-        var result = MemoryFile.Rename(new Url("memdrive://a.txt"), new Url("memdrive://b.txt"), true);
-        Assert.IsFalse(result);
-    }
-
-    [TestMethod]
     public void Constructor_NullArray_ContentIsNull()
     {
         var file = new MemoryFile("null.bin", (byte[]?)null);

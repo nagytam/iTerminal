@@ -8,4 +8,6 @@ namespace iTerminal.Core.Model.Validations;
 public class FolderOrNewFilesValidationModel(ITextModel textModel, IDateTimeProviderService dateTimeProviderService)
     : UrlValidationModel(textModel, dateTimeProviderService, PathExistMode.FolderOrNewFile)
 {
+    // The only refusal in this mode is a file that is already there, so that is what "already exists" names.
+    protected override bool ExistsAlready(Url url) => File.Exists(url.FullName);
 }
