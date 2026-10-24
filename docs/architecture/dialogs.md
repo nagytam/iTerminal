@@ -210,6 +210,27 @@ connection in the active panel as the existing SFTP drive. N / E / D add, edit a
 - **Mark by pattern** (`MarkPatternDialog`, Num+ / Num-): a pattern that matches no row, or a panel that cannot be marked in, keeps the dialog open with the reason on its error line. It closes only when at least one row changed.
 - **Format drive** (`FormatDriveDialog`): the drive letter must be typed back before anything is erased. A second Enter while a format is running says it is already running, rather than doing nothing.
 - **Form dialogs** (`FormDialog`): the two buttons never share columns, even on a narrow dialog — Cancel is kept clear of the primary button.
-
 - **Disk and network lists** (`DiskManagerDialog`, `NetworkManagerDialog`): `IsLoaded` means the first pass is over, whether or not every item answered. The job sets it in a `finally`; before, a failing pass left the list on "Reading…" for good.
 - **Folder size counts** (`FileInformationRefreshTask`): a count that could not finish (a folder that is missing or unreadable) shows `?`, not the part that was counted.
+
+### The XML viewer (`XmlViewerDialog`, F3 on an XML file, `iConsole/Xml/`)
+F3 on an `.xml`, `.xaml`, `.csproj`, `.config`, `.resx`, `.svg` and the other XML types in `XmlFileTypes` opens the
+document as a tree. `XmlTree` builds one `XmlNodeItem` per element, text run, comment and processing instruction, and
+indexes each XML node to its item. An element whose only content is text shows that text on its own line.
+
+- **Expand and collapse** are the `TreeView`'s own keys (Enter, Space, `+`, `-`, Left, Right); `*` expands every node.
+- **XPath** (`/` moves to the box, Enter runs it): `XmlXPathQuery` evaluates XPath 1.0 with the prefixes the root
+  element declares. A node-set gives one result per node, shown as its absolute path (with `[n]` where siblings share
+  a name) and its value; the first 500 are listed and the count says how many there were. Enter on a result opens its
+  ancestors and moves the cursor to the node.
+- **Validation** (F2): `XmlValidator` checks the document against the DTD its DOCTYPE names, or against the XSD files
+  its `xsi:schemaLocation` and `xsi:noNamespaceSchemaLocation` attributes name. Schema and DTD files are read from the
+  local disk next to the document only, never fetched. Each error or warning is listed with its line and column, and
+  Enter on one opens the element it is about (`XmlTree.ItemAtLine`). A document that names neither is reported as a note.
+  A missing schema is a warning from the framework, not an error.
+- **Text** (F4) shows the file's text through the plain viewer's reader. A file that is not well-formed opens that way
+  at once, with the parse error on the status line.
+
+The document is parsed on a background task when the dialog opens, and a query runs on one too; both results are
+applied on the idle pass, on the thread that owns the controls. The tree is the dialog's first focusable control, since
+`Dialog` gives the keyboard to the first one that can take it.

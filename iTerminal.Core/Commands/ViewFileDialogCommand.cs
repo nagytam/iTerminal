@@ -1,6 +1,7 @@
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Dialogs;
+using iConsole.Xml;
 using iConsole.Interfaces;
 using iTerminal.Core.Audio;
 using iTerminal.Core.Dialogs.Dotnet;
@@ -16,7 +17,8 @@ public class ViewFileDialogCommand(
     SolutionViewerDialog? solutionViewerDialog = null,
     MusicFileViewerDialog? musicFileViewerDialog = null,
     VideoFileViewerDialog? videoFileViewerDialog = null,
-    ImageFileViewerDialog? imageFileViewerDialog = null) : Command
+    ImageFileViewerDialog? imageFileViewerDialog = null,
+    XmlViewerDialog? xmlViewerDialog = null) : Command
 {
     private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
     private readonly ImageFileViewerDialog? _imageFileViewerDialog = imageFileViewerDialog;
@@ -24,6 +26,7 @@ public class ViewFileDialogCommand(
     private readonly IContentModelService _contentModelService = contentModelService;
     private readonly SolutionViewerDialog? _solutionViewerDialog = solutionViewerDialog;
     private readonly MusicFileViewerDialog? _musicFileViewerDialog = musicFileViewerDialog;
+    private readonly XmlViewerDialog? _xmlViewerDialog = xmlViewerDialog;
 
     public override string Title => "View";
     public override string Description => "Open the selected file in the viewer.";
@@ -103,6 +106,16 @@ public class ViewFileDialogCommand(
         {
             _solutionViewerDialog.SolutionPath = focusedFileUrl.Path;
             await (Control?.ShowDialogAsync(_solutionViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // An XML document opens in the XML viewer, from any drive: it is read through the file system like text.
+        if (_xmlViewerDialog is not null
+            && focusedFileUrl is not null
+            && XmlFileTypes.IsXmlFile(focusedFileUrl.Path))
+        {
+            _xmlViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_xmlViewerDialog) ?? Task.CompletedTask);
             return;
         }
 

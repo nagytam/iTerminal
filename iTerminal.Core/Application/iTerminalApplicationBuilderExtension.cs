@@ -175,6 +175,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Video.IVideoDecoderFactory, iTerminal.Core.Video.FfmpegVideoDecoderFactory>();
         services.AddTransient<iTerminal.Core.Dialogs.Video.VideoFileViewerDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Video.ImageFileViewerDialog>();
+        services.AddTransient<XmlViewerDialog>();
         // The library index is a singleton so the in-memory copy of the table is shared by the
         // indexing job and every dialog that searches it.
         services.AddSingleton<iTerminal.Core.Services.Music.IMusicLibraryService, iTerminal.Core.Services.Music.MusicLibraryService>();
