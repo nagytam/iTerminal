@@ -210,6 +210,18 @@ F3 on a video (`VideoFileTypes`) opens `VideoFileViewerDialog`; F3 on a picture 
   of the way down the view. A number past the end goes to the last line.
 - **Search hits**: F3 and Ctrl+F3 step through the hits and reveal them through `ShowLine`, so a wrapped hit is shown on its
   own row. The status bar's counter reads "Hit n/N": n is the hit the cursor is on, or the last one before it.
+- **Scrolling**: Down stops with the last line at the bottom of the view (no blank rows below it), the wheel moves the
+  *view* three rows (the cursor only goes along when the view would leave it behind), Home / End (Ctrl+Home / Ctrl+End in
+  the editor, where they belong to the line) go to the top and the bottom of the file, and `SyncScrollableSize` keeps the
+  scrollable size in step with text that arrives after the layout or is re-read under another code page.
+- **Syntax colouring**: `SyntaxHighlighter.ForFile` picks a `SyntaxLanguage` from the extension and `Tokenize` splits a
+  line into keyword / string / comment / number spans; the viewer and the editor both set `Syntax` from the file's path.
+  A block comment is looked for in the 400 lines above the first row on screen, so drawing never reads the whole file.
+- **Editor history, replace and bookmarks** (`TextEditorControl`): Ctrl+Z undo, Ctrl+Y / Ctrl+Shift+Z redo — every key is
+  recorded as a before/after text snapshot, typing that runs on is one step, 200 steps are kept. Ctrl+R opens
+  `ReplaceTextDialog` (Replace = next occurrence from the cursor, wrapping; Replace all = one undo step; Match case).
+  Ctrl+F2 sets or clears a bookmark on the cursor's line, F9 / Shift+F9 go to the next / previous one; bookmarks move with
+  their lines (`ShiftBookmarks` compares the text before and after) and are drawn as a coloured row.
 - **Image metadata (`i` in the image viewer)**: `ImageInfoReader` reads a 1 MB prefix of a PNG, JPEG, GIF, BMP, WebP or
   TIFF file: its format and dimensions, PNG text chunks and JPEG comments, and the EXIF fields (make, model, lens,
   exposure, aperture, focal length, ISO, date taken, GPS position and altitude). Nothing is decoded; the dialog scrolls the

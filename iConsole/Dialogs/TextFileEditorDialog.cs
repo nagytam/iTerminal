@@ -44,7 +44,8 @@ public class TextFileEditorDialog : Dialog
             contentModelService,
             beepService,
             dateTimeProviderService,
-            themeService);
+            themeService,
+            TextEditorControl);
         AddControl(TextEditorControl);
         AddControl(_statusBar);
     }
@@ -53,6 +54,7 @@ public class TextFileEditorDialog : Dialog
     {
         var fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
         await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, TextEditorControl.TextModel);
+        TextEditorControl.Syntax = SyntaxHighlighter.ForFile(Url is null ? null : (Url.Path.Length > 0 ? Url.Path : Url.FullUrl));
 
         await base.OnInitializeAsync();
     }

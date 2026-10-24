@@ -207,6 +207,7 @@ public class FileViewerDialog : Dialog
     {
         var fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
         await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, _textViewerControl.TextModel);
+        _textViewerControl.Syntax = SyntaxHighlighter.ForFile(Url is null ? null : (Url.Path.Length > 0 ? Url.Path : Url.FullUrl));
 
         await base.OnInitializeAsync();
     }
