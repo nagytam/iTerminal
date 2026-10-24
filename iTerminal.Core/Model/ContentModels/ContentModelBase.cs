@@ -16,7 +16,7 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
     /// version it was taken under. One immutable record rather than three fields, so a reader on one
     /// thread can never see the list of one snapshot with the stamp of another.
     /// </summary>
-    private sealed record FilteredSnapshot(IList<IEntry> Entries, string? Filter, int Version, PanelSort Sort, PanelViewOptions Options);
+    private sealed record FilteredSnapshot(IList<IEntry> Entries, string? Filter, int Version, PanelSort Sort, PanelViewOptions Options, Func<IEntry, bool>? EntryFilter);
 
     private FilteredSnapshot? _filteredSnapshot;
 
@@ -70,16 +70,23 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
                 var filter = Filter;
                 var sort = CanSort ? _sort : PanelSort.AsListed;
                 var options = CanSort ? _viewOptions : PanelViewOptions.Default;
+                var entryFilter = _entryFilter;
                 var cached = _filteredSnapshot;
-                if (cached is not null && cached.Version == version && cached.Filter == filter && cached.Sort == sort && cached.Options == options)
+                if (cached is not null && cached.Version == version && cached.Filter == filter && cached.Sort == sort && cached.Options == options
+                    && ReferenceEquals(cached.EntryFilter, entryFilter))
                 {
                     return cached.Entries;
                 }
 
                 // Sorted here, in the one list the cursor, the marks and the drawing all index —
                 // so every drive sorts alike, and none of them has to know how.
-                var entries = sort.Apply(Entries.AsSnapshot(), options);
-                _filteredSnapshot = new FilteredSnapshot(entries, filter, version, sort, options);
+                IList<IEntry> entries = sort.Apply(Entries.AsSnapshot(), options);
+                if (entryFilter is not null)
+                {
+                    entries = entries.Where(entryFilter).ToList();
+                }
+
+                _filteredSnapshot = new FilteredSnapshot(entries, filter, version, sort, options, entryFilter);
                 return entries;
             }
             catch
@@ -157,6 +164,28 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
     }
     #endregion
 
+    private Func<IEntry, bool>? _entryFilter;
+    private string? _entryFilterDescription;
+
+    /// <summary>What the entries are narrowed to, as a phrase for the footer; null when nothing narrows them.</summary>
+    public string? EntryFilterDescription => _entryFilterDescription;
+
+    /// <summary>
+    /// Shows only the entries <paramref name="predicate"/> accepts; null shows them all again. The cursor stays on its entry
+    /// when it is still shown, and moves to the nearest one when it is not.
+    /// </summary>
+    public void SetEntryFilter(Func<IEntry, bool>? predicate, string? description)
+    {
+        Reorder(() =>
+        {
+            _entryFilter = predicate;
+            _entryFilterDescription = predicate is null ? null : description;
+        });
+    }
+
+    /// <summary>Applies the entry filter again, for a change in what it reads (a label): the list is rebuilt, the cursor kept on its entry.</summary>
+    public void RefreshEntryFilter() => Reorder(() => Interlocked.Increment(ref _entriesVersion));
+
     private string? _filter;
     public virtual string? Filter
     {
@@ -227,6 +256,10 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
         if (Filter is not null)
         {
             footer += $"Filter: {Filter} ";
+        }
+        if (EntryFilterDescription is not null)
+        {
+            footer += $"{EntryFilterDescription} ";
         }
         if (!Sort.IsAsListed)
         {
