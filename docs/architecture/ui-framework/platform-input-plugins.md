@@ -1,0 +1,2 @@
+### Platform input plug-ins — `iConsole.Inputs.Posix` / `iConsole.Inputs.Windows`
+Each supplies an `ITerminalInputSource` + input-consumer `IJob` and a DI extension called from `Program.cs`: `AddLinuxTerminalInput()` (Linux, ANSI/SGR mouse + raw stdin) and `AddInputWindowsAsync()` (Windows). The Windows path is feature-gated by `WindowsConsoleDriver` (via `Microsoft.FeatureManagement`, config in `appSettings.json`); when off — and on all non-Windows/non-driver paths — it falls back to `AddPollingConsoleKeyboard()`.
