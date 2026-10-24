@@ -66,4 +66,24 @@ public class WeatherIndicatorTest
 
         StringAssert.StartsWith(buffer.Line(0), "Budapest");
     }
+
+    [TestMethod]
+    public void AFailedAttempt_SaysUnavailableInsteadOfSpinningForever()
+    {
+        // Offline, the spinner used to run on with no sign that nothing was coming.
+        var (indicator, service) = Create();
+        service.LastRefreshFailed = true;
+
+        Assert.AreEqual("Weather unavailable".PadRight(20), indicator.Describe(20));
+    }
+
+    [TestMethod]
+    public void AFailedAttemptBeingRetried_KeepsTheSpinner()
+    {
+        var (indicator, service) = Create();
+        service.LastRefreshFailed = true;
+        service.IsRefreshing = true;
+
+        StringAssert.StartsWith(indicator.Describe(20), "Weather ");
+    }
 }

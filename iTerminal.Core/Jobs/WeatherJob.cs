@@ -37,22 +37,23 @@ public class WeatherJob(WeatherService weatherService, ICacheService cacheServic
             {
                 _weatherService.IsRefreshing = true;
                 _weatherLocation ??= await GetWeatherLocationAsync(cancellationToken);
-                if (_weatherLocation is not null)
+                var weather = _weatherLocation is null
+                    ? null
+                    : await GetWeatherAsync(_weatherLocation.Value, cancellationToken);
+                _weatherService.LastRefreshFailed = weather is null;
+                if (weather is not null)
                 {
-                    var weather = await GetWeatherAsync(_weatherLocation.Value, cancellationToken);
-                    if (weather is not null)
-                    {
-                        _weatherService.CurrentWeather = weather;
-                        _weatherService.IsFromCache = false;
-                        // Update cache
-                        await _cacheService.SetCachedWeatherAsync(weather);
-                    }
+                    _weatherService.CurrentWeather = weather;
+                    _weatherService.IsFromCache = false;
+                    // Update cache
+                    await _cacheService.SetCachedWeatherAsync(weather);
                 }
             }
             catch (Exception exception)
             {
                 Debug.WriteLine($"{nameof(WeatherJob)}.{nameof(RunAsync)} failed: {exception}");
                 _weatherLocation = null;
+                _weatherService.LastRefreshFailed = true;
             }
             finally
             {

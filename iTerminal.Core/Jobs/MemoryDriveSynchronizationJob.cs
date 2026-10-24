@@ -1,3 +1,4 @@
+using System.Diagnostics;
 ﻿using iConsole.Data;
 using iConsole.Jobs;
 using iTerminal.Core.Services;
@@ -70,7 +71,9 @@ public class MemoryDriveSynchronizationJob
             {
                 Directory.CreateDirectory(SyncPath);
             }
-            var filenames = Directory.EnumerateFiles(SyncPath, "*.*", SearchOption.AllDirectories);
+            // Only the folder itself: the memory drive is flat, and a file in a subfolder would be loaded under its bare
+            // name and collide with a root file of the same name.
+            var filenames = Directory.EnumerateFiles(SyncPath, "*.*", SearchOption.TopDirectoryOnly);
             foreach (var filename in filenames)
             {
                 var fileInfo = new FileInfo(filename);
@@ -81,9 +84,9 @@ public class MemoryDriveSynchronizationJob
                 _memoryDriveService.Root.Files[name].CreationTime = fileInfo.LastWriteTime;
             }
         }
-        catch
+        catch (Exception exception)
         {
-
+            Debug.WriteLine($"{nameof(MemoryDriveSynchronizationJob)}.{nameof(Initialize)} failed: {exception}");
         }
     }
 
@@ -112,8 +115,10 @@ public class MemoryDriveSynchronizationJob
             }
 
         }
-        catch
+        catch (Exception exception)
         {
+            // Kept running: the next pass tries again. Traced, so a folder that cannot be written is not a silent loss.
+            Debug.WriteLine($"{nameof(MemoryDriveSynchronizationJob)}.{nameof(WriteIfDirty)} failed: {exception}");
         }
     }
 
