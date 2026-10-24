@@ -79,12 +79,13 @@ public static class ImageMetadataWriter
 
     private sealed record Segment(byte Marker, byte[] Payload);
 
-    private static byte[] WriteJpeg(byte[] content, ImageMetadataEdit edit)
+    /// <summary>The segments of a JPEG up to its image data, which starts at <paramref name="scanStart"/>.</summary>
+    private static List<Segment> SplitJpeg(byte[] content, out int scanStart)
     {
-        // Split the file into its segments up to the start of the image data; that data is copied as it is.
+        // The image data is copied as it is, so only the segments before it are read.
         List<Segment> segments = [];
         int position = 2;
-        int scanStart = content.Length;
+        scanStart = content.Length;
         while (position + 4 <= content.Length && content[position] == 0xFF)
         {
             byte marker = content[position + 1];
@@ -115,6 +116,12 @@ public static class ImageMetadataWriter
             throw new InvalidDataException("The JPEG has no image data.");
         }
 
+        return segments;
+    }
+
+    private static byte[] WriteJpeg(byte[] content, ImageMetadataEdit edit)
+    {
+        List<Segment> segments = SplitJpeg(content, out int scanStart);
         bool isExif(Segment s) => s.Marker == 0xE1 && s.Payload.AsSpan().StartsWith("Exif\0\0"u8);
         byte[]? exifTiff = segments.FirstOrDefault(isExif) is { } exif ? exif.Payload[6..] : null;
         byte[]? newTiff = BuildExifTiff(exifTiff, edit);
@@ -159,9 +166,15 @@ public static class ImageMetadataWriter
             output.Add(new Segment(0xFE, Encoding.UTF8.GetBytes(edit.Comment)));
         }
 
+        return JoinJpeg(output, content, scanStart);
+    }
+
+    /// <summary>The segments, in order, then the image data from <paramref name="scanStart"/> on as it was.</summary>
+    private static byte[] JoinJpeg(List<Segment> segments, byte[] content, int scanStart)
+    {
         using MemoryStream stream = new();
         stream.Write([0xFF, 0xD8]);
-        foreach (Segment segment in output)
+        foreach (Segment segment in segments)
         {
             if (segment.Payload.Length + 2 > MaxSegment)
             {
@@ -175,6 +188,50 @@ public static class ImageMetadataWriter
         stream.Write(content.AsSpan(scanStart));
         return stream.ToArray();
     }
+
+    /// <summary>
+    /// Removes what describes the picture rather than shows it: in a JPEG the EXIF, XMP and IPTC blocks and the comments;
+    /// in a PNG the text chunks and the EXIF chunk. The picture, its colour profile and the layout data are kept. A file
+    /// with nothing to remove is left alone; the return says whether it was replaced.
+    /// </summary>
+    public static bool Strip(string path)
+    {
+        byte[] content = File.ReadAllBytes(path);
+        byte[] result;
+        if (content.AsSpan().StartsWith(PngSignature))
+        {
+            result = StripPng(content);
+        }
+        else if (content.Length > 2 && content[0] == 0xFF && content[1] == 0xD8)
+        {
+            result = StripJpeg(content);
+        }
+        else
+        {
+            throw new NotSupportedException("Metadata can be stripped from JPEG and PNG files.");
+        }
+
+        if (result.AsSpan().SequenceEqual(content))
+        {
+            return false;
+        }
+
+        FileReplacement.Replace(path, result);
+        return true;
+    }
+
+    /// <summary>The JFIF header, the ICC colour profile and the Adobe colour marker are what the picture needs to look right.</summary>
+    private static byte[] StripJpeg(byte[] content)
+    {
+        List<Segment> segments = SplitJpeg(content, out int scanStart);
+        List<Segment> kept = segments.Where(s => s.Marker != 0xFE && (s.Marker is < 0xE1 or > 0xEF || IsLayoutSegment(s))).ToList();
+        return JoinJpeg(kept, content, scanStart);
+    }
+
+    private static bool IsLayoutSegment(Segment segment) =>
+        segment.Marker == 0xE0
+        || segment.Marker == 0xEE
+        || (segment.Marker == 0xE2 && segment.Payload.AsSpan().StartsWith("ICC_PROFILE\0"u8));
 
     private static int LastApplicationIndex(List<Segment> segments)
     {
@@ -393,10 +450,25 @@ public static class ImageMetadataWriter
     private static byte[] WritePng(byte[] content, ImageMetadataEdit edit)
     {
         HashSet<string> keywords = PngKeywords.Select(k => k.Keyword).ToHashSet(StringComparer.Ordinal);
+        return RewritePng(
+            content,
+            (type, data) => !(type is "tEXt" or "iTXt" && TextKeyword(data) is { } keyword && keywords.Contains(keyword)),
+            output => WriteTextChunks(output, edit));
+    }
+
+    /// <summary>Decides, chunk by chunk, what a PNG keeps: the type and the data of each chunk.</summary>
+    private delegate bool PngChunkFilter(string type, ReadOnlySpan<byte> data);
+
+    /// <summary>
+    /// Copies a PNG chunk by chunk, leaving out the ones <paramref name="keep"/> refuses. <paramref name="beforeImageData"/>,
+    /// when given, writes ahead of the first image data chunk. Throws for a PNG without image data.
+    /// </summary>
+    private static byte[] RewritePng(byte[] content, PngChunkFilter keep, Action<Stream>? beforeImageData)
+    {
         using MemoryStream output = new();
         output.Write(content, 0, PngSignature.Length);
         int position = PngSignature.Length;
-        bool written = false;
+        bool sawImageData = false;
         while (position + 12 <= content.Length)
         {
             uint length = BinaryPrimitives.ReadUInt32BigEndian(content.AsSpan(position));
@@ -407,16 +479,14 @@ public static class ImageMetadataWriter
                 throw new InvalidDataException("A PNG chunk runs past the end of the file.");
             }
 
-            ReadOnlySpan<byte> data = content.AsSpan(position + 8, (int)length);
-            bool isText = type is "tEXt" or "iTXt" && TextKeyword(data) is { } keyword && keywords.Contains(keyword);
-            if (!isText)
+            if (type == "IDAT" && !sawImageData)
             {
-                if (type == "IDAT" && !written)
-                {
-                    WriteTextChunks(output, edit);
-                    written = true;
-                }
+                sawImageData = true;
+                beforeImageData?.Invoke(output);
+            }
 
+            if (keep(type, content.AsSpan(position + 8, (int)length)))
+            {
                 output.Write(content, position, total);
             }
 
@@ -427,13 +497,17 @@ public static class ImageMetadataWriter
             }
         }
 
-        if (!written)
+        if (!sawImageData)
         {
             throw new InvalidDataException("The PNG has no image data.");
         }
 
         return output.ToArray();
     }
+
+    /// <summary>The PNG with its text chunks and its EXIF chunk left out.</summary>
+    private static byte[] StripPng(byte[] content) =>
+        RewritePng(content, (type, _) => type is not ("tEXt" or "zTXt" or "iTXt" or "eXIf" or "tIME"), beforeImageData: null);
 
     private static string? TextKeyword(ReadOnlySpan<byte> data)
     {

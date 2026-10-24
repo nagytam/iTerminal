@@ -312,6 +312,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<FileSystemResolver>();
         services.AddTransient<CompareFoldersDialog>();
         services.AddTransient<SynchronizeFoldersDialog>();
+        services.AddTransient<StripMetadataDialog>();
         services.AddTransient<FileDiffDialog>();
         // Ctrl+O: the terminal handed to an interactive shell. One per control it is attached to (the
         // content and the Navigate menu); the service, which knows whether a shell is running, is one.

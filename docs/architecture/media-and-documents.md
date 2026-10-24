@@ -222,6 +222,7 @@ F3 on a video (`VideoFileTypes`) opens `VideoFileViewerDialog`; F3 on a picture 
   text and as iTXt in UTF-8 otherwise, with the CRC-32 computed. The picture data is copied byte for byte. EXIF and comment
   text are UTF-8. Other formats are refused. The file is replaced through `FileReplacement`, and the metadata is read again
   after a save.
+- **Strip Metadata (Edit menu)** runs `ImageMetadataWriter.Strip` over the marked pictures in one run; see file-operations.md.
 - **Audio tags (`e` in the music viewer)**: `MusicTagEditorDialog` edits title, artist, album, year, track, genre and
   comment of an MP3 or FLAC. `AudioTagWriter` rewrites only the tag block: in an MP3 the ID3v2 block (other frames such as
   cover art, and comments with a description, are kept, and the audio is copied byte for byte); in a FLAC the Vorbis comment

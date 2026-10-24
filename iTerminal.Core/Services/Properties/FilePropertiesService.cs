@@ -43,6 +43,13 @@ public interface IFilePropertiesService
 
     /// <summary>Sets the attributes (Windows) or the permission bits (elsewhere); a null leaves that one alone.</summary>
     void Apply(string path, FileAttributes? attributes, UnixFileMode? unixMode);
+
+    /// <summary>
+    /// Sets the dates; a null leaves that one alone. The modified and accessed dates can be set everywhere; the created date
+    /// only on Windows, where it throws <see cref="NotSupportedException"/>. A symbolic link is refused: its dates are those
+    /// of what it points to, and setting them would change that file.
+    /// </summary>
+    void SetTimes(string path, DateTime? created, DateTime? modified, DateTime? accessed);
 }
 
 public class FilePropertiesService : IFilePropertiesService
@@ -157,6 +164,61 @@ public class FilePropertiesService : IFilePropertiesService
         if (unixMode is { } mode && !OperatingSystem.IsWindows())
         {
             File.SetUnixFileMode(trimmed, mode);
+        }
+    }
+
+    public void SetTimes(string path, DateTime? created, DateTime? modified, DateTime? accessed)
+    {
+        var trimmed = Path.TrimEndingDirectorySeparator(path);
+        if (created is null && modified is null && accessed is null)
+        {
+            return;
+        }
+
+        if (FileLinkHelper.GetLinkTarget(new FileInfo(trimmed)) is not null)
+        {
+            throw new IOException("A link's dates are those of what it points to; change the target instead.");
+        }
+
+        if (created is not null && !OperatingSystem.IsWindows())
+        {
+            throw new NotSupportedException("The creation date can only be set on Windows.");
+        }
+
+        // Directory and File have the same setters, and each only accepts its own kind of entry.
+        if (Directory.Exists(trimmed))
+        {
+            if (created is { } folderCreated)
+            {
+                Directory.SetCreationTime(trimmed, folderCreated);
+            }
+
+            if (modified is { } folderModified)
+            {
+                Directory.SetLastWriteTime(trimmed, folderModified);
+            }
+
+            if (accessed is { } folderAccessed)
+            {
+                Directory.SetLastAccessTime(trimmed, folderAccessed);
+            }
+
+            return;
+        }
+
+        if (created is { } fileCreated)
+        {
+            File.SetCreationTime(trimmed, fileCreated);
+        }
+
+        if (modified is { } fileModified)
+        {
+            File.SetLastWriteTime(trimmed, fileModified);
+        }
+
+        if (accessed is { } fileAccessed)
+        {
+            File.SetLastAccessTime(trimmed, fileAccessed);
         }
     }
 

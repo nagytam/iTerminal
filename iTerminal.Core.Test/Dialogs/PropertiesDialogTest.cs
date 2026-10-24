@@ -17,6 +17,7 @@ namespace iTerminal.Core.Test.Dialogs;
 public class PropertiesDialogTest
 {
     private static readonly DateTime Stamp = new(2025, 3, 4, 5, 6, 7);
+    private static readonly UnixFileMode Octal644 = UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.GroupRead | UnixFileMode.OtherRead;
 
     private static FileProperties File(
         FileAttributes attributes = FileAttributes.Archive,
@@ -292,5 +293,49 @@ public class PropertiesDialogTest
 
         local.Verify(m => m.Refresh(true), Times.Once);
         other.Verify(m => m.Refresh(It.IsAny<bool>()), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task TheDatesAreShownForEditing()
+    {
+        Rig rig = await OpenAsync(File(mode: Octal644));
+
+        Assert.AreEqual("2025-03-05 05:06:07", rig.Dialog.ModifiedText);
+        Assert.AreEqual("2025-03-06 05:06:07", rig.Dialog.AccessedText);
+        AssertScreenContains(Render(rig.Root), "2025-03-05 05:06:07");
+    }
+
+    [TestMethod]
+    public async Task ChangingTheModifiedDate_WritesOnlyThatDate()
+    {
+        Rig rig = await OpenAsync(File(mode: Octal644));
+        rig.Dialog.ModifiedText = "2020-01-02 03:04:05";
+
+        Assert.IsTrue(rig.Dialog.Apply());
+
+        rig.Service.Verify(s => s.SetTimes(It.IsAny<string>(), null, new DateTime(2020, 1, 2, 3, 4, 5), null), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task ADateThatIsNotADate_IsRefused_AndNothingIsWritten()
+    {
+        Rig rig = await OpenAsync(File(mode: Octal644));
+        rig.Dialog.AccessedText = "yesterday";
+        rig.Dialog.ModifiedText = "2020-01-02 03:04:05";
+
+        Assert.IsFalse(rig.Dialog.Apply());
+
+        StringAssert.StartsWith(rig.Dialog.Error, "Error: a date is yyyy-MM-dd HH:mm:ss");
+        rig.Service.Verify(s => s.SetTimes(It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>()), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task UnchangedDates_AreNotWritten()
+    {
+        Rig rig = await OpenAsync(File(mode: Octal644));
+
+        Assert.IsTrue(rig.Dialog.Apply());
+
+        rig.Service.Verify(s => s.SetTimes(It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>()), Times.Never);
     }
 }
