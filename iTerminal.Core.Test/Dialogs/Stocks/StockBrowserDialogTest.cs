@@ -32,8 +32,12 @@ public class StockBrowserDialogTest
                 .ToDictionary(s => s, s => new StockQuote(s, s + " Corp", s == "TSLA" ? 90m : Price, 100m, "USD", "NASDAQ", DateTime.Now,
                     DayLow: 95m, DayHigh: 115m, YearLow: 50m, YearHigh: 200m, Volume: 1234567), StringComparer.OrdinalIgnoreCase));
 
+        public Exception? SearchFailure { get; set; }
+
         public Task<IReadOnlyList<StockSearchHit>> SearchAsync(string query, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<StockSearchHit>>([.. Hits]);
+            SearchFailure is { } failure
+                ? Task.FromException<IReadOnlyList<StockSearchHit>>(failure)
+                : Task.FromResult<IReadOnlyList<StockSearchHit>>([.. Hits]);
     }
 
     private static (StockBrowserDialog Dialog, StockService Service, FakeProvider Provider) Create()
@@ -158,6 +162,22 @@ public class StockBrowserDialogTest
         await WaitUntilAsync(() => service.Watchlist.Count == 8 && dialog.RowsForTest.Count == 8, "AAPL to leave the list");
         Assert.IsFalse(dialog.RowsForTest.Any(r => r.Stock.Symbol == "AAPL"));
         dialog.Close();
+    }
+
+    [TestMethod]
+    public async Task ASearchThatFailsWithAnUnexpectedError_SaysWhy_NotLeftSearching()
+    {
+        var (dialog, _, provider) = Create();
+        provider.SearchFailure = new FormatException("reply was not JSON");
+        await ShowAsync(dialog);
+        await QuotesLandedAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Char('a'));
+        dialog.InputBoxForTest.Text = "vodafone";
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        await WaitUntilAsync(() => dialog.MessageForTest.Contains("reply was not JSON"), "the failure to be said");
+        Assert.IsFalse(dialog.MessageForTest.Contains("Searching"));
     }
 
     [TestMethod]

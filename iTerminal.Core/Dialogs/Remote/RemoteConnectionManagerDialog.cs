@@ -404,7 +404,17 @@ public class RemoteConnectionManagerDialog : Dialog
         var name = connection.Name;
         PendingOperation = Task.Run(async () =>
         {
-            var outcome = await _shellService.RunAsync(launch);
+            ShellOutcome outcome;
+            try
+            {
+                outcome = await _shellService.RunAsync(launch);
+            }
+            catch (Exception exception) when (exception is not OperationCanceledException)
+            {
+                // Said on the status line. Left alone, "Connecting to …" stayed up for ever.
+                outcome = new ShellOutcome(-1, exception.Message);
+            }
+
             lock (_sync)
             {
                 if (outcome.Started)
