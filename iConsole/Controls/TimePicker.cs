@@ -134,6 +134,25 @@ public class TimePicker : Control, IReadOnly
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Left/Right", "Move between hour, minute and second");
+        yield return ("Home/End", "First or last field");
+        yield return (": or .", "Next field");
+        if (!IsReadOnly)
+        {
+            yield return ("Up/Down", "Step the field");
+            yield return ("PageUp/PageDown", "Step the field by ten");
+            yield return ("0-9", "Type the field");
+            yield return ("Backspace/Delete", "Clear the field");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

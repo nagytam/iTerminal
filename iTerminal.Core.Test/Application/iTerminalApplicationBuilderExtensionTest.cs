@@ -3,6 +3,7 @@ using iTerminal.Core.Application;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Data;
 using iTerminal.Core.Services;
+using iTerminal.Core.Test.Helper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +18,7 @@ public class iTerminalApplicationBuilderExtensionTest
     {
         ServiceCollection services = [];
 
-        IServiceCollection result = services.AddiTerminal();
+        IServiceCollection result = services.AddiTerminal(TemporaryDataDirectory.Create());
 
         Assert.AreSame(services, result);
         Assert.IsTrue(services.Any(service => service.ServiceType == typeof(IHostedService) && service.ImplementationType == typeof(DatabaseInitializationHostedService)));

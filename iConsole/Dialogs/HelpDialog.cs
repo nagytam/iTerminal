@@ -157,7 +157,8 @@ public class HelpDialog : Dialog
             }
         }
 
-        var keyHints = GetKeyHints(rootControl).ToList();
+        // Several controls of one kind (every text box, every spinner) describe the same keys; list each once.
+        var keyHints = GetKeyHints(rootControl).Distinct().ToList();
         if (keyHints.Count > 0)
         {
             lines.Add(string.Empty);

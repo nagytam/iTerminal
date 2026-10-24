@@ -18,6 +18,7 @@ namespace iTerminal.Core.Test.Controls.Contents;
 /// "restart", because that clamp is invisible to anything that fakes the load.
 /// </summary>
 [TestClass]
+[DoNotParallelize]
 public class FilePanelPositionRestoreTest
 {
     // A deadline, not a budget: the listing loads on the TaskManager, which the rest of the suite

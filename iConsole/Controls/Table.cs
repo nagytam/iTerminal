@@ -119,6 +119,20 @@ public class Table<T> : Control
         ScrollableModel.ScrollableSize = new Size(ViewSize.Width, _rows.Count);
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down", "Move the cursor");
+        if (_rows.Count > 0)
+        {
+            yield return ("Enter", "Open the highlighted row");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         // Enter on an empty table has no row to activate; leave the key to whoever hosts the table.

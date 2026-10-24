@@ -10,6 +10,7 @@ using iTerminal.Core.Jobs;
 using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Music;
+using iTerminal.Core.Test.Helper;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace iTerminal.Core.Test.Application;
@@ -30,7 +31,7 @@ public class MusicPanelsRegistrationTest
         var services = new ServiceCollection();
         services.AddDefaultConsoleDriver();
         services.AddiConsoleCore();
-        services.AddiTerminal();
+        services.AddiTerminal(TemporaryDataDirectory.Create());
         return services.BuildServiceProvider();
     }
 

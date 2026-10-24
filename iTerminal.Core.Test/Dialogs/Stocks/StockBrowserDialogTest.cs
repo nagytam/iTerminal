@@ -225,6 +225,7 @@ public class StockBrowserDialogTest
     {
         var (dialog, _, _) = Create();
         await ShowAsync(dialog);
+        await QuotesLandedAsync(dialog);
 
         await dialog.HandleKeyEventAsync(Char('a'));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));

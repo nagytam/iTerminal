@@ -1,3 +1,4 @@
+using iConsole.Model;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
 using iConsole.Controls;
@@ -1319,5 +1320,114 @@ public class ControlInteractionTest
 
         combo.IsEnabled = false;
         Assert.AreEqual(0, combo.GetKeyHints().Count());
+    }
+
+    // ---- Key hints in Help (TextBox, SearchBox, TreeView, Table, TimePicker, RadioGroup, ToggleButton, LinkLabel, Alert) ----
+
+    private static List<string> HintKeys(Control control) => control.GetKeyHints().Select(h => h.Key).ToList();
+
+    [TestMethod]
+    public void TextBox_KeyHints_EditKeysOnlyWhenEditable()
+    {
+        TextBox box = new(Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), Theme()) { Position = new Position(0, 0) };
+        CollectionAssert.Contains(HintKeys(box), "Ctrl+U");
+
+        box.IsReadOnly = true;
+        var readOnly = HintKeys(box);
+        CollectionAssert.Contains(readOnly, "Home/End");
+        CollectionAssert.DoesNotContain(readOnly, "Ctrl+U");
+        CollectionAssert.DoesNotContain(readOnly, "Backspace/Delete");
+
+        box.IsReadOnly = false;
+        box.IsEnabled = false;
+        Assert.AreEqual(0, box.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public void SearchBox_KeyHints_AddEscapeToTheTextKeys()
+    {
+        SearchBox search = new(Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), Theme()) { Position = new Position(0, 0) };
+
+        var keys = HintKeys(search);
+
+        CollectionAssert.Contains(keys, "Home/End");
+        CollectionAssert.Contains(keys, "Esc");
+    }
+
+    [TestMethod]
+    public void TreeView_KeyHints_EmptyWhenDisabled()
+    {
+        var root = new HierarchicalItemModel(null, "/") { IsOpened = true };
+        TreeView tree = new(root, Theme()) { Position = new Position(0, 0), ViewSize = new Size(20, 5) };
+        CollectionAssert.Contains(HintKeys(tree), "Up/Down");
+
+        tree.IsEnabled = false;
+        Assert.AreEqual(0, tree.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public void Table_KeyHints_EnterOnlyWhenThereAreRows()
+    {
+        var rows = new ConcurrentObservableCollection<string>();
+        Table<string> table = new(rows, Theme()) { Position = new Position(0, 0), ViewSize = new Size(20, 5) };
+        CollectionAssert.DoesNotContain(HintKeys(table), "Enter");
+
+        rows.Add("first");
+
+        CollectionAssert.Contains(HintKeys(table), "Enter");
+    }
+
+    [TestMethod]
+    public void TimePicker_KeyHints_EditKeysOnlyWhenEditable()
+    {
+        TimePicker picker = new(Theme()) { Value = new TimeOnly(14, 5), Position = new Position(0, 0) };
+        CollectionAssert.Contains(HintKeys(picker), "Backspace/Delete");
+
+        picker.IsReadOnly = true;
+        var readOnly = HintKeys(picker);
+        CollectionAssert.Contains(readOnly, "Left/Right");
+        CollectionAssert.DoesNotContain(readOnly, "Up/Down");
+        CollectionAssert.DoesNotContain(readOnly, "Backspace/Delete");
+    }
+
+    [TestMethod]
+    public void RadioGroup_KeyHints_EmptyWithoutOptions()
+    {
+        RadioGroup<string> group = new(Theme()) { Position = new Position(0, 0), ViewSize = new Size(20, 3) };
+        Assert.AreEqual(0, group.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public void ToggleButton_KeyHints_EmptyWhenReadOnly()
+    {
+        ToggleButton toggle = new(Theme()) { Position = new Position(0, 0), ViewSize = new Size(10, 1) };
+        CollectionAssert.Contains(HintKeys(toggle), "Space/Enter");
+
+        toggle.IsReadOnly = true;
+        Assert.AreEqual(0, toggle.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public void LinkLabel_KeyHints_EmptyWithoutText()
+    {
+        LinkLabel link = new(Theme()) { Text = string.Empty };
+        Assert.AreEqual(0, link.GetKeyHints().Count());
+
+        link.Text = "Docs";
+
+        CollectionAssert.Contains(HintKeys(link), "Enter/Space");
+    }
+
+    [TestMethod]
+    public void Alert_KeyHints_OnlyWhenDismissibleWithText()
+    {
+        Alert alert = new(Theme()) { Text = "Saved", Position = new Position(0, 0), ViewSize = new Size(20, 1) };
+        Assert.AreEqual(0, alert.GetKeyHints().Count(), "a plain alert cannot be dismissed");
+
+        alert.IsDismissible = true;
+        CollectionAssert.Contains(HintKeys(alert), "Esc/Enter");
+
+        alert.Text = string.Empty;
+        Assert.AreEqual(0, alert.GetKeyHints().Count());
     }
 }

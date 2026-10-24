@@ -48,6 +48,20 @@ public class SearchBox : TextBox
         Cleared?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>The text keys of <see cref="TextBox"/>, plus Escape, which clears the query.</summary>
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        foreach (var hint in base.GetKeyHints())
+        {
+            yield return hint;
+        }
+
+        if (IsEnabled)
+        {
+            yield return ("Esc", "Clear the search");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         var before = Text;
