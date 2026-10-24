@@ -23,8 +23,22 @@ public class Slider : Control, IReadOnly
     }
 
     public bool IsReadOnly { get; set; }
-    public long Step { get; set; } = 1;
-    public long LargeStep { get; set; } = 10;
+    private long _step = 1;
+    private long _largeStep = 10;
+
+    /// <summary>Distance of an arrow key or a wheel notch; at least 1, since a zero or negative step would stall or reverse the keys.</summary>
+    public long Step
+    {
+        get => _step;
+        set => _step = Math.Max(1, value);
+    }
+
+    /// <summary>Distance of PageUp/PageDown; at least 1.</summary>
+    public long LargeStep
+    {
+        get => _largeStep;
+        set => _largeStep = Math.Max(1, value);
+    }
 
     /// <summary>Draws the current value right of the track, so the number is readable without counting cells.</summary>
     public bool ShowValue { get; set; }
@@ -186,8 +200,13 @@ public class Slider : Control, IReadOnly
                 SetFocus();
             }
 
+            // The value read-out right of the track is not part of it: a click there must not jump to the maximum.
             int column = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
-            Value = ValueAt(Math.Min(column, TrackWidth - 1), _minimum, _maximum, TrackWidth);
+            if (column < TrackWidth)
+            {
+                Value = ValueAt(column, _minimum, _maximum, TrackWidth);
+            }
+
             return true;
         }
 

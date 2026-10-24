@@ -31,8 +31,15 @@ public class SegmentedControl : Control, IReadOnly
         set
         {
             _options = [.. value ?? []];
-            _selectedIndex = Math.Clamp(_selectedIndex, 0, Math.Max(0, _options.Count - 1));
+            int clamped = Math.Clamp(_selectedIndex, 0, Math.Max(0, _options.Count - 1));
+            bool moved = clamped != _selectedIndex;
+            _selectedIndex = clamped;
             StateHasChanged();
+            if (moved)
+            {
+                // A shorter list moved the choice: whoever listens to it must hear about that.
+                SelectionChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 
@@ -80,7 +87,8 @@ public class SegmentedControl : Control, IReadOnly
 
             if (shown.Any(s => s.Index == _selectedIndex) || first == _selectedIndex)
             {
-                return shown;
+                // An option wider than the control still shows, cut at the edge, instead of leaving the row blank.
+                return shown.Count == 0 ? [(_selectedIndex, 0)] : shown;
             }
         }
 

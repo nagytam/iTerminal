@@ -47,13 +47,15 @@ public class ControlInteractionTest
     }
 
     [TestMethod]
-    public async Task Slider_Click_PastTrackWithValueShown_ClampsToMaximum()
+    public async Task Slider_Click_OnValueReadout_FocusesWithoutMovingTheThumb()
     {
         Slider slider = NewSlider();
         slider.ShowValue = true;
         slider.ViewSize = new Size(14, 1);
+        slider.Value = 30;
         await slider.HandleMouseEventAsync(Click(13));
-        Assert.AreEqual(100, slider.Value);
+        Assert.IsTrue(slider.IsFocused);
+        Assert.AreEqual(30, slider.Value);
     }
 
     [TestMethod]
@@ -857,7 +859,7 @@ public class ControlInteractionTest
         Assert.IsFalse(shown.Any(s => s.Index == 0));
         chips.ActiveIndex = 0;
         Assert.AreEqual(0, chips.Visible(30)[0].Index);
-        Assert.AreEqual(0, chips.Visible(2).Count);
+        Assert.AreEqual(1, chips.Visible(2).Count, "a chip wider than the control is cut, not dropped");
     }
 
     // ---- NumericUpDown ----

@@ -118,7 +118,9 @@ public class TimePicker : Control, IReadOnly
         }
         else
         {
-            Set(_field, Get(_field) * 10 + digit);
+            int combined = Get(_field) * 10 + digit;
+            // "2" then "5" for the hour is not 23: the second digit becomes the entry instead of being clamped.
+            Set(_field, combined > max ? digit : combined);
             CompleteField();
         }
     }
