@@ -1,0 +1,10 @@
+﻿Árvíztűrő tükörfúrógép
+First paragraph with & an entity and “quotes”.
+Alpha item
+Beta item
+┌───────┬─────┐
+│ Name  │ Qty │
+│ Apple │ 3   │
+└───────┴─────┘
+
+Last paragraph.
