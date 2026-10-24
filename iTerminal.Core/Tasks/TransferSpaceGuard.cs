@@ -30,8 +30,10 @@ internal sealed class TransferSpaceGuard(IFileSystem target, Url targetUrl, IErr
 
         if (deletesSource && ReferenceEquals(source, target))
         {
+            // Only a move the volumes show to be one volume is a rename. When either volume cannot be identified the
+            // space is checked as for any copy: a cross-volume move that runs out of room halfway is the worse outcome.
             var sourceVolume = space.GetVolumeId(sourceUrl);
-            if (sourceVolume is null || sourceVolume == space.GetVolumeId(targetUrl))
+            if (sourceVolume is not null && sourceVolume == space.GetVolumeId(targetUrl))
             {
                 return null;
             }

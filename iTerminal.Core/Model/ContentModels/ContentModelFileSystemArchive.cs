@@ -54,74 +54,90 @@ public class ContentModelFileSystemArchive(
         Refresh();
     }
 
+    /// <summary>The background read of the folder being shown; a test waits for it, the panel does not.</summary>
+    public Task ListingTask { get; private set; } = Task.CompletedTask;
+
+    private CancellationTokenSource? _listingCancellation;
+
     public override void Refresh(bool forceRefresh = false)
     {
         if (forceRefresh)
         {
             Entries.Clear();
         }
-        //if (!_taskManager.HasTask<FilePanelRefreshTask>((t) => true))
-        //{
-        //    _taskManager.Add(new FilePanelRefreshTask(this));
-        //}
         if (string.IsNullOrEmpty(ArchivePath))
         {
             return;
         }
-        var location = ArchivePath.Replace(Container.ZIP_ARCHIVE, string.Empty);
-        var marker = location.IndexOf("@/", StringComparison.Ordinal);
-        var archivePath = location[..marker];
-        // The folder inside the archive being shown: "" at the top, "sub/" or "sub/deeper/" below it.
-        var inside = location[(marker + 2)..];
-        Entries.Clear();
-        Entries.Add(ParentRow(archivePath, inside));
 
-        // The archive can be gone or unreadable (deleted while the panel shows it): then the panel shows only the way out,
-        // rather than the exception from the refresh.
-        ZipArchive archive;
-        FileStream zipToOpen;
+        // The ".." row costs nothing, so it is shown at once; reading the archive takes as long as the archive is big,
+        // and the key handler that asked for the folder must not wait for it.
+        var location = ArchivePath;
+        Split(location, out var archivePath, out var inside);
+        Entries.ReplaceAll([ParentRow(archivePath, inside)]);
+
+        _listingCancellation?.Cancel();
+        var cancellation = _listingCancellation = new CancellationTokenSource();
+        ListingTask = Task.Run(() =>
+        {
+            var entries = ReadListing(archivePath, inside);
+            // Only the folder still on screen may take the listing: the user may have gone elsewhere while it was read.
+            if (cancellation.IsCancellationRequested || location != ArchivePath)
+            {
+                return;
+            }
+
+            ReplaceEntriesAndRestoreFocus(entries, isComplete: true);
+        });
+    }
+
+    /// <summary>Splits the panel's location into the archive's file and the folder inside it ("" at the top, "sub/" below).</summary>
+    private static void Split(string location, out string archivePath, out string inside)
+    {
+        var path = location.Replace(Container.ZIP_ARCHIVE, string.Empty);
+        var marker = path.IndexOf("@/", StringComparison.Ordinal);
+        archivePath = path[..marker];
+        inside = path[(marker + 2)..];
+    }
+
+    /// <summary>
+    /// The ".." row and what is directly in the folder: a file as its own row, and a sub-folder once, however many entries lie
+    /// under it. An archive that cannot be opened (deleted while shown) gives just the ".." row, rather than an exception.
+    /// </summary>
+    private static List<IEntry> ReadListing(string archivePath, string inside)
+    {
+        var entries = new List<IEntry> { ParentRow(archivePath, inside) };
         try
         {
-            zipToOpen = new FileStream(archivePath, FileMode.Open, FileAccess.Read);
-            archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read);
+            using var zipToOpen = new FileStream(archivePath, FileMode.Open, FileAccess.Read);
+            using var archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read);
+            var folders = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var zipArchiveEntry in archive.Entries)
+            {
+                if (!zipArchiveEntry.FullName.StartsWith(inside, StringComparison.Ordinal) || zipArchiveEntry.FullName.Length == inside.Length)
+                {
+                    continue;
+                }
+
+                var rest = zipArchiveEntry.FullName[inside.Length..];
+                var slash = rest.IndexOf('/');
+                if (slash < 0)
+                {
+                    entries.Add(new ArchiveEntry(zipArchiveEntry));
+                }
+                else if (folders.Add(rest[..slash]))
+                {
+                    var folder = rest[..slash];
+                    entries.Add(new ArchiveEntry(folder, Container.ZIP_ARCHIVE + archivePath + "@/" + inside + folder + "/"));
+                }
+            }
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidDataException)
         {
-            Debug.WriteLine($"{nameof(ContentModelFileSystemArchive)}.{nameof(Refresh)} could not open {archivePath}: {exception}");
-            return;
+            Debug.WriteLine($"{nameof(ContentModelFileSystemArchive)}.{nameof(ReadListing)} could not read {archivePath}: {exception}");
         }
 
-        using (zipToOpen)
-        using (archive)
-        {
-            ListFolder(archive, archivePath, inside);
-        }
-    }
-
-    private void ListFolder(ZipArchive archive, string archivePath, string inside)
-    {
-
-        // Only what is directly in this folder: a file as its own row, and a sub-folder once, however many entries lie under it.
-        var folders = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var zipArchiveEntry in archive.Entries)
-        {
-            if (!zipArchiveEntry.FullName.StartsWith(inside, StringComparison.Ordinal) || zipArchiveEntry.FullName.Length == inside.Length)
-            {
-                continue;
-            }
-
-            var rest = zipArchiveEntry.FullName[inside.Length..];
-            var slash = rest.IndexOf('/');
-            if (slash < 0)
-            {
-                Entries.Add(new ArchiveEntry(zipArchiveEntry));
-            }
-            else if (folders.Add(rest[..slash]))
-            {
-                var folder = rest[..slash];
-                Entries.Add(new ArchiveEntry(folder, Container.ZIP_ARCHIVE + archivePath + "@/" + inside + folder + "/"));
-            }
-        }
+        return entries;
     }
 
     /// <summary>The ".." row: out of the archive from its top folder, and up one folder inside it from any other.</summary>

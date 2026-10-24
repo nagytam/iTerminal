@@ -1,172 +1,126 @@
 using iConsole.Data;
+using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Services;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace iTerminal.Core.Tasks.Test;
 
+/// <summary>Before a copy writes, the target must have room for it; a move on one volume is a rename and needs none.</summary>
 [TestClass]
 public class TransferSpaceGuardTest
 {
-    private string _tempDir = string.Empty;
+    private static readonly Url Source = new(Path.Combine(Path.GetTempPath(), "a.bin"));
+    private static readonly Url Target = new(Path.Combine(Path.GetTempPath(), "out", "a.bin"));
 
-    [TestInitialize]
-    public void Setup()
+    private static (Mock<IFileSystem> Fs, Mock<IFreeSpaceFileSystem> Space) Volume(long? free, string? volumeOfSource = "v1", string? volumeOfTarget = "v1")
     {
-        _tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(_tempDir);
+        var fs = new Mock<IFileSystem>();
+        var space = fs.As<IFreeSpaceFileSystem>();
+        space.Setup(s => s.GetFreeBytes(It.IsAny<Url>())).Returns(free);
+        space.Setup(s => s.GetVolumeId(Source)).Returns(volumeOfSource);
+        space.Setup(s => s.GetVolumeId(Target)).Returns(volumeOfTarget);
+        return (fs, space);
     }
 
-    [TestCleanup]
-    public void Cleanup()
+    private static Mock<IErrorPromptService> Prompts(params bool[] answers)
     {
-        if (Directory.Exists(_tempDir))
-        {
-            Directory.Delete(_tempDir, recursive: true);
-        }
-    }
-
-    private sealed class TinyDisk(long free, Func<Url, string?> volume) : FileSystemService
-    {
-        public override long? GetFreeBytes(Url url) => free;
-
-        public override string? GetVolumeId(Url url) => volume(url);
-    }
-
-    /// <summary>Answers the prompts in order; true is the first button.</summary>
-    private sealed class ScriptedPrompts(params bool[] answers) : IErrorPromptService
-    {
-        private int _next;
-
-        public List<string> Titles { get; } = [];
-
-        public Task<bool> ConfirmContinueAsync(string title, string message, CancellationToken cancellationToken) =>
-            ConfirmAsync(title, message, "Continue", "Cancel", cancellationToken);
-
-        public Task<bool> ConfirmAsync(string title, string message, string acceptLabel, string declineLabel, CancellationToken cancellationToken)
-        {
-            Titles.Add(title);
-            return Task.FromResult(answers[_next++]);
-        }
-    }
-
-    private (string Source, string Target) Files(string content = "0123456789")
-    {
-        var source = Path.Combine(_tempDir, "source.txt");
-        File.WriteAllText(source, content);
-        return (source, Path.Combine(_tempDir, "target.txt"));
+        var prompts = new Mock<IErrorPromptService>();
+        var queue = new Queue<bool>(answers);
+        prompts.Setup(p => p.ConfirmAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => queue.Dequeue());
+        return prompts;
     }
 
     [TestMethod]
-    public async Task Copy_WithEnoughSpace_AsksNothing()
+    public void AMoveOnOneKnownVolume_NeedsNoGuard()
     {
-        var (source, target) = Files();
-        var prompts = new ScriptedPrompts();
-        var disk = new TinyDisk(1000, _ => "C");
+        var (fs, _) = Volume(free: 0);
 
-        await new ContentModelCopyFileTask(disk, disk, new Url(source), new Url(target), false, prompts).ExecuteAsync();
+        var guard = TransferSpaceGuard.For(fs.Object, Source, fs.Object, Target, deletesSource: true, Prompts().Object);
 
-        Assert.AreEqual(0, prompts.Titles.Count);
-        Assert.IsTrue(File.Exists(target));
+        Assert.IsNull(guard);
     }
 
     [TestMethod]
-    public async Task Copy_WithoutEnoughSpace_WarnsAndGoesOnWhenTheUserSaysSo()
+    public void AMoveWhoseVolumeCannotBeIdentified_IsStillChecked()
     {
-        var (source, target) = Files();
-        var prompts = new ScriptedPrompts(false);
-        var disk = new TinyDisk(5, _ => "C");
+        // Unknown is not "the same volume": a move that might cross volumes must not skip the space check.
+        var (fs, _) = Volume(free: 0, volumeOfSource: null, volumeOfTarget: null);
 
-        await new ContentModelCopyFileTask(disk, disk, new Url(source), new Url(target), false, prompts).ExecuteAsync();
+        var guard = TransferSpaceGuard.For(fs.Object, Source, fs.Object, Target, deletesSource: true, Prompts().Object);
 
-        CollectionAssert.AreEqual(new[] { "Not enough free space" }, prompts.Titles);
-        Assert.IsTrue(File.Exists(target));
+        Assert.IsNotNull(guard);
     }
 
     [TestMethod]
-    public async Task Copy_PausedThenResumed_AsksAgainAndCopiesOnceTheUserGoesOn()
+    public void ACopy_IsAlwaysChecked()
     {
-        var (source, target) = Files();
-        var prompts = new ScriptedPrompts(true, true, false);
-        var disk = new TinyDisk(5, _ => "C");
+        var (fs, _) = Volume(free: 0);
 
-        await new ContentModelCopyFileTask(disk, disk, new Url(source), new Url(target), false, prompts).ExecuteAsync();
+        var guard = TransferSpaceGuard.For(fs.Object, Source, fs.Object, Target, deletesSource: false, Prompts().Object);
 
-        CollectionAssert.AreEqual(new[] { "Not enough free space", "Copy paused", "Not enough free space" }, prompts.Titles);
-        Assert.IsTrue(File.Exists(target));
+        Assert.IsNotNull(guard);
     }
 
     [TestMethod]
-    public async Task Copy_PausedThenCancelled_CopiesNothing()
+    public void WithoutPrompts_ThereIsNoGuard()
     {
-        var (source, target) = Files();
-        var prompts = new ScriptedPrompts(true, false);
-        var disk = new TinyDisk(5, _ => "C");
-        var task = new ContentModelCopyFileTask(disk, disk, new Url(source), new Url(target), false, prompts);
+        var (fs, _) = Volume(free: 0);
 
-        await task.ExecuteAsync();
-
-        Assert.IsFalse(File.Exists(target));
-        Assert.IsTrue(File.Exists(source));
+        Assert.IsNull(TransferSpaceGuard.For(fs.Object, Source, fs.Object, Target, deletesSource: false, prompts: null));
     }
 
     [TestMethod]
-    public async Task Move_OnTheSameVolume_NeverChecksSpace()
+    public async Task EnoughRoom_ProceedsWithoutAsking()
     {
-        var (source, target) = Files();
-        var prompts = new ScriptedPrompts();
-        var disk = new TinyDisk(0, _ => "C");
+        var (fs, _) = Volume(free: 1000);
+        var prompts = Prompts();
+        var guard = TransferSpaceGuard.For(fs.Object, Source, fs.Object, Target, deletesSource: false, prompts.Object);
 
-        await new ContentModelMoveFileTask(disk, disk, new Url(source), new Url(target), false, prompts).ExecuteAsync();
+        await guard!.EnsureAsync(() => 500, CancellationToken.None);
 
-        Assert.AreEqual(0, prompts.Titles.Count);
-        Assert.IsTrue(File.Exists(target));
-        Assert.IsFalse(File.Exists(source));
+        prompts.Verify(p => p.ConfirmAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [TestMethod]
-    public async Task Move_ToAnotherVolume_WarnsWhenItDoesNotFit()
+    public async Task Short_GoOnAnyway_ProceedsOnceAndAsksNoMore()
     {
-        var (source, target) = Files();
-        var prompts = new ScriptedPrompts(false);
-        var disk = new TinyDisk(5, url => url.FullName.EndsWith("target.txt") ? "D" : "C");
+        var (fs, _) = Volume(free: 100);
+        var prompts = Prompts(false);
+        var guard = TransferSpaceGuard.For(fs.Object, Source, fs.Object, Target, deletesSource: false, prompts.Object);
 
-        await new ContentModelMoveFileTask(disk, disk, new Url(source), new Url(target), false, prompts).ExecuteAsync();
+        await guard!.EnsureAsync(() => 500, CancellationToken.None);
+        await guard.EnsureAsync(() => 500, CancellationToken.None);
 
-        CollectionAssert.AreEqual(new[] { "Not enough free space" }, prompts.Titles);
+        prompts.Verify(p => p.ConfirmAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [TestMethod]
-    public async Task CopyFolder_WithoutEnoughSpace_WarnsOnceForTheWholeTree()
+    public async Task Short_PausedThenCancelled_StopsTheCopy()
     {
-        var folder = Path.Combine(_tempDir, "src");
-        Directory.CreateDirectory(folder);
-        File.WriteAllText(Path.Combine(folder, "a.txt"), "0123456789");
-        File.WriteAllText(Path.Combine(folder, "b.txt"), "0123456789");
-        var prompts = new ScriptedPrompts(false);
-        var disk = new TinyDisk(5, _ => "C");
+        var (fs, _) = Volume(free: 100);
+        var guard = TransferSpaceGuard.For(fs.Object, Source, fs.Object, Target, deletesSource: false, Prompts(true, false).Object);
 
-        var task = new ContentModelCopyFolderTask(
-            disk, disk, new Url(folder + Path.DirectorySeparatorChar), new Url(Path.Combine(_tempDir, "dst") + Path.DirectorySeparatorChar), true, null, prompts);
-        await task.ExecuteAsync();
-
-        CollectionAssert.AreEqual(new[] { "Not enough free space" }, prompts.Titles);
-        Assert.IsTrue(File.Exists(Path.Combine(_tempDir, "dst", "b.txt")));
+        await Assert.ThrowsAsync<OperationCanceledException>(() => guard!.EnsureAsync(() => 500, CancellationToken.None));
     }
 
     [TestMethod]
-    public async Task MoveFolder_OnTheSameVolume_NeverChecksSpace()
+    public async Task Short_PausedThenResumedAfterFreeingSpace_Continues()
     {
-        var folder = Path.Combine(_tempDir, "src");
-        Directory.CreateDirectory(folder);
-        File.WriteAllText(Path.Combine(folder, "a.txt"), "0123456789");
-        var prompts = new ScriptedPrompts();
-        var disk = new TinyDisk(0, _ => "C");
+        // Short until the user has freed space at the resume prompt; then the copy goes on without a third question.
+        var freed = false;
+        var (fs, space) = Volume(free: 100);
+        space.Setup(s => s.GetFreeBytes(It.IsAny<Url>())).Returns(() => freed ? 1000 : 100);
+        var prompts = new Mock<IErrorPromptService>();
+        var answers = new Queue<Func<bool>>([() => true, () => { freed = true; return true; }]);
+        prompts.Setup(p => p.ConfirmAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => answers.Dequeue()());
+        var guard = TransferSpaceGuard.For(fs.Object, Source, fs.Object, Target, deletesSource: false, prompts.Object);
 
-        var task = new ContentModelMoveFolderTask(
-            disk, disk, new Url(folder + Path.DirectorySeparatorChar), new Url(Path.Combine(_tempDir, "dst") + Path.DirectorySeparatorChar), true, null, prompts);
-        await task.ExecuteAsync();
+        await guard!.EnsureAsync(() => 500, CancellationToken.None);
 
-        Assert.AreEqual(0, prompts.Titles.Count);
-        Assert.IsTrue(File.Exists(Path.Combine(_tempDir, "dst", "a.txt")));
+        prompts.Verify(p => p.ConfirmAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
     }
 }

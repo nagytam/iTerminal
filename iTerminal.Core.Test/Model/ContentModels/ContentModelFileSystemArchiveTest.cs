@@ -56,6 +56,7 @@ public class ContentModelFileSystemArchiveTest
         var model = NewModel();
 
         model.SetUrl(new Url(Container.ZIP_ARCHIVE + _zip + "@/"));
+        model.ListingTask.Wait();
 
         var names = model.Entries.Select(e => e.Name).ToList();
         CollectionAssert.Contains(names, "top.txt");
@@ -68,6 +69,7 @@ public class ContentModelFileSystemArchiveTest
         var model = NewModel();
 
         model.SetUrl(new Url(Container.ZIP_ARCHIVE + _zip + "@/sub/"));
+        model.ListingTask.Wait();
 
         var names = model.Entries.Select(e => e.Name).ToList();
         CollectionAssert.Contains(names, "nested.txt", "the folder's own file is listed");
@@ -79,6 +81,7 @@ public class ContentModelFileSystemArchiveTest
     {
         var model = NewModel();
         model.SetUrl(new Url(Container.ZIP_ARCHIVE + _zip + "@/"));
+        model.ListingTask.Wait();
 
         var parent = model.Entries.First();
 
@@ -91,6 +94,7 @@ public class ContentModelFileSystemArchiveTest
     {
         var model = NewModel();
         model.SetUrl(new Url(Container.ZIP_ARCHIVE + _zip + "@/sub/"));
+        model.ListingTask.Wait();
 
         var parent = model.Entries.First(e => e.DisplayName == "..");
 
@@ -103,6 +107,7 @@ public class ContentModelFileSystemArchiveTest
         var model = NewModel();
 
         model.SetUrl(new Url(Container.ZIP_ARCHIVE + _zip + "@/sub/"));
+        model.ListingTask.Wait();
 
         var names = model.Entries.Select(e => e.DisplayName).ToList();
         Assert.AreEqual(1, names.Count(n => n == "deep"), "one row for the folder, however many entries lie under it");
@@ -115,8 +120,21 @@ public class ContentModelFileSystemArchiveTest
         var gone = Path.Combine(Path.GetTempPath(), "gone-" + Guid.NewGuid().ToString("N") + ".zip");
 
         model.SetUrl(new Url(Container.ZIP_ARCHIVE + gone + "@/"));
+        model.ListingTask.Wait();
 
         Assert.AreEqual(1, model.Entries.Count);
         Assert.AreEqual("..", model.Entries.First().DisplayName);
+    }
+
+    [TestMethod]
+    public void TheParentRow_IsShownBeforeTheArchiveIsRead()
+    {
+        // Opening a folder must not wait for the archive to be read: the ".." row is there at once.
+        var model = NewModel();
+
+        model.SetUrl(new Url(Container.ZIP_ARCHIVE + _zip + "@/"));
+
+        Assert.AreEqual("..", model.Entries.First().DisplayName);
+        model.ListingTask.Wait();
     }
 }

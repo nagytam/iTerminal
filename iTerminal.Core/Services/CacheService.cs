@@ -74,13 +74,10 @@ public class CacheService(IDbContextFactory<iTerminalDbContext> dbContextFactory
             .Select(g => g.OrderByDescending(i => i.CachedAtUtc).First())
             .ToListAsync();
 
-        // Return empty list if cache is expired, allowing fresh data to be fetched
-        if (cached.Count > 0 && DateTime.UtcNow - cached[0].CachedAtUtc > InstrumentCacheTtl)
-        {
-            return [];
-        }
-
-        return cached;
+        // Each instrument has its own age: one that has expired is left out, so it is fetched again. Judging the whole
+        // list by its first entry served an hours-old quote beside a fresh one, as though it were current.
+        var now = DateTime.UtcNow;
+        return cached.Where(i => now - i.CachedAtUtc <= InstrumentCacheTtl).ToList();
     }
 
     public async Task SetCachedInstrumentAsync(string instrumentName, string currency, decimal value, int instrumentType, int instrumentValueType, DateTime sourceDateTime)
