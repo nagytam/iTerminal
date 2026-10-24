@@ -102,6 +102,14 @@ public class TaskManagerTest
         using var manager = new TaskManager(workerCount: 1);
         var executionOrder = new ConcurrentQueue<string>();
 
+        // A gate holds the only worker while both tasks are queued. Without it the worker can take the
+        // background task before the input task arrives, and the order then depends on scheduling.
+        var gate = new SemaphoreSlim(0, 1);
+        var gateTask = new FakeTask(async () => await gate.WaitAsync())
+        {
+            Priority = TaskPriority.Rendering,
+        };
+
         var backgroundTask = new FakeTask(() =>
         {
             executionOrder.Enqueue("background");
@@ -120,8 +128,10 @@ public class TaskManagerTest
             Priority = TaskPriority.Input,
         };
 
+        await manager.Add(gateTask);
         await manager.Add(backgroundTask);
         await manager.Add(inputTask);
+        gate.Release();
 
         await AssertEventuallyAsync(() => executionOrder.Count == 2);
         CollectionAssert.AreEqual(new[] { "input", "background" }, executionOrder.ToArray());
