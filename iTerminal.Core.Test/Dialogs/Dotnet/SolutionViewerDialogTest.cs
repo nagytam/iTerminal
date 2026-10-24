@@ -1,3 +1,4 @@
+using iConsole.Data;
 using iTerminal.Core.Dialogs.Dotnet;
 using iTerminal.Core.Model.Dotnet;
 using iTerminal.Core.Services.Dotnet;
@@ -91,6 +92,15 @@ public class SolutionViewerDialogTest
         AssertScreenContains(screen, "[ ] App");
         AssertScreenContains(screen, "[ ] App.Test  [test]");
         AssertScreenContains(screen, "(2 projects)");
+    }
+
+    [TestMethod]
+    public async Task TheDialogFillsTheWholeScreen()
+    {
+        var dialog = await OpenAsync(new FakeDotnetSolutionService { Solution = TwoProjects() });
+
+        Assert.AreEqual(dialog.Parent!.ViewSize, dialog.ViewSize);
+        Assert.AreEqual(new Position(0, 0), dialog.Position);
     }
 
     [TestMethod]

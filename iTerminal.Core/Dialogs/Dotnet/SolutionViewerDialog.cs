@@ -292,7 +292,8 @@ public class SolutionViewerDialog : SplitPaneDialog
     {
         if (Parent is not null)
         {
-            CenterInParent(Parent.ViewSize * 0.95);
+            ViewSize = Parent.ViewSize;
+            Position = new Position(0, 0);
         }
 
         var iw = (int)ViewSize.Width - 2;
