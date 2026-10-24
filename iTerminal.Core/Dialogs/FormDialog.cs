@@ -30,7 +30,7 @@ public abstract class FormDialog : Dialog
     protected static bool IsEditingKey(KeyEvent keyEvent) =>
         !keyEvent.Control && !keyEvent.Alt
         && (keyEvent.ConsoleKey is ConsoleKey.Backspace or ConsoleKey.Delete
-            || (keyEvent.KeyChar >= ' ' && keyEvent.KeyChar != '' && keyEvent.ConsoleKey is not (ConsoleKey.Enter or ConsoleKey.Escape or ConsoleKey.Tab)));
+            || (keyEvent.KeyChar >= ' ' && keyEvent.KeyChar != '\u007F' && keyEvent.ConsoleKey is not (ConsoleKey.Enter or ConsoleKey.Escape or ConsoleKey.Tab)));
 
     /// <summary>Drops the error line. Called when the user starts typing again, which is the answer to what it said.</summary>
     protected virtual void ClearError()
@@ -55,7 +55,8 @@ public abstract class FormDialog : Dialog
         primaryButton.Position = new Position(FieldX, y);
         primaryButton.ViewSize = new Size(PrimaryButtonWidth, 1);
 
-        var cancelX = Math.Max(FieldX, ViewSize.Width - CancelButtonWidth - ButtonRightMargin);
+        // Right-aligned, but never over the primary button: on a narrow dialog the two would otherwise share columns.
+        var cancelX = Math.Max(FieldX + PrimaryButtonWidth, ViewSize.Width - CancelButtonWidth - ButtonRightMargin);
         cancelButton.Position = new Position(cancelX, y);
         cancelButton.ViewSize = new Size(CancelButtonWidth, 1);
     }
