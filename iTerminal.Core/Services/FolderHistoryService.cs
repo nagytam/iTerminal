@@ -15,16 +15,19 @@ public class FolderHistoryService
     public int MaxHistoryItems { get; set; } = 20;
     public ConcurrentObservableCollection<string> History { get; private set; } = [];
 
+    /// <summary>
+    /// Records a visit. The folder goes to the top of the list; a folder visited again moves up rather than staying where it
+    /// was, so the list is in the order the folders were last used.
+    /// </summary>
     public void Add(Url url)
     {
+        History.Remove(url.FullUrl);
         while (History.Count >= MaxHistoryItems)
         {
             History.RemoveAt(History.Count - 1);
         }
-        if (!History.Contains(url.FullUrl))
-        {
-            History.Insert(0, url.FullUrl);
-        }
+
+        History.Insert(0, url.FullUrl);
         UpdateSettings();
     }
 

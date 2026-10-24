@@ -89,6 +89,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         ExtractDialog? extractDialog = null,
         CommandPaletteDialog? commandPaletteDialog = null,
         CompareFoldersDialog? compareFoldersDialog = null,
+        SynchronizeFoldersDialog? synchronizeFoldersDialog = null,
         iTerminal.Core.Commands.InteractiveShellCommand? shellCommand = null,
         iTerminal.Core.Dialogs.RuntimeDependencyDialog? runtimeDependencyDialog = null,
         FileDiffDialog? fileDiffDialog = null,
@@ -145,6 +146,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             unmarkPatternDialog,
             compareFoldersDialog,
             fileDiffDialog,
+            synchronizeFoldersDialog,
             clipboardOperations));
 
         AddMenuItem(new NavigateMenuItem(

@@ -214,6 +214,14 @@ F3 on a video (`VideoFileTypes`) opens `VideoFileViewerDialog`; F3 on a picture 
   TIFF file: its format and dimensions, PNG text chunks and JPEG comments, and the EXIF fields (make, model, lens,
   exposure, aperture, focal length, ISO, date taken, GPS position and altitude). Nothing is decoded; the dialog scrolls the
   list with the arrow and page keys.
+- **Image text (`e` in the metadata view)**: `ImageMetadataEditorDialog` edits the description, artist, copyright and comment
+  of a JPEG or PNG, prefilled from `ImageMetadataEdit.From`, which maps the EXIF tags and the PNG keywords (Author is the
+  artist). `ImageMetadataWriter` rebuilds the file in memory: in a JPEG it rewrites the three EXIF text tags of the first
+  directory and the COM comment, and re-serialises the rest of the EXIF block (camera, exposure, GPS) with its offsets moved;
+  in a PNG it drops the tEXt/iTXt chunks with those keywords and writes new ones before the first IDAT, as tEXt for Latin-1
+  text and as iTXt in UTF-8 otherwise, with the CRC-32 computed. The picture data is copied byte for byte. EXIF and comment
+  text are UTF-8. Other formats are refused. The file is replaced through `FileReplacement`, and the metadata is read again
+  after a save.
 - **Audio tags (`e` in the music viewer)**: `MusicTagEditorDialog` edits title, artist, album, year, track, genre and
   comment of an MP3 or FLAC. `AudioTagWriter` rewrites only the tag block: in an MP3 the ID3v2 block (other frames such as
   cover art, and comments with a description, are kept, and the audio is copied byte for byte); in a FLAC the Vorbis comment

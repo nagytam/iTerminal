@@ -138,6 +138,23 @@ public static class ImageInfoReader
                     fields.Add(new("Text", Encoding.Latin1.GetString(chunk[..separator]), Encoding.Latin1.GetString(chunk[(separator + 1)..])));
                 }
             }
+            else if (type == "iTXt")
+            {
+                // Keyword, compression flag, compression method, language, translated keyword, then the text as UTF-8.
+                // A compressed text is left out: the viewer does not inflate it.
+                int separator = chunk.IndexOf((byte)0);
+                if (separator > 0 && chunk.Length >= separator + 3 && chunk[separator + 1] == 0)
+                {
+                    ReadOnlySpan<byte> rest = chunk[(separator + 3)..];
+                    int languageEnd = rest.IndexOf((byte)0);
+                    int translatedEnd = languageEnd < 0 ? -1 : rest[(languageEnd + 1)..].IndexOf((byte)0);
+                    if (translatedEnd >= 0)
+                    {
+                        ReadOnlySpan<byte> text = rest[(languageEnd + 1 + translatedEnd + 1)..];
+                        fields.Add(new("Text", Encoding.Latin1.GetString(chunk[..separator]), Encoding.UTF8.GetString(text)));
+                    }
+                }
+            }
             else if (type == "IEND")
             {
                 break;
@@ -184,7 +201,7 @@ public static class ImageInfoReader
             }
             else if (marker == 0xFE)
             {
-                fields.Add(new("Text", "Comment", Encoding.Latin1.GetString(segment).TrimEnd('\0')));
+                fields.Add(new("Text", "Comment", Encoding.UTF8.GetString(segment).TrimEnd('\0')));
             }
 
             position = data + length - 2;

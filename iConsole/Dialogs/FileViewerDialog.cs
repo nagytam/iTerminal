@@ -46,6 +46,7 @@ public class FileViewerDialog : Dialog
         AddCommand(new ViewerWrapLinesCommand(_textViewerControl));
         AddCommand(new ViewerGoToLineCommand(_textViewerControl, beepService, dateTimeProviderService, themeService));
         _hexViewer = new HexViewer(themeService);
+        AddCommand(new ViewerGoToOffsetCommand(_hexViewer, beepService, dateTimeProviderService, themeService));
         AddControl(_textViewerControl);
         AddControl(_hexViewer);
         AddControl(_statusBar);
@@ -91,7 +92,7 @@ public class FileViewerDialog : Dialog
             _textViewerControl.SetFocus();
         }
         Title = (Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer")
-            + (_hexMode ? " [HEX]" : TextHints());
+            + (_hexMode ? HexHints() : TextHints());
         StateHasChanged();
     }
 
@@ -111,6 +112,9 @@ public class FileViewerDialog : Dialog
             TextEncodings.Next(_textViewerControl.TextModel.Encoding, backwards));
         StateHasChanged();
     }
+
+    /// <summary>The keys the hex dump adds: the offset key, and the way back to the text.</summary>
+    private static string HexHints() => " [HEX]  F4:Text  F5:Offset";
 
     /// <summary>The keys the text view adds; the wrap key says whether wrapping is on.</summary>
     private string TextHints() =>
@@ -214,7 +218,7 @@ public class FileViewerDialog : Dialog
             ViewSize = Parent.ViewSize;
             Position = new Position(0, 0);
             Title = Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer";
-            Title += _hexMode ? " [HEX]" : TextHints();
+            Title += _hexMode ? HexHints() : TextHints();
         }
 
         _textViewerControl.Position = new(1, 1);

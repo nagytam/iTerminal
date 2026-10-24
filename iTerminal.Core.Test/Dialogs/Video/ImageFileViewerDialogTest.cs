@@ -22,7 +22,7 @@ public class ImageFileViewerDialogTest
     }
 
     private static ImageFileViewerDialog CreateDialog(bool available = true, Func<IVideoDecoder>? create = null) =>
-        new(new FakeVideoDecoderFactory(create ?? (() => new FakeVideoDecoder(Info, frameCount: 1)), available), CreateThemeService())
+        new(new FakeVideoDecoderFactory(create ?? (() => new FakeVideoDecoder(Info, frameCount: 1)), available), Mock.Of<IBeepService>(), new DateTimeProviderService(), CreateThemeService())
         {
             FilePath = "/pictures/photo.png",
         };

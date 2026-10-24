@@ -26,6 +26,8 @@ public class ImageFileViewerDialog : Dialog
     private const int FooterRows = 2;
 
     private readonly IVideoDecoderFactory _decoderFactory;
+    private readonly IBeepService _beepService;
+    private readonly IDateTimeProviderService _dateTimeProviderService;
     private readonly Button _colorButton;
     private readonly object _lock = new();
 
@@ -50,10 +52,16 @@ public class ImageFileViewerDialog : Dialog
     /// <summary>Absolute path of the file to view. Set by the caller before the dialog is shown.</summary>
     public string FilePath { get; set; } = string.Empty;
 
-    public ImageFileViewerDialog(IVideoDecoderFactory decoderFactory, IThemeService themeService)
+    public ImageFileViewerDialog(
+        IVideoDecoderFactory decoderFactory,
+        IBeepService beepService,
+        IDateTimeProviderService dateTimeProviderService,
+        IThemeService themeService)
         : base(nameof(ImageFileViewerDialog), themeService)
     {
         _decoderFactory = decoderFactory;
+        _beepService = beepService;
+        _dateTimeProviderService = dateTimeProviderService;
         Title = "Image";
 
         _colorButton = new Button(
@@ -231,6 +239,14 @@ public class ImageFileViewerDialog : Dialog
             return true;
         }
 
+        if (_showMetadata && keyEvent.KeyPressType == KeyPressType.Down
+            && !keyEvent.Control && !keyEvent.Alt
+            && keyEvent.KeyChar is 'e' or 'E')
+        {
+            await EditTextAsync();
+            return true;
+        }
+
         if (_showMetadata && keyEvent.KeyPressType == KeyPressType.Down && !keyEvent.Control && !keyEvent.Alt)
         {
             int page = Math.Max(1, Area().Rows - 1);
@@ -256,13 +272,53 @@ public class ImageFileViewerDialog : Dialog
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
+    /// <summary>True while the metadata is shown instead of the picture (i toggles it).</summary>
+    internal bool ShowingMetadata => _showMetadata;
+
+    /// <summary>
+    /// Opens the text editor for the picture's description, artist, copyright and comment (e, in the metadata view, for a JPEG
+    /// or a PNG). After a save the metadata is read again, so the view shows what the file now holds.
+    /// </summary>
+    private async Task EditTextAsync()
+    {
+        string path = FilePath;
+        if (!ImageMetadataWriter.CanWrite(path))
+        {
+            _beepService.Beep();
+            return;
+        }
+
+        ImageMetadataEditorDialog editor = new(
+            path,
+            ImageMetadataEdit.From(_metadata),
+            _beepService,
+            _dateTimeProviderService,
+            ThemeService,
+            saved: () => _ = ReloadMetadataAsync(path));
+        await ShowDialogAsync(editor);
+    }
+
+    private async Task ReloadMetadataAsync(string path)
+    {
+        IReadOnlyList<ImageInfoField> fields = await Task.Run(() => ImageInfoReader.ReadFile(path));
+        if (FilePath != path)
+        {
+            return;
+        }
+
+        lock (_lock)
+        {
+            _metadata = fields;
+            _metadataLines = null;
+        }
+
+        StateHasChanged();
+    }
+
     /// <summary>
     /// The metadata as lines: each group under a heading, then its fields as name and value. The lines are built once; the
     /// view scrolls through them.
     /// </summary>
-    /// <summary>True while the metadata is shown instead of the picture (i toggles it).</summary>
-    internal bool ShowingMetadata => _showMetadata;
-
     internal List<string> MetadataLines()
     {
         if (_metadataLines is not null)
@@ -298,7 +354,7 @@ public class ImageFileViewerDialog : Dialog
     {
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
         var size = new Size(Math.Max(0, iw), 1);
-        var header = $" {FilePath}   metadata";
+        var header = $" {FilePath}   metadata" + (ImageMetadataWriter.CanWrite(FilePath) ? "   e:edit text" : string.Empty);
         buffer.Write(ZOrder, new Position((uint)ix, (uint)iy), size, new ConxelString(Fit(header, iw), Color.Cyan, colorScheme.Background));
 
         List<string> lines = MetadataLines();

@@ -46,8 +46,10 @@ appear on. `GitLens` shares the same service.
 
 ### The folder selector (`iTerminal.Core/Dialogs/FolderSelector*.cs`)
 Ctrl+F1 opens `FolderSelectorDialog`: a vertical `Tab` whose seven pages are the seven ways of naming
-a folder — Favourites, Drives, History, Places, Folder Tree, SSH, Path. Whichever page is up, the
+a folder — Favourites, Drives, Recent, Places, Folder Tree, SSH, Path. Whichever page is up, the
 keys are the same: the arrows move, **Enter goes**, Esc cancels, F1 explains.
+
+**Recent** is most-recently-used first: `FolderHistoryService.Add` takes the folder out of the list if it is there, puts it on top, and drops the least recently used past the maximum. The list is saved in that order, so it survives a restart.
 
 - **The left strip is clickable, and a click lands the cursor in the panel on the right.** Both
   halves matter: the strip is drawn by the `Tab` and owns no controls, so a click on a page name
@@ -118,6 +120,14 @@ keys are the same: the arrows move, **Enter goes**, Esc cancels, F1 explains.
   `Clear` raises `CollectionChanged`, which writes the now-empty list straight back — so saved
   favourites were erased a line before they were read, every start-up; and the write joined the `Url`
   objects rather than their `FullUrl`, and `Url` does not override `ToString`.
+
+### Synchronise folders (`SynchronizeFoldersDialog`, Edit menu, `iTerminal.Core/Dialogs/SynchronizeFoldersDialog.cs`)
+The dialog holds three options and a list. The list is the plan (`FolderSynchronizer.Plan` over `FolderComparer`), built
+on a background task by `p` and applied on the idle pass, so the keys never wait for the disk. Each option change drops the
+list: a plan is only valid for the options it was built with. The run button is the same Enter that builds the plan, so a
+plan that deletes is always seen before it runs. The test seam is `StartPreview`, `RunAsync` and the `ShownPlan` and `Status`
+properties; the tests cover the option keys, the preview, the second Enter for deletions, and the two refusals (no task
+services, no panel folder).
 
 ### Web Browser (`WebBrowserDialog`, `Model/Web/`, `Services/Web/`)
 A full-screen, text-mode browser (Tools > Web Browser, Ctrl+S; Ctrl+T would open the Tools menu): tabs, address bar, back/forward, reload/stop, bookmarks, history, find in page, forms, cookies, page source (F9) and saving (F7). F1 lists the keys.
