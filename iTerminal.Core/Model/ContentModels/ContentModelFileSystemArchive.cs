@@ -5,6 +5,7 @@ using iConsole.Interfaces;
 using iConsole.Services;
 using iConsole.Tasks;
 using iTerminal.Core.Services;
+using System.Diagnostics;
 using System.IO.Compression;
 
 namespace iTerminal.Core.Model.ContentModels;
@@ -67,18 +68,74 @@ public class ContentModelFileSystemArchive(
         {
             return;
         }
-        var archivePath = ArchivePath.Replace(Container.ZIP_ARCHIVE, string.Empty);
-        archivePath = archivePath[..archivePath.IndexOf("@/", StringComparison.Ordinal)];
-        using FileStream zipToOpen = new(archivePath, FileMode.Open, FileAccess.Read);
-        using ZipArchive archive = new(zipToOpen, ZipArchiveMode.Read);
-
+        var location = ArchivePath.Replace(Container.ZIP_ARCHIVE, string.Empty);
+        var marker = location.IndexOf("@/", StringComparison.Ordinal);
+        var archivePath = location[..marker];
+        // The folder inside the archive being shown: "" at the top, "sub/" or "sub/deeper/" below it.
+        var inside = location[(marker + 2)..];
         Entries.Clear();
-        var path = Path.GetDirectoryName(archivePath);
-        Entries.Add(new ArchiveEntry("..", path!));
+        Entries.Add(ParentRow(archivePath, inside));
+
+        // The archive can be gone or unreadable (deleted while the panel shows it): then the panel shows only the way out,
+        // rather than the exception from the refresh.
+        ZipArchive archive;
+        FileStream zipToOpen;
+        try
+        {
+            zipToOpen = new FileStream(archivePath, FileMode.Open, FileAccess.Read);
+            archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidDataException)
+        {
+            Debug.WriteLine($"{nameof(ContentModelFileSystemArchive)}.{nameof(Refresh)} could not open {archivePath}: {exception}");
+            return;
+        }
+
+        using (zipToOpen)
+        using (archive)
+        {
+            ListFolder(archive, archivePath, inside);
+        }
+    }
+
+    private void ListFolder(ZipArchive archive, string archivePath, string inside)
+    {
+
+        // Only what is directly in this folder: a file as its own row, and a sub-folder once, however many entries lie under it.
+        var folders = new HashSet<string>(StringComparer.Ordinal);
         foreach (var zipArchiveEntry in archive.Entries)
         {
-            Entries.Add(new ArchiveEntry(zipArchiveEntry));
+            if (!zipArchiveEntry.FullName.StartsWith(inside, StringComparison.Ordinal) || zipArchiveEntry.FullName.Length == inside.Length)
+            {
+                continue;
+            }
+
+            var rest = zipArchiveEntry.FullName[inside.Length..];
+            var slash = rest.IndexOf('/');
+            if (slash < 0)
+            {
+                Entries.Add(new ArchiveEntry(zipArchiveEntry));
+            }
+            else if (folders.Add(rest[..slash]))
+            {
+                var folder = rest[..slash];
+                Entries.Add(new ArchiveEntry(folder, Container.ZIP_ARCHIVE + archivePath + "@/" + inside + folder + "/"));
+            }
         }
+    }
+
+    /// <summary>The ".." row: out of the archive from its top folder, and up one folder inside it from any other.</summary>
+    private static ArchiveEntry ParentRow(string archivePath, string inside)
+    {
+        if (inside.Length == 0)
+        {
+            return new ArchiveEntry("..", Path.GetDirectoryName(archivePath)!);
+        }
+
+        var trimmed = inside.TrimEnd('/');
+        var cut = trimmed.LastIndexOf('/');
+        var parentInside = cut < 0 ? string.Empty : trimmed[..(cut + 1)];
+        return new ArchiveEntry("..", Container.ZIP_ARCHIVE + archivePath + "@/" + parentInside);
     }
 
     public override async Task<IMemoryFile?> ReadFileAsync(Url url) => await archiveFileSystemService.ReadFileAsync(url);
