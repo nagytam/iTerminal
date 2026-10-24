@@ -7,6 +7,7 @@ using iConsole.Interfaces;
 using iConsole.Model;
 using iConsole.Services;
 using iTerminal.Core.Services.Search;
+using System.Globalization;
 
 namespace iTerminal.Core.Dialogs.Search;
 
@@ -58,6 +59,8 @@ public class FindFilesDialog : SplitPaneDialog
     private readonly TextBox _namesBox;
     private readonly TextBox _textBox;
     private readonly TextBox _folderBox;
+    private readonly TextBox _largerBox;
+    private readonly TextBox _olderBox;
     private readonly CheckBox _subfoldersBox;
     private readonly HitListBox _resultListBox;
     private readonly ConcurrentObservableCollection<FileSearchHit> _resultItems = new();
@@ -81,6 +84,8 @@ public class FindFilesDialog : SplitPaneDialog
         _namesBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Find", MaxLength = 512, Placeholder = "name or pattern, e.g. *.log" };
         _textBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Containing", MaxLength = 512, Placeholder = "text inside the files (optional)" };
         _folderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "In", MaxLength = 1024, Placeholder = "folder to search" };
+        _largerBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Larger MB", MaxLength = 12, Placeholder = "blank: any" };
+        _olderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Older days", MaxLength = 6, Placeholder = "blank: any" };
         _subfoldersBox = new CheckBox(themeService) { Label = "Include subfolders", IsChecked = true, HotKeyChar = 'I' };
         _resultListBox = new HitListBox(new ListBoxModel<FileSearchHit>(_resultItems), themeService)
         {
@@ -92,9 +97,22 @@ public class FindFilesDialog : SplitPaneDialog
         AddControl(_namesBox);
         AddControl(_textBox);
         AddControl(_folderBox);
+        AddControl(_largerBox);
+        AddControl(_olderBox);
         AddControl(_subfoldersBox);
         AddControl(_resultListBox);
     }
+
+    private sealed record CriteriaPreset(double? LargerThanMegabytes, int? UnchangedForDays);
+
+    private CriteriaPreset? _preset;
+
+    /// <summary>
+    /// The size and age the next opening starts with: the large and old file finders call this before the dialog shows, and
+    /// the name box starts empty. Null for both leaves it to the last search.
+    /// </summary>
+    public void Preset(double? largerThanMegabytes, int? unchangedForDays) =>
+        _preset = new CriteriaPreset(largerThanMegabytes, unchangedForDays);
 
     /// <summary>The folder a search starts in when the focused panel is not on the local disk.</summary>
     internal static string DefaultFolder => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -113,6 +131,17 @@ public class FindFilesDialog : SplitPaneDialog
         _textBox.Text = previous?.ContainingText ?? string.Empty;
         _subfoldersBox.IsChecked = previous?.IncludeSubfolders ?? true;
         _folderBox.Text = PanelFolder();
+        _largerBox.Text = string.Empty;
+        _olderBox.Text = string.Empty;
+        if (_preset is { } preset)
+        {
+            // A finder command asked for the search: its size and age, and no name, whatever the last search was.
+            _namesBox.Text = string.Empty;
+            _largerBox.Text = preset.LargerThanMegabytes?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
+            _olderBox.Text = preset.UnchangedForDays?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
+            _preset = null;
+        }
+
         _message = _searchService.IsRunning ? string.Empty : _searchService.StatusMessage;
         SyncResults();
     }
@@ -145,15 +174,43 @@ public class FindFilesDialog : SplitPaneDialog
             return;
         }
 
+        if (!TryParseOptional(_largerBox.Text, out var largerMegabytes) || !TryParseOptional(_olderBox.Text, out var olderDays))
+        {
+            _message = "Larger MB and Older days are numbers, or blank.";
+            StateHasChanged();
+            return;
+        }
+
         var query = new FileSearchQuery(
             Path.GetFullPath(folder),
             _namesBox.Text ?? string.Empty,
             _textBox.Text ?? string.Empty,
-            _subfoldersBox.IsChecked);
+            _subfoldersBox.IsChecked,
+            largerMegabytes is { } megabytes ? (long)(megabytes * 1024 * 1024) : null,
+            olderDays is { } days ? DateTime.Now.AddDays(-days) : null);
         _message = string.Empty;
         _ = _searchService.StartAsync(query);
         _resultListBox.SetFocus();
         StateHasChanged();
+    }
+
+    /// <summary>A number the field may leave blank (meaning none). False when it is not a number, or is negative.</summary>
+    private static bool TryParseOptional(string? text, out double? value)
+    {
+        value = null;
+        var trimmed = (text ?? string.Empty).Trim();
+        if (trimmed.Length == 0)
+        {
+            return true;
+        }
+
+        if (!double.TryParse(trimmed, NumberStyles.Float, CultureInfo.InvariantCulture, out var number) || number < 0)
+        {
+            return false;
+        }
+
+        value = number;
+        return true;
     }
 
     private FileSearchHit? SelectedHit()
@@ -340,6 +397,16 @@ public class FindFilesDialog : SplitPaneDialog
 
             _subfoldersBox.Position = new Position(1, 4);
             _subfoldersBox.ViewSize = new Size(Math.Min(innerWidth, 30), 1);
+
+            // The size and the age share the subfolders' row: the boxes sit to its right when there is room for them.
+            _largerBox.Position = new Position(33, 4);
+            _largerBox.ViewSize = new Size(Math.Clamp(innerWidth - 33 - 2, 0, 22), 1);
+            _olderBox.Position = new Position(Math.Min(innerWidth, 33 + 24), 4);
+            _olderBox.ViewSize = new Size(Math.Clamp(innerWidth - 33 - 24 - 1, 0, 20), 1);
+            foreach (var box in new[] { _largerBox, _olderBox })
+            {
+                box.ScrollableModel.ViewSize = box.ViewSize;
+            }
 
             var listTop = FieldRows + 2;
             _resultListBox.Position = new Position(1, listTop + 1);

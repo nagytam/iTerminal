@@ -49,6 +49,8 @@ public class FileMenuItem : MenuItem
             AddMenuItem(new MenuItem("Edit With…\tCtrl+F4", new OpenWithDialogCommand(openWithDialogFactory(), contentModelService, iTerminal.Core.Services.FileAssociations.FileAssociationKind.Edit, textFileEditorDialog), [], themeService));
         }
         AddMenuItem(new MenuItem("Find Files\tF7", new FindFilesDialogCommand(findFilesDialog!), [], themeService));
+        AddMenuItem(new MenuItem("Find Large Files", new FindLargeFilesCommand(findFilesDialog!), [], themeService));
+        AddMenuItem(new MenuItem("Find Old Files", new FindOldFilesCommand(findFilesDialog!), [], themeService));
         AddMenuItem(new MenuItem("-", null, [], themeService));
         AddMenuItem(new MenuItem("Create Folder\tShift+F7", new CreateFolderDialogCommand(createFolderDialog, contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Create File\tShift+F4", new CreateFileDialogCommand(createFileDialog, contentModelService), [], themeService));

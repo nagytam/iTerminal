@@ -62,6 +62,10 @@ public abstract class BackgroundTask : IBackgroundTask, INotifyPropertyChanged
         }
     }
 
+    public PauseGate PauseGate { get; } = new();
+
+    public bool IsPaused => PauseGate.IsPaused;
+
     public CancellationTokenSource CancellationTokenSource { get; private set; }
     protected CancellationToken CancellationToken { get; private set; }
     protected IProgress<uint> Progress { get; private set; }

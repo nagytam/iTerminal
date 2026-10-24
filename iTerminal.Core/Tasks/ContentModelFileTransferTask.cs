@@ -96,7 +96,7 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
 
                 try
                 {
-                    await PipelinedFileCopyHelper.CopyAsync(source, target, sourceUrl, _targetUrl, progress, CancellationToken);
+                    await PipelinedFileCopyHelper.CopyAsync(source, target, sourceUrl, _targetUrl, progress, CancellationToken, PauseGate);
                 }
                 catch (OperationCanceledException)
                 {

@@ -125,7 +125,8 @@ public abstract class ContentModelFolderTransferTask(
                     {
                         currentFile = url.FullName.Shrink(60) ?? string.Empty;
                         Description = $"{ProgressVerb} {ItemsProcessed}/{discoveryTask.ItemsProcessed} file(s){Environment.NewLine}{currentFile}";
-                    });
+                    },
+                    pauseGate: PauseGate);
                 ReportBytes(Interlocked.Read(ref _bytesCopied), discoveryTask.TotalBytes);
 
                 if (DeletesSource && failedItems.Count == 0)

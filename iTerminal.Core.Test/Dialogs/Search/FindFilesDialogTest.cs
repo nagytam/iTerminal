@@ -209,4 +209,16 @@ public class FindFilesDialogTest
 
         Assert.AreEqual(0, (int)dialog.ResultListBoxForTest.ScrollableModel.CursorPosition.Y);
     }
+
+    [TestMethod]
+    public async Task ALargeFilePreset_OpensWithTheSizeAndAnEmptyName()
+    {
+        var dialog = CreateDialog(new FileSearchService());
+        dialog.Preset(largerThanMegabytes: 100, unchangedForDays: null);
+
+        var root = await ShowAsync(dialog);
+
+        AssertScreenContains(Render(root), "Larger MB");
+        AssertScreenContains(Render(root), "100");
+    }
 }

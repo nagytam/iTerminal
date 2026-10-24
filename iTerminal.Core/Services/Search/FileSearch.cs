@@ -12,13 +12,20 @@ namespace iTerminal.Core.Services.Search;
 /// </param>
 /// <param name="ContainingText">Text the file must contain, case-insensitively; empty to match on names only.</param>
 /// <param name="IncludeSubfolders">Whether the walk descends below <paramref name="StartFolder"/>.</param>
+/// <param name="MinBytes">Only files at least this long; null for any size. Setting it, or <paramref name="ModifiedBefore"/>, makes the search find files only.</param>
+/// <param name="ModifiedBefore">Only files last changed at or before this local time; null for any date.</param>
 public sealed record FileSearchQuery(
     string StartFolder,
     string NamePatterns,
     string ContainingText = "",
-    bool IncludeSubfolders = true)
+    bool IncludeSubfolders = true,
+    long? MinBytes = null,
+    DateTime? ModifiedBefore = null)
 {
     public bool SearchesContent => ContainingText.Length > 0;
+
+    /// <summary>Whether the size or the age narrows the search (the large and old file finders).</summary>
+    public bool FiltersBySizeOrAge => MinBytes is not null || ModifiedBefore is not null;
 
     /// <summary>The patterns as the matcher uses them: wildcard-free words wrapped in <c>*…*</c>.</summary>
     internal IReadOnlyList<string> Expressions => FileSearch.ParsePatterns(NamePatterns);
@@ -139,7 +146,7 @@ public static class FileSearch
                     }
 
                     // A folder can only match a name search: it has no content to contain the text.
-                    if (!query.SearchesContent && MatchesName(name, expressions))
+                    if (!query.SearchesContent && !query.FiltersBySizeOrAge && MatchesName(name, expressions))
                     {
                         onHit(new FileSearchHit(child.Path, true, 0, child.Modified));
                         hits++;
@@ -149,7 +156,7 @@ public static class FileSearch
                 }
 
                 files++;
-                if (!MatchesName(name, expressions))
+                if (!MatchesName(name, expressions) || !MeetsSizeAndAge(query, child.Size, child.Modified))
                 {
                     continue;
                 }
@@ -182,6 +189,11 @@ public static class FileSearch
         onProgress?.Invoke(final);
         return final;
     }
+
+    /// <summary>Whether a file is big enough and old enough for the query; with neither set, every file is.</summary>
+    internal static bool MeetsSizeAndAge(FileSearchQuery query, long size, DateTime modified) =>
+        (query.MinBytes is not { } minBytes || size >= minBytes)
+        && (query.ModifiedBefore is not { } before || modified <= before);
 
     /// <summary>
     /// <c>*.cs;*.md</c> split into the expressions <see cref="MatchesName"/> takes: separated by
