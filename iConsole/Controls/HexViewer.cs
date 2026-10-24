@@ -83,7 +83,7 @@ public class HexViewer : Control
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
         long relativeX = (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
         long relativeY = (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y;
-        if (RowCount == 0 || relativeX < 0 || relativeX >= ViewSize.Width || relativeY < 0 || relativeY >= ViewSize.Height)
+        if (!IsEnabled || RowCount == 0 || relativeX < 0 || relativeX >= ViewSize.Width || relativeY < 0 || relativeY >= ViewSize.Height)
         {
             return isHandled;
         }

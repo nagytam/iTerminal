@@ -680,4 +680,70 @@ public class MenuItemTest
         help.OpenMenu();
 
         Assert.IsTrue(help.Position.X + help.ViewSize.Width <= 40, $"{help.Position.X} + {help.ViewSize.Width}");
-    }}
+    }
+    [TestMethod]
+    public async Task HomeAndEnd_SelectTheFirstAndLastEntry_SkippingSeparators()
+    {
+        var mockThemeService = CreateThemeServiceMock();
+        var separatorFirst = new MenuItem("-", null, [], mockThemeService.Object);
+        var childA = new MenuItem("ChildA", null, [], mockThemeService.Object);
+        var childB = new MenuItem("ChildB", null, [], mockThemeService.Object);
+        var childC = new MenuItem("ChildC", null, [], mockThemeService.Object);
+        var separatorLast = new MenuItem("-", null, [], mockThemeService.Object);
+        var parent = new MenuItem("Parent", null, [separatorFirst, childA, childB, childC, separatorLast], mockThemeService.Object);
+        parent.OpenMenu();
+
+        Assert.IsTrue(await parent.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.End, false, false, false)));
+        Assert.IsTrue(childC.IsSelected);
+        Assert.IsFalse(separatorLast.IsSelected);
+
+        Assert.IsTrue(await parent.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Home, false, false, false)));
+        Assert.IsTrue(childA.IsSelected);
+        Assert.IsFalse(childC.IsSelected);
+        Assert.IsFalse(separatorFirst.IsSelected);
+    }
+
+    [TestMethod]
+    public async Task HomeAndEnd_OnAnEmptyDropDown_AreHandledAndChangeNothing()
+    {
+        var mockThemeService = CreateThemeServiceMock();
+        var parent = new MenuItem("Parent", null, [], mockThemeService.Object);
+        parent.OpenMenu();
+
+        Assert.IsTrue(await parent.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.End, false, false, false)));
+        Assert.IsTrue(await parent.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Home, false, false, false)));
+    }
+
+    [TestMethod]
+    public async Task Space_RunsTheSelectedEntryLikeEnter()
+    {
+        var mockThemeService = CreateThemeServiceMock();
+        var mockCommand = new Mock<ICommand>();
+        mockCommand.SetupGet(c => c.Key).Returns(new Key(ConsoleKey.Q, false, false, true));
+        mockCommand.Setup(c => c.CanExecute()).Returns(true);
+        mockCommand.Setup(c => c.RunAsync(null)).ReturnsAsync(true);
+        var leaf = new MenuItem("Quit", mockCommand.Object, [], mockThemeService.Object);
+        var fileMenu = new MenuItem("File", null, [leaf], mockThemeService.Object) { HotKeyChar = 'F' };
+        var menuBar = new MenuBarControl([fileMenu], mockThemeService.Object);
+        fileMenu.OpenMenu();
+
+        Assert.IsTrue(await menuBar.HandleKeyEventAsync(new KeyEvent(' ', ConsoleKey.Spacebar, false, false, false)));
+
+        mockCommand.Verify(c => c.RunAsync(null), Times.Once);
+        Assert.IsFalse(fileMenu.IsOpened);
+    }
+
+    [TestMethod]
+    public async Task Space_OnABranchEntry_DescendsIntoTheSubmenu()
+    {
+        var mockThemeService = CreateThemeServiceMock();
+        var leaf = new MenuItem("Leaf", null, [], mockThemeService.Object);
+        var branch = new MenuItem("Branch", null, [leaf], mockThemeService.Object);
+        var parent = new MenuItem("Parent", null, [branch], mockThemeService.Object);
+        parent.OpenMenu();
+
+        await parent.HandleKeyEventAsync(new KeyEvent(' ', ConsoleKey.Spacebar, false, false, false));
+
+        Assert.IsTrue(branch.IsOpened);
+    }
+}
