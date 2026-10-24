@@ -50,6 +50,7 @@ public class FilePanelFactory(
     SignatureDialog? signatureDialog = null,
     iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
     INotificationService? notificationService = null,
+    EditLinkDialog? editLinkDialog = null,
     iTerminal.Core.Services.Git.IGitService? gitService = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
@@ -95,6 +96,7 @@ public class FilePanelFactory(
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
             notificationService: notificationService,
+            editLinkDialog: editLinkDialog,
             gitService: gitService);
         contentModelService.AddContentBrowser(name, contentBrowser);
         return new FilePanel(
