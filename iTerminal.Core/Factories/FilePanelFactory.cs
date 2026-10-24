@@ -49,7 +49,8 @@ public class FilePanelFactory(
     SecureWipeDialog? secureWipeDialog = null,
     SignatureDialog? signatureDialog = null,
     iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
-    INotificationService? notificationService = null)
+    INotificationService? notificationService = null,
+    EditLinkDialog? editLinkDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -93,7 +94,8 @@ public class FilePanelFactory(
             secureWipeDialog: secureWipeDialog,
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
-            notificationService: notificationService);
+            notificationService: notificationService,
+            editLinkDialog: editLinkDialog);
         contentModelService.AddContentBrowser(name, contentBrowser);
         return new FilePanel(
             name,
