@@ -26,6 +26,8 @@ public class FileLabelServiceTest
     [TestCleanup]
     public void Cleanup()
     {
+        // Windows will not delete a SQLite file while a pooled connection to it is open: release the pool first.
+        Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
         Directory.Delete(_folder, recursive: true);
     }
 
