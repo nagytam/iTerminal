@@ -12,7 +12,7 @@ using iTerminal.Core.Services.Duplicates;
 namespace iTerminal.Core.Dialogs;
 
 /// <summary>
-/// Ctrl+Shift+F7: files with identical content under a folder, grouped, largest waste first. Space
+/// Ctrl+Shift+F6: files with identical content under a folder, grouped, largest waste first. Space
 /// marks a copy, <c>a</c> marks every copy but the oldest in each group (<c>n</c>: but the newest),
 /// <c>u</c> clears the marks, Delete removes the marked files — to the recycle bin where there is one,
 /// after a y/n — and <c>g</c> takes the panel to the folder of the file under the cursor.

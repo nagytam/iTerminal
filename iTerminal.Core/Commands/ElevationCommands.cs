@@ -32,7 +32,17 @@ public class RestartAsAdministratorCommand(
         var desktop = (Control?.GetRootControl() as Screen)?.Desktop;
         AttemptTask = Task.Run(async () =>
         {
-            var outcome = await elevationService.RestartElevatedAsync();
+            ElevationOutcome outcome;
+            try
+            {
+                outcome = await elevationService.RestartElevatedAsync();
+            }
+            catch (Exception exception) when (exception is not OperationCanceledException)
+            {
+                // A platform that throws is a refusal the user is told about; uncaught, the attempt just ended without a word.
+                outcome = new ElevationOutcome(ElevationResult.Failed, exception.Message);
+            }
+
             if (outcome.Started)
             {
                 // The elevated copy waits for this one to end (Windows) or replaces it (Unix).
@@ -91,7 +101,16 @@ public class RunAsAdministratorCommand(
 
         AttemptTask = Task.Run(async () =>
         {
-            var outcome = await elevationService.RunElevatedAsync(path);
+            ElevationOutcome outcome;
+            try
+            {
+                outcome = await elevationService.RunElevatedAsync(path);
+            }
+            catch (Exception exception) when (exception is not OperationCanceledException)
+            {
+                outcome = new ElevationOutcome(ElevationResult.Failed, exception.Message);
+            }
+
             if (!outcome.Started && outcome.Result != ElevationResult.Cancelled)
             {
                 notificationService?.Notify(
