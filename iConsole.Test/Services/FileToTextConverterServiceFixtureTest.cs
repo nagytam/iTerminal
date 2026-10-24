@@ -334,4 +334,183 @@ public class FileToTextConverterServiceFixtureTest
 
         GetOrCreateExpected(file, actual);
     }
+
+    // ── Office 97–2003 binary and OpenDocument presentations ────────────────
+
+    [TestMethod]
+    public async Task ConvertFile_Doc_MatchesExpected()
+    {
+        const string file = "sample.doc";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.Contains("Sample Word Content")), $"[{file}] Expected 'Sample Word Content' in output.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_RichDoc_KeepsTablesAndAccentedText()
+    {
+        const string file = "rich.doc";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.Contains("Árvíztűrő tükörfúrógép")), $"[{file}] Expected the accented heading.");
+        Assert.IsTrue(actual.Any(l => l.Contains("│ Name") && l.Contains("│ Qty")), $"[{file}] Expected the table as a grid.");
+        Assert.IsTrue(actual.Any(l => l.Contains("│ Apple") && l.Contains("│ 3")), $"[{file}] Expected the table's second row.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_Xls_MatchesExpected()
+    {
+        const string file = "sample.xls";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.Contains("Sample Spreadsheet Content")), $"[{file}] Expected 'Sample Spreadsheet Content' in output.");
+        Assert.IsTrue(actual.Any(l => l.Contains("│ 2 │ Row2Col1")), $"[{file}] Expected the second row as a numbered grid row.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_BookXls_ShowsEverySheetWithDatesAndErrors()
+    {
+        const string file = "book.xls";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.Contains("── Budget")), $"[{file}] Expected the first sheet's heading.");
+        Assert.IsTrue(actual.Any(l => l.Contains("── Notes")), $"[{file}] Expected the second sheet's heading.");
+        Assert.IsTrue(actual.Any(l => l.Contains("2026-01-02")), $"[{file}] A date-formatted cell should show as a date.");
+        Assert.IsTrue(actual.Any(l => l.Contains("#VALUE!")), $"[{file}] A stored error should show as the error.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_Ppt_MatchesExpected()
+    {
+        const string file = "sample.ppt";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.Contains("Sample Presentation Content")), $"[{file}] Expected the slide text.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_DeckPpt_ShowsSlidesTitlesAndNotes()
+    {
+        const string file = "deck.ppt";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.StartsWith("── Slide 1: Quarterly Résumé")), $"[{file}] Expected slide 1 with its title.");
+        Assert.IsTrue(actual.Any(l => l.StartsWith("── Slide 2: Figures")), $"[{file}] Expected slide 2 with its title.");
+        Assert.IsTrue(actual.Any(l => l.Contains("Remember to thank the team.")), $"[{file}] Expected the speaker notes.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_Odp_MatchesExpected()
+    {
+        const string file = "sample.odp";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.Contains("Sample Presentation Content")), $"[{file}] Expected the slide text.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_Otp_MatchesExpected()
+    {
+        const string file = "sample.otp";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.Contains("Sample Presentation Content")), $"[{file}] Expected the slide text.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_DeckOdp_ShowsSlidesTitlesTablesAndNotes()
+    {
+        const string file = "deck.odp";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.StartsWith("── Slide 1: Quarterly Résumé")), $"[{file}] Expected slide 1 with its title.");
+        Assert.IsTrue(actual.Any(l => l == "  • First point & more"), $"[{file}] List items should be bullets.");
+        Assert.IsTrue(actual.Any(l => l.Contains("│ Region │ Sales │")), $"[{file}] Expected the slide table as a grid.");
+        Assert.IsTrue(actual.Any(l => l.Contains("Remember to thank the team.")), $"[{file}] Expected the speaker notes.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    // ── RTF and EPUB ────────────────────────────────────────────────────────
+
+    [TestMethod]
+    public async Task ConvertFile_Rtf_MatchesExpected()
+    {
+        const string file = "sample.rtf";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.Contains("Sample Word Content")), $"[{file}] Expected 'Sample Word Content' in output.");
+        Assert.IsFalse(actual.Any(l => l.Contains("\\par") || l.Contains("{")), $"[{file}] Control words should not show.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_EscapesRtf_DecodesCodePagesAndUnicode()
+    {
+        const string file = "escapes.rtf";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.StartsWith("Café au lait — €")), $"[{file}] Expected the escaped text decoded.");
+        Assert.IsTrue(actual.Any(l => l == "€two-byte"), $"[{file}] uc2 should skip two fallback units.");
+        Assert.IsTrue(actual.Any(l => l == "First item"), $"[{file}] List numbering should not show.");
+        Assert.IsTrue(actual.Any(l => l.Contains("Field: linked text")), $"[{file}] A field shows its result, not its instruction.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_Epub_MatchesExpected()
+    {
+        const string file = "sample.epub";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.Contains("Sample Word Content")), $"[{file}] Expected 'Sample Word Content' in output.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_BookEpub_ReadsChaptersInSpineOrder()
+    {
+        const string file = "book.epub";
+        var actual = await ConvertFileAsync(file);
+
+        int one = actual.ToList().FindIndex(l => l == "# Chapter One");
+        int second = actual.ToList().FindIndex(l => l == "## Second");
+        Assert.IsTrue(one >= 0 && second > one, $"[{file}] Chapters should come in spine order.");
+        Assert.IsFalse(actual.Any(l => l.Contains("var x")), $"[{file}] Script content should be dropped.");
+        Assert.IsFalse(actual.Any(l => l.Contains("not in spine")), $"[{file}] The navigation document is not in the spine.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
 }

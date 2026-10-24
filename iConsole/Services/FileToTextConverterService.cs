@@ -49,12 +49,40 @@ public class FileToTextConverterService : IFileToTextConverterService
     private static readonly HashSet<string> PresentationExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "pptx", "pptm", "potx", "potm", "ppsx", "ppsm" };
 
+    private static readonly HashSet<string> OpenDocumentPresentationExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "odp", "otp" };
+
+    private static readonly HashSet<string> EpubExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "epub" };
+
+    private static readonly HashSet<string> RtfExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "rtf" };
+
+    private static readonly HashSet<string> LegacyWordExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "doc" };
+
+    private static readonly HashSet<string> LegacySpreadsheetExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "xls" };
+
+    private static readonly HashSet<string> LegacyPresentationExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "ppt" };
+
+    /// <summary>
+    /// Formats whose text is read from their structure rather than from the bytes as a code page: an RTF file carries
+    /// its own code page, so a code page chosen for it means nothing either.
+    /// </summary>
     private static bool IsOfficeExtension(string extension) =>
         WordExtensions.Contains(extension)
         || OpenDocumentTextExtensions.Contains(extension)
         || SpreadsheetExtensions.Contains(extension)
         || OpenDocumentSpreadsheetExtensions.Contains(extension)
-        || PresentationExtensions.Contains(extension);
+        || PresentationExtensions.Contains(extension)
+        || OpenDocumentPresentationExtensions.Contains(extension)
+        || EpubExtensions.Contains(extension)
+        || RtfExtensions.Contains(extension)
+        || LegacyWordExtensions.Contains(extension)
+        || LegacySpreadsheetExtensions.Contains(extension)
+        || LegacyPresentationExtensions.Contains(extension);
 
     private static void AddLines(ITextModel textModel, IReadOnlyList<string> lines)
     {
@@ -117,6 +145,30 @@ public class FileToTextConverterService : IFileToTextConverterService
             {
                 AddLines(textModel, OfficeTextRenderer.RenderPresentation(url.Path));
             }
+            else if (OpenDocumentPresentationExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, OfficeTextRenderer.RenderOpenDocumentPresentation);
+            }
+            else if (EpubExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, EpubTextReader.Read);
+            }
+            else if (RtfExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, RtfTextReader.Read);
+            }
+            else if (LegacyWordExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, LegacyOfficeTextRenderer.RenderWord);
+            }
+            else if (LegacySpreadsheetExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, LegacyOfficeTextRenderer.RenderWorkbook);
+            }
+            else if (LegacyPresentationExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, LegacyOfficeTextRenderer.RenderPresentation);
+            }
             else
             {
                 await ReadTextFileAsync(url, fileSystem, textModel);
@@ -169,6 +221,23 @@ public class FileToTextConverterService : IFileToTextConverterService
                     textModel.Lines.Add(trimmed);
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Reads a file's bytes from whichever drive it is on and renders them. The renderers take bytes rather than a
+    /// path, so a document on an SSH, archive or memory drive reads the same as one on disk.
+    /// </summary>
+    private static async Task ReadBinaryFileAsync(
+        Url url,
+        IFileSystem fileSystem,
+        ITextModel textModel,
+        Func<byte[], IReadOnlyList<string>> render)
+    {
+        var memoryFile = await fileSystem.ReadFileAsync(url);
+        if (memoryFile?.Content is { } content)
+        {
+            AddLines(textModel, render(content));
         }
     }
 

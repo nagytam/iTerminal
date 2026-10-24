@@ -18,6 +18,26 @@ real pause/seek/volume and a working output-device selector possible on both pla
 - **Tag reading** has two shapes off one parser. `MusicTagReader.Read` returns title/artist/album for the playlist and the library index; `MusicTagReader.ReadAll` returns the whole ID3 block (every text frame, comments, cover-art size, numeric genres resolved) for the F3 viewer. `FlacTagReader` covers what ID3 cannot: FLAC's Vorbis comments *and* its STREAMINFO, which is also where a FLAC's duration and bit depth come from without forking ffmpeg. Ogg/Opus/M4A tags are not read — those files show their name, size and "needs ffmpeg" instead of inventing metadata.
 - **`IMusicMetadataService`** (→ `MusicMetadataService`) is what the viewer actually calls: it picks the tag reader by container and probes duration/format with the managed decoders only, for the same reason `MusicLibraryService.ProbeDuration` does. Async by contract; the dialog awaits it on a background task and repaints when it lands.
 
+### What the F3 viewer reads (`iConsole/Services/`)
+F3 on a file that is not music, video, a picture or a solution opens `FileViewerDialog`, which asks
+`FileToTextConverterService` for lines. Each format has a reader, and every reader takes the file's bytes
+rather than a path, so a document on an SSH, archive or memory drive reads the same as one on disk:
+
+- **OpenXML and OpenDocument** (`OfficeTextRenderer`): Word, Excel, PowerPoint, and `.odt`, `.ods`, `.odp`/`.otp`.
+- **Office 97–2003** (`LegacyOfficeTextRenderer`): `.doc`, `.xls`, `.ppt`. These are OLE2 compound files, opened
+  with OpenMcdf. The reader takes the text streams only: the piece table and text stream of a `.doc`, the BIFF8
+  cell records and shared-string table of an `.xls` (dates and stored errors shown as they are in the sheet), and
+  the text atoms of a `.ppt` reached through its persist directory, with the notes list for speaker notes.
+  A password-protected workbook says so.
+- **RTF** (`RtfTextReader`): a hand-written reader. Destinations that are not body text (fonts, colours, styles,
+  metadata, pictures, objects, headers and footers, list numbering) are skipped whole; `\'hh` is decoded with the
+  declared `\ansicpg` and `\uN` skips its fallback.
+- **EPUB** (`EpubTextReader`): `container.xml` names the OPF, the spine orders the XHTML chapters.
+- **HTML, PDF, plain text, images as ASCII art and .NET binaries** are read as before.
+
+These readers do not feed the document search index: `DocumentTextExtractorFactory` still lists only the
+extensions it always had.
+
 ### Code pages in the viewer and the editor (`TextEncodings`)
 **F8 / Shift+F8** in the F3 viewer and the F4 editor re-read the text under the next / previous code page (UTF-8, UTF-16, Windows-1250/1251/1252/1253/1254/1257, ISO-8859-1/2/15, DOS 437/852/866, KOI8-R, Shift-JIS, GBK, Korean, Big5); the status bar's encoding indicator shows the current one and the editor saves with it.
 

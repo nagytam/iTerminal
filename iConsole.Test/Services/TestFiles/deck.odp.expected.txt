@@ -1,0 +1,12 @@
+﻿── Slide 1: Quarterly Résumé — Ünïcode ─────────────────────────
+  • First point & more
+  • Second point
+
+  Notes:
+    Remember to thank the team.
+
+── Slide 2: Figures ────────────────────────────────────────────
+┌────────┬───────┐
+│ Region │ Sales │
+│ North  │ 120   │
+└────────┴───────┘

@@ -1,0 +1,8 @@
+﻿Café au lait — €
+Euro  and é fallback
+bold plain {braces} back\slash	tabbed
+next line
+First item
+Field: linked text
+€two-byte
+été done

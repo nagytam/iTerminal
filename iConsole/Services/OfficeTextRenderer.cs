@@ -28,7 +28,7 @@ public static class OfficeTextRenderer
     private const int MaxSheetColumnWidth = 30;
     private const int TableBudgetWidth = 110;
 
-    private readonly record struct GridCell(string Text, bool RightAligned = false);
+    internal readonly record struct GridCell(string Text, bool RightAligned = false);
 
     public static IReadOnlyList<string> RenderWord(string path)
     {
@@ -141,6 +141,46 @@ public static class OfficeTextRenderer
         catch (Exception exception)
         {
             lines.Add($"[Could not read the workbook: {exception.Message}]");
+        }
+
+        return Trim(lines);
+    }
+
+    /// <summary>
+    /// Renders an OpenDocument presentation (.odp/.otp) the way <see cref="RenderPresentation"/> renders PowerPoint:
+    /// one framed section per slide with its title, outline and speaker notes. Takes the file's bytes rather than
+    /// a path, so a presentation on any drive (an SSH or archive one included) can be read.
+    /// </summary>
+    public static IReadOnlyList<string> RenderOpenDocumentPresentation(byte[] content)
+    {
+        List<string> lines = [];
+        try
+        {
+            using ZipArchive archive = new(new MemoryStream(content), ZipArchiveMode.Read);
+            ZipArchiveEntry? entry = archive.GetEntry("content.xml");
+            if (entry is null)
+            {
+                lines.Add("[Could not read the presentation: content.xml is missing]");
+                return lines;
+            }
+
+            XDocument document;
+            using (Stream stream = entry.Open())
+            {
+                document = XDocument.Load(stream);
+            }
+
+            XElement? presentation = document.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "presentation");
+            int number = 0;
+            foreach (XElement page in presentation?.Elements(DrawNs + "page") ?? [])
+            {
+                number++;
+                AppendOdfSlide(lines, page, number);
+            }
+        }
+        catch (Exception exception)
+        {
+            lines.Add($"[Could not read the presentation: {exception.Message}]");
         }
 
         return Trim(lines);
@@ -344,6 +384,77 @@ public static class OfficeTextRenderer
     private static readonly XNamespace OfficeNs = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";
     private static readonly XNamespace TextNs = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
     private static readonly XNamespace TableNs = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
+    private static readonly XNamespace DrawNs = "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0";
+    private static readonly XNamespace PresentationNs = "urn:oasis:names:tc:opendocument:xmlns:presentation:1.0";
+
+    /// <summary>
+    /// One slide of an OpenDocument presentation: its title frame names the heading, every other frame and custom
+    /// shape contributes its text (or table) in document order, and the notes frames follow the slide's content.
+    /// </summary>
+    private static void AppendOdfSlide(List<string> lines, XElement page, int number)
+    {
+        List<XElement> shapes = [.. page.Elements().Where(e => e.Name == DrawNs + "frame" || e.Name == DrawNs + "custom-shape")];
+        // A title is tagged as one. Writers that leave it untagged, as LibreOffice does for a title layout, put a
+        // single-paragraph frame first.
+        XElement? titleShape = shapes.FirstOrDefault(IsOdfTitle);
+        if (titleShape is null && shapes.Count > 0 && shapes[0].Descendants(TextNs + "p").Count() == 1)
+        {
+            titleShape = shapes[0];
+        }
+
+        string title = titleShape is null ? string.Empty : string.Join(" ", titleShape.Descendants(TextNs + "p").Select(OdfText).Where(t => t.Length > 0));
+
+        AppendHeading(lines, title.Length > 0 ? $"Slide {number}: {title}" : $"Slide {number}");
+
+        foreach (XElement shape in shapes.Where(s => !ReferenceEquals(s, titleShape)))
+        {
+            AppendOdfBlocks(lines, shape, 0);
+            foreach (XElement box in shape.Elements(DrawNs + "text-box"))
+            {
+                AppendOdfSlideBox(lines, box);
+            }
+        }
+
+        List<string> notes = [];
+        foreach (XElement frame in page.Element(PresentationNs + "notes")?.Elements(DrawNs + "frame") ?? [])
+        {
+            foreach (XElement box in frame.Elements(DrawNs + "text-box"))
+            {
+                AppendOdfBlocks(notes, box, 0);
+            }
+        }
+
+        if (notes.Any(note => note.Length > 0))
+        {
+            lines.Add(string.Empty);
+            lines.Add("  Notes:");
+            lines.AddRange(notes.Where(note => note.Length > 0).Select(note => $"    {note}"));
+        }
+
+        lines.Add(string.Empty);
+    }
+
+    /// <summary>
+    /// The text of a slide's text box. Its paragraphs are bullets, as the PowerPoint renderer shows an outline, and its
+    /// lists keep their own depth.
+    /// </summary>
+    private static void AppendOdfSlideBox(List<string> lines, XElement box)
+    {
+        foreach (XElement child in box.Elements())
+        {
+            if (child.Name == TextNs + "p")
+            {
+                AppendOdfParagraph(lines, child, 1);
+            }
+            else if (child.Name == TextNs + "list")
+            {
+                AppendOdfBlocks(lines, child, 1);
+            }
+        }
+    }
+
+    private static bool IsOdfTitle(XElement shape) =>
+        (string?)shape.Attribute(PresentationNs + "class") == "title";
 
     private static void AppendOdfBlocks(List<string> lines, XElement container, int listDepth)
     {
@@ -639,7 +750,7 @@ public static class OfficeTextRenderer
     }
 
     /// <summary>The grid of a sheet: a header row of column letters, then each non-empty row under its number.</summary>
-    private static void AppendCellGrid(List<string> lines, List<(uint Row, Dictionary<int, GridCell> Cells)> rows, int columns, bool truncatedRows, bool truncatedColumns)
+    internal static void AppendCellGrid(List<string> lines, List<(uint Row, Dictionary<int, GridCell> Cells)> rows, int columns, bool truncatedRows, bool truncatedColumns)
     {
         if (rows.Count == 0)
         {
@@ -701,7 +812,13 @@ public static class OfficeTextRenderer
         }
 
         uint style = cell.StyleIndex?.Value ?? 0;
-        if (type == CellValues.Date || (style < dateStyles.Length && dateStyles[style]))
+        return NumberCell(number, type == CellValues.Date || (style < dateStyles.Length && dateStyles[style]));
+    }
+
+    /// <summary>A number as a sheet shows it: a date or time for a date-formatted cell, otherwise the number itself.</summary>
+    internal static GridCell NumberCell(double number, bool isDate)
+    {
+        if (isDate)
         {
             try
             {
@@ -750,7 +867,7 @@ public static class OfficeTextRenderer
         })];
     }
 
-    private static bool IsDateFormat(string code)
+    internal static bool IsDateFormat(string code)
     {
         bool quoted = false;
         bool bracketed = false;
@@ -891,7 +1008,7 @@ public static class OfficeTextRenderer
 
     #region Shared drawing
 
-    private static void AppendHeading(List<string> lines, string heading) =>
+    internal static void AppendHeading(List<string> lines, string heading) =>
         lines.Add($"── {heading} {new string('─', Math.Max(0, 60 - heading.Length))}");
 
     private static string Clean(string text) =>
@@ -902,6 +1019,10 @@ public static class OfficeTextRenderer
     /// sheets, a share of <see cref="TableBudgetWidth"/> for document tables — and longer text is cut
     /// with an ellipsis rather than wrapped, so every row stays one line.
     /// </summary>
+    /// <summary>A box-drawn table of plain text cells, for a document table whose cells have no formatting to keep.</summary>
+    internal static void AppendTextTable(List<string> lines, IReadOnlyList<IReadOnlyList<string>> rows) =>
+        AppendGrid(lines, [.. rows.Select(row => row.Select(text => new GridCell(text)).ToArray())], headerRows: 0, widthCap: null);
+
     private static void AppendGrid(List<string> lines, List<GridCell[]> rows, int headerRows, int? widthCap)
     {
         int columns = rows.Count == 0 ? 0 : rows.Max(row => row.Length);
@@ -949,7 +1070,7 @@ public static class OfficeTextRenderer
         lines.Add(Border('└', '┴', '┘'));
     }
 
-    private static List<string> Trim(List<string> lines)
+    internal static List<string> Trim(List<string> lines)
     {
         while (lines.Count > 0 && lines[^1].Length == 0)
         {
