@@ -18,7 +18,7 @@ public class ImageFileViewerMetadataTest
         File.WriteAllBytes(path, [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0, 0, 0, 0, 0, 0, 0, 0]);
         try
         {
-            var dialog = new ImageFileViewerDialog(Mock.Of<IVideoDecoderFactory>(), TestTheme()) { FilePath = path };
+            var dialog = new ImageFileViewerDialog(Mock.Of<IVideoDecoderFactory>(), Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme()) { FilePath = path };
             await ShowAsync(dialog);
 
             await dialog.HandleKeyEventAsync(new KeyEvent('i', ConsoleKey.I, false, false, false));
@@ -42,10 +42,47 @@ public class ImageFileViewerMetadataTest
         File.WriteAllBytes(path, [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
         try
         {
-            var dialog = new ImageFileViewerDialog(Mock.Of<IVideoDecoderFactory>(), TestTheme()) { FilePath = path };
+            var dialog = new ImageFileViewerDialog(Mock.Of<IVideoDecoderFactory>(), Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme()) { FilePath = path };
             await ShowAsync(dialog);
 
             CollectionAssert.Contains(dialog.MetadataLines().Where(l => !string.IsNullOrEmpty(l)).ToList(), "  Format           PNG");
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    public async Task E_OutsideTheMetadataView_IsNotHandled()
+    {
+        string path = Path.Combine(Path.GetTempPath(), "meta-" + Guid.NewGuid().ToString("N") + ".png");
+        File.WriteAllBytes(path, [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
+        try
+        {
+            var dialog = new ImageFileViewerDialog(Mock.Of<IVideoDecoderFactory>(), Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme()) { FilePath = path };
+            await ShowAsync(dialog);
+
+            Assert.IsFalse(await dialog.HandleKeyEventAsync(new KeyEvent('e', ConsoleKey.E, false, false, false)));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    public async Task E_InTheMetadataView_OpensTheTextEditor()
+    {
+        string path = Path.Combine(Path.GetTempPath(), "meta-" + Guid.NewGuid().ToString("N") + ".png");
+        File.WriteAllBytes(path, [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
+        try
+        {
+            var dialog = new ImageFileViewerDialog(Mock.Of<IVideoDecoderFactory>(), Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme()) { FilePath = path };
+            await ShowAsync(dialog);
+            await dialog.HandleKeyEventAsync(new KeyEvent('i', ConsoleKey.I, false, false, false));
+
+            Assert.IsTrue(await dialog.HandleKeyEventAsync(new KeyEvent('e', ConsoleKey.E, false, false, false)));
         }
         finally
         {

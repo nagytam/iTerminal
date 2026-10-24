@@ -45,7 +45,7 @@ public class FolderSelectorDialogTest
         var dialog = CreateDialog(harness);
 
         CollectionAssert.AreEqual(
-            new[] { "0-Favourites", "1-Drives", "2-History", "3-Places", "4-Folder Tree", "5-SSH", "6-Path" },
+            new[] { "0-Favourites", "1-Drives", "2-Recent", "3-Places", "4-Folder Tree", "5-SSH", "6-Path" },
             dialog.TabPages.Select(p => p.Name).ToArray());
     }
 

@@ -20,6 +20,7 @@ public class EditMenuItem : MenuItem
         MarkPatternDialog? unmarkPatternDialog = null,
         CompareFoldersDialog? compareFoldersDialog = null,
         FileDiffDialog? fileDiffDialog = null,
+        SynchronizeFoldersDialog? synchronizeFoldersDialog = null,
         iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null)
         : base("Edit", null, [], themeService)
     {
@@ -61,6 +62,10 @@ public class EditMenuItem : MenuItem
             // Comparing ends in marks — what each side should copy across — so it lives with them.
             AddMenuItem(new MenuItem("-", null, [], themeService));
             AddMenuItem(new MenuItem("Compare Folders\tShift+F2", new CompareFoldersDialogCommand(compareFoldersDialog, contentModelService), [], themeService));
+        }
+        if (synchronizeFoldersDialog is not null)
+        {
+            AddMenuItem(new MenuItem("Synchronise Folders", new SynchronizeFoldersDialogCommand(synchronizeFoldersDialog), [], themeService));
         }
         if (fileDiffDialog is not null)
         {

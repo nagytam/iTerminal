@@ -62,6 +62,58 @@ public class HexViewer : Control
 
     public ScrollableModel ScrollableModel { get; }
 
+    /// <summary>
+    /// Puts the cursor on the row of a byte and scrolls so that row sits a third of the way down the view. An offset past
+    /// the end goes to the last byte; an empty dump has nothing to go to.
+    /// </summary>
+    public void ShowOffset(long offset)
+    {
+        if (_data.Length == 0)
+        {
+            return;
+        }
+
+        long clamped = Math.Clamp(offset, 0, _data.Length - 1);
+        long row = clamped / BytesPerRow;
+        int visibleRows = Math.Max(1, (int)ViewSize.Height);
+        long maxScroll = Math.Max(0, RowCount - visibleRows);
+        ScrollableModel.CursorPosition.Y = row;
+        ScrollableModel.ScrollPosition.Y = Math.Clamp(row - visibleRows / 3, 0, maxScroll);
+        StateHasChanged();
+    }
+
+    /// <summary>The size of the dump in bytes, for a go-to-offset to check its target against.</summary>
+    public int Length => _data.Length;
+
+    /// <summary>
+    /// Reads an offset typed by a person: a decimal number, or a hexadecimal one written with a <c>0x</c> prefix or an
+    /// <c>h</c> suffix (<c>0x1F</c>, <c>1Fh</c>). Returns false for anything else.
+    /// </summary>
+    public static bool TryParseOffset(string text, out long offset)
+    {
+        string value = text.Trim();
+        offset = 0;
+        if (value.Length == 0)
+        {
+            return false;
+        }
+
+        if (value.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+        {
+            return long.TryParse(value[2..], System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.InvariantCulture, out offset)
+                && offset >= 0;
+        }
+
+        if (value.EndsWith('h') || value.EndsWith('H'))
+        {
+            return long.TryParse(value[..^1], System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.InvariantCulture, out offset)
+                && offset >= 0;
+        }
+
+        return long.TryParse(value, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out offset)
+            && offset >= 0;
+    }
+
     /// <summary>Byte offset of the first byte in the cursor row.</summary>
     public int SelectedOffset => (int)ScrollableModel.CursorPosition.Y * BytesPerRow;
 

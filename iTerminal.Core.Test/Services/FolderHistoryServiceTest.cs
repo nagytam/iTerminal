@@ -136,4 +136,53 @@ public class FolderHistoryServiceTest
         Assert.AreEqual("file:///path2", service.History[1]);
         Assert.AreEqual("file:///path1", service.History[2]);
     }
+
+    [TestMethod]
+    public void Add_AFolderVisitedAgain_MovesToTheTop()
+    {
+        var mockSettingsService = new Mock<ISettingsService>();
+        mockSettingsService.Setup(s => s.Get(It.IsAny<string>())).Returns((string?)null);
+        var service = new FolderHistoryService(mockSettingsService.Object);
+
+        service.Add(new Url("file:///a"));
+        service.Add(new Url("file:///b"));
+        service.Add(new Url("file:///a"));
+
+        CollectionAssert.AreEqual(new[] { "file:///a", "file:///b" }, service.History.AsSnapshot().ToList());
+    }
+
+    [TestMethod]
+    public void Add_KeepsAtMostTheMaximum_DroppingTheLeastRecentlyUsed()
+    {
+        var mockSettingsService = new Mock<ISettingsService>();
+        mockSettingsService.Setup(s => s.Get(It.IsAny<string>())).Returns((string?)null);
+        var service = new FolderHistoryService(mockSettingsService.Object) { MaxHistoryItems = 3 };
+
+        service.Add(new Url("file:///a"));
+        service.Add(new Url("file:///b"));
+        service.Add(new Url("file:///c"));
+        service.Add(new Url("file:///a"));
+        service.Add(new Url("file:///d"));
+
+        CollectionAssert.AreEqual(new[] { "file:///d", "file:///a", "file:///c" }, service.History.AsSnapshot().ToList());
+    }
+
+    [TestMethod]
+    public void Add_SavesTheOrderSoItSurvivesARestart()
+    {
+        string? saved = null;
+        var mockSettingsService = new Mock<ISettingsService>();
+        mockSettingsService.Setup(s => s.Get(It.IsAny<string>())).Returns((string?)null);
+        mockSettingsService.Setup(s => s.Set(SettingsService.FOLDER_HISTORY, It.IsAny<string>())).Callback<string, string>((_, value) => saved = value);
+        var service = new FolderHistoryService(mockSettingsService.Object);
+        service.Add(new Url("file:///a"));
+        service.Add(new Url("file:///b"));
+        service.Add(new Url("file:///a"));
+
+        var restarted = new Mock<ISettingsService>();
+        restarted.Setup(s => s.Get(SettingsService.FOLDER_HISTORY)).Returns(saved);
+        var reloaded = new FolderHistoryService(restarted.Object);
+
+        CollectionAssert.AreEqual(new[] { "file:///a", "file:///b" }, reloaded.History.AsSnapshot().ToList());
+    }
 }
