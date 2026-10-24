@@ -273,7 +273,7 @@ public class ControlInteractionTest
         await rating.HandleKeyEventAsync(Key(ConsoleKey.D3, '3'));
         Assert.AreEqual(3, rating.Value);
         await rating.HandleKeyEventAsync(Key(ConsoleKey.D9, '9'));
-        Assert.AreEqual(5, rating.Value);
+        Assert.AreEqual(3, rating.Value, "9 is past the five stars: ignored, not clamped");
         Assert.IsFalse(await rating.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
@@ -910,7 +910,7 @@ public class ControlInteractionTest
         await spinner.HandleKeyEventAsync(Key(ConsoleKey.End));
         Assert.AreEqual(100, spinner.Value);
         await spinner.HandleKeyEventAsync(Key(ConsoleKey.D9, '9'));
-        Assert.AreEqual(100, spinner.Value);
+        Assert.AreEqual(9, spinner.Value, "1009 is out of range: the 9 starts a new entry");
     }
 
     [TestMethod]

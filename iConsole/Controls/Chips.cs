@@ -190,17 +190,17 @@ public class Chips : Control, IReadOnly
         }
 
         int column = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
+        if (!IsFocused)
+        {
+            SetFocus();
+        }
+
         foreach ((int index, int start) in Visible((int)ViewSize.Width))
         {
             int length = Label(index).Length;
             if (column < start || column >= start + length)
             {
                 continue;
-            }
-
-            if (!IsFocused)
-            {
-                SetFocus();
             }
 
             if (index == _items.Count)

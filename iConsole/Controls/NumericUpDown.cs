@@ -27,6 +27,9 @@ public class NumericUpDown : Control, IReadOnly
     private int _upArrowOffset = -1;
     private int _downArrowOffset = -1;
 
+    // "-" on a zero cannot flip anything, so it is remembered for the next digit: typing -5 gives -5, not 5.
+    private bool _pendingMinus;
+
     public NumericUpDown(IThemeService themeService) : base(themeService)
     {
         CanFocus = true;
@@ -132,6 +135,8 @@ public class NumericUpDown : Control, IReadOnly
             return isHandled;
         }
 
+        bool minusPending = _pendingMinus;
+        _pendingMinus = false;
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.UpArrow:
@@ -164,11 +169,12 @@ public class NumericUpDown : Control, IReadOnly
         {
             if (char.IsDigit(keyEvent.KeyChar))
             {
-                AppendDigit(keyEvent.KeyChar - '0');
+                AppendDigit(keyEvent.KeyChar - '0', minusPending);
                 return true;
             }
             if (keyEvent.KeyChar == '-' && _minimum < 0)
             {
+                _pendingMinus = _value == 0 && !minusPending;
                 Value = SafeNegate(_value);
                 return true;
             }
@@ -224,12 +230,23 @@ public class NumericUpDown : Control, IReadOnly
 
     private void Increment(long delta) => Value = SafeAdd(_value, delta);
 
-    private void AppendDigit(int digit)
+    private void AppendDigit(int digit, bool minusPending)
     {
-        var negative = _value < 0;
+        var negative = _value < 0 || (minusPending && _value == 0);
         var magnitude = _value == long.MinValue ? long.MaxValue : Math.Abs(_value);
         var candidate = SafeAdd(SafeMultiplyByTen(magnitude), digit);
-        Value = negative ? SafeNegate(candidate) : candidate;
+        var typed = negative ? SafeNegate(candidate) : candidate;
+        // A digit that would carry the value past the bound starts a new entry instead of sticking to the bound.
+        if (typed > _maximum || typed < _minimum)
+        {
+            var fresh = negative ? -(long)digit : digit;
+            if (fresh >= _minimum && fresh <= _maximum)
+            {
+                typed = fresh;
+            }
+        }
+
+        Value = typed;
     }
 
     private static long SafeAdd(long a, long b)

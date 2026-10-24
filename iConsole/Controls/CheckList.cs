@@ -48,9 +48,9 @@ public class CheckList : Control, IReadOnly
         HashSet<string> preChecked = [.. checkedTexts ?? []];
         _items.Clear();
         _items.AddRange(texts.Select(t => (t, preChecked.Contains(t))));
-        _cursor = Math.Clamp(_cursor, 0, Math.Max(0, _items.Count - 1));
         _scroll = 0;
-        StateHasChanged();
+        // Scrolls back to the cursor: it is kept, so a window at the top would leave it off screen.
+        MoveCursor(_cursor);
     }
 
     public void SetChecked(int index, bool isChecked)
