@@ -147,6 +147,17 @@ public class Toolbar : Control
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (mouseEvent.WheelDelta != 0 && IsEnabled && _items.Count > 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            int step = NextEnabled(_active, mouseEvent.WheelDelta > 0 ? -1 : 1);
+            if (step >= 0)
+            {
+                ActiveIndex = step;
+            }
+
+            return true;
+        }
+
         if (!mouseEvent.LeftClicked || !IsEnabled || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;

@@ -970,4 +970,36 @@ public class ControlInteractionTest
         Assert.AreEqual(2, activated.Count);
         Assert.AreEqual(activated[0], activated[1]);
     }
+
+    [TestMethod]
+    public async Task Breadcrumb_Wheel_StepsTheActiveSegment_AndStopsAtTheEnds()
+    {
+        Breadcrumb crumb = new(Theme()) { Segments = ["A", "B", "C"], Position = new Position(0, 0), ViewSize = new Size(30, 1) };
+        crumb.SetFocus();
+        crumb.ActiveIndex = 0;
+        MouseEvent down = new() { Position = new Position(1, 0), WheelDelta = -1 };
+
+        Assert.IsTrue(await crumb.HandleMouseEventAsync(down));
+        Assert.AreEqual(1, crumb.ActiveIndex);
+        await crumb.HandleMouseEventAsync(down);
+        await crumb.HandleMouseEventAsync(down);
+        Assert.AreEqual(2, crumb.ActiveIndex);
+
+        await crumb.HandleMouseEventAsync(new MouseEvent { Position = new Position(1, 0), WheelDelta = 1 });
+        Assert.AreEqual(1, crumb.ActiveIndex);
+    }
+
+    [TestMethod]
+    public async Task Breadcrumb_WheelElsewhereOrDisabled_IsIgnored()
+    {
+        Breadcrumb crumb = new(Theme()) { Segments = ["A", "B", "C"], Position = new Position(0, 0), ViewSize = new Size(30, 1) };
+        crumb.ActiveIndex = 1;
+
+        await crumb.HandleMouseEventAsync(new MouseEvent { Position = new Position(50, 9), WheelDelta = -1 });
+        Assert.AreEqual(1, crumb.ActiveIndex);
+
+        crumb.IsEnabled = false;
+        await crumb.HandleMouseEventAsync(new MouseEvent { Position = new Position(1, 0), WheelDelta = -1 });
+        Assert.AreEqual(1, crumb.ActiveIndex);
+    }
 }

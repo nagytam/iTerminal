@@ -368,4 +368,36 @@ public class GroupAndToolbarInteractionTest
         await list.HandleMouseEventAsync(Click(1, 2));
         Assert.AreEqual(2, (int)list.ScrollableModel.CursorPosition.Y);
     }
+
+    [TestMethod]
+    public async Task Toolbar_Wheel_StepsOverTheEnabledItems_AndStopsAtTheEnds()
+    {
+        Toolbar toolbar = NewToolbar();
+        MouseEvent down = new() { Position = new Position(1, 0), WheelDelta = -1 };
+        MouseEvent up = new() { Position = new Position(1, 0), WheelDelta = 1 };
+        Assert.AreEqual(0, toolbar.ActiveIndex);
+
+        Assert.IsTrue(await toolbar.HandleMouseEventAsync(down));
+        Assert.AreEqual(2, toolbar.ActiveIndex, "the disabled Save is skipped");
+        await toolbar.HandleMouseEventAsync(down);
+        Assert.AreEqual(2, toolbar.ActiveIndex);
+
+        await toolbar.HandleMouseEventAsync(up);
+        Assert.AreEqual(0, toolbar.ActiveIndex);
+        await toolbar.HandleMouseEventAsync(up);
+        Assert.AreEqual(0, toolbar.ActiveIndex);
+    }
+
+    [TestMethod]
+    public async Task Toolbar_WheelElsewhereOrDisabled_IsIgnored()
+    {
+        Toolbar toolbar = NewToolbar();
+
+        await toolbar.HandleMouseEventAsync(new MouseEvent { Position = new Position(60, 5), WheelDelta = -1 });
+        Assert.AreEqual(0, toolbar.ActiveIndex);
+
+        toolbar.IsEnabled = false;
+        await toolbar.HandleMouseEventAsync(new MouseEvent { Position = new Position(1, 0), WheelDelta = -1 });
+        Assert.AreEqual(0, toolbar.ActiveIndex);
+    }
 }

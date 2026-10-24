@@ -278,7 +278,17 @@ public class TreeView : Control
             return true;
         }
 
-        if (!IsFocused || !IsEnabled || keyEvent.Control || keyEvent.Alt || keyEvent.Shift)
+        if (!IsFocused || !IsEnabled || keyEvent.Control || keyEvent.Alt)
+        {
+            return false;
+        }
+
+        if (HandleExpandKey(keyEvent))
+        {
+            return true;
+        }
+
+        if (keyEvent.Shift)
         {
             return false;
         }
@@ -313,6 +323,29 @@ public class TreeView : Control
             StateHasChanged();
         }
 
+        return true;
+    }
+
+    /// <summary>
+    /// Enter and Space toggle the focused node, <c>+</c> opens it and <c>-</c> closes it (the focus stays on it). A node
+    /// without children leaves the key to the host. Before this opening a node meant stepping into it with Right.
+    /// </summary>
+    private bool HandleExpandKey(KeyEvent keyEvent)
+    {
+        bool toggle = keyEvent.ConsoleKey is ConsoleKey.Enter or ConsoleKey.Spacebar && !keyEvent.Shift;
+        if (!toggle && keyEvent.KeyChar is not ('+' or '-'))
+        {
+            return false;
+        }
+
+        IHierarchicalItemModel? focused = Root.GetFocusedItem();
+        if (focused is null || !focused.Children.Any())
+        {
+            return false;
+        }
+
+        focused.IsOpened = toggle ? !focused.IsOpened : keyEvent.KeyChar == '+';
+        StateHasChanged();
         return true;
     }
 

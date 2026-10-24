@@ -175,6 +175,19 @@ public class Calendar : Control, IReadOnly
             return isHandled;
         }
 
+        if (keyEvent.Control && !keyEvent.Alt && !IsReadOnly
+            && keyEvent.ConsoleKey is ConsoleKey.PageUp or ConsoleKey.PageDown)
+        {
+            SelectedDate = AddMonths(_selected, keyEvent.ConsoleKey == ConsoleKey.PageUp ? -12 : 12);
+            return true;
+        }
+
+        if (!IsReadOnly && !keyEvent.Control && !keyEvent.Alt && keyEvent.KeyChar is 't' or 'T')
+        {
+            SelectedDate = Today;
+            return true;
+        }
+
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.LeftArrow when !IsReadOnly:
@@ -202,6 +215,7 @@ public class Calendar : Control, IReadOnly
                 SelectedDate = new DateOnly(_selected.Year, _selected.Month, DateTime.DaysInMonth(_selected.Year, _selected.Month));
                 return true;
             case ConsoleKey.Enter:
+            case ConsoleKey.Spacebar:
                 DateActivated?.Invoke(this, _selected);
                 return true;
         }
