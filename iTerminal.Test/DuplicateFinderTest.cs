@@ -1,6 +1,6 @@
 namespace iTerminal.Test;
 
-/// <summary>Ctrl+Shift+F7, end to end: the whole app finds the copies under the panel's folder and marks the extra ones.</summary>
+/// <summary>Ctrl+Shift+F6, end to end: the whole app finds the copies under the panel's folder and marks the extra ones.</summary>
 [TestClass]
 public class DuplicateFinderTest
 {
@@ -23,7 +23,7 @@ public class DuplicateFinderTest
     [TestMethod]
     public async Task CtrlShiftF7ListsTheCopiesAndAMarksAllButTheOldest()
     {
-        await _app.PressAsync("Ctrl+Shift+F7");
+        await _app.PressAsync("Ctrl+Shift+F6");
         var dialog = await _app.Driver.WaitForModalAsync<Core.Dialogs.DuplicateFinderDialog>();
         await dialog.Scan!.Completion;
 

@@ -293,7 +293,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();
         services.AddTransient<PropertiesDialog>();
         services.AddTransient<ChecksumDialog>();
-        // Ctrl+Shift+F8 secure wipe, Ctrl+Shift+F7 signatures (sign and verify).
+        // Ctrl+Shift+F8 secure wipe, Ctrl+Shift+F7 signatures, Ctrl+Shift+F6 duplicates (sign and verify).
         services.AddSingleton<iTerminal.Core.Services.Wipe.ISecureWipeService, iTerminal.Core.Services.Wipe.SecureWipeService>();
         services.AddSingleton<iTerminal.Core.Services.Signing.ISignatureService, iTerminal.Core.Services.Signing.SignatureService>();
         // Scan with Microsoft Defender (Windows): the file panel's context menu and the File menu.

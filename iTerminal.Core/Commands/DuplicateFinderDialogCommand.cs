@@ -5,7 +5,7 @@ using iTerminal.Core.Dialogs;
 namespace iTerminal.Core.Commands;
 
 /// <summary>
-/// Ctrl+Shift+F7: find files with identical content under the folder in the panel
+/// Ctrl+Shift+F6: find files with identical content under the folder in the panel
 /// (<see cref="DuplicateFinderDialog"/>) — or under the folder the cursor is on. Local folders only.
 /// </summary>
 public class DuplicateFinderDialogCommand(
@@ -18,7 +18,7 @@ public class DuplicateFinderDialogCommand(
 
     // Key ctor is (consoleKey, shift, alt, control). Ctrl+F7 is the music player, F7 find files.
     public override Key? Key { get; init; } =
-        new Key(ConsoleKey.F7, true, false, true);
+        new Key(ConsoleKey.F6, true, false, true);
 
     /// <summary>The panel the key acts on — the one the menu was opened over, when it runs from the menu.</summary>
     private IContentModel? SourceModel =>

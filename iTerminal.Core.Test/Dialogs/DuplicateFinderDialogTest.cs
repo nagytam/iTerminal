@@ -78,6 +78,19 @@ public class DuplicateFinderDialogTest
     }
 
     [TestMethod]
+    public async Task NMarksAllButTheNewest_ThatIsTheOneLeftUnmarked()
+    {
+        var (dialog, _) = await OpenAsync();
+        var group = dialog.Groups.Single();
+        var newest = group.Files.OrderByDescending(f => f.Modified).First();
+
+        await PressAsync(dialog, ConsoleKey.N);
+
+        Assert.AreEqual(group.Files.Count - 1, dialog.MarkedPaths.Count);
+        Assert.IsFalse(dialog.MarkedPaths.Contains(newest.Path), "the newest copy is the one kept");
+    }
+
+    [TestMethod]
     public async Task AMarksAllButTheOldestAndDeleteAsksFirst()
     {
         var (dialog, fileSystem) = await OpenAsync();
