@@ -21,14 +21,20 @@ public class SolutionViewerDialogTest
         public int ExitCode { get; set; }
         public TaskCompletionSource? Gate { get; set; }
 
+        public List<string> Hosts { get; } = [];
+        public IReadOnlyList<DotnetSdk> Sdks { get; set; } = [];
+
+        public IReadOnlyList<DotnetSdk> ListSdks() => Sdks;
+
         public SolutionInfo ParseSolution(string solutionPath) =>
             ParseFailure is not null ? throw ParseFailure : Solution;
 
-        public async Task<int> RunAsync(string workingDirectory, IReadOnlyList<string> arguments, Action<string> onOutputLine, CancellationToken cancellationToken = default)
+        public async Task<int> RunAsync(string workingDirectory, string dotnetPath, IReadOnlyList<string> arguments, Action<string> onOutputLine, CancellationToken cancellationToken = default)
         {
             lock (Runs)
             {
                 Runs.Add(arguments);
+                Hosts.Add(dotnetPath);
             }
 
             foreach (var line in Output)
@@ -224,6 +230,123 @@ public class SolutionViewerDialogTest
         await WaitIdleAsync(dialog);
 
         CollectionAssert.AreEqual(new[] { "run", "--project", "/src/App/App.csproj" }, service.Runs.Single().ToArray());
+    }
+
+    [TestMethod]
+    public async Task CleanOnTheSolutionRowCleansTheSolution()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects() };
+        var dialog = await OpenAsync(service);
+
+        await dialog.HandleKeyEventAsync(Char('c'));
+        await WaitIdleAsync(dialog);
+
+        CollectionAssert.AreEqual(new[] { "clean", "/src/App.slnx" }, service.Runs.Single().ToArray());
+    }
+
+    [TestMethod]
+    public async Task CleanOnAProjectRowCleansThatProject()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects() };
+        var dialog = await OpenAsync(service);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await dialog.HandleKeyEventAsync(Char('c'));
+        await WaitIdleAsync(dialog);
+
+        CollectionAssert.AreEqual(new[] { "clean", "/src/App/App.csproj" }, service.Runs.Single().ToArray());
+    }
+
+    [TestMethod]
+    public async Task CleanReportsSuccessOnTheStatusLine()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects() };
+        var dialog = await OpenAsync(service);
+
+        await dialog.HandleKeyEventAsync(Char('c'));
+        await WaitIdleAsync(dialog);
+
+        Assert.AreEqual("dotnet clean succeeded.", dialog.StatusForTest);
+    }
+
+    private static readonly DotnetSdk Sdk913 = new("9.0.300", "/usr/lib/dotnet");
+    private static readonly DotnetSdk Sdk1013 = new("10.0.113", "/opt/dotnet");
+    private static readonly DotnetSdk Sdk10Preview = new("10.0.200-preview.1", "/home/me/dotnet");
+
+    [TestMethod]
+    public async Task TheNewestStableSdkIsSelectedByDefault()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects(), Sdks = [Sdk10Preview, Sdk913, Sdk1013] };
+        var dialog = await OpenAsync(service);
+
+        Assert.AreEqual("10.0.113", dialog.SdkVersionForTest);
+    }
+
+    [TestMethod]
+    public async Task TheHeaderShowsTheSdkVersion()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects(), Sdks = [Sdk1013] };
+        var dialog = await OpenAsync(service);
+
+        var screen = Render(dialog);
+
+        AssertScreenContains(screen, ".NET SDK 10.0.113");
+    }
+
+    [TestMethod]
+    public async Task BuildUsesTheSelectedSdksHost()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects(), Sdks = [Sdk1013] };
+        var dialog = await OpenAsync(service);
+
+        await dialog.HandleKeyEventAsync(Char('b'));
+        await WaitIdleAsync(dialog);
+
+        Assert.AreEqual(Path.Combine("/opt/dotnet", "dotnet"), service.Hosts.Single());
+    }
+
+    [TestMethod]
+    public async Task VCyclesThroughTheInstalledSdks_AndTheNextCommandUsesTheChosenOne()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects(), Sdks = [Sdk1013, Sdk913] };
+        var dialog = await OpenAsync(service);
+        Assert.AreEqual("10.0.113", dialog.SdkVersionForTest);
+
+        await dialog.HandleKeyEventAsync(Char('v'));
+        Assert.AreEqual("9.0.300", dialog.SdkVersionForTest);
+        StringAssert.Contains(dialog.StatusForTest, "9.0.300");
+
+        await dialog.HandleKeyEventAsync(Char('v'));
+        Assert.AreEqual("10.0.113", dialog.SdkVersionForTest, "it wraps around");
+
+        await dialog.HandleKeyEventAsync(Char('v'));
+        await dialog.HandleKeyEventAsync(Char('t'));
+        await WaitIdleAsync(dialog);
+        Assert.AreEqual(Path.Combine("/usr/lib/dotnet", "dotnet"), service.Hosts.Single());
+    }
+
+    [TestMethod]
+    public async Task VWithOneSdkSaysSo()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects(), Sdks = [Sdk1013] };
+        var dialog = await OpenAsync(service);
+
+        await dialog.HandleKeyEventAsync(Char('v'));
+
+        StringAssert.Contains(dialog.StatusForTest, "Only .NET SDK 10.0.113");
+    }
+
+    [TestMethod]
+    public async Task WithNoSdkFoundCommandsUseTheDotnetOnThePath()
+    {
+        var service = new FakeDotnetSolutionService { Solution = TwoProjects() };
+        var dialog = await OpenAsync(service);
+
+        await dialog.HandleKeyEventAsync(Char('b'));
+        await WaitIdleAsync(dialog);
+
+        Assert.AreEqual("dotnet", service.Hosts.Single());
+        Assert.AreEqual(string.Empty, dialog.SdkVersionForTest);
     }
 
     [TestMethod]

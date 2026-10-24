@@ -249,6 +249,7 @@ public class DotnetSolutionServiceTest
 
         var exitCode = await service.RunAsync(
             CreateTempDir(),
+            "dotnet",
             ["--version"],
             line => { lock (lines) lines.Add(line); });
 
@@ -271,6 +272,7 @@ public class DotnetSolutionServiceTest
 
         var exitCode = await service.RunAsync(
             CreateTempDir(),
+            "dotnet",
             ["--version"],
             _ => { },
             cts.Token);

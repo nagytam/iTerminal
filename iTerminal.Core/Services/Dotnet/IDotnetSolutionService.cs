@@ -15,13 +15,18 @@ public interface IDotnetSolutionService
     SolutionInfo ParseSolution(string solutionPath);
 
     /// <summary>
-    /// Runs <c>dotnet</c> with the given arguments in <paramref name="workingDirectory"/>,
-    /// streaming each line of stdout and stderr to <paramref name="onOutputLine"/> as it is
-    /// produced. Returns the process exit code, or a negative value if it could not run or was
-    /// cancelled.
+    /// The .NET SDKs installed on this machine, newest first. Empty when <c>dotnet</c> cannot be run.
+    /// </summary>
+    IReadOnlyList<DotnetSdk> ListSdks();
+
+    /// <summary>
+    /// Runs <paramref name="dotnetPath"/> (the <c>dotnet</c> host of the SDK to use) with the given arguments in
+    /// <paramref name="workingDirectory"/>, streaming each line of stdout and stderr to <paramref name="onOutputLine"/> as it
+    /// is produced. Returns the process exit code, or a negative value if it could not run or was cancelled.
     /// </summary>
     Task<int> RunAsync(
         string workingDirectory,
+        string dotnetPath,
         IReadOnlyList<string> arguments,
         Action<string> onOutputLine,
         CancellationToken cancellationToken = default);
