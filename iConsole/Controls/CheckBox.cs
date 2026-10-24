@@ -57,6 +57,13 @@ public class CheckBox : Control, IReadOnly
             && mouseEvent.WheelDelta == 0
             && mouseEvent.LeftClicked)
         {
+            // Take the focus with the click, as the keyboard Space would need it: otherwise the box
+            // flips while the focus stays on another control, and the next key goes elsewhere.
+            if (!IsFocused)
+            {
+                SetFocus();
+            }
+
             IsChecked = !IsChecked;
             isHandled = true;
         }

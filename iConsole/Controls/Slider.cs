@@ -117,6 +117,18 @@ public class Slider : Control, IReadOnly
         return delta < 0 && sum > value ? long.MinValue : sum;
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (IsReadOnly || !IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Left/Right", "Lower or raise the value");
+        yield return ("PageUp/PageDown", "Raise or lower the value by a large step");
+        yield return ("Home/End", "Set the minimum or maximum");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

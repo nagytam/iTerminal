@@ -88,6 +88,18 @@ public class Toolbar : Control
         return -1;
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_items.Count == 0)
+        {
+            yield break;
+        }
+
+        yield return ("Left/Right", "Move along the toolbar");
+        yield return ("Home/End", "First or last item");
+        yield return ("Enter/Space", "Run the item");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

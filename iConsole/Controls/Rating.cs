@@ -51,6 +51,18 @@ public class Rating : Control, IReadOnly
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (IsReadOnly || !IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Left/Right", "Lower or raise the rating");
+        yield return ("0-9", "Set the rating directly");
+        yield return ("Home/End", "Clear the rating or give the maximum");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

@@ -108,6 +108,22 @@ public class Chips : Control, IReadOnly
         return [];
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Left/Right", "Move between the chips");
+        yield return ("Home/End", "First chip or last chip");
+        if (!IsReadOnly)
+        {
+            yield return ("Enter", "Add a chip on the [+] slot");
+            yield return ("Delete/Backspace", "Remove the active chip");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

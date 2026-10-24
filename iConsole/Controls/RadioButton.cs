@@ -84,6 +84,11 @@ public class RadioButton : Control, IReadOnly
             && mouseEvent.WheelDelta == 0
             && mouseEvent.LeftClicked)
         {
+            if (!IsFocused)
+            {
+                SetFocus();
+            }
+
             Select();
             isHandled = true;
         }
