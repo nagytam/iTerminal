@@ -98,6 +98,7 @@ public class Breadcrumb : Control
                 ActiveIndex = _segments.Count - 1;
                 return true;
             case ConsoleKey.Enter:
+            case ConsoleKey.Spacebar:
                 SegmentActivated?.Invoke(this, _activeIndex);
                 return true;
         }

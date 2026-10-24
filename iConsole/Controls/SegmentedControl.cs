@@ -85,9 +85,11 @@ public class SegmentedControl : Control, IReadOnly
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.RightArrow:
+            case ConsoleKey.DownArrow:
                 SelectedIndex++;
                 return true;
             case ConsoleKey.LeftArrow:
+            case ConsoleKey.UpArrow:
                 SelectedIndex--;
                 return true;
             case ConsoleKey.Home:

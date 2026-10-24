@@ -224,6 +224,107 @@ public class TextBox : Control, IReadOnly
         return true;
     }
 
+    /// <summary>Where the word before <paramref name="position"/> starts: the blanks to its left are skipped, then the word.</summary>
+    public static int WordStart(string text, int position)
+    {
+        int i = Math.Clamp(position, 0, text.Length);
+        while (i > 0 && text[i - 1] == ' ')
+        {
+            i--;
+        }
+
+        while (i > 0 && text[i - 1] != ' ')
+        {
+            i--;
+        }
+
+        return i;
+    }
+
+    /// <summary>Where the next word starts after <paramref name="position"/>: the rest of this word is skipped, then the blanks (the end of the text if there is no next word).</summary>
+    public static int WordEnd(string text, int position)
+    {
+        int i = Math.Clamp(position, 0, text.Length);
+        while (i < text.Length && text[i] != ' ')
+        {
+            i++;
+        }
+
+        while (i < text.Length && text[i] == ' ')
+        {
+            i++;
+        }
+
+        return i;
+    }
+
+    /// <summary>
+    /// The shell and editor keys on Ctrl: Left and Right move by a word (with Shift they select by a word), Ctrl+Backspace
+    /// and Ctrl+W delete the word before the cursor, Ctrl+Delete the word after it, Ctrl+U everything before it (Ctrl+K, which clears
+    /// the line, is a command of its own). With a selection up the delete keys remove the selection instead.
+    /// </summary>
+    private bool HandleWordKey(KeyEvent keyEvent)
+    {
+        if (!keyEvent.Control || keyEvent.Alt)
+        {
+            return false;
+        }
+
+        int cursor = (int)Math.Clamp(ScrollableModel.CursorPosition.X, 0, TextLength);
+        if (keyEvent.ConsoleKey is ConsoleKey.LeftArrow or ConsoleKey.RightArrow)
+        {
+            int target = keyEvent.ConsoleKey == ConsoleKey.LeftArrow ? WordStart(Text, cursor) : WordEnd(Text, cursor);
+            if (keyEvent.Shift)
+            {
+                _selectionAnchor ??= cursor;
+                ScrollableModel.CursorPosition.X = target;
+                UpdateSelectionModel();
+            }
+            else
+            {
+                ClearSelection();
+                ScrollableModel.CursorPosition.X = target;
+            }
+
+            KeepCursorVisible();
+            StateHasChanged();
+            return true;
+        }
+
+        if (keyEvent.Shift || IsReadOnly)
+        {
+            return false;
+        }
+
+        (int Start, int End)? range = keyEvent.ConsoleKey switch
+        {
+            ConsoleKey.W or ConsoleKey.Backspace => (WordStart(Text, cursor), cursor),
+            ConsoleKey.Delete => (cursor, WordEnd(Text, cursor)),
+            ConsoleKey.U => (0, cursor),
+            _ => null,
+        };
+        if (range is null)
+        {
+            return false;
+        }
+
+        if (HasSelection)
+        {
+            DeleteSelection();
+        }
+        else if (range.Value.End > range.Value.Start)
+        {
+            string remaining = Text.Remove(range.Value.Start, range.Value.End - range.Value.Start);
+            Text = remaining;
+            ScrollableModel.CursorPosition.X = range.Value.Start;
+        }
+
+        KeepCursorVisible();
+        Parent?.Refresh();
+        StateHasChanged();
+        return true;
+    }
+
     private ITextClipboardService? _clipboard;
 
     /// <summary>The clipboard Copy, Cut and Paste use: the application's (<see cref="TextClipboard.Current"/>) unless one is given.</summary>
@@ -343,6 +444,11 @@ public class TextBox : Control, IReadOnly
     {
         KeepCursorVisible();
         if (IsFocused && IsEnabled && HandleSelectionKey(keyEvent))
+        {
+            return true;
+        }
+
+        if (IsFocused && IsEnabled && HandleWordKey(keyEvent))
         {
             return true;
         }
