@@ -195,4 +195,63 @@ public class FileDiffDialogTest
 
         Assert.IsFalse(await dialog.HandleMouseEventAsync(new MouseEvent { Position = new Position(0, 0), WheelDelta = -1 }));
     }
+
+    [TestMethod]
+    [Timeout(30_000)]
+    public async Task ABinaryFileOpensInHex_WithItsDifferingBytesCounted()
+    {
+        var left = new Url(Path.Combine(_folder, "a.bin"));
+        var right = new Url(Path.Combine(_folder, "b.bin"));
+        File.WriteAllBytes(left.Path, [1, 2, 0, 3]);
+        File.WriteAllBytes(right.Path, [1, 9, 0, 4]);
+
+        var (dialog, root) = await ShowAsync(left, right);
+        dialog.OnIdle();
+
+        Assert.IsTrue(dialog.IsHexMode);
+        Assert.AreEqual(2, dialog.Binary!.DifferingBytes);
+        StringAssert.Contains(dialog.Status, "2 bytes in 2 place(s)");
+        UiTestHelper.AssertScreenContains(UiTestHelper.Render(root), "01 02 00 03");
+    }
+
+    [TestMethod]
+    [Timeout(30_000)]
+    public async Task F4_ShowsATextFilesBytes_AndBackToItsLines()
+    {
+        var left = Write("a.txt", "one\ntwo\n");
+        var right = Write("b.txt", "one\n2\n");
+        var (dialog, root) = await ShowAsync(left, right);
+        Assert.IsFalse(dialog.IsHexMode);
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.F4, false, false, false));
+        Assert.IsTrue(dialog.IsHexMode);
+        UiTestHelper.AssertScreenContains(UiTestHelper.Render(root), "6F 6E 65");
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.F4, false, false, false));
+        Assert.IsFalse(dialog.IsHexMode);
+        Assert.IsNotNull(dialog.Result);
+    }
+
+    [TestMethod]
+    [Timeout(30_000)]
+    public async Task NAndP_MoveBetweenTheRunsOfDifferingBytes_InHex()
+    {
+        // Two single-byte differences in a text of about a hundred lines, far enough apart to be on different rows.
+        var line = new string('x', 40);
+        var left = Write("a.txt", string.Join("\n", Enumerable.Repeat(line, 100)) + "\n");
+        var changed = Enumerable.Repeat(line, 100).ToArray();
+        changed[0] = "y" + line[1..];
+        changed[90] = "y" + line[1..];
+        var right = Write("b.txt", string.Join("\n", changed) + "\n");
+        var (dialog, root) = await ShowAsync(left, right);
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.F4, false, false, false));
+        UiTestHelper.AssertScreenContains(UiTestHelper.Render(root), "(1/2)");
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('n', ConsoleKey.N, false, false, false));
+        UiTestHelper.AssertScreenContains(UiTestHelper.Render(root), "(2/2)");
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('p', ConsoleKey.P, false, false, false));
+        UiTestHelper.AssertScreenContains(UiTestHelper.Render(root), "(1/2)");
+    }
 }

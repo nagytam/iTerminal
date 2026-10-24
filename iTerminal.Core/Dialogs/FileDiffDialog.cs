@@ -36,6 +36,11 @@ public class FileDiffDialog : Dialog
     private const int TabWidth = 4;
 
     private readonly DiffView _view;
+    private readonly BinaryDiffView _hexView;
+    private byte[]? _leftBytes;
+    private byte[]? _rightBytes;
+    private volatile BinaryDiffResult? _binary;
+    private volatile bool _hexMode;
     private CancellationTokenSource? _cancellation;
     private string[]? _leftLines;
     private string[]? _rightLines;
@@ -55,8 +60,16 @@ public class FileDiffDialog : Dialog
     {
         Title = "Compare files";
         _view = new DiffView(themeService);
+        _hexView = new BinaryDiffView(themeService);
         AddControl(_view);
+        AddControl(_hexView);
     }
+
+    /// <summary>True while the two files are shown as hex (F4 switches a text file between its lines and its bytes).</summary>
+    public bool IsHexMode => _hexMode;
+
+    /// <summary>The byte-by-byte comparison of the two files, once they are read.</summary>
+    public BinaryDiffResult? Binary => _binary;
 
     /// <summary>The read-and-compare started last; nothing waits on it — it exists so a test can.</summary>
     public Task LoadTask { get; private set; } = Task.CompletedTask;
@@ -85,6 +98,10 @@ public class FileDiffDialog : Dialog
         _ignoreCase = false;
         _leftLines = null;
         _rightLines = null;
+        _leftBytes = null;
+        _rightBytes = null;
+        _binary = null;
+        _hexMode = false;
         Result = null;
         _view.SetResult(null);
         SetStatus("Reading…", isError: false);
@@ -112,14 +129,20 @@ public class FileDiffDialog : Dialog
             {
                 var leftBytes = await ReadAsync(left, leftFileSystem, token);
                 var rightBytes = await ReadAsync(right, rightFileSystem, token);
+                var binary = BinaryComparer.Compare(leftBytes, rightBytes);
+                _leftBytes = leftBytes;
+                _rightBytes = rightBytes;
+                _binary = binary;
+                _hexView.SetData(leftBytes, rightBytes, binary);
 
                 if (IsBinary(leftBytes) || IsBinary(rightBytes))
                 {
-                    var same = leftBytes.AsSpan().SequenceEqual(rightBytes);
+                    // No lines to compare: the bytes are the comparison, and the hex view is what shows them.
+                    _hexMode = true;
                     SetStatus(
-                        same
+                        binary.Identical
                             ? "Binary files — identical, byte for byte."
-                            : $"Binary files — they differ ({leftBytes.Length:N0} and {rightBytes.Length:N0} bytes). Shift+F12 shows their checksums.",
+                            : $"Binary files — they differ ({leftBytes.Length:N0} and {rightBytes.Length:N0} bytes): {binary.DifferingBytes:N0} bytes in {binary.Runs.Count:N0} place(s). Shift+F12 shows their checksums.",
                         isError: false);
                     return;
                 }
@@ -137,6 +160,53 @@ public class FileDiffDialog : Dialog
                 SetStatus($"Could not read the files: {exception.Message}", isError: true);
             }
         });
+    }
+
+    /// <summary>F4: switches between a text file's lines and its bytes. A binary file has no lines, so it stays in hex.</summary>
+    private void ToggleHex()
+    {
+        if (_leftLines is null || _rightLines is null || _binary is not { } binary)
+        {
+            return;
+        }
+
+        _hexMode = !_hexMode;
+        SetStatus(_hexMode ? BinaryStatus(binary) : Result?.Summary() ?? _status, isError: false);
+        ApplyMode();
+    }
+
+    private static string BinaryStatus(BinaryDiffResult binary) =>
+        binary.Identical
+            ? "Identical, byte for byte."
+            : $"{binary.DifferingBytes:N0} bytes differ in {binary.Runs.Count:N0} place(s).";
+
+    /// <summary>Shows the view of the mode in use and hides the other; each is only touched when it changes.</summary>
+    private void ApplyMode()
+    {
+        SetVisible(_view, !_hexMode);
+        SetVisible(_hexView, _hexMode);
+    }
+
+    private static void SetVisible(Control control, bool visible)
+    {
+        if (control.IsVisible != visible)
+        {
+            control.IsVisible = visible;
+        }
+    }
+
+    public override async Task ShowAsync()
+    {
+        await base.ShowAsync();
+        // ShowAsync makes every child visible; the mode decides which one stays.
+        ApplyMode();
+    }
+
+    /// <summary>The files are read on a background task, so the mode is applied here, on the thread that owns the controls.</summary>
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        ApplyMode();
     }
 
     private void Recompute()
@@ -261,6 +331,8 @@ public class FileDiffDialog : Dialog
 
         _view.Position = new Position(1, 3);
         _view.ViewSize = new Size(Math.Max(1, ViewSize.Width - 2), Math.Max(1, ViewSize.Height - 5));
+        _hexView.Position = _view.Position;
+        _hexView.ViewSize = _view.ViewSize;
         base.OnInitializeLayout();
     }
 
@@ -275,7 +347,7 @@ public class FileDiffDialog : Dialog
     {
         if (mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
-            _view.ScrollBy(mouseEvent.WheelDelta > 0 ? -3 : 3);
+            Scroll(mouseEvent.WheelDelta > 0 ? -3 : 3);
             StateHasChanged();
             return true;
         }
@@ -291,40 +363,43 @@ public class FileDiffDialog : Dialog
             switch (keyEvent.ConsoleKey)
             {
                 case ConsoleKey.UpArrow:
-                    _view.ScrollBy(-1);
+                    Scroll(-1);
                     break;
                 case ConsoleKey.DownArrow:
-                    _view.ScrollBy(1);
+                    Scroll(1);
                     break;
                 case ConsoleKey.PageUp:
-                    _view.ScrollBy(-_view.PageSize);
+                    Scroll(-CurrentPageSize());
                     break;
                 case ConsoleKey.PageDown:
-                    _view.ScrollBy(_view.PageSize);
+                    Scroll(CurrentPageSize());
                     break;
                 case ConsoleKey.Home:
-                    _view.ScrollTo(0);
+                    ScrollTo(0);
                     break;
                 case ConsoleKey.End:
-                    _view.ScrollTo(int.MaxValue);
+                    ScrollTo(int.MaxValue);
                     break;
-                case ConsoleKey.LeftArrow:
+                case ConsoleKey.LeftArrow when !_hexMode:
                     _view.ScrollSideways(-8);
                     break;
-                case ConsoleKey.RightArrow:
+                case ConsoleKey.RightArrow when !_hexMode:
                     _view.ScrollSideways(8);
                     break;
                 case ConsoleKey.N:
-                    _view.JumpToDifference(next: true);
+                    Jump(next: true);
                     break;
                 case ConsoleKey.P:
-                    _view.JumpToDifference(next: false);
+                    Jump(next: false);
                     break;
-                case ConsoleKey.W:
+                case ConsoleKey.F4:
+                    ToggleHex();
+                    break;
+                case ConsoleKey.W when !_hexMode:
                     _ignoreWhitespace = !_ignoreWhitespace;
                     RecomputeInBackground();
                     break;
-                case ConsoleKey.C:
+                case ConsoleKey.C when !_hexMode:
                     _ignoreCase = !_ignoreCase;
                     RecomputeInBackground();
                     break;
@@ -344,6 +419,44 @@ public class FileDiffDialog : Dialog
     }
 
     private void RecomputeInBackground() => LoadTask = Task.Run(Recompute);
+
+    private void Scroll(int rows)
+    {
+        if (_hexMode)
+        {
+            _hexView.ScrollBy(rows);
+        }
+        else
+        {
+            _view.ScrollBy(rows);
+        }
+    }
+
+    private void ScrollTo(int row)
+    {
+        if (_hexMode)
+        {
+            _hexView.ScrollTo(row);
+        }
+        else
+        {
+            _view.ScrollTo(row);
+        }
+    }
+
+    private int CurrentPageSize() => _hexMode ? _hexView.PageSize : _view.PageSize;
+
+    private void Jump(bool next)
+    {
+        if (_hexMode)
+        {
+            _hexView.JumpToDifference(next);
+        }
+        else
+        {
+            _view.JumpToDifference(next);
+        }
+    }
 
     protected override void DrawChrome(IBuffer buffer)
     {
@@ -365,11 +478,26 @@ public class FileDiffDialog : Dialog
         var rule = new ConxelString(Border.Horizontal.Repeat(inner), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + 2), new Size(rule.Count, 1), rule);
 
-        var options = (_ignoreWhitespace ? " [ignore whitespace]" : string.Empty) + (_ignoreCase ? " [ignore case]" : string.Empty);
-        var position = Result is { HunkStarts.Count: > 0 } result ? $"  ({_view.CurrentDifference(result)}/{result.HunkStarts.Count})" : string.Empty;
+        string options;
+        string position;
+        if (_hexMode)
+        {
+            options = " [hex]";
+            position = _binary is { Runs.Count: > 0 } binary ? $"  ({_hexView.CurrentDifference()}/{binary.Runs.Count})" : string.Empty;
+        }
+        else
+        {
+            options = (_ignoreWhitespace ? " [ignore whitespace]" : string.Empty) + (_ignoreCase ? " [ignore case]" : string.Empty);
+            position = Result is { HunkStarts.Count: > 0 } result ? $"  ({_view.CurrentDifference(result)}/{result.HunkStarts.Count})" : string.Empty;
+        }
+
         Write(1, (int)ViewSize.Height - 2, " " + _status + position + options, inner, _statusIsError ? colorScheme.Error : foreground);
 
-        var hints = " N/P:next/prev difference  W:whitespace  C:case  ↑↓ PgUp PgDn wheel ←→:scroll  Esc:close ".FitHints(Math.Max(0, width - 4));
+        // F4 only means something where there are lines to go back to.
+        var toggle = _leftLines is null ? string.Empty : _hexMode ? "  F4:text" : "  F4:hex";
+        var hints = _hexMode
+            ? $" N/P:next/prev difference{toggle}  ↑↓ PgUp PgDn wheel  Esc:close ".FitHints(Math.Max(0, width - 4))
+            : $" N/P:next/prev difference  W:whitespace  C:case{toggle}  ↑↓ PgUp PgDn wheel ←→:scroll  Esc:close ".FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, hints), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);

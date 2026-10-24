@@ -101,6 +101,28 @@ public static class PanelRefreshHelper
     }
 
     /// <summary>
+    /// Re-reads every panel showing a local folder, for a change made with no task to watch (a date or an attribute,
+    /// a metadata strip). A panel that cannot be re-read does not stop the others.
+    /// </summary>
+    public static void RefreshLocalPanels(IContentModelService? contentModelService)
+    {
+        foreach (var model in contentModelService?.ContentModels?.ToList() ?? [])
+        {
+            try
+            {
+                if (model.Url?.ContainerType == ContainerType.FileSystem)
+                {
+                    model.Refresh(forceRefresh: true);
+                }
+            }
+            catch
+            {
+                // A panel that cannot be re-read must not keep the other from it.
+            }
+        }
+    }
+
+    /// <summary>
     /// Like <see cref="RefreshWhenFinished"/>, but for operations that change the contents of whole
     /// folders (a synchronisation): the URLs are the folders themselves, not entries inside them.
     /// </summary>

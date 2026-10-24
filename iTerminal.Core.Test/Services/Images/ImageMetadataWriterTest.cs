@@ -239,4 +239,52 @@ public class ImageMetadataWriterTest
         Assert.AreEqual("Tamas", edit.Artist);
         Assert.AreEqual(string.Empty, edit.Description);
     }
+
+    [TestMethod]
+    public void Strip_JpegLosesItsExifAndComments_AndKeepsThePicture()
+    {
+        File.WriteAllBytes(_path + ".jpg", Jpeg("Acme"));
+        ImageMetadataWriter.Write(_path + ".jpg", new ImageMetadataEdit("Sunset", "Tamas", string.Empty, "Lake"));
+
+        bool changed = ImageMetadataWriter.Strip(_path + ".jpg");
+
+        Assert.IsTrue(changed);
+        IReadOnlyList<ImageInfoField> fields = ImageInfoReader.ReadFile(_path + ".jpg");
+        Assert.IsFalse(fields.Any(f => f.Group == "Camera"), "the camera make is gone");
+        Assert.IsFalse(fields.Any(f => f.Group == "Text"), "the comment is gone");
+        Assert.IsFalse(fields.Any(f => f.Name is "Description" or "Artist" or "Copyright"), "the EXIF text is gone");
+        CollectionAssert.AreEqual(new byte[] { 0x12, 0x34, 0xFF, 0xD9 }, File.ReadAllBytes(_path + ".jpg")[^4..]);
+    }
+
+    [TestMethod]
+    public void Strip_PngLosesItsTextChunks_AndAFileWithNoneIsLeftAlone()
+    {
+        File.WriteAllBytes(_path + ".png", Png());
+        ImageMetadataWriter.Write(_path + ".png", new ImageMetadataEdit("Sunset", "Tamas", string.Empty, string.Empty));
+
+        Assert.IsTrue(ImageMetadataWriter.Strip(_path + ".png"));
+        Assert.IsFalse(ImageInfoReader.ReadFile(_path + ".png").Any(f => f.Group == "Text"));
+
+        byte[] stripped = File.ReadAllBytes(_path + ".png");
+        Assert.IsFalse(ImageMetadataWriter.Strip(_path + ".png"));
+        CollectionAssert.AreEqual(stripped, File.ReadAllBytes(_path + ".png"));
+    }
+
+    [TestMethod]
+    public void Strip_AFileWithNothingToRemove_IsNotRewritten()
+    {
+        File.WriteAllBytes(_path + ".jpg", [0xFF, 0xD8, 0xFF, 0xDA, 0x00, 0x03, 0x01, 0x00, 0x00, 0x12, 0x34, 0xFF, 0xD9]);
+        DateTime before = File.GetLastWriteTimeUtc(_path + ".jpg");
+
+        Assert.IsFalse(ImageMetadataWriter.Strip(_path + ".jpg"));
+        Assert.AreEqual(before, File.GetLastWriteTimeUtc(_path + ".jpg"));
+    }
+
+    [TestMethod]
+    public void Strip_OtherFormatsAreRefused()
+    {
+        File.WriteAllBytes(_path + ".gif", Encoding.ASCII.GetBytes("GIF89a"));
+
+        Assert.ThrowsExactly<NotSupportedException>(() => ImageMetadataWriter.Strip(_path + ".gif"));
+    }
 }

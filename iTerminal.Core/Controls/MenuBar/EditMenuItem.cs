@@ -21,6 +21,7 @@ public class EditMenuItem : MenuItem
         CompareFoldersDialog? compareFoldersDialog = null,
         FileDiffDialog? fileDiffDialog = null,
         SynchronizeFoldersDialog? synchronizeFoldersDialog = null,
+        StripMetadataDialog? stripMetadataDialog = null,
         iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null)
         : base("Edit", null, [], themeService)
     {
@@ -66,6 +67,10 @@ public class EditMenuItem : MenuItem
         if (synchronizeFoldersDialog is not null)
         {
             AddMenuItem(new MenuItem("Synchronise Folders", new SynchronizeFoldersDialogCommand(synchronizeFoldersDialog), [], themeService));
+        }
+        if (stripMetadataDialog is not null)
+        {
+            AddMenuItem(new MenuItem("Strip Metadata", new StripMetadataDialogCommand(stripMetadataDialog, contentModelService), [], themeService));
         }
         if (fileDiffDialog is not null)
         {
