@@ -15,6 +15,7 @@ using iTerminal.Core.Factories;
 using iTerminal.Core.Jobs;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Labels;
 using iTerminal.Core.Services.RuntimeDependencies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
@@ -103,6 +104,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<ContentBrowser>();
         services.AddSingleton<iTerminal.Core.Services.Git.IGitService, iTerminal.Core.Services.Git.GitService>();
         services.AddSingleton<IContentLens, GitLens>();
+        services.AddSingleton<IContentLens, FileLabelLens>();
+        services.AddSingleton<IFileLabelService, FileLabelService>();
         services.AddTransient<iTerminal.Core.Dialogs.Git.GitClientDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Calculator.CalculatorDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog>();
@@ -313,6 +316,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<CompareFoldersDialog>();
         services.AddTransient<SynchronizeFoldersDialog>();
         services.AddTransient<StripMetadataDialog>();
+        services.AddTransient<FileLabelsDialog>();
         services.AddTransient<FileDiffDialog>();
         // Ctrl+O: the terminal handed to an interactive shell. One per control it is attached to (the
         // content and the Navigate menu); the service, which knows whether a shell is running, is one.

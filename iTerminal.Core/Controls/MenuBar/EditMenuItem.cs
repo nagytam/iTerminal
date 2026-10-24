@@ -22,6 +22,7 @@ public class EditMenuItem : MenuItem
         FileDiffDialog? fileDiffDialog = null,
         SynchronizeFoldersDialog? synchronizeFoldersDialog = null,
         StripMetadataDialog? stripMetadataDialog = null,
+        FileLabelsDialog? fileLabelsDialog = null,
         iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null)
         : base("Edit", null, [], themeService)
     {
@@ -71,6 +72,10 @@ public class EditMenuItem : MenuItem
         if (stripMetadataDialog is not null)
         {
             AddMenuItem(new MenuItem("Strip Metadata", new StripMetadataDialogCommand(stripMetadataDialog, contentModelService), [], themeService));
+        }
+        if (fileLabelsDialog is not null)
+        {
+            AddMenuItem(new MenuItem("Colour Labels and Tags", new FileLabelsDialogCommand(fileLabelsDialog, contentModelService), [], themeService));
         }
         if (fileDiffDialog is not null)
         {
