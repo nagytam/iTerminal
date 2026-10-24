@@ -87,6 +87,16 @@ public class ColorPicker : Control, IReadOnly
             case ConsoleKey.DownArrow:
                 MoveCursor(0, 1);
                 return true;
+            case ConsoleKey.Home:
+                _cursor = keyEvent.Control ? 0 : _cursor / GridColumns * GridColumns;
+                StateHasChanged();
+                return true;
+            case ConsoleKey.End:
+                _cursor = keyEvent.Control
+                    ? Colors.Length - 1
+                    : Math.Min(_cursor / GridColumns * GridColumns + GridColumns - 1, Colors.Length - 1);
+                StateHasChanged();
+                return true;
             case ConsoleKey.Enter:
             case ConsoleKey.Spacebar:
                 if (!IsReadOnly)

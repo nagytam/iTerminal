@@ -56,7 +56,7 @@ public class ScrollBar(IThemeService themeService)
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
-        if (ScrollableModel is null || !AbsoluteBoundRect.Contains(mouseEvent.Position))
+        if (ScrollableModel is null || !IsEnabled || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;
         }

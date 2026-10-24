@@ -243,4 +243,28 @@ public class HexViewerTest
 
         Assert.IsTrue(string.IsNullOrWhiteSpace(buffer.ContentAsString));
     }
+
+    [TestMethod]
+    public async Task Disabled_IgnoresTheWheelAndClicks()
+    {
+        var hv = Create(new byte[16 * 10]);
+        hv.IsEnabled = false;
+        long before = hv.ScrollableModel.CursorPosition.Y;
+
+        Assert.IsFalse(await hv.HandleMouseEventAsync(new MouseEvent { Position = new Position(5, 1), WheelDelta = -1 }));
+        Assert.IsFalse(await hv.HandleMouseEventAsync(new MouseEvent { Position = new Position(5, 2), LeftClicked = true }));
+
+        Assert.AreEqual(before, hv.ScrollableModel.CursorPosition.Y);
+        Assert.IsFalse(hv.IsFocused);
+    }
+
+    [TestMethod]
+    public async Task Enabled_TheWheelStillMovesTheCursorThreeRows()
+    {
+        var hv = Create(new byte[16 * 10]);
+
+        Assert.IsTrue(await hv.HandleMouseEventAsync(new MouseEvent { Position = new Position(5, 1), WheelDelta = -1 }));
+
+        Assert.AreEqual(3L, hv.ScrollableModel.CursorPosition.Y);
+    }
 }

@@ -301,4 +301,61 @@ public class PickerAndPopupListInteractionTest
         Assert.IsTrue(lines[1].StartsWith(" gamma"));
         Assert.AreEqual(2, list.Highlight);
     }
+
+    [TestMethod]
+    public async Task ColorPicker_HomeAndEnd_GoToTheStartAndEndOfTheRow()
+    {
+        ColorPicker picker = new(Theme()) { Position = new Position(0, 0) };
+        picker.SetFocus();
+        int count = Enum.GetValues<Color>().Length;
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.RightArrow));
+        int row = picker.CursorIndex / ColorPicker.GridColumns;
+
+        Assert.IsTrue(await picker.HandleKeyEventAsync(Key(ConsoleKey.End)));
+        Assert.AreEqual(Math.Min(row * ColorPicker.GridColumns + ColorPicker.GridColumns - 1, count - 1), picker.CursorIndex);
+
+        Assert.IsTrue(await picker.HandleKeyEventAsync(Key(ConsoleKey.Home)));
+        Assert.AreEqual(row * ColorPicker.GridColumns, picker.CursorIndex);
+    }
+
+    [TestMethod]
+    public async Task ColorPicker_CtrlHomeAndEnd_GoToTheFirstAndLastSwatch()
+    {
+        ColorPicker picker = new(Theme()) { Position = new Position(0, 0) };
+        picker.SetFocus();
+        int count = Enum.GetValues<Color>().Length;
+
+        Assert.IsTrue(await picker.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.End, false, false, true)));
+        Assert.AreEqual(count - 1, picker.CursorIndex);
+
+        Assert.IsTrue(await picker.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Home, false, false, true)));
+        Assert.AreEqual(0, picker.CursorIndex);
+    }
+
+    [TestMethod]
+    public async Task ColorPicker_HomeAndEnd_MoveTheCursorOnly_NotTheChoice()
+    {
+        ColorPicker picker = new(Theme()) { Position = new Position(0, 0) };
+        picker.SetFocus();
+        Color chosen = picker.SelectedColor;
+
+        await picker.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.End, false, false, true));
+
+        Assert.AreEqual(chosen, picker.SelectedColor);
+    }
+
+    [TestMethod]
+    public async Task ColorPicker_HomeAndEnd_UnfocusedOrDisabled_AreIgnored()
+    {
+        ColorPicker plain = new(Theme()) { Position = new Position(0, 0) };
+        Assert.IsFalse(await plain.HandleKeyEventAsync(Key(ConsoleKey.End)));
+
+        ColorPicker disabled = new(Theme()) { Position = new Position(0, 0) };
+        disabled.SetFocus();
+        disabled.IsEnabled = false;
+        int start = disabled.CursorIndex;
+        await disabled.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.End, false, false, true));
+        Assert.AreEqual(start, disabled.CursorIndex);
+    }
 }

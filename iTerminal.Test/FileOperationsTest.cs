@@ -218,8 +218,9 @@ public class FileOperationsTest
 
         await CopyFocusedEntryAsync();
 
+        // The files are copied in no fixed order, so wait for both rather than for one and assert the other.
         await _app.WaitUntilAsync(() => ReadIfFinished(Path.Combine(_app.RightRoot, "box", "inner", "two.txt")) == "two", "the nested file to land on the disk");
-        Assert.AreEqual("one", ReadIfFinished(Path.Combine(_app.RightRoot, "box", "one.txt")));
+        await _app.WaitUntilAsync(() => ReadIfFinished(Path.Combine(_app.RightRoot, "box", "one.txt")) == "one", "the folder's own file to land on the disk");
         await _app.WaitForNoDialogAsync();
     }
 

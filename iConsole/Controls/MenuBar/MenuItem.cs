@@ -342,6 +342,16 @@ public class MenuItem : PopUpWindow
         siblings[nextIndex].SetSelected();
     }
 
+    /// <summary>Selects the first or the last entry of this drop-down, skipping separators.</summary>
+    private void SelectEdge(bool last)
+    {
+        var siblings = SelectableMenuItems;
+        if (siblings.Count > 0)
+        {
+            (last ? siblings[^1] : siblings[0]).SetSelected();
+        }
+    }
+
     private void SwitchTopLevelMenu(int direction)
     {
         if (Parent is not MenuBar menuBar)
@@ -561,7 +571,14 @@ public class MenuItem : PopUpWindow
                         MoveSelection(1);
                         return true;
                     case ConsoleKey.Enter:
+                    case ConsoleKey.Spacebar:
                         await ActivateSelectedAsync();
+                        return true;
+                    case ConsoleKey.Home:
+                        SelectEdge(last: false);
+                        return true;
+                    case ConsoleKey.End:
+                        SelectEdge(last: true);
                         return true;
                     case ConsoleKey.RightArrow:
                         await OpenOrAdvanceAsync();

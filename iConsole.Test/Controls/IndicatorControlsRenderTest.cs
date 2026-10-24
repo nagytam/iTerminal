@@ -344,4 +344,29 @@ public class IndicatorControlsRenderTest
         Assert.IsTrue(screen.Lines[2].StartsWith("B: [2"));
     }
     #endregion
+
+    [TestMethod]
+    public async Task ScrollBar_Disabled_IgnoresTheWheelAndClicks()
+    {
+        ScrollBarControl bar = CreateScrollBar(2, 11);
+        bar.Position = new Position(0, 0);
+        bar.IsEnabled = false;
+        long before = bar.ScrollableModel!.CursorPosition.Y;
+
+        Assert.IsFalse(await bar.HandleMouseEventAsync(new MouseEvent { Position = new Position(0, 2), WheelDelta = -1 }));
+        Assert.IsFalse(await bar.HandleMouseEventAsync(new MouseEvent { Position = new Position(0, 4), LeftClicked = true }));
+
+        Assert.AreEqual(before, bar.ScrollableModel.CursorPosition.Y);
+    }
+
+    [TestMethod]
+    public async Task ScrollBar_Enabled_TheWheelMovesTheCursor()
+    {
+        ScrollBarControl bar = CreateScrollBar(2, 11);
+        bar.Position = new Position(0, 0);
+
+        Assert.IsTrue(await bar.HandleMouseEventAsync(new MouseEvent { Position = new Position(0, 2), WheelDelta = -1 }));
+
+        Assert.IsTrue(bar.ScrollableModel!.CursorPosition.Y > 2);
+    }
 }

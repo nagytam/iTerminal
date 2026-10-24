@@ -90,7 +90,7 @@ public class PopupListView : Control
         var relativeY = (int)mouseEvent.Position.Y - (int)AbsolutePosition.Y;
         var withinX = relativeX >= 0 && relativeX < (int)ViewSize.Width;
 
-        if (mouseEvent.WheelDelta != 0 && withinX)
+        if (mouseEvent.WheelDelta != 0 && withinX && relativeY >= 0 && relativeY < Rows())
         {
             MoveHighlight(mouseEvent.WheelDelta > 0 ? -1 : 1);
             return true;

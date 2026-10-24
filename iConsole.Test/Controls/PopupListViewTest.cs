@@ -116,4 +116,20 @@ public class PopupListViewTest
         Assert.IsTrue(content.Contains("Green"));
         Assert.IsTrue(content.Contains("Blue"));
     }
+
+    [TestMethod]
+    public async Task TheWheel_OnlyActsOverTheRows()
+    {
+        var view = CreateControl();
+        view.Position = new Position(0, 5);
+        MouseEvent Wheel(long x, long y) => new() { Position = new Position(x, y), WheelDelta = -1 };
+
+        Assert.IsTrue(await view.HandleMouseEventAsync(Wheel(3, 6)));
+        Assert.AreEqual(1, view.Highlight);
+
+        Assert.IsFalse(await view.HandleMouseEventAsync(Wheel(3, 20)), "below the list");
+        Assert.IsFalse(await view.HandleMouseEventAsync(Wheel(3, 2)), "above the list");
+        Assert.IsFalse(await view.HandleMouseEventAsync(Wheel(40, 6)), "beside the list");
+        Assert.AreEqual(1, view.Highlight);
+    }
 }
