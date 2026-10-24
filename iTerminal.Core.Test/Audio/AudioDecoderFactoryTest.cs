@@ -4,6 +4,7 @@ using iTerminal.Core.Audio.Decoders;
 namespace iTerminal.Core.Test.Audio;
 
 [TestClass]
+[DoNotParallelize]
 public class AudioDecoderFactoryTest
 {
     private string _tempRoot = string.Empty;

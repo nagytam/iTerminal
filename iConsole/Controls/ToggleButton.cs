@@ -47,6 +47,16 @@ public class ToggleButton : Control, IReadOnly
         AddCommand(new ToggleCommand(new Key(ConsoleKey.Enter, false, false, false)));
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (IsReadOnly || !IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Space/Enter", "Switch the setting on or off");
+    }
+
     private void Toggle()
     {
         IsOn = !IsOn;

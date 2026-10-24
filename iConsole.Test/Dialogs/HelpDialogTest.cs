@@ -121,6 +121,26 @@ public class HelpDialogTest
         StringAssert.Contains(helpText, "Open File menu");
     }
 
+    [TestMethod]
+    public async Task KeyHintsOfSeveralControlsOfOneKindAreListedOnce()
+    {
+        var themeService = CreateThemeService();
+        var dialog = new HelpDialog(themeService);
+
+        var root = new Control(themeService) { Name = "Root" };
+        root.AddControl(new Rating(themeService) { Position = new Position(0, 0), ViewSize = new Size(5, 1) });
+        root.AddControl(new Rating(themeService) { Position = new Position(0, 1), ViewSize = new Size(5, 1) });
+
+        dialog.ContextControl = root;
+        dialog.ContextFocus = root;
+
+        await dialog.OnInitializeAsync();
+
+        var textViewer = dialog.Controls.OfType<TextViewerControl>().Single();
+        var helpText = string.Join(Environment.NewLine, textViewer.TextModel.Lines);
+        Assert.AreEqual(1, helpText.Split(Environment.NewLine).Count(line => line.Contains("Lower or raise the rating")));
+    }
+
     /// <summary>The part of the help that lists what can run in this context, before the complete list.</summary>
     private static IEnumerable<string> Available(IEnumerable<string> lines) =>
         lines.TakeWhile(l => !l.StartsWith("All commands in the application:", StringComparison.Ordinal));

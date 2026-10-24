@@ -440,6 +440,25 @@ public class TextBox : Control, IReadOnly
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Left/Right", "Move the cursor");
+        yield return ("Home/End", "Start or end of the text");
+        yield return ("Ctrl+Left/Right", "Move by a word");
+        if (!IsReadOnly)
+        {
+            yield return ("Backspace/Delete", "Delete a character");
+            yield return ("Ctrl+W/Ctrl+Backspace", "Delete the word before the cursor");
+            yield return ("Ctrl+Delete", "Delete the word after the cursor");
+            yield return ("Ctrl+U", "Delete to the start of the text");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         KeepCursorVisible();

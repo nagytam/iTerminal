@@ -63,6 +63,16 @@ public class Alert(IThemeService themeService) : Control(themeService)
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!_isDismissible || !IsEnabled || _text.Length == 0)
+        {
+            yield break;
+        }
+
+        yield return ("Esc/Enter", "Dismiss the message");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

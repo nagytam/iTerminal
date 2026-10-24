@@ -13,6 +13,7 @@ namespace iTerminal.Core.Test.Services.Shell;
 
 /// <summary>Where Ctrl+O's shell runs, for each kind of panel, and how a shell that cannot start is reported.</summary>
 [TestClass]
+[DoNotParallelize]
 public class ShellLaunchTest
 {
     private static IFrequentExecutionGuardService ImmediateGuard()

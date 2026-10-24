@@ -38,6 +38,16 @@ public class LinkLabel : Control
 
     public event EventHandler? Activated;
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled || _text.Length == 0)
+        {
+            yield break;
+        }
+
+        yield return ("Enter/Space", "Follow the link");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

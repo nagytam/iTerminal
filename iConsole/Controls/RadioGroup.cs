@@ -103,6 +103,18 @@ public class RadioGroup<T> : Control, IReadOnly
         LayoutButtons();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (IsReadOnly || !IsEnabled || _items.Count == 0)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down or Left/Right", "Choose the previous or next option");
+        yield return ("Home/End", "First or last option");
+        yield return ("Space", "Choose the option under the cursor");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         // Only with focus: a key the focused control declines is offered to every control.

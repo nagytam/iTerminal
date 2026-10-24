@@ -271,6 +271,20 @@ public class TreeView : Control
     /// view shows, so the row the page ends on stays in sight). The arrows are the commands'; without these a tall tree
     /// could only be crossed one row at a time. The view scrolls to the focused row when it is drawn.
     /// </summary>
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down", "Move the cursor");
+        yield return ("PageUp/PageDown", "Move the cursor a page");
+        yield return ("Home/End", "First or last row");
+        yield return ("Right/Left", "Expand or collapse the node in place");
+        yield return ("Enter/Space/+/-", "Expand or collapse the node");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (await base.HandleKeyEventAsync(keyEvent))
