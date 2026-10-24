@@ -922,4 +922,52 @@ public class ControlInteractionTest
         spinner.Draw(buffer);
         return FirstLine(buffer);
     }
+
+    [TestMethod]
+    public async Task Slider_UpAndDown_StepLikeRightAndLeft()
+    {
+        Slider slider = NewSlider();
+        slider.SetFocus();
+
+        await slider.HandleKeyEventAsync(Key(ConsoleKey.UpArrow));
+        await slider.HandleKeyEventAsync(Key(ConsoleKey.UpArrow));
+        Assert.AreEqual(2, slider.Value);
+        await slider.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        Assert.AreEqual(1, slider.Value);
+        await slider.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await slider.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        Assert.AreEqual(0, slider.Value, "and it stops at the minimum");
+    }
+
+    [TestMethod]
+    public async Task SegmentedControl_UpAndDown_MoveTheSelectionAndStayInBounds()
+    {
+        SegmentedControl control = NewSegments();
+        control.SetFocus();
+
+        await control.HandleKeyEventAsync(Key(ConsoleKey.UpArrow));
+        Assert.AreEqual(0, control.SelectedIndex);
+        await control.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await control.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await control.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        Assert.AreEqual(2, control.SelectedIndex);
+        await control.HandleKeyEventAsync(Key(ConsoleKey.UpArrow));
+        Assert.AreEqual(1, control.SelectedIndex);
+    }
+
+    [TestMethod]
+    public async Task Breadcrumb_Space_ActivatesTheSegmentLikeEnter()
+    {
+        Breadcrumb crumb = new(Theme()) { Segments = ["A", "B", "C"], Position = new Position(0, 0), ViewSize = new Size(30, 1) };
+        crumb.SetFocus();
+        List<int> activated = [];
+        crumb.SegmentActivated += (_, index) => activated.Add(index);
+        await crumb.HandleKeyEventAsync(Key(ConsoleKey.LeftArrow));
+
+        Assert.IsTrue(await crumb.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' ')));
+        await crumb.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        Assert.AreEqual(2, activated.Count);
+        Assert.AreEqual(activated[0], activated[1]);
+    }
 }

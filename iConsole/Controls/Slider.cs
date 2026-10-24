@@ -128,9 +128,11 @@ public class Slider : Control, IReadOnly
         switch (keyEvent.ConsoleKey)
         {
             case ConsoleKey.RightArrow:
+            case ConsoleKey.UpArrow:
                 Value = SaturatingAdd(_value, Step);
                 return true;
             case ConsoleKey.LeftArrow:
+            case ConsoleKey.DownArrow:
                 Value = SaturatingAdd(_value, -Step);
                 return true;
             case ConsoleKey.PageUp:
