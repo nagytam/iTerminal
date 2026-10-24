@@ -474,4 +474,79 @@ public class ListControlsRenderTest
         ScreenBuffer.Render(list, 10, 3).AssertFillsBounds(list);
     }
     #endregion
+
+    private static KeyEvent Char(char c, ConsoleKey key = ConsoleKey.NoName, bool shift = false) => new(c, key, shift, false, false);
+
+    [TestMethod]
+    public async Task TreeView_EnterAndSpace_ToggleTheFocusedNode()
+    {
+        var root = Node(null, "/", isOpened: true);
+        var home = Node(root, "home");
+        Node(home, "tamas");
+        home.IsFocused = true;
+        var tree = CreateTree(root);
+        tree.SetFocus();
+
+        Assert.IsTrue(await tree.HandleKeyEventAsync(Key(ConsoleKey.Enter)));
+        Assert.IsTrue(home.IsOpened);
+        Assert.IsTrue(home.IsFocused, "the focus stays on the node");
+
+        Assert.IsTrue(await tree.HandleKeyEventAsync(Char(' ', ConsoleKey.Spacebar)));
+        Assert.IsFalse(home.IsOpened);
+    }
+
+    [TestMethod]
+    public async Task TreeView_PlusOpens_MinusCloses_EvenWithShiftHeld()
+    {
+        var root = Node(null, "/", isOpened: true);
+        var home = Node(root, "home");
+        Node(home, "tamas");
+        home.IsFocused = true;
+        var tree = CreateTree(root);
+        tree.SetFocus();
+
+        Assert.IsTrue(await tree.HandleKeyEventAsync(Char('+', ConsoleKey.OemPlus, shift: true)));
+        Assert.IsTrue(home.IsOpened);
+        await tree.HandleKeyEventAsync(Char('+', ConsoleKey.Add));
+        Assert.IsTrue(home.IsOpened, "plus never closes");
+
+        Assert.IsTrue(await tree.HandleKeyEventAsync(Char('-', ConsoleKey.OemMinus)));
+        Assert.IsFalse(home.IsOpened);
+        await tree.HandleKeyEventAsync(Char('-', ConsoleKey.Subtract));
+        Assert.IsFalse(home.IsOpened, "minus never opens");
+    }
+
+    [TestMethod]
+    public async Task TreeView_ExpandKeys_OnALeafOrWithoutFocus_AreLeftToTheHost()
+    {
+        var root = Node(null, "/", isOpened: true);
+        var leaf = Node(root, "etc");
+        var home = Node(root, "home");
+        Node(home, "tamas");
+        leaf.IsFocused = true;
+        var tree = CreateTree(root);
+
+        Assert.IsFalse(await tree.HandleKeyEventAsync(Key(ConsoleKey.Enter)), "not focused");
+
+        tree.SetFocus();
+        Assert.IsFalse(await tree.HandleKeyEventAsync(Key(ConsoleKey.Enter)), "a leaf has nothing to open");
+        Assert.IsFalse(await tree.HandleKeyEventAsync(Char('+', ConsoleKey.Add)));
+        Assert.IsFalse(home.IsOpened);
+    }
+
+    [TestMethod]
+    public async Task TreeView_Disabled_IgnoresTheExpandKeys()
+    {
+        var root = Node(null, "/", isOpened: true);
+        var home = Node(root, "home");
+        Node(home, "tamas");
+        home.IsFocused = true;
+        var tree = CreateTree(root);
+        tree.SetFocus();
+        tree.IsEnabled = false;
+
+        await tree.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        Assert.IsFalse(home.IsOpened);
+    }
 }

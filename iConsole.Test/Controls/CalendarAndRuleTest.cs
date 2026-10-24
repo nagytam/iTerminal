@@ -209,4 +209,74 @@ public class CalendarAndRuleTest
         second.Raise();
         Assert.AreEqual(1, changed);
     }
+
+    [TestMethod]
+    public async Task Calendar_CtrlPageUpAndDown_MoveByAYear()
+    {
+        Calendar calendar = Create();
+        calendar.SetFocus();
+
+        Assert.IsTrue(await calendar.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.PageDown, false, false, true)));
+        Assert.AreEqual(new DateOnly(2027, 10, 18), calendar.SelectedDate);
+        await calendar.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.PageUp, false, false, true));
+        await calendar.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.PageUp, false, false, true));
+        Assert.AreEqual(new DateOnly(2025, 10, 18), calendar.SelectedDate);
+    }
+
+    [TestMethod]
+    public async Task Calendar_CtrlPageDown_FromALeapDay_ClampsToTheShorterMonth()
+    {
+        Calendar calendar = Create();
+        calendar.SelectedDate = new DateOnly(2028, 2, 29);
+        calendar.SetFocus();
+
+        await calendar.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.PageDown, false, false, true));
+
+        Assert.AreEqual(new DateOnly(2029, 2, 28), calendar.SelectedDate);
+    }
+
+    [TestMethod]
+    public async Task Calendar_T_JumpsBackToToday_InEitherCase()
+    {
+        Calendar calendar = Create();
+        calendar.SetFocus();
+        calendar.SelectedDate = new DateOnly(2030, 1, 5);
+
+        Assert.IsTrue(await calendar.HandleKeyEventAsync(new KeyEvent('t', ConsoleKey.T, false, false, false)));
+        Assert.AreEqual(new DateOnly(2026, 10, 18), calendar.SelectedDate);
+
+        calendar.SelectedDate = new DateOnly(2030, 1, 5);
+        await calendar.HandleKeyEventAsync(new KeyEvent('T', ConsoleKey.T, true, false, false));
+        Assert.AreEqual(new DateOnly(2026, 10, 18), calendar.SelectedDate);
+    }
+
+    [TestMethod]
+    public async Task Calendar_ReadOnlyOrCtrlT_IgnoresTheNewKeys()
+    {
+        Calendar calendar = Create();
+        calendar.SetFocus();
+        calendar.SelectedDate = new DateOnly(2030, 1, 5);
+
+        await calendar.HandleKeyEventAsync(new KeyEvent('t', ConsoleKey.T, false, false, true));
+        Assert.AreEqual(new DateOnly(2030, 1, 5), calendar.SelectedDate, "Ctrl+T is not Today");
+
+        calendar.IsReadOnly = true;
+        await calendar.HandleKeyEventAsync(new KeyEvent('t', ConsoleKey.T, false, false, false));
+        await calendar.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.PageDown, false, false, true));
+        Assert.AreEqual(new DateOnly(2030, 1, 5), calendar.SelectedDate);
+    }
+
+    [TestMethod]
+    public async Task Calendar_Space_ActivatesTheDateLikeEnter()
+    {
+        Calendar calendar = Create();
+        calendar.SetFocus();
+        List<DateOnly> activated = [];
+        calendar.DateActivated += (_, date) => activated.Add(date);
+
+        Assert.IsTrue(await calendar.HandleKeyEventAsync(new KeyEvent(' ', ConsoleKey.Spacebar, false, false, false)));
+        await calendar.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        CollectionAssert.AreEqual(new[] { new DateOnly(2026, 10, 18), new DateOnly(2026, 10, 18) }, activated);
+    }
 }

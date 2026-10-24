@@ -109,6 +109,12 @@ public class Breadcrumb : Control
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (IsEnabled && mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            ActiveIndex += mouseEvent.WheelDelta > 0 ? -1 : 1;
+            return true;
+        }
+
         if (!IsEnabled || !mouseEvent.LeftClicked || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;
