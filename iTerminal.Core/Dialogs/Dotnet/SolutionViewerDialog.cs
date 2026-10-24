@@ -77,6 +77,8 @@ public class SolutionViewerDialog : SplitPaneDialog
         RegexOptions.Compiled);
 
     private readonly IDotnetSolutionService _dotnetSolutionService;
+    private IReadOnlyList<DotnetSdk> _sdks = [];
+    private int _sdkIndex = -1;
 
     private readonly ConcurrentObservableCollection<ProjectRow> _projectItems = new();
     private readonly ConcurrentObservableCollection<string> _outputItems = new();
@@ -253,6 +255,11 @@ public class SolutionViewerDialog : SplitPaneDialog
         _runCts = null;
         _selectedProjects.Clear();
 
+        // The SDKs are listed off the UI thread (dotnet --list-sdks takes a moment), and the newest stable one is selected.
+        _sdks = await Task.Run(() => _dotnetSolutionService.ListSdks().ToList());
+        DotnetSdk? defaultSdk = DotnetSdk.Default(_sdks);
+        _sdkIndex = defaultSdk is null ? -1 : _sdks.ToList().IndexOf(defaultSdk);
+
         try
         {
             _solution = _dotnetSolutionService.ParseSolution(SolutionPath);
@@ -331,6 +338,8 @@ public class SolutionViewerDialog : SplitPaneDialog
 
     private void RunBuild() => RunDotnet("build", ResolveTargets());
 
+    private void RunClean() => RunDotnet("clean", ResolveTargets());
+
     private void RunTest() => RunDotnet("test", ResolveTargets());
 
     private void RunProject()
@@ -381,6 +390,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         }
 
         var workingDirectory = _solution.Directory;
+        var dotnetHost = DotnetHost;
         var targetLabel = targets.Count == 1
             ? (targets[0]?.Name ?? _solution.Name)
             : $"{targets.Count} projects";
@@ -419,13 +429,13 @@ public class SolutionViewerDialog : SplitPaneDialog
                     _status = $"dotnet {verb} {targetName}...";
                     StateHasChanged();
                 }
-                AppendOutput($"$ dotnet {string.Join(' ', arguments)}");
+                AppendOutput($"$ dotnet {string.Join(' ', arguments)}" + (SelectedSdk is { } sdk ? $"   (.NET SDK {sdk.Version})" : string.Empty));
 
                 int exitCode;
                 try
                 {
                     exitCode = await _dotnetSolutionService.RunAsync(
-                        workingDirectory, arguments, AppendOutput, cts.Token);
+                        workingDirectory, dotnetHost, arguments, AppendOutput, cts.Token);
                 }
                 catch (Exception exception)
                 {
@@ -613,6 +623,9 @@ public class SolutionViewerDialog : SplitPaneDialog
             case 'b':
                 RunBuild();
                 return true;
+            case 'c':
+                RunClean();
+                return true;
             case 't':
                 RunTest();
                 return true;
@@ -621,6 +634,9 @@ public class SolutionViewerDialog : SplitPaneDialog
                 return true;
             case 'x':
                 Cancel();
+                return true;
+            case 'v':
+                CycleSdk();
                 return true;
         }
 
@@ -652,6 +668,8 @@ public class SolutionViewerDialog : SplitPaneDialog
     #region Test seams
 
     internal string StatusForTest => _status;
+    internal string SdkVersionForTest => SelectedSdk?.Version ?? string.Empty;
+    internal string DotnetHostForTest => DotnetHost;
     internal int OutputScrollForTest => (int)_outputListBox.ScrollableModel.ScrollPosition.Y;
     internal int OutputRowsForTest => (int)_outputListBox.ViewSize.Height;
     internal bool IsBusyForTest => _busy;
@@ -715,14 +733,44 @@ public class SolutionViewerDialog : SplitPaneDialog
     {
         var busy = _busy ? "  *" : string.Empty;
         var selected = _selectedProjects.Count > 0 ? $", {_selectedProjects.Count} selected" : string.Empty;
+        var sdk = SelectedSdk is { } chosen ? $"   .NET SDK {chosen.Version}" : "   .NET SDK not found";
         var text = string.IsNullOrEmpty(_solution.Path)
             ? SolutionPath
-            : $"{_solution.Path}   ({_solution.Projects.Count} projects{selected}){busy}";
+            : $"{_solution.Path}   ({_solution.Projects.Count} projects{selected}){sdk}{busy}";
         WriteLine(buffer, x, y, w, text, Color.Cyan, colorScheme.Background);
     }
 
     internal const string KeyHints =
-        "b:build  t:test  r:run  x:cancel  Space:check  a:all  T:tests  PgUp/PgDn/Home/End:output  Esc:close";
+        "b:build c:clean t:test r:run x:cancel v:SDK Space:check a:all T:tests PgUp/PgDn/Home/End:output Esc:close";
+
+    /// <summary>The SDK new commands run with: the one chosen with v, the newest stable one by default.</summary>
+    private DotnetSdk? SelectedSdk => _sdkIndex >= 0 && _sdkIndex < _sdks.Count ? _sdks[_sdkIndex] : null;
+
+    /// <summary>The <c>dotnet</c> host to run: the selected SDK's, or the <c>dotnet</c> on the PATH when none was found.</summary>
+    private string DotnetHost => SelectedSdk?.HostPath ?? "dotnet";
+
+    /// <summary>
+    /// v: the next installed SDK. A command already running keeps the SDK it started with; the next one uses this.
+    /// </summary>
+    private void CycleSdk()
+    {
+        if (_sdks.Count == 0)
+        {
+            _status = "No .NET SDK was found; commands run with the dotnet on the PATH.";
+        }
+        else if (_sdks.Count == 1)
+        {
+            _status = $"Only .NET SDK {SelectedSdk!.Version} is installed.";
+        }
+        else
+        {
+            _sdkIndex = (_sdkIndex + 1) % _sdks.Count;
+            _status = $"Using .NET SDK {SelectedSdk!.Version}{(SelectedSdk.IsPrerelease ? " (preview)" : string.Empty)}.";
+        }
+
+        _statusSeverity = StatusSeverity.Info;
+        StateHasChanged();
+    }
 
     /// <summary>
     /// Status (coloured by severity) followed by the key hints. The hints used to be shown only

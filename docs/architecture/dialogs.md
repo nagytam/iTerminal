@@ -249,3 +249,18 @@ and arrays with contents expand and collapse with the `TreeView`'s own keys; `*`
   once, with the error on the status line.
 
 The document is parsed and validated on background tasks; the validation result is shown on the idle pass.
+
+### The solution viewer (`SolutionViewerDialog`, F3 on a `.sln` or `.slnx`, `Services/Dotnet/`)
+F3 on a solution opens its projects, with build (`b`), clean (`c`), test (`t`) and run (`r`) on the checked projects, or
+on the project under the cursor, or on the whole solution for build, clean and test. `x` cancels a run.
+
+- **SDKs.** `DotnetSolutionService.ListSdks` reads `dotnet --list-sdks` off the UI thread. The newest stable SDK is the
+  default (`DotnetSdk.Default`); a preview is chosen only when no stable one is installed. The header shows the selected
+  SDK's version, and each command's first output line names it. `v` cycles through the installed SDKs; the next command
+  uses the chosen one, and a running command keeps the SDK it started with. Each command runs the SDK's own `dotnet`
+  host. A `global.json` in the solution folder can still pin a different SDK; the host applies it as usual.
+- **Finishing a run.** A run ends when the `dotnet` process exits. Its output is then read for a short grace period
+  (2 seconds), not until the pipe closes: MSBuild can leave a build node running that holds the pipe open, which used to
+  leave the dialog busy after a command had finished.
+- **Cancelling.** The run's task is cancelled before the process is killed. Killing raises the exit event at once, and
+  that would otherwise report the run as finished with an exit code.

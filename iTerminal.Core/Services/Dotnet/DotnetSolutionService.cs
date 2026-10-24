@@ -137,16 +137,84 @@ public sealed partial class DotnetSolutionService : IDotnetSolutionService
         !string.IsNullOrWhiteSpace(value)
         && ProjectExtensions.Any(extension => value!.EndsWith(extension, StringComparison.OrdinalIgnoreCase));
 
+    public IReadOnlyList<DotnetSdk> ListSdks()
+    {
+        try
+        {
+            using var process = Start("dotnet", ["--list-sdks"], out _);
+            if (process is null)
+            {
+                return [];
+            }
+
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit(TimeSpan.FromSeconds(30));
+            return DotnetSdk.ParseListing(output.Split('\n'));
+        }
+        catch (Exception)
+        {
+            return [];
+        }
+    }
+
+    /// <summary>How long the output may still arrive after the process has exited.</summary>
+    private static readonly TimeSpan OutputGracePeriod = TimeSpan.FromSeconds(2);
+
     public async Task<int> RunAsync(
         string workingDirectory,
+        string dotnetPath,
         IReadOnlyList<string> arguments,
         Action<string> onOutputLine,
         CancellationToken cancellationToken = default)
     {
+        var exited = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var process = Start(dotnetPath, arguments, out string? startError, workingDirectory, onOutputLine, exited);
+        if (process is null)
+        {
+            onOutputLine(startError ?? "Failed to start dotnet.");
+            return -1;
+        }
+
+        using var registration = cancellationToken.Register(() =>
+        {
+            // Cancel before killing: killing raises the exit event at once, and that would finish the run as an exit code.
+            exited.TrySetCanceled(cancellationToken);
+            try { process.Kill(entireProcessTree: true); } catch { }
+        });
+
+        try
+        {
+            int exitCode = await exited.Task;
+
+            // The process has exited, but a child it left running (MSBuild keeps a build node alive) can hold the
+            // output open. Wait for the last lines a short while, not for the child to finish.
+            await Task.WhenAny(Task.Run(() => process.WaitForExit()), Task.Delay(OutputGracePeriod));
+            return exitCode;
+        }
+        catch (OperationCanceledException)
+        {
+            onOutputLine("(cancelled)");
+            return -1;
+        }
+    }
+
+    /// <summary>
+    /// Starts a process with redirected output. With <paramref name="onOutputLine"/> it reports each line and the exit to
+    /// <paramref name="exited"/>; without, the caller reads the standard output itself.
+    /// </summary>
+    private static Process? Start(
+        string fileName,
+        IReadOnlyList<string> arguments,
+        out string? error,
+        string? workingDirectory = null,
+        Action<string>? onOutputLine = null,
+        TaskCompletionSource<int>? exited = null)
+    {
+        error = null;
         var startInfo = new ProcessStartInfo
         {
-            FileName = "dotnet",
-            WorkingDirectory = workingDirectory,
+            FileName = fileName,
+            WorkingDirectory = workingDirectory ?? Environment.CurrentDirectory,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
@@ -157,37 +225,39 @@ public sealed partial class DotnetSolutionService : IDotnetSolutionService
             startInfo.ArgumentList.Add(argument);
         }
 
-        using var process = new Process { StartInfo = startInfo };
-        process.OutputDataReceived += (_, e) => { if (e.Data is not null) onOutputLine(e.Data); };
-        process.ErrorDataReceived += (_, e) => { if (e.Data is not null) onOutputLine(e.Data); };
+        var process = new Process { StartInfo = startInfo, EnableRaisingEvents = exited is not null };
+        if (exited is not null)
+        {
+            process.Exited += (_, _) => exited.TrySetResult(process.ExitCode);
+        }
+
+        if (onOutputLine is not null)
+        {
+            process.OutputDataReceived += (_, e) => { if (e.Data is not null) onOutputLine(e.Data); };
+            process.ErrorDataReceived += (_, e) => { if (e.Data is not null) onOutputLine(e.Data); };
+        }
 
         try
         {
             if (!process.Start())
             {
-                onOutputLine("Failed to start dotnet.");
-                return -1;
+                process.Dispose();
+                return null;
             }
         }
         catch (Exception exception)
         {
-            onOutputLine($"Failed to start dotnet: {exception.Message}");
-            return -1;
+            process.Dispose();
+            error = $"Failed to start dotnet: {exception.Message}";
+            return null;
         }
 
-        process.BeginOutputReadLine();
-        process.BeginErrorReadLine();
+        if (onOutputLine is not null)
+        {
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+        }
 
-        try
-        {
-            await process.WaitForExitAsync(cancellationToken);
-            return process.ExitCode;
-        }
-        catch (OperationCanceledException)
-        {
-            try { process.Kill(entireProcessTree: true); } catch { }
-            onOutputLine("(cancelled)");
-            return -1;
-        }
+        return process;
     }
 }
