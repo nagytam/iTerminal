@@ -28,7 +28,16 @@ public class ErrorPromptService(IServiceProvider serviceProvider, IThemeService 
             var dialog = new ErrorPromptDialog(title, message, themeService, acceptLabel, declineLabel);
             var root = desktop.Screens.First();
             await root.ShowDialogAsync(dialog);
-            return await dialog.WaitForChoiceAsync(cancellationToken);
+            try
+            {
+                return await dialog.WaitForChoiceAsync(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                // The operation that asked has gone: its prompt is taken down, or it would stay on screen grabbing the keys.
+                dialog.Abandon();
+                throw;
+            }
         }
         finally
         {

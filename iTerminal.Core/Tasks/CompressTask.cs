@@ -159,6 +159,12 @@ public sealed class CompressTask(
             items.Add(new ArchiveItem(entryName + "/", true, 0, Modified(url, localPath, folder: true), localPath));
             foreach (var child in ContentModelFolderTaskHelper.ListChildren(fileSystem, url))
             {
+                // A link back to a folder it is inside would be archived for ever; the copy, size and delete walks refuse it too.
+                if (ContentModelFolderTaskHelper.IsLinkBackToAncestor(child))
+                {
+                    continue;
+                }
+
                 Collect(child, entryName + "/" + FocusedEntry.NameOf(child), fileSystem, items, archiveKey, cancellationToken);
             }
 

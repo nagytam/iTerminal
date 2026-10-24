@@ -5,6 +5,8 @@ namespace iTerminal.Core.Test.Model.Dotnet;
 [TestClass]
 public class DotnetSdkTest
 {
+    private static string Native(string unixPath) => unixPath.Replace('/', Path.DirectorySeparatorChar);
+
     [TestMethod]
     public void ParseListing_ReadsEachSdkAndItsInstallRoot_NewestFirst()
     {
@@ -22,8 +24,9 @@ public class DotnetSdkTest
         CollectionAssert.AreEqual(
             new[] { "10.0.200-preview.1.25001.1", "10.0.113", "9.0.300" },
             sdks.Select(s => s.Version).ToList());
-        Assert.AreEqual("/home/me/.dotnet", sdks[0].Root);
-        Assert.AreEqual("/usr/lib/dotnet", sdks[1].Root);
+        // The root is the folder above sdk/, written the way this platform writes paths.
+        Assert.AreEqual(Native("/home/me/.dotnet"), sdks[0].Root);
+        Assert.AreEqual(Native("/usr/lib/dotnet"), sdks[1].Root);
     }
 
     [TestMethod]

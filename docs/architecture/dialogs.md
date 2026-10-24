@@ -249,6 +249,7 @@ and arrays with contents expand and collapse with the `TreeView`'s own keys; `*`
   once, with the error on the status line.
 
 The document is parsed and validated on background tasks; the validation result is shown on the idle pass.
+- **An abandoned error prompt**: when the operation that asked for a prompt is cancelled, `ErrorPromptService` marks the prompt abandoned, and the prompt removes itself on the UI thread at its next idle pass. Before, it stayed on screen, grabbing the keys.
 
 ### The solution viewer (`SolutionViewerDialog`, F3 on a `.sln` or `.slnx`, `Services/Dotnet/`)
 F3 on a solution opens its projects, with build (`b`), clean (`c`), test (`t`) and run (`r`) on the checked projects, or
