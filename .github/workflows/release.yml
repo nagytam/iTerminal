@@ -1,8 +1,9 @@
 name: Release builds
 
 # Builds the Windows installer and the Linux packages. Merging a pull request into main runs it
-# and publishes the packages as a GitHub Release tagged v<version>; a manual run only attaches
-# them to the run as artifacts.
+# and publishes the packages as a GitHub Release tagged v<version> and to the iTerminalRelease
+# repository (Windows downloads and the Debian/Ubuntu APT repository, see .github/scripts); a manual
+# run only attaches them to the run as artifacts.
 
 on:
   pull_request:
@@ -107,3 +108,61 @@ jobs:
           --title "iTerminal $VERSION"
           --notes "Built from #$PR_NUMBER: $PR_TITLE"
           --generate-notes
+
+  publish-repository:
+    name: Publish to the iTerminalRelease repository
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    needs: [windows, linux]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # One at a time: each run reads and rewrites the whole repository.
+    concurrency:
+      group: release-repository
+      cancel-in-progress: false
+    steps:
+      - name: Check out the app (for the publishing script)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          path: iTerminal
+
+      - name: Download the packages
+        uses: actions/download-artifact@v4
+        with:
+          path: packages
+          pattern: iTerminal-${{ env.VERSION }}-*
+          merge-multiple: true
+
+      - name: Check out the release repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/iTerminalRelease
+          # A token with write access to that repository only; the default token cannot push to it.
+          token: ${{ secrets.RELEASE_REPOSITORY_TOKEN }}
+          path: iTerminalRelease
+
+      - name: Install apt-utils (apt-ftparchive)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apt-utils
+
+      - name: Import the APT signing key
+        env:
+          SIGNING_PRIVATE_KEY: ${{ secrets.APT_SIGNING_PRIVATE_KEY }}
+        run: printf '%s\n' "$SIGNING_PRIVATE_KEY" | gpg --batch --import
+
+      - name: Add the release to the repository
+        env:
+          SIGNING_KEY_ID: ${{ vars.APT_SIGNING_KEY_ID }}
+        run: iTerminal/.github/scripts/publish-release-repository.sh iTerminalRelease packages "$VERSION"
+
+      - name: Commit and push
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        working-directory: iTerminalRelease
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Release $VERSION from #$PR_NUMBER"
+          git push
