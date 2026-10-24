@@ -53,14 +53,23 @@ public class ScanWithDefenderCommand(
             string? failure = null;
             foreach (var target in targets)
             {
-                var result = await scanService.ScanAsync(target);
-                if (result.Outcome == ScanOutcome.ThreatsFound)
+                try
                 {
-                    threats++;
+                    var result = await scanService.ScanAsync(target);
+                    if (result.Outcome == ScanOutcome.ThreatsFound)
+                    {
+                        threats++;
+                    }
+                    else if (result.Outcome == ScanOutcome.Failed)
+                    {
+                        failure ??= result.Message;
+                    }
                 }
-                else if (result.Outcome == ScanOutcome.Failed)
+                catch (Exception exception) when (exception is not OperationCanceledException)
                 {
-                    failure ??= result.Message;
+                    // A scan that throws is a failed scan, and the rest still run. Uncaught, it ended the task with no word
+                    // to the user after "Scanning…".
+                    failure ??= exception.Message;
                 }
             }
 

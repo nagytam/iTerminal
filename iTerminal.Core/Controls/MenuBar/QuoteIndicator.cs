@@ -79,7 +79,9 @@ public class QuoteIndicator(string instrumentName, OnlineQuoteService onlineQuot
         var lastValue = instrument.InstrumentValues.FirstOrDefault();
         if (lastValue is null)
         {
-            return (Fit($"{instrument.Name} {ProgressChar()}", width), colorScheme.Background);
+            // An instrument with no value yet is as unavailable as no instrument, once the last attempt has failed.
+            var status = _onlineQuoteService.LastRefreshFailed && !_onlineQuoteService.IsRefreshing ? "unavailable" : ProgressChar();
+            return (Fit($"{instrument.Name} {status}", width), colorScheme.Background);
         }
 
         var background = colorScheme.Background;

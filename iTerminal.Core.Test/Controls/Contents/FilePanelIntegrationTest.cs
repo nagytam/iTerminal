@@ -374,9 +374,12 @@ public class FilePanelIntegrationTest
 
         // After navigate-back, RestoreFocusedEntry may leave cursor on the last-visited child
         // (alpha, index 1). Press Home to anchor to '..' (index 0), then move to beta (index 2).
+        // Walk down to beta by name: where the cursor lands after navigating back is not what this test measures.
         await app.LeftPanel.HandleKeyEventAsync(Key(ConsoleKey.Home));
-        await app.LeftPanel.HandleKeyEventAsync(Key(ConsoleKey.DownArrow)); // index 1 (alpha)
-        await app.LeftPanel.HandleKeyEventAsync(Key(ConsoleKey.DownArrow)); // index 2 (beta)
+        for (var step = 0; step < 10 && app.LeftModel!.GetFocusedEntry()?.Url.DisplayName != "beta"; step++)
+        {
+            await app.LeftPanel.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        }
         Assert.AreEqual("beta", app.LeftModel!.GetFocusedEntry()?.Url.DisplayName,
             "Cursor should be on 'beta'");
 

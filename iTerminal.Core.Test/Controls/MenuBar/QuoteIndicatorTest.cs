@@ -166,4 +166,15 @@ public class QuoteIndicatorTest
         StringAssert.StartsWith(indicator.Describe(30).Text, "Bitcoin ");
         StringAssert.DoesNotMatch(indicator.Describe(30).Text, new System.Text.RegularExpressions.Regex("unavailable"));
     }
+
+    [TestMethod]
+    public void AnInstrumentWithNoValue_AfterAFailedAttempt_SaysUnavailable()
+    {
+        var (indicator, service) = Create(new Instrument { Id = Guid.NewGuid(), Name = "Bitcoin", Currency = "USD", InstrumentType = InstrumentType.CryptoCurrency });
+        service.LastRefreshFailed = true;
+
+        var (text, _) = indicator.Describe(30);
+
+        Assert.AreEqual("Bitcoin unavailable", text.TrimEnd());
+    }
 }

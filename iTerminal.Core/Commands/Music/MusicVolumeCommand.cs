@@ -18,13 +18,20 @@ public abstract class MusicVolumeCommand(
     /// <summary>The second chord that means the same thing as <see cref="Command.Key"/>.</summary>
     protected abstract Key AlternateKey { get; }
 
+    /// <summary>
+    /// The characters that mean the same thing. On most layouts the main-row + is Shift with = (and the key Shift changes
+    /// its code), so the character is what is compared: a chord match on the key alone never saw it.
+    /// </summary>
+    protected abstract char[] AlternateChars { get; }
+
     protected abstract MusicAction Action { get; }
 
     public override string KeyDisplayText => $"{FormatKey(Key)} / {FormatKey(AlternateKey)}";
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
-        if (AlternateKey.IsIdentical(keyEvent))
+        var typed = !keyEvent.Control && !keyEvent.Alt && AlternateChars.Contains(keyEvent.KeyChar);
+        if (typed || AlternateKey.IsIdentical(keyEvent))
         {
             return await RunAsync(null);
         }
@@ -54,6 +61,8 @@ public class MusicVolumeUpCommand(
     protected override Key AlternateKey { get; } =
         new(ConsoleKey.OemPlus, false, false, false);
 
+    protected override char[] AlternateChars { get; } = ['+', '='];
+
     protected override MusicAction Action => MusicAction.VolumeUp;
 }
 
@@ -71,6 +80,8 @@ public class MusicVolumeDownCommand(
 
     protected override Key AlternateKey { get; } =
         new(ConsoleKey.OemMinus, false, false, false);
+
+    protected override char[] AlternateChars { get; } = ['-'];
 
     protected override MusicAction Action => MusicAction.VolumeDown;
 }
