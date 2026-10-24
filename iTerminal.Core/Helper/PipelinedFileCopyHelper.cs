@@ -1,5 +1,6 @@
 using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Tasks;
 using System.IO.Pipelines;
 
 namespace iTerminal.Core.Helper;
@@ -22,7 +23,8 @@ public static class PipelinedFileCopyHelper
         Url sourceUrl,
         Url targetUrl,
         IProgress<long>? progress,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        PauseGate? pauseGate = null)
     {
         var pipe = new Pipe(new PipeOptions(
             pauseWriterThreshold: PauseWriterThreshold,
@@ -37,7 +39,8 @@ public static class PipelinedFileCopyHelper
         var produce = Task.Run(async () =>
         {
             Exception? error = null;
-            var writerStream = pipe.Writer.AsStream();
+            // A paused copy waits at its next chunk: the writer is the side that reads the source.
+            Stream writerStream = pauseGate is null ? pipe.Writer.AsStream() : new GatedStream(pipe.Writer.AsStream(), pauseGate);
             try
             {
                 await source.StreamToAsync(sourceUrl, writerStream, progress, linkedToken).ConfigureAwait(false);

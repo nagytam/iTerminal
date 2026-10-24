@@ -10,6 +10,8 @@ public class TaskManagerTest
 {
     private sealed class FakeTask : IBackgroundTask
     {
+        public PauseGate PauseGate { get; } = new();
+
         private readonly Func<Task>? _runAsync;
 
         public string Name => "Fake";
@@ -179,5 +181,69 @@ public class TaskManagerTest
 
             await Task.Delay(10);
         }
+    }
+
+    [TestMethod]
+    public async Task APausedQueuedTask_IsNotStarted_UntilItIsResumed()
+    {
+        using var manager = new TaskManager(workerCount: 1);
+        var release = new SemaphoreSlim(0, 1);
+        var otherRan = new TaskCompletionSource();
+        var pausedRan = new TaskCompletionSource();
+        var paused = new FakeTask(() => { pausedRan.TrySetResult(); return Task.CompletedTask; });
+        var other = new FakeTask(() => { otherRan.TrySetResult(); return Task.CompletedTask; });
+
+        await manager.Add(new FakeTask(() => release.WaitAsync()));
+        manager.SetPaused(paused, true);
+        await manager.Add(paused);
+        await manager.Add(other);
+        release.Release();
+
+        await otherRan.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await Task.Delay(50);
+        Assert.IsFalse(pausedRan.Task.IsCompleted, "the paused task waits in the queue");
+
+        manager.SetPaused(paused, false);
+        await pausedRan.Task.WaitAsync(TimeSpan.FromSeconds(5));
+    }
+
+    [TestMethod]
+    public async Task MoveInQueue_StartsAQueuedTaskEarlier()
+    {
+        using var manager = new TaskManager(workerCount: 1);
+        var release = new SemaphoreSlim(0, 1);
+        var order = new ConcurrentQueue<string>();
+        var both = new TaskCompletionSource();
+        var a = new FakeTask(() => { order.Enqueue("a"); if (order.Count == 2) both.TrySetResult(); return Task.CompletedTask; });
+        var b = new FakeTask(() => { order.Enqueue("b"); if (order.Count == 2) both.TrySetResult(); return Task.CompletedTask; });
+
+        await manager.Add(new FakeTask(() => release.WaitAsync()));
+        await manager.Add(a);
+        await manager.Add(b);
+        manager.MoveInQueue(b, earlier: true);
+        release.Release();
+
+        await both.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.AreEqual("b", order.First());
+    }
+
+    [TestMethod]
+    public async Task MoveInQueue_ForTheFirstTask_DoesNothing()
+    {
+        using var manager = new TaskManager(workerCount: 1);
+        var release = new SemaphoreSlim(0, 1);
+        var order = new ConcurrentQueue<string>();
+        var both = new TaskCompletionSource();
+        var a = new FakeTask(() => { order.Enqueue("a"); if (order.Count == 2) both.TrySetResult(); return Task.CompletedTask; });
+        var b = new FakeTask(() => { order.Enqueue("b"); if (order.Count == 2) both.TrySetResult(); return Task.CompletedTask; });
+
+        await manager.Add(new FakeTask(() => release.WaitAsync()));
+        await manager.Add(a);
+        await manager.Add(b);
+        manager.MoveInQueue(a, earlier: true);
+        release.Release();
+
+        await both.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.AreEqual("a", order.First());
     }
 }

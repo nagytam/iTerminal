@@ -1,6 +1,7 @@
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
+using iConsole.Tasks;
 using iTerminal.Core.Helper;
 
 namespace iTerminal.Core.Tasks;
@@ -32,7 +33,8 @@ internal static class FolderCopyPipeline
         Action<Url>? onItemSucceeded = null,
         Action<long>? reportBytes = null,
         Action<Url>? onFileStarted = null,
-        Func<CancellationToken, Task>? beforeFile = null)
+        Func<CancellationToken, Task>? beforeFile = null,
+        PauseGate? pauseGate = null)
     {
         long processedFiles = 0;
         long processedBytes = 0;
@@ -94,7 +96,7 @@ internal static class FolderCopyPipeline
                                 reportBytes(Interlocked.Add(ref processedBytes, delta));
                             });
 
-                        await PipelinedFileCopyHelper.CopyAsync(source, target, item.Source, item.Target, fileProgress, linkedCts.Token);
+                        await PipelinedFileCopyHelper.CopyAsync(source, target, item.Source, item.Target, fileProgress, linkedCts.Token, pauseGate);
                         onItemSucceeded?.Invoke(item.Source);
                     }
                     catch (OperationCanceledException)

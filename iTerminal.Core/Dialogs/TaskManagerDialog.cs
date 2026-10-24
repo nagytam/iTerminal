@@ -12,6 +12,7 @@ namespace iTerminal.Core.Dialogs;
 public class TaskManagerDialog : Dialog
 {
     private readonly TaskManager _taskManager;
+    private readonly ListBoxModel<IBackgroundTask> _listModel;
     private ListBox<IBackgroundTask> _listBox { get; set; }
     private ScrollBar _scrollBar { get; set; }
 
@@ -20,11 +21,11 @@ public class TaskManagerDialog : Dialog
     {
         _taskManager = taskManager ?? new TaskManager();
         Title = "Task Manager";
-        var listModel = new ListBoxModel<IBackgroundTask>(_taskManager.Tasks)
+        _listModel = new ListBoxModel<IBackgroundTask>(_taskManager.Tasks)
         {
             TransformItem = TransformItem
         };
-        _listBox = new ListBox<IBackgroundTask>(listModel, themeService)
+        _listBox = new ListBox<IBackgroundTask>(_listModel, themeService)
         {
             // An empty frame read as "the list failed to load"; most of the time nothing is running.
             EmptyText = " No background tasks are running.",
@@ -42,9 +43,46 @@ public class TaskManagerDialog : Dialog
     {
         var transformedItem = new ListItem<IBackgroundTask>(item)
         {
-            Value = item.DisplayName.Shrink((int)_listBox.ViewSize.Width - 2) ?? string.Empty
+            Value = (item.PauseGate.IsPaused ? "[paused] " : string.Empty) + item.DisplayName.Shrink((int)_listBox.ViewSize.Width - 4) ?? string.Empty
         };
         return transformedItem;
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        if (keyEvent.KeyPressType == KeyPressType.Down && _listBox.SelectedItem?.Item is { } task)
+        {
+            if (keyEvent.ConsoleKey == ConsoleKey.P && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
+            {
+                _taskManager.SetPaused(task, !task.PauseGate.IsPaused);
+                _listModel.Invalidate();
+                return true;
+            }
+
+            if (keyEvent.Control && keyEvent.ConsoleKey is ConsoleKey.UpArrow or ConsoleKey.DownArrow)
+            {
+                // Moves the queued task; once it has started it is no longer in the queue, and the key does nothing.
+                _taskManager.MoveInQueue(task, earlier: keyEvent.ConsoleKey == ConsoleKey.UpArrow);
+                _listModel.Invalidate();
+                return true;
+            }
+
+            if (keyEvent.ConsoleKey == ConsoleKey.Delete && !keyEvent.Control && !keyEvent.Alt)
+            {
+                task.CancellationTokenSource.Cancel();
+                return true;
+            }
+        }
+
+        return await base.HandleKeyEventAsync(keyEvent);
+    }
+
+    /// <summary>The keys this dialog adds to the list's.</summary>
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("P", "Pause or resume the task");
+        yield return ("Ctrl+↑/↓", "Move a queued task");
+        yield return ("Del", "Cancel the task");
     }
 
     public override void OnIdle()

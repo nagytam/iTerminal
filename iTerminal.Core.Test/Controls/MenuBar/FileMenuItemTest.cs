@@ -18,6 +18,6 @@ public class FileMenuItemTest
             .Select(m => m.Text.Split('\t')[0])
             .ToArray();
 
-        CollectionAssert.AreEqual(new[] { "View", "Quick View", "Edit", "Open With…", "Edit With…", "Find Files", "Create Folder", "Create File", "Rename", "Create Link", "Compress", "Extract", "Checksums", "Properties", "Quit" }, entries);
+        CollectionAssert.AreEqual(new[] { "View", "Quick View", "Edit", "Open With…", "Edit With…", "Find Files", "Find Large Files", "Find Old Files", "Create Folder", "Create File", "Rename", "Create Link", "Compress", "Extract", "Checksums", "Properties", "Quit" }, entries);
     }
 }

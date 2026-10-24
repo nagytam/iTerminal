@@ -123,4 +123,28 @@ public class FileSearchTest
         Assert.ThrowsExactly<DirectoryNotFoundException>(() =>
             FileSearch.Run(new FileSearchQuery(Path.Combine(_root, "nope"), "*"), _ => { }, null, CancellationToken.None));
     }
+
+    [TestMethod]
+    public void ASizeLimit_FindsOnlyFilesAtLeastThatLong_AndNoFolders()
+    {
+        List<FileSearchHit> hits = [];
+        FileSearch.Run(new FileSearchQuery(_root, string.Empty, MinBytes: 20), hits.Add, null, CancellationToken.None);
+
+        // readme.md (28 bytes) and the report (about 40) are at least 20 bytes; notes.md (13) and image.bin (11) are not.
+        CollectionAssert.AreEquivalent(new[] { "readme.md", "docs/2024-report-final.txt" }, Relative(hits));
+        Assert.IsTrue(hits.All(h => !h.IsFolder));
+    }
+
+    [TestMethod]
+    public void AnAgeLimit_FindsOnlyFilesChangedAtOrBeforeIt()
+    {
+        List<FileSearchHit> nothingOlder = [];
+        FileSearch.Run(new FileSearchQuery(_root, string.Empty, ModifiedBefore: DateTime.Now.AddDays(-1)), nothingOlder.Add, null, CancellationToken.None);
+
+        List<FileSearchHit> everything = [];
+        FileSearch.Run(new FileSearchQuery(_root, string.Empty, ModifiedBefore: DateTime.Now.AddDays(1)), everything.Add, null, CancellationToken.None);
+
+        Assert.AreEqual(0, nothingOlder.Count, "every file was written today");
+        Assert.AreEqual(4, everything.Count, "the four files outside .git, and no folder");
+    }
 }
