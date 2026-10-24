@@ -103,11 +103,32 @@ public class ContentModelFileSystem(
     /// </summary>
     public FilePanelRefreshTask? LastRefreshTask { get; private set; }
 
+    /// <summary>
+    /// The folder to show when the one asked for is gone (a removed drive, a deleted folder): its nearest parent that
+    /// still exists, so the panel stays where the user was. The working directory only when nothing above it does.
+    /// </summary>
+    private Url NearestExistingFolder(Url url)
+    {
+        var folder = Path.GetDirectoryName(url.Path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+        while (!string.IsNullOrEmpty(folder))
+        {
+            var candidate = new Url(folder);
+            if (fileSystemService.ExistsFolder(candidate))
+            {
+                return candidate;
+            }
+
+            folder = Path.GetDirectoryName(folder);
+        }
+
+        return new Url(Directory.GetCurrentDirectory());
+    }
+
     public override void SetUrl(Url url)
     {
         if (!fileSystemService.ExistsFolder(url))
         {
-            url = Directory.GetCurrentDirectory();
+            url = NearestExistingFolder(url);
         }
         _settingsService.Set(Name, url.FullUrl);
         _folderHistoryService.Add(url);

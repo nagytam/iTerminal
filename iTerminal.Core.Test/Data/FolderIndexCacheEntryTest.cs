@@ -1,19 +1,18 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using iTerminal.Core.Data;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace iTerminal.Core.Data.Test;
 
+/// <summary>A cached folder-size entry starts at zero bytes with an empty path, so a fresh entry reads as "nothing measured yet".</summary>
 [TestClass]
 public class FolderIndexCacheEntryTest
 {
     [TestMethod]
-    public void Constructor_Default_ShouldCreateInstance()
+    public void A_NewEntry_HasEmptyPathAndZeroSize()
     {
-        // Arrange
+        var entry = new FolderIndexCacheEntry();
 
-        // Act
-        // TODO: implement test
-        // Assert
+        Assert.AreEqual(string.Empty, entry.Path);
+        Assert.AreEqual(0L, entry.Size);
     }
 }
-

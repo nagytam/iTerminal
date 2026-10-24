@@ -25,6 +25,8 @@ public class FileInformationRefreshTask
     private DateTime _lastModelProgressUpdate = DateTime.MinValue;
     private static readonly TimeSpan ModelProgressUpdateInterval = TimeSpan.FromMilliseconds(500);
     private readonly uint _reportBatchSize;
+    private readonly object _countLock = new();
+    private bool _countFinished;
 
     public FileInformationRefreshTask(
         IEntry entry, 
@@ -68,12 +70,21 @@ public class FileInformationRefreshTask
                         CurrentEntry.Url.UrlScheme == Container.FILE)
                     {
                         uint numberOfFiles = 0;
+                        lock (_countLock)
+                        {
+                            _countFinished = false;
+                        }
                         Progress.Report(numberOfFiles);
                         var counted = GetNumberOfFiles(ref numberOfFiles, CurrentEntry.FullName, CancellationToken);
-                        if (!CancellationToken.IsCancellationRequested)
+                        lock (_countLock)
                         {
-                            // A count that stopped part-way (a folder that cannot be read) is not a total: say so, not a short number.
-                            CurrentEntry.NumberOfFiles = counted ? numberOfFiles.ToString("N0") : "?";
+                            // Set before the final value, so a progress report that is delivered late cannot put "…" back.
+                            _countFinished = true;
+                            if (!CancellationToken.IsCancellationRequested)
+                            {
+                                // A count that stopped part-way (a folder that cannot be read) is not a total: say so, not a short number.
+                                CurrentEntry.NumberOfFiles = counted ? numberOfFiles.ToString("N0") : "?";
+                            }
                         }
                     }
                 }
@@ -99,17 +110,24 @@ public class FileInformationRefreshTask
     {
         base.OnProgressChanged(value);
 
-        if (!CancellationToken.IsCancellationRequested)
+        lock (_countLock)
         {
+            // Progress is delivered on a later turn than it was reported, so one can arrive after the count has finished.
+            if (_countFinished || CancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             // The running count, not a spinner: a large tree takes a while, and a number that
             // climbs says both that work is happening and roughly how much there is.
             CurrentEntry.NumberOfFiles = $"{value:N0}…";
-            var now = DateTime.UtcNow;
-            if (now - _lastModelProgressUpdate >= ModelProgressUpdateInterval)
-            {
-                _lastModelProgressUpdate = now;
-                CurrentModel?.Update();
-            }
+        }
+
+        var now = DateTime.UtcNow;
+        if (now - _lastModelProgressUpdate >= ModelProgressUpdateInterval)
+        {
+            _lastModelProgressUpdate = now;
+            CurrentModel?.Update();
         }
     }
 
