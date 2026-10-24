@@ -7,6 +7,7 @@ using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Controls;
 using iTerminal.Core.Helper;
+using iTerminal.Core.Services.Labels;
 using iTerminal.Core.Services.Properties;
 using System.Globalization;
 
@@ -25,11 +26,12 @@ namespace iTerminal.Core.Dialogs;
 public class PropertiesDialog : FormDialog
 {
     private const int CaptionWidth = 11;
-    private const int InfoRows = 11;
+    private const int InfoRows = 13;
     private static readonly string[] DateFormats = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm"];
 
     private readonly IFilePropertiesService _propertiesService;
     private readonly IContentModelService _contentModelService;
+    private readonly IFileLabelService? _labels;
     private readonly InfoLines _info;
     private readonly CheckBox _checkBoxReadOnly;
     private readonly CheckBox _checkBoxHidden;
@@ -57,11 +59,13 @@ public class PropertiesDialog : FormDialog
         IContentModelService contentModelService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        IFileLabelService? labels = null)
         : base(nameof(PropertiesDialog), themeService)
     {
         _propertiesService = propertiesService;
         _contentModelService = contentModelService;
+        _labels = labels;
         Title = "Properties";
         var applyCommand = new ApplyCommand();
         AddCommand(applyCommand);
@@ -332,6 +336,14 @@ public class PropertiesDialog : FormDialog
         if (properties.UnixMode is { } mode)
         {
             lines.Add(new(Row("Permissions", FilePropertiesService.ToSymbolic(mode))));
+        }
+
+        if (_labels is not null)
+        {
+            // The colour and the tags the file was given in the labels dialog; "none" where it has none.
+            var label = _labels.Get(properties.Path);
+            lines.Add(new(Row("Colour", label.Colour == LabelColour.None ? "none" : LabelColours.Name(label.Colour))));
+            lines.Add(new(Row("Tags", label.Tags.Count == 0 ? "none" : (FileLabelTags.Format(label.Tags)).Shrink(valueWidth) ?? string.Empty)));
         }
 
         _info.Lines = lines;

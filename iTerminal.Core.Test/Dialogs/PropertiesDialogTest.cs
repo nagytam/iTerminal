@@ -5,6 +5,7 @@ using iConsole.Interfaces;
 using iConsole.Services;
 using iConsole.Test.Core;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Services.Labels;
 using iTerminal.Core.Services.Properties;
 using Moq;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
@@ -337,5 +338,39 @@ public class PropertiesDialogTest
         Assert.IsTrue(rig.Dialog.Apply());
 
         rig.Service.Verify(s => s.SetTimes(It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>()), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task TheColourAndTheTagsAreShown()
+    {
+        Mock<IFilePropertiesService> service = new();
+        service.Setup(s => s.Read(It.IsAny<string>())).Returns(File(mode: Octal644));
+        Mock<IFileLabelService> labels = new();
+        labels.Setup(l => l.Get(It.IsAny<string>())).Returns(new FileLabel(LabelColour.Red, ["invoice", "2026"]));
+        PropertiesDialog dialog = new(service.Object, Panels(), Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), TestTheme(), labels.Object);
+        dialog.Load(Path.Combine(Path.GetTempPath(), "dir", "report.txt"));
+        Control root = await ShowAsync(dialog);
+        dialog.OnIdle();
+
+        ScreenBuffer screen = Render(root);
+        AssertScreenContains(screen, "Colour     red");
+        AssertScreenContains(screen, "Tags       invoice, 2026");
+    }
+
+    [TestMethod]
+    public async Task AFileWithNoLabel_SaysNoneForBoth()
+    {
+        Mock<IFilePropertiesService> service = new();
+        service.Setup(s => s.Read(It.IsAny<string>())).Returns(File(mode: Octal644));
+        Mock<IFileLabelService> labels = new();
+        labels.Setup(l => l.Get(It.IsAny<string>())).Returns(FileLabel.None);
+        PropertiesDialog dialog = new(service.Object, Panels(), Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), TestTheme(), labels.Object);
+        dialog.Load(Path.Combine(Path.GetTempPath(), "dir", "report.txt"));
+        Control root = await ShowAsync(dialog);
+        dialog.OnIdle();
+
+        ScreenBuffer screen = Render(root);
+        AssertScreenContains(screen, "Colour     none");
+        AssertScreenContains(screen, "Tags       none");
     }
 }

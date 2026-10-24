@@ -1,6 +1,7 @@
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Tasks;
+using iTerminal.Core.Model.ContentModels;
 using System.ComponentModel;
 
 namespace iTerminal.Core.Helper;
@@ -118,6 +119,18 @@ public static class PanelRefreshHelper
             catch
             {
                 // A panel that cannot be re-read must not keep the other from it.
+            }
+        }
+    }
+
+    /// <summary>Rebuilds the list of every panel narrowed by a label filter, after the labels changed; each keeps its cursor on its entry.</summary>
+    public static void RefreshEntryFilters(IContentModelService? contentModelService)
+    {
+        foreach (var model in contentModelService?.ContentModels?.ToList() ?? [])
+        {
+            if (model is ContentModelBase { EntryFilterDescription: not null } filtered)
+            {
+                filtered.RefreshEntryFilter();
             }
         }
     }

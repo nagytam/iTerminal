@@ -6,6 +6,7 @@ using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Layouts;
 using iConsole.Services;
+using iTerminal.Core.Helper;
 using iTerminal.Core.Services.Labels;
 
 namespace iTerminal.Core.Dialogs;
@@ -20,6 +21,7 @@ public class FileLabelsDialog : FormDialog
     private const string Keep = "(keep)";
 
     private readonly IFileLabelService _labels;
+    private readonly IContentModelService? _contentModelService;
     private readonly ComboBox<string> _colour;
     private readonly TextBox _tags;
     private readonly Label _info;
@@ -35,10 +37,12 @@ public class FileLabelsDialog : FormDialog
         IFileLabelService labels,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        IContentModelService? contentModelService = null)
         : base(nameof(FileLabelsDialog), themeService)
     {
         _labels = labels;
+        _contentModelService = contentModelService;
         Title = "Colour labels and tags";
         var applyCommand = new ApplyCommand();
         AddCommand(applyCommand);
@@ -162,7 +166,9 @@ public class FileLabelsDialog : FormDialog
         {
             if (_saveSucceeded)
             {
-                // The panel draws the new labels from memory, and closing the dialog repaints it.
+                // The panel draws the new labels from memory, and closing the dialog repaints it. A panel filtered by label
+                // has its list built from them, so that one is rebuilt.
+                PanelRefreshHelper.RefreshEntryFilters(_contentModelService);
                 _message.Text = string.Empty;
                 Close();
             }

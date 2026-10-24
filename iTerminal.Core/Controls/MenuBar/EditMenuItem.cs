@@ -23,6 +23,7 @@ public class EditMenuItem : MenuItem
         SynchronizeFoldersDialog? synchronizeFoldersDialog = null,
         StripMetadataDialog? stripMetadataDialog = null,
         FileLabelsDialog? fileLabelsDialog = null,
+        LabelFilterDialog? labelFilterDialog = null,
         iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null)
         : base("Edit", null, [], themeService)
     {
@@ -76,6 +77,10 @@ public class EditMenuItem : MenuItem
         if (fileLabelsDialog is not null)
         {
             AddMenuItem(new MenuItem("Colour Labels and Tags", new FileLabelsDialogCommand(fileLabelsDialog, contentModelService), [], themeService));
+        }
+        if (labelFilterDialog is not null)
+        {
+            AddMenuItem(new MenuItem("Filter by Label", new LabelFilterDialogCommand(labelFilterDialog, contentModelService), [], themeService));
         }
         if (fileDiffDialog is not null)
         {
