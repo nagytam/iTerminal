@@ -3,17 +3,16 @@ using iTerminal.Core.Data;
 
 namespace iTerminal.Core.Data.Test;
 
+/// <summary>A stored setting is a key and its text value; neither is ever null, so a read cannot fail on a missing one.</summary>
 [TestClass]
 public class PersistedSettingTest
 {
     [TestMethod]
-    public void Constructor_Default_ShouldCreateInstance()
+    public void A_NewSetting_HasEmptyKeyAndValue_NotNull()
     {
-        // Arrange
+        var setting = new PersistedSetting();
 
-        // Act
-        // TODO: implement test
-        // Assert
+        Assert.AreEqual(string.Empty, setting.Key);
+        Assert.AreEqual(string.Empty, setting.Value);
     }
 }
-

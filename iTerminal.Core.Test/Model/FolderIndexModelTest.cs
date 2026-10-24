@@ -3,17 +3,17 @@ using iTerminal.Core.Model;
 
 namespace iTerminal.Core.Model.Test;
 
+/// <summary>The "My Computer" root of the folder index: named, open and focused from the start, so the tree is never a closed root.</summary>
 [TestClass]
 public class FolderIndexModelTest
 {
     [TestMethod]
-    public void Constructor_Default_ShouldCreateInstance()
+    public void TheRoot_IsMyComputer_AndStartsOpenAndFocused()
     {
-        // Arrange
+        var root = new FolderIndexModel();
 
-        // Act
-        // TODO: implement test
-        // Assert
+        Assert.AreEqual("My Computer", root.Name);
+        Assert.IsTrue(root.IsOpened);
+        Assert.IsTrue(root.IsFocused);
     }
 }
-
