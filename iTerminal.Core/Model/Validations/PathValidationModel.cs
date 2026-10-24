@@ -13,21 +13,25 @@ public class PathValidationModel(ITextModel model, IDateTimeProviderService date
         if (Model is not null)
         {
             var inputPath = Model.Lines[0];
+            // Empty is invalid but says nothing, as on the create dialogs: a red message before the first key is noise.
             if (string.IsNullOrEmpty(inputPath))
             {
-                SetValidationResult(now, false, "Path cannot be empty");
+                SetValidationResult(now, false, string.Empty);
                 return;
             }
 
-            var url = new Url(inputPath);
-            if (url is not null && !url.IsValid(PathExistMode.Default))
+            // A path the file system cannot represent (a NUL character) is refused, not thrown from the key handler.
+            bool accepted;
+            try
             {
-                SetValidationResult(now, false, "Invalid path");
+                accepted = new Url(inputPath).IsValid(PathExistMode.Default);
             }
-            else
+            catch (ArgumentException)
             {
-                SetValidationResult(now, true, string.Empty);
+                accepted = false;
             }
+
+            SetValidationResult(now, accepted, accepted ? string.Empty : UrlValidationModel.InvalidMessage);
         }
         else
         {

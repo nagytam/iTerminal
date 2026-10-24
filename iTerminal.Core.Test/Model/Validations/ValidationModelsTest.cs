@@ -55,7 +55,7 @@ public class PathValidationModelTest
         var model = new PathValidationModel(textModel, dt.Object);
         model.Validate(DateTime.Now);
         Assert.IsFalse(model.IsValid);
-        Assert.IsFalse(string.IsNullOrEmpty(model.ErrorMessage));
+        Assert.AreEqual(string.Empty, model.ErrorMessage, "an empty field says nothing, as on the create dialogs");
     }
 
     [TestMethod]
