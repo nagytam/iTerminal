@@ -1,4 +1,5 @@
 ﻿using iConsole.Buffers;
+using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -61,8 +62,158 @@ public class TextViewerControl : Control
 
         AddControl(_verticalScrollBar);
         AddControl(_horizontalScrollBar);
-        CommandHelper.AddVerticalScrollingCommands(this, ScrollableModel, false);
+        // A viewer has no caret, so Home and End take it to the start and the end of the file; an editor keeps them for
+        // the line, and takes Ctrl+Home / Ctrl+End for the file.
+        CommandHelper.AddVerticalScrollingCommands(this, ScrollableModel, !isCursorEnabled);
+        AddCommand(new ScrollToHomeVerticalCommand(ScrollableModel) { Key = new Key(ConsoleKey.Home, false, false, true) });
+        AddCommand(new ScrollToEndVerticalCommand(ScrollableModel) { Key = new Key(ConsoleKey.End, false, false, true) });
         CommandHelper.AddHorizontalScrollingCommands(this, ScrollableModel, TextModel, SelectionTextModel, isCursorEnabled);
+        TextModel.PropertyChanged += (_, _) => _scrollableSizeStale = true;
+    }
+
+    // ---- Scrollable size (the text can change after the layout) ----
+
+    private bool _scrollableSizeStale = true;
+    private ConcurrentList<string>? _sizedLines;
+    private int _sizedCount = -1;
+
+    /// <summary>
+    /// Brings <see cref="IScrollableModel.ScrollableSize"/> up to the text. The layout sets it once, but a file can be
+    /// read, or re-read under another code page, after that, and a size left at zero lets nothing scroll. The longest
+    /// line is only searched for again when the text was announced as changed or its line count differs.
+    /// </summary>
+    protected void SyncScrollableSize()
+    {
+        var lines = TextModel.Lines;
+        if (!_scrollableSizeStale && ReferenceEquals(lines, _sizedLines) && lines.Count == _sizedCount)
+        {
+            return;
+        }
+
+        _scrollableSizeStale = false;
+        _sizedLines = lines;
+        _sizedCount = lines.Count;
+        if (_wrapLines && !ViewSize.IsEmpty)
+        {
+            _rowsKey = (-1, -1, false);
+            _ = ScreenRows;
+            return;
+        }
+
+        var size = lines.Count == 0
+            ? new Size(0, 0)
+            : new Size(lines.Max(l => l.Length), lines.Count);
+        ScrollableModel.ScrollableSize = size;
+        ClampScrollPosition();
+    }
+
+    /// <summary>Keeps the view inside the text: no scrolling past the last line, or past the end of the longest one.</summary>
+    private void ClampScrollPosition()
+    {
+        if (ScrollableModel.ViewSize.IsEmpty)
+        {
+            return;
+        }
+
+        long maxY = Math.Max(0, ScrollableModel.ScrollableSize.Height - ScrollableModel.ViewSize.Height);
+        long maxX = Math.Max(0, ScrollableModel.ScrollableSize.Width - ScrollableModel.ViewSize.Width);
+        if (ScrollableModel.ScrollPosition.Y > maxY)
+        {
+            ScrollableModel.ScrollPosition.Y = maxY;
+        }
+
+        if (ScrollableModel.ScrollPosition.X > maxX)
+        {
+            ScrollableModel.ScrollPosition.X = maxX;
+        }
+    }
+
+    // ---- Syntax colouring ----
+
+    private SyntaxLanguage? _syntax;
+
+    /// <summary>The language the text is coloured as; null for none. Set by the dialog from the file's extension.</summary>
+    public SyntaxLanguage? Syntax
+    {
+        get => _syntax;
+        set
+        {
+            if (!ReferenceEquals(_syntax, value))
+            {
+                _syntax = value;
+                StateHasChanged();
+            }
+        }
+    }
+
+    /// <summary>How far back a block comment is looked for when the first row on screen is drawn.</summary>
+    private const int BlockCommentLookBack = 400;
+
+    private readonly List<SyntaxSpan> _spans = [];
+
+    /// <summary>Whether line <paramref name="line"/> starts inside a block comment, found by reading a bounded stretch of lines before it.</summary>
+    private bool StartsInBlockComment(int line)
+    {
+        if (_syntax?.BlockComment is null)
+        {
+            return false;
+        }
+
+        bool inComment = false;
+        for (int i = Math.Max(0, line - BlockCommentLookBack); i < line && i < TextModel.Lines.Count; i++)
+        {
+            _spans.Clear();
+            inComment = SyntaxHighlighter.Tokenize(_syntax, TextModel.Lines[i], inComment, _spans);
+        }
+
+        return inComment;
+    }
+
+    private static Color ColorOf(SyntaxKind kind) => kind switch
+    {
+        SyntaxKind.Keyword => Color.Cyan,
+        SyntaxKind.String => Color.Green,
+        SyntaxKind.Comment => Color.Gray,
+        SyntaxKind.Number => Color.Magenta,
+        _ => Color.White,
+    };
+
+    /// <summary>Colours the keywords, strings, comments and numbers of line <paramref name="line"/> in a row drawn from the scroll position on.</summary>
+    private void ColorizeSyntax(ConxelString drawn, string text, bool startsInComment, int scrollX, out bool endsInComment, bool skipColours)
+    {
+        endsInComment = false;
+        if (_syntax is null)
+        {
+            return;
+        }
+
+        _spans.Clear();
+        endsInComment = SyntaxHighlighter.Tokenize(_syntax, text, startsInComment, _spans);
+        if (skipColours)
+        {
+            return;
+        }
+
+        foreach (SyntaxSpan span in _spans)
+        {
+            int start = Math.Max(0, span.Start - scrollX);
+            int end = Math.Min(drawn.Count, span.Start + span.Length - scrollX);
+            Color color = ColorOf(span.Kind);
+            for (int x = start; x < end; x++)
+            {
+                Conxel cell = drawn.String[x];
+                cell.ForegroundColor = color;
+                drawn.String[x] = cell;
+            }
+        }
+    }
+
+    /// <summary>
+    /// A hook for what an editor adds to a drawn row — the bookmark mark, say. <paramref name="line"/> is the text line;
+    /// <paramref name="drawn"/> starts at the scroll position.
+    /// </summary>
+    protected virtual void DecorateLine(ConxelString drawn, int line, bool isCursorLine, ColorScheme colorScheme)
+    {
     }
 
     /// <summary>
@@ -404,6 +555,7 @@ public class TextViewerControl : Control
     /// </summary>
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        SyncScrollableSize();
         // No IsFocused test: the editor never takes the focus itself (its dialog hands it the keys), and its own
         // commands act without it too.
         if (_isCursorEnabled && IsEnabled && TextModel.Lines.Count > 0 && !_extendingSelection
@@ -528,7 +680,7 @@ public class TextViewerControl : Control
             }
             if (!ViewSize.IsEmpty)
             {
-                ScrollableModel.ViewSize = new Size(ViewSize.Width - 1, ViewSize.Height - 1);
+                ScrollableModel.ViewSize = new Size(Math.Max(0, ViewSize.Width - 2), Math.Max(0, ViewSize.Height - 1));
             }
         }
 
@@ -592,10 +744,20 @@ public class TextViewerControl : Control
             }
 
             long line = Math.Clamp((long)ScrollableModel.ScrollPosition.Y + row, 0, TextModel.Lines.Count - 1);
-            ScrollableModel.CursorPosition.Y = line;
+            long lineStart = 0;
+            if (_wrapLines && ScreenRows.Count > 0)
+            {
+                // A wrapped row is part of a line: the click lands on that line, at its place in the row.
+                TextRow clicked = ScreenRows[(int)Math.Clamp((long)ScrollableModel.ScrollPosition.Y + row, 0, ScreenRows.Count - 1)];
+                line = clicked.Line;
+                lineStart = clicked.Start;
+            }
+
+            ScrollableModel.CursorPosition.Y = _wrapLines ? ScrollableModel.ScrollPosition.Y + row : line;
             if (_isCursorEnabled)
             {
-                ScrollableModel.CursorPosition.X = Math.Clamp((long)ScrollableModel.ScrollPosition.X + column, 0, TextModel.Lines[(int)line].Length);
+                ScrollableModel.CursorPosition.Y = line;
+                ScrollableModel.CursorPosition.X = Math.Clamp(lineStart + (_wrapLines ? 0 : (long)ScrollableModel.ScrollPosition.X) + column, 0, TextModel.Lines[(int)line].Length);
                 _selectionAnchor = ClampedCursor();
                 _dragSelecting = true;
             }
@@ -609,9 +771,18 @@ public class TextViewerControl : Control
             return false;
         }
 
-        long target = ScrollableModel.CursorPosition.Y + (mouseEvent.WheelDelta > 0 ? -WheelRows : WheelRows);
-        ScrollableModel.CursorPosition.Y = Math.Clamp(target, 0, TextModel.Lines.Count - 1);
-        ScrollableModel.ScrollToVisible();
+        // The wheel moves the view, not the cursor: the cursor goes along only when the view would leave it behind.
+        SyncScrollableSize();
+        long visibleRows = Math.Max(1, ScrollableModel.ViewSize.Height);
+        long totalRows = _wrapLines ? ScreenRows.Count : TextModel.Lines.Count;
+        long maxScroll = Math.Max(0, totalRows - visibleRows);
+        long scroll = Math.Clamp(ScrollableModel.ScrollPosition.Y + (mouseEvent.WheelDelta > 0 ? -WheelRows : WheelRows), 0, maxScroll);
+        ScrollableModel.ScrollPosition.Y = scroll;
+        if (!_wrapLines)
+        {
+            ScrollableModel.CursorPosition.Y = Math.Clamp(ScrollableModel.CursorPosition.Y, scroll, Math.Min(scroll + visibleRows - 1, TextModel.Lines.Count - 1));
+        }
+
         StateHasChanged();
         return true;
     }
@@ -632,9 +803,11 @@ public class TextViewerControl : Control
             return;
         }
 
+        SyncScrollableSize();
         Color foregroundColor;
         Color backgroundColor;
         var size = new Size(Math.Max(0, ViewSize.Width - 2), 1);
+        bool inComment = StartsInBlockComment((int)Math.Min(ScrollableModel.ScrollPosition.Y, TextModel.Lines.Count));
         for (int i = 0; i < ViewSize.Height - 1; i++)
         {
             var indexY = ScrollableModel.ScrollPosition.Y + i;
@@ -656,6 +829,10 @@ public class TextViewerControl : Control
                     .PadRight(Math.Max(0, (int)ViewSize.Width - 2));
                 var conxelLine = new ConxelString(line, foregroundColor, backgroundColor);
                 var highlightPositionX = (int)(positionX - ScrollableModel.ScrollPosition.X);
+                bool isCursorLine = ScrollableModel.CursorPosition.Y == indexY;
+                // The cursor's row keeps the cursor colours; the others are coloured by what the text is.
+                ColorizeSyntax(conxelLine, TextModel.Lines[(int)indexY], inComment, positionX, out inComment, isCursorLine);
+                DecorateLine(conxelLine, (int)indexY, isCursorLine, colorScheme);
                 HighlightSearchResults(conxelLine, highlightPositionX, (int)indexY);
                 HighlightSelectedPart(conxelLine, (int)indexY, TextModel.Lines[(int)indexY].Length, colorScheme);
                 buffer.Write(

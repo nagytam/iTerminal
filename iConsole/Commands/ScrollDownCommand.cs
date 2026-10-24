@@ -17,7 +17,8 @@ public class ScrollDownCommand(IScrollableModel scrollableModel) : Command
         Debug.Assert(!scrollableModel.ViewSize.IsEmpty);
         if (scrollableModel.CursorPosition.Y == scrollableModel.ScrollPosition.Y + scrollableModel.ViewSize.Height - 1)
         {
-            if (scrollableModel.ScrollPosition.Y < scrollableModel.ScrollableSize.Height - 1)
+            // Not past the point where the last line is at the bottom of the view.
+            if (scrollableModel.ScrollPosition.Y < scrollableModel.ScrollableSize.Height - scrollableModel.ViewSize.Height)
             {
                 scrollableModel.ScrollPosition.Y++;
             }

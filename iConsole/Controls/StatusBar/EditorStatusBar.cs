@@ -1,5 +1,6 @@
 ﻿using iConsole.Commands;
 using iConsole.Controls.Buttons;
+using iConsole.Controls.Editors;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Layouts;
@@ -14,6 +15,7 @@ public class EditorStatusBar : StatusBar
     private Button _findNextButton { get; set; }
     private Button _findPreviousButton { get; set; }
     private Button _searchTextDialogButton { get; set; }
+    private Button? _replaceButton { get; set; }
     private Button _toggleReadOnlyButton { get; set; }
     private EncodingIndicator _encodingIndicator { get; set; }
     private CursorPositionIndicator _cursorPositionIndicator { get; set; }
@@ -31,7 +33,8 @@ public class EditorStatusBar : StatusBar
         IContentModelService contentModelService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        TextEditorControl? editor = null)
         : base(themeService)
     {
         Name = nameof(EditorStatusBar);
@@ -44,6 +47,12 @@ public class EditorStatusBar : StatusBar
         _toggleReadOnlyButton = new Button(new ToggleReadOnlyCommand(readOnly), themeService);
         _searchTextDialogButton = new Button(
             new SearchTextDialogCommand(searchModel, textModel, scrollableModel, beepService, dateTimeProviderService, themeService), themeService);
+        if (editor is not null)
+        {
+            _replaceButton = new Button(
+                new ReplaceTextDialogCommand(editor, beepService, dateTimeProviderService, themeService), themeService);
+        }
+
         _encodingIndicator = new EncodingIndicator(textModel, themeService);
         _cursorPositionIndicator = new CursorPositionIndicator(scrollableModel, themeService);
         _readOnlyIndicator = new ReadOnlyIndicator(readOnly, themeService);
@@ -54,6 +63,11 @@ public class EditorStatusBar : StatusBar
         AddControl(_findPreviousButton);
         AddControl(_toggleReadOnlyButton);
         AddControl(_searchTextDialogButton);
+        if (_replaceButton is not null)
+        {
+            AddControl(_replaceButton);
+        }
+
         AddControl(_encodingIndicator);
         AddControl(_cursorPositionIndicator);
         AddControl(_readOnlyIndicator);
@@ -75,36 +89,45 @@ public class EditorStatusBar : StatusBar
         _findPreviousButton.ViewSize = new Size(18, 1);
         _toggleReadOnlyButton.ViewSize = new Size(13, 1);
         _searchTextDialogButton.ViewSize = new Size(11, 1);
+        _replaceButton?.ViewSize = new Size(13, 1);
         _encodingIndicator.ViewSize = new Size(10, 1);
         _cursorPositionIndicator.ViewSize = new Size(20, 1);
         _readOnlyIndicator.ViewSize = new Size(10, 1);
         _dirtyIndicator.ViewSize = new Size(10, 1);
         _searchResultsIndicator.ViewSize = new Size(20, 1);
 
-        StackFitting(
-            [
-                _saveButton,
-                _findNextButton,
-                _findPreviousButton,
-                _toggleReadOnlyButton,
-                _searchTextDialogButton,
-                _encodingIndicator,
-                _cursorPositionIndicator,
-                _readOnlyIndicator,
-                _dirtyIndicator,
-                _searchResultsIndicator
-            ],
-            [
-                _saveButton,
-                _cursorPositionIndicator,
-                _dirtyIndicator,
-                _readOnlyIndicator,
-                _encodingIndicator,
-                _searchTextDialogButton,
-                _findNextButton,
-                _toggleReadOnlyButton,
-                _searchResultsIndicator,
-                _findPreviousButton
-            ]);
+        List<Control> order =
+        [
+            _saveButton,
+            _findNextButton,
+            _findPreviousButton,
+            _toggleReadOnlyButton,
+            _searchTextDialogButton,
+            _encodingIndicator,
+            _cursorPositionIndicator,
+            _readOnlyIndicator,
+            _dirtyIndicator,
+            _searchResultsIndicator
+        ];
+        List<Control> priority =
+        [
+            _saveButton,
+            _cursorPositionIndicator,
+            _dirtyIndicator,
+            _readOnlyIndicator,
+            _encodingIndicator,
+            _searchTextDialogButton,
+            _findNextButton,
+            _toggleReadOnlyButton,
+            _searchResultsIndicator,
+            _findPreviousButton
+        ];
+        if (_replaceButton is not null)
+        {
+            order.Insert(5, _replaceButton);
+            priority.Insert(7, _replaceButton);
+        }
+
+        StackFitting(order, priority);
     }
 }
