@@ -7,6 +7,7 @@ using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Commands;
+using iTerminal.Core.Helper;
 using iTerminal.Core.Model;
 using System.ComponentModel;
 
@@ -89,6 +90,16 @@ public class TerminalWindow : Window
         {
             // The command being typed *is* the running command until it finishes and is moved to
             // the history, so an edit now would rewrite the history entry of what is running.
+            isHandled = true;
+        }
+
+        if (!isHandled && !_terminalModel.IsRunning && _terminalModel.Command.Command.Length > 0
+            && (PasteHelper.IsDeleteWordKey(keyEvent) || PasteHelper.IsClearKey(keyEvent)))
+        {
+            // Ctrl+W / Ctrl+Backspace take the last word of the command being typed, Ctrl+U the whole of it.
+            _terminalModel.Command.Command = PasteHelper.IsClearKey(keyEvent)
+                ? string.Empty
+                : PasteHelper.DeleteLastWord(_terminalModel.Command.Command);
             isHandled = true;
         }
 

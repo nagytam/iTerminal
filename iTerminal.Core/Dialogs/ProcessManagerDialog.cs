@@ -97,6 +97,13 @@ public class ProcessManagerDialog : Dialog
             return await _listBox.HandleKeyEventAsync(keyEvent);
         }
 
+        // Home and End belong to the filter's cursor, so Ctrl+Home and Ctrl+End reach the first and the last process.
+        if (_textbox.IsFocused && keyEvent.Control && !keyEvent.Alt
+            && keyEvent.ConsoleKey is ConsoleKey.Home or ConsoleKey.End)
+        {
+            return await _listBox.HandleKeyEventAsync(new KeyEvent(keyEvent.KeyChar, keyEvent.ConsoleKey, false, false, false));
+        }
+
         return await base.HandleKeyEventAsync(keyEvent);
     }
 }

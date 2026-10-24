@@ -31,6 +31,32 @@ public class AiPromptBar : Window
 
     /// <summary>First response line shown; reset whenever a new response starts arriving.</summary>
     private int _responseScroll;
+
+    /// <summary>The questions sent so far, oldest first, for Up and Down to recall.</summary>
+    private readonly List<string> _history = [];
+    private const int HistoryLimit = 50;
+    private int _historyIndex = -1;
+    private string _draft = string.Empty;
+
+    private void Remember(string input)
+    {
+        string question = input.Trim();
+        _historyIndex = -1;
+        if (question.Length == 0)
+        {
+            return;
+        }
+
+        if (_history.Count == 0 || _history[^1] != question)
+        {
+            _history.Add(question);
+        }
+
+        if (_history.Count > HistoryLimit)
+        {
+            _history.RemoveAt(0);
+        }
+    }
     private string _lastResponseSeen = string.Empty;
 
     public AiPromptBar(
@@ -156,6 +182,7 @@ public class AiPromptBar : Window
                         return true;
                     }
 
+                    Remember(_model.Input);
                     _ = SendAsync();
                 }
                 return true;
@@ -163,6 +190,37 @@ public class AiPromptBar : Window
             case ConsoleKey.Escape:
                 _cts?.Cancel();
                 _model.Input = string.Empty;
+                _historyIndex = -1;
+                return true;
+
+            // Up and Down walk the questions already sent (only with the focus: the keys are the panels' otherwise);
+            // Down past the newest brings back what was being typed.
+            case ConsoleKey.UpArrow when IsFocused && _history.Count > 0 && !keyEvent.Control && !keyEvent.Alt:
+                if (_historyIndex < 0)
+                {
+                    _draft = _model.Input;
+                    _historyIndex = _history.Count - 1;
+                }
+                else if (_historyIndex > 0)
+                {
+                    _historyIndex--;
+                }
+
+                _model.Input = _history[_historyIndex];
+                return true;
+
+            case ConsoleKey.DownArrow when IsFocused && _historyIndex >= 0 && !keyEvent.Control && !keyEvent.Alt:
+                if (_historyIndex < _history.Count - 1)
+                {
+                    _historyIndex++;
+                    _model.Input = _history[_historyIndex];
+                }
+                else
+                {
+                    _historyIndex = -1;
+                    _model.Input = _draft;
+                }
+
                 return true;
 
             case ConsoleKey.Backspace:
