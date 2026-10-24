@@ -83,6 +83,19 @@ public class NumericUpDown : Control, IReadOnly
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (IsReadOnly || !IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down", "Step the value");
+        yield return ("PageUp/PageDown", "Step the value by a large amount");
+        yield return ("Home/End", "Set the minimum or maximum");
+        yield return ("0-9", "Type the value");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         var isHandled = await base.HandleKeyEventAsync(keyEvent);
@@ -158,14 +171,16 @@ public class NumericUpDown : Control, IReadOnly
             return true;
         }
 
-        if (mouseEvent.LeftClicked || mouseEvent.RightClicked)
+        // Only the left button acts, as on Button and CheckBox; a click anywhere on the control takes the focus,
+        // so the value box can be focused by a click too, not only the arrows.
+        if (mouseEvent.LeftClicked)
         {
-            var x = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
-            if ((x == _upArrowOffset || x == _downArrowOffset) && !IsFocused)
+            if (!IsFocused)
             {
                 SetFocus();
             }
 
+            var x = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
             if (x == _upArrowOffset)
             {
                 Increment(Step);
@@ -176,6 +191,7 @@ public class NumericUpDown : Control, IReadOnly
                 Increment(-Step);
                 return true;
             }
+            return true;
         }
 
         return isHandled;

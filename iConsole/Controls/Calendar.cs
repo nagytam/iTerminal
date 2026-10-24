@@ -167,6 +167,24 @@ public class Calendar : Control, IReadOnly
         return 0;
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Arrows", "Move the selected day or week");
+        yield return ("PageUp/PageDown", "Previous or next month");
+        yield return ("Home/End", "First or last day of the month");
+        yield return ("Enter/Space", "Choose the selected day");
+        if (!IsReadOnly)
+        {
+            yield return ("T", "Select today");
+            yield return ("Ctrl+PageUp/PageDown", "Previous or next year");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

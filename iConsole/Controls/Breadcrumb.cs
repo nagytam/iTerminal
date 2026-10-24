@@ -75,6 +75,18 @@ public class Breadcrumb : Control
     private static int Measure(List<(int Index, string Text)> parts)
         => parts.Sum(p => p.Text.Length) + Separator.Length * Math.Max(0, parts.Count - 1);
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled || _segments.Count == 0)
+        {
+            yield break;
+        }
+
+        yield return ("Left/Right", "Move the highlight along the trail");
+        yield return ("Home/End", "First or last segment");
+        yield return ("Enter/Space", "Open the highlighted segment");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);
