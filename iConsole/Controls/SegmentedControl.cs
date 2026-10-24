@@ -56,19 +56,46 @@ public class SegmentedControl : Control, IReadOnly
     /// <summary>Text of option <paramref name="index"/> as drawn: one cell of padding either side.</summary>
     private string Segment(int index) => " " + _options[index] + " ";
 
-    /// <summary>Index of the option under <paramref name="column"/> (relative to the control), or -1.</summary>
-    public int IndexAtColumn(int column)
+    /// <summary>
+    /// The options shown for <paramref name="width"/> cells as (index, start column) pairs. The window starts at
+    /// the first option and slides right until the chosen one fits, so a choice past the edge stays visible.
+    /// </summary>
+    public List<(int Index, int Start)> VisibleSegments(int width)
     {
-        int start = 0;
-        for (int i = 0; i < _options.Count; i++)
+        for (int first = 0; first <= _selectedIndex && first < _options.Count; first++)
         {
-            int end = start + Segment(i).Length;
-            if (column >= start && column < end)
+            List<(int Index, int Start)> shown = [];
+            int column = 0;
+            for (int i = first; i < _options.Count; i++)
             {
-                return i;
+                int length = Segment(i).Length;
+                if (column + length > width)
+                {
+                    break;
+                }
+
+                shown.Add((i, column));
+                column += length + 1;
             }
 
-            start = end + 1;
+            if (shown.Any(s => s.Index == _selectedIndex) || first == _selectedIndex)
+            {
+                return shown;
+            }
+        }
+
+        return [];
+    }
+
+    /// <summary>Index of the visible option under <paramref name="column"/> (relative to the control), or -1.</summary>
+    public int IndexAtColumn(int column)
+    {
+        foreach ((int index, int start) in VisibleSegments((int)ViewSize.Width))
+        {
+            if (column >= start && column < start + Segment(index).Length)
+            {
+                return index;
+            }
         }
 
         return -1;
@@ -82,6 +109,7 @@ public class SegmentedControl : Control, IReadOnly
         }
 
         yield return ("Left/Right", "Choose the previous or next segment");
+        yield return ("Up/Down", "Choose the previous or next segment");
         yield return ("Home/End", "Choose the first or last segment");
     }
 
@@ -159,8 +187,14 @@ public class SegmentedControl : Control, IReadOnly
         int width = (int)ViewSize.Width;
         ConxelString line = new(string.Empty, colorScheme.Foreground, colorScheme.Background);
         bool disabled = IsReadOnly || !IsEnabled;
-        for (int i = 0; i < _options.Count && line.Count < width; i++)
+        int column = 0;
+        foreach ((int i, int start) in VisibleSegments(width))
         {
+            if (start > column)
+            {
+                line.Append(new string(' ', start - column), colorScheme.Foreground, colorScheme.Background);
+            }
+
             Color foreground;
             Color background;
             if (i == _selectedIndex)
@@ -175,7 +209,7 @@ public class SegmentedControl : Control, IReadOnly
             }
 
             line.Append(Segment(i), foreground, background);
-            line.Append(" ", colorScheme.Foreground, colorScheme.Background);
+            column = start + Segment(i).Length;
         }
 
         line.Expand(width, colorScheme.Foreground, colorScheme.Background);

@@ -23,6 +23,17 @@ public class Accordion : Control
     /// <summary>The open section's index, or -1 when all are closed.</summary>
     public int OpenIndex => _sections.FindIndex(s => s.IsExpanded);
 
+    /// <summary>A section takes the width of the accordion, so a resize of the accordion reaches them on the next idle pass.</summary>
+    public override void OnIdle()
+    {
+        if (_sections.Any(s => s.ViewSize.Width != ViewSize.Width))
+        {
+            Reflow();
+        }
+
+        base.OnIdle();
+    }
+
     public Expander AddSection(string header, IControl content, int contentHeight = 3)
     {
         Expander section = new(ThemeService)
