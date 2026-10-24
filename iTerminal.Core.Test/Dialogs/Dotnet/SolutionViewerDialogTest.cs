@@ -77,6 +77,9 @@ public class SolutionViewerDialogTest
     private static Task WaitIdleAsync(SolutionViewerDialog dialog) =>
         WaitUntilAsync(() => !dialog.IsBusyForTest, "the dotnet run to finish");
 
+    /// <summary>The host the product runs for an SDK root: dotnet, or dotnet.exe on Windows.</summary>
+    private static string HostOf(string root) => Path.Combine(root, OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet");
+
     [TestMethod]
     public async Task ListsTheSolutionRowAndEveryProject()
     {
@@ -302,7 +305,7 @@ public class SolutionViewerDialogTest
         await dialog.HandleKeyEventAsync(Char('b'));
         await WaitIdleAsync(dialog);
 
-        Assert.AreEqual(Path.Combine("/opt/dotnet", "dotnet"), service.Hosts.Single());
+        Assert.AreEqual(HostOf("/opt/dotnet"), service.Hosts.Single());
     }
 
     [TestMethod]
@@ -322,7 +325,7 @@ public class SolutionViewerDialogTest
         await dialog.HandleKeyEventAsync(Char('v'));
         await dialog.HandleKeyEventAsync(Char('t'));
         await WaitIdleAsync(dialog);
-        Assert.AreEqual(Path.Combine("/usr/lib/dotnet", "dotnet"), service.Hosts.Single());
+        Assert.AreEqual(HostOf("/usr/lib/dotnet"), service.Hosts.Single());
     }
 
     [TestMethod]
