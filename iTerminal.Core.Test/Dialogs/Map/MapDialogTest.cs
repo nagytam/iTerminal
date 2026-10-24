@@ -410,4 +410,16 @@ public class MapDialogTest
 
         AssertScreenContains(Render(f.Root), "Search or coordinates: 48.2 16.37");
     }
+
+    [TestMethod]
+    public async Task CtrlWDeletesTheLastWordOfTheSearch()
+    {
+        var f = await OpenAsync(online: false);
+        await PressAsync(f, ConsoleKey.Oem2, '/');
+        await TypeTextAsync(f, "new york city");
+
+        await PressAsync(f, ConsoleKey.W, 'w', control: true);
+
+        AssertScreenContains(Render(f.Root), "Search or coordinates: new york ");
+    }
 }

@@ -150,6 +150,10 @@ public class PasswordManagerDialog : Dialog
                 return MoveCursor(-ListRows);
             case ConsoleKey.PageDown when plain:
                 return MoveCursor(ListRows);
+            case ConsoleKey.Home:
+                return MoveCursor(-int.MaxValue / 2);
+            case ConsoleKey.End:
+                return MoveCursor(int.MaxValue / 2);
             case ConsoleKey.Enter when plain:
                 OpenEdit(Selected);
                 return true;
@@ -215,6 +219,13 @@ public class PasswordManagerDialog : Dialog
     /// <summary>Tab and the arrows move between fields; the field under the cursor takes the typing.</summary>
     private bool EditField(KeyEvent keyEvent)
     {
+        if (PasteHelper.IsDeleteWordKey(keyEvent) && _fields[_field].Kind != FieldKind.Category)
+        {
+            _fields[_field].Text = PasteHelper.DeleteLastWord(_fields[_field].Text);
+            StateHasChanged();
+            return true;
+        }
+
         if (PasteHelper.IsPasteKey(keyEvent))
         {
             Field target = _fields[_field];

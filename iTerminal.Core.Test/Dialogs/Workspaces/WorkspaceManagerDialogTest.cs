@@ -355,4 +355,35 @@ public class WorkspaceManagerDialogTest
 
         Assert.AreEqual(before, dialog.CursorForTest);
     }
+
+    [TestMethod]
+    public async Task CtrlWDeletesTheLastWordOfTheName_AndCtrlUClearsIt()
+    {
+        var (dialog, service, _) = Create();
+        await ShowAsync(dialog);
+        await dialog.HandleKeyEventAsync(Char('s'));
+        await TypeAsync(dialog, "Build box");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.W, 'w', control: true));
+        AssertScreenContains(Render(dialog), "Build");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.U, 'u', control: true));
+        await TypeAsync(dialog, "Docs");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        Assert.AreEqual("Docs", service.GetAll().Single().Name);
+    }
+
+    [TestMethod]
+    public async Task CtrlWOnTheSuggestedNameClearsItAtOnce()
+    {
+        var (dialog, service, _) = Create();
+        await ShowAsync(dialog);
+        await dialog.HandleKeyEventAsync(Char('s'));
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.W, 'w', control: true));
+        await TypeAsync(dialog, "Mine");
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+
+        Assert.AreEqual("Mine", service.GetAll().Single().Name);
+    }
 }

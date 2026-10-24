@@ -108,4 +108,33 @@ public class PasteHelperTest
             TextClipboard.Current = original;
         }
     }
+
+    [TestMethod]
+    public void CtrlWAndCtrlBackspaceDeleteAWord_CtrlUClears_NothingElseDoes()
+    {
+        Assert.IsTrue(PasteHelper.IsDeleteWordKey(Key(ConsoleKey.W, 'w', control: true)));
+        Assert.IsTrue(PasteHelper.IsDeleteWordKey(Key(ConsoleKey.Backspace, control: true)));
+        Assert.IsFalse(PasteHelper.IsDeleteWordKey(Key(ConsoleKey.Backspace)));
+        Assert.IsFalse(PasteHelper.IsDeleteWordKey(Key(ConsoleKey.W, 'w')));
+        Assert.IsFalse(PasteHelper.IsDeleteWordKey(Key(ConsoleKey.W, 'w', control: true, alt: true)));
+        Assert.IsTrue(PasteHelper.IsClearKey(Key(ConsoleKey.U, 'u', control: true)));
+        Assert.IsFalse(PasteHelper.IsClearKey(Key(ConsoleKey.U, 'u')));
+    }
+
+    [TestMethod]
+    public void DeleteLastWord_TakesTheWordAndTheSpacesAfterIt()
+    {
+        Assert.AreEqual("one two ", PasteHelper.DeleteLastWord("one two three"));
+        Assert.AreEqual("one two ", PasteHelper.DeleteLastWord("one two three   "));
+        Assert.AreEqual(string.Empty, PasteHelper.DeleteLastWord("single"));
+        Assert.AreEqual(string.Empty, PasteHelper.DeleteLastWord("   "));
+        Assert.AreEqual(string.Empty, PasteHelper.DeleteLastWord(string.Empty));
+    }
+
+    [TestMethod]
+    public void DeleteLastWord_TreatsALineBreakAsABoundary_AndRemovesAFinalOneAlone()
+    {
+        Assert.AreEqual("first" + (char)10, PasteHelper.DeleteLastWord("first" + (char)10 + "second"));
+        Assert.AreEqual("first", PasteHelper.DeleteLastWord("first" + (char)10));
+    }
 }

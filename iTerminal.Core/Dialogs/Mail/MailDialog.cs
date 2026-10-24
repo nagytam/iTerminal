@@ -276,6 +276,13 @@ public class MailDialog : Dialog
             return true;
         }
 
+        if (PasteHelper.IsDeleteWordKey(keyEvent) || PasteHelper.IsClearKey(keyEvent))
+        {
+            _draft[_draftField] = PasteHelper.IsClearKey(keyEvent) ? string.Empty : PasteHelper.DeleteLastWord(_draft[_draftField]);
+            StateHasChanged();
+            return true;
+        }
+
         if (PasteHelper.IsPasteKey(keyEvent))
         {
             // The body keeps the clipboard's line breaks; the address and subject are one line.
@@ -338,6 +345,15 @@ public class MailDialog : Dialog
         if (keyEvent.ConsoleKey == ConsoleKey.Escape)
         {
             _mode = Mode.Compose;
+            StateHasChanged();
+            return true;
+        }
+
+        if (PasteHelper.IsDeleteWordKey(keyEvent) || PasteHelper.IsClearKey(keyEvent))
+        {
+            _directoryTerm = PasteHelper.IsClearKey(keyEvent) ? string.Empty : PasteHelper.DeleteLastWord(_directoryTerm);
+            _people = [];
+            _personCursor = 0;
             StateHasChanged();
             return true;
         }
@@ -412,6 +428,14 @@ public class MailDialog : Dialog
         if (keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.S)
         {
             SaveSetup();
+            return true;
+        }
+
+        if ((PasteHelper.IsDeleteWordKey(keyEvent) || PasteHelper.IsClearKey(keyEvent)) && !_setup[_setupCursor].IsToggle)
+        {
+            SetupField edited = _setup[_setupCursor];
+            edited.Text = PasteHelper.IsClearKey(keyEvent) ? string.Empty : PasteHelper.DeleteLastWord(edited.Text);
+            StateHasChanged();
             return true;
         }
 

@@ -304,4 +304,17 @@ public class AiPromptBarTest
 
         Assert.AreEqual(string.Empty, model.Input);
     }
+
+    [TestMethod]
+    public async Task CtrlWDeletesTheLastWordOfThePrompt_AndCtrlUClearsIt()
+    {
+        var (bar, model, _) = Create();
+        model.Input = "explain this error";
+
+        await bar.HandleKeyEventAsync(new KeyEvent('w', ConsoleKey.W, false, false, true));
+        Assert.AreEqual("explain this ", model.Input);
+
+        await bar.HandleKeyEventAsync(new KeyEvent('u', ConsoleKey.U, false, false, true));
+        Assert.AreEqual(string.Empty, model.Input);
+    }
 }

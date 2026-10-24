@@ -173,6 +173,14 @@ public class ToDoListDialog : Dialog
     /// <summary>While a task is being typed every key belongs to the entry; Esc abandons it rather than closing the list.</summary>
     private bool HandleEntryKey(KeyEvent keyEvent)
     {
+        if (PasteHelper.IsDeleteWordKey(keyEvent))
+        {
+            _entry = PasteHelper.DeleteLastWord(_entry ?? string.Empty);
+            _entryError = null;
+            StateHasChanged();
+            return true;
+        }
+
         if (PasteHelper.IsPasteKey(keyEvent))
         {
             PasteHelper.Paste(text =>

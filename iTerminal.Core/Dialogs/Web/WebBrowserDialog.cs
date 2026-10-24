@@ -372,6 +372,15 @@ public class WebBrowserDialog : Dialog
 
     private bool HandleAddressKey(KeyEvent key)
     {
+        if (PasteHelper.IsDeleteWordKey(key))
+        {
+            string kept = _addressReplace ? string.Empty : PasteHelper.DeleteLastWord(_address[.._addressCursor]);
+            _address = _addressReplace ? string.Empty : kept + _address[_addressCursor..];
+            _addressCursor = kept.Length;
+            _addressReplace = false;
+            return true;
+        }
+
         if (PasteHelper.IsPasteKey(key))
         {
             PasteHelper.Paste(text =>
@@ -473,6 +482,12 @@ public class WebBrowserDialog : Dialog
 
     private bool HandleFindKey(KeyEvent key)
     {
+        if (PasteHelper.IsDeleteWordKey(key))
+        {
+            _findText = PasteHelper.DeleteLastWord(_findText);
+            return true;
+        }
+
         if (PasteHelper.IsPasteKey(key))
         {
             PasteHelper.Paste(text => _findText += PasteHelper.SingleLine(text), StateHasChanged);
@@ -518,6 +533,12 @@ public class WebBrowserDialog : Dialog
         {
             _mode = Mode.Browse;
             return false;
+        }
+
+        if (PasteHelper.IsDeleteWordKey(key))
+        {
+            _model.SetValue(tab, field, PasteHelper.DeleteLastWord(field.Value));
+            return true;
         }
 
         if (PasteHelper.IsPasteKey(key))

@@ -45,6 +45,30 @@ internal static class PasteHelper
         }
     }
 
+    /// <summary>Ctrl+W or Ctrl+Backspace: delete the word before the cursor, as a shell does.</summary>
+    public static bool IsDeleteWordKey(KeyEvent key) =>
+        key.Control && !key.Alt && !key.Shift && key.ConsoleKey is ConsoleKey.W or ConsoleKey.Backspace;
+
+    /// <summary>Ctrl+U: clear the line.</summary>
+    public static bool IsClearKey(KeyEvent key) =>
+        key.Control && !key.Alt && !key.Shift && key.ConsoleKey == ConsoleKey.U;
+
+    /// <summary>
+    /// <paramref name="text"/> without its last word: a final line break goes alone, otherwise the spaces at the end
+    /// and the word before them, leaving the space that separated it from the one before.
+    /// </summary>
+    public static string DeleteLastWord(string text)
+    {
+        if (text.EndsWith('\n'))
+        {
+            return text[..^1];
+        }
+
+        string trimmed = text.TrimEnd(' ');
+        int start = trimmed.LastIndexOfAny([' ', '\n']);
+        return start < 0 ? string.Empty : trimmed[..(start + 1)];
+    }
+
     /// <summary>Line breaks and tabs become single spaces, the ends are trimmed: for a field that holds one line.</summary>
     public static string SingleLine(string text) =>
         string.Join(' ', text.Split(['\r', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries)).Trim();

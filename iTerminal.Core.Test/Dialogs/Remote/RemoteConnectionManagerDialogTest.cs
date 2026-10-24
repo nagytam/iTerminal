@@ -328,4 +328,35 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual("Edit", h.Dialog.ModeForTest);
         Assert.AreEqual(0, h.Dialog.CursorForTest);
     }
+
+    [TestMethod]
+    public async Task CtrlWDeletesTheLastWordOfAField_ButNotOnTheTypeToggle()
+    {
+        var h = Create();
+        await ShowAsync(h.Dialog);
+        await h.Dialog.HandleKeyEventAsync(Char('n'));
+        await TypeAsync(h.Dialog, "build server");
+
+        await h.Dialog.HandleKeyEventAsync(Key(ConsoleKey.W, 'w', control: true));
+        await TabAsync(h.Dialog); // Type
+        await h.Dialog.HandleKeyEventAsync(Key(ConsoleKey.W, 'w', control: true));
+        await TabAsync(h.Dialog); // Host
+        await TypeAsync(h.Dialog, "srv");
+        await EnterAsync(h.Dialog);
+
+        var saved = h.Connections.GetAll().Single();
+        Assert.AreEqual("build", saved.Name);
+        Assert.AreEqual(RemoteProtocol.Ssh, saved.Protocol);
+    }
+
+    [TestMethod]
+    public async Task HomeAndEndJumpToTheFirstAndLastConnection()
+    {
+        var h = await OpenWithAsync(10);
+
+        await h.Dialog.HandleKeyEventAsync(Key(ConsoleKey.End));
+        Assert.AreEqual(9, h.Dialog.CursorForTest);
+        await h.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Home));
+        Assert.AreEqual(0, h.Dialog.CursorForTest);
+    }
 }

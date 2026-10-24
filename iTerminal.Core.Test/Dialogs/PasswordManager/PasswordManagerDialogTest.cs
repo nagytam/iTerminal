@@ -256,4 +256,34 @@ public class PasswordManagerDialogTest
 
         Assert.AreEqual(4, manager.List().Count);
     }
+
+    [TestMethod]
+    public async Task CtrlWDeletesTheLastWordOfTheField_AndLeavesTheCategoryAlone()
+    {
+        var manager = NewManager();
+        manager.Unlock();
+        var dialog = new PasswordManagerDialog(manager, TestTheme());
+        await ShowAsync(dialog);
+        await dialog.HandleKeyEventAsync(Char('n'));
+        await TypeAsync(dialog, "Bank login");
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.W, 'w', control: true));
+        Assert.AreEqual("Bank ", dialog.FieldForTest("Title"));
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab, (char)9));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab, (char)9));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.W, 'w', control: true));
+        Assert.AreEqual("Bank ", dialog.FieldForTest("Title"));
+    }
+
+    [TestMethod]
+    public async Task HomeAndEndJumpToTheFirstAndLastEntry()
+    {
+        var (dialog, _) = await OpenWithAsync(10);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.End));
+        Assert.AreEqual(9, dialog.CursorForTest);
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Home));
+        Assert.AreEqual(0, dialog.CursorForTest);
+    }
 }
