@@ -128,6 +128,16 @@ public class WebDavFileSystemServiceTest
     }
 
     [TestMethod]
+    public void ListChildren_OfAFolderThatIsNotThere_Throws_SoAWalkDoesNotMistakeItForEmpty()
+    {
+        var (service, _, _) = Create(_ => Reply(HttpStatusCode.NotFound));
+        using var owned = service;
+        service.Connect("example.org", secure: false, null, null);
+
+        Assert.Throws<IOException>(() => service.ListChildren(new Url("dav://example.org/missing/")).ToList());
+    }
+
+    [TestMethod]
     public void List_OfAFolderThatIsNotThere_IsEmpty_AndAFailureIsNotThrown()
     {
         var (service, _, _) = Create(_ => Reply(HttpStatusCode.NotFound));
