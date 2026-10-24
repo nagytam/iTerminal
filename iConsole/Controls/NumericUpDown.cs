@@ -117,6 +117,9 @@ public class NumericUpDown : Control, IReadOnly
             case ConsoleKey.Backspace:
                 Value = _value / 10;
                 return true;
+            case ConsoleKey.Delete:
+                Value = 0;
+                return true;
         }
 
         if (!keyEvent.Control && !keyEvent.Alt)
@@ -127,6 +130,11 @@ public class NumericUpDown : Control, IReadOnly
                 return true;
             }
             if (keyEvent.KeyChar == '-' && _minimum < 0)
+            {
+                Value = SafeNegate(_value);
+                return true;
+            }
+            if (keyEvent.KeyChar == '+' && _value < 0)
             {
                 Value = SafeNegate(_value);
                 return true;

@@ -158,4 +158,54 @@ public class NumericUpDownTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Count:"));
         Assert.IsTrue(buffer.ContentAsString.Contains("42"));
     }
+
+    [TestMethod]
+    public async Task Delete_ResetsTheValueToZero()
+    {
+        var control = CreateControl();
+
+        Assert.IsTrue(await control.HandleKeyEventAsync(Key(ConsoleKey.Delete)));
+
+        Assert.AreEqual(0, control.Value);
+    }
+
+    [TestMethod]
+    public async Task Delete_ClampsZeroToTheMinimum()
+    {
+        var control = CreateControl();
+        control.Minimum = 3;
+        control.Value = 50;
+
+        await control.HandleKeyEventAsync(Key(ConsoleKey.Delete));
+
+        Assert.AreEqual(3, control.Value);
+    }
+
+    [TestMethod]
+    public async Task Plus_MakesANegativeValuePositive_AndLeavesAPositiveOne()
+    {
+        var control = CreateControl();
+        control.Minimum = -100;
+        control.Value = -7;
+
+        Assert.IsTrue(await control.HandleKeyEventAsync(Key(ConsoleKey.OemPlus, '+')));
+        Assert.AreEqual(7, control.Value);
+
+        Assert.IsFalse(await control.HandleKeyEventAsync(Key(ConsoleKey.OemPlus, '+')), "nothing to do on a positive value");
+        Assert.AreEqual(7, control.Value);
+    }
+
+    [TestMethod]
+    public async Task ReadOnly_IgnoresDeleteAndPlus()
+    {
+        var control = CreateControl();
+        control.Minimum = -100;
+        control.Value = -7;
+        control.IsReadOnly = true;
+
+        await control.HandleKeyEventAsync(Key(ConsoleKey.Delete));
+        await control.HandleKeyEventAsync(Key(ConsoleKey.OemPlus, '+'));
+
+        Assert.AreEqual(-7, control.Value);
+    }
 }

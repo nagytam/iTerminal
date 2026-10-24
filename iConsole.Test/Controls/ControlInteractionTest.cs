@@ -1002,4 +1002,50 @@ public class ControlInteractionTest
         await crumb.HandleMouseEventAsync(new MouseEvent { Position = new Position(1, 0), WheelDelta = -1 });
         Assert.AreEqual(1, crumb.ActiveIndex);
     }
+
+    [TestMethod]
+    public async Task CheckList_PlusChecksEverything_MinusUnchecksEverything()
+    {
+        CheckList list = NewCheckList();
+        list.SetFocus();
+        int changed = 0;
+        list.CheckedChanged += (_, _) => changed++;
+
+        Assert.IsTrue(await list.HandleKeyEventAsync(Key(ConsoleKey.OemPlus, '+')));
+        Assert.AreEqual(5, list.CheckedItems.Count());
+        Assert.AreEqual(1, changed);
+
+        Assert.IsTrue(await list.HandleKeyEventAsync(Key(ConsoleKey.OemMinus, '-')));
+        Assert.AreEqual(0, list.CheckedItems.Count());
+        Assert.AreEqual(2, changed);
+    }
+
+    [TestMethod]
+    public async Task CheckList_PlusWhenAllChecked_RaisesNothingNew()
+    {
+        CheckList list = NewCheckList();
+        list.SetFocus();
+        list.SetAll(true);
+        int changed = 0;
+        list.CheckedChanged += (_, _) => changed++;
+
+        await list.HandleKeyEventAsync(Key(ConsoleKey.OemPlus, '+'));
+
+        Assert.AreEqual(0, changed);
+        Assert.AreEqual(5, list.CheckedItems.Count());
+    }
+
+    [TestMethod]
+    public async Task CheckList_ReadOnlyOrUnfocused_IgnoresPlusAndMinus()
+    {
+        CheckList list = NewCheckList();
+        Assert.IsFalse(await list.HandleKeyEventAsync(Key(ConsoleKey.OemPlus, '+')), "not focused");
+
+        list.SetFocus();
+        list.IsReadOnly = true;
+        await list.HandleKeyEventAsync(Key(ConsoleKey.OemPlus, '+'));
+        await list.HandleKeyEventAsync(Key(ConsoleKey.OemMinus, '-'));
+
+        CollectionAssert.AreEqual(new[] { "b" }, list.CheckedItems.ToArray());
+    }
 }

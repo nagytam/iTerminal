@@ -144,6 +144,12 @@ public class ComboBox<T> : Control, IReadOnly
             case ConsoleKey.UpArrow:
                 MoveSelection(-1);
                 return true;
+            case ConsoleKey.PageUp:
+                MoveSelection(-PageItems);
+                return true;
+            case ConsoleKey.PageDown:
+                MoveSelection(PageItems);
+                return true;
             case ConsoleKey.Home:
                 SelectedIndex = 0;
                 return true;
@@ -204,6 +210,9 @@ public class ComboBox<T> : Control, IReadOnly
 
         return isHandled;
     }
+
+    /// <summary>Items PageUp and PageDown move the selection by on the closed line.</summary>
+    private const int PageItems = 5;
 
     private void MoveSelection(int delta)
     {

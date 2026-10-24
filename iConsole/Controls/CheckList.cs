@@ -63,6 +63,23 @@ public class CheckList : Control, IReadOnly
         }
     }
 
+    /// <summary>Checks or unchecks every item.</summary>
+    public void SetAll(bool isChecked)
+    {
+        if (_items.Count == 0 || _items.All(item => item.Checked == isChecked))
+        {
+            return;
+        }
+
+        for (int i = 0; i < _items.Count; i++)
+        {
+            _items[i] = (_items[i].Text, isChecked);
+        }
+
+        CheckedChanged?.Invoke(this, EventArgs.Empty);
+        StateHasChanged();
+    }
+
     public void InvertAll()
     {
         if (_items.Count == 0)
@@ -139,6 +156,12 @@ public class CheckList : Control, IReadOnly
         if (keyEvent.KeyChar == '*' && !IsReadOnly)
         {
             InvertAll();
+            return true;
+        }
+
+        if (keyEvent.KeyChar is '+' or '-' && !IsReadOnly)
+        {
+            SetAll(keyEvent.KeyChar == '+');
             return true;
         }
 

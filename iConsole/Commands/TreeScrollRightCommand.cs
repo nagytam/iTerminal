@@ -13,10 +13,16 @@ public class TreeScrollRightCommand(IHierarchicalItemModel root) : Command
         var focusedItem = root.GetFocusedItem();
         if (focusedItem != null && focusedItem.Children.Any())
         {
+            // A closed node opens where it is; an open one steps into its first child.
+            if (!focusedItem.IsOpened)
+            {
+                focusedItem.IsOpened = true;
+                return Task.CompletedTask;
+            }
+
             var nextItem = focusedItem.Children.AsSnapshot().First();
             if (nextItem is not null)
             {
-                focusedItem.IsOpened = true;
                 focusedItem.IsFocused = false;
                 nextItem.IsFocused = true;
             }
