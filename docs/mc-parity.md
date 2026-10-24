@@ -36,6 +36,7 @@ before work starts.
 - User menu (Shift+F10, `usermenu.txt`) - item 5.
 - Ctrl+Space folder size - item 7.
 - FTP drive (`ftp://`) - item 12.
+- Edit link (Ctrl+Shift+L, `EditLinkDialog`) - item 15, symbolic and hard.
 
 ## Gaps
 

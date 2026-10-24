@@ -242,6 +242,7 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+L: symbolic and hard links on the local disk.
         services.AddSingleton<iTerminal.Core.Services.Links.ILinkService, iTerminal.Core.Services.Links.LinkService>();
         services.AddTransient<CreateLinkDialog>();
+        services.AddTransient<EditLinkDialog>();
         // Shift+F11: the order of a panel's rows.
         services.AddTransient<SortDialog>();
         services.AddSingleton<iTerminal.Core.Services.UserMenu.IUserMenuService>(sp =>

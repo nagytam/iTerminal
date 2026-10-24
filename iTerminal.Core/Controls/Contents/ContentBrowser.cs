@@ -51,6 +51,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private OpenWithDialog? _openWithDialog { get; set; }
     private OpenWithDialog? _editWithDialog { get; set; }
     private CreateLinkDialog? _createLinkDialog { get; set; }
+    private EditLinkDialog? _editLinkDialog { get; set; }
     private PropertiesDialog? _propertiesDialog { get; set; }
     private ChecksumDialog? _checksumDialog { get; set; }
     private FileSystemResolver? _fileSystemResolver { get; set; }
@@ -103,9 +104,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         SecureWipeDialog? secureWipeDialog = null,
         SignatureDialog? signatureDialog = null,
         iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
-        INotificationService? notificationService = null)
+        INotificationService? notificationService = null,
+        EditLinkDialog? editLinkDialog = null)
         : base(themeService)
     {
+        _editLinkDialog = editLinkDialog;
         _malwareScanService = malwareScanService;
         _notificationService = notificationService;
         _diskImageDialog = diskImageDialog;
@@ -267,6 +270,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_createLinkDialog is not null)
         {
             AddCommand(new CreateLinkDialogCommand(_createLinkDialog, ContentModelService));
+        }
+        if (_editLinkDialog is not null)
+        {
+            AddCommand(new EditLinkDialogCommand(_editLinkDialog, ContentModelService));
         }
         if (_diskImageDialog is not null)
         {

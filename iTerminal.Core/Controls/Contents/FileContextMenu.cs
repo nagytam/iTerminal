@@ -81,6 +81,7 @@ public static class FileContextMenu
         AddCommands<CompressDialogCommand>(items, snapshot, "Compress");
         AddCommands<ExtractDialogCommand>(items, snapshot, "Extract");
         AddCommands<CreateLinkDialogCommand>(items, snapshot, "Create link");
+        AddCommands<EditLinkDialogCommand>(items, snapshot, "Edit link");
         AddCommands<ChecksumDialogCommand>(items, snapshot, "Checksums");
         AddCommands<SignatureDialogCommand>(items, snapshot, "Signatures");
         AddCommands<SecureWipeDialogCommand>(items, snapshot, "Secure wipe");
