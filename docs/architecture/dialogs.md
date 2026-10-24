@@ -204,3 +204,9 @@ connection in the active panel as the existing SFTP drive. N / E / D add, edit a
   key file. The dialog says so rather than opening a drive that would connect somewhere else.
 - Entries are JSON in the `RemoteConnections` setting (`IRemoteConnectionService`), separate from the
   network browser's profiles.
+
+### Mark by pattern and Format drive: failures stay in the dialog
+
+- **Mark by pattern** (`MarkPatternDialog`, Num+ / Num-): a pattern that matches no row, or a panel that cannot be marked in, keeps the dialog open with the reason on its error line. It closes only when at least one row changed.
+- **Format drive** (`FormatDriveDialog`): the drive letter must be typed back before anything is erased. A second Enter while a format is running says it is already running, rather than doing nothing.
+- **Form dialogs** (`FormDialog`): the two buttons never share columns, even on a narrow dialog — Cancel is kept clear of the primary button.

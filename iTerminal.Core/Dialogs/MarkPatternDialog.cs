@@ -148,7 +148,22 @@ public class MarkPatternDialog : FormDialog
                 return Task.CompletedTask;
             }
 
-            dialog.Apply();
+            // Nothing to mark in, or nothing matching: say so and keep the dialog open to fix the pattern, rather
+            // than closing as though the mark had worked.
+            if (dialog.Target is not IMarkableContentModel { CanMark: true })
+            {
+                dialog.ErrorMessage.Text = "There is no panel to mark in.";
+                return Task.CompletedTask;
+            }
+
+            if (dialog.Apply() == 0)
+            {
+                dialog.ErrorMessage.Text = dialog.Marking
+                    ? $"No file matches {dialog.Pattern.Trim()}."
+                    : $"No marked file matches {dialog.Pattern.Trim()}.";
+                return Task.CompletedTask;
+            }
+
             dialog.Close();
             return Task.CompletedTask;
         }

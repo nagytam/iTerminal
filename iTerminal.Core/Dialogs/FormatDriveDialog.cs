@@ -185,6 +185,8 @@ public class FormatDriveDialog : FormDialog
     {
         if (_isFormatting)
         {
+            // Enter again while the drive is being formatted: say so, rather than doing nothing that looks like a failure.
+            SetError("The drive is already being formatted.");
             return false;
         }
 
