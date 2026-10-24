@@ -186,6 +186,55 @@ public static class OfficeTextRenderer
         return Trim(lines);
     }
 
+    /// <summary>
+    /// Renders an OpenDocument drawing (.odg/.otg): one section per page, holding the text of the page's frames and
+    /// shapes in order, tables included. Takes the file's bytes, as <see cref="RenderOpenDocumentPresentation"/> does.
+    /// </summary>
+    public static IReadOnlyList<string> RenderOpenDocumentDrawing(byte[] content)
+    {
+        List<string> lines = [];
+        try
+        {
+            using ZipArchive archive = new(new MemoryStream(content), ZipArchiveMode.Read);
+            ZipArchiveEntry? entry = archive.GetEntry("content.xml");
+            if (entry is null)
+            {
+                lines.Add("[Could not read the drawing: content.xml is missing]");
+                return lines;
+            }
+
+            XDocument document;
+            using (Stream stream = entry.Open())
+            {
+                document = XDocument.Load(stream);
+            }
+
+            XElement? drawing = document.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "drawing");
+            int number = 0;
+            foreach (XElement page in drawing?.Elements(DrawNs + "page") ?? [])
+            {
+                number++;
+                AppendHeading(lines, $"Page {number}");
+                foreach (XElement shape in page.Descendants().Where(e => e.Name == DrawNs + "frame" || e.Name == DrawNs + "custom-shape"))
+                {
+                    AppendOdfBlocks(lines, shape, 0);
+                    foreach (XElement box in shape.Elements(DrawNs + "text-box"))
+                    {
+                        AppendOdfBlocks(lines, box, 0);
+                    }
+                }
+
+                lines.Add(string.Empty);
+            }
+        }
+        catch (Exception exception)
+        {
+            lines.Add($"[Could not read the drawing: {exception.Message}]");
+        }
+
+        return Trim(lines);
+    }
+
     public static IReadOnlyList<string> RenderSpreadsheet(string path)
     {
         List<string> lines = [];

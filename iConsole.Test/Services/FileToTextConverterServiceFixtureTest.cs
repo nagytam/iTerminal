@@ -513,4 +513,45 @@ public class FileToTextConverterServiceFixtureTest
         var expected = GetOrCreateExpected(file, actual);
         AssertLinesMatch(expected, actual, file);
     }
+
+    // ── Drawings, mail, XPS and e-books ─────────────────────────────────────
+
+    [TestMethod]
+    public async Task ConvertFile_Odg_MatchesExpected()
+    {
+        const string file = "diagram.odg";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Any(l => l.StartsWith("── Page 2")), $"[{file}] Expected a section per page.");
+        Assert.IsTrue(actual.Any(l => l.Contains("Only page two")), $"[{file}] Expected the second page's text.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_Eml_MatchesExpected()
+    {
+        const string file = "sample.eml";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Contains("Subject: Sample message"), $"[{file}] Expected the subject.");
+        Assert.IsTrue(actual.Contains("Sample message body."), $"[{file}] Expected the body.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
+
+    [TestMethod]
+    public async Task ConvertFile_Fb2_MatchesExpected()
+    {
+        const string file = "sample.fb2";
+        var actual = await ConvertFileAsync(file);
+
+        Assert.IsTrue(actual.Contains("## Sample Chapter"), $"[{file}] Expected the chapter heading.");
+        Assert.IsTrue(actual.Contains("Sample FictionBook content."), $"[{file}] Expected the paragraph.");
+
+        var expected = GetOrCreateExpected(file, actual);
+        AssertLinesMatch(expected, actual, file);
+    }
 }

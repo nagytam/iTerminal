@@ -32,7 +32,19 @@ rather than a path, so a document on an SSH, archive or memory drive reads the s
 - **RTF** (`RtfTextReader`): a hand-written reader. Destinations that are not body text (fonts, colours, styles,
   metadata, pictures, objects, headers and footers, list numbering) are skipped whole; `\'hh` is decoded with the
   declared `\ansicpg` and `\uN` skips its fallback.
-- **EPUB** (`EpubTextReader`): `container.xml` names the OPF, the spine orders the XHTML chapters.
+- **EPUB** (`EpubTextReader`): `container.xml` names the OPF, the spine orders the XHTML chapters. The markup goes
+  through `HtmlTextExtractor`, shared with the e-mail and Kindle readers.
+- **OpenDocument drawings** (`.odg`, `.otg`): one section per page, as presentations are.
+- **XPS and OpenXPS** (`XpsTextReader`, `.xps`, `.oxps`): the `FixedDocumentSequence` gives the documents, each
+  `FixedDocument` its pages, and a page's `Glyphs` runs are grouped into lines by their origin.
+- **E-mail** (`MimeMessageReader`, `.eml`): the headers unfolded and their RFC 2047 words decoded, the body from
+  base64 or quoted-printable in its charset, the plain part preferred over HTML. Attachments are listed by name.
+- **Outlook messages** (`OutlookMessageReader`, `.msg`): the MAPI property streams of the compound file, Unicode
+  when present, and the attachment storages' names.
+- **FictionBook 2** (`Fb2TextReader`, `.fb2`): sections as headings, paragraphs, verses, tables, notes bodies.
+- **Kindle MOBI and AZW** (`MobiTextReader`, `.mobi`, `.azw`): the Palm database's PalmDOC text records, with the
+  trailing entries the MOBI header declares stripped and the markup read by `HtmlTextExtractor`. Huffman-compressed
+  (KF8/AZW3) books are reported, not read.
 - **HTML, PDF, plain text, images as ASCII art and .NET binaries** are read as before.
 
 These readers do not feed the document search index: `DocumentTextExtractorFactory` still lists only the

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FictionBook xmlns="http://www.gribuzz.ru/XSD/FictionBook/2.0">
+  <description><title-info><book-title>Sample</book-title></title-info></description>
+  <body>
+    <section>
+      <title><p>Sample Chapter</p></title>
+      <p>Sample FictionBook content.</p>
+    </section>
+  </body>
+</FictionBook>

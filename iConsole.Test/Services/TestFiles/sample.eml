@@ -1,0 +1,6 @@
+From: Ann <ann@example.org>
+To: Bob <bob@example.org>
+Subject: Sample message
+Content-Type: text/plain; charset=utf-8
+
+Sample message body.
