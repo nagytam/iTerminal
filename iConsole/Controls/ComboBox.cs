@@ -112,6 +112,22 @@ public class ComboBox<T> : Control, IReadOnly
 
     public new void Close() => _popup?.Close();
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down", "Choose the previous or next item");
+        yield return ("Home/End", "First or last item");
+        if (!IsReadOnly)
+        {
+            yield return ("Enter/Space/F4", "Open the list");
+            yield return ("Alt+Down", "Open the list");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         var isHandled = await base.HandleKeyEventAsync(keyEvent);

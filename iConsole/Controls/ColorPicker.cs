@@ -65,6 +65,21 @@ public class ColorPicker : Control, IReadOnly
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Arrows", "Move the cursor over the palette");
+        yield return ("Home/End", "First or last colour");
+        if (!IsReadOnly)
+        {
+            yield return ("Enter/Space", "Choose the colour under the cursor");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

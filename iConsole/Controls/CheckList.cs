@@ -112,6 +112,25 @@ public class CheckList : Control, IReadOnly
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled || _items.Count == 0)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down", "Move the cursor");
+        yield return ("PageUp/PageDown", "Move the cursor a page");
+        yield return ("Home/End", "First or last item");
+        yield return ("Enter", "Activate the list");
+        if (!IsReadOnly)
+        {
+            yield return ("Space", "Check or uncheck the item under the cursor");
+            yield return ("+/-", "Check or uncheck every item");
+            yield return ("*", "Invert every item");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

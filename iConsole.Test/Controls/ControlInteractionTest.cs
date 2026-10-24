@@ -419,7 +419,7 @@ public class ControlInteractionTest
     public async Task Pagination_ClickArrows_StepAndFocus()
     {
         Pagination pager = NewPager();
-        int right = pager.Caption.Length + 2;
+        int right = pager.Caption.Length + 3;
         await pager.HandleMouseEventAsync(Click(right));
         Assert.AreEqual(1, pager.Page);
         Assert.IsTrue(pager.IsFocused);
@@ -427,6 +427,26 @@ public class ControlInteractionTest
         Assert.AreEqual(0, pager.Page);
         await pager.HandleMouseEventAsync(Click(5));
         Assert.AreEqual(0, pager.Page);
+    }
+
+    [TestMethod]
+    public async Task Pagination_ClickPaddingBesideCaption_DoesNotStep()
+    {
+        // The space between the caption and the right arrow is not the arrow: a click there must not page.
+        Pagination pager = NewPager();
+        await pager.HandleMouseEventAsync(Click(pager.Caption.Length + 2));
+        Assert.AreEqual(0, pager.Page);
+    }
+
+    [TestMethod]
+    public void Pagination_Draw_RightArrowSitsAtClickColumn()
+    {
+        Pagination pager = NewPager();
+        var buffer = new MockBuffer(new Size(30, 1));
+        pager.Draw(buffer);
+
+        string line = FirstLine(buffer);
+        Assert.AreEqual('›', line[pager.Caption.Length + 3]);
     }
 
     [TestMethod]
@@ -446,7 +466,7 @@ public class ControlInteractionTest
         pager.SetFocus();
         pager.IsEnabled = false;
         await pager.HandleMouseEventAsync(Wheel(3, -1));
-        await pager.HandleMouseEventAsync(Click(pager.Caption.Length + 2));
+        await pager.HandleMouseEventAsync(Click(pager.Caption.Length + 3));
         await pager.HandleKeyEventAsync(Key(ConsoleKey.End));
         Assert.AreEqual(0, pager.Page);
     }
@@ -1191,5 +1211,113 @@ public class ControlInteractionTest
         CollectionAssert.Contains(readOnly, "Left/Right");
         CollectionAssert.DoesNotContain(readOnly, "Delete/Backspace");
         CollectionAssert.DoesNotContain(readOnly, "Enter");
+    }
+
+    // ---- Spinner: any click focuses, only the left button steps ----
+
+    [TestMethod]
+    public async Task NumericUpDown_ClickOnValueText_FocusesWithoutStepping()
+    {
+        NumericUpDown spinner = NewSpinner();
+        Assert.IsFalse(spinner.IsFocused);
+
+        await spinner.HandleMouseEventAsync(Click(2));
+
+        Assert.IsTrue(spinner.IsFocused);
+        Assert.AreEqual(5, spinner.Value);
+    }
+
+    [TestMethod]
+    public async Task NumericUpDown_RightClick_DoesNotStep()
+    {
+        NumericUpDown spinner = NewSpinner();
+        int up = FirstLineOf(spinner).IndexOf(Border.ArrowUp);
+
+        await spinner.HandleMouseEventAsync(new MouseEvent { Position = new Position(up, 0), RightClicked = true });
+
+        Assert.AreEqual(5, spinner.Value);
+    }
+
+    // ---- Key hints in Help (Pagination, NumericUpDown, Breadcrumb, ColorPicker, CheckList, Calendar, ComboBox) ----
+
+    [TestMethod]
+    public void Pagination_KeyHints_EmptyWhenDisabled()
+    {
+        Pagination pager = NewPager();
+        CollectionAssert.Contains(pager.GetKeyHints().Select(h => h.Key).ToList(), "Home/End");
+
+        pager.IsEnabled = false;
+        Assert.AreEqual(0, pager.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public void NumericUpDown_KeyHints_EmptyWhenReadOnly()
+    {
+        NumericUpDown spinner = NewSpinner();
+        CollectionAssert.Contains(spinner.GetKeyHints().Select(h => h.Key).ToList(), "PageUp/PageDown");
+
+        spinner.IsReadOnly = true;
+        Assert.AreEqual(0, spinner.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public void Breadcrumb_KeyHints_EmptyWithoutSegments()
+    {
+        Breadcrumb crumb = new(Theme()) { Position = new Position(0, 0) };
+        Assert.AreEqual(0, crumb.GetKeyHints().Count());
+
+        crumb.Segments = ["A", "B"];
+
+        CollectionAssert.Contains(crumb.GetKeyHints().Select(h => h.Key).ToList(), "Enter/Space");
+    }
+
+    [TestMethod]
+    public void ColorPicker_KeyHints_OmitChooseWhenReadOnly()
+    {
+        ColorPicker picker = new(Theme()) { Position = new Position(0, 0) };
+        CollectionAssert.Contains(picker.GetKeyHints().Select(h => h.Key).ToList(), "Enter/Space");
+
+        picker.IsReadOnly = true;
+        CollectionAssert.DoesNotContain(picker.GetKeyHints().Select(h => h.Key).ToList(), "Enter/Space");
+    }
+
+    [TestMethod]
+    public void CheckList_KeyHints_OmitEditKeysWhenReadOnly()
+    {
+        CheckList list = NewCheckList();
+        var editable = list.GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.Contains(editable, "*");
+        CollectionAssert.Contains(editable, "+/-");
+
+        list.IsReadOnly = true;
+        var readOnly = list.GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.Contains(readOnly, "PageUp/PageDown");
+        CollectionAssert.DoesNotContain(readOnly, "*");
+        CollectionAssert.DoesNotContain(readOnly, "+/-");
+    }
+
+    [TestMethod]
+    public void Calendar_KeyHints_OmitTodayAndYearWhenReadOnly()
+    {
+        Calendar calendar = new(Theme()) { Position = new Position(0, 0), ViewSize = new Size(20, 8) };
+        var editable = calendar.GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.Contains(editable, "T");
+        CollectionAssert.Contains(editable, "Ctrl+PageUp/PageDown");
+
+        calendar.IsReadOnly = true;
+        var readOnly = calendar.GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.Contains(readOnly, "PageUp/PageDown");
+        CollectionAssert.DoesNotContain(readOnly, "T");
+        CollectionAssert.DoesNotContain(readOnly, "Ctrl+PageUp/PageDown");
+    }
+
+    [TestMethod]
+    public void ComboBox_KeyHints_EmptyWhenDisabled()
+    {
+        ComboBox<string> combo = new(Theme()) { Position = new Position(0, 0), ViewSize = new Size(20, 1) };
+        CollectionAssert.Contains(combo.GetKeyHints().Select(h => h.Key).ToList(), "Enter/Space/F4");
+
+        combo.IsEnabled = false;
+        Assert.AreEqual(0, combo.GetKeyHints().Count());
     }
 }

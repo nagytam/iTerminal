@@ -71,6 +71,18 @@ public class Pagination : Control
     /// <summary>The text between the arrows.</summary>
     public string Caption => $"Page {_page + 1} of {PageCount}";
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Left/Right", "Previous or next page");
+        yield return ("PageUp/PageDown", "Previous or next page");
+        yield return ("Home/End", "First or last page");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);
@@ -117,7 +129,8 @@ public class Pagination : Control
         if (mouseEvent.LeftClicked)
         {
             int column = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
-            int right = Caption.Length + 2;
+            // Drawn as ‹ + " " + Caption + " " + ›: the right arrow sits after the caption and both spaces.
+            int right = Caption.Length + 3;
             if (column == 0)
             {
                 Page--;

@@ -55,7 +55,7 @@ public class PagerRatingAndMouseTest
     public async Task Pagination_ClickArrows_StepPages()
     {
         Pagination pager = new(Theme()) { PageSize = 10, TotalItems = 30, Position = new Position(0, 0), ViewSize = new Size(30, 1) };
-        long right = pager.Caption.Length + 2;
+        long right = pager.Caption.Length + 3;
         await pager.HandleMouseEventAsync(Click(right, 0));
         Assert.AreEqual(1, pager.Page);
         await pager.HandleMouseEventAsync(Click(0, 0));
