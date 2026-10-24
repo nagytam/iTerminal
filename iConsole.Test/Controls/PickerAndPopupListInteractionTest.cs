@@ -93,13 +93,13 @@ public class PickerAndPopupListInteractionTest
     }
 
     [TestMethod]
-    public async Task TimePicker_TypingAnOutOfRangePair_ClampsToTheMaximum()
+    public async Task TimePicker_TypingAnOutOfRangePair_KeepsTheSecondDigit()
     {
         TimePicker picker = NewTime();
         picker.SetFocus();
         await picker.HandleKeyEventAsync(Key(ConsoleKey.D2, '2'));
         await picker.HandleKeyEventAsync(Key(ConsoleKey.D9, '9'));
-        Assert.AreEqual(23, picker.Value.Hour);
+        Assert.AreEqual(9, picker.Value.Hour);
     }
 
     [TestMethod]

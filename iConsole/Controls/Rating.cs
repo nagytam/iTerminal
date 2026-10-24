@@ -117,7 +117,11 @@ public class Rating : Control, IReadOnly
             SetFocus();
         }
 
-        Value = star == _value ? 0 : star;
+        // Blank cells right of the last star (a stretched control) are not stars: they must not give the maximum.
+        if (star <= _maximum)
+        {
+            Value = star == _value ? 0 : star;
+        }
         return true;
     }
 

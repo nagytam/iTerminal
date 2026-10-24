@@ -33,10 +33,35 @@ public class NumericUpDown : Control, IReadOnly
         ViewSize = new Size(16, 1);
     }
 
-    public string Label { get; set; } = string.Empty;
+    private string _label = string.Empty;
+
+    public string Label
+    {
+        get => _label;
+        set
+        {
+            _label = value ?? string.Empty;
+            StateHasChanged();
+        }
+    }
+
     public bool IsReadOnly { get; set; }
-    public long Step { get; set; } = 1;
-    public long LargeStep { get; set; } = 10;
+    private long _step = 1;
+    private long _largeStep = 10;
+
+    /// <summary>Distance of an arrow key or a wheel notch; at least 1, since a zero or negative step would stall or reverse the keys.</summary>
+    public long Step
+    {
+        get => _step;
+        set => _step = Math.Max(1, value);
+    }
+
+    /// <summary>Distance of PageUp/PageDown; at least 1.</summary>
+    public long LargeStep
+    {
+        get => _largeStep;
+        set => _largeStep = Math.Max(1, value);
+    }
 
     public event EventHandler? ValueChanged;
 

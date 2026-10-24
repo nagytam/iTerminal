@@ -23,7 +23,18 @@ public class Chips : Control, IReadOnly
         ViewSize = new Size(40, 1);
     }
 
-    public bool IsReadOnly { get; set; }
+    private bool _isReadOnly;
+
+    /// <summary>Hides the <c>[+]</c> chip and the ×; the highlight leaves the <c>[+]</c> slot when it goes.</summary>
+    public bool IsReadOnly
+    {
+        get => _isReadOnly;
+        set
+        {
+            _isReadOnly = value;
+            ActiveIndex = _active;
+        }
+    }
 
     public IReadOnlyList<string> Items => _items;
 
@@ -101,7 +112,8 @@ public class Chips : Control, IReadOnly
 
             if (shown.Any(s => s.Item1 == _active) || first == _active)
             {
-                return shown;
+                // A chip wider than the control still shows, cut at the edge, instead of leaving the row blank.
+                return shown.Count == 0 ? [(_active, 0)] : shown;
             }
         }
 
@@ -148,19 +160,16 @@ public class Chips : Control, IReadOnly
                 return true;
             case ConsoleKey.Delete:
             case ConsoleKey.Backspace:
-                if (!IsReadOnly)
-                {
-                    RemoveAt(_active);
-                }
-
-                return true;
+                // Keys that do nothing here are left to the host: Enter on a chip is the dialog's default button.
+                return !IsReadOnly && RemoveAt(_active);
             case ConsoleKey.Enter:
                 if (!IsReadOnly && _active == _items.Count)
                 {
                     AddRequested?.Invoke(this, EventArgs.Empty);
+                    return true;
                 }
 
-                return true;
+                return false;
         }
 
         return false;

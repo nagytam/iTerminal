@@ -27,7 +27,17 @@ public class Countdown : Control
         ViewSize = new Size(8, 1);
     }
 
-    public string Label { get; set; } = string.Empty;
+    private string _label = string.Empty;
+
+    public string Label
+    {
+        get => _label;
+        set
+        {
+            _label = value ?? string.Empty;
+            StateHasChanged();
+        }
+    }
 
     public event EventHandler? Finished;
 

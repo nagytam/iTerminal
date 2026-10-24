@@ -22,10 +22,35 @@ public class Expander : Control
         ViewSize = new Size(30, 1);
     }
 
-    public string Header { get; set; } = string.Empty;
+    private string _header = string.Empty;
+    private int _contentHeight = 3;
 
-    /// <summary>Rows the expanded content takes (the header is one more).</summary>
-    public int ContentHeight { get; set; } = 3;
+    public string Header
+    {
+        get => _header;
+        set
+        {
+            _header = value ?? string.Empty;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>Rows the expanded content takes (the header is one more). Changing it resizes an open section.</summary>
+    public int ContentHeight
+    {
+        get => _contentHeight;
+        set
+        {
+            _contentHeight = Math.Max(0, value);
+            if (_isExpanded && _content is not null)
+            {
+                _content.ViewSize = new Size(ViewSize.Width, _contentHeight);
+            }
+
+            ViewSize = new Size(ViewSize.Width, _isExpanded && _content is not null ? 1 + _contentHeight : 1);
+            StateHasChanged();
+        }
+    }
 
     public event EventHandler<bool>? ExpandedChanged;
 
