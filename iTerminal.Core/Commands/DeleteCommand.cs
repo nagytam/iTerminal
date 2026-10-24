@@ -27,8 +27,15 @@ public class DeleteCommand(
         if (Control?.Parent is DeleteDialog deleteDialog)
         {
             // A delete is only meaningful with a panel behind it: the dialog's Url is whatever that
-            // panel's cursor was on.
-            if (contentModelService.GetLastContentModel() is not null && deleteDialog.IsMultiple)
+            // panel's cursor was on. Without one Enter used to do nothing at all, with the dialog left
+            // open and no word why.
+            if (contentModelService.GetLastContentModel() is null)
+            {
+                deleteDialog.ErrorMessage.Text = "There is no panel to delete from.";
+                return;
+            }
+
+            if (deleteDialog.IsMultiple)
             {
                 try
                 {
@@ -41,7 +48,7 @@ public class DeleteCommand(
                     deleteDialog.ErrorMessage.Text = exception.Message;
                 }
             }
-            else if (contentModelService.GetLastContentModel() is not null)
+            else
             {
                 var deleteUrl = new Url(deleteDialog.Url);
                 var moveToRecycleBin = deleteDialog.MoveToRecycleBin;
