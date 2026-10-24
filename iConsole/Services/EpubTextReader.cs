@@ -1,9 +1,5 @@
 using System.IO.Compression;
-using System.Net;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using HtmlAgilityPack;
-using iConsole.Helper;
 
 namespace iConsole.Services;
 
@@ -15,10 +11,7 @@ namespace iConsole.Services;
 /// </summary>
 public static class EpubTextReader
 {
-    private static readonly Regex WhitespaceRun = new(@"\s+", RegexOptions.Compiled);
-
-    /// <summary>Elements that start and end a line of their own.</summary>
-    private const string BlockElements = "//p|//div|//section|//article|//blockquote|//pre|//tr|//li|//dt|//dd|//figcaption|//table|//ul|//ol|//dl";
+//p|//div|//section|//article|//blockquote|//pre|//tr|//li|//dt|//dd|//figcaption|//table|//ul|//ol|//dl";
 
     public static IReadOnlyList<string> Read(byte[] content)
     {
@@ -101,61 +94,15 @@ public static class EpubTextReader
         return XDocument.Load(stream);
     }
 
-    /// <summary>One chapter's text: its block elements as lines, lists with bullets, headings with hashes, table cells separated by bars.</summary>
+    /// <summary>One chapter's text, as lines of the shared HTML reader.</summary>
     private static List<string> ChapterLines(ZipArchiveEntry entry)
     {
-        byte[] bytes;
+        using MemoryStream copy = new();
         using (Stream stream = entry.Open())
-        using (MemoryStream copy = new())
         {
             stream.CopyTo(copy);
-            bytes = copy.ToArray();
         }
 
-        HtmlDocument document = new();
-        document.LoadHtml(TextEncodings.Decode(bytes, out _));
-
-        foreach (HtmlNode node in document.DocumentNode.SelectNodes("//script|//style|//head|//nav") ?? Enumerable.Empty<HtmlNode>())
-        {
-            node.Remove();
-        }
-
-        foreach (HtmlNode node in document.DocumentNode.SelectNodes("//h1|//h2|//h3|//h4|//h5|//h6") ?? Enumerable.Empty<HtmlNode>())
-        {
-            node.PrependChild(document.CreateTextNode(new string('#', node.Name[1] - '0') + " "));
-        }
-
-        foreach (HtmlNode node in document.DocumentNode.SelectNodes("//li") ?? Enumerable.Empty<HtmlNode>())
-        {
-            node.PrependChild(document.CreateTextNode("• "));
-        }
-
-        foreach (HtmlNode node in document.DocumentNode.SelectNodes("//td|//th") ?? Enumerable.Empty<HtmlNode>())
-        {
-            node.ParentNode?.InsertAfter(document.CreateTextNode(" │ "), node);
-        }
-
-        foreach (HtmlNode node in document.DocumentNode.SelectNodes("//br") ?? Enumerable.Empty<HtmlNode>())
-        {
-            node.ParentNode?.InsertAfter(document.CreateTextNode("\n"), node);
-        }
-
-        foreach (HtmlNode node in document.DocumentNode.SelectNodes(BlockElements) ?? Enumerable.Empty<HtmlNode>())
-        {
-            node.ParentNode?.InsertBefore(document.CreateTextNode("\n"), node);
-            node.ParentNode?.InsertAfter(document.CreateTextNode("\n"), node);
-        }
-
-        List<string> lines = [];
-        foreach (string raw in document.DocumentNode.InnerText.Split('\n'))
-        {
-            string line = WhitespaceRun.Replace(WebUtility.HtmlDecode(raw), " ").Trim();
-            if (line.Length > 0)
-            {
-                lines.Add(line);
-            }
-        }
-
-        return lines;
+        return [.. HtmlTextExtractor.Lines(copy.ToArray())];
     }
 }

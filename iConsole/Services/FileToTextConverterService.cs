@@ -67,11 +67,30 @@ public class FileToTextConverterService : IFileToTextConverterService
     private static readonly HashSet<string> LegacyPresentationExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "ppt" };
 
+    private static readonly HashSet<string> OpenDocumentDrawingExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "odg", "otg" };
+
+    private static readonly HashSet<string> XpsExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "xps", "oxps" };
+
+    private static readonly HashSet<string> MessageExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "eml" };
+
+    private static readonly HashSet<string> OutlookMessageExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "msg" };
+
+    private static readonly HashSet<string> Fb2Extensions =
+        new(StringComparer.OrdinalIgnoreCase) { "fb2" };
+
+    private static readonly HashSet<string> KindleExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "mobi", "azw" };
+
     /// <summary>
     /// Formats whose text is read from their structure rather than from the bytes as a code page: an RTF file carries
-    /// its own code page, so a code page chosen for it means nothing either.
+    /// its own code page, and an e-mail, e-book or XPS document its own charsets, so a code page chosen for it means
+    /// nothing either.
     /// </summary>
-    private static bool IsOfficeExtension(string extension) =>
+    private static bool IsStructuredExtension(string extension) =>
         WordExtensions.Contains(extension)
         || OpenDocumentTextExtensions.Contains(extension)
         || SpreadsheetExtensions.Contains(extension)
@@ -82,7 +101,13 @@ public class FileToTextConverterService : IFileToTextConverterService
         || RtfExtensions.Contains(extension)
         || LegacyWordExtensions.Contains(extension)
         || LegacySpreadsheetExtensions.Contains(extension)
-        || LegacyPresentationExtensions.Contains(extension);
+        || LegacyPresentationExtensions.Contains(extension)
+        || OpenDocumentDrawingExtensions.Contains(extension)
+        || XpsExtensions.Contains(extension)
+        || MessageExtensions.Contains(extension)
+        || OutlookMessageExtensions.Contains(extension)
+        || Fb2Extensions.Contains(extension)
+        || KindleExtensions.Contains(extension);
 
     private static void AddLines(ITextModel textModel, IReadOnlyList<string> lines)
     {
@@ -99,7 +124,7 @@ public class FileToTextConverterService : IFileToTextConverterService
     public static bool IsEncodingRelevant(Url? url) =>
         url is not null
         && !url.Extension.Equals("pdf", StringComparison.OrdinalIgnoreCase)
-        && !IsOfficeExtension(url.Extension)
+        && !IsStructuredExtension(url.Extension)
         && !ImageExtensions.Contains(url.Extension)
         && !AssemblyExtensions.Contains(url.Extension);
 
@@ -168,6 +193,30 @@ public class FileToTextConverterService : IFileToTextConverterService
             else if (LegacyPresentationExtensions.Contains(url.Extension))
             {
                 await ReadBinaryFileAsync(url, fileSystem, textModel, LegacyOfficeTextRenderer.RenderPresentation);
+            }
+            else if (OpenDocumentDrawingExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, OfficeTextRenderer.RenderOpenDocumentDrawing);
+            }
+            else if (XpsExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, XpsTextReader.Read);
+            }
+            else if (MessageExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, MimeMessageReader.Read);
+            }
+            else if (OutlookMessageExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, OutlookMessageReader.Read);
+            }
+            else if (Fb2Extensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, Fb2TextReader.Read);
+            }
+            else if (KindleExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, MobiTextReader.Read);
             }
             else
             {
