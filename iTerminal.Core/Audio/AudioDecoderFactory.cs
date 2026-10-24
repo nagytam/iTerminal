@@ -14,12 +14,34 @@ public static class AudioDecoderFactory
     public static readonly IReadOnlySet<string> NativeExtensions =
         new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".wav", ".wave", ".mp3", ".mp2" };
 
-    /// <summary>Formats that need ffmpeg on PATH.</summary>
+    /// <summary>
+    /// Formats that need ffmpeg on PATH. Every extension here is one the ffmpeg this build was checked against reads as an
+    /// audio file: the container and codec families, the raw and telephony formats, the game-audio streams and the tracker
+    /// modules (which need ffmpeg built with libopenmpt). ffmpeg identifies the format from the file's content, so the
+    /// extension only decides whether the viewer and the library take the file.
+    /// </summary>
     public static readonly IReadOnlySet<string> FfmpegExtensions =
         new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
+            // Containers and codecs first, as before.
             ".flac", ".ogg", ".oga", ".opus", ".m4a", ".m4b", ".aac", ".wma",
             ".aiff", ".aif", ".alac", ".mp4", ".webm", ".ape", ".mpc", ".wv",
+            ".ac3", ".ac4", ".eac3", ".ec3", ".mlp", ".thd", ".truehd", ".dts", ".dtshd",
+            ".tta", ".tak", ".mka", ".oma", ".omg", ".aa", ".aa3", ".aax", ".acm", ".aea",
+            ".afc", ".apc", ".avr", ".mca", ".dss", ".lc3", ".sbc", ".msbc",
+            // Telephony, raw and legacy PCM.
+            ".al", ".ul", ".au", ".snd", ".caf", ".sf", ".ircam", ".voc", ".w64",
+            ".gsm", ".g722", ".g723_1", ".tco", ".rco", ".g728", ".g729", ".dfpwm",
+            ".ivr", ".laf", ".adx", ".aptx", ".aptxhd", ".qoa", ".wa",
+            // High-resolution and game-audio streams.
+            ".dsf", ".dff", ".genh", ".brstm", ".bfstm", ".bcstm", ".hca", ".binka", ".bonk",
+            ".vag", ".xvag", ".wsd", ".xmd", ".vqf", ".vql", ".vqe", ".rka", ".mtaf",
+            // Tracker modules.
+            ".mod", ".s3m", ".xm", ".it", ".mtm", ".stm", ".669", ".amf", ".ams", ".dbm",
+            ".digi", ".dmf", ".dsm", ".dtm", ".far", ".gdm", ".imf", ".j2b", ".m15", ".mdl",
+            ".med", ".mmcmp", ".mms", ".mo3", ".mptm", ".mt2", ".nst", ".okt", ".plm", ".psm",
+            ".pt36", ".ptm", ".sfx", ".sfx2", ".st26", ".stk", ".stp", ".ult", ".umx", ".wow",
+            ".xpk",
         };
 
     /// <summary>Every extension the player will ever put in a playlist.</summary>
