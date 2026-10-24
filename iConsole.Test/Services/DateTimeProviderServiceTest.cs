@@ -50,4 +50,16 @@ public class DateTimeProviderServiceTest
         var service = new DateTimeProviderService();
         Assert.IsInstanceOfType(service, typeof(IDateTimeProviderService));
     }
+
+    [TestMethod]
+    public async Task Now_AdvancesOnceTheRefreshIntervalHasPassed()
+    {
+        // The cache is refreshed on the monotonic clock, so the time moves on after the interval whatever the wall clock does.
+        var provider = new DateTimeProviderService();
+        var first = provider.Now;
+
+        await Task.Delay(700);
+
+        Assert.IsTrue(provider.Now > first, "the cached time was never refreshed");
+    }
 }

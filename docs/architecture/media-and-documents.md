@@ -227,3 +227,4 @@ F3 on a video (`VideoFileTypes`) opens `VideoFileViewerDialog`; F3 on a picture 
   cover art, and comments with a description, are kept, and the audio is copied byte for byte); in a FLAC the Vorbis comment
   block (other comments and metadata blocks are kept). The file is written beside the original and moved over it, so a
   failed save leaves the original intact. ID3v2.2 tags and other formats are not written.
+- **Volume keys** (`MusicVolumeCommand`): `+`/`=` and `-` change the volume whether or not Shift is held, as on most layouts the main-row + is Shift with =; the keypad's + and - work too.

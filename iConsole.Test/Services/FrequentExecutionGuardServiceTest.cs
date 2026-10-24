@@ -83,4 +83,42 @@ public class FrequentExecutionGuardServiceTest
             // Expected
         }
     }
+
+    [TestMethod]
+    public async Task AnActionThatThrowsWhileDelayed_DoesNotStopLaterDelayedActions()
+    {
+        var service = new FrequentExecutionGuardService(new DateTimeProviderService());
+        service.Execute(() => { });                                           // immediate: opens the window
+        service.Execute(() => throw new InvalidOperationException("boom"));  // delayed, and it fails on its worker
+        await Task.Delay(300);
+
+        var ran = false;
+        service.Execute(() => ran = true);                                    // must be scheduled again, not dropped
+
+        var deadline = DateTime.UtcNow.AddSeconds(5);
+        while (!ran && DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(20);
+        }
+
+        Assert.IsTrue(ran, "a delayed action that failed stopped every later one");
+    }
+
+    [TestMethod]
+    public async Task TheNewestDelayedRequest_IsTheOneThatRuns()
+    {
+        var service = new FrequentExecutionGuardService(new DateTimeProviderService());
+        var ran = new List<string>();
+        service.Execute(() => ran.Add("immediate"));
+        service.Execute(() => ran.Add("first waiting"));
+        service.Execute(() => ran.Add("latest"));
+
+        var deadline = DateTime.UtcNow.AddSeconds(5);
+        while (!ran.Contains("latest") && DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(20);
+        }
+
+        CollectionAssert.AreEqual(new[] { "immediate", "latest" }, ran, "the latest update was dropped");
+    }
 }

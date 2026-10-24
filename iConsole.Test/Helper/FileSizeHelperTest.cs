@@ -82,5 +82,12 @@ public class FileSizeHelperTest
         Assert.IsNotNull(fileSize);
         Assert.IsFalse(string.IsNullOrEmpty(fileSize));
     }
-}
 
+    [TestMethod]
+    public void StringOverload_ReadsAByteCount_AndShowsOtherTextAsItIs()
+    {
+        Assert.AreEqual(1024L.ToFileSize(), "1024".ToFileSize());
+        Assert.AreEqual("not a size", "not a size".ToFileSize());
+        Assert.AreEqual("1.5 MB", "1.5 MB".ToFileSize());
+    }
+}

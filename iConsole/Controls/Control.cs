@@ -674,16 +674,38 @@ public class Control : INotifyPropertyChanged, IControl
         }
     }
 
+    private CancellationTokenSource? _autoRefresh;
+
+    /// <summary>
+    /// Repaints this control's subtree every 100 ms, for a control that shows data arriving on its own (a weather reading, a quote).
+    /// Starting again replaces the running repaint, rather than adding a second one; <see cref="StopAutoRefresh"/> ends it.
+    /// </summary>
     protected void StartAutoRefresh()
     {
+        StopAutoRefresh();
+        var cancellation = _autoRefresh = new CancellationTokenSource();
         AutoRefreshTask = Task.Run(async () =>
         {
-            while (true)
+            try
             {
-                await Task.Delay(100);
-                Refresh();
+                while (!cancellation.IsCancellationRequested)
+                {
+                    await Task.Delay(100, cancellation.Token);
+                    Refresh();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Stopped: nothing more to repaint.
             }
         });
+    }
+
+    /// <summary>Ends the repaint started by <see cref="StartAutoRefresh"/>. Safe to call when none is running.</summary>
+    public void StopAutoRefresh()
+    {
+        _autoRefresh?.Cancel();
+        _autoRefresh = null;
     }
 
     public virtual void Refresh()
