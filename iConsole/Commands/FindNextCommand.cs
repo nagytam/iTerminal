@@ -3,7 +3,7 @@ using iConsole.Model;
 
 namespace iConsole.Commands;
 
-public class FindNextCommand(ISearchModel searchModel, IScrollableModel scrollableModel)
+public class FindNextCommand(ISearchModel searchModel, IScrollableModel scrollableModel, Action<long, long>? reveal = null)
     : Command
 {
     public override string Title => "F3-FindNext";
@@ -35,9 +35,16 @@ public class FindNextCommand(ISearchModel searchModel, IScrollableModel scrollab
             {
                 nextPosition = searchModel.Hits.First();
             }
-            scrollableModel.CursorPosition.Y = nextPosition.Y;
-            scrollableModel.CursorPosition.X = nextPosition.X;
-            scrollableModel.ScrollToVisible();
+            if (reveal is not null)
+            {
+                reveal(nextPosition.Y, nextPosition.X);
+            }
+            else
+            {
+                scrollableModel.CursorPosition.Y = nextPosition.Y;
+                scrollableModel.CursorPosition.X = nextPosition.X;
+                scrollableModel.ScrollToVisible();
+            }
         }
         return Task.CompletedTask;
     }

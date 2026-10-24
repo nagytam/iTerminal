@@ -3,7 +3,7 @@ using iConsole.Model;
 
 namespace iConsole.Commands;
 
-public class FindPreviousCommand(ISearchModel searchModel, IScrollableModel scrollableModel)
+public class FindPreviousCommand(ISearchModel searchModel, IScrollableModel scrollableModel, Action<long, long>? reveal = null)
     : Command
 {
     public override string Title => "Ctrl-F3-FindPrev";
@@ -35,9 +35,16 @@ public class FindPreviousCommand(ISearchModel searchModel, IScrollableModel scro
             {
                 previousPosition = searchModel.Hits.Last();
             }
-            scrollableModel.CursorPosition.Y = previousPosition.Y;
-            scrollableModel.CursorPosition.X = previousPosition.X;
-            scrollableModel.ScrollToVisible();
+            if (reveal is not null)
+            {
+                reveal(previousPosition.Y, previousPosition.X);
+            }
+            else
+            {
+                scrollableModel.CursorPosition.Y = previousPosition.Y;
+                scrollableModel.CursorPosition.X = previousPosition.X;
+                scrollableModel.ScrollToVisible();
+            }
         }
         return Task.CompletedTask;
     }

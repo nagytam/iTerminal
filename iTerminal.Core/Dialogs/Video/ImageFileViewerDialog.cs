@@ -5,6 +5,7 @@ using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Services;
+using iTerminal.Core.Services.Images;
 using iTerminal.Core.Video;
 
 namespace iTerminal.Core.Dialogs.Video;
@@ -19,7 +20,7 @@ namespace iTerminal.Core.Dialogs.Video;
 /// </summary>
 public class ImageFileViewerDialog : Dialog
 {
-    internal const string KeyHints = " c:colour  Esc:close";
+    internal const string KeyHints = " c:colour  i:info  Esc:close";
 
     private const int HeaderRows = 1;
     private const int FooterRows = 2;
@@ -40,6 +41,11 @@ public class ImageFileViewerDialog : Dialog
     private AsciiFrame? _ascii;
     private VideoFrame? _asciiSource;
     private AsciiColorMode _asciiMode;
+
+    private IReadOnlyList<ImageInfoField> _metadata = [];
+    private List<string>? _metadataLines;
+    private bool _showMetadata;
+    private int _metadataScroll;
 
     /// <summary>Absolute path of the file to view. Set by the caller before the dialog is shown.</summary>
     public string FilePath { get; set; } = string.Empty;
@@ -94,7 +100,11 @@ public class ImageFileViewerDialog : Dialog
 
         _ascii = null;
         _asciiSource = null;
+        _metadataLines = null;
+        _metadataScroll = 0;
         Title = "Image — " + Path.GetFileName(FilePath);
+        // The metadata is at the front of the file: it is read here, off the render thread, so i shows it at once.
+        _metadata = await Task.Run(() => ImageInfoReader.ReadFile(FilePath));
         StateHasChanged();
     }
 
@@ -211,8 +221,99 @@ public class ImageFileViewerDialog : Dialog
             return true;
         }
 
+        if (keyEvent.KeyPressType == KeyPressType.Down
+            && !keyEvent.Control
+            && !keyEvent.Alt
+            && keyEvent.KeyChar is 'i' or 'I')
+        {
+            _showMetadata = !_showMetadata;
+            StateHasChanged();
+            return true;
+        }
+
+        if (_showMetadata && keyEvent.KeyPressType == KeyPressType.Down && !keyEvent.Control && !keyEvent.Alt)
+        {
+            int page = Math.Max(1, Area().Rows - 1);
+            int? scroll = keyEvent.ConsoleKey switch
+            {
+                ConsoleKey.DownArrow => 1,
+                ConsoleKey.UpArrow => -1,
+                ConsoleKey.PageDown => page,
+                ConsoleKey.PageUp => -page,
+                ConsoleKey.Home => int.MinValue,
+                ConsoleKey.End => int.MaxValue,
+                _ => null,
+            };
+            if (scroll is int step)
+            {
+                int last = Math.Max(0, MetadataLines().Count - Area().Rows);
+                _metadataScroll = step == int.MinValue ? 0 : step == int.MaxValue ? last : Math.Clamp(_metadataScroll + step, 0, last);
+                StateHasChanged();
+                return true;
+            }
+        }
+
         return await base.HandleKeyEventAsync(keyEvent);
     }
+
+    /// <summary>
+    /// The metadata as lines: each group under a heading, then its fields as name and value. The lines are built once; the
+    /// view scrolls through them.
+    /// </summary>
+    /// <summary>True while the metadata is shown instead of the picture (i toggles it).</summary>
+    internal bool ShowingMetadata => _showMetadata;
+
+    internal List<string> MetadataLines()
+    {
+        if (_metadataLines is not null)
+        {
+            return _metadataLines;
+        }
+
+        List<string> lines = [];
+        foreach (IGrouping<string, ImageInfoField> group in _metadata.GroupBy(f => f.Group))
+        {
+            if (lines.Count > 0)
+            {
+                lines.Add(string.Empty);
+            }
+
+            lines.Add($"── {group.Key} ──────────────────────────────");
+            foreach (ImageInfoField field in group)
+            {
+                lines.Add($"  {field.Name,-16} {field.Value}");
+            }
+        }
+
+        if (lines.Count == 0)
+        {
+            lines.Add("No metadata in this file.");
+        }
+
+        _metadataLines = lines;
+        return lines;
+    }
+
+    private void DrawMetadata(IBuffer buffer, int ix, int iy, int iw, int ih)
+    {
+        ColorScheme colorScheme = ThemeService.CurrentColorScheme;
+        var size = new Size(Math.Max(0, iw), 1);
+        var header = $" {FilePath}   metadata";
+        buffer.Write(ZOrder, new Position((uint)ix, (uint)iy), size, new ConxelString(Fit(header, iw), Color.Cyan, colorScheme.Background));
+
+        List<string> lines = MetadataLines();
+        int rows = Math.Max(0, ih - HeaderRows - FooterRows);
+        for (int row = 0; row < rows; row++)
+        {
+            int index = _metadataScroll + row;
+            string text = index < lines.Count ? lines[index] : string.Empty;
+            buffer.Write(ZOrder, new Position((uint)ix, (uint)(iy + HeaderRows + row)), size,
+                new ConxelString(Fit(text, iw), colorScheme.Foreground, colorScheme.Background));
+        }
+    }
+
+    private static string Fit(string text, int width) =>
+        text.Length >= width ? text[..Math.Max(0, width)] : text.PadRight(width);
 
     public override void Draw(IBuffer buffer)
     {
@@ -230,6 +331,12 @@ public class ImageFileViewerDialog : Dialog
         var ih = (int)ViewSize.Height - 2;
         if (iw <= 0 || ih <= HeaderRows + FooterRows)
         {
+            return;
+        }
+
+        if (_showMetadata)
+        {
+            DrawMetadata(buffer, ix, iy, iw, ih);
             return;
         }
 

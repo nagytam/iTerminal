@@ -41,6 +41,8 @@ public class MusicFileViewerDialog : Dialog
     private readonly IMusicPlayerService _player;
     private readonly IAudioDeviceService _deviceService;
     private readonly IMusicMetadataService _metadataService;
+    private readonly IBeepService _beepService;
+    private readonly IDateTimeProviderService _dateTimeProviderService;
 
     private readonly ConcurrentObservableCollection<string> _tagRows = new();
     private readonly ListBox<string> _tagListBox;
@@ -58,12 +60,16 @@ public class MusicFileViewerDialog : Dialog
         IMusicPlayerService player,
         IAudioDeviceService deviceService,
         IMusicMetadataService metadataService,
+        IBeepService beepService,
+        IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService)
         : base(nameof(MusicFileViewerDialog), themeService)
     {
         _player = player;
         _deviceService = deviceService;
         _metadataService = metadataService;
+        _beepService = beepService;
+        _dateTimeProviderService = dateTimeProviderService;
         Title = "Music";
 
         _tagListBox = new ListBox<string>(
@@ -97,6 +103,31 @@ public class MusicFileViewerDialog : Dialog
 
         StartLoading();
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// E: edits the file's tags in the tag editor. Only MP3 and FLAC files can be written; the tags are shown again once a
+    /// save has gone through.
+    /// </summary>
+    private async Task EditTagsAsync()
+    {
+        string path = FilePath;
+        if (!AudioTagWriter.CanWrite(path))
+        {
+            _status = "Tags can be written to MP3 and FLAC files.";
+            StateHasChanged();
+            return;
+        }
+
+        MusicTagSet current = await Task.Run(() => MusicTagReader.ReadAll(path));
+        var editor = new MusicTagEditorDialog(path, current, _beepService, _dateTimeProviderService, ThemeService, saved: () =>
+        {
+            if (FilePath == path)
+            {
+                StartLoading();
+            }
+        });
+        await ShowDialogAsync(editor);
     }
 
     /// <summary>
@@ -273,6 +304,12 @@ public class MusicFileViewerDialog : Dialog
         if (keyEvent.KeyPressType != KeyPressType.Down || keyEvent.Control || keyEvent.Alt)
         {
             return await base.HandleKeyEventAsync(keyEvent);
+        }
+
+        if (keyEvent.KeyChar is 'e' or 'E')
+        {
+            await EditTagsAsync();
+            return true;
         }
 
         switch (keyEvent.ConsoleKey)
@@ -466,7 +503,7 @@ public class MusicFileViewerDialog : Dialog
     }
 
     internal const string KeyHints =
-        " Space:play/pause  Enter:from start  s:stop  ←/→:seek  Shift+←/→:seek further  +/-:volume  Esc:close";
+        " Space:play/pause Enter:from start s:stop ←/→:seek Shift+←/→:seek further +/-:volume e:tags Esc:close";
 
     internal string StatusForTest => _status;
 
