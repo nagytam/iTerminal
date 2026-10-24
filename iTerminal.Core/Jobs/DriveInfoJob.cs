@@ -1,3 +1,4 @@
+using System.Diagnostics;
 ﻿using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Jobs;
@@ -65,10 +66,16 @@ public class DriveInfoJob(DriveInfoModel driveInfoModel) : Job
                 }
 
                 Task.WaitAll([.. tasks], cancellationToken);
-                _driveInfoModel.IsLoaded = true;
             }
-            catch
+            catch (Exception exception)
             {
+                // Traced: one drive that fails must not leave the disk manager saying "Reading…" for ever.
+                Debug.WriteLine($"{nameof(DriveInfoJob)}.{nameof(RunAsync)} failed: {exception}");
+            }
+            finally
+            {
+                // The first pass is over, whether or not every drive answered: "not read yet" is for before that.
+                _driveInfoModel.IsLoaded = true;
             }
             if (!cancellationToken.IsCancellationRequested)
             {

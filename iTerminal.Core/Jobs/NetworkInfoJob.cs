@@ -54,12 +54,17 @@ public class NetworkInfoJob(NetworkInfoModel networkInfoModel) : Job
                     {
                         _networkInfoModel.Networks.RemoveAt(staleIndex);
                     }
-                }                _networkInfoModel.IsLoaded = true;
-
+                }
             }
             catch (Exception exception)
             {
                 Debug.WriteLine($"{nameof(NetworkInfoJob)}.{nameof(RunAsync)} failed: {exception}");
+            }
+            finally
+            {
+                // The first pass is over, whether or not it could read the interfaces: "not read yet" is for before that,
+                // and a list that never leaves it shows "Reading…" for ever.
+                _networkInfoModel.IsLoaded = true;
             }
             if (!cancellationToken.IsCancellationRequested)
             {

@@ -168,5 +168,25 @@ public class NetworkInfoJobTest
 
         Assert.IsTrue(result);
     }
-}
 
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task AfterTheFirstPass_TheListIsMarkedRead()
+    {
+        var model = new iTerminal.Core.Model.NetworkInfoModel();
+        var job = new NetworkInfoJob(model);
+        using var cancellation = new CancellationTokenSource();
+        // The job loops synchronously until cancelled, so it runs on a worker and the test polls it.
+        var running = Task.Run(() => job.ExecuteAsync(cancellation.Token));
+
+        var deadline = DateTime.UtcNow.AddSeconds(50);
+        while (!model.IsLoaded && DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(50);
+        }
+        cancellation.Cancel();
+        await running;
+
+        Assert.IsTrue(model.IsLoaded);
+    }
+}

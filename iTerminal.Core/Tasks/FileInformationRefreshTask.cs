@@ -69,16 +69,17 @@ public class FileInformationRefreshTask
                     {
                         uint numberOfFiles = 0;
                         Progress.Report(numberOfFiles);
-                        GetNumberOfFiles(ref numberOfFiles, CurrentEntry.FullName, CancellationToken);
+                        var counted = GetNumberOfFiles(ref numberOfFiles, CurrentEntry.FullName, CancellationToken);
                         if (!CancellationToken.IsCancellationRequested)
                         {
-                            CurrentEntry.NumberOfFiles = numberOfFiles.ToString("N0");
+                            // A count that stopped part-way (a folder that cannot be read) is not a total: say so, not a short number.
+                            CurrentEntry.NumberOfFiles = counted ? numberOfFiles.ToString("N0") : "?";
                         }
                     }
                 }
-                catch
+                catch (Exception exception)
                 {
-
+                    Logger.Warning(exception, nameof(FileInformationRefreshTask) + " could not count {Url}", item.Value.Item1.Url?.FullUrl);
                 }
                 finally
                 {
@@ -112,7 +113,8 @@ public class FileInformationRefreshTask
         }
     }
 
-    private void GetNumberOfFiles(ref uint numberOfFiles, string fullName, CancellationToken cancellationToken)
+    /// <returns>Whether the count ran to the end. False when the folder, or something under it, could not be read.</returns>
+    private bool GetNumberOfFiles(ref uint numberOfFiles, string fullName, CancellationToken cancellationToken)
     {
         try
         {
@@ -127,9 +129,12 @@ public class FileInformationRefreshTask
                 // Ensure final count is reported.
                 Progress.Report(numberOfFiles);
             }
+            return true;
         }
-        catch
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
         {
+            Logger.Debug(exception, nameof(FileInformationRefreshTask) + " could not read {Folder}", fullName);
+            return false;
         }
     }
 
