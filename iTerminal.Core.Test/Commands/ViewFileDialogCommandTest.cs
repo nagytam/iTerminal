@@ -488,6 +488,37 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [TestMethod]
+    public void ExecuteAsync_WithAnXmlFile_PointsTheXmlViewerAtIt()
+    {
+        var themeService = CreateThemeService();
+        var xmlDialog = new XmlViewerDialog(
+            Mock.Of<IContentModelService>(),
+            Mock.Of<IFileToTextConverterService>(),
+            Mock.Of<IBeepService>(),
+            new DateTimeProviderService(),
+            themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.xml");
+        File.WriteAllText(path, "<root/>");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                CreateDialog(themeService),
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                xmlViewerDialog: xmlDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, xmlDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     // ── ContentBrowser integration ───────────────────────────────────────────
 
     [TestMethod]
