@@ -28,7 +28,7 @@ public abstract class UrlValidationModel(ITextModel textModel, IDateTimeProvider
     protected virtual bool ExistsAlready(Url url) => false;
 
     /// <summary>The URL the input names: a bare name inside <see cref="BaseUrl"/>, anything else as typed.</summary>
-    protected Url Resolve(string rawInput)
+    protected virtual Url Resolve(string rawInput)
     {
         var baseUrl = BaseUrl;
         if (baseUrl is not null
@@ -64,13 +64,31 @@ public abstract class UrlValidationModel(ITextModel textModel, IDateTimeProvider
                 SetValidationResult(now, false, string.Empty);
                 return;
             }
-            var url = Resolve(rawInput);
-            if (!url.IsValid(PathExistMode))
+            var (accepted, taken) = Judge(rawInput);
+            if (!accepted)
             {
-                SetValidationResult(now, false, ExistsAlready(url) ? ExistsMessage : InvalidMessage);
+                SetValidationResult(now, false, taken ? ExistsMessage : InvalidMessage);
                 return;
             }
         }
         SetValidationResult(now, true, string.Empty);
+    }
+
+    /// <summary>
+    /// Whether the input names a place the file system accepts, and whether that place is taken already. A name the
+    /// file system cannot even represent — a NUL character, pasted into the box — is refused, not thrown: the throw
+    /// came out of the key handler and left the dialog with no message at all.
+    /// </summary>
+    private (bool Accepted, bool Taken) Judge(string rawInput)
+    {
+        try
+        {
+            var url = Resolve(rawInput);
+            return url.IsValid(PathExistMode) ? (true, false) : (false, ExistsAlready(url));
+        }
+        catch (ArgumentException)
+        {
+            return (false, false);
+        }
     }
 }

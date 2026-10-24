@@ -28,35 +28,37 @@ public class CreateFileCommand(
     {
         if (Control?.Parent is CreateFileDialog createFileDialog)
         {
-            var isSuccess = false;
             var newFileUrl = createFileDialog.BaseUrl.Combine(createFileDialog.NewFileName);
             var model = contentModelService.GetLastContentModel();
 
             // The last line of defence against truncating a file: writing the new, empty file over
-            // one that exists replaces its contents. The validation normally stops this first.
+            // one that exists replaces its contents. The validation normally stops this first, and when
+            // it did not, the dialog says so rather than quietly staying open.
             if (newFileUrl.ContainerType == ContainerType.FileSystem && File.Exists(newFileUrl.FullName))
             {
+                createFileDialog.ReportFailure(UrlValidationModel.ExistsMessage);
+                return;
+            }
+
+            if (model is null)
+            {
+                createFileDialog.ReportFailure("There is no folder to create the file in.");
                 return;
             }
 
             try
             {
-                if (model != null)
-                {
-                    await model.WriteFileAsync(newFileUrl, new MemoryStream());
-                    model.Update();
-                }
-                isSuccess = true;
+                await model.WriteFileAsync(newFileUrl, new MemoryStream());
+                model.Update();
             }
-            catch (Exception) 
+            catch (Exception exception)
             {
-                // TODO handle error
+                createFileDialog.ReportFailure($"Could not create the file: {exception.Message}");
+                return;
             }
-            if (isSuccess)
-            {
-                createFileDialog.Close();
-                createFileDialog.Reset();
-            }
+
+            createFileDialog.Close();
+            createFileDialog.Reset();
         }
     }
 }

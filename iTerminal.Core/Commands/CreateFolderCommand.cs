@@ -27,31 +27,32 @@ public class CreateFolderCommand(
     {
         if (Control?.Parent is CreateFolderDialog createFolderDialog)
         {
-            var isSuccess = false;
             var newUrl = createFolderDialog.BaseUrl.Combine(createFolderDialog.NewFolderName);
             if (!newUrl.FullUrl.EndsWith('/'))
             {
                 newUrl += '/';
             }
+
+            var contentModel = contentModelService.GetLastContentModel();
+            if (contentModel is null)
+            {
+                createFolderDialog.ReportFailure("There is no folder to create the folder in.");
+                return;
+            }
+
             try
             {
-                var contentModel = contentModelService.GetLastContentModel();
-                if (contentModel is not null)
-                {
-                    await contentModel.CreateFolderAsync(newUrl);
-                    contentModel.Update();
-                    isSuccess = true;
-                }
+                await contentModel.CreateFolderAsync(newUrl);
+                contentModel.Update();
             }
-            catch (Exception) 
+            catch (Exception exception)
             {
-                // TODO handle error
+                createFolderDialog.ReportFailure($"Could not create the folder: {exception.Message}");
+                return;
             }
-            if (isSuccess)
-            {
-                createFolderDialog.Close();
-                createFolderDialog.Reset();
-            }
+
+            createFolderDialog.Close();
+            createFolderDialog.Reset();
         }
     }
 }

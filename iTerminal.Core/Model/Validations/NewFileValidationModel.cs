@@ -9,4 +9,13 @@ public class NewFileValidationModel(ITextModel model, IDateTimeProviderService d
     : UrlValidationModel(model, dateTimeProviderService, PathExistMode.NewFile)
 {
     protected override bool ExistsAlready(Url url) => File.Exists(url.FullName);
+
+    /// <summary>
+    /// A name typed into a create dialog is inside the panel's folder however it is written, as the create command
+    /// writes it: "sub/new.txt" is checked and created in the panel's folder, not in the working directory.
+    /// </summary>
+    protected override Url Resolve(string rawInput) =>
+        BaseUrl is { ContainerType: ContainerType.FileSystem, PathType: PathType.Folder } baseUrl && !Path.IsPathRooted(rawInput)
+            ? baseUrl.Combine(rawInput)
+            : base.Resolve(rawInput);
 }

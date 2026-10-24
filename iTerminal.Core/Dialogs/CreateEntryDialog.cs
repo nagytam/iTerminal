@@ -2,6 +2,7 @@ using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
 using iConsole.Data;
+using iConsole.Helper;
 using iConsole.Services;
 
 namespace iTerminal.Core.Dialogs;
@@ -83,6 +84,25 @@ public abstract class CreateEntryDialog : FormDialog
         _errorMessage.Position = new Position(FieldX, 3);
         _errorMessage.ViewSize = new Size(FieldWidth, 1);
         LayoutButtonRow(_createButton, _cancelButton);
+    }
+
+    /// <summary>
+    /// Says why the create did not happen, on the error line, and keeps the dialog open with the name still in
+    /// the box so it can be changed. The next key that edits the name withdraws the message.
+    /// </summary>
+    public void ReportFailure(string message) => _errorMessage.Text = message;
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        var isHandled = await base.HandleKeyEventAsync(keyEvent);
+        bool editsTheName = ConsoleKeyHelper.IsTypingKey(keyEvent)
+            || keyEvent.ConsoleKey is ConsoleKey.Backspace or ConsoleKey.Delete;
+        if (isHandled && _textBoxName.IsFocused && editsTheName)
+        {
+            _errorMessage.Text = string.Empty;
+        }
+
+        return isHandled;
     }
 
     public void Reset()
