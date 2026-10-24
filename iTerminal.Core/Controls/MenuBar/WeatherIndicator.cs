@@ -26,7 +26,10 @@ public class WeatherIndicator(WeatherService weatherService, IThemeService theme
         string text;
         if (weather is null)
         {
-            text = $"Weather {ProgressChar()}";
+            // A spinner means "still trying": once the last attempt has failed and none is running, say so.
+            text = _weatherService.LastRefreshFailed && !_weatherService.IsRefreshing
+                ? "Weather unavailable"
+                : $"Weather {ProgressChar()}";
         }
         else
         {

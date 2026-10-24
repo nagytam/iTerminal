@@ -1,3 +1,4 @@
+using System.Diagnostics;
 ﻿using iConsole.Jobs;
 using iTerminal.Core.Services;
 
@@ -32,8 +33,10 @@ public class SettingsSynchronizationJob(ISettingsService settingsService)
                 _settingsService.Write();
             }
         }
-        catch
+        catch (Exception exception)
         {
+            // Kept running: the next pass tries again. Traced, so settings that cannot be saved are not lost silently.
+            Debug.WriteLine($"{nameof(SettingsSynchronizationJob)}.{nameof(WriteIfDirty)} failed: {exception}");
         }
     }
 

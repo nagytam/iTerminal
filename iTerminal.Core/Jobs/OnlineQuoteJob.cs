@@ -68,14 +68,17 @@ public class OnlineQuoteJob(
 
                 await Task.WhenAll(tasks);
                 _onlineQuoteService.IsFromCache = false;
+                _onlineQuoteService.LastRefreshFailed = false;
             }
             catch (PlaywrightException)
             {
                 // The browser did not start: its install is no longer complete, so the dialog offers it again.
+                _onlineQuoteService.LastRefreshFailed = true;
                 _runtimeDependencies.InvalidateInstalled(PlaywrightRuntimeDependency.DependencyId);
             }
-            catch 
+            catch
             {
+                _onlineQuoteService.LastRefreshFailed = true;
             }
             finally
             {

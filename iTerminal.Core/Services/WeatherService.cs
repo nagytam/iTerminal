@@ -15,4 +15,10 @@ public class WeatherService
     /// Indicates whether a refresh is currently in progress
     /// </summary>
     public bool IsRefreshing { get; set; } = false;
+
+    /// <summary>
+    /// Whether the last attempt to fetch the weather failed (offline, no location, a bad response). Without this a failed
+    /// first attempt looked exactly like one still in progress: a spinner, and no sign that nothing was coming.
+    /// </summary>
+    public bool LastRefreshFailed { get; set; } = false;
 }

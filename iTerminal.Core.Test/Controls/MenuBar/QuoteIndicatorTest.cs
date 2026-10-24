@@ -144,4 +144,26 @@ public class QuoteIndicatorTest
 
         Assert.IsTrue(Enumerable.Range(0, 18).All(x => buffer.IsWritten(x, 0)));
     }
+
+    [TestMethod]
+    public void AFailedAttempt_SaysUnavailableInsteadOfSpinningForever()
+    {
+        var (indicator, service) = Create();
+        service.LastRefreshFailed = true;
+
+        var (text, _) = indicator.Describe(30);
+
+        Assert.AreEqual("Bitcoin unavailable", text.TrimEnd());
+    }
+
+    [TestMethod]
+    public void AFailedAttemptBeingRetried_KeepsTheSpinner()
+    {
+        var (indicator, service) = Create();
+        service.LastRefreshFailed = true;
+        service.IsRefreshing = true;
+
+        StringAssert.StartsWith(indicator.Describe(30).Text, "Bitcoin ");
+        StringAssert.DoesNotMatch(indicator.Describe(30).Text, new System.Text.RegularExpressions.Regex("unavailable"));
+    }
 }
