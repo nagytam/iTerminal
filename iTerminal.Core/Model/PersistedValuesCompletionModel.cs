@@ -22,13 +22,26 @@ public class PersistedValuesCompletionModel : ICompletionModel
         {
             foreach (var value in values.Split(';'))
             {
-                _completions.Add(value);
+                // A blank entry (a trailing ';', or one saved before blanks were refused) is not a completion.
+                if (!string.IsNullOrWhiteSpace(value) && !_completions.Contains(value))
+                {
+                    _completions.Add(value);
+                }
             }
         }
     }
 
+    /// <summary>
+    /// Remembers a value for the completions. A blank value is not remembered, and neither is one with a ';': the list is
+    /// stored separated by ';', so such a value would read back as two entries and corrupt the history.
+    /// </summary>
     public void InsertCompletion(string value)
     {
+        if (string.IsNullOrWhiteSpace(value) || value.Contains(';'))
+        {
+            return;
+        }
+
         if (!Completions.Contains(value))
         {
             _completions.Add(value);
