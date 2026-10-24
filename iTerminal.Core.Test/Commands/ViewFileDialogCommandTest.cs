@@ -2,6 +2,7 @@ using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Interfaces;
+using iConsole.Json;
 using iConsole.Services;
 using iConsole.Tasks;
 using iTerminal.Core.Commands;
@@ -512,6 +513,35 @@ public class ViewFileDialogCommandTest
             command.ExecuteAsync(null).GetAwaiter().GetResult();
 
             Assert.AreEqual(path, xmlDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    public void ExecuteAsync_WithAJsonFile_PointsTheJsonViewerAtIt()
+    {
+        var themeService = CreateThemeService();
+        var jsonDialog = new JsonViewerDialog(
+            Mock.Of<IContentModelService>(),
+            Mock.Of<IFileToTextConverterService>(),
+            themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.json");
+        File.WriteAllText(path, "{}");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                CreateDialog(themeService),
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                jsonViewerDialog: jsonDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, jsonDialog.Url?.Path);
         }
         finally
         {

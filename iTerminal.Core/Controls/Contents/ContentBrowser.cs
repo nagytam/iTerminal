@@ -42,6 +42,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? _videoFileViewerDialog { get; set; }
     private iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? _imageFileViewerDialog { get; set; }
     private XmlViewerDialog? _xmlViewerDialog { get; set; }
+    private JsonViewerDialog? _jsonViewerDialog { get; set; }
     private MarkPatternDialog? _markPatternDialog { get; set; }
     private MarkPatternDialog? _unmarkPatternDialog { get; set; }
     private CompressDialog? _compressDialog { get; set; }
@@ -82,6 +83,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? imageFileViewerDialog = null,
         XmlViewerDialog? xmlViewerDialog = null,
+        JsonViewerDialog? jsonViewerDialog = null,
         MarkPatternDialog? markPatternDialog = null,
         MarkPatternDialog? unmarkPatternDialog = null,
         CompressDialog? compressDialog = null,
@@ -138,6 +140,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _videoFileViewerDialog = videoFileViewerDialog;
         _imageFileViewerDialog = imageFileViewerDialog;
         _xmlViewerDialog = xmlViewerDialog;
+        _jsonViewerDialog = jsonViewerDialog;
         _markPatternDialog = markPatternDialog;
         _unmarkPatternDialog = unmarkPatternDialog;
         _compressDialog = compressDialog;
@@ -320,7 +323,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
         if (_fileViewerDialog is not null)
         {
-            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog));
+            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog));
         }
         if (_textFileEditorDialog is not null)
         {

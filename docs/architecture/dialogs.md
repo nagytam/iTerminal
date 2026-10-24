@@ -234,3 +234,16 @@ indexes each XML node to its item. An element whose only content is text shows t
 The document is parsed on a background task when the dialog opens, and a query runs on one too; both results are
 applied on the idle pass, on the thread that owns the controls. The tree is the dialog's first focusable control, since
 `Dialog` gives the keyboard to the first one that can take it.
+
+### The JSON viewer (`JsonViewerDialog`, F3 on a `.json` file, `iConsole/Json/`)
+F3 on a `.json` file opens the document as a tree. `JsonTree` builds one `JsonNodeItem` per member or item: a
+property shows as `"key": value`, an array item as `[0]: value`, and a container shows how many members it has. Objects
+and arrays with contents expand and collapse with the `TreeView`'s own keys; `*` expands every node.
+
+- **Validation** (F2): `JsonValidator` parses the document with `System.Text.Json` and reports the first place it is not
+  valid JSON, with its line and column. Comments and trailing commas are rejected, as RFC 8259 requires. A document is
+  not checked against a JSON Schema; that needs a schema library, which this viewer does not use.
+- **Text** (F4) shows the file's text through the plain viewer's reader. A file that is not valid JSON opens that way at
+  once, with the error on the status line.
+
+The document is parsed and validated on background tasks; the validation result is shown on the idle pass.
