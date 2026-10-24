@@ -81,8 +81,10 @@ public static class S3CredentialResolver
             }
         }
 
-        region ??= FirstNonEmpty(options?.Region, environment("AWS_REGION"), environment("AWS_DEFAULT_REGION"));
-        endpoint ??= FirstNonEmpty(options?.Endpoint, environment("AWS_ENDPOINT_URL_S3"), environment("AWS_ENDPOINT_URL"));
+        // The environment outranks the configuration, as the order above says: configuration only fills what neither the
+        // password manager nor the environment gave.
+        region ??= FirstNonEmpty(environment("AWS_REGION"), environment("AWS_DEFAULT_REGION"), options?.Region);
+        endpoint ??= FirstNonEmpty(environment("AWS_ENDPOINT_URL_S3"), environment("AWS_ENDPOINT_URL"), options?.Endpoint);
         return new S3Credentials(key, secret, token, region, endpoint);
     }
 

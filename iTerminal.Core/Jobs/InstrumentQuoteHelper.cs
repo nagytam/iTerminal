@@ -11,6 +11,9 @@ namespace iTerminal.Core.Jobs;
 /// </summary>
 internal static class InstrumentQuoteHelper
 {
+    /// <summary>The newest values kept per instrument: the indicator needs the last few, not every poll since the start.</summary>
+    internal const int MaxValuesKept = 100;
+
     /// <summary>Populates <paramref name="onlineQuoteService"/> from previously cached instrument values.</summary>
     public static void PrimeFromCache(OnlineQuoteService onlineQuoteService, IEnumerable<CachedInstrumentValue> cachedInstruments, string source)
     {
@@ -76,6 +79,11 @@ internal static class InstrumentQuoteHelper
             ValueType = InstrumentValueType.Intraday
         };
         instrument.InstrumentValues.InsertAt(0, instrumentValue);
+        // A poll every few seconds would otherwise grow the history for as long as the app runs.
+        while (instrument.InstrumentValues.Count > MaxValuesKept)
+        {
+            instrument.InstrumentValues.RemoveAt(instrument.InstrumentValues.Count - 1);
+        }
 
         await cacheService.SetCachedInstrumentAsync(
             name,
