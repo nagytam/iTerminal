@@ -1,19 +1,18 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using iTerminal.Core.Data;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace iTerminal.Core.Data.Test;
 
+/// <summary>A cached folder listing starts empty rather than null, so a read of a fresh entry never fails.</summary>
 [TestClass]
 public class FolderContentsCacheEntryTest
 {
     [TestMethod]
-    public void Constructor_Default_ShouldCreateInstance()
+    public void A_NewEntry_HasEmptyPathAndContent()
     {
-        // Arrange
+        var entry = new FolderContentsCacheEntry();
 
-        // Act
-        // TODO: implement test
-        // Assert
+        Assert.AreEqual(string.Empty, entry.Path);
+        Assert.AreEqual(string.Empty, entry.ContentJson);
     }
 }
-

@@ -12,6 +12,12 @@ namespace iTerminal.Core.Tasks.Test;
 [TestClass]
 public class FileInformationRefreshTaskTest
 {
+    /// <summary>Exposes the progress handler, so a test can deliver a report the way <c>Progress</c> does, after the count.</summary>
+    private sealed class CountingTask(IEntry entry, IContentModel model) : FileInformationRefreshTask(entry, model, Mock.Of<IMemoryCacheService>(), Log.Logger)
+    {
+        public void DeliverLateProgress(long value) => OnProgressChanged(value);
+    }
+
     private static Mock<IEntry> FolderEntry(string path)
     {
         var entry = new Mock<IEntry>();
@@ -54,6 +60,29 @@ public class FileInformationRefreshTaskTest
             await CountAsync(entry.Object);
 
             Assert.AreEqual("3", entry.Object.NumberOfFiles);
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public async Task AProgressReportDeliveredAfterTheCount_DoesNotPutTheEllipsisBack()
+    {
+        var folder = Path.Combine(Path.GetTempPath(), "LateProgress_" + Guid.NewGuid().ToString("N")[..8]);
+        Directory.CreateDirectory(folder);
+        try
+        {
+            File.WriteAllText(Path.Combine(folder, "a.txt"), "a");
+            var entry = FolderEntry(folder);
+            var task = new CountingTask(entry.Object, Mock.Of<IContentModel>());
+            await task.ExecuteAsync();
+            Assert.AreEqual("1", entry.Object.NumberOfFiles);
+
+            task.DeliverLateProgress(1);
+
+            Assert.AreEqual("1", entry.Object.NumberOfFiles, "the final count stays");
         }
         finally
         {
