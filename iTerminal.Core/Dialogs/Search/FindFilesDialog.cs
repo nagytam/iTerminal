@@ -245,6 +245,15 @@ public class FindFilesDialog : SplitPaneDialog
             }
         }
 
+        // Home and End belong to the text boxes' cursors, so Ctrl+Home and Ctrl+End reach the first and the last result.
+        if ((_namesBox.IsFocused || _textBox.IsFocused || _folderBox.IsFocused)
+            && keyEvent.Control && !keyEvent.Alt
+            && keyEvent.ConsoleKey is ConsoleKey.Home or ConsoleKey.End
+            && _resultListBox.Count > 0)
+        {
+            return await _resultListBox.HandleKeyEventAsync(new KeyEvent(keyEvent.KeyChar, keyEvent.ConsoleKey, false, false, false));
+        }
+
         // The arrows drive the results from the text boxes too, so a search and a pick from its
         // results is one motion; Tab still moves between the fields.
         if ((_namesBox.IsFocused || _textBox.IsFocused || _folderBox.IsFocused)

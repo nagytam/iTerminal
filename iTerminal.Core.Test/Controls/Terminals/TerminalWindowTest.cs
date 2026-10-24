@@ -149,4 +149,29 @@ public class TerminalWindowTest
 
         Assert.AreEqual(new Size(100, 1), window.ViewSize);
     }
+
+    [TestMethod]
+    public async Task CtrlW_DeletesTheLastWordOfTheCommand_AndCtrlU_ClearsIt()
+    {
+        var (window, model) = Create();
+        model.Command.Command = "git commit -m";
+
+        Assert.IsTrue(await window.HandleKeyEventAsync(Key('w', ConsoleKey.W, control: true)));
+        Assert.AreEqual("git commit ", model.Command.Command);
+        await window.HandleKeyEventAsync(Key('\b', ConsoleKey.Backspace, control: true));
+        Assert.AreEqual("git ", model.Command.Command);
+
+        Assert.IsTrue(await window.HandleKeyEventAsync(Key('u', ConsoleKey.U, control: true)));
+        Assert.AreEqual(string.Empty, model.Command.Command);
+    }
+
+    [TestMethod]
+    public async Task CtrlWAndCtrlU_OnAnEmptyCommand_AreLeftForOthers()
+    {
+        var (window, model) = Create();
+
+        Assert.IsFalse(await window.HandleKeyEventAsync(Key('w', ConsoleKey.W, control: true)));
+        Assert.IsFalse(await window.HandleKeyEventAsync(Key('u', ConsoleKey.U, control: true)));
+        Assert.AreEqual(string.Empty, model.Command.Command);
+    }
 }

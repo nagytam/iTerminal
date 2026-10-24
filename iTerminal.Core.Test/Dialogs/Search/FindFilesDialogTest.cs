@@ -168,4 +168,45 @@ public class FindFilesDialogTest
         Assert.AreEqual("*.md", second.NamesBoxForTest.Text);
         Assert.AreEqual(_root, second.FolderBoxForTest.Text);
     }
+
+    [TestMethod]
+    public async Task CtrlEndAndCtrlHome_JumpToTheLastAndFirstResult_FromTheNameBox()
+    {
+        var service = new FileSearchService();
+        var dialog = CreateDialog(service);
+        await ShowAsync(dialog);
+        await SearchForAsync(dialog, service, "*.txt", 2);
+        dialog.NamesBoxForTest.SetFocus();
+
+        Assert.IsTrue(await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.End, false, false, true)));
+        Assert.AreEqual(1, (int)dialog.ResultListBoxForTest.ScrollableModel.CursorPosition.Y);
+
+        Assert.IsTrue(await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Home, false, false, true)));
+        Assert.AreEqual(0, (int)dialog.ResultListBoxForTest.ScrollableModel.CursorPosition.Y);
+    }
+
+    [TestMethod]
+    public async Task PlainHomeAndEnd_StayWithTheTextBoxCursor()
+    {
+        var service = new FileSearchService();
+        var dialog = CreateDialog(service);
+        await ShowAsync(dialog);
+        await SearchForAsync(dialog, service, "*.txt", 2);
+        dialog.NamesBoxForTest.SetFocus();
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.End, '\0'));
+
+        Assert.AreEqual(0, (int)dialog.ResultListBoxForTest.ScrollableModel.CursorPosition.Y, "End moves the text cursor, not the results");
+    }
+
+    [TestMethod]
+    public async Task CtrlEnd_WithNoResults_IsLeftToTheTextBox()
+    {
+        var dialog = CreateDialog(new FileSearchService());
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.End, false, false, true));
+
+        Assert.AreEqual(0, (int)dialog.ResultListBoxForTest.ScrollableModel.CursorPosition.Y);
+    }
 }

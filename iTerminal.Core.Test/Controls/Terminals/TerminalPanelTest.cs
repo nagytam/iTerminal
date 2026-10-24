@@ -186,4 +186,29 @@ public class TerminalPanelTest
 
         Assert.AreEqual("ping", terminalModel.Command.Command);
     }
+
+    [TestMethod]
+    public async Task CtrlW_DeletesTheLastWordOfTheCommand_AndCtrlU_ClearsIt()
+    {
+        var (panel, model) = Create();
+        model.Command.Command = "git commit -m";
+
+        Assert.IsTrue(await panel.HandleKeyEventAsync(Key('w', ConsoleKey.W, control: true)));
+        Assert.AreEqual("git commit ", model.Command.Command);
+        await panel.HandleKeyEventAsync(Key('\b', ConsoleKey.Backspace, control: true));
+        Assert.AreEqual("git ", model.Command.Command);
+
+        Assert.IsTrue(await panel.HandleKeyEventAsync(Key('u', ConsoleKey.U, control: true)));
+        Assert.AreEqual(string.Empty, model.Command.Command);
+    }
+
+    [TestMethod]
+    public async Task CtrlWAndCtrlU_OnAnEmptyCommand_AreLeftForOthers()
+    {
+        var (panel, model) = Create();
+
+        Assert.IsFalse(await panel.HandleKeyEventAsync(Key('w', ConsoleKey.W, control: true)));
+        Assert.IsFalse(await panel.HandleKeyEventAsync(Key('u', ConsoleKey.U, control: true)));
+        Assert.AreEqual(string.Empty, model.Command.Command);
+    }
 }

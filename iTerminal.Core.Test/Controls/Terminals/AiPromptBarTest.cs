@@ -317,4 +317,79 @@ public class AiPromptBarTest
         await bar.HandleKeyEventAsync(new KeyEvent('u', ConsoleKey.U, false, false, true));
         Assert.AreEqual(string.Empty, model.Input);
     }
+
+    private static async Task SendAsync(AiPromptBar bar, AiChatModel model, string question)
+    {
+        model.Input = question;
+        await bar.HandleKeyEventAsync(Key('\r', ConsoleKey.Enter));
+        model.Input = string.Empty;
+    }
+
+    [TestMethod]
+    public async Task UpRecallsTheEarlierQuestions_AndDownWalksBackToTheDraft()
+    {
+        var (bar, model, _) = Create();
+        bar.SetFocus();
+        await SendAsync(bar, model, "first question");
+        await SendAsync(bar, model, "second question");
+        model.Input = "half typed";
+
+        Assert.IsTrue(await bar.HandleKeyEventAsync(Key('\0', ConsoleKey.UpArrow)));
+        Assert.AreEqual("second question", model.Input);
+        await bar.HandleKeyEventAsync(Key('\0', ConsoleKey.UpArrow));
+        Assert.AreEqual("first question", model.Input);
+        await bar.HandleKeyEventAsync(Key('\0', ConsoleKey.UpArrow));
+        Assert.AreEqual("first question", model.Input, "it stops at the oldest");
+
+        await bar.HandleKeyEventAsync(Key('\0', ConsoleKey.DownArrow));
+        Assert.AreEqual("second question", model.Input);
+        Assert.IsTrue(await bar.HandleKeyEventAsync(Key('\0', ConsoleKey.DownArrow)));
+        Assert.AreEqual("half typed", model.Input, "past the newest the draft comes back");
+        Assert.IsFalse(await bar.HandleKeyEventAsync(Key('\0', ConsoleKey.DownArrow)), "nothing more to walk");
+    }
+
+    [TestMethod]
+    public async Task AQuestionAskedTwiceInARow_IsKeptOnce_AndBlankOnesNotAtAll()
+    {
+        var (bar, model, _) = Create();
+        bar.SetFocus();
+        await SendAsync(bar, model, "same");
+        await SendAsync(bar, model, "same");
+        model.Input = "   ";
+        await bar.HandleKeyEventAsync(Key('\r', ConsoleKey.Enter));
+        model.Input = string.Empty;
+
+        await bar.HandleKeyEventAsync(Key('\0', ConsoleKey.UpArrow));
+        Assert.AreEqual("same", model.Input);
+        await bar.HandleKeyEventAsync(Key('\0', ConsoleKey.UpArrow));
+        Assert.AreEqual("same", model.Input, "there is only one entry");
+    }
+
+    [TestMethod]
+    public async Task UpAndDown_WithoutFocusOrHistory_AreLeftForOthers()
+    {
+        var (bar, model, _) = Create();
+        bar.SetFocus();
+        Assert.IsFalse(await bar.HandleKeyEventAsync(Key(' ', ConsoleKey.UpArrow)), "no history yet");
+
+        var (other, otherModel, _) = Create();
+        await SendAsync(other, otherModel, "asked");
+        Assert.IsFalse(await other.HandleKeyEventAsync(Key(' ', ConsoleKey.UpArrow)), "the panels have the arrows when the bar is not focused");
+        Assert.AreEqual(string.Empty, otherModel.Input);
+        Assert.AreEqual(string.Empty, model.Input);
+    }
+
+    [TestMethod]
+    public async Task EscapeLeavesTheHistoryWalk()
+    {
+        var (bar, model, _) = Create();
+        bar.SetFocus();
+        await SendAsync(bar, model, "old");
+        await bar.HandleKeyEventAsync(Key('\0', ConsoleKey.UpArrow));
+
+        await bar.HandleKeyEventAsync(Key('\x1b', ConsoleKey.Escape));
+        Assert.AreEqual(string.Empty, model.Input);
+
+        Assert.IsFalse(await bar.HandleKeyEventAsync(Key('\0', ConsoleKey.DownArrow)), "no walk in progress after Escape");
+    }
 }

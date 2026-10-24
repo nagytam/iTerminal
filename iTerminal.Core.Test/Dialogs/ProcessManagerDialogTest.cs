@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
+using iConsole.Data;
 using iConsole.Services;
 using iTerminal.Core.Dialogs;
 using Moq;
@@ -86,5 +87,32 @@ public class ProcessManagerDialogTest
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
 
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
+    }
+
+    [TestMethod]
+    public async Task CtrlEndAndCtrlHomeJumpToTheLastAndFirstProcessWhileTheFilterHasFocus()
+    {
+        var dialog = Create();
+        await ShowAsync(dialog);
+        await WaitUntilAsync(() => dialog.ListBoxForTest.Count > 2, "the process list to fill");
+        int last = dialog.ListBoxForTest.Count - 1;
+
+        Assert.IsTrue(await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.End, false, false, true)));
+        Assert.AreEqual(last, (int)dialog.ListBoxForTest.ScrollableModel.CursorPosition.Y);
+
+        Assert.IsTrue(await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Home, false, false, true)));
+        Assert.AreEqual(0, (int)dialog.ListBoxForTest.ScrollableModel.CursorPosition.Y);
+    }
+
+    [TestMethod]
+    public async Task PlainEndStaysWithTheFilterBox()
+    {
+        var dialog = Create();
+        await ShowAsync(dialog);
+        await WaitUntilAsync(() => dialog.ListBoxForTest.Count > 2, "the process list to fill");
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.End, false, false, false));
+
+        Assert.AreEqual(0, (int)dialog.ListBoxForTest.ScrollableModel.CursorPosition.Y);
     }
 }
