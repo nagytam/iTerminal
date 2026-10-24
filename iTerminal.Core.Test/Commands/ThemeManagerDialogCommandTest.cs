@@ -1,19 +1,23 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using iConsole.Data;
 using iTerminal.Core.Commands;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace iTerminal.Core.Commands.Test;
 
+/// <summary>Alt+F6 opens the theme chooser.</summary>
 [TestClass]
 public class ThemeManagerDialogCommandTest
 {
     [TestMethod]
-    public void Constructor_Default_ShouldCreateInstance()
+    public void Key_IsAltF6_AndItHasATitleAndDescription()
     {
-        // Arrange
+        var command = new ThemeManagerDialogCommand(null!);
 
-        // Act
-        // TODO: implement test
-        // Assert
+        Assert.AreEqual(ConsoleKey.F6, command.Key!.ConsoleKey);
+        Assert.IsTrue(command.Key.Alt);
+        Assert.IsFalse(command.Key.Control);
+        Assert.IsFalse(command.Key.Shift);
+        Assert.AreEqual("Themes", command.Title);
+        Assert.IsFalse(string.IsNullOrWhiteSpace(command.Description));
     }
 }
-

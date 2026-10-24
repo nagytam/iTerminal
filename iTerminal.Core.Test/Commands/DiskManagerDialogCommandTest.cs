@@ -1,19 +1,23 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using iConsole.Data;
 using iTerminal.Core.Commands;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace iTerminal.Core.Commands.Test;
 
+/// <summary>Alt+F9 opens the disk manager, beside the task manager on F9.</summary>
 [TestClass]
 public class DiskManagerDialogCommandTest
 {
     [TestMethod]
-    public void Constructor_Default_ShouldCreateInstance()
+    public void Key_IsAltF9_NotTheTaskManagersF9()
     {
-        // Arrange
+        var command = new DiskManagerDialogCommand(null!);
 
-        // Act
-        // TODO: implement test
-        // Assert
+        Assert.AreEqual(ConsoleKey.F9, command.Key!.ConsoleKey);
+        Assert.IsTrue(command.Key.Alt);
+        Assert.IsFalse(command.Key.Shift);
+        Assert.IsFalse(command.Key.Control);
+        Assert.AreEqual("Disk manager", command.Title);
+        Assert.IsFalse(string.IsNullOrWhiteSpace(command.Description));
     }
 }
-
