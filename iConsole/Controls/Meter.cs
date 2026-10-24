@@ -12,6 +12,8 @@ namespace iConsole.Controls;
 /// </summary>
 public class Meter(IThemeService themeService) : Control(themeService)
 {
+    private const int MinBarWidth = 4;
+
     private double _value = 0.0;
 
     /// <summary>Current fill level, clamped to [0, 1] on set.</summary>
@@ -52,8 +54,10 @@ public class Meter(IThemeService themeService) : Control(themeService)
         var prefix = string.Empty;
         if (!string.IsNullOrEmpty(Label))
         {
-            prefix = Label + " ";
-            barWidth = Math.Max(0, barWidth - prefix.Length);
+            // The level is what the control is for: a long label is cut so the bar keeps at least a few cells.
+            string label = Label.Cut(Math.Max(0, barWidth - MinBarWidth - 1)).TrimEnd();
+            prefix = label.Length == 0 ? string.Empty : label + " ";
+            barWidth -= prefix.Length;
         }
 
         var filled = (int)(barWidth * _value);

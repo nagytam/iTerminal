@@ -163,6 +163,11 @@ public class Table<T> : Control
             int column = ColumnAt((int)relativeX);
             if (column >= 0)
             {
+                if (!IsFocused)
+                {
+                    SetFocus();
+                }
+
                 SortRequested?.Invoke(this, column);
                 return true;
             }

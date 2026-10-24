@@ -1,6 +1,7 @@
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
+using iConsole.Helper;
 using iConsole.Services;
 
 namespace iConsole.Controls;
@@ -159,7 +160,10 @@ public class ElapsedClock : Control
         string text = Format(Elapsed);
         _shown = text;
         int width = (int)ViewSize.Width;
-        ConxelString line = new(Label.Length == 0 ? string.Empty : Label + " ", colorScheme.Foreground, colorScheme.Background);
+        // The time is what the control is for, so a long label gives way to it instead of pushing it off the edge.
+        int labelRoom = Math.Max(0, width - text.Length - 1);
+        string prefix = Label.Length == 0 || labelRoom == 0 ? string.Empty : Label.Cut(labelRoom) + " ";
+        ConxelString line = new(prefix, colorScheme.Foreground, colorScheme.Background);
         Color foreground = IsRunning ? Color.Green : colorScheme.Foreground;
         line.Append(text, IsFocused ? colorScheme.SelectedFocusedForeground : foreground, colorScheme.Background);
         line.Expand(width, colorScheme.Foreground, colorScheme.Background);
