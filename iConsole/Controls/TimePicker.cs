@@ -162,6 +162,23 @@ public class TimePicker : Control, IReadOnly
             case ConsoleKey.RightArrow:
                 MoveField(_field + 1);
                 return true;
+            case ConsoleKey.Home:
+                MoveField(0);
+                return true;
+            case ConsoleKey.End:
+                MoveField(FieldCount - 1);
+                return true;
+            case ConsoleKey.Backspace:
+            case ConsoleKey.Delete:
+                Set(_field, 0);
+                _typed = 0;
+                return true;
+        }
+
+        if (keyEvent.KeyChar is ':' or '.')
+        {
+            MoveField(_field + 1);
+            return true;
         }
 
         if (keyEvent.KeyChar is >= '0' and <= '9')

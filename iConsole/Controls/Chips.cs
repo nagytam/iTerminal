@@ -124,6 +124,12 @@ public class Chips : Control, IReadOnly
             case ConsoleKey.RightArrow:
                 ActiveIndex++;
                 return true;
+            case ConsoleKey.Home:
+                ActiveIndex = 0;
+                return true;
+            case ConsoleKey.End:
+                ActiveIndex = int.MaxValue;
+                return true;
             case ConsoleKey.Delete:
             case ConsoleKey.Backspace:
                 if (!IsReadOnly)
@@ -147,6 +153,12 @@ public class Chips : Control, IReadOnly
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (IsEnabled && mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            ActiveIndex += mouseEvent.WheelDelta > 0 ? -1 : 1;
+            return true;
+        }
+
         if (!IsEnabled || !mouseEvent.LeftClicked || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;

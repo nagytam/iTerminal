@@ -153,4 +153,79 @@ public class PickersTest
         await combo.HandleKeyEventAsync(Key(ConsoleKey.Home));
         Assert.AreEqual("Apple", combo.SelectedItem);
     }
+
+    [TestMethod]
+    public async Task TimePicker_HomeAndEnd_JumpToTheFirstAndLastField()
+    {
+        TimePicker picker = new(Theme()) { ShowSeconds = true };
+        picker.SetFocus();
+
+        Assert.IsTrue(await picker.HandleKeyEventAsync(Key(ConsoleKey.End)));
+        Assert.AreEqual(2, picker.ActiveField);
+
+        Assert.IsTrue(await picker.HandleKeyEventAsync(Key(ConsoleKey.Home)));
+        Assert.AreEqual(0, picker.ActiveField);
+    }
+
+    [TestMethod]
+    public async Task TimePicker_WithoutSeconds_EndStopsAtTheMinutes()
+    {
+        TimePicker picker = new(Theme());
+        picker.SetFocus();
+
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.End));
+
+        Assert.AreEqual(1, picker.ActiveField);
+    }
+
+    [TestMethod]
+    public async Task TimePicker_ColonAndDot_MoveToTheNextField_SoATimeCanBeTypedAsItIsWritten()
+    {
+        TimePicker picker = new(Theme());
+        picker.SetFocus();
+
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.D9, '9'));
+        Assert.AreEqual(1, picker.ActiveField, "9 cannot start a longer hour, so it completes the field");
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.Home));
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.D1, '1'));
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.Oem1, ':'));
+        Assert.AreEqual(1, picker.ActiveField, "a colon after one digit leaves the hour at 1");
+        Assert.AreEqual(1, picker.Value.Hour);
+
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.D3, '3'));
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.OemPeriod, '.'));
+        Assert.AreEqual(1, picker.ActiveField, "there is no field after the minutes");
+        Assert.AreEqual(3, picker.Value.Minute);
+    }
+
+    [TestMethod]
+    public async Task TimePicker_Delete_ZeroesTheActiveField_AndForgetsAHalfTypedValue()
+    {
+        TimePicker picker = new(Theme()) { Value = new TimeOnly(14, 35) };
+        picker.SetFocus();
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.RightArrow));
+
+        Assert.IsTrue(await picker.HandleKeyEventAsync(Key(ConsoleKey.Delete)));
+
+        Assert.AreEqual(new TimeOnly(14, 0), picker.Value);
+        Assert.AreEqual(1, picker.ActiveField);
+
+        picker.Value = new TimeOnly(14, 35);
+        Assert.IsTrue(await picker.HandleKeyEventAsync(Key(ConsoleKey.Backspace)));
+        Assert.AreEqual(new TimeOnly(14, 0), picker.Value, "Backspace does the same");
+    }
+
+    [TestMethod]
+    public async Task TimePicker_ReadOnly_IgnoresHomeEndColonAndDelete()
+    {
+        TimePicker picker = new(Theme()) { Value = new TimeOnly(14, 35), IsReadOnly = true };
+        picker.SetFocus();
+
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.End));
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.Delete));
+        await picker.HandleKeyEventAsync(Key(ConsoleKey.Oem1, ':'));
+
+        Assert.AreEqual(0, picker.ActiveField);
+        Assert.AreEqual(new TimeOnly(14, 35), picker.Value);
+    }
 }

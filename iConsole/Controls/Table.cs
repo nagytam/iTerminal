@@ -122,7 +122,7 @@ public class Table<T> : Control
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         // Enter on an empty table has no row to activate; leave the key to whoever hosts the table.
-        if (keyEvent.ConsoleKey == ConsoleKey.Enter && _rows.Count > 0)
+        if (keyEvent.ConsoleKey == ConsoleKey.Enter && _rows.Count > 0 && IsFocused && IsEnabled)
         {
             RowActivated?.Invoke(this, SelectedRow);
             return true;

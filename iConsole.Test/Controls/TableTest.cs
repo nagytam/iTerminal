@@ -196,6 +196,7 @@ public class TableTest
         var table = CreateTable([Alice, Bob]);
         Person? activated = null;
         table.RowActivated += (_, row) => activated = row;
+        table.SetFocus();
 
         await table.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Enter, false, false, false));
 
@@ -208,6 +209,7 @@ public class TableTest
         var table = CreateTable([Alice, Bob, Carol]);
         Person? activated = null;
         table.RowActivated += (_, row) => activated = row;
+        table.SetFocus();
 
         await table.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.DownArrow, false, false, false));
         await table.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Enter,     false, false, false));
@@ -219,6 +221,7 @@ public class TableTest
     public async Task EnterKey_ReturnsHandledTrue()
     {
         var table = CreateTable([Alice]);
+        table.SetFocus();
 
         var handled = await table.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Enter, false, false, false));
 
@@ -279,4 +282,33 @@ public class TableTest
         Assert.AreEqual(10, col.Width);
         Assert.AreEqual("Alice", col.ValueSelector(Alice));
     }
+
+    [TestMethod]
+    public async Task EnterKey_WhenNotFocused_DoesNotActivateARow()
+    {
+        var table = CreateTable([Alice, Bob]);
+        bool activated = false;
+        table.RowActivated += (_, _) => activated = true;
+
+        bool handled = await table.HandleKeyEventAsync(EnterKey);
+
+        Assert.IsFalse(activated, "a table that is not focused must leave Enter to its host");
+        Assert.IsFalse(handled);
+    }
+
+    [TestMethod]
+    public async Task EnterKey_WhenDisabled_DoesNotActivateARow()
+    {
+        var table = CreateTable([Alice]);
+        table.SetFocus();
+        table.IsEnabled = false;
+        bool activated = false;
+        table.RowActivated += (_, _) => activated = true;
+
+        await table.HandleKeyEventAsync(EnterKey);
+
+        Assert.IsFalse(activated);
+    }
+
+    private static readonly KeyEvent EnterKey = new('\0', ConsoleKey.Enter, false, false, false);
 }
