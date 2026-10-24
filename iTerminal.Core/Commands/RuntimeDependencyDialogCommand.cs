@@ -10,4 +10,7 @@ public class RuntimeDependencyDialogCommand(RuntimeDependencyDialog runtimeDepen
 
     // Reached from the Tools menu and the command palette; no hot key, so none of the menu's keys is taken.
     public override Key? Key { get; init; } = null;
+
+    /// <summary>Only when a dependency is missing or can be updated: the dialog is not shown when there is nothing to do.</summary>
+    public override bool CanExecute() => Dialog.HasWork;
 }
