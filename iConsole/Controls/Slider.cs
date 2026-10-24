@@ -125,6 +125,7 @@ public class Slider : Control, IReadOnly
         }
 
         yield return ("Left/Right", "Lower or raise the value");
+        yield return ("Up/Down", "Lower or raise the value");
         yield return ("PageUp/PageDown", "Raise or lower the value by a large step");
         yield return ("Home/End", "Set the minimum or maximum");
     }

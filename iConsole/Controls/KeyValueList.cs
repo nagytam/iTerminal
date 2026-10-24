@@ -33,7 +33,9 @@ public class KeyValueList : Control
     {
         _items.Clear();
         _items.AddRange(items);
-        ViewSize = new Size(ViewSize.Width, _items.Count);
+        // Grows to fit but never shrinks: rows painted earlier sit outside a smaller rectangle and nothing
+        // else repaints them, so a list that lost pairs has to keep the rows and paint them blank.
+        ViewSize = new Size(ViewSize.Width, Math.Max(ViewSize.Height, _items.Count));
         StateHasChanged();
     }
 

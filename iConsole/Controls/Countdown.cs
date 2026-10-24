@@ -1,6 +1,7 @@
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
+using iConsole.Helper;
 using iConsole.Services;
 
 namespace iConsole.Controls;
@@ -101,14 +102,17 @@ public class Countdown : Control
         }
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
-        string prefix = Label.Length == 0 ? string.Empty : Label + " ";
+        int width = (int)ViewSize.Width;
+        string text = Text;
+        // The time is what the control is for, so the label gives way to it: it is cut to the cells left over.
+        int labelRoom = Math.Max(0, width - text.Length - 1);
+        string prefix = Label.Length == 0 || labelRoom == 0 ? string.Empty : Label.Cut(labelRoom) + " ";
         Color foreground = _target is null ? colorScheme.DisabledForeground
             : IsFinished ? Color.Red
             : Remaining < TimeSpan.FromSeconds(10) ? Color.Yellow
             : colorScheme.Foreground;
-        int width = (int)ViewSize.Width;
         ConxelString line = new(prefix, colorScheme.Foreground, colorScheme.Background);
-        line.Append(Text, foreground, colorScheme.Background);
+        line.Append(text, foreground, colorScheme.Background);
         line.Expand(width, colorScheme.Foreground, colorScheme.Background);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, line);
     }
