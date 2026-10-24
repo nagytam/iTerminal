@@ -160,6 +160,12 @@ public static class FolderComparer
                 continue;
             }
 
+            if (l.IsFolder && ContentModelFolderTaskHelper.IsLinkBackToAncestor(l.Url))
+            {
+                // Listed by nothing: descending into it would compare the same folders for ever.
+                continue;
+            }
+
             if (l.IsFolder)
             {
                 if (!options.IncludeSubfolders)

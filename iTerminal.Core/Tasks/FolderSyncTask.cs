@@ -153,6 +153,12 @@ public sealed class FolderSyncTask(
 
         foreach (var child in ContentModelFolderTaskHelper.ListChildren(sourceSystem, source).ToList())
         {
+            if (ContentModelFolderTaskHelper.IsLinkBackToAncestor(child))
+            {
+                // A link back into the tree being copied: copied as itself, it would be copied into itself for ever.
+                continue;
+            }
+
             var name = FocusedEntry.NameOf(child);
             if (child.PathType == PathType.Folder)
             {

@@ -109,4 +109,27 @@ public class CompressTaskTest
         StringAssert.Contains(task.Error, "cannot be password-protected");
         Assert.IsFalse(File.Exists(Path.Combine(_root, "out.tar")));
     }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task AFolderLinkBackToAnAncestor_IsNotArchivedAgain()
+    {
+        // The walk used to follow such a link for ever. A link cannot be made everywhere (Windows without the privilege), so then the test says so.
+        var link = Path.Combine(_root, "photos", "up");
+        try
+        {
+            Directory.CreateSymbolicLink(link, _root);
+        }
+        catch (Exception exception) when (exception is UnauthorizedAccessException or IOException or PlatformNotSupportedException)
+        {
+            Assert.Inconclusive($"A symbolic link cannot be created here: {exception.Message}");
+        }
+
+        var task = new CompressTask(Service(), [Folder("photos")], Resolve, FileUrl("out.zip"), new CompressionOptions(ArchiveFormat.Zip, 6));
+        await task.RunAsync();
+
+        Assert.IsNull(task.Error, task.Description);
+        using var zip = ZipFile.OpenRead(Path.Combine(_root, "out.zip"));
+        Assert.IsTrue(zip.Entries.Count < 20, "the archive holds the folder once, not the loop");
+    }
 }

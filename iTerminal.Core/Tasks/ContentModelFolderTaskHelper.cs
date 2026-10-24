@@ -14,6 +14,16 @@ namespace iTerminal.Core.Tasks;
 /// </summary>
 internal static class ContentModelFolderTaskHelper
 {
+    /// <summary>
+    /// A folder link on the local disk that leads back to a folder it is inside. Walking it would go round for ever, so the
+    /// walks that copy, size, compare, sync or archive a tree skip it. Other links are followed as what they point to.
+    /// </summary>
+    public static bool IsLinkBackToAncestor(Url url) =>
+        url.PathType == PathType.Folder
+        && url.ContainerType == ContainerType.FileSystem
+        && url.IsLink
+        && iConsole.Helper.FileLinkHelper.LeadsToAnAncestor(url.FullName);
+
     public static IEnumerable<Url> ListChildren(IFileSystem fileSystem, Url folderUrl)
     {
         switch (folderUrl.ContainerType)

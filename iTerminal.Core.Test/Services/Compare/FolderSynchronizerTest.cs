@@ -225,4 +225,30 @@ public class FolderSynchronizerTest
 
         Assert.AreEqual("1 copy to the right, 1 copy to the left, 1 deletion. 2 conflicts left alone.", plan.Summary());
     }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task AFolderLinkBackToItsOwnTree_IsNotFollowed_SoTheCompareAndTheSyncEnd()
+    {
+        // A link from a folder back to the tree it is in: followed, the compare and the copy would go round for ever.
+        Write("L", "a.txt", "a", Noon);
+        var link = PathOf("L", "loop");
+        try
+        {
+            Directory.CreateSymbolicLink(link, Path.Combine(_root, "L"));
+        }
+        catch (Exception exception) when (exception is UnauthorizedAccessException or IOException or PlatformNotSupportedException)
+        {
+            Assert.Inconclusive($"A symbolic link cannot be created here: {exception.Message}");
+        }
+
+        var comparison = await Compare();
+        var plan = FolderSynchronizer.Plan(comparison, new SyncOptions(SyncDirection.LeftToRight));
+        var task = new FolderSyncTask(plan, Folder("L"), _fileSystem, Folder("R"), _fileSystem);
+        await task.RunAsync();
+
+        Assert.IsNull(task.Error, string.Join("; ", task.Failures));
+        Assert.IsTrue(File.Exists(PathOf("R", "a.txt")));
+        Assert.IsFalse(comparison.Differences.Any(d => d.Path.StartsWith("loop/loop", StringComparison.Ordinal)), "the loop is not compared into itself");
+    }
 }

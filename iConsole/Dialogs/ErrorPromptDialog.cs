@@ -58,6 +58,28 @@ public class ErrorPromptDialog : Dialog
     /// </summary>
     public Task<bool> WaitForChoiceAsync(CancellationToken cancellationToken) => _choice.Task.WaitAsync(cancellationToken);
 
+    private volatile bool _abandoned;
+
+    /// <summary>
+    /// The operation that asked was cancelled, so nobody will answer. Called from its thread, so it only records the fact:
+    /// the dialog takes itself down on the UI thread at its next idle pass.
+    /// </summary>
+    public void Abandon()
+    {
+        _abandoned = true;
+        _choice.TrySetCanceled();
+    }
+
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        if (_abandoned)
+        {
+            _abandoned = false;
+            Close();
+        }
+    }
+
     public override void OnInitializeLayout()
     {
         base.OnInitializeLayout();

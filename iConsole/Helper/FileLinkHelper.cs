@@ -78,8 +78,10 @@ public static class FileLinkHelper
 
             var resolved = Path.TrimEndingDirectorySeparator(target.FullName);
             var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            // A root keeps its own separator ("/", "C:\\"), so it is not given a second one: every path is inside it.
+            var ancestorPrefix = resolved.EndsWith(Path.DirectorySeparatorChar) ? resolved : resolved + Path.DirectorySeparatorChar;
             return link.Equals(resolved, comparison)
-                || link.StartsWith(resolved + Path.DirectorySeparatorChar, comparison);
+                || link.StartsWith(ancestorPrefix, comparison);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
         {
