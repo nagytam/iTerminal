@@ -179,7 +179,16 @@ public class DiskManagerDialog : Dialog
 
         PendingOperation = Task.Run(async () =>
         {
-            var lines = await ReadDetailsAsync(drive, root);
+            IReadOnlyList<InfoLines.Line> lines;
+            try
+            {
+                lines = await ReadDetailsAsync(drive, root);
+            }
+            catch (Exception exception) when (exception is not OperationCanceledException)
+            {
+                // A failed read is said on the pane; left alone, the "Reading the drive…" line stayed for ever.
+                lines = [new InfoLines.Line($"Could not read {root}: {exception.Message}", Color.Red)];
+            }
             // Only the drive still under the cursor may write: a slow read must not paint over a
             // faster one that belongs to the row the user moved to.
             if (Interlocked.Read(ref _detailsGeneration) == generation)

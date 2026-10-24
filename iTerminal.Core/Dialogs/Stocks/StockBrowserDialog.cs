@@ -346,8 +346,9 @@ public class StockBrowserDialog : SplitPaneDialog
                     ? $"No stock found for \"{query}\". Enter again adds it as a symbol (exchange suffix: VOD.L)."
                     : $"{hits.Count} found — ↑↓ choose, Enter adds the chosen one");
             }
-            catch (Exception exception) when (exception is HttpRequestException or TaskCanceledException)
+            catch (Exception exception)
             {
+                // Any failure is said here: only the network ones were, so a bad reply left "Searching…" on the screen.
                 SetMessage($"Error: search failed — {exception.Message}");
             }
             finally
@@ -382,8 +383,9 @@ public class StockBrowserDialog : SplitPaneDialog
                 _closeAdding = true;
                 SetMessage($"Added {stock.Symbol}");
             }
-            catch (Exception exception) when (exception is InvalidOperationException or HttpRequestException or TaskCanceledException)
+            catch (Exception exception)
             {
+                // Any failure is said here, as for the search: a non-network one left "Adding…" on the screen.
                 SetMessage($"Error: {exception.Message}");
             }
             finally

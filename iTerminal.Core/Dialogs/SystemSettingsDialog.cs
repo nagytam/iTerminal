@@ -53,6 +53,9 @@ public class SystemSettingsDialog : Dialog
 
     private string _message = string.Empty;
     private bool _messageIsError;
+
+    /// <summary>Set when the first read failed: what would have been read is then "not available", not "being read".</summary>
+    private bool _loadFailed;
     private bool _busy;
     private int _environmentVersion;
 
@@ -108,12 +111,23 @@ public class SystemSettingsDialog : Dialog
         Render();
         LoadTask = Task.Run(async () =>
         {
-            _currentZone = _service.CurrentTimeZoneId;
-            _zones = _service.GetTimeZones();
-            _identity = await _service.GetComputerAsync().ConfigureAwait(false);
-            _message = string.Empty;
-            Render();
-            await LoadEnvironmentAsync().ConfigureAwait(false);
+            try
+            {
+                _currentZone = _service.CurrentTimeZoneId;
+                _zones = _service.GetTimeZones();
+                _identity = await _service.GetComputerAsync().ConfigureAwait(false);
+                _message = string.Empty;
+                Render();
+                await LoadEnvironmentAsync().ConfigureAwait(false);
+            }
+            catch (Exception exception) when (exception is not OperationCanceledException)
+            {
+                // Said on the dialog. Left alone, "Reading the system settings…" and the "Reading…" rows stayed for ever.
+                _loadFailed = true;
+                _message = $"Could not read the system settings: {exception.Message}";
+                _messageIsError = true;
+                Render();
+            }
         });
     }
 
@@ -218,7 +232,7 @@ public class SystemSettingsDialog : Dialog
     {
         if (_identity is not { } identity)
         {
-            body.Add(new("  Reading…", scheme.DisabledForeground));
+            body.Add(new(_loadFailed ? "  Not available" : "  Reading…", scheme.DisabledForeground));
             return;
         }
 
@@ -256,7 +270,7 @@ public class SystemSettingsDialog : Dialog
 
         if (!_variablesLoaded)
         {
-            body.Add(new("  Reading…", scheme.DisabledForeground));
+            body.Add(new(_loadFailed ? "  Not available" : "  Reading…", scheme.DisabledForeground));
             return;
         }
 

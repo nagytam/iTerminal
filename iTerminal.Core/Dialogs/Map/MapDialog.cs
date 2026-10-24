@@ -407,8 +407,10 @@ public class MapDialog : Dialog
             {
                 _pending = new SearchOutcome(query, await _search.SearchAsync(query), null);
             }
-            catch (Exception exception) when (exception is WebFetchException or HttpRequestException or OperationCanceledException)
+            catch (Exception exception)
             {
+                // Any failure is a result for the dialog to show. Only the expected ones were caught before, so anything
+                // else left _searching set for ever and every later search answered "A search is already running."
                 _pending = new SearchOutcome(query, [], exception.Message);
             }
         });

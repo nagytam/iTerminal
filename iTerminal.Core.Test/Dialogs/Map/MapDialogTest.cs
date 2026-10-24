@@ -257,6 +257,23 @@ public class MapDialogTest
     }
 
     [TestMethod]
+    public async Task ASearchThatFailsUnexpectedly_SaysWhy_AndTheNextSearchCanRun()
+    {
+        var f = await OpenAsync(search: _ => throw new InvalidOperationException("index unreadable"));
+        await PressAsync(f, ConsoleKey.Oem2, '/');
+        await TypeTextAsync(f, "Paris");
+        await PressAsync(f, ConsoleKey.Enter, '\r');
+        await WaitUntil(f, () => Render(f.Root).Contains("index unreadable"));
+
+        await PressAsync(f, ConsoleKey.Oem2, '/');
+        await TypeTextAsync(f, "Rome");
+        await PressAsync(f, ConsoleKey.Enter, '\r');
+
+        await WaitUntil(f, () => f.Search.Queries.Count == 2);
+        AssertScreenDoesNotContain(Render(f.Root), "already running");
+    }
+
+    [TestMethod]
     public async Task NothingFoundIsReported()
     {
         var f = await OpenAsync();

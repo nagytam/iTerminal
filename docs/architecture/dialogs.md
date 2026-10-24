@@ -213,6 +213,8 @@ connection in the active panel as the existing SFTP drive. N / E / D add, edit a
 - **Disk and network lists** (`DiskManagerDialog`, `NetworkManagerDialog`): `IsLoaded` means the first pass is over, whether or not every item answered. The job sets it in a `finally`; before, a failing pass left the list on "Reading…" for good.
 - **Folder size counts** (`FileInformationRefreshTask`): a count that could not finish (a folder that is missing or unreadable) shows `?`, not the part that was counted.
 
+- **Background work in a dialog says how it failed.** A `Task.Run` that sets a "Reading…", "Searching…", "Connecting to …" or "Adding…" message must clear it on every outcome, including an exception it did not expect. Catching only the network or I/O exceptions left those messages on screen for good (`DiskManagerDialog`, `SystemSettingsDialog`, `RemoteConnectionManagerDialog`, `MapDialog`, `StockBrowserDialog`).
+
 ### The XML viewer (`XmlViewerDialog`, F3 on an XML file, `iConsole/Xml/`)
 F3 on an `.xml`, `.xaml`, `.csproj`, `.config`, `.resx`, `.svg` and the other XML types in `XmlFileTypes` opens the
 document as a tree. `XmlTree` builds one `XmlNodeItem` per element, text run, comment and processing instruction, and

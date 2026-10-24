@@ -135,6 +135,22 @@ public class RemoteConnectionManagerDialogTest
     }
 
     [TestMethod]
+    public async Task ASessionThatThrows_SaysWhy_NotLeftConnecting()
+    {
+        var h = Create();
+        h.Shell.Setup(s => s.RunAsync(It.IsAny<ShellLaunch>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new InvalidOperationException("no ssh client"));
+        h.Connections.Save(new RemoteConnection { Name = "web", Host = "example.com" });
+        await ShowAsync(h.Dialog);
+
+        await EnterAsync(h.Dialog);
+        await h.Dialog.PendingOperation;
+
+        StringAssert.Contains(h.Dialog.StatusForTest, "no ssh client");
+        StringAssert.DoesNotMatch(h.Dialog.StatusForTest, new System.Text.RegularExpressions.Regex("Connecting"));
+    }
+
+    [TestMethod]
     public async Task ASessionThatCannotStartSaysWhy()
     {
         var h = Create();

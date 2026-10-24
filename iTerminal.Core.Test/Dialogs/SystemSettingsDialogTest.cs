@@ -249,4 +249,18 @@ public class SystemSettingsDialogTest
         await PressAsync(dialog, ConsoleKey.UpArrow);
         Assert.AreEqual(0, dialog.Cursor);
     }
+
+    [TestMethod]
+    public async Task AFailedRead_IsSaidOnTheDialog_NotLeftAsReading()
+    {
+        var service = Service();
+        service.Setup(s => s.GetComputerAsync(It.IsAny<CancellationToken>())).ThrowsAsync(new InvalidOperationException("access refused"));
+        var dialog = new SystemSettingsDialog(service.Object, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme());
+        await ShowAsync(dialog);
+
+        await dialog.LoadTask;
+
+        AssertScreenContains(Render(dialog), "Could not read the system settings: access refused");
+        AssertScreenDoesNotContain(Render(dialog), "Reading");
+    }
 }
