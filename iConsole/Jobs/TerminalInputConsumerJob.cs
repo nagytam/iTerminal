@@ -10,10 +10,12 @@ namespace iConsole.Jobs;
 /// </summary>
 public class TerminalInputConsumerJob(
     ITerminalInputSource inputSource,
-    IBeepService beepService
+    IBeepService beepService,
+    IToolTipService? toolTipService = null
 ) : Job
 {
     private readonly ITerminalInputSource _inputSource = inputSource;
+    private readonly IToolTipService? _toolTipService = toolTipService;
     public override JobPriority Priority => JobPriority.Input;
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
@@ -63,6 +65,16 @@ public class TerminalInputConsumerJob(
 
     public async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
+        // Tooltips follow the pointer; anything that is not a hover (a click, a drag, a wheel turn) hides them.
+        if (mouseEvent.IsHover)
+        {
+            _toolTipService?.ReportPointer(mouseEvent.Position);
+        }
+        else
+        {
+            _toolTipService?.Dismiss();
+        }
+
         var modalControl = Desktop?.GetModalChildControl();
         if (modalControl is null)
         {
@@ -74,6 +86,8 @@ public class TerminalInputConsumerJob(
 
     public async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        _toolTipService?.Dismiss();
+
         var modalControl = Desktop?.GetModalChildControl();
         if (modalControl is null)
         {

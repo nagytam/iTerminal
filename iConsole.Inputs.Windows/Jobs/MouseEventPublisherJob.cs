@@ -190,6 +190,9 @@ public partial class MouseEventPublisherJob : Job, ITerminalInputSource, IConsol
                 && !isWheel
                 && (buttonState & MOUSE_EVENT_RECORD.FROM_LEFT_1ST_BUTTON_PRESSED) == MOUSE_EVENT_RECORD.FROM_LEFT_1ST_BUTTON_PRESSED,
             WheelDelta = isWheel && !isHorizontalWheel ? GetWheelDelta(buttonState) : 0,
+            IsHover = isMotion
+                && !isWheel
+                && buttonState == 0,
         };
     }
 
