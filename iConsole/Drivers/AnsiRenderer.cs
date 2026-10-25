@@ -164,6 +164,12 @@ public static class AnsiRenderer
 
         foreach (var c in list)
         {
+            // The second column of a wide character is covered by the character before it.
+            if (c.Char == TextWidth.Continuation)
+            {
+                continue;
+            }
+
             bool colorChanged = c.ForegroundColor != lastFg || c.BackgroundColor != lastBg;
             bool styleChanged = c.IsBold != lastBold || c.IsItalic != lastItalic
                              || c.IsUnderline != lastUnderline || c.IsStrikeThrough != lastStrike;

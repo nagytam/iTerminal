@@ -1,4 +1,4 @@
-using iConsole.Buffers;
+﻿using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Controls.Editors;
 using iConsole.Controls.PopUpWindows;
@@ -100,6 +100,8 @@ public static class iConsoleApplicationBuilderExtension
         services.AddSingleton<ITimeProvider, SystemTimeProvider>();
         services.AddSingleton<IToolTipService, ToolTipService>();
         services.AddTransient<ToolTipHost>();
+        // Prompts: a dialog per kind, shown through the desktop by the service. Callers ask for the service only.
+        services.AddSingleton<IPromptService, Prompts.PromptService>();
         services.AddSingleton<IDateTimeProviderService, DateTimeProviderService>();
         services.AddSingleton<IFrequentExecutionGuardService, FrequentExecutionGuardService>();
         services.AddSingleton<IFileToTextConverterService, FileToTextConverterService>();
