@@ -95,6 +95,11 @@ public static class iConsoleApplicationBuilderExtension
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<IJob, NotificationJob>();
         services.AddTransient<ToastHost>();
+        // Tooltips: the input consumer reports the pointer to the service, and a ToolTipHost on the screen's root shows
+        // the tip for the control under it. Time comes from ITimeProvider, so tests can move past the delay.
+        services.AddSingleton<ITimeProvider, SystemTimeProvider>();
+        services.AddSingleton<IToolTipService, ToolTipService>();
+        services.AddTransient<ToolTipHost>();
         services.AddSingleton<IDateTimeProviderService, DateTimeProviderService>();
         services.AddSingleton<IFrequentExecutionGuardService, FrequentExecutionGuardService>();
         services.AddSingleton<IFileToTextConverterService, FileToTextConverterService>();

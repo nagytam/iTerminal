@@ -63,6 +63,12 @@ public class Control : INotifyPropertyChanged, IControl
         }
     }
     public virtual bool IsEnabled { get; set; } = true;
+
+    /// <summary>
+    /// Text shown in a tooltip after the pointer has rested on this control for a moment. Null or empty means no tooltip.
+    /// The innermost control under the pointer that has text wins.
+    /// </summary>
+    public string? ToolTipText { get; set; }
     private bool _hasStateChanged = true;
     public virtual bool HasStateChanged 
     {
