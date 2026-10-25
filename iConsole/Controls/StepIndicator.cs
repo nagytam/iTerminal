@@ -100,10 +100,10 @@ public class StepIndicator : Control
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
         string line = Render(_count, _current);
-        buffer.Write(ZOrder, AbsolutePosition, new Size((uint)line.Length, 1), new ConxelString(line, colorScheme.Foreground, colorScheme.Background));
+        buffer.Write(ZOrder, AbsolutePosition, new Size((uint)line.Length, 1), new ConxelString(line, IsEnabled ? colorScheme.Foreground : colorScheme.DisabledForeground, colorScheme.Background));
         if (_current >= 0 && _current < _count)
         {
-            buffer.Write(ZOrder, new Position(AbsolutePosition.X + _current * 2, AbsolutePosition.Y), new Size(1, 1), new ConxelString(line[_current * 2].ToString(), Color.Cyan, colorScheme.Background));
+            buffer.Write(ZOrder, new Position(AbsolutePosition.X + _current * 2, AbsolutePosition.Y), new Size(1, 1), new ConxelString(line[_current * 2].ToString(), IsEnabled ? Color.Cyan : colorScheme.DisabledForeground, colorScheme.Background));
         }
     }
 }

@@ -160,11 +160,12 @@ public class Pagination : Control
         }
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
-        Color active = IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
+        Color active = !IsEnabled ? colorScheme.DisabledForeground : IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
+        Color text = IsEnabled ? colorScheme.Foreground : colorScheme.DisabledForeground;
         Color dim = colorScheme.DisabledForeground;
         ConxelString line = new(string.Empty, colorScheme.Foreground, colorScheme.Background);
         line.Append("‹", _page > 0 ? active : dim, colorScheme.Background);
-        line.Append(" " + Caption + " ", colorScheme.Foreground, colorScheme.Background);
+        line.Append(" " + Caption + " ", text, colorScheme.Background);
         line.Append("›", _page < PageCount - 1 ? active : dim, colorScheme.Background);
         line.Expand((int)ViewSize.Width, colorScheme.Foreground, colorScheme.Background);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, line);

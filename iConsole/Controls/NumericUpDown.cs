@@ -292,8 +292,8 @@ public class NumericUpDown : Control, IReadOnly
         line.HighlightHotKey(HotConsoleKey, HotKeyChar, colorScheme.SelectedFocusedForeground, background);
 
         // Input well — shares TextBox's editable-field colours so inputs look consistent.
-        var wellForeground = Color.Green;
-        var wellBackground = IsReadOnly ? Color.DarkYellow : Color.Yellow;
+        var wellForeground = IsEnabled ? Color.Green : colorScheme.DisabledForeground;
+        var wellBackground = !IsEnabled ? colorScheme.DisabledBackground : IsReadOnly ? Color.DarkYellow : Color.Yellow;
 
         var width = Math.Max(_minimum.ToString().Length, _maximum.ToString().Length);
         var valueText = _value.ToString();

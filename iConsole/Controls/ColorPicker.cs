@@ -143,7 +143,8 @@ public class ColorPicker : Control, IReadOnly
         int column = ((int)mouseEvent.Position.X - (int)AbsolutePosition.X) / SwatchWidth;
         int row = (int)mouseEvent.Position.Y - (int)AbsolutePosition.Y;
         int index = row * GridColumns + column;
-        if (index >= 0 && index < Colors.Length)
+        // A stretched control has cells right of the grid: they must not wrap into the next row's swatches.
+        if (column < GridColumns && index >= 0 && index < Colors.Length)
         {
             if (!IsFocused)
             {
