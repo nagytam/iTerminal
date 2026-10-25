@@ -194,10 +194,16 @@ public class TextViewerControl : Control
             return;
         }
 
-        foreach (SyntaxSpan span in _spans)
+        ApplySpans(drawn, _spans, scrollX);
+    }
+
+    /// <summary>Colours the cells of <paramref name="drawn"/>, which starts at character <paramref name="offset"/> of its line, by what each span is.</summary>
+    private static void ApplySpans(ConxelString drawn, List<SyntaxSpan> spans, int offset)
+    {
+        foreach (SyntaxSpan span in spans)
         {
-            int start = Math.Max(0, span.Start - scrollX);
-            int end = Math.Min(drawn.Count, span.Start + span.Length - scrollX);
+            int start = Math.Max(0, span.Start - offset);
+            int end = Math.Min(drawn.Count, span.Start + span.Length - offset);
             Color color = ColorOf(span.Kind);
             for (int x = start; x < end; x++)
             {
@@ -467,6 +473,22 @@ public class TextViewerControl : Control
         _selectionAnchor = (0, 0);
         ScrollableModel.CursorPosition.Y = TextModel.Lines.Count - 1;
         ScrollableModel.CursorPosition.X = TextModel.Lines[TextModel.Lines.Count - 1].Length;
+        UpdateSelectionModel();
+        KeepCursorInText();
+        StateHasChanged();
+    }
+
+    /// <summary>Selects from <paramref name="anchor"/> to <paramref name="cursor"/> and puts the cursor at the end. Only an editor (a text cursor) selects.</summary>
+    protected void SelectRange((long Row, long Column) anchor, (long Row, long Column) cursor)
+    {
+        if (!_isCursorEnabled || TextModel.Lines.Count == 0)
+        {
+            return;
+        }
+
+        _selectionAnchor = anchor;
+        ScrollableModel.CursorPosition.Y = cursor.Row;
+        ScrollableModel.CursorPosition.X = cursor.Column;
         UpdateSelectionModel();
         KeepCursorInText();
         StateHasChanged();
@@ -863,6 +885,11 @@ public class TextViewerControl : Control
         int width = Math.Max(0, (int)ViewSize.Width - 2);
         var size = new Size(width, 1);
         IReadOnlyList<TextRow> rows = ScreenRows;
+
+        // A line is tokenized once, however many rows it wraps to; the next line starts in a block comment if this one ended in one.
+        int tokenizedLine = -1;
+        bool nextStartsInComment = false;
+        List<SyntaxSpan> lineSpans = [];
         for (int i = 0; i < ViewSize.Height - 1; i++)
         {
             var index = ScrollableModel.ScrollPosition.Y + i;
@@ -877,6 +904,23 @@ public class TextViewerControl : Control
                     text,
                     cursorLine ? colorScheme.SelectedFocusedForeground : Color.White,
                     cursorLine ? Color.Yellow : colorScheme.Background);
+                if (_syntax is not null)
+                {
+                    if (row.Line != tokenizedLine)
+                    {
+                        bool startsInComment = tokenizedLine < 0 ? StartsInBlockComment(row.Line) : nextStartsInComment;
+                        lineSpans.Clear();
+                        nextStartsInComment = SyntaxHighlighter.Tokenize(_syntax, line, startsInComment, lineSpans);
+                        tokenizedLine = row.Line;
+                    }
+
+                    // The cursor's row keeps the cursor colours, as in the unwrapped view.
+                    if (!cursorLine)
+                    {
+                        ApplySpans(conxelLine, lineSpans, start);
+                    }
+                }
+
                 HighlightSearchHitsInRow(conxelLine, row);
                 buffer.Write(
                     ZOrder,

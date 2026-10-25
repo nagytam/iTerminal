@@ -115,7 +115,7 @@ Detailed conventions, including the end-to-end suite and `ConsoleAppDriver` auto
 ## Further reference
 
 - [docs/architecture/key-patterns.md](docs/architecture/key-patterns.md): the full list of UI, navigation and state patterns (why a rule exists, with the bug it fixed).
-- [docs/mc-parity.md](docs/mc-parity.md): Midnight Commander feature comparison.
+- [docs/mc-parity.md](docs/mc-parity.md): feature comparison with mc, Total Commander, Far, Double Commander, Directory Opus and Explorer, with a prioritized gap list.
 
 ## Code style
 

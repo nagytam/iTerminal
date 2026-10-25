@@ -52,7 +52,7 @@ public class RemoteConnectionManagerDialogTest
 
         await ShowAsync(h.Dialog);
 
-        AssertScreenContains(Render(h.Dialog), "N adds an SSH or PowerShell connection");
+        AssertScreenContains(Render(h.Dialog), "N adds an SSH, PowerShell, FTP or WebDAV connection");
     }
 
     [TestMethod]
@@ -374,5 +374,102 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual(9, h.Dialog.CursorForTest);
         await h.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Home));
         Assert.AreEqual(0, h.Dialog.CursorForTest);
+    }
+
+    private sealed record FileDriveHarness(Harness Base, NetworkProfileService Profiles, Mock<IPasswordManager> Passwords);
+
+    private static FileDriveHarness CreateWithLogins()
+    {
+        var settings = new SettingsService();
+        var profiles = new NetworkProfileService(settings);
+        var passwords = new Mock<IPasswordManager>();
+        passwords.SetupGet(p => p.IsUnlocked).Returns(true);
+        var connections = new RemoteConnectionService(settings, profiles, passwords.Object);
+        var shell = new Mock<IInteractiveShellService>();
+        var panels = new Mock<IContentModelService>();
+        panels.Setup(p => p.SetUrlAsync(It.IsAny<Url>())).Returns(Task.CompletedTask);
+        var dialog = new RemoteConnectionManagerDialog(connections, shell.Object, panels.Object, TestTheme());
+        return new FileDriveHarness(new Harness(dialog, connections, shell, panels), profiles, passwords);
+    }
+
+    [TestMethod]
+    public async Task AnFtpConnectionIsSavedFromTheFormWithItsPasswordInThePasswordManager()
+    {
+        var h = CreateWithLogins();
+        await ShowAsync(h.Base.Dialog);
+
+        await h.Base.Dialog.HandleKeyEventAsync(Char('n'));
+        await TypeAsync(h.Base.Dialog, "files");
+        await TabAsync(h.Base.Dialog); // Type
+        await h.Base.Dialog.HandleKeyEventAsync(Char(' ')); // PowerShell
+        await h.Base.Dialog.HandleKeyEventAsync(Char(' ')); // FTP
+        await TabAsync(h.Base.Dialog); // Host
+        await TypeAsync(h.Base.Dialog, "ftp.example.com");
+        await TabAsync(h.Base.Dialog); // Port
+        await TabAsync(h.Base.Dialog); // User
+        await TypeAsync(h.Base.Dialog, "alice");
+        await TabAsync(h.Base.Dialog); // Key
+        await TabAsync(h.Base.Dialog); // Transport
+        await TabAsync(h.Base.Dialog); // Notes
+        await TabAsync(h.Base.Dialog); // Password
+        await TypeAsync(h.Base.Dialog, "s3cret");
+        await TabAsync(h.Base.Dialog); // Folder
+        await TypeAsync(h.Base.Dialog, "pub");
+        await EnterAsync(h.Base.Dialog);
+
+        var saved = h.Base.Connections.GetAll().Single();
+        Assert.AreEqual(RemoteProtocol.Ftp, saved.Protocol);
+        Assert.AreEqual("pub", saved.RemotePath);
+        Assert.IsTrue(saved.HasSavedCredential);
+        h.Passwords.Verify(p => p.Save(It.Is<iTerminal.Core.Model.Passwords.PasswordEntry>(e => e.Id == saved.Id && e.Password == "s3cret")), Times.Once);
+        var profile = h.Profiles.Get(saved.Id);
+        Assert.IsNotNull(profile);
+        Assert.AreEqual(iTerminal.Core.Model.Network.NetworkProtocol.Ftp, profile.Protocol);
+        Assert.AreEqual("ftp.example.com", profile.Host);
+        Assert.AreEqual("alice", profile.Username);
+        Assert.IsFalse(System.Text.Json.JsonSerializer.Serialize(saved).Contains("s3cret", StringComparison.Ordinal));
+    }
+
+    [TestMethod]
+    public async Task EnterOnAnFtpConnectionOpensItsDriveInThePanel()
+    {
+        var h = CreateWithLogins();
+        Url? opened = null;
+        h.Base.Panels.Setup(p => p.SetUrlAsync(It.IsAny<Url>())).Callback<Url>(u => opened = u).Returns(Task.CompletedTask);
+        h.Base.Connections.Save(new RemoteConnection
+        {
+            Name = "files", Protocol = RemoteProtocol.Ftp, Host = "ftp.example.com", Port = 2121, Username = "alice", RemotePath = "pub",
+        });
+        await ShowAsync(h.Base.Dialog);
+
+        await EnterAsync(h.Base.Dialog);
+        await h.Base.Dialog.PendingOperation;
+
+        Assert.IsNotNull(opened);
+        Assert.AreEqual("ftp://alice@ftp.example.com:2121/pub", opened!.FullUrl);
+        h.Base.Shell.Verify(s => s.RunAsync(It.IsAny<ShellLaunch>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task SpaceOnTheTypeFieldCyclesThroughWebDavOverHttpAndHttps()
+    {
+        var h = CreateWithLogins();
+        await ShowAsync(h.Base.Dialog);
+        await h.Base.Dialog.HandleKeyEventAsync(Char('n'));
+        await TypeAsync(h.Base.Dialog, "cloud");
+        await TabAsync(h.Base.Dialog); // Type
+        for (var i = 0; i < 4; i++) // PowerShell, FTP, WebDAV, WebDAV over HTTPS
+        {
+            await h.Base.Dialog.HandleKeyEventAsync(Char(' '));
+        }
+
+        await TabAsync(h.Base.Dialog); // Host
+        await TypeAsync(h.Base.Dialog, "dav.example.com");
+        await EnterAsync(h.Base.Dialog);
+
+        var saved = h.Base.Connections.GetAll().Single();
+        Assert.AreEqual(RemoteProtocol.WebDav, saved.Protocol);
+        Assert.IsTrue(saved.Secure);
+        Assert.AreEqual("davs://dav.example.com/", saved.DriveUrl);
     }
 }

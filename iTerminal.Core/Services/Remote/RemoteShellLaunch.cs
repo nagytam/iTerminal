@@ -21,6 +21,12 @@ public static class RemoteShellLaunch
             return false;
         }
 
+        if (connection.IsFileDrive)
+        {
+            error = "An FTP or WebDAV connection opens as a panel (B), not as a shell.";
+            return false;
+        }
+
         if (connection.Protocol == RemoteProtocol.Ssh)
         {
             launch = Ssh(connection);

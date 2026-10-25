@@ -47,17 +47,30 @@ public class SaveCommand(
 
             if (textFileEditorDialog is not null)
             {
-                var textEditorControl = textFileEditorDialog.TextEditorControl;
-                var content = string.Join(Environment.NewLine, _textModel.Lines);
-                var url = textFileEditorDialog.Url;
-                using var stream = content.ToMemoryStream(_textModel.Encoding);
-                var contentModel = _contentModelService.GetLastContentModel();
-                if (contentModel is not null && url is not null)
-                {
-                    await contentModel.WriteFileAsync(url, stream);
-                    textEditorControl.IsDirty = false;
-                    textEditorControl.Refresh();
-                }
+                await WriteAsync(textFileEditorDialog, _textModel, _contentModelService);
             }
         }
+
+    /// <summary>
+    /// Writes the editor's text to its file, with the line break and the code page the file was read with, and clears the
+    /// changed mark. False when there is nowhere to write (no file, no panel). Shared by F2 and by the question asked when an
+    /// edited file is closed.
+    /// </summary>
+    internal static async Task<bool> WriteAsync(TextFileEditorDialog dialog, ITextModel textModel, IContentModelService contentModelService)
+    {
+        var url = dialog.Url;
+        var contentModel = contentModelService.GetLastContentModel();
+        if (contentModel is null || url is null)
+        {
+            return false;
+        }
+
+        // The break the file came with, not the system's: saving must not change every line of an LF file on Windows.
+        var content = string.Join(textModel.LineEnding, textModel.Lines);
+        using var stream = content.ToMemoryStream(textModel.Encoding);
+        await contentModel.WriteFileAsync(url, stream);
+        dialog.TextEditorControl.IsDirty = false;
+        dialog.TextEditorControl.Refresh();
+        return true;
+    }
 }

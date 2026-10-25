@@ -117,8 +117,52 @@ public static class SyntaxHighlighter
         "Batch", ["if", "else", "for", "in", "do", "goto", "call", "echo", "set", "exit", "rem", "setlocal", "endlocal", "not", "exist"],
         ["rem ", "::"], null, "\"", ignoreCase: true);
 
+    private static readonly SyntaxLanguage Lua = new(
+        "Lua",
+        ["and", "break", "do", "else", "elseif", "end", "false", "for", "function", "goto", "if", "in", "local", "nil", "not", "or",
+         "repeat", "return", "then", "true", "until", "while"],
+        ["--"], ("--[[", "]]"), "\"'");
+
+    private static readonly SyntaxLanguage VisualBasic = new(
+        "Visual Basic",
+        ["AddHandler", "As", "Boolean", "ByRef", "ByVal", "Case", "Catch", "Class", "Const", "Dim", "Do", "Double", "Each", "Else",
+         "ElseIf", "End", "Enum", "Exit", "False", "Finally", "For", "Function", "If", "Imports", "In", "Integer", "Interface",
+         "Is", "Loop", "Me", "Module", "Namespace", "New", "Next", "Nothing", "Not", "Of", "Option", "Or", "OrElse", "And",
+         "AndAlso", "Private", "Property", "Protected", "Public", "Return", "Select", "Shared", "Step", "String", "Structure",
+         "Sub", "Then", "Throw", "To", "True", "Try", "Using", "Wend", "While", "With"],
+        ["'", "rem "], null, "\"", ignoreCase: true);
+
+    private static readonly SyntaxLanguage FSharp = new(
+        "F#",
+        ["abstract", "and", "as", "async", "begin", "do", "done", "downto", "elif", "else", "end", "exception", "false", "finally",
+         "for", "fun", "function", "if", "in", "inherit", "inline", "interface", "let", "match", "member", "module", "mutable",
+         "namespace", "new", "not", "null", "of", "open", "or", "override", "rec", "return", "then", "to", "true", "try", "type",
+         "use", "val", "when", "while", "with", "yield", "task"],
+        ["//"], ("(*", "*)"), "\"");
+
+    private static readonly SyntaxLanguage BuildFile = new(
+        "Build file",
+        ["include", "ifeq", "ifneq", "ifdef", "ifndef", "else", "endif", "define", "endef", "export", "override", "vpath",
+         "FROM", "RUN", "CMD", "LABEL", "EXPOSE", "ENV", "ADD", "COPY", "ENTRYPOINT", "VOLUME", "USER", "WORKDIR", "ARG",
+         "ONBUILD", "STOPSIGNAL", "HEALTHCHECK", "SHELL", "AS"],
+        ["#"], null, "\"'");
+
+    /// <summary>Files that have a language by name, because they have no extension, or one that says nothing.</summary>
+    private static readonly Dictionary<string, SyntaxLanguage> ByFileName = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Dockerfile"] = BuildFile, ["Containerfile"] = BuildFile, ["Makefile"] = BuildFile, ["GNUmakefile"] = BuildFile,
+        [".bashrc"] = Shell, [".zshrc"] = Shell, [".profile"] = Shell, [".bash_profile"] = Shell,
+        [".gitignore"] = Config, [".gitattributes"] = Config, [".dockerignore"] = Config, [".npmrc"] = Config,
+        ["Directory.Build.props"] = Markup, ["Directory.Build.targets"] = Markup,
+    };
+
     private static readonly Dictionary<string, SyntaxLanguage> ByExtension = new(StringComparer.OrdinalIgnoreCase)
     {
+        [".lua"] = Lua, [".vb"] = VisualBasic, [".fs"] = FSharp, [".fsx"] = FSharp, [".fsi"] = FSharp,
+        [".mk"] = BuildFile, [".dockerfile"] = BuildFile,
+        [".gradle"] = CLike, [".groovy"] = CLike, [".kts"] = CLike, [".proto"] = CLike, [".m"] = CLike, [".mm"] = CLike,
+        [".vue"] = Markup, [".svelte"] = Markup, [".xhtml"] = Markup, [".resx"] = Markup, [".nuspec"] = Markup,
+        [".tf"] = Config, [".tfvars"] = Config, [".gitignore"] = Config,
         [".cs"] = CLike, [".csx"] = CLike, [".java"] = CLike, [".js"] = CLike, [".jsx"] = CLike, [".mjs"] = CLike,
         [".ts"] = CLike, [".tsx"] = CLike, [".c"] = CLike, [".h"] = CLike, [".cpp"] = CLike, [".cc"] = CLike,
         [".hpp"] = CLike, [".go"] = CLike, [".rs"] = CLike, [".kt"] = CLike, [".swift"] = CLike, [".php"] = CLike,
@@ -145,6 +189,13 @@ public static class SyntaxHighlighter
         // A URL's query or fragment is not part of the file name.
         int cut = fileName.IndexOfAny(['?', '#']);
         string name = cut >= 0 ? fileName[..cut] : fileName;
+        // The name alone can say it (Dockerfile, Makefile, .bashrc); a URL's last segment is the name too.
+        string baseName = name[(name.LastIndexOfAny(['/', '\\']) + 1)..];
+        if (ByFileName.TryGetValue(baseName, out SyntaxLanguage? named))
+        {
+            return named;
+        }
+
         string extension = Path.GetExtension(name);
         return extension.Length > 0 && ByExtension.TryGetValue(extension, out SyntaxLanguage? language) ? language : null;
     }
