@@ -20,23 +20,30 @@ public static partial class MarkdownParser
     {
         var blocks = new List<MarkdownBlock>();
         var paragraph = new List<string>();
-        var inFence = false;
+        // The marker that opened the fence (``` or ~~~); a line closes the fence only with the same marker.
+        string? fence = null;
 
         foreach (var raw in (markdown ?? string.Empty).Replace("\r\n", "\n").Split('\n'))
         {
             var trimmed = raw.Trim();
 
-            if (trimmed.StartsWith("```", StringComparison.Ordinal))
+            if (fence is not null)
             {
-                FlushParagraph(blocks, paragraph);
-                inFence = !inFence;
+                if (trimmed.StartsWith(fence, StringComparison.Ordinal))
+                {
+                    fence = null;
+                    continue;
+                }
+
+                // A tab would jump to the next stop on screen, not one cell, so the row would no longer match the layout's width.
+                blocks.Add(new MarkdownBlock(MarkdownBlockKind.Code, [new MarkdownSpan(raw.Replace("\t", "    ").TrimEnd(), MarkdownStyle.Code)]));
                 continue;
             }
 
-            if (inFence)
+            if (trimmed.StartsWith("```", StringComparison.Ordinal) || trimmed.StartsWith("~~~", StringComparison.Ordinal))
             {
-                // A tab would jump to the next stop on screen, not one cell, so the row would no longer match the layout's width.
-                blocks.Add(new MarkdownBlock(MarkdownBlockKind.Code, [new MarkdownSpan(raw.Replace("\t", "    ").TrimEnd(), MarkdownStyle.Code)]));
+                FlushParagraph(blocks, paragraph);
+                fence = trimmed[..3];
                 continue;
             }
 

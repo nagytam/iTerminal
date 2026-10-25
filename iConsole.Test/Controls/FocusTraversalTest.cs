@@ -28,6 +28,25 @@ public class FocusTraversalTest
     private static void Backward(Control root) => root.OnHandleTabBackward();
 
     [TestMethod]
+    public void Tab_SkipsADisabledControl_ForwardAndBackward()
+    {
+        Window root = new(Theme()) { ViewSize = new Size(40, 10) };
+        CheckBox a = Box("a");
+        CheckBox b = Box("b");
+        CheckBox c = Box("c");
+        b.IsEnabled = false;
+        root.AddControl(a);
+        root.AddControl(b);
+        root.AddControl(c);
+        a.SetFocus();
+
+        Forward(root);
+        Assert.AreEqual("c", Focused(root), "Tab must not stop on the disabled box.");
+        Backward(root);
+        Assert.AreEqual("a", Focused(root), "Shift+Tab must not stop on the disabled box either.");
+    }
+
+    [TestMethod]
     public void Tab_VisitsSiblingsInOrder_AndWrapsAround()
     {
         Window root = new(Theme()) { ViewSize = new Size(40, 10) };

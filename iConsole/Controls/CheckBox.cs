@@ -44,6 +44,16 @@ public class CheckBox : Control, IReadOnly
         AddCommand(new ToggleCheckBoxCommand());
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (IsReadOnly || !IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Space", "Check or uncheck");
+    }
+
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         var isHandled = await base.HandleMouseEventAsync(mouseEvent);

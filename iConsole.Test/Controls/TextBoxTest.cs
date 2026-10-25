@@ -40,6 +40,26 @@ public class TextBoxTest
     }
 
     [TestMethod]
+    public void KeyHints_ListTheClipboardKeys_ExceptCopyAndCutOnAPasswordBox()
+    {
+        var theme = new Mock<IThemeService>();
+        theme.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
+        var beep = new Mock<IBeepService>().Object;
+        var time = new Mock<IDateTimeProviderService>().Object;
+
+        var keys = new TextBox(beep, time, theme.Object).GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.Contains(keys, "Ctrl+C");
+        CollectionAssert.Contains(keys, "Ctrl+X");
+        CollectionAssert.Contains(keys, "Ctrl+V");
+        CollectionAssert.Contains(keys, "Ctrl+A");
+
+        var password = new PasswordBox(beep, time, theme.Object).GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.DoesNotContain(password, "Ctrl+C");
+        CollectionAssert.DoesNotContain(password, "Ctrl+X");
+        CollectionAssert.Contains(password, "Ctrl+V");
+    }
+
+    [TestMethod]
     public async Task DisabledTextBox_IgnoresTyping()
     {
         var mockThemeService = new Mock<IThemeService>();

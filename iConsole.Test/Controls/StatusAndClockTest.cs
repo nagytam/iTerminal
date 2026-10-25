@@ -32,6 +32,19 @@ public class StatusAndClockTest
     }
 
     [TestMethod]
+    public void ElapsedClock_KeyHints_NameSpaceForTheCurrentStateAndR()
+    {
+        var clock = new ElapsedClock(Theme(), new FakeClock()) { Position = new Position(0, 0), ViewSize = new Size(10, 1) };
+
+        var hints = clock.GetKeyHints().ToDictionary(h => h.Key, h => h.Description);
+        Assert.AreEqual("Start the clock", hints["Space"]);
+        Assert.IsTrue(hints.ContainsKey("R"));
+
+        clock.Start();
+        Assert.AreEqual("Stop the clock", clock.GetKeyHints().Single(h => h.Key == "Space").Description);
+    }
+
+    [TestMethod]
     public void StatusDot_Draw_ShowsDotAndText()
     {
         MockBuffer buffer = new(new Size(20, 1));

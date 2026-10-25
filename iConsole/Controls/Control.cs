@@ -550,7 +550,8 @@ public class Control : INotifyPropertyChanged, IControl
         orderedList.AddRange(controlList.Take(index));
         foreach (var control in orderedList)
         {
-            if (control.CanFocus)
+            // A disabled control takes no keys, so Tab passes over it rather than stopping on it.
+            if (control.CanFocus && control.IsEnabled)
             {
                 nextControl = control;
                 break;
@@ -567,7 +568,7 @@ public class Control : INotifyPropertyChanged, IControl
     {
         foreach (var control in Controls.AsSnapshot())
         {
-            if (control.CanFocus)
+            if (control.CanFocus && control.IsEnabled)
             {
                 focusableControl = control;
                 return true;
@@ -590,7 +591,7 @@ public class Control : INotifyPropertyChanged, IControl
         orderedList.AddRange(controlList.Take(index));
         foreach (var control in orderedList)
         {
-            if (control.CanFocus)
+            if (control.CanFocus && control.IsEnabled)
             {
                 previousControl = control;
                 break;

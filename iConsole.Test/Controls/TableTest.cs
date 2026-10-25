@@ -37,6 +37,15 @@ public class TableTest
         return table;
     }
 
+    [TestMethod]
+    public void KeyHints_ListThePagingAndJumpKeys()
+    {
+        var keys = CreateTable([Alice, Bob]).GetKeyHints().Select(h => h.Key).ToList();
+
+        CollectionAssert.Contains(keys, "PageUp/PageDown");
+        CollectionAssert.Contains(keys, "Home/End");
+    }
+
     private static readonly Person Alice = new("Alice", 30, "New York");
     private static readonly Person Bob   = new("Bob",   25, "London");
     private static readonly Person Carol = new("Carol", 35, "Paris");
