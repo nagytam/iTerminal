@@ -71,6 +71,18 @@ public class MarkdownViewerControl : Control
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled || _markdown.Length == 0)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down", "Scroll one line");
+        yield return ("PageUp/PageDown", "Scroll a page");
+        yield return ("Home/End", "Go to the top or the end");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (IsEnabled && IsFocused && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
@@ -107,6 +119,17 @@ public class MarkdownViewerControl : Control
         if (IsEnabled && mouseEvent.WheelDelta != 0 && AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             ScrollBy(-mouseEvent.WheelDelta * 3);
+            return true;
+        }
+
+        // A click takes the focus, as on the other controls, so the arrow keys scroll the document the user clicked.
+        if (IsEnabled && mouseEvent.LeftClicked && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            if (!IsFocused)
+            {
+                SetFocus();
+            }
+
             return true;
         }
 

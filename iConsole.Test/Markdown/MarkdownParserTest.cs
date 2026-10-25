@@ -60,6 +60,14 @@ public class MarkdownParserTest
     }
 
     [TestMethod]
+    public void FencedCode_TabsBecomeSpaces()
+    {
+        var blocks = MarkdownParser.Parse("```\n\tif (x)\n```");
+
+        Assert.AreEqual("    if (x)", Text(blocks[0]));
+    }
+
+    [TestMethod]
     public void UnclosedFence_RunsToTheEnd()
     {
         var blocks = MarkdownParser.Parse("```\nline one\nline two");

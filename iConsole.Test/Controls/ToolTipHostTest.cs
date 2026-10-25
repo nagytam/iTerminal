@@ -114,4 +114,60 @@ public class ToolTipHostTest
 
         Assert.IsNull(ToolTipHost.FindTarget(root, new Position(4, 2)));
     }
+
+    [TestMethod]
+    public void TipNearTheBottomRight_OpensAboveAndLeftOfThePointer()
+    {
+        var (root, button, host) = CreateRoot();
+        button.Position = new Position(55, 18);
+        button.ViewSize = new Size(4, 1);
+        var pointer = new Position(56, 18);
+
+        _tips.ReportPointer(pointer);
+        host.Synchronize();
+        _time.Advance(host.Delay);
+        host.Synchronize();
+
+        Assert.IsTrue(host.IsShowing);
+        var tip = ScreenBuffer.Render(root, 60, 20).Find(" Copy file ");
+        Assert.IsNotNull(tip);
+        Assert.IsTrue(tip.Y < pointer.Y,"The tip sits above the pointer row, so the pointer is not covered.");
+    }
+
+    [TestMethod]
+    public void ChangingTheTargetsText_ReplacesTheShownTip()
+    {
+        var (root, button, host) = CreateRoot();
+        _tips.ReportPointer(new Position(4, 2));
+        host.Synchronize();
+        _time.Advance(host.Delay);
+        host.Synchronize();
+        Assert.IsTrue(host.IsShowing);
+
+        button.ToolTipText = "Paste";
+        host.Synchronize();
+        Assert.IsFalse(host.IsShowing, "The stale tip comes down as soon as its text no longer matches.");
+
+        _time.Advance(host.Delay);
+        host.Synchronize();
+        Assert.IsTrue(host.IsShowing);
+        Assert.IsNotNull(ScreenBuffer.Render(root, 60, 20).Find(" Paste "));
+    }
+
+    [TestMethod]
+    public void ClearingTheTargetsText_HidesItsTip()
+    {
+        var (_, button, host) = CreateRoot();
+        _tips.ReportPointer(new Position(4, 2));
+        host.Synchronize();
+        _time.Advance(host.Delay);
+        host.Synchronize();
+
+        button.ToolTipText = null;
+        host.Synchronize();
+        _time.Advance(host.Delay);
+        host.Synchronize();
+
+        Assert.IsFalse(host.IsShowing);
+    }
 }

@@ -46,9 +46,9 @@ public static class MarkdownLayout
                     break;
             }
 
-            // Consecutive list items stay together; every other block is followed by a blank row.
-            var nextIsItem = index + 1 < list.Count && list[index + 1].Kind == MarkdownBlockKind.ListItem;
-            if (!(block.Kind == MarkdownBlockKind.ListItem && nextIsItem) && index + 1 < list.Count)
+            // Consecutive list items, code lines and quote lines stay together; every other block is followed by a blank row.
+            var joinsNext = index + 1 < list.Count && JoinsNext(block.Kind, list[index + 1].Kind);
+            if (!joinsNext && index + 1 < list.Count)
             {
                 lines.Add(new MarkdownLine([], MarkdownBlockKind.Paragraph, 0));
             }
@@ -56,6 +56,13 @@ public static class MarkdownLayout
 
         return lines;
     }
+
+    /// <summary>
+    /// The parser makes one block per source line for list items, code and quotes, so a run of them is one unit: a
+    /// code block of five lines is five rows, not five rows with a blank between each.
+    /// </summary>
+    private static bool JoinsNext(MarkdownBlockKind current, MarkdownBlockKind next) =>
+        current == next && current is MarkdownBlockKind.ListItem or MarkdownBlockKind.Code or MarkdownBlockKind.Quote;
 
     private static IReadOnlyList<MarkdownSpan> Bold(IReadOnlyList<MarkdownSpan> spans) =>
         spans.Select(span => span with { Style = span.Style | MarkdownStyle.Bold }).ToList();

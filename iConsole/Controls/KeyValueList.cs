@@ -32,7 +32,8 @@ public class KeyValueList : Control
     public void SetItems(IEnumerable<(string Key, string Value)> items)
     {
         _items.Clear();
-        _items.AddRange(items);
+        // A null key or value would fail in the width and cut calls on every draw; it is shown as an empty cell instead.
+        _items.AddRange(items.Select(item => (item.Key ?? string.Empty, item.Value ?? string.Empty)));
         // Grows to fit but never shrinks: rows painted earlier sit outside a smaller rectangle and nothing
         // else repaints them, so a list that lost pairs has to keep the rows and paint them blank.
         ViewSize = new Size(ViewSize.Width, Math.Max(ViewSize.Height, _items.Count));
