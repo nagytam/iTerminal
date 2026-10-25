@@ -75,6 +75,12 @@ public class Breadcrumb : Control
             }
         }
 
+        if (keep == 0)
+        {
+            // Nothing fits: the first segment is the highlighted one, so it is the one that stays.
+            return [all[0], (-1, "…")];
+        }
+
         return keep >= 1 && keep < all.Count - 1 ? [all[0], (-1, "…"), all[keep]] : [(-1, "…"), all[^1]];
     }
 
@@ -180,7 +186,11 @@ public class Breadcrumb : Control
             }
 
             bool active = parts[i].Index == _activeIndex && parts[i].Index >= 0;
-            if (active && IsFocused)
+            if (!IsEnabled)
+            {
+                line.Append(parts[i].Text, colorScheme.DisabledForeground, colorScheme.Background);
+            }
+            else if (active && IsFocused)
             {
                 line.Append(parts[i].Text, colorScheme.SelectedFocusedForeground, colorScheme.SelectedFocusedBackground);
             }

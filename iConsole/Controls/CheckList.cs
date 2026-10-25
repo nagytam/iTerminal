@@ -243,7 +243,11 @@ public class CheckList : Control, IReadOnly
             if (index < _items.Count)
             {
                 text = (_items[index].Checked ? "[x] " : "[ ] ") + _items[index].Text;
-                if (index == _cursor)
+                if (index == _cursor && !IsEnabled)
+                {
+                    foreground = colorScheme.DisabledForeground;
+                }
+                else if (index == _cursor)
                 {
                     foreground = IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.SelectedForeground;
                     background = IsFocused ? colorScheme.SelectedFocusedBackground : colorScheme.SelectedBackground;
