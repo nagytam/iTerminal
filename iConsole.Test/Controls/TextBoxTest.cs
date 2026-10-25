@@ -40,6 +40,26 @@ public class TextBoxTest
     }
 
     [TestMethod]
+    public async Task DisabledTextBox_IgnoresTyping()
+    {
+        var mockThemeService = new Mock<IThemeService>();
+        mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
+        var textBox = new TextBox(new Mock<IBeepService>().Object, new Mock<IDateTimeProviderService>().Object, mockThemeService.Object)
+        {
+            Text = "keep",
+            ViewSize = new Size(25, 1),
+            IsEnabled = false,
+        };
+        textBox.SetFocus();
+
+        await textBox.HandleKeyEventAsync(new KeyEvent('x', ConsoleKey.X, false, false, false));
+        await textBox.HandleKeyEventAsync(new KeyEvent('\b', ConsoleKey.Backspace, false, false, false));
+        await textBox.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Delete, false, false, false));
+
+        Assert.AreEqual("keep", textBox.Text);
+    }
+
+    [TestMethod]
     public async Task TextBoxDraw()
     {
         var mockBeepService = new Mock<IBeepService>();

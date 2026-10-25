@@ -21,6 +21,17 @@ public class HexViewerTest
         return m;
     }
 
+    [TestMethod]
+    public void KeyHints_ListTheScrollKeysForAShownDump()
+    {
+        var hv = Create(new byte[64]);
+        var keys = hv.GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.AreEqual(new[] { "Up/Down", "PageUp/PageDown", "Home/End" }, keys);
+
+        hv.Data = [];
+        Assert.AreEqual(0, hv.GetKeyHints().Count());
+    }
+
     private static HexViewer Create(byte[]? data = null, int height = 4)
     {
         var hv = new HexViewer(ThemeMock().Object)

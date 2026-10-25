@@ -281,7 +281,8 @@ public class TreeView : Control
         yield return ("Up/Down", "Move the cursor");
         yield return ("PageUp/PageDown", "Move the cursor a page");
         yield return ("Home/End", "First or last row");
-        yield return ("Right/Left", "Expand or collapse the node in place");
+        yield return ("Right", "Open the node, or step into its first child");
+        yield return ("Left", "Close the node, or go to its parent");
         yield return ("Enter/Space/+/-", "Expand or collapse the node");
     }
 

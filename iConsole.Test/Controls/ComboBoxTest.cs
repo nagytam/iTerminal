@@ -47,6 +47,23 @@ public class ComboBoxTest
         Assert.AreEqual(0, harness.Combo.SelectedIndex);
     }
 
+    [TestMethod]
+    public async Task ClickingAnUnfocusedCombo_TakesTheFocusSoItHasItBackWhenTheListCloses()
+    {
+        var harness = CreateHarness();
+        harness.Root.ResetFocus();
+        Assert.IsFalse(harness.Combo.IsFocused);
+
+        await harness.Combo.HandleMouseEventAsync(new MouseEvent { Position = new Position(2, 2), LeftClicked = true });
+
+        Assert.IsTrue(harness.Combo.IsOpen);
+
+        // The open list holds the keyboard; closing it hands the focus back to the combo, not to nothing.
+        harness.Combo.Close();
+
+        Assert.IsTrue(harness.Combo.IsFocused);
+    }
+
     private static Popup OpenPopup(Window root) =>
         root.Controls.AsSnapshot().OfType<Popup>().Single();
 

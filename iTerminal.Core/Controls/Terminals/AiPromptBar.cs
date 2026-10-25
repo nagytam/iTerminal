@@ -151,12 +151,27 @@ public class AiPromptBar : Window
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!_model.IsAvailable)
+        {
+            yield break;
+        }
+
+        yield return ("Enter", "Send the question");
+        yield return ("Esc", "Clear the question, or cancel the answer");
+        yield return ("Up/Down", "Recall the questions already sent");
+        yield return ("PageUp/PageDown", "Scroll the answer");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         var isHandled = await base.HandleKeyEventAsync(keyEvent);
         if (isHandled) return true;
 
-        if (!_model.IsAvailable) return false;
+        // Only with the focus: the bar sits beside the panels, and an unfocused bar used to take the typed characters,
+        // Escape (which cancels a running answer) and Enter (which sends the question) meant for whoever has the focus.
+        if (!_model.IsAvailable || !IsFocused) return false;
 
         if (PasteHelper.IsDeleteWordKey(keyEvent) || PasteHelper.IsClearKey(keyEvent))
         {

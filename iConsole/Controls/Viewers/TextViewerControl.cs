@@ -575,6 +575,19 @@ public class TextViewerControl : Control
     /// start of the next, and End goes to the end of the line the cursor is on (the scrolling command it replaces used
     /// the first visible line). Everything else is the commands' to handle; afterwards the cursor is kept in the text.
     /// </summary>
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down", "Scroll a line");
+        yield return ("PageUp/PageDown", "Scroll a page");
+        yield return ("Left/Right", "Scroll sideways");
+        yield return ("Ctrl+Home/Ctrl+End", "Go to the start or the end of the file");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         SyncScrollableSize();
