@@ -656,6 +656,14 @@ public class TextEditorControl
     /// </summary>
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // Wrapped, Up and Down move by screen row, so a long line is walked row by row; by line they would skip its rows.
+        if (IsEnabled && WrapLines && !HasSelection && !keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt
+            && keyEvent.ConsoleKey is ConsoleKey.UpArrow or ConsoleKey.DownArrow)
+        {
+            MoveCursorByScreenRow(keyEvent.ConsoleKey == ConsoleKey.DownArrow ? 1 : -1);
+            return true;
+        }
+
         if (IsEnabled && !keyEvent.Alt)
         {
             if (keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.Z)

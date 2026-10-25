@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using Buffer = iConsole.Buffers.Buffer;
+using iConsole.Diagnostics;
 
 namespace iConsole.Jobs;
 
@@ -22,6 +23,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
     private const int MaxDumpWidth  = 160;
 
     private readonly IRenderingDumpHelper _dump;
+    private readonly MainLoopWatchDog? _watchDog;
     public string DumpDirectoryPath => _dump.DumpDirectoryPath;
 
     private IConsoleDriver _consoleDriver { get; set; }
@@ -48,8 +50,10 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         IConsoleDriver consoleDriver,
         IBuffer buffer,
         IRenderingDumpHelper? dumpHelper = null,
-        Services.ConsoleOwnership? consoleOwnership = null)
+        Services.ConsoleOwnership? consoleOwnership = null,
+        MainLoopWatchDog? watchDog = null)
     {
+        _watchDog = watchDog;
         _consoleDriver = consoleDriver ?? Services.NullConsoleDriver.Instance;
         ConsoleForegroundColor = _consoleDriver.ForegroundColor;
         ConsoleBackgroundColor = _consoleDriver.BackgroundColor;
@@ -112,7 +116,12 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                     ForceRedraw();
                     lastRedraw = now;
                 }
-                var idle = RenderBuffer();
+                // Timed for the watchdog: a frame past its budget is reported while it is still being drawn.
+                bool idle;
+                using (_watchDog?.Watch("render"))
+                {
+                    idle = RenderBuffer();
+                }
                 DetectWindowSizeChanges(now);
                 _renderIterations++;
                 if (idle)

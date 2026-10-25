@@ -49,6 +49,8 @@ public class TextFileEditorDialog : Dialog
             TextEditorControl);
         // The same key as the viewer's: F5 asks for a line number and goes to it.
         AddCommand(new ViewerGoToLineCommand(TextEditorControl, beepService, dateTimeProviderService, themeService));
+        // F6 wraps the lines in the editor, as F2 does in the viewer; F2 is save here. Wrapped, Up and Down walk the rows.
+        AddCommand(new ViewerWrapLinesCommand(TextEditorControl, new iConsole.Data.Key(ConsoleKey.F6, false, false, false)));
         AddControl(TextEditorControl);
         AddControl(_statusBar);
     }
