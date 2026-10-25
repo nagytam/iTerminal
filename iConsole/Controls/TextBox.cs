@@ -494,7 +494,7 @@ public class TextBox : Control, IReadOnly
         }
 
         var isHandled = await base.HandleKeyEventAsync(keyEvent);
-        if (!isHandled && !IsReadOnly &&
+        if (!isHandled && IsEnabled && !IsReadOnly &&
             ConsoleKeyHelper.IsTypingKey(keyEvent) &&
             IsAllowedCharacter(keyEvent.KeyChar))
         {

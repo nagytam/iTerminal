@@ -25,6 +25,18 @@ public class TreeViewTest
     }
 
     [TestMethod]
+    public void KeyHints_DescribeWhatRightAndLeftDo()
+    {
+        var root = new HierarchicalItemModel(null, "/") { IsOpened = true };
+        var treeView = new TreeView(root, _mockThemeService.Object) { Position = new Position(0, 0), ViewSize = new Size(20, 5) };
+
+        var hints = treeView.GetKeyHints().ToDictionary(h => h.Key, h => h.Description);
+
+        Assert.AreEqual("Open the node, or step into its first child", hints["Right"]);
+        Assert.AreEqual("Close the node, or go to its parent", hints["Left"]);
+    }
+
+    [TestMethod]
     public async Task TreeViewRootOnly()
     {
         var root = new HierarchicalItemModel(null, "/") { IsOpened = true };
