@@ -26,10 +26,21 @@ public class TextViewerControl : Control
             Position cursorPosition;
             if (IsEnabled && IsVisible)
             {
-                cursorPosition = new Position(
-                    ScrollableModel.CursorPosition.X - ScrollableModel.ScrollPosition.X + AbsolutePosition.X,
-                    ScrollableModel.CursorPosition.Y - ScrollableModel.ScrollPosition.Y + AbsolutePosition.Y
-                    );
+                if (_wrapLines)
+                {
+                    // Wrapped, the scroll counts screen rows and the caret sits at its column within the row it is on.
+                    int row = CursorScreenRow();
+                    cursorPosition = new Position(
+                        ScrollableModel.CursorPosition.X - ScreenRows[row].Start + AbsolutePosition.X,
+                        row - ScrollableModel.ScrollPosition.Y + AbsolutePosition.Y);
+                }
+                else
+                {
+                    cursorPosition = new Position(
+                        ScrollableModel.CursorPosition.X - ScrollableModel.ScrollPosition.X + AbsolutePosition.X,
+                        ScrollableModel.CursorPosition.Y - ScrollableModel.ScrollPosition.Y + AbsolutePosition.Y
+                        );
+                }
             }
             else
             {
@@ -237,6 +248,12 @@ public class TextViewerControl : Control
         var row = Math.Clamp(ScrollableModel.CursorPosition.Y, 0, TextModel.Lines.Count - 1);
         ScrollableModel.CursorPosition.Y = row;
         ScrollableModel.CursorPosition.X = Math.Clamp(ScrollableModel.CursorPosition.X, 0, TextModel.Lines[(int)row].Length);
+        if (_wrapLines)
+        {
+            KeepRowVisible(CursorScreenRow());
+            return;
+        }
+
         ScrollableModel.ScrollToVisible();
     }
 
@@ -288,6 +305,12 @@ public class TextViewerControl : Control
 
     private void RebuildRows(int width)
     {
+        // The row at the top of the screen is kept as text, so a resize (or a change of wrapping) re-flows the lines around
+        // the same reading position instead of leaving the scroll on whatever text now has the old row number.
+        TextRow? top = _rows.Count > 0 && ScrollableModel.ScrollPosition.Y >= 0 && ScrollableModel.ScrollPosition.Y < _rows.Count
+            ? _rows[(int)ScrollableModel.ScrollPosition.Y]
+            : null;
+
         _rows = new List<TextRow>(TextModel.Lines.Count);
         for (int line = 0; line < TextModel.Lines.Count; line++)
         {
@@ -309,6 +332,102 @@ public class TextViewerControl : Control
         {
             ScrollableModel.ScrollableSize = new Size(0, _rows.Count);
         }
+
+        if (top is { } kept)
+        {
+            ScrollableModel.ScrollPosition.Y = RowOf(kept);
+        }
+    }
+
+    /// <summary>The first row of the current layout that shows the text <paramref name="kept"/> starts with; the last row of its line when that text is gone.</summary>
+    private int RowOf(TextRow kept)
+    {
+        for (int i = 0; i < _rows.Count; i++)
+        {
+            var row = _rows[i];
+            if (row.Line == kept.Line && kept.Start >= row.Start && kept.Start < row.Start + Math.Max(1, row.Length))
+            {
+                return i;
+            }
+        }
+
+        int last = _rows.FindLastIndex(r => r.Line == kept.Line);
+        return Math.Clamp(last < 0 ? 0 : last, 0, Math.Max(0, _rows.Count - 1));
+    }
+
+    /// <summary>The line and the column in it at the top of the screen (the top row, when wrapped).</summary>
+    public (long Line, int Start) TopRow()
+    {
+        var rows = ScreenRows;
+        if (rows.Count == 0)
+        {
+            return (0, 0);
+        }
+
+        var index = Math.Clamp((int)ScrollableModel.ScrollPosition.Y, 0, rows.Count - 1);
+        return (rows[index].Line, rows[index].Start);
+    }
+
+    /// <summary>The screen row the cursor is on: its line and column within the line. At a row break the cursor goes to the row that starts there.</summary>
+    internal int CursorScreenRow()
+    {
+        var rows = ScreenRows;
+        long line = ScrollableModel.CursorPosition.Y;
+        long column = ScrollableModel.CursorPosition.X;
+        for (int i = 0; i < rows.Count; i++)
+        {
+            var row = rows[i];
+            if (row.Line == line && column >= row.Start && column < row.Start + row.Length)
+            {
+                return i;
+            }
+        }
+
+        // The end of a line sits just past its last row's text.
+        return Math.Max(0, rows.ToList().FindLastIndex(r => r.Line == line));
+    }
+
+    /// <summary>
+    /// Moves the cursor <paramref name="delta"/> screen rows up or down, keeping its column within the row where it can.
+    /// Only meaningful when the lines are wrapped: unwrapped, a screen row is a line and the caller moves by line.
+    /// </summary>
+    protected void MoveCursorByScreenRow(int delta)
+    {
+        if (!_wrapLines || TextModel.Lines.Count == 0 || ViewSize.IsEmpty)
+        {
+            return;
+        }
+
+        var rows = ScreenRows;
+        int current = CursorScreenRow();
+        int column = (int)ScrollableModel.CursorPosition.X - rows[current].Start;
+        int target = Math.Clamp(current + delta, 0, rows.Count - 1);
+        var row = rows[target];
+
+        // A row that is cut by a wrap cannot hold the caret just past its text: that position is the next row's first column.
+        bool endsLine = target + 1 >= rows.Count || rows[target + 1].Line != row.Line;
+        int maxColumn = endsLine ? row.Length : Math.Max(0, row.Length - 1);
+        ScrollableModel.CursorPosition.Y = row.Line;
+        ScrollableModel.CursorPosition.X = row.Start + Math.Min(Math.Max(0, column), maxColumn);
+        KeepRowVisible(target);
+        StateHasChanged();
+    }
+
+    /// <summary>Scrolls, when wrapped, so that screen row <paramref name="row"/> is on the screen.</summary>
+    private void KeepRowVisible(int row)
+    {
+        int visibleRows = Math.Max(1, (int)ViewSize.Height - 1);
+        long top = ScrollableModel.ScrollPosition.Y;
+        if (row < top)
+        {
+            top = row;
+        }
+        else if (row >= top + visibleRows)
+        {
+            top = row - visibleRows + 1;
+        }
+
+        ScrollableModel.ScrollPosition.Y = Math.Max(0, top);
     }
 
     /// <summary>
