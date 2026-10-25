@@ -167,13 +167,13 @@ public class SegmentedControl : Control, IReadOnly
         if (mouseEvent.LeftClicked)
         {
             int index = IndexAtColumn((int)mouseEvent.Position.X - (int)AbsolutePosition.X);
+            if (!IsFocused)
+            {
+                SetFocus();
+            }
+
             if (index >= 0)
             {
-                if (!IsFocused)
-                {
-                    SetFocus();
-                }
-
                 SelectedIndex = index;
             }
 

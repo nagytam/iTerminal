@@ -52,11 +52,13 @@ public class TimePicker : Control, IReadOnly
         get => new(_hour, _minute, _showSeconds ? _second : 0);
         set
         {
-            if (_hour != value.Hour || _minute != value.Minute || _second != value.Second)
+            // Seconds that are not shown are still kept (ShowSeconds may be set afterwards) but are no change to announce.
+            bool changed = _hour != value.Hour || _minute != value.Minute || (_showSeconds && _second != value.Second);
+            _hour = value.Hour;
+            _minute = value.Minute;
+            _second = value.Second;
+            if (changed)
             {
-                _hour = value.Hour;
-                _minute = value.Minute;
-                _second = value.Second;
                 ValueChanged?.Invoke(this, EventArgs.Empty);
                 StateHasChanged();
             }

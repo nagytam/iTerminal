@@ -89,7 +89,12 @@ public class Rating : Control, IReadOnly
 
         if (keyEvent.KeyChar is >= '0' and <= '9')
         {
-            Value = keyEvent.KeyChar - '0';
+            // 9 on a five-star rating is not five stars: a digit past the maximum is ignored, not clamped to it.
+            if (keyEvent.KeyChar - '0' <= _maximum)
+            {
+                Value = keyEvent.KeyChar - '0';
+            }
+
             return true;
         }
 

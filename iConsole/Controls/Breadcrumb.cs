@@ -52,7 +52,7 @@ public class Breadcrumb : Control
     /// The segments that are drawn for <paramref name="width"/> cells, as (index, text) pairs; index -1 is
     /// the folded-away middle. Segments are dropped from just after the first until the trail fits.
     /// </summary>
-    public static List<(int Index, string Text)> Layout(IReadOnlyList<string> segments, int width)
+    public static List<(int Index, string Text)> Layout(IReadOnlyList<string> segments, int width, int keep = -1)
     {
         List<(int Index, string Text)> all = [.. segments.Select((text, index) => (index, text))];
         if (all.Count == 0 || Measure(all) <= width || all.Count < 3)
@@ -62,6 +62,12 @@ public class Breadcrumb : Control
 
         for (int dropped = 1; dropped < all.Count - 1; dropped++)
         {
+            // The highlighted segment must stay on screen, or the arrow keys move a highlight nobody can see.
+            if (keep >= 1 && keep <= dropped)
+            {
+                break;
+            }
+
             List<(int Index, string Text)> folded = [all[0], (-1, "…"), .. all.Skip(1 + dropped)];
             if (Measure(folded) <= width)
             {
@@ -69,7 +75,7 @@ public class Breadcrumb : Control
             }
         }
 
-        return [(-1, "…"), all[^1]];
+        return keep >= 1 && keep < all.Count - 1 ? [all[0], (-1, "…"), all[keep]] : [(-1, "…"), all[^1]];
     }
 
     private static int Measure(List<(int Index, string Text)> parts)
@@ -134,15 +140,15 @@ public class Breadcrumb : Control
 
         int column = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
         int start = 0;
-        foreach ((int index, string text) in Layout(_segments, (int)ViewSize.Width))
+        if (!IsFocused)
+        {
+            SetFocus();
+        }
+
+        foreach ((int index, string text) in Layout(_segments, (int)ViewSize.Width, _activeIndex))
         {
             if (index >= 0 && column >= start && column < start + text.Length)
             {
-                if (!IsFocused)
-                {
-                    SetFocus();
-                }
-
                 ActiveIndex = index;
                 SegmentActivated?.Invoke(this, index);
                 return true;
@@ -165,7 +171,7 @@ public class Breadcrumb : Control
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
         int width = (int)ViewSize.Width;
         ConxelString line = new(string.Empty, colorScheme.Foreground, colorScheme.Background);
-        List<(int Index, string Text)> parts = Layout(_segments, width);
+        List<(int Index, string Text)> parts = Layout(_segments, width, _activeIndex);
         for (int i = 0; i < parts.Count; i++)
         {
             if (i > 0)

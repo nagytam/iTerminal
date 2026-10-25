@@ -230,6 +230,9 @@ public sealed class GitService : IGitService
     public Task<GitResult> PullAsync(string repositoryRoot, CancellationToken cancellationToken = default) =>
         RunWriteAsync(repositoryRoot, cancellationToken, "pull");
 
+    public Task<GitResult> PullRebaseAsync(string repositoryRoot, CancellationToken cancellationToken = default) =>
+        RunWriteAsync(repositoryRoot, cancellationToken, "pull", "--rebase");
+
     public async Task<GitResult> PushAsync(string repositoryRoot, bool setUpstream = false, CancellationToken cancellationToken = default)
     {
         if (!setUpstream)

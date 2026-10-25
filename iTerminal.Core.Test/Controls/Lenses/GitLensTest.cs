@@ -50,6 +50,7 @@ public class GitLensTest
         public Task<bool> IsMergeInProgressAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult(false);
         public Task<GitResult> FetchAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult(GitResult.Ok());
         public Task<GitResult> PullAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult(GitResult.Ok());
+        public Task<GitResult> PullRebaseAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult(GitResult.Ok());
         public Task<GitResult> PushAsync(string repositoryRoot, bool setUpstream = false, CancellationToken cancellationToken = default) => Task.FromResult(GitResult.Ok());
         public Task<string?> GetDefaultRemoteAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult<string?>("origin");
         public Task<IReadOnlyList<GitStash>> GetStashesAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<GitStash>>([]);

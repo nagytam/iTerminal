@@ -62,7 +62,7 @@ public class FileMenuItem : MenuItem
         }
         if (editLinkDialog is not null)
         {
-            AddMenuItem(new MenuItem("Edit Link\tCtrl+Shift+L", new EditLinkDialogCommand(editLinkDialog, contentModelService), [], themeService));
+            AddMenuItem(new MenuItem("Edit Link	Ctrl+Shift+L", new EditLinkDialogCommand(editLinkDialog, contentModelService), [], themeService));
         }
         if (compressDialog is not null)
         {

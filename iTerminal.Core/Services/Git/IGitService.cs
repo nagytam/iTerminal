@@ -68,6 +68,9 @@ public interface IGitService
 
     Task<GitResult> PullAsync(string repositoryRoot, CancellationToken cancellationToken = default);
 
+    /// <summary>Pulls the upstream and replays the local commits on top of it (<c>git pull --rebase</c>) instead of merging.</summary>
+    Task<GitResult> PullRebaseAsync(string repositoryRoot, CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Pushes the current branch. With <paramref name="setUpstream"/> the branch is published to the
     /// default remote and made to track it — what a plain <c>git push</c> refuses to do for a branch

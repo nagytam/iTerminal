@@ -64,6 +64,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private SignatureDialog? _signatureDialog { get; set; }
     private iTerminal.Core.Services.Defender.IMalwareScanService? _malwareScanService { get; set; }
     private INotificationService? _notificationService { get; set; }
+    private iTerminal.Core.Services.Git.IGitService? _gitService { get; set; }
 
     public ContentBrowser(
         string name,
@@ -105,9 +106,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         SignatureDialog? signatureDialog = null,
         iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
         INotificationService? notificationService = null,
-        EditLinkDialog? editLinkDialog = null)
+        EditLinkDialog? editLinkDialog = null,
+        iTerminal.Core.Services.Git.IGitService? gitService = null)
         : base(themeService)
     {
+        _gitService = gitService;
         _editLinkDialog = editLinkDialog;
         _malwareScanService = malwareScanService;
         _notificationService = notificationService;
@@ -307,6 +310,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_signatureDialog is not null)
         {
             AddCommand(new SignatureDialogCommand(_signatureDialog, ContentModelService));
+        }
+        if (_gitService is not null)
+        {
+            AddCommand(new GitPullRebaseCommand(ContentModelService, _gitService, _notificationService));
         }
         if (_fileDiffDialog is not null)
         {
