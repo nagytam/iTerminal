@@ -127,6 +127,43 @@ public class SearchBoxTest
     }
 
     [TestMethod]
+    public async Task Escape_FiresSearchChangedOnce()
+    {
+        var (box, _) = Create("hello");
+        var calls = 0;
+        box.SearchChanged += (_, _) => calls++;
+
+        await box.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Escape, false, false, false));
+
+        Assert.AreEqual(1, calls);
+    }
+
+    [TestMethod]
+    public void ProgrammaticClear_FiresSearchChangedSoFiltersFollowTheEmptyBox()
+    {
+        var (box, _) = Create("hello");
+        string? received = null;
+        box.SearchChanged += (_, v) => received = v;
+
+        box.Clear();
+
+        Assert.AreEqual(string.Empty, received);
+        Assert.AreEqual(string.Empty, box.Text);
+    }
+
+    [TestMethod]
+    public void ProgrammaticClear_OnEmptyBox_DoesNotFireSearchChanged()
+    {
+        var (box, _) = Create(string.Empty);
+        var calls = 0;
+        box.SearchChanged += (_, _) => calls++;
+
+        box.Clear();
+
+        Assert.AreEqual(0, calls);
+    }
+
+    [TestMethod]
     public async Task Escape_ReturnsHandledTrue()
     {
         var (box, _) = Create();

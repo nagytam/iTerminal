@@ -25,6 +25,39 @@ public class NumericUpDownTest
         return control;
     }
 
+    [TestMethod]
+    public void KeyHints_ListDeleteKeysAndOmitSignWhenNoNegatives()
+    {
+        var keys = CreateControl().GetKeyHints().Select(h => h.Key).ToList();
+
+        CollectionAssert.Contains(keys, "Backspace");
+        CollectionAssert.Contains(keys, "Delete");
+        CollectionAssert.DoesNotContain(keys, "-");
+    }
+
+    [TestMethod]
+    public void KeyHints_ListSignFlipWhenRangeAllowsNegatives()
+    {
+        var control = CreateControl();
+        control.Minimum = -10;
+
+        var hints = control.GetKeyHints().ToList();
+
+        Assert.AreEqual("Flip the sign", hints.Single(h => h.Key == "-").Description);
+    }
+
+    [TestMethod]
+    public void KeyHints_EmptyWhenReadOnlyOrDisabled()
+    {
+        var readOnly = CreateControl();
+        readOnly.IsReadOnly = true;
+        var disabled = CreateControl();
+        disabled.IsEnabled = false;
+
+        Assert.AreEqual(0, readOnly.GetKeyHints().Count());
+        Assert.AreEqual(0, disabled.GetKeyHints().Count());
+    }
+
     /// <summary>A key the focused control declines is offered to every control; an unfocused spinner must let it pass.</summary>
     [TestMethod]
     public async Task AnUnfocusedSpinnerIgnoresTheArrows()

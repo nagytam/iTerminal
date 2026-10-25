@@ -97,7 +97,13 @@ public class TimePicker : Control, IReadOnly
     /// <summary>Steps field <paramref name="field"/> by <paramref name="delta"/>, wrapping within its range.</summary>
     public static int Wrap(int value, int delta, int max) => ((value + delta) % (max + 1) + max + 1) % (max + 1);
 
-    private void Step(int delta) => Set(_field, Wrap(Get(_field), delta, MaxOf(_field)));
+    private void Step(int delta)
+    {
+        Set(_field, Wrap(Get(_field), delta, MaxOf(_field)));
+
+        // A stepped value is the start of a new entry: a digit typed next must not join onto it.
+        _typed = 0;
+    }
 
     private void MoveField(int field)
     {

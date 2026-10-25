@@ -54,6 +54,16 @@ public class RadioButton : Control, IReadOnly
     /// <summary>Raised when the user picks this option (click or Space), before exclusivity is applied.</summary>
     public event EventHandler? SelectRequested;
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (IsReadOnly || !IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Space", "Select this option");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         var isHandled = await base.HandleKeyEventAsync(keyEvent);

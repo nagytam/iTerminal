@@ -90,7 +90,7 @@ public class Toolbar : Control
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        if (_items.Count == 0)
+        if (_items.Count == 0 || !IsEnabled)
         {
             yield break;
         }
