@@ -35,7 +35,8 @@ public class FileMenuItem : MenuItem
         SecureWipeDialog? secureWipeDialog = null,
         SignatureDialog? signatureDialog = null,
         iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
-        INotificationService? notificationService = null)
+        INotificationService? notificationService = null,
+        EditLinkDialog? editLinkDialog = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
@@ -58,6 +59,10 @@ public class FileMenuItem : MenuItem
         if (createLinkDialog is not null)
         {
             AddMenuItem(new MenuItem("Create Link\tCtrl+L", new CreateLinkDialogCommand(createLinkDialog, contentModelService), [], themeService));
+        }
+        if (editLinkDialog is not null)
+        {
+            AddMenuItem(new MenuItem("Edit Link\tCtrl+Shift+L", new EditLinkDialogCommand(editLinkDialog, contentModelService), [], themeService));
         }
         if (compressDialog is not null)
         {
