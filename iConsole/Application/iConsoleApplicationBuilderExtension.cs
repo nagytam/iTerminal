@@ -94,6 +94,10 @@ public static class iConsoleApplicationBuilderExtension
         // screen's root draws them. Posting needs only the service.
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<IJob, NotificationJob>();
+        // The main-loop watchdog times key handlers and render passes (the 200 ms budget). It is one instance, offered as a job
+        // and to the loops it watches.
+        services.AddSingleton<MainLoopWatchDog>();
+        services.AddSingleton<IJob>(provider => provider.GetRequiredService<MainLoopWatchDog>());
         services.AddTransient<ToastHost>();
         // Tooltips: the input consumer reports the pointer to the service, and a ToolTipHost on the screen's root shows
         // the tip for the control under it. Time comes from ITimeProvider, so tests can move past the delay.
