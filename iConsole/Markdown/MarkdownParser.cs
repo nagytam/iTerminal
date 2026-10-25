@@ -35,7 +35,8 @@ public static partial class MarkdownParser
 
             if (inFence)
             {
-                blocks.Add(new MarkdownBlock(MarkdownBlockKind.Code, [new MarkdownSpan(raw.TrimEnd(), MarkdownStyle.Code)]));
+                // A tab would jump to the next stop on screen, not one cell, so the row would no longer match the layout's width.
+                blocks.Add(new MarkdownBlock(MarkdownBlockKind.Code, [new MarkdownSpan(raw.Replace("\t", "    ").TrimEnd(), MarkdownStyle.Code)]));
                 continue;
             }
 

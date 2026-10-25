@@ -25,6 +25,9 @@ public class ToolTipHost : Control
     private long _targetSinceMilliseconds;
     private Popup? _tip;
 
+    // The text the open tip was built from, so a change to the target's text can be seen and the tip rebuilt.
+    private string? _shownText;
+
     public ToolTipHost(IToolTipService toolTipService, ITimeProvider timeProvider, IThemeService themeService) : base(themeService)
     {
         _toolTipService = toolTipService;
@@ -66,7 +69,14 @@ public class ToolTipHost : Control
             }
         }
 
-        if (_target is null || _tip is not null || !_target.IsParentVisible())
+        // The text can change while its tip is on screen: the stale tip comes down and the delay starts again for the new text.
+        if (_tip is not null && _target is not null && _shownText != _target.ToolTipText)
+        {
+            HideTip();
+            _targetSinceMilliseconds = _timeProvider.MonotonicMilliseconds;
+        }
+
+        if (_target is null || _tip is not null || string.IsNullOrEmpty(_target.ToolTipText) || !_target.IsParentVisible())
         {
             return;
         }
@@ -110,19 +120,34 @@ public class ToolTipHost : Control
         var root = GetRootControl();
         // One line of text inside a border; wider than the screen, it is cut at the edge rather than wrapped.
         var width = (long)Math.Min(text.Length + 2, Math.Max(3, root.ViewSize.Width));
+        const long height = 3;
         var tip = new Popup(ThemeService)
         {
             HasBorder = true,
             Modal = false,
             CloseOnOutsideClick = false,
             CloseOnEscape = false,
-            ViewSize = new Size(width, 3),
+            ViewSize = new Size(width, height),
         };
         tip.SetContent(new Label(text, ThemeService));
         _tip = tip;
+        _shownText = target.ToolTipText;
 
-        // The tip sits just below and to the right of the pointer, so the pointer never covers the text.
-        _ = tip.ShowAtAsync(target, new Position(pointer.X + 1, pointer.Y + 1));
+        // Just below and to the right of the pointer, so the pointer never covers the text. Where that runs off the screen the
+        // tip turns to the left of the pointer or above it: Popup would only pull it back on screen, over the pointer.
+        long x = pointer.X + 1;
+        if (x + width > root.ViewSize.Width)
+        {
+            x = pointer.X - width;
+        }
+
+        long y = pointer.Y + 1;
+        if (y + height > root.ViewSize.Height)
+        {
+            y = pointer.Y - height;
+        }
+
+        _ = tip.ShowAtAsync(target, new Position(Math.Max(0, x), Math.Max(0, y)));
     }
 
     private void HideTip()
@@ -134,6 +159,7 @@ public class ToolTipHost : Control
 
         var tip = _tip;
         _tip = null;
+        _shownText = null;
         tip.Close();
     }
 }

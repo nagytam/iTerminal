@@ -45,6 +45,29 @@ public class MarkdownViewerControlTest
     }
 
     [TestMethod]
+    public void KeyHints_ListTheScrollKeysOnlyForADocument()
+    {
+        var (_, viewer) = Create(5, Document(20));
+        var keys = viewer.GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.AreEqual(new[] { "Up/Down", "PageUp/PageDown", "Home/End" }, keys);
+
+        viewer.Markdown = string.Empty;
+        Assert.AreEqual(0, viewer.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public async Task Click_TakesTheFocusSoTheArrowKeysScroll()
+    {
+        var viewer = new MarkdownViewerControl(_theme) { Position = new Position(0, 0), ViewSize = new Size(30, 5) };
+        viewer.Markdown = Document(20);
+        Assert.IsFalse(viewer.IsFocused);
+
+        await viewer.HandleMouseEventAsync(new MouseEvent { Position = new Position(3, 2), LeftClicked = true });
+
+        Assert.IsTrue(viewer.IsFocused);
+    }
+
+    [TestMethod]
     public async Task Keys_AreIgnored_WhenNotFocused()
     {
         var (root, viewer) = Create(5, Document(20));

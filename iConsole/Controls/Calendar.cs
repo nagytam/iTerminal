@@ -284,7 +284,13 @@ public class Calendar : Control, IReadOnly
             DateOnly day = CellDate(row - 2, gridColumn / 3);
             if (ShowAdjacentDays || day.Month == _selected.Month)
             {
+                // A click on the day that is already chosen chooses it, as a second click on a table's cursor row activates it.
+                bool wasSelected = day == _selected;
                 SelectedDate = day;
+                if (wasSelected)
+                {
+                    DateActivated?.Invoke(this, day);
+                }
             }
         }
 

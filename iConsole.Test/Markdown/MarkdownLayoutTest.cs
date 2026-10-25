@@ -52,4 +52,22 @@ public class MarkdownLayoutTest
     {
         CollectionAssert.AreEqual(new[] { "│ one two", "│ three" }, Rows("> one two three", 9));
     }
+
+    [TestMethod]
+    public void FencedCode_LinesStayTogetherWithoutBlankRows()
+    {
+        CollectionAssert.AreEqual(new[] { "a", "b", "c" }, Rows("```\na\nb\nc\n```", 10));
+    }
+
+    [TestMethod]
+    public void Quote_LinesStayTogetherWithoutBlankRows()
+    {
+        CollectionAssert.AreEqual(new[] { "│ one", "│ two" }, Rows("> one\n> two", 20));
+    }
+
+    [TestMethod]
+    public void BlockAfterCode_IsStillSeparatedByABlankRow()
+    {
+        CollectionAssert.AreEqual(new[] { "a", string.Empty, "text" }, Rows("```\na\n```\n\ntext", 20));
+    }
 }
