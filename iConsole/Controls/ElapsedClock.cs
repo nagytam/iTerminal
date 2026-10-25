@@ -92,6 +92,17 @@ public class ElapsedClock : Control
         base.OnIdle();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Space", IsRunning ? "Stop the clock" : "Start the clock");
+        yield return ("R", "Reset the clock to zero");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool isHandled = await base.HandleKeyEventAsync(keyEvent);

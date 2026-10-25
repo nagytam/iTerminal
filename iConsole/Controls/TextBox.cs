@@ -450,12 +450,23 @@ public class TextBox : Control, IReadOnly
         yield return ("Left/Right", "Move the cursor");
         yield return ("Home/End", "Start or end of the text");
         yield return ("Ctrl+Left/Right", "Move by a word");
+        yield return ("Ctrl+A", "Select all");
+        if (AllowsCopyOut)
+        {
+            yield return ("Ctrl+C", "Copy the selection");
+        }
+
         if (!IsReadOnly)
         {
             yield return ("Backspace/Delete", "Delete a character");
             yield return ("Ctrl+W/Ctrl+Backspace", "Delete the word before the cursor");
             yield return ("Ctrl+Delete", "Delete the word after the cursor");
             yield return ("Ctrl+U", "Delete to the start of the text");
+            yield return ("Ctrl+V", "Paste");
+            if (AllowsCopyOut)
+            {
+                yield return ("Ctrl+X", "Cut the selection");
+            }
         }
     }
 

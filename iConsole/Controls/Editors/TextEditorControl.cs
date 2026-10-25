@@ -637,18 +637,29 @@ public class TextEditorControl
         }
     }
 
-    public override IEnumerable<(string Key, string Description)> GetKeyHints() =>
-    [
-        ("Ctrl+Z", "Undo"),
-        ("Ctrl+Y", "Redo"),
-        ("Ctrl+R", "Replace"),
-        ("Tab / Shift+Tab", "Indent / outdent (the selected lines too)"),
-        ("Ctrl+S / F2", "Save"),
-        ("F5", "Go to line"),
-        ("Ctrl+F2", "Toggle bookmark"),
-        ("F9", "Next bookmark"),
-        ("Shift+F9", "Previous bookmark"),
-    ];
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Ctrl+A", "Select all");
+        yield return ("Ctrl+C", "Copy the selection");
+
+        // A read-only editor refuses the changes to the text, so only the keys that move about, copy or save are offered.
+        if (!IsReadOnly)
+        {
+            yield return ("Ctrl+X", "Cut the selection");
+            yield return ("Ctrl+V", "Paste");
+            yield return ("Ctrl+Z", "Undo");
+            yield return ("Ctrl+Y", "Redo");
+            yield return ("Ctrl+R", "Replace");
+            yield return ("Tab / Shift+Tab", "Indent / outdent (the selected lines too)");
+            yield return ("Ctrl+K", "Delete the line");
+        }
+
+        yield return ("Ctrl+S / F2", "Save");
+        yield return ("F5", "Go to line");
+        yield return ("Ctrl+F2", "Toggle bookmark");
+        yield return ("F9", "Next bookmark");
+        yield return ("Shift+F9", "Previous bookmark");
+    }
 
     /// <summary>
     /// Undo and redo (Ctrl+Z, Ctrl+Y or Ctrl+Shift+Z), the bookmark keys (Ctrl+F2 sets or clears one, F9 and

@@ -160,6 +160,16 @@ public class Button : Control
         await RunFirstCommandAsync();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
+        yield return ("Space", "Press the button");
+    }
+
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         var isHandled = await base.HandleMouseEventAsync(mouseEvent);

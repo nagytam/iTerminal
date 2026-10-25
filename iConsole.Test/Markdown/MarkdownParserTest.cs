@@ -60,6 +60,27 @@ public class MarkdownParserTest
     }
 
     [TestMethod]
+    public void TildeFence_IsCode()
+    {
+        var blocks = MarkdownParser.Parse("~~~\nline\n~~~");
+
+        Assert.AreEqual(1, blocks.Count);
+        Assert.AreEqual(MarkdownBlockKind.Code, blocks[0].Kind);
+        Assert.AreEqual("line", Text(blocks[0]));
+    }
+
+    [TestMethod]
+    public void Fence_ClosesOnlyWithItsOwnMarker()
+    {
+        var blocks = MarkdownParser.Parse("```\n~~~\nstill code\n```\n\nafter");
+
+        Assert.AreEqual(3, blocks.Count);
+        Assert.AreEqual("~~~", Text(blocks[0]));
+        Assert.AreEqual("still code", Text(blocks[1]));
+        Assert.AreEqual(MarkdownBlockKind.Paragraph, blocks[2].Kind);
+    }
+
+    [TestMethod]
     public void FencedCode_TabsBecomeSpaces()
     {
         var blocks = MarkdownParser.Parse("```\n\tif (x)\n```");

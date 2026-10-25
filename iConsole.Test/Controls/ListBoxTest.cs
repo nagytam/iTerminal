@@ -39,7 +39,7 @@ public class ListBoxTest
 
         var keys = listBox.GetKeyHints().Select(h => h.Key).ToList();
 
-        CollectionAssert.AreEqual(new[] { "Up/Down", "PageUp/PageDown", "Home/End", "Enter" }, keys);
+        CollectionAssert.AreEqual(new[] { "Up/Down", "PageUp/PageDown", "Home/End", "Enter", "Insert" }, keys);
     }
 
     [TestMethod]

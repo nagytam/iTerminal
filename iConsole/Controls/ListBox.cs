@@ -134,6 +134,7 @@ public class ListBox<T> : Control
         yield return ("PageUp/PageDown", "Move the cursor by a page");
         yield return ("Home/End", "First or last item");
         yield return ("Enter", "Select the item under the cursor");
+        yield return ("Insert", "Mark or unmark the item under the cursor");
         if (EnableTypeAhead)
         {
             yield return ("Letters", "Jump to the next item that starts with them");
