@@ -123,7 +123,7 @@ public class ControlsReviewBatch14Test
         MockBuffer buffer = new(new Size(12, 1));
         meter.Draw(buffer);
         string line = FirstLine(buffer);
-        Assert.AreEqual("Memory ████", line.TrimEnd());
+        Assert.AreEqual("Memory █████", line.TrimEnd());
     }
 
     [TestMethod]
