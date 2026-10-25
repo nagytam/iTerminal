@@ -39,12 +39,24 @@ public class SearchBox : TextBox
         AddCommand(new ClearSearchCommand());
     }
 
-    /// <summary>Resets the query to empty and fires <see cref="Cleared"/>.</summary>
+    // Set while a key is being handled: the key reports its own change once it has finished, so Clear (run by Escape) stays quiet.
+    private bool _isHandlingKey;
+
+    /// <summary>
+    /// Resets the query to empty, fires <see cref="SearchChanged"/> if that changed it, and then fires <see cref="Cleared"/>.
+    /// A caller outside a key press, such as a host that empties the box itself, gets the change reported here.
+    /// </summary>
     public void Clear()
     {
+        var before = Text;
         Text = string.Empty;
         ScrollableModel.CursorPosition.X = 0;
         ScrollableModel.ScrollPosition.X = 0;
+        if (!_isHandlingKey && Text != before)
+        {
+            SearchChanged?.Invoke(this, Text);
+        }
+
         Cleared?.Invoke(this, EventArgs.Empty);
     }
 
@@ -65,7 +77,17 @@ public class SearchBox : TextBox
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         var before = Text;
-        var handled = await base.HandleKeyEventAsync(keyEvent);
+        bool handled;
+        _isHandlingKey = true;
+        try
+        {
+            handled = await base.HandleKeyEventAsync(keyEvent);
+        }
+        finally
+        {
+            _isHandlingKey = false;
+        }
+
         if (!handled && IsFocused && IsEnabled && keyEvent.ConsoleKey == ConsoleKey.Enter && Submitted is not null)
         {
             Submitted.Invoke(this, Text);

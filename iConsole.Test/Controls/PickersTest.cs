@@ -48,6 +48,20 @@ public class PickersTest
     }
 
     [TestMethod]
+    public async Task TimePicker_DigitAfterArrowStep_StartsANewEntry()
+    {
+        TimePicker picker = new(Theme()) { Value = new TimeOnly(0, 0), Position = new Position(0, 0), ViewSize = new Size(10, 1) };
+        picker.SetFocus();
+
+        await picker.HandleKeyEventAsync(new KeyEvent('1', ConsoleKey.D1, false, false, false));
+        await picker.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.UpArrow, false, false, false));
+        await picker.HandleKeyEventAsync(new KeyEvent('1', ConsoleKey.D1, false, false, false));
+
+        // Typing 1, stepping to 2, then typing 1 gives hour 1; joining the digit onto the stepped 2 would give 21.
+        Assert.AreEqual(1, picker.Value.Hour);
+    }
+
+    [TestMethod]
     public async Task TimePicker_UpDown_StepsActiveFieldWithWrap()
     {
         TimePicker picker = new(Theme()) { Value = new TimeOnly(23, 0) };

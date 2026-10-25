@@ -1165,9 +1165,31 @@ public class ControlInteractionTest
     [TestMethod]
     public void Expander_KeyHints_NameEveryToggleKey()
     {
-        var keys = NewExpander().GetKeyHints().Select(h => h.Key).ToList();
+        var hints = NewExpander().GetKeyHints().ToList();
 
-        CollectionAssert.AreEquivalent(new[] { "Enter/Space", "Right/Left", "+/-" }, keys);
+        CollectionAssert.AreEquivalent(new[] { "Enter/Space", "Right", "Left", "+/-" }, hints.Select(h => h.Key).ToList());
+        Assert.AreEqual("Expand the section", hints.Single(h => h.Key == "Right").Description);
+        Assert.AreEqual("Collapse the section", hints.Single(h => h.Key == "Left").Description);
+    }
+
+    [TestMethod]
+    public void Expander_KeyHints_EmptyWhenDisabled()
+    {
+        var expander = NewExpander();
+        expander.IsEnabled = false;
+
+        Assert.AreEqual(0, expander.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public void Toolbar_KeyHints_EmptyWhenDisabled()
+    {
+        Toolbar toolbar = new(Theme()) { Position = new Position(0, 0), ViewSize = new Size(40, 1), Items = [new ToolbarItem("Open")] };
+        Assert.IsTrue(toolbar.GetKeyHints().Any());
+
+        toolbar.IsEnabled = false;
+
+        Assert.AreEqual(0, toolbar.GetKeyHints().Count());
     }
 
     [TestMethod]

@@ -71,6 +71,33 @@ public class PagerRatingAndMouseTest
     }
 
     [TestMethod]
+    public void Pagination_Draw_ShortensCaptionToKeepArrowsOnNarrowRow()
+    {
+        MockBuffer buffer = new(new Size(7, 1));
+        new Pagination(Theme()) { PageSize = 10, TotalItems = 30, Position = new Position(0, 0), ViewSize = new Size(7, 1) }.Draw(buffer);
+        Assert.AreEqual("‹ 1/3 ›", buffer.ContentAsString.Split(Environment.NewLine)[0].TrimEnd());
+    }
+
+    [TestMethod]
+    public void Pagination_Draw_KeepsRightArrowWhenVeryNarrow()
+    {
+        MockBuffer buffer = new(new Size(6, 1));
+        new Pagination(Theme()) { PageSize = 10, TotalItems = 30, Position = new Position(0, 0), ViewSize = new Size(6, 1) }.Draw(buffer);
+        Assert.AreEqual("‹ 1/ ›", buffer.ContentAsString.Split(Environment.NewLine)[0].TrimEnd());
+    }
+
+    [TestMethod]
+    public async Task Pagination_ClickRightArrowOfNarrowPager_TurnsThePage()
+    {
+        Pagination pager = new(Theme()) { PageSize = 10, TotalItems = 30, Position = new Position(0, 0), ViewSize = new Size(7, 1) };
+
+        // The arrow sits at column 6 of "‹ 1/3 ›", where it is drawn, not after the full caption.
+        await pager.HandleMouseEventAsync(Click(6, 0));
+
+        Assert.AreEqual(1, pager.Page);
+    }
+
+    [TestMethod]
     public async Task Rating_ClickStar_SetsValueAndClickAgainClears()
     {
         Rating rating = new(Theme()) { Position = new Position(0, 0) };

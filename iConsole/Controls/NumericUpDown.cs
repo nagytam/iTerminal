@@ -122,6 +122,13 @@ public class NumericUpDown : Control, IReadOnly
         yield return ("PageUp/PageDown", "Step the value by a large amount");
         yield return ("Home/End", "Set the minimum or maximum");
         yield return ("0-9", "Type the value");
+        if (_minimum < 0)
+        {
+            yield return ("-", "Flip the sign");
+        }
+
+        yield return ("Backspace", "Remove the last digit");
+        yield return ("Delete", "Set the value to 0");
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

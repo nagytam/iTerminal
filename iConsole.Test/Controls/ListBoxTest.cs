@@ -33,6 +33,38 @@ public class ListBoxTest
     }
 
     [TestMethod]
+    public void KeyHints_ListNavigationAndSelectWhenItemsExist()
+    {
+        var listBox = CreateListBox(CreateTheme().Object, ["Alpha", "Beta"], new Size(20, 3));
+
+        var keys = listBox.GetKeyHints().Select(h => h.Key).ToList();
+
+        CollectionAssert.AreEqual(new[] { "Up/Down", "PageUp/PageDown", "Home/End", "Enter" }, keys);
+    }
+
+    [TestMethod]
+    public void KeyHints_ListTypeAheadOnlyWhenEnabled()
+    {
+        var listBox = CreateListBox(CreateTheme().Object, ["Alpha"], new Size(20, 3));
+        Assert.IsFalse(listBox.GetKeyHints().Any(h => h.Key == "Letters"));
+
+        listBox.EnableTypeAhead = true;
+
+        Assert.IsTrue(listBox.GetKeyHints().Any(h => h.Key == "Letters"));
+    }
+
+    [TestMethod]
+    public void KeyHints_EmptyWithoutItemsOrWhenDisabled()
+    {
+        var empty = CreateListBox(CreateTheme().Object, [], new Size(20, 3));
+        Assert.AreEqual(0, empty.GetKeyHints().Count());
+
+        var disabled = CreateListBox(CreateTheme().Object, ["Alpha"], new Size(20, 3));
+        disabled.IsEnabled = false;
+        Assert.AreEqual(0, disabled.GetKeyHints().Count());
+    }
+
+    [TestMethod]
     public void Draw_SingleItem_RendersItem()
     {
         var theme = CreateTheme();
