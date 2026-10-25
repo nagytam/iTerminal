@@ -497,6 +497,78 @@ public static class SandboxServices
         }
     }
     /// <summary>
+    /// An access control list kept in memory: no test changes who may open a file of the machine running the suite.
+    /// It starts every entry with the owner and Users, and keeps what the dialog writes for the rest of the run.
+    /// </summary>
+    public sealed class AccessControl : Core.Services.AccessControl.IAccessControlService
+    {
+        private static readonly string[] PresetNames = ["Full control", "Modify", "Read & execute", "Read", "Write"];
+        private readonly Lock _lock = new();
+        private readonly Dictionary<string, List<Core.Services.AccessControl.AclEntry>> _lists = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, string> _owners = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, bool> _inherit = new(StringComparer.OrdinalIgnoreCase);
+
+        public Core.Services.AccessControl.AclInfo Read(string path)
+        {
+            lock (_lock)
+            {
+                var full = Path.GetFullPath(path);
+                if (!_lists.TryGetValue(full, out var list))
+                {
+                    list =
+                    [
+                        new("SANDBOX\\Users", Core.Services.AccessControl.AclKind.Allow, "Read & execute", true, true),
+                        new("SANDBOX\\Owner", Core.Services.AccessControl.AclKind.Allow, "Full control", true, false),
+                    ];
+                    _lists[full] = list;
+                }
+
+                return new Core.Services.AccessControl.AclInfo(full, Directory.Exists(full), _owners.GetValueOrDefault(full, "SANDBOX\\Owner"), null,
+                    [.. list], _inherit.GetValueOrDefault(full, true), true, true, true, PresetNames);
+            }
+        }
+
+        public void Set(string path, string principal, Core.Services.AccessControl.AclKind kind, string preset, bool inheritToChildren)
+        {
+            lock (_lock)
+            {
+                Read(path);
+                var list = _lists[Path.GetFullPath(path)];
+                list.RemoveAll(e => !e.Inherited && e.Kind == kind && string.Equals(e.Principal, principal, StringComparison.OrdinalIgnoreCase));
+                list.Insert(0, new Core.Services.AccessControl.AclEntry(principal, kind, preset, true, false));
+            }
+        }
+
+        public void Remove(string path, string principal, Core.Services.AccessControl.AclKind kind)
+        {
+            lock (_lock)
+            {
+                Read(path);
+                _lists[Path.GetFullPath(path)].RemoveAll(e => !e.Inherited && e.Kind == kind && string.Equals(e.Principal, principal, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        public void SetInheritance(string path, bool inherit)
+        {
+            lock (_lock)
+            {
+                _inherit[Path.GetFullPath(path)] = inherit;
+            }
+        }
+
+        public void SetOwner(string path, string? owner, string? group)
+        {
+            lock (_lock)
+            {
+                if (!string.IsNullOrWhiteSpace(owner))
+                {
+                    _owners[Path.GetFullPath(path)] = owner;
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Does nothing to a drive: records what was asked. A test that pressed E in the disk manager
     /// would otherwise eject a real drive of the machine running the suite.
     /// </summary>

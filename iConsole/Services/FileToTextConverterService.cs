@@ -299,8 +299,8 @@ public class FileToTextConverterService : IFileToTextConverterService
         {
             memoryString = TextEncodings.Decode(memoryFile.Content, out var encoding);
             textModel.Encoding = encoding;
-            memoryString = memoryString.ReplaceLineEndings();
-            lines = memoryString.Split(Environment.NewLine);
+            textModel.LineEnding = LineEndings.Detect(memoryString);
+            lines = LineEndings.Split(memoryString);
             foreach (var line in lines)
             {
                 textModel.Lines.Add(line);

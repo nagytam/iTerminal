@@ -295,6 +295,12 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();
+        services.AddSingleton<iTerminal.Core.Services.AccessControl.IAccessControlService>(provider =>
+            OperatingSystem.IsWindows()
+                ? new iTerminal.Core.Services.AccessControl.WindowsAccessControlService()
+                : new iTerminal.Core.Services.AccessControl.UnixAccessControlService(
+                    provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>()));
+        services.AddTransient<AccessControlDialog>();
         services.AddTransient<PropertiesDialog>();
         services.AddTransient<ChecksumDialog>();
         // Ctrl+Shift+F8 secure wipe, Ctrl+Shift+F7 signatures, Ctrl+Shift+F6 duplicates (sign and verify).

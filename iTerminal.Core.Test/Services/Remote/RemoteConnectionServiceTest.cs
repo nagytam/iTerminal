@@ -9,6 +9,103 @@ public class RemoteConnectionServiceTest
 {
     private static RemoteConnectionService CreateService(SettingsService? settings = null) => new(settings ?? new SettingsService());
 
+    private static RemoteConnection FtpEntry() => new()
+    {
+        Name = "files", Protocol = RemoteProtocol.Ftp, Host = "ftp.example.com", Port = 2121, Username = "alice",
+    };
+
+    [TestMethod]
+    public void AnFtpEntryRecordsTheLoginTheDriveLooksFor()
+    {
+        var settings = new SettingsService();
+        var profiles = new NetworkProfileService(settings);
+        var passwords = new Moq.Mock<IPasswordManager>();
+        passwords.SetupGet(p => p.IsUnlocked).Returns(true);
+        var service = new RemoteConnectionService(settings, profiles, passwords.Object);
+        var entry = FtpEntry();
+
+        service.Save(entry, "s3cret");
+
+        var profile = profiles.Get(entry.Id)!;
+        Assert.AreEqual(iTerminal.Core.Model.Network.NetworkProtocol.Ftp, profile.Protocol);
+        Assert.AreEqual("ftp.example.com:2121", profile.Host); // as Url.Host reads it: the port rides along
+        Assert.AreEqual("alice", profile.Username);
+        Assert.IsTrue(profile.HasSavedCredential);
+        Assert.IsTrue(service.Get(entry.Id)!.HasSavedCredential);
+        passwords.Verify(p => p.Save(Moq.It.Is<iTerminal.Core.Model.Passwords.PasswordEntry>(e => e.Id == entry.Id && e.Password == "s3cret")), Moq.Times.Once);
+    }
+
+    [TestMethod]
+    public void ASecondSaveWithoutAPasswordKeepsTheOneSaved()
+    {
+        var settings = new SettingsService();
+        var passwords = new Moq.Mock<IPasswordManager>();
+        passwords.SetupGet(p => p.IsUnlocked).Returns(true);
+        var service = new RemoteConnectionService(settings, new NetworkProfileService(settings), passwords.Object);
+        var entry = FtpEntry();
+        service.Save(entry, "s3cret");
+
+        var edited = service.Get(entry.Id)!;
+        edited.Notes = "renamed";
+        service.Save(edited, string.Empty);
+
+        Assert.IsTrue(service.Get(entry.Id)!.HasSavedCredential);
+        passwords.Verify(p => p.Save(Moq.It.IsAny<iTerminal.Core.Model.Passwords.PasswordEntry>()), Moq.Times.Once);
+    }
+
+    [TestMethod]
+    public void ALockedPasswordManagerRefusesTheSaveAndNothingIsRecorded()
+    {
+        var settings = new SettingsService();
+        var profiles = new NetworkProfileService(settings);
+        var passwords = new Moq.Mock<IPasswordManager>();
+        passwords.SetupGet(p => p.IsUnlocked).Returns(false);
+        passwords.Setup(p => p.Unlock()).Returns(false);
+        var service = new RemoteConnectionService(settings, profiles, passwords.Object);
+
+        Assert.ThrowsExactly<InvalidOperationException>(() => service.Save(FtpEntry(), "s3cret"));
+
+        Assert.AreEqual(0, service.GetAll().Count);
+        Assert.AreEqual(0, profiles.GetAll().Count);
+    }
+
+    [TestMethod]
+    public void DeletingAnFtpEntryRemovesItsProfileAndPassword()
+    {
+        var settings = new SettingsService();
+        var profiles = new NetworkProfileService(settings);
+        var passwords = new Moq.Mock<IPasswordManager>();
+        passwords.SetupGet(p => p.IsUnlocked).Returns(true);
+        var service = new RemoteConnectionService(settings, profiles, passwords.Object);
+        var entry = FtpEntry();
+        service.Save(entry, "s3cret");
+
+        service.Delete(entry.Id);
+
+        Assert.AreEqual(0, profiles.GetAll().Count);
+        passwords.Verify(p => p.DeleteSecret(entry.Id), Moq.Times.Once);
+    }
+
+    [TestMethod]
+    public void ChangingAnFtpEntryIntoSshDropsItsLogin()
+    {
+        var settings = new SettingsService();
+        var profiles = new NetworkProfileService(settings);
+        var passwords = new Moq.Mock<IPasswordManager>();
+        passwords.SetupGet(p => p.IsUnlocked).Returns(true);
+        var service = new RemoteConnectionService(settings, profiles, passwords.Object);
+        var entry = FtpEntry();
+        service.Save(entry, "s3cret");
+
+        var changed = service.Get(entry.Id)!;
+        changed.Protocol = RemoteProtocol.Ssh;
+        service.Save(changed, "ignored");
+
+        Assert.AreEqual(0, profiles.GetAll().Count);
+        Assert.IsFalse(service.Get(entry.Id)!.HasSavedCredential);
+        passwords.Verify(p => p.DeleteSecret(entry.Id), Moq.Times.Once);
+    }
+
     [TestMethod]
     public void NothingIsSavedAtFirst()
     {

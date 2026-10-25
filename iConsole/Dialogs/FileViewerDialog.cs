@@ -65,6 +65,9 @@ public class FileViewerDialog : Dialog
         _hexMode = false;
         _hexViewer.IsVisible = false;
         _textViewerControl.IsVisible = true;
+        // The dialog gave the focus to its first focusable child while laying out, and that was the hex dump: hidden, but
+        // first in line for every key, so Down, PageDown, End and the like all went to a view nobody could see.
+        _hexViewer.ResetFocus();
     }
 
     /// <summary>Switches between the text view and the hex dump of the file's raw bytes.</summary>
@@ -89,9 +92,10 @@ public class FileViewerDialog : Dialog
         }
         else
         {
-            _textViewerControl.SetFocus();
+            // The text view cannot take the focus; what matters is that the hidden hex dump no longer holds it.
+            _hexViewer.ResetFocus();
         }
-        Title = (Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer")
+        Title =(Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "Viewer")
             + (_hexMode ? HexHints() : TextHints());
         StateHasChanged();
     }
@@ -233,6 +237,18 @@ public class FileViewerDialog : Dialog
         _statusBar.ViewSize = new(ViewSize.Width - 3, 1);
 
         base.OnInitializeLayout();
+
+        // The base layout hands the focus to the first focusable child, which is the hex dump — hidden, yet first in line for every
+        // key. The control that is on screen is the one that takes them.
+        if (_hexMode)
+        {
+            _hexViewer.SetFocus();
+        }
+        else
+        {
+            // Only the hex dump can take the focus, and the base layout gave it; the text view reads keys as an unfocused child's.
+            _hexViewer.ResetFocus();
+        }
 
         Layout.Center(this);
     }

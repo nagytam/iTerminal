@@ -12,12 +12,15 @@ using iTerminal.Core.Services.Shell;
 namespace iTerminal.Core.Dialogs.Remote;
 
 /// <summary>
-/// The remote connections: SSH hosts and PowerShell remoting targets, saved by name. Enter hands the whole
-/// terminal to the session (<see cref="IInteractiveShellService"/>) — a real <c>ssh</c> or
-/// <c>Enter-PSSession</c> with its prompt, colours and Ctrl+C — and <c>exit</c> comes back here. B opens an
-/// SSH host in the active panel as an SFTP drive. N adds, E edits and D removes (after a y).
+/// The remote connections: SSH hosts, PowerShell remoting targets, FTP servers and WebDAV servers, saved by
+/// name. Enter hands the whole terminal to an SSH or PowerShell session (<see cref="IInteractiveShellService"/>) —
+/// a real <c>ssh</c> or <c>Enter-PSSession</c> with its prompt, colours and Ctrl+C — and <c>exit</c> comes back
+/// here. B opens an SSH host in the active panel as an SFTP drive; for an FTP or WebDAV entry, which has no
+/// shell, Enter and B both open its drive. N adds, E edits and D removes (after a y).
 ///
-/// <para>Passwords are never stored: the session asks for them on the terminal it was lent.</para>
+/// <para>A shell's password is never stored: the session asks for it on the terminal it was lent. An FTP or
+/// WebDAV password has no such terminal, so it goes to the password manager (see
+/// <see cref="IRemoteConnectionService.Save(RemoteConnection, string?)"/>) under the entry's id — where the drives find it.</para>
 /// </summary>
 public class RemoteConnectionManagerDialog : Dialog
 {
@@ -33,6 +36,7 @@ public class RemoteConnectionManagerDialog : Dialog
         Number,
         Protocol,
         Transport,
+        Secret,
     }
 
     private sealed class Field(string label, FieldKind kind, string text = "")
@@ -55,6 +59,8 @@ public class RemoteConnectionManagerDialog : Dialog
     private const int KeyField = 5;
     private const int TransportField = 6;
     private const int NotesField = 7;
+    private const int PasswordField = 8;
+    private const int FolderField = 9;
 
     private readonly IRemoteConnectionService _connections;
     private readonly IInteractiveShellService _shellService;
@@ -71,6 +77,7 @@ public class RemoteConnectionManagerDialog : Dialog
     private int _field;
     private RemoteProtocol _editProtocol;
     private PowerShellTransport _editTransport;
+    private bool _editSecure;
     private RemoteConnection? _editing;
 
     private string _status = string.Empty;
@@ -284,8 +291,27 @@ public class RemoteConnectionManagerDialog : Dialog
             case FieldKind.Protocol:
                 if (IsSpace(keyEvent))
                 {
-                    // The other type's fields keep their text; they are just not used.
-                    _editProtocol = _editProtocol == RemoteProtocol.Ssh ? RemoteProtocol.PowerShell : RemoteProtocol.Ssh;
+                    // The other type's fields keep their text; they are just not used. WebDAV comes twice: HTTP, then HTTPS.
+                    switch (_editProtocol)
+                    {
+                        case RemoteProtocol.Ssh:
+                            _editProtocol = RemoteProtocol.PowerShell;
+                            break;
+                        case RemoteProtocol.PowerShell:
+                            _editProtocol = RemoteProtocol.Ftp;
+                            break;
+                        case RemoteProtocol.Ftp:
+                            _editProtocol = RemoteProtocol.WebDav;
+                            _editSecure = false;
+                            break;
+                        case RemoteProtocol.WebDav when !_editSecure:
+                            _editSecure = true;
+                            break;
+                        default:
+                            _editProtocol = RemoteProtocol.Ssh;
+                            _editSecure = false;
+                            break;
+                    }
                 }
 
                 break;
@@ -385,6 +411,13 @@ public class RemoteConnectionManagerDialog : Dialog
             return;
         }
 
+        if (connection.IsFileDrive)
+        {
+            // No shell behind it: Enter does what B does.
+            Browse();
+            return;
+        }
+
         if (!RemoteShellLaunch.TryCreate(connection, out var launch, out var error) || launch is null)
         {
             SetStatus(error ?? "This connection cannot be started.", true);
@@ -443,9 +476,26 @@ public class RemoteConnectionManagerDialog : Dialog
             return;
         }
 
-        if (connection.Protocol != RemoteProtocol.Ssh)
+        if (connection.IsFileDrive)
         {
-            SetStatus("Only SSH connections can be browsed as a drive.", true);
+            var url = connection.DriveUrl;
+            var id = connection.Id;
+            if (connection.Validate() is { } problem)
+            {
+                SetStatus(problem, true);
+            }
+            else
+            {
+                _connections.MarkConnected(id);
+                Reload();
+                SetStatus($"Opening {connection.Name} in the panel…", false);
+                PendingOperation = Task.Run(() => _contentModelService.SetUrlAsync(url));
+                Close();
+            }
+        }
+        else if (connection.Protocol != RemoteProtocol.Ssh)
+        {
+            SetStatus("Only SSH, FTP and WebDAV connections can be browsed as a drive.", true);
         }
         else if (connection.Port is not null and not 22)
         {
@@ -468,6 +518,7 @@ public class RemoteConnectionManagerDialog : Dialog
         var source = connection ?? new RemoteConnection();
         _editProtocol = source.Protocol;
         _editTransport = source.Transport;
+        _editSecure = source.Secure;
         _fields =
         [
             new Field("Name", FieldKind.Text, source.Name),
@@ -478,6 +529,8 @@ public class RemoteConnectionManagerDialog : Dialog
             new Field("Key file", FieldKind.Text, source.PrivateKeyPath ?? string.Empty),
             new Field("Transport", FieldKind.Transport),
             new Field("Notes", FieldKind.Text, source.Notes ?? string.Empty),
+            new Field("Password", FieldKind.Secret),
+            new Field("Folder", FieldKind.Text, source.RemotePath ?? string.Empty),
         ];
         _field = 0;
         _mode = Mode.Edit;
@@ -495,6 +548,10 @@ public class RemoteConnectionManagerDialog : Dialog
         connection.PrivateKeyPath = NullIfEmpty(_fields[KeyField].Text);
         connection.Transport = _editTransport;
         connection.Notes = NullIfEmpty(_fields[NotesField].Text);
+        connection.Secure = _editProtocol == RemoteProtocol.WebDav && _editSecure;
+        connection.RemotePath = NullIfEmpty(_fields[FolderField].Text);
+        // Only an FTP or WebDAV entry has somewhere to keep a password; the others are asked on the terminal.
+        var password = _editProtocol is RemoteProtocol.Ftp or RemoteProtocol.WebDav ? _fields[PasswordField].Text : null;
 
         var portText = _fields[PortField].Text.Trim();
         if (portText.Length == 0)
@@ -515,7 +572,7 @@ public class RemoteConnectionManagerDialog : Dialog
 
         try
         {
-            _connections.Save(connection);
+            _connections.Save(connection, password);
             _selectedId = connection.Id;
             _mode = Mode.List;
             Reload();
@@ -627,16 +684,16 @@ public class RemoteConnectionManagerDialog : Dialog
     {
         Mode.List => _confirmDelete ? "y delete  any other key cancels"
             : "Enter connect  B browse files  N new  E edit  D delete  Esc close",
-        _ => "Tab field  Space changes type/transport  Enter save  Esc back",
+        _ => "Tab field  Space changes type/transport  Enter/Ctrl+S save  Esc back",
     };
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, $"{_list.Count} saved  ·  passwords are asked for by the session, never stored", Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, $"{_list.Count} saved  ·  a shell asks for its password itself; FTP/WebDAV keep theirs in the password manager", Color.Cyan, colorScheme.Background);
         Put(buffer, 1, 1, iw - 2, "  Type  Name                          Destination", colorScheme.DisabledForeground, colorScheme.Background);
         if (_list.Count == 0)
         {
-            Put(buffer, 1, 2, iw - 2, "Nothing saved yet. N adds an SSH or PowerShell connection.", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 2, iw - 2, "Nothing saved yet. N adds an SSH, PowerShell, FTP or WebDAV connection.", colorScheme.DisabledForeground, colorScheme.Background);
         }
 
         var first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
@@ -666,12 +723,20 @@ public class RemoteConnectionManagerDialog : Dialog
         }
     }
 
-    private static string TypeLabel(RemoteConnection connection) => connection.Protocol == RemoteProtocol.Ssh ? "SSH" : "PS";
+    private static string TypeLabel(RemoteConnection connection) => connection.Protocol switch
+    {
+        RemoteProtocol.Ssh => "SSH",
+        RemoteProtocol.Ftp => "FTP",
+        RemoteProtocol.WebDav => connection.Secure ? "DAVS" : "DAV",
+        _ => "PS",
+    };
 
     private static string DescribeCommand(RemoteConnection connection) =>
-        RemoteShellLaunch.TryCreate(connection, out var launch, out var error) && launch is not null
-            ? Path.GetFileNameWithoutExtension(launch.FileName) + " " + string.Join(' ', launch.Arguments.Select(a => a.Contains(' ') ? $"\"{a}\"" : a))
-            : error ?? string.Empty;
+        connection.IsFileDrive
+            ? "opens " + connection.DriveUrl + (connection.HasSavedCredential ? "  (password saved)" : string.Empty)
+            : RemoteShellLaunch.TryCreate(connection, out var launch, out var error) && launch is not null
+                ? Path.GetFileNameWithoutExtension(launch.FileName) + " " + string.Join(' ', launch.Arguments.Select(a => a.Contains(' ') ? $"\"{a}\"" : a))
+                : error ?? string.Empty;
 
     private void DrawForm(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
@@ -680,28 +745,43 @@ public class RemoteConnectionManagerDialog : Dialog
         {
             var field = _fields[i];
             var focused = i == _field;
+            var fileDrive = _editProtocol is RemoteProtocol.Ftp or RemoteProtocol.WebDav;
             var unused = (i == TransportField && _editProtocol != RemoteProtocol.PowerShell)
-                         || (i == KeyField && !(_editProtocol == RemoteProtocol.Ssh || _editTransport == PowerShellTransport.Ssh));
-            var row = 2 + i * 2;
+                         || (i == KeyField && (fileDrive || !(_editProtocol == RemoteProtocol.Ssh || _editTransport == PowerShellTransport.Ssh)))
+                         || ((i == PasswordField || i == FolderField) && !fileDrive);
+            var row = 2 + i;
             Put(buffer, 1, row, 16, field.Label, focused ? Color.Cyan : colorScheme.DisabledForeground, colorScheme.Background);
             var value = field.Kind switch
             {
-                FieldKind.Protocol => (_editProtocol == RemoteProtocol.Ssh ? "SSH" : "PowerShell remoting") + "  (Space changes)",
+                FieldKind.Protocol => ProtocolLabel() + "  (Space changes)",
                 FieldKind.Transport => _editProtocol == RemoteProtocol.PowerShell
                     ? (_editTransport == PowerShellTransport.WinRm ? "WinRM (Windows)" : "SSH (PowerShell 7)") + "  (Space changes)"
                     : "only for PowerShell",
+                FieldKind.Secret => !fileDrive ? "only for FTP and WebDAV"
+                    : field.Text.Length > 0 ? new string('*', field.Text.Length)
+                    : _editing?.HasSavedCredential == true ? "(saved - type to replace)" : "(none: anonymous or asks nothing)",
                 FieldKind.Number when field.Text.Length == 0 => $"(default {DefaultPortFor()})",
                 _ => field.Text,
             };
-            var editable = field.Kind is FieldKind.Text or FieldKind.Number;
+            var editable = field.Kind is FieldKind.Text or FieldKind.Number or FieldKind.Secret;
             Put(buffer, 17, row, iw - 18, value + (focused && editable ? "_" : string.Empty),
-                unused || (field.Kind == FieldKind.Number && field.Text.Length == 0) ? colorScheme.DisabledForeground : colorScheme.Foreground,
+                unused || (field.Kind == FieldKind.Number && field.Text.Length == 0)
+                    || (field.Kind == FieldKind.Secret && field.Text.Length == 0)
+                    ? colorScheme.DisabledForeground : colorScheme.Foreground,
                 focused ? colorScheme.SelectedBackground : colorScheme.Background);
         }
     }
 
     private int DefaultPortFor() =>
-        new RemoteConnection { Protocol = _editProtocol, Transport = _editTransport }.DefaultPort;
+        new RemoteConnection { Protocol = _editProtocol, Transport = _editTransport, Secure = _editSecure }.DefaultPort;
+
+    private string ProtocolLabel() => _editProtocol switch
+    {
+        RemoteProtocol.Ssh => "SSH",
+        RemoteProtocol.Ftp => "FTP (FTPS when the server offers it)",
+        RemoteProtocol.WebDav => _editSecure ? "WebDAV over HTTPS (davs://)" : "WebDAV over HTTP (dav://)",
+        _ => "PowerShell remoting",
+    };
 
     private void Put(IBuffer buffer, int x, int y, int width, string text, Color foreground, Color background)
     {

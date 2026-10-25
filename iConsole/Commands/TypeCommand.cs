@@ -40,14 +40,22 @@ public class TypeCommand : Command
             }
             else if (keyEvent.ConsoleKey == ConsoleKey.Enter)
             {
-                // Splits the line at the cursor; the cursor goes to the start of the new line.
+                // Splits the line at the cursor; the new line starts with the indent of the one it was split from
+                // (only as much of it as is before the cursor), and the cursor goes after that.
                 var (lines, y) = Prepare(editor);
                 var line = lines[y];
                 var x = Math.Min((int)editor.ScrollableModel.CursorPosition.X, line.Length);
+                var indentLength = 0;
+                while (indentLength < x && line[indentLength] is ' ' or '\t')
+                {
+                    indentLength++;
+                }
+
+                var indent = line[..indentLength];
                 lines[y] = line[..x];
-                lines.Insert(y + 1, line[x..]);
+                lines.Insert(y + 1, indent + line[x..]);
                 editor.IsDirty = true;
-                editor.ScrollableModel.CursorPosition.X = 0;
+                editor.ScrollableModel.CursorPosition.X = indentLength;
                 editor.ScrollableModel.CursorPosition.Y = y + 1;
                 editor.Refresh();
                 editor.ScrollableModel.ScrollToVisible();
