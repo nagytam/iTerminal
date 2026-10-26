@@ -17,6 +17,7 @@ The detailed write-ups, one file per subsystem:
 | --- | --- |
 | [Notifications and toasts](ui-framework/notifications.md) | `INotificationService`, `NotificationJob`, `ToastHost` |
 | [Small input and navigation controls](ui-framework/input-and-navigation-controls.md) | Controls for keys, lists, menus and panels |
+| [Comparison with other TUI libraries](ui-framework/tui-library-comparison.md) | Missing features measured against Terminal.Gui, Textual, Ratatui, Bubble Tea, Spectre.Console and others |
 | [Rendering pipeline](ui-framework/rendering-pipeline.md) | `ControlRendererJob` to `ConsoleBufferRendererJob`; frame dumps |
 | [Lending the terminal (Ctrl+O)](ui-framework/terminal-ownership.md) | `ConsoleOwnership` and the child shell |
 | [Platform input plug-ins](ui-framework/platform-input-plugins.md) | `iConsole.Inputs.Posix` and `iConsole.Inputs.Windows` |
