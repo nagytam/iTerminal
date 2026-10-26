@@ -101,10 +101,10 @@ public class HexViewer : Control
     /// Reads an offset typed by a person: a decimal number, or a hexadecimal one written with a <c>0x</c> prefix or an
     /// <c>h</c> suffix (<c>0x1F</c>, <c>1Fh</c>). Returns false for anything else.
     /// </summary>
-    public static bool TryParseOffset(string text, out long offset)
+    public static bool TryParseOffset(string? text, out long offset)
     {
-        string value = text.Trim();
         offset = 0;
+        string value = text?.Trim() ?? string.Empty;
         if (value.Length == 0)
         {
             return false;

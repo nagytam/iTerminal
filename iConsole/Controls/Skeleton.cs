@@ -44,6 +44,11 @@ public class Skeleton : Control
     /// <summary>One placeholder line with the band at <paramref name="offset"/> (it re-enters from the left after the end).</summary>
     public static string BuildLine(int length, int offset)
     {
+        if (length <= 0)
+        {
+            return string.Empty;
+        }
+
         char[] cells = new char[length];
         Array.Fill(cells, Bar);
         for (int i = 0; i < ShimmerWidth; i++)

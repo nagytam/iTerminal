@@ -95,7 +95,12 @@ public class TimePicker : Control, IReadOnly
     }
 
     /// <summary>Steps field <paramref name="field"/> by <paramref name="delta"/>, wrapping within its range.</summary>
-    public static int Wrap(int value, int delta, int max) => ((value + delta) % (max + 1) + max + 1) % (max + 1);
+    public static int Wrap(int value, int delta, int max)
+    {
+        // Long arithmetic: a delta near int.MaxValue overflowed, and a max below 0 divided by zero.
+        long size = Math.Max(0, (long)max) + 1;
+        return (int)((((long)value + delta) % size + size) % size);
+    }
 
     private void Step(int delta)
     {
