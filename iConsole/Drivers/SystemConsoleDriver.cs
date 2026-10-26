@@ -243,6 +243,27 @@ public class SystemConsoleDriver : IConsoleDriver
         }
     }
 
+    private bool _frameOpen;
+
+    public void BeginFrame()
+    {
+        if (_supportsVirtualTerminal && SynchronizedOutput.IsEnabledByEnvironment && !_frameOpen)
+        {
+            Console.Out.Write(SynchronizedOutput.Begin);
+            _frameOpen = true;
+        }
+    }
+
+    public void EndFrame()
+    {
+        if (_frameOpen)
+        {
+            Console.Out.Write(SynchronizedOutput.End);
+            Console.Out.Flush();
+            _frameOpen = false;
+        }
+    }
+
     public void Write(int x, int y, Conxel conxel)
     {
         try

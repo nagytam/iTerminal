@@ -232,6 +232,27 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
         RefreshWindowSize();
     }
 
+    private bool _frameOpen;
+
+    public void BeginFrame()
+    {
+        if (_supportsVirtualTerminalProcessing && SynchronizedOutput.IsEnabledByEnvironment && !_frameOpen)
+        {
+            Console.Write(SynchronizedOutput.Begin);
+            _frameOpen = true;
+        }
+    }
+
+    public void EndFrame()
+    {
+        if (_frameOpen)
+        {
+            Console.Write(SynchronizedOutput.End);
+            Console.Out.Flush();
+            _frameOpen = false;
+        }
+    }
+
     public void Beep()
     {
         Console.Write(AnsiRenderer.BELL);

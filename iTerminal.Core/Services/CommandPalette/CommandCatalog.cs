@@ -1,4 +1,4 @@
-using iConsole.Commands;
+﻿using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Data;
 
@@ -130,15 +130,34 @@ public static class CommandCatalog
         }
 
         var phrase = string.Join(' ', words);
+        var letters = string.Concat(words);
         return [.. entries
-            .Where(e => words.All(w => Contains(e.Title, w) || Contains(e.Key, w) || Contains(e.Description, w)))
-            .OrderBy(e => e.Title.StartsWith(phrase, StringComparison.OrdinalIgnoreCase) ? 0
-                : words.All(w => Contains(e.Title, w)) ? 1
-                : words.All(w => Contains(e.Title, w) || Contains(e.Key, w)) ? 2
-                : 3)
-            .ThenBy(e => Recency(recent ?? [], e))
-            .ThenBy(e => e.Title, StringComparer.OrdinalIgnoreCase)];
+            .Select(e => (Entry: e, Tier: Tier(e, words, phrase), Fuzzy: FuzzyScore(letters, e.Title)))
+            .Where(x => x.Tier < 4 || x.Fuzzy > 0)
+            .OrderBy(x => x.Tier)
+            .ThenByDescending(x => x.Tier == 4 ? x.Fuzzy : 0)
+            .ThenBy(x => Recency(recent ?? [], x.Entry))
+            .ThenBy(x => x.Entry.Title, StringComparer.OrdinalIgnoreCase)
+            .Select(x => x.Entry)];
     }
+
+    // 0-3: every word is a substring somewhere (title prefix first). 4: no substring match, but the letters
+    // typed appear in the title in order ("cfld" finds "Compare folders"); ranked below the others.
+    private static int Tier(PaletteEntry e, string[] words, string phrase)
+    {
+        if (!words.All(w => Contains(e.Title, w) || Contains(e.Key, w) || Contains(e.Description, w)))
+        {
+            return 4;
+        }
+
+        return e.Title.StartsWith(phrase, StringComparison.OrdinalIgnoreCase) ? 0
+            : words.All(w => Contains(e.Title, w)) ? 1
+            : words.All(w => Contains(e.Title, w) || Contains(e.Key, w)) ? 2
+            : 3;
+    }
+
+    private static int FuzzyScore(string letters, string title) =>
+        letters.Length >= 3 ? iConsole.Helper.FuzzyMatcher.Match(letters, title)?.Score ?? 0 : 0;
 
     private static bool Contains(string text, string word) => text.Contains(word, StringComparison.OrdinalIgnoreCase);
 

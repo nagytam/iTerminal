@@ -263,6 +263,11 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                 }
             }
 
+            if (shouldHideCursor || shouldClearConsole || pendingWrites.Count > 0)
+            {
+                _consoleDriver.BeginFrame();
+            }
+
             if (shouldHideCursor)
             {
                 _consoleDriver.IsCursorVisible = false;
@@ -285,6 +290,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         finally
         {
             UpdateCursor(isCursorVisible);
+            _consoleDriver.EndFrame();
             if (shouldDumpFrame && layerToDump is not null)
             {
                 DumpFrame(layerToDump, renderSteps, displayWrites);
