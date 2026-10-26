@@ -1,4 +1,4 @@
-using iConsole.Commands;
+﻿using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Data;
 using iTerminal.Core.Services.CommandPalette;
@@ -127,5 +127,12 @@ public class CommandCatalogTest
         var ordered = CommandCatalog.Filter(Sample, "  ", ["Find files", "Copy"]);
 
         CollectionAssert.AreEqual(new[] { "Find files", "Copy", "Calculator", "Compress", "Unit Converter" }, Titles(ordered));
+    }
+
+    [TestMethod]
+    public void LettersThatAppearInOrderInATitleFindItAfterTheSubstringMatches()
+    {
+        CollectionAssert.AreEqual(new[] { "Unit Converter" }, Titles(CommandCatalog.Filter(Sample, "ucn")));
+        Assert.AreEqual(0, CommandCatalog.Filter(Sample, "zzz").Count);
     }
 }

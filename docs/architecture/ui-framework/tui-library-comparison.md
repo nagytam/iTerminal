@@ -46,7 +46,7 @@ Ordered by value to iTerminal. "Seen in" names the libraries that have it.
 19. **Sub-menus and checked entries in `ContextMenu` and `MenuBar`.** Documented as not built. Seen in: Terminal.Gui, Textual (`ContextMenu` add-ons).
 20. **Drag and drop inside the app.** Mouse drags select text; there is no drag source or drop target model (Terminal.Gui has limited support, Textual `Drag`). A file-manager use case: drag entries between panels.
 21. **Command palette as a framework service.** iTerminal has one in `Core`; Textual ships it in the framework with fuzzy matching and providers. Moving the palette shell into `iConsole` makes it reusable.
-22. **Fuzzy matching helper.** *Helper built:* `FuzzyMatcher.Match` / `Rank` score a subsequence match (word-start, camel-case and consecutive bonuses) and return the matched positions for highlighting. Not yet wired into `AutoCompletion`, `ComboBox`, the palette or type-to-search. Seen in Textual, Bubbles `list`, prompt_toolkit completers.
+22. **Fuzzy matching helper.** *Helper built:* `FuzzyMatcher.Match` / `Rank` score a subsequence match (word-start, camel-case and consecutive bonuses) and return the matched positions for highlighting. Wired into the command palette as a fallback after substring matches (three or more letters); not yet in `AutoCompletion`, `ComboBox` or type-to-search. Seen in Textual, Bubbles `list`, prompt_toolkit completers.
 23. **Input masks and validation.** `TextBox` has no validator pipeline or mask; Textual `Input` has validators with live error text, Terminal.Gui `TextValidateField` has masks.
 24. **Scroll containers.** A generic `ScrollView` that hosts arbitrary children with a scroll bar (Terminal.Gui, Textual `VerticalScroll`).
 
