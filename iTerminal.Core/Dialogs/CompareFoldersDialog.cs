@@ -386,6 +386,14 @@ public class CompareFoldersDialog : Dialog
     /// takes focus first and would answer Enter by opening itself (Space, F4 or Alt+Down still open
     /// it). ↑/↓ and PgUp/PgDn scroll the differences, unless that list has focus and wants the arrows.
     /// </summary>
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Enter", "Compare the two panels");
+        yield return ("F5", "Synchronise: shows the plan first, any key but Esc cancels it");
+        yield return ("Up/Down", "Scroll the differences");
+        yield return ("PageUp/PageDown", "Scroll the differences a page at a time");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         var isSyncKey = keyEvent.ConsoleKey == ConsoleKey.F5 && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift;

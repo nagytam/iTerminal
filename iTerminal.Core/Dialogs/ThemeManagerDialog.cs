@@ -148,6 +148,12 @@ public class ThemeManagerDialog : Dialog
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Up/Down", "Choose a theme");
+        yield return ("Enter/Space", "Apply the chosen theme");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         // Claimed ahead of the list box, whose own Enter binding only ticks the row.

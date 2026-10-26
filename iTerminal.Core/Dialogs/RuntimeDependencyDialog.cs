@@ -178,6 +178,21 @@ public class RuntimeDependencyDialog : Dialog
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsWizardActive)
+        {
+            yield return ("Enter", "Close");
+            yield break;
+        }
+
+        yield return ("Enter", "Next step; on the last step, install what is ticked");
+        yield return ("Right", "Browse to the next step");
+        yield return ("Left/Backspace", "Back to the previous step");
+        yield return ("Space", "Tick or untick the component on this step");
+        yield return ("S", "Skip the ticked offers and close");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool plain = !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift;

@@ -287,6 +287,12 @@ public class SynchronizeFoldersDialog : Dialog
         base.OnIdle();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Enter", _shown is null ? "Preview what the synchronisation would do" : "Run the previewed synchronisation");
+        yield return ("Esc", "Close without changing anything");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType != KeyPressType.Down || keyEvent.Control || keyEvent.Alt)
