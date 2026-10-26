@@ -83,8 +83,7 @@ public class Expander : Control
     {
         if (_content is not null && Controls.Contains(_content))
         {
-            Controls.Remove(_content);
-            InvalidateTree();
+            RemoveControl(_content);
         }
     }
 

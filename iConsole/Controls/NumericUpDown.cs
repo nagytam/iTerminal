@@ -203,6 +203,12 @@ public class NumericUpDown : Control, IReadOnly
             return isHandled;
         }
 
+        // A remembered "-" belongs to the keyboard entry it started: a click or a wheel notch ends that entry.
+        if (mouseEvent.WheelDelta != 0 || mouseEvent.LeftClicked)
+        {
+            _pendingMinus = false;
+        }
+
         if (mouseEvent.WheelDelta != 0)
         {
             Increment(mouseEvent.WheelDelta > 0 ? Step : -Step);

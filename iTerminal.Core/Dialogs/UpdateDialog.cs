@@ -91,6 +91,13 @@ public partial class UpdateDialog : FormDialog
         _skipButton.ViewSize = new Size((int)skipWidth, 1);
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Enter", "Install the update");
+        yield return ("S", "Skip this version");
+        yield return ("Esc", "Close and ask again later");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         bool plain = !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift;

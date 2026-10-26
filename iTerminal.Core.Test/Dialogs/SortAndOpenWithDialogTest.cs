@@ -448,4 +448,28 @@ public class SortAndOpenWithDialogTest
         await rig.Dialog.HandleMouseEventAsync(new MouseEvent { Position = inside, WheelDelta = 1 });
         Assert.AreEqual("Program 00", rig.Dialog.Selected!.Title);
     }
+
+    [TestMethod]
+    public async Task Sort_KeyHints_NameTheKeysTheDialogTakes()
+    {
+        SortRig rig = await OpenSortAsync();
+
+        string[] keys = [.. rig.Dialog.GetKeyHints().Select(h => h.Key)];
+
+        CollectionAssert.IsSubsetOf(new[] { "Up/Down", "Enter", "R/Space" }, keys);
+    }
+
+    [TestMethod]
+    public async Task OpenWith_KeyHints_ListTheCommands_AndWhileTheRemoveQuestionIsUpOnlyItsAnswers()
+    {
+        OpenRig rig = await OpenWithAsync(programs: TwoPrograms);
+
+        string[] keys = [.. rig.Dialog.GetKeyHints().Select(h => h.Key)];
+        CollectionAssert.IsSubsetOf(new[] { "Enter", "Insert", "F4", "Delete", "Space" }, keys);
+
+        await PressAsync(rig, ConsoleKey.Delete);
+
+        keys = [.. rig.Dialog.GetKeyHints().Select(h => h.Key)];
+        CollectionAssert.AreEqual(new[] { "Y", "Any other key" }, keys);
+    }
 }

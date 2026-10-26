@@ -133,6 +133,25 @@ public class OpenWithDialog : Dialog
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_pendingRemoval is not null)
+        {
+            yield return ("Y", "Remove the program from the list");
+            yield return ("Any other key", "Keep the program");
+            yield break;
+        }
+
+        yield return ("Up/Down", "Choose a program");
+        yield return ("PageUp/PageDown", "Move a page at a time");
+        yield return ("Home/End", "Jump to the first or last program");
+        yield return ("Enter", "Open the file with the chosen program");
+        yield return ("Insert", "Add a program");
+        yield return ("F4", "Change the chosen program");
+        yield return ("Delete", "Remove the chosen program (asks first)");
+        yield return ("Space", "Make the chosen program the default");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_pendingRemoval is { } removal)
