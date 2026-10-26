@@ -37,10 +37,21 @@ public class ToastHost : Control
     public int MaxToastWidth { get; set; } = 50;
 
     /// <summary>Rows left free above the first toast — the menu bar's row, by default.</summary>
-    public int TopOffset { get; set; } = 1;
+    public int TopOffset
+    {
+        get => _topOffset;
+        set => _topOffset = Math.Max(0, value);
+    }
 
-    /// <summary>Columns left free between the toasts and the right edge.</summary>
-    public int RightMargin { get; set; } = 1;
+    /// <summary>Columns left free between the toasts and the right edge; at least 0, so a toast never starts off screen.</summary>
+    public int RightMargin
+    {
+        get => _rightMargin;
+        set => _rightMargin = Math.Max(0, value);
+    }
+
+    private int _topOffset = 1;
+    private int _rightMargin = 1;
 
     public override void OnIdle()
     {

@@ -128,7 +128,6 @@ public class CheckList : Control, IReadOnly
             yield return ("Space", "Check or uncheck the item under the cursor");
             yield return ("+/-", "Check or uncheck every item");
             yield return ("*", "Invert every item");
-            yield return ("*", "Invert every item");
         }
     }
 
