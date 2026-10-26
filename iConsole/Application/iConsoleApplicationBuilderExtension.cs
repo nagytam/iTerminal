@@ -104,6 +104,9 @@ public static class iConsoleApplicationBuilderExtension
         services.AddSingleton<ITimeProvider, SystemTimeProvider>();
         services.AddSingleton<IToolTipService, ToolTipService>();
         services.AddTransient<ToolTipHost>();
+        // Popovers: one open at a time, placed on screen. Context menus open through it.
+        services.AddSingleton<IPopoverService, PopoverService>();
+        services.AddTransient<ContextMenu>();
         services.AddSingleton<IDateTimeProviderService, DateTimeProviderService>();
         services.AddSingleton<IFrequentExecutionGuardService, FrequentExecutionGuardService>();
         services.AddSingleton<IFileToTextConverterService, FileToTextConverterService>();

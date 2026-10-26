@@ -33,7 +33,10 @@ public class LinkLabel : Control
         }
     }
 
-    /// <summary>What the link points at, for the host's handler (not drawn).</summary>
+    /// <summary>
+    /// What the link points at, for the host's handler. A web, file, FTP, SSH or mail address (<c>https://…</c>, <c>file://…</c>) is also written
+    /// as an OSC 8 hyperlink, so a terminal that supports them opens it on a Ctrl+click; anything else is only for the handler.
+    /// </summary>
     public string Target { get; set; } = string.Empty;
 
     public event EventHandler? Activated;
@@ -94,6 +97,12 @@ public class LinkLabel : Control
         Color foreground = !IsEnabled ? colorScheme.DisabledForeground : IsFocused ? colorScheme.SelectedFocusedForeground : Color.Cyan;
         Color background = IsFocused && IsEnabled ? colorScheme.SelectedFocusedBackground : colorScheme.Background;
         // The focused link is underlined as well as recoloured, so the focus shows even where the colours do not stand out.
-        buffer.Write(ZOrder, AbsolutePosition, ViewSize, new ConxelString(_text, foreground, background, isUnderline: IsFocused && IsEnabled));
+        ConxelString line = new(_text, foreground, background, isUnderline: IsFocused && IsEnabled);
+        if (IsEnabled && Uri.TryCreate(Target, UriKind.Absolute, out Uri? uri) && uri.Scheme is "http" or "https" or "ftp" or "ftps" or "sftp" or "ssh" or "file" or "mailto")
+        {
+            line.SetHyperlink(uri.OriginalString);
+        }
+
+        buffer.Write(ZOrder, AbsolutePosition, ViewSize, line);
     }
 }

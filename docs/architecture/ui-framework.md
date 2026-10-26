@@ -32,6 +32,15 @@ The detailed write-ups, one file per subsystem:
 - **`IInputInjector`.** Sends keys and mouse events through the same consumer and routing as a real keyboard and mouse. `VirtualTerminalInput` implements it for the test suite.
 - **`ITimeProvider`.** `SystemTimeProvider` for the application and `VirtualTimeProvider` for tests, which moves the clock with `Advance` instead of sleeping.
 
+### Text attributes, hyperlinks, popovers and context menus
+
+- **Attributes.** `Conxel` carries dim, reverse, blink and overline as well as bold, italic, underline and strike-through, an `UnderlineStyle` (single, double, curly, dotted, dashed) and an optional underline colour. `Label` exposes them; `ConxelString.SetUnderline` sets the underline for a range. `AnsiRenderer` writes them as SGR codes (`2`, `5`, `7`, `53`, `4:3`, `58:5:n`). A terminal that does not know a style falls back to a plain underline. A change in any of them makes the renderer repaint the cell.
+- **Attribute reset.** `AnsiRenderer.ConxelString2Ansi` starts a sequence with `0;` when the previous cell had attributes, because a colour/attribute sequence only adds; without it, bold stayed on after a bold cell.
+- **Hyperlinks (OSC 8).** A cell holds a `LinkId`, not a string, because the renderer compares cells as raw bytes. `Hyperlinks.Register(target)` interns the target and returns the id; `ConxelString.SetHyperlink(target, start, end)` and `Label.Hyperlink` use it. `LinkLabel` links itself when `Target` is an http(s), ftp(s), sftp, ssh, file or mailto address. A target is percent-encoded outside printable ASCII, so text can not end the escape sequence early. The renderer opens a link with an `id=` so a link written in pieces is one link, and closes it at the end of every write. Switch off with `ITERMINAL_HYPERLINKS=0` (`TERM=linux` and `dumb` are off by default); `AnsiRenderer.HyperlinksEnabled` is the same switch in code. The terminal opens a link on a Ctrl+click (Shift+click while the application has the mouse).
+- **Windows.** `SystemConsoleDriver` turns on virtual terminal processing and writes a string as ANSI only when a cell needs it (an attribute or a link); other strings keep the Console colour calls. Before this the Windows driver drew no bold, italic or underline at all.
+- **Popovers.** `IPopoverService` keeps one popover open at a time and places it with `PopoverPlacement`: beside a control it turns to the other side when it does not fit (`Popup` alone only pulls an overlay back on screen, over its target), and at a point it opens with its corner on the point or its far edges on it. `ToolTipHost` still places its own tip.
+- **Context menus.** `ContextMenu` (a `Popup`) holds `ContextMenuItem`s: title, shortcut hint, `Execute`, `IsEnabled`, or `ContextMenuItem.Separator()`. Set `Control.ContextMenu` and a right-click on the control opens it at the pointer, and Shift+F10 or the Menu key opens it under the control while it has focus; the deepest control with a menu wins. Up, Down, Home and End move past separators and disabled entries, Enter, Space or a click choose, a letter jumps to the next entry starting with it. The entry runs after the menu has closed and focus is back, so it can open a dialog. Not built: sub-menus, checked entries, per-entry hot keys.
+
 ### Suggested improvements
 
 Compared with Terminal.Gui 2.5.0 (its public API and XML docs, not its runtime behaviour). Items marked as built or partly built are described above; the rest are not built. The "not found" notes are grep-based and need a runtime check before work starts. Terminal.Gui owns the main loop, layout and rendering, so the items below are ideas to adopt, not a reason to replace the framework.
@@ -46,7 +55,7 @@ Compared with Terminal.Gui 2.5.0 (its public API and XML docs, not its runtime b
 
 **Worth designing**
 
-6. **Popover service.** *Partly built:* `Popup.ShowAtAsync(owner, anchor)` places an overlay at a point in the root's coordinates, and `ToolTipHost` uses it for tooltips. Context menus and the Ctrl+O hint are still placed by hand.
+6. **Popover service.** *Built* (see above): `IPopoverService`, `PopoverPlacement` and `ContextMenu`. The Ctrl+O hint and `ToolTipHost` still place themselves.
 7. **Percent and fill sizing in `Layout`.** Layout is manual, so resizing needs per-control code. `Dim.Percent` / `Dim.Fill` equivalents would make panel ratios (item 9 in `docs/mc-parity.md`) cheap.
 8. **Table upgrades.** Multi-select regions, per-column styles and cell colour getters would make the file list and search results more flexible.
 9. **Markdown and image controls.** *Markdown built:* `MarkdownViewerControl` (parser in `iConsole/Markdown/`). The image control is not built: it would use the Kitty graphics protocol, with a cell-based fallback, for the image viewer's ASCII-art gap.

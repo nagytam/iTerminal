@@ -375,7 +375,15 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                     conxel.IsBold           != lastConxel.IsBold           ||
                     conxel.IsItalic         != lastConxel.IsItalic         ||
                     conxel.IsUnderline      != lastConxel.IsUnderline      ||
-                    conxel.IsStrikeThrough  != lastConxel.IsStrikeThrough;
+                    conxel.IsStrikeThrough  != lastConxel.IsStrikeThrough  ||
+                    conxel.IsDim            != lastConxel.IsDim            ||
+                    conxel.IsReverse        != lastConxel.IsReverse        ||
+                    conxel.IsBlink          != lastConxel.IsBlink          ||
+                    conxel.IsOverline       != lastConxel.IsOverline       ||
+                    conxel.UnderlineStyle   != lastConxel.UnderlineStyle   ||
+                    conxel.UnderlineColor   != lastConxel.UnderlineColor   ||
+                    conxel.HasUnderlineColor != lastConxel.HasUnderlineColor ||
+                    conxel.LinkId           != lastConxel.LinkId;
             }
 
             if (isCellChanged)
