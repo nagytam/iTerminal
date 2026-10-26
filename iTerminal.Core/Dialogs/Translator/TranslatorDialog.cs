@@ -217,6 +217,14 @@ public class TranslatorDialog : SplitPaneDialog
     /// <summary>True after the first F8 over a text: the second one clears; any other key withdraws it.</summary>
     private bool _clearArmed;
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("F5", "Translate");
+        yield return ("F6", "Swap the two languages");
+        yield return ("F7", "Detect the language of the text");
+        yield return ("F8", "Clear the text (asks first)");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType == KeyPressType.Down && keyEvent.ConsoleKey != ConsoleKey.F8)

@@ -150,6 +150,13 @@ public class IPhoneBrowserDialog : Dialog
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Enter", "Connect to the chosen device");
+        yield return ("R", "Search for devices again");
+        yield return ("Esc", "Close");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.ConsoleKey == ConsoleKey.Escape && !keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt)

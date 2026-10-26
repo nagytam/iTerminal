@@ -512,6 +512,30 @@ public class PackageManagerDialog : SplitPaneDialog
 
     #region Input
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_confirmAction is not null)
+        {
+            yield return ("Y", "Confirm");
+            yield return ("Any other key", "Cancel");
+            yield break;
+        }
+
+        if (_inputActive)
+        {
+            yield return ("Enter", "Submit");
+            yield return ("Esc", "Cancel");
+            yield break;
+        }
+
+        yield return ("Enter/Space", "Run the main action");
+        yield return ("R", "Refresh the list");
+        yield return ("S", "Search for packages");
+        yield return ("I", "Show the installed packages");
+        yield return ("X", "Cancel the running command");
+        yield return ("PageUp/PageDown", "Scroll the output");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_confirmAction is not null)

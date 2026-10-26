@@ -272,6 +272,15 @@ public class FindFilesDialog : SplitPaneDialog
 
     #region Input
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Enter", "Search, or show the chosen result in the panel when the list has focus");
+        yield return ("Up/Down", "Choose a result");
+        yield return ("Ctrl+Home/End", "Jump to the first or last result");
+        yield return ("Ctrl+P", "Send the results to a panel");
+        yield return ("Ctrl+X", "Cancel the search");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Control && !keyEvent.Alt)

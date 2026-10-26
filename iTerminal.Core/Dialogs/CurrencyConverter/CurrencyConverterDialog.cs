@@ -159,6 +159,12 @@ public class CurrencyConverterDialog : SplitPaneDialog
         base.OnInitializeLayout();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("F5", "Refresh the rates");
+        yield return ("F6", "Swap the two currencies");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType == KeyPressType.Down && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift && !_from.IsOpen && !_to.IsOpen)

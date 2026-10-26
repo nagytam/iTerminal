@@ -107,6 +107,30 @@ public class PasswordManagerDialog : Dialog
         base.OnInitializeLayout();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_mode == Mode.Edit)
+        {
+            yield return ("Ctrl+S", "Save the entry");
+            yield return ("Tab / Up/Down", "Move between the fields");
+            yield return ("Esc", "Back to the list");
+            yield break;
+        }
+
+        if (_confirmDelete)
+        {
+            yield return ("Y / D / Delete", "Delete the entry");
+            yield return ("Any other key", "Keep the entry");
+            yield break;
+        }
+
+        yield return ("Up/Down", "Choose an entry");
+        yield return ("N", "Add an entry");
+        yield return ("Enter/E", "Edit the entry");
+        yield return ("Delete/D", "Delete the entry (asks first)");
+        yield return ("V", "Show or hide the passwords");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         lock (_sync)
