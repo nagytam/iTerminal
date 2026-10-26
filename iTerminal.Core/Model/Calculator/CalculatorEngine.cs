@@ -187,7 +187,7 @@ public class CalculatorEngine
         if (_pendingOperator is not null && !_startNewEntry)
         {
             value = Compute(_accumulator, value, _pendingOperator);
-            if (IsError)
+            if (IsError || !Accept(value))
             {
                 return;
             }
@@ -208,7 +208,7 @@ public class CalculatorEngine
         }
 
         var result = Compute(_accumulator, ParseDisplay(), _pendingOperator);
-        if (IsError)
+        if (IsError || !Accept(result))
         {
             return;
         }
@@ -231,8 +231,8 @@ public class CalculatorEngine
         double result;
         switch (function)
         {
-            case "sin": result = Math.Sin(ToRadians(value)); break;
-            case "cos": result = Math.Cos(ToRadians(value)); break;
+            case "sin": result = Tidy(Math.Sin(ToRadians(value))); break;
+            case "cos": result = Tidy(Math.Cos(ToRadians(value))); break;
             case "tan": result = Math.Tan(ToRadians(value)); break;
             case "asin": result = FromRadians(Math.Asin(value)); break;
             case "acos": result = FromRadians(Math.Acos(value)); break;
@@ -284,9 +284,34 @@ public class CalculatorEngine
             default: return;
         }
 
+        if (!Accept(result))
+        {
+            return;
+        }
+
         Display = FormatValue(result);
         _startNewEntry = true;
     }
+
+    /// <summary>
+    /// Whether <paramref name="result"/> can be shown: a result that is not a number (0^-1, asin 2) or does not fit
+    /// (exp 1000, a programming result past 64 bits) used to be shown as "Error" or silently cut, without the calculator
+    /// being in its error state; now it is, and the next digit starts over.
+    /// </summary>
+    private bool Accept(double result)
+    {
+        bool fits = double.IsFinite(result)
+            && (Mode != CalculatorMode.Programming || (result >= -9.2233720368547758E18 && result < 9.2233720368547758E18));
+        if (!fits)
+        {
+            SetError();
+        }
+
+        return fits;
+    }
+
+    /// <summary>Rounding noise (sin 180° = 1.2E-16) is zero.</summary>
+    private static double Tidy(double result) => Math.Abs(result) < 1e-15 ? 0 : result;
 
     public void InputConstant(string name)
     {
@@ -367,8 +392,9 @@ public class CalculatorEngine
             case "and": return (long)a & (long)b;
             case "or": return (long)a | (long)b;
             case "xor": return (long)a ^ (long)b;
-            case "shl": return (long)a << (int)b;
-            case "shr": return (long)a >> (int)b;
+            // A count outside 0..63 shifts everything out; the machine would take it modulo 64 (1 << 64 gave 1).
+            case "shl": return b is < 0 or > 63 ? 0 : (long)a << (int)b;
+            case "shr": return b is < 0 or > 63 ? ((long)a < 0 ? -1 : 0) : (long)a >> (int)b;
             default: return b;
         }
     }

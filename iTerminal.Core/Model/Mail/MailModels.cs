@@ -102,7 +102,8 @@ public sealed class MailAccountStore(ISettingsService settingsService)
             var json = settingsService.Get(SettingsKey);
             if (!string.IsNullOrWhiteSpace(json))
             {
-                _accounts.AddRange(JsonSerializer.Deserialize<List<MailAccount>>(json, Json) ?? []);
+                // A null entry ("[null]") is not an account; the rest of the list is still good.
+                _accounts.AddRange((JsonSerializer.Deserialize<List<MailAccount>>(json, Json) ?? []).Where(account => account is not null));
             }
         }
         catch (JsonException)
