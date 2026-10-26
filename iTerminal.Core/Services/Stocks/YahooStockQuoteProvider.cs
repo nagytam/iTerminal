@@ -102,6 +102,11 @@ public sealed class YahooStockQuoteProvider : IStockQuoteProvider
     /// <summary>Reads the first result of a chart response; null when the source has no data for the symbol.</summary>
     internal static StockQuote? ParseChart(string symbol, string json)
     {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return null;
+        }
+
         using var document = JsonDocument.Parse(json);
         if (!document.RootElement.TryGetProperty("chart", out var chart)
             || !chart.TryGetProperty("result", out var results)
@@ -140,6 +145,24 @@ public sealed class YahooStockQuoteProvider : IStockQuoteProvider
 
     /// <summary>Reads a search response; only listed stocks (and ETFs, which trade the same way) are kept.</summary>
     internal static IReadOnlyList<StockSearchHit> ParseSearch(string json)
+    {
+        // An empty body or an error page is no hits, not an exception into the dialog that asked.
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return [];
+        }
+
+        try
+        {
+            return ParseHits(json);
+        }
+        catch (JsonException)
+        {
+            return [];
+        }
+    }
+
+    private static IReadOnlyList<StockSearchHit> ParseHits(string json)
     {
         using var document = JsonDocument.Parse(json);
         if (!document.RootElement.TryGetProperty("quotes", out var quotes) || quotes.ValueKind != JsonValueKind.Array)

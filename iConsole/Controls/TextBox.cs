@@ -367,9 +367,9 @@ public class TextBox : Control, IReadOnly
     /// breaks: each becomes a blank. Characters the box does not accept are dropped, and what would pass
     /// <see cref="MaxLength"/> is cut off (with a beep, as typing would give).
     /// </summary>
-    public void InsertText(string text)
+    public void InsertText(string? text)
     {
-        if (IsReadOnly)
+        if (IsReadOnly || string.IsNullOrEmpty(text))
         {
             return;
         }

@@ -119,6 +119,7 @@ public static class TerminalSequences
     {
         ArgumentNullException.ThrowIfNull(text);
 
+        maxLength = Math.Max(0, maxLength);
         var sb = new StringBuilder(Math.Min(text.Length, maxLength));
         foreach (char c in text)
         {

@@ -86,5 +86,5 @@ public static class ClipboardKeys
     }
 
     /// <summary>Line breaks as a single line feed, whatever the other program wrote.</summary>
-    public static string NormalizeLineBreaks(string text) => text.Replace("\r\n", "\n").Replace('\r', '\n');
+    public static string NormalizeLineBreaks(string? text) => (text ?? string.Empty).Replace("\r\n", "\n").Replace('\r', '\n');
 }
