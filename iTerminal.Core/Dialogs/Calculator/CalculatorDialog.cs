@@ -59,6 +59,14 @@ public class CalculatorDialog : SplitPaneDialog
         base.OnInitializeLayout();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("0-9 . + - * / ^ %", "Enter digits and operators");
+        yield return ("Enter/=", "Evaluate");
+        yield return ("Backspace", "Remove the last digit");
+        yield return ("Delete/C", "Clear");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.ConsoleKey == ConsoleKey.Escape && !keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt)

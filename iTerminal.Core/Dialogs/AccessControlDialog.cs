@@ -242,6 +242,39 @@ public class AccessControlDialog : Dialog
 
     #region Keys
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        switch (_mode)
+        {
+            case Mode.Edit:
+                yield return ("Enter / Ctrl+S", "Save the entry");
+                yield return ("Tab / Up/Down", "Move between the fields");
+                yield return ("Space / Left/Right", "Change the choice");
+                yield return ("Esc", "Back to the list");
+                break;
+            case Mode.Owner:
+                yield return ("Enter / Ctrl+S", "Save the owner");
+                yield return ("Esc", "Back to the list");
+                break;
+            default:
+                if (_confirmDelete)
+                {
+                    yield return ("Y / D / Delete", "Delete the entry");
+                    yield return ("Any other key", "Keep the entry");
+                    break;
+                }
+
+                yield return ("Up/Down", "Choose an entry");
+                yield return ("Insert/A", "Add an entry");
+                yield return ("Enter/E", "Edit the entry");
+                yield return ("Delete/D", "Delete the entry (asks first)");
+                yield return ("I", "Switch inheritance on or off");
+                yield return ("O", "Change the owner");
+                yield return ("R", "Read the permissions again");
+                break;
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         lock (_sync)

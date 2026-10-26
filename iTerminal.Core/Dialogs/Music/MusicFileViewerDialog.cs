@@ -299,6 +299,16 @@ public class MusicFileViewerDialog : Dialog
 
     #region Input
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Space", "Play or pause");
+        yield return ("Enter", "Play from the start");
+        yield return ("Left/Right", "Seek back or forward (Shift: a long step)");
+        yield return ("+/-", "Raise or lower the volume");
+        yield return ("S", "Stop this file");
+        yield return ("E", "Edit the tags");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType != KeyPressType.Down || keyEvent.Control || keyEvent.Alt)

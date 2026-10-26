@@ -217,6 +217,18 @@ public class ImageFileViewerDialog : Dialog
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("C", "Switch colour on or off");
+        yield return ("I", "Show or hide the image information");
+        if (_showMetadata)
+        {
+            yield return ("Up/Down", "Scroll the information");
+            yield return ("PageUp/PageDown", "Scroll a page at a time");
+            yield return ("E", "Edit the information");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType == KeyPressType.Down

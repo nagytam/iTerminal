@@ -106,6 +106,32 @@ public class CalendarDialog : Dialog
         base.OnInitializeLayout();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_entry is not null)
+        {
+            yield return ("Enter", "Save the meeting");
+            yield return ("Esc", "Discard the entry");
+            yield break;
+        }
+
+        if (_confirmingDelete)
+        {
+            yield return ("Y", "Delete the meeting");
+            yield return ("Any other key", "Keep the meeting");
+            yield break;
+        }
+
+        yield return ("Arrows", "Move by a day or a week");
+        yield return ("PageUp/PageDown", "Previous or next month");
+        yield return ("Ctrl+PageUp/PageDown", "Previous or next year");
+        yield return ("Home", "Go to today");
+        yield return ("Alt+Up/Down", "Choose a meeting of the day");
+        yield return ("Enter/Insert/N", "Add a meeting");
+        yield return ("F2", "Edit the chosen meeting");
+        yield return ("Delete", "Delete the chosen meeting (asks first)");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_entry is not null)

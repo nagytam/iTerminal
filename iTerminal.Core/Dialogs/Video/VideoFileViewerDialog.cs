@@ -218,6 +218,15 @@ public class VideoFileViewerDialog : Dialog
 
     #region Input
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Space", "Play or pause");
+        yield return ("Left/Right", "Seek back or forward (Shift: a long step)");
+        yield return ("Home", "Back to the start");
+        yield return ("S", "Stop");
+        yield return ("C", "Switch colour on or off");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType != KeyPressType.Down || keyEvent.Control || keyEvent.Alt)
