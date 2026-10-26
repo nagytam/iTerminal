@@ -275,3 +275,9 @@ on the project under the cursor, or on the whole solution for build, clean and t
   leave the dialog busy after a command had finished.
 - **Cancelling.** The run's task is cancelled before the process is killed. Killing raises the exit event at once, and
   that would otherwise report the run as finished with an exit code.
+
+### The language selector (`LanguageDialog`, `Services/SettingsLanguageStore.cs`)
+Ctrl+Shift+F3 (Tools > Language…) opens `LanguageDialog`: English, Deutsch, Français, Español, Italiano and Magyar, each by its own name so it
+can be found whatever language is showing. ↑/↓ move, Enter or a click applies and closes. Applying calls `ILocalizer.SetLanguage`,
+which saves the choice in the `Language` setting and raises `LanguageChanged`; the menu bar and the footer re-label on their next idle
+pass (see Localization in [ui-framework.md](ui-framework.md)). The dialog's own title and key hints are looked up from the same resources.

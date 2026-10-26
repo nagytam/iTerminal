@@ -5,6 +5,7 @@ using iConsole.Controls.PopUpWindows;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
+using iConsole.Localization;
 using iConsole.Services;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -219,6 +220,46 @@ public class MenuItem : PopUpWindow
         menuItem.Parent = this;
         MenuItems.Add(menuItem);
         Controls.Add(menuItem);
+    }
+
+    /// <summary>The English text the entry was built with; what a language without a translation falls back to.</summary>
+    private string? _sourceText;
+
+    /// <summary>
+    /// The resource key of an entry's label: <c>Menu.</c> and the English label without anything that is not a
+    /// letter or a digit, so "Edit With…" is <c>Menu.EditWith</c>. The shortcut after the tab is not part of it.
+    /// </summary>
+    public static string LocalizationKey(string text)
+    {
+        var tab = text.IndexOf('\t');
+        var label = tab < 0 ? text : text[..tab];
+        return "Menu." + new string(label.Where(char.IsLetterOrDigit).ToArray());
+    }
+
+    /// <summary>
+    /// Shows this entry and every entry below it in the localizer's language. The text each was built with is kept
+    /// as the English source, so switching back (or to a language that lacks an entry) restores it; the shortcut
+    /// after the tab is never translated.
+    /// </summary>
+    public void Localize(ILocalizer localizer)
+    {
+        _sourceText ??= Text;
+        foreach (var menuItem in MenuItems.AsSnapshot())
+        {
+            menuItem.Localize(localizer);
+        }
+
+        if (_sourceText == "-")
+        {
+            return;
+        }
+
+        var tab = _sourceText.IndexOf('\t');
+        var shortcut = tab < 0 ? string.Empty : _sourceText[tab..];
+        Text = localizer.TryGet(LocalizationKey(_sourceText), out var label)
+            ? label + shortcut
+            : _sourceText;
+        Title = Text;
     }
 
     /// <summary>

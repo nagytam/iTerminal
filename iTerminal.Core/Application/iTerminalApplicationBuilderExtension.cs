@@ -93,6 +93,12 @@ public static class iTerminalApplicationBuilderExtension
 
         services.AddSingleton<StartupWarningService>();
 
+        // Ctrl+Shift+F3: the language of the interface. The strings are .resx files; the choice is a setting.
+        services.AddSingleton<iConsole.Localization.ILocalizationSource>(_ => new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(iTerminalApplicationBuilderExtension).Assembly)));
+        services.AddSingleton<iConsole.Localization.ILanguageStore, iTerminal.Core.Services.SettingsLanguageStore>();
+        services.AddTransient<LanguageDialog>();
+
         services.AddDbContextFactory<iTerminalDbContext>(options =>
             options.UseSqlite($"Data Source={databasePath}"));
         services.AddScoped<ICacheService, CacheService>();

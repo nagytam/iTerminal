@@ -89,6 +89,8 @@ public static class iConsoleApplicationBuilderExtension
         services.AddSingleton<ProcessService>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<IBeepService, BeepService>();
+        // The language the interface is shown in; the app adds its own resources and a store for the choice.
+        services.AddSingleton<iConsole.Localization.ILocalizer, iConsole.Localization.Localizer>();
         services.AddSingleton<IErrorPromptService, ErrorPromptService>();
         // Notifications: the service holds them, the job counts them down, and a ToastHost on the
         // screen's root draws them. Posting needs only the service.
