@@ -330,12 +330,15 @@ internal sealed class DocumentSearchIndex
     }
 
     /// <summary>A one-line excerpt around the first occurrence of <paramref name="term"/>.</summary>
-    internal static string BuildSnippet(string text, string term, int radius = 60)
+    internal static string BuildSnippet(string? text, string? term, int radius = 60)
     {
-        if (text.Length == 0)
+        if (string.IsNullOrEmpty(text))
         {
             return string.Empty;
         }
+
+        term ??= string.Empty;
+        radius = Math.Max(0, radius);
 
         int match = text.IndexOf(term, StringComparison.OrdinalIgnoreCase);
         int start = match < 0 ? 0 : Math.Max(0, match - radius);

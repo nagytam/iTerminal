@@ -78,9 +78,9 @@ public class TextEditorControl
     /// first joined to what is before the cursor and the last to what is after it. Line breaks are normalised and
     /// control characters other than a tab are dropped.
     /// </summary>
-    public void InsertText(string text)
+    public void InsertText(string? text)
     {
-        if (IsReadOnly)
+        if (IsReadOnly || string.IsNullOrEmpty(text))
         {
             return;
         }

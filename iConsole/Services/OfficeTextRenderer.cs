@@ -916,8 +916,9 @@ public static class OfficeTextRenderer
         })];
     }
 
-    internal static bool IsDateFormat(string code)
+    internal static bool IsDateFormat(string? code)
     {
+        code ??= string.Empty;
         bool quoted = false;
         bool bracketed = false;
         foreach (char c in code)
