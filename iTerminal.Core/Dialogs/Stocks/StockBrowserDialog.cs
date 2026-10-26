@@ -452,6 +452,28 @@ public class StockBrowserDialog : SplitPaneDialog
 
     #region Input
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_confirmAction is not null)
+        {
+            yield return ("Y", "Confirm");
+            yield return ("Any other key", "Cancel");
+            yield break;
+        }
+
+        if (_adding)
+        {
+            yield return ("Enter", "Search, or add the chosen hit");
+            yield return ("Up/Down", "Choose a hit");
+            yield return ("Esc", "Back to the list");
+            yield break;
+        }
+
+        yield return ("A", "Add a stock");
+        yield return ("D/Delete", "Remove the stock");
+        yield return ("R", "Refresh the quotes");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_closeAdding)

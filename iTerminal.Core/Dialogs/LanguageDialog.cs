@@ -71,6 +71,13 @@ public class LanguageDialog : Dialog
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Up/Down", "Choose a language");
+        yield return ("Home/End", "Jump to the first or last language");
+        yield return ("Enter", "Use the chosen language");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (!keyEvent.Alt && !keyEvent.Control)

@@ -186,6 +186,26 @@ public class MapDialog : Dialog
 
     #region Keys
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_mode != Mode.Browse)
+        {
+            yield return ("Esc", "Back to the map");
+            yield break;
+        }
+
+        yield return ("Arrows", "Pan the map (Shift: half a screen)");
+        yield return ("+/-", "Zoom in or out");
+        yield return ("Home", "Back to the home view");
+        yield return ("/ or G", "Search for a place");
+        yield return ("B", "Open the saved places");
+        yield return ("M", "Save the centre as a place");
+        yield return ("R", "Reload the tiles");
+        yield return ("O", "Go online or offline");
+        yield return ("D", "Save this area for offline use");
+        yield return ("F1", "Help");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType != KeyPressType.Down)

@@ -294,6 +294,18 @@ public class SignatureDialog : Dialog
         _ => "Key signature",
     };
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("F2", "Sign with GPG");
+        yield return ("F3", "Sign with Authenticode");
+        yield return ("F4", "Sign with a PEM key");
+        yield return ("F5", "Verify the signatures");
+        if (_busy.Length == 0)
+        {
+            yield return ("Enter", "Close the report");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (!keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)
