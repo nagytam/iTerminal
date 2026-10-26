@@ -30,7 +30,13 @@ public class Gauge(IThemeService themeService) : Control(themeService)
     }
 
     /// <summary>Text drawn left of the bar.</summary>
-    public string Label { get; set; } = string.Empty;
+    public string Label
+    {
+        get => _label;
+        set => _label = value ?? string.Empty;
+    }
+
+    private string _label = string.Empty;
 
     public double WarningThreshold { get; set; } = 0.75;
 

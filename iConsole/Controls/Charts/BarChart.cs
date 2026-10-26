@@ -36,7 +36,27 @@ public class BarChart(IThemeService themeService) : Control(themeService)
     public bool ShowValues { get; set; } = true;
 
     /// <summary>Format string for the values.</summary>
-    public string ValueFormat { get; set; } = "0.##";
+    public string ValueFormat
+    {
+        get => _valueFormat;
+        set => _valueFormat = string.IsNullOrEmpty(value) ? DefaultValueFormat : value;
+    }
+
+    private const string DefaultValueFormat = "0.##";
+    private string _valueFormat = DefaultValueFormat;
+
+    /// <summary>The value as text; a format string the number cannot use falls back to the default instead of failing every draw.</summary>
+    private string FormatValue(double value)
+    {
+        try
+        {
+            return value.ToString(_valueFormat, CultureInfo.CurrentCulture);
+        }
+        catch (FormatException)
+        {
+            return value.ToString(DefaultValueFormat, CultureInfo.CurrentCulture);
+        }
+    }
 
     /// <summary>Colour for items that do not specify one. Null uses the theme foreground.</summary>
     public Color? DefaultBarColor { get; set; }
@@ -49,7 +69,8 @@ public class BarChart(IThemeService themeService) : Control(themeService)
             return string.Empty;
         }
 
-        int eighths = (int)Math.Round(Math.Clamp(ratio, 0.0, 1.0) * width * 8);
+        // NaN has no bar: clamping leaves it NaN and the cast to int then gives a negative length.
+        int eighths = double.IsNaN(ratio) ? 0 : (int)Math.Round(Math.Clamp(ratio, 0.0, 1.0) * width * 8);
         int full = eighths / 8;
         int rest = eighths % 8;
         string bar = new string('█', full) + (rest > 0 ? Partials[rest].ToString() : string.Empty);
@@ -65,9 +86,9 @@ public class BarChart(IThemeService themeService) : Control(themeService)
         int height = (int)ViewSize.Height;
         Color barDefault = DefaultBarColor ?? colorScheme.Foreground;
 
-        int labelWidth = _items.Count == 0 ? 0 : _items.Max(i => i.Label.Length);
-        double max = MaxValue ?? (_items.Count == 0 ? 0 : _items.Max(i => i.Value));
-        string[] values = _items.Select(i => ShowValues ? i.Value.ToString(ValueFormat, CultureInfo.CurrentCulture) : string.Empty).ToArray();
+        int labelWidth = _items.Count == 0 ? 0 : _items.Max(i => (i.Label ?? string.Empty).Length);
+        double max = MaxValue ?? (_items.Count == 0 ? 0 : _items.Where(i => !double.IsNaN(i.Value)).Select(i => i.Value).DefaultIfEmpty(0).Max());
+        string[] values = _items.Select(i => ShowValues ? FormatValue(i.Value) : string.Empty).ToArray();
         int valueWidth = values.Length == 0 ? 0 : values.Max(v => v.Length);
         int valueColumn = ShowValues && valueWidth > 0 ? valueWidth + 1 : 0;
         int barWidth = Math.Max(0, width - labelWidth - 1 - valueColumn);
@@ -85,7 +106,7 @@ public class BarChart(IThemeService themeService) : Control(themeService)
 
             BarChartItem item = _items[row];
             double ratio = max <= 0 ? 0 : item.Value / max;
-            string label = item.Label.PadRight(labelWidth) + " ";
+            string label = (item.Label ?? string.Empty).PadRight(labelWidth) + " ";
             string bar = BuildBar(ratio, barWidth);
             string value = valueColumn > 0 ? " " + values[row].PadLeft(valueWidth) : string.Empty;
 

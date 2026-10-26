@@ -37,9 +37,15 @@ public class Sparkline(IThemeService themeService) : Control(themeService)
     /// <summary>Maps a value to a glyph index between 0 and 7.</summary>
     public static int LevelFor(double value, double min, double max)
     {
-        if (double.IsNaN(value) || max <= min)
+        if (double.IsNaN(value) || !double.IsFinite(min) || !double.IsFinite(max) || max <= min)
         {
             return 0;
+        }
+
+        // Past either bound clamps to the end glyph; the arithmetic below would give NaN for an infinity.
+        if (double.IsInfinity(value))
+        {
+            return value > 0 ? Levels.Length - 1 : 0;
         }
 
         double ratio = Math.Clamp((value - min) / (max - min), 0.0, 1.0);
@@ -56,8 +62,10 @@ public class Sparkline(IThemeService themeService) : Control(themeService)
 
         IEnumerable<double> window = values.Count > width ? values.Skip(values.Count - width) : values;
         double[] data = window.ToArray();
-        double min = minimum ?? data.Min();
-        double max = maximum ?? data.Max();
+        // Autoscale on the numbers only: one NaN in the data made Min and Max NaN for the whole line.
+        double[] finite = data.Where(double.IsFinite).ToArray();
+        double min = minimum ?? (finite.Length == 0 ? 0 : finite.Min());
+        double max = maximum ?? (finite.Length == 0 ? 0 : finite.Max());
         return new string(data.Select(v => Levels[LevelFor(v, min, max)]).ToArray());
     }
 

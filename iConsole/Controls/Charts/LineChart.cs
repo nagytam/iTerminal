@@ -42,7 +42,7 @@ public class LineChart(IThemeService themeService) : Control(themeService)
         }
 
         int[,] cells = new int[height, width];
-        double[] data = values.Where(v => !double.IsNaN(v)).ToArray();
+        double[] data = values.Where(double.IsFinite).ToArray();
         if (data.Length > 0)
         {
             int pixelWidth = width * 2;
@@ -54,7 +54,7 @@ public class LineChart(IThemeService themeService) : Control(themeService)
             {
                 double position = pixelWidth == 1 ? 0 : x * (data.Length - 1) / (double)(pixelWidth - 1);
                 double value = data[(int)Math.Round(position)];
-                double ratio = max <= min ? 0.0 : Math.Clamp((value - min) / (max - min), 0.0, 1.0);
+                double ratio = max <= min || !double.IsFinite(min) || !double.IsFinite(max) ? 0.0 : Math.Clamp((value - min) / (max - min), 0.0, 1.0);
                 int y = (int)Math.Round((1.0 - ratio) * (pixelHeight - 1));
                 int from = previous ?? y;
                 for (int fill = Math.Min(from, y); fill <= Math.Max(from, y); fill++)
