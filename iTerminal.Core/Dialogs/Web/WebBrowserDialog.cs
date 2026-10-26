@@ -180,6 +180,30 @@ public class WebBrowserDialog : Dialog
 
     #region Keys
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_mode != Mode.Browse)
+        {
+            yield return ("Esc", "Back to the page");
+            yield break;
+        }
+
+        yield return ("Ctrl+L / F6", "Type an address");
+        yield return ("Tab", "Move to the next link or field");
+        yield return ("Enter", "Follow the link (Ctrl: in a new tab)");
+        yield return ("Up/Down", "Scroll the page");
+        yield return ("Space", "Scroll a page down (Shift: up)");
+        yield return ("Backspace / Alt+Left", "Back");
+        yield return ("Shift+Backspace / Alt+Right", "Forward");
+        yield return ("F5 / Ctrl+R", "Reload");
+        yield return ("Ctrl+T / Ctrl+W", "Open or close a tab");
+        yield return ("Ctrl+Tab", "Next tab");
+        yield return ("Ctrl+D", "Bookmark the page");
+        yield return ("F2 / F4", "Bookmarks / history");
+        yield return ("/ or Ctrl+F", "Find in the page");
+        yield return ("F1", "Help");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType != KeyPressType.Down)

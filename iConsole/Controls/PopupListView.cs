@@ -42,6 +42,15 @@ public class PopupListView : Control
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Up/Down", "Move the highlight");
+        yield return ("PageUp/PageDown", "Move a page at a time");
+        yield return ("Home/End", "Jump to the first or last item");
+        yield return ("Enter/Space", "Choose the highlighted item");
+        yield return ("Esc", "Close the list");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         var isHandled = await base.HandleKeyEventAsync(keyEvent);

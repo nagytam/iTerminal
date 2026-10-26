@@ -513,6 +513,28 @@ public class NetworkBrowserDialog : SplitPaneDialog
 
     #region Input
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_pendingDelete is not null)
+        {
+            yield return ("Y", "Delete the saved profile");
+            yield return ("N / Esc", "Keep the profile");
+            yield break;
+        }
+
+        if (_mode == Mode.Connect)
+        {
+            yield return ("Enter", "Connect");
+            yield return ("Esc", "Back to the host list");
+            yield break;
+        }
+
+        yield return ("Enter", "Open the chosen host");
+        yield return ("R", "Search the network again");
+        yield return ("D", "Delete the saved profile (asks first)");
+        yield return ("Esc", "Close");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_pendingDelete is not null)

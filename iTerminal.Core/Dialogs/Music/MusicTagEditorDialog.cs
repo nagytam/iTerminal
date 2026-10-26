@@ -147,6 +147,13 @@ public class MusicTagEditorDialog : Dialog
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Tab", "Move between the tags");
+        yield return ("Enter", "Save the tags");
+        yield return ("Esc", "Close without saving");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType == KeyPressType.Down

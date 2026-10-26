@@ -225,6 +225,14 @@ public class Popup : Window
         Closed?.Invoke(this, EventArgs.Empty);
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (IsOpen && CloseOnEscape)
+        {
+            yield return ("Esc", "Close the popup");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (IsOpen && CloseOnEscape
