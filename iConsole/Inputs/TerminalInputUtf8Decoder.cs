@@ -85,6 +85,12 @@ public sealed class TerminalInputUtf8Decoder
 
             var fullLen = endInclusive + 1;
             var csi = b[..fullLen];
+            if (TryParseKittyKeyboardReply(csi) || TryParseKittyKey(csi, emitKey))
+            {
+                RemovePrefix(fullLen);
+                return true;
+            }
+
             if (TryParseSgrMouse(csi, emitMouse))
             {
                 RemovePrefix(fullLen);
@@ -155,6 +161,128 @@ public sealed class TerminalInputUtf8Decoder
         }
 
         return false;
+    }
+
+    /// <summary>True once the terminal has answered <see cref="KittyKeyboardProtocol.Query"/>.</summary>
+    public bool KittyKeyboardSupported { get; private set; }
+
+    // "ESC [ ? flags u" — the answer to the query.
+    private bool TryParseKittyKeyboardReply(ReadOnlySpan<byte> csi)
+    {
+        if (csi.Length < 4 || csi[2] != (byte)'?' || csi[^1] != (byte)'u')
+        {
+            return false;
+        }
+
+        foreach (var c in csi[3..^1])
+        {
+            if (c is < (byte)'0' or > (byte)'9')
+            {
+                return false;
+            }
+        }
+
+        KittyKeyboardSupported = true;
+        return true;
+    }
+
+    // "ESC [ code[:shifted[:base]] ; modifiers[:event] [; text] u". Modifiers are 1 + a bit set:
+    // shift 1, alt 2, ctrl 4 (super, hyper, meta, caps lock and num lock are not read).
+    private static bool TryParseKittyKey(ReadOnlySpan<byte> csi, Action<KeyEvent> emitKey)
+    {
+        if (csi.Length < 4 || csi[^1] != (byte)'u' || csi[2] is (byte)'?' or (byte)'<' or (byte)'>' or (byte)'=')
+        {
+            return false;
+        }
+
+        var parts = Encoding.ASCII.GetString(csi[2..^1]).Split(';');
+        var codeFields = parts[0].Split(':');
+        if (!int.TryParse(codeFields[0], out var code) || code <= 0)
+        {
+            return false;
+        }
+
+        var modifiers = 0;
+        var eventType = 1;
+        if (parts.Length > 1 && parts[1].Length > 0)
+        {
+            var modFields = parts[1].Split(':');
+            if (!int.TryParse(modFields[0], out modifiers) || modifiers < 1)
+            {
+                return false;
+            }
+
+            modifiers--;
+            if (modFields.Length > 1 && !int.TryParse(modFields[1], out eventType))
+            {
+                return false;
+            }
+        }
+
+        // A key release is not a key press. Nothing asks for them yet; swallow the sequence.
+        if (eventType == 3)
+        {
+            return true;
+        }
+
+        var shift = (modifiers & 1) != 0;
+        var alt = (modifiers & 2) != 0;
+        var control = (modifiers & 4) != 0;
+
+        switch (code)
+        {
+            case 27:
+                emitKey(new KeyEvent('\x1b', ConsoleKey.Escape, shift, alt, control));
+                return true;
+            case 13:
+                emitKey(new KeyEvent('\r', ConsoleKey.Enter, shift, alt, control));
+                return true;
+            case 9:
+                emitKey(new KeyEvent('\t', ConsoleKey.Tab, shift, alt, control));
+                return true;
+            case 8:
+            case 127:
+                emitKey(new KeyEvent('\b', ConsoleKey.Backspace, shift, alt, control));
+                return true;
+            case 32:
+                emitKey(new KeyEvent(' ', ConsoleKey.Spacebar, shift, alt, control));
+                return true;
+        }
+
+        // Private-use codes are the function and keypad keys; they are not mapped yet.
+        if (code is >= 0xD800 and <= 0xDFFF || code >= 0xE000)
+        {
+            return true;
+        }
+
+        var ch = char.ConvertFromUtf32(code)[0];
+        var consoleKey = ConsoleKey.None;
+        if (ch is >= 'a' and <= 'z')
+        {
+            consoleKey = ch - 'a' + ConsoleKey.A;
+        }
+        else if (ch is >= '0' and <= '9')
+        {
+            consoleKey = ch - '0' + ConsoleKey.D0;
+        }
+
+        // The legacy decoder reports Ctrl+letter as the control character, so the key matches either way.
+        char keyChar;
+        if (control && consoleKey is >= ConsoleKey.A and <= ConsoleKey.Z)
+        {
+            keyChar = (char)(ch & 0x1f);
+        }
+        else if (shift && codeFields.Length > 1 && int.TryParse(codeFields[1], out var shifted) && shifted is > 0 and < 0xD800)
+        {
+            keyChar = (char)shifted;
+        }
+        else
+        {
+            keyChar = shift && consoleKey is >= ConsoleKey.A and <= ConsoleKey.Z ? char.ToUpperInvariant(ch) : ch;
+        }
+
+        emitKey(new KeyEvent(keyChar, consoleKey, shift, alt, control));
+        return true;
     }
 
     private static bool TryParseSgrMouse(ReadOnlySpan<byte> csi, Action<MouseEvent> emitMouse)

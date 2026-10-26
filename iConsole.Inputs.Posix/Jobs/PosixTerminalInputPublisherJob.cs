@@ -35,6 +35,40 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
     private bool _termiosCaptured;
     private bool _mouseEnabled;
 
+    /// <summary>Whether the Kitty keyboard flags are pushed on the terminal, so they must be popped before the shell gets it back.</summary>
+    private bool _kittyPushed;
+
+    private void PushKittyKeyboard()
+    {
+        if (_kittyPushed || !KittyKeyboardProtocol.IsEnabledByEnvironment)
+        {
+            return;
+        }
+
+        Console.Out.Write(KittyKeyboardProtocol.Push);
+        Console.Out.Flush();
+        _kittyPushed = true;
+    }
+
+    private void PopKittyKeyboard()
+    {
+        if (!_kittyPushed)
+        {
+            return;
+        }
+
+        try
+        {
+            Console.Out.Write(KittyKeyboardProtocol.Pop);
+            Console.Out.Flush();
+        }
+        catch
+        {
+        }
+
+        _kittyPushed = false;
+    }
+
     protected override Task RunAsync(CancellationToken cancellationToken)
     {
         if (!OperatingSystem.IsLinux())
@@ -50,6 +84,11 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
             }
 
             Console.Out.Write(TerminalMouseAnsi.EnablePreferredMouseReporting);
+            if (KittyKeyboardProtocol.IsEnabledByEnvironment)
+            {
+                Console.Out.Write(KittyKeyboardProtocol.Query);
+            }
+
             Console.Out.Flush();
             _mouseEnabled = true;
 
@@ -86,6 +125,7 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
         }
         finally
         {
+            PopKittyKeyboard();
             if (_mouseEnabled)
             {
                 try
@@ -150,6 +190,13 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
                 MouseQueue.Enqueue(m);
                 InputAvailableSignal.Release();
             });
+
+        // The terminal answered the query: only now is it safe to ask for the new key format.
+        if (_decoder.KittyKeyboardSupported)
+        {
+            PushKittyKeyboard();
+        }
+
         return true;
     }
 
@@ -164,6 +211,7 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
             return;
         }
 
+        PopKittyKeyboard();
         if (_mouseEnabled)
         {
             Console.Out.Write(TerminalMouseAnsi.DisablePreferredMouseReporting);
@@ -190,6 +238,11 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
             Console.Out.Write(TerminalMouseAnsi.EnablePreferredMouseReporting);
             Console.Out.Flush();
             _mouseEnabled = true;
+            if (_decoder.KittyKeyboardSupported)
+            {
+                PushKittyKeyboard();
+            }
+
             _ = TrySetNonBlockingStdin(true);
         }
     }
