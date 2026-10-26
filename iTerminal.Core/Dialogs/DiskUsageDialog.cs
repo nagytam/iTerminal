@@ -291,6 +291,18 @@ public class DiskUsageDialog : Dialog
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Up/Down", "Move the cursor over the folders");
+        yield return ("PageUp/PageDown", "Move a page at a time");
+        yield return ("Home/End", "Jump to the first or last row");
+        yield return ("Enter/Right", "Go into the folder under the cursor");
+        yield return ("Backspace/Left", "Go up one folder");
+        yield return ("S", "Sort by name or by size");
+        yield return ("R", "Scan again");
+        yield return ("G", "Show the folder in the panel");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (!keyEvent.Alt && !keyEvent.Control && _scan is { IsComplete: true } && _current is not null)

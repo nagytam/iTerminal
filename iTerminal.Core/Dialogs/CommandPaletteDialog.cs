@@ -123,6 +123,14 @@ public class CommandPaletteDialog : Dialog
     /// The list keys are claimed ahead of the text box, which holds focus so typing always narrows
     /// the list: ↑/↓, PgUp/PgDn choose, Enter runs. Everything else goes to the text box.
     /// </summary>
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Type", "Filter the commands");
+        yield return ("Up/Down", "Choose a command");
+        yield return ("PageUp/PageDown", "Move a page at a time");
+        yield return ("Enter", "Run the chosen command");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (!keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)

@@ -284,6 +284,27 @@ public class DuplicateFinderDialog : Dialog
         Status();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_confirming)
+        {
+            yield return ("Y", "Delete the marked files");
+            yield return ("Any other key", "Delete nothing");
+            yield break;
+        }
+
+        yield return ("Up/Down", "Move the cursor over the files");
+        yield return ("PageUp/PageDown", "Move a page at a time");
+        yield return ("Home/End", "Jump to the first or last file");
+        yield return ("Space/Insert", "Mark or unmark the file and move on");
+        yield return ("A", "Mark all but the oldest of each set");
+        yield return ("N", "Mark all but the newest of each set");
+        yield return ("U", "Clear the marks");
+        yield return ("Delete/F8", "Delete the marked files (asks first)");
+        yield return ("R", "Scan again");
+        yield return ("G/Enter", "Show the file in the panel");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_confirming)
