@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Menu.File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Menu.Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Menu.Navigate" xml:space="preserve">
+    <value>Navigate</value>
+  </data>
+  <data name="Menu.Tools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="Menu.Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Menu.CommandPalette" xml:space="preserve">
+    <value>Command Palette</value>
+  </data>
+  <data name="Menu.About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Menu.Checksums" xml:space="preserve">
+    <value>Checksums</value>
+  </data>
+  <data name="Menu.ColourLabelsandTags" xml:space="preserve">
+    <value>Colour Labels and Tags</value>
+  </data>
+  <data name="Menu.CommandLog" xml:space="preserve">
+    <value>Command Log</value>
+  </data>
+  <data name="Menu.CompareFiles" xml:space="preserve">
+    <value>Compare Files</value>
+  </data>
+  <data name="Menu.CompareFolders" xml:space="preserve">
+    <value>Compare Folders</value>
+  </data>
+  <data name="Menu.Compress" xml:space="preserve">
+    <value>Compress</value>
+  </data>
+  <data name="Menu.CopytoClipboard" xml:space="preserve">
+    <value>Copy to Clipboard</value>
+  </data>
+  <data name="Menu.Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Menu.CreateFile" xml:space="preserve">
+    <value>Create File</value>
+  </data>
+  <data name="Menu.CreateFolder" xml:space="preserve">
+    <value>Create Folder</value>
+  </data>
+  <data name="Menu.CreateLink" xml:space="preserve">
+    <value>Create Link</value>
+  </data>
+  <data name="Menu.CuttoClipboard" xml:space="preserve">
+    <value>Cut to Clipboard</value>
+  </data>
+  <data name="Menu.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Menu.DiskManager" xml:space="preserve">
+    <value>Disk Manager</value>
+  </data>
+  <data name="Menu.DockerContainers" xml:space="preserve">
+    <value>Docker Containers</value>
+  </data>
+  <data name="Menu.EditLink" xml:space="preserve">
+    <value>Edit Link</value>
+  </data>
+  <data name="Menu.EditWith" xml:space="preserve">
+    <value>Edit With…</value>
+  </data>
+  <data name="Menu.Extract" xml:space="preserve">
+    <value>Extract</value>
+  </data>
+  <data name="Menu.FilterbyLabel" xml:space="preserve">
+    <value>Filter by Label</value>
+  </data>
+  <data name="Menu.FindFiles" xml:space="preserve">
+    <value>Find Files</value>
+  </data>
+  <data name="Menu.FindLargeFiles" xml:space="preserve">
+    <value>Find Large Files</value>
+  </data>
+  <data name="Menu.FindOldFiles" xml:space="preserve">
+    <value>Find Old Files</value>
+  </data>
+  <data name="Menu.GitHistory" xml:space="preserve">
+    <value>Git History</value>
+  </data>
+  <data name="Menu.GoToFolder" xml:space="preserve">
+    <value>Go To Folder</value>
+  </data>
+  <data name="Menu.InvertMarks" xml:space="preserve">
+    <value>Invert Marks</value>
+  </data>
+  <data name="Menu.MarkAll" xml:space="preserve">
+    <value>Mark All</value>
+  </data>
+  <data name="Menu.MarkbyPattern" xml:space="preserve">
+    <value>Mark by Pattern</value>
+  </data>
+  <data name="Menu.Mark" xml:space="preserve">
+    <value>Mark</value>
+  </data>
+  <data name="Menu.Move" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="Menu.MusicPlayer" xml:space="preserve">
+    <value>Music Player</value>
+  </data>
+  <data name="Menu.NetworkManager" xml:space="preserve">
+    <value>Network Manager</value>
+  </data>
+  <data name="Menu.OpenWith" xml:space="preserve">
+    <value>Open With…</value>
+  </data>
+  <data name="Menu.PastefromClipboard" xml:space="preserve">
+    <value>Paste from Clipboard</value>
+  </data>
+  <data name="Menu.ProcessManager" xml:space="preserve">
+    <value>Process Manager</value>
+  </data>
+  <data name="Menu.Properties" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="Menu.QuickView" xml:space="preserve">
+    <value>Quick View</value>
+  </data>
+  <data name="Menu.Quit" xml:space="preserve">
+    <value>Quit</value>
+  </data>
+  <data name="Menu.RecycleBin" xml:space="preserve">
+    <value>Recycle Bin</value>
+  </data>
+  <data name="Menu.Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="Menu.ScanwithMicrosoftDefender" xml:space="preserve">
+    <value>Scan with Microsoft Defender</value>
+  </data>
+  <data name="Menu.SecureWipe" xml:space="preserve">
+    <value>Secure Wipe</value>
+  </data>
+  <data name="Menu.Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Menu.Shell" xml:space="preserve">
+    <value>Shell</value>
+  </data>
+  <data name="Menu.Signatures" xml:space="preserve">
+    <value>Signatures</value>
+  </data>
+  <data name="Menu.SortBy" xml:space="preserve">
+    <value>Sort By…</value>
+  </data>
+  <data name="Menu.StripMetadata" xml:space="preserve">
+    <value>Strip Metadata</value>
+  </data>
+  <data name="Menu.SwitchPanels" xml:space="preserve">
+    <value>Switch Panels</value>
+  </data>
+  <data name="Menu.SynchroniseFolders" xml:space="preserve">
+    <value>Synchronise Folders</value>
+  </data>
+  <data name="Menu.SystemInfo" xml:space="preserve">
+    <value>System Info</value>
+  </data>
+  <data name="Menu.TaskManager" xml:space="preserve">
+    <value>Task Manager</value>
+  </data>
+  <data name="Menu.Terminal" xml:space="preserve">
+    <value>Terminal</value>
+  </data>
+  <data name="Menu.ThemeManager" xml:space="preserve">
+    <value>Theme Manager</value>
+  </data>
+  <data name="Menu.UnmarkAll" xml:space="preserve">
+    <value>Unmark All</value>
+  </data>
+  <data name="Menu.UnmarkbyPattern" xml:space="preserve">
+    <value>Unmark by Pattern</value>
+  </data>
+  <data name="Menu.View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Menu.iPhoneBrowser" xml:space="preserve">
+    <value>iPhone Browser</value>
+  </data>
+  <data name="Menu.Language" xml:space="preserve">
+    <value>Language…</value>
+  </data>
+  <data name="Menu.Workspaces" xml:space="preserve">
+    <value>Workspaces</value>
+  </data>
+  <data name="Menu.Translator" xml:space="preserve">
+    <value>Translator</value>
+  </data>
+  <data name="Menu.CurrencyConverter" xml:space="preserve">
+    <value>Currency Converter</value>
+  </data>
+  <data name="Footer.Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Footer.Commands" xml:space="preserve">
+    <value>Commands</value>
+  </data>
+  <data name="Footer.Terminal" xml:space="preserve">
+    <value>Terminal</value>
+  </data>
+  <data name="Footer.View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Footer.Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Footer.Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Footer.Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="Footer.Find" xml:space="preserve">
+    <value>Find</value>
+  </data>
+  <data name="Footer.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Footer.Tasks" xml:space="preserve">
+    <value>Tasks</value>
+  </data>
+  <data name="Footer.Quit" xml:space="preserve">
+    <value>Quit</value>
+  </data>
+  <data name="Footer.Screens" xml:space="preserve">
+    <value>Screens</value>
+  </data>
+  <data name="Footer.Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Footer.Compare" xml:space="preserve">
+    <value>Compare</value>
+  </data>
+  <data name="Footer.Unpack" xml:space="preserve">
+    <value>Unpack</value>
+  </data>
+  <data name="Footer.Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="Footer.Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Footer.Folders" xml:space="preserve">
+    <value>Folders</value>
+  </data>
+  <data name="Footer.Preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Footer.History" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="Footer.Docker" xml:space="preserve">
+    <value>Docker</value>
+  </data>
+  <data name="Footer.Recycle" xml:space="preserve">
+    <value>Recycle</value>
+  </data>
+  <data name="Footer.Networks" xml:space="preserve">
+    <value>Networks</value>
+  </data>
+  <data name="Footer.Git" xml:space="preserve">
+    <value>Git</value>
+  </data>
+  <data name="Footer.Calc" xml:space="preserve">
+    <value>Calc</value>
+  </data>
+  <data name="Footer.Convert" xml:space="preserve">
+    <value>Convert</value>
+  </data>
+  <data name="Footer.Packages" xml:space="preserve">
+    <value>Packages</value>
+  </data>
+  <data name="Footer.Documents" xml:space="preserve">
+    <value>Documents</value>
+  </data>
+  <data name="Footer.Pack" xml:space="preserve">
+    <value>Pack</value>
+  </data>
+  <data name="Footer.Themes" xml:space="preserve">
+    <value>Themes</value>
+  </data>
+  <data name="Footer.About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Footer.SysInfo" xml:space="preserve">
+    <value>SysInfo</value>
+  </data>
+  <data name="Footer.SysSet" xml:space="preserve">
+    <value>SysSet</value>
+  </data>
+  <data name="Footer.Stocks" xml:space="preserve">
+    <value>Stocks</value>
+  </data>
+  <data name="Footer.Translate" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="Footer.Currency" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="Footer.Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Language.Title" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Language.Current" xml:space="preserve">
+    <value>Current: {0}</value>
+  </data>
+  <data name="Language.Applied" xml:space="preserve">
+    <value>Language: {0}</value>
+  </data>
+</root>

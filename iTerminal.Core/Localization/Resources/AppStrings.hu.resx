@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Menu.File" xml:space="preserve">
+    <value>Fájl</value>
+  </data>
+  <data name="Menu.Edit" xml:space="preserve">
+    <value>Szerkesztés</value>
+  </data>
+  <data name="Menu.Navigate" xml:space="preserve">
+    <value>Navigálás</value>
+  </data>
+  <data name="Menu.Tools" xml:space="preserve">
+    <value>Eszközök</value>
+  </data>
+  <data name="Menu.Help" xml:space="preserve">
+    <value>Súgó</value>
+  </data>
+  <data name="Menu.CommandPalette" xml:space="preserve">
+    <value>Parancspaletta</value>
+  </data>
+  <data name="Menu.About" xml:space="preserve">
+    <value>Névjegy</value>
+  </data>
+  <data name="Menu.Checksums" xml:space="preserve">
+    <value>Ellenőrzőösszegek</value>
+  </data>
+  <data name="Menu.ColourLabelsandTags" xml:space="preserve">
+    <value>Színcímkék és címkék</value>
+  </data>
+  <data name="Menu.CommandLog" xml:space="preserve">
+    <value>Parancsnapló</value>
+  </data>
+  <data name="Menu.CompareFiles" xml:space="preserve">
+    <value>Fájlok összehasonlítása</value>
+  </data>
+  <data name="Menu.CompareFolders" xml:space="preserve">
+    <value>Mappák összehasonlítása</value>
+  </data>
+  <data name="Menu.Compress" xml:space="preserve">
+    <value>Tömörítés</value>
+  </data>
+  <data name="Menu.CopytoClipboard" xml:space="preserve">
+    <value>Másolás a vágólapra</value>
+  </data>
+  <data name="Menu.Copy" xml:space="preserve">
+    <value>Másolás</value>
+  </data>
+  <data name="Menu.CreateFile" xml:space="preserve">
+    <value>Fájl létrehozása</value>
+  </data>
+  <data name="Menu.CreateFolder" xml:space="preserve">
+    <value>Mappa létrehozása</value>
+  </data>
+  <data name="Menu.CreateLink" xml:space="preserve">
+    <value>Hivatkozás létrehozása</value>
+  </data>
+  <data name="Menu.CuttoClipboard" xml:space="preserve">
+    <value>Kivágás a vágólapra</value>
+  </data>
+  <data name="Menu.Delete" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
+  <data name="Menu.DiskManager" xml:space="preserve">
+    <value>Lemezkezelő</value>
+  </data>
+  <data name="Menu.DockerContainers" xml:space="preserve">
+    <value>Docker-tárolók</value>
+  </data>
+  <data name="Menu.EditLink" xml:space="preserve">
+    <value>Hivatkozás szerkesztése</value>
+  </data>
+  <data name="Menu.EditWith" xml:space="preserve">
+    <value>Szerkesztés ezzel…</value>
+  </data>
+  <data name="Menu.Extract" xml:space="preserve">
+    <value>Kicsomagolás</value>
+  </data>
+  <data name="Menu.FilterbyLabel" xml:space="preserve">
+    <value>Szűrés címke szerint</value>
+  </data>
+  <data name="Menu.FindFiles" xml:space="preserve">
+    <value>Fájlok keresése</value>
+  </data>
+  <data name="Menu.FindLargeFiles" xml:space="preserve">
+    <value>Nagy fájlok keresése</value>
+  </data>
+  <data name="Menu.FindOldFiles" xml:space="preserve">
+    <value>Régi fájlok keresése</value>
+  </data>
+  <data name="Menu.GitHistory" xml:space="preserve">
+    <value>Git-előzmények</value>
+  </data>
+  <data name="Menu.GoToFolder" xml:space="preserve">
+    <value>Ugrás mappához</value>
+  </data>
+  <data name="Menu.InvertMarks" xml:space="preserve">
+    <value>Jelölés megfordítása</value>
+  </data>
+  <data name="Menu.MarkAll" xml:space="preserve">
+    <value>Összes jelölése</value>
+  </data>
+  <data name="Menu.MarkbyPattern" xml:space="preserve">
+    <value>Jelölés mintával</value>
+  </data>
+  <data name="Menu.Mark" xml:space="preserve">
+    <value>Jelölés</value>
+  </data>
+  <data name="Menu.Move" xml:space="preserve">
+    <value>Áthelyezés</value>
+  </data>
+  <data name="Menu.MusicPlayer" xml:space="preserve">
+    <value>Zenelejátszó</value>
+  </data>
+  <data name="Menu.NetworkManager" xml:space="preserve">
+    <value>Hálózatkezelő</value>
+  </data>
+  <data name="Menu.OpenWith" xml:space="preserve">
+    <value>Megnyitás ezzel…</value>
+  </data>
+  <data name="Menu.PastefromClipboard" xml:space="preserve">
+    <value>Beillesztés a vágólapról</value>
+  </data>
+  <data name="Menu.ProcessManager" xml:space="preserve">
+    <value>Folyamatkezelő</value>
+  </data>
+  <data name="Menu.Properties" xml:space="preserve">
+    <value>Tulajdonságok</value>
+  </data>
+  <data name="Menu.QuickView" xml:space="preserve">
+    <value>Gyorsnézet</value>
+  </data>
+  <data name="Menu.Quit" xml:space="preserve">
+    <value>Kilépés</value>
+  </data>
+  <data name="Menu.RecycleBin" xml:space="preserve">
+    <value>Lomtár</value>
+  </data>
+  <data name="Menu.Rename" xml:space="preserve">
+    <value>Átnevezés</value>
+  </data>
+  <data name="Menu.ScanwithMicrosoftDefender" xml:space="preserve">
+    <value>Vizsgálat a Microsoft Defenderrel</value>
+  </data>
+  <data name="Menu.SecureWipe" xml:space="preserve">
+    <value>Biztonságos törlés</value>
+  </data>
+  <data name="Menu.Settings" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  <data name="Menu.Shell" xml:space="preserve">
+    <value>Shell</value>
+  </data>
+  <data name="Menu.Signatures" xml:space="preserve">
+    <value>Aláírások</value>
+  </data>
+  <data name="Menu.SortBy" xml:space="preserve">
+    <value>Rendezés…</value>
+  </data>
+  <data name="Menu.StripMetadata" xml:space="preserve">
+    <value>Metaadatok eltávolítása</value>
+  </data>
+  <data name="Menu.SwitchPanels" xml:space="preserve">
+    <value>Panelek cseréje</value>
+  </data>
+  <data name="Menu.SynchroniseFolders" xml:space="preserve">
+    <value>Mappák szinkronizálása</value>
+  </data>
+  <data name="Menu.SystemInfo" xml:space="preserve">
+    <value>Rendszerinformáció</value>
+  </data>
+  <data name="Menu.TaskManager" xml:space="preserve">
+    <value>Feladatkezelő</value>
+  </data>
+  <data name="Menu.Terminal" xml:space="preserve">
+    <value>Terminál</value>
+  </data>
+  <data name="Menu.ThemeManager" xml:space="preserve">
+    <value>Témakezelő</value>
+  </data>
+  <data name="Menu.UnmarkAll" xml:space="preserve">
+    <value>Jelölés törlése</value>
+  </data>
+  <data name="Menu.UnmarkbyPattern" xml:space="preserve">
+    <value>Jelölés törlése mintával</value>
+  </data>
+  <data name="Menu.View" xml:space="preserve">
+    <value>Megtekintés</value>
+  </data>
+  <data name="Menu.iPhoneBrowser" xml:space="preserve">
+    <value>iPhone-böngésző</value>
+  </data>
+  <data name="Menu.Language" xml:space="preserve">
+    <value>Nyelv…</value>
+  </data>
+  <data name="Menu.Workspaces" xml:space="preserve">
+    <value>Munkaterületek</value>
+  </data>
+  <data name="Menu.Translator" xml:space="preserve">
+    <value>Fordító</value>
+  </data>
+  <data name="Menu.CurrencyConverter" xml:space="preserve">
+    <value>Pénznemváltó</value>
+  </data>
+  <data name="Footer.Help" xml:space="preserve">
+    <value>Súgó</value>
+  </data>
+  <data name="Footer.Commands" xml:space="preserve">
+    <value>Parancsok</value>
+  </data>
+  <data name="Footer.Terminal" xml:space="preserve">
+    <value>Terminál</value>
+  </data>
+  <data name="Footer.View" xml:space="preserve">
+    <value>Nézet</value>
+  </data>
+  <data name="Footer.Edit" xml:space="preserve">
+    <value>Szerk.</value>
+  </data>
+  <data name="Footer.Copy" xml:space="preserve">
+    <value>Másol</value>
+  </data>
+  <data name="Footer.Rename" xml:space="preserve">
+    <value>Átnevez</value>
+  </data>
+  <data name="Footer.Find" xml:space="preserve">
+    <value>Keres</value>
+  </data>
+  <data name="Footer.Delete" xml:space="preserve">
+    <value>Töröl</value>
+  </data>
+  <data name="Footer.Tasks" xml:space="preserve">
+    <value>Feladatok</value>
+  </data>
+  <data name="Footer.Quit" xml:space="preserve">
+    <value>Kilép</value>
+  </data>
+  <data name="Footer.Screens" xml:space="preserve">
+    <value>Képernyők</value>
+  </data>
+  <data name="Footer.Create" xml:space="preserve">
+    <value>Új</value>
+  </data>
+  <data name="Footer.Compare" xml:space="preserve">
+    <value>Összeh.</value>
+  </data>
+  <data name="Footer.Unpack" xml:space="preserve">
+    <value>Kibont</value>
+  </data>
+  <data name="Footer.Folder" xml:space="preserve">
+    <value>Mappa</value>
+  </data>
+  <data name="Footer.Settings" xml:space="preserve">
+    <value>Beáll.</value>
+  </data>
+  <data name="Footer.Folders" xml:space="preserve">
+    <value>Mappák</value>
+  </data>
+  <data name="Footer.Preview" xml:space="preserve">
+    <value>Előnézet</value>
+  </data>
+  <data name="Footer.History" xml:space="preserve">
+    <value>Előzmény</value>
+  </data>
+  <data name="Footer.Docker" xml:space="preserve">
+    <value>Docker</value>
+  </data>
+  <data name="Footer.Recycle" xml:space="preserve">
+    <value>Lomtár</value>
+  </data>
+  <data name="Footer.Networks" xml:space="preserve">
+    <value>Hálózatok</value>
+  </data>
+  <data name="Footer.Git" xml:space="preserve">
+    <value>Git</value>
+  </data>
+  <data name="Footer.Calc" xml:space="preserve">
+    <value>Számológép</value>
+  </data>
+  <data name="Footer.Convert" xml:space="preserve">
+    <value>Átvált</value>
+  </data>
+  <data name="Footer.Packages" xml:space="preserve">
+    <value>Csomagok</value>
+  </data>
+  <data name="Footer.Documents" xml:space="preserve">
+    <value>Dokumentumok</value>
+  </data>
+  <data name="Footer.Pack" xml:space="preserve">
+    <value>Tömörít</value>
+  </data>
+  <data name="Footer.Themes" xml:space="preserve">
+    <value>Témák</value>
+  </data>
+  <data name="Footer.About" xml:space="preserve">
+    <value>Névjegy</value>
+  </data>
+  <data name="Footer.SysInfo" xml:space="preserve">
+    <value>Rendszer</value>
+  </data>
+  <data name="Footer.SysSet" xml:space="preserve">
+    <value>Rdsz.beáll.</value>
+  </data>
+  <data name="Footer.Stocks" xml:space="preserve">
+    <value>Részvények</value>
+  </data>
+  <data name="Footer.Translate" xml:space="preserve">
+    <value>Fordít</value>
+  </data>
+  <data name="Footer.Currency" xml:space="preserve">
+    <value>Pénznem</value>
+  </data>
+  <data name="Footer.Language" xml:space="preserve">
+    <value>Nyelv</value>
+  </data>
+  <data name="Language.Title" xml:space="preserve">
+    <value>Nyelv</value>
+  </data>
+  <data name="Language.Current" xml:space="preserve">
+    <value>Jelenlegi: {0}</value>
+  </data>
+  <data name="Language.Applied" xml:space="preserve">
+    <value>Nyelv: {0}</value>
+  </data>
+</root>

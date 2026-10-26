@@ -5,6 +5,7 @@ using iConsole.Controls.StatusBar;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Interop;
+using iConsole.Localization;
 using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Commands;
@@ -74,7 +75,9 @@ public class HotKeys : StatusBarItem
         SystemSettingsDialog? systemSettingsDialog = null,
         iTerminal.Core.Dialogs.Stocks.StockBrowserDialog? stockBrowserDialog = null,
         iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null,
-        iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null)
+        iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null,
+        LanguageDialog? languageDialog = null,
+        ILocalizer? localizer = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -413,6 +416,63 @@ public class HotKeys : StatusBarItem
             };
             AddControl(currencyConverterDialogButton);
         }
+
+        if (languageDialog is not null)
+        {
+            var languageDialogButton = new Button("Shift-Ctrl-F3-Language", new LanguageDialogCommand(languageDialog), themeService)
+            {
+                Position = new Position(0, 0),
+                ViewSize = new Size(22, 1),
+                IsVisible = false
+            };
+            AddControl(languageDialogButton);
+        }
+
+        _localizer = localizer;
+        if (localizer is not null)
+        {
+            // The language can change on any thread; the idle pass re-reads the labels on the UI thread.
+            localizer.LanguageChanged += (_, _) => _languageChanged = true;
+            LocalizeButtons();
+        }
+    }
+
+    private readonly ILocalizer? _localizer;
+    private volatile bool _languageChanged;
+
+    /// <summary>The English title each button was built with, "F5-Copy": what a missing translation falls back to.</summary>
+    private readonly Dictionary<Button, string> _sourceTitles = [];
+
+    /// <summary>
+    /// Re-labels the buttons in the localizer's language. A title is the keys it stands for, a dash, and the
+    /// label ("Shift-Ctrl-F3-Language"); only the label is translated, from <c>Footer.</c> and the label, and
+    /// the row lays itself out again for the new widths the next time it is drawn.
+    /// </summary>
+    internal void LocalizeButtons()
+    {
+        if (_localizer is null)
+        {
+            return;
+        }
+
+        foreach (Button button in Controls.AsSnapshot().OfType<Button>())
+        {
+            if (!_sourceTitles.TryGetValue(button, out string? source))
+            {
+                source = button.Title;
+                _sourceTitles[button] = source;
+            }
+
+            int dash = source.LastIndexOf('-');
+            if (dash <= 0)
+            {
+                continue;
+            }
+
+            button.Title = _localizer.TryGet("Footer." + source[(dash + 1)..], out string label)
+                ? source[..(dash + 1)] + label
+                : source;
+        }
     }
 
     /// <summary>
@@ -646,6 +706,13 @@ public class HotKeys : StatusBarItem
 
     public override void OnIdle()
     {
+        if (_languageChanged)
+        {
+            _languageChanged = false;
+            LocalizeButtons();
+            StateHasChanged();
+        }
+
         if (OperatingSystem.IsWindows())
         {
             var shift = WindowsPhysicalKeyboard.IsShiftHeld();

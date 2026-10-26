@@ -36,7 +36,7 @@ public class Button : Control
             }
             return _title;
         }
-        private set
+        set
         {
             if (_title != value)
             {

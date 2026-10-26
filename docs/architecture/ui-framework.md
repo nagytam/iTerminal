@@ -24,6 +24,27 @@ The detailed write-ups, one file per subsystem:
 - **Periodic repaint** (`Control.StartAutoRefresh`): starting it again replaces the repaint already running, and `StopAutoRefresh` ends it.
 - **Clock** (`DateTimeProviderService`): the cached time is refreshed on the monotonic clock, so setting the wall clock back cannot freeze it.
 
+### Localization (`iConsole/Localization/`)
+`ILocalizer` (registered by `AddiConsoleCore`) turns a resource key into text in the current language. Strings live in
+`.resx` files, a neutral English one plus `de`, `fr`, `es`, `it` and `hu`; the framework's own are
+`iConsole/Localization/Resources/Strings*.resx` (`Common.*`), and the app adds its own through an `ILocalizationSource`
+(`iTerminal.Core/Localization/Resources/AppStrings*.resx`).
+- **English is the neutral language and the fallback.** A key a language lacks (or leaves empty) shows the English text; a key no
+  file knows shows the key itself, so a missing string is visible. `Get(key, args)` formats with the current culture and never
+  throws on a broken placeholder; `TryGet` is the lookup without the key-as-text fallback.
+- **The choice is `ILanguageStore`-backed.** `Localizer` reads it at construction and saves on `SetLanguage`; the app's store is the
+  `Language` setting (`SettingsLanguageStore`). An unknown saved code leaves English. The default is English, never the OS culture.
+- **There is no change notification in `ISettingsService`, so `ILocalizer.LanguageChanged` is the notification.** It fires on the
+  caller's thread; a control that keeps looked-up text sets a flag in the handler and re-reads in `OnIdle` (the menu bar and the
+  footer do), because the control tree must not be touched from another thread.
+- **Menus and the footer are translated by key derived from the English text.** `MenuItem.Localize(localizer)` keeps the text an
+  entry was built with and looks up `Menu.` + its label without non-alphanumerics (`Edit With…` → `Menu.EditWith`); the shortcut after the
+  tab is never translated. The footer does the same with `Footer.` + the label of `F5-Copy`. An entry without a key stays English, so
+  a new menu entry needs a `Menu.*` row in every `AppStrings*.resx` (the completeness test fails otherwise).
+- **Adding a string:** add the key to the neutral file and to all five language files; `LocalizationResourcesTest` fails when a
+  language lacks a key, has an extra one, or changes the `{n}` placeholders. Strings are extracted in stages: the menu bar, the hot key
+  bar and the language dialog are done; dialog bodies, the command palette and the commands' own titles are still English.
+
 ### Built from the comparison
 
 - **Tooltips.** Set `Control.ToolTipText`. The input consumer reports every pointer event to `IToolTipService`, and a `ToolTipHost` on the screen's root shows the innermost text under the pointer after `Delay` (600 ms by default), measured on `ITimeProvider`. A click, a drag, a wheel turn or a key hides it. Pointer motion without a button is decoded as `MouseEvent.IsHover`; the terminal is asked for it with `?1003h` (any-motion reporting).

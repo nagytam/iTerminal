@@ -2,6 +2,7 @@ using iConsole.Controls.StatusBar;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iConsole.Services;
 using iConsole.Tasks;
 using iTerminal.Core.Controls.Contents;
@@ -28,6 +29,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
     private QuoteIndicator _quoteBTC { get; set; }
 
     private bool _isWeatherIndicatorEnabled = true;
+    private readonly ILocalizer? _localizer;
+    private volatile bool _languageChanged;
     private bool _isQuotesIndicatorEnabled = true;
 
     public TerminalMenuBar(
@@ -111,7 +114,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Remote.RemoteConnectionManagerDialog? remoteConnectionManagerDialog = null,
         iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null,
         iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null,
-        iTerminal.Core.Dialogs.Workspaces.WorkspaceManagerDialog? workspaceManagerDialog = null
+        iTerminal.Core.Dialogs.Workspaces.WorkspaceManagerDialog? workspaceManagerDialog = null,
+        LanguageDialog? languageDialog = null,
+        ILocalizer? localizer = null
         )
         : base([], themeService)
     {
@@ -204,9 +209,18 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             remoteConnectionManagerDialog,
             translatorDialog,
             currencyConverterDialog,
-            workspaceManagerDialog));
+            workspaceManagerDialog,
+            languageDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
+
+        _localizer = localizer;
+        if (localizer is not null)
+        {
+            // The language can change on any thread; the idle pass re-reads the labels on the UI thread.
+            localizer.LanguageChanged += (_, _) => _languageChanged = true;
+            LocalizeMenus();
+        }
 
         _statusBarTopRight = new iConsole.Controls.StatusBar.StatusBar(themeService);
         _statusBarTopRight.AddControl(new Date(themeService, dateTimeProviderService));
@@ -262,10 +276,31 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
     public override void OnIdle()
     {
         base.OnIdle();
-        if (ReadIndicatorSettings())
+        bool languageChanged = _languageChanged;
+        if (languageChanged)
+        {
+            _languageChanged = false;
+            LocalizeMenus();
+        }
+
+        if (ReadIndicatorSettings() || languageChanged)
         {
             OnInitializeLayout();
             GetRootControl()?.Refresh();
+        }
+    }
+
+    /// <summary>Shows every menu and entry in the localizer's language; the menu titles change width, so the bar lays out again.</summary>
+    internal void LocalizeMenus()
+    {
+        if (_localizer is null)
+        {
+            return;
+        }
+
+        foreach (iConsole.Controls.MenuItem menuItem in MenuItems)
+        {
+            menuItem.Localize(_localizer);
         }
     }
 

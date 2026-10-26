@@ -15,6 +15,9 @@ public static class Settings
     /// <summary>The name of the workspace last saved or switched to.</summary>
     public const string ActiveWorkspace = nameof(ActiveWorkspace);
 
+    /// <summary>The language of the interface chosen in the language dialog (<c>en</c>, <c>de</c>, ...), restored at start-up.</summary>
+    public const string Language = nameof(Language);
+
     /// <summary>The colour theme chosen in the theme manager, restored at start-up.</summary>
     public const string Theme = nameof(Theme);
 
