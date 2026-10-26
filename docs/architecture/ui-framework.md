@@ -107,3 +107,48 @@ Compared with Terminal.Gui 2.5.0 (its public API and XML docs, not its runtime b
 - **Reflow.** When the width changes, or wrapping is switched on or off, the viewer keeps the reading position as text: the row at the top of the screen is found again by its line and column after the rows are rebuilt (`TextViewerControl.RebuildRows`, `RowOf`). The caret follows the wrapped row (`CursorScreenRow`), and `KeepCursorInText` scrolls in rows when wrapped.
 - **Editor wrap.** The editor inherits the viewer's wrap. F6 toggles it (F2 is save in the editor). Wrapped, Up and Down move by screen row and keep the column within the row (`MoveCursorByScreenRow`); unwrapped they move by line as before. Home and End still work by line.
 - **Taskbar progress.** `TaskbarProgressJob` polls the background tasks every 250 ms, works out the state with `TaskbarProgressCalculator` (average progress of running tasks; paused when every running task is paused; indeterminate before any progress is reported), and tells `ITaskbarProgress` only when that changes. `WindowsTaskbarProgress` drives `ITaskbarList3` on a thread in a single-threaded apartment, against the console window. Elsewhere `NullTaskbarProgress` is used. The Windows path is compiled on Linux but has not been run on Windows. Windows Terminal may host the console in a window that has no taskbar button to show the indicator on.
+
+### Comparison with other TUI libraries
+
+The first comparison above was against Terminal.Gui only. This one widens it to the libraries people pick instead: Textual and prompt_toolkit (Python), Ratatui (Rust), Bubble Tea with Bubbles and Lip Gloss, and tview (Go), FTXUI and Notcurses (C++/C), Spectre.Console (.NET) and Ink (JavaScript). It is based on their documented features, not their runtime behaviour, and on a search of `iConsole` at `github/main` (92fda4d); a "not found" is a grep result and needs a runtime check before work starts. Features that already have an entry under "Suggested improvements" are only referred to by number.
+
+**Where iConsole is level or ahead.** Most of the widget set (tabs, tree, table, virtualized list and table, calendar, wizard, markdown viewer, charts, toasts, tooltips, popovers, context menus with submenus, command palette, splitter, percent/fill panel), hyperlinks (OSC 8), underline styles, OSC 52 clipboard, the Kitty keyboard protocol, synchronized output, localization, a virtual terminal for tests with input injection and virtual time, and a main-loop watchdog. Few of the others have a watchdog or a built-in localizer; none has a file-panel stack on top.
+
+**Gaps, by library that has the feature**
+
+| Feature | Seen in | Status in iConsole | Fits |
+| --- | --- | --- | --- |
+| Display width of wide characters and grapheme clusters | Notcurses, Textual, Ratatui (`unicode-width`), tcell | Not found (item 1) | `ConxelString`, `Conxel`, the renderer |
+| Bracketed paste | prompt_toolkit, Textual, Bubble Tea, tcell | Not found (item 2) | input sources, `IInputInjector` |
+| Colour depth detection and quantisation to 256/16 colours; OSC 10/11 default colours | Textual, Notcurses, Ratatui via backends | Not found (item 3) | `AnsiRenderer`, `ThemeService` |
+| Focus-in / focus-out reporting (`?1004h`) | Textual, Bubble Tea, tcell | Not found | input sources; pause blinking and auto-refresh while the terminal is in the background |
+| Window title (OSC 0/2) and title stack | Textual, Bubble Tea, tcell | Not found | `IConsoleDriver` |
+| Inline images: Kitty graphics, iTerm2 and Sixel, with a half-block fallback | Notcurses, Textual (`textual-image`), Ratatui (`ratatui-image`) | Not built (item 9) | new `ImageControl`; the image viewer's ASCII art |
+| Sub-cell drawing: braille and half-block canvas for plots and shapes | Ratatui `Canvas`, Notcurses blitters, Bubble Tea (`asciigraph`) | Not found | `LineChart`, `Heatmap`, `Sparkline` would gain resolution |
+| Declarative styling (a style sheet or theme file, per-state selectors) | Textual CSS, Lip Gloss, tview themes | Themes exist as code and a theme dialog; no file format | `ColorScheme`, `ThemeService`; a JSON theme file is the small version |
+| Grid layout with row/column spans; wrap panel; dock layout | Textual (`grid`, `dock`), FTXUI `gridbox`, Ratatui `Layout` | *Built:* `GridPanel` and `DockPanel` (see below). Wrap panel not built | next to `StackPanel` and `SizeSolver` |
+| Scroll container for arbitrary children (clipping plus scroll bars) | Textual `ScrollableContainer`, Terminal.Gui, FTXUI `frame` | Not found; each control scrolls itself | new `ScrollView` over `ScrollBar` |
+| Animation and easing (property tweens, fade, slide) on a frame clock | Textual `animate`, Bubble Tea `harmonica`, Notcurses | Not found; `Spinner`, `Skeleton` and `BouncingLabel` animate by hand | `ITimeProvider`, `StartAutoRefresh` |
+| Rich inline markup in a label (`[bold red]text[/]`) | Spectre.Console, Textual `Rich` | Not found; attributes are set through `ConxelString` calls | `Label`, `ConxelString` |
+| Mouse text selection and copy in viewers and editors | Textual, tview, Terminal.Gui | Not found (drag selection) | `TextViewerControl`, `TextEditorControl`, `ITextClipboardService` |
+| Mouse hold to repeat (scroll arrows, spin buttons) | Terminal.Gui, Textual | Not built (item 10) | `ScrollBar`, `NumericUpDown`, `Slider` |
+| Drag and drop between controls | Textual, Terminal.Gui, tview | Not found | mouse routing, file panels |
+| Tree table (tree with columns) | Textual `DataTable`+`Tree`, Terminal.Gui `TreeTableSource` | Not found | `TreeView`, `Table<T>` |
+| Table upgrades: multi-select, cell colour, fixed columns | Textual `DataTable`, tview `Table` | Not built (item 8); virtual table lacks marking and cell selection | `Table<T>`, `VirtualTable<T>` |
+| Scatter series and chart legends | Ratatui `Chart`, Textual-plotext | Not found (item 11) | `LineChart` |
+| Inline (non-fullscreen) mode: a region that grows under the prompt and leaves scrollback | Ink, Bubble Tea inline, Ratatui `Viewport::Inline`, Spectre `Live` | Not found; the framework owns the whole screen | rendering pipeline; useful for a small CLI built on iConsole |
+| Prompt widgets for scripts: select, multi-select, text prompt with validation | Spectre.Console `Prompt`, Bubbles, Inquirer | Dialogs only; no one-call prompt API | thin helpers over the existing dialogs and lists |
+| Focus chain control: explicit tab order, focus groups, focus-visible ring | Textual, Terminal.Gui | Tab order follows the tree; no explicit order | `Control`, `TabForwardCommand` |
+| Snapshot tests of a screen (golden text/SVG) | Textual `pytest-textual-snapshot`, Ratatui `TestBackend` | `ScreenBuffer` asserts exist; no golden-file helper | `iConsole.Test` helpers |
+| Pluggable key bindings from a file | Textual `BINDINGS`, Bubbles `key` | Not found (item 5) | `Command.Key` |
+| Debug overlay / inspector (bounds, focus, tree) | Textual devtools, Ratatui `tui-logger` | Not built (item 10) | alongside `ITERMINAL_RENDER_DUMPS` |
+| Right-to-left and bidi text | Notcurses (partial), few others | Not found; low priority | text layout |
+| Screen reader and accessibility hints | Few; Textual has none beyond a "no colour" mode | Not found; `NO_COLOR` was not checked | `AnsiRenderer` (`NO_COLOR` is cheap to honour) |
+
+**Suggested order.** The first four rows protect correct output on real terminals (width, paste, colour depth, focus), and are small. After those, the biggest gain per line of code is the `ScrollView` and grid layout (every dialog that lays out by hand shrinks), then the sub-cell canvas and image control (the charts and image viewer look much better), then animation and mouse selection. Inline mode and the prompt helpers are only worth doing if iConsole is meant to be used as a library by other programs, which this repository does not need yet.
+
+### Grid and dock layout
+
+- **`GridPanel`** has column and row tracks, each a `SizeRule` (`SetColumns`, `SetRows`; one filling track each by default), `ColumnGap` and `RowGap`. `Add(control, row, column, rowSpan, columnSpan)` puts a child in a cell or across several tracks; a span covers the gaps between its tracks. Tracks are solved with `SizeSolver` on every draw, so a resize needs no code. A hidden child leaves its cells empty (the grid keeps its shape), and a child placed past the last track is clamped to it.
+- **`DockPanel`** attaches children to edges in the order added (`DockSide.Top`, `Bottom`, `Left`, `Right`, `Fill`). Each takes a strip of the space the earlier ones left, with a thickness given as a `SizeRule` (one cell by default; a percentage is of the space left at that point). `Fill` takes the rest and children added after it get no space. `Gap` separates a strip from what follows it, and a hidden child takes neither space nor gap.
+- Both are unfocusable containers like `StackPanel`; nest them (a dock whose fill is a grid) for full screens.
