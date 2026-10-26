@@ -22,6 +22,9 @@ public class Rating : Control, IReadOnly
 
     public bool IsReadOnly { get; set; }
 
+    /// <summary>The most stars a rating can have.</summary>
+    public const int MaxStars = 1000;
+
     public event EventHandler? ValueChanged;
 
     public int Maximum
@@ -29,7 +32,8 @@ public class Rating : Control, IReadOnly
         get => _maximum;
         set
         {
-            _maximum = Math.Max(1, value);
+            // Stars past the widest screen cannot be drawn, and a width that large cannot be laid out.
+            _maximum = Math.Clamp(value, 1, MaxStars);
             ViewSize = new Size(_maximum, 1);
             Value = _value;
             StateHasChanged();

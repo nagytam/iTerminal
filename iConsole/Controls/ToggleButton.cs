@@ -32,10 +32,21 @@ public class ToggleButton : Control, IReadOnly
     public bool IsReadOnly { get; set; }
 
     /// <summary>Text shown inside the brackets when <see cref="IsOn"/> is <c>true</c>.</summary>
-    public string LabelOn { get; set; } = "ON";
+    public string LabelOn
+    {
+        get => _labelOn;
+        set => _labelOn = value ?? string.Empty;
+    }
 
     /// <summary>Text shown inside the brackets when <see cref="IsOn"/> is <c>false</c>.</summary>
-    public string LabelOff { get; set; } = "OFF";
+    public string LabelOff
+    {
+        get => _labelOff;
+        set => _labelOff = value ?? string.Empty;
+    }
+
+    private string _labelOn = "ON";
+    private string _labelOff = "OFF";
 
     /// <summary>Fired after each state change; the argument is the new <see cref="IsOn"/> value.</summary>
     public event EventHandler<bool>? Toggled;

@@ -19,12 +19,16 @@ public class StepIndicator : Control
         ViewSize = new Size(0, 1);
     }
 
+    /// <summary>The most steps an indicator shows.</summary>
+    public const int MaxSteps = 10000;
+
     public int Count
     {
         get => _count;
         set
         {
-            _count = Math.Max(0, value);
+            // Two cells a step: a count past this would overflow the width.
+            _count = Math.Clamp(value, 0, MaxSteps);
             ViewSize = new Size(WidthFor(_count), 1);
             StateHasChanged();
         }

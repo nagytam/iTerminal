@@ -28,7 +28,13 @@ public class ElapsedClock : Control
         ViewSize = new Size(10, 1);
     }
 
-    public string Label { get; set; } = string.Empty;
+    private string _label = string.Empty;
+
+    public string Label
+    {
+        get => _label;
+        set => _label = value ?? string.Empty;
+    }
 
     public bool IsRunning => _startedAt is not null;
 

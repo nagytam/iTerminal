@@ -38,6 +38,8 @@ public class Button : Control
         }
         set
         {
+            // A null title would fail every draw of the button; it is an empty one.
+            value ??= string.Empty;
             if (_title != value)
             {
                 _title = value;

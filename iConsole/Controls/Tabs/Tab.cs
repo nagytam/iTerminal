@@ -9,7 +9,14 @@ namespace iConsole.Controls.Tabs;
 
 public class Tab(IThemeService themeService) : Control(themeService)
 {
-    public ConcurrentList<TabPage> TabPages { get; set; } = [];
+    private ConcurrentList<TabPage> _tabPages = [];
+
+    /// <summary>The pages; assigning null leaves the tab with none instead of failing every key and draw.</summary>
+    public ConcurrentList<TabPage> TabPages
+    {
+        get => _tabPages;
+        set => _tabPages = value ?? [];
+    }
 
     private int _focusedTabPage;
     public int FocusedTabPage
