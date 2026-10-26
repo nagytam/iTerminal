@@ -301,6 +301,12 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();
+        services.AddSingleton<iTerminal.Core.Services.AccessControl.IAccessControlService>(provider =>
+            OperatingSystem.IsWindows()
+                ? new iTerminal.Core.Services.AccessControl.WindowsAccessControlService()
+                : new iTerminal.Core.Services.AccessControl.UnixAccessControlService(
+                    provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>()));
+        services.AddTransient<AccessControlDialog>();
         services.AddTransient<PropertiesDialog>();
         services.AddTransient<ChecksumDialog>();
         // Ctrl+Shift+F8 secure wipe, Ctrl+Shift+F7 signatures, Ctrl+Shift+F6 duplicates (sign and verify).
@@ -373,10 +379,25 @@ public static class iTerminalApplicationBuilderExtension
                 ? new iTerminal.Core.Services.Clipboard.WindowsTextClipboardService()
                 : new iTerminal.Core.Services.Clipboard.ProcessTextClipboardService(
                     provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>());
-            return new iTerminal.Core.Services.Clipboard.FallbackTextClipboardService(
-                system, new iConsole.Services.InProcessTextClipboardService());
+            // OSC 52 asks the terminal to set the clipboard: the fallback when no system clipboard works, and the first choice
+            // over SSH. The terminal's clipboard cannot be read, so paste uses the system one and then the application's own copy.
+            iConsole.Services.ITextClipboardService terminal = new iConsole.Services.Osc52TextClipboardService(
+                () => Console.Out, provider.GetRequiredService<iConsole.Services.ConsoleOwnership>());
+            return new iTerminal.Core.Services.Clipboard.LayeredTextClipboardService(
+                system,
+                terminal,
+                new iConsole.Services.InProcessTextClipboardService(),
+                iTerminal.Core.Services.Clipboard.LayeredTextClipboardService.IsRemoteSession());
         });
         services.AddHostedService<iTerminal.Core.Services.Clipboard.TextClipboardHostedService>();
+        // Stalls of the main loop (a key handler or render pass past its 200 ms budget) go to the log.
+        services.AddHostedService<iTerminal.Core.Services.Diagnostics.MainLoopWatchDogLoggingHostedService>();
+        // The taskbar's progress indicator: Windows drives the taskbar button, everywhere else it is a no-op. A job keeps it in
+        // step with the background tasks.
+        services.AddSingleton<iTerminal.Core.Services.Taskbar.ITaskbarProgress>(_ => OperatingSystem.IsWindows()
+            ? new iTerminal.Core.Services.Taskbar.WindowsTaskbarProgress()
+            : iTerminal.Core.Services.Taskbar.NullTaskbarProgress.Instance);
+        services.AddSingleton<iConsole.Jobs.IJob, iTerminal.Core.Services.Taskbar.TaskbarProgressJob>();
         services.AddSingleton<iTerminal.Core.Services.Clipboard.FileClipboardOperations>();
         services.AddSingleton<ISettingsService, SettingsService>();
         // Where a local delete with the bin ticked goes on Linux: the freedesktop Trash, home or per-volume.

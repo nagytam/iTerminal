@@ -289,6 +289,25 @@ public class SecureWipeDialog : Dialog
         _info.Lines = lines;
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        switch (Phase)
+        {
+            case WipePhase.Choosing:
+                yield return ("1/3/7", "Choose one random pass, three passes or seven passes");
+                yield return ("Up/Down", "Choose the previous or next method");
+                yield return ("Enter", "Arm the wipe (nothing is erased yet)");
+                break;
+            case WipePhase.Armed:
+                yield return ("Enter", "Confirm: the files are erased for good");
+                yield return ("Any other key", "Withdraw and choose again");
+                break;
+            case WipePhase.Finished:
+                yield return ("Enter", "Close");
+                break;
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         var plain = !keyEvent.Alt && !keyEvent.Control;

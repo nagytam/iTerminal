@@ -44,6 +44,8 @@ public class PropertiesDialog : FormDialog
     private readonly Label _errorLabel;
     private readonly Button _applyButton;
     private readonly Button _cancelButton;
+    private readonly Button? _permissionsButton;
+    private readonly AccessControlDialog? _accessControlDialog;
     private readonly bool _usesAttributes = OperatingSystem.IsWindows();
 
     /// <summary>The date fields this system shows: the created date only on Windows, where it can be set.</summary>
@@ -60,15 +62,23 @@ public class PropertiesDialog : FormDialog
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
-        IFileLabelService? labels = null)
+        IFileLabelService? labels = null,
+        AccessControlDialog? accessControlDialog = null)
         : base(nameof(PropertiesDialog), themeService)
     {
         _propertiesService = propertiesService;
         _contentModelService = contentModelService;
         _labels = labels;
+        _accessControlDialog = accessControlDialog;
         Title = "Properties";
         var applyCommand = new ApplyCommand();
         AddCommand(applyCommand);
+        if (accessControlDialog is not null)
+        {
+            var permissionsCommand = new PermissionsCommand();
+            AddCommand(permissionsCommand);
+            _permissionsButton = new Button("Permissions… (^P)", permissionsCommand, themeService);
+        }
 
         _info = new InfoLines(themeService);
         _checkBoxReadOnly = new CheckBox(themeService) { Label = "Read-only" };
@@ -106,8 +116,25 @@ public class PropertiesDialog : FormDialog
 
         AddControl(_info);
         AddControl(_errorLabel);
+        if (_permissionsButton is not null)
+        {
+            AddControl(_permissionsButton);
+        }
+
         AddControl(_applyButton);
         AddControl(_cancelButton);
+    }
+
+    /// <summary>Opens the access control list of the entry shown, over this dialog.</summary>
+    public async Task ShowPermissionsAsync()
+    {
+        if (_accessControlDialog is null || Properties is not { } properties)
+        {
+            return;
+        }
+
+        _accessControlDialog.Load(properties.Path);
+        await ShowDialogAsync(_accessControlDialog);
     }
 
     /// <summary>What was read when the dialog opened; null when the entry could not be read.</summary>
@@ -276,6 +303,13 @@ public class PropertiesDialog : FormDialog
 
         _errorLabel.Position = new Position(FieldX, dateRow + DateBoxes.Length);
         _errorLabel.ViewSize = new Size(FieldWidth, 1);
+        if (_permissionsButton is not null)
+        {
+            // The row under the error line, which the two-button row below has no room beside.
+            _permissionsButton.Position = new Position(FieldX, dateRow + DateBoxes.Length + 1);
+            _permissionsButton.ViewSize = new Size(PrimaryButtonWidth + 2, 1);
+        }
+
         LayoutButtonRow(_applyButton, _cancelButton);
     }
 
@@ -440,6 +474,25 @@ public class PropertiesDialog : FormDialog
         // Nobody is left to read the total, and the walk can be of a whole disk.
         _cancellation?.Cancel();
         base.Close();
+    }
+
+    /// <summary>Ctrl+P, or the Permissions button: who may do what (<see cref="AccessControlDialog"/>).</summary>
+    private sealed class PermissionsCommand : Command
+    {
+        public override string Title => "Permissions";
+        public override string Description => "Edit the access control list and the owner of this entry.";
+
+        public override Key? Key { get; init; } =
+            new Key(ConsoleKey.P, false, false, true);
+
+        public override async Task ExecuteAsync(object? args)
+        {
+            var dialog = Control as PropertiesDialog ?? Control?.Parent as PropertiesDialog;
+            if (dialog is not null)
+            {
+                await dialog.ShowPermissionsAsync();
+            }
+        }
     }
 
     /// <summary>Enter, or the Apply button.</summary>

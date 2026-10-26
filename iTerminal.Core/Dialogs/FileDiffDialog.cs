@@ -355,6 +355,25 @@ public class FileDiffDialog : Dialog
         return await base.HandleMouseEventAsync(mouseEvent);
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Up/Down", "Scroll the differences");
+        yield return ("PageUp/PageDown", "Scroll a page at a time");
+        yield return ("Home/End", "Jump to the start or the end");
+        if (!_hexMode)
+        {
+            yield return ("Left/Right", "Scroll sideways");
+        }
+
+        yield return ("N/P", "Jump to the next or previous difference");
+        yield return ("F4", "Switch between the text and the hex view");
+        if (!_hexMode)
+        {
+            yield return ("W", "Ignore white space");
+            yield return ("C", "Ignore letter case");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (!keyEvent.Alt && !keyEvent.Control)

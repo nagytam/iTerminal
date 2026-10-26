@@ -80,6 +80,17 @@ public class Popup : Window
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Opens the overlay with its top-left corner at <paramref name="anchor"/> in the root's coordinates, not beside the
+    /// owner. Used where the thing it points at is a position, such as a context menu at the pointer or a tooltip.
+    /// </summary>
+    public Task ShowAtAsync(IControl owner, Position anchor)
+    {
+        Placement = PopupPlacement.Manual;
+        Anchor = anchor;
+        return ShowAsync(owner);
+    }
+
     /// <summary>Opens the overlay anchored to <paramref name="owner"/>, capturing focus and input.</summary>
     public async Task ShowAsync(IControl owner)
     {

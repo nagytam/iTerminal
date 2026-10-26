@@ -1,3 +1,4 @@
+using iConsole.Data;
 using System.Net;
 using System.Text.RegularExpressions;
 
@@ -8,6 +9,12 @@ public enum RemoteProtocol
 {
     Ssh,
     PowerShell,
+
+    /// <summary>A file drive, <c>ftp://</c> (FTPS is negotiated by the service). Opened as a panel, never as a shell.</summary>
+    Ftp,
+
+    /// <summary>A file drive, <c>dav://</c>, or <c>davs://</c> when <see cref="RemoteConnection.Secure"/> is set.</summary>
+    WebDav,
 }
 
 /// <summary>How a PowerShell remoting session reaches its host.</summary>
@@ -23,7 +30,9 @@ public enum PowerShellTransport
 /// <summary>
 /// One entry of the remote connection manager: where to connect and how. It never holds a password —
 /// <c>ssh</c> and PowerShell ask for it on the terminal they are given, which is also where a key's
-/// passphrase or a host-key question belongs.
+/// passphrase or a host-key question belongs. An FTP or WebDAV entry has no terminal to ask on, so its
+/// password lives in the password manager under <see cref="Id"/>, the way the drives look it up
+/// (<see cref="HasSavedCredential"/> only says that one is there).
 /// </summary>
 public sealed partial class RemoteConnection
 {
@@ -45,12 +54,54 @@ public sealed partial class RemoteConnection
     public string? Notes { get; set; }
     public DateTime? LastConnectedUtc { get; set; }
 
+    /// <summary>WebDAV only: HTTPS (<c>davs://</c>) rather than HTTP.</summary>
+    public bool Secure { get; set; }
+
+    /// <summary>FTP and WebDAV: the folder the panel opens in; empty is the root.</summary>
+    public string? RemotePath { get; set; }
+
+    /// <summary>FTP and WebDAV: a password for this entry is in the password manager.</summary>
+    public bool HasSavedCredential { get; set; }
+
     /// <summary>The port the connection actually uses.</summary>
     public int EffectivePort => Port ?? DefaultPort;
 
-    public int DefaultPort => Protocol == RemoteProtocol.PowerShell && Transport == PowerShellTransport.WinRm ? 5985 : 22;
+    public int DefaultPort => Protocol switch
+    {
+        RemoteProtocol.Ftp => 21,
+        RemoteProtocol.WebDav => Secure ? 443 : 80,
+        RemoteProtocol.PowerShell when Transport == PowerShellTransport.WinRm => 5985,
+        _ => 22,
+    };
 
-    public bool UsesSsh => Protocol == RemoteProtocol.Ssh || Transport == PowerShellTransport.Ssh;
+    public bool UsesSsh => Protocol == RemoteProtocol.Ssh || (Protocol == RemoteProtocol.PowerShell && Transport == PowerShellTransport.Ssh);
+
+    /// <summary>FTP and WebDAV: opened as a panel drive; there is no shell to lend the terminal to.</summary>
+    public bool IsFileDrive => Protocol is RemoteProtocol.Ftp or RemoteProtocol.WebDav;
+
+    /// <summary>
+    /// The host as the drives see it — <c>host</c> or <c>host:port</c> — which is what a saved
+    /// <see cref="Network.NetworkConnectionProfile"/> is matched on. The default port is left off, because
+    /// a URL without one carries the bare host.
+    /// </summary>
+    public string DriveHost => Port is { } port && port != DefaultPort ? $"{Host}:{port}" : Host;
+
+    /// <summary>The drive URL of a file-drive entry: <c>ftp://user@host[:port]/path</c> or <c>dav[s]://…</c>.</summary>
+    public string DriveUrl
+    {
+        get
+        {
+            var scheme = Protocol switch
+            {
+                RemoteProtocol.Ftp => Container.FTP,
+                RemoteProtocol.WebDav when Secure => Container.WEBDAV_SECURE,
+                _ => Container.WEBDAV,
+            };
+            var path = (RemotePath ?? string.Empty).Trim().Replace('\\', '/').TrimStart('/');
+            var user = string.IsNullOrEmpty(Username) ? string.Empty : Username + "@";
+            return $"{scheme}{user}{DriveHost}/{path}";
+        }
+    }
 
     /// <summary><c>user@host</c>, or just the host when no user is set.</summary>
     public string Destination => string.IsNullOrEmpty(Username) ? Host : $"{Username}@{Host}";
@@ -87,6 +138,20 @@ public sealed partial class RemoteConnection
         if (!string.IsNullOrEmpty(PrivateKeyPath) && PrivateKeyPath.Any(char.IsControl))
         {
             return "The key file path has control characters.";
+        }
+
+        if (IsFileDrive)
+        {
+            // The user name is written into a URL, where these end it early.
+            if (Username.IndexOfAny(['@', '/', '\\', ':']) >= 0)
+            {
+                return "An FTP or WebDAV user name cannot contain @ / \\ or : (it is written into the drive's address).";
+            }
+
+            if (!string.IsNullOrEmpty(RemotePath) && RemotePath.Any(char.IsControl))
+            {
+                return "The folder has control characters.";
+            }
         }
 
         return null;

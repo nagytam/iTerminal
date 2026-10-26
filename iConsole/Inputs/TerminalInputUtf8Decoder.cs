@@ -203,11 +203,14 @@ public sealed class TerminalInputUtf8Decoder
         var left = !release && wheelDelta == 0 && !motion && btn == 0;
         var right = !release && wheelDelta == 0 && !motion && btn == 2;
         var drag = !release && wheelDelta == 0 && motion && btn == 0;
+        // Motion with no button held is reported as button code 3 (xterm any-motion tracking, ?1003).
+        var hover = !release && wheelDelta == 0 && motion && btn == 3;
         var pos = new Position(px - 1, py - 1);
         emitMouse(new MouseEvent
         {
             Position = pos,
             IsDrag = drag,
+            IsHover = hover,
             LeftClicked = left,
             RightClicked = right,
             IsRelease = release,

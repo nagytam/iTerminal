@@ -6,10 +6,10 @@ namespace iConsole.Test.Inputs;
 public class TerminalMouseAnsiTest
 {
     [TestMethod]
-    public void EnablePreferredMouseReporting_CombinesCellMotionAndSgrSequences()
+    public void EnablePreferredMouseReporting_CombinesAnyMotionAndSgrSequences()
     {
         Assert.AreEqual(
-            TerminalMouseAnsi.EnableCellMotionMouse + TerminalMouseAnsi.EnableSgrExtendedMouse,
+            TerminalMouseAnsi.EnableAnyMotionMouse + TerminalMouseAnsi.EnableSgrExtendedMouse,
             TerminalMouseAnsi.EnablePreferredMouseReporting);
     }
 
@@ -17,7 +17,7 @@ public class TerminalMouseAnsiTest
     public void DisablePreferredMouseReporting_CombinesDisableSequences()
     {
         Assert.AreEqual(
-            TerminalMouseAnsi.DisableSgrExtendedMouse + TerminalMouseAnsi.DisableCellMotionMouse + TerminalMouseAnsi.DisableBasicMouse,
+            TerminalMouseAnsi.DisableSgrExtendedMouse + TerminalMouseAnsi.DisableAnyMotionMouse + TerminalMouseAnsi.DisableCellMotionMouse + TerminalMouseAnsi.DisableBasicMouse,
             TerminalMouseAnsi.DisablePreferredMouseReporting);
     }
 }

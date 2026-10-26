@@ -117,7 +117,7 @@ public class Countdown : Control
         // The time is what the control is for, so the label gives way to it: it is cut to the cells left over.
         int labelRoom = Math.Max(0, width - text.Length - 1);
         string prefix = Label.Length == 0 || labelRoom == 0 ? string.Empty : Label.Cut(labelRoom) + " ";
-        Color foreground = _target is null ? colorScheme.DisabledForeground
+        Color foreground = _target is null || !IsEnabled ? colorScheme.DisabledForeground
             : IsFinished ? Color.Red
             : Remaining < TimeSpan.FromSeconds(10) ? Color.Yellow
             : colorScheme.Foreground;

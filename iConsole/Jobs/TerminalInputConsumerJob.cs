@@ -1,7 +1,8 @@
-using iConsole.Data;
+﻿using iConsole.Data;
 using iConsole.Inputs;
 using iConsole.Services;
 using System.Diagnostics;
+using iConsole.Diagnostics;
 
 namespace iConsole.Jobs;
 
@@ -10,10 +11,14 @@ namespace iConsole.Jobs;
 /// </summary>
 public class TerminalInputConsumerJob(
     ITerminalInputSource inputSource,
-    IBeepService beepService
+    IBeepService beepService,
+    IToolTipService? toolTipService = null,
+    MainLoopWatchDog? watchDog = null
 ) : Job
 {
     private readonly ITerminalInputSource _inputSource = inputSource;
+    private readonly IToolTipService? _toolTipService = toolTipService;
+    private readonly MainLoopWatchDog? _watchDog = watchDog;
     public override JobPriority Priority => JobPriority.Input;
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
@@ -32,13 +37,13 @@ public class TerminalInputConsumerJob(
             while (_inputSource.MouseQueue.TryDequeue(out var mouseEvent)
                 && mouseEvent is not null)
             {
-                await DispatchAsync(() => HandleMouseEventAsync(mouseEvent));
+                await DispatchAsync("mouse", () => HandleMouseEventAsync(mouseEvent));
             }
 
             while (_inputSource.KeyQueue.TryDequeue(out var keyEvent)
                 && keyEvent is not null)
             {
-                await DispatchAsync(() => HandleKeyEventAsync(keyEvent));
+                await DispatchAsync("key", () => HandleKeyEventAsync(keyEvent));
             }
         }
     }
@@ -49,8 +54,10 @@ public class TerminalInputConsumerJob(
     /// it), and from then on every key is ignored — an app that still draws but no longer responds.
     /// Commands already contain their own exceptions; this covers a control's handler, which does not.
     /// </summary>
-    private static async Task DispatchAsync(Func<Task<bool>> handle)
+    private async Task DispatchAsync(string label, Func<Task<bool>> handle)
     {
+        // Timed for the watchdog: a handler past its budget is reported while it is still running.
+        using var pass = _watchDog?.Watch(label);
         try
         {
             await handle();
@@ -63,6 +70,16 @@ public class TerminalInputConsumerJob(
 
     public async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
+        // Tooltips follow the pointer; anything that is not a hover (a click, a drag, a wheel turn) hides them.
+        if (mouseEvent.IsHover)
+        {
+            _toolTipService?.ReportPointer(mouseEvent.Position);
+        }
+        else
+        {
+            _toolTipService?.Dismiss();
+        }
+
         var modalControl = Desktop?.GetModalChildControl();
         if (modalControl is null)
         {
@@ -74,6 +91,8 @@ public class TerminalInputConsumerJob(
 
     public async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        _toolTipService?.Dismiss();
+
         var modalControl = Desktop?.GetModalChildControl();
         if (modalControl is null)
         {

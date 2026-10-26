@@ -984,6 +984,37 @@ public class TabTest
         Assert.AreEqual(0, tab.GetKeyHints().Count());
     }
 
+    [TestMethod]
+    public void GetKeyHints_WhenDisabled_SaysNothing()
+    {
+        var mockThemeService = CreateMockThemeService();
+        var tab = new Tab(mockThemeService.Object) { IsEnabled = false };
+        tab.AddTabPage(new TabPage("Page1", mockThemeService.Object));
+        tab.AddTabPage(new TabPage("Page2", mockThemeService.Object));
+
+        Assert.AreEqual(0, tab.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public async Task HandleKeyEventAsync_WhenDisabled_DoesNotOfferKeysToTheFocusedPage()
+    {
+        var mockThemeService = CreateMockThemeService();
+        var (tab, firstList) = CreateTabWithLists(Orientation.Vertical, mockThemeService.Object);
+        var claimingPage = new ClaimingTabPage("3-Claiming", mockThemeService.Object);
+        tab.AddTabPage(claimingPage);
+        await tab.OnInitializeAsync();
+        SettleList(firstList);
+        tab.FocusedTabPage = tab.TabPages.Count - 1;
+        claimingPage.SetFocus();
+        tab.IsEnabled = false;
+
+        var handled = await tab.HandleKeyEventAsync(
+            new KeyEvent('\0', ConsoleKey.Enter, shift: false, alt: false, control: false));
+
+        Assert.IsFalse(handled, "A disabled tab declines the key, so its parent can handle it.");
+        Assert.AreEqual(0, claimingPage.ClaimCount);
+    }
+
     #endregion
 
     #region Show/Hide Tests

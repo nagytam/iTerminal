@@ -71,6 +71,26 @@ public class Pagination : Control
     /// <summary>The text between the arrows.</summary>
     public string Caption => $"Page {_page + 1} of {PageCount}";
 
+    /// <summary>
+    /// The caption as drawn: the full <see cref="Caption"/> if it fits beside the two arrows, else <c>3/12</c>, else
+    /// as much of that as fits. A narrow pager keeps its right arrow on the row this way, where the caption used to push it off.
+    /// </summary>
+    private string FittedCaption
+    {
+        get
+        {
+            // Four cells go to the arrows and the spaces that surround the caption.
+            int room = Math.Max(0, (int)ViewSize.Width - 4);
+            if (Caption.Length <= room)
+            {
+                return Caption;
+            }
+
+            string compact = $"{_page + 1}/{PageCount}";
+            return compact.Length <= room ? compact : compact[..room];
+        }
+    }
+
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         if (!IsEnabled)
@@ -129,8 +149,8 @@ public class Pagination : Control
         if (mouseEvent.LeftClicked)
         {
             int column = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
-            // Drawn as ‹ + " " + Caption + " " + ›: the right arrow sits after the caption and both spaces.
-            int right = Caption.Length + 3;
+            // Drawn as ‹ + " " + FittedCaption + " " + ›: the right arrow sits after the caption and both spaces.
+            int right = FittedCaption.Length + 3;
             if (column == 0)
             {
                 Page--;
@@ -160,11 +180,12 @@ public class Pagination : Control
         }
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
-        Color active = IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
+        Color active = !IsEnabled ? colorScheme.DisabledForeground : IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
+        Color text = IsEnabled ? colorScheme.Foreground : colorScheme.DisabledForeground;
         Color dim = colorScheme.DisabledForeground;
         ConxelString line = new(string.Empty, colorScheme.Foreground, colorScheme.Background);
         line.Append("‹", _page > 0 ? active : dim, colorScheme.Background);
-        line.Append(" " + Caption + " ", colorScheme.Foreground, colorScheme.Background);
+        line.Append(" " + FittedCaption + " ", text, colorScheme.Background);
         line.Append("›", _page < PageCount - 1 ? active : dim, colorScheme.Background);
         line.Expand((int)ViewSize.Width, colorScheme.Foreground, colorScheme.Background);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, line);

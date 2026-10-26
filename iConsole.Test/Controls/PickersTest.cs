@@ -48,6 +48,55 @@ public class PickersTest
     }
 
     [TestMethod]
+    public async Task TimePicker_DigitAfterArrowStep_StartsANewEntry()
+    {
+        TimePicker picker = new(Theme()) { Value = new TimeOnly(0, 0), Position = new Position(0, 0), ViewSize = new Size(10, 1) };
+        picker.SetFocus();
+
+        await picker.HandleKeyEventAsync(new KeyEvent('1', ConsoleKey.D1, false, false, false));
+        await picker.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.UpArrow, false, false, false));
+        await picker.HandleKeyEventAsync(new KeyEvent('1', ConsoleKey.D1, false, false, false));
+
+        // Typing 1, stepping to 2, then typing 1 gives hour 1; joining the digit onto the stepped 2 would give 21.
+        Assert.AreEqual(1, picker.Value.Hour);
+    }
+
+    [TestMethod]
+    public async Task Calendar_ClickOnTheChosenDay_ActivatesIt()
+    {
+        var calendar = new Calendar(Theme()) { Position = new Position(0, 0) };
+        var target = new DateOnly(2026, 10, 16);
+        calendar.SelectedDate = new DateOnly(2026, 10, 15);
+        var activated = new List<DateOnly>();
+        calendar.DateActivated += (_, day) => activated.Add(day);
+        var (x, y) = CellOf(calendar, target);
+
+        await calendar.HandleMouseEventAsync(Click(x, y));
+        Assert.AreEqual(target, calendar.SelectedDate);
+        Assert.AreEqual(0, activated.Count, "The first click only chooses the day.");
+
+        await calendar.HandleMouseEventAsync(Click(x, y));
+        CollectionAssert.AreEqual(new[] { target }, activated);
+    }
+
+    /// <summary>The screen cell (column, row) of a day in the grid, found from the calendar's own layout.</summary>
+    private static (long X, long Y) CellOf(Calendar calendar, DateOnly day)
+    {
+        for (var row = 0; row < 6; row++)
+        {
+            for (var column = 0; column < 7; column++)
+            {
+                if (calendar.CellDate(row, column) == day)
+                {
+                    return (column * 3, row + 2);
+                }
+            }
+        }
+
+        throw new InvalidOperationException($"{day} is not in the grid.");
+    }
+
+    [TestMethod]
     public async Task TimePicker_UpDown_StepsActiveFieldWithWrap()
     {
         TimePicker picker = new(Theme()) { Value = new TimeOnly(23, 0) };

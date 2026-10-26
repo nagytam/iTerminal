@@ -377,6 +377,12 @@ public class Tab(IThemeService themeService) : Control(themeService)
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // A disabled tab control declines every key, its pages' included, so the keys reach its parent instead.
+        if (!IsEnabled)
+        {
+            return false;
+        }
+
         if (TabPages.Count > 1)
         {
             var step = GetPageSwitchStep(keyEvent);
@@ -579,7 +585,7 @@ public class Tab(IThemeService themeService) : Control(themeService)
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        if (TabPages.Count <= 1)
+        if (TabPages.Count <= 1 || !IsEnabled)
         {
             yield break;
         }

@@ -103,6 +103,47 @@ public class ConxelString : IEnumerable<Conxel>
         }
     }
 
+    /// <summary>
+    /// Replaces each cell from <paramref name="start"/> up to, not including, <paramref name="end"/> with what
+    /// <paramref name="edit"/> returns for it.
+    /// </summary>
+    public void Edit(int start, int end, Func<Conxel, Conxel> edit)
+    {
+        Span<Conxel> cells = CollectionsMarshal.AsSpan(String);
+        for (int x = Math.Max(0, start); x < Math.Min(end, cells.Length); x++)
+        {
+            cells[x] = edit(cells[x]);
+        }
+    }
+
+    /// <summary>
+    /// Makes the cells from <paramref name="start"/> up to <paramref name="end"/> a hyperlink to <paramref name="target"/>,
+    /// or removes the link when it is null or empty. The terminal opens it on a Ctrl+click or the like; the text itself
+    /// is not restyled, so underline it as well if it should look like a link.
+    /// </summary>
+    public void SetHyperlink(string? target, int start = 0, int end = int.MaxValue)
+    {
+        ushort id = Hyperlinks.Register(target);
+        Edit(start, end, conxel =>
+        {
+            conxel.LinkId = id;
+            return conxel;
+        });
+    }
+
+    /// <summary>Underlines the cells in the given style, and in <paramref name="color"/> when one is given.</summary>
+    public void SetUnderline(UnderlineStyle style, Color? color = null, int start = 0, int end = int.MaxValue)
+    {
+        Edit(start, end, conxel =>
+        {
+            conxel.IsUnderline = true;
+            conxel.UnderlineStyle = style;
+            conxel.HasUnderlineColor = color is not null;
+            conxel.UnderlineColor = color ?? default;
+            return conxel;
+        });
+    }
+
     public void HighlightHotKey(ConsoleKey? hotConsoleKey, char? hotKeyChar, Color foreground, Color background)
     {
         char? c = null;

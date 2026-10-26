@@ -89,6 +89,15 @@ public class SortDialog : Dialog
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Up/Down", "Move the cursor over the sort modes");
+        yield return ("Home/End", "Jump to the first or last mode");
+        yield return ("Enter", "Sort by the mode under the cursor");
+        yield return ("Letter", "Sort by the mode marked with that letter at once");
+        yield return ("R/Space", "Reverse the sort order");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (!keyEvent.Alt && !keyEvent.Control)

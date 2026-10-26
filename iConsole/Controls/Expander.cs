@@ -83,8 +83,7 @@ public class Expander : Control
     {
         if (_content is not null && Controls.Contains(_content))
         {
-            Controls.Remove(_content);
-            InvalidateTree();
+            RemoveControl(_content);
         }
     }
 
@@ -110,8 +109,14 @@ public class Expander : Control
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
+        if (!IsEnabled)
+        {
+            yield break;
+        }
+
         yield return ("Enter/Space", "Expand or collapse the section");
-        yield return ("Right/Left", "Expand or collapse the section");
+        yield return ("Right", "Expand the section");
+        yield return ("Left", "Collapse the section");
         yield return ("+/-", "Expand or collapse the section");
     }
 

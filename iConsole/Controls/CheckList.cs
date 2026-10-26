@@ -128,6 +128,7 @@ public class CheckList : Control, IReadOnly
             yield return ("Space", "Check or uncheck the item under the cursor");
             yield return ("+/-", "Check or uncheck every item");
             yield return ("*", "Invert every item");
+            yield return ("*", "Invert every item");
         }
     }
 
@@ -243,7 +244,11 @@ public class CheckList : Control, IReadOnly
             if (index < _items.Count)
             {
                 text = (_items[index].Checked ? "[x] " : "[ ] ") + _items[index].Text;
-                if (index == _cursor)
+                if (index == _cursor && !IsEnabled)
+                {
+                    foreground = colorScheme.DisabledForeground;
+                }
+                else if (index == _cursor)
                 {
                     foreground = IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.SelectedForeground;
                     background = IsFocused ? colorScheme.SelectedFocusedBackground : colorScheme.SelectedBackground;

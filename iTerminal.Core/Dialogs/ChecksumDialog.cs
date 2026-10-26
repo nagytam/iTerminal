@@ -317,6 +317,14 @@ public class ChecksumDialog : Dialog
             : ($"✗ Does NOT match the {name}.", false);
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("F2", "Save the checksums next to the files");
+        yield return ("F3", "Copy the SHA-256 checksum");
+        yield return ("Click", "Copy the checksum under the pointer");
+        yield return ("Enter", "Close the report while the compare box is empty");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.ConsoleKey == ConsoleKey.F2 && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)

@@ -642,6 +642,14 @@ public class ControlInteractionTest
     }
 
     [TestMethod]
+    public void CheckList_KeyHints_ListTheInvertKeyWhenEditable()
+    {
+        var keys = NewCheckList().GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.Contains(keys, "*");
+        CollectionAssert.Contains(keys, "+/-");
+    }
+
+    [TestMethod]
     public async Task CheckList_Keys_NavigateScrollAndToggle()
     {
         CheckList list = NewCheckList();
@@ -1165,9 +1173,31 @@ public class ControlInteractionTest
     [TestMethod]
     public void Expander_KeyHints_NameEveryToggleKey()
     {
-        var keys = NewExpander().GetKeyHints().Select(h => h.Key).ToList();
+        var hints = NewExpander().GetKeyHints().ToList();
 
-        CollectionAssert.AreEquivalent(new[] { "Enter/Space", "Right/Left", "+/-" }, keys);
+        CollectionAssert.AreEquivalent(new[] { "Enter/Space", "Right", "Left", "+/-" }, hints.Select(h => h.Key).ToList());
+        Assert.AreEqual("Expand the section", hints.Single(h => h.Key == "Right").Description);
+        Assert.AreEqual("Collapse the section", hints.Single(h => h.Key == "Left").Description);
+    }
+
+    [TestMethod]
+    public void Expander_KeyHints_EmptyWhenDisabled()
+    {
+        var expander = NewExpander();
+        expander.IsEnabled = false;
+
+        Assert.AreEqual(0, expander.GetKeyHints().Count());
+    }
+
+    [TestMethod]
+    public void Toolbar_KeyHints_EmptyWhenDisabled()
+    {
+        Toolbar toolbar = new(Theme()) { Position = new Position(0, 0), ViewSize = new Size(40, 1), Items = [new ToolbarItem("Open")] };
+        Assert.IsTrue(toolbar.GetKeyHints().Any());
+
+        toolbar.IsEnabled = false;
+
+        Assert.AreEqual(0, toolbar.GetKeyHints().Count());
     }
 
     [TestMethod]
@@ -1309,7 +1339,8 @@ public class ControlInteractionTest
 
         calendar.IsReadOnly = true;
         var readOnly = calendar.GetKeyHints().Select(h => h.Key).ToList();
-        CollectionAssert.Contains(readOnly, "PageUp/PageDown");
+        CollectionAssert.Contains(readOnly, "Enter/Space");
+        CollectionAssert.DoesNotContain(readOnly, "PageUp/PageDown");
         CollectionAssert.DoesNotContain(readOnly, "T");
         CollectionAssert.DoesNotContain(readOnly, "Ctrl+PageUp/PageDown");
     }
@@ -1387,7 +1418,7 @@ public class ControlInteractionTest
 
         picker.IsReadOnly = true;
         var readOnly = HintKeys(picker);
-        CollectionAssert.Contains(readOnly, "Left/Right");
+        CollectionAssert.DoesNotContain(readOnly, "Left/Right");
         CollectionAssert.DoesNotContain(readOnly, "Up/Down");
         CollectionAssert.DoesNotContain(readOnly, "Backspace/Delete");
     }

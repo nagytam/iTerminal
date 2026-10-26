@@ -33,6 +33,22 @@ public class ButtonTest
     }
 
     [TestMethod]
+    public void KeyHints_ListSpaceForAButtonThatCanRun()
+    {
+        var mockCmd = new Mock<ICommand>();
+        mockCmd.SetupGet(c => c.Title).Returns("T");
+        mockCmd.Setup(c => c.CanExecute()).Returns(true);
+        var mockTheme = new Mock<IThemeService>();
+        mockTheme.SetupGet(t => t.CurrentColorScheme).Returns(new iConsole.Display.ColorScheme());
+        var btn = new Button("Title", mockCmd.Object, mockTheme.Object) { ViewSize = new Size(12, 1) };
+
+        Assert.AreEqual("Space", btn.GetKeyHints().Single().Key);
+
+        mockCmd.Setup(c => c.CanExecute()).Returns(false);
+        Assert.AreEqual(0, btn.GetKeyHints().Count());
+    }
+
+    [TestMethod]
     public void Draw_ShouldRenderTitle()
     {
         var mockCmd = new Mock<ICommand>();

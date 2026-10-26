@@ -86,6 +86,31 @@ public class ToDoListDialog : Dialog
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_entry is not null)
+        {
+            yield return ("Enter", "Save the task");
+            yield return ("Esc", "Discard the entry");
+            yield break;
+        }
+
+        if (_confirmingDelete)
+        {
+            yield return ("Y", "Delete the task");
+            yield return ("Any other key", "Keep the task");
+            yield break;
+        }
+
+        yield return ("Up/Down", "Move over the tasks");
+        yield return ("PageUp/PageDown", "Move a page at a time");
+        yield return ("Home/End", "Jump to the first or last task");
+        yield return ("Enter/Insert", "Add a task");
+        yield return ("F2", "Edit the task");
+        yield return ("Space", "Mark the task done or open");
+        yield return ("Delete", "Delete the task (asks first)");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_entry is not null)

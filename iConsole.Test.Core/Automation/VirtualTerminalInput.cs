@@ -14,7 +14,7 @@ namespace iConsole.Test.Core.Automation;
 /// publisher would; events queued on <see cref="KeyQueue"/>/<see cref="MouseQueue"/> directly are
 /// dispatched too, just without a completion to await.</para>
 /// </summary>
-public sealed class VirtualTerminalInput : ITerminalInputSource
+public sealed class VirtualTerminalInput : ITerminalInputSource, IInputInjector
 {
     private readonly ConcurrentQueue<PendingInput> _pending = new();
 
@@ -52,8 +52,8 @@ public sealed class VirtualTerminalInput : ITerminalInputSource
 /// the handler instead of sleeping. An exception thrown by a handler faults that event's task, which
 /// fails the test that sent it rather than silently stopping the keyboard.
 /// </summary>
-public sealed class VirtualTerminalInputJob(VirtualTerminalInput input, IBeepService beepService)
-    : TerminalInputConsumerJob(input, beepService)
+public sealed class VirtualTerminalInputJob(VirtualTerminalInput input, IBeepService beepService, IToolTipService? toolTipService = null)
+    : TerminalInputConsumerJob(input, beepService, toolTipService)
 {
     private readonly VirtualTerminalInput _input = input;
 

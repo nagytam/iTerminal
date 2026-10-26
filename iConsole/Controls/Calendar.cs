@@ -174,15 +174,17 @@ public class Calendar : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Arrows", "Move the selected day or week");
-        yield return ("PageUp/PageDown", "Previous or next month");
-        yield return ("Home/End", "First or last day of the month");
-        yield return ("Enter/Space", "Choose the selected day");
+        // A read-only calendar takes no keys but Enter and Space, so the keys that would move the selection are not offered.
         if (!IsReadOnly)
         {
+            yield return ("Arrows", "Move the selected day or week");
+            yield return ("PageUp/PageDown", "Previous or next month");
+            yield return ("Home/End", "First or last day of the month");
             yield return ("T", "Select today");
             yield return ("Ctrl+PageUp/PageDown", "Previous or next year");
         }
+
+        yield return ("Enter/Space", "Choose the selected day");
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -284,7 +286,13 @@ public class Calendar : Control, IReadOnly
             DateOnly day = CellDate(row - 2, gridColumn / 3);
             if (ShowAdjacentDays || day.Month == _selected.Month)
             {
+                // A click on the day that is already chosen chooses it, as a second click on a table's cursor row activates it.
+                bool wasSelected = day == _selected;
                 SelectedDate = day;
+                if (wasSelected)
+                {
+                    DateActivated?.Invoke(this, day);
+                }
             }
         }
 

@@ -134,6 +134,19 @@ public class StripMetadataDialog : Dialog
         UpdateLines();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (Phase == StripPhase.Armed)
+        {
+            yield return ("Enter", "Confirm: the metadata is removed from the files");
+            yield return ("Any other key", "Withdraw");
+        }
+        else if (Phase == StripPhase.Choosing)
+        {
+            yield return ("Enter", "Arm the removal (nothing is changed yet)");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType == KeyPressType.Down && keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt)

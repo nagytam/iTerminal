@@ -214,14 +214,27 @@ F3 on a video (`VideoFileTypes`) opens `VideoFileViewerDialog`; F3 on a picture 
   *view* three rows (the cursor only goes along when the view would leave it behind), Home / End (Ctrl+Home / Ctrl+End in
   the editor, where they belong to the line) go to the top and the bottom of the file, and `SyncScrollableSize` keeps the
   scrollable size in step with text that arrives after the layout or is re-read under another code page.
-- **Syntax colouring**: `SyntaxHighlighter.ForFile` picks a `SyntaxLanguage` from the extension and `Tokenize` splits a
-  line into keyword / string / comment / number spans; the viewer and the editor both set `Syntax` from the file's path.
-  A block comment is looked for in the 400 lines above the first row on screen, so drawing never reads the whole file.
+- **Syntax colouring**: `SyntaxHighlighter.ForFile` picks a `SyntaxLanguage` from the file name (`Dockerfile`,
+  `Makefile`, `.bashrc`, `.gitignore`) or else the extension, and `Tokenize` splits a line into keyword / string /
+  comment / number spans; the viewer and the editor both set `Syntax` from the file's path. A block comment is looked for
+  in the 400 lines above the first row on screen, so drawing never reads the whole file. **Wrapped text is coloured too**
+  (`DrawWrapped`): a line is tokenized once however many rows it wraps to and each row takes the part of the spans that is
+  its own; the cursor's row keeps the cursor colours in both views.
 - **Editor history, replace and bookmarks** (`TextEditorControl`): Ctrl+Z undo, Ctrl+Y / Ctrl+Shift+Z redo — every key is
   recorded as a before/after text snapshot, typing that runs on is one step, 200 steps are kept. Ctrl+R opens
   `ReplaceTextDialog` (Replace = next occurrence from the cursor, wrapping; Replace all = one undo step; Match case).
   Ctrl+F2 sets or clears a bookmark on the cursor's line, F9 / Shift+F9 go to the next / previous one; bookmarks move with
   their lines (`ShiftBookmarks` compares the text before and after) and are drawn as a coloured row.
+- **Editor basics** (`TextEditorControl`, `TextFileEditorDialog`): **Tab** puts spaces up to the next multiple of 4 (a tab
+  character is drawn one cell wide) and, with a selection, indents every line it touches; **Shift+Tab** takes one step off.
+  The dialog forwards Tab to the editor, so it never moves focus to the status bar. **Enter keeps the indent** of the line
+  it splits (only the part before the cursor). **Ctrl+S** saves as F2 does; **F5** goes to a line.
+- **Saving keeps the file as it was read.** `LineEndings.Detect` records the break the file uses most (`\r\n`, `\n`, `\r`) in
+  `ITextModel.LineEnding` and `SaveCommand.WriteAsync` joins with it, with the code page the file was read with. It used to
+  join with `Environment.NewLine`, so opening an LF file on Windows and saving it rewrote every line as CRLF.
+- **Closing a changed file asks** (`UnsavedChangesDialog`: S save, D discard, C or Esc cancel). `TextFileEditorDialog.Close`
+  is the one place Esc, the Close button and F10 reach; a read-only editor closes at once. A save that fails keeps the editor
+  open with the reason in the title. `PendingClose` is the test seam.
 - **Image metadata (`i` in the image viewer)**: `ImageInfoReader` reads a 1 MB prefix of a PNG, JPEG, GIF, BMP, WebP or
   TIFF file: its format and dimensions, PNG text chunks and JPEG comments, and the EXIF fields (make, model, lens,
   exposure, aperture, focal length, ISO, date taken, GPS position and altitude). Nothing is decoded; the dialog scrolls the

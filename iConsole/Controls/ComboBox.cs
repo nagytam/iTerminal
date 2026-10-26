@@ -220,6 +220,12 @@ public class ComboBox<T> : Control, IReadOnly
 
         if ((mouseEvent.LeftClicked || mouseEvent.RightClicked) && onClosedLine)
         {
+            // Taking the focus first means the control has it again when the list closes, as it does after a key opens the list.
+            if (!IsFocused)
+            {
+                SetFocus();
+            }
+
             await OpenAsync();
             return true;
         }

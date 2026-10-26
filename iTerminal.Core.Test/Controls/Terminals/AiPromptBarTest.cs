@@ -34,6 +34,9 @@ public class AiPromptBarTest
             ViewSize = new Size(width, height),
         };
         bar.OnInitializeLayout();
+
+        // The app focuses the bar when it is shown (Content.ShowAiBar), and an unfocused bar takes no keys.
+        bar.SetFocus();
         return (bar, model, chat);
     }
 
@@ -374,6 +377,7 @@ public class AiPromptBarTest
 
         var (other, otherModel, _) = Create();
         await SendAsync(other, otherModel, "asked");
+        other.ResetFocus();
         Assert.IsFalse(await other.HandleKeyEventAsync(Key(' ', ConsoleKey.UpArrow)), "the panels have the arrows when the bar is not focused");
         Assert.AreEqual(string.Empty, otherModel.Input);
         Assert.AreEqual(string.Empty, model.Input);

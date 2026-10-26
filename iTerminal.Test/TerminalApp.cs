@@ -197,6 +197,7 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<iConsole.Services.ITextClipboardService, iConsole.Services.InProcessTextClipboardService>();
                 services.AddSingleton<SandboxServices.DriveActions>();
                 services.AddSingleton<Core.Services.Drives.IDriveActionsService>(provider => provider.GetRequiredService<SandboxServices.DriveActions>());
+                services.AddSingleton<Core.Services.AccessControl.IAccessControlService, SandboxServices.AccessControl>();
                 services.AddSingleton<Core.Services.Mail.IMailService, SandboxServices.Mail>();
                 services.AddSingleton<Core.Services.Web.IWebFetcher, SandboxServices.Web>();
                 services.AddSingleton<SandboxServices.SystemSettings>();

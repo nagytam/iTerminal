@@ -25,6 +25,16 @@ public class CheckBoxTest
     }
 
     [TestMethod]
+    public void KeyHints_ListSpaceOnlyWhenEditable()
+    {
+        var checkBox = new CheckBox(new Mock<IThemeService>().Object) { Label = "Label" };
+        Assert.AreEqual("Space", checkBox.GetKeyHints().Single().Key);
+
+        checkBox.IsReadOnly = true;
+        Assert.AreEqual(0, checkBox.GetKeyHints().Count());
+    }
+
+    [TestMethod]
     public async Task ClickTogglesCheckBox()
     {
         var mockThemeService = new Mock<IThemeService>();

@@ -200,6 +200,94 @@ public class TextEditorControl
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
+    // ---- Indenting ----
+
+    /// <summary>How far Tab moves, in spaces: the width the project's own files are indented with.</summary>
+    public const int IndentWidth = 4;
+
+    /// <summary>
+    /// Tab puts spaces up to the next multiple of <see cref="IndentWidth"/> (a tab character would be drawn one cell
+    /// wide); with a selection it indents every line the selection touches. Shift+Tab takes one step of indent off the
+    /// line, or each selected line — a tab character or up to <see cref="IndentWidth"/> spaces. Returns whether it acted.
+    /// </summary>
+    public bool Indent(bool outdent)
+    {
+        if (IsReadOnly)
+        {
+            return false;
+        }
+
+        var lines = TextModel.Lines;
+        if (lines.Count == 0)
+        {
+            lines.Add(string.Empty);
+        }
+
+        ((long Row, long Column) Anchor, (long Row, long Column) Cursor)? selectAfter = null;
+        if (HasSelection)
+        {
+            var ((startRow, _), (endRow, endColumn)) = SelectionRange;
+            // A selection that ends at the very start of a line has not touched that line.
+            var lastRow = endColumn == 0 && endRow > startRow ? endRow - 1 : endRow;
+            for (var row = startRow; row <= lastRow; row++)
+            {
+                lines[(int)row] = outdent ? Outdented(lines[(int)row], out _) : IndentWidthSpaces + lines[(int)row];
+            }
+
+            selectAfter = ((startRow, 0), (lastRow, lines[(int)lastRow].Length));
+        }
+        else
+        {
+            var row = (int)Math.Clamp(ScrollableModel.CursorPosition.Y, 0, lines.Count - 1);
+            var column = (int)Math.Min(ScrollableModel.CursorPosition.X, lines[row].Length);
+            if (outdent)
+            {
+                lines[row] = Outdented(lines[row], out var removed);
+                ScrollableModel.CursorPosition.X = Math.Max(0, column - removed);
+            }
+            else
+            {
+                var spaces = IndentWidth - (column % IndentWidth);
+                lines[row] = lines[row].Insert(column, new string(' ', spaces));
+                ScrollableModel.CursorPosition.X = column + spaces;
+            }
+
+            ScrollableModel.CursorPosition.Y = row;
+        }
+
+        IsDirty = true;
+        TextModel.TriggerPropertyChanged();
+        Refresh();
+        if (selectAfter is { } selection)
+        {
+            // After the refresh, which would otherwise end the selection: the lines stay selected, so Tab can go on.
+            SelectRange(selection.Anchor, selection.Cursor);
+        }
+
+        return true;
+    }
+
+    private static readonly string IndentWidthSpaces = new(' ', IndentWidth);
+
+    /// <summary>The line with one step of indent off its start; <paramref name="removed"/> is how many characters that was.</summary>
+    private static string Outdented(string line, out int removed)
+    {
+        if (line.StartsWith('\t'))
+        {
+            removed = 1;
+            return line[1..];
+        }
+
+        var spaces = 0;
+        while (spaces < IndentWidth && spaces < line.Length && line[spaces] == ' ')
+        {
+            spaces++;
+        }
+
+        removed = spaces;
+        return line[spaces..];
+    }
+
     // ---- Undo and redo ----
 
     /// <summary>The text, and where the cursor was, at one point of the editing.</summary>
@@ -549,15 +637,29 @@ public class TextEditorControl
         }
     }
 
-    public override IEnumerable<(string Key, string Description)> GetKeyHints() =>
-    [
-        ("Ctrl+Z", "Undo"),
-        ("Ctrl+Y", "Redo"),
-        ("Ctrl+R", "Replace"),
-        ("Ctrl+F2", "Toggle bookmark"),
-        ("F9", "Next bookmark"),
-        ("Shift+F9", "Previous bookmark"),
-    ];
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Ctrl+A", "Select all");
+        yield return ("Ctrl+C", "Copy the selection");
+
+        // A read-only editor refuses the changes to the text, so only the keys that move about, copy or save are offered.
+        if (!IsReadOnly)
+        {
+            yield return ("Ctrl+X", "Cut the selection");
+            yield return ("Ctrl+V", "Paste");
+            yield return ("Ctrl+Z", "Undo");
+            yield return ("Ctrl+Y", "Redo");
+            yield return ("Ctrl+R", "Replace");
+            yield return ("Tab / Shift+Tab", "Indent / outdent (the selected lines too)");
+            yield return ("Ctrl+K", "Delete the line");
+        }
+
+        yield return ("Ctrl+S / F2", "Save");
+        yield return ("F5", "Go to line");
+        yield return ("Ctrl+F2", "Toggle bookmark");
+        yield return ("F9", "Next bookmark");
+        yield return ("Shift+F9", "Previous bookmark");
+    }
 
     /// <summary>
     /// Undo and redo (Ctrl+Z, Ctrl+Y or Ctrl+Shift+Z), the bookmark keys (Ctrl+F2 sets or clears one, F9 and
@@ -565,6 +667,14 @@ public class TextEditorControl
     /// </summary>
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // Wrapped, Up and Down move by screen row, so a long line is walked row by row; by line they would skip its rows.
+        if (IsEnabled && WrapLines && !HasSelection && !keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt
+            && keyEvent.ConsoleKey is ConsoleKey.UpArrow or ConsoleKey.DownArrow)
+        {
+            MoveCursorByScreenRow(keyEvent.ConsoleKey == ConsoleKey.DownArrow ? 1 : -1);
+            return true;
+        }
+
         if (IsEnabled && !keyEvent.Alt)
         {
             if (keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.Z)
@@ -596,6 +706,15 @@ public class TextEditorControl
             if (!keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.F9)
             {
                 GoToBookmark(forward: !keyEvent.Shift);
+                return true;
+            }
+
+            // Tab is the editor's: it indents. The dialog's Tab (to the next control) has nothing else to reach.
+            if (!keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.Tab)
+            {
+                var beforeIndent = Capture();
+                Indent(outdent: keyEvent.Shift);
+                RecordEdit(beforeIndent, isTyping: false);
                 return true;
             }
         }

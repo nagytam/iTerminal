@@ -123,6 +123,24 @@ public class ListBox<T> : Control
         return -1;
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled || Count == 0)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down", "Move the cursor");
+        yield return ("PageUp/PageDown", "Move the cursor by a page");
+        yield return ("Home/End", "First or last item");
+        yield return ("Enter", "Select the item under the cursor");
+        yield return ("Insert", "Mark or unmark the item under the cursor");
+        if (EnableTypeAhead)
+        {
+            yield return ("Letters", "Jump to the next item that starts with them");
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         var isHandled = await base.HandleKeyEventAsync(keyEvent);

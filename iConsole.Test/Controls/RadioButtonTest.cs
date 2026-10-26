@@ -51,6 +51,27 @@ public class RadioButtonTest
     }
 
     [TestMethod]
+    public void KeyHints_ListSpaceWhenEditable()
+    {
+        var hints = CreateControl().GetKeyHints().ToList();
+
+        Assert.AreEqual(1, hints.Count);
+        Assert.AreEqual("Space", hints[0].Key);
+    }
+
+    [TestMethod]
+    public void KeyHints_EmptyWhenReadOnlyOrDisabled()
+    {
+        var readOnly = CreateControl();
+        readOnly.IsReadOnly = true;
+        var disabled = CreateControl();
+        disabled.IsEnabled = false;
+
+        Assert.AreEqual(0, readOnly.GetKeyHints().Count());
+        Assert.AreEqual(0, disabled.GetKeyHints().Count());
+    }
+
+    [TestMethod]
     public async Task SelectRequestedIsRaised()
     {
         var control = CreateControl();

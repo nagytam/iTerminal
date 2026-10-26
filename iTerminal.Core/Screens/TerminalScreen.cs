@@ -1,4 +1,4 @@
-using iConsole.Controls;
+﻿using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Drivers;
@@ -41,7 +41,8 @@ public class TerminalScreen : iConsole.Screens.Screen
         NetworkBrowserDialog networkBrowserDialog,
         ISettingsService settingsService,
         ToastHost? toastHost = null,
-        RuntimeDependencyDialog? runtimeDependencyDialog = null)
+        RuntimeDependencyDialog? runtimeDependencyDialog = null,
+        ToolTipHost? toolTipHost = null)
         : base(consoleDriver, themeService)
     {
         _consoleDriver = consoleDriver ?? NullConsoleDriver.Instance;
@@ -71,6 +72,11 @@ public class TerminalScreen : iConsole.Screens.Screen
         if (toastHost is not null)
         {
             AddControl(toastHost);
+        }
+        // Last, so a tooltip is drawn over everything else on the screen.
+        if (toolTipHost is not null)
+        {
+            AddControl(toolTipHost);
         }
     }
 

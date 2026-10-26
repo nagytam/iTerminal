@@ -61,7 +61,7 @@ public class Timeline : Control
         int width = (int)ViewSize.Width;
         int height = (int)ViewSize.Height;
         int first = FirstVisibleEvent(_events.Count, height);
-        int timeWidth = _events.Count == 0 ? 0 : _events.Max(e => e.Time.Length);
+        int timeWidth = _events.Count == 0 ? 0 : _events.Max(e => (e.Time ?? string.Empty).Length);
         for (int y = 0; y < height; y++)
         {
             int index = first + y / 2;
@@ -72,8 +72,8 @@ public class Timeline : Control
                 {
                     TimelineEvent e = _events[index];
                     line.Append("●", Badge.BackgroundFor(e.Kind, colorScheme.Foreground), colorScheme.Background);
-                    line.Append(" " + e.Time.PadRight(timeWidth) + "  ", colorScheme.DisabledForeground, colorScheme.Background);
-                    line.Append(e.Title.Cut(Math.Max(0, width - timeWidth - 4)), colorScheme.Foreground, colorScheme.Background);
+                    line.Append(" " + (e.Time ?? string.Empty).PadRight(timeWidth) + "  ", colorScheme.DisabledForeground, colorScheme.Background);
+                    line.Append((e.Title ?? string.Empty).Cut(Math.Max(0, width - timeWidth - 4)), colorScheme.Foreground, colorScheme.Background);
                 }
                 else if (index < _events.Count - 1)
                 {

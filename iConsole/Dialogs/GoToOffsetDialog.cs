@@ -48,8 +48,26 @@ public class GoToOffsetDialog : Dialog
         return true;
     }
 
+    /// <summary>The box opens holding "0x0"; the first character typed replaces it rather than following it.</summary>
+    private bool _replaceOnType = true;
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        if (_replaceOnType && keyEvent.KeyPressType == KeyPressType.Down && !keyEvent.Control && !keyEvent.Alt)
+        {
+            if (keyEvent.KeyChar >= ' ' && keyEvent.KeyChar != '\u007F')
+            {
+                _offsetBox.Text = string.Empty;
+                _offsetBox.ScrollableModel.CursorPosition.X = 0;
+                _offsetBox.ScrollableModel.ScrollPosition.X = 0;
+                _replaceOnType = false;
+            }
+            else if (keyEvent.ConsoleKey is ConsoleKey.Backspace or ConsoleKey.Delete or ConsoleKey.LeftArrow or ConsoleKey.RightArrow)
+            {
+                _replaceOnType = false;
+            }
+        }
+
         if (keyEvent.KeyPressType == KeyPressType.Down
             && keyEvent.ConsoleKey == ConsoleKey.Enter
             && !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt)

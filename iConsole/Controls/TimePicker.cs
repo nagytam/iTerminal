@@ -97,7 +97,13 @@ public class TimePicker : Control, IReadOnly
     /// <summary>Steps field <paramref name="field"/> by <paramref name="delta"/>, wrapping within its range.</summary>
     public static int Wrap(int value, int delta, int max) => ((value + delta) % (max + 1) + max + 1) % (max + 1);
 
-    private void Step(int delta) => Set(_field, Wrap(Get(_field), delta, MaxOf(_field)));
+    private void Step(int delta)
+    {
+        Set(_field, Wrap(Get(_field), delta, MaxOf(_field)));
+
+        // A stepped value is the start of a new entry: a digit typed next must not join onto it.
+        _typed = 0;
+    }
 
     private void MoveField(int field)
     {
@@ -140,7 +146,8 @@ public class TimePicker : Control, IReadOnly
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        if (!IsEnabled)
+        // A read-only picker takes no keys, so it offers none.
+        if (!IsEnabled || IsReadOnly)
         {
             yield break;
         }
@@ -148,13 +155,10 @@ public class TimePicker : Control, IReadOnly
         yield return ("Left/Right", "Move between hour, minute and second");
         yield return ("Home/End", "First or last field");
         yield return (": or .", "Next field");
-        if (!IsReadOnly)
-        {
-            yield return ("Up/Down", "Step the field");
-            yield return ("PageUp/PageDown", "Step the field by ten");
-            yield return ("0-9", "Type the field");
-            yield return ("Backspace/Delete", "Clear the field");
-        }
+        yield return ("Up/Down", "Step the field");
+        yield return ("PageUp/PageDown", "Step the field by ten");
+        yield return ("0-9", "Type the field");
+        yield return ("Backspace/Delete", "Clear the field");
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

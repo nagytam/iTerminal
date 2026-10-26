@@ -117,6 +117,15 @@ public class UserMenuDialog : Dialog
         StateHasChanged();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Up/Down", "Move the cursor over the entries");
+        yield return ("Home/End", "Jump to the first or last entry");
+        yield return ("Enter", "Run the entry under the cursor");
+        yield return ("Hotkey", "Run the entry marked with that key");
+        yield return ("F4", "Open the file with the system default program");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType == KeyPressType.Down && !keyEvent.Alt && !keyEvent.Control)

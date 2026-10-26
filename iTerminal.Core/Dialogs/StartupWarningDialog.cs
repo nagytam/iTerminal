@@ -80,6 +80,11 @@ public class StartupWarningDialog : Dialog
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Enter", "Dismiss the warning");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         // A notice has one thing to do with it. Enter is the key people press to "OK" a message;

@@ -127,6 +127,8 @@ public class Table<T> : Control
         }
 
         yield return ("Up/Down", "Move the cursor");
+        yield return ("PageUp/PageDown", "Move the cursor a page");
+        yield return ("Home/End", "First or last row");
         if (_rows.Count > 0)
         {
             yield return ("Enter", "Open the highlighted row");

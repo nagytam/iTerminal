@@ -24,6 +24,9 @@ public class TextModel : ITextModel, INotifyPropertyChanged
         }
     }
 
+    /// <summary>The break the text was read with (see <see cref="Helper.LineEndings"/>); saving writes it back.</summary>
+    public string LineEnding { get; set; } = Environment.NewLine;
+
     public TextModel()
     {
     }

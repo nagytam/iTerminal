@@ -22,7 +22,7 @@ public class Meter(IThemeService themeService) : Control(themeService)
         get => _value;
         set
         {
-            var clamped = Math.Clamp(value, 0.0, 1.0);
+            var clamped = double.IsNaN(value) ? 0.0 : Math.Clamp(value, 0.0, 1.0);
             if (_value != clamped)
             {
                 _value = clamped;

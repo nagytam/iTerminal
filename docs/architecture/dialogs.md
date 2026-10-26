@@ -188,14 +188,26 @@ puts a whole working context back.
   Nothing secret is stored — a remote panel is only its URL.
 
 ### The remote connection manager (`iTerminal.Core/Dialogs/Remote/`, `Services/Remote/`, `Model/Remote/`)
-Alt+F2 (Tools > Remote connections) opens `RemoteConnectionManagerDialog`: saved SSH and PowerShell
-remoting targets, each a keypress from a live session. Enter lends the whole terminal to the session through
+Alt+F2 (Tools > Remote connections) opens `RemoteConnectionManagerDialog`: saved SSH, PowerShell remoting, **FTP and
+WebDAV** targets. Enter on an SSH or PowerShell entry lends the whole terminal to the session through
 `IInteractiveShellService` — the same hand-over as Ctrl+O — so it is a real `ssh` or `Enter-PSSession` with
 its prompt, colours, full-screen programs and Ctrl+C; `exit` comes back to the manager. B opens an SSH
-connection in the active panel as the existing SFTP drive. N / E / D add, edit and delete (D asks y/n).
+connection in the active panel as the existing SFTP drive. N / E / D add, edit and delete (D asks y/n). On the
+form Space on the Type field cycles SSH, PowerShell, FTP, WebDAV (HTTP), WebDAV over HTTPS.
 
-- **No password is ever stored.** The session gets the real terminal and asks there — password, key
-  passphrase and host-key question alike. `RemoteConnection` has no secret field on purpose.
+- **FTP and WebDAV entries are drives, not shells.** Enter and B both open `ftp://user@host[:port]/folder` or
+  `dav[s]://…` in the active panel (`RemoteConnection.DriveUrl`; the port is left off when it is the default). They
+  add a **Password** and a **Folder** field. `RemoteShellLaunch.TryCreate` refuses them ("opens as a panel").
+- **Their password goes to the password manager, never into the entry's JSON.** A shell asks for its password on the
+  terminal it is lent; a drive has none to ask on. `RemoteConnectionService.Save(connection, password)` writes the
+  password as a `PasswordEntry` under the connection's id *and* a `NetworkConnectionProfile` with the same id
+  (protocol, `RemoteConnection.DriveHost` = `host` or `host:port`, user, `HasSavedCredential`) — exactly what
+  `ContentModelFtpDrive` / `ContentModelWebDavDrive` look up when a URL names a user, so the saved password is used
+  with no other step. A blank password on a later edit keeps the one saved; no user name is an anonymous login (no
+  profile is looked up, so none is kept). A locked password manager that cannot be opened refuses the save, and nothing
+  is half-recorded. Delete, or changing the entry into SSH/PowerShell, removes the profile and the secret.
+- **No shell password is ever stored.** The session gets the real terminal and asks there — password, key
+  passphrase and host-key question alike. Only a file-drive entry has `HasSavedCredential`.
 - **`RemoteShellLaunch` builds the program from the entry.** SSH is `ssh [-p port] [-i key] [user@]host`
   with no remote command, so the server starts the login shell. PowerShell is `pwsh|powershell.exe -NoLogo
   -NoProfile -Command "Enter-PSSession …"` — no `-NoExit`, so leaving the remote session ends the process.
@@ -212,8 +224,9 @@ connection in the active panel as the existing SFTP drive. N / E / D add, edit a
 - **The panel drive (B) has the drive's limits**: SSH only, port 22 only (the `ssh://` URL has no port), and
   credentials resolved by `ContentModelSshDrive` (a network profile or `~/.ssh/id_rsa`), not by this entry's
   key file. The dialog says so rather than opening a drive that would connect somewhere else.
-- Entries are JSON in the `RemoteConnections` setting (`IRemoteConnectionService`), separate from the
-  network browser's profiles.
+- Entries are JSON in the `RemoteConnections` setting (`IRemoteConnectionService`). An FTP or WebDAV entry also
+  writes a `NetworkConnectionProfile` (the network browser's store) so the drives find its login; the id is shared.
+  A user name for those two may not hold `@ / \ :` — it is written into the drive's address.
 
 ### Mark by pattern and Format drive: failures stay in the dialog
 

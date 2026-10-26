@@ -14,4 +14,7 @@ public record MouseEvent
 
     /// <summary>Vertical wheel: +1 up, -1 down, 0 none (SGR buttons 64/65).</summary>
     public int WheelDelta { get; set; }
+
+    /// <summary>The pointer moved with no button held. Nothing is clicked; tooltips use it to find what is under the pointer.</summary>
+    public bool IsHover { get; set; }
 }

@@ -1,6 +1,7 @@
 ﻿using iConsole.Data;
 using iConsole.Display;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace iConsole.Drivers;
 
@@ -109,8 +110,13 @@ public class SystemConsoleDriver : IConsoleDriver
     private Size _windowSize;
     public Size WindowSize => _windowSize;
 
+    // Set when the console accepts escape sequences. Plain cells keep going through the Console colour calls; a cell with a
+    // text attribute (bold, dim, curly underline…) or a hyperlink is written as ANSI, which the Console API cannot express.
+    private readonly bool _supportsVirtualTerminal;
+
     public SystemConsoleDriver()
     {
+        _supportsVirtualTerminal = TryEnableVirtualTerminal();
         // Unit tests (and some hosts) can run without an attached console, where WindowWidth/Height throws.
         // Fall back to a minimal size so color/title APIs can still be exercised.
         try
@@ -262,6 +268,12 @@ public class SystemConsoleDriver : IConsoleDriver
     {
         var list = s.String;
         if (list.Count == 0) return;
+        if (_supportsVirtualTerminal && NeedsAnsi(list))
+        {
+            WriteAnsi(x, y, s);
+            return;
+        }
+
         try
         {
             SetCursorPosition(x, y);
@@ -295,6 +307,69 @@ public class SystemConsoleDriver : IConsoleDriver
         {
         }
     }
+
+    private static bool NeedsAnsi(List<Conxel> list)
+    {
+        foreach (var conxel in list)
+        {
+            if (AnsiRenderer.NeedsAnsi(conxel))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void WriteAnsi(int x, int y, ConxelString s)
+    {
+        try
+        {
+            // The sequences position the cursor themselves, relative to the window, and end with a reset.
+            Console.Out.Write(AnsiRenderer.ConxelString2Ansi(x, y, s));
+
+            // The reset put the console's own colours back to its defaults; the cached colours no longer describe it, and
+            // the setters skip a value they think is already set. Setting them again keeps the two in step.
+            Console.ForegroundColor = (ConsoleColor)_foregroundColor;
+            Console.BackgroundColor = (ConsoleColor)_backgroundColor;
+        }
+        catch (IOException)
+        {
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+        }
+    }
+
+    private static bool TryEnableVirtualTerminal()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return false;
+        }
+
+        try
+        {
+            const int StdOutputHandle = -11;
+            const uint EnableVirtualTerminalProcessing = 0x0004;
+            nint handle = GetStdHandle(StdOutputHandle);
+            return GetConsoleMode(handle, out uint mode)
+                && ((mode & EnableVirtualTerminalProcessing) != 0 || SetConsoleMode(handle, mode | EnableVirtualTerminalProcessing));
+        }
+        catch (Exception exception) when (exception is DllNotFoundException or EntryPointNotFoundException)
+        {
+            return false;
+        }
+    }
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern nint GetStdHandle(int nStdHandle);
+
+    [DllImport("kernel32.dll")]
+    private static extern bool GetConsoleMode(nint hConsoleHandle, out uint lpMode);
+
+    [DllImport("kernel32.dll")]
+    private static extern bool SetConsoleMode(nint hConsoleHandle, uint dwMode);
 
     private void FlushRun(Color foreground, Color background)
     {

@@ -34,6 +34,18 @@ public class HexViewer : Control
         AddCommand(new ScrollToEndVerticalCommand(ScrollableModel));
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsEnabled || RowCount == 0)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down", "Scroll a row");
+        yield return ("PageUp/PageDown", "Scroll a page");
+        yield return ("Home/End", "First or last row");
+    }
+
     /// <summary>The bytes to display. Setting this resets the cursor to row 0.</summary>
     public byte[] Data
     {

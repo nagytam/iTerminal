@@ -23,6 +23,20 @@ public class TextViewerControlTest
     }
 
     [TestMethod]
+    public void KeyHints_ListTheScrollKeys_AndNothingWhenDisabled()
+    {
+        var mockThemeService = new Mock<IThemeService>();
+        var viewer = new TextViewerControl(false, mockThemeService.Object);
+
+        var keys = viewer.GetKeyHints().Select(h => h.Key).ToList();
+        CollectionAssert.Contains(keys, "PageUp/PageDown");
+        CollectionAssert.Contains(keys, "Ctrl+Home/Ctrl+End");
+
+        viewer.IsEnabled = false;
+        Assert.AreEqual(0, viewer.GetKeyHints().Count());
+    }
+
+    [TestMethod]
     public void TextViewerControlHasTextModel()
     {
         var mockThemeService = new Mock<IThemeService>();

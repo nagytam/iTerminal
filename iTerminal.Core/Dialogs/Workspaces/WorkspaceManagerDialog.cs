@@ -125,6 +125,31 @@ public class WorkspaceManagerDialog : Dialog
 
     #region Keys
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_mode == Mode.Name)
+        {
+            yield return ("Enter", "Save the workspace under this name");
+            yield return ("Esc", "Back to the list");
+            yield break;
+        }
+
+        if (_pending != Pending.None)
+        {
+            yield return ("Y", "Confirm");
+            yield return ("Any other key", "Cancel");
+            yield break;
+        }
+
+        yield return ("Up/Down", "Choose a workspace");
+        yield return ("Enter", "Switch to the chosen workspace");
+        yield return ("1-9", "Switch to a workspace by its number");
+        yield return ("S/N", "Save the screen as a new workspace");
+        yield return ("U", "Update the chosen workspace from the screen");
+        yield return ("R", "Rename the chosen workspace");
+        yield return ("D/Delete", "Delete the chosen workspace (asks first)");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         Workspace? toRestore = null;
