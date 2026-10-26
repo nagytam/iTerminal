@@ -121,6 +121,31 @@ public class RemoteConnectionManagerDialog : Dialog
         base.OnInitializeLayout();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_mode == Mode.Edit)
+        {
+            yield return ("Ctrl+S / Enter", "Save the connection");
+            yield return ("Tab / Up/Down", "Move between the fields");
+            yield return ("Esc", "Back to the list");
+            yield break;
+        }
+
+        if (_confirmDelete)
+        {
+            yield return ("Y / D / Delete", "Delete the connection");
+            yield return ("Any other key", "Keep the connection");
+            yield break;
+        }
+
+        yield return ("Up/Down", "Choose a connection");
+        yield return ("Enter", "Connect on the lent terminal");
+        yield return ("N", "Add a connection");
+        yield return ("E", "Edit the connection");
+        yield return ("D/Delete", "Delete the connection (asks first)");
+        yield return ("B", "Browse the connection in a panel");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         lock (_sync)

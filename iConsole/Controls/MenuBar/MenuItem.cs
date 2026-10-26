@@ -588,6 +588,21 @@ public class MenuItem : PopUpWindow
         return Task.CompletedTask;
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsOpened)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down", "Move over the menu items");
+        yield return ("Home/End", "Jump to the first or last item");
+        yield return ("Enter/Space", "Run the selected item");
+        yield return ("Right", "Open the submenu or go to the next menu");
+        yield return ("Left", "Close the submenu or go to the previous menu");
+        yield return ("Esc", "Close the menu");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (IsOpened)

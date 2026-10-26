@@ -128,6 +128,35 @@ public class MailDialog : Dialog
         base.Close();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        switch (_mode)
+        {
+            case Mode.List:
+                yield return ("Up/Down", "Choose a message");
+                yield return ("Enter", "Read the message");
+                yield return ("C", "Write a message");
+                yield return ("R", "Refresh the inbox");
+                yield return ("D/Delete", "Delete the message (asks first)");
+                yield return ("S", "Account settings");
+                break;
+            case Mode.View:
+                yield return ("Up/Down", "Scroll the message");
+                yield return ("R", "Reply");
+                yield return ("Esc", "Back to the inbox");
+                break;
+            case Mode.Compose:
+                yield return ("Ctrl+S", "Send the message");
+                yield return ("Ctrl+L", "Look up an address");
+                yield return ("Tab", "Move between the fields");
+                yield return ("Esc", "Back to the inbox");
+                break;
+            default:
+                yield return ("Esc", "Back");
+                break;
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         lock (_sync)

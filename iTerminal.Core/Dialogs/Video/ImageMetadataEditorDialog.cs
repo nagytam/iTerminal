@@ -114,6 +114,13 @@ public class ImageMetadataEditorDialog : Dialog
         }
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Tab", "Move between the fields");
+        yield return ("Enter", "Save the metadata");
+        yield return ("Esc", "Close without saving");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType == KeyPressType.Down

@@ -151,6 +151,12 @@ public class UnitConverterDialog : SplitPaneDialog
         base.OnInitializeLayout();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Tab", "Move between the category, the units and the value");
+        yield return ("Esc", "Close");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.ConsoleKey == ConsoleKey.Escape && !keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt)
