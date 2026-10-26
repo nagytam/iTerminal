@@ -13,9 +13,9 @@ namespace iTerminal.Core.Model.Mail;
 /// </summary>
 public static partial class MimeParser
 {
-    public static MailItem Parse(int number, string raw)
+    public static MailItem Parse(int number, string? raw)
     {
-        var (headerBlock, body) = SplitHeaders(raw);
+        var (headerBlock, body) = SplitHeaders(raw ?? string.Empty);
         var headers = ParseHeaders(headerBlock);
         return new MailItem(
             number,
@@ -27,9 +27,9 @@ public static partial class MimeParser
     }
 
     /// <summary>The list line for a message, from its headers alone (a TOP reply, or a whole RETR).</summary>
-    public static MailListing ParseListing(int number, long size, string headerBlock)
+    public static MailListing ParseListing(int number, long size, string? headerBlock)
     {
-        var (block, _) = SplitHeaders(headerBlock);
+        var (block, _) = SplitHeaders(headerBlock ?? string.Empty);
         var headers = ParseHeaders(block);
         return new MailListing(number, size, HeaderValue(headers, "From"), HeaderValue(headers, "Subject"), HeaderValue(headers, "Date"));
     }
