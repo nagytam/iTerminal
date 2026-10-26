@@ -56,7 +56,13 @@ public class Table<T> : Control
     /// Drawn on the first body row, in the disabled colours, while the table has no rows. Empty by
     /// default.
     /// </summary>
-    public string EmptyText { get; set; } = string.Empty;
+    public string EmptyText
+    {
+        get => _emptyText;
+        set => _emptyText = value ?? string.Empty;
+    }
+
+    private string _emptyText = string.Empty;
 
     /// <summary>The column the host has sorted the rows by, or -1; its header shows ▲ or ▼.</summary>
     public int SortColumn { get; set; } = -1;

@@ -943,10 +943,10 @@ public static class OfficeTextRenderer
         return false;
     }
 
-    public static int ColumnIndex(string cellReference)
+    public static int ColumnIndex(string? cellReference)
     {
         int index = 0;
-        foreach (char c in cellReference)
+        foreach (char c in cellReference ?? string.Empty)
         {
             if (!char.IsAsciiLetter(c))
             {

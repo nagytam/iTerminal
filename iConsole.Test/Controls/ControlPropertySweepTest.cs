@@ -29,11 +29,34 @@ public class ControlPropertySweepTest
         nameof(Control.IsVisible), nameof(Control.CanFocus),
     ];
 
+    /// <summary>The controls to sweep; one that is generic over a single type is swept closed over string.</summary>
+    private static readonly ConsoleKey[] Keys =
+    [
+        ConsoleKey.UpArrow, ConsoleKey.DownArrow, ConsoleKey.LeftArrow, ConsoleKey.RightArrow, ConsoleKey.Home, ConsoleKey.End,
+        ConsoleKey.PageUp, ConsoleKey.PageDown, ConsoleKey.Enter, ConsoleKey.Spacebar, ConsoleKey.Backspace, ConsoleKey.Delete,
+        ConsoleKey.D5, ConsoleKey.A,
+    ];
+
     private static IEnumerable<Type> ControlTypes() => typeof(Control).Assembly.GetTypes()
-        .Where(t => t.IsPublic && !t.IsAbstract && !t.IsGenericTypeDefinition && typeof(Control).IsAssignableFrom(t))
+        .Where(t => t.IsPublic && !t.IsAbstract && typeof(Control).IsAssignableFrom(t))
         .Where(t => t.Namespace is not null && t.Namespace.StartsWith("iConsole.Controls", StringComparison.Ordinal))
         .Where(t => !typeof(Window).IsAssignableFrom(t))
+        .Where(t => !t.IsGenericTypeDefinition || t.GetGenericArguments().Length == 1)
+        .Select(t => t.IsGenericTypeDefinition ? TryClose(t) : t)
+        .OfType<Type>()
         .OrderBy(t => t.FullName, StringComparer.Ordinal);
+
+    private static Type? TryClose(Type definition)
+    {
+        try
+        {
+            return definition.MakeGenericType(typeof(string));
+        }
+        catch (ArgumentException)
+        {
+            return null;
+        }
+    }
 
     private static Control? Build(Type type)
     {
@@ -51,6 +74,15 @@ public class ControlPropertySweepTest
                 else if (parameter.IsInterface && parameter.Name.EndsWith("Service", StringComparison.Ordinal))
                 {
                     arguments[i] = ((Mock)Activator.CreateInstance(typeof(Mock<>).MakeGenericType(parameter))!).Object;
+                }
+                else if (parameter.IsGenericType && parameter.GetGenericTypeDefinition().Name.StartsWith("IListBoxModel", StringComparison.Ordinal))
+                {
+                    Type model = typeof(iConsole.Model.ListBoxModel<>).MakeGenericType(parameter.GetGenericArguments());
+                    arguments[i] = Activator.CreateInstance(model, Activator.CreateInstance(model.GetConstructors()[0].GetParameters()[0].ParameterType));
+                }
+                else if (!parameter.IsInterface && !parameter.IsAbstract && parameter.GetConstructor(Type.EmptyTypes) is not null)
+                {
+                    arguments[i] = Activator.CreateInstance(parameter);
                 }
                 else
                 {
@@ -71,7 +103,7 @@ public class ControlPropertySweepTest
     {
         if (type == typeof(int))
         {
-            return [-1, int.MinValue, int.MaxValue, 0];
+            return [-1, int.MinValue, int.MaxValue, 0, 1, 2, 1000];
         }
 
         if (type == typeof(long))
@@ -86,7 +118,7 @@ public class ControlPropertySweepTest
 
         if (type == typeof(string))
         {
-            return [null, string.Empty, new string('x', 500), "{0}"];
+            return [null, string.Empty, new string('x', 500), "{0}", " ", "a\nb\tc", "日本語\U0001F600"];
         }
 
         if (type == typeof(char))
@@ -132,7 +164,22 @@ public class ControlPropertySweepTest
                             control.Position = new Position(0, 0);
                             control.ViewSize = new Size(width, height);
                             property.SetValue(control, value);
-                            control.Draw(new ScreenBuffer((int)width, (int)height));
+                            ScreenBuffer buffer = new((int)width, (int)height);
+                            control.Draw(buffer);
+                            control.SetFocus();
+                            foreach (ConsoleKey key in Keys)
+                            {
+                                control.HandleKeyEventAsync(new KeyEvent(key == ConsoleKey.A ? 'a' : key == ConsoleKey.D5 ? '5' : '\0', key, false, false, false)).GetAwaiter().GetResult();
+                                control.Draw(buffer);
+                            }
+
+                            foreach ((long x, long y) in new[] { (0L, 0L), (width / 2L, height / 2L), (width + 3L, height + 3L) })
+                            {
+                                control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), LeftClicked = true }).GetAwaiter().GetResult();
+                                control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), WheelDelta = 1 }).GetAwaiter().GetResult();
+                            }
+
+                            control.Draw(buffer);
                         }
                         catch (Exception exception)
                         {

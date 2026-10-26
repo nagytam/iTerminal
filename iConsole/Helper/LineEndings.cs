@@ -12,8 +12,9 @@ public static class LineEndings
     /// The break the text uses most: <c>\r\n</c>, <c>\n</c> or a lone <c>\r</c>. A text with no break at all, or with as
     /// many of two kinds, gets the system's, which is what a new file should have.
     /// </summary>
-    public static string Detect(string text)
+    public static string Detect(string? text)
     {
+        text ??= string.Empty;
         int crlf = 0;
         int lf = 0;
         int cr = 0;
@@ -56,5 +57,5 @@ public static class LineEndings
     }
 
     /// <summary>Splits on any of the three breaks, so a file with mixed endings still comes apart into its lines.</summary>
-    public static string[] Split(string text) => text.ReplaceLineEndings("\n").Split('\n');
+    public static string[] Split(string? text) => (text ?? string.Empty).ReplaceLineEndings("\n").Split('\n');
 }

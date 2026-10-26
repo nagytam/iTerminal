@@ -6,8 +6,10 @@ public static class StringHelper
 {
     public static string Repeat(this string value, int count)
     {
-        if (count > 0)
+        if (count > 0 && !string.IsNullOrEmpty(value))
         {
+            // A repeat past a screen's size is a mistake, and one to int.MaxValue ran out of memory.
+            count = Math.Min(count, MaxPadding / value.Length + 1);
             return new StringBuilder().Insert(0, value, count).ToString();
         }
         else
@@ -19,12 +21,12 @@ public static class StringHelper
     public static string Repeat(char c, int count)
     {
         if (count <= 0) return string.Empty;
-        return new StringBuilder().Insert(0, c.ToString(), count).ToString();
+        return new string(c, Math.Min(count, MaxPadding));
     }
 
-    public static string Cut(this string value, int size)
+    public static string Cut(this string? value, int size)
     {
-        if (size <= 0) return string.Empty;
+        if (size <= 0 || string.IsNullOrEmpty(value)) return string.Empty;
         return (value.Length > size) ? value[..size] : value;
     }
 
@@ -101,7 +103,7 @@ public static class StringHelper
 
     public static string Expand(this string value, int left, int right)
     {
-        var paddedString = " ".Repeat(left) + value + " ".Repeat(right);
+        var paddedString = " ".Repeat(Math.Min(left, MaxPadding)) + value + " ".Repeat(Math.Min(right, MaxPadding));
         return paddedString;
     }
 
@@ -110,8 +112,19 @@ public static class StringHelper
         return Expand(value, " ", width);
     }
 
+    /// <summary>The most padding any of the Expand methods writes: a width past a screen's is a mistake, and padding to int.MaxValue ran out of memory.</summary>
+    private const int MaxPadding = 100_000;
+
     public static string Expand(this string value, string c, int width)
     {
+        value ??= string.Empty;
+        c = string.IsNullOrEmpty(c) ? " " : c;
+        width = Math.Min(width, MaxPadding);
+        if (width <= value.Length)
+        {
+            return value;
+        }
+
         int left = (width - value.Length) / 2;
         int right = (width - value.Length) / 2;
         if (left + value.Length + right < width)
@@ -129,7 +142,7 @@ public static class StringHelper
             return string.Empty;
         }
 
-        int right = (width - value.Length);
+        int right = (int)Math.Max((long)int.MinValue, Math.Min(width, MaxPadding) - (long)value.Length);
         var paddedString = value + " ".Repeat(right);
         return paddedString;
     }

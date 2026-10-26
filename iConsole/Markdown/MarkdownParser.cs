@@ -116,7 +116,7 @@ public static partial class MarkdownParser
 /// <summary>Inline emphasis, code and links. Delimiters that are not closed are kept as literal text.</summary>
 public static class MarkdownInline
 {
-    public static IReadOnlyList<MarkdownSpan> Parse(string text) => Parse(text, MarkdownStyle.Plain);
+    public static IReadOnlyList<MarkdownSpan> Parse(string? text) => Parse(text ?? string.Empty, MarkdownStyle.Plain);
 
     private static List<MarkdownSpan> Parse(string text, MarkdownStyle style)
     {
