@@ -6,7 +6,13 @@ namespace iConsole.Controls.StatusBar;
 
 public abstract class StatusBarItem(IThemeService themeService) : Control(themeService)
 {
-    public string Text { get; set; } = string.Empty;
+    private string _text = string.Empty;
+
+    public string Text
+    {
+        get => _text;
+        set => _text = value ?? string.Empty;
+    }
 
     public override void Draw(IBuffer buffer)
     {

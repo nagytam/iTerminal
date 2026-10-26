@@ -25,6 +25,8 @@ public class TextBox : Control, IReadOnly
         }
         set
         {
+            // Null is no text: it would fail every key and draw of the box.
+            value ??= string.Empty;
             if (TextModel.Lines[0] != value)
             {
                 TextModel.Lines[0] = value;
@@ -43,7 +45,13 @@ public class TextBox : Control, IReadOnly
     /// Hint drawn greyed inside the well while the box is empty, so a field says what it wants
     /// ("Search…", "host:port") without a label. It is never part of <see cref="Text"/>.
     /// </summary>
-    public string Placeholder { get; set; } = string.Empty;
+    private string _placeholder = string.Empty;
+
+    public string Placeholder
+    {
+        get => _placeholder;
+        set => _placeholder = value ?? string.Empty;
+    }
     public bool IsReadOnly { get; set; } = false;
     private IValidationModel? _validationModel;
     public IValidationModel? ValidationModel 

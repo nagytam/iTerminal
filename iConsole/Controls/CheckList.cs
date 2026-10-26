@@ -29,7 +29,13 @@ public class CheckList : Control, IReadOnly
     public bool IsReadOnly { get; set; }
 
     /// <summary>Drawn on the first row, greyed, while there are no items.</summary>
-    public string EmptyText { get; set; } = string.Empty;
+    public string EmptyText
+    {
+        get => _emptyText;
+        set => _emptyText = value ?? string.Empty;
+    }
+
+    private string _emptyText = string.Empty;
 
     public IReadOnlyList<(string Text, bool Checked)> Items => _items;
 
