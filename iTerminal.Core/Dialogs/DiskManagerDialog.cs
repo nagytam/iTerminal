@@ -263,6 +263,19 @@ public class DiskManagerDialog : Dialog
 
     // ---- actions --------------------------------------------------------------------------------
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_driveActions is null)
+        {
+            yield break;
+        }
+
+        yield return ("E", "Eject the drive");
+        yield return ("F", "Format the drive");
+        yield return ("M", "Mount a disk image");
+        yield return ("B", "Back to the drive under the cursor");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (!keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift && _driveActions is not null)

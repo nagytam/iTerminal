@@ -570,6 +570,21 @@ public class SolutionViewerDialog : SplitPaneDialog
 
     #region Input
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Space", "Select or unselect the project");
+        yield return ("A", "Select all projects");
+        yield return ("Shift+T", "Select all test projects");
+        yield return ("B", "Build the selected projects");
+        yield return ("C", "Clean the selected projects");
+        yield return ("T", "Run the tests");
+        yield return ("R", "Run the project");
+        yield return ("X", "Cancel the running command");
+        yield return ("V", "Switch to the next .NET SDK");
+        yield return ("PageUp/PageDown", "Scroll the output");
+        yield return ("Home/End", "Top of the output, or follow the end");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         switch (keyEvent.ConsoleKey)

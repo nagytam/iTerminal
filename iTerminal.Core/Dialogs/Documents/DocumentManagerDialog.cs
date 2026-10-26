@@ -612,6 +612,17 @@ public class DocumentManagerDialog : SplitPaneDialog
 
     #region Input
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Type", "Search the documents");
+        yield return ("Up/Down", "Choose a result");
+        yield return ("Enter", "Show the document in the panel");
+        yield return ("Esc", "Clear the search, then close");
+        yield return ("Ctrl+R", "Scan the documents again");
+        yield return ("Ctrl+X", "Cancel the scan");
+        yield return ("Ctrl+T", "Show or hide the preview");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         switch (keyEvent.ConsoleKey)

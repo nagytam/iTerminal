@@ -89,6 +89,14 @@ public class ProcessManagerDialog : Dialog
     /// Up/Down/PageUp/PageDown move the list while the filter has focus, so narrowing and choosing
     /// is one motion — the arrows otherwise went to the filter box, which has nothing to do with them.
     /// </summary>
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Type", "Filter the processes");
+        yield return ("Up/Down", "Move over the processes, even from the filter box");
+        yield return ("PageUp/PageDown", "Move a page at a time");
+        yield return ("Ctrl+Home/End", "Jump to the first or last process");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_textbox.IsFocused
