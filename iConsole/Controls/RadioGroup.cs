@@ -23,7 +23,19 @@ public class RadioGroup<T> : Control, IReadOnly
         ViewSize = new Size(20, 1);
     }
 
-    public Orientation Orientation { get; set; } = Orientation.Vertical;
+    private Orientation _orientation = Orientation.Vertical;
+
+    /// <summary>Stacked rows or one row of options; changing it lays the options out again at once.</summary>
+    public Orientation Orientation
+    {
+        get => _orientation;
+        set
+        {
+            _orientation = value;
+            LayoutButtons();
+            StateHasChanged();
+        }
+    }
     public Func<T, string> DisplaySelector { get; set; } = item => item?.ToString() ?? string.Empty;
 
     public event EventHandler? SelectionChanged;
@@ -112,7 +124,6 @@ public class RadioGroup<T> : Control, IReadOnly
 
         yield return ("Up/Down or Left/Right", "Choose the previous or next option");
         yield return ("Home/End", "First or last option");
-        yield return ("Space", "Choose the option under the cursor");
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

@@ -24,10 +24,21 @@ public class KeyValueList : Control
     public IReadOnlyList<(string Key, string Value)> Items => _items;
 
     /// <summary>Widest the key column may grow to; longer keys are cut.</summary>
-    public int MaxKeyWidth { get; set; } = 20;
+    public int MaxKeyWidth
+    {
+        get => _maxKeyWidth;
+        set => _maxKeyWidth = Math.Max(0, value);
+    }
 
-    /// <summary>Cells between the key column and the values.</summary>
-    public int Gap { get; set; } = 2;
+    /// <summary>Cells between the key column and the values; a negative gap would fail every draw, so it is at least 0.</summary>
+    public int Gap
+    {
+        get => _gap;
+        set => _gap = Math.Max(0, value);
+    }
+
+    private int _maxKeyWidth = 20;
+    private int _gap = 2;
 
     public void SetItems(IEnumerable<(string Key, string Value)> items)
     {

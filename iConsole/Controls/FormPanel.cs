@@ -28,7 +28,13 @@ public class FormPanel : Control
     }
 
     /// <summary>Blank rows inserted between consecutive fields.</summary>
-    public int RowGap { get; set; }
+    public int RowGap
+    {
+        get => _rowGap;
+        set => _rowGap = Math.Max(0, value);
+    }
+
+    private int _rowGap;
 
     /// <summary>Printed between the label column and the field. Aligned across all rows.</summary>
     public string LabelSeparator { get; set; } = ": ";
