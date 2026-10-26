@@ -70,8 +70,9 @@ public static class Hyperlinks
         }
     }
 
-    internal static string Sanitize(string target)
+    internal static string Sanitize(string? target)
     {
+        target ??= string.Empty;
         bool clean = true;
         foreach (char c in target)
         {

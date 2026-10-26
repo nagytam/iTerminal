@@ -80,8 +80,9 @@ public static class UserMenuMacros
     }
 
     /// <summary>Quotes one word for cmd on Windows and for sh elsewhere.</summary>
-    public static string Quote(string word)
+    public static string Quote(string? word)
     {
+        word ??= string.Empty;
         if (OperatingSystem.IsWindows())
         {
             return "\"" + word.Replace("\"", "\"\"") + "\"";

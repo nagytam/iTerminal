@@ -133,5 +133,5 @@ public static class RemoteShellLaunch
     }
 
     /// <summary>A single-quoted PowerShell string: everything literal, a quote doubled.</summary>
-    internal static string QuotePowerShell(string text) => "'" + text.Replace("'", "''") + "'";
+    internal static string QuotePowerShell(string? text) => "'" + (text ?? string.Empty).Replace("'", "''") + "'";
 }

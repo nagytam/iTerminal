@@ -18,6 +18,8 @@ public static class PromptLine
             return string.Empty;
         }
 
+        // No terminal is wider than this; padding to int.MaxValue ran out of memory.
+        width = Math.Min(width, 100_000);
         prefix ??= string.Empty;
         input ??= string.Empty;
 
