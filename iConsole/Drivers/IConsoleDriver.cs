@@ -24,4 +24,14 @@ public interface IConsoleDriver : Services.IConsoleHandoverParticipant
     void SetCursorPosition(int x, int y);
     void Write(int x, int y, Conxel conxel);
     void Write(int x, int y, ConxelString s);
+
+    /// <summary>Called before the writes of one frame. A driver on a terminal that knows synchronized output starts holding it.</summary>
+    void BeginFrame()
+    {
+    }
+
+    /// <summary>Called after the writes of one frame, whatever happened in between.</summary>
+    void EndFrame()
+    {
+    }
 }
