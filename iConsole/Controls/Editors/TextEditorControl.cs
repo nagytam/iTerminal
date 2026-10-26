@@ -1,4 +1,5 @@
-﻿using iConsole.Commands;
+﻿using iConsole.Buffers;
+using iConsole.Commands;
 using iConsole.Helper;
 using iConsole.Data;
 using iConsole.Display;
@@ -616,6 +617,74 @@ public class TextEditorControl
         }
     }
 
+    /// <summary>
+    /// Whether the bracket at the cursor and its partner are marked, and Ctrl+F9 goes to the partner. On by default.
+    /// </summary>
+    public bool BracketMatchingEnabled { get; set; } = true;
+
+    private BracketMatch? _bracketMatch;
+
+    /// <summary>The bracket at (or just before) the cursor and the one it pairs with, or null when the cursor is not by a bracket.</summary>
+    public BracketMatch? FindMatchingBracket()
+    {
+        var row = (int)Math.Clamp(ScrollableModel.CursorPosition.Y, 0, Math.Max(0, TextModel.Lines.Count - 1));
+        return BracketMatcher.Find(TextModel.Lines, row, (int)ScrollableModel.CursorPosition.X);
+    }
+
+    /// <summary>Moves the cursor onto the bracket that pairs with the one at the cursor. False when there is none to go to.</summary>
+    public bool GoToMatchingBracket()
+    {
+        if (FindMatchingBracket() is not { Match: { } match })
+        {
+            return false;
+        }
+
+        ScrollableModel.CursorPosition.Y = match.Line;
+        ScrollableModel.CursorPosition.X = match.Column;
+        ClearSelection();
+        KeepCursorInText();
+        StateHasChanged();
+        return true;
+    }
+
+    public override void Draw(IBuffer buffer)
+    {
+        // Looked for once a frame, not once a row: the search can cross many lines.
+        _bracketMatch = BracketMatchingEnabled ? FindMatchingBracket() : null;
+        base.Draw(buffer);
+    }
+
+    protected override void DecorateText(ConxelString drawn, int line, int firstColumn, bool isCursorLine, ColorScheme colorScheme)
+    {
+        if (_bracketMatch is null)
+        {
+            return;
+        }
+
+        // A bracket with a partner is marked together with it; one without is marked alone, in red.
+        bool paired = _bracketMatch.Match is not null;
+        MarkBracket(drawn, _bracketMatch.Bracket, line, firstColumn, paired);
+        if (_bracketMatch.Match is { } match)
+        {
+            MarkBracket(drawn, match, line, firstColumn, paired);
+        }
+    }
+
+    private static void MarkBracket(ConxelString drawn, BracketLocation location, int line, int firstColumn, bool paired)
+    {
+        int cell = location.Column - firstColumn;
+        if (location.Line != line || cell < 0 || cell >= drawn.Count)
+        {
+            return;
+        }
+
+        Conxel conxel = drawn.String[cell];
+        conxel.ForegroundColor = paired ? Color.Black : Color.White;
+        conxel.BackgroundColor = paired ? Color.Cyan : Color.Red;
+        conxel.IsBold = true;
+        drawn.String[cell] = conxel;
+    }
+
     protected override void DecorateLine(ConxelString drawn, int line, bool isCursorLine, ColorScheme colorScheme)
     {
         if (!_bookmarks.Contains(line) || drawn.Count == 0)
@@ -659,6 +728,10 @@ public class TextEditorControl
         yield return ("Ctrl+F2", "Toggle bookmark");
         yield return ("F9", "Next bookmark");
         yield return ("Shift+F9", "Previous bookmark");
+        if (BracketMatchingEnabled)
+        {
+            yield return ("Ctrl+F9", "Go to the matching bracket");
+        }
     }
 
     /// <summary>
@@ -706,6 +779,12 @@ public class TextEditorControl
             if (!keyEvent.Control && keyEvent.ConsoleKey == ConsoleKey.F9)
             {
                 GoToBookmark(forward: !keyEvent.Shift);
+                return true;
+            }
+
+            if (keyEvent.Control && !keyEvent.Shift && keyEvent.ConsoleKey == ConsoleKey.F9 && BracketMatchingEnabled)
+            {
+                GoToMatchingBracket();
                 return true;
             }
 

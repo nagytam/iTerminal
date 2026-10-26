@@ -234,6 +234,15 @@ public class TextViewerControl : Control
     }
 
     /// <summary>
+    /// A hook for what an editor marks inside a row's text — a bracket and its partner, say. Called for wrapped and unwrapped
+    /// rows alike. <paramref name="firstColumn"/> is the text column the first cell of <paramref name="drawn"/> shows, so a
+    /// mark at column <c>c</c> is the cell <c>c - firstColumn</c>.
+    /// </summary>
+    protected virtual void DecorateText(ConxelString drawn, int line, int firstColumn, bool isCursorLine, ColorScheme colorScheme)
+    {
+    }
+
+    /// <summary>
     /// With a caret (an editor), brings the cursor back onto the text it is editing: a row that exists, a column no
     /// further than the end of that line — Up/Down onto a shorter line, or Right across a short one, used to leave it
     /// floating in the empty space — and the view scrolled so it is on screen.
@@ -987,6 +996,7 @@ public class TextViewerControl : Control
                 // The cursor's row keeps the cursor colours; the others are coloured by what the text is.
                 ColorizeSyntax(conxelLine, TextModel.Lines[(int)indexY], inComment, positionX, out inComment, isCursorLine);
                 DecorateLine(conxelLine, (int)indexY, isCursorLine, colorScheme);
+                DecorateText(conxelLine, (int)indexY, positionX, isCursorLine, colorScheme);
                 HighlightSearchResults(conxelLine, highlightPositionX, (int)indexY);
                 HighlightSelectedPart(conxelLine, (int)indexY, TextModel.Lines[(int)indexY].Length, colorScheme);
                 buffer.Write(
@@ -1054,6 +1064,7 @@ public class TextViewerControl : Control
                 }
 
                 HighlightSearchHitsInRow(conxelLine, row);
+                DecorateText(conxelLine, row.Line, start, cursorLine, colorScheme);
                 buffer.Write(
                     ZOrder,
                     new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + i)),
