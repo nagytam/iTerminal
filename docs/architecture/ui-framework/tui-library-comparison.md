@@ -30,7 +30,7 @@ Ordered by value to iTerminal. "Seen in" names the libraries that have it.
 
 **Layout and styling**
 
-9. **Percent, fill and constraint layout.** `Layouts/Layout.cs` is a single file; the docs already list `Dim.Percent`/`Fill` as not built. Seen in: Terminal.Gui (`Dim`/`Pos`), Textual (fr, %, grid), Ratatui (`Constraint`), FTXUI (flex), Lip Gloss. Add stack, dock and grid panels with weights and min/max sizes.
+9. **Percent, fill and constraint layout.** *Stack layout built:* `SizeRule` (`Fixed`, `Percent`, `Fill(weight)`, each with `WithMin` / `WithMax`), `SizeSolver.Solve` (exact cell counts, no cell lost to rounding, last children shrink first on overflow) and `StackPanel` (row or column, gap, hidden children take no space, re-laid out on every draw). Not built: dock and grid panels, and use by the dialogs and the file panels. Seen in: Terminal.Gui (`Dim`/`Pos`), Textual (fr, %, grid), Ratatui (`Constraint`), FTXUI (flex), Lip Gloss.
 10. **Styling by rules.** Colours are set on controls and a `ColorScheme`. Textual's TCSS and Lip Gloss's composable `Style` let a theme restyle by type, class and state (`:focus`, `:disabled`, `:hover`). A small selector table in `IThemeService` would remove per-control colour code.
 11. **Border and box-drawing styles.** `Border.cs` exists; check for rounded, double, thick and dashed sets, per-side borders, and border titles with alignment (Lip Gloss, Textual, Ratatui `Block`).
 12. **Gradients and alpha blending.** Not found. Textual and Lip Gloss blend and interpolate colours; useful for shadows under popups and fading toasts.
