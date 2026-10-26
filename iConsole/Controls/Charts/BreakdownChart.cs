@@ -35,10 +35,13 @@ public class BreakdownChart(IThemeService themeService) : Control(themeService)
     /// Splits <paramref name="width"/> cells between the values with the largest-remainder method,
     /// so the widths always add up to the full width (when any value is positive).
     /// </summary>
+    /// <summary>What a value counts for: only a finite positive one has a share, so NaN and infinity cannot spoil the others' widths.</summary>
+    private static double Weight(double value) => double.IsFinite(value) && value > 0 ? value : 0;
+
     public static int[] Allocate(IReadOnlyList<double> values, int width)
     {
         int[] widths = new int[values.Count];
-        double total = values.Where(v => v > 0).Sum();
+        double total = values.Sum(Weight);
         if (total <= 0 || width <= 0)
         {
             return widths;
@@ -48,7 +51,7 @@ public class BreakdownChart(IThemeService themeService) : Control(themeService)
         int used = 0;
         for (int i = 0; i < values.Count; i++)
         {
-            double exact = values[i] > 0 ? values[i] / total * width : 0;
+            double exact = Weight(values[i]) / total * width;
             widths[i] = (int)Math.Floor(exact);
             remainders[i] = exact - widths[i];
             used += widths[i];
@@ -69,7 +72,7 @@ public class BreakdownChart(IThemeService themeService) : Control(themeService)
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
         int width = (int)ViewSize.Width;
         int height = (int)ViewSize.Height;
-        double total = _items.Where(i => i.Value > 0).Sum(i => i.Value);
+        double total = _items.Sum(i => Weight(i.Value));
         int[] widths = Allocate(_items.Select(i => i.Value).ToList(), width);
 
         long x = AbsolutePosition.X;
@@ -101,7 +104,7 @@ public class BreakdownChart(IThemeService themeService) : Control(themeService)
 
             BreakdownChartItem item = _items[index];
             string value = item.Value.ToString("0.##", CultureInfo.CurrentCulture);
-            string share = ShowPercentages && total > 0 && item.Value > 0
+            string share = ShowPercentages && total > 0 && Weight(item.Value) > 0
                 ? $" ({item.Value / total * 100:0.#}%)"
                 : string.Empty;
             string text = $" {item.Label} {value}{share}";

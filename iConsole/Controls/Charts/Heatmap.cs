@@ -35,7 +35,7 @@ public class Heatmap : Control
         get => _values;
         set
         {
-            _values = [.. (value ?? []).Select(row => row.ToArray())];
+            _values = [.. (value ?? []).Select(row => row?.ToArray() ?? [])];
             StateHasChanged();
         }
     }
@@ -45,7 +45,7 @@ public class Heatmap : Control
         get => _rowLabels;
         set
         {
-            _rowLabels = [.. value ?? []];
+            _rowLabels = [.. (value ?? []).Select(label => label ?? string.Empty)];
             StateHasChanged();
         }
     }
@@ -56,7 +56,7 @@ public class Heatmap : Control
         get => _columnLabels;
         set
         {
-            _columnLabels = [.. value ?? []];
+            _columnLabels = [.. (value ?? []).Select(label => label ?? string.Empty)];
             StateHasChanged();
         }
     }
