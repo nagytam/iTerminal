@@ -115,7 +115,8 @@ public sealed class MeetingStore(ISettingsService settingsService)
             var json = settingsService.Get(SettingsKey);
             if (!string.IsNullOrWhiteSpace(json))
             {
-                _meetings.AddRange(JsonSerializer.Deserialize<List<Meeting>>(json, Json) ?? []);
+                // A null entry ("[null]") is not a meeting; the rest of the list is still good.
+                _meetings.AddRange((JsonSerializer.Deserialize<List<Meeting>>(json, Json) ?? []).Where(meeting => meeting is not null));
             }
         }
         catch (JsonException)

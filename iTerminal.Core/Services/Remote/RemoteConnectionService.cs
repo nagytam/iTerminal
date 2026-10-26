@@ -193,7 +193,8 @@ public sealed class RemoteConnectionService(
         try
         {
             var connections = JsonSerializer.Deserialize<List<RemoteConnection>>(json, JsonOptions) ?? [];
-            return [.. connections.OrderBy(c => c.Name, StringComparer.CurrentCultureIgnoreCase)];
+            // A null entry ("[null]") is not a connection; sorting it threw from the dialog that opened the list.
+            return [.. connections.Where(c => c is not null).OrderBy(c => c.Name, StringComparer.CurrentCultureIgnoreCase)];
         }
         catch (JsonException)
         {

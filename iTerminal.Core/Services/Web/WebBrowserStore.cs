@@ -145,7 +145,8 @@ public sealed class WebBrowserStore(ISettingsService settingsService)
         try
         {
             var json = settingsService.Get(key);
-            return string.IsNullOrWhiteSpace(json) ? [] : JsonSerializer.Deserialize<List<WebBookmark>>(json, Json) ?? [];
+            // A null entry ("[null]") is not a page; the rest of the list is still good.
+            return string.IsNullOrWhiteSpace(json) ? [] : [.. (JsonSerializer.Deserialize<List<WebBookmark>>(json, Json) ?? []).Where(page => page is not null)];
         }
         catch (JsonException)
         {

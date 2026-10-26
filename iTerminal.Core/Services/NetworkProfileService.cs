@@ -52,7 +52,8 @@ public class NetworkProfileService(ISettingsService settingsService) : INetworkP
         }
         try
         {
-            return JsonSerializer.Deserialize<List<NetworkConnectionProfile>>(json) ?? [];
+            // A null entry ("[null]") is not a profile; the rest of the list is still good.
+            return [.. (JsonSerializer.Deserialize<List<NetworkConnectionProfile>>(json) ?? []).Where(profile => profile is not null)];
         }
         catch (JsonException)
         {

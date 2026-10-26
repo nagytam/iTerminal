@@ -149,7 +149,8 @@ public sealed class ToDoStore(ISettingsService settingsService)
             var json = settingsService.Get(SettingsKey);
             if (!string.IsNullOrWhiteSpace(json))
             {
-                _tasks.AddRange(JsonSerializer.Deserialize<List<ToDoTask>>(json, Json) ?? []);
+                // A null entry ("[null]") is not a task; the rest of the list is still good.
+                _tasks.AddRange((JsonSerializer.Deserialize<List<ToDoTask>>(json, Json) ?? []).Where(task => task is not null));
             }
         }
         catch (JsonException)
