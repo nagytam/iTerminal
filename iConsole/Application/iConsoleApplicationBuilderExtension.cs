@@ -89,6 +89,9 @@ public static class iConsoleApplicationBuilderExtension
         services.AddSingleton<ProcessService>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<IBeepService, BeepService>();
+        // The terminal's own title and desktop notifications (OSC 2, OSC 9 / 777, the bell).
+        services.AddSingleton<ITerminalTitleService>(provider => new TerminalTitleService(ownership: provider.GetRequiredService<ConsoleOwnership>()));
+        services.AddSingleton<ITerminalNotificationService>(provider => new TerminalNotificationService(ownership: provider.GetRequiredService<ConsoleOwnership>()));
         // The language the interface is shown in; the app adds its own resources and a store for the choice.
         services.AddSingleton<iConsole.Localization.ILocalizer, iConsole.Localization.Localizer>();
         services.AddSingleton<IErrorPromptService, ErrorPromptService>();
