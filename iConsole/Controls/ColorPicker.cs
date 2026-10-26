@@ -54,6 +54,12 @@ public class ColorPicker : Control, IReadOnly
     /// <summary>The cursor index after moving by (<paramref name="dx"/>, <paramref name="dy"/>), stopping at the edges.</summary>
     public static int Move(int index, int dx, int dy, int count)
     {
+        if (count <= 0)
+        {
+            return 0;
+        }
+
+        index = Math.Clamp(index, 0, count - 1);
         int column = Math.Clamp(index % GridColumns + dx, 0, GridColumns - 1);
         int row = Math.Max(0, index / GridColumns + dy);
         return Math.Min(row * GridColumns + column, count - 1);

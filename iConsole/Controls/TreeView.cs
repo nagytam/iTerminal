@@ -212,7 +212,7 @@ public class TreeView : Control
         var glyph = item.Children.Any()
             ? (item.IsOpened ? ExpandedGlyph : CollapsedGlyph)
             : " ";
-        return new string(' ', depth * IndentWidth) + glyph + " " + item.Name;
+        return new string(' ', Math.Max(0, depth) * IndentWidth) + glyph + " " + item.Name;
     }
 
     /// <summary>

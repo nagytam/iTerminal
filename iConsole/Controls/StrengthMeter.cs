@@ -149,7 +149,7 @@ public class StrengthMeter : Control
     /// <summary>The bar and the name, e.g. <c>▰▰▰▱ Good</c>; just the empty bar for no password.</summary>
     public static string Render(PasswordStrength strength)
     {
-        int filled = (int)strength;
+        int filled = Math.Clamp((int)strength, 0, 4);
         string bar = new string('▰', filled) + new string('▱', 4 - filled);
         string name = NameOf(strength);
         return name.Length == 0 ? bar : bar + " " + name;

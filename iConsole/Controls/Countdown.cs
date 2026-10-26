@@ -53,7 +53,14 @@ public class Countdown : Control
         }
     }
 
-    public void Start(TimeSpan duration) => Target = _dateTimeProviderService.Now + duration;
+    /// <summary>Counts down <paramref name="duration"/> from now; one that runs past the last date counts down to that date instead of throwing.</summary>
+    public void Start(TimeSpan duration)
+    {
+        DateTime now = _dateTimeProviderService.Now;
+        Target = duration >= DateTime.MaxValue - now ? DateTime.MaxValue
+            : duration <= DateTime.MinValue - now ? DateTime.MinValue
+            : now + duration;
+    }
 
     public void Stop() => Target = null;
 

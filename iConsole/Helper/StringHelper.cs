@@ -157,8 +157,10 @@ public static class StringHelper
         }
     }
 
-    public static string AlignCenter(string line, string title)
+    public static string AlignCenter(string? line, string? title)
     {
+        line ??= string.Empty;
+        title ??= string.Empty;
         var newLine = line;
         if (title.Length < line.Length)
         {

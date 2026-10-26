@@ -110,9 +110,11 @@ public class ListBox<T> : Control
     /// </summary>
     public static int FindPrefix(IReadOnlyList<string> values, string prefix, int start)
     {
+        prefix ??= string.Empty;
         for (var offset = 0; offset < values.Count; offset++)
         {
-            var index = (start + offset) % values.Count;
+            // A start before the first row (or past the last) is taken modulo the count instead of indexing out of range.
+            var index = (((start + offset) % values.Count) + values.Count) % values.Count;
             var text = values[index].TrimStart(' ', '●', '○', '▶', '>', '*', '-', '•');
             if (text.StartsWith(prefix, StringComparison.CurrentCultureIgnoreCase))
             {

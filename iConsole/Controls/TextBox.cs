@@ -225,8 +225,9 @@ public class TextBox : Control, IReadOnly
     }
 
     /// <summary>Where the word before <paramref name="position"/> starts: the blanks to its left are skipped, then the word.</summary>
-    public static int WordStart(string text, int position)
+    public static int WordStart(string? text, int position)
     {
+        text ??= string.Empty;
         int i = Math.Clamp(position, 0, text.Length);
         while (i > 0 && text[i - 1] == ' ')
         {
@@ -242,8 +243,9 @@ public class TextBox : Control, IReadOnly
     }
 
     /// <summary>Where the next word starts after <paramref name="position"/>: the rest of this word is skipped, then the blanks (the end of the text if there is no next word).</summary>
-    public static int WordEnd(string text, int position)
+    public static int WordEnd(string? text, int position)
     {
+        text ??= string.Empty;
         int i = Math.Clamp(position, 0, text.Length);
         while (i < text.Length && text[i] != ' ')
         {
