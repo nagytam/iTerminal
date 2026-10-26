@@ -371,6 +371,12 @@ public class Control : INotifyPropertyChanged, IControl
                 return true;
             }
         }
+        if (IsFocused && IsEnabled && ContextMenu is { IsOpen: false } menu && IsContextMenuKey(keyEvent))
+        {
+            // Under the control's corner: a keyboard has no pointer to open it at.
+            await menu.OpenAtAsync(this, new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + 1));
+            return true;
+        }
         if (IsEnabled)
         {
             var isHandled = await HandleHotKeyEventAsync(keyEvent);
@@ -799,7 +805,26 @@ public class Control : INotifyPropertyChanged, IControl
             }
         }
 
+        if (!isHandled && ContextMenu is { IsOpen: false } menu && IsEnabled && IsVisible
+            && mouseEvent.RightClicked && !mouseEvent.IsRelease && AbsoluteBoundRect.Contains(mouseEvent.Position))
+        {
+            await menu.OpenAtAsync(this, mouseEvent.Position);
+            return true;
+        }
+
         return isHandled;
+    }
+
+    /// <summary>
+    /// The menu a right-click on this control opens, or Shift+F10 / the Menu key while it has focus. A child that handles
+    /// the click itself, or has a menu of its own under the pointer, wins over its parent's.
+    /// </summary>
+    public ContextMenu? ContextMenu { get; set; }
+
+    private static bool IsContextMenuKey(KeyEvent keyEvent)
+    {
+        return keyEvent.ConsoleKey == ConsoleKey.Applications
+            || (keyEvent.ConsoleKey == ConsoleKey.F10 && keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt);
     }
     #endregion
 

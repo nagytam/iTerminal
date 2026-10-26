@@ -22,6 +22,47 @@ public static class AnsiRenderer
     private const char   STRIKE_THROUGH = '9';
     private const char   H = 'H';
     private const string RESET = "[0m";
+    private const string OSC = "\x1B]";
+    private const string STRING_TERMINATOR = "\x1B\\";
+
+    /// <summary>
+    /// Whether OSC 8 hyperlinks are written. They are on unless <c>ITERMINAL_HYPERLINKS=0</c> is set or the terminal
+    /// is the Linux console or a dumb terminal, which would print the sequence's text. A terminal that does not know
+    /// OSC 8 ignores it, so the default is to send it.
+    /// </summary>
+    public static bool HyperlinksEnabled { get; set; } = DetectHyperlinkSupport();
+
+    private static bool DetectHyperlinkSupport()
+    {
+        if (Environment.GetEnvironmentVariable("ITERMINAL_HYPERLINKS") == "0")
+        {
+            return false;
+        }
+
+        string? term = Environment.GetEnvironmentVariable("TERM");
+        return term is not ("linux" or "dumb");
+    }
+
+    // ANSI palette index of each Color ordinal, for the 58:5:n underline colour (the SGR fg codes above are not an index).
+    private static readonly byte[] s_paletteIndex =
+    [
+        0,  // Black
+        4,  // DarkBlue
+        2,  // DarkGreen
+        6,  // DarkCyan
+        1,  // DarkRed
+        5,  // DarkMagenta
+        3,  // DarkYellow
+        7,  // Gray
+        8,  // DarkGray
+        12, // Blue
+        10, // Green
+        14, // Cyan
+        9,  // Red
+        13, // Magenta
+        11, // Yellow
+        15, // White
+    ];
 
     private const string FOREGROUND_BLACK = "30";
     private const string FOREGROUND_RED = "31";
@@ -112,25 +153,107 @@ public static class AnsiRenderer
         stringBuilder.Append(x + 1);
         stringBuilder.Append(H);
         // Color, style, character, reset
-        AppendColorAndStyle(stringBuilder, conxel);
+        AppendColorAndStyle(stringBuilder, conxel, reset: false);
+        ushort openLink = AppendHyperlink(stringBuilder, Hyperlinks.None, conxel.LinkId);
         stringBuilder.Append(conxel.Char);
+        AppendHyperlink(stringBuilder, openLink, Hyperlinks.None);
         stringBuilder.Append(ESCAPE);
         stringBuilder.Append(RESET);
         return stringBuilder;
     }
 
-    /// <summary>Emits <c>CSI fg;bg[;styles]m</c> into <paramref name="sb"/>.</summary>
-    private static void AppendColorAndStyle(StringBuilder sb, in Conxel conxel)
+    /// <summary>True when drawing <paramref name="conxel"/> needs more than the console's own colour calls.</summary>
+    public static bool NeedsAnsi(in Conxel conxel)
+    {
+        return HasAttributes(conxel) || (conxel.LinkId != Hyperlinks.None && HyperlinksEnabled);
+    }
+
+    /// <summary>
+    /// Emits <c>CSI [0;]fg;bg[;styles]m</c> into <paramref name="sb"/>. <paramref name="reset"/> clears what the previous
+    /// cell turned on first: the sequence only ever adds attributes, so without it bold would stay on after a bold cell.
+    /// </summary>
+    private static void AppendColorAndStyle(StringBuilder sb, in Conxel conxel, bool reset)
     {
         sb.Append(CSI);
+        if (reset)
+        {
+            sb.Append('0');
+            sb.Append(SEMICOLON);
+        }
         sb.Append(s_fgCodes[(int)conxel.ForegroundColor]);
         sb.Append(SEMICOLON);
         sb.Append(s_bgCodes[(int)conxel.BackgroundColor]);
         if (conxel.IsBold)          { sb.Append(SEMICOLON); sb.Append(BOLD); }
+        if (conxel.IsDim)           { sb.Append(SEMICOLON); sb.Append('2'); }
         if (conxel.IsItalic)        { sb.Append(SEMICOLON); sb.Append(ITALIC); }
+        if (conxel.IsBlink)         { sb.Append(SEMICOLON); sb.Append(BLINK); }
+        if (conxel.IsReverse)       { sb.Append(SEMICOLON); sb.Append('7'); }
         if (conxel.IsStrikeThrough) { sb.Append(SEMICOLON); sb.Append(STRIKE_THROUGH); }
-        if (conxel.IsUnderline)     { sb.Append(SEMICOLON); sb.Append(UNDERLINE); }
+        if (conxel.IsOverline)      { sb.Append(SEMICOLON); sb.Append("53"); }
+        if (conxel.IsUnderline)
+        {
+            sb.Append(SEMICOLON);
+            sb.Append(UNDERLINE);
+            // Sub-parameters: a terminal that does not know the style falls back to a plain underline.
+            switch (conxel.UnderlineStyle)
+            {
+                case UnderlineStyle.Double: sb.Append(":2"); break;
+                case UnderlineStyle.Curly:  sb.Append(":3"); break;
+                case UnderlineStyle.Dotted: sb.Append(":4"); break;
+                case UnderlineStyle.Dashed: sb.Append(":5"); break;
+            }
+
+            if (conxel.HasUnderlineColor)
+            {
+                sb.Append(";58:5:");
+                sb.Append(s_paletteIndex[(int)conxel.UnderlineColor]);
+            }
+        }
         sb.Append(END);
+    }
+
+    private static bool HasAttributes(in Conxel c)
+    {
+        return c.IsBold || c.IsItalic || c.IsUnderline || c.IsStrikeThrough
+            || c.IsDim || c.IsReverse || c.IsBlink || c.IsOverline;
+    }
+
+    private static bool SameStyle(in Conxel a, in Conxel b)
+    {
+        return a.ForegroundColor == b.ForegroundColor && a.BackgroundColor == b.BackgroundColor
+            && a.IsBold == b.IsBold && a.IsItalic == b.IsItalic && a.IsUnderline == b.IsUnderline
+            && a.IsStrikeThrough == b.IsStrikeThrough && a.IsDim == b.IsDim && a.IsReverse == b.IsReverse
+            && a.IsBlink == b.IsBlink && a.IsOverline == b.IsOverline
+            && (!a.IsUnderline || (a.UnderlineStyle == b.UnderlineStyle
+                && a.HasUnderlineColor == b.HasUnderlineColor
+                && (!a.HasUnderlineColor || a.UnderlineColor == b.UnderlineColor)));
+    }
+
+    /// <summary>
+    /// Switches from link <paramref name="from"/> to link <paramref name="to"/> (<see cref="Hyperlinks.None"/> for none):
+    /// <c>OSC 8 ; id=… ; target ST</c> opens one and an empty target closes it. The id makes a link that is written in
+    /// several pieces, such as one wrapped over two rows, a single link to the terminal. Returns the link now open.
+    /// </summary>
+    private static ushort AppendHyperlink(StringBuilder sb, ushort from, ushort to)
+    {
+        if (!HyperlinksEnabled || from == to)
+        {
+            return from;
+        }
+
+        string? target = Hyperlinks.Resolve(to);
+        if (target is null)
+        {
+            if (from != Hyperlinks.None)
+            {
+                sb.Append(OSC).Append("8;;").Append(STRING_TERMINATOR);
+            }
+
+            return Hyperlinks.None;
+        }
+
+        sb.Append(OSC).Append("8;id=iT").Append(to).Append(';').Append(target).Append(STRING_TERMINATOR);
+        return to;
     }
 
     /// <summary>
@@ -154,36 +277,29 @@ public static class AnsiRenderer
         sb.Append(x + 1);
         sb.Append(H);
 
-        var lastFg = (Color)(-1);
-        var lastBg = (Color)(-1);
-        var lastBold = false;
-        var lastItalic = false;
-        var lastUnderline = false;
-        var lastStrike = false;
-        bool stylesActive = false;
+        Conxel last = default;
+        bool haveLast = false;
+        bool attributesOn = false;
+        ushort openLink = Hyperlinks.None;
 
         foreach (var c in list)
         {
-            bool colorChanged = c.ForegroundColor != lastFg || c.BackgroundColor != lastBg;
-            bool styleChanged = c.IsBold != lastBold || c.IsItalic != lastItalic
-                             || c.IsUnderline != lastUnderline || c.IsStrikeThrough != lastStrike;
-
-            if (colorChanged || styleChanged)
+            if (!haveLast || !SameStyle(c, last))
             {
-                AppendColorAndStyle(sb, c);
-                lastFg = c.ForegroundColor;
-                lastBg = c.BackgroundColor;
-                lastBold = c.IsBold;
-                lastItalic = c.IsItalic;
-                lastUnderline = c.IsUnderline;
-                lastStrike = c.IsStrikeThrough;
-                stylesActive = true;
+                AppendColorAndStyle(sb, c, reset: attributesOn);
+                attributesOn = HasAttributes(c);
+                last = c;
+                haveLast = true;
             }
 
+            openLink = AppendHyperlink(sb, openLink, c.LinkId);
             sb.Append(c.Char);
         }
 
-        if (stylesActive)
+        // A link must not stay open into whatever is written next.
+        AppendHyperlink(sb, openLink, Hyperlinks.None);
+
+        if (haveLast)
         {
             sb.Append(ESCAPE);
             sb.Append(RESET);
