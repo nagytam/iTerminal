@@ -398,6 +398,8 @@ public static class iTerminalApplicationBuilderExtension
             ? new iTerminal.Core.Services.Taskbar.WindowsTaskbarProgress()
             : iTerminal.Core.Services.Taskbar.NullTaskbarProgress.Instance);
         services.AddSingleton<iConsole.Jobs.IJob, iTerminal.Core.Services.Taskbar.TaskbarProgressJob>();
+        // The terminal's title follows the folder of the focused panel and is put back when the application stops.
+        services.AddSingleton<iConsole.Jobs.IJob, iTerminal.Core.Services.Terminal.TerminalTitleJob>();
         services.AddSingleton<iTerminal.Core.Services.Clipboard.FileClipboardOperations>();
         services.AddSingleton<ISettingsService, SettingsService>();
         // Where a local delete with the bin ticked goes on Linux: the freedesktop Trash, home or per-volume.
