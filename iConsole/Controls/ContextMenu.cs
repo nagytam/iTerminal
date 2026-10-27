@@ -142,6 +142,21 @@ public class ContextMenu : Popup
         base.Close();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (!IsOpen)
+        {
+            yield break;
+        }
+
+        yield return ("Up/Down", "Move over the items");
+        yield return ("Home/End", "First or last item");
+        yield return ("Enter/Space", "Run the item, or open its submenu");
+        yield return ("Right", "Open the submenu");
+        yield return ("Left", "Close the submenu");
+        yield return ("Esc", "Close the menu");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (!IsOpen || keyEvent.Control || keyEvent.Alt)
