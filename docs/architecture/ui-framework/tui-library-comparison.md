@@ -72,6 +72,55 @@ Ordered by value to iTerminal. "Seen in" names the libraries that have it.
 
 Each item should land with tests on the virtual terminal; items 1 to 8 also need a fall-back for terminals that do not answer a capability query.
 
+#### Second survey: more libraries
+
+Compared again with Terminal.Gui v2, Consolonia (Avalonia on a terminal), Spectre.Console prompts, Rich, Urwid, Asciimatics, Blessed / blessed-contrib (Node), tview and tcell, gocui, Bubbles and Glamour (Go), Cursive and the Ratatui add-ons (`tui-textarea`, `ratatui-image`, `tui-tree-widget`), Brick and Vty (Haskell), Lanterna and JLine (Java), ncurses with CDK / Newt, and the Turbo Vision lineage. "Not found" means a grep of `iConsole/` on `github/main` at 84328fe came back empty. Numbering continues from the list above.
+
+**Rendering and terminal capability**
+
+34. **True-colour and 256-colour output.** `Color` is the 16 ANSI colours only. Terminal.Gui, Consolonia, Textual, Rich, Ratatui, tcell, Lanterna and notcurses all draw 24-bit colour. This changes item 3: the first step is a richer palette, then down-sampling for terminals without it. Gradients (item 12), alpha blending and a theme that follows the terminal's light / dark setting depend on it.
+35. **Terminal capability record (terminfo, `TERM`, XTGETTCAP).** Not found. tcell, Lanterna, Blessed, Vty and ncurses read terminfo; iConsole checks a few `TERM` values in separate places (hyperlinks, sync output, notifications, Kitty keyboard). One record would feed items 3, 5, 6 and 7 and those switches.
+36. **Braille and block-character canvas.** Not found. Ratatui `Canvas`, blessed-contrib and notcurses blitters draw sub-cell graphics (2x4 braille, 2x2 quadrants, half blocks). `LineChart` and `Heatmap` would gain resolution.
+37. **Auto-joining line drawing.** Border sets exist, but touching boxes do not merge corners. Terminal.Gui's `LineCanvas` joins the glyphs where panels, tables and group boxes meet; tview and Cursive do the same for split panes.
+38. **Big text (FIGlet-style fonts).** `Digits` draws numbers only. Spectre `FigletText`, Asciimatics `FigletText` and Rich + `pyfiglet` give titles and splash screens.
+39. **Particle and sprite effects.** Asciimatics (`Sprite`, `Path`, `Particle`) and notcurses. Cosmetic; depends on item 13.
+40. **Serving the UI over a network.** Textual (`textual serve`, in a browser) and Charm Wish (a Bubble Tea app over SSH). iConsole has a driver interface and a virtual terminal, so a socket or websocket driver is possible.
+
+**Layout and boxes**
+
+41. **Margin, border and padding as one box model.** Terminal.Gui v2 gives every view `Margin`, `Border` and `Padding` adornments; Textual and Lip Gloss use CSS-style margin and padding. In iConsole each control pads itself. A shared thickness on `Control` would remove per-control offset code and give `GroupBox`, `Alert` and `Popup` one border-title path (item 11). *Built for one container:* `BoxPanel` with `Thickness` margin and padding, six `BorderStyle`s and an aligned title. Not built: the same thickness on every `Control`, and use by `GroupBox`, `Alert` and `Popup`.
+42. **Spans and flow layout.** Check `GridPanel` for row and column spans and fractional tracks (Textual `grid`, Brick `hBox` / `vBox`). A wrapping flow panel for chips, badges and toolbars (Lip Gloss `JoinHorizontal`, Terminal.Gui `Pos.Align`) is not found.
+43. **Movable, resizable overlapping windows.** Terminal.Gui's `ViewArrangement` and notcurses planes move and resize floating windows by keyboard and mouse. Useful for floating tool windows in the file manager.
+44. **Focus groups and spatial navigation.** Tab skips disabled controls today. Lanterna, Cursive, Brick and Terminal.Gui (`NavigationDirection`) add named focus rings and arrow-key movement between neighbours.
+
+**Controls**
+
+45. **Selection prompts as one-call widgets.** Spectre `SelectionPrompt` / `MultiSelectionPrompt` with search and grouping; Bubbles `list` with filtering. `ListBox` plus `SearchBox` covers most of it but is not packaged.
+46. **File and folder pickers in the library.** Terminal.Gui `FileDialog`, Bubbles `filepicker`. iTerminal has `FolderSelectorDialog` in `Core`; a generic `IFileSystem`-backed picker could live in `iConsole`. *Built:* `FilePicker` over `IFilePickerSource` (local disk included), with a filter, hidden-file switch and folder mode. Not built: a dialog with a name box, multi-select, an `IFileSystem` source.
+47. **Markup for labels.** Rich (`[bold red]x[/]`), Textual `Content`, tview colour tags and Spectre markup colour parts of a label from one string. iConsole has `ConxelString` and an inline-Markdown parser; no public markup-to-`ConxelString` helper was found for labels, tooltips and toasts.
+48. **Object and exception tree.** Rich `traceback` / `pretty` and Spectre `WriteException`. `JsonViewerDialog` exists; an exception detail tree for `ErrorPromptDialog` is not found.
+49. **Line-editing extras.** prompt_toolkit and JLine: vi / emacs modes, kill ring, persistent history with reverse search, ghost-text completion hints (Fish style), multi-line continuation. `TextBox` has none of these (the only `History` hits are the editor's undo).
+50. **Text area features.** Line numbers, soft-wrap toggle, multiple cursors and folding are in Textual `TextArea` and `tui-textarea`. Check `TextEditorControl` first (see item 15).
+51. **Reusable key-hint footer.** Bubbles `help` and Textual `Footer` build a footer from the focused control's bindings. The key hints exist per control; a single `Footer` control is not found.
+52. **Tree upgrades.** Lazy async children, checkboxes, icons and drag-to-reorder (Terminal.Gui `TreeView`, `tui-tree-widget`, Textual `Tree`). Check `TreeView` for lazy loading and multi-select.
+
+**Framework**
+
+53. **Live-reloading style sheets.** Textual reloads TCSS while the app runs. Needs item 10 first.
+54. **Baseline snapshot assertions.** Textual's snapshot plugin and Ratatui's `insta` compare a rendered screen with a stored one and show a diff. iConsole has `ScreenSnapshot` and frame dumps; a stored-baseline helper with a readable diff is not found.
+55. **Bubbling events.** Textual messages bubble up the widget tree; Brick and Bubble Tea use one event type. iConsole uses commands and per-control callbacks; a typed bubbling event would simplify dialogs. Complements item 27.
+56. **Background-work helper tied to a control.** Textual `work` and Bubble Tea `Cmd`. `TaskManager` covers the running; a helper that drops the result when the control has been removed would encode the stale-result rule from CLAUDE.md.
+57. **Extension API.** Terminal.Gui and Textual are hosts for third-party widgets; iTerminal registers controls in its composition root only. A documented extension point for commands and panels is not found.
+58. **Windows key release and repeat.** Windows Terminal lacks the Kitty protocol, but `ReadConsoleInput` reports key-up events (tcell, Vty use them). This would finish item 6 on Windows.
+
+#### Suggested order for the second survey
+
+1. Items 34 and 35 (colour depth and one capability record): they unblock items 3, 12 and theme work and are invisible to consumers.
+2. Items 41 and 37: one box model and joined borders improve every dialog at once.
+3. Items 49, 47 and 55: line editing, markup and bubbling events remove the most repeated code.
+4. Items 36, 38 and 54: self-contained additions.
+5. Items 40 and 57 only when there is a concrete user.
+
 #### Third survey: libraries from other languages
 
 Compared with libraries in languages not yet covered, besides those in the first two surveys: libvaxis (Zig), Ink and OpenTUI (Node, with a Yoga flexbox core), terminal-kit and ora / cli-spinners (Node), Jexer (Java), tvision, the C++ port of Turbo Vision, Dear ImGui and ImTui (C++), Mosaic and Kotter (Kotlin), SwiftTUI and TermKit (Swift), Ratatouille (Elixir), Notty (OCaml), nocterm (Dart), illwill (Nim), termui (Go), and in Rust tachyonfx (effects), tui-logger, tui-realm, indicatif and inquire; huh and Harmonica from the Charm family (Go); questionary and py-cui (Python). "Not found" means a grep of `iConsole/` on `github/main` at 803f5c1 came back empty. Numbering continues from the second survey (items 34 to 58, in the pull request that adds it); items 1 to 58 are not repeated.
