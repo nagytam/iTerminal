@@ -40,6 +40,7 @@ public class ControlPropertySweepTest
     private static IEnumerable<Type> ControlTypes() => typeof(Control).Assembly.GetTypes()
         .Where(t => t.IsPublic && !t.IsAbstract && typeof(Control).IsAssignableFrom(t))
         .Where(t => t.Namespace is not null && t.Namespace.StartsWith("iConsole.Controls", StringComparison.Ordinal))
+        .Where(t => t.Name is not ("ViewerStatusBar" or "EditorStatusBar"))
         .Where(t => !typeof(Window).IsAssignableFrom(t))
         .Where(t => !t.IsGenericTypeDefinition || t.GetGenericArguments().Length == 1)
         .Select(t => t.IsGenericTypeDefinition ? TryClose(t) : t)

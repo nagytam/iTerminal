@@ -145,7 +145,7 @@ public class DialogHintsWholeTest
             .Where(t => typeof(Dialog).IsAssignableFrom(t) && !t.IsAbstract && !t.IsGenericTypeDefinition)
             .OrderBy(t => t.FullName, StringComparer.Ordinal))
         {
-            foreach ((uint width, uint height) in new[] { (30u, 8u), (120u, 40u) })
+            foreach ((uint width, uint height) in new[] { (30u, 8u), (120u, 40u), (4u, 3u), (1u, 1u) })
             {
                 if (Resolve(type, 0) is not Dialog dialog)
                 {
