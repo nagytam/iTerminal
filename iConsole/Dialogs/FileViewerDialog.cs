@@ -129,6 +129,13 @@ public class FileViewerDialog : Dialog
         AddActionButton(new ActionButton("Close", CloseActionView, new CloseSelfCommand(this), ThemeService));
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Esc", "Close the viewer");
+        yield return ("F4", "Switch between the text and the hex view");
+        yield return ("F8", "Next code page (Shift: previous)");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType == KeyPressType.Down
