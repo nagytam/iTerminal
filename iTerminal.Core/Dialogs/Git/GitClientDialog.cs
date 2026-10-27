@@ -949,6 +949,49 @@ public class GitClientDialog : SplitPaneDialog
 
     #region Input
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_helpVisible)
+        {
+            yield return ("Up/Down", "Scroll the help");
+            yield return ("Esc", "Back to the repository");
+            yield break;
+        }
+
+        if (_confirmAction is not null)
+        {
+            yield return ("Y", "Confirm");
+            yield return ("N / Esc", "Cancel");
+            yield break;
+        }
+
+        if (_inputActive)
+        {
+            yield return ("Enter", "Use the text");
+            yield return ("Esc", "Cancel");
+            yield break;
+        }
+
+        yield return ("Tab", "Next section (changes, branches, log, stashes, detail)");
+        yield return ("Enter/Space", "Stage or unstage, check out, or show the commit");
+        yield return ("S/U", "Stage or unstage the file");
+        yield return ("A", "Stage all (apply, in the stashes)");
+        yield return ("D", "Discard the changes of the file (asks first)");
+        yield return ("C", "Commit");
+        yield return ("Shift+C", "Amend the last commit");
+        yield return ("N", "New branch");
+        yield return ("M", "Merge the branch");
+        yield return ("Shift+D", "Delete the branch");
+        yield return ("F", "Fetch");
+        yield return ("P / Shift+P", "Pull / push");
+        yield return ("Shift+S", "Stash the changes");
+        yield return ("X", "Drop the stash");
+        yield return ("R", "Refresh");
+        yield return ("PageUp/PageDown", "Scroll the patch");
+        yield return ("F1, ?", "Help");
+        yield return ("Esc", "Close");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_helpVisible)

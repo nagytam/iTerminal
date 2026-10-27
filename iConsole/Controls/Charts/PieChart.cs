@@ -41,7 +41,13 @@ public class PieChart(IThemeService themeService) : Control(themeService)
 
     public bool ShowLegend { get; set; } = true;
 
-    public string EmptyText { get; set; } = "No data";
+    public string EmptyText
+    {
+        get => _emptyText;
+        set => _emptyText = value ?? string.Empty;
+    }
+
+    private string _emptyText = "No data";
 
     private static double Weight(ChartSlice slice) => double.IsFinite(slice.Value) && slice.Value > 0 ? slice.Value : 0;
 
