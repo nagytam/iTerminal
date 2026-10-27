@@ -181,9 +181,14 @@ public class RadioGroup<T> : Control, IReadOnly
 
     public override void Draw(IBuffer buffer)
     {
+        // The options take the group's width as it is now, so a group that was made narrower does not draw past its edge.
+        LayoutButtons();
+
         // The selected option carries the focused look only while the group itself holds focus.
         for (var i = 0; i < _buttons.Count; i++)
         {
+            // The options follow the group: a disabled group used to draw them as live as an enabled one.
+            _buttons[i].IsEnabled = IsEnabled;
             _buttons[i].IsHighlighted = IsFocused && i == _selectedIndex;
         }
 

@@ -732,6 +732,12 @@ public partial class TextBox : Control, IReadOnly
         backgroundColor = (IsReadOnly)
             ? Color.DarkYellow
             : (IsValid) ? Color.Yellow : colorScheme.Error;
+        if (!IsEnabled)
+        {
+            // The well is greyed with the label: a disabled box used to look as editable as an enabled one.
+            foregroundColor = colorScheme.DisabledForeground;
+            backgroundColor = colorScheme.DisabledBackground;
+        }
 
         var displayText = DisplayText;
         var scrollX = Math.Clamp((int)ScrollableModel.ScrollPosition.X, 0, displayText.Length);

@@ -373,5 +373,16 @@ public class Calendar : Control, IReadOnly
     }
 
     private void WriteRow(IBuffer buffer, int row, ConxelString line)
-        => buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + (uint)row), new Size(ViewSize.Width, 1), line);
+        => WriteInside(buffer, row, line);
+
+    /// <summary>Rows past the control's height are not drawn: a calendar given fewer rows than its eight used to paint over what is under it.</summary>
+    private void WriteInside(IBuffer buffer, int row, ConxelString line)
+    {
+        if (row >= (int)ViewSize.Height)
+        {
+            return;
+        }
+
+        buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + (uint)row), new Size(ViewSize.Width, 1), line);
+    }
 }
