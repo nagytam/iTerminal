@@ -411,6 +411,38 @@ public class SystemSettingsDialog : Dialog
 
     // ── Keys ────────────────────────────────────────────────────────────────
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_confirmPrompt is not null)
+        {
+            yield return ("Y", "Confirm");
+            yield return ("N / Esc", "Cancel");
+            yield break;
+        }
+
+        if (_inputActive)
+        {
+            yield return ("Enter", "Apply the value");
+            yield return ("Esc", "Cancel the entry");
+            yield break;
+        }
+
+        yield return ("Left/Right, Tab", "Switch section");
+        yield return ("Up/Down", "Move over the settings");
+        yield return ("PageUp/PageDown", "Move a page at a time");
+        yield return ("Home/End", "First or last setting");
+        yield return ("Enter/F4", "Change the setting under the cursor");
+        yield return ("F5", "Read the settings again");
+        if (_section == SettingsSection.Environment)
+        {
+            yield return ("Insert/N", "Add a variable");
+            yield return ("Delete/F8", "Remove the variable (asks first)");
+            yield return ("S", "Switch between the user and the machine scope");
+        }
+
+        yield return ("Esc", "Close");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType != KeyPressType.Down)
