@@ -1044,6 +1044,8 @@ public partial class TextViewerControl : Control
                 // The cursor's row keeps the cursor colours; the others are coloured by what the text is.
                 ColorizeSyntax(conxelLine, TextModel.Lines[(int)indexY], inComment, positionX, out inComment, isCursorLine);
                 DecorateLine(conxelLine, (int)indexY, isCursorLine, colorScheme);
+                ApplyDecorations(conxelLine, (int)indexY, positionX, isCursorLine);
+                ApplySpelling(conxelLine, TextModel.Lines[(int)indexY], positionX, int.MaxValue, colorScheme);
                 DecorateText(conxelLine, (int)indexY, positionX, isCursorLine, colorScheme);
                 HighlightSearchResults(conxelLine, highlightPositionX, (int)indexY);
                 HighlightSelectedPart(conxelLine, (int)indexY, TextModel.Lines[(int)indexY].Length, colorScheme);
@@ -1123,6 +1125,8 @@ public partial class TextViewerControl : Control
                 }
 
                 HighlightSearchHitsInRow(conxelLine, row);
+                ApplyDecorations(conxelLine, row.Line, start, cursorLine);
+                ApplySpelling(conxelLine, line, start, row.Length, colorScheme);
                 DecorateText(conxelLine, row.Line, start, cursorLine, colorScheme);
                 MarkWhitespace(conxelLine, line, start, row.Length, colorScheme);
                 if (foldNote >= 0 && foldNote < width)

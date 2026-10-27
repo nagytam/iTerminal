@@ -137,8 +137,8 @@ Compared with libraries in languages not yet covered, besides those in the first
 **Layout**
 
 65. **Content-based sizing.** Not found. `SizeRule` has fixed, percent and fill, but a control cannot report its preferred size. Terminal.Gui `Dim.Auto`, prompt_toolkit `Dimension(preferred, min, max)`, Ink / Yoga auto, FTXUI natural size and Brick's `Widget` sizing let a label, button row or table size to what it holds. Add `SizeRule.Auto` backed by a `GetPreferredSize(available)` virtual on `Control`.
-66. **Cross-axis alignment and main-axis justification.** `StackPanel` stretches. Yoga (Ink, OpenTUI), Textual `align` and Lip Gloss `Place` offer start, centre, end and stretch on the cross axis and space-between / space-around on the main axis, plus wrap. Needs item 65 for centre and end to mean anything.
-67. **Wrapper views that constrain a child.** Cursive `ResizedView`, `PaddedView`, `ShadowView` and `LayerView`; Terminal.Gui `Pos.Center`, `Pos.AnchorEnd`. A `Center`, `MinMax` (minimum and maximum size) and `Shadow` wrapper would replace the hand-placed offsets in the dialogs.
+66. **Cross-axis alignment and main-axis justification.** `StackPanel` stretches. Yoga (Ink, OpenTUI), Textual `align` and Lip Gloss `Place` offer start, centre, end and stretch on the cross axis and space-between / space-around on the main axis, plus wrap. Needs item 65 for centre and end to mean anything. *Built:* `StackPanel.CrossAlignment`, `SetAlignment` and `Justify`.
+67. **Wrapper views that constrain a child.** Cursive `ResizedView`, `PaddedView`, `ShadowView` and `LayerView`; Terminal.Gui `Pos.Center`, `Pos.AnchorEnd`. A `Center`, `MinMax` (minimum and maximum size) and `Shadow` wrapper would replace the hand-placed offsets in the dialogs. *Built:* `AlignPanel` and `ConstrainedPanel`.
 68. **Window management for overlapping windows.** Not found (`Tile`, `Cascade`). Turbo Vision (tvision) and Jexer offer tile, cascade, maximise, minimise, next and previous window, and a window list. Far's screens list is the closest in file managers; `Screens/` has the structure but no tile or window list. Extends item 43.
 
 **Controls**
