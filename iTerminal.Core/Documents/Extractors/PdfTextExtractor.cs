@@ -937,8 +937,10 @@ public sealed class PdfTextExtractor : IDocumentTextExtractor
     /// inflated object streams together. Both are needed: a classic PDF keeps the dictionary in the
     /// plain file, one with a compressed cross-reference keeps it inside an object stream.
     /// </summary>
-    internal static string FindInfoValue(string source, string key)
+    internal static string FindInfoValue(string? source, string? key)
     {
+        source ??= string.Empty;
+        key ??= string.Empty;
         string needle = "/" + key;
         int index = source.IndexOf(needle, StringComparison.Ordinal);
 
@@ -994,8 +996,9 @@ public sealed class PdfTextExtractor : IDocumentTextExtractor
     /// they are the interior nodes of the page tree, and counting them would inflate the total by
     /// the shape of a tree the reader never walks.
     /// </summary>
-    internal static int CountPages(string source)
+    internal static int CountPages(string? source)
     {
+        source ??= string.Empty;
         int count = 0;
         int index = source.IndexOf("/Type", StringComparison.Ordinal);
 
@@ -1031,8 +1034,9 @@ public sealed class PdfTextExtractor : IDocumentTextExtractor
     /// Whether a piece of extracted text is plausibly language rather than glyph codes. See the
     /// class remarks for why this check exists at all.
     /// </summary>
-    internal static bool LooksLikeText(string text)
+    internal static bool LooksLikeText(string? text)
     {
+        text ??= string.Empty;
         if (text.Length < TextRatioSampleThreshold)
         {
             return true;

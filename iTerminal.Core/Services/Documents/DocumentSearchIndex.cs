@@ -342,7 +342,8 @@ internal sealed class DocumentSearchIndex
 
         int match = text.IndexOf(term, StringComparison.OrdinalIgnoreCase);
         int start = match < 0 ? 0 : Math.Max(0, match - radius);
-        int end = Math.Min(text.Length, (match < 0 ? 0 : match) + term.Length + radius);
+        // Long arithmetic: a radius near int.MaxValue wrapped the end below the start.
+        int end = (int)Math.Min(text.Length, (long)(match < 0 ? 0 : match) + term.Length + radius);
 
         string excerpt = text[start..end].Replace('\n', ' ').Replace('\r', ' ').Trim();
 

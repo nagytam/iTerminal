@@ -28,8 +28,8 @@ public sealed class WindowsTextClipboardService : ITextClipboardService
         Task.Run(() => Get(cancellationToken), cancellationToken);
 
     /// <summary>The text as Windows holds it: every line break a CR LF, and a terminating NUL.</summary>
-    internal static byte[] ToClipboardBytes(string text) =>
-        Encoding.Unicode.GetBytes(text.Replace("\r\n", "\n").Replace('\r', '\n').Replace("\n", "\r\n") + "\0");
+    internal static byte[] ToClipboardBytes(string? text) =>
+        Encoding.Unicode.GetBytes((text ?? string.Empty).Replace("\r\n", "\n").Replace('\r', '\n').Replace("\n", "\r\n") + "\0");
 
     /// <summary>The text from a clipboard block: up to the first NUL, with a single line feed for every line break.</summary>
     internal static string FromClipboardBytes(byte[] block)

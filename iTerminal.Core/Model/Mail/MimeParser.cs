@@ -49,8 +49,9 @@ public static partial class MimeParser
     }
 
     /// <summary>Header names are case-insensitive; a repeated header keeps its first value.</summary>
-    internal static Dictionary<string, string> ParseHeaders(string block)
+    internal static Dictionary<string, string> ParseHeaders(string? block)
     {
+        block ??= string.Empty;
         var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         string? name = null;
         var value = new StringBuilder();
@@ -202,8 +203,9 @@ public static partial class MimeParser
     }
 
     /// <summary>Decodes quoted-printable into bytes: <c>=XX</c> is a byte, <c>=</c> at a line end is a soft break.</summary>
-    internal static byte[] QuotedPrintable(string text)
+    internal static byte[] QuotedPrintable(string? text)
     {
+        text ??= string.Empty;
         var bytes = new List<byte>(text.Length);
         for (var i = 0; i < text.Length; i++)
         {

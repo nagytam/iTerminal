@@ -49,8 +49,9 @@ public sealed class MarkupTextExtractor : IDocumentTextExtractor
     /// The contents of the first <c>&lt;title&gt;</c> element, which is the one piece of an HTML
     /// document that is genuinely its title. Empty for XML, which has no such convention.
     /// </summary>
-    internal static string ExtractTitle(string markup)
+    internal static string ExtractTitle(string? markup)
     {
+        markup ??= string.Empty;
         int open = markup.IndexOf("<title", StringComparison.OrdinalIgnoreCase);
         if (open < 0)
         {
