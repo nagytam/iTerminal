@@ -333,6 +333,17 @@ public class LogView : Control
             return true;
         }
 
+        // A click takes the focus, so the keys that scroll the log reach it; before, only the wheel worked until Tab got there.
+        if (mouseEvent.LeftClicked && IsEnabled && x >= 0 && x < ViewSize.Width && y >= 0 && y < ViewSize.Height)
+        {
+            if (!IsFocused)
+            {
+                SetFocus();
+            }
+
+            return true;
+        }
+
         return isHandled;
     }
 

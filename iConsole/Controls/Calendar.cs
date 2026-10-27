@@ -70,7 +70,15 @@ public class Calendar : Control, IReadOnly
         set
         {
             _showWeekNumbers = value;
-            ViewSize = new Size(Columns + GridX, Rows);
+            Size size = new(Columns + GridX, Rows);
+            // Hiding the week numbers leaves cells outside the new rectangle that nothing else repaints.
+            bool shrinks = size.Width < ViewSize.Width;
+            ViewSize = size;
+            if (shrinks)
+            {
+                InvalidateTree();
+            }
+
             StateHasChanged();
         }
     }
@@ -351,7 +359,8 @@ public class Calendar : Control, IReadOnly
                 }
                 else if (day == _selected)
                 {
-                    bool emphasize = IsFocused || AlwaysEmphasizeSelection;
+                    // A read-only calendar is not emphasised as focused: its keys do nothing, and it should not look as if they did.
+                    bool emphasize = (IsFocused && !IsReadOnly) || AlwaysEmphasizeSelection;
                     fg = emphasize ? colorScheme.SelectedFocusedForeground : colorScheme.SelectedForeground;
                     bg = emphasize ? colorScheme.SelectedFocusedBackground : colorScheme.SelectedBackground;
                 }

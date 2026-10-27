@@ -191,7 +191,8 @@ public class ColorPicker : Control, IReadOnly
                 Color ink = swatch is Color.Black or Color.DarkBlue or Color.DarkRed or Color.DarkMagenta or Color.Blue or Color.DarkGreen or Color.DarkGray
                     ? Color.White
                     : Color.Black;
-                bool atCursor = index == _cursor && IsFocused;
+                // A read-only palette shows no cursor: it would point at a swatch the keys cannot move.
+                bool atCursor = index == _cursor && IsFocused && !IsReadOnly;
                 string cell = atCursor
                     ? "[" + (swatch == _selected ? "✓" : " ") + "]"
                     : " " + (swatch == _selected ? "✓" : " ") + " ";
