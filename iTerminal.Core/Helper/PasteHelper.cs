@@ -70,6 +70,6 @@ internal static class PasteHelper
     }
 
     /// <summary>Line breaks and tabs become single spaces, the ends are trimmed: for a field that holds one line.</summary>
-    public static string SingleLine(string text) =>
-        string.Join(' ', text.Split(['\r', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries)).Trim();
+    public static string SingleLine(string? text) =>
+        string.Join(' ', (text ?? string.Empty).Split(['\r', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries)).Trim();
 }

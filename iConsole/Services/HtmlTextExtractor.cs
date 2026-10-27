@@ -21,11 +21,12 @@ public static class HtmlTextExtractor
     private const string BlockElements = "//p|//div|//section|//article|//blockquote|//pre|//tr|//li|//dt|//dd|//figcaption|//table|//ul|//ol|//dl";
 
     /// <summary>The lines of an HTML document held as bytes, decoded with the encoding the markup declares.</summary>
-    public static IReadOnlyList<string> Lines(byte[] html) => Lines(TextEncodings.Decode(html, out _));
+    public static IReadOnlyList<string> Lines(byte[]? html) => Lines(TextEncodings.Decode(html ?? [], out _));
 
     /// <summary>The lines of an HTML document already decoded to text.</summary>
-    public static IReadOnlyList<string> Lines(string html)
+    public static IReadOnlyList<string> Lines(string? html)
     {
+        html ??= string.Empty;
         HtmlDocument document = new();
         document.LoadHtml(html);
 

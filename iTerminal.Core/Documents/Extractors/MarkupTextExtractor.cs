@@ -79,8 +79,9 @@ public sealed class MarkupTextExtractor : IDocumentTextExtractor
     /// what is left. Block-level tags become line breaks so the preview keeps the shape of the page
     /// instead of arriving as one paragraph.
     /// </summary>
-    internal static string StripTags(string markup)
+    internal static string StripTags(string? markup)
     {
+        markup ??= string.Empty;
         StringBuilder builder = new(markup.Length);
         int index = 0;
 
@@ -208,8 +209,9 @@ public sealed class MarkupTextExtractor : IDocumentTextExtractor
     /// Squeezes horizontal whitespace runs to one space while keeping line breaks, so the tag
     /// separators inserted above do not leave the preview full of gaps.
     /// </summary>
-    internal static string CollapseWhitespace(string text)
+    internal static string CollapseWhitespace(string? text)
     {
+        text ??= string.Empty;
         StringBuilder builder = new(text.Length);
         bool pendingSpace = false;
 
