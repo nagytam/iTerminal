@@ -497,7 +497,8 @@ public class LspClientTest
             Assert.AreEqual("**int** x", hover);
             Assert.AreEqual(2, items.Count);
             Assert.AreEqual(1, where.Count);
-            Assert.AreEqual("Console.WriteLine", server.Text, "the server was told the new text before it was asked");
+            // The fake server records the notification on its own thread, so on a busy runner the answers can arrive first.
+            await WaitFor(() => server.Text == "Console.WriteLine", "the server to have been told the new text");
         }
     }
 
