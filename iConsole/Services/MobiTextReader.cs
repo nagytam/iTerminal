@@ -138,8 +138,9 @@ public static class MobiTextReader
     }
 
     /// <summary>PalmDOC LZ77: literal bytes, runs of literal bytes, back-references, and space plus character pairs.</summary>
-    internal static byte[] PalmDocDecompress(byte[] data)
+    internal static byte[] PalmDocDecompress(byte[]? data)
     {
+        data ??= [];
         List<byte> output = new(data.Length * 2);
         int i = 0;
         while (i < data.Length)

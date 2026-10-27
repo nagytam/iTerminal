@@ -63,8 +63,9 @@ public sealed class PlainTextExtractor : IDocumentTextExtractor
     /// up holding a byte array of unknown encoding of their own (HTML meta charsets, PNG text
     /// chunks), so every path through the indexer decodes the same way.
     /// </summary>
-    internal static string Decode(byte[] bytes)
+    internal static string Decode(byte[]? bytes)
     {
+        bytes ??= [];
         if (bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
         {
             return Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);

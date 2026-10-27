@@ -132,8 +132,9 @@ public sealed class OfficeTextExtractor : IDocumentTextExtractor
     /// <summary>
     /// The number at the end of a part's file name (<c>slide12.xml</c> → 12), or 0 when it has none.
     /// </summary>
-    internal static int TrailingNumber(string partName)
+    internal static int TrailingNumber(string? partName)
     {
+        partName ??= string.Empty;
         string name = System.IO.Path.GetFileNameWithoutExtension(partName);
         int end = name.Length;
         while (end > 0 && char.IsAsciiDigit(name[end - 1]))
