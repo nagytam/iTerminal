@@ -71,3 +71,49 @@ Ordered by value to iTerminal. "Seen in" names the libraries that have it.
 5. The rest as needed.
 
 Each item should land with tests on the virtual terminal; items 1 to 8 also need a fall-back for terminals that do not answer a capability query.
+
+#### Third survey: libraries from other languages
+
+Compared with libraries in languages not yet covered, besides those in the first two surveys: libvaxis (Zig), Ink and OpenTUI (Node, with a Yoga flexbox core), terminal-kit and ora / cli-spinners (Node), Jexer (Java), tvision, the C++ port of Turbo Vision, Dear ImGui and ImTui (C++), Mosaic and Kotter (Kotlin), SwiftTUI and TermKit (Swift), Ratatouille (Elixir), Notty (OCaml), nocterm (Dart), illwill (Nim), termui (Go), and in Rust tachyonfx (effects), tui-logger, tui-realm, indicatif and inquire; huh and Harmonica from the Charm family (Go); questionary and py-cui (Python). "Not found" means a grep of `iConsole/` on `github/main` at 803f5c1 came back empty. Numbering continues from the second survey (items 34 to 58, in the pull request that adds it); items 1 to 58 are not repeated.
+
+**Terminal protocol**
+
+59. **Cursor shape (DECSCUSR, `CSI n SP q`).** Not found. Ratatui, crossterm, libvaxis, Terminal.Gui and notcurses set a bar in text boxes, a block for overwrite mode and an underline for read-only. `Cursor` only carries position and visibility.
+60. **In-band resize (mode 2048) and colour-scheme change notice (mode 2031).** Not found. libvaxis, Kitty, Ghostty and Contour tell the program when the window is resized and when the terminal switches between light and dark, with no polling and no SIGWINCH. iConsole polls the window size; the theme could follow the terminal's scheme (see item 34).
+61. **Explicit character width (Kitty text sizing, OSC 66) and grapheme clusters.** Not found. libvaxis asks the terminal for the width of a cell instead of guessing from tables, which also fixes emoji with zero-width joiners and variation selectors. Complements item 1, which needs a width table first.
+62. **Mouse pointer shape (OSC 22).** Not found. libvaxis shows a hand over links and buttons, a text cursor over text boxes and a resize arrow over splitters. Only a few terminals honour it; the sequence is ignored elsewhere.
+63. **Shell integration marks (OSC 7 working directory, OSC 133 prompt and command marks).** Not found. iTerminal lends the terminal to a child shell (Ctrl+O); reading the child's reported directory would let the panels follow its `cd`, as mc does with its subshell, and OSC 133 marks give command start, end and exit status for a status line. Seen in: iTerm2, Kitty, WezTerm and VS Code terminals as senders; Jexer and Urwid's `Terminal` as receivers.
+64. **Embedded terminal pane.** Not found. Run a child process inside a pane with a VT parser and a cell grid (Urwid `Terminal`, blessed `Terminal`, Jexer, notcurses `ncsubproc`, Textual-terminal, tmux). Today the child owns the whole screen. A pane would allow a shell under the file panels or a command output that stays on screen. Needs a VT100/xterm parser with scroll regions, alternate screen and mouse pass-through; the biggest item in this survey.
+
+**Layout**
+
+65. **Content-based sizing.** Not found. `SizeRule` has fixed, percent and fill, but a control cannot report its preferred size. Terminal.Gui `Dim.Auto`, prompt_toolkit `Dimension(preferred, min, max)`, Ink / Yoga auto, FTXUI natural size and Brick's `Widget` sizing let a label, button row or table size to what it holds. Add `SizeRule.Auto` backed by a `GetPreferredSize(available)` virtual on `Control`.
+66. **Cross-axis alignment and main-axis justification.** `StackPanel` stretches. Yoga (Ink, OpenTUI), Textual `align` and Lip Gloss `Place` offer start, centre, end and stretch on the cross axis and space-between / space-around on the main axis, plus wrap. Needs item 65 for centre and end to mean anything.
+67. **Wrapper views that constrain a child.** Cursive `ResizedView`, `PaddedView`, `ShadowView` and `LayerView`; Terminal.Gui `Pos.Center`, `Pos.AnchorEnd`. A `Center`, `MinMax` (minimum and maximum size) and `Shadow` wrapper would replace the hand-placed offsets in the dialogs.
+68. **Window management for overlapping windows.** Not found (`Tile`, `Cascade`). Turbo Vision (tvision) and Jexer offer tile, cascade, maximise, minimise, next and previous window, and a window list. Far's screens list is the closest in file managers; `Screens/` has the structure but no tile or window list. Extends item 43.
+
+**Controls**
+
+69. **Streaming log view.** Not found. Textual `RichLog` / `Log`, blessed `Log`, tui-logger and Kotter append lines from a running task, follow the tail until the user scrolls up, cap the line count, colour by level and filter. Useful for the transfer, git and docker output now shown in viewers.
+70. **More chart types.** `BarChart`, `BreakdownChart`, `Gauge`, `Heatmap`, `LineChart` and `Sparkline` exist; no pie / donut, scatter, histogram, candlestick, stacked bars, axes with tick labels or multi-series legend (termui, blessed-contrib, Ratatui `Chart`, plotext). Pair with the braille canvas (item 36) for resolution.
+71. **Named spinner sets.** `Spinner` has one braille frame set. cli-spinners (80 sets), Spectre `Spinner.Known`, Bubbles `spinner` and throbber-widgets give dots, line, arrow, bounce, clock and moon sets, plus a fall-back to ASCII (`|/-\`) for terminals without braille.
+72. **Form bound to a model object.** `FormPanel` exists. huh, Asciimatics `Frame.data`, Terminal.Gui and Cursive `Dialog` bind fields to a record and its validators, group fields into pages, and show or hide a field from another field's value. Add `FormPanel.Bind(model)` with reflection or a source generator and per-field validation (see item 23).
+73. **Immediate-mode helpers.** Dear ImGui and ImTui build a UI by calling functions every frame, with no control tree to manage. Out of scope as a framework change, but a small `Ui.Button(...)` helper over a temporary `BoxPanel` suits tools and debug panels. Low priority.
+74. **Utility dialogs from Turbo Vision.** tvision and Jexer ship an ASCII / character-map table, a calculator and a calendar, as well as `THelp` hypertext help with links between topics. `HelpDialog` and `Calendar` exist; check whether help topics can link to each other. Low priority.
+
+**Framework**
+
+75. **Thread-safe post to the UI loop.** Not found (`Dispatcher`, `Invoke`). Cursive `cb_sink`, Terminal.Gui `Application.Invoke`, Textual `call_from_thread`, Brick `BChan` and Mosaic's coroutine scope marshal a callback onto the UI loop. CLAUDE.md tells workers to post a notification or poll state from `OnIdle`, which each control re-implements. An `IUiDispatcher.Post(Action)` run once per frame would replace those polls and make the stale-result check (`IsCurrentUrl()`) one helper.
+76. **Post-render effects.** tachyonfx (fade, dissolve, sweep, slide, colour shift), Asciimatics effects, notcurses fades and Textual `animate` change the cells of a rectangle for a time after drawing. Needs animation (item 13) and, for fades, colour depth (item 34). Harmonica-style spring motion is a variant of the same clock.
+77. **Screenshot export for users.** Only `BufferHelper.DumpBufferToHtml` for debugging. Rich `export_svg` / `export_html`, Textual `save_screenshot`, blessed `screenshot` and tmux `capture-pane` give the user a command that saves the screen as SVG, HTML, ANSI text or plain text, with the clipboard as a target.
+78. **Accessibility roles and a plain mode.** Not found (`Aria`, `ScreenReader`, `HighContrast`). Ink has `aria-role` and `aria-label` and `isScreenReaderEnabled`; huh has an accessible mode that swaps the full-screen form for line prompts. Controls could expose a role, a label and a state string, and a switch could make the UI print the focused control's text on every focus change. Extends item 26.
+79. **Frame-time overlay.** Dear ImGui's metrics window, Textual's devtools and Terminal.Gui's `Application.Diagnostics` show frame time, redraws and dirty cells. `MainLoopWatchDog` and frame dumps exist; an on-screen overlay (F-key) would show the render and key-handler times that the 200 ms rule depends on. Extends item 31.
+80. **Typed message loop for tests and tools.** tui-realm, Bubble Tea `teatest`, Ratatouille and Notty drive an application with a stream of messages and assert on the model. `IInputInjector` and `ConsoleAppDriver` do this for keys; messages for non-key events (resize, focus, paste, timer tick) would extend it once items 2, 5 and 60 exist.
+
+#### Suggested order for the third survey
+
+1. Item 75 (UI dispatcher): small, removes polling in several controls, and the effects, log and chart items rely on it.
+2. Items 65 and 66 (preferred size, alignment): they make `BoxPanel`, dialogs and forms lay out without fixed sizes.
+3. Items 69, 71 and 70: the log view, spinner sets and extra charts are self-contained controls.
+4. Items 59, 60 and 63: three small protocol additions that share the capability query of items 35 and 5.
+5. Items 64 and 68 last: large, and only worth it for a shell pane and multi-window editing.
