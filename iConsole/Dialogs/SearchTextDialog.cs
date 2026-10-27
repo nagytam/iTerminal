@@ -13,7 +13,24 @@ public class SearchTextDialog : Dialog
     private TextBox _textBoxSearch;
     private Button _searchTextButton { get; set; }
     private Button _cancelButton { get; set; }
+    private readonly CheckBox _regexBox;
+    private readonly CheckBox _matchCaseBox;
+    private const string DialogTitle = "Search text";
     public string SearchValue => _textBoxSearch.Text;
+
+    /// <summary>The search text is a regular expression.</summary>
+    public bool UseRegex => _regexBox.IsChecked;
+
+    /// <summary>Upper and lower case must match. On by default, as the search has always been.</summary>
+    public bool MatchCase => _matchCaseBox.IsChecked;
+
+    /// <summary>Says in the title why the search could not run, such as a pattern that does not compile.</summary>
+    public void ShowError(string message)
+    {
+        var firstLine = message.Split('\n')[0].Trim();
+        Title = DialogTitle + ": " + (firstLine.Length > 40 ? firstLine[..40] : firstLine);
+        StateHasChanged();
+    }
 
     public SearchTextDialog(
         ISearchModel searchModel,
@@ -22,13 +39,17 @@ public class SearchTextDialog : Dialog
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService) 
-        : base("Search text", themeService)
+        : base(DialogTitle, themeService)
     {
         _searchModel = searchModel;
         _textBoxSearch = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Search", HotKeyChar = 'T' };
         _searchTextButton = new Button(new SearchTextCommand(searchModel, textModel, scrollableModel), themeService) { HotKeyChar = 'S' };
         _cancelButton = new CancelDialogButton(themeService);
+        _regexBox = new CheckBox(themeService) { Label = "Regular expression", IsChecked = searchModel.UseRegex };
+        _matchCaseBox = new CheckBox(themeService) { Label = "Match case", IsChecked = searchModel.MatchCase };
         AddControl(_textBoxSearch);
+        AddControl(_regexBox);
+        AddControl(_matchCaseBox);
         AddControl(_searchTextButton);
         AddControl(_cancelButton);
     }
@@ -39,7 +60,7 @@ public class SearchTextDialog : Dialog
 
         if (Parent != null)
         {
-            CenterInParent(new Size(60, 7));
+            CenterInParent(new Size(60, 9));
         }
 
         // Ensure sizes and positions are non-negative so tests that initialize dialogs
@@ -51,6 +72,11 @@ public class SearchTextDialog : Dialog
         _textBoxSearch.ScrollableModel.ScrollableSize = new Size(_textBoxSearch.MaxLength, 1);
         var editableWidth = Math.Max(0, _textBoxSearch.EditableWidth);
         _textBoxSearch.ScrollableModel.ViewSize = new Size(editableWidth, 1);
+
+        _regexBox.Position = new Position(3, 4);
+        _regexBox.ViewSize = new Size(24, 1);
+        _matchCaseBox.Position = new Position(30, 4);
+        _matchCaseBox.ViewSize = new Size(16, 1);
 
         var searchButtonY = Math.Max(0, ViewSize.Height - 2);
         _searchTextButton.Position = new Position(3, searchButtonY);

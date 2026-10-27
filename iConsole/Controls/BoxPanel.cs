@@ -1,5 +1,6 @@
 using iConsole.Data;
 using iConsole.Display;
+using iConsole.Helper;
 using iConsole.Services;
 using IBuffer = iConsole.Buffers.IBuffer;
 
@@ -45,6 +46,29 @@ public class BoxPanel : Control
         get => _borderStyle;
         set => Set(ref _borderStyle, value);
     }
+
+    /// <summary>Draws a drop shadow down the right and along the bottom of the box (see <see cref="Shadow"/>); the margin must leave room for it.</summary>
+    public bool HasShadow { get; set; }
+
+    /// <summary>Scrolls a title that is longer than the room in the top edge (see <see cref="Marquee"/>) instead of cutting it.</summary>
+    public bool ScrollTitle { get; set; }
+
+    /// <summary>Milliseconds on any fixed clock; replaceable so a test can move the title without waiting.</summary>
+    public Func<long> TickSource
+    {
+        get => _tickSource;
+        set
+        {
+            _tickSource = value ?? (() => Environment.TickCount64);
+            // The scroll counts from the moment the clock is chosen.
+            _titleStarted = _tickSource();
+        }
+    }
+
+    private Func<long> _tickSource = () => Environment.TickCount64;
+    private long _titleStarted = Environment.TickCount64;
+    private int _titleRoom;
+    private int _drawnTitleOffset = -1;
 
     /// <summary>Text set into the top edge. Ignored without a border.</summary>
     public string Title
@@ -99,6 +123,16 @@ public class BoxPanel : Control
         LayoutContent();
     }
 
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        if (ScrollTitle && _titleRoom > 0 && _title.Length > _titleRoom
+            && Marquee.Offset(_title.Length, _titleRoom, TimeSpan.FromMilliseconds(TickSource() - _titleStarted)) != _drawnTitleOffset)
+        {
+            StateHasChanged();
+        }
+    }
+
     public override void Draw(IBuffer buffer)
     {
         if (ViewSize.IsEmpty)
@@ -112,6 +146,11 @@ public class BoxPanel : Control
         {
             Position absolute = AbsolutePosition;
             Position boxPosition = new(absolute.X + origin.X, absolute.Y + origin.Y);
+            if (HasShadow)
+            {
+                Shadow.Draw(buffer, ZOrder, boxPosition, size, colorScheme);
+            }
+
             iConsole.Buffers.Buffer.Clear(buffer, ZOrder, boxPosition, size, colorScheme);
             if (_borderStyle != BorderStyle.None && size.Width >= 2 && size.Height >= 2)
             {
@@ -155,7 +194,10 @@ public class BoxPanel : Control
             return edge;
         }
 
-        string text = _title.Length > room ? _title[..room] : _title;
+        _titleRoom = room;
+        TimeSpan elapsed = TimeSpan.FromMilliseconds(TickSource() - _titleStarted);
+        string text = _title.Length <= room ? _title : ScrollTitle ? Marquee.Window(_title, room, elapsed) : _title[..room];
+        _drawnTitleOffset = ScrollTitle ? Marquee.Offset(_title.Length, room, elapsed) : 0;
         string label = " " + text + " ";
         int start = _titleAlignment switch
         {

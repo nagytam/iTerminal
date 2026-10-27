@@ -120,19 +120,45 @@ public static class InputValidators
         new DelegateValidator(text => text.Length == 0 || mask.IsComplete(text) ? null : message);
 }
 
+/// <summary>One rule that has to wait for an answer, such as a name that must not be taken on a server.</summary>
+public interface IAsyncInputValidator
+{
+    /// <summary>Null when the value is fine, otherwise the message to show. <paramref name="cancellationToken"/> is cancelled when the value changes again.</summary>
+    Task<string?> ValidateAsync(string text, CancellationToken cancellationToken);
+}
+
+/// <summary>An asynchronous validator written as a function.</summary>
+public sealed class DelegateAsyncValidator(Func<string, CancellationToken, Task<string?>> check) : IAsyncInputValidator
+{
+    public Task<string?> ValidateAsync(string text, CancellationToken cancellationToken) => check(text, cancellationToken);
+}
+
 /// <summary>
 /// Runs a list of <see cref="IInputValidator"/> over a value, in order. It reads the value from <c>textSource</c> each time it is
 /// asked and re-checks only when the value changed, so a text box can ask on every draw. With <see cref="StopOnFirstError"/>
 /// (the default) the first failing rule gives <see cref="ErrorMessage"/> and the rest are skipped; otherwise
 /// <see cref="Errors"/> lists them all.
+/// <para>
+/// Asynchronous rules (<see cref="AddAsync(IAsyncInputValidator)"/>) run only after every synchronous rule has passed and the value
+/// has rested for <see cref="AsyncDebounce"/>; a value that changes meanwhile cancels the check, and an answer for a value that is
+/// no longer the current one is dropped. While one is running <see cref="IsPending"/> is true and the value counts as valid, so
+/// typing is never blocked; <see cref="Version"/> moves and <see cref="Completed"/> is raised when an answer lands.
+/// </para>
 /// </summary>
 public sealed class ValidatorPipeline(Func<string> textSource) : IValidationModel
 {
     private readonly Lock _gate = new();
     private readonly List<IInputValidator> _validators = [];
+    private readonly List<IAsyncInputValidator> _asyncValidators = [];
     private string? _checkedText;
     private IReadOnlyList<string> _errors = [];
+    private IReadOnlyList<string> _asyncErrors = [];
     private bool _stopOnFirstError = true;
+    private bool _pending;
+    private CancellationTokenSource? _asyncCancellation;
+    private Task _asyncTask = Task.CompletedTask;
+    private TimeSpan _asyncDebounce = TimeSpan.FromMilliseconds(300);
+    private long _version;
 
     public IReadOnlyList<IInputValidator> Validators
     {
@@ -144,6 +170,29 @@ public sealed class ValidatorPipeline(Func<string> textSource) : IValidationMode
         get { lock (_gate) { return _stopOnFirstError; } }
         set { lock (_gate) { _stopOnFirstError = value; _checkedText = null; } }
     }
+
+    /// <summary>How long the value must rest before the asynchronous rules are asked; keeps a server from hearing every key.</summary>
+    public TimeSpan AsyncDebounce
+    {
+        get { lock (_gate) { return _asyncDebounce; } }
+        set { lock (_gate) { _asyncDebounce = value < TimeSpan.Zero ? TimeSpan.Zero : value; } }
+    }
+
+    /// <summary>True while an asynchronous rule has been asked and has not answered for the current value.</summary>
+    public bool IsPending
+    {
+        get
+        {
+            Refresh();
+            lock (_gate) { return _pending; }
+        }
+    }
+
+    /// <summary>Moves whenever an answer lands, so a control can notice a change it did not cause.</summary>
+    public long Version => Interlocked.Read(ref _version);
+
+    /// <summary>Raised on a worker thread when an asynchronous answer has landed.</summary>
+    public event Action? Completed;
 
     public ValidatorPipeline Add(IInputValidator validator)
     {
@@ -159,11 +208,27 @@ public sealed class ValidatorPipeline(Func<string> textSource) : IValidationMode
 
     public ValidatorPipeline Add(Func<string, string?> check) => Add(new DelegateValidator(check));
 
+    public ValidatorPipeline AddAsync(IAsyncInputValidator validator)
+    {
+        ArgumentNullException.ThrowIfNull(validator);
+        lock (_gate)
+        {
+            _asyncValidators.Add(validator);
+            _checkedText = null;
+        }
+
+        return this;
+    }
+
+    public ValidatorPipeline AddAsync(Func<string, CancellationToken, Task<string?>> check) => AddAsync(new DelegateAsyncValidator(check));
+
     public void Clear()
     {
         lock (_gate)
         {
             _validators.Clear();
+            _asyncValidators.Clear();
+            CancelAsync();
             _checkedText = null;
         }
     }
@@ -174,7 +239,7 @@ public sealed class ValidatorPipeline(Func<string> textSource) : IValidationMode
         get
         {
             Refresh();
-            lock (_gate) { return _errors; }
+            lock (_gate) { return [.. _errors, .. _asyncErrors]; }
         }
     }
 
@@ -191,6 +256,27 @@ public sealed class ValidatorPipeline(Func<string> textSource) : IValidationMode
         }
 
         Refresh();
+    }
+
+    /// <summary>Completes when the asynchronous check under way, if any, has answered or been given up.</summary>
+    public Task WaitForPendingAsync()
+    {
+        Refresh();
+        Task task;
+        lock (_gate)
+        {
+            task = _asyncTask;
+        }
+
+        return task;
+    }
+
+    private void CancelAsync()
+    {
+        _asyncCancellation?.Cancel();
+        _asyncCancellation = null;
+        _pending = false;
+        _asyncErrors = [];
     }
 
     private void Refresh()
@@ -229,6 +315,79 @@ public sealed class ValidatorPipeline(Func<string> textSource) : IValidationMode
 
             _errors = errors;
             _checkedText = text;
+
+            // The answer for the old value is no use for this one.
+            CancelAsync();
+            if (errors.Count == 0 && text.Length > 0 && _asyncValidators.Count > 0)
+            {
+                StartAsync(text);
+            }
         }
+    }
+
+    private void StartAsync(string text)
+    {
+        var cancellation = new CancellationTokenSource();
+        _asyncCancellation = cancellation;
+        _pending = true;
+        IReadOnlyList<IAsyncInputValidator> validators = [.. _asyncValidators];
+        TimeSpan debounce = _asyncDebounce;
+        bool stopOnFirst = _stopOnFirstError;
+        _asyncTask = Task.Run(async () =>
+        {
+            var errors = new List<string>();
+            try
+            {
+                if (debounce > TimeSpan.Zero)
+                {
+                    await Task.Delay(debounce, cancellation.Token).ConfigureAwait(false);
+                }
+
+                foreach (IAsyncInputValidator validator in validators)
+                {
+                    string? error;
+                    try
+                    {
+                        error = await validator.ValidateAsync(text, cancellation.Token).ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+                    {
+                        throw;
+                    }
+                    catch (Exception exception)
+                    {
+                        error = exception.Message;
+                    }
+
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        errors.Add(error);
+                        if (stopOnFirst)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
+            lock (_gate)
+            {
+                // Only the answer for the value that is there now counts.
+                if (cancellation.IsCancellationRequested || !ReferenceEquals(_asyncCancellation, cancellation))
+                {
+                    return;
+                }
+
+                _asyncErrors = errors;
+                _pending = false;
+            }
+
+            Interlocked.Increment(ref _version);
+            Completed?.Invoke();
+        });
     }
 }

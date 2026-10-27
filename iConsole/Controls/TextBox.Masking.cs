@@ -66,6 +66,41 @@ public partial class TextBox
 
     public TextBox AddValidator(Func<string, string?> check) => AddValidator(new DelegateValidator(check));
 
+    /// <summary>
+    /// Adds a rule that has to wait for an answer (a name taken on a server). It is asked after the synchronous rules pass and the
+    /// value has rested for the pipeline's <see cref="ValidatorPipeline.AsyncDebounce"/>; typing is never blocked while it runs.
+    /// </summary>
+    public TextBox AddAsyncValidator(IAsyncInputValidator validator)
+    {
+        if (_pipeline is null)
+        {
+            _pipeline = new ValidatorPipeline(() => MaskedValue);
+            ValidationModel = _pipeline;
+        }
+
+        _pipeline.AddAsync(validator);
+        StateHasChanged();
+        return this;
+    }
+
+    public TextBox AddAsyncValidator(Func<string, CancellationToken, Task<string?>> check) => AddAsyncValidator(new DelegateAsyncValidator(check));
+
+    /// <summary>True while an asynchronous rule has been asked and has not answered.</summary>
+    public bool IsValidating => _pipeline?.IsPending ?? false;
+
+    private long _seenValidationVersion;
+
+    /// <summary>An answer from an asynchronous rule lands on a worker thread; the box notices it here and repaints.</summary>
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        if (_pipeline is { } pipeline && pipeline.Version != _seenValidationVersion)
+        {
+            _seenValidationVersion = pipeline.Version;
+            StateHasChanged();
+        }
+    }
+
     private void SetMaskedRaw(string raw, int cursorSlots)
     {
         string formatted = _mask!.Format(raw);

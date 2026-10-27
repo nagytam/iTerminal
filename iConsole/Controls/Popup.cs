@@ -47,6 +47,9 @@ public class Popup : Window
     /// </summary>
     public Position? Anchor { get; set; }
     public bool HasBorder { get; set; } = true;
+
+    /// <summary>Draws a drop shadow down the right and along the bottom of the popup (see <see cref="Shadow"/>).</summary>
+    public bool HasShadow { get; set; }
     public bool CloseOnOutsideClick { get; set; } = true;
     public bool CloseOnEscape { get; set; } = true;
 
@@ -267,6 +270,11 @@ public class Popup : Window
         }
 
         var colorScheme = ThemeService.CurrentColorScheme;
+        if (HasShadow)
+        {
+            Shadow.Draw(buffer, ZOrder, AbsolutePosition, ViewSize, colorScheme);
+        }
+
         iConsole.Buffers.Buffer.Clear(buffer, ZOrder, AbsolutePosition, ViewSize, colorScheme);
 
         if (HasBorder)

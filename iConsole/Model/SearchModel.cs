@@ -26,6 +26,40 @@ public class SearchModel : ISearchModel
 
     public ConcurrentObservableCollection<Position> Hits { get; private set; } = [];
 
+    public bool UseRegex { get; set; }
+
+    public bool MatchCase { get; set; } = true;
+
+    private readonly Lock _lengthGate = new();
+    private readonly Dictionary<(long X, long Y), int> _lengths = [];
+
+    public int LengthAt(Position hit)
+    {
+        lock (_lengthGate)
+        {
+            return _lengths.TryGetValue((hit.X, hit.Y), out var length) ? length : Search.Length;
+        }
+    }
+
+    public void SetHits(IEnumerable<iConsole.Helper.SearchHit> hits)
+    {
+        var list = hits as IReadOnlyList<iConsole.Helper.SearchHit> ?? [.. hits];
+        lock (_lengthGate)
+        {
+            _lengths.Clear();
+            foreach (var hit in list)
+            {
+                _lengths[(hit.Column, hit.Line)] = hit.Length;
+            }
+        }
+
+        Hits.Clear();
+        foreach (var hit in list)
+        {
+            Hits.Add(new Position(hit.Column, hit.Line));
+        }
+    }
+
     public SearchModel()
     {
         Hits.CollectionChanged += OnCollectionChanged;
