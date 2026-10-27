@@ -206,8 +206,9 @@ internal sealed class WebDocument
     public Dictionary<HtmlNode, int> LinkOf { get; } = [];
     public Dictionary<HtmlNode, int> FieldOf { get; } = [];
 
-    public static WebDocument Parse(string url, string html)
+    public static WebDocument Parse(string? url, string? html)
     {
+        url ??= string.Empty;
         var document = new WebDocument { Url = url, Root = HtmlParser.Parse(html) };
         document.BaseUrl = url;
         document.Build(document.Root, null);
