@@ -9,7 +9,7 @@ using iConsole.Services;
 
 namespace iConsole.Controls;
 
-public class TextBox : Control, IReadOnly
+public partial class TextBox : Control, IReadOnly
 {
     private readonly IBeepService _beepService;
     public string Label { get; set; } = string.Empty;
@@ -374,6 +374,12 @@ public class TextBox : Control, IReadOnly
             return;
         }
 
+        if (_mask is not null)
+        {
+            InsertMasked(text);
+            return;
+        }
+
         var cleaned = new System.Text.StringBuilder();
         foreach (var c in ClipboardKeys.NormalizeLineBreaks(text))
         {
@@ -495,6 +501,12 @@ public class TextBox : Control, IReadOnly
 
         if (IsFocused && IsEnabled && await HandleClipboardKeyAsync(keyEvent))
         {
+            return true;
+        }
+
+        if (IsFocused && IsEnabled && HandleMaskedKey(keyEvent))
+        {
+            KeepCursorVisible();
             return true;
         }
 
@@ -766,6 +778,11 @@ public class TextBox : Control, IReadOnly
     /// </summary>
     private string GetCompletionSuffix(string typed)
     {
+        if (_mask is not null && ScrollableModel.ScrollPosition.X == 0)
+        {
+            return _mask.TemplateAfter(Text.Length);
+        }
+
         var completion = ShowsCompletion ? AutoCompletion?.CompletionModel?.MatchingValues.FirstOrDefault() : null;
         if (string.IsNullOrEmpty(completion) || !completion.StartsWith(typed))
         {
