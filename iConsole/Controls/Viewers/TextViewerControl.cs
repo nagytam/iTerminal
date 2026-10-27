@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace iConsole.Controls.Viewers;
 
-public class TextViewerControl : Control
+public partial class TextViewerControl : Control
 {
     public IScrollableModel ScrollableModel { get; private set; } = new ScrollableModel();
     public ISearchModel SearchModel { get; private set; } = new SearchModel();
@@ -26,12 +26,12 @@ public class TextViewerControl : Control
             Position cursorPosition;
             if (IsEnabled && IsVisible)
             {
-                if (_wrapLines)
+                if (RowMode)
                 {
                     // Wrapped, the scroll counts screen rows and the caret sits at its column within the row it is on.
                     int row = CursorScreenRow();
                     cursorPosition = new Position(
-                        ScrollableModel.CursorPosition.X - ScreenRows[row].Start + AbsolutePosition.X,
+                        ScrollableModel.CursorPosition.X - ScreenRows[row].Start + AbsolutePosition.X + GutterWidth,
                         row - ScrollableModel.ScrollPosition.Y + AbsolutePosition.Y);
                 }
                 else
@@ -79,7 +79,11 @@ public class TextViewerControl : Control
         AddCommand(new ScrollToHomeVerticalCommand(ScrollableModel) { Key = new Key(ConsoleKey.Home, false, false, true) });
         AddCommand(new ScrollToEndVerticalCommand(ScrollableModel) { Key = new Key(ConsoleKey.End, false, false, true) });
         CommandHelper.AddHorizontalScrollingCommands(this, ScrollableModel, TextModel, SelectionTextModel, isCursorEnabled);
-        TextModel.PropertyChanged += (_, _) => _scrollableSizeStale = true;
+        TextModel.PropertyChanged += (_, _) =>
+        {
+            _scrollableSizeStale = true;
+            DropStaleFolds();
+        };
     }
 
     // ---- Scrollable size (the text can change after the layout) ----
@@ -104,9 +108,9 @@ public class TextViewerControl : Control
         _scrollableSizeStale = false;
         _sizedLines = lines;
         _sizedCount = lines.Count;
-        if (_wrapLines && !ViewSize.IsEmpty)
+        if (RowMode && !ViewSize.IsEmpty)
         {
-            _rowsKey = (-1, -1, false);
+            _rowsKey = (-1, -1, false, 0, false);
             _ = ScreenRows;
             return;
         }
@@ -250,10 +254,11 @@ public class TextViewerControl : Control
             return;
         }
 
+        MoveCursorOutOfFolds();
         var row = Math.Clamp(ScrollableModel.CursorPosition.Y, 0, TextModel.Lines.Count - 1);
         ScrollableModel.CursorPosition.Y = row;
         ScrollableModel.CursorPosition.X = Math.Clamp(ScrollableModel.CursorPosition.X, 0, TextModel.Lines[(int)row].Length);
-        if (_wrapLines)
+        if (RowMode)
         {
             KeepRowVisible(CursorScreenRow());
             return;
@@ -282,7 +287,7 @@ public class TextViewerControl : Control
 
             _wrapLines = value;
             ScrollableModel.ScrollPosition.X = 0;
-            _rowsKey = (-1, -1, false);
+            _rowsKey = (-1, -1, false, 0, false);
             StateHasChanged();
         }
     }
@@ -291,15 +296,15 @@ public class TextViewerControl : Control
     internal readonly record struct TextRow(int Line, int Start, int Length);
 
     private List<TextRow> _rows = [];
-    private (int Lines, int Width, bool Wrap) _rowsKey = (-1, -1, false);
+    private (int Lines, int Width, bool Wrap, int Fold, bool Numbers) _rowsKey = (-1, -1, false, 0, false);
 
     /// <summary>The screen rows for the current text and width. Rebuilt when either changes.</summary>
     internal IReadOnlyList<TextRow> ScreenRows
     {
         get
         {
-            int width = Math.Max(1, (int)ViewSize.Width - 2);
-            if (_rowsKey != (TextModel.Lines.Count, width, _wrapLines))
+            int width = TextAreaWidth;
+            if (_rowsKey != (TextModel.Lines.Count, width, _wrapLines, _foldVersion, _showLineNumbers))
             {
                 RebuildRows(width);
             }
@@ -317,8 +322,14 @@ public class TextViewerControl : Control
             : null;
 
         _rows = new List<TextRow>(TextModel.Lines.Count);
+        HashSet<int> hidden = HiddenLines();
         for (int line = 0; line < TextModel.Lines.Count; line++)
         {
+            if (hidden.Contains(line))
+            {
+                continue;
+            }
+
             int length = TextModel.Lines[line].Length;
             if (!_wrapLines || length <= width)
             {
@@ -332,8 +343,8 @@ public class TextViewerControl : Control
             }
         }
 
-        _rowsKey = (TextModel.Lines.Count, width, _wrapLines);
-        if (_wrapLines)
+        _rowsKey = (TextModel.Lines.Count, width, _wrapLines, _foldVersion, _showLineNumbers);
+        if (RowMode)
         {
             ScrollableModel.ScrollableSize = new Size(0, _rows.Count);
         }
@@ -398,7 +409,7 @@ public class TextViewerControl : Control
     /// </summary>
     protected void MoveCursorByScreenRow(int delta)
     {
-        if (!_wrapLines || TextModel.Lines.Count == 0 || ViewSize.IsEmpty)
+        if (!RowMode || TextModel.Lines.Count == 0 || ViewSize.IsEmpty)
         {
             return;
         }
@@ -447,6 +458,7 @@ public class TextViewerControl : Control
         }
 
         long row = Math.Clamp(line, 0, TextModel.Lines.Count - 1);
+        RevealLine((int)row);
         long col = Math.Clamp(column, 0, TextModel.Lines[(int)row].Length);
         ScrollableModel.CursorPosition.Y = row;
         ScrollableModel.CursorPosition.X = col;
@@ -455,7 +467,7 @@ public class TextViewerControl : Control
         int visibleColumns = Math.Max(1, (int)ViewSize.Width - 2);
         long index;
         long total;
-        if (_wrapLines)
+        if (RowMode)
         {
             IReadOnlyList<TextRow> rows = ScreenRows;
             total = rows.Count;
@@ -503,12 +515,34 @@ public class TextViewerControl : Control
         var viewWidth = ViewSize.Width - 1;
         var viewHeight = ViewSize.Height - 1;
 
-        var newRow = row < 0 ? cursorRow - 1
-            : row >= viewHeight ? cursorRow + 1
-            : (long)ScrollableModel.ScrollPosition.Y + row;
+        long rowStart = 0;
+        long newRow;
+        if (RowMode && ScreenRows.Count > 0)
+        {
+            // Rows are not lines here: find the line under the pointer, and where in it the row starts.
+            IReadOnlyList<TextRow> screenRows = ScreenRows;
+            if (row >= 0 && row < viewHeight)
+            {
+                TextRow under = screenRows[(int)Math.Clamp((long)ScrollableModel.ScrollPosition.Y + row, 0, screenRows.Count - 1)];
+                newRow = under.Line;
+                rowStart = under.Start;
+            }
+            else
+            {
+                newRow = row < 0 ? cursorRow - 1 : cursorRow + 1;
+            }
+        }
+        else
+        {
+            newRow = row < 0 ? cursorRow - 1
+                : row >= viewHeight ? cursorRow + 1
+                : (long)ScrollableModel.ScrollPosition.Y + row;
+        }
+
         newRow = Math.Clamp(newRow, 0, TextModel.Lines.Count - 1);
         var newColumn = column < 0 ? cursorColumn - 1
             : column >= viewWidth ? cursorColumn + 1
+            : RowMode ? rowStart + Math.Max(0, column - GutterWidth)
             : (long)ScrollableModel.ScrollPosition.X + column;
         newColumn = Math.Clamp(newColumn, 0, TextModel.Lines[(int)newRow].Length);
 
@@ -710,11 +744,20 @@ public class TextViewerControl : Control
         yield return ("PageUp/PageDown", "Scroll a page");
         yield return ("Left/Right", "Scroll sideways");
         yield return ("Ctrl+Home/Ctrl+End", "Go to the start or the end of the file");
+        if (_enableFolding)
+        {
+            yield return ("Alt+Left/Alt+Right", "Fold or unfold the region at the cursor");
+        }
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         SyncScrollableSize();
+        if (HandleFoldKey(keyEvent))
+        {
+            return true;
+        }
+
         // No IsFocused test: the editor never takes the focus itself (its dialog hands it the keys), and its own
         // commands act without it too.
         if (_isCursorEnabled && IsEnabled && TextModel.Lines.Count > 0 && !_extendingSelection
@@ -843,9 +886,9 @@ public class TextViewerControl : Control
             }
         }
 
-        if (Parent != null && _wrapLines && !ViewSize.IsEmpty)
+        if (Parent != null && RowMode && !ViewSize.IsEmpty)
         {
-            RebuildRows(Math.Max(1, (int)ViewSize.Width - 2));
+            RebuildRows(TextAreaWidth);
         }
 
         Layout.Center(this);
@@ -904,19 +947,25 @@ public class TextViewerControl : Control
 
             long line = Math.Clamp((long)ScrollableModel.ScrollPosition.Y + row, 0, TextModel.Lines.Count - 1);
             long lineStart = 0;
-            if (_wrapLines && ScreenRows.Count > 0)
+            if (RowMode && ScreenRows.Count > 0)
             {
                 // A wrapped row is part of a line: the click lands on that line, at its place in the row.
                 TextRow clicked = ScreenRows[(int)Math.Clamp((long)ScrollableModel.ScrollPosition.Y + row, 0, ScreenRows.Count - 1)];
                 line = clicked.Line;
                 lineStart = clicked.Start;
+                if (_enableFolding && column < GutterWidth && lineStart == 0 && CanFold((int)line))
+                {
+                    // A click on the gutter's marker opens or closes the region.
+                    ToggleFold((int)line);
+                    return true;
+                }
             }
 
-            ScrollableModel.CursorPosition.Y = _wrapLines ? ScrollableModel.ScrollPosition.Y + row : line;
+            ScrollableModel.CursorPosition.Y = RowMode ? ScrollableModel.ScrollPosition.Y + row : line;
             if (_isCursorEnabled)
             {
                 ScrollableModel.CursorPosition.Y = line;
-                ScrollableModel.CursorPosition.X = Math.Clamp(lineStart + (_wrapLines ? 0 : (long)ScrollableModel.ScrollPosition.X) + column, 0, TextModel.Lines[(int)line].Length);
+                ScrollableModel.CursorPosition.X = Math.Clamp(lineStart + (RowMode ? -GutterWidth : (long)ScrollableModel.ScrollPosition.X) + column, 0, TextModel.Lines[(int)line].Length);
                 _selectionAnchor = ClampedCursor();
                 _dragSelecting = true;
             }
@@ -933,11 +982,11 @@ public class TextViewerControl : Control
         // The wheel moves the view, not the cursor: the cursor goes along only when the view would leave it behind.
         SyncScrollableSize();
         long visibleRows = Math.Max(1, ScrollableModel.ViewSize.Height);
-        long totalRows = _wrapLines ? ScreenRows.Count : TextModel.Lines.Count;
+        long totalRows = RowMode ? ScreenRows.Count : TextModel.Lines.Count;
         long maxScroll = Math.Max(0, totalRows - visibleRows);
         long scroll = Math.Clamp(ScrollableModel.ScrollPosition.Y + (mouseEvent.WheelDelta > 0 ? -WheelRows : WheelRows), 0, maxScroll);
         ScrollableModel.ScrollPosition.Y = scroll;
-        if (!_wrapLines)
+        if (!RowMode)
         {
             ScrollableModel.CursorPosition.Y = Math.Clamp(ScrollableModel.CursorPosition.Y, scroll, Math.Min(scroll + visibleRows - 1, TextModel.Lines.Count - 1));
         }
@@ -956,8 +1005,11 @@ public class TextViewerControl : Control
             return; // TODO
         }
 
-        if (_wrapLines)
+        if (RowMode)
         {
+            // The rows are laid out from the text, so an edit since the last frame has to reach them first.
+            SyncScrollableSize();
+            RefreshRowsIfTextChanged();
             DrawWrapped(buffer, colorScheme);
             return;
         }
@@ -1020,8 +1072,9 @@ public class TextViewerControl : Control
     /// <summary>The wrapped view: one screen row for each row of the scroll position, each showing its part of a line.</summary>
     private void DrawWrapped(IBuffer buffer, ColorScheme colorScheme)
     {
-        int width = Math.Max(0, (int)ViewSize.Width - 2);
-        var size = new Size(width, 1);
+        int gutter = GutterWidth;
+        int width = Math.Max(0, (int)ViewSize.Width - 2 - gutter);
+        var size = new Size(width + gutter, 1);
         IReadOnlyList<TextRow> rows = ScreenRows;
 
         // A line is tokenized once, however many rows it wraps to; the next line starts in a block comment if this one ended in one.
@@ -1036,7 +1089,16 @@ public class TextViewerControl : Control
                 TextRow row = rows[(int)index];
                 string line = TextModel.Lines[row.Line];
                 int start = Math.Min(row.Start, line.Length);
-                string text = line.Substring(start, Math.Min(row.Length, line.Length - start)).PadRight(width);
+                string text = line.Substring(start, Math.Min(row.Length, line.Length - start));
+                int foldNote = -1;
+                bool endsLine = start + row.Length >= line.Length;
+                if (endsLine && IsFolded(row.Line) && FoldRegion(row.Line) is { } folded)
+                {
+                    foldNote = text.Length;
+                    text += $" ⋯ {folded.Last - folded.First + 1} lines";
+                }
+
+                text = text.Length > width ? text[..width] : text.PadRight(width);
                 bool cursorLine = ScrollableModel.CursorPosition.Y == row.Line;
                 var conxelLine = new ConxelString(
                     text,
@@ -1061,6 +1123,18 @@ public class TextViewerControl : Control
 
                 HighlightSearchHitsInRow(conxelLine, row);
                 DecorateText(conxelLine, row.Line, start, cursorLine, colorScheme);
+                if (foldNote >= 0 && foldNote < width)
+                {
+                    conxelLine.HighlightRange(foldNote, width, colorScheme.DisabledForeground, colorScheme.Background);
+                }
+
+                if (gutter > 0)
+                {
+                    var gutterLine = new ConxelString(GutterText(row), cursorLine ? colorScheme.Foreground : colorScheme.DisabledForeground, colorScheme.Background);
+                    gutterLine.Append(conxelLine);
+                    conxelLine = gutterLine;
+                }
+
                 buffer.Write(
                     ZOrder,
                     new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + i)),
@@ -1073,7 +1147,7 @@ public class TextViewerControl : Control
                     ZOrder,
                     new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + i)),
                     size,
-                    new ConxelString(string.Empty.PadRight(width), Color.White, colorScheme.Background));
+                    new ConxelString(string.Empty.PadRight(width + gutter), Color.White, colorScheme.Background));
             }
         }
 

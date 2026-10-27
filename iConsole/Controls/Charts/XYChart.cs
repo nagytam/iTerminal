@@ -22,7 +22,13 @@ public abstract class XYChart(IThemeService themeService) : Control(themeService
     public bool ShowLegend { get; set; }
 
     /// <summary>Text shown when there is nothing to plot.</summary>
-    public string EmptyText { get; set; } = "No data";
+    public string EmptyText
+    {
+        get => _emptyText;
+        set => _emptyText = value ?? string.Empty;
+    }
+
+    private string _emptyText = "No data";
 
     /// <summary>The value range to plot; false when there is no data.</summary>
     protected abstract bool TryGetRange(out double xMin, out double xMax, out double yMin, out double yMax);

@@ -728,6 +728,11 @@ public class TextEditorControl
         yield return ("Ctrl+F2", "Toggle bookmark");
         yield return ("F9", "Next bookmark");
         yield return ("Shift+F9", "Previous bookmark");
+        if (EnableFolding)
+        {
+            yield return ("Alt+Left/Alt+Right", "Fold or unfold the region at the cursor");
+        }
+
         if (BracketMatchingEnabled)
         {
             yield return ("Ctrl+F9", "Go to the matching bracket");
@@ -741,7 +746,7 @@ public class TextEditorControl
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         // Wrapped, Up and Down move by screen row, so a long line is walked row by row; by line they would skip its rows.
-        if (IsEnabled && WrapLines && !HasSelection && !keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt
+        if (IsEnabled && RowMode && !HasSelection && !keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt
             && keyEvent.ConsoleKey is ConsoleKey.UpArrow or ConsoleKey.DownArrow)
         {
             MoveCursorByScreenRow(keyEvent.ConsoleKey == ConsoleKey.DownArrow ? 1 : -1);
