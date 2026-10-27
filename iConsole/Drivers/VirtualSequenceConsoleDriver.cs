@@ -54,6 +54,26 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
         }  
     }
 
+    private CursorShape _cursorShape;
+
+    public CursorShape CursorShape
+    {
+        get => _cursorShape;
+        set
+        {
+            if (_cursorShape == value)
+            {
+                return;
+            }
+
+            _cursorShape = value;
+            if (_supportsVirtualTerminalProcessing && CursorShapes.IsEnabledByEnvironment)
+            {
+                Console.Write(CursorShapes.Sequence(value));
+            }
+        }
+    }
+
     private Color _foregroundColor;
     public Color ForegroundColor
     {
@@ -182,6 +202,8 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
     /// <summary>Attributes reset, cursor home and shown, screen cleared: what a shell expects to start on.</summary>
     public void OnConsoleReleased()
     {
+        // The shell gets the cursor shape it had before.
+        CursorShape = CursorShape.Default;
         if (_supportsVirtualTerminalProcessing)
         {
             Console.Write("\x1B[0m" + AnsiRenderer.CLEAR_DISPLAY + "\x1B[H" + AnsiRenderer.SHOW_CURSOR);

@@ -52,6 +52,8 @@ public class TextEditorControl
         : base(true, themeService)
     {
         IsCursorVisible = true;
+        CursorShape = CursorShape.BlinkingBar;
+        PointerShape = PointerShape.Text;
 
         AddCommand(new TypeCommand());
         AddCommand(new BackspaceCommand(TextModel, ScrollableModel));

@@ -97,6 +97,14 @@ public sealed class TerminalInputUtf8Decoder
                 return true;
             }
 
+            // "ESC [ I" and "ESC [ O": the window got or lost the keyboard focus (mode 1004).
+            if (csi.Length == 3 && csi[2] is (byte)'I' or (byte)'O')
+            {
+                FocusReported?.Invoke(csi[2] == (byte)'I');
+                RemovePrefix(fullLen);
+                return true;
+            }
+
             if (TryParseCsiKey(csi, emitKey))
             {
                 RemovePrefix(fullLen);
@@ -162,6 +170,9 @@ public sealed class TerminalInputUtf8Decoder
 
         return false;
     }
+
+    /// <summary>Raised with true for a focus-in report and false for a focus-out report.</summary>
+    public event Action<bool>? FocusReported;
 
     /// <summary>True once the terminal has answered <see cref="KittyKeyboardProtocol.Query"/>.</summary>
     public bool KittyKeyboardSupported { get; private set; }

@@ -18,6 +18,7 @@ public class LinkLabel : Control
     public LinkLabel(IThemeService themeService) : base(themeService)
     {
         CanFocus = true;
+        PointerShape = PointerShape.Pointer;
         ViewSize = new Size(0, 1);
     }
 

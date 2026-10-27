@@ -139,6 +139,23 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                 _consoleOwnership?.EndUse();
             }
         }
+
+        // Leaving: the shell gets its own cursor shape back.
+        if (_consoleOwnership is null || _consoleOwnership.TryBeginUse())
+        {
+            try
+            {
+                _consoleDriver.CursorShape = Display.CursorShape.Default;
+            }
+            catch (Exception exception) when (exception is IOException or ObjectDisposedException)
+            {
+            }
+            finally
+            {
+                _consoleOwnership?.EndUse();
+            }
+        }
+
         return Task.CompletedTask;
     }
 
@@ -316,6 +333,10 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                 _consoleDriver.SetCursorPosition((int)cursor.CursorPosition.X, (int)cursor.CursorPosition.Y);
                 LastBufferCursor.CursorPosition = cursor.CursorPosition;
             }
+
+            // Asked for on every frame the cursor shows: the driver writes only a change, and after a lend it is the driver
+            // that knows the terminal has its own shape again.
+            _consoleDriver.CursorShape = Buffer.Cursor.Shape;
 
             if (!isCursorVisible)
             {

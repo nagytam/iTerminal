@@ -74,6 +74,7 @@ public class Button : Control
         Title = title;
         _hasExplicitTitle = !string.IsNullOrEmpty(title);
         CanFocus = true;
+        PointerShape = PointerShape.Pointer;
         _command = command;
         AddCommand(command);
         AddCommand(new SpaceCommand());
@@ -84,6 +85,7 @@ public class Button : Control
     {
         Title = command.Title;
         CanFocus = true;
+        PointerShape = PointerShape.Pointer;
         _command = command;
         AddCommand(command);
         AddCommand(new SpaceCommand());

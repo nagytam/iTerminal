@@ -31,6 +31,39 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
     public override JobPriority Priority => JobPriority.Input;
 
     private readonly TerminalInputUtf8Decoder _decoder = new();
+
+    /// <summary>Whether focus reports were asked for, so they are switched off before the shell gets the terminal back.</summary>
+    private bool _focusReporting;
+
+    private void EnableFocusReporting()
+    {
+        if (_focusReporting || !TerminalFocusReporting.IsEnabledByEnvironment)
+        {
+            return;
+        }
+
+        Console.Out.Write(TerminalFocusReporting.Enable);
+        _focusReporting = true;
+    }
+
+    private void DisableFocusReporting()
+    {
+        if (!_focusReporting)
+        {
+            return;
+        }
+
+        try
+        {
+            Console.Out.Write(TerminalFocusReporting.Disable);
+            Console.Out.Flush();
+        }
+        catch
+        {
+        }
+
+        _focusReporting = false;
+    }
     private LinuxStdin.Termios _original;
     private bool _termiosCaptured;
     private bool _mouseEnabled;
@@ -84,6 +117,8 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
             }
 
             Console.Out.Write(TerminalMouseAnsi.EnablePreferredMouseReporting);
+            EnableFocusReporting();
+            _decoder.FocusReported += TerminalFocus.Current.Report;
             if (KittyKeyboardProtocol.IsEnabledByEnvironment)
             {
                 Console.Out.Write(KittyKeyboardProtocol.Query);
@@ -126,6 +161,7 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
         finally
         {
             PopKittyKeyboard();
+            DisableFocusReporting();
             if (_mouseEnabled)
             {
                 try
@@ -212,6 +248,7 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
         }
 
         PopKittyKeyboard();
+        DisableFocusReporting();
         if (_mouseEnabled)
         {
             Console.Out.Write(TerminalMouseAnsi.DisablePreferredMouseReporting);
@@ -236,6 +273,7 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
         if (TryEnterRawMode())
         {
             Console.Out.Write(TerminalMouseAnsi.EnablePreferredMouseReporting);
+            EnableFocusReporting();
             Console.Out.Flush();
             _mouseEnabled = true;
             if (_decoder.KittyKeyboardSupported)

@@ -6,6 +6,10 @@ public record Cursor(Size size)
 {
     public Size Size { get; set; } = size;
     public bool IsCursorVisible { get; set; } = false;
+
+    /// <summary>The shape the cursor is drawn with while it is visible.</summary>
+    public CursorShape Shape { get; set; } = CursorShape.Default;
+
     private Position? _cursorPosition = null;
     public Position? CursorPosition
     {

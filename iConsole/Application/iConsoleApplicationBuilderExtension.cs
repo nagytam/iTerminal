@@ -88,6 +88,8 @@ public static class iConsoleApplicationBuilderExtension
         services.AddSingleton<IJob, ConsoleBufferRendererJob>();
         services.AddSingleton<ProcessService>();
         services.AddSingleton<IThemeService, ThemeService>();
+        services.AddSingleton<ITerminalFocusService>(_ => TerminalFocus.Current);
+        services.AddSingleton<IPointerShapeService, PointerShapeService>();
         services.AddSingleton<ISyntaxHighlightingService>(SyntaxHighlightingService.Default);
         services.AddSingleton<IBeepService, BeepService>();
         // The terminal's own title and desktop notifications (OSC 2, OSC 9 / 777, the bell).

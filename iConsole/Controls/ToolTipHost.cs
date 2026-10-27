@@ -28,10 +28,14 @@ public class ToolTipHost : Control
     // The text the open tip was built from, so a change to the target's text can be seen and the tip rebuilt.
     private string? _shownText;
 
-    public ToolTipHost(IToolTipService toolTipService, ITimeProvider timeProvider, IThemeService themeService) : base(themeService)
+    private readonly IPointerShapeService? _pointerShape;
+
+    public ToolTipHost(IToolTipService toolTipService, ITimeProvider timeProvider, IThemeService themeService, IPointerShapeService? pointerShape = null)
+        : base(themeService)
     {
         _toolTipService = toolTipService;
         _timeProvider = timeProvider;
+        _pointerShape = pointerShape;
     }
 
     /// <summary>How long the pointer must rest on a control before its tooltip appears.</summary>
@@ -60,6 +64,8 @@ public class ToolTipHost : Control
         {
             _syncedVersion = version;
             var pointer = _toolTipService.PointerPosition;
+            // The pointer takes the shape of what is under it: a hand over a button, an I-beam over a text field.
+            _pointerShape?.Set(pointer is null ? PointerShape.Default : FindPointerShape(GetRootControl() as Control, pointer));
             var target = pointer is null ? null : FindTarget(GetRootControl() as Control, pointer);
             if (target != _target)
             {

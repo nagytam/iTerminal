@@ -22,6 +22,10 @@ public interface IControl
     Position Position { get; set; }
     string Name { get; set; }
     bool IsCursorVisible { get; }
+
+    /// <summary>The shape the cursor should have while this control (or a child) shows it.</summary>
+    Display.CursorShape EffectiveCursorShape => Display.CursorShape.Default;
+
     Position CursorPosition { get; }
     void AddCommand(ICommand command);
     void SetCommandLogger(ICommandLogger commandLogger);

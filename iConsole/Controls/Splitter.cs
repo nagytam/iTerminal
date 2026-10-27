@@ -182,6 +182,14 @@ public class Splitter : Control
     /// <summary>The cell offset of the divider along the split axis.</summary>
     private int DividerOffset => FirstSize;
 
+    /// <summary>A double arrow across the divider, and nothing special elsewhere.</summary>
+    public override PointerShape PointerShapeAt(Position position)
+    {
+        return IsOnDivider(position)
+            ? (IsSideBySide ? PointerShape.ResizeHorizontal : PointerShape.ResizeVertical)
+            : PointerShape.Default;
+    }
+
     private bool IsOnDivider(Position position)
     {
         int x = (int)position.X - (int)AbsolutePosition.X;

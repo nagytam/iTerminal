@@ -119,6 +119,61 @@ public class Control : INotifyPropertyChanged, IControl
             }
         }
     } 
+    /// <summary>The shape of the text cursor while this control shows it; <see cref="Display.CursorShape.Default"/> leaves the terminal's own.</summary>
+    public CursorShape CursorShape { get; set; } = CursorShape.Default;
+
+    /// <summary>The shape the cursor should have: this control's, or that of the first child that wants the cursor shown.</summary>
+    public virtual CursorShape EffectiveCursorShape
+    {
+        get
+        {
+            if (CursorShape != CursorShape.Default)
+            {
+                return CursorShape;
+            }
+
+            foreach (var control in Controls.AsSnapshot())
+            {
+                if (control is not null && control.IsCursorVisible)
+                {
+                    return control.EffectiveCursorShape;
+                }
+            }
+
+            return CursorShape.Default;
+        }
+    }
+
+    /// <summary>The shape of the mouse pointer over this control (a hand over a button, an I-beam over a text field).</summary>
+    public PointerShape PointerShape { get; set; } = PointerShape.Default;
+
+    /// <summary>The pointer shape at <paramref name="position"/> (absolute), for a control whose shape depends on where: a divider.</summary>
+    public virtual PointerShape PointerShapeAt(Position position) => PointerShape;
+
+    /// <summary>The shape for the pointer at <paramref name="position"/>: the innermost visible control under it that asks for one.</summary>
+    public static PointerShape FindPointerShape(Control? control, Position position)
+    {
+        if (control is null)
+        {
+            return PointerShape.Default;
+        }
+
+        var children = control.Controls.AsSnapshot();
+        for (var i = children.Count - 1; i >= 0; i--)
+        {
+            if (children[i] is Control child && child.IsVisible && child.AbsoluteBoundRect.Contains(position))
+            {
+                var deeper = FindPointerShape(child, position);
+                if (deeper != PointerShape.Default)
+                {
+                    return deeper;
+                }
+            }
+        }
+
+        return control.AbsoluteBoundRect.Contains(position) ? control.PointerShapeAt(position) : PointerShape.Default;
+    }
+
     private bool _isCursorVisible = false;
     public virtual bool IsCursorVisible 
     { 
@@ -704,6 +759,8 @@ public class Control : INotifyPropertyChanged, IControl
                 while (!cancellation.IsCancellationRequested)
                 {
                     await Task.Delay(100, cancellation.Token);
+                    // A window in the background repaints nothing: the frame is drawn when focus comes back.
+                    await TerminalFocus.Current.WaitForFocusAsync(cancellation.Token);
                     Refresh();
                 }
             }

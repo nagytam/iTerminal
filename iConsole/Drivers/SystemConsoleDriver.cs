@@ -35,6 +35,26 @@ public class SystemConsoleDriver : IConsoleDriver
         }
     }
 
+    private CursorShape _cursorShape;
+
+    public CursorShape CursorShape
+    {
+        get => _cursorShape;
+        set
+        {
+            if (_cursorShape == value)
+            {
+                return;
+            }
+
+            _cursorShape = value;
+            if (_supportsVirtualTerminal && CursorShapes.IsEnabledByEnvironment && !Console.IsOutputRedirected)
+            {
+                Console.Out.Write(CursorShapes.Sequence(value));
+            }
+        }
+    }
+
     private bool _isCursorVisible = false;
     public bool IsCursorVisible 
     {
@@ -136,6 +156,7 @@ public class SystemConsoleDriver : IConsoleDriver
     {
         try
         {
+            CursorShape = CursorShape.Default;
             Console.ResetColor();
             Console.Clear();
             Console.SetCursorPosition(0, 0);
