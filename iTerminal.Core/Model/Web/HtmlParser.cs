@@ -83,8 +83,9 @@ internal static class HtmlParser
 
     private static readonly string[] ParagraphBoundary = ["td", "th", "li", "dd", "dt", "caption", "button", "select", "body", "html", "blockquote"];
 
-    public static HtmlNode Parse(string html)
+    public static HtmlNode Parse(string? html)
     {
+        html ??= string.Empty;
         var root = new HtmlNode(HtmlNode.RootTag);
         var stack = new List<HtmlNode> { root };
         var position = 0;

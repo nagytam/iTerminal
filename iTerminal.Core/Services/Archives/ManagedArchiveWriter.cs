@@ -120,9 +120,9 @@ public static class ManagedArchiveWriter
     }
 
     /// <summary>'/'-separated, no leading slash — what every one of these formats stores.</summary>
-    internal static string NormalizeName(string name)
+    internal static string NormalizeName(string? name)
     {
-        var normalized = name.Replace('\\', '/').TrimStart('/');
+        var normalized = (name ?? string.Empty).Replace('\\', '/').TrimStart('/');
         while (normalized.StartsWith("./", StringComparison.Ordinal))
         {
             normalized = normalized[2..];

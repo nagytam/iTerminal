@@ -100,8 +100,9 @@ public static class UserMenuMacros
 /// </summary>
 public static class UserMenuParser
 {
-    public static IReadOnlyList<UserMenuItem> Parse(string text)
+    public static IReadOnlyList<UserMenuItem> Parse(string? text)
     {
+        text ??= string.Empty;
         var items = new List<UserMenuItem>();
         var patterns = "*";
         var hotkey = ' ';

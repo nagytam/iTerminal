@@ -98,9 +98,9 @@ internal static partial class WebAddress
     [GeneratedRegex(@"^[a-zA-Z]:[\\/]")]
     private static partial Regex DrivePathRegex();
 
-    public static string FromInput(string input, string? searchTemplate = null)
+    public static string FromInput(string? input, string? searchTemplate = null)
     {
-        var text = input.Trim();
+        var text = (input ?? string.Empty).Trim();
         if (text.Length == 0)
         {
             return Blank;
@@ -128,7 +128,16 @@ internal static partial class WebAddress
             return (local ? "http://" : "https://") + text;
         }
 
-        return string.Format(searchTemplate is { Length: > 0 } ? searchTemplate : DefaultSearch, Uri.EscapeDataString(text).Replace("%20", "+"));
+        string query = Uri.EscapeDataString(text).Replace("%20", "+");
+        try
+        {
+            return string.Format(searchTemplate is { Length: > 0 } ? searchTemplate : DefaultSearch, query);
+        }
+        catch (FormatException)
+        {
+            // A search address with a stray brace in it (typed into the settings) cannot take the query: use the default.
+            return string.Format(DefaultSearch, query);
+        }
     }
 
     public static string FileUrl(string path)
@@ -181,6 +190,6 @@ internal static partial class WebAddress
         return index < 0 ? string.Empty : Uri.UnescapeDataString(url[(index + 1)..]);
     }
 
-    public static bool IsSameDocument(string a, string b) =>
-        string.Equals(WithoutFragment(a), WithoutFragment(b), StringComparison.Ordinal);
+    public static bool IsSameDocument(string? a, string? b) =>
+        string.Equals(WithoutFragment(a ?? string.Empty), WithoutFragment(b ?? string.Empty), StringComparison.Ordinal);
 }
