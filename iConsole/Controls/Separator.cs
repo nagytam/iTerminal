@@ -8,7 +8,22 @@ namespace iConsole.Controls;
 
 public class Separator(IThemeService themeService) : Control(themeService)
 {
-    public Orientation Orientation { get; set; } = Orientation.Horizontal;
+    private Orientation _orientation = Orientation.Horizontal;
+
+    /// <summary>Horizontal rule or vertical line; turning it leaves the old line on screen unless the screen is repainted, so it is.</summary>
+    public Orientation Orientation
+    {
+        get => _orientation;
+        set
+        {
+            if (_orientation != value)
+            {
+                _orientation = value;
+                InvalidateTree();
+                StateHasChanged();
+            }
+        }
+    }
 
     /// <summary>
     /// Optional heading set into a horizontal rule (<c>── Advanced ─────</c>), so a form can be

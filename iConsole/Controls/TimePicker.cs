@@ -37,7 +37,15 @@ public class TimePicker : Control, IReadOnly
         {
             _showSeconds = value;
             _field = Math.Min(_field, FieldCount - 1);
-            ViewSize = new Size(FieldCount == 3 ? 10 : 7, 1);
+            Size size = new(FieldCount == 3 ? 10 : 7, 1);
+            // Dropping the seconds leaves cells outside the new rectangle that nothing else repaints.
+            bool shrinks = size.Width < ViewSize.Width;
+            ViewSize = size;
+            if (shrinks)
+            {
+                InvalidateTree();
+            }
+
             StateHasChanged();
         }
     }

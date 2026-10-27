@@ -34,7 +34,15 @@ public class Badge : Control
         set
         {
             _text = value ?? string.Empty;
-            ViewSize = new Size(_text.Length == 0 ? 0 : _text.Length + 2, 1);
+            Size size = new(_text.Length == 0 ? 0 : _text.Length + 2, 1);
+            // A shorter text leaves cells outside the new rectangle that nothing else repaints: ask for a repaint from scratch.
+            bool shrinks = size.Width < ViewSize.Width;
+            ViewSize = size;
+            if (shrinks)
+            {
+                InvalidateTree();
+            }
+
             StateHasChanged();
         }
     }
@@ -62,12 +70,18 @@ public class Badge : Control
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
-        if (_text.Length == 0)
+        int width = (int)ViewSize.Width;
+        if (width <= 0)
         {
             return;
         }
 
-        Color background = BackgroundFor(_kind, Color.Gray);
-        buffer.Write(ZOrder, AbsolutePosition, ViewSize, new ConxelString($" {_text} ", Color.Black, background));
+        // The whole rectangle is painted: a badge whose text got shorter, or empty, used to leave the old text behind.
+        ColorScheme colorScheme = ThemeService.CurrentColorScheme;
+        ConxelString line = _text.Length == 0
+            ? new ConxelString(string.Empty, colorScheme.Foreground, colorScheme.Background)
+            : new ConxelString($" {_text} ", Color.Black, BackgroundFor(_kind, Color.Gray));
+        line.Expand(width, colorScheme.Foreground, colorScheme.Background);
+        buffer.Write(ZOrder, AbsolutePosition, ViewSize, line);
     }
 }
