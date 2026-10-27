@@ -198,6 +198,32 @@ public sealed class JsonRpcConnection : IDisposable
         }
     }
 
+    private readonly Lock _orderGate = new();
+    private Task _ordered = Task.CompletedTask;
+
+    /// <summary>Runs <paramref name="action"/> on a worker thread after every earlier one has finished; an exception does not stop the ones after it.</summary>
+    private void RunInOrder(Action action)
+    {
+        lock (_orderGate)
+        {
+            _ordered = _ordered.ContinueWith(
+                _ =>
+                {
+                    try
+                    {
+                        action();
+                    }
+                    catch (Exception)
+                    {
+                        // A handler that throws must not stop the connection.
+                    }
+                },
+                CancellationToken.None,
+                TaskContinuationOptions.None,
+                TaskScheduler.Default);
+        }
+    }
+
     private void Dispatch(JsonElement message)
     {
         bool hasMethod = message.TryGetProperty("method", out JsonElement methodElement);
@@ -206,23 +232,17 @@ public sealed class JsonRpcConnection : IDisposable
         if (hasMethod)
         {
             string method = methodElement.GetString() ?? string.Empty;
+            // Requests and notifications are handled in the order they arrived: a didChange must be applied before the hover
+            // that follows it, and two diagnostics notifications must not swap. A request is only started in turn (its
+            // answer may take as long as it likes); a notification is run to its end before the next message starts.
             if (hasId)
             {
-                _ = Task.Run(() => AnswerRequestAsync(idElement.Clone(), method, parameters));
+                JsonElement requestId = idElement.Clone();
+                RunInOrder(() => _ = AnswerRequestAsync(requestId, method, parameters));
             }
             else if (_notificationHandlers.TryGetValue(method, out Action<JsonElement?>? handler))
             {
-                _ = Task.Run(() =>
-                {
-                    try
-                    {
-                        handler(parameters);
-                    }
-                    catch (Exception)
-                    {
-                        // A handler that throws must not stop the connection.
-                    }
-                });
+                RunInOrder(() => handler(parameters));
             }
 
             return;

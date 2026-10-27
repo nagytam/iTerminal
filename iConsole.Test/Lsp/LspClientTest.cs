@@ -182,6 +182,45 @@ public class LspClientTest
     }
 
     [TestMethod]
+    public async Task NotificationsAndRequests_AreHandledInTheOrderTheyArrived()
+    {
+        (Stream aWrites, Stream bReads) = Pipe();
+        (Stream bWrites, Stream aReads) = Pipe();
+        using var a = new JsonRpcConnection(aReads, aWrites);
+        using var b = new JsonRpcConnection(bReads, bWrites);
+        List<int> seen = [];
+        b.OnNotification("note", p =>
+        {
+            int n = p!.Value.GetProperty("n").GetInt32();
+            // The early ones are the slowest, so a handler run on its own thread would finish out of order.
+            Thread.Sleep(n % 7 == 0 ? 15 : 0);
+            lock (seen)
+            {
+                seen.Add(n);
+            }
+        });
+        b.OnRequest("count", _ =>
+        {
+            lock (seen)
+            {
+                return Task.FromResult<object?>(seen.Count);
+            }
+        });
+        a.Start();
+        b.Start();
+
+        for (int n = 0; n < 40; n++)
+        {
+            a.Notify("note", new { n });
+        }
+
+        JsonElement? count = await a.RequestAsync("count", null, TimeSpan.FromSeconds(10));
+
+        Assert.AreEqual(40, count!.Value.GetInt32(), "the request was answered before the notifications before it were handled");
+        CollectionAssert.AreEqual(Enumerable.Range(0, 40).ToList(), seen);
+    }
+
+    [TestMethod]
     public async Task AnErrorAnswer_ThrowsWithItsCodeAndMessage_AndAnUnknownMethodIsAnError()
     {
         (Stream aWrites, Stream bReads) = Pipe();
@@ -497,8 +536,7 @@ public class LspClientTest
             Assert.AreEqual("**int** x", hover);
             Assert.AreEqual(2, items.Count);
             Assert.AreEqual(1, where.Count);
-            // The fake server records the notification on its own thread, so on a busy runner the answers can arrive first.
-            await WaitFor(() => server.Text == "Console.WriteLine", "the server to have been told the new text");
+            Assert.AreEqual("Console.WriteLine", server.Text, "the server was told the new text before it was asked");
         }
     }
 
