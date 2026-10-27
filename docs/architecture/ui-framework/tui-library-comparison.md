@@ -217,3 +217,36 @@ Compared again with Textual's full widget list and design system, Terminal.Gui v
 3. Items 94, 93b and 99: quick dialogs, a key preview hook and a focus history shorten most dialog code.
 4. Items 95, 104 and 105: richer charts, tables and logs.
 5. Items 98 and 101 after the colour work (34) and animation (13); items 93 and 103 only when there is a concrete use.
+
+#### Status after the pull of 2026-10-28
+
+Checked again against `github/main` at cf6e230 (a grep of the source, not the tests). Built since the status above: 14 (`Shadow`, `HasShadow`), 37 for a grid (`LineCanvas`, `BorderedGrid`; separate boxes do not join by themselves), 43 for dialogs (drag by the title bar, resize by the corner, Ctrl+F7 and Ctrl+F8), 58 for Windows (`KeyEvent.IsRepeat`), 83 (`IAsyncInputValidator`; no error line under the box yet), 84 (`X{n}`, `X{n,m}`, `%(group){n}`, `~`), 89 for visible whitespace (`ShowWhitespace`; no indent guides or ruler yet), 107 (regex search and replace) and 110 (`Marquee`, `MarqueeLabel`, `ScrollTitle`). Every other item in the lists above was checked and is still missing.
+
+#### Fifth survey: more libraries and tools
+
+Compared with the Ink ecosystem (`ink-select-input`, `ink-table`, `ink-testing-library`, `<Static>`), Lip Gloss and Bubble Tea v2 (`Place`, `JoinHorizontal`, static table, list and tree renderers), Terminal.Gui v2 dialogs that return a result, terminal-kit (`inputField`, `getCursorLocation`), Brick (themes loaded from INI files, automatic border joining), libvaxis `vxfw`, Rich (`Syntax` line highlights), Cursive's builder, fzf and telescope.nvim (preview panes), ranger and yazi (Miller columns), lazygit and k9s (filter with `/`), bottom and btop (bars inside table cells) and the editors Neovim and VS Code (bracket-pair colours, sticky scroll, spell check). Numbering continues after item 111.
+
+**Controls**
+
+112. **Fuzzy filtering with highlighted matches.** `FuzzyMatcher` exists and the command palette uses it, but `ListBox`, `ComboBox` and `AutoCompletion` still match by prefix and do not show which letters matched (Bubbles `list`, fzf, telescope.nvim).
+113. **List with a preview pane.** A list on the left and a live preview of the item under the cursor on the right, with the preview loaded in the background (fzf `--preview`, telescope.nvim, yazi); the file panels have a preview drive but no reusable control.
+114. **Miller columns.** Parent, current and child lists side by side, moving right opens the child (ranger, yazi, the macOS Finder column view); a control for any tree, not only folders.
+115. **Widgets inside table cells.** A bar, sparkline or rating in a `Table` or `LiveTable` cell (Textual `DataTable` renderables, bottom and btop process tables); cells are text only today.
+116. **Type-to-filter on tables and lists.** `/` opens a filter line that hides rows that do not match (lazygit, k9s, VisiData); `ListBox` has a filter in its model but `Table` and `VirtualTable` have none.
+117. **Line and range decorations.** A public way to colour a background, underline or mark a line or a range of text in the viewer and editor: diagnostics, diff added and removed lines, blame, an error line in a log (Rich `Syntax` `highlight_lines`, VS Code decorations). The viewer has private helpers for its own search and selection only.
+118. **Editor polish.** Bracket-pair colours, sticky scroll headers that keep the enclosing line in view, spell check with the curly underline the renderer already has, and a symbol outline (VS Code, Neovim).
+
+**Framework**
+
+119. **Typed dialog results.** `ShowDialogAsync` returns when the dialog closes but not what it chose; callers read the dialog's properties afterwards (Terminal.Gui `Dialog.Result`, Spectre prompts return values). `ShowDialogAsync<T>` would return the value or null for cancel.
+120. **Theme files with user overrides.** Load a theme from a file and save the user's changes over the defaults (Brick `Themes` INI files, Textual themes, Cursive TOML themes); themes are code plus a dialog today.
+121. **Declarative layout files.** Describe a screen in JSON or a small markup and build the control tree from it, with reload on change (Cursive builder, Consolonia XAML, Textual `compose`); every screen is built in code.
+122. **Mouse capture.** A control that took a press keeps the following moves and the release even when the pointer leaves it (Terminal.Gui `Mouse.Grab`, Win32 `SetCapture`); a drag today has to stay inside the control's rectangle.
+123. **Render a control without a terminal.** Print a table, tree, chart or progress group as ANSI text to a pipe or a file for `--help` style output and scripts (Lip Gloss static renderers, Spectre `AnsiConsole.Write`); only the test harness renders offscreen today. Shares the work of item 77.
+
+#### Suggested order for the fifth survey
+
+1. Items 112, 116 and 119: fuzzy matching, `/` filters and typed dialog results are small and used by many dialogs.
+2. Items 117 and 122: line decorations and mouse capture unblock diagnostics, diffs and drags that leave their control.
+3. Items 115 and 113: bars in cells and a preview list suit the file manager and the dashboards.
+4. Items 120, 121 and 123 once the colour work (34) is done; items 114 and 118 when there is a use for them.
