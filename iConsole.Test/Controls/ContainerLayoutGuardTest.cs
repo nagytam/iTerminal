@@ -56,6 +56,14 @@ public class ContainerLayoutGuardTest
         splitter.SetFirst(Child("first"));
         splitter.SetSecond(Child("second"));
         yield return ("Splitter", splitter);
+
+        foreach (Type type in new[] { typeof(iConsole.Controls.StatusBar.ViewerStatusBar), typeof(iConsole.Controls.StatusBar.EditorStatusBar) })
+        {
+            if (SweepControlFactory.Build(type, Theme()) is { } bar)
+            {
+                yield return (type.Name, bar);
+            }
+        }
     }
 
     [TestMethod]
@@ -70,7 +78,7 @@ public class ContainerLayoutGuardTest
                 container.ViewSize = new Size(width, height);
                 container.OnInitializeLayout();
                 ScreenBuffer.Render(container, (int)Math.Max(1, width), (int)Math.Max(1, height));
-                foreach (IControl child in container.Controls.AsSnapshot())
+                foreach (IControl child in container.Controls.AsSnapshot().Where(c => c.IsVisible))
                 {
                     bool inside = (long)child.Position.X >= 0 && (long)child.Position.Y >= 0
                         && (long)child.Position.X + (long)child.ViewSize.Width <= width

@@ -106,6 +106,11 @@ internal static class SweepControlFactory
             }
         }
 
+        if (type.IsInterface && FindImplementation(type, theme, depth) is { } implementation)
+        {
+            return implementation;
+        }
+
         if (type.IsInterface)
         {
             return type.Name.EndsWith("Service", StringComparison.Ordinal)
@@ -136,5 +141,23 @@ internal static class SweepControlFactory
         }
 
         return null;
+    }
+
+    /// <summary>The one concrete class of iConsole that implements <paramref name="contract"/> and can be built from what this can make.</summary>
+    private static object? FindImplementation(Type contract, IThemeService theme, int depth)
+    {
+        if (depth > 1 || contract.IsGenericType)
+        {
+            return null;
+        }
+
+        List<Type> candidates = [.. typeof(Control).Assembly.GetTypes()
+            .Where(t => t.IsClass && !t.IsAbstract && !t.IsGenericTypeDefinition && !typeof(Control).IsAssignableFrom(t) && contract.IsAssignableFrom(t))];
+        if (candidates.Count != 1)
+        {
+            return null;
+        }
+
+        return Resolve(candidates[0], theme, depth + 1);
     }
 }

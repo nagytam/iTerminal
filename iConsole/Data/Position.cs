@@ -17,6 +17,8 @@ public record class Position : INotifyPropertyChanged
         } 
         set
         {
+            // A position worked out from a smaller parent can come to a negative one; the screen starts at 0.
+            value = Math.Max(0, value);
             if (value != _x)
             {
                 Debug.Assert(value >= 0);
@@ -33,6 +35,7 @@ public record class Position : INotifyPropertyChanged
         }
         set
         {
+            value = Math.Max(0, value);
             if (value != _y)
             {
                 Debug.Assert(value >= 0);

@@ -16,6 +16,8 @@ public record class Size : INotifyPropertyChanged
         }
         set
         {
+            // A layout that works a size out of a smaller parent can come to a negative one; nothing is negative, so it is empty.
+            value = Math.Max(0, value);
             if (value != _width)
             {
                 Debug.Assert(value >= 0);
@@ -36,6 +38,7 @@ public record class Size : INotifyPropertyChanged
         }
         set
         {
+            value = Math.Max(0, value);
             if (_height != value)
             {
                 Debug.Assert(value >= 0);
