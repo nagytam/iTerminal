@@ -26,9 +26,10 @@ public enum MarkdownBlockKind
 
 /// <summary>
 /// One block of a document. <see cref="Level"/> is the heading level (1–6) or the list nesting depth;
-/// <see cref="Marker"/> is a list item's bullet or number.
+/// <see cref="Marker"/> is a list item's bullet or number;
+/// <see cref="Language"/> is the info string of a code fence (<c>```csharp</c>), empty for none.
 /// </summary>
-public sealed record MarkdownBlock(MarkdownBlockKind Kind, IReadOnlyList<MarkdownSpan> Spans, int Level = 0, string Marker = "");
+public sealed record MarkdownBlock(MarkdownBlockKind Kind, IReadOnlyList<MarkdownSpan> Spans, int Level = 0, string Marker = "", string Language = "");
 
 /// <summary>One screen row of a laid-out document.</summary>
-public sealed record MarkdownLine(IReadOnlyList<MarkdownSpan> Spans, MarkdownBlockKind Kind, int Level);
+public sealed record MarkdownLine(IReadOnlyList<MarkdownSpan> Spans, MarkdownBlockKind Kind, int Level, string Language = "");

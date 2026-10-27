@@ -22,6 +22,7 @@ public static partial class MarkdownParser
         var paragraph = new List<string>();
         // The marker that opened the fence (``` or ~~~); a line closes the fence only with the same marker.
         string? fence = null;
+        string fenceLanguage = string.Empty;
 
         foreach (var raw in (markdown ?? string.Empty).Replace("\r\n", "\n").Split('\n'))
         {
@@ -36,7 +37,7 @@ public static partial class MarkdownParser
                 }
 
                 // A tab would jump to the next stop on screen, not one cell, so the row would no longer match the layout's width.
-                blocks.Add(new MarkdownBlock(MarkdownBlockKind.Code, [new MarkdownSpan(raw.Replace("\t", "    ").TrimEnd(), MarkdownStyle.Code)]));
+                blocks.Add(new MarkdownBlock(MarkdownBlockKind.Code, [new MarkdownSpan(raw.Replace("\t", "    ").TrimEnd(), MarkdownStyle.Code)], Language: fenceLanguage));
                 continue;
             }
 
@@ -44,6 +45,8 @@ public static partial class MarkdownParser
             {
                 FlushParagraph(blocks, paragraph);
                 fence = trimmed[..3];
+                // The info string: the first word after the marker ("```csharp title=x" is csharp).
+                fenceLanguage = trimmed[3..].Trim().Split([' ', '\t', '{'], StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
                 continue;
             }
 

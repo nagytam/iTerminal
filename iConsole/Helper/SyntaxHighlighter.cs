@@ -178,6 +178,10 @@ public static class SyntaxHighlighter
         [".bat"] = Batch, [".cmd"] = Batch,
     };
 
+    /// <summary>Every language built in, for <see cref="iConsole.Services.ISyntaxHighlightingService"/> to list and look up by name.</summary>
+    internal static IReadOnlyList<SyntaxLanguage> BuiltInLanguages { get; } =
+        [CLike, Python, Shell, Sql, Markup, Json, Config, Batch, Lua, VisualBasic, FSharp, BuildFile];
+
     /// <summary>The language for a file name or path, or null when there is none to colour it with.</summary>
     public static SyntaxLanguage? ForFile(string? fileName)
     {
