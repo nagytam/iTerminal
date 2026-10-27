@@ -207,7 +207,13 @@ public class HexViewer : Control
             var isCursor = rowIndex == cursorRow;
 
             Color fg, bg;
-            if (isCursor)
+            if (!IsEnabled)
+            {
+                // A disabled viewer is greyed like every other disabled control, the cursor row included.
+                fg = colorScheme.DisabledForeground;
+                bg = colorScheme.DisabledBackground;
+            }
+            else if (isCursor)
             {
                 fg = IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.SelectedForeground;
                 bg = IsFocused ? colorScheme.SelectedFocusedBackground : colorScheme.SelectedBackground;
