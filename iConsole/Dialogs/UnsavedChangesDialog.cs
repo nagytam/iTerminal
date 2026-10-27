@@ -59,6 +59,13 @@ public class UnsavedChangesDialog : Dialog
     /// S, D and C answer on their own, no Ctrl needed — a dialog that is a single question takes the letter. (A button's own hot
     /// key is Ctrl+letter, and Ctrl+C or Ctrl+D would mean something else to a terminal.) Enter presses the focused button.
     /// </summary>
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("S", "Save the changes");
+        yield return ("D", "Discard the changes");
+        yield return ("C", "Cancel and keep editing");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (!keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)

@@ -56,6 +56,13 @@ public class GoToLineDialog : Dialog
     /// <summary>The box opens holding the current line; the first character typed replaces it, rather than being added to it ("1" + "250" went to line 1250).</summary>
     private bool _replaceOnType = true;
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("0-9", "Type the line number (the first key replaces the current one)");
+        yield return ("Enter", "Go to the line");
+        yield return ("Esc", "Close without moving");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_replaceOnType && keyEvent.KeyPressType == KeyPressType.Down && !keyEvent.Control && !keyEvent.Alt)

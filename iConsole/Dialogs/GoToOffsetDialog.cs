@@ -51,6 +51,13 @@ public class GoToOffsetDialog : Dialog
     /// <summary>The box opens holding "0x0"; the first character typed replaces it rather than following it.</summary>
     private bool _replaceOnType = true;
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("0-9, 0x.., ..h", "Type the offset in decimal or hexadecimal");
+        yield return ("Enter", "Go to the offset");
+        yield return ("Esc", "Close without moving");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_replaceOnType && keyEvent.KeyPressType == KeyPressType.Down && !keyEvent.Control && !keyEvent.Alt)

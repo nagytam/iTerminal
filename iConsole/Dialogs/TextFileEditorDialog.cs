@@ -134,6 +134,13 @@ public class TextFileEditorDialog : Dialog
         await base.OnInitializeAsync();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Ctrl+S", "Save the file");
+        yield return ("Tab", "Indent");
+        yield return ("F8", "Next code page (Shift: previous)");
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.KeyPressType == KeyPressType.Down
