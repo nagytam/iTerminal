@@ -420,8 +420,9 @@ internal sealed class WebDocument
         }, form);
     }
 
-    internal static string Collapse(string text)
+    internal static string Collapse(string? text)
     {
+        text ??= string.Empty;
         var builder = new StringBuilder(text.Length);
         var space = false;
         foreach (var c in text)

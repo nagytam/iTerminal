@@ -23,7 +23,7 @@ public static class MarkdownLayout
                     {
                         // Code is not wrapped: a line that is too long is cut at the edge, as a terminal would.
                         var text = span.Text.Length > width ? span.Text[..width] : span.Text;
-                        lines.Add(new MarkdownLine([span with { Text = text }], block.Kind, 0));
+                        lines.Add(new MarkdownLine([span with { Text = text }], block.Kind, 0, block.Language));
                     }
                     break;
 

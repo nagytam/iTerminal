@@ -35,8 +35,9 @@ public static partial class MimeParser
     }
 
     /// <summary>The headers as text, and the body after the first blank line.</summary>
-    internal static (string Headers, string Body) SplitHeaders(string raw)
+    internal static (string Headers, string Body) SplitHeaders(string? raw)
     {
+        raw ??= string.Empty;
         var blank = raw.IndexOf("\r\n\r\n", StringComparison.Ordinal);
         var length = 4;
         if (blank < 0)

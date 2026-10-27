@@ -289,8 +289,8 @@ internal sealed class DocumentSearchIndex
     /// text. Prefix matching is what makes the search box usable while it is still being typed:
     /// "invo" finds the invoices.</para>
     /// </summary>
-    internal static string BuildMatchExpression(string[] tokens) =>
-        string.Join(" AND ", tokens.Select(token => $"\"{token.Replace("\"", "\"\"")}\"*"));
+    internal static string BuildMatchExpression(string?[]? tokens) =>
+        string.Join(" AND ", (tokens ?? []).Where(token => !string.IsNullOrEmpty(token)).Select(token => $"\"{token!.Replace("\"", "\"\"")}\"*"));
 
     /// <summary>
     /// Splits a query into search words, dropping the punctuation FTS5 would not have indexed

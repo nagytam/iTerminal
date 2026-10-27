@@ -62,15 +62,16 @@ internal static class Ber
     }
 
     /// <summary>Splits a value into its consecutive elements: each is a tag and its content.</summary>
-    public static List<(byte Tag, byte[] Value)> Elements(byte[] data)
+    public static List<(byte Tag, byte[] Value)> Elements(byte[]? data)
     {
+        data ??= [];
         var result = new List<(byte, byte[])>();
         var position = 0;
         while (position < data.Length)
         {
             var tag = data[position++];
             var length = ReadLength(data, ref position);
-            if (position + length > data.Length)
+            if ((long)position + length > data.Length)
             {
                 throw new FormatException("A BER element runs past the end of its value.");
             }
@@ -82,8 +83,9 @@ internal static class Ber
         return result;
     }
 
-    public static long DecodeInt(byte[] value)
+    public static long DecodeInt(byte[]? value)
     {
+        value ??= [];
         long result = value.Length > 0 && (value[0] & 0x80) != 0 ? -1 : 0;
         foreach (var b in value)
         {
@@ -129,6 +131,13 @@ internal static class Ber
 
     private static int ReadLength(byte[] data, ref int position)
     {
+        // A reply from a server is not trusted to be whole: a cut-off or absurd length is a FormatException, which the
+        // callers already treat as a bad reply, not an index error out of the dialog.
+        if (position >= data.Length)
+        {
+            throw new FormatException("A BER element has no length.");
+        }
+
         var first = data[position++];
         if ((first & 0x80) == 0)
         {
@@ -136,10 +145,25 @@ internal static class Ber
         }
 
         var count = first & 0x7F;
+        if (count > 4)
+        {
+            throw new FormatException("A BER length is longer than four bytes.");
+        }
+
         var length = 0;
         for (var i = 0; i < count; i++)
         {
+            if (position >= data.Length)
+            {
+                throw new FormatException("A BER length is cut off.");
+            }
+
             length = (length << 8) | data[position++];
+        }
+
+        if (length < 0)
+        {
+            throw new FormatException("A BER length is negative.");
         }
 
         return length;

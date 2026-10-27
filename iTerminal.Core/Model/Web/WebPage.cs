@@ -140,8 +140,9 @@ internal static partial class WebAddress
         }
     }
 
-    public static string FileUrl(string path)
+    public static string FileUrl(string? path)
     {
+        path ??= string.Empty;
         if (path.StartsWith("~/", StringComparison.Ordinal))
         {
             path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), path[2..]);
@@ -157,8 +158,10 @@ internal static partial class WebAddress
         }
     }
 
-    public static string Resolve(string baseUrl, string href)
+    public static string Resolve(string? baseUrl, string? href)
     {
+        baseUrl ??= string.Empty;
+        href ??= string.Empty;
         href = href.Trim();
         if (href.Length == 0)
         {
@@ -178,14 +181,16 @@ internal static partial class WebAddress
         return Uri.TryCreate(parent, href, out var combined) ? combined.AbsoluteUri : href;
     }
 
-    public static string WithoutFragment(string url)
+    public static string WithoutFragment(string? url)
     {
+        url ??= string.Empty;
         var index = url.IndexOf('#');
         return index < 0 ? url : url[..index];
     }
 
-    public static string Fragment(string url)
+    public static string Fragment(string? url)
     {
+        url ??= string.Empty;
         var index = url.IndexOf('#');
         return index < 0 ? string.Empty : Uri.UnescapeDataString(url[(index + 1)..]);
     }

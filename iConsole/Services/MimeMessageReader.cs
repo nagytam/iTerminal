@@ -110,8 +110,9 @@ public static class MimeMessageReader
     }
 
     /// <summary>Quoted-printable: =XX is a byte, and an = at the end of a line joins it to the next.</summary>
-    internal static byte[] QuotedPrintable(string text)
+    internal static byte[] QuotedPrintable(string? text)
     {
+        text ??= string.Empty;
         List<byte> bytes = new(text.Length);
         for (int i = 0; i < text.Length; i++)
         {
@@ -136,8 +137,10 @@ public static class MimeMessageReader
     }
 
     /// <summary>Decodes bytes in the named charset; an unknown charset is read as UTF-8.</summary>
-    internal static string CharsetDecode(byte[] bytes, string charset)
+    internal static string CharsetDecode(byte[]? bytes, string? charset)
     {
+        bytes ??= [];
+        charset ??= string.Empty;
         try
         {
             return Encoding.GetEncoding(charset.Trim('"')).GetString(bytes);
