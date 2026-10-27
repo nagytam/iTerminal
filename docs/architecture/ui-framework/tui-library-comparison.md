@@ -40,7 +40,7 @@ Ordered by value to iTerminal. "Seen in" names the libraries that have it.
 **Controls and interaction**
 
 15. **Multi-line rich text editor.** `TextEditorControl` is code-oriented. Textual's `TextArea` adds syntax highlighting by tree-sitter, selections, undo grouping and line numbers; check which of these the editor lacks before building.
-16. **Syntax highlighting as a service.** Markdown has a parser; code blocks and the viewers would share one tokenizer (Textual `TextArea`, Spectre via plug-ins, Rich `Syntax`).
+16. **Syntax highlighting as a service.** Markdown has a parser; code blocks and the viewers would share one tokenizer (Textual `TextArea`, Spectre via plug-ins, Rich `Syntax`). *Built:* `ISyntaxHighlightingService` with language registration, a shared palette and Markdown code-fence colouring; see `ui-framework.md`. Not built: more token kinds and a grammar-based tokenizer.
 17. **Table upgrades.** Cell selection, multi-region select, per-cell style getters, frozen columns and column resize by mouse (Terminal.Gui `TableView`, Textual `DataTable`). Marking, type-ahead and a scroll bar are still missing from the virtual controls.
 18. **Splitter, resizable panes and dockable regions.** *Splitter built:* `Splitter` holds two panes (side by side or stacked) with a divider that moves by arrow keys, PageUp/PageDown, Home and mouse drag, keeps a `Ratio` across resizes and honours `MinFirstSize` / `MinSecondSize`. Not built: more than two panes, nested-splitter persistence, and use by the workspace manager. Seen in: Terminal.Gui `TileView`, Textual, FTXUI `ResizableSplit`.
 19. **Sub-menus and checked entries in `ContextMenu` and `MenuBar`.** Documented as not built. Seen in: Terminal.Gui, Textual (`ContextMenu` add-ons).

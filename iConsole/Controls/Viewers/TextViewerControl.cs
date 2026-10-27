@@ -174,20 +174,16 @@ public class TextViewerControl : Control
         for (int i = Math.Max(0, line - BlockCommentLookBack); i < line && i < TextModel.Lines.Count; i++)
         {
             _spans.Clear();
-            inComment = SyntaxHighlighter.Tokenize(_syntax, TextModel.Lines[i], inComment, _spans);
+            inComment = Highlighting.Tokenize(_syntax, TextModel.Lines[i], inComment, _spans);
         }
 
         return inComment;
     }
 
-    private static Color ColorOf(SyntaxKind kind) => kind switch
-    {
-        SyntaxKind.Keyword => Color.Cyan,
-        SyntaxKind.String => Color.Green,
-        SyntaxKind.Comment => Color.Gray,
-        SyntaxKind.Number => Color.Magenta,
-        _ => Color.White,
-    };
+    /// <summary>Where languages are looked up and which colours they get; the shared service unless one is given.</summary>
+    public ISyntaxHighlightingService Highlighting { get; set; } = SyntaxHighlightingService.Default;
+
+    private Color ColorOf(SyntaxKind kind) => Highlighting.Palette.ColorOf(kind, Color.White);
 
     /// <summary>Colours the keywords, strings, comments and numbers of line <paramref name="line"/> in a row drawn from the scroll position on.</summary>
     private void ColorizeSyntax(ConxelString drawn, string text, bool startsInComment, int scrollX, out bool endsInComment, bool skipColours)
@@ -199,7 +195,7 @@ public class TextViewerControl : Control
         }
 
         _spans.Clear();
-        endsInComment = SyntaxHighlighter.Tokenize(_syntax, text, startsInComment, _spans);
+        endsInComment = Highlighting.Tokenize(_syntax, text, startsInComment, _spans);
         if (skipColours)
         {
             return;
@@ -209,7 +205,7 @@ public class TextViewerControl : Control
     }
 
     /// <summary>Colours the cells of <paramref name="drawn"/>, which starts at character <paramref name="offset"/> of its line, by what each span is.</summary>
-    private static void ApplySpans(ConxelString drawn, List<SyntaxSpan> spans, int offset)
+    private void ApplySpans(ConxelString drawn, List<SyntaxSpan> spans, int offset)
     {
         foreach (SyntaxSpan span in spans)
         {
@@ -1052,7 +1048,7 @@ public class TextViewerControl : Control
                     {
                         bool startsInComment = tokenizedLine < 0 ? StartsInBlockComment(row.Line) : nextStartsInComment;
                         lineSpans.Clear();
-                        nextStartsInComment = SyntaxHighlighter.Tokenize(_syntax, line, startsInComment, lineSpans);
+                        nextStartsInComment = Highlighting.Tokenize(_syntax, line, startsInComment, lineSpans);
                         tokenizedLine = row.Line;
                     }
 
