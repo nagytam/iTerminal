@@ -13,4 +13,6 @@ public struct INPUT_RECORD
     public KEY_EVENT_RECORD KeyEvent;
     [FieldOffset(4)]
     public MOUSE_EVENT_RECORD MouseEvent;
+    [FieldOffset(4)]
+    public int SetFocus;
 }

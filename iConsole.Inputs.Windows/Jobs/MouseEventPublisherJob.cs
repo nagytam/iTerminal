@@ -125,6 +125,11 @@ public partial class MouseEventPublisherJob : Job, ITerminalInputSource, IConsol
                         InputAvailableSignal.Release();
                         break;
                     }
+                case NativeMethods.FOCUS_EVENT:
+                    {
+                        iConsole.Services.TerminalFocus.Current.Report(record.SetFocus != 0);
+                        break;
+                    }
                 case NativeMethods.KEY_EVENT:
                     {
                         if (record.KeyEvent.AsciiChar == '\0')

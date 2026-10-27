@@ -95,6 +95,9 @@ public class DocumentLibraryIndexJob(IDocumentLibraryService documentLibraryServ
             try
             {
                 await Task.Delay(FolderPollInterval, cancellationToken);
+
+                // The folders are scanned again when the window has focus; a window in the background leaves them alone.
+                await iConsole.Services.TerminalFocus.Current.WaitForFocusAsync(cancellationToken);
             }
             catch (OperationCanceledException)
             {

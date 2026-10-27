@@ -12,6 +12,16 @@ namespace iConsole.Drivers;
 public interface IConsoleDriver : Services.IConsoleHandoverParticipant
 {
     bool IsCursorVisible { get; set; }
+
+    /// <summary>The shape of the cursor; a driver on a terminal that cannot change it keeps <see cref="CursorShape.Default"/>.</summary>
+    CursorShape CursorShape
+    {
+        get => CursorShape.Default;
+        set
+        {
+        }
+    }
+
     Color ForegroundColor { get; set; }
     Color BackgroundColor { get; set; }
     Size WindowSize { get; }

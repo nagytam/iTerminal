@@ -13,6 +13,7 @@ internal partial class NativeMethods
 
     public const Int32 KEY_EVENT = 1;
     public const Int32 MOUSE_EVENT = 2;
+    public const Int32 FOCUS_EVENT = 16;
 
     [DllImportAttribute("kernel32.dll", SetLastError = true)]
     [return: MarshalAsAttribute(UnmanagedType.Bool)]

@@ -301,6 +301,7 @@ public class Desktop : IHostedService, IDesktop
     private void DisableCursorIfHidden()
     {
         var isCursorVisible = false;
+        var shape = Display.CursorShape.Default;
         foreach (var screen in Screens.AsSnapshot())
         {
             foreach (var control in screen.Controls.AsSnapshot())
@@ -308,11 +309,13 @@ public class Desktop : IHostedService, IDesktop
                 if (control.IsCursorVisible)
                 {
                     isCursorVisible = true;
+                    shape = control.EffectiveCursorShape;
                     break;
                 }
             }
         }
 
         Buffer.Cursor.IsCursorVisible = isCursorVisible;
+        Buffer.Cursor.Shape = shape;
     }
 }

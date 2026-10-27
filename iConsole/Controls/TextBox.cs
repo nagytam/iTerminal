@@ -84,6 +84,8 @@ public partial class TextBox : Control, IReadOnly
     {
         _beepService = beepService;
         CanFocus = true;
+        CursorShape = CursorShape.BlinkingBar;
+        PointerShape = PointerShape.Text;
 
         _validationModel = new ValidationModel<ITextModel>(dateTimeProviderService, TextModel);
 

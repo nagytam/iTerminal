@@ -354,6 +354,9 @@ public class ContentModelFileSystem(
             try
             {
                 await Task.Delay(FileWatcherRefreshDelay, cancellationTokenSource.Token);
+
+                // In the background nobody sees the listing: it is refreshed once, when focus comes back.
+                await iConsole.Services.TerminalFocus.Current.WaitForFocusAsync(cancellationTokenSource.Token);
                 if (!cancellationTokenSource.Token.IsCancellationRequested)
                 {
                     // Forced: a listing already under way may have read the folder before this change

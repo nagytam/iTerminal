@@ -62,6 +62,9 @@ public class OllamaServerJob(
                 }
 
                 await Task.Delay(PollInterval, cancellationToken);
+
+                // A window in the background does not need the server watched; it is checked again when focus returns.
+                await iConsole.Services.TerminalFocus.Current.WaitForFocusAsync(cancellationToken);
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
