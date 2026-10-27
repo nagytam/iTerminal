@@ -92,4 +92,14 @@ public class CommandCatalogueTest
 
         Assert.AreEqual(0, missing.Count, string.Join(", ", missing));
     }
+
+    [TestMethod]
+    public void ACommandWithAKey_ShowsItAsText()
+    {
+        List<string> blank = [.. Build()
+            .Where(entry => entry.Command.Key is not null && string.IsNullOrWhiteSpace(entry.Command.KeyDisplayText))
+            .Select(entry => entry.Type.Name)];
+
+        Assert.AreEqual(0, blank.Count, string.Join(", ", blank));
+    }
 }

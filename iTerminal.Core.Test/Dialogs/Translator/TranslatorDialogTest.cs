@@ -40,6 +40,20 @@ public class TranslatorDialogTest
 
     private static KeyEvent Key(ConsoleKey key) => new('\0', key, false, false, false);
 
+    [TestMethod]
+    public async Task Tab_LeavesTheInputPane_AndTheTranslationCanBeReachedFromTheKeyboard()
+    {
+        var (dialog, _, _, _) = Create();
+        await ShowAsync(dialog);
+        dialog.Input.SetFocus();
+        Assert.IsTrue(dialog.Input.IsFocused);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Tab));
+
+        Assert.IsTrue(dialog.Output.IsFocused, "Tab from the input went to the translation");
+        Assert.AreEqual(0, dialog.Input.TextModel.Lines.Count(line => line.Contains('\t')), "no tab character was typed into the text");
+    }
+
     private static async Task SettleAsync(TranslatorDialog dialog)
     {
         await dialog.RequestTask;

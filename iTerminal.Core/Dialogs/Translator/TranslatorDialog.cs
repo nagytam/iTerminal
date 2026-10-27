@@ -40,6 +40,18 @@ public class TranslatorDialog : SplitPaneDialog
             base.OnInitializeLayout();
             Position = placed;
         }
+
+        // Text to translate has no use for indentation, and the editor took Tab for it: focus could never leave the
+        // pane, so the translation could not be reached or scrolled from the keyboard. Tab moves on, as the footer says.
+        public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+        {
+            if (keyEvent.ConsoleKey == ConsoleKey.Tab && !keyEvent.Control && !keyEvent.Alt)
+            {
+                return false;
+            }
+
+            return await base.HandleKeyEventAsync(keyEvent);
+        }
     }
 
     private sealed class PaneViewer(IThemeService themeService) : TextViewerControl(false, themeService)
