@@ -81,7 +81,13 @@ public class LiveTable : Control
         set { _keepNewestVisible = value; Changed(); }
     }
 
-    public string EmptyText { get; set; } = "No rows";
+    public string EmptyText
+    {
+        get => _emptyText;
+        set => _emptyText = value ?? string.Empty;
+    }
+
+    private string _emptyText = "No rows";
 
     public IReadOnlyList<LiveTableColumn> Columns
     {

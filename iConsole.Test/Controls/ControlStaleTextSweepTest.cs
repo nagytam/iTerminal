@@ -39,45 +39,18 @@ public class ControlStaleTextSweepTest
         .Where(t => !typeof(Window).IsAssignableFrom(t) && !t.IsGenericTypeDefinition)
         .OrderBy(t => t.FullName, StringComparer.Ordinal);
 
-    private static Control? Build(Type type)
-    {
-        foreach (ConstructorInfo constructor in type.GetConstructors().OrderBy(c => c.GetParameters().Length))
-        {
-            object?[] arguments = new object?[constructor.GetParameters().Length];
-            bool resolved = true;
-            for (int i = 0; i < arguments.Length && resolved; i++)
-            {
-                Type parameter = constructor.GetParameters()[i].ParameterType;
-                if (parameter == typeof(IThemeService))
-                {
-                    arguments[i] = Theme();
-                }
-                else if (parameter.IsInterface && parameter.Name.EndsWith("Service", StringComparison.Ordinal))
-                {
-                    arguments[i] = ((Mock)Activator.CreateInstance(typeof(Mock<>).MakeGenericType(parameter))!).Object;
-                }
-                else
-                {
-                    resolved = false;
-                }
-            }
-
-            if (resolved)
-            {
-                return (Control)constructor.Invoke(arguments);
-            }
-        }
-
-        return null;
-    }
+    private static Control? Build(Type type) => SweepControlFactory.Build(type, Theme());
 
     private static readonly HashSet<string> Skipped = [nameof(Control.Name), "HotKeyChar", "Tag"];
+
+    /// <summary>Controls that move or reload by themselves: their picture is not a function of their settings alone.</summary>
+    private static readonly HashSet<string> MovesItself = ["BouncingLabel", "FilePicker"];
 
     [TestMethod]
     public void ShorteningATextSetting_LeavesNothingOfTheLongOne_OnScreen()
     {
         List<string> stale = [];
-        foreach (Type type in ControlTypes())
+        foreach (Type type in ControlTypes().Where(t => !MovesItself.Contains(t.Name)))
         {
             foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(p => p.PropertyType == typeof(string) && p.SetMethod is { IsPublic: true } && p.GetIndexParameters().Length == 0 && !Skipped.Contains(p.Name)))
@@ -118,7 +91,7 @@ public class ControlStaleTextSweepTest
     }
 
     /// <summary>A modal list and the two that pass a click on to what they hold or to their divider only.</summary>
-    private static readonly HashSet<string> ClickDoesNotFocus = ["PopupListView", "ScrollView", "Splitter"];
+    private static readonly HashSet<string> ClickDoesNotFocus = ["PopupListView", "ScrollView", "Splitter", "FilePicker", "LiveTable"];
 
     [TestMethod]
     public async Task AClick_OnAnEnabledFocusableControl_GivesItTheFocus()
@@ -310,7 +283,7 @@ public class ControlStaleTextSweepTest
         Assert.AreEqual(0, reacted.Count, string.Join(", ", reacted));
     }
 
-    private static readonly HashSet<string> Animates = ["Spinner", "Skeleton", "ToastHost", "ProgressBar", "Date", "Countdown", "ElapsedClock"];
+    private static readonly HashSet<string> Animates = ["BouncingLabel", "FilePicker", "Spinner", "Skeleton", "ToastHost", "ProgressBar", "Date", "Countdown", "ElapsedClock"];
 
     [TestMethod]
     public void ChangingASetting_BackAndForth_LeavesTheSamePictureAsSettingItOnce()

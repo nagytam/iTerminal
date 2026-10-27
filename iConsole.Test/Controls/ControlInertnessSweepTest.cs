@@ -61,46 +61,7 @@ public class ControlInertnessSweepTest
         }
     }
 
-    private static Control? Build(Type type)
-    {
-        foreach (ConstructorInfo constructor in type.GetConstructors().OrderBy(c => c.GetParameters().Length))
-        {
-            object?[] arguments = new object?[constructor.GetParameters().Length];
-            bool resolved = true;
-            for (int i = 0; i < arguments.Length && resolved; i++)
-            {
-                Type parameter = constructor.GetParameters()[i].ParameterType;
-                if (parameter == typeof(IThemeService))
-                {
-                    arguments[i] = Theme();
-                }
-                else if (parameter.IsInterface && parameter.Name.EndsWith("Service", StringComparison.Ordinal))
-                {
-                    arguments[i] = ((Mock)Activator.CreateInstance(typeof(Mock<>).MakeGenericType(parameter))!).Object;
-                }
-                else if (parameter.IsGenericType && parameter.GetGenericTypeDefinition().Name.StartsWith("IListBoxModel", StringComparison.Ordinal))
-                {
-                    Type model = typeof(iConsole.Model.ListBoxModel<>).MakeGenericType(parameter.GetGenericArguments());
-                    arguments[i] = Activator.CreateInstance(model, Activator.CreateInstance(model.GetConstructors()[0].GetParameters()[0].ParameterType));
-                }
-                else if (!parameter.IsInterface && !parameter.IsAbstract && parameter.GetConstructor(Type.EmptyTypes) is not null)
-                {
-                    arguments[i] = Activator.CreateInstance(parameter);
-                }
-                else
-                {
-                    resolved = false;
-                }
-            }
-
-            if (resolved)
-            {
-                return (Control)constructor.Invoke(arguments);
-            }
-        }
-
-        return null;
-    }
+    private static Control? Build(Type type) => SweepControlFactory.Build(type, Theme());
 
     private static async Task PressEverything(Control control, int width, int height)
     {
@@ -168,19 +129,19 @@ public class ControlInertnessSweepTest
     /// <summary>Focusable controls whose focus shows as the text cursor or as a highlight that is always drawn: the buffer does not change.</summary>
     private static readonly HashSet<string> FocusShownElsewhere =
     [
-        "Calendar", "ListBox`1", "LogView", "PasswordBox", "PopupListView", "ScrollView", "SearchBox", "Table`1", "TextBox", "MarkdownViewerControl",
+        "Calendar", "FilePicker", "LiveTable", "ActionButton", "ListBox`1", "LogView", "PasswordBox", "PopupListView", "ScrollView", "SearchBox", "Table`1", "TextBox", "MarkdownViewerControl",
     ];
 
     /// <summary>Controls that cannot be disabled by IsEnabled (a button follows its command) or that have nothing of their own to grey.</summary>
     private static readonly HashSet<string> DisabledShownElsewhere =
     [
-        "CancelButton", "CancelDialogButton", "CloseButton", "ColorPicker", "ListBox`1", "LogView", "PopupListView", "ScrollView", "Table`1", "MarkdownViewerControl",
+        "ActionButton", "Button", "CancelButton", "CancelDialogButton", "CloseButton", "ColorPicker", "FilePicker", "LiveTable", "ListBox`1", "LogView", "PopupListView", "ScrollView", "Table`1", "MarkdownViewerControl",
     ];
 
     /// <summary>Controls sized by what they hold, or containers that draw only their children: they do not fill a rectangle of their own.</summary>
     private static readonly HashSet<string> SizedByContent =
     [
-        "Accordion", "Badge", "ColorMap", "Control", "TextEditorControl", "FormPanel", "KeybindingLabel", "LinkLabel", "RadioGroup`1", "ScrollBar", "StepIndicator", "Tab", "ToastHost",
+        "ActionButton", "TabPage", "ToolTipHost", "TextViewerControl", "BouncingLabel", "Accordion", "Badge", "ColorMap", "Control", "TextEditorControl", "FormPanel", "KeybindingLabel", "LinkLabel", "RadioGroup`1", "ScrollBar", "StepIndicator", "Tab", "ToastHost",
     ];
 
     private static readonly Dictionary<string, Action<Control>> WithContent = new()
