@@ -17,7 +17,7 @@ public enum LogEntryLevel
 }
 
 /// <summary>One line held by a <see cref="LogView"/>.</summary>
-public sealed record LogEntry(string Text, LogEntryLevel Level);
+public sealed record LogEntry(string Text, LogEntryLevel Level, IReadOnlyList<LogSpan>? Spans = null);
 
 /// <summary>
 /// Shows lines that a running task appends: a transfer, a git or docker command, a build. <see cref="Append"/> may be
@@ -37,6 +37,9 @@ public class LogView : Control
     private readonly List<LogEntry> _entries = [];
     private readonly List<LogEntry> _visible = [];
     private int _maxLines = 10_000;
+    private IReadOnlyList<LogHighlighter> _highlighters = LogHighlighters.Default;
+    private bool _highlightingEnabled = true;
+    private bool _parseAnsi = true;
     private LogEntryLevel _minimumLevel = LogEntryLevel.Trace;
     private string _filterText = string.Empty;
     private bool _follow = true;
@@ -65,6 +68,33 @@ public class LogView : Control
                 _version++;
             }
         }
+    }
+
+    /// <summary>
+    /// What colours URLs, paths, numbers, timestamps and error words in a line, from <see cref="LogHighlighters.Default"/> unless set.
+    /// A change applies to lines added afterwards.
+    /// </summary>
+    public IReadOnlyList<LogHighlighter> Highlighters
+    {
+        get { lock (_gate) { return _highlighters; } }
+        set { lock (_gate) { _highlighters = value ?? []; } }
+    }
+
+    /// <summary>Switches the highlighters off (the lines keep the colour of their level).</summary>
+    public bool HighlightingEnabled
+    {
+        get { lock (_gate) { return _highlightingEnabled; } }
+        set { lock (_gate) { _highlightingEnabled = value; } }
+    }
+
+    /// <summary>
+    /// Reads ANSI colour codes in appended text (build tools, git and docker write them): colours and styles show, and every other
+    /// escape sequence is dropped. With it off the escape characters are removed and the text is plain.
+    /// </summary>
+    public bool ParseAnsi
+    {
+        get { lock (_gate) { return _parseAnsi; } }
+        set { lock (_gate) { _parseAnsi = value; } }
     }
 
     /// <summary>Lines below this level are hidden.</summary>
@@ -148,12 +178,67 @@ public class LogView : Control
     /// <summary>Adds text as one line per line break (a blank line stays a blank line). Safe to call from any thread.</summary>
     public void Append(string text, LogEntryLevel level = LogEntryLevel.Info)
     {
-        string[] lines = (text ?? string.Empty).Split(["\r\n", "\n", "\r"], StringSplitOptions.None);
+        text ??= string.Empty;
+        bool parseAnsi;
+        bool highlight;
+        IReadOnlyList<LogHighlighter> highlighters;
         lock (_gate)
         {
-            foreach (string line in lines)
+            parseAnsi = _parseAnsi;
+            highlight = _highlightingEnabled;
+            highlighters = _highlighters;
+        }
+
+        // Colours carry from one line to the next, so the codes are read over the whole text before it is split.
+        string plain = text;
+        IReadOnlyList<LogSpan> ansiSpans = [];
+        if (AnsiText.HasEscapes(text))
+        {
+            (plain, ansiSpans) = parseAnsi ? AnsiText.Parse(text) : (AnsiText.Parse(text).Plain, []);
+        }
+
+        var entries = new List<LogEntry>();
+        int lineStart = 0;
+        for (int i = 0; i <= plain.Length; i++)
+        {
+            bool atEnd = i == plain.Length;
+            if (!atEnd && plain[i] is not ('\r' or '\n'))
             {
-                var entry = new LogEntry(line.Replace('\t', ' ').TrimEnd(), level);
+                continue;
+            }
+
+            string line = plain[lineStart..i].Replace('\t', ' ');
+            int trimmed = line.TrimEnd().Length;
+            line = line[..trimmed];
+            var spans = new List<LogSpan>();
+            foreach (LogSpan span in ansiSpans)
+            {
+                int start = Math.Max(span.Start, lineStart) - lineStart;
+                int end = Math.Min(span.End, lineStart + trimmed) - lineStart;
+                if (end > start)
+                {
+                    spans.Add(span with { Start = start, Length = end - start });
+                }
+            }
+
+            if (highlight)
+            {
+                spans.AddRange(LogHighlighters.Find(line, highlighters, spans));
+            }
+
+            entries.Add(new LogEntry(line, level, spans.Count == 0 ? null : spans));
+            if (!atEnd && plain[i] == '\r' && i + 1 < plain.Length && plain[i + 1] == '\n')
+            {
+                i++;
+            }
+
+            lineStart = i + 1;
+        }
+
+        lock (_gate)
+        {
+            foreach (LogEntry entry in entries)
+            {
                 _entries.Add(entry);
                 if (Passes(entry))
                 {
@@ -391,6 +476,11 @@ public class LogView : Control
             string badge = line == height - 1 && !following && unread > 0 ? $" ▼ {unread} new " : string.Empty;
             int textWidth = Math.Max(0, width - badge.Length);
             var conxelString = new ConxelString(text.Cut(textWidth).PadRight(textWidth), foreground, colorScheme.Background);
+            if (line < rows.Length && rows[line].Spans is { } entrySpans)
+            {
+                ApplySpans(conxelString, entrySpans, left, Math.Min(text.Length, textWidth));
+            }
+
             if (badge.Length > 0)
             {
                 conxelString.Append(badge, colorScheme.SelectedForeground, colorScheme.SelectedBackground);
@@ -398,6 +488,37 @@ public class LogView : Control
 
             conxelString.Expand(width, foreground, colorScheme.Background);
             buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + line), new Size(width, 1), conxelString);
+        }
+    }
+
+    /// <summary>Colours the cells of a drawn row by the spans of its line; the row starts at text column <paramref name="left"/>.</summary>
+    private void ApplySpans(ConxelString drawn, IReadOnlyList<LogSpan> spans, int left, int shown)
+    {
+        if (!IsEnabled)
+        {
+            return;
+        }
+
+        foreach (LogSpan span in spans)
+        {
+            for (int x = Math.Max(0, span.Start - left); x < Math.Min(shown, span.End - left); x++)
+            {
+                Conxel cell = drawn.String[x];
+                if (span.Foreground is { } foreground)
+                {
+                    cell.ForegroundColor = foreground;
+                }
+
+                if (span.Background is { } background)
+                {
+                    cell.BackgroundColor = background;
+                }
+
+                cell.IsBold |= span.Bold;
+                cell.IsItalic |= span.Italic;
+                cell.IsUnderline |= span.Underline;
+                drawn.String[x] = cell;
+            }
         }
     }
 
