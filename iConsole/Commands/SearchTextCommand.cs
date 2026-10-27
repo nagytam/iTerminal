@@ -1,5 +1,6 @@
 ﻿using iConsole.Data;
 using iConsole.Dialogs;
+using iConsole.Helper;
 using iConsole.Model;
 
 namespace iConsole.Commands;
@@ -24,20 +25,21 @@ public class SearchTextCommand(ISearchModel searchModel, ITextModel textModel, I
     {
         var searchTextDialog = Control?.Parent as SearchTextDialog;
         string search = searchTextDialog?.SearchValue ?? string.Empty;
+        bool useRegex = searchTextDialog?.UseRegex ?? false;
+        bool matchCase = searchTextDialog?.MatchCase ?? true;
         _searchModel.Search = search;
+        _searchModel.UseRegex = useRegex;
+        _searchModel.MatchCase = matchCase;
 
-        _searchModel.Hits.Clear();
-        int y = 0;
-        foreach (var line in _textModel.Lines)
+        var hits = SearchEngine.FindAll(_textModel.Lines, search, useRegex, matchCase, out var error);
+        if (error is not null)
         {
-            int x = 0;
-            while (search.Length > 0 && (x = line.IndexOf(search, x)) != -1)
-            {
-                _searchModel.Hits.Add(new Position(x, y));
-                x++;
-            }
-            y++;
+            // The dialog stays open with the reason, so the pattern can be mended.
+            searchTextDialog?.ShowError(error);
+            return Task.CompletedTask;
         }
+
+        _searchModel.SetHits(hits);
         if (_searchModel.Hits.Count > 0)
         {
             var hit = _searchModel.Hits.First();

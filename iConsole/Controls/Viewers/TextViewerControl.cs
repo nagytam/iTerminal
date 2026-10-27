@@ -1047,6 +1047,7 @@ public partial class TextViewerControl : Control
                 DecorateText(conxelLine, (int)indexY, positionX, isCursorLine, colorScheme);
                 HighlightSearchResults(conxelLine, highlightPositionX, (int)indexY);
                 HighlightSelectedPart(conxelLine, (int)indexY, TextModel.Lines[(int)indexY].Length, colorScheme);
+                MarkWhitespace(conxelLine, TextModel.Lines[(int)indexY], positionX, int.MaxValue, colorScheme);
                 buffer.Write(
                     ZOrder,
                     new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + i)),
@@ -1123,6 +1124,7 @@ public partial class TextViewerControl : Control
 
                 HighlightSearchHitsInRow(conxelLine, row);
                 DecorateText(conxelLine, row.Line, start, cursorLine, colorScheme);
+                MarkWhitespace(conxelLine, line, start, row.Length, colorScheme);
                 if (foldNote >= 0 && foldNote < width)
                 {
                     conxelLine.HighlightRange(foldNote, width, colorScheme.DisabledForeground, colorScheme.Background);
@@ -1159,9 +1161,9 @@ public partial class TextViewerControl : Control
     private void HighlightSearchHitsInRow(ConxelString conxelLine, TextRow row)
     {
         var colorScheme = ThemeService.CurrentColorScheme;
-        var searchLength = SearchModel.Search.Length;
         foreach (var hit in SearchModel.Hits.AsSnapshot().Where(h => h.Y == row.Line))
         {
+            var searchLength = SearchModel.LengthAt(hit);
             long from = Math.Max(hit.X, row.Start);
             long to = Math.Min(hit.X + searchLength, row.Start + row.Length);
             if (to > from)
@@ -1174,10 +1176,10 @@ public partial class TextViewerControl : Control
     private void HighlightSearchResults(ConxelString conxelLine, int x, int y)
     {
         var colorScheme = ThemeService.CurrentColorScheme;
-        var searchLength = SearchModel.Search.Length;
         var matchingLines = SearchModel.Hits.AsSnapshot().Where(h => h.Y == y);
         foreach (var hit in matchingLines)
         {
+            var searchLength = SearchModel.LengthAt(hit);
             conxelLine.HighlightRange((int)hit.X, (int)hit.X + searchLength, colorScheme.SelectedForeground, colorScheme.SelectedFocusedBackground);
         }
     }

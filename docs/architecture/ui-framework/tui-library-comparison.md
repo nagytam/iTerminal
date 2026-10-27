@@ -35,7 +35,7 @@ Ordered by value to iTerminal. "Seen in" names the libraries that have it.
 11. **Border and box-drawing styles.** `Border.cs` exists; check for rounded, double, thick and dashed sets, per-side borders, and border titles with alignment (Lip Gloss, Textual, Ratatui `Block`).
 12. **Gradients and alpha blending.** Not found. Textual and Lip Gloss blend and interpolate colours; useful for shadows under popups and fading toasts.
 13. **Animation.** No tweening or easing (only `BouncingLabel` under `Experimental`). Textual (`animate`), Terminal.Gui (timeouts) and Bubble Tea (Harmonica) offer it. A small `Animator` on `ITimeProvider` would make it testable with `VirtualTimeProvider`.
-14. **Drop shadows and z-order helpers.** Layers exist; an optional shadow on `Popup` and `Dialog` is cosmetic but common (Terminal.Gui, Textual, Turbo Vision lineage).
+14. **Drop shadows and z-order helpers.** Layers exist; an optional shadow on `Popup` and `Dialog` is cosmetic but common (Terminal.Gui, Textual, Turbo Vision lineage). *Built:* `Shadow`, with `HasShadow` on `Window` (dialogs), `Popup` and `BoxPanel`.
 
 **Controls and interaction**
 
@@ -81,7 +81,7 @@ Compared again with Terminal.Gui v2, Consolonia (Avalonia on a terminal), Spectr
 34. **True-colour and 256-colour output.** `Color` is the 16 ANSI colours only. Terminal.Gui, Consolonia, Textual, Rich, Ratatui, tcell, Lanterna and notcurses all draw 24-bit colour. This changes item 3: the first step is a richer palette, then down-sampling for terminals without it. Gradients (item 12), alpha blending and a theme that follows the terminal's light / dark setting depend on it.
 35. **Terminal capability record (terminfo, `TERM`, XTGETTCAP).** Not found. tcell, Lanterna, Blessed, Vty and ncurses read terminfo; iConsole checks a few `TERM` values in separate places (hyperlinks, sync output, notifications, Kitty keyboard). One record would feed items 3, 5, 6 and 7 and those switches.
 36. **Braille and block-character canvas.** Not found. Ratatui `Canvas`, blessed-contrib and notcurses blitters draw sub-cell graphics (2x4 braille, 2x2 quadrants, half blocks). `LineChart` and `Heatmap` would gain resolution.
-37. **Auto-joining line drawing.** Border sets exist, but touching boxes do not merge corners. Terminal.Gui's `LineCanvas` joins the glyphs where panels, tables and group boxes meet; tview and Cursive do the same for split panes.
+37. **Auto-joining line drawing.** Border sets exist, but touching boxes do not merge corners. Terminal.Gui's `LineCanvas` joins the glyphs where panels, tables and group boxes meet; tview and Cursive do the same for split panes. *Built:* `LineCanvas` and `BorderedGrid` (shared, joined borders in a grid of cells). Not built: joining the borders of separate `BoxPanel`s automatically.
 38. **Big text (FIGlet-style fonts).** `Digits` draws numbers only. Spectre `FigletText`, Asciimatics `FigletText` and Rich + `pyfiglet` give titles and splash screens.
 39. **Particle and sprite effects.** Asciimatics (`Sprite`, `Path`, `Particle`) and notcurses. Cosmetic; depends on item 13.
 40. **Serving the UI over a network.** Textual (`textual serve`, in a browser) and Charm Wish (a Bubble Tea app over SSH). iConsole has a driver interface and a virtual terminal, so a socket or websocket driver is possible.
@@ -90,7 +90,7 @@ Compared again with Terminal.Gui v2, Consolonia (Avalonia on a terminal), Spectr
 
 41. **Margin, border and padding as one box model.** Terminal.Gui v2 gives every view `Margin`, `Border` and `Padding` adornments; Textual and Lip Gloss use CSS-style margin and padding. In iConsole each control pads itself. A shared thickness on `Control` would remove per-control offset code and give `GroupBox`, `Alert` and `Popup` one border-title path (item 11). *Built for one container:* `BoxPanel` with `Thickness` margin and padding, six `BorderStyle`s and an aligned title. Not built: the same thickness on every `Control`, and use by `GroupBox`, `Alert` and `Popup`.
 42. **Spans and flow layout.** Check `GridPanel` for row and column spans and fractional tracks (Textual `grid`, Brick `hBox` / `vBox`). A wrapping flow panel for chips, badges and toolbars (Lip Gloss `JoinHorizontal`, Terminal.Gui `Pos.Align`) is not found.
-43. **Movable, resizable overlapping windows.** Terminal.Gui's `ViewArrangement` and notcurses planes move and resize floating windows by keyboard and mouse. Useful for floating tool windows in the file manager.
+43. **Movable, resizable overlapping windows.** Terminal.Gui's `ViewArrangement` and notcurses planes move and resize floating windows by keyboard and mouse. Useful for floating tool windows in the file manager. *Built for dialogs:* drag the title bar, drag the corner (`IsResizable`), Ctrl+F7 and Ctrl+F8 with the arrow keys. Not built: tiling, cascade and a window list (item 68).
 44. **Focus groups and spatial navigation.** Tab skips disabled controls today. Lanterna, Cursive, Brick and Terminal.Gui (`NavigationDirection`) add named focus rings and arrow-key movement between neighbours.
 
 **Controls**
@@ -111,7 +111,7 @@ Compared again with Terminal.Gui v2, Consolonia (Avalonia on a terminal), Spectr
 55. **Bubbling events.** Textual messages bubble up the widget tree; Brick and Bubble Tea use one event type. iConsole uses commands and per-control callbacks; a typed bubbling event would simplify dialogs. Complements item 27.
 56. **Background-work helper tied to a control.** Textual `work` and Bubble Tea `Cmd`. `TaskManager` covers the running; a helper that drops the result when the control has been removed would encode the stale-result rule from CLAUDE.md.
 57. **Extension API.** Terminal.Gui and Textual are hosts for third-party widgets; iTerminal registers controls in its composition root only. A documented extension point for commands and panels is not found.
-58. **Windows key release and repeat.** Windows Terminal lacks the Kitty protocol, but `ReadConsoleInput` reports key-up events (tcell, Vty use them). This would finish item 6 on Windows.
+58. **Windows key release and repeat.** Windows Terminal lacks the Kitty protocol, but `ReadConsoleInput` reports key-up events (tcell, Vty use them). This would finish item 6 on Windows. *Built:* `KeyEvent.IsRepeat` and repeat counts on Windows.
 
 #### Suggested order for the second survey
 

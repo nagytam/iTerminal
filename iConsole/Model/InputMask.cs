@@ -9,7 +9,8 @@ namespace iConsole.Model;
 /// <item><c>0</c> a digit, <c>9</c> a digit that may be left out</item>
 /// <item><c>L</c> a letter, <c>?</c> a letter that may be left out</item>
 /// <item><c>A</c> a letter or digit, <c>a</c> one that may be left out</item>
-/// <item><c>&amp;</c> any printable character</item>
+/// <item><c>&amp;</c> any printable character, <c>~</c> one that may be left out</item>
+/// <item><c>X{n}</c> and <c>X{n,m}</c> repeat a slot, and <c>%(...){n}</c> a group (see <see cref="ExpandedPattern"/>)</item>
 /// <item><c>&gt;</c> upper-cases the slots after it, <c>&lt;</c> lower-cases them, <c>|</c> stops either</item>
 /// <item><c>\</c> makes the next character a literal; any other character is a literal</item>
 /// </list>
@@ -42,17 +43,19 @@ public sealed class InputMask
     public InputMask(string pattern)
     {
         Pattern = pattern ?? string.Empty;
+        ExpandedPattern = Expand(Pattern);
+        string source = ExpandedPattern;
         CaseMode mode = CaseMode.None;
-        for (int i = 0; i < Pattern.Length; i++)
+        for (int i = 0; i < source.Length; i++)
         {
-            char c = Pattern[i];
+            char c = source[i];
             switch (c)
             {
                 case '>': mode = CaseMode.Upper; continue;
                 case '<': mode = CaseMode.Lower; continue;
                 case '|': mode = CaseMode.None; continue;
-                case '\\' when i + 1 < Pattern.Length:
-                    _elements.Add(new Element(SlotKind.Literal, Pattern[++i], false, CaseMode.None));
+                case '\\' when i + 1 < source.Length:
+                    _elements.Add(new Element(SlotKind.Literal, source[++i], false, CaseMode.None));
                     continue;
             }
 
@@ -65,6 +68,7 @@ public sealed class InputMask
                 'A' => new Element(SlotKind.Alphanumeric, c, false, mode),
                 'a' => new Element(SlotKind.Alphanumeric, c, true, mode),
                 '&' => new Element(SlotKind.Any, c, false, mode),
+                '~' => new Element(SlotKind.Any, c, true, mode),
                 _ => new Element(SlotKind.Literal, c, false, CaseMode.None),
             };
             if (element.Kind != SlotKind.Literal)
@@ -77,6 +81,126 @@ public sealed class InputMask
     }
 
     public string Pattern { get; }
+
+    /// <summary>The pattern with every repeat written out: <c>0{3}</c> is <c>000</c>, <c>0{2,4}</c> is <c>0099</c>.</summary>
+    public string ExpandedPattern { get; }
+
+    /// <summary>The most characters a pattern may expand to; a pattern asking for more is cut off there.</summary>
+    public const int MaxExpandedLength = 512;
+
+    /// <summary>The most repeats one quantifier may ask for.</summary>
+    public const int MaxRepeat = 64;
+
+    /// <summary>
+    /// Writes out the repeats of a pattern. <c>X{n}</c> repeats the slot or escaped literal <c>X</c> n times; <c>X{n,m}</c> asks
+    /// for n and allows up to m, the extra ones optional. A group <c>%(...)</c> followed by the same quantifier repeats everything
+    /// in it, so <c>%(00-){3}</c> is <c>00-00-00-</c> and <c>%(0000 ){1,3}</c> takes one to three groups of four digits.
+    /// A <c>{</c> that follows nothing to repeat is an ordinary character.
+    /// </summary>
+    private static string Expand(string pattern)
+    {
+        var result = new StringBuilder();
+        int i = 0;
+        while (i < pattern.Length && result.Length < MaxExpandedLength)
+        {
+            string unit;
+            if (pattern[i] == '\\' && i + 1 < pattern.Length)
+            {
+                unit = pattern.Substring(i, 2);
+                i += 2;
+            }
+            else if (pattern[i] == '%' && i + 1 < pattern.Length && pattern[i + 1] == '(' && FindGroupEnd(pattern, i + 2) is int close)
+            {
+                unit = Expand(pattern.Substring(i + 2, close - i - 2));
+                i = close + 1;
+            }
+            else
+            {
+                unit = pattern[i].ToString();
+                i++;
+            }
+
+            if (i < pattern.Length && pattern[i] == '{' && TryReadQuantifier(pattern, i, out int min, out int max, out int length))
+            {
+                i += length;
+                for (int copy = 0; copy < max && result.Length < MaxExpandedLength; copy++)
+                {
+                    result.Append(copy < min ? unit : MakeOptional(unit));
+                }
+            }
+            else
+            {
+                result.Append(unit);
+            }
+        }
+
+        return result.Length > MaxExpandedLength ? result.ToString(0, MaxExpandedLength) : result.ToString();
+    }
+
+    private static int? FindGroupEnd(string pattern, int start)
+    {
+        for (int i = start; i < pattern.Length; i++)
+        {
+            if (pattern[i] == '\\')
+            {
+                i++;
+            }
+            else if (pattern[i] == ')')
+            {
+                return i;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>Reads <c>{n}</c> or <c>{n,m}</c> at <paramref name="start"/>; false when it is not one, so the brace stays a literal.</summary>
+    private static bool TryReadQuantifier(string pattern, int start, out int min, out int max, out int length)
+    {
+        min = max = length = 0;
+        int end = pattern.IndexOf('}', start);
+        if (end < 0)
+        {
+            return false;
+        }
+
+        string body = pattern.Substring(start + 1, end - start - 1);
+        string[] parts = body.Split(',');
+        if (parts.Length is < 1 or > 2 || !int.TryParse(parts[0], out min) || min < 0)
+        {
+            return false;
+        }
+
+        max = min;
+        if (parts.Length == 2 && (!int.TryParse(parts[1], out max) || max < min))
+        {
+            return false;
+        }
+
+        min = Math.Min(min, MaxRepeat);
+        max = Math.Min(max, MaxRepeat);
+        length = end - start + 1;
+        return true;
+    }
+
+    /// <summary>The same unit with its required slots made optional; literals stay.</summary>
+    private static string MakeOptional(string unit)
+    {
+        var text = new StringBuilder(unit.Length);
+        for (int i = 0; i < unit.Length; i++)
+        {
+            char c = unit[i];
+            if (c == '\\' && i + 1 < unit.Length)
+            {
+                text.Append(c).Append(unit[++i]);
+                continue;
+            }
+
+            text.Append(c switch { '0' => '9', 'L' => '?', 'A' => 'a', '&' => '~', _ => c });
+        }
+
+        return text.ToString();
+    }
 
     /// <summary>The number of characters the user can type.</summary>
     public int SlotCount => _slotElement.Count;

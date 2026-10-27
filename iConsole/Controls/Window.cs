@@ -10,11 +10,19 @@ public class Window(IThemeService themeService)
 {
     public virtual string Title { get; set; } = string.Empty;
 
+    /// <summary>Draws a drop shadow down the right and along the bottom of the window (see <see cref="Shadow"/>).</summary>
+    public bool HasShadow { get; set; }
+
     public override void Draw(IBuffer buffer)
     {
         if (ViewSize.IsEmpty)
         {
             return;
+        }
+
+        if (HasShadow)
+        {
+            Shadow.Draw(buffer, ZOrder, AbsolutePosition, ViewSize, ThemeService.CurrentColorScheme);
         }
 
         DrawChrome(buffer);

@@ -18,6 +18,7 @@ public class ReplaceTextDialog : Dialog
     private readonly TextBox _findBox;
     private readonly TextBox _replaceBox;
     private readonly CheckBox _matchCaseBox;
+    private readonly CheckBox _regexBox;
     private readonly Button _replaceButton;
     private readonly Button _replaceAllButton;
     private readonly Button _cancelButton;
@@ -44,12 +45,14 @@ public class ReplaceTextDialog : Dialog
             Text = editor.LastReplacement,
         };
         _matchCaseBox = new CheckBox(themeService) { Label = "Match case", IsChecked = editor.LastMatchCase };
+        _regexBox = new CheckBox(themeService) { Label = "Regular expression", IsChecked = editor.LastUseRegex };
         _replaceButton = new Button("Replace", new ReplaceCommand(this, all: false), themeService) { HotKeyChar = 'R' };
         _replaceAllButton = new Button("Replace all", new ReplaceCommand(this, all: true), themeService) { HotKeyChar = 'A' };
         _cancelButton = new CancelDialogButton(themeService);
         AddControl(_findBox);
         AddControl(_replaceBox);
         AddControl(_matchCaseBox);
+        AddControl(_regexBox);
         AddControl(_replaceButton);
         AddControl(_replaceAllButton);
         AddControl(_cancelButton);
@@ -61,6 +64,9 @@ public class ReplaceTextDialog : Dialog
 
     public bool MatchCase => _matchCaseBox.IsChecked;
 
+    /// <summary>The find text is a regular expression, and the replacement may use <c>$1</c>.</summary>
+    public bool UseRegex => _regexBox.IsChecked;
+
     /// <summary>How many occurrences the last "Replace" or "Replace all" changed.</summary>
     public int ReplacedCount { get; private set; }
 
@@ -70,9 +76,10 @@ public class ReplaceTextDialog : Dialog
         _editor.LastFind = FindValue;
         _editor.LastReplacement = ReplacementValue;
         _editor.LastMatchCase = MatchCase;
+        _editor.LastUseRegex = UseRegex;
         ReplacedCount = all
-            ? _editor.ReplaceAll(FindValue, ReplacementValue, MatchCase)
-            : _editor.ReplaceNext(FindValue, ReplacementValue, MatchCase) ? 1 : 0;
+            ? _editor.ReplaceAll(FindValue, ReplacementValue, MatchCase, UseRegex)
+            : _editor.ReplaceNext(FindValue, ReplacementValue, MatchCase, UseRegex) ? 1 : 0;
         if (ReplacedCount == 0)
         {
             _beepService.Beep();
@@ -103,6 +110,8 @@ public class ReplaceTextDialog : Dialog
         _replaceBox.Position = new Position(3, 4);
         _matchCaseBox.Position = new Position(3, 6);
         _matchCaseBox.ViewSize = new Size(16, 1);
+        _regexBox.Position = new Position(24, 6);
+        _regexBox.ViewSize = new Size(24, 1);
 
         var buttonY = Math.Max(0, ViewSize.Height - 2);
         _replaceButton.Position = new Position(3, buttonY);
