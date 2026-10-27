@@ -29,7 +29,10 @@ public class DialogHintsWholeTest
 
         if (type.IsInterface)
         {
-            return ((Mock)Activator.CreateInstance(typeof(Mock<>).MakeGenericType(type))!).Object;
+            Mock mock = (Mock)Activator.CreateInstance(typeof(Mock<>).MakeGenericType(type))!;
+            // A mocked list or model answers with an empty mock, where the plain default is null that no real service gives.
+            mock.DefaultValue = DefaultValue.Mock;
+            return mock.Object;
         }
 
         if (type.IsAbstract || depth > 3)
@@ -90,5 +93,94 @@ public class DialogHintsWholeTest
 
         Assert.IsTrue(checkedDialogs >= 30, $"only {checkedDialogs} dialogs could be checked");
         Assert.AreEqual(0, faulty.Count, string.Join(", ", faulty));
+    }
+
+    [TestMethod]
+    [Timeout(120_000)]
+    public async Task EveryDialog_ClosesOnEsc_FromItsFirstScreen()
+    {
+        List<string> stays = [];
+        int checkedDialogs = 0;
+        foreach (Type type in typeof(iTerminal.Core.Dialogs.SortDialog).Assembly.GetExportedTypes()
+            .Where(t => typeof(Dialog).IsAssignableFrom(t) && !t.IsAbstract && !t.IsGenericTypeDefinition)
+            .OrderBy(t => t.FullName, StringComparer.Ordinal))
+        {
+            if (Resolve(type, 0) is not Dialog dialog)
+            {
+                continue;
+            }
+
+            try
+            {
+                Task<iConsole.Controls.Control> shown = ShowAsync(dialog);
+                if (await Task.WhenAny(shown, Task.Delay(3000)) != shown)
+                {
+                    continue;
+                }
+
+                iConsole.Controls.Control root = await shown;
+                checkedDialogs++;
+                await dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
+                if (root.Controls.AsSnapshot().Contains(dialog) && dialog.IsVisible)
+                {
+                    stays.Add(type.Name);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        Assert.IsTrue(checkedDialogs >= 20, $"only {checkedDialogs} dialogs could be opened");
+        Assert.AreEqual(0, stays.Count, string.Join(", ", stays));
+    }
+
+    [TestMethod]
+    [Timeout(120_000)]
+    public async Task EveryDialog_HasATitle_AndDrawsOnASmallAndANormalScreen()
+    {
+        List<string> faulty = [];
+        int checkedDialogs = 0;
+        foreach (Type type in typeof(iTerminal.Core.Dialogs.SortDialog).Assembly.GetExportedTypes()
+            .Where(t => typeof(Dialog).IsAssignableFrom(t) && !t.IsAbstract && !t.IsGenericTypeDefinition)
+            .OrderBy(t => t.FullName, StringComparer.Ordinal))
+        {
+            foreach ((uint width, uint height) in new[] { (30u, 8u), (120u, 40u) })
+            {
+                if (Resolve(type, 0) is not Dialog dialog)
+                {
+                    break;
+                }
+
+                try
+                {
+                    Task<iConsole.Controls.Control> shown = ShowAsync(dialog, new iConsole.Data.Size(width, height));
+                    if (await Task.WhenAny(shown, Task.Delay(3000)) != shown)
+                    {
+                        break;
+                    }
+
+                    iConsole.Controls.Control root = await shown;
+                    checkedDialogs++;
+                    iConsole.Test.Core.ScreenBuffer.Render(root, (int)width, (int)height);
+                    iConsole.Test.Core.ScreenBuffer.Render(root, (int)width, (int)height);
+                    if (string.IsNullOrWhiteSpace(dialog.Title) && type.Name != "LanguageDialog")
+                    {
+                        faulty.Add($"{type.Name} (no title)");
+                    }
+                }
+                catch (Exception exception) when (exception.Message.Contains("proxy", StringComparison.Ordinal) || exception.Message.Contains("empty string", StringComparison.Ordinal))
+                {
+                    // A mock cannot stand in for a class such as Url, and a viewer opened with no file has no path: the rig, not the dialog.
+                }
+                catch (Exception exception)
+                {
+                    faulty.Add($"{type.Name} {width}x{height} ({exception.GetType().Name}: {exception.Message.Split('\n')[0]})");
+                }
+            }
+        }
+
+        Assert.IsTrue(checkedDialogs >= 40, $"only {checkedDialogs} dialog screens could be drawn");
+        Assert.AreEqual(0, faulty.Count, string.Join(Environment.NewLine, faulty.Take(30)));
     }
 }

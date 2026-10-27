@@ -58,46 +58,7 @@ public class ControlPropertySweepTest
         }
     }
 
-    private static Control? Build(Type type)
-    {
-        foreach (ConstructorInfo constructor in type.GetConstructors().OrderBy(c => c.GetParameters().Length))
-        {
-            object?[] arguments = new object?[constructor.GetParameters().Length];
-            bool resolved = true;
-            for (int i = 0; i < arguments.Length && resolved; i++)
-            {
-                Type parameter = constructor.GetParameters()[i].ParameterType;
-                if (parameter == typeof(IThemeService))
-                {
-                    arguments[i] = Theme();
-                }
-                else if (parameter.IsInterface && parameter.Name.EndsWith("Service", StringComparison.Ordinal))
-                {
-                    arguments[i] = ((Mock)Activator.CreateInstance(typeof(Mock<>).MakeGenericType(parameter))!).Object;
-                }
-                else if (parameter.IsGenericType && parameter.GetGenericTypeDefinition().Name.StartsWith("IListBoxModel", StringComparison.Ordinal))
-                {
-                    Type model = typeof(iConsole.Model.ListBoxModel<>).MakeGenericType(parameter.GetGenericArguments());
-                    arguments[i] = Activator.CreateInstance(model, Activator.CreateInstance(model.GetConstructors()[0].GetParameters()[0].ParameterType));
-                }
-                else if (!parameter.IsInterface && !parameter.IsAbstract && parameter.GetConstructor(Type.EmptyTypes) is not null)
-                {
-                    arguments[i] = Activator.CreateInstance(parameter);
-                }
-                else
-                {
-                    resolved = false;
-                }
-            }
-
-            if (resolved)
-            {
-                return (Control)constructor.Invoke(arguments);
-            }
-        }
-
-        return null;
-    }
+    private static Control? Build(Type type) => SweepControlFactory.Build(type, Theme());
 
     private static IEnumerable<object?> ValuesFor(Type type)
     {

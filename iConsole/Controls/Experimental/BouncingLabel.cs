@@ -84,7 +84,7 @@ public class BouncingLabel : Label, IDisposable
                 BounceY = 1;
             }
 
-            long width = Text.Length;
+            long width = (Text ?? string.Empty).Length;
             if (!FitsX(Position.X + BounceX, width, maxWidth))
             {
                 BounceX = -BounceX;
@@ -137,7 +137,7 @@ public class BouncingLabel : Label, IDisposable
                 _positionChanged = false;
             }
             var colorScheme = ThemeService.CurrentColorScheme;
-            var s = new ConxelString(Text, colorScheme.Foreground, colorScheme.Background);
+            var s = new ConxelString(Text ?? string.Empty, colorScheme.Foreground, colorScheme.Background);
             buffer.Write(ZOrder, AbsolutePosition, ViewSize, s);
         }
     }
