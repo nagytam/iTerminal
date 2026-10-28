@@ -64,6 +64,9 @@
   <data name="Common.Cancel" xml:space="preserve">
     <value>Annulla</value>
   </data>
+  <data name="Common.Continue" xml:space="preserve">
+    <value>Continua</value>
+  </data>
   <data name="Common.Close" xml:space="preserve">
     <value>Chiudi</value>
   </data>
