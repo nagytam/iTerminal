@@ -165,6 +165,14 @@ Tools > Currency Converter: an amount, a From and a To currency; the result and 
 - **Nothing waits on the network.** Like the translator, the download runs on a background task, parks its outcome, and `OnIdle` applies it; only the newest download (by generation) may land.
 - **The end-to-end suite replaces the provider** (`SandboxServices.CurrencyRates`: one euro is two dollars): no run reaches the network.
 
+### BitTorrent manager (`TorrentManagerDialog`, Ctrl+Shift+F1, `Services/Torrents/`)
+Tools > BitTorrent: every torrent with state, progress, size, speeds and peers, refreshed twice a second from `OnIdle`. A adds a magnet link, a `.torrent` path or the URL of one (and the folder to save to, default `~/Downloads` or the `BitTorrent.DownloadFolder` setting); Space pauses or resumes; D asks, then Y removes and keeps the files, W removes and deletes them; O opens the save folder in the active panel.
+
+- **The engine is MonoTorrent**, wrapped by `TorrentService` (`ITorrentService`). It is created on first use, so a run that never opens the manager opens no sockets. Every action runs on a background task and reports on the status line; the dialog never waits on the engine.
+- **Torrents survive a restart.** The list lives in the `BitTorrent.Items` setting (magnet links as they are; `.torrent` files copied to `torrents/` beside the database); the dialog calls `RestoreAsync` when it opens, and the engine's fast-resume files in `torrent-cache/` keep the pieces already downloaded. A torrent that cannot come back is logged and skipped.
+- **Dispose stops the engine** (`TorrentService` is `IAsyncDisposable`, so the container does it at shutdown).
+- **Not yet covered by the end-to-end sandbox:** the engine is only reached when a torrent is added, which no end-to-end test does; a test that adds one needs a `SandboxServices` replacement for `ITorrentService` first.
+
 ### The workspace manager (`iTerminal.Core/Dialogs/Workspaces/`, `Services/Workspaces/`, `Model/Workspaces/`)
 Ctrl+Shift+F2 (Tools > Workspaces) opens `WorkspaceManagerDialog`: named screen layouts. A workspace is a
 `WorkspaceLayout` — the left and right panel locations, each panel's sort order, what is under the panels
