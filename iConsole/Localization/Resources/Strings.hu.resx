@@ -64,6 +64,9 @@
   <data name="Common.Cancel" xml:space="preserve">
     <value>Mégse</value>
   </data>
+  <data name="Common.Continue" xml:space="preserve">
+    <value>Folytatás</value>
+  </data>
   <data name="Common.Close" xml:space="preserve">
     <value>Bezárás</value>
   </data>

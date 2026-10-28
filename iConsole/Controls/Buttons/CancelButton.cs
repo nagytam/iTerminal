@@ -6,7 +6,7 @@ namespace iConsole.Controls.Buttons;
 public class CancelButton : Button
 {
     public CancelButton(CancellationTokenSource cancellationTokenSource, IThemeService themeService)
-        : base("Cancel", new CancelCommand(cancellationTokenSource), themeService)
+        : base(iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"), new CancelCommand(cancellationTokenSource), themeService)
     {
         HotKeyChar = 'c';
     }

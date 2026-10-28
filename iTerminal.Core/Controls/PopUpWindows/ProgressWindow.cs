@@ -28,7 +28,7 @@ public class ProgressWindow : PopUpWindow
     /// </summary>
     private sealed class CancelOrCloseCommand(BackgroundTask task) : iConsole.Commands.Command
     {
-        public override string Title => task.Status == iConsole.Data.TaskStatus.Started ? "Cancel" : "Close";
+        public override string Title => task.Status == iConsole.Data.TaskStatus.Started ? iConsole.Localization.UiText.Get("Common.Cancel", "Cancel") : iConsole.Localization.UiText.Get("Common.Close", "Close");
 
         public override Key? Key { get; init; } = new Key(ConsoleKey.Escape, false, false, false);
 
@@ -84,7 +84,7 @@ public class ProgressWindow : PopUpWindow
     /// </summary>
     public override void OnInitializeActionButtons()
     {
-        AddActionButton(new ActionButton("Close", "[X]", new CloseParentCommand(), ThemeService));
+        AddActionButton(new ActionButton(iConsole.Localization.UiText.Get("Common.Close", "Close"), "[X]", new CloseParentCommand(), ThemeService));
     }
 
     public override void OnInitializeLayout()

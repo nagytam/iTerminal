@@ -126,7 +126,7 @@ public class FileViewerDialog : Dialog
 
     public override void OnInitializeActionButtons()
     {
-        AddActionButton(new ActionButton("Close", CloseActionView, new CloseSelfCommand(this), ThemeService));
+        AddActionButton(new ActionButton(iConsole.Localization.UiText.Get("Common.Close", "Close"), CloseActionView, new CloseSelfCommand(this), ThemeService));
     }
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()

@@ -17,7 +17,7 @@ public class ErrorPromptService(IServiceProvider serviceProvider, IThemeService 
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     public Task<bool> ConfirmContinueAsync(string title, string message, CancellationToken cancellationToken) =>
-        ConfirmAsync(title, message, "Continue", "Cancel", cancellationToken);
+        ConfirmAsync(title, message, iConsole.Localization.UiText.Get("Common.Continue", "Continue"), iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"), cancellationToken);
 
     public async Task<bool> ConfirmAsync(string title, string message, string acceptLabel, string declineLabel, CancellationToken cancellationToken)
     {

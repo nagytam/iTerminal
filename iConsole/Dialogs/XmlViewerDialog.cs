@@ -311,7 +311,7 @@ public class XmlViewerDialog : Dialog
 
     public override void OnInitializeActionButtons()
     {
-        AddActionButton(new ActionButton("Close", CloseActionView, new CloseSelfCommand(this), ThemeService));
+        AddActionButton(new ActionButton(iConsole.Localization.UiText.Get("Common.Close", "Close"), CloseActionView, new CloseSelfCommand(this), ThemeService));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

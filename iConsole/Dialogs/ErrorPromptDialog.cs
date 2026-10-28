@@ -30,10 +30,12 @@ public class ErrorPromptDialog : Dialog
         }
     }
 
-    public ErrorPromptDialog(string title, string message, IThemeService themeService, string acceptLabel = "Continue", string declineLabel = "Cancel")
+    public ErrorPromptDialog(string title, string message, IThemeService themeService, string? acceptLabel = null, string? declineLabel = null)
         : base(title, themeService)
     {
         _message = message;
+        acceptLabel ??= iConsole.Localization.UiText.Get("Common.Continue", "Continue");
+        declineLabel ??= iConsole.Localization.UiText.Get("Common.Cancel", "Cancel");
         // Hot keys are the first letters, unless both would be the same: then the decline label's second.
         var acceptKey = acceptLabel[0];
         var declineKey = char.ToUpperInvariant(declineLabel[0]) == char.ToUpperInvariant(acceptKey) && declineLabel.Length > 1
