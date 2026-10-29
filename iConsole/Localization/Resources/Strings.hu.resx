@@ -67,6 +67,27 @@
   <data name="Common.Continue" xml:space="preserve">
     <value>Folytatás</value>
   </data>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>Megerősítés</value>
+  </data>
+  <data name="Common.Help" xml:space="preserve">
+    <value>Súgó</value>
+  </data>
+  <data name="Common.Back" xml:space="preserve">
+    <value>Vissza</value>
+  </data>
+  <data name="Common.Paste" xml:space="preserve">
+    <value>Beillesztés</value>
+  </data>
+  <data name="Common.Undo" xml:space="preserve">
+    <value>Visszavonás</value>
+  </data>
+  <data name="Common.Save" xml:space="preserve">
+    <value>Mentés</value>
+  </data>
+  <data name="Common.Stop" xml:space="preserve">
+    <value>Leállítás</value>
+  </data>
   <data name="Common.Close" xml:space="preserve">
     <value>Bezárás</value>
   </data>

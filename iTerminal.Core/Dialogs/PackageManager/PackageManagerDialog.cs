@@ -516,15 +516,15 @@ public class PackageManagerDialog : SplitPaneDialog
     {
         if (_confirmAction is not null)
         {
-            yield return ("Y", "Confirm");
-            yield return ("Any other key", "Cancel");
+            yield return ("Y", iConsole.Localization.UiText.Get("Common.Confirm", "Confirm"));
+            yield return ("Any other key", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 
         if (_inputActive)
         {
             yield return ("Enter", "Submit");
-            yield return ("Esc", "Cancel");
+            yield return ("Esc", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 

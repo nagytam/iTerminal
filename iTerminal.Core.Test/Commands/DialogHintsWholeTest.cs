@@ -10,7 +10,7 @@ namespace iTerminal.Core.Test.Commands;
 [TestClass]
 public class DialogHintsWholeTest
 {
-    private static object? Resolve(Type type, int depth)
+    internal static object? Resolve(Type type, int depth)
     {
         if (type == typeof(IThemeService))
         {

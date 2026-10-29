@@ -456,8 +456,8 @@ public class StockBrowserDialog : SplitPaneDialog
     {
         if (_confirmAction is not null)
         {
-            yield return ("Y", "Confirm");
-            yield return ("Any other key", "Cancel");
+            yield return ("Y", iConsole.Localization.UiText.Get("Common.Confirm", "Confirm"));
+            yield return ("Any other key", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 

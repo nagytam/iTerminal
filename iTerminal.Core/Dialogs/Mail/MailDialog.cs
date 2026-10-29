@@ -152,7 +152,7 @@ public class MailDialog : Dialog
                 yield return ("Esc", "Back to the inbox");
                 break;
             default:
-                yield return ("Esc", "Back");
+                yield return ("Esc", iConsole.Localization.UiText.Get("Common.Back", "Back"));
                 break;
         }
     }

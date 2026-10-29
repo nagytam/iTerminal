@@ -795,15 +795,15 @@ public class TextEditorControl
         if (!IsReadOnly)
         {
             yield return ("Ctrl+X", "Cut the selection");
-            yield return ("Ctrl+V", "Paste");
-            yield return ("Ctrl+Z", "Undo");
+            yield return ("Ctrl+V", iConsole.Localization.UiText.Get("Common.Paste", "Paste"));
+            yield return ("Ctrl+Z", iConsole.Localization.UiText.Get("Common.Undo", "Undo"));
             yield return ("Ctrl+Y", "Redo");
             yield return ("Ctrl+R", "Replace");
             yield return ("Tab / Shift+Tab", "Indent / outdent (the selected lines too)");
             yield return ("Ctrl+K", "Delete the line");
         }
 
-        yield return ("Ctrl+S / F2", "Save");
+        yield return ("Ctrl+S / F2", iConsole.Localization.UiText.Get("Common.Save", "Save"));
         yield return ("F5", "Go to line");
         yield return ("Ctrl+F2", "Toggle bookmark");
         yield return ("F9", "Next bookmark");

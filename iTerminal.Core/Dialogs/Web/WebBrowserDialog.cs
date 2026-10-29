@@ -193,7 +193,7 @@ public class WebBrowserDialog : Dialog
         yield return ("Enter", "Follow the link (Ctrl: in a new tab)");
         yield return ("Up/Down", "Scroll the page");
         yield return ("Space", "Scroll a page down (Shift: up)");
-        yield return ("Backspace / Alt+Left", "Back");
+        yield return ("Backspace / Alt+Left", iConsole.Localization.UiText.Get("Common.Back", "Back"));
         yield return ("Shift+Backspace / Alt+Right", "Forward");
         yield return ("F5 / Ctrl+R", "Reload");
         yield return ("Ctrl+T / Ctrl+W", "Open or close a tab");
@@ -201,7 +201,7 @@ public class WebBrowserDialog : Dialog
         yield return ("Ctrl+D", "Bookmark the page");
         yield return ("F2 / F4", "Bookmarks / history");
         yield return ("/ or Ctrl+F", "Find in the page");
-        yield return ("F1", "Help");
+        yield return ("F1", iConsole.Localization.UiText.Get("Common.Help", "Help"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

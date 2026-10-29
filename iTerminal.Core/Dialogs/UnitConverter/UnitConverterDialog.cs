@@ -154,7 +154,7 @@ public class UnitConverterDialog : SplitPaneDialog
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Tab", "Move between the category, the units and the value");
-        yield return ("Esc", "Close");
+        yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

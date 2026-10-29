@@ -154,7 +154,7 @@ public class IPhoneBrowserDialog : Dialog
     {
         yield return ("Enter", "Connect to the chosen device");
         yield return ("R", "Search for devices again");
-        yield return ("Esc", "Close");
+        yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

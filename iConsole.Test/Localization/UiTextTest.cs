@@ -101,4 +101,30 @@ public class UiTextTest
             Assert.AreNotEqual("Continue", UiText.Get("Common.Continue", "Continue"), language.Code);
         }
     }
+
+    [TestMethod]
+    public void EveryLanguage_TranslatesTheWordsTheKeyHintsUse()
+    {
+        foreach (LanguageInfo language in Localizer.SupportedLanguages.Where(l => l.Code != "en"))
+        {
+            Speak(language.Code);
+
+            foreach (string word in new[] { "Cancel", "Close", "Confirm", "Help", "Back", "Paste", "Undo", "Save", "Stop" })
+            {
+                string text = UiText.Get("Common." + word, word);
+                Assert.IsFalse(string.IsNullOrWhiteSpace(text), language.Code + " " + word);
+                Assert.AreNotEqual("Common." + word, text);
+            }
+        }
+    }
+
+    [TestMethod]
+    public void ATextBoxHint_FollowsTheChosenLanguage()
+    {
+        Speak("de");
+        Control box = iConsole.Test.Controls.SweepControlFactory.Build(typeof(iConsole.Controls.TextBox), Theme())!;
+        box.SetFocus();
+
+        Assert.IsTrue(box.GetKeyHints().Any(h => h.Description == "Einfügen"));
+    }
 }

@@ -203,7 +203,7 @@ public class MapDialog : Dialog
         yield return ("R", "Reload the tiles");
         yield return ("O", "Go online or offline");
         yield return ("D", "Save this area for offline use");
-        yield return ("F1", "Help");
+        yield return ("F1", iConsole.Localization.UiText.Get("Common.Help", "Help"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

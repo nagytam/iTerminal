@@ -223,7 +223,7 @@ public class VideoFileViewerDialog : Dialog
         yield return ("Space", "Play or pause");
         yield return ("Left/Right", "Seek back or forward (Shift: a long step)");
         yield return ("Home", "Back to the start");
-        yield return ("S", "Stop");
+        yield return ("S", iConsole.Localization.UiText.Get("Common.Stop", "Stop"));
         yield return ("C", "Switch colour on or off");
     }
 

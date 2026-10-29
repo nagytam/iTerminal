@@ -136,8 +136,8 @@ public class WorkspaceManagerDialog : Dialog
 
         if (_pending != Pending.None)
         {
-            yield return ("Y", "Confirm");
-            yield return ("Any other key", "Cancel");
+            yield return ("Y", iConsole.Localization.UiText.Get("Common.Confirm", "Confirm"));
+            yield return ("Any other key", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 
