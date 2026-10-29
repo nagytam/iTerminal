@@ -157,6 +157,7 @@ public class TorrentManagerDialogTest
     {
         var (dialog, torrents, _) = Create(Item("one"));
         await ShowAsync(dialog);
+        await dialog.PendingOperation; // the restore started on opening
 
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
         await dialog.PendingOperation;

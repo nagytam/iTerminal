@@ -97,7 +97,7 @@ public static class TorrentSource
 /// <c>.torrent</c> files copied next to the database — so they come back after a restart; the pieces already
 /// downloaded are found again by the engine's own fast-resume files in the cache folder.
 /// </summary>
-public sealed class TorrentService : ITorrentService, IAsyncDisposable
+public sealed class TorrentService : ITorrentService, IAsyncDisposable, IDisposable
 {
     public const string ItemsKey = "BitTorrent.Items";
     public const string DownloadFolderKey = "BitTorrent.DownloadFolder";
@@ -430,6 +430,9 @@ public sealed class TorrentService : ITorrentService, IAsyncDisposable
         _engine.Dispose();
         _engine = null;
     }
+
+    /// <summary>For a container disposed synchronously; the engine only exists once something was added, so this is a no-op otherwise.</summary>
+    public void Dispose() => DisposeAsync().AsTask().GetAwaiter().GetResult();
 
     public async ValueTask DisposeAsync()
     {
