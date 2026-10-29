@@ -960,15 +960,15 @@ public class GitClientDialog : SplitPaneDialog
 
         if (_confirmAction is not null)
         {
-            yield return ("Y", "Confirm");
-            yield return ("N / Esc", "Cancel");
+            yield return ("Y", iConsole.Localization.UiText.Get("Common.Confirm", "Confirm"));
+            yield return ("N / Esc", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 
         if (_inputActive)
         {
             yield return ("Enter", "Use the text");
-            yield return ("Esc", "Cancel");
+            yield return ("Esc", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 
@@ -988,8 +988,8 @@ public class GitClientDialog : SplitPaneDialog
         yield return ("X", "Drop the stash");
         yield return ("R", "Refresh");
         yield return ("PageUp/PageDown", "Scroll the patch");
-        yield return ("F1, ?", "Help");
-        yield return ("Esc", "Close");
+        yield return ("F1, ?", iConsole.Localization.UiText.Get("Common.Help", "Help"));
+        yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

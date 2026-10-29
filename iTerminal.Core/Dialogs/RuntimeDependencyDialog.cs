@@ -182,7 +182,7 @@ public class RuntimeDependencyDialog : Dialog
     {
         if (!IsWizardActive)
         {
-            yield return ("Enter", "Close");
+            yield return ("Enter", iConsole.Localization.UiText.Get("Common.Close", "Close"));
             yield break;
         }
 

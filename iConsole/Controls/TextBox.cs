@@ -480,7 +480,7 @@ public partial class TextBox : Control, IReadOnly
             yield return ("Ctrl+W/Ctrl+Backspace", "Delete the word before the cursor");
             yield return ("Ctrl+Delete", "Delete the word after the cursor");
             yield return ("Ctrl+U", "Delete to the start of the text");
-            yield return ("Ctrl+V", "Paste");
+            yield return ("Ctrl+V", iConsole.Localization.UiText.Get("Common.Paste", "Paste"));
             if (AllowsCopyOut)
             {
                 yield return ("Ctrl+X", "Cut the selection");

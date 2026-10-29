@@ -303,7 +303,7 @@ public class SecureWipeDialog : Dialog
                 yield return ("Any other key", "Withdraw and choose again");
                 break;
             case WipePhase.Finished:
-                yield return ("Enter", "Close");
+                yield return ("Enter", iConsole.Localization.UiText.Get("Common.Close", "Close"));
                 break;
         }
     }

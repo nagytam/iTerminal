@@ -67,6 +67,27 @@
   <data name="Common.Continue" xml:space="preserve">
     <value>Weiter</value>
   </data>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="Common.Help" xml:space="preserve">
+    <value>Hilfe</value>
+  </data>
+  <data name="Common.Back" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="Common.Paste" xml:space="preserve">
+    <value>Einfügen</value>
+  </data>
+  <data name="Common.Undo" xml:space="preserve">
+    <value>Rückgängig</value>
+  </data>
+  <data name="Common.Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Common.Stop" xml:space="preserve">
+    <value>Stopp</value>
+  </data>
   <data name="Common.Close" xml:space="preserve">
     <value>Schließen</value>
   </data>
