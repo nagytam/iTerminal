@@ -137,7 +137,7 @@ public class StockBrowserDialog : SplitPaneDialog
         : base(nameof(StockBrowserDialog), themeService)
     {
         _stockService = stockService;
-        Title = "Stocks";
+        Title = iConsole.Localization.UiText.Get("Dialog.Stocks", "Stocks");
 
         _stockListBox = new StockListBox(new ListBoxModel<StockRow>(_rowItems), themeService)
         {
@@ -456,8 +456,8 @@ public class StockBrowserDialog : SplitPaneDialog
     {
         if (_confirmAction is not null)
         {
-            yield return ("Y", "Confirm");
-            yield return ("Any other key", "Cancel");
+            yield return ("Y", iConsole.Localization.UiText.Get("Common.Confirm", "Confirm"));
+            yield return ("Any other key", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 

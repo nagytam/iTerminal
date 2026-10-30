@@ -20,12 +20,12 @@ public class GoToOffsetDialog : Dialog
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService)
-        : base("Go to offset", themeService)
+        : base(iConsole.Localization.UiText.Get("Editor.GoToOffset", "Go to offset"), themeService)
     {
         _hexViewer = hexViewer;
         _offsetBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
-            Label = "Offset",
+            Label = iConsole.Localization.UiText.Get("Editor.Offset", "Offset"),
             Text = "0x0",
         };
         AddControl(_offsetBox);

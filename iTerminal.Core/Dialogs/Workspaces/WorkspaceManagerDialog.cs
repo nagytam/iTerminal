@@ -68,7 +68,7 @@ public class WorkspaceManagerDialog : Dialog
         INotificationService? notifications = null)
         : base(nameof(WorkspaceManagerDialog), themeService)
     {
-        Title = "Workspaces";
+        Title = iConsole.Localization.UiText.Get("Menu.Workspaces", "Workspaces");
         _workspaces = workspaces;
         _notifications = notifications;
     }
@@ -136,8 +136,8 @@ public class WorkspaceManagerDialog : Dialog
 
         if (_pending != Pending.None)
         {
-            yield return ("Y", "Confirm");
-            yield return ("Any other key", "Cancel");
+            yield return ("Y", iConsole.Localization.UiText.Get("Common.Confirm", "Confirm"));
+            yield return ("Any other key", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 

@@ -79,7 +79,7 @@ public class FindFilesDialog : SplitPaneDialog
     {
         _searchService = searchService;
         _contentModelService = contentModelService;
-        Title = "Find Files";
+        Title = iConsole.Localization.UiText.Get("Menu.FindFiles", "Find Files");
 
         _namesBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Find", MaxLength = 512, Placeholder = "name or pattern, e.g. *.log" };
         _textBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Containing", MaxLength = 512, Placeholder = "text inside the files (optional)" };

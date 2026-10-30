@@ -39,7 +39,7 @@ public class UserMenuDialog : Dialog
         _menuService = menuService;
         _launcher = launcher;
         _notifications = notifications;
-        Title = "User menu";
+        Title = iConsole.Localization.UiText.Get("Dialog.UserMenu", "User menu");
         _lines = new InfoLines(themeService);
         AddControl(_lines);
     }

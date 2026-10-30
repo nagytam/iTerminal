@@ -43,15 +43,15 @@ public class FileLabelsDialog : FormDialog
     {
         _labels = labels;
         _contentModelService = contentModelService;
-        Title = "Colour labels and tags";
+        Title = iConsole.Localization.UiText.Get("Dialog.ColourLabels", "Colour labels and tags");
         var applyCommand = new ApplyCommand();
         AddCommand(applyCommand);
 
-        _colour = new ComboBox<string>(themeService) { Label = "Colour" };
+        _colour = new ComboBox<string>(themeService) { Label = iConsole.Localization.UiText.Get("Label.Colour", "Colour") };
         _tags = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Tags" };
         _info = new Label(string.Empty, themeService);
         _message = new Label(string.Empty, themeService);
-        _applyButton = new Button("Apply", applyCommand, themeService);
+        _applyButton = new Button(iConsole.Localization.UiText.Get("Common.Apply", "Apply"), applyCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);
 
         AddControl(_colour);

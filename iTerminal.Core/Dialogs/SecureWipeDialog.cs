@@ -59,7 +59,7 @@ public class SecureWipeDialog : Dialog
         _wipeService = wipeService;
         _notifications = notifications;
         _contentModelService = contentModelService;
-        Title = "Secure wipe";
+        Title = iConsole.Localization.UiText.Get("Dialog.SecureWipe", "Secure wipe");
         _info = new InfoLines(themeService);
         AddControl(_info);
     }
@@ -303,7 +303,7 @@ public class SecureWipeDialog : Dialog
                 yield return ("Any other key", "Withdraw and choose again");
                 break;
             case WipePhase.Finished:
-                yield return ("Enter", "Close");
+                yield return ("Enter", iConsole.Localization.UiText.Get("Common.Close", "Close"));
                 break;
         }
     }

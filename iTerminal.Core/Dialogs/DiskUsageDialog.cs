@@ -49,7 +49,7 @@ public class DiskUsageDialog : Dialog
     {
         _service = service;
         _contentModelService = contentModelService;
-        Title = "Disk usage";
+        Title = iConsole.Localization.UiText.Get("Dialog.DiskUsage", "Disk usage");
         _lines = new InfoLines(themeService);
         AddControl(_lines);
 

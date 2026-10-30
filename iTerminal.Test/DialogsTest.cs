@@ -59,6 +59,7 @@ public class DialogsTest
     [DataRow("Alt+F7", "StockBrowserDialog")]
     [DataRow("Ctrl+Shift+F4", "TranslatorDialog")]
     [DataRow("Ctrl+Shift+F5", "CurrencyConverterDialog")]
+    [DataRow("Ctrl+Shift+K", "ContactManagerDialog")]
     [DataRow("Alt+F2", "RemoteConnectionManagerDialog")]
     [DataRow("Alt+F9", "DiskManagerDialog")]
     [DataRow("Alt+F12", "ProcessManagerDialog")]

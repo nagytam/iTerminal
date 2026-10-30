@@ -42,7 +42,7 @@ public class RuntimeDependencyDialog : Dialog
         : base("Runtime dependencies", themeService)
     {
         _service = service;
-        Title = "Runtime dependencies";
+        Title = iConsole.Localization.UiText.Get("Dialog.RuntimeDependencies", "Runtime dependencies");
     }
 
     /// <summary>Whether anything is left to install or update.</summary>
@@ -182,7 +182,7 @@ public class RuntimeDependencyDialog : Dialog
     {
         if (!IsWizardActive)
         {
-            yield return ("Enter", "Close");
+            yield return ("Enter", iConsole.Localization.UiText.Get("Common.Close", "Close"));
             yield break;
         }
 

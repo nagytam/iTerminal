@@ -82,26 +82,26 @@ public class RenameDialog : FormDialog
         : base(nameof(RenameDialog), themeService)
     {
         _contentModelService = contentModelService;
-        Title = "Rename";
+        Title = iConsole.Localization.UiText.Get("Menu.Rename", "Rename");
 
         _renameCommand = new RenameCommand(contentModelService);
         AddCommand(_renameCommand);
 
         _textBoxName = new TextBox(beepService, dateTimeProviderService, themeService) 
         { 
-            Label = "Name", 
+            Label = iConsole.Localization.UiText.Get("Label.Name", "Name"), 
             Text = TargetUrl, 
             IsEnabled = true, 
             HotKeyChar = 'N' 
         };
         _checkBoxOverwrite = new CheckBox(themeService)
         {
-            Label = "Overwrite",
+            Label = iConsole.Localization.UiText.Get("Label.Overwrite", "Overwrite"),
             IsChecked = false,
             IsEnabled = true,
             HotKeyChar = 'O'
         };
-        _renameButton = new Button("Rename", _renameCommand, themeService) { HotKeyChar = 'R' };
+        _renameButton = new Button(iConsole.Localization.UiText.Get("Menu.Rename", "Rename"), _renameCommand, themeService) { HotKeyChar = 'R' };
         _cancelButton = new CancelDialogButton(themeService);
         _errorLabel = new Label(string.Empty, themeService);
         AddControl(_textBoxName);

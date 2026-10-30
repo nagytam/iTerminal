@@ -58,7 +58,7 @@ public class FileDiffDialog : Dialog
     public FileDiffDialog(IThemeService themeService)
         : base(nameof(FileDiffDialog), themeService)
     {
-        Title = "Compare files";
+        Title = iConsole.Localization.UiText.Get("Dialog.CompareFiles", "Compare files");
         _view = new DiffView(themeService);
         _hexView = new BinaryDiffView(themeService);
         AddControl(_view);

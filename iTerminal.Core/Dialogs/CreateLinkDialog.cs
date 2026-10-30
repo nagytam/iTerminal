@@ -38,7 +38,7 @@ public class CreateLinkDialog : FormDialog
     {
         _linkService = linkService;
         _contentModelService = contentModelService;
-        Title = "Create link";
+        Title = iConsole.Localization.UiText.Get("Dialog.CreateLink", "Create link");
         var createCommand = new CreateCommand();
         AddCommand(createCommand);
 
@@ -47,7 +47,7 @@ public class CreateLinkDialog : FormDialog
         _checkBoxHard = new CheckBox(themeService) { Label = "Hard link (a second name for the file; same volume)" };
         _checkBoxRelative = new CheckBox(themeService) { Label = "Relative target (the pair can be moved together)" };
         _errorLabels = [.. Enumerable.Range(0, ErrorRows).Select(_ => new Label(string.Empty, themeService))];
-        _createButton = new Button("Create", createCommand, themeService);
+        _createButton = new Button(iConsole.Localization.UiText.Get("Button.Create", "Create"), createCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);
 
         // The box first: it is where the cursor belongs when the dialog opens.

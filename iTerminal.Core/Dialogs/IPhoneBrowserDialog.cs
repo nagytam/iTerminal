@@ -38,7 +38,7 @@ public class IPhoneBrowserDialog : Dialog
     {
         _deviceService = deviceService;
         _contentModelService = contentModelService;
-        Title = "iPhone Browser";
+        Title = iConsole.Localization.UiText.Get("Menu.iPhoneBrowser", "iPhone Browser");
 
         var listModel = new ListBoxModel<IPhoneDeviceInfo>(_devices) { TransformItem = TransformItem };
         _listBox = new ListBox<IPhoneDeviceInfo>(listModel, themeService);
@@ -154,7 +154,7 @@ public class IPhoneBrowserDialog : Dialog
     {
         yield return ("Enter", "Connect to the chosen device");
         yield return ("R", "Search for devices again");
-        yield return ("Esc", "Close");
+        yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

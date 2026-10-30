@@ -62,7 +62,7 @@ public class ImageFileViewerDialog : Dialog
         _decoderFactory = decoderFactory;
         _beepService = beepService;
         _dateTimeProviderService = dateTimeProviderService;
-        Title = "Image";
+        Title = iConsole.Localization.UiText.Get("Dialog.Image", "Image");
 
         _colorButton = new Button(
             new VideoActionCommand(

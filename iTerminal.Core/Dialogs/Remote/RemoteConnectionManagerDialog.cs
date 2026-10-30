@@ -90,7 +90,7 @@ public class RemoteConnectionManagerDialog : Dialog
         IThemeService themeService)
         : base(nameof(RemoteConnectionManagerDialog), themeService)
     {
-        Title = "Remote connections";
+        Title = iConsole.Localization.UiText.Get("Dialog.RemoteConnections", "Remote connections");
         _connections = connections;
         _shellService = shellService;
         _contentModelService = contentModelService;

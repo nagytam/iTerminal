@@ -185,6 +185,14 @@ Arrows move the cursor, Enter or Space plays, PgUp/PgDn or 1-4 choose the game, 
 - **Nine Men's Morris** has placing, sliding, flying at three men, mills that take a man outside a mill, and the 100-move draw. The computer is a time-budgeted alpha-beta search.
 - **Colours.** Boards are drawn on fixed colours (a wood background for Go and Morris, a checker for chess) and not the theme's, because a "black stone" has to stay black on a light theme.
 
+### The contact manager (`ContactManagerDialog`, Ctrl+Shift+K, `Model/Contacts/`)
+Tools > Contacts: name, email, phone, company and notes for the people the person keeps in touch with. N or Insert adds a contact and E, F2 or Enter changes the highlighted one, a field at a time (Enter or Tab for the next, Shift+Tab back, Enter on the last saves, Esc discards); the highlighted contact's fields are shown under the list. D or Delete asks y/n in the dialog. `/` filters the list as it is typed: every word must appear in some field, Enter keeps the filter, Esc clears it (and the next Esc closes the dialog).
+
+- **Storage is the `Contacts` setting**, one JSON list read by `ContactStore` (same approach as the task list and the calendar): a table of its own would change the schema stamp and drop every cached table at start-up. A damaged value or a `null` entry is skipped, and the next save replaces it.
+- **`Contact.Validate` is the one rule set:** a name is required, an email needs an `@` with text on both sides, a phone number needs a digit and only `+ - ( ) . /` and spaces. A refused save keeps the form open and moves the cursor to the field at fault.
+- **The highlight follows the contact by id**, so it survives a re-sort or a filter; a contact saved under a filter that would hide it clears the filter.
+- Also reachable from the `ui` AI tool as `contacts`.
+
 ### The workspace manager (`iTerminal.Core/Dialogs/Workspaces/`, `Services/Workspaces/`, `Model/Workspaces/`)
 Ctrl+Shift+F2 (Tools > Workspaces) opens `WorkspaceManagerDialog`: named screen layouts. A workspace is a
 `WorkspaceLayout` — the left and right panel locations, each panel's sort order, what is under the panels

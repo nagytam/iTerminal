@@ -72,7 +72,7 @@ public class SystemSettingsDialog : Dialog
         : base(nameof(SystemSettingsDialog), themeService)
     {
         _service = service;
-        Title = "System Settings";
+        Title = iConsole.Localization.UiText.Get("Dialog.SystemSettings", "System Settings");
         _lines = new InfoLines(themeService);
         _input = new TextBox(beepService, dateTimeProviderService, themeService)
         {
@@ -415,8 +415,8 @@ public class SystemSettingsDialog : Dialog
     {
         if (_confirmPrompt is not null)
         {
-            yield return ("Y", "Confirm");
-            yield return ("N / Esc", "Cancel");
+            yield return ("Y", iConsole.Localization.UiText.Get("Common.Confirm", "Confirm"));
+            yield return ("N / Esc", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 
@@ -440,7 +440,7 @@ public class SystemSettingsDialog : Dialog
             yield return ("S", "Switch between the user and the machine scope");
         }
 
-        yield return ("Esc", "Close");
+        yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

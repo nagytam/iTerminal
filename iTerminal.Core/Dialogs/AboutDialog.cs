@@ -26,7 +26,7 @@ public class AboutDialog : Dialog
     public AboutDialog(IThemeService themeService)
         : base(nameof(AboutDialog), themeService)
     {
-        Title = "About";
+        Title = iConsole.Localization.UiText.Get("Menu.About", "About");
 
         // The label/value block is a KeyValueList rather than pre-padded strings: it aligns the values
         // itself, so a new row ("Commit", "Data folder") is one more pair, not another PadRight.

@@ -34,7 +34,7 @@ public class SortDialog : Dialog
         : base(nameof(SortDialog), themeService)
     {
         _settingsService = settingsService;
-        Title = "Sort by";
+        Title = iConsole.Localization.UiText.Get("Dialog.SortBy", "Sort by");
         _lines = new InfoLines(themeService);
         AddControl(_lines);
     }

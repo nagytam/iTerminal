@@ -20,7 +20,7 @@ public class AiModelDialog : Dialog
     {
         _model = model;
         _options = options.Value;
-        Title = "AI Model Information";
+        Title = iConsole.Localization.UiText.Get("Dialog.AiModelInformation", "AI Model Information");
         _textViewer = new TextViewerControl(false, themeService);
         AddControl(_textViewer);
     }

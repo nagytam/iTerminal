@@ -67,6 +67,27 @@
   <data name="Common.Continue" xml:space="preserve">
     <value>Continuar</value>
   </data>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="Common.Help" xml:space="preserve">
+    <value>Ayuda</value>
+  </data>
+  <data name="Common.Back" xml:space="preserve">
+    <value>Atrás</value>
+  </data>
+  <data name="Common.Paste" xml:space="preserve">
+    <value>Pegar</value>
+  </data>
+  <data name="Common.Undo" xml:space="preserve">
+    <value>Deshacer</value>
+  </data>
+  <data name="Common.Save" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="Common.Stop" xml:space="preserve">
+    <value>Detener</value>
+  </data>
   <data name="Common.Close" xml:space="preserve">
     <value>Cerrar</value>
   </data>
@@ -78,5 +99,50 @@
   </data>
   <data name="Common.Apply" xml:space="preserve">
     <value>Aplicar</value>
+  </data>
+  <data name="Editor.GoToLine" xml:space="preserve">
+    <value>Ir a la línea</value>
+  </data>
+  <data name="Editor.Line" xml:space="preserve">
+    <value>Línea</value>
+  </data>
+  <data name="Editor.GoToOffset" xml:space="preserve">
+    <value>Ir al desplazamiento</value>
+  </data>
+  <data name="Editor.Offset" xml:space="preserve">
+    <value>Desplazamiento</value>
+  </data>
+  <data name="Editor.ReplaceText" xml:space="preserve">
+    <value>Reemplazar texto</value>
+  </data>
+  <data name="Editor.Find" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="Editor.With" xml:space="preserve">
+    <value>Reemplazar con</value>
+  </data>
+  <data name="Editor.MatchCase" xml:space="preserve">
+    <value>Coincidir mayúsculas</value>
+  </data>
+  <data name="Editor.RegularExpression" xml:space="preserve">
+    <value>Expresión regular</value>
+  </data>
+  <data name="Editor.Replace" xml:space="preserve">
+    <value>Reemplazar</value>
+  </data>
+  <data name="Editor.ReplaceAll" xml:space="preserve">
+    <value>Reemplazar todo</value>
+  </data>
+  <data name="Editor.SearchText" xml:space="preserve">
+    <value>Buscar texto</value>
+  </data>
+  <data name="Editor.Search" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="Editor.UnsavedChanges" xml:space="preserve">
+    <value>Cambios sin guardar</value>
+  </data>
+  <data name="Editor.Discard" xml:space="preserve">
+    <value>Descartar</value>
   </data>
 </root>

@@ -74,7 +74,7 @@ public class DiskManagerDialog : Dialog
         _notifications = notifications;
         _formatDialog = formatDialog;
         _imageDialog = imageDialog;
-        Title = "Disk manager";
+        Title = iConsole.Localization.UiText.Get("Dialog.DiskManager", "Disk manager");
         var listModel = new ListBoxModel<Drive>(_driveInfoModel.Drives)
         {
             TransformItem = TransformItem

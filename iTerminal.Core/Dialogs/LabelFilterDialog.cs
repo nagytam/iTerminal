@@ -35,16 +35,16 @@ public class LabelFilterDialog : FormDialog
         : base(nameof(LabelFilterDialog), themeService)
     {
         _labels = labels;
-        Title = "Filter by label";
+        Title = iConsole.Localization.UiText.Get("Dialog.FilterByLabel", "Filter by label");
         var applyCommand = new ApplyCommand();
         AddCommand(applyCommand);
 
-        _colour = new ComboBox<string>(themeService) { Label = "Colour" };
+        _colour = new ComboBox<string>(themeService) { Label = iConsole.Localization.UiText.Get("Label.Colour", "Colour") };
         _colour.SetItems([AnyColour, NoColour, .. Enum.GetValues<LabelColour>().Where(colour => colour != LabelColour.None).Select(LabelColours.Name)]);
-        _tag = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Tag" };
+        _tag = new TextBox(beepService, dateTimeProviderService, themeService) { Label = iConsole.Localization.UiText.Get("Label.Tag", "Tag") };
         _info = new Label("Folders stay listed, so the panel can still be walked.", themeService);
         _message = new Label(string.Empty, themeService);
-        _applyButton = new Button("Apply", applyCommand, themeService);
+        _applyButton = new Button(iConsole.Localization.UiText.Get("Common.Apply", "Apply"), applyCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);
 
         AddControl(_colour);

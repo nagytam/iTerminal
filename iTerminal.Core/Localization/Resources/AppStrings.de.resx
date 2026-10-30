@@ -379,4 +379,199 @@
   <data name="Language.Applied" xml:space="preserve">
     <value>Sprache: {0}</value>
   </data>
+  <data name="Dialog.CreateLink" xml:space="preserve">
+    <value>Link erstellen</value>
+  </data>
+  <data name="Dialog.FilterByLabel" xml:space="preserve">
+    <value>Nach Etikett filtern</value>
+  </data>
+  <data name="Dialog.ColourLabels" xml:space="preserve">
+    <value>Farbetiketten und Tags</value>
+  </data>
+  <data name="Dialog.Permissions" xml:space="preserve">
+    <value>Berechtigungen</value>
+  </data>
+  <data name="Dialog.Calculator" xml:space="preserve">
+    <value>Rechner</value>
+  </data>
+  <data name="Dialog.Calendar" xml:space="preserve">
+    <value>Kalender</value>
+  </data>
+  <data name="Dialog.Commands" xml:space="preserve">
+    <value>Befehle</value>
+  </data>
+  <data name="Dialog.DiskUsage" xml:space="preserve">
+    <value>Speicherbelegung</value>
+  </data>
+  <data name="Dialog.DiskManager" xml:space="preserve">
+    <value>Datenträgerverwaltung</value>
+  </data>
+  <data name="Dialog.Documents" xml:space="preserve">
+    <value>Dokumente</value>
+  </data>
+  <data name="Dialog.EditLink" xml:space="preserve">
+    <value>Link bearbeiten</value>
+  </data>
+  <data name="Dialog.SortBy" xml:space="preserve">
+    <value>Sortieren nach</value>
+  </data>
+  <data name="Dialog.ProcessManager" xml:space="preserve">
+    <value>Prozessverwaltung</value>
+  </data>
+  <data name="Dialog.NetworkManager" xml:space="preserve">
+    <value>Netzwerkverwaltung</value>
+  </data>
+  <data name="Dialog.SecureWipe" xml:space="preserve">
+    <value>Sicheres Löschen</value>
+  </data>
+  <data name="Dialog.ThemeManager" xml:space="preserve">
+    <value>Designverwaltung</value>
+  </data>
+  <data name="Dialog.CompareFiles" xml:space="preserve">
+    <value>Dateien vergleichen</value>
+  </data>
+  <data name="Dialog.DuplicateFiles" xml:space="preserve">
+    <value>Doppelte Dateien</value>
+  </data>
+  <data name="Dialog.FormatDrive" xml:space="preserve">
+    <value>Laufwerk formatieren</value>
+  </data>
+  <data name="Dialog.OpenWith" xml:space="preserve">
+    <value>Öffnen mit</value>
+  </data>
+  <data name="Dialog.Passwords" xml:space="preserve">
+    <value>Passwörter</value>
+  </data>
+  <data name="Dialog.RemoteConnections" xml:space="preserve">
+    <value>Remoteverbindungen</value>
+  </data>
+  <data name="Dialog.ScreenManager" xml:space="preserve">
+    <value>Bildschirmverwaltung</value>
+  </data>
+  <data name="Dialog.StripMetadata" xml:space="preserve">
+    <value>Metadaten entfernen</value>
+  </data>
+  <data name="Dialog.SynchroniseFolders" xml:space="preserve">
+    <value>Ordner synchronisieren</value>
+  </data>
+  <data name="Dialog.SystemInformation" xml:space="preserve">
+    <value>Systeminformationen</value>
+  </data>
+  <data name="Dialog.SystemSettings" xml:space="preserve">
+    <value>Systemeinstellungen</value>
+  </data>
+  <data name="Dialog.Tasks" xml:space="preserve">
+    <value>Aufgaben</value>
+  </data>
+  <data name="Dialog.UnitConverter" xml:space="preserve">
+    <value>Einheitenumrechner</value>
+  </data>
+  <data name="Dialog.UserMenu" xml:space="preserve">
+    <value>Benutzermenü</value>
+  </data>
+  <data name="Dialog.WebBrowser" xml:space="preserve">
+    <value>Webbrowser</value>
+  </data>
+  <data name="Dialog.FolderSelector" xml:space="preserve">
+    <value>Ordnerauswahl</value>
+  </data>
+  <data name="Dialog.AiModelInformation" xml:space="preserve">
+    <value>KI-Modellinformationen</value>
+  </data>
+  <data name="Dialog.CompareAndSynchroniseFolders" xml:space="preserve">
+    <value>Ordner vergleichen und synchronisieren</value>
+  </data>
+  <data name="Dialog.DeleteFile" xml:space="preserve">
+    <value>Datei löschen</value>
+  </data>
+  <data name="Dialog.DeleteFolder" xml:space="preserve">
+    <value>Ordner löschen</value>
+  </data>
+  <data name="Dialog.DiskImage" xml:space="preserve">
+    <value>Datenträgerabbild</value>
+  </data>
+  <data name="Dialog.Solution" xml:space="preserve">
+    <value>Projektmappe</value>
+  </data>
+  <data name="Dialog.Program" xml:space="preserve">
+    <value>Programm</value>
+  </data>
+  <data name="Dialog.Mail" xml:space="preserve">
+    <value>E-Mail</value>
+  </data>
+  <data name="Dialog.Map" xml:space="preserve">
+    <value>Karte</value>
+  </data>
+  <data name="Dialog.Music" xml:space="preserve">
+    <value>Musik</value>
+  </data>
+  <data name="Dialog.NetworkBrowser" xml:space="preserve">
+    <value>Netzwerkbrowser</value>
+  </data>
+  <data name="Dialog.Packages" xml:space="preserve">
+    <value>Pakete</value>
+  </data>
+  <data name="Dialog.RuntimeDependencies" xml:space="preserve">
+    <value>Laufzeitabhängigkeiten</value>
+  </data>
+  <data name="Dialog.Warning" xml:space="preserve">
+    <value>Warnung</value>
+  </data>
+  <data name="Dialog.Stocks" xml:space="preserve">
+    <value>Aktien</value>
+  </data>
+  <data name="Dialog.UpdateAvailable" xml:space="preserve">
+    <value>Update verfügbar</value>
+  </data>
+  <data name="Dialog.Image" xml:space="preserve">
+    <value>Bild</value>
+  </data>
+  <data name="Dialog.Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="Button.Create" xml:space="preserve">
+    <value>Erstellen</value>
+  </data>
+  <data name="Button.Mount" xml:space="preserve">
+    <value>Einbinden</value>
+  </data>
+  <data name="Button.Unmount" xml:space="preserve">
+    <value>Trennen</value>
+  </data>
+  <data name="Button.Format" xml:space="preserve">
+    <value>Formatieren</value>
+  </data>
+  <data name="Button.Connect" xml:space="preserve">
+    <value>Verbinden</value>
+  </data>
+  <data name="Button.Swap" xml:space="preserve">
+    <value>Tauschen</value>
+  </data>
+  <data name="Label.Source" xml:space="preserve">
+    <value>Quelle</value>
+  </data>
+  <data name="Label.Target" xml:space="preserve">
+    <value>Ziel</value>
+  </data>
+  <data name="Label.To" xml:space="preserve">
+    <value>Nach</value>
+  </data>
+  <data name="Label.Overwrite" xml:space="preserve">
+    <value>Überschreiben</value>
+  </data>
+  <data name="Label.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Label.Search" xml:space="preserve">
+    <value>Suche</value>
+  </data>
+  <data name="Label.Colour" xml:space="preserve">
+    <value>Farbe</value>
+  </data>
+  <data name="Label.Tag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="Label.Value" xml:space="preserve">
+    <value>Wert</value>
+  </data>
 </root>

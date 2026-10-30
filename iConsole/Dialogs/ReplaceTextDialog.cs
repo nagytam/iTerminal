@@ -28,26 +28,26 @@ public class ReplaceTextDialog : Dialog
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService)
-        : base("Replace text", themeService)
+        : base(iConsole.Localization.UiText.Get("Editor.ReplaceText", "Replace text"), themeService)
     {
         _editor = editor;
         _beepService = beepService;
         _findBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
-            Label = "Find",
+            Label = iConsole.Localization.UiText.Get("Editor.Find", "Find"),
             HotKeyChar = 'F',
             Text = editor.LastFind,
         };
         _replaceBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
-            Label = "With",
+            Label = iConsole.Localization.UiText.Get("Editor.With", "With"),
             HotKeyChar = 'W',
             Text = editor.LastReplacement,
         };
-        _matchCaseBox = new CheckBox(themeService) { Label = "Match case", IsChecked = editor.LastMatchCase };
-        _regexBox = new CheckBox(themeService) { Label = "Regular expression", IsChecked = editor.LastUseRegex };
-        _replaceButton = new Button("Replace", new ReplaceCommand(this, all: false), themeService) { HotKeyChar = 'R' };
-        _replaceAllButton = new Button("Replace all", new ReplaceCommand(this, all: true), themeService) { HotKeyChar = 'A' };
+        _matchCaseBox = new CheckBox(themeService) { Label = iConsole.Localization.UiText.Get("Editor.MatchCase", "Match case"), IsChecked = editor.LastMatchCase };
+        _regexBox = new CheckBox(themeService) { Label = iConsole.Localization.UiText.Get("Editor.RegularExpression", "Regular expression"), IsChecked = editor.LastUseRegex };
+        _replaceButton = new Button(iConsole.Localization.UiText.Get("Editor.Replace", "Replace"), new ReplaceCommand(this, all: false), themeService) { HotKeyChar = 'R' };
+        _replaceAllButton = new Button(iConsole.Localization.UiText.Get("Editor.ReplaceAll", "Replace all"), new ReplaceCommand(this, all: true), themeService) { HotKeyChar = 'A' };
         _cancelButton = new CancelDialogButton(themeService);
         AddControl(_findBox);
         AddControl(_replaceBox);

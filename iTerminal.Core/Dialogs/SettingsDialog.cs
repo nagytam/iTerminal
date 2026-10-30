@@ -20,7 +20,7 @@ public class SettingsDialog : Dialog
         )
         : base(nameof(SettingsDialog), themeService)
     {
-        Title = "Settings";
+        Title = iConsole.Localization.UiText.Get("Menu.Settings", "Settings");
         _tab = new Tab(themeService) { Orientation = Orientation.Vertical };
         AddControl(_tab);
         var tabPageGlobal = new SettingsGlobalTabPage(themeService);

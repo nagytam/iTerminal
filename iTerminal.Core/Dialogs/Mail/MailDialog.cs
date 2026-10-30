@@ -79,7 +79,7 @@ public class MailDialog : Dialog
     public MailDialog(MailAccountStore accounts, IMailService mail, IPasswordManager passwords, IThemeService themeService)
         : base(nameof(MailDialog), themeService)
     {
-        Title = "Mail";
+        Title = iConsole.Localization.UiText.Get("Dialog.Mail", "Mail");
         _accounts = accounts;
         _mail = mail;
         _passwords = passwords;
@@ -152,7 +152,7 @@ public class MailDialog : Dialog
                 yield return ("Esc", "Back to the inbox");
                 break;
             default:
-                yield return ("Esc", "Back");
+                yield return ("Esc", iConsole.Localization.UiText.Get("Common.Back", "Back"));
                 break;
         }
     }

@@ -70,7 +70,7 @@ public class PropertiesDialog : FormDialog
         _contentModelService = contentModelService;
         _labels = labels;
         _accessControlDialog = accessControlDialog;
-        Title = "Properties";
+        Title = iConsole.Localization.UiText.Get("Menu.Properties", "Properties");
         var applyCommand = new ApplyCommand();
         AddCommand(applyCommand);
         if (accessControlDialog is not null)
@@ -90,7 +90,7 @@ public class PropertiesDialog : FormDialog
         _textBoxModified = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Modified" };
         _textBoxAccessed = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Accessed" };
         _errorLabel = new Label(string.Empty, themeService);
-        _applyButton = new Button("Apply", applyCommand, themeService);
+        _applyButton = new Button(iConsole.Localization.UiText.Get("Common.Apply", "Apply"), applyCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);
 
         // Only the controls this system has a use for are attached at all. Attached and hidden,
