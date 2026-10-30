@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Controls.Editors;
@@ -231,10 +232,10 @@ public class TranslatorDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("F5", "Translate");
-        yield return ("F6", "Swap the two languages");
-        yield return ("F7", "Detect the language of the text");
-        yield return ("F8", "Clear the text (asks first)");
+        yield return ("F5", UiText.Get("DialogHint.Translate", "Translate"));
+        yield return ("F6", UiText.Get("DialogHint.SwapLanguages", "Swap the two languages"));
+        yield return ("F7", UiText.Get("DialogHint.DetectLanguage", "Detect the language of the text"));
+        yield return ("F8", UiText.Get("DialogHint.ClearTextAsks", "Clear the text (asks first)"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls;
@@ -388,10 +389,10 @@ public class CompareFoldersDialog : Dialog
     /// </summary>
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Enter", "Compare the two panels");
-        yield return ("F5", "Synchronise: shows the plan first, any key but Esc cancels it");
-        yield return ("Up/Down", "Scroll the differences");
-        yield return ("PageUp/PageDown", "Scroll the differences a page at a time");
+        yield return ("Enter", UiText.Get("DialogHint.CompareTwoPanels", "Compare the two panels"));
+        yield return ("F5", UiText.Get("DialogHint.SynchroniseShowsPlan", "Synchronise: shows the plan first, any key but Esc cancels it"));
+        yield return ("Up/Down", UiText.Get("DialogHint.ScrollDifferences", "Scroll the differences"));
+        yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollDifferencesPage", "Scroll the differences a page at a time"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

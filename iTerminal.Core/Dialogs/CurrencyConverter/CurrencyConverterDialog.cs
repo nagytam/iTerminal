@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -161,8 +162,8 @@ public class CurrencyConverterDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("F5", "Refresh the rates");
-        yield return ("F6", "Swap the two currencies");
+        yield return ("F5", UiText.Get("DialogHint.RefreshRates", "Refresh the rates"));
+        yield return ("F6", UiText.Get("DialogHint.SwapCurrencies", "Swap the two currencies"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

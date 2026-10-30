@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -149,9 +150,9 @@ public class MusicTagEditorDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Tab", "Move between the tags");
-        yield return ("Enter", "Save the tags");
-        yield return ("Esc", "Close without saving");
+        yield return ("Tab", UiText.Get("DialogHint.MoveBetweenTags", "Move between the tags"));
+        yield return ("Enter", UiText.Get("DialogHint.SaveTags", "Save the tags"));
+        yield return ("Esc", UiText.Get("DialogHint.CloseWithoutSaving", "Close without saving"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

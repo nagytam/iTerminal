@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -319,10 +320,10 @@ public class ChecksumDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("F2", "Save the checksums next to the files");
-        yield return ("F3", "Copy the SHA-256 checksum");
-        yield return ("Click", "Copy the checksum under the pointer");
-        yield return ("Enter", "Close the report while the compare box is empty");
+        yield return ("F2", UiText.Get("DialogHint.SaveChecksumsNextToFiles", "Save the checksums next to the files"));
+        yield return ("F3", UiText.Get("DialogHint.CopySha256", "Copy the SHA-256 checksum"));
+        yield return ("Click", UiText.Get("DialogHint.CopyChecksumUnderPointer", "Copy the checksum under the pointer"));
+        yield return ("Enter", UiText.Get("DialogHint.CloseReportCompareEmpty", "Close the report while the compare box is empty"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
