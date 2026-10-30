@@ -96,7 +96,7 @@ public class ExtractDialog : FormDialog
     {
         _contentModelService = contentModelService;
         _extractionService = extractionService;
-        Title = "Extract";
+        Title = iConsole.Localization.UiText.Get("Menu.Extract", "Extract");
 
         var extractCommand = new ExtractCommand(
             extractionService, taskManager, progressWindowFactory, contentModelService,

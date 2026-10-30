@@ -82,7 +82,7 @@ public class RenameDialog : FormDialog
         : base(nameof(RenameDialog), themeService)
     {
         _contentModelService = contentModelService;
-        Title = "Rename";
+        Title = iConsole.Localization.UiText.Get("Menu.Rename", "Rename");
 
         _renameCommand = new RenameCommand(contentModelService);
         AddCommand(_renameCommand);

@@ -137,7 +137,7 @@ public class CompressDialog : FormDialog
     {
         _contentModelService = contentModelService;
         _compressionService = compressionService;
-        Title = "Compress";
+        Title = iConsole.Localization.UiText.Get("Menu.Compress", "Compress");
 
         var compressCommand = new CompressCommand(
             compressionService, taskManager, progressWindowFactory, contentModelService,
