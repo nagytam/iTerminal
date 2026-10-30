@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Interfaces;
@@ -70,7 +71,7 @@ public class GitPullRebaseCommand(
             return Task.CompletedTask;
         }
 
-        notificationService?.Notify("Git", "Pulling with rebase…", NotificationSeverity.Info);
+        notificationService?.Notify("Git", UiText.Get("Notify.PullingRebase", "Pulling with rebase…"), NotificationSeverity.Info);
         PullTask = Task.Run(async () =>
         {
             try
@@ -79,24 +80,24 @@ public class GitPullRebaseCommand(
                 string? root = await gitService.GetRepositoryRootAsync(folder);
                 if (root is null)
                 {
-                    notificationService?.Notify("Git pull --rebase", "This folder is not in a git repository.", NotificationSeverity.Warning);
+                    notificationService?.Notify("Git pull --rebase", UiText.Get("Notify.NotGitRepo", "This folder is not in a git repository."), NotificationSeverity.Warning);
                     return;
                 }
 
                 GitResult result = await gitService.PullRebaseAsync(root);
                 if (result.Success)
                 {
-                    notificationService?.Notify("Git", "Pulled with rebase.", NotificationSeverity.Info);
+                    notificationService?.Notify("Git", UiText.Get("Notify.PulledRebase", "Pulled with rebase."), NotificationSeverity.Info);
                 }
                 else
                 {
-                    notificationService?.Notify("Git pull --rebase failed", FirstLine(result.Output), NotificationSeverity.Warning);
+                    notificationService?.Notify(UiText.Get("Notify.PullRebaseFailed", "Git pull --rebase failed"), FirstLine(result.Output), NotificationSeverity.Warning);
                 }
             }
             catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 // Uncaught, the task would end with no word to the user after "Pulling…".
-                notificationService?.Notify("Git pull --rebase failed", exception.Message, NotificationSeverity.Warning);
+                notificationService?.Notify(UiText.Get("Notify.PullRebaseFailed", "Git pull --rebase failed"), exception.Message, NotificationSeverity.Warning);
             }
         });
 

@@ -218,7 +218,7 @@ public class FormatDriveDialog : FormDialog
                 return false;
             }
 
-            _notifications.Notify("Format", result.Message, NotificationSeverity.Success);
+            _notifications.Notify(UiText.Get("Notify.Format", "Format"), result.Message, NotificationSeverity.Success);
             Close();
             RefreshPanels();
             return true;

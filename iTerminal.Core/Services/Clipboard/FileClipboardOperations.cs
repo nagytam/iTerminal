@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Interfaces;
@@ -77,7 +78,7 @@ public class FileClipboardOperations(
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
             logger.Warning(exception, "Putting files on the clipboard failed");
-            notificationService.Notify("Clipboard", exception.Message, NotificationSeverity.Error);
+            notificationService.Notify(UiText.Get("Notify.Clipboard", "Clipboard"), exception.Message, NotificationSeverity.Error);
             return false;
         }
 
@@ -105,13 +106,13 @@ public class FileClipboardOperations(
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
             logger.Warning(exception, "Reading the clipboard failed");
-            notificationService.Notify("Clipboard", exception.Message, NotificationSeverity.Error);
+            notificationService.Notify(UiText.Get("Notify.Clipboard", "Clipboard"), exception.Message, NotificationSeverity.Error);
             return;
         }
 
         if (content is null || content.Paths.Count == 0)
         {
-            notificationService.Notify("Paste", "The clipboard holds no files.", NotificationSeverity.Warning);
+            notificationService.Notify(UiText.Get("Notify.Paste", "Paste"), UiText.Get("Notify.ClipboardNoFiles", "The clipboard holds no files."), NotificationSeverity.Warning);
             return;
         }
 
@@ -120,7 +121,7 @@ public class FileClipboardOperations(
         {
             if (plan.Skipped.Count > 0)
             {
-                notificationService.Notify("Paste", plan.Skipped[0], NotificationSeverity.Warning);
+                notificationService.Notify(UiText.Get("Notify.Paste", "Paste"), plan.Skipped[0], NotificationSeverity.Warning);
             }
 
             return;
@@ -133,7 +134,7 @@ public class FileClipboardOperations(
 
         if (plan.Skipped.Count > 0)
         {
-            notificationService.Notify("Paste", $"{plan.Skipped.Count} skipped: {plan.Skipped[0]}", NotificationSeverity.Warning);
+            notificationService.Notify(UiText.Get("Notify.Paste", "Paste"), string.Format(UiText.Get("Notify.SkippedCount", "{0} skipped: {1}"), plan.Skipped.Count, plan.Skipped[0]), NotificationSeverity.Warning);
         }
     }
 

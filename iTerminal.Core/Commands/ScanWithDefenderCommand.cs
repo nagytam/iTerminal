@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Interfaces;
@@ -45,7 +46,7 @@ public class ScanWithDefenderCommand(
         }
 
         var label = targets.Count == 1 ? Path.GetFileName(targets[0].TrimEnd('\\', '/')) : $"{targets.Count} items";
-        notificationService?.Notify("Microsoft Defender", $"Scanning {label}…", NotificationSeverity.Info);
+        notificationService?.Notify("Microsoft Defender", string.Format(UiText.Get("Notify.Scanning", "Scanning {0}…"), label), NotificationSeverity.Info);
 
         ScanTask = Task.Run(async () =>
         {
@@ -75,15 +76,15 @@ public class ScanWithDefenderCommand(
 
             if (threats > 0)
             {
-                notificationService?.Notify("Microsoft Defender", $"Threats found in {threats} of {targets.Count} item(s). Open Windows Security for details.", NotificationSeverity.Warning);
+                notificationService?.Notify("Microsoft Defender", string.Format(UiText.Get("Notify.ThreatsFound", "Threats found in {0} of {1} item(s). Open Windows Security for details."), threats, targets.Count), NotificationSeverity.Warning);
             }
             else if (failure is not null)
             {
-                notificationService?.Notify("Microsoft Defender scan failed", failure, NotificationSeverity.Warning);
+                notificationService?.Notify(UiText.Get("Notify.DefenderFailed", "Microsoft Defender scan failed"), failure, NotificationSeverity.Warning);
             }
             else
             {
-                notificationService?.Notify("Microsoft Defender", $"No threats found in {label}.", NotificationSeverity.Info);
+                notificationService?.Notify("Microsoft Defender", string.Format(UiText.Get("Notify.NoThreats", "No threats found in {0}."), label), NotificationSeverity.Info);
             }
         });
 

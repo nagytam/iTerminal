@@ -1654,4 +1654,64 @@
   <data name="Field.Engine" xml:space="preserve">
     <value>Engine</value>
   </data>
+  <data name="Notify.PullingRebase" xml:space="preserve">
+    <value>Pulling with rebase…</value>
+  </data>
+  <data name="Notify.NotGitRepo" xml:space="preserve">
+    <value>This folder is not in a git repository.</value>
+  </data>
+  <data name="Notify.PulledRebase" xml:space="preserve">
+    <value>Pulled with rebase.</value>
+  </data>
+  <data name="Notify.PullRebaseFailed" xml:space="preserve">
+    <value>Git pull --rebase failed</value>
+  </data>
+  <data name="Notify.Scanning" xml:space="preserve">
+    <value>Scanning {0}…</value>
+  </data>
+  <data name="Notify.ThreatsFound" xml:space="preserve">
+    <value>Threats found in {0} of {1} item(s). Open Windows Security for details.</value>
+  </data>
+  <data name="Notify.DefenderFailed" xml:space="preserve">
+    <value>Microsoft Defender scan failed</value>
+  </data>
+  <data name="Notify.NoThreats" xml:space="preserve">
+    <value>No threats found in {0}.</value>
+  </data>
+  <data name="Notify.Eject" xml:space="preserve">
+    <value>Eject</value>
+  </data>
+  <data name="Notify.Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Notify.Clipboard" xml:space="preserve">
+    <value>Clipboard</value>
+  </data>
+  <data name="Notify.Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="Notify.WipeStopped" xml:space="preserve">
+    <value>Secure wipe stopped</value>
+  </data>
+  <data name="Notify.WipeStoppedBody" xml:space="preserve">
+    <value>{0} wiped before it was cancelled.</value>
+  </data>
+  <data name="Notify.WipeErrors" xml:space="preserve">
+    <value>Secure wipe finished with errors</value>
+  </data>
+  <data name="Notify.WipeErrorsBody" xml:space="preserve">
+    <value>{0} wiped; {1} failed. First: {2}</value>
+  </data>
+  <data name="Notify.WipeFinished" xml:space="preserve">
+    <value>Secure wipe finished</value>
+  </data>
+  <data name="Notify.WipeFinishedBody" xml:space="preserve">
+    <value>{0} overwritten and deleted.</value>
+  </data>
+  <data name="Notify.ClipboardNoFiles" xml:space="preserve">
+    <value>The clipboard holds no files.</value>
+  </data>
+  <data name="Notify.SkippedCount" xml:space="preserve">
+    <value>{0} skipped: {1}</value>
+  </data>
 </root>

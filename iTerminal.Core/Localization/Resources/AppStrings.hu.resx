@@ -1654,4 +1654,64 @@
   <data name="Field.Engine" xml:space="preserve">
     <value>Motor</value>
   </data>
+  <data name="Notify.PullingRebase" xml:space="preserve">
+    <value>Pull rebase-szel…</value>
+  </data>
+  <data name="Notify.NotGitRepo" xml:space="preserve">
+    <value>Ez a mappa nem git-tárolóban van.</value>
+  </data>
+  <data name="Notify.PulledRebase" xml:space="preserve">
+    <value>A pull rebase-szel kész.</value>
+  </data>
+  <data name="Notify.PullRebaseFailed" xml:space="preserve">
+    <value>A git pull --rebase sikertelen</value>
+  </data>
+  <data name="Notify.Scanning" xml:space="preserve">
+    <value>{0} vizsgálata…</value>
+  </data>
+  <data name="Notify.ThreatsFound" xml:space="preserve">
+    <value>Fenyegetés {0} / {1} elemben. A részletekért nyissa meg a Windows-biztonságot.</value>
+  </data>
+  <data name="Notify.DefenderFailed" xml:space="preserve">
+    <value>A Microsoft Defender vizsgálata sikertelen</value>
+  </data>
+  <data name="Notify.NoThreats" xml:space="preserve">
+    <value>Nincs fenyegetés itt: {0}.</value>
+  </data>
+  <data name="Notify.Eject" xml:space="preserve">
+    <value>Kiadás</value>
+  </data>
+  <data name="Notify.Format" xml:space="preserve">
+    <value>Formázás</value>
+  </data>
+  <data name="Notify.Clipboard" xml:space="preserve">
+    <value>Vágólap</value>
+  </data>
+  <data name="Notify.Paste" xml:space="preserve">
+    <value>Beillesztés</value>
+  </data>
+  <data name="Notify.WipeStopped" xml:space="preserve">
+    <value>A biztonságos törlés leállt</value>
+  </data>
+  <data name="Notify.WipeStoppedBody" xml:space="preserve">
+    <value>{0} törölve a megszakítás előtt.</value>
+  </data>
+  <data name="Notify.WipeErrors" xml:space="preserve">
+    <value>A biztonságos törlés hibákkal fejeződött be</value>
+  </data>
+  <data name="Notify.WipeErrorsBody" xml:space="preserve">
+    <value>{0} törölve; {1} sikertelen. Első: {2}</value>
+  </data>
+  <data name="Notify.WipeFinished" xml:space="preserve">
+    <value>A biztonságos törlés befejeződött</value>
+  </data>
+  <data name="Notify.WipeFinishedBody" xml:space="preserve">
+    <value>{0} felülírva és törölve.</value>
+  </data>
+  <data name="Notify.ClipboardNoFiles" xml:space="preserve">
+    <value>A vágólapon nincsenek fájlok.</value>
+  </data>
+  <data name="Notify.SkippedCount" xml:space="preserve">
+    <value>{0} kihagyva: {1}</value>
+  </data>
 </root>

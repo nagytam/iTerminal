@@ -165,15 +165,15 @@ public class SecureWipeDialog : Dialog
         var what = $"{result.Files} file{(result.Files == 1 ? string.Empty : "s")}, {FilePropertiesService.FormatSize(result.Bytes)}";
         if (result.Cancelled)
         {
-            _notifications.Notify("Secure wipe stopped", $"{what} wiped before it was cancelled.", NotificationSeverity.Warning);
+            _notifications.Notify(UiText.Get("Notify.WipeStopped", "Secure wipe stopped"), string.Format(UiText.Get("Notify.WipeStoppedBody", "{0} wiped before it was cancelled."), what), NotificationSeverity.Warning);
         }
         else if (result.Failures.Count > 0)
         {
-            _notifications.Notify("Secure wipe finished with errors", $"{what} wiped; {result.Failures.Count} failed. First: {result.Failures[0]}", NotificationSeverity.Error);
+            _notifications.Notify(UiText.Get("Notify.WipeErrors", "Secure wipe finished with errors"), string.Format(UiText.Get("Notify.WipeErrorsBody", "{0} wiped; {1} failed. First: {2}"), what, result.Failures.Count, result.Failures[0]), NotificationSeverity.Error);
         }
         else
         {
-            _notifications.Notify("Secure wipe finished", $"{what} overwritten and deleted.", NotificationSeverity.Success);
+            _notifications.Notify(UiText.Get("Notify.WipeFinished", "Secure wipe finished"), string.Format(UiText.Get("Notify.WipeFinishedBody", "{0} overwritten and deleted."), what), NotificationSeverity.Success);
         }
     }
 
