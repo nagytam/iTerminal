@@ -574,4 +574,154 @@
   <data name="Label.Value" xml:space="preserve">
     <value>Wert</value>
   </data>
+  <data name="DialogHint.NextFieldEnterSaves" xml:space="preserve">
+    <value>Nächstes Feld; Enter im letzten speichert</value>
+  </data>
+  <data name="DialogHint.PreviousField" xml:space="preserve">
+    <value>Vorheriges Feld</value>
+  </data>
+  <data name="DialogHint.MoveBetweenFields" xml:space="preserve">
+    <value>Zwischen den Feldern wechseln</value>
+  </data>
+  <data name="DialogHint.KeepFilterBackToList" xml:space="preserve">
+    <value>Den Filter behalten und zur Liste zurückkehren</value>
+  </data>
+  <data name="DialogHint.ClearFilter" xml:space="preserve">
+    <value>Den Filter löschen</value>
+  </data>
+  <data name="DialogHint.DeleteContact" xml:space="preserve">
+    <value>Den Kontakt löschen</value>
+  </data>
+  <data name="DialogHint.KeepContact" xml:space="preserve">
+    <value>Den Kontakt behalten</value>
+  </data>
+  <data name="DialogHint.MoveOverContacts" xml:space="preserve">
+    <value>Über die Kontakte bewegen</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastContact" xml:space="preserve">
+    <value>Zum ersten oder letzten Kontakt springen</value>
+  </data>
+  <data name="DialogHint.AddContact" xml:space="preserve">
+    <value>Einen Kontakt hinzufügen</value>
+  </data>
+  <data name="DialogHint.ChangeContact" xml:space="preserve">
+    <value>Den Kontakt ändern</value>
+  </data>
+  <data name="DialogHint.DeleteContactAsks" xml:space="preserve">
+    <value>Den Kontakt löschen (fragt vorher)</value>
+  </data>
+  <data name="DialogHint.FilterList" xml:space="preserve">
+    <value>Die Liste filtern</value>
+  </data>
+  <data name="DialogHint.SaveEntry" xml:space="preserve">
+    <value>Den Eintrag speichern</value>
+  </data>
+  <data name="DialogHint.ChangeChoice" xml:space="preserve">
+    <value>Die Auswahl ändern</value>
+  </data>
+  <data name="DialogHint.BackToList" xml:space="preserve">
+    <value>Zurück zur Liste</value>
+  </data>
+  <data name="DialogHint.SaveOwner" xml:space="preserve">
+    <value>Den Besitzer speichern</value>
+  </data>
+  <data name="DialogHint.DeleteEntry" xml:space="preserve">
+    <value>Den Eintrag löschen</value>
+  </data>
+  <data name="DialogHint.KeepEntry" xml:space="preserve">
+    <value>Den Eintrag behalten</value>
+  </data>
+  <data name="DialogHint.ChooseEntry" xml:space="preserve">
+    <value>Einen Eintrag wählen</value>
+  </data>
+  <data name="DialogHint.AddEntry" xml:space="preserve">
+    <value>Einen Eintrag hinzufügen</value>
+  </data>
+  <data name="DialogHint.EditEntry" xml:space="preserve">
+    <value>Den Eintrag bearbeiten</value>
+  </data>
+  <data name="DialogHint.DeleteEntryAsks" xml:space="preserve">
+    <value>Den Eintrag löschen (fragt vorher)</value>
+  </data>
+  <data name="DialogHint.SwitchInheritance" xml:space="preserve">
+    <value>Die Vererbung ein- oder ausschalten</value>
+  </data>
+  <data name="DialogHint.ChangeOwner" xml:space="preserve">
+    <value>Den Besitzer ändern</value>
+  </data>
+  <data name="DialogHint.ReadPermissionsAgain" xml:space="preserve">
+    <value>Die Berechtigungen erneut lesen</value>
+  </data>
+  <data name="DialogHint.BackToPage" xml:space="preserve">
+    <value>Zurück zur Seite</value>
+  </data>
+  <data name="DialogHint.TypeAddress" xml:space="preserve">
+    <value>Eine Adresse eingeben</value>
+  </data>
+  <data name="DialogHint.NextLinkOrField" xml:space="preserve">
+    <value>Zum nächsten Link oder Feld wechseln</value>
+  </data>
+  <data name="DialogHint.FollowLinkNewTab" xml:space="preserve">
+    <value>Dem Link folgen (Strg: in neuem Tab)</value>
+  </data>
+  <data name="DialogHint.ScrollPageUpDown" xml:space="preserve">
+    <value>Die Seite scrollen</value>
+  </data>
+  <data name="DialogHint.ScrollPageDownShiftUp" xml:space="preserve">
+    <value>Eine Seite nach unten scrollen (Umschalt: nach oben)</value>
+  </data>
+  <data name="DialogHint.Forward" xml:space="preserve">
+    <value>Vorwärts</value>
+  </data>
+  <data name="DialogHint.Reload" xml:space="preserve">
+    <value>Neu laden</value>
+  </data>
+  <data name="DialogHint.OpenCloseTab" xml:space="preserve">
+    <value>Einen Tab öffnen oder schließen</value>
+  </data>
+  <data name="DialogHint.NextTab" xml:space="preserve">
+    <value>Nächster Tab</value>
+  </data>
+  <data name="DialogHint.BookmarkPage" xml:space="preserve">
+    <value>Ein Lesezeichen für die Seite setzen</value>
+  </data>
+  <data name="DialogHint.BookmarksHistory" xml:space="preserve">
+    <value>Lesezeichen / Verlauf</value>
+  </data>
+  <data name="DialogHint.FindInPage" xml:space="preserve">
+    <value>Auf der Seite suchen</value>
+  </data>
+  <data name="DialogHint.ChooseMessage" xml:space="preserve">
+    <value>Eine Nachricht wählen</value>
+  </data>
+  <data name="DialogHint.ReadMessage" xml:space="preserve">
+    <value>Die Nachricht lesen</value>
+  </data>
+  <data name="DialogHint.WriteMessage" xml:space="preserve">
+    <value>Eine Nachricht schreiben</value>
+  </data>
+  <data name="DialogHint.RefreshInbox" xml:space="preserve">
+    <value>Den Posteingang aktualisieren</value>
+  </data>
+  <data name="DialogHint.DeleteMessageAsks" xml:space="preserve">
+    <value>Die Nachricht löschen (fragt vorher)</value>
+  </data>
+  <data name="DialogHint.AccountSettings" xml:space="preserve">
+    <value>Kontoeinstellungen</value>
+  </data>
+  <data name="DialogHint.ScrollMessage" xml:space="preserve">
+    <value>Die Nachricht scrollen</value>
+  </data>
+  <data name="DialogHint.Reply" xml:space="preserve">
+    <value>Antworten</value>
+  </data>
+  <data name="DialogHint.BackToInbox" xml:space="preserve">
+    <value>Zurück zum Posteingang</value>
+  </data>
+  <data name="DialogHint.SendMessage" xml:space="preserve">
+    <value>Die Nachricht senden</value>
+  </data>
+  <data name="DialogHint.LookUpAddress" xml:space="preserve">
+    <value>Eine Adresse nachschlagen</value>
+  </data>
 </root>

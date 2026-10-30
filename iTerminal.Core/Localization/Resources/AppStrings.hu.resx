@@ -574,4 +574,154 @@
   <data name="Label.Value" xml:space="preserve">
     <value>Érték</value>
   </data>
+  <data name="DialogHint.NextFieldEnterSaves" xml:space="preserve">
+    <value>Következő mező; az utolsón az Enter ment</value>
+  </data>
+  <data name="DialogHint.PreviousField" xml:space="preserve">
+    <value>Előző mező</value>
+  </data>
+  <data name="DialogHint.MoveBetweenFields" xml:space="preserve">
+    <value>Mozgás a mezők között</value>
+  </data>
+  <data name="DialogHint.KeepFilterBackToList" xml:space="preserve">
+    <value>A szűrő megtartása és vissza a listához</value>
+  </data>
+  <data name="DialogHint.ClearFilter" xml:space="preserve">
+    <value>A szűrő törlése</value>
+  </data>
+  <data name="DialogHint.DeleteContact" xml:space="preserve">
+    <value>A névjegy törlése</value>
+  </data>
+  <data name="DialogHint.KeepContact" xml:space="preserve">
+    <value>A névjegy megtartása</value>
+  </data>
+  <data name="DialogHint.MoveOverContacts" xml:space="preserve">
+    <value>Mozgás a névjegyek között</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastContact" xml:space="preserve">
+    <value>Ugrás az első vagy utolsó névjegyre</value>
+  </data>
+  <data name="DialogHint.AddContact" xml:space="preserve">
+    <value>Névjegy hozzáadása</value>
+  </data>
+  <data name="DialogHint.ChangeContact" xml:space="preserve">
+    <value>A névjegy módosítása</value>
+  </data>
+  <data name="DialogHint.DeleteContactAsks" xml:space="preserve">
+    <value>A névjegy törlése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.FilterList" xml:space="preserve">
+    <value>A lista szűrése</value>
+  </data>
+  <data name="DialogHint.SaveEntry" xml:space="preserve">
+    <value>A bejegyzés mentése</value>
+  </data>
+  <data name="DialogHint.ChangeChoice" xml:space="preserve">
+    <value>A választás módosítása</value>
+  </data>
+  <data name="DialogHint.BackToList" xml:space="preserve">
+    <value>Vissza a listához</value>
+  </data>
+  <data name="DialogHint.SaveOwner" xml:space="preserve">
+    <value>A tulajdonos mentése</value>
+  </data>
+  <data name="DialogHint.DeleteEntry" xml:space="preserve">
+    <value>A bejegyzés törlése</value>
+  </data>
+  <data name="DialogHint.KeepEntry" xml:space="preserve">
+    <value>A bejegyzés megtartása</value>
+  </data>
+  <data name="DialogHint.ChooseEntry" xml:space="preserve">
+    <value>Bejegyzés kiválasztása</value>
+  </data>
+  <data name="DialogHint.AddEntry" xml:space="preserve">
+    <value>Bejegyzés hozzáadása</value>
+  </data>
+  <data name="DialogHint.EditEntry" xml:space="preserve">
+    <value>A bejegyzés szerkesztése</value>
+  </data>
+  <data name="DialogHint.DeleteEntryAsks" xml:space="preserve">
+    <value>A bejegyzés törlése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.SwitchInheritance" xml:space="preserve">
+    <value>Az öröklés be- vagy kikapcsolása</value>
+  </data>
+  <data name="DialogHint.ChangeOwner" xml:space="preserve">
+    <value>A tulajdonos módosítása</value>
+  </data>
+  <data name="DialogHint.ReadPermissionsAgain" xml:space="preserve">
+    <value>A jogosultságok újraolvasása</value>
+  </data>
+  <data name="DialogHint.BackToPage" xml:space="preserve">
+    <value>Vissza az oldalhoz</value>
+  </data>
+  <data name="DialogHint.TypeAddress" xml:space="preserve">
+    <value>Cím beírása</value>
+  </data>
+  <data name="DialogHint.NextLinkOrField" xml:space="preserve">
+    <value>Ugrás a következő hivatkozásra vagy mezőre</value>
+  </data>
+  <data name="DialogHint.FollowLinkNewTab" xml:space="preserve">
+    <value>A hivatkozás követése (Ctrl: új lapon)</value>
+  </data>
+  <data name="DialogHint.ScrollPageUpDown" xml:space="preserve">
+    <value>Az oldal görgetése</value>
+  </data>
+  <data name="DialogHint.ScrollPageDownShiftUp" xml:space="preserve">
+    <value>Egy oldal görgetése lefelé (Shift: felfelé)</value>
+  </data>
+  <data name="DialogHint.Forward" xml:space="preserve">
+    <value>Előre</value>
+  </data>
+  <data name="DialogHint.Reload" xml:space="preserve">
+    <value>Újratöltés</value>
+  </data>
+  <data name="DialogHint.OpenCloseTab" xml:space="preserve">
+    <value>Lap megnyitása vagy bezárása</value>
+  </data>
+  <data name="DialogHint.NextTab" xml:space="preserve">
+    <value>Következő lap</value>
+  </data>
+  <data name="DialogHint.BookmarkPage" xml:space="preserve">
+    <value>Az oldal könyvjelzőzése</value>
+  </data>
+  <data name="DialogHint.BookmarksHistory" xml:space="preserve">
+    <value>Könyvjelzők / előzmények</value>
+  </data>
+  <data name="DialogHint.FindInPage" xml:space="preserve">
+    <value>Keresés az oldalon</value>
+  </data>
+  <data name="DialogHint.ChooseMessage" xml:space="preserve">
+    <value>Üzenet kiválasztása</value>
+  </data>
+  <data name="DialogHint.ReadMessage" xml:space="preserve">
+    <value>Az üzenet elolvasása</value>
+  </data>
+  <data name="DialogHint.WriteMessage" xml:space="preserve">
+    <value>Üzenet írása</value>
+  </data>
+  <data name="DialogHint.RefreshInbox" xml:space="preserve">
+    <value>A beérkezett üzenetek frissítése</value>
+  </data>
+  <data name="DialogHint.DeleteMessageAsks" xml:space="preserve">
+    <value>Az üzenet törlése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.AccountSettings" xml:space="preserve">
+    <value>Fiókbeállítások</value>
+  </data>
+  <data name="DialogHint.ScrollMessage" xml:space="preserve">
+    <value>Az üzenet görgetése</value>
+  </data>
+  <data name="DialogHint.Reply" xml:space="preserve">
+    <value>Válasz</value>
+  </data>
+  <data name="DialogHint.BackToInbox" xml:space="preserve">
+    <value>Vissza a beérkezett üzenetekhez</value>
+  </data>
+  <data name="DialogHint.SendMessage" xml:space="preserve">
+    <value>Az üzenet elküldése</value>
+  </data>
+  <data name="DialogHint.LookUpAddress" xml:space="preserve">
+    <value>Cím keresése</value>
+  </data>
 </root>

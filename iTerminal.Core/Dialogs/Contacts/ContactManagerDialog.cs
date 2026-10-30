@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -98,28 +99,28 @@ public class ContactManagerDialog : Dialog
         switch (_mode)
         {
             case Mode.Form:
-                yield return ("Enter/Tab", "Next field; Enter on the last one saves");
-                yield return ("Shift+Tab", "Previous field");
-                yield return ("Up/Down", "Move between the fields");
-                yield return ("Esc", "Discard the changes");
+                yield return ("Enter/Tab", UiText.Get("DialogHint.NextFieldEnterSaves", "Next field; Enter on the last one saves"));
+                yield return ("Shift+Tab", UiText.Get("DialogHint.PreviousField", "Previous field"));
+                yield return ("Up/Down", UiText.Get("DialogHint.MoveBetweenFields", "Move between the fields"));
+                yield return ("Esc", UiText.Get("Hint.DiscardChanges", "Discard the changes"));
                 yield break;
             case Mode.Filter:
-                yield return ("Enter", "Keep the filter and go back to the list");
-                yield return ("Esc", "Clear the filter");
+                yield return ("Enter", UiText.Get("DialogHint.KeepFilterBackToList", "Keep the filter and go back to the list"));
+                yield return ("Esc", UiText.Get("DialogHint.ClearFilter", "Clear the filter"));
                 yield break;
             case Mode.ConfirmDelete:
-                yield return ("Y", "Delete the contact");
-                yield return ("Any other key", "Keep the contact");
+                yield return ("Y", UiText.Get("DialogHint.DeleteContact", "Delete the contact"));
+                yield return ("Any other key", UiText.Get("DialogHint.KeepContact", "Keep the contact"));
                 yield break;
         }
 
-        yield return ("Up/Down", "Move over the contacts");
-        yield return ("PageUp/PageDown", "Move a page at a time");
-        yield return ("Home/End", "Jump to the first or last contact");
-        yield return ("Insert/N", "Add a contact");
-        yield return ("Enter/F2/E", "Change the contact");
-        yield return ("Delete/D", "Delete the contact (asks first)");
-        yield return ("/", "Filter the list");
+        yield return ("Up/Down", UiText.Get("DialogHint.MoveOverContacts", "Move over the contacts"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MovePageAtATime", "Move a page at a time"));
+        yield return ("Home/End", UiText.Get("DialogHint.JumpFirstLastContact", "Jump to the first or last contact"));
+        yield return ("Insert/N", UiText.Get("DialogHint.AddContact", "Add a contact"));
+        yield return ("Enter/F2/E", UiText.Get("DialogHint.ChangeContact", "Change the contact"));
+        yield return ("Delete/D", UiText.Get("DialogHint.DeleteContactAsks", "Delete the contact (asks first)"));
+        yield return ("/", UiText.Get("DialogHint.FilterList", "Filter the list"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
