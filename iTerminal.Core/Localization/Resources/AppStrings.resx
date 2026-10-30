@@ -901,4 +901,142 @@
   <data name="DialogHint.BrowseConnection" xml:space="preserve">
     <value>Browse the connection in a panel</value>
   </data>
+  <data name="DialogHint.SelectProject" xml:space="preserve">
+    <value>Select or unselect the project</value>
+  </data>
+  <data name="DialogHint.SelectAllProjects" xml:space="preserve">
+    <value>Select all projects</value>
+  </data>
+  <data name="DialogHint.SelectAllTestProjects" xml:space="preserve">
+    <value>Select all test projects</value>
+  </data>
+  <data name="DialogHint.BuildSelected" xml:space="preserve">
+    <value>Build the selected projects</value>
+  </data>
+  <data name="DialogHint.CleanSelected" xml:space="preserve">
+    <value>Clean the selected projects</value>
+  </data>
+  <data name="DialogHint.RunTests" xml:space="preserve">
+    <value>Run the tests</value>
+  </data>
+  <data name="DialogHint.RunProject" xml:space="preserve">
+    <value>Run the project</value>
+  </data>
+  <data name="DialogHint.CancelRunningCommand" xml:space="preserve">
+    <value>Cancel the running command</value>
+  </data>
+  <data name="DialogHint.NextDotnetSdk" xml:space="preserve">
+    <value>Switch to the next .NET SDK</value>
+  </data>
+  <data name="DialogHint.ScrollOutput" xml:space="preserve">
+    <value>Scroll the output</value>
+  </data>
+  <data name="DialogHint.TopOfOutputOrFollow" xml:space="preserve">
+    <value>Top of the output, or follow the end</value>
+  </data>
+  <data name="DialogHint.ShowHidePasswords" xml:space="preserve">
+    <value>Show or hide the passwords</value>
+  </data>
+  <data name="DialogHint.RemoveProgramFromList" xml:space="preserve">
+    <value>Remove the program from the list</value>
+  </data>
+  <data name="DialogHint.KeepProgram" xml:space="preserve">
+    <value>Keep the program</value>
+  </data>
+  <data name="DialogHint.ChooseProgram" xml:space="preserve">
+    <value>Choose a program</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastProgram" xml:space="preserve">
+    <value>Jump to the first or last program</value>
+  </data>
+  <data name="DialogHint.OpenWithChosenProgram" xml:space="preserve">
+    <value>Open the file with the chosen program</value>
+  </data>
+  <data name="DialogHint.AddProgram" xml:space="preserve">
+    <value>Add a program</value>
+  </data>
+  <data name="DialogHint.ChangeChosenProgram" xml:space="preserve">
+    <value>Change the chosen program</value>
+  </data>
+  <data name="DialogHint.RemoveChosenProgramAsks" xml:space="preserve">
+    <value>Remove the chosen program (asks first)</value>
+  </data>
+  <data name="DialogHint.MakeProgramDefault" xml:space="preserve">
+    <value>Make the chosen program the default</value>
+  </data>
+  <data name="DialogHint.BackToMap" xml:space="preserve">
+    <value>Back to the map</value>
+  </data>
+  <data name="DialogHint.PanMap" xml:space="preserve">
+    <value>Pan the map (Shift: half a screen)</value>
+  </data>
+  <data name="DialogHint.ZoomInOut" xml:space="preserve">
+    <value>Zoom in or out</value>
+  </data>
+  <data name="DialogHint.BackToHomeView" xml:space="preserve">
+    <value>Back to the home view</value>
+  </data>
+  <data name="DialogHint.SearchPlace" xml:space="preserve">
+    <value>Search for a place</value>
+  </data>
+  <data name="DialogHint.OpenSavedPlaces" xml:space="preserve">
+    <value>Open the saved places</value>
+  </data>
+  <data name="DialogHint.SaveCentreAsPlace" xml:space="preserve">
+    <value>Save the centre as a place</value>
+  </data>
+  <data name="DialogHint.ReloadTiles" xml:space="preserve">
+    <value>Reload the tiles</value>
+  </data>
+  <data name="DialogHint.GoOnlineOffline" xml:space="preserve">
+    <value>Go online or offline</value>
+  </data>
+  <data name="DialogHint.SaveAreaOffline" xml:space="preserve">
+    <value>Save this area for offline use</value>
+  </data>
+  <data name="DialogHint.SaveWorkspaceUnderName" xml:space="preserve">
+    <value>Save the workspace under this name</value>
+  </data>
+  <data name="DialogHint.ChooseWorkspace" xml:space="preserve">
+    <value>Choose a workspace</value>
+  </data>
+  <data name="DialogHint.SwitchToWorkspace" xml:space="preserve">
+    <value>Switch to the chosen workspace</value>
+  </data>
+  <data name="DialogHint.SwitchWorkspaceByNumber" xml:space="preserve">
+    <value>Switch to a workspace by its number</value>
+  </data>
+  <data name="DialogHint.SaveScreenAsWorkspace" xml:space="preserve">
+    <value>Save the screen as a new workspace</value>
+  </data>
+  <data name="DialogHint.UpdateWorkspace" xml:space="preserve">
+    <value>Update the chosen workspace from the screen</value>
+  </data>
+  <data name="DialogHint.RenameWorkspace" xml:space="preserve">
+    <value>Rename the chosen workspace</value>
+  </data>
+  <data name="DialogHint.DeleteWorkspaceAsks" xml:space="preserve">
+    <value>Delete the chosen workspace (asks first)</value>
+  </data>
+  <data name="DialogHint.PlaySelectTake" xml:space="preserve">
+    <value>Play, select or take a piece at the cursor</value>
+  </data>
+  <data name="DialogHint.SameAsEnter" xml:space="preserve">
+    <value>Same as Enter</value>
+  </data>
+  <data name="DialogHint.PreviousNextGame" xml:space="preserve">
+    <value>Previous or next game</value>
+  </data>
+  <data name="DialogHint.ChooseGame" xml:space="preserve">
+    <value>Choose a game</value>
+  </data>
+  <data name="DialogHint.StartGameAgain" xml:space="preserve">
+    <value>Start the game again</value>
+  </data>
+  <data name="DialogHint.TakeBackMove" xml:space="preserve">
+    <value>Take back the last move</value>
+  </data>
+  <data name="DialogHint.SwitchComputerTwoPlayers" xml:space="preserve">
+    <value>Switch between the computer and two players</value>
+  </data>
 </root>

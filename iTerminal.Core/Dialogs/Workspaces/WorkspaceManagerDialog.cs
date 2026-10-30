@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
@@ -129,8 +130,8 @@ public class WorkspaceManagerDialog : Dialog
     {
         if (_mode == Mode.Name)
         {
-            yield return ("Enter", "Save the workspace under this name");
-            yield return ("Esc", "Back to the list");
+            yield return ("Enter", UiText.Get("DialogHint.SaveWorkspaceUnderName", "Save the workspace under this name"));
+            yield return ("Esc", UiText.Get("DialogHint.BackToList", "Back to the list"));
             yield break;
         }
 
@@ -141,13 +142,13 @@ public class WorkspaceManagerDialog : Dialog
             yield break;
         }
 
-        yield return ("Up/Down", "Choose a workspace");
-        yield return ("Enter", "Switch to the chosen workspace");
-        yield return ("1-9", "Switch to a workspace by its number");
-        yield return ("S/N", "Save the screen as a new workspace");
-        yield return ("U", "Update the chosen workspace from the screen");
-        yield return ("R", "Rename the chosen workspace");
-        yield return ("D/Delete", "Delete the chosen workspace (asks first)");
+        yield return ("Up/Down", UiText.Get("DialogHint.ChooseWorkspace", "Choose a workspace"));
+        yield return ("Enter", UiText.Get("DialogHint.SwitchToWorkspace", "Switch to the chosen workspace"));
+        yield return ("1-9", UiText.Get("DialogHint.SwitchWorkspaceByNumber", "Switch to a workspace by its number"));
+        yield return ("S/N", UiText.Get("DialogHint.SaveScreenAsWorkspace", "Save the screen as a new workspace"));
+        yield return ("U", UiText.Get("DialogHint.UpdateWorkspace", "Update the chosen workspace from the screen"));
+        yield return ("R", UiText.Get("DialogHint.RenameWorkspace", "Rename the chosen workspace"));
+        yield return ("D/Delete", UiText.Get("DialogHint.DeleteWorkspaceAsks", "Delete the chosen workspace (asks first)"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

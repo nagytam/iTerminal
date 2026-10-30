@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Controls;
@@ -111,24 +112,24 @@ public class PasswordManagerDialog : Dialog
     {
         if (_mode == Mode.Edit)
         {
-            yield return ("Ctrl+S", "Save the entry");
-            yield return ("Tab / Up/Down", "Move between the fields");
-            yield return ("Esc", "Back to the list");
+            yield return ("Ctrl+S", UiText.Get("DialogHint.SaveEntry", "Save the entry"));
+            yield return ("Tab / Up/Down", UiText.Get("DialogHint.MoveBetweenFields", "Move between the fields"));
+            yield return ("Esc", UiText.Get("DialogHint.BackToList", "Back to the list"));
             yield break;
         }
 
         if (_confirmDelete)
         {
-            yield return ("Y / D / Delete", "Delete the entry");
-            yield return ("Any other key", "Keep the entry");
+            yield return ("Y / D / Delete", UiText.Get("DialogHint.DeleteEntry", "Delete the entry"));
+            yield return ("Any other key", UiText.Get("DialogHint.KeepEntry", "Keep the entry"));
             yield break;
         }
 
-        yield return ("Up/Down", "Choose an entry");
-        yield return ("N", "Add an entry");
-        yield return ("Enter/E", "Edit the entry");
-        yield return ("Delete/D", "Delete the entry (asks first)");
-        yield return ("V", "Show or hide the passwords");
+        yield return ("Up/Down", UiText.Get("DialogHint.ChooseEntry", "Choose an entry"));
+        yield return ("N", UiText.Get("DialogHint.AddEntry", "Add an entry"));
+        yield return ("Enter/E", UiText.Get("DialogHint.EditEntry", "Edit the entry"));
+        yield return ("Delete/D", UiText.Get("DialogHint.DeleteEntryAsks", "Delete the entry (asks first)"));
+        yield return ("V", UiText.Get("DialogHint.ShowHidePasswords", "Show or hide the passwords"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
