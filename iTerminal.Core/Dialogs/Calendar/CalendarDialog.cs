@@ -46,7 +46,7 @@ public class CalendarDialog : Dialog
     public CalendarDialog(IDateTimeProviderService dateTimeProviderService, MeetingStore meetings, IThemeService themeService)
         : base(nameof(CalendarDialog), themeService)
     {
-        Title = "Calendar";
+        Title = iConsole.Localization.UiText.Get("Dialog.Calendar", "Calendar");
         _dateTimeProviderService = dateTimeProviderService;
         _meetings = meetings;
         _calendar = new CalendarModel(Today());

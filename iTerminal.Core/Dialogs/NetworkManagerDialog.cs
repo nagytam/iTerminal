@@ -24,7 +24,7 @@ public class NetworkManagerDialog : Dialog
         _taskManager = taskManager ?? new TaskManager();
         _networkInfoModel = networkInfoModel ?? new NetworkInfoModel();
 
-        Title = "Network manager";
+        Title = iConsole.Localization.UiText.Get("Dialog.NetworkManager", "Network manager");
         var listModel = new ListBoxModel<NetworkInfo>(_networkInfoModel.Networks)
         {
             TransformItem = TransformItem

@@ -388,4 +388,43 @@
   <data name="Dialog.ColourLabels" xml:space="preserve">
     <value>Farbetiketten und Tags</value>
   </data>
+  <data name="Dialog.Permissions" xml:space="preserve">
+    <value>Berechtigungen</value>
+  </data>
+  <data name="Dialog.Calculator" xml:space="preserve">
+    <value>Rechner</value>
+  </data>
+  <data name="Dialog.Calendar" xml:space="preserve">
+    <value>Kalender</value>
+  </data>
+  <data name="Dialog.Commands" xml:space="preserve">
+    <value>Befehle</value>
+  </data>
+  <data name="Dialog.DiskUsage" xml:space="preserve">
+    <value>Speicherbelegung</value>
+  </data>
+  <data name="Dialog.DiskManager" xml:space="preserve">
+    <value>Datenträgerverwaltung</value>
+  </data>
+  <data name="Dialog.Documents" xml:space="preserve">
+    <value>Dokumente</value>
+  </data>
+  <data name="Dialog.EditLink" xml:space="preserve">
+    <value>Link bearbeiten</value>
+  </data>
+  <data name="Dialog.SortBy" xml:space="preserve">
+    <value>Sortieren nach</value>
+  </data>
+  <data name="Dialog.ProcessManager" xml:space="preserve">
+    <value>Prozessverwaltung</value>
+  </data>
+  <data name="Dialog.NetworkManager" xml:space="preserve">
+    <value>Netzwerkverwaltung</value>
+  </data>
+  <data name="Dialog.SecureWipe" xml:space="preserve">
+    <value>Sicheres Löschen</value>
+  </data>
+  <data name="Dialog.ThemeManager" xml:space="preserve">
+    <value>Designverwaltung</value>
+  </data>
 </root>

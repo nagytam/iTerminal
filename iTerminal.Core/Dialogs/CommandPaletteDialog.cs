@@ -42,7 +42,7 @@ public class CommandPaletteDialog : Dialog
         : base(nameof(CommandPaletteDialog), themeService)
     {
         _settingsService = settingsService;
-        Title = "Commands";
+        Title = iConsole.Localization.UiText.Get("Dialog.Commands", "Commands");
         _query = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Run", IsReadOnly = false, Placeholder = "type to filter commands" };
         _list = new PaletteList(themeService);
         AddControl(_query);

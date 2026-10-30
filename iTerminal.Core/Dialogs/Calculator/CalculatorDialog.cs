@@ -31,7 +31,7 @@ public class CalculatorDialog : SplitPaneDialog
     public CalculatorDialog(IThemeService themeService)
         : base(nameof(CalculatorDialog), themeService)
     {
-        Title = "Calculator";
+        Title = iConsole.Localization.UiText.Get("Dialog.Calculator", "Calculator");
 
         _tab = new Tab(themeService) { Orientation = Orientation.Horizontal };
         AddControl(_tab);

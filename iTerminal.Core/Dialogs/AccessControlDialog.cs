@@ -93,7 +93,7 @@ public class AccessControlDialog : Dialog
     public AccessControlDialog(IAccessControlService service, IThemeService themeService)
         : base(nameof(AccessControlDialog), themeService)
     {
-        Title = "Permissions";
+        Title = iConsole.Localization.UiText.Get("Dialog.Permissions", "Permissions");
         _service = service;
     }
 

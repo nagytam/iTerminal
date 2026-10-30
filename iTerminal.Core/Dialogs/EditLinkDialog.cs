@@ -40,7 +40,7 @@ public class EditLinkDialog : FormDialog
     {
         _linkService = linkService;
         _contentModelService = contentModelService;
-        Title = "Edit link";
+        Title = iConsole.Localization.UiText.Get("Dialog.EditLink", "Edit link");
         var saveCommand = new SaveCommand();
         AddCommand(saveCommand);
 
