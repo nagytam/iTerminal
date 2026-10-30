@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Display;
@@ -740,13 +741,13 @@ public partial class TextViewerControl : Control
             yield break;
         }
 
-        yield return ("Up/Down", "Scroll a line");
-        yield return ("PageUp/PageDown", "Scroll a page");
-        yield return ("Left/Right", "Scroll sideways");
-        yield return ("Ctrl+Home/Ctrl+End", "Go to the start or the end of the file");
+        yield return ("Up/Down", UiText.Get("Hint.ScrollLine", "Scroll a line"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.ScrollPage", "Scroll a page"));
+        yield return ("Left/Right", UiText.Get("Hint.ScrollSideways", "Scroll sideways"));
+        yield return ("Ctrl+Home/Ctrl+End", UiText.Get("Hint.GoToFileStartOrEnd", "Go to the start or the end of the file"));
         if (_enableFolding)
         {
-            yield return ("Alt+Left/Alt+Right", "Fold or unfold the region at the cursor");
+            yield return ("Alt+Left/Alt+Right", UiText.Get("Hint.FoldRegion", "Fold or unfold the region at the cursor"));
         }
     }
 

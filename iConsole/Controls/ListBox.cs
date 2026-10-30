@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Display;
@@ -132,14 +133,14 @@ public class ListBox<T> : Control
             yield break;
         }
 
-        yield return ("Up/Down", "Move the cursor");
-        yield return ("PageUp/PageDown", "Move the cursor by a page");
-        yield return ("Home/End", "First or last item");
-        yield return ("Enter", "Select the item under the cursor");
-        yield return ("Insert", "Mark or unmark the item under the cursor");
+        yield return ("Up/Down", UiText.Get("Hint.MoveCursor", "Move the cursor"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MoveCursorByPage", "Move the cursor by a page"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastItem", "First or last item"));
+        yield return ("Enter", UiText.Get("Hint.SelectItemUnderCursor", "Select the item under the cursor"));
+        yield return ("Insert", UiText.Get("Hint.MarkItemUnderCursor", "Mark or unmark the item under the cursor"));
         if (EnableTypeAhead)
         {
-            yield return ("Letters", "Jump to the next item that starts with them");
+            yield return ("Letters", UiText.Get("Hint.JumpToLetter", "Jump to the next item that starts with them"));
         }
     }
 

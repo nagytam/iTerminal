@@ -595,12 +595,12 @@ public class MenuItem : PopUpWindow
             yield break;
         }
 
-        yield return ("Up/Down", "Move over the menu items");
-        yield return ("Home/End", "Jump to the first or last item");
-        yield return ("Enter/Space", "Run the selected item");
-        yield return ("Right", "Open the submenu or go to the next menu");
-        yield return ("Left", "Close the submenu or go to the previous menu");
-        yield return ("Esc", "Close the menu");
+        yield return ("Up/Down", UiText.Get("Hint.MoveOverMenuItems", "Move over the menu items"));
+        yield return ("Home/End", UiText.Get("Hint.JumpFirstLastItem", "Jump to the first or last item"));
+        yield return ("Enter/Space", UiText.Get("Hint.RunSelectedItem", "Run the selected item"));
+        yield return ("Right", UiText.Get("Hint.OpenSubmenuOrNext", "Open the submenu or go to the next menu"));
+        yield return ("Left", UiText.Get("Hint.CloseSubmenuOrPrevious", "Close the submenu or go to the previous menu"));
+        yield return ("Esc", UiText.Get("Hint.CloseMenu", "Close the menu"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

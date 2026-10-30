@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Display;
@@ -278,12 +279,12 @@ public class TreeView : Control
             yield break;
         }
 
-        yield return ("Up/Down", "Move the cursor");
-        yield return ("PageUp/PageDown", "Move the cursor a page");
-        yield return ("Home/End", "First or last row");
-        yield return ("Right", "Open the node, or step into its first child");
-        yield return ("Left", "Close the node, or go to its parent");
-        yield return ("Enter/Space/+/-", "Expand or collapse the node");
+        yield return ("Up/Down", UiText.Get("Hint.MoveCursor", "Move the cursor"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MoveCursorPage", "Move the cursor a page"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastRow", "First or last row"));
+        yield return ("Right", UiText.Get("Hint.OpenNodeOrChild", "Open the node, or step into its first child"));
+        yield return ("Left", UiText.Get("Hint.CloseNodeOrParent", "Close the node, or go to its parent"));
+        yield return ("Enter/Space/+/-", UiText.Get("Hint.ExpandOrCollapseNode", "Expand or collapse the node"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
