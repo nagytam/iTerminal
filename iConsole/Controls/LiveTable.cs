@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -83,11 +84,11 @@ public class LiveTable : Control
 
     public string EmptyText
     {
-        get => _emptyText;
+        get => _emptyText ?? UiText.Get("Common.NoRows", "No rows");
         set => _emptyText = value ?? string.Empty;
     }
 
-    private string _emptyText = "No rows";
+    private string? _emptyText;
 
     public IReadOnlyList<LiveTableColumn> Columns
     {

@@ -223,4 +223,115 @@
   <data name="Viewer.HintCodePage" xml:space="preserve">
     <value>Siguiente página de códigos (Mayús: anterior)</value>
   </data>
+  <data name="Hint.DismissMessage" xml:space="preserve">
+    <value>Descartar el mensaje</value>
+  </data>
+  <data name="Hint.MoveHighlightTrail" xml:space="preserve">
+    <value>Mover el resaltado a lo largo de la ruta</value>
+  </data>
+  <data name="Hint.FirstOrLastSegment" xml:space="preserve">
+    <value>Primer o último segmento</value>
+  </data>
+  <data name="Hint.OpenHighlightedSegment" xml:space="preserve">
+    <value>Abrir el segmento resaltado</value>
+  </data>
+  <data name="Hint.PressButton" xml:space="preserve">
+    <value>Pulsar el botón</value>
+  </data>
+  <data name="Hint.MoveSelectedDay" xml:space="preserve">
+    <value>Mover el día o la semana seleccionados</value>
+  </data>
+  <data name="Hint.PreviousNextMonth" xml:space="preserve">
+    <value>Mes anterior o siguiente</value>
+  </data>
+  <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
+    <value>Primer o último día del mes</value>
+  </data>
+  <data name="Hint.SelectToday" xml:space="preserve">
+    <value>Seleccionar hoy</value>
+  </data>
+  <data name="Hint.PreviousNextYear" xml:space="preserve">
+    <value>Año anterior o siguiente</value>
+  </data>
+  <data name="Hint.ChooseSelectedDay" xml:space="preserve">
+    <value>Elegir el día seleccionado</value>
+  </data>
+  <data name="Hint.CheckOrUncheck" xml:space="preserve">
+    <value>Marcar o desmarcar</value>
+  </data>
+  <data name="Hint.MoveCursor" xml:space="preserve">
+    <value>Mover el cursor</value>
+  </data>
+  <data name="Hint.MoveCursorPage" xml:space="preserve">
+    <value>Mover el cursor una página</value>
+  </data>
+  <data name="Hint.FirstOrLastItem" xml:space="preserve">
+    <value>Primer o último elemento</value>
+  </data>
+  <data name="Hint.ActivateList" xml:space="preserve">
+    <value>Activar la lista</value>
+  </data>
+  <data name="Hint.CheckItemUnderCursor" xml:space="preserve">
+    <value>Marcar o desmarcar el elemento bajo el cursor</value>
+  </data>
+  <data name="Hint.CheckEveryItem" xml:space="preserve">
+    <value>Marcar o desmarcar todos los elementos</value>
+  </data>
+  <data name="Hint.InvertEveryItem" xml:space="preserve">
+    <value>Invertir todos los elementos</value>
+  </data>
+  <data name="Hint.MoveBetweenChips" xml:space="preserve">
+    <value>Moverse entre los chips</value>
+  </data>
+  <data name="Hint.FirstOrLastChip" xml:space="preserve">
+    <value>Primer chip o último chip</value>
+  </data>
+  <data name="Hint.AddChip" xml:space="preserve">
+    <value>Añadir un chip en la ranura [+]</value>
+  </data>
+  <data name="Hint.RemoveActiveChip" xml:space="preserve">
+    <value>Quitar el chip activo</value>
+  </data>
+  <data name="Hint.MoveOverPalette" xml:space="preserve">
+    <value>Mover el cursor por la paleta</value>
+  </data>
+  <data name="Hint.FirstOrLastColour" xml:space="preserve">
+    <value>Primer o último color</value>
+  </data>
+  <data name="Hint.ChooseColourUnderCursor" xml:space="preserve">
+    <value>Elegir el color bajo el cursor</value>
+  </data>
+  <data name="Hint.ChoosePreviousNext" xml:space="preserve">
+    <value>Elegir el elemento anterior o siguiente</value>
+  </data>
+  <data name="Hint.ChooseItemPageAway" xml:space="preserve">
+    <value>Elegir un elemento una página más allá</value>
+  </data>
+  <data name="Hint.JumpToLetter" xml:space="preserve">
+    <value>Saltar al siguiente elemento que empiece por ellas</value>
+  </data>
+  <data name="Hint.OpenList" xml:space="preserve">
+    <value>Abrir la lista</value>
+  </data>
+  <data name="Hint.MoveOverItems" xml:space="preserve">
+    <value>Moverse por los elementos</value>
+  </data>
+  <data name="Hint.RunOrOpenSubmenu" xml:space="preserve">
+    <value>Ejecutar el elemento o abrir su submenú</value>
+  </data>
+  <data name="Hint.OpenSubmenu" xml:space="preserve">
+    <value>Abrir el submenú</value>
+  </data>
+  <data name="Hint.CloseSubmenu" xml:space="preserve">
+    <value>Cerrar el submenú</value>
+  </data>
+  <data name="Hint.CloseMenu" xml:space="preserve">
+    <value>Cerrar el menú</value>
+  </data>
+  <data name="Common.NoData" xml:space="preserve">
+    <value>Sin datos</value>
+  </data>
+  <data name="Common.NoRows" xml:space="preserve">
+    <value>Sin filas</value>
+  </data>
 </root>

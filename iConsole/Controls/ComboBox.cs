@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Services;
@@ -120,12 +121,12 @@ public class ComboBox<T> : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Up/Down", "Choose the previous or next item");
-        yield return ("PageUp/PageDown", "Choose an item a page away");
-        yield return ("Home/End", "First or last item");
-        yield return ("Letters", "Jump to the next item that starts with them");
-        yield return ("Enter/Space/F4", "Open the list");
-        yield return ("Alt+Down", "Open the list");
+        yield return ("Up/Down", UiText.Get("Hint.ChoosePreviousNext", "Choose the previous or next item"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.ChooseItemPageAway", "Choose an item a page away"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastItem", "First or last item"));
+        yield return ("Letters", UiText.Get("Hint.JumpToLetter", "Jump to the next item that starts with them"));
+        yield return ("Enter/Space/F4", UiText.Get("Hint.OpenList", "Open the list"));
+        yield return ("Alt+Down", UiText.Get("Hint.OpenList", "Open the list"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
