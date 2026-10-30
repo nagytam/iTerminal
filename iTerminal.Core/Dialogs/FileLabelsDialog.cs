@@ -47,7 +47,7 @@ public class FileLabelsDialog : FormDialog
         var applyCommand = new ApplyCommand();
         AddCommand(applyCommand);
 
-        _colour = new ComboBox<string>(themeService) { Label = "Colour" };
+        _colour = new ComboBox<string>(themeService) { Label = iConsole.Localization.UiText.Get("Label.Colour", "Colour") };
         _tags = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Tags" };
         _info = new Label(string.Empty, themeService);
         _message = new Label(string.Empty, themeService);

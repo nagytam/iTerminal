@@ -86,12 +86,12 @@ public abstract class TransferDialog : FormDialog
 
         AddCommand(transferCommand);
 
-        _labelSource = new Label("Source: ", themeService);
+        _labelSource = new Label(iConsole.Localization.UiText.Get("Label.Source", "Source") + ": ", themeService);
         TextBoxTarget = new FolderOrNewFileTextBox(beepService, dateTimeProviderService, themeService)
         {
             // The box holds a destination path, not a name; "Name" was a leftover from the create
             // dialogs and read as "rename to".
-            Label = "To",
+            Label = iConsole.Localization.UiText.Get("Label.To", "To"),
             Text = TargetUrl,
             MaxLength = Url.MaxLength,
             IsReadOnly = false
@@ -100,10 +100,10 @@ public abstract class TransferDialog : FormDialog
         var validator = (TextBoxTarget.ValidationModel as FolderOrNewFilesValidationModel);
         ErrorMessage = new ErrorMessage(validator!, themeService);
 
-        _labelTarget = new Label("Target: ", themeService);
+        _labelTarget = new Label(iConsole.Localization.UiText.Get("Label.Target", "Target") + ": ", themeService);
         _checkBoxOverwrite = new CheckBox(themeService)
         {
-            Label = "Overwrite",
+            Label = iConsole.Localization.UiText.Get("Label.Overwrite", "Overwrite"),
             IsChecked = false,
             IsEnabled = true,
             HotKeyChar = 'O'
@@ -164,7 +164,7 @@ public abstract class TransferDialog : FormDialog
             CenterInParent(new Size(80, DialogHeight));
         }
 
-        _labelSource.Text = "Source: " + (IsMultiple
+        _labelSource.Text = iConsole.Localization.UiText.Get("Label.Source", "Source") + ": " + (IsMultiple
             ? DescribeSources(SourceUrls).Shrink((int)FieldWidth - 8)
             : SourceUrl.Shrink((int)FieldWidth - 8));
         // One column for every row — the box's caption, the two path lines, the check box and the
@@ -209,7 +209,7 @@ public abstract class TransferDialog : FormDialog
             target = TextBoxTarget.Text ?? string.Empty;
         }
 
-        string text = "Target: " + target.Shrink((int)FieldWidth - 8);
+        string text = iConsole.Localization.UiText.Get("Label.Target", "Target") + ": " + target.Shrink((int)FieldWidth - 8);
         if (_labelTarget.Text != text)
         {
             _labelTarget.Text = text;

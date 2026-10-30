@@ -144,7 +144,7 @@ public class CompressDialog : FormDialog
             new FileSystemResolver(fileSystemService, memoryDriveService, sshFileSystemService, archiveFileSystemService, contentModelService));
         AddCommand(compressCommand);
 
-        _labelSource = new Label("Source: ", themeService);
+        _labelSource = new Label(iConsole.Localization.UiText.Get("Label.Source", "Source") + ": ", themeService);
 
         // Built without captions: the form draws them, in one aligned column.
         _textBoxArchive = new TextBox(beepService, dateTimeProviderService, themeService)
@@ -220,7 +220,7 @@ public class CompressDialog : FormDialog
         PasswordConfirmation = string.Empty;
 
         Title = SourceUrls.Count == 1 ? $"Compress {FocusedEntry.NameOf(SourceUrls[0])}" : $"Compress {SourceUrls.Count} items";
-        _labelSource.Text = "Source: " + (SourceUrls.Count == 0 ? string.Empty : TransferDialog.DescribeSources(SourceUrls));
+        _labelSource.Text = iConsole.Localization.UiText.Get("Label.Source", "Source") + ": " + (SourceUrls.Count == 0 ? string.Empty : TransferDialog.DescribeSources(SourceUrls));
 
         var format = Format ?? ArchiveFormat.Zip;
         ArchivePath = DefaultArchivePath(SourceUrls, sourceModel?.Url, _contentModelService.NonFocusedFolderUrl, format);
