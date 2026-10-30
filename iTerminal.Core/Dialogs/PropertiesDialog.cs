@@ -70,7 +70,7 @@ public class PropertiesDialog : FormDialog
         _contentModelService = contentModelService;
         _labels = labels;
         _accessControlDialog = accessControlDialog;
-        Title = "Properties";
+        Title = iConsole.Localization.UiText.Get("Menu.Properties", "Properties");
         var applyCommand = new ApplyCommand();
         AddCommand(applyCommand);
         if (accessControlDialog is not null)

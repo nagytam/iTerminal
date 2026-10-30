@@ -73,7 +73,7 @@ public class DeleteDialog : FormDialog
         : base(nameof(DeleteDialog), themeService)
     {
         _contentModelService = contentModelService;
-        Title = "Delete";
+        Title = iConsole.Localization.UiText.Get("Menu.Delete", "Delete");
 
         _deleteCommand = new Commands.DeleteCommand(
             contentModelService,
