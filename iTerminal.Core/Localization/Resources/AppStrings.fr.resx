@@ -529,4 +529,22 @@
   <data name="Dialog.Video" xml:space="preserve">
     <value>Vidéo</value>
   </data>
+  <data name="Button.Create" xml:space="preserve">
+    <value>Créer</value>
+  </data>
+  <data name="Button.Mount" xml:space="preserve">
+    <value>Monter</value>
+  </data>
+  <data name="Button.Unmount" xml:space="preserve">
+    <value>Démonter</value>
+  </data>
+  <data name="Button.Format" xml:space="preserve">
+    <value>Formater</value>
+  </data>
+  <data name="Button.Connect" xml:space="preserve">
+    <value>Connecter</value>
+  </data>
+  <data name="Button.Swap" xml:space="preserve">
+    <value>Échanger</value>
+  </data>
 </root>

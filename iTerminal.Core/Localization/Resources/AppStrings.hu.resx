@@ -529,4 +529,22 @@
   <data name="Dialog.Video" xml:space="preserve">
     <value>Videó</value>
   </data>
+  <data name="Button.Create" xml:space="preserve">
+    <value>Létrehozás</value>
+  </data>
+  <data name="Button.Mount" xml:space="preserve">
+    <value>Csatolás</value>
+  </data>
+  <data name="Button.Unmount" xml:space="preserve">
+    <value>Leválasztás</value>
+  </data>
+  <data name="Button.Format" xml:space="preserve">
+    <value>Formázás</value>
+  </data>
+  <data name="Button.Connect" xml:space="preserve">
+    <value>Csatlakozás</value>
+  </data>
+  <data name="Button.Swap" xml:space="preserve">
+    <value>Csere</value>
+  </data>
 </root>

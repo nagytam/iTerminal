@@ -101,7 +101,7 @@ public class RenameDialog : FormDialog
             IsEnabled = true,
             HotKeyChar = 'O'
         };
-        _renameButton = new Button("Rename", _renameCommand, themeService) { HotKeyChar = 'R' };
+        _renameButton = new Button(iConsole.Localization.UiText.Get("Menu.Rename", "Rename"), _renameCommand, themeService) { HotKeyChar = 'R' };
         _cancelButton = new CancelDialogButton(themeService);
         _errorLabel = new Label(string.Empty, themeService);
         AddControl(_textBoxName);
