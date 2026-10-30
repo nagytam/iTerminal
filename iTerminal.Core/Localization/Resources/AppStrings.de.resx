@@ -1039,4 +1039,166 @@
   <data name="DialogHint.SwitchComputerTwoPlayers" xml:space="preserve">
     <value>Zwischen Computer und zwei Spielern wechseln</value>
   </data>
+  <data name="DialogHint.ScrollDifferences" xml:space="preserve">
+    <value>Die Unterschiede scrollen</value>
+  </data>
+  <data name="DialogHint.ScrollPageAtATime" xml:space="preserve">
+    <value>Seitenweise scrollen</value>
+  </data>
+  <data name="DialogHint.JumpStartOrEnd" xml:space="preserve">
+    <value>Zum Anfang oder Ende springen</value>
+  </data>
+  <data name="DialogHint.JumpNextPrevDifference" xml:space="preserve">
+    <value>Zum nächsten oder vorherigen Unterschied springen</value>
+  </data>
+  <data name="DialogHint.IgnoreWhiteSpace" xml:space="preserve">
+    <value>Leerraum ignorieren</value>
+  </data>
+  <data name="DialogHint.IgnoreLetterCase" xml:space="preserve">
+    <value>Groß-/Kleinschreibung ignorieren</value>
+  </data>
+  <data name="DialogHint.MoveOverFolders" xml:space="preserve">
+    <value>Den Cursor über die Ordner bewegen</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastRow" xml:space="preserve">
+    <value>Zur ersten oder letzten Zeile springen</value>
+  </data>
+  <data name="DialogHint.GoIntoFolder" xml:space="preserve">
+    <value>In den Ordner unter dem Cursor wechseln</value>
+  </data>
+  <data name="DialogHint.SortNameOrSize" xml:space="preserve">
+    <value>Nach Name oder Größe sortieren</value>
+  </data>
+  <data name="DialogHint.ShowFolderInPanel" xml:space="preserve">
+    <value>Den Ordner im Panel zeigen</value>
+  </data>
+  <data name="DialogHint.Submit" xml:space="preserve">
+    <value>Absenden</value>
+  </data>
+  <data name="DialogHint.RunMainAction" xml:space="preserve">
+    <value>Die Hauptaktion ausführen</value>
+  </data>
+  <data name="DialogHint.RefreshList" xml:space="preserve">
+    <value>Die Liste aktualisieren</value>
+  </data>
+  <data name="DialogHint.SearchPackages" xml:space="preserve">
+    <value>Nach Paketen suchen</value>
+  </data>
+  <data name="DialogHint.ShowInstalled" xml:space="preserve">
+    <value>Die installierten Pakete zeigen</value>
+  </data>
+  <data name="DialogHint.DeleteSavedProfile" xml:space="preserve">
+    <value>Das gespeicherte Profil löschen</value>
+  </data>
+  <data name="DialogHint.KeepProfile" xml:space="preserve">
+    <value>Das Profil behalten</value>
+  </data>
+  <data name="DialogHint.Connect" xml:space="preserve">
+    <value>Verbinden</value>
+  </data>
+  <data name="DialogHint.BackToHostList" xml:space="preserve">
+    <value>Zurück zur Host-Liste</value>
+  </data>
+  <data name="DialogHint.OpenChosenHost" xml:space="preserve">
+    <value>Den gewählten Host öffnen</value>
+  </data>
+  <data name="DialogHint.SearchNetworkAgain" xml:space="preserve">
+    <value>Das Netzwerk erneut durchsuchen</value>
+  </data>
+  <data name="DialogHint.DeleteSavedProfileAsks" xml:space="preserve">
+    <value>Das gespeicherte Profil löschen (fragt vorher)</value>
+  </data>
+  <data name="DialogHint.SearchDocuments" xml:space="preserve">
+    <value>Die Dokumente durchsuchen</value>
+  </data>
+  <data name="DialogHint.ChooseResult" xml:space="preserve">
+    <value>Ein Ergebnis wählen</value>
+  </data>
+  <data name="DialogHint.ShowDocumentInPanel" xml:space="preserve">
+    <value>Das Dokument im Panel zeigen</value>
+  </data>
+  <data name="DialogHint.ClearSearchThenClose" xml:space="preserve">
+    <value>Die Suche leeren, dann schließen</value>
+  </data>
+  <data name="DialogHint.ScanDocumentsAgain" xml:space="preserve">
+    <value>Die Dokumente erneut durchsuchen</value>
+  </data>
+  <data name="DialogHint.CancelScan" xml:space="preserve">
+    <value>Die Suche abbrechen</value>
+  </data>
+  <data name="DialogHint.ShowHidePreview" xml:space="preserve">
+    <value>Die Vorschau ein- oder ausblenden</value>
+  </data>
+  <data name="DialogHint.SearchOrAddHit" xml:space="preserve">
+    <value>Suchen oder den gewählten Treffer hinzufügen</value>
+  </data>
+  <data name="DialogHint.ChooseHit" xml:space="preserve">
+    <value>Einen Treffer wählen</value>
+  </data>
+  <data name="DialogHint.AddStock" xml:space="preserve">
+    <value>Eine Aktie hinzufügen</value>
+  </data>
+  <data name="DialogHint.RemoveStock" xml:space="preserve">
+    <value>Die Aktie entfernen</value>
+  </data>
+  <data name="DialogHint.RefreshQuotes" xml:space="preserve">
+    <value>Die Kurse aktualisieren</value>
+  </data>
+  <data name="DialogHint.ScrollHelp" xml:space="preserve">
+    <value>Die Hilfe scrollen</value>
+  </data>
+  <data name="DialogHint.BackToRepository" xml:space="preserve">
+    <value>Zurück zum Repository</value>
+  </data>
+  <data name="DialogHint.UseTheText" xml:space="preserve">
+    <value>Den Text verwenden</value>
+  </data>
+  <data name="DialogHint.NextSection" xml:space="preserve">
+    <value>Nächster Bereich (Änderungen, Branches, Verlauf, Stashes, Detail)</value>
+  </data>
+  <data name="DialogHint.StageCheckoutShow" xml:space="preserve">
+    <value>Stagen oder unstagen, auschecken oder den Commit zeigen</value>
+  </data>
+  <data name="DialogHint.StageUnstageFile" xml:space="preserve">
+    <value>Die Datei stagen oder unstagen</value>
+  </data>
+  <data name="DialogHint.StageAll" xml:space="preserve">
+    <value>Alles stagen (anwenden, bei den Stashes)</value>
+  </data>
+  <data name="DialogHint.DiscardFileChangesAsks" xml:space="preserve">
+    <value>Die Änderungen der Datei verwerfen (fragt vorher)</value>
+  </data>
+  <data name="DialogHint.Commit" xml:space="preserve">
+    <value>Committen</value>
+  </data>
+  <data name="DialogHint.AmendCommit" xml:space="preserve">
+    <value>Den letzten Commit ändern</value>
+  </data>
+  <data name="DialogHint.NewBranch" xml:space="preserve">
+    <value>Neuer Branch</value>
+  </data>
+  <data name="DialogHint.MergeBranch" xml:space="preserve">
+    <value>Den Branch mergen</value>
+  </data>
+  <data name="DialogHint.DeleteBranch" xml:space="preserve">
+    <value>Den Branch löschen</value>
+  </data>
+  <data name="DialogHint.Fetch" xml:space="preserve">
+    <value>Abrufen</value>
+  </data>
+  <data name="DialogHint.PullPush" xml:space="preserve">
+    <value>Abrufen / Übertragen</value>
+  </data>
+  <data name="DialogHint.StashChanges" xml:space="preserve">
+    <value>Die Änderungen stashen</value>
+  </data>
+  <data name="DialogHint.DropStash" xml:space="preserve">
+    <value>Den Stash verwerfen</value>
+  </data>
+  <data name="DialogHint.Refresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="DialogHint.ScrollPatch" xml:space="preserve">
+    <value>Den Patch scrollen</value>
+  </data>
 </root>

@@ -1039,4 +1039,166 @@
   <data name="DialogHint.SwitchComputerTwoPlayers" xml:space="preserve">
     <value>Váltás a számítógép és a két játékos között</value>
   </data>
+  <data name="DialogHint.ScrollDifferences" xml:space="preserve">
+    <value>A különbségek görgetése</value>
+  </data>
+  <data name="DialogHint.ScrollPageAtATime" xml:space="preserve">
+    <value>Görgetés oldalanként</value>
+  </data>
+  <data name="DialogHint.JumpStartOrEnd" xml:space="preserve">
+    <value>Ugrás az elejére vagy a végére</value>
+  </data>
+  <data name="DialogHint.JumpNextPrevDifference" xml:space="preserve">
+    <value>Ugrás a következő vagy előző különbségre</value>
+  </data>
+  <data name="DialogHint.IgnoreWhiteSpace" xml:space="preserve">
+    <value>Szóközök figyelmen kívül hagyása</value>
+  </data>
+  <data name="DialogHint.IgnoreLetterCase" xml:space="preserve">
+    <value>Kis- és nagybetűk figyelmen kívül hagyása</value>
+  </data>
+  <data name="DialogHint.MoveOverFolders" xml:space="preserve">
+    <value>A kurzor mozgatása a mappákon</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastRow" xml:space="preserve">
+    <value>Ugrás az első vagy utolsó sorra</value>
+  </data>
+  <data name="DialogHint.GoIntoFolder" xml:space="preserve">
+    <value>Belépés a kurzor alatti mappába</value>
+  </data>
+  <data name="DialogHint.SortNameOrSize" xml:space="preserve">
+    <value>Rendezés név vagy méret szerint</value>
+  </data>
+  <data name="DialogHint.ShowFolderInPanel" xml:space="preserve">
+    <value>A mappa megjelenítése a panelen</value>
+  </data>
+  <data name="DialogHint.Submit" xml:space="preserve">
+    <value>Elküldés</value>
+  </data>
+  <data name="DialogHint.RunMainAction" xml:space="preserve">
+    <value>A fő művelet végrehajtása</value>
+  </data>
+  <data name="DialogHint.RefreshList" xml:space="preserve">
+    <value>A lista frissítése</value>
+  </data>
+  <data name="DialogHint.SearchPackages" xml:space="preserve">
+    <value>Csomagok keresése</value>
+  </data>
+  <data name="DialogHint.ShowInstalled" xml:space="preserve">
+    <value>A telepített csomagok megjelenítése</value>
+  </data>
+  <data name="DialogHint.DeleteSavedProfile" xml:space="preserve">
+    <value>A mentett profil törlése</value>
+  </data>
+  <data name="DialogHint.KeepProfile" xml:space="preserve">
+    <value>A profil megtartása</value>
+  </data>
+  <data name="DialogHint.Connect" xml:space="preserve">
+    <value>Kapcsolódás</value>
+  </data>
+  <data name="DialogHint.BackToHostList" xml:space="preserve">
+    <value>Vissza a gépek listájához</value>
+  </data>
+  <data name="DialogHint.OpenChosenHost" xml:space="preserve">
+    <value>A kiválasztott gép megnyitása</value>
+  </data>
+  <data name="DialogHint.SearchNetworkAgain" xml:space="preserve">
+    <value>Újabb keresés a hálózaton</value>
+  </data>
+  <data name="DialogHint.DeleteSavedProfileAsks" xml:space="preserve">
+    <value>A mentett profil törlése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.SearchDocuments" xml:space="preserve">
+    <value>Keresés a dokumentumokban</value>
+  </data>
+  <data name="DialogHint.ChooseResult" xml:space="preserve">
+    <value>Találat kiválasztása</value>
+  </data>
+  <data name="DialogHint.ShowDocumentInPanel" xml:space="preserve">
+    <value>A dokumentum megjelenítése a panelen</value>
+  </data>
+  <data name="DialogHint.ClearSearchThenClose" xml:space="preserve">
+    <value>A keresés törlése, majd bezárás</value>
+  </data>
+  <data name="DialogHint.ScanDocumentsAgain" xml:space="preserve">
+    <value>A dokumentumok újbóli vizsgálata</value>
+  </data>
+  <data name="DialogHint.CancelScan" xml:space="preserve">
+    <value>A vizsgálat megszakítása</value>
+  </data>
+  <data name="DialogHint.ShowHidePreview" xml:space="preserve">
+    <value>Az előnézet megjelenítése vagy elrejtése</value>
+  </data>
+  <data name="DialogHint.SearchOrAddHit" xml:space="preserve">
+    <value>Keresés, vagy a kiválasztott találat hozzáadása</value>
+  </data>
+  <data name="DialogHint.ChooseHit" xml:space="preserve">
+    <value>Találat kiválasztása</value>
+  </data>
+  <data name="DialogHint.AddStock" xml:space="preserve">
+    <value>Részvény hozzáadása</value>
+  </data>
+  <data name="DialogHint.RemoveStock" xml:space="preserve">
+    <value>A részvény eltávolítása</value>
+  </data>
+  <data name="DialogHint.RefreshQuotes" xml:space="preserve">
+    <value>Az árfolyamok frissítése</value>
+  </data>
+  <data name="DialogHint.ScrollHelp" xml:space="preserve">
+    <value>A súgó görgetése</value>
+  </data>
+  <data name="DialogHint.BackToRepository" xml:space="preserve">
+    <value>Vissza a tárolóhoz</value>
+  </data>
+  <data name="DialogHint.UseTheText" xml:space="preserve">
+    <value>A szöveg használata</value>
+  </data>
+  <data name="DialogHint.NextSection" xml:space="preserve">
+    <value>Következő szakasz (változások, ágak, napló, rejtettek, részlet)</value>
+  </data>
+  <data name="DialogHint.StageCheckoutShow" xml:space="preserve">
+    <value>Színpadra tétel vagy visszavonás, kiválasztás, vagy a commit megjelenítése</value>
+  </data>
+  <data name="DialogHint.StageUnstageFile" xml:space="preserve">
+    <value>A fájl színpadra tétele vagy visszavonása</value>
+  </data>
+  <data name="DialogHint.StageAll" xml:space="preserve">
+    <value>Mindent színpadra (alkalmazás a rejtetteknél)</value>
+  </data>
+  <data name="DialogHint.DiscardFileChangesAsks" xml:space="preserve">
+    <value>A fájl módosításainak elvetése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.Commit" xml:space="preserve">
+    <value>Véglegítés</value>
+  </data>
+  <data name="DialogHint.AmendCommit" xml:space="preserve">
+    <value>Az utolsó commit módosítása</value>
+  </data>
+  <data name="DialogHint.NewBranch" xml:space="preserve">
+    <value>Új ág</value>
+  </data>
+  <data name="DialogHint.MergeBranch" xml:space="preserve">
+    <value>Az ág összefésülése</value>
+  </data>
+  <data name="DialogHint.DeleteBranch" xml:space="preserve">
+    <value>Az ág törlése</value>
+  </data>
+  <data name="DialogHint.Fetch" xml:space="preserve">
+    <value>Letöltés</value>
+  </data>
+  <data name="DialogHint.PullPush" xml:space="preserve">
+    <value>Lehúzás / feltöltés</value>
+  </data>
+  <data name="DialogHint.StashChanges" xml:space="preserve">
+    <value>A módosítások félretétele</value>
+  </data>
+  <data name="DialogHint.DropStash" xml:space="preserve">
+    <value>A rejtett elvetése</value>
+  </data>
+  <data name="DialogHint.Refresh" xml:space="preserve">
+    <value>Frissítés</value>
+  </data>
+  <data name="DialogHint.ScrollPatch" xml:space="preserve">
+    <value>A javítás görgetése</value>
+  </data>
 </root>
