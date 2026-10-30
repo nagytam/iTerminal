@@ -253,14 +253,21 @@ public class VirtualListBoxTest
     [TestMethod]
     public async Task APagedSourceFillsInRowsAsTheyArrive()
     {
+        // The page is held back until the first frame is drawn: a fetch that completes at once can beat that draw.
+        TaskCompletionSource gate = new(TaskCreationOptions.RunContinuationsAsynchronously);
         PagedDataSource<string> source = new(
-            (start, count, _) => Task.FromResult<IReadOnlyList<string>>([.. Enumerable.Range(start, count).Select(i => "item " + i)]),
+            async (start, count, _) =>
+            {
+                await gate.Task;
+                return (IReadOnlyList<string>)[.. Enumerable.Range(start, count).Select(i => "item " + i)];
+            },
             1_000_000, pageSize: 20, readAheadPages: 0);
         VirtualListBox<string> list = Create(source);
         ScreenBuffer buffer = new(20, 5);
 
         list.Draw(buffer);
         Assert.IsTrue(buffer.Line(0).StartsWith("…", StringComparison.Ordinal), "the first frame shows placeholders");
+        gate.SetResult();
 
         DateTime deadline = DateTime.UtcNow.AddSeconds(5);
         while (!source.TryGet(0, out _) && DateTime.UtcNow < deadline)

@@ -1,3 +1,4 @@
+using ICSharpCode.SharpZipLib;
 using ICSharpCode.SharpZipLib.BZip2;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
@@ -192,7 +193,7 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
             {
                 input = zip.GetInputStream(entry);
             }
-            catch (ZipException exception) when (entry.IsCrypted)
+            catch (SharpZipBaseException exception) when (entry.IsCrypted)
             {
                 throw new InvalidOperationException($"The password does not open {archiveName}.", exception);
             }
@@ -326,8 +327,9 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
             {
             }
 
-            // A wrong ZipCrypto password is only noticed once the data fails its check.
-            if (encrypted && exception is ZipException)
+            // A wrong ZipCrypto password is only noticed once the data fails its check, and one in 256 wrong passwords
+            // passes the one-byte check and fails as corrupt data instead.
+            if (encrypted && exception is SharpZipBaseException or InvalidDataException)
             {
                 throw new InvalidOperationException($"The password does not open {archiveName}.", exception);
             }
