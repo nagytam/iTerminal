@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -116,9 +117,9 @@ public class ImageMetadataEditorDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Tab", "Move between the fields");
-        yield return ("Enter", "Save the metadata");
-        yield return ("Esc", "Close without saving");
+        yield return ("Tab", UiText.Get("DialogHint.MoveBetweenFields", "Move between the fields"));
+        yield return ("Enter", UiText.Get("DialogHint.SaveMetadata", "Save the metadata"));
+        yield return ("Esc", UiText.Get("DialogHint.CloseWithoutSaving", "Close without saving"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

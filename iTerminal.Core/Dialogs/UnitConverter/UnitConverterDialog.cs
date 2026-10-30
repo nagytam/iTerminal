@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls;
@@ -153,7 +154,7 @@ public class UnitConverterDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Tab", "Move between the category, the units and the value");
+        yield return ("Tab", UiText.Get("DialogHint.MoveCategoryUnitsValue", "Move between the category, the units and the value"));
         yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
     }
 

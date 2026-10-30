@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -82,7 +83,7 @@ public class StartupWarningDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Enter", "Dismiss the warning");
+        yield return ("Enter", UiText.Get("DialogHint.DismissWarning", "Dismiss the warning"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls.Tabs;
 using iConsole.Data;
@@ -61,10 +62,10 @@ public class CalculatorDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("0-9 . + - * / ^ %", "Enter digits and operators");
-        yield return ("Enter/=", "Evaluate");
-        yield return ("Backspace", "Remove the last digit");
-        yield return ("Delete/C", "Clear");
+        yield return ("0-9 . + - * / ^ %", UiText.Get("DialogHint.EnterDigitsOperators", "Enter digits and operators"));
+        yield return ("Enter/=", UiText.Get("DialogHint.Evaluate", "Evaluate"));
+        yield return ("Backspace", UiText.Get("Hint.RemoveLastDigit", "Remove the last digit"));
+        yield return ("Delete/C", UiText.Get("DialogHint.ClearShort", "Clear"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

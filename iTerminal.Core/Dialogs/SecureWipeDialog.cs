@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -294,13 +295,13 @@ public class SecureWipeDialog : Dialog
         switch (Phase)
         {
             case WipePhase.Choosing:
-                yield return ("1/3/7", "Choose one random pass, three passes or seven passes");
-                yield return ("Up/Down", "Choose the previous or next method");
-                yield return ("Enter", "Arm the wipe (nothing is erased yet)");
+                yield return ("1/3/7", UiText.Get("DialogHint.ChoosePasses", "Choose one random pass, three passes or seven passes"));
+                yield return ("Up/Down", UiText.Get("DialogHint.ChoosePreviousNextMethod", "Choose the previous or next method"));
+                yield return ("Enter", UiText.Get("DialogHint.ArmWipe", "Arm the wipe (nothing is erased yet)"));
                 break;
             case WipePhase.Armed:
-                yield return ("Enter", "Confirm: the files are erased for good");
-                yield return ("Any other key", "Withdraw and choose again");
+                yield return ("Enter", UiText.Get("DialogHint.ConfirmFilesErased", "Confirm: the files are erased for good"));
+                yield return ("Any other key", UiText.Get("DialogHint.WithdrawChooseAgain", "Withdraw and choose again"));
                 break;
             case WipePhase.Finished:
                 yield return ("Enter", iConsole.Localization.UiText.Get("Common.Close", "Close"));

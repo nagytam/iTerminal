@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Controls.Progress;
@@ -186,11 +187,11 @@ public class RuntimeDependencyDialog : Dialog
             yield break;
         }
 
-        yield return ("Enter", "Next step; on the last step, install what is ticked");
-        yield return ("Right", "Browse to the next step");
-        yield return ("Left/Backspace", "Back to the previous step");
-        yield return ("Space", "Tick or untick the component on this step");
-        yield return ("S", "Skip the ticked offers and close");
+        yield return ("Enter", UiText.Get("DialogHint.NextStepInstall", "Next step; on the last step, install what is ticked"));
+        yield return ("Right", UiText.Get("DialogHint.BrowseNextStep", "Browse to the next step"));
+        yield return ("Left/Backspace", UiText.Get("DialogHint.BackPreviousStep", "Back to the previous step"));
+        yield return ("Space", UiText.Get("DialogHint.TickComponent", "Tick or untick the component on this step"));
+        yield return ("S", UiText.Get("DialogHint.SkipOffersClose", "Skip the ticked offers and close"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

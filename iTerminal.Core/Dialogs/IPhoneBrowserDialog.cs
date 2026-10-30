@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -152,8 +153,8 @@ public class IPhoneBrowserDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Enter", "Connect to the chosen device");
-        yield return ("R", "Search for devices again");
+        yield return ("Enter", UiText.Get("DialogHint.ConnectChosenDevice", "Connect to the chosen device"));
+        yield return ("R", UiText.Get("DialogHint.SearchDevicesAgain", "Search for devices again"));
         yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
     }
 

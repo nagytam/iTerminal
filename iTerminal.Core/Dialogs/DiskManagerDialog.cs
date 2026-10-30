@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Controls.ScrollBar;
@@ -270,10 +271,10 @@ public class DiskManagerDialog : Dialog
             yield break;
         }
 
-        yield return ("E", "Eject the drive");
-        yield return ("F", "Format the drive");
-        yield return ("M", "Mount a disk image");
-        yield return ("B", "Back to the drive under the cursor");
+        yield return ("E", UiText.Get("DialogHint.EjectDrive", "Eject the drive"));
+        yield return ("F", UiText.Get("DialogHint.FormatDrive", "Format the drive"));
+        yield return ("M", UiText.Get("DialogHint.MountDiskImage", "Mount a disk image"));
+        yield return ("B", UiText.Get("DialogHint.BackToDriveUnderCursor", "Back to the drive under the cursor"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
@@ -93,9 +94,9 @@ public partial class UpdateDialog : FormDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Enter", "Install the update");
-        yield return ("S", "Skip this version");
-        yield return ("Esc", "Close and ask again later");
+        yield return ("Enter", UiText.Get("DialogHint.InstallUpdate", "Install the update"));
+        yield return ("S", UiText.Get("DialogHint.SkipVersion", "Skip this version"));
+        yield return ("Esc", UiText.Get("DialogHint.CloseAskLater", "Close and ask again later"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

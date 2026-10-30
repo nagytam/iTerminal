@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -125,10 +126,10 @@ public class CommandPaletteDialog : Dialog
     /// </summary>
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Type", "Filter the commands");
-        yield return ("Up/Down", "Choose a command");
-        yield return ("PageUp/PageDown", "Move a page at a time");
-        yield return ("Enter", "Run the chosen command");
+        yield return ("Type", UiText.Get("DialogHint.FilterCommands", "Filter the commands"));
+        yield return ("Up/Down", UiText.Get("DialogHint.ChooseCommand", "Choose a command"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MovePageAtATime", "Move a page at a time"));
+        yield return ("Enter", UiText.Get("DialogHint.RunChosenCommand", "Run the chosen command"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
