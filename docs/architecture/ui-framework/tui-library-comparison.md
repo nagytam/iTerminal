@@ -166,3 +166,87 @@ Compared with libraries in languages not yet covered, besides those in the first
 3. Items 69, 71 and 70: the log view, spinner sets and extra charts are self-contained controls.
 4. Items 59, 60 and 63: three small protocol additions that share the capability query of items 35 and 5.
 5. Items 64 and 68 last: large, and only worth it for a shell pane and multi-window editing.
+
+#### Status after the pull of 2026-10-27
+
+Every item above was checked again against `github/main` at 73f4a9d (a grep of the source, not the tests). Built since the first survey, so no longer missing: 4 (synchronized output), 5 (focus reporting, with polling that pauses), 6 for the first flag, 8 (title and notifications), 9 (stack, grid and dock layout), 11 for `BoxPanel`, 16 (`ISyntaxHighlightingService`), 18 (`Splitter`, two panes), 19 (`ContextMenu` has check marks, hot keys and submenus), 22 (`FuzzyMatcher`), 23 (`InputMask` and the validator pipeline), 24 (`ScrollView`), 29 (`ProgressGroup`, `LiveTable`), 41 for `BoxPanel`, 46 (`FilePicker`), 50 for soft wrap, line numbers and folding, 59 (cursor shape), 62 (pointer shape), 69 (`LogView`), 70 for pie, scatter, histogram and candlestick, 15 for the folding and gutter parts. Some earlier notes were too strong and are corrected here: item 30 is half there (the file panel has its own double-click timer, but `MouseEvent` has no click count for other controls), item 58 is half there (the Windows plug-in reports key-up for keys without a character), item 21 exists in `iTerminal.Core` only (not reusable from `iConsole`), and item 74's calculator exists in `iTerminal.Core`.
+
+#### Fourth survey: more libraries, and editors and dashboards as sources
+
+Compared again with Textual's full widget list and design system, Terminal.Gui v2 (`TableView` column styles, `GraphView`), Spectre.Console (prompts, `TextPath`, emoji), Rich (highlighters, `Syntax`), Glamour (Markdown), Bubbles and Huh (Go), tview and tcell, Cursive, Lanterna (dialogs), Urwid, blessed-contrib and termui (dashboards), btop and htop (live graphs), JLine, prompt_toolkit's ready-made dialogs, Ratatui's `rat-widget` and `tui-logger`, and the editor widgets of Helix, Kakoune, Micro, Neovim and VS Code. Numbering continues after item 85.
+
+**Text and Markdown**
+
+86. **Markdown tables.** Not found (`MarkdownBlockKind` has no table). Glamour, Rich, Textual `Markdown` and mdcat draw pipe tables with aligned columns and a header rule; `MarkdownViewerControl` shows the raw `|` lines.
+87. **Markdown task lists, footnotes and following links.** Not found. Task boxes (`- [x]`), footnotes and a way to open a link from the keyboard or a click (Glamour, Textual `Markdown`, mdcat); links are underlined but not activated.
+88. **Auto-close brackets and quotes.** Not found. Typing `(` inserts `()` and typing the closer steps over it (every editor above); `BracketMatcher` only highlights the match.
+89. **Indent guides, visible whitespace and a ruler column.** Not found. VS Code, Helix and Micro draw faint guides at each indent level, show tabs and trailing spaces, and mark column 80 or 120.
+90. **Gutter marker API.** Not found. The editor now has a gutter; breakpoints, diagnostics, git change bars and bookmarks (Helix, VS Code, Neovim signs) need a way for code to put a glyph and colour beside a line.
+91. **Block (column) selection.** Not found. Drag with Alt, or a key, to select a rectangle and edit all its lines at once (Micro, Neovim `Ctrl+V`, VS Code). Multiple cursors (item 15) build on the same edit path.
+92. **Key macro record and replay.** Not found. Record keys and replay them (Vim `q`, Emacs, Micro): small on top of `IInputInjector`.
+93. **Language-server client.** Not found. Diagnostics (the renderer already has curly coloured underlines), completion, hover and go-to-definition from a language server (Helix, Neovim, VS Code). Large; needs items 90 and 49.
+107. **Regex search.** Not found (`SearchModel` and `SearchTextDialog` have no regex switch). `less`, `bat`, every editor and Glow search by regular expression.
+
+**Controls**
+
+94. **Quick modal dialogs.** Not found. One-call message, input, confirm, list-select, checkbox-list and wait dialogs (prompt_toolkit `shortcuts`, Lanterna dialogs, Spectre prompts, Huh). Each dialog in `iTerminal.Core` builds its own.
+95. **More chart kinds.** `LineChart` takes one series, `BarChart` one set of bars. Grouped and stacked bars, a multi-series line chart with a legend, and a live time series that appends to a ring buffer and rescales (btop, termui, blessed-contrib `StackedBar`, Textual `plotext`).
+104. **Table columns that format, total and edit.** Not found (`Table` has widths and headers only). Per-column alignment and format, a footer or totals row, a cell style getter and in-place cell editing (Terminal.Gui `ColumnStyle`, Spectre column footers, Textual `DataTable.update_cell`).
+105. **Highlighters and ANSI in `LogView`.** Not found. Auto-colour URLs, paths and numbers in a log line (Rich highlighters, `tui-logger`) and read ANSI colour codes in appended text (docker, git and build output arrive with them).
+106. **Hierarchical multi-select.** Not found. A tree of choices with groups, search and select-all-in-group (Spectre `MultiSelectionPrompt`).
+108. **Toast actions.** Not found (`Toast` shows text only). A button in the toast, such as Undo (Textual `notify`, Material snackbars).
+110. **Scrolling text.** Not found. A long title that scrolls in a short space (cmus, ncmpcpp); useful for the music player's status line.
+96. **Emoji short codes.** Not found. `:rocket:` in Markdown and labels (Rich, Spectre, Glamour); depends on item 1 for the width.
+97. **Path text with a middle ellipsis.** Not found. `C:\Users\…\project\file.cs` instead of cutting the end (Spectre `TextPath`, Midnight Commander); long paths in the footer and dialogs lose their file name today.
+
+**Framework**
+
+93b. **Key preview hook.** Not found (`PreviewKey`, `InputCapture`). A parent or the application sees a key before the focused control and may consume it (tview `SetInputCapture`, Terminal.Gui `KeyDown`, Textual `on_key` bubbling); today a global shortcut must be a command on a control that has the focus.
+98. **Theme design tokens.** Not found. A theme made from a few base colours with the hover, disabled, border and selected shades derived from them (Textual's design system, Material); `ColorScheme` lists every colour by hand. Needs item 34.
+99. **Focus history.** Not found. Closing a dialog gives the focus back to the control that had it, through a stack (blessed `saveFocus`/`rewindFocus`, Textual screens).
+100. **Page stack and content switcher.** Not found. Show one of several children by key without removing the others (Textual `ContentSwitcher`, tview `Pages`, Cursive `StackView`).
+101. **Smooth progress.** Not found. A bar or value that eases to its new value (Bubbles `progress` with Harmonica); needs item 13.
+102. **Run behind a spinner.** Not found. `await Spinner.RunAsync(task, "Copying")` shows a spinner while a task runs and removes it after (Huh `spinner`, Spectre `Status`).
+103. **Developer console.** Not found. Stream the application's log and events to a second terminal through a named pipe (Textual devtools, Flutter DevTools), so the application's own screen is not used for debugging.
+109. **Generic click count.** Not found (`ClickCount`). `MouseEvent` carries 1, 2 or 3 for single, double and triple clicks, so the editor can select a word or a line and lists can open an item; the file panel has its own timer today.
+
+#### Suggested order for the fourth survey
+
+1. Items 86, 87 and 107: Markdown tables and links, and regex search; each is small and removes a visible rough edge in the viewers.
+2. Items 88, 89 and 90: auto-close, guides and a marker API finish the editor work started with the gutter.
+3. Items 94, 93b and 99: quick dialogs, a key preview hook and a focus history shorten most dialog code.
+4. Items 95, 104 and 105: richer charts, tables and logs.
+5. Items 98 and 101 after the colour work (34) and animation (13); items 93 and 103 only when there is a concrete use.
+
+#### Status after the pull of 2026-10-28
+
+Checked again against `github/main` at cf6e230 (a grep of the source, not the tests). Built since the status above: 14 (`Shadow`, `HasShadow`), 37 for a grid (`LineCanvas`, `BorderedGrid`; separate boxes do not join by themselves), 43 for dialogs (drag by the title bar, resize by the corner, Ctrl+F7 and Ctrl+F8), 58 for Windows (`KeyEvent.IsRepeat`), 83 (`IAsyncInputValidator`; no error line under the box yet), 84 (`X{n}`, `X{n,m}`, `%(group){n}`, `~`), 89 for visible whitespace (`ShowWhitespace`; no indent guides or ruler yet), 107 (regex search and replace) and 110 (`Marquee`, `MarqueeLabel`, `ScrollTitle`). Every other item in the lists above was checked and is still missing.
+
+#### Fifth survey: more libraries and tools
+
+Compared with the Ink ecosystem (`ink-select-input`, `ink-table`, `ink-testing-library`, `<Static>`), Lip Gloss and Bubble Tea v2 (`Place`, `JoinHorizontal`, static table, list and tree renderers), Terminal.Gui v2 dialogs that return a result, terminal-kit (`inputField`, `getCursorLocation`), Brick (themes loaded from INI files, automatic border joining), libvaxis `vxfw`, Rich (`Syntax` line highlights), Cursive's builder, fzf and telescope.nvim (preview panes), ranger and yazi (Miller columns), lazygit and k9s (filter with `/`), bottom and btop (bars inside table cells) and the editors Neovim and VS Code (bracket-pair colours, sticky scroll, spell check). Numbering continues after item 111.
+
+**Controls**
+
+112. **Fuzzy filtering with highlighted matches.** `FuzzyMatcher` exists and the command palette uses it, but `ListBox`, `ComboBox` and `AutoCompletion` still match by prefix and do not show which letters matched (Bubbles `list`, fzf, telescope.nvim).
+113. **List with a preview pane.** A list on the left and a live preview of the item under the cursor on the right, with the preview loaded in the background (fzf `--preview`, telescope.nvim, yazi); the file panels have a preview drive but no reusable control.
+114. **Miller columns.** Parent, current and child lists side by side, moving right opens the child (ranger, yazi, the macOS Finder column view); a control for any tree, not only folders.
+115. **Widgets inside table cells.** A bar, sparkline or rating in a `Table` or `LiveTable` cell (Textual `DataTable` renderables, bottom and btop process tables); cells are text only today.
+116. **Type-to-filter on tables and lists.** `/` opens a filter line that hides rows that do not match (lazygit, k9s, VisiData); `ListBox` has a filter in its model but `Table` and `VirtualTable` have none.
+117. **Line and range decorations.** A public way to colour a background, underline or mark a line or a range of text in the viewer and editor: diagnostics, diff added and removed lines, blame, an error line in a log (Rich `Syntax` `highlight_lines`, VS Code decorations). The viewer has private helpers for its own search and selection only.
+118. **Editor polish.** Bracket-pair colours, sticky scroll headers that keep the enclosing line in view, spell check with the curly underline the renderer already has, and a symbol outline (VS Code, Neovim).
+
+**Framework**
+
+119. **Typed dialog results.** `ShowDialogAsync` returns when the dialog closes but not what it chose; callers read the dialog's properties afterwards (Terminal.Gui `Dialog.Result`, Spectre prompts return values). `ShowDialogAsync<T>` would return the value or null for cancel.
+120. **Theme files with user overrides.** Load a theme from a file and save the user's changes over the defaults (Brick `Themes` INI files, Textual themes, Cursive TOML themes); themes are code plus a dialog today.
+121. **Declarative layout files.** Describe a screen in JSON or a small markup and build the control tree from it, with reload on change (Cursive builder, Consolonia XAML, Textual `compose`); every screen is built in code.
+122. **Mouse capture.** A control that took a press keeps the following moves and the release even when the pointer leaves it (Terminal.Gui `Mouse.Grab`, Win32 `SetCapture`); a drag today has to stay inside the control's rectangle.
+123. **Render a control without a terminal.** Print a table, tree, chart or progress group as ANSI text to a pipe or a file for `--help` style output and scripts (Lip Gloss static renderers, Spectre `AnsiConsole.Write`); only the test harness renders offscreen today. Shares the work of item 77.
+
+#### Suggested order for the fifth survey
+
+1. Items 112, 116 and 119: fuzzy matching, `/` filters and typed dialog results are small and used by many dialogs.
+2. Items 117 and 122: line decorations and mouse capture unblock diagnostics, diffs and drags that leave their control.
+3. Items 115 and 113: bars in cells and a preview list suit the file manager and the dashboards.
+4. Items 120, 121 and 123 once the colour work (34) is done; items 114 and 118 when there is a use for them.
