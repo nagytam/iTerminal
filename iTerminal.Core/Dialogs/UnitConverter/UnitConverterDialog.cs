@@ -64,7 +64,7 @@ public class UnitConverterDialog : SplitPaneDialog
             themeService);
         _inputTextBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
-            Label = "Value",
+            Label = iConsole.Localization.UiText.Get("Label.Value", "Value"),
             Text = _engine.InputText
         };
         _swapButton = new Button(iConsole.Localization.UiText.Get("Button.Swap", "Swap"), new UnitConverterActionCommand(SwapUnits), themeService) { HotKeyChar = 'S' };

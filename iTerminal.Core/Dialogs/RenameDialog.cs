@@ -89,14 +89,14 @@ public class RenameDialog : FormDialog
 
         _textBoxName = new TextBox(beepService, dateTimeProviderService, themeService) 
         { 
-            Label = "Name", 
+            Label = iConsole.Localization.UiText.Get("Label.Name", "Name"), 
             Text = TargetUrl, 
             IsEnabled = true, 
             HotKeyChar = 'N' 
         };
         _checkBoxOverwrite = new CheckBox(themeService)
         {
-            Label = "Overwrite",
+            Label = iConsole.Localization.UiText.Get("Label.Overwrite", "Overwrite"),
             IsChecked = false,
             IsEnabled = true,
             HotKeyChar = 'O'

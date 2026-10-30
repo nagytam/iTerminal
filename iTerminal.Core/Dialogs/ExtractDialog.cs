@@ -103,7 +103,7 @@ public class ExtractDialog : FormDialog
             new FileSystemResolver(fileSystemService, memoryDriveService, sshFileSystemService, archiveFileSystemService, contentModelService));
         AddCommand(extractCommand);
 
-        _labelSource = new Label("Source: ", themeService);
+        _labelSource = new Label(iConsole.Localization.UiText.Get("Label.Source", "Source") + ": ", themeService);
         _textBoxTarget = new TextBox(beepService, dateTimeProviderService, themeService)
         {
             MaxLength = Url.MaxLength,
@@ -156,7 +156,7 @@ public class ExtractDialog : FormDialog
         _errorLabel.Text = string.Empty;
 
         Title = Archives.Count == 1 ? $"Extract {FocusedEntry.NameOf(Archives[0])}" : $"Extract {Archives.Count} archives";
-        _labelSource.Text = "Source: " + string.Join(", ", Archives.Select(FocusedEntry.NameOf));
+        _labelSource.Text = iConsole.Localization.UiText.Get("Label.Source", "Source") + ": " + string.Join(", ", Archives.Select(FocusedEntry.NameOf));
         var target = _contentModelService.NonFocusedFolderUrl ?? sourceModel?.Url;
         TargetFolder = target?.FullUrl ?? string.Empty;
 

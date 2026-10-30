@@ -547,4 +547,31 @@
   <data name="Button.Swap" xml:space="preserve">
     <value>Csere</value>
   </data>
+  <data name="Label.Source" xml:space="preserve">
+    <value>Forrás</value>
+  </data>
+  <data name="Label.Target" xml:space="preserve">
+    <value>Cél</value>
+  </data>
+  <data name="Label.To" xml:space="preserve">
+    <value>Ide</value>
+  </data>
+  <data name="Label.Overwrite" xml:space="preserve">
+    <value>Felülírás</value>
+  </data>
+  <data name="Label.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Label.Search" xml:space="preserve">
+    <value>Keresés</value>
+  </data>
+  <data name="Label.Colour" xml:space="preserve">
+    <value>Szín</value>
+  </data>
+  <data name="Label.Tag" xml:space="preserve">
+    <value>Címke</value>
+  </data>
+  <data name="Label.Value" xml:space="preserve">
+    <value>Érték</value>
+  </data>
 </root>

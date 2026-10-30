@@ -44,7 +44,7 @@ public class EditLinkDialog : FormDialog
         var saveCommand = new SaveCommand();
         AddCommand(saveCommand);
 
-        _textBoxTarget = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Target" };
+        _textBoxTarget = new TextBox(beepService, dateTimeProviderService, themeService) { Label = iConsole.Localization.UiText.Get("Label.Target", "Target") };
         _labelLink = new Label(string.Empty, themeService);
         _labelKind = new Label(string.Empty, themeService);
         _checkBoxHard = new CheckBox(themeService) { Label = "Hard link (a second name for the file; same volume)" };

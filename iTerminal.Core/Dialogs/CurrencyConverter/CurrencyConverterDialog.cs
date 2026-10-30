@@ -60,7 +60,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
 
         _amount = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Amount", Text = "1" };
         _from = new ComboBox<CurrencyChoice>(themeService) { Label = "From", DisplaySelector = choice => choice.Display, MaxDropDownRows = 10 };
-        _to = new ComboBox<CurrencyChoice>(themeService) { Label = "To", DisplaySelector = choice => choice.Display, MaxDropDownRows = 10 };
+        _to = new ComboBox<CurrencyChoice>(themeService) { Label = iConsole.Localization.UiText.Get("Label.To", "To"), DisplaySelector = choice => choice.Display, MaxDropDownRows = 10 };
 
         AddControl(_amount);
         AddControl(_from);

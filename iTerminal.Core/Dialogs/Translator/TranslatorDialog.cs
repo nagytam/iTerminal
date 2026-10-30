@@ -109,7 +109,7 @@ public class TranslatorDialog : SplitPaneDialog
         Title = iConsole.Localization.UiText.Get("Menu.Translator", "Translator");
 
         _from = new ComboBox<TranslationLanguage>(themeService) { Label = "From", DisplaySelector = language => language.Name, MaxDropDownRows = 10 };
-        _to = new ComboBox<TranslationLanguage>(themeService) { Label = "To", DisplaySelector = language => language.Name, MaxDropDownRows = 10 };
+        _to = new ComboBox<TranslationLanguage>(themeService) { Label = iConsole.Localization.UiText.Get("Label.To", "To"), DisplaySelector = language => language.Name, MaxDropDownRows = 10 };
         _engine = new ComboBox<EngineChoice>(themeService) { Label = "Engine", DisplaySelector = choice => choice.Name };
         // Neither is focusable by default, which left Tab cycling through the three pickers only.
         _input = new PaneEditor(themeService) { CanFocus = true };

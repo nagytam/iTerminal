@@ -87,7 +87,7 @@ public class DeleteDialog : FormDialog
 
         _textBoxName = new TextBox(beepService, dateTimeProviderService, themeService) 
         { 
-            Label = "Name", 
+            Label = iConsole.Localization.UiText.Get("Label.Name", "Name"), 
             Text = Url, 
             IsReadOnly = true 
         };

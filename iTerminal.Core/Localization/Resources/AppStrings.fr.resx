@@ -547,4 +547,31 @@
   <data name="Button.Swap" xml:space="preserve">
     <value>Échanger</value>
   </data>
+  <data name="Label.Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Label.Target" xml:space="preserve">
+    <value>Cible</value>
+  </data>
+  <data name="Label.To" xml:space="preserve">
+    <value>Vers</value>
+  </data>
+  <data name="Label.Overwrite" xml:space="preserve">
+    <value>Écraser</value>
+  </data>
+  <data name="Label.Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Label.Search" xml:space="preserve">
+    <value>Recherche</value>
+  </data>
+  <data name="Label.Colour" xml:space="preserve">
+    <value>Couleur</value>
+  </data>
+  <data name="Label.Tag" xml:space="preserve">
+    <value>Étiquette</value>
+  </data>
+  <data name="Label.Value" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
 </root>
