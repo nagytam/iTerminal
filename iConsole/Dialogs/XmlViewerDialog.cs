@@ -1,6 +1,7 @@
 using System.Xml;
 using iConsole.Commands;
 using iConsole.Controls;
+using iConsole.Localization;
 using iConsole.Controls.Buttons;
 using iConsole.Controls.Viewers;
 using iConsole.Data;
@@ -50,11 +51,11 @@ public class XmlViewerDialog : Dialog
         _xpathBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
             Label = "XPath",
-            Placeholder = "Enter a query, e.g. //book[price > 10]/title",
+            Placeholder = UiText.Get("Viewer.XPathPlaceholder", "Enter a query, e.g. //book[price > 10]/title"),
         };
         _treeView = new TreeView(new HierarchicalItemModel(null, string.Empty), themeService);
         _resultsModel = new ListBoxModel<XmlXPathResult>(new ConcurrentObservableCollection<XmlXPathResult>());
-        _resultsBox = new ListBox<XmlXPathResult>(_resultsModel, themeService) { EmptyText = "No results" };
+        _resultsBox = new ListBox<XmlXPathResult>(_resultsModel, themeService) { EmptyText = UiText.Get("Viewer.NoResults", "No results") };
         _textViewerControl = new TextViewerControl(false, themeService);
         _statusLabel = new Label(string.Empty, themeService);
         // The tree is added first: a dialog gives the keyboard to its first focusable control, and the tree is where it starts.
@@ -86,14 +87,14 @@ public class XmlViewerDialog : Dialog
         IFileSystem? fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
         if (Url is null || fileSystem is null)
         {
-            _statusLabel.Text = "Nothing to show";
+            _statusLabel.Text = UiText.Get("Viewer.NothingToShow", "Nothing to show");
             return;
         }
 
         byte[]? content = (await fileSystem.ReadFileAsync(Url))?.Content;
         if (content is null)
         {
-            _statusLabel.Text = "Could not read the file";
+            _statusLabel.Text = UiText.Get("Viewer.CouldNotRead", "Could not read the file");
             return;
         }
 
@@ -107,7 +108,7 @@ public class XmlViewerDialog : Dialog
         catch (XmlException exception)
         {
             // Not well-formed: the file's text is the useful thing to show, with the position of the error.
-            _statusLabel.Text = $"Not well-formed XML: {exception.Message}";
+            _statusLabel.Text = string.Format(UiText.Get("Viewer.NotWellFormed", "Not well-formed XML: {0}"), exception.Message);
             await ShowTextAsync();
         }
     }
@@ -199,7 +200,7 @@ public class XmlViewerDialog : Dialog
 
         XmlTree tree = _tree;
         _query = Task.Run(() => XmlXPathQuery.Run(tree, expression));
-        _statusLabel.Text = "Running the query…";
+        _statusLabel.Text = UiText.Get("Viewer.RunningQuery", "Running the query…");
         return _query;
     }
 
@@ -223,7 +224,7 @@ public class XmlViewerDialog : Dialog
         byte[] content = _content;
         string? path = Url?.Path;
         _validation = Task.Run(() => XmlValidator.Validate(content, path));
-        _statusLabel.Text = "Validating…";
+        _statusLabel.Text = UiText.Get("Viewer.Validating", "Validating…");
         return _validation;
     }
 
@@ -239,10 +240,10 @@ public class XmlViewerDialog : Dialog
             XmlXPathOutcome outcome = query.Result;
             _resultsModel.Items.ReplaceAll([.. outcome.Results]);
             _statusLabel.Text = outcome.Error is not null
-                ? $"XPath error: {outcome.Error}"
-                : outcome.Total == 0 ? "No matches"
-                : outcome.Total == outcome.Results.Count ? $"{outcome.Total:N0} match(es)"
-                : $"Showing {outcome.Results.Count:N0} of {outcome.Total:N0} matches";
+                ? string.Format(UiText.Get("Viewer.XPathError", "XPath error: {0}"), outcome.Error)
+                : outcome.Total == 0 ? UiText.Get("Viewer.NoMatches", "No matches")
+                : outcome.Total == outcome.Results.Count ? string.Format(UiText.Get("Viewer.Matches", "{0:N0} match(es)"), outcome.Total)
+                : string.Format(UiText.Get("Viewer.ShowingMatches", "Showing {0:N0} of {1:N0} matches"), outcome.Results.Count, outcome.Total);
             StateHasChanged();
         }
 
@@ -267,9 +268,9 @@ public class XmlViewerDialog : Dialog
 
         int errors = issues.Count(i => i.IsError);
         int warnings = issues.Count(i => !i.IsError && i.Line > 0);
-        _statusLabel.Text = issues.Count == 0 ? "Valid"
+        _statusLabel.Text = issues.Count == 0 ? UiText.Get("Viewer.Valid", "Valid")
             : issues is [{ Line: 0, IsError: false } note] ? note.Message
-            : $"{errors:N0} error(s), {warnings:N0} warning(s)";
+            : string.Format(UiText.Get("Viewer.ErrorsWarnings", "{0:N0} error(s), {1:N0} warning(s)"), errors, warnings);
     }
 
     /// <summary>Opens the ancestors of a node, moves the cursor to it and gives the tree the keyboard.</summary>
@@ -302,11 +303,11 @@ public class XmlViewerDialog : Dialog
     /// <summary>The keys this dialog adds to the tree's and the XPath box's, for the help screen.</summary>
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("F2", "Validate against the schema or DTD the document names");
-        yield return ("F4", "Show the file's text, or the tree again");
-        yield return ("/", "Move to the XPath box");
-        yield return ("*", "Expand every node");
-        yield return ("Enter", "Run the XPath query, or open the selected result in the tree");
+        yield return ("F2", UiText.Get("Viewer.HintXmlValidate", "Validate against the schema or DTD the document names"));
+        yield return ("F4", UiText.Get("Viewer.HintToggleText", "Show the file's text, or the tree again"));
+        yield return ("/", UiText.Get("Viewer.HintXPathBox", "Move to the XPath box"));
+        yield return ("*", UiText.Get("Viewer.HintExpandAll", "Expand every node"));
+        yield return ("Enter", UiText.Get("Viewer.HintRunXPath", "Run the XPath query, or open the selected result in the tree"));
     }
 
     public override void OnInitializeActionButtons()

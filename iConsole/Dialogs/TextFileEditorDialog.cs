@@ -4,6 +4,7 @@ using iConsole.Controls.StatusBar;
 using iConsole.Controls.Viewers;
 using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iConsole.Layouts;
 using iConsole.Helper;
 using iConsole.Services;
@@ -102,13 +103,13 @@ public class TextFileEditorDialog : Dialog
                         }
                         else
                         {
-                            Title = "Nowhere to save to: " + (Url?.Shrink((int)ViewSize.Width - 30) ?? "no file");
+                            Title = string.Format(UiText.Get("Viewer.NowhereToSave", "Nowhere to save to: {0}"), Url?.Shrink((int)ViewSize.Width - 30) ?? "no file");
                         }
                     }
                     catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
                     {
                         // Stay in the editor with the text: closing now would lose what could not be written.
-                        Title = "Not saved: " + exception.Message;
+                        Title = string.Format(UiText.Get("Viewer.NotSaved", "Not saved: {0}"), exception.Message);
                     }
 
                     StateHasChanged();
@@ -136,9 +137,9 @@ public class TextFileEditorDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Ctrl+S", "Save the file");
-        yield return ("Tab", "Indent");
-        yield return ("F8", "Next code page (Shift: previous)");
+        yield return ("Ctrl+S", UiText.Get("Viewer.HintSave", "Save the file"));
+        yield return ("Tab", UiText.Get("Viewer.HintIndent", "Indent"));
+        yield return ("F8", UiText.Get("Viewer.HintCodePage", "Next code page (Shift: previous)"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
