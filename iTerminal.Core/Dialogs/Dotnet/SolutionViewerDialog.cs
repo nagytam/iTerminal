@@ -115,7 +115,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         : base(nameof(SolutionViewerDialog), themeService)
     {
         _dotnetSolutionService = dotnetSolutionService;
-        Title = "Solution";
+        Title = iConsole.Localization.UiText.Get("Dialog.Solution", "Solution");
 
         _projectListBox = new DotnetProjectListBox(
             new ListBoxModel<ProjectRow>(_projectItems) { TransformItem = TransformProjectRow },

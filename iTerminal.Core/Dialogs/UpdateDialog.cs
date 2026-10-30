@@ -31,7 +31,7 @@ public partial class UpdateDialog : FormDialog
         : base("Update", themeService)
     {
         _service = service;
-        Title = "Update available";
+        Title = iConsole.Localization.UiText.Get("Dialog.UpdateAvailable", "Update available");
 
         var installCommand = new InstallCommand();
         AddCommand(installCommand);

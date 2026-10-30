@@ -28,7 +28,7 @@ public class StartupWarningDialog : Dialog
         : base("Warning", themeService)
     {
         _warnings = warnings;
-        Title = "Warning";
+        Title = iConsole.Localization.UiText.Get("Dialog.Warning", "Warning");
     }
 
     /// <summary>The warnings as display lines for an inner width; each warning starts on a new line.</summary>

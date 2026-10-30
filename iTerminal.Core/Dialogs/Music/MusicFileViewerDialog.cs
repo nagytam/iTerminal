@@ -70,7 +70,7 @@ public class MusicFileViewerDialog : Dialog
         _metadataService = metadataService;
         _beepService = beepService;
         _dateTimeProviderService = dateTimeProviderService;
-        Title = "Music";
+        Title = iConsole.Localization.UiText.Get("Dialog.Music", "Music");
 
         _tagListBox = new ListBox<string>(
             new ListBoxModel<string>(_tagRows) { TransformItem = TransformTagRow },

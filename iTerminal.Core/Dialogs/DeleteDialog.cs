@@ -148,11 +148,11 @@ public class DeleteDialog : FormDialog
         }
         else if (new Url(Url).PathType == PathType.File)
         {
-            Title = "Delete file";
+            Title = iConsole.Localization.UiText.Get("Dialog.DeleteFile", "Delete file");
         }
         else
         {
-            Title = "Delete folder";
+            Title = iConsole.Localization.UiText.Get("Dialog.DeleteFolder", "Delete folder");
         }
 
 

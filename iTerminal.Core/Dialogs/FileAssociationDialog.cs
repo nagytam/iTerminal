@@ -32,7 +32,7 @@ public class FileAssociationDialog : FormDialog
         : base(nameof(FileAssociationDialog), themeService)
     {
         _associations = associations;
-        Title = "Program";
+        Title = iConsole.Localization.UiText.Get("Dialog.Program", "Program");
         var saveCommand = new SaveCommand();
         AddCommand(saveCommand);
 
