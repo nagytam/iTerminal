@@ -342,7 +342,7 @@ public class DiskManagerDialog : Dialog
             {
                 var result = await _driveActions.EjectAsync(root);
                 SetStatus(result.Message, !result.Success);
-                _notifications?.Notify("Eject", result.Message, result.Success ? NotificationSeverity.Success : NotificationSeverity.Error);
+                _notifications?.Notify(UiText.Get("Notify.Eject", "Eject"), result.Message, result.Success ? NotificationSeverity.Success : NotificationSeverity.Error);
             }
             finally
             {

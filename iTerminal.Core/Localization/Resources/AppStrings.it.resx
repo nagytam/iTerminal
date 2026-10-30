@@ -1654,4 +1654,64 @@
   <data name="Field.Engine" xml:space="preserve">
     <value>Motore</value>
   </data>
+  <data name="Notify.PullingRebase" xml:space="preserve">
+    <value>Pull con rebase in corso…</value>
+  </data>
+  <data name="Notify.NotGitRepo" xml:space="preserve">
+    <value>Questa cartella non è in un repository git.</value>
+  </data>
+  <data name="Notify.PulledRebase" xml:space="preserve">
+    <value>Pull con rebase completato.</value>
+  </data>
+  <data name="Notify.PullRebaseFailed" xml:space="preserve">
+    <value>Git pull --rebase non riuscito</value>
+  </data>
+  <data name="Notify.Scanning" xml:space="preserve">
+    <value>Scansione di {0}…</value>
+  </data>
+  <data name="Notify.ThreatsFound" xml:space="preserve">
+    <value>Minacce trovate in {0} di {1} elemento/i. Apri Sicurezza di Windows per i dettagli.</value>
+  </data>
+  <data name="Notify.DefenderFailed" xml:space="preserve">
+    <value>La scansione di Microsoft Defender non è riuscita</value>
+  </data>
+  <data name="Notify.NoThreats" xml:space="preserve">
+    <value>Nessuna minaccia trovata in {0}.</value>
+  </data>
+  <data name="Notify.Eject" xml:space="preserve">
+    <value>Espelli</value>
+  </data>
+  <data name="Notify.Format" xml:space="preserve">
+    <value>Formatta</value>
+  </data>
+  <data name="Notify.Clipboard" xml:space="preserve">
+    <value>Appunti</value>
+  </data>
+  <data name="Notify.Paste" xml:space="preserve">
+    <value>Incolla</value>
+  </data>
+  <data name="Notify.WipeStopped" xml:space="preserve">
+    <value>Cancellazione sicura interrotta</value>
+  </data>
+  <data name="Notify.WipeStoppedBody" xml:space="preserve">
+    <value>{0} cancellato/i prima dell'annullamento.</value>
+  </data>
+  <data name="Notify.WipeErrors" xml:space="preserve">
+    <value>Cancellazione sicura terminata con errori</value>
+  </data>
+  <data name="Notify.WipeErrorsBody" xml:space="preserve">
+    <value>{0} cancellato/i; {1} non riusciti. Primo: {2}</value>
+  </data>
+  <data name="Notify.WipeFinished" xml:space="preserve">
+    <value>Cancellazione sicura terminata</value>
+  </data>
+  <data name="Notify.WipeFinishedBody" xml:space="preserve">
+    <value>{0} sovrascritto/i ed eliminato/i.</value>
+  </data>
+  <data name="Notify.ClipboardNoFiles" xml:space="preserve">
+    <value>Gli appunti non contengono file.</value>
+  </data>
+  <data name="Notify.SkippedCount" xml:space="preserve">
+    <value>{0} saltato/i: {1}</value>
+  </data>
 </root>

@@ -1654,4 +1654,64 @@
   <data name="Field.Engine" xml:space="preserve">
     <value>Dienst</value>
   </data>
+  <data name="Notify.PullingRebase" xml:space="preserve">
+    <value>Pull mit Rebase läuft…</value>
+  </data>
+  <data name="Notify.NotGitRepo" xml:space="preserve">
+    <value>Dieser Ordner liegt in keinem Git-Repository.</value>
+  </data>
+  <data name="Notify.PulledRebase" xml:space="preserve">
+    <value>Pull mit Rebase abgeschlossen.</value>
+  </data>
+  <data name="Notify.PullRebaseFailed" xml:space="preserve">
+    <value>Git pull --rebase fehlgeschlagen</value>
+  </data>
+  <data name="Notify.Scanning" xml:space="preserve">
+    <value>{0} wird geprüft…</value>
+  </data>
+  <data name="Notify.ThreatsFound" xml:space="preserve">
+    <value>Bedrohungen in {0} von {1} Element(en) gefunden. Details in der Windows-Sicherheit.</value>
+  </data>
+  <data name="Notify.DefenderFailed" xml:space="preserve">
+    <value>Die Microsoft-Defender-Prüfung ist fehlgeschlagen</value>
+  </data>
+  <data name="Notify.NoThreats" xml:space="preserve">
+    <value>Keine Bedrohungen in {0} gefunden.</value>
+  </data>
+  <data name="Notify.Eject" xml:space="preserve">
+    <value>Auswerfen</value>
+  </data>
+  <data name="Notify.Format" xml:space="preserve">
+    <value>Formatieren</value>
+  </data>
+  <data name="Notify.Clipboard" xml:space="preserve">
+    <value>Zwischenablage</value>
+  </data>
+  <data name="Notify.Paste" xml:space="preserve">
+    <value>Einfügen</value>
+  </data>
+  <data name="Notify.WipeStopped" xml:space="preserve">
+    <value>Sicheres Löschen angehalten</value>
+  </data>
+  <data name="Notify.WipeStoppedBody" xml:space="preserve">
+    <value>{0} gelöscht, bevor abgebrochen wurde.</value>
+  </data>
+  <data name="Notify.WipeErrors" xml:space="preserve">
+    <value>Sicheres Löschen mit Fehlern beendet</value>
+  </data>
+  <data name="Notify.WipeErrorsBody" xml:space="preserve">
+    <value>{0} gelöscht; {1} fehlgeschlagen. Erster: {2}</value>
+  </data>
+  <data name="Notify.WipeFinished" xml:space="preserve">
+    <value>Sicheres Löschen beendet</value>
+  </data>
+  <data name="Notify.WipeFinishedBody" xml:space="preserve">
+    <value>{0} überschrieben und gelöscht.</value>
+  </data>
+  <data name="Notify.ClipboardNoFiles" xml:space="preserve">
+    <value>Die Zwischenablage enthält keine Dateien.</value>
+  </data>
+  <data name="Notify.SkippedCount" xml:space="preserve">
+    <value>{0} übersprungen: {1}</value>
+  </data>
 </root>

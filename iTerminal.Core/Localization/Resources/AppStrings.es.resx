@@ -1654,4 +1654,64 @@
   <data name="Field.Engine" xml:space="preserve">
     <value>Motor</value>
   </data>
+  <data name="Notify.PullingRebase" xml:space="preserve">
+    <value>Haciendo pull con rebase…</value>
+  </data>
+  <data name="Notify.NotGitRepo" xml:space="preserve">
+    <value>Esta carpeta no está en un repositorio git.</value>
+  </data>
+  <data name="Notify.PulledRebase" xml:space="preserve">
+    <value>Pull con rebase completado.</value>
+  </data>
+  <data name="Notify.PullRebaseFailed" xml:space="preserve">
+    <value>Falló git pull --rebase</value>
+  </data>
+  <data name="Notify.Scanning" xml:space="preserve">
+    <value>Analizando {0}…</value>
+  </data>
+  <data name="Notify.ThreatsFound" xml:space="preserve">
+    <value>Amenazas encontradas en {0} de {1} elemento(s). Abra Seguridad de Windows para ver los detalles.</value>
+  </data>
+  <data name="Notify.DefenderFailed" xml:space="preserve">
+    <value>Falló el análisis de Microsoft Defender</value>
+  </data>
+  <data name="Notify.NoThreats" xml:space="preserve">
+    <value>No se encontraron amenazas en {0}.</value>
+  </data>
+  <data name="Notify.Eject" xml:space="preserve">
+    <value>Expulsar</value>
+  </data>
+  <data name="Notify.Format" xml:space="preserve">
+    <value>Formatear</value>
+  </data>
+  <data name="Notify.Clipboard" xml:space="preserve">
+    <value>Portapapeles</value>
+  </data>
+  <data name="Notify.Paste" xml:space="preserve">
+    <value>Pegar</value>
+  </data>
+  <data name="Notify.WipeStopped" xml:space="preserve">
+    <value>Borrado seguro detenido</value>
+  </data>
+  <data name="Notify.WipeStoppedBody" xml:space="preserve">
+    <value>{0} borrado(s) antes de cancelar.</value>
+  </data>
+  <data name="Notify.WipeErrors" xml:space="preserve">
+    <value>Borrado seguro terminado con errores</value>
+  </data>
+  <data name="Notify.WipeErrorsBody" xml:space="preserve">
+    <value>{0} borrado(s); {1} fallaron. Primero: {2}</value>
+  </data>
+  <data name="Notify.WipeFinished" xml:space="preserve">
+    <value>Borrado seguro terminado</value>
+  </data>
+  <data name="Notify.WipeFinishedBody" xml:space="preserve">
+    <value>{0} sobrescrito(s) y eliminado(s).</value>
+  </data>
+  <data name="Notify.ClipboardNoFiles" xml:space="preserve">
+    <value>El portapapeles no contiene archivos.</value>
+  </data>
+  <data name="Notify.SkippedCount" xml:space="preserve">
+    <value>{0} omitido(s): {1}</value>
+  </data>
 </root>
