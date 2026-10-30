@@ -137,7 +137,7 @@ public class StockBrowserDialog : SplitPaneDialog
         : base(nameof(StockBrowserDialog), themeService)
     {
         _stockService = stockService;
-        Title = "Stocks";
+        Title = iConsole.Localization.UiText.Get("Dialog.Stocks", "Stocks");
 
         _stockListBox = new StockListBox(new ListBoxModel<StockRow>(_rowItems), themeService)
         {

@@ -41,7 +41,7 @@ public class DiskImageDialog : FormDialog
         _driveActions = driveActions;
         _notifications = notifications;
         _contentModelService = contentModelService;
-        Title = "Disk image";
+        Title = iConsole.Localization.UiText.Get("Dialog.DiskImage", "Disk image");
         var mountCommand = new ImageCommand(mount: true);
         var unmountCommand = new ImageCommand(mount: false);
         AddCommand(mountCommand);

@@ -109,7 +109,7 @@ public class MapDialog : Dialog
     {
         _model = model;
         _search = search;
-        Title = "Map";
+        Title = iConsole.Localization.UiText.Get("Dialog.Map", "Map");
     }
 
     internal MapModel Model => _model;

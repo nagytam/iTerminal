@@ -88,7 +88,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
         _contentModelService = contentModelService;
         _beepService = beepService;
         _dateTimeProviderService = dateTimeProviderService;
-        Title = "Network Browser";
+        Title = iConsole.Localization.UiText.Get("Dialog.NetworkBrowser", "Network Browser");
 
         _hostListBox = new HostListBox(
             new ListBoxModel<HostRow>(_hostItems) { TransformItem = TransformHostRow },

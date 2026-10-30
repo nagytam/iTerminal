@@ -66,7 +66,7 @@ public class VideoFileViewerDialog : Dialog
         : base(nameof(VideoFileViewerDialog), themeService)
     {
         _decoderFactory = decoderFactory;
-        Title = "Video";
+        Title = iConsole.Localization.UiText.Get("Dialog.Video", "Video");
 
         _buttons =
         [

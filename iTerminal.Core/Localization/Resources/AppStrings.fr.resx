@@ -475,4 +475,58 @@
   <data name="Dialog.FolderSelector" xml:space="preserve">
     <value>Sélecteur de dossier</value>
   </data>
+  <data name="Dialog.AiModelInformation" xml:space="preserve">
+    <value>Informations sur le modèle d'IA</value>
+  </data>
+  <data name="Dialog.CompareAndSynchroniseFolders" xml:space="preserve">
+    <value>Comparer et synchroniser les dossiers</value>
+  </data>
+  <data name="Dialog.DeleteFile" xml:space="preserve">
+    <value>Supprimer le fichier</value>
+  </data>
+  <data name="Dialog.DeleteFolder" xml:space="preserve">
+    <value>Supprimer le dossier</value>
+  </data>
+  <data name="Dialog.DiskImage" xml:space="preserve">
+    <value>Image disque</value>
+  </data>
+  <data name="Dialog.Solution" xml:space="preserve">
+    <value>Solution</value>
+  </data>
+  <data name="Dialog.Program" xml:space="preserve">
+    <value>Programme</value>
+  </data>
+  <data name="Dialog.Mail" xml:space="preserve">
+    <value>Courrier</value>
+  </data>
+  <data name="Dialog.Map" xml:space="preserve">
+    <value>Carte</value>
+  </data>
+  <data name="Dialog.Music" xml:space="preserve">
+    <value>Musique</value>
+  </data>
+  <data name="Dialog.NetworkBrowser" xml:space="preserve">
+    <value>Navigateur réseau</value>
+  </data>
+  <data name="Dialog.Packages" xml:space="preserve">
+    <value>Paquets</value>
+  </data>
+  <data name="Dialog.RuntimeDependencies" xml:space="preserve">
+    <value>Dépendances d'exécution</value>
+  </data>
+  <data name="Dialog.Warning" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="Dialog.Stocks" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Dialog.UpdateAvailable" xml:space="preserve">
+    <value>Mise à jour disponible</value>
+  </data>
+  <data name="Dialog.Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Dialog.Video" xml:space="preserve">
+    <value>Vidéo</value>
+  </data>
 </root>

@@ -62,7 +62,13 @@ public class DialogTitlesLanguageTest
         ("DocumentManagerDialog", "Documents", "Documents"), ("EditLinkDialog", "EditLink", "Edit link"), ("SortDialog", "SortBy", "Sort by"),
         ("ProcessManagerDialog", "ProcessManager", "Process manager"), ("NetworkManagerDialog", "NetworkManager", "Network manager"),
         ("SecureWipeDialog", "SecureWipe", "Secure wipe"), ("ThemeManagerDialog", "ThemeManager", "Theme manager"),
+        ("AiModelDialog", "AiModelInformation", "AI Model Information"), ("CompareFoldersDialog", "CompareAndSynchroniseFolders", "Compare and synchronise folders"), ("DiskImageDialog", "DiskImage", "Disk image"), ("SolutionViewerDialog", "Solution", "Solution"), ("FileAssociationDialog", "Program", "Program"), ("MailDialog", "Mail", "Mail"), ("MapDialog", "Map", "Map"), ("MusicFileViewerDialog", "Music", "Music"), ("NetworkBrowserDialog", "NetworkBrowser", "Network Browser"), ("PackageManagerDialog", "Packages", "Packages"), ("RuntimeDependencyDialog", "RuntimeDependencies", "Runtime dependencies"), ("StartupWarningDialog", "Warning", "Warning"), ("StockBrowserDialog", "Stocks", "Stocks"), ("UpdateDialog", "UpdateAvailable", "Update available"), ("ImageFileViewerDialog", "Image", "Image"), ("VideoFileViewerDialog", "Video", "Video"), 
         ("FileDiffDialog", "CompareFiles", "Compare files"), ("DuplicateFinderDialog", "DuplicateFiles", "Duplicate files"), ("FormatDriveDialog", "FormatDrive", "Format drive"), ("OpenWithDialog", "OpenWith", "Open with"), ("PasswordManagerDialog", "Passwords", "Passwords"), ("RemoteConnectionManagerDialog", "RemoteConnections", "Remote connections"), ("ScreenManagerDialog", "ScreenManager", "Screen manager"), ("StripMetadataDialog", "StripMetadata", "Strip metadata"), ("SynchronizeFoldersDialog", "SynchroniseFolders", "Synchronise folders"), ("SystemInfoDialog", "SystemInformation", "System Information"), ("SystemSettingsDialog", "SystemSettings", "System Settings"), ("ToDoListDialog", "Tasks", "Tasks"), ("UnitConverterDialog", "UnitConverter", "Unit Converter"), ("UserMenuDialog", "UserMenu", "User menu"), ("WebBrowserDialog", "WebBrowser", "Web Browser"), ("FolderSelectorDialog", "FolderSelector", "Folder Selector"), 
+    ];
+
+    private static readonly HashSet<(string Language, string Key)> SameWord =
+    [
+        ("fr", "Documents"), ("fr", "Solution"), ("fr", "Image"), ("de", "Video"), ("it", "Video"), ("hu", "Program"),
     ];
 
     private static Type Find(string name) => typeof(RenameDialog).Assembly.GetExportedTypes().Single(t => t.Name == name);
@@ -96,7 +102,7 @@ public class DialogTitlesLanguageTest
             foreach ((string type, string key, string english) in Titled)
             {
                 Assert.IsTrue(localizer.TryGet("Dialog." + key, out string text), key);
-                if (!(language.Code == "fr" && key == "Documents"))
+                if (!SameWord.Contains((language.Code, key)))
                 {
                     Assert.AreNotEqual(english, text, language.Code + " " + key);
                 }

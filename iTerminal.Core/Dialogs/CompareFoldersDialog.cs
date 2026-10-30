@@ -66,7 +66,7 @@ public class CompareFoldersDialog : Dialog
         _resolver = resolver;
         _taskManager = taskManager;
         _progressWindowFactory = progressWindowFactory;
-        Title = "Compare and synchronise folders";
+        Title = iConsole.Localization.UiText.Get("Dialog.CompareAndSynchroniseFolders", "Compare and synchronise folders");
 
         _comboMode = new ComboBox<CompareMode>(themeService) { DisplaySelector = DescribeMode };
         _comboMode.SetItems([CompareMode.SizeAndDate, CompareMode.SizeOnly, CompareMode.Content]);

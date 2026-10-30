@@ -135,7 +135,7 @@ public class PackageManagerDialog : SplitPaneDialog
         : base(nameof(PackageManagerDialog), themeService)
     {
         _packageManagerService = packageManagerService;
-        Title = "Packages";
+        Title = iConsole.Localization.UiText.Get("Dialog.Packages", "Packages");
 
         _packageListBox = new PackageListBox(new ListBoxModel<PackageInfo>(_packageItems), themeService)
         {
