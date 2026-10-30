@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -116,9 +117,9 @@ public class SegmentedControl : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Left/Right", "Choose the previous or next segment");
-        yield return ("Up/Down", "Choose the previous or next segment");
-        yield return ("Home/End", "Choose the first or last segment");
+        yield return ("Left/Right", UiText.Get("Hint.ChoosePreviousNextSegment", "Choose the previous or next segment"));
+        yield return ("Up/Down", UiText.Get("Hint.ChoosePreviousNextSegment", "Choose the previous or next segment"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastSegmentChoose", "Choose the first or last segment"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

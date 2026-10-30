@@ -1,4 +1,5 @@
-﻿using iConsole.Commands;
+﻿using iConsole.Localization;
+using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
 using iConsole.Controls.StatusBar;
@@ -131,9 +132,9 @@ public class FileViewerDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Esc", "Close the viewer");
-        yield return ("F4", "Switch between the text and the hex view");
-        yield return ("F8", "Next code page (Shift: previous)");
+        yield return ("Esc", UiText.Get("Hint.CloseViewer", "Close the viewer"));
+        yield return ("F4", UiText.Get("Hint.SwitchTextHex", "Switch between the text and the hex view"));
+        yield return ("F8", UiText.Get("Viewer.HintCodePage", "Next code page (Shift: previous)"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

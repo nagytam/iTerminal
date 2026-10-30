@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -568,14 +569,14 @@ public class ScrollView : Control
         Measurement m = Measure();
         if (m.Extent.Height > m.Viewport.Height)
         {
-            yield return ("Up/Down", "Scroll");
-            yield return ("PgUp/PgDn", "Scroll a page");
-            yield return ("Home/End", "Go to the top or bottom");
+            yield return ("Up/Down", UiText.Get("Hint.Scroll", "Scroll"));
+            yield return ("PgUp/PgDn", UiText.Get("Hint.ScrollPage", "Scroll a page"));
+            yield return ("Home/End", UiText.Get("Hint.GoTopOrBottom", "Go to the top or bottom"));
         }
 
         if (m.Extent.Width > m.Viewport.Width)
         {
-            yield return ("Left/Right", "Scroll sideways");
+            yield return ("Left/Right", UiText.Get("Hint.ScrollSideways", "Scroll sideways"));
         }
     }
     #endregion

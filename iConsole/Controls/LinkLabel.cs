@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -57,7 +58,7 @@ public class LinkLabel : Control
             yield break;
         }
 
-        yield return ("Enter/Space", "Follow the link");
+        yield return ("Enter/Space", UiText.Get("Hint.FollowLink", "Follow the link"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -62,9 +63,9 @@ public class Rating : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Left/Right", "Lower or raise the rating");
-        yield return ("0-9", "Set the rating directly");
-        yield return ("Home/End", "Clear the rating or give the maximum");
+        yield return ("Left/Right", UiText.Get("Hint.LowerRaiseRating", "Lower or raise the rating"));
+        yield return ("0-9", UiText.Get("Hint.SetRatingDirectly", "Set the rating directly"));
+        yield return ("Home/End", UiText.Get("Hint.ClearRatingOrMax", "Clear the rating or give the maximum"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -361,11 +362,11 @@ public class LogView : Control
             yield break;
         }
 
-        yield return ("Up/Down", "Scroll one line");
-        yield return ("PageUp/PageDown", "Scroll one page");
-        yield return ("Home", "Oldest line");
-        yield return ("End", "Newest line, and follow new lines");
-        yield return ("Left/Right", "Scroll sideways");
+        yield return ("Up/Down", UiText.Get("Hint.ScrollOneLine", "Scroll one line"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.ScrollOnePage", "Scroll one page"));
+        yield return ("Home", UiText.Get("Hint.OldestLine", "Oldest line"));
+        yield return ("End", UiText.Get("Hint.NewestLineFollow", "Newest line, and follow new lines"));
+        yield return ("Left/Right", UiText.Get("Hint.ScrollSideways", "Scroll sideways"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

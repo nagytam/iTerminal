@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
@@ -70,7 +71,7 @@ public class SearchBox : TextBox
 
         if (IsEnabled)
         {
-            yield return ("Esc", "Clear the search");
+            yield return ("Esc", UiText.Get("Hint.ClearSearch", "Clear the search"));
         }
     }
 

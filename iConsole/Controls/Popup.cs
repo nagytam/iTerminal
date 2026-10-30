@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Display;
 using IBuffer = iConsole.Buffers.IBuffer;
@@ -232,7 +233,7 @@ public class Popup : Window
     {
         if (IsOpen && CloseOnEscape)
         {
-            yield return ("Esc", "Close the popup");
+            yield return ("Esc", UiText.Get("Hint.ClosePopup", "Close the popup"));
         }
     }
 

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
@@ -61,9 +62,9 @@ public class UnsavedChangesDialog : Dialog
     /// </summary>
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("S", "Save the changes");
-        yield return ("D", "Discard the changes");
-        yield return ("C", "Cancel and keep editing");
+        yield return ("S", UiText.Get("Hint.SaveChanges", "Save the changes"));
+        yield return ("D", UiText.Get("Hint.DiscardChanges", "Discard the changes"));
+        yield return ("C", UiText.Get("Hint.CancelKeepEditing", "Cancel and keep editing"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

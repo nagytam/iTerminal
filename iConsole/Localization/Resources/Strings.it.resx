@@ -475,4 +475,163 @@
   <data name="Hint.TypeValue" xml:space="preserve">
     <value>Digita il valore</value>
   </data>
+  <data name="Hint.BackPreviousMenu" xml:space="preserve">
+    <value>Indietro / menu precedente</value>
+  </data>
+  <data name="Hint.CancelKeepEditing" xml:space="preserve">
+    <value>Annulla e continua a modificare</value>
+  </data>
+  <data name="Hint.CentreDivider" xml:space="preserve">
+    <value>Centra il divisore</value>
+  </data>
+  <data name="Hint.FirstOrLastSegmentChoose" xml:space="preserve">
+    <value>Scegli il primo o l'ultimo segmento</value>
+  </data>
+  <data name="Hint.ChooseHighlightedItem" xml:space="preserve">
+    <value>Scegli la voce evidenziata</value>
+  </data>
+  <data name="Hint.ChoosePreviousNextOption" xml:space="preserve">
+    <value>Scegli l'opzione precedente o successiva</value>
+  </data>
+  <data name="Hint.ChoosePreviousNextSegment" xml:space="preserve">
+    <value>Scegli il segmento precedente o successivo</value>
+  </data>
+  <data name="Hint.ClearRatingOrMax" xml:space="preserve">
+    <value>Cancella la valutazione o assegna il massimo</value>
+  </data>
+  <data name="Hint.ClearSearch" xml:space="preserve">
+    <value>Cancella la ricerca</value>
+  </data>
+  <data name="Hint.CloseMenuShort" xml:space="preserve">
+    <value>Chiudi menu</value>
+  </data>
+  <data name="Hint.CloseList" xml:space="preserve">
+    <value>Chiudi l'elenco</value>
+  </data>
+  <data name="Hint.ClosePopup" xml:space="preserve">
+    <value>Chiudi il popup</value>
+  </data>
+  <data name="Hint.CloseViewer" xml:space="preserve">
+    <value>Chiudi il visualizzatore</value>
+  </data>
+  <data name="Hint.CloseWithoutMoving" xml:space="preserve">
+    <value>Chiudi senza spostarti</value>
+  </data>
+  <data name="Hint.CollapseSection" xml:space="preserve">
+    <value>Comprimi la sezione</value>
+  </data>
+  <data name="Hint.DiscardChanges" xml:space="preserve">
+    <value>Scarta le modifiche</value>
+  </data>
+  <data name="Hint.ExpandOrCollapseSection" xml:space="preserve">
+    <value>Espandi o comprimi la sezione</value>
+  </data>
+  <data name="Hint.ExpandSection" xml:space="preserve">
+    <value>Espandi la sezione</value>
+  </data>
+  <data name="Hint.FirstOrLastOption" xml:space="preserve">
+    <value>Prima o ultima opzione</value>
+  </data>
+  <data name="Hint.FirstOrLastPage" xml:space="preserve">
+    <value>Prima o ultima pagina</value>
+  </data>
+  <data name="Hint.FollowLink" xml:space="preserve">
+    <value>Segui il collegamento</value>
+  </data>
+  <data name="Hint.GoToTheLine" xml:space="preserve">
+    <value>Vai alla riga</value>
+  </data>
+  <data name="Hint.GoToTheOffset" xml:space="preserve">
+    <value>Vai all'offset</value>
+  </data>
+  <data name="Hint.GoTopOrBottom" xml:space="preserve">
+    <value>Vai in cima o in fondo</value>
+  </data>
+  <data name="Hint.GoTopOrEnd" xml:space="preserve">
+    <value>Vai all'inizio o alla fine</value>
+  </data>
+  <data name="Hint.GoUpFolder" xml:space="preserve">
+    <value>Sali di una cartella</value>
+  </data>
+  <data name="Hint.LowerRaiseRating" xml:space="preserve">
+    <value>Diminuisci o aumenta la valutazione</value>
+  </data>
+  <data name="Hint.LowerRaiseValue" xml:space="preserve">
+    <value>Diminuisci o aumenta il valore</value>
+  </data>
+  <data name="Hint.MovePageAtATime" xml:space="preserve">
+    <value>Spostati una pagina alla volta</value>
+  </data>
+  <data name="Hint.MoveAlongToolbar" xml:space="preserve">
+    <value>Scorri la barra degli strumenti</value>
+  </data>
+  <data name="Hint.MoveMenuSelection" xml:space="preserve">
+    <value>Sposta la selezione del menu</value>
+  </data>
+  <data name="Hint.MoveDividerBy8" xml:space="preserve">
+    <value>Sposta il divisore di 8</value>
+  </data>
+  <data name="Hint.MoveHighlight" xml:space="preserve">
+    <value>Sposta l'evidenziazione</value>
+  </data>
+  <data name="Hint.NewestLineFollow" xml:space="preserve">
+    <value>Riga più recente e segui le nuove righe</value>
+  </data>
+  <data name="Hint.OldestLine" xml:space="preserve">
+    <value>Riga più vecchia</value>
+  </data>
+  <data name="Hint.OpenSubmenuRunCommand" xml:space="preserve">
+    <value>Apri sottomenu / esegui comando</value>
+  </data>
+  <data name="Hint.OpenHighlightedRow" xml:space="preserve">
+    <value>Apri la riga evidenziata</value>
+  </data>
+  <data name="Hint.PreviousNextPage" xml:space="preserve">
+    <value>Pagina precedente o successiva</value>
+  </data>
+  <data name="Hint.RaiseLowerLargeStep" xml:space="preserve">
+    <value>Aumenta o diminuisci il valore a passi grandi</value>
+  </data>
+  <data name="Hint.ResetClock" xml:space="preserve">
+    <value>Azzera l'orologio</value>
+  </data>
+  <data name="Hint.RunTheItem" xml:space="preserve">
+    <value>Esegui la voce</value>
+  </data>
+  <data name="Hint.SaveChanges" xml:space="preserve">
+    <value>Salva le modifiche</value>
+  </data>
+  <data name="Hint.Scroll" xml:space="preserve">
+    <value>Scorri</value>
+  </data>
+  <data name="Hint.ScrollRow" xml:space="preserve">
+    <value>Scorri di una riga</value>
+  </data>
+  <data name="Hint.ScrollOneLine" xml:space="preserve">
+    <value>Scorri di una riga</value>
+  </data>
+  <data name="Hint.ScrollOnePage" xml:space="preserve">
+    <value>Scorri di una pagina</value>
+  </data>
+  <data name="Hint.ScrollOneRow" xml:space="preserve">
+    <value>Scorri di una riga</value>
+  </data>
+  <data name="Hint.SelectThisOption" xml:space="preserve">
+    <value>Scegli questa opzione</value>
+  </data>
+  <data name="Hint.SetRatingDirectly" xml:space="preserve">
+    <value>Imposta direttamente la valutazione</value>
+  </data>
+  <data name="Hint.SwitchTextHex" xml:space="preserve">
+    <value>Passa tra la vista testo e la vista esadecimale</value>
+  </data>
+  <data name="Hint.SwitchSetting" xml:space="preserve">
+    <value>Attiva o disattiva l'impostazione</value>
+  </data>
+  <data name="Hint.TypeLineNumber" xml:space="preserve">
+    <value>Digita il numero di riga (il primo tasto sostituisce quello attuale)</value>
+  </data>
+  <data name="Hint.TypeOffset" xml:space="preserve">
+    <value>Digita l'offset in decimale o esadecimale</value>
+  </data>
 </root>

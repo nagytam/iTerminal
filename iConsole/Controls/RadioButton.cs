@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -61,7 +62,7 @@ public class RadioButton : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Space", "Select this option");
+        yield return ("Space", UiText.Get("Hint.SelectThisOption", "Select this option"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
