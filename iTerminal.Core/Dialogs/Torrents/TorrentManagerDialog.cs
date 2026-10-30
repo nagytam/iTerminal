@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -113,26 +114,26 @@ public class TorrentManagerDialog : Dialog
     {
         if (_mode == Mode.Add)
         {
-            yield return ("Enter", "Add the torrent");
-            yield return ("Tab / Up/Down", "Move between the fields");
-            yield return ("Ctrl+V", "Paste a link or a path");
-            yield return ("Esc", "Back to the list");
+            yield return ("Enter", UiText.Get("DialogHint.AddTorrent", "Add the torrent"));
+            yield return ("Tab / Up/Down", UiText.Get("DialogHint.MoveBetweenFields", "Move between the fields"));
+            yield return ("Ctrl+V", UiText.Get("DialogHint.PasteLinkOrPath", "Paste a link or a path"));
+            yield return ("Esc", UiText.Get("DialogHint.BackToList", "Back to the list"));
             yield break;
         }
 
         if (_confirmDelete)
         {
-            yield return ("Y", "Remove, keep the downloaded files");
-            yield return ("W", "Remove and delete the downloaded files");
-            yield return ("Any other key", "Keep the torrent");
+            yield return ("Y", UiText.Get("DialogHint.RemoveKeepFiles", "Remove, keep the downloaded files"));
+            yield return ("W", UiText.Get("DialogHint.RemoveDeleteFiles", "Remove and delete the downloaded files"));
+            yield return ("Any other key", UiText.Get("DialogHint.KeepTorrent", "Keep the torrent"));
             yield break;
         }
 
-        yield return ("Up/Down", "Choose a torrent");
-        yield return ("A / N", "Add a magnet link or .torrent");
-        yield return ("Space", "Pause or resume");
-        yield return ("D/Delete", "Remove the torrent (asks first)");
-        yield return ("O", "Open the save folder in the active panel");
+        yield return ("Up/Down", UiText.Get("DialogHint.ChooseTorrent", "Choose a torrent"));
+        yield return ("A / N", UiText.Get("DialogHint.AddMagnetOrTorrent", "Add a magnet link or .torrent"));
+        yield return ("Space", UiText.Get("DialogHint.PauseOrResume", "Pause or resume"));
+        yield return ("D/Delete", UiText.Get("DialogHint.RemoveTorrentAsks", "Remove the torrent (asks first)"));
+        yield return ("O", UiText.Get("DialogHint.OpenSaveFolder", "Open the save folder in the active panel"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

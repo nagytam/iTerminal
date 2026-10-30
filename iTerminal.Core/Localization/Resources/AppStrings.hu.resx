@@ -724,4 +724,181 @@
   <data name="DialogHint.LookUpAddress" xml:space="preserve">
     <value>Cím keresése</value>
   </data>
+  <data name="DialogHint.AddTorrent" xml:space="preserve">
+    <value>A torrent hozzáadása</value>
+  </data>
+  <data name="DialogHint.PasteLinkOrPath" xml:space="preserve">
+    <value>Hivatkozás vagy útvonal beillesztése</value>
+  </data>
+  <data name="DialogHint.RemoveKeepFiles" xml:space="preserve">
+    <value>Eltávolítás, a letöltött fájlok megtartásával</value>
+  </data>
+  <data name="DialogHint.RemoveDeleteFiles" xml:space="preserve">
+    <value>Eltávolítás a letöltött fájlok törlésével</value>
+  </data>
+  <data name="DialogHint.KeepTorrent" xml:space="preserve">
+    <value>A torrent megtartása</value>
+  </data>
+  <data name="DialogHint.ChooseTorrent" xml:space="preserve">
+    <value>Torrent kiválasztása</value>
+  </data>
+  <data name="DialogHint.AddMagnetOrTorrent" xml:space="preserve">
+    <value>Magnet-hivatkozás vagy .torrent hozzáadása</value>
+  </data>
+  <data name="DialogHint.PauseOrResume" xml:space="preserve">
+    <value>Szüneteltetés vagy folytatás</value>
+  </data>
+  <data name="DialogHint.RemoveTorrentAsks" xml:space="preserve">
+    <value>A torrent eltávolítása (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.OpenSaveFolder" xml:space="preserve">
+    <value>A mentési mappa megnyitása az aktív panelen</value>
+  </data>
+  <data name="DialogHint.DeleteMarkedFiles" xml:space="preserve">
+    <value>A megjelölt fájlok törlése</value>
+  </data>
+  <data name="DialogHint.DeleteNothing" xml:space="preserve">
+    <value>Semmit sem töröl</value>
+  </data>
+  <data name="DialogHint.MoveOverFiles" xml:space="preserve">
+    <value>A kurzor mozgatása a fájlokon</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastFile" xml:space="preserve">
+    <value>Ugrás az első vagy utolsó fájlra</value>
+  </data>
+  <data name="DialogHint.MarkFileAndMoveOn" xml:space="preserve">
+    <value>A fájl megjelölése vagy a jelölés törlése, és tovább</value>
+  </data>
+  <data name="DialogHint.MarkAllButOldest" xml:space="preserve">
+    <value>Minden csoportban a legrégebbi kivételével mind megjelölése</value>
+  </data>
+  <data name="DialogHint.MarkAllButNewest" xml:space="preserve">
+    <value>Minden csoportban a legújabb kivételével mind megjelölése</value>
+  </data>
+  <data name="DialogHint.ClearMarks" xml:space="preserve">
+    <value>A jelölések törlése</value>
+  </data>
+  <data name="DialogHint.DeleteMarkedAsks" xml:space="preserve">
+    <value>A megjelölt fájlok törlése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.ScanAgain" xml:space="preserve">
+    <value>Újabb vizsgálat</value>
+  </data>
+  <data name="DialogHint.ShowFileInPanel" xml:space="preserve">
+    <value>A fájl megjelenítése a panelen</value>
+  </data>
+  <data name="DialogHint.SaveMeeting" xml:space="preserve">
+    <value>A megbeszélés mentése</value>
+  </data>
+  <data name="DialogHint.DiscardEntry" xml:space="preserve">
+    <value>A bejegyzés elvetése</value>
+  </data>
+  <data name="DialogHint.DeleteMeeting" xml:space="preserve">
+    <value>A megbeszélés törlése</value>
+  </data>
+  <data name="DialogHint.KeepMeeting" xml:space="preserve">
+    <value>A megbeszélés megtartása</value>
+  </data>
+  <data name="DialogHint.MoveDayOrWeek" xml:space="preserve">
+    <value>Mozgás egy nappal vagy héttel</value>
+  </data>
+  <data name="DialogHint.GoToToday" xml:space="preserve">
+    <value>Ugrás a mai napra</value>
+  </data>
+  <data name="DialogHint.ChooseMeetingOfDay" xml:space="preserve">
+    <value>A nap egy megbeszélésének kiválasztása</value>
+  </data>
+  <data name="DialogHint.AddMeeting" xml:space="preserve">
+    <value>Megbeszélés hozzáadása</value>
+  </data>
+  <data name="DialogHint.EditChosenMeeting" xml:space="preserve">
+    <value>A kiválasztott megbeszélés szerkesztése</value>
+  </data>
+  <data name="DialogHint.DeleteChosenMeetingAsks" xml:space="preserve">
+    <value>A kiválasztott megbeszélés törlése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.SaveTask" xml:space="preserve">
+    <value>A feladat mentése</value>
+  </data>
+  <data name="DialogHint.DeleteTask" xml:space="preserve">
+    <value>A feladat törlése</value>
+  </data>
+  <data name="DialogHint.KeepTask" xml:space="preserve">
+    <value>A feladat megtartása</value>
+  </data>
+  <data name="DialogHint.MoveOverTasks" xml:space="preserve">
+    <value>Mozgás a feladatok között</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastTask" xml:space="preserve">
+    <value>Ugrás az első vagy utolsó feladatra</value>
+  </data>
+  <data name="DialogHint.AddTask" xml:space="preserve">
+    <value>Feladat hozzáadása</value>
+  </data>
+  <data name="DialogHint.EditTask" xml:space="preserve">
+    <value>A feladat szerkesztése</value>
+  </data>
+  <data name="DialogHint.MarkTaskDoneOrOpen" xml:space="preserve">
+    <value>A feladat késznek vagy nyitottnak jelölése</value>
+  </data>
+  <data name="DialogHint.DeleteTaskAsks" xml:space="preserve">
+    <value>A feladat törlése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.ApplyValue" xml:space="preserve">
+    <value>Az érték alkalmazása</value>
+  </data>
+  <data name="DialogHint.CancelEntry" xml:space="preserve">
+    <value>A bevitel megszakítása</value>
+  </data>
+  <data name="DialogHint.SwitchSection" xml:space="preserve">
+    <value>Szakasz váltása</value>
+  </data>
+  <data name="DialogHint.MoveOverSettings" xml:space="preserve">
+    <value>Mozgás a beállítások között</value>
+  </data>
+  <data name="DialogHint.FirstOrLastSetting" xml:space="preserve">
+    <value>Első vagy utolsó beállítás</value>
+  </data>
+  <data name="DialogHint.ChangeSettingUnderCursor" xml:space="preserve">
+    <value>A kurzor alatti beállítás módosítása</value>
+  </data>
+  <data name="DialogHint.ReadSettingsAgain" xml:space="preserve">
+    <value>A beállítások újraolvasása</value>
+  </data>
+  <data name="DialogHint.AddVariable" xml:space="preserve">
+    <value>Változó hozzáadása</value>
+  </data>
+  <data name="DialogHint.RemoveVariableAsks" xml:space="preserve">
+    <value>A változó eltávolítása (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.SwitchUserMachine" xml:space="preserve">
+    <value>Váltás a felhasználói és a gépi hatókör között</value>
+  </data>
+  <data name="DialogHint.SaveConnection" xml:space="preserve">
+    <value>A kapcsolat mentése</value>
+  </data>
+  <data name="DialogHint.DeleteConnection" xml:space="preserve">
+    <value>A kapcsolat törlése</value>
+  </data>
+  <data name="DialogHint.KeepConnection" xml:space="preserve">
+    <value>A kapcsolat megtartása</value>
+  </data>
+  <data name="DialogHint.ChooseConnection" xml:space="preserve">
+    <value>Kapcsolat kiválasztása</value>
+  </data>
+  <data name="DialogHint.ConnectLentTerminal" xml:space="preserve">
+    <value>Kapcsolódás az átadott terminálon</value>
+  </data>
+  <data name="DialogHint.AddConnection" xml:space="preserve">
+    <value>Kapcsolat hozzáadása</value>
+  </data>
+  <data name="DialogHint.EditConnection" xml:space="preserve">
+    <value>A kapcsolat szerkesztése</value>
+  </data>
+  <data name="DialogHint.DeleteConnectionAsks" xml:space="preserve">
+    <value>A kapcsolat törlése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.BrowseConnection" xml:space="preserve">
+    <value>A kapcsolat böngészése egy panelen</value>
+  </data>
 </root>

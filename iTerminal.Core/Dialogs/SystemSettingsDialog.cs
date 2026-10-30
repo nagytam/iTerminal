@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -422,22 +423,22 @@ public class SystemSettingsDialog : Dialog
 
         if (_inputActive)
         {
-            yield return ("Enter", "Apply the value");
-            yield return ("Esc", "Cancel the entry");
+            yield return ("Enter", UiText.Get("DialogHint.ApplyValue", "Apply the value"));
+            yield return ("Esc", UiText.Get("DialogHint.CancelEntry", "Cancel the entry"));
             yield break;
         }
 
-        yield return ("Left/Right, Tab", "Switch section");
-        yield return ("Up/Down", "Move over the settings");
-        yield return ("PageUp/PageDown", "Move a page at a time");
-        yield return ("Home/End", "First or last setting");
-        yield return ("Enter/F4", "Change the setting under the cursor");
-        yield return ("F5", "Read the settings again");
+        yield return ("Left/Right, Tab", UiText.Get("DialogHint.SwitchSection", "Switch section"));
+        yield return ("Up/Down", UiText.Get("DialogHint.MoveOverSettings", "Move over the settings"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MovePageAtATime", "Move a page at a time"));
+        yield return ("Home/End", UiText.Get("DialogHint.FirstOrLastSetting", "First or last setting"));
+        yield return ("Enter/F4", UiText.Get("DialogHint.ChangeSettingUnderCursor", "Change the setting under the cursor"));
+        yield return ("F5", UiText.Get("DialogHint.ReadSettingsAgain", "Read the settings again"));
         if (_section == SettingsSection.Environment)
         {
-            yield return ("Insert/N", "Add a variable");
-            yield return ("Delete/F8", "Remove the variable (asks first)");
-            yield return ("S", "Switch between the user and the machine scope");
+            yield return ("Insert/N", UiText.Get("DialogHint.AddVariable", "Add a variable"));
+            yield return ("Delete/F8", UiText.Get("DialogHint.RemoveVariableAsks", "Remove the variable (asks first)"));
+            yield return ("S", UiText.Get("DialogHint.SwitchUserMachine", "Switch between the user and the machine scope"));
         }
 
         yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
