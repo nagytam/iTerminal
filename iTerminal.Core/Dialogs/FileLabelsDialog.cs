@@ -43,7 +43,7 @@ public class FileLabelsDialog : FormDialog
     {
         _labels = labels;
         _contentModelService = contentModelService;
-        Title = iConsole.Localization.UiText.Get("Menu.ColourLabelsandTags", "Colour labels and tags");
+        Title = iConsole.Localization.UiText.Get("Dialog.ColourLabels", "Colour labels and tags");
         var applyCommand = new ApplyCommand();
         AddCommand(applyCommand);
 

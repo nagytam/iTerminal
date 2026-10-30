@@ -379,4 +379,13 @@
   <data name="Language.Applied" xml:space="preserve">
     <value>Nyelv: {0}</value>
   </data>
+  <data name="Dialog.CreateLink" xml:space="preserve">
+    <value>Hivatkozás létrehozása</value>
+  </data>
+  <data name="Dialog.FilterByLabel" xml:space="preserve">
+    <value>Szűrés címke szerint</value>
+  </data>
+  <data name="Dialog.ColourLabels" xml:space="preserve">
+    <value>Színcímkék és címkék</value>
+  </data>
 </root>

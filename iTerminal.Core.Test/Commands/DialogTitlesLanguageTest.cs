@@ -42,7 +42,7 @@ public class DialogTitlesLanguageTest
             (typeof(MarkPatternDialog), "Menu.Mark"), (typeof(PropertiesDialog), "Menu.Properties"), (typeof(RenameDialog), "Menu.Rename"),
             (typeof(FindFilesDialog), "Menu.FindFiles"), (typeof(SettingsDialog), "Menu.Settings"),
             (typeof(ChecksumDialog), "Menu.Checksums"), (typeof(SignatureDialog), "Menu.Signatures"), (typeof(TaskManagerDialog), "Menu.TaskManager"),
-            (typeof(CreateLinkDialog), "Menu.CreateLink"), (typeof(LabelFilterDialog), "Menu.FilterbyLabel"), (typeof(FileLabelsDialog), "Menu.ColourLabelsandTags"),
+            (typeof(CreateLinkDialog), "Dialog.CreateLink"), (typeof(LabelFilterDialog), "Dialog.FilterByLabel"), (typeof(FileLabelsDialog), "Dialog.ColourLabels"),
             (typeof(iTerminal.Core.Dialogs.Workspaces.WorkspaceManagerDialog), "Menu.Workspaces"), (typeof(iTerminal.Core.Dialogs.Translator.TranslatorDialog), "Menu.Translator"),
             (typeof(iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog), "Menu.CurrencyConverter"), (typeof(IPhoneBrowserDialog), "Menu.iPhoneBrowser"),
         ];

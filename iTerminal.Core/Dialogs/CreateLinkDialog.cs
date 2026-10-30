@@ -38,7 +38,7 @@ public class CreateLinkDialog : FormDialog
     {
         _linkService = linkService;
         _contentModelService = contentModelService;
-        Title = iConsole.Localization.UiText.Get("Menu.CreateLink", "Create link");
+        Title = iConsole.Localization.UiText.Get("Dialog.CreateLink", "Create link");
         var createCommand = new CreateCommand();
         AddCommand(createCommand);
 
