@@ -44,6 +44,7 @@ public class UiService : IUiService
             "git" or "git_client" or "source_control" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Git.GitClientDialog>(),
             "currency" or "currencyconverter" or "currency converter" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog>(),
             "torrent" or "torrents" or "bittorrent" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog>(),
+            "games" or "game" or "chess" or "go" or "tictactoe" or "morris" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.GamesDialog>(),
             "translator" or "translate" or "translation" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Translator.TranslatorDialog>(),
             _ => null
         };

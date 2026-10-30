@@ -117,7 +117,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Workspaces.WorkspaceManagerDialog? workspaceManagerDialog = null,
         LanguageDialog? languageDialog = null,
         ILocalizer? localizer = null,
-        iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null
+        iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
+        iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null
         )
         : base([], themeService)
     {
@@ -212,7 +213,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             currencyConverterDialog,
             workspaceManagerDialog,
             languageDialog,
-            torrentManagerDialog));
+            torrentManagerDialog,
+            gamesDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 
