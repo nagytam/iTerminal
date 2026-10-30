@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -57,14 +58,14 @@ public class MarkPatternDialog : FormDialog
 
         _textBoxPattern = new TextBox(beepService, dateTimeProviderService, themeService)
         {
-            Label = "Pattern",
+            Label = UiText.Get("Field.Pattern", "Pattern"),
             Text = "*",
             IsEnabled = true,
             HotKeyChar = 'P'
         };
         _checkBoxFolders = new CheckBox(themeService)
         {
-            Label = "Folders too",
+            Label = UiText.Get("Field.FoldersToo", "Folders too"),
             IsChecked = false,
             IsEnabled = true,
             HotKeyChar = 'F'

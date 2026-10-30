@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -81,14 +82,14 @@ public class PropertiesDialog : FormDialog
         }
 
         _info = new InfoLines(themeService);
-        _checkBoxReadOnly = new CheckBox(themeService) { Label = "Read-only" };
-        _checkBoxHidden = new CheckBox(themeService) { Label = "Hidden" };
-        _checkBoxSystem = new CheckBox(themeService) { Label = "System" };
-        _checkBoxArchive = new CheckBox(themeService) { Label = "Archive" };
-        _textBoxMode = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Mode (octal)" };
-        _textBoxCreated = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Created" };
-        _textBoxModified = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Modified" };
-        _textBoxAccessed = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Accessed" };
+        _checkBoxReadOnly = new CheckBox(themeService) { Label = UiText.Get("Field.ReadOnly", "Read-only") };
+        _checkBoxHidden = new CheckBox(themeService) { Label = UiText.Get("Field.Hidden", "Hidden") };
+        _checkBoxSystem = new CheckBox(themeService) { Label = UiText.Get("Field.System", "System") };
+        _checkBoxArchive = new CheckBox(themeService) { Label = UiText.Get("Field.Archive", "Archive") };
+        _textBoxMode = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.ModeOctal", "Mode (octal)") };
+        _textBoxCreated = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Created", "Created") };
+        _textBoxModified = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Modified", "Modified") };
+        _textBoxAccessed = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Accessed", "Accessed") };
         _errorLabel = new Label(string.Empty, themeService);
         _applyButton = new Button(iConsole.Localization.UiText.Get("Common.Apply", "Apply"), applyCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);

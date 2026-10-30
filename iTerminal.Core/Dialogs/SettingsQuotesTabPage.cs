@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Controls.Tabs;
 using iConsole.Services;
@@ -58,7 +59,7 @@ public class SettingsQuotesTabPage : TabPage
 
         _checkBoxEnableQuotes = new CheckBox(themeService)
         {
-            Label = "Enable quotes",
+            Label = UiText.Get("Field.EnableQuotes", "Enable quotes"),
             IsChecked = _isQuotesIndicatorEnabled
         };
         _checkBoxEnableQuotes.CheckedChanged += OnCheckBoxEnableQuotesCheckedChanged;
@@ -66,7 +67,7 @@ public class SettingsQuotesTabPage : TabPage
 
         _checkBoxEnableWeather = new CheckBox(themeService)
         {
-            Label = "Enable weather",
+            Label = UiText.Get("Field.EnableWeather", "Enable weather"),
             IsChecked = _isWeatherIndicatorEnabled
         };
         _checkBoxEnableWeather.CheckedChanged += OnCheckBoxEnableWeatherCheckedChanged;

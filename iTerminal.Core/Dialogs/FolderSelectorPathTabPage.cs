@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -55,7 +56,7 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         var completionModel = new FolderPathCompletionModel(settingsService, folderHistoryService);
         TextBoxPath = new TextBox(beepService, dateTimeProviderService, themeService)
         {
-            Label = "Path or URL: ",
+            Label = UiText.Get("Field.PathOrUrl", "Path or URL: "),
             MaxLength = 1024,
             Placeholder = "e.g. /home/me, C:\\Users, ssh://host/path",
         }.WithAutoCompletion(completionModel);

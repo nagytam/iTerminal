@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -118,14 +119,14 @@ public class ExtractDialog : FormDialog
 
         _checkBoxOwnFolder = new CheckBox(themeService)
         {
-            Label = "Each archive into a folder of its own",
+            Label = UiText.Get("Field.EachArchiveOwnFolder", "Each archive into a folder of its own"),
             IsChecked = true,
             HotKeyChar = 'F',
         };
         _checkBoxOwnFolder.CheckedChanged += (_, _) => UpdateLanding();
         _checkBoxOverwrite = new CheckBox(themeService)
         {
-            Label = "Overwrite files that are already there",
+            Label = UiText.Get("Field.OverwriteExisting", "Overwrite files that are already there"),
             IsChecked = false,
             HotKeyChar = 'O',
         };

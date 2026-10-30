@@ -1480,4 +1480,178 @@
   <data name="DialogHint.BackToStart" xml:space="preserve">
     <value>Torna all'inizio</value>
   </data>
+  <data name="Field.Compare" xml:space="preserve">
+    <value>Confronta</value>
+  </data>
+  <data name="Field.PasteExpectedHash" xml:space="preserve">
+    <value>incolla l'hash atteso</value>
+  </data>
+  <data name="Field.Run" xml:space="preserve">
+    <value>Esegui</value>
+  </data>
+  <data name="Field.TypeToFilterCommands" xml:space="preserve">
+    <value>digita per filtrare i comandi</value>
+  </data>
+  <data name="Field.IncludeSubfolders" xml:space="preserve">
+    <value>Includi le sottocartelle</value>
+  </data>
+  <data name="Field.DeleteTargetLacksSource" xml:space="preserve">
+    <value>Elimina ciò che c'è nella destinazione e manca nell'origine (solo a senso unico)</value>
+  </data>
+  <data name="Field.EncryptFileNames" xml:space="preserve">
+    <value>Cifra anche i nomi dei file</value>
+  </data>
+  <data name="Field.ReplaceFilesArchiveHas" xml:space="preserve">
+    <value>Sostituisci i file già presenti nell'archivio</value>
+  </data>
+  <data name="Field.Link" xml:space="preserve">
+    <value>Collegamento</value>
+  </data>
+  <data name="Field.HardLink" xml:space="preserve">
+    <value>Collegamento fisico (un secondo nome per il file; stesso volume)</value>
+  </data>
+  <data name="Field.RelativeTarget" xml:space="preserve">
+    <value>Destinazione relativa (la coppia può essere spostata insieme)</value>
+  </data>
+  <data name="Field.Amount" xml:space="preserve">
+    <value>Importo</value>
+  </data>
+  <data name="Field.From" xml:space="preserve">
+    <value>Da</value>
+  </data>
+  <data name="Field.MoveToRecycleBin" xml:space="preserve">
+    <value>Sposta nel cestino</value>
+  </data>
+  <data name="Field.RecursivelyDeleteFolder" xml:space="preserve">
+    <value>Elimina la cartella ricorsivamente</value>
+  </data>
+  <data name="Field.Image" xml:space="preserve">
+    <value>Immagine</value>
+  </data>
+  <data name="Field.EachArchiveOwnFolder" xml:space="preserve">
+    <value>Ogni archivio in una cartella propria</value>
+  </data>
+  <data name="Field.OverwriteExisting" xml:space="preserve">
+    <value>Sovrascrivi i file già presenti</value>
+  </data>
+  <data name="Field.AppliesTo" xml:space="preserve">
+    <value>Si applica a</value>
+  </data>
+  <data name="Field.RunsInTerminal" xml:space="preserve">
+    <value>Viene eseguito nel terminale (vim, nano, less…)</value>
+  </data>
+  <data name="Field.Tags" xml:space="preserve">
+    <value>Etichette</value>
+  </data>
+  <data name="Field.PathOrUrl" xml:space="preserve">
+    <value>Percorso o URL: </value>
+  </data>
+  <data name="Field.SshUserHost" xml:space="preserve">
+    <value>Utente@host SSH: </value>
+  </data>
+  <data name="Field.FileSystem" xml:space="preserve">
+    <value>File system</value>
+  </data>
+  <data name="Field.VolumeLabel" xml:space="preserve">
+    <value>Etichetta del volume</value>
+  </data>
+  <data name="Field.QuickFormat" xml:space="preserve">
+    <value>Formattazione rapida (senza il passaggio completo sulla superficie)</value>
+  </data>
+  <data name="Field.TypeDriveLetterConfirm" xml:space="preserve">
+    <value>Digita la lettera dell'unità per confermare</value>
+  </data>
+  <data name="Field.Pattern" xml:space="preserve">
+    <value>Modello</value>
+  </data>
+  <data name="Field.FoldersToo" xml:space="preserve">
+    <value>Anche le cartelle</value>
+  </data>
+  <data name="Field.Username" xml:space="preserve">
+    <value>Nome utente</value>
+  </data>
+  <data name="Field.PasswordOrKey" xml:space="preserve">
+    <value>Password (o percorso della chiave SSH se vuoto)</value>
+  </data>
+  <data name="Field.ShareName" xml:space="preserve">
+    <value>Nome della condivisione</value>
+  </data>
+  <data name="Field.SaveConnection" xml:space="preserve">
+    <value>Salva questa connessione</value>
+  </data>
+  <data name="Field.Filter" xml:space="preserve">
+    <value>Filtro</value>
+  </data>
+  <data name="Field.ProcessNameOrId" xml:space="preserve">
+    <value>nome o id del processo</value>
+  </data>
+  <data name="Field.ReadOnly" xml:space="preserve">
+    <value>Sola lettura</value>
+  </data>
+  <data name="Field.Hidden" xml:space="preserve">
+    <value>Nascosto</value>
+  </data>
+  <data name="Field.System" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
+  <data name="Field.Archive" xml:space="preserve">
+    <value>Archivio</value>
+  </data>
+  <data name="Field.ModeOctal" xml:space="preserve">
+    <value>Modo (ottale)</value>
+  </data>
+  <data name="Field.Created" xml:space="preserve">
+    <value>Creato</value>
+  </data>
+  <data name="Field.Modified" xml:space="preserve">
+    <value>Modificato</value>
+  </data>
+  <data name="Field.Accessed" xml:space="preserve">
+    <value>Ultimo accesso</value>
+  </data>
+  <data name="Field.Find" xml:space="preserve">
+    <value>Trova</value>
+  </data>
+  <data name="Field.NameOrPattern" xml:space="preserve">
+    <value>nome o modello, ad es. *.log</value>
+  </data>
+  <data name="Field.Containing" xml:space="preserve">
+    <value>Contenente</value>
+  </data>
+  <data name="Field.TextInsideFiles" xml:space="preserve">
+    <value>testo all'interno dei file (facoltativo)</value>
+  </data>
+  <data name="Field.In" xml:space="preserve">
+    <value>In</value>
+  </data>
+  <data name="Field.FolderToSearch" xml:space="preserve">
+    <value>cartella in cui cercare</value>
+  </data>
+  <data name="Field.LargerMb" xml:space="preserve">
+    <value>Più di MB</value>
+  </data>
+  <data name="Field.BlankAny" xml:space="preserve">
+    <value>vuoto: qualsiasi</value>
+  </data>
+  <data name="Field.OlderDays" xml:space="preserve">
+    <value>Più vecchi di giorni</value>
+  </data>
+  <data name="Field.ReadTextFromImages" xml:space="preserve">
+    <value>Leggi il testo dalle immagini (OCR)</value>
+  </data>
+  <data name="Field.EnableQuotes" xml:space="preserve">
+    <value>Abilita le quotazioni</value>
+  </data>
+  <data name="Field.EnableWeather" xml:space="preserve">
+    <value>Abilita il meteo</value>
+  </data>
+  <data name="Field.Key" xml:space="preserve">
+    <value>Chiave</value>
+  </data>
+  <data name="Field.MemoryThisProcess" xml:space="preserve">
+    <value>Memoria (questo processo)</value>
+  </data>
+  <data name="Field.Engine" xml:space="preserve">
+    <value>Motore</value>
+  </data>
 </root>

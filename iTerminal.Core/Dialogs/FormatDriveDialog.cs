@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -51,11 +52,11 @@ public class FormatDriveDialog : FormDialog
 
         _labelDrive = new Label(string.Empty, themeService);
         _labelWarning = new Label(string.Empty, themeService);
-        _comboFileSystem = new ComboBox<string>(themeService) { Label = "File system" };
+        _comboFileSystem = new ComboBox<string>(themeService) { Label = UiText.Get("Field.FileSystem", "File system") };
         _comboFileSystem.SetItems(DriveActionsService.FileSystems);
-        _textBoxLabel = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Volume label" };
-        _checkBoxQuick = new CheckBox(themeService) { Label = "Quick format (skip the full surface pass)", IsChecked = true };
-        _textBoxConfirm = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Type the drive letter to confirm" };
+        _textBoxLabel = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.VolumeLabel", "Volume label") };
+        _checkBoxQuick = new CheckBox(themeService) { Label = UiText.Get("Field.QuickFormat", "Quick format (skip the full surface pass)"), IsChecked = true };
+        _textBoxConfirm = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.TypeDriveLetterConfirm", "Type the drive letter to confirm") };
         _errorLabels = [.. Enumerable.Range(0, ErrorRows).Select(_ => new Label(string.Empty, themeService))];
         _formatButton = new Button(iConsole.Localization.UiText.Get("Button.Format", "Format"), formatCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);

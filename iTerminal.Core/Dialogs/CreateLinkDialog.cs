@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -42,10 +43,10 @@ public class CreateLinkDialog : FormDialog
         var createCommand = new CreateCommand();
         AddCommand(createCommand);
 
-        _textBoxLink = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Link" };
+        _textBoxLink = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Link", "Link") };
         _labelTarget = new Label(string.Empty, themeService);
-        _checkBoxHard = new CheckBox(themeService) { Label = "Hard link (a second name for the file; same volume)" };
-        _checkBoxRelative = new CheckBox(themeService) { Label = "Relative target (the pair can be moved together)" };
+        _checkBoxHard = new CheckBox(themeService) { Label = UiText.Get("Field.HardLink", "Hard link (a second name for the file; same volume)") };
+        _checkBoxRelative = new CheckBox(themeService) { Label = UiText.Get("Field.RelativeTarget", "Relative target (the pair can be moved together)") };
         _errorLabels = [.. Enumerable.Range(0, ErrorRows).Select(_ => new Label(string.Empty, themeService))];
         _createButton = new Button(iConsole.Localization.UiText.Get("Button.Create", "Create"), createCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);

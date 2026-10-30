@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -176,13 +177,13 @@ public class CompressDialog : FormDialog
 
         _checkBoxEncryptNames = new CheckBox(themeService)
         {
-            Label = "Encrypt file names too",
+            Label = UiText.Get("Field.EncryptFileNames", "Encrypt file names too"),
             IsChecked = false,
             HotKeyChar = 'N',
         };
         _checkBoxReplace = new CheckBox(themeService)
         {
-            Label = "Replace files the archive already has",
+            Label = UiText.Get("Field.ReplaceFilesArchiveHas", "Replace files the archive already has"),
             IsChecked = true,
             HotKeyChar = 'R',
         };

@@ -1480,4 +1480,178 @@
   <data name="DialogHint.BackToStart" xml:space="preserve">
     <value>Back to the start</value>
   </data>
+  <data name="Field.Compare" xml:space="preserve">
+    <value>Compare</value>
+  </data>
+  <data name="Field.PasteExpectedHash" xml:space="preserve">
+    <value>paste the expected hash</value>
+  </data>
+  <data name="Field.Run" xml:space="preserve">
+    <value>Run</value>
+  </data>
+  <data name="Field.TypeToFilterCommands" xml:space="preserve">
+    <value>type to filter commands</value>
+  </data>
+  <data name="Field.IncludeSubfolders" xml:space="preserve">
+    <value>Include subfolders</value>
+  </data>
+  <data name="Field.DeleteTargetLacksSource" xml:space="preserve">
+    <value>Delete what the target has and the source lacks (one-way only)</value>
+  </data>
+  <data name="Field.EncryptFileNames" xml:space="preserve">
+    <value>Encrypt file names too</value>
+  </data>
+  <data name="Field.ReplaceFilesArchiveHas" xml:space="preserve">
+    <value>Replace files the archive already has</value>
+  </data>
+  <data name="Field.Link" xml:space="preserve">
+    <value>Link</value>
+  </data>
+  <data name="Field.HardLink" xml:space="preserve">
+    <value>Hard link (a second name for the file; same volume)</value>
+  </data>
+  <data name="Field.RelativeTarget" xml:space="preserve">
+    <value>Relative target (the pair can be moved together)</value>
+  </data>
+  <data name="Field.Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Field.From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="Field.MoveToRecycleBin" xml:space="preserve">
+    <value>Move to Recycle bin</value>
+  </data>
+  <data name="Field.RecursivelyDeleteFolder" xml:space="preserve">
+    <value>Recursively delete folder</value>
+  </data>
+  <data name="Field.Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Field.EachArchiveOwnFolder" xml:space="preserve">
+    <value>Each archive into a folder of its own</value>
+  </data>
+  <data name="Field.OverwriteExisting" xml:space="preserve">
+    <value>Overwrite files that are already there</value>
+  </data>
+  <data name="Field.AppliesTo" xml:space="preserve">
+    <value>Applies to</value>
+  </data>
+  <data name="Field.RunsInTerminal" xml:space="preserve">
+    <value>Runs in the terminal (vim, nano, less…)</value>
+  </data>
+  <data name="Field.Tags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="Field.PathOrUrl" xml:space="preserve">
+    <value>Path or URL: </value>
+  </data>
+  <data name="Field.SshUserHost" xml:space="preserve">
+    <value>SSH username@host: </value>
+  </data>
+  <data name="Field.FileSystem" xml:space="preserve">
+    <value>File system</value>
+  </data>
+  <data name="Field.VolumeLabel" xml:space="preserve">
+    <value>Volume label</value>
+  </data>
+  <data name="Field.QuickFormat" xml:space="preserve">
+    <value>Quick format (skip the full surface pass)</value>
+  </data>
+  <data name="Field.TypeDriveLetterConfirm" xml:space="preserve">
+    <value>Type the drive letter to confirm</value>
+  </data>
+  <data name="Field.Pattern" xml:space="preserve">
+    <value>Pattern</value>
+  </data>
+  <data name="Field.FoldersToo" xml:space="preserve">
+    <value>Folders too</value>
+  </data>
+  <data name="Field.Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Field.PasswordOrKey" xml:space="preserve">
+    <value>Password (or SSH key path if left blank)</value>
+  </data>
+  <data name="Field.ShareName" xml:space="preserve">
+    <value>Share name</value>
+  </data>
+  <data name="Field.SaveConnection" xml:space="preserve">
+    <value>Save this connection</value>
+  </data>
+  <data name="Field.Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Field.ProcessNameOrId" xml:space="preserve">
+    <value>process name or id</value>
+  </data>
+  <data name="Field.ReadOnly" xml:space="preserve">
+    <value>Read-only</value>
+  </data>
+  <data name="Field.Hidden" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="Field.System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Field.Archive" xml:space="preserve">
+    <value>Archive</value>
+  </data>
+  <data name="Field.ModeOctal" xml:space="preserve">
+    <value>Mode (octal)</value>
+  </data>
+  <data name="Field.Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="Field.Modified" xml:space="preserve">
+    <value>Modified</value>
+  </data>
+  <data name="Field.Accessed" xml:space="preserve">
+    <value>Accessed</value>
+  </data>
+  <data name="Field.Find" xml:space="preserve">
+    <value>Find</value>
+  </data>
+  <data name="Field.NameOrPattern" xml:space="preserve">
+    <value>name or pattern, e.g. *.log</value>
+  </data>
+  <data name="Field.Containing" xml:space="preserve">
+    <value>Containing</value>
+  </data>
+  <data name="Field.TextInsideFiles" xml:space="preserve">
+    <value>text inside the files (optional)</value>
+  </data>
+  <data name="Field.In" xml:space="preserve">
+    <value>In</value>
+  </data>
+  <data name="Field.FolderToSearch" xml:space="preserve">
+    <value>folder to search</value>
+  </data>
+  <data name="Field.LargerMb" xml:space="preserve">
+    <value>Larger MB</value>
+  </data>
+  <data name="Field.BlankAny" xml:space="preserve">
+    <value>blank: any</value>
+  </data>
+  <data name="Field.OlderDays" xml:space="preserve">
+    <value>Older days</value>
+  </data>
+  <data name="Field.ReadTextFromImages" xml:space="preserve">
+    <value>Read text from images (OCR)</value>
+  </data>
+  <data name="Field.EnableQuotes" xml:space="preserve">
+    <value>Enable quotes</value>
+  </data>
+  <data name="Field.EnableWeather" xml:space="preserve">
+    <value>Enable weather</value>
+  </data>
+  <data name="Field.Key" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="Field.MemoryThisProcess" xml:space="preserve">
+    <value>Memory (this process)</value>
+  </data>
+  <data name="Field.Engine" xml:space="preserve">
+    <value>Engine</value>
+  </data>
 </root>
