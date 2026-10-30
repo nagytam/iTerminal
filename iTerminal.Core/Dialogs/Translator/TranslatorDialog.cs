@@ -106,7 +106,7 @@ public class TranslatorDialog : SplitPaneDialog
         _service = service;
         _settings = settings;
         _options = options.Value;
-        Title = "Translator";
+        Title = iConsole.Localization.UiText.Get("Menu.Translator", "Translator");
 
         _from = new ComboBox<TranslationLanguage>(themeService) { Label = "From", DisplaySelector = language => language.Name, MaxDropDownRows = 10 };
         _to = new ComboBox<TranslationLanguage>(themeService) { Label = "To", DisplaySelector = language => language.Name, MaxDropDownRows = 10 };

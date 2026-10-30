@@ -20,7 +20,7 @@ public class TaskManagerDialog : Dialog
         : base(nameof(TaskManagerDialog), themeService)
     {
         _taskManager = taskManager ?? new TaskManager();
-        Title = "Task Manager";
+        Title = iConsole.Localization.UiText.Get("Menu.TaskManager", "Task Manager");
         _listModel = new ListBoxModel<IBackgroundTask>(_taskManager.Tasks)
         {
             TransformItem = TransformItem

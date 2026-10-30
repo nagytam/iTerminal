@@ -68,7 +68,7 @@ public class WorkspaceManagerDialog : Dialog
         INotificationService? notifications = null)
         : base(nameof(WorkspaceManagerDialog), themeService)
     {
-        Title = "Workspaces";
+        Title = iConsole.Localization.UiText.Get("Menu.Workspaces", "Workspaces");
         _workspaces = workspaces;
         _notifications = notifications;
     }

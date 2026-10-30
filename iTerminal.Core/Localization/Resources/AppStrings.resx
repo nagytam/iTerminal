@@ -379,4 +379,13 @@
   <data name="Language.Applied" xml:space="preserve">
     <value>Language: {0}</value>
   </data>
+  <data name="Dialog.CreateLink" xml:space="preserve">
+    <value>Create link</value>
+  </data>
+  <data name="Dialog.FilterByLabel" xml:space="preserve">
+    <value>Filter by label</value>
+  </data>
+  <data name="Dialog.ColourLabels" xml:space="preserve">
+    <value>Colour labels and tags</value>
+  </data>
 </root>

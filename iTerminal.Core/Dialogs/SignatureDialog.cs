@@ -52,7 +52,7 @@ public class SignatureDialog : Dialog
         _signatureService = signatureService;
         _notifications = notifications;
         _contentModelService = contentModelService;
-        Title = "Signatures";
+        Title = iConsole.Localization.UiText.Get("Menu.Signatures", "Signatures");
         _textBoxKey = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Key" };
         _info = new InfoLines(themeService);
         AddControl(_textBoxKey);
