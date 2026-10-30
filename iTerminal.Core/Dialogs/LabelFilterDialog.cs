@@ -44,7 +44,7 @@ public class LabelFilterDialog : FormDialog
         _tag = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Tag" };
         _info = new Label("Folders stay listed, so the panel can still be walked.", themeService);
         _message = new Label(string.Empty, themeService);
-        _applyButton = new Button("Apply", applyCommand, themeService);
+        _applyButton = new Button(iConsole.Localization.UiText.Get("Common.Apply", "Apply"), applyCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);
 
         AddControl(_colour);

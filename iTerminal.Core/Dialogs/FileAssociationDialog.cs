@@ -43,7 +43,7 @@ public class FileAssociationDialog : FormDialog
         _checkBoxTerminal = new CheckBox(themeService) { Label = "Runs in the terminal (vim, nano, less…)" };
         _hintLabel = new Label("%f file  %d folder  %n name — without %f the file goes last", themeService);
         _errorLabel = new Label(string.Empty, themeService);
-        _saveButton = new Button("Save", saveCommand, themeService);
+        _saveButton = new Button(iConsole.Localization.UiText.Get("Common.Save", "Save"), saveCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);
 
         // The command first: it is the one field that has to be typed, and the first focusable

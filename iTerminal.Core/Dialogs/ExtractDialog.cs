@@ -131,7 +131,7 @@ public class ExtractDialog : FormDialog
         };
         _labelLanding = new Label(string.Empty, themeService);
         _errorLabel = new Label(string.Empty, themeService);
-        _extractButton = new Button("Extract", extractCommand, themeService) { HotKeyChar = 'E' };
+        _extractButton = new Button(iConsole.Localization.UiText.Get("Menu.Extract", "Extract"), extractCommand, themeService) { HotKeyChar = 'E' };
         _cancelButton = new CancelDialogButton(themeService);
 
         AddControl(_labelSource);

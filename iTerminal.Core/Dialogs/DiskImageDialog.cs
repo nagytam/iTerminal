@@ -49,8 +49,8 @@ public class DiskImageDialog : FormDialog
         _textBoxPath = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Image" };
         _labelHint = new Label("An .iso, .vhd or .vhdx file.", themeService);
         _errorLabels = [.. Enumerable.Range(0, ErrorRows).Select(_ => new Label(string.Empty, themeService))];
-        _mountButton = new Button("Mount", mountCommand, themeService);
-        _unmountButton = new Button("Unmount", unmountCommand, themeService);
+        _mountButton = new Button(iConsole.Localization.UiText.Get("Button.Mount", "Mount"), mountCommand, themeService);
+        _unmountButton = new Button(iConsole.Localization.UiText.Get("Button.Unmount", "Unmount"), unmountCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);
 
         AddControl(_textBoxPath);

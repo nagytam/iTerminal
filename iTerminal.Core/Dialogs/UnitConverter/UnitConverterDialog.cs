@@ -67,7 +67,7 @@ public class UnitConverterDialog : SplitPaneDialog
             Label = "Value",
             Text = _engine.InputText
         };
-        _swapButton = new Button("Swap", new UnitConverterActionCommand(SwapUnits), themeService) { HotKeyChar = 'S' };
+        _swapButton = new Button(iConsole.Localization.UiText.Get("Button.Swap", "Swap"), new UnitConverterActionCommand(SwapUnits), themeService) { HotKeyChar = 'S' };
 
         AddControl(_categoryListBox);
         AddControl(_fromUnitListBox);

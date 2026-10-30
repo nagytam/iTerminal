@@ -99,8 +99,8 @@ public class NetworkBrowserDialog : SplitPaneDialog
         _passwordTextBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Password (or SSH key path if left blank)", IsVisible = false, CanFocus = false };
         _shareTextBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Share name", IsVisible = false, CanFocus = false };
         _saveConnectionCheckBox = new CheckBox(themeService) { Label = "Save this connection", IsVisible = false, CanFocus = false };
-        _connectButton = new Button("Connect", new NetworkBrowserActionCommand(() => _ = ConnectPendingAsync()), themeService) { HotKeyChar = 'C', IsVisible = false, CanFocus = false };
-        _backButton = new Button("Back", new NetworkBrowserActionCommand(BeginBrowse), themeService) { HotKeyChar = 'B', IsVisible = false, CanFocus = false };
+        _connectButton = new Button(iConsole.Localization.UiText.Get("Button.Connect", "Connect"), new NetworkBrowserActionCommand(() => _ = ConnectPendingAsync()), themeService) { HotKeyChar = 'C', IsVisible = false, CanFocus = false };
+        _backButton = new Button(iConsole.Localization.UiText.Get("Common.Back", "Back"), new NetworkBrowserActionCommand(BeginBrowse), themeService) { HotKeyChar = 'B', IsVisible = false, CanFocus = false };
         AddControl(_usernameTextBox);
         AddControl(_passwordTextBox);
         AddControl(_shareTextBox);

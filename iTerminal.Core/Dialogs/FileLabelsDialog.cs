@@ -51,7 +51,7 @@ public class FileLabelsDialog : FormDialog
         _tags = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Tags" };
         _info = new Label(string.Empty, themeService);
         _message = new Label(string.Empty, themeService);
-        _applyButton = new Button("Apply", applyCommand, themeService);
+        _applyButton = new Button(iConsole.Localization.UiText.Get("Common.Apply", "Apply"), applyCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);
 
         AddControl(_colour);
