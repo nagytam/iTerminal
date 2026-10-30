@@ -32,8 +32,9 @@ public sealed class LanguageServerBinding : IDisposable
         Uri = uri;
         LanguageId = languageId;
         _lastSent = CurrentText();
-        _client.OpenDocument(uri, languageId, _lastSent);
+        // Listen first: a quick server can publish before OpenDocument returns, and that first set would be lost.
         _client.DiagnosticsReceived += OnDiagnostics;
+        _client.OpenDocument(uri, languageId, _lastSent);
         TimeSpan interval = pollInterval ?? TimeSpan.FromMilliseconds(300);
         _timer = new Timer(_ => Flush(), null, interval, interval);
     }
