@@ -51,7 +51,7 @@ public class MarkPatternDialog : FormDialog
         IThemeService themeService)
         : base(nameof(MarkPatternDialog), themeService)
     {
-        Title = "Mark";
+        Title = iConsole.Localization.UiText.Get("Menu.Mark", "Mark");
         _applyCommand = new ApplyCommand(() => Marking);
         AddCommand(_applyCommand);
 

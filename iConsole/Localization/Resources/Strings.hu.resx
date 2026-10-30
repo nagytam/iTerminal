@@ -64,6 +64,30 @@
   <data name="Common.Cancel" xml:space="preserve">
     <value>Mégse</value>
   </data>
+  <data name="Common.Continue" xml:space="preserve">
+    <value>Folytatás</value>
+  </data>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>Megerősítés</value>
+  </data>
+  <data name="Common.Help" xml:space="preserve">
+    <value>Súgó</value>
+  </data>
+  <data name="Common.Back" xml:space="preserve">
+    <value>Vissza</value>
+  </data>
+  <data name="Common.Paste" xml:space="preserve">
+    <value>Beillesztés</value>
+  </data>
+  <data name="Common.Undo" xml:space="preserve">
+    <value>Visszavonás</value>
+  </data>
+  <data name="Common.Save" xml:space="preserve">
+    <value>Mentés</value>
+  </data>
+  <data name="Common.Stop" xml:space="preserve">
+    <value>Leállítás</value>
+  </data>
   <data name="Common.Close" xml:space="preserve">
     <value>Bezárás</value>
   </data>
@@ -75,5 +99,539 @@
   </data>
   <data name="Common.Apply" xml:space="preserve">
     <value>Alkalmaz</value>
+  </data>
+  <data name="Editor.GoToLine" xml:space="preserve">
+    <value>Ugrás sorra</value>
+  </data>
+  <data name="Editor.Line" xml:space="preserve">
+    <value>Sor</value>
+  </data>
+  <data name="Editor.GoToOffset" xml:space="preserve">
+    <value>Ugrás eltolásra</value>
+  </data>
+  <data name="Editor.Offset" xml:space="preserve">
+    <value>Eltolás</value>
+  </data>
+  <data name="Editor.ReplaceText" xml:space="preserve">
+    <value>Szöveg cseréje</value>
+  </data>
+  <data name="Editor.Find" xml:space="preserve">
+    <value>Keresés</value>
+  </data>
+  <data name="Editor.With" xml:space="preserve">
+    <value>Csere erre</value>
+  </data>
+  <data name="Editor.MatchCase" xml:space="preserve">
+    <value>Kis- és nagybetű</value>
+  </data>
+  <data name="Editor.RegularExpression" xml:space="preserve">
+    <value>Reguláris kifejezés</value>
+  </data>
+  <data name="Editor.Replace" xml:space="preserve">
+    <value>Csere</value>
+  </data>
+  <data name="Editor.ReplaceAll" xml:space="preserve">
+    <value>Összes cseréje</value>
+  </data>
+  <data name="Editor.SearchText" xml:space="preserve">
+    <value>Szöveg keresése</value>
+  </data>
+  <data name="Editor.Search" xml:space="preserve">
+    <value>Keresés</value>
+  </data>
+  <data name="Editor.UnsavedChanges" xml:space="preserve">
+    <value>Nem mentett módosítások</value>
+  </data>
+  <data name="Editor.Discard" xml:space="preserve">
+    <value>Elvetés</value>
+  </data>
+  <data name="Viewer.NothingToShow" xml:space="preserve">
+    <value>Nincs mit megjeleníteni</value>
+  </data>
+  <data name="Viewer.CouldNotRead" xml:space="preserve">
+    <value>A fájl nem olvasható</value>
+  </data>
+  <data name="Viewer.NotValidJson" xml:space="preserve">
+    <value>Érvénytelen JSON: {0}</value>
+  </data>
+  <data name="Viewer.Validating" xml:space="preserve">
+    <value>Ellenőrzés…</value>
+  </data>
+  <data name="Viewer.ValidJson" xml:space="preserve">
+    <value>Érvényes JSON</value>
+  </data>
+  <data name="Viewer.HintJsonValidate" xml:space="preserve">
+    <value>Ellenőrzi, hogy a fájl érvényes JSON-e</value>
+  </data>
+  <data name="Viewer.HintToggleText" xml:space="preserve">
+    <value>A fájl szövegének vagy újra a fának megjelenítése</value>
+  </data>
+  <data name="Viewer.HintExpandAll" xml:space="preserve">
+    <value>Minden csomópont kibontása</value>
+  </data>
+  <data name="Viewer.XPathPlaceholder" xml:space="preserve">
+    <value>Írjon be egy lekérdezést, pl. //book[price &gt; 10]/title</value>
+  </data>
+  <data name="Viewer.NoResults" xml:space="preserve">
+    <value>Nincs találat</value>
+  </data>
+  <data name="Viewer.NotWellFormed" xml:space="preserve">
+    <value>Nem jól formált XML: {0}</value>
+  </data>
+  <data name="Viewer.RunningQuery" xml:space="preserve">
+    <value>Lekérdezés futtatása…</value>
+  </data>
+  <data name="Viewer.XPathError" xml:space="preserve">
+    <value>XPath-hiba: {0}</value>
+  </data>
+  <data name="Viewer.NoMatches" xml:space="preserve">
+    <value>Nincs egyezés</value>
+  </data>
+  <data name="Viewer.Matches" xml:space="preserve">
+    <value>{0:N0} egyezés</value>
+  </data>
+  <data name="Viewer.ShowingMatches" xml:space="preserve">
+    <value>{0:N0} / {1:N0} egyezés megjelenítve</value>
+  </data>
+  <data name="Viewer.Valid" xml:space="preserve">
+    <value>Érvényes</value>
+  </data>
+  <data name="Viewer.ErrorsWarnings" xml:space="preserve">
+    <value>{0:N0} hiba, {1:N0} figyelmeztetés</value>
+  </data>
+  <data name="Viewer.HintXmlValidate" xml:space="preserve">
+    <value>Ellenőrzés a dokumentum által megnevezett sémával vagy DTD-vel</value>
+  </data>
+  <data name="Viewer.HintXPathBox" xml:space="preserve">
+    <value>Ugrás az XPath mezőre</value>
+  </data>
+  <data name="Viewer.HintRunXPath" xml:space="preserve">
+    <value>XPath-lekérdezés futtatása, vagy a kijelölt találat megnyitása a fában</value>
+  </data>
+  <data name="Viewer.NotSaved" xml:space="preserve">
+    <value>Nincs mentve: {0}</value>
+  </data>
+  <data name="Viewer.NowhereToSave" xml:space="preserve">
+    <value>Nincs hová menteni: {0}</value>
+  </data>
+  <data name="Viewer.HintSave" xml:space="preserve">
+    <value>Fájl mentése</value>
+  </data>
+  <data name="Viewer.HintIndent" xml:space="preserve">
+    <value>Behúzás</value>
+  </data>
+  <data name="Viewer.HintCodePage" xml:space="preserve">
+    <value>Következő kódlap (Shift: előző)</value>
+  </data>
+  <data name="Hint.DismissMessage" xml:space="preserve">
+    <value>Az üzenet bezárása</value>
+  </data>
+  <data name="Hint.MoveHighlightTrail" xml:space="preserve">
+    <value>A kiemelés mozgatása az útvonal mentén</value>
+  </data>
+  <data name="Hint.FirstOrLastSegment" xml:space="preserve">
+    <value>Első vagy utolsó szakasz</value>
+  </data>
+  <data name="Hint.OpenHighlightedSegment" xml:space="preserve">
+    <value>A kiemelt szakasz megnyitása</value>
+  </data>
+  <data name="Hint.PressButton" xml:space="preserve">
+    <value>A gomb megnyomása</value>
+  </data>
+  <data name="Hint.MoveSelectedDay" xml:space="preserve">
+    <value>A kijelölt nap vagy hét mozgatása</value>
+  </data>
+  <data name="Hint.PreviousNextMonth" xml:space="preserve">
+    <value>Előző vagy következő hónap</value>
+  </data>
+  <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
+    <value>A hónap első vagy utolsó napja</value>
+  </data>
+  <data name="Hint.SelectToday" xml:space="preserve">
+    <value>A mai nap kijelölése</value>
+  </data>
+  <data name="Hint.PreviousNextYear" xml:space="preserve">
+    <value>Előző vagy következő év</value>
+  </data>
+  <data name="Hint.ChooseSelectedDay" xml:space="preserve">
+    <value>A kijelölt nap kiválasztása</value>
+  </data>
+  <data name="Hint.CheckOrUncheck" xml:space="preserve">
+    <value>Bejelölés vagy törlés</value>
+  </data>
+  <data name="Hint.MoveCursor" xml:space="preserve">
+    <value>A kurzor mozgatása</value>
+  </data>
+  <data name="Hint.MoveCursorPage" xml:space="preserve">
+    <value>A kurzor mozgatása egy oldallal</value>
+  </data>
+  <data name="Hint.FirstOrLastItem" xml:space="preserve">
+    <value>Első vagy utolsó elem</value>
+  </data>
+  <data name="Hint.ActivateList" xml:space="preserve">
+    <value>A lista aktiválása</value>
+  </data>
+  <data name="Hint.CheckItemUnderCursor" xml:space="preserve">
+    <value>A kurzor alatti elem bejelölése vagy törlése</value>
+  </data>
+  <data name="Hint.CheckEveryItem" xml:space="preserve">
+    <value>Minden elem bejelölése vagy törlése</value>
+  </data>
+  <data name="Hint.InvertEveryItem" xml:space="preserve">
+    <value>Minden elem megfordítása</value>
+  </data>
+  <data name="Hint.MoveBetweenChips" xml:space="preserve">
+    <value>Mozgás a chipek között</value>
+  </data>
+  <data name="Hint.FirstOrLastChip" xml:space="preserve">
+    <value>Első vagy utolsó chip</value>
+  </data>
+  <data name="Hint.AddChip" xml:space="preserve">
+    <value>Chip hozzáadása a [+] helyen</value>
+  </data>
+  <data name="Hint.RemoveActiveChip" xml:space="preserve">
+    <value>Az aktív chip eltávolítása</value>
+  </data>
+  <data name="Hint.MoveOverPalette" xml:space="preserve">
+    <value>A kurzor mozgatása a palettán</value>
+  </data>
+  <data name="Hint.FirstOrLastColour" xml:space="preserve">
+    <value>Első vagy utolsó szín</value>
+  </data>
+  <data name="Hint.ChooseColourUnderCursor" xml:space="preserve">
+    <value>A kurzor alatti szín kiválasztása</value>
+  </data>
+  <data name="Hint.ChoosePreviousNext" xml:space="preserve">
+    <value>Az előző vagy következő elem kiválasztása</value>
+  </data>
+  <data name="Hint.ChooseItemPageAway" xml:space="preserve">
+    <value>Egy oldallal távolabbi elem kiválasztása</value>
+  </data>
+  <data name="Hint.JumpToLetter" xml:space="preserve">
+    <value>Ugrás a következő, ezekkel kezdődő elemre</value>
+  </data>
+  <data name="Hint.OpenList" xml:space="preserve">
+    <value>A lista megnyitása</value>
+  </data>
+  <data name="Hint.MoveOverItems" xml:space="preserve">
+    <value>Mozgás az elemek között</value>
+  </data>
+  <data name="Hint.RunOrOpenSubmenu" xml:space="preserve">
+    <value>A tétel futtatása vagy almenüjének megnyitása</value>
+  </data>
+  <data name="Hint.OpenSubmenu" xml:space="preserve">
+    <value>Az almenü megnyitása</value>
+  </data>
+  <data name="Hint.CloseSubmenu" xml:space="preserve">
+    <value>Az almenü bezárása</value>
+  </data>
+  <data name="Hint.CloseMenu" xml:space="preserve">
+    <value>A menü bezárása</value>
+  </data>
+  <data name="Common.NoData" xml:space="preserve">
+    <value>Nincs adat</value>
+  </data>
+  <data name="Common.NoRows" xml:space="preserve">
+    <value>Nincs sor</value>
+  </data>
+  <data name="Hint.ClearField" xml:space="preserve">
+    <value>A mező törlése</value>
+  </data>
+  <data name="Hint.CloseNodeOrParent" xml:space="preserve">
+    <value>A csomópont bezárása vagy ugrás a szülőre</value>
+  </data>
+  <data name="Hint.CloseSubmenuOrPrevious" xml:space="preserve">
+    <value>Az almenü bezárása vagy ugrás az előző menüre</value>
+  </data>
+  <data name="Hint.CopySelection" xml:space="preserve">
+    <value>A kijelölés másolása</value>
+  </data>
+  <data name="Hint.CutSelection" xml:space="preserve">
+    <value>A kijelölés kivágása</value>
+  </data>
+  <data name="Hint.DeleteCharacter" xml:space="preserve">
+    <value>Egy karakter törlése</value>
+  </data>
+  <data name="Hint.DeleteLine" xml:space="preserve">
+    <value>A sor törlése</value>
+  </data>
+  <data name="Hint.DeleteWordAfter" xml:space="preserve">
+    <value>A kurzor utáni szó törlése</value>
+  </data>
+  <data name="Hint.DeleteWordBefore" xml:space="preserve">
+    <value>A kurzor előtti szó törlése</value>
+  </data>
+  <data name="Hint.DeleteToStart" xml:space="preserve">
+    <value>Törlés a szöveg elejéig</value>
+  </data>
+  <data name="Hint.ExpandOrCollapseNode" xml:space="preserve">
+    <value>A csomópont kibontása vagy összecsukása</value>
+  </data>
+  <data name="Hint.FirstOrLastField" xml:space="preserve">
+    <value>Első vagy utolsó mező</value>
+  </data>
+  <data name="Hint.FirstOrLastRow" xml:space="preserve">
+    <value>Első vagy utolsó sor</value>
+  </data>
+  <data name="Hint.FlipSign" xml:space="preserve">
+    <value>Az előjel megfordítása</value>
+  </data>
+  <data name="Hint.FoldRegion" xml:space="preserve">
+    <value>A kurzornál lévő terület összecsukása vagy kibontása</value>
+  </data>
+  <data name="Hint.GoToMatchingBracket" xml:space="preserve">
+    <value>Ugrás a párjául szolgáló zárójelre</value>
+  </data>
+  <data name="Hint.GoToFileStartOrEnd" xml:space="preserve">
+    <value>Ugrás a fájl elejére vagy végére</value>
+  </data>
+  <data name="Hint.IndentOutdent" xml:space="preserve">
+    <value>Behúzás / kihúzás (a kijelölt sorokra is)</value>
+  </data>
+  <data name="Hint.JumpFirstLastItem" xml:space="preserve">
+    <value>Ugrás az első vagy utolsó elemre</value>
+  </data>
+  <data name="Hint.MarkItemUnderCursor" xml:space="preserve">
+    <value>A kurzor alatti elem megjelölése vagy a jelölés törlése</value>
+  </data>
+  <data name="Hint.MoveHourMinuteSecond" xml:space="preserve">
+    <value>Váltás óra, perc és másodperc között</value>
+  </data>
+  <data name="Hint.MoveByWord" xml:space="preserve">
+    <value>Mozgás szavanként</value>
+  </data>
+  <data name="Hint.MoveOverMenuItems" xml:space="preserve">
+    <value>Mozgás a menüelemek között</value>
+  </data>
+  <data name="Hint.MoveCursorByPage" xml:space="preserve">
+    <value>A kurzor mozgatása oldalanként</value>
+  </data>
+  <data name="Hint.NextBookmark" xml:space="preserve">
+    <value>Következő könyvjelző</value>
+  </data>
+  <data name="Hint.NextField" xml:space="preserve">
+    <value>Következő mező</value>
+  </data>
+  <data name="Hint.OpenNodeOrChild" xml:space="preserve">
+    <value>A csomópont megnyitása vagy belépés az első gyerekébe</value>
+  </data>
+  <data name="Hint.OpenSubmenuOrNext" xml:space="preserve">
+    <value>Az almenü megnyitása vagy ugrás a következő menüre</value>
+  </data>
+  <data name="Hint.PreviousBookmark" xml:space="preserve">
+    <value>Előző könyvjelző</value>
+  </data>
+  <data name="Hint.Redo" xml:space="preserve">
+    <value>Ismétlés</value>
+  </data>
+  <data name="Hint.RemoveLastDigit" xml:space="preserve">
+    <value>Az utolsó számjegy törlése</value>
+  </data>
+  <data name="Hint.RunSelectedItem" xml:space="preserve">
+    <value>A kijelölt tétel futtatása</value>
+  </data>
+  <data name="Hint.ScrollLine" xml:space="preserve">
+    <value>Görgetés soronként</value>
+  </data>
+  <data name="Hint.ScrollPage" xml:space="preserve">
+    <value>Görgetés oldalanként</value>
+  </data>
+  <data name="Hint.ScrollSideways" xml:space="preserve">
+    <value>Görgetés oldalra</value>
+  </data>
+  <data name="Hint.SelectAll" xml:space="preserve">
+    <value>Az összes kijelölése</value>
+  </data>
+  <data name="Hint.SelectItemUnderCursor" xml:space="preserve">
+    <value>A kurzor alatti elem kijelölése</value>
+  </data>
+  <data name="Hint.SetMinMax" xml:space="preserve">
+    <value>A minimum vagy maximum beállítása</value>
+  </data>
+  <data name="Hint.SetValueZero" xml:space="preserve">
+    <value>Az érték 0-ra állítása</value>
+  </data>
+  <data name="Hint.StartOrEndOfText" xml:space="preserve">
+    <value>A szöveg eleje vagy vége</value>
+  </data>
+  <data name="Hint.StepField" xml:space="preserve">
+    <value>A mező léptetése</value>
+  </data>
+  <data name="Hint.StepFieldByTen" xml:space="preserve">
+    <value>A mező léptetése tízesével</value>
+  </data>
+  <data name="Hint.StepValue" xml:space="preserve">
+    <value>Az érték léptetése</value>
+  </data>
+  <data name="Hint.StepValueLarge" xml:space="preserve">
+    <value>Az érték léptetése nagy lépésekkel</value>
+  </data>
+  <data name="Hint.ToggleBookmark" xml:space="preserve">
+    <value>Könyvjelző be/ki</value>
+  </data>
+  <data name="Hint.TypeField" xml:space="preserve">
+    <value>A mező beírása</value>
+  </data>
+  <data name="Hint.TypeValue" xml:space="preserve">
+    <value>Az érték beírása</value>
+  </data>
+  <data name="Hint.BackPreviousMenu" xml:space="preserve">
+    <value>Vissza / előző menü</value>
+  </data>
+  <data name="Hint.CancelKeepEditing" xml:space="preserve">
+    <value>Mégse, a szerkesztés folytatása</value>
+  </data>
+  <data name="Hint.CentreDivider" xml:space="preserve">
+    <value>Az elválasztó középre állítása</value>
+  </data>
+  <data name="Hint.FirstOrLastSegmentChoose" xml:space="preserve">
+    <value>Az első vagy utolsó szakasz kiválasztása</value>
+  </data>
+  <data name="Hint.ChooseHighlightedItem" xml:space="preserve">
+    <value>A kiemelt elem kiválasztása</value>
+  </data>
+  <data name="Hint.ChoosePreviousNextOption" xml:space="preserve">
+    <value>Az előző vagy következő beállítás kiválasztása</value>
+  </data>
+  <data name="Hint.ChoosePreviousNextSegment" xml:space="preserve">
+    <value>Az előző vagy következő szakasz kiválasztása</value>
+  </data>
+  <data name="Hint.ClearRatingOrMax" xml:space="preserve">
+    <value>Az értékelés törlése vagy a maximum megadása</value>
+  </data>
+  <data name="Hint.ClearSearch" xml:space="preserve">
+    <value>A keresés törlése</value>
+  </data>
+  <data name="Hint.CloseMenuShort" xml:space="preserve">
+    <value>Menü bezárása</value>
+  </data>
+  <data name="Hint.CloseList" xml:space="preserve">
+    <value>A lista bezárása</value>
+  </data>
+  <data name="Hint.ClosePopup" xml:space="preserve">
+    <value>A felugró ablak bezárása</value>
+  </data>
+  <data name="Hint.CloseViewer" xml:space="preserve">
+    <value>A megjelenítő bezárása</value>
+  </data>
+  <data name="Hint.CloseWithoutMoving" xml:space="preserve">
+    <value>Bezárás ugrás nélkül</value>
+  </data>
+  <data name="Hint.CollapseSection" xml:space="preserve">
+    <value>A szakasz összecsukása</value>
+  </data>
+  <data name="Hint.DiscardChanges" xml:space="preserve">
+    <value>A módosítások elvetése</value>
+  </data>
+  <data name="Hint.ExpandOrCollapseSection" xml:space="preserve">
+    <value>A szakasz kibontása vagy összecsukása</value>
+  </data>
+  <data name="Hint.ExpandSection" xml:space="preserve">
+    <value>A szakasz kibontása</value>
+  </data>
+  <data name="Hint.FirstOrLastOption" xml:space="preserve">
+    <value>Első vagy utolsó beállítás</value>
+  </data>
+  <data name="Hint.FirstOrLastPage" xml:space="preserve">
+    <value>Első vagy utolsó oldal</value>
+  </data>
+  <data name="Hint.FollowLink" xml:space="preserve">
+    <value>A hivatkozás követése</value>
+  </data>
+  <data name="Hint.GoToTheLine" xml:space="preserve">
+    <value>Ugrás a sorra</value>
+  </data>
+  <data name="Hint.GoToTheOffset" xml:space="preserve">
+    <value>Ugrás az eltolásra</value>
+  </data>
+  <data name="Hint.GoTopOrBottom" xml:space="preserve">
+    <value>Ugrás az elejére vagy a végére</value>
+  </data>
+  <data name="Hint.GoTopOrEnd" xml:space="preserve">
+    <value>Ugrás az elejére vagy a végére</value>
+  </data>
+  <data name="Hint.GoUpFolder" xml:space="preserve">
+    <value>Egy mappával feljebb</value>
+  </data>
+  <data name="Hint.LowerRaiseRating" xml:space="preserve">
+    <value>Az értékelés csökkentése vagy növelése</value>
+  </data>
+  <data name="Hint.LowerRaiseValue" xml:space="preserve">
+    <value>Az érték csökkentése vagy növelése</value>
+  </data>
+  <data name="Hint.MovePageAtATime" xml:space="preserve">
+    <value>Mozgás oldalanként</value>
+  </data>
+  <data name="Hint.MoveAlongToolbar" xml:space="preserve">
+    <value>Mozgás az eszköztáron</value>
+  </data>
+  <data name="Hint.MoveMenuSelection" xml:space="preserve">
+    <value>A menüválasztás mozgatása</value>
+  </data>
+  <data name="Hint.MoveDividerBy8" xml:space="preserve">
+    <value>Az elválasztó mozgatása 8-cal</value>
+  </data>
+  <data name="Hint.MoveHighlight" xml:space="preserve">
+    <value>A kiemelés mozgatása</value>
+  </data>
+  <data name="Hint.NewestLineFollow" xml:space="preserve">
+    <value>Legújabb sor, és az új sorok követése</value>
+  </data>
+  <data name="Hint.OldestLine" xml:space="preserve">
+    <value>Legrégebbi sor</value>
+  </data>
+  <data name="Hint.OpenSubmenuRunCommand" xml:space="preserve">
+    <value>Almenü megnyitása / parancs futtatása</value>
+  </data>
+  <data name="Hint.OpenHighlightedRow" xml:space="preserve">
+    <value>A kiemelt sor megnyitása</value>
+  </data>
+  <data name="Hint.PreviousNextPage" xml:space="preserve">
+    <value>Előző vagy következő oldal</value>
+  </data>
+  <data name="Hint.RaiseLowerLargeStep" xml:space="preserve">
+    <value>Az érték növelése vagy csökkentése nagy lépésekkel</value>
+  </data>
+  <data name="Hint.ResetClock" xml:space="preserve">
+    <value>Az óra nullázása</value>
+  </data>
+  <data name="Hint.RunTheItem" xml:space="preserve">
+    <value>A tétel futtatása</value>
+  </data>
+  <data name="Hint.SaveChanges" xml:space="preserve">
+    <value>A módosítások mentése</value>
+  </data>
+  <data name="Hint.Scroll" xml:space="preserve">
+    <value>Görgetés</value>
+  </data>
+  <data name="Hint.ScrollRow" xml:space="preserve">
+    <value>Görgetés soronként</value>
+  </data>
+  <data name="Hint.ScrollOneLine" xml:space="preserve">
+    <value>Görgetés egy sorral</value>
+  </data>
+  <data name="Hint.ScrollOnePage" xml:space="preserve">
+    <value>Görgetés egy oldallal</value>
+  </data>
+  <data name="Hint.ScrollOneRow" xml:space="preserve">
+    <value>Görgetés egy sorral</value>
+  </data>
+  <data name="Hint.SelectThisOption" xml:space="preserve">
+    <value>A beállítás kiválasztása</value>
+  </data>
+  <data name="Hint.SetRatingDirectly" xml:space="preserve">
+    <value>Az értékelés közvetlen beállítása</value>
+  </data>
+  <data name="Hint.SwitchTextHex" xml:space="preserve">
+    <value>Váltás a szöveg- és a hexa nézet között</value>
+  </data>
+  <data name="Hint.SwitchSetting" xml:space="preserve">
+    <value>A beállítás be- vagy kikapcsolása</value>
+  </data>
+  <data name="Hint.TypeLineNumber" xml:space="preserve">
+    <value>Írja be a sorszámot (az első billentyű felülírja a jelenlegit)</value>
+  </data>
+  <data name="Hint.TypeOffset" xml:space="preserve">
+    <value>Írja be az eltolást decimálisan vagy hexadecimálisan</value>
   </data>
 </root>

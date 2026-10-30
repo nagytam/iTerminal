@@ -73,9 +73,9 @@ public class LanguageDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Up/Down", "Choose a language");
-        yield return ("Home/End", "Jump to the first or last language");
-        yield return ("Enter", "Use the chosen language");
+        yield return ("Up/Down", UiText.Get("DialogHint.ChooseLanguage", "Choose a language"));
+        yield return ("Home/End", UiText.Get("DialogHint.JumpFirstLastLanguage", "Jump to the first or last language"));
+        yield return ("Enter", UiText.Get("DialogHint.UseChosenLanguage", "Use the chosen language"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

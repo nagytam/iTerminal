@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Helper;
 using iConsole.Data;
@@ -428,6 +429,8 @@ public class TextEditorControl
 
     public bool LastMatchCase { get; set; }
 
+    public bool LastUseRegex { get; set; }
+
     private static StringComparison ComparisonFor(bool matchCase) =>
         matchCase ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
 
@@ -436,11 +439,52 @@ public class TextEditorControl
     /// the text — with <paramref name="replacement"/>, and leaves the cursor just after it, so asking again goes on to
     /// the next one. Returns whether there was one. A match is within one line.
     /// </summary>
-    public bool ReplaceNext(string find, string replacement, bool matchCase = true)
+    public bool ReplaceNext(string find, string replacement, bool matchCase = true, bool useRegex = false)
     {
         if (IsReadOnly || string.IsNullOrEmpty(find) || find.Contains('\n') || TextModel.Lines.Count == 0)
         {
             return false;
+        }
+
+        System.Text.RegularExpressions.Regex? regex = null;
+        if (useRegex)
+        {
+            try
+            {
+                var options = System.Text.RegularExpressions.RegexOptions.CultureInvariant
+                    | (matchCase ? System.Text.RegularExpressions.RegexOptions.None : System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                regex = new System.Text.RegularExpressions.Regex(find, options, Helper.SearchEngine.LineTimeout);
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
+
+        // Where the next match in a line starts, how long it is and what replaces it; a regular expression may use $1 in the replacement.
+        (int At, int Length, string Text) MatchIn(string line, int from)
+        {
+            if (regex is null)
+            {
+                var found = from <= line.Length ? line.IndexOf(find, from, ComparisonFor(matchCase)) : -1;
+                return (found, find.Length, replacement);
+            }
+
+            try
+            {
+                for (var match = from <= line.Length ? regex.Match(line, from) : System.Text.RegularExpressions.Match.Empty; match.Success; match = match.NextMatch())
+                {
+                    if (match.Length > 0)
+                    {
+                        return (match.Index, match.Length, match.Result(replacement));
+                    }
+                }
+            }
+            catch (System.Text.RegularExpressions.RegexMatchTimeoutException)
+            {
+            }
+
+            return (-1, 0, replacement);
         }
 
         var lines = TextModel.Lines;
@@ -452,7 +496,7 @@ public class TextEditorControl
             var row = (startRow + step) % lines.Count;
             var line = lines[row];
             var from = step == 0 ? startColumn : 0;
-            var at = from <= line.Length ? line.IndexOf(find, from, comparison) : -1;
+            var (at, length, text) = MatchIn(line, from);
             // Coming back round to the starting line, only what is before the cursor is left to look at.
             if (step == lines.Count && (at < 0 || at >= startColumn))
             {
@@ -465,23 +509,58 @@ public class TextEditorControl
             }
 
             var before = Capture();
-            lines[row] = string.Concat(line.AsSpan(0, at), replacement, line.AsSpan(at + find.Length));
+            lines[row] = string.Concat(line.AsSpan(0, at), text, line.AsSpan(at + length));
             ScrollableModel.CursorPosition.Y = row;
-            ScrollableModel.CursorPosition.X = at + replacement.Length;
+            ScrollableModel.CursorPosition.X = at + text.Length;
             AfterReplace(before);
-            ShowLine(row, at + replacement.Length);
+            ShowLine(row, at + text.Length);
             return true;
         }
 
         return false;
     }
 
+    private int ReplaceAllRegex(string find, string replacement, bool matchCase)
+    {
+        var before = Capture();
+        var count = 0;
+        var lines = TextModel.Lines;
+        try
+        {
+            for (var row = 0; row < lines.Count; row++)
+            {
+                var replaced = Helper.SearchEngine.Replace(lines[row], find, replacement, useRegex: true, matchCase, out var inLine);
+                if (inLine > 0)
+                {
+                    lines[row] = replaced;
+                    count += inLine;
+                }
+            }
+        }
+        catch (Exception exception) when (exception is ArgumentException or System.Text.RegularExpressions.RegexMatchTimeoutException)
+        {
+            // A pattern that does not compile, or takes too long, changes nothing it has not already changed in one undo step.
+        }
+
+        if (count > 0)
+        {
+            AfterReplace(before);
+        }
+
+        return count;
+    }
+
     /// <summary>Replaces every occurrence of <paramref name="find"/> in the text as one undo step; returns how many.</summary>
-    public int ReplaceAll(string find, string replacement, bool matchCase = true)
+    public int ReplaceAll(string find, string replacement, bool matchCase = true, bool useRegex = false)
     {
         if (IsReadOnly || string.IsNullOrEmpty(find) || find.Contains('\n') || TextModel.Lines.Count == 0)
         {
             return 0;
+        }
+
+        if (useRegex)
+        {
+            return ReplaceAllRegex(find, replacement, matchCase);
         }
 
         var comparison = ComparisonFor(matchCase);
@@ -710,34 +789,34 @@ public class TextEditorControl
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Ctrl+A", "Select all");
-        yield return ("Ctrl+C", "Copy the selection");
+        yield return ("Ctrl+A", UiText.Get("Hint.SelectAll", "Select all"));
+        yield return ("Ctrl+C", UiText.Get("Hint.CopySelection", "Copy the selection"));
 
         // A read-only editor refuses the changes to the text, so only the keys that move about, copy or save are offered.
         if (!IsReadOnly)
         {
-            yield return ("Ctrl+X", "Cut the selection");
-            yield return ("Ctrl+V", "Paste");
-            yield return ("Ctrl+Z", "Undo");
-            yield return ("Ctrl+Y", "Redo");
-            yield return ("Ctrl+R", "Replace");
-            yield return ("Tab / Shift+Tab", "Indent / outdent (the selected lines too)");
-            yield return ("Ctrl+K", "Delete the line");
+            yield return ("Ctrl+X", UiText.Get("Hint.CutSelection", "Cut the selection"));
+            yield return ("Ctrl+V", iConsole.Localization.UiText.Get("Common.Paste", "Paste"));
+            yield return ("Ctrl+Z", iConsole.Localization.UiText.Get("Common.Undo", "Undo"));
+            yield return ("Ctrl+Y", UiText.Get("Hint.Redo", "Redo"));
+            yield return ("Ctrl+R", UiText.Get("Editor.Replace", "Replace"));
+            yield return ("Tab / Shift+Tab", UiText.Get("Hint.IndentOutdent", "Indent / outdent (the selected lines too)"));
+            yield return ("Ctrl+K", UiText.Get("Hint.DeleteLine", "Delete the line"));
         }
 
-        yield return ("Ctrl+S / F2", "Save");
-        yield return ("F5", "Go to line");
-        yield return ("Ctrl+F2", "Toggle bookmark");
-        yield return ("F9", "Next bookmark");
-        yield return ("Shift+F9", "Previous bookmark");
+        yield return ("Ctrl+S / F2", iConsole.Localization.UiText.Get("Common.Save", "Save"));
+        yield return ("F5", UiText.Get("Editor.GoToLine", "Go to line"));
+        yield return ("Ctrl+F2", UiText.Get("Hint.ToggleBookmark", "Toggle bookmark"));
+        yield return ("F9", UiText.Get("Hint.NextBookmark", "Next bookmark"));
+        yield return ("Shift+F9", UiText.Get("Hint.PreviousBookmark", "Previous bookmark"));
         if (EnableFolding)
         {
-            yield return ("Alt+Left/Alt+Right", "Fold or unfold the region at the cursor");
+            yield return ("Alt+Left/Alt+Right", UiText.Get("Hint.FoldRegion", "Fold or unfold the region at the cursor"));
         }
 
         if (BracketMatchingEnabled)
         {
-            yield return ("Ctrl+F9", "Go to the matching bracket");
+            yield return ("Ctrl+F9", UiText.Get("Hint.GoToMatchingBracket", "Go to the matching bracket"));
         }
     }
 

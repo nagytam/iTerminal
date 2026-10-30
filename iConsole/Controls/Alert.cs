@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -70,7 +71,7 @@ public class Alert(IThemeService themeService) : Control(themeService)
             yield break;
         }
 
-        yield return ("Esc/Enter", "Dismiss the message");
+        yield return ("Esc/Enter", UiText.Get("Hint.DismissMessage", "Dismiss the message"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

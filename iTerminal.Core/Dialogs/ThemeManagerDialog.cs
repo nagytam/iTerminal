@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -33,7 +34,7 @@ public class ThemeManagerDialog : Dialog
         : base(nameof(ThemeManagerDialog), themeService)
     {
         _settingsService = settingsService;
-        Title = "Theme manager";
+        Title = iConsole.Localization.UiText.Get("Dialog.ThemeManager", "Theme manager");
 
         var listModel = new ListBoxModel<ColorScheme>(_themes)
         {
@@ -150,8 +151,8 @@ public class ThemeManagerDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Up/Down", "Choose a theme");
-        yield return ("Enter/Space", "Apply the chosen theme");
+        yield return ("Up/Down", UiText.Get("DialogHint.ChooseTheme", "Choose a theme"));
+        yield return ("Enter/Space", UiText.Get("DialogHint.ApplyChosenTheme", "Apply the chosen theme"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

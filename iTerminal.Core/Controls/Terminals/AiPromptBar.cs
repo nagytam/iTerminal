@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Commands;
@@ -158,10 +159,10 @@ public class AiPromptBar : Window
             yield break;
         }
 
-        yield return ("Enter", "Send the question");
-        yield return ("Esc", "Clear the question, or cancel the answer");
-        yield return ("Up/Down", "Recall the questions already sent");
-        yield return ("PageUp/PageDown", "Scroll the answer");
+        yield return ("Enter", UiText.Get("DialogHint.SendQuestion", "Send the question"));
+        yield return ("Esc", UiText.Get("DialogHint.ClearQuestionCancelAnswer", "Clear the question, or cancel the answer"));
+        yield return ("Up/Down", UiText.Get("DialogHint.RecallQuestions", "Recall the questions already sent"));
+        yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollAnswer", "Scroll the answer"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -104,7 +105,7 @@ public class WebBrowserDialog : Dialog
         : base(nameof(WebBrowserDialog), themeService)
     {
         _model = model;
-        Title = "Web Browser";
+        Title = iConsole.Localization.UiText.Get("Dialog.WebBrowser", "Web Browser");
     }
 
     internal WebBrowserModel Model => _model;
@@ -184,24 +185,24 @@ public class WebBrowserDialog : Dialog
     {
         if (_mode != Mode.Browse)
         {
-            yield return ("Esc", "Back to the page");
+            yield return ("Esc", UiText.Get("DialogHint.BackToPage", "Back to the page"));
             yield break;
         }
 
-        yield return ("Ctrl+L / F6", "Type an address");
-        yield return ("Tab", "Move to the next link or field");
-        yield return ("Enter", "Follow the link (Ctrl: in a new tab)");
-        yield return ("Up/Down", "Scroll the page");
-        yield return ("Space", "Scroll a page down (Shift: up)");
-        yield return ("Backspace / Alt+Left", "Back");
-        yield return ("Shift+Backspace / Alt+Right", "Forward");
-        yield return ("F5 / Ctrl+R", "Reload");
-        yield return ("Ctrl+T / Ctrl+W", "Open or close a tab");
-        yield return ("Ctrl+Tab", "Next tab");
-        yield return ("Ctrl+D", "Bookmark the page");
-        yield return ("F2 / F4", "Bookmarks / history");
-        yield return ("/ or Ctrl+F", "Find in the page");
-        yield return ("F1", "Help");
+        yield return ("Ctrl+L / F6", UiText.Get("DialogHint.TypeAddress", "Type an address"));
+        yield return ("Tab", UiText.Get("DialogHint.NextLinkOrField", "Move to the next link or field"));
+        yield return ("Enter", UiText.Get("DialogHint.FollowLinkNewTab", "Follow the link (Ctrl: in a new tab)"));
+        yield return ("Up/Down", UiText.Get("DialogHint.ScrollPageUpDown", "Scroll the page"));
+        yield return ("Space", UiText.Get("DialogHint.ScrollPageDownShiftUp", "Scroll a page down (Shift: up)"));
+        yield return ("Backspace / Alt+Left", iConsole.Localization.UiText.Get("Common.Back", "Back"));
+        yield return ("Shift+Backspace / Alt+Right", UiText.Get("DialogHint.Forward", "Forward"));
+        yield return ("F5 / Ctrl+R", UiText.Get("DialogHint.Reload", "Reload"));
+        yield return ("Ctrl+T / Ctrl+W", UiText.Get("DialogHint.OpenCloseTab", "Open or close a tab"));
+        yield return ("Ctrl+Tab", UiText.Get("DialogHint.NextTab", "Next tab"));
+        yield return ("Ctrl+D", UiText.Get("DialogHint.BookmarkPage", "Bookmark the page"));
+        yield return ("F2 / F4", UiText.Get("DialogHint.BookmarksHistory", "Bookmarks / history"));
+        yield return ("/ or Ctrl+F", UiText.Get("DialogHint.FindInPage", "Find in the page"));
+        yield return ("F1", iConsole.Localization.UiText.Get("Common.Help", "Help"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

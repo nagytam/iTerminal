@@ -1,4 +1,5 @@
-﻿using iConsole.Controls;
+﻿using iConsole.Localization;
+using iConsole.Controls;
 using iConsole.Controls.Buttons;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -24,7 +25,7 @@ public class ProcessManagerDialog : Dialog
     {
         processService ??= new ProcessService();
 
-        Title = "Process manager";
+        Title = iConsole.Localization.UiText.Get("Dialog.ProcessManager", "Process manager");
         _textbox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Filter", Placeholder = "process name or id" };
         AddControl(_textbox);
         var listModel = new ListBoxModel<Process>(processService.Processes)
@@ -91,10 +92,10 @@ public class ProcessManagerDialog : Dialog
     /// </summary>
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Type", "Filter the processes");
-        yield return ("Up/Down", "Move over the processes, even from the filter box");
-        yield return ("PageUp/PageDown", "Move a page at a time");
-        yield return ("Ctrl+Home/End", "Jump to the first or last process");
+        yield return ("Type", UiText.Get("DialogHint.FilterProcesses", "Filter the processes"));
+        yield return ("Up/Down", UiText.Get("DialogHint.MoveOverProcesses", "Move over the processes, even from the filter box"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MovePageAtATime", "Move a page at a time"));
+        yield return ("Ctrl+Home/End", UiText.Get("DialogHint.JumpFirstLastProcess", "Jump to the first or last process"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

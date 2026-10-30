@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Controls.Viewers;
 using iConsole.Data;
@@ -20,12 +21,12 @@ public class GoToOffsetDialog : Dialog
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService)
-        : base("Go to offset", themeService)
+        : base(iConsole.Localization.UiText.Get("Editor.GoToOffset", "Go to offset"), themeService)
     {
         _hexViewer = hexViewer;
         _offsetBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
-            Label = "Offset",
+            Label = iConsole.Localization.UiText.Get("Editor.Offset", "Offset"),
             Text = "0x0",
         };
         AddControl(_offsetBox);
@@ -53,9 +54,9 @@ public class GoToOffsetDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("0-9, 0x.., ..h", "Type the offset in decimal or hexadecimal");
-        yield return ("Enter", "Go to the offset");
-        yield return ("Esc", "Close without moving");
+        yield return ("0-9, 0x.., ..h", UiText.Get("Hint.TypeOffset", "Type the offset in decimal or hexadecimal"));
+        yield return ("Enter", UiText.Get("Hint.GoToTheOffset", "Go to the offset"));
+        yield return ("Esc", UiText.Get("Hint.CloseWithoutMoving", "Close without moving"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

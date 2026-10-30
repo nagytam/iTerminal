@@ -13,6 +13,7 @@ public class Dialog : PopUpWindow
     {
         IsModal = true;
         IsVisible = false;
+        IsMovable = true;
         AddCommand(new CloseCommand());
         AddCommand(new TabForwardCommand());
         AddCommand(new TabBackwardCommand());
@@ -60,6 +61,13 @@ public class Dialog : PopUpWindow
     /// </summary>
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // Ctrl+F7 and Ctrl+F8 move and resize the window; while one is on, Escape ends it instead of closing the dialog.
+        if (HandleWindowKey(keyEvent))
+        {
+            StateHasChanged();
+            return true;
+        }
+
         if (keyEvent.ConsoleKey == ConsoleKey.Escape && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
         {
             if (ITransientOverlayHost.TryCloseInnermostOverlay(this))

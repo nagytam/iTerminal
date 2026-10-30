@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -953,43 +954,43 @@ public class GitClientDialog : SplitPaneDialog
     {
         if (_helpVisible)
         {
-            yield return ("Up/Down", "Scroll the help");
-            yield return ("Esc", "Back to the repository");
+            yield return ("Up/Down", UiText.Get("DialogHint.ScrollHelp", "Scroll the help"));
+            yield return ("Esc", UiText.Get("DialogHint.BackToRepository", "Back to the repository"));
             yield break;
         }
 
         if (_confirmAction is not null)
         {
-            yield return ("Y", "Confirm");
-            yield return ("N / Esc", "Cancel");
+            yield return ("Y", iConsole.Localization.UiText.Get("Common.Confirm", "Confirm"));
+            yield return ("N / Esc", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 
         if (_inputActive)
         {
-            yield return ("Enter", "Use the text");
-            yield return ("Esc", "Cancel");
+            yield return ("Enter", UiText.Get("DialogHint.UseTheText", "Use the text"));
+            yield return ("Esc", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 
-        yield return ("Tab", "Next section (changes, branches, log, stashes, detail)");
-        yield return ("Enter/Space", "Stage or unstage, check out, or show the commit");
-        yield return ("S/U", "Stage or unstage the file");
-        yield return ("A", "Stage all (apply, in the stashes)");
-        yield return ("D", "Discard the changes of the file (asks first)");
-        yield return ("C", "Commit");
-        yield return ("Shift+C", "Amend the last commit");
-        yield return ("N", "New branch");
-        yield return ("M", "Merge the branch");
-        yield return ("Shift+D", "Delete the branch");
-        yield return ("F", "Fetch");
-        yield return ("P / Shift+P", "Pull / push");
-        yield return ("Shift+S", "Stash the changes");
-        yield return ("X", "Drop the stash");
-        yield return ("R", "Refresh");
-        yield return ("PageUp/PageDown", "Scroll the patch");
-        yield return ("F1, ?", "Help");
-        yield return ("Esc", "Close");
+        yield return ("Tab", UiText.Get("DialogHint.NextSection", "Next section (changes, branches, log, stashes, detail)"));
+        yield return ("Enter/Space", UiText.Get("DialogHint.StageCheckoutShow", "Stage or unstage, check out, or show the commit"));
+        yield return ("S/U", UiText.Get("DialogHint.StageUnstageFile", "Stage or unstage the file"));
+        yield return ("A", UiText.Get("DialogHint.StageAll", "Stage all (apply, in the stashes)"));
+        yield return ("D", UiText.Get("DialogHint.DiscardFileChangesAsks", "Discard the changes of the file (asks first)"));
+        yield return ("C", UiText.Get("DialogHint.Commit", "Commit"));
+        yield return ("Shift+C", UiText.Get("DialogHint.AmendCommit", "Amend the last commit"));
+        yield return ("N", UiText.Get("DialogHint.NewBranch", "New branch"));
+        yield return ("M", UiText.Get("DialogHint.MergeBranch", "Merge the branch"));
+        yield return ("Shift+D", UiText.Get("DialogHint.DeleteBranch", "Delete the branch"));
+        yield return ("F", UiText.Get("DialogHint.Fetch", "Fetch"));
+        yield return ("P / Shift+P", UiText.Get("DialogHint.PullPush", "Pull / push"));
+        yield return ("Shift+S", UiText.Get("DialogHint.StashChanges", "Stash the changes"));
+        yield return ("X", UiText.Get("DialogHint.DropStash", "Drop the stash"));
+        yield return ("R", UiText.Get("DialogHint.Refresh", "Refresh"));
+        yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollPatch", "Scroll the patch"));
+        yield return ("F1, ?", iConsole.Localization.UiText.Get("Common.Help", "Help"));
+        yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

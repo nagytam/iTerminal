@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Controls.Editors;
@@ -39,6 +40,18 @@ public class TranslatorDialog : SplitPaneDialog
             Position placed = Position;
             base.OnInitializeLayout();
             Position = placed;
+        }
+
+        // Text to translate has no use for indentation, and the editor took Tab for it: focus could never leave the
+        // pane, so the translation could not be reached or scrolled from the keyboard. Tab moves on, as the footer says.
+        public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+        {
+            if (keyEvent.ConsoleKey == ConsoleKey.Tab && !keyEvent.Control && !keyEvent.Alt)
+            {
+                return false;
+            }
+
+            return await base.HandleKeyEventAsync(keyEvent);
         }
     }
 
@@ -94,10 +107,10 @@ public class TranslatorDialog : SplitPaneDialog
         _service = service;
         _settings = settings;
         _options = options.Value;
-        Title = "Translator";
+        Title = iConsole.Localization.UiText.Get("Menu.Translator", "Translator");
 
         _from = new ComboBox<TranslationLanguage>(themeService) { Label = "From", DisplaySelector = language => language.Name, MaxDropDownRows = 10 };
-        _to = new ComboBox<TranslationLanguage>(themeService) { Label = "To", DisplaySelector = language => language.Name, MaxDropDownRows = 10 };
+        _to = new ComboBox<TranslationLanguage>(themeService) { Label = iConsole.Localization.UiText.Get("Label.To", "To"), DisplaySelector = language => language.Name, MaxDropDownRows = 10 };
         _engine = new ComboBox<EngineChoice>(themeService) { Label = "Engine", DisplaySelector = choice => choice.Name };
         // Neither is focusable by default, which left Tab cycling through the three pickers only.
         _input = new PaneEditor(themeService) { CanFocus = true };
@@ -219,10 +232,10 @@ public class TranslatorDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("F5", "Translate");
-        yield return ("F6", "Swap the two languages");
-        yield return ("F7", "Detect the language of the text");
-        yield return ("F8", "Clear the text (asks first)");
+        yield return ("F5", UiText.Get("DialogHint.Translate", "Translate"));
+        yield return ("F6", UiText.Get("DialogHint.SwapLanguages", "Swap the two languages"));
+        yield return ("F7", UiText.Get("DialogHint.DetectLanguage", "Detect the language of the text"));
+        yield return ("F8", UiText.Get("DialogHint.ClearTextAsks", "Clear the text (asks first)"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

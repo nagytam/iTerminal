@@ -73,7 +73,7 @@ public class DeleteDialog : FormDialog
         : base(nameof(DeleteDialog), themeService)
     {
         _contentModelService = contentModelService;
-        Title = "Delete";
+        Title = iConsole.Localization.UiText.Get("Menu.Delete", "Delete");
 
         _deleteCommand = new Commands.DeleteCommand(
             contentModelService,
@@ -87,7 +87,7 @@ public class DeleteDialog : FormDialog
 
         _textBoxName = new TextBox(beepService, dateTimeProviderService, themeService) 
         { 
-            Label = "Name", 
+            Label = iConsole.Localization.UiText.Get("Label.Name", "Name"), 
             Text = Url, 
             IsReadOnly = true 
         };
@@ -104,7 +104,7 @@ public class DeleteDialog : FormDialog
             IsEnabled = false,
             HotKeyChar = 'R'
         };
-        _deleteButton = new Button("Delete", _deleteCommand, themeService) { HotKeyChar = 'D' };
+        _deleteButton = new Button(iConsole.Localization.UiText.Get("Menu.Delete", "Delete"), _deleteCommand, themeService) { HotKeyChar = 'D' };
         _cancelButton = new CancelDialogButton(themeService);
         _errorLabel = new Label(string.Empty, themeService);
         AddControl(_textBoxName);
@@ -148,11 +148,11 @@ public class DeleteDialog : FormDialog
         }
         else if (new Url(Url).PathType == PathType.File)
         {
-            Title = "Delete file";
+            Title = iConsole.Localization.UiText.Get("Dialog.DeleteFile", "Delete file");
         }
         else
         {
-            Title = "Delete folder";
+            Title = iConsole.Localization.UiText.Get("Dialog.DeleteFolder", "Delete folder");
         }
 
 

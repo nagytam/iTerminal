@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
@@ -109,7 +110,7 @@ public class MapDialog : Dialog
     {
         _model = model;
         _search = search;
-        Title = "Map";
+        Title = iConsole.Localization.UiText.Get("Dialog.Map", "Map");
     }
 
     internal MapModel Model => _model;
@@ -190,20 +191,20 @@ public class MapDialog : Dialog
     {
         if (_mode != Mode.Browse)
         {
-            yield return ("Esc", "Back to the map");
+            yield return ("Esc", UiText.Get("DialogHint.BackToMap", "Back to the map"));
             yield break;
         }
 
-        yield return ("Arrows", "Pan the map (Shift: half a screen)");
-        yield return ("+/-", "Zoom in or out");
-        yield return ("Home", "Back to the home view");
-        yield return ("/ or G", "Search for a place");
-        yield return ("B", "Open the saved places");
-        yield return ("M", "Save the centre as a place");
-        yield return ("R", "Reload the tiles");
-        yield return ("O", "Go online or offline");
-        yield return ("D", "Save this area for offline use");
-        yield return ("F1", "Help");
+        yield return ("Arrows", UiText.Get("DialogHint.PanMap", "Pan the map (Shift: half a screen)"));
+        yield return ("+/-", UiText.Get("DialogHint.ZoomInOut", "Zoom in or out"));
+        yield return ("Home", UiText.Get("DialogHint.BackToHomeView", "Back to the home view"));
+        yield return ("/ or G", UiText.Get("DialogHint.SearchPlace", "Search for a place"));
+        yield return ("B", UiText.Get("DialogHint.OpenSavedPlaces", "Open the saved places"));
+        yield return ("M", UiText.Get("DialogHint.SaveCentreAsPlace", "Save the centre as a place"));
+        yield return ("R", UiText.Get("DialogHint.ReloadTiles", "Reload the tiles"));
+        yield return ("O", UiText.Get("DialogHint.GoOnlineOffline", "Go online or offline"));
+        yield return ("D", UiText.Get("DialogHint.SaveAreaOffline", "Save this area for offline use"));
+        yield return ("F1", iConsole.Localization.UiText.Get("Common.Help", "Help"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

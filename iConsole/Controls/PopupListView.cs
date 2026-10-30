@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Services;
@@ -44,11 +45,11 @@ public class PopupListView : Control
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Up/Down", "Move the highlight");
-        yield return ("PageUp/PageDown", "Move a page at a time");
-        yield return ("Home/End", "Jump to the first or last item");
-        yield return ("Enter/Space", "Choose the highlighted item");
-        yield return ("Esc", "Close the list");
+        yield return ("Up/Down", UiText.Get("Hint.MoveHighlight", "Move the highlight"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MovePageAtATime", "Move a page at a time"));
+        yield return ("Home/End", UiText.Get("Hint.JumpFirstLastItem", "Jump to the first or last item"));
+        yield return ("Enter/Space", UiText.Get("Hint.ChooseHighlightedItem", "Choose the highlighted item"));
+        yield return ("Esc", UiText.Get("Hint.CloseList", "Close the list"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

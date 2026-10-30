@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -29,7 +30,15 @@ public class LinkLabel : Control
         set
         {
             _text = value ?? string.Empty;
-            ViewSize = new Size(_text.Length, 1);
+            Size size = new(_text.Length, 1);
+            // A shorter text leaves cells outside the new rectangle that nothing else repaints: ask for a repaint from scratch.
+            bool shrinks = size.Width < ViewSize.Width;
+            ViewSize = size;
+            if (shrinks)
+            {
+                InvalidateTree();
+            }
+
             StateHasChanged();
         }
     }
@@ -49,7 +58,7 @@ public class LinkLabel : Control
             yield break;
         }
 
-        yield return ("Enter/Space", "Follow the link");
+        yield return ("Enter/Space", UiText.Get("Hint.FollowLink", "Follow the link"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -89,12 +98,22 @@ public class LinkLabel : Control
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
-        if (_text.Length == 0)
+        int width = (int)ViewSize.Width;
+        if (width <= 0)
         {
             return;
         }
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
+        if (_text.Length == 0)
+        {
+            // Painted blank, not skipped: a link whose text was cleared used to leave the old text behind.
+            ConxelString blank = new(string.Empty, colorScheme.Foreground, colorScheme.Background);
+            blank.Expand(width, colorScheme.Foreground, colorScheme.Background);
+            buffer.Write(ZOrder, AbsolutePosition, ViewSize, blank);
+            return;
+        }
+
         Color foreground = !IsEnabled ? colorScheme.DisabledForeground : IsFocused ? colorScheme.SelectedFocusedForeground : Color.Cyan;
         Color background = IsFocused && IsEnabled ? colorScheme.SelectedFocusedBackground : colorScheme.Background;
         // The focused link is underlined as well as recoloured, so the focus shows even where the colours do not stand out.
@@ -104,6 +123,7 @@ public class LinkLabel : Control
             line.SetHyperlink(uri.OriginalString);
         }
 
+        line.Expand(width, colorScheme.Foreground, colorScheme.Background);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, line);
     }
 }

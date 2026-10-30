@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -93,7 +94,7 @@ public class AccessControlDialog : Dialog
     public AccessControlDialog(IAccessControlService service, IThemeService themeService)
         : base(nameof(AccessControlDialog), themeService)
     {
-        Title = "Permissions";
+        Title = iConsole.Localization.UiText.Get("Dialog.Permissions", "Permissions");
         _service = service;
     }
 
@@ -247,30 +248,30 @@ public class AccessControlDialog : Dialog
         switch (_mode)
         {
             case Mode.Edit:
-                yield return ("Enter / Ctrl+S", "Save the entry");
-                yield return ("Tab / Up/Down", "Move between the fields");
-                yield return ("Space / Left/Right", "Change the choice");
-                yield return ("Esc", "Back to the list");
+                yield return ("Enter / Ctrl+S", UiText.Get("DialogHint.SaveEntry", "Save the entry"));
+                yield return ("Tab / Up/Down", UiText.Get("DialogHint.MoveBetweenFields", "Move between the fields"));
+                yield return ("Space / Left/Right", UiText.Get("DialogHint.ChangeChoice", "Change the choice"));
+                yield return ("Esc", UiText.Get("DialogHint.BackToList", "Back to the list"));
                 break;
             case Mode.Owner:
-                yield return ("Enter / Ctrl+S", "Save the owner");
-                yield return ("Esc", "Back to the list");
+                yield return ("Enter / Ctrl+S", UiText.Get("DialogHint.SaveOwner", "Save the owner"));
+                yield return ("Esc", UiText.Get("DialogHint.BackToList", "Back to the list"));
                 break;
             default:
                 if (_confirmDelete)
                 {
-                    yield return ("Y / D / Delete", "Delete the entry");
-                    yield return ("Any other key", "Keep the entry");
+                    yield return ("Y / D / Delete", UiText.Get("DialogHint.DeleteEntry", "Delete the entry"));
+                    yield return ("Any other key", UiText.Get("DialogHint.KeepEntry", "Keep the entry"));
                     break;
                 }
 
-                yield return ("Up/Down", "Choose an entry");
-                yield return ("Insert/A", "Add an entry");
-                yield return ("Enter/E", "Edit the entry");
-                yield return ("Delete/D", "Delete the entry (asks first)");
-                yield return ("I", "Switch inheritance on or off");
-                yield return ("O", "Change the owner");
-                yield return ("R", "Read the permissions again");
+                yield return ("Up/Down", UiText.Get("DialogHint.ChooseEntry", "Choose an entry"));
+                yield return ("Insert/A", UiText.Get("DialogHint.AddEntry", "Add an entry"));
+                yield return ("Enter/E", UiText.Get("DialogHint.EditEntry", "Edit the entry"));
+                yield return ("Delete/D", UiText.Get("DialogHint.DeleteEntryAsks", "Delete the entry (asks first)"));
+                yield return ("I", UiText.Get("DialogHint.SwitchInheritance", "Switch inheritance on or off"));
+                yield return ("O", UiText.Get("DialogHint.ChangeOwner", "Change the owner"));
+                yield return ("R", UiText.Get("DialogHint.ReadPermissionsAgain", "Read the permissions again"));
                 break;
         }
     }

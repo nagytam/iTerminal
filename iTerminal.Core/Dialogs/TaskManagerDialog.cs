@@ -1,4 +1,5 @@
-﻿using iConsole.Controls;
+﻿using iConsole.Localization;
+using iConsole.Controls;
 using iConsole.Controls.ScrollBar;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -20,7 +21,7 @@ public class TaskManagerDialog : Dialog
         : base(nameof(TaskManagerDialog), themeService)
     {
         _taskManager = taskManager ?? new TaskManager();
-        Title = "Task Manager";
+        Title = iConsole.Localization.UiText.Get("Menu.TaskManager", "Task Manager");
         _listModel = new ListBoxModel<IBackgroundTask>(_taskManager.Tasks)
         {
             TransformItem = TransformItem
@@ -80,9 +81,9 @@ public class TaskManagerDialog : Dialog
     /// <summary>The keys this dialog adds to the list's.</summary>
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("P", "Pause or resume the task");
-        yield return ("Ctrl+↑/↓", "Move a queued task");
-        yield return ("Del", "Cancel the task");
+        yield return ("P", UiText.Get("DialogHint.PauseResumeTask", "Pause or resume the task"));
+        yield return ("Ctrl+↑/↓", UiText.Get("DialogHint.MoveQueuedTask", "Move a queued task"));
+        yield return ("Del", UiText.Get("DialogHint.CancelTask", "Cancel the task"));
     }
 
     public override void OnIdle()

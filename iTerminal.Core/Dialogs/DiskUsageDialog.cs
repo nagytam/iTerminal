@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Controls.Charts;
@@ -49,7 +50,7 @@ public class DiskUsageDialog : Dialog
     {
         _service = service;
         _contentModelService = contentModelService;
-        Title = "Disk usage";
+        Title = iConsole.Localization.UiText.Get("Dialog.DiskUsage", "Disk usage");
         _lines = new InfoLines(themeService);
         AddControl(_lines);
 
@@ -293,14 +294,14 @@ public class DiskUsageDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Up/Down", "Move the cursor over the folders");
-        yield return ("PageUp/PageDown", "Move a page at a time");
-        yield return ("Home/End", "Jump to the first or last row");
-        yield return ("Enter/Right", "Go into the folder under the cursor");
-        yield return ("Backspace/Left", "Go up one folder");
-        yield return ("S", "Sort by name or by size");
-        yield return ("R", "Scan again");
-        yield return ("G", "Show the folder in the panel");
+        yield return ("Up/Down", UiText.Get("DialogHint.MoveOverFolders", "Move the cursor over the folders"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MovePageAtATime", "Move a page at a time"));
+        yield return ("Home/End", UiText.Get("DialogHint.JumpFirstLastRow", "Jump to the first or last row"));
+        yield return ("Enter/Right", UiText.Get("DialogHint.GoIntoFolder", "Go into the folder under the cursor"));
+        yield return ("Backspace/Left", UiText.Get("Hint.GoUpFolder", "Go up one folder"));
+        yield return ("S", UiText.Get("DialogHint.SortNameOrSize", "Sort by name or by size"));
+        yield return ("R", UiText.Get("DialogHint.ScanAgain", "Scan again"));
+        yield return ("G", UiText.Get("DialogHint.ShowFolderInPanel", "Show the folder in the panel"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

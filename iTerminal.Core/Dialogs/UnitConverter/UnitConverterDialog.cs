@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls;
@@ -51,7 +52,7 @@ public class UnitConverterDialog : SplitPaneDialog
     public UnitConverterDialog(IBeepService beepService, IDateTimeProviderService dateTimeProviderService, IThemeService themeService)
         : base(nameof(UnitConverterDialog), themeService)
     {
-        Title = "Unit Converter";
+        Title = iConsole.Localization.UiText.Get("Dialog.UnitConverter", "Unit Converter");
 
         _categoryListBox = new CategoryListBox(
             new ListBoxModel<UnitCategory>(_categoryItems) { TransformItem = TransformCategory },
@@ -64,10 +65,10 @@ public class UnitConverterDialog : SplitPaneDialog
             themeService);
         _inputTextBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
-            Label = "Value",
+            Label = iConsole.Localization.UiText.Get("Label.Value", "Value"),
             Text = _engine.InputText
         };
-        _swapButton = new Button("Swap", new UnitConverterActionCommand(SwapUnits), themeService) { HotKeyChar = 'S' };
+        _swapButton = new Button(iConsole.Localization.UiText.Get("Button.Swap", "Swap"), new UnitConverterActionCommand(SwapUnits), themeService) { HotKeyChar = 'S' };
 
         AddControl(_categoryListBox);
         AddControl(_fromUnitListBox);
@@ -153,8 +154,8 @@ public class UnitConverterDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Tab", "Move between the category, the units and the value");
-        yield return ("Esc", "Close");
+        yield return ("Tab", UiText.Get("DialogHint.MoveCategoryUnitsValue", "Move between the category, the units and the value"));
+        yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

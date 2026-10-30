@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -79,9 +80,9 @@ public class MarkdownViewerControl : Control
             yield break;
         }
 
-        yield return ("Up/Down", "Scroll one line");
-        yield return ("PageUp/PageDown", "Scroll a page");
-        yield return ("Home/End", "Go to the top or the end");
+        yield return ("Up/Down", UiText.Get("Hint.ScrollOneLine", "Scroll one line"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.ScrollPage", "Scroll a page"));
+        yield return ("Home/End", UiText.Get("Hint.GoTopOrEnd", "Go to the top or the end"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

@@ -379,4 +379,1105 @@
   <data name="Language.Applied" xml:space="preserve">
     <value>Lingua: {0}</value>
   </data>
+  <data name="Dialog.CreateLink" xml:space="preserve">
+    <value>Crea collegamento</value>
+  </data>
+  <data name="Dialog.FilterByLabel" xml:space="preserve">
+    <value>Filtra per etichetta</value>
+  </data>
+  <data name="Dialog.ColourLabels" xml:space="preserve">
+    <value>Etichette colore e tag</value>
+  </data>
+  <data name="Dialog.Permissions" xml:space="preserve">
+    <value>Autorizzazioni</value>
+  </data>
+  <data name="Dialog.Calculator" xml:space="preserve">
+    <value>Calcolatrice</value>
+  </data>
+  <data name="Dialog.Calendar" xml:space="preserve">
+    <value>Calendario</value>
+  </data>
+  <data name="Dialog.Commands" xml:space="preserve">
+    <value>Comandi</value>
+  </data>
+  <data name="Dialog.DiskUsage" xml:space="preserve">
+    <value>Utilizzo del disco</value>
+  </data>
+  <data name="Dialog.DiskManager" xml:space="preserve">
+    <value>Gestione dischi</value>
+  </data>
+  <data name="Dialog.Documents" xml:space="preserve">
+    <value>Documenti</value>
+  </data>
+  <data name="Dialog.EditLink" xml:space="preserve">
+    <value>Modifica collegamento</value>
+  </data>
+  <data name="Dialog.SortBy" xml:space="preserve">
+    <value>Ordina per</value>
+  </data>
+  <data name="Dialog.ProcessManager" xml:space="preserve">
+    <value>Gestione processi</value>
+  </data>
+  <data name="Dialog.NetworkManager" xml:space="preserve">
+    <value>Gestione rete</value>
+  </data>
+  <data name="Dialog.SecureWipe" xml:space="preserve">
+    <value>Cancellazione sicura</value>
+  </data>
+  <data name="Dialog.ThemeManager" xml:space="preserve">
+    <value>Gestione temi</value>
+  </data>
+  <data name="Dialog.CompareFiles" xml:space="preserve">
+    <value>Confronta file</value>
+  </data>
+  <data name="Dialog.DuplicateFiles" xml:space="preserve">
+    <value>File duplicati</value>
+  </data>
+  <data name="Dialog.FormatDrive" xml:space="preserve">
+    <value>Formatta unità</value>
+  </data>
+  <data name="Dialog.OpenWith" xml:space="preserve">
+    <value>Apri con</value>
+  </data>
+  <data name="Dialog.Passwords" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Dialog.RemoteConnections" xml:space="preserve">
+    <value>Connessioni remote</value>
+  </data>
+  <data name="Dialog.ScreenManager" xml:space="preserve">
+    <value>Gestione schermate</value>
+  </data>
+  <data name="Dialog.StripMetadata" xml:space="preserve">
+    <value>Rimuovi metadati</value>
+  </data>
+  <data name="Dialog.SynchroniseFolders" xml:space="preserve">
+    <value>Sincronizza cartelle</value>
+  </data>
+  <data name="Dialog.SystemInformation" xml:space="preserve">
+    <value>Informazioni di sistema</value>
+  </data>
+  <data name="Dialog.SystemSettings" xml:space="preserve">
+    <value>Impostazioni di sistema</value>
+  </data>
+  <data name="Dialog.Tasks" xml:space="preserve">
+    <value>Attività</value>
+  </data>
+  <data name="Dialog.UnitConverter" xml:space="preserve">
+    <value>Convertitore di unità</value>
+  </data>
+  <data name="Dialog.UserMenu" xml:space="preserve">
+    <value>Menu utente</value>
+  </data>
+  <data name="Dialog.WebBrowser" xml:space="preserve">
+    <value>Browser web</value>
+  </data>
+  <data name="Dialog.FolderSelector" xml:space="preserve">
+    <value>Selettore cartelle</value>
+  </data>
+  <data name="Dialog.AiModelInformation" xml:space="preserve">
+    <value>Informazioni sul modello IA</value>
+  </data>
+  <data name="Dialog.CompareAndSynchroniseFolders" xml:space="preserve">
+    <value>Confronta e sincronizza cartelle</value>
+  </data>
+  <data name="Dialog.DeleteFile" xml:space="preserve">
+    <value>Elimina file</value>
+  </data>
+  <data name="Dialog.DeleteFolder" xml:space="preserve">
+    <value>Elimina cartella</value>
+  </data>
+  <data name="Dialog.DiskImage" xml:space="preserve">
+    <value>Immagine disco</value>
+  </data>
+  <data name="Dialog.Solution" xml:space="preserve">
+    <value>Soluzione</value>
+  </data>
+  <data name="Dialog.Program" xml:space="preserve">
+    <value>Programma</value>
+  </data>
+  <data name="Dialog.Mail" xml:space="preserve">
+    <value>Posta</value>
+  </data>
+  <data name="Dialog.Map" xml:space="preserve">
+    <value>Mappa</value>
+  </data>
+  <data name="Dialog.Music" xml:space="preserve">
+    <value>Musica</value>
+  </data>
+  <data name="Dialog.NetworkBrowser" xml:space="preserve">
+    <value>Esplora rete</value>
+  </data>
+  <data name="Dialog.Packages" xml:space="preserve">
+    <value>Pacchetti</value>
+  </data>
+  <data name="Dialog.RuntimeDependencies" xml:space="preserve">
+    <value>Dipendenze di runtime</value>
+  </data>
+  <data name="Dialog.Warning" xml:space="preserve">
+    <value>Avviso</value>
+  </data>
+  <data name="Dialog.Stocks" xml:space="preserve">
+    <value>Azioni</value>
+  </data>
+  <data name="Dialog.UpdateAvailable" xml:space="preserve">
+    <value>Aggiornamento disponibile</value>
+  </data>
+  <data name="Dialog.Image" xml:space="preserve">
+    <value>Immagine</value>
+  </data>
+  <data name="Dialog.Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="Button.Create" xml:space="preserve">
+    <value>Crea</value>
+  </data>
+  <data name="Button.Mount" xml:space="preserve">
+    <value>Monta</value>
+  </data>
+  <data name="Button.Unmount" xml:space="preserve">
+    <value>Smonta</value>
+  </data>
+  <data name="Button.Format" xml:space="preserve">
+    <value>Formatta</value>
+  </data>
+  <data name="Button.Connect" xml:space="preserve">
+    <value>Connetti</value>
+  </data>
+  <data name="Button.Swap" xml:space="preserve">
+    <value>Scambia</value>
+  </data>
+  <data name="Label.Source" xml:space="preserve">
+    <value>Origine</value>
+  </data>
+  <data name="Label.Target" xml:space="preserve">
+    <value>Destinazione</value>
+  </data>
+  <data name="Label.To" xml:space="preserve">
+    <value>A</value>
+  </data>
+  <data name="Label.Overwrite" xml:space="preserve">
+    <value>Sovrascrivi</value>
+  </data>
+  <data name="Label.Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Label.Search" xml:space="preserve">
+    <value>Cerca</value>
+  </data>
+  <data name="Label.Colour" xml:space="preserve">
+    <value>Colore</value>
+  </data>
+  <data name="Label.Tag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="Label.Value" xml:space="preserve">
+    <value>Valore</value>
+  </data>
+  <data name="DialogHint.NextFieldEnterSaves" xml:space="preserve">
+    <value>Campo successivo; Invio sull'ultimo salva</value>
+  </data>
+  <data name="DialogHint.PreviousField" xml:space="preserve">
+    <value>Campo precedente</value>
+  </data>
+  <data name="DialogHint.MoveBetweenFields" xml:space="preserve">
+    <value>Spostati tra i campi</value>
+  </data>
+  <data name="DialogHint.KeepFilterBackToList" xml:space="preserve">
+    <value>Mantieni il filtro e torna all'elenco</value>
+  </data>
+  <data name="DialogHint.ClearFilter" xml:space="preserve">
+    <value>Cancella il filtro</value>
+  </data>
+  <data name="DialogHint.DeleteContact" xml:space="preserve">
+    <value>Elimina il contatto</value>
+  </data>
+  <data name="DialogHint.KeepContact" xml:space="preserve">
+    <value>Mantieni il contatto</value>
+  </data>
+  <data name="DialogHint.MoveOverContacts" xml:space="preserve">
+    <value>Scorri i contatti</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastContact" xml:space="preserve">
+    <value>Vai al primo o all'ultimo contatto</value>
+  </data>
+  <data name="DialogHint.AddContact" xml:space="preserve">
+    <value>Aggiungi un contatto</value>
+  </data>
+  <data name="DialogHint.ChangeContact" xml:space="preserve">
+    <value>Modifica il contatto</value>
+  </data>
+  <data name="DialogHint.DeleteContactAsks" xml:space="preserve">
+    <value>Elimina il contatto (chiede prima)</value>
+  </data>
+  <data name="DialogHint.FilterList" xml:space="preserve">
+    <value>Filtra l'elenco</value>
+  </data>
+  <data name="DialogHint.SaveEntry" xml:space="preserve">
+    <value>Salva la voce</value>
+  </data>
+  <data name="DialogHint.ChangeChoice" xml:space="preserve">
+    <value>Modifica la scelta</value>
+  </data>
+  <data name="DialogHint.BackToList" xml:space="preserve">
+    <value>Torna all'elenco</value>
+  </data>
+  <data name="DialogHint.SaveOwner" xml:space="preserve">
+    <value>Salva il proprietario</value>
+  </data>
+  <data name="DialogHint.DeleteEntry" xml:space="preserve">
+    <value>Elimina la voce</value>
+  </data>
+  <data name="DialogHint.KeepEntry" xml:space="preserve">
+    <value>Mantieni la voce</value>
+  </data>
+  <data name="DialogHint.ChooseEntry" xml:space="preserve">
+    <value>Scegli una voce</value>
+  </data>
+  <data name="DialogHint.AddEntry" xml:space="preserve">
+    <value>Aggiungi una voce</value>
+  </data>
+  <data name="DialogHint.EditEntry" xml:space="preserve">
+    <value>Modifica la voce</value>
+  </data>
+  <data name="DialogHint.DeleteEntryAsks" xml:space="preserve">
+    <value>Elimina la voce (chiede prima)</value>
+  </data>
+  <data name="DialogHint.SwitchInheritance" xml:space="preserve">
+    <value>Attiva o disattiva l'ereditarietà</value>
+  </data>
+  <data name="DialogHint.ChangeOwner" xml:space="preserve">
+    <value>Cambia il proprietario</value>
+  </data>
+  <data name="DialogHint.ReadPermissionsAgain" xml:space="preserve">
+    <value>Rileggi le autorizzazioni</value>
+  </data>
+  <data name="DialogHint.BackToPage" xml:space="preserve">
+    <value>Torna alla pagina</value>
+  </data>
+  <data name="DialogHint.TypeAddress" xml:space="preserve">
+    <value>Digita un indirizzo</value>
+  </data>
+  <data name="DialogHint.NextLinkOrField" xml:space="preserve">
+    <value>Vai al collegamento o campo successivo</value>
+  </data>
+  <data name="DialogHint.FollowLinkNewTab" xml:space="preserve">
+    <value>Segui il collegamento (Ctrl: in una nuova scheda)</value>
+  </data>
+  <data name="DialogHint.ScrollPageUpDown" xml:space="preserve">
+    <value>Scorri la pagina</value>
+  </data>
+  <data name="DialogHint.ScrollPageDownShiftUp" xml:space="preserve">
+    <value>Scorri di una pagina in basso (Maiusc: in alto)</value>
+  </data>
+  <data name="DialogHint.Forward" xml:space="preserve">
+    <value>Avanti</value>
+  </data>
+  <data name="DialogHint.Reload" xml:space="preserve">
+    <value>Ricarica</value>
+  </data>
+  <data name="DialogHint.OpenCloseTab" xml:space="preserve">
+    <value>Apri o chiudi una scheda</value>
+  </data>
+  <data name="DialogHint.NextTab" xml:space="preserve">
+    <value>Scheda successiva</value>
+  </data>
+  <data name="DialogHint.BookmarkPage" xml:space="preserve">
+    <value>Aggiungi la pagina ai segnalibri</value>
+  </data>
+  <data name="DialogHint.BookmarksHistory" xml:space="preserve">
+    <value>Segnalibri / cronologia</value>
+  </data>
+  <data name="DialogHint.FindInPage" xml:space="preserve">
+    <value>Cerca nella pagina</value>
+  </data>
+  <data name="DialogHint.ChooseMessage" xml:space="preserve">
+    <value>Scegli un messaggio</value>
+  </data>
+  <data name="DialogHint.ReadMessage" xml:space="preserve">
+    <value>Leggi il messaggio</value>
+  </data>
+  <data name="DialogHint.WriteMessage" xml:space="preserve">
+    <value>Scrivi un messaggio</value>
+  </data>
+  <data name="DialogHint.RefreshInbox" xml:space="preserve">
+    <value>Aggiorna la posta in arrivo</value>
+  </data>
+  <data name="DialogHint.DeleteMessageAsks" xml:space="preserve">
+    <value>Elimina il messaggio (chiede prima)</value>
+  </data>
+  <data name="DialogHint.AccountSettings" xml:space="preserve">
+    <value>Impostazioni dell'account</value>
+  </data>
+  <data name="DialogHint.ScrollMessage" xml:space="preserve">
+    <value>Scorri il messaggio</value>
+  </data>
+  <data name="DialogHint.Reply" xml:space="preserve">
+    <value>Rispondi</value>
+  </data>
+  <data name="DialogHint.BackToInbox" xml:space="preserve">
+    <value>Torna alla posta in arrivo</value>
+  </data>
+  <data name="DialogHint.SendMessage" xml:space="preserve">
+    <value>Invia il messaggio</value>
+  </data>
+  <data name="DialogHint.LookUpAddress" xml:space="preserve">
+    <value>Cerca un indirizzo</value>
+  </data>
+  <data name="DialogHint.AddTorrent" xml:space="preserve">
+    <value>Aggiungi il torrent</value>
+  </data>
+  <data name="DialogHint.PasteLinkOrPath" xml:space="preserve">
+    <value>Incolla un collegamento o un percorso</value>
+  </data>
+  <data name="DialogHint.RemoveKeepFiles" xml:space="preserve">
+    <value>Rimuovi, mantieni i file scaricati</value>
+  </data>
+  <data name="DialogHint.RemoveDeleteFiles" xml:space="preserve">
+    <value>Rimuovi ed elimina i file scaricati</value>
+  </data>
+  <data name="DialogHint.KeepTorrent" xml:space="preserve">
+    <value>Mantieni il torrent</value>
+  </data>
+  <data name="DialogHint.ChooseTorrent" xml:space="preserve">
+    <value>Scegli un torrent</value>
+  </data>
+  <data name="DialogHint.AddMagnetOrTorrent" xml:space="preserve">
+    <value>Aggiungi un collegamento magnet o un .torrent</value>
+  </data>
+  <data name="DialogHint.PauseOrResume" xml:space="preserve">
+    <value>Metti in pausa o riprendi</value>
+  </data>
+  <data name="DialogHint.RemoveTorrentAsks" xml:space="preserve">
+    <value>Rimuovi il torrent (chiede prima)</value>
+  </data>
+  <data name="DialogHint.OpenSaveFolder" xml:space="preserve">
+    <value>Apri la cartella di salvataggio nel pannello attivo</value>
+  </data>
+  <data name="DialogHint.DeleteMarkedFiles" xml:space="preserve">
+    <value>Elimina i file contrassegnati</value>
+  </data>
+  <data name="DialogHint.DeleteNothing" xml:space="preserve">
+    <value>Non eliminare nulla</value>
+  </data>
+  <data name="DialogHint.MoveOverFiles" xml:space="preserve">
+    <value>Sposta il cursore sui file</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastFile" xml:space="preserve">
+    <value>Vai al primo o all'ultimo file</value>
+  </data>
+  <data name="DialogHint.MarkFileAndMoveOn" xml:space="preserve">
+    <value>Contrassegna o rimuovi il contrassegno del file e vai avanti</value>
+  </data>
+  <data name="DialogHint.MarkAllButOldest" xml:space="preserve">
+    <value>Contrassegna tutti tranne il più vecchio di ogni gruppo</value>
+  </data>
+  <data name="DialogHint.MarkAllButNewest" xml:space="preserve">
+    <value>Contrassegna tutti tranne il più recente di ogni gruppo</value>
+  </data>
+  <data name="DialogHint.ClearMarks" xml:space="preserve">
+    <value>Rimuovi i contrassegni</value>
+  </data>
+  <data name="DialogHint.DeleteMarkedAsks" xml:space="preserve">
+    <value>Elimina i file contrassegnati (chiede prima)</value>
+  </data>
+  <data name="DialogHint.ScanAgain" xml:space="preserve">
+    <value>Scansiona di nuovo</value>
+  </data>
+  <data name="DialogHint.ShowFileInPanel" xml:space="preserve">
+    <value>Mostra il file nel pannello</value>
+  </data>
+  <data name="DialogHint.SaveMeeting" xml:space="preserve">
+    <value>Salva la riunione</value>
+  </data>
+  <data name="DialogHint.DiscardEntry" xml:space="preserve">
+    <value>Scarta la voce</value>
+  </data>
+  <data name="DialogHint.DeleteMeeting" xml:space="preserve">
+    <value>Elimina la riunione</value>
+  </data>
+  <data name="DialogHint.KeepMeeting" xml:space="preserve">
+    <value>Mantieni la riunione</value>
+  </data>
+  <data name="DialogHint.MoveDayOrWeek" xml:space="preserve">
+    <value>Spostati di un giorno o di una settimana</value>
+  </data>
+  <data name="DialogHint.GoToToday" xml:space="preserve">
+    <value>Vai a oggi</value>
+  </data>
+  <data name="DialogHint.ChooseMeetingOfDay" xml:space="preserve">
+    <value>Scegli una riunione del giorno</value>
+  </data>
+  <data name="DialogHint.AddMeeting" xml:space="preserve">
+    <value>Aggiungi una riunione</value>
+  </data>
+  <data name="DialogHint.EditChosenMeeting" xml:space="preserve">
+    <value>Modifica la riunione scelta</value>
+  </data>
+  <data name="DialogHint.DeleteChosenMeetingAsks" xml:space="preserve">
+    <value>Elimina la riunione scelta (chiede prima)</value>
+  </data>
+  <data name="DialogHint.SaveTask" xml:space="preserve">
+    <value>Salva l'attività</value>
+  </data>
+  <data name="DialogHint.DeleteTask" xml:space="preserve">
+    <value>Elimina l'attività</value>
+  </data>
+  <data name="DialogHint.KeepTask" xml:space="preserve">
+    <value>Mantieni l'attività</value>
+  </data>
+  <data name="DialogHint.MoveOverTasks" xml:space="preserve">
+    <value>Scorri le attività</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastTask" xml:space="preserve">
+    <value>Vai alla prima o all'ultima attività</value>
+  </data>
+  <data name="DialogHint.AddTask" xml:space="preserve">
+    <value>Aggiungi un'attività</value>
+  </data>
+  <data name="DialogHint.EditTask" xml:space="preserve">
+    <value>Modifica l'attività</value>
+  </data>
+  <data name="DialogHint.MarkTaskDoneOrOpen" xml:space="preserve">
+    <value>Segna l'attività come fatta o aperta</value>
+  </data>
+  <data name="DialogHint.DeleteTaskAsks" xml:space="preserve">
+    <value>Elimina l'attività (chiede prima)</value>
+  </data>
+  <data name="DialogHint.ApplyValue" xml:space="preserve">
+    <value>Applica il valore</value>
+  </data>
+  <data name="DialogHint.CancelEntry" xml:space="preserve">
+    <value>Annulla la voce</value>
+  </data>
+  <data name="DialogHint.SwitchSection" xml:space="preserve">
+    <value>Cambia sezione</value>
+  </data>
+  <data name="DialogHint.MoveOverSettings" xml:space="preserve">
+    <value>Scorri le impostazioni</value>
+  </data>
+  <data name="DialogHint.FirstOrLastSetting" xml:space="preserve">
+    <value>Prima o ultima impostazione</value>
+  </data>
+  <data name="DialogHint.ChangeSettingUnderCursor" xml:space="preserve">
+    <value>Modifica l'impostazione sotto il cursore</value>
+  </data>
+  <data name="DialogHint.ReadSettingsAgain" xml:space="preserve">
+    <value>Rileggi le impostazioni</value>
+  </data>
+  <data name="DialogHint.AddVariable" xml:space="preserve">
+    <value>Aggiungi una variabile</value>
+  </data>
+  <data name="DialogHint.RemoveVariableAsks" xml:space="preserve">
+    <value>Rimuovi la variabile (chiede prima)</value>
+  </data>
+  <data name="DialogHint.SwitchUserMachine" xml:space="preserve">
+    <value>Passa tra l'ambito utente e quello del computer</value>
+  </data>
+  <data name="DialogHint.SaveConnection" xml:space="preserve">
+    <value>Salva la connessione</value>
+  </data>
+  <data name="DialogHint.DeleteConnection" xml:space="preserve">
+    <value>Elimina la connessione</value>
+  </data>
+  <data name="DialogHint.KeepConnection" xml:space="preserve">
+    <value>Mantieni la connessione</value>
+  </data>
+  <data name="DialogHint.ChooseConnection" xml:space="preserve">
+    <value>Scegli una connessione</value>
+  </data>
+  <data name="DialogHint.ConnectLentTerminal" xml:space="preserve">
+    <value>Connetti sul terminale ceduto</value>
+  </data>
+  <data name="DialogHint.AddConnection" xml:space="preserve">
+    <value>Aggiungi una connessione</value>
+  </data>
+  <data name="DialogHint.EditConnection" xml:space="preserve">
+    <value>Modifica la connessione</value>
+  </data>
+  <data name="DialogHint.DeleteConnectionAsks" xml:space="preserve">
+    <value>Elimina la connessione (chiede prima)</value>
+  </data>
+  <data name="DialogHint.BrowseConnection" xml:space="preserve">
+    <value>Sfoglia la connessione in un pannello</value>
+  </data>
+  <data name="DialogHint.SelectProject" xml:space="preserve">
+    <value>Seleziona o deseleziona il progetto</value>
+  </data>
+  <data name="DialogHint.SelectAllProjects" xml:space="preserve">
+    <value>Seleziona tutti i progetti</value>
+  </data>
+  <data name="DialogHint.SelectAllTestProjects" xml:space="preserve">
+    <value>Seleziona tutti i progetti di test</value>
+  </data>
+  <data name="DialogHint.BuildSelected" xml:space="preserve">
+    <value>Compila i progetti selezionati</value>
+  </data>
+  <data name="DialogHint.CleanSelected" xml:space="preserve">
+    <value>Pulisci i progetti selezionati</value>
+  </data>
+  <data name="DialogHint.RunTests" xml:space="preserve">
+    <value>Esegui i test</value>
+  </data>
+  <data name="DialogHint.RunProject" xml:space="preserve">
+    <value>Esegui il progetto</value>
+  </data>
+  <data name="DialogHint.CancelRunningCommand" xml:space="preserve">
+    <value>Annulla il comando in esecuzione</value>
+  </data>
+  <data name="DialogHint.NextDotnetSdk" xml:space="preserve">
+    <value>Passa al successivo SDK .NET</value>
+  </data>
+  <data name="DialogHint.ScrollOutput" xml:space="preserve">
+    <value>Scorri l'output</value>
+  </data>
+  <data name="DialogHint.TopOfOutputOrFollow" xml:space="preserve">
+    <value>Inizio dell'output o segui la fine</value>
+  </data>
+  <data name="DialogHint.ShowHidePasswords" xml:space="preserve">
+    <value>Mostra o nascondi le password</value>
+  </data>
+  <data name="DialogHint.RemoveProgramFromList" xml:space="preserve">
+    <value>Rimuovi il programma dall'elenco</value>
+  </data>
+  <data name="DialogHint.KeepProgram" xml:space="preserve">
+    <value>Mantieni il programma</value>
+  </data>
+  <data name="DialogHint.ChooseProgram" xml:space="preserve">
+    <value>Scegli un programma</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastProgram" xml:space="preserve">
+    <value>Vai al primo o all'ultimo programma</value>
+  </data>
+  <data name="DialogHint.OpenWithChosenProgram" xml:space="preserve">
+    <value>Apri il file con il programma scelto</value>
+  </data>
+  <data name="DialogHint.AddProgram" xml:space="preserve">
+    <value>Aggiungi un programma</value>
+  </data>
+  <data name="DialogHint.ChangeChosenProgram" xml:space="preserve">
+    <value>Modifica il programma scelto</value>
+  </data>
+  <data name="DialogHint.RemoveChosenProgramAsks" xml:space="preserve">
+    <value>Rimuovi il programma scelto (chiede prima)</value>
+  </data>
+  <data name="DialogHint.MakeProgramDefault" xml:space="preserve">
+    <value>Imposta il programma scelto come predefinito</value>
+  </data>
+  <data name="DialogHint.BackToMap" xml:space="preserve">
+    <value>Torna alla mappa</value>
+  </data>
+  <data name="DialogHint.PanMap" xml:space="preserve">
+    <value>Sposta la mappa (Maiusc: mezza schermata)</value>
+  </data>
+  <data name="DialogHint.ZoomInOut" xml:space="preserve">
+    <value>Ingrandisci o riduci</value>
+  </data>
+  <data name="DialogHint.BackToHomeView" xml:space="preserve">
+    <value>Torna alla vista iniziale</value>
+  </data>
+  <data name="DialogHint.SearchPlace" xml:space="preserve">
+    <value>Cerca un luogo</value>
+  </data>
+  <data name="DialogHint.OpenSavedPlaces" xml:space="preserve">
+    <value>Apri i luoghi salvati</value>
+  </data>
+  <data name="DialogHint.SaveCentreAsPlace" xml:space="preserve">
+    <value>Salva il centro come luogo</value>
+  </data>
+  <data name="DialogHint.ReloadTiles" xml:space="preserve">
+    <value>Ricarica le tessere</value>
+  </data>
+  <data name="DialogHint.GoOnlineOffline" xml:space="preserve">
+    <value>Passa online o offline</value>
+  </data>
+  <data name="DialogHint.SaveAreaOffline" xml:space="preserve">
+    <value>Salva quest'area per l'uso offline</value>
+  </data>
+  <data name="DialogHint.SaveWorkspaceUnderName" xml:space="preserve">
+    <value>Salva l'area di lavoro con questo nome</value>
+  </data>
+  <data name="DialogHint.ChooseWorkspace" xml:space="preserve">
+    <value>Scegli un'area di lavoro</value>
+  </data>
+  <data name="DialogHint.SwitchToWorkspace" xml:space="preserve">
+    <value>Passa all'area di lavoro scelta</value>
+  </data>
+  <data name="DialogHint.SwitchWorkspaceByNumber" xml:space="preserve">
+    <value>Passa a un'area di lavoro dal suo numero</value>
+  </data>
+  <data name="DialogHint.SaveScreenAsWorkspace" xml:space="preserve">
+    <value>Salva la schermata come nuova area di lavoro</value>
+  </data>
+  <data name="DialogHint.UpdateWorkspace" xml:space="preserve">
+    <value>Aggiorna l'area di lavoro scelta dalla schermata</value>
+  </data>
+  <data name="DialogHint.RenameWorkspace" xml:space="preserve">
+    <value>Rinomina l'area di lavoro scelta</value>
+  </data>
+  <data name="DialogHint.DeleteWorkspaceAsks" xml:space="preserve">
+    <value>Elimina l'area di lavoro scelta (chiede prima)</value>
+  </data>
+  <data name="DialogHint.PlaySelectTake" xml:space="preserve">
+    <value>Gioca, seleziona o prendi un pezzo al cursore</value>
+  </data>
+  <data name="DialogHint.SameAsEnter" xml:space="preserve">
+    <value>Come Invio</value>
+  </data>
+  <data name="DialogHint.PreviousNextGame" xml:space="preserve">
+    <value>Gioco precedente o successivo</value>
+  </data>
+  <data name="DialogHint.ChooseGame" xml:space="preserve">
+    <value>Scegli un gioco</value>
+  </data>
+  <data name="DialogHint.StartGameAgain" xml:space="preserve">
+    <value>Ricomincia la partita</value>
+  </data>
+  <data name="DialogHint.TakeBackMove" xml:space="preserve">
+    <value>Annulla l'ultima mossa</value>
+  </data>
+  <data name="DialogHint.SwitchComputerTwoPlayers" xml:space="preserve">
+    <value>Passa tra computer e due giocatori</value>
+  </data>
+  <data name="DialogHint.ScrollDifferences" xml:space="preserve">
+    <value>Scorri le differenze</value>
+  </data>
+  <data name="DialogHint.ScrollPageAtATime" xml:space="preserve">
+    <value>Scorri una pagina alla volta</value>
+  </data>
+  <data name="DialogHint.JumpStartOrEnd" xml:space="preserve">
+    <value>Vai all'inizio o alla fine</value>
+  </data>
+  <data name="DialogHint.JumpNextPrevDifference" xml:space="preserve">
+    <value>Vai alla differenza successiva o precedente</value>
+  </data>
+  <data name="DialogHint.IgnoreWhiteSpace" xml:space="preserve">
+    <value>Ignora gli spazi</value>
+  </data>
+  <data name="DialogHint.IgnoreLetterCase" xml:space="preserve">
+    <value>Ignora maiuscole e minuscole</value>
+  </data>
+  <data name="DialogHint.MoveOverFolders" xml:space="preserve">
+    <value>Sposta il cursore sulle cartelle</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastRow" xml:space="preserve">
+    <value>Vai alla prima o all'ultima riga</value>
+  </data>
+  <data name="DialogHint.GoIntoFolder" xml:space="preserve">
+    <value>Entra nella cartella sotto il cursore</value>
+  </data>
+  <data name="DialogHint.SortNameOrSize" xml:space="preserve">
+    <value>Ordina per nome o per dimensione</value>
+  </data>
+  <data name="DialogHint.ShowFolderInPanel" xml:space="preserve">
+    <value>Mostra la cartella nel pannello</value>
+  </data>
+  <data name="DialogHint.Submit" xml:space="preserve">
+    <value>Invia</value>
+  </data>
+  <data name="DialogHint.RunMainAction" xml:space="preserve">
+    <value>Esegui l'azione principale</value>
+  </data>
+  <data name="DialogHint.RefreshList" xml:space="preserve">
+    <value>Aggiorna l'elenco</value>
+  </data>
+  <data name="DialogHint.SearchPackages" xml:space="preserve">
+    <value>Cerca pacchetti</value>
+  </data>
+  <data name="DialogHint.ShowInstalled" xml:space="preserve">
+    <value>Mostra i pacchetti installati</value>
+  </data>
+  <data name="DialogHint.DeleteSavedProfile" xml:space="preserve">
+    <value>Elimina il profilo salvato</value>
+  </data>
+  <data name="DialogHint.KeepProfile" xml:space="preserve">
+    <value>Mantieni il profilo</value>
+  </data>
+  <data name="DialogHint.Connect" xml:space="preserve">
+    <value>Connetti</value>
+  </data>
+  <data name="DialogHint.BackToHostList" xml:space="preserve">
+    <value>Torna all'elenco degli host</value>
+  </data>
+  <data name="DialogHint.OpenChosenHost" xml:space="preserve">
+    <value>Apri l'host scelto</value>
+  </data>
+  <data name="DialogHint.SearchNetworkAgain" xml:space="preserve">
+    <value>Cerca di nuovo nella rete</value>
+  </data>
+  <data name="DialogHint.DeleteSavedProfileAsks" xml:space="preserve">
+    <value>Elimina il profilo salvato (chiede prima)</value>
+  </data>
+  <data name="DialogHint.SearchDocuments" xml:space="preserve">
+    <value>Cerca nei documenti</value>
+  </data>
+  <data name="DialogHint.ChooseResult" xml:space="preserve">
+    <value>Scegli un risultato</value>
+  </data>
+  <data name="DialogHint.ShowDocumentInPanel" xml:space="preserve">
+    <value>Mostra il documento nel pannello</value>
+  </data>
+  <data name="DialogHint.ClearSearchThenClose" xml:space="preserve">
+    <value>Cancella la ricerca, poi chiudi</value>
+  </data>
+  <data name="DialogHint.ScanDocumentsAgain" xml:space="preserve">
+    <value>Scansiona di nuovo i documenti</value>
+  </data>
+  <data name="DialogHint.CancelScan" xml:space="preserve">
+    <value>Annulla la scansione</value>
+  </data>
+  <data name="DialogHint.ShowHidePreview" xml:space="preserve">
+    <value>Mostra o nascondi l'anteprima</value>
+  </data>
+  <data name="DialogHint.SearchOrAddHit" xml:space="preserve">
+    <value>Cerca o aggiungi il risultato scelto</value>
+  </data>
+  <data name="DialogHint.ChooseHit" xml:space="preserve">
+    <value>Scegli un risultato</value>
+  </data>
+  <data name="DialogHint.AddStock" xml:space="preserve">
+    <value>Aggiungi un titolo</value>
+  </data>
+  <data name="DialogHint.RemoveStock" xml:space="preserve">
+    <value>Rimuovi il titolo</value>
+  </data>
+  <data name="DialogHint.RefreshQuotes" xml:space="preserve">
+    <value>Aggiorna le quotazioni</value>
+  </data>
+  <data name="DialogHint.ScrollHelp" xml:space="preserve">
+    <value>Scorri la guida</value>
+  </data>
+  <data name="DialogHint.BackToRepository" xml:space="preserve">
+    <value>Torna al repository</value>
+  </data>
+  <data name="DialogHint.UseTheText" xml:space="preserve">
+    <value>Usa il testo</value>
+  </data>
+  <data name="DialogHint.NextSection" xml:space="preserve">
+    <value>Sezione successiva (modifiche, branch, log, stash, dettaglio)</value>
+  </data>
+  <data name="DialogHint.StageCheckoutShow" xml:space="preserve">
+    <value>Aggiungi o rimuovi dall'area di staging, fai checkout o mostra il commit</value>
+  </data>
+  <data name="DialogHint.StageUnstageFile" xml:space="preserve">
+    <value>Aggiungi o rimuovi il file dall'area di staging</value>
+  </data>
+  <data name="DialogHint.StageAll" xml:space="preserve">
+    <value>Aggiungi tutto allo staging (applica, negli stash)</value>
+  </data>
+  <data name="DialogHint.DiscardFileChangesAsks" xml:space="preserve">
+    <value>Scarta le modifiche del file (chiede prima)</value>
+  </data>
+  <data name="DialogHint.Commit" xml:space="preserve">
+    <value>Esegui commit</value>
+  </data>
+  <data name="DialogHint.AmendCommit" xml:space="preserve">
+    <value>Modifica l'ultimo commit</value>
+  </data>
+  <data name="DialogHint.NewBranch" xml:space="preserve">
+    <value>Nuovo branch</value>
+  </data>
+  <data name="DialogHint.MergeBranch" xml:space="preserve">
+    <value>Unisci il branch</value>
+  </data>
+  <data name="DialogHint.DeleteBranch" xml:space="preserve">
+    <value>Elimina il branch</value>
+  </data>
+  <data name="DialogHint.Fetch" xml:space="preserve">
+    <value>Recupera</value>
+  </data>
+  <data name="DialogHint.PullPush" xml:space="preserve">
+    <value>Scarica / carica</value>
+  </data>
+  <data name="DialogHint.StashChanges" xml:space="preserve">
+    <value>Metti da parte le modifiche</value>
+  </data>
+  <data name="DialogHint.DropStash" xml:space="preserve">
+    <value>Elimina lo stash</value>
+  </data>
+  <data name="DialogHint.Refresh" xml:space="preserve">
+    <value>Aggiorna</value>
+  </data>
+  <data name="DialogHint.ScrollPatch" xml:space="preserve">
+    <value>Scorri la patch</value>
+  </data>
+  <data name="DialogHint.SendQuestion" xml:space="preserve">
+    <value>Invia la domanda</value>
+  </data>
+  <data name="DialogHint.ClearQuestionCancelAnswer" xml:space="preserve">
+    <value>Cancella la domanda o annulla la risposta</value>
+  </data>
+  <data name="DialogHint.RecallQuestions" xml:space="preserve">
+    <value>Richiama le domande già inviate</value>
+  </data>
+  <data name="DialogHint.ScrollAnswer" xml:space="preserve">
+    <value>Scorri la risposta</value>
+  </data>
+  <data name="DialogHint.EnterDigitsOperators" xml:space="preserve">
+    <value>Inserisci cifre e operatori</value>
+  </data>
+  <data name="DialogHint.Evaluate" xml:space="preserve">
+    <value>Calcola</value>
+  </data>
+  <data name="DialogHint.ClearShort" xml:space="preserve">
+    <value>Cancella</value>
+  </data>
+  <data name="DialogHint.SaveChecksumsNextToFiles" xml:space="preserve">
+    <value>Salva i checksum accanto ai file</value>
+  </data>
+  <data name="DialogHint.CopySha256" xml:space="preserve">
+    <value>Copia il checksum SHA-256</value>
+  </data>
+  <data name="DialogHint.CopyChecksumUnderPointer" xml:space="preserve">
+    <value>Copia il checksum sotto il puntatore</value>
+  </data>
+  <data name="DialogHint.CloseReportCompareEmpty" xml:space="preserve">
+    <value>Chiudi il rapporto finché la casella di confronto è vuota</value>
+  </data>
+  <data name="DialogHint.FilterCommands" xml:space="preserve">
+    <value>Filtra i comandi</value>
+  </data>
+  <data name="DialogHint.ChooseCommand" xml:space="preserve">
+    <value>Scegli un comando</value>
+  </data>
+  <data name="DialogHint.RunChosenCommand" xml:space="preserve">
+    <value>Esegui il comando scelto</value>
+  </data>
+  <data name="DialogHint.CompareTwoPanels" xml:space="preserve">
+    <value>Confronta i due pannelli</value>
+  </data>
+  <data name="DialogHint.SynchroniseShowsPlan" xml:space="preserve">
+    <value>Sincronizza: mostra prima il piano, qualsiasi tasto tranne Esc lo annulla</value>
+  </data>
+  <data name="DialogHint.ScrollDifferencesPage" xml:space="preserve">
+    <value>Scorri le differenze una pagina alla volta</value>
+  </data>
+  <data name="DialogHint.RefreshRates" xml:space="preserve">
+    <value>Aggiorna i tassi</value>
+  </data>
+  <data name="DialogHint.SwapCurrencies" xml:space="preserve">
+    <value>Scambia le due valute</value>
+  </data>
+  <data name="DialogHint.EjectDrive" xml:space="preserve">
+    <value>Espelli l'unità</value>
+  </data>
+  <data name="DialogHint.FormatDrive" xml:space="preserve">
+    <value>Formatta l'unità</value>
+  </data>
+  <data name="DialogHint.MountDiskImage" xml:space="preserve">
+    <value>Monta un'immagine disco</value>
+  </data>
+  <data name="DialogHint.BackToDriveUnderCursor" xml:space="preserve">
+    <value>Torna all'unità sotto il cursore</value>
+  </data>
+  <data name="DialogHint.ConnectChosenDevice" xml:space="preserve">
+    <value>Connettiti al dispositivo scelto</value>
+  </data>
+  <data name="DialogHint.SearchDevicesAgain" xml:space="preserve">
+    <value>Cerca di nuovo i dispositivi</value>
+  </data>
+  <data name="DialogHint.ChooseLanguage" xml:space="preserve">
+    <value>Scegli una lingua</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastLanguage" xml:space="preserve">
+    <value>Vai alla prima o all'ultima lingua</value>
+  </data>
+  <data name="DialogHint.UseChosenLanguage" xml:space="preserve">
+    <value>Usa la lingua scelta</value>
+  </data>
+  <data name="DialogHint.PlayOrPause" xml:space="preserve">
+    <value>Riproduci o metti in pausa</value>
+  </data>
+  <data name="DialogHint.PlayFromStart" xml:space="preserve">
+    <value>Riproduci dall'inizio</value>
+  </data>
+  <data name="DialogHint.SeekBackForward" xml:space="preserve">
+    <value>Indietro o avanti (Maiusc: passo lungo)</value>
+  </data>
+  <data name="DialogHint.RaiseLowerVolume" xml:space="preserve">
+    <value>Alza o abbassa il volume</value>
+  </data>
+  <data name="DialogHint.StopThisFile" xml:space="preserve">
+    <value>Ferma questo file</value>
+  </data>
+  <data name="DialogHint.EditTags" xml:space="preserve">
+    <value>Modifica i tag</value>
+  </data>
+  <data name="DialogHint.MoveBetweenTags" xml:space="preserve">
+    <value>Spostati tra i tag</value>
+  </data>
+  <data name="DialogHint.SaveTags" xml:space="preserve">
+    <value>Salva i tag</value>
+  </data>
+  <data name="DialogHint.CloseWithoutSaving" xml:space="preserve">
+    <value>Chiudi senza salvare</value>
+  </data>
+  <data name="DialogHint.FilterProcesses" xml:space="preserve">
+    <value>Filtra i processi</value>
+  </data>
+  <data name="DialogHint.MoveOverProcesses" xml:space="preserve">
+    <value>Scorri i processi, anche dalla casella del filtro</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastProcess" xml:space="preserve">
+    <value>Vai al primo o all'ultimo processo</value>
+  </data>
+  <data name="DialogHint.NextStepInstall" xml:space="preserve">
+    <value>Passo successivo; all'ultimo passo, installa ciò che è selezionato</value>
+  </data>
+  <data name="DialogHint.BrowseNextStep" xml:space="preserve">
+    <value>Vai al passo successivo</value>
+  </data>
+  <data name="DialogHint.BackPreviousStep" xml:space="preserve">
+    <value>Torna al passo precedente</value>
+  </data>
+  <data name="DialogHint.TickComponent" xml:space="preserve">
+    <value>Seleziona o deseleziona il componente di questo passo</value>
+  </data>
+  <data name="DialogHint.SkipOffersClose" xml:space="preserve">
+    <value>Salta le offerte selezionate e chiudi</value>
+  </data>
+  <data name="DialogHint.SearchOrShowResult" xml:space="preserve">
+    <value>Cerca, oppure mostra il risultato scelto nel pannello quando l'elenco ha il focus</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastResult" xml:space="preserve">
+    <value>Vai al primo o all'ultimo risultato</value>
+  </data>
+  <data name="DialogHint.SendResultsToPanel" xml:space="preserve">
+    <value>Invia i risultati a un pannello</value>
+  </data>
+  <data name="DialogHint.CancelSearch" xml:space="preserve">
+    <value>Annulla la ricerca</value>
+  </data>
+  <data name="DialogHint.ChoosePasses" xml:space="preserve">
+    <value>Scegli un passaggio casuale, tre o sette passaggi</value>
+  </data>
+  <data name="DialogHint.ChoosePreviousNextMethod" xml:space="preserve">
+    <value>Scegli il metodo precedente o successivo</value>
+  </data>
+  <data name="DialogHint.ArmWipe" xml:space="preserve">
+    <value>Attiva la cancellazione (non è ancora cancellato nulla)</value>
+  </data>
+  <data name="DialogHint.ConfirmFilesErased" xml:space="preserve">
+    <value>Conferma: i file vengono cancellati definitivamente</value>
+  </data>
+  <data name="DialogHint.WithdrawChooseAgain" xml:space="preserve">
+    <value>Ritira e scegli di nuovo</value>
+  </data>
+  <data name="DialogHint.SignGpg" xml:space="preserve">
+    <value>Firma con GPG</value>
+  </data>
+  <data name="DialogHint.SignAuthenticode" xml:space="preserve">
+    <value>Firma con Authenticode</value>
+  </data>
+  <data name="DialogHint.SignPem" xml:space="preserve">
+    <value>Firma con una chiave PEM</value>
+  </data>
+  <data name="DialogHint.VerifySignatures" xml:space="preserve">
+    <value>Verifica le firme</value>
+  </data>
+  <data name="DialogHint.CloseReport" xml:space="preserve">
+    <value>Chiudi il rapporto</value>
+  </data>
+  <data name="DialogHint.MoveOverSortModes" xml:space="preserve">
+    <value>Sposta il cursore sui modi di ordinamento</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastMode" xml:space="preserve">
+    <value>Vai al primo o all'ultimo modo</value>
+  </data>
+  <data name="DialogHint.SortByModeUnderCursor" xml:space="preserve">
+    <value>Ordina secondo il modo sotto il cursore</value>
+  </data>
+  <data name="DialogHint.SortByLetterAtOnce" xml:space="preserve">
+    <value>Ordina subito secondo il modo contrassegnato da quella lettera</value>
+  </data>
+  <data name="DialogHint.ReverseSortOrder" xml:space="preserve">
+    <value>Inverti l'ordine</value>
+  </data>
+  <data name="DialogHint.DismissWarning" xml:space="preserve">
+    <value>Chiudi l'avviso</value>
+  </data>
+  <data name="DialogHint.ConfirmMetadataRemoved" xml:space="preserve">
+    <value>Conferma: i metadati vengono rimossi dai file</value>
+  </data>
+  <data name="DialogHint.Withdraw" xml:space="preserve">
+    <value>Ritira</value>
+  </data>
+  <data name="DialogHint.ArmRemoval" xml:space="preserve">
+    <value>Attiva la rimozione (non è ancora cambiato nulla)</value>
+  </data>
+  <data name="DialogHint.CloseWithoutChanging" xml:space="preserve">
+    <value>Chiudi senza modificare nulla</value>
+  </data>
+  <data name="DialogHint.PauseResumeTask" xml:space="preserve">
+    <value>Metti in pausa o riprendi l'attività</value>
+  </data>
+  <data name="DialogHint.MoveQueuedTask" xml:space="preserve">
+    <value>Sposta un'attività in coda</value>
+  </data>
+  <data name="DialogHint.CancelTask" xml:space="preserve">
+    <value>Annulla l'attività</value>
+  </data>
+  <data name="DialogHint.ChooseTheme" xml:space="preserve">
+    <value>Scegli un tema</value>
+  </data>
+  <data name="DialogHint.ApplyChosenTheme" xml:space="preserve">
+    <value>Applica il tema scelto</value>
+  </data>
+  <data name="DialogHint.Translate" xml:space="preserve">
+    <value>Traduci</value>
+  </data>
+  <data name="DialogHint.SwapLanguages" xml:space="preserve">
+    <value>Scambia le due lingue</value>
+  </data>
+  <data name="DialogHint.DetectLanguage" xml:space="preserve">
+    <value>Rileva la lingua del testo</value>
+  </data>
+  <data name="DialogHint.ClearTextAsks" xml:space="preserve">
+    <value>Cancella il testo (chiede prima)</value>
+  </data>
+  <data name="DialogHint.MoveCategoryUnitsValue" xml:space="preserve">
+    <value>Spostati tra categoria, unità e valore</value>
+  </data>
+  <data name="DialogHint.InstallUpdate" xml:space="preserve">
+    <value>Installa l'aggiornamento</value>
+  </data>
+  <data name="DialogHint.SkipVersion" xml:space="preserve">
+    <value>Salta questa versione</value>
+  </data>
+  <data name="DialogHint.CloseAskLater" xml:space="preserve">
+    <value>Chiudi e chiedi di nuovo più tardi</value>
+  </data>
+  <data name="DialogHint.MoveOverEntries" xml:space="preserve">
+    <value>Sposta il cursore sulle voci</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastEntry" xml:space="preserve">
+    <value>Vai alla prima o all'ultima voce</value>
+  </data>
+  <data name="DialogHint.RunEntryUnderCursor" xml:space="preserve">
+    <value>Esegui la voce sotto il cursore</value>
+  </data>
+  <data name="DialogHint.RunEntryMarkedKey" xml:space="preserve">
+    <value>Esegui la voce contrassegnata da quel tasto</value>
+  </data>
+  <data name="DialogHint.OpenWithSystemDefault" xml:space="preserve">
+    <value>Apri il file con il programma predefinito del sistema</value>
+  </data>
+  <data name="DialogHint.SwitchColour" xml:space="preserve">
+    <value>Attiva o disattiva il colore</value>
+  </data>
+  <data name="DialogHint.ShowHideImageInfo" xml:space="preserve">
+    <value>Mostra o nascondi le informazioni sull'immagine</value>
+  </data>
+  <data name="DialogHint.ScrollInformation" xml:space="preserve">
+    <value>Scorri le informazioni</value>
+  </data>
+  <data name="DialogHint.EditInformation" xml:space="preserve">
+    <value>Modifica le informazioni</value>
+  </data>
+  <data name="DialogHint.SaveMetadata" xml:space="preserve">
+    <value>Salva i metadati</value>
+  </data>
+  <data name="DialogHint.BackToStart" xml:space="preserve">
+    <value>Torna all'inizio</value>
+  </data>
 </root>

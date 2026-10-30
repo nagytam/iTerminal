@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Services;
@@ -149,12 +150,12 @@ public class ContextMenu : Popup
             yield break;
         }
 
-        yield return ("Up/Down", "Move over the items");
-        yield return ("Home/End", "First or last item");
-        yield return ("Enter/Space", "Run the item, or open its submenu");
-        yield return ("Right", "Open the submenu");
-        yield return ("Left", "Close the submenu");
-        yield return ("Esc", "Close the menu");
+        yield return ("Up/Down", UiText.Get("Hint.MoveOverItems", "Move over the items"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastItem", "First or last item"));
+        yield return ("Enter/Space", UiText.Get("Hint.RunOrOpenSubmenu", "Run the item, or open its submenu"));
+        yield return ("Right", UiText.Get("Hint.OpenSubmenu", "Open the submenu"));
+        yield return ("Left", UiText.Get("Hint.CloseSubmenu", "Close the submenu"));
+        yield return ("Esc", UiText.Get("Hint.CloseMenu", "Close the menu"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

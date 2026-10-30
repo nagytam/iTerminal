@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -38,7 +39,7 @@ public class IPhoneBrowserDialog : Dialog
     {
         _deviceService = deviceService;
         _contentModelService = contentModelService;
-        Title = "iPhone Browser";
+        Title = iConsole.Localization.UiText.Get("Menu.iPhoneBrowser", "iPhone Browser");
 
         var listModel = new ListBoxModel<IPhoneDeviceInfo>(_devices) { TransformItem = TransformItem };
         _listBox = new ListBox<IPhoneDeviceInfo>(listModel, themeService);
@@ -152,9 +153,9 @@ public class IPhoneBrowserDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Enter", "Connect to the chosen device");
-        yield return ("R", "Search for devices again");
-        yield return ("Esc", "Close");
+        yield return ("Enter", UiText.Get("DialogHint.ConnectChosenDevice", "Connect to the chosen device"));
+        yield return ("R", UiText.Get("DialogHint.SearchDevicesAgain", "Search for devices again"));
+        yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

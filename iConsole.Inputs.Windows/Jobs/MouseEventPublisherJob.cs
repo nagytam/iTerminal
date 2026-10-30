@@ -11,6 +11,7 @@ namespace iConsole.Inputs.Windows.Jobs;
 public partial class MouseEventPublisherJob : Job, ITerminalInputSource, IConsoleHandoverParticipant
 {
     private readonly ConsoleHandle _consoleHandle;
+    private readonly KeyRepeatTracker _keyRepeats = new();
     private readonly ConsoleOwnership? _consoleOwnership;
 
     /// <summary>The input mode the console had before this job changed it — what a child process gets while it has the console.</summary>
@@ -127,39 +128,23 @@ public partial class MouseEventPublisherJob : Job, ITerminalInputSource, IConsol
                     }
                 case NativeMethods.FOCUS_EVENT:
                     {
+                        // Releases that happen while another window has the focus never arrive: forget which keys were down.
+                        if (record.SetFocus == 0)
+                        {
+                            _keyRepeats.Reset();
+                        }
+
                         iConsole.Services.TerminalFocus.Current.Report(record.SetFocus != 0);
                         break;
                     }
                 case NativeMethods.KEY_EVENT:
                     {
-                        if (record.KeyEvent.AsciiChar == '\0')
+                        foreach (var keyEvent in MapKeyRecord(record.KeyEvent, _keyRepeats))
                         {
-                            var mappedKey = MapConsoleKey(record.KeyEvent.wVirtualKeyCode);
-                            var keyEvent = new KeyEvent(
-                                ' ', mappedKey,
-                                IsShiftKeyPressed(record.KeyEvent.dwControlKeyState),
-                                IsAltKeyPressed(record.KeyEvent.dwControlKeyState),
-                                IsCtrlKeyPressed(record.KeyEvent.dwControlKeyState),
-                                (record.KeyEvent.bKeyDown) ? KeyPressType.Down : KeyPressType.Up
-                                );
                             KeyQueue.Enqueue(keyEvent);
                             InputAvailableSignal.Release();
                         }
-                        else if (record.KeyEvent.bKeyDown)
-                        {
-                            var keyEvent = new KeyEvent(
-                                record.KeyEvent.UnicodeChar,
-                                MapConsoleKey(record.KeyEvent.wVirtualKeyCode),
-                                IsShiftKeyPressed
-                                (record.KeyEvent.dwControlKeyState),
-                                IsAltKeyPressed
-                                (record.KeyEvent.dwControlKeyState),
-                                IsCtrlKeyPressed
-                                (record.KeyEvent.dwControlKeyState));
 
-                            KeyQueue.Enqueue(keyEvent);
-                            InputAvailableSignal.Release();
-                        }
                         break;
                     }
             }
@@ -167,6 +152,46 @@ public partial class MouseEventPublisherJob : Job, ITerminalInputSource, IConsol
         else
         {
             Thread.Sleep((int)PollIntervalMs);
+        }
+    }
+
+    /// <summary>
+    /// The key events one console key record stands for. A record that carries a repeat count (a key held while the program was
+    /// busy) stands for that many presses, and a key-down of a key that is already down is marked as a repeat. A key-up of a key
+    /// with a character produces nothing, as before; it only tells <paramref name="tracker"/> the key was let go.
+    /// </summary>
+    internal static IEnumerable<KeyEvent> MapKeyRecord(KEY_EVENT_RECORD record, KeyRepeatTracker tracker)
+    {
+        int virtualKey = record.wVirtualKeyCode;
+        bool isRepeat = tracker.Register(virtualKey, record.bKeyDown);
+        bool shift = IsShiftKeyPressed(record.dwControlKeyState);
+        bool alt = IsAltKeyPressed(record.dwControlKeyState);
+        bool control = IsCtrlKeyPressed(record.dwControlKeyState);
+        if (record.AsciiChar == '\0')
+        {
+            var mappedKey = MapConsoleKey(record.wVirtualKeyCode);
+            if (!record.bKeyDown)
+            {
+                yield return new KeyEvent(' ', mappedKey, shift, alt, control, KeyPressType.Up);
+                yield break;
+            }
+
+            for (int i = 0; i < KeyRepeatTracker.CountFor(record.wRepeatCount); i++)
+            {
+                yield return new KeyEvent(' ', mappedKey, shift, alt, control, KeyPressType.Down) { IsRepeat = isRepeat || i > 0 };
+            }
+
+            yield break;
+        }
+
+        if (!record.bKeyDown)
+        {
+            yield break;
+        }
+
+        for (int i = 0; i < KeyRepeatTracker.CountFor(record.wRepeatCount); i++)
+        {
+            yield return new KeyEvent(record.UnicodeChar, MapConsoleKey(record.wVirtualKeyCode), shift, alt, control) { IsRepeat = isRepeat || i > 0 };
         }
     }
 

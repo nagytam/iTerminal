@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
@@ -90,7 +91,7 @@ public class RemoteConnectionManagerDialog : Dialog
         IThemeService themeService)
         : base(nameof(RemoteConnectionManagerDialog), themeService)
     {
-        Title = "Remote connections";
+        Title = iConsole.Localization.UiText.Get("Dialog.RemoteConnections", "Remote connections");
         _connections = connections;
         _shellService = shellService;
         _contentModelService = contentModelService;
@@ -125,25 +126,25 @@ public class RemoteConnectionManagerDialog : Dialog
     {
         if (_mode == Mode.Edit)
         {
-            yield return ("Ctrl+S / Enter", "Save the connection");
-            yield return ("Tab / Up/Down", "Move between the fields");
-            yield return ("Esc", "Back to the list");
+            yield return ("Ctrl+S / Enter", UiText.Get("DialogHint.SaveConnection", "Save the connection"));
+            yield return ("Tab / Up/Down", UiText.Get("DialogHint.MoveBetweenFields", "Move between the fields"));
+            yield return ("Esc", UiText.Get("DialogHint.BackToList", "Back to the list"));
             yield break;
         }
 
         if (_confirmDelete)
         {
-            yield return ("Y / D / Delete", "Delete the connection");
-            yield return ("Any other key", "Keep the connection");
+            yield return ("Y / D / Delete", UiText.Get("DialogHint.DeleteConnection", "Delete the connection"));
+            yield return ("Any other key", UiText.Get("DialogHint.KeepConnection", "Keep the connection"));
             yield break;
         }
 
-        yield return ("Up/Down", "Choose a connection");
-        yield return ("Enter", "Connect on the lent terminal");
-        yield return ("N", "Add a connection");
-        yield return ("E", "Edit the connection");
-        yield return ("D/Delete", "Delete the connection (asks first)");
-        yield return ("B", "Browse the connection in a panel");
+        yield return ("Up/Down", UiText.Get("DialogHint.ChooseConnection", "Choose a connection"));
+        yield return ("Enter", UiText.Get("DialogHint.ConnectLentTerminal", "Connect on the lent terminal"));
+        yield return ("N", UiText.Get("DialogHint.AddConnection", "Add a connection"));
+        yield return ("E", UiText.Get("DialogHint.EditConnection", "Edit the connection"));
+        yield return ("D/Delete", UiText.Get("DialogHint.DeleteConnectionAsks", "Delete the connection (asks first)"));
+        yield return ("B", UiText.Get("DialogHint.BrowseConnection", "Browse the connection in a panel"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

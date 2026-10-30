@@ -43,7 +43,10 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null,
         iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null,
         iTerminal.Core.Dialogs.Workspaces.WorkspaceManagerDialog? workspaceManagerDialog = null,
-        LanguageDialog? languageDialog = null)
+        LanguageDialog? languageDialog = null,
+        iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
+        iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
+        iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -81,6 +84,9 @@ public class ToolsMenuItem : MenuItem
         if (mapDialog is not null) features.Add(new MapDialogCommand(mapDialog));
         if (translatorDialog is not null) features.Add(new TranslatorDialogCommand(translatorDialog));
         if (currencyConverterDialog is not null) features.Add(new CurrencyConverterDialogCommand(currencyConverterDialog));
+        if (torrentManagerDialog is not null) features.Add(new TorrentManagerDialogCommand(torrentManagerDialog));
+        if (contactManagerDialog is not null) features.Add(new ContactManagerDialogCommand(contactManagerDialog));
+        if (gamesDialog is not null) features.Add(new GamesDialogCommand(gamesDialog));
         if (remoteConnectionManagerDialog is not null) features.Add(new RemoteConnectionManagerDialogCommand(remoteConnectionManagerDialog));
         if (workspaceManagerDialog is not null) features.Add(new WorkspaceManagerDialogCommand(workspaceManagerDialog));
         if (languageDialog is not null) features.Add(new LanguageDialogCommand(languageDialog));

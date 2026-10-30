@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -34,7 +35,7 @@ public class SortDialog : Dialog
         : base(nameof(SortDialog), themeService)
     {
         _settingsService = settingsService;
-        Title = "Sort by";
+        Title = iConsole.Localization.UiText.Get("Dialog.SortBy", "Sort by");
         _lines = new InfoLines(themeService);
         AddControl(_lines);
     }
@@ -91,11 +92,11 @@ public class SortDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Up/Down", "Move the cursor over the sort modes");
-        yield return ("Home/End", "Jump to the first or last mode");
-        yield return ("Enter", "Sort by the mode under the cursor");
-        yield return ("Letter", "Sort by the mode marked with that letter at once");
-        yield return ("R/Space", "Reverse the sort order");
+        yield return ("Up/Down", UiText.Get("DialogHint.MoveOverSortModes", "Move the cursor over the sort modes"));
+        yield return ("Home/End", UiText.Get("DialogHint.JumpFirstLastMode", "Jump to the first or last mode"));
+        yield return ("Enter", UiText.Get("DialogHint.SortByModeUnderCursor", "Sort by the mode under the cursor"));
+        yield return ("Letter", UiText.Get("DialogHint.SortByLetterAtOnce", "Sort by the mode marked with that letter at once"));
+        yield return ("R/Space", UiText.Get("DialogHint.ReverseSortOrder", "Reverse the sort order"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

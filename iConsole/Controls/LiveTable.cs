@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -81,7 +82,13 @@ public class LiveTable : Control
         set { _keepNewestVisible = value; Changed(); }
     }
 
-    public string EmptyText { get; set; } = "No rows";
+    public string EmptyText
+    {
+        get => _emptyText ?? UiText.Get("Common.NoRows", "No rows");
+        set => _emptyText = value ?? string.Empty;
+    }
+
+    private string? _emptyText;
 
     public IReadOnlyList<LiveTableColumn> Columns
     {
@@ -288,9 +295,9 @@ public class LiveTable : Control
             yield break;
         }
 
-        yield return ("Up/Down", "Scroll one row");
-        yield return ("PageUp/PageDown", "Scroll one page");
-        yield return ("Home/End", "First or last row");
+        yield return ("Up/Down", UiText.Get("Hint.ScrollOneRow", "Scroll one row"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.ScrollOnePage", "Scroll one page"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastRow", "First or last row"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

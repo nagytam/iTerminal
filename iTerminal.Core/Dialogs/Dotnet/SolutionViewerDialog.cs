@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -115,7 +116,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         : base(nameof(SolutionViewerDialog), themeService)
     {
         _dotnetSolutionService = dotnetSolutionService;
-        Title = "Solution";
+        Title = iConsole.Localization.UiText.Get("Dialog.Solution", "Solution");
 
         _projectListBox = new DotnetProjectListBox(
             new ListBoxModel<ProjectRow>(_projectItems) { TransformItem = TransformProjectRow },
@@ -572,17 +573,17 @@ public class SolutionViewerDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Space", "Select or unselect the project");
-        yield return ("A", "Select all projects");
-        yield return ("Shift+T", "Select all test projects");
-        yield return ("B", "Build the selected projects");
-        yield return ("C", "Clean the selected projects");
-        yield return ("T", "Run the tests");
-        yield return ("R", "Run the project");
-        yield return ("X", "Cancel the running command");
-        yield return ("V", "Switch to the next .NET SDK");
-        yield return ("PageUp/PageDown", "Scroll the output");
-        yield return ("Home/End", "Top of the output, or follow the end");
+        yield return ("Space", UiText.Get("DialogHint.SelectProject", "Select or unselect the project"));
+        yield return ("A", UiText.Get("DialogHint.SelectAllProjects", "Select all projects"));
+        yield return ("Shift+T", UiText.Get("DialogHint.SelectAllTestProjects", "Select all test projects"));
+        yield return ("B", UiText.Get("DialogHint.BuildSelected", "Build the selected projects"));
+        yield return ("C", UiText.Get("DialogHint.CleanSelected", "Clean the selected projects"));
+        yield return ("T", UiText.Get("DialogHint.RunTests", "Run the tests"));
+        yield return ("R", UiText.Get("DialogHint.RunProject", "Run the project"));
+        yield return ("X", UiText.Get("DialogHint.CancelRunningCommand", "Cancel the running command"));
+        yield return ("V", UiText.Get("DialogHint.NextDotnetSdk", "Switch to the next .NET SDK"));
+        yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollOutput", "Scroll the output"));
+        yield return ("Home/End", UiText.Get("DialogHint.TopOfOutputOrFollow", "Top of the output, or follow the end"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

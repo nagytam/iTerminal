@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Display;
@@ -740,13 +741,13 @@ public partial class TextViewerControl : Control
             yield break;
         }
 
-        yield return ("Up/Down", "Scroll a line");
-        yield return ("PageUp/PageDown", "Scroll a page");
-        yield return ("Left/Right", "Scroll sideways");
-        yield return ("Ctrl+Home/Ctrl+End", "Go to the start or the end of the file");
+        yield return ("Up/Down", UiText.Get("Hint.ScrollLine", "Scroll a line"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.ScrollPage", "Scroll a page"));
+        yield return ("Left/Right", UiText.Get("Hint.ScrollSideways", "Scroll sideways"));
+        yield return ("Ctrl+Home/Ctrl+End", UiText.Get("Hint.GoToFileStartOrEnd", "Go to the start or the end of the file"));
         if (_enableFolding)
         {
-            yield return ("Alt+Left/Alt+Right", "Fold or unfold the region at the cursor");
+            yield return ("Alt+Left/Alt+Right", UiText.Get("Hint.FoldRegion", "Fold or unfold the region at the cursor"));
         }
     }
 
@@ -1044,9 +1045,12 @@ public partial class TextViewerControl : Control
                 // The cursor's row keeps the cursor colours; the others are coloured by what the text is.
                 ColorizeSyntax(conxelLine, TextModel.Lines[(int)indexY], inComment, positionX, out inComment, isCursorLine);
                 DecorateLine(conxelLine, (int)indexY, isCursorLine, colorScheme);
+                ApplyDecorations(conxelLine, (int)indexY, positionX, isCursorLine);
+                ApplySpelling(conxelLine, TextModel.Lines[(int)indexY], positionX, int.MaxValue, colorScheme);
                 DecorateText(conxelLine, (int)indexY, positionX, isCursorLine, colorScheme);
                 HighlightSearchResults(conxelLine, highlightPositionX, (int)indexY);
                 HighlightSelectedPart(conxelLine, (int)indexY, TextModel.Lines[(int)indexY].Length, colorScheme);
+                MarkWhitespace(conxelLine, TextModel.Lines[(int)indexY], positionX, int.MaxValue, colorScheme);
                 buffer.Write(
                     ZOrder,
                     new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + i)),
@@ -1122,7 +1126,10 @@ public partial class TextViewerControl : Control
                 }
 
                 HighlightSearchHitsInRow(conxelLine, row);
+                ApplyDecorations(conxelLine, row.Line, start, cursorLine);
+                ApplySpelling(conxelLine, line, start, row.Length, colorScheme);
                 DecorateText(conxelLine, row.Line, start, cursorLine, colorScheme);
+                MarkWhitespace(conxelLine, line, start, row.Length, colorScheme);
                 if (foldNote >= 0 && foldNote < width)
                 {
                     conxelLine.HighlightRange(foldNote, width, colorScheme.DisabledForeground, colorScheme.Background);
@@ -1159,9 +1166,9 @@ public partial class TextViewerControl : Control
     private void HighlightSearchHitsInRow(ConxelString conxelLine, TextRow row)
     {
         var colorScheme = ThemeService.CurrentColorScheme;
-        var searchLength = SearchModel.Search.Length;
         foreach (var hit in SearchModel.Hits.AsSnapshot().Where(h => h.Y == row.Line))
         {
+            var searchLength = SearchModel.LengthAt(hit);
             long from = Math.Max(hit.X, row.Start);
             long to = Math.Min(hit.X + searchLength, row.Start + row.Length);
             if (to > from)
@@ -1174,10 +1181,10 @@ public partial class TextViewerControl : Control
     private void HighlightSearchResults(ConxelString conxelLine, int x, int y)
     {
         var colorScheme = ThemeService.CurrentColorScheme;
-        var searchLength = SearchModel.Search.Length;
         var matchingLines = SearchModel.Hits.AsSnapshot().Where(h => h.Y == y);
         foreach (var hit in matchingLines)
         {
+            var searchLength = SearchModel.LengthAt(hit);
             conxelLine.HighlightRange((int)hit.X, (int)hit.X + searchLength, colorScheme.SelectedForeground, colorScheme.SelectedFocusedBackground);
         }
     }

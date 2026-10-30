@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -70,7 +71,15 @@ public class Calendar : Control, IReadOnly
         set
         {
             _showWeekNumbers = value;
-            ViewSize = new Size(Columns + GridX, Rows);
+            Size size = new(Columns + GridX, Rows);
+            // Hiding the week numbers leaves cells outside the new rectangle that nothing else repaints.
+            bool shrinks = size.Width < ViewSize.Width;
+            ViewSize = size;
+            if (shrinks)
+            {
+                InvalidateTree();
+            }
+
             StateHasChanged();
         }
     }
@@ -177,14 +186,14 @@ public class Calendar : Control, IReadOnly
         // A read-only calendar takes no keys but Enter and Space, so the keys that would move the selection are not offered.
         if (!IsReadOnly)
         {
-            yield return ("Arrows", "Move the selected day or week");
-            yield return ("PageUp/PageDown", "Previous or next month");
-            yield return ("Home/End", "First or last day of the month");
-            yield return ("T", "Select today");
-            yield return ("Ctrl+PageUp/PageDown", "Previous or next year");
+            yield return ("Arrows", UiText.Get("Hint.MoveSelectedDay", "Move the selected day or week"));
+            yield return ("PageUp/PageDown", UiText.Get("Hint.PreviousNextMonth", "Previous or next month"));
+            yield return ("Home/End", UiText.Get("Hint.FirstLastDayOfMonth", "First or last day of the month"));
+            yield return ("T", UiText.Get("Hint.SelectToday", "Select today"));
+            yield return ("Ctrl+PageUp/PageDown", UiText.Get("Hint.PreviousNextYear", "Previous or next year"));
         }
 
-        yield return ("Enter/Space", "Choose the selected day");
+        yield return ("Enter/Space", UiText.Get("Hint.ChooseSelectedDay", "Choose the selected day"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -351,7 +360,8 @@ public class Calendar : Control, IReadOnly
                 }
                 else if (day == _selected)
                 {
-                    bool emphasize = IsFocused || AlwaysEmphasizeSelection;
+                    // A read-only calendar is not emphasised as focused: its keys do nothing, and it should not look as if they did.
+                    bool emphasize = (IsFocused && !IsReadOnly) || AlwaysEmphasizeSelection;
                     fg = emphasize ? colorScheme.SelectedFocusedForeground : colorScheme.SelectedForeground;
                     bg = emphasize ? colorScheme.SelectedFocusedBackground : colorScheme.SelectedBackground;
                 }
@@ -373,5 +383,16 @@ public class Calendar : Control, IReadOnly
     }
 
     private void WriteRow(IBuffer buffer, int row, ConxelString line)
-        => buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + (uint)row), new Size(ViewSize.Width, 1), line);
+        => WriteInside(buffer, row, line);
+
+    /// <summary>Rows past the control's height are not drawn: a calendar given fewer rows than its eight used to paint over what is under it.</summary>
+    private void WriteInside(IBuffer buffer, int row, ConxelString line)
+    {
+        if (row >= (int)ViewSize.Height)
+        {
+            return;
+        }
+
+        buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + (uint)row), new Size(ViewSize.Width, 1), line);
+    }
 }

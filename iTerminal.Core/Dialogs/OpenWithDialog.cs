@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -39,7 +40,7 @@ public class OpenWithDialog : Dialog
     {
         _runner = runner;
         _associationDialog = associationDialog;
-        Title = "Open with";
+        Title = iConsole.Localization.UiText.Get("Dialog.OpenWith", "Open with");
         _list = new ChoiceList(themeService);
         AddControl(_list);
     }
@@ -137,19 +138,19 @@ public class OpenWithDialog : Dialog
     {
         if (_pendingRemoval is not null)
         {
-            yield return ("Y", "Remove the program from the list");
-            yield return ("Any other key", "Keep the program");
+            yield return ("Y", UiText.Get("DialogHint.RemoveProgramFromList", "Remove the program from the list"));
+            yield return ("Any other key", UiText.Get("DialogHint.KeepProgram", "Keep the program"));
             yield break;
         }
 
-        yield return ("Up/Down", "Choose a program");
-        yield return ("PageUp/PageDown", "Move a page at a time");
-        yield return ("Home/End", "Jump to the first or last program");
-        yield return ("Enter", "Open the file with the chosen program");
-        yield return ("Insert", "Add a program");
-        yield return ("F4", "Change the chosen program");
-        yield return ("Delete", "Remove the chosen program (asks first)");
-        yield return ("Space", "Make the chosen program the default");
+        yield return ("Up/Down", UiText.Get("DialogHint.ChooseProgram", "Choose a program"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MovePageAtATime", "Move a page at a time"));
+        yield return ("Home/End", UiText.Get("DialogHint.JumpFirstLastProgram", "Jump to the first or last program"));
+        yield return ("Enter", UiText.Get("DialogHint.OpenWithChosenProgram", "Open the file with the chosen program"));
+        yield return ("Insert", UiText.Get("DialogHint.AddProgram", "Add a program"));
+        yield return ("F4", UiText.Get("DialogHint.ChangeChosenProgram", "Change the chosen program"));
+        yield return ("Delete", UiText.Get("DialogHint.RemoveChosenProgramAsks", "Remove the chosen program (asks first)"));
+        yield return ("Space", UiText.Get("DialogHint.MakeProgramDefault", "Make the chosen program the default"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

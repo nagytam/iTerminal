@@ -64,6 +64,30 @@
   <data name="Common.Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
+  <data name="Common.Continue" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="Common.Help" xml:space="preserve">
+    <value>Hilfe</value>
+  </data>
+  <data name="Common.Back" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="Common.Paste" xml:space="preserve">
+    <value>Einfügen</value>
+  </data>
+  <data name="Common.Undo" xml:space="preserve">
+    <value>Rückgängig</value>
+  </data>
+  <data name="Common.Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Common.Stop" xml:space="preserve">
+    <value>Stopp</value>
+  </data>
   <data name="Common.Close" xml:space="preserve">
     <value>Schließen</value>
   </data>
@@ -75,5 +99,539 @@
   </data>
   <data name="Common.Apply" xml:space="preserve">
     <value>Übernehmen</value>
+  </data>
+  <data name="Editor.GoToLine" xml:space="preserve">
+    <value>Gehe zu Zeile</value>
+  </data>
+  <data name="Editor.Line" xml:space="preserve">
+    <value>Zeile</value>
+  </data>
+  <data name="Editor.GoToOffset" xml:space="preserve">
+    <value>Gehe zu Offset</value>
+  </data>
+  <data name="Editor.Offset" xml:space="preserve">
+    <value>Offset</value>
+  </data>
+  <data name="Editor.ReplaceText" xml:space="preserve">
+    <value>Text ersetzen</value>
+  </data>
+  <data name="Editor.Find" xml:space="preserve">
+    <value>Suchen</value>
+  </data>
+  <data name="Editor.With" xml:space="preserve">
+    <value>Ersetzen durch</value>
+  </data>
+  <data name="Editor.MatchCase" xml:space="preserve">
+    <value>Groß-/Kleinschreibung</value>
+  </data>
+  <data name="Editor.RegularExpression" xml:space="preserve">
+    <value>Regulärer Ausdruck</value>
+  </data>
+  <data name="Editor.Replace" xml:space="preserve">
+    <value>Ersetzen</value>
+  </data>
+  <data name="Editor.ReplaceAll" xml:space="preserve">
+    <value>Alle ersetzen</value>
+  </data>
+  <data name="Editor.SearchText" xml:space="preserve">
+    <value>Text suchen</value>
+  </data>
+  <data name="Editor.Search" xml:space="preserve">
+    <value>Suche</value>
+  </data>
+  <data name="Editor.UnsavedChanges" xml:space="preserve">
+    <value>Nicht gespeicherte Änderungen</value>
+  </data>
+  <data name="Editor.Discard" xml:space="preserve">
+    <value>Verwerfen</value>
+  </data>
+  <data name="Viewer.NothingToShow" xml:space="preserve">
+    <value>Nichts anzuzeigen</value>
+  </data>
+  <data name="Viewer.CouldNotRead" xml:space="preserve">
+    <value>Die Datei konnte nicht gelesen werden</value>
+  </data>
+  <data name="Viewer.NotValidJson" xml:space="preserve">
+    <value>Kein gültiges JSON: {0}</value>
+  </data>
+  <data name="Viewer.Validating" xml:space="preserve">
+    <value>Wird geprüft…</value>
+  </data>
+  <data name="Viewer.ValidJson" xml:space="preserve">
+    <value>Gültiges JSON</value>
+  </data>
+  <data name="Viewer.HintJsonValidate" xml:space="preserve">
+    <value>Prüfen, ob die Datei gültiges JSON ist</value>
+  </data>
+  <data name="Viewer.HintToggleText" xml:space="preserve">
+    <value>Dateitext oder wieder den Baum anzeigen</value>
+  </data>
+  <data name="Viewer.HintExpandAll" xml:space="preserve">
+    <value>Alle Knoten aufklappen</value>
+  </data>
+  <data name="Viewer.XPathPlaceholder" xml:space="preserve">
+    <value>Abfrage eingeben, z. B. //book[price &gt; 10]/title</value>
+  </data>
+  <data name="Viewer.NoResults" xml:space="preserve">
+    <value>Keine Ergebnisse</value>
+  </data>
+  <data name="Viewer.NotWellFormed" xml:space="preserve">
+    <value>Kein wohlgeformtes XML: {0}</value>
+  </data>
+  <data name="Viewer.RunningQuery" xml:space="preserve">
+    <value>Abfrage wird ausgeführt…</value>
+  </data>
+  <data name="Viewer.XPathError" xml:space="preserve">
+    <value>XPath-Fehler: {0}</value>
+  </data>
+  <data name="Viewer.NoMatches" xml:space="preserve">
+    <value>Keine Treffer</value>
+  </data>
+  <data name="Viewer.Matches" xml:space="preserve">
+    <value>{0:N0} Treffer</value>
+  </data>
+  <data name="Viewer.ShowingMatches" xml:space="preserve">
+    <value>{0:N0} von {1:N0} Treffern angezeigt</value>
+  </data>
+  <data name="Viewer.Valid" xml:space="preserve">
+    <value>Gültig</value>
+  </data>
+  <data name="Viewer.ErrorsWarnings" xml:space="preserve">
+    <value>{0:N0} Fehler, {1:N0} Warnung(en)</value>
+  </data>
+  <data name="Viewer.HintXmlValidate" xml:space="preserve">
+    <value>Gegen das im Dokument genannte Schema oder DTD prüfen</value>
+  </data>
+  <data name="Viewer.HintXPathBox" xml:space="preserve">
+    <value>Zum XPath-Feld wechseln</value>
+  </data>
+  <data name="Viewer.HintRunXPath" xml:space="preserve">
+    <value>XPath-Abfrage ausführen oder das gewählte Ergebnis im Baum öffnen</value>
+  </data>
+  <data name="Viewer.NotSaved" xml:space="preserve">
+    <value>Nicht gespeichert: {0}</value>
+  </data>
+  <data name="Viewer.NowhereToSave" xml:space="preserve">
+    <value>Kein Speicherort: {0}</value>
+  </data>
+  <data name="Viewer.HintSave" xml:space="preserve">
+    <value>Datei speichern</value>
+  </data>
+  <data name="Viewer.HintIndent" xml:space="preserve">
+    <value>Einrücken</value>
+  </data>
+  <data name="Viewer.HintCodePage" xml:space="preserve">
+    <value>Nächste Codepage (Umschalt: vorherige)</value>
+  </data>
+  <data name="Hint.DismissMessage" xml:space="preserve">
+    <value>Meldung schließen</value>
+  </data>
+  <data name="Hint.MoveHighlightTrail" xml:space="preserve">
+    <value>Die Markierung entlang des Pfads bewegen</value>
+  </data>
+  <data name="Hint.FirstOrLastSegment" xml:space="preserve">
+    <value>Erstes oder letztes Segment</value>
+  </data>
+  <data name="Hint.OpenHighlightedSegment" xml:space="preserve">
+    <value>Das markierte Segment öffnen</value>
+  </data>
+  <data name="Hint.PressButton" xml:space="preserve">
+    <value>Die Schaltfläche drücken</value>
+  </data>
+  <data name="Hint.MoveSelectedDay" xml:space="preserve">
+    <value>Den gewählten Tag oder die Woche verschieben</value>
+  </data>
+  <data name="Hint.PreviousNextMonth" xml:space="preserve">
+    <value>Vorheriger oder nächster Monat</value>
+  </data>
+  <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
+    <value>Erster oder letzter Tag des Monats</value>
+  </data>
+  <data name="Hint.SelectToday" xml:space="preserve">
+    <value>Heute auswählen</value>
+  </data>
+  <data name="Hint.PreviousNextYear" xml:space="preserve">
+    <value>Vorheriges oder nächstes Jahr</value>
+  </data>
+  <data name="Hint.ChooseSelectedDay" xml:space="preserve">
+    <value>Den gewählten Tag übernehmen</value>
+  </data>
+  <data name="Hint.CheckOrUncheck" xml:space="preserve">
+    <value>Ankreuzen oder abwählen</value>
+  </data>
+  <data name="Hint.MoveCursor" xml:space="preserve">
+    <value>Den Cursor bewegen</value>
+  </data>
+  <data name="Hint.MoveCursorPage" xml:space="preserve">
+    <value>Den Cursor um eine Seite bewegen</value>
+  </data>
+  <data name="Hint.FirstOrLastItem" xml:space="preserve">
+    <value>Erstes oder letztes Element</value>
+  </data>
+  <data name="Hint.ActivateList" xml:space="preserve">
+    <value>Die Liste aktivieren</value>
+  </data>
+  <data name="Hint.CheckItemUnderCursor" xml:space="preserve">
+    <value>Das Element unter dem Cursor an- oder abwählen</value>
+  </data>
+  <data name="Hint.CheckEveryItem" xml:space="preserve">
+    <value>Alle Elemente an- oder abwählen</value>
+  </data>
+  <data name="Hint.InvertEveryItem" xml:space="preserve">
+    <value>Alle Elemente umkehren</value>
+  </data>
+  <data name="Hint.MoveBetweenChips" xml:space="preserve">
+    <value>Zwischen den Chips wechseln</value>
+  </data>
+  <data name="Hint.FirstOrLastChip" xml:space="preserve">
+    <value>Erster oder letzter Chip</value>
+  </data>
+  <data name="Hint.AddChip" xml:space="preserve">
+    <value>Auf dem [+]-Feld einen Chip hinzufügen</value>
+  </data>
+  <data name="Hint.RemoveActiveChip" xml:space="preserve">
+    <value>Den aktiven Chip entfernen</value>
+  </data>
+  <data name="Hint.MoveOverPalette" xml:space="preserve">
+    <value>Den Cursor über die Palette bewegen</value>
+  </data>
+  <data name="Hint.FirstOrLastColour" xml:space="preserve">
+    <value>Erste oder letzte Farbe</value>
+  </data>
+  <data name="Hint.ChooseColourUnderCursor" xml:space="preserve">
+    <value>Die Farbe unter dem Cursor wählen</value>
+  </data>
+  <data name="Hint.ChoosePreviousNext" xml:space="preserve">
+    <value>Das vorherige oder nächste Element wählen</value>
+  </data>
+  <data name="Hint.ChooseItemPageAway" xml:space="preserve">
+    <value>Ein Element eine Seite entfernt wählen</value>
+  </data>
+  <data name="Hint.JumpToLetter" xml:space="preserve">
+    <value>Zum nächsten Element springen, das damit beginnt</value>
+  </data>
+  <data name="Hint.OpenList" xml:space="preserve">
+    <value>Die Liste öffnen</value>
+  </data>
+  <data name="Hint.MoveOverItems" xml:space="preserve">
+    <value>Über die Einträge bewegen</value>
+  </data>
+  <data name="Hint.RunOrOpenSubmenu" xml:space="preserve">
+    <value>Den Eintrag ausführen oder sein Untermenü öffnen</value>
+  </data>
+  <data name="Hint.OpenSubmenu" xml:space="preserve">
+    <value>Das Untermenü öffnen</value>
+  </data>
+  <data name="Hint.CloseSubmenu" xml:space="preserve">
+    <value>Das Untermenü schließen</value>
+  </data>
+  <data name="Hint.CloseMenu" xml:space="preserve">
+    <value>Das Menü schließen</value>
+  </data>
+  <data name="Common.NoData" xml:space="preserve">
+    <value>Keine Daten</value>
+  </data>
+  <data name="Common.NoRows" xml:space="preserve">
+    <value>Keine Zeilen</value>
+  </data>
+  <data name="Hint.ClearField" xml:space="preserve">
+    <value>Das Feld leeren</value>
+  </data>
+  <data name="Hint.CloseNodeOrParent" xml:space="preserve">
+    <value>Den Knoten schließen oder zum übergeordneten wechseln</value>
+  </data>
+  <data name="Hint.CloseSubmenuOrPrevious" xml:space="preserve">
+    <value>Das Untermenü schließen oder zum vorherigen Menü wechseln</value>
+  </data>
+  <data name="Hint.CopySelection" xml:space="preserve">
+    <value>Die Auswahl kopieren</value>
+  </data>
+  <data name="Hint.CutSelection" xml:space="preserve">
+    <value>Die Auswahl ausschneiden</value>
+  </data>
+  <data name="Hint.DeleteCharacter" xml:space="preserve">
+    <value>Ein Zeichen löschen</value>
+  </data>
+  <data name="Hint.DeleteLine" xml:space="preserve">
+    <value>Die Zeile löschen</value>
+  </data>
+  <data name="Hint.DeleteWordAfter" xml:space="preserve">
+    <value>Das Wort nach dem Cursor löschen</value>
+  </data>
+  <data name="Hint.DeleteWordBefore" xml:space="preserve">
+    <value>Das Wort vor dem Cursor löschen</value>
+  </data>
+  <data name="Hint.DeleteToStart" xml:space="preserve">
+    <value>Bis zum Textanfang löschen</value>
+  </data>
+  <data name="Hint.ExpandOrCollapseNode" xml:space="preserve">
+    <value>Den Knoten auf- oder zuklappen</value>
+  </data>
+  <data name="Hint.FirstOrLastField" xml:space="preserve">
+    <value>Erstes oder letztes Feld</value>
+  </data>
+  <data name="Hint.FirstOrLastRow" xml:space="preserve">
+    <value>Erste oder letzte Zeile</value>
+  </data>
+  <data name="Hint.FlipSign" xml:space="preserve">
+    <value>Das Vorzeichen umkehren</value>
+  </data>
+  <data name="Hint.FoldRegion" xml:space="preserve">
+    <value>Den Bereich am Cursor ein- oder ausklappen</value>
+  </data>
+  <data name="Hint.GoToMatchingBracket" xml:space="preserve">
+    <value>Zur passenden Klammer springen</value>
+  </data>
+  <data name="Hint.GoToFileStartOrEnd" xml:space="preserve">
+    <value>Zum Anfang oder Ende der Datei springen</value>
+  </data>
+  <data name="Hint.IndentOutdent" xml:space="preserve">
+    <value>Ein-/Ausrücken (auch die gewählten Zeilen)</value>
+  </data>
+  <data name="Hint.JumpFirstLastItem" xml:space="preserve">
+    <value>Zum ersten oder letzten Element springen</value>
+  </data>
+  <data name="Hint.MarkItemUnderCursor" xml:space="preserve">
+    <value>Das Element unter dem Cursor markieren oder die Markierung aufheben</value>
+  </data>
+  <data name="Hint.MoveHourMinuteSecond" xml:space="preserve">
+    <value>Zwischen Stunde, Minute und Sekunde wechseln</value>
+  </data>
+  <data name="Hint.MoveByWord" xml:space="preserve">
+    <value>Wortweise bewegen</value>
+  </data>
+  <data name="Hint.MoveOverMenuItems" xml:space="preserve">
+    <value>Über die Menüeinträge bewegen</value>
+  </data>
+  <data name="Hint.MoveCursorByPage" xml:space="preserve">
+    <value>Den Cursor seitenweise bewegen</value>
+  </data>
+  <data name="Hint.NextBookmark" xml:space="preserve">
+    <value>Nächstes Lesezeichen</value>
+  </data>
+  <data name="Hint.NextField" xml:space="preserve">
+    <value>Nächstes Feld</value>
+  </data>
+  <data name="Hint.OpenNodeOrChild" xml:space="preserve">
+    <value>Den Knoten öffnen oder in sein erstes Kind wechseln</value>
+  </data>
+  <data name="Hint.OpenSubmenuOrNext" xml:space="preserve">
+    <value>Das Untermenü öffnen oder zum nächsten Menü wechseln</value>
+  </data>
+  <data name="Hint.PreviousBookmark" xml:space="preserve">
+    <value>Vorheriges Lesezeichen</value>
+  </data>
+  <data name="Hint.Redo" xml:space="preserve">
+    <value>Wiederholen</value>
+  </data>
+  <data name="Hint.RemoveLastDigit" xml:space="preserve">
+    <value>Die letzte Ziffer entfernen</value>
+  </data>
+  <data name="Hint.RunSelectedItem" xml:space="preserve">
+    <value>Den gewählten Eintrag ausführen</value>
+  </data>
+  <data name="Hint.ScrollLine" xml:space="preserve">
+    <value>Eine Zeile scrollen</value>
+  </data>
+  <data name="Hint.ScrollPage" xml:space="preserve">
+    <value>Eine Seite scrollen</value>
+  </data>
+  <data name="Hint.ScrollSideways" xml:space="preserve">
+    <value>Seitlich scrollen</value>
+  </data>
+  <data name="Hint.SelectAll" xml:space="preserve">
+    <value>Alles auswählen</value>
+  </data>
+  <data name="Hint.SelectItemUnderCursor" xml:space="preserve">
+    <value>Das Element unter dem Cursor auswählen</value>
+  </data>
+  <data name="Hint.SetMinMax" xml:space="preserve">
+    <value>Das Minimum oder Maximum setzen</value>
+  </data>
+  <data name="Hint.SetValueZero" xml:space="preserve">
+    <value>Den Wert auf 0 setzen</value>
+  </data>
+  <data name="Hint.StartOrEndOfText" xml:space="preserve">
+    <value>Anfang oder Ende des Textes</value>
+  </data>
+  <data name="Hint.StepField" xml:space="preserve">
+    <value>Das Feld schrittweise ändern</value>
+  </data>
+  <data name="Hint.StepFieldByTen" xml:space="preserve">
+    <value>Das Feld in Zehnerschritten ändern</value>
+  </data>
+  <data name="Hint.StepValue" xml:space="preserve">
+    <value>Den Wert schrittweise ändern</value>
+  </data>
+  <data name="Hint.StepValueLarge" xml:space="preserve">
+    <value>Den Wert in großen Schritten ändern</value>
+  </data>
+  <data name="Hint.ToggleBookmark" xml:space="preserve">
+    <value>Lesezeichen umschalten</value>
+  </data>
+  <data name="Hint.TypeField" xml:space="preserve">
+    <value>Das Feld eintippen</value>
+  </data>
+  <data name="Hint.TypeValue" xml:space="preserve">
+    <value>Den Wert eintippen</value>
+  </data>
+  <data name="Hint.BackPreviousMenu" xml:space="preserve">
+    <value>Zurück / vorheriges Menü</value>
+  </data>
+  <data name="Hint.CancelKeepEditing" xml:space="preserve">
+    <value>Abbrechen und weiter bearbeiten</value>
+  </data>
+  <data name="Hint.CentreDivider" xml:space="preserve">
+    <value>Den Teiler zentrieren</value>
+  </data>
+  <data name="Hint.FirstOrLastSegmentChoose" xml:space="preserve">
+    <value>Das erste oder letzte Segment wählen</value>
+  </data>
+  <data name="Hint.ChooseHighlightedItem" xml:space="preserve">
+    <value>Den markierten Eintrag wählen</value>
+  </data>
+  <data name="Hint.ChoosePreviousNextOption" xml:space="preserve">
+    <value>Die vorherige oder nächste Option wählen</value>
+  </data>
+  <data name="Hint.ChoosePreviousNextSegment" xml:space="preserve">
+    <value>Das vorherige oder nächste Segment wählen</value>
+  </data>
+  <data name="Hint.ClearRatingOrMax" xml:space="preserve">
+    <value>Die Bewertung löschen oder das Maximum vergeben</value>
+  </data>
+  <data name="Hint.ClearSearch" xml:space="preserve">
+    <value>Die Suche leeren</value>
+  </data>
+  <data name="Hint.CloseMenuShort" xml:space="preserve">
+    <value>Menü schließen</value>
+  </data>
+  <data name="Hint.CloseList" xml:space="preserve">
+    <value>Die Liste schließen</value>
+  </data>
+  <data name="Hint.ClosePopup" xml:space="preserve">
+    <value>Das Popup schließen</value>
+  </data>
+  <data name="Hint.CloseViewer" xml:space="preserve">
+    <value>Den Betrachter schließen</value>
+  </data>
+  <data name="Hint.CloseWithoutMoving" xml:space="preserve">
+    <value>Schließen ohne zu springen</value>
+  </data>
+  <data name="Hint.CollapseSection" xml:space="preserve">
+    <value>Den Abschnitt zuklappen</value>
+  </data>
+  <data name="Hint.DiscardChanges" xml:space="preserve">
+    <value>Die Änderungen verwerfen</value>
+  </data>
+  <data name="Hint.ExpandOrCollapseSection" xml:space="preserve">
+    <value>Den Abschnitt auf- oder zuklappen</value>
+  </data>
+  <data name="Hint.ExpandSection" xml:space="preserve">
+    <value>Den Abschnitt aufklappen</value>
+  </data>
+  <data name="Hint.FirstOrLastOption" xml:space="preserve">
+    <value>Erste oder letzte Option</value>
+  </data>
+  <data name="Hint.FirstOrLastPage" xml:space="preserve">
+    <value>Erste oder letzte Seite</value>
+  </data>
+  <data name="Hint.FollowLink" xml:space="preserve">
+    <value>Dem Link folgen</value>
+  </data>
+  <data name="Hint.GoToTheLine" xml:space="preserve">
+    <value>Zur Zeile springen</value>
+  </data>
+  <data name="Hint.GoToTheOffset" xml:space="preserve">
+    <value>Zum Offset springen</value>
+  </data>
+  <data name="Hint.GoTopOrBottom" xml:space="preserve">
+    <value>Zum Anfang oder Ende springen</value>
+  </data>
+  <data name="Hint.GoTopOrEnd" xml:space="preserve">
+    <value>Zum Anfang oder Ende springen</value>
+  </data>
+  <data name="Hint.GoUpFolder" xml:space="preserve">
+    <value>Einen Ordner nach oben</value>
+  </data>
+  <data name="Hint.LowerRaiseRating" xml:space="preserve">
+    <value>Die Bewertung verringern oder erhöhen</value>
+  </data>
+  <data name="Hint.LowerRaiseValue" xml:space="preserve">
+    <value>Den Wert verringern oder erhöhen</value>
+  </data>
+  <data name="Hint.MovePageAtATime" xml:space="preserve">
+    <value>Seitenweise bewegen</value>
+  </data>
+  <data name="Hint.MoveAlongToolbar" xml:space="preserve">
+    <value>Entlang der Symbolleiste bewegen</value>
+  </data>
+  <data name="Hint.MoveMenuSelection" xml:space="preserve">
+    <value>Menüauswahl bewegen</value>
+  </data>
+  <data name="Hint.MoveDividerBy8" xml:space="preserve">
+    <value>Den Teiler um 8 verschieben</value>
+  </data>
+  <data name="Hint.MoveHighlight" xml:space="preserve">
+    <value>Die Markierung bewegen</value>
+  </data>
+  <data name="Hint.NewestLineFollow" xml:space="preserve">
+    <value>Neueste Zeile und neuen Zeilen folgen</value>
+  </data>
+  <data name="Hint.OldestLine" xml:space="preserve">
+    <value>Älteste Zeile</value>
+  </data>
+  <data name="Hint.OpenSubmenuRunCommand" xml:space="preserve">
+    <value>Untermenü öffnen / Befehl ausführen</value>
+  </data>
+  <data name="Hint.OpenHighlightedRow" xml:space="preserve">
+    <value>Die markierte Zeile öffnen</value>
+  </data>
+  <data name="Hint.PreviousNextPage" xml:space="preserve">
+    <value>Vorherige oder nächste Seite</value>
+  </data>
+  <data name="Hint.RaiseLowerLargeStep" xml:space="preserve">
+    <value>Den Wert in großen Schritten erhöhen oder verringern</value>
+  </data>
+  <data name="Hint.ResetClock" xml:space="preserve">
+    <value>Die Uhr auf null zurücksetzen</value>
+  </data>
+  <data name="Hint.RunTheItem" xml:space="preserve">
+    <value>Den Eintrag ausführen</value>
+  </data>
+  <data name="Hint.SaveChanges" xml:space="preserve">
+    <value>Die Änderungen speichern</value>
+  </data>
+  <data name="Hint.Scroll" xml:space="preserve">
+    <value>Scrollen</value>
+  </data>
+  <data name="Hint.ScrollRow" xml:space="preserve">
+    <value>Eine Zeile scrollen</value>
+  </data>
+  <data name="Hint.ScrollOneLine" xml:space="preserve">
+    <value>Eine Zeile scrollen</value>
+  </data>
+  <data name="Hint.ScrollOnePage" xml:space="preserve">
+    <value>Eine Seite scrollen</value>
+  </data>
+  <data name="Hint.ScrollOneRow" xml:space="preserve">
+    <value>Eine Zeile scrollen</value>
+  </data>
+  <data name="Hint.SelectThisOption" xml:space="preserve">
+    <value>Diese Option wählen</value>
+  </data>
+  <data name="Hint.SetRatingDirectly" xml:space="preserve">
+    <value>Die Bewertung direkt setzen</value>
+  </data>
+  <data name="Hint.SwitchTextHex" xml:space="preserve">
+    <value>Zwischen Text- und Hex-Ansicht wechseln</value>
+  </data>
+  <data name="Hint.SwitchSetting" xml:space="preserve">
+    <value>Die Einstellung ein- oder ausschalten</value>
+  </data>
+  <data name="Hint.TypeLineNumber" xml:space="preserve">
+    <value>Die Zeilennummer eintippen (die erste Taste ersetzt die aktuelle)</value>
+  </data>
+  <data name="Hint.TypeOffset" xml:space="preserve">
+    <value>Den Offset dezimal oder hexadezimal eintippen</value>
   </data>
 </root>

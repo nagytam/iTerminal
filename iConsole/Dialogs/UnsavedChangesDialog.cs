@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
@@ -44,12 +45,12 @@ public class UnsavedChangesDialog : Dialog
     }
 
     public UnsavedChangesDialog(string fileName, IThemeService themeService)
-        : base("Unsaved changes", themeService)
+        : base(iConsole.Localization.UiText.Get("Editor.UnsavedChanges", "Unsaved changes"), themeService)
     {
         _message = $"{fileName} has unsaved changes.";
-        _saveButton = new Button("Save (S)", new ChoiceCommand(_choice, UnsavedChoice.Save), themeService);
-        _discardButton = new Button("Discard (D)", new ChoiceCommand(_choice, UnsavedChoice.Discard), themeService);
-        _cancelButton = new Button("Cancel (C)", new ChoiceCommand(_choice, UnsavedChoice.Cancel), themeService);
+        _saveButton = new Button(iConsole.Localization.UiText.Get("Common.Save", "Save") + " (S)", new ChoiceCommand(_choice, UnsavedChoice.Save), themeService);
+        _discardButton = new Button(iConsole.Localization.UiText.Get("Editor.Discard", "Discard") + " (D)", new ChoiceCommand(_choice, UnsavedChoice.Discard), themeService);
+        _cancelButton = new Button(iConsole.Localization.UiText.Get("Common.Cancel", "Cancel") + " (C)", new ChoiceCommand(_choice, UnsavedChoice.Cancel), themeService);
         AddControl(_saveButton);
         AddControl(_discardButton);
         AddControl(_cancelButton);
@@ -61,9 +62,9 @@ public class UnsavedChangesDialog : Dialog
     /// </summary>
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("S", "Save the changes");
-        yield return ("D", "Discard the changes");
-        yield return ("C", "Cancel and keep editing");
+        yield return ("S", UiText.Get("Hint.SaveChanges", "Save the changes"));
+        yield return ("D", UiText.Get("Hint.DiscardChanges", "Discard the changes"));
+        yield return ("C", UiText.Get("Hint.CancelKeepEditing", "Cancel and keep editing"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -78,11 +79,11 @@ public class ColorPicker : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Arrows", "Move the cursor over the palette");
-        yield return ("Home/End", "First or last colour");
+        yield return ("Arrows", UiText.Get("Hint.MoveOverPalette", "Move the cursor over the palette"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastColour", "First or last colour"));
         if (!IsReadOnly)
         {
-            yield return ("Enter/Space", "Choose the colour under the cursor");
+            yield return ("Enter/Space", UiText.Get("Hint.ChooseColourUnderCursor", "Choose the colour under the cursor"));
         }
     }
 
@@ -191,7 +192,8 @@ public class ColorPicker : Control, IReadOnly
                 Color ink = swatch is Color.Black or Color.DarkBlue or Color.DarkRed or Color.DarkMagenta or Color.Blue or Color.DarkGreen or Color.DarkGray
                     ? Color.White
                     : Color.Black;
-                bool atCursor = index == _cursor && IsFocused;
+                // A read-only palette shows no cursor: it would point at a swatch the keys cannot move.
+                bool atCursor = index == _cursor && IsFocused && !IsReadOnly;
                 string cell = atCursor
                     ? "[" + (swatch == _selected ? "✓" : " ") + "]"
                     : " " + (swatch == _selected ? "✓" : " ") + " ";

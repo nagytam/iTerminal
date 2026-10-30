@@ -6,7 +6,7 @@ namespace iConsole.Controls.Buttons;
 public class CancelDialogButton : Button
 {
     public CancelDialogButton(IThemeService themeService)
-        : base("Cancel", new CancelDialogCommand(), themeService)
+        : base(iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"), new CancelDialogCommand(), themeService)
     {
         HotKeyChar = 'c';
     }

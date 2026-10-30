@@ -50,7 +50,7 @@ public class FolderSelectorDialog : Dialog
         HelpDialog? helpDialog = null)
         : base(nameof(FolderSelectorDialog), themeService)
     {
-        Title = "Folder Selector";
+        Title = iConsole.Localization.UiText.Get("Dialog.FolderSelector", "Folder Selector");
 
         _tab = new Tab(themeService) { Orientation = Orientation.Vertical };
         AddControl(_tab);

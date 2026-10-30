@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -338,11 +339,11 @@ public class FilePicker : Control
             yield break;
         }
 
-        yield return ("Up/Down", "Move the cursor");
-        yield return ("PageUp/PageDown", "Move the cursor by a page");
-        yield return ("Home/End", "First or last row");
+        yield return ("Up/Down", UiText.Get("Hint.MoveCursor", "Move the cursor"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MoveCursorByPage", "Move the cursor by a page"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastRow", "First or last row"));
         yield return ("Enter", _pickFolders ? "Open a folder, or choose it on a second Enter" : "Open a folder or choose a file");
-        yield return ("Backspace", "Go up one folder");
+        yield return ("Backspace", UiText.Get("Hint.GoUpFolder", "Go up one folder"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

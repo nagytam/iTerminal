@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -106,7 +107,7 @@ public class ElapsedClock : Control
         }
 
         yield return ("Space", IsRunning ? "Stop the clock" : "Start the clock");
-        yield return ("R", "Reset the clock to zero");
+        yield return ("R", UiText.Get("Hint.ResetClock", "Reset the clock to zero"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -181,8 +182,8 @@ public class ElapsedClock : Control
         int labelRoom = Math.Max(0, width - text.Length - 1);
         string prefix = Label.Length == 0 || labelRoom == 0 ? string.Empty : Label.Cut(labelRoom) + " ";
         ConxelString line = new(prefix, colorScheme.Foreground, colorScheme.Background);
-        Color foreground = IsRunning ? Color.Green : colorScheme.Foreground;
-        line.Append(text, IsFocused ? colorScheme.SelectedFocusedForeground : foreground, colorScheme.Background);
+        Color foreground = !IsEnabled ? colorScheme.DisabledForeground : IsRunning ? Color.Green : colorScheme.Foreground;
+        line.Append(text, IsFocused && IsEnabled ? colorScheme.SelectedFocusedForeground : foreground, colorScheme.Background);
         line.Expand(width, colorScheme.Foreground, colorScheme.Background);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, line);
     }

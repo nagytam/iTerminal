@@ -153,6 +153,17 @@ public class FilePanelPositionRestoreTest
         return condition();
     }
 
+    /// <summary>
+    /// The whole folder is listed and its rows are in their final order. Counting rows is not enough: the listing
+    /// streams in batches and is sorted as it grows, so a row number read while the order is still moving belongs
+    /// to a different entry once it settles.
+    /// </summary>
+    private static bool IsListedInOrder(ContentModelFileSystem model, int count)
+    {
+        List<string> names = [.. model.FilteredEntries.Select(e => e.Name)];
+        return names.Count == count && names.Skip(1).SequenceEqual(names.Skip(1).OrderBy(n => n, StringComparer.Ordinal));
+    }
+
     [TestMethod]
     public async Task Panel_RestoresTheCursorAndTheFirstVisibleRow()
     {
@@ -163,7 +174,7 @@ public class FilePanelPositionRestoreTest
         // the rows are not yet in their final order, so the entry read from row 20 below could be another one by the
         // time the folder is complete. The whole listing (.. and the 30 files) is waited for.
         Assert.IsTrue(
-            await SettlesOnAsync(() => model.FilteredEntries.Count >= 31),
+            await SettlesOnAsync(() => IsListedInOrder(model, 31)),
             $"Precondition: the whole folder must have loaded (have {model.FilteredEntries.Count})");
 
         model.CursorPosition.Y = 20;
@@ -201,7 +212,7 @@ public class FilePanelPositionRestoreTest
         // the restore land on the wrong row.
         const int everyRow = 31; // .. and the 30 files in each folder
         Assert.IsTrue(
-            await SettlesOnAsync(() => leftModel.FilteredEntries.Count == everyRow && rightModel.FilteredEntries.Count == everyRow),
+            await SettlesOnAsync(() => IsListedInOrder(leftModel, everyRow) && IsListedInOrder(rightModel, everyRow)),
             $"Precondition: both folders must be listed (left {leftModel.FilteredEntries.Count}, right {rightModel.FilteredEntries.Count})");
 
         leftModel.CursorPosition.Y = 5;
@@ -234,7 +245,7 @@ public class FilePanelPositionRestoreTest
         // the rows are not yet in their final order, so the entry read from row 20 below could be another one by the
         // time the folder is complete. The whole listing (.. and the 30 files) is waited for.
         Assert.IsTrue(
-            await SettlesOnAsync(() => model.FilteredEntries.Count >= 31),
+            await SettlesOnAsync(() => IsListedInOrder(model, 31)),
             $"Precondition: the whole folder must have loaded (have {model.FilteredEntries.Count})");
 
         model.CursorPosition.Y = 20;

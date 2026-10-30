@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -39,7 +40,7 @@ public class UserMenuDialog : Dialog
         _menuService = menuService;
         _launcher = launcher;
         _notifications = notifications;
-        Title = "User menu";
+        Title = iConsole.Localization.UiText.Get("Dialog.UserMenu", "User menu");
         _lines = new InfoLines(themeService);
         AddControl(_lines);
     }
@@ -119,11 +120,11 @@ public class UserMenuDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Up/Down", "Move the cursor over the entries");
-        yield return ("Home/End", "Jump to the first or last entry");
-        yield return ("Enter", "Run the entry under the cursor");
-        yield return ("Hotkey", "Run the entry marked with that key");
-        yield return ("F4", "Open the file with the system default program");
+        yield return ("Up/Down", UiText.Get("DialogHint.MoveOverEntries", "Move the cursor over the entries"));
+        yield return ("Home/End", UiText.Get("DialogHint.JumpFirstLastEntry", "Jump to the first or last entry"));
+        yield return ("Enter", UiText.Get("DialogHint.RunEntryUnderCursor", "Run the entry under the cursor"));
+        yield return ("Hotkey", UiText.Get("DialogHint.RunEntryMarkedKey", "Run the entry marked with that key"));
+        yield return ("F4", UiText.Get("DialogHint.OpenWithSystemDefault", "Open the file with the system default program"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

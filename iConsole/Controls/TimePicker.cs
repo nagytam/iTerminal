@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -37,7 +38,15 @@ public class TimePicker : Control, IReadOnly
         {
             _showSeconds = value;
             _field = Math.Min(_field, FieldCount - 1);
-            ViewSize = new Size(FieldCount == 3 ? 10 : 7, 1);
+            Size size = new(FieldCount == 3 ? 10 : 7, 1);
+            // Dropping the seconds leaves cells outside the new rectangle that nothing else repaints.
+            bool shrinks = size.Width < ViewSize.Width;
+            ViewSize = size;
+            if (shrinks)
+            {
+                InvalidateTree();
+            }
+
             StateHasChanged();
         }
     }
@@ -157,13 +166,13 @@ public class TimePicker : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Left/Right", "Move between hour, minute and second");
-        yield return ("Home/End", "First or last field");
-        yield return (": or .", "Next field");
-        yield return ("Up/Down", "Step the field");
-        yield return ("PageUp/PageDown", "Step the field by ten");
-        yield return ("0-9", "Type the field");
-        yield return ("Backspace/Delete", "Clear the field");
+        yield return ("Left/Right", UiText.Get("Hint.MoveHourMinuteSecond", "Move between hour, minute and second"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastField", "First or last field"));
+        yield return (": or .", UiText.Get("Hint.NextField", "Next field"));
+        yield return ("Up/Down", UiText.Get("Hint.StepField", "Step the field"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.StepFieldByTen", "Step the field by ten"));
+        yield return ("0-9", UiText.Get("Hint.TypeField", "Type the field"));
+        yield return ("Backspace/Delete", UiText.Get("Hint.ClearField", "Clear the field"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

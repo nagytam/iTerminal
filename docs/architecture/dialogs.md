@@ -165,6 +165,34 @@ Tools > Currency Converter: an amount, a From and a To currency; the result and 
 - **Nothing waits on the network.** Like the translator, the download runs on a background task, parks its outcome, and `OnIdle` applies it; only the newest download (by generation) may land.
 - **The end-to-end suite replaces the provider** (`SandboxServices.CurrencyRates`: one euro is two dollars): no run reaches the network.
 
+### BitTorrent manager (`TorrentManagerDialog`, Ctrl+Shift+F1, `Services/Torrents/`)
+Tools > BitTorrent: every torrent with state, progress, size, speeds and peers, refreshed twice a second from `OnIdle`. A adds a magnet link, a `.torrent` path or the URL of one (and the folder to save to, default `~/Downloads` or the `BitTorrent.DownloadFolder` setting); Space pauses or resumes; D asks, then Y removes and keeps the files, W removes and deletes them; O opens the save folder in the active panel.
+
+- **The engine is MonoTorrent**, wrapped by `TorrentService` (`ITorrentService`). It is created on first use, so a run that never opens the manager opens no sockets. Every action runs on a background task and reports on the status line; the dialog never waits on the engine.
+- **Torrents survive a restart.** The list lives in the `BitTorrent.Items` setting (magnet links as they are; `.torrent` files copied to `torrents/` beside the database); the dialog calls `RestoreAsync` when it opens, and the engine's fast-resume files in `torrent-cache/` keep the pieces already downloaded. A torrent that cannot come back is logged and skipped.
+- **Dispose stops the engine** (`TorrentService` is `IAsyncDisposable`, so the container does it at shutdown).
+- **Not yet covered by the end-to-end sandbox:** the engine is only reached when a torrent is added, which no end-to-end test does; a test that adds one needs a `SandboxServices` replacement for `ITorrentService` first.
+
+### Games (`GamesDialog`, Tools > Games, `Services/Games/`)
+Tic-Tac-Toe, Chess, Go (9x9, 13x13, 19x19) and Nine Men's Morris, against the computer or two people at one keyboard. There is no hot key: every Ctrl+Shift+F-key is taken, so it opens from the Tools menu, the command palette or the AI `ui` tool ("games", "chess", "go", ...).
+
+Arrows move the cursor, Enter or Space plays, PgUp/PgDn or 1-4 choose the game, N starts again, U takes a move back (and the computer's answer with it), M switches between the computer and two players. A game may ask for more: Go has P (pass) and S (board size); chess asks for the promotion piece with Q, R, B or N.
+
+- **A game is an `IGame`.** It owns its rules, its cursor and its drawing (`Render()` returns rows of `GameCell`: text, colours, a cursor flag); the dialog only forwards keys and paints. A new game is one class plus an entry in the `GamesDialog` constructor. The dialog is a transient, but the games live as long as it does, so a closed dialog keeps its positions for the run.
+- **The computer never blocks a key handler.** `IGame.PlanComputerMove()` returns null unless it is the computer's turn, otherwise a function that runs on a background task against an immutable snapshot of the position and returns the action that plays the move. The dialog parks that action; `OnIdle` plays it on the UI thread. Every change bumps the game's `Version`, so a move chosen for a position that has since changed (undo, new game) does nothing, and closing or switching games cancels the search through its token.
+- **Chess** (`ChessEngine.cs`) has the whole rulebook: castling through attacked squares, en passant, promotion choice, mate, stalemate, fifty moves, threefold repetition, dead positions. The move generator is checked against the published perft counts. The computer is an iterative-deepening alpha-beta search with a capture quiescence tail and a 1.5 s budget.
+- **Go** has captures, no suicide, the simple ko rule, passing and area scoring with a 7.5 komi. After two passes the dead groups are marked by hand (Enter on a stone) and the score follows; Undo resumes play. The computer is a one-ply heuristic (captures, atari, liberties, eyes, own territory, line height); it passes when nothing is worth playing or when the person has passed and it is ahead.
+- **Nine Men's Morris** has placing, sliding, flying at three men, mills that take a man outside a mill, and the 100-move draw. The computer is a time-budgeted alpha-beta search.
+- **Colours.** Boards are drawn on fixed colours (a wood background for Go and Morris, a checker for chess) and not the theme's, because a "black stone" has to stay black on a light theme.
+
+### The contact manager (`ContactManagerDialog`, Ctrl+Shift+K, `Model/Contacts/`)
+Tools > Contacts: name, email, phone, company and notes for the people the person keeps in touch with. N or Insert adds a contact and E, F2 or Enter changes the highlighted one, a field at a time (Enter or Tab for the next, Shift+Tab back, Enter on the last saves, Esc discards); the highlighted contact's fields are shown under the list. D or Delete asks y/n in the dialog. `/` filters the list as it is typed: every word must appear in some field, Enter keeps the filter, Esc clears it (and the next Esc closes the dialog).
+
+- **Storage is the `Contacts` setting**, one JSON list read by `ContactStore` (same approach as the task list and the calendar): a table of its own would change the schema stamp and drop every cached table at start-up. A damaged value or a `null` entry is skipped, and the next save replaces it.
+- **`Contact.Validate` is the one rule set:** a name is required, an email needs an `@` with text on both sides, a phone number needs a digit and only `+ - ( ) . /` and spaces. A refused save keeps the form open and moves the cursor to the field at fault.
+- **The highlight follows the contact by id**, so it survives a re-sort or a filter; a contact saved under a filter that would hide it clears the filter.
+- Also reachable from the `ui` AI tool as `contacts`.
+
 ### The workspace manager (`iTerminal.Core/Dialogs/Workspaces/`, `Services/Workspaces/`, `Model/Workspaces/`)
 Ctrl+Shift+F2 (Tools > Workspaces) opens `WorkspaceManagerDialog`: named screen layouts. A workspace is a
 `WorkspaceLayout` — the left and right panel locations, each panel's sort order, what is under the panels

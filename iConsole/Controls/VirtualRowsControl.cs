@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -104,12 +105,12 @@ public abstract class VirtualRowsControl<T> : Control
             yield break;
         }
 
-        yield return ("Up/Down", "Move the cursor");
-        yield return ("PageUp/PageDown", "Move the cursor a page");
-        yield return ("Home/End", "First or last row");
+        yield return ("Up/Down", UiText.Get("Hint.MoveCursor", "Move the cursor"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MoveCursorPage", "Move the cursor a page"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastRow", "First or last row"));
         if (Source.Count > 0)
         {
-            yield return ("Enter", "Open the highlighted row");
+            yield return ("Enter", UiText.Get("Hint.OpenHighlightedRow", "Open the highlighted row"));
         }
     }
 
@@ -239,7 +240,10 @@ public abstract class VirtualRowsControl<T> : Control
                 if (Source.TryGet(index, out T? item) && item is not null)
                 {
                     text = RowText(item, index);
-                    VisualState state = isCursor ? (IsFocused ? VisualState.Focused : VisualState.Selected) : VisualState.Normal;
+                    // A disabled list greys its rows, the cursor row included, like every other disabled control.
+                    VisualState state = !IsEnabled ? VisualState.Disabled
+                        : isCursor ? (IsFocused ? VisualState.Focused : VisualState.Selected)
+                        : VisualState.Normal;
                     GetColor(colorScheme, state, out foreground, out background);
                 }
                 else

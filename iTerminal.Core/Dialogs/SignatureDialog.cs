@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -52,7 +53,7 @@ public class SignatureDialog : Dialog
         _signatureService = signatureService;
         _notifications = notifications;
         _contentModelService = contentModelService;
-        Title = "Signatures";
+        Title = iConsole.Localization.UiText.Get("Menu.Signatures", "Signatures");
         _textBoxKey = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Key" };
         _info = new InfoLines(themeService);
         AddControl(_textBoxKey);
@@ -296,13 +297,13 @@ public class SignatureDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("F2", "Sign with GPG");
-        yield return ("F3", "Sign with Authenticode");
-        yield return ("F4", "Sign with a PEM key");
-        yield return ("F5", "Verify the signatures");
+        yield return ("F2", UiText.Get("DialogHint.SignGpg", "Sign with GPG"));
+        yield return ("F3", UiText.Get("DialogHint.SignAuthenticode", "Sign with Authenticode"));
+        yield return ("F4", UiText.Get("DialogHint.SignPem", "Sign with a PEM key"));
+        yield return ("F5", UiText.Get("DialogHint.VerifySignatures", "Verify the signatures"));
         if (_busy.Length == 0)
         {
-            yield return ("Enter", "Close the report");
+            yield return ("Enter", UiText.Get("DialogHint.CloseReport", "Close the report"));
         }
     }
 

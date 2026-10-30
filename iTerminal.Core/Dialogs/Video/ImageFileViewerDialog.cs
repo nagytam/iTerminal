@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -62,7 +63,7 @@ public class ImageFileViewerDialog : Dialog
         _decoderFactory = decoderFactory;
         _beepService = beepService;
         _dateTimeProviderService = dateTimeProviderService;
-        Title = "Image";
+        Title = iConsole.Localization.UiText.Get("Dialog.Image", "Image");
 
         _colorButton = new Button(
             new VideoActionCommand(
@@ -219,13 +220,13 @@ public class ImageFileViewerDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("C", "Switch colour on or off");
-        yield return ("I", "Show or hide the image information");
+        yield return ("C", UiText.Get("DialogHint.SwitchColour", "Switch colour on or off"));
+        yield return ("I", UiText.Get("DialogHint.ShowHideImageInfo", "Show or hide the image information"));
         if (_showMetadata)
         {
-            yield return ("Up/Down", "Scroll the information");
-            yield return ("PageUp/PageDown", "Scroll a page at a time");
-            yield return ("E", "Edit the information");
+            yield return ("Up/Down", UiText.Get("DialogHint.ScrollInformation", "Scroll the information"));
+            yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollPageAtATime", "Scroll a page at a time"));
+            yield return ("E", UiText.Get("DialogHint.EditInformation", "Edit the information"));
         }
     }
 

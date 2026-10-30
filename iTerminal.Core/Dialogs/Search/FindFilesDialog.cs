@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -79,7 +80,7 @@ public class FindFilesDialog : SplitPaneDialog
     {
         _searchService = searchService;
         _contentModelService = contentModelService;
-        Title = "Find Files";
+        Title = iConsole.Localization.UiText.Get("Menu.FindFiles", "Find Files");
 
         _namesBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Find", MaxLength = 512, Placeholder = "name or pattern, e.g. *.log" };
         _textBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Containing", MaxLength = 512, Placeholder = "text inside the files (optional)" };
@@ -274,11 +275,11 @@ public class FindFilesDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Enter", "Search, or show the chosen result in the panel when the list has focus");
-        yield return ("Up/Down", "Choose a result");
-        yield return ("Ctrl+Home/End", "Jump to the first or last result");
-        yield return ("Ctrl+P", "Send the results to a panel");
-        yield return ("Ctrl+X", "Cancel the search");
+        yield return ("Enter", UiText.Get("DialogHint.SearchOrShowResult", "Search, or show the chosen result in the panel when the list has focus"));
+        yield return ("Up/Down", UiText.Get("DialogHint.ChooseResult", "Choose a result"));
+        yield return ("Ctrl+Home/End", UiText.Get("DialogHint.JumpFirstLastResult", "Jump to the first or last result"));
+        yield return ("Ctrl+P", UiText.Get("DialogHint.SendResultsToPanel", "Send the results to a panel"));
+        yield return ("Ctrl+X", UiText.Get("DialogHint.CancelSearch", "Cancel the search"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

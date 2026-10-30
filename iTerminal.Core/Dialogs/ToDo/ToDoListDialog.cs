@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
@@ -46,7 +47,7 @@ public class ToDoListDialog : Dialog
     public ToDoListDialog(IDateTimeProviderService dateTimeProviderService, ToDoStore store, IThemeService themeService)
         : base(nameof(ToDoListDialog), themeService)
     {
-        Title = "Tasks";
+        Title = iConsole.Localization.UiText.Get("Dialog.Tasks", "Tasks");
         _dateTimeProviderService = dateTimeProviderService;
         _store = store;
         _today = Today();
@@ -90,25 +91,25 @@ public class ToDoListDialog : Dialog
     {
         if (_entry is not null)
         {
-            yield return ("Enter", "Save the task");
-            yield return ("Esc", "Discard the entry");
+            yield return ("Enter", UiText.Get("DialogHint.SaveTask", "Save the task"));
+            yield return ("Esc", UiText.Get("DialogHint.DiscardEntry", "Discard the entry"));
             yield break;
         }
 
         if (_confirmingDelete)
         {
-            yield return ("Y", "Delete the task");
-            yield return ("Any other key", "Keep the task");
+            yield return ("Y", UiText.Get("DialogHint.DeleteTask", "Delete the task"));
+            yield return ("Any other key", UiText.Get("DialogHint.KeepTask", "Keep the task"));
             yield break;
         }
 
-        yield return ("Up/Down", "Move over the tasks");
-        yield return ("PageUp/PageDown", "Move a page at a time");
-        yield return ("Home/End", "Jump to the first or last task");
-        yield return ("Enter/Insert", "Add a task");
-        yield return ("F2", "Edit the task");
-        yield return ("Space", "Mark the task done or open");
-        yield return ("Delete", "Delete the task (asks first)");
+        yield return ("Up/Down", UiText.Get("DialogHint.MoveOverTasks", "Move over the tasks"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MovePageAtATime", "Move a page at a time"));
+        yield return ("Home/End", UiText.Get("DialogHint.JumpFirstLastTask", "Jump to the first or last task"));
+        yield return ("Enter/Insert", UiText.Get("DialogHint.AddTask", "Add a task"));
+        yield return ("F2", UiText.Get("DialogHint.EditTask", "Edit the task"));
+        yield return ("Space", UiText.Get("DialogHint.MarkTaskDoneOrOpen", "Mark the task done or open"));
+        yield return ("Delete", UiText.Get("DialogHint.DeleteTaskAsks", "Delete the task (asks first)"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

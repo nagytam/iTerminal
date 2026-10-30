@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
 using iConsole.Data;
@@ -63,7 +64,7 @@ public class SynchronizeFoldersDialog : Dialog
         _resolver = resolver;
         _taskManager = taskManager;
         _progressWindowFactory = progressWindowFactory;
-        Title = "Synchronise folders";
+        Title = iConsole.Localization.UiText.Get("Dialog.SynchroniseFolders", "Synchronise folders");
 
         _optionsLabel = new Label(string.Empty, themeService);
         _listBox = new ListBox<string>(new ListBoxModel<string>(_rows), themeService)
@@ -290,7 +291,7 @@ public class SynchronizeFoldersDialog : Dialog
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Enter", _shown is null ? "Preview what the synchronisation would do" : "Run the previewed synchronisation");
-        yield return ("Esc", "Close without changing anything");
+        yield return ("Esc", UiText.Get("DialogHint.CloseWithoutChanging", "Close without changing anything"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

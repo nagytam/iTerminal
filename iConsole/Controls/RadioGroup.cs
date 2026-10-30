@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Services;
@@ -122,8 +123,8 @@ public class RadioGroup<T> : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Up/Down or Left/Right", "Choose the previous or next option");
-        yield return ("Home/End", "First or last option");
+        yield return ("Up/Down or Left/Right", UiText.Get("Hint.ChoosePreviousNextOption", "Choose the previous or next option"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastOption", "First or last option"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -181,9 +182,14 @@ public class RadioGroup<T> : Control, IReadOnly
 
     public override void Draw(IBuffer buffer)
     {
+        // The options take the group's width as it is now, so a group that was made narrower does not draw past its edge.
+        LayoutButtons();
+
         // The selected option carries the focused look only while the group itself holds focus.
         for (var i = 0; i < _buttons.Count; i++)
         {
+            // The options follow the group: a disabled group used to draw them as live as an enabled one.
+            _buttons[i].IsEnabled = IsEnabled;
             _buttons[i].IsHighlighted = IsFocused && i == _selectedIndex;
         }
 

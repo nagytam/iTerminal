@@ -968,6 +968,12 @@ public class Control : INotifyPropertyChanged, IControl
         string header, string footer,
         ColorScheme colorScheme, VisualState visualState)
     {
+        // A border has no cells to draw in a rectangle with no width or height; the bottom row below would sit at -1.
+        if (size.Width == 0 || size.Height == 0)
+        {
+            return;
+        }
+
         GetColor(colorScheme, visualState, out var foreground, out var background);
         var line = Border.TopLeft +
                    Border.Horizontal.Repeat((int)size.Width - 2) +

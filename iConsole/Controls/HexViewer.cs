@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
@@ -41,9 +42,9 @@ public class HexViewer : Control
             yield break;
         }
 
-        yield return ("Up/Down", "Scroll a row");
-        yield return ("PageUp/PageDown", "Scroll a page");
-        yield return ("Home/End", "First or last row");
+        yield return ("Up/Down", UiText.Get("Hint.ScrollRow", "Scroll a row"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.ScrollPage", "Scroll a page"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastRow", "First or last row"));
     }
 
     /// <summary>The bytes to display. Setting this resets the cursor to row 0.</summary>
@@ -207,7 +208,13 @@ public class HexViewer : Control
             var isCursor = rowIndex == cursorRow;
 
             Color fg, bg;
-            if (isCursor)
+            if (!IsEnabled)
+            {
+                // A disabled viewer is greyed like every other disabled control, the cursor row included.
+                fg = colorScheme.DisabledForeground;
+                bg = colorScheme.DisabledBackground;
+            }
+            else if (isCursor)
             {
                 fg = IsFocused ? colorScheme.SelectedFocusedForeground : colorScheme.SelectedForeground;
                 bg = IsFocused ? colorScheme.SelectedFocusedBackground : colorScheme.SelectedBackground;

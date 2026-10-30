@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
@@ -79,7 +80,7 @@ public class MailDialog : Dialog
     public MailDialog(MailAccountStore accounts, IMailService mail, IPasswordManager passwords, IThemeService themeService)
         : base(nameof(MailDialog), themeService)
     {
-        Title = "Mail";
+        Title = iConsole.Localization.UiText.Get("Dialog.Mail", "Mail");
         _accounts = accounts;
         _mail = mail;
         _passwords = passwords;
@@ -133,26 +134,26 @@ public class MailDialog : Dialog
         switch (_mode)
         {
             case Mode.List:
-                yield return ("Up/Down", "Choose a message");
-                yield return ("Enter", "Read the message");
-                yield return ("C", "Write a message");
-                yield return ("R", "Refresh the inbox");
-                yield return ("D/Delete", "Delete the message (asks first)");
-                yield return ("S", "Account settings");
+                yield return ("Up/Down", UiText.Get("DialogHint.ChooseMessage", "Choose a message"));
+                yield return ("Enter", UiText.Get("DialogHint.ReadMessage", "Read the message"));
+                yield return ("C", UiText.Get("DialogHint.WriteMessage", "Write a message"));
+                yield return ("R", UiText.Get("DialogHint.RefreshInbox", "Refresh the inbox"));
+                yield return ("D/Delete", UiText.Get("DialogHint.DeleteMessageAsks", "Delete the message (asks first)"));
+                yield return ("S", UiText.Get("DialogHint.AccountSettings", "Account settings"));
                 break;
             case Mode.View:
-                yield return ("Up/Down", "Scroll the message");
-                yield return ("R", "Reply");
-                yield return ("Esc", "Back to the inbox");
+                yield return ("Up/Down", UiText.Get("DialogHint.ScrollMessage", "Scroll the message"));
+                yield return ("R", UiText.Get("DialogHint.Reply", "Reply"));
+                yield return ("Esc", UiText.Get("DialogHint.BackToInbox", "Back to the inbox"));
                 break;
             case Mode.Compose:
-                yield return ("Ctrl+S", "Send the message");
-                yield return ("Ctrl+L", "Look up an address");
-                yield return ("Tab", "Move between the fields");
-                yield return ("Esc", "Back to the inbox");
+                yield return ("Ctrl+S", UiText.Get("DialogHint.SendMessage", "Send the message"));
+                yield return ("Ctrl+L", UiText.Get("DialogHint.LookUpAddress", "Look up an address"));
+                yield return ("Tab", UiText.Get("DialogHint.MoveBetweenFields", "Move between the fields"));
+                yield return ("Esc", UiText.Get("DialogHint.BackToInbox", "Back to the inbox"));
                 break;
             default:
-                yield return ("Esc", "Back");
+                yield return ("Esc", iConsole.Localization.UiText.Get("Common.Back", "Back"));
                 break;
         }
     }

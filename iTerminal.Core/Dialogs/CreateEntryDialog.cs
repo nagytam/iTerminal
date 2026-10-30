@@ -55,7 +55,7 @@ public abstract class CreateEntryDialog : FormDialog
         Title = title;
 
         _textBoxName = textBoxName;
-        _textBoxName.Label = "Name";
+        _textBoxName.Label = iConsole.Localization.UiText.Get("Label.Name", "Name");
         _textBoxName.HotKeyChar = 'N';
         _errorMessage = new ErrorMessage(textBoxName.ValidationModel!, themeService);
 

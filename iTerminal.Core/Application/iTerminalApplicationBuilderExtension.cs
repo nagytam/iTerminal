@@ -119,6 +119,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.Calendar.CalendarDialog>();
         services.AddSingleton<iTerminal.Core.Model.ToDo.ToDoStore>();
         services.AddTransient<iTerminal.Core.Dialogs.ToDo.ToDoListDialog>();
+        services.AddSingleton<iTerminal.Core.Model.Contacts.ContactStore>();
+        services.AddTransient<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>();
         services.AddSingleton<iTerminal.Core.Model.Mail.MailAccountStore>();
         services.AddSingleton<iTerminal.Core.Services.Mail.IMailService, iTerminal.Core.Services.Mail.MailService>();
         services.AddTransient<iTerminal.Core.Dialogs.Mail.MailDialog>();
@@ -298,6 +300,12 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Currency.ICurrencyRateProvider, iTerminal.Core.Services.Currency.EcbCurrencyRateProvider>();
         services.AddSingleton<iTerminal.Core.Services.Currency.ICurrencyService, iTerminal.Core.Services.Currency.CurrencyService>();
         services.AddTransient<iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog>();
+        // Ctrl+Shift+F1: the BitTorrent manager. The engine starts on first use, so a run that never adds a torrent opens no sockets.
+        services.AddSingleton<iTerminal.Core.Services.Torrents.ITorrentService>(provider => new iTerminal.Core.Services.Torrents.TorrentService(
+            provider.GetRequiredService<ISettingsService>(), databaseDirectory));
+        services.AddTransient<iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog>();
+        // Tools > Games: Tic-Tac-Toe, Chess, Go and Nine Men's Morris. The dialog is a transient that keeps the games' positions for the run.
+        services.AddTransient<iTerminal.Core.Dialogs.Games.GamesDialog>();
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();

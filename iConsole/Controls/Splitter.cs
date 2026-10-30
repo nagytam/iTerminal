@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -277,8 +278,8 @@ public class Splitter : Control
         }
 
         yield return (IsSideBySide ? "Left/Right" : "Up/Down", "Move the divider");
-        yield return ("PgUp/PgDn", "Move the divider by 8");
-        yield return ("Home", "Centre the divider");
+        yield return ("PgUp/PgDn", UiText.Get("Hint.MoveDividerBy8", "Move the divider by 8"));
+        yield return ("Home", UiText.Get("Hint.CentreDivider", "Centre the divider"));
     }
 
     public override void Draw(IBuffer buffer)

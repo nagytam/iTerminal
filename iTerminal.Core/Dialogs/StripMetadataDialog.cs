@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -45,7 +46,7 @@ public class StripMetadataDialog : Dialog
         : base(nameof(StripMetadataDialog), themeService)
     {
         _contentModelService = contentModelService;
-        Title = "Strip metadata";
+        Title = iConsole.Localization.UiText.Get("Dialog.StripMetadata", "Strip metadata");
         _info = new InfoLines(themeService);
         AddControl(_info);
     }
@@ -138,12 +139,12 @@ public class StripMetadataDialog : Dialog
     {
         if (Phase == StripPhase.Armed)
         {
-            yield return ("Enter", "Confirm: the metadata is removed from the files");
-            yield return ("Any other key", "Withdraw");
+            yield return ("Enter", UiText.Get("DialogHint.ConfirmMetadataRemoved", "Confirm: the metadata is removed from the files"));
+            yield return ("Any other key", UiText.Get("DialogHint.Withdraw", "Withdraw"));
         }
         else if (Phase == StripPhase.Choosing)
         {
-            yield return ("Enter", "Arm the removal (nothing is changed yet)");
+            yield return ("Enter", UiText.Get("DialogHint.ArmRemoval", "Arm the removal (nothing is changed yet)"));
         }
     }
 

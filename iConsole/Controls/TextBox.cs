@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Display;
@@ -465,25 +466,25 @@ public partial class TextBox : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Left/Right", "Move the cursor");
-        yield return ("Home/End", "Start or end of the text");
-        yield return ("Ctrl+Left/Right", "Move by a word");
-        yield return ("Ctrl+A", "Select all");
+        yield return ("Left/Right", UiText.Get("Hint.MoveCursor", "Move the cursor"));
+        yield return ("Home/End", UiText.Get("Hint.StartOrEndOfText", "Start or end of the text"));
+        yield return ("Ctrl+Left/Right", UiText.Get("Hint.MoveByWord", "Move by a word"));
+        yield return ("Ctrl+A", UiText.Get("Hint.SelectAll", "Select all"));
         if (AllowsCopyOut)
         {
-            yield return ("Ctrl+C", "Copy the selection");
+            yield return ("Ctrl+C", UiText.Get("Hint.CopySelection", "Copy the selection"));
         }
 
         if (!IsReadOnly)
         {
-            yield return ("Backspace/Delete", "Delete a character");
-            yield return ("Ctrl+W/Ctrl+Backspace", "Delete the word before the cursor");
-            yield return ("Ctrl+Delete", "Delete the word after the cursor");
-            yield return ("Ctrl+U", "Delete to the start of the text");
-            yield return ("Ctrl+V", "Paste");
+            yield return ("Backspace/Delete", UiText.Get("Hint.DeleteCharacter", "Delete a character"));
+            yield return ("Ctrl+W/Ctrl+Backspace", UiText.Get("Hint.DeleteWordBefore", "Delete the word before the cursor"));
+            yield return ("Ctrl+Delete", UiText.Get("Hint.DeleteWordAfter", "Delete the word after the cursor"));
+            yield return ("Ctrl+U", UiText.Get("Hint.DeleteToStart", "Delete to the start of the text"));
+            yield return ("Ctrl+V", iConsole.Localization.UiText.Get("Common.Paste", "Paste"));
             if (AllowsCopyOut)
             {
-                yield return ("Ctrl+X", "Cut the selection");
+                yield return ("Ctrl+X", UiText.Get("Hint.CutSelection", "Cut the selection"));
             }
         }
     }
@@ -732,6 +733,12 @@ public partial class TextBox : Control, IReadOnly
         backgroundColor = (IsReadOnly)
             ? Color.DarkYellow
             : (IsValid) ? Color.Yellow : colorScheme.Error;
+        if (!IsEnabled)
+        {
+            // The well is greyed with the label: a disabled box used to look as editable as an enabled one.
+            foregroundColor = colorScheme.DisabledForeground;
+            backgroundColor = colorScheme.DisabledBackground;
+        }
 
         var displayText = DisplayText;
         var scrollX = Math.Clamp((int)ScrollableModel.ScrollPosition.X, 0, displayText.Length);

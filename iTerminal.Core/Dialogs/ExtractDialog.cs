@@ -96,14 +96,14 @@ public class ExtractDialog : FormDialog
     {
         _contentModelService = contentModelService;
         _extractionService = extractionService;
-        Title = "Extract";
+        Title = iConsole.Localization.UiText.Get("Menu.Extract", "Extract");
 
         var extractCommand = new ExtractCommand(
             extractionService, taskManager, progressWindowFactory, contentModelService,
             new FileSystemResolver(fileSystemService, memoryDriveService, sshFileSystemService, archiveFileSystemService, contentModelService));
         AddCommand(extractCommand);
 
-        _labelSource = new Label("Source: ", themeService);
+        _labelSource = new Label(iConsole.Localization.UiText.Get("Label.Source", "Source") + ": ", themeService);
         _textBoxTarget = new TextBox(beepService, dateTimeProviderService, themeService)
         {
             MaxLength = Url.MaxLength,
@@ -131,7 +131,7 @@ public class ExtractDialog : FormDialog
         };
         _labelLanding = new Label(string.Empty, themeService);
         _errorLabel = new Label(string.Empty, themeService);
-        _extractButton = new Button("Extract", extractCommand, themeService) { HotKeyChar = 'E' };
+        _extractButton = new Button(iConsole.Localization.UiText.Get("Menu.Extract", "Extract"), extractCommand, themeService) { HotKeyChar = 'E' };
         _cancelButton = new CancelDialogButton(themeService);
 
         AddControl(_labelSource);
@@ -156,7 +156,7 @@ public class ExtractDialog : FormDialog
         _errorLabel.Text = string.Empty;
 
         Title = Archives.Count == 1 ? $"Extract {FocusedEntry.NameOf(Archives[0])}" : $"Extract {Archives.Count} archives";
-        _labelSource.Text = "Source: " + string.Join(", ", Archives.Select(FocusedEntry.NameOf));
+        _labelSource.Text = iConsole.Localization.UiText.Get("Label.Source", "Source") + ": " + string.Join(", ", Archives.Select(FocusedEntry.NameOf));
         var target = _contentModelService.NonFocusedFolderUrl ?? sourceModel?.Url;
         TargetFolder = target?.FullUrl ?? string.Empty;
 

@@ -96,7 +96,12 @@ public static class iConsoleApplicationBuilderExtension
         services.AddSingleton<ITerminalTitleService>(provider => new TerminalTitleService(ownership: provider.GetRequiredService<ConsoleOwnership>()));
         services.AddSingleton<ITerminalNotificationService>(provider => new TerminalNotificationService(ownership: provider.GetRequiredService<ConsoleOwnership>()));
         // The language the interface is shown in; the app adds its own resources and a store for the choice.
-        services.AddSingleton<iConsole.Localization.ILocalizer, iConsole.Localization.Localizer>();
+        services.AddSingleton<iConsole.Localization.ILocalizer>(provider =>
+        {
+            iConsole.Localization.Localizer localizer = ActivatorUtilities.CreateInstance<iConsole.Localization.Localizer>(provider);
+            iConsole.Localization.UiText.Current = localizer;
+            return localizer;
+        });
         services.AddSingleton<IErrorPromptService, ErrorPromptService>();
         // Notifications: the service holds them, the job counts them down, and a ToastHost on the
         // screen's root draws them. Posting needs only the service.

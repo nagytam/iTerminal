@@ -77,7 +77,8 @@ public class HotKeys : StatusBarItem
         iTerminal.Core.Dialogs.Translator.TranslatorDialog? translatorDialog = null,
         iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null,
         LanguageDialog? languageDialog = null,
-        ILocalizer? localizer = null)
+        ILocalizer? localizer = null,
+        iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -415,6 +416,17 @@ public class HotKeys : StatusBarItem
                 IsVisible = false
             };
             AddControl(currencyConverterDialogButton);
+        }
+
+        if (torrentManagerDialog is not null)
+        {
+            var torrentManagerDialogButton = new Button("Shift-Ctrl-F1-BitTorrent", new TorrentManagerDialogCommand(torrentManagerDialog), themeService)
+            {
+                Position = new Position(0, 0),
+                ViewSize = new Size(24, 1),
+                IsVisible = false
+            };
+            AddControl(torrentManagerDialogButton);
         }
 
         if (languageDialog is not null)

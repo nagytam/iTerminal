@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -70,7 +71,7 @@ public class MusicFileViewerDialog : Dialog
         _metadataService = metadataService;
         _beepService = beepService;
         _dateTimeProviderService = dateTimeProviderService;
-        Title = "Music";
+        Title = iConsole.Localization.UiText.Get("Dialog.Music", "Music");
 
         _tagListBox = new ListBox<string>(
             new ListBoxModel<string>(_tagRows) { TransformItem = TransformTagRow },
@@ -301,12 +302,12 @@ public class MusicFileViewerDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Space", "Play or pause");
-        yield return ("Enter", "Play from the start");
-        yield return ("Left/Right", "Seek back or forward (Shift: a long step)");
-        yield return ("+/-", "Raise or lower the volume");
-        yield return ("S", "Stop this file");
-        yield return ("E", "Edit the tags");
+        yield return ("Space", UiText.Get("DialogHint.PlayOrPause", "Play or pause"));
+        yield return ("Enter", UiText.Get("DialogHint.PlayFromStart", "Play from the start"));
+        yield return ("Left/Right", UiText.Get("DialogHint.SeekBackForward", "Seek back or forward (Shift: a long step)"));
+        yield return ("+/-", UiText.Get("DialogHint.RaiseLowerVolume", "Raise or lower the volume"));
+        yield return ("S", UiText.Get("DialogHint.StopThisFile", "Stop this file"));
+        yield return ("E", UiText.Get("DialogHint.EditTags", "Edit the tags"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

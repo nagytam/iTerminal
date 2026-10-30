@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Controls;
@@ -46,7 +47,7 @@ public class CalendarDialog : Dialog
     public CalendarDialog(IDateTimeProviderService dateTimeProviderService, MeetingStore meetings, IThemeService themeService)
         : base(nameof(CalendarDialog), themeService)
     {
-        Title = "Calendar";
+        Title = iConsole.Localization.UiText.Get("Dialog.Calendar", "Calendar");
         _dateTimeProviderService = dateTimeProviderService;
         _meetings = meetings;
         _calendar = new CalendarModel(Today());
@@ -110,26 +111,26 @@ public class CalendarDialog : Dialog
     {
         if (_entry is not null)
         {
-            yield return ("Enter", "Save the meeting");
-            yield return ("Esc", "Discard the entry");
+            yield return ("Enter", UiText.Get("DialogHint.SaveMeeting", "Save the meeting"));
+            yield return ("Esc", UiText.Get("DialogHint.DiscardEntry", "Discard the entry"));
             yield break;
         }
 
         if (_confirmingDelete)
         {
-            yield return ("Y", "Delete the meeting");
-            yield return ("Any other key", "Keep the meeting");
+            yield return ("Y", UiText.Get("DialogHint.DeleteMeeting", "Delete the meeting"));
+            yield return ("Any other key", UiText.Get("DialogHint.KeepMeeting", "Keep the meeting"));
             yield break;
         }
 
-        yield return ("Arrows", "Move by a day or a week");
-        yield return ("PageUp/PageDown", "Previous or next month");
-        yield return ("Ctrl+PageUp/PageDown", "Previous or next year");
-        yield return ("Home", "Go to today");
-        yield return ("Alt+Up/Down", "Choose a meeting of the day");
-        yield return ("Enter/Insert/N", "Add a meeting");
-        yield return ("F2", "Edit the chosen meeting");
-        yield return ("Delete", "Delete the chosen meeting (asks first)");
+        yield return ("Arrows", UiText.Get("DialogHint.MoveDayOrWeek", "Move by a day or a week"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.PreviousNextMonth", "Previous or next month"));
+        yield return ("Ctrl+PageUp/PageDown", UiText.Get("Hint.PreviousNextYear", "Previous or next year"));
+        yield return ("Home", UiText.Get("DialogHint.GoToToday", "Go to today"));
+        yield return ("Alt+Up/Down", UiText.Get("DialogHint.ChooseMeetingOfDay", "Choose a meeting of the day"));
+        yield return ("Enter/Insert/N", UiText.Get("DialogHint.AddMeeting", "Add a meeting"));
+        yield return ("F2", UiText.Get("DialogHint.EditChosenMeeting", "Edit the chosen meeting"));
+        yield return ("Delete", UiText.Get("DialogHint.DeleteChosenMeetingAsks", "Delete the chosen meeting (asks first)"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

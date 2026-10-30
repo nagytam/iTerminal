@@ -35,7 +35,7 @@ Ordered by value to iTerminal. "Seen in" names the libraries that have it.
 11. **Border and box-drawing styles.** `Border.cs` exists; check for rounded, double, thick and dashed sets, per-side borders, and border titles with alignment (Lip Gloss, Textual, Ratatui `Block`).
 12. **Gradients and alpha blending.** Not found. Textual and Lip Gloss blend and interpolate colours; useful for shadows under popups and fading toasts.
 13. **Animation.** No tweening or easing (only `BouncingLabel` under `Experimental`). Textual (`animate`), Terminal.Gui (timeouts) and Bubble Tea (Harmonica) offer it. A small `Animator` on `ITimeProvider` would make it testable with `VirtualTimeProvider`.
-14. **Drop shadows and z-order helpers.** Layers exist; an optional shadow on `Popup` and `Dialog` is cosmetic but common (Terminal.Gui, Textual, Turbo Vision lineage).
+14. **Drop shadows and z-order helpers.** Layers exist; an optional shadow on `Popup` and `Dialog` is cosmetic but common (Terminal.Gui, Textual, Turbo Vision lineage). *Built:* `Shadow`, with `HasShadow` on `Window` (dialogs), `Popup` and `BoxPanel`.
 
 **Controls and interaction**
 
@@ -81,7 +81,7 @@ Compared again with Terminal.Gui v2, Consolonia (Avalonia on a terminal), Spectr
 34. **True-colour and 256-colour output.** `Color` is the 16 ANSI colours only. Terminal.Gui, Consolonia, Textual, Rich, Ratatui, tcell, Lanterna and notcurses all draw 24-bit colour. This changes item 3: the first step is a richer palette, then down-sampling for terminals without it. Gradients (item 12), alpha blending and a theme that follows the terminal's light / dark setting depend on it.
 35. **Terminal capability record (terminfo, `TERM`, XTGETTCAP).** Not found. tcell, Lanterna, Blessed, Vty and ncurses read terminfo; iConsole checks a few `TERM` values in separate places (hyperlinks, sync output, notifications, Kitty keyboard). One record would feed items 3, 5, 6 and 7 and those switches.
 36. **Braille and block-character canvas.** Not found. Ratatui `Canvas`, blessed-contrib and notcurses blitters draw sub-cell graphics (2x4 braille, 2x2 quadrants, half blocks). `LineChart` and `Heatmap` would gain resolution.
-37. **Auto-joining line drawing.** Border sets exist, but touching boxes do not merge corners. Terminal.Gui's `LineCanvas` joins the glyphs where panels, tables and group boxes meet; tview and Cursive do the same for split panes.
+37. **Auto-joining line drawing.** Border sets exist, but touching boxes do not merge corners. Terminal.Gui's `LineCanvas` joins the glyphs where panels, tables and group boxes meet; tview and Cursive do the same for split panes. *Built:* `LineCanvas` and `BorderedGrid` (shared, joined borders in a grid of cells). Not built: joining the borders of separate `BoxPanel`s automatically.
 38. **Big text (FIGlet-style fonts).** `Digits` draws numbers only. Spectre `FigletText`, Asciimatics `FigletText` and Rich + `pyfiglet` give titles and splash screens.
 39. **Particle and sprite effects.** Asciimatics (`Sprite`, `Path`, `Particle`) and notcurses. Cosmetic; depends on item 13.
 40. **Serving the UI over a network.** Textual (`textual serve`, in a browser) and Charm Wish (a Bubble Tea app over SSH). iConsole has a driver interface and a virtual terminal, so a socket or websocket driver is possible.
@@ -90,7 +90,7 @@ Compared again with Terminal.Gui v2, Consolonia (Avalonia on a terminal), Spectr
 
 41. **Margin, border and padding as one box model.** Terminal.Gui v2 gives every view `Margin`, `Border` and `Padding` adornments; Textual and Lip Gloss use CSS-style margin and padding. In iConsole each control pads itself. A shared thickness on `Control` would remove per-control offset code and give `GroupBox`, `Alert` and `Popup` one border-title path (item 11). *Built for one container:* `BoxPanel` with `Thickness` margin and padding, six `BorderStyle`s and an aligned title. Not built: the same thickness on every `Control`, and use by `GroupBox`, `Alert` and `Popup`.
 42. **Spans and flow layout.** Check `GridPanel` for row and column spans and fractional tracks (Textual `grid`, Brick `hBox` / `vBox`). A wrapping flow panel for chips, badges and toolbars (Lip Gloss `JoinHorizontal`, Terminal.Gui `Pos.Align`) is not found.
-43. **Movable, resizable overlapping windows.** Terminal.Gui's `ViewArrangement` and notcurses planes move and resize floating windows by keyboard and mouse. Useful for floating tool windows in the file manager.
+43. **Movable, resizable overlapping windows.** Terminal.Gui's `ViewArrangement` and notcurses planes move and resize floating windows by keyboard and mouse. Useful for floating tool windows in the file manager. *Built for dialogs:* drag the title bar, drag the corner (`IsResizable`), Ctrl+F7 and Ctrl+F8 with the arrow keys. Not built: tiling, cascade and a window list (item 68).
 44. **Focus groups and spatial navigation.** Tab skips disabled controls today. Lanterna, Cursive, Brick and Terminal.Gui (`NavigationDirection`) add named focus rings and arrow-key movement between neighbours.
 
 **Controls**
@@ -111,7 +111,7 @@ Compared again with Terminal.Gui v2, Consolonia (Avalonia on a terminal), Spectr
 55. **Bubbling events.** Textual messages bubble up the widget tree; Brick and Bubble Tea use one event type. iConsole uses commands and per-control callbacks; a typed bubbling event would simplify dialogs. Complements item 27.
 56. **Background-work helper tied to a control.** Textual `work` and Bubble Tea `Cmd`. `TaskManager` covers the running; a helper that drops the result when the control has been removed would encode the stale-result rule from CLAUDE.md.
 57. **Extension API.** Terminal.Gui and Textual are hosts for third-party widgets; iTerminal registers controls in its composition root only. A documented extension point for commands and panels is not found.
-58. **Windows key release and repeat.** Windows Terminal lacks the Kitty protocol, but `ReadConsoleInput` reports key-up events (tcell, Vty use them). This would finish item 6 on Windows.
+58. **Windows key release and repeat.** Windows Terminal lacks the Kitty protocol, but `ReadConsoleInput` reports key-up events (tcell, Vty use them). This would finish item 6 on Windows. *Built:* `KeyEvent.IsRepeat` and repeat counts on Windows.
 
 #### Suggested order for the second survey
 
@@ -137,8 +137,8 @@ Compared with libraries in languages not yet covered, besides those in the first
 **Layout**
 
 65. **Content-based sizing.** Not found. `SizeRule` has fixed, percent and fill, but a control cannot report its preferred size. Terminal.Gui `Dim.Auto`, prompt_toolkit `Dimension(preferred, min, max)`, Ink / Yoga auto, FTXUI natural size and Brick's `Widget` sizing let a label, button row or table size to what it holds. Add `SizeRule.Auto` backed by a `GetPreferredSize(available)` virtual on `Control`.
-66. **Cross-axis alignment and main-axis justification.** `StackPanel` stretches. Yoga (Ink, OpenTUI), Textual `align` and Lip Gloss `Place` offer start, centre, end and stretch on the cross axis and space-between / space-around on the main axis, plus wrap. Needs item 65 for centre and end to mean anything.
-67. **Wrapper views that constrain a child.** Cursive `ResizedView`, `PaddedView`, `ShadowView` and `LayerView`; Terminal.Gui `Pos.Center`, `Pos.AnchorEnd`. A `Center`, `MinMax` (minimum and maximum size) and `Shadow` wrapper would replace the hand-placed offsets in the dialogs.
+66. **Cross-axis alignment and main-axis justification.** `StackPanel` stretches. Yoga (Ink, OpenTUI), Textual `align` and Lip Gloss `Place` offer start, centre, end and stretch on the cross axis and space-between / space-around on the main axis, plus wrap. Needs item 65 for centre and end to mean anything. *Built:* `StackPanel.CrossAlignment`, `SetAlignment` and `Justify`.
+67. **Wrapper views that constrain a child.** Cursive `ResizedView`, `PaddedView`, `ShadowView` and `LayerView`; Terminal.Gui `Pos.Center`, `Pos.AnchorEnd`. A `Center`, `MinMax` (minimum and maximum size) and `Shadow` wrapper would replace the hand-placed offsets in the dialogs. *Built:* `AlignPanel` and `ConstrainedPanel`.
 68. **Window management for overlapping windows.** Not found (`Tile`, `Cascade`). Turbo Vision (tvision) and Jexer offer tile, cascade, maximise, minimise, next and previous window, and a window list. Far's screens list is the closest in file managers; `Screens/` has the structure but no tile or window list. Extends item 43.
 
 **Controls**
@@ -217,3 +217,36 @@ Compared again with Textual's full widget list and design system, Terminal.Gui v
 3. Items 94, 93b and 99: quick dialogs, a key preview hook and a focus history shorten most dialog code.
 4. Items 95, 104 and 105: richer charts, tables and logs.
 5. Items 98 and 101 after the colour work (34) and animation (13); items 93 and 103 only when there is a concrete use.
+
+#### Status after the pull of 2026-10-28
+
+Checked again against `github/main` at cf6e230 (a grep of the source, not the tests). Built since the status above: 14 (`Shadow`, `HasShadow`), 37 for a grid (`LineCanvas`, `BorderedGrid`; separate boxes do not join by themselves), 43 for dialogs (drag by the title bar, resize by the corner, Ctrl+F7 and Ctrl+F8), 58 for Windows (`KeyEvent.IsRepeat`), 83 (`IAsyncInputValidator`; no error line under the box yet), 84 (`X{n}`, `X{n,m}`, `%(group){n}`, `~`), 89 for visible whitespace (`ShowWhitespace`; no indent guides or ruler yet), 107 (regex search and replace) and 110 (`Marquee`, `MarqueeLabel`, `ScrollTitle`). Every other item in the lists above was checked and is still missing.
+
+#### Fifth survey: more libraries and tools
+
+Compared with the Ink ecosystem (`ink-select-input`, `ink-table`, `ink-testing-library`, `<Static>`), Lip Gloss and Bubble Tea v2 (`Place`, `JoinHorizontal`, static table, list and tree renderers), Terminal.Gui v2 dialogs that return a result, terminal-kit (`inputField`, `getCursorLocation`), Brick (themes loaded from INI files, automatic border joining), libvaxis `vxfw`, Rich (`Syntax` line highlights), Cursive's builder, fzf and telescope.nvim (preview panes), ranger and yazi (Miller columns), lazygit and k9s (filter with `/`), bottom and btop (bars inside table cells) and the editors Neovim and VS Code (bracket-pair colours, sticky scroll, spell check). Numbering continues after item 111.
+
+**Controls**
+
+112. **Fuzzy filtering with highlighted matches.** `FuzzyMatcher` exists and the command palette uses it, but `ListBox`, `ComboBox` and `AutoCompletion` still match by prefix and do not show which letters matched (Bubbles `list`, fzf, telescope.nvim).
+113. **List with a preview pane.** A list on the left and a live preview of the item under the cursor on the right, with the preview loaded in the background (fzf `--preview`, telescope.nvim, yazi); the file panels have a preview drive but no reusable control.
+114. **Miller columns.** Parent, current and child lists side by side, moving right opens the child (ranger, yazi, the macOS Finder column view); a control for any tree, not only folders.
+115. **Widgets inside table cells.** A bar, sparkline or rating in a `Table` or `LiveTable` cell (Textual `DataTable` renderables, bottom and btop process tables); cells are text only today.
+116. **Type-to-filter on tables and lists.** `/` opens a filter line that hides rows that do not match (lazygit, k9s, VisiData); `ListBox` has a filter in its model but `Table` and `VirtualTable` have none.
+117. **Line and range decorations.** A public way to colour a background, underline or mark a line or a range of text in the viewer and editor: diagnostics, diff added and removed lines, blame, an error line in a log (Rich `Syntax` `highlight_lines`, VS Code decorations). The viewer has private helpers for its own search and selection only.
+118. **Editor polish.** Bracket-pair colours, sticky scroll headers that keep the enclosing line in view, spell check with the curly underline the renderer already has, and a symbol outline (VS Code, Neovim).
+
+**Framework**
+
+119. **Typed dialog results.** `ShowDialogAsync` returns when the dialog closes but not what it chose; callers read the dialog's properties afterwards (Terminal.Gui `Dialog.Result`, Spectre prompts return values). `ShowDialogAsync<T>` would return the value or null for cancel.
+120. **Theme files with user overrides.** Load a theme from a file and save the user's changes over the defaults (Brick `Themes` INI files, Textual themes, Cursive TOML themes); themes are code plus a dialog today.
+121. **Declarative layout files.** Describe a screen in JSON or a small markup and build the control tree from it, with reload on change (Cursive builder, Consolonia XAML, Textual `compose`); every screen is built in code.
+122. **Mouse capture.** A control that took a press keeps the following moves and the release even when the pointer leaves it (Terminal.Gui `Mouse.Grab`, Win32 `SetCapture`); a drag today has to stay inside the control's rectangle.
+123. **Render a control without a terminal.** Print a table, tree, chart or progress group as ANSI text to a pipe or a file for `--help` style output and scripts (Lip Gloss static renderers, Spectre `AnsiConsole.Write`); only the test harness renders offscreen today. Shares the work of item 77.
+
+#### Suggested order for the fifth survey
+
+1. Items 112, 116 and 119: fuzzy matching, `/` filters and typed dialog results are small and used by many dialogs.
+2. Items 117 and 122: line decorations and mouse capture unblock diagnostics, diffs and drags that leave their control.
+3. Items 115 and 113: bars in cells and a preview list suit the file manager and the dashboards.
+4. Items 120, 121 and 123 once the colour work (34) is done; items 114 and 118 when there is a use for them.

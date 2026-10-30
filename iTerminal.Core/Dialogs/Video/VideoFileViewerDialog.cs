@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -66,7 +67,7 @@ public class VideoFileViewerDialog : Dialog
         : base(nameof(VideoFileViewerDialog), themeService)
     {
         _decoderFactory = decoderFactory;
-        Title = "Video";
+        Title = iConsole.Localization.UiText.Get("Dialog.Video", "Video");
 
         _buttons =
         [
@@ -220,11 +221,11 @@ public class VideoFileViewerDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Space", "Play or pause");
-        yield return ("Left/Right", "Seek back or forward (Shift: a long step)");
-        yield return ("Home", "Back to the start");
-        yield return ("S", "Stop");
-        yield return ("C", "Switch colour on or off");
+        yield return ("Space", UiText.Get("DialogHint.PlayOrPause", "Play or pause"));
+        yield return ("Left/Right", UiText.Get("DialogHint.SeekBackForward", "Seek back or forward (Shift: a long step)"));
+        yield return ("Home", UiText.Get("DialogHint.BackToStart", "Back to the start"));
+        yield return ("S", iConsole.Localization.UiText.Get("Common.Stop", "Stop"));
+        yield return ("C", UiText.Get("DialogHint.SwitchColour", "Switch colour on or off"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
