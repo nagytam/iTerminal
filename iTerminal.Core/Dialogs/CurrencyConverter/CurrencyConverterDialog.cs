@@ -56,7 +56,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
     {
         _service = service;
         _settings = settings;
-        Title = "Currency Converter";
+        Title = iConsole.Localization.UiText.Get("Menu.CurrencyConverter", "Currency Converter");
 
         _amount = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Amount", Text = "1" };
         _from = new ComboBox<CurrencyChoice>(themeService) { Label = "From", DisplaySelector = choice => choice.Display, MaxDropDownRows = 10 };

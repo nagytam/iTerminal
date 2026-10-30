@@ -38,7 +38,7 @@ public class IPhoneBrowserDialog : Dialog
     {
         _deviceService = deviceService;
         _contentModelService = contentModelService;
-        Title = "iPhone Browser";
+        Title = iConsole.Localization.UiText.Get("Menu.iPhoneBrowser", "iPhone Browser");
 
         var listModel = new ListBoxModel<IPhoneDeviceInfo>(_devices) { TransformItem = TransformItem };
         _listBox = new ListBox<IPhoneDeviceInfo>(listModel, themeService);

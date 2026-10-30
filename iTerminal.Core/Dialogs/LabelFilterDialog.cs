@@ -35,7 +35,7 @@ public class LabelFilterDialog : FormDialog
         : base(nameof(LabelFilterDialog), themeService)
     {
         _labels = labels;
-        Title = "Filter by label";
+        Title = iConsole.Localization.UiText.Get("Menu.FilterbyLabel", "Filter by label");
         var applyCommand = new ApplyCommand();
         AddCommand(applyCommand);
 

@@ -50,7 +50,7 @@ public class ChecksumDialog : Dialog
         : base(nameof(ChecksumDialog), themeService)
     {
         _checksumService = checksumService;
-        Title = "Checksums";
+        Title = iConsole.Localization.UiText.Get("Menu.Checksums", "Checksums");
         _textBoxCompare = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Compare", Placeholder = "paste the expected hash" };
         _info = new InfoLines(themeService);
         _verdict = new InfoLines(themeService);
