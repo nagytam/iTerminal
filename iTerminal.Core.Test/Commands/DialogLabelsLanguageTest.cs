@@ -79,4 +79,44 @@ public class DialogLabelsLanguageTest
             }
         }
     }
+
+    [TestMethod]
+    public async Task EveryCaption_IsDrawnWhole_InEveryLanguage_OnASmallScreen()
+    {
+        int shownCount = 0;
+        List<string> clipped = [];
+        foreach (LanguageInfo language in Localizer.SupportedLanguages)
+        {
+            Speak(language.Code);
+            foreach ((string type, string member, _, _) in Labels.DistinctBy(l => l.Type))
+            {
+                Type dialogType = typeof(RenameDialog).Assembly.GetExportedTypes().Single(t => t.Name == type);
+                Dialog dialog = (Dialog)DialogHintsWholeTest.Resolve(dialogType, 0)!;
+                iConsole.Data.Size screen = new(80, 24);
+                string drawn;
+                try
+                {
+                    iConsole.Controls.Control root = await Helper.UiTestHelper.ShowAsync(dialog, screen);
+                    drawn = Helper.UiTestHelper.Render(root, screen).ToString();
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+
+                shownCount++;
+                foreach ((string t, string m, _, _) in Labels.Where(l => l.Type == type))
+                {
+                    string? label = LabelOf(t, m);
+                    if (!string.IsNullOrEmpty(label) && !drawn.Contains(label))
+                    {
+                        clipped.Add(language.Code + ":" + t + "." + m + " \"" + label + "\"");
+                    }
+                }
+            }
+        }
+
+        Assert.IsTrue(shownCount > 10, "only " + shownCount + " dialogs could be shown");
+        Assert.AreEqual(0, clipped.Count, string.Join("; ", clipped));
+    }
 }
