@@ -39,7 +39,7 @@ public class OpenWithDialog : Dialog
     {
         _runner = runner;
         _associationDialog = associationDialog;
-        Title = "Open with";
+        Title = iConsole.Localization.UiText.Get("Dialog.OpenWith", "Open with");
         _list = new ChoiceList(themeService);
         AddControl(_list);
     }

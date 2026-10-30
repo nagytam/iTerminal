@@ -63,7 +63,7 @@ public class SynchronizeFoldersDialog : Dialog
         _resolver = resolver;
         _taskManager = taskManager;
         _progressWindowFactory = progressWindowFactory;
-        Title = "Synchronise folders";
+        Title = iConsole.Localization.UiText.Get("Dialog.SynchroniseFolders", "Synchronise folders");
 
         _optionsLabel = new Label(string.Empty, themeService);
         _listBox = new ListBox<string>(new ListBoxModel<string>(_rows), themeService)

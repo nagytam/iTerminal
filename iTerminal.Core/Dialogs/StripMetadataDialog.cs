@@ -45,7 +45,7 @@ public class StripMetadataDialog : Dialog
         : base(nameof(StripMetadataDialog), themeService)
     {
         _contentModelService = contentModelService;
-        Title = "Strip metadata";
+        Title = iConsole.Localization.UiText.Get("Dialog.StripMetadata", "Strip metadata");
         _info = new InfoLines(themeService);
         AddControl(_info);
     }

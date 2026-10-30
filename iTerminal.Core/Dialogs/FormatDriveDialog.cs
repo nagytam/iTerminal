@@ -45,7 +45,7 @@ public class FormatDriveDialog : FormDialog
         _driveActions = driveActions;
         _notifications = notifications;
         _contentModelService = contentModelService;
-        Title = "Format drive";
+        Title = iConsole.Localization.UiText.Get("Dialog.FormatDrive", "Format drive");
         var formatCommand = new FormatCommand();
         AddCommand(formatCommand);
 

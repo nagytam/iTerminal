@@ -427,4 +427,52 @@
   <data name="Dialog.ThemeManager" xml:space="preserve">
     <value>Témakezelő</value>
   </data>
+  <data name="Dialog.CompareFiles" xml:space="preserve">
+    <value>Fájlok összehasonlítása</value>
+  </data>
+  <data name="Dialog.DuplicateFiles" xml:space="preserve">
+    <value>Duplikált fájlok</value>
+  </data>
+  <data name="Dialog.FormatDrive" xml:space="preserve">
+    <value>Meghajtó formázása</value>
+  </data>
+  <data name="Dialog.OpenWith" xml:space="preserve">
+    <value>Megnyitás ezzel</value>
+  </data>
+  <data name="Dialog.Passwords" xml:space="preserve">
+    <value>Jelszavak</value>
+  </data>
+  <data name="Dialog.RemoteConnections" xml:space="preserve">
+    <value>Távoli kapcsolatok</value>
+  </data>
+  <data name="Dialog.ScreenManager" xml:space="preserve">
+    <value>Képernyőkezelő</value>
+  </data>
+  <data name="Dialog.StripMetadata" xml:space="preserve">
+    <value>Metaadatok eltávolítása</value>
+  </data>
+  <data name="Dialog.SynchroniseFolders" xml:space="preserve">
+    <value>Mappák szinkronizálása</value>
+  </data>
+  <data name="Dialog.SystemInformation" xml:space="preserve">
+    <value>Rendszerinformáció</value>
+  </data>
+  <data name="Dialog.SystemSettings" xml:space="preserve">
+    <value>Rendszerbeállítások</value>
+  </data>
+  <data name="Dialog.Tasks" xml:space="preserve">
+    <value>Feladatok</value>
+  </data>
+  <data name="Dialog.UnitConverter" xml:space="preserve">
+    <value>Mértékegység-átváltó</value>
+  </data>
+  <data name="Dialog.UserMenu" xml:space="preserve">
+    <value>Felhasználói menü</value>
+  </data>
+  <data name="Dialog.WebBrowser" xml:space="preserve">
+    <value>Webböngésző</value>
+  </data>
+  <data name="Dialog.FolderSelector" xml:space="preserve">
+    <value>Mappaválasztó</value>
+  </data>
 </root>

@@ -51,7 +51,7 @@ public class UnitConverterDialog : SplitPaneDialog
     public UnitConverterDialog(IBeepService beepService, IDateTimeProviderService dateTimeProviderService, IThemeService themeService)
         : base(nameof(UnitConverterDialog), themeService)
     {
-        Title = "Unit Converter";
+        Title = iConsole.Localization.UiText.Get("Dialog.UnitConverter", "Unit Converter");
 
         _categoryListBox = new CategoryListBox(
             new ListBoxModel<UnitCategory>(_categoryItems) { TransformItem = TransformCategory },

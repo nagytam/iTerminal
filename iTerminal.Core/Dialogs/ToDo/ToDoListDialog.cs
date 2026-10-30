@@ -46,7 +46,7 @@ public class ToDoListDialog : Dialog
     public ToDoListDialog(IDateTimeProviderService dateTimeProviderService, ToDoStore store, IThemeService themeService)
         : base(nameof(ToDoListDialog), themeService)
     {
-        Title = "Tasks";
+        Title = iConsole.Localization.UiText.Get("Dialog.Tasks", "Tasks");
         _dateTimeProviderService = dateTimeProviderService;
         _store = store;
         _today = Today();

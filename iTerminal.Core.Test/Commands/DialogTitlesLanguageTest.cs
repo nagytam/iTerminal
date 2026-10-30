@@ -62,6 +62,7 @@ public class DialogTitlesLanguageTest
         ("DocumentManagerDialog", "Documents", "Documents"), ("EditLinkDialog", "EditLink", "Edit link"), ("SortDialog", "SortBy", "Sort by"),
         ("ProcessManagerDialog", "ProcessManager", "Process manager"), ("NetworkManagerDialog", "NetworkManager", "Network manager"),
         ("SecureWipeDialog", "SecureWipe", "Secure wipe"), ("ThemeManagerDialog", "ThemeManager", "Theme manager"),
+        ("FileDiffDialog", "CompareFiles", "Compare files"), ("DuplicateFinderDialog", "DuplicateFiles", "Duplicate files"), ("FormatDriveDialog", "FormatDrive", "Format drive"), ("OpenWithDialog", "OpenWith", "Open with"), ("PasswordManagerDialog", "Passwords", "Passwords"), ("RemoteConnectionManagerDialog", "RemoteConnections", "Remote connections"), ("ScreenManagerDialog", "ScreenManager", "Screen manager"), ("StripMetadataDialog", "StripMetadata", "Strip metadata"), ("SynchronizeFoldersDialog", "SynchroniseFolders", "Synchronise folders"), ("SystemInfoDialog", "SystemInformation", "System Information"), ("SystemSettingsDialog", "SystemSettings", "System Settings"), ("ToDoListDialog", "Tasks", "Tasks"), ("UnitConverterDialog", "UnitConverter", "Unit Converter"), ("UserMenuDialog", "UserMenu", "User menu"), ("WebBrowserDialog", "WebBrowser", "Web Browser"), ("FolderSelectorDialog", "FolderSelector", "Folder Selector"), 
     ];
 
     private static Type Find(string name) => typeof(RenameDialog).Assembly.GetExportedTypes().Single(t => t.Name == name);

@@ -427,4 +427,52 @@
   <data name="Dialog.ThemeManager" xml:space="preserve">
     <value>Administrador de temas</value>
   </data>
+  <data name="Dialog.CompareFiles" xml:space="preserve">
+    <value>Comparar archivos</value>
+  </data>
+  <data name="Dialog.DuplicateFiles" xml:space="preserve">
+    <value>Archivos duplicados</value>
+  </data>
+  <data name="Dialog.FormatDrive" xml:space="preserve">
+    <value>Formatear unidad</value>
+  </data>
+  <data name="Dialog.OpenWith" xml:space="preserve">
+    <value>Abrir con</value>
+  </data>
+  <data name="Dialog.Passwords" xml:space="preserve">
+    <value>Contraseñas</value>
+  </data>
+  <data name="Dialog.RemoteConnections" xml:space="preserve">
+    <value>Conexiones remotas</value>
+  </data>
+  <data name="Dialog.ScreenManager" xml:space="preserve">
+    <value>Administrador de pantallas</value>
+  </data>
+  <data name="Dialog.StripMetadata" xml:space="preserve">
+    <value>Quitar metadatos</value>
+  </data>
+  <data name="Dialog.SynchroniseFolders" xml:space="preserve">
+    <value>Sincronizar carpetas</value>
+  </data>
+  <data name="Dialog.SystemInformation" xml:space="preserve">
+    <value>Información del sistema</value>
+  </data>
+  <data name="Dialog.SystemSettings" xml:space="preserve">
+    <value>Configuración del sistema</value>
+  </data>
+  <data name="Dialog.Tasks" xml:space="preserve">
+    <value>Tareas</value>
+  </data>
+  <data name="Dialog.UnitConverter" xml:space="preserve">
+    <value>Conversor de unidades</value>
+  </data>
+  <data name="Dialog.UserMenu" xml:space="preserve">
+    <value>Menú de usuario</value>
+  </data>
+  <data name="Dialog.WebBrowser" xml:space="preserve">
+    <value>Navegador web</value>
+  </data>
+  <data name="Dialog.FolderSelector" xml:space="preserve">
+    <value>Selector de carpetas</value>
+  </data>
 </root>

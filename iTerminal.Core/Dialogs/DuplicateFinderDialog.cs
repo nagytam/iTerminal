@@ -62,7 +62,7 @@ public class DuplicateFinderDialog : Dialog
         _service = service;
         _contentModelService = contentModelService;
         _fileSystem = fileSystem;
-        Title = "Duplicate files";
+        Title = iConsole.Localization.UiText.Get("Dialog.DuplicateFiles", "Duplicate files");
         _lines = new InfoLines(themeService);
         AddControl(_lines);
     }
