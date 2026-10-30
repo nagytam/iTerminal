@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -48,7 +49,7 @@ public class FileLabelsDialog : FormDialog
         AddCommand(applyCommand);
 
         _colour = new ComboBox<string>(themeService) { Label = iConsole.Localization.UiText.Get("Label.Colour", "Colour") };
-        _tags = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Tags" };
+        _tags = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Tags", "Tags") };
         _info = new Label(string.Empty, themeService);
         _message = new Label(string.Empty, themeService);
         _applyButton = new Button(iConsole.Localization.UiText.Get("Common.Apply", "Apply"), applyCommand, themeService);

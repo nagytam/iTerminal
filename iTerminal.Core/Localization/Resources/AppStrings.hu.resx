@@ -1480,4 +1480,178 @@
   <data name="DialogHint.BackToStart" xml:space="preserve">
     <value>Vissza az elejére</value>
   </data>
+  <data name="Field.Compare" xml:space="preserve">
+    <value>Összehasonlítás</value>
+  </data>
+  <data name="Field.PasteExpectedHash" xml:space="preserve">
+    <value>illessze be a várt hasht</value>
+  </data>
+  <data name="Field.Run" xml:space="preserve">
+    <value>Futtatás</value>
+  </data>
+  <data name="Field.TypeToFilterCommands" xml:space="preserve">
+    <value>gépeljen a parancsok szűréséhez</value>
+  </data>
+  <data name="Field.IncludeSubfolders" xml:space="preserve">
+    <value>Almappák bevonása</value>
+  </data>
+  <data name="Field.DeleteTargetLacksSource" xml:space="preserve">
+    <value>Törlés, ami a célban van, de a forrásból hiányzik (csak egyirányú)</value>
+  </data>
+  <data name="Field.EncryptFileNames" xml:space="preserve">
+    <value>A fájlnevek titkosítása is</value>
+  </data>
+  <data name="Field.ReplaceFilesArchiveHas" xml:space="preserve">
+    <value>Az archívumban már meglévő fájlok cseréje</value>
+  </data>
+  <data name="Field.Link" xml:space="preserve">
+    <value>Hivatkozás</value>
+  </data>
+  <data name="Field.HardLink" xml:space="preserve">
+    <value>Hardlink (a fájl második neve; azonos kötet)</value>
+  </data>
+  <data name="Field.RelativeTarget" xml:space="preserve">
+    <value>Relatív cél (a páros együtt mozgatható)</value>
+  </data>
+  <data name="Field.Amount" xml:space="preserve">
+    <value>Összeg</value>
+  </data>
+  <data name="Field.From" xml:space="preserve">
+    <value>Ettől</value>
+  </data>
+  <data name="Field.MoveToRecycleBin" xml:space="preserve">
+    <value>Áthelyezés a Lomtárba</value>
+  </data>
+  <data name="Field.RecursivelyDeleteFolder" xml:space="preserve">
+    <value>Mappa rekurzív törlése</value>
+  </data>
+  <data name="Field.Image" xml:space="preserve">
+    <value>Lemezkép</value>
+  </data>
+  <data name="Field.EachArchiveOwnFolder" xml:space="preserve">
+    <value>Minden archívum saját mappába</value>
+  </data>
+  <data name="Field.OverwriteExisting" xml:space="preserve">
+    <value>A már meglévő fájlok felülírása</value>
+  </data>
+  <data name="Field.AppliesTo" xml:space="preserve">
+    <value>Érvényes erre</value>
+  </data>
+  <data name="Field.RunsInTerminal" xml:space="preserve">
+    <value>A terminálban fut (vim, nano, less…)</value>
+  </data>
+  <data name="Field.Tags" xml:space="preserve">
+    <value>Címkék</value>
+  </data>
+  <data name="Field.PathOrUrl" xml:space="preserve">
+    <value>Útvonal vagy URL:</value>
+  </data>
+  <data name="Field.SshUserHost" xml:space="preserve">
+    <value>SSH felhasználó@gép:</value>
+  </data>
+  <data name="Field.FileSystem" xml:space="preserve">
+    <value>Fájlrendszer</value>
+  </data>
+  <data name="Field.VolumeLabel" xml:space="preserve">
+    <value>Kötetcímke</value>
+  </data>
+  <data name="Field.QuickFormat" xml:space="preserve">
+    <value>Gyors formázás (a teljes felületvizsgálat kihagyásával)</value>
+  </data>
+  <data name="Field.TypeDriveLetterConfirm" xml:space="preserve">
+    <value>A megerősítéshez írja be a meghajtó betűjelét</value>
+  </data>
+  <data name="Field.Pattern" xml:space="preserve">
+    <value>Minta</value>
+  </data>
+  <data name="Field.FoldersToo" xml:space="preserve">
+    <value>A mappák is</value>
+  </data>
+  <data name="Field.Username" xml:space="preserve">
+    <value>Felhasználónév</value>
+  </data>
+  <data name="Field.PasswordOrKey" xml:space="preserve">
+    <value>Jelszó (vagy az SSH-kulcs útvonala, ha üres)</value>
+  </data>
+  <data name="Field.ShareName" xml:space="preserve">
+    <value>Megosztás neve</value>
+  </data>
+  <data name="Field.SaveConnection" xml:space="preserve">
+    <value>A kapcsolat mentése</value>
+  </data>
+  <data name="Field.Filter" xml:space="preserve">
+    <value>Szűrő</value>
+  </data>
+  <data name="Field.ProcessNameOrId" xml:space="preserve">
+    <value>folyamat neve vagy azonosítója</value>
+  </data>
+  <data name="Field.ReadOnly" xml:space="preserve">
+    <value>Csak olvasható</value>
+  </data>
+  <data name="Field.Hidden" xml:space="preserve">
+    <value>Rejtett</value>
+  </data>
+  <data name="Field.System" xml:space="preserve">
+    <value>Rendszer</value>
+  </data>
+  <data name="Field.Archive" xml:space="preserve">
+    <value>Archív</value>
+  </data>
+  <data name="Field.ModeOctal" xml:space="preserve">
+    <value>Mód (oktális)</value>
+  </data>
+  <data name="Field.Created" xml:space="preserve">
+    <value>Létrehozva</value>
+  </data>
+  <data name="Field.Modified" xml:space="preserve">
+    <value>Módosítva</value>
+  </data>
+  <data name="Field.Accessed" xml:space="preserve">
+    <value>Elérve</value>
+  </data>
+  <data name="Field.Find" xml:space="preserve">
+    <value>Keresés</value>
+  </data>
+  <data name="Field.NameOrPattern" xml:space="preserve">
+    <value>név vagy minta, pl. *.log</value>
+  </data>
+  <data name="Field.Containing" xml:space="preserve">
+    <value>Tartalmazza</value>
+  </data>
+  <data name="Field.TextInsideFiles" xml:space="preserve">
+    <value>a fájlokban lévő szöveg (nem kötelező)</value>
+  </data>
+  <data name="Field.In" xml:space="preserve">
+    <value>Itt</value>
+  </data>
+  <data name="Field.FolderToSearch" xml:space="preserve">
+    <value>a keresendő mappa</value>
+  </data>
+  <data name="Field.LargerMb" xml:space="preserve">
+    <value>Nagyobb, MB</value>
+  </data>
+  <data name="Field.BlankAny" xml:space="preserve">
+    <value>üres: bármely</value>
+  </data>
+  <data name="Field.OlderDays" xml:space="preserve">
+    <value>Régebbi, nap</value>
+  </data>
+  <data name="Field.ReadTextFromImages" xml:space="preserve">
+    <value>Szöveg olvasása képekből (OCR)</value>
+  </data>
+  <data name="Field.EnableQuotes" xml:space="preserve">
+    <value>Árfolyamok engedélyezése</value>
+  </data>
+  <data name="Field.EnableWeather" xml:space="preserve">
+    <value>Időjárás engedélyezése</value>
+  </data>
+  <data name="Field.Key" xml:space="preserve">
+    <value>Kulcs</value>
+  </data>
+  <data name="Field.MemoryThisProcess" xml:space="preserve">
+    <value>Memória (ez a folyamat)</value>
+  </data>
+  <data name="Field.Engine" xml:space="preserve">
+    <value>Motor</value>
+  </data>
 </root>

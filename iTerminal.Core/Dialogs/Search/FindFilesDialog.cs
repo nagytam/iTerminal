@@ -82,12 +82,12 @@ public class FindFilesDialog : SplitPaneDialog
         _contentModelService = contentModelService;
         Title = iConsole.Localization.UiText.Get("Menu.FindFiles", "Find Files");
 
-        _namesBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Find", MaxLength = 512, Placeholder = "name or pattern, e.g. *.log" };
-        _textBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Containing", MaxLength = 512, Placeholder = "text inside the files (optional)" };
-        _folderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "In", MaxLength = 1024, Placeholder = "folder to search" };
-        _largerBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Larger MB", MaxLength = 12, Placeholder = "blank: any" };
-        _olderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Older days", MaxLength = 6, Placeholder = "blank: any" };
-        _subfoldersBox = new CheckBox(themeService) { Label = "Include subfolders", IsChecked = true, HotKeyChar = 'I' };
+        _namesBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Find", "Find"), MaxLength = 512, Placeholder = UiText.Get("Field.NameOrPattern", "name or pattern, e.g. *.log") };
+        _textBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Containing", "Containing"), MaxLength = 512, Placeholder = UiText.Get("Field.TextInsideFiles", "text inside the files (optional)") };
+        _folderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.In", "In"), MaxLength = 1024, Placeholder = UiText.Get("Field.FolderToSearch", "folder to search") };
+        _largerBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.LargerMb", "Larger MB"), MaxLength = 12, Placeholder = UiText.Get("Field.BlankAny", "blank: any") };
+        _olderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.OlderDays", "Older days"), MaxLength = 6, Placeholder = UiText.Get("Field.BlankAny", "blank: any") };
+        _subfoldersBox = new CheckBox(themeService) { Label = UiText.Get("Field.IncludeSubfolders", "Include subfolders"), IsChecked = true, HotKeyChar = 'I' };
         _resultListBox = new HitListBox(new ListBoxModel<FileSearchHit>(_resultItems), themeService)
         {
             EmptyText = " Type a name pattern and press Enter.",

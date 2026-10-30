@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -46,7 +47,7 @@ public class DiskImageDialog : FormDialog
         var unmountCommand = new ImageCommand(mount: false);
         AddCommand(mountCommand);
 
-        _textBoxPath = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Image" };
+        _textBoxPath = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Image", "Image") };
         _labelHint = new Label("An .iso, .vhd or .vhdx file.", themeService);
         _errorLabels = [.. Enumerable.Range(0, ErrorRows).Select(_ => new Label(string.Empty, themeService))];
         _mountButton = new Button(iConsole.Localization.UiText.Get("Button.Mount", "Mount"), mountCommand, themeService);

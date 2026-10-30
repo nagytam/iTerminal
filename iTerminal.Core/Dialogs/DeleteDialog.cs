@@ -1,4 +1,5 @@
-﻿using iConsole.Commands;
+﻿using iConsole.Localization;
+using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
 using iConsole.Data;
@@ -93,13 +94,13 @@ public class DeleteDialog : FormDialog
         };
         _checkBoxRecycleBin = new CheckBox(themeService)
         {
-            Label = "Move to Recycle bin",
+            Label = UiText.Get("Field.MoveToRecycleBin", "Move to Recycle bin"),
             IsChecked = false,
             HotKeyChar = 'M'
         };
         _checkBoxRecursive = new CheckBox(themeService)
         {
-            Label = "Recursively delete folder",
+            Label = UiText.Get("Field.RecursivelyDeleteFolder", "Recursively delete folder"),
             IsChecked = false,
             IsEnabled = false,
             HotKeyChar = 'R'

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
 using iConsole.Services;
@@ -40,7 +41,7 @@ public class FolderSelectorRemoteShellTabPage : FolderSelectorTabPage
         var completionModel = new PersistedValuesCompletionModel(settingsService, "SSH-Hosts");
         TextBoxHost = new TextBox(beepService, dateTimeProviderService, themeService)
         {
-            Label = "SSH username@host: ",
+            Label = UiText.Get("Field.SshUserHost", "SSH username@host: "),
             Placeholder = "user@host",
         }.WithAutoCompletion(completionModel);
         TextBoxHost.ValidationModel = new HostValidationModel(TextBoxHost.TextModel, dateTimeProviderService);

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Controls.Tabs;
 using iConsole.Data;
@@ -51,7 +52,7 @@ public class SettingsDocumentsTabPage : TabPage
 
         _ocrCheckBox = new CheckBox(themeService)
         {
-            Label = "Read text from images (OCR)",
+            Label = UiText.Get("Field.ReadTextFromImages", "Read text from images (OCR)"),
         };
         _ocrCheckBox.CheckedChanged += OnOcrCheckedChanged;
         AddControl(_ocrCheckBox);

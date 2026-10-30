@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls.Viewers;
 using iConsole.Data;
 using iConsole.Display;
@@ -30,7 +31,7 @@ public class SystemInfoDialog : Dialog
         AddControl(_textViewerControl);
 
         // A live strip under the report: how much of the machine's memory this process holds, and the trend.
-        _memoryGauge = new Gauge(themeService) { Label = "Memory (this process)", ViewSize = new Size(1, 1) };
+        _memoryGauge = new Gauge(themeService) { Label = UiText.Get("Field.MemoryThisProcess", "Memory (this process)"), ViewSize = new Size(1, 1) };
         _memoryTrend = new LineChart(themeService) { Foreground = Color.Cyan, ViewSize = new Size(1, 2) };
         AddControl(_memoryGauge);
         AddControl(_memoryTrend);

@@ -54,7 +54,7 @@ public class SignatureDialog : Dialog
         _notifications = notifications;
         _contentModelService = contentModelService;
         Title = iConsole.Localization.UiText.Get("Menu.Signatures", "Signatures");
-        _textBoxKey = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Key" };
+        _textBoxKey = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Key", "Key") };
         _info = new InfoLines(themeService);
         AddControl(_textBoxKey);
         AddControl(_info);

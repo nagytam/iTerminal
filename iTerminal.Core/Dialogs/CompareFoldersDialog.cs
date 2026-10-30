@@ -75,7 +75,7 @@ public class CompareFoldersDialog : Dialog
         _form.AddField("Compare", _comboMode);
         _checkBoxSubfolders = new CheckBox(themeService)
         {
-            Label = "Include subfolders",
+            Label = UiText.Get("Field.IncludeSubfolders", "Include subfolders"),
             IsChecked = false,
             HotKeyChar = 'S',
         };
@@ -85,7 +85,7 @@ public class CompareFoldersDialog : Dialog
         _syncForm.AddField("Sync (F5)", _comboDirection);
         _checkBoxDeleteExtras = new CheckBox(themeService)
         {
-            Label = "Delete what the target has and the source lacks (one-way only)",
+            Label = UiText.Get("Field.DeleteTargetLacksSource", "Delete what the target has and the source lacks (one-way only)"),
             IsChecked = false,
             HotKeyChar = 'D',
         };

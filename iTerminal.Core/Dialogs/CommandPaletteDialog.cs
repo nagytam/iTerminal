@@ -44,7 +44,7 @@ public class CommandPaletteDialog : Dialog
     {
         _settingsService = settingsService;
         Title = iConsole.Localization.UiText.Get("Dialog.Commands", "Commands");
-        _query = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Run", IsReadOnly = false, Placeholder = "type to filter commands" };
+        _query = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Run", "Run"), IsReadOnly = false, Placeholder = UiText.Get("Field.TypeToFilterCommands", "type to filter commands") };
         _list = new PaletteList(themeService);
         AddControl(_query);
         AddControl(_list);
