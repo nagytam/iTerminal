@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -288,21 +289,21 @@ public class DuplicateFinderDialog : Dialog
     {
         if (_confirming)
         {
-            yield return ("Y", "Delete the marked files");
-            yield return ("Any other key", "Delete nothing");
+            yield return ("Y", UiText.Get("DialogHint.DeleteMarkedFiles", "Delete the marked files"));
+            yield return ("Any other key", UiText.Get("DialogHint.DeleteNothing", "Delete nothing"));
             yield break;
         }
 
-        yield return ("Up/Down", "Move the cursor over the files");
-        yield return ("PageUp/PageDown", "Move a page at a time");
-        yield return ("Home/End", "Jump to the first or last file");
-        yield return ("Space/Insert", "Mark or unmark the file and move on");
-        yield return ("A", "Mark all but the oldest of each set");
-        yield return ("N", "Mark all but the newest of each set");
-        yield return ("U", "Clear the marks");
-        yield return ("Delete/F8", "Delete the marked files (asks first)");
-        yield return ("R", "Scan again");
-        yield return ("G/Enter", "Show the file in the panel");
+        yield return ("Up/Down", UiText.Get("DialogHint.MoveOverFiles", "Move the cursor over the files"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MovePageAtATime", "Move a page at a time"));
+        yield return ("Home/End", UiText.Get("DialogHint.JumpFirstLastFile", "Jump to the first or last file"));
+        yield return ("Space/Insert", UiText.Get("DialogHint.MarkFileAndMoveOn", "Mark or unmark the file and move on"));
+        yield return ("A", UiText.Get("DialogHint.MarkAllButOldest", "Mark all but the oldest of each set"));
+        yield return ("N", UiText.Get("DialogHint.MarkAllButNewest", "Mark all but the newest of each set"));
+        yield return ("U", UiText.Get("DialogHint.ClearMarks", "Clear the marks"));
+        yield return ("Delete/F8", UiText.Get("DialogHint.DeleteMarkedAsks", "Delete the marked files (asks first)"));
+        yield return ("R", UiText.Get("DialogHint.ScanAgain", "Scan again"));
+        yield return ("G/Enter", UiText.Get("DialogHint.ShowFileInPanel", "Show the file in the panel"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

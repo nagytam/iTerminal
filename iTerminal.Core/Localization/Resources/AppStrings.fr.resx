@@ -724,4 +724,181 @@
   <data name="DialogHint.LookUpAddress" xml:space="preserve">
     <value>Rechercher une adresse</value>
   </data>
+  <data name="DialogHint.AddTorrent" xml:space="preserve">
+    <value>Ajouter le torrent</value>
+  </data>
+  <data name="DialogHint.PasteLinkOrPath" xml:space="preserve">
+    <value>Coller un lien ou un chemin</value>
+  </data>
+  <data name="DialogHint.RemoveKeepFiles" xml:space="preserve">
+    <value>Retirer, garder les fichiers téléchargés</value>
+  </data>
+  <data name="DialogHint.RemoveDeleteFiles" xml:space="preserve">
+    <value>Retirer et supprimer les fichiers téléchargés</value>
+  </data>
+  <data name="DialogHint.KeepTorrent" xml:space="preserve">
+    <value>Garder le torrent</value>
+  </data>
+  <data name="DialogHint.ChooseTorrent" xml:space="preserve">
+    <value>Choisir un torrent</value>
+  </data>
+  <data name="DialogHint.AddMagnetOrTorrent" xml:space="preserve">
+    <value>Ajouter un lien magnet ou un .torrent</value>
+  </data>
+  <data name="DialogHint.PauseOrResume" xml:space="preserve">
+    <value>Mettre en pause ou reprendre</value>
+  </data>
+  <data name="DialogHint.RemoveTorrentAsks" xml:space="preserve">
+    <value>Retirer le torrent (demande d'abord)</value>
+  </data>
+  <data name="DialogHint.OpenSaveFolder" xml:space="preserve">
+    <value>Ouvrir le dossier d'enregistrement dans le panneau actif</value>
+  </data>
+  <data name="DialogHint.DeleteMarkedFiles" xml:space="preserve">
+    <value>Supprimer les fichiers marqués</value>
+  </data>
+  <data name="DialogHint.DeleteNothing" xml:space="preserve">
+    <value>Ne rien supprimer</value>
+  </data>
+  <data name="DialogHint.MoveOverFiles" xml:space="preserve">
+    <value>Déplacer le curseur sur les fichiers</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastFile" xml:space="preserve">
+    <value>Aller au premier ou au dernier fichier</value>
+  </data>
+  <data name="DialogHint.MarkFileAndMoveOn" xml:space="preserve">
+    <value>Marquer ou démarquer le fichier et passer au suivant</value>
+  </data>
+  <data name="DialogHint.MarkAllButOldest" xml:space="preserve">
+    <value>Marquer tous sauf le plus ancien de chaque groupe</value>
+  </data>
+  <data name="DialogHint.MarkAllButNewest" xml:space="preserve">
+    <value>Marquer tous sauf le plus récent de chaque groupe</value>
+  </data>
+  <data name="DialogHint.ClearMarks" xml:space="preserve">
+    <value>Effacer les marques</value>
+  </data>
+  <data name="DialogHint.DeleteMarkedAsks" xml:space="preserve">
+    <value>Supprimer les fichiers marqués (demande d'abord)</value>
+  </data>
+  <data name="DialogHint.ScanAgain" xml:space="preserve">
+    <value>Analyser à nouveau</value>
+  </data>
+  <data name="DialogHint.ShowFileInPanel" xml:space="preserve">
+    <value>Afficher le fichier dans le panneau</value>
+  </data>
+  <data name="DialogHint.SaveMeeting" xml:space="preserve">
+    <value>Enregistrer la réunion</value>
+  </data>
+  <data name="DialogHint.DiscardEntry" xml:space="preserve">
+    <value>Abandonner l'entrée</value>
+  </data>
+  <data name="DialogHint.DeleteMeeting" xml:space="preserve">
+    <value>Supprimer la réunion</value>
+  </data>
+  <data name="DialogHint.KeepMeeting" xml:space="preserve">
+    <value>Garder la réunion</value>
+  </data>
+  <data name="DialogHint.MoveDayOrWeek" xml:space="preserve">
+    <value>Se déplacer d'un jour ou d'une semaine</value>
+  </data>
+  <data name="DialogHint.GoToToday" xml:space="preserve">
+    <value>Aller à aujourd'hui</value>
+  </data>
+  <data name="DialogHint.ChooseMeetingOfDay" xml:space="preserve">
+    <value>Choisir une réunion du jour</value>
+  </data>
+  <data name="DialogHint.AddMeeting" xml:space="preserve">
+    <value>Ajouter une réunion</value>
+  </data>
+  <data name="DialogHint.EditChosenMeeting" xml:space="preserve">
+    <value>Modifier la réunion choisie</value>
+  </data>
+  <data name="DialogHint.DeleteChosenMeetingAsks" xml:space="preserve">
+    <value>Supprimer la réunion choisie (demande d'abord)</value>
+  </data>
+  <data name="DialogHint.SaveTask" xml:space="preserve">
+    <value>Enregistrer la tâche</value>
+  </data>
+  <data name="DialogHint.DeleteTask" xml:space="preserve">
+    <value>Supprimer la tâche</value>
+  </data>
+  <data name="DialogHint.KeepTask" xml:space="preserve">
+    <value>Garder la tâche</value>
+  </data>
+  <data name="DialogHint.MoveOverTasks" xml:space="preserve">
+    <value>Parcourir les tâches</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastTask" xml:space="preserve">
+    <value>Aller à la première ou à la dernière tâche</value>
+  </data>
+  <data name="DialogHint.AddTask" xml:space="preserve">
+    <value>Ajouter une tâche</value>
+  </data>
+  <data name="DialogHint.EditTask" xml:space="preserve">
+    <value>Modifier la tâche</value>
+  </data>
+  <data name="DialogHint.MarkTaskDoneOrOpen" xml:space="preserve">
+    <value>Marquer la tâche comme faite ou ouverte</value>
+  </data>
+  <data name="DialogHint.DeleteTaskAsks" xml:space="preserve">
+    <value>Supprimer la tâche (demande d'abord)</value>
+  </data>
+  <data name="DialogHint.ApplyValue" xml:space="preserve">
+    <value>Appliquer la valeur</value>
+  </data>
+  <data name="DialogHint.CancelEntry" xml:space="preserve">
+    <value>Annuler la saisie</value>
+  </data>
+  <data name="DialogHint.SwitchSection" xml:space="preserve">
+    <value>Changer de section</value>
+  </data>
+  <data name="DialogHint.MoveOverSettings" xml:space="preserve">
+    <value>Parcourir les paramètres</value>
+  </data>
+  <data name="DialogHint.FirstOrLastSetting" xml:space="preserve">
+    <value>Premier ou dernier paramètre</value>
+  </data>
+  <data name="DialogHint.ChangeSettingUnderCursor" xml:space="preserve">
+    <value>Modifier le paramètre sous le curseur</value>
+  </data>
+  <data name="DialogHint.ReadSettingsAgain" xml:space="preserve">
+    <value>Relire les paramètres</value>
+  </data>
+  <data name="DialogHint.AddVariable" xml:space="preserve">
+    <value>Ajouter une variable</value>
+  </data>
+  <data name="DialogHint.RemoveVariableAsks" xml:space="preserve">
+    <value>Supprimer la variable (demande d'abord)</value>
+  </data>
+  <data name="DialogHint.SwitchUserMachine" xml:space="preserve">
+    <value>Basculer entre la portée utilisateur et machine</value>
+  </data>
+  <data name="DialogHint.SaveConnection" xml:space="preserve">
+    <value>Enregistrer la connexion</value>
+  </data>
+  <data name="DialogHint.DeleteConnection" xml:space="preserve">
+    <value>Supprimer la connexion</value>
+  </data>
+  <data name="DialogHint.KeepConnection" xml:space="preserve">
+    <value>Garder la connexion</value>
+  </data>
+  <data name="DialogHint.ChooseConnection" xml:space="preserve">
+    <value>Choisir une connexion</value>
+  </data>
+  <data name="DialogHint.ConnectLentTerminal" xml:space="preserve">
+    <value>Se connecter sur le terminal prêté</value>
+  </data>
+  <data name="DialogHint.AddConnection" xml:space="preserve">
+    <value>Ajouter une connexion</value>
+  </data>
+  <data name="DialogHint.EditConnection" xml:space="preserve">
+    <value>Modifier la connexion</value>
+  </data>
+  <data name="DialogHint.DeleteConnectionAsks" xml:space="preserve">
+    <value>Supprimer la connexion (demande d'abord)</value>
+  </data>
+  <data name="DialogHint.BrowseConnection" xml:space="preserve">
+    <value>Parcourir la connexion dans un panneau</value>
+  </data>
 </root>
