@@ -104,7 +104,7 @@ public class WebBrowserDialog : Dialog
         : base(nameof(WebBrowserDialog), themeService)
     {
         _model = model;
-        Title = "Web Browser";
+        Title = iConsole.Localization.UiText.Get("Dialog.WebBrowser", "Web Browser");
     }
 
     internal WebBrowserModel Model => _model;

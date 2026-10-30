@@ -25,7 +25,7 @@ public class ScreenManagerDialog : Dialog
     public ScreenManagerDialog(IThemeService themeService)
         : base(nameof(ScreenManagerDialog), themeService)
     {
-        Title = "Screen manager";
+        Title = iConsole.Localization.UiText.Get("Dialog.ScreenManager", "Screen manager");
 
         var listModel = new ListBoxModel<IScreen>(_screens)
         {

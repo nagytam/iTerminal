@@ -25,7 +25,7 @@ public class SystemInfoDialog : Dialog
     public SystemInfoDialog(IThemeService themeService)
         : base(nameof(SystemInfoDialog), themeService)
     {
-        Title = "System Information";
+        Title = iConsole.Localization.UiText.Get("Dialog.SystemInformation", "System Information");
         _textViewerControl = new TextViewerControl(false, themeService);
         AddControl(_textViewerControl);
 

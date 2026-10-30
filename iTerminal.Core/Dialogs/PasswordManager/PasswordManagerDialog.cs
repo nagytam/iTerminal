@@ -72,7 +72,7 @@ public class PasswordManagerDialog : Dialog
     public PasswordManagerDialog(IPasswordManager passwords, IThemeService themeService)
         : base(nameof(PasswordManagerDialog), themeService)
     {
-        Title = "Passwords";
+        Title = iConsole.Localization.UiText.Get("Dialog.Passwords", "Passwords");
         _passwords = passwords;
         _strengthMeter = new StrengthMeter(themeService);
     }

@@ -72,7 +72,7 @@ public class SystemSettingsDialog : Dialog
         : base(nameof(SystemSettingsDialog), themeService)
     {
         _service = service;
-        Title = "System Settings";
+        Title = iConsole.Localization.UiText.Get("Dialog.SystemSettings", "System Settings");
         _lines = new InfoLines(themeService);
         _input = new TextBox(beepService, dateTimeProviderService, themeService)
         {
