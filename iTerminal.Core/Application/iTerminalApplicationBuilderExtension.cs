@@ -119,6 +119,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.Calendar.CalendarDialog>();
         services.AddSingleton<iTerminal.Core.Model.ToDo.ToDoStore>();
         services.AddTransient<iTerminal.Core.Dialogs.ToDo.ToDoListDialog>();
+        services.AddSingleton<iTerminal.Core.Model.Contacts.ContactStore>();
+        services.AddTransient<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>();
         services.AddSingleton<iTerminal.Core.Model.Mail.MailAccountStore>();
         services.AddSingleton<iTerminal.Core.Services.Mail.IMailService, iTerminal.Core.Services.Mail.MailService>();
         services.AddTransient<iTerminal.Core.Dialogs.Mail.MailDialog>();
