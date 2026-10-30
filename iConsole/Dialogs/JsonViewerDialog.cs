@@ -1,6 +1,7 @@
 using System.Text.Json;
 using iConsole.Commands;
 using iConsole.Controls;
+using iConsole.Localization;
 using iConsole.Controls.Buttons;
 using iConsole.Controls.Viewers;
 using iConsole.Data;
@@ -67,14 +68,14 @@ public class JsonViewerDialog : Dialog
         IFileSystem? fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
         if (Url is null || fileSystem is null)
         {
-            _statusLabel.Text = "Nothing to show";
+            _statusLabel.Text = UiText.Get("Viewer.NothingToShow", "Nothing to show");
             return;
         }
 
         byte[]? content = (await fileSystem.ReadFileAsync(Url))?.Content;
         if (content is null)
         {
-            _statusLabel.Text = "Could not read the file";
+            _statusLabel.Text = UiText.Get("Viewer.CouldNotRead", "Could not read the file");
             return;
         }
 
@@ -82,7 +83,7 @@ public class JsonViewerDialog : Dialog
         JsonValidationIssue? issue = await Task.Run(() => JsonValidator.Validate(content));
         if (issue is not null)
         {
-            _statusLabel.Text = $"Not valid JSON: {issue}";
+            _statusLabel.Text = string.Format(UiText.Get("Viewer.NotValidJson", "Not valid JSON: {0}"), issue);
             await ShowTextAsync();
             return;
         }
@@ -187,7 +188,7 @@ public class JsonViewerDialog : Dialog
 
         byte[] content = _content;
         _validation = Task.Run(() => JsonValidator.Validate(content));
-        _statusLabel.Text = "Validating…";
+        _statusLabel.Text = UiText.Get("Viewer.Validating", "Validating…");
         return _validation;
     }
 
@@ -201,7 +202,7 @@ public class JsonViewerDialog : Dialog
         {
             _validation = null;
             JsonValidationIssue? issue = validation.Result;
-            _statusLabel.Text = issue is null ? "Valid JSON" : $"Not valid JSON: {issue}";
+            _statusLabel.Text = issue is null ? UiText.Get("Viewer.ValidJson", "Valid JSON") : string.Format(UiText.Get("Viewer.NotValidJson", "Not valid JSON: {0}"), issue);
             StateHasChanged();
         }
 
@@ -279,9 +280,9 @@ public class JsonViewerDialog : Dialog
     /// <summary>The keys this dialog adds to the tree's, for the help screen.</summary>
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("F2", "Check the file is valid JSON");
-        yield return ("F4", "Show the file's text, or the tree again");
-        yield return ("*", "Expand every node");
+        yield return ("F2", UiText.Get("Viewer.HintJsonValidate", "Check the file is valid JSON"));
+        yield return ("F4", UiText.Get("Viewer.HintToggleText", "Show the file's text, or the tree again"));
+        yield return ("*", UiText.Get("Viewer.HintExpandAll", "Expand every node"));
     }
 
     private sealed class CloseSelfCommand(JsonViewerDialog owner) : Command

@@ -145,4 +145,82 @@
   <data name="Editor.Discard" xml:space="preserve">
     <value>Elvetés</value>
   </data>
+  <data name="Viewer.NothingToShow" xml:space="preserve">
+    <value>Nincs mit megjeleníteni</value>
+  </data>
+  <data name="Viewer.CouldNotRead" xml:space="preserve">
+    <value>A fájl nem olvasható</value>
+  </data>
+  <data name="Viewer.NotValidJson" xml:space="preserve">
+    <value>Érvénytelen JSON: {0}</value>
+  </data>
+  <data name="Viewer.Validating" xml:space="preserve">
+    <value>Ellenőrzés…</value>
+  </data>
+  <data name="Viewer.ValidJson" xml:space="preserve">
+    <value>Érvényes JSON</value>
+  </data>
+  <data name="Viewer.HintJsonValidate" xml:space="preserve">
+    <value>Ellenőrzi, hogy a fájl érvényes JSON-e</value>
+  </data>
+  <data name="Viewer.HintToggleText" xml:space="preserve">
+    <value>A fájl szövegének vagy újra a fának megjelenítése</value>
+  </data>
+  <data name="Viewer.HintExpandAll" xml:space="preserve">
+    <value>Minden csomópont kibontása</value>
+  </data>
+  <data name="Viewer.XPathPlaceholder" xml:space="preserve">
+    <value>Írjon be egy lekérdezést, pl. //book[price &gt; 10]/title</value>
+  </data>
+  <data name="Viewer.NoResults" xml:space="preserve">
+    <value>Nincs találat</value>
+  </data>
+  <data name="Viewer.NotWellFormed" xml:space="preserve">
+    <value>Nem jól formált XML: {0}</value>
+  </data>
+  <data name="Viewer.RunningQuery" xml:space="preserve">
+    <value>Lekérdezés futtatása…</value>
+  </data>
+  <data name="Viewer.XPathError" xml:space="preserve">
+    <value>XPath-hiba: {0}</value>
+  </data>
+  <data name="Viewer.NoMatches" xml:space="preserve">
+    <value>Nincs egyezés</value>
+  </data>
+  <data name="Viewer.Matches" xml:space="preserve">
+    <value>{0:N0} egyezés</value>
+  </data>
+  <data name="Viewer.ShowingMatches" xml:space="preserve">
+    <value>{0:N0} / {1:N0} egyezés megjelenítve</value>
+  </data>
+  <data name="Viewer.Valid" xml:space="preserve">
+    <value>Érvényes</value>
+  </data>
+  <data name="Viewer.ErrorsWarnings" xml:space="preserve">
+    <value>{0:N0} hiba, {1:N0} figyelmeztetés</value>
+  </data>
+  <data name="Viewer.HintXmlValidate" xml:space="preserve">
+    <value>Ellenőrzés a dokumentum által megnevezett sémával vagy DTD-vel</value>
+  </data>
+  <data name="Viewer.HintXPathBox" xml:space="preserve">
+    <value>Ugrás az XPath mezőre</value>
+  </data>
+  <data name="Viewer.HintRunXPath" xml:space="preserve">
+    <value>XPath-lekérdezés futtatása, vagy a kijelölt találat megnyitása a fában</value>
+  </data>
+  <data name="Viewer.NotSaved" xml:space="preserve">
+    <value>Nincs mentve: {0}</value>
+  </data>
+  <data name="Viewer.NowhereToSave" xml:space="preserve">
+    <value>Nincs hová menteni: {0}</value>
+  </data>
+  <data name="Viewer.HintSave" xml:space="preserve">
+    <value>Fájl mentése</value>
+  </data>
+  <data name="Viewer.HintIndent" xml:space="preserve">
+    <value>Behúzás</value>
+  </data>
+  <data name="Viewer.HintCodePage" xml:space="preserve">
+    <value>Következő kódlap (Shift: előző)</value>
+  </data>
 </root>

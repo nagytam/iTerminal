@@ -145,4 +145,82 @@
   <data name="Editor.Discard" xml:space="preserve">
     <value>Descartar</value>
   </data>
+  <data name="Viewer.NothingToShow" xml:space="preserve">
+    <value>Nada que mostrar</value>
+  </data>
+  <data name="Viewer.CouldNotRead" xml:space="preserve">
+    <value>No se pudo leer el archivo</value>
+  </data>
+  <data name="Viewer.NotValidJson" xml:space="preserve">
+    <value>JSON no válido: {0}</value>
+  </data>
+  <data name="Viewer.Validating" xml:space="preserve">
+    <value>Validando…</value>
+  </data>
+  <data name="Viewer.ValidJson" xml:space="preserve">
+    <value>JSON válido</value>
+  </data>
+  <data name="Viewer.HintJsonValidate" xml:space="preserve">
+    <value>Comprobar que el archivo es JSON válido</value>
+  </data>
+  <data name="Viewer.HintToggleText" xml:space="preserve">
+    <value>Mostrar el texto del archivo o el árbol de nuevo</value>
+  </data>
+  <data name="Viewer.HintExpandAll" xml:space="preserve">
+    <value>Expandir todos los nodos</value>
+  </data>
+  <data name="Viewer.XPathPlaceholder" xml:space="preserve">
+    <value>Escriba una consulta, p. ej. //book[price &gt; 10]/title</value>
+  </data>
+  <data name="Viewer.NoResults" xml:space="preserve">
+    <value>Sin resultados</value>
+  </data>
+  <data name="Viewer.NotWellFormed" xml:space="preserve">
+    <value>XML mal formado: {0}</value>
+  </data>
+  <data name="Viewer.RunningQuery" xml:space="preserve">
+    <value>Ejecutando la consulta…</value>
+  </data>
+  <data name="Viewer.XPathError" xml:space="preserve">
+    <value>Error de XPath: {0}</value>
+  </data>
+  <data name="Viewer.NoMatches" xml:space="preserve">
+    <value>Sin coincidencias</value>
+  </data>
+  <data name="Viewer.Matches" xml:space="preserve">
+    <value>{0:N0} coincidencia(s)</value>
+  </data>
+  <data name="Viewer.ShowingMatches" xml:space="preserve">
+    <value>Mostrando {0:N0} de {1:N0} coincidencias</value>
+  </data>
+  <data name="Viewer.Valid" xml:space="preserve">
+    <value>Válido</value>
+  </data>
+  <data name="Viewer.ErrorsWarnings" xml:space="preserve">
+    <value>{0:N0} error(es), {1:N0} advertencia(s)</value>
+  </data>
+  <data name="Viewer.HintXmlValidate" xml:space="preserve">
+    <value>Validar con el esquema o DTD que nombra el documento</value>
+  </data>
+  <data name="Viewer.HintXPathBox" xml:space="preserve">
+    <value>Ir al cuadro XPath</value>
+  </data>
+  <data name="Viewer.HintRunXPath" xml:space="preserve">
+    <value>Ejecutar la consulta XPath o abrir el resultado elegido en el árbol</value>
+  </data>
+  <data name="Viewer.NotSaved" xml:space="preserve">
+    <value>No guardado: {0}</value>
+  </data>
+  <data name="Viewer.NowhereToSave" xml:space="preserve">
+    <value>Sin destino donde guardar: {0}</value>
+  </data>
+  <data name="Viewer.HintSave" xml:space="preserve">
+    <value>Guardar el archivo</value>
+  </data>
+  <data name="Viewer.HintIndent" xml:space="preserve">
+    <value>Sangrar</value>
+  </data>
+  <data name="Viewer.HintCodePage" xml:space="preserve">
+    <value>Siguiente página de códigos (Mayús: anterior)</value>
+  </data>
 </root>
