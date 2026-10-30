@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Display;
 using iConsole.Services;
@@ -43,11 +44,11 @@ public class PieChart(IThemeService themeService) : Control(themeService)
 
     public string EmptyText
     {
-        get => _emptyText;
+        get => _emptyText ?? UiText.Get("Common.NoData", "No data");
         set => _emptyText = value ?? string.Empty;
     }
 
-    private string _emptyText = "No data";
+    private string? _emptyText;
 
     private static double Weight(ChartSlice slice) => double.IsFinite(slice.Value) && slice.Value > 0 ? slice.Value : 0;
 

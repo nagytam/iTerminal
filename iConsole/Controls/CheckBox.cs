@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Display;
@@ -51,7 +52,7 @@ public class CheckBox : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Space", "Check or uncheck");
+        yield return ("Space", UiText.Get("Hint.CheckOrUncheck", "Check or uncheck"));
     }
 
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)

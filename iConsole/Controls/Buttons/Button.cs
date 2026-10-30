@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Display;
@@ -171,7 +172,7 @@ public class Button : Control
             yield break;
         }
 
-        yield return ("Space", "Press the button");
+        yield return ("Space", UiText.Get("Hint.PressButton", "Press the button"));
     }
 
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)

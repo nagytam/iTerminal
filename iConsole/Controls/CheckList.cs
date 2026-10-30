@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -125,15 +126,15 @@ public class CheckList : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Up/Down", "Move the cursor");
-        yield return ("PageUp/PageDown", "Move the cursor a page");
-        yield return ("Home/End", "First or last item");
-        yield return ("Enter", "Activate the list");
+        yield return ("Up/Down", UiText.Get("Hint.MoveCursor", "Move the cursor"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.MoveCursorPage", "Move the cursor a page"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastItem", "First or last item"));
+        yield return ("Enter", UiText.Get("Hint.ActivateList", "Activate the list"));
         if (!IsReadOnly)
         {
-            yield return ("Space", "Check or uncheck the item under the cursor");
-            yield return ("+/-", "Check or uncheck every item");
-            yield return ("*", "Invert every item");
+            yield return ("Space", UiText.Get("Hint.CheckItemUnderCursor", "Check or uncheck the item under the cursor"));
+            yield return ("+/-", UiText.Get("Hint.CheckEveryItem", "Check or uncheck every item"));
+            yield return ("*", UiText.Get("Hint.InvertEveryItem", "Invert every item"));
         }
     }
 

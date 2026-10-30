@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -127,12 +128,12 @@ public class Chips : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Left/Right", "Move between the chips");
-        yield return ("Home/End", "First chip or last chip");
+        yield return ("Left/Right", UiText.Get("Hint.MoveBetweenChips", "Move between the chips"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastChip", "First chip or last chip"));
         if (!IsReadOnly)
         {
-            yield return ("Enter", "Add a chip on the [+] slot");
-            yield return ("Delete/Backspace", "Remove the active chip");
+            yield return ("Enter", UiText.Get("Hint.AddChip", "Add a chip on the [+] slot"));
+            yield return ("Delete/Backspace", UiText.Get("Hint.RemoveActiveChip", "Remove the active chip"));
         }
     }
 

@@ -223,4 +223,115 @@
   <data name="Viewer.HintCodePage" xml:space="preserve">
     <value>Következő kódlap (Shift: előző)</value>
   </data>
+  <data name="Hint.DismissMessage" xml:space="preserve">
+    <value>Az üzenet bezárása</value>
+  </data>
+  <data name="Hint.MoveHighlightTrail" xml:space="preserve">
+    <value>A kiemelés mozgatása az útvonal mentén</value>
+  </data>
+  <data name="Hint.FirstOrLastSegment" xml:space="preserve">
+    <value>Első vagy utolsó szakasz</value>
+  </data>
+  <data name="Hint.OpenHighlightedSegment" xml:space="preserve">
+    <value>A kiemelt szakasz megnyitása</value>
+  </data>
+  <data name="Hint.PressButton" xml:space="preserve">
+    <value>A gomb megnyomása</value>
+  </data>
+  <data name="Hint.MoveSelectedDay" xml:space="preserve">
+    <value>A kijelölt nap vagy hét mozgatása</value>
+  </data>
+  <data name="Hint.PreviousNextMonth" xml:space="preserve">
+    <value>Előző vagy következő hónap</value>
+  </data>
+  <data name="Hint.FirstLastDayOfMonth" xml:space="preserve">
+    <value>A hónap első vagy utolsó napja</value>
+  </data>
+  <data name="Hint.SelectToday" xml:space="preserve">
+    <value>A mai nap kijelölése</value>
+  </data>
+  <data name="Hint.PreviousNextYear" xml:space="preserve">
+    <value>Előző vagy következő év</value>
+  </data>
+  <data name="Hint.ChooseSelectedDay" xml:space="preserve">
+    <value>A kijelölt nap kiválasztása</value>
+  </data>
+  <data name="Hint.CheckOrUncheck" xml:space="preserve">
+    <value>Bejelölés vagy törlés</value>
+  </data>
+  <data name="Hint.MoveCursor" xml:space="preserve">
+    <value>A kurzor mozgatása</value>
+  </data>
+  <data name="Hint.MoveCursorPage" xml:space="preserve">
+    <value>A kurzor mozgatása egy oldallal</value>
+  </data>
+  <data name="Hint.FirstOrLastItem" xml:space="preserve">
+    <value>Első vagy utolsó elem</value>
+  </data>
+  <data name="Hint.ActivateList" xml:space="preserve">
+    <value>A lista aktiválása</value>
+  </data>
+  <data name="Hint.CheckItemUnderCursor" xml:space="preserve">
+    <value>A kurzor alatti elem bejelölése vagy törlése</value>
+  </data>
+  <data name="Hint.CheckEveryItem" xml:space="preserve">
+    <value>Minden elem bejelölése vagy törlése</value>
+  </data>
+  <data name="Hint.InvertEveryItem" xml:space="preserve">
+    <value>Minden elem megfordítása</value>
+  </data>
+  <data name="Hint.MoveBetweenChips" xml:space="preserve">
+    <value>Mozgás a chipek között</value>
+  </data>
+  <data name="Hint.FirstOrLastChip" xml:space="preserve">
+    <value>Első vagy utolsó chip</value>
+  </data>
+  <data name="Hint.AddChip" xml:space="preserve">
+    <value>Chip hozzáadása a [+] helyen</value>
+  </data>
+  <data name="Hint.RemoveActiveChip" xml:space="preserve">
+    <value>Az aktív chip eltávolítása</value>
+  </data>
+  <data name="Hint.MoveOverPalette" xml:space="preserve">
+    <value>A kurzor mozgatása a palettán</value>
+  </data>
+  <data name="Hint.FirstOrLastColour" xml:space="preserve">
+    <value>Első vagy utolsó szín</value>
+  </data>
+  <data name="Hint.ChooseColourUnderCursor" xml:space="preserve">
+    <value>A kurzor alatti szín kiválasztása</value>
+  </data>
+  <data name="Hint.ChoosePreviousNext" xml:space="preserve">
+    <value>Az előző vagy következő elem kiválasztása</value>
+  </data>
+  <data name="Hint.ChooseItemPageAway" xml:space="preserve">
+    <value>Egy oldallal távolabbi elem kiválasztása</value>
+  </data>
+  <data name="Hint.JumpToLetter" xml:space="preserve">
+    <value>Ugrás a következő, ezekkel kezdődő elemre</value>
+  </data>
+  <data name="Hint.OpenList" xml:space="preserve">
+    <value>A lista megnyitása</value>
+  </data>
+  <data name="Hint.MoveOverItems" xml:space="preserve">
+    <value>Mozgás az elemek között</value>
+  </data>
+  <data name="Hint.RunOrOpenSubmenu" xml:space="preserve">
+    <value>A tétel futtatása vagy almenüjének megnyitása</value>
+  </data>
+  <data name="Hint.OpenSubmenu" xml:space="preserve">
+    <value>Az almenü megnyitása</value>
+  </data>
+  <data name="Hint.CloseSubmenu" xml:space="preserve">
+    <value>Az almenü bezárása</value>
+  </data>
+  <data name="Hint.CloseMenu" xml:space="preserve">
+    <value>A menü bezárása</value>
+  </data>
+  <data name="Common.NoData" xml:space="preserve">
+    <value>Nincs adat</value>
+  </data>
+  <data name="Common.NoRows" xml:space="preserve">
+    <value>Nincs sor</value>
+  </data>
 </root>

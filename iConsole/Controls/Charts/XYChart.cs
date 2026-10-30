@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Display;
 using iConsole.Services;
@@ -24,11 +25,11 @@ public abstract class XYChart(IThemeService themeService) : Control(themeService
     /// <summary>Text shown when there is nothing to plot.</summary>
     public string EmptyText
     {
-        get => _emptyText;
+        get => _emptyText ?? UiText.Get("Common.NoData", "No data");
         set => _emptyText = value ?? string.Empty;
     }
 
-    private string _emptyText = "No data";
+    private string? _emptyText;
 
     /// <summary>The value range to plot; false when there is no data.</summary>
     protected abstract bool TryGetRange(out double xMin, out double xMax, out double yMin, out double yMax);

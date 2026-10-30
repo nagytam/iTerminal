@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -94,9 +95,9 @@ public class Breadcrumb : Control
             yield break;
         }
 
-        yield return ("Left/Right", "Move the highlight along the trail");
-        yield return ("Home/End", "First or last segment");
-        yield return ("Enter/Space", "Open the highlighted segment");
+        yield return ("Left/Right", UiText.Get("Hint.MoveHighlightTrail", "Move the highlight along the trail"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastSegment", "First or last segment"));
+        yield return ("Enter/Space", UiText.Get("Hint.OpenHighlightedSegment", "Open the highlighted segment"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
