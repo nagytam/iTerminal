@@ -158,7 +158,7 @@ public class DocumentManagerDialog : SplitPaneDialog
     {
         _documentLibraryService = documentLibraryService;
         _contentModelService = contentModelService;
-        Title = "Documents";
+        Title = iConsole.Localization.UiText.Get("Dialog.Documents", "Documents");
 
         _resultListBox = new ResultListBox(new ListBoxModel<DocumentSearchHit>(_resultItems), themeService);
         _previewListBox = new PreviewListBox(new ListBoxModel<string>(_previewItems), themeService);

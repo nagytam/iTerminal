@@ -24,7 +24,7 @@ public class ProcessManagerDialog : Dialog
     {
         processService ??= new ProcessService();
 
-        Title = "Process manager";
+        Title = iConsole.Localization.UiText.Get("Dialog.ProcessManager", "Process manager");
         _textbox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Filter", Placeholder = "process name or id" };
         AddControl(_textbox);
         var listModel = new ListBoxModel<Process>(processService.Processes)

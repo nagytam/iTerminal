@@ -33,7 +33,7 @@ public class ThemeManagerDialog : Dialog
         : base(nameof(ThemeManagerDialog), themeService)
     {
         _settingsService = settingsService;
-        Title = "Theme manager";
+        Title = iConsole.Localization.UiText.Get("Dialog.ThemeManager", "Theme manager");
 
         var listModel = new ListBoxModel<ColorScheme>(_themes)
         {
