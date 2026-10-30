@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -118,17 +119,17 @@ public class NumericUpDown : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Up/Down", "Step the value");
-        yield return ("PageUp/PageDown", "Step the value by a large amount");
-        yield return ("Home/End", "Set the minimum or maximum");
-        yield return ("0-9", "Type the value");
+        yield return ("Up/Down", UiText.Get("Hint.StepValue", "Step the value"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.StepValueLarge", "Step the value by a large amount"));
+        yield return ("Home/End", UiText.Get("Hint.SetMinMax", "Set the minimum or maximum"));
+        yield return ("0-9", UiText.Get("Hint.TypeValue", "Type the value"));
         if (_minimum < 0)
         {
-            yield return ("-", "Flip the sign");
+            yield return ("-", UiText.Get("Hint.FlipSign", "Flip the sign"));
         }
 
-        yield return ("Backspace", "Remove the last digit");
-        yield return ("Delete", "Set the value to 0");
+        yield return ("Backspace", UiText.Get("Hint.RemoveLastDigit", "Remove the last digit"));
+        yield return ("Delete", UiText.Get("Hint.SetValueZero", "Set the value to 0"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

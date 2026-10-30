@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Helper;
 using iConsole.Data;
@@ -788,34 +789,34 @@ public class TextEditorControl
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Ctrl+A", "Select all");
-        yield return ("Ctrl+C", "Copy the selection");
+        yield return ("Ctrl+A", UiText.Get("Hint.SelectAll", "Select all"));
+        yield return ("Ctrl+C", UiText.Get("Hint.CopySelection", "Copy the selection"));
 
         // A read-only editor refuses the changes to the text, so only the keys that move about, copy or save are offered.
         if (!IsReadOnly)
         {
-            yield return ("Ctrl+X", "Cut the selection");
+            yield return ("Ctrl+X", UiText.Get("Hint.CutSelection", "Cut the selection"));
             yield return ("Ctrl+V", iConsole.Localization.UiText.Get("Common.Paste", "Paste"));
             yield return ("Ctrl+Z", iConsole.Localization.UiText.Get("Common.Undo", "Undo"));
-            yield return ("Ctrl+Y", "Redo");
-            yield return ("Ctrl+R", "Replace");
-            yield return ("Tab / Shift+Tab", "Indent / outdent (the selected lines too)");
-            yield return ("Ctrl+K", "Delete the line");
+            yield return ("Ctrl+Y", UiText.Get("Hint.Redo", "Redo"));
+            yield return ("Ctrl+R", UiText.Get("Editor.Replace", "Replace"));
+            yield return ("Tab / Shift+Tab", UiText.Get("Hint.IndentOutdent", "Indent / outdent (the selected lines too)"));
+            yield return ("Ctrl+K", UiText.Get("Hint.DeleteLine", "Delete the line"));
         }
 
         yield return ("Ctrl+S / F2", iConsole.Localization.UiText.Get("Common.Save", "Save"));
-        yield return ("F5", "Go to line");
-        yield return ("Ctrl+F2", "Toggle bookmark");
-        yield return ("F9", "Next bookmark");
-        yield return ("Shift+F9", "Previous bookmark");
+        yield return ("F5", UiText.Get("Editor.GoToLine", "Go to line"));
+        yield return ("Ctrl+F2", UiText.Get("Hint.ToggleBookmark", "Toggle bookmark"));
+        yield return ("F9", UiText.Get("Hint.NextBookmark", "Next bookmark"));
+        yield return ("Shift+F9", UiText.Get("Hint.PreviousBookmark", "Previous bookmark"));
         if (EnableFolding)
         {
-            yield return ("Alt+Left/Alt+Right", "Fold or unfold the region at the cursor");
+            yield return ("Alt+Left/Alt+Right", UiText.Get("Hint.FoldRegion", "Fold or unfold the region at the cursor"));
         }
 
         if (BracketMatchingEnabled)
         {
-            yield return ("Ctrl+F9", "Go to the matching bracket");
+            yield return ("Ctrl+F9", UiText.Get("Hint.GoToMatchingBracket", "Go to the matching bracket"));
         }
     }
 

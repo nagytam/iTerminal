@@ -334,4 +334,145 @@
   <data name="Common.NoRows" xml:space="preserve">
     <value>Nessuna riga</value>
   </data>
+  <data name="Hint.ClearField" xml:space="preserve">
+    <value>Svuota il campo</value>
+  </data>
+  <data name="Hint.CloseNodeOrParent" xml:space="preserve">
+    <value>Chiudi il nodo o vai al genitore</value>
+  </data>
+  <data name="Hint.CloseSubmenuOrPrevious" xml:space="preserve">
+    <value>Chiudi il sottomenu o vai al menu precedente</value>
+  </data>
+  <data name="Hint.CopySelection" xml:space="preserve">
+    <value>Copia la selezione</value>
+  </data>
+  <data name="Hint.CutSelection" xml:space="preserve">
+    <value>Taglia la selezione</value>
+  </data>
+  <data name="Hint.DeleteCharacter" xml:space="preserve">
+    <value>Elimina un carattere</value>
+  </data>
+  <data name="Hint.DeleteLine" xml:space="preserve">
+    <value>Elimina la riga</value>
+  </data>
+  <data name="Hint.DeleteWordAfter" xml:space="preserve">
+    <value>Elimina la parola dopo il cursore</value>
+  </data>
+  <data name="Hint.DeleteWordBefore" xml:space="preserve">
+    <value>Elimina la parola prima del cursore</value>
+  </data>
+  <data name="Hint.DeleteToStart" xml:space="preserve">
+    <value>Elimina fino all'inizio del testo</value>
+  </data>
+  <data name="Hint.ExpandOrCollapseNode" xml:space="preserve">
+    <value>Espandi o comprimi il nodo</value>
+  </data>
+  <data name="Hint.FirstOrLastField" xml:space="preserve">
+    <value>Primo o ultimo campo</value>
+  </data>
+  <data name="Hint.FirstOrLastRow" xml:space="preserve">
+    <value>Prima o ultima riga</value>
+  </data>
+  <data name="Hint.FlipSign" xml:space="preserve">
+    <value>Inverti il segno</value>
+  </data>
+  <data name="Hint.FoldRegion" xml:space="preserve">
+    <value>Comprimi o espandi l'area al cursore</value>
+  </data>
+  <data name="Hint.GoToMatchingBracket" xml:space="preserve">
+    <value>Vai alla parentesi corrispondente</value>
+  </data>
+  <data name="Hint.GoToFileStartOrEnd" xml:space="preserve">
+    <value>Vai all'inizio o alla fine del file</value>
+  </data>
+  <data name="Hint.IndentOutdent" xml:space="preserve">
+    <value>Rientra / riduci rientro (anche le righe selezionate)</value>
+  </data>
+  <data name="Hint.JumpFirstLastItem" xml:space="preserve">
+    <value>Vai al primo o all'ultimo elemento</value>
+  </data>
+  <data name="Hint.MarkItemUnderCursor" xml:space="preserve">
+    <value>Contrassegna o rimuovi il contrassegno dell'elemento sotto il cursore</value>
+  </data>
+  <data name="Hint.MoveHourMinuteSecond" xml:space="preserve">
+    <value>Spostati tra ore, minuti e secondi</value>
+  </data>
+  <data name="Hint.MoveByWord" xml:space="preserve">
+    <value>Spostati di una parola</value>
+  </data>
+  <data name="Hint.MoveOverMenuItems" xml:space="preserve">
+    <value>Scorri le voci del menu</value>
+  </data>
+  <data name="Hint.MoveCursorByPage" xml:space="preserve">
+    <value>Sposta il cursore di pagina in pagina</value>
+  </data>
+  <data name="Hint.NextBookmark" xml:space="preserve">
+    <value>Segnalibro successivo</value>
+  </data>
+  <data name="Hint.NextField" xml:space="preserve">
+    <value>Campo successivo</value>
+  </data>
+  <data name="Hint.OpenNodeOrChild" xml:space="preserve">
+    <value>Apri il nodo o entra nel suo primo figlio</value>
+  </data>
+  <data name="Hint.OpenSubmenuOrNext" xml:space="preserve">
+    <value>Apri il sottomenu o vai al menu successivo</value>
+  </data>
+  <data name="Hint.PreviousBookmark" xml:space="preserve">
+    <value>Segnalibro precedente</value>
+  </data>
+  <data name="Hint.Redo" xml:space="preserve">
+    <value>Ripeti</value>
+  </data>
+  <data name="Hint.RemoveLastDigit" xml:space="preserve">
+    <value>Rimuovi l'ultima cifra</value>
+  </data>
+  <data name="Hint.RunSelectedItem" xml:space="preserve">
+    <value>Esegui la voce selezionata</value>
+  </data>
+  <data name="Hint.ScrollLine" xml:space="preserve">
+    <value>Scorri di una riga</value>
+  </data>
+  <data name="Hint.ScrollPage" xml:space="preserve">
+    <value>Scorri di una pagina</value>
+  </data>
+  <data name="Hint.ScrollSideways" xml:space="preserve">
+    <value>Scorri lateralmente</value>
+  </data>
+  <data name="Hint.SelectAll" xml:space="preserve">
+    <value>Seleziona tutto</value>
+  </data>
+  <data name="Hint.SelectItemUnderCursor" xml:space="preserve">
+    <value>Seleziona l'elemento sotto il cursore</value>
+  </data>
+  <data name="Hint.SetMinMax" xml:space="preserve">
+    <value>Imposta il minimo o il massimo</value>
+  </data>
+  <data name="Hint.SetValueZero" xml:space="preserve">
+    <value>Imposta il valore a 0</value>
+  </data>
+  <data name="Hint.StartOrEndOfText" xml:space="preserve">
+    <value>Inizio o fine del testo</value>
+  </data>
+  <data name="Hint.StepField" xml:space="preserve">
+    <value>Modifica il campo a passi</value>
+  </data>
+  <data name="Hint.StepFieldByTen" xml:space="preserve">
+    <value>Modifica il campo a passi di dieci</value>
+  </data>
+  <data name="Hint.StepValue" xml:space="preserve">
+    <value>Modifica il valore a passi</value>
+  </data>
+  <data name="Hint.StepValueLarge" xml:space="preserve">
+    <value>Modifica il valore a passi grandi</value>
+  </data>
+  <data name="Hint.ToggleBookmark" xml:space="preserve">
+    <value>Attiva/disattiva segnalibro</value>
+  </data>
+  <data name="Hint.TypeField" xml:space="preserve">
+    <value>Digita il campo</value>
+  </data>
+  <data name="Hint.TypeValue" xml:space="preserve">
+    <value>Digita il valore</value>
+  </data>
 </root>
