@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -98,9 +99,9 @@ public class Pagination : Control
             yield break;
         }
 
-        yield return ("Left/Right", "Previous or next page");
-        yield return ("PageUp/PageDown", "Previous or next page");
-        yield return ("Home/End", "First or last page");
+        yield return ("Left/Right", UiText.Get("Hint.PreviousNextPage", "Previous or next page"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.PreviousNextPage", "Previous or next page"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastPage", "First or last page"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

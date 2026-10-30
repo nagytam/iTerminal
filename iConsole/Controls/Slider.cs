@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -138,10 +139,10 @@ public class Slider : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Left/Right", "Lower or raise the value");
-        yield return ("Up/Down", "Lower or raise the value");
-        yield return ("PageUp/PageDown", "Raise or lower the value by a large step");
-        yield return ("Home/End", "Set the minimum or maximum");
+        yield return ("Left/Right", UiText.Get("Hint.LowerRaiseValue", "Lower or raise the value"));
+        yield return ("Up/Down", UiText.Get("Hint.LowerRaiseValue", "Lower or raise the value"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.RaiseLowerLargeStep", "Raise or lower the value by a large step"));
+        yield return ("Home/End", UiText.Get("Hint.SetMinMax", "Set the minimum or maximum"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

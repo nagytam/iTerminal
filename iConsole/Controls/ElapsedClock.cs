@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -106,7 +107,7 @@ public class ElapsedClock : Control
         }
 
         yield return ("Space", IsRunning ? "Stop the clock" : "Start the clock");
-        yield return ("R", "Reset the clock to zero");
+        yield return ("R", UiText.Get("Hint.ResetClock", "Reset the clock to zero"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

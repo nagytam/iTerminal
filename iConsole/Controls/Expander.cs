@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -114,10 +115,10 @@ public class Expander : Control
             yield break;
         }
 
-        yield return ("Enter/Space", "Expand or collapse the section");
-        yield return ("Right", "Expand the section");
-        yield return ("Left", "Collapse the section");
-        yield return ("+/-", "Expand or collapse the section");
+        yield return ("Enter/Space", UiText.Get("Hint.ExpandOrCollapseSection", "Expand or collapse the section"));
+        yield return ("Right", UiText.Get("Hint.ExpandSection", "Expand the section"));
+        yield return ("Left", UiText.Get("Hint.CollapseSection", "Collapse the section"));
+        yield return ("+/-", UiText.Get("Hint.ExpandOrCollapseSection", "Expand or collapse the section"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

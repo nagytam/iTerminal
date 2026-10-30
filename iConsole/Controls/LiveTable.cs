@@ -295,9 +295,9 @@ public class LiveTable : Control
             yield break;
         }
 
-        yield return ("Up/Down", "Scroll one row");
-        yield return ("PageUp/PageDown", "Scroll one page");
-        yield return ("Home/End", "First or last row");
+        yield return ("Up/Down", UiText.Get("Hint.ScrollOneRow", "Scroll one row"));
+        yield return ("PageUp/PageDown", UiText.Get("Hint.ScrollOnePage", "Scroll one page"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastRow", "First or last row"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

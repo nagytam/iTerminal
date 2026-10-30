@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Services;
@@ -122,8 +123,8 @@ public class RadioGroup<T> : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Up/Down or Left/Right", "Choose the previous or next option");
-        yield return ("Home/End", "First or last option");
+        yield return ("Up/Down or Left/Right", UiText.Get("Hint.ChoosePreviousNextOption", "Choose the previous or next option"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastOption", "First or last option"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -95,9 +96,9 @@ public class Toolbar : Control
             yield break;
         }
 
-        yield return ("Left/Right", "Move along the toolbar");
-        yield return ("Home/End", "First or last item");
-        yield return ("Enter/Space", "Run the item");
+        yield return ("Left/Right", UiText.Get("Hint.MoveAlongToolbar", "Move along the toolbar"));
+        yield return ("Home/End", UiText.Get("Hint.FirstOrLastItem", "First or last item"));
+        yield return ("Enter/Space", UiText.Get("Hint.RunTheItem", "Run the item"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

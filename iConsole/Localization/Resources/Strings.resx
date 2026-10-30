@@ -475,4 +475,163 @@
   <data name="Hint.TypeValue" xml:space="preserve">
     <value>Type the value</value>
   </data>
+  <data name="Hint.BackPreviousMenu" xml:space="preserve">
+    <value>Back / previous menu</value>
+  </data>
+  <data name="Hint.CancelKeepEditing" xml:space="preserve">
+    <value>Cancel and keep editing</value>
+  </data>
+  <data name="Hint.CentreDivider" xml:space="preserve">
+    <value>Centre the divider</value>
+  </data>
+  <data name="Hint.FirstOrLastSegmentChoose" xml:space="preserve">
+    <value>Choose the first or last segment</value>
+  </data>
+  <data name="Hint.ChooseHighlightedItem" xml:space="preserve">
+    <value>Choose the highlighted item</value>
+  </data>
+  <data name="Hint.ChoosePreviousNextOption" xml:space="preserve">
+    <value>Choose the previous or next option</value>
+  </data>
+  <data name="Hint.ChoosePreviousNextSegment" xml:space="preserve">
+    <value>Choose the previous or next segment</value>
+  </data>
+  <data name="Hint.ClearRatingOrMax" xml:space="preserve">
+    <value>Clear the rating or give the maximum</value>
+  </data>
+  <data name="Hint.ClearSearch" xml:space="preserve">
+    <value>Clear the search</value>
+  </data>
+  <data name="Hint.CloseMenuShort" xml:space="preserve">
+    <value>Close menu</value>
+  </data>
+  <data name="Hint.CloseList" xml:space="preserve">
+    <value>Close the list</value>
+  </data>
+  <data name="Hint.ClosePopup" xml:space="preserve">
+    <value>Close the popup</value>
+  </data>
+  <data name="Hint.CloseViewer" xml:space="preserve">
+    <value>Close the viewer</value>
+  </data>
+  <data name="Hint.CloseWithoutMoving" xml:space="preserve">
+    <value>Close without moving</value>
+  </data>
+  <data name="Hint.CollapseSection" xml:space="preserve">
+    <value>Collapse the section</value>
+  </data>
+  <data name="Hint.DiscardChanges" xml:space="preserve">
+    <value>Discard the changes</value>
+  </data>
+  <data name="Hint.ExpandOrCollapseSection" xml:space="preserve">
+    <value>Expand or collapse the section</value>
+  </data>
+  <data name="Hint.ExpandSection" xml:space="preserve">
+    <value>Expand the section</value>
+  </data>
+  <data name="Hint.FirstOrLastOption" xml:space="preserve">
+    <value>First or last option</value>
+  </data>
+  <data name="Hint.FirstOrLastPage" xml:space="preserve">
+    <value>First or last page</value>
+  </data>
+  <data name="Hint.FollowLink" xml:space="preserve">
+    <value>Follow the link</value>
+  </data>
+  <data name="Hint.GoToTheLine" xml:space="preserve">
+    <value>Go to the line</value>
+  </data>
+  <data name="Hint.GoToTheOffset" xml:space="preserve">
+    <value>Go to the offset</value>
+  </data>
+  <data name="Hint.GoTopOrBottom" xml:space="preserve">
+    <value>Go to the top or bottom</value>
+  </data>
+  <data name="Hint.GoTopOrEnd" xml:space="preserve">
+    <value>Go to the top or the end</value>
+  </data>
+  <data name="Hint.GoUpFolder" xml:space="preserve">
+    <value>Go up one folder</value>
+  </data>
+  <data name="Hint.LowerRaiseRating" xml:space="preserve">
+    <value>Lower or raise the rating</value>
+  </data>
+  <data name="Hint.LowerRaiseValue" xml:space="preserve">
+    <value>Lower or raise the value</value>
+  </data>
+  <data name="Hint.MovePageAtATime" xml:space="preserve">
+    <value>Move a page at a time</value>
+  </data>
+  <data name="Hint.MoveAlongToolbar" xml:space="preserve">
+    <value>Move along the toolbar</value>
+  </data>
+  <data name="Hint.MoveMenuSelection" xml:space="preserve">
+    <value>Move menu selection</value>
+  </data>
+  <data name="Hint.MoveDividerBy8" xml:space="preserve">
+    <value>Move the divider by 8</value>
+  </data>
+  <data name="Hint.MoveHighlight" xml:space="preserve">
+    <value>Move the highlight</value>
+  </data>
+  <data name="Hint.NewestLineFollow" xml:space="preserve">
+    <value>Newest line, and follow new lines</value>
+  </data>
+  <data name="Hint.OldestLine" xml:space="preserve">
+    <value>Oldest line</value>
+  </data>
+  <data name="Hint.OpenSubmenuRunCommand" xml:space="preserve">
+    <value>Open submenu / run command</value>
+  </data>
+  <data name="Hint.OpenHighlightedRow" xml:space="preserve">
+    <value>Open the highlighted row</value>
+  </data>
+  <data name="Hint.PreviousNextPage" xml:space="preserve">
+    <value>Previous or next page</value>
+  </data>
+  <data name="Hint.RaiseLowerLargeStep" xml:space="preserve">
+    <value>Raise or lower the value by a large step</value>
+  </data>
+  <data name="Hint.ResetClock" xml:space="preserve">
+    <value>Reset the clock to zero</value>
+  </data>
+  <data name="Hint.RunTheItem" xml:space="preserve">
+    <value>Run the item</value>
+  </data>
+  <data name="Hint.SaveChanges" xml:space="preserve">
+    <value>Save the changes</value>
+  </data>
+  <data name="Hint.Scroll" xml:space="preserve">
+    <value>Scroll</value>
+  </data>
+  <data name="Hint.ScrollRow" xml:space="preserve">
+    <value>Scroll a row</value>
+  </data>
+  <data name="Hint.ScrollOneLine" xml:space="preserve">
+    <value>Scroll one line</value>
+  </data>
+  <data name="Hint.ScrollOnePage" xml:space="preserve">
+    <value>Scroll one page</value>
+  </data>
+  <data name="Hint.ScrollOneRow" xml:space="preserve">
+    <value>Scroll one row</value>
+  </data>
+  <data name="Hint.SelectThisOption" xml:space="preserve">
+    <value>Select this option</value>
+  </data>
+  <data name="Hint.SetRatingDirectly" xml:space="preserve">
+    <value>Set the rating directly</value>
+  </data>
+  <data name="Hint.SwitchTextHex" xml:space="preserve">
+    <value>Switch between the text and the hex view</value>
+  </data>
+  <data name="Hint.SwitchSetting" xml:space="preserve">
+    <value>Switch the setting on or off</value>
+  </data>
+  <data name="Hint.TypeLineNumber" xml:space="preserve">
+    <value>Type the line number (the first key replaces the current one)</value>
+  </data>
+  <data name="Hint.TypeOffset" xml:space="preserve">
+    <value>Type the offset in decimal or hexadecimal</value>
+  </data>
 </root>

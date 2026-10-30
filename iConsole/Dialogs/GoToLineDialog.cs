@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Controls.Viewers;
 using iConsole.Data;
@@ -58,9 +59,9 @@ public class GoToLineDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("0-9", "Type the line number (the first key replaces the current one)");
-        yield return ("Enter", "Go to the line");
-        yield return ("Esc", "Close without moving");
+        yield return ("0-9", UiText.Get("Hint.TypeLineNumber", "Type the line number (the first key replaces the current one)"));
+        yield return ("Enter", UiText.Get("Hint.GoToTheLine", "Go to the line"));
+        yield return ("Esc", UiText.Get("Hint.CloseWithoutMoving", "Close without moving"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
@@ -65,7 +66,7 @@ public class ToggleButton : Control, IReadOnly
             yield break;
         }
 
-        yield return ("Space/Enter", "Switch the setting on or off");
+        yield return ("Space/Enter", UiText.Get("Hint.SwitchSetting", "Switch the setting on or off"));
     }
 
     private void Toggle()

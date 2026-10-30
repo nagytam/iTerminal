@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Services;
@@ -105,9 +106,9 @@ public class MenuBar : MenuItem
                 yield return ($"Ctrl+{letter}", $"Open {item.Text} menu");
             }
         }
-        yield return ("Up/Down", "Move menu selection");
-        yield return ("Right/Enter", "Open submenu / run command");
-        yield return ("Left", "Back / previous menu");
-        yield return ("Esc", "Close menu");
+        yield return ("Up/Down", UiText.Get("Hint.MoveMenuSelection", "Move menu selection"));
+        yield return ("Right/Enter", UiText.Get("Hint.OpenSubmenuRunCommand", "Open submenu / run command"));
+        yield return ("Left", UiText.Get("Hint.BackPreviousMenu", "Back / previous menu"));
+        yield return ("Esc", UiText.Get("Hint.CloseMenuShort", "Close menu"));
     }
 }
