@@ -100,4 +100,49 @@
   <data name="Common.Apply" xml:space="preserve">
     <value>Appliquer</value>
   </data>
+  <data name="Editor.GoToLine" xml:space="preserve">
+    <value>Aller à la ligne</value>
+  </data>
+  <data name="Editor.Line" xml:space="preserve">
+    <value>Ligne</value>
+  </data>
+  <data name="Editor.GoToOffset" xml:space="preserve">
+    <value>Aller au décalage</value>
+  </data>
+  <data name="Editor.Offset" xml:space="preserve">
+    <value>Décalage</value>
+  </data>
+  <data name="Editor.ReplaceText" xml:space="preserve">
+    <value>Remplacer le texte</value>
+  </data>
+  <data name="Editor.Find" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="Editor.With" xml:space="preserve">
+    <value>Remplacer par</value>
+  </data>
+  <data name="Editor.MatchCase" xml:space="preserve">
+    <value>Respecter la casse</value>
+  </data>
+  <data name="Editor.RegularExpression" xml:space="preserve">
+    <value>Expression régulière</value>
+  </data>
+  <data name="Editor.Replace" xml:space="preserve">
+    <value>Remplacer</value>
+  </data>
+  <data name="Editor.ReplaceAll" xml:space="preserve">
+    <value>Tout remplacer</value>
+  </data>
+  <data name="Editor.SearchText" xml:space="preserve">
+    <value>Rechercher du texte</value>
+  </data>
+  <data name="Editor.Search" xml:space="preserve">
+    <value>Recherche</value>
+  </data>
+  <data name="Editor.UnsavedChanges" xml:space="preserve">
+    <value>Modifications non enregistrées</value>
+  </data>
+  <data name="Editor.Discard" xml:space="preserve">
+    <value>Abandonner</value>
+  </data>
 </root>

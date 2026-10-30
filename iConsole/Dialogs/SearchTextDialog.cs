@@ -15,7 +15,7 @@ public class SearchTextDialog : Dialog
     private Button _cancelButton { get; set; }
     private readonly CheckBox _regexBox;
     private readonly CheckBox _matchCaseBox;
-    private const string DialogTitle = "Search text";
+    private static string DialogTitle => iConsole.Localization.UiText.Get("Editor.SearchText", "Search text");
     public string SearchValue => _textBoxSearch.Text;
 
     /// <summary>The search text is a regular expression.</summary>
@@ -42,11 +42,11 @@ public class SearchTextDialog : Dialog
         : base(DialogTitle, themeService)
     {
         _searchModel = searchModel;
-        _textBoxSearch = new TextBox(beepService, dateTimeProviderService, themeService) { Label = "Search", HotKeyChar = 'T' };
+        _textBoxSearch = new TextBox(beepService, dateTimeProviderService, themeService) { Label = iConsole.Localization.UiText.Get("Editor.Search", "Search"), HotKeyChar = 'T' };
         _searchTextButton = new Button(new SearchTextCommand(searchModel, textModel, scrollableModel), themeService) { HotKeyChar = 'S' };
         _cancelButton = new CancelDialogButton(themeService);
-        _regexBox = new CheckBox(themeService) { Label = "Regular expression", IsChecked = searchModel.UseRegex };
-        _matchCaseBox = new CheckBox(themeService) { Label = "Match case", IsChecked = searchModel.MatchCase };
+        _regexBox = new CheckBox(themeService) { Label = iConsole.Localization.UiText.Get("Editor.RegularExpression", "Regular expression"), IsChecked = searchModel.UseRegex };
+        _matchCaseBox = new CheckBox(themeService) { Label = iConsole.Localization.UiText.Get("Editor.MatchCase", "Match case"), IsChecked = searchModel.MatchCase };
         AddControl(_textBoxSearch);
         AddControl(_regexBox);
         AddControl(_matchCaseBox);

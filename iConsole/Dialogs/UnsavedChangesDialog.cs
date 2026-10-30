@@ -44,12 +44,12 @@ public class UnsavedChangesDialog : Dialog
     }
 
     public UnsavedChangesDialog(string fileName, IThemeService themeService)
-        : base("Unsaved changes", themeService)
+        : base(iConsole.Localization.UiText.Get("Editor.UnsavedChanges", "Unsaved changes"), themeService)
     {
         _message = $"{fileName} has unsaved changes.";
-        _saveButton = new Button("Save (S)", new ChoiceCommand(_choice, UnsavedChoice.Save), themeService);
-        _discardButton = new Button("Discard (D)", new ChoiceCommand(_choice, UnsavedChoice.Discard), themeService);
-        _cancelButton = new Button("Cancel (C)", new ChoiceCommand(_choice, UnsavedChoice.Cancel), themeService);
+        _saveButton = new Button(iConsole.Localization.UiText.Get("Common.Save", "Save") + " (S)", new ChoiceCommand(_choice, UnsavedChoice.Save), themeService);
+        _discardButton = new Button(iConsole.Localization.UiText.Get("Editor.Discard", "Discard") + " (D)", new ChoiceCommand(_choice, UnsavedChoice.Discard), themeService);
+        _cancelButton = new Button(iConsole.Localization.UiText.Get("Common.Cancel", "Cancel") + " (C)", new ChoiceCommand(_choice, UnsavedChoice.Cancel), themeService);
         AddControl(_saveButton);
         AddControl(_discardButton);
         AddControl(_cancelButton);
