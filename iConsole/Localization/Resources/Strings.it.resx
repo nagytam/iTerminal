@@ -100,4 +100,49 @@
   <data name="Common.Apply" xml:space="preserve">
     <value>Applica</value>
   </data>
+  <data name="Editor.GoToLine" xml:space="preserve">
+    <value>Vai alla riga</value>
+  </data>
+  <data name="Editor.Line" xml:space="preserve">
+    <value>Riga</value>
+  </data>
+  <data name="Editor.GoToOffset" xml:space="preserve">
+    <value>Vai all'offset</value>
+  </data>
+  <data name="Editor.Offset" xml:space="preserve">
+    <value>Offset</value>
+  </data>
+  <data name="Editor.ReplaceText" xml:space="preserve">
+    <value>Sostituisci testo</value>
+  </data>
+  <data name="Editor.Find" xml:space="preserve">
+    <value>Trova</value>
+  </data>
+  <data name="Editor.With" xml:space="preserve">
+    <value>Sostituisci con</value>
+  </data>
+  <data name="Editor.MatchCase" xml:space="preserve">
+    <value>Maiuscole/minuscole</value>
+  </data>
+  <data name="Editor.RegularExpression" xml:space="preserve">
+    <value>Espressione regolare</value>
+  </data>
+  <data name="Editor.Replace" xml:space="preserve">
+    <value>Sostituisci</value>
+  </data>
+  <data name="Editor.ReplaceAll" xml:space="preserve">
+    <value>Sostituisci tutto</value>
+  </data>
+  <data name="Editor.SearchText" xml:space="preserve">
+    <value>Cerca testo</value>
+  </data>
+  <data name="Editor.Search" xml:space="preserve">
+    <value>Cerca</value>
+  </data>
+  <data name="Editor.UnsavedChanges" xml:space="preserve">
+    <value>Modifiche non salvate</value>
+  </data>
+  <data name="Editor.Discard" xml:space="preserve">
+    <value>Scarta</value>
+  </data>
 </root>

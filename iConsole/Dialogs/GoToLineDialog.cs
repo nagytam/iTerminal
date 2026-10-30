@@ -20,12 +20,12 @@ public class GoToLineDialog : Dialog
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService)
-        : base("Go to line", themeService)
+        : base(iConsole.Localization.UiText.Get("Editor.GoToLine", "Go to line"), themeService)
     {
         _viewer = viewer;
         _lineBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {
-            Label = "Line",
+            Label = iConsole.Localization.UiText.Get("Editor.Line", "Line"),
             Text = viewer.CursorLine.ToString(),
         };
         AddControl(_lineBox);

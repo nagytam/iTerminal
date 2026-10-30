@@ -18,7 +18,7 @@ public class HelpDialog : Dialog
         : base(nameof(HelpDialog), themeService)
     {
         _textViewerControl = new TextViewerControl(false, themeService);
-        Title = "Help";
+        Title = iConsole.Localization.UiText.Get("Common.Help", "Help");
 
         AddControl(_textViewerControl);
     }
