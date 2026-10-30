@@ -901,4 +901,142 @@
   <data name="DialogHint.BrowseConnection" xml:space="preserve">
     <value>A kapcsolat böngészése egy panelen</value>
   </data>
+  <data name="DialogHint.SelectProject" xml:space="preserve">
+    <value>A projekt kijelölése vagy a kijelölés törlése</value>
+  </data>
+  <data name="DialogHint.SelectAllProjects" xml:space="preserve">
+    <value>Az összes projekt kijelölése</value>
+  </data>
+  <data name="DialogHint.SelectAllTestProjects" xml:space="preserve">
+    <value>Az összes tesztprojekt kijelölése</value>
+  </data>
+  <data name="DialogHint.BuildSelected" xml:space="preserve">
+    <value>A kijelölt projektek fordítása</value>
+  </data>
+  <data name="DialogHint.CleanSelected" xml:space="preserve">
+    <value>A kijelölt projektek tisztítása</value>
+  </data>
+  <data name="DialogHint.RunTests" xml:space="preserve">
+    <value>A tesztek futtatása</value>
+  </data>
+  <data name="DialogHint.RunProject" xml:space="preserve">
+    <value>A projekt futtatása</value>
+  </data>
+  <data name="DialogHint.CancelRunningCommand" xml:space="preserve">
+    <value>A futó parancs megszakítása</value>
+  </data>
+  <data name="DialogHint.NextDotnetSdk" xml:space="preserve">
+    <value>Váltás a következő .NET SDK-ra</value>
+  </data>
+  <data name="DialogHint.ScrollOutput" xml:space="preserve">
+    <value>A kimenet görgetése</value>
+  </data>
+  <data name="DialogHint.TopOfOutputOrFollow" xml:space="preserve">
+    <value>A kimenet eleje, vagy a vég követése</value>
+  </data>
+  <data name="DialogHint.ShowHidePasswords" xml:space="preserve">
+    <value>A jelszavak megjelenítése vagy elrejtése</value>
+  </data>
+  <data name="DialogHint.RemoveProgramFromList" xml:space="preserve">
+    <value>A program eltávolítása a listáról</value>
+  </data>
+  <data name="DialogHint.KeepProgram" xml:space="preserve">
+    <value>A program megtartása</value>
+  </data>
+  <data name="DialogHint.ChooseProgram" xml:space="preserve">
+    <value>Program kiválasztása</value>
+  </data>
+  <data name="DialogHint.JumpFirstLastProgram" xml:space="preserve">
+    <value>Ugrás az első vagy utolsó programra</value>
+  </data>
+  <data name="DialogHint.OpenWithChosenProgram" xml:space="preserve">
+    <value>A fájl megnyitása a kiválasztott programmal</value>
+  </data>
+  <data name="DialogHint.AddProgram" xml:space="preserve">
+    <value>Program hozzáadása</value>
+  </data>
+  <data name="DialogHint.ChangeChosenProgram" xml:space="preserve">
+    <value>A kiválasztott program módosítása</value>
+  </data>
+  <data name="DialogHint.RemoveChosenProgramAsks" xml:space="preserve">
+    <value>A kiválasztott program eltávolítása (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.MakeProgramDefault" xml:space="preserve">
+    <value>A kiválasztott program alapértelmezetté tétele</value>
+  </data>
+  <data name="DialogHint.BackToMap" xml:space="preserve">
+    <value>Vissza a térképhez</value>
+  </data>
+  <data name="DialogHint.PanMap" xml:space="preserve">
+    <value>A térkép mozgatása (Shift: fél képernyő)</value>
+  </data>
+  <data name="DialogHint.ZoomInOut" xml:space="preserve">
+    <value>Nagyítás vagy kicsinyítés</value>
+  </data>
+  <data name="DialogHint.BackToHomeView" xml:space="preserve">
+    <value>Vissza a kezdőnézethez</value>
+  </data>
+  <data name="DialogHint.SearchPlace" xml:space="preserve">
+    <value>Hely keresése</value>
+  </data>
+  <data name="DialogHint.OpenSavedPlaces" xml:space="preserve">
+    <value>A mentett helyek megnyitása</value>
+  </data>
+  <data name="DialogHint.SaveCentreAsPlace" xml:space="preserve">
+    <value>A középpont mentése helyként</value>
+  </data>
+  <data name="DialogHint.ReloadTiles" xml:space="preserve">
+    <value>A csempék újratöltése</value>
+  </data>
+  <data name="DialogHint.GoOnlineOffline" xml:space="preserve">
+    <value>Online vagy offline mód</value>
+  </data>
+  <data name="DialogHint.SaveAreaOffline" xml:space="preserve">
+    <value>A terület mentése offline használatra</value>
+  </data>
+  <data name="DialogHint.SaveWorkspaceUnderName" xml:space="preserve">
+    <value>A munkaterület mentése ezen a néven</value>
+  </data>
+  <data name="DialogHint.ChooseWorkspace" xml:space="preserve">
+    <value>Munkaterület kiválasztása</value>
+  </data>
+  <data name="DialogHint.SwitchToWorkspace" xml:space="preserve">
+    <value>Váltás a kiválasztott munkaterületre</value>
+  </data>
+  <data name="DialogHint.SwitchWorkspaceByNumber" xml:space="preserve">
+    <value>Váltás munkaterületre a száma alapján</value>
+  </data>
+  <data name="DialogHint.SaveScreenAsWorkspace" xml:space="preserve">
+    <value>A képernyő mentése új munkaterületként</value>
+  </data>
+  <data name="DialogHint.UpdateWorkspace" xml:space="preserve">
+    <value>A kiválasztott munkaterület frissítése a képernyőről</value>
+  </data>
+  <data name="DialogHint.RenameWorkspace" xml:space="preserve">
+    <value>A kiválasztott munkaterület átnevezése</value>
+  </data>
+  <data name="DialogHint.DeleteWorkspaceAsks" xml:space="preserve">
+    <value>A kiválasztott munkaterület törlése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.PlaySelectTake" xml:space="preserve">
+    <value>Lépés, kijelölés vagy bábu felvétele a kurzornál</value>
+  </data>
+  <data name="DialogHint.SameAsEnter" xml:space="preserve">
+    <value>Mint az Enter</value>
+  </data>
+  <data name="DialogHint.PreviousNextGame" xml:space="preserve">
+    <value>Előző vagy következő játék</value>
+  </data>
+  <data name="DialogHint.ChooseGame" xml:space="preserve">
+    <value>Játék kiválasztása</value>
+  </data>
+  <data name="DialogHint.StartGameAgain" xml:space="preserve">
+    <value>A játék újraindítása</value>
+  </data>
+  <data name="DialogHint.TakeBackMove" xml:space="preserve">
+    <value>Az utolsó lépés visszavonása</value>
+  </data>
+  <data name="DialogHint.SwitchComputerTwoPlayers" xml:space="preserve">
+    <value>Váltás a számítógép és a két játékos között</value>
+  </data>
 </root>

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -77,14 +78,14 @@ public class GamesDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Arrows", "Move the cursor");
-        yield return ("Enter", "Play, select or take a piece at the cursor");
-        yield return ("Space", "Same as Enter");
-        yield return ("PgUp / PgDn", "Previous or next game");
-        yield return ("1-4", "Choose a game");
-        yield return ("N", "Start the game again");
-        yield return ("U", "Take back the last move");
-        yield return ("M", "Switch between the computer and two players");
+        yield return ("Arrows", UiText.Get("Hint.MoveCursor", "Move the cursor"));
+        yield return ("Enter", UiText.Get("DialogHint.PlaySelectTake", "Play, select or take a piece at the cursor"));
+        yield return ("Space", UiText.Get("DialogHint.SameAsEnter", "Same as Enter"));
+        yield return ("PgUp / PgDn", UiText.Get("DialogHint.PreviousNextGame", "Previous or next game"));
+        yield return ("1-4", UiText.Get("DialogHint.ChooseGame", "Choose a game"));
+        yield return ("N", UiText.Get("DialogHint.StartGameAgain", "Start the game again"));
+        yield return ("U", UiText.Get("DialogHint.TakeBackMove", "Take back the last move"));
+        yield return ("M", UiText.Get("DialogHint.SwitchComputerTwoPlayers", "Switch between the computer and two players"));
         foreach ((string key, string description) in Current.ExtraKeys)
         {
             yield return (key, description);
