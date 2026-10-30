@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -614,13 +615,13 @@ public class DocumentManagerDialog : SplitPaneDialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Type", "Search the documents");
-        yield return ("Up/Down", "Choose a result");
-        yield return ("Enter", "Show the document in the panel");
-        yield return ("Esc", "Clear the search, then close");
-        yield return ("Ctrl+R", "Scan the documents again");
-        yield return ("Ctrl+X", "Cancel the scan");
-        yield return ("Ctrl+T", "Show or hide the preview");
+        yield return ("Type", UiText.Get("DialogHint.SearchDocuments", "Search the documents"));
+        yield return ("Up/Down", UiText.Get("DialogHint.ChooseResult", "Choose a result"));
+        yield return ("Enter", UiText.Get("DialogHint.ShowDocumentInPanel", "Show the document in the panel"));
+        yield return ("Esc", UiText.Get("DialogHint.ClearSearchThenClose", "Clear the search, then close"));
+        yield return ("Ctrl+R", UiText.Get("DialogHint.ScanDocumentsAgain", "Scan the documents again"));
+        yield return ("Ctrl+X", UiText.Get("DialogHint.CancelScan", "Cancel the scan"));
+        yield return ("Ctrl+T", UiText.Get("DialogHint.ShowHidePreview", "Show or hide the preview"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

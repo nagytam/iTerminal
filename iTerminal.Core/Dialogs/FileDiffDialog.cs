@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -357,20 +358,20 @@ public class FileDiffDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Up/Down", "Scroll the differences");
-        yield return ("PageUp/PageDown", "Scroll a page at a time");
-        yield return ("Home/End", "Jump to the start or the end");
+        yield return ("Up/Down", UiText.Get("DialogHint.ScrollDifferences", "Scroll the differences"));
+        yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollPageAtATime", "Scroll a page at a time"));
+        yield return ("Home/End", UiText.Get("DialogHint.JumpStartOrEnd", "Jump to the start or the end"));
         if (!_hexMode)
         {
-            yield return ("Left/Right", "Scroll sideways");
+            yield return ("Left/Right", UiText.Get("Hint.ScrollSideways", "Scroll sideways"));
         }
 
-        yield return ("N/P", "Jump to the next or previous difference");
-        yield return ("F4", "Switch between the text and the hex view");
+        yield return ("N/P", UiText.Get("DialogHint.JumpNextPrevDifference", "Jump to the next or previous difference"));
+        yield return ("F4", UiText.Get("Hint.SwitchTextHex", "Switch between the text and the hex view"));
         if (!_hexMode)
         {
-            yield return ("W", "Ignore white space");
-            yield return ("C", "Ignore letter case");
+            yield return ("W", UiText.Get("DialogHint.IgnoreWhiteSpace", "Ignore white space"));
+            yield return ("C", UiText.Get("DialogHint.IgnoreLetterCase", "Ignore letter case"));
         }
     }
 

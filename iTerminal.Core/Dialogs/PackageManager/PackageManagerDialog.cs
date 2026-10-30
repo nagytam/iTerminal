@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -523,17 +524,17 @@ public class PackageManagerDialog : SplitPaneDialog
 
         if (_inputActive)
         {
-            yield return ("Enter", "Submit");
+            yield return ("Enter", UiText.Get("DialogHint.Submit", "Submit"));
             yield return ("Esc", iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"));
             yield break;
         }
 
-        yield return ("Enter/Space", "Run the main action");
-        yield return ("R", "Refresh the list");
-        yield return ("S", "Search for packages");
-        yield return ("I", "Show the installed packages");
-        yield return ("X", "Cancel the running command");
-        yield return ("PageUp/PageDown", "Scroll the output");
+        yield return ("Enter/Space", UiText.Get("DialogHint.RunMainAction", "Run the main action"));
+        yield return ("R", UiText.Get("DialogHint.RefreshList", "Refresh the list"));
+        yield return ("S", UiText.Get("DialogHint.SearchPackages", "Search for packages"));
+        yield return ("I", UiText.Get("DialogHint.ShowInstalled", "Show the installed packages"));
+        yield return ("X", UiText.Get("DialogHint.CancelRunningCommand", "Cancel the running command"));
+        yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollOutput", "Scroll the output"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

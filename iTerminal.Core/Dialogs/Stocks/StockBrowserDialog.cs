@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Globalization;
 using iConsole.Buffers;
 using iConsole.Controls.Charts;
@@ -463,15 +464,15 @@ public class StockBrowserDialog : SplitPaneDialog
 
         if (_adding)
         {
-            yield return ("Enter", "Search, or add the chosen hit");
-            yield return ("Up/Down", "Choose a hit");
-            yield return ("Esc", "Back to the list");
+            yield return ("Enter", UiText.Get("DialogHint.SearchOrAddHit", "Search, or add the chosen hit"));
+            yield return ("Up/Down", UiText.Get("DialogHint.ChooseHit", "Choose a hit"));
+            yield return ("Esc", UiText.Get("DialogHint.BackToList", "Back to the list"));
             yield break;
         }
 
-        yield return ("A", "Add a stock");
-        yield return ("D/Delete", "Remove the stock");
-        yield return ("R", "Refresh the quotes");
+        yield return ("A", UiText.Get("DialogHint.AddStock", "Add a stock"));
+        yield return ("D/Delete", UiText.Get("DialogHint.RemoveStock", "Remove the stock"));
+        yield return ("R", UiText.Get("DialogHint.RefreshQuotes", "Refresh the quotes"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)

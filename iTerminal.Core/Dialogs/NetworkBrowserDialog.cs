@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Model.Passwords;
 using iConsole.Buffers;
 using iConsole.Controls;
@@ -517,21 +518,21 @@ public class NetworkBrowserDialog : SplitPaneDialog
     {
         if (_pendingDelete is not null)
         {
-            yield return ("Y", "Delete the saved profile");
-            yield return ("N / Esc", "Keep the profile");
+            yield return ("Y", UiText.Get("DialogHint.DeleteSavedProfile", "Delete the saved profile"));
+            yield return ("N / Esc", UiText.Get("DialogHint.KeepProfile", "Keep the profile"));
             yield break;
         }
 
         if (_mode == Mode.Connect)
         {
-            yield return ("Enter", "Connect");
-            yield return ("Esc", "Back to the host list");
+            yield return ("Enter", UiText.Get("DialogHint.Connect", "Connect"));
+            yield return ("Esc", UiText.Get("DialogHint.BackToHostList", "Back to the host list"));
             yield break;
         }
 
-        yield return ("Enter", "Open the chosen host");
-        yield return ("R", "Search the network again");
-        yield return ("D", "Delete the saved profile (asks first)");
+        yield return ("Enter", UiText.Get("DialogHint.OpenChosenHost", "Open the chosen host"));
+        yield return ("R", UiText.Get("DialogHint.SearchNetworkAgain", "Search the network again"));
+        yield return ("D", UiText.Get("DialogHint.DeleteSavedProfileAsks", "Delete the saved profile (asks first)"));
         yield return ("Esc", iConsole.Localization.UiText.Get("Common.Close", "Close"));
     }
 
