@@ -45,6 +45,7 @@ public class UiService : IUiService
             "currency" or "currencyconverter" or "currency converter" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog>(),
             "torrent" or "torrents" or "bittorrent" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog>(),
             "encyclopedia" or "wikipedia" or "wiki" or "britannica" or "dictionary" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog>(),
+            "benchmark" or "performance" or "performance_benchmark" or "speed_test" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog>(),
             "contacts" or "contact" or "contact_manager" or "address_book" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>(),
             "games" or "game" or "chess" or "go" or "tictactoe" or "morris" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.GamesDialog>(),
             "translator" or "translate" or "translation" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Translator.TranslatorDialog>(),

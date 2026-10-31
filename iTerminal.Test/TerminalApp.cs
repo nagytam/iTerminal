@@ -181,6 +181,13 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<Core.Services.Translation.ITranslationProvider, SandboxServices.Translation>();
                 services.AddSingleton<Core.Services.Currency.ICurrencyRateProvider, SandboxServices.CurrencyRates>();
                 services.AddSingleton<Core.Services.Encyclopedia.IEncyclopediaProvider, SandboxServices.Encyclopedia>();
+                // The benchmark's probes read the disk and the network: each one gives a fixed figure, so no run measures this machine.
+                Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
+                    .RemoveAll<Core.Services.Benchmark.IBenchmarkProbe>(services);
+                foreach (Core.Services.Benchmark.IBenchmarkProbe probe in SandboxServices.BenchmarkProbes.All)
+                {
+                    services.AddSingleton(probe);
+                }
                 services.AddSingleton<SandboxServices.Shell>();
                 services.AddSingleton<Core.Services.Shell.IInteractiveShellService>(provider => provider.GetRequiredService<SandboxServices.Shell>());
                 services.AddSingleton<SandboxServices.Launcher>();
