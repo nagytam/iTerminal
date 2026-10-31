@@ -119,6 +119,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         ILocalizer? localizer = null,
         iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
+        iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null
         )
         : base([], themeService)
@@ -216,6 +217,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             languageDialog,
             torrentManagerDialog,
             contactManagerDialog,
+            encyclopediaDialog,
             gamesDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));

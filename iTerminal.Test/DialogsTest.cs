@@ -60,6 +60,7 @@ public class DialogsTest
     [DataRow("Ctrl+Shift+F4", "TranslatorDialog")]
     [DataRow("Ctrl+Shift+F5", "CurrencyConverterDialog")]
     [DataRow("Ctrl+Shift+K", "ContactManagerDialog")]
+    [DataRow("Ctrl+Shift+W", "EncyclopediaDialog")]
     [DataRow("Alt+F2", "RemoteConnectionManagerDialog")]
     [DataRow("Alt+F9", "DiskManagerDialog")]
     [DataRow("Alt+F12", "ProcessManagerDialog")]
@@ -114,6 +115,34 @@ public class DialogsTest
 
         await _app.WaitForTextAsync("[en] Guten Tag");
         await _app.WaitForTextAsync("German (detected) → English");
+
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
+    /// <summary>The encyclopedia through the whole app: type a term, search, read the introduction, read the whole article, open it in the browser.</summary>
+    [TestMethod]
+    public async Task TheEncyclopediaSearchesAndReadsAnArticle()
+    {
+        await _app.PressAsync("Ctrl+Shift+W");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Encyclopedia.EncyclopediaDialog, "the encyclopedia to open");
+
+        await _app.TypeAsync("tulip");
+        await _app.PressAsync("Enter");
+
+        // The results arrive, and the first one's introduction is read without another key.
+        await _app.WaitForTextAsync("tulip (sandbox)");
+        await _app.WaitForTextAsync("The sandbox introduction to tulip (sandbox).");
+
+        // Enter on the results reads the whole article.
+        await _app.PressAsync("Tab");
+        await _app.PressAsync("Tab");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("The whole sandbox article on tulip (sandbox).");
+
+        await _app.PressAsync("F2");
+        await _app.WaitUntilAsync(() => _app.Driver.GetRequiredService<SandboxServices.Launcher>().Launches.Any(l => l.FilePath == "https://en.wikipedia.org/wiki/" + Uri.EscapeDataString("tulip_(sandbox)")), "the article to be opened in the browser");
 
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();

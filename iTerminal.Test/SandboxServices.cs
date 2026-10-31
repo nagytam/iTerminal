@@ -386,6 +386,9 @@ public static class SandboxServices
         public Task<Core.Services.FileAssociations.LaunchOutcome> OpenWithSystemDefaultAsync(string filePath, CancellationToken cancellationToken = default) =>
             Record(null, filePath);
 
+        public Task<Core.Services.FileAssociations.LaunchOutcome> OpenUrlAsync(string url, CancellationToken cancellationToken = default) =>
+            Record(null, url);
+
         private Task<Core.Services.FileAssociations.LaunchOutcome> Record(Core.Services.FileAssociations.FileAssociation? association, string filePath)
         {
             lock (_lock)
@@ -444,6 +447,26 @@ public static class SandboxServices
     }
 
     /// <summary>Exchange rates with no network: one euro is exactly two dollars, so a conversion is easy to read.</summary>
+    /// <summary>Two results for any term and a short article for each: no test reaches Wikipedia.</summary>
+    public sealed class Encyclopedia : Core.Services.Encyclopedia.IEncyclopediaProvider
+    {
+        public Task<IReadOnlyList<Core.Services.Encyclopedia.EncyclopediaHit>> SearchAsync(
+            Core.Services.Encyclopedia.EncyclopediaSource source, string query, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Core.Services.Encyclopedia.EncyclopediaHit>>(
+            [
+                new($"{query} (sandbox)", $"All about {query}"),
+                new($"History of {query}", $"How {query} came about"),
+            ]);
+
+        public Task<Core.Services.Encyclopedia.EncyclopediaArticle> GetArticleAsync(
+            Core.Services.Encyclopedia.EncyclopediaSource source, string title, bool full, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Encyclopedia.EncyclopediaArticle(
+                title,
+                full ? $"The whole sandbox article on {title}." : $"The sandbox introduction to {title}.",
+                $"https://{source.Address}/wiki/{Uri.EscapeDataString(title.Replace(' ', '_'))}",
+                full));
+    }
+
     public sealed class CurrencyRates : Core.Services.Currency.ICurrencyRateProvider
     {
         public string Name => "Sandbox";

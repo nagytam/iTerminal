@@ -208,6 +208,12 @@ public class FileAssociationTest
             Launches.Add((null, filePath));
             return Task.FromResult(outcome);
         }
+
+        public Task<LaunchOutcome> OpenUrlAsync(string url, CancellationToken cancellationToken = default)
+        {
+            Launches.Add((null, url));
+            return Task.FromResult(outcome);
+        }
     }
 
     private static IContentModelService NoPanels()

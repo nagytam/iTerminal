@@ -46,6 +46,7 @@ public class ToolsMenuItem : MenuItem
         LanguageDialog? languageDialog = null,
         iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
+        iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null)
         : base("Tools", null, [], themeService)
     {
@@ -86,6 +87,7 @@ public class ToolsMenuItem : MenuItem
         if (currencyConverterDialog is not null) features.Add(new CurrencyConverterDialogCommand(currencyConverterDialog));
         if (torrentManagerDialog is not null) features.Add(new TorrentManagerDialogCommand(torrentManagerDialog));
         if (contactManagerDialog is not null) features.Add(new ContactManagerDialogCommand(contactManagerDialog));
+        if (encyclopediaDialog is not null) features.Add(new EncyclopediaDialogCommand(encyclopediaDialog));
         if (gamesDialog is not null) features.Add(new GamesDialogCommand(gamesDialog));
         if (remoteConnectionManagerDialog is not null) features.Add(new RemoteConnectionManagerDialogCommand(remoteConnectionManagerDialog));
         if (workspaceManagerDialog is not null) features.Add(new WorkspaceManagerDialogCommand(workspaceManagerDialog));

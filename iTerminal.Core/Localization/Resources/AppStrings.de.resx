@@ -2161,4 +2161,76 @@
   <data name="Verb.Moving" xml:space="preserve">
     <value>Verschiebe</value>
   </data>
+  <data name="Menu.Encyclopedia" xml:space="preserve">
+    <value>Enzyklopädie</value>
+  </data>
+  <data name="Encyclopedia.Term" xml:space="preserve">
+    <value>Begriff</value>
+  </data>
+  <data name="Encyclopedia.TermPlaceholder" xml:space="preserve">
+    <value>ein Wort oder ein Name zum Nachschlagen</value>
+  </data>
+  <data name="Encyclopedia.Source" xml:space="preserve">
+    <value>Quelle</value>
+  </data>
+  <data name="Encyclopedia.EmptyResults" xml:space="preserve">
+    <value> Oben einen Begriff eingeben und Eingabe drücken.</value>
+  </data>
+  <data name="Encyclopedia.LinkOut" xml:space="preserve">
+    <value>{0} kann hier nicht gelesen werden: Es hat keine Schnittstelle, die ein Programm nutzen darf. F2 öffnet die Suche nach „{1}“ im Browser.</value>
+  </data>
+  <data name="Encyclopedia.TypeTerm" xml:space="preserve">
+    <value>Einen Begriff zum Nachschlagen eingeben.</value>
+  </data>
+  <data name="Encyclopedia.Searching" xml:space="preserve">
+    <value>{0} wird durchsucht…</value>
+  </data>
+  <data name="Encyclopedia.SearchFailed" xml:space="preserve">
+    <value>Die Suche ist fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Encyclopedia.Reading" xml:space="preserve">
+    <value>{0} wird gelesen…</value>
+  </data>
+  <data name="Encyclopedia.ReadFailed" xml:space="preserve">
+    <value>Der Artikel konnte nicht gelesen werden: {0}</value>
+  </data>
+  <data name="Encyclopedia.NothingToOpen" xml:space="preserve">
+    <value>Es gibt noch keinen Artikel zum Öffnen.</value>
+  </data>
+  <data name="Encyclopedia.Opened" xml:space="preserve">
+    <value>{0} im Browser geöffnet.</value>
+  </data>
+  <data name="Encyclopedia.OpenFailed" xml:space="preserve">
+    <value>Der Browser konnte nicht gestartet werden.</value>
+  </data>
+  <data name="Encyclopedia.NothingFound" xml:space="preserve">
+    <value>Nichts gefunden für „{0}“.</value>
+  </data>
+  <data name="Encyclopedia.Found" xml:space="preserve">
+    <value>{0} gefunden in {1}.</value>
+  </data>
+  <data name="Encyclopedia.WholeFrom" xml:space="preserve">
+    <value>{0} — der ganze Artikel</value>
+  </data>
+  <data name="Encyclopedia.IntroFrom" xml:space="preserve">
+    <value>{0} — die Einleitung</value>
+  </data>
+  <data name="Encyclopedia.NoText" xml:space="preserve">
+    <value>Dieser Artikel hat keinen eigenen Text.</value>
+  </data>
+  <data name="Encyclopedia.Results" xml:space="preserve">
+    <value>Ergebnisse ({0})</value>
+  </data>
+  <data name="Encyclopedia.Article" xml:space="preserve">
+    <value>Artikel</value>
+  </data>
+  <data name="DialogHint.SearchOrRead" xml:space="preserve">
+    <value>Den Begriff suchen oder den ganzen Artikel unter dem Cursor lesen</value>
+  </data>
+  <data name="DialogHint.WholeArticle" xml:space="preserve">
+    <value>Den ganzen Artikel lesen oder nur die Einleitung</value>
+  </data>
+  <data name="DialogHint.OpenInBrowser" xml:space="preserve">
+    <value>Den Artikel im Browser öffnen</value>
+  </data>
 </root>
