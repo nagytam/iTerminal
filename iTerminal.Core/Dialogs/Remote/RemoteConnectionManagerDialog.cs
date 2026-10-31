@@ -715,7 +715,7 @@ public class RemoteConnectionManagerDialog : Dialog
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, $"{_list.Count} saved  ·  a shell asks for its password itself; FTP/WebDAV keep theirs in the password manager", Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, $"{_list.Count} saved  ·  shells ask for a password; FTP/WebDAV use the password manager", Color.Cyan, colorScheme.Background);
         Put(buffer, 1, 1, iw - 2, "  Type  Name                          Destination", colorScheme.DisabledForeground, colorScheme.Background);
         if (_list.Count == 0)
         {

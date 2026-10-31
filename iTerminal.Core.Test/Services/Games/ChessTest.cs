@@ -285,4 +285,27 @@ public class ChessTest
         Assert.AreEqual(" k ", rows[0][5].Text);
         Assert.AreEqual(1, rows.SelectMany(r => r).Count(c => c.Cursor));
     }
+
+    [TestMethod]
+    public void TheEnPassantSquare_MakesPositionsDifferOnlyWhenAPawnCanUseIt()
+    {
+        // Nothing can answer the double step, so the position is the one without it.
+        Assert.AreEqual(
+            FromFen("4k3/8/8/8/4P3/8/8/4K3 b - - 0 1").Key(),
+            FromFen("4k3/8/8/8/4P3/8/8/4K3 b - e3 0 1").Key());
+
+        // A black pawn beside it could take en passant, which makes it a different position.
+        Assert.AreNotEqual(
+            FromFen("4k3/8/8/8/3pP3/8/8/4K3 b - - 0 1").Key(),
+            FromFen("4k3/8/8/8/3pP3/8/8/4K3 b - e3 0 1").Key());
+    }
+
+    [TestMethod]
+    public void BishopsOnOneColourAloneCannotMate_ButMixedMinorsCan()
+    {
+        Assert.IsTrue(ChessRules.InsufficientMaterial(FromFen("5b2/4k3/8/8/8/8/8/2B1K3 w - - 0 1")), "c1 and f8 are both dark squares");
+        Assert.IsFalse(ChessRules.InsufficientMaterial(FromFen("4bk2/8/8/8/8/8/8/2B1K3 w - - 0 1")), "c1 is dark and e8 is light");
+        Assert.IsFalse(ChessRules.InsufficientMaterial(FromFen("4k3/8/8/8/8/8/8/2B1K1n1 w - - 0 1")), "a bishop and a knight");
+    }
+
 }

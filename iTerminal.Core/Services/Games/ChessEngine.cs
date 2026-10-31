@@ -77,7 +77,25 @@ internal sealed class ChessState
             builder.Append((char)('a' + piece + 6));
         }
 
-        return builder.Append(WhiteToMove ? 'w' : 'b').Append(Castling).Append(EnPassant).ToString();
+        return builder.Append(WhiteToMove ? 'w' : 'b').Append(Castling).Append(EnPassantUsable() ? EnPassant : -1).ToString();
+    }
+
+    /// <summary>
+    /// Whether a pawn of the side to move stands beside the pawn that just advanced two squares. Only then does the
+    /// en passant square make the position different for the repetition rule: after a double step that nothing can
+    /// answer, the position is the same as it would be a move later without the step.
+    /// </summary>
+    private bool EnPassantUsable()
+    {
+        if (EnPassant < 0)
+        {
+            return false;
+        }
+
+        int file = EnPassant & 7;
+        int pawnSquare = EnPassant + (WhiteToMove ? -8 : 8);
+        sbyte pawn = (sbyte)(WhiteToMove ? Piece.Pawn : -Piece.Pawn);
+        return (file > 0 && Board[pawnSquare - 1] == pawn) || (file < 7 && Board[pawnSquare + 1] == pawn);
     }
 
     public static string SquareName(int square) => $"{(char)('a' + (square & 7))}{(square >> 3) + 1}";
@@ -424,7 +442,29 @@ internal static class ChessRules
             }
         }
 
-        return minors <= 1;
+        if (minors <= 1)
+        {
+            return true;
+        }
+
+        // Only bishops left, all on squares of one colour: no mate is possible whoever has them.
+        int bishopColours = 0;
+        for (int square = 0; square < 64; square++)
+        {
+            switch (Math.Abs(state.Board[square]))
+            {
+                case Piece.Bishop:
+                    bishopColours |= 1 << (((square & 7) + (square >> 3)) & 1);
+                    break;
+                case 0:
+                case Piece.King:
+                    break;
+                default:
+                    return false;
+            }
+        }
+
+        return bishopColours is 1 or 2;
     }
 }
 

@@ -225,4 +225,27 @@ public class NineMensMorrisTest
         Assert.AreEqual("───", rows[0][1].Text);
         Assert.AreEqual(" │ ", rows[1][0].Text);
     }
+
+    [TestMethod]
+    public void ThePositionComingUpThreeTimes_IsADraw()
+    {
+        NineMensMorrisGame game = TwoPlayers();
+        PlaceAllNineEach(game);
+
+        // White shuffles 17-16-17 and black 13-21-13: after four moves the position is back.
+        (int From, int To)[] cycle = [(17, 16), (13, 21), (16, 17), (21, 13)];
+        for (int round = 0; round < 2; round++)
+        {
+            foreach ((int from, int to) in cycle)
+            {
+                Assert.IsFalse(game.IsOver, "not over before the third time");
+                Assert.IsTrue(game.PlayMove(new MorrisMove(from, to, -1)), $"{from}-{to} was refused");
+            }
+        }
+
+        Assert.IsTrue(game.IsOver);
+        Assert.AreEqual(2, game.Winner);
+        StringAssert.Contains(game.Status, "three times");
+    }
+
 }

@@ -120,6 +120,10 @@ internal sealed class MorrisState
     public int Turn { get; set; }
     public int QuietMoves { get; set; }
 
+    /// <summary>Whether the two positions are the same: the men, the men still in hand and whose turn it is.</summary>
+    public bool SamePosition(MorrisState other) =>
+        Turn == other.Turn && InHand[0] == other.InHand[0] && InHand[1] == other.InHand[1] && Board.AsSpan().SequenceEqual(other.Board);
+
     public MorrisState Clone() => new()
     {
         Board = (byte[])Board.Clone(),
@@ -551,7 +555,9 @@ public class NineMensMorrisGame : GameBase
 
             if (_winner == 2)
             {
-                return "A draw: a hundred moves went by without a mill.";
+                return _state.QuietMoves >= 100
+                    ? "A draw: a hundred moves went by without a mill."
+                    : "A draw: the same position came up three times.";
             }
 
             if (_winner >= 0)
@@ -718,7 +724,15 @@ public class NineMensMorrisGame : GameBase
         return true;
     }
 
-    private void Finish() => _winner = _state.Winner();
+    private void Finish()
+    {
+        _winner = _state.Winner();
+        // Men only leave the board, never come back, so a position can only repeat while men slide about.
+        if (_winner < 0 && _history.Count(snapshot => snapshot.State.SamePosition(_state)) + 1 >= 3)
+        {
+            _winner = 2;
+        }
+    }
 
     public override void Undo()
     {
@@ -854,7 +868,7 @@ public class NineMensMorrisGame : GameBase
         int seed = Random.Next();
         return token =>
         {
-            MorrisMove? move = new MorrisSearch(new Random(seed), token, 4).Best(snapshot);
+            MorrisMove? move = new MorrisSearch(new Random(seed), token, 10, 2000).Best(snapshot);
             return move is null ? null : () =>
             {
                 if (version != Version)
