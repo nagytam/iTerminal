@@ -22,6 +22,12 @@ public class DialogMessagesLanguageTest
         return localizer;
     }
 
+    /// <summary>The words "Tags", "Image" and "Video" are spelled the same in some languages.</summary>
+    private static bool SameWordInThatLanguage(string code, string key) =>
+        (key == "Dialog.TagsTitle" && code is "de" or "fr") ||
+        (key == "Dialog.ImageTitle" && code == "fr") ||
+        (key == "Dialog.VideoTitle" && code is "de" or "it");
+
     private static string[] Placeholders(string text) =>
         [.. Regex.Matches(text, @"\{(\d+)\}").Select(m => m.Groups[1].Value).Distinct().Order()];
 
@@ -36,7 +42,7 @@ public class DialogMessagesLanguageTest
             {
                 Assert.IsTrue(localizer.TryGet(key, out string text), language.Code + " " + key);
                 Assert.IsTrue(english.TryGet(key, out string englishText), key);
-                if (!(key is "Dialog.TagsTitle" or "Dialog.VideoTitle" && language.Code is "de" or "fr" or "it" or "es" or "hu" && englishText == text))
+                if (!SameWordInThatLanguage(language.Code, key))
                 {
                     Assert.AreNotEqual(englishText, text, language.Code + " " + key);
                 }
