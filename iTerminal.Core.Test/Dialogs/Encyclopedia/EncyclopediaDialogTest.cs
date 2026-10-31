@@ -1,3 +1,4 @@
+using iConsole.Data;
 using iConsole.Services;
 using iTerminal.Core.Dialogs.Encyclopedia;
 using iTerminal.Core.Services.Encyclopedia;
@@ -354,6 +355,20 @@ public class EncyclopediaDialogTest
         Harness h = Create();
         await ShowAsync(h.Dialog);
 
-        StringAssert.Contains(Render(h.Dialog).ToString()!, "F3:whole article");
+        StringAssert.Contains(Render(h.Dialog).ToString()!, "F3:whole");
+    }
+
+    [TestMethod]
+    public async Task OnAnEightyColumnScreen_TheSourceNameAndEveryKeyHintFit()
+    {
+        Harness h = Create();
+        await ShowAsync(h.Dialog, new Size(80, 24));
+
+        string screen = Render(h.Dialog, new Size(80, 24)).ToString()!;
+
+        // The box showed "Wikipedia (Engli" and the footer dropped F2 at this width.
+        StringAssert.Contains(screen, "Wikipedia (English)");
+        StringAssert.Contains(screen, "F2:browser");
+        StringAssert.Contains(screen, "Esc:close");
     }
 }

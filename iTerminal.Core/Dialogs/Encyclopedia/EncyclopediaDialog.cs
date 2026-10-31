@@ -24,7 +24,7 @@ namespace iTerminal.Core.Dialogs.Encyclopedia;
 /// </summary>
 public class EncyclopediaDialog : SplitPaneDialog
 {
-    internal const string KeyHints = "Enter:search/read  Tab:next field  F3:whole article  F2:open in browser  Esc:close";
+    internal const string KeyHints = "Enter:search/read  Tab:field  F3:whole  F2:browser  Esc:close";
 
     internal const string SourceKey = "Encyclopedia.Source";
     internal const string QueryKey = "Encyclopedia.Query";
@@ -180,7 +180,8 @@ public class EncyclopediaDialog : SplitPaneDialog
         int ih = (int)ViewSize.Height - 2;
         if (iw > 0 && ih > 0)
         {
-            int queryWidth = Math.Max(12, iw * 3 / 5);
+            // The source names are up to 24 cells long and the box needs room for its label and arrow as well.
+            int queryWidth = Math.Max(12, Math.Min(iw / 2, iw - 36));
             _query.Position = new Position(1, 1);
             _query.ViewSize = new Size(queryWidth, 1);
             _query.ScrollableModel.ViewSize = _query.ViewSize;
