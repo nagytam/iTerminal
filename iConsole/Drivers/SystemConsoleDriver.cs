@@ -285,6 +285,22 @@ public class SystemConsoleDriver : IConsoleDriver
         }
     }
 
+    public void WriteGraphics(int x, int y, string sequence)
+    {
+        if (!_supportsVirtualTerminal)
+        {
+            return;
+        }
+
+        try
+        {
+            Console.Out.Write($"\u001b[{y + 1};{x + 1}H{sequence}");
+        }
+        catch (IOException)
+        {
+        }
+    }
+
     public void Write(int x, int y, Conxel conxel)
     {
         try

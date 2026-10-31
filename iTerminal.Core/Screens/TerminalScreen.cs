@@ -42,7 +42,8 @@ public class TerminalScreen : iConsole.Screens.Screen
         ISettingsService settingsService,
         ToastHost? toastHost = null,
         RuntimeDependencyDialog? runtimeDependencyDialog = null,
-        ToolTipHost? toolTipHost = null)
+        ToolTipHost? toolTipHost = null,
+        iConsole.Graphics.SixelOverlay? sixelOverlay = null)
         : base(consoleDriver, themeService)
     {
         _consoleDriver = consoleDriver ?? NullConsoleDriver.Instance;
@@ -68,7 +69,9 @@ public class TerminalScreen : iConsole.Screens.Screen
         {
             AddControl(statusBar);
         }
-        AddControl(new SplashDialog(themeService));
+        // The Sixel feature flag is a setting, read each time a picture is about to be drawn.
+        iConsole.Graphics.TerminalGraphics.EnabledSource = () => settingsService?.GetAsBool(iTerminal.Core.Data.Settings.SixelEnabled, true) ?? true;
+        AddControl(new SplashDialog(themeService, sixelOverlay));
         if (toastHost is not null)
         {
             AddControl(toastHost);

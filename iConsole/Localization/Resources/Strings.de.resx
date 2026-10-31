@@ -667,6 +667,15 @@
   <data name="Xml.NodeCount" xml:space="preserve">
     <value>{0} · {1:N0} Knoten</value>
   </data>
+  <data name="Splash.Protocols" xml:space="preserve">
+    <value>Terminal-Protokolle</value>
+  </data>
+  <data name="Splash.StateOn" xml:space="preserve">
+    <value>an</value>
+  </data>
+  <data name="Splash.StateOff" xml:space="preserve">
+    <value>aus</value>
+  </data>
   <data name="Splash.SystemInfo" xml:space="preserve">
     <value>CPU: {0} Kerne, Speicher: {1} GB</value>
   </data>

@@ -84,6 +84,7 @@ public static class iConsoleApplicationBuilderExtension
         services.AddSingleton<HelpDialog>();
         services.AddSingleton<IBuffer, Buffers.Buffer>();
         services.AddSingleton<ConsoleOwnership>();
+        services.AddSingleton<Graphics.SixelOverlay>();
         services.AddSingleton<IJob, ControlRendererJob>();
         services.AddSingleton<IJob, ConsoleBufferRendererJob>();
         services.AddSingleton<ProcessService>();

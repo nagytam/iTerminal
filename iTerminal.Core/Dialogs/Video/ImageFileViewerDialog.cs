@@ -5,6 +5,7 @@ using iConsole.Controls.Buttons;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
+using iConsole.Graphics;
 using iConsole.Services;
 using iTerminal.Core.Services.Images;
 using iTerminal.Core.Video;
@@ -15,6 +16,9 @@ namespace iTerminal.Core.Dialogs.Video;
 /// F3 on a picture: the image drawn as ASCII art, fitted to the room the dialog has. It shares the
 /// decoder and the character conversion with <see cref="VideoFileViewerDialog"/> — to ffmpeg a
 /// picture is a one-frame video — so an animated GIF shows its first frame.
+///
+/// <para>On a terminal that draws Sixel (Windows Terminal, WezTerm, foot, Konsole, iTerm2…) the picture is a real bitmap sized
+/// in pixels and drawn over blank cells by the renderer; anywhere else the ASCII art is the fallback.</para>
 ///
 /// <para>Decoding runs on a background task and is redone when the available room changes, so a
 /// terminal resize never leaves a stretched or clipped picture. Only the newest request is kept.</para>
@@ -45,6 +49,9 @@ public class ImageFileViewerDialog : Dialog
     private VideoFrame? _asciiSource;
     private AsciiColorMode _asciiMode;
 
+    private readonly SixelOverlay? _sixelOverlay;
+    private SixelPicture? _sixel;
+
     private IReadOnlyList<ImageInfoField> _metadata = [];
     private List<string>? _metadataLines;
     private bool _showMetadata;
@@ -57,9 +64,11 @@ public class ImageFileViewerDialog : Dialog
         IVideoDecoderFactory decoderFactory,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        SixelOverlay? sixelOverlay = null)
         : base(nameof(ImageFileViewerDialog), themeService)
     {
+        _sixelOverlay = sixelOverlay;
         _decoderFactory = decoderFactory;
         _beepService = beepService;
         _dateTimeProviderService = dateTimeProviderService;
@@ -91,8 +100,76 @@ public class ImageFileViewerDialog : Dialog
     /// <summary>The picture currently on screen, or null while there is none.</summary>
     internal VideoFrame? Picture => _picture;
 
-    private void ToggleColor() =>
+    /// <summary>A picture encoded for the terminal, and the cells it covers.</summary>
+    private sealed record SixelPicture(string Data, int Columns, int Rows);
+
+    /// <summary>True when the terminal draws Sixel pictures: the picture is then a real bitmap rather than characters.</summary>
+    private bool UseSixel => _sixelOverlay is not null && TerminalGraphics.Current.IsSixelSupported;
+
+    /// <summary>The picture on screen is a Sixel bitmap and not text.</summary>
+    internal bool IsShownAsSixel => _sixel is not null;
+
+    private void ToggleColor()
+    {
         _colorMode = _colorMode == AsciiColorMode.Color ? AsciiColorMode.Mono : AsciiColorMode.Color;
+        RebuildSixel();
+    }
+
+    /// <summary>Encodes the picture again for the colour mode just chosen, off the render thread; the old one stays up meanwhile.</summary>
+    private void RebuildSixel()
+    {
+        VideoFrame? picture;
+        SixelPicture? current;
+        int generation;
+        lock (_lock)
+        {
+            picture = _picture;
+            current = _sixel;
+            generation = Volatile.Read(ref _generation);
+        }
+
+        if (picture is null || current is null)
+        {
+            return;
+        }
+
+        AsciiColorMode mode = _colorMode;
+        _ = Task.Run(() =>
+        {
+            string data = SixelEncoder.Encode(SixelPixels(picture.Rgb, mode), picture.Columns, picture.Rows);
+            lock (_lock)
+            {
+                if (generation != Volatile.Read(ref _generation) || !ReferenceEquals(_picture, picture) || mode != _colorMode)
+                {
+                    return;
+                }
+
+                _sixel = new SixelPicture(data, current.Columns, current.Rows);
+            }
+
+            StateHasChanged();
+        });
+    }
+
+    /// <summary>The pixels to encode: as decoded, or reduced to grey for the colour-off mode.</summary>
+    private static byte[] SixelPixels(byte[] rgb, AsciiColorMode mode)
+    {
+        if (mode == AsciiColorMode.Color)
+        {
+            return rgb;
+        }
+
+        byte[] grey = new byte[rgb.Length];
+        for (int i = 0; i < rgb.Length; i += 3)
+        {
+            byte luma = (byte)((rgb[i] * 299 + rgb[i + 1] * 587 + rgb[i + 2] * 114) / 1000);
+            grey[i] = luma;
+            grey[i + 1] = luma;
+            grey[i + 2] = luma;
+        }
+
+        return grey;
+    }
 
     public override async Task OnInitializeAsync()
     {
@@ -103,6 +180,7 @@ public class ImageFileViewerDialog : Dialog
             Interlocked.Increment(ref _generation);
             _info = null;
             _picture = null;
+            _sixel = null;
             _error = string.Empty;
             _requested = (0, 0);
         }
@@ -120,6 +198,7 @@ public class ImageFileViewerDialog : Dialog
     public override void Close()
     {
         Interlocked.Increment(ref _generation);
+        _sixelOverlay?.Hide(this);
         base.Close();
     }
 
@@ -154,7 +233,8 @@ public class ImageFileViewerDialog : Dialog
     {
         lock (_lock)
         {
-            var wanted = _info is null ? (areaColumns, areaRows) : AsciiArt.Fit(_info.AspectRatio, areaColumns, areaRows);
+            // A Sixel picture is fitted in pixels while loading, so it is the room itself that is compared.
+            var wanted = _info is null || UseSixel ? (areaColumns, areaRows) : AsciiArt.Fit(_info.AspectRatio, areaColumns, areaRows);
             if (_requested == wanted || !string.IsNullOrEmpty(_error) || areaColumns <= 0 || areaRows <= 0)
             {
                 return;
@@ -180,6 +260,13 @@ public class ImageFileViewerDialog : Dialog
             }
 
             using IVideoDecoder decoder = _decoderFactory.Create(path);
+            if (UseSixel)
+            {
+                LoadSixel(decoder, generation, areaColumns, areaRows);
+                StateHasChanged();
+                return;
+            }
+
             var (columns, rows) = AsciiArt.Fit(decoder.Info.AspectRatio, areaColumns, areaRows);
             decoder.Open(TimeSpan.Zero, columns, rows);
 
@@ -216,6 +303,34 @@ public class ImageFileViewerDialog : Dialog
         }
 
         StateHasChanged();
+    }
+
+    /// <summary>Decodes at the pixel size that fills the room, and encodes the result for the terminal.</summary>
+    private void LoadSixel(IVideoDecoder decoder, int generation, int areaColumns, int areaRows)
+    {
+        SixelFit fit = TerminalGraphics.Current.Fit(decoder.Info.AspectRatio, areaColumns, areaRows);
+        decoder.Open(TimeSpan.Zero, fit.PixelWidth, fit.PixelHeight);
+
+        var rgb = new byte[fit.PixelWidth * fit.PixelHeight * 3];
+        if (!decoder.ReadFrame(rgb))
+        {
+            throw new InvalidOperationException("No picture could be decoded from this file.");
+        }
+
+        string data = SixelEncoder.Encode(SixelPixels(rgb, _colorMode), fit.PixelWidth, fit.PixelHeight);
+        lock (_lock)
+        {
+            if (generation != Volatile.Read(ref _generation))
+            {
+                return;
+            }
+
+            _info = decoder.Info;
+            _picture = new VideoFrame(rgb, fit.PixelWidth, fit.PixelHeight, TimeSpan.Zero);
+            _sixel = new SixelPicture(data, fit.Columns, fit.Rows);
+            _isLoading = false;
+            _requested = (areaColumns, areaRows);
+        }
     }
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
@@ -400,11 +515,13 @@ public class ImageFileViewerDialog : Dialog
         var ih = (int)ViewSize.Height - 2;
         if (iw <= 0 || ih <= HeaderRows + FooterRows)
         {
+            _sixelOverlay?.Hide(this);
             return;
         }
 
         if (_showMetadata)
         {
+            _sixelOverlay?.Hide(this);
             DrawMetadata(buffer, ix, iy, iw, ih);
             return;
         }
@@ -414,12 +531,14 @@ public class ImageFileViewerDialog : Dialog
 
         VideoInfo? info;
         VideoFrame? picture;
+        SixelPicture? sixel;
         string error;
         bool loading;
         lock (_lock)
         {
             info = _info;
             picture = _picture;
+            sixel = _sixel;
             error = _error;
             loading = _isLoading;
         }
@@ -430,12 +549,33 @@ public class ImageFileViewerDialog : Dialog
             header += $"   {info.Width}×{info.Height} pixels";
             if (picture is not null)
             {
-                header += $"   shown as {picture.Columns}×{picture.Rows} characters";
+                header += sixel is not null
+                    ? $"   shown as {picture.Columns}×{picture.Rows} pixels"
+                    : $"   shown as {picture.Columns}×{picture.Rows} characters";
             }
         }
 
         WriteLine(buffer, ix, iy, iw, header, Color.Cyan, colorScheme.Background);
-        DrawPicture(buffer, ix, iy + HeaderRows, areaColumns, areaRows, picture, error, loading);
+        if (sixel is not null && _sixelOverlay is not null && string.IsNullOrEmpty(error)
+            && sixel.Columns <= areaColumns && sixel.Rows <= areaRows)
+        {
+            // The room is blank black cells; the terminal draws the bitmap over them, centred.
+            DrawPicture(buffer, ix, iy + HeaderRows, areaColumns, areaRows, null, string.Empty, false);
+            _sixelOverlay.Show(
+                this,
+                ix + (areaColumns - sixel.Columns) / 2,
+                iy + HeaderRows + (areaRows - sixel.Rows) / 2,
+                sixel.Columns,
+                sixel.Rows,
+                sixel.Data,
+                Color.Black);
+        }
+        else
+        {
+            _sixelOverlay?.Hide(this);
+            DrawPicture(buffer, ix, iy + HeaderRows, areaColumns, areaRows, UseSixel ? null : picture, error, loading);
+        }
+
         WriteLine(buffer, ix, iy + ih - 1, iw, KeyHints, colorScheme.Foreground, colorScheme.Background);
     }
 
