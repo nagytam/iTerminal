@@ -101,7 +101,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
         _shareTextBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.ShareName", "Share name"), IsVisible = false, CanFocus = false };
         _saveConnectionCheckBox = new CheckBox(themeService) { Label = UiText.Get("Field.SaveConnection", "Save this connection"), IsVisible = false, CanFocus = false };
         _connectButton = new Button(iConsole.Localization.UiText.Get("Button.Connect", "Connect"), new NetworkBrowserActionCommand(() => _ = ConnectPendingAsync()), themeService) { HotKeyChar = 'C', IsVisible = false, CanFocus = false };
-        _backButton = new Button(iConsole.Localization.UiText.Get("Common.Back", "Back"), new NetworkBrowserActionCommand(BeginBrowse), themeService) { HotKeyChar = 'B', IsVisible = false, CanFocus = false };
+        _backButton = new Button(iConsole.Localization.UiText.Get("Common.Back", "Back"), new NetworkBrowserActionCommand(BeginBrowse), themeService) { HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Common.Back", "Back"), 'B'), IsVisible = false, CanFocus = false };
         AddControl(_usernameTextBox);
         AddControl(_passwordTextBox);
         AddControl(_shareTextBox);

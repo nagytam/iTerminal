@@ -79,7 +79,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
                 _listBox.ScrollableModel,
                 _favourites), themeService)
         {
-            HotKeyChar = 'D'
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Button.DeleteFavourite", "Delete favourite"), 'D')
         };
         // The list goes in first on purpose: SetFocus lands on the first focusable control, and a
         // page that opens with "Add to favourites" focused answers the arrow keys with nothing and

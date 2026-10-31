@@ -685,4 +685,7 @@
   <data name="Dialog.DateTimeTimeZone" xml:space="preserve">
     <value>Datum, Uhrzeit und Zeitzone</value>
   </data>
+  <data name="Hint.MoveDivider" xml:space="preserve">
+    <value>Trennlinie verschieben</value>
+  </data>
 </root>

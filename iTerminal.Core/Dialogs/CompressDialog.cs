@@ -189,7 +189,7 @@ public class CompressDialog : FormDialog
         };
         _labelHint = new Label(string.Empty, themeService);
         _errorLabel = new Label(string.Empty, themeService);
-        _compressButton = new Button(iConsole.Localization.UiText.Get("Menu.Compress", "Compress"), compressCommand, themeService) { HotKeyChar = 'C' };
+        _compressButton = new Button(iConsole.Localization.UiText.Get("Menu.Compress", "Compress"), compressCommand, themeService) { HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Menu.Compress", "Compress"), 'C') };
         _cancelButton = new CancelDialogButton(themeService);
 
         AddControl(_labelSource);

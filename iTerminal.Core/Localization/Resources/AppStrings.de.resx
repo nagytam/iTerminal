@@ -2350,4 +2350,82 @@
   <data name="Dialog.AddTorrent" xml:space="preserve">
     <value>Torrent hinzufügen</value>
   </data>
+  <data name="Field.MoveToRecycleBinNotHere" xml:space="preserve">
+    <value>In den Papierkorb verschieben — hier nicht verfügbar, wird endgültig gelöscht</value>
+  </data>
+  <data name="Field.MoveToTrash" xml:space="preserve">
+    <value>In den Papierkorb verschieben</value>
+  </data>
+  <data name="Button.SkipVersion" xml:space="preserve">
+    <value>Diese Version überspringen</value>
+  </data>
+  <data name="Update.InstallDescription" xml:space="preserve">
+    <value>Die neue Version herunterladen und ihr Installationsprogramm starten.</value>
+  </data>
+  <data name="Update.SkipDescription" xml:space="preserve">
+    <value>Diese Version nicht mehr anbieten.</value>
+  </data>
+  <data name="RuntimeDependency.NotInstalled" xml:space="preserve">
+    <value>Nicht installiert. {0} installieren.</value>
+  </data>
+  <data name="RuntimeDependency.UpdateTo" xml:space="preserve">
+    <value>Installiert {0}. Auf {1} aktualisieren.</value>
+  </data>
+  <data name="RuntimeDependency.UpToDate" xml:space="preserve">
+    <value>Installiert {0}. Aktuell.</value>
+  </data>
+  <data name="RuntimeDependency.Intro" xml:space="preserve">
+    <value>Komponenten, die iTerminal herunterlädt, statt sie mitzuliefern.</value>
+  </data>
+  <data name="RuntimeDependency.DataFolderNote" xml:space="preserve">
+    <value>Komponenten, die iTerminal in Ihren Datenordner herunterlädt, statt sie mitzuliefern.</value>
+  </data>
+  <data name="RuntimeDependency.NothingToSetUp" xml:space="preserve">
+    <value>Es gibt nichts einzurichten.</value>
+  </data>
+  <data name="RuntimeDependency.AllUpToDate" xml:space="preserve">
+    <value>Alle Komponenten sind installiert und aktuell.</value>
+  </data>
+  <data name="RuntimeDependency.NeedWork" xml:space="preserve">
+    <value>{0} von {1} müssen installiert oder aktualisiert werden.</value>
+  </data>
+  <data name="RuntimeDependency.EnterCloses" xml:space="preserve">
+    <value>Enter schließt dies.</value>
+  </data>
+  <data name="RuntimeDependency.NothingTicked" xml:space="preserve">
+    <value>Nichts ist ausgewählt.</value>
+  </data>
+  <data name="RuntimeDependency.FinishWillInstall" xml:space="preserve">
+    <value>Abschließen installiert:</value>
+  </data>
+  <data name="RuntimeDependency.NothingTickedGoBack" xml:space="preserve">
+    <value>Nichts ist ausgewählt. Zurück und auswählen, was installiert werden soll.</value>
+  </data>
+  <data name="RuntimeDependency.Footer.Installing" xml:space="preserve">
+    <value>Installation läuft... Esc: ausblenden (läuft weiter)</value>
+  </data>
+  <data name="RuntimeDependency.Footer.InstallWithTick" xml:space="preserve">
+    <value>Enter:installieren  Rücktaste:zurück  Leertaste:auswählen  S:nicht mehr fragen  Esc:später</value>
+  </data>
+  <data name="RuntimeDependency.Footer.InstallOnly" xml:space="preserve">
+    <value>Enter:schließen  Rücktaste:zurück  Esc:schließen</value>
+  </data>
+  <data name="RuntimeDependency.Footer.NextWithTick" xml:space="preserve">
+    <value>Enter:weiter  Rücktaste:zurück  Leertaste:auswählen  S:nicht mehr fragen  Esc:später</value>
+  </data>
+  <data name="RuntimeDependency.Footer.NextOnly" xml:space="preserve">
+    <value>Enter:weiter  Rücktaste:zurück  Esc:schließen</value>
+  </data>
+  <data name="RuntimeDependency.Footer.Close" xml:space="preserve">
+    <value>Enter oder Esc: schließen</value>
+  </data>
+  <data name="RuntimeDependency.Tick.NothingToDo" xml:space="preserve">
+    <value>✓ Hier ist nichts zu tun.</value>
+  </data>
+  <data name="RuntimeDependency.Tick.Install" xml:space="preserve">
+    <value>[x] Diese installieren   (Leertaste: weglassen)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
+    <value>[ ] Weggelassen   (Leertaste: installieren)</value>
+  </data>
 </root>

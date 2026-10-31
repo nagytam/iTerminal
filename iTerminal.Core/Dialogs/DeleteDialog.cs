@@ -96,7 +96,7 @@ public class DeleteDialog : FormDialog
         {
             Label = UiText.Get("Field.MoveToRecycleBin", "Move to Recycle bin"),
             IsChecked = false,
-            HotKeyChar = 'M'
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Field.MoveToRecycleBin", "Move to Recycle bin"), 'M')
         };
         _checkBoxRecursive = new CheckBox(themeService)
         {
@@ -105,7 +105,7 @@ public class DeleteDialog : FormDialog
             IsEnabled = false,
             HotKeyChar = 'R'
         };
-        _deleteButton = new Button(iConsole.Localization.UiText.Get("Menu.Delete", "Delete"), _deleteCommand, themeService) { HotKeyChar = 'D' };
+        _deleteButton = new Button(iConsole.Localization.UiText.Get("Menu.Delete", "Delete"), _deleteCommand, themeService) { HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Menu.Delete", "Delete"), 'D') };
         _cancelButton = new CancelDialogButton(themeService);
         _errorLabel = new Label(string.Empty, themeService);
         AddControl(_textBoxName);
@@ -196,9 +196,9 @@ public class DeleteDialog : FormDialog
         _textBoxName.ScrollableModel.ScrollPosition.X = Math.Max(0, length - visible + 1);
     }
 
-    internal const string RecycleBinLabel = "Move to Recycle bin";
-    internal const string NoRecycleBinLabel = "Move to Recycle bin — not available here, deleted for good";
-    internal const string TrashLabel = "Move to Trash";
+    internal static string RecycleBinLabel => iConsole.Localization.UiText.Get("Field.MoveToRecycleBin", "Move to Recycle bin");
+    internal static string NoRecycleBinLabel => iConsole.Localization.UiText.Get("Field.MoveToRecycleBinNotHere", "Move to Recycle bin — not available here, deleted for good");
+    internal static string TrashLabel => iConsole.Localization.UiText.Get("Field.MoveToTrash", "Move to Trash");
 
     /// <summary>Whether a delete of <paramref name="url"/> can be undone: local files on Windows (Recycle bin) and Linux (Trash).</summary>
     internal static bool CanRecycle(Url url) =>

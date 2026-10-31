@@ -87,7 +87,7 @@ public class FindFilesDialog : SplitPaneDialog
         _folderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.In", "In"), MaxLength = 1024, Placeholder = UiText.Get("Field.FolderToSearch", "folder to search") };
         _largerBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.LargerMb", "Larger MB"), MaxLength = 12, Placeholder = UiText.Get("Field.BlankAny", "blank: any") };
         _olderBox = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.OlderDays", "Older days"), MaxLength = 6, Placeholder = UiText.Get("Field.BlankAny", "blank: any") };
-        _subfoldersBox = new CheckBox(themeService) { Label = UiText.Get("Field.IncludeSubfolders", "Include subfolders"), IsChecked = true, HotKeyChar = 'I' };
+        _subfoldersBox = new CheckBox(themeService) { Label = UiText.Get("Field.IncludeSubfolders", "Include subfolders"), IsChecked = true, HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Field.OlderDays", "Older days"), 'I') };
         _resultListBox = new HitListBox(new ListBoxModel<FileSearchHit>(_resultItems), themeService)
         {
             EmptyText = UiText.Get("Empty.FindFiles", " Type a name pattern and press Enter."),

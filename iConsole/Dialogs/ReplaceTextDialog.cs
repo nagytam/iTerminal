@@ -47,7 +47,7 @@ public class ReplaceTextDialog : Dialog
         _matchCaseBox = new CheckBox(themeService) { Label = iConsole.Localization.UiText.Get("Editor.MatchCase", "Match case"), IsChecked = editor.LastMatchCase };
         _regexBox = new CheckBox(themeService) { Label = iConsole.Localization.UiText.Get("Editor.RegularExpression", "Regular expression"), IsChecked = editor.LastUseRegex };
         _replaceButton = new Button(iConsole.Localization.UiText.Get("Editor.Replace", "Replace"), new ReplaceCommand(this, all: false), themeService) { HotKeyChar = 'R' };
-        _replaceAllButton = new Button(iConsole.Localization.UiText.Get("Editor.ReplaceAll", "Replace all"), new ReplaceCommand(this, all: true), themeService) { HotKeyChar = 'A' };
+        _replaceAllButton = new Button(iConsole.Localization.UiText.Get("Editor.ReplaceAll", "Replace all"), new ReplaceCommand(this, all: true), themeService) { HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Editor.ReplaceAll", "Replace all"), 'A') };
         _cancelButton = new CancelDialogButton(themeService);
         AddControl(_findBox);
         AddControl(_replaceBox);

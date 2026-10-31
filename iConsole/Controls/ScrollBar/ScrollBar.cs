@@ -53,9 +53,45 @@ public class ScrollBar(IThemeService themeService)
     /// The arrows step the cursor one cell, a click on the track jumps to the matching position and
     /// the wheel moves it three. Before this the bar only showed where you were.
     /// </summary>
+    /// <summary>
+    /// The cursor for a thumb dragged to <paramref name="offset"/> cells along a bar <paramref name="length"/> cells long: the
+    /// same track mapping as a click on the track, with the arrow cells clamped to the ends, so a drag that wanders off the
+    /// track still stops at the first and last positions.
+    /// </summary>
+    public static long CursorForDrag(long offset, long length, long total, long current)
+    {
+        long track = length - 3;
+        if (total <= 0 || track <= 0 || total == 1)
+        {
+            return current;
+        }
+
+        long clamped = Math.Clamp(offset, 1, length - 2);
+        return Math.Clamp((long)Math.Round((clamped - 1) / (double)track * (total - 1)), 0, total - 1);
+    }
+
+    /// <summary>True while a thumb is being dragged: the button was pressed on the track and is still held.</summary>
+    private bool _dragging;
+
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (_dragging)
+        {
+            if (mouseEvent.IsRelease || ScrollableModel is null || !IsEnabled || (!mouseEvent.IsDrag && !mouseEvent.LeftClicked))
+            {
+                _dragging = false;
+                return true;
+            }
+
+            if (mouseEvent.IsDrag)
+            {
+                MoveCursor(CursorForDragAt(mouseEvent));
+            }
+
+            return true;
+        }
+
         if (ScrollableModel is null || !IsEnabled || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;
@@ -76,24 +112,43 @@ public class ScrollBar(IThemeService themeService)
                 : (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
             long length = vertical ? (long)ViewSize.Height : (long)ViewSize.Width;
             target = CursorForClick(offset, length, total, current);
+            // A press on the track (not an arrow) starts a drag, so the thumb follows the pointer while the button is held.
+            _dragging = !mouseEvent.IsRelease && offset > 0 && offset < length - 1;
         }
         else
         {
             return isHandled;
         }
 
-        if (vertical)
+        MoveCursor(target);
+        return true;
+    }
+
+    private long CursorForDragAt(MouseEvent mouseEvent)
+    {
+        bool vertical = ScrollBarOrientation == Orientation.Vertical;
+        long total = (long)(vertical ? ScrollableModel!.ScrollableSize.Height : ScrollableModel!.ScrollableSize.Width);
+        long current = vertical ? ScrollableModel.CursorPosition.Y : ScrollableModel.CursorPosition.X;
+        long offset = vertical
+            ? (long)mouseEvent.Position.Y - (long)AbsolutePosition.Y
+            : (long)mouseEvent.Position.X - (long)AbsolutePosition.X;
+        long length = vertical ? (long)ViewSize.Height : (long)ViewSize.Width;
+        return CursorForDrag(offset, length, total, current);
+    }
+
+    private void MoveCursor(long target)
+    {
+        if (ScrollBarOrientation == Orientation.Vertical)
         {
-            ScrollableModel.CursorPosition.Y = target;
+            ScrollableModel!.CursorPosition.Y = target;
         }
         else
         {
-            ScrollableModel.CursorPosition.X = target;
+            ScrollableModel!.CursorPosition.X = target;
         }
 
         ScrollableModel.ScrollToVisible();
         StateHasChanged();
-        return true;
     }
 
     public override void Draw(IBuffer buffer)

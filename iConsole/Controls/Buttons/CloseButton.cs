@@ -10,6 +10,6 @@ public class CloseButton : Button
     {
         // 'c' is reserved for Cancel (CancelButton/CancelDialogButton); Close uses 'l' so the two
         // can coexist in the same dialog without one silently swallowing the other's Ctrl+key.
-        HotKeyChar = 'l';
+        HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Common.Close", "Close"), 'l');
     }
 }
