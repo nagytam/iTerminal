@@ -634,4 +634,46 @@
   <data name="Hint.TypeOffset" xml:space="preserve">
     <value>Írja be az eltolást decimálisan vagy hexadecimálisan</value>
   </data>
+  <data name="Pagination.Caption" xml:space="preserve">
+    <value>{0}. oldal / {1}</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Hiba: {0}</value>
+  </data>
+  <data name="Hint.OpenMenuNamed" xml:space="preserve">
+    <value>A(z) {0} menü megnyitása</value>
+  </data>
+  <data name="Status.Tasks" xml:space="preserve">
+    <value>Feladatok: {0}</value>
+  </data>
+  <data name="Status.Search" xml:space="preserve">
+    <value>Keresés: {0}</value>
+  </data>
+  <data name="Status.Hit" xml:space="preserve">
+    <value>Találat {0}/{1}</value>
+  </data>
+  <data name="Wizard.Step" xml:space="preserve">
+    <value>{0}. lépés / {1}: {2}</value>
+  </data>
+  <data name="Help.FocusedControl" xml:space="preserve">
+    <value>Fókuszban lévő vezérlő: {0}</value>
+  </data>
+  <data name="Help.FocusedControlNone" xml:space="preserve">
+    <value>Fókuszban lévő vezérlő: nincs</value>
+  </data>
+  <data name="Xml.NodeCount" xml:space="preserve">
+    <value>{0} · {1:N0} csomópont</value>
+  </data>
+  <data name="Splash.SystemInfo" xml:space="preserve">
+    <value>CPU: {0} mag, memória: {1} GB</value>
+  </data>
+  <data name="Hint.SwitchTabPage" xml:space="preserve">
+    <value>Váltás az előző / következő lapra.</value>
+  </data>
+  <data name="Hint.SwitchTabPageArrows" xml:space="preserve">
+    <value>Lapváltás, ha a fókuszban lévő vezérlő nem használja a nyílbillentyűket.</value>
+  </data>
+  <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
+    <value>Ugrás közvetlenül arra a lapra, amelynek nevében szerepel a szám.</value>
+  </data>
 </root>

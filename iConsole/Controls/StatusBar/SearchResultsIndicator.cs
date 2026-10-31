@@ -1,3 +1,4 @@
+using iConsole.Localization;
 ﻿using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
@@ -40,12 +41,12 @@ public class SearchResultsIndicator : StatusBarItem
         var hits = _searchModel.Hits.AsSnapshot();
         if (_scrollableModel is null)
         {
-            return $"Search: {hits.Count}";
+            return string.Format(UiText.Get("Status.Search", "Search: {0}"), hits.Count);
         }
 
         var cursor = _scrollableModel.CursorPosition;
         int upToCursor = hits.Count(h => h.Y < cursor.Y || (h.Y == cursor.Y && h.X <= cursor.X));
-        return $"Hit {upToCursor}/{hits.Count}";
+        return string.Format(UiText.Get("Status.Hit", "Hit {0}/{1}"), upToCursor, hits.Count);
     }
 
     public override void Draw(IBuffer buffer)

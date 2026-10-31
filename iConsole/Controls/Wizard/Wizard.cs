@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
@@ -169,7 +170,7 @@ public class Wizard : Control
         int width = (int)ViewSize.Width;
         string header = CurrentStep is null
             ? string.Empty
-            : $"Step {_currentIndex + 1} of {_steps.Count}: {CurrentStep.Title}";
+            : string.Format(UiText.Get("Wizard.Step", "Step {0} of {1}: {2}"), _currentIndex + 1, _steps.Count, CurrentStep.Title);
         int headerWidth = Math.Max(0, width - (int)_indicator.ViewSize.Width - 1);
         WriteLine(buffer, 0, header.Length > headerWidth ? header[..headerWidth] : header, colorScheme.Foreground, colorScheme.Background, width);
 

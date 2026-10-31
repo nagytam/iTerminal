@@ -634,4 +634,46 @@
   <data name="Hint.TypeOffset" xml:space="preserve">
     <value>Escriba el desplazamiento en decimal o hexadecimal</value>
   </data>
+  <data name="Pagination.Caption" xml:space="preserve">
+    <value>Página {0} de {1}</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="Hint.OpenMenuNamed" xml:space="preserve">
+    <value>Abrir el menú {0}</value>
+  </data>
+  <data name="Status.Tasks" xml:space="preserve">
+    <value>Tareas: {0}</value>
+  </data>
+  <data name="Status.Search" xml:space="preserve">
+    <value>Búsqueda: {0}</value>
+  </data>
+  <data name="Status.Hit" xml:space="preserve">
+    <value>Coincidencia {0}/{1}</value>
+  </data>
+  <data name="Wizard.Step" xml:space="preserve">
+    <value>Paso {0} de {1}: {2}</value>
+  </data>
+  <data name="Help.FocusedControl" xml:space="preserve">
+    <value>Control con el foco: {0}</value>
+  </data>
+  <data name="Help.FocusedControlNone" xml:space="preserve">
+    <value>Control con el foco: ninguno</value>
+  </data>
+  <data name="Xml.NodeCount" xml:space="preserve">
+    <value>{0} · {1:N0} nodos</value>
+  </data>
+  <data name="Splash.SystemInfo" xml:space="preserve">
+    <value>CPU: {0} núcleos, memoria: {1} GB</value>
+  </data>
+  <data name="Hint.SwitchTabPage" xml:space="preserve">
+    <value>Cambiar a la pestaña anterior / siguiente.</value>
+  </data>
+  <data name="Hint.SwitchTabPageArrows" xml:space="preserve">
+    <value>Cambiar de pestaña cuando el control activo no usa las flechas.</value>
+  </data>
+  <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
+    <value>Ir directamente a la pestaña cuyo nombre lleva ese número.</value>
+  </data>
 </root>

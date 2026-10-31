@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Controls.Viewers;
 using iConsole.Commands;
@@ -90,8 +91,8 @@ public class HelpDialog : Dialog
         var lines = new List<string>
         {
             focusedControl is not null
-                ? $"Focused control: {focusedControl.Name}"
-                : "Focused control: n/a",
+                ? string.Format(UiText.Get("Help.FocusedControl", "Focused control: {0}"), focusedControl.Name)
+                : UiText.Get("Help.FocusedControlNone", "Focused control: n/a"),
             string.Empty,
             "Available commands:",
         };
