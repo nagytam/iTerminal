@@ -47,7 +47,7 @@ public class MusicTagEditorDialog : Dialog
         _genre = Field("Genre", Value(current, "Genre"), beepService, dateTimeProviderService, themeService);
         _comment = Field("Comment", Value(current, "Comment"), beepService, dateTimeProviderService, themeService);
         _message = new Label(string.Empty, themeService);
-        Title = "Tags — " + Path.GetFileName(path);
+        Title = string.Format(UiText.Get("Dialog.TagsTitle", "Tags — {0}"), Path.GetFileName(path));
         foreach (Control control in new Control[] { _title, _artist, _album, _year, _track, _genre, _comment, _message })
         {
             AddControl(control);

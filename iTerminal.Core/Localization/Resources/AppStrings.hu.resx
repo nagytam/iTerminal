@@ -1774,4 +1774,52 @@
   <data name="Msg.TextOnlyJpegPng" xml:space="preserve">
     <value>Szöveg csak JPEG és PNG fájlokba írható.</value>
   </data>
+  <data name="Msg.DeleteItems" xml:space="preserve">
+    <value>{0} elem törlése</value>
+  </data>
+  <data name="Msg.CachedTextUnreadable" xml:space="preserve">
+    <value>A gyorsítótárazott szöveg nem olvasható: {0}</value>
+  </data>
+  <data name="Msg.NotGitRepo" xml:space="preserve">
+    <value>Nem git-tároló: {0}</value>
+  </data>
+  <data name="Msg.CommitCancelled" xml:space="preserve">
+    <value>A commit megszakadt — üres üzenettel nem lehet commitolni.</value>
+  </data>
+  <data name="Msg.NothingToStash" xml:space="preserve">
+    <value>Nincs mit félretenni — a munkafa tiszta.</value>
+  </data>
+  <data name="Msg.NothingToAmend" xml:space="preserve">
+    <value>Nincs mit módosítani — még nincs commit.</value>
+  </data>
+  <data name="Msg.UpdatingQuotes" xml:space="preserve">
+    <value>Árfolyamok frissítése…</value>
+  </data>
+  <data name="Msg.AddingSymbol" xml:space="preserve">
+    <value>{0} hozzáadása…</value>
+  </data>
+  <data name="Msg.AddedSymbol" xml:space="preserve">
+    <value>{0} hozzáadva</value>
+  </data>
+  <data name="Msg.CurrentTimeZone" xml:space="preserve">
+    <value>Ez a jelenlegi időzóna.</value>
+  </data>
+  <data name="Dialog.TagsTitle" xml:space="preserve">
+    <value>Címkék — {0}</value>
+  </data>
+  <data name="Dialog.ImageTitle" xml:space="preserve">
+    <value>Kép — {0}</value>
+  </data>
+  <data name="Dialog.VideoTitle" xml:space="preserve">
+    <value>Videó — {0}</value>
+  </data>
+  <data name="Dialog.ImageTextTitle" xml:space="preserve">
+    <value>Képszöveg — {0}</value>
+  </data>
+  <data name="Msg.WorkspaceName" xml:space="preserve">
+    <value>„{0}” munkaterület</value>
+  </data>
+  <data name="Msg.WorkspaceBackExcept" xml:space="preserve">
+    <value>A(z) „{0}” munkaterület visszaállt, kivéve:</value>
+  </data>
 </root>

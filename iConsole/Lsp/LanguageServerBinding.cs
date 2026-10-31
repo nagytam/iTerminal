@@ -86,11 +86,17 @@ public sealed class LanguageServerBinding : IDisposable
             {
                 return;
             }
-
-            _diagnostics = diagnostics;
         }
 
+        // The marks go on before the list is published, so whoever sees the new list also sees its marks.
         _view.Decorations.ReplaceSource(DecorationSource, DecorationsFor(diagnostics));
+        lock (_gate)
+        {
+            if (!_disposed)
+            {
+                _diagnostics = diagnostics;
+            }
+        }
     }
 
     /// <summary>The marks for <paramref name="diagnostics"/>: one per line a diagnostic touches, an empty range widened to one character.</summary>

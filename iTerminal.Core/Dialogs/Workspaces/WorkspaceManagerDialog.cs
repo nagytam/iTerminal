@@ -523,12 +523,12 @@ public class WorkspaceManagerDialog : Dialog
 
         if (problems.Count == 0)
         {
-            _notifications.Notify($"Workspace '{workspace.Name}'");
+            _notifications.Notify(string.Format(UiText.Get("Msg.WorkspaceName", "Workspace '{0}'"), workspace.Name));
         }
         else
         {
             _notifications.Notify(
-                $"Workspace '{workspace.Name}' is back, except:",
+                string.Format(UiText.Get("Msg.WorkspaceBackExcept", "Workspace '{0}' is back, except:"), workspace.Name),
                 string.Join(Environment.NewLine, problems),
                 NotificationSeverity.Warning);
         }

@@ -498,7 +498,7 @@ public class GitClientDialog : SplitPaneDialog
                 _root = null;
                 // "(working tree clean)" under "Not a git repository" contradicted the line above it.
                 _unstagedListBox.EmptyText = NoRepositoryText;
-                SetMessage($"Not a git repository: {_startDirectory}", MessageSeverity.Error);
+                SetMessage(string.Format(UiText.Get("Msg.NotGitRepo", "Not a git repository: {0}"), _startDirectory), MessageSeverity.Error);
                 _loading = false;
                 StateHasChanged();
                 return;
@@ -759,7 +759,7 @@ public class GitClientDialog : SplitPaneDialog
         message = message.Trim();
         if (message.Length == 0)
         {
-            SetMessage("Commit cancelled — an empty message commits nothing.", MessageSeverity.Info);
+            SetMessage(UiText.Get("Msg.CommitCancelled", "Commit cancelled — an empty message commits nothing."), MessageSeverity.Info);
             StateHasChanged();
             return;
         }
@@ -905,7 +905,7 @@ public class GitClientDialog : SplitPaneDialog
     {
         if (_status.Unstaged.Count == 0 && _status.Staged.Count == 0)
         {
-            SetMessage("Nothing to stash — the working tree is clean.", MessageSeverity.Info);
+            SetMessage(UiText.Get("Msg.NothingToStash", "Nothing to stash — the working tree is clean."), MessageSeverity.Info);
             StateHasChanged();
             return;
         }
@@ -1262,7 +1262,7 @@ public class GitClientDialog : SplitPaneDialog
             var previous = await _gitService.GetLastCommitMessageAsync(root);
             if (previous.Length == 0)
             {
-                SetMessage("Nothing to amend — there is no commit yet.", MessageSeverity.Info);
+                SetMessage(UiText.Get("Msg.NothingToAmend", "Nothing to amend — there is no commit yet."), MessageSeverity.Info);
                 StateHasChanged();
                 return;
             }

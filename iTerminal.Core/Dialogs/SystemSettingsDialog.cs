@@ -711,7 +711,7 @@ public class SystemSettingsDialog : Dialog
         var zone = _zones[index];
         if (string.Equals(zone.Id, _currentZone, StringComparison.OrdinalIgnoreCase))
         {
-            SetMessage("That is the current time zone.", error: false);
+            SetMessage(UiText.Get("Msg.CurrentTimeZone", "That is the current time zone."), error: false);
             return;
         }
 

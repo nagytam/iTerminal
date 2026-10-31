@@ -111,7 +111,7 @@ public class ImageFileViewerDialog : Dialog
         _asciiSource = null;
         _metadataLines = null;
         _metadataScroll = 0;
-        Title = "Image — " + Path.GetFileName(FilePath);
+        Title = string.Format(UiText.Get("Dialog.ImageTitle", "Image — {0}"), Path.GetFileName(FilePath));
         // The metadata is at the front of the file: it is read here, off the render thread, so i shows it at once.
         _metadata = await Task.Run(() => ImageInfoReader.ReadFile(FilePath));
         StateHasChanged();
