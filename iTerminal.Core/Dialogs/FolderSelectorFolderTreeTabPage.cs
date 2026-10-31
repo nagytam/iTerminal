@@ -22,7 +22,7 @@ public class FolderSelectorFolderTreeTabPage : FolderSelectorTabPage
 
     private ICommand _selectFolderCommand { get; set; }
     protected override ICommand? SelectCommand => _selectFolderCommand;
-    protected override string SelectDescription => "Go to the folder under the cursor in the tree.";
+    protected override string SelectDescription => iConsole.Localization.UiText.Get("FolderSelector.Select.Tree", "Go to the folder under the cursor in the tree.");
 
     public FolderSelectorFolderTreeTabPage(
         IContentModelService contentModelService,
@@ -41,7 +41,7 @@ public class FolderSelectorFolderTreeTabPage : FolderSelectorTabPage
         _dynamicLabel = new DynamicLabel<IHierarchicalItemModel>(observableValue, themeService);
 
         _selectFolderCommand = new SelectTreeFolderCommand(contentModelService, folderIndexModel);
-        _selectFolderButton = new Button("Select folder", _selectFolderCommand, themeService)
+        _selectFolderButton = new Button(iConsole.Localization.UiText.Get("Button.SelectFolder", "Select folder"), _selectFolderCommand, themeService)
         {
             HotKeyChar = 'S'
         };

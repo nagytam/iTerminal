@@ -26,7 +26,7 @@ public class StartupWarningDialog : Dialog
     private readonly IReadOnlyList<string> _warnings;
 
     public StartupWarningDialog(IReadOnlyList<string> warnings, IThemeService themeService)
-        : base("Warning", themeService)
+        : base(iConsole.Localization.UiText.Get("Dialog.Warning", "Warning"), themeService)
     {
         _warnings = warnings;
         Title = iConsole.Localization.UiText.Get("Dialog.Warning", "Warning");

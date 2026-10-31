@@ -65,8 +65,8 @@ public abstract class FolderSelectorTabPage : TabPage
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Enter", SelectDescription);
-        yield return ("Tab / Shift+Tab", "Move between this page's list and its buttons.");
-        yield return ("Esc", "Dismiss the suggestion list if one is up, otherwise close the folder selector without navigating.");
-        yield return ("F1", "Show this help.");
+        yield return ("Tab / Shift+Tab", iConsole.Localization.UiText.Get("FolderSelector.Hint.TabPage", "Move between this page's list and its buttons."));
+        yield return ("Esc", iConsole.Localization.UiText.Get("FolderSelector.Hint.EscPage", "Dismiss the suggestion list if one is up, otherwise close the folder selector without navigating."));
+        yield return ("F1", iConsole.Localization.UiText.Get("FolderSelector.Hint.Help", "Show this help."));
     }
 }

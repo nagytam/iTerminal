@@ -23,7 +23,7 @@ public class FolderSelectorHistoryTabPage : FolderSelectorTabPage
 
     private ICommand _selectFolderCommand { get; set; }
     protected override ICommand? SelectCommand => _selectFolderCommand;
-    protected override string SelectDescription => "Go back to the folder under the cursor.";
+    protected override string SelectDescription => iConsole.Localization.UiText.Get("FolderSelector.Select.History", "Go back to the folder under the cursor.");
 
     public FolderSelectorHistoryTabPage(
         FolderHistoryService folderHistoryService,
@@ -48,7 +48,7 @@ public class FolderSelectorHistoryTabPage : FolderSelectorTabPage
             ScrollableModel = _listBox.ScrollableModel
         };
         _selectFolderCommand = new SelectHistoryFolderCommand(contentModelService, folderHistoryService);
-        _selectFolderButton = new Button("Select folder", _selectFolderCommand, themeService)
+        _selectFolderButton = new Button(iConsole.Localization.UiText.Get("Button.SelectFolder", "Select folder"), _selectFolderCommand, themeService)
         {
             HotKeyChar = 'S'
         };

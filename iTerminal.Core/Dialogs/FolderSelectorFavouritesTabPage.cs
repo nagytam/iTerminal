@@ -32,7 +32,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
 
     private ICommand _selectFavouriteCommand { get; set; }
     protected override ICommand? SelectCommand => _selectFavouriteCommand;
-    protected override string SelectDescription => "Go to the favourite folder under the cursor.";
+    protected override string SelectDescription => iConsole.Localization.UiText.Get("FolderSelector.Select.Favourite", "Go to the favourite folder under the cursor.");
 
     public FolderSelectorFavouritesTabPage(
         IContentModelService contentModelService,
@@ -62,18 +62,18 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
             contentModelService,
             _listBox.ScrollableModel,
             _favourites);
-        _selectFavouriteButton = new Button("Select favourite", _selectFavouriteCommand, themeService)
+        _selectFavouriteButton = new Button(iConsole.Localization.UiText.Get("Button.SelectFavourite", "Select favourite"), _selectFavouriteCommand, themeService)
         {
             HotKeyChar = 'S'
         };
-        _addToFavouritesButton = new Button("Add to favourites",
+        _addToFavouritesButton = new Button(iConsole.Localization.UiText.Get("Button.AddToFavourites", "Add to favourites"),
             new AddToFavouritesCommand(
                 contentModelService,
                 _favourites), themeService)
         {
             HotKeyChar = 'A'
         };
-        _deleteFavouriteButton = new Button("Delete favourite",
+        _deleteFavouriteButton = new Button(iConsole.Localization.UiText.Get("Button.DeleteFavourite", "Delete favourite"),
             new DeleteFavouriteCommand(
                 contentModelService,
                 _listBox.ScrollableModel,
@@ -154,8 +154,8 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
         {
             yield return hint;
         }
-        yield return ("Ctrl+A", "Add the folder the active panel is showing to the favourites.");
-        yield return ("Ctrl+D", "Remove the favourite under the cursor.");
+        yield return ("Ctrl+A", iConsole.Localization.UiText.Get("FolderSelector.Hint.AddFavourite", "Add the folder the active panel is showing to the favourites."));
+        yield return ("Ctrl+D", iConsole.Localization.UiText.Get("FolderSelector.Hint.RemoveFavourite", "Remove the favourite under the cursor."));
     }
 
     private IEnumerable<Url> FilterAndSortItems(IEnumerable<Url> items, CancellationToken cancellationToken)

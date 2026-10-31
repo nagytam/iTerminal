@@ -24,7 +24,7 @@ public class CreateFolderDialog : CreateEntryDialog
     private CreateFolderDialog(FolderTextBox textBoxName, IContentModelService contentModelService, IThemeService themeService)
         : base(
             nameof(CreateFolderDialog),
-            "Create folder",
+            iConsole.Localization.UiText.Get("Dialog.CreateFolder", "Create folder"),
             textBoxName,
             new CreateFolderCommand((FolderValidationModel)textBoxName.ValidationModel!, contentModelService),
             themeService)

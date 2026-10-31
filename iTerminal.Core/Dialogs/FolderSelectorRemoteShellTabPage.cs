@@ -25,7 +25,7 @@ public class FolderSelectorRemoteShellTabPage : FolderSelectorTabPage
 
     private ICommand _connectCommand { get; set; }
     protected override ICommand? SelectCommand => _connectCommand;
-    protected override string SelectDescription => "Connect to the SSH host that has been typed in.";
+    protected override string SelectDescription => iConsole.Localization.UiText.Get("FolderSelector.Select.Connect", "Connect to the SSH host that has been typed in.");
 
     public FolderSelectorRemoteShellTabPage(
         IContentModelService contentModelService,
@@ -50,7 +50,7 @@ public class FolderSelectorRemoteShellTabPage : FolderSelectorTabPage
         var hostValidator = (HostValidationModel)TextBoxHost.ValidationModel!;
 
         _connectCommand = new ConnectRemoteShellCommand(hostValidator, contentModelService);
-        _buttonConnect = new Button("Connect", _connectCommand, themeService)
+        _buttonConnect = new Button(iConsole.Localization.UiText.Get("Button.Connect", "Connect"), _connectCommand, themeService)
         {
             HotKeyChar = 'C'
         };
@@ -96,8 +96,8 @@ public class FolderSelectorRemoteShellTabPage : FolderSelectorTabPage
         {
             yield return hint;
         }
-        yield return ("Tab", "Complete the host from the ones connected to before.");
-        yield return ("Ctrl+C", "Connect, from anywhere on this page.");
+        yield return ("Tab", iConsole.Localization.UiText.Get("FolderSelector.Hint.CompleteHost", "Complete the host from the ones connected to before."));
+        yield return ("Ctrl+C", iConsole.Localization.UiText.Get("FolderSelector.Hint.ConnectAnywhere", "Connect, from anywhere on this page."));
     }
 }
 

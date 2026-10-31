@@ -2233,4 +2233,112 @@
   <data name="DialogHint.OpenInBrowser" xml:space="preserve">
     <value>Abrir el artículo en el navegador</value>
   </data>
+  <data name="Dialog.CreateFolder" xml:space="preserve">
+    <value>Crear carpeta</value>
+  </data>
+  <data name="Dialog.CreateFile" xml:space="preserve">
+    <value>Crear archivo</value>
+  </data>
+  <data name="Dialog.MarkFiles" xml:space="preserve">
+    <value>Marcar archivos</value>
+  </data>
+  <data name="Dialog.UnmarkFiles" xml:space="preserve">
+    <value>Desmarcar archivos</value>
+  </data>
+  <data name="Button.InstallUpdates" xml:space="preserve">
+    <value>Instalar actualizaciones</value>
+  </data>
+  <data name="Dialog.ImageText" xml:space="preserve">
+    <value>Texto de la imagen</value>
+  </data>
+  <data name="Field.MagnetFileOrUrl" xml:space="preserve">
+    <value>Magnet / archivo / URL</value>
+  </data>
+  <data name="Field.SaveTo" xml:space="preserve">
+    <value>Guardar en</value>
+  </data>
+  <data name="Button.SelectFolder" xml:space="preserve">
+    <value>Seleccionar carpeta</value>
+  </data>
+  <data name="Button.SelectDrive" xml:space="preserve">
+    <value>Seleccionar unidad</value>
+  </data>
+  <data name="Button.SelectFavourite" xml:space="preserve">
+    <value>Seleccionar favorito</value>
+  </data>
+  <data name="Button.AddToFavourites" xml:space="preserve">
+    <value>Añadir a favoritos</value>
+  </data>
+  <data name="Button.DeleteFavourite" xml:space="preserve">
+    <value>Eliminar favorito</value>
+  </data>
+  <data name="Button.Go" xml:space="preserve">
+    <value>Ir</value>
+  </data>
+  <data name="FolderSelector.Select.Connect" xml:space="preserve">
+    <value>Conectar con el host SSH escrito.</value>
+  </data>
+  <data name="FolderSelector.Select.SpecialFolder" xml:space="preserve">
+    <value>Ir al lugar bajo el cursor.</value>
+  </data>
+  <data name="FolderSelector.Select.Favourite" xml:space="preserve">
+    <value>Ir a la carpeta favorita bajo el cursor.</value>
+  </data>
+  <data name="FolderSelector.Select.Tree" xml:space="preserve">
+    <value>Ir a la carpeta bajo el cursor en el árbol.</value>
+  </data>
+  <data name="FolderSelector.Select.Path" xml:space="preserve">
+    <value>Ir a la ruta o URL escrita.</value>
+  </data>
+  <data name="FolderSelector.Select.History" xml:space="preserve">
+    <value>Volver a la carpeta bajo el cursor.</value>
+  </data>
+  <data name="FolderSelector.Select.Drive" xml:space="preserve">
+    <value>Ir a la unidad bajo el cursor.</value>
+  </data>
+  <data name="FolderSelector.Hint.Enter" xml:space="preserve">
+    <value>Ir a la carpeta bajo el cursor de la página activa y cerrar.</value>
+  </data>
+  <data name="FolderSelector.Hint.Esc" xml:space="preserve">
+    <value>Cerrar la lista de sugerencias si está abierta; si no, cerrar sin navegar.</value>
+  </data>
+  <data name="FolderSelector.Hint.PageSwitch" xml:space="preserve">
+    <value>Ir a la página anterior / siguiente del selector.</value>
+  </data>
+  <data name="FolderSelector.Hint.JumpPage" xml:space="preserve">
+    <value>Ir directamente a una página por el número de su nombre, con el cursor en su primer control.</value>
+  </data>
+  <data name="FolderSelector.Hint.TabFocusedPage" xml:space="preserve">
+    <value>Moverse entre la lista y los botones de la página activa.</value>
+  </data>
+  <data name="FolderSelector.Hint.TabPage" xml:space="preserve">
+    <value>Moverse entre la lista y los botones de esta página.</value>
+  </data>
+  <data name="FolderSelector.Hint.EscPage" xml:space="preserve">
+    <value>Cerrar la lista de sugerencias si está abierta; si no, cerrar el selector de carpetas sin navegar.</value>
+  </data>
+  <data name="FolderSelector.Hint.Help" xml:space="preserve">
+    <value>Mostrar esta ayuda.</value>
+  </data>
+  <data name="FolderSelector.Hint.CompleteHost" xml:space="preserve">
+    <value>Completar el host con los que se conectó antes.</value>
+  </data>
+  <data name="FolderSelector.Hint.ConnectAnywhere" xml:space="preserve">
+    <value>Conectar, desde cualquier lugar de esta página.</value>
+  </data>
+  <data name="FolderSelector.Hint.CompletePath" xml:space="preserve">
+    <value>Completar la ruta con las escritas aquí y las carpetas visitadas antes.</value>
+  </data>
+  <data name="FolderSelector.Hint.GoAnywhere" xml:space="preserve">
+    <value>Ir, desde cualquier lugar de esta página.</value>
+  </data>
+  <data name="FolderSelector.Hint.AddFavourite" xml:space="preserve">
+    <value>Añadir la carpeta que muestra el panel activo a los favoritos.</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoveFavourite" xml:space="preserve">
+    <value>Quitar el favorito bajo el cursor.</value>
+  </data>
+  <data name="Dialog.AddTorrent" xml:space="preserve">
+    <value>Añadir un torrent</value>
+  </data>
 </root>

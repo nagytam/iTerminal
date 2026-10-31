@@ -653,8 +653,12 @@ public class TorrentManagerDialog : Dialog
 
     private void DrawForm(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, "Add a torrent", Color.Cyan, colorScheme.Background);
-        string[] labels = ["Magnet / file / URL", "Save to"];
+        Put(buffer, 1, 0, iw - 2, iConsole.Localization.UiText.Get("Dialog.AddTorrent", "Add a torrent"), Color.Cyan, colorScheme.Background);
+        string[] labels =
+        [
+            iConsole.Localization.UiText.Get("Field.MagnetFileOrUrl", "Magnet / file / URL"),
+            iConsole.Localization.UiText.Get("Field.SaveTo", "Save to"),
+        ];
         string[] values = [_source, _folder];
         for (int i = 0; i < 2; i++)
         {

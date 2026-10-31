@@ -40,7 +40,7 @@ public class RuntimeDependencyDialog : Dialog
     private bool _wizardActive;
 
     public RuntimeDependencyDialog(IRuntimeDependencyService service, IThemeService themeService)
-        : base("Runtime dependencies", themeService)
+        : base(iConsole.Localization.UiText.Get("Dialog.RuntimeDependencies", "Runtime dependencies"), themeService)
     {
         _service = service;
         Title = iConsole.Localization.UiText.Get("Dialog.RuntimeDependencies", "Runtime dependencies");

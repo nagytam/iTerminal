@@ -24,7 +24,7 @@ public class CreateFileDialog : CreateEntryDialog
     private CreateFileDialog(NewFileTextBox textBoxName, IContentModelService contentModelService, IThemeService themeService)
         : base(
             nameof(CreateFileDialog),
-            "Create file",
+            iConsole.Localization.UiText.Get("Dialog.CreateFile", "Create file"),
             textBoxName,
             new CreateFileCommand((NewFileValidationModel)textBoxName.ValidationModel!, contentModelService),
             themeService)
