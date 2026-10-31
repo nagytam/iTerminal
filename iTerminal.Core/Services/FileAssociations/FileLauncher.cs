@@ -27,6 +27,9 @@ public interface IFileLauncher
 
     /// <summary>Opens <paramref name="filePath"/> with whatever the operating system associates with it.</summary>
     Task<LaunchOutcome> OpenWithSystemDefaultAsync(string filePath, CancellationToken cancellationToken = default);
+
+    /// <summary>Opens a web address in the system's browser.</summary>
+    Task<LaunchOutcome> OpenUrlAsync(string url, CancellationToken cancellationToken = default);
 }
 
 public class FileLauncher(IInteractiveShellService shellService) : IFileLauncher
@@ -82,6 +85,34 @@ public class FileLauncher(IInteractiveShellService shellService) : IFileLauncher
             catch (Exception exception) when (exception is Win32Exception or InvalidOperationException or IOException)
             {
                 return LaunchOutcome.Failed($"Nothing is set up to open {Path.GetFileName(filePath)}: {exception.Message}");
+            }
+        }, cancellationToken);
+
+    public Task<LaunchOutcome> OpenUrlAsync(string url, CancellationToken cancellationToken = default) =>
+        Task.Run(() =>
+        {
+            // Only web addresses: whatever else was asked for, a shell would happily start as a program.
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri? address) || address.Scheme is not ("http" or "https"))
+            {
+                return LaunchOutcome.Failed($"{url} is not a web address.");
+            }
+
+            try
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    using var process = Process.Start(new ProcessStartInfo(address.AbsoluteUri) { UseShellExecute = true });
+                    return LaunchOutcome.Success;
+                }
+
+                var opener = OperatingSystem.IsMacOS() ? "open" : "xdg-open";
+                return ResolveProgram(opener) is { } program
+                    ? StartDetached(program, [address.AbsoluteUri], null)
+                    : LaunchOutcome.Failed($"{opener} is not installed, so there is no browser to ask.");
+            }
+            catch (Exception exception) when (exception is Win32Exception or InvalidOperationException or IOException)
+            {
+                return LaunchOutcome.Failed($"The browser could not be started: {exception.Message}");
             }
         }, cancellationToken);
 

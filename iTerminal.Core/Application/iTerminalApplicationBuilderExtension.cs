@@ -300,6 +300,11 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Currency.ICurrencyRateProvider, iTerminal.Core.Services.Currency.EcbCurrencyRateProvider>();
         services.AddSingleton<iTerminal.Core.Services.Currency.ICurrencyService, iTerminal.Core.Services.Currency.CurrencyService>();
         services.AddTransient<iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog>();
+        // Ctrl+Shift+W: the encyclopedia. Wikipedia and Wiktionary are read through the MediaWiki API; a test replaces the
+        // provider so no run reaches the network.
+        services.AddSingleton<iTerminal.Core.Services.Encyclopedia.IEncyclopediaProvider, iTerminal.Core.Services.Encyclopedia.WikiEncyclopediaProvider>();
+        services.AddSingleton<iTerminal.Core.Services.Encyclopedia.IEncyclopediaService, iTerminal.Core.Services.Encyclopedia.EncyclopediaService>();
+        services.AddTransient<iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog>();
         // Ctrl+Shift+F1: the BitTorrent manager. The engine starts on first use, so a run that never adds a torrent opens no sockets.
         services.AddSingleton<iTerminal.Core.Services.Torrents.ITorrentService>(provider => new iTerminal.Core.Services.Torrents.TorrentService(
             provider.GetRequiredService<ISettingsService>(), databaseDirectory));

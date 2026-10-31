@@ -193,6 +193,16 @@ Tools > Contacts: name, email, phone, company and notes for the people the perso
 - **The highlight follows the contact by id**, so it survives a re-sort or a filter; a contact saved under a filter that would hide it clears the filter.
 - Also reachable from the `ui` AI tool as `contacts`.
 
+### The encyclopedia (`EncyclopediaDialog`, Ctrl+Shift+W, `Services/Encyclopedia/`)
+Tools > Encyclopedia: a term to type, a source to look it up in, the matching articles on the left and the one under the cursor on the right. Enter on the term searches; the cursor resting on a result reads that article's introduction; Enter on a result or F3 reads the whole article (F3 again goes back to the introduction); F2 opens the article in the browser. The source and the term are kept in the `Encyclopedia.Source` and `Encyclopedia.Query` settings; opening the dialog never searches by itself.
+
+- **Sources are `EncyclopediaSources.All`:** Wikipedia in English, German, French, Spanish, Italian and Hungarian, the Simple English Wikipedia, and Wiktionary are `MediaWiki` sources read through the open Action API (`list=search` for the results, `prop=extracts` with `explaintext` for the text, `exintro` for the introduction only). The request carries a user agent that names the app, as the Wikimedia rules ask.
+- **Britannica is a `LinkOut` source.** Its pages answer a program with a Cloudflare challenge ("Just a moment…"), and this app does not try to get around a bot check. Choosing it gives one result, the term itself, and F2 opens Britannica's own search in the browser through `IFileLauncher.OpenUrlAsync` (which refuses anything but `http` and `https`).
+- **`EncyclopediaService` does what no provider can:** it answers link-out sources itself, trims the term, and remembers the last 40 articles read so going back to a result does not ask the network again. A failed read is never remembered.
+- **Nothing waits on the network.** Searches and reads run on a background task and park an outcome that the next idle pass applies; only the newest request may land, and closing cancels the one in flight. The cursor over the results is polled from `OnIdle` and a read starts only once it has rested (`CursorDelayMilliseconds`), so holding Down does not fetch every row.
+- **Tests never reach the network:** `TerminalApp` replaces `IEncyclopediaProvider` with `SandboxServices.Encyclopedia`.
+- Also reachable from the `ui` AI tool as `encyclopedia`, `wikipedia` or `britannica`.
+
 ### The workspace manager (`iTerminal.Core/Dialogs/Workspaces/`, `Services/Workspaces/`, `Model/Workspaces/`)
 Ctrl+Shift+F2 (Tools > Workspaces) opens `WorkspaceManagerDialog`: named screen layouts. A workspace is a
 `WorkspaceLayout` — the left and right panel locations, each panel's sort order, what is under the panels
