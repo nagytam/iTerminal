@@ -2668,4 +2668,10 @@
   <data name="Startup.Dismiss" xml:space="preserve">
     <value>Intro o Esc para continuar</value>
   </data>
+  <data name="Svg.NotReadable" xml:space="preserve">
+    <value>No se pudo leer este dibujo SVG.</value>
+  </data>
+  <data name="Icon.NotReadable" xml:space="preserve">
+    <value>No se pudo leer este archivo de icono.</value>
+  </data>
 </root>
