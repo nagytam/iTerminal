@@ -8,6 +8,6 @@ public class CancelDialogButton : Button
     public CancelDialogButton(IThemeService themeService)
         : base(iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"), new CancelDialogCommand(), themeService)
     {
-        HotKeyChar = 'c';
+        HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Common.Cancel", "Cancel"), 'c');
     }
 }

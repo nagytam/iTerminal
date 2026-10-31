@@ -685,4 +685,7 @@
   <data name="Dialog.DateTimeTimeZone" xml:space="preserve">
     <value>Data, ora e fuso orario</value>
   </data>
+  <data name="Hint.MoveDivider" xml:space="preserve">
+    <value>Sposta il divisore</value>
+  </data>
 </root>

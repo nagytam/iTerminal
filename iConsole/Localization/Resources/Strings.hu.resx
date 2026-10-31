@@ -685,4 +685,7 @@
   <data name="Dialog.DateTimeTimeZone" xml:space="preserve">
     <value>Dátum, idő és időzóna</value>
   </data>
+  <data name="Hint.MoveDivider" xml:space="preserve">
+    <value>Elválasztó áthelyezése</value>
+  </data>
 </root>

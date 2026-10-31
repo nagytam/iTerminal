@@ -39,7 +39,10 @@ public partial class UpdateDialog : FormDialog
         _installButton = new Button(iConsole.Localization.UiText.Get("Button.InstallUpdates", "Install updates"), installCommand, themeService);
         var skipCommand = new SkipCommand();
         AddCommand(skipCommand);
-        _skipButton = new Button("Skip this version", skipCommand, themeService) { HotKeyChar = 'S' };
+        _skipButton = new Button(iConsole.Localization.UiText.Get("Button.SkipVersion", "Skip this version"), skipCommand, themeService)
+        {
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Button.SkipVersion", "Skip this version"), 'S'),
+        };
         _cancelButton = new CancelDialogButton(themeService);
         AddControl(_installButton);
         AddControl(_skipButton);
@@ -283,7 +286,7 @@ public partial class UpdateDialog : FormDialog
     private sealed class InstallCommand : Command
     {
         public override string Title => iConsole.Localization.UiText.Get("Button.InstallUpdates", "Install updates");
-        public override string Description => "Download the new release and run its installer.";
+        public override string Description => iConsole.Localization.UiText.Get("Update.InstallDescription", "Download the new release and run its installer.");
 
         public override Task ExecuteAsync(object? args)
         {
@@ -295,8 +298,8 @@ public partial class UpdateDialog : FormDialog
 
     private sealed class SkipCommand : Command
     {
-        public override string Title => "Skip this version";
-        public override string Description => "Do not offer this release again.";
+        public override string Title => iConsole.Localization.UiText.Get("Button.SkipVersion", "Skip this version");
+        public override string Description => iConsole.Localization.UiText.Get("Update.SkipDescription", "Do not offer this release again.");
 
         public override Task ExecuteAsync(object? args)
         {

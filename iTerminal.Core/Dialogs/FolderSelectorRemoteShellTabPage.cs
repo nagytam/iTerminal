@@ -52,7 +52,7 @@ public class FolderSelectorRemoteShellTabPage : FolderSelectorTabPage
         _connectCommand = new ConnectRemoteShellCommand(hostValidator, contentModelService);
         _buttonConnect = new Button(iConsole.Localization.UiText.Get("Button.Connect", "Connect"), _connectCommand, themeService)
         {
-            HotKeyChar = 'C'
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Button.Connect", "Connect"), 'C')
         };
         _hintLabel = new Label(
             "user@host — the path defaults to /. Tab completes a host connected to before.",

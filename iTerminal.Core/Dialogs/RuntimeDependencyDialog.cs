@@ -160,7 +160,7 @@ public class RuntimeDependencyDialog : Dialog
     }
 
     private Task<string?> ValidateSomethingTicked() =>
-        Task.FromResult<string?>(TickedIds().Count == 0 ? "Nothing is ticked. Go back and tick what to install." : null);
+        Task.FromResult<string?>(TickedIds().Count == 0 ? iConsole.Localization.UiText.Get("RuntimeDependency.NothingTickedGoBack", "Nothing is ticked. Go back and tick what to install.") : null);
 
     private void FinishWizard()
     {
@@ -278,7 +278,7 @@ public class RuntimeDependencyDialog : Dialog
     {
         List<(string Text, Color Color)> rows =
         [
-            ("Components iTerminal downloads into your data folder, rather than shipping them.", scheme.Foreground),
+            (iConsole.Localization.UiText.Get("RuntimeDependency.DataFolderNote", "Components iTerminal downloads into your data folder, rather than shipping them."), scheme.Foreground),
             (string.Empty, scheme.Foreground),
         ];
 
@@ -324,16 +324,16 @@ public class RuntimeDependencyDialog : Dialog
     private bool IsOnLastStep => _wizard is { CurrentStep: { } step } wizard && wizard.Steps.Count > 0 && ReferenceEquals(step, wizard.Steps[^1]);
 
     internal string Hint => _service.IsBusy
-        ? "Installing... Esc:hide this (it keeps going)"
+        ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.Installing", "Installing... Esc:hide this (it keeps going)")
         : IsWizardActive
             ? IsOnLastStep
                 ? HasWork
-                    ? "Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later"
-                    : "Enter:close  Backspace:back  Esc:close"
+                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.InstallWithTick", "Enter:install  Backspace:back  Space:tick  S:don't ask again  Esc:later")
+                    : iConsole.Localization.UiText.Get("RuntimeDependency.Footer.InstallOnly", "Enter:close  Backspace:back  Esc:close")
                 : HasWork
-                    ? "Enter:next  Backspace:back  Space:tick  S:don't ask again  Esc:later"
-                    : "Enter:next  Backspace:back  Esc:close"
-            : "Enter or Esc:close";
+                    ? iConsole.Localization.UiText.Get("RuntimeDependency.Footer.NextWithTick", "Enter:next  Backspace:back  Space:tick  S:don't ask again  Esc:later")
+                    : iConsole.Localization.UiText.Get("RuntimeDependency.Footer.NextOnly", "Enter:next  Backspace:back  Esc:close")
+            : iConsole.Localization.UiText.Get("RuntimeDependency.Footer.Close", "Enter or Esc:close");
 
     private static (string Glyph, Color Color) StateMarker(RuntimeDependencyStatus status, ColorScheme scheme) =>
         status.Problem is not null

@@ -182,9 +182,30 @@ public class Slider : Control, IReadOnly
         return false;
     }
 
+    /// <summary>True while the left button, pressed on the track, is held: the thumb follows the pointer.</summary>
+    private bool _dragging;
+
     public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
     {
         bool isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (_dragging)
+        {
+            // The pointer may leave the track while dragging; the thumb keeps following it and only a release ends the drag.
+            if (mouseEvent.IsRelease || IsReadOnly || !IsEnabled || (!mouseEvent.IsDrag && !mouseEvent.LeftClicked))
+            {
+                _dragging = false;
+                return true;
+            }
+
+            if (mouseEvent.IsDrag)
+            {
+                int dragColumn = Math.Clamp((int)mouseEvent.Position.X - (int)AbsolutePosition.X, 0, TrackWidth - 1);
+                Value = ValueAt(dragColumn, _minimum, _maximum, TrackWidth);
+            }
+
+            return true;
+        }
+
         if (IsReadOnly || !IsEnabled || !AbsoluteBoundRect.Contains(mouseEvent.Position))
         {
             return isHandled;
@@ -207,6 +228,7 @@ public class Slider : Control, IReadOnly
             int column = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
             if (column < TrackWidth)
             {
+                _dragging = !mouseEvent.IsRelease && !mouseEvent.IsDrag;
                 Value = ValueAt(column, _minimum, _maximum, TrackWidth);
             }
 

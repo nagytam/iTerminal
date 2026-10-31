@@ -277,7 +277,7 @@ public class Splitter : Control
             yield break;
         }
 
-        yield return (IsSideBySide ? "Left/Right" : "Up/Down", "Move the divider");
+        yield return (IsSideBySide ? "Left/Right" : "Up/Down", UiText.Get("Hint.MoveDivider", "Move the divider"));
         yield return ("PgUp/PgDn", UiText.Get("Hint.MoveDividerBy8", "Move the divider by 8"));
         yield return ("Home", UiText.Get("Hint.CentreDivider", "Centre the divider"));
     }

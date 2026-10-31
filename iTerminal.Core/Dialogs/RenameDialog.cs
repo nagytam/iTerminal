@@ -99,9 +99,9 @@ public class RenameDialog : FormDialog
             Label = iConsole.Localization.UiText.Get("Label.Overwrite", "Overwrite"),
             IsChecked = false,
             IsEnabled = true,
-            HotKeyChar = 'O'
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Label.Overwrite", "Overwrite"), 'O')
         };
-        _renameButton = new Button(iConsole.Localization.UiText.Get("Menu.Rename", "Rename"), _renameCommand, themeService) { HotKeyChar = 'R' };
+        _renameButton = new Button(iConsole.Localization.UiText.Get("Menu.Rename", "Rename"), _renameCommand, themeService) { HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Menu.Rename", "Rename"), 'R') };
         _cancelButton = new CancelDialogButton(themeService);
         _errorLabel = new Label(string.Empty, themeService);
         AddControl(_textBoxName);

@@ -68,7 +68,7 @@ public class MarkPatternDialog : FormDialog
             Label = UiText.Get("Field.FoldersToo", "Folders too"),
             IsChecked = false,
             IsEnabled = true,
-            HotKeyChar = 'F'
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Field.FoldersToo", "Folders too"), 'F')
         };
         // Built from the command alone, so its caption follows the command's title: Mark or Unmark.
         _applyButton = new Button(_applyCommand, themeService) { HotKeyChar = 'M' };

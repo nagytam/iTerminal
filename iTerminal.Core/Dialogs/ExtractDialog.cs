@@ -121,18 +121,18 @@ public class ExtractDialog : FormDialog
         {
             Label = UiText.Get("Field.EachArchiveOwnFolder", "Each archive into a folder of its own"),
             IsChecked = true,
-            HotKeyChar = 'F',
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Field.EachArchiveOwnFolder", "Each archive into a folder of its own"), 'F'),
         };
         _checkBoxOwnFolder.CheckedChanged += (_, _) => UpdateLanding();
         _checkBoxOverwrite = new CheckBox(themeService)
         {
             Label = UiText.Get("Field.OverwriteExisting", "Overwrite files that are already there"),
             IsChecked = false,
-            HotKeyChar = 'O',
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Field.OverwriteExisting", "Overwrite files that are already there"), 'O'),
         };
         _labelLanding = new Label(string.Empty, themeService);
         _errorLabel = new Label(string.Empty, themeService);
-        _extractButton = new Button(iConsole.Localization.UiText.Get("Menu.Extract", "Extract"), extractCommand, themeService) { HotKeyChar = 'E' };
+        _extractButton = new Button(iConsole.Localization.UiText.Get("Menu.Extract", "Extract"), extractCommand, themeService) { HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Menu.Extract", "Extract"), 'E') };
         _cancelButton = new CancelDialogButton(themeService);
 
         AddControl(_labelSource);

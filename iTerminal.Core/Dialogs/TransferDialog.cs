@@ -106,7 +106,7 @@ public abstract class TransferDialog : FormDialog
             Label = iConsole.Localization.UiText.Get("Label.Overwrite", "Overwrite"),
             IsChecked = false,
             IsEnabled = true,
-            HotKeyChar = 'O'
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Label.Target", "Target"), 'O')
         };
         _primaryButton = new Button(operationName, transferCommand, themeService) { HotKeyChar = primaryHotKeyChar };
         _cancelButton = new CancelDialogButton(themeService);

@@ -77,7 +77,7 @@ public class CompareFoldersDialog : Dialog
         {
             Label = UiText.Get("Field.IncludeSubfolders", "Include subfolders"),
             IsChecked = false,
-            HotKeyChar = 'S',
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Field.IncludeSubfolders", "Include subfolders"), 'S'),
         };
         _comboDirection = new ComboBox<SyncDirection>(themeService) { DisplaySelector = DescribeDirection };
         _comboDirection.SetItems([SyncDirection.Both, SyncDirection.LeftToRight, SyncDirection.RightToLeft]);
@@ -87,7 +87,7 @@ public class CompareFoldersDialog : Dialog
         {
             Label = UiText.Get("Field.DeleteTargetLacksSource", "Delete what the target has and the source lacks (one-way only)"),
             IsChecked = false,
-            HotKeyChar = 'D',
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Field.DeleteTargetLacksSource", "Delete what the target has and the source lacks (one-way only)"), 'D'),
         };
         _list = new DiffList(themeService);
 

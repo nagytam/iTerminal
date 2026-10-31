@@ -2350,4 +2350,82 @@
   <data name="Dialog.AddTorrent" xml:space="preserve">
     <value>Torrent hozzáadása</value>
   </data>
+  <data name="Field.MoveToRecycleBinNotHere" xml:space="preserve">
+    <value>Áthelyezés a Lomtárba — itt nem elérhető, véglegesen törlődik</value>
+  </data>
+  <data name="Field.MoveToTrash" xml:space="preserve">
+    <value>Áthelyezés a kukába</value>
+  </data>
+  <data name="Button.SkipVersion" xml:space="preserve">
+    <value>Ez a verzió kihagyása</value>
+  </data>
+  <data name="Update.InstallDescription" xml:space="preserve">
+    <value>Az új kiadás letöltése és telepítőjének futtatása.</value>
+  </data>
+  <data name="Update.SkipDescription" xml:space="preserve">
+    <value>Ne ajánlja fel többé ezt a kiadást.</value>
+  </data>
+  <data name="RuntimeDependency.NotInstalled" xml:space="preserve">
+    <value>Nincs telepítve. Telepítés: {0}.</value>
+  </data>
+  <data name="RuntimeDependency.UpdateTo" xml:space="preserve">
+    <value>Telepítve: {0}. Frissítés erre: {1}.</value>
+  </data>
+  <data name="RuntimeDependency.UpToDate" xml:space="preserve">
+    <value>Telepítve: {0}. Naprakész.</value>
+  </data>
+  <data name="RuntimeDependency.Intro" xml:space="preserve">
+    <value>Összetevők, amelyeket az iTerminal letölt ahelyett, hogy a csomaggal szállítaná.</value>
+  </data>
+  <data name="RuntimeDependency.DataFolderNote" xml:space="preserve">
+    <value>Összetevők, amelyeket az iTerminal az adatmappádba tölt le, ahelyett, hogy a csomaggal szállítaná.</value>
+  </data>
+  <data name="RuntimeDependency.NothingToSetUp" xml:space="preserve">
+    <value>Nincs mit beállítani.</value>
+  </data>
+  <data name="RuntimeDependency.AllUpToDate" xml:space="preserve">
+    <value>Minden összetevő telepítve van és naprakész.</value>
+  </data>
+  <data name="RuntimeDependency.NeedWork" xml:space="preserve">
+    <value>{0} / {1} telepítése vagy frissítése szükséges.</value>
+  </data>
+  <data name="RuntimeDependency.EnterCloses" xml:space="preserve">
+    <value>Az Enter bezárja.</value>
+  </data>
+  <data name="RuntimeDependency.NothingTicked" xml:space="preserve">
+    <value>Nincs kijelölve semmi.</value>
+  </data>
+  <data name="RuntimeDependency.FinishWillInstall" xml:space="preserve">
+    <value>A befejezés telepíti:</value>
+  </data>
+  <data name="RuntimeDependency.NothingTickedGoBack" xml:space="preserve">
+    <value>Nincs kijelölve semmi. Lépj vissza, és jelöld ki, mit kell telepíteni.</value>
+  </data>
+  <data name="RuntimeDependency.Footer.Installing" xml:space="preserve">
+    <value>Telepítés... Esc: elrejtés (folytatódik)</value>
+  </data>
+  <data name="RuntimeDependency.Footer.InstallWithTick" xml:space="preserve">
+    <value>Enter:telepítés  Backspace:vissza  Szóköz:kijelölés  S:ne kérdezd újra  Esc:később</value>
+  </data>
+  <data name="RuntimeDependency.Footer.InstallOnly" xml:space="preserve">
+    <value>Enter:bezárás  Backspace:vissza  Esc:bezárás</value>
+  </data>
+  <data name="RuntimeDependency.Footer.NextWithTick" xml:space="preserve">
+    <value>Enter:tovább  Backspace:vissza  Szóköz:kijelölés  S:ne kérdezd újra  Esc:később</value>
+  </data>
+  <data name="RuntimeDependency.Footer.NextOnly" xml:space="preserve">
+    <value>Enter:tovább  Backspace:vissza  Esc:bezárás</value>
+  </data>
+  <data name="RuntimeDependency.Footer.Close" xml:space="preserve">
+    <value>Enter vagy Esc: bezárás</value>
+  </data>
+  <data name="RuntimeDependency.Tick.NothingToDo" xml:space="preserve">
+    <value>✓ Nincs itt teendő.</value>
+  </data>
+  <data name="RuntimeDependency.Tick.Install" xml:space="preserve">
+    <value>[x] Ezt telepíti   (Szóköz: kihagyás)</value>
+  </data>
+  <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
+    <value>[ ] Kihagyva   (Szóköz: telepítés)</value>
+  </data>
 </root>

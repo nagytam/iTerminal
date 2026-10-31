@@ -69,7 +69,7 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         _goToPathCommand = new GoToPathCommand(contentModelService, PathValidator);
         _goButton = new Button(iConsole.Localization.UiText.Get("Button.Go", "Go"), _goToPathCommand, themeService)
         {
-            HotKeyChar = 'G'
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Button.Go", "Go"), 'G')
         };
 
         // The typed path, one clickable crumb per folder: a click cuts the box back to that folder, which is
