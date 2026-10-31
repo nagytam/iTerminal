@@ -44,4 +44,9 @@ public interface IConsoleDriver : Services.IConsoleHandoverParticipant
     void EndFrame()
     {
     }
+
+    /// <summary>Draws a Sixel picture (the complete device control string) with its top left corner at the cell. A driver that cannot draw pictures ignores it.</summary>
+    void WriteGraphics(int x, int y, string sequence)
+    {
+    }
 }

@@ -280,6 +280,14 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
         Console.Write(AnsiRenderer.BELL);
     }
 
+    public void WriteGraphics(int x, int y, string sequence)
+    {
+        if (_supportsVirtualTerminalProcessing)
+        {
+            Console.Write($"\u001b[{y + 1};{x + 1}H{sequence}");
+        }
+    }
+
     public Position GetCursorPosition()
     {
         var (left, top) = Console.GetCursorPosition();

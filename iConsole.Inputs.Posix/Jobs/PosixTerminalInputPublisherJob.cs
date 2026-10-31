@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using iConsole.Data;
+using iConsole.Graphics;
 using iConsole.Inputs;
 using iConsole.Inputs.Posix.Interop;
 using iConsole.Jobs;
@@ -44,6 +45,15 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
 
         Console.Out.Write(TerminalFocusReporting.Enable);
         _focusReporting = true;
+    }
+
+    /// <summary>Asks the terminal how large a cell is in pixels, so a Sixel picture can be sized to the cells it covers. The answer is read with the keys.</summary>
+    private static void QueryCellSize()
+    {
+        if (TerminalGraphics.Current.IsSixelSupported && !TerminalGraphics.Current.IsCellSizeKnown)
+        {
+            Console.Out.Write("\u001b[16t");
+        }
     }
 
     private void DisableFocusReporting()
@@ -119,6 +129,8 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
             Console.Out.Write(TerminalMouseAnsi.EnablePreferredMouseReporting);
             EnableFocusReporting();
             _decoder.FocusReported += TerminalFocus.Current.Report;
+            _decoder.CellSizeReported += (width, height) => TerminalGraphics.Current.SetCellSize(width, height);
+            QueryCellSize();
             if (KittyKeyboardProtocol.IsEnabledByEnvironment)
             {
                 Console.Out.Write(KittyKeyboardProtocol.Query);
@@ -274,6 +286,7 @@ public sealed class PosixTerminalInputPublisherJob : Job, ITerminalInputSource, 
         {
             Console.Out.Write(TerminalMouseAnsi.EnablePreferredMouseReporting);
             EnableFocusReporting();
+            QueryCellSize();
             Console.Out.Flush();
             _mouseEnabled = true;
             if (_decoder.KittyKeyboardSupported)

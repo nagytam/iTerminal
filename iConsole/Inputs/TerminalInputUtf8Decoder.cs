@@ -85,7 +85,7 @@ public sealed class TerminalInputUtf8Decoder
 
             var fullLen = endInclusive + 1;
             var csi = b[..fullLen];
-            if (TryParseKittyKeyboardReply(csi) || TryParseKittyKey(csi, emitKey))
+            if (TryParseCellSizeReply(csi) || TryParseKittyKeyboardReply(csi) || TryParseKittyKey(csi, emitKey))
             {
                 RemovePrefix(fullLen);
                 return true;
@@ -173,6 +173,27 @@ public sealed class TerminalInputUtf8Decoder
 
     /// <summary>Raised with true for a focus-in report and false for a focus-out report.</summary>
     public event Action<bool>? FocusReported;
+
+    /// <summary>Raised with the width and height in pixels of one cell, when the terminal answers <c>ESC [ 16 t</c>.</summary>
+    public event Action<int, int>? CellSizeReported;
+
+    // "ESC [ 6 ; height ; width t" — the answer to the cell size query.
+    private bool TryParseCellSizeReply(ReadOnlySpan<byte> csi)
+    {
+        if (csi.Length < 8 || csi[2] != (byte)'6' || csi[3] != (byte)';' || csi[^1] != (byte)'t')
+        {
+            return false;
+        }
+
+        var parts = Encoding.ASCII.GetString(csi[4..^1]).Split(';');
+        if (parts.Length != 2 || !int.TryParse(parts[0], out var height) || !int.TryParse(parts[1], out var width))
+        {
+            return false;
+        }
+
+        CellSizeReported?.Invoke(width, height);
+        return true;
+    }
 
     /// <summary>True once the terminal has answered <see cref="KittyKeyboardProtocol.Query"/>.</summary>
     public bool KittyKeyboardSupported { get; private set; }

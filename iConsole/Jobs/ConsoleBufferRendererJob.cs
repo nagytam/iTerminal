@@ -40,6 +40,10 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
     private DateTime _lastStatisticsDate = DateTime.Now;
     private DateTime _lastWindowSizeCheck = DateTime.MinValue;
     private readonly Services.ConsoleOwnership? _consoleOwnership;
+    private readonly Graphics.SixelOverlay? _sixelOverlay;
+
+    /// <summary>The picture the terminal is showing over the cells, or null. Only the render loop touches it.</summary>
+    private Graphics.SixelPlacement? _shownPicture;
 
     /// <param name="dumpHelper">
     /// Optional rendering-dump helper.  Defaults to a new <see cref="RenderingDumpHelper"/>
@@ -51,9 +55,11 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         IBuffer buffer,
         IRenderingDumpHelper? dumpHelper = null,
         Services.ConsoleOwnership? consoleOwnership = null,
-        MainLoopWatchDog? watchDog = null)
+        MainLoopWatchDog? watchDog = null,
+        Graphics.SixelOverlay? sixelOverlay = null)
     {
         _watchDog = watchDog;
+        _sixelOverlay = sixelOverlay;
         _consoleDriver = consoleDriver ?? Services.NullConsoleDriver.Instance;
         ConsoleForegroundColor = _consoleDriver.ForegroundColor;
         ConsoleBackgroundColor = _consoleDriver.BackgroundColor;
@@ -80,6 +86,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         LastBufferCursor.CursorPosition?.Reset();
         LastBufferCursor.IsCursorVisible = false;
         _lastWindowSizeCheck = DateTime.MinValue;
+        _shownPicture = null;
     }
 
     protected override void OnStart()
@@ -216,6 +223,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         var shouldDumpFrame = renderSteps is not null && displayWrites is not null;
         var shouldClearConsole = false;
         var shouldHideCursor = false;
+        Graphics.SixelPlacement? pictureToDraw = null;
         try
         {
             var minY = 0;
@@ -238,6 +246,8 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                     // Mark every cell as dirty by clearing LastBuffer to sentinel values so
                     // the diff loop forces a full redraw on the next iteration.
                     LastBuffer.Clear(new Conxel('\0', Color.Black, Color.Black));
+                    // The screen is cleared below, and the picture goes with it.
+                    _shownPicture = null;
                 }
 
                 //if (Buffer.IsDirty)
@@ -246,6 +256,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                 //}
                 var layer = Buffer.MergedLayer;
                 layerToDump = layer;
+                pictureToDraw = PreparePicture(layer);
 
                 for (int y = minY; y < maxY; y++)
                 {
@@ -280,7 +291,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                 }
             }
 
-            if (shouldHideCursor || shouldClearConsole || pendingWrites.Count > 0)
+            if (shouldHideCursor || shouldClearConsole || pendingWrites.Count > 0 || pictureToDraw is not null)
             {
                 _consoleDriver.BeginFrame();
             }
@@ -298,6 +309,16 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
             foreach (var write in pendingWrites)
             {
                 _consoleDriver.Write(write.X, write.Y, write.Text);
+            }
+
+            // On top of the cells just written, so the picture is the last thing drawn there.
+            if (pictureToDraw is not null)
+            {
+                isIdle = false;
+                _consoleDriver.WriteGraphics(pictureToDraw.X, pictureToDraw.Y, pictureToDraw.Data);
+                _shownPicture = pictureToDraw;
+                // The picture moved the terminal's cursor; the next cursor update must set it again.
+                LastBufferCursor.CursorPosition?.Reset();
             }
         }
         catch (Exception ex)
@@ -320,6 +341,77 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         //}
 
         return isIdle;
+    }
+
+    /// <summary>
+    /// Decides what to do about the Sixel picture a control has offered, before the cells are compared. A picture is drawn over
+    /// blank cells and any write to a cell erases the part of it under that cell, so it is shown only while every cell under it is
+    /// still the blank the control painted; a toast or a dialog over it takes it off the screen until they are gone.
+    /// <list type="bullet">
+    /// <item>On screen and unchanged: the cells under it are made known to be current so the fallback redraws leave them alone.</item>
+    /// <item>On screen but withdrawn, changed or covered: its cells are marked unknown so they are rewritten, which erases it.</item>
+    /// </list>
+    /// </summary>
+    /// <returns>The picture to draw after this frame's cell writes, or null.</returns>
+    private Graphics.SixelPlacement? PreparePicture(BufferLayer layer)
+    {
+        Graphics.SixelPlacement? wanted = _sixelOverlay?.Current;
+        if (wanted is not null && !IsPictureAreaBlank(layer, wanted))
+        {
+            wanted = null;
+        }
+
+        Graphics.SixelPlacement? shown = _shownPicture;
+        if (shown is null)
+        {
+            return wanted;
+        }
+
+        if (wanted is not null && wanted.IsSameAs(shown))
+        {
+            ForEachPictureRow(shown, layer, (row, from, to) => layer[row].Span[from..to].CopyTo(LastBuffer[row].Span[from..to]));
+            return null;
+        }
+
+        var unknown = new Conxel('\0', Color.Black, Color.Black);
+        ForEachPictureRow(shown, layer, (row, from, to) => LastBuffer[row].Span[from..to].Fill(unknown));
+        _shownPicture = null;
+        return wanted;
+    }
+
+    private static bool IsPictureAreaBlank(BufferLayer layer, Graphics.SixelPlacement picture)
+    {
+        if (picture.X < 0 || picture.Y < 0 || picture.Columns <= 0 || picture.Rows <= 0
+            || picture.X + picture.Columns > layer.Size.Width || picture.Y + picture.Rows > layer.Size.Height
+            || picture.Y + picture.Rows > layer.Content.Length)
+        {
+            return false;
+        }
+
+        for (int y = picture.Y; y < picture.Y + picture.Rows; y++)
+        {
+            var span = layer[y].Span;
+            for (int x = picture.X; x < picture.X + picture.Columns; x++)
+            {
+                if (span[x].Char != ' ' || span[x].BackgroundColor != picture.Background)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static void ForEachPictureRow(Graphics.SixelPlacement picture, BufferLayer layer, Action<int, int, int> action)
+    {
+        int width = (int)layer.Size.Width;
+        for (int y = picture.Y; y < picture.Y + picture.Rows && y < layer.Content.Length; y++)
+        {
+            int from = Math.Clamp(picture.X, 0, width);
+            int to = Math.Clamp(picture.X + picture.Columns, from, width);
+            action(y, from, to);
+        }
     }
 
     private void UpdateCursor(bool isCursorVisible)
