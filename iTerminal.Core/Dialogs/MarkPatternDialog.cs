@@ -83,7 +83,9 @@ public class MarkPatternDialog : FormDialog
 
     public override async Task OnInitializeAsync()
     {
-        Title = Marking ? "Mark files" : "Unmark files";
+        Title = Marking
+            ? UiText.Get("Dialog.MarkFiles", "Mark files")
+            : UiText.Get("Dialog.UnmarkFiles", "Unmark files");
         _applyButton.HotKeyChar = Marking ? 'M' : 'U';
         _errorLabel.Text = string.Empty;
         _textBoxPattern.ScrollableModel.Reset();

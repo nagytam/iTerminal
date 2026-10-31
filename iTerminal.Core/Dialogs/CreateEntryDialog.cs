@@ -60,12 +60,34 @@ public abstract class CreateEntryDialog : FormDialog
         _errorMessage = new ErrorMessage(textBoxName.ValidationModel!, themeService);
 
         AddCommand(createCommand);
-        _createButton = new Button(title, createCommand, themeService) { HotKeyChar = 'f' };
+        _createButton = new Button(title, createCommand, themeService) { HotKeyChar = CreateButtonHotKey(title) };
         _cancelButton = new CancelDialogButton(themeService);
         AddControl(_textBoxName);
         AddControl(_errorMessage);
         AddControl(_createButton);
         AddControl(_cancelButton);
+    }
+
+    /// <summary>
+    /// The letter that runs Create from the keyboard. It is taken from the caption, so the highlight shows in every
+    /// language (a fixed letter that a translated caption lacks was never drawn), and it skips C and N, which the
+    /// Cancel button and the name box already hold. Null when the caption has no usable letter.
+    /// </summary>
+    internal static char? CreateButtonHotKey(string caption)
+    {
+        string[] words = caption.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        for (int word = words.Length - 1; word >= 0; word--)
+        {
+            foreach (char letter in words[word])
+            {
+                if (char.IsLetter(letter) && char.ToLowerInvariant(letter) is not ('c' or 'n'))
+                {
+                    return letter;
+                }
+            }
+        }
+
+        return null;
     }
 
     public override void OnInitializeLayout()

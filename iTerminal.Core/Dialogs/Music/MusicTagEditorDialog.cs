@@ -34,7 +34,7 @@ public class MusicTagEditorDialog : Dialog
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
         Action? saved = null)
-        : base("Tags", themeService)
+        : base(iConsole.Localization.UiText.Get("Field.Tags", "Tags"), themeService)
     {
         _path = path;
         _saved = saved;

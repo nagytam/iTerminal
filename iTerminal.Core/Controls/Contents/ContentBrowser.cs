@@ -767,19 +767,19 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
 
         if (sbH < 3)
         {
-            await new ScrollDownCommand(ContentModel).ExecuteAsync(null);
+            await new ScrollDownCommand(ContentModel).RunAsync(null);
             return;
         }
 
         if (sy == 0)
         {
-            await new ScrollUpCommand(ContentModel).ExecuteAsync(null);
+            await new ScrollUpCommand(ContentModel).RunAsync(null);
             return;
         }
 
         if (sy == sbH - 1)
         {
-            await new ScrollDownCommand(ContentModel).ExecuteAsync(null);
+            await new ScrollDownCommand(ContentModel).RunAsync(null);
             return;
         }
 

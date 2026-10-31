@@ -32,7 +32,7 @@ public class ImageMetadataEditorDialog : Dialog
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
         Action? saved = null)
-        : base("Image text", themeService)
+        : base(iConsole.Localization.UiText.Get("Dialog.ImageText", "Image text"), themeService)
     {
         _path = path;
         _saved = saved;

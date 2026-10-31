@@ -147,10 +147,10 @@ public class FolderSelectorDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Enter", "Go to the folder the focused page has under its cursor, and close.");
-        yield return ("Esc", "Dismiss the suggestion list if one is up, otherwise close without navigating.");
-        yield return ("Ctrl+Up / Ctrl+Down", "Move to the previous / next page of the selector.");
-        yield return ("Ctrl+0 … Ctrl+6", "Jump straight to a page by the number in its name, cursor on its first control.");
-        yield return ("Tab / Shift+Tab", "Move between the focused page's list and its buttons.");
+        yield return ("Enter", iConsole.Localization.UiText.Get("FolderSelector.Hint.Enter", "Go to the folder the focused page has under its cursor, and close."));
+        yield return ("Esc", iConsole.Localization.UiText.Get("FolderSelector.Hint.Esc", "Dismiss the suggestion list if one is up, otherwise close without navigating."));
+        yield return ("Ctrl+Up / Ctrl+Down", iConsole.Localization.UiText.Get("FolderSelector.Hint.PageSwitch", "Move to the previous / next page of the selector."));
+        yield return ("Ctrl+0 … Ctrl+6", iConsole.Localization.UiText.Get("FolderSelector.Hint.JumpPage", "Jump straight to a page by the number in its name, cursor on its first control."));
+        yield return ("Tab / Shift+Tab", iConsole.Localization.UiText.Get("FolderSelector.Hint.TabFocusedPage", "Move between the focused page's list and its buttons."));
     }
 }

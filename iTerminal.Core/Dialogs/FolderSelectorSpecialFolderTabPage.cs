@@ -36,7 +36,7 @@ public class FolderSelectorSpecialFoldersTabPage : FolderSelectorTabPage
 
     private ICommand _selectSpecialFolderCommand { get; set; }
     protected override ICommand? SelectCommand => _selectSpecialFolderCommand;
-    protected override string SelectDescription => "Go to the place under the cursor.";
+    protected override string SelectDescription => iConsole.Localization.UiText.Get("FolderSelector.Select.SpecialFolder", "Go to the place under the cursor.");
 
     /// <summary>
     /// The app's own drives, in the order they are listed. Kept as URLs rather than as
@@ -74,7 +74,7 @@ public class FolderSelectorSpecialFoldersTabPage : FolderSelectorTabPage
             ScrollableModel = _listBox.ScrollableModel
         };
         _selectSpecialFolderCommand = new SelectSpecialFolderCommand(contentModelService, _specialFolders);
-        _selectSpecialFolderButton = new Button("Select folder", _selectSpecialFolderCommand, themeService)
+        _selectSpecialFolderButton = new Button(iConsole.Localization.UiText.Get("Button.SelectFolder", "Select folder"), _selectSpecialFolderCommand, themeService)
         {
             HotKeyChar = 'S'
         };

@@ -11,7 +11,7 @@ public class DatePopUpWindow : PopUpWindow
     private readonly IThemeService _themeService;
 
     public DatePopUpWindow(IThemeService themeService) 
-        : base("Date, Time and TimeZone", themeService)
+        : base(iConsole.Localization.UiText.Get("Dialog.DateTimeTimeZone", "Date, Time and TimeZone"), themeService)
     {
         _themeService = themeService;
         Hide();

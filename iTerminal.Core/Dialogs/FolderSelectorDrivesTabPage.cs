@@ -43,7 +43,7 @@ public class FolderSelectorDrivesTabPage : FolderSelectorTabPage
 
     private ICommand _selectDriveCommand { get; set; }
     protected override ICommand? SelectCommand => _selectDriveCommand;
-    protected override string SelectDescription => "Go to the drive under the cursor.";
+    protected override string SelectDescription => iConsole.Localization.UiText.Get("FolderSelector.Select.Drive", "Go to the drive under the cursor.");
 
     public FolderSelectorDrivesTabPage(
         DriveInfoModel driveInfoModel,
@@ -67,7 +67,7 @@ public class FolderSelectorDrivesTabPage : FolderSelectorTabPage
             ScrollableModel = _listBox.ScrollableModel
         };
         _selectDriveCommand = new SelectDriveCommand(_contentModelService);
-        _selectDriveButton = new Button("Select drive", _selectDriveCommand, themeService)
+        _selectDriveButton = new Button(iConsole.Localization.UiText.Get("Button.SelectDrive", "Select drive"), _selectDriveCommand, themeService)
         {
             HotKeyChar = 'S'
         };

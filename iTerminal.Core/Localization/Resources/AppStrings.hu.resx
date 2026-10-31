@@ -2233,4 +2233,112 @@
   <data name="DialogHint.OpenInBrowser" xml:space="preserve">
     <value>A cikk megnyitása a böngészőben</value>
   </data>
+  <data name="Dialog.CreateFolder" xml:space="preserve">
+    <value>Mappa létrehozása</value>
+  </data>
+  <data name="Dialog.CreateFile" xml:space="preserve">
+    <value>Fájl létrehozása</value>
+  </data>
+  <data name="Dialog.MarkFiles" xml:space="preserve">
+    <value>Fájlok megjelölése</value>
+  </data>
+  <data name="Dialog.UnmarkFiles" xml:space="preserve">
+    <value>Fájlok jelölésének törlése</value>
+  </data>
+  <data name="Button.InstallUpdates" xml:space="preserve">
+    <value>Frissítések telepítése</value>
+  </data>
+  <data name="Dialog.ImageText" xml:space="preserve">
+    <value>Kép szövege</value>
+  </data>
+  <data name="Field.MagnetFileOrUrl" xml:space="preserve">
+    <value>Magnet / fájl / URL</value>
+  </data>
+  <data name="Field.SaveTo" xml:space="preserve">
+    <value>Mentés ide</value>
+  </data>
+  <data name="Button.SelectFolder" xml:space="preserve">
+    <value>Mappa kiválasztása</value>
+  </data>
+  <data name="Button.SelectDrive" xml:space="preserve">
+    <value>Meghajtó kiválasztása</value>
+  </data>
+  <data name="Button.SelectFavourite" xml:space="preserve">
+    <value>Kedvenc kiválasztása</value>
+  </data>
+  <data name="Button.AddToFavourites" xml:space="preserve">
+    <value>Hozzáadás a kedvencekhez</value>
+  </data>
+  <data name="Button.DeleteFavourite" xml:space="preserve">
+    <value>Kedvenc törlése</value>
+  </data>
+  <data name="Button.Go" xml:space="preserve">
+    <value>Ugrás</value>
+  </data>
+  <data name="FolderSelector.Select.Connect" xml:space="preserve">
+    <value>Csatlakozás a megadott SSH-gazdagéphez.</value>
+  </data>
+  <data name="FolderSelector.Select.SpecialFolder" xml:space="preserve">
+    <value>Ugrás a kurzor alatti helyre.</value>
+  </data>
+  <data name="FolderSelector.Select.Favourite" xml:space="preserve">
+    <value>Ugrás a kurzor alatti kedvenc mappára.</value>
+  </data>
+  <data name="FolderSelector.Select.Tree" xml:space="preserve">
+    <value>Ugrás a fában a kurzor alatti mappára.</value>
+  </data>
+  <data name="FolderSelector.Select.Path" xml:space="preserve">
+    <value>Ugrás a megadott útvonalra vagy URL-re.</value>
+  </data>
+  <data name="FolderSelector.Select.History" xml:space="preserve">
+    <value>Visszatérés a kurzor alatti mappához.</value>
+  </data>
+  <data name="FolderSelector.Select.Drive" xml:space="preserve">
+    <value>Ugrás a kurzor alatti meghajtóra.</value>
+  </data>
+  <data name="FolderSelector.Hint.Enter" xml:space="preserve">
+    <value>Ugrás az aktív lap kurzora alatti mappára, majd bezárás.</value>
+  </data>
+  <data name="FolderSelector.Hint.Esc" xml:space="preserve">
+    <value>Ha a javaslatlista nyitva van, bezárja; különben bezárás navigálás nélkül.</value>
+  </data>
+  <data name="FolderSelector.Hint.PageSwitch" xml:space="preserve">
+    <value>Ugrás a választó előző / következő lapjára.</value>
+  </data>
+  <data name="FolderSelector.Hint.JumpPage" xml:space="preserve">
+    <value>Ugrás közvetlenül egy lapra a nevében lévő szám alapján, a kurzor az első vezérlőjén.</value>
+  </data>
+  <data name="FolderSelector.Hint.TabFocusedPage" xml:space="preserve">
+    <value>Váltás az aktív lap listája és gombjai között.</value>
+  </data>
+  <data name="FolderSelector.Hint.TabPage" xml:space="preserve">
+    <value>Váltás ennek a lapnak a listája és gombjai között.</value>
+  </data>
+  <data name="FolderSelector.Hint.EscPage" xml:space="preserve">
+    <value>Ha a javaslatlista nyitva van, bezárja; különben bezárja a mappaválasztót navigálás nélkül.</value>
+  </data>
+  <data name="FolderSelector.Hint.Help" xml:space="preserve">
+    <value>Ez a súgó megjelenítése.</value>
+  </data>
+  <data name="FolderSelector.Hint.CompleteHost" xml:space="preserve">
+    <value>Gazdagép kiegészítése a korábban csatlakozottak közül.</value>
+  </data>
+  <data name="FolderSelector.Hint.ConnectAnywhere" xml:space="preserve">
+    <value>Csatlakozás, a lap bármely pontjáról.</value>
+  </data>
+  <data name="FolderSelector.Hint.CompletePath" xml:space="preserve">
+    <value>Az útvonal kiegészítése az itt megadottak és a korábban meglátogatott mappák alapján.</value>
+  </data>
+  <data name="FolderSelector.Hint.GoAnywhere" xml:space="preserve">
+    <value>Ugrás, a lap bármely pontjáról.</value>
+  </data>
+  <data name="FolderSelector.Hint.AddFavourite" xml:space="preserve">
+    <value>Az aktív panel mappájának hozzáadása a kedvencekhez.</value>
+  </data>
+  <data name="FolderSelector.Hint.RemoveFavourite" xml:space="preserve">
+    <value>A kurzor alatti kedvenc eltávolítása.</value>
+  </data>
+  <data name="Dialog.AddTorrent" xml:space="preserve">
+    <value>Torrent hozzáadása</value>
+  </data>
 </root>

@@ -679,4 +679,7 @@
   <data name="Json.TopLevelItems" xml:space="preserve">
     <value>{0:N0} Element(e) auf oberster Ebene</value>
   </data>
+  <data name="Dialog.DateTimeTimeZone" xml:space="preserve">
+    <value>Datum, Uhrzeit und Zeitzone</value>
+  </data>
 </root>

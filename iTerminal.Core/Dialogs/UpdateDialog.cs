@@ -36,7 +36,7 @@ public partial class UpdateDialog : FormDialog
 
         var installCommand = new InstallCommand();
         AddCommand(installCommand);
-        _installButton = new Button("Install updates", installCommand, themeService);
+        _installButton = new Button(iConsole.Localization.UiText.Get("Button.InstallUpdates", "Install updates"), installCommand, themeService);
         var skipCommand = new SkipCommand();
         AddCommand(skipCommand);
         _skipButton = new Button("Skip this version", skipCommand, themeService) { HotKeyChar = 'S' };
@@ -282,7 +282,7 @@ public partial class UpdateDialog : FormDialog
 
     private sealed class InstallCommand : Command
     {
-        public override string Title => "Install updates";
+        public override string Title => iConsole.Localization.UiText.Get("Button.InstallUpdates", "Install updates");
         public override string Description => "Download the new release and run its installer.";
 
         public override Task ExecuteAsync(object? args)

@@ -42,7 +42,7 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
 
     private ICommand _goToPathCommand { get; set; }
     protected override ICommand? SelectCommand => _goToPathCommand;
-    protected override string SelectDescription => "Go to the typed path or URL.";
+    protected override string SelectDescription => iConsole.Localization.UiText.Get("FolderSelector.Select.Path", "Go to the typed path or URL.");
 
     public FolderSelectorPathTabPage(
         IContentModelService contentModelService,
@@ -67,7 +67,7 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         _schemesLabel = new Label(GetSchemesHint(), themeService);
 
         _goToPathCommand = new GoToPathCommand(contentModelService, PathValidator);
-        _goButton = new Button("Go", _goToPathCommand, themeService)
+        _goButton = new Button(iConsole.Localization.UiText.Get("Button.Go", "Go"), _goToPathCommand, themeService)
         {
             HotKeyChar = 'G'
         };
@@ -207,8 +207,8 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         {
             yield return hint;
         }
-        yield return ("Tab", "Complete the path from the ones typed here and the folders visited before.");
-        yield return ("Ctrl+G", "Go, from anywhere on this page.");
+        yield return ("Tab", iConsole.Localization.UiText.Get("FolderSelector.Hint.CompletePath", "Complete the path from the ones typed here and the folders visited before."));
+        yield return ("Ctrl+G", iConsole.Localization.UiText.Get("FolderSelector.Hint.GoAnywhere", "Go, from anywhere on this page."));
         yield return ("Type", GetSchemesHint());
     }
 }
