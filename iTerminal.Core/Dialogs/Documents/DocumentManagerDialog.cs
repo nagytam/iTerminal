@@ -887,8 +887,9 @@ public class DocumentManagerDialog : SplitPaneDialog
         // and is left out rather than shown as a stub ("│ Sear") when there is no room for it.
         string capability = _documentLibraryService.CapabilityMessage ?? string.Empty;
         string fittedKeys = keys.FitHints(width);
+        int room = width - fittedKeys.Length - 5;
         string text = capability.Length > 0 && fittedKeys.Length + 5 + Math.Min(capability.Length, 12) <= width
-            ? $"{fittedKeys}   │ {capability}"
+            ? $"{fittedKeys}   │ {(capability.Length > room ? capability[..Math.Max(1, room - 1)] + "…" : capability)}"
             : fittedKeys;
         WriteLine(buffer, x, y, width, text, colorScheme.Foreground, colorScheme.Background);
     }

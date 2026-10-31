@@ -610,8 +610,8 @@ public class TorrentManagerDialog : Dialog
         long up = _list.Sum(t => t.UploadRate);
         Put(buffer, 1, 0, iw - 2, $"{_list.Count} torrents  ·  down {FormatRate(down)}  ·  up {FormatRate(up)}", Color.Cyan, colorScheme.Background);
 
-        int nameWidth = Math.Max(10, iw - 2 - 2 - 52);
-        Put(buffer, 1, 1, iw - 2, "  " + "Name".PadRight(nameWidth) + " State       Done      Size       Down         Up Peer", colorScheme.DisabledForeground, colorScheme.Background);
+        int nameWidth = Math.Max(10, iw - 2 - 2 - 53);
+        Put(buffer, 1, 1, iw - 2, "  " + "Name".PadRight(nameWidth) + " " + "State".PadRight(8) + " " + "Done".PadLeft(6) + " " + "Size".PadLeft(9) + " " + "Down".PadLeft(10) + " " + "Up".PadLeft(10) + " " + "Peer".PadLeft(4), colorScheme.DisabledForeground, colorScheme.Background);
         if (_list.Count == 0)
         {
             Put(buffer, 1, 2, iw - 2, "No torrents yet. A adds a magnet link, a .torrent file or its URL.", colorScheme.DisabledForeground, colorScheme.Background);

@@ -286,4 +286,17 @@ public class PasswordManagerDialogTest
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Home));
         Assert.AreEqual(0, dialog.CursorForTest);
     }
+
+    [TestMethod]
+    public async Task AnEmptyStoreSaysHowToAddAPassword()
+    {
+        var dialog = new PasswordManagerDialog(NewManager(), TestTheme());
+        await ShowAsync(dialog);
+
+        // The message was drawn and then blanked by the empty rows that follow it, so it never showed.
+        var screen = Render(dialog);
+        AssertScreenContains(screen, "Nothing saved yet. N adds a password;");
+        AssertScreenContains(screen, "network and mail passwords appear here as they are saved.");
+    }
+
 }

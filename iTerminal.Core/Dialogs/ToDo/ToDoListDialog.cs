@@ -468,7 +468,7 @@ public class ToDoListDialog : Dialog
         DrawHeader(buffer, iw, colorScheme);
         DrawRows(buffer, iw, colorScheme);
         DrawEntry(buffer, iw, colorScheme);
-        Put(buffer, 1, ih - 1, iw - 2, "Space done  N new  E change  P priority  D delete  H show done  Esc close", colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, ih - 1, iw - 2, "Space done  N new  E edit  P priority  D delete  H show done  Esc close", colorScheme.Foreground, colorScheme.Background);
     }
 
     private void DrawHeader(IBuffer buffer, int iw, ColorScheme colorScheme)

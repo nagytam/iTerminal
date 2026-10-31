@@ -546,11 +546,6 @@ public class PasswordManagerDialog : Dialog
     {
         Put(buffer, 1, 0, iw - 2, $"{_list.Count} saved  ·  unlocked", Color.Cyan, colorScheme.Background);
         Put(buffer, 1, 1, iw - 2, "  Category    Title                            Username", colorScheme.DisabledForeground, colorScheme.Background);
-        if (_list.Count == 0)
-        {
-            Put(buffer, 1, 2, iw - 2, "Nothing saved yet. N adds a password; network and mail passwords appear here as they are saved.", colorScheme.DisabledForeground, colorScheme.Background);
-        }
-
         var first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
         for (var i = 0; i < ListRows; i++)
         {
@@ -568,6 +563,13 @@ public class PasswordManagerDialog : Dialog
             Put(buffer, 1, y, iw - 2, (highlighted ? "> " : "  ") + line,
                 highlighted ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground,
                 highlighted ? colorScheme.SelectedFocusedBackground : colorScheme.Background);
+        }
+
+        if (_list.Count == 0)
+        {
+            // After the rows: they blank every row they do not fill, and used to paint this message away.
+            Put(buffer, 1, 2, iw - 2, "Nothing saved yet. N adds a password;", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 3, iw - 2, "network and mail passwords appear here as they are saved.", colorScheme.DisabledForeground, colorScheme.Background);
         }
 
         var selected = Selected;

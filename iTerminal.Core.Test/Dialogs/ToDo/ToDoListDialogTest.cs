@@ -407,4 +407,15 @@ public class ToDoListDialogTest
 
         Assert.AreEqual("14:30 45 Team ", fixture.Dialog.EntryForTest);
     }
+
+    [TestMethod]
+    public async Task TheFooterShowsEveryKeyToTheEnd()
+    {
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+
+        // The last words used to be cut off at the frame ("Esc clos").
+        AssertScreenContains(Render(fixture.Dialog), "H show done  Esc close");
+    }
+
 }

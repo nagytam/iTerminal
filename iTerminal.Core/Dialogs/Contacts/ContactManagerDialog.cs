@@ -522,8 +522,17 @@ public class ContactManagerDialog : Dialog
         var total = _store.Count;
         var shown = Visible.Count;
         var count = _filter.Length > 0 ? $"{shown} of {total} contacts" : $"{total} contacts";
-        Put(buffer, 1, 0, iw - 2, Fit("Name", NameColumn) + Fit("Email", EmailColumn) + Fit("Phone", PhoneColumn) + "Company", Color.Cyan, colorScheme.Background);
-        Put(buffer, iw - count.Length - 1, 0, count.Length, count, colorScheme.DisabledForeground, colorScheme.Background);
+        string header = Fit("Name", NameColumn) + Fit("Email", EmailColumn) + Fit("Phone", PhoneColumn) + "Company";
+        Put(buffer, 1, 0, iw - 2, header, Color.Cyan, colorScheme.Background);
+
+        // The count sits at the right edge and must not paint over the last column title: the short form
+        // ("3/10", "10") takes over where the words do not fit beside it.
+        string compact = _filter.Length > 0 ? $"{shown}/{total}" : total.ToString();
+        string? fitting = new[] { count, compact }.FirstOrDefault(text => iw - text.Length - 1 > 1 + header.Length);
+        if (fitting is not null)
+        {
+            Put(buffer, iw - fitting.Length - 1, 0, fitting.Length, fitting, colorScheme.DisabledForeground, colorScheme.Background);
+        }
     }
 
     private void DrawRows(IBuffer buffer, int iw, ColorScheme colorScheme)
