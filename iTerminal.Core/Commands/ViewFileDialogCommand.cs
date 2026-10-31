@@ -9,6 +9,7 @@ using iTerminal.Core.Audio;
 using iTerminal.Core.Dialogs.Dotnet;
 using iTerminal.Core.Dialogs.Music;
 using iTerminal.Core.Dialogs.Video;
+using iTerminal.Core.Dialogs.Web;
 using iTerminal.Core.Video;
 
 namespace iTerminal.Core.Commands;
@@ -22,8 +23,10 @@ public class ViewFileDialogCommand(
     ImageFileViewerDialog? imageFileViewerDialog = null,
     XmlViewerDialog? xmlViewerDialog = null,
     JsonViewerDialog? jsonViewerDialog = null,
-    CsvViewerDialog? csvViewerDialog = null) : Command
+    CsvViewerDialog? csvViewerDialog = null,
+    WebBrowserDialog? webBrowserDialog = null) : Command
 {
+    private readonly WebBrowserDialog? _webBrowserDialog = webBrowserDialog;
     private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
     private readonly ImageFileViewerDialog? _imageFileViewerDialog = imageFileViewerDialog;
     private readonly FileViewerDialog _fileViewerDialog = fileViewerDialog;
@@ -91,6 +94,9 @@ public class ViewFileDialogCommand(
         && ImageFileTypes.IsImageFile(url.Path)
         && File.Exists(url.Path);
 
+    private static bool IsHtmlFile(string path) =>
+        Path.GetExtension(path).ToLowerInvariant() is ".html" or ".htm" or ".xhtml";
+
     private static bool IsSolutionFile(string extension) =>
         extension.ToLowerInvariant() is "slnx" or "sln";
 
@@ -122,6 +128,18 @@ public class ViewFileDialogCommand(
         {
             _xmlViewerDialog.Url = focusedFileUrl;
             await (Control?.ShowDialogAsync(_xmlViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // An HTML page (.html, .htm, .xhtml) is meant to be browsed, not read as markup: it opens in the
+        // Web Browser. The browser loads it from disk, so it needs a real local file.
+        if (_webBrowserDialog is not null
+            && focusedFileUrl is not null
+            && IsHtmlFile(focusedFileUrl.Path)
+            && File.Exists(focusedFileUrl.Path))
+        {
+            _webBrowserDialog.StartAddress = iTerminal.Core.Model.Web.WebAddress.FileUrl(focusedFileUrl.Path);
+            await (Control?.ShowDialogAsync(_webBrowserDialog) ?? Task.CompletedTask);
             return;
         }
 
