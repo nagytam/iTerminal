@@ -1714,4 +1714,64 @@
   <data name="Notify.SkippedCount" xml:space="preserve">
     <value>{0} übersprungen: {1}</value>
   </data>
+  <data name="Msg.NoPanelDelete" xml:space="preserve">
+    <value>Es gibt kein Panel, aus dem gelöscht werden kann.</value>
+  </data>
+  <data name="Msg.TypeNewName" xml:space="preserve">
+    <value>Den neuen Namen eingeben.</value>
+  </data>
+  <data name="Msg.ReadingLink" xml:space="preserve">
+    <value>Der Link wird gelesen…</value>
+  </data>
+  <data name="Msg.SymlinkFolder" xml:space="preserve">
+    <value>Ein symbolischer Link auf einen Ordner.</value>
+  </data>
+  <data name="Msg.SymlinkFile" xml:space="preserve">
+    <value>Ein symbolischer Link auf eine Datei.</value>
+  </data>
+  <data name="Msg.HardLinkNames" xml:space="preserve">
+    <value>Ein Hardlink: Diese Datei hat {0} Namen. Geben Sie die Datei ein, auf die dieser Name zeigen soll.</value>
+  </data>
+  <data name="Msg.TypeCommand" xml:space="preserve">
+    <value>Geben Sie den Befehl ein, der die Datei öffnet, z. B. notepad oder code %f.</value>
+  </data>
+  <data name="Msg.SayWhichFiles" xml:space="preserve">
+    <value>Geben Sie an, für welche Dateien es gilt, z. B. *.jpg;*.png – oder * für alle.</value>
+  </data>
+  <data name="Msg.BlankTagsRemove" xml:space="preserve">
+    <value>Leere Schlagwörter entfernen sie. Schlagwörter werden durch Kommas getrennt.</value>
+  </data>
+  <data name="Msg.Saving" xml:space="preserve">
+    <value>Wird gespeichert…</value>
+  </data>
+  <data name="Msg.Drive" xml:space="preserve">
+    <value>Laufwerk {0}</value>
+  </data>
+  <data name="Msg.DriveErased" xml:space="preserve">
+    <value>Alles auf diesem Laufwerk wird gelöscht.</value>
+  </data>
+  <data name="Msg.Formatting" xml:space="preserve">
+    <value>{0}: wird formatiert ...</value>
+  </data>
+  <data name="Msg.OneTagAtATime" xml:space="preserve">
+    <value>Jeweils ein Schlagwort.</value>
+  </data>
+  <data name="Msg.TypePattern" xml:space="preserve">
+    <value>Geben Sie ein Muster ein, z. B. *.jpg;*.png.</value>
+  </data>
+  <data name="Msg.NoPanelMark" xml:space="preserve">
+    <value>Es gibt kein Panel, in dem markiert werden kann.</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Fehler: {0}</value>
+  </data>
+  <data name="Msg.ErrorDate" xml:space="preserve">
+    <value>Fehler: Ein Datum hat die Form yyyy-MM-dd HH:mm:ss, z. B. 2024-05-01 10:20:30.</value>
+  </data>
+  <data name="Msg.ErrorMode" xml:space="preserve">
+    <value>Fehler: Der Modus besteht aus drei oder vier Oktalziffern, z. B. 644 oder 755.</value>
+  </data>
+  <data name="Msg.TextOnlyJpegPng" xml:space="preserve">
+    <value>Text kann nur für JPEG- und PNG-Dateien geschrieben werden.</value>
+  </data>
 </root>

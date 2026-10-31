@@ -165,14 +165,14 @@ public class FileAssociationDialog : FormDialog
         var words = FileAssociation.SplitWords(command);
         if (words.Count == 0)
         {
-            _errorLabel.Text = "Type the command that opens the file, such as notepad or code %f.";
+            _errorLabel.Text = UiText.Get("Msg.TypeCommand", "Type the command that opens the file, such as notepad or code %f.");
             return false;
         }
 
         var patterns = Patterns.Trim();
         if (patterns.Length == 0)
         {
-            _errorLabel.Text = "Say which files it applies to, such as *.jpg;*.png — or * for all.";
+            _errorLabel.Text = UiText.Get("Msg.SayWhichFiles", "Say which files it applies to, such as *.jpg;*.png — or * for all.");
             return false;
         }
 

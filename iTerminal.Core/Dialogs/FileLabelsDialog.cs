@@ -109,7 +109,7 @@ public class FileLabelsDialog : FormDialog
             var label = _labels.Get(_paths[0]);
             ChooseColour(LabelColours.Name(label.Colour));
             Tags = FileLabelTags.Format(label.Tags);
-            _info.Text = "Blank tags remove them. Tags are separated by commas.";
+            _info.Text = UiText.Get("Msg.BlankTagsRemove", "Blank tags remove them. Tags are separated by commas.");
         }
         else
         {
@@ -141,7 +141,7 @@ public class FileLabelsDialog : FormDialog
         LabelColour? colour = choice is null || choice == Keep ? null : LabelColours.Parse(choice);
         var keepTags = _paths.Count > 1 && string.IsNullOrWhiteSpace(Tags);
         var tags = FileLabelTags.Parse(Tags);
-        _message.Text = "Saving…";
+        _message.Text = UiText.Get("Msg.Saving", "Saving…");
         _saving = SaveAsync(_paths, old => new FileLabel(colour ?? old.Colour, keepTags ? old.Tags : tags));
         StateHasChanged();
         return true;
@@ -163,7 +163,7 @@ public class FileLabelsDialog : FormDialog
     public override void OnIdle()
     {
         base.OnIdle();
-        if (_saving is { IsCompleted: true } && _message.Text == "Saving…")
+        if (_saving is { IsCompleted: true } && _message.Text == UiText.Get("Msg.Saving", "Saving…"))
         {
             if (_saveSucceeded)
             {

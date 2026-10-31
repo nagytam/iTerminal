@@ -1714,4 +1714,64 @@
   <data name="Notify.SkippedCount" xml:space="preserve">
     <value>{0} saltato/i: {1}</value>
   </data>
+  <data name="Msg.NoPanelDelete" xml:space="preserve">
+    <value>Non c'è nessun pannello da cui eliminare.</value>
+  </data>
+  <data name="Msg.TypeNewName" xml:space="preserve">
+    <value>Digita il nuovo nome.</value>
+  </data>
+  <data name="Msg.ReadingLink" xml:space="preserve">
+    <value>Lettura del collegamento…</value>
+  </data>
+  <data name="Msg.SymlinkFolder" xml:space="preserve">
+    <value>Un collegamento simbolico a una cartella.</value>
+  </data>
+  <data name="Msg.SymlinkFile" xml:space="preserve">
+    <value>Un collegamento simbolico a un file.</value>
+  </data>
+  <data name="Msg.HardLinkNames" xml:space="preserve">
+    <value>Un collegamento fisico: questo file ha {0} nomi. Digita il file a cui questo nome deve portare.</value>
+  </data>
+  <data name="Msg.TypeCommand" xml:space="preserve">
+    <value>Digita il comando che apre il file, come notepad o code %f.</value>
+  </data>
+  <data name="Msg.SayWhichFiles" xml:space="preserve">
+    <value>Indica a quali file si applica, come *.jpg;*.png — o * per tutti.</value>
+  </data>
+  <data name="Msg.BlankTagsRemove" xml:space="preserve">
+    <value>Le etichette vuote le rimuovono. Le etichette sono separate da virgole.</value>
+  </data>
+  <data name="Msg.Saving" xml:space="preserve">
+    <value>Salvataggio…</value>
+  </data>
+  <data name="Msg.Drive" xml:space="preserve">
+    <value>Unità {0}</value>
+  </data>
+  <data name="Msg.DriveErased" xml:space="preserve">
+    <value>Tutto su questa unità verrà cancellato.</value>
+  </data>
+  <data name="Msg.Formatting" xml:space="preserve">
+    <value>Formattazione di {0}: ...</value>
+  </data>
+  <data name="Msg.OneTagAtATime" xml:space="preserve">
+    <value>Un'etichetta alla volta.</value>
+  </data>
+  <data name="Msg.TypePattern" xml:space="preserve">
+    <value>Digita un modello, come *.jpg;*.png.</value>
+  </data>
+  <data name="Msg.NoPanelMark" xml:space="preserve">
+    <value>Non c'è nessun pannello in cui contrassegnare.</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Errore: {0}</value>
+  </data>
+  <data name="Msg.ErrorDate" xml:space="preserve">
+    <value>Errore: una data è yyyy-MM-dd HH:mm:ss, come 2024-05-01 10:20:30.</value>
+  </data>
+  <data name="Msg.ErrorMode" xml:space="preserve">
+    <value>Errore: la modalità è di tre o quattro cifre ottali, come 644 o 755.</value>
+  </data>
+  <data name="Msg.TextOnlyJpegPng" xml:space="preserve">
+    <value>Il testo può essere scritto solo per file JPEG e PNG.</value>
+  </data>
 </root>

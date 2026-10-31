@@ -1714,4 +1714,64 @@
   <data name="Notify.SkippedCount" xml:space="preserve">
     <value>{0} kihagyva: {1}</value>
   </data>
+  <data name="Msg.NoPanelDelete" xml:space="preserve">
+    <value>Nincs panel, amelyből törölni lehetne.</value>
+  </data>
+  <data name="Msg.TypeNewName" xml:space="preserve">
+    <value>Írja be az új nevet.</value>
+  </data>
+  <data name="Msg.ReadingLink" xml:space="preserve">
+    <value>A hivatkozás beolvasása…</value>
+  </data>
+  <data name="Msg.SymlinkFolder" xml:space="preserve">
+    <value>Szimbolikus hivatkozás egy mappára.</value>
+  </data>
+  <data name="Msg.SymlinkFile" xml:space="preserve">
+    <value>Szimbolikus hivatkozás egy fájlra.</value>
+  </data>
+  <data name="Msg.HardLinkNames" xml:space="preserve">
+    <value>Hardlink: ennek a fájlnak {0} neve van. Írja be a fájlt, amelyre ez a név mutasson.</value>
+  </data>
+  <data name="Msg.TypeCommand" xml:space="preserve">
+    <value>Írja be a fájlt megnyitó parancsot, például notepad vagy code %f.</value>
+  </data>
+  <data name="Msg.SayWhichFiles" xml:space="preserve">
+    <value>Adja meg, mely fájlokra vonatkozik, például *.jpg;*.png – vagy * az összesre.</value>
+  </data>
+  <data name="Msg.BlankTagsRemove" xml:space="preserve">
+    <value>Az üres címkék eltávolítják őket. A címkéket vesszővel válassza el.</value>
+  </data>
+  <data name="Msg.Saving" xml:space="preserve">
+    <value>Mentés…</value>
+  </data>
+  <data name="Msg.Drive" xml:space="preserve">
+    <value>Meghajtó: {0}</value>
+  </data>
+  <data name="Msg.DriveErased" xml:space="preserve">
+    <value>Minden törlődik erről a meghajtóról.</value>
+  </data>
+  <data name="Msg.Formatting" xml:space="preserve">
+    <value>{0}: formázása ...</value>
+  </data>
+  <data name="Msg.OneTagAtATime" xml:space="preserve">
+    <value>Egyszerre egy címke.</value>
+  </data>
+  <data name="Msg.TypePattern" xml:space="preserve">
+    <value>Írjon be egy mintát, például *.jpg;*.png.</value>
+  </data>
+  <data name="Msg.NoPanelMark" xml:space="preserve">
+    <value>Nincs panel, amelyben jelölni lehetne.</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Hiba: {0}</value>
+  </data>
+  <data name="Msg.ErrorDate" xml:space="preserve">
+    <value>Hiba: a dátum formátuma yyyy-MM-dd HH:mm:ss, például 2024-05-01 10:20:30.</value>
+  </data>
+  <data name="Msg.ErrorMode" xml:space="preserve">
+    <value>Hiba: a mód három vagy négy oktális számjegy, például 644 vagy 755.</value>
+  </data>
+  <data name="Msg.TextOnlyJpegPng" xml:space="preserve">
+    <value>Szöveg csak JPEG és PNG fájlokba írható.</value>
+  </data>
 </root>

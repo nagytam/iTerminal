@@ -145,7 +145,7 @@ public class MarkPatternDialog : FormDialog
 
             if (string.IsNullOrWhiteSpace(dialog.Pattern))
             {
-                dialog.ErrorMessage.Text = "Type a pattern, such as *.jpg;*.png.";
+                dialog.ErrorMessage.Text = UiText.Get("Msg.TypePattern", "Type a pattern, such as *.jpg;*.png.");
                 return Task.CompletedTask;
             }
 
@@ -153,7 +153,7 @@ public class MarkPatternDialog : FormDialog
             // than closing as though the mark had worked.
             if (dialog.Target is not IMarkableContentModel { CanMark: true })
             {
-                dialog.ErrorMessage.Text = "There is no panel to mark in.";
+                dialog.ErrorMessage.Text = UiText.Get("Msg.NoPanelMark", "There is no panel to mark in.");
                 return Task.CompletedTask;
             }
 

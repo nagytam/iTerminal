@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Interfaces;
@@ -31,7 +32,7 @@ public class DeleteCommand(
             // open and no word why.
             if (contentModelService.GetLastContentModel() is null)
             {
-                deleteDialog.ErrorMessage.Text = "There is no panel to delete from.";
+                deleteDialog.ErrorMessage.Text = UiText.Get("Msg.NoPanelDelete", "There is no panel to delete from.");
                 return;
             }
 

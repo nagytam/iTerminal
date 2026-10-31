@@ -125,8 +125,8 @@ public class FormatDriveDialog : FormDialog
         Confirmation = string.Empty;
         _isFormatting = false;
         SetError(string.Empty);
-        _labelDrive.Text = $"Drive {root}";
-        _labelWarning.Text = "Everything on this drive will be erased.";
+        _labelDrive.Text = string.Format(UiText.Get("Msg.Drive", "Drive {0}"), root);
+        _labelWarning.Text = UiText.Get("Msg.DriveErased", "Everything on this drive will be erased.");
     }
 
     public override async Task OnInitializeAsync()
@@ -206,14 +206,14 @@ public class FormatDriveDialog : FormDialog
 
         _isFormatting = true;
         SetError(string.Empty);
-        _labelWarning.Text = $"Formatting {letter}: ...";
+        _labelWarning.Text = string.Format(UiText.Get("Msg.Formatting", "Formatting {0}: ..."), letter);
         StateHasChanged();
         try
         {
             var result = await Task.Run(() => _driveActions.FormatAsync(Root, new DriveFormatOptions(FileSystem, VolumeLabel.Trim(), Quick)));
             if (!result.Success)
             {
-                _labelWarning.Text = "Everything on this drive will be erased.";
+                _labelWarning.Text = UiText.Get("Msg.DriveErased", "Everything on this drive will be erased.");
                 SetError(result.Message);
                 return false;
             }

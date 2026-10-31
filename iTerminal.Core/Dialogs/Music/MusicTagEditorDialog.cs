@@ -112,7 +112,7 @@ public class MusicTagEditorDialog : Dialog
         }
 
         AudioTagEdit edit = Edit();
-        _message.Text = "Saving…";
+        _message.Text = UiText.Get("Msg.Saving", "Saving…");
         _saving = Task.Run(() => AudioTagWriter.Write(_path, edit)).ContinueWith(task =>
         {
             // The result is shown on the idle pass, on the thread that owns the controls.
@@ -131,7 +131,7 @@ public class MusicTagEditorDialog : Dialog
     public override void OnIdle()
     {
         base.OnIdle();
-        if (_saving is { IsCompleted: true } && _message.Text == "Saving…")
+        if (_saving is { IsCompleted: true } && _message.Text == UiText.Get("Msg.Saving", "Saving…"))
         {
             if (Saved)
             {
