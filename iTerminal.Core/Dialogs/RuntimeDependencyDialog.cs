@@ -95,6 +95,15 @@ public class RuntimeDependencyDialog : Dialog
     {
         await base.OnInitializeAsync();
         BuildWizard();
+
+        // An owner that shows the dialog and then initializes its own children runs this a second time on a dialog that is
+        // already up. ShowAsync is not called again, so the wizard built just now would stay hidden and the dialog empty.
+        if (IsVisible && _wizard is not null)
+        {
+            await _wizard.ShowAsync();
+            _wizard.IsVisible = _wizardActive;
+            PlaceWizard();
+        }
     }
 
     public override async Task ShowAsync()
