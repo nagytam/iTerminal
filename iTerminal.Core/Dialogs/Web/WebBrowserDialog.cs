@@ -126,19 +126,35 @@ public class WebBrowserDialog : Dialog
     private static string DefaultDownloadDirectory() =>
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
+    /// <summary>An address to open in a tab of its own the next time the dialog is shown (F3 on an HTML file). Consumed on show.</summary>
+    public string? StartAddress { get; set; }
+
     #region Lifecycle
 
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
+        string? start = StartAddress;
+        StartAddress = null;
         if (!_started)
         {
             _started = true;
             var tab = _model.Active;
-            if (tab.Current is null && !tab.IsLoading)
+            if (start is null && tab.Current is null && !tab.IsLoading)
             {
                 _ = _model.NavigateAsync(tab, _model.Store.Home);
             }
+        }
+
+        if (start is not null)
+        {
+            WebTab target = _model.Active;
+            if (target.Current is not null || target.IsLoading)
+            {
+                target = _model.NewTab();
+            }
+
+            _ = _model.NavigateAsync(target, start);
         }
 
         _mode = Mode.Browse;
