@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Audio;
 using iTerminal.Core.Audio.Decoders;
 using iTerminal.Core.Data;
@@ -271,7 +272,7 @@ public sealed class MusicLibraryService : IMusicLibraryService
             Persist(pending, removed);
 
             LastIndexedUtc = now;
-            StatusMessage = $"Indexed {scanned.Count} track{(scanned.Count == 1 ? string.Empty : "s")} from {folder}.";
+            StatusMessage = string.Format(scanned.Count == 1 ? UiText.Get("Msg.IndexedTrack", "Indexed {0} track from {1}.") : UiText.Get("Msg.IndexedTracks", "Indexed {0} tracks from {1}."), scanned.Count, folder);
 
             if (changedCount > 0 || removed.Count > 0)
             {
@@ -286,7 +287,7 @@ public sealed class MusicLibraryService : IMusicLibraryService
         }
         catch (Exception exception)
         {
-            StatusMessage = $"Music indexing failed: {exception.Message}";
+            StatusMessage = string.Format(UiText.Get("Msg.MusicIndexFailed", "Music indexing failed: {0}"), exception.Message);
             _logger?.Warning(exception, "Music library indexing failed.");
             return TrackCount;
         }

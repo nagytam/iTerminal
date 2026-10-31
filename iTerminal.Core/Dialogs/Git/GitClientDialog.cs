@@ -265,10 +265,10 @@ public class GitClientDialog : SplitPaneDialog
         // An empty section says so from inside its own list: the list paints every one of its rows,
         // so a message drawn over it by the dialog lasted only until the list next repainted alone.
         _unstagedListBox.EmptyText = CleanWorkingTreeText;
-        _stagedListBox.EmptyText = "  (nothing staged)";
-        _branchesListBox.EmptyText = "  (no branches)";
-        _commitsListBox.EmptyText = "  (no commits yet)";
-        _stashesListBox.EmptyText = "  (no stashes)";
+        _stagedListBox.EmptyText = UiText.Get("Empty.GitStaged", UiText.Get("Empty.GitStaged", "  (nothing staged)"));
+        _branchesListBox.EmptyText = UiText.Get("Empty.GitBranches", UiText.Get("Empty.GitBranches", "  (no branches)"));
+        _commitsListBox.EmptyText = UiText.Get("Empty.GitCommits", UiText.Get("Empty.GitCommits", "  (no commits yet)"));
+        _stashesListBox.EmptyText = UiText.Get("Empty.GitStashes", UiText.Get("Empty.GitStashes", "  (no stashes)"));
 
         AddControl(_unstagedListBox);
         AddControl(_stagedListBox);

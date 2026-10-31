@@ -29,7 +29,7 @@ public class TaskManagerDialog : Dialog
         _listBox = new ListBox<IBackgroundTask>(_listModel, themeService)
         {
             // An empty frame read as "the list failed to load"; most of the time nothing is running.
-            EmptyText = " No background tasks are running.",
+            EmptyText = UiText.Get("Empty.Tasks", " No background tasks are running."),
         };
         _scrollBar = new ScrollBar(themeService)
         {

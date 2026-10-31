@@ -90,7 +90,7 @@ public class FindFilesDialog : SplitPaneDialog
         _subfoldersBox = new CheckBox(themeService) { Label = UiText.Get("Field.IncludeSubfolders", "Include subfolders"), IsChecked = true, HotKeyChar = 'I' };
         _resultListBox = new HitListBox(new ListBoxModel<FileSearchHit>(_resultItems), themeService)
         {
-            EmptyText = " Type a name pattern and press Enter.",
+            EmptyText = UiText.Get("Empty.FindFiles", " Type a name pattern and press Enter."),
         };
 
         // The name box first: the layout pass focuses the first focusable child, and the name is
@@ -357,7 +357,7 @@ public class FindFilesDialog : SplitPaneDialog
         _resultItems.ReplaceAll([.. hits]);
         _resultListBox.UpdateModel();
         _resultListBox.EmptyText = _searchService.IsRunning ? " Searching…"
-            : _searchService.Query is null ? " Type a name pattern and press Enter."
+            : _searchService.Query is null ? UiText.Get("Empty.FindFiles", " Type a name pattern and press Enter.")
             : " Nothing found.";
 
         // Hits only ever arrive at the end, so the row the user is on stays where it is.

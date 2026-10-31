@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
 using iConsole.Controls;
@@ -51,7 +52,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
         _listBox = new ListBox<Url>(listModel, themeService)
         {
             // A first run has no favourites, and a blank page did not say how to get one.
-            EmptyText = " No favourites yet — Add to favourites saves the folder the panel is showing.",
+            EmptyText = UiText.Get("Empty.Favourites", UiText.Get("Empty.Favourites", " No favourites yet — Add to favourites saves the folder the panel is showing.")),
         };
         _scrollBar = new ScrollBar(themeService)
         {

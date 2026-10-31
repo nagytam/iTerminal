@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -33,7 +34,7 @@ public class ScreenManagerDialog : Dialog
         };
         _listBox = new ListBox<IScreen>(listModel, themeService)
         {
-            EmptyText = " No screens.",
+            EmptyText = UiText.Get("Empty.Screens", UiText.Get("Empty.Screens", " No screens.")),
         };
         AddControl(_listBox);
     }

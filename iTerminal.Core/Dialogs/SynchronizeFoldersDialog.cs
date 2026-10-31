@@ -69,7 +69,7 @@ public class SynchronizeFoldersDialog : Dialog
         _optionsLabel = new Label(string.Empty, themeService);
         _listBox = new ListBox<string>(new ListBoxModel<string>(_rows), themeService)
         {
-            EmptyText = " Press p to compare the two panels and list what would change.",
+            EmptyText = UiText.Get("Empty.Sync", " Press p to compare the two panels and list what would change."),
         };
         _statusLabel = new Label(string.Empty, themeService);
         AddControl(_optionsLabel);
@@ -242,14 +242,14 @@ public class SynchronizeFoldersDialog : Dialog
 
     private static string DescribeDirection(SyncDirection direction) => direction switch
     {
-        SyncDirection.Both => "both ways, newer wins",
-        SyncDirection.LeftToRight => "left to right",
-        _ => "right to left",
+        SyncDirection.Both => UiText.Get("Sync.BothWays", "both ways, newer wins"),
+        SyncDirection.LeftToRight => UiText.Get("Sync.LeftToRight", "left to right"),
+        _ => UiText.Get("Sync.RightToLeft", "right to left"),
     };
 
     private void UpdateOptionsLine()
     {
-        _optionsLabel.Text = $" Direction: {DescribeDirection(_direction)}   Subfolders: {(_subfolders ? "yes" : "no")}   Delete extras: {(_deleteExtras ? "yes" : "no")}";
+        _optionsLabel.Text = string.Format(UiText.Get("Sync.Options", " Direction: {0}   Subfolders: {1}   Delete extras: {2}"), DescribeDirection(_direction), _subfolders ? UiText.Get("Sync.Yes", "yes") : UiText.Get("Sync.No", "no"), _deleteExtras ? UiText.Get("Sync.Yes", "yes") : UiText.Get("Sync.No", "no"));
     }
 
     private void SetStatus(string text, bool isError)
@@ -282,7 +282,7 @@ public class SynchronizeFoldersDialog : Dialog
         }
         else if (IsBusy && _progress.Length > 0)
         {
-            _statusLabel.Text = " Comparing… " + _progress;
+            _statusLabel.Text = string.Format(UiText.Get("Msg.ComparingProgress", " Comparing… {0}"), _progress);
         }
 
         base.OnIdle();

@@ -1861,4 +1861,163 @@
   <data name="Dialog.MailAccountTitle" xml:space="preserve">
     <value>Correo: {0}</value>
   </data>
+  <data name="DiskUsage.Partial" xml:space="preserve">
+    <value>PARCIAL</value>
+  </data>
+  <data name="DiskUsage.ByName" xml:space="preserve">
+    <value>POR NOMBRE</value>
+  </data>
+  <data name="DiskUsage.BySize" xml:space="preserve">
+    <value>POR TAMAÑO</value>
+  </data>
+  <data name="Placeholder.DocumentWords" xml:space="preserve">
+    <value>palabras que buscar en sus documentos</value>
+  </data>
+  <data name="Msg.LinkPath" xml:space="preserve">
+    <value>enlace {0}</value>
+  </data>
+  <data name="Label.Command" xml:space="preserve">
+    <value>Comando</value>
+  </data>
+  <data name="Placeholder.CommandExample" xml:space="preserve">
+    <value>p. ej. code %f</value>
+  </data>
+  <data name="Msg.LabelsMultiple" xml:space="preserve">
+    <value>{0} elementos. Deje (keep) y las etiquetas en blanco para cambiar solo lo que escriba.</value>
+  </data>
+  <data name="Dialog.LabelsTitleFile" xml:space="preserve">
+    <value>Etiquetas de color y etiquetas — {0}</value>
+  </data>
+  <data name="Dialog.LabelsTitle" xml:space="preserve">
+    <value>Etiquetas de color y etiquetas</value>
+  </data>
+  <data name="Empty.Favourites" xml:space="preserve">
+    <value> Aún no hay favoritos: «Añadir a favoritos» guarda la carpeta que muestra el panel.</value>
+  </data>
+  <data name="Empty.History" xml:space="preserve">
+    <value> Aún no se ha visitado ninguna carpeta.</value>
+  </data>
+  <data name="Placeholder.PathExample" xml:space="preserve">
+    <value>p. ej. /home/yo, C:\Users, ssh://host/ruta</value>
+  </data>
+  <data name="Empty.GitStaged" xml:space="preserve">
+    <value>  (nada en el área de preparación)</value>
+  </data>
+  <data name="Empty.GitBranches" xml:space="preserve">
+    <value>  (sin ramas)</value>
+  </data>
+  <data name="Empty.GitCommits" xml:space="preserve">
+    <value>  (aún no hay commits)</value>
+  </data>
+  <data name="Empty.GitStashes" xml:space="preserve">
+    <value>  (sin stashes)</value>
+  </data>
+  <data name="Empty.IPhoneLooking" xml:space="preserve">
+    <value> Buscando dispositivos…</value>
+  </data>
+  <data name="Empty.HostsLooking" xml:space="preserve">
+    <value> Buscando equipos en la red local…</value>
+  </data>
+  <data name="Empty.HostsNone" xml:space="preserve">
+    <value> No se encontraron equipos: r vuelve a buscar.</value>
+  </data>
+  <data name="Empty.Loading" xml:space="preserve">
+    <value> Cargando…</value>
+  </data>
+  <data name="Empty.PackagesFailed" xml:space="preserve">
+    <value> No se pudieron listar los paquetes: r reintenta.</value>
+  </data>
+  <data name="Empty.Processes" xml:space="preserve">
+    <value> Ningún proceso coincide con el filtro.</value>
+  </data>
+  <data name="Empty.Screens" xml:space="preserve">
+    <value> No hay pantallas.</value>
+  </data>
+  <data name="Empty.FindFiles" xml:space="preserve">
+    <value> Escriba un patrón de nombre y pulse Intro.</value>
+  </data>
+  <data name="Empty.Watchlist" xml:space="preserve">
+    <value> La lista de seguimiento está vacía: pulse a para añadir una acción.</value>
+  </data>
+  <data name="Empty.StockNothing" xml:space="preserve">
+    <value> No se encontró nada.</value>
+  </data>
+  <data name="Empty.Sync" xml:space="preserve">
+    <value> Pulse p para comparar los dos paneles y listar los cambios.</value>
+  </data>
+  <data name="Sync.BothWays" xml:space="preserve">
+    <value>en ambos sentidos, gana lo más reciente</value>
+  </data>
+  <data name="Sync.LeftToRight" xml:space="preserve">
+    <value>de izquierda a derecha</value>
+  </data>
+  <data name="Sync.RightToLeft" xml:space="preserve">
+    <value>de derecha a izquierda</value>
+  </data>
+  <data name="Sync.Options" xml:space="preserve">
+    <value> Dirección: {0}   Subcarpetas: {1}   Eliminar sobrantes: {2}</value>
+  </data>
+  <data name="Sync.Yes" xml:space="preserve">
+    <value>sí</value>
+  </data>
+  <data name="Sync.No" xml:space="preserve">
+    <value>no</value>
+  </data>
+  <data name="Msg.ComparingProgress" xml:space="preserve">
+    <value> Comparando… {0}</value>
+  </data>
+  <data name="Empty.Tasks" xml:space="preserve">
+    <value> No hay tareas en segundo plano.</value>
+  </data>
+  <data name="Empty.Themes" xml:space="preserve">
+    <value> No hay temas disponibles.</value>
+  </data>
+  <data name="Notify.UpdateAvailable" xml:space="preserve">
+    <value>iTerminal {0} está disponible</value>
+  </data>
+  <data name="Notify.UpdateDetail" xml:space="preserve">
+    <value>Tiene la {0}. Descárguela en {1}</value>
+  </data>
+  <data name="Web.Stopped" xml:space="preserve">
+    <value>Detenido.</value>
+  </data>
+  <data name="Web.Loading" xml:space="preserve">
+    <value>Cargando {0}…</value>
+  </data>
+  <data name="OAuth.SignIn" xml:space="preserve">
+    <value>Iniciar sesión en {0}</value>
+  </data>
+  <data name="OAuth.SignInDetail" xml:space="preserve">
+    <value>Abra {0} e introduzca {1}</value>
+  </data>
+  <data name="OAuth.SignedIn" xml:space="preserve">
+    <value>Sesión iniciada en {0}</value>
+  </data>
+  <data name="OAuth.SignedInDetail" xml:space="preserve">
+    <value>Actualice el panel (Ctrl+R) para listarlo.</value>
+  </data>
+  <data name="OAuth.Failed" xml:space="preserve">
+    <value>Error al iniciar sesión en {0}</value>
+  </data>
+  <data name="OAuth.Refused" xml:space="preserve">
+    <value>Se rechazó la solicitud.</value>
+  </data>
+  <data name="OAuth.Expired" xml:space="preserve">
+    <value>La sesión de {0} expiró</value>
+  </data>
+  <data name="OAuth.ExpiredDetail" xml:space="preserve">
+    <value>Abra la unidad de nuevo para obtener un código nuevo.</value>
+  </data>
+  <data name="Msg.DocIndexFailed" xml:space="preserve">
+    <value>Error al indexar los documentos: {0}</value>
+  </data>
+  <data name="Msg.IndexedTrack" xml:space="preserve">
+    <value>Se indexó {0} pista de {1}.</value>
+  </data>
+  <data name="Msg.IndexedTracks" xml:space="preserve">
+    <value>Se indexaron {0} pistas de {1}.</value>
+  </data>
+  <data name="Msg.MusicIndexFailed" xml:space="preserve">
+    <value>Error al indexar la música: {0}</value>
+  </data>
 </root>

@@ -58,7 +58,7 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         {
             Label = UiText.Get("Field.PathOrUrl", "Path or URL: "),
             MaxLength = 1024,
-            Placeholder = "e.g. /home/me, C:\\Users, ssh://host/path",
+            Placeholder = UiText.Get("Placeholder.PathExample", UiText.Get("Placeholder.PathExample", "e.g. /home/me, C:\\Users, ssh://host/path")),
         }.WithAutoCompletion(completionModel);
         PathValidator = new FolderUrlValidationModel(TextBoxPath.TextModel, dateTimeProviderService);
         TextBoxPath.ValidationModel = PathValidator;

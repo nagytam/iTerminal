@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text.Json;
@@ -284,7 +285,7 @@ public sealed class OAuthTokenProvider : ICloudTokenProvider
 
         var message = $"Sign in to {_config.Name}: open {address} and enter {userCode}, then refresh (Ctrl+R).";
         _pending[account] = new Pending(message);
-        _notifications?.Notify($"Sign in to {_config.Name}", $"Open {address} and enter {userCode}", iConsole.Services.NotificationSeverity.Info, Timeout.InfiniteTimeSpan);
+        _notifications?.Notify(string.Format(UiText.Get("OAuth.SignIn", "Sign in to {0}"), _config.Name), string.Format(UiText.Get("OAuth.SignInDetail", "Open {0} and enter {1}"), address, userCode), iConsole.Services.NotificationSeverity.Info, Timeout.InfiniteTimeSpan);
 
         _ = Task.Run(() => PollAsync(account, deviceCode, TimeSpan.FromSeconds(Math.Max(1, interval)), TimeSpan.FromSeconds(lifetime)));
         return new CloudSignInRequiredException(message);
@@ -326,7 +327,7 @@ public sealed class OAuthTokenProvider : ICloudTokenProvider
                         StoreRefreshToken(account, token);
                     }
 
-                    _notifications?.Notify($"Signed in to {_config.Name}", "Refresh the panel (Ctrl+R) to list it.", iConsole.Services.NotificationSeverity.Success);
+                    _notifications?.Notify(string.Format(UiText.Get("OAuth.SignedIn", "Signed in to {0}"), _config.Name), UiText.Get("OAuth.SignedInDetail", "Refresh the panel (Ctrl+R) to list it."), iConsole.Services.NotificationSeverity.Success);
                     return;
                 }
 
@@ -339,12 +340,12 @@ public sealed class OAuthTokenProvider : ICloudTokenProvider
                         interval += TimeSpan.FromSeconds(5);
                         continue;
                     default:
-                        _notifications?.Notify($"{_config.Name} sign-in failed", error ?? "The request was refused.", iConsole.Services.NotificationSeverity.Error);
+                        _notifications?.Notify(string.Format(UiText.Get("OAuth.Failed", "{0} sign-in failed"), _config.Name), error ?? UiText.Get("OAuth.Refused", "The request was refused."), iConsole.Services.NotificationSeverity.Error);
                         return;
                 }
             }
 
-            _notifications?.Notify($"{_config.Name} sign-in expired", "Open the drive again to get a new code.", iConsole.Services.NotificationSeverity.Warning);
+            _notifications?.Notify(string.Format(UiText.Get("OAuth.Expired", "{0} sign-in expired"), _config.Name), UiText.Get("OAuth.ExpiredDetail", "Open the drive again to get a new code."), iConsole.Services.NotificationSeverity.Warning);
         }
         catch (Exception exception) when (exception is HttpRequestException or TaskCanceledException or JsonException)
         {

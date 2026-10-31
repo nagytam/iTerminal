@@ -83,7 +83,7 @@ public class IPhoneBrowserDialog : Dialog
         _scanning = true;
         _status = string.Empty;
         _statusIsError = false;
-        _listBox.EmptyText = " Looking for devices…";
+        _listBox.EmptyText = UiText.Get("Empty.IPhoneLooking", UiText.Get("Empty.IPhoneLooking", " Looking for devices…"));
         StateHasChanged();
 
         _ = Task.Run(() =>

@@ -115,10 +115,10 @@ public class FileLabelsDialog : FormDialog
         {
             ChooseColour(Keep);
             Tags = string.Empty;
-            _info.Text = $"{_paths.Count} items. Leave (keep) and the tags blank to change only what you type.";
+            _info.Text = string.Format(UiText.Get("Msg.LabelsMultiple", "{0} items. Leave (keep) and the tags blank to change only what you type."), _paths.Count);
         }
 
-        Title = single ? "Colour labels and tags — " + Path.GetFileName(_paths[0]) : "Colour labels and tags";
+        Title = single ? string.Format(UiText.Get("Dialog.LabelsTitleFile", "Colour labels and tags — {0}"), Path.GetFileName(_paths[0])) : UiText.Get("Dialog.LabelsTitle", "Colour labels and tags");
         StateHasChanged();
     }
 

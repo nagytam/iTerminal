@@ -1861,4 +1861,163 @@
   <data name="Dialog.MailAccountTitle" xml:space="preserve">
     <value>Mail: {0}</value>
   </data>
+  <data name="DiskUsage.Partial" xml:space="preserve">
+    <value>PARTIAL</value>
+  </data>
+  <data name="DiskUsage.ByName" xml:space="preserve">
+    <value>BY NAME</value>
+  </data>
+  <data name="DiskUsage.BySize" xml:space="preserve">
+    <value>BY SIZE</value>
+  </data>
+  <data name="Placeholder.DocumentWords" xml:space="preserve">
+    <value>words to look for in your documents</value>
+  </data>
+  <data name="Msg.LinkPath" xml:space="preserve">
+    <value>link {0}</value>
+  </data>
+  <data name="Label.Command" xml:space="preserve">
+    <value>Command</value>
+  </data>
+  <data name="Placeholder.CommandExample" xml:space="preserve">
+    <value>e.g. code %f</value>
+  </data>
+  <data name="Msg.LabelsMultiple" xml:space="preserve">
+    <value>{0} items. Leave (keep) and the tags blank to change only what you type.</value>
+  </data>
+  <data name="Dialog.LabelsTitleFile" xml:space="preserve">
+    <value>Colour labels and tags — {0}</value>
+  </data>
+  <data name="Dialog.LabelsTitle" xml:space="preserve">
+    <value>Colour labels and tags</value>
+  </data>
+  <data name="Empty.Favourites" xml:space="preserve">
+    <value> No favourites yet — Add to favourites saves the folder the panel is showing.</value>
+  </data>
+  <data name="Empty.History" xml:space="preserve">
+    <value> No folders visited yet.</value>
+  </data>
+  <data name="Placeholder.PathExample" xml:space="preserve">
+    <value>e.g. /home/me, C:\Users, ssh://host/path</value>
+  </data>
+  <data name="Empty.GitStaged" xml:space="preserve">
+    <value>  (nothing staged)</value>
+  </data>
+  <data name="Empty.GitBranches" xml:space="preserve">
+    <value>  (no branches)</value>
+  </data>
+  <data name="Empty.GitCommits" xml:space="preserve">
+    <value>  (no commits yet)</value>
+  </data>
+  <data name="Empty.GitStashes" xml:space="preserve">
+    <value>  (no stashes)</value>
+  </data>
+  <data name="Empty.IPhoneLooking" xml:space="preserve">
+    <value> Looking for devices…</value>
+  </data>
+  <data name="Empty.HostsLooking" xml:space="preserve">
+    <value> Looking for hosts on the local network…</value>
+  </data>
+  <data name="Empty.HostsNone" xml:space="preserve">
+    <value> No hosts found — r scans again.</value>
+  </data>
+  <data name="Empty.Loading" xml:space="preserve">
+    <value> Loading…</value>
+  </data>
+  <data name="Empty.PackagesFailed" xml:space="preserve">
+    <value> Could not list packages — r retries.</value>
+  </data>
+  <data name="Empty.Processes" xml:space="preserve">
+    <value> No process matches the filter.</value>
+  </data>
+  <data name="Empty.Screens" xml:space="preserve">
+    <value> No screens.</value>
+  </data>
+  <data name="Empty.FindFiles" xml:space="preserve">
+    <value> Type a name pattern and press Enter.</value>
+  </data>
+  <data name="Empty.Watchlist" xml:space="preserve">
+    <value> The watchlist is empty — press a to add a stock.</value>
+  </data>
+  <data name="Empty.StockNothing" xml:space="preserve">
+    <value> Nothing found.</value>
+  </data>
+  <data name="Empty.Sync" xml:space="preserve">
+    <value> Press p to compare the two panels and list what would change.</value>
+  </data>
+  <data name="Sync.BothWays" xml:space="preserve">
+    <value>both ways, newer wins</value>
+  </data>
+  <data name="Sync.LeftToRight" xml:space="preserve">
+    <value>left to right</value>
+  </data>
+  <data name="Sync.RightToLeft" xml:space="preserve">
+    <value>right to left</value>
+  </data>
+  <data name="Sync.Options" xml:space="preserve">
+    <value> Direction: {0}   Subfolders: {1}   Delete extras: {2}</value>
+  </data>
+  <data name="Sync.Yes" xml:space="preserve">
+    <value>yes</value>
+  </data>
+  <data name="Sync.No" xml:space="preserve">
+    <value>no</value>
+  </data>
+  <data name="Msg.ComparingProgress" xml:space="preserve">
+    <value> Comparing… {0}</value>
+  </data>
+  <data name="Empty.Tasks" xml:space="preserve">
+    <value> No background tasks are running.</value>
+  </data>
+  <data name="Empty.Themes" xml:space="preserve">
+    <value> No themes available.</value>
+  </data>
+  <data name="Notify.UpdateAvailable" xml:space="preserve">
+    <value>iTerminal {0} is available</value>
+  </data>
+  <data name="Notify.UpdateDetail" xml:space="preserve">
+    <value>You have {0}. Download it from {1}</value>
+  </data>
+  <data name="Web.Stopped" xml:space="preserve">
+    <value>Stopped.</value>
+  </data>
+  <data name="Web.Loading" xml:space="preserve">
+    <value>Loading {0}…</value>
+  </data>
+  <data name="OAuth.SignIn" xml:space="preserve">
+    <value>Sign in to {0}</value>
+  </data>
+  <data name="OAuth.SignInDetail" xml:space="preserve">
+    <value>Open {0} and enter {1}</value>
+  </data>
+  <data name="OAuth.SignedIn" xml:space="preserve">
+    <value>Signed in to {0}</value>
+  </data>
+  <data name="OAuth.SignedInDetail" xml:space="preserve">
+    <value>Refresh the panel (Ctrl+R) to list it.</value>
+  </data>
+  <data name="OAuth.Failed" xml:space="preserve">
+    <value>{0} sign-in failed</value>
+  </data>
+  <data name="OAuth.Refused" xml:space="preserve">
+    <value>The request was refused.</value>
+  </data>
+  <data name="OAuth.Expired" xml:space="preserve">
+    <value>{0} sign-in expired</value>
+  </data>
+  <data name="OAuth.ExpiredDetail" xml:space="preserve">
+    <value>Open the drive again to get a new code.</value>
+  </data>
+  <data name="Msg.DocIndexFailed" xml:space="preserve">
+    <value>Document indexing failed: {0}</value>
+  </data>
+  <data name="Msg.IndexedTrack" xml:space="preserve">
+    <value>Indexed {0} track from {1}.</value>
+  </data>
+  <data name="Msg.IndexedTracks" xml:space="preserve">
+    <value>Indexed {0} tracks from {1}.</value>
+  </data>
+  <data name="Msg.MusicIndexFailed" xml:space="preserve">
+    <value>Music indexing failed: {0}</value>
+  </data>
 </root>

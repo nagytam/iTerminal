@@ -168,7 +168,7 @@ public class DocumentManagerDialog : SplitPaneDialog
         {
             Label = iConsole.Localization.UiText.Get("Label.Search", "Search"),
             MaxLength = 512,
-            Placeholder = "words to look for in your documents",
+            Placeholder = UiText.Get("Placeholder.DocumentWords", UiText.Get("Placeholder.DocumentWords", "words to look for in your documents")),
         };
         _searchBox.PropertyChanged += OnSearchTextChanged;
 

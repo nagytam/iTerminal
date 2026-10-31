@@ -1861,4 +1861,163 @@
   <data name="Dialog.MailAccountTitle" xml:space="preserve">
     <value>Levelezés: {0}</value>
   </data>
+  <data name="DiskUsage.Partial" xml:space="preserve">
+    <value>RÉSZLEGES</value>
+  </data>
+  <data name="DiskUsage.ByName" xml:space="preserve">
+    <value>NÉV SZERINT</value>
+  </data>
+  <data name="DiskUsage.BySize" xml:space="preserve">
+    <value>MÉRET SZERINT</value>
+  </data>
+  <data name="Placeholder.DocumentWords" xml:space="preserve">
+    <value>a dokumentumokban keresendő szavak</value>
+  </data>
+  <data name="Msg.LinkPath" xml:space="preserve">
+    <value>hivatkozás {0}</value>
+  </data>
+  <data name="Label.Command" xml:space="preserve">
+    <value>Parancs</value>
+  </data>
+  <data name="Placeholder.CommandExample" xml:space="preserve">
+    <value>pl. code %f</value>
+  </data>
+  <data name="Msg.LabelsMultiple" xml:space="preserve">
+    <value>{0} elem. Hagyja a (keep) értéket és a címkéket üresen, hogy csak a beírtakat módosítsa.</value>
+  </data>
+  <data name="Dialog.LabelsTitleFile" xml:space="preserve">
+    <value>Színcímkék és címkék — {0}</value>
+  </data>
+  <data name="Dialog.LabelsTitle" xml:space="preserve">
+    <value>Színcímkék és címkék</value>
+  </data>
+  <data name="Empty.Favourites" xml:space="preserve">
+    <value> Még nincs kedvenc — a „Hozzáadás a kedvencekhez” menti a panelen látható mappát.</value>
+  </data>
+  <data name="Empty.History" xml:space="preserve">
+    <value> Még nem járt egyetlen mappában sem.</value>
+  </data>
+  <data name="Placeholder.PathExample" xml:space="preserve">
+    <value>pl. /home/en, C:\Users, ssh://gep/utvonal</value>
+  </data>
+  <data name="Empty.GitStaged" xml:space="preserve">
+    <value>  (nincs előkészítve)</value>
+  </data>
+  <data name="Empty.GitBranches" xml:space="preserve">
+    <value>  (nincs ág)</value>
+  </data>
+  <data name="Empty.GitCommits" xml:space="preserve">
+    <value>  (még nincs commit)</value>
+  </data>
+  <data name="Empty.GitStashes" xml:space="preserve">
+    <value>  (nincs félretett módosítás)</value>
+  </data>
+  <data name="Empty.IPhoneLooking" xml:space="preserve">
+    <value> Eszközök keresése…</value>
+  </data>
+  <data name="Empty.HostsLooking" xml:space="preserve">
+    <value> Gépek keresése a helyi hálózaton…</value>
+  </data>
+  <data name="Empty.HostsNone" xml:space="preserve">
+    <value> Nincs találat — az r újra keres.</value>
+  </data>
+  <data name="Empty.Loading" xml:space="preserve">
+    <value> Betöltés…</value>
+  </data>
+  <data name="Empty.PackagesFailed" xml:space="preserve">
+    <value> A csomagok nem listázhatók — az r újra próbálja.</value>
+  </data>
+  <data name="Empty.Processes" xml:space="preserve">
+    <value> Egy folyamat sem felel meg a szűrőnek.</value>
+  </data>
+  <data name="Empty.Screens" xml:space="preserve">
+    <value> Nincs képernyő.</value>
+  </data>
+  <data name="Empty.FindFiles" xml:space="preserve">
+    <value> Írjon be egy névmintát, és nyomjon Entert.</value>
+  </data>
+  <data name="Empty.Watchlist" xml:space="preserve">
+    <value> A figyelőlista üres — az a billentyű részvényt ad hozzá.</value>
+  </data>
+  <data name="Empty.StockNothing" xml:space="preserve">
+    <value> Nincs találat.</value>
+  </data>
+  <data name="Empty.Sync" xml:space="preserve">
+    <value> A p összehasonlítja a két panelt, és felsorolja a változásokat.</value>
+  </data>
+  <data name="Sync.BothWays" xml:space="preserve">
+    <value>mindkét irányban, az újabb nyer</value>
+  </data>
+  <data name="Sync.LeftToRight" xml:space="preserve">
+    <value>balról jobbra</value>
+  </data>
+  <data name="Sync.RightToLeft" xml:space="preserve">
+    <value>jobbról balra</value>
+  </data>
+  <data name="Sync.Options" xml:space="preserve">
+    <value> Irány: {0}   Almappák: {1}   Felesleges törlése: {2}</value>
+  </data>
+  <data name="Sync.Yes" xml:space="preserve">
+    <value>igen</value>
+  </data>
+  <data name="Sync.No" xml:space="preserve">
+    <value>nem</value>
+  </data>
+  <data name="Msg.ComparingProgress" xml:space="preserve">
+    <value> Összehasonlítás… {0}</value>
+  </data>
+  <data name="Empty.Tasks" xml:space="preserve">
+    <value> Nem fut háttérfeladat.</value>
+  </data>
+  <data name="Empty.Themes" xml:space="preserve">
+    <value> Nincs elérhető téma.</value>
+  </data>
+  <data name="Notify.UpdateAvailable" xml:space="preserve">
+    <value>Elérhető az iTerminal {0}</value>
+  </data>
+  <data name="Notify.UpdateDetail" xml:space="preserve">
+    <value>Az Ön verziója: {0}. Letöltés: {1}</value>
+  </data>
+  <data name="Web.Stopped" xml:space="preserve">
+    <value>Leállítva.</value>
+  </data>
+  <data name="Web.Loading" xml:space="preserve">
+    <value>{0} betöltése…</value>
+  </data>
+  <data name="OAuth.SignIn" xml:space="preserve">
+    <value>Bejelentkezés: {0}</value>
+  </data>
+  <data name="OAuth.SignInDetail" xml:space="preserve">
+    <value>Nyissa meg: {0}, és írja be: {1}</value>
+  </data>
+  <data name="OAuth.SignedIn" xml:space="preserve">
+    <value>Bejelentkezett: {0}</value>
+  </data>
+  <data name="OAuth.SignedInDetail" xml:space="preserve">
+    <value>Frissítse a panelt (Ctrl+R) a listázáshoz.</value>
+  </data>
+  <data name="OAuth.Failed" xml:space="preserve">
+    <value>A bejelentkezés sikertelen: {0}</value>
+  </data>
+  <data name="OAuth.Refused" xml:space="preserve">
+    <value>A kérést elutasították.</value>
+  </data>
+  <data name="OAuth.Expired" xml:space="preserve">
+    <value>A bejelentkezés lejárt: {0}</value>
+  </data>
+  <data name="OAuth.ExpiredDetail" xml:space="preserve">
+    <value>Nyissa meg újra a meghajtót új kódért.</value>
+  </data>
+  <data name="Msg.DocIndexFailed" xml:space="preserve">
+    <value>A dokumentumok indexelése sikertelen: {0}</value>
+  </data>
+  <data name="Msg.IndexedTrack" xml:space="preserve">
+    <value>{0} szám indexelve innen: {1}.</value>
+  </data>
+  <data name="Msg.IndexedTracks" xml:space="preserve">
+    <value>{0} szám indexelve innen: {1}.</value>
+  </data>
+  <data name="Msg.MusicIndexFailed" xml:space="preserve">
+    <value>A zene indexelése sikertelen: {0}</value>
+  </data>
 </root>

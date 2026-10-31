@@ -196,7 +196,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
         _scanning = true;
         _status = "Scanning local network...";
         _statusIsError = false;
-        _hostListBox.EmptyText = " Looking for hosts on the local network…";
+        _hostListBox.EmptyText = UiText.Get("Empty.HostsLooking", UiText.Get("Empty.HostsLooking", " Looking for hosts on the local network…"));
 
         var savedRows = BuildSavedProfileRows();
         _hostItems.ReplaceAll(savedRows);
@@ -234,7 +234,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
                 if (!cts.IsCancellationRequested)
                 {
                     _scanning = false;
-                    _hostListBox.EmptyText = " No hosts found — r scans again.";
+                    _hostListBox.EmptyText = UiText.Get("Empty.HostsNone", UiText.Get("Empty.HostsNone", " No hosts found — r scans again."));
 
                     // Only the progress note is cleared: a scan error was shown and then wiped by
                     // this same line a moment later, so a failed scan read as an empty network.

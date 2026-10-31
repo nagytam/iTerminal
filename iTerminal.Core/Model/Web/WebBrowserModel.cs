@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Net;
 using System.Text;
 using iTerminal.Core.Services.Web;
@@ -479,7 +480,7 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
             }
 
             Cancel(tab);
-            tab.Message = "Stopped.";
+            tab.Message = UiText.Get("Web.Stopped", "Stopped.");
             tab.Touch();
         }
     }
@@ -505,7 +506,7 @@ internal sealed class WebBrowserModel(IWebFetcher fetcher, WebBrowserStore store
             generation = ++tab.Generation;
             tab.IsLoading = true;
             tab.LoadingUrl = request.Url;
-            tab.Message = "Loading " + request.Url + "…";
+            tab.Message = string.Format(UiText.Get("Web.Loading", "Loading {0}…"), request.Url);
             tab.Touch();
         }
 

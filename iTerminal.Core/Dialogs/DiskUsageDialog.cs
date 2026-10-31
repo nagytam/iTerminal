@@ -139,7 +139,7 @@ public class DiskUsageDialog : Dialog
         if (_current.Size <= 0)
         {
             _chart.IsVisible = false;
-            _badge.Text = "PARTIAL";
+            _badge.Text = UiText.Get("DiskUsage.Partial", UiText.Get("DiskUsage.Partial", "PARTIAL"));
             _badge.Kind = BadgeKind.Warning;
             PlaceChart();
             _badge.IsVisible = true;
@@ -155,7 +155,7 @@ public class DiskUsageDialog : Dialog
         _chart.Items = items;
         _chart.IsVisible = items.Count > 0;
 
-        _badge.Text = _current.Inaccessible ? "PARTIAL" : _sortByName ? "BY NAME" : "BY SIZE";
+        _badge.Text = _current.Inaccessible ? UiText.Get("DiskUsage.Partial", UiText.Get("DiskUsage.Partial", "PARTIAL")) : _sortByName ? UiText.Get("DiskUsage.ByName", UiText.Get("DiskUsage.ByName", "BY NAME")) : UiText.Get("DiskUsage.BySize", UiText.Get("DiskUsage.BySize", "BY SIZE"));
         _badge.Kind = _current.Inaccessible ? BadgeKind.Warning : BadgeKind.Info;
         PlaceChart();
         _badge.IsVisible = true;

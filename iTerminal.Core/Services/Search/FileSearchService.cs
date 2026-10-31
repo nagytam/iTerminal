@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using Serilog;
 
 namespace iTerminal.Core.Services.Search;
@@ -63,7 +64,7 @@ public sealed class FileSearchService(ILogger? logger = null) : IFileSearchServi
             Query = query;
             Progress = new FileSearchProgress(0, 0, 0, query.StartFolder);
             IsRunning = true;
-            StatusMessage = "Searching…";
+            StatusMessage = UiText.Get("Msg.Searching", "Searching…");
             Version++;
         }
 

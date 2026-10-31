@@ -110,7 +110,7 @@ public class JsonViewerDialog : Dialog
 
         root.IsFocused = true;
         _treeView.Root = root;
-        _statusLabel.Text = $"{root.Children.Count:N0} top-level item(s)";
+        _statusLabel.Text = string.Format(UiText.Get("Json.TopLevelItems", "{0:N0} top-level item(s)"), root.Children.Count);
         StateHasChanged();
     }
 
