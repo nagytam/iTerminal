@@ -41,7 +41,7 @@ public class ImageMetadataEditorDialog : Dialog
         _copyright = Field("Copyright", current.Copyright, beepService, dateTimeProviderService, themeService);
         _comment = Field("Comment", current.Comment, beepService, dateTimeProviderService, themeService);
         _message = new Label(ImageMetadataWriter.CanWrite(path) ? string.Empty : UiText.Get("Msg.TextOnlyJpegPng", "Text can only be written for JPEG and PNG files."), themeService);
-        Title = "Image text — " + Path.GetFileName(path);
+        Title = string.Format(UiText.Get("Dialog.ImageTextTitle", "Image text — {0}"), Path.GetFileName(path));
         foreach (Control control in new Control[] { _description, _artist, _copyright, _comment, _message })
         {
             AddControl(control);

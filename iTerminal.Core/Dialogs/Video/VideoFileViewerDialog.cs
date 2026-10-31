@@ -118,7 +118,7 @@ public class VideoFileViewerDialog : Dialog
         _openError = string.Empty;
         _ascii = null;
         _asciiSource = null;
-        Title = "Video — " + Path.GetFileName(FilePath);
+        Title = string.Format(UiText.Get("Dialog.VideoTitle", "Video — {0}"), Path.GetFileName(FilePath));
 
         StartOpening();
         StateHasChanged();

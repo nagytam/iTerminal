@@ -247,7 +247,7 @@ public class StockBrowserDialog : SplitPaneDialog
         }
 
         _isBusy = true;
-        SetMessage("Updating quotes…");
+        SetMessage(UiText.Get("Msg.UpdatingQuotes", "Updating quotes…"));
         _ = Task.Run(async () =>
         {
             try
@@ -375,14 +375,14 @@ public class StockBrowserDialog : SplitPaneDialog
         }
 
         _isBusy = true;
-        SetMessage($"Adding {symbol.ToUpperInvariant()}…");
+        SetMessage(string.Format(UiText.Get("Msg.AddingSymbol", "Adding {0}…"), symbol.ToUpperInvariant()));
         _ = Task.Run(async () =>
         {
             try
             {
                 var stock = await _stockService.AddAsync(symbol, name);
                 _closeAdding = true;
-                SetMessage($"Added {stock.Symbol}");
+                SetMessage(string.Format(UiText.Get("Msg.AddedSymbol", "Added {0}"), stock.Symbol));
             }
             catch (Exception exception)
             {

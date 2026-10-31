@@ -1774,4 +1774,52 @@
   <data name="Msg.TextOnlyJpegPng" xml:space="preserve">
     <value>Text kann nur für JPEG- und PNG-Dateien geschrieben werden.</value>
   </data>
+  <data name="Msg.DeleteItems" xml:space="preserve">
+    <value>{0} Elemente löschen</value>
+  </data>
+  <data name="Msg.CachedTextUnreadable" xml:space="preserve">
+    <value>Der zwischengespeicherte Text konnte nicht gelesen werden: {0}</value>
+  </data>
+  <data name="Msg.NotGitRepo" xml:space="preserve">
+    <value>Kein Git-Repository: {0}</value>
+  </data>
+  <data name="Msg.CommitCancelled" xml:space="preserve">
+    <value>Commit abgebrochen — eine leere Nachricht committet nichts.</value>
+  </data>
+  <data name="Msg.NothingToStash" xml:space="preserve">
+    <value>Nichts zum Stashen — der Arbeitsbaum ist sauber.</value>
+  </data>
+  <data name="Msg.NothingToAmend" xml:space="preserve">
+    <value>Nichts zu ändern — es gibt noch keinen Commit.</value>
+  </data>
+  <data name="Msg.UpdatingQuotes" xml:space="preserve">
+    <value>Kurse werden aktualisiert…</value>
+  </data>
+  <data name="Msg.AddingSymbol" xml:space="preserve">
+    <value>{0} wird hinzugefügt…</value>
+  </data>
+  <data name="Msg.AddedSymbol" xml:space="preserve">
+    <value>{0} hinzugefügt</value>
+  </data>
+  <data name="Msg.CurrentTimeZone" xml:space="preserve">
+    <value>Das ist die aktuelle Zeitzone.</value>
+  </data>
+  <data name="Dialog.TagsTitle" xml:space="preserve">
+    <value>Tags — {0}</value>
+  </data>
+  <data name="Dialog.ImageTitle" xml:space="preserve">
+    <value>Bild — {0}</value>
+  </data>
+  <data name="Dialog.VideoTitle" xml:space="preserve">
+    <value>Video — {0}</value>
+  </data>
+  <data name="Dialog.ImageTextTitle" xml:space="preserve">
+    <value>Bildtext — {0}</value>
+  </data>
+  <data name="Msg.WorkspaceName" xml:space="preserve">
+    <value>Arbeitsbereich „{0}“</value>
+  </data>
+  <data name="Msg.WorkspaceBackExcept" xml:space="preserve">
+    <value>Arbeitsbereich „{0}“ ist wiederhergestellt, außer:</value>
+  </data>
 </root>

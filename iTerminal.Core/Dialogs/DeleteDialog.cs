@@ -145,7 +145,7 @@ public class DeleteDialog : FormDialog
 
         if (IsMultiple)
         {
-            Title = $"Delete {Urls.Count} items";
+            Title = string.Format(UiText.Get("Msg.DeleteItems", "Delete {0} items"), Urls.Count);
         }
         else if (new Url(Url).PathType == PathType.File)
         {

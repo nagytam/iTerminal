@@ -453,7 +453,7 @@ public class DocumentManagerDialog : SplitPaneDialog
                 if (generation == Volatile.Read(ref _previewGeneration))
                 {
                     _previewLoading = false;
-                    _previewText = $"Could not read the cached text: {exception.Message}";
+                    _previewText = string.Format(UiText.Get("Msg.CachedTextUnreadable", "Could not read the cached text: {0}"), exception.Message);
                     WrapPreview(force: true);
                 }
             }
