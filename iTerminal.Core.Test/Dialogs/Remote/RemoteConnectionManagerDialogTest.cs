@@ -472,4 +472,15 @@ public class RemoteConnectionManagerDialogTest
         Assert.IsTrue(saved.Secure);
         Assert.AreEqual("davs://dav.example.com/", saved.DriveUrl);
     }
+
+    [TestMethod]
+    public async Task OnAnEightyColumnScreen_TheHeaderSentenceIsNotCutOff()
+    {
+        var h = Create();
+        await ShowAsync(h.Dialog, new Size(80, 24));
+
+        // The header explaining where passwords live was cut in the middle ("keep theirs in") at 80 columns.
+        AssertScreenContains(Render(h.Dialog, new Size(80, 24)), "FTP/WebDAV use the password manager");
+    }
+
 }

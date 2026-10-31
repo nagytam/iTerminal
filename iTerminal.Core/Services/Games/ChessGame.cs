@@ -312,7 +312,7 @@ public class ChessGame : GameBase
         int seed = Random.Next();
         return token =>
         {
-            ChessMove? move = new ChessSearch(new Random(seed), token, 1500).Best(snapshot);
+            ChessMove? move = new ChessSearch(new Random(seed), token, 2000, 6).Best(snapshot);
             return move is null ? null : () =>
             {
                 if (version == Version)
