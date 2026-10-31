@@ -107,7 +107,7 @@ public class EditLinkDialog : FormDialog
         TargetPath = string.Empty;
         _checkBoxHard.IsChecked = false;
         _checkBoxRelative.IsChecked = false;
-        _labelKind.Text = "Reading the link…";
+        _labelKind.Text = UiText.Get("Msg.ReadingLink", "Reading the link…");
         _saveButton.IsEnabled = false;
         SetError(string.Empty);
     }
@@ -140,13 +140,13 @@ public class EditLinkDialog : FormDialog
             var written = info.SymbolicTarget!;
             TargetPath = written;
             _checkBoxRelative.IsChecked = !Path.IsPathRooted(written);
-            _labelKind.Text = "A symbolic link to a " + (info.IsFolder ? "folder." : "file.");
+            _labelKind.Text = (info.IsFolder ? UiText.Get("Msg.SymlinkFolder", "A symbolic link to a folder.") : UiText.Get("Msg.SymlinkFile", "A symbolic link to a file."));
             _saveButton.IsEnabled = true;
         }
         else if (info.IsHard)
         {
             _checkBoxHard.IsChecked = true;
-            _labelKind.Text = $"A hard link: this file has {info.NameCount} names. Type the file this name should lead to.";
+            _labelKind.Text = string.Format(UiText.Get("Msg.HardLinkNames", "A hard link: this file has {0} names. Type the file this name should lead to."), info.NameCount);
             _saveButton.IsEnabled = true;
         }
         else

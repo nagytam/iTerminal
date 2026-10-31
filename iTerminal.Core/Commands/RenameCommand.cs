@@ -1,4 +1,5 @@
-﻿using iConsole.Commands;
+﻿using iConsole.Localization;
+using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iTerminal.Core.Dialogs;
@@ -17,7 +18,7 @@ public class RenameCommand(IContentModelService contentModelService)
         {
             if (string.IsNullOrWhiteSpace(renameDialog.NewName))
             {
-                renameDialog.ErrorMessage.Text = "Type the new name.";
+                renameDialog.ErrorMessage.Text = UiText.Get("Msg.TypeNewName", "Type the new name.");
                 return;
             }
 

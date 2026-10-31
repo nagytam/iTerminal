@@ -1714,4 +1714,64 @@
   <data name="Notify.SkippedCount" xml:space="preserve">
     <value>{0} ignoré(s) : {1}</value>
   </data>
+  <data name="Msg.NoPanelDelete" xml:space="preserve">
+    <value>Il n'y a pas de panneau où supprimer.</value>
+  </data>
+  <data name="Msg.TypeNewName" xml:space="preserve">
+    <value>Saisissez le nouveau nom.</value>
+  </data>
+  <data name="Msg.ReadingLink" xml:space="preserve">
+    <value>Lecture du lien…</value>
+  </data>
+  <data name="Msg.SymlinkFolder" xml:space="preserve">
+    <value>Un lien symbolique vers un dossier.</value>
+  </data>
+  <data name="Msg.SymlinkFile" xml:space="preserve">
+    <value>Un lien symbolique vers un fichier.</value>
+  </data>
+  <data name="Msg.HardLinkNames" xml:space="preserve">
+    <value>Un lien physique : ce fichier a {0} noms. Saisissez le fichier vers lequel ce nom doit mener.</value>
+  </data>
+  <data name="Msg.TypeCommand" xml:space="preserve">
+    <value>Saisissez la commande qui ouvre le fichier, comme notepad ou code %f.</value>
+  </data>
+  <data name="Msg.SayWhichFiles" xml:space="preserve">
+    <value>Indiquez les fichiers concernés, comme *.jpg;*.png — ou * pour tous.</value>
+  </data>
+  <data name="Msg.BlankTagsRemove" xml:space="preserve">
+    <value>Des étiquettes vides les suppriment. Les étiquettes sont séparées par des virgules.</value>
+  </data>
+  <data name="Msg.Saving" xml:space="preserve">
+    <value>Enregistrement…</value>
+  </data>
+  <data name="Msg.Drive" xml:space="preserve">
+    <value>Lecteur {0}</value>
+  </data>
+  <data name="Msg.DriveErased" xml:space="preserve">
+    <value>Tout sur ce lecteur sera effacé.</value>
+  </data>
+  <data name="Msg.Formatting" xml:space="preserve">
+    <value>Formatage de {0} : ...</value>
+  </data>
+  <data name="Msg.OneTagAtATime" xml:space="preserve">
+    <value>Une étiquette à la fois.</value>
+  </data>
+  <data name="Msg.TypePattern" xml:space="preserve">
+    <value>Saisissez un motif, comme *.jpg;*.png.</value>
+  </data>
+  <data name="Msg.NoPanelMark" xml:space="preserve">
+    <value>Il n'y a pas de panneau où marquer.</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Erreur : {0}</value>
+  </data>
+  <data name="Msg.ErrorDate" xml:space="preserve">
+    <value>Erreur : une date s'écrit yyyy-MM-dd HH:mm:ss, par exemple 2024-05-01 10:20:30.</value>
+  </data>
+  <data name="Msg.ErrorMode" xml:space="preserve">
+    <value>Erreur : le mode est de trois ou quatre chiffres octaux, par exemple 644 ou 755.</value>
+  </data>
+  <data name="Msg.TextOnlyJpegPng" xml:space="preserve">
+    <value>Le texte ne peut être écrit que pour les fichiers JPEG et PNG.</value>
+  </data>
 </root>

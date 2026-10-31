@@ -40,7 +40,7 @@ public class ImageMetadataEditorDialog : Dialog
         _artist = Field("Artist", current.Artist, beepService, dateTimeProviderService, themeService);
         _copyright = Field("Copyright", current.Copyright, beepService, dateTimeProviderService, themeService);
         _comment = Field("Comment", current.Comment, beepService, dateTimeProviderService, themeService);
-        _message = new Label(ImageMetadataWriter.CanWrite(path) ? string.Empty : "Text can only be written for JPEG and PNG files.", themeService);
+        _message = new Label(ImageMetadataWriter.CanWrite(path) ? string.Empty : UiText.Get("Msg.TextOnlyJpegPng", "Text can only be written for JPEG and PNG files."), themeService);
         Title = "Image text — " + Path.GetFileName(path);
         foreach (Control control in new Control[] { _description, _artist, _copyright, _comment, _message })
         {
@@ -77,13 +77,13 @@ public class ImageMetadataEditorDialog : Dialog
 
         if (!ImageMetadataWriter.CanWrite(_path))
         {
-            _message.Text = "Text can only be written for JPEG and PNG files.";
+            _message.Text = UiText.Get("Msg.TextOnlyJpegPng", "Text can only be written for JPEG and PNG files.");
             StateHasChanged();
             return false;
         }
 
         ImageMetadataEdit edit = Edit();
-        _message.Text = "Saving…";
+        _message.Text = UiText.Get("Msg.Saving", "Saving…");
         _saving = Task.Run(() => ImageMetadataWriter.Write(_path, edit)).ContinueWith(task =>
         {
             // The result is shown on the idle pass, on the thread that owns the controls.
@@ -97,7 +97,7 @@ public class ImageMetadataEditorDialog : Dialog
     public override void OnIdle()
     {
         base.OnIdle();
-        if (_saving is { IsCompleted: true } && _message.Text == "Saving…")
+        if (_saving is { IsCompleted: true } && _message.Text == UiText.Get("Msg.Saving", "Saving…"))
         {
             if (_saveSucceeded)
             {

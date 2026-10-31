@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -109,7 +110,7 @@ public class LabelFilterDialog : FormDialog
         {
             if (tag.Contains(','))
             {
-                _message.Text = "One tag at a time.";
+                _message.Text = UiText.Get("Msg.OneTagAtATime", "One tag at a time.");
                 StateHasChanged();
                 return false;
             }

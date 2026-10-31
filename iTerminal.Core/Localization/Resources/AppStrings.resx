@@ -1714,4 +1714,64 @@
   <data name="Notify.SkippedCount" xml:space="preserve">
     <value>{0} skipped: {1}</value>
   </data>
+  <data name="Msg.NoPanelDelete" xml:space="preserve">
+    <value>There is no panel to delete from.</value>
+  </data>
+  <data name="Msg.TypeNewName" xml:space="preserve">
+    <value>Type the new name.</value>
+  </data>
+  <data name="Msg.ReadingLink" xml:space="preserve">
+    <value>Reading the link…</value>
+  </data>
+  <data name="Msg.SymlinkFolder" xml:space="preserve">
+    <value>A symbolic link to a folder.</value>
+  </data>
+  <data name="Msg.SymlinkFile" xml:space="preserve">
+    <value>A symbolic link to a file.</value>
+  </data>
+  <data name="Msg.HardLinkNames" xml:space="preserve">
+    <value>A hard link: this file has {0} names. Type the file this name should lead to.</value>
+  </data>
+  <data name="Msg.TypeCommand" xml:space="preserve">
+    <value>Type the command that opens the file, such as notepad or code %f.</value>
+  </data>
+  <data name="Msg.SayWhichFiles" xml:space="preserve">
+    <value>Say which files it applies to, such as *.jpg;*.png — or * for all.</value>
+  </data>
+  <data name="Msg.BlankTagsRemove" xml:space="preserve">
+    <value>Blank tags remove them. Tags are separated by commas.</value>
+  </data>
+  <data name="Msg.Saving" xml:space="preserve">
+    <value>Saving…</value>
+  </data>
+  <data name="Msg.Drive" xml:space="preserve">
+    <value>Drive {0}</value>
+  </data>
+  <data name="Msg.DriveErased" xml:space="preserve">
+    <value>Everything on this drive will be erased.</value>
+  </data>
+  <data name="Msg.Formatting" xml:space="preserve">
+    <value>Formatting {0}: ...</value>
+  </data>
+  <data name="Msg.OneTagAtATime" xml:space="preserve">
+    <value>One tag at a time.</value>
+  </data>
+  <data name="Msg.TypePattern" xml:space="preserve">
+    <value>Type a pattern, such as *.jpg;*.png.</value>
+  </data>
+  <data name="Msg.NoPanelMark" xml:space="preserve">
+    <value>There is no panel to mark in.</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="Msg.ErrorDate" xml:space="preserve">
+    <value>Error: a date is yyyy-MM-dd HH:mm:ss, such as 2024-05-01 10:20:30.</value>
+  </data>
+  <data name="Msg.ErrorMode" xml:space="preserve">
+    <value>Error: the mode is three or four octal digits, such as 644 or 755.</value>
+  </data>
+  <data name="Msg.TextOnlyJpegPng" xml:space="preserve">
+    <value>Text can only be written for JPEG and PNG files.</value>
+  </data>
 </root>

@@ -188,7 +188,7 @@ public class PropertiesDialog : FormDialog
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
         {
             Properties = null;
-            _errorLabel.Text = "Error: " + exception.Message;
+            _errorLabel.Text = string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), exception.Message);
             return;
         }
 
@@ -401,7 +401,7 @@ public class PropertiesDialog : FormDialog
             || !TryChangedDate(ModifiedText, properties.Modified, out var modified)
             || !TryChangedDate(AccessedText, properties.Accessed, out var accessed))
         {
-            _errorLabel.Text = "Error: a date is yyyy-MM-dd HH:mm:ss, such as 2024-05-01 10:20:30.";
+            _errorLabel.Text = UiText.Get("Msg.ErrorDate", "Error: a date is yyyy-MM-dd HH:mm:ss, such as 2024-05-01 10:20:30.");
             return false;
         }
 
@@ -422,7 +422,7 @@ public class PropertiesDialog : FormDialog
             {
                 if (FilePropertiesService.ParseOctal(Mode) is not { } mode)
                 {
-                    _errorLabel.Text = "Error: the mode is three or four octal digits, such as 644 or 755.";
+                    _errorLabel.Text = UiText.Get("Msg.ErrorMode", "Error: the mode is three or four octal digits, such as 644 or 755.");
                     return false;
                 }
 
@@ -439,7 +439,7 @@ public class PropertiesDialog : FormDialog
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
         {
-            _errorLabel.Text = "Error: " + exception.Message;
+            _errorLabel.Text = string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), exception.Message);
             return false;
         }
 
