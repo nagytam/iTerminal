@@ -2020,4 +2020,145 @@
   <data name="Msg.MusicIndexFailed" xml:space="preserve">
     <value>A zene indexelése sikertelen: {0}</value>
   </data>
+  <data name="Task.Started" xml:space="preserve">
+    <value>elindítva</value>
+  </data>
+  <data name="Task.Finished" xml:space="preserve">
+    <value>befejezve</value>
+  </data>
+  <data name="Task.Cancelled" xml:space="preserve">
+    <value>megszakítva</value>
+  </data>
+  <data name="Task.VerbFailed" xml:space="preserve">
+    <value>{0} sikertelen: {1}</value>
+  </data>
+  <data name="Task.VerbStep" xml:space="preserve">
+    <value>{0}: {1}/{2}</value>
+  </data>
+  <data name="Task.BatchCancelled" xml:space="preserve">
+    <value>{0} megszakítva {1}/{2} elem után</value>
+  </data>
+  <data name="Task.BatchFinished1" xml:space="preserve">
+    <value>{0} befejezve: {1} elem</value>
+  </data>
+  <data name="Task.BatchFinished2" xml:space="preserve">
+    <value>{0} befejezve: {1}/{2} elem</value>
+  </data>
+  <data name="Task.Compress" xml:space="preserve">
+    <value>Tömörítés</value>
+  </data>
+  <data name="Task.ReadingFiles" xml:space="preserve">
+    <value>a fájlok beolvasása…</value>
+  </data>
+  <data name="Task.FetchingArchiveToAdd" xml:space="preserve">
+    <value>a bővítendő archívum lekérése…</value>
+  </data>
+  <data name="Task.CompressingInto" xml:space="preserve">
+    <value>Tömörítés ide: {0}</value>
+  </data>
+  <data name="Task.Uploading" xml:space="preserve">
+    <value>feltöltés…</value>
+  </data>
+  <data name="Task.CompressCancelled" xml:space="preserve">
+    <value>megszakítva — az archívum változatlan maradt</value>
+  </data>
+  <data name="Task.CompressFailed" xml:space="preserve">
+    <value>A tömörítés sikertelen: {0}</value>
+  </data>
+  <data name="Task.Delete" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
+  <data name="Task.DeleteFailed" xml:space="preserve">
+    <value>A törlés sikertelen: {0}</value>
+  </data>
+  <data name="Task.WithErrors" xml:space="preserve">
+    <value>{0}, {1} hibával: {2}</value>
+  </data>
+  <data name="Task.VerbFile" xml:space="preserve">
+    <value>{0}: fájl</value>
+  </data>
+  <data name="Task.VerbFolder" xml:space="preserve">
+    <value>{0}: mappa</value>
+  </data>
+  <data name="Task.To" xml:space="preserve">
+    <value>ide:</value>
+  </data>
+  <data name="Task.BytesCopied" xml:space="preserve">
+    <value>{0} másolva</value>
+  </data>
+  <data name="Task.VerbFileFailed" xml:space="preserve">
+    <value>{0} (fájl) sikertelen: {1}</value>
+  </data>
+  <data name="Task.VerbFolderFailed" xml:space="preserve">
+    <value>{0} (mappa) sikertelen: {1}</value>
+  </data>
+  <data name="Task.ProgressFiles" xml:space="preserve">
+    <value>{0} {1}/{2} fájl</value>
+  </data>
+  <data name="Task.RemovingSource" xml:space="preserve">
+    <value>Forrásmappa eltávolítása</value>
+  </data>
+  <data name="Task.WithErrorsSuffix" xml:space="preserve">
+    <value>{0}, {1} hibával{2}: {3}</value>
+  </data>
+  <data name="Task.ExtractCancelled" xml:space="preserve">
+    <value>A kicsomagolás megszakítva</value>
+  </data>
+  <data name="Task.FilesWritten" xml:space="preserve">
+    <value>{0} fájl már ki lett írva</value>
+  </data>
+  <data name="Task.ExtractStep" xml:space="preserve">
+    <value>Kicsomagolás: {0}/{1}</value>
+  </data>
+  <data name="Task.FetchingArchive" xml:space="preserve">
+    <value>az archívum lekérése…</value>
+  </data>
+  <data name="Task.ExtractStepNamed" xml:space="preserve">
+    <value>Kicsomagolás: {0}/{1}: {2}</value>
+  </data>
+  <data name="Task.Scanning" xml:space="preserve">
+    <value>Vizsgálat…</value>
+  </data>
+  <data name="Task.Scanned" xml:space="preserve">
+    <value>{0} fájl megvizsgálva</value>
+  </data>
+  <data name="Task.ScanOf" xml:space="preserve">
+    <value>Vizsgálat:</value>
+  </data>
+  <data name="Task.ScanFailed" xml:space="preserve">
+    <value>A vizsgálat sikertelen: {0}</value>
+  </data>
+  <data name="Task.FoundSoFar" xml:space="preserve">
+    <value>eddig {0} fájl található</value>
+  </data>
+  <data name="Task.Discovering" xml:space="preserve">
+    <value>Felderítés…</value>
+  </data>
+  <data name="Task.Discovered" xml:space="preserve">
+    <value>{0} fájl felderítve</value>
+  </data>
+  <data name="Task.DiscoveryOf" xml:space="preserve">
+    <value>Felderítés:</value>
+  </data>
+  <data name="Task.DiscoveryFailed" xml:space="preserve">
+    <value>A felderítés sikertelen: {0}</value>
+  </data>
+  <data name="Task.Synchronise" xml:space="preserve">
+    <value>Szinkronizálás</value>
+  </data>
+  <data name="Task.SyncCancelled" xml:space="preserve">
+    <value>A szinkronizálás megszakítva {0}/{1} lépés után</value>
+  </data>
+  <data name="Verb.Copy" xml:space="preserve">
+    <value>Másolás</value>
+  </data>
+  <data name="Verb.Move" xml:space="preserve">
+    <value>Áthelyezés</value>
+  </data>
+  <data name="Verb.Copying" xml:space="preserve">
+    <value>Másolás</value>
+  </data>
+  <data name="Verb.Moving" xml:space="preserve">
+    <value>Áthelyezés</value>
+  </data>
 </root>

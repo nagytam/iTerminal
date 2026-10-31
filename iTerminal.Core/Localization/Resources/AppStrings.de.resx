@@ -2020,4 +2020,145 @@
   <data name="Msg.MusicIndexFailed" xml:space="preserve">
     <value>Musikindizierung fehlgeschlagen: {0}</value>
   </data>
+  <data name="Task.Started" xml:space="preserve">
+    <value>gestartet</value>
+  </data>
+  <data name="Task.Finished" xml:space="preserve">
+    <value>abgeschlossen</value>
+  </data>
+  <data name="Task.Cancelled" xml:space="preserve">
+    <value>abgebrochen</value>
+  </data>
+  <data name="Task.VerbFailed" xml:space="preserve">
+    <value>{0} fehlgeschlagen: {1}</value>
+  </data>
+  <data name="Task.VerbStep" xml:space="preserve">
+    <value>{0} {1} von {2}</value>
+  </data>
+  <data name="Task.BatchCancelled" xml:space="preserve">
+    <value>{0} nach {1} von {2} Element(en) abgebrochen</value>
+  </data>
+  <data name="Task.BatchFinished1" xml:space="preserve">
+    <value>{0} abgeschlossen: {1} Element(e)</value>
+  </data>
+  <data name="Task.BatchFinished2" xml:space="preserve">
+    <value>{0} abgeschlossen: {1} von {2} Element(en)</value>
+  </data>
+  <data name="Task.Compress" xml:space="preserve">
+    <value>Komprimieren</value>
+  </data>
+  <data name="Task.ReadingFiles" xml:space="preserve">
+    <value>Dateien werden gelesen…</value>
+  </data>
+  <data name="Task.FetchingArchiveToAdd" xml:space="preserve">
+    <value>Archiv zum Hinzufügen wird geholt…</value>
+  </data>
+  <data name="Task.CompressingInto" xml:space="preserve">
+    <value>Komprimieren nach {0}</value>
+  </data>
+  <data name="Task.Uploading" xml:space="preserve">
+    <value>wird hochgeladen…</value>
+  </data>
+  <data name="Task.CompressCancelled" xml:space="preserve">
+    <value>abgebrochen — das Archiv blieb unverändert</value>
+  </data>
+  <data name="Task.CompressFailed" xml:space="preserve">
+    <value>Komprimieren fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Task.Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Task.DeleteFailed" xml:space="preserve">
+    <value>Löschen fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Task.WithErrors" xml:space="preserve">
+    <value>{0} mit {1} Fehler(n): {2}</value>
+  </data>
+  <data name="Task.VerbFile" xml:space="preserve">
+    <value>{0}: Datei</value>
+  </data>
+  <data name="Task.VerbFolder" xml:space="preserve">
+    <value>{0}: Ordner</value>
+  </data>
+  <data name="Task.To" xml:space="preserve">
+    <value>nach</value>
+  </data>
+  <data name="Task.BytesCopied" xml:space="preserve">
+    <value>{0} kopiert</value>
+  </data>
+  <data name="Task.VerbFileFailed" xml:space="preserve">
+    <value>{0} (Datei) fehlgeschlagen: {1}</value>
+  </data>
+  <data name="Task.VerbFolderFailed" xml:space="preserve">
+    <value>{0} (Ordner) fehlgeschlagen: {1}</value>
+  </data>
+  <data name="Task.ProgressFiles" xml:space="preserve">
+    <value>{0} {1}/{2} Datei(en)</value>
+  </data>
+  <data name="Task.RemovingSource" xml:space="preserve">
+    <value>Quellordner wird entfernt</value>
+  </data>
+  <data name="Task.WithErrorsSuffix" xml:space="preserve">
+    <value>{0} mit {1} Fehler(n){2}: {3}</value>
+  </data>
+  <data name="Task.ExtractCancelled" xml:space="preserve">
+    <value>Entpacken abgebrochen</value>
+  </data>
+  <data name="Task.FilesWritten" xml:space="preserve">
+    <value>{0} Datei(en) wurden bereits geschrieben</value>
+  </data>
+  <data name="Task.ExtractStep" xml:space="preserve">
+    <value>Entpacken {0} von {1}</value>
+  </data>
+  <data name="Task.FetchingArchive" xml:space="preserve">
+    <value>Archiv wird geholt…</value>
+  </data>
+  <data name="Task.ExtractStepNamed" xml:space="preserve">
+    <value>Entpacken {0} von {1}: {2}</value>
+  </data>
+  <data name="Task.Scanning" xml:space="preserve">
+    <value>Wird durchsucht…</value>
+  </data>
+  <data name="Task.Scanned" xml:space="preserve">
+    <value>{0} Datei(en) durchsucht</value>
+  </data>
+  <data name="Task.ScanOf" xml:space="preserve">
+    <value>Durchsuchen von</value>
+  </data>
+  <data name="Task.ScanFailed" xml:space="preserve">
+    <value>Durchsuchen fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Task.FoundSoFar" xml:space="preserve">
+    <value>bisher {0} Datei(en) gefunden</value>
+  </data>
+  <data name="Task.Discovering" xml:space="preserve">
+    <value>Wird erfasst…</value>
+  </data>
+  <data name="Task.Discovered" xml:space="preserve">
+    <value>{0} Datei(en) erfasst</value>
+  </data>
+  <data name="Task.DiscoveryOf" xml:space="preserve">
+    <value>Erfassen von</value>
+  </data>
+  <data name="Task.DiscoveryFailed" xml:space="preserve">
+    <value>Erfassen fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Task.Synchronise" xml:space="preserve">
+    <value>Synchronisieren</value>
+  </data>
+  <data name="Task.SyncCancelled" xml:space="preserve">
+    <value>Synchronisieren nach {0} von {1} Schritt(en) abgebrochen</value>
+  </data>
+  <data name="Verb.Copy" xml:space="preserve">
+    <value>Kopieren</value>
+  </data>
+  <data name="Verb.Move" xml:space="preserve">
+    <value>Verschieben</value>
+  </data>
+  <data name="Verb.Copying" xml:space="preserve">
+    <value>Kopiere</value>
+  </data>
+  <data name="Verb.Moving" xml:space="preserve">
+    <value>Verschiebe</value>
+  </data>
 </root>

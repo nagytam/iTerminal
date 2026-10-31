@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -34,21 +35,21 @@ public class FolderDeleteDiscoveryTask(IFileSystem target, Url folderUrl) : Tran
     {
         try
         {
-            Description = $"Scanning…{Environment.NewLine}{folderUrl.FullName.Shrink(60)}";
+            Description = string.Join(Environment.NewLine, UiText.Get("Task.Scanning", "Scanning…"), folderUrl.FullName.Shrink(60));
             await DiscoverAsync(folderUrl, CancellationToken);
             _channel.Writer.Complete();
-            Description = $"Scanned {_discovered} file(s){Environment.NewLine}{folderUrl.FullName.Shrink(60)}";
+            Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.Scanned", "Scanned {0} file(s)"), _discovered), folderUrl.FullName.Shrink(60));
             ProgressPercentage = 100;
         }
         catch (OperationCanceledException)
         {
             _channel.Writer.TryComplete();
-            Description = $"Scan of{Environment.NewLine}{folderUrl.FullName.Shrink(60)}{Environment.NewLine}cancelled";
+            Description = string.Join(Environment.NewLine, UiText.Get("Task.ScanOf", "Scan of"), folderUrl.FullName.Shrink(60), UiText.Get("Task.Cancelled", "cancelled"));
         }
         catch (Exception ex)
         {
             _channel.Writer.TryComplete(ex);
-            Description = $"Scan failed: {ex.Message}";
+            Description = string.Format(UiText.Get("Task.ScanFailed", "Scan failed: {0}"), ex.Message);
         }
     }
 
@@ -84,7 +85,7 @@ public class FolderDeleteDiscoveryTask(IFileSystem target, Url folderUrl) : Tran
             {
                 _discovered++;
                 ReportItems(_discovered, _discovered);
-                Description = $"Scanning…{Environment.NewLine}{_discovered} file(s) found so far";
+                Description = string.Join(Environment.NewLine, UiText.Get("Task.Scanning", "Scanning…"), string.Format(UiText.Get("Task.FoundSoFar", "{0} file(s) found so far"), _discovered));
                 await _channel.Writer.WriteAsync(childUrl, cancellationToken);
             }
         }

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Helper;
 using iConsole.Tasks;
 using System.ComponentModel;
@@ -39,7 +40,7 @@ public sealed class BatchOperationTask : BackgroundTask
         _steps = steps;
         _prepareAsync = prepareAsync;
         Name = $"{verb} {steps.Count} item{(steps.Count == 1 ? string.Empty : "s")}";
-        Description = $"{Name}{Environment.NewLine}started";
+        Description = string.Join(Environment.NewLine, Name, UiText.Get("Task.Started", "started"));
     }
 
     public IReadOnlyList<BatchStep> Steps => _steps;
@@ -62,7 +63,7 @@ public sealed class BatchOperationTask : BackgroundTask
         }
         catch (Exception exception)
         {
-            Description = $"{_verb} failed: {exception.Message}";
+            Description = string.Format(UiText.Get("Task.VerbFailed", "{0} failed: {1}"), _verb, exception.Message);
             Error = exception.Message;
             return;
         }
@@ -71,7 +72,7 @@ public sealed class BatchOperationTask : BackgroundTask
         {
             var step = _steps[index];
             var position = index;
-            Description = $"{_verb} {position + 1} of {_steps.Count}{Environment.NewLine}{step.Label.Shrink(60)}";
+            Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.VerbStep", "{0} {1} of {2}"), _verb, position + 1, _steps.Count), step.Label.Shrink(60));
 
             void OnStepChanged(object? sender, PropertyChangedEventArgs e)
             {
@@ -79,7 +80,7 @@ public sealed class BatchOperationTask : BackgroundTask
                 {
                     var stepPercentage = Math.Clamp(step.Primary.ProgressPercentage, 0, 100);
                     OnProgressChanged((position * 100 + stepPercentage) / _steps.Count);
-                    Description = $"{_verb} {position + 1} of {_steps.Count}{Environment.NewLine}{step.Primary.Description}";
+                    Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.VerbStep", "{0} {1} of {2}"), _verb, position + 1, _steps.Count), step.Primary.Description);
                 }
             }
 
@@ -125,19 +126,19 @@ public sealed class BatchOperationTask : BackgroundTask
         Failures = failures;
         if (CancellationToken.IsCancellationRequested)
         {
-            Description = $"{_verb} cancelled after {Succeeded} of {_steps.Count} item(s)";
+            Description = string.Format(UiText.Get("Task.BatchCancelled", "{0} cancelled after {1} of {2} item(s)"), _verb, Succeeded, _steps.Count);
             return;
         }
 
         ProgressPercentage = 100;
         if (failures.Count == 0)
         {
-            Description = $"{_verb} finished: {Succeeded} item(s)";
+            Description = string.Format(UiText.Get("Task.BatchFinished1", "{0} finished: {1} item(s)"), _verb, Succeeded);
             return;
         }
 
         Error = $"{failures.Count} of {_steps.Count} item(s) failed.";
-        Description = $"{_verb} finished: {Succeeded} of {_steps.Count} item(s)"
+        Description = string.Format(UiText.Get("Task.BatchFinished2", "{0} finished: {1} of {2} item(s)"), _verb, Succeeded, _steps.Count)
             + Environment.NewLine
             + string.Join(Environment.NewLine, failures);
     }

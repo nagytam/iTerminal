@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -48,7 +49,7 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
             }
 
             Subject = TaskNotificationHelper.TransferSubject(sourceUrl, _targetUrl);
-            Description = $"{Verb} file{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}{Environment.NewLine}to{Environment.NewLine}{_targetUrl.FullName.Shrink(60)}{Environment.NewLine}started";
+            Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.VerbFile", "{0} file"), Verb), sourceUrl.FullName.Shrink(60), UiText.Get("Task.To", "to"), _targetUrl.FullName.Shrink(60), UiText.Get("Task.Started", "started"));
 
             if (target.IsReadOnly)
             {
@@ -86,11 +87,11 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
                     if (totalBytes > 0)
                     {
                         OnProgressChanged(Math.Clamp(100L * bytesCopied / totalBytes, 0, 100));
-                        Description = $"{ProgressVerb}{Environment.NewLine}{sourceUrl.Name}{Environment.NewLine}{bytesCopied.ToFileSize()} / {totalBytes.ToFileSize()}";
+                        Description = string.Join(Environment.NewLine, ProgressVerb, sourceUrl.Name, $"{bytesCopied.ToFileSize()} / {totalBytes.ToFileSize()}");
                     }
                     else
                     {
-                        Description = $"{ProgressVerb}{Environment.NewLine}{sourceUrl.Name}{Environment.NewLine}{bytesCopied.ToFileSize()} copied";
+                        Description = string.Join(Environment.NewLine, ProgressVerb, sourceUrl.Name, string.Format(UiText.Get("Task.BytesCopied", "{0} copied"), bytesCopied.ToFileSize()));
                     }
                 });
 
@@ -110,16 +111,16 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
                 }
             }
 
-            Description = $"{Verb} file{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}{Environment.NewLine}to{Environment.NewLine}{_targetUrl.FullName.Shrink(60)}{Environment.NewLine}finished";
+            Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.VerbFile", "{0} file"), Verb), sourceUrl.FullName.Shrink(60), UiText.Get("Task.To", "to"), _targetUrl.FullName.Shrink(60), UiText.Get("Task.Finished", "finished"));
             ProgressPercentage = 100;
         }
         catch (OperationCanceledException)
         {
-            Description = $"{Verb} file{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}{Environment.NewLine}cancelled";
+            Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.VerbFile", "{0} file"), Verb), sourceUrl.FullName.Shrink(60), UiText.Get("Task.Cancelled", "cancelled"));
         }
         catch (Exception ex)
         {
-            Description = $"{Verb} file failed: {ex.Message}";
+            Description = string.Format(UiText.Get("Task.VerbFileFailed", "{0} file failed: {1}"), Verb, ex.Message);
             Error = ex.Message;
         }
     }

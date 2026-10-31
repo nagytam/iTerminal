@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
@@ -17,7 +18,7 @@ public class MoveCommand(
     IContentModelService contentModelService)
     : TransferCommand(taskManager, progressWindowFactory, errorPromptService, fileSystemResolver, contentModelService)
 {
-    protected override string OperationName => "Move";
+    protected override string OperationName => UiText.Get("Verb.Move", "Move");
 
     protected override bool RemovesSource => true;
 

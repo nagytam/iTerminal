@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -40,7 +41,7 @@ public sealed class FolderSyncTask(
         Subject = "folder synchronisation";
         var actions = plan.Actions;
         var done = 0;
-        Description = $"Synchronise{Environment.NewLine}{leftFolder.FullUrl.Shrink(60)}{Environment.NewLine}{rightFolder.FullUrl.Shrink(60)}";
+        Description = string.Join(Environment.NewLine, UiText.Get("Task.Synchronise", "Synchronise"), leftFolder.FullUrl.Shrink(60), rightFolder.FullUrl.Shrink(60));
         ReportItems(0, actions.Count);
         ReportBytes(0, actions.Where(a => !a.IsDelete && !a.Item.IsFolder).Sum(a => Math.Max(0, a.SourceSize ?? 0)));
 
@@ -49,7 +50,7 @@ public sealed class FolderSyncTask(
             foreach (var action in actions)
             {
                 CancellationToken.ThrowIfCancellationRequested();
-                Description = $"Synchronise{Environment.NewLine}{action.Describe().Shrink(70)}";
+                Description = string.Join(Environment.NewLine, UiText.Get("Task.Synchronise", "Synchronise"), action.Describe().Shrink(70));
                 try
                 {
                     if (action.IsDelete)
@@ -86,7 +87,7 @@ public sealed class FolderSyncTask(
         }
         catch (OperationCanceledException)
         {
-            Description = $"Synchronise cancelled after {done} of {actions.Count} step(s){Environment.NewLine}{Summarise()}";
+            Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.SyncCancelled", "Synchronise cancelled after {0} of {1} step(s)"), done, actions.Count), Summarise());
         }
     }
 

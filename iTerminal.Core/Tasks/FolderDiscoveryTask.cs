@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -30,21 +31,21 @@ public class FolderDiscoveryTask(IFileSystem source, IFileSystem target, Url sou
     {
         try
         {
-            Description = $"Discovering…{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}";
+            Description = string.Join(Environment.NewLine, UiText.Get("Task.Discovering", "Discovering…"), sourceUrl.FullName.Shrink(60));
             await DiscoverAsync(sourceUrl, folderTargetUrl, CancellationToken);
             _channel.Writer.Complete();
-            Description = $"Discovered {_discovered} file(s){Environment.NewLine}{sourceUrl.FullName.Shrink(60)}";
+            Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.Discovered", "Discovered {0} file(s)"), _discovered), sourceUrl.FullName.Shrink(60));
             ProgressPercentage = 100;
         }
         catch (OperationCanceledException)
         {
             _channel.Writer.TryComplete();
-            Description = $"Discovery of{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}{Environment.NewLine}cancelled";
+            Description = string.Join(Environment.NewLine, UiText.Get("Task.DiscoveryOf", "Discovery of"), sourceUrl.FullName.Shrink(60), UiText.Get("Task.Cancelled", "cancelled"));
         }
         catch (Exception ex)
         {
             _channel.Writer.TryComplete(ex);
-            Description = $"Discovery failed: {ex.Message}";
+            Description = string.Format(UiText.Get("Task.DiscoveryFailed", "Discovery failed: {0}"), ex.Message);
         }
     }
 
@@ -79,7 +80,7 @@ public class FolderDiscoveryTask(IFileSystem source, IFileSystem target, Url sou
                 {
                     AddTotalBytes(childUrl.Length);
                 }
-                Description = $"Discovering…{Environment.NewLine}{_discovered} file(s) found so far";
+                Description = string.Join(Environment.NewLine, UiText.Get("Task.Discovering", "Discovering…"), string.Format(UiText.Get("Task.FoundSoFar", "{0} file(s) found so far"), _discovered));
                 await _channel.Writer.WriteAsync((childUrl, childTargetUrl), cancellationToken);
             }
         }
