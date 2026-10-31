@@ -1,0 +1,2 @@
+iTerminal example: a plain text file.
+Second line, with some words to search for.
