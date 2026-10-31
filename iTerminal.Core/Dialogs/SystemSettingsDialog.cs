@@ -794,7 +794,7 @@ public class SystemSettingsDialog : Dialog
     private void CancelInput()
     {
         HideInput();
-        SetMessage("Cancelled.", error: false);
+        SetMessage(UiText.Get("Msg.Cancelled", "Cancelled."), error: false);
     }
 
     private void HideInput()
@@ -828,7 +828,7 @@ public class SystemSettingsDialog : Dialog
         {
             _confirmPrompt = null;
             _onConfirm = null;
-            SetMessage("Cancelled.", error: false);
+            SetMessage(UiText.Get("Msg.Cancelled", "Cancelled."), error: false);
         }
 
         return true;

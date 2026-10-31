@@ -865,7 +865,7 @@ public class MailDialog : Dialog
             _passwords.Save(new PasswordEntry
             {
                 Id = account.SecretProfileId,
-                Title = $"Mail: {account.Name}",
+                Title = string.Format(UiText.Get("Dialog.MailAccountTitle", "Mail: {0}"), account.Name),
                 Username = account.UserName,
                 Category = PasswordCategory.Mail,
                 Password = f[8].Text,

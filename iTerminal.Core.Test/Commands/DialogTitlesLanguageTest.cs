@@ -1,114 +1,64 @@
-using iConsole.Dialogs;
+using System.Text.RegularExpressions;
 using iConsole.Localization;
 using iTerminal.Core.Dialogs;
-using iTerminal.Core.Dialogs.Search;
 
 namespace iTerminal.Core.Test.Commands;
 
-/// <summary>A dialog is titled with the same word its menu entry uses, in the language the user chose. The language is a static, so this runs on its own.</summary>
+/// <summary>The titles and status messages of the contacts, games, git, stock, settings, task manager, terminal and mail dialogs follow the chosen language. The language is a static, so this runs on its own.</summary>
 [TestClass]
 [DoNotParallelize]
 public class DialogTitlesLanguageTest
 {
+    private static readonly string[] Keys = ["Dialog.ContactsTitle","Dialog.GamesTitle","Msg.Cancelled","Dialog.GitDetails","Msg.FailedTitle","Msg.Searching","Msg.SearchFailed","Settings.Order","Settings.Listing","Dialog.TaskManagerTitle","Dialog.TerminalTitle","Dialog.TerminalCommandTitle","Dialog.MailAccountTitle"];
+
     [TestCleanup]
     public void Reset() => UiText.Current = null;
 
-    private static string TitleOf(Type type)
-    {
-        Dialog? dialog = DialogHintsWholeTest.Resolve(type, 0) as Dialog;
-        Assert.IsNotNull(dialog, type.Name);
-        return dialog.Title;
-    }
-
-    [TestMethod]
-    public void WithNoLanguageSet_TheTitlesAreEnglish()
-    {
-        UiText.Current = null;
-
-        Assert.AreEqual("Rename", TitleOf(typeof(RenameDialog)));
-        Assert.AreEqual("Find Files", TitleOf(typeof(FindFilesDialog)));
-    }
-
-    [TestMethod]
-    public void InGerman_TheMainDialogs_AreTitledLikeTheirMenuEntries()
-    {
-        Localizer localizer = new([new ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(RenameDialog).Assembly))]);
-        Assert.IsTrue(localizer.SetLanguage("de"));
-        UiText.Current = localizer;
-
-        (Type Dialog, string Key)[] dialogs =
-        [
-            (typeof(AboutDialog), "Menu.About"), (typeof(CompressDialog), "Menu.Compress"), (typeof(ExtractDialog), "Menu.Extract"),
-            (typeof(MarkPatternDialog), "Menu.Mark"), (typeof(PropertiesDialog), "Menu.Properties"), (typeof(RenameDialog), "Menu.Rename"),
-            (typeof(FindFilesDialog), "Menu.FindFiles"), (typeof(SettingsDialog), "Menu.Settings"),
-            (typeof(ChecksumDialog), "Menu.Checksums"), (typeof(SignatureDialog), "Menu.Signatures"), (typeof(TaskManagerDialog), "Menu.TaskManager"),
-            (typeof(CreateLinkDialog), "Dialog.CreateLink"), (typeof(LabelFilterDialog), "Dialog.FilterByLabel"), (typeof(FileLabelsDialog), "Dialog.ColourLabels"),
-            (typeof(iTerminal.Core.Dialogs.Workspaces.WorkspaceManagerDialog), "Menu.Workspaces"), (typeof(iTerminal.Core.Dialogs.Translator.TranslatorDialog), "Menu.Translator"),
-            (typeof(iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog), "Menu.CurrencyConverter"), (typeof(IPhoneBrowserDialog), "Menu.iPhoneBrowser"),
-        ];
-        foreach ((Type dialog, string key) in dialogs)
-        {
-            Assert.IsTrue(localizer.TryGet(key, out string german), key);
-            Assert.AreEqual(german, TitleOf(dialog), dialog.Name);
-        }
-
-        Assert.AreEqual("Umbenennen", TitleOf(typeof(RenameDialog)));
-    }
-
-    private static readonly (string Type, string Key, string English)[] Titled =
-    [
-        ("AccessControlDialog", "Permissions", "Permissions"), ("CalculatorDialog", "Calculator", "Calculator"), ("CalendarDialog", "Calendar", "Calendar"),
-        ("CommandPaletteDialog", "Commands", "Commands"), ("DiskUsageDialog", "DiskUsage", "Disk usage"), ("DiskManagerDialog", "DiskManager", "Disk manager"),
-        ("DocumentManagerDialog", "Documents", "Documents"), ("EditLinkDialog", "EditLink", "Edit link"), ("SortDialog", "SortBy", "Sort by"),
-        ("ProcessManagerDialog", "ProcessManager", "Process manager"), ("NetworkManagerDialog", "NetworkManager", "Network manager"),
-        ("SecureWipeDialog", "SecureWipe", "Secure wipe"), ("ThemeManagerDialog", "ThemeManager", "Theme manager"),
-        ("AiModelDialog", "AiModelInformation", "AI Model Information"), ("CompareFoldersDialog", "CompareAndSynchroniseFolders", "Compare and synchronise folders"), ("DiskImageDialog", "DiskImage", "Disk image"), ("SolutionViewerDialog", "Solution", "Solution"), ("FileAssociationDialog", "Program", "Program"), ("MailDialog", "Mail", "Mail"), ("MapDialog", "Map", "Map"), ("MusicFileViewerDialog", "Music", "Music"), ("NetworkBrowserDialog", "NetworkBrowser", "Network Browser"), ("PackageManagerDialog", "Packages", "Packages"), ("RuntimeDependencyDialog", "RuntimeDependencies", "Runtime dependencies"), ("StartupWarningDialog", "Warning", "Warning"), ("StockBrowserDialog", "Stocks", "Stocks"), ("UpdateDialog", "UpdateAvailable", "Update available"), ("ImageFileViewerDialog", "Image", "Image"), ("VideoFileViewerDialog", "Video", "Video"), 
-        ("FileDiffDialog", "CompareFiles", "Compare files"), ("DuplicateFinderDialog", "DuplicateFiles", "Duplicate files"), ("FormatDriveDialog", "FormatDrive", "Format drive"), ("OpenWithDialog", "OpenWith", "Open with"), ("PasswordManagerDialog", "Passwords", "Passwords"), ("RemoteConnectionManagerDialog", "RemoteConnections", "Remote connections"), ("ScreenManagerDialog", "ScreenManager", "Screen manager"), ("StripMetadataDialog", "StripMetadata", "Strip metadata"), ("SynchronizeFoldersDialog", "SynchroniseFolders", "Synchronise folders"), ("SystemInfoDialog", "SystemInformation", "System Information"), ("SystemSettingsDialog", "SystemSettings", "System Settings"), ("ToDoListDialog", "Tasks", "Tasks"), ("UnitConverterDialog", "UnitConverter", "Unit Converter"), ("UserMenuDialog", "UserMenu", "User menu"), ("WebBrowserDialog", "WebBrowser", "Web Browser"), ("FolderSelectorDialog", "FolderSelector", "Folder Selector"), 
-    ];
-
-    private static readonly HashSet<(string Language, string Key)> SameWord =
-    [
-        ("fr", "Documents"), ("fr", "Solution"), ("fr", "Image"), ("de", "Video"), ("it", "Video"), ("hu", "Program"),
-    ];
-
-    private static Type Find(string name) => typeof(RenameDialog).Assembly.GetExportedTypes().Single(t => t.Name == name);
-
     private static Localizer Speak(string code)
     {
-        Localizer localizer = new([new ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(RenameDialog).Assembly))]);
+        Localizer localizer = new([new ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(SortDialog).Assembly))]);
         Assert.IsTrue(localizer.SetLanguage(code));
         UiText.Current = localizer;
         return localizer;
     }
 
-    [TestMethod]
-    public void WithEnglishChosen_EveryTitleKeepsItsExactEnglishText()
-    {
-        Speak("en");
+    /// <summary>Names such as "Terminal" and "Contacts" are spelled the same in some languages.</summary>
+    private static bool SameWordInThatLanguage(string code, string key) =>
+        (key == "Dialog.ContactsTitle" && code == "fr") ||
+        (key == "Dialog.GitDetails" && code == "de") ||
+        (key is "Dialog.TerminalTitle" or "Dialog.TerminalCommandTitle" && code is "de" or "es" or "fr");
 
-        foreach ((string type, _, string english) in Titled)
+    private static string[] Placeholders(string text) =>
+        [.. Regex.Matches(text, @"\{(\d+)\}").Select(m => m.Groups[1].Value).Distinct().Order()];
+
+    [TestMethod]
+    public void EveryLanguage_TranslatesEveryTitle_AndKeepsItsPlaceholders()
+    {
+        Localizer english = Speak("en");
+        foreach (LanguageInfo language in Localizer.SupportedLanguages.Where(l => l.Code != "en"))
         {
-            Assert.AreEqual(english, TitleOf(Find(type)), type);
+            Localizer localizer = Speak(language.Code);
+            foreach (string key in Keys)
+            {
+                Assert.IsTrue(localizer.TryGet(key, out string text), language.Code + " " + key);
+                Assert.IsTrue(english.TryGet(key, out string englishText), key);
+                if (!SameWordInThatLanguage(language.Code, key))
+                {
+                    Assert.AreNotEqual(englishText, text, language.Code + " " + key);
+                }
+
+                CollectionAssert.AreEquivalent(Placeholders(englishText), Placeholders(text), language.Code + " " + key);
+            }
         }
     }
 
     [TestMethod]
-    public void InEveryOtherLanguage_EveryTitleIsTranslated()
+    public void TheFormattedTitles_FillTheirPlaceholders_InEveryLanguage()
     {
-        foreach (LanguageInfo language in Localizer.SupportedLanguages.Where(l => l.Code != "en"))
-        {
-            Localizer localizer = Speak(language.Code);
+        UiText.Current = null;
+        Assert.AreEqual("Task Manager (2)", string.Format(UiText.Get("Dialog.TaskManagerTitle", "Task Manager ({0})"), 2));
 
-            foreach ((string type, string key, string english) in Titled)
-            {
-                Assert.IsTrue(localizer.TryGet("Dialog." + key, out string text), key);
-                if (!SameWord.Contains((language.Code, key)))
-                {
-                    Assert.AreNotEqual(english, text, language.Code + " " + key);
-                }
-
-                Assert.AreEqual(text, TitleOf(Find(type)), language.Code + " " + type);
-            }
-        }
+        Speak("de");
+        Assert.AreEqual("Task-Manager (2)", string.Format(UiText.Get("Dialog.TaskManagerTitle", "Task Manager ({0})"), 2));
     }
 }

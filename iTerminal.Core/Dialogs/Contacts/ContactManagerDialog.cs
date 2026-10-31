@@ -59,7 +59,7 @@ public class ContactManagerDialog : Dialog
     public ContactManagerDialog(ContactStore store, IThemeService themeService)
         : base(nameof(ContactManagerDialog), themeService)
     {
-        Title = "Contacts";
+        Title = UiText.Get("Dialog.ContactsTitle", "Contacts");
         _store = store;
     }
 

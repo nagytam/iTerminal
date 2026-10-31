@@ -43,7 +43,7 @@ public class GamesDialog : SplitPaneDialog
         : base(nameof(GamesDialog), themeService)
     {
         _games = games;
-        Title = "Games";
+        Title = UiText.Get("Dialog.GamesTitle", "Games");
     }
 
     #region Test seams

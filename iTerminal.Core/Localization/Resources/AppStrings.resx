@@ -1822,4 +1822,43 @@
   <data name="Msg.WorkspaceBackExcept" xml:space="preserve">
     <value>Workspace '{0}' is back, except:</value>
   </data>
+  <data name="Dialog.ContactsTitle" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
+  <data name="Dialog.GamesTitle" xml:space="preserve">
+    <value>Games</value>
+  </data>
+  <data name="Msg.Cancelled" xml:space="preserve">
+    <value>Cancelled.</value>
+  </data>
+  <data name="Dialog.GitDetails" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Msg.FailedTitle" xml:space="preserve">
+    <value>Failed: {0}</value>
+  </data>
+  <data name="Msg.Searching" xml:space="preserve">
+    <value>Searching…</value>
+  </data>
+  <data name="Msg.SearchFailed" xml:space="preserve">
+    <value>Error: search failed — {0}</value>
+  </data>
+  <data name="Settings.Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="Settings.Listing" xml:space="preserve">
+    <value>Listing</value>
+  </data>
+  <data name="Dialog.TaskManagerTitle" xml:space="preserve">
+    <value>Task Manager ({0})</value>
+  </data>
+  <data name="Dialog.TerminalTitle" xml:space="preserve">
+    <value>Terminal</value>
+  </data>
+  <data name="Dialog.TerminalCommandTitle" xml:space="preserve">
+    <value>Terminal - {0}</value>
+  </data>
+  <data name="Dialog.MailAccountTitle" xml:space="preserve">
+    <value>Mail: {0}</value>
+  </data>
 </root>
