@@ -688,4 +688,52 @@
   <data name="Hint.MoveDivider" xml:space="preserve">
     <value>Elválasztó áthelyezése</value>
   </data>
+  <data name="Csv.Query.Label" xml:space="preserve">
+    <value>Lekérdezés</value>
+  </data>
+  <data name="Csv.Query.Placeholder" xml:space="preserve">
+    <value>e.g. SELECT name, amount WHERE amount &gt; 10 ORDER BY amount DESC LIMIT 20</value>
+  </data>
+  <data name="Csv.Grid.Empty" xml:space="preserve">
+    <value>A lekérdezésnek nincs találata</value>
+  </data>
+  <data name="Csv.Status.Empty" xml:space="preserve">
+    <value>A fájl üres</value>
+  </data>
+  <data name="Csv.Status.Rows" xml:space="preserve">
+    <value>{0:N0} / {1:N0} sor, {2} oszlop</value>
+  </data>
+  <data name="Csv.Status.Truncated" xml:space="preserve">
+    <value>; csak az első {0:N0} sor van beolvasva</value>
+  </data>
+  <data name="Csv.Hint.RunQuery" xml:space="preserve">
+    <value>Lekérdezés futtatása a sorokon</value>
+  </data>
+  <data name="Csv.Error.Unterminated" xml:space="preserve">
+    <value>Egy idézőjel nincs lezárva: hiányzik a {0}</value>
+  </data>
+  <data name="Csv.Error.Expected" xml:space="preserve">
+    <value>Várt: {0}, ezt találtam: {1}</value>
+  </data>
+  <data name="Csv.Error.EndOfQuery" xml:space="preserve">
+    <value>a lekérdezés vége</value>
+  </data>
+  <data name="Csv.Error.Limit" xml:space="preserve">
+    <value>A LIMIT egész számot vár</value>
+  </data>
+  <data name="Csv.Error.UnknownColumn" xml:space="preserve">
+    <value>Nincs '{0}' nevű oszlop. Oszlopok: {1}</value>
+  </data>
+  <data name="Csv.Hint.MoveRows" xml:space="preserve">
+    <value>Mozgás a sorok között</value>
+  </data>
+  <data name="Csv.Hint.MoveColumns" xml:space="preserve">
+    <value>Mozgás az oszlopok között</value>
+  </data>
+  <data name="Csv.Hint.Page" xml:space="preserve">
+    <value>Lapozás oldalanként</value>
+  </data>
+  <data name="Csv.Hint.Ends" xml:space="preserve">
+    <value>Ugrás az első vagy az utolsó sorra</value>
+  </data>
 </root>
