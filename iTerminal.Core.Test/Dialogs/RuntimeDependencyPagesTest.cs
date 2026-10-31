@@ -36,7 +36,7 @@ public class RuntimeDependencyPagesTest
     }
 
     [TestMethod]
-    public void Overview_ListsEveryComponentWithItsState()
+    public void Overview_NamesNoComponent_TheDialogStepsThroughThoseThatNeedWork()
     {
         var page = new RuntimeDependencyOverviewPage(ServiceWith(Missing()).Object, TestTheme())
         {
@@ -45,8 +45,8 @@ public class RuntimeDependencyPagesTest
 
         var screen = Render(page, new Size(100, 8));
 
-        AssertScreenContains(screen, "Playwright", "every component is named");
-        AssertScreenContains(screen, "Not installed. Install 1.63.0.", "its state is written next to it");
+        AssertScreenDoesNotContain(screen, "Playwright", "the components that need work get their own pages");
+        AssertScreenContains(screen, "1 need to be installed or updated.");
     }
 
     [TestMethod]
@@ -68,7 +68,7 @@ public class RuntimeDependencyPagesTest
             ViewSize = new Size(100, 8),
         };
 
-        AssertScreenContains(Render(page, new Size(100, 8)), "All 1 are installed and up to date.");
+        AssertScreenContains(Render(page, new Size(100, 8)), "All components are installed and up to date.");
     }
 
     [TestMethod]
