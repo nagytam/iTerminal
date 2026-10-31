@@ -2428,4 +2428,100 @@
   <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
     <value>[ ] Left out   (Space: install it)</value>
   </data>
+  <data name="Dialog.PerformanceBenchmark" xml:space="preserve">
+    <value>Performance benchmark</value>
+  </data>
+  <data name="Benchmark.Hint.CancelRun" xml:space="preserve">
+    <value>Cancel the run</value>
+  </data>
+  <data name="Benchmark.Hint.Run" xml:space="preserve">
+    <value>Run the benchmark</value>
+  </data>
+  <data name="Benchmark.Overall" xml:space="preserve">
+    <value>Overall score</value>
+  </data>
+  <data name="Benchmark.Scale" xml:space="preserve">
+    <value>Higher is better. 1000 is a reference machine.</value>
+  </data>
+  <data name="Benchmark.Note.Disk" xml:space="preserve">
+    <value>Disk: reads one program file, up to 256 MB. Cached data reads faster.</value>
+  </data>
+  <data name="Benchmark.Note.Network" xml:space="preserve">
+    <value>Internet tests download from speed.cloudflare.com (10 MB).</value>
+  </data>
+  <data name="Benchmark.Unavailable" xml:space="preserve">
+    <value>unavailable</value>
+  </data>
+  <data name="Benchmark.Measuring" xml:space="preserve">
+    <value>measuring...</value>
+  </data>
+  <data name="Benchmark.Waiting" xml:space="preserve">
+    <value>waiting</value>
+  </data>
+  <data name="Benchmark.Prompt.Running" xml:space="preserve">
+    <value>Measuring {0}...</value>
+  </data>
+  <data name="Benchmark.Prompt.Finished" xml:space="preserve">
+    <value>Finished. Enter runs it again.</value>
+  </data>
+  <data name="Benchmark.Prompt.Cancelled" xml:space="preserve">
+    <value>Cancelled; the scores so far are shown. Enter runs it again.</value>
+  </data>
+  <data name="Benchmark.Prompt.Idle" xml:space="preserve">
+    <value>Enter starts the benchmark. It takes about half a minute.</value>
+  </data>
+  <data name="Benchmark.Hint.Footer.Running" xml:space="preserve">
+    <value>Esc:cancel the run</value>
+  </data>
+  <data name="Benchmark.Hint.Footer" xml:space="preserve">
+    <value>Enter:run  Esc:close</value>
+  </data>
+  <data name="Benchmark.Category.Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Benchmark.Category.Memory" xml:space="preserve">
+    <value>Memory</value>
+  </data>
+  <data name="Benchmark.Category.Disk" xml:space="preserve">
+    <value>Disk</value>
+  </data>
+  <data name="Benchmark.Category.Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="Benchmark.Category.Latency" xml:space="preserve">
+    <value>Latency</value>
+  </data>
+  <data name="Benchmark.Probe.cpu.single" xml:space="preserve">
+    <value>Single thread</value>
+  </data>
+  <data name="Benchmark.Probe.cpu.multi" xml:space="preserve">
+    <value>All threads</value>
+  </data>
+  <data name="Benchmark.Probe.memory.copy" xml:space="preserve">
+    <value>Copy bandwidth</value>
+  </data>
+  <data name="Benchmark.Probe.memory.alloc" xml:space="preserve">
+    <value>Allocation rate</value>
+  </data>
+  <data name="Benchmark.Probe.disk.sequential" xml:space="preserve">
+    <value>Sequential read</value>
+  </data>
+  <data name="Benchmark.Probe.disk.random" xml:space="preserve">
+    <value>Random read, 4 KiB</value>
+  </data>
+  <data name="Benchmark.Probe.disk.listing" xml:space="preserve">
+    <value>Directory listing</value>
+  </data>
+  <data name="Benchmark.Probe.network.loopback" xml:space="preserve">
+    <value>Loopback throughput</value>
+  </data>
+  <data name="Benchmark.Probe.network.latency" xml:space="preserve">
+    <value>Internet latency</value>
+  </data>
+  <data name="Benchmark.Probe.network.download" xml:space="preserve">
+    <value>Internet download</value>
+  </data>
+  <data name="Benchmark.Probe.latency.timer" xml:space="preserve">
+    <value>Timer wake-up</value>
+  </data>
 </root>

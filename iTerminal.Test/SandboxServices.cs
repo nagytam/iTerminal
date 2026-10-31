@@ -467,6 +467,38 @@ public static class SandboxServices
                 full));
     }
 
+    /// <summary>The benchmark's probes with fixed figures: the same ids, names and categories, but nothing is measured.</summary>
+    public static class BenchmarkProbes
+    {
+        public static IEnumerable<Core.Services.Benchmark.IBenchmarkProbe> All =>
+        [
+            new BenchmarkProbe("cpu.single", "Single thread", Core.Services.Benchmark.BenchmarkCategory.Cpu, 1000, "Mops/s", 500),
+            new BenchmarkProbe("cpu.multi", "All threads", Core.Services.Benchmark.BenchmarkCategory.Cpu, 2000, "Mops/s", 2000),
+            new BenchmarkProbe("memory.copy", "Copy bandwidth", Core.Services.Benchmark.BenchmarkCategory.Memory, 10, "GB/s", 10),
+            new BenchmarkProbe("memory.alloc", "Allocation rate", Core.Services.Benchmark.BenchmarkCategory.Memory, 50, "M allocs/s", 50),
+            new BenchmarkProbe("disk.sequential", "Sequential read", Core.Services.Benchmark.BenchmarkCategory.Disk, 500, "MB/s", 500),
+            new BenchmarkProbe("disk.random", "Random read, 4 KiB", Core.Services.Benchmark.BenchmarkCategory.Disk, 20000, "IOPS", 20000),
+            new BenchmarkProbe("disk.listing", "Directory listing", Core.Services.Benchmark.BenchmarkCategory.Disk, 200, "k entries/s", 200),
+            new BenchmarkProbe("network.loopback", "Loopback throughput", Core.Services.Benchmark.BenchmarkCategory.Network, 1000, "MB/s", 1000),
+            new BenchmarkProbe("network.latency", "Internet latency", Core.Services.Benchmark.BenchmarkCategory.Network, 30, "ms", 30, higherIsBetter: false),
+            new BenchmarkProbe("network.download", "Internet download", Core.Services.Benchmark.BenchmarkCategory.Network, 12.5, "MB/s", 12.5),
+            new BenchmarkProbe("latency.timer", "Timer wake-up", Core.Services.Benchmark.BenchmarkCategory.Latency, 1.1, "ms", 1.1, higherIsBetter: false),
+        ];
+
+        private sealed class BenchmarkProbe(string id, string name, Core.Services.Benchmark.BenchmarkCategory category, double value, string unit, double reference, bool higherIsBetter = true)
+            : Core.Services.Benchmark.IBenchmarkProbe
+        {
+            public string Id => id;
+
+            public string Name => name;
+
+            public Core.Services.Benchmark.BenchmarkCategory Category => category;
+
+            public Task<Core.Services.Benchmark.BenchmarkMeasurement> MeasureAsync(CancellationToken cancellationToken) =>
+                Task.FromResult(new Core.Services.Benchmark.BenchmarkMeasurement(value, unit, reference, higherIsBetter));
+        }
+    }
+
     public sealed class CurrencyRates : Core.Services.Currency.ICurrencyRateProvider
     {
         public string Name => "Sandbox";

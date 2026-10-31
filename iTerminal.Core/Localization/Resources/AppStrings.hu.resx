@@ -2428,4 +2428,100 @@
   <data name="RuntimeDependency.Tick.LeftOut" xml:space="preserve">
     <value>[ ] Kihagyva   (Szóköz: telepítés)</value>
   </data>
+  <data name="Dialog.PerformanceBenchmark" xml:space="preserve">
+    <value>Teljesítménymérés</value>
+  </data>
+  <data name="Benchmark.Hint.CancelRun" xml:space="preserve">
+    <value>Mérés megszakítása</value>
+  </data>
+  <data name="Benchmark.Hint.Run" xml:space="preserve">
+    <value>Mérés indítása</value>
+  </data>
+  <data name="Benchmark.Overall" xml:space="preserve">
+    <value>Összesített pontszám</value>
+  </data>
+  <data name="Benchmark.Scale" xml:space="preserve">
+    <value>Minél magasabb, annál jobb. Az 1000 egy referenciagép.</value>
+  </data>
+  <data name="Benchmark.Note.Disk" xml:space="preserve">
+    <value>Lemez: egy programfájlt olvas, legfeljebb 256 MB-ot. A gyorsítótárazott adatok gyorsabban olvasódnak.</value>
+  </data>
+  <data name="Benchmark.Note.Network" xml:space="preserve">
+    <value>Az internetes tesztek a speed.cloudflare.com-ról töltenek le (10 MB).</value>
+  </data>
+  <data name="Benchmark.Unavailable" xml:space="preserve">
+    <value>nem elérhető</value>
+  </data>
+  <data name="Benchmark.Measuring" xml:space="preserve">
+    <value>mérés...</value>
+  </data>
+  <data name="Benchmark.Waiting" xml:space="preserve">
+    <value>várakozik</value>
+  </data>
+  <data name="Benchmark.Prompt.Running" xml:space="preserve">
+    <value>{0} mérése...</value>
+  </data>
+  <data name="Benchmark.Prompt.Finished" xml:space="preserve">
+    <value>Kész. Az Enter újra futtatja a mérést.</value>
+  </data>
+  <data name="Benchmark.Prompt.Cancelled" xml:space="preserve">
+    <value>Megszakítva; a eddigi pontszámok látszanak. Az Enter újra futtatja.</value>
+  </data>
+  <data name="Benchmark.Prompt.Idle" xml:space="preserve">
+    <value>Az Enter elindítja a mérést. Körülbelül fél percig tart.</value>
+  </data>
+  <data name="Benchmark.Hint.Footer.Running" xml:space="preserve">
+    <value>Esc:mérés megszakítása</value>
+  </data>
+  <data name="Benchmark.Hint.Footer" xml:space="preserve">
+    <value>Enter:indítás  Esc:bezár</value>
+  </data>
+  <data name="Benchmark.Category.Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Benchmark.Category.Memory" xml:space="preserve">
+    <value>Memória</value>
+  </data>
+  <data name="Benchmark.Category.Disk" xml:space="preserve">
+    <value>Lemez</value>
+  </data>
+  <data name="Benchmark.Category.Network" xml:space="preserve">
+    <value>Hálózat</value>
+  </data>
+  <data name="Benchmark.Category.Latency" xml:space="preserve">
+    <value>Késleltetés</value>
+  </data>
+  <data name="Benchmark.Probe.cpu.single" xml:space="preserve">
+    <value>Egy szál</value>
+  </data>
+  <data name="Benchmark.Probe.cpu.multi" xml:space="preserve">
+    <value>Összes szál</value>
+  </data>
+  <data name="Benchmark.Probe.memory.copy" xml:space="preserve">
+    <value>Másolási sávszélesség</value>
+  </data>
+  <data name="Benchmark.Probe.memory.alloc" xml:space="preserve">
+    <value>Foglalási sebesség</value>
+  </data>
+  <data name="Benchmark.Probe.disk.sequential" xml:space="preserve">
+    <value>Szekvenciális olvasás</value>
+  </data>
+  <data name="Benchmark.Probe.disk.random" xml:space="preserve">
+    <value>Véletlen olvasás, 4 KiB</value>
+  </data>
+  <data name="Benchmark.Probe.disk.listing" xml:space="preserve">
+    <value>Könyvtárlistázás</value>
+  </data>
+  <data name="Benchmark.Probe.network.loopback" xml:space="preserve">
+    <value>Loopback átviteli sebesség</value>
+  </data>
+  <data name="Benchmark.Probe.network.latency" xml:space="preserve">
+    <value>Internet-késleltetés</value>
+  </data>
+  <data name="Benchmark.Probe.network.download" xml:space="preserve">
+    <value>Internetes letöltés</value>
+  </data>
+  <data name="Benchmark.Probe.latency.timer" xml:space="preserve">
+    <value>Időzítő-ébredés</value>
+  </data>
 </root>

@@ -305,6 +305,20 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Encyclopedia.IEncyclopediaProvider, iTerminal.Core.Services.Encyclopedia.WikiEncyclopediaProvider>();
         services.AddSingleton<iTerminal.Core.Services.Encyclopedia.IEncyclopediaService, iTerminal.Core.Services.Encyclopedia.EncyclopediaService>();
         services.AddTransient<iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog>();
+        // Ctrl+Shift+B: the performance benchmark. Its probes are registered in the order a run measures them; each one only reads or computes.
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.CpuSingleThreadProbe>();
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.CpuMultiThreadProbe>();
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.MemoryCopyProbe>();
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.MemoryAllocationProbe>();
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.DiskSequentialReadProbe>();
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.DiskRandomReadProbe>();
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.DiskListingProbe>();
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.NetworkLoopbackProbe>();
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.NetworkLatencyProbe>();
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.NetworkDownloadProbe>();
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.TimerWakeupProbe>();
+        services.AddSingleton<iTerminal.Core.Services.Benchmark.IPerformanceBenchmarkService, iTerminal.Core.Services.Benchmark.PerformanceBenchmarkService>();
+        services.AddTransient<iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog>();
         // Ctrl+Shift+F1: the BitTorrent manager. The engine starts on first use, so a run that never adds a torrent opens no sockets.
         services.AddSingleton<iTerminal.Core.Services.Torrents.ITorrentService>(provider => new iTerminal.Core.Services.Torrents.TorrentService(
             provider.GetRequiredService<ISettingsService>(), databaseDirectory));

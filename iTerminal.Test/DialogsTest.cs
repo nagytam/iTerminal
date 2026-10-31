@@ -61,6 +61,7 @@ public class DialogsTest
     [DataRow("Ctrl+Shift+F5", "CurrencyConverterDialog")]
     [DataRow("Ctrl+Shift+K", "ContactManagerDialog")]
     [DataRow("Ctrl+Shift+W", "EncyclopediaDialog")]
+    [DataRow("Ctrl+Shift+B", "PerformanceBenchmarkDialog")]
     [DataRow("Alt+F2", "RemoteConnectionManagerDialog")]
     [DataRow("Alt+F9", "DiskManagerDialog")]
     [DataRow("Alt+F12", "ProcessManagerDialog")]
@@ -143,6 +144,23 @@ public class DialogsTest
 
         await _app.PressAsync("F2");
         await _app.WaitUntilAsync(() => _app.Driver.GetRequiredService<SandboxServices.Launcher>().Launches.Any(l => l.FilePath == "https://en.wikipedia.org/wiki/" + Uri.EscapeDataString("tulip_(sandbox)")), "the article to be opened in the browser");
+
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
+    /// <summary>The performance benchmark through the whole app: Enter runs it, the scores land, and the probes are the sandbox's fixed figures.</summary>
+    [TestMethod]
+    public async Task ThePerformanceBenchmarkRunsAndShowsItsScores()
+    {
+        await _app.PressAsync("Ctrl+Shift+B");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Benchmark.PerformanceBenchmarkDialog, "the benchmark to open");
+
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("Finished. Enter runs it again.");
+        await _app.WaitForTextAsync("Overall score");
+        await _app.WaitForTextAsync("Single thread");
 
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();
