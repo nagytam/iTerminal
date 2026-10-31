@@ -688,4 +688,52 @@
   <data name="Hint.MoveDivider" xml:space="preserve">
     <value>Move the divider</value>
   </data>
+  <data name="Csv.Query.Label" xml:space="preserve">
+    <value>Query</value>
+  </data>
+  <data name="Csv.Query.Placeholder" xml:space="preserve">
+    <value>e.g. SELECT name, amount WHERE amount &gt; 10 ORDER BY amount DESC LIMIT 20</value>
+  </data>
+  <data name="Csv.Grid.Empty" xml:space="preserve">
+    <value>No rows match the query</value>
+  </data>
+  <data name="Csv.Status.Empty" xml:space="preserve">
+    <value>The file is empty</value>
+  </data>
+  <data name="Csv.Status.Rows" xml:space="preserve">
+    <value>{0:N0} of {1:N0} row(s), {2} column(s)</value>
+  </data>
+  <data name="Csv.Status.Truncated" xml:space="preserve">
+    <value>; only the first {0:N0} rows are read</value>
+  </data>
+  <data name="Csv.Hint.RunQuery" xml:space="preserve">
+    <value>Run the query over the rows</value>
+  </data>
+  <data name="Csv.Error.Unterminated" xml:space="preserve">
+    <value>A quote is not closed: missing {0}</value>
+  </data>
+  <data name="Csv.Error.Expected" xml:space="preserve">
+    <value>Expected {0}, found {1}</value>
+  </data>
+  <data name="Csv.Error.EndOfQuery" xml:space="preserve">
+    <value>the end of the query</value>
+  </data>
+  <data name="Csv.Error.Limit" xml:space="preserve">
+    <value>LIMIT needs a whole number</value>
+  </data>
+  <data name="Csv.Error.UnknownColumn" xml:space="preserve">
+    <value>No column called '{0}'. Columns: {1}</value>
+  </data>
+  <data name="Csv.Hint.MoveRows" xml:space="preserve">
+    <value>Move between the rows</value>
+  </data>
+  <data name="Csv.Hint.MoveColumns" xml:space="preserve">
+    <value>Move between the columns</value>
+  </data>
+  <data name="Csv.Hint.Page" xml:space="preserve">
+    <value>Move a page at a time</value>
+  </data>
+  <data name="Csv.Hint.Ends" xml:space="preserve">
+    <value>Go to the first or the last row</value>
+  </data>
 </root>

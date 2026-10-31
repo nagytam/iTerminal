@@ -43,6 +43,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? _imageFileViewerDialog { get; set; }
     private XmlViewerDialog? _xmlViewerDialog { get; set; }
     private JsonViewerDialog? _jsonViewerDialog { get; set; }
+    private CsvViewerDialog? _csvViewerDialog { get; set; }
     private MarkPatternDialog? _markPatternDialog { get; set; }
     private MarkPatternDialog? _unmarkPatternDialog { get; set; }
     private CompressDialog? _compressDialog { get; set; }
@@ -107,10 +108,12 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
         INotificationService? notificationService = null,
         EditLinkDialog? editLinkDialog = null,
-        iTerminal.Core.Services.Git.IGitService? gitService = null)
+        iTerminal.Core.Services.Git.IGitService? gitService = null,
+        CsvViewerDialog? csvViewerDialog = null)
         : base(themeService)
     {
         _gitService = gitService;
+        _csvViewerDialog = csvViewerDialog;
         _editLinkDialog = editLinkDialog;
         _malwareScanService = malwareScanService;
         _notificationService = notificationService;
@@ -337,7 +340,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
         if (_fileViewerDialog is not null)
         {
-            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog));
+            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog));
         }
         if (_textFileEditorDialog is not null)
         {

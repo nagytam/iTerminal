@@ -688,4 +688,52 @@
   <data name="Hint.MoveDivider" xml:space="preserve">
     <value>Déplacer le séparateur</value>
   </data>
+  <data name="Csv.Query.Label" xml:space="preserve">
+    <value>Requête</value>
+  </data>
+  <data name="Csv.Query.Placeholder" xml:space="preserve">
+    <value>e.g. SELECT name, amount WHERE amount &gt; 10 ORDER BY amount DESC LIMIT 20</value>
+  </data>
+  <data name="Csv.Grid.Empty" xml:space="preserve">
+    <value>Aucune ligne ne correspond à la requête</value>
+  </data>
+  <data name="Csv.Status.Empty" xml:space="preserve">
+    <value>Le fichier est vide</value>
+  </data>
+  <data name="Csv.Status.Rows" xml:space="preserve">
+    <value>{0:N0} sur {1:N0} ligne(s), {2} colonne(s)</value>
+  </data>
+  <data name="Csv.Status.Truncated" xml:space="preserve">
+    <value>; seules les {0:N0} premières lignes sont lues</value>
+  </data>
+  <data name="Csv.Hint.RunQuery" xml:space="preserve">
+    <value>Lancer la requête sur les lignes</value>
+  </data>
+  <data name="Csv.Error.Unterminated" xml:space="preserve">
+    <value>Un guillemet n'est pas fermé : {0} manquant</value>
+  </data>
+  <data name="Csv.Error.Expected" xml:space="preserve">
+    <value>Attendu : {0}, trouvé : {1}</value>
+  </data>
+  <data name="Csv.Error.EndOfQuery" xml:space="preserve">
+    <value>la fin de la requête</value>
+  </data>
+  <data name="Csv.Error.Limit" xml:space="preserve">
+    <value>LIMIT attend un nombre entier</value>
+  </data>
+  <data name="Csv.Error.UnknownColumn" xml:space="preserve">
+    <value>Aucune colonne nommée « {0} ». Colonnes : {1}</value>
+  </data>
+  <data name="Csv.Hint.MoveRows" xml:space="preserve">
+    <value>Passer d'une ligne à l'autre</value>
+  </data>
+  <data name="Csv.Hint.MoveColumns" xml:space="preserve">
+    <value>Passer d'une colonne à l'autre</value>
+  </data>
+  <data name="Csv.Hint.Page" xml:space="preserve">
+    <value>Défiler page par page</value>
+  </data>
+  <data name="Csv.Hint.Ends" xml:space="preserve">
+    <value>Aller à la première ou à la dernière ligne</value>
+  </data>
 </root>

@@ -688,4 +688,52 @@
   <data name="Hint.MoveDivider" xml:space="preserve">
     <value>Sposta il divisore</value>
   </data>
+  <data name="Csv.Query.Label" xml:space="preserve">
+    <value>Query</value>
+  </data>
+  <data name="Csv.Query.Placeholder" xml:space="preserve">
+    <value>e.g. SELECT name, amount WHERE amount &gt; 10 ORDER BY amount DESC LIMIT 20</value>
+  </data>
+  <data name="Csv.Grid.Empty" xml:space="preserve">
+    <value>Nessuna riga corrisponde alla query</value>
+  </data>
+  <data name="Csv.Status.Empty" xml:space="preserve">
+    <value>Il file è vuoto</value>
+  </data>
+  <data name="Csv.Status.Rows" xml:space="preserve">
+    <value>{0:N0} su {1:N0} riga/e, {2} colonna/e</value>
+  </data>
+  <data name="Csv.Status.Truncated" xml:space="preserve">
+    <value>; vengono lette solo le prime {0:N0} righe</value>
+  </data>
+  <data name="Csv.Hint.RunQuery" xml:space="preserve">
+    <value>Esegui la query sulle righe</value>
+  </data>
+  <data name="Csv.Error.Unterminated" xml:space="preserve">
+    <value>Una virgoletta non è chiusa: manca {0}</value>
+  </data>
+  <data name="Csv.Error.Expected" xml:space="preserve">
+    <value>Atteso {0}, trovato {1}</value>
+  </data>
+  <data name="Csv.Error.EndOfQuery" xml:space="preserve">
+    <value>la fine della query</value>
+  </data>
+  <data name="Csv.Error.Limit" xml:space="preserve">
+    <value>LIMIT richiede un numero intero</value>
+  </data>
+  <data name="Csv.Error.UnknownColumn" xml:space="preserve">
+    <value>Nessuna colonna chiamata '{0}'. Colonne: {1}</value>
+  </data>
+  <data name="Csv.Hint.MoveRows" xml:space="preserve">
+    <value>Spostarsi tra le righe</value>
+  </data>
+  <data name="Csv.Hint.MoveColumns" xml:space="preserve">
+    <value>Spostarsi tra le colonne</value>
+  </data>
+  <data name="Csv.Hint.Page" xml:space="preserve">
+    <value>Scorrere una pagina alla volta</value>
+  </data>
+  <data name="Csv.Hint.Ends" xml:space="preserve">
+    <value>Vai alla prima o all'ultima riga</value>
+  </data>
 </root>

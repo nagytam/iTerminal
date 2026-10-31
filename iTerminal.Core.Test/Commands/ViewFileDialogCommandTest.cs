@@ -2,6 +2,7 @@ using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Interfaces;
+using iConsole.Csv;
 using iConsole.Json;
 using iConsole.Services;
 using iConsole.Tasks;
@@ -544,6 +545,39 @@ public class ViewFileDialogCommandTest
             command.ExecuteAsync(null).GetAwaiter().GetResult();
 
             Assert.AreEqual(path, jsonDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [DataTestMethod]
+    [DataRow(".csv")]
+    [DataRow(".tsv")]
+    public void ExecuteAsync_WithACsvOrTsvFile_PointsTheCsvViewerAtIt(string extension)
+    {
+        var themeService = CreateThemeService();
+        var csvDialog = new CsvViewerDialog(
+            Mock.Of<IContentModelService>(),
+            Mock.Of<IFileToTextConverterService>(),
+            Mock.Of<IBeepService>(),
+            Mock.Of<IDateTimeProviderService>(),
+            themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}{extension}");
+        File.WriteAllText(path, "a,b\n1,2\n");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                CreateDialog(themeService),
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                csvViewerDialog: csvDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, csvDialog.Url?.Path);
         }
         finally
         {

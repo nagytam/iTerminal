@@ -1,5 +1,6 @@
 using iConsole.Commands;
 using iConsole.Data;
+using iConsole.Csv;
 using iConsole.Dialogs;
 using iConsole.Json;
 using iConsole.Xml;
@@ -20,7 +21,8 @@ public class ViewFileDialogCommand(
     VideoFileViewerDialog? videoFileViewerDialog = null,
     ImageFileViewerDialog? imageFileViewerDialog = null,
     XmlViewerDialog? xmlViewerDialog = null,
-    JsonViewerDialog? jsonViewerDialog = null) : Command
+    JsonViewerDialog? jsonViewerDialog = null,
+    CsvViewerDialog? csvViewerDialog = null) : Command
 {
     private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
     private readonly ImageFileViewerDialog? _imageFileViewerDialog = imageFileViewerDialog;
@@ -30,6 +32,7 @@ public class ViewFileDialogCommand(
     private readonly MusicFileViewerDialog? _musicFileViewerDialog = musicFileViewerDialog;
     private readonly XmlViewerDialog? _xmlViewerDialog = xmlViewerDialog;
     private readonly JsonViewerDialog? _jsonViewerDialog = jsonViewerDialog;
+    private readonly CsvViewerDialog? _csvViewerDialog = csvViewerDialog;
 
     public override string Title => "View";
     public override string Description => "Open the selected file in the viewer.";
@@ -119,6 +122,16 @@ public class ViewFileDialogCommand(
         {
             _xmlViewerDialog.Url = focusedFileUrl;
             await (Control?.ShowDialogAsync(_xmlViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // A CSV or TSV file opens in the grid viewer, from any drive: it is read through the file system like text.
+        if (_csvViewerDialog is not null
+            && focusedFileUrl is not null
+            && CsvFileTypes.IsCsvFile(focusedFileUrl.Path))
+        {
+            _csvViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_csvViewerDialog) ?? Task.CompletedTask);
             return;
         }
 

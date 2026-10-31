@@ -688,4 +688,52 @@
   <data name="Hint.MoveDivider" xml:space="preserve">
     <value>Mover el divisor</value>
   </data>
+  <data name="Csv.Query.Label" xml:space="preserve">
+    <value>Consulta</value>
+  </data>
+  <data name="Csv.Query.Placeholder" xml:space="preserve">
+    <value>e.g. SELECT name, amount WHERE amount &gt; 10 ORDER BY amount DESC LIMIT 20</value>
+  </data>
+  <data name="Csv.Grid.Empty" xml:space="preserve">
+    <value>Ninguna fila coincide con la consulta</value>
+  </data>
+  <data name="Csv.Status.Empty" xml:space="preserve">
+    <value>El archivo está vacío</value>
+  </data>
+  <data name="Csv.Status.Rows" xml:space="preserve">
+    <value>{0:N0} de {1:N0} fila(s), {2} columna(s)</value>
+  </data>
+  <data name="Csv.Status.Truncated" xml:space="preserve">
+    <value>; solo se leen las primeras {0:N0} filas</value>
+  </data>
+  <data name="Csv.Hint.RunQuery" xml:space="preserve">
+    <value>Ejecutar la consulta sobre las filas</value>
+  </data>
+  <data name="Csv.Error.Unterminated" xml:space="preserve">
+    <value>Una comilla no está cerrada: falta {0}</value>
+  </data>
+  <data name="Csv.Error.Expected" xml:space="preserve">
+    <value>Se esperaba {0}, se encontró {1}</value>
+  </data>
+  <data name="Csv.Error.EndOfQuery" xml:space="preserve">
+    <value>el final de la consulta</value>
+  </data>
+  <data name="Csv.Error.Limit" xml:space="preserve">
+    <value>LIMIT necesita un número entero</value>
+  </data>
+  <data name="Csv.Error.UnknownColumn" xml:space="preserve">
+    <value>No hay ninguna columna llamada '{0}'. Columnas: {1}</value>
+  </data>
+  <data name="Csv.Hint.MoveRows" xml:space="preserve">
+    <value>Moverse entre las filas</value>
+  </data>
+  <data name="Csv.Hint.MoveColumns" xml:space="preserve">
+    <value>Moverse entre las columnas</value>
+  </data>
+  <data name="Csv.Hint.Page" xml:space="preserve">
+    <value>Avanzar una página cada vez</value>
+  </data>
+  <data name="Csv.Hint.Ends" xml:space="preserve">
+    <value>Ir a la primera o la última fila</value>
+  </data>
 </root>
