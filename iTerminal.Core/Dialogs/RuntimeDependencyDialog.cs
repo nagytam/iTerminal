@@ -49,7 +49,7 @@ public class RuntimeDependencyDialog : Dialog
     /// <summary>Whether anything is left to install or update.</summary>
     public bool HasWork => _service.Statuses.Any(status => status.State != RuntimeDependencyState.Installed);
 
-    /// <summary>The dependencies that have something to install or update, in list order.</summary>
+    /// <summary>The dependencies that have something to install or update, in list order. The dialog lists only these.</summary>
     private List<RuntimeDependencyStatus> Actionable() =>
         _service.Statuses.Where(status => status.State != RuntimeDependencyState.Installed).ToList();
 
@@ -67,7 +67,7 @@ public class RuntimeDependencyDialog : Dialog
         if (Parent is not null)
         {
             int width = (int)Math.Max(20, Math.Min(PreferredWidth, (long)Parent.ViewSize.Width));
-            int height = (int)Math.Max(FixedRows, Math.Min(FixedRows + RowsPerDependency * _service.Statuses.Count, (long)Parent.ViewSize.Height));
+            int height = (int)Math.Max(FixedRows, Math.Min(FixedRows + RowsPerDependency * Actionable().Count, (long)Parent.ViewSize.Height));
             CenterInParent(new Size(width, height));
         }
 
@@ -128,8 +128,8 @@ public class RuntimeDependencyDialog : Dialog
         _unticked.Clear();
         List<RuntimeDependencyStatus> actionable = Actionable();
         // Always a wizard unless an install is running: an overview first, then one page for every
-        // component (the up-to-date ones too, so the person sees what is on the machine), and a last
-        // page that sums up what Finish does.
+        // component that needs work, and a last page that sums up what Finish does. Up-to-date components
+        // get no page at all.
         _wizardActive = !_service.IsBusy;
         if (!_wizardActive)
         {
@@ -137,13 +137,14 @@ public class RuntimeDependencyDialog : Dialog
         }
 
         _wizard = new Wizard(ThemeService);
-        // One page for each dependency. Only with no dependency at all is there nothing to show but the overview, which says so.
-        if (_service.Statuses.Count == 0)
+        // One page for each dependency that needs work. With nothing to do there is nothing to step through, so the
+        // overview alone says so.
+        if (actionable.Count == 0)
         {
             _wizard.AddStep(new WizardStep("Overview", new RuntimeDependencyOverviewPage(_service, ThemeService)));
         }
 
-        foreach (RuntimeDependencyStatus status in _service.Statuses)
+        foreach (RuntimeDependencyStatus status in actionable)
         {
             _wizard.AddStep(new WizardStep(status.Name, new RuntimeDependencyStepPage(status.Id, _service, IsTicked, ThemeService)));
         }
@@ -281,7 +282,7 @@ public class RuntimeDependencyDialog : Dialog
             (string.Empty, scheme.Foreground),
         ];
 
-        foreach (RuntimeDependencyStatus status in _service.Statuses)
+        foreach (RuntimeDependencyStatus status in Actionable())
         {
             (string glyph, Color glyphColor) = StateMarker(status, scheme);
             rows.Add(($"{status.Name} - {status.Purpose}", scheme.Foreground));

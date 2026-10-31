@@ -73,8 +73,8 @@ public class RuntimeDependencyStepPage(
 }
 
 /// <summary>
-/// The first wizard page: what these components are and where every one stands, one line each, so the
-/// dialog never opens on an empty page and the person sees the whole list before the per-component steps.
+/// The first wizard page, shown only when nothing needs installing or updating (or nothing is registered): it says
+/// so, and Enter closes the dialog. Dependencies that need work get their own pages instead.
 /// </summary>
 public class RuntimeDependencyOverviewPage(
     IRuntimeDependencyService service,
@@ -99,21 +99,11 @@ public class RuntimeDependencyOverviewPage(
             (statuses.Count == 0
                 ? "There is nothing to set up."
                 : needWork == 0
-                    ? $"All {statuses.Count} are installed and up to date."
+                    ? "All components are installed and up to date."
                     : $"{needWork} of {statuses.Count} need to be installed or updated.", scheme.DisabledForeground),
             (string.Empty, scheme.Foreground),
+            ("Enter closes this.", scheme.DisabledForeground),
         ];
-        int nameWidth = statuses.Count == 0 ? 0 : Math.Min(16, statuses.Max(status => status.Name.Length));
-        foreach (RuntimeDependencyStatus status in statuses)
-        {
-            bool done = status.State == RuntimeDependencyState.Installed;
-            string glyph = status.Problem is not null ? Alert.GlyphFor(BadgeKind.Error).ToString() : done ? "✓" : "●";
-            Color color = status.Problem is not null ? Color.DarkRed : done ? Color.DarkGreen : Color.DarkYellow;
-            rows.Add(($"{glyph} {status.Name.PadRight(nameWidth)}  {RuntimeDependencyStepPage.StateText(status)}", color));
-        }
-
-        rows.Add((string.Empty, scheme.Foreground));
-        rows.Add((statuses.Count == 0 ? "Enter closes this." : "Enter goes through them one by one.", scheme.DisabledForeground));
 
         for (int i = 0; i < ViewSize.Height; i++)
         {

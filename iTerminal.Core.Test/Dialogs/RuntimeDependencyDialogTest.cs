@@ -236,17 +236,17 @@ public class RuntimeDependencyDialogTest
     }
 
     [TestMethod]
-    public async Task WhenNothingIsLeftTheWizardStillListsEveryComponentAndOnlyCloses()
+    public async Task WhenNothingIsLeftTheOverviewSaysSoAndOnlyCloses()
     {
         var service = NewService(RuntimeDependencyState.Installed);
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
-        // The Tools command does not open the dialog then, but a dialog opened with nothing to do still shows each component.
+        // The Tools command does not open the dialog then, but a dialog opened with nothing to do says so and lists nothing.
         var page = Render(dialog);
-        AssertScreenContains(page, "Step 1 of 1: Playwright");
-        AssertScreenContains(page, "Installed 1.63.0. Up to date.");
-        AssertScreenContains(page, "Nothing to do here.");
+        AssertScreenContains(page, "Step 1 of 1: Overview");
+        AssertScreenContains(page, "All components are installed and up to date.");
+        AssertScreenDoesNotContain(page, "Playwright");
         AssertScreenContains(page, "Enter:close  Backspace:back  Esc:close");
 
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
@@ -259,7 +259,7 @@ public class RuntimeDependencyDialogTest
     }
 
     [TestMethod]
-    public async Task AnUpToDateComponentIsNeverOnTheSummary()
+    public async Task AnUpToDateComponentIsNeverOnTheDialogOrTheSummary()
     {
         var service = new Mock<IRuntimeDependencyService>();
         service.SetupGet(s => s.Statuses).Returns(
@@ -272,15 +272,39 @@ public class RuntimeDependencyDialogTest
         var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
         await ShowAsync(dialog);
 
-        for (int i = 0; i < 2; i++)
-        {
-            await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
-        }
+        // The only page is Ollama's; the installed Playwright has no page of its own.
+        var first = Render(dialog);
+        AssertScreenContains(first, "Step 1 of 2: Ollama");
+        AssertScreenDoesNotContain(first, "Playwright");
 
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter));
         var summary = Render(dialog);
-        AssertScreenContains(summary, "Step 3 of 3: Install");
+        AssertScreenContains(summary, "Step 2 of 2: Install");
         AssertScreenContains(summary, "Ollama: Not installed. Install 0.40.4.");
-        Assert.IsFalse(summary.Contains("Playwright: Installed"), summary.ToString());
+        Assert.IsFalse(summary.Contains("Playwright"), summary.ToString());
+    }
+
+    [TestMethod]
+    public async Task OnlyTheComponentsThatNeedWorkGetAPage()
+    {
+        var service = new Mock<IRuntimeDependencyService>();
+        service.SetupGet(s => s.Statuses).Returns(
+        [
+            new RuntimeDependencyStatus("playwright", "Playwright", "Chromium", "1.63.0", null, RuntimeDependencyState.Installed),
+            new RuntimeDependencyStatus("ollama", "Ollama", "Local AI", "0.40.3", "0.40.4", RuntimeDependencyState.UpdateAvailable),
+            new RuntimeDependencyStatus("git", "Git", "Source control", "2.45.0", null, RuntimeDependencyState.Installed),
+        ]);
+        service.SetupGet(s => s.Log).Returns(new List<string>());
+        service.SetupGet(s => s.IsBusy).Returns(false);
+        service.SetupGet(s => s.ShouldOfferAtStartup).Returns(true);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        // Ollama is the only one that needs work, so it is the only page and the first one.
+        var first = Render(dialog);
+        AssertScreenContains(first, "Step 1 of 2: Ollama");
+        AssertScreenDoesNotContain(first, "Git");
+        AssertScreenDoesNotContain(first, "Playwright");
     }
 
     [TestMethod]
