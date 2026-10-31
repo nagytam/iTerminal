@@ -667,6 +667,15 @@
   <data name="Xml.NodeCount" xml:space="preserve">
     <value>{0} · {1:N0} nœuds</value>
   </data>
+  <data name="Splash.Protocols" xml:space="preserve">
+    <value>Protocoles du terminal</value>
+  </data>
+  <data name="Splash.StateOn" xml:space="preserve">
+    <value>oui</value>
+  </data>
+  <data name="Splash.StateOff" xml:space="preserve">
+    <value>non</value>
+  </data>
   <data name="Splash.SystemInfo" xml:space="preserve">
     <value>CPU : {0} cœurs, mémoire : {1} Go</value>
   </data>

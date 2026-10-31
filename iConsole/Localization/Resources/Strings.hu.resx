@@ -667,6 +667,15 @@
   <data name="Xml.NodeCount" xml:space="preserve">
     <value>{0} · {1:N0} csomópont</value>
   </data>
+  <data name="Splash.Protocols" xml:space="preserve">
+    <value>Terminálprotokollok</value>
+  </data>
+  <data name="Splash.StateOn" xml:space="preserve">
+    <value>be</value>
+  </data>
+  <data name="Splash.StateOff" xml:space="preserve">
+    <value>ki</value>
+  </data>
   <data name="Splash.SystemInfo" xml:space="preserve">
     <value>CPU: {0} mag, memória: {1} GB</value>
   </data>

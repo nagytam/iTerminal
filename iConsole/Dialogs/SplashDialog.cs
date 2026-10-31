@@ -73,6 +73,41 @@ public class SplashDialog : Dialog
         base.Close();
     }
 
+    /// <summary>
+    /// The terminal protocols in use, in two columns under a heading: the name, then on (green) or off (grey). Drawn in the rows
+    /// below the colour map.
+    /// </summary>
+    private void DrawProtocols(IBuffer buffer, ColorScheme colorScheme)
+    {
+        int top = HasLogo ? LogoRows : 0;
+        int x = (int)AbsolutePosition.X + 1;
+        int y = (int)AbsolutePosition.Y + 7 + top;
+        int inner = (int)ViewSize.Width - 2;
+        string on = UiText.Get("Splash.StateOn", "on");
+        string off = UiText.Get("Splash.StateOff", "off");
+        int stateWidth = Math.Max(on.Length, off.Length);
+
+        string heading = StringHelper.AlignCenter(" ".Repeat(inner), UiText.Get("Splash.Protocols", "Terminal protocols"));
+        buffer.Write(ZOrder, new Position((uint)x, (uint)y), new Size(inner, 1), new ConxelString(heading, Color.Cyan, colorScheme.Background));
+
+        IReadOnlyList<TerminalProtocolState> protocols = TerminalProtocols.Current();
+        int columnWidth = inner / 2;
+        int nameWidth = columnWidth - stateWidth - 2;
+        for (int i = 0; i < protocols.Count; i++)
+        {
+            int column = i % 2;
+            int row = i / 2;
+            TerminalProtocolState protocol = protocols[i];
+            int cellX = x + column * columnWidth + 1;
+            string name = (protocol.Name.Length > nameWidth ? protocol.Name[..nameWidth] : protocol.Name).PadRight(nameWidth + 1);
+            string state = (protocol.IsEnabled ? on : off).PadRight(stateWidth);
+            buffer.Write(ZOrder, new Position((uint)cellX, (uint)(y + 1 + row)), new Size(name.Length, 1),
+                new ConxelString(name, colorScheme.Foreground, colorScheme.Background));
+            buffer.Write(ZOrder, new Position((uint)(cellX + name.Length), (uint)(y + 1 + row)), new Size(state.Length, 1),
+                new ConxelString(state, protocol.IsEnabled ? Color.Green : Color.DarkGray, colorScheme.Background));
+        }
+    }
+
     /// <summary>The emblem is drawn as a picture where the terminal can show one; elsewhere the splash is text only.</summary>
     private bool HasLogo => _logoSixel is not null;
 
@@ -96,12 +131,19 @@ public class SplashDialog : Dialog
     {
         base.Draw(buffer);
 
-        if (_sixelOverlay is null || _logoSixel is null || ViewSize.IsEmpty)
+        if (ViewSize.IsEmpty)
         {
             return;
         }
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
+        DrawProtocols(buffer, colorScheme);
+
+        if (_sixelOverlay is null || _logoSixel is null)
+        {
+            return;
+        }
+
         int x = (int)AbsolutePosition.X + 1 + Math.Max(0, ((int)ViewSize.Width - 2 - _logoColumns) / 2);
         int y = (int)AbsolutePosition.Y + 1;
         var blank = new ConxelString(new string(' ', _logoColumns), colorScheme.Foreground, colorScheme.Background);
@@ -133,7 +175,8 @@ public class SplashDialog : Dialog
 
         if (Parent != null)
         {
-            ViewSize = new Size(50, (uint)(8 + top));
+            // The text, the colour map and the list of protocols (a heading and five rows).
+            ViewSize = new Size(50, (uint)(15 + top));
             Position = new Position(
                 Math.Max(0, (Parent.ViewSize.Width - ViewSize.Width) / 2),
                 Math.Max(0, (Parent.ViewSize.Height - ViewSize.Height) / 2));

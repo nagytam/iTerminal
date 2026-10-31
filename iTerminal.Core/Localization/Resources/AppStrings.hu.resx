@@ -1639,6 +1639,9 @@
   <data name="Field.OlderDays" xml:space="preserve">
     <value>Régebbi, nap</value>
   </data>
+  <data name="Field.DrawPicturesAsSixel" xml:space="preserve">
+    <value>Képek rajzolása Sixel bitképként</value>
+  </data>
   <data name="Field.ReadTextFromImages" xml:space="preserve">
     <value>Szöveg olvasása képekből (OCR)</value>
   </data>

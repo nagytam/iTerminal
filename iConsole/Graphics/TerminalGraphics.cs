@@ -22,13 +22,14 @@ public sealed class TerminalGraphics
 
     private static TerminalGraphics? _current;
 
+    private readonly bool _isDetected;
     private int _cellWidth;
     private int _cellHeight;
     private bool _isCellSizeKnown;
 
     public TerminalGraphics(bool isSixelSupported, int cellWidth = DefaultCellWidth, int cellHeight = DefaultCellHeight, bool isCellSizeKnown = false)
     {
-        IsSixelSupported = isSixelSupported;
+        _isDetected = isSixelSupported;
         _cellWidth = Math.Max(1, cellWidth);
         _cellHeight = Math.Max(1, cellHeight);
         _isCellSizeKnown = isCellSizeKnown;
@@ -41,7 +42,14 @@ public sealed class TerminalGraphics
         set => _current = value;
     }
 
-    public bool IsSixelSupported { get; }
+    /// <summary>
+    /// The feature flag: asked on every use whether Sixel may be used at all. The app points it at the <c>SixelEnabled</c> setting;
+    /// null (the default) means yes. The flag only ever narrows what was detected, it cannot turn on a terminal that lacks Sixel.
+    /// </summary>
+    public static Func<bool>? EnabledSource { get; set; }
+
+    /// <summary>True when the terminal draws Sixel and the feature flag allows it.</summary>
+    public bool IsSixelSupported => _isDetected && (EnabledSource?.Invoke() ?? true);
 
     public int CellWidth => Volatile.Read(ref _cellWidth);
 

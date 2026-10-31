@@ -48,4 +48,11 @@ public static class Settings
     /// something a first run springs on them.
     /// </summary>
     public const string DocumentsOcrEnabled = nameof(DocumentsOcrEnabled);
+
+    /// <summary>
+    /// The feature flag for Sixel bitmaps (the image viewer and the splash emblem). On by default, and then used only where the
+    /// terminal is detected to draw Sixel; off draws the ASCII art and the text splash everywhere. Read live, so it applies the
+    /// next time a picture is drawn.
+    /// </summary>
+    public const string SixelEnabled = nameof(SixelEnabled);
 }

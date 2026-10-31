@@ -1639,6 +1639,9 @@
   <data name="Field.OlderDays" xml:space="preserve">
     <value>Older days</value>
   </data>
+  <data name="Field.DrawPicturesAsSixel" xml:space="preserve">
+    <value>Draw pictures as Sixel bitmaps</value>
+  </data>
   <data name="Field.ReadTextFromImages" xml:space="preserve">
     <value>Read text from images (OCR)</value>
   </data>

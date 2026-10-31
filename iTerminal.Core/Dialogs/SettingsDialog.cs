@@ -23,7 +23,7 @@ public class SettingsDialog : Dialog
         Title = iConsole.Localization.UiText.Get("Menu.Settings", "Settings");
         _tab = new Tab(themeService) { Orientation = Orientation.Vertical };
         AddControl(_tab);
-        var tabPageGlobal = new SettingsGlobalTabPage(themeService);
+        var tabPageGlobal = new SettingsGlobalTabPage(themeService, settingsService);
         _tab.AddTabPage(tabPageGlobal);
         var tabPageNetwork = new SettingsNetworkTabPage(themeService);
         _tab.AddTabPage(tabPageNetwork);

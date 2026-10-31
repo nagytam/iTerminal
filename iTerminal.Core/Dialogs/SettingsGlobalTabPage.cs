@@ -2,7 +2,10 @@ using iConsole.Controls;
 using iConsole.Controls.Tabs;
 using iConsole.Data;
 using iConsole.Helper;
+using iConsole.Localization;
 using iConsole.Services;
+using iTerminal.Core.Data;
+using iTerminal.Core.Services;
 
 namespace iTerminal.Core.Dialogs;
 
@@ -20,12 +23,25 @@ public class SettingsGlobalTabPage : TabPage
     ];
 
     private readonly List<Label> _labels = [];
+    private readonly ISettingsService _settingsService;
+    private readonly CheckBox _sixelCheckBox;
 
     public SettingsGlobalTabPage(
-        IThemeService themeService)
+        IThemeService themeService,
+        ISettingsService? settingsService = null)
         : base("1-Global ", themeService)
     {
         HotConsoleKey = ConsoleKey.D1;
+        _settingsService = settingsService ?? NullSettingsService.Instance;
+
+        // The Sixel feature flag. It only narrows what the terminal was detected to do: on, Sixel is used where the terminal
+        // draws it; off, the image viewer and the splash fall back to characters everywhere.
+        _sixelCheckBox = new CheckBox(themeService)
+        {
+            Label = UiText.Get("Field.DrawPicturesAsSixel", "Draw pictures as Sixel bitmaps"),
+            IsChecked = true,
+        };
+        _sixelCheckBox.CheckedChanged += (_, _) => _settingsService.Set(Settings.SixelEnabled, _sixelCheckBox.IsChecked.ToString());
 
         // A fixed set of rows, filled at layout: each line is word-wrapped to the page's width, and
         // building labels per wrapped row would change the control tree on every layout. On an
@@ -36,6 +52,21 @@ public class SettingsGlobalTabPage : TabPage
             _labels.Add(label);
             AddControl(label);
         }
+
+        AddControl(_sixelCheckBox);
+    }
+
+    /// <summary>Whether Sixel bitmaps are allowed (the feature flag).</summary>
+    public bool IsSixelEnabled
+    {
+        get => _sixelCheckBox.IsChecked;
+        set => _sixelCheckBox.IsChecked = value;
+    }
+
+    public override Task OnInitializeAsync()
+    {
+        _sixelCheckBox.IsChecked = _settingsService.GetAsBool(Settings.SixelEnabled, true) ?? true;
+        return base.OnInitializeAsync();
     }
 
     private const int MaxRows = 12;
@@ -66,5 +97,9 @@ public class SettingsGlobalTabPage : TabPage
             _labels[i].Position = new Position(0, i);
             _labels[i].ViewSize = new Size(ViewSize.Width, 1);
         }
+
+        // Under the text, with a blank row between.
+        _sixelCheckBox.Position = new Position(0, rows.Count + 1);
+        _sixelCheckBox.ViewSize = new Size(ViewSize.Width, 1);
     }
 }

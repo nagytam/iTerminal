@@ -34,6 +34,34 @@ public class SettingsGlobalTabPageTest
         CollectionAssert.AreEqual(expected, words, "every word is still there");
     }
     [TestMethod]
+    public async Task TheSixelFlag_IsOnByDefault_AndFollowsTheSetting()
+    {
+        var settings = iTerminal.Core.Services.NullSettingsService.Instance;
+        var page = new SettingsGlobalTabPage(TestTheme(), settings);
+        await page.OnInitializeAsync();
+        Assert.IsTrue(page.IsSixelEnabled);
+
+        var stored = new Moq.Mock<iTerminal.Core.Services.ISettingsService>();
+        stored.Setup(s => s.GetAsBool(iTerminal.Core.Data.Settings.SixelEnabled, true)).Returns(false);
+        var off = new SettingsGlobalTabPage(TestTheme(), stored.Object);
+        await off.OnInitializeAsync();
+        Assert.IsFalse(off.IsSixelEnabled);
+    }
+
+    [TestMethod]
+    public async Task ChangingTheSixelFlag_IsSaved()
+    {
+        var stored = new Moq.Mock<iTerminal.Core.Services.ISettingsService>();
+        stored.Setup(s => s.GetAsBool(iTerminal.Core.Data.Settings.SixelEnabled, true)).Returns(true);
+        var page = new SettingsGlobalTabPage(TestTheme(), stored.Object);
+        await page.OnInitializeAsync();
+
+        page.IsSixelEnabled = false;
+
+        stored.Verify(s => s.Set(iTerminal.Core.Data.Settings.SixelEnabled, bool.FalseString), Moq.Times.Once());
+    }
+
+    [TestMethod]
     public void NameAndHotKey()
     {
         var page = new SettingsGlobalTabPage(TestTheme());
