@@ -171,6 +171,30 @@ public class XmlViewerDialogTest
         Assert.AreEqual(2, dialog.Results.Count);
     }
 
+    [TestMethod]
+    public async Task Enter_InTheResults_RevealsTheRowUnderTheCursor()
+    {
+        // Enter on a result reveals the row the cursor is on; the keyboard never marks a row, so nothing else is consulted.
+        XmlViewerDialog dialog = CreateDialog(Utf8("<catalog><book/><book/></catalog>"), out _);
+        await dialog.OnInitializeAsync();
+        await dialog.ShowAsync();
+        dialog.OnInitializeLayout();
+        XPathBoxOf(dialog).Text = "//book";
+        XPathBoxOf(dialog).SetFocus();
+        await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+        await Task.Delay(50);
+        dialog.OnIdle();
+        ListBox<XmlXPathResult> resultsBox = dialog.Controls.OfType<ListBox<XmlXPathResult>>().Single();
+        resultsBox.SetFocus();
+        resultsBox.ScrollableModel.CursorPosition.Y = 1;
+
+        bool handled = await dialog.HandleKeyEventAsync(new KeyEvent('\r', ConsoleKey.Enter, false, false, false));
+
+        Assert.IsTrue(handled);
+        Assert.IsTrue(dialog.Results[1].Node!.IsFocused);
+        Assert.IsFalse(dialog.Results[0].Node!.IsFocused);
+    }
+
     private static TextBox XPathBoxOf(XmlViewerDialog dialog) =>
         (TextBox)dialog.Controls.First(c => c is TextBox);
 

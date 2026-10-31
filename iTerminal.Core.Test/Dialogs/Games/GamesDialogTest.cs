@@ -225,4 +225,69 @@ public class GamesDialogTest
         Assert.AreEqual("Games", command.Title);
         Assert.IsNull(command.Key);
     }
+
+    [TestMethod]
+    public async Task AComputerSearchCancelledLateDoesNotLoseTheMoveOfTheNewerOne()
+    {
+        // The first search ignores its cancellation until the second has answered, so its (stale) move is parked last.
+        TaskCompletionSource gate = new();
+        ScriptedGame game = new(gate.Task);
+        var dialog = new GamesDialog([game], TestTheme());
+        await ShowAsync(dialog);
+
+        dialog.OnIdle();
+        Task first = dialog.ThinkingTask;
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.N, 'n'));
+        dialog.OnIdle();
+        await dialog.ThinkingTask;
+        gate.SetResult();
+        await first;
+
+        dialog.ApplyPendingForTest();
+
+        Assert.AreEqual(1, game.MovesPlayed, "the newer search's move is played");
+        Assert.IsFalse(dialog.IsThinking, "the computer is not left waiting for a move that never comes");
+    }
+
+    /// <summary>A game whose computer plans its first move behind a gate that ignores cancellation, and plans every later one at once.</summary>
+    private sealed class ScriptedGame(Task firstPlanGate) : IGame
+    {
+        private bool _firstPlanned;
+
+        public string Name => "Scripted";
+        public string Rules => string.Empty;
+        public bool VsComputer { get; set; } = true;
+        public string Status => string.Empty;
+        public bool IsOver => false;
+        public bool CanUndo => false;
+        public bool IsComputerTurn { get; private set; } = true;
+        public int MovesPlayed { get; private set; }
+
+        public IReadOnlyList<GameCell[]> Render() => [];
+        public void MoveCursor(int dx, int dy) { }
+        public void Activate() { }
+        public void Undo() { }
+
+        public void NewGame() => IsComputerTurn = true;
+
+        public Func<CancellationToken, Action?>? PlanComputerMove()
+        {
+            bool gated = !_firstPlanned;
+            _firstPlanned = true;
+            return token =>
+            {
+                if (gated)
+                {
+                    firstPlanGate.GetAwaiter().GetResult();
+                }
+
+                token.ThrowIfCancellationRequested();
+                return () =>
+                {
+                    MovesPlayed++;
+                    IsComputerTurn = false;
+                };
+            };
+        }
+    }
 }

@@ -48,6 +48,19 @@ public class SliderAndLineChartTest
     }
 
     [TestMethod]
+    public void Slider_RangeChangedWithTheValueUnchanged_RequestsARepaint()
+    {
+        // The thumb is placed by the range, so a new range moves it even though the value stays where it was.
+        var slider = new Slider(Theme()) { Minimum = 0, Maximum = 4, Value = 2, Position = new Position(0, 0), ViewSize = new Size(5, 1) };
+        slider.HasStateChanged = false;
+
+        slider.Maximum = 100;
+
+        Assert.IsTrue(slider.HasStateChanged);
+        Assert.AreEqual(2, slider.Value);
+    }
+
+    [TestMethod]
     public void LineChart_Render_RisingSeriesFillsDiagonal()
     {
         string[] rows = LineChart.Render([0, 1], 1, 1);

@@ -70,6 +70,7 @@ public class EncyclopediaDialog : SplitPaneDialog
     private readonly TextViewerControl _article;
 
     private CancellationTokenSource? _cancellation;
+    private readonly Lock _landGate = new();
     private Outcome? _pending;
     private int _generation;
     private string _status = string.Empty;
@@ -163,7 +164,7 @@ public class EncyclopediaDialog : SplitPaneDialog
 
         // Cancelled, not awaited: the request ends on its own, and a late outcome is dropped by its generation.
         _cancellation?.Cancel();
-        _generation++;
+        NextGeneration();
         base.Close();
     }
 
@@ -324,6 +325,7 @@ public class EncyclopediaDialog : SplitPaneDialog
     {
         if (SelectedHit() is not { } hit)
         {
+            SetStatus(UiText.Get("Encyclopedia.NoResultToRead", "There is no result to read yet. Search for a term first."), isError: true);
             return;
         }
 
@@ -370,10 +372,29 @@ public class EncyclopediaDialog : SplitPaneDialog
         _cancellation?.Cancel();
         _cancellation = new CancellationTokenSource();
         SetStatus(status, isError: false);
-        return ++_generation;
+        return NextGeneration();
     }
 
-    private void Land(Outcome outcome) => _pending = outcome;
+    private int NextGeneration()
+    {
+        lock (_landGate)
+        {
+            return ++_generation;
+        }
+    }
+
+    private void Land(Outcome outcome)
+    {
+        // A cancelled request still reports back. Only the newest request may park its outcome: a late "Cancelled." from
+        // the one it replaced would otherwise overwrite the answer the newer one has just parked, and nothing would show it.
+        lock (_landGate)
+        {
+            if (outcome.Generation == _generation)
+            {
+                _pending = outcome;
+            }
+        }
+    }
 
     private int SelectedIndex() => (int)_results.ScrollableModel.CursorPosition.Y;
 

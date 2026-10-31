@@ -21,10 +21,35 @@ public class CurrencyTest
         public int Calls { get; private set; }
         public string Name => "Fake";
 
+        /// <summary>Holds the download until this task completes; with <see cref="IgnoresCancellation"/> the cancellation is only reported then.</summary>
+        public Task? Gate { get; set; }
+
+        public bool IgnoresCancellation { get; set; }
+
         public Task<CurrencyRates> FetchAsync(CancellationToken cancellationToken = default)
         {
             Calls++;
+            if (Gate is not null)
+            {
+                return AfterGate(cancellationToken);
+            }
+
             return failure is not null ? Task.FromException<CurrencyRates>(failure) : Task.FromResult(rates ?? Sample());
+        }
+
+        private async Task<CurrencyRates> AfterGate(CancellationToken cancellationToken)
+        {
+            if (IgnoresCancellation)
+            {
+                await Gate!;
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+            else
+            {
+                await Gate!.WaitAsync(cancellationToken);
+            }
+
+            return rates ?? Sample();
         }
     }
 

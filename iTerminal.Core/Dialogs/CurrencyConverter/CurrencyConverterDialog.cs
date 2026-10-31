@@ -41,6 +41,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
     private readonly ComboBox<CurrencyChoice> _to;
 
     private CancellationTokenSource? _cancellation;
+    private readonly Lock _landGate = new();
     private Outcome? _pending;
     private int _generation;
     private string _status = string.Empty;
@@ -118,7 +119,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
 
         // Cancelled, not awaited: the download ends on its own, and a late outcome is dropped by its generation.
         _cancellation?.Cancel();
-        _generation++;
+        NextGeneration();
         base.Close();
     }
 
@@ -195,7 +196,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
         _cancellation?.Cancel();
         _cancellation = new CancellationTokenSource();
         CancellationToken token = _cancellation.Token;
-        int generation = ++_generation;
+        int generation = NextGeneration();
         _busy = true;
         SetStatus("Downloading the rates…", isError: false);
 
@@ -203,17 +204,38 @@ public class CurrencyConverterDialog : SplitPaneDialog
         {
             try
             {
-                _pending = new Outcome(generation, await _service.RefreshAsync(token), null);
+                Land(new Outcome(generation, await _service.RefreshAsync(token), null));
             }
             catch (OperationCanceledException)
             {
-                _pending = new Outcome(generation, null, null);
+                Land(new Outcome(generation, null, null));
             }
             catch (Exception exception)
             {
-                _pending = new Outcome(generation, null, exception.Message);
+                Land(new Outcome(generation, null, exception.Message));
             }
         });
+    }
+
+    private int NextGeneration()
+    {
+        lock (_landGate)
+        {
+            return ++_generation;
+        }
+    }
+
+    private void Land(Outcome outcome)
+    {
+        // A cancelled download still reports back. Only the newest one may park its outcome, or a late "Cancelled." from the
+        // download it replaced would overwrite the rates the newer one has just parked.
+        lock (_landGate)
+        {
+            if (outcome.Generation == _generation)
+            {
+                _pending = outcome;
+            }
+        }
     }
 
     /// <summary>F6: swaps the two currencies.</summary>

@@ -119,6 +119,42 @@ public class TranslatorDialogTest
     }
 
     [TestMethod]
+    public async Task ARequestCancelledLateDoesNotOverwriteTheNewerTranslation()
+    {
+        // The first request reports its cancellation only after the second has answered, so its outcome lands last.
+        TaskCompletionSource gate = new();
+        var (dialog, api, _, _) = Create((api, _) =>
+        {
+            api.Gate = gate.Task;
+            api.IgnoresCancellation = true;
+        });
+        await ShowAsync(dialog);
+        dialog.InputText = "first";
+        Assert.IsTrue(await dialog.HandleKeyEventAsync(Key(ConsoleKey.F5)));
+        Task first = dialog.RequestTask;
+        await WaitUntilAsync(() => api.Calls.Count == 1, "the first request to reach the provider");
+
+        api.Gate = null;
+        dialog.InputText = "second";
+        Assert.IsTrue(await dialog.HandleKeyEventAsync(Key(ConsoleKey.F5)));
+        await dialog.RequestTask;
+        gate.SetResult();
+        try
+        {
+            await first;
+        }
+        catch (OperationCanceledException)
+        {
+        }
+
+        await SettleAsync(dialog);
+
+        Assert.AreEqual("<second>", dialog.TranslationText, "the newer answer must survive the older request's cancellation");
+        Assert.IsFalse(dialog.IsBusy);
+        Assert.IsFalse(dialog.Status.Contains("Cancelled", StringComparison.Ordinal));
+    }
+
+    [TestMethod]
     public async Task AFailureIsShownInWordsAndLeavesTheOldTranslation()
     {
         var (dialog, api, llm, _) = Create();

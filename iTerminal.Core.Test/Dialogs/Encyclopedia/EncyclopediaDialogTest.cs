@@ -307,6 +307,50 @@ public class EncyclopediaDialogTest
     }
 
     [TestMethod]
+    public async Task ASearchThatIsCancelledLateDoesNotOverwriteTheNewerResults()
+    {
+        // The first search only reports its cancellation after the second has answered, so its outcome lands last.
+        TaskCompletionSource gate = new();
+        Harness h = Create(new EncyclopediaTest.FakeEncyclopedia { Gate = gate.Task, IgnoresCancellation = true });
+        await ShowAsync(h.Dialog);
+        h.Dialog.QueryBox.Text = "first";
+        h.Dialog.StartSearch();
+        Task first = h.Dialog.RequestTask;
+        await WaitUntilAsync(() => h.Provider.SearchCalls == 1, "the first search to reach the provider");
+
+        h.Provider.Gate = null;
+        h.Dialog.QueryBox.Text = "second";
+        h.Dialog.StartSearch();
+        await h.Dialog.RequestTask;
+        gate.SetResult();
+        try
+        {
+            await first;
+        }
+        catch (OperationCanceledException)
+        {
+        }
+
+        await SettleAsync(h.Dialog);
+
+        Assert.AreEqual(2, h.Dialog.Results.ListModel.ListItems.Count, "the second search's results survive the first one's late cancellation");
+        Assert.IsFalse(h.Dialog.Status.Contains("Cancelled", StringComparison.Ordinal));
+    }
+
+    [TestMethod]
+    public async Task EnterOnAnEmptyResultListSaysThereIsNothingToReadYet()
+    {
+        Harness h = Create();
+        await ShowAsync(h.Dialog);
+        h.Dialog.Results.SetFocus();
+
+        Assert.IsTrue(await h.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter)));
+
+        StringAssert.Contains(h.Dialog.Status, "Search for a term first");
+        Assert.AreEqual(0, h.Provider.ArticleCalls, "nothing is fetched for a result that is not there");
+    }
+
+    [TestMethod]
     public async Task TheSourceAndTheTermAreRememberedWhenTheDialogCloses_AndComeBackWhenItOpens()
     {
         Harness h = Create();

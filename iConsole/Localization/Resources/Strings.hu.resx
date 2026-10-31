@@ -451,6 +451,9 @@
   <data name="Hint.SetValueZero" xml:space="preserve">
     <value>Az érték 0-ra állítása</value>
   </data>
+  <data name="Hint.SetValueNearestBound" xml:space="preserve">
+    <value>A értéket a legközelebbi határra állítja</value>
+  </data>
   <data name="Hint.StartOrEndOfText" xml:space="preserve">
     <value>A szöveg eleje vagy vége</value>
   </data>

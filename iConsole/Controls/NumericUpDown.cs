@@ -80,6 +80,7 @@ public class NumericUpDown : Control, IReadOnly
                 _maximum = _minimum;
             }
             Value = _value; // re-clamp into the new range
+            StateHasChanged(); // the well is padded to the widest bound, and the sign hint depends on the minimum
         }
     }
 
@@ -94,6 +95,7 @@ public class NumericUpDown : Control, IReadOnly
                 _minimum = _maximum;
             }
             Value = _value; // re-clamp into the new range
+            StateHasChanged(); // the well is padded to the widest bound, so a wider maximum has to repaint
         }
     }
 
@@ -129,7 +131,10 @@ public class NumericUpDown : Control, IReadOnly
         }
 
         yield return ("Backspace", UiText.Get("Hint.RemoveLastDigit", "Remove the last digit"));
-        yield return ("Delete", UiText.Get("Hint.SetValueZero", "Set the value to 0"));
+        // Delete sets 0, but a range that leaves 0 out stops at the bound nearest to it.
+        yield return _minimum <= 0 && _maximum >= 0
+            ? ("Delete", UiText.Get("Hint.SetValueZero", "Set the value to 0"))
+            : ("Delete", UiText.Get("Hint.SetValueNearestBound", "Set the value to the nearest bound"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -310,7 +315,8 @@ public class NumericUpDown : Control, IReadOnly
         var wellBackground = !IsEnabled ? colorScheme.DisabledBackground : IsReadOnly ? Color.DarkYellow : Color.Yellow;
 
         var width = Math.Max(_minimum.ToString().Length, _maximum.ToString().Length);
-        var valueText = _value.ToString();
+        // A remembered "-" on a zero shows as "-0", so the sign of the number typed next is not a surprise.
+        var valueText = _pendingMinus && _value == 0 ? "-0" : _value.ToString();
         valueText = valueText.PadLeft(Math.Max(width, valueText.Length));
 
         line.Append(Border.Start, wellForeground, wellBackground);

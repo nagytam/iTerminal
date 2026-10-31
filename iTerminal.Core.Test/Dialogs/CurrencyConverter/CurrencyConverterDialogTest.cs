@@ -135,6 +135,42 @@ public class CurrencyConverterDialogTest
     }
 
     [TestMethod]
+    public async Task ADownloadCancelledLateDoesNotOverwriteTheNewerRates()
+    {
+        // The dialog downloads on its own when it opens. Once that has landed, the first download the test starts holds
+        // until the second has finished, and only then reports its cancellation, so its outcome lands last.
+        var provider = new CurrencyTest.FakeProvider();
+        var (dialog, _, _) = Create(provider);
+        await ShowAsync(dialog);
+        await SettleAsync(dialog);
+
+        TaskCompletionSource gate = new();
+        provider.Gate = gate.Task;
+        provider.IgnoresCancellation = true;
+        dialog.StartRefresh();
+        Task first = dialog.RequestTask;
+        await WaitUntilAsync(() => provider.Calls == 2, "the first download to reach the provider");
+
+        provider.Gate = null;
+        dialog.StartRefresh();
+        await dialog.RequestTask;
+        gate.SetResult();
+        try
+        {
+            await first;
+        }
+        catch (OperationCanceledException)
+        {
+        }
+
+        await SettleAsync(dialog);
+
+        Assert.IsFalse(dialog.IsBusy);
+        StringAssert.Contains(dialog.Status, "downloaded");
+        Assert.IsFalse(dialog.Status.Contains("Cancelled", StringComparison.Ordinal));
+    }
+
+    [TestMethod]
     public async Task ClosingKeepsTheChoices()
     {
         var (dialog, _, settings) = Create();
