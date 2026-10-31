@@ -1417,6 +1417,9 @@
   <data name="DialogHint.CancelTask" xml:space="preserve">
     <value>Die Aufgabe abbrechen</value>
   </data>
+  <data name="DialogHint.KeepTaskRunning" xml:space="preserve">
+    <value>Aufgabe weiterlaufen lassen</value>
+  </data>
   <data name="DialogHint.ChooseTheme" xml:space="preserve">
     <value>Ein Design wählen</value>
   </data>
@@ -1852,6 +1855,9 @@
   <data name="Dialog.TaskManagerTitle" xml:space="preserve">
     <value>Task-Manager ({0})</value>
   </data>
+  <data name="Dialog.TaskManagerCancelQuestion" xml:space="preserve">
+    <value>"{0}" abbrechen?</value>
+  </data>
   <data name="Dialog.TerminalTitle" xml:space="preserve">
     <value>Terminal</value>
   </data>
@@ -2196,6 +2202,9 @@
   </data>
   <data name="Encyclopedia.NothingToOpen" xml:space="preserve">
     <value>Es gibt noch keinen Artikel zum Öffnen.</value>
+  </data>
+  <data name="Encyclopedia.NoResultToRead" xml:space="preserve">
+    <value>Es gibt noch kein Ergebnis zum Lesen. Suchen Sie zuerst einen Begriff.</value>
   </data>
   <data name="Encyclopedia.Opened" xml:space="preserve">
     <value>{0} im Browser geöffnet.</value>

@@ -17,6 +17,11 @@ public class TranslationServiceTest
         public List<(string Text, string? Source, string Target)> Calls { get; } = [];
         public int DetectCalls { get; private set; }
 
+        /// <summary>Holds the answer until this task completes. With <see cref="IgnoresCancellation"/> the request only reports its cancellation then, as one already on the wire does.</summary>
+        public Task? Gate { get; set; }
+
+        public bool IgnoresCancellation { get; set; }
+
         public Task<TranslationResult> TranslateAsync(string text, string? sourceCode, string targetCode, CancellationToken cancellationToken = default)
         {
             Calls.Add((text, sourceCode, targetCode));
@@ -25,7 +30,27 @@ public class TranslationServiceTest
                 throw Failure;
             }
 
+            if (Gate is not null)
+            {
+                return AfterGate(text, cancellationToken);
+            }
+
             return Task.FromResult(new TranslationResult($"<{text}>", ReportedSource, Name));
+        }
+
+        private async Task<TranslationResult> AfterGate(string text, CancellationToken cancellationToken)
+        {
+            if (IgnoresCancellation)
+            {
+                await Gate!;
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+            else
+            {
+                await Gate!.WaitAsync(cancellationToken);
+            }
+
+            return new TranslationResult($"<{text}>", ReportedSource, Name);
         }
 
         public Task<LanguageDetection?> DetectAsync(string text, CancellationToken cancellationToken = default)

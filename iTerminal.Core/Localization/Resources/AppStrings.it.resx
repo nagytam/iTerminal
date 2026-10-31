@@ -1417,6 +1417,9 @@
   <data name="DialogHint.CancelTask" xml:space="preserve">
     <value>Annulla l'attività</value>
   </data>
+  <data name="DialogHint.KeepTaskRunning" xml:space="preserve">
+    <value>Lascia in esecuzione l'attività</value>
+  </data>
   <data name="DialogHint.ChooseTheme" xml:space="preserve">
     <value>Scegli un tema</value>
   </data>
@@ -1852,6 +1855,9 @@
   <data name="Dialog.TaskManagerTitle" xml:space="preserve">
     <value>Gestione attività ({0})</value>
   </data>
+  <data name="Dialog.TaskManagerCancelQuestion" xml:space="preserve">
+    <value>Annullare «{0}»?</value>
+  </data>
   <data name="Dialog.TerminalTitle" xml:space="preserve">
     <value>Terminale</value>
   </data>
@@ -2196,6 +2202,9 @@
   </data>
   <data name="Encyclopedia.NothingToOpen" xml:space="preserve">
     <value>Non c’è ancora nessun articolo da aprire.</value>
+  </data>
+  <data name="Encyclopedia.NoResultToRead" xml:space="preserve">
+    <value>Non c'è ancora nessun risultato da leggere. Cerca prima un termine.</value>
   </data>
   <data name="Encyclopedia.Opened" xml:space="preserve">
     <value>{0} aperto nel browser.</value>

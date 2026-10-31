@@ -241,4 +241,71 @@ public class NumericUpDownTest
 
         Assert.AreEqual(-7, control.Value);
     }
+
+    [TestMethod]
+    public void KeyHints_DeleteSaysZeroWhenTheRangeHoldsZero()
+    {
+        var control = CreateControl();
+        control.Minimum = -10;
+
+        Assert.AreEqual("Set the value to 0", control.GetKeyHints().Single(h => h.Key == "Delete").Description);
+    }
+
+    [TestMethod]
+    public async Task KeyHints_DeleteSaysNearestBoundWhenTheRangeLeavesZeroOut()
+    {
+        // Delete clamps 0 to the minimum here, so the hint must not promise a 0 the box can never show.
+        var control = CreateControl();
+        control.Minimum = 3;
+        control.Value = 50;
+
+        Assert.AreEqual("Set the value to the nearest bound", control.GetKeyHints().Single(h => h.Key == "Delete").Description);
+
+        await control.HandleKeyEventAsync(Key(ConsoleKey.Delete));
+
+        Assert.AreEqual(3, control.Value);
+    }
+
+    [TestMethod]
+    public async Task PendingMinusOnZeroShowsAsMinusZero()
+    {
+        var themeService = new Mock<IThemeService>();
+        themeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
+        var buffer = new MockBuffer(new Size(20, 1));
+        var control = CreateControl(themeService);
+        control.Minimum = -10;
+        control.Value = 0;
+
+        await control.HandleKeyEventAsync(Key(ConsoleKey.OemMinus, '-'));
+        control.Draw(buffer);
+
+        Assert.IsTrue(buffer.ContentAsString.Contains("-0"), "the pending minus is visible before the digit");
+        Assert.AreEqual(0, control.Value, "the sign is only taken with the next digit");
+    }
+
+    [TestMethod]
+    public void Maximum_WidenedWithTheValueUnchanged_RequestsARepaint()
+    {
+        // The well is padded to the widest bound, so a wider maximum must be drawn again even though the value stayed put.
+        var control = CreateControl();
+        control.HasStateChanged = false;
+
+        control.Maximum = 100000;
+
+        Assert.IsTrue(control.HasStateChanged);
+        Assert.AreEqual(5, control.Value);
+    }
+
+    [TestMethod]
+    public void Minimum_ChangedWithTheValueUnchanged_RequestsARepaint()
+    {
+        // A negative minimum adds the sign hint, which only a repaint shows.
+        var control = CreateControl();
+        control.HasStateChanged = false;
+
+        control.Minimum = -5;
+
+        Assert.IsTrue(control.HasStateChanged);
+        Assert.IsTrue(control.GetKeyHints().Any(h => h.Key == "-"));
+    }
 }

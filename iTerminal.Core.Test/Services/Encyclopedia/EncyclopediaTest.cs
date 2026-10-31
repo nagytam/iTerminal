@@ -16,12 +16,20 @@ public class EncyclopediaTest
         public Exception? Failure { get; set; }
         public Task? Gate { get; set; }
 
+        /// <summary>A search that has already left the machine finishes whatever it is told: it reports its cancellation only once the gate opens.</summary>
+        public bool IgnoresCancellation { get; set; }
+
         public async Task<IReadOnlyList<EncyclopediaHit>> SearchAsync(EncyclopediaSource source, string query, CancellationToken cancellationToken = default)
         {
             SearchCalls++;
             LastSource = source;
             LastQuery = query;
-            if (Gate is not null)
+            if (Gate is not null && IgnoresCancellation)
+            {
+                await Gate;
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+            else if (Gate is not null)
             {
                 await Gate.WaitAsync(cancellationToken);
             }

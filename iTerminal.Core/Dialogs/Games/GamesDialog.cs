@@ -29,6 +29,7 @@ public class GamesDialog : SplitPaneDialog
     private int _current;
 
     private CancellationTokenSource? _cancellation;
+    private readonly Lock _landGate = new();
     private Outcome? _pending;
     private int _generation;
     private volatile bool _thinking;
@@ -224,7 +225,7 @@ public class GamesDialog : SplitPaneDialog
         _cancellation?.Cancel();
         _cancellation = new CancellationTokenSource();
         CancellationToken token = _cancellation.Token;
-        int generation = ++_generation;
+        int generation = NextGeneration();
         _thinking = true;
         StateHasChanged();
 
@@ -243,7 +244,7 @@ public class GamesDialog : SplitPaneDialog
                 // The computer simply passes the turn back; the person can still undo or start again.
             }
 
-            _pending = new Outcome(generation, move);
+            Land(new Outcome(generation, move));
         });
     }
 
@@ -251,9 +252,30 @@ public class GamesDialog : SplitPaneDialog
     private void CancelThinking()
     {
         _cancellation?.Cancel();
-        _generation++;
+        NextGeneration();
         _pending = null;
         _thinking = false;
+    }
+
+    private int NextGeneration()
+    {
+        lock (_landGate)
+        {
+            return ++_generation;
+        }
+    }
+
+    private void Land(Outcome outcome)
+    {
+        // A search that was cancelled still finishes. Only the newest one may park its move: a late one from the search it
+        // replaced would overwrite the move the newer search has just parked, and the computer would wait for ever.
+        lock (_landGate)
+        {
+            if (outcome.Generation == _generation)
+            {
+                _pending = outcome;
+            }
+        }
     }
 
     #endregion

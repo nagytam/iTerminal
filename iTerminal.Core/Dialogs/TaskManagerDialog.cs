@@ -17,6 +17,9 @@ public class TaskManagerDialog : Dialog
     private ListBox<IBackgroundTask> _listBox { get; set; }
     private ScrollBar _scrollBar { get; set; }
 
+    // The task the Delete key has asked about. It is the one the question named, even if the list has moved on since.
+    private IBackgroundTask? _taskToCancel;
+
     public TaskManagerDialog(TaskManager taskManager, IThemeService themeService) 
         : base(nameof(TaskManagerDialog), themeService)
     {
@@ -51,7 +54,22 @@ public class TaskManagerDialog : Dialog
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
-        if (keyEvent.KeyPressType == KeyPressType.Down && _listBox.SelectedItem?.Item is { } task)
+        if (keyEvent.KeyPressType == KeyPressType.Down && _taskToCancel is { } asked)
+        {
+            // Cancelling a task throws away what it has done so far, so the question is answered first: y or Delete
+            // cancels it, and any other key keeps the task running.
+            _taskToCancel = null;
+            bool plain = !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift;
+            if (plain && (keyEvent.ConsoleKey == ConsoleKey.Delete || char.ToLowerInvariant(keyEvent.KeyChar) == 'y'))
+            {
+                asked.CancellationTokenSource.Cancel();
+            }
+
+            StateHasChanged();
+            return true;
+        }
+
+        if (keyEvent.KeyPressType == KeyPressType.Down && CursorTask() is { } task)
         {
             if (keyEvent.ConsoleKey == ConsoleKey.P && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
             {
@@ -70,7 +88,8 @@ public class TaskManagerDialog : Dialog
 
             if (keyEvent.ConsoleKey == ConsoleKey.Delete && !keyEvent.Control && !keyEvent.Alt)
             {
-                task.CancellationTokenSource.Cancel();
+                _taskToCancel = task;
+                StateHasChanged();
                 return true;
             }
         }
@@ -78,9 +97,30 @@ public class TaskManagerDialog : Dialog
         return await base.HandleKeyEventAsync(keyEvent);
     }
 
+    /// <summary>The task on the cursor row. Enter marks a row as selected, but a cursor move alone does not, so the keys act on this.</summary>
+    private IBackgroundTask? CursorTask()
+    {
+        var items = _listBox.ListModel.ListItems;
+        int cursor = (int)_listBox.ScrollableModel.CursorPosition.Y;
+        return cursor >= 0 && cursor < items.Count ? items[cursor].Item : null;
+    }
+
     /// <summary>The keys this dialog adds to the list's.</summary>
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
+        if (_taskToCancel is not null)
+        {
+            yield return ("y / Del", UiText.Get("DialogHint.CancelTask", "Cancel the task"));
+            yield return ("Any other key", UiText.Get("DialogHint.KeepTaskRunning", "Keep the task running"));
+            yield break;
+        }
+
+        // With no task under the cursor these keys do nothing, so the footer does not name them.
+        if (CursorTask() is null)
+        {
+            yield break;
+        }
+
         yield return ("P", UiText.Get("DialogHint.PauseResumeTask", "Pause or resume the task"));
         yield return ("Ctrl+↑/↓", UiText.Get("DialogHint.MoveQueuedTask", "Move a queued task"));
         yield return ("Del", UiText.Get("DialogHint.CancelTask", "Cancel the task"));
@@ -88,7 +128,9 @@ public class TaskManagerDialog : Dialog
 
     public override void OnIdle()
     {
-        Title = string.Format(UiText.Get("Dialog.TaskManagerTitle", "Task Manager ({0})"), _listBox.Count);
+        Title = _taskToCancel is { } asked
+            ? string.Format(UiText.Get("Dialog.TaskManagerCancelQuestion", "Cancel \"{0}\"?"), asked.DisplayName)
+            : string.Format(UiText.Get("Dialog.TaskManagerTitle", "Task Manager ({0})"), _listBox.Count);
         base.OnIdle();
     }
 

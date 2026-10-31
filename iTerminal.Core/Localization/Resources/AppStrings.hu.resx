@@ -1417,6 +1417,9 @@
   <data name="DialogHint.CancelTask" xml:space="preserve">
     <value>A feladat megszakítása</value>
   </data>
+  <data name="DialogHint.KeepTaskRunning" xml:space="preserve">
+    <value>A feladat futtatásának folytatása</value>
+  </data>
   <data name="DialogHint.ChooseTheme" xml:space="preserve">
     <value>Téma kiválasztása</value>
   </data>
@@ -1852,6 +1855,9 @@
   <data name="Dialog.TaskManagerTitle" xml:space="preserve">
     <value>Feladatkezelő ({0})</value>
   </data>
+  <data name="Dialog.TaskManagerCancelQuestion" xml:space="preserve">
+    <value>Megszakítja: „{0}”?</value>
+  </data>
   <data name="Dialog.TerminalTitle" xml:space="preserve">
     <value>Terminál</value>
   </data>
@@ -2196,6 +2202,9 @@
   </data>
   <data name="Encyclopedia.NothingToOpen" xml:space="preserve">
     <value>Még nincs megnyitható cikk.</value>
+  </data>
+  <data name="Encyclopedia.NoResultToRead" xml:space="preserve">
+    <value>Még nincs olvasható találat. Először keressen egy kifejezésre.</value>
   </data>
   <data name="Encyclopedia.Opened" xml:space="preserve">
     <value>{0} megnyitva a böngészőben.</value>

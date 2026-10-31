@@ -62,6 +62,7 @@ public class Slider : Control, IReadOnly
             }
 
             Value = _value;
+            StateHasChanged(); // the thumb sits at a place in the range, which a new range moves even when the value stays
         }
     }
 
@@ -77,6 +78,7 @@ public class Slider : Control, IReadOnly
             }
 
             Value = _value;
+            StateHasChanged(); // the thumb sits at a place in the range, which a new range moves even when the value stays
         }
     }
 

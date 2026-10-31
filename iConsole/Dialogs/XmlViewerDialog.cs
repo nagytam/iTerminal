@@ -273,6 +273,13 @@ public class XmlViewerDialog : Dialog
             : string.Format(UiText.Get("Viewer.ErrorsWarnings", "{0:N0} error(s), {1:N0} warning(s)"), errors, warnings);
     }
 
+    private XmlXPathResult? CursorResult()
+    {
+        var items = _resultsBox.ListModel.ListItems;
+        int cursor = (int)_resultsBox.ScrollableModel.CursorPosition.Y;
+        return cursor >= 0 && cursor < items.Count ? items[cursor].Item : null;
+    }
+
     /// <summary>Opens the ancestors of a node, moves the cursor to it and gives the tree the keyboard.</summary>
     public void Reveal(XmlNodeItem node)
     {
@@ -348,7 +355,8 @@ public class XmlViewerDialog : Dialog
 
         if (keyEvent.ConsoleKey == ConsoleKey.Enter && !_textMode && _resultsBox.IsFocused && !keyEvent.Control && !keyEvent.Alt)
         {
-            if (_resultsBox.SelectedItem?.Item.Node is { } node)
+            // The row under the cursor: Enter marks a row, but a cursor move alone does not, so the mark is not what to reveal.
+            if (CursorResult()?.Node is { } node)
             {
                 Reveal(node);
             }

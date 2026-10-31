@@ -1417,6 +1417,9 @@
   <data name="DialogHint.CancelTask" xml:space="preserve">
     <value>Cancel the task</value>
   </data>
+  <data name="DialogHint.KeepTaskRunning" xml:space="preserve">
+    <value>Keep the task running</value>
+  </data>
   <data name="DialogHint.ChooseTheme" xml:space="preserve">
     <value>Choose a theme</value>
   </data>
@@ -1852,6 +1855,9 @@
   <data name="Dialog.TaskManagerTitle" xml:space="preserve">
     <value>Task Manager ({0})</value>
   </data>
+  <data name="Dialog.TaskManagerCancelQuestion" xml:space="preserve">
+    <value>Cancel "{0}"?</value>
+  </data>
   <data name="Dialog.TerminalTitle" xml:space="preserve">
     <value>Terminal</value>
   </data>
@@ -2196,6 +2202,9 @@
   </data>
   <data name="Encyclopedia.NothingToOpen" xml:space="preserve">
     <value>There is no article to open yet.</value>
+  </data>
+  <data name="Encyclopedia.NoResultToRead" xml:space="preserve">
+    <value>There is no result to read yet. Search for a term first.</value>
   </data>
   <data name="Encyclopedia.Opened" xml:space="preserve">
     <value>Opened {0} in the browser.</value>

@@ -451,6 +451,9 @@
   <data name="Hint.SetValueZero" xml:space="preserve">
     <value>Set the value to 0</value>
   </data>
+  <data name="Hint.SetValueNearestBound" xml:space="preserve">
+    <value>Set the value to the nearest bound</value>
+  </data>
   <data name="Hint.StartOrEndOfText" xml:space="preserve">
     <value>Start or end of the text</value>
   </data>
