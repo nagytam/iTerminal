@@ -48,6 +48,22 @@ public class RuntimeDependencyDialogTest
     }
 
     [TestMethod]
+    public async Task InitializingAnOpenDialogAgain_KeepsTheFirstPageOnScreen()
+    {
+        var service = NewService(RuntimeDependencyState.Missing);
+        var dialog = new RuntimeDependencyDialog(service.Object, TestTheme());
+        await ShowAsync(dialog);
+
+        // The start-up offer shows the dialog and then the screen initializes all its children, the dialog among them.
+        await dialog.OnInitializeAsync();
+
+        var screen = Render(dialog);
+        AssertScreenContains(screen, "Step 1 of 2: Playwright");
+        AssertScreenContains(screen, "Not installed. Install 1.63.0.");
+        AssertScreenContains(screen, "[x] Install this one");
+    }
+
+    [TestMethod]
     public async Task AnUpdateSaysWhichVersionItReplaces()
     {
         var service = NewService(RuntimeDependencyState.UpdateAvailable);
