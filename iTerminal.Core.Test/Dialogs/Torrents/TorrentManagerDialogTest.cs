@@ -240,4 +240,19 @@ public class TorrentManagerDialogTest
         Assert.AreEqual("-", TorrentManagerDialog.FormatRate(0));
         Assert.AreEqual("[#####-----]", TorrentManagerDialog.ProgressBar(50, 12));
     }
+
+    [TestMethod]
+    public async Task TheColumnTitlesLineUpWithTheRowsAndAreNotCutOff()
+    {
+        var (dialog, _, _) = Create();
+        await ShowAsync(dialog);
+        await dialog.PendingOperation;
+
+        // "Peer" was clipped to "Pe" because the header was two cells wider than the room.
+        AssertScreenContains(Render(dialog), "Up Peer");
+        Assert.AreEqual(TorrentManagerDialog.Row(Item("x", TorrentStatus.Downloading), 10).Length + 1 + 2,
+            ("  " + "Name".PadRight(10) + " " + "State".PadRight(8) + " " + "Done".PadLeft(6) + " " + "Size".PadLeft(9) + " " + "Down".PadLeft(10) + " " + "Up".PadLeft(10) + " " + "Peer".PadLeft(4)).Length + 1,
+            "the title row is as wide as a data row");
+    }
+
 }

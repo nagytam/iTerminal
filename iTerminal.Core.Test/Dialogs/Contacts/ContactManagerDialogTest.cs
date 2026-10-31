@@ -181,7 +181,9 @@ public class ContactManagerDialogTest
         Assert.IsTrue(dialog.IsFilteringForTest);
         Assert.AreEqual("Bob", dialog.SelectedForTest!.Name);
         var screen = Render(dialog);
-        AssertScreenContains(screen, "1 of 2 contacts");
+        // The words do not fit beside the last column title at this width, so the short form stands in for them.
+        AssertScreenContains(screen, "1/2");
+        AssertScreenContains(screen, "Company");
         Assert.IsFalse(screen.ToString()!.Contains("alice@example.com"));
     }
 
@@ -282,4 +284,18 @@ public class ContactManagerDialogTest
         await dialog.HandleKeyEventAsync(Char('n'));
         CollectionAssert.IsSubsetOf(new[] { "Enter/Tab", "Shift+Tab", "Esc" }, dialog.GetKeyHints().Select(h => h.Key).ToArray());
     }
+
+    [TestMethod]
+    public async Task TheContactCount_DoesNotPaintOverTheLastColumnTitle()
+    {
+        var (dialog, _) = Create();
+        await ShowAsync(dialog);
+
+        var screen = Render(dialog);
+
+        // The title is the whole word; the count took its place before ("Com0 contacts").
+        AssertScreenContains(screen, "Company");
+        AssertScreenDoesNotContain(screen, "Com0");
+    }
+
 }
