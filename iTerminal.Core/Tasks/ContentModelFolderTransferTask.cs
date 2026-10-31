@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -46,7 +47,7 @@ public abstract class ContentModelFolderTransferTask(
         try
         {
             Subject = TaskNotificationHelper.TransferSubject(sourceUrl, targetUrl);
-            Description = $"{Verb} folder{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}{Environment.NewLine}to{Environment.NewLine}{targetUrl.FullName.Shrink(60)}{Environment.NewLine}started";
+            Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.VerbFolder", "{0} folder"), Verb), sourceUrl.FullName.Shrink(60), UiText.Get("Task.To", "to"), targetUrl.FullName.Shrink(60), UiText.Get("Task.Started", "started"));
 
             if (target.IsReadOnly)
             {
@@ -91,7 +92,7 @@ public abstract class ContentModelFolderTransferTask(
                     UpdatePercentage(discoveryTask, processed, discovered);
                     Description = processed == 0 && bytes == 0
                         ? $"Discovering…{Environment.NewLine}{discovered} file(s) found so far"
-                        : $"{ProgressVerb} {processed}/{discovered} file(s){Environment.NewLine}{currentFile}";
+                        : string.Join(Environment.NewLine, string.Format(UiText.Get("Task.ProgressFiles", "{0} {1}/{2} file(s)"), ProgressVerb, processed, discovered), currentFile);
                 }
 
                 failedItems = await FolderCopyPipeline.RunAsync(
@@ -124,14 +125,14 @@ public abstract class ContentModelFolderTransferTask(
                     onFileStarted: url =>
                     {
                         currentFile = url.FullName.Shrink(60) ?? string.Empty;
-                        Description = $"{ProgressVerb} {ItemsProcessed}/{discoveryTask.ItemsProcessed} file(s){Environment.NewLine}{currentFile}";
+                        Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.ProgressFiles", "{0} {1}/{2} file(s)"), ProgressVerb, ItemsProcessed, discoveryTask.ItemsProcessed), currentFile);
                     },
                     pauseGate: PauseGate);
                 ReportBytes(Interlocked.Read(ref _bytesCopied), discoveryTask.TotalBytes);
 
                 if (DeletesSource && failedItems.Count == 0)
                 {
-                    Description = $"Removing source folder{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}";
+                    Description = string.Join(Environment.NewLine, UiText.Get("Task.RemovingSource", "Removing source folder"), sourceUrl.FullName.Shrink(60));
                     source.DeleteFolder(sourceUrl, recursive: true, moveToRecycleBin: false);
                 }
             }
@@ -147,11 +148,11 @@ public abstract class ContentModelFolderTransferTask(
         }
         catch (OperationCanceledException)
         {
-            Description = $"{Verb} folder{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}{Environment.NewLine}cancelled";
+            Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.VerbFolder", "{0} folder"), Verb), sourceUrl.FullName.Shrink(60), UiText.Get("Task.Cancelled", "cancelled"));
         }
         catch (Exception ex)
         {
-            Description = $"{Verb} folder failed: {ex.Message}";
+            Description = string.Format(UiText.Get("Task.VerbFolderFailed", "{0} folder failed: {1}"), Verb, ex.Message);
             Error = ex.Message;
         }
     }
@@ -206,7 +207,7 @@ public abstract class ContentModelFolderTransferTask(
 
     private string FormatFinishedDescription(IReadOnlyList<(Url Url, string Error)> failedItems)
     {
-        var baseDescription = $"{Verb} folder{Environment.NewLine}{sourceUrl.FullName.Shrink(60)}{Environment.NewLine}to{Environment.NewLine}{targetUrl.FullName.Shrink(60)}{Environment.NewLine}finished";
+        var baseDescription = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.VerbFolder", "{0} folder"), Verb), sourceUrl.FullName.Shrink(60), UiText.Get("Task.To", "to"), targetUrl.FullName.Shrink(60), UiText.Get("Task.Finished", "finished"));
         if (failedItems.Count == 0)
         {
             return baseDescription;
@@ -214,6 +215,6 @@ public abstract class ContentModelFolderTransferTask(
 
         var details = string.Join(", ", failedItems.Select(f => $"{f.Url.Name} ({f.Error})"));
         var suffix = DeletesSource ? " — source not fully removed" : string.Empty;
-        return $"{baseDescription} with {failedItems.Count} error(s){suffix}: {details}";
+        return string.Format(UiText.Get("Task.WithErrorsSuffix", "{0} with {1} error(s){2}: {3}"), baseDescription, failedItems.Count, suffix, details);
     }
 }

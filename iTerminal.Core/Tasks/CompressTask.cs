@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -34,7 +35,7 @@ public sealed class CompressTask(
         string? workFolder = null;
         try
         {
-            Description = $"Compress{Environment.NewLine}{archiveName}{Environment.NewLine}reading the files…";
+            Description = string.Join(Environment.NewLine, UiText.Get("Task.Compress", "Compress"), archiveName, UiText.Get("Task.ReadingFiles", "reading the files…"));
             var items = CollectItems(sources, resolveFileSystem, archiveUrl, CancellationToken);
             var files = items.Count(i => !i.IsFolder);
             ReportItems(0, files);
@@ -54,7 +55,7 @@ public sealed class CompressTask(
                 workPath = Path.Combine(workFolder, archiveName);
                 if (target.ExistsFile(archiveUrl))
                 {
-                    Description = $"Compress{Environment.NewLine}{archiveName}{Environment.NewLine}fetching the archive to add to…";
+                    Description = string.Join(Environment.NewLine, UiText.Get("Task.Compress", "Compress"), archiveName, UiText.Get("Task.FetchingArchiveToAdd", "fetching the archive to add to…"));
                     await using var download = new FileStream(workPath, FileMode.Create, FileAccess.Write);
                     await target.StreamToAsync(archiveUrl, download, null, CancellationToken);
                 }
@@ -69,14 +70,14 @@ public sealed class CompressTask(
                     OnProgressChanged(Math.Clamp(100L * p.BytesDone / p.BytesTotal, 0, 100));
                 }
 
-                Description = $"Compressing into {archiveName.Shrink(50)}{Environment.NewLine}{p.CurrentEntry.Shrink(60)}";
+                Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.CompressingInto", "Compressing into {0}"), archiveName.Shrink(50)), p.CurrentEntry.Shrink(60));
             });
 
             Result = await compressionService.CompressAsync(workPath, items, options, progress, CancellationToken);
 
             if (!isLocal)
             {
-                Description = $"Compress{Environment.NewLine}{archiveName}{Environment.NewLine}uploading…";
+                Description = string.Join(Environment.NewLine, UiText.Get("Task.Compress", "Compress"), archiveName, UiText.Get("Task.Uploading", "uploading…"));
                 await using var upload = new FileStream(workPath, FileMode.Open, FileAccess.Read);
                 await target.StreamFromAsync(archiveUrl, upload, null, CancellationToken);
             }
@@ -86,11 +87,11 @@ public sealed class CompressTask(
         }
         catch (OperationCanceledException)
         {
-            Description = $"Compress{Environment.NewLine}{archiveName}{Environment.NewLine}cancelled — the archive was left as it was";
+            Description = string.Join(Environment.NewLine, UiText.Get("Task.Compress", "Compress"), archiveName, UiText.Get("Task.CompressCancelled", "cancelled — the archive was left as it was"));
         }
         catch (Exception exception)
         {
-            Description = $"Compress failed: {exception.Message}";
+            Description = string.Format(UiText.Get("Task.CompressFailed", "Compress failed: {0}"), exception.Message);
             Error = exception.Message;
         }
         finally

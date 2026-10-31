@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
@@ -18,8 +19,8 @@ public class ContentModelCopyFolderTask(
     IErrorPromptService errorPromptService)
     : ContentModelFolderTransferTask(source, target, sourceUrl, targetUrl, overwrite, discoveryTask, errorPromptService)
 {
-    protected override string Verb => "Copy";
-    protected override string ProgressVerb => "Copying";
+    protected override string Verb => UiText.Get("Verb.Copy", "Copy");
+    protected override string ProgressVerb => UiText.Get("Verb.Copying", "Copying");
     protected override bool DeletesSource => false;
 
     protected override Task SameFileSystemTransferAsync(IFileSystem fileSystem, Url sourceUrl, Url targetUrl, bool overwrite) =>

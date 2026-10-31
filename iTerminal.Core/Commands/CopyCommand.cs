@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
@@ -17,7 +18,7 @@ public class CopyCommand(
     IContentModelService contentModelService)
     : TransferCommand(taskManager, progressWindowFactory, errorPromptService, fileSystemResolver, contentModelService)
 {
-    protected override string OperationName => "Copy";
+    protected override string OperationName => UiText.Get("Verb.Copy", "Copy");
 
     protected override bool RemovesSource => false;
 

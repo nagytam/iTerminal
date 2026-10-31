@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -29,7 +30,7 @@ public class ContentModelDeleteTask(
         try
         {
             Subject = iTerminal.Core.Commands.FocusedEntry.NameOf(url);
-            Description = $"Delete{Environment.NewLine}{url.FullName.Shrink(60)}{Environment.NewLine}started";
+            Description = string.Join(Environment.NewLine, UiText.Get("Task.Delete", "Delete"), url.FullName.Shrink(60), UiText.Get("Task.Started", "started"));
 
             if (target.IsReadOnly)
             {
@@ -73,24 +74,24 @@ public class ContentModelDeleteTask(
         }
         catch (OperationCanceledException)
         {
-            Description = $"Delete{Environment.NewLine}{url.FullName.Shrink(60)}{Environment.NewLine}cancelled";
+            Description = string.Join(Environment.NewLine, UiText.Get("Task.Delete", "Delete"), url.FullName.Shrink(60), UiText.Get("Task.Cancelled", "cancelled"));
         }
         catch (Exception ex)
         {
-            Description = $"Delete failed: {ex.Message}";
+            Description = string.Format(UiText.Get("Task.DeleteFailed", "Delete failed: {0}"), ex.Message);
             Error = ex.Message;
         }
     }
 
     private string FormatFinishedDescription(IReadOnlyList<(Url Url, string Error)> failedItems)
     {
-        var baseDescription = $"Delete{Environment.NewLine}{url.FullName.Shrink(60)}{Environment.NewLine}finished";
+        var baseDescription = string.Join(Environment.NewLine, UiText.Get("Task.Delete", "Delete"), url.FullName.Shrink(60), UiText.Get("Task.Finished", "finished"));
         if (failedItems.Count == 0)
         {
             return baseDescription;
         }
 
         var details = string.Join(", ", failedItems.Select(f => $"{f.Url.Name} ({f.Error})"));
-        return $"{baseDescription} with {failedItems.Count} error(s): {details}";
+        return string.Format(UiText.Get("Task.WithErrors", "{0} with {1} error(s): {2}"), baseDescription, failedItems.Count, details);
     }
 }

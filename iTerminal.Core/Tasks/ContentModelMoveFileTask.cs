@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
@@ -12,8 +13,8 @@ namespace iTerminal.Core.Tasks;
 public class ContentModelMoveFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite, IErrorPromptService? errorPromptService = null)
     : ContentModelFileTransferTask(source, target, sourceUrl, targetUrl, overwrite, errorPromptService)
 {
-    protected override string Verb => "Move";
-    protected override string ProgressVerb => "Moving";
+    protected override string Verb => UiText.Get("Verb.Move", "Move");
+    protected override string ProgressVerb => UiText.Get("Verb.Moving", "Moving");
     protected override bool DeletesSource => true;
 
     protected override Task SameFileSystemTransferAsync(IFileSystem fileSystem, Url sourceUrl, Url targetUrl, bool overwrite) =>

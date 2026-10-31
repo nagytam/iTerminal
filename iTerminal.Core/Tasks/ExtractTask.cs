@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -63,7 +64,7 @@ public sealed class ExtractTask(
         Failures = failures;
         if (CancellationToken.IsCancellationRequested)
         {
-            Description = $"Extract cancelled{Environment.NewLine}{extracted} file(s) were already written";
+            Description = string.Join(Environment.NewLine, UiText.Get("Task.ExtractCancelled", "Extract cancelled"), string.Format(UiText.Get("Task.FilesWritten", "{0} file(s) were already written"), extracted));
             return;
         }
 
@@ -110,7 +111,7 @@ public sealed class ExtractTask(
         string? workFolder = null;
         try
         {
-            Description = $"Extract {index + 1} of {archives.Count}{Environment.NewLine}{name.Shrink(60)}";
+            Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.ExtractStep", "Extract {0} of {1}"), index + 1, archives.Count), name.Shrink(60));
 
             string archivePath;
             if (archive.ContainerType == ContainerType.FileSystem)
@@ -122,7 +123,7 @@ public sealed class ExtractTask(
                 workFolder = Path.Combine(Path.GetTempPath(), "iTerminal-unpack-" + Guid.NewGuid().ToString("N")[..8]);
                 Directory.CreateDirectory(workFolder);
                 archivePath = Path.Combine(workFolder, name);
-                Description = $"Extract {index + 1} of {archives.Count}{Environment.NewLine}{name.Shrink(60)}{Environment.NewLine}fetching the archive…";
+                Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.ExtractStep", "Extract {0} of {1}"), index + 1, archives.Count), name.Shrink(60), UiText.Get("Task.FetchingArchive", "fetching the archive…"));
                 await using var download = new FileStream(archivePath, FileMode.Create, FileAccess.Write);
                 await resolveFileSystem(archive).StreamToAsync(archive, download, null, cancellationToken);
             }
@@ -137,7 +138,7 @@ public sealed class ExtractTask(
                     OnProgressChanged((long)Math.Clamp((index * 100 + share) / archives.Count, 0, 100));
                 }
 
-                Description = $"Extract {index + 1} of {archives.Count}: {name.Shrink(50)}{Environment.NewLine}{p.CurrentEntry.Shrink(60)}";
+                Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.ExtractStepNamed", "Extract {0} of {1}: {2}"), index + 1, archives.Count, name.Shrink(50)), p.CurrentEntry.Shrink(60));
             });
 
             if (destination.ContainerType == ContainerType.FileSystem)

@@ -105,7 +105,7 @@ public class DeleteCommand(
             steps.Add(new BatchStep(FocusedEntry.NameOf(url), task, discoveryTask));
         }
 
-        var batch = new BatchOperationTask("Delete", steps);
+        var batch = new BatchOperationTask(UiText.Get("Task.Delete", "Delete"), steps);
         PanelRefreshHelper.RefreshWhenFinished(batch, contentModelService, deleteDialog.Urls[0]);
         TransferCommand.ConsumeMarks(deleteDialog.SourceModel);
 
