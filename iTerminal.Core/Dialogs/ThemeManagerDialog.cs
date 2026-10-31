@@ -42,7 +42,7 @@ public class ThemeManagerDialog : Dialog
         };
         _listBoxThemes = new ListBox<ColorScheme>(listModel, themeService)
         {
-            EmptyText = " No themes available.",
+            EmptyText = UiText.Get("Empty.Themes", " No themes available."),
         };
         _listBoxThemes.EnableTypeAhead = true;
         AddControl(_listBoxThemes);

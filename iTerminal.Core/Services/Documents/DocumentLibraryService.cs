@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Data;
 using iTerminal.Core.Data.Documents;
 using iTerminal.Core.Documents;
@@ -250,7 +251,7 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
         }
         catch (Exception exception)
         {
-            StatusMessage = $"Document indexing failed: {exception.Message}";
+            StatusMessage = string.Format(UiText.Get("Msg.DocIndexFailed", "Document indexing failed: {0}"), exception.Message);
             _logger?.Warning(exception, "Document library indexing failed.");
             return DocumentCount;
         }

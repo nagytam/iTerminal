@@ -676,4 +676,7 @@
   <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
     <value>Vai direttamente alla scheda il cui nome porta quel numero.</value>
   </data>
+  <data name="Json.TopLevelItems" xml:space="preserve">
+    <value>{0:N0} elemento/i di primo livello</value>
+  </data>
 </root>

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Jobs;
 using iConsole.Services;
 using iTerminal.Core.Dialogs;
@@ -55,6 +56,6 @@ public class UpdateCheckJob(
             return;
         }
 
-        notifications.Notify($"iTerminal {update.Version} is available", $"You have {updates.CurrentVersion}. Download it from {updates.ReleasesAddress}");
+        notifications.Notify(string.Format(UiText.Get("Notify.UpdateAvailable", "iTerminal {0} is available"), update.Version), string.Format(UiText.Get("Notify.UpdateDetail", "You have {0}. Download it from {1}"), updates.CurrentVersion, updates.ReleasesAddress));
     }
 }

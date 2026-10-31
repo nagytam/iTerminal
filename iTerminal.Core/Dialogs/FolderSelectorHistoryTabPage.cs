@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
 using iConsole.Controls;
@@ -40,7 +41,7 @@ public class FolderSelectorHistoryTabPage : FolderSelectorTabPage
         };
         _listBox = new ListBox<string>(listModel, themeService)
         {
-            EmptyText = " No folders visited yet.",
+            EmptyText = UiText.Get("Empty.History", UiText.Get("Empty.History", " No folders visited yet.")),
         };
         _scrollBar = new ScrollBar(themeService)
         {

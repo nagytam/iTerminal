@@ -140,7 +140,7 @@ public class PackageManagerDialog : SplitPaneDialog
 
         _packageListBox = new PackageListBox(new ListBoxModel<PackageInfo>(_packageItems), themeService)
         {
-            EmptyText = " Loading…",
+            EmptyText = UiText.Get("Empty.Loading", UiText.Get("Empty.Loading", " Loading…")),
         };
         _outputListBox = new PackageOutputListBox(new ListBoxModel<string>(_outputItems), themeService);
         _inputBox = new TextBox(beepService, dateTimeProviderService, themeService)
@@ -303,7 +303,7 @@ public class PackageManagerDialog : SplitPaneDialog
             if (error is not null)
             {
                 _message = $"Error: {error}";
-                _packageListBox.EmptyText = " Could not list packages — r retries.";
+                _packageListBox.EmptyText = UiText.Get("Empty.PackagesFailed", UiText.Get("Empty.PackagesFailed", " Could not list packages — r retries."));
             }
             else
             {

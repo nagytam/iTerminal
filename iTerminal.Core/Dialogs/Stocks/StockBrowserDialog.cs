@@ -142,11 +142,11 @@ public class StockBrowserDialog : SplitPaneDialog
 
         _stockListBox = new StockListBox(new ListBoxModel<StockRow>(_rowItems), themeService)
         {
-            EmptyText = " The watchlist is empty — press a to add a stock.",
+            EmptyText = UiText.Get("Empty.Watchlist", " The watchlist is empty — press a to add a stock."),
         };
         _hitListBox = new HitListBox(new ListBoxModel<StockSearchHit>(_hitItems), themeService)
         {
-            EmptyText = " Nothing found.",
+            EmptyText = UiText.Get("Empty.StockNothing", " Nothing found."),
         };
         _inputBox = new TextBox(beepService, dateTimeProviderService, themeService)
         {

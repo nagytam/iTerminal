@@ -35,7 +35,7 @@ public class ProcessManagerDialog : Dialog
         };
         _listBox = new ListBox<Process>(listModel, themeService)
         {
-            EmptyText = " No process matches the filter.",
+            EmptyText = UiText.Get("Empty.Processes", UiText.Get("Empty.Processes", " No process matches the filter.")),
         };
         AddControl(_listBox);
 

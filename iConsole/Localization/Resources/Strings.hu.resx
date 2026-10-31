@@ -676,4 +676,7 @@
   <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
     <value>Ugrás közvetlenül arra a lapra, amelynek nevében szerepel a szám.</value>
   </data>
+  <data name="Json.TopLevelItems" xml:space="preserve">
+    <value>{0:N0} legfelső szintű elem</value>
+  </data>
 </root>

@@ -114,7 +114,7 @@ public class EditLinkDialog : FormDialog
 
     public override async Task OnInitializeAsync()
     {
-        _labelLink.Text = "link " + LinkPath;
+        _labelLink.Text = string.Format(UiText.Get("Msg.LinkPath", "link {0}"), LinkPath);
         LoadTask = InspectAsync();
         await LoadTask;
         await base.OnInitializeAsync();
@@ -183,7 +183,7 @@ public class EditLinkDialog : FormDialog
         }
 
         _textBoxTarget.ScrollableModel.ViewSize = _textBoxTarget.ViewSize;
-        _labelLink.Text = ("link " + LinkPath).Shrink((int)FieldWidth) ?? string.Empty;
+        _labelLink.Text = string.Format(UiText.Get("Msg.LinkPath", "link {0}"), LinkPath).Shrink((int)FieldWidth) ?? string.Empty;
         LayoutButtonRow(_saveButton, _cancelButton);
     }
 

@@ -676,4 +676,7 @@
   <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
     <value>Ir directamente a la pestaña cuyo nombre lleva ese número.</value>
   </data>
+  <data name="Json.TopLevelItems" xml:space="preserve">
+    <value>{0:N0} elemento(s) de nivel superior</value>
+  </data>
 </root>

@@ -676,4 +676,7 @@
   <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
     <value>Direkt zur Registerseite springen, deren Name diese Nummer trägt.</value>
   </data>
+  <data name="Json.TopLevelItems" xml:space="preserve">
+    <value>{0:N0} Element(e) auf oberster Ebene</value>
+  </data>
 </root>

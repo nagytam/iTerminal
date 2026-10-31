@@ -676,4 +676,7 @@
   <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
     <value>Aller directement à l’onglet dont le nom porte ce numéro.</value>
   </data>
+  <data name="Json.TopLevelItems" xml:space="preserve">
+    <value>{0:N0} élément(s) de premier niveau</value>
+  </data>
 </root>
