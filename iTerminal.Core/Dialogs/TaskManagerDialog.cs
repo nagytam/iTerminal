@@ -88,7 +88,7 @@ public class TaskManagerDialog : Dialog
 
     public override void OnIdle()
     {
-        Title = $"Task Manager ({_listBox.Count})";
+        Title = string.Format(UiText.Get("Dialog.TaskManagerTitle", "Task Manager ({0})"), _listBox.Count);
         base.OnIdle();
     }
 

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls.Tabs;
 using iConsole.Data;
@@ -23,7 +24,7 @@ public class TerminalDialog : Dialog
     {
         _terminalModel = terminalModel ?? new TerminalModel(new iConsole.Tasks.TaskManager(), null!);
         _terminalCommand = _terminalModel.History.LastOrDefault();
-        Title = $"Terminal";
+        Title = UiText.Get("Dialog.TerminalTitle", "Terminal");
         _tab = new Tab(themeService);
         AddControl(_tab);
 
@@ -47,11 +48,11 @@ public class TerminalDialog : Dialog
         _terminalCommand = _terminalModel.History.LastOrDefault();
         if (_terminalCommand is not null)
         {
-            Title = $"Terminal - {_terminalCommand?.Command}";
+            Title = string.Format(UiText.Get("Dialog.TerminalCommandTitle", "Terminal - {0}"), _terminalCommand?.Command);
         }
         else
         {
-            Title = $"Terminal";
+            Title = UiText.Get("Dialog.TerminalTitle", "Terminal");
         }
 
     }

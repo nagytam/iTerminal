@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Controls.Tabs;
 using iConsole.Data;
@@ -57,8 +58,8 @@ public class SettingsPanelsTabPage : TabPage
         _hintLabel = new Label("Shift+F11 changes the focused panel's order without coming here.", themeService);
 
         // Two titled rules group the page: what orders the panels, and what both of them list.
-        _orderRule = new Separator(themeService) { Title = "Order" };
-        _listingRule = new Separator(themeService) { Title = "Listing" };
+        _orderRule = new Separator(themeService) { Title = UiText.Get("Settings.Order", "Order") };
+        _listingRule = new Separator(themeService) { Title = UiText.Get("Settings.Listing", "Listing") };
 
         // The first focusable control is where the cursor lands when the page is chosen.
         AddControl(_orderRule);

@@ -333,7 +333,7 @@ public class StockBrowserDialog : SplitPaneDialog
         }
 
         _isBusy = true;
-        SetMessage("Searching…");
+        SetMessage(UiText.Get("Msg.Searching", "Searching…"));
         _ = Task.Run(async () =>
         {
             try
@@ -350,7 +350,7 @@ public class StockBrowserDialog : SplitPaneDialog
             catch (Exception exception)
             {
                 // Any failure is said here: only the network ones were, so a bad reply left "Searching…" on the screen.
-                SetMessage($"Error: search failed — {exception.Message}");
+                SetMessage(string.Format(UiText.Get("Msg.SearchFailed", "Error: search failed — {0}"), exception.Message));
             }
             finally
             {
@@ -387,7 +387,7 @@ public class StockBrowserDialog : SplitPaneDialog
             catch (Exception exception)
             {
                 // Any failure is said here, as for the search: a non-network one left "Adding…" on the screen.
-                SetMessage($"Error: {exception.Message}");
+                SetMessage(string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), exception.Message));
             }
             finally
             {

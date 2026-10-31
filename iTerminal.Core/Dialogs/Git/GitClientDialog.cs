@@ -192,7 +192,7 @@ public class GitClientDialog : SplitPaneDialog
     private CancellationTokenSource? _diffCts;
 
     /// <summary>What the detail pane is currently showing, for its header band.</summary>
-    private string _detailTitle = "Details";
+    private string _detailTitle = UiText.Get("Dialog.GitDetails", "Details");
 
     /// <summary>
     /// Set while the detail pane holds a command's failure output rather than a diff. Git's errors
@@ -522,7 +522,7 @@ public class GitClientDialog : SplitPaneDialog
         }
         catch (Exception exception)
         {
-            SetMessage($"Error: {exception.Message}", MessageSeverity.Error);
+            SetMessage(string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), exception.Message), MessageSeverity.Error);
             _loading = false;
             StateHasChanged();
         }
@@ -808,7 +808,7 @@ public class GitClientDialog : SplitPaneDialog
             else
             {
                 var output = string.IsNullOrWhiteSpace(result.Output) ? "the command failed." : result.Output.Trim();
-                SetMessage($"Error: {FirstLine(output)}", MessageSeverity.Error);
+                SetMessage(string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), FirstLine(output)), MessageSeverity.Error);
                 ShowErrorDetail(busyMessage.TrimEnd('.'), output);
             }
 
@@ -1305,7 +1305,7 @@ public class GitClientDialog : SplitPaneDialog
     private void CancelInput()
     {
         HideInput();
-        SetMessage("Cancelled.", MessageSeverity.Info);
+        SetMessage(UiText.Get("Msg.Cancelled", "Cancelled."), MessageSeverity.Info);
         StateHasChanged();
     }
 
@@ -1343,7 +1343,7 @@ public class GitClientDialog : SplitPaneDialog
         }
         else
         {
-            SetMessage("Cancelled.", MessageSeverity.Info);
+            SetMessage(UiText.Get("Msg.Cancelled", "Cancelled."), MessageSeverity.Info);
             StateHasChanged();
         }
 
@@ -1625,7 +1625,7 @@ public class GitClientDialog : SplitPaneDialog
         var position = total > rows
             ? $"  {Math.Min(total, (int)_diffListBox.ScrollableModel.ScrollPosition.Y + rows)}/{total}"
             : string.Empty;
-        var title = _detailShowsError ? $"Failed: {_detailTitle}" : _detailTitle;
+        var title = _detailShowsError ? string.Format(UiText.Get("Msg.FailedTitle", "Failed: {0}"), _detailTitle) : _detailTitle;
         return (title.Shrink(Math.Max(1, width - position.Length - 2)) ?? string.Empty) + position;
     }
 

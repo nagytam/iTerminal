@@ -1822,4 +1822,43 @@
   <data name="Msg.WorkspaceBackExcept" xml:space="preserve">
     <value>A(z) „{0}” munkaterület visszaállt, kivéve:</value>
   </data>
+  <data name="Dialog.ContactsTitle" xml:space="preserve">
+    <value>Névjegyek</value>
+  </data>
+  <data name="Dialog.GamesTitle" xml:space="preserve">
+    <value>Játékok</value>
+  </data>
+  <data name="Msg.Cancelled" xml:space="preserve">
+    <value>Megszakítva.</value>
+  </data>
+  <data name="Dialog.GitDetails" xml:space="preserve">
+    <value>Részletek</value>
+  </data>
+  <data name="Msg.FailedTitle" xml:space="preserve">
+    <value>Sikertelen: {0}</value>
+  </data>
+  <data name="Msg.Searching" xml:space="preserve">
+    <value>Keresés…</value>
+  </data>
+  <data name="Msg.SearchFailed" xml:space="preserve">
+    <value>Hiba: a keresés sikertelen — {0}</value>
+  </data>
+  <data name="Settings.Order" xml:space="preserve">
+    <value>Sorrend</value>
+  </data>
+  <data name="Settings.Listing" xml:space="preserve">
+    <value>Listázás</value>
+  </data>
+  <data name="Dialog.TaskManagerTitle" xml:space="preserve">
+    <value>Feladatkezelő ({0})</value>
+  </data>
+  <data name="Dialog.TerminalTitle" xml:space="preserve">
+    <value>Terminál</value>
+  </data>
+  <data name="Dialog.TerminalCommandTitle" xml:space="preserve">
+    <value>Terminál - {0}</value>
+  </data>
+  <data name="Dialog.MailAccountTitle" xml:space="preserve">
+    <value>Levelezés: {0}</value>
+  </data>
 </root>
