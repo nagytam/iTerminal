@@ -614,7 +614,7 @@ public class TorrentManagerDialog : Dialog
         Put(buffer, 1, 1, iw - 2, "  " + "Name".PadRight(nameWidth) + " " + "State".PadRight(8) + " " + "Done".PadLeft(6) + " " + "Size".PadLeft(9) + " " + "Down".PadLeft(10) + " " + "Up".PadLeft(10) + " " + "Peer".PadLeft(4), colorScheme.DisabledForeground, colorScheme.Background);
         if (_list.Count == 0)
         {
-            Put(buffer, 1, 2, iw - 2, "No torrents yet. A adds a magnet link, a .torrent file or its URL.", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Torrents.Empty", "No torrents yet. A adds a magnet link, a .torrent file or its URL."), colorScheme.DisabledForeground, colorScheme.Background);
         }
 
         int first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
@@ -636,7 +636,7 @@ public class TorrentManagerDialog : Dialog
         {
             int y = 2 + ListRows;
             Put(buffer, 1, y, iw - 2, ProgressBar(selected.Progress, Math.Min(40, iw - 12)) + $" {selected.Progress:0.0}%", colorScheme.Foreground, colorScheme.Background);
-            Put(buffer, 1, y + 1, iw - 2, selected.Error is { } error ? $"Error: {error}" : $"Saved in {selected.SavePath}", selected.Error is null ? colorScheme.DisabledForeground : colorScheme.Error, colorScheme.Background);
+            Put(buffer, 1, y + 1, iw - 2, selected.Error is { } error ? string.Format(iConsole.Localization.UiText.Get("Torrents.Error", "Error: {0}"), error) : string.Format(iConsole.Localization.UiText.Get("Torrents.SavedIn", "Saved in {0}"), selected.SavePath), selected.Error is null ? colorScheme.DisabledForeground : colorScheme.Error, colorScheme.Background);
         }
     }
 

@@ -21,9 +21,9 @@ public class ToDoListDialog : Dialog
     private const int DialogHeight = 24;
     private const int ListRows = 16;
     private const int MaxEntryLength = 120;
-    private const string DoneColumn = "Done ";
-    private const string PriorityColumn = "Priority ";
-    private const string DueColumn = "Due        ";
+    private static string DoneColumn => iConsole.Localization.UiText.Get("ToDo.Done", "Done").PadRight(6);
+    private static string PriorityColumn => iConsole.Localization.UiText.Get("ToDo.Priority", "Priority").PadRight(9);
+    private static string DueColumn => iConsole.Localization.UiText.Get("ToDo.Due", "Due").PadRight(11);
 
     private readonly IDateTimeProviderService _dateTimeProviderService;
     private readonly ToDoStore _store;
@@ -468,14 +468,14 @@ public class ToDoListDialog : Dialog
         DrawHeader(buffer, iw, colorScheme);
         DrawRows(buffer, iw, colorScheme);
         DrawEntry(buffer, iw, colorScheme);
-        Put(buffer, 1, ih - 1, iw - 2, "Space done  N new  E edit  P priority  D delete  H show done  Esc close", colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, ih - 1, iw - 2, iConsole.Localization.UiText.Get("ToDo.Hint", "Space done  N new  E edit  P priority  D delete  H show done  Esc close"), colorScheme.Foreground, colorScheme.Background);
     }
 
     private void DrawHeader(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
         var open = _store.Visible(false).Count;
         var title = $"{open} open  ·  {_store.Visible(true).Count - open} done";
-        Put(buffer, 1, 0, iw - 2, DoneColumn + PriorityColumn + DueColumn + "Subject", Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, DoneColumn + PriorityColumn + DueColumn + iConsole.Localization.UiText.Get("ToDo.Subject", "Subject"), Color.Cyan, colorScheme.Background);
         Put(buffer, iw - title.Length - 1, 0, title.Length, title, colorScheme.DisabledForeground, colorScheme.Background);
     }
 
@@ -485,7 +485,7 @@ public class ToDoListDialog : Dialog
         var selectedId = Selected?.Id;
         if (visible.Count == 0)
         {
-            Put(buffer, 1, 1, iw - 2, "No tasks. Press N to add one, e.g. !Renew passport @2026-11-01", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 1, iw - 2, iConsole.Localization.UiText.Get("ToDo.NoTasks", "No tasks. Press N to add one, e.g. !Renew passport @2026-11-01"), colorScheme.DisabledForeground, colorScheme.Background);
             return;
         }
 
@@ -510,11 +510,11 @@ public class ToDoListDialog : Dialog
                 : colorScheme.Foreground;
             var background = highlighted ? colorScheme.SelectedFocusedBackground : colorScheme.Background;
 
-            var done = task.IsComplete ? "[x]  " : "[ ]  ";
+            var done = task.IsComplete ? "[x]   " : "[ ]   ";
             var priority = task.Priority switch
             {
-                ToDoPriority.High => "High     ",
-                ToDoPriority.Low => "Low      ",
+                ToDoPriority.High => iConsole.Localization.UiText.Get("ToDo.PriorityHigh", "High").PadRight(9),
+                ToDoPriority.Low => iConsole.Localization.UiText.Get("ToDo.PriorityLow", "Low").PadRight(9),
                 _ => "         ",
             };
             var dueText = task.DueDate?.ToString("yyyy-MM-dd") ?? string.Empty;
@@ -528,7 +528,7 @@ public class ToDoListDialog : Dialog
         var y = 1 + ListRows + 1;
         if (_confirmingDelete && Selected is { } doomed)
         {
-            Put(buffer, 1, y, iw - 2, $"Delete \"{doomed.Subject}\"? (y/n)", colorScheme.Error, colorScheme.Background);
+            Put(buffer, 1, y, iw - 2, string.Format(iConsole.Localization.UiText.Get("Prompt.DeleteNamed", "Delete \"{0}\"? (y/n)"), doomed.Subject), colorScheme.Error, colorScheme.Background);
         }
         else if (_entry is not null)
         {

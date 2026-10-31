@@ -2524,4 +2524,148 @@
   <data name="Benchmark.Probe.latency.timer" xml:space="preserve">
     <value>Réveil du minuteur</value>
   </data>
+  <data name="ToDo.Hint" xml:space="preserve">
+    <value>Espace fait  N nouveau  E modifier  P priorité  D supprimer  H afficher faits  Échap fermer</value>
+  </data>
+  <data name="ToDo.Done" xml:space="preserve">
+    <value>Fait</value>
+  </data>
+  <data name="ToDo.Priority" xml:space="preserve">
+    <value>Priorité</value>
+  </data>
+  <data name="ToDo.Due" xml:space="preserve">
+    <value>Échéance</value>
+  </data>
+  <data name="ToDo.Subject" xml:space="preserve">
+    <value>Sujet</value>
+  </data>
+  <data name="ToDo.PriorityHigh" xml:space="preserve">
+    <value>Haute</value>
+  </data>
+  <data name="ToDo.PriorityLow" xml:space="preserve">
+    <value>Basse</value>
+  </data>
+  <data name="ToDo.NoTasks" xml:space="preserve">
+    <value>Aucune tâche. Appuyez sur N pour en ajouter une, p. ex. !Renouveler passeport @2026-11-01</value>
+  </data>
+  <data name="Prompt.DeleteNamed" xml:space="preserve">
+    <value>Supprimer « {0} » ? (o/n)</value>
+  </data>
+  <data name="Contacts.FilterInput" xml:space="preserve">
+    <value>Filtre : {0}_</value>
+  </data>
+  <data name="Contacts.FilterHint" xml:space="preserve">
+    <value>Filtre : {0}  (Échap affiche tous les contacts)</value>
+  </data>
+  <data name="Torrents.Empty" xml:space="preserve">
+    <value>Aucun torrent pour l'instant. A ajoute un lien magnet, un fichier .torrent ou son URL.</value>
+  </data>
+  <data name="Torrents.Error" xml:space="preserve">
+    <value>Erreur : {0}</value>
+  </data>
+  <data name="Torrents.SavedIn" xml:space="preserve">
+    <value>Enregistré dans {0}</value>
+  </data>
+  <data name="Passwords.CannotOpen" xml:space="preserve">
+    <value>Les mots de passe enregistrés ne peuvent pas être ouverts.</value>
+  </data>
+  <data name="Passwords.KeyGone" xml:space="preserve">
+    <value>La clé qui les protégeait n'existe plus pour ce compte : elles ne peuvent plus être lues.</value>
+  </data>
+  <data name="Passwords.NothingSaved" xml:space="preserve">
+    <value>Rien d'enregistré. N ajoute un mot de passe ;</value>
+  </data>
+  <data name="Passwords.SavedPassword" xml:space="preserve">
+    <value>Mot de passe enregistré</value>
+  </data>
+  <data name="Passwords.Password" xml:space="preserve">
+    <value>Mot de passe : {0}</value>
+  </data>
+  <data name="Passwords.Notes" xml:space="preserve">
+    <value>Notes : {0}</value>
+  </data>
+  <data name="Remote.Empty" xml:space="preserve">
+    <value>Rien d'enregistré. N ajoute une connexion SSH, PowerShell, FTP ou WebDAV.</value>
+  </data>
+  <data name="Remote.Runs" xml:space="preserve">
+    <value>Exécute : {0}</value>
+  </data>
+  <data name="Remote.NewConnection" xml:space="preserve">
+    <value>Nouvelle connexion</value>
+  </data>
+  <data name="Remote.EditConnection" xml:space="preserve">
+    <value>Modifier la connexion</value>
+  </data>
+  <data name="Mail.Inbox" xml:space="preserve">
+    <value>Boîte de réception — {0} {1}</value>
+  </data>
+  <data name="Mail.NoMessages" xml:space="preserve">
+    <value>Aucun message. R relit la boîte de réception.</value>
+  </data>
+  <data name="Mail.From" xml:space="preserve">
+    <value>De :</value>
+  </data>
+  <data name="Mail.To" xml:space="preserve">
+    <value>À :</value>
+  </data>
+  <data name="Mail.Subject" xml:space="preserve">
+    <value>Objet :</value>
+  </data>
+  <data name="Mail.Date" xml:space="preserve">
+    <value>Date :</value>
+  </data>
+  <data name="Mail.Body" xml:space="preserve">
+    <value>Corps :</value>
+  </data>
+  <data name="Mail.Search" xml:space="preserve">
+    <value>Recherche : </value>
+  </data>
+  <data name="Mail.TypeHint" xml:space="preserve">
+    <value>Saisissez une partie d'un nom ou d'une adresse.</value>
+  </data>
+  <data name="Mail.PressEnterHint" xml:space="preserve">
+    <value>Appuyez sur Entrée pour chercher dans le carnet d'adresses.</value>
+  </data>
+  <data name="Access.Reading" xml:space="preserve">
+    <value>Lecture…</value>
+  </data>
+  <data name="Access.NoEntries" xml:space="preserve">
+    <value>Aucune entrée : seuls le propriétaire et les administrateurs ont accès.</value>
+  </data>
+  <data name="Access.AddEntry" xml:space="preserve">
+    <value>Ajouter une entrée</value>
+  </data>
+  <data name="Access.ChangeEntry" xml:space="preserve">
+    <value>Modifier une entrée</value>
+  </data>
+  <data name="Access.ChangeOwner" xml:space="preserve">
+    <value>Modifier le propriétaire</value>
+  </data>
+  <data name="Access.Owner" xml:space="preserve">
+    <value>Propriétaire</value>
+  </data>
+  <data name="Access.Group" xml:space="preserve">
+    <value>Groupe</value>
+  </data>
+  <data name="Validation.Exists" xml:space="preserve">
+    <value>Un fichier ou un dossier portant ce nom existe déjà.</value>
+  </data>
+  <data name="Validation.Invalid" xml:space="preserve">
+    <value>Nom ou chemin non valide.</value>
+  </data>
+  <data name="Ffmpeg.Missing" xml:space="preserve">
+    <value>Cela nécessite ffmpeg et ffprobe dans le PATH — Outils &gt; Dépendances d'exécution les installe.</value>
+  </data>
+  <data name="AI.Off" xml:space="preserve">
+    <value>L'IA est désactivée (AI:Provider est None).</value>
+  </data>
+  <data name="Terminal.NoCommand" xml:space="preserve">
+    <value>Aucune commande de terminal n'a encore été exécutée.</value>
+  </data>
+  <data name="Screen.Hint" xml:space="preserve">
+    <value>Les écrans ouverts (le bureau en montre un à la fois).  Échap:fermer</value>
+  </data>
+  <data name="Startup.Dismiss" xml:space="preserve">
+    <value>Entrée ou Échap pour continuer</value>
+  </data>
 </root>

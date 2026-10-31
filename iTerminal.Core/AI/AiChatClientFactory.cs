@@ -87,7 +87,7 @@ public static class AiChatClientFactory
     /// <summary>The client registered when AI is off. Nothing reaches it: the availability check says so first.</summary>
     internal sealed class UnavailableChatClient : IChatClient
     {
-        private const string Message = "AI is off (AI:Provider is None).";
+        private static string Message => iConsole.Localization.UiText.Get("AI.Off", "AI is off (AI:Provider is None).");
 
         public Task<ChatResponse> GetResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions? options = null, CancellationToken cancellationToken = default) =>
             throw new InvalidOperationException(Message);

@@ -43,10 +43,10 @@ public abstract class UrlValidationModel(ITextModel textModel, IDateTimeProvider
     }
 
     /// <summary>Shown when the name is taken. The dialog's error line adds the "Error: " itself.</summary>
-    public const string ExistsMessage = "A file or folder with this name already exists.";
+    public static string ExistsMessage => iConsole.Localization.UiText.Get("Validation.Exists", "A file or folder with this name already exists.");
 
     /// <summary>Shown for a name or path the file system would refuse.</summary>
-    public const string InvalidMessage = "Not a valid name or path.";
+    public static string InvalidMessage => iConsole.Localization.UiText.Get("Validation.Invalid", "Not a valid name or path.");
 
     /// <summary>
     /// An empty field is invalid — the create and copy buttons stay disabled — but says nothing.
