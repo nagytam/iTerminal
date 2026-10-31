@@ -1,3 +1,4 @@
+using iConsole.Localization;
 ﻿using iConsole.Data;
 using iConsole.Services;
 using iConsole.Tasks;
@@ -16,7 +17,7 @@ public class TaskStatus : StatusBarItem
 
     public override void OnIdle()
     {
-        var text = $"Tasks: {_taskManager.Tasks.Count}".PadRight((int)ViewSize.Width);
+        var text = string.Format(UiText.Get("Status.Tasks", "Tasks: {0}"), _taskManager.Tasks.Count).PadRight((int)ViewSize.Width);
         if (text != Text)
         {
             Text = text;

@@ -634,4 +634,46 @@
   <data name="Hint.TypeOffset" xml:space="preserve">
     <value>Digita l'offset in decimale o esadecimale</value>
   </data>
+  <data name="Pagination.Caption" xml:space="preserve">
+    <value>Pagina {0} di {1}</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Errore: {0}</value>
+  </data>
+  <data name="Hint.OpenMenuNamed" xml:space="preserve">
+    <value>Apri il menu {0}</value>
+  </data>
+  <data name="Status.Tasks" xml:space="preserve">
+    <value>Attività: {0}</value>
+  </data>
+  <data name="Status.Search" xml:space="preserve">
+    <value>Ricerca: {0}</value>
+  </data>
+  <data name="Status.Hit" xml:space="preserve">
+    <value>Risultato {0}/{1}</value>
+  </data>
+  <data name="Wizard.Step" xml:space="preserve">
+    <value>Passo {0} di {1}: {2}</value>
+  </data>
+  <data name="Help.FocusedControl" xml:space="preserve">
+    <value>Controllo attivo: {0}</value>
+  </data>
+  <data name="Help.FocusedControlNone" xml:space="preserve">
+    <value>Controllo attivo: nessuno</value>
+  </data>
+  <data name="Xml.NodeCount" xml:space="preserve">
+    <value>{0} · {1:N0} nodi</value>
+  </data>
+  <data name="Splash.SystemInfo" xml:space="preserve">
+    <value>CPU: {0} core, memoria: {1} GB</value>
+  </data>
+  <data name="Hint.SwitchTabPage" xml:space="preserve">
+    <value>Passa alla scheda precedente / successiva.</value>
+  </data>
+  <data name="Hint.SwitchTabPageArrows" xml:space="preserve">
+    <value>Cambia scheda quando il controllo attivo non usa le frecce.</value>
+  </data>
+  <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
+    <value>Vai direttamente alla scheda il cui nome porta quel numero.</value>
+  </data>
 </root>

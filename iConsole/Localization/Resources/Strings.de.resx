@@ -634,4 +634,46 @@
   <data name="Hint.TypeOffset" xml:space="preserve">
     <value>Den Offset dezimal oder hexadezimal eintippen</value>
   </data>
+  <data name="Pagination.Caption" xml:space="preserve">
+    <value>Seite {0} von {1}</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Fehler: {0}</value>
+  </data>
+  <data name="Hint.OpenMenuNamed" xml:space="preserve">
+    <value>Menü „{0}“ öffnen</value>
+  </data>
+  <data name="Status.Tasks" xml:space="preserve">
+    <value>Aufgaben: {0}</value>
+  </data>
+  <data name="Status.Search" xml:space="preserve">
+    <value>Suche: {0}</value>
+  </data>
+  <data name="Status.Hit" xml:space="preserve">
+    <value>Treffer {0}/{1}</value>
+  </data>
+  <data name="Wizard.Step" xml:space="preserve">
+    <value>Schritt {0} von {1}: {2}</value>
+  </data>
+  <data name="Help.FocusedControl" xml:space="preserve">
+    <value>Fokussiertes Steuerelement: {0}</value>
+  </data>
+  <data name="Help.FocusedControlNone" xml:space="preserve">
+    <value>Fokussiertes Steuerelement: –</value>
+  </data>
+  <data name="Xml.NodeCount" xml:space="preserve">
+    <value>{0} · {1:N0} Knoten</value>
+  </data>
+  <data name="Splash.SystemInfo" xml:space="preserve">
+    <value>CPU: {0} Kerne, Speicher: {1} GB</value>
+  </data>
+  <data name="Hint.SwitchTabPage" xml:space="preserve">
+    <value>Zur vorherigen / nächsten Registerseite wechseln.</value>
+  </data>
+  <data name="Hint.SwitchTabPageArrows" xml:space="preserve">
+    <value>Registerseiten wechseln, wenn das fokussierte Steuerelement die Pfeiltasten nicht verwendet.</value>
+  </data>
+  <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
+    <value>Direkt zur Registerseite springen, deren Name diese Nummer trägt.</value>
+  </data>
 </root>

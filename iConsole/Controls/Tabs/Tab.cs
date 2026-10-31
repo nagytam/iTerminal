@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
@@ -598,9 +599,9 @@ public class Tab(IThemeService themeService) : Control(themeService)
         }
         var previous = Orientation == Orientation.Horizontal ? "Left" : "Up";
         var next = Orientation == Orientation.Horizontal ? "Right" : "Down";
-        yield return ($"Ctrl+{previous} / Ctrl+{next}", "Switch to the previous / next tab page.");
-        yield return ($"{previous} / {next}", "Switch tab pages when the focused control does not use the arrow keys.");
-        yield return ("Ctrl+<number>", "Jump straight to the tab page carrying that number in its name.");
+        yield return ($"Ctrl+{previous} / Ctrl+{next}", UiText.Get("Hint.SwitchTabPage", "Switch to the previous / next tab page."));
+        yield return ($"{previous} / {next}", UiText.Get("Hint.SwitchTabPageArrows", "Switch tab pages when the focused control does not use the arrow keys."));
+        yield return ("Ctrl+<number>", UiText.Get("Hint.JumpTabPageByNumber", "Jump straight to the tab page carrying that number in its name."));
     }
 
     /// <summary>

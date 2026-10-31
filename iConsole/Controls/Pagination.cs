@@ -48,7 +48,7 @@ public class Pagination : Control
     }
 
     /// <summary>Number of pages; an empty list still has one (empty) page.</summary>
-    public int PageCount => Math.Max(1, (_totalItems + _pageSize - 1) / _pageSize);
+    public int PageCount => (int)Math.Max(1, ((long)_totalItems + _pageSize - 1) / _pageSize);
 
     /// <summary>Zero-based current page, clamped to [0, <see cref="PageCount"/> - 1].</summary>
     public int Page
@@ -70,7 +70,7 @@ public class Pagination : Control
     public int FirstItemIndex => _page * _pageSize;
 
     /// <summary>The text between the arrows.</summary>
-    public string Caption => $"Page {_page + 1} of {PageCount}";
+    public string Caption => string.Format(UiText.Get("Pagination.Caption", "Page {0} of {1}"), _page + 1, PageCount);
 
     /// <summary>
     /// The caption as drawn: the full <see cref="Caption"/> if it fits beside the two arrows, else <c>3/12</c>, else

@@ -103,7 +103,7 @@ public class MenuBar : MenuItem
             var letter = item.HotKeyChar?.ToString() ?? item.HotConsoleKey?.ToString();
             if (!string.IsNullOrEmpty(letter))
             {
-                yield return ($"Ctrl+{letter}", $"Open {item.Text} menu");
+                yield return ($"Ctrl+{letter}", string.Format(UiText.Get("Hint.OpenMenuNamed", "Open {0} menu"), item.Text));
             }
         }
         yield return ("Up/Down", UiText.Get("Hint.MoveMenuSelection", "Move menu selection"));

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 ﻿using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Display;
@@ -102,7 +103,7 @@ public class SplashDialog : Dialog
 
         _systemInfoLabel.Text = StringHelper.AlignCenter(
             " ".Repeat((int)ViewSize.Width - 2),
-            $"CPU: {Environment.ProcessorCount} cores, Memory: {SystemHelper.GetAvailableMemoryInMBs() / 1000} GBs");
+            string.Format(UiText.Get("Splash.SystemInfo", "CPU: {0} cores, Memory: {1} GBs"), Environment.ProcessorCount, SystemHelper.GetAvailableMemoryInMBs() / 1000));
         _systemInfoLabel.Position = new Position(1, 4);
         _systemInfoLabel.ViewSize = new Size(_systemInfoLabel.Text.Length, 1);
 

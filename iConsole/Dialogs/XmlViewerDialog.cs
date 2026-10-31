@@ -125,7 +125,7 @@ public class XmlViewerDialog : Dialog
 
         tree.Root.IsFocused = true;
         _treeView.Root = tree.Root;
-        _statusLabel.Text = $"{XmlTree.Tag(tree.Document.Root!)} · {tree.Document.Root!.DescendantNodes().Count():N0} nodes";
+        _statusLabel.Text = string.Format(UiText.Get("Xml.NodeCount", "{0} · {1:N0} nodes"), XmlTree.Tag(tree.Document.Root!), tree.Document.Root!.DescendantNodes().Count());
         StateHasChanged();
     }
 

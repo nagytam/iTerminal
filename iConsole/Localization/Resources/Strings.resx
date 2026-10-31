@@ -634,4 +634,46 @@
   <data name="Hint.TypeOffset" xml:space="preserve">
     <value>Type the offset in decimal or hexadecimal</value>
   </data>
+  <data name="Pagination.Caption" xml:space="preserve">
+    <value>Page {0} of {1}</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="Hint.OpenMenuNamed" xml:space="preserve">
+    <value>Open {0} menu</value>
+  </data>
+  <data name="Status.Tasks" xml:space="preserve">
+    <value>Tasks: {0}</value>
+  </data>
+  <data name="Status.Search" xml:space="preserve">
+    <value>Search: {0}</value>
+  </data>
+  <data name="Status.Hit" xml:space="preserve">
+    <value>Hit {0}/{1}</value>
+  </data>
+  <data name="Wizard.Step" xml:space="preserve">
+    <value>Step {0} of {1}: {2}</value>
+  </data>
+  <data name="Help.FocusedControl" xml:space="preserve">
+    <value>Focused control: {0}</value>
+  </data>
+  <data name="Help.FocusedControlNone" xml:space="preserve">
+    <value>Focused control: n/a</value>
+  </data>
+  <data name="Xml.NodeCount" xml:space="preserve">
+    <value>{0} · {1:N0} nodes</value>
+  </data>
+  <data name="Splash.SystemInfo" xml:space="preserve">
+    <value>CPU: {0} cores, Memory: {1} GBs</value>
+  </data>
+  <data name="Hint.SwitchTabPage" xml:space="preserve">
+    <value>Switch to the previous / next tab page.</value>
+  </data>
+  <data name="Hint.SwitchTabPageArrows" xml:space="preserve">
+    <value>Switch tab pages when the focused control does not use the arrow keys.</value>
+  </data>
+  <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
+    <value>Jump straight to the tab page carrying that number in its name.</value>
+  </data>
 </root>

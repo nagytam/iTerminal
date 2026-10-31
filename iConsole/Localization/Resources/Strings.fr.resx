@@ -634,4 +634,46 @@
   <data name="Hint.TypeOffset" xml:space="preserve">
     <value>Saisissez le décalage en décimal ou en hexadécimal</value>
   </data>
+  <data name="Pagination.Caption" xml:space="preserve">
+    <value>Page {0} sur {1}</value>
+  </data>
+  <data name="Msg.ErrorPrefix" xml:space="preserve">
+    <value>Erreur : {0}</value>
+  </data>
+  <data name="Hint.OpenMenuNamed" xml:space="preserve">
+    <value>Ouvrir le menu {0}</value>
+  </data>
+  <data name="Status.Tasks" xml:space="preserve">
+    <value>Tâches : {0}</value>
+  </data>
+  <data name="Status.Search" xml:space="preserve">
+    <value>Recherche : {0}</value>
+  </data>
+  <data name="Status.Hit" xml:space="preserve">
+    <value>Résultat {0}/{1}</value>
+  </data>
+  <data name="Wizard.Step" xml:space="preserve">
+    <value>Étape {0} sur {1} : {2}</value>
+  </data>
+  <data name="Help.FocusedControl" xml:space="preserve">
+    <value>Contrôle actif : {0}</value>
+  </data>
+  <data name="Help.FocusedControlNone" xml:space="preserve">
+    <value>Contrôle actif : aucun</value>
+  </data>
+  <data name="Xml.NodeCount" xml:space="preserve">
+    <value>{0} · {1:N0} nœuds</value>
+  </data>
+  <data name="Splash.SystemInfo" xml:space="preserve">
+    <value>CPU : {0} cœurs, mémoire : {1} Go</value>
+  </data>
+  <data name="Hint.SwitchTabPage" xml:space="preserve">
+    <value>Passer à l’onglet précédent / suivant.</value>
+  </data>
+  <data name="Hint.SwitchTabPageArrows" xml:space="preserve">
+    <value>Changer d’onglet quand le contrôle actif n’utilise pas les flèches.</value>
+  </data>
+  <data name="Hint.JumpTabPageByNumber" xml:space="preserve">
+    <value>Aller directement à l’onglet dont le nom porte ce numéro.</value>
+  </data>
 </root>
