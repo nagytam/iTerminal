@@ -1011,11 +1011,11 @@ public class MailDialog : Dialog
 
     private void DrawList(IBuffer buffer, int iw, int rows, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, $"Inbox — {_account?.Name ?? string.Empty} {_account?.UserName}", Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, string.Format(iConsole.Localization.UiText.Get("Mail.Inbox", "Inbox — {0} {1}"), _account?.Name ?? string.Empty, _account?.UserName), Color.Cyan, colorScheme.Background);
         Put(buffer, 1, 1, iw - 2, "  Date              From                       Subject", colorScheme.DisabledForeground, colorScheme.Background);
         if (_listings.Count == 0)
         {
-            Put(buffer, 1, 2, iw - 2, "No messages. R reads the inbox again.", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Mail.NoMessages", "No messages. R reads the inbox again."), colorScheme.DisabledForeground, colorScheme.Background);
             return;
         }
 
@@ -1046,10 +1046,10 @@ public class MailDialog : Dialog
             return;
         }
 
-        Put(buffer, 1, 0, iw - 2, "From:    " + _item.From, Color.Cyan, colorScheme.Background);
-        Put(buffer, 1, 1, iw - 2, "To:      " + _item.To, colorScheme.Foreground, colorScheme.Background);
-        Put(buffer, 1, 2, iw - 2, "Subject: " + _item.Subject, colorScheme.Foreground, colorScheme.Background);
-        Put(buffer, 1, 3, iw - 2, "Date:    " + _item.Date, colorScheme.DisabledForeground, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, iConsole.Localization.UiText.Get("Mail.From", "From:").PadRight(9) + _item.From, Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 1, iw - 2, iConsole.Localization.UiText.Get("Mail.To", "To:").PadRight(9) + _item.To, colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Mail.Subject", "Subject:").PadRight(9) + _item.Subject, colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, 3, iw - 2, iConsole.Localization.UiText.Get("Mail.Date", "Date:").PadRight(9) + _item.Date, colorScheme.DisabledForeground, colorScheme.Background);
         var bodyRows = rows - 5;
         for (var i = 0; i < bodyRows; i++)
         {
@@ -1063,7 +1063,7 @@ public class MailDialog : Dialog
     {
         DrawField(buffer, iw, 0, "To:      ", _draft[0], _draftField == 0, colorScheme);
         DrawField(buffer, iw, 1, "Subject: ", _draft[1], _draftField == 1, colorScheme);
-        Put(buffer, 1, 2, iw - 2, "Body:", _draftField == 2 ? Color.Cyan : colorScheme.DisabledForeground, colorScheme.Background);
+        Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Mail.Body", "Body:"), _draftField == 2 ? Color.Cyan : colorScheme.DisabledForeground, colorScheme.Background);
 
         var lines = _draft[2].Split('\n');
         var bodyRows = rows - 3;
@@ -1089,10 +1089,10 @@ public class MailDialog : Dialog
 
     private void DrawDirectory(IBuffer buffer, int iw, int rows, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, "Search: " + _directoryTerm + "_", colorScheme.SelectedFocusedForeground, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, iConsole.Localization.UiText.Get("Mail.Search", "Search: ") + _directoryTerm + "_", colorScheme.SelectedFocusedForeground, colorScheme.Background);
         if (_people.Count == 0)
         {
-            Put(buffer, 1, 2, iw - 2, _directoryTerm.Length == 0 ? "Type part of a name or an address." : "Press Enter to search the address book.", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 2, iw - 2, _directoryTerm.Length == 0 ? iConsole.Localization.UiText.Get("Mail.TypeHint", "Type part of a name or an address.") : iConsole.Localization.UiText.Get("Mail.PressEnterHint", "Press Enter to search the address book."), colorScheme.DisabledForeground, colorScheme.Background);
             return;
         }
 

@@ -518,14 +518,14 @@ public class PasswordManagerDialog : Dialog
             switch (_mode)
             {
                 case Mode.Unavailable:
-                    Put(buffer, 1, 1, iw - 2, "The saved passwords cannot be opened.", colorScheme.Foreground, colorScheme.Background);
-                    Put(buffer, 1, 2, iw - 2, "The key they were sealed with is gone from this account, so they cannot be read again.", colorScheme.DisabledForeground, colorScheme.Background);
+                    Put(buffer, 1, 1, iw - 2, iConsole.Localization.UiText.Get("Passwords.CannotOpen", "The saved passwords cannot be opened."), colorScheme.Foreground, colorScheme.Background);
+                    Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Passwords.KeyGone", "The key they were sealed with is gone from this account, so they cannot be read again."), colorScheme.DisabledForeground, colorScheme.Background);
                     break;
                 case Mode.List:
                     DrawList(buffer, iw, colorScheme);
                     break;
                 case Mode.Edit:
-                    DrawForm(buffer, iw, "Saved password", colorScheme);
+                    DrawForm(buffer, iw, iConsole.Localization.UiText.Get("Passwords.SavedPassword", "Saved password"), colorScheme);
                     break;
             }
 
@@ -568,7 +568,7 @@ public class PasswordManagerDialog : Dialog
         if (_list.Count == 0)
         {
             // After the rows: they blank every row they do not fill, and used to paint this message away.
-            Put(buffer, 1, 2, iw - 2, "Nothing saved yet. N adds a password;", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Passwords.NothingSaved", "Nothing saved yet. N adds a password;"), colorScheme.DisabledForeground, colorScheme.Background);
             Put(buffer, 1, 3, iw - 2, "network and mail passwords appear here as they are saved.", colorScheme.DisabledForeground, colorScheme.Background);
         }
 
@@ -576,8 +576,8 @@ public class PasswordManagerDialog : Dialog
         if (selected is not null)
         {
             var password = _reveal ? selected.Password : Mask;
-            Put(buffer, 1, 2 + ListRows + 1, iw - 2, $"Password: {password}", colorScheme.Foreground, colorScheme.Background);
-            Put(buffer, 1, 2 + ListRows + 2, iw - 2, string.IsNullOrEmpty(selected.Notes) ? string.Empty : $"Notes: {selected.Notes}", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 2 + ListRows + 1, iw - 2, string.Format(iConsole.Localization.UiText.Get("Passwords.Password", "Password: {0}"), password), colorScheme.Foreground, colorScheme.Background);
+            Put(buffer, 1, 2 + ListRows + 2, iw - 2, string.IsNullOrEmpty(selected.Notes) ? string.Empty : string.Format(iConsole.Localization.UiText.Get("Passwords.Notes", "Notes: {0}"), selected.Notes), colorScheme.DisabledForeground, colorScheme.Background);
         }
     }
 

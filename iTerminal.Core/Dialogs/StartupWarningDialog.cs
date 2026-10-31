@@ -21,7 +21,7 @@ public class StartupWarningDialog : Dialog
     /// <summary>Rows that are not warning text: top border, blank row, blank row, hint row, bottom border.</summary>
     private const int ChromeRows = 5;
 
-    internal const string DismissHint = "Enter or Esc to continue";
+    internal static string DismissHint => iConsole.Localization.UiText.Get("Startup.Dismiss", "Enter or Esc to continue");
 
     private readonly IReadOnlyList<string> _warnings;
 

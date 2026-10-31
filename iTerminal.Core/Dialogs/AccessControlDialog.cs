@@ -805,7 +805,7 @@ public class AccessControlDialog : Dialog
         Put(buffer, 1, 0, iw - 2, _path.Shrink(iw - 2) ?? string.Empty, Color.Cyan, colors.Background);
         if (_info is not { } info)
         {
-            Put(buffer, 1, 2, iw - 2, _busy ? "Reading…" : string.Empty, colors.DisabledForeground, colors.Background);
+            Put(buffer, 1, 2, iw - 2, _busy ? iConsole.Localization.UiText.Get("Access.Reading", "Reading…") : string.Empty, colors.DisabledForeground, colors.Background);
             return;
         }
 
@@ -819,7 +819,7 @@ public class AccessControlDialog : Dialog
         Put(buffer, 1, ListTop, iw - 2, "  " + (info.SupportsDeny ? "Type  " : string.Empty) + "Who".PadRight(26) + "Rights".PadRight(22) + "Applies to", colors.DisabledForeground, colors.Background);
         if (info.Entries.Count == 0)
         {
-            Put(buffer, 1, ListTop + 1, iw - 2, "No entries: nobody but the owner and administrators has access.", colors.DisabledForeground, colors.Background);
+            Put(buffer, 1, ListTop + 1, iw - 2, iConsole.Localization.UiText.Get("Access.NoEntries", "No entries: nobody but the owner and administrators has access."), colors.DisabledForeground, colors.Background);
         }
 
         var first = FirstRow();
@@ -850,7 +850,7 @@ public class AccessControlDialog : Dialog
     private void DrawEdit(IBuffer buffer, int iw, ColorScheme colors)
     {
         var info = _info!;
-        Put(buffer, 1, 0, iw - 2, _adding ? "Add an entry" : "Change an entry", Color.Cyan, colors.Background);
+        Put(buffer, 1, 0, iw - 2, _adding ? iConsole.Localization.UiText.Get("Access.AddEntry", "Add an entry") : iConsole.Localization.UiText.Get("Access.ChangeEntry", "Change an entry"), Color.Cyan, colors.Background);
         var fields = EditFields();
         for (var i = 0; i < fields.Count; i++)
         {
@@ -874,12 +874,12 @@ public class AccessControlDialog : Dialog
 
     private void DrawOwner(IBuffer buffer, int iw, ColorScheme colors)
     {
-        Put(buffer, 1, 0, iw - 2, "Change the owner", Color.Cyan, colors.Background);
-        Put(buffer, 1, 2, 14, "Owner", _ownerField == 0 ? Color.Cyan : colors.DisabledForeground, colors.Background);
+        Put(buffer, 1, 0, iw - 2, iConsole.Localization.UiText.Get("Access.ChangeOwner", "Change the owner"), Color.Cyan, colors.Background);
+        Put(buffer, 1, 2, 14, iConsole.Localization.UiText.Get("Access.Owner", "Owner"), _ownerField == 0 ? Color.Cyan : colors.DisabledForeground, colors.Background);
         Put(buffer, 15, 2, iw - 16, _ownerText + (_ownerField == 0 ? "_" : string.Empty), colors.Foreground, _ownerField == 0 ? colors.SelectedBackground : colors.Background);
         if (_info?.Group is not null)
         {
-            Put(buffer, 1, 4, 14, "Group", _ownerField == 1 ? Color.Cyan : colors.DisabledForeground, colors.Background);
+            Put(buffer, 1, 4, 14, iConsole.Localization.UiText.Get("Access.Group", "Group"), _ownerField == 1 ? Color.Cyan : colors.DisabledForeground, colors.Background);
             Put(buffer, 15, 4, iw - 16, _groupText + (_ownerField == 1 ? "_" : string.Empty), colors.Foreground, _ownerField == 1 ? colors.SelectedBackground : colors.Background);
         }
     }

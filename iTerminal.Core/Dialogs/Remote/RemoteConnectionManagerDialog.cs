@@ -719,7 +719,7 @@ public class RemoteConnectionManagerDialog : Dialog
         Put(buffer, 1, 1, iw - 2, "  Type  Name                          Destination", colorScheme.DisabledForeground, colorScheme.Background);
         if (_list.Count == 0)
         {
-            Put(buffer, 1, 2, iw - 2, "Nothing saved yet. N adds an SSH, PowerShell, FTP or WebDAV connection.", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Remote.Empty", "Nothing saved yet. N adds an SSH, PowerShell, FTP or WebDAV connection."), colorScheme.DisabledForeground, colorScheme.Background);
         }
 
         var first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
@@ -743,7 +743,7 @@ public class RemoteConnectionManagerDialog : Dialog
         if (Selected is { } selected)
         {
             var y = 2 + ListRows + 1;
-            Put(buffer, 1, y, iw - 2, $"Runs: {DescribeCommand(selected)}", colorScheme.Foreground, colorScheme.Background);
+            Put(buffer, 1, y, iw - 2, string.Format(iConsole.Localization.UiText.Get("Remote.Runs", "Runs: {0}"), DescribeCommand(selected)), colorScheme.Foreground, colorScheme.Background);
             var last = selected.LastConnectedUtc is { } at ? $"Last connected {at.ToLocalTime():yyyy-MM-dd HH:mm}" : "Never connected";
             Put(buffer, 1, y + 1, iw - 2, string.IsNullOrEmpty(selected.Notes) ? last : $"{last}  ·  {selected.Notes}", colorScheme.DisabledForeground, colorScheme.Background);
         }
@@ -766,7 +766,7 @@ public class RemoteConnectionManagerDialog : Dialog
 
     private void DrawForm(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, _editing is null ? "New connection" : "Edit connection", Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, _editing is null ? iConsole.Localization.UiText.Get("Remote.NewConnection", "New connection") : iConsole.Localization.UiText.Get("Remote.EditConnection", "Edit connection"), Color.Cyan, colorScheme.Background);
         for (var i = 0; i < _fields.Length; i++)
         {
             var field = _fields[i];

@@ -18,7 +18,7 @@ namespace iTerminal.Core.Dialogs;
 /// </summary>
 public class ScreenManagerDialog : Dialog
 {
-    internal const string Hint = "The open screens (the desktop shows one at a time).  Esc:close";
+    internal static string Hint => iConsole.Localization.UiText.Get("Screen.Hint", "The open screens (the desktop shows one at a time).  Esc:close");
 
     private readonly ConcurrentObservableCollection<IScreen> _screens = [];
     private ListBox<IScreen> _listBox { get; set; }

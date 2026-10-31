@@ -589,7 +589,7 @@ public class ContactManagerDialog : Dialog
         var y = FieldsTop + FieldCount;
         if (_mode == Mode.ConfirmDelete && Selected is { } doomed)
         {
-            Put(buffer, 1, y, iw - 2, $"Delete \"{doomed.Name}\"? (y/n)", colorScheme.Error, colorScheme.Background);
+            Put(buffer, 1, y, iw - 2, string.Format(iConsole.Localization.UiText.Get("Prompt.DeleteNamed", "Delete \"{0}\"? (y/n)"), doomed.Name), colorScheme.Error, colorScheme.Background);
         }
         else if (_mode == Mode.Form)
         {
@@ -597,11 +597,11 @@ public class ContactManagerDialog : Dialog
         }
         else if (_mode == Mode.Filter)
         {
-            Put(buffer, 1, y, iw - 2, $"Filter: {_filter}_", colorScheme.SelectedFocusedForeground, colorScheme.Background);
+            Put(buffer, 1, y, iw - 2, string.Format(iConsole.Localization.UiText.Get("Contacts.FilterInput", "Filter: {0}_"), _filter), colorScheme.SelectedFocusedForeground, colorScheme.Background);
         }
         else if (_filter.Length > 0)
         {
-            Put(buffer, 1, y, iw - 2, $"Filter: {_filter}  (Esc shows every contact)", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, y, iw - 2, string.Format(iConsole.Localization.UiText.Get("Contacts.FilterHint", "Filter: {0}  (Esc shows every contact)"), _filter), colorScheme.DisabledForeground, colorScheme.Background);
         }
     }
 

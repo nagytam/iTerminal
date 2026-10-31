@@ -17,7 +17,7 @@ namespace iTerminal.Core.Dialogs;
 /// </summary>
 public abstract class TerminalTextTabPage : TabPage
 {
-    internal const string NoCommandText = "No terminal command has been run yet.";
+    internal static string NoCommandText => iConsole.Localization.UiText.Get("Terminal.NoCommand", "No terminal command has been run yet.");
 
     private ITerminalModel _terminalModel { get; set; }
     private TextViewerControl _textViewerControl { get; set; }

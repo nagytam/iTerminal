@@ -325,7 +325,7 @@ public sealed class FfmpegVideoDecoder : IVideoDecoder
 
 public sealed class FfmpegVideoDecoderFactory : IVideoDecoderFactory
 {
-    public const string MissingMessage = "This needs ffmpeg and ffprobe on PATH — Tools > Runtime Dependencies installs them.";
+    public static string MissingMessage => iConsole.Localization.UiText.Get("Ffmpeg.Missing", "This needs ffmpeg and ffprobe on PATH — Tools > Runtime Dependencies installs them.");
 
     public bool IsAvailable => FfmpegAudioDecoder.IsAvailable() && FfmpegVideoDecoder.IsProbeAvailable();
 
