@@ -99,6 +99,18 @@ public partial class Url
     /// other drive, which has no such thing to say.
     /// </summary>
     public bool IsHidden { get; }
+
+    /// <summary>
+    /// The Windows attributes read when this Url was made from an enumerated <see cref="FileSystemInfo"/>; null otherwise.
+    /// </summary>
+    public FileAttributes? Attributes { get; private set; }
+
+    /// <summary>
+    /// The Unix permission bits, read from <see cref="FileSystemInfo.UnixFileMode"/> when this Url was made from an
+    /// enumerated entry on a non-Windows system; null otherwise. Not measured: the status is expected to be the one
+    /// cached for the enumeration that already reads <c>LastWriteTime</c>, but a symbolic link may be followed.
+    /// </summary>
+    public UnixFileMode? UnixMode { get; private set; }
     public string Date => _date;
     public string Time => _time;
     public string FullName => _fullName;
@@ -749,6 +761,8 @@ public partial class Url
             _exists       = true;  // entry was returned by enumeration so it exists
             LinkTarget    = iConsole.Helper.FileLinkHelper.GetLinkTarget(info);
             IsHidden      = (info.Attributes & FileAttributes.Hidden) != 0;
+            Attributes    = info.Attributes;
+            UnixMode      = OperatingSystem.IsWindows() ? null : info.UnixFileMode;
 
             if (!isDir && info is FileInfo fi)
             {

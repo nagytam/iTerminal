@@ -3424,4 +3424,55 @@
   <data name="Multi.Status.CaseOnly" xml:space="preserve">
     <value>change of case only, not renamed</value>
   </data>
+  <data name="Listing.LongTitle" xml:space="preserve">
+    <value>Long listing</value>
+  </data>
+  <data name="Listing.LongDescription" xml:space="preserve">
+    <value>Show each entry's attributes, date and time, with no size column, or back to the normal listing.</value>
+  </data>
+  <data name="Listing.InfoTitle" xml:space="preserve">
+    <value>Info listing</value>
+  </data>
+  <data name="Listing.InfoDescription" xml:space="preserve">
+    <value>Shows the other panel's cursor entry. Keys act on this panel, whose cursor is hidden while this mode is on. The mouse is ignored. Esc returns to the list.</value>
+  </data>
+  <data name="Listing.Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="Listing.NoEntry" xml:space="preserve">
+    <value>no entry</value>
+  </data>
+  <data name="Listing.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Listing.Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="Listing.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Listing.Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Listing.Modified" xml:space="preserve">
+    <value>Modified</value>
+  </data>
+  <data name="Listing.Attributes" xml:space="preserve">
+    <value>Attributes</value>
+  </data>
+  <data name="Listing.Unknown" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="Listing.LinkTarget" xml:space="preserve">
+    <value>Link target</value>
+  </data>
+  <data name="Listing.TypeFile" xml:space="preserve">
+    <value>file</value>
+  </data>
+  <data name="Listing.TypeFolder" xml:space="preserve">
+    <value>folder</value>
+  </data>
+  <data name="Listing.TypeLink" xml:space="preserve">
+    <value>link</value>
+  </data>
 </root>

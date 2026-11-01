@@ -137,6 +137,12 @@ public record MusicEntry : EntryBase, IEntry
         return ColorPlaybackState(base.FormatItemName(width, cursor, colorScheme, visualState), cursor);
     }
 
+    /// <summary>The Long row gets the same selected / playing colour as the full row.</summary>
+    public override ConxelString FormatLongItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState)
+    {
+        return ColorPlaybackState(base.FormatLongItemName(width, cursor, colorScheme, visualState), cursor);
+    }
+
     /// <summary>The Brief cell gets the same selected / playing colour as the full row.</summary>
     public override ConxelString FormatBriefItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState)
     {

@@ -3424,4 +3424,55 @@
   <data name="Multi.Status.CaseOnly" xml:space="preserve">
     <value>solo cambio de mayúsculas, no renombrado</value>
   </data>
+  <data name="Listing.LongTitle" xml:space="preserve">
+    <value>Listado largo</value>
+  </data>
+  <data name="Listing.LongDescription" xml:space="preserve">
+    <value>Mostrar los atributos, la fecha y la hora de cada entrada, sin columna de tamaño, o volver al listado normal.</value>
+  </data>
+  <data name="Listing.InfoTitle" xml:space="preserve">
+    <value>Listado de información</value>
+  </data>
+  <data name="Listing.InfoDescription" xml:space="preserve">
+    <value>Muestra la entrada del cursor del otro panel. Las teclas actúan sobre este panel, cuyo cursor está oculto en este modo. El ratón se ignora. Esc vuelve al listado.</value>
+  </data>
+  <data name="Listing.Entry" xml:space="preserve">
+    <value>Entrada</value>
+  </data>
+  <data name="Listing.NoEntry" xml:space="preserve">
+    <value>sin entrada</value>
+  </data>
+  <data name="Listing.Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Listing.Path" xml:space="preserve">
+    <value>Ruta</value>
+  </data>
+  <data name="Listing.Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Listing.Size" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
+  <data name="Listing.Modified" xml:space="preserve">
+    <value>Modificado</value>
+  </data>
+  <data name="Listing.Attributes" xml:space="preserve">
+    <value>Atributos</value>
+  </data>
+  <data name="Listing.Unknown" xml:space="preserve">
+    <value>desconocido</value>
+  </data>
+  <data name="Listing.LinkTarget" xml:space="preserve">
+    <value>Destino del enlace</value>
+  </data>
+  <data name="Listing.TypeFile" xml:space="preserve">
+    <value>archivo</value>
+  </data>
+  <data name="Listing.TypeFolder" xml:space="preserve">
+    <value>carpeta</value>
+  </data>
+  <data name="Listing.TypeLink" xml:space="preserve">
+    <value>enlace</value>
+  </data>
 </root>

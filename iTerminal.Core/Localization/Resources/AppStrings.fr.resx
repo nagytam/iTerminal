@@ -3424,4 +3424,55 @@
   <data name="Multi.Status.CaseOnly" xml:space="preserve">
     <value>changement de casse seulement, non renommé</value>
   </data>
+  <data name="Listing.LongTitle" xml:space="preserve">
+    <value>Liste détaillée</value>
+  </data>
+  <data name="Listing.LongDescription" xml:space="preserve">
+    <value>Afficher les attributs, la date et l'heure de chaque élément, sans colonne de taille, ou revenir à la liste normale.</value>
+  </data>
+  <data name="Listing.InfoTitle" xml:space="preserve">
+    <value>Liste d'infos</value>
+  </data>
+  <data name="Listing.InfoDescription" xml:space="preserve">
+    <value>Affiche l'élément sous le curseur de l'autre panneau. Les touches agissent sur ce panneau, dont le curseur est masqué dans ce mode. La souris est ignorée. Échap revient à la liste.</value>
+  </data>
+  <data name="Listing.Entry" xml:space="preserve">
+    <value>Élément</value>
+  </data>
+  <data name="Listing.NoEntry" xml:space="preserve">
+    <value>aucun élément</value>
+  </data>
+  <data name="Listing.Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Listing.Path" xml:space="preserve">
+    <value>Chemin</value>
+  </data>
+  <data name="Listing.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Listing.Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="Listing.Modified" xml:space="preserve">
+    <value>Modifié</value>
+  </data>
+  <data name="Listing.Attributes" xml:space="preserve">
+    <value>Attributs</value>
+  </data>
+  <data name="Listing.Unknown" xml:space="preserve">
+    <value>inconnu</value>
+  </data>
+  <data name="Listing.LinkTarget" xml:space="preserve">
+    <value>Cible du lien</value>
+  </data>
+  <data name="Listing.TypeFile" xml:space="preserve">
+    <value>fichier</value>
+  </data>
+  <data name="Listing.TypeFolder" xml:space="preserve">
+    <value>dossier</value>
+  </data>
+  <data name="Listing.TypeLink" xml:space="preserve">
+    <value>lien</value>
+  </data>
 </root>

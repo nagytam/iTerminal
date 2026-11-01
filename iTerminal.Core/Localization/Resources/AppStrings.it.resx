@@ -3424,4 +3424,55 @@
   <data name="Multi.Status.CaseOnly" xml:space="preserve">
     <value>solo cambio di maiuscole, non rinominato</value>
   </data>
+  <data name="Listing.LongTitle" xml:space="preserve">
+    <value>Elenco esteso</value>
+  </data>
+  <data name="Listing.LongDescription" xml:space="preserve">
+    <value>Mostra attributi, data e ora di ogni voce, senza colonna delle dimensioni, o torna all'elenco normale.</value>
+  </data>
+  <data name="Listing.InfoTitle" xml:space="preserve">
+    <value>Elenco informazioni</value>
+  </data>
+  <data name="Listing.InfoDescription" xml:space="preserve">
+    <value>Mostra la voce del cursore dell'altro pannello. I tasti agiscono su questo pannello, il cui cursore è nascosto in questa modalità. Il mouse viene ignorato. Esc torna all'elenco.</value>
+  </data>
+  <data name="Listing.Entry" xml:space="preserve">
+    <value>Voce</value>
+  </data>
+  <data name="Listing.NoEntry" xml:space="preserve">
+    <value>nessuna voce</value>
+  </data>
+  <data name="Listing.Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Listing.Path" xml:space="preserve">
+    <value>Percorso</value>
+  </data>
+  <data name="Listing.Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Listing.Size" xml:space="preserve">
+    <value>Dimensione</value>
+  </data>
+  <data name="Listing.Modified" xml:space="preserve">
+    <value>Modificato</value>
+  </data>
+  <data name="Listing.Attributes" xml:space="preserve">
+    <value>Attributi</value>
+  </data>
+  <data name="Listing.Unknown" xml:space="preserve">
+    <value>sconosciuto</value>
+  </data>
+  <data name="Listing.LinkTarget" xml:space="preserve">
+    <value>Destinazione del collegamento</value>
+  </data>
+  <data name="Listing.TypeFile" xml:space="preserve">
+    <value>file</value>
+  </data>
+  <data name="Listing.TypeFolder" xml:space="preserve">
+    <value>cartella</value>
+  </data>
+  <data name="Listing.TypeLink" xml:space="preserve">
+    <value>collegamento</value>
+  </data>
 </root>
