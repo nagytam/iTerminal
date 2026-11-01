@@ -410,7 +410,7 @@ public sealed class TerminalApp : IAsyncDisposable
 
     private async Task DismissSplashAsync()
     {
-        // The splash closes itself after three seconds; Esc closes it at once. Either way the
+        // The splash closes itself after 4.5 seconds; Esc closes it at once. Either way the
         // panels are what the first real frame has to show.
         const string Splash = "Welcome to iTerminal";
         var deadline = DateTime.UtcNow.AddSeconds(10);

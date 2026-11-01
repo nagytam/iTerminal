@@ -19,6 +19,9 @@ public class SplashDialog : Dialog
     private Label _systemInfoLabel { get; set; }
     private ColorMap _colorMap { get; set; }
 
+    /// <summary>How long the splash stays up before it closes itself. Anything that opens at start-up waits for it.</summary>
+    public static readonly TimeSpan DisplayTime = TimeSpan.FromMilliseconds(4500);
+
     /// <summary>Rows of cells the emblem takes above the text when the terminal can draw pictures.</summary>
     private const int LogoRows = 7;
 
@@ -42,7 +45,7 @@ public class SplashDialog : Dialog
         AddControl(_systemInfoLabel);
         AddControl(_colorMap);
 
-        var timer = new System.Timers.Timer(3000)
+        var timer = new System.Timers.Timer(DisplayTime.TotalMilliseconds)
         {
             AutoReset = false
         };
