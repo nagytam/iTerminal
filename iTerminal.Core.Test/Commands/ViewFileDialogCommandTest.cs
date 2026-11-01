@@ -640,6 +640,7 @@ public class ViewFileDialogCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ExecuteAsync_WithALocalDatabaseFile_PointsTheSqliteViewerAtIt()
     {
         var themeService = CreateThemeService();
@@ -670,6 +671,7 @@ public class ViewFileDialogCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ExecuteAsync_WithADbFileThatIsNotSqlite_UsesTheGenericViewer()
     {
         var themeService = CreateThemeService();
@@ -702,6 +704,7 @@ public class ViewFileDialogCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ExecuteAsync_WithADatabaseThatIsNotLocal_LeavesTheSqliteViewerAloneAndUsesTheGenericViewer()
     {
         var themeService = CreateThemeService();

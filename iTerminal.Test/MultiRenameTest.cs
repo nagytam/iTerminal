@@ -17,6 +17,7 @@ public class MultiRenameTest
     public async Task StopAsync() => await _app.DisposeAsync();
 
     [TestMethod]
+    [Timeout(120_000)]
     public async Task EditMenuRenamesTheMarkedFilesByThePattern()
     {
         await _app.SelectEntryAsync("notes.md");

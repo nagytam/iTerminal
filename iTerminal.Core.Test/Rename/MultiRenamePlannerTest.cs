@@ -9,6 +9,7 @@ public class MultiRenamePlannerTest
         MultiRenamePlanner.Plan([.. entries], folder);
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ANewNameNoOneElseHoldsIsOk()
     {
         var rows = Plan([("a.txt", "x.txt")], "a.txt");
@@ -17,6 +18,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void TheSameNameIsUnchanged()
     {
         var rows = Plan([("a.txt", "a.txt")], "a.txt");
@@ -25,6 +27,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ABlankNameIsEmpty()
     {
         Assert.AreEqual(RenameStatus.Empty, Plan([("a.txt", "  ")], "a.txt").Single().Status);
@@ -32,6 +35,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ASeparatorDotOrDotDotIsAnInvalidName()
     {
         Assert.AreEqual(RenameStatus.InvalidName, Plan([("a.txt", "x/y.txt")], "a.txt").Single().Status);
@@ -41,6 +45,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ANameTheBatchVacatesIsBlocked()
     {
         // a -> b and b -> a: whichever ran first would meet the other's name, so neither runs.
@@ -51,6 +56,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ANameAnotherEntryInTheFolderHoldsIsExists()
     {
         var rows = Plan([("a.txt", "c.txt")], "a.txt", "c.txt");
@@ -59,6 +65,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void TwoRowsWithOneNewNameAreDuplicates()
     {
         var rows = Plan([("a.txt", "x.txt"), ("b.txt", "x.txt")], "a.txt", "b.txt");
@@ -68,6 +75,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void DuplicatesIgnoreCase()
     {
         var rows = Plan([("a.txt", "X.txt"), ("b.txt", "x.TXT")], "a.txt", "b.txt");
@@ -77,6 +85,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ACaseOnlyChangeIsCaseOnlyAndNotRun()
     {
         // On a case-insensitive volume the engine would find the file itself as the target, so the change is not run on any platform.
@@ -86,6 +95,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ACaseVariantOfABatchNameDoesNotBlockAnotherName()
     {
         // Foo.txt is in the batch; foo.txt is another file in the folder. Foo.txt -> foo.txt only changes case; Foo.txt -> x.txt is free.
@@ -97,6 +107,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void WindowsNameRulesRefuseTrailingDotsAndReservedNames()
     {
         IReadOnlyList<RenameRow> OnWindows(string newName) =>
@@ -111,6 +122,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void WithoutWindowsRulesTheseNamesAreAllowed()
     {
         Assert.AreEqual(RenameStatus.Ok, MultiRenamePlanner.Plan([("a.txt", "CON")], ["a.txt"]).Single().Status);
@@ -118,6 +130,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void UnchangedWinsOverExists()
     {
         // The name is the row's own, so it is unchanged, even though the folder lists it.
@@ -127,6 +140,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void BlockedWinsOverDuplicate()
     {
         // a -> b, b -> b: a is blocked by b's old name, and b is unchanged. Two rows share b, but Blocked is decided first.
@@ -137,6 +151,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void AProblemRowDoesNotChangeTheOtherRows()
     {
         var rows = Plan([("a.txt", "x.txt"), ("b.txt", string.Empty)], "a.txt", "b.txt");
@@ -146,6 +161,7 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void RowsKeepTheBatchOrderAndTheirIndex()
     {
         var rows = Plan([("a.txt", "x.txt"), ("b.txt", "y.txt")], "a.txt", "b.txt");

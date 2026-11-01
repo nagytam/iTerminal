@@ -12,6 +12,7 @@ public class BluetoothDeviceManagerDialogTest
     private const string Keyboard = "66:77:88:99:AA:BB";
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task OpeningReadsTheDevicesAndShowsTheirState()
     {
         var bluetooth = new RecordingBluetooth(new BluetoothDevice(Headphones, "Headphones", IsPaired: true, IsConnected: true));
@@ -27,6 +28,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AnEmptyListSaysHowToScan()
     {
         var bluetooth = new RecordingBluetooth();
@@ -40,6 +42,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task WithoutABackendTheDialogSaysSoAndReadsNothing()
     {
         var bluetooth = new RecordingBluetooth { IsSupported = false };
@@ -53,6 +56,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task COnAConnectedDeviceDisconnectsIt()
     {
         var bluetooth = new RecordingBluetooth(new BluetoothDevice(Headphones, "Headphones", IsPaired: true, IsConnected: true));
@@ -68,6 +72,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task COnANearbyDeviceConnectsIt()
     {
         var bluetooth = new RecordingBluetooth(new BluetoothDevice(Keyboard, "Keyboard", IsPaired: false, IsConnected: false));
@@ -82,6 +87,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ARefreshKeepsTheHighlightedDevice()
     {
         var headphones = new BluetoothDevice(Headphones, "Headphones", IsPaired: true, IsConnected: false);
@@ -107,6 +113,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task PairingAPairedDeviceIsRefusedWithAReason()
     {
         var bluetooth = new RecordingBluetooth(new BluetoothDevice(Headphones, "Headphones", IsPaired: true, IsConnected: false));
@@ -121,6 +128,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task RemoveAsksFirstAndYRemoves()
     {
         var bluetooth = new RecordingBluetooth(new BluetoothDevice(Headphones, "Headphones", IsPaired: true, IsConnected: false));
@@ -140,6 +148,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task RemoveAnsweredWithAnythingElseKeepsTheDevice()
     {
         var bluetooth = new RecordingBluetooth(new BluetoothDevice(Headphones, "Headphones", IsPaired: true, IsConnected: false));
@@ -155,6 +164,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task EscapeBacksOutOfTheRemovePromptBeforeItClosesTheDialog()
     {
         var bluetooth = new RecordingBluetooth(new BluetoothDevice(Headphones, "Headphones", IsPaired: true, IsConnected: false));
@@ -174,6 +184,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AFailedChangeShowsTheToolsReason()
     {
         var bluetooth = new RecordingBluetooth(new BluetoothDevice(Keyboard, "Keyboard", IsPaired: false, IsConnected: false))
@@ -192,6 +203,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AChangeRefusedWhileAnotherRunsSaysSo()
     {
         var gate = new TaskCompletionSource();
@@ -213,6 +225,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ClosingTheDialogCancelsWhatItIsDoing()
     {
         var bluetooth = new RecordingBluetooth(new BluetoothDevice(Keyboard, "Keyboard", IsPaired: false, IsConnected: false))
@@ -232,6 +245,7 @@ public class BluetoothDeviceManagerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void TheRowKeepsItsColumnsWhenTheNameIsLong()
     {
         var row = BluetoothDeviceManagerDialog.FormatRow(new BluetoothDevice(Keyboard, new string('x', 80), false, false), "nearby");
