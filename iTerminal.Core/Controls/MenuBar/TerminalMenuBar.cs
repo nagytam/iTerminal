@@ -125,7 +125,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
         iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null,
-        PrintDialog? printDialog = null
+        PrintDialog? printDialog = null,
+        VirtualMachineManagerDialog? virtualMachineManagerDialog = null
         )
         : base([], themeService)
     {
@@ -229,7 +230,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             contactManagerDialog,
             encyclopediaDialog,
             performanceBenchmarkDialog,
-            gamesDialog));
+            gamesDialog,
+            virtualMachineManagerDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 
