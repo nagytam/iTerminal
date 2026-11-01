@@ -37,6 +37,17 @@ public class OutsideWorldDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task CtrlShiftJListsTheBluetoothDevicesOfTheSandbox()
+    {
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+J"));
+
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog, "the Bluetooth device manager");
+        await _app.WaitForTextAsync("Sandbox Headphones");
+        await _app.WaitForTextAsync("Sandbox Keyboard");
+        await CloseAndCheckAsync();
+    }
+
+    [TestMethod]
     public async Task AltF8ListsTheInstalledPackages()
     {
         Assert.IsTrue(await _app.PressAsync("Alt+F8"));

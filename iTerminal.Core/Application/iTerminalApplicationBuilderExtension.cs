@@ -393,6 +393,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.SystemSettings.ISystemSettingsService, iTerminal.Core.Services.SystemSettings.SystemSettingsService>();
         services.AddTransient<SystemSettingsDialog>();
         services.AddTransient<NetworkManagerDialog>();
+        services.AddSingleton<iTerminal.Core.Services.Bluetooth.IBluetoothService, iTerminal.Core.Services.Bluetooth.BluetoothService>();
+        services.AddTransient<iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog>();
         services.AddTransient<NetworkBrowserDialog>();
         services.AddTransient<IPhoneBrowserDialog>();
         services.AddSingleton<NetworkInfoModel>();
