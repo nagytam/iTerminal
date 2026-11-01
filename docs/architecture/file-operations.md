@@ -7,6 +7,16 @@ Insert marks the cursor row and steps down, Shift+↓/↑ mark while moving, Num
 - **Name a target with `FocusedEntry.NameOf`, not `Url.Name`**, which is empty for a folder URL — a marked folder named by it would be copied onto the target folder itself.
 - `ContentBrowser` paints a marked row (yellow; dark red under the cursor) *after* the lenses, so a git status colour cannot hide what the next F8 will delete. The footer counts the marks and their size.
 
+### Multi-rename (Edit menu only: `MultiRenameDialog`, `Rename/`)
+
+The Edit menu's **Multi-rename** renames the marked rows (or the cursor row when none are marked) by a pattern, with Find and Replace after it and a live preview. It has **no chord**: Ctrl+Shift+Y sends the same byte as Ctrl+Y on legacy Linux terminals, which opens the ToDo list, and Ctrl+Shift+N is "new window" in common terminal hosts.
+
+- **Tokens** (`MultiRenamePattern`): `[N]` is a counter from 1, `[N:3]` the same zero-padded to width 3, `[C]` the name without its extension, `[E]` the extension without its dot. Anything else is copied as typed. Find and Replace are plain text, applied to the expanded pattern. A file whose pattern does not name `[E]` keeps its extension (`[C]_[N:2]` turns `a.txt` into `a_01.txt`); a folder has no extension, so its whole name is `[C]`.
+- **The planner decides every row from names alone** (`MultiRenamePlanner`): no disk, and the folder's names are read once, in `Prepare`. The first rule that matches wins: `Empty`, `InvalidName` (a separator, an invalid character, `.` or `..`), `Unchanged`, `Blocked` (the new name is another batch entry's old name, so the order would decide the result), `Duplicate` (another row gets the same name), `Exists` (a name in the folder that is not part of the batch), then `Ok`. A case-only change (`a` to `A`) is `Ok`; duplicate and blocked checks ignore case on every platform, so the result does not depend on the volume.
+- **Planning runs on every change, the preview draws at most 500 rows** (`MultiRenameDialog.PreviewLimit`). The count line covers every row. The preview list has `CanFocus = false`, so Enter always reaches the Rename command, as in the single Rename dialog.
+- **Rename runs one `BatchOperationTask`** (`MultiRenameCommand`): one move per `Ok` row, each through `ContentModelMoveFileTask` or `ContentModelMoveFolderTask` on the folder's own file system, with **`FileConflictMode.Legacy`**. Legacy never asks and never overwrites: a target that appears after planning is that step's error, listed when the batch ends. `Blocked`, `Duplicate` and `Exists` rows are never submitted. The marks are consumed, as for the other batch operations.
+- **Read-only panels are refused** (`MultiRenameDialogCommand.CanExecute`): an archive, a search or a preview cannot take a move. The single Rename does not have this check and is not changed here.
+
 ### The command line and the panels (mc niceties)
 The terminal bar (Ctrl+B) is the command line; the panels feed it and run it, as in mc.
 

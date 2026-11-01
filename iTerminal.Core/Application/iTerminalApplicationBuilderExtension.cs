@@ -388,6 +388,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<DriveInfoModel>();
         services.AddTransient<CopyDialog>();
         services.AddTransient<MoveDialog>();
+        services.AddTransient<MultiRenameDialog>();
         services.AddTransient<AboutDialog>();
         services.AddTransient<SystemInfoDialog>();
         services.AddSingleton<iTerminal.Core.Services.SystemSettings.ISystemSettingsService, iTerminal.Core.Services.SystemSettings.SystemSettingsService>();

@@ -126,7 +126,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
         iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null,
         PrintDialog? printDialog = null,
-        VirtualMachineManagerDialog? virtualMachineManagerDialog = null
+        VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
+        MultiRenameDialog? multiRenameDialog = null
         )
         : base([], themeService)
     {
@@ -173,7 +174,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             stripMetadataDialog,
             fileLabelsDialog,
             labelFilterDialog,
-            clipboardOperations));
+            clipboardOperations,
+            multiRenameDialog: multiRenameDialog));
 
         AddMenuItem(new NavigateMenuItem(
             contentModelService,
