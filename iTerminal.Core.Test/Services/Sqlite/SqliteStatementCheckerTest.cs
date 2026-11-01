@@ -24,6 +24,7 @@ public class SqliteStatementCheckerTest
     [DataRow("PRAGMA table_info(t)")]
     [DataRow("PRAGMA table_info(\"t\")")]
     [DataRow("pragma INDEX_LIST(t)")]
+    [Timeout(60_000)]
     public void Validate_AcceptsOneReadOnlyStatement(string sql)
     {
         SqliteStatementChecker.Validate(sql);
@@ -52,12 +53,14 @@ public class SqliteStatementCheckerTest
     [DataRow(";SELECT 1")]
     [DataRow("")]
     [DataRow("   ")]
+    [Timeout(60_000)]
     public void Validate_RefusesAnythingElse(string sql)
     {
         Assert.ThrowsExactly<SqlQueryException>(() => SqliteStatementChecker.Validate(sql));
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void Validate_RefusesASecondStatementEvenWhenTheFirstIsAllowed()
     {
         SqlQueryException failure = Assert.ThrowsExactly<SqlQueryException>(() => SqliteStatementChecker.Validate("SELECT 1; DROP TABLE t"));

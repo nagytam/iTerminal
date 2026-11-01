@@ -60,6 +60,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task SelectReturnsTheHeadersAndTheRows()
     {
         string path = CreatePeople();
@@ -74,6 +75,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ARowCapKeepsTheFirstRowsAndSaysSo()
     {
         string path = CreatePeople();
@@ -85,6 +87,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AResultExactlyAtTheCapIsNotTruncated()
     {
         string path = CreatePeople();
@@ -96,6 +99,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task TheSchemaListsTheTables()
     {
         string path = CreatePeople();
@@ -106,6 +110,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AQuotedSemicolonInAStringRuns()
     {
         string path = CreatePeople();
@@ -116,6 +121,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AMultiStatementInputIsRefusedAndTheTableSurvives()
     {
         string path = CreatePeople();
@@ -128,6 +134,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AWithStatementThatWritesLeavesTheFileUnchanged()
     {
         string path = CreatePeople();
@@ -141,6 +148,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task APragmaThatTurnsWritesBackOnIsRefused()
     {
         string path = CreatePeople();
@@ -153,6 +161,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task LoadingAnExtensionFails()
     {
         string path = CreatePeople();
@@ -162,6 +171,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AMissingFileIsRefused()
     {
         await Assert.ThrowsExactlyAsync<SqlQueryException>(() =>
@@ -169,6 +179,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ANonSqliteFileIsRefused()
     {
         string path = NewPath();
@@ -181,6 +192,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AnEmptyDbFileIsRefused()
     {
         string path = NewPath();
@@ -193,6 +205,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AWalDatabaseWhoseWalFileIsPresentReturnsRows()
     {
         string path = NewPath();
@@ -219,6 +232,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AWalDatabaseWithItsShmFileMissingDoesNotCrash()
     {
         // Crash guard, not a pin on one error: SQLite may recreate the -shm file or refuse, depending on the folder and the
@@ -230,7 +244,14 @@ public class SqliteDatabaseReaderTest
             using SqliteCommand command = writer.CreateCommand();
             command.CommandText = "PRAGMA journal_mode=WAL; CREATE TABLE t (id INTEGER); INSERT INTO t VALUES (1);";
             command.ExecuteNonQuery();
-            File.Delete(path + "-shm");
+            try
+            {
+                File.Delete(path + "-shm");
+            }
+            catch (IOException)
+            {
+                // Windows keeps the -shm file locked while the writer is open, so it cannot go missing there; the guard still runs.
+            }
             try
             {
                 SqlTable table = await _reader.QueryAsync(path, "SELECT count(*) FROM t", 10, CancellationToken.None);
@@ -244,6 +265,7 @@ public class SqliteDatabaseReaderTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ARunawayRecursiveQueryIsCancelledPromptly()
     {
         string path = CreatePeople();

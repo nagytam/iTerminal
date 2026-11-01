@@ -168,6 +168,14 @@ public class ClipboardAndDriveActionsTest
         var format = (FormatDriveDialog)_app.Driver.FocusedModal!;
 
         await format.FormatAsync();
+        if (!OperatingSystem.IsWindows())
+        {
+            // Only a lettered drive (C:\) can be typed back; the sandbox's root here is "/", which is refused in words.
+            StringAssert.Contains(format.Error, "Not a lettered drive.");
+            Assert.AreEqual(0, Drives.Calls.Count(c => c.StartsWith("format")), "nothing is formatted on a root that has no letter");
+            return;
+        }
+
         StringAssert.Contains(format.Error, "to confirm");
         Assert.AreEqual(0, Drives.Calls.Count(c => c.StartsWith("format")), "nothing is formatted without the confirmation");
 
