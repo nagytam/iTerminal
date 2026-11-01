@@ -36,16 +36,12 @@ public class ErrorPromptDialog : Dialog
         _message = message;
         acceptLabel ??= iConsole.Localization.UiText.Get("Common.Continue", "Continue");
         declineLabel ??= iConsole.Localization.UiText.Get("Common.Cancel", "Cancel");
-        // Hot keys are the first letters, unless both would be the same: then the decline label's second.
+        // Hot keys are the first letters, unless both would be the same: then the decline label's second. So the English
+        // pair Continue / Cancel gets C and a, and a translated pair follows the same rule in its own words.
         var acceptKey = acceptLabel[0];
         var declineKey = char.ToUpperInvariant(declineLabel[0]) == char.ToUpperInvariant(acceptKey) && declineLabel.Length > 1
             ? declineLabel[1]
             : declineLabel[0];
-        // The long-standing pair keeps its hot keys: Continue / Cancel.
-        if (acceptLabel == "Continue" && declineLabel == "Cancel")
-        {
-            declineKey = 'a';
-        }
         _continueButton = new Button(acceptLabel, new ChoiceCommand(_choice, true), themeService) { HotKeyChar = acceptKey };
         _cancelButton = new Button(declineLabel, new ChoiceCommand(_choice, false), themeService) { HotKeyChar = declineKey };
 

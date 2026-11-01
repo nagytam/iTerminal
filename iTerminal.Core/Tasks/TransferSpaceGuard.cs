@@ -1,6 +1,7 @@
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iConsole.Services;
 
 namespace iTerminal.Core.Tasks;
@@ -69,11 +70,19 @@ internal sealed class TransferSpaceGuard(IFileSystem target, Url targetUrl, IErr
                 }
 
                 var pause = await prompts!.ConfirmAsync(
-                    "Not enough free space",
-                    $"The target has {free.ToFileSize()} free, but {required.ToFileSize()} are to be written" +
-                    $"{Environment.NewLine}({(required - free).ToFileSize()} short) to:{Environment.NewLine}{targetUrl.FullName.Shrink(66)}" +
-                    $"{Environment.NewLine}{Environment.NewLine}Pause the operation to free some space, or go on anyway?",
-                    "Pause", "Go on anyway", cancellationToken);
+                    UiText.Get("Transfer.Space.Title", "Not enough free space"),
+                    string.Format(
+                        UiText.Get(
+                            "Transfer.Space.Body",
+                            "The target has {0} free, but {1} are to be written{4}({2} short) to:{4}{3}{4}{4}Pause the operation to free some space, or go on anyway?"),
+                        free.ToFileSize(),
+                        required.ToFileSize(),
+                        (required - free).ToFileSize(),
+                        targetUrl.FullName.Shrink(66),
+                        Environment.NewLine),
+                    UiText.Get("Transfer.Space.Pause", "Pause"),
+                    UiText.Get("Transfer.Space.GoOn", "Go on anyway"),
+                    cancellationToken);
                 if (!pause)
                 {
                     _proceedAnyway = true;
@@ -81,10 +90,16 @@ internal sealed class TransferSpaceGuard(IFileSystem target, Url targetUrl, IErr
                 }
 
                 var resume = await prompts.ConfirmAsync(
-                    "Copy paused",
-                    $"The operation is paused.{Environment.NewLine}Free some space on the target, then resume." +
-                    $"{Environment.NewLine}{Environment.NewLine}{targetUrl.FullName.Shrink(66)}",
-                    "Resume", "Cancel", cancellationToken);
+                    UiText.Get("Transfer.Paused.Title", "Transfer paused"),
+                    string.Format(
+                        UiText.Get(
+                            "Transfer.Paused.Body",
+                            "The operation is paused.{1}Free some space on the target, then resume.{1}{1}{0}"),
+                        targetUrl.FullName.Shrink(66),
+                        Environment.NewLine),
+                    UiText.Get("Transfer.Paused.Resume", "Resume"),
+                    UiText.Get("Common.Cancel", "Cancel"),
+                    cancellationToken);
                 if (!resume)
                 {
                     throw new OperationCanceledException("Cancelled while paused for lack of space.");

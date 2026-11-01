@@ -279,4 +279,72 @@ public class VirtualListBoxTest
         Assert.IsTrue(buffer.Line(0).StartsWith("item 0", StringComparison.Ordinal));
         source.Dispose();
     }
+
+    [TestMethod]
+    public void ScrollToMovesTheViewportAndLeavesTheCursorWhereItWas()
+    {
+        VirtualListBox<string> list = Create(new CountingSource(100));
+
+        list.ScrollTo(50);
+        ScreenBuffer buffer = new(20, 5);
+        list.Draw(buffer);
+
+        Assert.AreEqual(50, list.TopIndex);
+        Assert.AreEqual(0, list.CursorIndex, "scrolling does not move the cursor");
+        Assert.IsTrue(buffer.Line(0).StartsWith("row 50", StringComparison.Ordinal), "the viewport is not pulled back to the cursor");
+    }
+
+    [TestMethod]
+    public void ScrollToIsClampedToTheLastFullPage()
+    {
+        VirtualListBox<string> list = Create(new CountingSource(100));
+
+        list.ScrollTo(99);
+        ScreenBuffer buffer = new(20, 5);
+        list.Draw(buffer);
+
+        Assert.AreEqual(95, list.TopIndex);
+        Assert.IsTrue(buffer.Line(4).StartsWith("row 99", StringComparison.Ordinal));
+    }
+
+    [TestMethod]
+    public async Task MovingTheCursorBringsTheViewportBackToIt()
+    {
+        VirtualListBox<string> list = Create(new CountingSource(100));
+        list.ScrollTo(50);
+
+        await list.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+
+        Assert.AreEqual(1, list.CursorIndex);
+        Assert.AreEqual(1, list.TopIndex, "the viewport follows the cursor again: row 1 is now the first row on screen");
+    }
+
+    [TestMethod]
+    public void AnEmptyListShowsTheEmptyTextAndNoRows()
+    {
+        VirtualListBox<string> list = Create(new CountingSource(0));
+        list.EmptyText = "Nothing here";
+        ScreenBuffer buffer = new(20, 5);
+
+        list.Draw(buffer);
+
+        Assert.IsTrue(buffer.Line(0).StartsWith("Nothing here", StringComparison.Ordinal));
+        Assert.AreEqual(0, list.CursorIndex);
+        Assert.IsNull(list.SelectedItem);
+    }
+
+    [TestMethod]
+    public async Task AnEmptyListTakesNoNavigationOrActivationKeys()
+    {
+        VirtualListBox<string> list = Create(new CountingSource(0));
+        List<int> activated = [];
+        list.ItemActivated += (_, index) => activated.Add(index);
+
+        bool enter = await list.HandleKeyEventAsync(Key(ConsoleKey.Enter));
+        bool down = await list.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+
+        Assert.IsFalse(enter);
+        Assert.IsFalse(down);
+        Assert.AreEqual(0, activated.Count);
+    }
 }

@@ -745,4 +745,10 @@
   <data name="Csv.Hint.Ends" xml:space="preserve">
     <value>Go to the first or the last row</value>
   </data>
+  <data name="Wizard.Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Wizard.Finish" xml:space="preserve">
+    <value>Finish</value>
+  </data>
 </root>

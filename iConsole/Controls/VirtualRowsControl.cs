@@ -27,6 +27,9 @@ public abstract class VirtualRowsControl<T> : Control
     private int _cursor;
     private int _top;
 
+    /// <summary>False after <see cref="ScrollTo"/>: the viewport may then leave the cursor off screen until the cursor moves.</summary>
+    private bool _followCursor = true;
+
     protected VirtualRowsControl(IVirtualDataSource<T> source, IThemeService themeService) : base(themeService)
     {
         Source = source ?? throw new ArgumentNullException(nameof(source));
@@ -81,6 +84,7 @@ public abstract class VirtualRowsControl<T> : Control
         int target = count == 0 ? 0 : Math.Clamp(index, 0, count - 1);
         bool moved = target != _cursor;
         _cursor = target;
+        _followCursor = true;
         Normalize();
         if (moved)
         {
@@ -90,10 +94,14 @@ public abstract class VirtualRowsControl<T> : Control
         StateHasChanged();
     }
 
-    /// <summary>Scrolls so that row <paramref name="index"/> is the first on screen, without moving the cursor.</summary>
+    /// <summary>
+    /// Scrolls so that row <paramref name="index"/> is the first on screen, without moving the cursor. The cursor may stay
+    /// off screen; the next cursor move brings the viewport back to it.
+    /// </summary>
     public void ScrollTo(int index)
     {
         _top = index;
+        _followCursor = false;
         Normalize();
         StateHasChanged();
     }
@@ -288,20 +296,27 @@ public abstract class VirtualRowsControl<T> : Control
         StateHasChanged();
     }
 
-    /// <summary>Keeps the cursor inside the rows and the top row where the cursor is on screen and the last page is full.</summary>
+    /// <summary>
+    /// Keeps the cursor inside the rows, the top row inside the last full page, and, while the viewport follows the cursor,
+    /// the cursor on screen.
+    /// </summary>
     private void Normalize()
     {
         int count = Source.Count;
         int body = BodyHeight;
         _cursor = count == 0 ? 0 : Math.Clamp(_cursor, 0, count - 1);
         int maxTop = Math.Max(0, count - body);
-        if (_cursor < _top)
+        // A viewport moved by ScrollTo keeps its place: only the range limits below apply to it.
+        if (_followCursor)
         {
-            _top = _cursor;
-        }
-        else if (body > 0 && _cursor >= _top + body)
-        {
-            _top = _cursor - body + 1;
+            if (_cursor < _top)
+            {
+                _top = _cursor;
+            }
+            else if (body > 0 && _cursor >= _top + body)
+            {
+                _top = _cursor - body + 1;
+            }
         }
 
         _top = Math.Clamp(_top, 0, maxTop);

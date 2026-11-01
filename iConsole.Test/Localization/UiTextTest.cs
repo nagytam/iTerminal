@@ -38,6 +38,14 @@ public class UiTextTest
         return accept.Title + "|" + decline.Title;
     }
 
+    private static string HotKeys(ErrorPromptDialog dialog)
+    {
+        System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+        Button accept = (Button)typeof(ErrorPromptDialog).GetField("_continueButton", flags)!.GetValue(dialog)!;
+        Button decline = (Button)typeof(ErrorPromptDialog).GetField("_cancelButton", flags)!.GetValue(dialog)!;
+        return accept.HotKeyChar + "|" + decline.HotKeyChar;
+    }
+
     private static void Speak(string code)
     {
         Localizer localizer = new();
@@ -126,5 +134,21 @@ public class UiTextTest
         box.SetFocus();
 
         Assert.IsTrue(box.GetKeyHints().Any(h => h.Description == "Einfügen"));
+    }
+
+    [TestMethod]
+    public void TheEnglishPrompt_KeepsContinueOnCAndCancelOnA()
+    {
+        UiText.Current = null;
+
+        Assert.AreEqual("C|a", HotKeys(new ErrorPromptDialog("t", "m", Theme())));
+    }
+
+    [TestMethod]
+    public void ATranslatedPrompt_TakesItsHotKeysFromItsOwnWords()
+    {
+        Speak("de");
+
+        Assert.AreEqual("W|A", HotKeys(new ErrorPromptDialog("Titel", "Nachricht", Theme())));
     }
 }

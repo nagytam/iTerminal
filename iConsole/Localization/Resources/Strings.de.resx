@@ -745,4 +745,10 @@
   <data name="Csv.Hint.Ends" xml:space="preserve">
     <value>Zur ersten oder letzten Zeile springen</value>
   </data>
+  <data name="Wizard.Next" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="Wizard.Finish" xml:space="preserve">
+    <value>Fertigstellen</value>
+  </data>
 </root>

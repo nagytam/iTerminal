@@ -2677,4 +2677,82 @@
   <data name="Icon.NotReadable" xml:space="preserve">
     <value>Ezt az ikonfájlt nem lehetett beolvasni.</value>
   </data>
+  <data name="Transfer.Space.Title" xml:space="preserve">
+    <value>Nincs elég szabad hely</value>
+  </data>
+  <data name="Transfer.Space.Body" xml:space="preserve">
+    <value>A célon {0} szabad hely van, de {1} méretű adatot kell kiírni{4}({2} hiányzik) ide:{4}{3}{4}{4}Szüneteltessem a műveletet a hely felszabadításához, vagy folytassam mindenképp?</value>
+  </data>
+  <data name="Transfer.Space.Pause" xml:space="preserve">
+    <value>Szünet</value>
+  </data>
+  <data name="Transfer.Space.GoOn" xml:space="preserve">
+    <value>Folytatás mindenképp</value>
+  </data>
+  <data name="Transfer.Paused.Title" xml:space="preserve">
+    <value>Átvitel szüneteltetve</value>
+  </data>
+  <data name="Transfer.Paused.Body" xml:space="preserve">
+    <value>A művelet szünetel.{1}Szabadítson fel helyet a célon, majd folytassa.{1}{1}{0}</value>
+  </data>
+  <data name="Transfer.Paused.Resume" xml:space="preserve">
+    <value>Folytatás</value>
+  </data>
+  <data name="Torrent.Col.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Torrent.Col.State" xml:space="preserve">
+    <value>Állapot</value>
+  </data>
+  <data name="Torrent.Col.Done" xml:space="preserve">
+    <value>Kész</value>
+  </data>
+  <data name="Torrent.Col.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="Torrent.Col.Down" xml:space="preserve">
+    <value>Letöltés</value>
+  </data>
+  <data name="Torrent.Col.Up" xml:space="preserve">
+    <value>Feltöltés</value>
+  </data>
+  <data name="Torrent.Col.Peer" xml:space="preserve">
+    <value>Peer</value>
+  </data>
+  <data name="Torrent.State.Starting" xml:space="preserve">
+    <value>Indítás</value>
+  </data>
+  <data name="Torrent.State.Metadata" xml:space="preserve">
+    <value>Metaadat</value>
+  </data>
+  <data name="Torrent.State.Checking" xml:space="preserve">
+    <value>Ellenőr</value>
+  </data>
+  <data name="Torrent.State.Downloading" xml:space="preserve">
+    <value>Letöltés</value>
+  </data>
+  <data name="Torrent.State.Seeding" xml:space="preserve">
+    <value>Küldés</value>
+  </data>
+  <data name="Torrent.State.Paused" xml:space="preserve">
+    <value>Szünet</value>
+  </data>
+  <data name="Torrent.State.Stopped" xml:space="preserve">
+    <value>Leállt</value>
+  </data>
+  <data name="Torrent.State.Error" xml:space="preserve">
+    <value>Hiba</value>
+  </data>
+  <data name="Torrent.Hint.List" xml:space="preserve">
+    <value>A hozzáad  Szóköz szünet/folytatás  D eltávolít  O mappa megnyitása  Esc bezár</value>
+  </data>
+  <data name="Torrent.Hint.Confirm" xml:space="preserve">
+    <value>y eltávolít  w eltávolít + fájlok törlése  más gomb megszakít</value>
+  </data>
+  <data name="Torrent.Hint.Edit" xml:space="preserve">
+    <value>Tab mező  Enter hozzáad  Ctrl+U törlés  Esc vissza</value>
+  </data>
+  <data name="Torrent.Confirm.Remove" xml:space="preserve">
+    <value>Eltávolítja: „{0}”? y megtartja a letöltött fájlokat, w azokat is törli, más gomb megszakít.</value>
+  </data>
 </root>
