@@ -640,7 +640,7 @@ public partial class Url
             }
             else if (!_path.Contains(ArchiveSeparator, StringComparison.Ordinal))
             {
-                var fileInfo = GetFileInfoCached(_path);
+                var fileInfo = GetFileInfoCached(LocalFilePath(_path));
                 _date = fileInfo.LastWriteTime.ToString("yyyy-MM-dd");
                 _time = fileInfo.LastWriteTime.ToString("HH:mm");
                 _name = fileInfo.Name;
@@ -945,6 +945,17 @@ public partial class Url
         exists = System.IO.Directory.Exists(path);
         DirectoryExistsCache.Set(path, exists, DirectoryExistsCacheDuration);
         return exists;
+    }
+
+    /// <summary>
+    /// A file:/// URL keeps the slash before a Windows drive (file:///C:/x), so the local path is C:/x there.
+    /// Without this, the slash makes Windows resolve the path against the current drive (D:\C:\x).
+    /// </summary>
+    private static string LocalFilePath(string path)
+    {
+        return OperatingSystem.IsWindows() && path.Length >= 3 && path[0] == '/' && char.IsLetter(path[1]) && path[2] == ':'
+            ? path[1..]
+            : path;
     }
 
     private static CachedFileInfo GetFileInfoCached(string path)
