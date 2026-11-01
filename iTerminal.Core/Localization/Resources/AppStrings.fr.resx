@@ -1042,6 +1042,63 @@
   <data name="DialogHint.PauseOrResumeSnake" xml:space="preserve">
     <value>Mettre le serpent en pause ou le relancer, ou le faire démarrer</value>
   </data>
+  <data name="Games.Risk.SideBlue" xml:space="preserve">
+    <value>Bleu</value>
+  </data>
+  <data name="Games.Risk.SideRed" xml:space="preserve">
+    <value>Rouge</value>
+  </data>
+  <data name="Games.Risk.Draw" xml:space="preserve">
+    <value>Match nul : la limite de tours est atteinte.</value>
+  </data>
+  <data name="Games.Risk.Wins" xml:space="preserve">
+    <value>{0} gagne !</value>
+  </data>
+  <data name="Games.Risk.ToMove" xml:space="preserve">
+    <value>{0} doit jouer.</value>
+  </data>
+  <data name="Games.Risk.PlaceHint" xml:space="preserve">
+    <value>{0} : placez {1} armées sur vos territoires.</value>
+  </data>
+  <data name="Games.Risk.AttackHint" xml:space="preserve">
+    <value>{0} : attaquez depuis un territoire d'au moins 2 armées, ou E pour terminer l'attaque.</value>
+  </data>
+  <data name="Games.Risk.FortifyHint" xml:space="preserve">
+    <value>{0} : déplacez une armée vers un territoire voisin à vous, ou E pour finir le tour.</value>
+  </data>
+  <data name="Games.Risk.PlaceOwn" xml:space="preserve">
+    <value>Placez les armées sur votre propre territoire.</value>
+  </data>
+  <data name="Games.Risk.AttackFromTwo" xml:space="preserve">
+    <value>Attaquez depuis un territoire d'au moins 2 armées.</value>
+  </data>
+  <data name="Games.Risk.MoveFromTwo" xml:space="preserve">
+    <value>Déplacez depuis un territoire d'au moins 2 armées.</value>
+  </data>
+  <data name="Games.Risk.SelectFirst" xml:space="preserve">
+    <value>Choisissez l'un de vos territoires d'où attaquer.</value>
+  </data>
+  <data name="Games.Risk.NotAdjacent" xml:space="preserve">
+    <value>Ce territoire n'est pas voisin de celui d'où vous attaquez.</value>
+  </data>
+  <data name="Games.Risk.PlaceFirst" xml:space="preserve">
+    <value>Placez d'abord les {0} armées restantes.</value>
+  </data>
+  <data name="Games.Risk.MoveToOwn" xml:space="preserve">
+    <value>Déplacez vers l'un de vos propres territoires.</value>
+  </data>
+  <data name="Games.Risk.Battle" xml:space="preserve">
+    <value>{0} a obtenu {1} et {2} {3} : {0} perd {4}, {2} perd {5}.</value>
+  </data>
+  <data name="Games.Risk.Conquers" xml:space="preserve">
+    <value>{0} prend le territoire.</value>
+  </data>
+  <data name="Games.Risk.Select" xml:space="preserve">
+    <value>choisir</value>
+  </data>
+  <data name="Games.Risk.Hint" xml:space="preserve">
+    <value>Choisir, attaquer, déplacer ou placer</value>
+  </data>
   <data name="Games.Snake.Pause" xml:space="preserve">
     <value>pause</value>
   </data>

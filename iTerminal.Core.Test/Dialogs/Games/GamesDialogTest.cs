@@ -15,7 +15,7 @@ namespace iTerminal.Core.Test.Dialogs.Games;
 public class GamesDialogTest
 {
     private static GamesDialog Create(ITimeProvider? time = null) => new(
-        [new TicTacToeGame(new Random(1)), new ChessGame(new Random(1)), new GoGame(new Random(1)), new NineMensMorrisGame(new Random(1)), new SnakeGame(new Random(1))],
+        [new TicTacToeGame(new Random(1)), new ChessGame(new Random(1)), new GoGame(new Random(1)), new NineMensMorrisGame(new Random(1)), new SnakeGame(new Random(1)), new RiskGame(new Random(1))],
         TestTheme(),
         time);
 
@@ -52,7 +52,7 @@ public class GamesDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task ItListsTheFiveGamesAndDrawsTheFirstOne()
+    public async Task ItListsTheSixGamesAndDrawsTheFirstOne()
     {
         GamesDialog dialog = Create();
         await ShowAsync(dialog);
@@ -64,6 +64,7 @@ public class GamesDialogTest
         StringAssert.Contains(screen, "Go");
         StringAssert.Contains(screen, "Nine Men's Morris");
         StringAssert.Contains(screen, "Snake");
+        StringAssert.Contains(screen, "Risk");
         StringAssert.Contains(screen, "Tic-Tac-Toe — against the computer");
         StringAssert.Contains(screen, "X to move.");
         StringAssert.Contains(screen, "Esc:close");
@@ -86,9 +87,11 @@ public class GamesDialogTest
         await Press(dialog, ConsoleKey.PageDown);
         Assert.AreEqual("Snake", dialog.Current.Name);
         await Press(dialog, ConsoleKey.PageDown);
+        Assert.AreEqual("Risk", dialog.Current.Name);
+        await Press(dialog, ConsoleKey.PageDown);
         Assert.AreEqual("Tic-Tac-Toe", dialog.Current.Name, "the last game wraps to the first");
         await Press(dialog, ConsoleKey.PageUp);
-        Assert.AreEqual("Snake", dialog.Current.Name);
+        Assert.AreEqual("Risk", dialog.Current.Name);
     }
 
     [Timeout(60_000)]
@@ -224,7 +227,42 @@ public class GamesDialogTest
     {
         GamesDialog dialog = Create();
 
-        Assert.IsTrue(dialog.GetKeyHints().Any(h => h.Key == "1-5"));
+        Assert.IsTrue(dialog.GetKeyHints().Any(h => h.Key == "1-6"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task RiskDrawsItsTitleAgainstTheComputerAndAFooterWithoutUndo()
+    {
+        GamesDialog dialog = Create();
+        await ShowAsync(dialog);
+        await Press(dialog, ConsoleKey.D6, '6');
+
+        string screen = Drawn(dialog);
+
+        Assert.AreEqual("Risk", dialog.Current.Name);
+        StringAssert.Contains(screen, "Risk — against the computer");
+        StringAssert.Contains(screen, "Blue: place ");
+        StringAssert.Contains(screen, "armies on your territories.");
+        StringAssert.Contains(screen, "Enter:select");
+        StringAssert.Contains(screen, "M:mode");
+        StringAssert.Contains(screen, "Esc:close");
+        Assert.IsFalse(screen.Contains("U:undo"), "Risk has no undo");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task RiskHelpListsEndThisPhaseAndUndoIsNotHandled()
+    {
+        GamesDialog dialog = Create();
+        await ShowAsync(dialog);
+        await Press(dialog, ConsoleKey.D6, '6');
+
+        List<(string Key, string Description)> hints = [.. dialog.GetKeyHints()];
+
+        Assert.IsTrue(hints.Any(h => h.Key == "E" && h.Description == "End this phase"));
+        Assert.IsFalse(hints.Any(h => h.Key == "U"));
+        Assert.IsFalse(await Press(dialog, ConsoleKey.U, 'u'), "the key is left to the other controls");
     }
 
     [Timeout(60_000)]
