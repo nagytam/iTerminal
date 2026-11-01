@@ -143,6 +143,9 @@ public class CsvViewerDialog : Dialog
         StateHasChanged();
     }
 
+    /// <summary>What the query line says.</summary>
+    public string QueryText => _queryBox.Text;
+
     /// <summary>The query the line starts with: every column of every row.</summary>
     public const string DefaultQuery = "SELECT * FROM file";
 
