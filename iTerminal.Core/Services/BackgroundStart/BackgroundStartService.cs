@@ -22,13 +22,20 @@ public sealed class BackgroundStartService(ISettingsService settingsService, Tim
     /// <summary>The setting a service's mode is stored under.</summary>
     public static string SettingKey(string serviceId) => Settings.BackgroundStartPrefix + serviceId;
 
-    /// <summary>Parses a stored mode, ignoring case. Anything else gives <see cref="DefaultMode"/>.</summary>
-    public static BackgroundStartMode ParseMode(string? stored) =>
+    /// <summary>
+    /// The mode of a service whose setting is missing. The update check is delayed: nothing in the app opens it
+    /// but About, so on demand it would never offer an update on its own.
+    /// </summary>
+    public static BackgroundStartMode DefaultModeOf(string? serviceId) =>
+        serviceId == BackgroundServices.UpdateCheck ? BackgroundStartMode.Delayed : DefaultMode;
+
+    /// <summary>Parses a stored mode, ignoring case. Anything else gives the service's default.</summary>
+    public static BackgroundStartMode ParseMode(string? stored, string? serviceId = null) =>
         Enum.TryParse(stored, ignoreCase: true, out BackgroundStartMode mode) && Enum.IsDefined(mode)
             ? mode
-            : DefaultMode;
+            : DefaultModeOf(serviceId);
 
-    public BackgroundStartMode ModeOf(string serviceId) => ParseMode(settingsService.Get(SettingKey(serviceId)));
+    public BackgroundStartMode ModeOf(string serviceId) => ParseMode(settingsService.Get(SettingKey(serviceId)), serviceId);
 
     public void Request(string serviceId) => Gate(serviceId).TrySetResult();
 
