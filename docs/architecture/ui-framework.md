@@ -296,3 +296,53 @@ A control that wants a real bitmap rather than characters (today: the F3 image v
 
 - **Highlighters.** `LogView.Highlighters` (default `LogHighlighters.Default`) colour error and warning words, ISO timestamps, URLs (underlined), Windows and Unix paths with `:line`, quoted text and numbers; where two overlap the earlier wins, a line over 4000 characters is left plain, and each pattern has a 50 ms timeout. `HighlightingEnabled` switches them off. Build one with `LogHighlighter.Create`.
 - **ANSI.** `AnsiText.Parse` reads the colour codes that build tools, git and docker write (the 16 colours, bright, 256-colour and true colour mapped to the nearest of 16, bold, italic, underline, reset) into spans over the plain text and drops every other control sequence; colours carry from one line of an `Append` to the next, and ANSI spans beat the highlighters. `LogView.ParseAnsi` off keeps the text plain.
+
+### Comparison with Spectre.Console
+
+Spectre.Console 0.57.2 (its public API and XML docs, not its runtime behaviour) is an output and prompt library. It has no full-screen loop, focus or key routing, so only the overlapping areas are compared. The "not found" notes are grep-based.
+
+| Area | iConsole | Spectre.Console |
+| --- | --- | --- |
+| Colour depth | 16 ANSI colours only (`Color` enum) | Profile detection: 16, 256 or truecolour, with downsampling |
+| Environment detection | `ITERMINAL_RENDER_DUMPS`, `ITERMINAL_KEY_TRACE` only | `NO_COLOR`, `COLORTERM`, `TERM`, redirected output |
+| Styled text | Built by hand from `ConxelString` runs | Markup strings (`[bold red]…[/]`) with `Markup.Escape` |
+| Prompts | Dialogs, `ComboBox`, `CheckList`, y/n in footers | `TextPrompt` (validation, secret, choices), `SelectionPrompt` (search, paging), `MultiSelectionPrompt`, `ConfirmationPrompt` |
+| Tables, trees, calendars, charts | Present | Present, with more border and alignment options |
+| Progress | `ProgressBar`, `ProgressTime`, Task Manager | `ProgressContext` with several tasks and columns: spinner, percent, elapsed, remaining, transfer speed, downloaded size |
+| Layout | `Layout` helpers, `Window`, `GroupBox` | `Grid`, `Columns`, `Rows`, `Panel` with header, `Padder`, `Align` |
+| Charts | Block bar, line, gauge, heatmap, sparkline | `Canvas` with Braille dots for plots |
+| Exceptions | `ErrorMessage` control | Pretty-printed traces: trimmed frames, file links, colours |
+| Recording and tests | `ScreenBuffer` for assertions; HTML render dumps | `Recorder` exports text, HTML or SVG; `TestConsole` |
+| Emoji and wide characters | Not handled (see the Terminal.Gui section) | Emoji tables and cell widths |
+
+**Built from this comparison**
+
+- **Prompts.** `IPromptService` (`AskAsync`, `SelectAsync`, `MultiSelectAsync`, `ConfirmAsync`) shows a dialog per prompt on the first screen, one at a time. `TextPrompt<T>` converts with the type's invariant converter and runs `Validate` rules; `SelectionPrompt<T>` filters as you type; `MultiSelectionPrompt<T>` marks with Space and enforces `MinimumSelections`; `ConfirmationPrompt` answers Y or N, and Enter takes `DefaultValue`. Esc or cancellation returns null. Choice state lives in `ChoiceList<T>`, which has no drawing.
+- **Grid.** `Grid` places children in rows and columns with `Place`, with `GridLength.Cells`, `Auto` and `Star` tracks and spans. It arranges on layout and when its size changes.
+- **Screen recorder.** `ScreenRecorder.Capture` copies the merged frame; `ToText`, `ToHtml`, `ToSvg` and `Save` (by extension) write it out. Wide characters keep their columns in every format.
+- **Wide characters and emoji.** `TextWidth` gives the column count of text. A wide BMP character takes its cell and a continuation cell that is never written to the terminal; an emoji takes a surrogate pair. `BufferLayer.RepairWideCharacters` blanks a half that lost its partner when layers are merged. Zero-width characters are dropped; the width table covers the common East Asian and emoji ranges, not all of Unicode.
+
+**Suggested improvements, in priority order**
+
+1. **Colour profile and environment detection.** Detect `NO_COLOR`, `COLORTERM=truecolor` and `TERM`, and map colours to the terminal's depth. The `Color` enum can't express 256-colour or truecolour themes, so a profile type (and an RGB colour) is needed before theme work. Same gap as Terminal.Gui item 3.
+2. **Markup for styled strings.** A small `[bold red]…[/]` parser with an `Escape` helper would simplify status messages, dialog text and help screens, and stop user text such as a file name containing `[` being read as styling. Build it on `ConxelString`.
+3. **A prompt facade.** An `IPromptService` with `Ask<T>`, `Select<T>`, `MultiSelect<T>` and `Confirm`, built on the existing controls, gives dialog flows one API and makes them testable. Start with search-as-you-type selection, which Spectre's `SelectionPrompt` has.
+4. **Recording the screen.** Expose the `ScreenBuffer` as a text, HTML or SVG recording. `BufferHelper.DumpBufferToHtml` already produces HTML. An end-to-end test could attach the screen on failure.
+5. **Progress columns for transfers.** Optional columns for transfer speed, remaining time and downloaded size on `ProgressBar` or a multi-task progress control. Check the copy and sync dialogs first: if they lack speed and ETA, this is the cheapest visible win.
+6. **Grid and columns layout.** A `Grid` with ratio and auto columns, and a `Columns` control, for cases `Layout.StackVertical` and manual positioning handle awkwardly. Overlaps Terminal.Gui item 7.
+7. **Canvas with Braille dots.** Doubles the vertical resolution of line and scatter plots over block charts. Lower priority.
+8. **Exception view.** Trimmed frames and file links in the `ErrorMessage` control. Low priority.
+9. **Figlet banners** for splash and about screens. Low priority and cosmetic.
+
+Items 1 and 2 are the largest gaps: item 1 blocks theme work, and item 2 removes repetitive `ConxelString` code.
+
+### Main-loop watchdog and terminal clipboard
+
+- **`MainLoopWatchDog`** (`iConsole/Diagnostics/`) is a job that times the passes that must stay inside the 200 ms budget: key and mouse handlers (`TerminalInputConsumerJob`) and render passes (`ConsoleBufferRendererJob`). A pass past `Threshold` is reported once through `Stalled` while it is still running, and `Recovered` reports the total when it ends. It measures and reports; it cannot interrupt a handler that never returns. Its events are raised on the watchdog's thread, so a handler must post a notification, not touch the control tree. The application logs both events through Serilog (`MainLoopWatchDogLoggingHostedService`).
+- **OSC 52 clipboard** (`Osc52TextClipboardService`) sets the clipboard of the machine the person is at by writing an OSC 52 sequence to the terminal. It is write-only and refuses a text larger than `MaxEncodedLength` or a copy made while the terminal is lent to a child process. `LayeredTextClipboardService` (iTerminal.Core) orders the layers: the system clipboard, then the terminal, then the application's own copy. Over SSH the terminal goes first, since a clipboard program on the remote machine would set a clipboard the person cannot reach. Paste reads the system clipboard and then the application's own copy. tmux needs `set-clipboard on` for OSC 52 to reach the outer terminal.
+
+### Reflow in the text viewer and editor, and the taskbar progress indicator
+
+- **Reflow.** When the width changes, or wrapping is switched on or off, the viewer keeps the reading position as text: the row at the top of the screen is found again by its line and column after the rows are rebuilt (`TextViewerControl.RebuildRows`, `RowOf`). The caret follows the wrapped row (`CursorScreenRow`), and `KeepCursorInText` scrolls in rows when wrapped.
+- **Editor wrap.** The editor inherits the viewer's wrap. F6 toggles it (F2 is save in the editor). Wrapped, Up and Down move by screen row and keep the column within the row (`MoveCursorByScreenRow`); unwrapped they move by line as before. Home and End still work by line.
+- **Taskbar progress.** `TaskbarProgressJob` polls the background tasks every 250 ms, works out the state with `TaskbarProgressCalculator` (average progress of running tasks; paused when every running task is paused; indeterminate before any progress is reported), and tells `ITaskbarProgress` only when that changes. `WindowsTaskbarProgress` drives `ITaskbarList3` on a thread in a single-threaded apartment, against the console window. Elsewhere `NullTaskbarProgress` is used. The Windows path is compiled on Linux but has not been run on Windows. Windows Terminal may host the console in a window that has no taskbar button to show the indicator on.

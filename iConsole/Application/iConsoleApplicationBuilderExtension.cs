@@ -1,4 +1,4 @@
-using iConsole.Buffers;
+﻿using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Controls.Editors;
 using iConsole.Controls.PopUpWindows;
@@ -122,6 +122,8 @@ public static class iConsoleApplicationBuilderExtension
         // Popovers: one open at a time, placed on screen. Context menus open through it.
         services.AddSingleton<IPopoverService, PopoverService>();
         services.AddTransient<ContextMenu>();
+        // Prompts: a dialog per kind, shown through the desktop by the service. Callers ask for the service only.
+        services.AddSingleton<IPromptService, Prompts.PromptService>();
         services.AddSingleton<IDateTimeProviderService, DateTimeProviderService>();
         services.AddSingleton<IFrequentExecutionGuardService, FrequentExecutionGuardService>();
         services.AddSingleton<IFileToTextConverterService, FileToTextConverterService>();

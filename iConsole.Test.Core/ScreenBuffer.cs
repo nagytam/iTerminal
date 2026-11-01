@@ -1,4 +1,4 @@
-using iConsole.Buffers;
+﻿using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Display;
@@ -130,12 +130,19 @@ public sealed class ScreenBuffer : IBuffer
     public Color BackgroundAt(int x, int y) => Cell(x, y).BackgroundColor;
 
     /// <summary>Row <paramref name="y"/>, full width, trailing blanks kept.</summary>
+    /// <summary>
+    /// The text of row <paramref name="y"/> as a person reads it. The second column of a wide character is left out, so
+    /// a column index is not a character index on a row that has wide characters before it.
+    /// </summary>
     public string Line(int y)
     {
         var builder = new StringBuilder(Width);
         for (var x = 0; x < Width; x++)
         {
-            builder.Append(CharAt(x, y));
+            if (CharAt(x, y) != iConsole.Display.TextWidth.Continuation)
+            {
+                builder.Append(CharAt(x, y));
+            }
         }
         return builder.ToString();
     }
