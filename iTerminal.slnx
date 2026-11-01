@@ -22,6 +22,9 @@
     <Platform Project="x86" />
     <Build />
   </Project>
+  <Project Path="iTerminal.Specifications.Test\iTerminal.Specifications.Test.csproj">
+    <BuildDependency Project="iTerminal.Test\iTerminal.Test.csproj" />
+  </Project>
   <Project Path="iTerminal.Test\iTerminal.Test.csproj">
     <BuildDependency Project="iConsole.Test.Core\iConsole.Test.Core.csproj" />
     <BuildDependency Project="iTerminal.Core\iTerminal.Core.csproj" />
