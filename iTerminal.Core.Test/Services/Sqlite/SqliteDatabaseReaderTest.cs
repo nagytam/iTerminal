@@ -230,7 +230,14 @@ public class SqliteDatabaseReaderTest
             using SqliteCommand command = writer.CreateCommand();
             command.CommandText = "PRAGMA journal_mode=WAL; CREATE TABLE t (id INTEGER); INSERT INTO t VALUES (1);";
             command.ExecuteNonQuery();
-            File.Delete(path + "-shm");
+            try
+            {
+                File.Delete(path + "-shm");
+            }
+            catch (IOException)
+            {
+                // Windows keeps the -shm file locked while the writer is open, so it cannot go missing there; the guard still runs.
+            }
             try
             {
                 SqlTable table = await _reader.QueryAsync(path, "SELECT count(*) FROM t", 10, CancellationToken.None);
