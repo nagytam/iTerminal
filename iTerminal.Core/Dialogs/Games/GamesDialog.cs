@@ -9,23 +9,30 @@ using iTerminal.Core.Services.Games;
 namespace iTerminal.Core.Dialogs.Games;
 
 /// <summary>
-/// Board games to play inside the terminal: Tic-Tac-Toe, Chess, Go and Nine Men's Morris, against the computer or a
-/// second person at the same keyboard. The games keep their positions while the app runs, so closing the dialog does
-/// not end a game.
+/// Board games to play inside the terminal: Tic-Tac-Toe, Chess, Go, Nine Men's Morris and Snake. The first four play
+/// against the computer or a second person at the same keyboard; Snake is for one person. The games keep their positions
+/// while the app runs, so closing the dialog does not end a game.
 ///
 /// <para>Each <see cref="IGame"/> owns its rules and its drawing; this dialog forwards keys and paints what the game
 /// renders. The computer thinks on a background task: it works on a snapshot of the position and parks the move it
 /// chose, and the next idle pass plays it on the UI thread, so a key handler never waits on the search.</para>
+///
+/// <para>A game that moves on its own clock (Snake) is ticked from <see cref="OnIdle"/> with the time since the last
+/// idle pass, capped at one second. The idle passes may come less often while the screen changes, so a game must not
+/// count passes; the elapsed time is what moves it.</para>
 /// </summary>
 public class GamesDialog : SplitPaneDialog
 {
-    internal const string KeyHints = "Arrows:move  Enter:play  PgUp/PgDn:game  N:new  U:undo  M:mode  Esc:close";
-
     private const int MenuWidth = 24;
+
+    /// <summary>The longest stretch of time one idle pass hands to the game, so a stall does not make it jump.</summary>
+    private const long MaxTickMilliseconds = 1000;
 
     private sealed record Outcome(int Generation, Action? Move);
 
     private readonly IGame[] _games;
+    private readonly ITimeProvider _time;
+    private long _lastMs;
     private int _current;
 
     private CancellationTokenSource? _cancellation;
@@ -35,15 +42,16 @@ public class GamesDialog : SplitPaneDialog
     private volatile bool _thinking;
     private bool _stuck;
 
-    public GamesDialog(IThemeService themeService)
-        : this([new TicTacToeGame(), new ChessGame(), new GoGame(), new NineMensMorrisGame()], themeService)
+    public GamesDialog(IThemeService themeService, ITimeProvider timeProvider)
+        : this([new TicTacToeGame(), new ChessGame(), new GoGame(), new NineMensMorrisGame(), new SnakeGame()], themeService, timeProvider)
     {
     }
 
-    internal GamesDialog(IGame[] games, IThemeService themeService)
+    internal GamesDialog(IGame[] games, IThemeService themeService, ITimeProvider? timeProvider = null)
         : base(nameof(GamesDialog), themeService)
     {
         _games = games;
+        _time = timeProvider ?? new SystemTimeProvider();
         Title = UiText.Get("Dialog.GamesTitle", "Games");
     }
 
@@ -61,9 +69,17 @@ public class GamesDialog : SplitPaneDialog
 
     #endregion
 
+    public override async Task ShowAsync()
+    {
+        await base.ShowAsync();
+        // Time that passed while the dialog was closed does not move a game when it opens again.
+        _lastMs = _time.MonotonicMilliseconds;
+    }
+
     public override void Close()
     {
         CancelThinking();
+        Current.Pause();
         base.Close();
     }
 
@@ -80,13 +96,21 @@ public class GamesDialog : SplitPaneDialog
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Arrows", UiText.Get("Hint.MoveCursor", "Move the cursor"));
-        yield return ("Enter", UiText.Get("DialogHint.PlaySelectTake", "Play, select or take a piece at the cursor"));
+        yield return ("Enter", Current.ActivateHint);
         yield return ("Space", UiText.Get("DialogHint.SameAsEnter", "Same as Enter"));
         yield return ("PgUp / PgDn", UiText.Get("DialogHint.PreviousNextGame", "Previous or next game"));
-        yield return ("1-4", UiText.Get("DialogHint.ChooseGame", "Choose a game"));
+        yield return ($"1-{_games.Length}", UiText.Get("DialogHint.ChooseGame", "Choose a game"));
         yield return ("N", UiText.Get("DialogHint.StartGameAgain", "Start the game again"));
-        yield return ("U", UiText.Get("DialogHint.TakeBackMove", "Take back the last move"));
-        yield return ("M", UiText.Get("DialogHint.SwitchComputerTwoPlayers", "Switch between the computer and two players"));
+        if (Current.OffersUndo)
+        {
+            yield return ("U", UiText.Get("DialogHint.TakeBackMove", "Take back the last move"));
+        }
+
+        if (Current.OffersComputerOpponent)
+        {
+            yield return ("M", UiText.Get("DialogHint.SwitchComputerTwoPlayers", "Switch between the computer and two players"));
+        }
+
         foreach ((string key, string description) in Current.ExtraKeys)
         {
             yield return (key, description);
@@ -163,10 +187,20 @@ public class GamesDialog : SplitPaneDialog
                 game.NewGame();
                 return true;
             case 'u':
+                if (!game.OffersUndo)
+                {
+                    return false;
+                }
+
                 CancelThinking();
                 game.Undo();
                 return true;
             case 'm':
+                if (!game.OffersComputerOpponent)
+                {
+                    return false;
+                }
+
                 CancelThinking();
                 game.VsComputer = !game.VsComputer;
                 return true;
@@ -183,6 +217,7 @@ public class GamesDialog : SplitPaneDialog
         }
 
         CancelThinking();
+        Current.Pause();
         _current = index;
     }
 
@@ -193,6 +228,14 @@ public class GamesDialog : SplitPaneDialog
     public override void OnIdle()
     {
         base.OnIdle();
+
+        long now = _time.MonotonicMilliseconds;
+        TimeSpan delta = TimeSpan.FromMilliseconds(Math.Min(now - _lastMs, MaxTickMilliseconds));
+        _lastMs = now;
+        if (Current.Tick(delta))
+        {
+            StateHasChanged();
+        }
 
         Outcome? outcome = Interlocked.Exchange(ref _pending, null);
         if (outcome is not null && outcome.Generation == _generation)
@@ -350,7 +393,9 @@ public class GamesDialog : SplitPaneDialog
             return;
         }
 
-        string mode = game.VsComputer ? "against the computer" : "two players";
+        string mode = !game.OffersComputerOpponent
+            ? UiText.Get("Games.OnePlayer", "one player")
+            : game.VsComputer ? "against the computer" : "two players";
         DrawSectionHeader(buffer, x0, iy, width, $"{game.Name} — {mode}", true, colorScheme);
 
         string status = game.Status + (_thinking ? " The computer is thinking…" : string.Empty);
@@ -405,7 +450,26 @@ public class GamesDialog : SplitPaneDialog
             rulesTop++;
         }
 
-        DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, string.Empty, colorScheme.Foreground, KeyHints, colorScheme);
+        DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, string.Empty, colorScheme.Foreground, FooterHints(), colorScheme);
+    }
+
+    /// <summary>The footer for the game on screen: the keys it answers to, short.</summary>
+    internal string FooterHints()
+    {
+        IGame game = Current;
+        List<string> hints = ["Arrows:move", "Enter:" + game.ActivateLabel, "PgUp/PgDn:game", "N:new"];
+        if (game.OffersUndo)
+        {
+            hints.Add("U:undo");
+        }
+
+        if (game.OffersComputerOpponent)
+        {
+            hints.Add("M:mode");
+        }
+
+        hints.Add("Esc:close");
+        return string.Join("  ", hints);
     }
 
     private void DrawMenu(IBuffer buffer, int x, int y, int width, int height, ColorScheme colorScheme)

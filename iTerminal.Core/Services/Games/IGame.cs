@@ -1,4 +1,5 @@
 using iConsole.Display;
+using iConsole.Localization;
 
 namespace iTerminal.Core.Services.Games;
 
@@ -55,6 +56,27 @@ public interface IGame
     /// action does nothing if the game moved on since the snapshot.
     /// </summary>
     Func<CancellationToken, Action?>? PlanComputerMove();
+
+    /// <summary>
+    /// Advances a game that moves on its own clock (Snake) by the time that has passed since the last call. Returns true
+    /// when the position changed. The turn-based games never move on their own.
+    /// </summary>
+    bool Tick(TimeSpan elapsed) => false;
+
+    /// <summary>Stops a game that moves on its own clock. The dialog calls it when the game is left and when the dialog closes.</summary>
+    void Pause() { }
+
+    /// <summary>False for a game with no computer opponent: the mode key does not apply and the mode label reads "one player".</summary>
+    bool OffersComputerOpponent => true;
+
+    /// <summary>False for a game that cannot take a move back: the undo key is not offered.</summary>
+    bool OffersUndo => true;
+
+    /// <summary>The short footer word for Enter.</summary>
+    string ActivateLabel => "play";
+
+    /// <summary>The help text for Enter.</summary>
+    string ActivateHint => UiText.Get("DialogHint.PlaySelectTake", "Play, select or take a piece at the cursor");
 }
 
 /// <summary>What the games share: the mode flag and a random source the tests can fix.</summary>
@@ -80,6 +102,17 @@ public abstract class GameBase(Random? random) : IGame
     public abstract void Undo();
     public abstract void NewGame();
     public abstract Func<CancellationToken, Action?>? PlanComputerMove();
+
+    // Virtual so a game can override them; the defaults are the interface's.
+    public virtual bool Tick(TimeSpan elapsed) => false;
+    public virtual void Pause()
+    {
+    }
+
+    public virtual bool OffersComputerOpponent => true;
+    public virtual bool OffersUndo => true;
+    public virtual string ActivateLabel => "play";
+    public virtual string ActivateHint => UiText.Get("DialogHint.PlaySelectTake", "Play, select or take a piece at the cursor");
 
     /// <summary>The cursor stays on the board.</summary>
     protected static int Clamp(int value, int max) => Math.Clamp(value, 0, max);

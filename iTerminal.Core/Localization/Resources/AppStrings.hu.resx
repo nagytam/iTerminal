@@ -1039,6 +1039,15 @@
   <data name="DialogHint.SwitchComputerTwoPlayers" xml:space="preserve">
     <value>Váltás a számítógép és a két játékos között</value>
   </data>
+  <data name="DialogHint.PauseOrResumeSnake" xml:space="preserve">
+    <value>Kígyó szüneteltetése vagy folytatása, vagy mozgásba hozása</value>
+  </data>
+  <data name="Games.Snake.Pause" xml:space="preserve">
+    <value>szünet</value>
+  </data>
+  <data name="Games.OnePlayer" xml:space="preserve">
+    <value>egy játékos</value>
+  </data>
   <data name="DialogHint.ScrollDifferences" xml:space="preserve">
     <value>A különbségek görgetése</value>
   </data>
