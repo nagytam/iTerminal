@@ -13,12 +13,10 @@ public class ScrollPageUpCommand(IScrollableModel scrollableModel) : Command
 
     public override Task ExecuteAsync(object? args)
     {
-        scrollableModel.CursorPosition.Y = (uint)Math.Max(
-            scrollableModel.CursorPosition.Y - (int)scrollableModel.ViewSize.Height,
-            0);
-        scrollableModel.ScrollPosition.Y = (uint)Math.Max(
-            scrollableModel.ScrollPosition.Y - (int)scrollableModel.ViewSize.Height,
-            0);
+        // A page is every visible entry: the view's lines times the columns of a line.
+        var page = scrollableModel.ViewSize.Height * ScrollableModel.ColumnCountOf(scrollableModel);
+        scrollableModel.CursorPosition.Y = Math.Max(scrollableModel.CursorPosition.Y - page, 0);
+        scrollableModel.ScrollPosition.Y = Math.Max(scrollableModel.ScrollPosition.Y - page, 0);
         scrollableModel.Update();
         return Task.CompletedTask;
     }

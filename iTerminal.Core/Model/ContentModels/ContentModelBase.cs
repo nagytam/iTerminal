@@ -727,6 +727,33 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
             });
     }
 
+    /// <summary>
+    /// The Brief cell for an entry: the name alone, with the same filter-miss highlight as the full row.
+    /// It calls the entry's brief formatting, not <see cref="FormatItemName"/>, so size and date do not return.
+    /// </summary>
+    public virtual ConxelString FormatBriefItemName(IEntry? entry, int width, bool cursor, ColorScheme colorScheme, VisualState visualState)
+    {
+        if (entry is null)
+        {
+            var empty = new ConxelString();
+            empty.Append(StringHelper.Repeat(' ', width), colorScheme.Foreground, colorScheme.Background);
+            return empty;
+        }
+
+        var conxelString = entry.FormatBriefItemName(width, cursor, colorScheme, visualState);
+        if (!cursor && !IsEntryMatch(entry))
+        {
+            for (var i = 0; i < conxelString.Count; i++)
+            {
+                var cell = conxelString.String[i];
+                cell.BackgroundColor = Color.Blue;
+                conxelString.String[i] = cell;
+            }
+        }
+
+        return conxelString;
+    }
+
     public virtual ConxelString FormatItemName(IEntry? entry, int width, bool cursor, ColorScheme colorScheme, VisualState visualState)
     {
         var (nameLength, showDate, showTime) = EntryBase.ColumnLayout(width);

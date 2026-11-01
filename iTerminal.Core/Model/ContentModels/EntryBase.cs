@@ -217,6 +217,24 @@ public abstract record EntryBase : IEntry
         return conxelString;
     }
 
+    /// <summary>
+    /// The name alone for a Brief listing cell: no size, date or time column. <paramref name="width"/> is the
+    /// name width; the caller draws the column separator.
+    /// </summary>
+    public virtual ConxelString FormatBriefItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState)
+    {
+        ConxelString conxelString = new();
+        if (Url is not null)
+        {
+            var foregroundColor = GetForegroundColor(colorScheme, cursor, visualState);
+            var backgroundColor = GetBackgroundColor(colorScheme, cursor, visualState);
+            var isItalic = Url.PathType == PathType.Folder;
+            var displayName = Url.IsLink ? $"{Url.DisplayName} {LinkArrow} {Url.LinkTarget}" : Url.DisplayName;
+            AppendRightPadded(conxelString, displayName, width, foregroundColor, backgroundColor, isItalic);
+        }
+        return conxelString;
+    }
+
     private static void AppendRightPadded(
         ConxelString conxelString,
         string value,

@@ -28,6 +28,12 @@ public interface IContentModel : IScrollableModel, IFileSystem
     string GetHeader(int width);
     string GetFooter();
     ConxelString FormatItemName(IEntry? entry, int width, bool cursor, ColorScheme colorScheme, VisualState visualState);
+
+    /// <summary>
+    /// The Brief listing cell for an entry (the name alone). Defaults to <see cref="FormatItemName"/>.
+    /// </summary>
+    ConxelString FormatBriefItemName(IEntry? entry, int width, bool cursor, ColorScheme colorScheme, VisualState visualState) =>
+        FormatItemName(entry, width, cursor, colorScheme, visualState);
     void ReadUrl();
     void Delete(Url url, bool recursive, bool moveToRecycleBin);
     Task RunTerminalCommandAsync(ITerminalModel terminalModel);

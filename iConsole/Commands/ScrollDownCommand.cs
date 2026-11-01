@@ -15,21 +15,13 @@ public class ScrollDownCommand(IScrollableModel scrollableModel) : Command
     public override Task ExecuteAsync(object? arg)
     {
         Debug.Assert(!scrollableModel.ViewSize.IsEmpty);
-        if (scrollableModel.CursorPosition.Y == scrollableModel.ScrollPosition.Y + scrollableModel.ViewSize.Height - 1)
-        {
-            // Not past the point where the last line is at the bottom of the view.
-            if (scrollableModel.ScrollPosition.Y < scrollableModel.ScrollableSize.Height - scrollableModel.ViewSize.Height)
-            {
-                scrollableModel.ScrollPosition.Y++;
-            }
-        }
-        if (scrollableModel.CursorPosition.Y < scrollableModel.ScrollableSize.Height - 1)
-        {
-            scrollableModel.CursorPosition.Y++;
-        }
+        // One line down: with several columns the cursor moves to the same column of the next row.
+        var columns = ScrollableModel.ColumnCountOf(scrollableModel);
         scrollableModel.CursorPosition.Y = Math.Max(0, Math.Min(
-            scrollableModel.CursorPosition.Y, 
+            scrollableModel.CursorPosition.Y + columns,
             scrollableModel.ScrollableSize.Height - 1));
+        Debug.Assert(scrollableModel.CursorPosition.Y <= Math.Max(0, scrollableModel.ScrollableSize.Height - 1));
+        ScrollableModel.ScrollLinesToVisible(scrollableModel);
 
         scrollableModel.Update();
         return Task.CompletedTask;

@@ -13,13 +13,18 @@ public class ScrollPageDownCommand(IScrollableModel scrollableModel) : Command
 
     public override Task ExecuteAsync(object? args)
     {
-        scrollableModel.CursorPosition.Y = (uint)Math.Min(
-            scrollableModel.CursorPosition.Y + scrollableModel.ViewSize.Height,
-            Math.Max(0, (int)scrollableModel.ScrollableSize.Height - 1));
-        scrollableModel.ScrollPosition.Y = (uint)Math.Min(
-            scrollableModel.ScrollPosition.Y + scrollableModel.ViewSize.Height,
-            Math.Max(0,
-            (int)scrollableModel.ScrollableSize.Height - scrollableModel.ViewSize.Height));
+        // A page is every visible entry: the view's lines times the columns of a line.
+        var columns = ScrollableModel.ColumnCountOf(scrollableModel);
+        var page = scrollableModel.ViewSize.Height * columns;
+        // The last scroll position that still fills the view: whole lines, the last one at the bottom.
+        var lines = (scrollableModel.ScrollableSize.Height + columns - 1) / columns;
+        var maxScroll = Math.Max(0, lines - scrollableModel.ViewSize.Height) * columns;
+        scrollableModel.CursorPosition.Y = Math.Min(
+            scrollableModel.CursorPosition.Y + page,
+            Math.Max(0, scrollableModel.ScrollableSize.Height - 1));
+        scrollableModel.ScrollPosition.Y = Math.Min(
+            scrollableModel.ScrollPosition.Y + page,
+            maxScroll);
         scrollableModel.Update();
         return Task.CompletedTask;
     }

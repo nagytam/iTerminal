@@ -5,8 +5,26 @@ using System.Runtime.CompilerServices;
 
 namespace iConsole.Model;
 
-public class ScrollableModel : IScrollableModel, INotifyPropertyChanged
+public class ScrollableModel : IColumnScrollableModel, INotifyPropertyChanged
 {
+    private int _columnCount = 1;
+    public int ColumnCount
+    {
+        get
+        {
+            return _columnCount;
+        }
+        set
+        {
+            var columnCount = Math.Max(1, value);
+            if (_columnCount != columnCount)
+            {
+                _columnCount = columnCount;
+                OnPropertyChanged(nameof(ColumnCount));
+            }
+        }
+    }
+
     #region Model
     private Position _cursorPosition = new(0, 0);
     public Position CursorPosition 
@@ -103,17 +121,52 @@ public class ScrollableModel : IScrollableModel, INotifyPropertyChanged
         OnPropertyChanged(nameof(ScrollPosition));
     }
 
+    /// <summary>
+    /// Rounds the scroll position down to a line start. Writes only when the value changes.
+    /// </summary>
+    public void AlignScroll()
+    {
+        var aligned = ScrollPosition.Y - (ScrollPosition.Y % ColumnCount);
+        if (aligned != ScrollPosition.Y)
+        {
+            ScrollPosition.Y = aligned;
+        }
+    }
+
+    /// <summary>
+    /// The vertical part of <see cref="ScrollToVisible"/>, in lines: keeps the cursor's line inside the
+    /// visible lines. With one column this is the entry-by-entry scroll it always was.
+    /// </summary>
+    public void ScrollToVisibleVertical() => ScrollLinesToVisible(this);
+
+    /// <summary>The number of columns a model lays out, 1 for any model without the column interface.</summary>
+    public static int ColumnCountOf(IScrollableModel model) =>
+        model is IColumnScrollableModel columns ? Math.Max(1, columns.ColumnCount) : 1;
+
+    /// <summary>
+    /// The vertical scroll of a model in lines of <see cref="ColumnCountOf"/> entries: keeps the cursor's
+    /// line inside the visible lines. Works on any <see cref="IScrollableModel"/>; with one column it is
+    /// the entry-by-entry scroll.
+    /// </summary>
+    public static void ScrollLinesToVisible(IScrollableModel model)
+    {
+        var columns = ColumnCountOf(model);
+        var cursorLine = model.CursorPosition.Y / columns;
+        var firstLine = model.ScrollPosition.Y / columns;
+        var rows = model.ViewSize.Height;
+        if (cursorLine < firstLine)
+        {
+            model.ScrollPosition.Y = cursorLine * columns;
+        }
+        else if (cursorLine > firstLine + rows - 1)
+        {
+            model.ScrollPosition.Y = Math.Max(0, cursorLine - rows + 1) * columns;
+        }
+    }
+
     public void ScrollToVisible()
     {
-        ScrollPosition.Y.Range(0, ScrollableSize.Height - 1);
-        if (CursorPosition.Y < ScrollPosition.Y)
-        {
-            ScrollPosition.Y = CursorPosition.Y;
-        }
-        else if (CursorPosition.Y > ScrollPosition.Y + ViewSize.Height - 1)
-        {
-            ScrollPosition.Y = Math.Max(0, CursorPosition.Y - ViewSize.Height + 1);
-        }
+        ScrollToVisibleVertical();
         if (CursorPosition.X < ScrollPosition.X)
         {
             ScrollPosition.X = CursorPosition.X;
