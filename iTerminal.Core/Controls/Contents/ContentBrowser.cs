@@ -265,6 +265,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         AddCommand(new TabForwardCommand());
         AddCommand(new TabBackwardCommand());
         AddCommand(new ExecuteCommand(ContentModel, _terminalModel, _taskManager));
+        // Any other file, with no program chosen: the system's default program, outside the application.
+        if (_fileAssociations is not null)
+        {
+            AddCommand(new OpenWithSystemDefaultCommand(ContentModelService, _fileAssociations));
+        }
         if (_createFolderDialog is not null)
         {
             AddCommand(new CreateFolderDialogCommand(_createFolderDialog, ContentModelService));

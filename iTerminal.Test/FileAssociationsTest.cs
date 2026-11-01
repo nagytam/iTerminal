@@ -60,6 +60,19 @@ public class FileAssociationsTest
     }
 
     [TestMethod]
+    public async Task Enter_OnAFileWithNothingChosen_OpensItWithTheSystemDefaultOutsideTheApp()
+    {
+        await _app.SelectEntryAsync("readme.txt");
+
+        await _app.PressAsync("Enter");
+
+        await WaitForLaunchesAsync(1);
+        Assert.IsNull(Launcher.Launches[0].Association, "the system default, not a program run in the command log");
+        Assert.AreEqual(ReadmePath, Launcher.Launches[0].FilePath);
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
+    [TestMethod]
     public async Task AProgramAddedWithIns_BecomesWhatEnterUses_ForFilesLikeIt()
     {
         await _app.SelectEntryAsync("readme.txt");
