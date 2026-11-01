@@ -6,6 +6,7 @@ using iConsole.Services;
 using iConsole.Tasks;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Helper;
+using iTerminal.Core.Services;
 
 namespace iTerminal.Core.Tasks;
 
@@ -19,7 +20,7 @@ namespace iTerminal.Core.Tasks;
 /// Copy and move differ only in the verb, the native fast path, and whether the source is deleted
 /// afterwards (<see cref="DeletesSource"/>).
 /// </summary>
-public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url requestedTargetUrl, bool overwrite, IErrorPromptService? errorPromptService = null) : BackgroundTask
+public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url requestedTargetUrl, FileConflictResolver resolver, IErrorPromptService? errorPromptService = null) : BackgroundTask
 {
     private Url _targetUrl = requestedTargetUrl;
 
@@ -60,9 +61,21 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
                 throw new NotSupportedException($"Cannot {Verb.ToLowerInvariant()} from a read-only source; use copy instead.");
             }
 
-            if (!overwrite && target.ExistsFile(_targetUrl))
+            // A conflict is decided before anything is reserved or written: a skipped file neither
+            // triggers the space warning nor touches the target.
+            var replace = false;
+            if (target.ExistsFile(_targetUrl))
             {
-                throw new IOException($"The file '{_targetUrl.FullName}' already exists.");
+                var decision = await resolver.DecideAsync(sourceUrl, _targetUrl, target.ExistsFile, CancellationToken);
+                if (decision.Skip)
+                {
+                    Description = string.Join(Environment.NewLine, UiText.Get("Task.Skipped", "Skipped"), sourceUrl.FullName.Shrink(60), UiText.Get("Task.To", "to"), _targetUrl.FullName.Shrink(60));
+                    ProgressPercentage = 100;
+                    return;
+                }
+
+                _targetUrl = decision.Target;
+                replace = decision.Replace;
             }
 
             if (sourceUrl.Length > 0)
@@ -77,7 +90,7 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
 
             if (ReferenceEquals(source, target))
             {
-                await SameFileSystemTransferAsync(source, sourceUrl, _targetUrl, overwrite);
+                await SameFileSystemTransferAsync(source, sourceUrl, _targetUrl, replace);
             }
             else
             {

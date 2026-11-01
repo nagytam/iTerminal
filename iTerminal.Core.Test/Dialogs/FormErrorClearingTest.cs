@@ -23,7 +23,7 @@ public class FormErrorClearingTest
     [TestMethod]
     public async Task Copy_AFailureIsShown_AndLeavesOnTyping()
     {
-        CopyDialog dialog = new(null!, Panels(), null!, null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), null!, null!, null!, null!);
+        CopyDialog dialog = new(null!, Panels(), null!, null!, null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), null!, null!, null!, null!);
         dialog.ErrorMessage.Text = "The disk is full.";
         Assert.AreEqual("Error: The disk is full.", dialog.ErrorMessage.Text);
 

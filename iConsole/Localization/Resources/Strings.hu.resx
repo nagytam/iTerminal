@@ -751,4 +751,28 @@
   <data name="Wizard.Finish" xml:space="preserve">
     <value>Befejezés</value>
   </data>
+  <data name="Conflict.Title" xml:space="preserve">
+    <value>A fájl már létezik</value>
+  </data>
+  <data name="Conflict.Message" xml:space="preserve">
+    <value>A(z) {0} már megtalálható a célmappában.</value>
+  </data>
+  <data name="Conflict.Overwrite" xml:space="preserve">
+    <value>Felülírás</value>
+  </data>
+  <data name="Conflict.Skip" xml:space="preserve">
+    <value>Kihagyás</value>
+  </data>
+  <data name="Conflict.Rename" xml:space="preserve">
+    <value>Átnevezés</value>
+  </data>
+  <data name="Conflict.KeepNewer" xml:space="preserve">
+    <value>Az újabbat megtart</value>
+  </data>
+  <data name="Conflict.KeepLarger" xml:space="preserve">
+    <value>A nagyobbat megtart</value>
+  </data>
+  <data name="Conflict.ApplyToAll" xml:space="preserve">
+    <value>Alkalmazás minden további ütközésre</value>
+  </data>
 </root>

@@ -104,6 +104,7 @@ public static class iConsoleApplicationBuilderExtension
             return localizer;
         });
         services.AddSingleton<IErrorPromptService, ErrorPromptService>();
+        services.AddSingleton<IConflictPromptService, ConflictPromptService>();
         // Notifications: the service holds them, the job counts them down, and a ToastHost on the
         // screen's root draws them. Posting needs only the service.
         services.AddSingleton<INotificationService, NotificationService>();

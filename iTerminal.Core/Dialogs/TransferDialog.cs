@@ -5,6 +5,7 @@ using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Services;
+using iTerminal.Core.Services;
 using iTerminal.Core.Controls;
 using iTerminal.Core.Model.Validations;
 
@@ -60,6 +61,9 @@ public abstract class TransferDialog : FormDialog
     public TextBox TextBoxTarget { get; private set; }
     private CheckBox _checkBoxOverwrite { get; set; }
     public bool Overwrite => _checkBoxOverwrite.IsChecked;
+
+    /// <summary>Unticked: each existing target is asked about. Ticked: every one is overwritten.</summary>
+    public FileConflictMode ConflictMode => _checkBoxOverwrite.IsChecked ? FileConflictMode.OverwriteAll : FileConflictMode.Ask;
     private Label _labelSource { get; set; }
     private Label _labelTarget { get; set; }
     protected override void ClearError() => ErrorMessage.Text = string.Empty;

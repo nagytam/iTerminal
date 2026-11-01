@@ -48,7 +48,7 @@ public class MultiSelectionDialogsTest
     }
 
     private static CopyDialog Copy(IContentModelService service) =>
-        new(null!, service, null!, null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), null!, null!, null!, null!);
+        new(null!, service, null!, null!, null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), null!, null!, null!, null!);
 
     private static DeleteDialog Delete(IContentModelService service) =>
         new(service, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), null!, null!, null!, null!, null!, null!, null!);

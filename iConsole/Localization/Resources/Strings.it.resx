@@ -751,4 +751,28 @@
   <data name="Wizard.Finish" xml:space="preserve">
     <value>Fine</value>
   </data>
+  <data name="Conflict.Title" xml:space="preserve">
+    <value>Il file esiste già</value>
+  </data>
+  <data name="Conflict.Message" xml:space="preserve">
+    <value>{0} è già nella cartella di destinazione.</value>
+  </data>
+  <data name="Conflict.Overwrite" xml:space="preserve">
+    <value>Sovrascrivi</value>
+  </data>
+  <data name="Conflict.Skip" xml:space="preserve">
+    <value>Salta</value>
+  </data>
+  <data name="Conflict.Rename" xml:space="preserve">
+    <value>Rinomina</value>
+  </data>
+  <data name="Conflict.KeepNewer" xml:space="preserve">
+    <value>Mantieni il più recente</value>
+  </data>
+  <data name="Conflict.KeepLarger" xml:space="preserve">
+    <value>Mantieni il più grande</value>
+  </data>
+  <data name="Conflict.ApplyToAll" xml:space="preserve">
+    <value>Applica a tutti i conflitti rimanenti</value>
+  </data>
 </root>

@@ -115,7 +115,7 @@ public class CopyFileTaskTest
 
         try
         {
-            var task = new ContentModelCopyFileTask(new FileSystemService(), new FileSystemService(), new Url(src), new Url(dst), overwrite: true);
+            var task = new ContentModelCopyFileTask(new FileSystemService(), new FileSystemService(), new Url(src), new Url(dst), ConflictResolvers.Of(true));
             await task.ExecuteAsync();
             Assert.IsTrue(File.Exists(dst));
             Assert.AreEqual("hello world", File.ReadAllText(dst));
@@ -137,7 +137,7 @@ public class CopyFileTaskTest
 
         try
         {
-            var task = new ContentModelCopyFileTask(new FileSystemService(), new FileSystemService(), new Url(src), new Url(dst), overwrite: true);
+            var task = new ContentModelCopyFileTask(new FileSystemService(), new FileSystemService(), new Url(src), new Url(dst), ConflictResolvers.Of(true));
             await task.ExecuteAsync();
             StringAssert.Contains(task.Description, "finished");
         }
@@ -159,7 +159,7 @@ public class CopyFileTaskTest
 
         try
         {
-            var task = new ContentModelCopyFileTask(new FileSystemService(), new FileSystemService(), new Url(src), new Url(dst), overwrite: true);
+            var task = new ContentModelCopyFileTask(new FileSystemService(), new FileSystemService(), new Url(src), new Url(dst), ConflictResolvers.Of(true));
             task.CancellationTokenSource.Cancel();
             await task.ExecuteAsync();
             // Just verifying no exception is thrown after cancellation

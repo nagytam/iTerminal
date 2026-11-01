@@ -1,3 +1,4 @@
+using iTerminal.Core.Services;
 using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
@@ -10,8 +11,8 @@ namespace iTerminal.Core.Tasks;
 /// (<see cref="ContentModelFileTransferTask"/>) streams the content across and then deletes the
 /// source, or delegates to <see cref="IFileSystem.MoveAsync"/> when both ends are the same drive.
 /// </summary>
-public class ContentModelMoveFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite, IErrorPromptService? errorPromptService = null)
-    : ContentModelFileTransferTask(source, target, sourceUrl, targetUrl, overwrite, errorPromptService)
+public class ContentModelMoveFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, FileConflictResolver resolver, IErrorPromptService? errorPromptService = null)
+    : ContentModelFileTransferTask(source, target, sourceUrl, targetUrl, resolver, errorPromptService)
 {
     protected override string Verb => UiText.Get("Verb.Move", "Move");
     protected override string ProgressVerb => UiText.Get("Verb.Moving", "Moving");

@@ -1,6 +1,7 @@
 using iConsole.Data;
 using iConsole.Interfaces;
 using iTerminal.Core.Services;
+using iConsole.Services;
 using iTerminal.Core.Test.Helper;
 
 namespace iTerminal.Core.Tasks.Test;
@@ -79,7 +80,7 @@ public class ContentModelMovePipelineTest
         var targetPath = Path.Combine(_tempDir, "target.txt");
         File.WriteAllText(sourcePath, new string('X', 300_000));
 
-        var task = new ContentModelMoveFileTask(new FileSystemService(), new FileSystemService(), new Url(sourcePath), new Url(targetPath), overwrite: true);
+        var task = new ContentModelMoveFileTask(new FileSystemService(), new FileSystemService(), new Url(sourcePath), new Url(targetPath), ConflictResolvers.Of(true));
         await task.ExecuteAsync();
 
         Assert.IsFalse(File.Exists(sourcePath));
@@ -95,7 +96,7 @@ public class ContentModelMovePipelineTest
         File.WriteAllText(sourcePath, "new content");
         File.WriteAllText(targetPath, "original content");
 
-        var task = new ContentModelMoveFileTask(new FileSystemService(), new FileSystemService(), new Url(sourcePath), new Url(targetPath), overwrite: false);
+        var task = new ContentModelMoveFileTask(new FileSystemService(), new FileSystemService(), new Url(sourcePath), new Url(targetPath), ConflictResolvers.Of(false));
         await task.ExecuteAsync();
 
         Assert.IsTrue(File.Exists(sourcePath));
@@ -110,7 +111,7 @@ public class ContentModelMovePipelineTest
         var targetPath = Path.Combine(_tempDir, "target.bin");
         File.WriteAllBytes(sourcePath, new byte[1024]);
 
-        var task = new ContentModelMoveFileTask(new FileSystemService(), new FileSystemService(), new Url(sourcePath), new Url(targetPath), overwrite: true);
+        var task = new ContentModelMoveFileTask(new FileSystemService(), new FileSystemService(), new Url(sourcePath), new Url(targetPath), ConflictResolvers.Of(true));
         task.CancellationTokenSource.Cancel();
         await task.ExecuteAsync();
 
@@ -125,7 +126,7 @@ public class ContentModelMovePipelineTest
         var sourcePath = Path.Combine(_tempDir, "does-not-exist.txt");
         var targetPath = Path.Combine(_tempDir, "target.txt");
 
-        var task = new ContentModelMoveFileTask(new FileSystemService(), new FileSystemService(), new Url(sourcePath), new Url(targetPath), overwrite: true);
+        var task = new ContentModelMoveFileTask(new FileSystemService(), new FileSystemService(), new Url(sourcePath), new Url(targetPath), ConflictResolvers.Of(true));
         await task.ExecuteAsync();
 
         StringAssert.Contains(task.Description, "failed");
@@ -165,5 +166,42 @@ public class ContentModelMovePipelineTest
         Assert.IsTrue(
             source.MaxObservedConcurrency > 1,
             $"Expected multiple copy workers to overlap in flight, but max observed concurrency was {source.MaxObservedConcurrency}");
+    }
+
+    // ---- File conflicts on a move: a skipped source stays; a rename moves to the new name. ----
+
+    [TestMethod]
+    public async Task ContentModelMoveFileTask_AskAndSkip_KeepsSourceAndTarget()
+    {
+        var sourcePath = Path.Combine(_tempDir, "source.txt");
+        var targetPath = Path.Combine(_tempDir, "target.txt");
+        File.WriteAllText(sourcePath, "new content");
+        File.WriteAllText(targetPath, "original content");
+        var resolver = new FileConflictResolver(FileConflictMode.Ask, new FakeConflictPromptService(FileConflictChoice.Skip));
+
+        var task = new ContentModelMoveFileTask(new FileSystemService(), new FileSystemService(), new Url(sourcePath), new Url(targetPath), resolver);
+        await task.ExecuteAsync();
+
+        Assert.IsTrue(File.Exists(sourcePath));
+        Assert.AreEqual("original content", File.ReadAllText(targetPath));
+        Assert.IsNull(task.Error);
+    }
+
+    [TestMethod]
+    public async Task ContentModelMoveFileTask_AskAndRename_MovesToTheNewName()
+    {
+        var sourcePath = Path.Combine(_tempDir, "source.txt");
+        var targetPath = Path.Combine(_tempDir, "target.txt");
+        File.WriteAllText(sourcePath, "new content");
+        File.WriteAllText(targetPath, "original content");
+        var resolver = new FileConflictResolver(FileConflictMode.Ask, new FakeConflictPromptService(FileConflictChoice.Rename));
+
+        var task = new ContentModelMoveFileTask(new FileSystemService(), new FileSystemService(), new Url(sourcePath), new Url(targetPath), resolver);
+        await task.ExecuteAsync();
+
+        Assert.IsFalse(File.Exists(sourcePath));
+        Assert.AreEqual("original content", File.ReadAllText(targetPath));
+        Assert.AreEqual("new content", File.ReadAllText(Path.Combine(_tempDir, "target (2).txt")));
+        Assert.IsNull(task.Error);
     }
 }

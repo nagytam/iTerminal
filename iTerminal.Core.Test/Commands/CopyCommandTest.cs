@@ -29,6 +29,7 @@ public class CopyCommandTest
             new Mock<TaskManager>().Object,
             new ProgressWindowFactory(theme),
             Mock.Of<IErrorPromptService>(),
+            Mock.Of<IConflictPromptService>(),
             resolver,
             contentModelService);
 
