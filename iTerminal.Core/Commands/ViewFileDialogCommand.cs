@@ -3,6 +3,7 @@ using iConsole.Data;
 using iConsole.Csv;
 using iConsole.Dialogs;
 using iConsole.Json;
+using iConsole.Sqlite;
 using iConsole.Xml;
 using iConsole.Interfaces;
 using iTerminal.Core.Audio;
@@ -25,7 +26,8 @@ public class ViewFileDialogCommand(
     XmlViewerDialog? xmlViewerDialog = null,
     JsonViewerDialog? jsonViewerDialog = null,
     CsvViewerDialog? csvViewerDialog = null,
-    WebBrowserDialog? webBrowserDialog = null) : Command
+    WebBrowserDialog? webBrowserDialog = null,
+    SqliteViewerDialog? sqliteViewerDialog = null) : Command
 {
     private readonly WebBrowserDialog? _webBrowserDialog = webBrowserDialog;
     private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
@@ -37,6 +39,7 @@ public class ViewFileDialogCommand(
     private readonly XmlViewerDialog? _xmlViewerDialog = xmlViewerDialog;
     private readonly JsonViewerDialog? _jsonViewerDialog = jsonViewerDialog;
     private readonly CsvViewerDialog? _csvViewerDialog = csvViewerDialog;
+    private readonly SqliteViewerDialog? _sqliteViewerDialog = sqliteViewerDialog;
 
     public override string Title => "View";
     public override string Description => "Open the selected file in the viewer.";
@@ -148,6 +151,21 @@ public class ViewFileDialogCommand(
         {
             _csvViewerDialog.Url = focusedFileUrl;
             await (Control?.ShowDialogAsync(_csvViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // A SQLite database opens in the database viewer, only when it is a local file: SQLite opens a path, so a remote
+        // database falls through to the generic text viewer, as it did before.
+        if (_sqliteViewerDialog is not null
+            && focusedFileUrl is not null
+            && SqliteFileTypes.IsSqliteFile(focusedFileUrl.Path)
+            && File.Exists(focusedFileUrl.Path)
+            // A .db file that is not SQLite (a Thumbs.db, say) is read by the generic viewer, as it always was. The header read
+            // runs on a worker thread.
+            && await Task.Run(() => SqliteFileTypes.FileHasSqliteHeader(focusedFileUrl.Path)))
+        {
+            _sqliteViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_sqliteViewerDialog) ?? Task.CompletedTask);
             return;
         }
 
