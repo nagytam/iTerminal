@@ -15,6 +15,7 @@ public class EditorViewerAndPermissionsTest
     {
         // Written with LF on purpose: on Windows an editor that saves with the system's break rewrites every line.
         File.WriteAllBytes(Path.Combine(left, "lf.txt"), System.Text.Encoding.UTF8.GetBytes("alpha\nbeta\n"));
+        File.WriteAllBytes(Path.Combine(left, "hu.csv"), System.Text.Encoding.Latin1.GetBytes("t\u00fbr\u00f5,n\u00e9v\nalma,3\n"));
         File.WriteAllText(Path.Combine(left, "long.txt"), string.Join("\n", Enumerable.Range(0, 300).Select(i => "row " + i.ToString("000"))));
     });
 
@@ -27,6 +28,21 @@ public class EditorViewerAndPermissionsTest
         Assert.IsTrue(await _app.PressAsync("F4"));
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.TextFileEditorDialog, "the editor to open");
         await _app.WaitForTextAsync(expectedText);
+    }
+
+    [TestMethod]
+    public async Task F8AndShiftF8InTheCsvViewerSwitchTheCodePageAndNeverReachDeleteOrSettings()
+    {
+        await _app.SelectEntryAsync("hu.csv");
+        Assert.IsTrue(await _app.PressAsync("F3"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.CsvViewerDialog, "the CSV viewer to open");
+
+        Assert.IsTrue(await _app.PressAsync("Shift+F8"));
+        Assert.IsTrue(_app.Driver.FocusedModal is iConsole.Dialogs.CsvViewerDialog, "Shift+F8 is the settings chord outside this dialog");
+
+        Assert.IsTrue(await _app.PressAsync("F8"));
+        Assert.IsTrue(_app.Driver.FocusedModal is iConsole.Dialogs.CsvViewerDialog, "F8 is Delete in the panels");
+        Assert.IsTrue(File.Exists(Path.Combine(_app.LeftRoot, "hu.csv")));
     }
 
     [TestMethod]

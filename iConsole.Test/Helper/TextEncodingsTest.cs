@@ -89,4 +89,13 @@ public class TextEncodingsTest
 
         Assert.AreEqual(TextEncodings.Available[0].CodePage, TextEncodings.Next(unlisted).CodePage);
     }
+
+    [TestMethod]
+    public void Available_HoldsTheLegacyPagesTheSwitchOffers()
+    {
+        foreach (int page in new[] { 1250, 1251, 1252, 852 })
+        {
+            Assert.IsTrue(TextEncodings.Available.Any(e => e.CodePage == page), $"code page {page}");
+        }
+    }
 }

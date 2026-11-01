@@ -37,14 +37,21 @@ public static class TextEncodings
         950,   // Big5
     ];
 
-    static TextEncodings()
-    {
-        // The legacy code pages are not part of the default set on .NET Core.
-        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-    }
+    /// <summary>
+    /// The legacy code pages are not part of the default set on .NET Core. This is a field initializer, declared before
+    /// <see cref="Available"/>, and not a static constructor: initializers run before a constructor's body, so a constructor would
+    /// register the provider only after <see cref="Build"/> had already skipped every legacy page as unavailable.
+    /// </summary>
+    private static readonly bool ProviderRegistered = RegisterProvider();
 
     /// <summary>The encodings the switch cycles through, in order.</summary>
     public static IReadOnlyList<Encoding> Available { get; } = Build();
+
+    private static bool RegisterProvider()
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        return true;
+    }
 
     private static List<Encoding> Build()
     {
