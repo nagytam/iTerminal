@@ -166,7 +166,7 @@ public sealed record CsvDocument(IReadOnlyList<string> Headers, IReadOnlyList<st
     private static string[] NameColumns(string[] header)
     {
         var names = new string[header.Length];
-        var seen = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         for (int i = 0; i < header.Length; i++)
         {
             string name = header[i].Trim();
@@ -175,14 +175,17 @@ public sealed record CsvDocument(IReadOnlyList<string> Headers, IReadOnlyList<st
                 name = $"Column{i + 1}";
             }
 
-            if (seen.TryGetValue(name, out int count))
+            if (!used.Add(name))
             {
-                seen[name] = count + 1;
-                name = $"{name}_{count + 1}";
-            }
-            else
-            {
-                seen[name] = 1;
+                // A generated name must not be one a later column already has: "a", "a", "a_2" is a, a_2 and a_2_2, not a_2 twice.
+                string candidate;
+                int number = 2;
+                do
+                {
+                    candidate = $"{name}_{number++}";
+                }
+                while (!used.Add(candidate));
+                name = candidate;
             }
 
             names[i] = name;

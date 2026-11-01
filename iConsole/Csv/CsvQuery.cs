@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Text.RegularExpressions;
 using iConsole.Localization;
 
 namespace iConsole.Csv;
@@ -26,8 +25,6 @@ public sealed record CsvQueryResult(IReadOnlyList<string> Headers, IReadOnlyList
 /// </summary>
 public static class CsvQuery
 {
-    private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(1);
-
     /// <summary>Runs <paramref name="text"/> over the document. An empty query selects every column and row.</summary>
     /// <exception cref="CsvQueryException">The query is not valid, or names a column the file does not have.</exception>
     public static CsvQueryResult Run(CsvDocument document, string text)
@@ -39,9 +36,14 @@ public static class CsvQuery
         int total = matched.Count;
         if (plan.OrderBy is { } order)
         {
-            matched = plan.Descending
-                ? [.. matched.OrderByDescending(row => Field(row, order), Comparer)]
-                : [.. matched.OrderBy(row => Field(row, order), Comparer)];
+            // A row with nothing in the column goes last whichever way the rest is sorted: descending, the empty ones would
+            // otherwise head a column of amounts.
+            List<string[]> filled = [.. matched.Where(row => Field(row, order).Length > 0)];
+            List<string[]> blank = [.. matched.Where(row => Field(row, order).Length == 0)];
+            filled = plan.Descending
+                ? [.. filled.OrderByDescending(row => Field(row, order), Comparer)]
+                : [.. filled.OrderBy(row => Field(row, order), Comparer)];
+            matched = [.. filled, .. blank];
         }
 
         if (plan.Limit is { } limit)
@@ -61,6 +63,49 @@ public static class CsvQuery
     /// <summary>The field at <paramref name="index"/>, or empty when the row is shorter than the header.</summary>
     internal static string Field(string[] row, int index) => index < row.Length ? row[index] : string.Empty;
 
+    /// <summary>
+    /// Whether the text matches a LIKE pattern: <c>%</c> is any run of characters (also none), <c>_</c> is any one, anything
+    /// else matches itself ignoring case. Done by walking both strings, which takes time in proportion to their lengths
+    /// however many wildcards the pattern holds; a regular expression built from the pattern could take for ever on one.
+    /// </summary>
+    public static bool GlobMatch(string text, string pattern)
+    {
+        int t = 0;
+        int p = 0;
+        int star = -1;
+        int resume = 0;
+        while (t < text.Length)
+        {
+            if (p < pattern.Length && pattern[p] == '%')
+            {
+                star = p++;
+                resume = t;
+            }
+            else if (p < pattern.Length && (pattern[p] == '_' || char.ToUpperInvariant(pattern[p]) == char.ToUpperInvariant(text[t])))
+            {
+                p++;
+                t++;
+            }
+            else if (star >= 0)
+            {
+                // Let the last % take one more character and try the rest of the pattern again from there.
+                p = star + 1;
+                t = ++resume;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        while (p < pattern.Length && pattern[p] == '%')
+        {
+            p++;
+        }
+
+        return p == pattern.Length;
+    }
+
     /// <summary>Compares two field values: as numbers when both are numbers, otherwise as text ignoring case.</summary>
     internal static int Compare(string left, string right)
     {
@@ -72,10 +117,33 @@ public static class CsvQuery
         return string.Compare(left, right, StringComparison.OrdinalIgnoreCase);
     }
 
-    private static readonly IComparer<string> Comparer = Comparer<string>.Create(Compare);
+    /// <summary>
+    /// The order of a sorted column: numbers first, by value, then everything else as text ignoring case. A column that mixes
+    /// numbers and words has to be sorted by one rule that is the same for every pair; comparing two numbers as numbers and
+    /// a number with a word as text made "10", "9" and "1a" each smaller than the next, which sorts to no particular order.
+    /// </summary>
+    public static int CompareForOrder(string left, string right)
+    {
+        bool leftIsNumber = TryNumber(left, out double a);
+        bool rightIsNumber = TryNumber(right, out double b);
+        if (leftIsNumber && rightIsNumber)
+        {
+            return a.CompareTo(b);
+        }
 
+        if (leftIsNumber != rightIsNumber)
+        {
+            return leftIsNumber ? -1 : 1;
+        }
+
+        return string.Compare(left, right, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static readonly IComparer<string> Comparer = Comparer<string>.Create(CompareForOrder);
+
+    // "NaN" and "Infinity" parse as doubles, but a name or a word in a column is not a number.
     private static bool TryNumber(string text, out double value) =>
-        double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+        double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) && double.IsFinite(value);
 
     private enum Kind
     {
@@ -104,14 +172,34 @@ public static class CsvQuery
             if (c is '\'' or '"' or '[')
             {
                 char close = c == '[' ? ']' : c;
-                int end = text.IndexOf(close, i + 1);
-                if (end < 0)
+                System.Text.StringBuilder content = new();
+                int end = i + 1;
+                while (end < text.Length)
+                {
+                    if (text[end] == close)
+                    {
+                        // A doubled quote inside quotes is the quote itself, as in SQL: 'O''Brien'.
+                        if (c != '[' && end + 1 < text.Length && text[end + 1] == close)
+                        {
+                            content.Append(close);
+                            end += 2;
+                            continue;
+                        }
+
+                        break;
+                    }
+
+                    content.Append(text[end]);
+                    end++;
+                }
+
+                if (end >= text.Length)
                 {
                     throw new CsvQueryException(string.Format(UiText.Get("Csv.Error.Unterminated", "A quote is not closed: missing {0}"), close));
                 }
 
                 // Single quotes are a value; double quotes and brackets name a column.
-                tokens.Add(new Token(c == '\'' ? Kind.Text : Kind.Identifier, text[(i + 1)..end], start));
+                tokens.Add(new Token(c == '\'' ? Kind.Text : Kind.Identifier, content.ToString(), start));
                 i = end + 1;
                 continue;
             }
@@ -312,12 +400,8 @@ public static class CsvQuery
             };
         }
 
-        private static Func<string[], bool> Like(int column, string pattern, bool negate)
-        {
-            string expression = "^" + Regex.Escape(pattern).Replace("%", ".*").Replace("_", ".") + "$";
-            var regex = new Regex(expression, RegexOptions.IgnoreCase | RegexOptions.Singleline, RegexTimeout);
-            return row => regex.IsMatch(CsvQuery.Field(row, column)) != negate;
-        }
+        private static Func<string[], bool> Like(int column, string pattern, bool negate) =>
+            row => GlobMatch(CsvQuery.Field(row, column), pattern) != negate;
 
         /// <summary>A value: a quoted string, or a number or word taken as text.</summary>
         private string ReadValue()
