@@ -79,12 +79,12 @@ public class DialogsTest
         await OpenAndCloseAsync(chord, dialogTypeName);
     }
 
-    /// <summary>The Virtual Machine Manager opens from its chord on Linux and does not open anywhere else.</summary>
+    /// <summary>The Virtual Machine Manager opens from its chord on Linux (libvirt) and Windows (Hyper-V) and does not open anywhere else.</summary>
     [Timeout(120_000)]
     [TestMethod]
-    public async Task TheVirtualMachineManagerOpensOnLinuxAndNowhereElse()
+    public async Task TheVirtualMachineManagerOpensWhereAHypervisorBackendExists()
     {
-        if (OperatingSystem.IsLinux())
+        if (Core.Commands.VirtualMachineManagerDialogCommand.IsSupported)
         {
             await OpenAndCloseAsync("Shift+Alt+F9", "VirtualMachineManagerDialog");
             return;

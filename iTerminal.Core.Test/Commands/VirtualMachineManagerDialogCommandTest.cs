@@ -20,14 +20,16 @@ public class VirtualMachineManagerDialogCommandTest
         Assert.IsFalse(command.Key.Control);
     }
 
-    // Reverted (the OS gate is removed): on Windows CanExecute is true and this fails; on Linux both sides are true.
-    // CI runs both platforms, so the Windows run is what proves the gate.
+    // Reverted (Windows is dropped from the gate): on Windows CanExecute is false and this fails.
+    // On macOS neither side is true, so CI's macOS run, if any, is what proves the other half of the gate.
     [Timeout(60_000)]
     [TestMethod]
-    public void IsAvailableOnlyOnLinux()
+    public void IsAvailableWhereAHypervisorBackendExists()
     {
         var command = new VirtualMachineManagerDialogCommand(null!);
 
-        Assert.AreEqual(OperatingSystem.IsLinux(), command.CanExecute());
+        bool expected = OperatingSystem.IsLinux() || OperatingSystem.IsWindows();
+        Assert.AreEqual(expected, VirtualMachineManagerDialogCommand.IsSupported);
+        Assert.AreEqual(expected, command.CanExecute());
     }
 }
