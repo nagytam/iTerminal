@@ -228,6 +228,12 @@ public static class SyntaxHighlighter
         "union", "all", "distinct", "as", "and", "or", "not", "null", "is", "in", "like", "between", "exists", "case",
         "when", "then", "else", "end", "limit", "offset", "primary", "key", "foreign", "references", "default",
         "constraint", "unique", "begin", "commit", "rollback", "transaction", "int", "varchar", "text", "date",
+        "integer", "bigint", "smallint", "decimal", "numeric", "float", "double", "char", "boolean", "timestamp", "time",
+        "true", "false", "cross", "full", "natural", "using", "intersect", "except", "with", "recursive", "over",
+        "partition", "asc", "desc", "count", "sum", "avg", "min", "max", "cast", "coalesce", "any", "some", "if",
+        "truncate", "add", "column", "database", "schema", "grant", "revoke", "procedure", "function", "trigger",
+        "returns", "return", "declare", "while", "for", "each", "row", "cascade", "check", "auto_increment",
+        "identity", "explain", "use", "replace", "merge", "fetch", "next", "only", "rows", "first", "last",
     ];
 
     private static readonly string[] MarkupKeywords = [];
@@ -285,7 +291,7 @@ public static class SyntaxHighlighter
         "Properties", [], ["#"], null, "\"'", keyDelimiter: '=');
 
     private static readonly SyntaxLanguage Sql = new(
-        "SQL", SqlKeywords, ["--"], ("/*", "*/"), "\"'", ignoreCase: true);
+        "SQL", SqlKeywords, ["--"], ("/*", "*/"), "\"'`", ignoreCase: true, doubledQuotes: true);
 
     private static readonly SyntaxLanguage Markup = new(
         "Markup", MarkupKeywords, [], ("<!--", "-->"), "\"'");
@@ -381,7 +387,7 @@ public static class SyntaxHighlighter
         [".scala"] = CLike, [".dart"] = CLike, [".css"] = CLike, [".scss"] = CLike,
         [".py"] = Python, [".pyw"] = Python, [".rb"] = Python, [".pl"] = Perl, [".pm"] = Perl, [".r"] = R,
         [".sh"] = Shell, [".bash"] = Shell, [".zsh"] = Shell,
-        [".sql"] = Sql,
+        [".sql"] = Sql, [".ddl"] = Sql, [".psql"] = Sql, [".pgsql"] = Sql, [".mysql"] = Sql, [".tsql"] = Sql,
         [".xml"] = Markup, [".html"] = Markup, [".htm"] = Markup, [".xaml"] = Markup, [".csproj"] = Markup,
         [".props"] = Markup, [".targets"] = Markup, [".svg"] = Markup, [".slnx"] = Markup, [".wxs"] = Markup,
         [".json"] = Json, [".jsonc"] = Json,
