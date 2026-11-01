@@ -3217,4 +3217,25 @@
   <data name="Print.Hint.List" xml:space="preserve">
     <value>Enter print  ←→ printer  +/- copies  P hold/resume  Del cancel  F5 refresh  Esc close</value>
   </data>
+  <data name="Notify.GitSyncing" xml:space="preserve">
+    <value>Syncing with the remote…</value>
+  </data>
+  <data name="Notify.GitSynced" xml:space="preserve">
+    <value>Synced with the remote.</value>
+  </data>
+  <data name="Notify.GitSyncNoUpstream" xml:space="preserve">
+    <value>The branch has no upstream branch to sync with.</value>
+  </data>
+  <data name="Notify.GitSyncPullFailed" xml:space="preserve">
+    <value>Git sync: pull --rebase failed</value>
+  </data>
+  <data name="Notify.GitSyncRebaseNote" xml:space="preserve">
+    <value>(Nothing was pushed. If git started a rebase, it is left unfinished.)</value>
+  </data>
+  <data name="Notify.GitSyncPushFailed" xml:space="preserve">
+    <value>Git sync: push failed</value>
+  </data>
+  <data name="Notify.GitSyncFailed" xml:space="preserve">
+    <value>Git sync failed</value>
+  </data>
 </root>

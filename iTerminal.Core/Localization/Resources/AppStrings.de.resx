@@ -3217,4 +3217,25 @@
   <data name="Print.Hint.List" xml:space="preserve">
     <value>Enter drucken  ←→ Drucker  +/- Kopien  P anhalten/fortsetzen  Entf abbrechen  F5 neu  Esc schließen</value>
   </data>
+  <data name="Notify.GitSyncing" xml:space="preserve">
+    <value>Mit dem Remote wird synchronisiert…</value>
+  </data>
+  <data name="Notify.GitSynced" xml:space="preserve">
+    <value>Mit dem Remote synchronisiert.</value>
+  </data>
+  <data name="Notify.GitSyncNoUpstream" xml:space="preserve">
+    <value>Der Branch hat keinen Upstream-Branch zum Synchronisieren.</value>
+  </data>
+  <data name="Notify.GitSyncPullFailed" xml:space="preserve">
+    <value>Git-Sync: Pull --rebase fehlgeschlagen</value>
+  </data>
+  <data name="Notify.GitSyncRebaseNote" xml:space="preserve">
+    <value>(Es wurde nichts gepusht. Falls git einen Rebase gestartet hat, bleibt er unvollständig.)</value>
+  </data>
+  <data name="Notify.GitSyncPushFailed" xml:space="preserve">
+    <value>Git-Sync: Push fehlgeschlagen</value>
+  </data>
+  <data name="Notify.GitSyncFailed" xml:space="preserve">
+    <value>Git-Sync fehlgeschlagen</value>
+  </data>
 </root>
