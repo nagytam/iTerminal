@@ -345,6 +345,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Defender.IMalwareScanService, iTerminal.Core.Services.Defender.DefenderScanService>();
         services.AddTransient<SecureWipeDialog>();
         services.AddTransient<SignatureDialog>();
+        // Ctrl+P: print the file under the cursor and manage the print queue.
+        services.AddSingleton<iTerminal.Core.Services.Printing.IPrintService, iTerminal.Core.Services.Printing.PrintService>();
+        services.AddTransient<PrintDialog>();
         // File associations: Enter and F4 open a file with the program chosen for it; Shift+F3 and
         // Ctrl+F4 choose. The dialogs are handed out by a factory because one consumer needs two —
         // "Open with" and "Edit with" are separate controls.

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Interfaces;
 using iTerminal.Core.Commands;
@@ -84,6 +85,7 @@ public static class FileContextMenu
         AddCommands<EditLinkDialogCommand>(items, snapshot, "Edit link");
         AddCommands<ChecksumDialogCommand>(items, snapshot, "Checksums");
         AddCommands<SignatureDialogCommand>(items, snapshot, "Signatures");
+        AddPrintCommand(items, snapshot);
         AddCommands<SecureWipeDialogCommand>(items, snapshot, "Secure wipe");
         AddCommands<ScanWithDefenderCommand>(items, snapshot, "Scan with Microsoft Defender");
         AddCommands<GitPullRebaseCommand>(items, snapshot, null);
@@ -97,6 +99,19 @@ public static class FileContextMenu
         return [.. items.Select(i => new ContextMenuItem(
             i.Key.Length == 0 ? i.Title : i.Title.PadRight(titleWidth + 2) + i.Key,
             i.Run))];
+    }
+
+    /// <summary>
+    /// Print always runs (without a file it is the queue manager), so the usual "can it run" test would list it on a folder
+    /// or an archive row; the menu offers it only on a local file, and Ctrl+P, the File menu and the palette keep the rest.
+    /// </summary>
+    private static void AddPrintCommand(List<(string Title, string Key, Func<Task> Run)> items, List<ICommand> commands)
+    {
+        foreach (var command in commands.OfType<PrintDialogCommand>().Where(c => c.HasPrintableFile))
+        {
+            var run = command;
+            items.Add((UiText.Get("Menu.Print", "Print"), command.KeyDisplayText, () => run.RunAsync(null)));
+        }
     }
 
     private static void AddCommands<TCommand>(

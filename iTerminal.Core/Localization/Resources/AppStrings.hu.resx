@@ -3118,4 +3118,103 @@
   <data name="Task.Skipped" xml:space="preserve">
     <value>Kihagyva</value>
   </data>
+  <data name="Menu.Print" xml:space="preserve">
+    <value>Nyomtatás</value>
+  </data>
+  <data name="Menu.PrintItem" xml:space="preserve">
+    <value>Nyomtatás…</value>
+  </data>
+  <data name="DialogHint.PrintFile" xml:space="preserve">
+    <value>A fájl nyomtatása</value>
+  </data>
+  <data name="DialogHint.ChoosePrinter" xml:space="preserve">
+    <value>Nyomtató választása</value>
+  </data>
+  <data name="DialogHint.Copies" xml:space="preserve">
+    <value>Több vagy kevesebb példány</value>
+  </data>
+  <data name="DialogHint.ChooseJob" xml:space="preserve">
+    <value>Nyomtatási feladat választása</value>
+  </data>
+  <data name="DialogHint.HoldOrResumeJob" xml:space="preserve">
+    <value>A feladat felfüggesztése vagy folytatása</value>
+  </data>
+  <data name="DialogHint.CancelJobAsks" xml:space="preserve">
+    <value>A feladat törlése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.RefreshQueue" xml:space="preserve">
+    <value>A várólista újraolvasása</value>
+  </data>
+  <data name="DialogHint.CancelJobYes" xml:space="preserve">
+    <value>A nyomtatási feladat törlése</value>
+  </data>
+  <data name="DialogHint.KeepJob" xml:space="preserve">
+    <value>A nyomtatási feladat megtartása</value>
+  </data>
+  <data name="Print.Status.AskCancel" xml:space="preserve">
+    <value>Törli a(z) {0} feladatot ({1})? Az y törli.</value>
+  </data>
+  <data name="Print.Status.NoFile" xml:space="preserve">
+    <value>A kurzor alatt nincs nyomtatható fájl.</value>
+  </data>
+  <data name="Print.Status.NoPrinter" xml:space="preserve">
+    <value>Nincs nyomtató, amelyre nyomtatni lehetne.</value>
+  </data>
+  <data name="Print.Status.Sending" xml:space="preserve">
+    <value>{0} küldése ide: {1}…</value>
+  </data>
+  <data name="Print.State.Printing" xml:space="preserve">
+    <value>Nyomtat</value>
+  </data>
+  <data name="Print.State.Held" xml:space="preserve">
+    <value>Tartva</value>
+  </data>
+  <data name="Print.State.Error" xml:space="preserve">
+    <value>Hiba</value>
+  </data>
+  <data name="Print.State.Queued" xml:space="preserve">
+    <value>Sorban</value>
+  </data>
+  <data name="Print.NoFile" xml:space="preserve">
+    <value>(nincs fájl a kurzor alatt – csak a várólista)</value>
+  </data>
+  <data name="Print.File" xml:space="preserve">
+    <value>Fájl</value>
+  </data>
+  <data name="Print.Printer" xml:space="preserve">
+    <value>Nyomtató</value>
+  </data>
+  <data name="Print.Copies" xml:space="preserve">
+    <value>Példány</value>
+  </data>
+  <data name="Print.Col.Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Print.Col.Document" xml:space="preserve">
+    <value>Dokumentum</value>
+  </data>
+  <data name="Print.Col.Owner" xml:space="preserve">
+    <value>Tulajdonos</value>
+  </data>
+  <data name="Print.Col.State" xml:space="preserve">
+    <value>Állapot</value>
+  </data>
+  <data name="Print.QueueEmpty" xml:space="preserve">
+    <value>A várólista üres.</value>
+  </data>
+  <data name="Print.Reading" xml:space="preserve">
+    <value>Nyomtatók beolvasása…</value>
+  </data>
+  <data name="Print.NoPrinters" xml:space="preserve">
+    <value>Nincs telepített nyomtató.</value>
+  </data>
+  <data name="Print.Default" xml:space="preserve">
+    <value>(alapértelmezett)</value>
+  </data>
+  <data name="Print.Hint.Confirm" xml:space="preserve">
+    <value>y törli a feladatot  bármely más billentyű megtartja</value>
+  </data>
+  <data name="Print.Hint.List" xml:space="preserve">
+    <value>Enter nyomtat  ←→ nyomtató  +/- példány  P tart/folytat  Del töröl  F5 frissít  Esc bezár</value>
+  </data>
 </root>
