@@ -165,7 +165,7 @@ public class CompareFoldersDialog : Dialog
         _compared = null;
         _pendingPlan = null;
         _list.SetItems([]);
-        _status = "Enter compares.";
+        _status = Say("Folders.Status.EnterCompares", "Enter compares.");
         _statusIsError = false;
         _progress = string.Empty;
     }
@@ -205,7 +205,7 @@ public class CompareFoldersDialog : Dialog
         var right = RightModel;
         if (left?.Url is null || right?.Url is null)
         {
-            SetStatus("Both panels must show a folder.", isError: true);
+            SetStatus(Say("Folders.Status.BothFolders", "Both panels must show a folder."), isError: true);
             return;
         }
 
@@ -230,7 +230,7 @@ public class CompareFoldersDialog : Dialog
         _compared = null;
         _pendingPlan = null;
         _list.SetItems([]);
-        SetStatus("Comparing…", isError: false);
+        SetStatus(Say("Folders.Status.Comparing", "Comparing…"), isError: false);
         var progress = new Helper.SynchronousProgress<string>(path => _progress = path);
 
         CompareTask = Task.Run(async () =>
@@ -249,11 +249,11 @@ public class CompareFoldersDialog : Dialog
             }
             catch (OperationCanceledException)
             {
-                SetStatus("Comparison stopped.", isError: false);
+                SetStatus(Say("Folders.Status.Stopped", "Comparison stopped."), isError: false);
             }
             catch (Exception exception)
             {
-                SetStatus($"Could not compare: {exception.Message}", isError: true);
+                SetStatus(Say("Folders.Status.CouldNotCompare", "Could not compare: {0}", exception.Message), isError: true);
             }
             finally
             {
@@ -271,7 +271,7 @@ public class CompareFoldersDialog : Dialog
     {
         if (_compared is null || Result is null)
         {
-            SetStatus("Compare first (Enter), then F5 synchronises what it found.", isError: true);
+            SetStatus(Say("Folders.Status.CompareFirst", "Compare first (Enter), then F5 synchronises what it found."), isError: true);
             return;
         }
 
@@ -297,13 +297,13 @@ public class CompareFoldersDialog : Dialog
         if (_compared.LeftFileSystem.IsReadOnly && (plan.CopiesToLeft > 0 || plan.Actions.Any(a => a.Kind == SyncActionKind.DeleteLeft))
             || _compared.RightFileSystem.IsReadOnly && (plan.CopiesToRight > 0 || plan.Actions.Any(a => a.Kind == SyncActionKind.DeleteRight)))
         {
-            SetStatus("One of the folders is read-only, so this synchronisation cannot be carried out.", isError: true);
+            SetStatus(Say("Folders.Status.ReadOnly", "One of the folders is read-only, so this synchronisation cannot be carried out."), isError: true);
             return;
         }
 
         _pendingPlan = plan;
         var recycle = plan.Deletes > 0 ? " Deletions go to the recycle bin where there is one." : string.Empty;
-        SetStatus($"{plan.Summary()}{recycle} F5 again to do it, any other key to cancel.", isError: plan.Deletes > 0);
+        SetStatus(Say("Folders.Status.SyncAgain", "{0} F5 again to do it, any other key to cancel.", $"{plan.Summary()}{recycle}"), isError: plan.Deletes > 0);
     }
 
     private async Task RunSyncAsync(SyncPlan plan)
@@ -311,7 +311,7 @@ public class CompareFoldersDialog : Dialog
         var compared = _compared;
         if (compared is null || _taskManager is null || _progressWindowFactory is null)
         {
-            SetStatus("Synchronising is not available here.", isError: true);
+            SetStatus(Say("Folders.Status.NotHere", "Synchronising is not available here."), isError: true);
             return;
         }
 
@@ -328,9 +328,12 @@ public class CompareFoldersDialog : Dialog
         }
         catch (Exception exception)
         {
-            SetStatus($"Could not synchronise: {exception.Message}", isError: true);
+            SetStatus(Say("Folders.Status.CouldNotSync", "Could not synchronise: {0}", exception.Message), isError: true);
         }
     }
+
+    /// <summary>A text in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
     private void SetStatus(string status, bool isError)
     {
@@ -407,7 +410,7 @@ public class CompareFoldersDialog : Dialog
         if (_pendingPlan is not null && keyEvent.ConsoleKey != ConsoleKey.Escape)
         {
             _pendingPlan = null;
-            SetStatus("Synchronisation cancelled — nothing was changed.", isError: false);
+            SetStatus(Say("Folders.Status.SyncCancelled", "Synchronisation cancelled — nothing was changed."), isError: false);
         }
 
         if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift && !_comboMode.IsOpen)

@@ -2755,4 +2755,223 @@
   <data name="Torrent.Confirm.Remove" xml:space="preserve">
     <value>¿Quitar "{0}"? y conserva los archivos descargados, w también los borra, cualquier otra tecla cancela.</value>
   </data>
+  <data name="Torrent.Status.PasteHint" xml:space="preserve">
+    <value>Pegue un enlace magnet o indique un archivo .torrent o su URL. Intro añade, Esc vuelve.</value>
+  </data>
+  <data name="Torrent.Status.NotATorrent" xml:space="preserve">
+    <value>No es un enlace magnet, un archivo .torrent ni una URL.</value>
+  </data>
+  <data name="Torrent.Status.Adding" xml:space="preserve">
+    <value>Añadiendo el torrent…</value>
+  </data>
+  <data name="Torrent.Status.Added" xml:space="preserve">
+    <value>Añadido. Empieza en seguida.</value>
+  </data>
+  <data name="Torrent.Status.Resuming" xml:space="preserve">
+    <value>Reanudando "{0}"…</value>
+  </data>
+  <data name="Torrent.Status.Pausing" xml:space="preserve">
+    <value>Pausando "{0}"…</value>
+  </data>
+  <data name="Torrent.Status.Resumed" xml:space="preserve">
+    <value>"{0}" reanudado.</value>
+  </data>
+  <data name="Torrent.Status.Paused" xml:space="preserve">
+    <value>"{0}" pausado.</value>
+  </data>
+  <data name="Torrent.Status.Removing" xml:space="preserve">
+    <value>Quitando "{0}"…</value>
+  </data>
+  <data name="Torrent.Status.Removed" xml:space="preserve">
+    <value>"{0}" quitado.</value>
+  </data>
+  <data name="Torrent.Status.RemovedWithFiles" xml:space="preserve">
+    <value>"{0}" y sus archivos quitados.</value>
+  </data>
+  <data name="Torrent.Status.Opening" xml:space="preserve">
+    <value>Abriendo {0} en el panel…</value>
+  </data>
+  <data name="Currency.Status.Rates" xml:space="preserve">
+    <value>Tipos del {0}.</value>
+  </data>
+  <data name="Currency.Status.Downloading" xml:space="preserve">
+    <value>Descargando los tipos…</value>
+  </data>
+  <data name="Currency.Status.Downloaded" xml:space="preserve">
+    <value>Tipos del {0} descargados.</value>
+  </data>
+  <data name="Currency.Status.UsingOld" xml:space="preserve">
+    <value> Se usan los tipos del {0}.</value>
+  </data>
+  <data name="Currency.Status.Cancelled" xml:space="preserve">
+    <value>Cancelado.</value>
+  </data>
+  <data name="Currency.Result.Waiting" xml:space="preserve">
+    <value>Esperando los tipos…</value>
+  </data>
+  <data name="Currency.Result.NoRates" xml:space="preserve">
+    <value>Aún no hay tipos: pulse F5 para descargarlos.</value>
+  </data>
+  <data name="Currency.Result.TypeAmount" xml:space="preserve">
+    <value>Escriba un importe en {0} para convertirlo a {1}.</value>
+  </data>
+  <data name="Currency.Result.NotANumber" xml:space="preserve">
+    <value>"{0}" no es un número.</value>
+  </data>
+  <data name="Currency.Result.NoRate" xml:space="preserve">
+    <value>No hay tipo para {0} → {1}.</value>
+  </data>
+  <data name="PasswordManager.Status.NewEntry" xml:space="preserve">
+    <value>Nueva contraseña guardada. Ctrl+S la guarda, Esc vuelve.</value>
+  </data>
+  <data name="PasswordManager.Status.Editing" xml:space="preserve">
+    <value>Ctrl+S guarda, Ctrl+R muestra la contraseña, Esc vuelve.</value>
+  </data>
+  <data name="PasswordManager.Status.NeedTitle" xml:space="preserve">
+    <value>Ponga un título a la contraseña para encontrarla en la lista.</value>
+  </data>
+  <data name="PasswordManager.Status.Saved" xml:space="preserve">
+    <value>"{0}" guardada.</value>
+  </data>
+  <data name="PasswordManager.Status.ConfirmDelete" xml:space="preserve">
+    <value>¿Eliminar "{0}"? Pulse y para eliminar, cualquier otra tecla cancela.</value>
+  </data>
+  <data name="PasswordManager.Status.Deleted" xml:space="preserve">
+    <value>"{0}" eliminada.</value>
+  </data>
+  <data name="Translator.Status.ClearAgain" xml:space="preserve">
+    <value>Pulse F8 otra vez para borrar el texto; cualquier otra tecla lo conserva.</value>
+  </data>
+  <data name="Translator.Status.NeedText" xml:space="preserve">
+    <value>Escriba o pegue un texto para traducirlo.</value>
+  </data>
+  <data name="Translator.Status.NeedTextDetect" xml:space="preserve">
+    <value>Escriba o pegue un texto para detectar su idioma.</value>
+  </data>
+  <data name="Translator.Status.ChooseFromFirst" xml:space="preserve">
+    <value>Elija primero el idioma de origen; hace falta para intercambiar.</value>
+  </data>
+  <data name="DupFinder.Status.KeepOne" xml:space="preserve">
+    <value>Conserve al menos una copia de cada archivo: esta es la última no marcada.</value>
+  </data>
+  <data name="DupFinder.Status.Marked" xml:space="preserve">
+    <value>Marcados {0} archivos, conservando el {1} de cada grupo. Eliminar los quita.</value>
+  </data>
+  <data name="DupFinder.Keep.Oldest" xml:space="preserve">
+    <value>más antiguo</value>
+  </data>
+  <data name="DupFinder.Keep.Newest" xml:space="preserve">
+    <value>más reciente</value>
+  </data>
+  <data name="DupFinder.Status.NothingMarked" xml:space="preserve">
+    <value>No hay nada marcado: Espacio marca un archivo, a marca todas menos la copia más antigua de cada grupo.</value>
+  </data>
+  <data name="DupFinder.Status.NotHere" xml:space="preserve">
+    <value>Eliminar no está disponible aquí.</value>
+  </data>
+  <data name="DupFinder.Status.ConfirmDelete" xml:space="preserve">
+    <value>¿Eliminar {0} archivos ({1}) {2}? y/n</value>
+  </data>
+  <data name="DupFinder.Where.Bin" xml:space="preserve">
+    <value>a la papelera</value>
+  </data>
+  <data name="DupFinder.Where.Gone" xml:space="preserve">
+    <value>para siempre</value>
+  </data>
+  <data name="DupFinder.Status.Deleting" xml:space="preserve">
+    <value>Eliminando {0} archivos…</value>
+  </data>
+  <data name="DupFinder.Status.NothingDeleted" xml:space="preserve">
+    <value>No se eliminó nada.</value>
+  </data>
+  <data name="DupFinder.Status.DeletedOne" xml:space="preserve">
+    <value>1 archivo eliminado.</value>
+  </data>
+  <data name="DupFinder.Status.DeletedMany" xml:space="preserve">
+    <value>{0} archivos eliminados.</value>
+  </data>
+  <data name="DupFinder.Status.Failed" xml:space="preserve">
+    <value> {0} fallaron: {1}</value>
+  </data>
+  <data name="Workspaces.Status.NothingToSwitch" xml:space="preserve">
+    <value>Aún no hay espacio de trabajo al que cambiar. S guarda la disposición actual.</value>
+  </data>
+  <data name="Workspaces.Status.NoWorkspace" xml:space="preserve">
+    <value>No hay ningún espacio de trabajo {0}.</value>
+  </data>
+  <data name="Workspaces.Status.NothingToRename" xml:space="preserve">
+    <value>Nada que renombrar todavía.</value>
+  </data>
+  <data name="Workspaces.Status.Renamed" xml:space="preserve">
+    <value>Renombrado como '{0}'.</value>
+  </data>
+  <data name="Workspaces.Status.Exists" xml:space="preserve">
+    <value>'{0}' ya existe. Intro de nuevo lo reemplaza por la disposición actual.</value>
+  </data>
+  <data name="Workspaces.Status.Replaced" xml:space="preserve">
+    <value>'{0}' reemplazado.</value>
+  </data>
+  <data name="Workspaces.Status.Saved" xml:space="preserve">
+    <value>'{0}' guardado.</value>
+  </data>
+  <data name="Workspaces.Status.NothingToUpdate" xml:space="preserve">
+    <value>Nada que actualizar todavía. S guarda la disposición como nuevo espacio de trabajo.</value>
+  </data>
+  <data name="Workspaces.Status.NothingToDelete" xml:space="preserve">
+    <value>Nada que eliminar.</value>
+  </data>
+  <data name="Workspaces.Status.Deleted" xml:space="preserve">
+    <value>'{0}' eliminado.</value>
+  </data>
+  <data name="Workspaces.Status.NowHolds" xml:space="preserve">
+    <value>'{0}' contiene ahora la disposición actual.</value>
+  </data>
+  <data name="Folders.Status.BothFolders" xml:space="preserve">
+    <value>Ambos paneles deben mostrar una carpeta.</value>
+  </data>
+  <data name="Folders.Status.Comparing" xml:space="preserve">
+    <value>Comparando…</value>
+  </data>
+  <data name="Folders.Status.NothingToSync" xml:space="preserve">
+    <value>Nada que sincronizar: las carpetas coinciden.</value>
+  </data>
+  <data name="Folders.Status.SyncWithRecycle" xml:space="preserve">
+    <value>{0} Las eliminaciones van a la papelera si la hay. Intro de nuevo para ejecutar.</value>
+  </data>
+  <data name="Folders.Status.NotHere" xml:space="preserve">
+    <value>La sincronización no está disponible aquí.</value>
+  </data>
+  <data name="Folders.Status.OptionsChanged" xml:space="preserve">
+    <value>Opciones cambiadas. Pulse p para comparar de nuevo.</value>
+  </data>
+  <data name="Folders.Status.Match" xml:space="preserve">
+    <value>Las carpetas coinciden: nada que sincronizar.</value>
+  </data>
+  <data name="Folders.Status.EnterRuns" xml:space="preserve">
+    <value>{0} Intro lo ejecuta.</value>
+  </data>
+  <data name="Folders.Status.CouldNotCompare" xml:space="preserve">
+    <value>No se pudo comparar: {0}</value>
+  </data>
+  <data name="Folders.Status.CouldNotSync" xml:space="preserve">
+    <value>No se pudo sincronizar: {0}</value>
+  </data>
+  <data name="Folders.Status.EnterCompares" xml:space="preserve">
+    <value>Intro compara.</value>
+  </data>
+  <data name="Folders.Status.Stopped" xml:space="preserve">
+    <value>Comparación detenida.</value>
+  </data>
+  <data name="Folders.Status.CompareFirst" xml:space="preserve">
+    <value>Compare primero (Intro); después, F5 sincroniza lo encontrado.</value>
+  </data>
+  <data name="Folders.Status.ReadOnly" xml:space="preserve">
+    <value>Una de las carpetas es de solo lectura, así que no se puede sincronizar.</value>
+  </data>
+  <data name="Folders.Status.SyncAgain" xml:space="preserve">
+    <value>{0} F5 otra vez para hacerlo, cualquier otra tecla para cancelar.</value>
+  </data>
+  <data name="Folders.Status.SyncCancelled" xml:space="preserve">
+    <value>Sincronización cancelada: no se cambió nada.</value>
+  </data>
 </root>

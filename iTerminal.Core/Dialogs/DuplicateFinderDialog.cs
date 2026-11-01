@@ -168,6 +168,9 @@ public class DuplicateFinderDialog : Dialog
         _cursor = Math.Clamp(_cursor, 0, Math.Max(0, fileRows.Count - 1));
     }
 
+    /// <summary>A text in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
+
     private void SetStatus(string status, bool isError)
     {
         _status = status;
@@ -317,7 +320,7 @@ public class DuplicateFinderDialog : Dialog
             }
             else
             {
-                SetStatus("Nothing was deleted.", isError: false);
+                SetStatus(Say("DupFinder.Status.NothingDeleted", "Nothing was deleted."), isError: false);
             }
 
             return true;
@@ -455,7 +458,7 @@ public class DuplicateFinderDialog : Dialog
         var group = _groups.First(g => g.Files.Contains(file));
         if (group.Files.Count(f => !_marked.Contains(f.Path)) <= 1)
         {
-            SetStatus("Keep at least one copy of each file — this is the last one not marked.", isError: true);
+            SetStatus(Say("DupFinder.Status.KeepOne", "Keep at least one copy of each file — this is the last one not marked."), isError: true);
             return;
         }
 
@@ -478,7 +481,7 @@ public class DuplicateFinderDialog : Dialog
             }
         }
 
-        SetStatus($"Marked {_marked.Count:N0} files, keeping the {(keepOldest ? "oldest" : "newest")} of each group. Delete removes them.", isError: false);
+        SetStatus(Say("DupFinder.Status.Marked", "Marked {0} files, keeping the {1} of each group. Delete removes them.", _marked.Count.ToString("N0"), keepOldest ? Say("DupFinder.Keep.Oldest", "oldest") : Say("DupFinder.Keep.Newest", "newest")), isError: false);
     }
 
     public void ClearMarks()
@@ -492,19 +495,19 @@ public class DuplicateFinderDialog : Dialog
     {
         if (_marked.Count == 0)
         {
-            SetStatus("Nothing is marked: Space marks a file, a marks all but the oldest copy of each.", isError: true);
+            SetStatus(Say("DupFinder.Status.NothingMarked", "Nothing is marked: Space marks a file, a marks all but the oldest copy of each."), isError: true);
             return;
         }
 
         if (_fileSystem is null)
         {
-            SetStatus("Deleting is not available here.", isError: true);
+            SetStatus(Say("DupFinder.Status.NotHere", "Deleting is not available here."), isError: true);
             return;
         }
 
         _confirming = true;
-        var where = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() ? "to the recycle bin" : "for good";
-        SetStatus($"Delete {_marked.Count:N0} files ({MarkedBytes().ToFileSize()}) {where}? y/n", isError: true);
+        var where = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() ? Say("DupFinder.Where.Bin", "to the recycle bin") : Say("DupFinder.Where.Gone", "for good");
+        SetStatus(Say("DupFinder.Status.ConfirmDelete", "Delete {0} files ({1}) {2}? y/n", _marked.Count.ToString("N0"), MarkedBytes().ToFileSize(), where), isError: true);
     }
 
     private void StartDelete()
@@ -516,7 +519,7 @@ public class DuplicateFinderDialog : Dialog
         }
 
         var paths = _marked.ToList();
-        SetStatus($"Deleting {paths.Count:N0} files…", isError: false);
+        SetStatus(Say("DupFinder.Status.Deleting", "Deleting {0} files…", paths.Count.ToString("N0")), isError: false);
         DeleteTask = Task.Run(() =>
         {
             var removed = new HashSet<string>(_marked.Comparer);
@@ -548,8 +551,10 @@ public class DuplicateFinderDialog : Dialog
             }
 
             Interlocked.Exchange(ref _deleting, 0);
-            var text = $"Deleted {removed.Count:N0} file{(removed.Count == 1 ? string.Empty : "s")}.";
-            SetStatus(failures.Count == 0 ? text : $"{text} {failures.Count} failed: {failures[0]}", isError: failures.Count > 0);
+            var text = removed.Count == 1
+                ? Say("DupFinder.Status.DeletedOne", "Deleted 1 file.")
+                : Say("DupFinder.Status.DeletedMany", "Deleted {0} files.", removed.Count.ToString("N0"));
+            SetStatus(failures.Count == 0 ? text : text + Say("DupFinder.Status.Failed", " {0} failed: {1}", failures.Count, failures[0]), isError: failures.Count > 0);
         });
     }
 

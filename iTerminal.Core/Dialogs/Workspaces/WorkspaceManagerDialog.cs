@@ -231,7 +231,7 @@ public class WorkspaceManagerDialog : Dialog
                 toRestore = Selected;
                 if (toRestore is null)
                 {
-                    SetStatus("Nothing to switch to yet. S saves the screen as it is now.", false);
+                    SetStatus(Say("Workspaces.Status.NothingToSwitch", "Nothing to switch to yet. S saves the screen as it is now."), false);
                 }
 
                 return true;
@@ -254,7 +254,7 @@ public class WorkspaceManagerDialog : Dialog
                 return true;
             }
 
-            SetStatus($"There is no workspace {letter}.", true);
+            SetStatus(Say("Workspaces.Status.NoWorkspace", "There is no workspace {0}.", letter), true);
             return true;
         }
 
@@ -274,7 +274,7 @@ public class WorkspaceManagerDialog : Dialog
                 }
                 else
                 {
-                    SetStatus("Nothing to rename yet.", true);
+                    SetStatus(Say("Workspaces.Status.NothingToRename", "Nothing to rename yet."), true);
                 }
 
                 return true;
@@ -438,7 +438,7 @@ public class WorkspaceManagerDialog : Dialog
             _selectedName = name;
             _mode = Mode.List;
             Reload();
-            SetStatus($"Renamed to '{name}'.", false);
+            SetStatus(Say("Workspaces.Status.Renamed", "Renamed to '{0}'.", name), false);
             return;
         }
 
@@ -447,7 +447,7 @@ public class WorkspaceManagerDialog : Dialog
         if (exists && _pending != Pending.Replace)
         {
             _pending = Pending.Replace;
-            SetStatus($"'{name}' already exists. Enter again replaces it with the screen as it is now.", true);
+            SetStatus(Say("Workspaces.Status.Exists", "'{0}' already exists. Enter again replaces it with the screen as it is now.", name), true);
             return;
         }
 
@@ -462,14 +462,14 @@ public class WorkspaceManagerDialog : Dialog
         _selectedName = saved.Name;
         _mode = Mode.List;
         Reload();
-        SetStatus(exists ? $"Replaced '{saved.Name}'." : $"Saved '{saved.Name}'.", false);
+        SetStatus(exists ? Say("Workspaces.Status.Replaced", "Replaced '{0}'.", saved.Name) : Say("Workspaces.Status.Saved", "Saved '{0}'.", saved.Name), false);
     }
 
     private void AskUpdate()
     {
         if (Selected is not { } selected)
         {
-            SetStatus("Nothing to update yet. S saves the screen as a new workspace.", true);
+            SetStatus(Say("Workspaces.Status.NothingToUpdate", "Nothing to update yet. S saves the screen as a new workspace."), true);
             return;
         }
 
@@ -481,7 +481,7 @@ public class WorkspaceManagerDialog : Dialog
     {
         if (Selected is null)
         {
-            SetStatus("Nothing to delete.", true);
+            SetStatus(Say("Workspaces.Status.NothingToDelete", "Nothing to delete."), true);
             return;
         }
 
@@ -501,12 +501,12 @@ public class WorkspaceManagerDialog : Dialog
             case Pending.Delete:
                 _workspaces.Delete(selected.Name);
                 Reload();
-                SetStatus($"Deleted '{selected.Name}'.", false);
+                SetStatus(Say("Workspaces.Status.Deleted", "Deleted '{0}'.", selected.Name), false);
                 break;
             case Pending.Update:
                 _workspaces.Save(selected.Name);
                 Reload();
-                SetStatus($"'{selected.Name}' now holds the screen as it is.", false);
+                SetStatus(Say("Workspaces.Status.NowHolds", "'{0}' now holds the screen as it is.", selected.Name), false);
                 break;
         }
     }
@@ -533,6 +533,9 @@ public class WorkspaceManagerDialog : Dialog
                 NotificationSeverity.Warning);
         }
     }
+
+    /// <summary>A text in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
     private void SetStatus(string text, bool isError)
     {
