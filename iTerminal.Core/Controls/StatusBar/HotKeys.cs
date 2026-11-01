@@ -99,7 +99,7 @@ public class HotKeys : StatusBarItem
         {
             AddCommand(new BluetoothDeviceManagerDialogCommand(bluetoothDeviceManagerDialog));
         }
-        if (virtualMachineManagerDialog is not null && OperatingSystem.IsLinux())
+        if (virtualMachineManagerDialog is not null && VirtualMachineManagerDialogCommand.IsSupported)
         {
             AddCommand(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
         }

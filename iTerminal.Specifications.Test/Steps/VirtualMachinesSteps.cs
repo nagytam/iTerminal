@@ -43,6 +43,9 @@ public sealed class VirtualMachinesSteps
     [Then(@"the message names the libvirt group")]
     public void ThenTheMessageNamesTheLibvirtGroup() => throw new PendingStepException();
 
+    [Given(@"the machine runs macOS")]
+    public void GivenTheMachineRunsMacOs() => throw new PendingStepException();
+
     [Then(@"the Tools menu does not list {string}")]
     public void ThenTheToolsMenuDoesNotListValue(string value1) => throw new PendingStepException();
 }

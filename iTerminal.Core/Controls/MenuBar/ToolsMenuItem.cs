@@ -80,7 +80,7 @@ public class ToolsMenuItem : MenuItem
         if (packageManagerDialog is not null) features.Add(new PackageManagerDialogCommand(packageManagerDialog));
         if (stockBrowserDialog is not null) features.Add(new StockBrowserDialogCommand(stockBrowserDialog));
         if (calculatorDialog is not null) features.Add(new CalculatorDialogCommand(calculatorDialog));
-        if (virtualMachineManagerDialog is not null && OperatingSystem.IsLinux()) features.Add(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
+        if (virtualMachineManagerDialog is not null && VirtualMachineManagerDialogCommand.IsSupported) features.Add(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
         if (unitConverterDialog is not null) features.Add(new UnitConverterDialogCommand(unitConverterDialog));
         if (calendarDialog is not null) features.Add(new CalendarDialogCommand(calendarDialog));
         if (toDoListDialog is not null) features.Add(new ToDoListDialogCommand(toDoListDialog));

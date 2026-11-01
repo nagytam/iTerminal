@@ -249,8 +249,11 @@ public static class iTerminalApplicationBuilderExtension
         // the remembered repositories, the last search's results.
         services.AddSingleton<iTerminal.Core.Services.Processes.IExternalProcessRunner, iTerminal.Core.Services.Processes.ExternalProcessRunner>();
         services.AddSingleton<iTerminal.Core.Services.VirtualMachines.IVirtualMachineService>(provider =>
-            new iTerminal.Core.Services.VirtualMachines.LibvirtVirtualMachineService(
-                provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>()));
+            OperatingSystem.IsWindows()
+                ? new iTerminal.Core.Services.VirtualMachines.HyperVVirtualMachineService(
+                    provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>())
+                : new iTerminal.Core.Services.VirtualMachines.LibvirtVirtualMachineService(
+                    provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>()));
         services.AddSingleton<iTerminal.Core.Services.Git.IGitDriveService, iTerminal.Core.Services.Git.GitDriveService>();
         services.AddSingleton<iTerminal.Core.Services.Docker.IDockerDriveService, iTerminal.Core.Services.Docker.DockerDriveService>();
         services.AddSingleton<iTerminal.Core.Services.Search.IFileSearchService, iTerminal.Core.Services.Search.FileSearchService>();

@@ -25,6 +25,9 @@ public sealed class LibvirtVirtualMachineService(
     /// <summary>The message the runner gives when a command outlives its 30-second limit.</summary>
     internal const string TimeoutMarker = "did not answer within";
 
+    /// <summary>What the user is told when a hypervisor call outlives that limit; shared with the Hyper-V backend.</summary>
+    internal const string TimeoutSentence = "the hypervisor did not answer in time. A save or a shutdown can take longer; press F5 to see the state.";
+
     private readonly Func<string, IReadOnlyList<string>, bool> _launchDetached = launchDetached ?? LaunchDetached;
 
     public async Task<IReadOnlyList<VirtualMachine>> ListAsync(CancellationToken cancellationToken = default)
@@ -58,7 +61,7 @@ public sealed class LibvirtVirtualMachineService(
             : new VirtualMachineActionResult(false, $"{name}: {DescribeFailure(result)}");
     }
 
-    private static string Done(VirtualMachineAction action) => action switch
+    internal static string Done(VirtualMachineAction action) => action switch
     {
         VirtualMachineAction.Start => "started",
         VirtualMachineAction.Shutdown => "shutdown requested",
@@ -75,7 +78,7 @@ public sealed class LibvirtVirtualMachineService(
     {
         if (result.ExitCode == -1 && result.StandardError.Contains(TimeoutMarker, StringComparison.Ordinal))
         {
-            return "the hypervisor did not answer in time. A save or a shutdown can take longer; press F5 to see the state.";
+            return TimeoutSentence;
         }
 
         if (result.StandardError.Contains("Permission denied", StringComparison.OrdinalIgnoreCase)
@@ -93,7 +96,7 @@ public sealed class LibvirtVirtualMachineService(
     }
 
     /// <summary>Starts virt-viewer without waiting for it. False when it is not installed.</summary>
-    private static bool LaunchDetached(string fileName, IReadOnlyList<string> arguments)
+    internal static bool LaunchDetached(string fileName, IReadOnlyList<string> arguments)
     {
         var startInfo = new ProcessStartInfo(fileName) { UseShellExecute = false };
         foreach (var argument in arguments)
