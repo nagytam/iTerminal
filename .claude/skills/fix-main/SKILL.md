@@ -135,8 +135,9 @@ Rules while fixing:
 
 Then:
 
-1. Commit only after the fix gate passes. Push the branch and open a pull request against `main`. CI runs on the
-   pull request, so the platform-only failure is checked on its own runner.
+1. Commit only after the fix gate passes. Push the branch and open a **draft** pull request against `main`
+   (`gh pr create --draft --base main`) **before the local build and test runs start**; fixes made after that go to
+   the same branch. CI runs on the pull request, so the platform-only failure is checked on its own runner.
 2. Watch the pull request's `Build and test` run to the end. A green Linux job with a red Windows job is red.
 
 **Gate: fix review.** Run the `code-review` skill against the working tree at `medium`. The gate passes when there
@@ -152,7 +153,8 @@ On `FAIL`, fix the findings and run the gate again.
 
 ## Phase 4: Integrate into main
 
-**Output.** A pull request against `main`, with the working record in its body. The body names the failing run,
+**Output.** The draft pull request from phase 3, marked ready (`gh pr ready`) once its gates pass, with the working
+record in its body. The body names the failing run,
 its breaking commit, the classification, the fix and the CI run that proves it.
 
 The commit message and the PR body end with the attribution lines the session gives.
