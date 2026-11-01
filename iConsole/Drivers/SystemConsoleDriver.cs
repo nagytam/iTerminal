@@ -303,6 +303,12 @@ public class SystemConsoleDriver : IConsoleDriver
 
     public void Write(int x, int y, Conxel conxel)
     {
+        // The second column of a wide character: the wide character before it already covered it.
+        if (conxel.Char == TextWidth.Continuation)
+        {
+            return;
+        }
+
         try
         {
             SetCursorPosition(x, y);
@@ -348,6 +354,11 @@ public class SystemConsoleDriver : IConsoleDriver
             var runBg = list[0].BackgroundColor;
             foreach (var c in list)
             {
+                if (c.Char == TextWidth.Continuation)
+                {
+                    continue;
+                }
+
                 if (c.ForegroundColor != runFg || c.BackgroundColor != runBg)
                 {
                     FlushRun(runFg, runBg);

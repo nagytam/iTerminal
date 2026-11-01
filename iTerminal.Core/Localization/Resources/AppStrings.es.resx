@@ -3138,5 +3138,103 @@
   </data>
   <data name="Notify.GitSyncFailed" xml:space="preserve">
     <value>Falló la sincronización git</value>
+  <data name="Menu.Print" xml:space="preserve">
+    <value>Imprimir</value>
+  </data>
+  <data name="Menu.PrintItem" xml:space="preserve">
+    <value>Imprimir…</value>
+  </data>
+  <data name="DialogHint.PrintFile" xml:space="preserve">
+    <value>Imprimir el archivo</value>
+  </data>
+  <data name="DialogHint.ChoosePrinter" xml:space="preserve">
+    <value>Elegir la impresora</value>
+  </data>
+  <data name="DialogHint.Copies" xml:space="preserve">
+    <value>Más o menos copias</value>
+  </data>
+  <data name="DialogHint.ChooseJob" xml:space="preserve">
+    <value>Elegir un trabajo de impresión</value>
+  </data>
+  <data name="DialogHint.HoldOrResumeJob" xml:space="preserve">
+    <value>Retener o reanudar el trabajo</value>
+  </data>
+  <data name="DialogHint.CancelJobAsks" xml:space="preserve">
+    <value>Cancelar el trabajo (pregunta antes)</value>
+  </data>
+  <data name="DialogHint.RefreshQueue" xml:space="preserve">
+    <value>Leer la cola de nuevo</value>
+  </data>
+  <data name="DialogHint.CancelJobYes" xml:space="preserve">
+    <value>Cancelar el trabajo de impresión</value>
+  </data>
+  <data name="DialogHint.KeepJob" xml:space="preserve">
+    <value>Conservar el trabajo de impresión</value>
+  </data>
+  <data name="Print.Status.AskCancel" xml:space="preserve">
+    <value>¿Cancelar el trabajo {0} ({1})? y lo cancela.</value>
+  </data>
+  <data name="Print.Status.NoFile" xml:space="preserve">
+    <value>No hay ningún archivo bajo el cursor para imprimir.</value>
+  </data>
+  <data name="Print.Status.NoPrinter" xml:space="preserve">
+    <value>No hay ninguna impresora.</value>
+  </data>
+  <data name="Print.Status.Sending" xml:space="preserve">
+    <value>Enviando {0} a {1}…</value>
+  </data>
+  <data name="Print.State.Printing" xml:space="preserve">
+    <value>Imprime</value>
+  </data>
+  <data name="Print.State.Held" xml:space="preserve">
+    <value>Retenido</value>
+  </data>
+  <data name="Print.State.Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Print.State.Queued" xml:space="preserve">
+    <value>En cola</value>
+  </data>
+  <data name="Print.NoFile" xml:space="preserve">
+    <value>(ningún archivo bajo el cursor: solo la cola)</value>
+  </data>
+  <data name="Print.File" xml:space="preserve">
+    <value>Archivo</value>
+  </data>
+  <data name="Print.Printer" xml:space="preserve">
+    <value>Impresora</value>
+  </data>
+  <data name="Print.Copies" xml:space="preserve">
+    <value>Copias</value>
+  </data>
+  <data name="Print.Col.Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Print.Col.Document" xml:space="preserve">
+    <value>Documento</value>
+  </data>
+  <data name="Print.Col.Owner" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="Print.Col.State" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="Print.QueueEmpty" xml:space="preserve">
+    <value>La cola está vacía.</value>
+  </data>
+  <data name="Print.Reading" xml:space="preserve">
+    <value>Leyendo las impresoras…</value>
+  </data>
+  <data name="Print.NoPrinters" xml:space="preserve">
+    <value>No hay impresoras instaladas.</value>
+  </data>
+  <data name="Print.Default" xml:space="preserve">
+    <value>(predeterminada)</value>
+  </data>
+  <data name="Print.Hint.Confirm" xml:space="preserve">
+    <value>y cancela el trabajo  cualquier otra tecla lo conserva</value>
+  </data>
+  <data name="Print.Hint.List" xml:space="preserve">
+    <value>Enter imprimir  ←→ impresora  +/- copias  P retener/reanudar  Supr cancelar  F5 actualizar  Esc cerrar</value>
   </data>
 </root>

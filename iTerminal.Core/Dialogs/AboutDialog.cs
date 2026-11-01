@@ -1,3 +1,4 @@
+using iTerminal.Core.Services.BackgroundStart;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using iConsole.Buffers;
@@ -23,9 +24,12 @@ public class AboutDialog : Dialog
 
     private readonly KeyValueList _details;
 
-    public AboutDialog(IThemeService themeService)
+    private readonly IBackgroundStartService? _backgroundStart;
+
+    public AboutDialog(IThemeService themeService, IBackgroundStartService? backgroundStart = null)
         : base(nameof(AboutDialog), themeService)
     {
+        _backgroundStart = backgroundStart;
         Title = iConsole.Localization.UiText.Get("Menu.About", "About");
 
         // The label/value block is a KeyValueList rather than pre-padded strings: it aligns the values
@@ -86,6 +90,13 @@ public class AboutDialog : Dialog
             var width = lines.Max(l => l.Length);
             return lines.Select(l => l.PadRight(width));
         }
+    }
+
+    public override async Task ShowAsync()
+    {
+        // Looks for a newer release when About is opened, or as configured (BackgroundStart.UpdateCheck).
+        _backgroundStart?.Request(BackgroundServices.UpdateCheck);
+        await base.ShowAsync();
     }
 
     public override void OnInitializeLayout()

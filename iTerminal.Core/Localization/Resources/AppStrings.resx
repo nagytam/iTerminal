@@ -3138,5 +3138,103 @@
   </data>
   <data name="Notify.GitSyncFailed" xml:space="preserve">
     <value>Git sync failed</value>
+  <data name="Menu.Print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="Menu.PrintItem" xml:space="preserve">
+    <value>Print…</value>
+  </data>
+  <data name="DialogHint.PrintFile" xml:space="preserve">
+    <value>Print the file</value>
+  </data>
+  <data name="DialogHint.ChoosePrinter" xml:space="preserve">
+    <value>Choose the printer</value>
+  </data>
+  <data name="DialogHint.Copies" xml:space="preserve">
+    <value>More or fewer copies</value>
+  </data>
+  <data name="DialogHint.ChooseJob" xml:space="preserve">
+    <value>Choose a print job</value>
+  </data>
+  <data name="DialogHint.HoldOrResumeJob" xml:space="preserve">
+    <value>Hold or resume the job</value>
+  </data>
+  <data name="DialogHint.CancelJobAsks" xml:space="preserve">
+    <value>Cancel the job (asks first)</value>
+  </data>
+  <data name="DialogHint.RefreshQueue" xml:space="preserve">
+    <value>Read the queue again</value>
+  </data>
+  <data name="DialogHint.CancelJobYes" xml:space="preserve">
+    <value>Cancel the print job</value>
+  </data>
+  <data name="DialogHint.KeepJob" xml:space="preserve">
+    <value>Keep the print job</value>
+  </data>
+  <data name="Print.Status.AskCancel" xml:space="preserve">
+    <value>Cancel job {0} ({1})? y cancels it.</value>
+  </data>
+  <data name="Print.Status.NoFile" xml:space="preserve">
+    <value>There is no file under the cursor to print.</value>
+  </data>
+  <data name="Print.Status.NoPrinter" xml:space="preserve">
+    <value>There is no printer to print on.</value>
+  </data>
+  <data name="Print.Status.Sending" xml:space="preserve">
+    <value>Sending {0} to {1}…</value>
+  </data>
+  <data name="Print.State.Printing" xml:space="preserve">
+    <value>Printing</value>
+  </data>
+  <data name="Print.State.Held" xml:space="preserve">
+    <value>Held</value>
+  </data>
+  <data name="Print.State.Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Print.State.Queued" xml:space="preserve">
+    <value>Queued</value>
+  </data>
+  <data name="Print.NoFile" xml:space="preserve">
+    <value>(no file under the cursor — the queue only)</value>
+  </data>
+  <data name="Print.File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Print.Printer" xml:space="preserve">
+    <value>Printer</value>
+  </data>
+  <data name="Print.Copies" xml:space="preserve">
+    <value>Copies</value>
+  </data>
+  <data name="Print.Col.Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="Print.Col.Document" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="Print.Col.Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="Print.Col.State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="Print.QueueEmpty" xml:space="preserve">
+    <value>The queue is empty.</value>
+  </data>
+  <data name="Print.Reading" xml:space="preserve">
+    <value>Reading the printers…</value>
+  </data>
+  <data name="Print.NoPrinters" xml:space="preserve">
+    <value>No printers are installed.</value>
+  </data>
+  <data name="Print.Default" xml:space="preserve">
+    <value>(default)</value>
+  </data>
+  <data name="Print.Hint.Confirm" xml:space="preserve">
+    <value>y cancels the job  any other key keeps it</value>
+  </data>
+  <data name="Print.Hint.List" xml:space="preserve">
+    <value>Enter print  ←→ printer  +/- copies  P hold/resume  Del cancel  F5 refresh  Esc close</value>
   </data>
 </root>

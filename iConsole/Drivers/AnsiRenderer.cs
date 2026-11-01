@@ -284,6 +284,12 @@ public static class AnsiRenderer
 
         foreach (var c in list)
         {
+            // The second column of a wide character is covered by the character before it.
+            if (c.Char == TextWidth.Continuation)
+            {
+                continue;
+            }
+
             if (!haveLast || !SameStyle(c, last))
             {
                 AppendColorAndStyle(sb, c, reset: attributesOn);

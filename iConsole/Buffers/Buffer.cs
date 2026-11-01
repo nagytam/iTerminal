@@ -177,5 +177,7 @@ public class Buffer : IBuffer
                 // Debugger.Break();
             }
         }
+
+        MergedLayer.RepairWideCharacters();
     }
 }

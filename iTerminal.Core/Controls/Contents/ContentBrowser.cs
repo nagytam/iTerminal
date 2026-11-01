@@ -64,6 +64,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private DiskImageDialog? _diskImageDialog { get; set; }
     private SecureWipeDialog? _secureWipeDialog { get; set; }
     private SignatureDialog? _signatureDialog { get; set; }
+    private PrintDialog? _printDialog { get; set; }
     private iTerminal.Core.Services.Defender.IMalwareScanService? _malwareScanService { get; set; }
     private INotificationService? _notificationService { get; set; }
     private iTerminal.Core.Services.Git.IGitService? _gitService { get; set; }
@@ -110,7 +111,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         INotificationService? notificationService = null,
         EditLinkDialog? editLinkDialog = null,
         iTerminal.Core.Services.Git.IGitService? gitService = null,
-        CsvViewerDialog? csvViewerDialog = null)
+        CsvViewerDialog? csvViewerDialog = null,
+        PrintDialog? printDialog = null)
         : base(themeService)
     {
         _gitService = gitService;
@@ -121,6 +123,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _diskImageDialog = diskImageDialog;
         _secureWipeDialog = secureWipeDialog;
         _signatureDialog = signatureDialog;
+        _printDialog = printDialog;
         _clipboard = clipboardOperations;
         _fileDiffDialog = fileDiffDialog;
         Name = name;
@@ -322,6 +325,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_signatureDialog is not null)
         {
             AddCommand(new SignatureDialogCommand(_signatureDialog, ContentModelService));
+        }
+        if (_printDialog is not null)
+        {
+            AddCommand(new PrintDialogCommand(_printDialog, ContentModelService));
         }
         if (_gitService is not null)
         {

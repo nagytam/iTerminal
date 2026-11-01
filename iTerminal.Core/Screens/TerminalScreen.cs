@@ -130,14 +130,29 @@ public class TerminalScreen : iConsole.Screens.Screen
         // Before anything is drawn, so the first frame is already in the chosen colours.
         ThemePersistence.Restore(ThemeService, _settingsService);
 
-        // Offered before the panels open: a component the features need is missing, or a newer one can be installed.
-        // Skipping a version, or installing, keeps it from being offered again.
+        await base.OnInitializeAsync();
+
+        // The start-up dialogs wait until the splash has been seen and closed. They are shown from a task, so this
+        // method returns at once and the splash is not held back.
+        _ = ShowStartupDialogsAfterSplashAsync();
+    }
+
+    /// <summary>The start-up dialogs open this long after start-up: the splash first, then a short pause.</summary>
+    internal static readonly TimeSpan StartupDialogDelay = SplashDialog.DisplayTime + TimeSpan.FromMilliseconds(500);
+
+    /// <summary>
+    /// Offers the runtime dependencies (a component the features need is missing, or a newer one can be installed;
+    /// skipping a version, or installing, keeps it from being offered again), then the start-up warnings. Both
+    /// open over the panels once the splash is gone.
+    /// </summary>
+    private async Task ShowStartupDialogsAfterSplashAsync()
+    {
+        await Task.Delay(StartupDialogDelay);
+
         if (_runtimeDependencyDialog is not null && _runtimeDependencyDialog.ShouldOpenAtStartup)
         {
             await ShowDialogAsync(_runtimeDependencyDialog);
         }
-
-        await base.OnInitializeAsync();
 
         if (_startupWarningService.Warnings.Count > 0)
         {
