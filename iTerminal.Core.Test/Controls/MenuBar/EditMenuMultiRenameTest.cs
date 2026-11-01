@@ -16,6 +16,7 @@ public class EditMenuMultiRenameTest
         [.. menu.Controls.AsSnapshot().OfType<MenuItem>().Select(item => item.Text)];
 
     [TestMethod]
+    [Timeout(60_000)]
     public void TheEditMenuOffersMultiRenameWhenItsDialogIsGiven()
     {
         var service = Mock.Of<IContentModelService>();
@@ -27,6 +28,7 @@ public class EditMenuMultiRenameTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void TheEntryFollowsRenameAndNamesNoShortcut()
     {
         var service = Mock.Of<IContentModelService>();
@@ -39,6 +41,7 @@ public class EditMenuMultiRenameTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void WithoutTheDialogTheEntryIsAbsent()
     {
         var service = Mock.Of<IContentModelService>();

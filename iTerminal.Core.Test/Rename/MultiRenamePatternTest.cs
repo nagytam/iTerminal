@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Rename;
 public class MultiRenamePatternTest
 {
     [TestMethod]
+    [Timeout(60_000)]
     public void TheDefaultPatternRenamesNothing()
     {
         Assert.AreEqual("a.txt", MultiRenamePattern.Expand(MultiRenamePattern.DefaultPattern, "a.txt", isFolder: false, 1, string.Empty, string.Empty));
@@ -13,6 +14,7 @@ public class MultiRenamePatternTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void TheCounterStartsAtOneAndIsPaddedToTheWidthGiven()
     {
         Assert.AreEqual("a_1.txt", MultiRenamePattern.Expand("[C]_[N]", "a.txt", false, 1, string.Empty, string.Empty));
@@ -21,12 +23,14 @@ public class MultiRenamePatternTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void AFileKeepsItsExtensionWhenThePatternDoesNotNameIt()
     {
         Assert.AreEqual("holiday_02.jpg", MultiRenamePattern.Expand("holiday_[N:2]", "IMG_9.jpg", false, 2, string.Empty, string.Empty));
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void TheExtensionTokenPlacesTheExtensionWhereThePatternPutsIt()
     {
         Assert.AreEqual("a.bak.txt", MultiRenamePattern.Expand("[C].bak", "a.txt", false, 1, string.Empty, string.Empty),
@@ -35,6 +39,7 @@ public class MultiRenamePatternTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ADotfileHasNoExtension()
     {
         Assert.AreEqual(".bashrc", MultiRenamePattern.Expand("[C]", ".bashrc", false, 1, string.Empty, string.Empty));
@@ -43,6 +48,7 @@ public class MultiRenamePatternTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ANameWithoutAnExtensionKeepsNothingExtra()
     {
         Assert.AreEqual("README_1", MultiRenamePattern.Expand("[C]_[N]", "README", false, 1, string.Empty, string.Empty));
@@ -51,6 +57,7 @@ public class MultiRenamePatternTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void AFolderHasNoExtensionSoItsWholeNameIsTheStem()
     {
         Assert.AreEqual("v1.2_backup", MultiRenamePattern.Expand("[C]_backup", "v1.2", isFolder: true, 1, string.Empty, string.Empty));
@@ -58,6 +65,7 @@ public class MultiRenamePatternTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void FindAndReplaceApplyToTheExpandedPatternAsPlainText()
     {
         Assert.AreEqual("IMG-1.jpg", MultiRenamePattern.Expand("[C]", "IMG_1.jpg", false, 1, "_", "-"));
@@ -67,12 +75,14 @@ public class MultiRenamePatternTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void AnUnknownTokenIsCopiedAsTyped()
     {
         Assert.AreEqual("[X]_a.txt", MultiRenamePattern.Expand("[X]_[C]", "a.txt", false, 1, string.Empty, string.Empty));
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void AnEmptyNameStaysEmptyAndIsNotAHiddenFile()
     {
         // Appending the extension to nothing would give ".pdf", a hidden file the planner would accept.

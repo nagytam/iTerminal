@@ -69,6 +69,7 @@ public class EditorViewerAndPermissionsTest
     }
 
     [TestMethod]
+    [Timeout(120_000)]
     public async Task TabIndents_CtrlSSaves_AndAnLfFileStaysLf()
     {
         await OpenInEditorAsync("lf.txt", "alpha");

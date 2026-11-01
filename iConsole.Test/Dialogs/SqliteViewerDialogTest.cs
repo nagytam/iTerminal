@@ -48,6 +48,7 @@ public class SqliteViewerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task OpensWithTheSchemaListing()
     {
         var reader = new FakeReader();
@@ -61,6 +62,7 @@ public class SqliteViewerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AResultLandsInTheGridWithItsCounts()
     {
         var reader = new FakeReader
@@ -79,6 +81,7 @@ public class SqliteViewerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ATruncatedResultSaysHowManyRowsAreShown()
     {
         var reader = new FakeReader
@@ -94,6 +97,7 @@ public class SqliteViewerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task AFailedQueryShowsItsMessageAndKeepsTheRowsOnScreen()
     {
         var reader = new FakeReader();
@@ -110,6 +114,7 @@ public class SqliteViewerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task OnlyTheNewestQueryLands()
     {
         var reader = new FakeReader();
@@ -132,6 +137,7 @@ public class SqliteViewerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task CloseCancelsTheRunningQueryAndWritesNothing()
     {
         CancellationToken observed = default;
@@ -157,6 +163,7 @@ public class SqliteViewerDialogTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task F4SwitchesToTheTextOutputAndBack()
     {
         var reader = new FakeReader

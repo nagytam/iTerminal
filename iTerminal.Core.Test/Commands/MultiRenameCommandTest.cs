@@ -119,6 +119,7 @@ public class MultiRenameCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task RenameRunsTheMarkedFilesAsOneBatchAndLeavesTheRestAlone()
     {
         var model = MarkableTestModel.Create(_root);
@@ -142,6 +143,7 @@ public class MultiRenameCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task RenameMovesAMarkedFolderUnderItsNewName()
     {
         var model = MarkableTestModel.Create(_root);
@@ -159,6 +161,7 @@ public class MultiRenameCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ABlockedRowIsNotSubmittedSoRenameQueuesNothing()
     {
         // a -> b would take b's name, which b is giving up: blocked, and b stays unchanged. Nothing is Ok, so Rename queues no batch.
@@ -179,6 +182,7 @@ public class MultiRenameCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ATargetTakenAfterPlanningFailsItsStepAndIsNeverOverwritten()
     {
         // The plan saw no a_x.txt. Another program writes one before Rename runs: the step must fail, not replace it.
@@ -200,6 +204,7 @@ public class MultiRenameCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void TheMenuCommandIsRefusedOnAReadOnlyPanel()
     {
         var readOnly = new ReadOnlyTestModel(Guard().Object, new Url(_root + Path.DirectorySeparatorChar));
@@ -214,6 +219,7 @@ public class MultiRenameCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void TheMenuCommandIsOfferedOnAWritablePanelWithAMark()
     {
         var model = MarkableTestModel.Create(_root);
@@ -234,6 +240,7 @@ public class MultiRenameCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ACaseOnlyChangeIsNeverSubmitted()
     {
         // a.txt -> A.txt is refused on every platform: on a case-insensitive volume the engine would see the file as its own target.

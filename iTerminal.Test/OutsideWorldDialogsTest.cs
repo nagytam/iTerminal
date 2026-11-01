@@ -48,6 +48,7 @@ public class OutsideWorldDialogsTest
     }
 
     [TestMethod]
+    [Timeout(120_000)]
     public async Task AltF8ListsTheInstalledPackages()
     {
         Assert.IsTrue(await _app.PressAsync("Alt+F8"));
