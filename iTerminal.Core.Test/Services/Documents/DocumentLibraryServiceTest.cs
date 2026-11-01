@@ -70,6 +70,7 @@ public class DocumentLibraryServiceTest
         return path;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DocumentsFolder_FallsBackToTheBuiltInDefaultWhenNothingIsConfigured()
     {
@@ -84,6 +85,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(expected, DocumentLibraryService.ResolveDocumentsFolder(empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_IndexesFilesAndExtractsTheirText()
     {
@@ -104,6 +106,7 @@ public class DocumentLibraryServiceTest
         Assert.IsTrue(roadmap.WordCount > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchAsync_FindsADocumentByItsContent()
     {
@@ -121,6 +124,7 @@ public class DocumentLibraryServiceTest
         StringAssert.Contains(hits[0].Snippet, "approved");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchAsync_RequiresEveryWordToMatch()
     {
@@ -136,6 +140,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual("one.txt", hits[0].Entry.FileName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchAsync_MatchesAPartialWordSoResultsNarrowAsTheQueryIsTyped()
     {
@@ -147,6 +152,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(1, (await service.SearchAsync("invo")).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchAsync_PutsANameMatchAheadOfDocumentsThatOnlyMentionIt()
     {
@@ -164,6 +170,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(DocumentSearchMatch.Content, hits[1].Match);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchAsync_TreatsQuerySyntaxAsTextRatherThanAsOperators()
     {
@@ -179,6 +186,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(1, hits.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchAsync_ReturnsNothingForAnEmptyQuery()
     {
@@ -190,6 +198,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(0, (await service.SearchAsync("   ")).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetTextAsync_ReturnsTheCachedTextForThePreview()
     {
@@ -202,6 +211,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(string.Empty, await service.GetTextAsync(Path.Combine(_documentsFolder, "missing.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_LeavesAnUnchangedFileAlone()
     {
@@ -219,6 +229,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(path, service.Entries.Single().Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_ReExtractsAFileThatChanged()
     {
@@ -237,6 +248,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(0, (await service.SearchAsync("Original")).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_DropsADocumentWhoseFileIsGone()
     {
@@ -257,6 +269,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(0, (await service.SearchAsync("Temporary")).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_IndexesAnUnsupportedFileByNameAndSaysWhyItHasNoText()
     {
@@ -273,6 +286,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(1, (await service.SearchAsync("archive")).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_SkipsBuildOutputAndDotFiles()
     {
@@ -289,6 +303,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual("real.txt", service.Entries.Single().FileName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_ReportsBothStagesAndEndsIdle()
     {
@@ -321,6 +336,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(100, indexing.Percent);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_ReportsAMissingFolderRatherThanThrowing()
     {
@@ -333,6 +349,7 @@ public class DocumentLibraryServiceTest
         StringAssert.Contains(service.StatusMessage, "not found");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Entries_ComeBackFromTheDatabaseInASecondSessionWithoutRescanning()
     {
@@ -349,6 +366,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(1, (await second.SearchAsync("Persisted")).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchIndex_IsRebuiltFromTheContentTableWhenItGoesMissing()
     {
@@ -372,6 +390,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(1, (await recovered.SearchAsync("Rebuildable")).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tokenize_SplitsOnPunctuationAndDropsIt()
     {
@@ -382,6 +401,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual(0, DocumentSearchIndex.Tokenize("   ").Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BuildMatchExpression_QuotesEveryTokenAndRequiresThemAll()
     {
@@ -391,6 +411,7 @@ public class DocumentLibraryServiceTest
         Assert.AreEqual("\"a\"\"b\"*", DocumentSearchIndex.BuildMatchExpression(["a\"b"]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetRelativeFolder_IsEmptyForAFileInTheRoot()
     {

@@ -39,6 +39,7 @@ public class SplitterTest
         return splitter;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ComputeFirstSize_SplitsWhatIsLeftAfterTheDivider()
     {
@@ -48,6 +49,7 @@ public class SplitterTest
         Assert.AreEqual(0, Splitter.ComputeFirstSize(0, 0.5, 0, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ComputeFirstSize_RespectsMinimums_AndSharesWhenTheyCannotBothFit()
     {
@@ -57,6 +59,7 @@ public class SplitterTest
         Assert.AreEqual(10, Splitter.ComputeFirstSize(21, double.NaN, 0, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_SideBySide_PutsTheDividerBetweenThePanes()
     {
@@ -66,6 +69,7 @@ public class SplitterTest
         Assert.AreEqual("aaaa│bbbb", screen.Line(1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Stacked_PutsTheDividerBetweenThePanes()
     {
@@ -74,6 +78,7 @@ public class SplitterTest
         Assert.AreEqual("aaaa|aaaa|" + Border.HorizontalSingle.Repeat(4) + "|bbbb|bbbb", string.Join("|", screen.Lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AfterMovingTheDivider_LeavesNoStaleCells()
     {
@@ -87,6 +92,7 @@ public class SplitterTest
         Assert.AreEqual("aa│bbbbbb", screen.Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Ratio_KeepsProportionWhenResized()
     {
@@ -98,6 +104,7 @@ public class SplitterTest
         Assert.AreEqual(10, splitter.FirstSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Ratio_OutOfRangeAndNaN_AreClamped()
     {
@@ -111,6 +118,7 @@ public class SplitterTest
         Assert.AreEqual(0.5, splitter.Ratio);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowKeys_MoveTheDividerAlongTheAxis_AndRaiseSplitChanged()
     {
@@ -130,6 +138,7 @@ public class SplitterTest
         Assert.AreEqual(4, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowKeys_WithoutFocus_DoNothing()
     {
@@ -139,6 +148,7 @@ public class SplitterTest
         Assert.AreEqual(10, splitter.FirstSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Drag_FromTheDivider_MovesItToThePointer_AndReleaseStops()
     {
@@ -152,6 +162,7 @@ public class SplitterTest
         Assert.AreEqual(4, splitter.FirstSize, "a drag that did not start on the divider does nothing");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Drag_PastTheEdges_StaysWithinTheMinimums()
     {
@@ -166,6 +177,7 @@ public class SplitterTest
         Assert.AreEqual(17, splitter.FirstSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Click_OnAPane_IsNotADrag()
     {
@@ -177,6 +189,7 @@ public class SplitterTest
         Assert.AreEqual(10, splitter.FirstSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetFirst_Replacing_RemovesTheOldPane()
     {
@@ -189,6 +202,7 @@ public class SplitterTest
         Assert.AreEqual("cccc│bbbb", ScreenBuffer.Render(splitter, 9, 1).Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_EmptySize_DoesNotThrow()
     {
@@ -197,6 +211,7 @@ public class SplitterTest
         splitter.Draw(new ScreenBuffer(5, 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetKeyHints_NamesTheKeysOfTheAxis()
     {

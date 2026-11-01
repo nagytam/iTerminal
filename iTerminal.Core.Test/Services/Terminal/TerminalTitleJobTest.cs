@@ -9,6 +9,7 @@ namespace iTerminal.Core.Test.Services.Terminal;
 [TestClass]
 public class TerminalTitleJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void BuildTitle_NamesTheFolderAndTheApplication()
     {
@@ -20,12 +21,14 @@ public class TerminalTitleJobTest
         Assert.AreEqual(model.Object.Url.FullUrl + " - iTerminal BETA", title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BuildTitle_WithoutAPanel_IsTheApplicationName()
     {
         Assert.AreEqual("iTerminal BETA", TerminalTitleJob.BuildTitle(null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Publish_UsesTheFocusedPanel_ElseTheLastOne_AndWritesOnlyChanges()
     {

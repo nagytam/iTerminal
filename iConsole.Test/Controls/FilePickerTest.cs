@@ -61,6 +61,7 @@ public class FilePickerTest
 
     private static KeyEvent Key(ConsoleKey key) => new(' ', key, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Lists_FoldersFirstThenFilesByName_AndHidesHiddenOnes()
     {
@@ -69,6 +70,7 @@ public class FilePickerTest
         CollectionAssert.AreEqual(new[] { "docs", "a.md", "b.txt", "c.bin" }, picker.Rows.Select(r => r.Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowHidden_AddsHiddenEntries()
     {
@@ -79,6 +81,7 @@ public class FilePickerTest
         Assert.IsTrue(picker.Rows.Any(r => r.Name == ".hidden"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Filter_KeepsMatchingFilesAndAllFolders()
     {
@@ -89,6 +92,7 @@ public class FilePickerTest
         CollectionAssert.AreEqual(new[] { "docs", "a.md", "b.txt" }, picker.Rows.Select(r => r.Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PickFolders_ListsOnlyFolders()
     {
@@ -99,6 +103,7 @@ public class FilePickerTest
         CollectionAssert.AreEqual(new[] { "docs" }, picker.Rows.Select(r => r.Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnAFolder_OpensItWithAParentRowFirst()
     {
@@ -110,6 +115,7 @@ public class FilePickerTest
         CollectionAssert.AreEqual(new[] { "..", "x.txt" }, picker.Rows.Select(r => r.Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnTheParentRow_GoesUp()
     {
@@ -121,6 +127,7 @@ public class FilePickerTest
         Assert.AreEqual("/", picker.FolderPath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnAFile_RaisesPathChosen()
     {
@@ -135,6 +142,7 @@ public class FilePickerTest
         Assert.AreEqual("/a.md", chosen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PickFolders_EnterOnAFolderChoosesIt_ButNotTheParentRow()
     {
@@ -151,6 +159,7 @@ public class FilePickerTest
         Assert.AreEqual("/", picker.FolderPath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Backspace_GoesUpAndKeysMoveTheCursorWithinBounds()
     {
@@ -169,6 +178,7 @@ public class FilePickerTest
         Assert.AreEqual("/", picker.FolderPath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UnfocusedPicker_IgnoresKeys()
     {
@@ -180,6 +190,7 @@ public class FilePickerTest
         Assert.AreEqual("docs", picker.CursorEntry?.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedListing_ShowsTheErrorAndKeepsTheOldFolder()
     {
@@ -193,6 +204,7 @@ public class FilePickerTest
         Assert.IsTrue(screen.Contains("No folder /missing") || picker.Rows.Count > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASlowListingThatIsOvertaken_IsDropped()
     {
@@ -208,6 +220,7 @@ public class FilePickerTest
         Assert.AreEqual("/docs", picker.FolderPath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw_ShowsTheFolderThenOneRowPerEntryWithSizesAndFillsItsBounds()
     {
@@ -225,6 +238,7 @@ public class FilePickerTest
         screen.AssertFillsBounds(picker);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw_HighlightsTheCursorRow()
     {
@@ -239,6 +253,7 @@ public class FilePickerTest
         Assert.AreEqual(scheme.Background, screen.BackgroundAt(1, 2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw_ScrollsToKeepTheCursorVisible()
     {
@@ -256,6 +271,7 @@ public class FilePickerTest
         Assert.IsFalse(screen.Contains("f00.txt"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Click_MovesTheCursor_AndASecondClickActivatesTheRow()
     {
@@ -272,6 +288,7 @@ public class FilePickerTest
         Assert.AreEqual("/a.md", chosen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("*.txt", "a.txt", true)]
     [DataRow("*.txt", "a.txt.bak", false)]
@@ -286,6 +303,7 @@ public class FilePickerTest
         Assert.AreEqual(expected, FilePicker.Matches(pattern, name));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LocalSource_ListsARealFolder()
     {

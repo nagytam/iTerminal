@@ -31,6 +31,7 @@ public class FlacTagReaderTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_ReturnsStreamInfoAndVorbisComments()
     {
@@ -65,6 +66,7 @@ public class FlacTagReaderTest
         Assert.AreEqual("1998", info.Tags.Tags.Single(tag => tag.Name == "Date").Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_KeepsAnUnknownFieldUnderItsOwnName()
     {
@@ -76,6 +78,7 @@ public class FlacTagReaderTest
         Assert.AreEqual("-3.21 dB", info.Tags.Tags.Single().Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_WithoutTags_StillReportsTheAudioFormat()
     {
@@ -89,6 +92,7 @@ public class FlacTagReaderTest
         Assert.AreEqual(TimeSpan.FromSeconds(1), info.Duration);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_NonFlacOrMissingFile_ReturnsEmptyRatherThanThrowing()
     {
@@ -99,6 +103,7 @@ public class FlacTagReaderTest
         Assert.AreEqual(FlacTagReader.FlacInfo.Empty, FlacTagReader.Read(Path.Combine(_tempRoot, "nope.flac")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanRead_OnlyClaimsFlacFiles()
     {

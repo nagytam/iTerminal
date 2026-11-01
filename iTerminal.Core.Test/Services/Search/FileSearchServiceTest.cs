@@ -31,6 +31,7 @@ public class FileSearchServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASearchCollectsItsHitsAndSaysHowItWent()
     {
@@ -46,6 +47,7 @@ public class FileSearchServiceTest
         Assert.IsTrue(changes >= 2, "once at the start and once at the end, at least");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANewSearchReplacesTheOldResults()
     {
@@ -58,6 +60,7 @@ public class FileSearchServiceTest
         Assert.AreEqual("file3*", service.Query!.NamePatterns);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedSearchIsReportedNotThrown()
     {
@@ -69,6 +72,7 @@ public class FileSearchServiceTest
         Assert.IsFalse(service.IsRunning);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingFoundIsSaidPlainly()
     {

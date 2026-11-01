@@ -93,6 +93,7 @@ public class OllamaRuntimeDependencyTest
         File.WriteAllText(binary, "program");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AssetName_PicksTheArchiveOfThePlatform()
     {
@@ -104,6 +105,7 @@ public class OllamaRuntimeDependencyTest
         Assert.IsNull(OllamaRuntimeDependency.AssetName(windows: false, macOS: false, Architecture.X86));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstalledVersion_IsNullUntilTheModelIsDownloaded()
     {
@@ -117,6 +119,7 @@ public class OllamaRuntimeDependencyTest
         Assert.AreEqual("0.40.4", dependency.InstalledVersion());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstalledVersion_IsNullWhenTheModelMarkerNamesAnotherModel()
     {
@@ -128,6 +131,7 @@ public class OllamaRuntimeDependencyTest
         Assert.IsNull(dependency.InstalledVersion());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Invalidate_ForgetsTheModelDownload()
     {
@@ -141,6 +145,7 @@ public class OllamaRuntimeDependencyTest
         Assert.IsNull(dependency.InstalledVersion());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsCompatible_StaysOnTheBuildsMinorLine()
     {
@@ -151,6 +156,7 @@ public class OllamaRuntimeDependencyTest
         Assert.IsFalse(dependency.IsCompatible(new Version(0, 41, 0)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Extract_UnpacksAZipAndRefusesAnEntryOutsideTheFolder()
     {
@@ -171,6 +177,7 @@ public class OllamaRuntimeDependencyTest
         Assert.IsFalse(File.Exists(Path.Combine(root, "escaped.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Extract_UnpacksATarZstWithItsLinksAndRefusesEntriesOutsideTheFolder()
     {
@@ -197,6 +204,7 @@ public class OllamaRuntimeDependencyTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_DownloadsVerifiesUnpacksAndPullsTheModel()
     {
@@ -262,6 +270,7 @@ public class OllamaRuntimeDependencyTest
         Assert.IsTrue(progress.Lines.Any(line => line.Contains("ready")), "The install says it is ready.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_RefusesADownloadThatDoesNotMatchItsDigest()
     {

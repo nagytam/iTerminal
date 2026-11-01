@@ -14,6 +14,7 @@ public class AiChatServiceSanitizeTest
         return (string)method.Invoke(null, [text])!;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sanitize_ThinkTags_AreRemoved()
     {
@@ -21,6 +22,7 @@ public class AiChatServiceSanitizeTest
         Assert.AreEqual("Hello!", Sanitize(input));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sanitize_MultilineThinkBlock_IsRemoved()
     {
@@ -28,6 +30,7 @@ public class AiChatServiceSanitizeTest
         Assert.AreEqual("Actual response.", Sanitize(input));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sanitize_AnsiColorCode_IsRemoved()
     {
@@ -35,6 +38,7 @@ public class AiChatServiceSanitizeTest
         Assert.AreEqual("Hello", Sanitize(input));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sanitize_AnsiCursorSequence_IsRemoved()
     {
@@ -42,6 +46,7 @@ public class AiChatServiceSanitizeTest
         Assert.AreEqual("textmore", Sanitize(input));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sanitize_PlainText_IsUnchanged()
     {
@@ -49,6 +54,7 @@ public class AiChatServiceSanitizeTest
         Assert.AreEqual(input, Sanitize(input));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sanitize_ThinkTagAndAnsi_BothRemoved()
     {

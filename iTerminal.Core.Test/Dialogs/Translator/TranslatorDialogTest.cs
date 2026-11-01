@@ -40,6 +40,7 @@ public class TranslatorDialogTest
 
     private static KeyEvent Key(ConsoleKey key) => new('\0', key, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Tab_LeavesTheInputPane_AndTheTranslationCanBeReachedFromTheKeyboard()
     {
@@ -82,6 +83,7 @@ public class TranslatorDialogTest
         return string.Join("\n", Enumerable.Range(0, height).Select(buffer.Line));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ItOpensWithDetectLanguageAndEnglishAndShowsTheKeys()
     {
@@ -97,6 +99,7 @@ public class TranslatorDialogTest
         StringAssert.Contains(screen, "Translation");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F5TranslatesInTheBackgroundAndShowsTheResultAndWhatWasDone()
     {
@@ -118,6 +121,7 @@ public class TranslatorDialogTest
         StringAssert.Contains(Drawn(dialog), "<Guten Tag>");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARequestCancelledLateDoesNotOverwriteTheNewerTranslation()
     {
@@ -154,6 +158,7 @@ public class TranslatorDialogTest
         Assert.IsFalse(dialog.Status.Contains("Cancelled", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailureIsShownInWordsAndLeavesTheOldTranslation()
     {
@@ -173,6 +178,7 @@ public class TranslatorDialogTest
         Assert.AreEqual("<Hello>", dialog.TranslationText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NothingToTranslateSaysSoWithoutAnyRequest()
     {
@@ -185,6 +191,7 @@ public class TranslatorDialogTest
         Assert.AreEqual(0, api.Calls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARequestIsNotAppliedUntilTheIdlePassSoNoWorkerTouchesTheScreen()
     {
@@ -200,6 +207,7 @@ public class TranslatorDialogTest
         Assert.AreEqual("<Hello>", dialog.TranslationText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnlyTheNewestRequestLands()
     {
@@ -218,6 +226,7 @@ public class TranslatorDialogTest
         Assert.AreEqual(2, api.Calls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F7DetectsTheLanguageAndTheInfoLineSaysIt()
     {
@@ -232,6 +241,7 @@ public class TranslatorDialogTest
         StringAssert.Contains(dialog.InfoLine(), "Japanese");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BeforeAnythingIsAskedTheInfoLineShowsTheOfflineGuess()
     {
@@ -242,6 +252,7 @@ public class TranslatorDialogTest
         StringAssert.Contains(dialog.InfoLine(), "German (a guess)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F6SwapsTheLanguagesAndBringsTheTranslationBack()
     {
@@ -261,6 +272,7 @@ public class TranslatorDialogTest
         Assert.AreEqual(string.Empty, dialog.TranslationText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F6WithNoKnownSourceAsksForOne()
     {
@@ -274,6 +286,7 @@ public class TranslatorDialogTest
         Assert.AreEqual("auto", dialog.FromBox.SelectedItem!.Code);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F8ClearsBothTexts()
     {
@@ -293,6 +306,7 @@ public class TranslatorDialogTest
         Assert.AreEqual(0, dialog.Output.TextModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnotherKeyWithdrawsTheClear_SoTheNextF8AsksAgain()
     {
@@ -308,6 +322,7 @@ public class TranslatorDialogTest
         StringAssert.Contains(dialog.Status, "Press F8 again");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F8WithNothingTypedClearsAtOnce_ThereIsNothingToLose()
     {
@@ -321,6 +336,7 @@ public class TranslatorDialogTest
         Assert.IsFalse(dialog.Status.Contains("Press F8 again"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheChoicesAreRememberedForTheNextTime()
     {
@@ -340,6 +356,7 @@ public class TranslatorDialogTest
         Assert.AreEqual(TranslationEngine.Llm, second.EngineBox.SelectedItem!.Engine);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnusableEngineIsSaidOnTheInfoLine()
     {
@@ -354,6 +371,7 @@ public class TranslatorDialogTest
         StringAssert.Contains(dialog.InfoLine(), "AI is off");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTranslationIsWrappedToThePaneInsteadOfScrollingSideways()
     {
@@ -368,6 +386,7 @@ public class TranslatorDialogTest
         Assert.IsTrue(dialog.Output.TextModel.Lines.AsSnapshot().All(line => line.Length <= width), "no line is wider than the pane");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("a b c d e f", 5, "a b c|d e f")]
     [DataRow("abcdefghij", 4, "abcd|efgh|ij")]
@@ -378,6 +397,7 @@ public class TranslatorDialogTest
         Assert.AreEqual(expected, string.Join('|', TranslatorDialog.Wrap(text, width)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {
@@ -389,6 +409,7 @@ public class TranslatorDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ItFitsAnEightyByTwentyFourScreen()
     {

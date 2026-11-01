@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Data;
 [TestClass]
 public class InstrumentValueTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesRequiredProperties()
     {
@@ -33,6 +34,7 @@ public class InstrumentValueTest
         Assert.AreEqual(sourceDateTime, value.SourceDateTime);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsGeneratedCorrectly()
     {
@@ -54,6 +56,7 @@ public class InstrumentValueTest
         Assert.AreEqual(expectedKey, value.Key);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_WithDifferentValueTypes_GeneratesDifferentKeys()
     {
@@ -87,6 +90,7 @@ public class InstrumentValueTest
         Assert.IsTrue(closeValue.Key.Contains("Close"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValueType_AllEnumValuesCanBeUsed()
     {
@@ -120,6 +124,7 @@ public class InstrumentValueTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Value_SupportsDecimalValues()
     {
@@ -142,6 +147,7 @@ public class InstrumentValueTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsRecord_CanCreateNewInstance()
     {

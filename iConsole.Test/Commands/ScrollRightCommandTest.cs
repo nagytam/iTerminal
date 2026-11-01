@@ -6,6 +6,7 @@ namespace iConsole.Commands.Test;
 [TestClass]
 public class ScrollRightCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TypeExists() => Assert.IsNotNull(typeof(ScrollRightCommand));
 }

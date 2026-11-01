@@ -41,6 +41,7 @@ public class Batch78LanguageTest
         return localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryKey()
     {
@@ -60,6 +61,7 @@ public class Batch78LanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheColumnsAndLabels_FitTheirWidthsInEveryLanguage()
     {
@@ -78,6 +80,7 @@ public class Batch78LanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheMessagesThatAreShownAndReported_FollowTheLanguage()
     {
@@ -90,6 +93,7 @@ public class Batch78LanguageTest
         StringAssert.Contains(ScreenManagerDialog.Hint, "Esc:schließen");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheEnglishTexts_AreUnchangedWithoutALanguage()
     {

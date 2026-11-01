@@ -7,6 +7,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class BeepServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void BeepServiceBeep()
     {
@@ -18,6 +19,7 @@ public class BeepServiceTest
         mockConsoleDriver.Verify(m => m.Beep(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BeepServiceMultipleBeeps()
     {

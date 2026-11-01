@@ -49,6 +49,7 @@ public class ConsoleBufferRendererJobSixelTest
         await run.WaitAsync(TimeSpan.FromSeconds(5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_APictureOverBlankCells_IsDrawnOnceAtItsCorner()
     {
@@ -63,6 +64,7 @@ public class ConsoleBufferRendererJobSixelTest
         driver.Verify(d => d.WriteGraphics(2, 1, Picture), Times.Once());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_APictureWithTextOverItsCells_IsNotDrawn()
     {
@@ -80,6 +82,7 @@ public class ConsoleBufferRendererJobSixelTest
         driver.Verify(d => d.WriteGraphics(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()), Times.Never());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_WithoutAnOverlay_NeverDrawsAPicture()
     {
@@ -92,6 +95,7 @@ public class ConsoleBufferRendererJobSixelTest
         driver.Verify(d => d.WriteGraphics(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()), Times.Never());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_APictureThatIsWithdrawn_HasItsCellsRewritten()
     {

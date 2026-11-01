@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Services;
 [TestClass]
 public class OnlineQuoteServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesInstruments()
     {
@@ -13,6 +14,7 @@ public class OnlineQuoteServiceTest
         Assert.IsNotNull(svc.Instruments);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Instruments_IsEmpty_Initially()
     {
@@ -20,6 +22,7 @@ public class OnlineQuoteServiceTest
         Assert.AreEqual(0, svc.Instruments.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Instruments_CanAddInstrument()
     {
@@ -30,6 +33,7 @@ public class OnlineQuoteServiceTest
         Assert.IsTrue(svc.Instruments.ContainsKey("BTC"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Instruments_CanRetrieveInstrument()
     {
@@ -40,6 +44,7 @@ public class OnlineQuoteServiceTest
         Assert.AreEqual("ETH", retrieved!.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Instruments_CanUpdateInstrument()
     {
@@ -53,6 +58,7 @@ public class OnlineQuoteServiceTest
         Assert.AreEqual("USD", svc.Instruments["BTC"].Currency);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Instruments_MultipleEntries_AllStored()
     {

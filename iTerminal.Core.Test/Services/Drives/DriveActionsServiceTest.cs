@@ -17,6 +17,7 @@ public class DriveActionsServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnlyDiskImagesAreMountable()
     {
@@ -25,6 +26,7 @@ public class DriveActionsServiceTest
         Assert.IsFalse(DriveActionsService.IsImage("a.zip"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(@"E:\", 'E')]
     [DataRow("e:", 'E')]
@@ -35,6 +37,7 @@ public class DriveActionsServiceTest
         Assert.AreEqual(expected, letter);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("")]
     [DataRow(@"E:\folder")]
@@ -45,6 +48,7 @@ public class DriveActionsServiceTest
         Assert.IsFalse(DriveActionsService.TryLetter(root, out _));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void QuotingDoublesTheQuoteAndFlattensNewlines()
     {
@@ -52,6 +56,7 @@ public class DriveActionsServiceTest
         Assert.AreEqual("'a b'", DriveActionsService.Quote("a\r\nb").Replace("  ", " "));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BitLockerValuesAreNamed()
     {
@@ -69,6 +74,7 @@ public class DriveActionsServiceTest
         Assert.AreEqual(BitLockerState.Unavailable, failed.State);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BitLockerIsReadThroughTheShellProperty()
     {
@@ -83,6 +89,7 @@ public class DriveActionsServiceTest
         StringAssert.Contains(script, "NameSpace('D:\\')");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EjectReportsASafeRemoval()
     {
@@ -96,6 +103,7 @@ public class DriveActionsServiceTest
         StringAssert.Contains(runner.Calls.Single().Arguments.Last(), "InvokeVerb('Eject')");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EjectOfAFixedDiskIsRefused()
     {
@@ -108,6 +116,7 @@ public class DriveActionsServiceTest
         StringAssert.Contains(result.Message, "not a removable drive");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EjectOfADriveInUseSaysSo()
     {
@@ -120,6 +129,7 @@ public class DriveActionsServiceTest
         StringAssert.Contains(result.Message, "in use");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EjectRefusesAnythingButALetter()
     {
@@ -132,6 +142,7 @@ public class DriveActionsServiceTest
         Assert.AreEqual(0, runner.Calls.Count, "nothing is run for a path that is not a drive");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FormatPassesTheLetterFileSystemAndLabel()
     {
@@ -148,6 +159,7 @@ public class DriveActionsServiceTest
         Assert.IsFalse(script.Contains("-Full"), "a quick format does not ask for the full pass");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFullFormatAsksForTheFullPass()
     {
@@ -159,6 +171,7 @@ public class DriveActionsServiceTest
         StringAssert.Contains(runner.Calls.Single().Arguments.Last(), "-Full");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FormatRefusesAFileSystemItDoesNotKnow()
     {
@@ -171,6 +184,7 @@ public class DriveActionsServiceTest
         Assert.AreEqual(0, runner.Calls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnAccessDeniedFormatSaysItNeedsAnAdministrator()
     {
@@ -183,6 +197,7 @@ public class DriveActionsServiceTest
         StringAssert.Contains(result.Message, "administrator");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSystemDriveAndTheOnesInUseCannotBeFormatted()
     {
@@ -195,6 +210,7 @@ public class DriveActionsServiceTest
         Assert.IsNotNull(service.WhyCannotFormat(@"\\server\share", []));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MountReportsTheLettersTheImageGot()
     {
@@ -208,6 +224,7 @@ public class DriveActionsServiceTest
         StringAssert.Contains(runner.Calls.Single().Arguments.Last(), "Mount-DiskImage -ImagePath 'C:\\isos\\disc.iso'");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MountRefusesAFileThatIsNotAnImage()
     {
@@ -219,6 +236,7 @@ public class DriveActionsServiceTest
         Assert.AreEqual(0, runner.Calls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UnmountDismountsByPath()
     {

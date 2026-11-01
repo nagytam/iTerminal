@@ -49,6 +49,7 @@ public class AiPromptBarTest
         return buffer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingBuildsThePrompt()
     {
@@ -62,6 +63,7 @@ public class AiPromptBarTest
         StringAssert.Contains(Render(bar).Line(0), "[m]> h");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClearsThePromptAndIsNotTypedIntoIt()
     {
@@ -74,6 +76,7 @@ public class AiPromptBarTest
         Assert.AreEqual(string.Empty, model.Input);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlCharactersAreNotTypedIntoThePrompt()
     {
@@ -84,6 +87,7 @@ public class AiPromptBarTest
         Assert.AreEqual(string.Empty, model.Input);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterSendsTheQuestion()
     {
@@ -95,6 +99,7 @@ public class AiPromptBarTest
         chat.Verify(c => c.SendMessageAsync(model, It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnAnEmptyPromptSendsNothing()
     {
@@ -105,6 +110,7 @@ public class AiPromptBarTest
         chat.Verify(c => c.SendMessageAsync(It.IsAny<AiChatModel>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhileTheModelIsUnavailableKeysAreLeftForOthers()
     {
@@ -115,6 +121,7 @@ public class AiPromptBarTest
         StringAssert.Contains(Render(bar).Line(0), "AI  unavailable: Ollama not running");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALongPromptShowsWhatIsBeingTyped()
     {
@@ -127,6 +134,7 @@ public class AiPromptBarTest
         StringAssert.Contains(line, "…");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ResponsesWrapAtWordsNotMidWord()
     {
@@ -139,6 +147,7 @@ public class AiPromptBarTest
         Assert.AreEqual("gamma", screen.Line(2).TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALongerAnswerSaysHowMuchMoreThereIs()
     {
@@ -150,6 +159,7 @@ public class AiPromptBarTest
         StringAssert.Contains(screen.Line(2), "↓ 3 more (PgDn)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PageDownAndPageUpScrollTheAnswer()
     {
@@ -177,6 +187,7 @@ public class AiPromptBarTest
         Assert.AreEqual(2, bar.ResponseScroll);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANewAnswerStartsAtItsTop()
     {
@@ -192,6 +203,7 @@ public class AiPromptBarTest
         Assert.AreEqual(0, bar.ResponseScroll);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AStreamingAnswerKeepsItsScrollPosition()
     {
@@ -206,6 +218,7 @@ public class AiPromptBarTest
         Assert.AreEqual(1, bar.ResponseScroll);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MoreIndicatorIsOverlaidOnTheRightEnd()
     {
@@ -220,6 +233,7 @@ public class AiPromptBarTest
     /// With no model behind it the bar used to keep its five rows, four of them blank, under a
     /// one-line "[server error (401)]".
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnavailableAssistantNeedsOneRow()
     {
@@ -230,6 +244,7 @@ public class AiPromptBarTest
         Assert.AreEqual(1, bar.PreferredHeight(5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WhileCheckingTheBarKeepsItsHeight()
     {
@@ -240,6 +255,7 @@ public class AiPromptBarTest
         Assert.AreEqual(5, bar.PreferredHeight(5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnAvailableAssistantKeepsItsHeight()
     {
@@ -248,6 +264,7 @@ public class AiPromptBarTest
         Assert.AreEqual(5, bar.PreferredHeight(5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheParentHearsWhenTheBarCollapsesAndExpands()
     {
@@ -263,6 +280,7 @@ public class AiPromptBarTest
         Assert.AreEqual(2, changes, "collapsed once, expanded once; a new reason is not a new height");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCollapsedBarSaysWhatIsWrongAndWhereToLook()
     {
@@ -275,6 +293,7 @@ public class AiPromptBarTest
         StringAssert.Contains(line, "Ctrl+F2");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ModelInfoIsCtrlF2NotAnAltLetterThePanelWouldTake()
     {
@@ -285,6 +304,7 @@ public class AiPromptBarTest
         Assert.IsFalse(command.Key.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesIntoThePrompt_OnOneLine()
     {
@@ -297,6 +317,7 @@ public class AiPromptBarTest
         Assert.AreEqual("please explain this error", model.Input);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PastingWhileTheModelIsUnavailableDoesNothing()
     {
@@ -308,6 +329,7 @@ public class AiPromptBarTest
         Assert.AreEqual(string.Empty, model.Input);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWDeletesTheLastWordOfThePrompt_AndCtrlUClearsIt()
     {
@@ -328,6 +350,7 @@ public class AiPromptBarTest
         model.Input = string.Empty;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpRecallsTheEarlierQuestions_AndDownWalksBackToTheDraft()
     {
@@ -351,6 +374,7 @@ public class AiPromptBarTest
         Assert.IsFalse(await bar.HandleKeyEventAsync(Key('\0', ConsoleKey.DownArrow)), "nothing more to walk");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AQuestionAskedTwiceInARow_IsKeptOnce_AndBlankOnesNotAtAll()
     {
@@ -368,6 +392,7 @@ public class AiPromptBarTest
         Assert.AreEqual("same", model.Input, "there is only one entry");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpAndDown_WithoutFocusOrHistory_AreLeftForOthers()
     {
@@ -383,6 +408,7 @@ public class AiPromptBarTest
         Assert.AreEqual(string.Empty, model.Input);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeLeavesTheHistoryWalk()
     {

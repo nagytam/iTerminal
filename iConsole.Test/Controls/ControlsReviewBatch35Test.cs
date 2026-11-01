@@ -25,6 +25,7 @@ public class ControlsReviewBatch35Test
         ScreenBuffer.Render(control, Math.Max(1, width), Math.Max(1, height));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void XyCharts_WithNoData_ShowTheEmptyText_AndAcceptANullOne()
     {
@@ -39,6 +40,7 @@ public class ControlsReviewBatch35Test
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void XyCharts_WithData_DrawAtEverySmallSize()
     {
@@ -55,6 +57,7 @@ public class ControlsReviewBatch35Test
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LogView_SplitsLines_TrimsToMaxLines_AndFiltersWithoutDeleting()
     {
@@ -72,6 +75,7 @@ public class ControlsReviewBatch35Test
         Assert.AreEqual(3, log.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LogView_NullTextAndNullFilter_AreAccepted_AndMaxLinesIsAtLeastOne()
     {
@@ -85,6 +89,7 @@ public class ControlsReviewBatch35Test
         DrawAt(log, 20, 3);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LogView_NotFollowing_CountsTheLinesThatArrive_AndFollowingClearsThem()
     {
@@ -100,6 +105,7 @@ public class ControlsReviewBatch35Test
         Assert.AreEqual(0, log.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BorderGlyphs_EveryStyleHasItsOwnSixGlyphs_AndNoneIsBlank()
     {
@@ -114,6 +120,7 @@ public class ControlsReviewBatch35Test
         Assert.AreEqual(none, BorderGlyphs.For((BorderStyle)99));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LanguageInfo_DefaultsToEnglish()
     {
@@ -123,6 +130,7 @@ public class ControlsReviewBatch35Test
         Assert.AreEqual("English", info.NativeName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CalendarState_RaisesChangedOnlyWhenTheDateReallyChanges()
     {
@@ -141,6 +149,7 @@ public class ControlsReviewBatch35Test
         Assert.AreEqual(other, state.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarkdownLine_KeepsItsParts()
     {
@@ -150,6 +159,7 @@ public class ControlsReviewBatch35Test
         Assert.AreEqual(string.Empty, line.Language);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheNullLoggers_AreSingletons_AndSwallowEverything()
     {
@@ -158,6 +168,7 @@ public class ControlsReviewBatch35Test
         NullScreenLogger.Instance.Capture("label", new BufferLayer(0, new Size(1, 1), Color.White, Color.Black), null);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SystemStopwatchFactory_StartsARunningStopwatch()
     {

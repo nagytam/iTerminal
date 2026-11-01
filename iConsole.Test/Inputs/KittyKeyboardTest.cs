@@ -17,6 +17,7 @@ public class KittyKeyboardTest
         return keys;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sequences_AreTheDocumentedOnes()
     {
@@ -25,6 +26,7 @@ public class KittyKeyboardTest
         Assert.AreEqual("\x1b[<u", KittyKeyboardProtocol.Pop);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Reply_MarksTheTerminalAsSupporting_AndEmitsNoKey()
     {
@@ -34,6 +36,7 @@ public class KittyKeyboardTest
         Assert.AreEqual(0, keys.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoReply_LeavesSupportOff()
     {
@@ -42,6 +45,7 @@ public class KittyKeyboardTest
         Assert.IsFalse(decoder.KittyKeyboardSupported);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Escape_IsEscape()
     {
@@ -51,6 +55,7 @@ public class KittyKeyboardTest
         Assert.IsFalse(key.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CtrlI_IsNotTab()
     {
@@ -61,6 +66,7 @@ public class KittyKeyboardTest
         Assert.IsFalse(key.Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CtrlM_IsNotEnter()
     {
@@ -70,6 +76,7 @@ public class KittyKeyboardTest
         Assert.IsTrue(key.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CtrlShiftLetter_KeepsBothModifiers()
     {
@@ -80,6 +87,7 @@ public class KittyKeyboardTest
         Assert.IsTrue(key.Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CtrlLetter_CarriesTheControlCharacterLikeTheLegacyDecoder()
     {
@@ -91,6 +99,7 @@ public class KittyKeyboardTest
         Assert.AreEqual(legacy.Control, kitty.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CtrlEnter_AndShiftEnter_AreTold_Apart()
     {
@@ -105,6 +114,7 @@ public class KittyKeyboardTest
         Assert.IsFalse(shift.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AltLetter_IsAlt()
     {
@@ -115,6 +125,7 @@ public class KittyKeyboardTest
         Assert.AreEqual('x', key.KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShiftLetter_WithShiftedCode_UsesTheShiftedCharacter()
     {
@@ -125,6 +136,7 @@ public class KittyKeyboardTest
         Assert.AreEqual('A', key.KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Digit_MapsToDigitKey()
     {
@@ -134,6 +146,7 @@ public class KittyKeyboardTest
         Assert.IsTrue(key.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CapsLockAndNumLockBits_AreIgnored()
     {
@@ -145,6 +158,7 @@ public class KittyKeyboardTest
         Assert.IsFalse(key.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyRelease_IsSwallowed()
     {
@@ -153,6 +167,7 @@ public class KittyKeyboardTest
         Assert.AreEqual(0, keys.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyRepeat_IsAPress()
     {
@@ -162,6 +177,7 @@ public class KittyKeyboardTest
         Assert.AreEqual(KeyPressType.Down, key.KeyPressType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PrivateUseCode_IsSwallowedAndNextKeyStillRead()
     {
@@ -171,6 +187,7 @@ public class KittyKeyboardTest
         Assert.AreEqual('x', keys[0].KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SequenceSplitAcrossReads_WaitsForTheRest()
     {
@@ -187,6 +204,7 @@ public class KittyKeyboardTest
         Assert.AreEqual(ConsoleKey.I, keys[0].ConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LegacyKeys_StillDecode()
     {

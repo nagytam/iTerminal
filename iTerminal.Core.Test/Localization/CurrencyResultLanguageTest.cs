@@ -36,6 +36,7 @@ public class CurrencyResultLanguageTest
             new CurrencyService(new CurrencyTest.FakeProvider(), settings), settings, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithNoRatesYetTheLineSaysSoInGerman()
     {
@@ -44,12 +45,14 @@ public class CurrencyResultLanguageTest
         Assert.AreEqual("Noch keine Kurse – F5 lädt sie herunter.", Create().ResultLine());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithNoRatesYetTheLineIsEnglishWithNoLanguageChosen()
     {
         Assert.AreEqual("No rates yet — press F5 to download them.", Create().ResultLine());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnAmountThatIsNotANumberIsQuotedInGerman()
     {

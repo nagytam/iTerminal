@@ -78,6 +78,7 @@ public class CursorShapeDriverTest
         Assert.AreEqual(CursorShape.Default, after);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDefaultDriverMemberDoesNothing()
     {

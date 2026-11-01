@@ -11,6 +11,7 @@ public class ControlsReviewBatch39Test
 {
     private readonly TestThemeService _theme = new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Size_NeverHoldsANegativeWidthOrHeight()
     {
@@ -25,6 +26,7 @@ public class ControlsReviewBatch39Test
         Assert.AreEqual(0, new Size(-4, -9).Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Position_NeverHoldsANegativeColumnOrRow()
     {
@@ -38,6 +40,7 @@ public class ControlsReviewBatch39Test
         Assert.AreEqual(0, new Position(-1, -1).Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABorderedControl_WithNoWidthOrHeight_DrawsNothing_AndDoesNotThrow()
     {

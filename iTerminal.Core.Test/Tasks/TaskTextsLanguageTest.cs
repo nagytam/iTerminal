@@ -29,6 +29,7 @@ public class TaskTextsLanguageTest
     private static string[] Placeholders(string text) =>
         [.. Regex.Matches(text, @"\{(\d+)\}").Select(m => m.Groups[1].Value).Distinct().Order()];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryTitle_AndKeepsItsPlaceholders()
     {
@@ -50,6 +51,7 @@ public class TaskTextsLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheTaskLines_FillTheirPlaceholders_InEveryLanguage()
     {

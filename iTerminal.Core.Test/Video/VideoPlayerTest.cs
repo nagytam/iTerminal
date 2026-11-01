@@ -23,6 +23,7 @@ public class VideoPlayerTest
         Assert.Fail($"Timed out waiting for {what}.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Start_ShowsTheFirstPictureWithoutPlaying()
     {
@@ -43,6 +44,7 @@ public class VideoPlayerTest
         Assert.AreEqual(version, player.FrameVersion);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Play_AdvancesFramesInStepWithTheClock()
     {
@@ -59,6 +61,7 @@ public class VideoPlayerTest
         Assert.IsTrue(player.Frame!.Time <= player.Position + TimeSpan.FromMilliseconds(100));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pause_FreezesPositionAndPicture()
     {
@@ -78,6 +81,7 @@ public class VideoPlayerTest
         Assert.AreEqual(version, player.FrameVersion);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Seek_ReopensTheDecoderAtTheTargetAndShowsThatPictureWhilePaused()
     {
@@ -94,6 +98,7 @@ public class VideoPlayerTest
         Assert.AreEqual(VideoPlaybackState.Stopped, player.State);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Seek_ClampsToTheVideo()
     {
@@ -108,6 +113,7 @@ public class VideoPlayerTest
         Assert.AreEqual(TimeSpan.Zero, player.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Resize_RemakesTheFramesAtTheNewSizeFromTheSamePosition()
     {
@@ -125,6 +131,7 @@ public class VideoPlayerTest
         Assert.AreEqual((TimeSpan.FromSeconds(3), 32, 8), decoder.Opens[^1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Resize_ToTheSameSizeDoesNotReopen()
     {
@@ -140,6 +147,7 @@ public class VideoPlayerTest
         Assert.AreEqual(opens, decoder.Opens.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EndOfStream_StopsAndGoesBackToTheFirstPicture()
     {
@@ -155,6 +163,7 @@ public class VideoPlayerTest
         Assert.AreEqual(string.Empty, player.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADecoderThatNeverDeliversIsReportedAndNotRetried()
     {
@@ -169,6 +178,7 @@ public class VideoPlayerTest
         Assert.IsNull(player.Frame);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Dispose_DisposesTheDecoderAndIsRepeatable()
     {

@@ -155,6 +155,7 @@ public class PrintDialogTest
         await UiTestHelper.WaitUntilAsync(() => _dialog.PrinterForTest == "Lab", "the remembered printer");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheRememberedPrinterSetting_IsNotAReservedKey()
     {
@@ -217,6 +218,7 @@ public class PrintDialogTest
         UiTestHelper.AssertScreenContains(Screen(), "lpstat is not installed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_AreNamed_WithoutDuplicates()
     {

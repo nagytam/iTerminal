@@ -22,6 +22,7 @@ public class LanguageTest
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.LanguageDialog, "the language dialog to open");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EnglishIsTheDefaultAndTheSelectorListsEveryLanguageByItsOwnName()
     {
@@ -40,6 +41,7 @@ public class LanguageTest
         Assert.AreEqual("en", _app.Driver.GetRequiredService<ILocalizer>().LanguageCode);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task PickingALanguageChangesTheFooterAndTheMenuAtOnceAndSavesTheChoice()
     {

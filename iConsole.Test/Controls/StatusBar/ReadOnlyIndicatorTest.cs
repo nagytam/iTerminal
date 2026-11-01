@@ -11,6 +11,7 @@ namespace iConsole.Test.Controls.StatusBar;
 [TestClass]
 public class ReadOnlyIndicatorTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CreatesInstance()
     {
@@ -22,6 +23,7 @@ public class ReadOnlyIndicatorTest
         Assert.IsNotNull(indicator);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsDefaultViewSize()
     {
@@ -34,6 +36,7 @@ public class ReadOnlyIndicatorTest
         Assert.AreEqual(1, indicator.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsReadOnlyWhenIsReadOnlyTrue()
     {
@@ -53,6 +56,7 @@ public class ReadOnlyIndicatorTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Read-Only"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsWritableWhenIsReadOnlyFalse()
     {
@@ -72,6 +76,7 @@ public class ReadOnlyIndicatorTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Writable"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PropertyChanged_OnReadOnly_TriggersStateChange()
     {
@@ -85,6 +90,7 @@ public class ReadOnlyIndicatorTest
         Assert.IsTrue(indicator.HasStateChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Indicator_IsInstanceOfStatusBarItem()
     {

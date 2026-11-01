@@ -19,6 +19,7 @@ public class TrustedHostStoreTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Check_RecordsANewHostThenTrustsIt()
     {
@@ -28,6 +29,7 @@ public class TrustedHostStoreTest
         Assert.AreEqual(HostTrust.Trusted, store.Check("ssh:example.org:22", "ssh-ed25519 SHA256:abc", out _));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Check_RefusesAChangedKeyAndReportsTheRecordedOne()
     {
@@ -41,6 +43,7 @@ public class TrustedHostStoreTest
         Assert.AreEqual(HostTrust.Changed, store.Check("ssh:example.org:22", "ssh-ed25519 SHA256:evil", out _), "a refusal must not record the new key");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Check_RemembersAcrossInstances()
     {
@@ -49,6 +52,7 @@ public class TrustedHostStoreTest
         Assert.AreEqual(HostTrust.Trusted, new TrustedHostStore(_path).Check("FTPS:example.org:21", "SHA256:AA", out _));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Forget_LetsTheNextKeyBeRecorded()
     {
@@ -60,6 +64,7 @@ public class TrustedHostStoreTest
         Assert.IsFalse(store.Forget("ssh:other:22"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Check_TreatsAnUnreadableFileAsEmpty()
     {

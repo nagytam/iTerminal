@@ -46,6 +46,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private JsonViewerDialog? _jsonViewerDialog { get; set; }
     private CsvViewerDialog? _csvViewerDialog { get; set; }
     private SqliteViewerDialog? _sqliteViewerDialog { get; set; }
+    private iTerminal.Core.Dialogs.Web.WebBrowserDialog? _webBrowserDialog { get; set; }
     private MarkPatternDialog? _markPatternDialog { get; set; }
     private MarkPatternDialog? _unmarkPatternDialog { get; set; }
     private CompressDialog? _compressDialog { get; set; }
@@ -113,10 +114,12 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         EditLinkDialog? editLinkDialog = null,
         iTerminal.Core.Services.Git.IGitService? gitService = null,
         CsvViewerDialog? csvViewerDialog = null,
+        iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
         PrintDialog? printDialog = null,
         SqliteViewerDialog? sqliteViewerDialog = null)
         : base(themeService)
     {
+        _webBrowserDialog = webBrowserDialog;
         _gitService = gitService;
         _csvViewerDialog = csvViewerDialog;
         _sqliteViewerDialog = sqliteViewerDialog;
@@ -336,6 +339,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_gitService is not null)
         {
             AddCommand(new GitPullRebaseCommand(ContentModelService, _gitService, _notificationService));
+            AddCommand(new GitSyncCommand(ContentModelService, _gitService, _notificationService));
         }
         if (_fileDiffDialog is not null)
         {
@@ -359,7 +363,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
         if (_fileViewerDialog is not null)
         {
-            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, sqliteViewerDialog: _sqliteViewerDialog));
+            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, _webBrowserDialog, sqliteViewerDialog: _sqliteViewerDialog));
         }
         if (_textFileEditorDialog is not null)
         {

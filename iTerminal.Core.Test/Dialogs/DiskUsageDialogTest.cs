@@ -69,6 +69,7 @@ public class DiskUsageDialogTest
 
     private static Task PressAsync(Fixture f, ConsoleKey key, char c = '\0') => f.Dialog.HandleKeyEventAsync(Key(key, c));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhileScanning_ItSaysSoAndTheBrowsingKeysDoNothing()
     {
@@ -85,6 +86,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhenDone_ItListsTheLevelLargestFirst_WithSizesAndShares()
     {
@@ -101,6 +103,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheArrowsHomeEndAndPages_MoveTheCursorAndStayInTheList()
     {
@@ -123,6 +126,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_GoesIntoAFolder_AndBackspaceComesOutWithTheCursorOnIt()
     {
@@ -140,6 +144,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RightAndLeft_DoWhatEnterAndBackspaceDo()
     {
@@ -152,6 +157,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnAFile_AndBackspaceAtTheTop_DoNothing()
     {
@@ -165,6 +171,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task S_SortsByNameFoldersFirst_AndAgainBySize()
     {
@@ -184,6 +191,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task R_MeasuresAgain_AndSeesWhatChanged()
     {
@@ -205,6 +213,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task G_PointsThePanelAtTheFolderUnderTheCursor_AndCloses()
     {
@@ -216,6 +225,7 @@ public class DiskUsageDialogTest
         Assert.IsFalse(f.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task G_OnAFile_GoesToTheFolderShown()
     {
@@ -227,6 +237,7 @@ public class DiskUsageDialogTest
         f.Panels.Verify(p => p.SetUrlAsync("Left", It.Is<Url>(u => u.FullUrl.Contains(Path.GetFileName(_folder)))), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task G_WithoutAPanelName_UsesTheFocusedPanel()
     {
@@ -247,6 +258,7 @@ public class DiskUsageDialogTest
         panels.Verify(p => p.SetUrlAsync(It.IsAny<Url>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_StopsAScanAndClosesTheDialog()
     {
@@ -259,6 +271,7 @@ public class DiskUsageDialogTest
         Assert.IsFalse(f.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderThatCannotBeRead_IsShownAsPartial()
     {
@@ -270,6 +283,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyFolder_SaysSo()
     {
@@ -285,6 +299,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNothingLoaded_ItSaysThereIsNothingToMeasure()
     {
@@ -302,6 +317,7 @@ public class DiskUsageDialogTest
         LeftClicked = true,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnARow_PutsTheCursorThere_AndASecondClickGoesIn()
     {
@@ -316,6 +332,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAFile_OnlySelectsIt()
     {
@@ -329,6 +346,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOutsideTheRows_DoesNothing()
     {
@@ -342,6 +360,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheel_MovesTheCursorThreeRows_AndStopsAtTheEnds()
     {
@@ -355,6 +374,7 @@ public class DiskUsageDialogTest
         f.Dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhileScanning_TheMouseDoesNothing()
     {

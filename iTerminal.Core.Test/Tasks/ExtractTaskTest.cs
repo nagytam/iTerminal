@@ -51,6 +51,7 @@ public class ExtractTaskTest
 
     private Url Destination => new(Path.Combine(_root, "dst") + Path.DirectorySeparatorChar);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EachArchiveGoesIntoAFolderNamedAfterIt()
     {
@@ -64,6 +65,7 @@ public class ExtractTaskTest
         StringAssert.Contains(task.Description, "Extracted 2 file(s) from 2 of 2 archive(s)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task IntoOneFolderTheSecondCopyIsLeftAlone()
     {
@@ -75,6 +77,7 @@ public class ExtractTaskTest
         StringAssert.Contains(task.Description, "1 file(s) already there were left alone");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALockedArchiveFailsAndTheOthersStillGo()
     {
@@ -87,6 +90,7 @@ public class ExtractTaskTest
         Assert.AreEqual(iConsole.Data.TaskStatus.Completed, task.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnArchiveOnTheMemoryDriveUnpacksIntoAFolderOnTheMemoryDrive()
     {
@@ -103,6 +107,7 @@ public class ExtractTaskTest
         Assert.AreEqual("alpha", System.Text.Encoding.UTF8.GetString(file!.Content!));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDestinationIsAFolderInsideTheTarget()
     {

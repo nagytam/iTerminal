@@ -7,6 +7,7 @@ namespace iTerminal.Core.Test.Services.FileAssociations;
 [TestClass]
 public class FileLauncherUrlTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("file:///etc/passwd")]
     [DataRow("javascript:alert(1)")]

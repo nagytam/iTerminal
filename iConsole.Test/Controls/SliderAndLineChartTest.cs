@@ -18,6 +18,7 @@ public class SliderAndLineChartTest
         return m.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_ThumbColumn_And_ValueAt_RoundTrip()
     {
@@ -27,6 +28,7 @@ public class SliderAndLineChartTest
         Assert.AreEqual(50, Slider.ValueAt(5, 0, 100, 11));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_Value_IsClampedAndRaisesEvent()
     {
@@ -39,6 +41,7 @@ public class SliderAndLineChartTest
         Assert.AreEqual(1, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_Draw_PutsThumbOnTrack()
     {
@@ -47,6 +50,7 @@ public class SliderAndLineChartTest
         Assert.AreEqual("━━●──", buffer.ContentAsString.Split(Environment.NewLine)[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_RangeChangedWithTheValueUnchanged_RequestsARepaint()
     {
@@ -60,6 +64,7 @@ public class SliderAndLineChartTest
         Assert.AreEqual(2, slider.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LineChart_Render_RisingSeriesFillsDiagonal()
     {
@@ -68,6 +73,7 @@ public class SliderAndLineChartTest
         Assert.AreNotEqual('⠀', rows[0][0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LineChart_Render_EmptySeriesIsBlankBraille()
     {

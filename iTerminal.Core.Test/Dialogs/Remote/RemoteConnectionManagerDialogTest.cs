@@ -45,6 +45,7 @@ public class RemoteConnectionManagerDialogTest
     private static Task EnterAsync(RemoteConnectionManagerDialog dialog) =>
         dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyManagerSaysHowToAddAConnection()
     {
@@ -55,6 +56,7 @@ public class RemoteConnectionManagerDialogTest
         AssertScreenContains(Render(h.Dialog), "N adds an SSH, PowerShell, FTP or WebDAV connection");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANewSshConnectionIsSavedFromTheForm()
     {
@@ -82,6 +84,7 @@ public class RemoteConnectionManagerDialogTest
         AssertScreenContains(Render(h.Dialog), "alice@example.com");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SpaceOnTheTypeFieldSwitchesToPowerShell()
     {
@@ -99,6 +102,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual(RemoteProtocol.PowerShell, h.Connections.GetAll().Single().Protocol);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABadHostIsNotSavedAndTheFormStaysOpen()
     {
@@ -117,6 +121,7 @@ public class RemoteConnectionManagerDialogTest
         StringAssert.Contains(h.Dialog.StatusForTest, "host");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterLendsTheTerminalToAnSshSession()
     {
@@ -134,6 +139,7 @@ public class RemoteConnectionManagerDialogTest
         StringAssert.Contains(h.Dialog.StatusForTest, "ended");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASessionThatThrows_SaysWhy_NotLeftConnecting()
     {
@@ -150,6 +156,7 @@ public class RemoteConnectionManagerDialogTest
         StringAssert.DoesNotMatch(h.Dialog.StatusForTest, new System.Text.RegularExpressions.Regex("Connecting"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASessionThatCannotStartSaysWhy()
     {
@@ -166,6 +173,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.IsNull(h.Connections.GetAll().Single().LastConnectedUtc);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NoSecondSessionStartsWhileOneRuns()
     {
@@ -180,6 +188,7 @@ public class RemoteConnectionManagerDialogTest
         StringAssert.Contains(h.Dialog.StatusForTest, "already running");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BBrowsesAnSshHostInThePanel()
     {
@@ -197,6 +206,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual("alice", opened.Username);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BRefusesAHostOnAnotherPort()
     {
@@ -210,6 +220,7 @@ public class RemoteConnectionManagerDialogTest
         StringAssert.Contains(h.Dialog.StatusForTest, "port 22");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteAsksFirstAndYConfirms()
     {
@@ -224,6 +235,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual(0, h.Connections.GetAll().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyOtherKeyCancelsADelete()
     {
@@ -238,6 +250,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual(1, h.Connections.GetAll().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesIntoTheHost_AndOnlyDigitsIntoThePort()
     {
@@ -261,6 +274,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual(2200, saved.Port);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVOnTheTypeFieldDoesNothing_AndCtrlUClearsAField()
     {
@@ -305,6 +319,7 @@ public class RemoteConnectionManagerDialogTest
         return h;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickHighlightsAConnection_AndTheWheelMovesThreeAtATime()
     {
@@ -319,6 +334,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual(4, h.Dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickBelowTheLastConnectionDoesNothing_AndTheWheelStopsAtTheEnds()
     {
@@ -333,6 +349,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual(0, h.Dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMouseLeavesTheListAloneInTheEditForm()
     {
@@ -345,6 +362,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual(0, h.Dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWDeletesTheLastWordOfAField_ButNotOnTheTypeToggle()
     {
@@ -365,6 +383,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual(RemoteProtocol.Ssh, saved.Protocol);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HomeAndEndJumpToTheFirstAndLastConnection()
     {
@@ -392,6 +411,7 @@ public class RemoteConnectionManagerDialogTest
         return new FileDriveHarness(new Harness(dialog, connections, shell, panels), profiles, passwords);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnFtpConnectionIsSavedFromTheFormWithItsPasswordInThePasswordManager()
     {
@@ -430,6 +450,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.IsFalse(System.Text.Json.JsonSerializer.Serialize(saved).Contains("s3cret", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnAnFtpConnectionOpensItsDriveInThePanel()
     {
@@ -450,6 +471,7 @@ public class RemoteConnectionManagerDialogTest
         h.Base.Shell.Verify(s => s.RunAsync(It.IsAny<ShellLaunch>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SpaceOnTheTypeFieldCyclesThroughWebDavOverHttpAndHttps()
     {
@@ -473,6 +495,7 @@ public class RemoteConnectionManagerDialogTest
         Assert.AreEqual("davs://dav.example.com/", saved.DriveUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnAnEightyColumnScreen_TheHeaderSentenceIsNotCutOff()
     {

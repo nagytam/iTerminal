@@ -14,6 +14,7 @@ public class MouseDragMappingTest
         dwEventFlags = flags,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MovingWithTheLeftButtonDown_IsADrag_NotAClick()
     {
@@ -25,6 +26,7 @@ public class MouseDragMappingTest
         Assert.AreEqual(3, mouseEvent.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MovingWithNoButtonOrTheRightButton_IsNotADrag()
     {
@@ -32,6 +34,7 @@ public class MouseDragMappingTest
         Assert.IsFalse(MouseEventPublisherJob.MapMouseEvent(Record(MOUSE_EVENT_RECORD.RIGHTMOST_BUTTON_PRESSED, MOUSE_EVENT_RECORD.MouseMoved)).IsDrag);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APressAReleaseAndTheWheel_AreNotDrags()
     {

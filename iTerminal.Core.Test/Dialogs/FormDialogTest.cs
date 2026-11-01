@@ -29,6 +29,7 @@ public class FormDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingACharacter_ClearsTheError()
     {
@@ -39,6 +40,7 @@ public class FormDialogTest
         Assert.AreEqual(1, form.ClearCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BackspaceAndDelete_ClearTheError()
     {
@@ -50,6 +52,7 @@ public class FormDialogTest
         Assert.AreEqual(2, form.ClearCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NavigationAndConfirmKeys_KeepTheError()
     {
@@ -63,6 +66,7 @@ public class FormDialogTest
         Assert.AreEqual(0, form.ClearCount, "the error stays until the user changes what it is about");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AChord_IsNotTyping_SoItKeepsTheError()
     {
@@ -73,6 +77,7 @@ public class FormDialogTest
         Assert.AreEqual(0, form.ClearCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ButtonRow_OnANarrowDialog_DoesNotShareColumnsWithThePrimaryButton()
     {
@@ -86,6 +91,7 @@ public class FormDialogTest
             $"primary {primary.Position.X}..{primary.Position.X + primary.ViewSize.Width} overlaps cancel from {cancel.Position.X}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ButtonRow_OnAWideDialog_RightAlignsCancel()
     {

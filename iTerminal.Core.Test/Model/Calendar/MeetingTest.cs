@@ -9,6 +9,7 @@ public class MeetingTest
 {
     private static readonly DateOnly Day = new(2026, 10, 14);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AStartAndATitleMakeAnHourLongMeeting()
     {
@@ -18,6 +19,7 @@ public class MeetingTest
         Assert.AreEqual(new Meeting(Day, new TimeOnly(14, 30), 60, "Standup"), meeting);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANumberAfterTheTimeIsTheDurationInMinutes()
     {
@@ -28,6 +30,7 @@ public class MeetingTest
         Assert.AreEqual("Design review", meeting.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDescriptionShowsTheWholeSlot()
     {
@@ -36,6 +39,7 @@ public class MeetingTest
         Assert.AreEqual("14:30–15:15  Standup", meeting.Describe());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("")]
     [DataRow("14:30")]
@@ -51,6 +55,7 @@ public class MeetingTest
         Assert.IsFalse(string.IsNullOrWhiteSpace(error));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMeetingThatWouldRunPastMidnightIsRefused()
     {
@@ -59,6 +64,7 @@ public class MeetingTest
         Assert.AreEqual("A meeting has to end on the same day", error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheStoreKeepsMeetingsAcrossInstances()
     {
@@ -78,6 +84,7 @@ public class MeetingTest
         settings.Verify(s => s.Write(), Times.AtLeastOnce);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADamagedSettingDoesNotStopTheCalendarOpening()
     {
@@ -89,6 +96,7 @@ public class MeetingTest
         Assert.AreEqual(0, store.On(Day).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RemovingAMeetingForgetsIt()
     {

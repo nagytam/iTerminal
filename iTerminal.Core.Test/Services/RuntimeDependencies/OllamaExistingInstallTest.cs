@@ -84,6 +84,7 @@ public class OllamaExistingInstallTest
 
     private static StubHandler Offline() => new(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnExistingProgramIsFoundButNotComplete_UntilTheModelIsThere()
     {
@@ -95,6 +96,7 @@ public class OllamaExistingInstallTest
         StringAssert.Contains(dependency.ExistingInstallNote!, "only the " + Model);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnExistingProgramWithTheModelMarkerIsInstalledAndNotUpdatedFromHere()
     {
@@ -108,6 +110,7 @@ public class OllamaExistingInstallTest
         StringAssert.Contains(dependency.ExistingInstallNote!, "already installed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingOnDiskAndNoServerIsMissing()
     {
@@ -119,6 +122,7 @@ public class OllamaExistingInstallTest
         Assert.IsNull(dependency.ExistingInstallNote);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AProgramInsideTheDataFolderIsNotAnExistingInstall()
     {
@@ -128,6 +132,7 @@ public class OllamaExistingInstallTest
         Assert.IsNull(OllamaRuntimeDependency.FindExistingBinary([root], root));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARunningServerIsRecognisedWithItsVersionAndModels()
     {
@@ -152,6 +157,7 @@ public class OllamaExistingInstallTest
         Assert.IsTrue(dependency.IsExistingInstall);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_UsesTheExistingServerAndOnlyDownloadsTheModel()
     {
@@ -186,6 +192,7 @@ public class OllamaExistingInstallTest
         Assert.AreEqual("0.9.1", dependency.InstalledVersion());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_DoesNotPullAModelTheServerAlreadyHolds()
     {
@@ -204,6 +211,7 @@ public class OllamaExistingInstallTest
         Assert.IsTrue(File.Exists(Path.Combine(root, OllamaRuntimeDependency.ModelMarker)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ModelsDirectoryFor_IsOnlyGivenToTheProgramOfTheDataFolder()
     {

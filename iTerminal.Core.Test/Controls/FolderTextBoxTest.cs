@@ -14,12 +14,14 @@ public class FolderTextBoxTest
     private static FolderTextBox Create(string text) =>
         new(Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme()) { Text = text };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidatesAsANewFolder()
     {
         Assert.IsInstanceOfType<FolderValidationModel>(Create(string.Empty).ValidationModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyBoxIsInvalidButSaysNothing()
     {
@@ -31,6 +33,7 @@ public class FolderTextBoxTest
         Assert.AreEqual(string.Empty, box.ValidationModel.ErrorMessage, "an untouched field is not an error; the button stays disabled instead");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFolderThatAlreadyExistsIsRejectedAndSaysWhy()
     {
@@ -42,6 +45,7 @@ public class FolderTextBoxTest
         Assert.AreEqual(UrlValidationModel.ExistsMessage, box.ValidationModel.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANewFolderUnderAnExistingOneIsAccepted()
     {

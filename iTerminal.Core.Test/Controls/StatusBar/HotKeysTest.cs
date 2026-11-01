@@ -40,6 +40,7 @@ public class HotKeysTest
     private static List<Button> Visible(HotKeys hotKeys) =>
         [.. hotKeys.Controls.AsSnapshot().OfType<Button>().Where(b => b.IsVisible)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheBaseLayerShowsThePlainFunctionKeys()
     {
@@ -53,6 +54,7 @@ public class HotKeysTest
         Assert.IsTrue(Visible(hotKeys).All(b => b.Commands.First().Key is { Alt: false, Control: false, Shift: false }));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HoldingAltShowsOnlyTheAltChords()
     {
@@ -66,6 +68,7 @@ public class HotKeysTest
         Assert.IsTrue(visible.All(b => b.Commands.First().Key is { Alt: true, Control: false, Shift: false }));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HoldingControlShowsOnlyTheControlChords()
     {
@@ -77,6 +80,7 @@ public class HotKeysTest
         Assert.IsTrue(Visible(hotKeys).All(b => b.Commands.First().Key is { Control: true, Alt: false, Shift: false }));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ButtonsArePackedLeftToRightWithoutOverlapping()
     {
@@ -93,6 +97,7 @@ public class HotKeysTest
         Assert.AreEqual(visible.Sum(b => (long)b.ViewSize.Width), hotKeys.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AtNaturalWidthEveryLabelFitsItsButton()
     {
@@ -103,6 +108,7 @@ public class HotKeysTest
         Assert.IsTrue(Visible(hotKeys).All(b => b.ViewSize.Width == b.Title.Length + 2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnANarrowScreenTheRowIsShrunkToFitLeavingRoomForTheClock()
     {
@@ -114,6 +120,7 @@ public class HotKeysTest
         Assert.IsTrue(Visible(hotKeys).All(b => b.ViewSize.Width >= 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReleasingTheModifierBringsBackTheBaseLayer()
     {
@@ -132,6 +139,7 @@ public class HotKeysTest
     /// "Ctrl-C-Calc" (the calculator is Ctrl+A; Ctrl+C quits) and the Alt layer "Alt-F6-Tasks" for the
     /// theme manager.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryButtonNamesTheKeyItsCommandIsBoundTo()
     {
@@ -160,6 +168,7 @@ public class HotKeysTest
         Assert.AreEqual(0, mismatches.Count, string.Join(Environment.NewLine, mismatches));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheThemeButtonIsNamedForThemes()
     {
@@ -172,6 +181,7 @@ public class HotKeysTest
     /// Too narrow for the full labels, the long words are cut to a common length and the short ones
     /// kept: every button used to be scaled alike — "[F1-Hel][F2-Termi][F3-Vie]".
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void ShorteningCutsTheLongWordsAndKeepsTheShortOnes()
     {
@@ -183,6 +193,7 @@ public class HotKeysTest
         CollectionAssert.AreEqual(new[] { 9, 10, 9, 11 }, widths, "[F1-Help][F2-Termi][F3-View][F12-Scree]");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BelowReadableWordsTheExpendableButtonsAreLeftOutFirst()
     {
@@ -202,6 +213,7 @@ public class HotKeysTest
     }
 
     /// <summary>The first cut of this left F10-Quit out at 80 columns while F7 and F8 stayed.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void HelpAndQuitAreTheLastToGo()
     {
@@ -215,6 +227,7 @@ public class HotKeysTest
         Assert.AreEqual(0, widths[3], "F7, the rightmost of the rest, gives way instead");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnATinyScreenTheKeysThatAreLeftAreKeptDownToALetter()
     {
@@ -226,6 +239,7 @@ public class HotKeysTest
         CollectionAssert.AreEqual(new[] { 6, 0, 0, 7 }, widths, "[F1-H][F10-Q]: half the buttons, Help and Quit kept, never a cut key");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void At100ColumnsTheBaseLayerKeepsReadableWords()
     {
@@ -251,6 +265,7 @@ public class HotKeysTest
     /// lays this row out again — so below about 100 columns the renderer never went idle and nothing
     /// that waits for an idle pass ran (the disk manager said "No drives found" with three drives).
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void LayingOutANarrowRowAgainChangesNoVisibility()
     {

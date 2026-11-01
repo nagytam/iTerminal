@@ -26,6 +26,7 @@ namespace iTerminal.Core.Test.Generated;
 [TestClass]
 public class InstantiateAllTypesTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void InstantiatePublicTypesFromLocalAssemblies()
     {

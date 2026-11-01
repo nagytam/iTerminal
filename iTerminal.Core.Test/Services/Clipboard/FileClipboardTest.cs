@@ -64,6 +64,7 @@ public class FileClipboardTest
 
     private static Url Folder(string path) => new(path.TrimEnd('\\', '/') + Path.DirectorySeparatorChar);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DropFilesRoundTrips()
     {
@@ -77,6 +78,7 @@ public class FileClipboardTest
         Assert.AreEqual(1, BitConverter.ToInt32(block, 16), "the names are wide");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADropBlockWithNoNamesIsEmpty()
     {
@@ -84,6 +86,7 @@ public class FileClipboardTest
         Assert.AreEqual(0, WindowsFileClipboardService.ParseDropFiles(WindowsFileClipboardService.BuildDropFiles([])).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheLinuxFormatCarriesCopyOrCutAndFileUris()
     {
@@ -99,6 +102,7 @@ public class FileClipboardTest
         Assert.IsNull(LinuxFileClipboardService.TryParse("some text"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheInProcessClipboardHoldsWhatWasSet()
     {
@@ -122,6 +126,7 @@ public class FileClipboardTest
             throw new IOException("clipboard busy");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailingSystemClipboardFallsBackToTheProcessOne()
     {
@@ -134,6 +139,7 @@ public class FileClipboardTest
         CollectionAssert.AreEqual(new[] { "a" }, content.Paths.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PastingACopyBesideItsOriginalNamesItLikeExplorer()
     {
@@ -147,6 +153,7 @@ public class FileClipboardTest
         Assert.AreEqual(0, plan.Skipped.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCopyNumberCountsUpWhileTheNameIsTaken()
     {
@@ -159,6 +166,7 @@ public class FileClipboardTest
         Assert.AreEqual("report - Copy (2).txt", Path.GetFileName(plan.Targets[0].FullUrl));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PastingIntoAnotherFolderKeepsTheName()
     {
@@ -171,6 +179,7 @@ public class FileClipboardTest
         Assert.AreEqual(file, plan.Sources[0].Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CuttingIntoTheSameFolderDoesNothing()
     {
@@ -182,6 +191,7 @@ public class FileClipboardTest
         Assert.AreEqual(1, plan.Skipped.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFolderCannotBePastedIntoItself()
     {
@@ -194,6 +204,7 @@ public class FileClipboardTest
         StringAssert.Contains(plan.Skipped[0], "into itself");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilesThatAreGoneAreSkippedAndSaidSo()
     {
@@ -205,6 +216,7 @@ public class FileClipboardTest
         StringAssert.Contains(plan.Skipped[0], "no longer exists");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CopyNamesKeepTheExtensionAndNumberFolders()
     {

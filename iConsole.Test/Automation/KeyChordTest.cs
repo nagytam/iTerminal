@@ -5,6 +5,7 @@ namespace iConsole.Test.Automation;
 [TestClass]
 public class KeyChordTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("F1", ConsoleKey.F1)]
     [DataRow("f5", ConsoleKey.F5)]
@@ -24,9 +25,11 @@ public class KeyChordTest
         Assert.IsFalse(key.Shift || key.Alt || key.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EnterCarriesACarriageReturn() => Assert.AreEqual('\r', KeyChord.Parse("Enter").KeyChar);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CtrlLetterCarriesItsControlCode()
     {
@@ -38,6 +41,7 @@ public class KeyChordTest
         Assert.AreEqual((char)7, key.KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShiftIsOnlyAddedToAChordWhenItIsNamed()
     {
@@ -47,6 +51,7 @@ public class KeyChordTest
         Assert.AreEqual(ConsoleKey.M, key.ConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AltLetterCarriesTheLetter()
     {
@@ -57,6 +62,7 @@ public class KeyChordTest
         Assert.AreEqual('g', key.KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ModifiersCombineInAnyOrderAndCase()
     {
@@ -66,6 +72,7 @@ public class KeyChordTest
         Assert.IsTrue(key.Shift && key.Control && key.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACapitalLetterIsShifted()
     {
@@ -76,6 +83,7 @@ public class KeyChordTest
         Assert.AreEqual('T', key.KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShiftTabIsTabWithShift()
     {
@@ -85,6 +93,7 @@ public class KeyChordTest
         Assert.IsTrue(key.Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePlusKeyCanBeNamed()
     {
@@ -95,6 +104,7 @@ public class KeyChordTest
         Assert.IsTrue(key.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DigitsMapToTheDigitKeys()
     {
@@ -104,6 +114,7 @@ public class KeyChordTest
         Assert.AreEqual('3', key.KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBecomesOneKeyPerCharacter()
     {
@@ -115,6 +126,7 @@ public class KeyChordTest
         Assert.IsFalse(keys[1].Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANewLineInTextIsEnter()
     {
@@ -124,6 +136,7 @@ public class KeyChordTest
         Assert.AreEqual('\r', key.KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("Hyper+A")]
     [DataRow("F25")]
@@ -131,6 +144,7 @@ public class KeyChordTest
     public void AnUnknownChordIsRejected(string chord) =>
         Assert.ThrowsExactly<FormatException>(() => KeyChord.Parse(chord));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyChordIsRejected() =>
         Assert.ThrowsExactly<ArgumentException>(() => KeyChord.Parse(string.Empty));

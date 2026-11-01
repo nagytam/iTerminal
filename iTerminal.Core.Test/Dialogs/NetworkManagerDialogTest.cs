@@ -9,6 +9,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class NetworkManagerDialogTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NoInterfacesIsSaidRatherThanLeftBlank()
     {
@@ -26,6 +27,7 @@ public class NetworkManagerDialogTest
         AssertScreenContains(Render(dialog), "No network interfaces found.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheListFillsTheDialog()
     {
@@ -39,6 +41,7 @@ public class NetworkManagerDialogTest
         Assert.AreEqual(dialog.ViewSize.Height - 2, list.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {
@@ -52,6 +55,7 @@ public class NetworkManagerDialogTest
     }
 
     /// <summary>A name longer than its column is shortened so the status column stays a column.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void ALongInterfaceNameKeepsTheColumnsAligned()
     {

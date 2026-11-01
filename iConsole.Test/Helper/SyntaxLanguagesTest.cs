@@ -24,6 +24,7 @@ public class SyntaxLanguagesTest
         return spans.Select(s => (line.Substring(s.Start, s.Length), s.Kind)).ToList();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryBuiltInLanguage_HasASampleFile()
     {
@@ -36,6 +37,7 @@ public class SyntaxLanguagesTest
             "a new language needs a sample file in SampleFiles and a row in ColoursItsOwnRules");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("x.ts", "const x = \"s\"; // c", "const", "\"s\"", "// c", "C-like")]
     [DataRow("x.cs", "return \"s\"; // c", "return", "\"s\"", "// c", "C#")]
@@ -88,6 +90,7 @@ public class SyntaxLanguagesTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("x.php", "$class = $this;", "class")]
     [DataRow("x.php", "$echo = 1;", "echo")]
@@ -100,12 +103,14 @@ public class SyntaxLanguagesTest
         CollectionAssert.DoesNotContain(Spans(file, line), (name, SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Php_IsCaseInsensitive_LikeThePhpLanguage()
     {
         CollectionAssert.Contains(Spans("x.php", "ECHO \"s\";"), ("ECHO", SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Perl_ColoursAPlainHashKeyWordLikeAKeyword_OnlyAfterASigilItIsAName()
     {
@@ -114,6 +119,7 @@ public class SyntaxLanguagesTest
         CollectionAssert.Contains(Spans("x.pl", "keys %h"), ("keys", SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sql_KeepsADoubledQuoteInsideTheString_AndColoursBacktickNames()
     {
@@ -122,6 +128,7 @@ public class SyntaxLanguagesTest
         CollectionAssert.Contains(Spans("x.psql", "WITH r AS (SELECT 1) SELECT * FROM r"), ("WITH", SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void R_ColoursNumbersAndSuffixedNumbers()
     {

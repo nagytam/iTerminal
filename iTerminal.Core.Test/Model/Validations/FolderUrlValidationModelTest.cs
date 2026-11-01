@@ -20,6 +20,7 @@ public class FolderUrlValidationModelTest
         return new FolderUrlValidationModel(new TextModel(text), dateTimeProviderService.Object);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyText_IsInvalidAndSaysWhat()
     {
@@ -29,6 +30,7 @@ public class FolderUrlValidationModelTest
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(validationModel.ErrorMessage, "path");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("file://C:/Windows")]
     [DataRow("ssh://tamas@example.com:/home/")]
@@ -49,12 +51,14 @@ public class FolderUrlValidationModelTest
         Assert.AreEqual(string.Empty, validationModel.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AKnownScheme_IsRecognisedRegardlessOfCase()
     {
         Assert.IsTrue(Validate("SSH://tamas@example.com:/home/").IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnknownScheme_IsRejectedAndPointsAtTheList()
     {
@@ -64,12 +68,14 @@ public class FolderUrlValidationModelTest
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(validationModel.ErrorMessage, "scheme");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnExistingLocalFolder_IsValid()
     {
         Assert.IsTrue(Validate(Path.GetTempPath()).IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALocalFolderThatIsNotThere_IsInvalid()
     {
@@ -79,12 +85,14 @@ public class FolderUrlValidationModelTest
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(validationModel.ErrorMessage, "No such folder");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SurroundingSpace_IsIgnored()
     {
         Assert.IsTrue(Validate("  " + Path.GetTempPath() + "  ").IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SupportedSchemes_CoverEverySchemeTheAppDeclares()
     {
@@ -103,6 +111,7 @@ public class FolderUrlValidationModelTest
         CollectionAssert.AreEquivalent(declaredSchemes, FolderUrlValidationModel.SupportedSchemes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HasSupportedScheme_IsWhatTheHintLineAndTheValidatorBothAskDirectly()
     {
@@ -110,6 +119,7 @@ public class FolderUrlValidationModelTest
         Assert.IsFalse(FolderUrlValidationModel.HasSupportedScheme(@"C:\Windows"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoModel_IsValid()
     {

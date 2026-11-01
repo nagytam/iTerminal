@@ -18,6 +18,7 @@ public class PersistedValuesCompletionModelTest
         return settings;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Load_SkipsBlankEntriesAndDuplicates()
     {
@@ -26,6 +27,7 @@ public class PersistedValuesCompletionModelTest
         CollectionAssert.AreEqual(new[] { "alpha", "beta" }, model.Completions.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Insert_AddsTheValueAndSavesTheWholeList()
     {
@@ -37,6 +39,7 @@ public class PersistedValuesCompletionModelTest
         settings.Verify(s => s.Set(Key, "alpha;gamma"), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Insert_OfAValueAlreadyKept_IsNotAddedTwice()
     {
@@ -48,6 +51,7 @@ public class PersistedValuesCompletionModelTest
         CollectionAssert.AreEqual(new[] { "alpha", "beta" }, model.Completions.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Insert_OfABlankValue_IsNotRememberedOrSaved()
     {
@@ -61,6 +65,7 @@ public class PersistedValuesCompletionModelTest
         settings.Verify(s => s.Set(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Insert_OfAValueWithASemicolon_IsNotRemembered_SoItDoesNotSplitTheHistory()
     {
@@ -74,6 +79,7 @@ public class PersistedValuesCompletionModelTest
         settings.Verify(s => s.Set(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UpdateMatchingValues_MatchesAnywhereIgnoringCase()
     {
@@ -88,6 +94,7 @@ public class PersistedValuesCompletionModelTest
         CollectionAssert.AreEqual(new[] { "Documents", "My Docs" }, model.MatchingValues.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UpdateMatchingValues_EmptyText_OffersEverything()
     {

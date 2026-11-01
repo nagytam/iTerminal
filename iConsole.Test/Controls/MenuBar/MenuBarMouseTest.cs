@@ -43,6 +43,7 @@ public class MenuBarMouseTest
         return new Rig { Bar = bar, File = file, Edit = edit, Quit = quit, Recent = recent, Nested = nested, QuitCommand = quitCommand };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOnATitle_OpensItsDropDownAndMakesTheBarModal()
     {
@@ -52,6 +53,7 @@ public class MenuBarMouseTest
         Assert.IsTrue(rig.Bar.IsModal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOnAnotherTitle_SwitchesMenus()
     {
@@ -62,6 +64,7 @@ public class MenuBarMouseTest
         Assert.IsTrue(rig.Edit.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOnTheOpenTitle_ClosesTheMenu()
     {
@@ -72,6 +75,7 @@ public class MenuBarMouseTest
         Assert.IsFalse(rig.Bar.IsModal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOnALeafEntry_RunsItsCommandAndClosesTheMenu()
     {
@@ -85,6 +89,7 @@ public class MenuBarMouseTest
         Assert.IsFalse(rig.Bar.IsModal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOnABranchEntry_OpensItsSubmenu()
     {
@@ -95,6 +100,7 @@ public class MenuBarMouseTest
         Assert.IsTrue(rig.File.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOnASeparatorOrTheBorder_KeepsTheMenuOpen()
     {
@@ -107,6 +113,7 @@ public class MenuBarMouseTest
         rig.QuitCommand.Verify(c => c.RunAsync(null), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOutsideAnOpenMenu_ClosesItAndIsSwallowed()
     {
@@ -117,6 +124,7 @@ public class MenuBarMouseTest
         Assert.IsFalse(rig.Bar.IsModal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOffTheTitlesWithNothingOpen_IsNotHandled()
     {
@@ -126,6 +134,7 @@ public class MenuBarMouseTest
         Assert.IsFalse(rig.File.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OtherMouseButtonsAndTheWheel_DoNotOpenAMenu()
     {
@@ -135,6 +144,7 @@ public class MenuBarMouseTest
         Assert.IsFalse(rig.File.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOnTheCloseButtonInTheBorder_ClosesTheMenu()
     {
@@ -146,6 +156,7 @@ public class MenuBarMouseTest
         Assert.IsFalse(rig.Bar.IsModal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOnTheBorderBesideTheCloseButton_KeepsTheMenuOpen()
     {

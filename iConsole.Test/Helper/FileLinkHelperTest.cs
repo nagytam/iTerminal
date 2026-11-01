@@ -44,6 +44,7 @@ public class FileLinkHelperTest
         return link;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnOrdinaryFolder_IsNotALink()
     {
@@ -51,6 +52,7 @@ public class FileLinkHelperTest
         Assert.IsNull(FileLinkHelper.GetLinkTarget(Path.Combine(_root, "tree")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALinkToAFolderElsewhere_DoesNotLeadToAnAncestor()
     {
@@ -60,6 +62,7 @@ public class FileLinkHelperTest
         Assert.IsFalse(FileLinkHelper.LeadsToAnAncestor(link));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALinkToItsOwnParent_LeadsToAnAncestor()
     {
@@ -68,6 +71,7 @@ public class FileLinkHelperTest
         Assert.IsTrue(FileLinkHelper.LeadsToAnAncestor(link));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALinkToItself_LeadsToAnAncestor()
     {
@@ -76,6 +80,7 @@ public class FileLinkHelperTest
         Assert.IsTrue(FileLinkHelper.LeadsToAnAncestor(link));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALinkToTheRootOfTheDisk_LeadsToAnAncestor()
     {
@@ -86,6 +91,7 @@ public class FileLinkHelperTest
         Assert.IsTrue(FileLinkHelper.LeadsToAnAncestor(link));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFolderThatIsNotALink_IsNotTakenForOne()
     {

@@ -102,6 +102,7 @@ public class ControlRobustnessSweepTest
         return $"{exception.GetType().Name}: {exception.Message.Split(Environment.NewLine)[0]} @ {where}";
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EveryControl_SurvivesDrawKeysAndClicks_AtAwkwardSizes()
     {
@@ -153,6 +154,7 @@ public class ControlRobustnessSweepTest
         Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures.GroupBy(f => f[..f.IndexOf(' ')]).Select(g => g.First()).Take(40)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSweepCoversTheSimpleControls()
     {

@@ -41,6 +41,7 @@ public class EditorStatusBarTest
             mockThemeService.Object);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CreatesInstance()
     {
@@ -49,6 +50,7 @@ public class EditorStatusBarTest
         Assert.IsNotNull(statusBar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsName()
     {
@@ -57,6 +59,7 @@ public class EditorStatusBarTest
         Assert.AreEqual("EditorStatusBar", statusBar.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_HasFixedHeight()
     {
@@ -65,6 +68,7 @@ public class EditorStatusBarTest
         Assert.AreEqual(1, statusBar.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_HasChildControls()
     {
@@ -73,6 +77,7 @@ public class EditorStatusBarTest
         Assert.IsTrue(statusBar.Controls.Count > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EditorStatusBar_IsInstanceOfStatusBar()
     {
@@ -81,6 +86,7 @@ public class EditorStatusBarTest
         Assert.IsInstanceOfType(statusBar, typeof(global::iConsole.Controls.StatusBar.StatusBar));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_DoesNotThrow()
     {
@@ -117,6 +123,7 @@ public class EditorStatusBarTest
         statusBar.Draw(buffer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CannotBeFocused()
     {

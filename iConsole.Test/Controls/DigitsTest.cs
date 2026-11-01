@@ -10,6 +10,7 @@ public class DigitsTest
 {
     private readonly TestThemeService _theme = new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALargeZeroIsFiveRowsOfDoubleWidthBlocks()
     {
@@ -18,6 +19,7 @@ public class DigitsTest
         CollectionAssert.AreEqual(new[] { "██████", "██  ██", "██  ██", "██  ██", "██████" }, rows.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACompactOneUsesHalfBlocks()
     {
@@ -26,6 +28,7 @@ public class DigitsTest
         CollectionAssert.AreEqual(new[] { "▄█ ", " █ ", "▀▀▀" }, rows.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CharactersAreSeparatedByOneBlankDotColumn()
     {
@@ -34,6 +37,7 @@ public class DigitsTest
         Assert.AreEqual(0, Digits.Measure(string.Empty, DigitsStyle.Large));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AColonIsNarrow()
     {
@@ -42,6 +46,7 @@ public class DigitsTest
         CollectionAssert.AreEqual(new[] { "  ", "██", "  ", "██", "  " }, Digits.Render(":", DigitsStyle.Large).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryRowOfARenderIsAsWideAsTheMeasure()
     {
@@ -54,12 +59,14 @@ public class DigitsTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LowercaseLettersUseTheCapitalGlyphs()
     {
         CollectionAssert.AreEqual(Digits.Render("ABCDEF", DigitsStyle.Large).ToArray(), Digits.Render("abcdef", DigitsStyle.Large).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACharacterTheFontLacksIsLeftBlank()
     {
@@ -69,6 +76,7 @@ public class DigitsTest
         Assert.AreEqual(Digits.Measure(" ", DigitsStyle.Large), rows[0].Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryDigitIsDistinct()
     {
@@ -77,6 +85,7 @@ public class DigitsTest
         Assert.AreEqual(10, glyphs.Distinct().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawPaintsTheTextAndBlanksTheRestOfTheRectangle()
     {
@@ -91,6 +100,7 @@ public class DigitsTest
         Assert.AreEqual(string.Empty, buffer.Text(7, 1, 6).Trim(), "right of the digits");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AChangedTextLeavesNothingOfTheOldBehind()
     {
@@ -104,6 +114,7 @@ public class DigitsTest
         Assert.AreEqual(string.Empty, buffer.Text(8, 0, 12).Trim());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheTextCanBeAlignedRightOrCentred()
     {
@@ -119,6 +130,7 @@ public class DigitsTest
         Assert.AreEqual("██████", buffer.Text(5, 0, 6));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextWiderThanTheControlIsCutAtItsEdge()
     {
@@ -131,6 +143,7 @@ public class DigitsTest
         Assert.AreEqual(string.Empty, buffer.Text(8, 0, 12).Trim(), "nothing spills past the rectangle");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheColoursCanBeSetAndOtherwiseComeFromTheTheme()
     {
@@ -148,6 +161,7 @@ public class DigitsTest
         Assert.AreNotEqual(Color.Red, themed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MeasuredSizeIsWhatTheTextNeeds()
     {

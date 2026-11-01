@@ -36,6 +36,7 @@ public class CreateFolderDialogCommandTest
 
     // ── constructor ──────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsShiftF7Key()
     {
@@ -54,6 +55,7 @@ public class CreateFolderDialogCommandTest
 
     // ── ExecuteAsync ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenContentModelServiceIsNull_DoesNotThrow()
     {
@@ -66,6 +68,7 @@ public class CreateFolderDialogCommandTest
         await command.ExecuteAsync(null);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_SetsBaseUrlFromContentModelService()
     {
@@ -91,6 +94,7 @@ public class CreateFolderDialogCommandTest
         control.Verify(c => c.ShowDialogAsync(dialog, It.IsAny<IControl?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithoutControl_DoesNotSeedDialogOrThrow()
     {
@@ -111,6 +115,7 @@ public class CreateFolderDialogCommandTest
 
     // ── ContentBrowser integration ───────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentBrowser_WithCreateFolderDialog_RegistersCreateFolderDialogCommand()
     {
@@ -143,6 +148,7 @@ public class CreateFolderDialogCommandTest
         Assert.IsTrue(hasCommand, "ContentBrowser should register CreateFolderDialogCommand when a CreateFolderDialog is supplied.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentBrowser_WithoutCreateFolderDialog_DoesNotRegisterCreateFolderDialogCommand()
     {
@@ -174,6 +180,7 @@ public class CreateFolderDialogCommandTest
 
     // ── FilePanelFactory integration ─────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithCreateFolderDialog_CreatesFilePanel()
     {
@@ -202,6 +209,7 @@ public class CreateFolderDialogCommandTest
         Assert.IsNotNull(panel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithoutCreateFolderDialog_CreatesFilePanel()
     {

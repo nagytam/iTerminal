@@ -45,6 +45,7 @@ public class FileConflictPolicyTest
         return (new Url(source), new Url(target));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Overwrite_Replaces_Skip_Keeps_Rename_WritesNewName()
     {
@@ -64,6 +65,7 @@ public class FileConflictPolicyTest
         StringAssert.EndsWith(rename.Target.FullUrl, "dst (2).txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rename_PicksTheLowestFreeNumber()
     {
@@ -75,6 +77,7 @@ public class FileConflictPolicyTest
         StringAssert.EndsWith(renamed.FullUrl, "dst (4).txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeepNewer_SourceNewer_Overwrites()
     {
@@ -86,6 +89,7 @@ public class FileConflictPolicyTest
         Assert.IsTrue(decision.Replace);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeepNewer_TargetNewer_Skips()
     {
@@ -96,6 +100,7 @@ public class FileConflictPolicyTest
         Assert.IsTrue(decision!.Skip);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeepNewer_EqualDates_AsksAgain()
     {
@@ -105,6 +110,7 @@ public class FileConflictPolicyTest
         Assert.IsNull(FileConflictPolicy.Decide(FileConflictChoice.KeepNewer, source, target, _ => true));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeepLarger_EqualSizes_AsksAgain()
     {
@@ -113,6 +119,7 @@ public class FileConflictPolicyTest
         Assert.IsNull(FileConflictPolicy.Decide(FileConflictChoice.KeepLarger, source, target, _ => true));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeepLarger_LargerSourceOverwrites_SmallerSourceSkips()
     {
@@ -123,6 +130,7 @@ public class FileConflictPolicyTest
         Assert.IsTrue(FileConflictPolicy.Decide(FileConflictChoice.KeepLarger, smallSource, smallTarget, _ => true)!.Skip);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Metadata_IsUnknown_ForNonLocalPaths()
     {

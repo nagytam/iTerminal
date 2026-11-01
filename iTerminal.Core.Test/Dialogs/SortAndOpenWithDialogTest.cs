@@ -71,6 +71,7 @@ public class SortAndOpenWithDialogTest
 
     private static Task PressAsync(SortRig rig, ConsoleKey key, char c = '\0') => rig.Dialog.HandleKeyEventAsync(Key(key, c));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Sort_ListsTheOrders_WithTheCursorOnTheCurrentOne_AndADotOnTheAppliedOne()
     {
@@ -84,6 +85,7 @@ public class SortAndOpenWithDialogTest
         AssertScreenContains(screen, "Enter:apply");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Sort_TheArrowsHomeAndEnd_MoveTheCursorWithinTheList()
     {
@@ -101,6 +103,7 @@ public class SortAndOpenWithDialogTest
         Assert.AreEqual(SortDialog.Modes[^1], rig.Dialog.Selected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Sort_EnterAppliesTheChosenOrder_SavesItForThePanel_AndCloses()
     {
@@ -117,6 +120,7 @@ public class SortAndOpenWithDialogTest
         Assert.IsFalse(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Sort_AModesFirstLetterChoosesItAtOnce_AndRLeavesTheDialogOpen()
     {
@@ -131,6 +135,7 @@ public class SortAndOpenWithDialogTest
         Assert.IsFalse(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Sort_AsListedIsNeverReversed()
     {
@@ -142,6 +147,7 @@ public class SortAndOpenWithDialogTest
         Assert.AreEqual(new PanelSort(PanelSortMode.AsListed, false), rig.Applied);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Sort_OnAPanelWhoseOrderIsItsContent_ChangesNothingButStillCloses()
     {
@@ -154,6 +160,7 @@ public class SortAndOpenWithDialogTest
         Assert.IsFalse(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Sort_EscapeAndKeysWithControl_DoNotApplyAnything()
     {
@@ -172,6 +179,7 @@ public class SortAndOpenWithDialogTest
         LeftClicked = true,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Sort_AClickOnAnOrder_AppliesIt()
     {
@@ -183,6 +191,7 @@ public class SortAndOpenWithDialogTest
         Assert.IsFalse(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Sort_AClickOnReversed_FlipsItAndLeavesTheDialogOpen()
     {
@@ -197,6 +206,7 @@ public class SortAndOpenWithDialogTest
         Assert.IsFalse(rig.Dialog.Descending);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Sort_AClickOnTheBlankLineOrOutside_DoesNothing_AndTheWheelMovesTheCursor()
     {
@@ -262,6 +272,7 @@ public class SortAndOpenWithDialogTest
 
     private static readonly FileAssociation[] TwoPrograms = [Program("a", "Notepad"), Program("b", "Editor")];
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_ListsTheProgramsDefaultFirst_ThenTheSystemDefault()
     {
@@ -276,6 +287,7 @@ public class SortAndOpenWithDialogTest
         AssertScreenContains(screen, "notepad %f");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_ForEditing_OffersTheBuiltInEditorOnlyWhenThereIsOne()
     {
@@ -287,6 +299,7 @@ public class SortAndOpenWithDialogTest
         Assert.AreEqual(0, without.Dialog.Choices.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_WithNoProgramAtAll_SaysHowToAddOne_AndEnterDoesNothing()
     {
@@ -299,6 +312,7 @@ public class SortAndOpenWithDialogTest
         Assert.IsFalse(await rig.Dialog.OpenSelectedAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_EnterOpensTheFileWithTheChosenProgram_AndCloses()
     {
@@ -312,6 +326,7 @@ public class SortAndOpenWithDialogTest
         Assert.IsFalse(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_TheSystemDefaultRow_OpensItWithTheSystem()
     {
@@ -324,6 +339,7 @@ public class SortAndOpenWithDialogTest
         rig.Launcher.Verify(l => l.OpenWithSystemDefaultAsync(rig.Dialog.FilePath, It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_TheBuiltInEditorRow_RunsTheEditorCallback()
     {
@@ -340,6 +356,7 @@ public class SortAndOpenWithDialogTest
         Assert.IsFalse(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_PagesHomeAndEnd_MoveWithinTheList()
     {
@@ -357,6 +374,7 @@ public class SortAndOpenWithDialogTest
         Assert.AreEqual("Program 00", rig.Dialog.Selected!.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_DelAsksFirst_OnlyYRemoves_AndTheRowsThatAreAlwaysThereCannotBeRemoved()
     {
@@ -378,6 +396,7 @@ public class SortAndOpenWithDialogTest
         Assert.AreEqual(string.Empty, rig.Dialog.Question);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_SpaceMakesTheChosenProgramTheDefault()
     {
@@ -391,6 +410,7 @@ public class SortAndOpenWithDialogTest
         Assert.AreEqual("Editor", rig.Dialog.Selected!.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_ListChangedUnderneath_IsFollowedOnIdle()
     {
@@ -409,6 +429,7 @@ public class SortAndOpenWithDialogTest
         LeftClicked = true,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_AClickOnARow_OpensTheFileWithIt()
     {
@@ -421,6 +442,7 @@ public class SortAndOpenWithDialogTest
         Assert.IsFalse(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_AClickBelowTheRows_OrWhileTheQuestionIsUp_DoesNothing()
     {
@@ -436,6 +458,7 @@ public class SortAndOpenWithDialogTest
         rig.Launcher.Verify(l => l.LaunchAsync(It.IsAny<FileAssociation>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_TheWheel_MovesTheChoiceThreeRows()
     {
@@ -449,6 +472,7 @@ public class SortAndOpenWithDialogTest
         Assert.AreEqual("Program 00", rig.Dialog.Selected!.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Sort_KeyHints_NameTheKeysTheDialogTakes()
     {
@@ -459,6 +483,7 @@ public class SortAndOpenWithDialogTest
         CollectionAssert.IsSubsetOf(new[] { "Up/Down", "Enter", "R/Space" }, keys);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenWith_KeyHints_ListTheCommands_AndWhileTheRemoveQuestionIsUpOnlyItsAnswers()
     {

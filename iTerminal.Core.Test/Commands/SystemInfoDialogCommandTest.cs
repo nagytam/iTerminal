@@ -9,6 +9,7 @@ namespace iTerminal.Core.Commands.Test;
 [TestClass]
 public class SystemInfoDialogCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsCtrlF11_AndItHasATitleAndDescription()
     {

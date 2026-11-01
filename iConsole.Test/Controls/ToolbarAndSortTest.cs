@@ -30,6 +30,7 @@ public class ToolbarAndSortTest
         return toolbar;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toolbar_Draw_ShowsCaptionsAndHints()
     {
@@ -38,6 +39,7 @@ public class ToolbarAndSortTest
         Assert.AreEqual(" Open F3   Save   Close", Lines(buffer)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Toolbar_Arrows_SkipDisabledItems()
     {
@@ -49,6 +51,7 @@ public class ToolbarAndSortTest
         Assert.AreEqual(0, toolbar.ActiveIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Toolbar_Enter_InvokesActiveItem()
     {
@@ -60,6 +63,7 @@ public class ToolbarAndSortTest
         Assert.AreEqual(0, invoked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Toolbar_Click_InvokesEnabledItemOnly()
     {
@@ -85,6 +89,7 @@ public class ToolbarAndSortTest
         return table;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Table_ColumnAt_MapsHeaderCells()
     {
@@ -95,6 +100,7 @@ public class ToolbarAndSortTest
         Assert.AreEqual(-1, table.ColumnAt(25));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Table_HeaderClick_RaisesSortRequested()
     {
@@ -106,6 +112,7 @@ public class ToolbarAndSortTest
         Assert.AreEqual(0, table.CursorRow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Table_SortedColumn_ShowsArrowInHeader()
     {

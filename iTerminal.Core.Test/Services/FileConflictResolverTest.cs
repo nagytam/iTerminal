@@ -27,6 +27,7 @@ public class FileConflictResolverTest
         return null!;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OverwriteAll_NeverPrompts()
     {
@@ -39,6 +40,7 @@ public class FileConflictResolverTest
         Assert.AreEqual(0, prompts.PromptCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Legacy_NeverPrompts_AndThrowsAlreadyExists()
     {
@@ -51,6 +53,7 @@ public class FileConflictResolverTest
         Assert.AreEqual(0, prompts.PromptCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ApplyToAll_CarriesTheAnswerToLaterConflicts()
     {
@@ -65,6 +68,7 @@ public class FileConflictResolverTest
         Assert.AreEqual(1, prompts.PromptCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Cancel_InvokesCancelRun_AndThrows()
     {

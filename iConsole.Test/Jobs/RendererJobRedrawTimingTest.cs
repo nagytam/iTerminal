@@ -7,6 +7,7 @@ namespace iConsole.Jobs.Test;
 [TestClass]
 public class RendererJobRedrawTimingTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ControlRendererJob_TriggersRedrawEvery500ms()
     {
@@ -28,6 +29,7 @@ public class RendererJobRedrawTimingTest
         Assert.IsTrue(triggered);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsoleBufferRendererJob_TriggersRedrawEvery500ms()
     {

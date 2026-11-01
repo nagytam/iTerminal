@@ -9,6 +9,7 @@ public class RuntimeDependencyServiceTest
     private static RuntimeDependencyService NewService(ISettingsService settings, FakeRuntimeDependency dependency) =>
         new(settings, [dependency]);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnlyTheDependenciesNamedAreInstalled()
     {
@@ -23,6 +24,7 @@ public class RuntimeDependencyServiceTest
         Assert.AreEqual(RuntimeDependencyState.Missing, service.Statuses.Single(status => status.Id == "first").State);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnlyTheDependenciesNamedAreSkipped()
     {
@@ -38,6 +40,7 @@ public class RuntimeDependencyServiceTest
         Assert.IsTrue(service.ShouldOfferAtStartup, "The one not skipped is still offered.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMissingDependencyIsOfferedAtTheVersionTheBuildWasCompiledAgainst()
     {
@@ -52,6 +55,7 @@ public class RuntimeDependencyServiceTest
         Assert.AreEqual(1, dependency.Activations, "The installed version is pointed at when the service starts.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AMissingDependencyIsInstalledAtTheNewestVersionOnItsLine()
     {
@@ -64,6 +68,7 @@ public class RuntimeDependencyServiceTest
         Assert.AreEqual("1.63.4", service.Statuses.Single().TargetVersion);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUpToDateDependencyIsNotOffered()
     {
@@ -76,6 +81,7 @@ public class RuntimeDependencyServiceTest
         Assert.IsFalse(service.ShouldOfferAtStartup);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANewerVersionOnTheSameLineIsAnUpdateAndALaterLineIsOnlyANote()
     {
@@ -97,6 +103,7 @@ public class RuntimeDependencyServiceTest
         Assert.IsTrue(service.ShouldOfferAtStartup);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SkippingAnOfferHidesItUntilANewerVersionAppears()
     {
@@ -116,6 +123,7 @@ public class RuntimeDependencyServiceTest
         Assert.IsTrue(service.ShouldOfferAtStartup, "A version newer than the skipped one is offered again.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AVersionSeenByAnEarlierRunIsOfferedWithoutTheNetwork()
     {
@@ -129,6 +137,7 @@ public class RuntimeDependencyServiceTest
         Assert.AreEqual("1.63.2", service.Statuses.Single().TargetVersion);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedCheckKeepsWhatIsInstalledAndSaysWhy()
     {
@@ -147,6 +156,7 @@ public class RuntimeDependencyServiceTest
         Assert.IsFalse(service.ShouldOfferAtStartup);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InstallingAMissingDependencyInstallsTheBuildsVersionAndLogsIt()
     {
@@ -163,6 +173,7 @@ public class RuntimeDependencyServiceTest
         Assert.IsTrue(service.IsInstalled("fake"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedInstallIsLoggedAndDoesNotEscape()
     {
@@ -176,6 +187,7 @@ public class RuntimeDependencyServiceTest
         Assert.IsTrue(service.Log.Any(line => line.Contains("could not be installed: disk is full")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InvalidatingAnInstalledDependencyReportsItMissing()
     {

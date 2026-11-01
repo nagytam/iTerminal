@@ -20,6 +20,7 @@ public class FormErrorClearingTest
         return service.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Copy_AFailureIsShown_AndLeavesOnTyping()
     {
@@ -34,6 +35,7 @@ public class FormErrorClearingTest
         Assert.AreEqual(string.Empty, dialog.ErrorMessage.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Delete_TheErrorLeavesOnBackspace()
     {
@@ -48,6 +50,7 @@ public class FormErrorClearingTest
         Assert.AreEqual(string.Empty, dialog.ErrorMessage.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rename_TheErrorLeavesOnTyping_ButNotOnAChord()
     {
@@ -62,6 +65,7 @@ public class FormErrorClearingTest
         Assert.AreEqual(string.Empty, dialog.ErrorMessage.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MarkPattern_TheErrorLeavesOnTyping()
     {

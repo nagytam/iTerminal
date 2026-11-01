@@ -24,6 +24,7 @@ public class TerminalOutputTabPageTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowsTheLastCommandsOutputLineByLine()
     {
@@ -36,6 +37,7 @@ public class TerminalOutputTabPageTest
         CollectionAssert.AreEqual(new[] { "one", "two", "three" }, page.LinesForTest.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACommandWithNoOutputSaysSo()
     {
@@ -46,6 +48,7 @@ public class TerminalOutputTabPageTest
         CollectionAssert.AreEqual(new[] { "(the command wrote no output)" }, page.LinesForTest.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoHistoryThePageSaysSo()
     {
@@ -56,6 +59,7 @@ public class TerminalOutputTabPageTest
         CollectionAssert.AreEqual(new[] { TerminalTextTabPage.NoCommandText }, page.LinesForTest.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheViewerIsLaidOutEvenWhenThereIsNothingToShow()
     {
@@ -69,6 +73,7 @@ public class TerminalOutputTabPageTest
         Assert.AreEqual(new Size(38, 7), viewer.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NameAndHotKey()
     {

@@ -44,6 +44,7 @@ public class CopyDialogCommandTest
 
     // ── constructor ──────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsF5Key()
     {
@@ -62,6 +63,7 @@ public class CopyDialogCommandTest
 
     // ── CanExecute ───────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedEntryIsFile_ReturnsTrue()
     {
@@ -87,6 +89,7 @@ public class CopyDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenNoFocusedModel_ReturnsFalse()
     {
@@ -101,6 +104,7 @@ public class CopyDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedEntryUrlIsNull_ReturnsFalse()
     {
@@ -122,6 +126,7 @@ public class CopyDialogCommandTest
 
     // ── ExecuteAsync ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenContentModelServiceIsNull_DoesNotThrow()
     {
@@ -136,6 +141,7 @@ public class CopyDialogCommandTest
 
     // ── ContentBrowser integration ───────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithCopyDialog_RegistersCopyDialogCommand()
     {
@@ -167,6 +173,7 @@ public class CopyDialogCommandTest
         Assert.IsTrue(hasCommand, "ContentBrowser should register CopyDialogCommand when a CopyDialog is supplied.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithoutCopyDialog_DoesNotRegisterCopyDialogCommand()
     {
@@ -198,6 +205,7 @@ public class CopyDialogCommandTest
 
     // ── FilePanelFactory integration ─────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithCopyDialog_CreatesFilePanel()
     {
@@ -226,6 +234,7 @@ public class CopyDialogCommandTest
         Assert.IsNotNull(panel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithoutCopyDialog_CreatesFilePanel()
     {
@@ -253,6 +262,7 @@ public class CopyDialogCommandTest
     }
 
     /// <summary>F5 used to accept files only, so a folder could not be copied with any key.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedEntryIsFolder_ReturnsTrue()
     {
@@ -265,6 +275,7 @@ public class CopyDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_OnTheParentRow_ReturnsFalse()
     {

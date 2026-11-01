@@ -52,6 +52,7 @@ public class StockServiceTest
         Assert.IsTrue(condition(), "the condition was not met in time");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDefaultWatchlistIsTheTechStocksSpaceXEthereumAndBitcoin()
     {
@@ -63,6 +64,7 @@ public class StockServiceTest
         Assert.AreEqual("Bitcoin", service.Watchlist.Last().Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AddingAStockKeepsItAcrossRestarts()
     {
@@ -77,6 +79,7 @@ public class StockServiceTest
         Assert.AreEqual(10, restarted.Watchlist.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASymbolTheSourceDoesNotKnowIsNotAdded()
     {
@@ -89,6 +92,7 @@ public class StockServiceTest
         Assert.AreEqual(9, service.Watchlist.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AStockAlreadyOnTheListIsNotAddedTwice()
     {
@@ -99,6 +103,7 @@ public class StockServiceTest
         StringAssert.Contains(exception.Message, "already on the list");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RemovingAStockTakesItOffTheListAndStaysRemoved()
     {
@@ -112,6 +117,7 @@ public class StockServiceTest
         Assert.AreEqual(8, restarted.Watchlist.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptiedListStaysEmptyInsteadOfReturningToTheDefaults()
     {
@@ -124,6 +130,7 @@ public class StockServiceTest
         Assert.AreEqual(0, new StockService(settings, provider).Watchlist.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshingFillsInTheQuotesAndRaisesChanged()
     {
@@ -141,6 +148,7 @@ public class StockServiceTest
         Assert.IsTrue(changes > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NoQuotesAtAllIsReportedAndKeepsTheOldOnes()
     {
@@ -157,6 +165,7 @@ public class StockServiceTest
         Assert.IsNotNull(service.GetQuote("AAPL"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AProviderThatThrowsIsReportedNotRaised()
     {
@@ -171,6 +180,7 @@ public class StockServiceTest
         Assert.AreEqual("offline", service.LastError);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AStockRemovedIsNotQuotedAgain()
     {
@@ -183,6 +193,7 @@ public class StockServiceTest
         Assert.IsNull(service.GetQuote("INTC"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task QuotesRefreshWhileSomeoneIsWatchingAndStopWhenTheLastWatcherLeaves()
     {
@@ -202,6 +213,7 @@ public class StockServiceTest
         Assert.AreEqual(calls, provider.Calls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADisposedWatchHandleCountsOnlyOnce()
     {

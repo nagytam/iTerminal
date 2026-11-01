@@ -46,6 +46,7 @@ public class LayeredTextClipboardServiceTest
         return (new LayeredTextClipboardService(system, terminal, inProcess, preferTerminal), system, terminal, inProcess);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Locally_TheSystemClipboardIsTheCopyTarget_AndTheTerminalIsNotWritten()
     {
@@ -58,6 +59,7 @@ public class LayeredTextClipboardServiceTest
         CollectionAssert.AreEqual(new[] { "hello" }, inProcess.Written.ToList(), "The application's own copy is always kept.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Locally_WhenTheSystemClipboardFails_TheTerminalTakesTheCopy_AndTheSystemIsNotAskedAgain()
     {
@@ -72,6 +74,7 @@ public class LayeredTextClipboardServiceTest
         Assert.AreEqual(0, system.Written.Count, "Once the system clipboard has failed it is skipped for the rest of the run.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OverSsh_TheTerminalComesFirst_AndTheRemoteSystemIsLeftAlone()
     {
@@ -83,6 +86,7 @@ public class LayeredTextClipboardServiceTest
         Assert.AreEqual(0, system.Written.Count, "A clipboard program on the remote machine would set one the person cannot reach.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OverSsh_WhenTheTerminalRefusesTheCopy_TheSystemClipboardTakesIt()
     {
@@ -94,6 +98,7 @@ public class LayeredTextClipboardServiceTest
         CollectionAssert.AreEqual(new[] { "copy" }, system.Written.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Paste_ReadsTheSystemClipboard()
     {
@@ -103,6 +108,7 @@ public class LayeredTextClipboardServiceTest
         Assert.AreEqual("from outside", await service.GetTextAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Paste_WhenTheSystemClipboardHoldsNoText_PastesTheLastCopyMadeHere()
     {
@@ -113,6 +119,7 @@ public class LayeredTextClipboardServiceTest
         Assert.AreEqual("kept", await service.GetTextAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Paste_WhenTheSystemClipboardCannotBeRead_PastesTheLastCopyMadeHere()
     {
@@ -126,6 +133,7 @@ public class LayeredTextClipboardServiceTest
         Assert.AreEqual(1, system.ReadCount, "A clipboard that could not be read is not asked again.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsRemoteSession_IsTrueWhenAnSshVariableIsSet()
     {

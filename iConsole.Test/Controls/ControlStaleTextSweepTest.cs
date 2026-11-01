@@ -47,6 +47,7 @@ public class ControlStaleTextSweepTest
     /// <summary>Controls that move or reload by themselves: their picture is not a function of their settings alone.</summary>
     private static readonly HashSet<string> MovesItself = ["BouncingLabel", "FilePicker"];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShorteningATextSetting_LeavesNothingOfTheLongOne_OnScreen()
     {
@@ -94,6 +95,7 @@ public class ControlStaleTextSweepTest
     /// <summary>A modal list and the two that pass a click on to what they hold or to their divider only.</summary>
     private static readonly HashSet<string> ClickDoesNotFocus = ["PopupListView", "ScrollView", "Splitter", "FilePicker", "LiveTable"];
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClick_OnAnEnabledFocusableControl_GivesItTheFocus()
     {
@@ -143,6 +145,7 @@ public class ControlStaleTextSweepTest
         Assert.AreEqual(0, unfocused.Count, string.Join(", ", unfocused));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AControlWithNoSize_WritesNothing()
     {
@@ -196,6 +199,7 @@ public class ControlStaleTextSweepTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AReadOnlyControl_LooksDifferent_FromAnEditableOne()
     {
@@ -250,6 +254,7 @@ public class ControlStaleTextSweepTest
         Assert.AreEqual(0, same.Count, string.Join(", ", same));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARightClick_ChangesNothing_OnAnyControl()
     {
@@ -286,6 +291,7 @@ public class ControlStaleTextSweepTest
 
     private static readonly HashSet<string> Animates = ["BouncingLabel", "FilePicker", "Spinner", "Skeleton", "ToastHost", "ProgressBar", "Date", "Countdown", "ElapsedClock"];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChangingASetting_BackAndForth_LeavesTheSamePictureAsSettingItOnce()
     {

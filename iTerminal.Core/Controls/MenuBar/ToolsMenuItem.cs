@@ -48,7 +48,9 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
-        iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null)
+        iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null,
+        iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
+        VirtualMachineManagerDialog? virtualMachineManagerDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -78,6 +80,7 @@ public class ToolsMenuItem : MenuItem
         if (packageManagerDialog is not null) features.Add(new PackageManagerDialogCommand(packageManagerDialog));
         if (stockBrowserDialog is not null) features.Add(new StockBrowserDialogCommand(stockBrowserDialog));
         if (calculatorDialog is not null) features.Add(new CalculatorDialogCommand(calculatorDialog));
+        if (virtualMachineManagerDialog is not null && OperatingSystem.IsLinux()) features.Add(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
         if (unitConverterDialog is not null) features.Add(new UnitConverterDialogCommand(unitConverterDialog));
         if (calendarDialog is not null) features.Add(new CalendarDialogCommand(calendarDialog));
         if (toDoListDialog is not null) features.Add(new ToDoListDialogCommand(toDoListDialog));
@@ -91,6 +94,7 @@ public class ToolsMenuItem : MenuItem
         if (encyclopediaDialog is not null) features.Add(new EncyclopediaDialogCommand(encyclopediaDialog));
         if (performanceBenchmarkDialog is not null) features.Add(new PerformanceBenchmarkDialogCommand(performanceBenchmarkDialog));
         if (gamesDialog is not null) features.Add(new GamesDialogCommand(gamesDialog));
+        if (bluetoothDeviceManagerDialog is not null) features.Add(new BluetoothDeviceManagerDialogCommand(bluetoothDeviceManagerDialog));
         if (remoteConnectionManagerDialog is not null) features.Add(new RemoteConnectionManagerDialogCommand(remoteConnectionManagerDialog));
         if (workspaceManagerDialog is not null) features.Add(new WorkspaceManagerDialogCommand(workspaceManagerDialog));
         if (languageDialog is not null) features.Add(new LanguageDialogCommand(languageDialog));

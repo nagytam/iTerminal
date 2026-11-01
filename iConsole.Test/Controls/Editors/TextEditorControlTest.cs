@@ -13,6 +13,7 @@ namespace iConsole.Test.Controls.Editors;
 [TestClass]
 public class TextEditorControlTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlCanBeCreated()
     {
@@ -22,6 +23,7 @@ public class TextEditorControlTest
         Assert.IsNotNull(editor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlHasTextModel()
     {
@@ -31,6 +33,7 @@ public class TextEditorControlTest
         Assert.IsNotNull(editor.TextModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlHasScrollableModel()
     {
@@ -40,6 +43,7 @@ public class TextEditorControlTest
         Assert.IsNotNull(editor.ScrollableModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlHasSearchModel()
     {
@@ -49,6 +53,7 @@ public class TextEditorControlTest
         Assert.IsNotNull(editor.SearchModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlHasSelectionModel()
     {
@@ -58,6 +63,7 @@ public class TextEditorControlTest
         Assert.IsNotNull(editor.SelectionTextModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlImplementsIDirtyModel()
     {
@@ -67,6 +73,7 @@ public class TextEditorControlTest
         Assert.IsInstanceOfType(editor, typeof(IDirtyModel));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlImplementsIReadOnly()
     {
@@ -76,6 +83,7 @@ public class TextEditorControlTest
         Assert.IsInstanceOfType(editor, typeof(IReadOnly));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlIsDirtyPropertyDefaultsToFalse()
     {
@@ -85,6 +93,7 @@ public class TextEditorControlTest
         Assert.IsFalse(editor.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlIsDirtyCanBeSet()
     {
@@ -98,6 +107,7 @@ public class TextEditorControlTest
         Assert.IsFalse(editor.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlIsReadOnlyPropertyDefaultsToFalse()
     {
@@ -107,6 +117,7 @@ public class TextEditorControlTest
         Assert.IsFalse(editor.IsReadOnly);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlIsReadOnlyCanBeSet()
     {
@@ -120,6 +131,7 @@ public class TextEditorControlTest
         Assert.IsFalse(editor.IsReadOnly);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlIsCursorVisibleByDefault()
     {
@@ -129,6 +141,7 @@ public class TextEditorControlTest
         Assert.IsTrue(editor.IsCursorVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlCanAddText()
     {
@@ -141,6 +154,7 @@ public class TextEditorControlTest
         Assert.AreEqual("Hello, World!", editor.TextModel.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlCanClearText()
     {
@@ -154,6 +168,7 @@ public class TextEditorControlTest
         Assert.AreEqual(0, editor.TextModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlRefreshUpdatesScrollableSize()
     {
@@ -167,6 +182,7 @@ public class TextEditorControlTest
         Assert.AreEqual(1, (int)editor.ScrollableModel.ScrollableSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlRefreshWithEmptyText()
     {
@@ -179,6 +195,7 @@ public class TextEditorControlTest
         Assert.AreEqual(0, (int)editor.ScrollableModel.ScrollableSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlRaisesPropertyChangedForDirty()
     {
@@ -199,6 +216,7 @@ public class TextEditorControlTest
         Assert.IsTrue(propertyChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlRaisesPropertyChangedForReadOnly()
     {
@@ -219,6 +237,7 @@ public class TextEditorControlTest
         Assert.IsTrue(propertyChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextEditorControlInitializeAsync()
     {
@@ -234,6 +253,7 @@ public class TextEditorControlTest
         Assert.IsNotNull(editor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlCanDrawWithContent()
     {
@@ -252,6 +272,7 @@ public class TextEditorControlTest
         Assert.IsTrue(buffer.ContentAsString.Length > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlHandlesMultipleLines()
     {
@@ -265,6 +286,7 @@ public class TextEditorControlTest
         Assert.AreEqual(3, editor.TextModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditorControlInheritsFromTextViewerControl()
     {

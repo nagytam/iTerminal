@@ -8,6 +8,7 @@ namespace iTerminal.Core.Model.ContentModels.Test;
 [TestClass]
 public class MemoryBaseTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_KeepsTheUrl_AndStampsTheCreationTime()
     {

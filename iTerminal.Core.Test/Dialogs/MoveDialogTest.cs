@@ -17,6 +17,7 @@ public class MoveDialogTest
     private static MoveDialog Create() =>
         new(null!, Mock.Of<iConsole.Interfaces.IContentModelService>(), null!, null!, null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), null!, null!, null!, null!);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePrimaryButtonIsNamedForTheOperation()
     {
@@ -27,6 +28,7 @@ public class MoveDialogTest
         Assert.IsTrue(buttons.Any(b => b.Title == "Cancel"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheTitleNamesTheOperation()
     {

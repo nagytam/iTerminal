@@ -25,6 +25,7 @@ public class DateTest
         return mockDateTimeProviderService;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesWithCorrectSize()
     {
@@ -37,6 +38,7 @@ public class DateTest
         Assert.AreEqual(1, date.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesText()
     {
@@ -48,6 +50,7 @@ public class DateTest
         Assert.IsNotNull(date.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Text_ContainsDateTime()
     {
@@ -60,6 +63,7 @@ public class DateTest
         Assert.IsTrue(date.Text.Contains(":"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Text_UpdatesOverTime()
     {
@@ -82,6 +86,7 @@ public class DateTest
         Assert.AreNotEqual(firstText, secondText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Dispose_DoesNotThrow()
     {
@@ -94,6 +99,7 @@ public class DateTest
         // If no exception, test passes
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Dispose_CanBeCalledMultipleTimes()
     {
@@ -107,6 +113,7 @@ public class DateTest
         // If no exception, test passes
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Text_IsInCorrectFormat()
     {
@@ -119,6 +126,7 @@ public class DateTest
         Assert.AreEqual(19, date.Text.Length); // yyyy-MM-dd HH:mm:ss is 19 characters
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RendersFormattedDate()
     {
@@ -137,6 +145,7 @@ public class DateTest
         Assert.IsTrue(buffer.ContentAsString.Contains("12:30:45"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_TextPaddedToViewWidth()
     {
@@ -155,6 +164,7 @@ public class DateTest
         Assert.AreEqual(20, lines[0].Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AfterOnIdle_ShowsUpdatedTime()
     {

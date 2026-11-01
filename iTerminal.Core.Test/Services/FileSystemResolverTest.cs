@@ -30,6 +30,7 @@ public class FileSystemResolverTest
         return new FileSystemResolver(_local, _memory, _ssh, _zip, service.Object);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSharedServicesServeTheirSchemes()
     {
@@ -40,6 +41,7 @@ public class FileSystemResolverTest
         Assert.AreSame(_ssh, resolver.Resolve(new Url("ssh://me@host:/home/")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADriveReachableOnlyThroughItsPanelIsServedByWhatThePanelHandsOver()
     {
@@ -52,6 +54,7 @@ public class FileSystemResolverTest
             "found among the panels, whichever one shows the drive");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("ftp://me@files.example.com/pub/a.txt")]
     [DataRow("smb://me@nas/share/My Documents/a.txt")]
@@ -65,6 +68,7 @@ public class FileSystemResolverTest
         Assert.AreSame(panel.Object, Create(panel.Object).Resolve(new Url(url)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APanelOnAnotherServerIsNeverUsed()
     {
@@ -74,6 +78,7 @@ public class FileSystemResolverTest
         Assert.ThrowsExactly<NotSupportedException>(() => Create(panel.Object).Resolve(new Url("ftp://me@files.example.com/pub/a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingToServeSaysWhatWasBeingDone()
     {

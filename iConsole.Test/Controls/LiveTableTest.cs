@@ -33,6 +33,7 @@ public class LiveTableTest
 
     private static KeyEvent Key(ConsoleKey key) => new(' ', key, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetRow_AddsRowsInOrder_AndReplacesByKey()
     {
@@ -48,6 +49,7 @@ public class LiveTableTest
         Assert.IsNull(table.GetCell("nope", 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetCell_ChangesOneCell_AndIgnoresAColumnThatDoesNotExist()
     {
@@ -63,6 +65,7 @@ public class LiveTableTest
         Assert.AreEqual(2, table.RowCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RemoveRow_AndClear()
     {
@@ -77,6 +80,7 @@ public class LiveTableTest
         Assert.AreEqual(0, table.RowCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsHeaderAndRowsWithAlignment()
     {
@@ -91,6 +95,7 @@ public class LiveTableTest
         Assert.AreEqual(new ColorScheme().SelectedBackground, screen.BackgroundAt(0, 0), "header uses the selected colours");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AChangedCellIsHighlightedUntilTheFlashEnds()
     {
@@ -109,6 +114,7 @@ public class LiveTableTest
         Assert.AreEqual(scheme.Background, faded.BackgroundAt(22, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFirstFill_AndAnUnchangedValue_DoNotFlash()
     {
@@ -121,6 +127,7 @@ public class LiveTableTest
         Assert.AreEqual(new ColorScheme().Background, screen.BackgroundAt(22, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FlashDurationZero_TurnsTheHighlightOff()
     {
@@ -132,6 +139,7 @@ public class LiveTableTest
         Assert.AreEqual(new ColorScheme().Background, Draw(table, 40, 6).BackgroundAt(22, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetCell_ColourTintsTheText()
     {
@@ -144,6 +152,7 @@ public class LiveTableTest
         Assert.AreEqual(Color.Red, Draw(table, 40, 6).ForegroundAt(11, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SortColumn_OrdersNumbersAsNumbers_AndDescendingReverses()
     {
@@ -162,6 +171,7 @@ public class LiveTableTest
         CollectionAssert.AreEqual(new[] { "a", "b", "c" }, table.Keys.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompareCells_NumbersBeforeText_AndPercentSigns()
     {
@@ -171,6 +181,7 @@ public class LiveTableTest
         Assert.IsTrue(LiveTable.CompareCells("Apple", "banana") < 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FittedColumns_TakeTheirContentWidth_AndShrinkWhenTheTableIsNarrow()
     {
@@ -184,6 +195,7 @@ public class LiveTableTest
         Assert.AreEqual(10, narrow[1], "a fixed width is kept while a fitted column can still shrink");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LongText_IsCutWithAnEllipsis()
     {
@@ -193,6 +205,7 @@ public class LiveTableTest
         StringAssert.Contains(Draw(table, 40, 6).Line(1), "a very lo…");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Scrolling_KeysMoveTheWindow_AndKeepNewestVisibleFollowsTheEnd()
     {
@@ -215,6 +228,7 @@ public class LiveTableTest
         StringAssert.Contains(Draw(table, 40, 4).Line(3), "row10");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyTables_SayWhatIsMissing()
     {
@@ -227,6 +241,7 @@ public class LiveTableTest
         StringAssert.Contains(screen.Line(1), "No rows");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_RepaintsOnAChangeAndWhileAHighlightFades()
     {
@@ -255,6 +270,7 @@ public class LiveTableTest
         Assert.IsFalse(table.HasStateChanged, "once faded, time alone repaints nothing");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpdatesFromManyThreads_AreAllKept()
     {
@@ -271,6 +287,7 @@ public class LiveTableTest
         Assert.AreEqual(800, table.RowCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TinySizes_DoNotThrow_AndTheTableFillsItsBounds()
     {

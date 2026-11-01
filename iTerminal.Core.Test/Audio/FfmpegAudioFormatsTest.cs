@@ -12,6 +12,7 @@ public class FfmpegAudioFormatsTest
 {
     private static readonly string SampleDirectory = Path.Combine(AppContext.BaseDirectory, "Audio", "TestFiles");
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryFfmpegAudioExtension_IsRecognised()
     {
@@ -21,6 +22,7 @@ public class FfmpegAudioFormatsTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DemuxOnlyFormats_AreRecognised()
     {
@@ -33,6 +35,7 @@ public class FfmpegAudioFormatsTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SampleFiles_AreAllAudioByExtension()
     {
@@ -45,6 +48,7 @@ public class FfmpegAudioFormatsTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SampleFiles_DecodeThroughFfmpeg()
     {

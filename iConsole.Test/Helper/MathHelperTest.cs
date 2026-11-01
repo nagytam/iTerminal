@@ -5,6 +5,7 @@ namespace iConsole.Test.Helper;
 [TestClass]
 public class MathHelperTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void MathHelperMin()
     {
@@ -12,6 +13,7 @@ public class MathHelperTest
         Assert.AreEqual(3, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MathHelperMinFirst()
     {
@@ -19,6 +21,7 @@ public class MathHelperTest
         Assert.AreEqual(1, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MathHelperMinLast()
     {
@@ -26,6 +29,7 @@ public class MathHelperTest
         Assert.AreEqual(2, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MathHelperMinEqual()
     {
@@ -33,6 +37,7 @@ public class MathHelperTest
         Assert.AreEqual(5, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MathHelperMinNegative()
     {
@@ -40,6 +45,7 @@ public class MathHelperTest
         Assert.AreEqual(-8, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IntRangeInBounds()
     {
@@ -47,6 +53,7 @@ public class MathHelperTest
         Assert.AreEqual(5, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IntRangeBelowMin()
     {
@@ -54,6 +61,7 @@ public class MathHelperTest
         Assert.AreEqual(0, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IntRangeAboveMax()
     {
@@ -61,6 +69,7 @@ public class MathHelperTest
         Assert.AreEqual(10, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IntRangeAtMin()
     {
@@ -68,6 +77,7 @@ public class MathHelperTest
         Assert.AreEqual(0, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IntRangeAtMax()
     {
@@ -75,6 +85,7 @@ public class MathHelperTest
         Assert.AreEqual(10, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LongRangeInBounds()
     {
@@ -82,6 +93,7 @@ public class MathHelperTest
         Assert.AreEqual(5, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LongRangeBelowMin()
     {
@@ -89,6 +101,7 @@ public class MathHelperTest
         Assert.AreEqual(0, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LongRangeAboveMax()
     {
@@ -96,6 +109,7 @@ public class MathHelperTest
         Assert.AreEqual(10, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LongRangeAtMin()
     {
@@ -103,6 +117,7 @@ public class MathHelperTest
         Assert.AreEqual(0, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LongRangeAtMax()
     {

@@ -8,15 +8,18 @@ public class SizeSolverTest
     private static string Solve(int length, int gap, params SizeRule[] rules) =>
         string.Join(",", SizeSolver.Solve(length, rules, gap));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Empty_ReturnsEmpty() => Assert.AreEqual(string.Empty, Solve(10, 0));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fixed_KeepsItsCells_AndFillTakesTheRest()
     {
         Assert.AreEqual("3,17", Solve(20, 0, SizeRule.Fixed(3), SizeRule.Fill()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Percent_IsAShareOfTheSpace_AndFillGetsWhatIsLeft()
     {
@@ -24,6 +27,7 @@ public class SizeSolverTest
         Assert.AreEqual("40,10,50", Solve(100, 0, SizeRule.Percent(40), SizeRule.Fixed(10), SizeRule.Fill()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gaps_AreTakenOutBeforePercentIsCounted()
     {
@@ -31,12 +35,14 @@ public class SizeSolverTest
         Assert.AreEqual("4,4,4", Solve(14, 1, SizeRule.Fill(), SizeRule.Fill(), SizeRule.Fill()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fill_WeightsSplitInProportion()
     {
         Assert.AreEqual("20,10", Solve(30, 0, SizeRule.Fill(2), SizeRule.Fill(1)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fill_RoundingNeverLosesACell()
     {
@@ -46,18 +52,21 @@ public class SizeSolverTest
         Assert.AreEqual("4,3,3", string.Join(",", sizes));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fill_MinimumTakesPriority_AndTheOthersShareTheRest()
     {
         Assert.AreEqual("12,8", Solve(20, 0, SizeRule.Fill().WithMin(12), SizeRule.Fill()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fill_MaximumCaps_AndTheExcessGoesToTheOthers()
     {
         Assert.AreEqual("5,15", Solve(20, 0, SizeRule.Fill().WithMax(5), SizeRule.Fill()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Percent_RespectsMinAndMax()
     {
@@ -65,6 +74,7 @@ public class SizeSolverTest
         Assert.AreEqual("20,80", Solve(100, 0, SizeRule.Percent(50).WithMax(20), SizeRule.Fill()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TooMuchAskedFor_TheLastChildrenShrinkFirst()
     {
@@ -72,6 +82,7 @@ public class SizeSolverTest
         Assert.AreEqual("0,0", Solve(0, 0, SizeRule.Fixed(3), SizeRule.Fill()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MinimumsThatCannotAllFit_NeverExceedTheLength()
     {
@@ -80,12 +91,14 @@ public class SizeSolverTest
         Assert.AreEqual(10, sizes.Sum());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GapWiderThanTheLength_GivesEveryoneZero()
     {
         Assert.AreEqual("0,0,0", Solve(3, 5, SizeRule.Fill(), SizeRule.Fill(), SizeRule.Fill()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BadValues_AreTreatedAsZero()
     {

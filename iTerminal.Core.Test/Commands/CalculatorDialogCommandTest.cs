@@ -17,6 +17,7 @@ public class CalculatorDialogCommandTest
         return mock.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsCtrlAKey()
     {
@@ -30,6 +31,7 @@ public class CalculatorDialogCommandTest
         Assert.IsFalse(command.Key.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_AlwaysReturnsTrue()
     {
@@ -39,6 +41,7 @@ public class CalculatorDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithNoControlAttached_DoesNotThrow()
     {
@@ -48,6 +51,7 @@ public class CalculatorDialogCommandTest
         await command.ExecuteAsync(null);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithControlAttached_OpensDialog()
     {

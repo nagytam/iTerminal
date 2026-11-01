@@ -39,6 +39,7 @@ public class RecycleDriveTest
         return drive;
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlF8_ListsWhatWasDeleted_NewestFirst_AndPressedAgainGoesBack()
     {
@@ -61,6 +62,7 @@ public class RecycleDriveTest
         await _app.WaitForFocusedFolderAsync(_app.LeftRoot);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task Enter_RestoresTheFile_ToWhereItWasDeletedFrom()
     {
@@ -79,6 +81,7 @@ public class RecycleDriveTest
         Assert.AreEqual(4, Directory.GetFileSystemEntries(_app.RecycleBinFolder).Length, "two items left, a record and its content each");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task Enter_WithRowsMarked_RestoresThemAll_FoldersIncluded()
     {
@@ -97,6 +100,7 @@ public class RecycleDriveTest
         await _app.WaitForTextAsync("Restored 2 items");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task Restore_NeverOverwrites_AndSaysWhy()
     {
@@ -113,6 +117,7 @@ public class RecycleDriveTest
         Assert.IsTrue(_app.LeftPanelLists("old report.txt"), "and the deleted one is still in the bin");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F8_DeletesForGood_AfterTheDialogSaysSo()
     {
@@ -134,6 +139,7 @@ public class RecycleDriveTest
         Assert.IsTrue(_app.LeftPanelLists("photos"), "the rest of the bin is untouched");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task MarkAllThenF8_EmptiesTheBin()
     {
@@ -150,6 +156,7 @@ public class RecycleDriveTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ADeletedFile_CanBeViewedAndCopiedOut_WithoutRestoringIt()
     {
@@ -172,6 +179,7 @@ public class RecycleDriveTest
         Assert.IsTrue(File.Exists(Path.Combine(_app.RecycleBinFolder, "$RAAA111.txt")), "copying out leaves it in the bin");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task OnTheParentRow_EnterLeavesTheDrive()
     {

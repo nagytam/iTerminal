@@ -66,6 +66,7 @@ public class PlaywrightRuntimeDependencyTest
         writer.Write(content);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AVersionIsCompatibleOnlyWithinItsMajorAndMinor()
     {
@@ -77,6 +78,7 @@ public class PlaywrightRuntimeDependencyTest
         Assert.AreEqual("1.63.0", dependency.ExpectedVersion);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheInstalledVersionIsTheNewestCompleteOneOnTheBuildsLine()
     {
@@ -90,12 +92,14 @@ public class PlaywrightRuntimeDependencyTest
         Assert.AreEqual("1.63.2", NewDependency(root).InstalledVersion());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingInstalledMeansNoInstalledVersion()
     {
         Assert.IsNull(NewDependency(NewRoot()).InstalledVersion());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ActivatePointsTheLibraryAtTheNewestInstalledDriverAndTheSharedBrowsers()
     {
@@ -118,6 +122,7 @@ public class PlaywrightRuntimeDependencyTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InvalidatingKeepsTheDriverButReportsTheBrowserMissing()
     {
@@ -131,6 +136,7 @@ public class PlaywrightRuntimeDependencyTest
         Assert.IsTrue(File.Exists(Path.Combine(root, "1.63.0", ".playwright", "package", "cli.js")), "Only the marker goes; the driver is reused.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExtractDriverKeepsTheDriverAndOnlyThisPlatformsNode()
     {
@@ -161,6 +167,7 @@ public class PlaywrightRuntimeDependencyTest
         Assert.IsFalse(File.Exists(Path.Combine(root, "escaped.txt")), "An entry that climbs out of the destination is skipped.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExtractDriverRefusesAPackageWithoutNodeForThisPlatform()
     {
@@ -180,6 +187,7 @@ public class PlaywrightRuntimeDependencyTest
     /// Downloads the driver for the library's version and installs Chromium into a temporary folder. It fetches about
     /// 350 MB from the internet, so it is kept off the regular run: remove the Ignore to run it by hand.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     [Ignore("Downloads the Playwright driver (about 210 MB) and Chromium (about 150 MB) from the internet; run it by hand.")]
     public async Task InstallAsyncDownloadsTheDriverAndChromiumAndActivatesThem()

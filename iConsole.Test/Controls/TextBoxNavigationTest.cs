@@ -57,6 +57,7 @@ public class TextBoxNavigationTest
         Assert.IsTrue(cursor >= scroll && cursor - scroll <= box.ScrollableModel.ViewSize.Width, $"cursor {cursor}, scroll {scroll}, well {box.ScrollableModel.ViewSize.Width}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Right_AcrossALongValue_KeepsMovingAndScrolls()
     {
@@ -67,6 +68,7 @@ public class TextBoxNavigationTest
         Assert.IsTrue(Drawn(box).StartsWith("<"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Right_AtTheEnd_StaysAndLeft_AtTheStart_Stays()
     {
@@ -78,6 +80,7 @@ public class TextBoxNavigationTest
         Assert.AreEqual(0L, start.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task End_ScrollsToTheEndOfALongValue_AndHomeBack()
     {
@@ -90,6 +93,7 @@ public class TextBoxNavigationTest
         Assert.AreEqual(0L, box.ScrollableModel.ScrollPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Left_FromTheEndOfALongValue_ScrollsBackWithTheCaret()
     {
@@ -100,6 +104,7 @@ public class TextBoxNavigationTest
         AssertCaretInWell(box);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_PastTheWell_KeepsTheCaretInsideIt()
     {
@@ -110,6 +115,7 @@ public class TextBoxNavigationTest
         AssertCaretInWell(box);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Backspace_ShorteningAScrolledValue_PullsTheViewBack()
     {
@@ -121,6 +127,7 @@ public class TextBoxNavigationTest
         Assert.IsTrue(Drawn(box).Contains("xxxxxxxxxx"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShorteningTheValueFromOutside_BringsTheCaretBackOntoIt()
     {
@@ -131,6 +138,7 @@ public class TextBoxNavigationTest
         Assert.AreEqual(0L, box.ScrollableModel.ScrollPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Backspace_InTheMiddle_RemovesOneCharacter()
     {
@@ -143,6 +151,7 @@ public class TextBoxNavigationTest
         Assert.AreEqual("hello", start.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Delete_RemovesTheCharacterUnderTheCaret_AndNothingAtTheEnd()
     {
@@ -155,6 +164,7 @@ public class TextBoxNavigationTest
         Assert.AreEqual("hello", end.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_InTheMiddle_InsertsAtTheCaret()
     {
@@ -164,6 +174,7 @@ public class TextBoxNavigationTest
         Assert.AreEqual(2L, box.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlLeftAndCtrlRight_MoveByWord()
     {
@@ -175,6 +186,7 @@ public class TextBoxNavigationTest
         Assert.AreEqual(6L, other.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlK_ClearsTheValue()
     {

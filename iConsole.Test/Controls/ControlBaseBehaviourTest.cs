@@ -54,6 +54,7 @@ public class ControlBaseBehaviourTest
 
     // ---- Render ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Render_DrawsAChangedControl_AndGoesIdleAfterwards()
     {
@@ -68,6 +69,7 @@ public class ControlBaseBehaviourTest
         Assert.AreEqual(2, probe.Draws);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Render_ADrawnControlDrawsNothingWhileHidden_ThenOnceShown()
     {
@@ -81,6 +83,7 @@ public class ControlBaseBehaviourTest
         Assert.AreEqual(1, probe.Draws);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Render_AControlThatThrowsInDraw_DoesNotTakeTheScreenDown_AndIsTriedAgain()
     {
@@ -98,6 +101,7 @@ public class ControlBaseBehaviourTest
         Assert.IsTrue(bad.Draws >= 2, "the failure is retried on the next frame");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AChildThatThrows_IsRefreshedInsteadOfBreakingTheParent()
     {
@@ -112,6 +116,7 @@ public class ControlBaseBehaviourTest
 
     // ---- Children ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddControl_SetsTheParent_NamesTheChild_AndRemoveControlDetachesIt()
     {
@@ -125,6 +130,7 @@ public class ControlBaseBehaviourTest
         Assert.IsFalse(root.Controls.Contains(child));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Refresh_MarksTheVisibleTreeChanged()
     {
@@ -141,6 +147,7 @@ public class ControlBaseBehaviourTest
 
     // ---- Idle ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_ReachesTheChildren_AndAFailingOneDoesNotStopTheOthers()
     {
@@ -156,6 +163,7 @@ public class ControlBaseBehaviourTest
 
     // ---- Modality ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetModalChildControl_IsTheLastModalOne_AndNullWithNone()
     {
@@ -171,6 +179,7 @@ public class ControlBaseBehaviourTest
         Assert.IsNull(root.GetModalChildControl());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetModalChildControl_PrefersWhatIsNestedInsideAModalControl()
     {
@@ -184,6 +193,7 @@ public class ControlBaseBehaviourTest
 
     // ---- Colours ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetColor_GivesEveryVisualStateItsOwnPair()
     {
@@ -197,6 +207,7 @@ public class ControlBaseBehaviourTest
         Assert.AreEqual((scheme.DisabledForeground, scheme.DisabledBackground), (disabledFg, disabledBg));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetColor_ASelectedRowOfADisabledControlStaysDisabledLooking()
     {
@@ -207,6 +218,7 @@ public class ControlBaseBehaviourTest
         Assert.AreEqual(scheme.DisabledBackground, background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetVisualState_FollowsFocusAndEnabled()
     {
@@ -222,6 +234,7 @@ public class ControlBaseBehaviourTest
 
     // ---- Pop-ups ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowPopUpWindowAsync_PutsTheWindowOnTheRoot_VisibleAndEnabled()
     {
@@ -239,6 +252,7 @@ public class ControlBaseBehaviourTest
         Assert.IsTrue(root.Controls.Contains(window));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressChar_IsOneOfTheFourSpinnerFrames()
     {

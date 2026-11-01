@@ -57,6 +57,7 @@ public class TerminalScreenTest
         yield break;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_CtrlG_OpensGitClientDialog()
     {
@@ -70,6 +71,7 @@ public class TerminalScreenTest
         Assert.IsTrue(screen.Controls.AsSnapshot().Contains(gitDialog), "Ctrl+G should open the Git client dialog");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_PlainG_DoesNotOpenGitClientDialog()
     {
@@ -82,6 +84,7 @@ public class TerminalScreenTest
             "the Git client must only open on Ctrl+G, not a plain 'g'");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_CtrlShiftG_DoesNotOpenGitClientDialog()
     {
@@ -94,6 +97,7 @@ public class TerminalScreenTest
             "the Git client should require exactly Ctrl+G (no extra modifiers)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_CtrlN_OpensNetworkBrowserDialog()
     {
@@ -107,6 +111,7 @@ public class TerminalScreenTest
         Assert.IsTrue(screen.Controls.AsSnapshot().Contains(networkBrowserDialog), "Ctrl+N should open the Network Browser dialog");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_PlainN_DoesNotOpenNetworkBrowserDialog()
     {
@@ -119,6 +124,7 @@ public class TerminalScreenTest
             "the Network Browser must only open on Ctrl+N, not a plain 'n'");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_CtrlShiftN_DoesNotOpenNetworkBrowserDialog()
     {

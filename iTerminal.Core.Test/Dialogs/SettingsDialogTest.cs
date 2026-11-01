@@ -14,6 +14,7 @@ public class SettingsDialogTest
     private static SettingsDialog Create() =>
         new(new SettingsService(), Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme());
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HasItsPagesInOrder()
     {
@@ -27,6 +28,7 @@ public class SettingsDialogTest
             tab.TabPages.Select(p => p.Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePageItOpensOnIsNotBlank()
     {
@@ -37,6 +39,7 @@ public class SettingsDialogTest
         AssertScreenContains(Render(dialog), "Theme manager (Alt+F6)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {

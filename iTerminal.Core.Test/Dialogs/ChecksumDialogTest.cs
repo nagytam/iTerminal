@@ -61,6 +61,7 @@ public class ChecksumDialogTest
         return (dialog, root);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ItShowsTheSizeAndEveryChecksum()
     {
@@ -76,6 +77,7 @@ public class ChecksumDialogTest
         AssertScreenContains(screen, "F2:save .sha256");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedRead_IsSaidInPlaceOfTheChecksums()
     {
@@ -86,6 +88,7 @@ public class ChecksumDialogTest
         StringAssert.Contains(dialog.Details, "disk gone");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATypedChecksum_IsComparedByItsLength()
     {
@@ -108,6 +111,7 @@ public class ChecksumDialogTest
         Assert.AreEqual(string.Empty, dialog.Verdict);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompareVerdict_WaitsForTheFile_AndIgnoresSpacesAndCase()
     {
@@ -120,6 +124,7 @@ public class ChecksumDialogTest
         Assert.IsNull(ChecksumDialog.CompareVerdict("  ", Hashes));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F2_WritesTheSha256File_ThenSaysItAlreadyDoes_AndNeverOverwritesADifferentOne()
     {
@@ -139,6 +144,7 @@ public class ChecksumDialogTest
         Assert.AreEqual(new string('f', 64) + " *data.bin\n", File.ReadAllText(target));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingAfterASave_ClearsWhatSaveSaid()
     {
@@ -150,6 +156,7 @@ public class ChecksumDialogTest
         Assert.IsFalse(dialog.Verdict.Contains("Saved"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SaveBeforeTheFileIsRead_SaysSo()
     {
@@ -170,6 +177,7 @@ public class ChecksumDialogTest
         never.TrySetCanceled();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AChecksumWrittenBesideTheFile_IsCheckedWithoutAsking()
     {
@@ -180,6 +188,7 @@ public class ChecksumDialogTest
         AssertScreenContains(Render(root), "✓ matches");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AWrittenChecksumThatDiffers_IsFlagged()
     {
@@ -189,6 +198,7 @@ public class ChecksumDialogTest
         AssertScreenContains(Render(root), "does NOT match");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InfoHeight_GrowsAsTheDialogNarrows()
     {
@@ -196,6 +206,7 @@ public class ChecksumDialogTest
         Assert.IsTrue(ChecksumDialog.InfoHeight(36) > ChecksumDialog.InfoHeight(66));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnANarrowTerminal_TheWrittenVerdictIsStillOnScreen()
     {
@@ -209,6 +220,7 @@ public class ChecksumDialogTest
         Assert.IsTrue(dialog.ViewSize.Height > 17);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeCloses()
     {
@@ -219,6 +231,7 @@ public class ChecksumDialogTest
         Assert.IsFalse(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_DismissesTheReport_WhenNothingIsTyped_AndLeavesTheBoxAloneWhenSomethingIs()
     {
@@ -242,6 +255,7 @@ public class ChecksumDialogTest
     private static int RowOf(ChecksumDialog dialog, string startsWith) =>
         dialog.Details.Split(Environment.NewLine).ToList().FindIndex(line => line.StartsWith(startsWith, StringComparison.Ordinal));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAChecksum_CopiesItToTheClipboard_AndSaysSo()
     {
@@ -258,6 +272,7 @@ public class ChecksumDialogTest
         Assert.AreEqual(new string('d', 128), await iConsole.Services.TextClipboard.Current.GetTextAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnTheFileLineOrAGapCopiesNothing()
     {
@@ -270,6 +285,7 @@ public class ChecksumDialogTest
         Assert.AreEqual("before", await iConsole.Services.TextClipboard.Current.GetTextAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F3_CopiesTheSha256()
     {
@@ -281,6 +297,7 @@ public class ChecksumDialogTest
         StringAssert.Contains(dialog.Verdict, "Copied the SHA-256");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F3_BeforeTheFileIsRead_SaysThereIsNothingToCopy()
     {
@@ -293,6 +310,7 @@ public class ChecksumDialogTest
         Assert.AreEqual("before", await iConsole.Services.TextClipboard.Current.GetTextAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheFooterNamesTheCopy_AndTypingInTheCompareBoxClearsTheCopiedNotice()
     {

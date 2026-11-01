@@ -23,6 +23,7 @@ public class WebFetcherTest
     private static HttpResponseMessage Ok(string body, string type = "text/html; charset=utf-8") =>
         new(HttpStatusCode.OK) { Content = new StringContent(body, Encoding.UTF8, type.Split(';')[0]) };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AGetCarriesTheBrowsersHeadersAndReturnsTheBytes()
     {
@@ -39,6 +40,7 @@ public class WebFetcherTest
         Assert.AreEqual(HttpMethod.Get, request.Method);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APostSendsTheFormBody()
     {
@@ -52,6 +54,7 @@ public class WebFetcherTest
         Assert.AreEqual("application/x-www-form-urlencoded", handler.Requests[0].Content!.Headers.ContentType!.MediaType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ErrorStatusesAreReturnedWithTheirBodyNotThrown()
     {
@@ -64,6 +67,7 @@ public class WebFetcherTest
         Assert.AreEqual("gone", Encoding.UTF8.GetString(response.Content));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANetworkFailureBecomesAReadableException()
     {
@@ -74,6 +78,7 @@ public class WebFetcherTest
         Assert.IsTrue(exception.Message.Length > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UnsupportedSchemesAndBadAddressesAreRefused()
     {
@@ -86,6 +91,7 @@ public class WebFetcherTest
         StringAssert.Contains(bad.Message, "not a url");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DataAddressesAreDecoded()
     {
@@ -99,6 +105,7 @@ public class WebFetcherTest
         Assert.AreEqual("hello", Encoding.UTF8.GetString(base64.Content));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AboutHomeNeedsNoNetwork()
     {
@@ -113,6 +120,7 @@ public class WebFetcherTest
         Assert.AreEqual(0, handler.Requests.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LocalFilesAndFoldersAreServed()
     {

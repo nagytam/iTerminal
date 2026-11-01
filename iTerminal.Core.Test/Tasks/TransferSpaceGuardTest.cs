@@ -33,6 +33,7 @@ public class TransferSpaceGuardTest
         return prompts;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMoveOnOneKnownVolume_NeedsNoGuard()
     {
@@ -43,6 +44,7 @@ public class TransferSpaceGuardTest
         Assert.IsNull(guard);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMoveWhoseVolumeCannotBeIdentified_IsStillChecked()
     {
@@ -54,6 +56,7 @@ public class TransferSpaceGuardTest
         Assert.IsNotNull(guard);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACopy_IsAlwaysChecked()
     {
@@ -64,6 +67,7 @@ public class TransferSpaceGuardTest
         Assert.IsNotNull(guard);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutPrompts_ThereIsNoGuard()
     {
@@ -72,6 +76,7 @@ public class TransferSpaceGuardTest
         Assert.IsNull(TransferSpaceGuard.For(fs.Object, Source, fs.Object, Target, deletesSource: false, prompts: null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnoughRoom_ProceedsWithoutAsking()
     {
@@ -84,6 +89,7 @@ public class TransferSpaceGuardTest
         prompts.Verify(p => p.ConfirmAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Short_GoOnAnyway_ProceedsOnceAndAsksNoMore()
     {
@@ -97,6 +103,7 @@ public class TransferSpaceGuardTest
         prompts.Verify(p => p.ConfirmAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Short_PausedThenCancelled_StopsTheCopy()
     {
@@ -106,6 +113,7 @@ public class TransferSpaceGuardTest
         await Assert.ThrowsAsync<OperationCanceledException>(() => guard!.EnsureAsync(() => 500, CancellationToken.None));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Short_PausedThenResumedAfterFreeingSpace_Continues()
     {

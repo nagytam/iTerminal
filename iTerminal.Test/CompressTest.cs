@@ -27,6 +27,7 @@ public class CompressTest
         }
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AltF5PacksTheMarkedRowsIntoAZipInTheOtherPanel()
     {
@@ -47,6 +48,7 @@ public class CompressTest
         await _app.WaitForTextGoneAsync("2 marked");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TypingTheEndingChoosesTheFormat()
     {
@@ -70,6 +72,7 @@ public class CompressTest
     }
 
     /// <summary>Alt+F5 one way, Shift+F5 back: the archive packed into the right panel unpacks into the left, into a folder of its own.</summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ShiftF5UnpacksWhatAltF5Packed()
     {
@@ -95,6 +98,7 @@ public class CompressTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ShiftF5DoesNothingOnAFileThatIsNoArchive()
     {
@@ -104,6 +108,7 @@ public class CompressTest
         Assert.IsInstanceOfType<Core.Screens.TerminalScreen>(_app.Driver.FocusedModal);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EscClosesTheDialogAndWritesNothing()
     {

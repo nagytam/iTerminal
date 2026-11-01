@@ -43,6 +43,7 @@ public class TextBoxSelectionTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftRight_SelectsCharactersFromTheCursor()
     {
@@ -56,6 +57,7 @@ public class TextBoxSelectionTest
         Assert.AreEqual(4L, box.SelectionTextModel.End!.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftLeft_SelectsBackwards_AndShrinksWhenReversed()
     {
@@ -69,6 +71,7 @@ public class TextBoxSelectionTest
         Assert.IsFalse(box.SelectionTextModel.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftHomeAndShiftEnd_SelectToTheEnds()
     {
@@ -80,6 +83,7 @@ public class TextBoxSelectionTest
         Assert.AreEqual("world", end.SelectedText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftArrows_StopAtTheEndsOfTheValue()
     {
@@ -91,6 +95,7 @@ public class TextBoxSelectionTest
         Assert.AreEqual(0L, box.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Left_WithASelection_CollapsesToItsStart_AndRightToItsEnd()
     {
@@ -108,6 +113,7 @@ public class TextBoxSelectionTest
         Assert.AreEqual(3L, right.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OtherMovement_EndsTheSelection()
     {
@@ -121,6 +127,7 @@ public class TextBoxSelectionTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_ReplacesTheSelection()
     {
@@ -132,6 +139,7 @@ public class TextBoxSelectionTest
         Assert.IsFalse(box.HasSelection);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BackspaceAndDelete_RemoveTheSelectionAndNothingElse()
     {
@@ -148,6 +156,7 @@ public class TextBoxSelectionTest
         Assert.AreEqual(2L, delete.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnlyBox_CanSelectButNotChange()
     {
@@ -159,6 +168,7 @@ public class TextBoxSelectionTest
         Assert.AreEqual("hello", box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingOrSettingTheText_ClearsTheSelection()
     {
@@ -174,6 +184,7 @@ public class TextBoxSelectionTest
         Assert.AreEqual(string.Empty, set.SelectedText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Selection_IsDrawnHighlighted()
     {
@@ -187,6 +198,7 @@ public class TextBoxSelectionTest
         Assert.AreNotEqual(scheme.SelectedFocusedBackground, buffer.Cell(8, 0).BackgroundColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Selecting_InALongValue_ScrollsTheViewWithTheCursor()
     {
@@ -198,6 +210,7 @@ public class TextBoxSelectionTest
         Assert.IsTrue(cursor >= scroll && cursor - scroll <= box.ScrollableModel.ViewSize.Width, $"cursor {cursor} scroll {scroll}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PasswordBox_DeletesASelectionToo()
     {

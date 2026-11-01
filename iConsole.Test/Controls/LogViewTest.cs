@@ -34,6 +34,7 @@ public class LogViewTest
 
     private static KeyEvent Key(ConsoleKey key) => new(' ', key, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Append_SplitsOnLineBreaksAndKeepsBlankLines()
     {
@@ -44,6 +45,7 @@ public class LogViewTest
         CollectionAssert.AreEqual(new[] { "a", "b", "", "c" }, view.VisibleEntries.Select(e => e.Text).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Following_ShowsTheNewestLines()
     {
@@ -58,6 +60,7 @@ public class LogViewTest
         Assert.IsTrue(view.Follow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScrollingUp_StopsFollowing_AndCountsUnreadLines()
     {
@@ -76,6 +79,7 @@ public class LogViewTest
         StringAssert_Contains(screen.Line(3), "▼ 3 new");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task End_FollowsAgainAndClearsTheUnreadCount()
     {
@@ -91,6 +95,7 @@ public class LogViewTest
         Assert.AreEqual(8, view.TopIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScrollingDownToTheBottom_FollowsAgain()
     {
@@ -104,6 +109,7 @@ public class LogViewTest
         Assert.IsTrue(view.Follow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MaxLines_DropsTheOldestLines()
     {
@@ -117,6 +123,7 @@ public class LogViewTest
         Assert.AreEqual("line 11", view.VisibleEntries[^1].Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhenNotFollowing_DroppedLinesDoNotMoveTheView()
     {
@@ -137,6 +144,7 @@ public class LogViewTest
         Assert.AreEqual(firstShown, after.Line(0).TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MinimumLevel_HidesLowerLevelsWithoutDeletingThem()
     {
@@ -154,6 +162,7 @@ public class LogViewTest
         Assert.AreEqual(3, view.VisibleEntries.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilterText_MatchesIgnoringCaseAndAppliesToNewLines()
     {
@@ -168,6 +177,7 @@ public class LogViewTest
         CollectionAssert.AreEqual(new[] { "Copied a.txt", "COPIED c.txt" }, view.VisibleEntries.Select(e => e.Text).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ColoursLinesByLevel_AndFillsItsBounds()
     {
@@ -187,6 +197,7 @@ public class LogViewTest
         screen.AssertFillsBounds(view);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_EmptyViewSaysSo_AndClearLeavesNoStaleText()
     {
@@ -204,6 +215,7 @@ public class LogViewTest
         StringAssert_Contains(screen.Line(0), "No log lines");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LeftAndRight_ScrollSideways()
     {
@@ -217,6 +229,7 @@ public class LogViewTest
         Assert.AreEqual("89012345678901234567", screen.Line(0).TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Wheel_ScrollsThreeRows_AndUnfocusedViewIgnoresKeys()
     {
@@ -233,6 +246,7 @@ public class LogViewTest
         Assert.IsTrue(other.Follow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AppendsFromManyThreads_AreAllKept()
     {
@@ -250,6 +264,7 @@ public class LogViewTest
         Assert.AreEqual(4000, view.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_RepaintsOnlyWhenSomethingChanged()
     {

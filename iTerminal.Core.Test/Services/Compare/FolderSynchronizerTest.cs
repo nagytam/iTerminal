@@ -69,6 +69,7 @@ public class FolderSynchronizerTest
 
     private static string[] Describe(SyncPlan plan) => [.. plan.Actions.Select(a => a.Describe()).OrderBy(s => s, StringComparer.Ordinal)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BothWaysCopiesWhatIsMissingAndTheNewerCopyAndLeavesConflictsAlone()
     {
@@ -91,6 +92,7 @@ public class FolderSynchronizerTest
         Assert.AreEqual(0, plan.Deletes, "a two-way run never deletes");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OneWayTakesTheSourceButKeepsATargetFileThatIsNewer()
     {
@@ -105,6 +107,7 @@ public class FolderSynchronizerTest
         Assert.AreEqual(0, plan.Conflicts);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteExtrasRemovesWhatOnlyTheTargetHasAndOnlyForOneWay()
     {
@@ -122,6 +125,7 @@ public class FolderSynchronizerTest
         Assert.AreEqual(0, both.Deletes, "in a two-way run a missing file cannot say which side is wrong");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnIdenticalPairHasNothingToDo()
     {
@@ -134,6 +138,7 @@ public class FolderSynchronizerTest
         Assert.AreEqual("Nothing to synchronise.", plan.Summary());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASynchronisedPairComparesIdenticalAgain()
     {
@@ -156,6 +161,7 @@ public class FolderSynchronizerTest
         Assert.AreEqual(0, again.Differences.Count(), string.Join(", ", again.Differences.Select(d => $"{d.Path}:{d.Kind}")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CopyingBetweenTwoDifferentDrivesKeepsTheSourceDate()
     {
@@ -174,6 +180,7 @@ public class FolderSynchronizerTest
         Assert.AreEqual(0, (await Compare(otherDrive)).Differences.Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeletionsGoThroughTheDrivesRecycleOption()
     {
@@ -194,6 +201,7 @@ public class FolderSynchronizerTest
         Assert.AreEqual(2, task.Deleted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedStepIsListedAndTheOthersStillRun()
     {
@@ -214,6 +222,7 @@ public class FolderSynchronizerTest
         Assert.IsNotNull(task.Error, "the progress window must stay up long enough to read it");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSummaryNamesWhatWillHappen()
     {

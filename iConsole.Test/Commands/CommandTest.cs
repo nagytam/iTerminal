@@ -9,6 +9,7 @@ namespace iConsole.Test.Commands;
 [TestClass]
 public class CommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void CommandHasTitle()
     {
@@ -21,6 +22,7 @@ public class CommandTest
         Assert.IsNotNull(command.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CommandHasKey()
     {
@@ -32,6 +34,7 @@ public class CommandTest
         Assert.IsNotNull(command.Key);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CommandSetControl()
     {
@@ -44,6 +47,7 @@ public class CommandTest
         Assert.AreEqual(mockControl.Object, command.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CommandCanExecute()
     {
@@ -55,6 +59,7 @@ public class CommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CommandInterface()
     {
@@ -66,6 +71,7 @@ public class CommandTest
     }
 
     /// <summary>Help listed "Ctrl+Oem5" — the virtual-key constant, not a key anyone can find.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(ConsoleKey.Oem5, "Ctrl+\\")]
     [DataRow(ConsoleKey.D3, "Ctrl+3")]

@@ -82,6 +82,7 @@ public class DriveDialogsTest
         return path;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Image_ShowsThePathAndWhatIsAccepted()
     {
@@ -95,6 +96,7 @@ public class DriveDialogsTest
         AssertScreenContains(screen, "Unmount");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Image_Mount_RunsTheAction_Notifies_ClosesAndRereadsLocalPanels()
     {
@@ -110,6 +112,7 @@ public class DriveDialogsTest
         Assert.AreEqual("Mounted as E:", rig.Dialog.LastMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Image_Unmount_DoesNotNeedTheFileToExist()
     {
@@ -121,6 +124,7 @@ public class DriveDialogsTest
         rig.Drives.Verify(d => d.UnmountImageAsync(path, It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Image_RefusesAnEmptyPath_ATypeItCannotMount_AndAMissingFile()
     {
@@ -140,6 +144,7 @@ public class DriveDialogsTest
         Assert.IsTrue(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Image_AFailureStaysInTheDialog_Wrapped()
     {
@@ -153,6 +158,7 @@ public class DriveDialogsTest
         rig.Notifications.Verify(n => n.Notify(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NotificationSeverity>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Image_TheErrorLeavesWhenTheUserTypesOn_ButNotOnTab()
     {
@@ -170,6 +176,7 @@ public class DriveDialogsTest
         Assert.AreEqual(string.Empty, rig.Dialog.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Image_Escape_Closes()
     {
@@ -204,6 +211,7 @@ public class DriveDialogsTest
         return new FormatRig { Dialog = dialog, Root = root, Drives = drives, Panel = panel };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Format_NamesTheDrive_AndWarnsEverythingWillBeErased()
     {
@@ -219,6 +227,7 @@ public class DriveDialogsTest
         Assert.AreEqual("ReFS", rig.Dialog.FileSystem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Format_AnUnknownCurrentFileSystem_FallsBackToNtfs()
     {
@@ -227,6 +236,7 @@ public class DriveDialogsTest
         Assert.AreEqual("NTFS", rig.Dialog.FileSystem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Format_WillNotRunUntilTheDriveLetterIsTyped()
     {
@@ -242,6 +252,7 @@ public class DriveDialogsTest
         Assert.IsTrue(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Format_WithTheLetterTyped_FormatsWithTheChosenOptions_ClosesAndRereadsPanels()
     {
@@ -258,6 +269,7 @@ public class DriveDialogsTest
         rig.Panel.Verify(m => m.Refresh(true), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Format_AFailureStaysInTheDialog_AndTheWarningComesBack()
     {
@@ -271,6 +283,7 @@ public class DriveDialogsTest
         AssertScreenContains(Render(rig.Root), "Everything on this drive will be erased.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Format_ARootThatIsNotALetteredDrive_IsRefused()
     {
@@ -282,6 +295,7 @@ public class DriveDialogsTest
         Assert.AreEqual("Error: Not a lettered drive.", rig.Dialog.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Format_TheErrorLeavesWhenTheUserTypesTheLetter()
     {
@@ -296,6 +310,7 @@ public class DriveDialogsTest
 
     // ---- Error clearing in the other forms ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EditingKeys_AreCharactersBackspaceAndDelete_NotMovesOrChords()
     {
@@ -316,6 +331,7 @@ public class DriveDialogsTest
         public static bool IsEditing(KeyEvent keyEvent) => IsEditingKey(keyEvent);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CreateLink_TheErrorLeavesWhenTheUserTypes()
     {
@@ -331,6 +347,7 @@ public class DriveDialogsTest
         Assert.AreEqual(string.Empty, dialog.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Properties_TheErrorLeavesWhenTheUserTypes()
     {

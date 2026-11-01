@@ -8,24 +8,28 @@ public class TerminalSequencesTest
     private static Func<string, string?> Env(params (string Name, string Value)[] variables) =>
         name => variables.Where(v => v.Name == name).Select(v => v.Value).FirstOrDefault();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetTitle_IsOsc2_EndedByBel()
     {
         Assert.AreEqual("\u001b]2;Hello\u0007", TerminalSequences.SetTitle("Hello"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetTitle_DropsEscapeAndBel_SoTheTextCannotEndTheSequenceEarly()
     {
         Assert.AreEqual("\u001b]2;AB[31mC\u0007", TerminalSequences.SetTitle("A\u001bB\u0007[31mC"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetTitle_TurnsLineBreaksIntoSpaces_AndKeepsSemicolons()
     {
         Assert.AreEqual("\u001b]2;a  b;c\u0007", TerminalSequences.SetTitle("a\r\nb;c"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sanitize_CutsAtTheLimit_WithoutSplittingASurrogatePair()
     {
@@ -35,6 +39,7 @@ public class TerminalSequencesTest
         Assert.AreEqual("a", result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notification_Osc777_CarriesTitleAndBody_WithoutSemicolons()
     {
@@ -43,6 +48,7 @@ public class TerminalSequencesTest
         Assert.AreEqual("\u001b]777;notify;Copy, done;3 files, 2 MB\u0007", sequence);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notification_Osc9_JoinsTitleAndBody()
     {
@@ -50,6 +56,7 @@ public class TerminalSequencesTest
         Assert.AreEqual("\u001b]9;Copy\u0007", TerminalSequences.Notification(TerminalNotificationStyle.Osc9, "Copy", null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notification_Osc9_CannotBeTurnedIntoTheProgressSequence()
     {
@@ -59,6 +66,7 @@ public class TerminalSequencesTest
         Assert.AreEqual("\u001b]9;4,3,50\u0007", sequence);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notification_BellAndNone()
     {
@@ -66,6 +74,7 @@ public class TerminalSequencesTest
         Assert.AreEqual(string.Empty, TerminalSequences.Notification(TerminalNotificationStyle.None, "x", "y"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Detect_EnvironmentOverrideWins()
     {
@@ -75,6 +84,7 @@ public class TerminalSequencesTest
         Assert.AreEqual(TerminalNotificationStyle.Bell, TerminalSequences.DetectNotificationStyle(Env(("ITERMINAL_NOTIFY", "bell"))));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Detect_GuessesFromTheTerminal()
     {
@@ -85,6 +95,7 @@ public class TerminalSequencesTest
         Assert.AreEqual(TerminalNotificationStyle.Osc777, TerminalSequences.DetectNotificationStyle(Env(("TERM_PROGRAM", "WezTerm"))));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Detect_FallsBackToTheBell_ForUnknownTerminalsAndMultiplexers()
     {

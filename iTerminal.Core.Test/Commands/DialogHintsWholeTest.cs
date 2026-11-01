@@ -60,6 +60,7 @@ public class DialogHintsWholeTest
         return null;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheHintsOfEveryDialog_AreWhole_AndNameEachKeyOnce()
     {
@@ -361,6 +362,7 @@ public class DialogHintsWholeTest
         Assert.AreEqual(0, problems.Count, string.Join(Environment.NewLine, problems));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryDialogFooterThatListsKeys_SaysHowToLeave()
     {

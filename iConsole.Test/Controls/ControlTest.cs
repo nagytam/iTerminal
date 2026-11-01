@@ -18,6 +18,7 @@ public class ControlTest
         return m;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_Default_ShouldCreateInstance()
     {
@@ -28,6 +29,7 @@ public class ControlTest
         Assert.IsTrue(derived.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithChildLabel_ChildIsRendered()
     {
@@ -50,6 +52,7 @@ public class ControlTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Hello"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ChildAtRow_RenderedAtCorrectPosition()
     {
@@ -73,6 +76,7 @@ public class ControlTest
         Assert.IsTrue(lines[2].Contains("World"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_InvisibleChild_NotRendered()
     {
@@ -96,6 +100,7 @@ public class ControlTest
         Assert.IsFalse(buffer.ContentAsString.Contains("Hidden"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetVisualState_Disabled_ReturnsDisabled()
     {
@@ -106,6 +111,7 @@ public class ControlTest
         Assert.AreEqual(VisualState.Disabled, state);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetVisualState_Enabled_ReturnsNormal()
     {
@@ -121,6 +127,7 @@ public class ControlTest
     /// whole tree, and the status bar's hidden date pop-up then wrote its blank rectangle into a
     /// layer that an open menu shares — the panels vanished under every open menu.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void AHiddenControlIsNotDrawnEvenWhenMarkedChanged()
     {

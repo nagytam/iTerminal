@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Model.ContentModels;
 [TestClass]
 public class EntryColumnLayoutTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void AWidePanelShowsEveryColumn()
     {
@@ -15,6 +16,7 @@ public class EntryColumnLayoutTest
         Assert.AreEqual(14, nameLength);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(30)]
     [DataRow(33)]
@@ -28,6 +30,7 @@ public class EntryColumnLayoutTest
         Assert.IsTrue(showDate || nameLength >= 14 || width < 31);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(60)]
     [DataRow(40)]

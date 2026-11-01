@@ -12,6 +12,7 @@ namespace iTerminal.Core.Test.Controls;
 [TestClass]
 public class PathTextBoxTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBoxValidator()
     {

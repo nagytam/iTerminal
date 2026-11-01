@@ -55,6 +55,7 @@ public class DiskManagerActionsTest
         return new Drive { Name = root, Url = new Url(root), DriveInfo = new DriveInfo(root) };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EjectingAMemoryDrive_SaysThereIsNothingToEject()
     {
@@ -67,6 +68,7 @@ public class DiskManagerActionsTest
         rig.Drives.Verify(d => d.EjectAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FormattingAMemoryDrive_SaysItCannotBe()
     {
@@ -77,6 +79,7 @@ public class DiskManagerActionsTest
         StringAssert.Contains(rig.Dialog.Status, "memory drive cannot be formatted");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F_OnASystemThatCannotFormat_SaysSoInsteadOfAskingForADrive()
     {
@@ -87,6 +90,7 @@ public class DiskManagerActionsTest
         Assert.AreEqual("Formatting is not available on this system.", rig.Dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Format_WithoutADialogToShow_SaysItIsNotAvailable()
     {
@@ -97,6 +101,7 @@ public class DiskManagerActionsTest
         Assert.AreEqual("Formatting is not available on this system.", rig.Dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Format_WithNoDriveListed_AsksForOne()
     {
@@ -116,6 +121,7 @@ public class DiskManagerActionsTest
         tasks.Dispose();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhileAnEjectIsRunning_AnotherRequestIsRefusedWithAMessage()
     {
@@ -138,6 +144,7 @@ public class DiskManagerActionsTest
         rig.Drives.Verify(d => d.EjectAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFootersHintsLeaveOutFormatWhereItDoesNotExist()
     {

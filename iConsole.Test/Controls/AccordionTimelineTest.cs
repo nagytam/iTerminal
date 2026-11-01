@@ -28,6 +28,7 @@ public class AccordionTimelineTest
         return accordion;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Accordion_Collapsed_TakesOneRowPerSection()
     {
@@ -37,6 +38,7 @@ public class AccordionTimelineTest
         Assert.AreEqual(2, (int)accordion.Sections[2].Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Accordion_OpeningOne_ClosesTheOthersAndReflows()
     {
@@ -50,6 +52,7 @@ public class AccordionTimelineTest
         Assert.AreEqual(5, (int)accordion.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Accordion_OpenMinusOne_ClosesAll()
     {
@@ -60,6 +63,7 @@ public class AccordionTimelineTest
         Assert.AreEqual(3, (int)accordion.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Timeline_Draw_ShowsEventsJoinedByConnectors()
     {
@@ -72,6 +76,7 @@ public class AccordionTimelineTest
         Assert.AreEqual("● 10:05  Tests", Lines(buffer)[2].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Timeline_FirstVisibleEvent_ShowsNewest()
     {
@@ -80,6 +85,7 @@ public class AccordionTimelineTest
         Assert.AreEqual(0, Timeline.FirstVisibleEvent(0, 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Timeline_Draw_BlanksRowsOfARemovedHistory()
     {
@@ -92,6 +98,7 @@ public class AccordionTimelineTest
         Assert.AreEqual(string.Empty, Lines(buffer)[0].Trim());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchBox_Enter_RaisesSubmittedOnlyWhenListened()
     {

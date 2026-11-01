@@ -47,6 +47,7 @@ public class ContextMenuSubmenuTest
 
     // ---- Hot keys ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnAmpersandMarksTheHotKeyAndIsNotShown()
     {
@@ -57,6 +58,7 @@ public class ContextMenuSubmenuTest
         Assert.AreEqual(5, item.HotKeyIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADoubleAmpersandIsALiteralOne()
     {
@@ -66,6 +68,7 @@ public class ContextMenuSubmenuTest
         Assert.IsNull(item.HotKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnAmpersandBeforeAnythingButALetterOrDigitIsLeftAlone()
     {
@@ -74,6 +77,7 @@ public class ContextMenuSubmenuTest
         Assert.AreEqual("Tom &", new ContextMenuItem("Tom &").Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnlyTheFirstMarkerIsTheHotKey()
     {
@@ -83,6 +87,7 @@ public class ContextMenuSubmenuTest
         Assert.AreEqual('S', item.HotKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATitleWithoutAMarkerIsUnchanged()
     {
@@ -93,6 +98,7 @@ public class ContextMenuSubmenuTest
         Assert.AreEqual(-1, item.HotKeyIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PressingAHotKeyChoosesTheEntryAtOnce()
     {
@@ -104,6 +110,7 @@ public class ContextMenuSubmenuTest
         Assert.IsFalse(s.Menu.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AHotKeyIsNotCaseSensitive()
     {
@@ -114,6 +121,7 @@ public class ContextMenuSubmenuTest
         CollectionAssert.AreEqual(new[] { "open" }, s.Ran);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AHotKeyOfADisabledEntryDoesNothing()
     {
@@ -125,6 +133,7 @@ public class ContextMenuSubmenuTest
         Assert.IsTrue(s.Menu.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AHotKeyOfASubmenuOpensIt()
     {
@@ -137,6 +146,7 @@ public class ContextMenuSubmenuTest
         Assert.AreEqual(0, s.Ran.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EntriesSharingAHotKeyAreSteppedThroughNotChosen()
     {
@@ -157,6 +167,7 @@ public class ContextMenuSubmenuTest
         CollectionAssert.AreEqual(new[] { "close" }, ran);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALetterThatIsNoOnesHotKeyStillJumpsToATitleThatStartsWithIt()
     {
@@ -173,6 +184,7 @@ public class ContextMenuSubmenuTest
         Assert.AreEqual(1, menu.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheHotKeyIsDrawnUnderlinedAndTheAmpersandIsNot()
     {
@@ -190,6 +202,7 @@ public class ContextMenuSubmenuTest
 
     // ---- Check marks ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACheckedEntryIsDrawnWithAMarkAndAnUncheckedOneWithoutIt()
     {
@@ -205,6 +218,7 @@ public class ContextMenuSubmenuTest
         Assert.IsFalse(buffer.Line(11).Contains('✓'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EntriesLineUpWhetherOrNotTheyAreSwitches()
     {
@@ -218,6 +232,7 @@ public class ContextMenuSubmenuTest
         Assert.AreEqual(open, bold, "the check column is reserved for every entry");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChoosingASwitchTurnsItOverBeforeItRuns()
     {
@@ -236,6 +251,7 @@ public class ContextMenuSubmenuTest
         Assert.IsFalse(s.Menu.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEntryThatIsNotASwitchHasNoCheckState()
     {
@@ -248,6 +264,7 @@ public class ContextMenuSubmenuTest
 
     // ---- Submenus ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASubmenuEntryIsDrawnWithAnArrow()
     {
@@ -260,6 +277,7 @@ public class ContextMenuSubmenuTest
         Assert.IsFalse(buffer.Line(7).Contains('▶'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RightOpensTheSubmenuBesideTheEntry()
     {
@@ -279,6 +297,7 @@ public class ContextMenuSubmenuTest
         Assert.IsTrue(s.Menu.IsOpen, "the parent stays open");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnASubmenuEntryOpensItRatherThanClosingTheMenu()
     {
@@ -292,6 +311,7 @@ public class ContextMenuSubmenuTest
         Assert.AreEqual(0, s.Ran.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LeftClosesTheSubmenuAndLeavesTheParent()
     {
@@ -307,6 +327,7 @@ public class ContextMenuSubmenuTest
         Assert.IsNull(s.Menu.OpenSubmenu);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeInASubmenuClosesOnlyTheSubmenu()
     {
@@ -320,6 +341,7 @@ public class ContextMenuSubmenuTest
         Assert.IsTrue(s.Menu.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LeftInATopMenuDoesNotCloseIt()
     {
@@ -330,6 +352,7 @@ public class ContextMenuSubmenuTest
         Assert.IsTrue(s.Menu.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChoosingAnEntryOfASubmenuClosesTheWholeChainThenRunsIt()
     {
@@ -354,6 +377,7 @@ public class ContextMenuSubmenuTest
         Assert.IsFalse(s.Root.Controls.Contains(child));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingTheParentClosesTheSubmenuToo()
     {
@@ -368,6 +392,7 @@ public class ContextMenuSubmenuTest
         Assert.IsFalse(s.Root.Controls.Contains(s.Menu));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASubmenuNearTheRightEdgeOpensOnTheLeft()
     {
@@ -380,6 +405,7 @@ public class ContextMenuSubmenuTest
         Assert.IsTrue(child.Position.X >= 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingASubmenuEntryOpensIt()
     {
@@ -391,6 +417,7 @@ public class ContextMenuSubmenuTest
         Assert.IsTrue(s.Menu.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingAnEntryOfTheSubmenuRunsIt()
     {
@@ -404,6 +431,7 @@ public class ContextMenuSubmenuTest
         Assert.IsFalse(s.Menu.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingOutsideEveryMenuClosesTheChain()
     {
@@ -419,6 +447,7 @@ public class ContextMenuSubmenuTest
         Assert.AreEqual(0, s.Ran.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnTheParentWhileTheSubmenuIsOpenGoesToTheParent()
     {
@@ -433,6 +462,7 @@ public class ContextMenuSubmenuTest
         Assert.IsFalse(s.Menu.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HoveringAnotherEntryClosesTheSubmenu()
     {
@@ -447,6 +477,7 @@ public class ContextMenuSubmenuTest
         Assert.AreEqual(0, s.Menu.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADisabledSubmenuEntryDoesNotOpen()
     {
@@ -460,6 +491,7 @@ public class ContextMenuSubmenuTest
         Assert.IsNull(s.Menu.OpenSubmenu);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpeningAnotherSubmenuReplacesTheFirst()
     {
@@ -479,6 +511,7 @@ public class ContextMenuSubmenuTest
         Assert.AreEqual(1, s.Menu.OpenSubmenu.Items.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SubmenusCanNest()
     {
@@ -499,6 +532,7 @@ public class ContextMenuSubmenuTest
         Assert.IsFalse(second.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMenuIsWideEnoughForTheCheckColumnAndTheArrow()
     {

@@ -30,6 +30,7 @@ public class UnitConverterDialogTest
 
     private static KeyEvent DownArrow() => new('\0', ConsoleKey.DownArrow, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowAsync_DefaultsToLengthCategoryWithFirstTwoUnitsSelected()
     {
@@ -43,6 +44,7 @@ public class UnitConverterDialogTest
         Assert.AreEqual("0.1", dialog.EngineForTest.ResultText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowAsync_FocusesCategoryListBoxFirst()
     {
@@ -53,6 +55,7 @@ public class UnitConverterDialogTest
         Assert.IsTrue(dialog.CategoryListBoxForTest.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingInInputTextBox_RecomputesResult()
     {
@@ -67,6 +70,7 @@ public class UnitConverterDialogTest
         Assert.AreEqual("1.5", dialog.EngineForTest.ResultText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClosesDialog()
     {
@@ -79,6 +83,7 @@ public class UnitConverterDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NavigatingCategoryListDown_SwitchesCategoryAndRepopulatesUnitLists()
     {
@@ -93,6 +98,7 @@ public class UnitConverterDialogTest
         Assert.AreEqual(UnitCatalog.GetUnits(UnitCategory.Area).Count, dialog.ToUnitListBoxForTest.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NavigatingFromUnitListDown_UpdatesEngineFromUnitIndex()
     {
@@ -106,6 +112,7 @@ public class UnitConverterDialogTest
         Assert.AreEqual(2, dialog.EngineForTest.FromUnitIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NavigatingToUnitListDown_UpdatesEngineToUnitIndex()
     {
@@ -118,6 +125,7 @@ public class UnitConverterDialogTest
         Assert.AreEqual(2, dialog.EngineForTest.ToUnitIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SwapButton_TriggeredDirectly_SwapsFromAndToUnitsAndListCursors()
     {
@@ -132,6 +140,7 @@ public class UnitConverterDialogTest
         Assert.AreEqual(0, dialog.ToUnitListBoxForTest.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SwitchingToTemperatureCategory_ComputesUsingOffsetFormula()
     {

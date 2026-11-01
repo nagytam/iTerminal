@@ -44,6 +44,7 @@ public class MoveDialogCommandTest
 
     // ── constructor ──────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsShiftF6Key()
     {
@@ -62,6 +63,7 @@ public class MoveDialogCommandTest
 
     // ── CanExecute ───────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedEntryIsFile_ReturnsTrue()
     {
@@ -85,6 +87,7 @@ public class MoveDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedEntryIsFolder_ReturnsTrue()
     {
@@ -108,6 +111,7 @@ public class MoveDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenNoFocusedModel_ReturnsFalse()
     {
@@ -122,6 +126,7 @@ public class MoveDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedEntryUrlIsNull_ReturnsFalse()
     {
@@ -142,6 +147,7 @@ public class MoveDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenEntryExistsNeitherAsFileNorFolder_ReturnsFalse()
     {
@@ -167,6 +173,7 @@ public class MoveDialogCommandTest
 
     // ── ExecuteAsync ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenContentModelServiceIsNull_DoesNotThrow()
     {
@@ -181,6 +188,7 @@ public class MoveDialogCommandTest
 
     // ── ContentBrowser integration ───────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithMoveDialog_RegistersMoveDialogCommand()
     {
@@ -212,6 +220,7 @@ public class MoveDialogCommandTest
         Assert.IsTrue(hasCommand, "ContentBrowser should register MoveDialogCommand when a MoveDialog is supplied.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithoutMoveDialog_DoesNotRegisterMoveDialogCommand()
     {
@@ -243,6 +252,7 @@ public class MoveDialogCommandTest
 
     // ── FilePanelFactory integration ─────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithMoveDialog_CreatesFilePanel()
     {
@@ -271,6 +281,7 @@ public class MoveDialogCommandTest
         Assert.IsNotNull(panel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithoutMoveDialog_CreatesFilePanel()
     {

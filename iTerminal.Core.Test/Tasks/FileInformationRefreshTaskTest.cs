@@ -34,6 +34,7 @@ public class FileInformationRefreshTaskTest
         await task.ExecuteAsync();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderThatCannotBeRead_ShowsAQuestionMark_NotAShortCount()
     {
@@ -45,6 +46,7 @@ public class FileInformationRefreshTaskTest
         Assert.AreEqual("?", entry.Object.NumberOfFiles);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AReadableFolder_ShowsItsCount()
     {
@@ -67,6 +69,7 @@ public class FileInformationRefreshTaskTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AProgressReportDeliveredAfterTheCount_DoesNotPutTheEllipsisBack()
     {

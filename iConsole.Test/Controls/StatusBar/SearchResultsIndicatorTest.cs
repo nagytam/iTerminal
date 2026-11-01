@@ -11,6 +11,7 @@ namespace iConsole.Test.Controls.StatusBar;
 [TestClass]
 public class SearchResultsIndicatorTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CreatesInstance()
     {
@@ -22,6 +23,7 @@ public class SearchResultsIndicatorTest
         Assert.IsNotNull(indicator);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsDefaultViewSize()
     {
@@ -34,6 +36,7 @@ public class SearchResultsIndicatorTest
         Assert.AreEqual(1, indicator.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsSearchHitCount()
     {
@@ -52,6 +55,7 @@ public class SearchResultsIndicatorTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Search:") || buffer.ContentAsString.Contains("0"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsCorrectCountWhenHitsAdded()
     {
@@ -72,6 +76,7 @@ public class SearchResultsIndicatorTest
         Assert.IsTrue(buffer.ContentAsString.Contains("2"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PropertyChanged_OnSearchModel_TriggersStateChange()
     {
@@ -85,6 +90,7 @@ public class SearchResultsIndicatorTest
         Assert.IsTrue(indicator.HasStateChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Indicator_IsInstanceOfStatusBarItem()
     {

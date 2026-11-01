@@ -23,6 +23,7 @@ public class OutsideWorldDialogsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlNScansTheNetworkAndListsWhatItFinds()
     {
@@ -31,6 +32,18 @@ public class OutsideWorldDialogsTest
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.NetworkBrowserDialog, "the network browser");
         await _app.WaitForTextAsync(SandboxServices.HostAddress.ToString());
         await _app.WaitForTextAsync("photos");
+        await CloseAndCheckAsync();
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task CtrlShiftJListsTheBluetoothDevicesOfTheSandbox()
+    {
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+J"));
+
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog, "the Bluetooth device manager");
+        await _app.WaitForTextAsync("Sandbox Headphones");
+        await _app.WaitForTextAsync("Sandbox Keyboard");
         await CloseAndCheckAsync();
     }
 
@@ -44,6 +57,7 @@ public class OutsideWorldDialogsTest
         await CloseAndCheckAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task APackageCanBeFoundAndInstalledAfterAConfirmation()
     {
@@ -63,6 +77,7 @@ public class OutsideWorldDialogsTest
         await _app.WaitForTextAsync("Done.");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AnyKeyButYDeclinesTheInstall()
     {
@@ -81,6 +96,7 @@ public class OutsideWorldDialogsTest
         Assert.IsFalse(_app.Screen.Contains("Successfully installed"));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AltF7OpensTheStockBrowserWithTheDefaultStocksQuoted()
     {
@@ -98,6 +114,7 @@ public class OutsideWorldDialogsTest
         await CloseAndCheckAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AStockIsFoundOnAnExchangeAddedAndRemoved()
     {

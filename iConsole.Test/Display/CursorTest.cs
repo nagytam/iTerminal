@@ -6,6 +6,7 @@ namespace iConsole.Test.Display;
 [TestClass]
 public class CursorTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorConstructor()
     {
@@ -16,6 +17,7 @@ public class CursorTest
         Assert.IsNull(cursor.CursorPosition);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorSetVisible()
     {
@@ -24,6 +26,7 @@ public class CursorTest
         Assert.IsTrue(cursor.IsCursorVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorSetPosition()
     {
@@ -36,6 +39,7 @@ public class CursorTest
         Assert.AreEqual(5, cursor.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorPositionNotVisibleWhenHidden()
     {
@@ -48,6 +52,7 @@ public class CursorTest
         Assert.IsNull(cursor.CursorPosition);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorPositionClampedToWidth()
     {
@@ -59,6 +64,7 @@ public class CursorTest
         Assert.AreEqual(5, cursor.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorPositionClampedToHeight()
     {
@@ -70,6 +76,7 @@ public class CursorTest
         Assert.AreEqual(23, cursor.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorSetPositionToNull()
     {
@@ -82,6 +89,7 @@ public class CursorTest
         Assert.IsNull(cursor.CursorPosition);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorResizeSize()
     {
@@ -91,6 +99,7 @@ public class CursorTest
         Assert.AreEqual(40, cursor.Size.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorEquality()
     {
@@ -99,6 +108,7 @@ public class CursorTest
         Assert.AreEqual(cursor1, cursor2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorBoundsValidation()
     {
@@ -110,6 +120,7 @@ public class CursorTest
         Assert.AreEqual(0, cursor.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorMaxBounds()
     {

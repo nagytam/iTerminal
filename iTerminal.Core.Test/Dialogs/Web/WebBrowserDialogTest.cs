@@ -67,6 +67,7 @@ public class WebBrowserDialogTest
         return Render(f.Root, size);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpensOnTheHomePage()
     {
@@ -80,6 +81,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(screen, "Pages are shown as text");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheAddressBarNavigatesAndShowsThePage()
     {
@@ -94,6 +96,7 @@ public class WebBrowserDialogTest
         Assert.IsFalse(f.Dialog.IsTyping);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTitleOfThePageIsShown()
     {
@@ -107,6 +110,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(screen, "Web Browser — Start page");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeInTheAddressBarCancelsTheEdit()
     {
@@ -121,6 +125,7 @@ public class WebBrowserDialogTest
         Assert.AreEqual(1, f.Fetcher.Requests.Count, "only the home page was fetched");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabAndEnterFollowALink()
     {
@@ -138,6 +143,7 @@ public class WebBrowserDialogTest
         Assert.AreEqual("https://a.test/two", f.Tab.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftTabStartsFromTheLastLinkAndTheStatusLineNamesTheTarget()
     {
@@ -151,6 +157,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(screen, "https://a.test/long");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BackspaceAndAltRightWalkTheHistory()
     {
@@ -168,6 +175,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(forward, "The second page");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingIntoAFormFieldAndPressingEnterSubmitsIt()
     {
@@ -189,6 +197,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(screen, "Results page");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SpaceTogglesACheckboxAndTheButtonSubmits()
     {
@@ -209,6 +218,7 @@ public class WebBrowserDialogTest
         Assert.AreEqual("https://a.test/results?q=", f.Fetcher.Requests[^1].Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScrollingKeysMoveThroughALongPage()
     {
@@ -232,6 +242,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(home, "line number 0");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMouseWheelScrollsAndAClickFollowsALink()
     {
@@ -252,6 +263,7 @@ public class WebBrowserDialogTest
         Assert.AreEqual("https://a.test/two", f.Tab.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FindJumpsToTheMatchAndMarksIt()
     {
@@ -275,6 +287,7 @@ public class WebBrowserDialogTest
         Assert.AreNotEqual(0, f.Tab.Scroll);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FindReportsWhenThereIsNoMatch()
     {
@@ -290,6 +303,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(screen, "“zebra” was not found.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabsCanBeOpenedSwitchedAndClosed()
     {
@@ -314,6 +328,7 @@ public class WebBrowserDialogTest
         Assert.AreEqual("Start page", f.Tab.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlEnterOpensALinkInANewTab()
     {
@@ -330,6 +345,7 @@ public class WebBrowserDialogTest
         Assert.AreEqual("https://a.test/", f.Dialog.Model.Tabs[0].Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BookmarksCanBeAddedListedOpenedAndRemoved()
     {
@@ -360,6 +376,7 @@ public class WebBrowserDialogTest
         Assert.IsFalse(f.Dialog.ShowsBookmarks);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HistoryListsVisitedPagesNewestFirst()
     {
@@ -376,6 +393,7 @@ public class WebBrowserDialogTest
             || text.Contains("Second"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PageSourceCanBeToggled()
     {
@@ -393,6 +411,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(rendered, "The second page");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HelpIsShownAndAnyKeyReturns()
     {
@@ -409,6 +428,7 @@ public class WebBrowserDialogTest
         Assert.IsTrue(f.Root.Controls.AsSnapshot().Contains(f.Dialog), "any key leaves the help, it does not close the browser");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeStopsALoadFirstAndThenClosesTheBrowser()
     {
@@ -431,6 +451,7 @@ public class WebBrowserDialogTest
         Assert.IsFalse(f.Root.Controls.AsSnapshot().Contains(f.Dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReopeningKeepsTheTabsAndThePage()
     {
@@ -445,6 +466,7 @@ public class WebBrowserDialogTest
         Assert.AreEqual(1, f.Fetcher.Requests.Count(r => r.Url == "about:home"), "the home page is opened once, not on every show");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnreachablePageShowsAReadableError()
     {
@@ -457,6 +479,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(screen, "No such host");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASmallTerminalStillDraws()
     {
@@ -469,6 +492,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(screen, "Welcome");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASaveWritesTheFileAndSaysWhere()
     {
@@ -497,6 +521,7 @@ public class WebBrowserDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FitHints_DropsTheLeastUsefulHintsWholeAndKeepsEscClose()
     {
@@ -512,6 +537,7 @@ public class WebBrowserDialogTest
         Assert.IsFalse(narrow.Contains("bookmarks", StringComparison.Ordinal), narrow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyKeyButYWithdrawsTheBookmarkRemoval_AndEscapeAlsoLeavesTheList()
     {
@@ -534,6 +560,7 @@ public class WebBrowserDialogTest
         Assert.IsFalse(f.Dialog.ConfirmingRemoveBookmark);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ForgettingAVisitInHistoryNeedsNoQuestion()
     {
@@ -547,6 +574,7 @@ public class WebBrowserDialogTest
         Assert.IsFalse(f.Dialog.ConfirmingRemoveBookmark);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesIntoTheAddressBar_AtTheCursor_OnOneLine()
     {
@@ -563,6 +591,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(await DrawAsync(f), "Ctrl+V:paste");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftInsertPastesToo_AndAFreshAddressBarIsReplacedNotAppendedTo()
     {
@@ -578,6 +607,7 @@ public class WebBrowserDialogTest
         Assert.AreEqual("https://a.test/two", f.Tab.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PastingAnEmptyClipboardChangesNothing()
     {
@@ -591,6 +621,7 @@ public class WebBrowserDialogTest
         Assert.AreEqual("abc", f.Dialog.AddressText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesIntoTheFindBox()
     {
@@ -607,6 +638,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(await DrawAsync(f), "line number 77");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesIntoAFormField()
     {
@@ -626,6 +658,7 @@ public class WebBrowserDialogTest
         Assert.IsTrue(url.Contains("dogs"), url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWDeletesTheWordBeforeTheCursorInTheAddressBar()
     {
@@ -642,6 +675,7 @@ public class WebBrowserDialogTest
         Assert.AreEqual("alpha ma", f.Dialog.AddressText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWOnAFreshAddressBarClearsItAll()
     {
@@ -653,6 +687,7 @@ public class WebBrowserDialogTest
         Assert.AreEqual(string.Empty, f.Dialog.AddressText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWDeletesTheLastWordOfTheFindBox()
     {
@@ -667,6 +702,7 @@ public class WebBrowserDialogTest
         AssertScreenContains(await DrawAsync(f), "Find: line ");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWDeletesTheLastWordOfAFormField()
     {

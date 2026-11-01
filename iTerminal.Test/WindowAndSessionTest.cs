@@ -4,6 +4,7 @@ namespace iTerminal.Test;
 [TestClass]
 public class WindowAndSessionTest
 {
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ResizingTheTerminalReLaysOutBothPanels()
     {
@@ -19,6 +20,7 @@ public class WindowAndSessionTest
         await app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ASmallTerminalStillShowsThePanelsAndTheKeyBar()
     {
@@ -36,6 +38,7 @@ public class WindowAndSessionTest
     /// never went idle — and lists that fill on an idle pass never filled: the disk manager said
     /// "No drives found" on a machine with three.
     /// </summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ASmallTerminalStillFillsDialogLists()
     {
@@ -46,6 +49,7 @@ public class WindowAndSessionTest
         await app.WaitForTextAsync("memdrive://");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F10Quits()
     {
@@ -56,6 +60,7 @@ public class WindowAndSessionTest
         await app.Driver.WaitForExitAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlCQuits()
     {
@@ -66,6 +71,7 @@ public class WindowAndSessionTest
         await app.Driver.WaitForExitAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ARestartReopensTheFolderThePanelWasIn()
     {
@@ -86,6 +92,7 @@ public class WindowAndSessionTest
         }
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ARestartKeepsTheChosenTheme()
     {

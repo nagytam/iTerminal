@@ -58,6 +58,7 @@ public class EditorBasicsTest
 
     // ---- Tab ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Tab_PutsSpacesUpToTheNextStop()
     {
@@ -71,6 +72,7 @@ public class EditorBasicsTest
         Assert.IsTrue(editor.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Tab_OnAnEmptyDocumentStartsALine()
     {
@@ -81,6 +83,7 @@ public class EditorBasicsTest
         Assert.AreEqual("    ", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftTab_TakesOneStepOffTheLineAndKeepsTheCursorOnItsText()
     {
@@ -93,6 +96,7 @@ public class EditorBasicsTest
         Assert.AreEqual(4, editor.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftTab_RemovesATabCharacterToo_AndNothingFromAFlushLine()
     {
@@ -106,6 +110,7 @@ public class EditorBasicsTest
         Assert.AreEqual("x|y", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Tab_WithASelectionIndentsEveryLineItTouchesAndKeepsThemSelected()
     {
@@ -125,6 +130,7 @@ public class EditorBasicsTest
         Assert.AreEqual("one|two|three|four", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Tab_ASelectionEndingAtTheStartOfALineLeavesThatLineAlone()
     {
@@ -138,6 +144,7 @@ public class EditorBasicsTest
         Assert.AreEqual("    one|    two|three", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Tab_IsOneStepOfUndo()
     {
@@ -152,6 +159,7 @@ public class EditorBasicsTest
         Assert.AreEqual("a|b", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Tab_ChangesNothingInAReadOnlyEditor()
     {
@@ -166,6 +174,7 @@ public class EditorBasicsTest
 
     // ---- Auto-indent ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_StartsTheNewLineWithTheIndentOfTheOldOne()
     {
@@ -179,6 +188,7 @@ public class EditorBasicsTest
         Assert.AreEqual(4, editor.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_InTheMiddleOfTheIndentCopiesOnlyWhatIsBeforeTheCursor()
     {
@@ -191,6 +201,7 @@ public class EditorBasicsTest
         Assert.AreEqual(2, editor.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnAFlushLineStillStartsAtTheLeftEdge()
     {
@@ -205,6 +216,7 @@ public class EditorBasicsTest
 
     // ---- Line endings ----
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("a\r\nb\r\nc", "\r\n")]
     [DataRow("a\nb\nc", "\n")]
@@ -216,6 +228,7 @@ public class EditorBasicsTest
         Assert.AreEqual(expected, LineEndings.Detect(text));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Detect_NoBreakAtAllGivesTheSystemsOwn()
     {
@@ -223,12 +236,14 @@ public class EditorBasicsTest
         Assert.AreEqual(Environment.NewLine, LineEndings.Detect(string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Split_ComesApartAtEveryKindOfBreak()
     {
         CollectionAssert.AreEqual(new[] { "a", "b", "c", "d", "" }, LineEndings.Split("a\r\nb\nc\rd\n"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadingThenSaving_KeepsTheFilesOwnLineBreakAndTrailingNewline()
     {
@@ -290,6 +305,7 @@ public class EditorBasicsTest
 
     private static UnsavedChangesDialog? Prompt(Control root) => root.Controls.OfType<UnsavedChangesDialog>().SingleOrDefault();
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscOnAnUnchangedFile_ClosesAtOnce()
     {
@@ -301,6 +317,7 @@ public class EditorBasicsTest
         Assert.IsFalse(rig.Root.Controls.Contains(rig.Dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscOnAChangedFile_AsksFirstAndStaysOpen()
     {
@@ -314,6 +331,7 @@ public class EditorBasicsTest
         Assert.IsFalse(rig.Dialog.PendingClose.IsCompleted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Discard_ClosesAndLosesTheChanges()
     {
@@ -328,6 +346,7 @@ public class EditorBasicsTest
         Assert.IsNull(rig.Written(), "nothing was written");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Save_WritesTheFileAndThenCloses()
     {
@@ -343,6 +362,7 @@ public class EditorBasicsTest
         Assert.IsFalse(rig.Root.Controls.Contains(rig.Dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscOnTheQuestion_IsCancel_AndTheEditorStaysWithItsText()
     {
@@ -359,6 +379,7 @@ public class EditorBasicsTest
         Assert.IsNull(rig.Written());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASaveThatFailsKeepsTheEditorOpen()
     {
@@ -375,6 +396,7 @@ public class EditorBasicsTest
         Assert.IsTrue(rig.Dialog.Title.Contains("disk full", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlS_SavesLikeF2()
     {
@@ -388,6 +410,7 @@ public class EditorBasicsTest
         Assert.IsFalse(rig.Dialog.TextEditorControl.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabInTheDialogIndentsInsteadOfMovingFocus()
     {
@@ -398,6 +421,7 @@ public class EditorBasicsTest
         Assert.AreEqual("    one", rig.Dialog.TextEditorControl.TextModel.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F5_InTheEditorAsksForALineToGoTo()
     {
@@ -414,6 +438,7 @@ public class EditorBasicsTest
 
     // ---- Viewer syntax ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_PicksALanguageByFileNameWhenTheNameIsAllThereIs()
     {
@@ -427,6 +452,7 @@ public class EditorBasicsTest
         Assert.IsNull(SyntaxHighlighter.ForFile("/notes/readme.txt"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_LuaBlockCommentsAndLineCommentsAreTold()
     {
@@ -448,6 +474,7 @@ public class EditorBasicsTest
         return string.Join("|", spans.Where(s => s.Kind == kind).Select(s => line.Substring(s.Start, s.Length)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_CSharpVerbatimStringsKeepTheBackslashesAndDoubledQuotes()
     {
@@ -456,6 +483,7 @@ public class EditorBasicsTest
         Assert.AreEqual("\"a\\\"b\"", SpansOf("a.cs", "var s = \"a\\\"b\";", SyntaxKind.String), "a normal C# string still escapes");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_CSharpKeywordsAndPreprocessorDirectives()
     {
@@ -464,6 +492,7 @@ public class EditorBasicsTest
         Assert.AreEqual("int", SpansOf("a.cs", "int value = 1;", SyntaxKind.Keyword), "'value' is a name, not a keyword");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_JavaKeywordsStringsAndComments()
     {
@@ -474,6 +503,7 @@ public class EditorBasicsTest
         Assert.AreEqual("int", SpansOf("Main.java", "int value = 1;", SyntaxKind.Keyword), "'value' is a name, not a keyword");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_PythonTripleQuotedStringsOnOneLine()
     {
@@ -481,6 +511,7 @@ public class EditorBasicsTest
         Assert.AreEqual("'''note", SpansOf("a.py", "y = '''note", SyntaxKind.String), "an unterminated triple quote ends with the line");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_VisualBasicDoubledQuotesAndNoBackslashEscapes()
     {
@@ -489,6 +520,7 @@ public class EditorBasicsTest
         Assert.AreEqual("If", SpansOf("a.vb", "p = \"C:\\\" If", SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_CPreprocessorAndKeywords()
     {
@@ -498,6 +530,7 @@ public class EditorBasicsTest
         Assert.AreEqual("C", SyntaxHighlighter.ForFile("main.c")?.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_GoKeywordsAndRaw()
     {
@@ -506,6 +539,7 @@ public class EditorBasicsTest
         Assert.AreEqual("\"x\"", SpansOf("main.go", "s := \"x\"", SyntaxKind.String));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_RustLifetimesAreNotStrings()
     {
@@ -514,6 +548,7 @@ public class EditorBasicsTest
         Assert.AreEqual("\"hi\"", SpansOf("lib.rs", "let s = \"hi\";", SyntaxKind.String));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_JavaScriptTemplateLiteralsAndKeywords()
     {
@@ -522,6 +557,7 @@ public class EditorBasicsTest
         Assert.AreEqual("`hi`", SpansOf("app.js", "const x = `hi`; // note", SyntaxKind.String));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_YamlKeysListItemsAndUrlsAreNotKeys()
     {
@@ -533,6 +569,7 @@ public class EditorBasicsTest
         Assert.AreEqual("enabled|true", SpansOf("a.yml", "enabled: true", SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_IniSectionsKeysAndComments()
     {
@@ -542,6 +579,7 @@ public class EditorBasicsTest
         Assert.AreEqual("", SpansOf("a.ini", "; just a note", SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_TomlTablesKeysAndValues()
     {
@@ -550,6 +588,7 @@ public class EditorBasicsTest
         Assert.AreEqual("enabled|true", SpansOf("a.toml", "enabled = true", SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_DotenvAndPropertiesKeys()
     {
@@ -558,6 +597,7 @@ public class EditorBasicsTest
         Assert.AreEqual("# note", SpansOf("a.env", "# note", SyntaxKind.Comment));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_BashBuiltinsVariablesAndStrings()
     {
@@ -566,6 +606,7 @@ public class EditorBasicsTest
         Assert.AreEqual("echo", SpansOf("a.sh", "echo $shift", SyntaxKind.Keyword), "a variable named like a builtin is not a keyword");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_CppKeywordsDigitSeparatorsAndDirectives()
     {
@@ -576,6 +617,7 @@ public class EditorBasicsTest
         Assert.AreEqual("", SpansOf("a.cpp", "int a = 1;", SyntaxKind.String));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_PowerShellIsCaseInsensitiveAndKnowsItsCmdlets()
     {
@@ -584,6 +626,7 @@ public class EditorBasicsTest
         Assert.AreEqual("Function|param|ForEach-Object", SpansOf("a.ps1", "Function Get-Thing { param($data) ForEach-Object { } }", SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_PowerShellVariablesAreNotKeywordsAndBacktickEscapes()
     {
@@ -592,6 +635,7 @@ public class EditorBasicsTest
         Assert.AreEqual("if", SpansOf("a.ps1", "echo \"a`\"b\" if", SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_PowerShellBlockCommentsRunOverLines()
     {
@@ -620,6 +664,7 @@ public class EditorBasicsTest
         return viewer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Viewer_ColoursKeywordsWhenNotWrapping()
     {
@@ -631,6 +676,7 @@ public class EditorBasicsTest
         Assert.AreEqual(Color.White, screen.ForegroundAt(8, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Viewer_ColoursKeywordsWhenWrapping()
     {
@@ -642,6 +688,7 @@ public class EditorBasicsTest
         Assert.AreEqual(Color.White, screen.ForegroundAt(8, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Viewer_AKeywordOnTheSecondRowOfAWrappedLineIsColouredFromItsOwnPlace()
     {
@@ -655,6 +702,7 @@ public class EditorBasicsTest
         Assert.AreEqual(Color.White, screen.ForegroundAt(0, 2), "the identifier runs on into the second row");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Viewer_ABlockCommentThatRunsOverWrappedLinesStaysAComment()
     {
@@ -666,6 +714,7 @@ public class EditorBasicsTest
         Assert.AreEqual(Color.Cyan, screen.ForegroundAt(3, 2), "and 'return' after the close is a keyword again");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Viewer_TheCursorRowKeepsItsHighlightWhenWrapping()
     {

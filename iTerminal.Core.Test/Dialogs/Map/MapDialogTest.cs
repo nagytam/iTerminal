@@ -82,6 +82,7 @@ public class MapDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowsTheHeaderWithModeCoordinatesZoomAndAttribution()
     {
@@ -96,6 +97,7 @@ public class MapDialogTest
         AssertScreenContains(screen, "F1:help");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DrawsTheMapAsAsciiOnceTheTilesHaveArrived()
     {
@@ -109,6 +111,7 @@ public class MapDialogTest
         AssertScreenContains(screen, "|-");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OfflineModeShowsTheStateAndNeverFetches()
     {
@@ -122,6 +125,7 @@ public class MapDialogTest
         Assert.AreEqual(0, f.Fetcher.Requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OTogglesOnlineAndOffline()
     {
@@ -135,6 +139,7 @@ public class MapDialogTest
         Assert.IsTrue(f.Model.Online);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowsPanAndPlusMinusZoom()
     {
@@ -160,6 +165,7 @@ public class MapDialogTest
         Assert.AreEqual(12, f.Model.Zoom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftArrowsPanHalfAScreen()
     {
@@ -173,6 +179,7 @@ public class MapDialogTest
         Assert.AreEqual(118 / 2.0 * MapAsciiRenderer.CellWidth, x1 - x0, 1.0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingTheMapCentresItOnThatSpot()
     {
@@ -185,6 +192,7 @@ public class MapDialogTest
         Assert.IsTrue(f.Model.Longitude > longitude);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HomeReturnsToBudapest()
     {
@@ -197,6 +205,7 @@ public class MapDialogTest
         Assert.AreEqual(MapStore.HomeZoom, f.Model.Zoom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingCoordinatesJumpsThereWithoutTheNetwork()
     {
@@ -217,6 +226,7 @@ public class MapDialogTest
         Assert.IsTrue(f.Model.Zoom >= 14);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchingByNameOfflineExplainsItNeedsTheNetwork()
     {
@@ -230,6 +240,7 @@ public class MapDialogTest
         Assert.AreEqual(0, f.Search.Queries.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SeveralSearchResultsAreListedAndEnterGoesToTheChosenOne()
     {
@@ -256,6 +267,7 @@ public class MapDialogTest
         AssertScreenContains(Render(f.Root), "Paris, Texas");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASearchThatFailsUnexpectedly_SaysWhy_AndTheNextSearchCanRun()
     {
@@ -273,6 +285,7 @@ public class MapDialogTest
         AssertScreenDoesNotContain(Render(f.Root), "already running");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NothingFoundIsReported()
     {
@@ -286,6 +299,7 @@ public class MapDialogTest
         AssertScreenContains(Render(f.Root), "Nothing found for");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SavedPlacesAreListedGoneToAndRemoved()
     {
@@ -311,6 +325,7 @@ public class MapDialogTest
         Assert.IsFalse(f.Dialog.ConfirmingRemovePlace);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyKeyButYWithdrawsTheRemovalOfAPlace_AndEscapeAlsoClosesTheList()
     {
@@ -333,6 +348,7 @@ public class MapDialogTest
         Assert.IsFalse(f.Dialog.ConfirmingRemovePlace);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutSavedPlacesBSaysSo()
     {
@@ -343,6 +359,7 @@ public class MapDialogTest
         AssertScreenContains(Render(f.Root), "No saved places yet");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DSavesTheViewForOfflineUse()
     {
@@ -355,6 +372,7 @@ public class MapDialogTest
         Assert.IsTrue(Directory.Exists(Path.Combine(_folder, "tiles")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F1ShowsHelpAndAnyKeyGoesBack()
     {
@@ -368,6 +386,7 @@ public class MapDialogTest
         Assert.IsFalse(f.Dialog.ShowsHelp);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscClosesTheDialog()
     {
@@ -378,6 +397,7 @@ public class MapDialogTest
         Assert.IsFalse(f.Root.Controls.AsSnapshot().Contains(f.Dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MouseWheelZoomsAtThePointer()
     {
@@ -391,6 +411,7 @@ public class MapDialogTest
         Assert.AreEqual(12, f.Model.Zoom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ViewIsRememberedBetweenOpens()
     {
@@ -416,6 +437,7 @@ public class MapDialogTest
         Assert.IsTrue(condition(), "timed out waiting");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesIntoTheSearch()
     {
@@ -428,6 +450,7 @@ public class MapDialogTest
         AssertScreenContains(Render(f.Root), "Search or coordinates: 48.2 16.37");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWDeletesTheLastWordOfTheSearch()
     {

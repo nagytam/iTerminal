@@ -33,6 +33,7 @@ public class WindowsAccessControlServiceTest
 
     private static void Cleanup(string file) => Directory.Delete(Path.GetDirectoryName(file)!, recursive: true);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARealFileListsItsOwnerAndEntries()
     {
@@ -54,6 +55,7 @@ public class WindowsAccessControlServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetAddsAnExplicitEntryAndASecondSetReplacesIt()
     {
@@ -80,6 +82,7 @@ public class WindowsAccessControlServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADenyEntryIsKeptApartFromAnAllowOneAndRemoveTakesOneKind()
     {
@@ -104,6 +107,7 @@ public class WindowsAccessControlServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARemovalOfWhatIsNotThereSaysSo()
     {
@@ -122,6 +126,7 @@ public class WindowsAccessControlServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFolderEntryCanReachWhatIsInsideIt()
     {
@@ -143,6 +148,7 @@ public class WindowsAccessControlServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TurningInheritanceOffKeepsTheInheritedEntriesAsCopies()
     {
@@ -168,6 +174,7 @@ public class WindowsAccessControlServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnknownAccountIsRefusedInWords()
     {
@@ -186,6 +193,7 @@ public class WindowsAccessControlServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APresetIsRecognisedWhateverTheSynchroniseBit()
     {

@@ -21,6 +21,7 @@ public class ExecuteCommandTaskTest
     private static async Task WaitForAsync(ExecuteCommandTask task) =>
         await task.Completion.WaitAsync(TimeSpan.FromSeconds(15));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNothingToRun_CompletesAtOnce_AndRunsNoTask()
     {
@@ -32,6 +33,7 @@ public class ExecuteCommandTaskTest
         Assert.IsNull(task.Task);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithAPanelAndACommand_RunsItOnThePanel_AndAddsItToHistory()
     {
@@ -48,6 +50,7 @@ public class ExecuteCommandTaskTest
         Assert.IsNull(terminal.History[0].Error, "a command that ran cleanly has no error");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhenTheCommandFails_ItsMessageGoesOnTheCommand_AndItStillCompletes()
     {

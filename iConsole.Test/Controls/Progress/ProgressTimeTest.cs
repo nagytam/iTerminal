@@ -25,6 +25,7 @@ public class ProgressTimeTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesProperties()
     {
@@ -39,6 +40,7 @@ public class ProgressTimeTest
         Assert.AreEqual(1, progressTime.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesDefaultLabels()
     {
@@ -53,6 +55,7 @@ public class ProgressTimeTest
         Assert.AreEqual("Total time", progressTime.LabelTotal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelElapsed_CanBeSet()
     {
@@ -66,6 +69,7 @@ public class ProgressTimeTest
         Assert.AreEqual("Custom Elapsed", progressTime.LabelElapsed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelRemaining_CanBeSet()
     {
@@ -79,6 +83,7 @@ public class ProgressTimeTest
         Assert.AreEqual("Custom Remaining", progressTime.LabelRemaining);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelTotal_CanBeSet()
     {
@@ -92,6 +97,7 @@ public class ProgressTimeTest
         Assert.AreEqual("Custom Total", progressTime.LabelTotal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewSize_CanBeSet()
     {
@@ -106,6 +112,7 @@ public class ProgressTimeTest
         Assert.AreEqual(2, progressTime.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_TaskStarted_ShowsElapsedLabel()
     {
@@ -124,6 +131,7 @@ public class ProgressTimeTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Elapsed time"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_TaskStarted_ShowsRemainingLabel()
     {
@@ -142,6 +150,7 @@ public class ProgressTimeTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Remaining time"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_TaskStarted_ShowsTimeDuration()
     {
@@ -161,6 +170,7 @@ public class ProgressTimeTest
         Assert.IsTrue(buffer.ContentAsString.Contains(":"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_CustomLabelElapsed_ShowsCustomLabel()
     {

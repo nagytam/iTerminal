@@ -12,6 +12,7 @@ namespace iConsole.Test.Helper;
 [TestClass]
 public class CommandHelperTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void AddVerticalScrollingCommands_AddsAllCommands()
     {
@@ -25,6 +26,7 @@ public class CommandHelperTest
         Assert.IsTrue(control.Commands.Count >= 4);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddVerticalScrollingCommands_WithHomeEnd_AddsMoreCommands()
     {
@@ -38,6 +40,7 @@ public class CommandHelperTest
         Assert.IsTrue(control.Commands.Count >= 6);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddVerticalScrollingCommands_NullControl_ThrowsException()
     {
@@ -54,6 +57,7 @@ public class CommandHelperTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddHorizontalScrollingCommands_AddsAllCommands()
     {
@@ -69,6 +73,7 @@ public class CommandHelperTest
         Assert.IsTrue(control.Commands.Count >= 8);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddHorizontalScrollingCommands_NullControl_ThrowsException()
     {
@@ -87,6 +92,7 @@ public class CommandHelperTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddHorizontalScrollingCommands_WithCursorDisabled_AddsCommands()
     {

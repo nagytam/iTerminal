@@ -11,6 +11,7 @@ namespace iConsole.Test.Controls;
 [TestClass]
 public class ErrorMessageTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ErrorMessageDrawsErrorText()
     {
@@ -31,6 +32,7 @@ public class ErrorMessageTest
         Assert.IsTrue(buffer.ContentAsString.Length > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ErrorMessageDrawsEmptyError()
     {
@@ -50,6 +52,7 @@ public class ErrorMessageTest
         Assert.IsFalse(buffer.ContentAsString.Contains("Error:"), "no message, no caption");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ErrorMessageTextPropertyReflectsValidationModel()
     {
@@ -63,6 +66,7 @@ public class ErrorMessageTest
         Assert.IsTrue(errorMessage.Text.Contains("Test error message"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ErrorMessageTextUpdatesWithValidationModel()
     {
@@ -79,6 +83,7 @@ public class ErrorMessageTest
         Assert.IsTrue(errorMessage.Text.Contains("Updated error"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ErrorMessageDrawsWithOffset()
     {
@@ -100,6 +105,7 @@ public class ErrorMessageTest
         Assert.IsTrue(lines.Length > 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ErrorMessageDrawsLongErrorMessage()
     {
@@ -121,6 +127,7 @@ public class ErrorMessageTest
         Assert.IsTrue(buffer.ContentAsString.Length > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ErrorMessageInheritsFromLabel()
     {
@@ -135,6 +142,7 @@ public class ErrorMessageTest
         Assert.IsInstanceOfType(errorMessage, typeof(Label));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ErrorMessageTextStartsWithErrorPrefix()
     {
@@ -152,6 +160,7 @@ public class ErrorMessageTest
     /// The caption belongs to a message. Visibility and text were read at different moments, so a
     /// result that changed in between drew a bare "Error:" with nothing after it.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutAMessageThereIsNoCaption()
     {
@@ -166,6 +175,7 @@ public class ErrorMessageTest
         Assert.IsFalse(screen.Contains("Error"), "a row with no message is blank");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMessageGetsTheCaption()
     {
@@ -176,6 +186,7 @@ public class ErrorMessageTest
         Assert.AreEqual("Error: Not a valid name or path.", errorMessage.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMessageSetByTheCaller_ShowsWhenValidationHasNone_AndCanBeWithdrawn()
     {
@@ -195,6 +206,7 @@ public class ErrorMessageTest
         Assert.AreEqual("", errorMessage.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationsOwnMessage_WinsOverOneSetByTheCaller()
     {
@@ -211,6 +223,7 @@ public class ErrorMessageTest
         Assert.AreEqual("Error: The disk is full.", errorMessage.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMessageSetByTheCaller_IsDrawn()
     {

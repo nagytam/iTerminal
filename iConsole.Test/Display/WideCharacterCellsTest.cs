@@ -8,6 +8,7 @@ namespace iConsole.Test.Display;
 [TestClass]
 public class WideCharacterCellsTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelString_GivesAWideCharacterTwoCells()
     {
@@ -17,6 +18,7 @@ public class WideCharacterCellsTest
         Assert.AreEqual("日本", text.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelString_GivesAnEmojiTwoCells()
     {
@@ -26,6 +28,7 @@ public class WideCharacterCellsTest
         Assert.AreEqual("a😀", text.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RepairWideCharacters_BlanksAHalfThatLostItsPartner()
     {
@@ -40,6 +43,7 @@ public class WideCharacterCellsTest
         Assert.AreEqual('x', layer[0].Span[1].Char);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RepairWideCharacters_LeavesAWhollyWideCharacterAlone()
     {
@@ -51,6 +55,7 @@ public class WideCharacterCellsTest
         Assert.AreEqual("日本", TextWidth.FromCells(layer[0].Span.ToArray().Select(c => c.Char)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnsiOutput_NeverWritesTheContinuationCell()
     {

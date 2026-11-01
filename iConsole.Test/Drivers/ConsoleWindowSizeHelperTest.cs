@@ -6,6 +6,7 @@ namespace iConsole.Test.Drivers;
 [TestClass]
 public class ConsoleWindowSizeHelperTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Normalize_WhenSizeHasNoPositiveDimension_ReturnsOriginalSize()
     {
@@ -16,6 +17,7 @@ public class ConsoleWindowSizeHelperTest
         Assert.AreEqual(size, normalized);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetBufferPosition_AddsViewportOrigin()
     {
@@ -24,6 +26,7 @@ public class ConsoleWindowSizeHelperTest
         Assert.AreEqual(new Position(6, 8), position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetVisiblePosition_SubtractsViewportOriginAndClampsToZero()
     {

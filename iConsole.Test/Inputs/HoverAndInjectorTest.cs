@@ -22,6 +22,7 @@ public class HoverAndInjectorTest
         return mouse!;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Motion_WithNoButtonHeld_IsDecodedAsHover()
     {
@@ -35,6 +36,7 @@ public class HoverAndInjectorTest
         Assert.AreEqual(4, mouse.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Motion_WithLeftButtonHeld_IsADragNotAHover()
     {
@@ -44,6 +46,7 @@ public class HoverAndInjectorTest
         Assert.IsFalse(mouse.IsHover);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Click_IsNotAHover()
     {
@@ -53,6 +56,7 @@ public class HoverAndInjectorTest
         Assert.IsFalse(mouse.IsHover);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Preferred_Reporting_EnablesAnyMotion()
     {

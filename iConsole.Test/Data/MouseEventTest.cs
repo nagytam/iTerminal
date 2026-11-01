@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class MouseEventTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void MouseEventConstructor()
     {
@@ -17,6 +18,7 @@ public class MouseEventTest
         Assert.IsFalse(mouseEvent.IsRelease);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MouseEventSetPosition()
     {
@@ -27,6 +29,7 @@ public class MouseEventTest
         Assert.AreEqual(20, mouseEvent.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MouseEventLeftClicked()
     {
@@ -35,6 +38,7 @@ public class MouseEventTest
         Assert.IsFalse(mouseEvent.RightClicked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MouseEventRightClicked()
     {
@@ -43,6 +47,7 @@ public class MouseEventTest
         Assert.IsTrue(mouseEvent.RightClicked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MouseEventBothClicked()
     {
@@ -51,6 +56,7 @@ public class MouseEventTest
         Assert.IsTrue(mouseEvent.RightClicked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MouseEventInitialize()
     {
@@ -67,6 +73,7 @@ public class MouseEventTest
         Assert.IsFalse(mouseEvent.RightClicked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MouseEventEquality()
     {

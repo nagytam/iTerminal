@@ -26,6 +26,7 @@ public class CalendarAndRuleTest
     private static Calendar Create()
         => new(Theme()) { Position = new Position(0, 0), SelectedDate = new DateOnly(2026, 10, 18), Today = new DateOnly(2026, 10, 18) };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_GridStart_IsTheFirstColumnOnOrBeforeTheFirst()
     {
@@ -33,6 +34,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(new DateOnly(2026, 9, 27), Calendar.GridStart(new DateOnly(2026, 10, 18), DayOfWeek.Sunday));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_Draw_ShowsMonthWeekdaysAndDays()
     {
@@ -48,6 +50,7 @@ public class CalendarAndRuleTest
     private static void StringAssert_Contains(string text, string part)
         => Assert.IsTrue(text.Contains(part), $"[{text}] lacks [{part}]");
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_Keys_MoveByDayWeekAndMonth()
     {
@@ -63,12 +66,14 @@ public class CalendarAndRuleTest
         Assert.AreEqual(new DateOnly(2026, 11, 30), calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_AddMonths_ClampsToShorterMonth()
     {
         Assert.AreEqual(new DateOnly(2026, 2, 28), Calendar.AddMonths(new DateOnly(2026, 1, 31), 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_ClickDay_SelectsIt()
     {
@@ -77,6 +82,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(new DateOnly(2026, 9, 28), calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_ClickArrows_ChangeMonth()
     {
@@ -87,6 +93,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(new DateOnly(2026, 10, 18), calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_ReadOnly_IgnoresInput()
     {
@@ -98,6 +105,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(new DateOnly(2026, 10, 18), calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Separator_BuildRule_SetsTitleIn()
     {
@@ -106,6 +114,7 @@ public class CalendarAndRuleTest
         Assert.IsTrue(rule.StartsWith(Border.HorizontalSingle + Border.HorizontalSingle + " Advanced " + Border.HorizontalSingle));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Separator_BuildRule_WithoutTitleOrRoom_IsPlain()
     {
@@ -113,6 +122,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(string.Concat(Enumerable.Repeat(Border.HorizontalSingle, 5)), Separator.BuildRule("Advanced", 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Meter_ShowPercent_OverlaysValue()
     {
@@ -120,6 +130,7 @@ public class CalendarAndRuleTest
         new Meter(Theme()) { Value = 0.5, ShowPercent = true, Position = new Position(0, 0), ViewSize = new Size(20, 1) }.Draw(buffer);
         Assert.IsTrue(Lines(buffer)[0].Contains(" 50% "));
     }
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_ShowWeekNumbers_AddsIsoWeekColumn()
     {
@@ -134,6 +145,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual("42 12 13 14 15 16 17 18", lines[4].TrimEnd().Substring(0, 23));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_AdjacentDaysOff_LeavesThemBlank()
     {
@@ -144,6 +156,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual("          1  2  3  4", Lines(buffer)[2].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_ClickOnBlankAdjacentDay_DoesNothing()
     {
@@ -153,6 +166,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(new DateOnly(2026, 10, 18), calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_WeekNumbersShiftTheClickColumns()
     {
@@ -181,6 +195,7 @@ public class CalendarAndRuleTest
         public void Raise() => Changed?.Invoke(this, EventArgs.Empty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_BoundModel_IsTheSourceOfTheSelection()
     {
@@ -195,6 +210,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(new DateOnly(2026, 12, 1), model.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_ReplacedModel_StopsListeningToTheOldOne()
     {
@@ -210,6 +226,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(1, changed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_CtrlPageUpAndDown_MoveByAYear()
     {
@@ -223,6 +240,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(new DateOnly(2025, 10, 18), calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_CtrlPageDown_FromALeapDay_ClampsToTheShorterMonth()
     {
@@ -235,6 +253,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(new DateOnly(2029, 2, 28), calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_T_JumpsBackToToday_InEitherCase()
     {
@@ -250,6 +269,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(new DateOnly(2026, 10, 18), calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_ReadOnlyOrCtrlT_IgnoresTheNewKeys()
     {
@@ -266,6 +286,7 @@ public class CalendarAndRuleTest
         Assert.AreEqual(new DateOnly(2030, 1, 5), calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_Space_ActivatesTheDateLikeEnter()
     {

@@ -9,6 +9,7 @@ public class KeyValueListTest
 {
     private readonly TestThemeService _theme = new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NullKeyOrValue_DrawsAsAnEmptyCell_InsteadOfFailing()
     {
@@ -21,6 +22,7 @@ public class KeyValueListTest
         Assert.AreEqual("Name", screen.Lines[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsKeysAndValuesInColumns()
     {

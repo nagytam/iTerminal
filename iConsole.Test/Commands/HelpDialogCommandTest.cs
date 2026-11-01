@@ -22,6 +22,7 @@ public class HelpDialogCommandTest
         return mock.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsF1Key()
     {
@@ -37,6 +38,7 @@ public class HelpDialogCommandTest
         Assert.IsFalse(command.Key.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_StoresDialog()
     {
@@ -48,6 +50,7 @@ public class HelpDialogCommandTest
         Assert.IsNotNull(command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_AlwaysReturnsTrue()
     {
@@ -59,6 +62,7 @@ public class HelpDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithNoControlAttached_DoesNotThrow()
     {

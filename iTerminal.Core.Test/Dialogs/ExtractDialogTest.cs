@@ -57,6 +57,7 @@ public class ExtractDialogTest
         return (dialog, model, service.Object);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheArchiveUnderTheCursorGoesIntoAFolderOfItsOwnInTheOtherPanel()
     {
@@ -72,6 +73,7 @@ public class ExtractDialogTest
         AssertScreenContains(Render(dialog), "Each archive into a folder of its own");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnlyTheMarkedArchivesAreTakenAndAMissingToolIsSaidUpFront()
     {
@@ -86,6 +88,7 @@ public class ExtractDialogTest
         StringAssert.Contains(dialog.LandingForTest, "a folder per archive");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingWithdrawsAnErrorButNotTheNoticeAboutAMissingTool()
     {
@@ -102,6 +105,7 @@ public class ExtractDialogTest
         Assert.AreEqual(".rar archives need 7-Zip installed.", dialog.ErrorMessage.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingClearsAnErrorWhenNothingWasBlocked()
     {
@@ -115,6 +119,7 @@ public class ExtractDialogTest
         Assert.AreEqual(string.Empty, dialog.ErrorMessage.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutOwnFoldersTheFilesLandInTheTargetItself()
     {
@@ -128,6 +133,7 @@ public class ExtractDialogTest
         Assert.AreEqual(new ExtractionOptions(null, false), dialog.ReadOptions().Options);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShiftF5IsOfferedOnlyOverAnArchive()
     {

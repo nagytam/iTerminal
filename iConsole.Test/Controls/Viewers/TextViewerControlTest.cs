@@ -12,6 +12,7 @@ namespace iConsole.Test.Controls.Viewers;
 [TestClass]
 public class TextViewerControlTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlCanBeCreated()
     {
@@ -22,6 +23,7 @@ public class TextViewerControlTest
         Assert.IsInstanceOfType(viewer, typeof(Control));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListTheScrollKeys_AndNothingWhenDisabled()
     {
@@ -36,6 +38,7 @@ public class TextViewerControlTest
         Assert.AreEqual(0, viewer.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlHasTextModel()
     {
@@ -45,6 +48,7 @@ public class TextViewerControlTest
         Assert.IsNotNull(viewer.TextModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlHasScrollableModel()
     {
@@ -54,6 +58,7 @@ public class TextViewerControlTest
         Assert.IsNotNull(viewer.ScrollableModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlHasSearchModel()
     {
@@ -63,6 +68,7 @@ public class TextViewerControlTest
         Assert.IsNotNull(viewer.SearchModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlHasSelectionModel()
     {
@@ -72,6 +78,7 @@ public class TextViewerControlTest
         Assert.IsNotNull(viewer.SelectionTextModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlCursorDisabledByDefault()
     {
@@ -81,6 +88,7 @@ public class TextViewerControlTest
         Assert.IsFalse(viewer.IsCursorVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlCursorCanBeEnabled()
     {
@@ -90,6 +98,7 @@ public class TextViewerControlTest
         Assert.IsTrue(viewer.IsCursorVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlCursorPositionCanBeRead()
     {
@@ -106,6 +115,7 @@ public class TextViewerControlTest
         Assert.IsNotNull(cursorPosition);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlCanAddText()
     {
@@ -118,6 +128,7 @@ public class TextViewerControlTest
         Assert.AreEqual("Hello, World!", viewer.TextModel.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlCanClearText()
     {
@@ -131,6 +142,7 @@ public class TextViewerControlTest
         Assert.AreEqual(0, viewer.TextModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlInitializeLayoutSetsScrollableSize()
     {
@@ -152,6 +164,7 @@ public class TextViewerControlTest
         Assert.AreEqual(1, (int)viewer.ScrollableModel.ScrollableSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlInitializeLayoutWithEmptyText()
     {
@@ -172,6 +185,7 @@ public class TextViewerControlTest
         Assert.AreEqual(0, (int)viewer.ScrollableModel.ScrollableSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextViewerControlInitializeAsync()
     {
@@ -187,6 +201,7 @@ public class TextViewerControlTest
         Assert.IsNotNull(viewer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlCanDrawContent()
     {
@@ -205,6 +220,7 @@ public class TextViewerControlTest
         Assert.IsTrue(buffer.ContentAsString.Length > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlHandlesMultipleLines()
     {
@@ -218,6 +234,7 @@ public class TextViewerControlTest
         Assert.AreEqual(3, viewer.TextModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlCanScroll()
     {
@@ -233,6 +250,7 @@ public class TextViewerControlTest
         Assert.AreEqual(50, viewer.TextModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlScrollableModelUpdatesWithTextSize()
     {
@@ -249,6 +267,7 @@ public class TextViewerControlTest
         Assert.IsTrue(firstWidth <= secondWidth || secondWidth > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlSearchModelAvailable()
     {
@@ -260,6 +279,7 @@ public class TextViewerControlTest
         Assert.IsNotNull(viewer.SearchModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlSelectionModelAvailable()
     {
@@ -270,6 +290,7 @@ public class TextViewerControlTest
         Assert.IsFalse(viewer.SelectionTextModel.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlCursorVisibilityToggle()
     {
@@ -281,6 +302,7 @@ public class TextViewerControlTest
         Assert.IsFalse(viewerWithoutCursor.IsCursorVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewerControlRefreshUpdatesDisplay()
     {

@@ -12,6 +12,7 @@ public class CompareFoldersTest
     [TestCleanup]
     public async Task StopAsync() => await _app.DisposeAsync();
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ShiftF2ListsTheDifferencesAndMarksWhatToCopyAcross()
     {
@@ -42,6 +43,7 @@ public class CompareFoldersTest
                                         && Directory.Exists(Path.Combine(_app.RightRoot, "alpha")), "the left side's files to arrive");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5InTheDialogSynchronisesBothWaysAfterAConfirmation()
     {
@@ -76,6 +78,7 @@ public class CompareFoldersTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task IdenticalFoldersSaySo()
     {

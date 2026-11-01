@@ -11,6 +11,7 @@ namespace iTerminal.Core.Test.Dialogs.Video;
 [TestClass]
 public class ImageFileViewerMetadataTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task I_ShowsTheMetadataInPlaceOfThePicture_AndAgainHidesIt()
     {
@@ -35,6 +36,7 @@ public class ImageFileViewerMetadataTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileWithNoMetadata_SaysSoInItsView()
     {
@@ -53,6 +55,7 @@ public class ImageFileViewerMetadataTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task E_OutsideTheMetadataView_IsNotHandled()
     {
@@ -71,6 +74,7 @@ public class ImageFileViewerMetadataTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task E_InTheMetadataView_OpensTheTextEditor()
     {

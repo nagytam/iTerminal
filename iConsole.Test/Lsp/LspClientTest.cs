@@ -160,6 +160,7 @@ public class LspClientTest
 
     // ---- JSON-RPC ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARequestIsMatchedToItsAnswer_AndANotificationReachesItsHandler()
     {
@@ -181,6 +182,7 @@ public class LspClientTest
         Assert.AreEqual("hello", heard);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NotificationsAndRequests_AreHandledInTheOrderTheyArrived()
     {
@@ -220,6 +222,7 @@ public class LspClientTest
         CollectionAssert.AreEqual(Enumerable.Range(0, 40).ToList(), seen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnErrorAnswer_ThrowsWithItsCodeAndMessage_AndAnUnknownMethodIsAnError()
     {
@@ -239,6 +242,7 @@ public class LspClientTest
         Assert.AreEqual(-32601, unknown.Code);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AMessageSplitAcrossWrites_IsStillRead_AndNonAsciiTextSurvives()
     {
@@ -268,6 +272,7 @@ public class LspClientTest
         Assert.AreEqual("árvíztűrő ✓", heard);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhenTheOtherEndCloses_PendingRequestsFailAndClosedIsRaised()
     {
@@ -292,6 +297,7 @@ public class LspClientTest
 
     // ---- the client ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Initialize_ReadsTheServersCapabilities_AndSaysInitialized()
     {
@@ -310,6 +316,7 @@ public class LspClientTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFeatureTheServerDoesNotHave_IsReportedAsMissing()
     {
@@ -324,6 +331,7 @@ public class LspClientTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpeningAndChangingADocument_PublishesDiagnostics()
     {
@@ -363,6 +371,7 @@ public class LspClientTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChangesCountUp_AndAnUnopenedDocumentIsNotChanged()
     {
@@ -385,6 +394,7 @@ public class LspClientTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Hover_Completion_AndDefinition_AreAnsweredFromTheServer()
     {
@@ -410,6 +420,7 @@ public class LspClientTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Shutdown_TellsTheServerToStopAndExit_OnlyOnce()
     {
@@ -428,6 +439,7 @@ public class LspClientTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UriOf_IsAFileUri()
     {
@@ -437,6 +449,7 @@ public class LspClientTest
         Assert.IsTrue(uri.EndsWith("a%20b.cs", StringComparison.Ordinal), uri);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AProcessThatIsNotInstalled_ReturnsNullInsteadOfThrowing()
     {
@@ -462,6 +475,7 @@ public class LspClientTest
         return editor;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheBinding_TurnsDiagnosticsIntoUnderlinesWithMessages()
     {
@@ -493,6 +507,7 @@ public class LspClientTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheBinding_SendsChangesOnceAndRefreshesTheMarks()
     {
@@ -516,6 +531,7 @@ public class LspClientTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheBinding_AsksHoverCompletionAndDefinitionAtTheCursor_AndFlushesFirst()
     {
@@ -540,6 +556,7 @@ public class LspClientTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheBinding_OnlyListensToItsOwnDocument_AndDisposeClosesItAndRemovesTheMarks()
     {
@@ -563,6 +580,7 @@ public class LspClientTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NextDiagnostic_GoesDownTheFileAndWrapsRound()
     {

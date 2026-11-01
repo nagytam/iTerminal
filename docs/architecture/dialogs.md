@@ -137,6 +137,7 @@ A full-screen, text-mode browser (Tools > Web Browser, Ctrl+S; Ctrl+T would open
 - **Form controls reserve their width in the layout but are drawn live** from `WebField` state (a span with `Field` set), so typing never re-lays the page out. The state survives a re-layout and Back/Forward (each history entry keeps its document, page, scroll and focus; entries more than 8 away drop their data and are re-fetched).
 - **`IWebFetcher` is the only network seam.** `WebFetcher` serves http(s) (one `HttpClient` and cookie jar for the app), `file:` (directories as a link list), `data:` and `about:`. Binary content is never saved unasked: the page says so and F7 writes it to `~/Downloads` without overwriting. The end-to-end suite replaces it with `SandboxServices.Web`.
 - **Bookmarks and history** (`WebBrowserStore`) are JSON in the settings (`WebBrowser.*`); the home page and search URL (`{0}` = query) can be set there too.
+- **F3 on a local `.html`, `.htm` or `.xhtml` file** opens the page here as a viewer (`ViewFileDialogCommand`, `HtmlFileTypes`). Enter does not: it opens the page in the external browser, through "Open with" or the system default, as for any other file. Each panel gets its own dialog (`Func<WebBrowserDialog>`), and the File menu and hot-key bar's F3 get the same one. The browser loads from disk, so a page on a remote drive or in an archive is not offered here and F3 shows it as text.
 
 ### Stock browser (`StockBrowserDialog`, Alt+F7)
 A full-screen `SplitPaneDialog` (like the Git client) showing a live watchlist: symbol, name, price, change and change %, exchange, with the cursor stock's day and 52-week range, volume and last trade below the list. `a` adds, `d`/Delete removes (y/n in the footer), `r` refreshes now.
@@ -224,6 +225,17 @@ puts a whole working context back.
 - **Restoring never fails the whole workspace.** A local folder that is gone is left as the panel has it and
   reported in the toast ("Left panel: C:\x no longer exists"); an unreachable remote reports the same.
   Nothing secret is stored — a remote panel is only its URL.
+
+### The Bluetooth device manager (`iTerminal.Core/Dialogs/Bluetooth/`, `Services/Bluetooth/`, Ctrl+Shift+J)
+Tools > Bluetooth devices lists the devices BlueZ knows: paired ones, ones seen recently, with their state (connected, paired, nearby). **S** scans for 8 seconds, **C** connects or disconnects the device under the cursor, **P** pairs, **Delete** asks y/n and then forgets it, **R** reads the list again.
+
+- **The backend is `bluetoothctl` on Linux only.** `BluetoothService` runs it through `IExternalProcessRunner` (one short command per call, each with its own timeout), and `BluetoothctlParser` reads what it prints, so the formats are tested against recorded output. Windows reports `IsSupported == false` and the dialog says so; nothing is read there. A device that asks for a PIN cannot be paired here: no agent answers it.
+- **`bluetoothctl` exits 0 after a refused connect.** `BluetoothctlParser.Failed` reads the text as well as the exit code (`Failed to`, `org.bluez.Error`, `not available`, `No default controller`), so the reason reaches the status line.
+- **The highlight is the cursor.** `ListBox` keeps the highlight in `ScrollableModel.CursorPosition`; `ListItem.IsSelected` is the mark that Space toggles, and the dialog does not use it. A refresh rebuilds the rows, so the dialog remembers the highlighted address and `OnIdle` moves the cursor back to that device when the rows changed.
+- **One operation at a time.** A key that starts a change is refused while another runs. The worker writes the result to `_statusText`; `OnIdle` puts it on the status line, so no worker touches the control tree. Each change reads the list again afterwards.
+- **The dialog takes focus for its list when it shows.** A dialog with focus passes arrow keys to no child.
+- **Tests never reach the machine's adapter.** `SandboxServices.Bluetooth` lists two made-up devices and answers every change with success; the unit tests use a recording fake.
+- No setting is stored: the list is read each time the dialog opens.
 
 ### The remote connection manager (`iTerminal.Core/Dialogs/Remote/`, `Services/Remote/`, `Model/Remote/`)
 Alt+F2 (Tools > Remote connections) opens `RemoteConnectionManagerDialog`: saved SSH, PowerShell remoting, **FTP and
@@ -378,3 +390,11 @@ Ctrl+P (also File > Print…, the right-click menu on a local file and the comma
 - **The queue is polled, never waited on.** Every call runs on a background task. While the dialog is open the queue is re-read every 5 s on Windows (each read starts PowerShell) and every 2 s elsewhere, a round is skipped while a call is still out, and it is read again right after any action. A generation counter drops a reply for another printer or an older request; closing the dialog cancels what is in flight.
 - **The end-to-end suite registers `SandboxServices.Printing`**, in-memory printers and jobs that record every call: no test may print on a printer of the machine it runs on. `PrintServiceTest` runs both platforms' command lines against `FakeProcessRunner`; `PrintDialogTest`, `PrintDialogCommandTest`, `FileContextMenuTest`, `PrintLanguageTest` and `PrintingTest` cover the rest. The Windows and CUPS command lines have not been run against a real printer.
 - Not built: adding printers, printer properties and printer-level pause, print-to-PDF, headers and pagination for text, remote files.
+
+### The virtual machine manager (`VirtualMachineManagerDialog`, Shift+Alt+F9, Tools > Virtual Machine Manager, `Services/VirtualMachines/`)
+- **Linux only, through libvirt.** `LibvirtVirtualMachineService` runs `virsh -c qemu:///system` (a CLI, like the docker drive, so nothing native is packaged); console opens `virt-viewer` detached. The command's `CanExecute` and the Tools menu entry are both false off Linux. Hyper-V is not written.
+- **Keys:** S starts; Enter starts a shut-off machine and does nothing otherwise; D shuts down, R restarts, Shift+X powers off and V saves state, all with a y/n in the status line; P pauses or resumes; C opens the console; F5 lists again. The dialog has no text box, so letters are commands and `ListBox.EnableTypeAhead` stays off. Enter is claimed by the dialog ahead of the list.
+- **The rule that makes the list safe:** `virsh` runs on a background task and stores its answer under a lock; `OnIdle` applies it on the UI thread. The list is read again every 5 s while the dialog is open.
+- **Failures are sentences.** A `virsh` run that outlives the runner's 30 s limit says the hypervisor may still be saving and to press F5; a refused connection names the `libvirt` group.
+- **The end-to-end suite registers `SandboxServices.VirtCli`**, a recorded `virsh` that never reaches a hypervisor, and a `virt-viewer` stand-in that records the console instead of opening one.
+- Not built: Hyper-V, snapshots, create and delete, CPU and memory columns.

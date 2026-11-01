@@ -83,6 +83,7 @@ public class ContentBrowserBriefTest
         model.Update();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Brief_SevenEntries_FourColumns_FilledRowMajor_NamesOnly()
     {
@@ -114,6 +115,7 @@ public class ContentBrowserBriefTest
         Assert.IsFalse(row0.Contains(":"), "a time column leaked into the Brief row");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Brief_ColumnCount_FollowsTheWidth_WithAMinimumCellOfSixteen()
     {
@@ -132,6 +134,7 @@ public class ContentBrowserBriefTest
         Assert.AreEqual(1, ((iConsole.Model.IColumnScrollableModel)model).ColumnCount, "width 20: at least one column");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toggling_BackToLong_RestoresOneColumn()
     {
@@ -146,6 +149,7 @@ public class ContentBrowserBriefTest
         Assert.AreEqual(1, ((iConsole.Model.IColumnScrollableModel)model).ColumnCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toggle_OnThePreviewPanel_DoesNothing()
     {
@@ -163,6 +167,7 @@ public class ContentBrowserBriefTest
         Assert.IsFalse(sut.IsBriefListing, "the Preview panel does not offer Brief");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MoveWithinLine_StaysInTheLine_AndStopsAtItsEnds()
     {
@@ -183,6 +188,7 @@ public class ContentBrowserBriefTest
         Assert.AreEqual(3, model.CursorPosition.Y, "right at the line's last column does not wrap to the next row");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MoveWithinLine_DoesNothingInLong()
     {

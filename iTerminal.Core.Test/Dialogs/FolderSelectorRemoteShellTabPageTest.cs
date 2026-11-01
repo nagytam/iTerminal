@@ -43,6 +43,7 @@ public class FolderSelectorRemoteShellTabPageTest
         page.TextBoxHost.ValidationModel?.Validate(DateTime.Now.AddMinutes(1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithAHost_ConnectsOverSsh()
     {
@@ -55,6 +56,7 @@ public class FolderSelectorRemoteShellTabPageTest
         CollectionAssert.AreEqual(new[] { "ssh://tamas@example.com:/" }, harness.Navigations);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithAnEmptyBox_ConnectsNowhere()
     {
@@ -66,6 +68,7 @@ public class FolderSelectorRemoteShellTabPageTest
         Assert.AreEqual(0, harness.Navigations.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Host_ReportsWhatWasTyped()
     {
@@ -74,6 +77,7 @@ public class FolderSelectorRemoteShellTabPageTest
         Assert.AreEqual("tamas@example.com", page.Host);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_RemembersTheHostForNextTime()
     {
@@ -87,6 +91,7 @@ public class FolderSelectorRemoteShellTabPageTest
         Assert.IsTrue(completions!.Any(c => c.Contains("example.com")), "The host should be offered next time.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetKeyHints_NameTabCompletion()
     {
@@ -98,6 +103,7 @@ public class FolderSelectorRemoteShellTabPageTest
         Assert.IsTrue(hints.Any(h => h.Key == "Enter"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeLayout_MakesTheHostBoxOneRowHigh()
     {
@@ -111,6 +117,7 @@ public class FolderSelectorRemoteShellTabPageTest
         Assert.AreEqual(1, (int)page.TextBoxHost.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_InANarrowPage_DoesNotProduceNegativeGeometry()
     {

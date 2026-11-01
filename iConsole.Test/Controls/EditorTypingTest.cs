@@ -41,6 +41,7 @@ public class EditorTypingTest
     private static (long X, long Y) Cursor(TextEditorControl editor)
         => (editor.ScrollableModel.CursorPosition.X, editor.ScrollableModel.CursorPosition.Y);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Backspace_RemovesTheCharacterBeforeTheCursor()
     {
@@ -54,6 +55,7 @@ public class EditorTypingTest
         Assert.IsTrue(editor.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Backspace_AtTheStartOfALine_JoinsItOntoTheOneAbove()
     {
@@ -63,6 +65,7 @@ public class EditorTypingTest
         Assert.AreEqual((2L, 0L), Cursor(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Backspace_AtTheStartOfTheDocument_ChangesNothing()
     {
@@ -72,6 +75,7 @@ public class EditorTypingTest
         Assert.IsFalse(editor.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Delete_RemovesTheCharacterUnderTheCursor_AndPullsTheNextLineUpAtTheEnd()
     {
@@ -85,6 +89,7 @@ public class EditorTypingTest
         Assert.AreEqual("acd", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Delete_AtTheEndOfTheDocument_ChangesNothing()
     {
@@ -94,6 +99,7 @@ public class EditorTypingTest
         Assert.IsFalse(editor.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_SplitsTheLineAtTheCursorAndMovesToTheNewLine()
     {
@@ -106,6 +112,7 @@ public class EditorTypingTest
         Assert.AreEqual((0L, 2L), Cursor(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_AtTheEndAndAtTheStartOfALine()
     {
@@ -117,6 +124,7 @@ public class EditorTypingTest
         Assert.AreEqual("|abc", Text(atStart));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EmptyDocument_AcceptsEnterBackspaceDeleteAndTyping()
     {
@@ -130,6 +138,7 @@ public class EditorTypingTest
         Assert.AreEqual("a", Text(typing));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_InsertsAtTheCursor_AndAClampedCursorPastTheLineEnd()
     {
@@ -142,6 +151,7 @@ public class EditorTypingTest
         Assert.AreEqual("abc", Text(pastEnd));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnlyEditor_IgnoresEditingKeys()
     {
@@ -153,6 +163,7 @@ public class EditorTypingTest
         Assert.AreEqual("abc", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewer_AtTinySizes_DrawsWithoutNegativeSizes()
     {

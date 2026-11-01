@@ -12,6 +12,7 @@ public class JsonTreeTest
         return JsonTree.Build(document);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnObject_ShowsItsMemberCount_AndEachMemberAsAKeyAndValue()
     {
@@ -23,6 +24,7 @@ public class JsonTreeTest
             root.Children.AsSnapshot().Select(c => c.Name).ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnArray_ShowsIndexes_AndItsCount()
     {
@@ -34,6 +36,7 @@ public class JsonTreeTest
             root.Children.AsSnapshot().Select(c => c.Name).ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NestedContainers_HaveChildren_ScalarsAndEmptyOnesDoNot()
     {
@@ -50,6 +53,7 @@ public class JsonTreeTest
         Assert.AreEqual(0, n.Children.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LongStrings_AreCut_AndLineBreaksCollapse()
     {
@@ -62,6 +66,7 @@ public class JsonTreeTest
         Assert.IsFalse(shortened.Contains('\n'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AScalarRoot_IsALeaf()
     {
@@ -71,6 +76,7 @@ public class JsonTreeTest
         Assert.AreEqual(0, root.Children.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AKeyWithAQuote_IsEscaped()
     {

@@ -29,6 +29,7 @@ public class AudioDecoderFactoryTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsAudioFile_AcceptsBothNativeAndFfmpegFormats()
     {
@@ -40,6 +41,7 @@ public class AudioDecoderFactoryTest
         Assert.IsFalse(AudioDecoderFactory.IsAudioFile(string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsSupported_NativeFormats_DoNotDependOnFfmpeg()
     {
@@ -49,6 +51,7 @@ public class AudioDecoderFactoryTest
         Assert.IsTrue(AudioDecoderFactory.IsSupported("song.wav"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsSupported_FfmpegFormats_TrackFfmpegAvailability()
     {
@@ -59,6 +62,7 @@ public class AudioDecoderFactoryTest
         Assert.IsTrue(AudioDecoderFactory.IsSupported("song.flac"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Create_ForAWaveFile_ReturnsTheManagedWaveDecoder()
     {
@@ -69,6 +73,7 @@ public class AudioDecoderFactoryTest
         Assert.IsInstanceOfType<WaveAudioDecoder>(decoder);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Create_ForAMissingFile_ThrowsFileNotFound()
     {
@@ -76,6 +81,7 @@ public class AudioDecoderFactoryTest
             () => AudioDecoderFactory.Create(Path.Combine(_tempRoot, "nope.wav")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Create_ForAnFfmpegFormatWithoutFfmpeg_ExplainsWhatToInstall()
     {
@@ -88,6 +94,7 @@ public class AudioDecoderFactoryTest
         StringAssert.Contains(exception.Message, "ffmpeg");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Create_ForACompressedWaveWithoutFfmpeg_ReportsItRatherThanReturningGarbage()
     {
@@ -98,6 +105,7 @@ public class AudioDecoderFactoryTest
         Assert.ThrowsExactly<NotSupportedException>(() => AudioDecoderFactory.Create(path));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AllExtensions_IsTheUnionOfBothTiers()
     {

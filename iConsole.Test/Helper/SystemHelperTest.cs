@@ -5,6 +5,7 @@ namespace iConsole.Test.Helper;
 [TestClass]
 public class SystemHelperTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void SystemHelperGetAvailableMemory()
     {
@@ -12,6 +13,7 @@ public class SystemHelperTest
         Assert.IsTrue(memory > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SystemHelperMemoryLessThanMax()
     {
@@ -20,6 +22,7 @@ public class SystemHelperTest
         Assert.IsTrue(memory < 2000000);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SystemHelperMemoryIsLong()
     {

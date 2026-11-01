@@ -16,6 +16,7 @@ public class LinkLabelTest
         return link;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterAndSpaceFollowTheLinkWhenFocused()
     {
@@ -30,6 +31,7 @@ public class LinkLabelTest
         Assert.AreEqual(2, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task KeysDoNothingWhenUnfocusedOrDisabled()
     {
@@ -45,6 +47,7 @@ public class LinkLabelTest
         Assert.AreEqual(0, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickFollowsTheLinkAndTakesFocus()
     {
@@ -58,6 +61,7 @@ public class LinkLabelTest
         Assert.IsTrue(link.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FocusedLinkIsUnderlined_UnfocusedIsNot()
     {
@@ -72,6 +76,7 @@ public class LinkLabelTest
         Assert.IsTrue(ScreenBuffer.Render(root, 20, 1).CellOf("Docs").IsUnderline);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListActivationOnlyWhenEnabledWithText()
     {

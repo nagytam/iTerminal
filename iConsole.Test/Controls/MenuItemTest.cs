@@ -11,6 +11,7 @@ namespace iConsole.Controls.Test;
 [TestClass]
 public class MenuItemTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void OpenMenu_ShouldSetIsOpenedAndMakeFirstVisible()
     {
@@ -27,6 +28,7 @@ public class MenuItemTest
         Assert.IsTrue(child.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_MenuBar_ShouldRenderText()
     {

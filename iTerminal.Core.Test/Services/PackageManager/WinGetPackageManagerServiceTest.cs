@@ -27,12 +27,14 @@ public class WinGetPackageManagerServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DisplayName_IsWinGet()
     {
         Assert.AreEqual("WinGet", new WinGetPackageManagerService().DisplayName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchPackagesAsync_EmptyQuery_ReturnsEmptySuccessWithoutRunningWinget()
     {
@@ -45,6 +47,7 @@ public class WinGetPackageManagerServiceTest
         Assert.AreEqual(0, result.Packages.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetInstalledPackagesAsync_ParsesAtLeastOneInstalledPackage()
     {
@@ -75,6 +78,7 @@ public class WinGetPackageManagerServiceTest
         Assert.IsTrue(result.Packages.All(p => !string.IsNullOrWhiteSpace(p.Id)), "Every parsed row must have an Id.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InstallAsync_UnknownPackageId_StreamsOutputAndReturnsNonZeroExitCode()
     {
@@ -97,6 +101,7 @@ public class WinGetPackageManagerServiceTest
         Assert.IsTrue(lines.Count > 0, "Expected winget to explain why the install failed.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InstallAsync_WhenCancelled_ReturnsNegative()
     {

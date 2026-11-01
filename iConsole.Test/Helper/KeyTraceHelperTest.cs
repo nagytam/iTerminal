@@ -16,6 +16,7 @@ public class KeyTraceHelperTest
     [TestCleanup]
     public void Cleanup() => KeyTraceHelper.SetEnabledForTest(null);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Format_SpellsOutTheWholeChord()
     {
@@ -27,6 +28,7 @@ public class KeyTraceHelperTest
         StringAssert.Contains(line, "handled=True");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Format_MarksUnhandledKeys()
     {
@@ -36,6 +38,7 @@ public class KeyTraceHelperTest
         StringAssert.Contains(line, "handled=False");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Trace_WhenDisabled_WritesNothing()
     {
@@ -52,6 +55,7 @@ public class KeyTraceHelperTest
         Assert.AreEqual(before, after, "Tracing must be inert unless explicitly enabled");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Trace_WithANullKeyEvent_DoesNotThrow()
     {
@@ -60,6 +64,7 @@ public class KeyTraceHelperTest
         KeyTraceHelper.Trace(null, isHandled: false);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsEnabled_DefaultsToOff()
     {

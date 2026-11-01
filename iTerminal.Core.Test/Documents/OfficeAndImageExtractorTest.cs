@@ -50,6 +50,7 @@ public class OfficeAndImageExtractorTest
 
     private const string WordNamespace = "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"";
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Docx_JoinsAdjacentRunsWithoutSplittingWords()
     {
@@ -75,6 +76,7 @@ public class OfficeAndImageExtractorTest
         StringAssert.Contains(result.Text, "Second paragraph");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Xlsx_ReadsTheSharedStringTable()
     {
@@ -89,6 +91,7 @@ public class OfficeAndImageExtractorTest
         StringAssert.Contains(result.Text, "Expenses");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pptx_ReadsSlidesInNumericOrder()
     {
@@ -109,6 +112,7 @@ public class OfficeAndImageExtractorTest
         Assert.IsTrue(first >= 0 && second > first && tenth > second, result.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TrailingNumber_ReadsThePartIndex()
     {
@@ -117,6 +121,7 @@ public class OfficeAndImageExtractorTest
         Assert.AreEqual(0, OfficeTextExtractor.TrailingNumber("word/document.xml"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Office_ReportsAFileThatIsNotAZipAsFailed()
     {
@@ -158,6 +163,7 @@ public class OfficeAndImageExtractorTest
         stream.Write([0, 0, 0, 0]); // CRC, which nothing here verifies
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Image_IndexesAPngTextChunkWithNoOcrEngineAtAll()
     {
@@ -171,6 +177,7 @@ public class OfficeAndImageExtractorTest
         StringAssert.Contains(result.Text, "Invoice from Contoso");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Image_ReadsTheTitleAndAuthorKeywords()
     {
@@ -181,6 +188,7 @@ public class OfficeAndImageExtractorTest
         Assert.AreEqual("Roof plan", result.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Image_WithNothingToReadSaysWhyRatherThanFailing()
     {
@@ -193,6 +201,7 @@ public class OfficeAndImageExtractorTest
         StringAssert.Contains(result.Note, "no embedded metadata");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Image_UsesTheOcrEngineWhenOneIsAvailable()
     {
@@ -207,6 +216,7 @@ public class OfficeAndImageExtractorTest
         StringAssert.Contains(result.Note, "OCR");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Image_DoesNotSendAFormatThatIsNotWorthRecognisingToOcr()
     {

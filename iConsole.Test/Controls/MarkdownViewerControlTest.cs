@@ -23,6 +23,7 @@ public class MarkdownViewerControlTest
         return (root, viewer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawsTheRenderedText()
     {
@@ -34,6 +35,7 @@ public class MarkdownViewerControlTest
         Assert.IsNotNull(screen.Find("Some bold text."));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DownArrow_ScrollsOneRow_WhenFocused()
     {
@@ -44,6 +46,7 @@ public class MarkdownViewerControlTest
         Assert.AreEqual(1, viewer.ScrollOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListTheScrollKeysOnlyForADocument()
     {
@@ -55,6 +58,7 @@ public class MarkdownViewerControlTest
         Assert.AreEqual(0, viewer.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Click_TakesTheFocusSoTheArrowKeysScroll()
     {
@@ -67,6 +71,7 @@ public class MarkdownViewerControlTest
         Assert.IsTrue(viewer.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Keys_AreIgnored_WhenNotFocused()
     {
@@ -81,6 +86,7 @@ public class MarkdownViewerControlTest
         Assert.AreEqual(0, viewer.ScrollOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PageDown_End_AndHome_MoveWithinTheDocument()
     {
@@ -97,6 +103,7 @@ public class MarkdownViewerControlTest
         Assert.AreEqual(0, viewer.ScrollOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScrollingUpAtTheTop_StaysAtTheTop()
     {
@@ -107,6 +114,7 @@ public class MarkdownViewerControlTest
         Assert.AreEqual(0, viewer.ScrollOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Wheel_ScrollsThreeRows()
     {
@@ -118,6 +126,7 @@ public class MarkdownViewerControlTest
         Assert.AreEqual(3, viewer.ScrollOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Setting_Markdown_ReturnsToTheTop()
     {

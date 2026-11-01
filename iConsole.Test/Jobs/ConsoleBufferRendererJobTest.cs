@@ -11,6 +11,7 @@ namespace iConsole.Jobs.Test;
 [TestClass]
 public class ConsoleBufferRendererJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void RenderBuffer_ShouldRunWithoutThrowing()
     {

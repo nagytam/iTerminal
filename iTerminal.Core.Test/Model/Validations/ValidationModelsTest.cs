@@ -12,6 +12,7 @@ public class HostValidationModelAdditionalTest
     private static Mock<IDateTimeProviderService> DtMock() =>
         new Mock<IDateTimeProviderService>().WithNow(DateTime.Now.AddSeconds(-1));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_NullModel_SetsValid()
     {
@@ -20,6 +21,7 @@ public class HostValidationModelAdditionalTest
         Assert.IsTrue(model.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_ValidHost_SetsValid()
     {
@@ -30,6 +32,7 @@ public class HostValidationModelAdditionalTest
         Assert.IsTrue(model.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_EmptyHost_SetsInvalid()
     {
@@ -47,6 +50,7 @@ public class PathValidationModelTest
     private static Mock<IDateTimeProviderService> DtMock() =>
         new Mock<IDateTimeProviderService>().WithNow(DateTime.Now.AddSeconds(-1));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_EmptyPath_SetsInvalid()
     {
@@ -58,6 +62,7 @@ public class PathValidationModelTest
         Assert.AreEqual(string.Empty, model.ErrorMessage, "an empty field says nothing, as on the create dialogs");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_NullModel_SetsInvalid()
     {
@@ -67,6 +72,7 @@ public class PathValidationModelTest
         Assert.IsFalse(model.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_ValidPath_SetsValid()
     {
@@ -77,6 +83,7 @@ public class PathValidationModelTest
         Assert.IsTrue(model.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationResult_IsNotNull_AfterConstruction()
     {
@@ -93,6 +100,7 @@ public class FolderValidationModelTest
     private static Mock<IDateTimeProviderService> DtMock() =>
         new Mock<IDateTimeProviderService>().WithNow(DateTime.Now.AddSeconds(-1));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_EmptyPath_SetsInvalid()
     {
@@ -103,6 +111,7 @@ public class FolderValidationModelTest
         Assert.IsFalse(model.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_ExistingFolder_SetsValid()
     {
@@ -115,6 +124,7 @@ public class FolderValidationModelTest
         Assert.IsNotNull(model.ValidationResult);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathExistMode_DefaultValue_IsNewFolder()
     {
@@ -124,6 +134,7 @@ public class FolderValidationModelTest
         Assert.AreEqual(PathExistMode.NewFolder, model.PathExistMode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathExistMode_CanBeChanged()
     {
@@ -143,6 +154,7 @@ public class NewFileValidationModelTest
     private static Mock<IDateTimeProviderService> DtMock() =>
         new Mock<IDateTimeProviderService>().WithNow(DateTime.Now.AddSeconds(-1));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_EmptyPath_SetsInvalid()
     {
@@ -153,6 +165,7 @@ public class NewFileValidationModelTest
         Assert.IsFalse(model.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_ValidNewFilePath_SetsValid()
     {
@@ -164,6 +177,7 @@ public class NewFileValidationModelTest
         Assert.IsNotNull(model.ValidationResult);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathExistMode_DefaultValue_IsNewFile()
     {
@@ -180,6 +194,7 @@ public class FolderOrNewFilesValidationModelTest
     private static Mock<IDateTimeProviderService> DtMock() =>
         new Mock<IDateTimeProviderService>().WithNow(DateTime.Now.AddSeconds(-1));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_EmptyPath_SetsInvalid()
     {
@@ -190,6 +205,7 @@ public class FolderOrNewFilesValidationModelTest
         Assert.IsFalse(model.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_NullModel_SetsValid()
     {
@@ -200,6 +216,7 @@ public class FolderOrNewFilesValidationModelTest
         Assert.IsNotNull(model.ValidationResult);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathExistMode_DefaultValue_IsFolderOrNewFile()
     {
@@ -209,6 +226,7 @@ public class FolderOrNewFilesValidationModelTest
         Assert.AreEqual(PathExistMode.FolderOrNewFile, model.PathExistMode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationResult_IsNotNull()
     {

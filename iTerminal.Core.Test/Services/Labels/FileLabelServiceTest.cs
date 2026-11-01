@@ -31,6 +31,7 @@ public class FileLabelServiceTest
         Directory.Delete(_folder, recursive: true);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpdateAsync_GivesTheLabelToTheFile_AndGetReturnsIt()
     {
@@ -44,6 +45,7 @@ public class FileLabelServiceTest
         CollectionAssert.AreEqual(new[] { "Invoice", "2026" }, label.Tags.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheLabelIsKeptInTheDatabase_AndReadBackByAFreshService()
     {
@@ -56,6 +58,7 @@ public class FileLabelServiceTest
         CollectionAssert.AreEqual(new[] { "draft" }, fresh.Get(_file).Tags.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyLabel_RemovesTheRow()
     {
@@ -69,6 +72,7 @@ public class FileLabelServiceTest
         Assert.AreEqual(0, await context.FileLabels.CountAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheChangeSeesWhatTheFileHasNow()
     {
@@ -83,6 +87,7 @@ public class FileLabelServiceTest
         CollectionAssert.AreEqual(new[] { "keep" }, label.Tags.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderAndAPathWithATrailingSeparator_AreTheSameLabel()
     {
@@ -92,12 +97,14 @@ public class FileLabelServiceTest
         Assert.AreEqual(LabelColour.Purple, service.Get(_folder + Path.DirectorySeparatorChar).Colour);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnlabelledPath_IsNone()
     {
         Assert.IsTrue(new FileLabelService(_factory).Get(Path.Combine(_folder, "nothing.txt")).IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tags_ParseTrimsDropsBlanksAndRepeats()
     {
@@ -106,6 +113,7 @@ public class FileLabelServiceTest
             FileLabelTags.Parse(" Invoice ,, invoice , 2026 ,").ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tags_TooMany_OrTooLong_AreRefused()
     {
@@ -114,6 +122,7 @@ public class FileLabelServiceTest
         StringAssert.Contains(FileLabelTags.Validate(new string('x', FileLabelTags.MaxTagLength + 1))!, "at most");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Colours_ParseAStoredNameAndRefuseAnUnknownOne()
     {

@@ -151,6 +151,7 @@ public class ConsoleOwnershipTest
         Assert.AreEqual(3, exitCode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AProgramWhoseOutputIsTakenIsNotInteractive()
     {

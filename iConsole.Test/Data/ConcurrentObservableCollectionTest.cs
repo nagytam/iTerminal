@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class ConcurrentObservableCollectionTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentObservableCollectionConstructor()
     {
@@ -12,6 +13,7 @@ public class ConcurrentObservableCollectionTest
         Assert.AreEqual(0, collection.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentObservableCollectionConstructorWithItems()
     {
@@ -23,6 +25,7 @@ public class ConcurrentObservableCollectionTest
         Assert.AreEqual("item3", collection[2]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentObservableCollectionAdd()
     {
@@ -32,6 +35,7 @@ public class ConcurrentObservableCollectionTest
         Assert.AreEqual("item1", collection[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentObservableCollectionAddRaisesEvent()
     {
@@ -48,6 +52,7 @@ public class ConcurrentObservableCollectionTest
         Assert.IsTrue(collectionChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentObservableCollectionRemove()
     {
@@ -59,6 +64,7 @@ public class ConcurrentObservableCollectionTest
         Assert.AreEqual("item2", collection[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentObservableCollectionClear()
     {
@@ -69,6 +75,7 @@ public class ConcurrentObservableCollectionTest
         Assert.AreEqual(0, collection.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentObservableCollectionInsert()
     {
@@ -80,6 +87,7 @@ public class ConcurrentObservableCollectionTest
         Assert.AreEqual("item2", collection[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentObservableCollectionMove()
     {
@@ -93,6 +101,7 @@ public class ConcurrentObservableCollectionTest
         Assert.AreEqual("item1", collection[2]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentObservableCollectionIndexOf()
     {
@@ -103,6 +112,7 @@ public class ConcurrentObservableCollectionTest
         Assert.AreEqual(1, collection.IndexOf("item2"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentObservableCollectionContains()
     {

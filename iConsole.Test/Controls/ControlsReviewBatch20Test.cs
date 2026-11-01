@@ -13,6 +13,7 @@ public class ControlsReviewBatch20Test
 
     private static MouseEvent Click(long x, long y = 0) => new() { Position = new Position(x, y), LeftClicked = true };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_ClickAfterAMinus_DropsTheRememberedSign()
     {
@@ -26,6 +27,7 @@ public class ControlsReviewBatch20Test
         Assert.AreEqual(5, box.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_MinusThenDigit_StillGivesANegative()
     {
@@ -39,6 +41,7 @@ public class ControlsReviewBatch20Test
     }
 
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expander_Collapsing_RemovesTheContentFromTheTree()
     {

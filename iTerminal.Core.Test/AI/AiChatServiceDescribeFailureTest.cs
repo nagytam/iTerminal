@@ -10,6 +10,7 @@ namespace iTerminal.Core.Test.AI;
 [TestClass]
 public class AiChatServiceDescribeFailureTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void AMissingKeyNamesTheVariableToSet()
     {
@@ -17,18 +18,21 @@ public class AiChatServiceDescribeFailureTest
             AiChatService.DescribeFailure(401, apiKeySet: false, "ANTHROPIC_API_KEY"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARefusedKeySaysSo()
     {
         StringAssert.StartsWith(AiChatService.DescribeFailure(403, apiKeySet: true, "KEY"), "API key refused (403)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AServerFaultIsAServerError()
     {
         Assert.AreEqual("server error (502)", AiChatService.DescribeFailure(502, apiKeySet: true, "KEY"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AWrongUrlPointsAtTheUrl()
     {

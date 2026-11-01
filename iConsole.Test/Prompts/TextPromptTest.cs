@@ -5,6 +5,7 @@ namespace iConsole.Test.Prompts;
 [TestClass]
 public class TextPromptTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void StringPrompt_TakesTheTextAsTyped()
     {
@@ -15,6 +16,7 @@ public class TextPromptTest
         Assert.IsNull(error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringPrompt_RefusesAnEmptyAnswerUnlessAllowed()
     {
@@ -27,6 +29,7 @@ public class TextPromptTest
         Assert.IsTrue(prompt.TryParse(string.Empty, out _, out _));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumberPrompt_ConvertsWithTheInvariantConverter()
     {
@@ -36,6 +39,7 @@ public class TextPromptTest
         Assert.AreEqual(42, value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumberPrompt_ReportsWhatWasNotANumber()
     {
@@ -45,6 +49,7 @@ public class TextPromptTest
         Assert.AreEqual("'forty' is not a valid Int32.", error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Validate_RulesRunAfterTheConversion_AndTheFirstFailureWins()
     {

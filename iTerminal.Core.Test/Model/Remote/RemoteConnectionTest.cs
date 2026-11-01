@@ -7,12 +7,14 @@ public class RemoteConnectionTest
 {
     private static RemoteConnection Sound() => new() { Name = "web", Host = "example.com", Username = "alice" };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASoundConnectionHasNoProblem()
     {
         Assert.IsNull(Sound().Validate());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("")]
     [DataRow("-oProxyCommand=evil")]
@@ -27,6 +29,7 @@ public class RemoteConnectionTest
         Assert.IsNotNull(connection.Validate());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("example.com")]
     [DataRow("10.0.0.5")]
@@ -41,6 +44,7 @@ public class RemoteConnectionTest
         Assert.IsNull(connection.Validate());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("-x")]
     [DataRow("a b")]
@@ -54,6 +58,7 @@ public class RemoteConnectionTest
         Assert.IsNotNull(connection.Validate());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("DOMAIN\\alice")]
     [DataRow("alice@corp.example")]
@@ -66,6 +71,7 @@ public class RemoteConnectionTest
         Assert.IsNull(connection.Validate());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(0)]
     [DataRow(65536)]
@@ -77,6 +83,7 @@ public class RemoteConnectionTest
         Assert.IsNotNull(connection.Validate());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANameIsRequired()
     {
@@ -86,6 +93,7 @@ public class RemoteConnectionTest
         Assert.IsNotNull(connection.Validate());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDefaultPortFollowsTheTransport()
     {

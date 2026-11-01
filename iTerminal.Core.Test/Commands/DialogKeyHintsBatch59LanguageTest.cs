@@ -22,6 +22,7 @@ public class DialogKeyHintsBatch59LanguageTest
         return localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryKey()
     {
@@ -38,6 +39,7 @@ public class DialogKeyHintsBatch59LanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheToDoHints_FollowTheLanguage_AndFallBackToEnglish()
     {

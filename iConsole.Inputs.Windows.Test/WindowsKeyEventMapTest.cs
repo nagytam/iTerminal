@@ -6,6 +6,7 @@ namespace iConsole.Inputs.Windows.Test;
 [TestClass]
 public class WindowsKeyEventMapTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow((ushort)0x70, ConsoleKey.F1)]
     [DataRow((ushort)0x71, ConsoleKey.F2)]
@@ -26,6 +27,7 @@ public class WindowsKeyEventMapTest
         Assert.IsNotNull(expected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow((ushort)0x1B, ConsoleKey.Escape)]
     [DataRow((ushort)0x24, ConsoleKey.Home)]
@@ -43,6 +45,7 @@ public class WindowsKeyEventMapTest
         Assert.IsNotNull(expected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow((ushort)0x10)]  // SHIFT
     [DataRow((ushort)0x11)]  // CONTROL
@@ -56,6 +59,7 @@ public class WindowsKeyEventMapTest
         // Modifier keys should map to None
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_MultipleButtonFlags_LeftTakesPrecedence()
     {
@@ -75,6 +79,7 @@ public class WindowsKeyEventMapTest
         Assert.IsTrue(mouseEvent.RightClicked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_ExtremeCoordinates()
     {
@@ -91,6 +96,7 @@ public class WindowsKeyEventMapTest
         Assert.AreEqual(32767, mouseEvent.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_NegativeCoordinates()
     {
@@ -109,6 +115,7 @@ public class WindowsKeyEventMapTest
         Assert.AreEqual(0, mouseEvent.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_ZeroCoordinates()
     {
@@ -126,6 +133,7 @@ public class WindowsKeyEventMapTest
         Assert.IsTrue(mouseEvent.LeftClicked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_LargeWheelDelta()
     {
@@ -142,6 +150,7 @@ public class WindowsKeyEventMapTest
         Assert.AreEqual(1, mouseEvent.WheelDelta);  // Should normalize to sign
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_NegativeLargeWheelDelta()
     {

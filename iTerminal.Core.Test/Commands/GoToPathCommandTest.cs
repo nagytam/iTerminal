@@ -22,6 +22,7 @@ public class GoToPathCommandTest
         return new GoToPathCommand(null!, validator);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsPlainEnter()
     {
@@ -31,6 +32,7 @@ public class GoToPathCommandTest
         Assert.IsFalse(command.Key!.Control || command.Key.Alt || command.Key.Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TitleAndDescription_AreWrittenForHelp()
     {
@@ -40,18 +42,21 @@ public class GoToPathCommandTest
         Assert.AreNotEqual(command.Title, command.Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WithNoControl_IsFalse()
     {
         Assert.IsFalse(Create("memdrive://").CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WithInvalidText_IsFalse()
     {
         Assert.IsFalse(Create(string.Empty).CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithNoControl_DoesNothing()
     {

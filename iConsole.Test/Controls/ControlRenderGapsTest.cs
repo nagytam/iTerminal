@@ -12,6 +12,7 @@ public class ControlRenderGapsTest
 {
     private static TestThemeService Theme() => new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SegmentedControl_KeepsTheSelectedOptionOnScreen()
     {
@@ -24,6 +25,7 @@ public class ControlRenderGapsTest
         Assert.IsTrue(screen.Contains("Year"), "the chosen option must be visible: " + screen.Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Countdown_KeepsTheTimeOnScreenWhenTheLabelIsLong()
     {
@@ -42,6 +44,7 @@ public class ControlRenderGapsTest
         Assert.IsTrue(screen.Contains("01:30"), "the time is the point of the control: " + screen.Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyValueList_EmptyingTheListClearsTheRowsItPainted()
     {
@@ -56,6 +59,7 @@ public class ControlRenderGapsTest
         Assert.IsFalse(screen.Contains("Version"), "a list that lost its pairs keeps showing them: " + screen.Line(1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Accordion_SectionsFollowTheWidthOfTheAccordion()
     {
@@ -68,6 +72,7 @@ public class ControlRenderGapsTest
         Assert.AreEqual(25, section.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SliderAndSegmentedControl_AdvertiseTheUpAndDownKeysTheyAlreadyHandle()
     {

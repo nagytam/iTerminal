@@ -24,6 +24,7 @@ public class TreeViewTest
         _buffer = new MockBuffer(new Size(80, 40));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_DescribeWhatRightAndLeftDo()
     {
@@ -36,6 +37,7 @@ public class TreeViewTest
         Assert.AreEqual("Close the node, or go to its parent", hints["Left"]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeViewRootOnly()
     {
@@ -68,6 +70,7 @@ public class TreeViewTest
             content.Take(7).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeViewClosedNodeDoesNotRenderChildren()
     {
@@ -96,6 +99,7 @@ public class TreeViewTest
         Assert.IsFalse(content.Any(l => l.Contains("A1")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeViewFocusRendersSameText()
     {
@@ -121,6 +125,7 @@ public class TreeViewTest
         Assert.AreEqual("A", content.Single(l => l == "A"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAllItemsReturnsAllVisibleItems()
     {
@@ -147,6 +152,7 @@ public class TreeViewTest
         Assert.IsFalse(allItems.Contains(grandchild2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAllItemsIncludesAllWhenFullyExpanded()
     {
@@ -172,6 +178,7 @@ public class TreeViewTest
         Assert.IsTrue(allItems.Contains(grandchild2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetFocusedItemReturnsFocusedItem()
     {
@@ -189,6 +196,7 @@ public class TreeViewTest
         Assert.AreEqual(child2, focusedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetFocusedItemReturnsNullWhenNoFocus()
     {
@@ -202,6 +210,7 @@ public class TreeViewTest
         Assert.IsNull(focusedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExpandAllExpandsAllNodes()
     {
@@ -224,6 +233,7 @@ public class TreeViewTest
         Assert.IsTrue(child2.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CollapseAllCollapsesAllNodes()
     {
@@ -246,6 +256,7 @@ public class TreeViewTest
         Assert.IsFalse(child2.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleItemExpandsClosedItem()
     {
@@ -260,6 +271,7 @@ public class TreeViewTest
         Assert.IsTrue(child1.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleItemCollapsesOpenItem()
     {
@@ -274,6 +286,7 @@ public class TreeViewTest
         Assert.IsFalse(child1.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleItemDoesNotThrowForLeafNode()
     {
@@ -286,6 +299,7 @@ public class TreeViewTest
         Assert.IsFalse(child1.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetVisibleItemCountReturnsCorrectCount()
     {
@@ -307,6 +321,7 @@ public class TreeViewTest
         Assert.AreEqual(4, count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetItemDepthReturnsCorrectDepth()
     {
@@ -327,6 +342,7 @@ public class TreeViewTest
         Assert.AreEqual(3, treeView.GetItemDepth(greatgrandchild1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TreeViewCanFocusIsTrue()
     {
@@ -336,6 +352,7 @@ public class TreeViewTest
         Assert.IsTrue(treeView.CanFocus);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeViewDrawsWithNoVisibleItems()
     {
@@ -356,6 +373,7 @@ public class TreeViewTest
         Assert.IsNotNull(_buffer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAllItemsWithEmptyTree()
     {
@@ -368,6 +386,7 @@ public class TreeViewTest
         Assert.AreEqual(root, allItems[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeViewDrawsLeafNodeWithoutExpansionIndicator()
     {
@@ -397,6 +416,7 @@ public class TreeViewTest
         Assert.IsFalse(leafLine!.Contains(TreeView.ExpandedGlyph) || leafLine.Contains(TreeView.CollapsedGlyph));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeViewDeepNesting()
     {
@@ -425,6 +445,7 @@ public class TreeViewTest
         Assert.AreEqual(depth + 1, allItems.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExpandAllWithNoChildren()
     {
@@ -436,6 +457,7 @@ public class TreeViewTest
         Assert.IsFalse(root.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CollapseAllWithNoChildren()
     {
@@ -447,6 +469,7 @@ public class TreeViewTest
         Assert.IsFalse(root.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MultipleItemsFocused()
     {
@@ -465,6 +488,7 @@ public class TreeViewTest
         Assert.IsTrue(focusedItem!.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetItemDepthOfRootIsZero()
     {
@@ -474,6 +498,7 @@ public class TreeViewTest
         Assert.AreEqual(0, treeView.GetItemDepth(root));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeViewWithMixedNodeTypes()
     {
@@ -503,6 +528,7 @@ public class TreeViewTest
         Assert.AreEqual(4, allItems.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TreeViewInitializationWithTreeCommands()
     {

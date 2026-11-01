@@ -38,6 +38,7 @@ public class TextBoxWordKeysTest
     private static Task<bool> Ctrl(TextBox box, ConsoleKey key, bool shift = false) =>
         box.HandleKeyEventAsync(new KeyEvent('\0', key, shift, false, true));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WordStart_SkipsBlanksThenTheWord()
     {
@@ -51,6 +52,7 @@ public class TextBoxWordKeysTest
         Assert.AreEqual(0, TextBox.WordStart("alpha   ", 8));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WordEnd_SkipsTheWordThenBlanks()
     {
@@ -63,6 +65,7 @@ public class TextBoxWordKeysTest
         Assert.AreEqual(0, TextBox.WordEnd(string.Empty, -3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlLeftAndRight_MoveByAWord()
     {
@@ -80,6 +83,7 @@ public class TextBoxWordKeysTest
         Assert.AreEqual(16L, box.ScrollableModel.CursorPosition.X, "it stops at the end");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlShiftLeftAndRight_SelectByAWord()
     {
@@ -93,6 +97,7 @@ public class TextBoxWordKeysTest
         Assert.AreEqual("gamma", box.SelectedText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlLeft_WithASelection_DropsItAndMoves()
     {
@@ -106,6 +111,7 @@ public class TextBoxWordKeysTest
         Assert.AreEqual(0L, box.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlW_AndCtrlBackspace_DeleteTheWordBeforeTheCursor()
     {
@@ -123,6 +129,7 @@ public class TextBoxWordKeysTest
         Assert.AreEqual(6L, middle.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlDelete_DeletesTheWordAfterTheCursor()
     {
@@ -134,6 +141,7 @@ public class TextBoxWordKeysTest
         Assert.AreEqual(0L, box.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlU_DeletesEverythingBeforeTheCursor()
     {
@@ -143,6 +151,7 @@ public class TextBoxWordKeysTest
         Assert.AreEqual(0L, u.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDeleteKeys_WithASelection_RemoveTheSelectionOnly()
     {
@@ -156,6 +165,7 @@ public class TextBoxWordKeysTest
         Assert.IsFalse(box.HasSelection);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDeleteKeys_AtTheEdges_AreHandledAndChangeNothing()
     {
@@ -169,6 +179,7 @@ public class TextBoxWordKeysTest
         Assert.AreEqual("alpha", box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnly_MovesByWordButDeletesNothing()
     {
@@ -182,6 +193,7 @@ public class TextBoxWordKeysTest
         Assert.AreEqual("alpha beta", box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Disabled_IgnoresTheKeys()
     {
@@ -195,6 +207,7 @@ public class TextBoxWordKeysTest
         Assert.AreEqual(10L, box.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftedDeleteKeys_AreNotWordKeys()
     {

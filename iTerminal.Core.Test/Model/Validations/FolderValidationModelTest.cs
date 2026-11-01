@@ -40,6 +40,7 @@ public class FolderValidationModelTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyName_IsInvalidButSaysNothing()
     {
@@ -49,6 +50,7 @@ public class FolderValidationModelTest
         Assert.AreEqual(string.Empty, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NameTakenInTheFolder_IsRefusedAndSaysWhy()
     {
@@ -58,6 +60,7 @@ public class FolderValidationModelTest
         Assert.AreEqual(UrlValidationModel.ExistsMessage, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NameWithAFolderTakenInThatFolder_IsRefused()
     {
@@ -67,6 +70,7 @@ public class FolderValidationModelTest
         Assert.AreEqual(UrlValidationModel.ExistsMessage, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NewNameInAnExistingSubfolder_IsAccepted()
     {
@@ -75,6 +79,7 @@ public class FolderValidationModelTest
         Assert.IsTrue(model.IsValid, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutAFolder_TheNameIsCheckedAsTyped()
     {

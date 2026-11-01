@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Services.Defender;
 [TestClass]
 public class DefenderScanServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Interpret_NoThreats_IsClean()
     {
@@ -13,6 +14,7 @@ public class DefenderScanServiceTest
         Assert.AreEqual(ScanOutcome.Clean, result.Outcome);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Interpret_ThreatsReported_IsThreatsFound()
     {
@@ -21,6 +23,7 @@ public class DefenderScanServiceTest
         Assert.AreEqual(ScanOutcome.ThreatsFound, result.Outcome);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Interpret_NonZeroExitWithoutVerdict_IsFailed()
     {
@@ -30,6 +33,7 @@ public class DefenderScanServiceTest
         Assert.AreEqual("Scan starting...", result.Message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScanAsync_WithoutScanner_Fails()
     {

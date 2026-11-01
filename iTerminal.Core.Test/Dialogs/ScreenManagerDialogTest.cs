@@ -15,6 +15,7 @@ public class ScreenManagerDialogTest
     private static Screen NewScreen(string name) =>
         new(NullConsoleDriver.Instance, TestTheme()) { Name = name, ViewSize = new Size(120, 40) };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListsTheDesktopsScreensAndMarksTheCurrentOne()
     {
@@ -30,6 +31,7 @@ public class ScreenManagerDialogTest
         CollectionAssert.AreEqual(new[] { " Main  (current)", " Logs" }, dialog.RowsForTest.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AScreenWithNoDesktopYetGivesAnEmptyListNotACrash()
     {
@@ -42,6 +44,7 @@ public class ScreenManagerDialogTest
         Assert.AreEqual(0, dialog.RowsForTest.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OutsideAScreenTheListSaysItIsEmpty()
     {
@@ -52,6 +55,7 @@ public class ScreenManagerDialogTest
         AssertScreenContains(Render(dialog), "No screens.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SaysTheListIsForLookingAt()
     {
@@ -61,6 +65,7 @@ public class ScreenManagerDialogTest
         AssertScreenContains(Render(dialog), "one at a time");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {

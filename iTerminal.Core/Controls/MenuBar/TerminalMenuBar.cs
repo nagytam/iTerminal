@@ -74,6 +74,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? imageFileViewerDialog = null,
+        iConsole.Dialogs.XmlViewerDialog? xmlViewerDialog = null,
+        iConsole.Dialogs.JsonViewerDialog? jsonViewerDialog = null,
+        iConsole.Dialogs.CsvViewerDialog? csvViewerDialog = null,
         // Tools, the larger features (optional so the menu can be built without them)
         iTerminal.Core.Dialogs.Git.GitClientDialog? gitClientDialog = null,
         iTerminal.Core.Dialogs.Documents.DocumentManagerDialog? documentManagerDialog = null,
@@ -122,7 +125,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
         iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null,
-        PrintDialog? printDialog = null
+        PrintDialog? printDialog = null,
+        iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
+        VirtualMachineManagerDialog? virtualMachineManagerDialog = null
         )
         : base([], themeService)
     {
@@ -141,6 +146,10 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             musicFileViewerDialog: musicFileViewerDialog,
             videoFileViewerDialog: videoFileViewerDialog,
             imageFileViewerDialog: imageFileViewerDialog,
+            webBrowserDialog: webBrowserDialog,
+            xmlViewerDialog: xmlViewerDialog,
+            jsonViewerDialog: jsonViewerDialog,
+            csvViewerDialog: csvViewerDialog,
             findFilesDialog: findFilesDialog,
             compressDialog: compressDialog,
             extractDialog: extractDialog,
@@ -222,7 +231,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             contactManagerDialog,
             encyclopediaDialog,
             performanceBenchmarkDialog,
-            gamesDialog));
+            gamesDialog,
+            bluetoothDeviceManagerDialog: bluetoothDeviceManagerDialog,
+            virtualMachineManagerDialog: virtualMachineManagerDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 

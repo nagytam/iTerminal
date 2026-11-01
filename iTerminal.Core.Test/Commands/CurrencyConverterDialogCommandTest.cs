@@ -11,6 +11,7 @@ namespace iTerminal.Core.Test.Commands;
 [TestClass]
 public class CurrencyConverterDialogCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ItIsBoundToCtrlShiftF5()
     {

@@ -16,6 +16,7 @@ public class WindowFeaturesTest
 
     // ---- shadow ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Shadow_FillsAStripOnTheRightAndOneAtTheBottom_OffsetFromTheWindow()
     {
@@ -35,6 +36,7 @@ public class WindowFeaturesTest
         Assert.IsFalse(screen.IsWritten(5, 3), "the window itself is not painted");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Shadow_ColourContrastsWithTheBackground_AndIsClippedAtTheScreenEdge()
     {
@@ -46,6 +48,7 @@ public class WindowFeaturesTest
         Shadow.Draw(screen, 1, new Position(0, 0), new Size(0, 3), new ColorScheme());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopupAndBoxPanelAndWindow_DrawTheirShadowOnlyWhenAsked()
     {
@@ -89,6 +92,7 @@ public class WindowFeaturesTest
 
     private static MouseEvent Release(long x, long y) => new() { Position = new Position(x, y), IsRelease = true };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DraggingTheTitleBar_MovesTheWindow_UntilTheButtonIsReleased()
     {
@@ -106,6 +110,7 @@ public class WindowFeaturesTest
         Assert.AreEqual(new Position(20, 9), dialog.Position, "after the release a drag no longer moves it");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWindowStaysOnTheScreen()
     {
@@ -119,6 +124,7 @@ public class WindowFeaturesTest
         Assert.AreEqual(new Position(0, 0), dialog.Position, "held at the top left");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickBelowTheTitleBar_DoesNotStartAMove()
     {
@@ -131,6 +137,7 @@ public class WindowFeaturesTest
         Assert.AreEqual(new Position(10, 5), dialog.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AWindowThatIsNotMovable_IgnoresTheDrag()
     {
@@ -143,6 +150,7 @@ public class WindowFeaturesTest
         Assert.AreEqual(new Position(10, 5), dialog.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlF7_MovesWithTheArrowKeys_AndEscapeEndsItWithoutClosingTheDialog()
     {
@@ -164,6 +172,7 @@ public class WindowFeaturesTest
         Assert.AreEqual(new Position(6, 6), dialog.Position, "arrows are ordinary keys again");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Resizing_NeedsIsResizable_AndKeepsToTheMinimumAndTheScreen()
     {
@@ -183,6 +192,7 @@ public class WindowFeaturesTest
         Assert.AreEqual(new Size(70, 20), dialog.ViewSize, "held to the room right and below the window");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlF8_ResizesWithTheArrowKeys()
     {
@@ -196,6 +206,7 @@ public class WindowFeaturesTest
         Assert.AreEqual(new Size(31, 15), dialog.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AMovedAndResizedDialog_KeepsItsPlaceWhenTheLayoutRunsAgain()
     {
@@ -215,6 +226,7 @@ public class WindowFeaturesTest
         await Task.CompletedTask;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MoveTo_RefusesToLeaveTheScreen_EvenBeforeItIsOnAnyParent()
     {
@@ -227,6 +239,7 @@ public class WindowFeaturesTest
 
     // ---- scrolling titles ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Marquee_RestsThenSlidesThenComesRound()
     {
@@ -246,6 +259,7 @@ public class WindowFeaturesTest
         Assert.AreEqual(2, Marquee.Offset(text.Length, 10, period + TimeSpan.FromMilliseconds(1200), pause, step));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarqueeWindow_ShowsTheRightSliceAndWrapsRoundPastTheGap()
     {
@@ -261,6 +275,7 @@ public class WindowFeaturesTest
         Assert.AreEqual(0, Marquee.Offset(50, 10, TimeSpan.FromMilliseconds(-5)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarqueeLabel_FollowsTheClock_AndRepaintsOnlyWhenTheTextMoved()
     {
@@ -292,6 +307,7 @@ public class WindowFeaturesTest
         Assert.AreEqual(0, label.Offset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BoxPanelTitle_ScrollsOnlyWhenAsked()
     {
@@ -324,6 +340,7 @@ public class WindowFeaturesTest
         Assert.IsTrue(screen.Line(0).EndsWith("┐"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APopUpWindowTitle_ScrollsWhenItIsTooLongForTheBorder()
     {

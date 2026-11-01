@@ -27,6 +27,7 @@ public class DialogKeyHintsBatch24Test
 {
     private static string[] Keys(IEnumerable<(string Key, string Description)> hints) => [.. hints.Select(h => h.Key)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RemoteConnections_KeyHints_NameTheListKeys()
     {
@@ -36,6 +37,7 @@ public class DialogKeyHintsBatch24Test
         CollectionAssert.IsSubsetOf(new[] { "Enter", "N", "E", "D/Delete", "B" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mail_KeyHints_ListTheInboxKeys()
     {
@@ -47,6 +49,7 @@ public class DialogKeyHintsBatch24Test
         Assert.IsTrue(dialog.GetKeyHints().Any());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WebBrowser_KeyHints_NameAddressLinksTabsAndFind()
     {
@@ -55,6 +58,7 @@ public class DialogKeyHintsBatch24Test
         CollectionAssert.IsSubsetOf(new[] { "Ctrl+L / F6", "Tab", "Enter", "Ctrl+T / Ctrl+W", "F1" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MusicTagEditor_KeyHints_NameSaveAndClose()
     {
@@ -63,6 +67,7 @@ public class DialogKeyHintsBatch24Test
         CollectionAssert.AreEqual(new[] { "Tab", "Enter", "Esc" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ImageMetadataEditor_KeyHints_NameSaveAndClose()
     {
@@ -72,6 +77,7 @@ public class DialogKeyHintsBatch24Test
         CollectionAssert.AreEqual(new[] { "Tab", "Enter", "Esc" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NetworkBrowser_KeyHints_NameOpenRescanAndDelete()
     {
@@ -81,6 +87,7 @@ public class DialogKeyHintsBatch24Test
         CollectionAssert.AreEqual(new[] { "Enter", "R", "D", "Esc" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UnitConverter_KeyHints_NameTabAndEsc()
     {

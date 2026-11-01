@@ -43,6 +43,7 @@ public class NetworkBrowserDialogCommandTest
         yield break;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsCtrlNKey()
     {
@@ -56,6 +57,7 @@ public class NetworkBrowserDialogCommandTest
         Assert.IsFalse(command.Key.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_AlwaysReturnsTrue()
     {
@@ -65,6 +67,7 @@ public class NetworkBrowserDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithNoControlAttached_DoesNotThrow()
     {
@@ -74,6 +77,7 @@ public class NetworkBrowserDialogCommandTest
         await command.ExecuteAsync(null);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithControlAttached_OpensDialog()
     {

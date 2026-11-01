@@ -21,6 +21,7 @@ public class PromptDialogsTest
 
     private static KeyEvent Enter() => new('\r', ConsoleKey.Enter, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Selection_EnterChoosesTheHighlightedItem()
     {
@@ -35,6 +36,7 @@ public class PromptDialogsTest
         Assert.AreEqual("Banana", await dialog.Result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Selection_TypingFiltersAndEnterChoosesTheFirstMatch()
     {
@@ -49,6 +51,7 @@ public class PromptDialogsTest
         Assert.AreEqual("Cherry", await dialog.Result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Selection_EnterWithNothingMatching_SaysSoAndStaysOpen()
     {
@@ -63,6 +66,7 @@ public class PromptDialogsTest
         Assert.IsFalse(dialog.Result.IsCompleted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Selection_EscCancels_ToNull()
     {
@@ -76,6 +80,7 @@ public class PromptDialogsTest
         Assert.IsNull(await dialog.Result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MultiSelection_SpaceMarks_EnterConfirmsTheMarked()
     {
@@ -93,6 +98,7 @@ public class PromptDialogsTest
         CollectionAssert.AreEqual(new[] { "Apple", "Cherry" }, (await dialog.Result)!.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MultiSelection_EnterBelowTheMinimum_IsRefused()
     {
@@ -108,6 +114,7 @@ public class PromptDialogsTest
         Assert.IsFalse(dialog.Result.IsCompleted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Confirmation_YesAndNo_AnswerDirectly()
     {
@@ -123,6 +130,7 @@ public class PromptDialogsTest
         Assert.IsFalse(await no.Result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Confirmation_EnterTakesTheDefault()
     {
@@ -135,6 +143,7 @@ public class PromptDialogsTest
         Assert.IsFalse(await dialog.Result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Confirmation_EnterWithoutADefault_DoesNothing()
     {
@@ -147,6 +156,7 @@ public class PromptDialogsTest
         Assert.IsFalse(dialog.Result.IsCompleted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Text_EnterAcceptsAValidValue()
     {
@@ -165,6 +175,7 @@ public class PromptDialogsTest
         Assert.AreEqual(41, await dialog.Result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Text_EnterWithAnInvalidValue_ShowsTheReasonAndStaysOpen()
     {

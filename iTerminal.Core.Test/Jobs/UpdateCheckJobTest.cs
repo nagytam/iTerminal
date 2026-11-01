@@ -20,6 +20,7 @@ public class UpdateCheckJobTest
         return updates;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhereNothingCanBeInstalled_ANewReleaseIsOnlyAToast()
     {
@@ -32,6 +33,7 @@ public class UpdateCheckJobTest
         notifications.Verify(n => n.Notify("iTerminal 1.2.0 is available", It.IsAny<string>(), It.IsAny<NotificationSeverity>(), It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASkippedReleaseIsNotAnnounced()
     {

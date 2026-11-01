@@ -12,6 +12,7 @@ namespace iTerminal.Core.Test.Jobs;
 [TestClass]
 public class FolderIndexJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpdateCacheIfChanged_InsertsAndSkipsWhenMetadataIsUnchanged()
     {
@@ -39,6 +40,7 @@ public class FolderIndexJobTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpdateCacheIfChanged_UpdatesWhenSizeOrModifiedChanges()
     {
@@ -66,6 +68,7 @@ public class FolderIndexJobTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Job_WalksNothingUntilTheIndexIsRequested()
     {

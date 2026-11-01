@@ -21,6 +21,7 @@ public class MusicVolumeCommandTest
 
     private static KeyEvent Typed(char c, ConsoleKey key, bool shift) => new(c, key, shift, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMainRowPlus_RaisesTheVolume_WithOrWithoutShift()
     {
@@ -33,6 +34,7 @@ public class MusicVolumeCommandTest
         music.Verify(m => m.Perform(MusicAction.VolumeUp), Times.Exactly(2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMainRowMinus_LowersTheVolume_WhetherOrNotShiftIsHeld()
     {
@@ -45,6 +47,7 @@ public class MusicVolumeCommandTest
         music.Verify(m => m.Perform(MusicAction.VolumeDown), Times.Exactly(2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheKeypadKey_StillWorks()
     {
@@ -56,6 +59,7 @@ public class MusicVolumeCommandTest
         music.Verify(m => m.Perform(MusicAction.VolumeUp), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithControlHeld_ThePlusIsNotTheVolumeKey()
     {
@@ -67,6 +71,7 @@ public class MusicVolumeCommandTest
         music.Verify(m => m.Perform(It.IsAny<MusicAction>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnotherPanelFocused_NothingChanges()
     {

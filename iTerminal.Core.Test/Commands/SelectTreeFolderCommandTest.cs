@@ -8,6 +8,7 @@ public class SelectTreeFolderCommandTest
 {
     private static SelectTreeFolderCommand Create() => new(null!, new FolderIndexModel());
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsPlainEnter()
     {
@@ -17,6 +18,7 @@ public class SelectTreeFolderCommandTest
         Assert.IsFalse(command.Key!.Control || command.Key.Alt || command.Key.Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TitleAndDescription_AreWrittenForHelp()
     {
@@ -26,6 +28,7 @@ public class SelectTreeFolderCommandTest
         Assert.AreNotEqual(command.Title, command.Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithNoControl_DoesNothing()
     {

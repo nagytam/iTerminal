@@ -30,6 +30,7 @@ public class TerminalModelTest
         return (new TerminalModel(taskManager, contentModelService.Object), gate, contentModel, taskManager);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StartCommandReturnsAtOnceAndTheCommandReadsAsRunningUntilItFinishes()
     {
@@ -52,6 +53,7 @@ public class TerminalModelTest
         Assert.AreEqual(string.Empty, model.Command.Command, "a fresh command line follows");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASecondStartWhileRunningDoesNotRunTheCommandTwice()
     {
@@ -67,6 +69,7 @@ public class TerminalModelTest
         contentModel.Verify(m => m.RunTerminalCommandAsync(It.IsAny<ITerminalModel>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailingCommandIsRecordedWithItsError()
     {
@@ -85,6 +88,7 @@ public class TerminalModelTest
         StringAssert.Contains(model.History[0].Error, "no such command");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoPanelToRunInTheCommandDoesNotStayRunning()
     {
@@ -98,6 +102,7 @@ public class TerminalModelTest
         await WaitUntilAsync(() => !model.IsRunning, "a command with nothing to run in to be released");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StartingAndFinishingRaisePropertyChanged()
     {

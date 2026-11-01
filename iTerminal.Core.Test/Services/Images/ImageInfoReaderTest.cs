@@ -134,6 +134,7 @@ public class ImageInfoReaderTest
         return ms.ToArray();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Png_GivesItsFormatDimensionsAndTextChunks()
     {
@@ -145,6 +146,7 @@ public class ImageInfoReaderTest
         Assert.AreEqual("1,234 bytes", Value(fields, "Size"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_GivesTheCameraExposureDateAndPosition()
     {
@@ -161,6 +163,7 @@ public class ImageInfoReaderTest
         Assert.AreEqual("47.376900, 8.541667", Value(fields, "Position"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EachFieldKnowsItsGroup()
     {
@@ -171,6 +174,7 @@ public class ImageInfoReaderTest
         Assert.AreEqual("Location", fields.Single(f => f.Name == "Position").Group);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFileThatIsNoImage_SaysSoAndKeepsItsSize()
     {
@@ -180,6 +184,7 @@ public class ImageInfoReaderTest
         Assert.AreEqual("9 bytes", Value(fields, "Size"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATruncatedFile_ReadsWhatIsThere()
     {
@@ -190,6 +195,7 @@ public class ImageInfoReaderTest
         Assert.AreEqual("JPEG", Value(fields, "Format"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMissingFile_GivesAnErrorField()
     {

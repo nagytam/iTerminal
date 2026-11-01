@@ -193,6 +193,12 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.Launcher>();
                 services.AddSingleton<Core.Services.FileAssociations.IFileLauncher>(provider => provider.GetRequiredService<SandboxServices.Launcher>());
                 services.AddSingleton<SandboxServices.DockerCli>();
+                services.AddSingleton<SandboxServices.VirtCli>();
+                services.AddSingleton<Core.Services.VirtualMachines.IVirtualMachineService>(provider =>
+                {
+                    var cli = provider.GetRequiredService<SandboxServices.VirtCli>();
+                    return new Core.Services.VirtualMachines.LibvirtVirtualMachineService(cli, cli.LaunchViewer);
+                });
 
                 // No test asks the machine it runs on for its phones: mtp:// is there, and empty-handed.
                 services.AddSingleton<Core.Services.Mtp.IMtpBackend>(
@@ -206,6 +212,8 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.DriveActions>();
                 services.AddSingleton<Core.Services.Drives.IDriveActionsService>(provider => provider.GetRequiredService<SandboxServices.DriveActions>());
                 services.AddSingleton<Core.Services.AccessControl.IAccessControlService, SandboxServices.AccessControl>();
+                // No test scans for, pairs with or forgets a device of the machine it runs on.
+                services.AddSingleton<Core.Services.Bluetooth.IBluetoothService, SandboxServices.Bluetooth>();
                 // No test prints on, or lists the queue of, a printer of the machine it runs on.
                 services.AddSingleton<SandboxServices.Printing>();
                 services.AddSingleton<Core.Services.Printing.IPrintService>(provider => provider.GetRequiredService<SandboxServices.Printing>());

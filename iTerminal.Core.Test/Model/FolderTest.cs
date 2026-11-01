@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Model;
 [TestClass]
 public class FolderTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithoutParent_CreatesRootFolder()
     {
@@ -16,6 +17,7 @@ public class FolderTest
         Assert.IsNull(folder.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithoutParent_CreatesUrlForNonRootFolder()
     {
@@ -27,6 +29,7 @@ public class FolderTest
         Assert.IsTrue(((string)folder.Url).Contains("C:\\"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithParent_CreatesChildFolder()
     {
@@ -38,6 +41,7 @@ public class FolderTest
         Assert.IsNotNull(child.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_MultipleChildren_HaveSameParent()
     {
@@ -51,6 +55,7 @@ public class FolderTest
         Assert.AreEqual("Windows", child2.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_NestedFolders_FormHierarchy()
     {
@@ -64,6 +69,7 @@ public class FolderTest
         Assert.AreEqual(level2, level3.Parent);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Url_IsNotNullForRegularFolder()
     {
@@ -71,6 +77,7 @@ public class FolderTest
         Assert.IsNotNull(folder.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Name_IsSetCorrectly()
     {
@@ -83,6 +90,7 @@ public class FolderTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithSpecialFolderNames()
     {
@@ -104,6 +112,7 @@ public class FolderTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChildFolders_CanHaveDifferentUrls()
     {

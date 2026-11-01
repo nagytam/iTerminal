@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Data;
 [TestClass]
 public class InstrumentTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesProperties()
     {
@@ -15,6 +16,7 @@ public class InstrumentTest
         Assert.AreEqual(0, instrument.InstrumentValues.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Name_SetAndGet()
     {
@@ -22,6 +24,7 @@ public class InstrumentTest
         Assert.AreEqual("AAPL", instrument.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Currency_SetAndGet()
     {
@@ -29,6 +32,7 @@ public class InstrumentTest
         Assert.AreEqual("USD", instrument.Currency);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentType_SetAndGet()
     {
@@ -36,6 +40,7 @@ public class InstrumentTest
         Assert.AreEqual(InstrumentType.Stock, instrument.InstrumentType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValues_IsInitializedAsEmptyList()
     {
@@ -44,6 +49,7 @@ public class InstrumentTest
         Assert.AreEqual(0, instrument.InstrumentValues.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValues_CanAddValues()
     {
@@ -64,6 +70,7 @@ public class InstrumentTest
         Assert.AreEqual(value.Id, instrument.InstrumentValues[0].Id);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Id_CanBeSet()
     {
@@ -73,6 +80,7 @@ public class InstrumentTest
         Assert.AreEqual(instrument1.Id, instrument2.Id);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MultipleInstrumentTypes_CanBeSet()
     {

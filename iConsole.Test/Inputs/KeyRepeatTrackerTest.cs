@@ -6,6 +6,7 @@ namespace iConsole.Test.Inputs;
 [TestClass]
 public class KeyRepeatTrackerTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void OnlyAKeyDownOfAKeyThatIsAlreadyDown_IsARepeat()
     {
@@ -17,6 +18,7 @@ public class KeyRepeatTrackerTest
         Assert.IsFalse(tracker.Register(65, keyDown: true));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AReleaseOfAKeyThatWasNeverDown_IsHarmless()
     {
@@ -26,6 +28,7 @@ public class KeyRepeatTrackerTest
         Assert.IsFalse(tracker.Register(99, keyDown: true));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(-5, 1)]
     [DataRow(0, 1)]
@@ -36,6 +39,7 @@ public class KeyRepeatTrackerTest
         Assert.AreEqual(expected, KeyRepeatTracker.CountFor(count));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AKeyEvent_IsNotARepeatUnlessTheSourceSaysSo_AndRepeatDoesNotChangeWhatItMeans()
     {

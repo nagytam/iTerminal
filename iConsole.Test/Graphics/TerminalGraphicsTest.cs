@@ -9,18 +9,21 @@ public class TerminalGraphicsTest
     private static Func<string, string?> Env(params (string Name, string Value)[] variables) =>
         name => variables.Where(v => v.Name == name).Select(v => v.Value).FirstOrDefault();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DetectSixel_WindowsTerminal_OnWindows()
     {
         Assert.IsTrue(TerminalGraphics.DetectSixel(Env(("WT_SESSION", "abc")), isWindows: true));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DetectSixel_PlainWindowsConsole_IsNotSupported()
     {
         Assert.IsFalse(TerminalGraphics.DetectSixel(Env(), isWindows: true));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("TERM", "foot")]
     [DataRow("TERM", "mlterm")]
@@ -33,6 +36,7 @@ public class TerminalGraphicsTest
         Assert.IsTrue(TerminalGraphics.DetectSixel(Env((name, value)), isWindows: false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("TERM", "xterm-256color")]
     [DataRow("TERM", "xterm-kitty")]
@@ -43,6 +47,7 @@ public class TerminalGraphicsTest
         Assert.IsFalse(TerminalGraphics.DetectSixel(Env((name, value)), isWindows: false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DetectSixel_InsideTmux_IsNotSupported_UnlessForced()
     {
@@ -50,6 +55,7 @@ public class TerminalGraphicsTest
         Assert.IsTrue(TerminalGraphics.DetectSixel(Env(("TMUX", "x"), ("ITERMINAL_SIXEL", "1")), isWindows: false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DetectSixel_TheOverride_WinsBothWays()
     {
@@ -57,6 +63,7 @@ public class TerminalGraphicsTest
         Assert.IsTrue(TerminalGraphics.DetectSixel(Env(("TERM", "xterm-256color"), ("ITERMINAL_SIXEL", "on")), isWindows: false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("9x18", true, 9, 18)]
     [DataRow("10X20", true, 10, 20)]
@@ -73,6 +80,7 @@ public class TerminalGraphicsTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetCellSize_ReplacesTheEstimate()
     {
@@ -86,6 +94,7 @@ public class TerminalGraphicsTest
         Assert.IsTrue(graphics.IsCellSizeKnown);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetCellSize_IgnoresNonsense()
     {
@@ -98,6 +107,7 @@ public class TerminalGraphicsTest
         Assert.IsFalse(graphics.IsCellSizeKnown);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fit_KeepsTheAspectRatioInPixels_AndStaysInsideTheRoom()
     {
@@ -112,6 +122,7 @@ public class TerminalGraphicsTest
         Assert.AreEqual(13, fit.Rows);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fit_ATallPicture_IsLimitedByTheHeight()
     {
@@ -125,6 +136,7 @@ public class TerminalGraphicsTest
         Assert.AreEqual(20, fit.Columns);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fit_ARoomLargerThanTheLimit_ScalesTheBitmapDown()
     {
@@ -136,6 +148,7 @@ public class TerminalGraphicsTest
         Assert.IsTrue(fit.Columns <= 300 && fit.Rows <= 100);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fit_NoRoom_IsEmpty()
     {

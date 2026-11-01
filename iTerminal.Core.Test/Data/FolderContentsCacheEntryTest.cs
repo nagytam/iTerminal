@@ -7,6 +7,7 @@ namespace iTerminal.Core.Data.Test;
 [TestClass]
 public class FolderContentsCacheEntryTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void A_NewEntry_HasEmptyPathAndContent()
     {

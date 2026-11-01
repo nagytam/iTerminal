@@ -16,6 +16,7 @@ public class SettingsDocumentsTabPageTest
     private static SettingsDocumentsTabPage CreatePage(ISettingsService settingsService) =>
         new(settingsService, Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), TestTheme());
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitialize_LoadsTheStoredFolderAndOcrSwitch()
     {
@@ -30,6 +31,7 @@ public class SettingsDocumentsTabPageTest
         Assert.IsTrue(page.IsOcrEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EditingTheFolder_WritesTheSettingStraightAway()
     {
@@ -42,6 +44,7 @@ public class SettingsDocumentsTabPageTest
         Assert.AreEqual(@"C:\Docs", settings.Get(Settings.DocumentsFolder));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyBoxSpellsOutTheDefaultFolder()
     {
@@ -53,6 +56,7 @@ public class SettingsDocumentsTabPageTest
         StringAssert.Contains(page.HintForTest, DocumentLibraryService.ResolveDocumentsFolder(settings));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnExistingFolderIsConfirmed()
     {
@@ -65,6 +69,7 @@ public class SettingsDocumentsTabPageTest
         StringAssert.StartsWith(page.HintForTest, "Folder found");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AMissingFolderIsFlagged()
     {
@@ -77,6 +82,7 @@ public class SettingsDocumentsTabPageTest
         Assert.AreEqual("Folder does not exist yet.", page.HintForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TurningOcrOnIsStoredAndExplained()
     {
@@ -91,12 +97,14 @@ public class SettingsDocumentsTabPageTest
         StringAssert.Contains(page.OcrHintForTest, "Tesseract");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheHotKeyIsFive()
     {
         Assert.AreEqual(ConsoleKey.D5, CreatePage(new SettingsService()).HotConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LayoutStacksCaptionBoxHintAndOcrRows()
     {

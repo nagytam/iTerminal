@@ -12,6 +12,7 @@ namespace iTerminal.Core.Test.Model.Batch28;
 [TestClass]
 public class FuzzFixesBatch32Test
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void WebAddress_FromInput_WithABrokenSearchTemplate_UsesTheDefaultSearch()
     {
@@ -20,12 +21,14 @@ public class FuzzFixesBatch32Test
         StringAssert.Contains(url, "hello+world");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WebAddress_FromInput_OfNull_IsBlank()
     {
         Assert.AreEqual(WebAddress.Blank, WebAddress.FromInput(null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WebAddress_IsSameDocument_WithNulls_IsTrueForTwoNulls()
     {
@@ -33,18 +36,21 @@ public class FuzzFixesBatch32Test
         Assert.IsFalse(WebAddress.IsSameDocument(null, "https://a.test/"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DocumentSearchIndex_BuildSnippet_WithAHugeRadius_ShowsTheWholeText()
     {
         Assert.AreEqual("some text here", DocumentSearchIndex.BuildSnippet("some text here", "text", int.MaxValue));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ManagedArchiveWriter_NormalizeName_OfNull_IsEmpty()
     {
         Assert.AreEqual(string.Empty, ManagedArchiveWriter.NormalizeName(null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HtmlParser_AndWebDocument_Parse_OfNullHtml_GiveAnEmptyDocument()
     {
@@ -52,12 +58,14 @@ public class FuzzFixesBatch32Test
         Assert.IsNotNull(WebDocument.Parse(null, null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarkupTextExtractor_ExtractTitle_OfNull_IsEmpty()
     {
         Assert.AreEqual(string.Empty, MarkupTextExtractor.ExtractTitle(null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PdfTextExtractor_Helpers_AcceptNull()
     {
@@ -66,6 +74,7 @@ public class FuzzFixesBatch32Test
         Assert.IsTrue(PdfTextExtractor.LooksLikeText(null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MimeParser_ParseHeaders_AndQuotedPrintable_AcceptNull()
     {
@@ -73,12 +82,14 @@ public class FuzzFixesBatch32Test
         Assert.AreEqual(0, MimeParser.QuotedPrintable(null).Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UserMenuParser_Parse_OfNull_IsNoItems()
     {
         Assert.AreEqual(0, UserMenuParser.Parse(null).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowsTextClipboardService_ToClipboardBytes_OfNull_IsJustTheTerminator()
     {

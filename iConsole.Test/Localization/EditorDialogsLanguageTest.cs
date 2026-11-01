@@ -46,6 +46,7 @@ public class EditorDialogsLanguageTest
     private static ReplaceTextDialog Replace() =>
         new(new TextEditorControl(Theme()), Mock.Of<IBeepService>(), new DateTimeProviderService(), Theme());
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithEnglishChosen_TheEditorDialogsKeepTheirExactText()
     {
@@ -67,6 +68,7 @@ public class EditorDialogsLanguageTest
         Assert.AreEqual("Help", new HelpDialog(Theme()).Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InGerman_TheEditorDialogsAreTranslated_AndTheHotKeysStay()
     {
@@ -87,6 +89,7 @@ public class EditorDialogsLanguageTest
         Assert.AreEqual("Hilfe", new HelpDialog(Theme()).Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryEditorString()
     {

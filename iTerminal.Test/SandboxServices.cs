@@ -238,6 +238,63 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// The virsh client, answering from a script: one domain, <c>sandbox-vm</c>, whose state follows the
+    /// actions sent to it. Every action is recorded instead of reaching a hypervisor, and virt-viewer is recorded
+    /// instead of started, so a test run never changes a guest or opens a window on the machine.
+    /// </summary>
+    public sealed class VirtCli : Core.Services.Processes.IExternalProcessRunner
+    {
+        public const string Machine = "sandbox-vm";
+
+        private static readonly Dictionary<string, string> StateAfter = new()
+        {
+            ["start"] = "running",
+            ["reboot"] = "running",
+            ["resume"] = "running",
+            ["suspend"] = "paused",
+            ["shutdown"] = "shut off",
+            ["destroy"] = "shut off",
+            ["managedsave"] = "shut off",
+        };
+
+        private volatile string _state = "running";
+
+        /// <summary>Every action and console launch, in order, as the dialog asked for it.</summary>
+        public System.Collections.Concurrent.ConcurrentQueue<string> Actions { get; } = new();
+
+        public Task<Core.Services.Processes.ProcessOutput> RunAsync(string fileName, IReadOnlyList<string> arguments, string? workingDirectory = null, CancellationToken cancellationToken = default)
+        {
+            var line = string.Join(' ', arguments);
+            if (line == "-c qemu:///system list --all")
+            {
+                return Task.FromResult(new Core.Services.Processes.ProcessOutput(0,
+                    " Id   Name        State\n--------------------------\n" +
+                    $" {(_state == "shut off" ? "-" : "1")}    {Machine}   {_state}\n",
+                    string.Empty));
+            }
+
+            if (arguments.Count == 4 && arguments[0] == "-c" && arguments[3] == Machine && StateAfter.TryGetValue(arguments[2], out var next))
+            {
+                Actions.Enqueue(arguments[2]);
+                _state = next;
+                return Task.FromResult(new Core.Services.Processes.ProcessOutput(0, string.Empty, string.Empty));
+            }
+
+            return Task.FromResult(new Core.Services.Processes.ProcessOutput(1, string.Empty, $"unexpected: virsh {line}"));
+        }
+
+        /// <summary>Stands in for launching virt-viewer: records the console and reports that it started.</summary>
+        public bool LaunchViewer(string fileName, IReadOnlyList<string> arguments)
+        {
+            Actions.Enqueue($"console {arguments[^1]}");
+            return true;
+        }
+
+        public Task<Core.Services.Processes.ProcessOutput> RunToStreamAsync(string fileName, IReadOnlyList<string> arguments, Stream destination, string? workingDirectory = null, Func<Stream, Task>? writeStandardInput = null, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Processes.ProcessOutput(1, string.Empty, "virsh does not stream in the sandbox."));
+    }
+
+    /// <summary>
     /// The docker CLI, answering from a script: one running container, <c>web</c>, holding
     /// <c>/etc/motd</c>. The real <see cref="Core.Services.Docker.DockerDriveService"/> runs on top of it,
     /// so what the panels show is the drive's own parsing of real-shaped output — only the daemon is
@@ -497,6 +554,38 @@ public static class SandboxServices
             public Task<Core.Services.Benchmark.BenchmarkMeasurement> MeasureAsync(CancellationToken cancellationToken) =>
                 Task.FromResult(new Core.Services.Benchmark.BenchmarkMeasurement(value, unit, reference, higherIsBetter));
         }
+    }
+
+    /// <summary>
+    /// The Bluetooth stack of the machine a run is on is never asked: no test scans, pairs, connects or forgets a
+    /// device of the person's own. Two made-up devices are listed, so the dialog has rows to act on.
+    /// </summary>
+    public sealed class Bluetooth : Core.Services.Bluetooth.IBluetoothService
+    {
+        public bool IsSupported => true;
+
+        public Task<Core.Services.Bluetooth.BluetoothListing> ListAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothListing(
+                [
+                    new Core.Services.Bluetooth.BluetoothDevice("00:11:22:33:44:55", "Sandbox Headphones", IsPaired: true, IsConnected: false),
+                    new Core.Services.Bluetooth.BluetoothDevice("66:77:88:99:AA:BB", "Sandbox Keyboard", IsPaired: false, IsConnected: false),
+                ],
+                null));
+
+        public Task<Core.Services.Bluetooth.BluetoothOutcome> ScanAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothOutcome(true, string.Empty));
+
+        public Task<Core.Services.Bluetooth.BluetoothOutcome> ConnectAsync(string address, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothOutcome(true, string.Empty));
+
+        public Task<Core.Services.Bluetooth.BluetoothOutcome> DisconnectAsync(string address, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothOutcome(true, string.Empty));
+
+        public Task<Core.Services.Bluetooth.BluetoothOutcome> PairAsync(string address, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothOutcome(true, string.Empty));
+
+        public Task<Core.Services.Bluetooth.BluetoothOutcome> RemoveAsync(string address, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothOutcome(true, string.Empty));
     }
 
     public sealed class CurrencyRates : Core.Services.Currency.ICurrencyRateProvider

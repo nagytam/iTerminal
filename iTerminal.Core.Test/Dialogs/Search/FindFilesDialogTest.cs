@@ -68,6 +68,7 @@ public class FindFilesDialogTest
         await WaitUntilAsync(() => dialog.ResultsForTest.Count == expected, $"{expected} results for {names}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ItOpensOnTheFocusedPanelsFolder()
     {
@@ -78,6 +79,7 @@ public class FindFilesDialogTest
         Assert.IsTrue(dialog.NamesBoxForTest.IsFocused, "typing starts in the name box");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterSearchesAndTheResultsAreListedAndDrawn()
     {
@@ -94,6 +96,7 @@ public class FindFilesDialogTest
         Assert.IsTrue(dialog.ResultListBoxForTest.IsFocused, "the results take focus once a search starts");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AContentSearchShowsTheMatchingLine()
     {
@@ -107,6 +110,7 @@ public class FindFilesDialogTest
         Assert.IsTrue(Render(root).Lines.Any(l => l.Contains("alpha.txt:2: needle here")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnAResultGoesToItsFolderAndCloses()
     {
@@ -124,6 +128,7 @@ public class FindFilesDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlPPutsTheResultsInThePanel()
     {
@@ -139,6 +144,7 @@ public class FindFilesDialogTest
         Assert.AreEqual(1, service.Hits.Count, "the results outlive the dialog");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderThatDoesNotExistIsRefusedWithAMessage()
     {
@@ -153,6 +159,7 @@ public class FindFilesDialogTest
         Assert.IsNull(service.Query, "nothing was started");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReopeningKeepsTheLastWordsButTakesThePanelsFolder()
     {
@@ -169,6 +176,7 @@ public class FindFilesDialogTest
         Assert.AreEqual(_root, second.FolderBoxForTest.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlEndAndCtrlHome_JumpToTheLastAndFirstResult_FromTheNameBox()
     {
@@ -185,6 +193,7 @@ public class FindFilesDialogTest
         Assert.AreEqual(0, (int)dialog.ResultListBoxForTest.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PlainHomeAndEnd_StayWithTheTextBoxCursor()
     {
@@ -199,6 +208,7 @@ public class FindFilesDialogTest
         Assert.AreEqual(0, (int)dialog.ResultListBoxForTest.ScrollableModel.CursorPosition.Y, "End moves the text cursor, not the results");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlEnd_WithNoResults_IsLeftToTheTextBox()
     {
@@ -210,6 +220,7 @@ public class FindFilesDialogTest
         Assert.AreEqual(0, (int)dialog.ResultListBoxForTest.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALargeFilePreset_OpensWithTheSizeAndAnEmptyName()
     {

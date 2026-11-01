@@ -12,6 +12,7 @@ public class PlaylistTest
         return playlist;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Add_IgnoresDuplicatePaths()
     {
@@ -23,6 +24,7 @@ public class PlaylistTest
         Assert.AreEqual(1, playlist.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddRange_ReturnsOnlyTheNumberActuallyAdded()
     {
@@ -34,6 +36,7 @@ public class PlaylistTest
         Assert.AreEqual(3, playlist.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RemoveAt_BelowCurrent_KeepsCursorOnTheSameTrack()
     {
@@ -46,6 +49,7 @@ public class PlaylistTest
         Assert.AreEqual("c.mp3", playlist.CurrentTrack?.Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RemoveAt_TheCurrentTrack_ClearsTheCursor()
     {
@@ -58,6 +62,7 @@ public class PlaylistTest
         Assert.IsNull(playlist.CurrentTrack);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Move_SwapsRowsAndFollowsTheCurrentTrack()
     {
@@ -71,6 +76,7 @@ public class PlaylistTest
         Assert.AreEqual(1, playlist.CurrentIndex, "The cursor follows the moved track");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Move_OutOfRange_IsRejected()
     {
@@ -81,6 +87,7 @@ public class PlaylistTest
         Assert.IsFalse(playlist.Move(0, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetNextIndex_RepeatOff_StopsAfterTheLastTrack()
     {
@@ -90,6 +97,7 @@ public class PlaylistTest
         Assert.AreEqual(-1, playlist.GetNextIndex(RepeatMode.Off));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetNextIndex_RepeatAll_WrapsToTheStart()
     {
@@ -99,6 +107,7 @@ public class PlaylistTest
         Assert.AreEqual(0, playlist.GetNextIndex(RepeatMode.All));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetNextIndex_RepeatOne_ReturnsTheCurrentTrack()
     {
@@ -108,6 +117,7 @@ public class PlaylistTest
         Assert.AreEqual(1, playlist.GetNextIndex(RepeatMode.One));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetNextIndex_WithNothingCued_StartsAtTheFirstTrack()
     {
@@ -116,6 +126,7 @@ public class PlaylistTest
         Assert.AreEqual(0, playlist.GetNextIndex(RepeatMode.Off));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetPreviousIndex_AtTheStart_WrapsOnlyWhenRepeatingAll()
     {
@@ -126,6 +137,7 @@ public class PlaylistTest
         Assert.AreEqual(2, playlist.GetPreviousIndex(RepeatMode.All));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Shuffle_KeepsPlayingTrackFirstSoItIsNotInterrupted()
     {
@@ -140,6 +152,7 @@ public class PlaylistTest
         Assert.IsTrue(next >= 0 && next < 50);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Shuffle_VisitsEveryTrackExactlyOnceBeforeWrapping()
     {
@@ -160,6 +173,7 @@ public class PlaylistTest
         Assert.AreEqual(-1, playlist.GetNextIndex(RepeatMode.Off), "The shuffled pass is over");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UnShuffle_RestoresSequentialOrder()
     {
@@ -171,6 +185,7 @@ public class PlaylistTest
         Assert.AreEqual(1, playlist.GetNextIndex(RepeatMode.Off));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Version_ChangesOnEveryMutation()
     {
@@ -198,6 +213,7 @@ public class PlaylistTest
         CollectionAssert.AllItemsAreUnique(versions);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceAll_ResetsTheCursorAndDropsDuplicates()
     {
@@ -210,6 +226,7 @@ public class PlaylistTest
         Assert.AreEqual(-1, playlist.CurrentIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyPlaylist_HasNoNextOrPrevious()
     {

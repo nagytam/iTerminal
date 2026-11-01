@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Data;
 [TestClass]
 public class NetworkInfoTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesProperties()
     {
@@ -13,6 +14,7 @@ public class NetworkInfoTest
         Assert.IsNotNull(networkInfo);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Name_SetAndGet()
     {
@@ -20,6 +22,7 @@ public class NetworkInfoTest
         Assert.AreEqual("Ethernet", networkInfo.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Name_CanBeNull()
     {
@@ -27,6 +30,7 @@ public class NetworkInfoTest
         Assert.IsNull(networkInfo.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NetworkInterface_IsNotAccessibleViaPublicSetter()
     {
@@ -36,6 +40,7 @@ public class NetworkInfoTest
         Assert.IsNotNull(networkInfo);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanCreateMultipleNetworkInfoInstances()
     {
@@ -47,6 +52,7 @@ public class NetworkInfoTest
         Assert.AreNotEqual(networkInfo1.Name, networkInfo2.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Name_CanBeUpdated()
     {
@@ -57,6 +63,7 @@ public class NetworkInfoTest
         Assert.AreEqual("WiFi", networkInfo.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidNetworkInterfaces()
     {

@@ -17,6 +17,7 @@ public class SeparatorTest
         return m;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_DefaultOrientationIsHorizontal()
     {
@@ -25,6 +26,7 @@ public class SeparatorTest
         Assert.AreEqual(Orientation.Horizontal, sep.Orientation);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Horizontal_FillsRowWithHorizontalSingleChars()
     {
@@ -42,6 +44,7 @@ public class SeparatorTest
         Assert.IsTrue(line.All(c => c == '⎯'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Horizontal_RenderedOnCorrectRow()
     {
@@ -59,6 +62,7 @@ public class SeparatorTest
         Assert.IsTrue(lines[1].All(c => c == '⎯'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Vertical_FillsColumnWithVerticalSingleChars()
     {
@@ -79,6 +83,7 @@ public class SeparatorTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Vertical_RenderedOnCorrectColumn()
     {
@@ -99,6 +104,7 @@ public class SeparatorTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Horizontal_SingleCharWidth_RendersSingleChar()
     {

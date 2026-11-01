@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Data;
 [TestClass]
 public class InstrumentValueTypeTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValueType_Open_HasValue()
     {
@@ -12,6 +13,7 @@ public class InstrumentValueTypeTest
         Assert.AreEqual(0, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValueType_Intraday_HasValue()
     {
@@ -19,6 +21,7 @@ public class InstrumentValueTypeTest
         Assert.AreEqual(1, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValueType_Close_HasValue()
     {
@@ -26,6 +29,7 @@ public class InstrumentValueTypeTest
         Assert.AreEqual(2, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValueType_Low_HasValue()
     {
@@ -33,6 +37,7 @@ public class InstrumentValueTypeTest
         Assert.AreEqual(3, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValueType_High_HasValue()
     {
@@ -40,6 +45,7 @@ public class InstrumentValueTypeTest
         Assert.AreEqual(4, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValueType_Bid_HasValue()
     {
@@ -47,6 +53,7 @@ public class InstrumentValueTypeTest
         Assert.AreEqual(5, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValueType_Ask_HasValue()
     {
@@ -54,6 +61,7 @@ public class InstrumentValueTypeTest
         Assert.AreEqual(6, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValueType_AllValuesAreUnique()
     {
@@ -72,6 +80,7 @@ public class InstrumentValueTypeTest
         Assert.AreEqual(types.Length, distinctTypes.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValueType_CanConvertToString()
     {
@@ -80,6 +89,7 @@ public class InstrumentValueTypeTest
         Assert.AreEqual("Close", str);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentValueType_CanCompare()
     {

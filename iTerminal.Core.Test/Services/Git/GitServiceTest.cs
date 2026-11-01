@@ -67,6 +67,7 @@ public class GitServiceTest
         Assert.AreEqual(0, process.ExitCode, $"git {arguments} failed:{Environment.NewLine}{output.Result}{error.Result}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetRepositoryRootAsync_OutsideRepo_ReturnsNull()
     {
@@ -90,6 +91,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetStatusAsync_ClassifiesUntrackedStagedAndModified()
     {
@@ -134,6 +136,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StageCommitFlow_MovesFileToStagedThenClears()
     {
@@ -172,6 +175,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CreateAndCheckoutBranch_SwitchesCurrentBranch()
     {
@@ -207,6 +211,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PushAndFetch_AgainstLocalBareRemote_Succeeds()
     {
@@ -251,6 +256,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StashFlow_PushHidesChanges_PopRestoresThem()
     {
@@ -294,6 +300,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetCommitDiffAsync_ContainsSubjectAndChangedFile()
     {
@@ -325,6 +332,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MergeAndDeleteBranch_IntegratesAndRemovesBranch()
     {
@@ -365,6 +373,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MergeConflict_ThenAbort_RestoresCleanState()
     {
@@ -414,6 +423,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StageAllAndUnstageAll_MoveEveryChangeAtOnce()
     {
@@ -456,6 +466,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetLastCommitMessageAsync_ReturnsTheWholeMessage()
     {
@@ -490,6 +501,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetBranchesAsync_SeparatesRemoteTrackingBranchesAndCheckingOneOutTracksIt()
     {
@@ -550,6 +562,7 @@ public class GitServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StashPushAsync_KeepsTheMessageItWasGiven()
     {

@@ -39,6 +39,7 @@ public class BatchOperationTaskTest
     private static BatchStep CopyFile(FileSystemService fs, string source, string target, bool overwrite = false) =>
         new(Path.GetFileName(source), new ContentModelCopyFileTask(fs, fs, new Url(source), new Url(target), ConflictResolvers.Of(overwrite)));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EveryStepRunsInOrder()
     {
@@ -54,6 +55,7 @@ public class BatchOperationTaskTest
         Assert.AreEqual(100, batch.ProgressPercentage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedStepDoesNotStopTheRestAndIsListed()
     {
@@ -72,6 +74,7 @@ public class BatchOperationTaskTest
         Assert.AreEqual(iConsole.Data.TaskStatus.Completed, batch.Status, "a failure is reported through Error, as every task here does");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderStepRunsWithItsDiscoveryAcrossDrives()
     {
@@ -88,6 +91,7 @@ public class BatchOperationTaskTest
         Assert.AreEqual("inside", System.Text.Encoding.UTF8.GetString(copied!.Content!));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePreparationRunsFirst()
     {
@@ -104,6 +108,7 @@ public class BatchOperationTaskTest
         Assert.IsTrue(File.Exists(Path.Combine(newFolder, "a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CancellingStopsTheStepsNotYetStarted()
     {

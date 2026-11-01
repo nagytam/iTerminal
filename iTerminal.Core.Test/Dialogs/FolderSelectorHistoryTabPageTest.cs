@@ -26,6 +26,7 @@ public class FolderSelectorHistoryTabPageTest
         return (page, harness);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_GoesBackToTheFolderUnderTheCursor()
     {
@@ -39,6 +40,7 @@ public class FolderSelectorHistoryTabPageTest
         CollectionAssert.AreEqual(new[] { new Url(@"C:\second").FullUrl }, harness.Navigations);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Down_ThenEnter_GoesToTheOlderFolder()
     {
@@ -51,6 +53,7 @@ public class FolderSelectorHistoryTabPageTest
         CollectionAssert.AreEqual(new[] { new Url(@"C:\first").FullUrl }, harness.Navigations);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithAnEmptyHistory_NavigatesNowhere()
     {
@@ -64,6 +67,7 @@ public class FolderSelectorHistoryTabPageTest
         Assert.AreEqual(0, harness.Navigations.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitialize_FocusesTheList()
     {
@@ -74,6 +78,7 @@ public class FolderSelectorHistoryTabPageTest
         Assert.IsInstanceOfType<iConsole.Controls.ListBox<string>>(page.GetFocusedControl());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithoutAHistoryService_StillWorks()
     {
@@ -84,6 +89,7 @@ public class FolderSelectorHistoryTabPageTest
         Assert.AreEqual(0, (int)page.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_InANarrowPage_DoesNotProduceNegativeGeometry()
     {
@@ -102,6 +108,7 @@ public class FolderSelectorHistoryTabPageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetKeyHints_DocumentEnterAndEscape()
     {

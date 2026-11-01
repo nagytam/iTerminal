@@ -7,6 +7,7 @@ namespace iTerminal.Core.Controls.Test;
 [TestClass]
 public class NewFileTextBoxTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ANameThatIsTakenSaysSoRatherThanCallingThePathInvalid()
     {
