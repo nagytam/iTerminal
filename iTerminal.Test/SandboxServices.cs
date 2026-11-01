@@ -499,6 +499,38 @@ public static class SandboxServices
         }
     }
 
+    /// <summary>
+    /// The Bluetooth stack of the machine a run is on is never asked: no test scans, pairs, connects or forgets a
+    /// device of the person's own. Two made-up devices are listed, so the dialog has rows to act on.
+    /// </summary>
+    public sealed class Bluetooth : Core.Services.Bluetooth.IBluetoothService
+    {
+        public bool IsSupported => true;
+
+        public Task<Core.Services.Bluetooth.BluetoothListing> ListAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothListing(
+                [
+                    new Core.Services.Bluetooth.BluetoothDevice("00:11:22:33:44:55", "Sandbox Headphones", IsPaired: true, IsConnected: false),
+                    new Core.Services.Bluetooth.BluetoothDevice("66:77:88:99:AA:BB", "Sandbox Keyboard", IsPaired: false, IsConnected: false),
+                ],
+                null));
+
+        public Task<Core.Services.Bluetooth.BluetoothOutcome> ScanAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothOutcome(true, string.Empty));
+
+        public Task<Core.Services.Bluetooth.BluetoothOutcome> ConnectAsync(string address, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothOutcome(true, string.Empty));
+
+        public Task<Core.Services.Bluetooth.BluetoothOutcome> DisconnectAsync(string address, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothOutcome(true, string.Empty));
+
+        public Task<Core.Services.Bluetooth.BluetoothOutcome> PairAsync(string address, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothOutcome(true, string.Empty));
+
+        public Task<Core.Services.Bluetooth.BluetoothOutcome> RemoveAsync(string address, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Bluetooth.BluetoothOutcome(true, string.Empty));
+    }
+
     public sealed class CurrencyRates : Core.Services.Currency.ICurrencyRateProvider
     {
         public string Name => "Sandbox";

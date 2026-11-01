@@ -78,7 +78,8 @@ public class HotKeys : StatusBarItem
         iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null,
         LanguageDialog? languageDialog = null,
         ILocalizer? localizer = null,
-        iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null)
+        iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
+        iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -88,6 +89,10 @@ public class HotKeys : StatusBarItem
         var taskManagerDialogCommand = new TaskManagerDialogCommand(taskManagerDialog);
         var themeManagerDialogCommand = new ThemeManagerDialogCommand(themeManagerDialog);
         AddCommand(new ProcessManagerDialogCommand(processManagerDialog));
+        if (bluetoothDeviceManagerDialog is not null)
+        {
+            AddCommand(new BluetoothDeviceManagerDialogCommand(bluetoothDeviceManagerDialog));
+        }
         var screenManagerDialogCommand = new ScreenManagerDialogCommand(themeService);
         var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog);
         var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations);

@@ -225,6 +225,17 @@ puts a whole working context back.
   reported in the toast ("Left panel: C:\x no longer exists"); an unreachable remote reports the same.
   Nothing secret is stored — a remote panel is only its URL.
 
+### The Bluetooth device manager (`iTerminal.Core/Dialogs/Bluetooth/`, `Services/Bluetooth/`, Ctrl+Shift+J)
+Tools > Bluetooth devices lists the devices BlueZ knows: paired ones, ones seen recently, with their state (connected, paired, nearby). **S** scans for 8 seconds, **C** connects or disconnects the device under the cursor, **P** pairs, **Delete** asks y/n and then forgets it, **R** reads the list again.
+
+- **The backend is `bluetoothctl` on Linux only.** `BluetoothService` runs it through `IExternalProcessRunner` (one short command per call, each with its own timeout), and `BluetoothctlParser` reads what it prints, so the formats are tested against recorded output. Windows reports `IsSupported == false` and the dialog says so; nothing is read there. A device that asks for a PIN cannot be paired here: no agent answers it.
+- **`bluetoothctl` exits 0 after a refused connect.** `BluetoothctlParser.Failed` reads the text as well as the exit code (`Failed to`, `org.bluez.Error`, `not available`, `No default controller`), so the reason reaches the status line.
+- **The highlight is the cursor.** `ListBox` keeps the highlight in `ScrollableModel.CursorPosition`; `ListItem.IsSelected` is the mark that Space toggles, and the dialog does not use it. A refresh rebuilds the rows, so the dialog remembers the highlighted address and `OnIdle` moves the cursor back to that device when the rows changed.
+- **One operation at a time.** A key that starts a change is refused while another runs. The worker writes the result to `_statusText`; `OnIdle` puts it on the status line, so no worker touches the control tree. Each change reads the list again afterwards.
+- **The dialog takes focus for its list when it shows.** A dialog with focus passes arrow keys to no child.
+- **Tests never reach the machine's adapter.** `SandboxServices.Bluetooth` lists two made-up devices and answers every change with success; the unit tests use a recording fake.
+- No setting is stored: the list is read each time the dialog opens.
+
 ### The remote connection manager (`iTerminal.Core/Dialogs/Remote/`, `Services/Remote/`, `Model/Remote/`)
 Alt+F2 (Tools > Remote connections) opens `RemoteConnectionManagerDialog`: saved SSH, PowerShell remoting, **FTP and
 WebDAV** targets. Enter on an SSH or PowerShell entry lends the whole terminal to the session through
