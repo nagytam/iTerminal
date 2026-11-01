@@ -101,7 +101,7 @@ public class CsvViewerDialog : Dialog
             return;
         }
 
-        string text = Encoding.UTF8.GetString(content);
+        string text = Decode(content);
         // A .tsv file is tab-separated whatever its first line looks like: a comma in a value must not make it a comma file.
         char? delimiter = string.Equals(Path.GetExtension(Url.Path), ".tsv", StringComparison.OrdinalIgnoreCase) ? '\t' : null;
         CsvDocument document = await Task.Run(() => CsvDocument.Parse(text, delimiter));
@@ -110,6 +110,25 @@ public class CsvViewerDialog : Dialog
         _matched = document.Rows.Count;
         UpdateStatus();
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// The file's text: UTF-16 when it starts with that byte order mark (what Excel's "Unicode Text" saves), otherwise UTF-8.
+    /// Read as UTF-8, a UTF-16 file is a string of unrelated characters and nulls.
+    /// </summary>
+    public static string Decode(byte[] content)
+    {
+        if (content.Length >= 2 && content[0] == 0xFF && content[1] == 0xFE)
+        {
+            return Encoding.Unicode.GetString(content, 2, content.Length - 2);
+        }
+
+        if (content.Length >= 2 && content[0] == 0xFE && content[1] == 0xFF)
+        {
+            return Encoding.BigEndianUnicode.GetString(content, 2, content.Length - 2);
+        }
+
+        return Encoding.UTF8.GetString(content);
     }
 
     /// <summary>Starts running a query over the file. The grid changes on the next idle pass; nothing here waits for it.</summary>
