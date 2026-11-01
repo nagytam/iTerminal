@@ -163,8 +163,10 @@ public class ControlsReviewBatch35Test
     [TestMethod]
     public void TheNullLoggers_AreSingletons_AndSwallowEverything()
     {
-        Assert.AreSame(NullCommandLogger.Instance, NullCommandLogger.Instance);
-        Assert.AreSame(NullScreenLogger.Instance, NullScreenLogger.Instance);
+        var commandLogger = NullCommandLogger.Instance;
+        Assert.AreSame(commandLogger, NullCommandLogger.Instance);
+        var screenLogger = NullScreenLogger.Instance;
+        Assert.AreSame(screenLogger, NullScreenLogger.Instance);
         NullScreenLogger.Instance.Capture("label", new BufferLayer(0, new Size(1, 1), Color.White, Color.Black), null);
     }
 

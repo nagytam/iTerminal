@@ -7,7 +7,7 @@ namespace iTerminal.Core.Test.Services.Sqlite;
 [TestClass]
 public class SqliteStatementCheckerTest
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("SELECT 1")]
     [DataRow("select * from t where x = 'a;b'")]
     [DataRow("SELECT '--x'")]
@@ -29,7 +29,7 @@ public class SqliteStatementCheckerTest
         SqliteStatementChecker.Validate(sql);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("SELECT '/*' ; DROP TABLE t; --'")]
     [DataRow("SELECT 1; DROP TABLE t")]
     [DataRow("SELECT 1; SELECT 2")]

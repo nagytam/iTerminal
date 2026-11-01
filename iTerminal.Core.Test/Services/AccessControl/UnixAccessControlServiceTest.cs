@@ -1,3 +1,4 @@
+using System.Runtime.Versioning;
 using iTerminal.Core.Services.AccessControl;
 using iTerminal.Core.Test.Helper;
 
@@ -149,6 +150,7 @@ public class UnixAccessControlServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [UnsupportedOSPlatform("windows")]
     public void WithoutGetfaclTheModeBitsAreShownWithANote()
     {
         if (OperatingSystem.IsWindows())

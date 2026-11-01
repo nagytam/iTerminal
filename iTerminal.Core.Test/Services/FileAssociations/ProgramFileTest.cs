@@ -1,3 +1,4 @@
+using System.Runtime.Versioning;
 using iTerminal.Core.Services.FileAssociations;
 
 namespace iTerminal.Core.Test.Services.FileAssociations;
@@ -24,6 +25,7 @@ public class ProgramFileTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [UnsupportedOSPlatform("windows")]
     public void IsRunnable_AFileWithoutAnExecuteBit_IsNotAProgram()
     {
         if (OperatingSystem.IsWindows())
@@ -40,6 +42,7 @@ public class ProgramFileTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [UnsupportedOSPlatform("windows")]
     public void IsRunnable_AFileWithAnExecuteBit_IsAProgram()
     {
         if (OperatingSystem.IsWindows())

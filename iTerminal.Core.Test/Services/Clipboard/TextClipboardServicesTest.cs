@@ -1,3 +1,4 @@
+using System.Runtime.Versioning;
 using System.Text;
 using iConsole.Services;
 using iTerminal.Core.Services.Clipboard;
@@ -43,6 +44,7 @@ public class TextClipboardServicesTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [SupportedOSPlatform("windows")]
     public void Windows_ToClipboardBytes_UsesCrLfAndAWideTerminatingNul()
     {
         byte[] bytes = WindowsTextClipboardService.ToClipboardBytes("a\nb\r\nc\rd");
@@ -51,6 +53,7 @@ public class TextClipboardServicesTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [SupportedOSPlatform("windows")]
     public void Windows_FromClipboardBytes_StopsAtTheNulAndUsesLineFeeds()
     {
         byte[] block = Encoding.Unicode.GetBytes("one\r\ntwo\rthree\0leftover");
@@ -61,6 +64,7 @@ public class TextClipboardServicesTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [SupportedOSPlatform("windows")]
     public void Windows_ConversionsRoundTripNonAsciiText()
     {
         const string text = "árvíztűrő tükörfúrógép\n日本語\nemoji 😀";
