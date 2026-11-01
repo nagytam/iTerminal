@@ -303,7 +303,12 @@ public static class SyntaxHighlighter
         "Config", DataKeywords, ["#", ";"], null, "\"'", ignoreCase: true);
 
     private static readonly SyntaxLanguage Batch = new(
-        "Batch", ["if", "else", "for", "in", "do", "goto", "call", "echo", "set", "exit", "rem", "setlocal", "endlocal", "not", "exist"],
+        "Batch",
+        ["if", "else", "for", "in", "do", "goto", "call", "echo", "set", "exit", "rem", "setlocal", "endlocal", "not", "exist",
+         "defined", "errorlevel", "equ", "neq", "lss", "leq", "gtr", "geq", "cmdextversion", "enabledelayedexpansion",
+         "disabledelayedexpansion", "enableextensions", "disableextensions", "pause", "shift", "title", "cls", "cd", "chdir",
+         "md", "mkdir", "rd", "rmdir", "del", "erase", "copy", "xcopy", "robocopy", "move", "ren", "rename", "type", "start",
+         "pushd", "popd", "choice", "findstr", "find", "where", "timeout", "assoc", "ftype", "path", "prompt", "ver", "vol", "color", "mklink"],
         ["rem ", "::"], null, "\"", ignoreCase: true);
 
     private static readonly SyntaxLanguage Lua = new(

@@ -59,6 +59,7 @@ public class SyntaxLanguagesTest
     [DataRow(".gitignore", "# c", null, null, "# c", "Config")]
     [DataRow("x.bat", "echo \"x\"", "echo", "\"x\"", null, "Batch")]
     [DataRow("x.bat", "rem c", null, null, "rem c", "Batch")]
+    [DataRow("x.cmd", "setlocal enabledelayedexpansion", "setlocal", null, null, "Batch")]
     [DataRow("x.lua", "local x = \"s\" -- c", "local", "\"s\"", "-- c", "Lua")]
     [DataRow("x.r", "x <- TRUE # c", "TRUE", null, "# c", "R")]
     [DataRow("x.pl", "my $x = \"s\"; # c", "my", "\"s\"", "# c", "Perl")]
