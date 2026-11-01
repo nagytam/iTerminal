@@ -3118,26 +3118,6 @@
   <data name="Task.Skipped" xml:space="preserve">
     <value>Omitido</value>
   </data>
-  <data name="Notify.GitSyncing" xml:space="preserve">
-    <value>Sincronizando con el remoto…</value>
-  </data>
-  <data name="Notify.GitSynced" xml:space="preserve">
-    <value>Sincronizado con el remoto.</value>
-  </data>
-  <data name="Notify.GitSyncNoUpstream" xml:space="preserve">
-    <value>La rama no tiene rama upstream con la que sincronizar.</value>
-  </data>
-  <data name="Notify.GitSyncPullFailed" xml:space="preserve">
-    <value>Sincronización git: falló pull --rebase</value>
-  </data>
-  <data name="Notify.GitSyncRebaseNote" xml:space="preserve">
-    <value>(No se envió nada. Si git inició un rebase, queda sin terminar.)</value>
-  </data>
-  <data name="Notify.GitSyncPushFailed" xml:space="preserve">
-    <value>Sincronización git: falló el push</value>
-  </data>
-  <data name="Notify.GitSyncFailed" xml:space="preserve">
-    <value>Falló la sincronización git</value>
   <data name="Menu.Print" xml:space="preserve">
     <value>Imprimir</value>
   </data>
@@ -3236,5 +3216,26 @@
   </data>
   <data name="Print.Hint.List" xml:space="preserve">
     <value>Enter imprimir  ←→ impresora  +/- copias  P retener/reanudar  Supr cancelar  F5 actualizar  Esc cerrar</value>
+  </data>
+  <data name="Notify.GitSyncing" xml:space="preserve">
+    <value>Sincronizando con el remoto…</value>
+  </data>
+  <data name="Notify.GitSynced" xml:space="preserve">
+    <value>Sincronizado con el remoto.</value>
+  </data>
+  <data name="Notify.GitSyncNoUpstream" xml:space="preserve">
+    <value>La rama no tiene rama upstream con la que sincronizar.</value>
+  </data>
+  <data name="Notify.GitSyncPullFailed" xml:space="preserve">
+    <value>Sincronización git: falló pull --rebase</value>
+  </data>
+  <data name="Notify.GitSyncRebaseNote" xml:space="preserve">
+    <value>(No se envió nada. Si git inició un rebase, queda sin terminar.)</value>
+  </data>
+  <data name="Notify.GitSyncPushFailed" xml:space="preserve">
+    <value>Sincronización git: falló el push</value>
+  </data>
+  <data name="Notify.GitSyncFailed" xml:space="preserve">
+    <value>Falló la sincronización git</value>
   </data>
 </root>

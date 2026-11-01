@@ -3118,26 +3118,6 @@
   <data name="Task.Skipped" xml:space="preserve">
     <value>Saltato</value>
   </data>
-  <data name="Notify.GitSyncing" xml:space="preserve">
-    <value>Sincronizzazione con il remoto…</value>
-  </data>
-  <data name="Notify.GitSynced" xml:space="preserve">
-    <value>Sincronizzato con il remoto.</value>
-  </data>
-  <data name="Notify.GitSyncNoUpstream" xml:space="preserve">
-    <value>Il branch non ha un branch upstream con cui sincronizzare.</value>
-  </data>
-  <data name="Notify.GitSyncPullFailed" xml:space="preserve">
-    <value>Sincronizzazione git: pull --rebase non riuscito</value>
-  </data>
-  <data name="Notify.GitSyncRebaseNote" xml:space="preserve">
-    <value>(Non è stato inviato nulla. Se git ha avviato un rebase, resta incompleto.)</value>
-  </data>
-  <data name="Notify.GitSyncPushFailed" xml:space="preserve">
-    <value>Sincronizzazione git: push non riuscito</value>
-  </data>
-  <data name="Notify.GitSyncFailed" xml:space="preserve">
-    <value>Sincronizzazione git non riuscita</value>
   <data name="Menu.Print" xml:space="preserve">
     <value>Stampa</value>
   </data>
@@ -3236,5 +3216,26 @@
   </data>
   <data name="Print.Hint.List" xml:space="preserve">
     <value>Invio stampa  ←→ stampante  +/- copie  P sospendi/riprendi  Canc annulla  F5 aggiorna  Esc chiudi</value>
+  </data>
+  <data name="Notify.GitSyncing" xml:space="preserve">
+    <value>Sincronizzazione con il remoto…</value>
+  </data>
+  <data name="Notify.GitSynced" xml:space="preserve">
+    <value>Sincronizzato con il remoto.</value>
+  </data>
+  <data name="Notify.GitSyncNoUpstream" xml:space="preserve">
+    <value>Il branch non ha un branch upstream con cui sincronizzare.</value>
+  </data>
+  <data name="Notify.GitSyncPullFailed" xml:space="preserve">
+    <value>Sincronizzazione git: pull --rebase non riuscito</value>
+  </data>
+  <data name="Notify.GitSyncRebaseNote" xml:space="preserve">
+    <value>(Non è stato inviato nulla. Se git ha avviato un rebase, resta incompleto.)</value>
+  </data>
+  <data name="Notify.GitSyncPushFailed" xml:space="preserve">
+    <value>Sincronizzazione git: push non riuscito</value>
+  </data>
+  <data name="Notify.GitSyncFailed" xml:space="preserve">
+    <value>Sincronizzazione git non riuscita</value>
   </data>
 </root>
