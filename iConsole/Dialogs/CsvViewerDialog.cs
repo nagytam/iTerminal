@@ -137,9 +137,14 @@ public class CsvViewerDialog : Dialog
         _document = document;
         _grid.SetData(document.Headers, document.Rows);
         _matched = document.Rows.Count;
+        // The grid already shows every row, which is what this query would give; the line says so and is ready to edit.
+        _queryBox.Text = DefaultQuery;
         UpdateStatus();
         StateHasChanged();
     }
+
+    /// <summary>The query the line starts with: every column of every row.</summary>
+    public const string DefaultQuery = "SELECT * FROM file";
 
     /// <summary>
     /// The file's text: a byte order mark decides, else UTF-8 when the bytes are valid UTF-8, else the system's ANSI code page

@@ -249,6 +249,16 @@ public static class CsvQuery
                 columns = ParseSelectList();
             }
 
+            if (IsKeyword("FROM"))
+            {
+                // The file is the only table: FROM and the name after it are accepted so a familiar query runs, and ignored.
+                _position++;
+                if (Peek() is { Kind: not Kind.Symbol } && !IsKeyword("WHERE") && !IsKeyword("ORDER") && !IsKeyword("LIMIT"))
+                {
+                    _position++;
+                }
+            }
+
             Func<string[], bool> filter = _ => true;
             if (IsKeyword("WHERE"))
             {
