@@ -34,7 +34,9 @@ public sealed class SyntaxLanguage
         char variableSigil = '\0',
         bool preprocessorDirectives = false,
         bool doubledQuotes = false,
-        bool tripleQuotes = false)
+        bool tripleQuotes = false,
+        char keyDelimiter = '\0',
+        bool sectionHeaders = false)
     {
         Name = name;
         Keywords = new HashSet<string>(keywords, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
@@ -48,6 +50,8 @@ public sealed class SyntaxLanguage
         PreprocessorDirectives = preprocessorDirectives;
         DoubledQuotes = doubledQuotes;
         TripleQuotes = tripleQuotes;
+        KeyDelimiter = keyDelimiter;
+        SectionHeaders = sectionHeaders;
     }
 
     public string Name { get; }
@@ -76,6 +80,12 @@ public sealed class SyntaxLanguage
 
     /// <summary>Python triple-quoted strings on one line; a string that runs past the line ends with it.</summary>
     public bool TripleQuotes { get; }
+
+    /// <summary>The character that ends a key on a line of a key-value format (<c>:</c> in YAML, <c>=</c> in INI); the key is coloured as a keyword. <c>'\0'</c> for none.</summary>
+    public char KeyDelimiter { get; }
+
+    /// <summary>Whether a line that starts with <c>[</c> is a section header (<c>[core]</c>), coloured as a keyword.</summary>
+    public bool SectionHeaders { get; }
 }
 
 /// <summary>
@@ -112,7 +122,8 @@ public static class SyntaxHighlighter
     [
         "if", "then", "else", "elif", "fi", "for", "while", "until", "do", "done", "case", "esac", "in", "function",
         "return", "exit", "export", "local", "readonly", "echo", "cd", "set", "unset", "source", "alias", "trap",
-        "break", "continue",
+        "break", "continue", "shift", "declare", "typeset", "eval", "exec", "printf", "read", "test", "getopts", "select",
+        "time", "let", "wait", "umask", "pushd", "popd", "hash", "type", "builtin", "command", "coproc",
     ];
 
     /// <summary>C# keywords and the contextual ones that read as keywords (<c>get</c>, <c>nameof</c>, LINQ's <c>from</c>); not <c>value</c> or <c>by</c>, which are often names.</summary>
@@ -258,6 +269,21 @@ public static class SyntaxHighlighter
     private static readonly SyntaxLanguage Shell = new(
         "Shell", ShellKeywords, ["#"], null, "\"'", hyphenatedWords: true, variableSigil: '$');
 
+    private static readonly SyntaxLanguage Yaml = new(
+        "YAML", DataKeywords, ["#"], null, "\"'", ignoreCase: true, doubledQuotes: true, keyDelimiter: ':');
+
+    private static readonly SyntaxLanguage Toml = new(
+        "TOML", DataKeywords, ["#"], null, "\"'", ignoreCase: true, keyDelimiter: '=', sectionHeaders: true, tripleQuotes: true);
+
+    private static readonly SyntaxLanguage Ini = new(
+        "INI", [], [";", "#"], null, "\"'", keyDelimiter: '=', sectionHeaders: true);
+
+    private static readonly SyntaxLanguage DotEnv = new(
+        "Dotenv", [], ["#"], null, "\"'", keyDelimiter: '=');
+
+    private static readonly SyntaxLanguage Properties = new(
+        "Properties", [], ["#"], null, "\"'", keyDelimiter: '=');
+
     private static readonly SyntaxLanguage Sql = new(
         "SQL", SqlKeywords, ["--"], ("/*", "*/"), "\"'", ignoreCase: true);
 
@@ -309,7 +335,7 @@ public static class SyntaxHighlighter
     {
         ["Dockerfile"] = BuildFile, ["Containerfile"] = BuildFile, ["Makefile"] = BuildFile, ["GNUmakefile"] = BuildFile,
         [".bashrc"] = Shell, [".zshrc"] = Shell, [".profile"] = Shell, [".bash_profile"] = Shell,
-        [".gitignore"] = Config, [".gitattributes"] = Config, [".dockerignore"] = Config, [".npmrc"] = Config,
+        [".gitignore"] = Config, [".gitattributes"] = Config, [".dockerignore"] = Config, [".gitconfig"] = Ini, [".npmrc"] = Ini,
         ["Directory.Build.props"] = Markup, ["Directory.Build.targets"] = Markup,
     };
 
@@ -332,14 +358,14 @@ public static class SyntaxHighlighter
         [".xml"] = Markup, [".html"] = Markup, [".htm"] = Markup, [".xaml"] = Markup, [".csproj"] = Markup,
         [".props"] = Markup, [".targets"] = Markup, [".svg"] = Markup, [".slnx"] = Markup, [".wxs"] = Markup,
         [".json"] = Json, [".jsonc"] = Json,
-        [".ini"] = Config, [".conf"] = Config, [".cfg"] = Config, [".toml"] = Config, [".yml"] = Config,
-        [".yaml"] = Config, [".env"] = Config, [".editorconfig"] = Config, [".properties"] = Config,
+        [".ini"] = Ini, [".conf"] = Ini, [".cfg"] = Ini, [".editorconfig"] = Ini, [".toml"] = Toml, [".yml"] = Yaml,
+        [".yaml"] = Yaml, [".env"] = DotEnv, [".properties"] = Properties,
         [".bat"] = Batch, [".cmd"] = Batch,
     };
 
     /// <summary>Every language built in, for <see cref="iConsole.Services.ISyntaxHighlightingService"/> to list and look up by name.</summary>
     internal static IReadOnlyList<SyntaxLanguage> BuiltInLanguages { get; } =
-        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, PowerShell, Python, Shell, Sql, Markup, Json, Config, Batch, Lua, VisualBasic, FSharp, BuildFile];
+        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, PowerShell, Python, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, VisualBasic, FSharp, BuildFile];
 
     /// <summary>The language for a file name or path, or null when there is none to colour it with.</summary>
     public static SyntaxLanguage? ForFile(string? fileName)
@@ -372,6 +398,10 @@ public static class SyntaxHighlighter
     {
         int i = 0;
         int length = line.Length;
+        if (!inBlockComment && TryLeadingKey(language, line, spans, out int afterKey))
+        {
+            i = afterKey;
+        }
         while (i < length)
         {
             if (inBlockComment)
@@ -494,6 +524,113 @@ public static class SyntaxHighlighter
         }
 
         return inBlockComment;
+    }
+
+    /// <summary>
+    /// The start of a key-value or section line: a <c>[section]</c> header, or the key before the delimiter (after the
+    /// indentation and a YAML <c>- </c>). The key is coloured as a keyword; <paramref name="end"/> is where ordinary
+    /// tokenizing resumes.
+    /// </summary>
+    private static bool TryLeadingKey(SyntaxLanguage language, string line, List<SyntaxSpan> spans, out int end)
+    {
+        end = 0;
+        int start = 0;
+        while (start < line.Length && char.IsWhiteSpace(line[start]))
+        {
+            start++;
+        }
+
+        if (start >= line.Length || StartsLineComment(language, line, start))
+        {
+            return false;
+        }
+
+        if (language.SectionHeaders && line[start] == '[')
+        {
+            int close = line.IndexOf(']', start);
+            end = close < 0 ? line.Length : close + 1;
+            spans.Add(new SyntaxSpan(start, end - start, SyntaxKind.Keyword));
+            return true;
+        }
+
+        if (language.KeyDelimiter == '\0')
+        {
+            return false;
+        }
+
+        // A YAML list item: "- key: value".
+        if (language.KeyDelimiter == ':' && line[start] == '-' && start + 1 < line.Length && line[start + 1] == ' ')
+        {
+            start += 2;
+            while (start < line.Length && line[start] == ' ')
+            {
+                start++;
+            }
+
+            if (start >= line.Length)
+            {
+                return false;
+            }
+        }
+
+        int keyEnd;
+        if (line[start] == '"' || line[start] == '\'')
+        {
+            // A quoted key; the quotes are part of it.
+            int close = line.IndexOf(line[start], start + 1);
+            if (close < 0)
+            {
+                return false;
+            }
+
+            int delimiter = close + 1;
+            while (delimiter < line.Length && line[delimiter] == ' ')
+            {
+                delimiter++;
+            }
+
+            if (delimiter >= line.Length || line[delimiter] != language.KeyDelimiter)
+            {
+                return false;
+            }
+
+            keyEnd = close + 1;
+        }
+        else
+        {
+            int delimiter = start;
+            while (true)
+            {
+                delimiter = line.IndexOf(language.KeyDelimiter, delimiter);
+                if (delimiter < 0)
+                {
+                    return false;
+                }
+
+                // A YAML ':' ends a key only before a space or the end of the line, so "http://x" is not a key.
+                if (language.KeyDelimiter == '=' || delimiter + 1 >= line.Length || char.IsWhiteSpace(line[delimiter + 1]))
+                {
+                    break;
+                }
+
+                delimiter++;
+            }
+
+            keyEnd = delimiter;
+            while (keyEnd > start && char.IsWhiteSpace(line[keyEnd - 1]))
+            {
+                keyEnd--;
+            }
+
+            if (keyEnd <= start)
+            {
+                return false;
+            }
+        }
+
+        spans.Add(new SyntaxSpan(start, keyEnd - start, SyntaxKind.Keyword));
+        end = keyEnd;
+        return true;
     }
 
     private static bool StartsLineComment(SyntaxLanguage language, string line, int index)

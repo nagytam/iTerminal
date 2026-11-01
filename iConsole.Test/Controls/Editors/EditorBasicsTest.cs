@@ -523,6 +523,50 @@ public class EditorBasicsTest
     }
 
     [TestMethod]
+    public void Syntax_YamlKeysListItemsAndUrlsAreNotKeys()
+    {
+        Assert.AreEqual("name", SpansOf("a.yml", "name: \"x\" # note", SyntaxKind.Keyword));
+        Assert.AreEqual("\"x\"", SpansOf("a.yml", "name: \"x\" # note", SyntaxKind.String));
+        Assert.AreEqual("# note", SpansOf("a.yml", "name: \"x\" # note", SyntaxKind.Comment));
+        Assert.AreEqual("image", SpansOf("a.yml", "  - image: nginx", SyntaxKind.Keyword));
+        Assert.AreEqual("url", SpansOf("a.yml", "url: http://x", SyntaxKind.Keyword), "the ':' inside http:// does not end a key");
+        Assert.AreEqual("enabled|true", SpansOf("a.yml", "enabled: true", SyntaxKind.Keyword));
+    }
+
+    [TestMethod]
+    public void Syntax_IniSectionsKeysAndComments()
+    {
+        Assert.AreEqual("[core]", SpansOf("a.ini", "[core]", SyntaxKind.Keyword));
+        Assert.AreEqual("path", SpansOf("a.ini", "path = C:\\x  ; c", SyntaxKind.Keyword));
+        Assert.AreEqual("; c", SpansOf("a.ini", "path = C:\\x  ; c", SyntaxKind.Comment));
+        Assert.AreEqual("", SpansOf("a.ini", "; just a note", SyntaxKind.Keyword));
+    }
+
+    [TestMethod]
+    public void Syntax_TomlTablesKeysAndValues()
+    {
+        Assert.AreEqual("[package]", SpansOf("a.toml", "[package]", SyntaxKind.Keyword));
+        Assert.AreEqual("name", SpansOf("a.toml", "name = \"app\"", SyntaxKind.Keyword));
+        Assert.AreEqual("enabled|true", SpansOf("a.toml", "enabled = true", SyntaxKind.Keyword));
+    }
+
+    [TestMethod]
+    public void Syntax_DotenvAndPropertiesKeys()
+    {
+        Assert.AreEqual("API_KEY", SpansOf("a.env", "API_KEY=abc", SyntaxKind.Keyword));
+        Assert.AreEqual("db.url", SpansOf("a.properties", "db.url=jdbc:x", SyntaxKind.Keyword));
+        Assert.AreEqual("# note", SpansOf("a.env", "# note", SyntaxKind.Comment));
+    }
+
+    [TestMethod]
+    public void Syntax_BashBuiltinsVariablesAndStrings()
+    {
+        Assert.AreEqual("declare", SpansOf("a.sh", "declare -a arr=(1 2)", SyntaxKind.Keyword));
+        Assert.AreEqual("\"$HOME\"", SpansOf("a.sh", "echo \"$HOME\"", SyntaxKind.String));
+        Assert.AreEqual("echo", SpansOf("a.sh", "echo $shift", SyntaxKind.Keyword), "a variable named like a builtin is not a keyword");
+    }
+
+    [TestMethod]
     public void Syntax_CppKeywordsDigitSeparatorsAndDirectives()
     {
         Assert.AreEqual("#include", SpansOf("a.cpp", "#include <vector>", SyntaxKind.Keyword));
