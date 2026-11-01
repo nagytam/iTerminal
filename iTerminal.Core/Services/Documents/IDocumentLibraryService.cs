@@ -75,13 +75,10 @@ public interface IDocumentLibraryService
     Task<int> RefreshAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Asks for the scan to run. Nothing is walked until something needs the library — the document manager calls this
-    /// when it opens — so a scan is not started at start-up for a feature the user may never use. Idempotent.
+    /// Asks for the scan to run. The document manager calls this when it opens, so a scan is not started at start-up for
+    /// a feature the user may never use — unless the document library is configured to start sooner. Idempotent.
     /// </summary>
     void RequestIndexing();
-
-    /// <summary>Completes once <see cref="RequestIndexing"/> has been called.</summary>
-    Task IndexingRequested { get; }
 
     /// <summary>
     /// Finds documents matching <paramref name="query"/>: every word must match, and each is
