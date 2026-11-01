@@ -281,7 +281,8 @@ F3 on an `.xml`, `.xaml`, `.csproj`, `.config`, `.resx`, `.svg` and the other XM
 document as a tree. `XmlTree` builds one `XmlNodeItem` per element, text run, comment and processing instruction, and
 indexes each XML node to its item. An element whose only content is text shows that text on its own line.
 
-- **Expand and collapse** are the `TreeView`'s own keys (Enter, Space, `+`, `-`, Left, Right); `*` expands every node.
+- **Expand and collapse** are the `TreeView`'s own keys (Enter, Space, `+`, `-`, Left, Right); `*` expands every node. The
+  title bar shows `+/-:Open/close` and `*:Expand all`; the title is shrunk around the file name so those hints always fit.
 - **XPath** (`/` moves to the box, Enter runs it): `XmlXPathQuery` evaluates XPath 1.0 with the prefixes the root
   element declares. A node-set gives one result per node, shown as its absolute path (with `[n]` where siblings share
   a name) and its value; the first 500 are listed and the count says how many there were. Enter on a result opens its
