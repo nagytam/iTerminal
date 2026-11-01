@@ -1,3 +1,4 @@
+using iTerminal.Core.Services.BackgroundStart;
 using iConsole.Localization;
 using iTerminal.Core.Data;
 using iTerminal.Core.Data.Documents;
@@ -27,12 +28,10 @@ namespace iTerminal.Core.Services.Documents;
 /// </summary>
 public sealed class DocumentLibraryService : IDocumentLibraryService
 {
-    private readonly TaskCompletionSource _indexingRequested = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly IBackgroundStartService? _backgroundStart;
 
-    /// <summary>Starts the scan the first time it is asked for; later calls do nothing.</summary>
-    public void RequestIndexing() => _indexingRequested.TrySetResult();
-
-    public Task IndexingRequested => _indexingRequested.Task;
+    /// <summary>Asks for the scan: it starts now, or as the document library is configured to (BackgroundStart.DocumentLibrary).</summary>
+    public void RequestIndexing() => _backgroundStart?.Request(BackgroundServices.DocumentLibrary);
 
     /// <summary>
     /// How deep the folder walk goes. A documents folder is nested more deeply than a music folder —
@@ -83,8 +82,10 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
         ISettingsService? settingsService,
         IOcrEngine? ocrEngine = null,
         DocumentTextExtractorFactory? extractorFactory = null,
-        Serilog.ILogger? logger = null)
+        Serilog.ILogger? logger = null,
+        IBackgroundStartService? backgroundStart = null)
     {
+        _backgroundStart = backgroundStart;
         _dbContextFactory = dbContextFactory ?? new TemporaryDbContextFactory("DocumentLibrary");
         _settingsService = settingsService ?? NullSettingsService.Instance;
         _ocrEngine = ocrEngine;
