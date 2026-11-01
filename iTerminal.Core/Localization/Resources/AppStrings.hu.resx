@@ -3424,4 +3424,55 @@
   <data name="Multi.Status.CaseOnly" xml:space="preserve">
     <value>csak kis- és nagybetűs változtatás, nem lesz átnevezve</value>
   </data>
+  <data name="Listing.LongTitle" xml:space="preserve">
+    <value>Részletes lista</value>
+  </data>
+  <data name="Listing.LongDescription" xml:space="preserve">
+    <value>Minden elem attribútumait, dátumát és idejét mutatja méretoszlop nélkül, vagy visszaáll a normál listára.</value>
+  </data>
+  <data name="Listing.InfoTitle" xml:space="preserve">
+    <value>Információs lista</value>
+  </data>
+  <data name="Listing.InfoDescription" xml:space="preserve">
+    <value>Megjeleníti a másik panel kurzor alatti elemét. A billentyűk ezen a panelen hatnak, amelynek kurzora ebben a módban rejtve van. Az egeret figyelmen kívül hagyja. Az Esc visszaadja a listát.</value>
+  </data>
+  <data name="Listing.Entry" xml:space="preserve">
+    <value>Elem</value>
+  </data>
+  <data name="Listing.NoEntry" xml:space="preserve">
+    <value>nincs elem</value>
+  </data>
+  <data name="Listing.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Listing.Path" xml:space="preserve">
+    <value>Útvonal</value>
+  </data>
+  <data name="Listing.Type" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Listing.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="Listing.Modified" xml:space="preserve">
+    <value>Módosítva</value>
+  </data>
+  <data name="Listing.Attributes" xml:space="preserve">
+    <value>Attribútumok</value>
+  </data>
+  <data name="Listing.Unknown" xml:space="preserve">
+    <value>ismeretlen</value>
+  </data>
+  <data name="Listing.LinkTarget" xml:space="preserve">
+    <value>Link célja</value>
+  </data>
+  <data name="Listing.TypeFile" xml:space="preserve">
+    <value>fájl</value>
+  </data>
+  <data name="Listing.TypeFolder" xml:space="preserve">
+    <value>mappa</value>
+  </data>
+  <data name="Listing.TypeLink" xml:space="preserve">
+    <value>hivatkozás</value>
+  </data>
 </root>

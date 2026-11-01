@@ -7,6 +7,7 @@ using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iConsole.Model;
 using iConsole.Services;
 using iConsole.Tasks;
@@ -236,6 +237,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         AddCommand(new iTerminal.Core.Commands.Listing.ToggleListingModeCommand(ContentModelService, this));
         AddCommand(new iTerminal.Core.Commands.Listing.ListingModeLeftCommand(this));
         AddCommand(new iTerminal.Core.Commands.Listing.ListingModeRightCommand(this));
+        AddCommand(new iTerminal.Core.Commands.Listing.ToggleLongListingCommand(ContentModelService, this));
+        AddCommand(new iTerminal.Core.Commands.Listing.ToggleInfoListingCommand(ContentModelService, this));
         AddCommand(new InvertMarksCommand(ContentModelService, ContentModel));
         if (_markPatternDialog is not null)
         {
@@ -426,6 +429,12 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         DrawBorder(buffer, ZOrder, AbsolutePosition, ViewSize, header, footer, colorScheme, visualState);
         base.Draw(buffer);
 
+        if (contentModel is not null && IsInfoListing)
+        {
+            DrawInfoRows(buffer, colorScheme);
+            return;
+        }
+
         if (contentModel is not null)
         {
             var columns = ScrollableModel.ColumnCountOf(contentModel);
@@ -451,12 +460,9 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
                 var entryIndex = scrollPositionY + y;
                 var entry = filteredEntries[entryIndex];
                 var isCursor = entryIndex == cursorPositionY;
-                var text = contentModel.FormatItemName(
-                    entry,
-                    width,
-                    isCursor,
-                    colorScheme,
-                    visualState);
+                var text = IsLongListing
+                    ? contentModel.FormatLongItemName(entry, width, isCursor, colorScheme, visualState)
+                    : contentModel.FormatItemName(entry, width, isCursor, colorScheme, visualState);
                 DecorateRow(contentModel, entry, text, isCursor, colorScheme, visualState);
                 if (contentModel is IMarkableContentModel marks && marks.IsMarked(entry))
                 {
@@ -471,7 +477,9 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
 
             for (var y = visibleEntryCount; y < rowCount; y++)
             {
-                var text = contentModel.FormatItemName(null, width, false, colorScheme, visualState);
+                var text = IsLongListing
+                    ? contentModel.FormatLongItemName(null, width, false, colorScheme, visualState)
+                    : contentModel.FormatItemName(null, width, false, colorScheme, visualState);
                 DecorateRow(contentModel, null, text, false, colorScheme, visualState);
                 buffer.Write(ZOrder,
                     new Position(positionX, positionY + y),
@@ -534,21 +542,46 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     internal const int MinimumBriefCellWidth = 16;
 
     /// <summary>
-    /// Brief listing (Ctrl+F): the entries in several columns, filled row-major, names only. The mode lives on
-    /// this control, so it survives a model swap; <see cref="ApplyListingLayout"/> applies it to the model.
+    /// The listing a file panel shows. Full is the one-column row (name, size, date, time). Brief is names in
+    /// columns (Ctrl+T). Long is the one-column row with an attributes column and no size (palette). Info shows
+    /// the other panel's cursor entry as label/value rows and is read-only here (palette; Esc leaves it).
     /// </summary>
-    public bool IsBriefListing { get; private set; }
+    public enum PanelListingMode
+    {
+        Full,
+        Brief,
+        Long,
+        Info,
+    }
+
+    /// <summary>The mode lives on this control, so it survives a model swap (except onto Preview).</summary>
+    public PanelListingMode ListingMode { get; private set; } = PanelListingMode.Full;
+
+    public bool IsBriefListing => ListingMode == PanelListingMode.Brief;
+
+    public bool IsLongListing => ListingMode == PanelListingMode.Long;
+
+    public bool IsInfoListing => ListingMode == PanelListingMode.Info;
 
     /// <summary>Toggles Brief. The Preview panel does not offer it: its entries are text lines.</summary>
-    public void ToggleBriefListing()
+    public void ToggleBriefListing() => ToggleListingMode(PanelListingMode.Brief);
+
+    /// <summary>Toggles Long. The Preview panel does not offer it.</summary>
+    public void ToggleLongListing() => ToggleListingMode(PanelListingMode.Long);
+
+    /// <summary>Toggles Info. The Preview panel does not offer it.</summary>
+    public void ToggleInfoListing() => ToggleListingMode(PanelListingMode.Info);
+
+    private void ToggleListingMode(PanelListingMode mode)
     {
         if (ContentModel is null || ContentModel is ContentModelPreview)
         {
             return;
         }
 
-        IsBriefListing = !IsBriefListing;
+        ListingMode = ListingMode == mode ? PanelListingMode.Full : mode;
         ApplyListingLayout();
+        RefreshInfoRows();
         ContentModel.Update();
         StateHasChanged();
     }
@@ -602,6 +635,86 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         ScrollableModel.ScrollLinesToVisible(model);
         model.Update();
         StateHasChanged();
+    }
+
+    private IReadOnlyList<ListingInfoRow> _infoRows = [];
+
+    /// <summary>
+    /// Polled from the UI thread: the Info rows follow the other panel's cursor. The read is a plain index into its
+    /// in-memory list; a bad index is treated as no entry. The rows are only redrawn when a field changed.
+    /// </summary>
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        if (IsInfoListing)
+        {
+            RefreshInfoRows();
+        }
+    }
+
+    private void RefreshInfoRows()
+    {
+        if (!IsInfoListing)
+        {
+            return;
+        }
+
+        var ownName = ContentModel?.Name;
+        var otherName = ownName == Services.ContentModelService.Left ? Services.ContentModelService.Right : Services.ContentModelService.Left;
+        var other = ContentModelService.ContentModels?.SingleOrDefault(m => m.Name == otherName);
+        IEntry? entry = null;
+        try
+        {
+            if (other is not null)
+            {
+                var index = (int)other.CursorPosition.Y;
+                var entries = other.FilteredEntries;
+                if (index >= 0 && index < entries.Count)
+                {
+                    entry = entries[index];
+                }
+            }
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            entry = null;
+        }
+
+        var rows = ListingInfo.Describe(entry, key => UiText.Get(key, key));
+        if (!rows.SequenceEqual(_infoRows))
+        {
+            _infoRows = rows;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>Draws the Info rows: a label column, then the value, one row per line. Every row is written in full.</summary>
+    private void DrawInfoRows(IBuffer buffer, ColorScheme colorScheme)
+    {
+        var innerWidth = Math.Max(0, (int)ViewSize.Width - 2);
+        var rows = Math.Max(0, (int)ViewSize.Height - 2);
+        var labelWidth = Math.Min(12, innerWidth / 3);
+        var positionX = AbsolutePosition.X + 1;
+        var positionY = AbsolutePosition.Y + 1;
+
+        for (var y = 0; y < rows; y++)
+        {
+            var text = new ConxelString();
+            if (y < _infoRows.Count)
+            {
+                var row = _infoRows[y];
+                var line = row.Label.PadRight(labelWidth) + row.Value;
+                if (line.Length > innerWidth)
+                {
+                    line = line[..innerWidth];
+                }
+
+                text.Append(line, colorScheme.Foreground, colorScheme.Background);
+            }
+
+            PadRow(text, innerWidth, colorScheme);
+            buffer.Write(ZOrder, new Position(positionX, positionY + y), new Size(innerWidth, 1), text);
+        }
     }
 
     /// <summary>
@@ -764,6 +877,13 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
 
         var lx = (int)mouseEvent.Position.X - (int)AbsolutePosition.X;
         var ly = (int)mouseEvent.Position.Y - (int)AbsolutePosition.Y;
+
+        if (IsInfoListing)
+        {
+            // Info shows another panel's entry: a click or the wheel here changes nothing, and the hidden cursor stays put.
+            SetFocus();
+            return true;
+        }
 
         if (mouseEvent.WheelDelta != 0)
         {
@@ -1023,6 +1143,26 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        // Info shows another panel's entry, so keys that would act on this panel's hidden cursor are swallowed here.
+        // Tab, the menus and the navigation keys still work, and Esc gives the list back.
+        if (IsInfoListing)
+        {
+            if (keyEvent.ConsoleKey == ConsoleKey.Escape && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
+            {
+                ListingMode = PanelListingMode.Full;
+                ApplyListingLayout();
+                StateHasChanged();
+                return true;
+            }
+
+            if (keyEvent.ConsoleKey is ConsoleKey.Enter or ConsoleKey.Spacebar or ConsoleKey.Insert or ConsoleKey.Delete or ConsoleKey.Backspace
+                || (keyEvent.ConsoleKey is >= ConsoleKey.F2 and <= ConsoleKey.F9)
+                || keyEvent.ConsoleKey is ConsoleKey.F11 or ConsoleKey.F12)
+            {
+                return true;
+            }
+        }
+
         // Alt+P / Alt+N walk the command history, as in mc, where Alt+letter is not a search
         // either. They come before the search below, so a search cannot be started with P or N
         // (any other letter, or a search already running, is unaffected).
@@ -1130,8 +1270,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         ContentModel = ContentModelService.ContentModels.SingleOrDefault(m => m.Name == name);
         if (ContentModel is ContentModelPreview)
         {
-            // The Preview panel does not offer Brief; a Brief panel that becomes Preview goes back to Long.
-            IsBriefListing = false;
+            // The Preview panel offers no listing mode; a panel that becomes Preview goes back to Full.
+            ListingMode = PanelListingMode.Full;
         }
 
         ApplyListingLayout();

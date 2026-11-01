@@ -34,6 +34,10 @@ public interface IContentModel : IScrollableModel, IFileSystem
     /// </summary>
     ConxelString FormatBriefItemName(IEntry? entry, int width, bool cursor, ColorScheme colorScheme, VisualState visualState) =>
         FormatItemName(entry, width, cursor, colorScheme, visualState);
+
+    /// <summary>The Long listing row for an entry. Defaults to <see cref="FormatItemName"/>.</summary>
+    ConxelString FormatLongItemName(IEntry? entry, int width, bool cursor, ColorScheme colorScheme, VisualState visualState) =>
+        FormatItemName(entry, width, cursor, colorScheme, visualState);
     void ReadUrl();
     void Delete(Url url, bool recursive, bool moveToRecycleBin);
     Task RunTerminalCommandAsync(ITerminalModel terminalModel);

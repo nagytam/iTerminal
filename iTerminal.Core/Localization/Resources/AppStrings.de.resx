@@ -3424,4 +3424,55 @@
   <data name="Multi.Status.CaseOnly" xml:space="preserve">
     <value>nur Groß-/Kleinschreibung, nicht umbenannt</value>
   </data>
+  <data name="Listing.LongTitle" xml:space="preserve">
+    <value>Lange Liste</value>
+  </data>
+  <data name="Listing.LongDescription" xml:space="preserve">
+    <value>Attribute, Datum und Uhrzeit jedes Eintrags ohne Größenspalte anzeigen oder zur normalen Liste zurückkehren.</value>
+  </data>
+  <data name="Listing.InfoTitle" xml:space="preserve">
+    <value>Info-Liste</value>
+  </data>
+  <data name="Listing.InfoDescription" xml:space="preserve">
+    <value>Zeigt den Cursor-Eintrag des anderen Bereichs. Tasten wirken auf diesen Bereich, dessen Cursor in diesem Modus verborgen ist. Die Maus wird ignoriert. Esc kehrt zur Liste zurück.</value>
+  </data>
+  <data name="Listing.Entry" xml:space="preserve">
+    <value>Eintrag</value>
+  </data>
+  <data name="Listing.NoEntry" xml:space="preserve">
+    <value>kein Eintrag</value>
+  </data>
+  <data name="Listing.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Listing.Path" xml:space="preserve">
+    <value>Pfad</value>
+  </data>
+  <data name="Listing.Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Listing.Size" xml:space="preserve">
+    <value>Größe</value>
+  </data>
+  <data name="Listing.Modified" xml:space="preserve">
+    <value>Geändert</value>
+  </data>
+  <data name="Listing.Attributes" xml:space="preserve">
+    <value>Attribute</value>
+  </data>
+  <data name="Listing.Unknown" xml:space="preserve">
+    <value>unbekannt</value>
+  </data>
+  <data name="Listing.LinkTarget" xml:space="preserve">
+    <value>Linkziel</value>
+  </data>
+  <data name="Listing.TypeFile" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="Listing.TypeFolder" xml:space="preserve">
+    <value>Ordner</value>
+  </data>
+  <data name="Listing.TypeLink" xml:space="preserve">
+    <value>Link</value>
+  </data>
 </root>
