@@ -1039,6 +1039,15 @@
   <data name="DialogHint.SwitchComputerTwoPlayers" xml:space="preserve">
     <value>Passa tra computer e due giocatori</value>
   </data>
+  <data name="DialogHint.PauseOrResumeSnake" xml:space="preserve">
+    <value>Metti in pausa o riprendi il serpente, o fallo partire</value>
+  </data>
+  <data name="Games.Snake.Pause" xml:space="preserve">
+    <value>pausa</value>
+  </data>
+  <data name="Games.OnePlayer" xml:space="preserve">
+    <value>un giocatore</value>
+  </data>
   <data name="DialogHint.ScrollDifferences" xml:space="preserve">
     <value>Scorri le differenze</value>
   </data>
