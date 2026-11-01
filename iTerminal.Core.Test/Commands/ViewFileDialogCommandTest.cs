@@ -115,7 +115,7 @@ public class ViewFileDialogCommandTest
         File.WriteAllText(path, "<html><body>Hi</body></html>");
         try
         {
-            var fileUrl = new Url(new Uri(path).AbsoluteUri);
+            var fileUrl = new Url(path);
             var contentModel = new Mock<IContentModel>(MockBehavior.Loose);
             contentModel.Setup(m => m.ExistsFile(fileUrl)).Returns(true);
             var contentModelService = new Mock<IContentModelService>();
