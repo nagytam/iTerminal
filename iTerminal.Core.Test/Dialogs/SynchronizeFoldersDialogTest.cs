@@ -49,7 +49,10 @@ public class SynchronizeFoldersDialogTest
     {
         Mock<IContentModel> model = new();
         model.SetupGet(m => m.Name).Returns(name);
-        model.SetupGet(m => m.Url).Returns(folder is null ? null : new Url(folder + Path.DirectorySeparatorChar));
+        if (folder is not null)
+        {
+            model.SetupGet(m => m.Url).Returns(new Url(folder + Path.DirectorySeparatorChar));
+        }
         return model.Object;
     }
 

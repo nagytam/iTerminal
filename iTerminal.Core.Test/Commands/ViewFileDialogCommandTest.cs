@@ -606,7 +606,7 @@ public class ViewFileDialogCommandTest
     }
 
     [Timeout(60_000)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(".csv")]
     [DataRow(".tsv")]
     public void ExecuteAsync_WithACsvOrTsvFile_PointsTheCsvViewerAtIt(string extension)
