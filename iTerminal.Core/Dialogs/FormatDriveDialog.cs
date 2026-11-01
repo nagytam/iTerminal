@@ -58,7 +58,7 @@ public class FormatDriveDialog : FormDialog
         _checkBoxQuick = new CheckBox(themeService) { Label = UiText.Get("Field.QuickFormat", "Quick format (skip the full surface pass)"), IsChecked = true };
         _textBoxConfirm = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.TypeDriveLetterConfirm", "Type the drive letter to confirm") };
         _errorLabels = [.. Enumerable.Range(0, ErrorRows).Select(_ => new Label(string.Empty, themeService))];
-        _formatButton = new Button(iConsole.Localization.UiText.Get("Button.Format", "Format"), formatCommand, themeService);
+        _formatButton = new Button(iConsole.Localization.UiText.Get("Button.Format", "Format"), formatCommand, themeService) { IsDestructive = true };
         _cancelButton = new CancelDialogButton(themeService);
 
         AddControl(_comboFileSystem);
