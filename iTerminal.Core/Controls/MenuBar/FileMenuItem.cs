@@ -23,6 +23,7 @@ public class FileMenuItem : MenuItem
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? imageFileViewerDialog = null,
+        iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
         iTerminal.Core.Dialogs.Search.FindFilesDialog? findFilesDialog = null,
         CompressDialog? compressDialog = null,
         ExtractDialog? extractDialog = null,
@@ -41,7 +42,7 @@ public class FileMenuItem : MenuItem
     {
         HotKeyChar = 'F';
 
-        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog), [], themeService));
+        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, webBrowserDialog: webBrowserDialog), [], themeService));
         AddMenuItem(new MenuItem("Quick View\tCtrl+F3", new iTerminal.Core.Commands.Drives.TogglePreviewCommand(contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Edit\tF4",   new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations), [], themeService));
         if (openWithDialogFactory is not null)

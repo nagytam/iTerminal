@@ -140,6 +140,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             musicFileViewerDialog: musicFileViewerDialog,
             videoFileViewerDialog: videoFileViewerDialog,
             imageFileViewerDialog: imageFileViewerDialog,
+            webBrowserDialog: webBrowserDialog,
             findFilesDialog: findFilesDialog,
             compressDialog: compressDialog,
             extractDialog: extractDialog,

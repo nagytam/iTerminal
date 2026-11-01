@@ -127,6 +127,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Web.IWebFetcher, iTerminal.Core.Services.Web.WebFetcher>();
         services.AddSingleton<iTerminal.Core.Services.Web.WebBrowserStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Web.WebBrowserDialog>();
+        services.AddSingleton<Func<iTerminal.Core.Dialogs.Web.WebBrowserDialog>>(provider =>
+            () => provider.GetRequiredService<iTerminal.Core.Dialogs.Web.WebBrowserDialog>());
         // Alt+F10: the ASCII-art OpenStreetMap. Tiles are saved (and .mbtiles files read) under <data directory>/maps,
         // so it works offline; a test replaces the tile service so no run reaches the network.
         services.AddSingleton<iTerminal.Core.Services.Map.MapStore>();
