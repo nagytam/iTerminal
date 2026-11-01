@@ -49,6 +49,7 @@ public class UpdateDialogProgressTest
         return (dialog, root);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseProgress_ReadsTheNewestDownloadLine()
     {
@@ -60,6 +61,7 @@ public class UpdateDialogProgressTest
         Assert.AreEqual("2.5 of 10.0 MB", progress.Value.Label);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseProgress_AcceptsADecimalComma()
     {
@@ -69,6 +71,7 @@ public class UpdateDialogProgressTest
         Assert.AreEqual("5,0 of 20,0 MB", progress.Value.Label);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseProgress_IsCompleteOnceDownloadedOrTheInstallerStarts()
     {
@@ -76,6 +79,7 @@ public class UpdateDialogProgressTest
         Assert.AreEqual(1.0, UpdateDialog.ParseProgress(["Starting the installer. iTerminal closes so its files can be replaced."])!.Value.Fraction);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseProgress_HasNoFraction_ForUnknownSizeNothingYetOrAFailure()
     {
@@ -86,12 +90,14 @@ public class UpdateDialogProgressTest
         Assert.IsNull(UpdateDialog.ParseProgress(["something else entirely"]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseProgress_NeverExceedsTheWhole()
     {
         Assert.AreEqual(1.0, UpdateDialog.ParseProgress(["Downloading a.msi: 12.0 of 10.0 MB"])!.Value.Fraction);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_FillsInProportion_AndFallsBackToAPercentageWhenNarrow()
     {
@@ -108,6 +114,7 @@ public class UpdateDialogProgressTest
         Assert.AreEqual("50%", narrowTail);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhileDownloading_TheDialogDrawsABarFromTheLog_InPlaceOfWorking()
     {
@@ -129,6 +136,7 @@ public class UpdateDialogProgressTest
         AssertScreenContains(Render(root), "100%");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BusyWithoutAnyProgressYet_StillSaysWorking_AndWhenIdleNoBarShows()
     {
@@ -142,6 +150,7 @@ public class UpdateDialogProgressTest
         AssertScreenDoesNotContain(Render(idleRoot), "50%");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheBar_ReplacesTheLogLines_ButAFailureAfterwardsShowsTheLogAgain()
     {
@@ -163,6 +172,7 @@ public class UpdateDialogProgressTest
         AssertScreenDoesNotContain(screen, "█");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BusyWithLogLinesThatAreNotProgress_StillShowsThem_AndWorking()
     {
@@ -176,6 +186,7 @@ public class UpdateDialogProgressTest
         AssertScreenContains(screen, "Working...");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheStage_NamesWhatIsHappening()
     {

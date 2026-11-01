@@ -48,6 +48,7 @@ public class EditorFeaturesTest
 
     // ---- Undo / redo ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Undo_TakesBackTypingThatRanOnAsOneStep()
     {
@@ -61,6 +62,7 @@ public class EditorFeaturesTest
         Assert.IsTrue(editor.CanRedo);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Undo_ThenRedo_RestoresTheTextAndTheCursor()
     {
@@ -79,6 +81,7 @@ public class EditorFeaturesTest
         Assert.AreEqual(1L, editor.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Undo_MovingTheCursorBetweenTypingStartsANewStep()
     {
@@ -95,6 +98,7 @@ public class EditorFeaturesTest
         Assert.AreEqual("", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Undo_AnEditAfterUndoDropsTheRedoHistory()
     {
@@ -106,6 +110,7 @@ public class EditorFeaturesTest
         Assert.AreEqual("x", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Undo_ShiftZIsRedo()
     {
@@ -116,6 +121,7 @@ public class EditorFeaturesTest
         Assert.AreEqual("ab", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Undo_DoesNothingInAReadOnlyEditor()
     {
@@ -126,6 +132,7 @@ public class EditorFeaturesTest
         Assert.AreEqual("ab", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Undo_TakesBackADeleteWithASelection()
     {
@@ -139,6 +146,7 @@ public class EditorFeaturesTest
 
     // ---- Replace ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceAll_ChangesEveryOccurrenceAsOneUndoStep()
     {
@@ -152,6 +160,7 @@ public class EditorFeaturesTest
         Assert.AreEqual("one two one|none|ONE", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceAll_IgnoringCaseTakesTheUpperCaseToo()
     {
@@ -160,6 +169,7 @@ public class EditorFeaturesTest
         Assert.AreEqual("x x x", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceAll_ReplacementContainingTheSearchIsNotReplacedAgain()
     {
@@ -168,6 +178,7 @@ public class EditorFeaturesTest
         Assert.AreEqual("aa aa", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceNext_GoesOnFromTheCursorAndWrapsRound()
     {
@@ -188,6 +199,7 @@ public class EditorFeaturesTest
         Assert.AreEqual("z|y3", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Replace_NothingToFindOrReadOnly_ChangesNothing()
     {
@@ -202,6 +214,7 @@ public class EditorFeaturesTest
 
     // ---- Bookmarks ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Bookmarks_ToggleAndGoToNextAndPreviousWrapRound()
     {
@@ -226,6 +239,7 @@ public class EditorFeaturesTest
         CollectionAssert.AreEqual(new[] { 1 }, editor.Bookmarks.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Bookmarks_KeysDriveThem()
     {
@@ -240,6 +254,7 @@ public class EditorFeaturesTest
         Assert.AreEqual(2L, editor.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Bookmarks_MoveWithTheirLinesWhenLinesAreAddedAndRemoved()
     {
@@ -260,6 +275,7 @@ public class EditorFeaturesTest
         CollectionAssert.AreEqual(new[] { 2 }, editor.Bookmarks.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Bookmarks_ALineRemovedTakesItsBookmarkWithIt()
     {
@@ -271,6 +287,7 @@ public class EditorFeaturesTest
         Assert.AreEqual(0, editor.Bookmarks.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Bookmarks_ADrawnBookmarkedLineIsColoured()
     {
@@ -288,6 +305,7 @@ public class EditorFeaturesTest
 
     // ---- Syntax ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_PicksALanguageByExtension()
     {
@@ -300,6 +318,7 @@ public class EditorFeaturesTest
         Assert.IsNull(SyntaxHighlighter.ForFile(null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_TokenizesKeywordsStringsNumbersAndComments()
     {
@@ -316,6 +335,7 @@ public class EditorFeaturesTest
         Assert.AreEqual("// done", Of(SyntaxKind.Comment));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_ABlockCommentRunsOverLines()
     {
@@ -331,6 +351,7 @@ public class EditorFeaturesTest
         Assert.IsTrue(spans.Any(s => s.Kind == SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_DrawnKeywordTakesItsColourAndPlainTextDoesNot()
     {
@@ -344,6 +365,7 @@ public class EditorFeaturesTest
         Assert.AreEqual(Color.White, screen.ForegroundAt(8, 1), "'value' is plain");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Syntax_ACommentThatStartedAboveTheViewStillColoursTheRowsBelowIt()
     {
@@ -386,6 +408,7 @@ public class EditorFeaturesTest
         return screen.Line(0).TrimEnd();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Viewer_DownScrollsToTheLastLineAndNoFurther()
     {
@@ -401,6 +424,7 @@ public class EditorFeaturesTest
         Assert.AreEqual($"Line {40 - visible}", FirstRow(viewer).TrimEnd('.'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Viewer_PageDownAndPageUpMoveByAScreen()
     {
@@ -413,6 +437,7 @@ public class EditorFeaturesTest
         Assert.AreEqual(0L, viewer.ScrollableModel.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Viewer_HomeAndEndGoToTheStartAndTheEndOfTheFile()
     {
@@ -429,6 +454,7 @@ public class EditorFeaturesTest
         Assert.AreEqual(0L, viewer.ScrollableModel.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Viewer_WheelScrollsTheViewNotJustTheCursor()
     {
@@ -451,6 +477,7 @@ public class EditorFeaturesTest
         Assert.AreEqual(100 - viewer.ScrollableModel.ViewSize.Height, viewer.ScrollableModel.ScrollPosition.Y, "not past the last line");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Viewer_TextReadAfterTheLayoutStillScrolls()
     {
@@ -470,6 +497,7 @@ public class EditorFeaturesTest
         Assert.IsTrue(viewer.ScrollableModel.ScrollPosition.Y > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Viewer_RightReachesTheLastColumnOfTheLongestLine()
     {
@@ -485,6 +513,7 @@ public class EditorFeaturesTest
         Assert.AreEqual(80 - viewer.ScrollableModel.ViewSize.Width, viewer.ScrollableModel.ScrollPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Viewer_ClickInWrappedTextLandsOnTheLineClicked()
     {

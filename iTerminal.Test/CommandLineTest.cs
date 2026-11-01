@@ -15,6 +15,7 @@ public class CommandLineTest
         }
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AltEnter_PutsTheFileNameOnTheCommandLine_AndShowsTheLine()
     {
@@ -27,6 +28,7 @@ public class CommandLineTest
         Assert.IsTrue(screen.Contains("readme.txt"), screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlEnter_AddsTheNextNameAfterABlank()
     {

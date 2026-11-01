@@ -31,6 +31,7 @@ public class FileLabelsDialogTest
         return labels;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASingleItem_ShowsWhatItHas()
     {
@@ -44,6 +45,7 @@ public class FileLabelsDialogTest
         Assert.AreEqual("draft, 2026", dialog.Tags);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Apply_SetsTheColourAndTheTags_ForEachItem()
     {
@@ -68,6 +70,7 @@ public class FileLabelsDialogTest
         CollectionAssert.AreEqual(new[] { "invoice", "2026" }, label.Tags.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SeveralItems_KeepWhatIsNotChanged()
     {
@@ -89,6 +92,7 @@ public class FileLabelsDialogTest
         CollectionAssert.AreEqual(new[] { "kept" }, label.Tags.ToList(), "the blank tags keep each item's own");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InvalidTags_AreRefusedWithTheReason_AndNothingIsSaved()
     {

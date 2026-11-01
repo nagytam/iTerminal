@@ -6,6 +6,7 @@ namespace iConsole.Test.Model;
 [TestClass]
 public class SelectionTextModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesProperties()
     {
@@ -16,6 +17,7 @@ public class SelectionTextModelTest
         Assert.IsFalse(model.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Start_DefaultValue_IsNull()
     {
@@ -24,6 +26,7 @@ public class SelectionTextModelTest
         Assert.IsNull(model.Start);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Start_SetValue_UpdatesProperty()
     {
@@ -37,6 +40,7 @@ public class SelectionTextModelTest
         Assert.AreEqual(5, model.Start.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void End_DefaultValue_IsNull()
     {
@@ -45,6 +49,7 @@ public class SelectionTextModelTest
         Assert.IsNull(model.End);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void End_SetValue_UpdatesProperty()
     {
@@ -58,6 +63,7 @@ public class SelectionTextModelTest
         Assert.AreEqual(15, model.End.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsSelected_DefaultValue_IsFalse()
     {
@@ -66,6 +72,7 @@ public class SelectionTextModelTest
         Assert.IsFalse(model.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsSelected_SetValue_UpdatesProperty()
     {
@@ -76,6 +83,7 @@ public class SelectionTextModelTest
         Assert.IsTrue(model.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanSetAllProperties()
     {
@@ -95,6 +103,7 @@ public class SelectionTextModelTest
         Assert.IsTrue(model.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanClearSelection()
     {
@@ -114,6 +123,7 @@ public class SelectionTextModelTest
         Assert.IsFalse(model.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SelectionWithSameStartEnd_IsValid()
     {

@@ -50,6 +50,7 @@ public class ContentBehaviourTest
         return new Setup(content, panels[0], panels[1], aiBar, terminal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AtAnOddWidthThePanelsStillCoverEveryColumn()
     {
@@ -61,6 +62,7 @@ public class ContentBehaviourTest
         Assert.AreEqual(60, (int)s.Right.Position.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePanelsSitAboveTheBottomBar()
     {
@@ -72,6 +74,7 @@ public class ContentBehaviourTest
         Assert.IsFalse(s.Terminal.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFullScreenTerminalHidesEverythingElseAndTakesTheWholeArea()
     {
@@ -85,6 +88,7 @@ public class ContentBehaviourTest
         Assert.AreEqual(s.Content.ViewSize, s.Terminal.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClosingTheTerminalReturnsToThePanelThatHadTheCursor()
     {
@@ -100,6 +104,7 @@ public class ContentBehaviourTest
         Assert.IsFalse(s.Terminal.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CyclingTheBottomBarSwapsTheAiPromptForTheTerminalAndBack()
     {
@@ -118,6 +123,7 @@ public class ContentBehaviourTest
         Assert.IsFalse(s.Terminal.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CyclingIsIgnoredWhileTheTerminalIsFullScreen()
     {
@@ -130,6 +136,7 @@ public class ContentBehaviourTest
         Assert.IsFalse(s.Left.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheShowMethodsPutTheScreenInEachState()
     {
@@ -148,6 +155,7 @@ public class ContentBehaviourTest
         Assert.IsTrue(s.Left.IsVisible && s.Left.IsFocused && s.AiBar.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFocusMethodsMoveTheCursor()
     {
@@ -167,6 +175,7 @@ public class ContentBehaviourTest
         Assert.IsTrue(s.Terminal.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlShiftOTogglesTheCommandLog()
     {
@@ -181,6 +190,7 @@ public class ContentBehaviourTest
         Assert.IsTrue(s.Terminal.IsVisible && !s.Left.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabCyclesThroughThePanelsAndTheBottomBarAndShiftTabGoesBack()
     {
@@ -203,6 +213,7 @@ public class ContentBehaviourTest
         Assert.IsTrue(s.AiBar.IsFocused, "back from the left panel wraps round to the bottom bar");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FromTheTerminalBarTabGoesBackToThePanels()
     {
@@ -218,6 +229,7 @@ public class ContentBehaviourTest
         Assert.IsTrue(s.Right.IsFocused, "back to the right panel");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InTheFullScreenTerminalTabStaysInTheTerminal()
     {
@@ -229,6 +241,7 @@ public class ContentBehaviourTest
         Assert.IsTrue(s.Terminal.IsFocused, "nothing else is on screen to go to");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ResizingLaysTheAreaOutAgain()
     {

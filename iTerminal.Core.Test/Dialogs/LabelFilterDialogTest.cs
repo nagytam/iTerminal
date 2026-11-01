@@ -36,6 +36,7 @@ public class LabelFilterDialogTest
     private LabelFilterDialog Dialog(IFileLabelService labels) =>
         new(labels, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme());
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Apply_FiltersThePanelToTheColour()
     {
@@ -51,6 +52,7 @@ public class LabelFilterDialogTest
         Assert.AreEqual("label: red", model.EntryFilterDescription);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyColourAndABlankTag_ClearTheFilter()
     {
@@ -66,6 +68,7 @@ public class LabelFilterDialogTest
         Assert.IsNull(model.EntryFilterDescription);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATagWithAComma_IsRefused()
     {

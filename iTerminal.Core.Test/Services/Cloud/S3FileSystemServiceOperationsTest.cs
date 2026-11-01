@@ -20,6 +20,7 @@ public class S3FileSystemServiceOperationsTest
 
     private static HttpResponseMessage Ok(string body = "") => FakeHttpHandler.Reply(HttpStatusCode.OK, body);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NotConnected_ExistenceChecksAreFalse_AndDisconnectForgetsTheAccount()
     {
@@ -39,6 +40,7 @@ public class S3FileSystemServiceOperationsTest
         Assert.AreEqual(0, handler.Requests.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Connect_WithoutCredentialsAndWithAnInvalidEndpoint_SendsUnsignedRequests()
     {
@@ -51,6 +53,7 @@ public class S3FileSystemServiceOperationsTest
         Assert.IsNull(handler.Requests.Single().Header("Authorization"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFile_ReflectsTheHeadAnswer_AndTolerantOfBadUrlsAndNetworkErrors()
     {
@@ -68,6 +71,7 @@ public class S3FileSystemServiceOperationsTest
         Assert.IsFalse(failing.ExistsFile(Key("docs/a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFolder_ChecksTheBucketOrAnyKeyUnderThePrefix()
     {
@@ -86,6 +90,7 @@ public class S3FileSystemServiceOperationsTest
         Assert.IsTrue(service.ExistsFolder(Key("docs/sub/")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFolder_WhenTheListingFails_IsFalse()
     {
@@ -95,6 +100,7 @@ public class S3FileSystemServiceOperationsTest
         Assert.IsFalse(service.ExistsFolder(Key("docs/sub")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Download_StreamsTheObject_AndReportsMissingAndFailing()
     {
@@ -117,6 +123,7 @@ public class S3FileSystemServiceOperationsTest
         StringAssert.Contains(failure.Message, "Boom");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Upload_RefusesABucketAsATarget_AndReportsServerErrors()
     {
@@ -130,6 +137,7 @@ public class S3FileSystemServiceOperationsTest
         StringAssert.Contains(failure.Message, "AccessDenied");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CreateFolder_PutsAPlaceholderKey_AndRefusesBuckets()
     {
@@ -149,6 +157,7 @@ public class S3FileSystemServiceOperationsTest
         await Assert.ThrowsExactlyAsync<IOException>(() => failing.CreateFolderAsync(Key("docs/new")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFile_DeletesTheKey_ToleratesMissing_AndRefusesBuckets()
     {
@@ -166,6 +175,7 @@ public class S3FileSystemServiceOperationsTest
         Assert.ThrowsExactly<IOException>(() => service.DeleteFile(Key("docs/locked.txt"), false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Copy_OfAFolder_CopiesEveryKey_AndSkipsExistingTargetsUnlessOverwriting()
     {
@@ -196,6 +206,7 @@ public class S3FileSystemServiceOperationsTest
         Assert.AreEqual(0, handler.Requests.Count(r => r.Method == HttpMethod.Head));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Move_CopiesThenDeletesTheSource()
     {
@@ -214,6 +225,7 @@ public class S3FileSystemServiceOperationsTest
         Assert.AreEqual(0, exists.Requests.Count(r => r.Method != HttpMethod.Head), "an existing target is left alone");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MovingAFolder_DeletesEachKeyAfterItsCopy()
     {
@@ -227,6 +239,7 @@ public class S3FileSystemServiceOperationsTest
         Assert.AreEqual(1, handler.Requests.Count(r => r.Method == HttpMethod.Delete && r.Uri.AbsolutePath == "/docs/src/a.txt"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Copy_RefusesBucketsAndReportsFailuresHiddenInAn200()
     {

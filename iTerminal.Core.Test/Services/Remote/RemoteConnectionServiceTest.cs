@@ -14,6 +14,7 @@ public class RemoteConnectionServiceTest
         Name = "files", Protocol = RemoteProtocol.Ftp, Host = "ftp.example.com", Port = 2121, Username = "alice",
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnFtpEntryRecordsTheLoginTheDriveLooksFor()
     {
@@ -35,6 +36,7 @@ public class RemoteConnectionServiceTest
         passwords.Verify(p => p.Save(Moq.It.Is<iTerminal.Core.Model.Passwords.PasswordEntry>(e => e.Id == entry.Id && e.Password == "s3cret")), Moq.Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASecondSaveWithoutAPasswordKeepsTheOneSaved()
     {
@@ -53,6 +55,7 @@ public class RemoteConnectionServiceTest
         passwords.Verify(p => p.Save(Moq.It.IsAny<iTerminal.Core.Model.Passwords.PasswordEntry>()), Moq.Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALockedPasswordManagerRefusesTheSaveAndNothingIsRecorded()
     {
@@ -69,6 +72,7 @@ public class RemoteConnectionServiceTest
         Assert.AreEqual(0, profiles.GetAll().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeletingAnFtpEntryRemovesItsProfileAndPassword()
     {
@@ -86,6 +90,7 @@ public class RemoteConnectionServiceTest
         passwords.Verify(p => p.DeleteSecret(entry.Id), Moq.Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChangingAnFtpEntryIntoSshDropsItsLogin()
     {
@@ -106,12 +111,14 @@ public class RemoteConnectionServiceTest
         passwords.Verify(p => p.DeleteSecret(entry.Id), Moq.Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingIsSavedAtFirst()
     {
         Assert.AreEqual(0, CreateService().GetAll().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASavedConnectionComesBackWithAllItsFields()
     {
@@ -141,6 +148,7 @@ public class RemoteConnectionServiceTest
         Assert.AreEqual("ci", loaded.Notes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SavingTheSameIdReplacesTheEntry()
     {
@@ -154,6 +162,7 @@ public class RemoteConnectionServiceTest
         Assert.AreEqual("h2", service.GetAll().Single().Host);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheListIsInNameOrder()
     {
@@ -164,6 +173,7 @@ public class RemoteConnectionServiceTest
         CollectionAssert.AreEqual(new[] { "Alpha", "zulu" }, service.GetAll().Select(c => c.Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnsoundConnectionIsNotSaved()
     {
@@ -173,6 +183,7 @@ public class RemoteConnectionServiceTest
         Assert.AreEqual(0, service.GetAll().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteRemovesOnlyThatEntry()
     {
@@ -187,6 +198,7 @@ public class RemoteConnectionServiceTest
         Assert.AreEqual(keep.Id, service.GetAll().Single().Id);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarkConnectedStampsTheEntry()
     {

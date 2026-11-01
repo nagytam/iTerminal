@@ -11,6 +11,7 @@ namespace iConsole.Controls.Buttons.Test;
 [TestClass]
 public class ActionButtonTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ActionView_ShouldBeStored()
     {
@@ -26,6 +27,7 @@ public class ActionButtonTest
         Assert.AreEqual("[X]", ab.ActionView);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WritesNothing_ActionButtonsDrawnByParent()
     {

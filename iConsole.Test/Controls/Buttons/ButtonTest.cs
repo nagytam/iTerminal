@@ -11,6 +11,7 @@ namespace iConsole.Controls.Buttons.Test;
 [TestClass]
 public class ButtonTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TriggerHotKeyAsync_ShouldInvokeCommand()
     {
@@ -32,6 +33,7 @@ public class ButtonTest
         mockCmd.Verify(c => c.RunAsync(null), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListSpaceForAButtonThatCanRun()
     {
@@ -48,6 +50,7 @@ public class ButtonTest
         Assert.AreEqual(0, btn.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShouldRenderTitle()
     {
@@ -70,6 +73,7 @@ public class ButtonTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Hi"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnExplicitTitleWinsOverTheCommandsTitle()
     {
@@ -83,6 +87,7 @@ public class ButtonTest
         Assert.AreEqual("F1-Help", button.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutATitleTheButtonFollowsItsCommand()
     {

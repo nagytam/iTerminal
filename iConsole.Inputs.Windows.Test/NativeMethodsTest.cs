@@ -5,6 +5,7 @@ namespace iConsole.Inputs.Windows.Test;
 [TestClass]
 public class NativeMethodsTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void NativeMethods_DefinesExpectedConstantsAndPInvokeMembers()
     {

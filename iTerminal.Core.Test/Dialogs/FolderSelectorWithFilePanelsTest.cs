@@ -168,6 +168,7 @@ public class FolderSelectorWithFilePanelsTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnATypedFolder_MovesTheFocusedPaneAndClosesTheDialog()
     {
@@ -201,6 +202,7 @@ public class FolderSelectorWithFilePanelsTest
         Assert.IsNull(harness.Dialog, "Choosing a folder ends the dialog.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SelectingAPage_PutsTheCursorOnItsFirstControl()
     {
@@ -220,6 +222,7 @@ public class FolderSelectorWithFilePanelsTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCompletionList_OpensDirectlyBelowTheBox()
     {
@@ -242,6 +245,7 @@ public class FolderSelectorWithFilePanelsTest
         Assert.AreEqual((int)box.AbsolutePosition.X, (int)popup.AbsolutePosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_TakesTheCompletionListFirstAndTheDialogNext()
     {
@@ -267,6 +271,7 @@ public class FolderSelectorWithFilePanelsTest
         Assert.IsNull(harness.Dialog, "The second Esc closes the selector.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_LeavesTheFocusedPaneWhereItWas()
     {
@@ -283,6 +288,7 @@ public class FolderSelectorWithFilePanelsTest
         Assert.AreEqual(before, pane.Url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingTheSelector_LeavesNothingFloatingOverThePanels()
     {

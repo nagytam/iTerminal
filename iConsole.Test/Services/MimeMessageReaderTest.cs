@@ -9,6 +9,7 @@ public class MimeMessageReaderTest
 {
     private static List<string> Read(string message) => [.. MimeMessageReader.Read(Encoding.UTF8.GetBytes(message))];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PlainMessage_ShowsItsAddressesDateSubjectAndBody()
     {
@@ -30,6 +31,7 @@ public class MimeMessageReaderTest
         CollectionAssert.Contains(lines, "Line two");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EncodedWords_AreDecoded_AndFoldedHeadersJoin()
     {
@@ -48,6 +50,7 @@ public class MimeMessageReaderTest
         CollectionAssert.Contains(lines, "To: first@example.org, second@example.org");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void QuotedPrintableBody_IsDecoded_AndSoftBreaksJoin()
     {
@@ -62,6 +65,7 @@ public class MimeMessageReaderTest
         CollectionAssert.Contains(lines, "Café softbreak");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Base64BodyInItsCharset_IsDecoded()
     {
@@ -76,6 +80,7 @@ public class MimeMessageReaderTest
         CollectionAssert.Contains(lines, "Ärger");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Multipart_PrefersThePlainPart_OverTheHtml()
     {
@@ -98,6 +103,7 @@ public class MimeMessageReaderTest
         Assert.IsFalse(lines.Any(l => l.Contains("HTML version")), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HtmlOnlyMessage_ShowsTheHtmlAsText()
     {
@@ -110,6 +116,7 @@ public class MimeMessageReaderTest
         CollectionAssert.Contains(lines, "Hello there");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Attachments_AreListedByName_NotShown()
     {

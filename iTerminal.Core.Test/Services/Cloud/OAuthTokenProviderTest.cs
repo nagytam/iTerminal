@@ -26,6 +26,7 @@ public class OAuthTokenProviderTest
         Assert.IsTrue(condition(), "timed out waiting");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NoClientId_ExplainsTheRegistration()
     {
@@ -38,6 +39,7 @@ public class OAuthTokenProviderTest
         StringAssert.Contains(exception.Message, "set the id.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshToken_IsRedeemedAndTheAccessTokenCachedUntilInvalidated()
     {
@@ -63,6 +65,7 @@ public class OAuthTokenProviderTest
         StringAssert.Contains(http.Requests[1].Text, "refresh_token=rt2", "the rotated token is used");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshToken_WithoutExpiresIn_DefaultsToAnHour()
     {
@@ -77,6 +80,7 @@ public class OAuthTokenProviderTest
         Assert.HasCount(1, http.Requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshToken_RefusedByTheServer_IsForgottenAndSignInStarts()
     {
@@ -101,6 +105,7 @@ public class OAuthTokenProviderTest
         Assert.AreEqual(exception.Message, again.Message, "a sign-in under way is reported, not restarted");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SignIn_CouldNotStart_ReportsTheReason()
     {
@@ -118,6 +123,7 @@ public class OAuthTokenProviderTest
         StringAssert.Contains(exception.Message, "HTTP 502");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SignIn_PollsThroughPendingAndSlowDown_ThenStoresTheTokens()
     {
@@ -151,6 +157,7 @@ public class OAuthTokenProviderTest
         Assert.IsTrue(http.Requests.Any(r => r.Text.Contains("client_secret=s") && r.Text.Contains("device_code=dc")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SignIn_Refused_NotifiesTheError()
     {
@@ -167,6 +174,7 @@ public class OAuthTokenProviderTest
         await WaitFor(() => notifications.Invocations.Any(i => i.Arguments[0] is string t && t.EndsWith("sign-in failed")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SignIn_NotApprovedInTime_Expires()
     {
@@ -182,6 +190,7 @@ public class OAuthTokenProviderTest
         await WaitFor(() => notifications.Invocations.Any(i => i.Arguments[0] is string t && t.EndsWith("sign-in expired")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SignIn_NetworkFailureWhilePolling_IsLoggedAndEnds()
     {
@@ -197,6 +206,7 @@ public class OAuthTokenProviderTest
         await WaitFor(() => logger.Invocations.Any(i => i.Method.Name == "Warning"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PasswordManagerFailures_AreTolerated()
     {
@@ -213,6 +223,7 @@ public class OAuthTokenProviderTest
             () => provider.GetAccessTokenAsync("me", CancellationToken.None));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshToken_FailingToSaveOrDelete_IsLoggedNotThrown()
     {
@@ -237,6 +248,7 @@ public class OAuthTokenProviderTest
             () => provider.GetAccessTokenAsync("me", CancellationToken.None));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProviderConfigs_UseTheirEndpoints()
     {

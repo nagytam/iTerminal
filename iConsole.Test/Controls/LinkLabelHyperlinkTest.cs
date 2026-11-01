@@ -10,6 +10,7 @@ public class LinkLabelHyperlinkTest
 {
     private readonly TestThemeService _theme = new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALinkWithAnAbsoluteTargetIsDrawnAsAHyperlink()
     {
@@ -23,6 +24,7 @@ public class LinkLabelHyperlinkTest
         Assert.AreEqual(id, buffer.Cell(3, 0).LinkId);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATargetThatIsNotAnAbsoluteUriIsOnlyForTheHandler()
     {
@@ -34,6 +36,7 @@ public class LinkLabelHyperlinkTest
         Assert.AreEqual(Hyperlinks.None, buffer.Cell(0, 0).LinkId);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AScriptTargetIsNeverWrittenAsALink()
     {
@@ -45,6 +48,7 @@ public class LinkLabelHyperlinkTest
         Assert.AreEqual(Hyperlinks.None, buffer.Cell(0, 0).LinkId);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALabelCarriesItsExtraAttributesAndLinkOnTheTextOnly()
     {

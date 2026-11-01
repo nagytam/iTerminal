@@ -7,6 +7,7 @@ namespace iTerminal.Core.Model.Test;
 [TestClass]
 public class FolderIndexModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TheRoot_IsMyComputer_AndStartsOpenAndFocused()
     {

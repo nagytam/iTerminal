@@ -33,6 +33,7 @@ public class WorkspaceManagerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyListExplainsWhatSavingDoes()
     {
@@ -46,6 +47,7 @@ public class WorkspaceManagerDialogTest
         AssertScreenContains(screen, "Enter switch  1-9 jump  S save");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheListShowsEachWorkspaceWithItsNumberAndFolders()
     {
@@ -61,6 +63,7 @@ public class WorkspaceManagerDialogTest
         AssertScreenContains(screen, "→ docs");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheLastSavedIsMarkedAsWhatIsOnScreen()
     {
@@ -71,6 +74,7 @@ public class WorkspaceManagerDialogTest
         AssertScreenContains(Render(dialog), "● This is what is on screen now.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARowSaysWhenTheScreenHasMovedOnSinceItWasSaved()
     {
@@ -82,6 +86,7 @@ public class WorkspaceManagerDialogTest
         AssertScreenContains(Render(dialog), "○ The screen has changed since. U updates this");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SSavesTheScreenUnderTheSuggestedNameOnEnter()
     {
@@ -97,6 +102,7 @@ public class WorkspaceManagerDialogTest
         AssertScreenContains(Render(dialog), "Saved 'Workspace 1'.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANameCanBeTypedInPlaceOfTheSuggestion()
     {
@@ -111,6 +117,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual("Build box", service.GetAll().Single().Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyNameIsRefusedAndTheFormStaysOpen()
     {
@@ -126,6 +133,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual(0, service.GetAll().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATakenNameNeedsASecondEnterToReplaceIt()
     {
@@ -145,6 +153,7 @@ public class WorkspaceManagerDialogTest
         AssertScreenContains(Render(dialog), "Replaced 'Alpha'.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscInTheNameFormGoesBackToTheListWithoutSaving()
     {
@@ -158,6 +167,7 @@ public class WorkspaceManagerDialogTest
         AssertScreenContains(Render(dialog), "No workspaces yet.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterSwitchesToTheSelectedWorkspaceAndClosesTheDialog()
     {
@@ -171,6 +181,7 @@ public class WorkspaceManagerDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANumberKeyJumpsStraightToThatWorkspace()
     {
@@ -183,6 +194,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual("Beta", service.ActiveName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANumberWithNoWorkspaceBehindItSaysSoAndKeepsTheDialog()
     {
@@ -195,6 +207,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual(0, layout.Applied.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteAsksFirstAndOnlyYDeletes()
     {
@@ -213,6 +226,7 @@ public class WorkspaceManagerDialogTest
         AssertScreenContains(Render(dialog), "Deleted 'Beta'.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpdateReplacesTheSelectedWithTheScreenAfterAYes()
     {
@@ -228,6 +242,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual(WorkspaceBar.Terminal, service.GetAll().Single().Layout.Bar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RenameStartsFromTheOldNameAndEndKeepsItToEdit()
     {
@@ -243,6 +258,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual("Alpha2", service.GetAll().Single().Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingOverTheSelectedOldNameReplacesIt()
     {
@@ -256,6 +272,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual("Zed", service.GetAll().Single().Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscClosesTheDialogFromTheList()
     {
@@ -267,6 +284,7 @@ public class WorkspaceManagerDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AShortLabelIsTheLastFolderOrTheScheme()
     {
@@ -274,6 +292,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual("-", WorkspaceManagerDialog.Short(string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesTheNameInPlaceOfTheSuggestion_OnOneLine()
     {
@@ -290,6 +309,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual("Build box", service.GetAll().Single().Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APastedNameIsCutToTheLongestAllowed()
     {
@@ -312,6 +332,7 @@ public class WorkspaceManagerDialogTest
         WheelDelta = wheel,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickHighlightsAWorkspace_AndTheWheelMovesThreeAtATime()
     {
@@ -328,6 +349,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual(0, dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickDoesNotSwitchWorkspaces_EnterDoes_AndAClickBelowTheListDoesNothing()
     {
@@ -343,6 +365,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual(1, dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMouseLeavesTheListAloneWhileANameIsBeingTyped()
     {
@@ -356,6 +379,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual(before, dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWDeletesTheLastWordOfTheName_AndCtrlUClearsIt()
     {
@@ -373,6 +397,7 @@ public class WorkspaceManagerDialogTest
         Assert.AreEqual("Docs", service.GetAll().Single().Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWOnTheSuggestedNameClearsItAtOnce()
     {

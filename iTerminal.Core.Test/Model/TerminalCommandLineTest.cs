@@ -38,6 +38,7 @@ public class TerminalCommandLineTest
         Directory.Delete(_folder, true);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void QuoteName_QuotesOnlyNamesWithBlanks()
     {
@@ -45,6 +46,7 @@ public class TerminalCommandLineTest
         Assert.AreEqual("\"my file.txt\"", TerminalModel.QuoteName("my file.txt"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InsertText_SeparatesWithABlank()
     {
@@ -56,6 +58,7 @@ public class TerminalCommandLineTest
         Assert.AreEqual("cp a.txt b.txt", _terminal.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RecallPreviousAndNext_WalkTheHistoryAndGiveBackTheDraft()
     {
@@ -77,6 +80,7 @@ public class TerminalCommandLineTest
         Assert.IsFalse(_terminal.RecallNext(), "nothing newer than the draft");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Cd_NavigatesThePanelInsteadOfRunningAShell()
     {
@@ -92,6 +96,7 @@ public class TerminalCommandLineTest
         Assert.AreEqual(string.Empty, _terminal.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Cd_ToAMissingFolder_SaysSoAndStays()
     {
@@ -103,6 +108,7 @@ public class TerminalCommandLineTest
         Assert.IsTrue(_terminal.History[0].Error!.Contains("no such directory"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACdChainedToSomethingElse_IsLeftToTheShell()
     {
@@ -111,6 +117,7 @@ public class TerminalCommandLineTest
         Assert.IsFalse(_terminal.TryChangeDirectory());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InsertCommand_CopiesTheFileNameAndTheFolderPath()
     {

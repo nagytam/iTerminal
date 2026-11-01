@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class ContainerTypeTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ContainerType_FileSystem_HasValue()
     {
@@ -12,6 +13,7 @@ public class ContainerTypeTest
         Assert.AreEqual(0, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContainerType_FileSystemArchive_HasValue()
     {
@@ -19,6 +21,7 @@ public class ContainerTypeTest
         Assert.IsTrue((int)type >= 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContainerType_SshFileSystem_HasValue()
     {
@@ -26,6 +29,7 @@ public class ContainerTypeTest
         Assert.IsTrue((int)type >= 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContainerType_MemoryDrive_HasValue()
     {
@@ -33,6 +37,7 @@ public class ContainerTypeTest
         Assert.IsTrue((int)type >= 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContainerType_AllValuesAreUnique()
     {

@@ -42,6 +42,7 @@ public class MenuItemMnemonicTest
 
     private static KeyEvent CtrlE => new('\u0005', ConsoleKey.E, false, false, true);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNothingBoundToTheChord_TheMnemonicOpensTheMenu()
     {
@@ -52,6 +53,7 @@ public class MenuItemMnemonicTest
         Assert.IsTrue(edit.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACommandBoundToTheChord_WinsOverTheMnemonic()
     {
@@ -64,6 +66,7 @@ public class MenuItemMnemonicTest
         Assert.IsFalse(edit.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACommandOnAnotherChord_LeavesTheMnemonicAlone()
     {

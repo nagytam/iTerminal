@@ -10,6 +10,7 @@ namespace iTerminal.Core.Test.Commands;
 [TestClass]
 public class ContactManagerDialogCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ItIsBoundToCtrlShiftK()
     {

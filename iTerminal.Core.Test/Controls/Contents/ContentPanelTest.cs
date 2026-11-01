@@ -57,6 +57,7 @@ public class ContentPanelTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_WithoutName_ThrowsInvalidOperationException()
     {
@@ -81,6 +82,7 @@ public class ContentPanelTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_AssignsCreatedContentModelToBrowserAndFooter()
     {
@@ -107,6 +109,7 @@ public class ContentPanelTest
         Assert.AreSame(contentModel.Object, itemInformation.ContentModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetFocus_UpdatesFocusedPanelTracking()
     {

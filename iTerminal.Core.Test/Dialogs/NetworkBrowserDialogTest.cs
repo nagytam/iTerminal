@@ -98,6 +98,7 @@ public class NetworkBrowserDialogTest
         Assert.Fail("Timed out waiting for the expected host rows to appear.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_LoadsSavedProfiles()
     {
@@ -110,6 +111,7 @@ public class NetworkBrowserDialogTest
         Assert.IsTrue(rows.Any(r => r.Kind == NetworkBrowserDialog.HostRowKind.SavedProfile && r.Host == "host1"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_StreamsDiscoveredSshHost()
     {
@@ -123,6 +125,7 @@ public class NetworkBrowserDialogTest
         Assert.IsTrue(rows.Any(r => r.Kind == NetworkBrowserDialog.HostRowKind.DiscoveredSsh && r.Host == "10.0.0.5"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_SmbHostWithShares_AddsOneRowPerShare()
     {
@@ -139,6 +142,7 @@ public class NetworkBrowserDialogTest
         Assert.IsTrue(rows.Any(r => r.ShareName == "Users"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_SmbHostWithoutShares_AddsLoginRequiredRow()
     {
@@ -152,6 +156,7 @@ public class NetworkBrowserDialogTest
         Assert.IsTrue(rows.Any(r => r.Kind == NetworkBrowserDialog.HostRowKind.DiscoveredSmbHost && r.Host == "10.0.0.7"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rescan_TriggersSecondScan()
     {
@@ -187,6 +192,7 @@ public class NetworkBrowserDialogTest
         Assert.Fail("Timed out waiting for the expected condition.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteSelectedProfile_RemovesFromProfileServiceAndVault()
     {
@@ -203,6 +209,7 @@ public class NetworkBrowserDialogTest
         Assert.IsFalse(dialog.HostRowsForTest.Any(r => r.Profile == profile));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SelectAsync_SavedProfile_ConnectsImmediatelyAndCloses()
     {
@@ -217,6 +224,7 @@ public class NetworkBrowserDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog), "dialog should close after connecting");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SelectAsync_DiscoveredSshHost_EntersConnectMode()
     {
@@ -232,6 +240,7 @@ public class NetworkBrowserDialogTest
         Assert.IsTrue(dialog.UsernameTextBoxForTest.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConnectPendingAsync_SshHostWithCredentials_ConnectsAndCloses()
     {
@@ -250,6 +259,7 @@ public class NetworkBrowserDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConnectPendingAsync_SmbWithoutShareName_ShowsErrorAndDoesNotConnect()
     {
@@ -266,6 +276,7 @@ public class NetworkBrowserDialogTest
         contentModels.Verify(s => s.SetUrlAsync(It.IsAny<Url>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConnectPendingAsync_WithSaveConnectionChecked_SavesProfileAndCredential()
     {
@@ -285,6 +296,7 @@ public class NetworkBrowserDialogTest
         vault.Verify(s => s.Save(It.Is<iTerminal.Core.Model.Passwords.PasswordEntry>(e => e.Password == "hunter2" && e.Category == iTerminal.Core.Model.Passwords.PasswordCategory.Network)), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_InConnectMode_ReturnsToBrowseWithoutClosing()
     {
@@ -303,6 +315,7 @@ public class NetworkBrowserDialogTest
         Assert.IsTrue(root.Controls.AsSnapshot().Contains(dialog), "Esc should not close the dialog while backing out of the connect form");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_InBrowseMode_ClosesDialog()
     {
@@ -314,6 +327,7 @@ public class NetworkBrowserDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpeningShowsOnlyTheHostListNotTheConnectForm()
     {
@@ -361,6 +375,7 @@ public class NetworkBrowserDialogTest
     }
 
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeletingASavedConnectionAsksFirst()
     {
@@ -386,6 +401,7 @@ public class NetworkBrowserDialogTest
         Assert.IsFalse(dialog.HostRowsForTest.Any(r => r.Kind == NetworkBrowserDialog.HostRowKind.SavedProfile));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NoKeepsTheSavedConnection()
     {
@@ -403,6 +419,7 @@ public class NetworkBrowserDialogTest
         profiles.Verify(s => s.Delete(It.IsAny<string>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AScanErrorStaysOnScreen()
     {
@@ -418,6 +435,7 @@ public class NetworkBrowserDialogTest
         Assert.IsTrue(RenderScreen(dialog).Contains("r:rescan"), "the keys stay beside the error");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyNetworkSaysSoAndHowToRetry()
     {
@@ -427,6 +445,7 @@ public class NetworkBrowserDialogTest
         await WaitForRowsAsync(dialog, _ => RenderScreen(dialog).Contains("No hosts found"), timeoutMs: 20000);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheConnectFormNamesTheHostAndProtocol()
     {
@@ -442,6 +461,7 @@ public class NetworkBrowserDialogTest
         Assert.IsTrue(RenderScreen(dialog).Contains("Connect to 10.0.0.5 over SSH"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterInTheConnectFormConnects()
     {
@@ -459,6 +479,7 @@ public class NetworkBrowserDialogTest
         contentModels.Verify(s => s.SetUrlAsync(It.Is<Url>(u => u.FullUrl.Contains("bob@10.0.0.5"))), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedConnectionIsShownAndTheFormStays()
     {
@@ -477,6 +498,7 @@ public class NetworkBrowserDialogTest
         Assert.AreEqual(NetworkBrowserDialog.Mode.Connect, dialog.ModeForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnSmbHostNeedsAShareName()
     {
@@ -494,6 +516,7 @@ public class NetworkBrowserDialogTest
         contentModels.Verify(s => s.SetUrlAsync(It.IsAny<Url>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RTriggersANewScan()
     {

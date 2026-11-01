@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class ObservableCollectionTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableCollectionConstructor()
     {
@@ -12,6 +13,7 @@ public class ObservableCollectionTest
         Assert.AreEqual(0, collection.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableCollectionAdd()
     {
@@ -21,6 +23,7 @@ public class ObservableCollectionTest
         Assert.AreEqual("item1", collection[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableCollectionAddMultiple()
     {
@@ -31,6 +34,7 @@ public class ObservableCollectionTest
         Assert.AreEqual(3, collection.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableCollectionReplaceAt()
     {
@@ -42,6 +46,7 @@ public class ObservableCollectionTest
         Assert.AreEqual("item2", collection[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableCollectionReplaceAtRaisesEvent()
     {
@@ -59,6 +64,7 @@ public class ObservableCollectionTest
         Assert.IsTrue(itemChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableCollectionRemove()
     {
@@ -70,6 +76,7 @@ public class ObservableCollectionTest
         Assert.AreEqual("item2", collection[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableCollectionClear()
     {
@@ -80,6 +87,7 @@ public class ObservableCollectionTest
         Assert.AreEqual(0, collection.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableCollectionContains()
     {
@@ -90,6 +98,7 @@ public class ObservableCollectionTest
         Assert.IsFalse(collection.Contains("item3"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableCollectionIndexOf()
     {
@@ -102,6 +111,7 @@ public class ObservableCollectionTest
         Assert.AreEqual(-1, collection.IndexOf("nonexistent"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableCollectionInsert()
     {

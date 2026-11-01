@@ -33,6 +33,7 @@ public class HexListAndStrengthInteractionTest
         return viewer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HexViewer_ClickRow_FocusesAndMovesTheCursor()
     {
@@ -42,6 +43,7 @@ public class HexListAndStrengthInteractionTest
         Assert.AreEqual(32, viewer.SelectedOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HexViewer_Wheel_MovesThreeRowsAndClamps()
     {
@@ -55,6 +57,7 @@ public class HexListAndStrengthInteractionTest
         Assert.AreEqual(96, viewer.SelectedOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HexViewer_ClickPastTheDataOrOutside_IsIgnored()
     {
@@ -66,6 +69,7 @@ public class HexListAndStrengthInteractionTest
         Assert.IsFalse(await empty.HandleMouseEventAsync(Click(5, 0)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HexViewer_BytesPerRow_NeverDropsBelowOne()
     {
@@ -78,6 +82,7 @@ public class HexListAndStrengthInteractionTest
         viewer.Draw(new MockBuffer(new Size(80, 4)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HexViewer_Draw_BlanksRowsPastTheData()
     {
@@ -101,6 +106,7 @@ public class HexListAndStrengthInteractionTest
         return (list, collection, model);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_RefreshItems_ReprojectsRowsAfterAFilterChange()
     {
@@ -113,6 +119,7 @@ public class HexListAndStrengthInteractionTest
         Assert.IsFalse(buffer.ContentAsString.Contains("banana"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_OnIdle_PicksUpItemsAddedFromAnotherThread()
     {
@@ -124,6 +131,7 @@ public class HexListAndStrengthInteractionTest
         list.OnIdle();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_Colors_CoverEveryVisualState()
     {
@@ -144,6 +152,7 @@ public class HexListAndStrengthInteractionTest
 
     // ---- StrengthMeter ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StrengthMeter_Rate_OrdersFromWeakToStrong()
     {
@@ -157,6 +166,7 @@ public class HexListAndStrengthInteractionTest
         Assert.IsTrue(StrengthMeter.Rate("Horse9Staple") > StrengthMeter.Rate("horsestaple"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StrengthMeter_Render_ShowsBarAndName()
     {
@@ -168,6 +178,7 @@ public class HexListAndStrengthInteractionTest
         Assert.AreEqual(Color.Gray, StrengthMeter.ColorOf(PasswordStrength.None, Color.Gray));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StrengthMeter_Password_UpdatesTheRatingAndDrawsWithoutKeepingTheText()
     {

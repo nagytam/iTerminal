@@ -23,6 +23,7 @@ public class ControlHintsBatch57LanguageTest
         return localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryKey()
     {
@@ -39,6 +40,7 @@ public class ControlHintsBatch57LanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSliderHints_FollowTheLanguage_AndFallBackToEnglish()
     {

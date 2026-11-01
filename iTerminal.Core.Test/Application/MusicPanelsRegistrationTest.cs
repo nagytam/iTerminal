@@ -35,6 +35,7 @@ public class MusicPanelsRegistrationTest
         return services.BuildServiceProvider();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Container_ResolvesThePlayerServices()
     {
@@ -47,6 +48,7 @@ public class MusicPanelsRegistrationTest
         Assert.IsNotNull(provider.GetService<IMusicPlaylistStore>());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MusicPlayerService_IsASingletonSoPlaybackOutlivesThePanel()
     {
@@ -63,6 +65,7 @@ public class MusicPanelsRegistrationTest
     /// player and library singletons the rest of the app uses — otherwise the panel would show a
     /// second, empty library and drive a second, silent player.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentModelService_BuildsTheMusicDrivesFromTheSharedSingletons()
     {
@@ -76,6 +79,7 @@ public class MusicPanelsRegistrationTest
         Assert.IsInstanceOfType<ContentModelMusicCatalog>(catalog);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Container_BuildsTheStatusBarHotKeysWithThePanelsCommandAttached()
     {
@@ -88,6 +92,7 @@ public class MusicPanelsRegistrationTest
         Assert.AreSame(hotKeys, command.Control, "AddCommand must have bound the command to its host control");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Container_BuildsTheToolsMenu()
     {
@@ -96,6 +101,7 @@ public class MusicPanelsRegistrationTest
         Assert.IsNotNull(provider.GetService<TerminalMenuBar>());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SessionJob_IsRegisteredSoThePlaylistSurvivesARestart()
     {
@@ -107,6 +113,7 @@ public class MusicPanelsRegistrationTest
         Assert.IsTrue(jobs.OfType<MusicLibraryIndexJob>().Any(), "MusicLibraryIndexJob must be registered as an IJob");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PanelsCommand_ExposesBothChordsForTheHelpScreen()
     {

@@ -28,6 +28,7 @@ public class LayoutTest
         };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rect_SetsPositionAndSize()
     {
@@ -44,6 +45,7 @@ public class LayoutTest
         Assert.AreEqual(3, control.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rect_WithoutParent_ThrowsException()
     {
@@ -61,6 +63,7 @@ public class LayoutTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Position_SetsPosition()
     {
@@ -75,6 +78,7 @@ public class LayoutTest
         Assert.AreEqual(10, control.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Position_WithoutParent_ThrowsException()
     {
@@ -92,6 +96,7 @@ public class LayoutTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LeftBottom_PositionsAtBottomLeft()
     {
@@ -109,6 +114,7 @@ public class LayoutTest
         Assert.AreEqual(45, control.Position.Y); // 50 - 5
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LeftBottom_WithoutParent_ThrowsException()
     {
@@ -126,6 +132,7 @@ public class LayoutTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fill_WithNoParent_FillsConsoleWindow()
     {
@@ -142,6 +149,7 @@ public class LayoutTest
         Assert.AreEqual(40, control.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fill_WithParent_DoesNothing()
     {
@@ -164,6 +172,7 @@ public class LayoutTest
         Assert.AreEqual(20, control.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Left_PositionsLeftOfRelative()
     {
@@ -187,6 +196,7 @@ public class LayoutTest
         Assert.AreEqual(20, control.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Bottom_PositionsBelowRelative()
     {
@@ -207,6 +217,7 @@ public class LayoutTest
         Assert.AreEqual(15, control.Position.Y); // 10 + 5
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Right_PositionsRightOfRelative()
     {
@@ -227,6 +238,7 @@ public class LayoutTest
         Assert.AreEqual(10, control.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PadRight_PositionsAtRightEdge()
     {
@@ -244,6 +256,7 @@ public class LayoutTest
         Assert.AreEqual(0, control.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StackHorizontal_PositionsControlsInRow()
     {
@@ -263,6 +276,7 @@ public class LayoutTest
         Assert.AreEqual(25, control3.Position.X); // 10 + 15
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StackVertical_PositionsControlsInColumn()
     {
@@ -282,6 +296,7 @@ public class LayoutTest
         Assert.AreEqual(8, control3.Position.Y); // 3 + 5
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StackVertical_WithStartPosition_UsesStartCoordinates()
     {
@@ -300,6 +315,7 @@ public class LayoutTest
         Assert.AreEqual(8, control2.Position.Y); // 5 + 3
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Center_PositionsAtCenterOfParent()
     {
@@ -317,6 +333,7 @@ public class LayoutTest
         Assert.AreEqual(20, control.Position.Y); // (50 - 10) / 2
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Center_WithoutParent_DoesNothing()
     {

@@ -36,6 +36,7 @@ public class BinaryDiffViewTest
     private static void Load(BinaryDiffView view, byte[] left, byte[] right) =>
         view.SetData(left, right, BinaryComparer.Compare(left, right));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BytesPerRowGrowsWithTheWidthInPowersOfTwo()
     {
@@ -44,6 +45,7 @@ public class BinaryDiffViewTest
         Assert.AreEqual(32, BinaryDiffView.BytesPerRowFor(1000), "a row never shows more than 32 bytes");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BytesPerRowIsAtLeastFourEvenWhenTheWidthIsTiny()
     {
@@ -51,6 +53,7 @@ public class BinaryDiffViewTest
         Assert.AreEqual(4, BinaryDiffView.BytesPerRowFor(10));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CurrentDifferenceIsZeroBeforeAnyDataIsLoaded()
     {
@@ -59,6 +62,7 @@ public class BinaryDiffViewTest
         Assert.AreEqual(0, view.CurrentDifference());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetDataOpensAOneRowMarginAboveTheFirstDifference()
     {
@@ -72,6 +76,7 @@ public class BinaryDiffViewTest
         Assert.AreEqual(1, view.CurrentDifference());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollToTheLastPageStopsAtTheLastFullPage()
     {
@@ -84,6 +89,7 @@ public class BinaryDiffViewTest
         Assert.AreEqual(245 * 4, TopOf(view));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollingAboveTheStartOrBelowTheEndIsClamped()
     {
@@ -97,6 +103,7 @@ public class BinaryDiffViewTest
         Assert.AreEqual(245 * 4, TopOf(view));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void JumpToDifferenceMovesToTheNextRunAndThenBackToThePreviousOne()
     {
@@ -114,6 +121,7 @@ public class BinaryDiffViewTest
         Assert.AreEqual(1, view.CurrentDifference());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void JumpToDifferenceDoesNothingPastTheLastRun()
     {
@@ -127,6 +135,7 @@ public class BinaryDiffViewTest
         Assert.AreEqual(before, TopOf(view));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IdenticalFilesHaveNoDifferenceToJumpTo()
     {

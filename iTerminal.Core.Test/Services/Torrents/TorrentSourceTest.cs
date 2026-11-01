@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Services.Torrents;
 [TestClass]
 public class TorrentSourceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567", TorrentSourceKind.Magnet)]
     [DataRow("magnet:nonsense", TorrentSourceKind.Invalid)]
@@ -17,10 +18,12 @@ public class TorrentSourceTest
     public void ItTellsTheKindsApart(string? text, TorrentSourceKind expected) =>
         Assert.AreEqual(expected, TorrentSource.Classify(text));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ItStripsTheQuotesAFileManagerAdds() =>
         Assert.AreEqual(@"C:\a b\c.torrent", TorrentSource.Clean(" \"C:\\a b\\c.torrent\" "));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileThatIsNotATorrentIsRefusedWithoutStartingAnything()
     {
@@ -42,6 +45,7 @@ public class TorrentSourceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AMissingFileIsReported()
     {

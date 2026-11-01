@@ -37,6 +37,7 @@ public class FilePreviewServiceTest
     private static Task<FilePreview> BuildAsync(IEntry? entry, IFileSystem? fileSystem = null, int width = 60) =>
         new FilePreviewService().BuildAsync(entry, fileSystem, width, CancellationToken.None);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATextFileShowsItsLinesWithTabsExpanded()
     {
@@ -50,6 +51,7 @@ public class FilePreviewServiceTest
         StringAssert.Contains(preview.Summary, "UTF-8");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALongLineIsCutToTheWidthNotWrapped()
     {
@@ -62,6 +64,7 @@ public class FilePreviewServiceTest
         StringAssert.EndsWith(preview.Lines[0], "…");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALargeFileIsPreviewedFromItsHeadOnly()
     {
@@ -75,6 +78,7 @@ public class FilePreviewServiceTest
         StringAssert.Contains(preview.Summary, "first part");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABinaryFileIsAHexDump()
     {
@@ -88,6 +92,7 @@ public class FilePreviewServiceTest
         StringAssert.Contains(preview.Summary, "binary");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InvalidUtf8IsReadAsLatin1()
     {
@@ -100,6 +105,7 @@ public class FilePreviewServiceTest
         StringAssert.Contains(preview.Summary, "Latin-1");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderIsSummarisedAndListed()
     {
@@ -111,6 +117,7 @@ public class FilePreviewServiceTest
         Assert.IsTrue(preview.Lines.Any(l => l.TrimStart().StartsWith("a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWayUpRowHasNothingToPreview()
     {
@@ -119,6 +126,7 @@ public class FilePreviewServiceTest
         StringAssert.Contains(string.Join(" ", preview.Lines), "The way up");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileOnAnotherDriveIsReadThroughThatDrive()
     {
@@ -130,6 +138,7 @@ public class FilePreviewServiceTest
         CollectionAssert.AreEqual(new[] { "remote text", "second line", string.Empty }, preview.Lines.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AHugeRemoteFileIsNotReadPastTheHead()
     {
@@ -142,6 +151,7 @@ public class FilePreviewServiceTest
         StringAssert.Contains(preview.Summary, "first part");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnreadableFileSaysWhyInsteadOfThrowing()
     {

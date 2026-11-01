@@ -7,6 +7,7 @@ namespace iConsole.Inputs.Posix.Test;
 [TestClass]
 public class PosixTerminalInputPublisherJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesQueuesAndImplementsExpectedInterfaces()
     {
@@ -20,6 +21,7 @@ public class PosixTerminalInputPublisherJobTest
         Assert.AreEqual(JobPriority.Input, job.Priority);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_OnNonLinux_CompletesWithoutReadingInput()
     {
@@ -36,6 +38,7 @@ public class PosixTerminalInputPublisherJobTest
         Assert.AreEqual(0, job.MouseQueue.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesEmptyQueues()
     {
@@ -45,6 +48,7 @@ public class PosixTerminalInputPublisherJobTest
         Assert.AreEqual(0, job.MouseQueue.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InputAvailableSignal_StartsWithInitialCountOfZero()
     {
@@ -56,6 +60,7 @@ public class PosixTerminalInputPublisherJobTest
         Assert.IsNotNull(job.InputAvailableSignal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Priority_ReturnsInputPriority()
     {

@@ -10,6 +10,7 @@ namespace iConsole.Test.Controls.MenuBar;
 [TestClass]
 public class MenuBarTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuBarIsVisibleByDefault()
     {
@@ -22,6 +23,7 @@ public class MenuBarTest
         Assert.AreEqual(nameof(iConsole.Controls.MenuBar), menuBar.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MenuBar()
     {

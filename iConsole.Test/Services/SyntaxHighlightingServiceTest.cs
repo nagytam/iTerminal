@@ -14,6 +14,7 @@ public class SyntaxHighlightingServiceTest
 {
     private readonly TestThemeService _theme = new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindByFile_FallsBackToTheBuiltInLanguages()
     {
@@ -25,6 +26,7 @@ public class SyntaxHighlightingServiceTest
         Assert.IsNull(service.FindByFile(null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("csharp", "C#")]
     [DataRow("C#", "C#")]
@@ -48,6 +50,7 @@ public class SyntaxHighlightingServiceTest
         Assert.AreEqual(expected, new SyntaxHighlightingService().FindByName(name)?.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("")]
     [DataRow("   ")]
@@ -58,6 +61,7 @@ public class SyntaxHighlightingServiceTest
         Assert.IsNull(new SyntaxHighlightingService().FindByName(name));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Register_AddsALanguageByExtensionFileNameAndAlias()
     {
@@ -74,6 +78,7 @@ public class SyntaxHighlightingServiceTest
         CollectionAssert.Contains(service.Languages.ToList(), zig);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Register_LetsAnApplicationOverrideABuiltInExtension()
     {
@@ -86,6 +91,7 @@ public class SyntaxHighlightingServiceTest
         Assert.AreEqual("C#", new SyntaxHighlightingService().FindByFile("a.cs")?.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tokenize_MatchesTheStaticHighlighter()
     {
@@ -101,6 +107,7 @@ public class SyntaxHighlightingServiceTest
         Assert.IsTrue(viaService.Any(s => s.Kind == SyntaxKind.Keyword));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Palette_MapsEachKind_AndPlainTextKeepsTheGivenColour()
     {
@@ -113,6 +120,7 @@ public class SyntaxHighlightingServiceTest
         Assert.AreEqual(Color.Yellow, palette.ColorOf(SyntaxKind.Plain, Color.Yellow));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextViewer_FollowsThePaletteOfItsService()
     {
@@ -139,6 +147,7 @@ public class SyntaxHighlightingServiceTest
         Assert.AreEqual(Color.Red, screen.ForegroundAt(0, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarkdownParser_KeepsTheFenceLanguage()
     {
@@ -160,6 +169,7 @@ public class SyntaxHighlightingServiceTest
         return viewer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarkdownViewer_ColoursACodeFenceByItsLanguage()
     {
@@ -175,6 +185,7 @@ public class SyntaxHighlightingServiceTest
         Assert.AreEqual(' ', screen.CharAt(29, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarkdownViewer_LeavesAFenceWithoutALanguageInTheCodeColour()
     {
@@ -188,6 +199,7 @@ public class SyntaxHighlightingServiceTest
         Assert.IsNotNull(scheme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarkdownViewer_FollowsABlockCommentAcrossCodeLines()
     {
@@ -201,6 +213,7 @@ public class SyntaxHighlightingServiceTest
         Assert.AreEqual(Color.Cyan, screen.ForegroundAt(7, 2), "'return' after the comment ends is a keyword");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarkdownViewer_UsesALanguageRegisteredWithTheService()
     {

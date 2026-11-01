@@ -13,6 +13,7 @@ public class MapSearchServiceTest
          {"lat":"33.66","lon":"-95.55"}]
         """;
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AskedNominatimWithTheEscapedQuery()
     {
@@ -28,6 +29,7 @@ public class MapSearchServiceTest
         Assert.AreEqual(-95.55, places[1].Longitude, 1e-9);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CoordinatesNeedNoNetwork()
     {
@@ -39,6 +41,7 @@ public class MapSearchServiceTest
         Assert.AreEqual(47.5, places.Single().Latitude);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnAnswerThatIsNotJsonIsNoResults()
     {
@@ -47,6 +50,7 @@ public class MapSearchServiceTest
         Assert.AreEqual(0, (await service.SearchAsync("anything")).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABlankQueryAsksNothing()
     {
@@ -56,6 +60,7 @@ public class MapSearchServiceTest
         Assert.AreEqual(0, fetcher.Requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANetworkFailureSurfacesAsAReadableError()
     {
@@ -65,6 +70,7 @@ public class MapSearchServiceTest
         StringAssert.Contains(exception.Message, "No such host");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheStoreRemembersPlacesAndSurvivesCorruptSettings()
     {

@@ -29,6 +29,7 @@ public class Fb2TextReaderTest
         </FictionBook>
         """;
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SectionsBecomeHeadings_ByDepth()
     {
@@ -39,6 +40,7 @@ public class Fb2TextReaderTest
         CollectionAssert.Contains(lines, "### Sub");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Paragraphs_KeepTheirText_WithInlineMarkupFlattened()
     {
@@ -50,6 +52,7 @@ public class Fb2TextReaderTest
         CollectionAssert.Contains(lines, "  Line b");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NotesBodies_AreShownUnderTheirName_AndTheDescriptionAndBinariesAreNot()
     {
@@ -60,6 +63,7 @@ public class Fb2TextReaderTest
         Assert.IsFalse(lines.Any(l => l.Contains("Hidden title") || l.Contains("AAAA")), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATableRow_IsAGridRow()
     {
@@ -68,6 +72,7 @@ public class Fb2TextReaderTest
         Assert.IsTrue(lines.Any(l => l.Contains("cell 1") && l.Contains("cell 2")), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnotherXmlDocument_IsReportedAsNotAFictionBook()
     {

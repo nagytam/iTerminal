@@ -46,6 +46,7 @@ public class PrintLanguageTest
         return localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryKey_IsTranslatedInEveryLanguage()
     {
@@ -59,6 +60,7 @@ public class PrintLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheColumnsAndLabels_FitTheirWidth_InEveryLanguage()
     {
@@ -73,6 +75,7 @@ public class PrintLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDialogSpeaksTheChosenLanguage()
     {
@@ -86,6 +89,7 @@ public class PrintLanguageTest
         Assert.AreEqual("Held", PrintDialog.StateLabel(PrintJobState.Held));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheMessagesWithPlaceholders_KeepThem_InEveryLanguage()
     {

@@ -38,6 +38,7 @@ public class FolderSelectorBatch76LanguageTest
         return localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryKey()
     {
@@ -54,6 +55,7 @@ public class FolderSelectorBatch76LanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCreateDialogs_TakeTheirTitleFromTheChosenLanguage_AndDrawTheirHotKeyInTheCaption()
     {
@@ -68,6 +70,7 @@ public class FolderSelectorBatch76LanguageTest
         Assert.AreEqual('e', CreateEntryDialog.CreateButtonHotKey(folder.Title));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryFolderSelectorPage_TheHelpAndSelectHints_FollowTheLanguage()
     {
@@ -84,6 +87,7 @@ public class FolderSelectorBatch76LanguageTest
         Assert.IsTrue(german.GetKeyHints().Any(h => h.Description == "Zum Laufwerk unter dem Cursor wechseln."));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFolderSelector_HintsFollowTheLanguage()
     {

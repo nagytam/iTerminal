@@ -14,6 +14,7 @@ public class CloseCommandTest
         public override void Close() { WasClosed = true; }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_ShouldCloseControl()
     {

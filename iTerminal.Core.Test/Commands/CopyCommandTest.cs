@@ -14,6 +14,7 @@ namespace iTerminal.Core.Commands.Test;
 [TestClass]
 public class CopyCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteWithoutADialog_DoesNothing()
     {

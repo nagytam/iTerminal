@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Model.UnitConverter;
 [TestClass]
 public class UnitConverterEngineTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_DefaultsToLengthMillimeterToCentimeter()
     {
@@ -16,6 +17,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual("0.1", engine.ResultText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetCategory_ResetsUnitIndicesAndUnitList()
     {
@@ -30,6 +32,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual("Kilogram", engine.Units[2].Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetCategory_SameCategory_IsNoOp()
     {
@@ -41,6 +44,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual(2, engine.FromUnitIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetFromUnit_OutOfRange_IsIgnored()
     {
@@ -52,6 +56,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual(0, engine.FromUnitIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetToUnit_OutOfRange_IsIgnored()
     {
@@ -62,6 +67,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual(1, engine.ToUnitIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SwapUnits_ExchangesFromAndToIndicesAndRecomputes()
     {
@@ -74,6 +80,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual("10", engine.ResultText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetInputText_InvalidNumber_ClearsResult()
     {
@@ -84,6 +91,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual(string.Empty, engine.ResultText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetInputText_EmptyString_ClearsResult()
     {
@@ -94,6 +102,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual(string.Empty, engine.ResultText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetInputText_NegativeNumber_ComputesSignedResult()
     {
@@ -104,6 +113,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual("-0.5", engine.ResultText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Length_MileToKilometer_ComputesExpectedValue()
     {
@@ -116,6 +126,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual(1.609344, double.Parse(engine.ResultText), 1e-6);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mass_KilogramToPound_ComputesExpectedValue()
     {
@@ -129,6 +140,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual(2.20462, double.Parse(engine.ResultText), 1e-4);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DigitalStorage_KilobyteToByte_ComputesExactValue()
     {
@@ -142,6 +154,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual("1024", engine.ResultText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Angle_DegreeToRadian_ComputesExpectedValue()
     {
@@ -155,6 +168,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual(Math.PI, double.Parse(engine.ResultText), 1e-6);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Temperature_CelsiusToFahrenheit_ComputesExactValue()
     {
@@ -168,6 +182,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual("212", engine.ResultText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Temperature_FahrenheitToKelvin_ComputesExpectedValue()
     {
@@ -181,6 +196,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual(273.15, double.Parse(engine.ResultText), 1e-6);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Temperature_KelvinToCelsius_ComputesExactValue()
     {
@@ -194,6 +210,7 @@ public class UnitConverterEngineTest
         Assert.AreEqual(-273.15, double.Parse(engine.ResultText), 1e-6);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UnitCatalog_EveryCategory_HasAtLeastTwoUnits()
     {
@@ -204,6 +221,7 @@ public class UnitConverterEngineTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UnitCatalog_GetCategoryName_ReturnsNonEmptyForEveryCategory()
     {

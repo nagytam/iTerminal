@@ -18,6 +18,7 @@ public class WorkspacesTest
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.Workspaces.WorkspaceManagerDialog, "the workspace manager to open");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheManagerOpensOnAnEmptyListThatSaysWhatSavingDoes()
     {
@@ -29,6 +30,7 @@ public class WorkspacesTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ASavedWorkspaceBringsBackTheFolderOfThePanel()
     {
@@ -53,6 +55,7 @@ public class WorkspacesTest
         await _app.WaitForFocusedFolderAsync(_app.LeftRoot);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheManagerFitsAnEightyByTwentyFourScreen()
     {

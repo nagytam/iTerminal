@@ -20,6 +20,7 @@ public class UnitConverterDialogCommandTest
     private static UnitConverterDialog CreateDialog(IThemeService themeService) =>
         new(Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), themeService);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsCtrlEKey()
     {
@@ -33,6 +34,7 @@ public class UnitConverterDialogCommandTest
         Assert.IsFalse(command.Key.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_AlwaysReturnsTrue()
     {
@@ -42,6 +44,7 @@ public class UnitConverterDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithNoControlAttached_DoesNotThrow()
     {
@@ -51,6 +54,7 @@ public class UnitConverterDialogCommandTest
         await command.ExecuteAsync(null);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithControlAttached_OpensDialog()
     {

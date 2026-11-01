@@ -31,6 +31,7 @@ public class FilePreviewServiceCoverageTest
     private static Task<FilePreview> BuildAsync(IEntry? entry, IFileSystem? fileSystem = null, int width = 60, IFileToTextConverterService? converter = null, CancellationToken token = default) =>
         new FilePreviewService(converter).BuildAsync(entry, fileSystem, width, token);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NoEntry_AndTheWayUpRow_HaveNothingToShow()
     {
@@ -44,6 +45,7 @@ public class FilePreviewServiceCoverageTest
         StringAssert.Contains(string.Join(" ", way.Lines), "The way up");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AVanishedFileOrFolder_SaysItIsGone()
     {
@@ -57,6 +59,7 @@ public class FilePreviewServiceCoverageTest
         StringAssert.Contains(string.Join(" ", preview.Lines), "gone");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderListsFoldersFirst_AndCutsAfterFiveHundredRows()
     {
@@ -74,6 +77,7 @@ public class FilePreviewServiceCoverageTest
         Assert.IsTrue(preview.Lines.Any(l => l.Contains("… and 11 more")), string.Join("\n", preview.Lines.TakeLast(3)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyFolder_ShowsZeroCounts()
     {
@@ -85,6 +89,7 @@ public class FilePreviewServiceCoverageTest
         Assert.AreEqual("0 folders, 0 files", preview.Summary);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARemoteFolder_IsListedThroughItsDrive_OrExplained()
     {
@@ -101,6 +106,7 @@ public class FilePreviewServiceCoverageTest
         StringAssert.Contains(string.Join(" ", plain.Lines), "A folder");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADriveThatKnowsBetter_AnswersFirst()
     {
@@ -117,6 +123,7 @@ public class FilePreviewServiceCoverageTest
         Assert.AreEqual("c1", fallback.Title, "with no own answer the ordinary preview is built");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADocument_IsRenderedThroughTheConverter_AndWrapped()
     {
@@ -138,6 +145,7 @@ public class FilePreviewServiceCoverageTest
         Assert.IsGreaterThan(2, preview.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADocumentThatRendersNothing_FallsBackToTheRawHead()
     {
@@ -153,6 +161,7 @@ public class FilePreviewServiceCoverageTest
         Assert.IsTrue(preview.Lines.Contains("raw text"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARenderedDocumentIsCappedAtMaxLines()
     {
@@ -174,6 +183,7 @@ public class FilePreviewServiceCoverageTest
         Assert.AreEqual(FilePreviewService.MaxLines, preview.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Cancellation_Propagates()
     {
@@ -186,6 +196,7 @@ public class FilePreviewServiceCoverageTest
             () => BuildAsync(new FileSystemEntry(path), token: cts.Token));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARemoteDriveThatCannotStream_IsReadWhole()
     {
@@ -207,6 +218,7 @@ public class FilePreviewServiceCoverageTest
         Assert.IsNotNull(await BuildAsync(entry, drive.Object));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARemoteFileWithoutADrive_CannotBeRead()
     {
@@ -217,6 +229,7 @@ public class FilePreviewServiceCoverageTest
         StringAssert.Contains(string.Join(" ", preview.Lines), "This drive cannot be read");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Utf16AndBomEncodings_AreDecoded()
     {
@@ -242,6 +255,7 @@ public class FilePreviewServiceCoverageTest
         Assert.IsNotNull(nothing);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATextHeadCutInsideACharacter_IsStillUtf8()
     {
@@ -255,6 +269,7 @@ public class FilePreviewServiceCoverageTest
         StringAssert.Contains(preview.Summary, "first part");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LooksBinary_IsTrueForNulsAndControlSoup_AndFalseForTextAndUtf16()
     {
@@ -266,6 +281,7 @@ public class FilePreviewServiceCoverageTest
         Assert.IsFalse(FilePreviewService.LooksBinary([]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HexDump_ShowsOffsetsAsciiAndTheRemainder()
     {

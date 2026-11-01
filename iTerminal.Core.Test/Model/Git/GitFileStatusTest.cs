@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Model.Git;
 [TestClass]
 public class GitFileStatusTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("UU")]
     [DataRow("AA")]
@@ -26,6 +27,7 @@ public class GitFileStatusTest
         Assert.AreEqual("!", file.Describe(staged: false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFileStagedAndModifiedAgainIsListedInBothPanels()
     {
@@ -36,6 +38,7 @@ public class GitFileStatusTest
         Assert.IsTrue(file.HasWorkTreeChange);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUntrackedFileIsNeitherStagedNorConflicted()
     {

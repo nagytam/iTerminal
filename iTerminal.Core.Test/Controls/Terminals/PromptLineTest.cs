@@ -5,12 +5,14 @@ namespace iTerminal.Core.Test.Controls.Terminals;
 [TestClass]
 public class PromptLineTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void AShortLineIsPaddedToTheWidth()
     {
         Assert.AreEqual("Terminal>dir     ", PromptLine.Format("Terminal>", "dir", 17));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALongInputKeepsThePrefixAndTheEndBeingTyped()
     {
@@ -21,12 +23,14 @@ public class PromptLineTest
         Assert.IsTrue(line.EndsWith("-m message", StringComparison.Ordinal), line);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnInputThatExactlyFitsIsNotElided()
     {
         Assert.AreEqual("> abcde", PromptLine.Format("> ", "abcde", 7));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WhenThePrefixDoesNotFitTheInputStillWins()
     {
@@ -36,12 +40,14 @@ public class PromptLineTest
         Assert.IsTrue(line.TrimEnd().EndsWith("xyz", StringComparison.Ordinal), line);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANonPositiveWidthIsEmpty()
     {
         Assert.AreEqual(string.Empty, PromptLine.Format("x", "y", 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NullsAreTreatedAsEmpty()
     {

@@ -27,6 +27,7 @@ public class DialogKeyHintsBatch21Test
         return service.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RuntimeDependencies_WithoutAWizard_NameOnlyEnter()
     {
@@ -35,6 +36,7 @@ public class DialogKeyHintsBatch21Test
         CollectionAssert.AreEqual(new[] { "Enter" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DiskUsage_KeyHints_NameNavigationSortRescanAndGoTo()
     {
@@ -43,6 +45,7 @@ public class DialogKeyHintsBatch21Test
         CollectionAssert.IsSubsetOf(new[] { "Up/Down", "Enter/Right", "S", "R", "G" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeManager_KeyHints_NameChooseAndApply()
     {
@@ -51,6 +54,7 @@ public class DialogKeyHintsBatch21Test
         CollectionAssert.AreEqual(new[] { "Up/Down", "Enter/Space" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompareFolders_KeyHints_NameCompareAndSynchronise()
     {
@@ -60,6 +64,7 @@ public class DialogKeyHintsBatch21Test
         CollectionAssert.IsSubsetOf(new[] { "Enter", "F5" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SynchronizeFolders_KeyHints_NameEnterAndEsc_AndTheEnterMeansPreviewFirst()
     {
@@ -72,6 +77,7 @@ public class DialogKeyHintsBatch21Test
         StringAssert.Contains(hints[0].Description, "Preview");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DuplicateFinder_KeyHints_NameTheMarkingAndDeleteKeys()
     {
@@ -80,6 +86,7 @@ public class DialogKeyHintsBatch21Test
         CollectionAssert.IsSubsetOf(new[] { "Space/Insert", "A", "N", "U", "Delete/F8" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToDoList_KeyHints_NameTheListKeys()
     {
@@ -88,6 +95,7 @@ public class DialogKeyHintsBatch21Test
         CollectionAssert.IsSubsetOf(new[] { "Enter/Insert", "F2", "Space", "Delete" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileDiff_KeyHints_NameNextPreviousAndTheHexSwitch()
     {
@@ -96,6 +104,7 @@ public class DialogKeyHintsBatch21Test
         CollectionAssert.IsSubsetOf(new[] { "N/P", "F4", "W", "C" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CommandPalette_KeyHints_NameFilterChooseAndRun()
     {
@@ -104,6 +113,7 @@ public class DialogKeyHintsBatch21Test
         CollectionAssert.IsSubsetOf(new[] { "Type", "Up/Down", "Enter" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WorkspaceManager_KeyHints_NameSaveSwitchRenameAndDelete()
     {

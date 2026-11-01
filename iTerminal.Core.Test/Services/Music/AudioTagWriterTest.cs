@@ -97,6 +97,7 @@ public class AudioTagWriterTest
     private static AudioTagEdit Edit(string title = "", string artist = "", string album = "", string year = "", string track = "", string genre = "", string comment = "") =>
         new(title, artist, album, year, track, genre, comment);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mp3_TheEditedFieldsReadBack_AndTheAudioIsUnchanged()
     {
@@ -115,6 +116,7 @@ public class AudioTagWriterTest
         CollectionAssert.AreEqual(Audio, File.ReadAllBytes(path)[^Audio.Length..]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mp3_OtherFrames_SuchAsCoverArt_AreKept()
     {
@@ -128,6 +130,7 @@ public class AudioTagWriterTest
         Assert.IsTrue(IndexOf(written, picture) >= 0, "and its bytes come through unchanged");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mp3_ACommentWithADescription_IsKept_WhileTheEditedCommentIsReplaced()
     {
@@ -143,6 +146,7 @@ public class AudioTagWriterTest
         Assert.IsTrue(IndexOf(written, plain) < 0, "the plain comment it replaces is gone");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mp3_WithNoTagYet_TheTagIsCreated()
     {
@@ -156,6 +160,7 @@ public class AudioTagWriterTest
         CollectionAssert.AreEqual(Audio, File.ReadAllBytes(path)[^Audio.Length..]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mp3_AFieldThatIsCleared_IsRemovedFromTheFile()
     {
@@ -168,6 +173,7 @@ public class AudioTagWriterTest
         Assert.AreEqual(string.Empty, tags.Artist);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Flac_TheEditedFieldsReadBack_AndOtherCommentsAreKept()
     {
@@ -185,6 +191,7 @@ public class AudioTagWriterTest
         CollectionAssert.AreEqual(Audio, File.ReadAllBytes(path)[^Audio.Length..]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Flac_WithNoCommentBlock_OneIsAddedAfterTheStreamInfo()
     {
@@ -197,6 +204,7 @@ public class AudioTagWriterTest
         CollectionAssert.AreEqual(Audio, File.ReadAllBytes(path)[^Audio.Length..]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Flac_NotAFlacFile_IsRefused()
     {
@@ -207,6 +215,7 @@ public class AudioTagWriterTest
         Assert.AreEqual("RIFFnot flac", Encoding.ASCII.GetString(File.ReadAllBytes(path)), "the file is untouched");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnsupportedFormat_IsRefused_AndCanWriteSaysSo()
     {
@@ -219,6 +228,7 @@ public class AudioTagWriterTest
         Assert.IsTrue(AudioTagWriter.CanWrite("track.flac"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AfterASave_NoTemporaryFileIsLeftBehind()
     {

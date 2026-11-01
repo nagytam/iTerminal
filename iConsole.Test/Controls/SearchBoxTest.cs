@@ -32,6 +32,7 @@ public class SearchBoxTest
 
     // ── Inherits TextBox ────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsInstanceOf_TextBox()
     {
@@ -39,6 +40,7 @@ public class SearchBoxTest
         Assert.IsInstanceOfType(box, typeof(TextBox));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_UpdatesText()
     {
@@ -52,6 +54,7 @@ public class SearchBoxTest
 
     // ── SearchChanged event ─────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_FiresSearchChanged()
     {
@@ -64,6 +67,7 @@ public class SearchBoxTest
         Assert.AreEqual("a", received);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_SearchChanged_PassesCurrentText()
     {
@@ -77,6 +81,7 @@ public class SearchBoxTest
         Assert.AreEqual("food", received[^1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NavigationKey_DoesNotFireSearchChanged()
     {
@@ -92,6 +97,7 @@ public class SearchBoxTest
 
     // ── Escape / Cleared ────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClearsText()
     {
@@ -102,6 +108,7 @@ public class SearchBoxTest
         Assert.AreEqual(string.Empty, box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_FiresCleared()
     {
@@ -114,6 +121,7 @@ public class SearchBoxTest
         Assert.IsTrue(fired);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_FiresSearchChangedWithEmptyString()
     {
@@ -126,6 +134,7 @@ public class SearchBoxTest
         Assert.AreEqual(string.Empty, received);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_FiresSearchChangedOnce()
     {
@@ -138,6 +147,7 @@ public class SearchBoxTest
         Assert.AreEqual(1, calls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgrammaticClear_FiresSearchChangedSoFiltersFollowTheEmptyBox()
     {
@@ -151,6 +161,7 @@ public class SearchBoxTest
         Assert.AreEqual(string.Empty, box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgrammaticClear_OnEmptyBox_DoesNotFireSearchChanged()
     {
@@ -163,6 +174,7 @@ public class SearchBoxTest
         Assert.AreEqual(0, calls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ReturnsHandledTrue()
     {
@@ -174,6 +186,7 @@ public class SearchBoxTest
         Assert.IsTrue(handled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ResetsCursorAndScroll()
     {
@@ -189,6 +202,7 @@ public class SearchBoxTest
 
     // ── Rendering ───────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsPrefix()
     {
@@ -199,6 +213,7 @@ public class SearchBoxTest
         Assert.IsTrue(buffer.ContentAsString.Contains("/"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsTextInField()
     {
@@ -209,6 +224,7 @@ public class SearchBoxTest
         Assert.IsTrue(buffer.ContentAsString.Contains("query"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsBrackets()
     {
@@ -220,6 +236,7 @@ public class SearchBoxTest
         Assert.IsTrue(content.Contains("[") || content.Contains("<"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_CustomPrefix_Rendered()
     {
@@ -231,6 +248,7 @@ public class SearchBoxTest
         Assert.IsTrue(buffer.ContentAsString.Contains("?"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_PrefixAppearsBeforeField()
     {
@@ -244,6 +262,7 @@ public class SearchBoxTest
 
     // ── Discoverability via Commands (so Help lists them) ──────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Commands_IncludeEscapeWithNonEmptyKeyDisplayText()
     {
@@ -253,6 +272,7 @@ public class SearchBoxTest
             && !string.IsNullOrEmpty(c.KeyDisplayText)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Clear_ResetsTextCursorAndScroll_AndFiresCleared()
     {

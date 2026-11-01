@@ -40,6 +40,7 @@ public class TerminalWindowTest
     /// global hot key (e.g. QuitCommand's Ctrl+C) was swallowed as literal input instead of being
     /// left unhandled to bubble up.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_CtrlC_IsNotAppendedToCommandLine()
     {
@@ -51,6 +52,7 @@ public class TerminalWindowTest
         Assert.AreEqual(string.Empty, terminalModel.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_PlainLetter_IsAppendedToCommandLine()
     {
@@ -62,6 +64,7 @@ public class TerminalWindowTest
         Assert.AreEqual("c", terminalModel.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BackspaceRemovesTheLastCharacter()
     {
@@ -73,6 +76,7 @@ public class TerminalWindowTest
         Assert.AreEqual("di", terminalModel.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClearsAHalfTypedCommand()
     {
@@ -85,6 +89,7 @@ public class TerminalWindowTest
         Assert.AreEqual(string.Empty, terminalModel.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeOnAnEmptyLineIsLeftForSomeoneElse()
     {
@@ -93,6 +98,7 @@ public class TerminalWindowTest
         Assert.IsFalse(await window.HandleKeyEventAsync(Key('\x1b', ConsoleKey.Escape)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FunctionKeysAreLeftForTheGlobalHotKeys()
     {
@@ -102,6 +108,7 @@ public class TerminalWindowTest
         Assert.AreEqual(string.Empty, terminalModel.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingIsIgnoredWhileACommandRuns()
     {
@@ -116,6 +123,7 @@ public class TerminalWindowTest
         Assert.AreEqual("ping", terminalModel.Command.Command, "the running command's text is not edited");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawsThePromptAndTheCommand()
     {
@@ -125,6 +133,7 @@ public class TerminalWindowTest
         Assert.AreEqual("Terminal>dir".PadRight(40), Render(window));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALongCommandShowsItsEndNotItsStart()
     {
@@ -138,6 +147,7 @@ public class TerminalWindowTest
         Assert.IsTrue(line.EndsWith("Something", StringComparison.Ordinal), line);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayoutTakesTheParentsWidthAndOneRow()
     {
@@ -150,6 +160,7 @@ public class TerminalWindowTest
         Assert.AreEqual(new Size(100, 1), window.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlW_DeletesTheLastWordOfTheCommand_AndCtrlU_ClearsIt()
     {
@@ -165,6 +176,7 @@ public class TerminalWindowTest
         Assert.AreEqual(string.Empty, model.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWAndCtrlU_OnAnEmptyCommand_AreLeftForOthers()
     {

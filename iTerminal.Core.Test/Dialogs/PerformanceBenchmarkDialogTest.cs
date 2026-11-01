@@ -45,6 +45,7 @@ public class PerformanceBenchmarkDialogTest
         new FixedProbe("network.latency", "Internet latency", BenchmarkCategory.Network, BenchmarkMeasurement.Unavailable("ms", 30, false, "could not reach speed.cloudflare.com")),
     ];
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BeforeARunItListsEveryProbeAsWaitingAndSaysHowToStart()
     {
@@ -61,6 +62,7 @@ public class PerformanceBenchmarkDialogTest
         Assert.IsFalse(dialog.IsRunning);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterRunsTheBenchmarkAndShowsTheScoresAndTheOverall()
     {
@@ -78,6 +80,7 @@ public class PerformanceBenchmarkDialogTest
         AssertScreenContains(screen, "Single thread");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AProbeThatCouldNotMeasureSaysWhyAndIsLeftOutOfTheOverall()
     {
@@ -94,6 +97,7 @@ public class PerformanceBenchmarkDialogTest
         Assert.AreEqual(2000, dialog.CurrentReport.Overall!.Value, 1e-6);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscDuringARunCancelsItAndKeepsTheDialogOpen()
     {
@@ -114,6 +118,7 @@ public class PerformanceBenchmarkDialogTest
         Assert.IsTrue(dialog.IsVisible, "the first Esc only stops the run");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDialogIsBoundToCtrlShiftB()
     {

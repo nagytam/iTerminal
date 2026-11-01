@@ -53,6 +53,7 @@ public class UiTextTest
         UiText.Current = localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithNoLocalizer_TheEnglishTextShows()
     {
@@ -64,6 +65,7 @@ public class UiTextTest
         Assert.AreEqual("Close", new CloseCommand().Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheStandardButtons_FollowTheChosenLanguage()
     {
@@ -75,6 +77,7 @@ public class UiTextTest
         Assert.AreEqual("Schließen", new CloseCommand().Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AKeyNoLanguageHas_FallsBackToTheGivenText()
     {
@@ -83,6 +86,7 @@ public class UiTextTest
         Assert.AreEqual("fallback", UiText.Get("No.Such.Key", "fallback"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APromptsDefaultAnswers_FollowTheChosenLanguage()
     {
@@ -91,6 +95,7 @@ public class UiTextTest
         Assert.AreEqual("Weiter|Abbrechen", Answers(new ErrorPromptDialog("Titel", "Nachricht", Theme())));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APromptsGivenAnswers_AreKeptAsTheyAre()
     {
@@ -99,6 +104,7 @@ public class UiTextTest
         Assert.AreEqual("Resume|Stop", Answers(new ErrorPromptDialog("t", "m", Theme(), "Resume", "Stop")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesTheContinueAnswer()
     {
@@ -110,6 +116,7 @@ public class UiTextTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesTheWordsTheKeyHintsUse()
     {
@@ -126,6 +133,7 @@ public class UiTextTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATextBoxHint_FollowsTheChosenLanguage()
     {
@@ -136,6 +144,7 @@ public class UiTextTest
         Assert.IsTrue(box.GetKeyHints().Any(h => h.Description == "Einfügen"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheEnglishPrompt_KeepsContinueOnCAndCancelOnA()
     {
@@ -144,6 +153,7 @@ public class UiTextTest
         Assert.AreEqual("C|a", HotKeys(new ErrorPromptDialog("t", "m", Theme())));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATranslatedPrompt_TakesItsHotKeysFromItsOwnWords()
     {

@@ -23,6 +23,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         return (keys, mice);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("\x1b[A", ConsoleKey.UpArrow)]
     [DataRow("\x1b[B", ConsoleKey.DownArrow)]
@@ -53,6 +54,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsFalse(keys[0].Shift || keys[0].Alt || keys[0].Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("\x1b[1;2A", ConsoleKey.UpArrow, true, false, false)]
     [DataRow("\x1b[1;3B", ConsoleKey.DownArrow, false, true, false)]
@@ -78,6 +80,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.AreEqual(control, keys[0].Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("\x1b[1;;5A")]
     [DataRow("\x1b[7;5~")]
@@ -96,6 +99,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsEmpty(mice);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("\u001b[Z")]
     [DataRow("\u001b[1Z")]
@@ -107,6 +111,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsTrue(keys[0].Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("\x1bOa", ConsoleKey.UpArrow)]
     [DataRow("\x1bOb", ConsoleKey.DownArrow)]
@@ -120,6 +125,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsTrue(keys[0].Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_Ss3ModifiedArrow_AppliesModifier()
     {
@@ -129,6 +135,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsTrue(keys[0].Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_Ss3ModifierDigitWithoutLetter_WaitsForMoreInput()
     {
@@ -144,6 +151,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.AreEqual(ConsoleKey.DownArrow, keys[0].ConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_Ss3ModifierDigitFollowedByNonArrow_FallsBackToAltO()
     {
@@ -153,6 +161,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.AreEqual('O', keys[0].KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_AltLetter_SetsAlt()
     {
@@ -163,6 +172,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsFalse(keys[0].Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_AltUpperCaseLetterAndDigit_KeepShiftAndDigitKeys()
     {
@@ -176,6 +186,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsTrue(keys[2].Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_DoubleEscapeThenChar_IsAltChar()
     {
@@ -185,6 +196,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsTrue(keys[0].Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_DoubleEscapeThenControlByte_KeepsTheControlKey()
     {
@@ -193,6 +205,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsTrue(keys[0].Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_DoubleEscapeAlone_WaitsForMoreInput()
     {
@@ -200,6 +213,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsEmpty(keys);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_EscapeThenControlByte_DropsTheEscape()
     {
@@ -208,6 +222,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsTrue(keys[0].Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_LoneEscape_WaitsUntilStandaloneEscapeIsDrained()
     {
@@ -219,6 +234,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.AreEqual(ConsoleKey.Escape, keys[0].ConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrainStandaloneEscape_IgnoresLongerBuffers()
     {
@@ -226,6 +242,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsEmpty(keys);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_IncompleteCsi_WaitsForTerminator()
     {
@@ -242,6 +259,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsTrue(keys[0].Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_PlainControlCharacters_MapToEnterTabBackspaceAndCtrlLetters()
     {
@@ -257,6 +275,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsTrue(keys[5].Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_ControlByteWithoutLetter_HasNoConsoleKey()
     {
@@ -266,6 +285,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsTrue(keys[0].Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_PrintableAscii_MapsLettersDigitsAndSymbols()
     {
@@ -280,6 +300,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.AreEqual('!', keys[3].KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_MultiByteUtf8_EmitsTheCharacter()
     {
@@ -289,6 +310,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.AreEqual('€', keys[1].KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_SurrogatePairRune_EmitsFirstUtf16Unit()
     {
@@ -297,6 +319,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.AreEqual("😀"[0], keys[0].KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_SplitMultiByteCharacter_WaitsForRemainingBytes()
     {
@@ -312,6 +335,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.AreEqual('€', keys[0].KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_InvalidUtf8_StaysBufferedWithoutEmitting()
     {
@@ -326,6 +350,7 @@ public class TerminalInputUtf8DecoderCoverageTest
         Assert.IsEmpty(keys);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_SgrRightPressAndWheelDown_SetFlags()
     {

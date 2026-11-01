@@ -33,6 +33,7 @@ public class PickerAndPopupListInteractionTest
         Position = new Position(0, 0),
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_UpDown_StepAndWrapTheActiveField()
     {
@@ -49,6 +50,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(9, picker.Value.Hour);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_LeftRight_MoveBetweenFieldsWithinBounds()
     {
@@ -65,6 +67,7 @@ public class PickerAndPopupListInteractionTest
         Assert.IsFalse(await picker.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_TypingDigits_FillsAFieldThenAdvances()
     {
@@ -80,6 +83,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(1, picker.ActiveField);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_TypingADigitThatCannotStartATwoDigitValue_CompletesTheField()
     {
@@ -92,6 +96,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(7, picker.Value.Minute);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_TypingAnOutOfRangePair_KeepsTheSecondDigit()
     {
@@ -102,6 +107,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(9, picker.Value.Hour);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_ClickPicksTheFieldUnderThePointer_AndWheelSteps()
     {
@@ -118,6 +124,7 @@ public class PickerAndPopupListInteractionTest
         Assert.IsFalse(await picker.HandleMouseEventAsync(Click(40)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_ReadOnlyAndDisabled_IgnoreKeys()
     {
@@ -132,6 +139,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(new TimeOnly(10, 30, 0), picker.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TimePicker_ShowSeconds_WidensAndKeepsTheFieldInRange()
     {
@@ -149,6 +157,7 @@ public class PickerAndPopupListInteractionTest
 
     // ---- Calendar at the ends of time ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_AtTheLastDay_KeysAndDrawDoNotThrow()
     {
@@ -161,6 +170,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(DateOnly.MaxValue, calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_AtTheFirstDay_KeysAndDrawDoNotThrow()
     {
@@ -173,6 +183,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(DateOnly.MinValue, calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_DateArithmetic_SaturatesAtTheEnds()
     {
@@ -184,6 +195,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(DateOnly.MinValue, Calendar.GridStart(DateOnly.MinValue, DayOfWeek.Sunday));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_AtTheLimitsOfLong_DoesNotWrapAround()
     {
@@ -213,6 +225,7 @@ public class PickerAndPopupListInteractionTest
         return list;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PopupListView_Keys_MoveClampAndCommit()
     {
@@ -236,6 +249,7 @@ public class PickerAndPopupListInteractionTest
         Assert.IsFalse(await list.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PopupListView_Escape_Cancels()
     {
@@ -246,6 +260,7 @@ public class PickerAndPopupListInteractionTest
         Assert.IsTrue(cancelled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PopupListView_Click_CommitsTheRowAccountingForScroll()
     {
@@ -263,6 +278,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(2, committed.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PopupListView_Wheel_MovesTheHighlight()
     {
@@ -274,6 +290,7 @@ public class PickerAndPopupListInteractionTest
         Assert.IsFalse(await list.HandleMouseEventAsync(Wheel(40, 1, -1)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PopupListView_Empty_IgnoresCommitAndMovement()
     {
@@ -289,6 +306,7 @@ public class PickerAndPopupListInteractionTest
         list.Draw(new MockBuffer(new Size(10, 3)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopupListView_Draw_ScrollsTheHighlightIntoViewAndTruncatesLongRows()
     {
@@ -302,6 +320,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(2, list.Highlight);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_HomeAndEnd_GoToTheStartAndEndOfTheRow()
     {
@@ -319,6 +338,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(row * ColorPicker.GridColumns, picker.CursorIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_CtrlHomeAndEnd_GoToTheFirstAndLastSwatch()
     {
@@ -333,6 +353,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(0, picker.CursorIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_HomeAndEnd_MoveTheCursorOnly_NotTheChoice()
     {
@@ -345,6 +366,7 @@ public class PickerAndPopupListInteractionTest
         Assert.AreEqual(chosen, picker.SelectedColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_HomeAndEnd_UnfocusedOrDisabled_AreIgnored()
     {

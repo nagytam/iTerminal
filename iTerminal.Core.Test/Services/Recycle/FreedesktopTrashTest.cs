@@ -47,6 +47,7 @@ public class FreedesktopTrashTest
         return path;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFile_GoesToFiles_WithARecordOfWhereItWas()
     {
@@ -62,6 +63,7 @@ public class FreedesktopTrashTest
         StringAssert.Contains(record, "DeletionDate=");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFolder_IsOneEntry_WithEverythingInIt()
     {
@@ -75,6 +77,7 @@ public class FreedesktopTrashTest
         Assert.IsTrue(File.Exists(Path.Combine(HomeTrash, "info", "proj.trashinfo")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoFilesOfOneName_DoNotCollide()
     {
@@ -87,6 +90,7 @@ public class FreedesktopTrashTest
         Assert.IsTrue(File.Exists(Path.Combine(HomeTrash, "info", "a.txt.2.trashinfo")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFileAlreadyInTheTrash_IsNotMovedAgain()
     {
@@ -98,6 +102,7 @@ public class FreedesktopTrashTest
         Assert.IsTrue(File.Exists(inside), "the caller deletes it for good; nothing was moved");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheStore_ListsWhatWasTrashed_AndRestoresIt()
     {
@@ -116,6 +121,7 @@ public class FreedesktopTrashTest
         Assert.AreEqual(0, store.List().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnotherVolume_GetsATrashOfItsOwn_WithPathsRelativeToItsRoot()
     {
@@ -140,6 +146,7 @@ public class FreedesktopTrashTest
         Assert.AreEqual("meow", File.ReadAllText(file));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TopDirectoryOf_IsTheLongestMountPointThatContainsThePath()
     {
@@ -154,6 +161,7 @@ public class FreedesktopTrashTest
         Assert.AreEqual(sep, FreedesktopTrash.TopDirectoryOf(data + "-sibling", [data]), "a sibling that shares the prefix is not inside");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MountInfo_UnescapesBlanksInMountPoints()
     {
@@ -166,6 +174,7 @@ public class FreedesktopTrashTest
         CollectionAssert.AreEqual(new[] { "/", "/media/me/My Disk" }, points.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSystemService_SendsADeleteToTheTrash_OnLinux()
     {
@@ -183,6 +192,7 @@ public class FreedesktopTrashTest
         Assert.IsTrue(File.Exists(Path.Combine(HomeTrash, "files", "gone.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSystemService_DeletesForGood_WhenTheBinIsUnticked()
     {

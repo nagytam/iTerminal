@@ -28,6 +28,7 @@ public class WizardTest
         return wizard;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Next_WalksForwardAndBack_ShowingOnlyCurrentPage()
     {
@@ -42,6 +43,7 @@ public class WizardTest
         Assert.IsFalse(wizard.Back());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Next_StaysPutAndShowsError_WhenValidationFails()
     {
@@ -60,6 +62,7 @@ public class WizardTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Name is required"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Next_OnLastStep_RaisesFinishedOnce()
     {
@@ -75,6 +78,7 @@ public class WizardTest
         Assert.AreEqual(1, finished);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowAsync_KeepsOnlyCurrentPageVisible()
     {

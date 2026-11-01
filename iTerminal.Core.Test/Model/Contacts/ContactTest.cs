@@ -10,6 +10,7 @@ public class ContactTest
     private static Contact Make(string name, string email = "", string phone = "", string company = "", string notes = "") =>
         new(Guid.NewGuid(), name, email, phone, company, notes);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANameIsRequired()
     {
@@ -17,6 +18,7 @@ public class ContactTest
         StringAssert.Contains(error, "name");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("ada@example.com", true)]
     [DataRow("", true)]
@@ -28,6 +30,7 @@ public class ContactTest
     public void AnEmailNeedsAnAtWithTextOnBothSides(string email, bool valid) =>
         Assert.AreEqual(valid, Make("Ada", email).Validate(out _));
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("+36 30 123-4567", true)]
     [DataRow("(020) 7946.0958", true)]
@@ -37,6 +40,7 @@ public class ContactTest
     public void APhoneNumberNeedsADigitAndOnlyPhoneCharacters(string phone, bool valid) =>
         Assert.AreEqual(valid, Make("Ada", phone: phone).Validate(out _));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MatchesLooksInEveryFieldForEveryWordInAnyCase()
     {
@@ -49,6 +53,7 @@ public class ContactTest
         Assert.IsFalse(contact.Matches("ada babbage"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TrimmedStripsEveryField()
     {
@@ -72,6 +77,7 @@ public class ContactStoreTest
 
     private static Contact Make(string name, string email = "") => new(Guid.NewGuid(), name, email, "", "", "");
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindListsContactsByNameIgnoringCase()
     {
@@ -83,6 +89,7 @@ public class ContactStoreTest
         CollectionAssert.AreEqual(new[] { "Alice", "bob", "charlie" }, store.Find().Select(c => c.Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindNarrowsToTheFilter()
     {
@@ -94,6 +101,7 @@ public class ContactStoreTest
         Assert.AreEqual(2, store.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UpdateReplacesAndRemoveDeletes()
     {
@@ -111,6 +119,7 @@ public class ContactStoreTest
         Assert.AreEqual(0, store.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContactsSurviveANewStoreOverTheSameSettings()
     {
@@ -122,6 +131,7 @@ public class ContactStoreTest
         Assert.AreEqual("alice@example.com", reopened.Find().Single().Email);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADamagedValueOrANullEntryDoesNotStopTheListOpening()
     {

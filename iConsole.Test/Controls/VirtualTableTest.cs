@@ -44,6 +44,7 @@ public class VirtualTableTest
         return table;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawsTheHeaderAndOnlyTheVisibleRows()
     {
@@ -59,6 +60,7 @@ public class VirtualTableTest
         CollectionAssert.AreEquivalent(new[] { 0, 1, 2, 3 }, source.Read.ToArray(), "four body rows under the header");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScrollsTheBodyUnderAFixedHeader()
     {
@@ -73,6 +75,7 @@ public class VirtualTableTest
         Assert.IsTrue(buffer.Line(4).StartsWith("999", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSortedColumnShowsAnArrow()
     {
@@ -86,6 +89,7 @@ public class VirtualTableTest
         Assert.AreEqual("Id", table.HeaderText(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAHeaderCellRaisesSortRequested()
     {
@@ -98,6 +102,7 @@ public class VirtualTableTest
         CollectionAssert.AreEqual(new[] { 1 }, requested);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickBetweenColumnsDoesNotSort()
     {
@@ -111,6 +116,7 @@ public class VirtualTableTest
         Assert.AreEqual(0, requested.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnABodyRowMovesTheCursorBelowTheHeader()
     {

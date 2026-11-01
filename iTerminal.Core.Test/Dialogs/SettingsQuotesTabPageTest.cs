@@ -11,6 +11,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class SettingsQuotesTabPageTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void BothIndicatorsAreOnByDefault()
     {
@@ -20,6 +21,7 @@ public class SettingsQuotesTabPageTest
         Assert.IsTrue(page.IsWeatherIndicatorEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StoredChoicesAreLoaded()
     {
@@ -34,6 +36,7 @@ public class SettingsQuotesTabPageTest
         Assert.IsFalse(page.IsWeatherIndicatorEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChangingAChoiceIsStoredAtOnce()
     {
@@ -45,6 +48,7 @@ public class SettingsQuotesTabPageTest
         Assert.AreEqual(bool.FalseString, settings.Get(Settings.IsWeatherIndicatorEnabled));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCheckBoxesAreStackedOneRowEach()
     {

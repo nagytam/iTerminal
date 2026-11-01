@@ -59,6 +59,7 @@ public class FolderSelectorSelectionTest
         Assert.IsFalse(fixture.Root.Controls.Contains(fixture.Dialog), "The selector should be off the screen, not merely invisible.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnAFavourite_GoesThereAndCloses()
     {
@@ -72,6 +73,7 @@ public class FolderSelectorSelectionTest
         AssertWentAndClosed(fixture, new Url(@"C:\one").FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnADrive_GoesThereAndCloses()
     {
@@ -90,6 +92,7 @@ public class FolderSelectorSelectionTest
         AssertWentAndClosed(fixture, new Url(Container.MEMORY_DRIVE).FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnAVisitedFolder_GoesBackThereAndCloses()
     {
@@ -103,6 +106,7 @@ public class FolderSelectorSelectionTest
         AssertWentAndClosed(fixture, new Url(Path.GetTempPath()).FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnAPlace_GoesThereAndCloses()
     {
@@ -115,6 +119,7 @@ public class FolderSelectorSelectionTest
         AssertWentAndClosed(fixture, new Url(expected).FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnATreeFolder_GoesThereAndCloses()
     {
@@ -133,6 +138,7 @@ public class FolderSelectorSelectionTest
         AssertWentAndClosed(fixture, new Url(@"C:\projects").FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnATypedHost_ConnectsAndCloses()
     {
@@ -148,6 +154,7 @@ public class FolderSelectorSelectionTest
         AssertWentAndClosed(fixture, new Url(Container.SSH + "tamas@example.com:/").FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnATypedPath_GoesThereAndCloses()
     {
@@ -163,6 +170,7 @@ public class FolderSelectorSelectionTest
         AssertWentAndClosed(fixture, new Url(Path.GetTempPath()).FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSelectButton_ClosesTheDialogToo()
     {
@@ -179,6 +187,7 @@ public class FolderSelectorSelectionTest
         AssertWentAndClosed(fixture, new Url(expected).FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithNothingSelectable_LeavesTheDialogOpen()
     {
@@ -192,6 +201,7 @@ public class FolderSelectorSelectionTest
         Assert.IsTrue(fixture.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnAddToFavourites_AddsAndLeavesTheDialogOpen()
     {

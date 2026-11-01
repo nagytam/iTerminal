@@ -7,6 +7,7 @@ namespace iConsole.Inputs.Windows.Test;
 [TestClass]
 public class BuilderExtensionCoverageTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AddInputWindowsAsync_RegistersFallbackKeyboardJobsWhenFeatureManagerIsUnavailable()
     {

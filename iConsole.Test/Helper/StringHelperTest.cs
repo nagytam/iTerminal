@@ -5,6 +5,7 @@ namespace iConsole.Test.Helper;
 [TestClass]
 public class StringHelperTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void StringRepeatString()
     {
@@ -12,6 +13,7 @@ public class StringHelperTest
         Assert.AreEqual("abcabcabc", result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringRepeatStringZero()
     {
@@ -19,6 +21,7 @@ public class StringHelperTest
         Assert.AreEqual(string.Empty, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringRepeatStringNegative()
     {
@@ -26,6 +29,7 @@ public class StringHelperTest
         Assert.AreEqual(string.Empty, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringRepeatChar()
     {
@@ -33,6 +37,7 @@ public class StringHelperTest
         Assert.AreEqual("aaaaa", result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringRepeatCharZero()
     {
@@ -40,6 +45,7 @@ public class StringHelperTest
         Assert.AreEqual(string.Empty, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringCut()
     {
@@ -47,6 +53,7 @@ public class StringHelperTest
         Assert.AreEqual("Hello", result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringCutExact()
     {
@@ -54,6 +61,7 @@ public class StringHelperTest
         Assert.AreEqual("Hello", result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringCutSmaller()
     {
@@ -61,6 +69,7 @@ public class StringHelperTest
         Assert.AreEqual("Hi", result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringCutZero()
     {
@@ -68,6 +77,7 @@ public class StringHelperTest
         Assert.AreEqual("", result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringExpandLeftRight()
     {
@@ -75,6 +85,7 @@ public class StringHelperTest
         Assert.AreEqual("  Hi  ", result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringExpandWidth()
     {
@@ -83,6 +94,7 @@ public class StringHelperTest
         Assert.IsTrue(result.Contains("Hi"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringExpandWidthWithChar()
     {
@@ -91,6 +103,7 @@ public class StringHelperTest
         Assert.IsTrue(result.Contains("Hi"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringExpandRight()
     {
@@ -99,6 +112,7 @@ public class StringHelperTest
         Assert.AreEqual(10, result.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringShrinkNormal()
     {
@@ -108,6 +122,7 @@ public class StringHelperTest
         Assert.IsTrue(result.Contains("..."));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringShrinkNull()
     {
@@ -116,6 +131,7 @@ public class StringHelperTest
         Assert.IsNull(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringShrinkEmpty()
     {
@@ -123,6 +139,7 @@ public class StringHelperTest
         Assert.AreEqual("", result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringShrinkNoTrim()
     {
@@ -130,6 +147,7 @@ public class StringHelperTest
         Assert.AreEqual("Short", result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringAlignCenter()
     {
@@ -138,6 +156,7 @@ public class StringHelperTest
         Assert.AreEqual(9, result.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringToMemoryStream()
     {
@@ -148,18 +167,21 @@ public class StringHelperTest
         Assert.IsTrue(content.Contains("Hello"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WrapWordsBreaksAtSpaces()
     {
         CollectionAssert.AreEqual(new[] { "alpha beta", "gamma" }, "alpha beta gamma".WrapWords(10));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WrapWordsBreaksAWordLongerThanTheLine()
     {
         CollectionAssert.AreEqual(new[] { "abcd", "efgh", "ij" }, "abcdefghij".WrapWords(4));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WrapWordsKeepsBlankLinesAndDropsCarriageReturns()
     {
@@ -168,6 +190,7 @@ public class StringHelperTest
         CollectionAssert.AreEqual(new[] { "one", "", "two" }, text.WrapWords(20));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WrapWordsOfNothingIsNothing()
     {
@@ -175,6 +198,7 @@ public class StringHelperTest
         Assert.AreEqual(0, "text".WrapWords(0).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FitHints_LeavesARowThatFitsAlone()
     {
@@ -182,6 +206,7 @@ public class StringHelperTest
     }
 
     /// <summary>Whole hints go, from the end — but the last one, how to leave, stays.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void FitHints_DropsWholeHintsAndKeepsTheLast()
     {
@@ -190,6 +215,7 @@ public class StringHelperTest
         Assert.AreEqual("Tab:next list  Up/Down:choose  Esc:close", fitted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FitHints_CutsOnlyWhenOneHintIsTooLongOnItsOwn()
     {

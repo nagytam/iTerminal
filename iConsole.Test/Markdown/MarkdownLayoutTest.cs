@@ -10,6 +10,7 @@ public class MarkdownLayoutTest
             .Select(line => string.Concat(line.Spans.Select(s => s.Text)))
             .ToList();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Paragraph_WrapsOnWordBoundaries()
     {
@@ -17,54 +18,63 @@ public class MarkdownLayoutTest
         CollectionAssert.AreEqual(new[] { "alpha beta", "gamma delta" }, Rows("alpha beta gamma delta", 11));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WordLongerThanTheRow_IsBroken()
     {
         CollectionAssert.AreEqual(new[] { "abcd", "efgh", "ij" }, Rows("abcdefghij", 4));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListItem_HasABulletAndAHangingIndent()
     {
         CollectionAssert.AreEqual(new[] { "• one two", "  three four" }, Rows("- one two three four", 12));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Blocks_AreSeparatedByABlankRow()
     {
         CollectionAssert.AreEqual(new[] { "p", string.Empty, "h" }, Rows("p\n\n# h", 20));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rule_FillsTheRow()
     {
         CollectionAssert.AreEqual(new[] { "─────" }, Rows("---", 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Code_IsCutAtTheEdgeNotWrapped()
     {
         CollectionAssert.AreEqual(new[] { "abcd" }, Rows("```\nabcdefgh\n```", 4));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Quote_EachRowIsPrefixed()
     {
         CollectionAssert.AreEqual(new[] { "│ one two", "│ three" }, Rows("> one two three", 9));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FencedCode_LinesStayTogetherWithoutBlankRows()
     {
         CollectionAssert.AreEqual(new[] { "a", "b", "c" }, Rows("```\na\nb\nc\n```", 10));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Quote_LinesStayTogetherWithoutBlankRows()
     {
         CollectionAssert.AreEqual(new[] { "│ one", "│ two" }, Rows("> one\n> two", 20));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BlockAfterCode_IsStillSeparatedByABlankRow()
     {

@@ -9,6 +9,7 @@ namespace iConsole.Test.Screens;
 [TestClass]
 public class ScreenTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Ctor_InitializesConsoleDriverAndDefaultState()
     {
@@ -31,6 +32,7 @@ public class ScreenTest
         consoleDriver.VerifySet(d => d.Title = "iConsole", Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Title_Setter_ForwardsToConsoleDriver()
     {

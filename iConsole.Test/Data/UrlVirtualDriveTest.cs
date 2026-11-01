@@ -9,6 +9,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class UrlVirtualDriveTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("docker://", ContainerType.Docker)]
     [DataRow("git://", ContainerType.Git)]
@@ -25,6 +26,7 @@ public class UrlVirtualDriveTest
         Assert.AreEqual(url, parsed.UrlScheme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADockerFileHasItsNameExtensionAndContainer()
     {
@@ -38,6 +40,7 @@ public class UrlVirtualDriveTest
         Assert.AreEqual('/', url.DirectorySeparatorChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADockerPathThatAlsoExistsLocallyIsStillTheContainers()
     {
@@ -50,6 +53,7 @@ public class UrlVirtualDriveTest
         Assert.IsTrue(string.IsNullOrEmpty(url.Date), "no local file date leaks in");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParentsWalkUpTheDriveAndEndAtItsRoot()
     {
@@ -60,12 +64,14 @@ public class UrlVirtualDriveTest
         Assert.AreEqual("docker://", new Url("docker://web/").ParentUrl.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheRootOfADockerPathIsTheContainersRoot()
     {
         Assert.AreEqual("docker://web/", new Url("docker://web/etc/nginx/").RootUrl.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheRootOfAGitPathIsTheRevisionsTree()
     {
@@ -77,6 +83,7 @@ public class UrlVirtualDriveTest
         Assert.AreEqual("git://C%3A%5Csrc%5Capp/feature%2Flogin/src/", url.ParentUrl.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CombiningANameKeepsTheDrive()
     {

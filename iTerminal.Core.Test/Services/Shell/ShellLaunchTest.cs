@@ -23,6 +23,7 @@ public class ShellLaunchTest
         return guard.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InsideAContainerTheShellIsDockerExecWithATerminal()
     {
@@ -36,6 +37,7 @@ public class ShellLaunchTest
         Assert.AreEqual("web:/etc/nginx", launch.Location);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OverSshTheFolderIsQuotedForTheRemoteShell()
     {
@@ -47,6 +49,7 @@ public class ShellLaunchTest
             launch.Arguments.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AConfiguredShellIsUsedAsIs()
     {
@@ -57,6 +60,7 @@ public class ShellLaunchTest
         Assert.AreEqual(Path.GetTempPath(), launch.ToStartInfo().WorkingDirectory);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDefaultLocalShellIsTheSystemsOwn()
     {
@@ -72,6 +76,7 @@ public class ShellLaunchTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlOOnTheDockerDriveOpensAShellInTheContainerUnderTheCursor()
     {
@@ -86,6 +91,7 @@ public class ShellLaunchTest
         Assert.AreEqual("web:/", command.ChooseLaunch().Location);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APanelWithNoShellOfItsOwnGetsOneInTheHomeFolder()
     {

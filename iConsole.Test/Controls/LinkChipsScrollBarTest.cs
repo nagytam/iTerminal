@@ -22,6 +22,7 @@ public class LinkChipsScrollBarTest
 
     private static KeyEvent Key(ConsoleKey key) => new('\0', key, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LinkLabel_Width_FollowsText()
     {
@@ -29,6 +30,7 @@ public class LinkChipsScrollBarTest
         Assert.AreEqual(4, (int)link.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LinkLabel_ClickAndEnter_RaiseActivated()
     {
@@ -41,6 +43,7 @@ public class LinkChipsScrollBarTest
         Assert.AreEqual(2, count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LinkLabel_Disabled_IgnoresClick()
     {
@@ -51,6 +54,7 @@ public class LinkChipsScrollBarTest
         Assert.AreEqual(0, count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Chips_Add_RejectsBlankAndDuplicates()
     {
@@ -61,6 +65,7 @@ public class LinkChipsScrollBarTest
         Assert.AreEqual(1, chips.Items.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Chips_Draw_ShowsChipsAndPlus()
     {
@@ -72,6 +77,7 @@ public class LinkChipsScrollBarTest
         Assert.AreEqual("[rock ×] [jazz ×] [+]", buffer.ContentAsString.Split(Environment.NewLine)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_ClickCross_RemovesChip()
     {
@@ -82,6 +88,7 @@ public class LinkChipsScrollBarTest
         CollectionAssert.AreEqual(new[] { "jazz" }, chips.Items.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_EnterOnPlus_RaisesAddRequested()
     {
@@ -95,6 +102,7 @@ public class LinkChipsScrollBarTest
         Assert.IsTrue(requested);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_Delete_RemovesActiveChip()
     {
@@ -107,6 +115,7 @@ public class LinkChipsScrollBarTest
         CollectionAssert.AreEqual(new[] { "b" }, chips.Items.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Chips_Visible_SlidesToKeepActiveChipOnScreen()
     {
@@ -120,6 +129,7 @@ public class LinkChipsScrollBarTest
         Assert.IsTrue(chips.Visible(20).Any(v => v.Index == 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBar_CursorForClick_ArrowsStepAndTrackJumps()
     {
@@ -129,6 +139,7 @@ public class LinkChipsScrollBarTest
         Assert.AreEqual(99, global::iConsole.Controls.ScrollBar.ScrollBar.CursorForClick(8, 10, 100, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScrollBar_ClickDownArrow_MovesCursor()
     {
@@ -143,6 +154,7 @@ public class LinkChipsScrollBarTest
         Assert.AreEqual(1, (int)model.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScrollBar_Wheel_MovesCursorThreeRows()
     {
@@ -167,6 +179,7 @@ public class LinkChipsScrollBarTest
         return chips;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_HomeAndEnd_JumpToTheFirstChipAndThePlus()
     {
@@ -180,6 +193,7 @@ public class LinkChipsScrollBarTest
         Assert.AreEqual(0, chips.ActiveIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_ReadOnly_EndStopsAtTheLastChip()
     {
@@ -191,6 +205,7 @@ public class LinkChipsScrollBarTest
         Assert.AreEqual(2, chips.ActiveIndex, "a read-only list has no [+]");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_TheWheel_StepsTheActiveChip_AndStopsAtTheEnds()
     {
@@ -211,6 +226,7 @@ public class LinkChipsScrollBarTest
         Assert.AreEqual(2, chips.ActiveIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_TheWheelElsewhereOrDisabled_IsIgnored()
     {

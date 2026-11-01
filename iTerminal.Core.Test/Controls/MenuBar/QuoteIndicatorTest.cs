@@ -41,6 +41,7 @@ public class QuoteIndicatorTest
         return (new QuoteIndicator("Bitcoin", service, TestTheme()), service);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WhileLoadingItNamesTheInstrument()
     {
@@ -50,6 +51,7 @@ public class QuoteIndicatorTest
         StringAssert.StartsWith(indicator.Describe(18).Text, "Bitcoin ");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShowsTheGroupedPriceWithThePair()
     {
@@ -60,6 +62,7 @@ public class QuoteIndicatorTest
         StringAssert.StartsWith(text, $"BTC/USD {82953m:N2}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARiseIsGreenWithAnUpArrow()
     {
@@ -71,6 +74,7 @@ public class QuoteIndicatorTest
         StringAssert.Contains(text, $"{101m:N2}{Border.ArrowUp}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFallIsRedWithADownArrow()
     {
@@ -82,6 +86,7 @@ public class QuoteIndicatorTest
         StringAssert.Contains(text, $"{99m:N2}{Border.ArrowDown}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnchangedPriceHasNoArrowOrBand()
     {
@@ -93,6 +98,7 @@ public class QuoteIndicatorTest
         Assert.IsFalse(text.Contains(Border.ArrowUp) || text.Contains(Border.ArrowDown));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheArrowSurvivesANarrowSlot()
     {
@@ -105,6 +111,7 @@ public class QuoteIndicatorTest
         Assert.IsTrue(text.TrimEnd().EndsWith(Border.ArrowUp), text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACachedValueIsMarkedAndStillFitsTheMenuBarSlot()
     {
@@ -123,6 +130,7 @@ public class QuoteIndicatorTest
         StringAssert.StartsWith(tight, "*", "with no room for the word, the marker shrinks to one character");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheInstrumentIsFoundByItsPairWhenStoredUnderAnotherName()
     {
@@ -133,6 +141,7 @@ public class QuoteIndicatorTest
         StringAssert.Contains(indicator.Describe(30).Text, "BTC/USD");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawFillsItsWidth()
     {
@@ -145,6 +154,7 @@ public class QuoteIndicatorTest
         Assert.IsTrue(Enumerable.Range(0, 18).All(x => buffer.IsWritten(x, 0)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFailedAttempt_SaysUnavailableInsteadOfSpinningForever()
     {
@@ -156,6 +166,7 @@ public class QuoteIndicatorTest
         Assert.AreEqual("Bitcoin unavailable", text.TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFailedAttemptBeingRetried_KeepsTheSpinner()
     {
@@ -167,6 +178,7 @@ public class QuoteIndicatorTest
         StringAssert.DoesNotMatch(indicator.Describe(30).Text, new System.Text.RegularExpressions.Regex("unavailable"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnInstrumentWithNoValue_AfterAFailedAttempt_SaysUnavailable()
     {

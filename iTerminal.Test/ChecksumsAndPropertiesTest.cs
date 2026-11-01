@@ -32,6 +32,7 @@ public class ChecksumsAndPropertiesTest
         return dialog;
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ShiftF12_ShowsTheFilesChecksums()
     {
@@ -50,6 +51,7 @@ public class ChecksumsAndPropertiesTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ATypedChecksum_IsComparedAsItIsTyped()
     {
@@ -69,6 +71,7 @@ public class ChecksumsAndPropertiesTest
         await _app.WaitForTextAsync("✗ Does NOT match the SHA-256.");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F2_WritesAChecksumFile_ThatIsCheckedTheNextTime()
     {
@@ -99,6 +102,7 @@ public class ChecksumsAndPropertiesTest
         Assert.AreNotEqual(ReadmeSha256, File.ReadAllText(ReadmePath + ".sha256")[..64], "the old checksum is still the one on disk");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ChecksumsAreNotOfferedOnAFolder()
     {
@@ -109,6 +113,7 @@ public class ChecksumsAndPropertiesTest
         Assert.IsInstanceOfType<Core.Screens.TerminalScreen>(_app.Driver.FocusedModal);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlF12_ShowsAFilesProperties()
     {
@@ -130,6 +135,7 @@ public class ChecksumsAndPropertiesTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlF12_OnAFolder_AddsUpWhatIsInIt()
     {
@@ -151,6 +157,7 @@ public class ChecksumsAndPropertiesTest
         Assert.IsTrue(screen.Contains("Folder"), screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AnAttributeTickedInTheDialog_IsWrittenOnEnter()
     {
@@ -188,6 +195,7 @@ public class ChecksumsAndPropertiesTest
         }
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task PropertiesAreNotOfferedOnTheParentRow()
     {

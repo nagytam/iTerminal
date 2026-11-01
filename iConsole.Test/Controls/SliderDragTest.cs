@@ -30,6 +30,7 @@ public class SliderDragTest
 
     private static MouseEvent Release(long column) => new() { Position = new Position(column, 0), IsRelease = true };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DraggingFollowsThePointerAcrossTheTrack()
     {
@@ -45,6 +46,7 @@ public class SliderDragTest
         Assert.AreEqual(0, slider.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADragThatLeavesTheTrackStillMovesTheThumbToTheNearestEnd()
     {
@@ -58,6 +60,7 @@ public class SliderDragTest
         Assert.AreEqual(0, slider.Value, "a pointer past the left edge stops at the minimum");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AReleaseEndsTheDrag()
     {
@@ -70,6 +73,7 @@ public class SliderDragTest
         Assert.AreEqual(50, slider.Value, "after the release the pointer moves nothing");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APressOnTheValueReadoutDoesNotStartADrag()
     {

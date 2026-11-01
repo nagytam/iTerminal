@@ -16,6 +16,7 @@ public class SettingsGlobalTabPageTest
         return [.. page.Controls.AsSnapshot().OfType<Label>().OrderBy(l => l.Position.Y).Select(l => l.Text).Where(t => t.Length > 0)];
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SaysWhereTheAppWideSettingsLive()
     {
@@ -23,6 +24,7 @@ public class SettingsGlobalTabPageTest
     }
 
     /// <summary>On an 80-column screen the page is ~43 wide; lines used to be cut at its edge.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void ANarrowPageWrapsInsteadOfCutting()
     {
@@ -33,6 +35,7 @@ public class SettingsGlobalTabPageTest
         var expected = string.Join(" ", SettingsGlobalTabPage.Lines).Split(' ', StringSplitOptions.RemoveEmptyEntries);
         CollectionAssert.AreEqual(expected, words, "every word is still there");
     }
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSixelFlag_IsOnByDefault_AndFollowsTheSetting()
     {
@@ -48,6 +51,7 @@ public class SettingsGlobalTabPageTest
         Assert.IsFalse(off.IsSixelEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChangingTheSixelFlag_IsSaved()
     {
@@ -61,6 +65,7 @@ public class SettingsGlobalTabPageTest
         stored.Verify(s => s.Set(iTerminal.Core.Data.Settings.SixelEnabled, bool.FalseString), Moq.Times.Once());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NameAndHotKey()
     {

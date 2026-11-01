@@ -79,6 +79,7 @@ public class ContentBrowserRenderTest
         model.Update();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_UndatedParentRowAfterADatedOne_LeavesNoStaleDateOrTime()
     {
@@ -113,6 +114,7 @@ public class ContentBrowserRenderTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_UndatedRow_PaintsTheWholeRowInTheCursorColour()
     {

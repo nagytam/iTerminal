@@ -37,6 +37,7 @@ public class XmlViewerDialogTest
 
     private static byte[] Utf8(string text) => Encoding.UTF8.GetBytes(text);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Load_BuildsTheTree_ForAWellFormedDocument()
     {
@@ -49,6 +50,7 @@ public class XmlViewerDialogTest
         Assert.IsTrue(dialog.Tree.Root.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Load_ShowsTheTextAndTheError_ForAMalformedDocument()
     {
@@ -62,6 +64,7 @@ public class XmlViewerDialogTest
         converter.Verify(c => c.ReadFileAsync(Document, It.IsAny<IFileSystem>(), It.IsAny<ITextModel>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Query_ShowsItsResults_AndTheMatchCount_WhenApplied()
     {
@@ -75,6 +78,7 @@ public class XmlViewerDialogTest
         Assert.AreEqual("2 match(es)", dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Query_ReportsAnError_ForAnInvalidExpression()
     {
@@ -88,6 +92,7 @@ public class XmlViewerDialogTest
         Assert.AreEqual(0, dialog.Results.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Reveal_OpensTheAncestors_AndFocusesTheNode()
     {
@@ -109,6 +114,7 @@ public class XmlViewerDialogTest
         Assert.IsFalse(dialog.Tree!.Root.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ToggleTextMode_SwitchesToTheFilesText_AndBack()
     {
@@ -123,6 +129,7 @@ public class XmlViewerDialogTest
         converter.Verify(c => c.ReadFileAsync(Document, It.IsAny<IFileSystem>(), It.IsAny<ITextModel>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SlashWithTheTreeFocused_MovesTheFocusToTheXPathBox()
     {
@@ -139,6 +146,7 @@ public class XmlViewerDialogTest
         Assert.IsTrue(XPathBoxOf(dialog).IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Star_ExpandsEveryNode()
     {
@@ -154,6 +162,7 @@ public class XmlViewerDialogTest
         Assert.IsTrue(c.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Minus_AndPlus_CloseAndOpenTheFocusedNode()
     {
@@ -170,6 +179,7 @@ public class XmlViewerDialogTest
         Assert.IsTrue(dialog.Tree!.Root.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Title_ShowsTheOpenCloseHint_EvenForALongFileName()
     {
@@ -186,6 +196,7 @@ public class XmlViewerDialogTest
         StringAssert.Contains(dialog.Title, "*:Expand all");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_InTheXPathBox_RunsTheTypedQuery()
     {
@@ -203,6 +214,7 @@ public class XmlViewerDialogTest
         Assert.AreEqual(2, dialog.Results.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_InTheResults_RevealsTheRowUnderTheCursor()
     {
@@ -230,6 +242,7 @@ public class XmlViewerDialogTest
     private static TextBox XPathBoxOf(XmlViewerDialog dialog) =>
         (TextBox)dialog.Controls.First(c => c is TextBox);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F2_ListsTheValidationErrors_AndEnterOpensTheElement()
     {
@@ -280,6 +293,7 @@ public class XmlViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F2_OnADocumentWithNoSchema_SaysSoOnTheStatusLine()
     {

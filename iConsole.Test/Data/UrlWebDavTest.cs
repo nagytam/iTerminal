@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class UrlWebDavTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void DavUrl_ParsesUserHostPortAndPath()
     {
@@ -20,6 +21,7 @@ public class UrlWebDavTest
         Assert.AreEqual("my docs", url.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DavsUrl_IsTheSecureScheme_AndAnonymousWithoutAUser()
     {
@@ -35,6 +37,7 @@ public class UrlWebDavTest
         Assert.AreEqual("pdf", url.Extension);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BareHost_IsTheRootFolder()
     {
@@ -45,6 +48,7 @@ public class UrlWebDavTest
         Assert.AreEqual("example.org", url.Host);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParentAndRoot_KeepSchemeAndUser()
     {
@@ -55,6 +59,7 @@ public class UrlWebDavTest
         Assert.AreEqual("davs://bob@example.org:8443/a/", new Url("davs://bob@example.org:8443/a/b/").ParentUrl.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DavScheme_IsNotMistakenForALocalPath()
     {

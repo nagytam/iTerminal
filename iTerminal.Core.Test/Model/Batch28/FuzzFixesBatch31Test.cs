@@ -10,6 +10,7 @@ namespace iTerminal.Core.Test.Model.Batch28;
 [TestClass]
 public class FuzzFixesBatch31Test
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void YahooStockQuoteProvider_ParseSearch_OfAnEmptyOrBrokenReply_IsNoHits()
     {
@@ -17,12 +18,14 @@ public class FuzzFixesBatch31Test
         Assert.AreEqual(0, YahooStockQuoteProvider.ParseSearch("<html>502 Bad Gateway</html>").Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void YahooStockQuoteProvider_ParseChart_OfAnEmptyReply_IsNoQuote()
     {
         Assert.IsNull(YahooStockQuoteProvider.ParseChart("MSFT", string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DocumentSearchIndex_BuildSnippet_WithNullsOrANegativeRadius_DoesNotThrow()
     {
@@ -31,18 +34,21 @@ public class FuzzFixesBatch31Test
         Assert.IsTrue(DocumentSearchIndex.BuildSnippet("some text here", "text", -5).Contains("text"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PromptLine_Format_ToAnAbsurdWidth_IsCapped()
     {
         Assert.IsTrue(PromptLine.Format("$ ", "ls", int.MaxValue).Length <= 100_000);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UserMenuMacros_Quote_OfNull_IsAnEmptyWord()
     {
         Assert.IsTrue(UserMenuMacros.Quote(null).Length == 2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RemoteShellLaunch_QuotePowerShell_OfNull_IsAnEmptyWord()
     {

@@ -54,6 +54,7 @@ public class CompressDialogTest
         return (dialog, model);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OneFileIsPackedIntoAZipNamedAfterItInTheOtherPanel()
     {
@@ -69,6 +70,7 @@ public class CompressDialogTest
         AssertScreenContains(Render(dialog), "Password");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SeveralMarkedRowsArePackedIntoAnArchiveNamedAfterTheirFolder()
     {
@@ -82,6 +84,7 @@ public class CompressDialogTest
         StringAssert.Contains(dialog.SourceLabelForTest, "3 files, 1 folder");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChoosingAFormatChangesTheEndingAndTheFields()
     {
@@ -102,6 +105,7 @@ public class CompressDialogTest
         Assert.IsFalse(dialog.IsLevelEnabledForTest, "TAR does not compress");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingAnEndingChoosesTheFormat()
     {
@@ -116,6 +120,7 @@ public class CompressDialogTest
         StringAssert.EndsWith(dialog.ArchivePath, "backup.7z", "choosing it did not rename what was typed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePasswordOptionsFollowThePassword()
     {
@@ -133,6 +138,7 @@ public class CompressDialogTest
         Assert.IsTrue(dialog.IsEncryptNamesEnabledForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MismatchedPasswordsAreRefused()
     {
@@ -148,6 +154,7 @@ public class CompressDialogTest
         Assert.AreEqual("The passwords do not match.", error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheOptionsAreWhatTheFieldsSay()
     {
@@ -165,6 +172,7 @@ public class CompressDialogTest
         Assert.AreEqual(new CompressionOptions(ArchiveFormat.SevenZip, 9, "s3cret", ArchiveEncryption.Aes256, true, false), options);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutSevenZipThe7zFormatIsNotListedAndTheHintSaysWhy()
     {
@@ -179,6 +187,7 @@ public class CompressDialogTest
         StringAssert.Contains(dialog.ReadOptions().Error, "ends in .7z, but the format is ZIP");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnExistingArchiveIsSaidToBeAddedTo()
     {
@@ -191,6 +200,7 @@ public class CompressDialogTest
         StringAssert.StartsWith(dialog.HintForTest, "Adds to the existing archive.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AltF5OpensItOnlyWhenThereIsSomethingToPack()
     {
@@ -206,6 +216,7 @@ public class CompressDialogTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("x.zip", "ZIP")]
     [DataRow("x.TAR.GZ", "TAR.GZ")]
@@ -219,6 +230,7 @@ public class CompressDialogTest
         Assert.AreEqual(format, ArchiveFormat.FromFileName(name)?.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyingAnEndingReplacesTheWholeOldOne()
     {

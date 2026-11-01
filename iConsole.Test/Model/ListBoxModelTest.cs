@@ -7,6 +7,7 @@ namespace iConsole.Test.Model;
 [TestClass]
 public class ListBoxModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Initialize_PopulatesListItems_WhenUpdated()
     {
@@ -20,6 +21,7 @@ public class ListBoxModelTest
         Assert.AreEqual("item-2", model.ListItems[1].Item);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CollectionChanged_DefersRefreshUntilUpdateListItems()
     {

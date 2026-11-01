@@ -17,6 +17,7 @@ public class FfmpegRuntimeDependencyTest
         bool privileged = false) =>
         new(findOnPath, [], readVersion ?? ((_, _) => Task.FromResult<string?>("7.1.0")), run ?? ((_, _, _) => Task.FromResult(0)), windows, mac, privileged);
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("ffmpeg version 7.1.1-essentials_build-www.gyan.dev Copyright", "7.1.1")]
     [DataRow("ffmpeg version n6.0 Copyright", "6.0.0")]
@@ -26,10 +27,12 @@ public class FfmpegRuntimeDependencyTest
     public void ParseVersion_ReadsTheNumbers(string output, string expected) =>
         Assert.AreEqual(expected, FfmpegRuntimeDependency.ParseVersion(output));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseVersion_RejectsOtherOutput() =>
         Assert.IsNull(FfmpegRuntimeDependency.ParseVersion("command not found"));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingOnThePath_IsMissing()
     {
@@ -39,6 +42,7 @@ public class FfmpegRuntimeDependencyTest
         Assert.IsFalse(dependency.IsExistingInstall);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FfmpegWithoutFfprobe_IsStillMissing()
     {
@@ -47,6 +51,7 @@ public class FfmpegRuntimeDependencyTest
         Assert.IsNull(dependency.InstalledVersion());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BothProgramsOnThePath_AreAnExistingInstallAndNeverUpdated()
     {
@@ -57,6 +62,7 @@ public class FfmpegRuntimeDependencyTest
         Assert.IsNotNull(dependency.ExistingInstallNote);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AProgramThatIsNotAWorkingFfmpeg_ReadsAsMissing()
     {
@@ -65,6 +71,7 @@ public class FfmpegRuntimeDependencyTest
         Assert.IsNull(dependency.InstalledVersion());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FourOrLaterIsCompatible()
     {
@@ -75,6 +82,7 @@ public class FfmpegRuntimeDependencyTest
         Assert.IsFalse(dependency.IsCompatible(new Version(3, 4, 0)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_Windows_UsesWingetWithTheGyanPackage()
     {
@@ -86,10 +94,12 @@ public class FfmpegRuntimeDependencyTest
         Assert.IsFalse(plan.RequiresSudo);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_Windows_WithoutWinget_IsNull() =>
         Assert.IsNull(SystemPackageInstallPlan.For(FfmpegRuntimeDependency.PackageNames, true, false, false, Path()));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_Mac_UsesHomebrew()
     {
@@ -99,6 +109,7 @@ public class FfmpegRuntimeDependencyTest
         CollectionAssert.AreEqual(new[] { "install", "ffmpeg" }, plan.Arguments.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_Apt_AsUser_GoesThroughSudoWithoutAPrompt()
     {
@@ -112,6 +123,7 @@ public class FfmpegRuntimeDependencyTest
         Assert.AreEqual("sudo apt-get install -y ffmpeg", plan.ManualCommand);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_Apt_AsRoot_RunsAptGetDirectlyAndNonInteractively()
     {
@@ -121,6 +133,7 @@ public class FfmpegRuntimeDependencyTest
         Assert.AreEqual("noninteractive", plan.Environment!["DEBIAN_FRONTEND"]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("dnf", "ffmpeg-free")]
     [DataRow("zypper", "ffmpeg")]
@@ -134,10 +147,12 @@ public class FfmpegRuntimeDependencyTest
         CollectionAssert.Contains(plan.Arguments.ToList(), package);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_NoPackageManager_IsNull() =>
         Assert.IsNull(SystemPackageInstallPlan.For(FfmpegRuntimeDependency.PackageNames, false, false, true, Path()));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_RunsThePlan_AndSucceedsWhenBothProgramsAppear()
     {
@@ -159,6 +174,7 @@ public class FfmpegRuntimeDependencyTest
         Assert.AreEqual("7.1.0", dependency.InstalledVersion());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_FailureNamesTheCommandToRunByHand()
     {
@@ -170,6 +186,7 @@ public class FfmpegRuntimeDependencyTest
         StringAssert.Contains(exception.Message, "sudo apt-get install -y ffmpeg");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_WithoutAPackageManager_SaysWhereToGetFfmpeg()
     {
@@ -181,6 +198,7 @@ public class FfmpegRuntimeDependencyTest
         StringAssert.Contains(exception.Message, "ffmpeg.org");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_WhenTheProgramsAreStillMissingAfterwards_Fails()
     {

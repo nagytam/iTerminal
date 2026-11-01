@@ -6,6 +6,7 @@ namespace iConsole.Test.Model;
 [TestClass]
 public class ScrollableModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesProperties()
     {
@@ -17,6 +18,7 @@ public class ScrollableModelTest
         Assert.IsNotNull(model.ScrollableSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorPosition_DefaultValue_IsZero()
     {
@@ -26,6 +28,7 @@ public class ScrollableModelTest
         Assert.AreEqual(0, model.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorPosition_SetValue_UpdatesProperty()
     {
@@ -38,6 +41,7 @@ public class ScrollableModelTest
         Assert.AreEqual(20, model.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorPosition_SetValue_RaisesPropertyChanged()
     {
@@ -50,6 +54,7 @@ public class ScrollableModelTest
         Assert.IsTrue(propertyChangedRaised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollPosition_DefaultValue_IsZero()
     {
@@ -59,6 +64,7 @@ public class ScrollableModelTest
         Assert.AreEqual(0, model.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollPosition_SetValue_UpdatesProperty()
     {
@@ -71,6 +77,7 @@ public class ScrollableModelTest
         Assert.AreEqual(25, model.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollPosition_SetValue_RaisesPropertyChanged()
     {
@@ -83,6 +90,7 @@ public class ScrollableModelTest
         Assert.IsTrue(propertyChangedRaised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewSize_DefaultValue_IsZero()
     {
@@ -92,6 +100,7 @@ public class ScrollableModelTest
         Assert.AreEqual(0, model.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewSize_SetValue_UpdatesProperty()
     {
@@ -104,6 +113,7 @@ public class ScrollableModelTest
         Assert.AreEqual(24, model.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewSize_SetValue_RaisesPropertyChanged()
     {
@@ -116,6 +126,7 @@ public class ScrollableModelTest
         Assert.IsTrue(propertyChangedRaised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollableSize_DefaultValue_IsZero()
     {
@@ -125,6 +136,7 @@ public class ScrollableModelTest
         Assert.AreEqual(0, model.ScrollableSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollableSize_SetValue_UpdatesProperty()
     {
@@ -137,6 +149,7 @@ public class ScrollableModelTest
         Assert.AreEqual(100, model.ScrollableSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollableSize_SetValue_RaisesPropertyChanged()
     {
@@ -149,6 +162,7 @@ public class ScrollableModelTest
         Assert.IsTrue(propertyChangedRaised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetSameValue_DoesNotRaisePropertyChanged()
     {

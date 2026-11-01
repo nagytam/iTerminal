@@ -13,6 +13,7 @@ namespace iTerminal.Core.Test.Commands;
 [TestClass]
 public class EncyclopediaDialogCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ItIsBoundToCtrlShiftW()
     {

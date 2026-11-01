@@ -6,6 +6,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class ConcurrentListReplaceAllTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceAll_SwapsTheContent()
     {
@@ -18,6 +19,7 @@ public class ConcurrentListReplaceAllTest
         CollectionAssert.AreEqual(new[] { "x", "y", "z" }, list.AsSnapshot().ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceAll_WithItsOwnItems_Works()
     {
@@ -29,6 +31,7 @@ public class ConcurrentListReplaceAllTest
         CollectionAssert.AreEqual(new[] { "a", "b" }, list.AsSnapshot().ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AReaderNeverSeesAnEmptyOrPartialList()
     {
@@ -59,6 +62,7 @@ public class ConcurrentListReplaceAllTest
         Assert.AreEqual(0, broken);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListBoxModel_RefreshedFromAWorker_NeverShowsAnEmptyList()
     {

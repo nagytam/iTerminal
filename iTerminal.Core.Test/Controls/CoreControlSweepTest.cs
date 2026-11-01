@@ -73,6 +73,7 @@ public class CoreControlSweepTest
             && !t.IsAbstract && !t.IsGenericTypeDefinition)
         .OrderBy(t => t.FullName, StringComparer.Ordinal);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EveryCoreControl_SurvivesAwkwardSizes_Keys_AndClicks()
     {
@@ -119,6 +120,7 @@ public class CoreControlSweepTest
         Assert.AreEqual(0, failed.Count, string.Join(Environment.NewLine, failed.Take(30)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryCoreControl_AcceptsNullAndHugeSettings()
     {

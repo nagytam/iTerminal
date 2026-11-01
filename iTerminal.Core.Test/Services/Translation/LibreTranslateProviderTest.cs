@@ -24,6 +24,7 @@ public class LibreTranslateProviderTest
     private static LibreTranslateProvider Provider(StubHandler handler, string url = "https://translate.test/", string? key = null) =>
         new(url, () => key, new HttpClient(handler));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATranslationIsPostedAsJsonAndTheAnswerRead()
     {
@@ -41,6 +42,7 @@ public class LibreTranslateProviderTest
         Assert.AreEqual("secret", (string?)sent["api_key"]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AGivenSourceLanguageIsSentAsItIs()
     {
@@ -53,6 +55,7 @@ public class LibreTranslateProviderTest
         Assert.IsNull(JsonNode.Parse(handler.Requests[0].Body)!["api_key"], "no key is sent when none is set");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DetectionPicksTheMostConfidentHitAndScalesItToOne()
     {
@@ -65,6 +68,7 @@ public class LibreTranslateProviderTest
         Assert.AreEqual("https://translate.test/detect", handler.Requests[0].Uri!.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NoHitsMeansNoDetection()
     {
@@ -73,6 +77,7 @@ public class LibreTranslateProviderTest
         Assert.IsNull(await Provider(handler).DetectAsync("?"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARefusedRequestSaysWhatToDo()
     {
@@ -85,6 +90,7 @@ public class LibreTranslateProviderTest
         StringAssert.Contains(exception.Message, "LIBRETRANSLATE_API_KEY");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(HttpStatusCode.Forbidden, false, "an API key is needed")]
     [DataRow(HttpStatusCode.Unauthorized, true, "the API key was refused")]
@@ -96,6 +102,7 @@ public class LibreTranslateProviderTest
         StringAssert.Contains(LibreTranslateProvider.Describe(status, "not json", keySet), expected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnreachableServerIsReportedNotThrownRaw()
     {
@@ -112,6 +119,7 @@ public class LibreTranslateProviderTest
             throw new HttpRequestException("no route to host");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutAnApiUrlNothingIsSent()
     {
@@ -123,6 +131,7 @@ public class LibreTranslateProviderTest
         Assert.AreEqual(0, handler.Requests.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnlyAnHttpAddressIsAccepted()
     {

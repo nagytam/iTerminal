@@ -89,6 +89,7 @@ public class LinkServiceTest
     }
 
     #region Creating
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HardLink_IsASecondNameForTheSameFile()
     {
@@ -106,6 +107,7 @@ public class LinkServiceTest
         Assert.AreEqual("two", File.ReadAllText(link), "the file lives on under its other name");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HardLink_ToAFolder_IsRefusedInWords()
     {
@@ -117,6 +119,7 @@ public class LinkServiceTest
         StringAssert.Contains(exception.Message, "symbolic link");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALink_IsNotMadeOverSomethingThatExists_NorToSomethingThatDoesNot()
     {
@@ -134,6 +137,7 @@ public class LinkServiceTest
         Assert.AreEqual("keep me", File.ReadAllText(taken));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SymbolicLink_ToAFileAndToAFolder_AbsoluteAndRelative()
     {
@@ -154,6 +158,7 @@ public class LinkServiceTest
         Assert.AreEqual("one", File.ReadAllText(PathOf("folder-link", "a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheWindowsPrivilegeFailure_SaysWhatToDoAboutIt()
     {
@@ -168,6 +173,7 @@ public class LinkServiceTest
         StringAssert.Contains(message, "hard link");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DefaultLinkPath_IsTheOtherPanelsFolder_OrBesideTheTargetUnderAnotherName()
     {
@@ -180,6 +186,7 @@ public class LinkServiceTest
     #endregion
 
     #region Showing
+    [Timeout(60_000)]
     [TestMethod]
     public void AListedLink_KnowsWhereItLeads_AndAnOrdinaryEntryDoesNot()
     {
@@ -198,6 +205,7 @@ public class LinkServiceTest
         Assert.IsFalse(new Url("file://" + PathOf("data") + Path.DirectorySeparatorChar).IsLink);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALinkRow_ShowsItsTargetInTheNameColumn_AndInTheInfoStrip()
     {
@@ -215,6 +223,7 @@ public class LinkServiceTest
     #endregion
 
     #region Deleting, copying, counting
+    [Timeout(60_000)]
     [TestMethod]
     public void DeletingALinkedFolder_RemovesTheLink_AndLeavesWhatItLeadsTo()
     {
@@ -230,6 +239,7 @@ public class LinkServiceTest
         Assert.AreEqual("precious", File.ReadAllText(kept));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeletingALinkedFolder_AsOneEntryOfARecursiveDelete_RemovesOnlyTheLink()
     {
@@ -244,6 +254,7 @@ public class LinkServiceTest
         Assert.AreEqual("precious", File.ReadAllText(kept));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteDiscovery_DoesNotWalkIntoALinkedFolder()
     {
@@ -264,6 +275,7 @@ public class LinkServiceTest
         Assert.AreEqual(1, discovery.Folders.Count, "the link is not a folder to walk");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteDiscovery_OfAFolderThatIsItselfALink_FindsNothingToDelete()
     {
@@ -277,6 +289,7 @@ public class LinkServiceTest
         Assert.AreEqual(1, discovery.Folders.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALinkBackToAParent_IsRecognised_AndAFolderCopyThroughItEnds()
     {

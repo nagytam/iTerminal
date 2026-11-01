@@ -47,6 +47,7 @@ public class SystemSettingsDialogTest
         await dialog.PendingOperation;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpensOnTheComputerWithItsNameWorkgroupAndDescription()
     {
@@ -60,6 +61,7 @@ public class SystemSettingsDialogTest
         StringAssert.Contains(dialog.Text, "Running as administrator");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutAdministratorRightsItSaysSoAtTheTop()
     {
@@ -69,6 +71,7 @@ public class SystemSettingsDialogTest
         StringAssert.Contains(dialog.Text, "Ctrl+Shift+A");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDialogDrawsItsRowsOnScreen()
     {
@@ -81,6 +84,7 @@ public class SystemSettingsDialogTest
         AssertScreenContains(screen, "DESK");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RightArrowMovesThroughTheSectionsAndWrapsAround()
     {
@@ -99,6 +103,7 @@ public class SystemSettingsDialogTest
         Assert.AreEqual(SystemSettingsDialog.SettingsSection.Computer, dialog.Section);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnTheNameOpensTheInputAndEnterAgainRenames()
     {
@@ -120,6 +125,7 @@ public class SystemSettingsDialogTest
         StringAssert.Contains(dialog.Message, "renamed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeInTheInputCancelsTheInputAndNotTheDialog()
     {
@@ -137,6 +143,7 @@ public class SystemSettingsDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog), "the next Esc closes it");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARefusedChangeShowsTheReasonAndLeavesTheDialogUsable()
     {
@@ -152,6 +159,7 @@ public class SystemSettingsDialogTest
         StringAssert.Contains(dialog.Text, "DESK", "the name shown is still the system's, not the one typed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InsertAsksForANameThenAValueAndAddsTheVariableToTheScopeInView()
     {
@@ -169,6 +177,7 @@ public class SystemSettingsDialogTest
         service.Verify(s => s.SetEnvironmentVariableAsync(EnvironmentScope.User, "MY_VAR", "42", It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABadVariableNameIsRefusedBeforeTheValueIsAsked()
     {
@@ -183,6 +192,7 @@ public class SystemSettingsDialogTest
         StringAssert.Contains(dialog.Message, "=");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteAsksFirstAndOnlyYRemovesTheVariable()
     {
@@ -203,6 +213,7 @@ public class SystemSettingsDialogTest
         service.Verify(s => s.RemoveEnvironmentVariableAsync(EnvironmentScope.User, "EDITOR", It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SSwitchesBetweenTheUserAndTheMachineVariables()
     {
@@ -216,6 +227,7 @@ public class SystemSettingsDialogTest
         Assert.IsFalse(dialog.Text.Contains("EDITOR"), "the user's variables are gone from view");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTimeZoneListStartsOnTheCurrentZoneAndEnterAppliesAnother()
     {
@@ -235,6 +247,7 @@ public class SystemSettingsDialogTest
         service.Verify(s => s.SetTimeZoneAsync("Zone/C", It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCursorStaysInsideTheList()
     {
@@ -250,6 +263,7 @@ public class SystemSettingsDialogTest
         Assert.AreEqual(0, dialog.Cursor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedRead_IsSaidOnTheDialog_NotLeftAsReading()
     {

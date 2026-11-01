@@ -35,6 +35,7 @@ public class ParserFuzzGuardTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MeetingTryParse_NeverThrows_AndExplainsEveryRefusal()
     {
@@ -58,6 +59,7 @@ public class ParserFuzzGuardTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToDoTaskTryParse_NeverThrows_AndExplainsEveryRefusal()
     {

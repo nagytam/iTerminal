@@ -5,6 +5,7 @@ namespace iConsole.Test.Display;
 [TestClass]
 public class ConxelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelConstructor()
     {
@@ -18,6 +19,7 @@ public class ConxelTest
         Assert.IsFalse(conxel.IsStrikeThrough);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelConstructorWithFormatting()
     {
@@ -29,6 +31,7 @@ public class ConxelTest
         Assert.IsTrue(conxel.IsStrikeThrough);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelProperties()
     {
@@ -43,6 +46,7 @@ public class ConxelTest
         Assert.AreEqual(Color.Green, conxel.ForegroundColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelEquality()
     {
@@ -51,6 +55,7 @@ public class ConxelTest
         Assert.AreEqual(conxel1, conxel2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelInequality()
     {
@@ -59,6 +64,7 @@ public class ConxelTest
         Assert.AreNotEqual(conxel1, conxel2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelWithDifferentColors()
     {

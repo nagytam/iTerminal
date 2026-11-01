@@ -36,6 +36,7 @@ public class FileOperationsTest
         await _app.PressAsync("Enter");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ShiftF7CreatesAFolder()
     {
@@ -48,6 +49,7 @@ public class FileOperationsTest
     }
 
     /// <summary>Text boxes used to accept ASCII letters, digits and six punctuation marks only.</summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AFolderNameMayHoldPunctuation()
     {
@@ -57,6 +59,7 @@ public class FileOperationsTest
             "a folder named with parentheses, a comma, an apostrophe and an ampersand");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AFolderNameMayHoldAccentedLetters()
     {
@@ -68,6 +71,7 @@ public class FileOperationsTest
     }
 
     /// <summary>The empty field used to say "Supply path!" in red before a key was pressed.</summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheCreateDialogOpensWithoutAnError()
     {
@@ -78,6 +82,7 @@ public class FileOperationsTest
         Assert.IsFalse(screen.Contains("Supply path"), screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EnterOnAnEmptyNameCreatesNothingAndKeepsTheDialog()
     {
@@ -92,6 +97,7 @@ public class FileOperationsTest
     }
 
     /// <summary>"Error: Error: Path exists already!" — the message carried the prefix the line adds.</summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ATakenNameSaysSoOnce()
     {
@@ -106,6 +112,7 @@ public class FileOperationsTest
         Assert.IsInstanceOfType<Core.Dialogs.CreateFolderDialog>(_app.Driver.FocusedModal, "a taken name is not created over");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EscCancelsTheCreateDialog()
     {
@@ -121,6 +128,7 @@ public class FileOperationsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ShiftF4CreatesAFile()
     {
@@ -134,6 +142,7 @@ public class FileOperationsTest
         await _app.WaitUntilAsync(s => _app.LeftPanelLists("todo.txt", s), "the new file to be listed");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5CopiesTheFileUnderTheCursorToTheOtherPanel()
     {
@@ -153,6 +162,7 @@ public class FileOperationsTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5CopiesAFolderWithItsContents()
     {
@@ -166,6 +176,7 @@ public class FileOperationsTest
         await _app.WaitUntilAsync(s => _app.RightPanelLists("alpha", s), "the target panel to list the folder");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5CopiesAFileToTheMemoryDrive()
     {
@@ -193,6 +204,7 @@ public class FileOperationsTest
         await _app.PressAsync("Enter");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5CopiesAFileFromTheMemoryDriveToTheDisk()
     {
@@ -206,6 +218,7 @@ public class FileOperationsTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5CopiesAFolderFromTheMemoryDriveToTheDisk()
     {
@@ -224,6 +237,7 @@ public class FileOperationsTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5CopiesAFileWithinTheMemoryDrive()
     {
@@ -239,6 +253,7 @@ public class FileOperationsTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5CopiesAFolderWithinTheMemoryDrive()
     {
@@ -255,6 +270,7 @@ public class FileOperationsTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5CopiesABigFileToTheMemoryDriveAndShowsProgress()
     {
@@ -272,6 +288,7 @@ public class FileOperationsTest
     }
 
     /// <summary>The memory drive loads what it mirrored last time after the panel may already have listed it.</summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheMemoryPanelListsFilesMirroredFromAnEarlierRun()
     {
@@ -288,6 +305,7 @@ public class FileOperationsTest
         await _app.WaitUntilAsync(s => _app.RightPanelLists("kept.txt", s), "the memory panel to list the mirrored file");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5CopiesALargeNestedFolderToTheMemoryDrive()
     {
@@ -311,6 +329,7 @@ public class FileOperationsTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5CopiesAFolderToTheMemoryDrive()
     {
@@ -326,6 +345,7 @@ public class FileOperationsTest
         await _app.WaitUntilAsync(s => _app.RightPanelLists("alpha", s), "the memory panel to list the folder");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ShiftF6MovesTheFileToTheOtherPanel()
     {
@@ -341,6 +361,7 @@ public class FileOperationsTest
             "both panels to show the move");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F6RenamesTheFile()
     {
@@ -361,6 +382,7 @@ public class FileOperationsTest
         await _app.WaitUntilAsync(s => _app.LeftPanelLists("journal.md", s) && !_app.LeftPanelLists("notes.md", s), "the panel to show the new name");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F8DeletesAFilePermanentlyWhenTheRecycleBinIsUnticked()
     {
@@ -383,6 +405,7 @@ public class FileOperationsTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F8DeletesAFolderTreeOnTheMemoryDrive()
     {
@@ -401,6 +424,7 @@ public class FileOperationsTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F8DeletesAnEmptyFolderOnTheMemoryDrive()
     {
@@ -416,6 +440,7 @@ public class FileOperationsTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task OnALocalFolderTheRecycleBinIsOfferedAndTicked()
     {
@@ -434,6 +459,7 @@ public class FileOperationsTest
     /// <summary>What the Delete dialog calls the place a delete can be undone from, on this system.</summary>
     private static string BinLabel => OperatingSystem.IsLinux() ? "Move to Trash" : "Move to Recycle bin";
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EscCancelsTheDeleteAndKeepsTheFile()
     {
@@ -449,6 +475,7 @@ public class FileOperationsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task OperationsOnTheParentEntryDoNothing()
     {

@@ -46,6 +46,7 @@ public class WrappedReflowAndCaretTest
     /// <summary>Ten lines, each 60 characters: "NN" then a run of x. The number says which line a row came from.</summary>
     private static string[] TenLines() => Enumerable.Range(0, 10).Select(i => $"{i:D2} " + new string('x', 57)).ToArray();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ResizingWrappedText_KeepsTheReaderOnTheSameLine()
     {
@@ -58,6 +59,7 @@ public class WrappedReflowAndCaretTest
         Assert.AreEqual(5L, viewer.TopRow().Line, "The top of the screen is still line 5 after the lines re-flow.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ResizingWrappedText_KeepsTheReadingPositionWithinALongLine()
     {
@@ -70,6 +72,7 @@ public class WrappedReflowAndCaretTest
         Assert.AreEqual(3L, viewer.TopRow().Line, "The top row is still within line 3, not the line before or after it.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WrappedEditor_TheCaretSitsOnTheRowItIsOn()
     {
@@ -82,6 +85,7 @@ public class WrappedReflowAndCaretTest
         Assert.AreEqual(5, editor.CursorPosition.X - editor.AbsolutePosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WrappedEditor_DownAndUp_MoveByScreenRow_KeepingTheColumn()
     {
@@ -99,6 +103,7 @@ public class WrappedReflowAndCaretTest
         Assert.AreEqual((0L, 45L), (editor.ScrollableModel.CursorPosition.Y, editor.ScrollableModel.CursorPosition.X));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WrappedEditor_WhenItsRowIsUnderTheBottomEdge_TheViewScrollsToIt()
     {

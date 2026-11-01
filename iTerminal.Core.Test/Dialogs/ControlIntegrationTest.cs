@@ -10,6 +10,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class ControlIntegrationTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ProcessManager_EmptyFilter_ShowsItsPlaceholder()
     {
@@ -19,6 +20,7 @@ public class ControlIntegrationTest
         AssertScreenContains(Render(dialog), "process name or id");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ProcessManager_TypedFilter_HidesItsPlaceholder()
     {
@@ -30,6 +32,7 @@ public class ControlIntegrationTest
         Assert.IsFalse(Render(dialog).ToString().Contains("process name or id"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task About_DetailBlock_IsAlignedByTheKeyValueList()
     {
@@ -42,6 +45,7 @@ public class ControlIntegrationTest
         AssertScreenContains(screen, "System    ");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void About_DetailPairs_MatchTheTextLines()
     {

@@ -42,6 +42,7 @@ public class NewFileValidationModelTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyName_IsInvalidButSaysNothing()
     {
@@ -51,6 +52,7 @@ public class NewFileValidationModelTest
         Assert.AreEqual(string.Empty, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NameTakenInTheFolder_IsRefusedAndSaysWhy()
     {
@@ -60,6 +62,7 @@ public class NewFileValidationModelTest
         Assert.AreEqual(UrlValidationModel.ExistsMessage, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NameWithAFolderTakenInThatFolder_IsRefused()
     {
@@ -70,6 +73,7 @@ public class NewFileValidationModelTest
         Assert.AreEqual(UrlValidationModel.ExistsMessage, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NewNameInAnExistingSubfolder_IsAccepted()
     {
@@ -78,6 +82,7 @@ public class NewFileValidationModelTest
         Assert.IsTrue(model.IsValid, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RootedPath_IsCheckedAsTyped_NotInsideTheFolder()
     {
@@ -89,6 +94,7 @@ public class NewFileValidationModelTest
         Assert.AreEqual(UrlValidationModel.ExistsMessage, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NameWithANulCharacter_IsRefusedAndSaysWhy_NotThrown()
     {
@@ -99,6 +105,7 @@ public class NewFileValidationModelTest
         Assert.AreEqual(UrlValidationModel.InvalidMessage, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutAFolder_TheNameIsCheckedAsTyped()
     {

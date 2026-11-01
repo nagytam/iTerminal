@@ -19,6 +19,7 @@ public class KeyHintGuardTest
         "ContentBrowser", "TerminalPanel", "TerminalWindow", "TerminalScreen", "PopUpWindow", "MenuBar", "Window", "Dialog",
     ];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryControlThatHandlesKeys_ListsThem_OrIsExempt()
     {
@@ -44,6 +45,7 @@ public class KeyHintGuardTest
         Assert.AreEqual(0, silent.Count, "These handle keys but list none in the help overlay: " + string.Join(", ", silent));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplicationInfo_TitleNamesTheApplicationAndItsVersion()
     {
@@ -51,6 +53,7 @@ public class KeyHintGuardTest
         Assert.AreEqual("iTerminal BETA " + ApplicationInfo.Version, ApplicationInfo.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CycleBottomBarModeCommand_WithNoPanels_DoesNothing_AndIsOnCtrlB()
     {

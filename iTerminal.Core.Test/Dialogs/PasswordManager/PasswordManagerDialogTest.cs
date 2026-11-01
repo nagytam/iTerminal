@@ -37,6 +37,7 @@ public class PasswordManagerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheStoreOpensItselfWithoutAskingForAPassword()
     {
@@ -47,6 +48,7 @@ public class PasswordManagerDialogTest
         Assert.AreEqual("List", dialog.ModeForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALockedStoreIsOpenedAgainWhenTheDialogShows()
     {
@@ -61,6 +63,7 @@ public class PasswordManagerDialogTest
         Assert.IsTrue(manager.IsUnlocked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AStoreWhoseKeyIsLostSaysSo()
     {
@@ -75,6 +78,7 @@ public class PasswordManagerDialogTest
         AssertScreenContains(Render(dialog), "cannot be opened");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANewPasswordIsSavedWithItsFields()
     {
@@ -99,6 +103,7 @@ public class PasswordManagerDialogTest
         Assert.AreEqual("List", dialog.ModeForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePasswordStaysHiddenUntilVShowsIt()
     {
@@ -116,6 +121,7 @@ public class PasswordManagerDialogTest
         AssertScreenContains(Render(dialog), "visible-when-asked");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteNeedsAYesAndAnyOtherKeyCancelsIt()
     {
@@ -135,6 +141,7 @@ public class PasswordManagerDialogTest
         Assert.AreEqual(0, manager.List().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesIntoTheFieldUnderTheCursor_OnOneLine_AndNotIntoTheCategory()
     {
@@ -160,6 +167,7 @@ public class PasswordManagerDialogTest
         Assert.AreEqual("p4ss w0rd", dialog.FieldForTest("Password"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlUClearsTheFieldUnderTheCursor()
     {
@@ -175,6 +183,7 @@ public class PasswordManagerDialogTest
         Assert.AreEqual(string.Empty, dialog.FieldForTest("Title"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftTabGoesBackAFieldAndWraps()
     {
@@ -217,6 +226,7 @@ public class PasswordManagerDialogTest
         return (dialog, manager);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickHighlightsAnEntry_AndTheWheelMovesThreeAtATime()
     {
@@ -233,6 +243,7 @@ public class PasswordManagerDialogTest
         Assert.AreNotEqual(start, dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickBelowTheLastEntryOrOutsideTheDialogDoesNothing()
     {
@@ -244,6 +255,7 @@ public class PasswordManagerDialogTest
         Assert.AreEqual(0, dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMouseLeavesTheListAloneWhileDeletionIsAsked()
     {
@@ -257,6 +269,7 @@ public class PasswordManagerDialogTest
         Assert.AreEqual(4, manager.List().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWDeletesTheLastWordOfTheField_AndLeavesTheCategoryAlone()
     {
@@ -276,6 +289,7 @@ public class PasswordManagerDialogTest
         Assert.AreEqual("Bank ", dialog.FieldForTest("Title"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HomeAndEndJumpToTheFirstAndLastEntry()
     {
@@ -287,6 +301,7 @@ public class PasswordManagerDialogTest
         Assert.AreEqual(0, dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyStoreSaysHowToAddAPassword()
     {

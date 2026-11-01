@@ -36,6 +36,7 @@ public class GridPanelTest
         return new GridPanel(Theme()) { ViewSize = new Size(width, height), Position = new Position(0, 0) };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Cells_AreDrawnAtTheirRowAndColumn()
     {
@@ -52,6 +53,7 @@ public class GridPanelTest
         Assert.AreEqual("aabbbb|ccdddd|ccdddd|ccdddd", string.Join("|", screen.Lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Span_CoversSeveralTracksAndTheGapsBetweenThem()
     {
@@ -67,6 +69,7 @@ public class GridPanelTest
         Assert.AreEqual("wwwwwwww|      tt|      tt", string.Join("|", screen.Lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Percent_AndFillTracks_ShareTheWidth()
     {
@@ -79,6 +82,7 @@ public class GridPanelTest
         Assert.AreEqual("aaabbbbccc", ScreenBuffer.Render(grid, 10, 1).Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Resize_RedistributesOnTheNextDraw()
     {
@@ -96,6 +100,7 @@ public class GridPanelTest
         Assert.AreEqual("aaaaaaaaaabbbbbbbbbb", screen.Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OutOfRangePlacement_IsClampedToTheLastTrack()
     {
@@ -107,6 +112,7 @@ public class GridPanelTest
         Assert.AreEqual("  xx|  xx", string.Join("|", ScreenBuffer.Render(grid, 4, 2).Lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HiddenChild_LeavesItsCellsEmpty()
     {
@@ -120,6 +126,7 @@ public class GridPanelTest
         Assert.AreEqual("  bb", ScreenBuffer.Render(grid, 4, 1).Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Remove_FreesTheCell_AndNegativeGapsCountAsZero()
     {
@@ -137,6 +144,7 @@ public class GridPanelTest
         Assert.AreEqual("  bb", ScreenBuffer.Render(grid, 4, 1).Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyTrackLists_FallBackToOneFillingTrack()
     {

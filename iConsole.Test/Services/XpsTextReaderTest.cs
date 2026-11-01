@@ -50,6 +50,7 @@ public class XpsTextReaderTest
             </FixedPage>
             """));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pages_FollowTheDocumentsOrder_NotTheirFileNames()
     {
@@ -61,6 +62,7 @@ public class XpsTextReaderTest
         Assert.IsTrue(lines.Any(l => l.StartsWith("── Page 1")), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GlyphRuns_OnOneLine_ReadLeftToRight_AndLinesFollowTheirOrigin()
     {
@@ -70,6 +72,7 @@ public class XpsTextReaderTest
         CollectionAssert.Contains(lines, "Next line");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APackageWithoutASequence_TheReaderSaysSo()
     {

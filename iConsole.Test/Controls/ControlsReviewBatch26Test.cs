@@ -12,12 +12,14 @@ public class ControlsReviewBatch26Test
 {
     private readonly TestThemeService _theme = new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BarChart_BuildBar_GivesNaNAnEmptyBar()
     {
         Assert.AreEqual("    ", BarChart.BuildBar(double.NaN, 4));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BarChart_ANaNValue_DrawsItsOtherBars()
     {
@@ -29,6 +31,7 @@ public class ControlsReviewBatch26Test
         Assert.IsTrue(screen.Line(1).Contains("good"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BarChart_ABadFormatString_FallsBackToTheDefault()
     {
@@ -40,6 +43,7 @@ public class ControlsReviewBatch26Test
         Assert.IsTrue(screen.Line(0).Contains("2"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BarChart_NullFormatAndNullLabel_AreAccepted()
     {
@@ -50,6 +54,7 @@ public class ControlsReviewBatch26Test
         ScreenBuffer.Render(chart, 30, 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gauge_NullLabel_DrawsWithoutOne()
     {
@@ -59,6 +64,7 @@ public class ControlsReviewBatch26Test
         ScreenBuffer.Render(gauge, 20, 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BreakdownChart_InfinityAndNaN_DoNotTakeTheShareOfTheOthers()
     {
@@ -67,6 +73,7 @@ public class ControlsReviewBatch26Test
         CollectionAssert.AreEqual(new[] { 0, 0, 5, 5 }, widths);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sparkline_ANaNInTheData_StillScalesTheRest()
     {
@@ -76,6 +83,7 @@ public class ControlsReviewBatch26Test
         Assert.AreNotEqual(line[0], line[2]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sparkline_Infinity_ClampsToTheEndGlyphs()
     {
@@ -84,6 +92,7 @@ public class ControlsReviewBatch26Test
         Assert.AreEqual(0, Sparkline.LevelFor(3, double.NaN, 10));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LineChart_InfinityInTheData_IsLeftOut()
     {
@@ -92,6 +101,7 @@ public class ControlsReviewBatch26Test
         Assert.AreEqual(2, rows.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Heatmap_NullRowsAndLabels_AreTakenAsEmpty()
     {

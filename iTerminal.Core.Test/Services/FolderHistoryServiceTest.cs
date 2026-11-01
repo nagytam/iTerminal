@@ -7,6 +7,7 @@ namespace iTerminal.Core.Test.Services;
 [TestClass]
 public class FolderHistoryServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesHistory()
     {
@@ -19,6 +20,7 @@ public class FolderHistoryServiceTest
         Assert.AreEqual(20, service.MaxHistoryItems);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_LoadsHistoryFromSettings()
     {
@@ -34,6 +36,7 @@ public class FolderHistoryServiceTest
         Assert.IsTrue(service.History.Contains("file:///path3"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Add_AddsNewUrl()
     {
@@ -48,6 +51,7 @@ public class FolderHistoryServiceTest
         Assert.IsTrue(service.History.Contains(url.FullUrl));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Add_InsertsAtBeginning()
     {
@@ -64,6 +68,7 @@ public class FolderHistoryServiceTest
         Assert.AreEqual(url1.FullUrl, service.History[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Add_DoesNotAddDuplicates()
     {
@@ -78,6 +83,7 @@ public class FolderHistoryServiceTest
         Assert.AreEqual(1, service.History.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Add_RemovedOldestWhenMaxReached()
     {
@@ -96,6 +102,7 @@ public class FolderHistoryServiceTest
         Assert.IsTrue(service.History.Contains("file:///path4"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Add_UpdatesSettings()
     {
@@ -109,6 +116,7 @@ public class FolderHistoryServiceTest
         mockSettingsService.Verify(s => s.Set(SettingsService.FOLDER_HISTORY, It.IsAny<string>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MaxHistoryItems_CanBeModified()
     {
@@ -121,6 +129,7 @@ public class FolderHistoryServiceTest
         Assert.AreEqual(50, service.MaxHistoryItems);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Add_MultipleUrls_MaintainsOrder()
     {
@@ -137,6 +146,7 @@ public class FolderHistoryServiceTest
         Assert.AreEqual("file:///path1", service.History[2]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Add_AFolderVisitedAgain_MovesToTheTop()
     {
@@ -151,6 +161,7 @@ public class FolderHistoryServiceTest
         CollectionAssert.AreEqual(new[] { "file:///a", "file:///b" }, service.History.AsSnapshot().ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Add_KeepsAtMostTheMaximum_DroppingTheLeastRecentlyUsed()
     {
@@ -167,6 +178,7 @@ public class FolderHistoryServiceTest
         CollectionAssert.AreEqual(new[] { "file:///d", "file:///a", "file:///c" }, service.History.AsSnapshot().ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Add_SavesTheOrderSoItSurvivesARestart()
     {

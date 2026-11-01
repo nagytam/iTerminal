@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Model.Calendar;
 [TestClass]
 public class CalendarModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void OctoberGridStartsOnThursdayAndHoldsEveryDay()
     {
@@ -19,6 +20,7 @@ public class CalendarModelTest
         Assert.AreEqual(31, weeks.SelectMany(w => w.Days).Count(d => d.HasValue));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryRowHasSevenColumns()
     {
@@ -28,6 +30,7 @@ public class CalendarModelTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WeekNumbersAreIsoWeeks()
     {
@@ -38,6 +41,7 @@ public class CalendarModelTest
         Assert.AreEqual(ISOWeek.GetWeekOfYear(new DateTime(2025, 12, 1)), december[0].WeekNumber);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsoWeekMatchesTheStandardCalendar()
     {
@@ -45,6 +49,7 @@ public class CalendarModelTest
         Assert.AreEqual(ISOWeek.GetWeekOfYear(new DateTime(2026, 10, 14)), CalendarModel.IsoWeek(new DateOnly(2026, 10, 14)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MovingByMonthKeepsTheDayWhereTheMonthHasIt()
     {
@@ -55,6 +60,7 @@ public class CalendarModelTest
         Assert.AreEqual(new DateOnly(2026, 2, 28), model.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MovingBackAcrossNewYearChangesTheYear()
     {
@@ -65,6 +71,7 @@ public class CalendarModelTest
         Assert.AreEqual(new DateOnly(2025, 12, 15), model.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MovingByYearFromLeapDayLandsOnTheLastDayOfFebruary()
     {
@@ -75,6 +82,7 @@ public class CalendarModelTest
         Assert.AreEqual(new DateOnly(2029, 2, 28), model.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MovingPastTheLastDayStopsAtTheLastDay()
     {
@@ -86,6 +94,7 @@ public class CalendarModelTest
         Assert.AreEqual(DateOnly.MaxValue, model.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MovingByWeekAndDayAndTodayWork()
     {
@@ -101,6 +110,7 @@ public class CalendarModelTest
         Assert.AreEqual(new DateOnly(2026, 10, 14), model.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ResetStartsAgainFromTheGivenDay()
     {
@@ -113,6 +123,7 @@ public class CalendarModelTest
         Assert.AreEqual(new DateOnly(2027, 1, 2), model.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(0, "today")]
     [DataRow(1, "tomorrow")]
@@ -126,6 +137,7 @@ public class CalendarModelTest
         Assert.AreEqual(expected, CalendarModel.RelativeTo(today.AddDays(days), today));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryChangeOfTheSelectionRaisesChanged()
     {
@@ -141,6 +153,7 @@ public class CalendarModelTest
         Assert.AreEqual(4, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SelectingTheSameDayIsNotAChange()
     {
@@ -154,6 +167,7 @@ public class CalendarModelTest
         Assert.AreEqual(0, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ResetToANewTodayIsAChangeEvenWhenTheSelectionStays()
     {
@@ -167,6 +181,7 @@ public class CalendarModelTest
         Assert.AreEqual(new DateOnly(2026, 10, 15), model.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheModelIsACalendarControlModel()
     {

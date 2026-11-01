@@ -94,6 +94,7 @@ public class MailDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutAnAccountTheSetupFormOpens()
     {
@@ -104,6 +105,7 @@ public class MailDialogTest
         Assert.AreEqual("Setup", fixture.Dialog.ModeForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithAnAccountTheInboxLoads()
     {
@@ -116,6 +118,7 @@ public class MailDialogTest
         StringAssert.Contains(fixture.Dialog.StatusForTest, "1 messages");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterReadsTheSelectedMessage()
     {
@@ -129,6 +132,7 @@ public class MailDialogTest
         StringAssert.Contains(fixture.Dialog.BodyForTest, "Hello from the test.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComposeSendsTheDraftWithItsRecipientSubjectAndBody()
     {
@@ -149,6 +153,7 @@ public class MailDialogTest
         Assert.AreEqual("List", fixture.Dialog.ModeForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASendWithoutARecipientIsNotSent()
     {
@@ -163,6 +168,7 @@ public class MailDialogTest
         Assert.AreEqual(0, fixture.Mail.Sent.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteAsksOnceMoreBeforeRemovingFromTheServer()
     {
@@ -179,6 +185,7 @@ public class MailDialogTest
         CollectionAssert.AreEqual(new[] { 1 }, fixture.Mail.Deleted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AddressBookLookupFillsInTheRecipient()
     {
@@ -197,6 +204,7 @@ public class MailDialogTest
         Assert.AreEqual("Ada Lovelace <ada@example.test>", fixture.Dialog.DraftForTest[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReplyAddressesTheSenderWithARePrefixedSubject()
     {
@@ -213,6 +221,7 @@ public class MailDialogTest
         Assert.AreEqual("Re: Welcome", fixture.Dialog.DraftForTest[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SetupSavesTheAccountAndItsPasswordToTheVault()
     {
@@ -249,6 +258,7 @@ public class MailDialogTest
     private static Task PressKeyAsync(MailDialog dialog, ConsoleKey key, char c = (char)0, bool shift = false, bool control = false) =>
         dialog.HandleKeyEventAsync(Key(key, c, shift, control: control));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HomeAndEndJumpToTheFirstAndLastMessage()
     {
@@ -260,6 +270,7 @@ public class MailDialogTest
         Assert.AreEqual(0, fixture.Dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HomeAndEndScrollAMessageToItsTopAndBottom()
     {
@@ -274,6 +285,7 @@ public class MailDialogTest
         Assert.AreEqual(0, fixture.Dialog.ScrollForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftTabGoesBackAFieldInTheComposer_AndWrapsFromTheFirst()
     {
@@ -289,6 +301,7 @@ public class MailDialogTest
         Assert.AreEqual(2, fixture.Dialog.DraftFieldForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftTabGoesBackAFieldInTheAccountForm()
     {
@@ -303,6 +316,7 @@ public class MailDialogTest
         Assert.AreEqual(1, fixture.Dialog.SetupCursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesIntoTheComposer_OneLineForTheAddressAndSubject_LineBreaksForTheBody()
     {
@@ -320,6 +334,7 @@ public class MailDialogTest
         Assert.AreEqual("one" + (char)10 + "two", fixture.Dialog.DraftForTest[2]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PastingNothingIntoTheComposerChangesNothing()
     {
@@ -333,6 +348,7 @@ public class MailDialogTest
         Assert.AreEqual("x", fixture.Dialog.DraftForTest[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesIntoTheAddressBookSearch()
     {
@@ -347,6 +363,7 @@ public class MailDialogTest
         Assert.AreEqual("Lovelace", fixture.Dialog.DirectoryTermForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesIntoTheCurrentAccountField()
     {
@@ -366,6 +383,7 @@ public class MailDialogTest
         WheelDelta = wheel,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickHighlightsAMessage_AndTheWheelMovesThreeAtATime()
     {
@@ -380,6 +398,7 @@ public class MailDialogTest
         Assert.AreEqual(4, fixture.Dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnTheShownRowOfAScrolledInbox_PicksThatMessage()
     {
@@ -393,6 +412,7 @@ public class MailDialogTest
         Assert.IsTrue(fixture.Dialog.CursorForTest > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickBelowTheLastMessageDoesNothing()
     {
@@ -403,6 +423,7 @@ public class MailDialogTest
         Assert.AreEqual(0, fixture.Dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheelScrollsAnOpenMessageThreeLinesAtATime()
     {
@@ -418,6 +439,7 @@ public class MailDialogTest
         Assert.AreEqual(0, fixture.Dialog.ScrollForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InTheAddressBookAClickPicksAPersonAndTheWheelMovesThrough()
     {
@@ -437,6 +459,7 @@ public class MailDialogTest
         Assert.AreEqual(2, fixture.Dialog.PersonCursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMouseDoesNothingInTheComposerOrOutsideTheDialog()
     {
@@ -448,6 +471,7 @@ public class MailDialogTest
         Assert.IsFalse(await fixture.Dialog.HandleMouseEventAsync(new iConsole.Data.MouseEvent { Position = new iConsole.Data.Position(0, 0), WheelDelta = -1 }));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWAndCtrlUEditTheCurrentComposerField()
     {
@@ -466,6 +490,7 @@ public class MailDialogTest
         Assert.AreEqual(string.Empty, fixture.Dialog.DraftForTest[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWAndCtrlUEditTheAddressBookSearch_AndDropTheOldResults()
     {
@@ -480,6 +505,7 @@ public class MailDialogTest
         Assert.AreEqual(string.Empty, fixture.Dialog.DirectoryTermForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWAndCtrlUEditTheCurrentAccountField()
     {

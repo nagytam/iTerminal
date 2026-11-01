@@ -25,6 +25,7 @@ public class ControlsReviewBatch13Test
 
     private static MouseEvent Click(long x) => new() { Position = new Position(x, 0), LeftClicked = true };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_NonPositiveStep_IsRaisedToOne()
     {
@@ -36,6 +37,7 @@ public class ControlsReviewBatch13Test
         Assert.AreEqual(52, slider.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_NegativeStep_DoesNotReverseTheArrows()
     {
@@ -47,6 +49,7 @@ public class ControlsReviewBatch13Test
         Assert.AreEqual(10, box.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumericUpDown_Label_RepaintsWhenChanged()
     {
@@ -58,6 +61,7 @@ public class ControlsReviewBatch13Test
         Assert.AreEqual(string.Empty, box.Label);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rating_ClickOnBlankCellsRightOfTheStars_ChangesNothing()
     {
@@ -70,6 +74,7 @@ public class ControlsReviewBatch13Test
         Assert.AreEqual(5, rating.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_SecondDigitThatOverflowsTheField_StartsTheNextEntry()
     {
@@ -84,6 +89,7 @@ public class ControlsReviewBatch13Test
         Assert.AreEqual(12, picker.Value.Minute);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Chips_TurningReadOnlyOn_MovesTheHighlightOffTheAddSlot()
     {
@@ -96,6 +102,7 @@ public class ControlsReviewBatch13Test
         Assert.IsTrue(chips.Visible(30).Any(v => v.Index == 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_KeysThatDoNothing_AreLeftToTheHost()
     {
@@ -119,6 +126,7 @@ public class ControlsReviewBatch13Test
         Assert.AreEqual(1, chips.Items.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Chips_ChipWiderThanTheControl_StillShows()
     {
@@ -130,6 +138,7 @@ public class ControlsReviewBatch13Test
         Assert.AreEqual((0, 0), visible[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SegmentedControl_OptionWiderThanTheControl_StillShows()
     {
@@ -139,6 +148,7 @@ public class ControlsReviewBatch13Test
         Assert.AreEqual((1, 0), visible[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SegmentedControl_ShorterOptionList_RaisesSelectionChangedWhenTheChoiceMoves()
     {
@@ -152,6 +162,7 @@ public class ControlsReviewBatch13Test
         Assert.AreEqual("b", control.SelectedOption);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expander_Header_RepaintsWhenChanged()
     {
@@ -161,6 +172,7 @@ public class ControlsReviewBatch13Test
         Assert.IsTrue(expander.HasStateChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expander_ContentHeight_ResizesAnOpenSection()
     {
@@ -175,6 +187,7 @@ public class ControlsReviewBatch13Test
         Assert.AreEqual(1u, expander.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Countdown_Label_RepaintsWhenChanged()
     {

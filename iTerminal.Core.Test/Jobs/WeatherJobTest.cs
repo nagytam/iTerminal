@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Jobs;
 [TestClass]
 public class WeatherJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseWeatherLocation_ReturnsLocation_ForSuccessfulIpApiResponse()
     {
@@ -27,6 +28,7 @@ public class WeatherJobTest
         Assert.AreEqual(19.0402, location.Value.Longitude, 0.0001);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseWeatherLocation_ReturnsNull_ForFailedIpApiResponse()
     {
@@ -42,6 +44,7 @@ public class WeatherJobTest
         Assert.IsNull(location);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseWeather_ReturnsWeatherInfo_ForCurrentOpenMeteoResponse()
     {

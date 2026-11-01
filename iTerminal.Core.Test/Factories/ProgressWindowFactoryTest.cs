@@ -8,6 +8,7 @@ namespace iTerminal.Core.Test.Factories;
 [TestClass]
 public class ProgressWindowFactoryTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesFactory()
     {

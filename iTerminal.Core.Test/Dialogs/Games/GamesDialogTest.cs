@@ -48,6 +48,7 @@ public class GamesDialogTest
         dialog.ApplyPendingForTest();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ItListsTheFourGamesAndDrawsTheFirstOne()
     {
@@ -65,6 +66,7 @@ public class GamesDialogTest
         StringAssert.Contains(screen, "Esc:close");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PageKeysAndDigitsChooseTheGame()
     {
@@ -84,6 +86,7 @@ public class GamesDialogTest
         Assert.AreEqual("Nine Men's Morris", dialog.Current.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowsAndEnterPlayAndTheComputerAnswersOnTheNextIdlePass()
     {
@@ -105,6 +108,7 @@ public class GamesDialogTest
         Assert.IsTrue(game.XToMove);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheLettersStartAgainTakeBackAndSwitchTheMode()
     {
@@ -125,6 +129,7 @@ public class GamesDialogTest
         Assert.AreEqual(' ', game.CellAt(4));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AGoPassKeyIsLeftToTheGameAndNewStaysWithTheDialog()
     {
@@ -139,6 +144,7 @@ public class GamesDialogTest
         Assert.AreEqual(1, go.Passes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheChessPromotionKeysReachTheGameBeforeTheDialogsOwnLetters()
     {
@@ -163,6 +169,7 @@ public class GamesDialogTest
 
     private static ChessState ChessTest_Fen(string fen) => iTerminal.Core.Test.Services.Games.ChessTest.FromFen(fen);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingDropsTheSearchInFlight()
     {
@@ -179,6 +186,7 @@ public class GamesDialogTest
         Assert.AreEqual(0, Enumerable.Range(0, 9).Count(i => ((TicTacToeGame)dialog.Current).CellAt(i) == 'O'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EveryGameDrawsOnASmallAndABigScreenWithoutAFault()
     {
@@ -194,6 +202,7 @@ public class GamesDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheKeyHintsNameTheKeysOnceAndTheFooterSaysHowToLeave()
     {
@@ -209,6 +218,7 @@ public class GamesDialogTest
     private static string GamesDialogKeyHints() =>
         (string)typeof(GamesDialog).GetField("KeyHints", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!.GetRawConstantValue()!;
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheWrapKeepsWordsWholeAndBreaksLongOnes()
     {
@@ -217,6 +227,7 @@ public class GamesDialogTest
         Assert.AreEqual(0, GamesDialog.Wrap("text", 0).Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCommandIsCalledGamesAndHasNoHotKey()
     {
@@ -226,6 +237,7 @@ public class GamesDialogTest
         Assert.IsNull(command.Key);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AComputerSearchCancelledLateDoesNotLoseTheMoveOfTheNewerOne()
     {

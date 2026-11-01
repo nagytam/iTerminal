@@ -48,6 +48,7 @@ public class CreateFolderDialogTest
         return (validation.IsValid, validation.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFolderThatAlreadyExistsInThePanelIsReportedAsSuch()
     {
@@ -57,6 +58,7 @@ public class CreateFolderDialogTest
         Assert.AreEqual(UrlValidationModel.ExistsMessage, message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANewFolderNameIsAccepted()
     {
@@ -65,6 +67,7 @@ public class CreateFolderDialogTest
         Assert.IsTrue(isValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpensTitledForWhatItDoes()
     {
@@ -75,6 +78,7 @@ public class CreateFolderDialogTest
         AssertScreenContains(Render(dialog), "Name");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {

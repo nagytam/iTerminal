@@ -36,6 +36,7 @@ public class PrintDialogCommandTest
             service.Object);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ItIsBoundToCtrlP_AndNamed()
     {
@@ -46,6 +47,7 @@ public class PrintDialogCommandTest
         Assert.IsFalse(string.IsNullOrWhiteSpace(command.Description));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ItAlwaysRuns_BecauseWithoutAFileItIsTheQueueManager()
     {
@@ -58,6 +60,7 @@ public class PrintDialogCommandTest
         Assert.IsTrue(CommandOn("memdrive://docs/a.txt").CanExecute(), "another drive");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnlyALocalFileIsPrintable()
     {

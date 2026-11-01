@@ -57,6 +57,7 @@ public class CreateFolderCommandTest
         return root;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_CreatesTheFolderInThePanelsFolderAndClosesTheDialog()
     {
@@ -71,6 +72,7 @@ public class CreateFolderCommandTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog), "a created folder closes the dialog");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WhenTheCreateFails_KeepsTheDialogOpenAndSaysWhy()
     {
@@ -86,6 +88,7 @@ public class CreateFolderCommandTest
         AssertScreenContains(Render(dialog), "Could not create the folder: Access denied");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithNoFolderToCreateIn_SaysSo()
     {

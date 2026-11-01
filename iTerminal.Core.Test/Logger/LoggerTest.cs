@@ -10,6 +10,7 @@ namespace iTerminal.Core.Test.Logger;
 [TestClass]
 public class LoggerTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_DoesNotThrow_WithValidSettings()
     {
@@ -20,6 +21,7 @@ public class LoggerTest
         Assert.IsNotNull(logger);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_UsesExistingLogFileName_FromSettings()
     {
@@ -32,6 +34,7 @@ public class LoggerTest
         // Note: log file is held open by Serilog; we only verify the logger was constructed
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsLogFileNameInSettings()
     {
@@ -43,6 +46,7 @@ public class LoggerTest
         settings.Verify(s => s.Set(It.IsAny<string>(), It.IsAny<string>()), Times.AtLeastOnce);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Write_DoesNotThrow()
     {
@@ -62,6 +66,7 @@ public class LoggerTest
         logger.Write(logEvent);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Logger_ImplementsSerilogILogger()
     {

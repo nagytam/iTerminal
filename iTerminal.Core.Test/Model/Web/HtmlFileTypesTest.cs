@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Model.Web;
 [TestClass]
 public class HtmlFileTypesTest
 {
+    [Timeout(60_000)]
     [DataTestMethod]
     [DataRow("/site/index.html")]
     [DataRow("/site/index.htm")]
@@ -14,6 +15,7 @@ public class HtmlFileTypesTest
     public void IsHtmlFile_ForEveryHtmlExtension_IsTrue(string path) =>
         Assert.IsTrue(HtmlFileTypes.IsHtmlFile(path));
 
+    [Timeout(60_000)]
     [DataTestMethod]
     [DataRow("/site/data.xml")]
     [DataRow("/site/readme.txt")]

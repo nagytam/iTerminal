@@ -7,6 +7,7 @@ public class LanguageDetectorTest
 {
     private readonly LanguageDetector _detector = new();
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("The quick brown fox jumps over the lazy dog and it is not that far from here.", "en")]
     [DataRow("Der Hund ist nicht in dem Haus, aber ich habe ihn mit der Katze gesehen.", "de")]
@@ -24,6 +25,7 @@ public class LanguageDetectorTest
         Assert.AreEqual(expected, _detector.Detect(text)?.Code);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("これは日本語の文章です。ひらがなとカタカナがあります。", "ja")]
     [DataRow("这是一个很长的中文句子,没有假名。", "zh")]
@@ -44,6 +46,7 @@ public class LanguageDetectorTest
         Assert.IsTrue(detection!.Confidence > 0.5, "a text wholly in the script is a sure guess");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KanaWinsOverHanBecauseJapaneseIsMostlyKanji()
     {
@@ -51,6 +54,7 @@ public class LanguageDetectorTest
         Assert.AreEqual("ja", _detector.Detect("東京の大学でべんきょうします")?.Code);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("")]
     [DataRow("   ")]
@@ -60,12 +64,14 @@ public class LanguageDetectorTest
         Assert.IsNull(_detector.Detect(text));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALatinTextWithNoTellingWordIsNotGuessed()
     {
         Assert.IsNull(_detector.Detect("Xylophone quartz"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADistinctiveLetterCountsAsEvidence()
     {
@@ -73,6 +79,7 @@ public class LanguageDetectorTest
         Assert.AreEqual("es", _detector.Detect("¿Cómo?")?.Code);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MoreEvidenceMakesAMoreConfidentGuess()
     {
@@ -83,6 +90,7 @@ public class LanguageDetectorTest
         Assert.IsTrue(lots <= 0.99);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryCodeTheDetectorCanReturnIsOneTheTranslatorOffers()
     {

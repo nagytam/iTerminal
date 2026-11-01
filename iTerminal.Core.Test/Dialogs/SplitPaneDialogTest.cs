@@ -20,6 +20,7 @@ public class SplitPaneDialogTest
             DrawSectionHeader(buffer, 0, 0, width, "Title", focused, ThemeService.CurrentColorScheme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutAStatusTheFooterIsTheKeys()
     {
@@ -30,6 +31,7 @@ public class SplitPaneDialogTest
         Assert.AreEqual("a:add  Esc:close", buffer.Line(0).TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AStatusComesFirstInItsColourAndTheKeysFollow()
     {
@@ -42,6 +44,7 @@ public class SplitPaneDialogTest
         Assert.AreNotEqual(Color.Red, buffer.ForegroundAt(10, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AStatusTooLongForBothKeepsTheStatus()
     {
@@ -52,6 +55,7 @@ public class SplitPaneDialogTest
         Assert.AreEqual("A long fai", buffer.Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFooterFillsItsRowSoNothingOlderShowsThrough()
     {
@@ -62,6 +66,7 @@ public class SplitPaneDialogTest
         Assert.IsTrue(Enumerable.Range(0, 40).All(x => buffer.IsWritten(x, 0)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoWidthDrawsNothing()
     {
@@ -72,6 +77,7 @@ public class SplitPaneDialogTest
         Assert.IsFalse(buffer.IsWritten(0, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFocusedSectionBandUsesTheSelectionColours()
     {

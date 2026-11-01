@@ -28,6 +28,7 @@ public class OpenDocumentDrawingTest
         return buffer.ToArray();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EachPage_IsASection_WithItsShapesText()
     {
@@ -50,6 +51,7 @@ public class OpenDocumentDrawingTest
         CollectionAssert.Contains(lines.Skip(two).ToList(), "Only page two");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AWithoutContentXml_TheRendererSaysSo()
     {

@@ -24,6 +24,7 @@ public class ToastHostTest
 
     private static List<Toast> Toasts(ToastHost host) => [.. host.Controls.AsSnapshot().OfType<Toast>()];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithNothingPosted_DrawsNothing()
     {
@@ -35,6 +36,7 @@ public class ToastHostTest
         Assert.AreEqual(string.Empty, ScreenBuffer.Render(host, 60, 20).ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Posted_AppearsInTheTopRightCorner_BelowTheFirstRow()
     {
@@ -50,6 +52,7 @@ public class ToastHostTest
         Assert.AreEqual(string.Empty, screen.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SeveralPosted_AreStackedOldestFirst_WithABlankRowBetween()
     {
@@ -66,6 +69,7 @@ public class ToastHostTest
         Assert.AreEqual(4, screen.Find("Second")!.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expired_IsRemovedFromTheTree_AndTheOthersMoveUp()
     {
@@ -88,6 +92,7 @@ public class ToastHostTest
 
     // Control.TreeVersion is process-wide, and every other test builds control trees, so this one
     // must not run alongside them or their changes read as the host's.
+    [Timeout(60_000)]
     [TestMethod]
     [DoNotParallelize]
     public void Idle_WithNothingNew_LeavesTheTreeAlone()
@@ -107,6 +112,7 @@ public class ToastHostTest
         Assert.AreSame(toast, Toasts(host)[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toasts_AreDrawnOneLayerAboveEverythingElse_AlsoAfterADialogOpens()
     {
@@ -129,6 +135,7 @@ public class ToastHostTest
         Assert.AreEqual(1, Toasts(host)[0].ZOrder, "the layer is given back when the dialog closes");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AToastThatDoesNotFitUnderTheOthers_IsNotDrawn()
     {
@@ -148,6 +155,7 @@ public class ToastHostTest
         Assert.IsFalse(screen.Contains("Third"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NarrowScreen_NarrowsTheToasts()
     {
@@ -163,6 +171,7 @@ public class ToastHostTest
         Assert.AreEqual(0, toast.Position.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Click_OnAToast_DismissesItsNotification()
     {
@@ -179,6 +188,7 @@ public class ToastHostTest
         Assert.AreEqual(1, Toasts(host).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Click_ElsewhereOnTheScreen_IsNotTheHosts()
     {
@@ -192,6 +202,7 @@ public class ToastHostTest
         Assert.AreEqual(1, _service.Active.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheHost_NeverTakesFocus()
     {

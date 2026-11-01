@@ -44,6 +44,7 @@ public class EditorNavigationTest
     private static (long X, long Y) Cursor(TextEditorControl editor)
         => (editor.ScrollableModel.CursorPosition.X, editor.ScrollableModel.CursorPosition.Y);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Left_AtTheStartOfALine_GoesToTheEndOfTheLineAbove()
     {
@@ -52,6 +53,7 @@ public class EditorNavigationTest
         Assert.AreEqual((3L, 0L), Cursor(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Right_AtTheEndOfALine_GoesToTheStartOfTheNextLine()
     {
@@ -60,6 +62,7 @@ public class EditorNavigationTest
         Assert.AreEqual((0L, 1L), Cursor(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LeftAndRight_AtTheEndsOfTheDocument_StayPut()
     {
@@ -71,6 +74,7 @@ public class EditorNavigationTest
         Assert.AreEqual((3L, 0L), Cursor(end));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Right_WithinALine_MovesOneColumnAndStopsAtTheLineEnd()
     {
@@ -82,6 +86,7 @@ public class EditorNavigationTest
         Assert.AreEqual((11L, 1L), Cursor(last));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task End_GoesToTheEndOfTheLineTheCursorIsOn()
     {
@@ -90,6 +95,7 @@ public class EditorNavigationTest
         Assert.AreEqual((2L, 1L), Cursor(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Home_GoesToTheStartOfTheLine()
     {
@@ -98,6 +104,7 @@ public class EditorNavigationTest
         Assert.AreEqual((0L, 1L), Cursor(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpAndDown_OntoAShorterLine_BringTheCursorBackToItsEnd()
     {
@@ -109,6 +116,7 @@ public class EditorNavigationTest
         Assert.AreEqual((2L, 0L), Cursor(up));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_PastTheRightEdge_ScrollsTheViewToKeepTheCursorOnScreen()
     {
@@ -125,6 +133,7 @@ public class EditorNavigationTest
         Assert.IsTrue(cursor - scroll >= 0 && cursor - scroll < editor.ScrollableModel.ViewSize.Width, $"cursor {cursor} scroll {scroll}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Right_AcrossALongLine_ScrollsTheViewToKeepTheCursorOnScreen()
     {
@@ -140,6 +149,7 @@ public class EditorNavigationTest
         Assert.IsTrue(cursor - scroll >= 0 && cursor - scroll < editor.ScrollableModel.ViewSize.Width, $"cursor {cursor} scroll {scroll}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Down_PastTheBottomEdge_ScrollsTheViewVertically()
     {
@@ -155,6 +165,7 @@ public class EditorNavigationTest
         Assert.IsTrue(cursor - scroll >= 0 && cursor - scroll < editor.ScrollableModel.ViewSize.Height, $"cursor {cursor} scroll {scroll}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollToVisible_PutsTheCursorOnTheLastColumnWhenItIsPastTheRightEdge()
     {
@@ -168,6 +179,7 @@ public class EditorNavigationTest
         Assert.AreEqual(3L, model.ScrollPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EmptyDocument_NavigationKeysAreHarmless()
     {

@@ -19,6 +19,7 @@ public class NineMensMorrisTest
     private static void PlaceAllNineEach(NineMensMorrisGame game) =>
         Place(game, 0, 1, 3, 2, 5, 4, 8, 6, 10, 7, 12, 9, 14, 11, 17, 13, 23, 15);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheBoardHas24PointsSixteenMillsAndThirtyTwoLines()
     {
@@ -30,6 +31,7 @@ public class NineMensMorrisTest
         Assert.IsTrue(MorrisBoard.Mills.All(mill => mill.Distinct().Count() == 3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThreeInARowTakesAnOpposingMan()
     {
@@ -46,6 +48,7 @@ public class NineMensMorrisTest
         Assert.AreEqual(8, game.State.Total(1), "one black man gone from the nine");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenInAMillAreSparedWhileOthersCanBeTaken()
     {
@@ -61,6 +64,7 @@ public class NineMensMorrisTest
         CollectionAssert.AreEquivalent(new[] { 0, 1, 2 }, MorrisState.Removable(board, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AfterTheMenAreDownTheyOnlySlideToAnEmptyNeighbour()
     {
@@ -74,6 +78,7 @@ public class NineMensMorrisTest
         Assert.IsTrue(game.PlayMove(new MorrisMove(17, 18, -1)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AWhitePlayerDownToThreeMenMayFly()
     {
@@ -89,6 +94,7 @@ public class NineMensMorrisTest
         Assert.AreEqual(3 * (24 - 7), moves.Count, "each of the three men to each of the 17 empty points");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASideBelowThreeMenOrWithoutAMoveHasLost()
     {
@@ -117,6 +123,7 @@ public class NineMensMorrisTest
         Assert.AreEqual(1, stuck.Winner());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCursorFollowsTheLines()
     {
@@ -132,6 +139,7 @@ public class NineMensMorrisTest
         Assert.AreEqual(16, game.CursorPoint);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ActivatePlacesAndThenSelectsAndMoves()
     {
@@ -149,6 +157,7 @@ public class NineMensMorrisTest
         Assert.AreEqual(1, game.State.Board[18]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerFormsAMillWhenItCan()
     {
@@ -164,6 +173,7 @@ public class NineMensMorrisTest
         Assert.IsTrue(move.Value.Remove >= 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerAnswersTheFirstPlacementInTime()
     {
@@ -179,6 +189,7 @@ public class NineMensMorrisTest
         Assert.AreEqual(1, game.State.OnBoard(1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerPlaysAWholeGameLegally()
     {
@@ -198,6 +209,7 @@ public class NineMensMorrisTest
         Assert.IsTrue(game.CanUndo);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UndoTakesBackTheComputersReplyToo()
     {
@@ -212,6 +224,7 @@ public class NineMensMorrisTest
         Assert.IsFalse(game.CanUndo);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheBoardDrawsThirteenRowsWithTheCursor()
     {
@@ -226,6 +239,7 @@ public class NineMensMorrisTest
         Assert.AreEqual(" │ ", rows[1][0].Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePositionComingUpThreeTimes_IsADraw()
     {

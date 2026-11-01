@@ -11,6 +11,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class DiskManagerDialogTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListsTheDrives()
     {
@@ -28,6 +29,7 @@ public class DiskManagerDialogTest
         Assert.AreEqual("Disk manager", dialog.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NoDrivesIsSaidRatherThanLeftBlank()
     {
@@ -45,6 +47,7 @@ public class DiskManagerDialogTest
         AssertScreenContains(Render(dialog), "No drives found.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {
@@ -57,6 +60,7 @@ public class DiskManagerDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedDetailRead_IsSaidOnThePane_NotLeftAsReading()
     {

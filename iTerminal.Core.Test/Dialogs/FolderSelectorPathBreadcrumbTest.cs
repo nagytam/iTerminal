@@ -7,6 +7,7 @@ namespace iTerminal.Core.Test.Dialogs;
 [TestClass]
 public class FolderSelectorPathBreadcrumbTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void SplitPath_WindowsPath_KeepsTheDriveRoot()
     {
@@ -16,6 +17,7 @@ public class FolderSelectorPathBreadcrumbTest
         CollectionAssert.AreEqual(new[] { @"C:\", @"C:\Users", @"C:\Users\me", @"C:\Users\me\docs" }, parts.Select(p => p.Prefix).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SplitPath_UnixPath_StartsAtTheRoot()
     {
@@ -25,6 +27,7 @@ public class FolderSelectorPathBreadcrumbTest
         CollectionAssert.AreEqual(new[] { "/", "/home", "/home/me" }, parts.Select(p => p.Prefix).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SplitPath_Url_StartsAtTheHost()
     {
@@ -34,6 +37,7 @@ public class FolderSelectorPathBreadcrumbTest
         CollectionAssert.AreEqual(new[] { "ssh://me@host", "ssh://me@host/var", "ssh://me@host/var/log" }, parts.Select(p => p.Prefix).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SplitPath_EmptyOrBlank_HasNoCrumbs()
     {
@@ -41,6 +45,7 @@ public class FolderSelectorPathBreadcrumbTest
         Assert.AreEqual(0, FolderSelectorPathTabPage.SplitPath("   ").Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SplitPath_RelativeName_IsOneCrumb()
     {
@@ -50,6 +55,7 @@ public class FolderSelectorPathBreadcrumbTest
         Assert.AreEqual("notes", parts[0].Prefix);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingACrumbCutsTheBoxBackToThatFolder()
     {

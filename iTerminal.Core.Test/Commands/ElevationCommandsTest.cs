@@ -10,6 +10,7 @@ namespace iTerminal.Core.Commands.Test;
 [TestClass]
 public class ElevationCommandsTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RestartAsAdministrator_WhenTheAttemptThrows_SaysSo()
     {
@@ -26,6 +27,7 @@ public class ElevationCommandsTest
         notes.Verify(n => n.Notify("Not restarted as administrator", "no pkexec", NotificationSeverity.Warning, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RunAsAdministrator_WhenTheAttemptThrows_SaysSo()
     {

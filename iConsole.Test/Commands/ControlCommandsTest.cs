@@ -8,6 +8,7 @@ namespace iConsole.Test.Commands;
 [TestClass]
 public class ControlCommandsTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void CloseCommandKey()
     {
@@ -16,6 +17,7 @@ public class ControlCommandsTest
         Assert.AreEqual(ConsoleKey.Escape, command.Key.ConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CloseCommandCanExecute()
     {
@@ -23,6 +25,7 @@ public class ControlCommandsTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CloseCommandExecute()
     {
@@ -35,6 +38,7 @@ public class ControlCommandsTest
         mockControl.Verify(c => c.Close(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CloseCommandExecuteWithoutControl()
     {
@@ -45,6 +49,7 @@ public class ControlCommandsTest
         Assert.IsNotNull(task);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void QuitCommandKey()
     {
@@ -53,6 +58,7 @@ public class ControlCommandsTest
         Assert.AreEqual(ConsoleKey.F10, command.Key.ConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void QuitCommandCanExecute()
     {
@@ -60,6 +66,7 @@ public class ControlCommandsTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task QuitCommandExecute()
     {

@@ -25,6 +25,7 @@ public class AiPromptBarKeysTest
         return (bar, model);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnfocusedBar_DoesNotTakeTypedCharacters()
     {
@@ -35,6 +36,7 @@ public class AiPromptBarKeysTest
         Assert.AreEqual("draft question", model.Input);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnfocusedBar_DoesNotClearOnEscape()
     {
@@ -45,6 +47,7 @@ public class AiPromptBarKeysTest
         Assert.AreEqual("draft question", model.Input);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnfocusedBar_DoesNotEraseOnBackspace()
     {
@@ -55,6 +58,7 @@ public class AiPromptBarKeysTest
         Assert.AreEqual("draft question", model.Input);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFocusedBar_EscapeClearsTheInput()
     {
@@ -66,6 +70,7 @@ public class AiPromptBarKeysTest
         Assert.AreEqual(string.Empty, model.Input);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListTheBarsKeys_OnlyWhileTheModelIsAvailable()
     {
@@ -77,6 +82,7 @@ public class AiPromptBarKeysTest
         Assert.AreEqual(0, bar.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFocusedBar_TypingAppendsToTheInput()
     {

@@ -19,6 +19,7 @@ public class BackspaceCommandTest
         return new BackspaceCommand(textModel, scrollable);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_ShouldDeleteCharacterBeforeCursor()
     {
@@ -33,6 +34,7 @@ public class BackspaceCommandTest
         Assert.AreEqual(4, scrollable.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_InTheMiddleOfALine_RemovesOnlyThePrecedingCharacter()
     {
@@ -45,6 +47,7 @@ public class BackspaceCommandTest
         Assert.AreEqual(1, scrollable.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_AtTheStartOfALine_JoinsItOntoTheLineAbove()
     {
@@ -60,6 +63,7 @@ public class BackspaceCommandTest
         Assert.AreEqual(0, scrollable.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_AtTheStartOfTheDocument_ChangesNothing()
     {
@@ -72,6 +76,7 @@ public class BackspaceCommandTest
         Assert.AreEqual(0, scrollable.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithACursorPastTheEndOfTheLine_RemovesTheLastCharacter()
     {
@@ -84,6 +89,7 @@ public class BackspaceCommandTest
         Assert.AreEqual(2, scrollable.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_OnAnEmptyDocument_DoesNothing()
     {
@@ -96,6 +102,7 @@ public class BackspaceCommandTest
         Assert.AreEqual(0, textModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_MarksTheEditorDirty_OnlyWhenSomethingChanged()
     {
@@ -115,6 +122,7 @@ public class BackspaceCommandTest
         Assert.AreEqual("a", editor.TextModel.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_IsFalseInAReadOnlyEditor()
     {
@@ -128,6 +136,7 @@ public class BackspaceCommandTest
         Assert.IsTrue(cmd.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheEditor_RoutesBackspaceToThisCommand_AndTypeCommandLeavesItAlone()
     {

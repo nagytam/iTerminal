@@ -11,6 +11,7 @@ namespace iConsole.Test.Controls.StatusBar;
 [TestClass]
 public class CursorPositionIndicatorTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CreatesInstance()
     {
@@ -22,6 +23,7 @@ public class CursorPositionIndicatorTest
         Assert.IsNotNull(indicator);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsDefaultViewSize()
     {
@@ -34,6 +36,7 @@ public class CursorPositionIndicatorTest
         Assert.AreEqual(1, indicator.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsName()
     {
@@ -45,6 +48,7 @@ public class CursorPositionIndicatorTest
         Assert.AreEqual("CursorPosition", indicator.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WritesPositionInfo()
     {
@@ -68,6 +72,7 @@ public class CursorPositionIndicatorTest
         Assert.IsTrue(content.Contains("X:") || content.Contains("3"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsScrollableSize()
     {
@@ -89,6 +94,7 @@ public class CursorPositionIndicatorTest
         Assert.IsNotNull(buffer.ContentAsString);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PropertyChanged_OnScrollableModel_TriggersStateChange()
     {
@@ -102,6 +108,7 @@ public class CursorPositionIndicatorTest
         Assert.IsTrue(indicator.HasStateChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Indicator_IsInstanceOfStatusBarItem()
     {

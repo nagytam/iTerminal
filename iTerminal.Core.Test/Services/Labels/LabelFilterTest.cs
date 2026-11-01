@@ -25,6 +25,7 @@ public class LabelFilterTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheColourAndTheTagAreTested()
     {
@@ -40,6 +41,7 @@ public class LabelFilterTest
         Assert.IsTrue(new LabelFilter(null, null).IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Describe_SaysWhatIsShown()
     {
@@ -47,6 +49,7 @@ public class LabelFilterTest
         Assert.AreEqual("label: no colour", new LabelFilter(LabelColour.None, null).Describe());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFilteredPanel_ShowsTheMatchingFiles_AndKeepsTheParentAndFolders()
     {
@@ -63,6 +66,7 @@ public class LabelFilterTest
         Assert.AreEqual("label: red", model.EntryFilterDescription);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClearingTheFilter_ShowsEverythingAgain()
     {
@@ -76,6 +80,7 @@ public class LabelFilterTest
         Assert.IsNull(model.EntryFilterDescription);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARelabelledFile_AppearsOnlyAfterTheFilterIsRefreshed()
     {

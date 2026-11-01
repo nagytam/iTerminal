@@ -52,6 +52,7 @@ public class DecorationsAndSpellingTest
 
     // ---- DecorationSet ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSetKeepsMarksByLine_AndLowestPriorityComesFirst()
     {
@@ -65,6 +66,7 @@ public class DecorationsAndSpellingTest
         Assert.AreEqual(0, set.ForLine(3).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceSource_SwapsOneSourcesMarks_AndLeavesTheOthers()
     {
@@ -84,6 +86,7 @@ public class DecorationsAndSpellingTest
         Assert.AreEqual(1, set.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarksThatMeanNothing_AreNotKept()
     {
@@ -96,6 +99,7 @@ public class DecorationsAndSpellingTest
         Assert.AreEqual(0, set.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MessageAt_FindsTheHighestPriorityMarkWithAMessageAtThatColumn()
     {
@@ -110,6 +114,7 @@ public class DecorationsAndSpellingTest
         Assert.IsNull(set.MessageAt(4, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ManyThreadsMayAddMarks()
     {
@@ -128,6 +133,7 @@ public class DecorationsAndSpellingTest
 
     // ---- decorations drawn ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARangeMark_ColoursOnlyItsCharacters()
     {
@@ -143,6 +149,7 @@ public class DecorationsAndSpellingTest
         Assert.IsTrue(screen.CellOf("world").IsBold);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AWholeLineMark_FillsTheRowIncludingThePadding()
     {
@@ -156,6 +163,7 @@ public class DecorationsAndSpellingTest
         Assert.AreNotEqual(Color.DarkGreen, screen.BackgroundAt(0, 2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnderlineMark_SetsTheStyleAndColour()
     {
@@ -172,6 +180,7 @@ public class DecorationsAndSpellingTest
         Assert.IsFalse(screen.Cell(7, 1).IsUnderline);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnTheCursorLine_ColoursAreLeftAlone_ButTheUnderlineStillShows()
     {
@@ -185,6 +194,7 @@ public class DecorationsAndSpellingTest
         Assert.IsTrue(screen.Cell(2, 0).IsUnderline);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HigherPriorityWins_WhereMarksOverlap()
     {
@@ -199,6 +209,7 @@ public class DecorationsAndSpellingTest
         Assert.AreEqual(Color.Red, screen.ForegroundAt(5, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarksFollowTheTextWhenScrolledSidewaysAndWhenWrapped()
     {
@@ -218,6 +229,7 @@ public class DecorationsAndSpellingTest
         Assert.IsTrue(Enumerable.Range(0, 10).Any(x => scrolledScreen.ForegroundAt(x, 1) == Color.Red), "the mark is in view after scrolling right");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMarkAddedFromAnotherThread_IsNoticedByTheIdlePass()
     {
@@ -237,6 +249,7 @@ public class DecorationsAndSpellingTest
 
     private static SpellChecker Checker() => new(Words);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KnownWords_AreCorrect_WhateverTheirCase_AndPossessivesAndHyphenationAreAllowed()
     {
@@ -250,6 +263,7 @@ public class DecorationsAndSpellingTest
         Assert.IsFalse(checker.IsCorrect("quick-brwon"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("")]
     [DataRow("a")]
@@ -263,6 +277,7 @@ public class DecorationsAndSpellingTest
         Assert.IsTrue(Checker().IsCorrect(word));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Suggestions_AreCloseWordsFromTheList_BestFirst_InTheCaseOfTheOriginal()
     {
@@ -280,6 +295,7 @@ public class DecorationsAndSpellingTest
         Assert.IsTrue(checker.Suggest("cat1x", 2).Count <= 2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EditDistance_CountsASwapAsOne()
     {
@@ -289,6 +305,7 @@ public class DecorationsAndSpellingTest
         Assert.AreEqual(3, SpellChecker.Distance("abc", "xyz"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddAndIgnore_MakeAWordCorrect()
     {
@@ -306,6 +323,7 @@ public class DecorationsAndSpellingTest
         Assert.AreEqual(Words.Length, checker.Count, "the list itself is not changed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Words_FindsLettersWithInnerApostrophesAndHyphens()
     {
@@ -316,6 +334,7 @@ public class DecorationsAndSpellingTest
         CollectionAssert.AreEqual(new[] { "It's", "a", "well-known", "test", "ok", "don't", "stop", "quoted" }, words);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FromFile_ReadsAPlainListAndAHunspellDictionary()
     {
@@ -344,6 +363,7 @@ public class DecorationsAndSpellingTest
 
     // ---- spell checking in the editor ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Misspellings_AreUnderlinedWithACurlyLine_AndNothingElseIs()
     {
@@ -360,6 +380,7 @@ public class DecorationsAndSpellingTest
         Assert.IsFalse(screen.Cell(11, 1).IsUnderline, "'fox' is right");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutAChecker_NothingIsUnderlined()
     {
@@ -368,6 +389,7 @@ public class DecorationsAndSpellingTest
         Assert.IsFalse(Draw(editor).Cell(5, 1).IsUnderline);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InCode_OnlyCommentsAndStringsAreChecked()
     {
@@ -384,6 +406,7 @@ public class DecorationsAndSpellingTest
         Assert.IsTrue(screen.Cell(inString, 2).IsUnderline);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MisspelledWordAt_SuggestionsAt_AndAddWord_WorkOnTheTextUnderTheCursor()
     {
@@ -406,6 +429,7 @@ public class DecorationsAndSpellingTest
         Assert.IsFalse(editor.AddWordToDictionary(1, 6));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TypingANewWord_IsCheckedAtOnce()
     {
@@ -418,6 +442,7 @@ public class DecorationsAndSpellingTest
         Assert.IsTrue(Draw(editor).Cell(5, 1).IsUnderline);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheIdlePassRepaints_WhenTheDictionaryChanged()
     {

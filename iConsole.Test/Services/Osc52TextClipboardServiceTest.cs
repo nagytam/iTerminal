@@ -5,6 +5,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class Osc52TextClipboardServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void EncodeSequence_IsOsc52_ForTheClipboard_BaseSixtyFour_AndBel()
     {
@@ -12,6 +13,7 @@ public class Osc52TextClipboardServiceTest
         Assert.AreEqual("\u001b]52;c;SGk=\u0007", Osc52TextClipboardService.EncodeSequence("Hi"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EncodeSequence_CarriesNonAsciiTextAsUtf8()
     {
@@ -21,6 +23,7 @@ public class Osc52TextClipboardServiceTest
         Assert.AreEqual("\u001b]52;c;5pel5pys\u0007", sequence);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SetText_WritesOneSequenceToTheTerminal()
     {
@@ -32,6 +35,7 @@ public class Osc52TextClipboardServiceTest
         Assert.AreEqual(Osc52TextClipboardService.EncodeSequence("copy me"), output.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SetText_RefusesATextTooLargeForTheTerminal_RatherThanTruncatingIt()
     {
@@ -44,6 +48,7 @@ public class Osc52TextClipboardServiceTest
         Assert.AreEqual(string.Empty, output.ToString(), "Nothing is sent when the text is refused.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SetText_RefusesWhileTheTerminalIsLent()
     {
@@ -64,6 +69,7 @@ public class Osc52TextClipboardServiceTest
         await lending;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetText_IsNotSupported_BecauseTheTerminalCannotBeRead()
     {

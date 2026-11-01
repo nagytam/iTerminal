@@ -36,6 +36,7 @@ public class ControlsReviewBatch14Test
 
     private static string FirstLine(MockBuffer buffer) => buffer.ContentAsString.Split(Environment.NewLine)[0];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ElapsedClock_LongLabel_GivesWayToTheTime()
     {
@@ -46,6 +47,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual("Build  00:00", FirstLine(buffer));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ElapsedClock_ShortLabel_IsKept()
     {
@@ -55,6 +57,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual("Run 00:00", FirstLine(buffer).TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ElapsedClock_LabelWiderThanTheControl_StillShowsTheTime()
     {
@@ -64,6 +67,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual("00:00", FirstLine(buffer).TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckList_ReplacingTheItems_KeepsTheCursorOnScreen()
     {
@@ -79,6 +83,7 @@ public class ControlsReviewBatch14Test
         Assert.IsTrue(buffer.ContentAsString.Contains("[ ] h"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckList_ReplacingWithFewerItems_ClampsAndShowsTheCursor()
     {
@@ -93,6 +98,7 @@ public class ControlsReviewBatch14Test
         Assert.IsTrue(buffer.ContentAsString.Contains("[ ] w"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TimePicker_SettingOnlyHiddenSeconds_RaisesNothing()
     {
@@ -105,6 +111,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(new TimeOnly(10, 30, 0), picker.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TimePicker_WithSeconds_StillTakesTheSeconds()
     {
@@ -116,6 +123,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(new TimeOnly(10, 30, 45), picker.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Meter_LongLabel_IsCutSoTheBarStaysVisible()
     {
@@ -126,6 +134,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual("Memory █████", line.TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Meter_ShortLabel_IsKeptWhole()
     {
@@ -135,6 +144,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual("CPU ░░░░░░░░", FirstLine(buffer).TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Meter_LabelWiderThanTheControl_DropsTheLabel()
     {
@@ -144,6 +154,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual("████", FirstLine(buffer).TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_MinusThenDigits_TypesANegativeNumber()
     {
@@ -156,6 +167,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(-52, box.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_MinusTwice_CancelsThePendingSign()
     {
@@ -167,6 +179,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(5, box.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_PendingMinus_IsDroppedByAnotherKey()
     {
@@ -180,6 +193,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(7, box.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_MinusWithoutNegativeRange_IsIgnored()
     {
@@ -190,6 +204,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(4, box.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_DigitPastTheMaximum_StartsANewEntry()
     {
@@ -201,6 +216,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(73, box.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_DigitPastTheMinimum_StartsANewNegativeEntry()
     {
@@ -210,6 +226,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(-9, box.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_DigitThatCannotFit_StillClamps()
     {
@@ -219,6 +236,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(3, box.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_ClickOnTheBlankCells_FocusesTheControl()
     {
@@ -229,6 +247,7 @@ public class ControlsReviewBatch14Test
         Assert.IsTrue(chips.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_ClickOnAChip_FocusesAndHighlightsIt()
     {
@@ -240,6 +259,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(0, chips.ActiveIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SegmentedControl_ClickOnTheBlankCells_FocusesWithoutChangingTheChoice()
     {
@@ -249,6 +269,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(1, control.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Breadcrumb_ClickOnTheSeparator_FocusesWithoutActivating()
     {
@@ -260,6 +281,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(0, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_Layout_KeepsTheHighlightedSegmentOutOfTheFold()
     {
@@ -272,6 +294,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(0, kept[0].Index);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_Layout_KeepFallsBackToFirstFoldAndHighlighted()
     {
@@ -281,6 +304,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(-1, kept[1].Index);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_Layout_TheLastSegmentStaysWhenItIsTheHighlight()
     {
@@ -289,6 +313,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(4, kept[^1].Index);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_Draw_ShowsTheHighlightedSegmentAfterMovingLeft()
     {
@@ -299,6 +324,7 @@ public class ControlsReviewBatch14Test
         Assert.IsTrue(FirstLine(buffer).Contains("Projects"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rating_DigitAboveTheMaximum_IsIgnored()
     {
@@ -310,6 +336,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(5, rating.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rating_DigitWithinALargerMaximum_Sets()
     {
@@ -319,6 +346,7 @@ public class ControlsReviewBatch14Test
         Assert.AreEqual(9, rating.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Table_HeaderClick_FocusesTheTableAndRequestsTheSort()
     {

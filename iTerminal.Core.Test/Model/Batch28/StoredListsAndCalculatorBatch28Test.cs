@@ -20,6 +20,7 @@ public class StoredListsAndCalculatorBatch28Test
         return settings.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MeetingStore_NullEntry_IsSkipped()
     {
@@ -28,6 +29,7 @@ public class StoredListsAndCalculatorBatch28Test
         Assert.AreEqual(0, store.On(new DateOnly(2026, 10, 26)).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MailAccountStore_NullEntry_IsSkipped()
     {
@@ -36,6 +38,7 @@ public class StoredListsAndCalculatorBatch28Test
         Assert.AreEqual(0, store.Accounts.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToDoStore_NullEntry_IsSkipped()
     {
@@ -44,6 +47,7 @@ public class StoredListsAndCalculatorBatch28Test
         Assert.AreEqual(0, store.Visible(showCompleted: true).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NetworkProfileService_NullEntry_IsSkipped()
     {
@@ -52,6 +56,7 @@ public class StoredListsAndCalculatorBatch28Test
         Assert.AreEqual(0, service.GetAll().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RemoteConnectionService_NullEntry_NoLongerThrowsWhileSorting()
     {
@@ -60,6 +65,7 @@ public class StoredListsAndCalculatorBatch28Test
         Assert.AreEqual(0, service.GetAll().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WebBrowserStore_NullEntry_IsSkipped()
     {
@@ -80,6 +86,7 @@ public class StoredListsAndCalculatorBatch28Test
         return engine;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calculator_ZeroToANegativePower_IsAnError_NotAnErrorLookingNumber()
     {
@@ -93,6 +100,7 @@ public class StoredListsAndCalculatorBatch28Test
         Assert.AreEqual("Error", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calculator_ExpOfAHugeNumber_IsAnError()
     {
@@ -102,6 +110,7 @@ public class StoredListsAndCalculatorBatch28Test
         Assert.IsTrue(engine.IsError);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calculator_Programming_ResultPastSixtyFourBits_IsAnError()
     {
@@ -123,6 +132,7 @@ public class StoredListsAndCalculatorBatch28Test
         Assert.IsTrue(engine.IsError);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calculator_Programming_ShiftByMoreThanSixtyThree_ShiftsEverythingOut()
     {
@@ -141,6 +151,7 @@ public class StoredListsAndCalculatorBatch28Test
         Assert.AreEqual("0", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calculator_SineOf180Degrees_IsZero()
     {

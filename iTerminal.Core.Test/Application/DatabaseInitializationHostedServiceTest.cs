@@ -24,6 +24,7 @@ public class DatabaseInitializationHostedServiceTest
             => Task.FromResult(CreateDbContext());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StartAsync_WhenDatabaseIsCreated_StampsTheSchemaInItsOwnTable()
     {
@@ -59,6 +60,7 @@ public class DatabaseInitializationHostedServiceTest
     /// cache were thrown away on every single run, while the settings themselves survived (they were
     /// in the cache) and hid it.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StartAsync_AfterTheSettingsCacheIsWrittenBack_DoesNotRecreateTheDatabase()
     {
@@ -118,6 +120,7 @@ public class DatabaseInitializationHostedServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StopAsync_CompletesImmediately()
     {

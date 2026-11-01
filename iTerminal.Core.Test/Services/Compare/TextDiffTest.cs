@@ -17,6 +17,7 @@ public class TextDiffTest
             _ => '+',
         }));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IdenticalTextsHaveNoDifferences()
     {
@@ -27,6 +28,7 @@ public class TextDiffTest
         Assert.AreEqual("The files are identical.", result.Summary());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEditedLineIsShownBesideItsOldSelf()
     {
@@ -40,6 +42,7 @@ public class TextDiffTest
         CollectionAssert.AreEqual(new[] { 1 }, result.HunkStarts.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddedAndRemovedLinesKeepTheirOwnNumbers()
     {
@@ -52,6 +55,7 @@ public class TextDiffTest
         Assert.AreEqual(4, result.Rows[4].RightNumber);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARunOfEditsWithUnequalLengthsPairsThenSpills()
     {
@@ -61,6 +65,7 @@ public class TextDiffTest
         Assert.AreEqual(1, result.HunkStarts.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OneSideEmptyIsAllOnTheOtherSide()
     {
@@ -69,6 +74,7 @@ public class TextDiffTest
         Assert.IsTrue(TextDiff.Compare(Lines(""), Lines("")).AreIdentical);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SeparateChangesAreSeparateDifferences()
     {
@@ -78,6 +84,7 @@ public class TextDiffTest
         StringAssert.StartsWith(result.Summary(), "2 differences");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RowsAccountForEveryLineOfBothSides()
     {
@@ -93,6 +100,7 @@ public class TextDiffTest
         Assert.IsFalse(result.IsApproximate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChangesInWhitespaceCanBeIgnored()
     {
@@ -103,6 +111,7 @@ public class TextDiffTest
         Assert.IsTrue(TextDiff.Compare(left, right, new TextDiffOptions(IgnoreWhitespace: true)).AreIdentical);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CaseCanBeIgnored()
     {
@@ -110,6 +119,7 @@ public class TextDiffTest
         Assert.IsTrue(TextDiff.Compare(["Hello"], ["hello"], new TextDiffOptions(IgnoreCase: true)).AreIdentical);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IgnoredDifferencesStillShowTheOriginalText()
     {
@@ -120,6 +130,7 @@ public class TextDiffTest
         Assert.AreEqual("hello", result.Rows[0].Right);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilesThatShareNothingAreGivenUpOnRatherThanSearchedForever()
     {
@@ -132,6 +143,7 @@ public class TextDiffTest
         Assert.AreEqual(left.Length, result.Changed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALargeFileWithOneEditIsQuick()
     {

@@ -8,6 +8,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class TerminalErrorTabPageTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowsTheLastCommandsErrors()
     {
@@ -19,6 +20,7 @@ public class TerminalErrorTabPageTest
         CollectionAssert.AreEqual(new[] { "file not found" }, page.LinesForTest.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASuccessfulCommandSaysThereWereNoErrors()
     {
@@ -30,6 +32,7 @@ public class TerminalErrorTabPageTest
         CollectionAssert.AreEqual(new[] { "(no errors)" }, page.LinesForTest.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NameAndHotKey()
     {

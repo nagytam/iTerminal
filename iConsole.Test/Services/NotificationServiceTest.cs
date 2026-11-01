@@ -7,6 +7,7 @@ public class NotificationServiceTest
 {
     private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notify_ShowsTheNotification_AndRecordsIt()
     {
@@ -21,6 +22,7 @@ public class NotificationServiceTest
         CollectionAssert.AreEqual(new[] { notification }, service.History.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notify_WithoutDuration_UsesTheSeveritysDefault_AndAnErrorStaysLongest()
     {
@@ -33,6 +35,7 @@ public class NotificationServiceTest
         Assert.IsTrue(error.Duration > info.Duration);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Advance_RemovesANotificationOnceItsTimeIsUp_AndKeepsItInTheHistory()
     {
@@ -47,6 +50,7 @@ public class NotificationServiceTest
         CollectionAssert.AreEqual(new[] { notification }, service.History.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Advance_NeverExpiresANotificationWithAnInfiniteDuration()
     {
@@ -60,6 +64,7 @@ public class NotificationServiceTest
         Assert.AreEqual(0, service.Active.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notify_BeyondMaxVisible_Waits_AndItsTimeStartsWhenItIsShown()
     {
@@ -81,6 +86,7 @@ public class NotificationServiceTest
         CollectionAssert.AreEqual(new[] { second }, service.Active.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notify_TheSameAsOneOnScreen_RestartsItsTime_InsteadOfStackingACopy()
     {
@@ -98,6 +104,7 @@ public class NotificationServiceTest
         Assert.AreEqual(1, service.Active.Count, "the second post gave it its two seconds back");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Dismiss_RemovesAnActiveOrAWaitingNotification_AndShowsTheNextOne()
     {
@@ -113,6 +120,7 @@ public class NotificationServiceTest
         CollectionAssert.AreEqual(new[] { third }, service.Active.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DismissAll_ClearsTheScreenAndTheQueue_ButNotTheHistory()
     {
@@ -127,6 +135,7 @@ public class NotificationServiceTest
         Assert.AreEqual(2, service.History.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void History_IsCapped_KeepingTheNewest()
     {
@@ -139,6 +148,7 @@ public class NotificationServiceTest
         CollectionAssert.AreEqual(new[] { "3", "4", "5" }, service.History.Select(n => n.Title).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Version_AndChanged_FollowWhatIsOnScreen_NotWhatIsWaiting()
     {
@@ -163,6 +173,7 @@ public class NotificationServiceTest
         Assert.IsFalse(service.Active.Contains(shown));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notify_ASubscriberThatThrows_DoesNotFailThePoster()
     {
@@ -174,6 +185,7 @@ public class NotificationServiceTest
         Assert.AreEqual(1, service.Active.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notify_FromManyThreads_LosesNothing()
     {

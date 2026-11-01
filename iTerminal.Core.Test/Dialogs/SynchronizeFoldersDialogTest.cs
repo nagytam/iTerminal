@@ -74,6 +74,7 @@ public class SynchronizeFoldersDialogTest
         dialog.OnIdle();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task A_Preview_ListsWhatWouldBeCopied_BeforeAnythingIs()
     {
@@ -88,6 +89,7 @@ public class SynchronizeFoldersDialogTest
         Assert.IsTrue(dialog.Status.Contains("Enter runs it"), dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChangingAnOption_ThrowsTheShownPreviewAway()
     {
@@ -101,6 +103,7 @@ public class SynchronizeFoldersDialogTest
         Assert.AreEqual(SyncDirection.LeftToRight, dialog.Direction);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDirectionCyclesThroughBothWays_LeftToRight_RightToLeft()
     {
@@ -115,6 +118,7 @@ public class SynchronizeFoldersDialogTest
         Assert.AreEqual(SyncDirection.Both, dialog.Direction);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheOptionKeysSetSubfoldersAndDeleteExtras()
     {
@@ -128,6 +132,7 @@ public class SynchronizeFoldersDialogTest
         Assert.IsTrue(dialog.DeleteExtras);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MatchingFolders_SayTheyMatch_AndNothingIsRun()
     {
@@ -143,6 +148,7 @@ public class SynchronizeFoldersDialogTest
             || dialog.Status.Contains("match", StringComparison.OrdinalIgnoreCase), dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Deletions_NeedASecondRun_BeforeTheyStart()
     {
@@ -160,6 +166,7 @@ public class SynchronizeFoldersDialogTest
         Assert.IsTrue(File.Exists(Path.Combine(_root, "R", "extra.txt")), "nothing is deleted on the first Enter");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutTheTaskServices_ARunSaysItIsNotAvailable()
     {
@@ -173,6 +180,7 @@ public class SynchronizeFoldersDialogTest
         Assert.IsFalse(File.Exists(Path.Combine(_root, "R", "only-left.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithAPanelThatShowsNoFolder_ThePreviewSaysSo()
     {

@@ -7,12 +7,14 @@ namespace iTerminal.Core.Test.Services.BackgroundStart;
 [TestClass]
 public class BackgroundStartServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ModeIsOnDemandWhenNothingIsStored()
     {
         Assert.AreEqual(BackgroundStartMode.OnDemand, TestBackgroundStart.Unset().ModeOf(BackgroundServices.FolderIndex));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ModeIsOnDemandWhenTheStoredValueIsNotAMode()
     {
@@ -22,6 +24,7 @@ public class BackgroundStartServiceTest
         Assert.AreEqual(BackgroundStartMode.OnDemand, new BackgroundStartService(settings.Object).ModeOf(BackgroundServices.MusicLibrary));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("immediately", BackgroundStartMode.Immediately)]
     [DataRow("DELAYED", BackgroundStartMode.Delayed)]
@@ -33,6 +36,7 @@ public class BackgroundStartServiceTest
         Assert.AreEqual(expected, BackgroundStartService.ParseMode(stored));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EachServiceReadsItsOwnSetting()
     {
@@ -54,6 +58,7 @@ public class BackgroundStartServiceTest
         await registry.WaitForStartAsync(BackgroundServices.OllamaServer, CancellationToken.None);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnDemandServiceWaitsForARequest()
     {
@@ -67,6 +72,7 @@ public class BackgroundStartServiceTest
         await wait.WaitAsync(TimeSpan.FromSeconds(5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnDemandServiceStopsWaitingWhenCancelled()
     {
@@ -123,6 +129,7 @@ public class BackgroundStartServiceTest
         await wait.WaitAsync(TimeSpan.FromSeconds(5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DelayedServiceStopsWaitingWhenCancelled()
     {

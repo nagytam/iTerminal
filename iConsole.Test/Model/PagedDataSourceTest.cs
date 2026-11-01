@@ -55,6 +55,7 @@ public class PagedDataSourceTest
         Assert.IsTrue(condition(), "timed out waiting");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARowIsMissingUntilItsPageHasLoaded()
     {
@@ -72,6 +73,7 @@ public class PagedDataSourceTest
         Assert.IsTrue(changed >= 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APageBeingLoadedIsNotAskedForTwice()
     {
@@ -91,6 +93,7 @@ public class PagedDataSourceTest
         WaitFor(() => !source.IsLoading);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadAheadLoadsTheNeighbouringPages()
     {
@@ -103,6 +106,7 @@ public class PagedDataSourceTest
         CollectionAssert.AreEquivalent(new[] { 10, 20, 30 }, fetcher.Starts);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheLeastRecentlyUsedPagesAreDroppedFirst()
     {
@@ -121,6 +125,7 @@ public class PagedDataSourceTest
         Assert.IsTrue(source.TryGet(20, out _));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AShortLastPageEndsTheRows()
     {
@@ -134,6 +139,7 @@ public class PagedDataSourceTest
         Assert.IsFalse(source.TryGet(-1, out _));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AResetDropsAPageThatWasStillOnItsWay()
     {
@@ -154,6 +160,7 @@ public class PagedDataSourceTest
         Assert.AreEqual(0, source.CachedPageCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFailedPageIsNotAskedForAgainUntilRetry()
     {
@@ -187,6 +194,7 @@ public class PagedDataSourceTest
         Assert.IsNull(source.LastError);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoMoreThanTheLimitOfRequestsRunAtOnce()
     {
@@ -202,6 +210,7 @@ public class PagedDataSourceTest
         gate.SetResult(Rows(0, 10, 1000));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetCountKeepsTheLoadedPages()
     {
@@ -216,6 +225,7 @@ public class PagedDataSourceTest
         Assert.IsTrue(source.TryGet(0, out _));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptySourceAsksForNothing()
     {

@@ -33,6 +33,7 @@ public class FileAssociationDialogTest
         return new Rig { Dialog = dialog, Root = root, Saved = saved };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANewProgram_StartsEmpty_WithTheFilesItWasOpenedFor()
     {
@@ -49,6 +50,7 @@ public class FileAssociationDialogTest
         AssertScreenContains(screen, "Runs in the terminal");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ForEditing_TheTitleSaysEdit()
     {
@@ -57,6 +59,7 @@ public class FileAssociationDialogTest
         AssertScreenContains(Render(rig.Root), "Add a program to edit with");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnExistingProgram_ShowsItsFields_AndSaysItIsBeingChanged()
     {
@@ -73,6 +76,7 @@ public class FileAssociationDialogTest
         AssertScreenContains(screen, "*.cs;*.md");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutACommand_SaveSaysWhatIsMissing_AndKeepsTheForm()
     {
@@ -85,6 +89,7 @@ public class FileAssociationDialogTest
         Assert.AreEqual(0, rig.Saved.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutPatterns_SaveSaysWhichFilesAreNeeded()
     {
@@ -97,6 +102,7 @@ public class FileAssociationDialogTest
         Assert.AreEqual(0, rig.Saved.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABlankCommand_CountsAsNone()
     {
@@ -106,6 +112,7 @@ public class FileAssociationDialogTest
         Assert.IsFalse(rig.Dialog.Save());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANewProgramWithoutAName_TakesTheProgramsName()
     {
@@ -123,6 +130,7 @@ public class FileAssociationDialogTest
         Assert.IsFalse(string.IsNullOrEmpty(saved.Id));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AChangedProgram_KeepsItsId_AndTheNewValues()
     {
@@ -139,6 +147,7 @@ public class FileAssociationDialogTest
         Assert.IsTrue(saved.InTerminal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_SavesAndCloses_WhenComplete()
     {
@@ -151,6 +160,7 @@ public class FileAssociationDialogTest
         Assert.IsFalse(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnAnIncompleteForm_StaysOpenSayingWhy()
     {
@@ -163,6 +173,7 @@ public class FileAssociationDialogTest
         AssertScreenContains(Render(rig.Root), "Type the command");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClosesWithoutSaving()
     {
@@ -175,6 +186,7 @@ public class FileAssociationDialogTest
         Assert.AreEqual(0, rig.Saved.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReopeningForAnotherProgram_ClearsTheLastError()
     {
@@ -187,6 +199,7 @@ public class FileAssociationDialogTest
         Assert.AreEqual(string.Empty, rig.Dialog.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingAfterAnError_ClearsIt_ButEnterKeepsIt()
     {

@@ -36,6 +36,7 @@ public class StackPanelTest
         return new StackPanel(Theme()) { Orientation = orientation, ViewSize = new Size(width, height), Position = new Position(0, 0) };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Row_FixedPercentAndFill_AreDrawnSideBySide()
     {
@@ -50,6 +51,7 @@ public class StackPanelTest
         Assert.AreEqual("aabbbccccc", screen.Line(1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Column_WithGap_LeavesBlankRowsBetweenChildren()
     {
@@ -64,6 +66,7 @@ public class StackPanelTest
         Assert.AreEqual("aaa||bbb|bbb||ccc|ccc", string.Join("|", screen.Lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Resize_RedistributesOnTheNextDraw()
     {
@@ -80,6 +83,7 @@ public class StackPanelTest
         Assert.AreEqual("aaaaaaaaaabbbbbbbbbb", screen.Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HiddenChild_TakesNoSpaceAndNoGap()
     {
@@ -96,6 +100,7 @@ public class StackPanelTest
         Assert.AreEqual("aaaa bbbb", screen.Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetRule_And_Remove_ReLayOut()
     {
@@ -113,6 +118,7 @@ public class StackPanelTest
         Assert.AreEqual(1, panel.Items.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChildSpansTheCrossAxis()
     {
@@ -126,6 +132,7 @@ public class StackPanelTest
         Assert.AreEqual(3u, (uint)child.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NegativeGap_IsClampedToZero()
     {
@@ -135,6 +142,7 @@ public class StackPanelTest
         Assert.AreEqual(0, panel.Gap);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_EmptySizeOrNoChildren_DoesNotThrow()
     {

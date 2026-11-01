@@ -10,6 +10,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class ThemeManagerDialogTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListsEveryThemeAndMarksTheCurrentOne()
     {
@@ -24,6 +25,7 @@ public class ThemeManagerDialogTest
         AssertScreenContains(screen, "Enter:apply  Esc:close");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterAppliesTheThemeUnderTheCursorAndKeepsTheDialogOpen()
     {
@@ -41,6 +43,7 @@ public class ThemeManagerDialogTest
         AssertScreenContains(Render(dialog), "● Dark");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCursorStartsOnTheThemeInUse()
     {
@@ -51,6 +54,7 @@ public class ThemeManagerDialogTest
         Assert.AreEqual(1, (int)dialog.ListBoxForTest.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AServiceThatCannotSwitchSaysSo()
     {
@@ -62,6 +66,7 @@ public class ThemeManagerDialogTest
         StringAssert.Contains(dialog.StatusForTest, "cannot be applied");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LayingOutAgainDoesNotStackAnotherList()
     {
@@ -75,6 +80,7 @@ public class ThemeManagerDialogTest
         Assert.AreEqual(1, dialog.Controls.AsSnapshot().OfType<ListBox<iConsole.Display.ColorScheme>>().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheListIsSizedFromTheDialogItSitsIn()
     {
@@ -88,6 +94,7 @@ public class ThemeManagerDialogTest
         Assert.IsTrue(list.Position.Y + list.ViewSize.Height < dialog.ViewSize.Height - 1, "the hint row stays free");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesTheDialog()
     {

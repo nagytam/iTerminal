@@ -6,6 +6,7 @@ namespace iConsole.Jobs.Test;
 [TestClass]
 public class ControlRendererJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Render_WhenDesktopIsNull_ShouldBeIdle()
     {

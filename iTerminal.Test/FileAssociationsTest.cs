@@ -38,6 +38,7 @@ public class FileAssociationsTest
         await _app.Driver.WaitForModalAsync<OpenWithDialog>();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ShiftF3_WithNothingChosen_OffersTheSystemDefault()
     {
@@ -59,6 +60,7 @@ public class FileAssociationsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task Enter_OnAFileWithNothingChosen_OpensItWithTheSystemDefaultOutsideTheApp()
     {
@@ -72,6 +74,7 @@ public class FileAssociationsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AProgramAddedWithIns_BecomesWhatEnterUses_ForFilesLikeIt()
     {
@@ -107,6 +110,7 @@ public class FileAssociationsTest
         Assert.AreEqual(2, Launcher.Launches.Count, "Enter on a folder still opens the folder");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheChoiceSurvivesARestart()
     {
@@ -122,6 +126,7 @@ public class FileAssociationsTest
         Assert.AreEqual("reader", Associations.GetDefault("readme.txt", FileAssociationKind.Open)?.Name);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlF4_ChoosesTheEditor_AndF4UsesIt()
     {
@@ -149,6 +154,7 @@ public class FileAssociationsTest
         Assert.IsNull(Associations.GetDefault("readme.txt", FileAssociationKind.Open));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheBuiltInEditorIsStillOneRowAway()
     {
@@ -166,6 +172,7 @@ public class FileAssociationsTest
         Assert.AreEqual(0, Launcher.Launches.Count);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task SpaceMakesAProgramTheDefault_AndDelRemovesOne_AfterAsking()
     {
@@ -195,6 +202,7 @@ public class FileAssociationsTest
         Assert.IsInstanceOfType<OpenWithDialog>(_app.Driver.FocusedModal, "removing a program does not close the list");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F4OnTheListChangesAProgram_AndAnEmptyCommandIsRefused()
     {
@@ -227,6 +235,7 @@ public class FileAssociationsTest
         Assert.AreEqual("Reader", changed.Name, "the name the user gave it is kept");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AProgramThatCannotStart_IsReportedInAToast()
     {
@@ -240,6 +249,7 @@ public class FileAssociationsTest
         Assert.IsTrue(screen.Contains("reader was not found on the PATH."), screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task OpenWithIsNotOfferedOnAFolder()
     {

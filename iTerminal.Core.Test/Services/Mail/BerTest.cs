@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Services.Mail;
 [TestClass]
 public class BerTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void IntegersRoundTripAcrossEverySignAndWidth()
     {
@@ -19,6 +20,7 @@ public class BerTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IntegersUseTheShortestTwosComplementForm()
     {
@@ -27,6 +29,7 @@ public class BerTest
         CollectionAssert.AreEqual(new byte[] { 0x02, 0x01, 0xFF }, Ber.Int(-1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALengthOfMoreThan127BytesUsesTheLongForm()
     {
@@ -39,6 +42,7 @@ public class BerTest
         Assert.AreEqual(300, element[0].Value.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ElementsReadsConsecutiveElementsInOrder()
     {
@@ -55,6 +59,7 @@ public class BerTest
         Assert.AreEqual(7, Ber.DecodeInt(elements[2].Value));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANullOrEmptyValueHasNoElementsAndDecodesToZero()
     {
@@ -64,6 +69,7 @@ public class BerTest
         Assert.AreEqual(0, Ber.DecodeInt([]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnElementThatRunsPastTheEndIsAFormatError()
     {
@@ -71,18 +77,21 @@ public class BerTest
         Assert.ThrowsExactly<FormatException>(() => Ber.Elements([0x04, 0x05, 0x01]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnElementWithNoLengthIsAFormatError()
     {
         Assert.ThrowsExactly<FormatException>(() => Ber.Elements([0x04]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALengthLongerThanFourBytesIsRefused()
     {
         Assert.ThrowsExactly<FormatException>(() => Ber.Elements([0x04, 0x85, 0x00, 0x00, 0x00, 0x00, 0x01]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringsRoundTripAsUtf8()
     {
@@ -91,6 +100,7 @@ public class BerTest
         Assert.AreEqual(text, Ber.DecodeString(Ber.Elements(Ber.Str(text))[0].Value));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadElementAsyncReadsOneWholeElementWithItsLongLength()
     {

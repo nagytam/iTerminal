@@ -170,6 +170,7 @@ public class FilePanelPositionRestoreTest
         return names.Count == count && names.Skip(1).SequenceEqual(names.Skip(1).OrderBy(n => n, StringComparer.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Panel_RestoresTheCursorAndTheFirstVisibleRow()
     {
@@ -205,6 +206,7 @@ public class FilePanelPositionRestoreTest
     /// the right one restored an index against a folder that had not loaded yet, which the clamp in
     /// <c>Update</c> turned straight back into zero. Both panels are covered here for that reason.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BothPanels_RestoreTheirOwnPosition()
     {
@@ -246,6 +248,7 @@ public class FilePanelPositionRestoreTest
     /// The row is restored by URL, not by index: a folder is rarely the same list it was, and an
     /// index alone would land the cursor on whatever has taken that row's place.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Panel_LandsOnTheSameRow_WhenTheFolderGainedEntriesAboveIt()
     {
@@ -285,6 +288,7 @@ public class FilePanelPositionRestoreTest
     /// A restore describes the folder the panel opened with. Once the user navigates, it is stale
     /// and must not be applied to whatever they navigated to.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NavigatingBeforeTheRestoreLands_DropsIt()
     {

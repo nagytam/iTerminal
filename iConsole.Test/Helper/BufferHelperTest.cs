@@ -13,6 +13,7 @@ public class BufferHelperTest
         return new BufferLayer(0, size, Color.White, Color.Black);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DumpBufferToHtml_CreatesFile()
     {
@@ -29,6 +30,7 @@ public class BufferHelperTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DumpBufferToHtml_ContainsHtmlStructure()
     {
@@ -49,6 +51,7 @@ public class BufferHelperTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DumpBufferToHtml_ContainsSpanElements()
     {
@@ -67,6 +70,7 @@ public class BufferHelperTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DumpBufferToHtml_WithNullLayer_WritesEmptyBody()
     {

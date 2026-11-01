@@ -25,6 +25,7 @@ public class DeleteCommandTest
         return mock.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithNoPanel_SaysSoOnTheDialog()
     {

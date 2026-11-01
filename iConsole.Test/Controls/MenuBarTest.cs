@@ -10,6 +10,7 @@ namespace iConsole.Controls.Test;
 [TestClass]
 public class MenuBarTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_ShouldBeVisible()
     {
@@ -22,6 +23,7 @@ public class MenuBarTest
         Assert.AreEqual("MenuBar", menu.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShouldRenderItems()
     {

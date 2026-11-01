@@ -46,6 +46,7 @@ public class OfficeTextRendererCoverageTest
         return path;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OpenDocumentText_MissingContentXml_Reports()
     {
@@ -56,6 +57,7 @@ public class OfficeTextRendererCoverageTest
         Assert.AreEqual("[Could not read the document: content.xml is missing]", lines.Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OpenDocumentText_NoBody_RendersNothing()
     {
@@ -69,6 +71,7 @@ public class OfficeTextRendererCoverageTest
         Assert.AreEqual(0, OfficeTextRenderer.RenderOpenDocumentText(path).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OpenDocumentText_RendersTitleListsSectionsAndInlineElements()
     {
@@ -113,6 +116,7 @@ public class OfficeTextRendererCoverageTest
         Assert.AreEqual(2, lines.First(l => l.Contains("rep")).Split("rep").Length - 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Word_RendersHeaderFooterAndNestedContent()
     {
@@ -164,6 +168,7 @@ public class OfficeTextRendererCoverageTest
         Assert.AreEqual(1, lines.Count(l => l == "Top line"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Word_EmptyDocument_RendersNothing()
     {
@@ -176,6 +181,7 @@ public class OfficeTextRendererCoverageTest
         Assert.AreEqual(0, OfficeTextRenderer.RenderWord(path).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Spreadsheet_RendersEveryCellKind()
     {
@@ -243,6 +249,7 @@ public class OfficeTextRendererCoverageTest
         Assert.IsTrue(all.Contains("1899-12-31"), "a cell typed as Date\n" + all);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Spreadsheet_EmptySheetsAndMissingSheetData_AreMarked()
     {
@@ -269,6 +276,7 @@ public class OfficeTextRendererCoverageTest
         Assert.IsTrue(lines.Contains("  (not a worksheet)"), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Spreadsheet_WithoutSheets_RendersNothing()
     {
@@ -281,6 +289,7 @@ public class OfficeTextRendererCoverageTest
         Assert.AreEqual(0, OfficeTextRenderer.RenderSpreadsheet(path).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Spreadsheet_TooManyRowsAndColumns_AreTruncatedWithANote()
     {
@@ -317,6 +326,7 @@ public class OfficeTextRendererCoverageTest
         Assert.IsFalse(lines.Any(l => l.StartsWith("│ " + (MaxRows + 1))));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Spreadsheet_Damaged_Reports()
     {
@@ -326,6 +336,7 @@ public class OfficeTextRendererCoverageTest
         Assert.IsTrue(OfficeTextRenderer.RenderSpreadsheet(path).Single().StartsWith("[Could not read the workbook"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Presentation_RendersTablesBreaksAndSkipsBrokenSlides()
     {
@@ -369,6 +380,7 @@ public class OfficeTextRendererCoverageTest
         Assert.IsFalse(all.Contains("Slide 2"), "a slide without a part is skipped\n" + all);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Presentation_WithoutSlideList_RendersNothing()
     {
@@ -381,6 +393,7 @@ public class OfficeTextRendererCoverageTest
         Assert.AreEqual(0, OfficeTextRenderer.RenderPresentation(path).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Presentation_Damaged_Reports()
     {

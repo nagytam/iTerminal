@@ -20,6 +20,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
         return (page, harness);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Lists_TheOperatingSystemsOwnFolders()
     {
@@ -29,6 +30,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
         Assert.IsTrue(page.Places.Contains(Path.GetTempPath()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Lists_TheDrivesThatOnlyExistInsideTheApp()
     {
@@ -41,6 +43,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
             page.Places.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Lists_NoBlankAndNoDuplicateRows()
     {
@@ -54,6 +57,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
             page.Places.Distinct(StringComparer.OrdinalIgnoreCase).Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_GoesToThePlaceUnderTheCursor()
     {
@@ -67,6 +71,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
         CollectionAssert.AreEqual(new[] { new Url(expected).FullUrl }, harness.Navigations);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Down_ThenEnter_GoesToTheNextPlace()
     {
@@ -80,6 +85,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
         CollectionAssert.AreEqual(new[] { new Url(expected).FullUrl }, harness.Navigations);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnAVirtualDrive_KeepsItsScheme()
     {
@@ -97,6 +103,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
         CollectionAssert.AreEqual(new[] { Container.MUSIC_CATALOG }, harness.Navigations);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitialize_FocusesTheList()
     {
@@ -107,6 +114,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
         Assert.IsInstanceOfType<iConsole.Controls.ListBox<string>>(page.GetFocusedControl());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitialize_Twice_DoesNotDoubleTheList()
     {
@@ -118,6 +126,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
         Assert.AreEqual(firstCount, page.Places.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_InANarrowPage_DoesNotProduceNegativeGeometry()
     {
@@ -135,6 +144,7 @@ public class FolderSelectorSpecialFoldersTabPageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetKeyHints_DocumentEnterAndEscape()
     {

@@ -75,6 +75,7 @@ public class ContentModelAsyncDriveTest
     private static VirtualDriveEntry File(Url folder, string name) =>
         new(new Url(folder.FullUrl + name), name, "1 B");
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NavigatingReturnsAtOnceWithTheWayUpAlreadyListed()
     {
@@ -88,6 +89,7 @@ public class ContentModelAsyncDriveTest
         StringAssert.Contains(model.GetHeader(200), "(reading…)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheListingReplacesTheWayUpRowWhenItLands()
     {
@@ -104,6 +106,7 @@ public class ContentModelAsyncDriveTest
         Assert.IsFalse(model.ExistsFile(new Url(url.FullUrl + "c.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AListingForAFolderAlreadyLeftIsDropped()
     {
@@ -122,6 +125,7 @@ public class ContentModelAsyncDriveTest
         CollectionAssert.AreEqual(new[] { "..", "new.txt" }, model.Entries.AsSnapshot().Select(e => e.DisplayName).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedListingIsSaidInTheFooterAndKeepsTheWayUp()
     {
@@ -136,6 +140,7 @@ public class ContentModelAsyncDriveTest
         StringAssert.Contains(model.GetFooter(), "fatal: Not a valid object name nope");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheRootsWayUpIsTheFolderThePanelCameFrom()
     {
@@ -148,6 +153,7 @@ public class ContentModelAsyncDriveTest
         Assert.AreEqual(home.FullUrl, model.Entries.Single().Url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BelowTheRootTheWayUpStaysOnTheDrive()
     {
@@ -158,6 +164,7 @@ public class ContentModelAsyncDriveTest
         Assert.AreEqual(GitDriveUrl.Build(Repository, "HEAD").FullUrl, model.Entries.Single().Url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnlyACrossingFromOutsideIsRemembered()
     {
@@ -172,6 +179,7 @@ public class ContentModelAsyncDriveTest
             "docker → search keeps the disk folder; a music drive is not one of these drives");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheHeaderNamesTheRepositoryAndRevisionInWords()
     {

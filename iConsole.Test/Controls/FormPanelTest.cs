@@ -17,6 +17,7 @@ public class FormPanelTest
         return themeService;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FieldsShareALeftEdgeAndStackVertically()
     {
@@ -42,6 +43,7 @@ public class FormPanelTest
         Assert.AreEqual(1, (int)second.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MultiRowFieldPushesTheNextFieldDown()
     {
@@ -64,6 +66,7 @@ public class FormPanelTest
         Assert.AreEqual(3, (int)trailing.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawRendersAlignedLabels()
     {

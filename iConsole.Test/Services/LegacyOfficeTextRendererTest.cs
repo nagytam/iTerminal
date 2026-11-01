@@ -11,6 +11,7 @@ public class LegacyOfficeTextRendererTest
 {
     private static readonly byte[] NotCompound = System.Text.Encoding.ASCII.GetBytes("this is plain text, not an OLE2 file");
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Word_NotACompoundFile_SaysTheDocumentCouldNotBeRead()
     {
@@ -19,6 +20,7 @@ public class LegacyOfficeTextRendererTest
         Assert.IsTrue(lines.Single().StartsWith("[Could not read the document:"), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Workbook_NotACompoundFile_SaysTheWorkbookCouldNotBeRead()
     {
@@ -27,6 +29,7 @@ public class LegacyOfficeTextRendererTest
         Assert.IsTrue(lines.Single().StartsWith("[Could not read the workbook:"), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Presentation_NotACompoundFile_SaysThePresentationCouldNotBeRead()
     {

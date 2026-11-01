@@ -17,6 +17,7 @@ public class StepIndicatorAndAlertTest
         return m.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StepIndicator_Render_MarksDoneCurrentAndPending()
     {
@@ -25,6 +26,7 @@ public class StepIndicatorAndAlertTest
         Assert.AreEqual(string.Empty, StepIndicator.Render(0, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StepIndicator_Width_FollowsCount()
     {
@@ -32,6 +34,7 @@ public class StepIndicatorAndAlertTest
         Assert.AreEqual(5, (int)indicator.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Alert_Draw_ShowsGlyphAndMessage()
     {
@@ -40,6 +43,7 @@ public class StepIndicatorAndAlertTest
         Assert.IsTrue(buffer.ContentAsString.StartsWith("✖ Disk full"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Alert_Draw_ClearsWhenTextIsEmpty()
     {

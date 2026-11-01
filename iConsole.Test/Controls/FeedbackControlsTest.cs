@@ -30,6 +30,7 @@ public class FeedbackControlsTest
         public DateTime UtcNow => Time.ToUniversalTime();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Countdown_Format_RoundsUpAndShowsHours()
     {
@@ -39,6 +40,7 @@ public class FeedbackControlsTest
         Assert.AreEqual("00:00", Countdown.Format(TimeSpan.FromSeconds(-4)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Countdown_Idle_ShowsDashes()
     {
@@ -47,6 +49,7 @@ public class FeedbackControlsTest
         Assert.AreEqual("--:--", Lines(buffer)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Countdown_OnIdle_CountsDownAndRaisesFinishedOnce()
     {
@@ -73,6 +76,7 @@ public class FeedbackControlsTest
         Assert.IsTrue(countdown.IsFinished);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Skeleton_LineLength_LastLineIsShorter()
     {
@@ -81,6 +85,7 @@ public class FeedbackControlsTest
         Assert.AreEqual(30, Skeleton.LineLength(0, 1, 30));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Skeleton_BuildLine_PutsBandAtOffsetAndWraps()
     {
@@ -89,6 +94,7 @@ public class FeedbackControlsTest
         Assert.AreEqual("▒▒░░░░░░░░", Skeleton.BuildLine(10, 12));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Skeleton_OnIdle_AdvancesBandWithTheClock()
     {
@@ -101,6 +107,7 @@ public class FeedbackControlsTest
         Assert.AreEqual(1, skeleton.Offset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Skeleton_Inactive_BlanksItsRows()
     {
@@ -113,6 +120,7 @@ public class FeedbackControlsTest
         Assert.AreEqual(string.Empty, Lines(buffer)[0].Trim());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Alert_Dismissible_ClickOnCrossClearsAndRaises()
     {
@@ -124,6 +132,7 @@ public class FeedbackControlsTest
         Assert.AreEqual(1, dismissed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Alert_NotDismissible_IgnoresClick()
     {
@@ -132,6 +141,7 @@ public class FeedbackControlsTest
         Assert.AreEqual("Saved", alert.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Alert_Dismissible_EscapeDismissesWhenFocused()
     {
@@ -141,6 +151,7 @@ public class FeedbackControlsTest
         Assert.AreEqual(string.Empty, alert.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Alert_Dismissible_DrawsCrossAndKeepsMessageClear()
     {
@@ -149,6 +160,7 @@ public class FeedbackControlsTest
         Assert.IsTrue(Lines(buffer)[0].TrimEnd().EndsWith("×"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StepIndicator_ClickOnGlyph_RaisesStepClicked()
     {

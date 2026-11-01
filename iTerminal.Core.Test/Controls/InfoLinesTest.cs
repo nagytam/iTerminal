@@ -17,6 +17,7 @@ public class InfoLinesTest
         return lines;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Text_JoinsTheRowsOnSeparateLines()
     {
@@ -27,6 +28,7 @@ public class InfoLinesTest
         Assert.AreEqual("Name: a" + Environment.NewLine + "Size: 4 B", lines.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Lines_Null_IsNoRows()
     {
@@ -38,6 +40,7 @@ public class InfoLinesTest
         Assert.AreEqual(string.Empty, lines.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_PaintsEachRow_AndTheRestOfTheBlockIsBlank()
     {

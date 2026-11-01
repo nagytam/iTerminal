@@ -7,6 +7,7 @@ namespace iTerminal.Core.Test.Model.ToDo;
 [TestClass]
 public class ToDoTaskTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ASubjectAloneIsANormalOpenTaskWithNoDueDate()
     {
@@ -19,6 +20,7 @@ public class ToDoTaskTest
         Assert.IsFalse(task.IsComplete);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABangMakesItHighPriorityAndATrailingDateSetsTheDueDate()
     {
@@ -29,6 +31,7 @@ public class ToDoTaskTest
         Assert.AreEqual(new DateOnly(2026, 11, 1), task.DueDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("")]
     [DataRow("!")]
@@ -42,6 +45,7 @@ public class ToDoTaskTest
         Assert.IsFalse(string.IsNullOrWhiteSpace(error));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PriorityCyclesNormalHighLowNormal()
     {
@@ -63,6 +67,7 @@ public class ToDoStoreTest
         return new ToDoStore(settings.Object);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OpenTasksComeBeforeDoneOnesAndEarlierDueDatesFirst()
     {
@@ -77,6 +82,7 @@ public class ToDoStoreTest
             store.Visible(showCompleted: true).Select(t => t.Subject).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HighPriorityComesFirstWhenDatesAreEqual()
     {
@@ -87,6 +93,7 @@ public class ToDoStoreTest
         CollectionAssert.AreEqual(new[] { "High one", "Low one" }, store.Visible(true).Select(t => t.Subject).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HidingDoneTasksLeavesThemOutOfTheList()
     {
@@ -98,6 +105,7 @@ public class ToDoStoreTest
         Assert.AreEqual(2, store.Visible(showCompleted: true).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UpdateReplacesTheTaskWithTheSameId()
     {
@@ -110,6 +118,7 @@ public class ToDoStoreTest
         Assert.IsTrue(store.Visible(true).Single().IsComplete);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TasksSurviveAStoreBeingReopened()
     {
@@ -127,6 +136,7 @@ public class ToDoStoreTest
         Assert.AreEqual(ToDoPriority.High, reopened.Priority);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADamagedSettingDoesNotStopTheListOpening()
     {

@@ -6,6 +6,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class FrequentExecutionGuardServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void FrequentExecutionGuardServiceExecuteImmediate()
     {
@@ -20,6 +21,7 @@ public class FrequentExecutionGuardServiceTest
         Assert.AreEqual(1, executionCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FrequentExecutionGuardServiceExecuteMultiple()
     {
@@ -39,6 +41,7 @@ public class FrequentExecutionGuardServiceTest
         Assert.IsTrue(executionCount > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FrequentExecutionGuardServiceThrottle()
     {
@@ -55,6 +58,7 @@ public class FrequentExecutionGuardServiceTest
         Assert.AreEqual(1, executionCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FrequentExecutionGuardServiceInterface()
     {
@@ -65,6 +69,7 @@ public class FrequentExecutionGuardServiceTest
         Assert.IsInstanceOfType(service, typeof(IFrequentExecutionGuardService));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FrequentExecutionGuardServiceWithActionException()
     {
@@ -84,6 +89,7 @@ public class FrequentExecutionGuardServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnActionThatThrowsWhileDelayed_DoesNotStopLaterDelayedActions()
     {
@@ -104,6 +110,7 @@ public class FrequentExecutionGuardServiceTest
         Assert.IsTrue(ran, "a delayed action that failed stopped every later one");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheNewestDelayedRequest_IsTheOneThatRuns()
     {

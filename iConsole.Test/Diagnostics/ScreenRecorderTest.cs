@@ -19,6 +19,7 @@ public class ScreenRecorderTest
         return screen;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToText_HasOneLinePerRow_WithWideCharactersAsTheyLookOnScreen()
     {
@@ -28,6 +29,7 @@ public class ScreenRecorderTest
         Assert.AreEqual("hello\n日本\n", recorder.ToText());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToHtml_EscapesText_AndCarriesTheColours()
     {
@@ -44,6 +46,7 @@ public class ScreenRecorderTest
         Contains(html, "<!doctype html>");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToSvg_SizesEachRunByTheColumnsItCovers()
     {
@@ -58,6 +61,7 @@ public class ScreenRecorderTest
         Contains(svg, ">日本</text>");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Capture_CopiesTheFrame_SoLaterDrawingDoesNotChangeTheRecording()
     {
@@ -70,6 +74,7 @@ public class ScreenRecorderTest
         Contains(recorder.ToText(), "hello");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_RejectsAnUnknownFormat()
     {

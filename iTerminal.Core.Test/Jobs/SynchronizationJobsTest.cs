@@ -7,6 +7,7 @@ namespace iTerminal.Core.Test.Jobs;
 [TestClass]
 public class SettingsSynchronizationJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_DoesNotThrow()
     {
@@ -15,6 +16,7 @@ public class SettingsSynchronizationJobTest
         Assert.IsNotNull(job);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_CanBeCancelled()
     {
@@ -27,6 +29,7 @@ public class SettingsSynchronizationJobTest
         // Passes if no exception is thrown
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnAfterStop_CallsWriteWhenDirty()
     {
@@ -39,6 +42,7 @@ public class SettingsSynchronizationJobTest
         mockSettings.Verify(s => s.Write(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnAfterStop_DoesNotCallWrite_WhenNotDirty()
     {
@@ -55,6 +59,7 @@ public class SettingsSynchronizationJobTest
 [TestClass]
 public class MemoryDriveSynchronizationJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_DoesNotThrow()
     {
@@ -67,6 +72,7 @@ public class MemoryDriveSynchronizationJobTest
         Assert.IsNotNull(job);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_UsesSyncPathFromSettings_WhenProvided()
     {
@@ -80,6 +86,7 @@ public class MemoryDriveSynchronizationJobTest
         Assert.IsNotNull(job);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_CanBeCancelled()
     {

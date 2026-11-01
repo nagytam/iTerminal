@@ -62,6 +62,7 @@ public class SmbFileSystemServiceTest
 
     // ── ListShares ───────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListShares_Success_ReturnsShares()
     {
@@ -78,6 +79,7 @@ public class SmbFileSystemServiceTest
         client.Verify(c => c.Disconnect(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListShares_ConnectFails_ReturnsEmpty()
     {
@@ -90,6 +92,7 @@ public class SmbFileSystemServiceTest
         Assert.AreEqual(0, shares.Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListShares_LoginFails_ReturnsEmpty()
     {
@@ -105,6 +108,7 @@ public class SmbFileSystemServiceTest
 
     // ── Connect ──────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Connect_Success_TreeConnectsToShare()
     {
@@ -117,6 +121,7 @@ public class SmbFileSystemServiceTest
         Assert.IsTrue(service.IsConnected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Connect_TransportConnectFails_Throws()
     {
@@ -127,6 +132,7 @@ public class SmbFileSystemServiceTest
         Assert.ThrowsExactly<IOException>(() => service.Connect("host", "Share", "user", "pw"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Connect_LoginFails_Throws()
     {
@@ -140,6 +146,7 @@ public class SmbFileSystemServiceTest
 
     // ── List ─────────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void List_MapsDirectoryEntries_SkippingDotAndDotDot()
     {
@@ -165,6 +172,7 @@ public class SmbFileSystemServiceTest
         Assert.AreEqual(3, entries.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void List_AtShareRoot_DoesNotIncludeParentEntry()
     {
@@ -180,6 +188,7 @@ public class SmbFileSystemServiceTest
         Assert.AreEqual(0, entries.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void List_CreateFileFails_ReturnsOnlyParentEntry()
     {
@@ -197,6 +206,7 @@ public class SmbFileSystemServiceTest
 
     // ── Exists ───────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFile_CreateFileSucceeds_ReturnsTrue()
     {
@@ -207,6 +217,7 @@ public class SmbFileSystemServiceTest
         Assert.IsTrue(service.ExistsFile(new Url("smb://user@host/Share/a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFile_CreateFileFails_ReturnsFalse()
     {
@@ -219,6 +230,7 @@ public class SmbFileSystemServiceTest
 
     // ── Delete / Move ────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFile_Success_ReturnsTrue()
     {
@@ -233,6 +245,7 @@ public class SmbFileSystemServiceTest
         fileStore.Verify(fs => fs.SetFileInformation(It.IsAny<object>(), It.Is<FileInformation>(i => i is FileDispositionInformation)), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MoveAsync_Success_SetsRenameInformation()
     {
@@ -246,6 +259,7 @@ public class SmbFileSystemServiceTest
         fileStore.Verify(fs => fs.SetFileInformation(It.IsAny<object>(), It.Is<FileInformation>(i => i is FileRenameInformationType2)), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MoveAsync_OpenFails_Throws()
     {
@@ -259,6 +273,7 @@ public class SmbFileSystemServiceTest
 
     // ── Read / Write ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_ReadsUntilEndOfFile_ReturnsAllBytes()
     {
@@ -284,6 +299,7 @@ public class SmbFileSystemServiceTest
 
     private delegate NTStatus ReadFileDelegate(out byte[] data, object handle, long offset, int maxCount);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WriteFileAsync_WritesAllBytes()
     {
@@ -302,6 +318,7 @@ public class SmbFileSystemServiceTest
 
     // ── GetAvailableDiskSpace ────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAvailableDiskSpace_Success_ReturnsNonEmptyString()
     {
@@ -321,6 +338,7 @@ public class SmbFileSystemServiceTest
         Assert.IsFalse(string.IsNullOrEmpty(result));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAvailableDiskSpace_NotConnected_ReturnsEmptyString()
     {

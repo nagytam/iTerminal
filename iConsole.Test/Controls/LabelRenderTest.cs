@@ -22,6 +22,7 @@ public class LabelRenderTest
         ViewSize = new Size(width, 1),
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WritesTextAtItsPosition()
     {
@@ -33,6 +34,7 @@ public class LabelRenderTest
         Assert.AreEqual(new Position(2, 1), screen.Find("Hello"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_UsesThemeColoursByDefault()
     {
@@ -42,6 +44,7 @@ public class LabelRenderTest
         screen.AssertColors("Hello", scheme.Foreground, scheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_PaintsItsWholeWidth()
     {
@@ -53,6 +56,7 @@ public class LabelRenderTest
         Assert.AreEqual(_theme.CurrentColorScheme.Background, screen.BackgroundAt(11, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShorterTextErasesThePreviousOne()
     {
@@ -66,6 +70,7 @@ public class LabelRenderTest
         Assert.AreEqual("  Done", screen.Lines[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_TextLongerThanTheLabelIsClipped()
     {
@@ -75,6 +80,7 @@ public class LabelRenderTest
         Assert.IsFalse(screen.IsWritten(8, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_CustomColoursAndStyleReachTheBuffer()
     {
@@ -95,6 +101,7 @@ public class LabelRenderTest
         Assert.IsFalse(cell.IsStrikeThrough);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ChildOfAParentIsDrawnAtTheAbsolutePosition()
     {
@@ -107,6 +114,7 @@ public class LabelRenderTest
         Assert.AreEqual(new Position(6, 3), screen.Find("Child"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_HiddenChildIsNotDrawnByItsParent()
     {
@@ -139,6 +147,7 @@ public class LabelRenderTest
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabel_DrawsTheCurrentValue()
     {
@@ -157,6 +166,7 @@ public class LabelRenderTest
         Assert.AreEqual("Copying 3 files", screen.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabel_ShorterValueErasesThePreviousOne()
     {
@@ -175,6 +185,7 @@ public class LabelRenderTest
         screen.AssertFillsBounds(label);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabel_DisabledUsesDisabledColours()
     {

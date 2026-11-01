@@ -31,6 +31,7 @@ public class TaskManagerTest
     /// The container used to pick the constructor with the defaulted worker count, which ran the app
     /// on one worker: a folder copy's discovery task then starved the copy that drains it.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void ResolvedFromTheContainer_RunsSeveralTasksAtOnce()
     {
@@ -44,6 +45,7 @@ public class TaskManagerTest
         manager.Dispose();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Add_ShouldInsertAndCancelByType()
     {
@@ -63,6 +65,7 @@ public class TaskManagerTest
         release.Release();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Add_ShouldRunTasksSequentiallyWhenWorkerCountIsOne()
     {
@@ -98,6 +101,7 @@ public class TaskManagerTest
         CollectionAssert.AreEqual(new[] { "first-start", "first-end", "second-run" }, executionOrder.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Add_ShouldRunHigherPriorityTaskBeforeLowerPriorityTask()
     {
@@ -139,6 +143,7 @@ public class TaskManagerTest
         CollectionAssert.AreEqual(new[] { "input", "background" }, executionOrder.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Add_ShouldSkipCanceledQueuedTask()
     {
@@ -183,6 +188,7 @@ public class TaskManagerTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APausedQueuedTask_IsNotStarted_UntilItIsResumed()
     {
@@ -207,6 +213,7 @@ public class TaskManagerTest
         await pausedRan.Task.WaitAsync(TimeSpan.FromSeconds(5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MoveInQueue_StartsAQueuedTaskEarlier()
     {
@@ -227,6 +234,7 @@ public class TaskManagerTest
         Assert.AreEqual("b", order.First());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MoveInQueue_ForTheFirstTask_DoesNothing()
     {

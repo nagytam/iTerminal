@@ -64,6 +64,7 @@ public class VirtualMachineManagerDialogTest
         dialog.HandleKeyEventAsync(new KeyEvent(keyChar, key, shift, false, false));
 
     // Reverted (Enter no longer starts a shut-off machine): the service is never asked and this fails.
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterStartsTheShutOffMachineUnderTheCursor()
     {
@@ -77,6 +78,7 @@ public class VirtualMachineManagerDialogTest
     }
 
     // Reverted (Enter starts anything): a running machine is started again and this fails.
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterDoesNothingToARunningMachine()
     {
@@ -90,6 +92,7 @@ public class VirtualMachineManagerDialogTest
     }
 
     // Reverted (D runs without asking): the shutdown happens before the answer and this fails.
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DecliningTheShutdownLeavesTheMachineAlone()
     {
@@ -109,6 +112,7 @@ public class VirtualMachineManagerDialogTest
     }
 
     // Reverted (the answer is ignored, or the confirmation is skipped): the shutdown does not run and this fails.
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConfirmingTheShutdownRunsIt()
     {
@@ -123,6 +127,7 @@ public class VirtualMachineManagerDialogTest
     }
 
     // Reverted (Shift is not checked, so a plain x powers off): the first press would ask and this fails.
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PowerOffNeedsShiftAndAnswer()
     {
@@ -138,6 +143,7 @@ public class VirtualMachineManagerDialogTest
     }
 
     // Reverted (pause asks first): the pause would wait for an answer and this fails.
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PauseActsAtOnceWithoutAsking()
     {
@@ -151,6 +157,7 @@ public class VirtualMachineManagerDialogTest
     }
 
     // Reverted (the worker writes the list itself, off the UI thread): the list is filled before OnIdle and this fails.
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AListingReachesTheListOnlyThroughOnIdle()
     {
@@ -169,6 +176,7 @@ public class VirtualMachineManagerDialogTest
     }
 
     // Reverted (the outcome is not written back): the status line keeps "Working on" and this fails.
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedActionReportsItsMessage()
     {

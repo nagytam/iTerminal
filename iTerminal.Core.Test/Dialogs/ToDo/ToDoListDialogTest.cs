@@ -35,6 +35,7 @@ public class ToDoListDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATypedTaskIsAddedAndHighlighted()
     {
@@ -49,6 +50,7 @@ public class ToDoListDialogTest
         AssertScreenContains(Render(fixture.Dialog), "2026-11-01");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SpaceMarksTheHighlightedTaskDoneAndTheHighlightFollowsIt()
     {
@@ -64,6 +66,7 @@ public class ToDoListDialogTest
         Assert.AreEqual(first.Id, fixture.Dialog.SelectedForTest!.Id);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PCyclesThePriorityOfTheHighlightedTask()
     {
@@ -76,6 +79,7 @@ public class ToDoListDialogTest
         Assert.AreEqual(ToDoPriority.High, fixture.Dialog.SelectedForTest!.Priority);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteRemovesTheHighlightedTask()
     {
@@ -93,6 +97,7 @@ public class ToDoListDialogTest
         Assert.IsNull(fixture.Dialog.SelectedForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyKeyButYWithdrawsTheDeletion()
     {
@@ -113,6 +118,7 @@ public class ToDoListDialogTest
         Assert.AreEqual(1, fixture.Store.Visible(true).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteWithNothingListedAsksNothing()
     {
@@ -135,6 +141,7 @@ public class ToDoListDialogTest
         return fixture;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PageDownAndPageUpMoveASceneAtATime_AndStopAtTheEnds()
     {
@@ -167,6 +174,7 @@ public class ToDoListDialogTest
         WheelDelta = wheel,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheelMovesTheHighlightThreeTasks()
     {
@@ -183,6 +191,7 @@ public class ToDoListDialogTest
         Assert.AreEqual(first, fixture.Dialog.SelectedForTest!.Subject);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickHighlightsATask_AndAClickOnItsBoxMarksItDone()
     {
@@ -199,6 +208,7 @@ public class ToDoListDialogTest
         Assert.AreEqual(third.Subject, fixture.Dialog.SelectedForTest!.Subject);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickBelowTheLastTaskOrOutsideTheDialogDoesNothing()
     {
@@ -212,6 +222,7 @@ public class ToDoListDialogTest
         Assert.AreEqual(first, fixture.Dialog.SelectedForTest!.Subject);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMouseLeavesTheListAloneWhileATaskIsBeingTypedOrADeletionAsked()
     {
@@ -229,6 +240,7 @@ public class ToDoListDialogTest
         Assert.AreEqual(first, fixture.Dialog.SelectedForTest!.Subject);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithMoreTasksThanRows_AClickLandsOnTheRowShownNotTheOneAtTheTop()
     {
@@ -242,6 +254,7 @@ public class ToDoListDialogTest
         Assert.AreEqual(all[all.Count - 16].Subject, fixture.Dialog.SelectedForTest!.Subject);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EPutsTheHighlightedTaskInTheEntryLine_AndEnterReplacesIt()
     {
@@ -265,6 +278,7 @@ public class ToDoListDialogTest
         Assert.AreEqual(id, fixture.Dialog.SelectedForTest!.Id);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChangingATask_KeepsItDone_DropsHighWhenTheBangGoes_AndKeepsLow()
     {
@@ -298,6 +312,7 @@ public class ToDoListDialogTest
         Assert.AreEqual(ToDoPriority.Normal, changed.Priority);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARefusedChange_LosesNothing_AndEscapeKeepsTheTask()
     {
@@ -324,6 +339,7 @@ public class ToDoListDialogTest
         AssertScreenContains(Render(fixture.Dialog), "New task:");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EWithNothingListedDoesNothing()
     {
@@ -335,6 +351,7 @@ public class ToDoListDialogTest
         Assert.IsNull(fixture.Dialog.EntryForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HHidesAndShowsDoneTasks()
     {
@@ -349,6 +366,7 @@ public class ToDoListDialogTest
         Assert.AreEqual("Finished", fixture.Dialog.SelectedForTest!.Subject);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeAbandonsAnEntryButClosesTheListWithNoEntry()
     {
@@ -366,6 +384,7 @@ public class ToDoListDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(fixture.Dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyListSaysHowToAddATask()
     {
@@ -376,6 +395,7 @@ public class ToDoListDialogTest
         AssertScreenContains(Render(fixture.Dialog), "No tasks. Press N to add one");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesTheTaskLine_AndCtrlUClearsIt()
     {
@@ -395,6 +415,7 @@ public class ToDoListDialogTest
         Assert.AreEqual(string.Empty, fixture.Dialog.EntryForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWDeletesTheLastWordOfTheEntryLine()
     {
@@ -408,6 +429,7 @@ public class ToDoListDialogTest
         Assert.AreEqual("14:30 45 Team ", fixture.Dialog.EntryForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheFooterShowsEveryKeyToTheEnd()
     {
