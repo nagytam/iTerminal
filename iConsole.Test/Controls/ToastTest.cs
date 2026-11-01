@@ -26,6 +26,7 @@ public class ToastTest
         };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_TitleOnly_IsOneRow_WithBarAndSeverityMark()
     {
@@ -36,6 +37,7 @@ public class ToastTest
         screen.AssertLines("▌ ✓ Copy finished");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Message_IsWrappedUnderTheTitle()
     {
@@ -50,6 +52,7 @@ public class ToastTest
             "▌   folder on the right");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_LongMessage_IsCutAtThreeLines_WithAnEllipsis()
     {
@@ -63,6 +66,7 @@ public class ToastTest
         Assert.AreEqual(string.Empty, screen.Lines[4]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_LongTitle_IsCutToTheToast_WithAnEllipsis()
     {
@@ -73,6 +77,7 @@ public class ToastTest
         Assert.AreEqual("▌ i A title far to…", screen.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_SeverityColoursTheBarAndTheMark_NotTheText()
     {
@@ -97,6 +102,7 @@ public class ToastTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_PaintsEveryCellOfItsRectangle()
     {
@@ -111,6 +117,7 @@ public class ToastTest
         Assert.IsFalse(screen.IsWritten(3, 3), "below the toast");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Click_InsideTheToast_RaisesClicked_AndOutsideDoesNot()
     {
@@ -131,6 +138,7 @@ public class ToastTest
         Assert.AreEqual(1, clicks);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toast_NeverTakesFocus()
     {

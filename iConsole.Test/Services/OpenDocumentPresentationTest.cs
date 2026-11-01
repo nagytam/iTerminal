@@ -32,6 +32,7 @@ public class OpenDocumentPresentationTest
         return buffer.ToArray();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASlide_HasItsTitleAsHeading_AndItsOutlineAsBullets()
     {
@@ -49,6 +50,7 @@ public class OpenDocumentPresentationTest
         Assert.IsFalse(lines.Skip(1).Any(l => l.Contains("Plan")), "The title should not repeat in the body.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SpeakerNotes_FollowTheSlideIndented()
     {
@@ -68,6 +70,7 @@ public class OpenDocumentPresentationTest
         Assert.AreEqual("    Pause here.", lines[notes + 1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListItems_KeepTheirDepth()
     {
@@ -87,6 +90,7 @@ public class OpenDocumentPresentationTest
         CollectionAssert.Contains(lines, "    • Nested");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AWithoutContentXml_TheRendererSaysSo()
     {

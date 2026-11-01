@@ -21,6 +21,7 @@ public class HexViewerTest
         return m;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListTheScrollKeysForAShownDump()
     {
@@ -46,18 +47,21 @@ public class HexViewerTest
 
     // ── Default state ───────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DefaultData_IsEmpty()
     {
         Assert.AreEqual(0, Create().Data.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DefaultSelectedOffset_IsZero()
     {
         Assert.AreEqual(0, Create().SelectedOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanFocus_IsTrue()
     {
@@ -66,6 +70,7 @@ public class HexViewerTest
 
     // ── SelectedOffset ──────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DownArrow_AdvancesSelectedOffsetByBytesPerRow()
     {
@@ -76,6 +81,7 @@ public class HexViewerTest
         Assert.AreEqual(hv.BytesPerRow, hv.SelectedOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpArrow_AtFirstRow_StaysAtZero()
     {
@@ -86,6 +92,7 @@ public class HexViewerTest
         Assert.AreEqual(0, hv.SelectedOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HomeKey_JumpsToFirstRow()
     {
@@ -98,6 +105,7 @@ public class HexViewerTest
         Assert.AreEqual(0, hv.SelectedOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EndKey_JumpsToLastRow()
     {
@@ -111,6 +119,7 @@ public class HexViewerTest
 
     // ── Data assignment ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AssigningData_ResetsCursorToZero()
     {
@@ -122,6 +131,7 @@ public class HexViewerTest
         Assert.AreEqual(0, hv.SelectedOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AssigningNull_TreatedAsEmpty()
     {
@@ -132,6 +142,7 @@ public class HexViewerTest
 
     // ── Rendering — offset column ───────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_FirstRow_ShowsZeroOffset()
     {
@@ -143,6 +154,7 @@ public class HexViewerTest
         Assert.IsTrue(buffer.ContentAsString.Contains("00000000"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_SecondRow_ShowsCorrectOffset()
     {
@@ -157,6 +169,7 @@ public class HexViewerTest
 
     // ── Rendering — hex column ──────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_KnownBytes_ShowsCorrectHexValues()
     {
@@ -172,6 +185,7 @@ public class HexViewerTest
         Assert.IsTrue(content.Contains("EF"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_PartialRow_PadsHexColumnsWithSpaces()
     {
@@ -188,6 +202,7 @@ public class HexViewerTest
 
     // ── Rendering — ASCII column ────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_PrintableBytes_ShownAsCharacters()
     {
@@ -200,6 +215,7 @@ public class HexViewerTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Hello"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_NonPrintableBytes_ShownAsDot()
     {
@@ -213,6 +229,7 @@ public class HexViewerTest
         Assert.IsTrue(asciiSection.Contains("...."));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AsciiColumnDelimitedByPipes()
     {
@@ -226,6 +243,7 @@ public class HexViewerTest
 
     // ── Rendering — scrolling ───────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw_AfterScrollDown_ShowsNextRow()
     {
@@ -244,6 +262,7 @@ public class HexViewerTest
 
     // ── Empty data ──────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_EmptyData_WritesNothing()
     {
@@ -255,6 +274,7 @@ public class HexViewerTest
         Assert.IsTrue(string.IsNullOrWhiteSpace(buffer.ContentAsString));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Disabled_IgnoresTheWheelAndClicks()
     {
@@ -269,6 +289,7 @@ public class HexViewerTest
         Assert.IsFalse(hv.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enabled_TheWheelStillMovesTheCursorThreeRows()
     {

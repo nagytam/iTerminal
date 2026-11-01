@@ -9,6 +9,7 @@ namespace iConsole.Commands.Test;
 [TestClass]
 public class FindPreviousCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_ShouldMoveCursorToPreviousHit()
     {

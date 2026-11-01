@@ -20,6 +20,7 @@ public class NotificationsTest
 
     private INotificationService Notifications => _app.Driver.GetRequiredService<INotificationService>();
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AFinishedCopyIsAnnounced_AndTheToastLeavesByItself()
     {
@@ -49,6 +50,7 @@ public class NotificationsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AToastStaysOnTopOfADialog_AndAClickDismissesIt()
     {

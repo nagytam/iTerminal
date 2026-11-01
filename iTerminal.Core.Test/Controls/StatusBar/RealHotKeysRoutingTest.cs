@@ -66,6 +66,7 @@ public class RealHotKeysRoutingTest
         return new Harness(root, hotKeys, contentModelService, iPhoneDialog);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AltF11_ReachesTheExistingIPhoneCommand()
     {
@@ -77,6 +78,7 @@ public class RealHotKeysRoutingTest
             "Baseline: an existing AddCommand-based hot key must route through the real status bar");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlShiftM_ReachesTheMusicPanelsCommand()
     {
@@ -87,6 +89,7 @@ public class RealHotKeysRoutingTest
         AssertMusicPanelsWereRequested(harness);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlF7_ReachesTheMusicPanelsCommand()
     {
@@ -110,6 +113,7 @@ public class RealHotKeysRoutingTest
         harness.ContentModelService.SetupGet(s => s.ContentModels).Returns([left.Object, right.Object]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlF9_PointsTheFocusedPanelAtTheContainers()
     {
@@ -121,6 +125,7 @@ public class RealHotKeysRoutingTest
         harness.ContentModelService.Verify(s => s.SetUrlAsync("LeftPanel", It.Is<Url>(url => url.FullUrl == Container.DOCKER)), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlF6_PointsTheFocusedPanelAtTheGitDrive()
     {
@@ -132,6 +137,7 @@ public class RealHotKeysRoutingTest
         harness.ContentModelService.Verify(s => s.SetUrlAsync("LeftPanel", It.Is<Url>(url => url.ContainerType == ContainerType.Git)), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlF3_OpensThePreviewInTheOtherPanel()
     {

@@ -32,6 +32,7 @@ public class TaskbarProgressTest
         public void Update(TaskbarState state, long percentage) => Calls.Add((state, percentage));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingRunning_ShowsNoIndicator()
     {
@@ -40,6 +41,7 @@ public class TaskbarProgressTest
         Assert.AreEqual((TaskbarState.None, 0L), result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RunningTasks_ShowTheirAverageProgress()
     {
@@ -48,6 +50,7 @@ public class TaskbarProgressTest
         Assert.AreEqual((TaskbarState.Normal, 40L), TaskbarProgressCalculator.Compute(tasks));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RunningWithNoProgressYet_ShowsAMovingIndicator()
     {
@@ -56,6 +59,7 @@ public class TaskbarProgressTest
         Assert.AreEqual((TaskbarState.Indeterminate, 0L), TaskbarProgressCalculator.Compute(tasks));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryRunningTaskPaused_ShowsPaused()
     {
@@ -65,6 +69,7 @@ public class TaskbarProgressTest
         Assert.AreEqual((TaskbarState.Paused, 50L), TaskbarProgressCalculator.Compute([task]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OneRunningTaskAmongPaused_ShowsNormal()
     {
@@ -75,6 +80,7 @@ public class TaskbarProgressTest
         Assert.AreEqual((TaskbarState.Normal, 20L), TaskbarProgressCalculator.Compute([paused, running]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FinishedTasks_DoNotCount()
     {
@@ -84,6 +90,7 @@ public class TaskbarProgressTest
         Assert.AreEqual((TaskbarState.None, 0L), TaskbarProgressCalculator.Compute([finished]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Job_TellsTheIndicatorOnlyWhenWhatItShowsChanges()
     {
@@ -106,6 +113,7 @@ public class TaskbarProgressTest
         manager.Dispose();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Job_ClearsTheIndicatorWhenTheWorkIsDone()
     {

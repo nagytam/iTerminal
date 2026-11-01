@@ -51,6 +51,7 @@ public class FolderComparerTest
 
     private static DiffKind KindOf(CompareResult result, string path) => result.Items.Single(i => i.Path == path).Kind;
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EachNameIsJudgedByItsSizeAndDate()
     {
@@ -81,6 +82,7 @@ public class FolderComparerTest
             result.Summary());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SizeOnlyIgnoresTheDates()
     {
@@ -91,6 +93,7 @@ public class FolderComparerTest
         Assert.AreEqual(DiffKind.Identical, KindOf(await Compare(CompareMode.SizeOnly), "a.txt"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentReadsTheBytes()
     {
@@ -107,6 +110,7 @@ public class FolderComparerTest
         Assert.AreEqual(DiffKind.Identical, KindOf(byContent, "same-bytes.txt"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASubfolderStandsForWhatIsInsideIt()
     {
@@ -128,6 +132,7 @@ public class FolderComparerTest
         Assert.IsTrue(order.IndexOf("docs") < order.IndexOf("docs/a.txt"), "a folder is listed before its contents");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALocalFolderComparesWithAZipOfItAsTheSame()
     {
@@ -151,6 +156,7 @@ public class FolderComparerTest
         Assert.AreEqual(3, result.Items.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(new[] { DiffKind.Identical, DiffKind.Identical }, DiffKind.Identical)]
     [DataRow(new[] { DiffKind.LeftOnly, DiffKind.LeftNewer, DiffKind.Identical }, DiffKind.LeftNewer)]
@@ -162,6 +168,7 @@ public class FolderComparerTest
         Assert.AreEqual(expected, FolderComparer.Aggregate(inside));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheMarksAreWhatEachSideShouldCopyAcross()
     {
@@ -183,6 +190,7 @@ public class FolderComparerTest
         CollectionAssert.AreEqual(new[] { "b.txt" }, right.MarkedNames, "c.jpg differs with no winner: marked on neither side");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APanelThatMovedOnIsNotMarked()
     {

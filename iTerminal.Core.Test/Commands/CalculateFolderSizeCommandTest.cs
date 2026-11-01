@@ -39,6 +39,7 @@ public class CalculateFolderSizeCommandTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingToMeasureOnAFile()
     {

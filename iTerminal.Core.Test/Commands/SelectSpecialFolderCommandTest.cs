@@ -7,6 +7,7 @@ public class SelectSpecialFolderCommandTest
 {
     private static SelectSpecialFolderCommand Create() => new(null!, []);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsPlainEnter()
     {
@@ -16,6 +17,7 @@ public class SelectSpecialFolderCommandTest
         Assert.IsFalse(command.Key!.Control || command.Key.Alt || command.Key.Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TitleAndDescription_AreWrittenForHelp()
     {
@@ -25,12 +27,14 @@ public class SelectSpecialFolderCommandTest
         Assert.AreNotEqual(command.Title, command.Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WithNoControl_IsFalse()
     {
         Assert.IsFalse(Create().CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithNoControl_DoesNothing()
     {

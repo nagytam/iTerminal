@@ -22,6 +22,7 @@ public class BouncingLabelMotionTest
     private static BouncingLabel NewLabel(long x, long y, string text = "ab", int dx = 1, int dy = 1)
         => new(new Position(x, y), text, Theme(), autoStart: false) { BounceX = dx, BounceY = dy };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_MovesOneCellAlongTheDirection()
     {
@@ -36,6 +37,7 @@ public class BouncingLabelMotionTest
         Assert.AreEqual(2L, label.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_AtTheRightEdge_TurnsRoundInsteadOfSticking()
     {
@@ -46,6 +48,7 @@ public class BouncingLabelMotionTest
         Assert.AreEqual(-1, label.BounceX);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_AtTheLeftEdge_TurnsRound()
     {
@@ -55,6 +58,7 @@ public class BouncingLabelMotionTest
         Assert.AreEqual(1, label.BounceX);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_AtTheBottomAndTopEdges_TurnsRound()
     {
@@ -69,6 +73,7 @@ public class BouncingLabelMotionTest
         Assert.AreEqual(1, top.BounceY);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_ManyTimes_StaysInsideAndReachesEveryEdge()
     {
@@ -91,6 +96,7 @@ public class BouncingLabelMotionTest
         Assert.AreEqual(5L, maxY);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_WithoutADirection_StartsMovingDownAndRight()
     {
@@ -100,6 +106,7 @@ public class BouncingLabelMotionTest
         Assert.AreEqual(3L, label.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_InAParentTooSmallForTheLabel_DoesNotMove()
     {
@@ -111,6 +118,7 @@ public class BouncingLabelMotionTest
         Assert.AreEqual(0L, flat.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_MovingOneAxisOnly_StillReportsAMove()
     {
@@ -120,6 +128,7 @@ public class BouncingLabelMotionTest
         Assert.AreEqual(1L, label.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AfterMoving_ShowsTheTextAtTheNewPosition()
     {
@@ -134,6 +143,7 @@ public class BouncingLabelMotionTest
         Assert.IsTrue(lines[2].Contains("ab"), buffer.ContentAsString);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheBackgroundTask_MovesTheLabelOnceItHasAParent_AndStopsWhenDisposed()
     {
@@ -161,6 +171,7 @@ public class BouncingLabelMotionTest
         label.Dispose();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Dispose_BeforeTheLabelHasAParent_EndsTheWaitingTask()
     {

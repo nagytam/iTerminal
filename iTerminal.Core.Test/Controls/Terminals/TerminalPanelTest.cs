@@ -42,6 +42,7 @@ public class TerminalPanelTest
     /// the panel's default key-handling branch appended every unmatched KeyChar unconditionally,
     /// swallowing Ctrl+C instead of leaving it unhandled to bubble up to a global hot key.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_CtrlC_IsNotAppendedToCommandLine()
     {
@@ -53,6 +54,7 @@ public class TerminalPanelTest
         Assert.AreEqual(string.Empty, terminalModel.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_PlainLetter_IsAppendedToCommandLine()
     {
@@ -64,6 +66,7 @@ public class TerminalPanelTest
         Assert.AreEqual("c", terminalModel.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClearsAHalfTypedCommand()
     {
@@ -75,6 +78,7 @@ public class TerminalPanelTest
         Assert.AreEqual(string.Empty, terminalModel.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawsTheHistoryAboveThePrompt()
     {
@@ -91,6 +95,7 @@ public class TerminalPanelTest
         Assert.AreEqual(Color.Cyan, screen.ForegroundAt(0, 0), "commands are cyan");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OutputIsSplitOnEitherLineEnding()
     {
@@ -104,6 +109,7 @@ public class TerminalPanelTest
         CollectionAssert.AreEqual(new[] { "> tool", "one", "two", "three", "", "Terminal>" }, screen.Lines);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpScrollsBackAndStopsAtTheFirstLine()
     {
@@ -121,6 +127,7 @@ public class TerminalPanelTest
         CollectionAssert.AreEqual(new[] { "> a", "1", "Terminal>" }, Render(panel).Lines);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DownScrollsForwardAndStopsAtTheLatestOutput()
     {
@@ -134,6 +141,7 @@ public class TerminalPanelTest
         Assert.AreEqual(0, panel.ScrollOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PageUpAndPageDownScrollByAPage()
     {
@@ -150,6 +158,7 @@ public class TerminalPanelTest
         Assert.AreEqual(3, panel.ScrollOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NewOutputReturnsToTheBottom()
     {
@@ -163,6 +172,7 @@ public class TerminalPanelTest
         Assert.AreEqual(0, panel.ScrollOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALongCommandShowsItsEnd()
     {
@@ -175,6 +185,7 @@ public class TerminalPanelTest
         Assert.IsTrue(prompt.EndsWith("Something", StringComparison.Ordinal), prompt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingIsIgnoredWhileACommandRuns()
     {
@@ -187,6 +198,7 @@ public class TerminalPanelTest
         Assert.AreEqual("ping", terminalModel.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlW_DeletesTheLastWordOfTheCommand_AndCtrlU_ClearsIt()
     {
@@ -202,6 +214,7 @@ public class TerminalPanelTest
         Assert.AreEqual(string.Empty, model.Command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWAndCtrlU_OnAnEmptyCommand_AreLeftForOthers()
     {

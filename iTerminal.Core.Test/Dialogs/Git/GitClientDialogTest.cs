@@ -213,6 +213,7 @@ public class GitClientDialogTest
 
     private static GitFileStatus Modified(string path) => new(path, " M", IsUntracked: false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterStagesTheFileUnderTheCursor()
     {
@@ -227,6 +228,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "stage:src/Foo.cs");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StageAllStagesEveryChangeFromTheUnstagedPanel()
     {
@@ -242,6 +244,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "stage-all");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StageAllUnstagesEverythingWhenTheStagingAreaIsFocused()
     {
@@ -258,6 +261,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "unstage-all");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PushPublishesABranchThatHasNoUpstream()
     {
@@ -272,6 +276,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "push:set-upstream=True");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PushLeavesTheUpstreamAloneWhenTheBranchAlreadyHasOne()
     {
@@ -284,6 +289,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "push:set-upstream=False");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheHelpOverlayListsTheKeysAndTakesTheWholeDialog()
     {
@@ -304,6 +310,7 @@ public class GitClientDialogTest
         Contains(Render(dialog), "Unstaged (1)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EmptySectionsCostAHeaderRatherThanAFifthOfTheColumn()
     {
@@ -327,6 +334,7 @@ public class GitClientDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyPanelSaysSoOnceTheCursorIsInIt()
     {
@@ -341,6 +349,7 @@ public class GitClientDialogTest
         Contains(Render(dialog), "(nothing staged)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedCommandShowsItsWholeOutputInTheDetailPane()
     {
@@ -358,6 +367,7 @@ public class GitClientDialogTest
         Contains(screen, "! [rejected] main -> main (fetch first)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheFooterShowsTheKeysForThePanelUnderTheCursor()
     {
@@ -371,6 +381,7 @@ public class GitClientDialogTest
         Contains(Render(dialog), "a:stage-all");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckingOutARemoteBranchCreatesALocalOneTrackingIt()
     {
@@ -394,6 +405,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "checkout-remote:origin/feature");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DiscardingAsksBeforeItThrowsWorkAway()
     {
@@ -413,6 +425,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "discard:a.cs");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AmendOffersThePreviousMessageBackRatherThanABlankLine()
     {
@@ -455,6 +468,7 @@ public class GitClientDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NCreatesABranchFromTheTypedName()
     {
@@ -470,6 +484,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "create-branch:feature");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyBranchNameCreatesNothing()
     {
@@ -483,6 +498,7 @@ public class GitClientDialogTest
         Assert.IsFalse(gitService.Calls.Any(c => c.StartsWith("create-branch", StringComparison.Ordinal)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeInTheInputCancelsItAndKeepsTheDialog()
     {
@@ -497,6 +513,7 @@ public class GitClientDialogTest
         Contains(Render(dialog), "Cancelled.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnABranchChecksItOut()
     {
@@ -514,6 +531,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "checkout:dev");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnARemoteBranchTracksIt()
     {
@@ -531,6 +549,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "checkout-remote:origin/feature");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MMergesTheBranchUnderTheCursor()
     {
@@ -548,6 +567,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "merge:dev");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeletingABranchAsksFirstAndIgnoresStrayKeys()
     {
@@ -570,6 +590,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "delete-branch:old");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StashingAWorkingTreeWithChangesAsksForAMessage()
     {
@@ -584,6 +605,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "stash-push:wip");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StashingACleanTreeSaysThereIsNothingToStash()
     {
@@ -596,6 +618,7 @@ public class GitClientDialogTest
         Contains(Render(dialog), "Nothing to stash");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InTheStashesSectionEnterPopsAAppliesAndXDropsAfterAsking()
     {
@@ -615,6 +638,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "stash-drop:0");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DiscardingAFileAsksFirst()
     {
@@ -633,6 +657,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "discard:a.cs");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AmendIsPrefilledWithTheLastSubject()
     {
@@ -650,6 +675,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "commit:amend:Fix the thing");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AmendWithNoCommitSaysSo()
     {
@@ -662,6 +688,7 @@ public class GitClientDialogTest
         Contains(Render(dialog), "Nothing to amend");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FAndPFetchAndPull()
     {
@@ -676,6 +703,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "pull");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CapitalAAbortsAMergeOnlyWhileOneIsInProgress()
     {
@@ -693,6 +721,7 @@ public class GitClientDialogTest
         AssertCalled(gitService, "abort-merge");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HelpOverlayScrollsAndAnyOtherKeyClosesItButNotTheDialog()
     {
@@ -712,6 +741,7 @@ public class GitClientDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PageDownScrollsTheDiffPane()
     {

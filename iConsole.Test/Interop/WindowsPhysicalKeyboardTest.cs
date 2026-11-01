@@ -5,6 +5,7 @@ namespace iConsole.Test.Interop;
 [TestClass]
 public class WindowsPhysicalKeyboardTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ModifierQueries_ReturnFalseOnNonWindows()
     {

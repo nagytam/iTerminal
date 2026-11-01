@@ -5,6 +5,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class VirtualTimeProviderTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void StartsAtTheGivenUtcTime_WithTheMonotonicClockAtZero()
     {
@@ -14,6 +15,7 @@ public class VirtualTimeProviderTest
         Assert.AreEqual(0, time.MonotonicMilliseconds);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Advance_MovesEveryClockForward()
     {
@@ -26,6 +28,7 @@ public class VirtualTimeProviderTest
         Assert.AreEqual(90_000, time.MonotonicMilliseconds);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Advance_RejectsNegativeDurations()
     {
@@ -35,6 +38,7 @@ public class VirtualTimeProviderTest
         Assert.AreEqual(0, time.MonotonicMilliseconds);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SystemTimeProvider_ReadsTheRealClocks()
     {

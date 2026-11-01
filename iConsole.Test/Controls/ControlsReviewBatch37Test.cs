@@ -28,6 +28,7 @@ public class ControlsReviewBatch37Test
         return m.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Badge_WithShorterText_AsksForARepaint_AndPaintsItsWholeRectangle()
     {
@@ -45,6 +46,7 @@ public class ControlsReviewBatch37Test
         Assert.IsFalse(screen.Line(0).Contains('Q'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LinkLabel_WithShorterOrNoText_AsksForARepaint_AndPaintsItsWholeRectangle()
     {
@@ -62,6 +64,7 @@ public class ControlsReviewBatch37Test
         Assert.IsFalse(screen.Line(0).Contains('Q'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LogView_AClickInsideGivesItTheFocus_AClickOutsideDoesNot()
     {
@@ -75,6 +78,7 @@ public class ControlsReviewBatch37Test
         Assert.IsTrue(log.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorPicker_ReadOnly_ShowsNoCursor()
     {
@@ -87,6 +91,7 @@ public class ControlsReviewBatch37Test
         Assert.IsFalse(ScreenBuffer.Render(picker, 40, 4).Line(0).Contains('['));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_ReadOnly_IsNotEmphasisedAsFocused()
     {
@@ -109,6 +114,7 @@ public class ControlsReviewBatch37Test
         Assert.IsTrue(differs);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_HidingTheWeekNumbers_AsksForARepaint()
     {
@@ -120,6 +126,7 @@ public class ControlsReviewBatch37Test
         Assert.IsTrue(Control.TreeVersion > before);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TimePicker_DroppingTheSeconds_AsksForARepaint()
     {
@@ -131,6 +138,7 @@ public class ControlsReviewBatch37Test
         Assert.IsTrue(Control.TreeVersion > before);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Separator_Turning_AsksForARepaint()
     {

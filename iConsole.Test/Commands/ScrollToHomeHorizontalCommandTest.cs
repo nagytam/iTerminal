@@ -6,6 +6,7 @@ namespace iConsole.Commands.Test;
 [TestClass]
 public class ScrollToHomeHorizontalCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TypeExists() => Assert.IsNotNull(typeof(ScrollToHomeHorizontalCommand));
 }

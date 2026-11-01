@@ -30,6 +30,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitForTextAsync(expectedText);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F8AndShiftF8InTheCsvViewerSwitchTheCodePageAndNeverReachDeleteOrSettings()
     {
@@ -45,6 +46,7 @@ public class EditorViewerAndPermissionsTest
         Assert.IsTrue(File.Exists(Path.Combine(_app.LeftRoot, "hu.csv")));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TabIndents_CtrlSSaves_AndAnLfFileStaysLf()
     {
@@ -59,6 +61,7 @@ public class EditorViewerAndPermissionsTest
         Assert.AreEqual("    alpha\nbeta\n", File.ReadAllText(LfFile), "saved with the break the file had, not the system's");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EscOnAChangedFileAsksAndDiscardLeavesTheFileAlone()
     {
@@ -75,6 +78,7 @@ public class EditorViewerAndPermissionsTest
         Assert.AreEqual("alpha\nbeta\n", File.ReadAllText(LfFile));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EscOnAnUnchangedFileClosesWithoutAsking()
     {
@@ -85,6 +89,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EnterInTheEditorKeepsTheIndentOfTheLine()
     {
@@ -100,6 +105,7 @@ public class EditorViewerAndPermissionsTest
         Assert.AreEqual("    alpha\n    x\nbeta\n", File.ReadAllText(LfFile));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5InTheEditorGoesToALine()
     {
@@ -113,6 +119,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitForTextAsync("row 249");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheViewerScrollsToTheEndAndBack()
     {
@@ -132,6 +139,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitForTextAsync("row 000");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlPInPropertiesOpensThePermissionsAndAnEntryCanBeAdded()
     {
@@ -155,6 +163,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.PropertiesDialog, "back in the properties");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AnFtpConnectionCanBeSavedFromTheRemoteConnectionsForm()
     {

@@ -45,6 +45,7 @@ public class ContentModelDockerDriveTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AContainerRowIsNothingAFileOperationMayTouch()
     {
@@ -56,6 +57,7 @@ public class ContentModelDockerDriveTest
         StringAssert.Contains(model.GetFooter(), "Shift+F9: start/stop");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftF9StopsARunningContainerAndTheRowShowsIt()
     {
@@ -82,6 +84,7 @@ public class ContentModelDockerDriveTest
         Assert.AreEqual("Exited", model.GetFocusedEntry()!.FileSize, "the listing is read again, cursor still on the row");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedActionIsSaidInTheFooter()
     {
@@ -96,6 +99,7 @@ public class ContentModelDockerDriveTest
         StringAssert.Contains(model.GetFooter(), "port is already allocated");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheQuickViewOfAContainerIsItsLogOpenedAtTheEnd()
     {
@@ -112,6 +116,7 @@ public class ContentModelDockerDriveTest
         Assert.AreEqual(" GET /favicon.ico 404", preview.Lines[^1], "the newest line last");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileInsideAContainerStillPreviewsAsAFile()
     {
@@ -121,6 +126,7 @@ public class ContentModelDockerDriveTest
         Assert.IsNull(await model.BuildPreviewAsync(model.Entries.AsSnapshot()[1], 60, CancellationToken.None));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTerminalRunsInsideTheContainerInThePanelsFolder()
     {
@@ -138,6 +144,7 @@ public class ContentModelDockerDriveTest
         Assert.AreEqual("web", command.Host);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnTheContainerListTheTerminalRunsInTheContainerUnderTheCursor()
     {
@@ -158,6 +165,7 @@ public class ContentModelDockerDriveTest
         Assert.AreEqual("/\n", command.Output);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AStoppedContainerIsSaidInsteadOfDockersParagraph()
     {

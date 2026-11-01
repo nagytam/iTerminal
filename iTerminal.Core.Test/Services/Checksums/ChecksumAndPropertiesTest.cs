@@ -48,6 +48,7 @@ public class ChecksumAndPropertiesTest
     }
 
     #region Computing
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComputeAsync_ALocalFile_GivesEveryAlgorithmInOnePass()
     {
@@ -69,6 +70,7 @@ public class ChecksumAndPropertiesTest
         public void Report(long value) => reported.Add(value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComputeAsync_AFileOnAnotherDrive_IsStreamedThroughItsFileSystem()
     {
@@ -89,6 +91,7 @@ public class ChecksumAndPropertiesTest
         Assert.AreEqual(3, result.Bytes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComputeAsync_AnEmptyFile_HasChecksumsToo()
     {
@@ -100,6 +103,7 @@ public class ChecksumAndPropertiesTest
         Assert.AreEqual(0, result.Bytes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComputeAsync_Cancelled_Stops()
     {
@@ -113,6 +117,7 @@ public class ChecksumAndPropertiesTest
     #endregion
 
     #region Reading a checksum someone wrote down
+    [Timeout(60_000)]
     [TestMethod]
     public void AlgorithmFor_GoesByLength_AndRefusesWhatIsNotHex()
     {
@@ -126,6 +131,7 @@ public class ChecksumAndPropertiesTest
         Assert.IsNull(ChecksumService.AlgorithmFor(null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseChecksumFile_ReadsWhatTheCommonToolsWrite()
     {
@@ -136,6 +142,7 @@ public class ChecksumAndPropertiesTest
         Assert.AreEqual(AbcSha256, ChecksumService.ParseChecksumFile($"{AbcSha256}  ./dist/abc.txt", "abc.txt"), "listed with its folder");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseChecksumFile_InAList_TakesThisFilesLine_AndNoOther()
     {
@@ -147,6 +154,7 @@ public class ChecksumAndPropertiesTest
         Assert.IsNull(ChecksumService.ParseChecksumFile("not a checksum file", "abc.txt"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindWrittenChecksum_LooksBesideTheFile_AndInTheFoldersList()
     {
@@ -162,6 +170,7 @@ public class ChecksumAndPropertiesTest
         Assert.AreEqual(new ExpectedChecksum(ChecksumAlgorithm.Md5, AbcMd5, "abc.txt.md5"), ChecksumService.FindWrittenChecksum(path));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompareVerdict_SaysWhichAlgorithmMatched_OrThatItIsNotAChecksumYet()
     {
@@ -183,6 +192,7 @@ public class ChecksumAndPropertiesTest
     #endregion
 
     #region Properties
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_AFile_AndAFolder()
     {
@@ -205,6 +215,7 @@ public class ChecksumAndPropertiesTest
         Assert.ThrowsExactly<IOException>(() => service.Read(Path.Combine(_root, "missing")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MeasureAsync_AddsUpEverythingUnderTheFolder_ButNotThroughALink()
     {
@@ -221,6 +232,7 @@ public class ChecksumAndPropertiesTest
         Assert.AreEqual(0, measure.Unreadable);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_ALink_IsTheLinkItself()
     {
@@ -234,6 +246,7 @@ public class ChecksumAndPropertiesTest
         StringAssert.EndsWith(Path.TrimEndingDirectorySeparator(properties.LinkTarget), "target");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Apply_ChangesWhatTheUserSets_AndLeavesTheRest()
     {
@@ -261,6 +274,7 @@ public class ChecksumAndPropertiesTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PermissionBits_AsOctalAndAsLetters()
     {
@@ -277,6 +291,7 @@ public class ChecksumAndPropertiesTest
         Assert.IsNull(FilePropertiesService.ParseOctal("rwx"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormatSize_IsForReadingAndForChecking()
     {

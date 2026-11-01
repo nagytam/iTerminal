@@ -69,6 +69,7 @@ public class TransferAndTorrentLanguageTest
         return (fs, new Url(Path.Combine(Path.GetTempPath(), "a.bin")), new Url(Path.Combine(Path.GetTempPath(), "out", "a.bin")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSpacePrompt_SpeaksTheChosenLanguage()
     {
@@ -87,6 +88,7 @@ public class TransferAndTorrentLanguageTest
         Assert.IsTrue(asked[0].Message.Contains("a.bin", StringComparison.Ordinal), asked[0].Message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePausedPrompt_SpeaksTheChosenLanguage_AndNamesTheTarget()
     {
@@ -103,6 +105,7 @@ public class TransferAndTorrentLanguageTest
         Assert.IsTrue(asked[1].Message.Contains("a.bin", StringComparison.Ordinal), asked[1].Message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesThePrompts_AndKeepsTheirPlaceholders()
     {
@@ -123,6 +126,7 @@ public class TransferAndTorrentLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TheTorrentRemoveQuestionKeepsItsNameAndItsKeys()
     {
@@ -138,6 +142,7 @@ public class TransferAndTorrentLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TorrentStateWordsAndHeadersFitTheirColumns()
     {

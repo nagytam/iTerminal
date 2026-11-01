@@ -11,6 +11,7 @@ namespace iTerminal.Core.Test.Services;
 [TestClass]
 public class ThemePersistenceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ApplyingAThemeInTheManagerSavesIt()
     {
@@ -24,6 +25,7 @@ public class ThemePersistenceTest
         Assert.AreEqual(nameof(Theme.Dark), settings.Get(Settings.Theme));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSavedThemeIsRestored()
     {
@@ -35,6 +37,7 @@ public class ThemePersistenceTest
         Assert.AreEqual(Theme.Dark, themeService.Theme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoSavedThemeLeavesTheDefault()
     {
@@ -44,6 +47,7 @@ public class ThemePersistenceTest
         Assert.AreEqual(Theme.Default, themeService.Theme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnknownSavedThemeIsIgnored()
     {
@@ -55,6 +59,7 @@ public class ThemePersistenceTest
         Assert.AreEqual(Theme.Default, themeService.Theme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AServiceThatCannotSwitchIsLeftAlone()
     {
@@ -64,6 +69,7 @@ public class ThemePersistenceTest
         Assert.IsFalse(ThemePersistence.Restore(TestTheme(), settings));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutSettingsNothingHappens()
     {

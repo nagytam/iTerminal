@@ -5,6 +5,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class ProcessServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ProcessServiceConstructor()
     {
@@ -13,6 +14,7 @@ public class ProcessServiceTest
         Assert.IsNotNull(service.Processes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProcessServiceProcessesNotEmpty()
     {
@@ -20,6 +22,7 @@ public class ProcessServiceTest
         Assert.IsTrue(service.Processes.Count > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProcessServiceProcessesSorted()
     {
@@ -32,6 +35,7 @@ public class ProcessServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProcessServiceContainsCurrentProcess()
     {
@@ -50,6 +54,7 @@ public class ProcessServiceTest
         Assert.IsTrue(found);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProcessServiceProcessesAreValid()
     {

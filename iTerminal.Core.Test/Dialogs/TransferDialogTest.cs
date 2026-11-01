@@ -64,6 +64,7 @@ public class TransferDialogTest
         return new MoveDialog(null!, contentModelService, null!, null!, null!, new Mock<IBeepService>().Object, dateTime.Object, TestTheme(), null!, null!, null!, null!);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpensWithTheSourceAndTheOtherPanelsFolderAsTarget()
     {
@@ -76,6 +77,7 @@ public class TransferDialogTest
         StringAssert.Contains(dialog.TextBoxTarget.Text, "dst");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTargetBoxIsLabelledAsADestination()
     {
@@ -86,6 +88,7 @@ public class TransferDialogTest
         Assert.AreEqual("To", dialog.TextBoxTarget.Label);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheResolvedTargetFollowsTheBoxAsItIsEdited()
     {
@@ -99,6 +102,7 @@ public class TransferDialogTest
         StringAssert.Contains(dialog.TargetPreviewForTest, "src", "a bare name lands next to the source");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDialogIsSizedToItsContent()
     {
@@ -109,6 +113,7 @@ public class TransferDialogTest
         AssertScreenContains(Render(dialog), "Overwrite");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTargetBoxScrollsWithinItsOwnWidth()
     {
@@ -120,6 +125,7 @@ public class TransferDialogTest
             "the box scrolls within the width its caption leaves");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MoveUsesTheSameLayoutWithItsOwnTitle()
     {
@@ -130,6 +136,7 @@ public class TransferDialogTest
         Assert.AreEqual("To", dialog.TextBoxTarget.Label);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesTheDialog()
     {

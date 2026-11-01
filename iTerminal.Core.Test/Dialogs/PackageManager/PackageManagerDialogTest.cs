@@ -124,6 +124,7 @@ public class PackageManagerDialogTest
         await WaitUntilAsync(() => !dialog.IsLoadingForTest, "the search to finish");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListsTheInstalledPackages()
     {
@@ -138,6 +139,7 @@ public class PackageManagerDialogTest
         AssertScreenContains(screen, "1.0 -> 2.0", "an available upgrade is shown");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhileLoadingTheListSaysSoRatherThanLookingEmpty()
     {
@@ -153,6 +155,7 @@ public class PackageManagerDialogTest
         await WaitUntilAsync(() => !dialog.IsLoadingForTest, "the list to load");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyInstalledListSaysSo()
     {
@@ -161,6 +164,7 @@ public class PackageManagerDialogTest
         AssertScreenContains(Render(dialog), "No packages installed.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AQueryThatThrowsStillEndsTheLoadingState()
     {
@@ -172,6 +176,7 @@ public class PackageManagerDialogTest
         AssertScreenContains(Render(dialog), "r retries");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedQueryIsShownInTheHeader()
     {
@@ -180,6 +185,7 @@ public class PackageManagerDialogTest
         AssertScreenContains(Render(dialog), "Error: source unavailable");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchShowsMatchesAndIReturnsToTheInstalledList()
     {
@@ -197,6 +203,7 @@ public class PackageManagerDialogTest
         AssertScreenContains(Render(dialog), "Installed (1)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASearchWithNoMatchesSaysSo()
     {
@@ -207,6 +214,7 @@ public class PackageManagerDialogTest
         AssertScreenContains(Render(dialog), "No package matches \"nothing\"");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeInTheSearchBoxCancelsTheSearchNotTheDialog()
     {
@@ -222,6 +230,7 @@ public class PackageManagerDialogTest
         CollectionAssert.DoesNotContain(service.Calls, "search:");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InstallAsksForConfirmationAndRunsOnlyOnY()
     {
@@ -241,6 +250,7 @@ public class PackageManagerDialogTest
         await WaitUntilAsync(() => dialog.StatusForTest == "Done.", "the install to report");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyOtherKeyDeclinesTheConfirmation()
     {
@@ -257,6 +267,7 @@ public class PackageManagerDialogTest
         CollectionAssert.DoesNotContain(service.Calls, "uninstall:Vendor.Git");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UninstallRefreshesTheInstalledListWhenItSucceeds()
     {
@@ -271,6 +282,7 @@ public class PackageManagerDialogTest
         CollectionAssert.Contains(service.Calls, "uninstall:Vendor.Git");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task KeyHintsStayVisibleNextToTheStatus()
     {
@@ -287,6 +299,7 @@ public class PackageManagerDialogTest
         AssertScreenContains(screen, "s:search", "the hints used to disappear once any status was set");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APrimaryActionWhileBusyIsExplained()
     {
@@ -308,6 +321,7 @@ public class PackageManagerDialogTest
         Assert.AreEqual("Cancelled.", dialog.StatusForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedInstallReportsTheExitCode()
     {
@@ -322,6 +336,7 @@ public class PackageManagerDialogTest
         await WaitUntilAsync(() => dialog.StatusForTest == "Failed (exit 3).", "the failure to be reported");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesTheDialog()
     {
@@ -333,6 +348,7 @@ public class PackageManagerDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpeningKeepsTheSearchBoxHiddenSoTheFooterIsDrawn()
     {
@@ -345,6 +361,7 @@ public class PackageManagerDialogTest
         AssertScreenContains(Render(dialog), "s:search");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task STheSearchBoxAppearsAndReplacesTheFooter()
     {
@@ -356,6 +373,7 @@ public class PackageManagerDialogTest
         AssertScreenContains(Render(dialog), "Search query");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheOutputScrollsWithThePageKeys()
     {
@@ -373,6 +391,7 @@ public class PackageManagerDialogTest
         Assert.AreEqual(0, dialog.OutputScrollForTest, "a one-line output has nothing to scroll past");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RReloadsTheInstalledList()
     {
@@ -384,6 +403,7 @@ public class PackageManagerDialogTest
         await WaitUntilAsync(() => service.Calls.Count(c => c == "list") >= 2, "the list to be read again");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RInSearchResultsRepeatsTheSearch()
     {
@@ -397,6 +417,7 @@ public class PackageManagerDialogTest
         await WaitUntilAsync(() => service.Calls.Count(c => c == "search:py") >= 2, "the search to run again");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterInTheInstalledListOffersToUninstallNotInstall()
     {

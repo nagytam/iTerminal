@@ -63,12 +63,14 @@ public class MusicPlaylistStoreTest
         new MusicTrack(@"C:\Music\c.mp3") { Title = "Sea", Artist = "Other", Album = "Second" },
     ];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Load_WithNothingSaved_ReturnsEmpty()
     {
         Assert.AreEqual(0, CreateStore().Load().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_ThenLoad_RestoresTheQueueInOrderWithItsTags()
     {
@@ -89,6 +91,7 @@ public class MusicPlaylistStoreTest
         Assert.AreEqual(TimeSpan.Zero, restored[1].Duration, "An unprobed duration stays unknown rather than becoming zero-ish");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_ReplacesTheWholeQueue()
     {
@@ -102,6 +105,7 @@ public class MusicPlaylistStoreTest
         Assert.AreEqual(@"C:\Music\only.mp3", restored[0].Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_AnEmptyQueue_ClearsTheStoredOne()
     {
@@ -113,6 +117,7 @@ public class MusicPlaylistStoreTest
         Assert.AreEqual(0, CreateStore().Load().Count, "Clearing the playlist has to persist too");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_WithoutADatabase_DoesNotThrow()
     {

@@ -14,6 +14,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class ControlIntegrationTwoTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThemeManager_TypingALetterJumpsToTheNextThemeStartingWithIt()
     {
@@ -29,6 +30,7 @@ public class ControlIntegrationTwoTest
 
     private static string NewDirectory() => Path.Combine(Path.GetTempPath(), $"iTerminal.ControlsTwo.{Guid.NewGuid():N}");
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PasswordManager_EditFormRatesThePasswordBeingTyped()
     {
@@ -59,6 +61,7 @@ public class ControlIntegrationTwoTest
         AssertScreenContains(Render(dialog), "Strong");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SettingsMusic_VolumeSliderShowsAndSetsThePlayersVolume()
     {
@@ -73,6 +76,7 @@ public class ControlIntegrationTwoTest
         Assert.AreEqual(75, player.Object.Volume);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SettingsMusic_WithoutAPlayerTheSliderIsHarmless()
     {

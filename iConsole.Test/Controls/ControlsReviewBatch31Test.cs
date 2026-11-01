@@ -19,6 +19,7 @@ public class ControlsReviewBatch31Test
     private static object? Internal(Type type, string name, string? argument)
         => type.GetMethod(name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!.Invoke(null, [argument]);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_InsertText_OfNull_ChangesNothing()
     {
@@ -29,6 +30,7 @@ public class ControlsReviewBatch31Test
         Assert.AreEqual("abc", box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextEditor_InsertText_OfNull_ChangesNothing()
     {
@@ -40,24 +42,28 @@ public class ControlsReviewBatch31Test
         Assert.AreEqual(before, editor.TextModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TerminalSequences_Sanitize_WithANegativeLength_IsEmpty()
     {
         Assert.AreEqual(string.Empty, TerminalSequences.Sanitize("title", -1, keepSemicolons: true));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OfficeTextRenderer_IsDateFormat_OfNull_IsFalse()
     {
         Assert.AreEqual(false, Internal(typeof(OfficeTextRenderer), "IsDateFormat", null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Hyperlinks_Sanitize_OfNull_IsEmpty()
     {
         Assert.AreEqual(string.Empty, Internal(typeof(Hyperlinks), "Sanitize", null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClipboardKeys_NormalizeLineBreaks_OfNull_IsEmpty()
     {

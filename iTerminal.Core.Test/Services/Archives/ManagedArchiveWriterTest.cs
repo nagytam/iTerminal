@@ -90,6 +90,7 @@ public class ManagedArchiveWriterTest
         return entries;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AZipHoldsEveryFileAndFolderUnderItsName()
     {
@@ -104,6 +105,7 @@ public class ManagedArchiveWriterTest
         Assert.AreEqual(3, result.Added);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheLevelChangesTheSize()
     {
@@ -115,6 +117,7 @@ public class ManagedArchiveWriterTest
         Assert.AreEqual("alpha", ReadZip(Archive("stored.zip"))["a.txt"]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnAesZipOpensOnlyWithItsPassword()
     {
@@ -136,6 +139,7 @@ public class ManagedArchiveWriterTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AZipCryptoZipIsTheOldCipher()
     {
@@ -150,6 +154,7 @@ public class ManagedArchiveWriterTest
         Assert.AreEqual("beta", new StreamReader(zip.GetInputStream(entry)).ReadToEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AddingToAZipKeepsWhatWasThereAndReplacesTheSameName()
     {
@@ -165,6 +170,7 @@ public class ManagedArchiveWriterTest
         Assert.AreEqual(new CompressionResult(1, 1, 0), result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithReplacingOffTheArchivesCopyIsKept()
     {
@@ -180,6 +186,7 @@ public class ManagedArchiveWriterTest
         Assert.AreEqual(new CompressionResult(1, 1, 1), result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AddingToAnEncryptedZipNeedsItsPasswordAndLeavesItAloneWithout()
     {
@@ -199,6 +206,7 @@ public class ManagedArchiveWriterTest
         Assert.AreEqual("alpha", new StreamReader(zip.GetInputStream(zip.GetEntry("a.txt"))).ReadToEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATarGzHoldsEverythingAndCanBeAddedTo()
     {
@@ -215,6 +223,7 @@ public class ManagedArchiveWriterTest
         Assert.IsTrue(entries.ContainsKey("docs/"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATarBz2AndAPlainTarRoundTrip()
     {
@@ -237,6 +246,7 @@ public class ManagedArchiveWriterTest
         CollectionAssert.Contains(names, "docs/deep/c.bin");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CancellingLeavesNoArchive()
     {
@@ -250,6 +260,7 @@ public class ManagedArchiveWriterTest
         Assert.AreEqual(0, Directory.GetFiles(_root).Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ProgressCountsTheBytesAndTheFiles()
     {

@@ -7,6 +7,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class AboutDialogTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowsWhatThisIsAndWhichBuild()
     {
@@ -22,6 +23,7 @@ public class AboutDialogTest
         AssertScreenContains(screen, "Esc:close");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheVersionHasNoCommitHash()
     {
@@ -29,6 +31,7 @@ public class AboutDialogTest
         Assert.IsFalse(string.IsNullOrWhiteSpace(AboutDialog.Version));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDialogIsTallEnoughForEveryLine()
     {
@@ -38,6 +41,7 @@ public class AboutDialogTest
         Assert.IsTrue(dialog.ViewSize.Height >= AboutDialog.Lines.Count + 3);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {

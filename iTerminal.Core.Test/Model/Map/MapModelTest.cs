@@ -37,6 +37,7 @@ public class MapModelTest
         Assert.IsTrue(condition(), "timed out waiting");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StartsAtTheSavedViewOrAtHome()
     {
@@ -52,6 +53,7 @@ public class MapModelTest
         Assert.AreEqual(7, reopened.Zoom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PanningMovesTheCentreEastAndSouth()
     {
@@ -66,6 +68,7 @@ public class MapModelTest
         Assert.IsTrue(model.Latitude < latitude);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PanningByTheWidthOfACellMovesFourPixels()
     {
@@ -78,6 +81,7 @@ public class MapModelTest
         Assert.AreEqual(3 * MapAsciiRenderer.CellWidth, x1 - x0, 1e-6);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PanningPastTheDateLineWraps()
     {
@@ -89,6 +93,7 @@ public class MapModelTest
         Assert.IsTrue(model.Longitude is < -160 and > -170, $"longitude was {model.Longitude}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PanningStopsAtThePoles()
     {
@@ -101,6 +106,7 @@ public class MapModelTest
         Assert.IsTrue(model.Latitude <= MapProjection.MaxLatitude);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ZoomIsLimitedToTheTileServersRange()
     {
@@ -117,6 +123,7 @@ public class MapModelTest
         Assert.AreEqual(1, model.Zoom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ZoomingAroundACellKeepsThatSpotUnderThePointer()
     {
@@ -134,6 +141,7 @@ public class MapModelTest
         Assert.IsTrue(meters < metersPerCell * 2, $"moved {meters} m, a cell is {metersPerCell} m");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCentreIsMarkedAndOffsetCellsConvertBackToCoordinates()
     {
@@ -149,6 +157,7 @@ public class MapModelTest
         Assert.AreEqual(frame.CenterColumn, model.CoordinateToCell(47.5, 19.04, 81, 31)!.Value.Column);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TilesArriveInTheBackgroundAndTheFrameFillsIn()
     {
@@ -168,6 +177,7 @@ public class MapModelTest
         Assert.IsTrue(model.Version > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OfflineDrawsHatchingForTilesItDoesNotHaveAndAsksForNone()
     {
@@ -183,6 +193,7 @@ public class MapModelTest
         Assert.IsTrue(Enumerable.Range(0, 60).Any(c => frame[c, 0].Char == '/'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GoingOnlineFetchesWhatOfflineCouldNotFind()
     {
@@ -199,6 +210,7 @@ public class MapModelTest
         Assert.IsTrue(model.Store.Online);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedTileIsNotRequestedInALoopUntilRetried()
     {
@@ -218,6 +230,7 @@ public class MapModelTest
         Assert.IsTrue(model.BuildFrame(40, 10).Unavailable > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATileOnItsWayIsDrawnFromTheZoomLevelOut()
     {
@@ -232,6 +245,7 @@ public class MapModelTest
         Assert.AreEqual('~', frame[0, 0].Char, "the zoom-3 tile stands in for the missing zoom-4 one");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SavedPlacesInViewAreMarked()
     {
@@ -246,6 +260,7 @@ public class MapModelTest
         Assert.AreEqual(Color.Magenta, frame[column, row].Foreground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SavingForOfflineRefusesWhenOffline()
     {
@@ -258,6 +273,7 @@ public class MapModelTest
         Assert.AreEqual(0, fetcher.Requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SavingForOfflineStoresTheViewAndTwoZoomsIn()
     {
@@ -274,6 +290,7 @@ public class MapModelTest
         Assert.AreEqual(keys.Count, fetcher.Requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SavingForOfflineIsCappedForTheTileUsagePolicy()
     {
@@ -285,6 +302,7 @@ public class MapModelTest
         Assert.IsTrue(keys.Count > MapModel.MaxDownloadTiles);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFrameAsTextHasOneLinePerRow()
     {

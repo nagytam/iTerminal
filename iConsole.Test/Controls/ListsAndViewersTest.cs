@@ -24,6 +24,7 @@ public class ListsAndViewersTest
 
     private static string[] Lines(MockBuffer buffer) => buffer.ContentAsString.Split(Environment.NewLine);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyValueList_AlignsValuesInAColumn()
     {
@@ -35,6 +36,7 @@ public class ListsAndViewersTest
         Assert.AreEqual("Version  1.2.3", Lines(buffer)[1].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyValueList_CutsLongKeysAndValues()
     {
@@ -54,6 +56,7 @@ public class ListsAndViewersTest
         return list;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckList_Draw_ShowsCheckMarks()
     {
@@ -63,6 +66,7 @@ public class ListsAndViewersTest
         Assert.AreEqual("[x] b", Lines(buffer)[1].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_Space_TogglesCursorRow()
     {
@@ -72,6 +76,7 @@ public class ListsAndViewersTest
         CollectionAssert.AreEqual(new[] { "a", "b" }, list.CheckedItems.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_Star_InvertsAll()
     {
@@ -81,6 +86,7 @@ public class ListsAndViewersTest
         CollectionAssert.AreEqual(new[] { "a", "c", "d", "e" }, list.CheckedItems.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_Click_MovesCursorAndToggles()
     {
@@ -90,6 +96,7 @@ public class ListsAndViewersTest
         Assert.IsTrue(list.CheckedItems.Contains("c"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_CursorPastView_Scrolls()
     {
@@ -101,6 +108,7 @@ public class ListsAndViewersTest
         Assert.AreEqual("[ ] e", Lines(buffer)[2].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_ReadOnly_DoesNotToggle()
     {
@@ -110,6 +118,7 @@ public class ListsAndViewersTest
         Assert.AreEqual(1, list.CheckedItems.Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HexViewer_Draw_BlanksRowsPastTheData()
     {
@@ -122,6 +131,7 @@ public class ListsAndViewersTest
         Assert.AreEqual(string.Empty, Lines(buffer)[2].Trim());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HexViewer_Click_MovesCursorRow()
     {
@@ -132,6 +142,7 @@ public class ListsAndViewersTest
         Assert.AreEqual(32, viewer.SelectedOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextViewer_Wheel_MovesCursorThreeRows()
     {

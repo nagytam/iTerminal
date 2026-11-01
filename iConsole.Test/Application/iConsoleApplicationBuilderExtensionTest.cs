@@ -7,6 +7,7 @@ namespace iConsole.Test.Application;
 [TestClass]
 public class iConsoleApplicationBuilderExtensionTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void AddDefaultConsoleDriver_RegistersExpectedDriverForCurrentPlatform()
     {
@@ -24,6 +25,7 @@ public class iConsoleApplicationBuilderExtensionTest
         Assert.AreEqual(ServiceLifetime.Singleton, registration.Lifetime);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddDefaultConsoleDriver_ReturnsOriginalServiceCollection()
     {

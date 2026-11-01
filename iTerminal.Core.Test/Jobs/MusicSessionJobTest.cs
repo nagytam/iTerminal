@@ -85,6 +85,7 @@ public class MusicSessionJobTest
         Assert.IsTrue(condition(), $"Timed out waiting for: {because}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Restore_LoadsTheQueueFromTheDatabase()
     {
@@ -99,6 +100,7 @@ public class MusicSessionJobTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Restore_ImportsThePreDatabaseQueueFileWhenTheTableIsEmpty()
     {
@@ -114,6 +116,7 @@ public class MusicSessionJobTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Restore_PrefersTheDatabaseOverTheLegacyFile()
     {
@@ -129,6 +132,7 @@ public class MusicSessionJobTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChangingTheQueue_PersistsIt()
     {
@@ -161,6 +165,7 @@ public class MusicSessionJobTest
     /// Which track is cued moves on its own — every time one ends — while the queue it indexes into
     /// does not change at all, so it is watched alongside the volume and not alongside the queue.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CuingAnotherTrack_PersistsIt()
     {

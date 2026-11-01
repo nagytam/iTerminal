@@ -62,6 +62,7 @@ public class TranslationServiceTest
 
     private static TranslationService Create(params ITranslationProvider[] providers) => new(new LanguageDetector(), providers);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheApiIsTriedBeforeTheModelWhateverTheRegistrationOrder()
     {
@@ -74,6 +75,7 @@ public class TranslationServiceTest
         Assert.AreEqual(0, llm.Calls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailingApiFallsBackToTheModel()
     {
@@ -86,6 +88,7 @@ public class TranslationServiceTest
         Assert.AreEqual("<hi>", result.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnApiThatIsNotSetUpIsSkippedWithoutBeingCalled()
     {
@@ -98,6 +101,7 @@ public class TranslationServiceTest
         Assert.AreEqual(1, llm.Calls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AChosenEngineIsNotFallenBackFrom()
     {
@@ -111,6 +115,7 @@ public class TranslationServiceTest
         Assert.AreEqual(0, llm.Calls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhenNoEngineWorksTheMessageSaysWhyForEach()
     {
@@ -124,6 +129,7 @@ public class TranslationServiceTest
         StringAssert.Contains(exception.Message, "timeout");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSourceIsFilledInOfflineWhenTheEngineDoesNotReportIt()
     {
@@ -136,6 +142,7 @@ public class TranslationServiceTest
         Assert.IsNull(llm.Calls[0].Source, "auto is passed on as no source");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEnginesOwnDetectionWinsOverTheOfflineGuess()
     {
@@ -146,6 +153,7 @@ public class TranslationServiceTest
         Assert.AreEqual("nl", result.DetectedSource);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AGivenSourceIsNotDetected()
     {
@@ -154,6 +162,7 @@ public class TranslationServiceTest
         Assert.IsNull(result.DetectedSource);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyTextIsNotSentAnywhere()
     {
@@ -165,6 +174,7 @@ public class TranslationServiceTest
         Assert.AreEqual(0, api.Calls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnknownTargetIsRefusedBeforeAnyRequest()
     {
@@ -174,6 +184,7 @@ public class TranslationServiceTest
         Assert.AreEqual(0, api.Calls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALongTextGoesInPiecesAndComesBackWithItsBlankSpaceIntact()
     {
@@ -188,6 +199,7 @@ public class TranslationServiceTest
         Assert.AreEqual(text, result.Text.Replace("<", string.Empty).Replace(">", string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnceAPieceHasDetectedTheSourceTheRestAreGivenIt()
     {
@@ -199,6 +211,7 @@ public class TranslationServiceTest
         Assert.IsTrue(api.Calls.Skip(1).All(call => call.Source == "en"), "the pieces are not each detected on their own");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("")]
     [DataRow("short")]
@@ -215,6 +228,7 @@ public class TranslationServiceTest
         Assert.IsTrue(chunks.All(chunk => chunk.Length <= 20), string.Join("|", chunks));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AConfidentOfflineGuessIsTakenWithoutAskingAnEngine()
     {
@@ -226,6 +240,7 @@ public class TranslationServiceTest
         Assert.AreEqual(0, api.DetectCalls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnsureOfflineGuessAsksTheEngine()
     {
@@ -236,6 +251,7 @@ public class TranslationServiceTest
         Assert.AreEqual("sv", detection!.Code);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AChosenEngineIsAskedEvenWhenTheOfflineGuessIsSure()
     {
@@ -246,6 +262,7 @@ public class TranslationServiceTest
         Assert.AreEqual("zh", detection!.Code);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhenTheEnginesFailTheOfflineGuessStands()
     {
@@ -256,6 +273,7 @@ public class TranslationServiceTest
         Assert.AreEqual("en", detection!.Code);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AvailabilityNamesTheReasonOnlyWhenNothingCanDoTheWork()
     {

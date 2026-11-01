@@ -28,6 +28,7 @@ public class ControlsReviewBatch36Test
         return m.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_Disabled_GreysItsWell()
     {
@@ -40,6 +41,7 @@ public class ControlsReviewBatch36Test
         Assert.AreEqual(Color.Black, screen.BackgroundAt(1, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_Enabled_KeepsItsEditableWell()
     {
@@ -50,6 +52,7 @@ public class ControlsReviewBatch36Test
         Assert.AreEqual(Color.Yellow, screen.BackgroundAt(1, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ElapsedClock_Disabled_DrawsTheTimeGreyed()
     {
@@ -61,6 +64,7 @@ public class ControlsReviewBatch36Test
         Assert.AreEqual(Color.DarkGray, screen.ForegroundAt(0, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RadioGroup_Disabled_GreysItsOptions()
     {
@@ -74,6 +78,7 @@ public class ControlsReviewBatch36Test
         Assert.AreEqual(Color.DarkGray, screen.ForegroundAt(3, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RadioGroup_MadeNarrower_DoesNotDrawPastItsEdge()
     {
@@ -87,6 +92,7 @@ public class ControlsReviewBatch36Test
         Assert.IsTrue(screen.Line(0)[22..].Trim().Length == 0, screen.Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HexViewer_Disabled_GreysTheCursorRowToo()
     {
@@ -98,6 +104,7 @@ public class ControlsReviewBatch36Test
         Assert.AreEqual(Color.DarkGray, screen.ForegroundAt(0, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_GivenFewerRowsThanItsEight_DrawsOnlyThose()
     {

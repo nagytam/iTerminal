@@ -73,6 +73,7 @@ public class GitLensTest
         return result;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetHeaderIndicator_WhenFolderIsGitRepository_ReturnsGitIndicator()
     {
@@ -103,6 +104,83 @@ public class GitLensTest
         }
     }
 
+    private static string Indicator(GitRepositoryStatus status, Func<string?, bool> isSatisfied)
+    {
+        string rootPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(rootPath);
+
+        try
+        {
+            GitLens lens = new(new FakeGitService { Root = rootPath, Status = status });
+            Mock<IContentModel> contentModel = new(MockBehavior.Strict);
+            contentModel.SetupGet(m => m.Url).Returns(new Url(rootPath));
+
+            return PollUntil(() => lens.GetHeaderIndicator(contentModel.Object), isSatisfied) ?? string.Empty;
+        }
+        finally
+        {
+            Directory.Delete(rootPath, true);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void GetHeaderIndicator_WithAnUpstream_ShowsRemoteSlashLocalCommits()
+    {
+        // One commit on the remote that is not here yet (behind), two here that are not on the remote (ahead).
+        string indicator = Indicator(
+            new GitRepositoryStatus("main", "origin/main", Ahead: 2, Behind: 1, Staged: [], Unstaged: []),
+            result => result is not null && result != "{Git}");
+
+        Assert.AreEqual("{Git 1/2}", indicator);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void GetHeaderIndicator_InSyncWithTheUpstream_ShowsZeroOverZero()
+    {
+        string indicator = Indicator(
+            new GitRepositoryStatus("main", "origin/main", 0, 0, [], []),
+            result => result is not null && result != "{Git}");
+
+        Assert.AreEqual("{Git 0/0}", indicator);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void GetHeaderIndicator_AfterMovingToAnotherFolder_DoesNotKeepTheOldCounts()
+    {
+        string first = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        string second = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(first);
+        Directory.CreateDirectory(second);
+
+        try
+        {
+            FakeGitService gitService = new()
+            {
+                Root = first,
+                Status = new GitRepositoryStatus("main", "origin/main", 2, 1, [], []),
+            };
+            GitLens lens = new(gitService);
+            Mock<IContentModel> firstModel = new(MockBehavior.Strict);
+            firstModel.SetupGet(m => m.Url).Returns(new Url(first));
+            Mock<IContentModel> secondModel = new(MockBehavior.Strict);
+            secondModel.SetupGet(m => m.Url).Returns(new Url(second));
+            PollUntil(() => lens.GetHeaderIndicator(firstModel.Object), result => result == "{Git 1/2}");
+
+            // The second folder is not a repository: the first one's counts must not show against it.
+            gitService.Root = null;
+            Assert.IsNull(lens.GetHeaderIndicator(secondModel.Object));
+        }
+        finally
+        {
+            Directory.Delete(first, true);
+            Directory.Delete(second, true);
+        }
+    }
+
+    [Timeout(60_000)]
     [TestMethod]
     public void DecorateRow_WhenFileIsModified_AppliesBackgroundHighlight()
     {

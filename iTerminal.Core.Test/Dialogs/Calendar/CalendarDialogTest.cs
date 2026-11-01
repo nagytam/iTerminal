@@ -42,6 +42,7 @@ public class CalendarDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpensOnToday()
     {
@@ -52,6 +53,7 @@ public class CalendarDialogTest
         Assert.AreEqual(new DateOnly(2026, 10, 14), fixture.Dialog.CalendarForTest.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowsMoveByDayAndWeekAndPageKeysByMonth()
     {
@@ -68,6 +70,7 @@ public class CalendarDialogTest
         Assert.AreEqual(new DateOnly(2026, 11, 22), fixture.Dialog.CalendarForTest.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReopeningStartsFromTodayAgain()
     {
@@ -80,6 +83,7 @@ public class CalendarDialogTest
         Assert.AreEqual(new DateOnly(2026, 10, 14), fixture.Dialog.CalendarForTest.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATypedMeetingIsAddedToTheSelectedDayAndDrawn()
     {
@@ -99,6 +103,7 @@ public class CalendarDialogTest
         AssertScreenContains(screen, "09:00–09:30  Stand up");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowsDoNotMoveTheCalendarWhileAMeetingIsBeingTyped()
     {
@@ -112,6 +117,7 @@ public class CalendarDialogTest
         Assert.IsNotNull(fixture.Dialog.EntryForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeAbandonsTheEntryAndKeepsTheDialogOpen()
     {
@@ -127,6 +133,7 @@ public class CalendarDialogTest
         Assert.IsTrue(root.Controls.AsSnapshot().Contains(fixture.Dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeWithNothingOpenClosesTheDialog()
     {
@@ -138,6 +145,7 @@ public class CalendarDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(fixture.Dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnInvalidMeetingStaysInTheEntryWithItsReason()
     {
@@ -153,6 +161,7 @@ public class CalendarDialogTest
         Assert.AreEqual(0, fixture.Meetings.On(new DateOnly(2026, 10, 14)).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteRemovesTheHighlightedMeeting()
     {
@@ -171,6 +180,7 @@ public class CalendarDialogTest
         CollectionAssert.AreEqual(new[] { "Keep" }, fixture.Meetings.On(day).Select(m => m.Title).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyKeyButYWithdrawsTheDeletion()
     {
@@ -189,6 +199,7 @@ public class CalendarDialogTest
         Assert.AreEqual(1, fixture.Meetings.On(day).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteOnADayWithoutMeetingsAsksNothing()
     {
@@ -200,6 +211,7 @@ public class CalendarDialogTest
         Assert.IsFalse(fixture.Dialog.ConfirmingDeleteForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EPutsTheHighlightedMeetingInTheEntryLine_AndEnterReplacesIt()
     {
@@ -226,6 +238,7 @@ public class CalendarDialogTest
         Assert.IsNull(fixture.Dialog.EntryForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARefusedChange_LosesNothing_AndEscapeKeepsTheOriginal()
     {
@@ -252,6 +265,7 @@ public class CalendarDialogTest
         AssertScreenContains(Render(fixture.Dialog), "New meeting:");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EWithNoMeetingDoesNothing()
     {
@@ -279,6 +293,7 @@ public class CalendarDialogTest
         fixture.Meetings.Add(new Meeting(day, new TimeOnly(11, 0), 30, "Three"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAMeetingHighlightsIt()
     {
@@ -293,6 +308,7 @@ public class CalendarDialogTest
         Assert.AreEqual(2, fixture.Dialog.MeetingCursorForTest, "a click below the last meeting changes nothing");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheelOverTheMeetingsMovesTheHighlight_AndStopsAtTheEnds()
     {
@@ -309,6 +325,7 @@ public class CalendarDialogTest
         Assert.AreEqual(1, fixture.Dialog.MeetingCursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMouseLeavesTheMeetingsAloneWhileTypingOrAsking()
     {
@@ -326,6 +343,7 @@ public class CalendarDialogTest
         Assert.AreEqual(0, fixture.Dialog.MeetingCursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMonthAndTheSelectedDayAreShownOnScreen()
     {
@@ -345,6 +363,7 @@ public class CalendarDialogTest
         LeftClicked = true,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMonthGridIsTheCalendarControlBoundToTheModel()
     {
@@ -355,6 +374,7 @@ public class CalendarDialogTest
         Assert.AreEqual(fixture.Dialog.CalendarForTest.SelectedDate, fixture.Dialog.GridForTest.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AKeyMovesTheGridSelectionToo()
     {
@@ -366,6 +386,7 @@ public class CalendarDialogTest
         Assert.AreEqual(new DateOnly(2026, 10, 21), fixture.Dialog.GridForTest.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnADaySelectsItAndShowsItsMeetings()
     {
@@ -380,6 +401,7 @@ public class CalendarDialogTest
         AssertScreenContains(Render(fixture.Dialog), "Review");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheGridShowsWeekNumbersAndLeavesNeighbouringDaysBlank()
     {
@@ -392,6 +414,7 @@ public class CalendarDialogTest
         AssertScreenContains(screen, "42");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlVPastesTheMeetingLine_AndCtrlUClearsIt()
     {
@@ -411,6 +434,7 @@ public class CalendarDialogTest
         Assert.AreEqual(string.Empty, fixture.Dialog.EntryForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlWDeletesTheLastWordOfTheEntryLine()
     {

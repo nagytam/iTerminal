@@ -36,6 +36,7 @@ public class PerformanceBenchmarkTest
     private static BenchmarkMeasurement Measured(double value, double reference = 1000, bool higherIsBetter = true) =>
         new(value, "u", reference, higherIsBetter);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMeasurementAtTheReferenceScoresAThousand()
     {
@@ -43,6 +44,7 @@ public class PerformanceBenchmarkTest
         Assert.AreEqual<double?>(2000, BenchmarkScore.ForMeasurement(Measured(2000)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALowerIsBetterMeasurementScoresInverselySoASpeedUpScoresHigher()
     {
@@ -51,6 +53,7 @@ public class PerformanceBenchmarkTest
         Assert.AreEqual<double?>(2000, BenchmarkScore.ForMeasurement(Measured(15, 30, higherIsBetter: false)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMeasurementThatIsMissingOrNotAPositiveNumberHasNoScore()
     {
@@ -60,6 +63,7 @@ public class PerformanceBenchmarkTest
         Assert.IsNull(BenchmarkScore.ForMeasurement(Measured(double.PositiveInfinity)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCombinedScoreIsTheGeometricMean()
     {
@@ -67,6 +71,7 @@ public class PerformanceBenchmarkTest
         Assert.IsNull(BenchmarkScore.Combine([]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheOverallScoreIsTheGeometricMeanOfTheCategoriesNotOfTheProbes()
     {
@@ -85,6 +90,7 @@ public class PerformanceBenchmarkTest
         Assert.AreEqual(4000, report.CategoryScores[BenchmarkCategory.Memory], 1e-6);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnavailableProbeLeavesItsCategoryAndTheOverallOutOfTheScores()
     {
@@ -97,6 +103,7 @@ public class PerformanceBenchmarkTest
         CollectionAssert.DoesNotContain(report.CategoryScores.Keys.ToList(), BenchmarkCategory.Network);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ItRunsEveryProbeInOrderAndReportsEachStartAndResult()
     {
@@ -116,6 +123,7 @@ public class PerformanceBenchmarkTest
         Assert.AreEqual("b", progress[3].Result!.Id);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AProbeThatFailsIsUnavailableAndTheOthersStillRun()
     {
@@ -132,6 +140,7 @@ public class PerformanceBenchmarkTest
         Assert.AreEqual(1, working.Runs);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CancellingKeepsTheScoresMeasuredSoFarAndIsNotComplete()
     {

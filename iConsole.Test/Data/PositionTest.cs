@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class PositionTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void PositionConstructor()
     {
@@ -13,6 +14,7 @@ public class PositionTest
         Assert.AreEqual(10, position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PositionZero()
     {
@@ -21,6 +23,7 @@ public class PositionTest
         Assert.AreEqual(0, position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PositionLargeValues()
     {
@@ -29,6 +32,7 @@ public class PositionTest
         Assert.AreEqual(2000, position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PositionSetX()
     {
@@ -37,6 +41,7 @@ public class PositionTest
         Assert.AreEqual(15, position.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PositionSetY()
     {
@@ -45,6 +50,7 @@ public class PositionTest
         Assert.AreEqual(25, position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PositionReset()
     {
@@ -54,6 +60,7 @@ public class PositionTest
         Assert.AreEqual(0, position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PositionAddition()
     {
@@ -64,6 +71,7 @@ public class PositionTest
         Assert.AreEqual(17, result.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PositionAdditionWithNull()
     {
@@ -74,6 +82,7 @@ public class PositionTest
         Assert.AreEqual(7, result.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PositionPropertyChanged()
     {
@@ -94,6 +103,7 @@ public class PositionTest
         Assert.IsTrue(yChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PositionEquality()
     {
@@ -105,6 +115,7 @@ public class PositionTest
         Assert.AreNotEqual(position1, position3);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PositionToString()
     {

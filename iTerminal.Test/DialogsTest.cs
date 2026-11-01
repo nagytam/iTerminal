@@ -39,6 +39,7 @@ public class DialogsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     [DataRow("F1", "HelpDialog")]
     [DataRow("F9", "TaskManagerDialog")]
@@ -78,7 +79,24 @@ public class DialogsTest
         await OpenAndCloseAsync(chord, dialogTypeName);
     }
 
+    /// <summary>The Virtual Machine Manager opens from its chord on Linux and does not open anywhere else.</summary>
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheVirtualMachineManagerOpensOnLinuxAndNowhereElse()
+    {
+        if (OperatingSystem.IsLinux())
+        {
+            await OpenAndCloseAsync("Shift+Alt+F9", "VirtualMachineManagerDialog");
+            return;
+        }
+
+        await _app.PressAsync("Shift+Alt+F9");
+        await _app.WaitForNoDialogAsync();
+        Assert.IsNull(_app.Driver.FocusedModal);
+    }
+
     /// <summary>The Web Browser through the whole app: opens on its home page, takes an address, follows a link and closes.</summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheWebBrowserOpensAnAddressAndFollowsALink()
     {
@@ -101,6 +119,7 @@ public class DialogsTest
     }
 
     /// <summary>The translator through the whole app: type a text, translate it, read the result and the language it was found to be in.</summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheTranslatorTranslatesATypedText()
     {
@@ -123,6 +142,7 @@ public class DialogsTest
     }
 
     /// <summary>The encyclopedia through the whole app: type a term, search, read the introduction, read the whole article, open it in the browser.</summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheEncyclopediaSearchesAndReadsAnArticle()
     {
@@ -151,6 +171,7 @@ public class DialogsTest
     }
 
     /// <summary>The performance benchmark through the whole app: Enter runs it, the scores land, and the probes are the sandbox's fixed figures.</summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ThePerformanceBenchmarkRunsAndShowsItsScores()
     {
@@ -168,6 +189,7 @@ public class DialogsTest
     }
 
     /// <summary>The currency converter through the whole app: the rates download on opening, and the amount is converted with them.</summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheCurrencyConverterConvertsWithTheDownloadedRates()
     {
@@ -185,6 +207,7 @@ public class DialogsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     [DataRow("F3", "FileViewerDialog")]
     [DataRow("F4", "TextFileEditorDialog")]
@@ -205,6 +228,7 @@ public class DialogsTest
     /// The ghost this suite found: closing a dialog while anything else still drew on its layer left
     /// the whole dialog on screen, and the next one opened over it.
     /// </summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task DialogsOpenedOneAfterAnotherNeverShowTheOneBefore()
     {
@@ -233,6 +257,7 @@ public class DialogsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task HelpListsTheKeysWithReadableNames()
     {
@@ -242,6 +267,7 @@ public class DialogsTest
         Assert.IsFalse(screen.Contains("Oem"), "keys are named as printed, not by their virtual-key constant" + Environment.NewLine + screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ADialogOverADialogClosesFirst()
     {

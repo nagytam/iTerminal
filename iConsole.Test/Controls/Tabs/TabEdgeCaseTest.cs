@@ -29,6 +29,7 @@ public class TabEdgeCaseTest
         return tab;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AtTinySizes_NeverThrows()
     {
@@ -43,6 +44,7 @@ public class TabEdgeCaseTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOnAPageName_OfADisabledTab_DoesNotSwitch()
     {
@@ -57,6 +59,7 @@ public class TabEdgeCaseTest
         Assert.AreEqual(1, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RightClickOrWheelOnTheStrip_DoesNotSwitch()
     {
@@ -67,6 +70,7 @@ public class TabEdgeCaseTest
         Assert.AreEqual(0, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATabWithoutPages_IgnoresKeysAndClicks()
     {
@@ -82,6 +86,7 @@ public class TabEdgeCaseTest
         Assert.AreEqual(0, tab.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlArrows_StopAtTheFirstAndLastPage_AndAltOrShiftDoNotSwitch()
     {

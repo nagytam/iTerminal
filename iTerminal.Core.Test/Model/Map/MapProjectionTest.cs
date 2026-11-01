@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Model.Map;
 [TestClass]
 public class MapProjectionTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void BudapestIsInTheKnownTileAtZoom12()
     {
@@ -14,6 +15,7 @@ public class MapProjectionTest
         Assert.AreEqual(1432, (int)(y / MapProjection.TileSize));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PixelsRoundTripBackToCoordinates()
     {
@@ -24,6 +26,7 @@ public class MapProjectionTest
         Assert.AreEqual(151.2093, longitude, 1e-6);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheWorldCentreIsTheMiddleOfTheWorld()
     {
@@ -33,6 +36,7 @@ public class MapProjectionTest
         Assert.AreEqual(MapProjection.WorldSize(3) / 2, y, 1e-6);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LongitudeWrapsAroundTheDateLine()
     {
@@ -41,6 +45,7 @@ public class MapProjectionTest
         Assert.AreEqual(-180, MapProjection.WrapLongitude(180), 1e-9);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LatitudeIsClampedToTheMercatorLimit()
     {
@@ -48,6 +53,7 @@ public class MapProjectionTest
         Assert.AreEqual(-MapProjection.MaxLatitude, MapProjection.ClampLatitude(-89));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MetersPerPixelHalvesWithEachZoomAndShrinksTowardThePoles()
     {
@@ -56,6 +62,7 @@ public class MapProjectionTest
         Assert.IsTrue(MapProjection.MetersPerPixel(60, 5) < MapProjection.MetersPerPixel(0, 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NiceDistanceRoundsDownToOneTwoOrFive()
     {
@@ -66,6 +73,7 @@ public class MapProjectionTest
         Assert.AreEqual("350 m", MapProjection.FormatDistance(350));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("47.4979, 19.0402", 47.4979, 19.0402)]
     [DataRow("47.4979 19.0402", 47.4979, 19.0402)]
@@ -79,6 +87,7 @@ public class MapProjectionTest
         Assert.AreEqual(longitude, parsedLongitude, 1e-9);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("Budapest")]
     [DataRow("91, 10")]
@@ -88,10 +97,12 @@ public class MapProjectionTest
     public void RejectsWhatIsNotACoordinate(string text) =>
         Assert.IsFalse(MapProjection.TryParseCoordinates(text, out _, out _));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormatsCoordinatesWithHemispheres() =>
         Assert.AreEqual("33.9000°S 70.5000°W", MapProjection.FormatCoordinates(-33.9, -70.5));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATileKnowsItsParent() =>
         Assert.AreEqual(new MapTileKey(11, 1132, 716), new MapTileKey(12, 2264, 1432).Parent);

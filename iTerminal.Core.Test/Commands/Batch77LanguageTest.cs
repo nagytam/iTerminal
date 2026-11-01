@@ -36,6 +36,7 @@ public class Batch77LanguageTest
         return localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryKey()
     {
@@ -52,6 +53,7 @@ public class Batch77LanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheRecycleBinOption_StaysInTheChosenLanguage()
     {
@@ -61,6 +63,7 @@ public class Batch77LanguageTest
         Assert.AreEqual("In den Papierkorb verschieben", DeleteDialog.TrashLabel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheWizardStateText_FollowsTheLanguage()
     {
@@ -73,6 +76,7 @@ public class Batch77LanguageTest
         Assert.AreEqual("Nicht installiert. 1.63.0 installieren.", RuntimeDependencyStepPage.StateText(missing));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSplitterHint_FollowsTheLanguage()
     {

@@ -27,6 +27,7 @@ public class SettingsServiceTest
             => Task.FromResult(CreateDbContext());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_Default_CreatesInstance()
     {
@@ -42,6 +43,7 @@ public class SettingsServiceTest
     /// must therefore never enter the cache — a schema stamp that did was resurrected on every flush,
     /// and the database was recreated at every start-up as a result.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void ReservedKeys_AreNeitherCachedNorRepublished()
     {
@@ -89,6 +91,7 @@ public class SettingsServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Write_PersistsSettingsAcrossInstances()
     {
@@ -121,6 +124,7 @@ public class SettingsServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TemporaryDbContextFactory_CreateDbContext_ReturnsSqliteContext()
     {

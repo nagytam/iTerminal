@@ -27,6 +27,7 @@ public class ContentModelCopyMoveTaskTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_RealFileToMemDrive_CopiesContentAndKeepsSource()
     {
@@ -50,6 +51,7 @@ public class ContentModelCopyMoveTaskTest
         Assert.IsTrue(File.Exists(sourcePath));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_TargetIsAnExistingFolder_PutsTheFileInsideIt()
     {
@@ -67,6 +69,7 @@ public class ContentModelCopyMoveTaskTest
         Assert.AreEqual("pixels", File.ReadAllText(Path.Combine(targetFolder, "photo@2x.png")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_TargetIsAnExistingFolderInTheMemoryDrive_PutsTheFileInsideIt()
     {
@@ -83,6 +86,7 @@ public class ContentModelCopyMoveTaskTest
         Assert.IsTrue(memoryDriveService.ExistsFile(new Url("memdrive://docs/a b.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_MemDriveToRealFile_CopiesContent()
     {
@@ -103,6 +107,7 @@ public class ContentModelCopyMoveTaskTest
         Assert.AreEqual("from memdrive", File.ReadAllText(targetPath));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelMoveFileTask_RealFileToMemDrive_MovesAndDeletesSource()
     {
@@ -126,6 +131,7 @@ public class ContentModelCopyMoveTaskTest
         Assert.IsFalse(File.Exists(sourcePath));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFolderTask_RealFolderToMemDrive_CopiesNestedContents()
     {
@@ -171,6 +177,7 @@ public class ContentModelCopyMoveTaskTest
         return zipPath;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_ExtractFromZipToRealFile_CopiesContent()
     {
@@ -191,6 +198,7 @@ public class ContentModelCopyMoveTaskTest
         Assert.AreEqual("archived content", File.ReadAllText(targetPath));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_CopyIntoZip_ThrowsWithoutTouchingArchive()
     {
@@ -213,6 +221,7 @@ public class ContentModelCopyMoveTaskTest
         Assert.IsFalse(archiveFileSystemService.ExistsFile(new Url(Container.ZIP_ARCHIVE + zipPath + "@/newentry.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelMoveFileTask_MoveFromZip_ThrowsWithoutCopyingOrDeleting()
     {

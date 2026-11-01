@@ -8,6 +8,7 @@ namespace iConsole.Commands.Test;
 [TestClass]
 public class AutoCompleteCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CompletesToTheFirstMatch()
     {
@@ -20,6 +21,7 @@ public class AutoCompleteCommandTest
         Assert.AreEqual(@"C:\projects\crypton", text.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoMatchTheTextIsLeftAlone()
     {
@@ -32,6 +34,7 @@ public class AutoCompleteCommandTest
         Assert.AreEqual("zzz", text.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATabPressedBeforeTheMatchUpdateLandsWaitsForIt()
     {
@@ -51,6 +54,7 @@ public class AutoCompleteCommandTest
         Assert.AreEqual(@"C:\projects\crypton", text.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AStuckUpdateDoesNotHoldTheKey()
     {
@@ -64,6 +68,7 @@ public class AutoCompleteCommandTest
         Assert.IsTrue(DateTime.UtcNow - started < TimeSpan.FromSeconds(1), "bounded well inside the key budget");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabIsTheKey()
     {

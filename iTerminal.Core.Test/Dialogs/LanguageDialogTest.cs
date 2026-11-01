@@ -16,6 +16,7 @@ public class LanguageDialogTest
             [new ResourceLocalizationSource(new ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(LanguageDialog).Assembly))],
             new SettingsLanguageStore(settings));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListsEveryLanguageByItsOwnNameAndMarksTheOneInUse()
     {
@@ -34,6 +35,7 @@ public class LanguageDialogTest
         AssertScreenContains(screen, "Enter:apply  Esc:close");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterAppliesTheLanguageUnderTheCursorSavesItAndCloses()
     {
@@ -53,6 +55,7 @@ public class LanguageDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog), "the dialog closes");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCursorStartsOnTheLanguageInUseAndTheDialogSpeaksIt()
     {
@@ -67,6 +70,7 @@ public class LanguageDialogTest
         AssertScreenContains(Render(dialog), "Enter:alkalmaz  Esc:bezárás");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesWithoutChangingTheLanguage()
     {

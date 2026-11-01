@@ -64,6 +64,7 @@ public class MusicPlayerServiceTest
     /// </summary>
     private string WriteLongTone(string name) => WriteTone(name, TimeSpan.FromMinutes(1));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PlayIndex_OpensTheSinkWithTheDecoderFormatAndFeedsIt()
     {
@@ -88,6 +89,7 @@ public class MusicPlayerServiceTest
         Assert.AreEqual(expectedBytes, sink.WrittenByteCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PlayIndex_ReportsDurationFromTheDecoder()
     {
@@ -105,6 +107,7 @@ public class MusicPlayerServiceTest
         player.Stop();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PlayIndex_BackfillsTheDurationOntoThePlaylistRow()
     {
@@ -121,6 +124,7 @@ public class MusicPlayerServiceTest
         Assert.AreEqual(1.0, player.Playlist[0]!.Duration.TotalSeconds, 0.05);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NaturalEnd_WithRepeatOff_StopsAfterTheLastTrack()
     {
@@ -138,6 +142,7 @@ public class MusicPlayerServiceTest
         Assert.AreEqual(1, deviceService.CreatedSinks.Count, "No further track should have been started");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NaturalEnd_AdvancesToTheNextTrackOnItsOwn()
     {
@@ -165,6 +170,7 @@ public class MusicPlayerServiceTest
     /// whether or not the pump gets scheduled — so the pump must not compete with rendering and
     /// background tasks on equal terms.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void PumpThread_RunsAboveTheRestOfTheApp()
     {
@@ -192,6 +198,7 @@ public class MusicPlayerServiceTest
     /// state itself does not change from one track to the next — both are "playing" — so an advance
     /// that relies on <c>SetState</c> to notify announces nothing at all.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void NaturalEnd_AnnouncesTheTrackItMovedTo()
     {
@@ -224,6 +231,7 @@ public class MusicPlayerServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NaturalEnd_WithRepeatOne_ReplaysTheSameTrack()
     {
@@ -239,6 +247,7 @@ public class MusicPlayerServiceTest
         player.Stop();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pause_HaltsTheFlowAndResumeContinuesIt()
     {
@@ -266,6 +275,7 @@ public class MusicPlayerServiceTest
         player.Stop();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TogglePlayPause_FromStopped_StartsTheCuedTrack()
     {
@@ -279,6 +289,7 @@ public class MusicPlayerServiceTest
         player.Stop();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Stop_EndsPlaybackAndReleasesTheSink()
     {
@@ -295,6 +306,7 @@ public class MusicPlayerServiceTest
         WaitFor(() => deviceService.LastSink!.IsDisposed, "the sink to be disposed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Next_MovesToTheFollowingTrackImmediately()
     {
@@ -312,6 +324,7 @@ public class MusicPlayerServiceTest
         player.Stop();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Previous_PartwayThroughATrack_RestartsItInsteadOfStepingBack()
     {
@@ -335,6 +348,7 @@ public class MusicPlayerServiceTest
         player.Stop();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Seek_MovesThePositionAndDropsBufferedAudio()
     {
@@ -352,6 +366,7 @@ public class MusicPlayerServiceTest
         player.Stop();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetDevice_ReopensTheSinkOnTheNewDeviceAndKeepsPlaying()
     {
@@ -374,6 +389,7 @@ public class MusicPlayerServiceTest
         player.Stop();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetDevice_WhileStopped_JustRemembersTheChoice()
     {
@@ -386,6 +402,7 @@ public class MusicPlayerServiceTest
         Assert.AreEqual(0, deviceService.CreatedSinks.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MissingFile_ReportsAnErrorAndSkipsToTheNextTrack()
     {
@@ -404,6 +421,7 @@ public class MusicPlayerServiceTest
             "the engine to skip the unplayable entry and play the next one");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AllTracksUnplayable_StopsInsteadOfLoopingForever()
     {
@@ -423,6 +441,7 @@ public class MusicPlayerServiceTest
         Assert.AreEqual(0, deviceService.CreatedSinks.Count, "No sink should ever have been opened");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoAudioBackend_ReportsItRatherThanThrowing()
     {
@@ -437,6 +456,7 @@ public class MusicPlayerServiceTest
         Assert.AreEqual(PlaybackState.Stopped, player.State);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PlayIndex_OutOfRange_Stops()
     {
@@ -449,6 +469,7 @@ public class MusicPlayerServiceTest
         Assert.AreEqual(0, deviceService.CreatedSinks.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Volume_IsClampedToZeroHundred()
     {
@@ -461,6 +482,7 @@ public class MusicPlayerServiceTest
         Assert.AreEqual(0, player.Volume);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyVolume_AtFullVolume_LeavesSamplesUntouched()
     {
@@ -472,6 +494,7 @@ public class MusicPlayerServiceTest
         CollectionAssert.AreEqual(original, pcm);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyVolume_AtZero_Silences()
     {
@@ -482,6 +505,7 @@ public class MusicPlayerServiceTest
         CollectionAssert.AreEqual(new byte[pcm.Length], pcm);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyVolume_UsesAQuadraticCurve()
     {
@@ -493,6 +517,7 @@ public class MusicPlayerServiceTest
         Assert.AreEqual(2500, BinaryPrimitives.ReadInt16LittleEndian(pcm), 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Dispose_WhilePlaying_StopsThePumpThread()
     {
@@ -509,6 +534,7 @@ public class MusicPlayerServiceTest
         Assert.IsTrue(stopwatch.Elapsed < TimeSpan.FromSeconds(3), "Dispose must not block on a long track");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TransportCommands_ReturnWellInsideTheKeyHandlerBudget()
     {
@@ -548,6 +574,7 @@ public class MusicPlayerServiceTest
     /// device stopped accepting data". A fast pump start wins that race, so many players are started
     /// at once to make it show.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void StartingATrackNeverStopsTheSinkOpenedForIt()
     {

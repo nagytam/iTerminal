@@ -33,6 +33,7 @@ public class HelpDialogIntegrationTest
 
     // ── ContentBrowser integration ───────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithHelpDialog_RegistersHelpDialogCommand()
     {
@@ -64,6 +65,7 @@ public class HelpDialogIntegrationTest
         Assert.IsTrue(hasCommand, "ContentBrowser should register HelpDialogCommand when a HelpDialog is supplied.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithoutHelpDialog_DoesNotRegisterHelpDialogCommand()
     {
@@ -93,6 +95,7 @@ public class HelpDialogIntegrationTest
         Assert.IsFalse(hasCommand, "ContentBrowser should NOT register HelpDialogCommand when no HelpDialog is supplied.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_HelpDialogCommand_HasF1Key()
     {
@@ -130,6 +133,7 @@ public class HelpDialogIntegrationTest
 
     // ── FilePanelFactory integration ─────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithHelpDialog_CreatesFilePanel()
     {
@@ -158,6 +162,7 @@ public class HelpDialogIntegrationTest
         Assert.IsNotNull(panel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithoutHelpDialog_CreatesFilePanel()
     {
@@ -184,6 +189,7 @@ public class HelpDialogIntegrationTest
         Assert.IsNotNull(panel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithHelpDialog_PanelIsNotNull()
     {

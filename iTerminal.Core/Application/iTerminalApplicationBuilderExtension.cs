@@ -127,6 +127,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Web.IWebFetcher, iTerminal.Core.Services.Web.WebFetcher>();
         services.AddSingleton<iTerminal.Core.Services.Web.WebBrowserStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Web.WebBrowserDialog>();
+        services.AddSingleton<Func<iTerminal.Core.Dialogs.Web.WebBrowserDialog>>(provider =>
+            () => provider.GetRequiredService<iTerminal.Core.Dialogs.Web.WebBrowserDialog>());
         // Alt+F10: the ASCII-art OpenStreetMap. Tiles are saved (and .mbtiles files read) under <data directory>/maps,
         // so it works offline; a test replaces the tile service so no run reaches the network.
         services.AddSingleton<iTerminal.Core.Services.Map.MapStore>();
@@ -148,6 +150,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<ScreenManagerDialog>();
         services.AddTransient<TaskManagerDialog>();
         services.AddTransient<ProcessManagerDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.VirtualMachineManagerDialog>();
         services.AddSingleton<ProcessService>();
         services.AddTransient<FileViewerDialog>();
         services.AddSingleton<iTerminal.Core.Services.Dotnet.IDotnetSolutionService, iTerminal.Core.Services.Dotnet.DotnetSolutionService>();
@@ -242,6 +245,9 @@ public static class iTerminalApplicationBuilderExtension
         // quick-view panel behind preview://. Singletons: each holds state the panels share —
         // the remembered repositories, the last search's results.
         services.AddSingleton<iTerminal.Core.Services.Processes.IExternalProcessRunner, iTerminal.Core.Services.Processes.ExternalProcessRunner>();
+        services.AddSingleton<iTerminal.Core.Services.VirtualMachines.IVirtualMachineService>(provider =>
+            new iTerminal.Core.Services.VirtualMachines.LibvirtVirtualMachineService(
+                provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>()));
         services.AddSingleton<iTerminal.Core.Services.Git.IGitDriveService, iTerminal.Core.Services.Git.GitDriveService>();
         services.AddSingleton<iTerminal.Core.Services.Docker.IDockerDriveService, iTerminal.Core.Services.Docker.DockerDriveService>();
         services.AddSingleton<iTerminal.Core.Services.Search.IFileSearchService, iTerminal.Core.Services.Search.FileSearchService>();

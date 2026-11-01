@@ -38,6 +38,7 @@ public class ArchiveFileSystemServiceTest
 
     private Url EntryUrl(string innerPath) => new(Container.ZIP_ARCHIVE + _zipPath + "@/" + innerPath);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsReadOnly_ReturnsTrue()
     {
@@ -45,6 +46,7 @@ public class ArchiveFileSystemServiceTest
         Assert.IsTrue(service.IsReadOnly);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_TopLevelEntry_ReturnsContent()
     {
@@ -54,6 +56,7 @@ public class ArchiveFileSystemServiceTest
         Assert.AreEqual("top content", Encoding.UTF8.GetString(file.Content!));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_NestedEntry_ReturnsContent()
     {
@@ -63,6 +66,7 @@ public class ArchiveFileSystemServiceTest
         Assert.AreEqual("nested content", Encoding.UTF8.GetString(file.Content!));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_MissingEntry_ReturnsNull()
     {
@@ -71,6 +75,7 @@ public class ArchiveFileSystemServiceTest
         Assert.IsNull(file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFile_ForExistingEntry_ReturnsTrue()
     {
@@ -78,6 +83,7 @@ public class ArchiveFileSystemServiceTest
         Assert.IsTrue(service.ExistsFile(EntryUrl("top.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFile_ForMissingEntry_ReturnsFalse()
     {
@@ -85,6 +91,7 @@ public class ArchiveFileSystemServiceTest
         Assert.IsFalse(service.ExistsFile(EntryUrl("missing.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFolder_ForFolderPrefix_ReturnsTrue()
     {
@@ -92,6 +99,7 @@ public class ArchiveFileSystemServiceTest
         Assert.IsTrue(service.ExistsFolder(EntryUrl("sub/")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListChildren_AtRoot_ReturnsTopLevelFileAndFolder()
     {
@@ -103,6 +111,7 @@ public class ArchiveFileSystemServiceTest
         Assert.IsTrue(children.Any(c => c.Name == "sub" && c.PathType == PathType.Folder));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListChildren_InSubfolder_ReturnsNestedFile()
     {
@@ -126,6 +135,7 @@ public class ArchiveFileSystemServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WriteFileAsync_Throws()
     {
@@ -133,6 +143,7 @@ public class ArchiveFileSystemServiceTest
         AssertThrowsNotSupported(() => service.WriteFileAsync(EntryUrl("new.txt"), new MemoryStream()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFile_Throws()
     {
@@ -140,6 +151,7 @@ public class ArchiveFileSystemServiceTest
         AssertThrowsNotSupported(() => service.DeleteFile(EntryUrl("top.txt"), false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFolder_Throws()
     {
@@ -147,6 +159,7 @@ public class ArchiveFileSystemServiceTest
         AssertThrowsNotSupported(() => service.DeleteFolder(EntryUrl("sub/"), true, false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateFolderAsync_Throws()
     {
@@ -154,6 +167,7 @@ public class ArchiveFileSystemServiceTest
         AssertThrowsNotSupported(() => service.CreateFolderAsync(EntryUrl("new/")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MoveAsync_Throws()
     {
@@ -161,6 +175,7 @@ public class ArchiveFileSystemServiceTest
         AssertThrowsNotSupported(() => service.MoveAsync(EntryUrl("top.txt"), EntryUrl("renamed.txt"), false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CopyAsync_Throws()
     {

@@ -7,6 +7,7 @@ namespace iConsole.Test.Helper;
 [TestClass]
 public class TextEncodingsTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Decode_ValidUtf8_IsUtf8WithoutBom()
     {
@@ -17,6 +18,7 @@ public class TextEncodingsTest
         Assert.AreEqual(0, encoding.GetPreamble().Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Decode_BomIsHonouredAndNotPartOfTheText()
     {
@@ -30,6 +32,7 @@ public class TextEncodingsTest
         Assert.AreEqual(1200, unicode.CodePage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Decode_InvalidUtf8_IsNeverLossy()
     {
@@ -41,6 +44,7 @@ public class TextEncodingsTest
         CollectionAssert.AreEqual(bytes, encoding.GetBytes(text));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Reinterpret_RereadsTheBytesUnderAnotherCodePage()
     {
@@ -60,6 +64,7 @@ public class TextEncodingsTest
         Assert.AreEqual(1250, model.Encoding.CodePage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Reinterpret_KeepsUnsavedEdits()
     {
@@ -71,6 +76,7 @@ public class TextEncodingsTest
         CollectionAssert.AreEqual(new[] { "edited line" }, model.Lines.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Next_CyclesBothWaysAndWraps()
     {
@@ -82,6 +88,7 @@ public class TextEncodingsTest
         Assert.AreEqual(last.CodePage, TextEncodings.Next(first, backwards: true).CodePage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Next_FromAnUnlistedEncoding_StartsAtTheEdge()
     {
@@ -90,6 +97,7 @@ public class TextEncodingsTest
         Assert.AreEqual(TextEncodings.Available[0].CodePage, TextEncodings.Next(unlisted).CodePage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Available_HoldsTheLegacyPagesTheSwitchOffers()
     {

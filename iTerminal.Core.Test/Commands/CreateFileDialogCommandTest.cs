@@ -13,6 +13,7 @@ namespace iTerminal.Core.Commands.Test;
 [TestClass]
 public class CreateFileDialogCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsShiftF4()
     {
@@ -24,6 +25,7 @@ public class CreateFileDialogCommandTest
         Assert.IsFalse(command.Key.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_OpensTheDialogInTheCurrentFolder()
     {

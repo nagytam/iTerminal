@@ -11,6 +11,7 @@ namespace iTerminal.Core.Test.Tasks;
 [TestClass]
 public class ExecuteCommandTaskTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_DefaultProperties_AreNull()
     {
@@ -20,6 +21,7 @@ public class ExecuteCommandTaskTest
         Assert.IsNull(task.Task);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenBothModelsNull_ReturnsCompletedTask()
     {
@@ -36,6 +38,7 @@ public class ExecuteCommandTaskTest
         return new TerminalModel(taskManager, contentModelService);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenOnlyTerminalModelSet_ReturnsCompletedTask()
     {
@@ -47,6 +50,7 @@ public class ExecuteCommandTaskTest
         Assert.IsNull(task.Task);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenOnlyContentModelSet_ReturnsCompletedTask()
     {
@@ -58,6 +62,7 @@ public class ExecuteCommandTaskTest
         Assert.IsNull(task.Task);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenBothModelsSet_SetsTask()
     {
@@ -77,6 +82,7 @@ public class ExecuteCommandTaskTest
         Assert.IsNotNull(task.Task);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenBothModelsSet_AddsToHistory()
     {
@@ -105,6 +111,7 @@ public class ExecuteCommandTaskTest
 [TestClass]
 public class CopyFileTaskTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_CopiesFile()
     {
@@ -127,6 +134,7 @@ public class CopyFileTaskTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_DescriptionContainsStarted_ThenFinished()
     {
@@ -148,6 +156,7 @@ public class CopyFileTaskTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_Cancelled_DoesNotComplete()
     {
@@ -175,6 +184,7 @@ public class CopyFileTaskTest
 [TestClass]
 public class CopyFolderTaskTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_CopiesAllFiles()
     {
@@ -204,6 +214,7 @@ public class CopyFolderTaskTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_DescriptionContainsFinished_OnSuccess()
     {
@@ -231,6 +242,7 @@ public class CopyFolderTaskTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_Cancelled_DescriptionContainsCancelled()
     {
@@ -261,6 +273,7 @@ public class CopyFolderTaskTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_EmptyFolder_DescriptionFinished()
     {

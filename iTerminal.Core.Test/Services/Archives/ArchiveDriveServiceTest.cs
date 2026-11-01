@@ -71,6 +71,7 @@ public class ArchiveDriveServiceTest
         return Encoding.UTF8.GetString(buffer.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("x.zip", "ZIP")]
     [DataRow("x.tar", "TAR")]
@@ -93,6 +94,7 @@ public class ArchiveDriveServiceTest
         Assert.AreEqual(4, ((VirtualDriveEntry)docs[1]).Size);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FoldersAZipOnlyImpliesAreListedToo()
     {
@@ -114,6 +116,7 @@ public class ArchiveDriveServiceTest
         Assert.IsFalse(service.ExistsFile(ArchiveDriveUrl.Build(archive, "x/nope.txt", isFolder: false)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderIsWalkedForACopyOut()
     {
@@ -126,6 +129,7 @@ public class ArchiveDriveServiceTest
             children);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnArchiveRewrittenSinceItWasListedIsReadAgain()
     {
@@ -140,6 +144,7 @@ public class ArchiveDriveServiceTest
         CollectionAssert.Contains(Names(await service.ListAsync(ArchiveDriveUrl.Build(archive), CancellationToken.None)), "later.txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEncryptedEntrySaysHowToGetAtIt()
     {
@@ -152,6 +157,7 @@ public class ArchiveDriveServiceTest
         StringAssert.Contains(exception.Message, "Shift+F5");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDriveIsReadOnly()
     {
@@ -162,6 +168,7 @@ public class ArchiveDriveServiceTest
         StringAssert.Contains(exception.Message, "Alt+F5");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SevenZipsTechnicalListingIsParsed()
     {
@@ -189,6 +196,7 @@ public class ArchiveDriveServiceTest
         Assert.IsFalse(entries[2].IsFolder, "no blank line between two entries, still two entries");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARealSevenZipArchiveIsBrowsedAndRead()
     {
@@ -213,6 +221,7 @@ public class ArchiveDriveServiceTest
         StringAssert.Contains(exception.Message, "password");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheArchiveUrlKeepsALocalPathInOneSegment()
     {

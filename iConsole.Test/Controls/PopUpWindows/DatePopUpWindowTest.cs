@@ -10,6 +10,7 @@ namespace iConsole.Controls.PopUpWindows.Test;
 [TestClass]
 public class DatePopUpWindowTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShouldWriteDateLines()
     {

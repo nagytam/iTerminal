@@ -27,6 +27,7 @@ public class FolderSelectorDialogCommandTest
             helpDialog);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsCtrlF1()
     {
@@ -40,6 +41,7 @@ public class FolderSelectorDialogCommandTest
         Assert.IsFalse(command.Key.Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TitleAndDescription_AreWrittenForHelp()
     {
@@ -49,6 +51,7 @@ public class FolderSelectorDialogCommandTest
         Assert.AreNotEqual(command.Title, command.Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_ShowsTheSelectorOnTheControlItIsAttachedTo()
     {
@@ -62,6 +65,7 @@ public class FolderSelectorDialogCommandTest
         Assert.AreEqual(1, host.Controls.AsSnapshot().OfType<FolderSelectorDialog>().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_PassesTheHelpDialogOnSoF1WorksInsideTheSelector()
     {
@@ -76,6 +80,7 @@ public class FolderSelectorDialogCommandTest
         Assert.IsTrue(dialog.Commands.Any(c => c is iConsole.Commands.HelpDialogCommand));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithNoControl_DoesNothing()
     {

@@ -7,6 +7,7 @@ namespace iConsole.Test.Graphics;
 [TestClass]
 public class SixelOverlayTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Show_ThenHide_ByTheSameOwner()
     {
@@ -21,6 +22,7 @@ public class SixelOverlayTest
         Assert.IsNull(overlay.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Show_TheSamePictureAgain_KeepsThePlacement()
     {
@@ -35,6 +37,7 @@ public class SixelOverlayTest
         Assert.AreSame(first, overlay.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Show_AMovedPicture_ReplacesThePlacement()
     {
@@ -50,6 +53,7 @@ public class SixelOverlayTest
         Assert.IsFalse(overlay.Current!.IsSameAs(first));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Hide_ByAnotherOwner_LeavesThePicture()
     {

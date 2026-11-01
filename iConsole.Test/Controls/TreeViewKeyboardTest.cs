@@ -41,6 +41,7 @@ public class TreeViewKeyboardTest
 
     private static int FocusedCount(TreeView tree) => tree.GetVisibleRows().Count(row => row.Item.IsFocused);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task End_FocusesTheLastRow_AndHomeTheFirst()
     {
@@ -53,6 +54,7 @@ public class TreeViewKeyboardTest
         Assert.AreEqual(1, FocusedCount(tree));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PageDown_AndPageUp_MoveByOneRowLessThanTheView()
     {
@@ -66,6 +68,7 @@ public class TreeViewKeyboardTest
         Assert.AreEqual(1, FocusedCount(tree));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Paging_StopsAtTheEnds()
     {
@@ -81,6 +84,7 @@ public class TreeViewKeyboardTest
         Assert.AreEqual(1, FocusedCount(tree));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheFocusedRow_IsAlwaysDrawnInTheView()
     {
@@ -95,6 +99,7 @@ public class TreeViewKeyboardTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoRowFocused_PageDownStartsFromTheTop()
     {
@@ -104,6 +109,7 @@ public class TreeViewKeyboardTest
         Assert.AreEqual(5, FocusedIndex(tree));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACollapsedTree_HasOnlyTheRootToVisit()
     {
@@ -115,6 +121,7 @@ public class TreeViewKeyboardTest
         Assert.IsTrue(root.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Keys_AreIgnoredWithoutFocus_WhenDisabled_OrWithAModifier()
     {
@@ -129,6 +136,7 @@ public class TreeViewKeyboardTest
         Assert.AreEqual(0, FocusedIndex(tree));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheArrows_StillStepOneRow_AndOtherKeysAreNotHandled()
     {
@@ -141,6 +149,7 @@ public class TreeViewKeyboardTest
         Assert.IsFalse(await tree.HandleKeyEventAsync(new KeyEvent('a', ConsoleKey.A, false, false, false)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARootWithoutChildren_SurvivesEveryNavigationKey()
     {

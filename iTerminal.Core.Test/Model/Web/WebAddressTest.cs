@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Model.Web;
 [TestClass]
 public class WebAddressTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("example.com", "https://example.com")]
     [DataRow("www.example.com/path?x=1", "https://www.example.com/path?x=1")]
@@ -18,6 +19,7 @@ public class WebAddressTest
         Assert.AreEqual(expected, WebAddress.FromInput(input));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WordsAreSearched()
     {
@@ -26,6 +28,7 @@ public class WebAddressTest
         Assert.AreEqual("https://search.test/?q=a+b", WebAddress.FromInput("a b", "https://search.test/?q={0}"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathsBecomeFileUrls()
     {
@@ -36,6 +39,7 @@ public class WebAddressTest
         Assert.IsTrue(url.StartsWith("file:///", StringComparison.Ordinal), url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RelativeLinksResolveAgainstThePage()
     {
@@ -47,6 +51,7 @@ public class WebAddressTest
         Assert.AreEqual("https://c.test/p", WebAddress.Resolve("https://a.test/", "//c.test/p"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FragmentsAreSplitOff()
     {

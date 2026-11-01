@@ -12,6 +12,7 @@ namespace iConsole.Test.Controls.ScrollBar;
 [TestClass]
 public class ScrollBarTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBarCanBeCreated()
     {
@@ -22,6 +23,7 @@ public class ScrollBarTest
         Assert.IsInstanceOfType(scrollBar, typeof(Control));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBarHasDefaultProperties()
     {
@@ -33,6 +35,7 @@ public class ScrollBarTest
         Assert.IsFalse(scrollBar.CanFocus);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBarOrientationCanBeSet()
     {
@@ -44,6 +47,7 @@ public class ScrollBarTest
         Assert.AreEqual(Orientation.Horizontal, scrollBar.ScrollBarOrientation);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBarScrollableModelCanBeSet()
     {
@@ -64,6 +68,7 @@ public class ScrollBarTest
         Assert.AreEqual(mockScrollableModel.Object, scrollBar.ScrollableModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBarHorizontalOrientationCanBeSet()
     {
@@ -76,6 +81,7 @@ public class ScrollBarTest
         Assert.AreEqual(Orientation.Horizontal, scrollBar.ScrollBarOrientation);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBarDrawWithEmptyViewSize()
     {
@@ -101,6 +107,7 @@ public class ScrollBarTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Vertical_RendersArrowUp()
     {
@@ -120,6 +127,7 @@ public class ScrollBarTest
         Assert.AreEqual("↑", lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Vertical_RendersArrowDown()
     {
@@ -139,6 +147,7 @@ public class ScrollBarTest
         Assert.AreEqual("↓", lines[9]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Vertical_RendersScrollThumb()
     {
@@ -157,6 +166,7 @@ public class ScrollBarTest
         Assert.IsTrue(buffer.ContentAsString.Contains("⬤"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Vertical_RendersTrackLines()
     {
@@ -175,6 +185,7 @@ public class ScrollBarTest
         Assert.IsTrue(buffer.ContentAsString.Contains("│"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Horizontal_RendersArrowLeft()
     {
@@ -199,6 +210,7 @@ public class ScrollBarTest
         Assert.IsTrue(buffer.ContentAsString.Contains("←"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Horizontal_RendersArrowRight()
     {

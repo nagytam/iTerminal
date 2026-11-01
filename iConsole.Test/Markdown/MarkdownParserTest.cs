@@ -5,6 +5,7 @@ namespace iConsole.Test.Markdown;
 [TestClass]
 public class MarkdownParserTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Heading_TakesItsLevelAndText()
     {
@@ -16,6 +17,7 @@ public class MarkdownParserTest
         Assert.AreEqual("Getting started", Text(blocks[0]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsecutiveLines_FormOneParagraph()
     {
@@ -26,6 +28,7 @@ public class MarkdownParserTest
         Assert.AreEqual("next", Text(blocks[1]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BulletsAndNumbers_BecomeListItems_NestedByIndentation()
     {
@@ -39,6 +42,7 @@ public class MarkdownParserTest
         Assert.AreEqual("1.", blocks[2].Marker);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Quote_IsOneBlockPerLine()
     {
@@ -48,6 +52,7 @@ public class MarkdownParserTest
         Assert.AreEqual("quoted text", Text(blocks[0]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FencedCode_KeepsEachLineAsWritten()
     {
@@ -59,6 +64,7 @@ public class MarkdownParserTest
         Assert.AreEqual("  return x;", Text(blocks[1]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TildeFence_IsCode()
     {
@@ -69,6 +75,7 @@ public class MarkdownParserTest
         Assert.AreEqual("line", Text(blocks[0]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fence_ClosesOnlyWithItsOwnMarker()
     {
@@ -80,6 +87,7 @@ public class MarkdownParserTest
         Assert.AreEqual(MarkdownBlockKind.Paragraph, blocks[2].Kind);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FencedCode_TabsBecomeSpaces()
     {
@@ -88,6 +96,7 @@ public class MarkdownParserTest
         Assert.AreEqual("    if (x)", Text(blocks[0]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UnclosedFence_RunsToTheEnd()
     {
@@ -97,6 +106,7 @@ public class MarkdownParserTest
         Assert.IsTrue(blocks.All(b => b.Kind == MarkdownBlockKind.Code));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HorizontalRule_IsAnyRunOfThreeOrMoreRuleCharacters()
     {
@@ -105,6 +115,7 @@ public class MarkdownParserTest
         Assert.AreEqual(MarkdownBlockKind.Rule, MarkdownParser.Parse("___")[0].Kind);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyOrNullInput_HasNoBlocks()
     {
@@ -112,6 +123,7 @@ public class MarkdownParserTest
         Assert.AreEqual(0, MarkdownParser.Parse(null).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Inline_Emphasis_Code_AndLinks_AreStyled()
     {
@@ -124,6 +136,7 @@ public class MarkdownParserTest
         Assert.IsFalse(spans.Any(s => s.Text.Contains("https")), "The link address is not shown.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Inline_UnclosedDelimiters_StayLiteral()
     {
@@ -133,6 +146,7 @@ public class MarkdownParserTest
         Assert.IsTrue(spans.All(s => s.Style == MarkdownStyle.Plain));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Inline_UnderscoreInsideAWord_IsNotEmphasis()
     {
@@ -142,6 +156,7 @@ public class MarkdownParserTest
         Assert.AreEqual("open file_name_here now", spans[0].Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Inline_BackslashEscapesAStar()
     {

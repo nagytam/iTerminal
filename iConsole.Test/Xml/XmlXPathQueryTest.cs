@@ -16,6 +16,7 @@ public class XmlXPathQueryTest
 
     private static XmlTree Tree(string xml = Catalog) => XmlTree.Build(XDocument.Parse(xml));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NodeSet_GivesOneResultPerNode_WithItsAbsolutePath()
     {
@@ -26,6 +27,7 @@ public class XmlXPathQueryTest
         Assert.AreEqual("Dune", outcome.Results[0].Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Attributes_ShowTheirValue_AndTheElementToJumpTo()
     {
@@ -39,6 +41,7 @@ public class XmlXPathQueryTest
         Assert.AreSame(tree.ItemFor(tree.Document.Root!.Elements("book").Last()), result.Node);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AScalarExpression_GivesOneValue()
     {
@@ -49,6 +52,7 @@ public class XmlXPathQueryTest
         Assert.IsNull(outcome.Results.Single().Node);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeclaredPrefixes_CanBeUsedInTheExpression()
     {
@@ -58,6 +62,7 @@ public class XmlXPathQueryTest
         Assert.AreEqual("Shelf 3", outcome.Results.Single().Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMalformedExpression_ReportsTheError_WithNoResults()
     {
@@ -68,6 +73,7 @@ public class XmlXPathQueryTest
         Assert.AreEqual(0, outcome.Results.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABlankExpression_RunsNothing()
     {
@@ -77,6 +83,7 @@ public class XmlXPathQueryTest
         Assert.IsNull(outcome.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ManyMatches_AreCountedAll_ButOnlyTheFirstShown()
     {
@@ -88,6 +95,7 @@ public class XmlXPathQueryTest
         Assert.AreEqual(XmlXPathQuery.MaxResults, outcome.Results.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathOf_NumbersOnlyRepeatedSiblings()
     {

@@ -19,6 +19,7 @@ public class MemoryFolderTest
 
     private static MemoryStream Bytes(string text) => new(System.Text.Encoding.UTF8.GetBytes(text));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WriteThenRead_ReturnsTheFileWithItsBytes()
     {
@@ -31,12 +32,14 @@ public class MemoryFolderTest
         CollectionAssert.AreEqual(System.Text.Encoding.UTF8.GetBytes("hello"), file.Content);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOfAMissingFile_IsNull()
     {
         Assert.IsNull(await Root().ReadFileAsync(new Url(Container.MEMORY_DRIVE + "nope.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WriteOverAnExistingFile_ReplacesItsContent()
     {
@@ -49,6 +52,7 @@ public class MemoryFolderTest
         CollectionAssert.AreEqual(System.Text.Encoding.UTF8.GetBytes("new"), file!.Content);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFile_RemovesItOnceOnly()
     {
@@ -59,6 +63,7 @@ public class MemoryFolderTest
         Assert.IsFalse(root.DeleteFile(new Url(Container.MEMORY_DRIVE + "a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFolder_NonEmpty_IsRefusedWithoutRecursive_AndRemovedWith()
     {
@@ -73,12 +78,14 @@ public class MemoryFolderTest
         Assert.IsFalse(root.Folders.ContainsKey("docs"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFolder_Missing_IsFalse()
     {
         Assert.IsFalse(Root().DeleteFolder(new Url(Container.MEMORY_DRIVE + "ghost/"), recursive: true));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Navigate_FollowsNestedSegments_EmptyIsThisFolder_MissingIsNull()
     {
@@ -90,6 +97,7 @@ public class MemoryFolderTest
         Assert.IsNull(root.Navigate("a/missing"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MoveFile_LeavesTheSourceAndCarriesTheFileToTheTarget()
     {
@@ -104,6 +112,7 @@ public class MemoryFolderTest
         Assert.AreEqual(Container.MEMORY_DRIVE + "dst/a.txt", dst.Files["a.txt"].Url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MoveFileOntoAnExistingFile_WithoutOverwrite_IsRefused_AndTheSourceKeepsIt()
     {
@@ -119,6 +128,7 @@ public class MemoryFolderTest
         CollectionAssert.AreEqual(System.Text.Encoding.UTF8.GetBytes("target"), dst.Files["a.txt"].Content);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MoveFolder_RebasesEverythingItCarries()
     {
@@ -133,6 +143,7 @@ public class MemoryFolderTest
         Assert.AreEqual(Container.MEMORY_DRIVE + "archive/x.txt", archive.Files["x.txt"].Url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MoveFolderIntoItsOwnSubfolder_IsRefused_AndNothingIsLost()
     {
@@ -148,6 +159,7 @@ public class MemoryFolderTest
         Assert.IsTrue(docs.Files.ContainsKey("x.txt"), "its contents are still there");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CopyFolder_DeepClonesTheSubtree_AndLeavesTheSourceAlone()
     {
@@ -164,6 +176,7 @@ public class MemoryFolderTest
         CollectionAssert.AreEqual(System.Text.Encoding.UTF8.GetBytes("deep"), copiedNested.Files["n.txt"].Content);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CopyFileOntoAnExistingFile_WithoutOverwrite_IsRefused()
     {

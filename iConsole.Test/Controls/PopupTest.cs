@@ -34,6 +34,7 @@ public class PopupTest
 
     private static KeyEvent Key(ConsoleKey consoleKey) => new('\0', consoleKey, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowAttachesAndAnchorsBelowOwner()
     {
@@ -48,6 +49,7 @@ public class PopupTest
         Assert.AreEqual(6, (int)harness.Popup.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowElevatesAboveTheOwner()
     {
@@ -58,6 +60,7 @@ public class PopupTest
         Assert.IsTrue(harness.Popup.ZOrder > harness.Owner.ZOrder);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AbovePlacementSitsOnTopOfOwner()
     {
@@ -70,6 +73,7 @@ public class PopupTest
         Assert.AreEqual(0, (int)harness.Popup.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesAndDetaches()
     {
@@ -82,6 +86,7 @@ public class PopupTest
         Assert.IsFalse(RootContains(harness.Root, harness.Popup));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OutsideClickClosesButInsideClickDoesNot()
     {
@@ -96,6 +101,7 @@ public class PopupTest
         Assert.IsFalse(harness.Popup.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingRestoresFocusToTheOwner()
     {
@@ -109,6 +115,7 @@ public class PopupTest
         Assert.IsTrue(harness.Owner.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosedEventFires()
     {
@@ -122,6 +129,7 @@ public class PopupTest
         Assert.AreEqual(1, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NonModalShowLeavesFocusAndInputWithTheOwner()
     {
@@ -142,6 +150,7 @@ public class PopupTest
         Assert.IsTrue(harness.Popup.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetContentFillsTheInterior()
     {
@@ -156,6 +165,7 @@ public class PopupTest
         Assert.AreEqual(4, (int)content.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawRendersTitleBorder()
     {

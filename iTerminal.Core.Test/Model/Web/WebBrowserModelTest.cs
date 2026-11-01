@@ -83,6 +83,7 @@ public class WebBrowserModelTest
         await tab.LayoutTask;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NavigatingLoadsAndLaysOutThePage()
     {
@@ -100,6 +101,7 @@ public class WebBrowserModelTest
         Assert.AreEqual("Welcome", tab.Page!.Lines[0].Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedLoadShowsAnErrorPageThatCanBeRetried()
     {
@@ -120,6 +122,7 @@ public class WebBrowserModelTest
         Assert.AreEqual(1, tab.History.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BackAndForwardWalkTheHistoryAndKeepTheScrollPosition()
     {
@@ -148,6 +151,7 @@ public class WebBrowserModelTest
         Assert.AreEqual(1, fetcher.Requests.Count(r => r.Url == "https://a.test/"), "going back must not fetch the page again");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NavigatingAfterGoingBackDropsTheForwardHistory()
     {
@@ -167,6 +171,7 @@ public class WebBrowserModelTest
         CollectionAssert.AreEqual(new[] { "https://a.test/1", "https://a.test/3" }, tab.History.Select(h => h.Url).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFragmentLinkOnTheSamePageOnlyScrolls()
     {
@@ -185,6 +190,7 @@ public class WebBrowserModelTest
         Assert.IsTrue(model.GoBack(tab));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetFormsAppendTheirFieldsToTheAddress()
     {
@@ -204,6 +210,7 @@ public class WebBrowserModelTest
         Assert.AreEqual("https://a.test/find?q=two+words+%26+more&exact=on&go=Search", fetcher.Requests[^1].Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PostFormsSendABodyAndKeepItOutOfTheAddress()
     {
@@ -226,6 +233,7 @@ public class WebBrowserModelTest
         Assert.AreEqual("Welcome", tab.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RadioButtonsOfAGroupExcludeEachOther()
     {
@@ -242,6 +250,7 @@ public class WebBrowserModelTest
         Assert.IsTrue(fields[1].Checked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AMetaRefreshIsFollowed()
     {
@@ -257,6 +266,7 @@ public class WebBrowserModelTest
         Assert.AreEqual("https://a.test/new", tab.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task JavaScriptAndMailLinksAreReportedNotFollowed()
     {
@@ -274,6 +284,7 @@ public class WebBrowserModelTest
         Assert.AreEqual(1, fetcher.Requests.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StoppingALoadKeepsThePageThatWasShowing()
     {
@@ -296,6 +307,7 @@ public class WebBrowserModelTest
         Assert.AreEqual(1, tab.History.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnlyTheNewestLoadOfATabLands()
     {
@@ -315,6 +327,7 @@ public class WebBrowserModelTest
         Assert.AreEqual(1, tab.History.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabsHaveTheirOwnHistoryAndTheLastOneIsNeverClosed()
     {
@@ -339,6 +352,7 @@ public class WebBrowserModelTest
         Assert.AreEqual("New tab", model.Active.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextFilesAreShownAsTheyAreAndBinaryOnesCanBeSaved()
     {
@@ -363,6 +377,7 @@ public class WebBrowserModelTest
         CollectionAssert.AreEqual(new byte[] { 1, 2, 3, 4 }, File.ReadAllBytes(first));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PageSourceCanBeShownInPlaceOfThePage()
     {
@@ -380,6 +395,7 @@ public class WebBrowserModelTest
         Assert.AreEqual("<h1>Rendered</h1>", tab.Page!.Lines[0].Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ResizingRelaysOutTheSamePage()
     {
@@ -397,6 +413,7 @@ public class WebBrowserModelTest
         Assert.IsTrue(tab.Page.Lines.Count > wide);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task VisitsAndBookmarksArePersisted()
     {
@@ -416,6 +433,7 @@ public class WebBrowserModelTest
         Assert.AreEqual(0, new WebBrowserStore(settings).Bookmarks.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheStoreIgnoresCorruptSettings()
     {
@@ -428,6 +446,7 @@ public class WebBrowserModelTest
         Assert.AreEqual(WebBrowserStore.DefaultHome, store.Home);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFocusMovesThroughLinksAndWraps()
     {
@@ -447,6 +466,7 @@ public class WebBrowserModelTest
         Assert.AreEqual(2, tab.FocusedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FocusingAnOffScreenLinkScrollsToIt()
     {

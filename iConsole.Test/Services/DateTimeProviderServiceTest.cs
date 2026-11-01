@@ -5,6 +5,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class DateTimeProviderServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void DateTimeProviderServiceNow()
     {
@@ -14,6 +15,7 @@ public class DateTimeProviderServiceTest
         Assert.IsTrue(now <= DateTime.Now.AddMilliseconds(500));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DateTimeProviderServiceUtcNow()
     {
@@ -23,6 +25,7 @@ public class DateTimeProviderServiceTest
         Assert.IsTrue(utcNow <= DateTime.UtcNow.AddMilliseconds(500));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DateTimeProviderServiceNowIsBeforeUtcNow()
     {
@@ -35,6 +38,7 @@ public class DateTimeProviderServiceTest
         Assert.IsTrue(utcNow.Kind == DateTimeKind.Utc);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DateTimeProviderServiceNowConsistent()
     {
@@ -44,6 +48,7 @@ public class DateTimeProviderServiceTest
         Assert.IsTrue(now2 >= now1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DateTimeProviderServiceInterface()
     {
@@ -51,6 +56,7 @@ public class DateTimeProviderServiceTest
         Assert.IsInstanceOfType(service, typeof(IDateTimeProviderService));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Now_AdvancesOnceTheRefreshIntervalHasPassed()
     {

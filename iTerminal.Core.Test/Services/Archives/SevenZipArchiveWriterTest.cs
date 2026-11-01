@@ -42,6 +42,7 @@ public class SevenZipArchiveWriterTest
         new("docs/b.md", false, 4, DateTime.Now, Path.Combine(_root, "src", "docs", "b.md")),
     ];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCommandLineCarriesTheLevelAndNeverThePassword()
     {
@@ -55,6 +56,7 @@ public class SevenZipArchiveWriterTest
         CollectionAssert.AreEqual(new[] { "--", "out.7z", "a.txt", "docs" }, arguments.TakeLast(4).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutAPasswordThereIsNoPasswordSwitch()
     {
@@ -64,6 +66,7 @@ public class SevenZipArchiveWriterTest
         Assert.IsFalse(arguments.Contains("-mhe=on"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplacingOrKeepingIsTheUpdateSwitch()
     {
@@ -74,6 +77,7 @@ public class SevenZipArchiveWriterTest
         CollectionAssert.Contains(keep, "-up1q1r2x1y1z1");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePasswordIsWrittenToStdinAndLocalFilesAreAddedFromTheirFolder()
     {
@@ -91,6 +95,7 @@ public class SevenZipArchiveWriterTest
         Assert.AreEqual(100, reports[^1].BytesDone * 100 / reports[^1].BytesTotal, "the percentages 7-Zip prints become progress");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailureIsSaidIn7ZipsWords()
     {
@@ -103,6 +108,7 @@ public class SevenZipArchiveWriterTest
         StringAssert.StartsWith(exception.Message, "7-Zip: ERROR: x.7z");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutSevenZipTheFormatIsNotOffered()
     {
@@ -113,6 +119,7 @@ public class SevenZipArchiveWriterTest
         Assert.AreEqual("7z needs 7-Zip installed", service.WhyUnavailable(ArchiveFormat.SevenZip));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARealEncrypted7zOpensOnlyWithItsPassword()
     {

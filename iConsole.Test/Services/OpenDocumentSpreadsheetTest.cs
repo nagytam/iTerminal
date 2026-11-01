@@ -52,6 +52,7 @@ public class OpenDocumentSpreadsheetTest
 
     private static string Text(string value) => $"<table:table-cell office:value-type=\"string\"><text:p>{value}</text:p></table:table-cell>";
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASheet_IsAGridWithColumnLettersRowNumbersAndItsName()
     {
@@ -71,6 +72,7 @@ public class OpenDocumentSpreadsheetTest
         Assert.IsTrue(lines.Any(l => l.StartsWith('┌')) && lines.Any(l => l.StartsWith('└')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SeveralSheets_EachGetTheirOwnHeading()
     {
@@ -89,6 +91,7 @@ public class OpenDocumentSpreadsheetTest
         Assert.AreEqual("  (empty)", lines[empty + 1].TrimEnd().Length > 0 ? lines[empty + 1] : lines[empty + 2]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Cells_ShowWhatTheSpreadsheetDisplays_ElseTheirStoredValue()
     {
@@ -117,6 +120,7 @@ public class OpenDocumentSpreadsheetTest
         StringAssert.Contains(joined, "stored text");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RepeatedColumns_AreExpanded_AndEmptyOnesOnlyMoveTheColumn()
     {
@@ -139,6 +143,7 @@ public class OpenDocumentSpreadsheetTest
         Assert.IsTrue(row.TrimEnd().EndsWith("y │"), row);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RepeatedRows_KeepTheirNumbers_AndABlockOfEmptyRowsIsSkippedNotExpanded()
     {
@@ -159,6 +164,7 @@ public class OpenDocumentSpreadsheetTest
         Assert.IsTrue(lines.Count < 20, lines.Count.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TooManyRowsOrColumns_AreCut_WithALineSayingSo()
     {
@@ -173,6 +179,7 @@ public class OpenDocumentSpreadsheetTest
         Assert.IsFalse(lines.Any(l => l.Contains("r" + (5000 + 3))));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CoveredCells_OfAMergedAreaStayEmpty()
     {
@@ -193,6 +200,7 @@ public class OpenDocumentSpreadsheetTest
         Assert.AreEqual(5, row.Count(c => c == (char)0x2502), row);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADamagedFile_OrOneWithoutContent_ReportsInsteadOfThrowing()
     {
@@ -209,6 +217,7 @@ public class OpenDocumentSpreadsheetTest
         Assert.AreEqual("[Could not read the workbook: content.xml is missing]", OfficeTextRenderer.RenderOpenDocumentSpreadsheet(noContent).Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheViewerConverter_ReadsOdsAndOtsFiles()
     {
@@ -225,6 +234,7 @@ public class OpenDocumentSpreadsheetTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnOdsIsNotShownAsTextInAnEncoding()
     {

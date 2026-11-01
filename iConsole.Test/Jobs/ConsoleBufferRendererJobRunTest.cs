@@ -32,6 +32,7 @@ public class ConsoleBufferRendererJobRunTest
         await run.WaitAsync(TimeSpan.FromSeconds(5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_WritesChangedLinesToTheDriver_AndFollowsWindowSize()
     {
@@ -56,6 +57,7 @@ public class ConsoleBufferRendererJobRunTest
         Assert.AreEqual(new Size(30, 6), buffer.Size);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_WhileTheConsoleIsLent_WritesNothing()
     {
@@ -85,6 +87,7 @@ public class ConsoleBufferRendererJobRunTest
         await lend;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_WithDumpsEnabled_WritesFramesAndSessionTrace()
     {
@@ -115,6 +118,7 @@ public class ConsoleBufferRendererJobRunTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_WhenTheDumpHelperThrows_KeepsRendering()
     {
@@ -132,6 +136,7 @@ public class ConsoleBufferRendererJobRunTest
         dump.Verify(d => d.AppendError(It.IsAny<Exception>()), Times.AtLeastOnce());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnConsoleReacquired_ForgetsWhatWasOnScreen()
     {
@@ -145,6 +150,7 @@ public class ConsoleBufferRendererJobRunTest
         Assert.IsFalse(job.LastBufferCursor.IsCursorVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_CanBeCalledRepeatedly()
     {

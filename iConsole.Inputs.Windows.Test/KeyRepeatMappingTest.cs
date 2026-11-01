@@ -31,6 +31,7 @@ public class KeyRepeatMappingTest
     private static List<KeyEvent> Map(KeyRepeatTracker tracker, KEY_EVENT_RECORD record) =>
         [.. MouseEventPublisherJob.MapKeyRecord(record, tracker)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFirstPress_IsNotARepeat()
     {
@@ -41,6 +42,7 @@ public class KeyRepeatMappingTest
         Assert.IsFalse(events[0].IsRepeat);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSecondAndLaterKeyDownsOfAHeldKey_AreRepeats()
     {
@@ -51,6 +53,7 @@ public class KeyRepeatMappingTest
         Assert.IsTrue(Map(tracker, Letter(down: true))[0].IsRepeat);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LettingGo_EndsTheRepeat_SoTheNextPressIsFresh()
     {
@@ -65,6 +68,7 @@ public class KeyRepeatMappingTest
         Assert.IsFalse(again[0].IsRepeat);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARecordWithARepeatCount_StandsForThatManyPresses_AllButTheFirstRepeats()
     {
@@ -76,6 +80,7 @@ public class KeyRepeatMappingTest
         Assert.IsTrue(events.All(e => e.KeyChar == 'a'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(0, 1)]
     [DataRow(1, 1)]
@@ -88,6 +93,7 @@ public class KeyRepeatMappingTest
         Assert.AreEqual(expected, events.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeysWithoutACharacter_KeepTheirDownAndUpEvents_AndRepeatToo()
     {
@@ -107,6 +113,7 @@ public class KeyRepeatMappingTest
         Assert.IsFalse(up[0].IsRepeat);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoKeysHeldAtOnce_AreTrackedApart()
     {
@@ -120,6 +127,7 @@ public class KeyRepeatMappingTest
         Assert.IsTrue(sameAgain[0].IsRepeat);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ResetForgetsTheKeysThatWereDown()
     {
@@ -131,6 +139,7 @@ public class KeyRepeatMappingTest
         Assert.IsFalse(Map(tracker, Letter(down: true))[0].IsRepeat);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Modifiers_AreCarriedOnEveryEvent()
     {

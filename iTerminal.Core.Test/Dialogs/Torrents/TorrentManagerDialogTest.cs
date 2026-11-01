@@ -82,6 +82,7 @@ public class TorrentManagerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyManagerSaysHowToAdd()
     {
@@ -94,6 +95,7 @@ public class TorrentManagerDialogTest
         CollectionAssert.Contains(torrents.Calls, "restore");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheListShowsNameStateProgressAndSpeed()
     {
@@ -109,6 +111,7 @@ public class TorrentManagerDialogTest
         AssertScreenContains(screen, "2.0 MB/s");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AMagnetLinkIsAddedWithTheDefaultFolder()
     {
@@ -125,6 +128,7 @@ public class TorrentManagerDialogTest
         Assert.AreEqual(1, dialog.ListCountForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnInvalidSourceIsRefusedOnTheForm()
     {
@@ -140,6 +144,7 @@ public class TorrentManagerDialogTest
         Assert.IsFalse(torrents.Calls.Any(c => c.StartsWith("add ")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscLeavesTheForm()
     {
@@ -152,6 +157,7 @@ public class TorrentManagerDialogTest
         Assert.AreEqual("List", dialog.ModeForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SpacePausesThenResumes()
     {
@@ -168,6 +174,7 @@ public class TorrentManagerDialogTest
         CollectionAssert.AreEqual(new[] { "restore", "pause one", "resume one" }, torrents.Calls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RemovingAsksFirstAndYKeepsTheFiles()
     {
@@ -183,6 +190,7 @@ public class TorrentManagerDialogTest
         Assert.AreEqual(0, dialog.ListCountForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WRemovesTheFilesToo()
     {
@@ -196,6 +204,7 @@ public class TorrentManagerDialogTest
         CollectionAssert.Contains(torrents.Calls, "remove one True");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyOtherKeyCancelsTheRemoval()
     {
@@ -209,6 +218,7 @@ public class TorrentManagerDialogTest
         Assert.AreEqual(1, dialog.ListCountForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheArrowsMoveTheHighlight()
     {
@@ -220,6 +230,7 @@ public class TorrentManagerDialogTest
         Assert.AreEqual(1, dialog.CursorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OOpensTheSaveFolderInThePanel()
     {
@@ -232,6 +243,7 @@ public class TorrentManagerDialogTest
         panels.Verify(p => p.SetUrlAsync(It.IsAny<Url>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizesAndRatesAreReadable()
     {
@@ -241,6 +253,7 @@ public class TorrentManagerDialogTest
         Assert.AreEqual("[#####-----]", TorrentManagerDialog.ProgressBar(50, 12));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheColumnTitlesLineUpWithTheRowsAndAreNotCutOff()
     {

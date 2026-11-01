@@ -5,6 +5,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class TerminalTitleAndNotificationServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Title_FirstChange_SavesTheOldTitle_ThenSetsTheNewOne()
     {
@@ -17,6 +18,7 @@ public class TerminalTitleAndNotificationServiceTest
         Assert.AreEqual("Docs", service.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Title_SecondChange_DoesNotPushAgain_AndSameTitleWritesNothing()
     {
@@ -32,6 +34,7 @@ public class TerminalTitleAndNotificationServiceTest
         Assert.AreEqual("\u001b]2;B\u0007", output.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Restore_PopsOnce_AndIsHarmlessWhenNothingWasSet()
     {
@@ -50,6 +53,7 @@ public class TerminalTitleAndNotificationServiceTest
         Assert.AreEqual(string.Empty, service.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Title_WhenDisabled_WritesNothing()
     {
@@ -61,6 +65,7 @@ public class TerminalTitleAndNotificationServiceTest
         Assert.AreEqual(string.Empty, output.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Title_WhileTheTerminalIsLent_IsNotWritten_AndIsSetOnceItIsBack()
     {
@@ -83,6 +88,7 @@ public class TerminalTitleAndNotificationServiceTest
         Assert.AreEqual("Lent", service.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Title_ARefusingOutput_DoesNotThrow()
     {
@@ -93,6 +99,7 @@ public class TerminalTitleAndNotificationServiceTest
         Assert.AreEqual(string.Empty, service.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notify_WritesTheSequenceOfTheStyle()
     {
@@ -105,6 +112,7 @@ public class TerminalTitleAndNotificationServiceTest
         Assert.AreEqual("\u001b]777;notify;Done;Copied\u0007", output.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Notify_WithStyleNone_WritesNothing_AndBellToo()
     {
@@ -117,6 +125,7 @@ public class TerminalTitleAndNotificationServiceTest
         Assert.AreEqual(string.Empty, output.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Bell_WritesBel()
     {

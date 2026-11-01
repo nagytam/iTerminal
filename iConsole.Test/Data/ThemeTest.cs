@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class ThemeTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Theme_Default_HasValue()
     {
@@ -12,6 +13,7 @@ public class ThemeTest
         Assert.AreEqual(0, (int)theme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Theme_Dark_HasValue()
     {
@@ -19,6 +21,7 @@ public class ThemeTest
         Assert.AreEqual(1, (int)theme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Theme_CanCompare()
     {
@@ -30,6 +33,7 @@ public class ThemeTest
         Assert.AreNotEqual(theme1, theme3);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Theme_CanConvertToString()
     {

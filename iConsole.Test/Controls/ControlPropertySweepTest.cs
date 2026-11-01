@@ -102,6 +102,7 @@ public class ControlPropertySweepTest
         return [];
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoSetting_ThrowsOrBreaksTheNextDraw_ForAnAwkwardValue()
     {

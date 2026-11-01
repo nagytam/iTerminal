@@ -5,6 +5,7 @@ namespace iConsole.Test.Helper;
 [TestClass]
 public class ConsoleKeyHelperTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsoleKeyHelperTypeableCharactersContainsLowercaseLetters()
     {
@@ -13,6 +14,7 @@ public class ConsoleKeyHelperTest
         Assert.IsTrue(chars.Contains('z'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsoleKeyHelperTypeableCharactersContainsUppercaseLetters()
     {
@@ -21,6 +23,7 @@ public class ConsoleKeyHelperTest
         Assert.IsTrue(chars.Contains('Z'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsoleKeyHelperTypeableCharactersContainsNumbers()
     {
@@ -29,6 +32,7 @@ public class ConsoleKeyHelperTest
         Assert.IsTrue(chars.Contains('9'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsoleKeyHelperTypeableCharactersContainsSpecialChars()
     {
@@ -40,6 +44,7 @@ public class ConsoleKeyHelperTest
         Assert.IsTrue(chars.Contains('/'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow('(')]
     [DataRow('\'')]
@@ -49,6 +54,7 @@ public class ConsoleKeyHelperTest
     [DataRow('€')]
     public void PrintableCharactersAreTypeable(char c) => Assert.IsTrue(ConsoleKeyHelper.IsTypeable(c));
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow('\0')]
     [DataRow('\r')]
@@ -57,10 +63,12 @@ public class ConsoleKeyHelperTest
     [DataRow('\u0003')]
     public void ControlCharactersAreNotTypeable(char c) => Assert.IsFalse(ConsoleKeyHelper.IsTypeable(c));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CtrlAltTogetherIsAltGrAndTypes() =>
         Assert.IsTrue(ConsoleKeyHelper.IsTypingKey(new iConsole.Data.KeyEvent('{', ConsoleKey.B, false, true, true)));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AltAloneOrCtrlAloneIsAChord()
     {
@@ -68,6 +76,7 @@ public class ConsoleKeyHelperTest
         Assert.IsFalse(ConsoleKeyHelper.IsTypingKey(new iConsole.Data.KeyEvent('a', ConsoleKey.A, false, false, true)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsoleKeyToCharD1()
     {
@@ -75,6 +84,7 @@ public class ConsoleKeyHelperTest
         Assert.AreEqual('1', result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsoleKeyToCharD5()
     {
@@ -82,6 +92,7 @@ public class ConsoleKeyHelperTest
         Assert.AreEqual('5', result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsoleKeyToCharD9()
     {
@@ -89,6 +100,7 @@ public class ConsoleKeyHelperTest
         Assert.AreEqual('9', result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsoleKeyToCharInvalidKey()
     {
@@ -96,6 +108,7 @@ public class ConsoleKeyHelperTest
         Assert.AreEqual('\0', result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsoleKeyToCharEscape()
     {

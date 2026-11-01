@@ -6,6 +6,7 @@ namespace iConsole.Test.Localization;
 [TestClass]
 public class HotKeysTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void VisibleIn_KeepsThePreferredLetterWhenTheCaptionHasIt()
     {
@@ -14,6 +15,7 @@ public class HotKeysTest
         Assert.AreEqual('F', HotKeys.VisibleIn("Create folder", 'F'), "a letter the caption has is returned as given");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VisibleIn_TakesTheLastWordsFirstLetterWhenTheCaptionLacksThePreferredOne()
     {
@@ -23,12 +25,14 @@ public class HotKeysTest
         Assert.AreEqual('A', HotKeys.VisibleIn("Annuler", 'c'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VisibleIn_SkipsPunctuationAndDigitsWhenLookingForALetter()
     {
         Assert.AreEqual('b', HotKeys.VisibleIn("123 ... bis", 'x'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VisibleIn_ReturnsThePreferredLetterWhenTheCaptionHasNoLetter()
     {

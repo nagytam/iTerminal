@@ -20,6 +20,7 @@ public class MenuItemTest
         return mockThemeService;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemCanBeCreated()
     {
@@ -31,6 +32,7 @@ public class MenuItemTest
         Assert.IsInstanceOfType(menuItem, typeof(PopUpWindow));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemHasText()
     {
@@ -41,6 +43,7 @@ public class MenuItemTest
         Assert.AreEqual("Edit", menuItem.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemHasMenuItems()
     {
@@ -56,6 +59,7 @@ public class MenuItemTest
         Assert.AreEqual(2, menuItemControls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemIsNotVisibleByDefault()
     {
@@ -66,6 +70,7 @@ public class MenuItemTest
         Assert.IsFalse(menuItem.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemIsNotOpenedByDefault()
     {
@@ -76,6 +81,7 @@ public class MenuItemTest
         Assert.IsFalse(menuItem.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemIsNotSelectedByDefault()
     {
@@ -86,6 +92,7 @@ public class MenuItemTest
         Assert.IsFalse(menuItem.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemWithCommandCanBeCreated()
     {
@@ -98,6 +105,7 @@ public class MenuItemTest
         Assert.AreEqual("Exit", menuItem.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemCanBeOpened()
     {
@@ -110,6 +118,7 @@ public class MenuItemTest
         Assert.IsTrue(menuItem.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemCanBeClosed()
     {
@@ -124,6 +133,7 @@ public class MenuItemTest
         Assert.IsFalse(menuItem.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemTextCanBeSet()
     {
@@ -136,6 +146,7 @@ public class MenuItemTest
         Assert.AreEqual("Modified", menuItem.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemWithEmptyMenuItems()
     {
@@ -147,6 +158,7 @@ public class MenuItemTest
         Assert.AreEqual(0, menuItemControls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemWithMultipleNestedItems()
     {
@@ -176,6 +188,7 @@ public class MenuItemTest
         Assert.AreEqual(1, thirdLevelItems.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemHasDefaultVisibility()
     {
@@ -186,6 +199,7 @@ public class MenuItemTest
         Assert.IsFalse(menuItem.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemHasDefaultEnabled()
     {
@@ -196,6 +210,7 @@ public class MenuItemTest
         Assert.IsTrue(menuItem.IsEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItemHasTitle()
     {
@@ -206,6 +221,7 @@ public class MenuItemTest
         Assert.IsNotNull(menuItem.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextWithHotKeyIncludesCommandKey()
     {
@@ -223,6 +239,7 @@ public class MenuItemTest
         Assert.IsTrue(textWithHotKey.EndsWith(" F1"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OpenMenuOpensParentAndSelectsFirstChild()
     {
@@ -238,6 +255,7 @@ public class MenuItemTest
         Assert.IsFalse(childB.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OpenSubMenuOpensAncestor()
     {
@@ -253,6 +271,7 @@ public class MenuItemTest
         Assert.IsTrue(leaf.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CloseMenuClosesDescendantsAndClearsSelection()
     {
@@ -274,6 +293,7 @@ public class MenuItemTest
         Assert.IsFalse(leaf.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetSelectedClearsSiblingSelection()
     {
@@ -289,6 +309,7 @@ public class MenuItemTest
         Assert.IsTrue(second.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TriggerHotKeyAsyncTogglesMenuState()
     {
@@ -303,6 +324,7 @@ public class MenuItemTest
         Assert.IsFalse(menuItem.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsyncEscapeClosesMenu()
     {
@@ -318,6 +340,7 @@ public class MenuItemTest
         Assert.IsFalse(child.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Closed_RendersSubItemText()
     {
@@ -335,6 +358,7 @@ public class MenuItemTest
         Assert.IsTrue(buffer.ContentAsString.Contains("File"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Closed_MultipleSubItems_AllTextsRendered()
     {
@@ -355,6 +379,7 @@ public class MenuItemTest
         Assert.IsTrue(content.Contains("Edit"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Opened_RendersBorderTopRow()
     {
@@ -371,6 +396,7 @@ public class MenuItemTest
         Assert.IsTrue(lines[0].Contains("╔") || lines[0].Contains("File"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Opened_RendersSubItemInList()
     {
@@ -385,6 +411,7 @@ public class MenuItemTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Open"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Opened_SelectedItem_MarkedWithAngleBrackets()
     {
@@ -403,6 +430,7 @@ public class MenuItemTest
 
     // ── Keyboard navigation while a menu is open ────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DownArrow_MovesSelectionToNextSibling()
     {
@@ -418,6 +446,7 @@ public class MenuItemTest
         Assert.IsTrue(childB.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DownArrow_WrapsToFirstSibling()
     {
@@ -433,6 +462,7 @@ public class MenuItemTest
         Assert.IsTrue(childA.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpArrow_WrapsToLastSibling()
     {
@@ -448,6 +478,7 @@ public class MenuItemTest
         Assert.IsTrue(childB.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DownArrow_SkipsSeparators()
     {
@@ -464,6 +495,7 @@ public class MenuItemTest
         Assert.IsTrue(childB.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnBranchItem_DescendsIntoSubmenu()
     {
@@ -479,6 +511,7 @@ public class MenuItemTest
         Assert.IsTrue(leaf.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnLeafItem_RunsCommandAndClosesWholeTree()
     {
@@ -500,6 +533,7 @@ public class MenuItemTest
         Assert.IsFalse(menuBar.IsModal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RightArrow_AtTopLevel_SwitchesToNextMenu()
     {
@@ -515,6 +549,7 @@ public class MenuItemTest
         Assert.IsTrue(editMenu.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LeftArrow_AtTopLevel_WrapsToLastMenu()
     {
@@ -530,6 +565,7 @@ public class MenuItemTest
         Assert.IsTrue(editMenu.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LeftArrow_Nested_AscendsKeepingParentSelectionAndTopLevelOpen()
     {
@@ -550,6 +586,7 @@ public class MenuItemTest
 
     // ── MenuBar.IsModal drives whether the desktop routes keys into the menu ───
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuBar_IsModal_BecomesTrueWhenATopLevelMenuOpens()
     {
@@ -562,6 +599,7 @@ public class MenuItemTest
         Assert.IsTrue(menuBar.IsModal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuBar_IsModal_BecomesFalseAfterCloseMenu()
     {
@@ -577,6 +615,7 @@ public class MenuItemTest
 
     // ── Help discoverability ────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetKeyHints_IncludesCtrlLetterForEachTopLevelMenuAndNavigationKeys()
     {
@@ -592,6 +631,7 @@ public class MenuItemTest
         Assert.IsTrue(hints.Any(h => h.Key == "Esc"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_MenuBar_RendersAllTopLevelItems()
     {
@@ -617,6 +657,7 @@ public class MenuItemTest
     /// The column used to append the command's bare console key as well — "Create File	Shift+F4 F4",
     /// a raw tab and a second, wrong shortcut (F4 is the editor).
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void AShortcutInTheLabelIsShownOnceAndNeverTheBareConsoleKey()
     {
@@ -630,6 +671,7 @@ public class MenuItemTest
         Assert.IsFalse(menuItem.TextWithHotKey.Contains('\t'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnOpenDropDownAlignsItsShortcutsInOneColumn()
     {
@@ -653,6 +695,7 @@ public class MenuItemTest
     }
 
     /// <summary>Every drop-down used to open at column 1, so the Tools menu appeared under "File".</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void ADropDownOpensUnderItsOwnName()
     {
@@ -668,6 +711,7 @@ public class MenuItemTest
         Assert.AreEqual(5, tools.Position.X, "\"File \" is five columns, so Tools starts at column 5");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADropDownNearTheRightEdgeStaysOnScreen()
     {
@@ -681,6 +725,7 @@ public class MenuItemTest
 
         Assert.IsTrue(help.Position.X + help.ViewSize.Width <= 40, $"{help.Position.X} + {help.ViewSize.Width}");
     }
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HomeAndEnd_SelectTheFirstAndLastEntry_SkippingSeparators()
     {
@@ -703,6 +748,7 @@ public class MenuItemTest
         Assert.IsFalse(separatorFirst.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HomeAndEnd_OnAnEmptyDropDown_AreHandledAndChangeNothing()
     {
@@ -714,6 +760,7 @@ public class MenuItemTest
         Assert.IsTrue(await parent.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Home, false, false, false)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Space_RunsTheSelectedEntryLikeEnter()
     {
@@ -733,6 +780,7 @@ public class MenuItemTest
         Assert.IsFalse(fileMenu.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Space_OnABranchEntry_DescendsIntoTheSubmenu()
     {

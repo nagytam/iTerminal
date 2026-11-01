@@ -25,6 +25,7 @@ public class AudioDeviceServiceTest
         public IAudioSink CreateSink() => new FakeAudioSink();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ResolvesTheAvailableBackendWithTheLowestPriorityNumber()
     {
@@ -37,6 +38,7 @@ public class AudioDeviceServiceTest
         Assert.AreEqual("Primary", service.ActiveBackendName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SkipsUnavailableBackends()
     {
@@ -50,6 +52,7 @@ public class AudioDeviceServiceTest
         Assert.IsTrue(service.HasAudioOutput);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABackendThatThrowsWhileProbingIsNotACandidate()
     {
@@ -59,6 +62,7 @@ public class AudioDeviceServiceTest
         Assert.AreEqual("Working", service.ActiveBackendName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithNoUsableBackend_ReportsNoOutputAndCreatesNoSink()
     {
@@ -70,6 +74,7 @@ public class AudioDeviceServiceTest
         Assert.IsNull(service.CreateSink());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithNoBackendsRegisteredAtAll_DegradesQuietly()
     {
@@ -79,6 +84,7 @@ public class AudioDeviceServiceTest
         Assert.IsNull(service.CreateSink());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetDevices_IsCachedUntilRefresh()
     {
@@ -94,6 +100,7 @@ public class AudioDeviceServiceTest
         Assert.AreEqual(2, backend.DeviceQueryCount, "Refresh must pick up hot-plugged devices");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateSink_ReturnsASinkFromTheActiveBackend()
     {

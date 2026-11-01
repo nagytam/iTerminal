@@ -23,6 +23,7 @@ public class UnitConverterMouseTest
         LeftClicked = true,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAnotherToUnit_ChangesTheResultWithoutAKeyPress()
     {
@@ -38,6 +39,7 @@ public class UnitConverterMouseTest
         Assert.AreNotEqual(resultBefore, dialog.ResultLine());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAnotherFromUnit_IsTakenUp()
     {
@@ -49,6 +51,7 @@ public class UnitConverterMouseTest
         Assert.AreEqual(target, dialog.EngineForTest.FromUnitIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAnotherCategory_ChangesTheUnitsOnOffer()
     {
@@ -61,6 +64,7 @@ public class UnitConverterMouseTest
         Assert.AreEqual(0, dialog.EngineForTest.FromUnitIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOutsideTheDialog_ChangesNothing()
     {

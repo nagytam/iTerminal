@@ -59,6 +59,7 @@ public class CreateLinkDialogTest
         return new Rig { Dialog = dialog, Root = root, Links = links, Local = local, Remote = remote };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ItShowsTheLinkPath_TheTarget_AndTheOptions()
     {
@@ -74,6 +75,7 @@ public class CreateLinkDialogTest
         Assert.AreEqual(Target, rig.Dialog.TargetPath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolder_CannotBeHardLinked()
     {
@@ -85,6 +87,7 @@ public class CreateLinkDialogTest
         Assert.IsTrue(rig.Dialog.TargetIsFolder);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFile_CanBeHardLinked()
     {
@@ -95,6 +98,7 @@ public class CreateLinkDialogTest
         Assert.IsTrue(rig.Dialog.IsHardLink);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Create_MakesASymbolicLink_ByDefault_ClosesAndRereadsLocalPanelsOnly()
     {
@@ -108,6 +112,7 @@ public class CreateLinkDialogTest
         rig.Remote.Verify(m => m.Refresh(It.IsAny<bool>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheOptions_ChooseAHardOrRelativeLink()
     {
@@ -120,6 +125,7 @@ public class CreateLinkDialogTest
         rig.Links.Verify(l => l.CreateAsync(LinkKind.Hard, Link, Target, true), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileUrlAndSurroundingSpaces_AreTidiedBeforeUse()
     {
@@ -131,6 +137,7 @@ public class CreateLinkDialogTest
         rig.Links.Verify(l => l.CreateAsync(LinkKind.Symbolic, Link, Target, false), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyPath_SaysWhereTheLinkMustGo_AndNothingIsCreated()
     {
@@ -145,6 +152,7 @@ public class CreateLinkDialogTest
         AssertScreenContains(Render(rig.Root), "Error: Type where the link goes.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailure_StaysInTheDialog_InWords_WrappedOverSeveralRows()
     {
@@ -161,6 +169,7 @@ public class CreateLinkDialogTest
         AssertScreenContains(screen, "developer mode");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterCreates_AndEscapeCloses()
     {
@@ -176,6 +185,7 @@ public class CreateLinkDialogTest
         other.Links.Verify(l => l.CreateAsync(It.IsAny<LinkKind>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LoadingAgain_ClearsTheOptionsAndTheError()
     {
@@ -192,6 +202,7 @@ public class CreateLinkDialogTest
         Assert.AreEqual(string.Empty, rig.Dialog.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DefaultLinkPath_IsBesideTheTarget_WhenTheOtherPanelShowsTheSameFolderOrNone()
     {

@@ -20,6 +20,7 @@ public class TerminalFocusAndShapesTest
 
     // ---- focus service ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Focus_StartsFocused_AndOnlyAChangeRaisesEvents()
     {
@@ -44,6 +45,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(1, regained);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WaitForFocus_IsImmediateWhileFocused_AndEndsWhenFocusReturns()
     {
@@ -60,6 +62,7 @@ public class TerminalFocusAndShapesTest
         Assert.IsTrue(waiting.IsCompletedSuccessfully);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WaitForFocus_CanBeCancelled_AndEveryWaiterIsReleased()
     {
@@ -77,6 +80,7 @@ public class TerminalFocusAndShapesTest
         await Task.WhenAll(first, second).WaitAsync(TimeSpan.FromSeconds(5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASecondLoss_WaitsAgain()
     {
@@ -95,6 +99,7 @@ public class TerminalFocusAndShapesTest
 
     // ---- the reports in the input ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Decoder_ReadsFocusInAndOut_NotAsKeys()
     {
@@ -110,6 +115,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual("abc", new string(keys.Select(k => k.KeyChar).ToArray()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Decoder_AFocusReportSplitAcrossReads_StillArrives()
     {
@@ -126,6 +132,7 @@ public class TerminalFocusAndShapesTest
         CollectionAssert.AreEqual(new[] { true }, reports);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Decoder_ArrowKeysAndSs3Keys_AreNotMistakenForFocus()
     {
@@ -142,6 +149,7 @@ public class TerminalFocusAndShapesTest
             new[] { ConsoleKey.UpArrow, ConsoleKey.F1, ConsoleKey.Home }, keys.Select(k => k.ConsoleKey).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FocusReporting_SequencesAreTheOnesTerminalsKnow()
     {
@@ -163,6 +171,7 @@ public class TerminalFocusAndShapesTest
         public void Start() => StartAutoRefresh();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AutoRefresh_StandsStillInTheBackground_AndRunsAgainOnFocus()
     {
@@ -190,6 +199,7 @@ public class TerminalFocusAndShapesTest
 
     // ---- cursor shape ----
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(CursorShape.Default, "\u001b[0 q")]
     [DataRow(CursorShape.BlinkingBlock, "\u001b[1 q")]
@@ -201,6 +211,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(expected, CursorShapes.Sequence(shape));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextFieldsAskForABar_AndOtherControlsLeaveTheTerminalsShape()
     {
@@ -217,6 +228,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(CursorShape.BlinkingBar, parent.EffectiveCursorShape, "the shape of the child that shows the cursor");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AControlsOwnShapeWinsOverItsChildren()
     {
@@ -228,6 +240,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(CursorShape.SteadyBlock, parent.EffectiveCursorShape);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheRenderer_TellsTheDriverTheShapeWhileTheCursorShows()
     {
@@ -248,6 +261,7 @@ public class TerminalFocusAndShapesTest
         driver.VerifySet(d => d.CursorShape = CursorShape.BlinkingBar, Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheRenderer_LeavesTheShapeAloneWhileTheCursorIsHidden()
     {
@@ -269,6 +283,7 @@ public class TerminalFocusAndShapesTest
     private static PointerShapeService Service(StringWriter output, bool enabled = true, ConsoleOwnership? ownership = null)
         => new(() => output, ownership, enabled);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PointerShape_WritesOsc22OnlyWhenTheShapeChanges()
     {
@@ -283,6 +298,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(PointerShape.Text, service.Shape);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(PointerShape.Default, "default")]
     [DataRow(PointerShape.Pointer, "pointer")]
@@ -295,6 +311,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(name, PointerShapeService.NameOf(shape));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PointerShape_ResetAndDisposeGiveThePointerBack_Once()
     {
@@ -311,6 +328,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(PointerShape.Default, service.Shape);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PointerShape_NeverSetMeansNothingToReset()
     {
@@ -321,6 +339,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(string.Empty, output.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PointerShape_DisabledWritesNothing()
     {
@@ -333,6 +352,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(PointerShape.Default, service.Shape);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PointerShape_NothingIsWrittenWhileTheTerminalIsLent()
     {
@@ -351,6 +371,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreNotEqual(string.Empty, output.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PointerShape_OnlyForTerminalsKnownToHonourIt_OrWhenAskedFor()
     {
@@ -376,6 +397,7 @@ public class TerminalFocusAndShapesTest
 
     private TextBox NewBox() => new(new Mock<IBeepService>().Object, new Mock<IDateTimeProviderService>().Object, _theme);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindPointerShape_TheInnermostControlThatAsksWins()
     {
@@ -393,6 +415,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(PointerShape.Default, Control.FindPointerShape(null, new Position(0, 0)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindPointerShape_AHiddenControlIsSkipped()
     {
@@ -406,6 +429,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(PointerShape.Default, Control.FindPointerShape(root, new Position(5, 2)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindPointerShape_OnlyTheDividerOfASplitterIsADoubleArrow()
     {
@@ -427,6 +451,7 @@ public class TerminalFocusAndShapesTest
         Assert.AreEqual(PointerShape.ResizeVertical, Control.FindPointerShape(splitter, new Position(3, 4)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToolTipHost_SetsThePointerShapeFromWhatIsUnderThePointer()
     {
@@ -450,6 +475,7 @@ public class TerminalFocusAndShapesTest
         shapes.Verify(s => s.Set(PointerShape.Default), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToolTipHost_WorksWithoutAPointerShapeService()
     {

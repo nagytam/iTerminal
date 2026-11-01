@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Data;
 [TestClass]
 public class InstrumentTypeTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentType_Cash_HasValue()
     {
@@ -12,6 +13,7 @@ public class InstrumentTypeTest
         Assert.AreEqual(0, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentType_CryptoCurrency_HasValue()
     {
@@ -19,6 +21,7 @@ public class InstrumentTypeTest
         Assert.AreEqual(1, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentType_Fund_HasValue()
     {
@@ -26,6 +29,7 @@ public class InstrumentTypeTest
         Assert.AreEqual(2, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentType_Stock_HasValue()
     {
@@ -33,6 +37,7 @@ public class InstrumentTypeTest
         Assert.AreEqual(3, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentType_AllValuesAreUnique()
     {
@@ -48,6 +53,7 @@ public class InstrumentTypeTest
         Assert.AreEqual(types.Length, distinctTypes.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentType_CanConvertToString()
     {
@@ -56,6 +62,7 @@ public class InstrumentTypeTest
         Assert.AreEqual("Stock", str);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InstrumentType_CanCompare()
     {

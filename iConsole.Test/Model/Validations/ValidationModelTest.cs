@@ -29,6 +29,7 @@ public class ValidationModelTest
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationModelConstructor()
     {
@@ -42,6 +43,7 @@ public class ValidationModelTest
         Assert.IsTrue(validationModel.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationModelIsValid()
     {
@@ -54,6 +56,7 @@ public class ValidationModelTest
         Assert.IsTrue(validationModel.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationModelValidationResult()
     {
@@ -67,6 +70,7 @@ public class ValidationModelTest
         Assert.IsTrue(validationModel.ValidationResult.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationModelErrorMessage()
     {
@@ -79,6 +83,7 @@ public class ValidationModelTest
         Assert.IsNotNull(validationModel.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationModelWithNullModel()
     {
@@ -108,6 +113,7 @@ public class ValidationModelTest
     /// stamped with a clock cached half a second behind it, so their results were thrown away and a
     /// name typed and confirmed quickly stayed "invalid" for good.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void AChangeAfterAValidationOnTheRealClockIsNotDiscarded()
     {
@@ -123,6 +129,7 @@ public class ValidationModelTest
         Assert.IsTrue(validator.EnsureCurrent(), "the typed name is what is validated");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EnsureCurrentSeesAChangeTheBackgroundHasNotValidatedYet()
     {
@@ -137,6 +144,7 @@ public class ValidationModelTest
         Assert.IsFalse(validator.IsPending);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheNewestChangeWinsEvenWhenTheClockDoesNotMove()
     {
@@ -159,6 +167,7 @@ public class ValidationModelTest
         Assert.IsTrue(validator.IsValid, "the last value is valid, whatever order the background validations finished in");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingPendingMeansNoWork()
     {
@@ -170,6 +179,7 @@ public class ValidationModelTest
         Assert.IsTrue(validator.EnsureCurrent());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationModelInterface()
     {

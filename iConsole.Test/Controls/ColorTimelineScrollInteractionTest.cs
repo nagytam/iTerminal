@@ -25,6 +25,7 @@ public class ColorTimelineScrollInteractionTest
 
     // ---- ColorPicker ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_Arrows_MoveTheCursorWithoutPickingAndStopAtTheEdges()
     {
@@ -49,6 +50,7 @@ public class ColorTimelineScrollInteractionTest
         Assert.IsFalse(await picker.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_EnterAndSpace_PickTheCursorColour_ReadOnlyDoesNot()
     {
@@ -68,6 +70,7 @@ public class ColorTimelineScrollInteractionTest
         Assert.AreEqual(picked, picker.SelectedColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_UnknownColour_DoesNotBreakTheCursor()
     {
@@ -81,6 +84,7 @@ public class ColorTimelineScrollInteractionTest
         Assert.IsTrue(picker.CursorIndex >= 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorPicker_Move_StopsAtTheGridEdges()
     {
@@ -92,6 +96,7 @@ public class ColorTimelineScrollInteractionTest
 
     // ---- Timeline ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Timeline_RowsNeeded_AndAdd_FollowTheEventCount()
     {
@@ -105,6 +110,7 @@ public class ColorTimelineScrollInteractionTest
         Assert.AreEqual(0, timeline.Events.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Timeline_Draw_CutsLongTitlesAndHandlesTinyViews()
     {
@@ -131,6 +137,7 @@ public class ColorTimelineScrollInteractionTest
         ViewSize = new Size(10, 1),
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScrollBar_Horizontal_ArrowsAndWheelMoveTheColumnCursor()
     {
@@ -146,6 +153,7 @@ public class ColorTimelineScrollInteractionTest
         Assert.AreEqual(0, (int)model.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScrollBar_ClickOutsideOrWithoutModel_IsIgnored()
     {
@@ -156,6 +164,7 @@ public class ColorTimelineScrollInteractionTest
         Assert.IsFalse(await bar.HandleMouseEventAsync(Click(3)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBar_CursorForClick_DegenerateSizes()
     {

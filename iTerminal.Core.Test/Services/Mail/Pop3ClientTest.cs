@@ -71,6 +71,7 @@ public class Pop3ClientTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListsTheMessagesWithTheirSizes()
     {
@@ -84,6 +85,7 @@ public class Pop3ClientTest
         await pop.QuitAsync();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadsTheHeadersOfOneMessageWithTop()
     {
@@ -97,6 +99,7 @@ public class Pop3ClientTest
         await pop.QuitAsync();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UnstuffsDotsInARetrievedMessage()
     {
@@ -110,6 +113,7 @@ public class Pop3ClientTest
         await pop.QuitAsync();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AServerRefusalBecomesAnException()
     {
@@ -130,6 +134,7 @@ public class Pop3ClientTest
         Assert.AreEqual("invalid password", error.Message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeletionIsSentAndTheSessionEndsWithQuit()
     {

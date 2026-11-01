@@ -5,6 +5,7 @@ namespace iConsole.Test.Helper;
 [TestClass]
 public class FileSizeHelperTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSizeWithZero()
     {
@@ -12,6 +13,7 @@ public class FileSizeHelperTest
         Assert.AreEqual("0  B", fileSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSizeWithOne()
     {
@@ -19,6 +21,7 @@ public class FileSizeHelperTest
         Assert.AreEqual("1  B", fileSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSizeWithBytes()
     {
@@ -26,6 +29,7 @@ public class FileSizeHelperTest
         Assert.IsTrue(fileSize.Contains("B"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSizeWithKilobytes()
     {
@@ -33,6 +37,7 @@ public class FileSizeHelperTest
         Assert.IsTrue(fileSize.Contains("KB"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSizeWithMegabytes()
     {
@@ -40,6 +45,7 @@ public class FileSizeHelperTest
         Assert.IsTrue(fileSize.Contains("MB"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSizeWithGigabytes()
     {
@@ -47,6 +53,7 @@ public class FileSizeHelperTest
         Assert.IsTrue(fileSize.Contains("GB"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSizeWithTerabytes()
     {
@@ -54,6 +61,7 @@ public class FileSizeHelperTest
         Assert.IsTrue(fileSize.Contains("TB"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSizeFromString()
     {
@@ -61,6 +69,7 @@ public class FileSizeHelperTest
         Assert.IsTrue(fileSize.Contains("KB"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSizeLarge()
     {
@@ -68,6 +77,7 @@ public class FileSizeHelperTest
         Assert.IsTrue(fileSize.Contains("PB"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSizeVeryLarge()
     {
@@ -75,6 +85,7 @@ public class FileSizeHelperTest
         Assert.IsTrue(fileSize.Contains("EB"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSizeFormatted()
     {
@@ -83,6 +94,7 @@ public class FileSizeHelperTest
         Assert.IsFalse(string.IsNullOrEmpty(fileSize));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StringOverload_ReadsAByteCount_AndShowsOtherTextAsItIs()
     {

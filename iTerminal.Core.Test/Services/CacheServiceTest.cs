@@ -55,6 +55,7 @@ public class CacheServiceTest
         context.SaveChanges();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFreshQuote_IsServed()
     {
@@ -65,6 +66,7 @@ public class CacheServiceTest
         CollectionAssert.AreEqual(new[] { "BTC" }, quotes.Select(q => q.InstrumentName).ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AQuoteOlderThanTheTtl_IsNotServed()
     {
@@ -75,6 +77,7 @@ public class CacheServiceTest
         Assert.AreEqual(0, quotes.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnOldQuoteBesideAFreshOne_IsLeftOut_NotServedAsCurrent()
     {
@@ -87,6 +90,7 @@ public class CacheServiceTest
         CollectionAssert.AreEqual(new[] { "BTC" }, quotes.Select(q => q.InstrumentName).ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASetWeatherReading_IsReadBack()
     {

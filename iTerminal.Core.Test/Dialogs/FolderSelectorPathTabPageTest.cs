@@ -49,6 +49,7 @@ public class FolderSelectorPathTabPageTest
         page.PathValidator.Validate(DateTime.Now.AddMinutes(1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithALocalPath_GoesThere()
     {
@@ -62,6 +63,7 @@ public class FolderSelectorPathTabPageTest
         CollectionAssert.AreEqual(new[] { new Url(tempPath).FullUrl }, harness.Navigations);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("ssh://tamas@example.com:/home/tamas/")]
     [DataRow("smb://server/share/folder/")]
@@ -83,6 +85,7 @@ public class FolderSelectorPathTabPageTest
         CollectionAssert.AreEqual(new[] { url }, harness.Navigations);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithAnEmptyBox_GoesNowhere()
     {
@@ -94,6 +97,7 @@ public class FolderSelectorPathTabPageTest
         Assert.AreEqual(0, harness.Navigations.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithAFolderThatDoesNotExist_GoesNowhere()
     {
@@ -107,6 +111,7 @@ public class FolderSelectorPathTabPageTest
         Assert.AreEqual(0, harness.Navigations.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithAnUnknownScheme_GoesNowhere()
     {
@@ -120,6 +125,7 @@ public class FolderSelectorPathTabPageTest
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(page.PathValidator.ErrorMessage, "scheme");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_RemembersThePathForTabCompletion()
     {
@@ -134,6 +140,7 @@ public class FolderSelectorPathTabPageTest
         CollectionAssert.Contains(completions, tempPath.Trim());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabCompletion_OffersTheFoldersThePanelsHaveVisited()
     {
@@ -158,6 +165,7 @@ public class FolderSelectorPathTabPageTest
             "A folder the panels have been in should complete without being typed here first.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Tab_CompletesTheTypedPrefix()
     {
@@ -183,6 +191,7 @@ public class FolderSelectorPathTabPageTest
         Assert.AreNotEqual("crypton", page.Path, "Tab should have expanded the prefix to the full path.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetSchemesHint_ListsEverySchemeTheValidatorAccepts()
     {
@@ -195,6 +204,7 @@ public class FolderSelectorPathTabPageTest
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(hint, "Tab completes");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetKeyHints_NameTabCompletionAndTheSchemes()
     {
@@ -207,6 +217,7 @@ public class FolderSelectorPathTabPageTest
         Assert.IsTrue(hints.Any(h => h.Description.Contains(Container.SMB)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_InANarrowPage_DoesNotProduceNegativeGeometry()
     {

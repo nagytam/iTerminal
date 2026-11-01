@@ -8,6 +8,7 @@ namespace iTerminal.Core.Test.Validators;
 [TestClass]
 public class PathValidatorTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void IsValidWithNullValueReturnsFalse()
     {
@@ -16,6 +17,7 @@ public class PathValidatorTest
         Assert.IsFalse(validator.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsValidWithEmptyValueReturnsFalse()
     {
@@ -25,6 +27,7 @@ public class PathValidatorTest
         Assert.IsFalse(validator.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsValidWithValidFileNameReturnsFalse()
     {

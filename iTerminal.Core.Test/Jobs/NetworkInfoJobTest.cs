@@ -10,6 +10,7 @@ namespace iTerminal.Core.Test.Jobs;
 [TestClass]
 public class NetworkInfoJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesJob()
     {
@@ -20,6 +21,7 @@ public class NetworkInfoJobTest
         Assert.IsNotNull(job);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithModel_StoresModel()
     {
@@ -30,6 +32,7 @@ public class NetworkInfoJobTest
         Assert.IsNotNull(job);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_CanBeCancelled()
     {
@@ -43,6 +46,7 @@ public class NetworkInfoJobTest
         // If no exception, test passes
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HasChanged_ReturnsFalse_ForEquivalentNullNetworkInterfaces()
     {
@@ -62,6 +66,7 @@ public class NetworkInfoJobTest
         Assert.IsFalse(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HasChanged_ReturnsTrue_WhenNameDiffers()
     {
@@ -81,6 +86,7 @@ public class NetworkInfoJobTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HasChanged_ReturnsFalse_ForEquivalentValues()
     {
@@ -99,6 +105,7 @@ public class NetworkInfoJobTest
         Assert.IsFalse(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HasChanged_ReturnsTrue_WhenDescriptionDiffers()
     {
@@ -117,6 +124,7 @@ public class NetworkInfoJobTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HasChanged_ReturnsTrue_WhenOperationalStatusDiffers()
     {
@@ -135,6 +143,7 @@ public class NetworkInfoJobTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HasChanged_ReturnsTrue_WhenIdDiffers()
     {
@@ -153,6 +162,7 @@ public class NetworkInfoJobTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HasChanged_ReturnsTrue_WhenNetworkInterfaceTypeDiffers()
     {

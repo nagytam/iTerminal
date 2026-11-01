@@ -23,6 +23,7 @@ public class HotKeysLocalizationTest
     private static List<string> Titles(HotKeys hotKeys) =>
         [.. hotKeys.Controls.AsSnapshot().OfType<Button>().Select(b => b.Title)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EnglishIsLeftAsItWasBuilt()
     {
@@ -32,6 +33,7 @@ public class HotKeysLocalizationTest
         CollectionAssert.Contains(Titles(hotKeys), "F5-Copy");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChangingTheLanguageRelabelsTheButtonsOnTheNextIdlePass()
     {
@@ -49,6 +51,7 @@ public class HotKeysLocalizationTest
         CollectionAssert.DoesNotContain(Titles(hotKeys), "F1-Help");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SwitchingBackToEnglishRestoresTheOriginalTitles()
     {

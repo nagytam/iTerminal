@@ -25,6 +25,7 @@ public class ProgressGroupTest
         return screen;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Task_TracksFractionSpeedAndRemainingTimeOnTheVirtualClock()
     {
@@ -43,6 +44,7 @@ public class ProgressGroupTest
         Assert.AreEqual(TimeSpan.FromSeconds(10), task.Elapsed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Value_IsHeldBetweenZeroAndTheMaximum_AndNonFiniteInputIsIgnored()
     {
@@ -59,6 +61,7 @@ public class ProgressGroupTest
         Assert.AreEqual(2, task.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Complete_FillsTheBarAndStopsTheClock()
     {
@@ -76,6 +79,7 @@ public class ProgressGroupTest
         Assert.IsTrue(group.IsCompleted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fail_KeepsTheWorkDoneAndTheMessage_AndAFinishedTaskDoesNotChangeAgain()
     {
@@ -90,6 +94,7 @@ public class ProgressGroupTest
         Assert.AreEqual(30, task.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsCompleted_NeedsEveryTaskFinished()
     {
@@ -103,6 +108,7 @@ public class ProgressGroupTest
         Assert.IsTrue(group.IsCompleted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsOneRowPerTaskWithDescriptionBarAndPercent()
     {
@@ -122,6 +128,7 @@ public class ProgressGroupTest
         Assert.AreEqual(Color.Cyan, screen.ForegroundAt(screen.Line(0).IndexOf('█'), 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_MarksFinishedTasksWithATickOrACross()
     {
@@ -138,6 +145,7 @@ public class ProgressGroupTest
         StringAssert.Contains(screen.Line(1), "bad: nope");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsSpeedElapsedAndEstimateWhenAsked()
     {
@@ -155,6 +163,7 @@ public class ProgressGroupTest
         StringAssert.Contains(screen.Line(0), "ETA 0:30");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AnIndeterminateBarSweepsWithTheClock()
     {
@@ -170,6 +179,7 @@ public class ProgressGroupTest
         StringAssert.DoesNotMatch(Draw(group, 40, 2).Line(0), new System.Text.RegularExpressions.Regex("%"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithMoreTasksThanRows_ShowsTheNewest()
     {
@@ -184,6 +194,7 @@ public class ProgressGroupTest
         StringAssert.Contains(screen.Line(1), "third");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_HideFinishedDropsDoneRows_AndOverallSumsTheTasks()
     {
@@ -202,6 +213,7 @@ public class ProgressGroupTest
         StringAssert.Contains(screen.Line(1), "75%");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_NoTasksSaysSo_AndTinyOrNarrowSizesDoNotThrow()
     {
@@ -220,6 +232,7 @@ public class ProgressGroupTest
         Draw(group, 60, 5).AssertFillsBounds(group);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_RepaintsOnAChangeOrAPassingMoment_NotWhenNothingMoves()
     {
@@ -249,6 +262,7 @@ public class ProgressGroupTest
         Assert.IsFalse(group.HasStateChanged, "all finished: time alone repaints nothing");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ManyThreadsUpdatingOneTask_AddUpExactly()
     {
@@ -266,6 +280,7 @@ public class ProgressGroupTest
         Assert.AreEqual(8000, task.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(null, "--:--")]
     [DataRow(0, "0:00")]
@@ -277,6 +292,7 @@ public class ProgressGroupTest
         Assert.AreEqual(expected, ProgressGroup.FormatDuration(seconds is null ? null : TimeSpan.FromSeconds(seconds.Value)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormatSpeed_UsesFewDigits()
     {

@@ -39,6 +39,7 @@ public class ContentModelMarksTest
 
     private static IEntry Row(MarkableTestModel model, string name) => model.Row(name);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleMarksAndUnmarks()
     {
@@ -52,6 +53,7 @@ public class ContentModelMarksTest
         Assert.AreEqual(0, model.MarkedCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheParentRowIsNeverMarked()
     {
@@ -61,6 +63,7 @@ public class ContentModelMarksTest
         Assert.AreEqual(0, model.MarkedCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MarkedEntriesComeInListingOrder()
     {
@@ -71,6 +74,7 @@ public class ContentModelMarksTest
         CollectionAssert.AreEqual(new[] { "a.txt", "c.jpg" }, MarkedNames(model));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMarkedEntryThatLeftTheListingIsNotReported()
     {
@@ -83,6 +87,7 @@ public class ContentModelMarksTest
         CollectionAssert.AreEqual(new[] { "b.txt" }, MarkedNames(model));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NavigatingElsewhereDropsTheMarks()
     {
@@ -96,6 +101,7 @@ public class ContentModelMarksTest
         Assert.AreEqual(0, model.MarkedCount, "coming back does not bring them back either");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APatternMarksMatchingFilesButNotFolders()
     {
@@ -107,6 +113,7 @@ public class ContentModelMarksTest
         CollectionAssert.AreEqual(new[] { "a.txt", "b.txt" }, MarkedNames(model));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APatternCanTakeFoldersToo()
     {
@@ -117,6 +124,7 @@ public class ContentModelMarksTest
         CollectionAssert.AreEqual(new[] { "photos" }, MarkedNames(model), "a bare word matches names containing it");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APatternUnmarks()
     {
@@ -128,6 +136,7 @@ public class ContentModelMarksTest
         CollectionAssert.AreEqual(new[] { "photos", "c.jpg" }, MarkedNames(model));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InvertingLeavesFoldersAlone()
     {
@@ -139,6 +148,7 @@ public class ContentModelMarksTest
         CollectionAssert.AreEqual(new[] { "b.txt", "c.jpg" }, MarkedNames(model));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFooterCountsTheMarksAndTheirSize()
     {

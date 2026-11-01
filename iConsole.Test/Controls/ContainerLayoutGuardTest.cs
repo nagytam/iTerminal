@@ -66,6 +66,7 @@ public class ContainerLayoutGuardTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheChildren_StayInsideTheContainer_AtEverySize_AfterEveryResize()
     {

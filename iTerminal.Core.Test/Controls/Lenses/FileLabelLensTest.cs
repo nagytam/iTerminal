@@ -30,6 +30,7 @@ public class FileLabelLensTest
 
     private static ConxelString Row(string text) => new(text, Color.White, Color.Black);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALabelledFile_HasItsNameInTheLabelsColour()
     {
@@ -41,6 +42,7 @@ public class FileLabelLensTest
         Assert.IsTrue(row.String.All(cell => cell.ForegroundColor == Color.Red));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnlabelledFile_IsLeftAsItWas()
     {
@@ -52,6 +54,7 @@ public class FileLabelLensTest
         Assert.IsTrue(row.String.All(cell => cell.ForegroundColor == Color.White));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCursorRow_KeepsItsOwnColours()
     {

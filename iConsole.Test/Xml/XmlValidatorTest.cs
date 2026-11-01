@@ -49,6 +49,7 @@ public class XmlValidatorTest
 
     private static byte[] Utf8(string text) => Encoding.UTF8.GetBytes(text);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADocumentThatMatchesItsSchema_HasNoIssues()
     {
@@ -63,6 +64,7 @@ public class XmlValidatorTest
         CollectionAssert.AreEqual(Array.Empty<XmlValidationIssue>(), issues.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnElementTheSchemaDoesNotAllow_IsAnErrorAtItsLine()
     {
@@ -78,6 +80,7 @@ public class XmlValidatorTest
         Assert.IsTrue(issue.Message.Contains("author"), issue.Message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMissingRequiredAttribute_IsAnError()
     {
@@ -92,6 +95,7 @@ public class XmlValidatorTest
         Assert.IsTrue(issues.Any(i => i.IsError && i.Message.Contains("id")), string.Join("\n", issues.Select(i => i.Message)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASchemaThatIsNotThere_IsReported()
     {
@@ -106,6 +110,7 @@ public class XmlValidatorTest
         Assert.IsTrue(issues.All(i => !i.IsError), "a missing schema is a warning, the document itself is well-formed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADtd_ValidatesTheDocumentAgainstItsDoctype()
     {
@@ -119,6 +124,7 @@ public class XmlValidatorTest
         Assert.IsTrue(issues.Any(i => i.IsError && i.Message.Contains("from")), string.Join("\n", issues.Select(i => i.Message)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANotWellFormedDocument_ReportsWhereItBreaks()
     {
@@ -132,6 +138,7 @@ public class XmlValidatorTest
         Assert.AreEqual(2, issue.Line);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADocumentThatNamesNoSchema_IsANoteNotAnError()
     {

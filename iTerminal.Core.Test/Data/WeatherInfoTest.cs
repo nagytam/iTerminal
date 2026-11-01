@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Data;
 [TestClass]
 public class WeatherInfoTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void CanInstantiateWeatherInfo_WithRequiredMembers()
     {
@@ -14,6 +15,7 @@ public class WeatherInfoTest
         Assert.AreEqual("X", w.LocationName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TemperatureC_SetAndGet()
     {

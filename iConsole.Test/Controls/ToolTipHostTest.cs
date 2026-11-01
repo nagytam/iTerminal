@@ -24,6 +24,7 @@ public class ToolTipHostTest
         return (root, button, host);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RestingOnAControl_ShowsItsTipOnlyAfterTheDelay()
     {
@@ -44,6 +45,7 @@ public class ToolTipHostTest
         Assert.IsNotNull(ScreenBuffer.Render(root, 60, 20).Find(" Copy file "));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MovingOffTheControl_HidesTheTip()
     {
@@ -61,6 +63,7 @@ public class ToolTipHostTest
         Assert.IsFalse(host.IsShowing);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AClickOrAKey_DismissesTheTip_UntilThePointerMovesAgain()
     {
@@ -86,6 +89,7 @@ public class ToolTipHostTest
         Assert.IsTrue(host.IsShowing);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheInnermostControlWithText_Wins()
     {
@@ -98,6 +102,7 @@ public class ToolTipHostTest
         Assert.AreSame(inner, target);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AControlWithoutText_HasNoTarget()
     {
@@ -106,6 +111,7 @@ public class ToolTipHostTest
         Assert.IsNull(ToolTipHost.FindTarget(root, new Position(40, 15)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AHiddenControl_IsNotATarget()
     {
@@ -115,6 +121,7 @@ public class ToolTipHostTest
         Assert.IsNull(ToolTipHost.FindTarget(root, new Position(4, 2)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TipNearTheBottomRight_OpensAboveAndLeftOfThePointer()
     {
@@ -134,6 +141,7 @@ public class ToolTipHostTest
         Assert.IsTrue(tip.Y < pointer.Y,"The tip sits above the pointer row, so the pointer is not covered.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChangingTheTargetsText_ReplacesTheShownTip()
     {
@@ -154,6 +162,7 @@ public class ToolTipHostTest
         Assert.IsNotNull(ScreenBuffer.Render(root, 60, 20).Find(" Paste "));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClearingTheTargetsText_HidesItsTip()
     {

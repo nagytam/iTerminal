@@ -100,6 +100,7 @@ public class DriveSelectorHotKeyRoutingTest
         };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlF1RawBytes_WithFilePanelFocused_OpensFolderSelectorDialog()
     {

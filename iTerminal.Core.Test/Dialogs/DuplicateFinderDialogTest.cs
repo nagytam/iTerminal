@@ -64,6 +64,7 @@ public class DuplicateFinderDialogTest
 
     private static Task PressAsync(DuplicateFinderDialog dialog, ConsoleKey key) => dialog.HandleKeyEventAsync(Key(key));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheGroupIsListedWithItsCopies()
     {
@@ -77,6 +78,7 @@ public class DuplicateFinderDialogTest
         AssertScreenDoesNotContain(screen, "unique.txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NMarksAllButTheNewest_ThatIsTheOneLeftUnmarked()
     {
@@ -90,6 +92,7 @@ public class DuplicateFinderDialogTest
         Assert.IsFalse(dialog.MarkedPaths.Contains(newest.Path), "the newest copy is the one kept");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AMarksAllButTheOldestAndDeleteAsksFirst()
     {
@@ -110,6 +113,7 @@ public class DuplicateFinderDialogTest
         fileSystem.Verify(f => f.DeleteFile(It.IsAny<Url>(), It.IsAny<bool>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConfirmingDeletesTheMarkedFilesToTheRecycleBinAndTheGroupGoesAway()
     {
@@ -126,6 +130,7 @@ public class DuplicateFinderDialogTest
         StringAssert.Contains(dialog.Status, "Deleted 2 files");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheLastUnmarkedCopyCannotBeMarked()
     {
@@ -141,6 +146,7 @@ public class DuplicateFinderDialogTest
         StringAssert.Contains(dialog.Status, "at least one copy");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeletingWithNothingMarkedSaysSo()
     {
@@ -153,6 +159,7 @@ public class DuplicateFinderDialogTest
         fileSystem.Verify(f => f.DeleteFile(It.IsAny<Url>(), It.IsAny<bool>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NMarksAllButTheNewest()
     {
@@ -172,6 +179,7 @@ public class DuplicateFinderDialogTest
         WheelDelta = wheel,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAFile_PutsTheCursorOnIt()
     {
@@ -185,6 +193,7 @@ public class DuplicateFinderDialogTest
         Assert.AreEqual(0, dialog.MarkedPaths.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnTheBox_MarksAndUnmarksThatFile()
     {
@@ -198,6 +207,7 @@ public class DuplicateFinderDialogTest
         Assert.AreEqual(0, dialog.MarkedPaths.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAGroupHeading_OrBelowTheList_ChangesNothing()
     {
@@ -211,6 +221,7 @@ public class DuplicateFinderDialogTest
         Assert.AreEqual(0, dialog.MarkedPaths.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheel_MovesTheCursorThreeFilesAtATime_AndStopsAtTheEnds()
     {
@@ -225,6 +236,7 @@ public class DuplicateFinderDialogTest
         Assert.AreEqual(dialog.Groups[0].Files[0].Path, dialog.Selected!.Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhileTheDeletionIsBeingAsked_TheMouseLeavesTheListAlone()
     {
@@ -240,6 +252,7 @@ public class DuplicateFinderDialogTest
         Assert.IsTrue(dialog.IsConfirmingDelete);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterGoesToTheFilesFolderInThePanel_AsGDoes_AndClosesTheDialog()
     {

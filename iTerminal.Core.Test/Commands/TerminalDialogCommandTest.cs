@@ -8,6 +8,7 @@ namespace iTerminal.Core.Commands.Test;
 [TestClass]
 public class TerminalDialogCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsF2_AndItHasATitleAndDescription()
     {

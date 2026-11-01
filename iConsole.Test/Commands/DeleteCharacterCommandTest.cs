@@ -26,6 +26,7 @@ public class DeleteCharacterCommandTest
         return new TextEditorControl(theme.Object);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_ShouldRemoveTheCharacterUnderTheCursor_AndLeaveTheCursorWhereItIs()
     {
@@ -38,6 +39,7 @@ public class DeleteCharacterCommandTest
         Assert.AreEqual(1, scrollable.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_AtTheStartOfALine_RemovesItsFirstCharacter()
     {
@@ -50,6 +52,7 @@ public class DeleteCharacterCommandTest
         Assert.AreEqual(0, scrollable.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_AtTheEndOfALine_PullsTheNextLineUp()
     {
@@ -65,6 +68,7 @@ public class DeleteCharacterCommandTest
         Assert.AreEqual(0, scrollable.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_AtTheEndOfTheDocument_ChangesNothing()
     {
@@ -77,6 +81,7 @@ public class DeleteCharacterCommandTest
         Assert.AreEqual(2, scrollable.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithACursorPastTheEndOfTheLine_JoinsTheNextLine()
     {
@@ -90,6 +95,7 @@ public class DeleteCharacterCommandTest
         Assert.AreEqual(2, scrollable.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_OnAnEmptyDocument_DoesNothing()
     {
@@ -102,6 +108,7 @@ public class DeleteCharacterCommandTest
         Assert.AreEqual(0, textModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_MarksTheEditorDirty_OnlyWhenSomethingChanged()
     {
@@ -119,6 +126,7 @@ public class DeleteCharacterCommandTest
         Assert.AreEqual("b", editor.TextModel.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_IsFalseInAReadOnlyEditor()
     {
@@ -131,6 +139,7 @@ public class DeleteCharacterCommandTest
         Assert.IsTrue(cmd.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheEditor_RoutesDeleteToThisCommand_AndTypeCommandLeavesItAlone()
     {

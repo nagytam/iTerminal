@@ -9,6 +9,7 @@ namespace iTerminal.Core.Test.Model.ContentModels;
 [TestClass]
 public class FileSystemEntryTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromUrlString_SetsUrl()
     {
@@ -16,6 +17,7 @@ public class FileSystemEntryTest
         Assert.IsNotNull(entry.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromUrlString_SetsFileSize()
     {
@@ -23,6 +25,7 @@ public class FileSystemEntryTest
         Assert.IsNotNull(entry.FileSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromNameAndUrl_SetsDisplayName()
     {
@@ -30,6 +33,7 @@ public class FileSystemEntryTest
         Assert.IsNotNull(entry.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromUrl_SetsUrl()
     {
@@ -38,6 +42,7 @@ public class FileSystemEntryTest
         Assert.AreEqual(url, entry.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSystemEntry_IsIEntry()
     {
@@ -45,6 +50,7 @@ public class FileSystemEntryTest
         Assert.IsInstanceOfType(entry, typeof(IEntry));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoEntries_WithSameUrl_AreEqual()
     {
@@ -53,6 +59,7 @@ public class FileSystemEntryTest
         Assert.AreEqual(a, b);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoEntries_WithDifferentUrls_AreNotEqual()
     {
@@ -65,6 +72,7 @@ public class FileSystemEntryTest
 [TestClass]
 public class EntryBaseFormattingTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void FormatItemName_ForFile_KeepsColumnLayout()
     {
@@ -80,6 +88,7 @@ public class EntryBaseFormattingTest
         Assert.AreEqual("LongDisplayNam}123456│2025-05-15│12:34", result.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormatItemName_ForFolder_AppliesItalicToWholeRow()
     {
@@ -99,6 +108,7 @@ public class EntryBaseFormattingTest
 [TestClass]
 public class ArchiveEntryTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromDisplayNameAndUrl_SetsUrl()
     {
@@ -106,6 +116,7 @@ public class ArchiveEntryTest
         Assert.IsNotNull(entry.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromDisplayNameAndUrl_NullZipEntry()
     {
@@ -113,6 +124,7 @@ public class ArchiveEntryTest
         Assert.IsNull(entry.ZipArchiveEntry);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Exists_WithNullZipEntry_ReturnsFalse()
     {
@@ -120,6 +132,7 @@ public class ArchiveEntryTest
         Assert.IsFalse(entry.Exists);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSize_WithNullZipEntry_ReturnsEmpty()
     {
@@ -127,6 +140,7 @@ public class ArchiveEntryTest
         Assert.AreEqual(string.Empty, entry.FileSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Date_WithNullZipEntry_ReturnsEmpty()
     {
@@ -134,6 +148,7 @@ public class ArchiveEntryTest
         Assert.AreEqual(string.Empty, entry.Date);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetName_WithNullZipEntry_ReturnsEmpty()
     {
@@ -141,6 +156,7 @@ public class ArchiveEntryTest
         Assert.AreEqual(string.Empty, entry.GetName(20));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetFileSize_WithNullZipEntry_ReturnsEmpty()
     {
@@ -148,6 +164,7 @@ public class ArchiveEntryTest
         Assert.AreEqual(string.Empty, entry.GetFileSize(10));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ArchiveEntry_WithZipEntry_ExistsIsTrue()
     {
@@ -176,6 +193,7 @@ public class ArchiveEntryTest
 [TestClass]
 public class MemoryDriveEntryTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromMemoryFile_SetsUrl()
     {
@@ -184,6 +202,7 @@ public class MemoryDriveEntryTest
         Assert.IsNotNull(entry.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromMemoryFile_SetsFileSize()
     {
@@ -192,6 +211,7 @@ public class MemoryDriveEntryTest
         Assert.IsFalse(string.IsNullOrEmpty(entry.FileSize));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromMemoryFile_SetsDate()
     {
@@ -200,6 +220,7 @@ public class MemoryDriveEntryTest
         Assert.IsFalse(string.IsNullOrEmpty(entry.Date));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromMemoryFolder_SetsFileSizeToFolder()
     {
@@ -208,6 +229,7 @@ public class MemoryDriveEntryTest
         Assert.AreEqual("Folder", entry.FileSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromName_SetsUrl()
     {
@@ -219,6 +241,7 @@ public class MemoryDriveEntryTest
 [TestClass]
 public class MemoryFileTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromStream_StoresContent()
     {
@@ -227,6 +250,7 @@ public class MemoryFileTest
         CollectionAssert.AreEqual(data, file.Content);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_FromArray_StoresContent()
     {
@@ -235,6 +259,7 @@ public class MemoryFileTest
         CollectionAssert.AreEqual(data, file.Content);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsFileName()
     {
@@ -242,6 +267,7 @@ public class MemoryFileTest
         Assert.AreEqual("hello.txt", file.FileName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_NullArray_ContentIsNull()
     {
@@ -253,6 +279,7 @@ public class MemoryFileTest
 [TestClass]
 public class MemoryFolderTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsUrl()
     {
@@ -261,6 +288,7 @@ public class MemoryFolderTest
         Assert.AreEqual(url, folder.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WriteFileAsync_StoresFile()
     {
@@ -272,6 +300,7 @@ public class MemoryFolderTest
         Assert.IsNotNull(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_ReturnsNull_WhenNotFound()
     {
@@ -280,6 +309,7 @@ public class MemoryFolderTest
         Assert.IsNull(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteFile_ReturnsTrueWhenFound()
     {
@@ -291,6 +321,7 @@ public class MemoryFolderTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFile_ReturnsFalse_WhenNotFound()
     {
@@ -299,6 +330,7 @@ public class MemoryFolderTest
         Assert.IsFalse(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FolderName_MatchesDisplayName()
     {

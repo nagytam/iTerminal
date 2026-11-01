@@ -11,6 +11,7 @@ namespace iConsole.Test.Controls;
 [TestClass]
 public class TextBoxTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBoxHandlesKeyEvents()
     {
@@ -39,6 +40,7 @@ public class TextBoxTest
         Assert.AreEqual("032Hello, world!1", textBox.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListTheClipboardKeys_ExceptCopyAndCutOnAPasswordBox()
     {
@@ -59,6 +61,7 @@ public class TextBoxTest
         CollectionAssert.Contains(password, "Ctrl+V");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DisabledTextBox_IgnoresTyping()
     {
@@ -79,6 +82,7 @@ public class TextBoxTest
         Assert.AreEqual("keep", textBox.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBoxDraw()
     {
@@ -114,6 +118,7 @@ public class TextBoxTest
         Assert.AreEqual("Label: [ABC>" + Environment.NewLine, buffer.ContentAsString);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBoxSelection()
     {
@@ -144,6 +149,7 @@ public class TextBoxTest
         Assert.AreEqual(new Position(0, 0), textBox.SelectionTextModel.End);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBoxAutoCompletion()
     {
@@ -219,6 +225,7 @@ public class TextBoxTest
     /// Punctuation a file name commonly carries. The box used to accept ASCII letters, digits and six
     /// marks only, so "Photos (2024)" or "Tom's notes" could not be typed into any dialog.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PunctuationCanBeTyped()
     {
@@ -229,6 +236,7 @@ public class TextBoxTest
         Assert.AreEqual("Tom's (2024), #1 & more! [a+b=c]", textBox.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AccentedLettersCanBeTyped()
     {
@@ -240,6 +248,7 @@ public class TextBoxTest
     }
 
     /// <summary>Windows reports AltGr as Ctrl+Alt; on a Hungarian layout AltGr+V is the only way to type '@'.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnAltGrCharacterIsTyped()
     {
@@ -250,6 +259,7 @@ public class TextBoxTest
         Assert.AreEqual("@", textBox.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChordsAreNotTyped()
     {

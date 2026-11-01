@@ -20,6 +20,7 @@ public class DuplicateFinderTest
     [TestCleanup]
     public async Task StopAsync() => await _app.DisposeAsync();
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlShiftF7ListsTheCopiesAndAMarksAllButTheOldest()
     {

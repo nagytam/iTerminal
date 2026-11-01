@@ -8,6 +8,7 @@ public class PopoverPlacementTest
 {
     private static readonly Size Screen = new(80, 25);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OpensBelowTheTargetWhenItFits()
     {
@@ -16,6 +17,7 @@ public class PopoverPlacementTest
         Assert.AreEqual(new Position(10, 6), position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TurnsAboveTheTargetWhenBelowIsTooTight()
     {
@@ -24,6 +26,7 @@ public class PopoverPlacementTest
         Assert.AreEqual(new Position(10, 16), position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TurnsBelowWhenAboveWasPreferredAndIsTooTight()
     {
@@ -32,6 +35,7 @@ public class PopoverPlacementTest
         Assert.AreEqual(new Position(10, 3), position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TurnsLeftOfTheTargetWhenRightIsTooTight()
     {
@@ -40,6 +44,7 @@ public class PopoverPlacementTest
         Assert.AreEqual(new Position(40, 5), position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsPulledBackOnScreenAlongTheOtherAxis()
     {
@@ -48,6 +53,7 @@ public class PopoverPlacementTest
         Assert.AreEqual(new Position(60, 6), position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StaysOnScreenWhenNeitherSideFits()
     {
@@ -56,12 +62,14 @@ public class PopoverPlacementTest
         Assert.IsTrue(position.Y >= 0 && position.Y + 20 <= 25);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APointOpensWithItsCornerOnThePoint()
     {
         Assert.AreEqual(new Position(12, 7), PopoverPlacement.PlaceAtPoint(new Position(12, 7), new Size(20, 6), Screen));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APointNearTheEdgesOpensTowardsTheMiddle()
     {
@@ -70,6 +78,7 @@ public class PopoverPlacementTest
         Assert.AreEqual(new Position(55, 16), position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APopoverLargerThanTheScreenIsPlacedAtTheOrigin()
     {

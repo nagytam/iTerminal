@@ -22,6 +22,7 @@ public class StatisticalChartsTest
 
     // ---- axis maths ----
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(0, 100, 5, 0, 100, 50)]
     [DataRow(0, 9, 5, 0, 10, 5)]
@@ -36,6 +37,7 @@ public class StatisticalChartsTest
         Assert.AreEqual(step, s, 1e-9);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NiceRange_WidensAZeroWidthRangeAndSurvivesNonFiniteInput()
     {
@@ -46,6 +48,7 @@ public class StatisticalChartsTest
         Assert.IsTrue(a < b && step > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Format_UsesOnlyTheDecimalsTheStepNeeds()
     {
@@ -56,6 +59,7 @@ public class StatisticalChartsTest
         CollectionAssert.AreEqual(new[] { 0.0, 2.5, 5.0 }, ChartAxis.Ticks(0, 5, 2.5).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Canvas_IgnoresOutOfRangeWritesAndCombinesBrailleDots()
     {
@@ -77,6 +81,7 @@ public class StatisticalChartsTest
 
     private static IReadOnlyList<ChartSlice> Halves => [new("A", 1, Color.Red), new("B", 1, Color.Blue)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pie_SharesAreFractionsOfThePositiveTotal()
     {
@@ -86,6 +91,7 @@ public class StatisticalChartsTest
         CollectionAssert.AreEqual(new[] { 0.0 }, PieChart.Shares([new("z", 0)]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pie_SliceAt_RunsClockwiseFromTheTop()
     {
@@ -96,6 +102,7 @@ public class StatisticalChartsTest
         Assert.AreEqual(-1, PieChart.SliceAt([new("z", 0)], 0.3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pie_DrawsTheFirstSliceOnTheRightAndTheSecondOnTheLeft()
     {
@@ -109,6 +116,7 @@ public class StatisticalChartsTest
         Assert.AreEqual(' ', screen.CharAt(19, 9));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Donut_HasAnEmptyHole()
     {
@@ -120,6 +128,7 @@ public class StatisticalChartsTest
         Assert.AreEqual('█', screen.CharAt(17, 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pie_LegendListsLabelsWithSharesAndTheCirclesStaysLeftOfIt()
     {
@@ -133,6 +142,7 @@ public class StatisticalChartsTest
         Assert.AreEqual(Color.Cyan, screen.ForegroundAt(screen.Line(0).IndexOf('■'), 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pie_EmptyOrTinyDataDoesNotThrow()
     {
@@ -146,6 +156,7 @@ public class StatisticalChartsTest
         Assert.AreEqual(0, chart.InnerRadius);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pie_TinyShareReadsLessThanOnePercent()
     {
@@ -162,6 +173,7 @@ public class StatisticalChartsTest
         new ScatterSeries("down", [(0, 10), (10, 0)], Color.Red),
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Scatter_PlotsDotsInTheColourOfTheirSeries()
     {
@@ -176,6 +188,7 @@ public class StatisticalChartsTest
         Assert.AreEqual(Color.Red, screen.ForegroundAt(19, 7));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Scatter_AxesShowRoundTicksAndTheLegendNamesSeries()
     {
@@ -189,6 +202,7 @@ public class StatisticalChartsTest
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(screen.Line(9), "10");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Scatter_IgnoresNonFinitePointsAndSinglePoints()
     {
@@ -205,6 +219,7 @@ public class StatisticalChartsTest
 
     // ---- histogram ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Histogram_BinCountsEveryFiniteValueOnce()
     {
@@ -217,6 +232,7 @@ public class StatisticalChartsTest
         Assert.AreEqual(0, Histogram.Bin([], 3).Sum());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(0, 1)]
     [DataRow(1, 1)]
@@ -227,6 +243,7 @@ public class StatisticalChartsTest
         Assert.AreEqual(bins, Histogram.SturgesBins(count));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Histogram_TallerBinsDrawTallerBars()
     {
@@ -240,6 +257,7 @@ public class StatisticalChartsTest
         Assert.AreNotEqual(' ', screen.CharAt(15, 7), "the short bar still shows at the bottom");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Histogram_LabelsTheLowestAndHighestValueAndHandlesNoData()
     {
@@ -261,6 +279,7 @@ public class StatisticalChartsTest
         new("Tue", 13, 15, 8, 9),
     ];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Candlestick_ColoursUpAndDownCandles()
     {
@@ -274,6 +293,7 @@ public class StatisticalChartsTest
         Assert.AreEqual(Color.Red, screen.ForegroundAt(2, rowOfSecond));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Candlestick_BodyIsBlockAndWickIsALine()
     {
@@ -286,6 +306,7 @@ public class StatisticalChartsTest
         Assert.IsTrue(Enumerable.Range(0, 11).Any(r => screen.CharAt(0, r) == '█'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Candlestick_WithMoreCandlesThanFit_DrawsTheNewest()
     {
@@ -298,6 +319,7 @@ public class StatisticalChartsTest
         Assert.IsFalse(screen.Contains("d0"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Candlestick_LegendNamesUpAndDown_AndBadCandlesAreSkipped()
     {
@@ -315,6 +337,7 @@ public class StatisticalChartsTest
         Assert.IsTrue(Draw(new CandlestickChart(_theme), 20, 5).Contains("No data"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Charts_FillTheirBoundsOnRedrawAndSurviveTinySizes()
     {

@@ -75,6 +75,7 @@ public class GitDriveServiceTest
     private static GitDriveService CreateService(ISettingsService? settings = null) =>
         new(new ExternalProcessRunner(), settings ?? new SettingsService());
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARepositoryListsHeadItsBranchesTagsAndCommits()
     {
@@ -92,6 +93,7 @@ public class GitDriveServiceTest
         Assert.AreEqual("Tag", entries.Single(e => e.DisplayName == "v1.0").FileSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABranchWithASlashIsOneFolderNotTwo()
     {
@@ -109,6 +111,7 @@ public class GitDriveServiceTest
         CollectionAssert.AreEqual(new[] { "src", "readme.md" }, tree.Select(e => e.DisplayName).ToArray(), "folders first");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATreeListsFoldersThenFilesWithSizes()
     {
@@ -123,6 +126,7 @@ public class GitDriveServiceTest
         Assert.AreEqual(10, ((VirtualDriveEntry)file).Size);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnOldRevisionReadsTheContentItHadThen()
     {
@@ -136,6 +140,7 @@ public class GitDriveServiceTest
         Assert.AreEqual("version two\n", File.ReadAllText(Path.Combine(Root, "readme.md")), "the working tree is untouched");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StreamingReportsTheBytesCopied()
     {
@@ -150,6 +155,7 @@ public class GitDriveServiceTest
         Assert.AreEqual(10, reported);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpeningARepositoryRemembersItAtTheDriveRoot()
     {
@@ -164,6 +170,7 @@ public class GitDriveServiceTest
         Assert.AreEqual(GitDriveUrl.Build(Root).FullUrl, repository.Url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListChildrenFeedsAFolderCopy()
     {
@@ -175,6 +182,7 @@ public class GitDriveServiceTest
         await Task.CompletedTask;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheHistoryIsReadOnly()
     {
@@ -184,6 +192,7 @@ public class GitDriveServiceTest
         Assert.ThrowsExactly<NotSupportedException>(() => service.DeleteFile(GitDriveUrl.Build(Root, "HEAD", "readme.md", isFolder: false), false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnknownRevisionFailsWithGitsOwnMessage()
     {
@@ -195,6 +204,7 @@ public class GitDriveServiceTest
         StringAssert.Contains(exception.Message, "no-such-branch");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseTreeReadsNamesVerbatim()
     {
@@ -210,6 +220,7 @@ public class GitDriveServiceTest
         Assert.AreEqual("commit", items[2].Type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UrlsRoundTripAWindowsPathAndASlashedBranch()
     {
@@ -224,6 +235,7 @@ public class GitDriveServiceTest
         Assert.AreEqual("guide", url.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARepositoryThatCannotBeReadSaysWhy()
     {

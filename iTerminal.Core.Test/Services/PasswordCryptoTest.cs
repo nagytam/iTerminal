@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Services;
 [TestClass]
 public class PasswordCryptoTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ASealedValueOpensWithTheSameKey()
     {
@@ -14,6 +15,7 @@ public class PasswordCryptoTest
         Assert.AreEqual("hunter2 — jelszó ✓", PasswordCrypto.Open(key, PasswordCrypto.Seal(key, "hunter2 — jelszó ✓")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyPasswordRoundTrips()
     {
@@ -22,6 +24,7 @@ public class PasswordCryptoTest
         Assert.AreEqual(string.Empty, PasswordCrypto.Open(key, PasswordCrypto.Seal(key, string.Empty)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSameTextSealsDifferentlyEachTime()
     {
@@ -31,6 +34,7 @@ public class PasswordCryptoTest
         Assert.AreNotEqual(PasswordCrypto.Seal(key, "same"), PasswordCrypto.Seal(key, "same"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnotherKeyDoesNotOpenIt()
     {
@@ -39,6 +43,7 @@ public class PasswordCryptoTest
         Assert.IsNull(PasswordCrypto.Open(PasswordCrypto.NewKey(), sealed_));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AChangedByteIsRefused()
     {
@@ -49,6 +54,7 @@ public class PasswordCryptoTest
         Assert.IsNull(PasswordCrypto.Open(key, Convert.ToBase64String(bytes)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AValueTooShortToHoldANonceAndTagIsRefusedNotThrown()
     {
@@ -58,12 +64,14 @@ public class PasswordCryptoTest
         Assert.IsNull(PasswordCrypto.Open(key, string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NotBase64IsRefused()
     {
         Assert.IsNull(PasswordCrypto.Open(PasswordCrypto.NewKey(), "not base64!!"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AKeyOfTheWrongLengthIsRefused()
     {

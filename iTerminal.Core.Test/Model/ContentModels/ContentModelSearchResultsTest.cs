@@ -53,6 +53,7 @@ public class ContentModelSearchResultsTest
         return (model, service);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HitsAreRealFileRowsNamedRelativeToTheSearch()
     {
@@ -65,6 +66,7 @@ public class ContentModelSearchResultsTest
         Assert.AreEqual(_root, rows[0].Url.FullName.TrimEnd(Path.DirectorySeparatorChar), ".. goes back to where the search started");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FileOperationsAcceptAHit()
     {
@@ -75,6 +77,7 @@ public class ContentModelSearchResultsTest
         Assert.IsTrue(model.IsReadOnly, "but nothing can be created in the list itself");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AHitDeletedSinceTheSearchLeavesTheList()
     {
@@ -87,6 +90,7 @@ public class ContentModelSearchResultsTest
         CollectionAssert.AreEqual(new[] { "..", Path.Combine("deep", "two.log") }, model.Entries.AsSnapshot().Select(r => r.DisplayName).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANewSearchRelistsThePanel()
     {
@@ -99,6 +103,7 @@ public class ContentModelSearchResultsTest
         StringAssert.Contains(model.GetHeader(300), "two*");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnAHitGoesToItsFolderWithTheCursorOnIt()
     {
@@ -121,6 +126,7 @@ public class ContentModelSearchResultsTest
         fileModel.Verify(m => m.RestoreNavigation(It.Is<string>(u => u.EndsWith("two.log")), 0, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnAHitLandsTheRealFilePanelsCursorOnIt()
     {
@@ -160,6 +166,7 @@ public class ContentModelSearchResultsTest
         Assert.AreEqual(Path.Combine(_root, "deep"), panel.Url.FullName.TrimEnd(Path.DirectorySeparatorChar));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BeforeAnySearchTheTitleSaysHowToStartOne()
     {

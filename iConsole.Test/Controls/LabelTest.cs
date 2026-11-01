@@ -10,6 +10,7 @@ namespace iConsole.Test.Controls;
 [TestClass]
 public class LabelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelDrawsPlainText()
     {
@@ -26,6 +27,7 @@ public class LabelTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Hello, World!"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelDrawsWithCustomColors()
     {
@@ -45,6 +47,7 @@ public class LabelTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Test"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelDrawsWithBoldFormatting()
     {
@@ -62,6 +65,7 @@ public class LabelTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Bold"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelDrawsWithItalicFormatting()
     {
@@ -79,6 +83,7 @@ public class LabelTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Italic"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelDrawsWithUnderlineFormatting()
     {
@@ -96,6 +101,7 @@ public class LabelTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Underline"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelDrawsWithStrikeThroughFormatting()
     {
@@ -114,6 +120,7 @@ public class LabelTest
         Assert.IsTrue(buffer.ContentAsString.Length > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelDrawsWithMultipleFormattingOptions()
     {
@@ -135,6 +142,7 @@ public class LabelTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Formatted"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelTextPropertyCanBeChanged()
     {
@@ -148,6 +156,7 @@ public class LabelTest
         Assert.AreEqual("Changed", label.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelDrawsWithOffset()
     {
@@ -166,6 +175,7 @@ public class LabelTest
         Assert.IsTrue(lines[1].Contains("Label"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelDrawsEmptyText()
     {
@@ -183,6 +193,7 @@ public class LabelTest
         Assert.IsNotNull(buffer.ContentAsString);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LabelDrawsTextLongerThanViewSize()
     {

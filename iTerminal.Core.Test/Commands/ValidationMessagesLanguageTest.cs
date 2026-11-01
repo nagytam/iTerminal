@@ -25,6 +25,7 @@ public class ValidationMessagesLanguageTest
     private static string[] Placeholders(string text) =>
         [.. Regex.Matches(text, @"\{(\d+)\}").Select(m => m.Groups[1].Value).Distinct().Order()];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryMessage_AndKeepsItsPlaceholders()
     {
@@ -46,6 +47,7 @@ public class ValidationMessagesLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFormattedMessages_FillTheirPlaceholders_InEveryLanguage()
     {

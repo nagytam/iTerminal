@@ -45,6 +45,7 @@ public class ImageFileViewerDialogTest
         return buffer.ContentAsString;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw_LoadsThePictureAndShowsItAsAscii()
     {
@@ -61,6 +62,7 @@ public class ImageFileViewerDialogTest
         Assert.IsTrue(text.Contains('$') || text.Contains('@'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Picture_KeepsTheShapeOfTheImage()
     {
@@ -73,6 +75,7 @@ public class ImageFileViewerDialogTest
         Assert.AreEqual(2 * 2 * picture.Rows, picture.Columns, 2, "a 2:1 picture on cells twice as tall as wide");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Drawing_DoesNotReloadWhileTheRoomIsUnchanged()
     {
@@ -90,6 +93,7 @@ public class ImageFileViewerDialogTest
         Assert.AreEqual(1, created);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CTogglesColour()
     {
@@ -101,6 +105,7 @@ public class ImageFileViewerDialogTest
         Assert.AreEqual(AsciiColorMode.Mono, dialog.ColorMode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutFfmpegTheDialogSaysSo()
     {
@@ -113,6 +118,7 @@ public class ImageFileViewerDialogTest
         Assert.IsNull(dialog.Picture);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADecoderThatDeliversNothingShowsAnError()
     {

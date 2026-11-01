@@ -33,6 +33,7 @@ public class PasswordBoxTest
 
     // ── Inherits TextBox editing ────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsInstanceOf_TextBox()
     {
@@ -40,6 +41,7 @@ public class PasswordBoxTest
         Assert.IsInstanceOfType(box, typeof(TextBox));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingCharacters_UpdatesTextProperty()
     {
@@ -51,6 +53,7 @@ public class PasswordBoxTest
         Assert.AreEqual("ab", box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Backspace_RemovesLastCharacter()
     {
@@ -64,6 +67,7 @@ public class PasswordBoxTest
 
     // ── Masking ─────────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_MasksRealText_WithBullets()
     {
@@ -77,6 +81,7 @@ public class PasswordBoxTest
             "Mask character '●' must appear in the buffer");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_MaskCount_MatchesTextLength()
     {
@@ -90,6 +95,7 @@ public class PasswordBoxTest
             "Number of '●' characters must equal the password length");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_EmptyPassword_NoMaskChars()
     {
@@ -100,6 +106,7 @@ public class PasswordBoxTest
         Assert.IsFalse(buffer.ContentAsString.Contains('●'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsLabel()
     {
@@ -110,6 +117,7 @@ public class PasswordBoxTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Pass"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsBrackets()
     {
@@ -122,6 +130,7 @@ public class PasswordBoxTest
             "Field border must be present");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AfterTyping_MaskCountUpdates()
     {
@@ -142,6 +151,7 @@ public class PasswordBoxTest
 
     // ── IsReadOnly ──────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnly_IgnoresTypedCharacters()
     {

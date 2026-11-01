@@ -26,6 +26,7 @@ public class ContentModelMemoryDriveTest
             frequentExecutionGuardService: frequentExecutionGuardService.Object);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Refresh_AtRoot_ListsRootEntriesWithoutDotDot()
     {
@@ -40,6 +41,7 @@ public class ContentModelMemoryDriveTest
         CollectionAssert.DoesNotContain(names, "..");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Refresh_InSubfolder_ListsOnlyThatFoldersChildrenPlusDotDot()
     {
@@ -57,6 +59,7 @@ public class ContentModelMemoryDriveTest
         CollectionAssert.DoesNotContain(names, "outside.txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CreateFolderAsync_WithoutTrailingSlash_ListsAFolderThatCanBeEntered()
     {
@@ -78,6 +81,7 @@ public class ContentModelMemoryDriveTest
         CollectionAssert.Contains(names, "..");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CreateFolderAsync_ThenSetUrl_ShowsNewSubfolder()
     {

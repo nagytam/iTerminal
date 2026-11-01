@@ -53,6 +53,7 @@ public class MultiSelectionDialogsTest
     private static DeleteDialog Delete(IContentModelService service) =>
         new(service, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), null!, null!, null!, null!, null!, null!, null!);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheMarksAreWhatAnOperationActsOn()
     {
@@ -66,6 +67,7 @@ public class MultiSelectionDialogsTest
         CollectionAssert.AreEqual(new[] { "photos", "a.txt" }, urls.Select(FocusedEntry.NameOf).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutMarksTheCursorRowIsWhatAnOperationActsOn()
     {
@@ -77,6 +79,7 @@ public class MultiSelectionDialogsTest
         Assert.AreEqual("c.jpg", urls.Single().Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CopyOpensOnTheMarkedRowsWithTheOtherPanelsFolderAsTarget()
     {
@@ -96,6 +99,7 @@ public class MultiSelectionDialogsTest
         Assert.AreEqual(Path.Combine(Target, "b.txt"), dialog.TargetUrlFor(new Url(Path.Combine(Source, "b.txt"))).FullName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderLandsAsAFolderOfTheSameName()
     {
@@ -112,6 +116,7 @@ public class MultiSelectionDialogsTest
         StringAssert.Contains(dialog.SourceLabelForTest, "1 file, 1 folder");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OneMarkedRowIsCopiedLikeTheCursorRow()
     {
@@ -130,6 +135,7 @@ public class MultiSelectionDialogsTest
         StringAssert.EndsWith(dialog.TextBoxTarget.Text, "a.txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteOpensOnTheMarkedRows()
     {
@@ -148,6 +154,7 @@ public class MultiSelectionDialogsTest
         AssertScreenContains(Render(dialog), "1 file, 1 folder");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeletingOnlyFilesOffersNoRecursion()
     {
@@ -161,6 +168,7 @@ public class MultiSelectionDialogsTest
         Assert.IsFalse(dialog.Recursive);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CopyMoveAndDeleteAreOfferedOnTheParentRowWhenRowsAreMarked()
     {

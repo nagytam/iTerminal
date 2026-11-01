@@ -43,6 +43,7 @@ public class SystemSettingsMouseTest
         WheelDelta = wheel,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnASectionsName_OpensIt()
     {
@@ -59,6 +60,7 @@ public class SystemSettingsMouseTest
         Assert.AreEqual(SystemSettingsDialog.SettingsSection.Computer, dialog.Section);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickBetweenTheNames_OrBeyondThem_OpensNothing()
     {
@@ -70,6 +72,7 @@ public class SystemSettingsMouseTest
         Assert.AreEqual(SystemSettingsDialog.SettingsSection.Computer, dialog.Section);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnARow_Highlights_It()
     {
@@ -83,6 +86,7 @@ public class SystemSettingsMouseTest
         Assert.AreEqual(2, dialog.Cursor, "a click below the list changes nothing");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnTheComputerRows_Highlights_Them()
     {
@@ -93,6 +97,7 @@ public class SystemSettingsMouseTest
         Assert.AreEqual(1, dialog.Cursor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheelMovesTheHighlightThreeRows_AndStopsAtTheEnds()
     {
@@ -108,6 +113,7 @@ public class SystemSettingsMouseTest
         Assert.AreEqual(4, dialog.Cursor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMouseLeavesTheDialogAloneWhileAValueIsBeingTyped()
     {
@@ -122,6 +128,7 @@ public class SystemSettingsMouseTest
         Assert.AreEqual(0, dialog.Cursor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AWheelOutsideTheDialogIsNotTheDialogs()
     {

@@ -5,6 +5,7 @@ namespace iConsole.Test.Display;
 [TestClass]
 public class HyperlinksTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void RegisterGivesTheSameIdToTheSameTarget()
     {
@@ -16,12 +17,14 @@ public class HyperlinksTest
         Assert.AreEqual("https://example.com/a", Hyperlinks.Resolve(first));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RegisterGivesDifferentTargetsDifferentIds()
     {
         Assert.AreNotEqual(Hyperlinks.Register("https://example.com/one"), Hyperlinks.Register("https://example.com/two"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyAndTooLongTargetsAreNoLink()
     {
@@ -31,6 +34,7 @@ public class HyperlinksTest
         Assert.IsNull(Hyperlinks.Resolve(Hyperlinks.None));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ControlCharactersAndNonAsciiArePercentEncoded()
     {
@@ -45,6 +49,7 @@ public class HyperlinksTest
         Assert.IsTrue(target.EndsWith("%20%C3%A9", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnIdNeverHandedOutResolvesToNothing()
     {

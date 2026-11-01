@@ -35,6 +35,7 @@ public class ComboBoxTest
     /// A key the focused control declines is offered to every control. An unfocused combo used to
     /// answer Enter by opening its list — over a dialog whose own Enter was meant to run.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnfocusedComboIgnoresEnterAndTheArrows()
     {
@@ -47,6 +48,7 @@ public class ComboBoxTest
         Assert.AreEqual(0, harness.Combo.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingAnUnfocusedCombo_TakesTheFocusSoItHasItBackWhenTheListCloses()
     {
@@ -69,6 +71,7 @@ public class ComboBoxTest
 
     private static KeyEvent Key(ConsoleKey consoleKey, bool alt = false) => new('\0', consoleKey, false, alt, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetItemsSelectsFirstItem()
     {
@@ -79,6 +82,7 @@ public class ComboBoxTest
         Assert.AreEqual("Red", combo.SelectedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosedArrowsCycleSelectionWithoutOpening()
     {
@@ -92,6 +96,7 @@ public class ComboBoxTest
         Assert.AreEqual(0, harness.Combo.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOpensTheDropdownPopup()
     {
@@ -103,6 +108,7 @@ public class ComboBoxTest
         Assert.IsTrue(OpenPopup(harness.Root).IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AltDownOpensWithoutMovingSelection()
     {
@@ -114,6 +120,7 @@ public class ComboBoxTest
         Assert.AreEqual(0, harness.Combo.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CommittingInThePopupUpdatesSelectionAndCloses()
     {
@@ -130,6 +137,7 @@ public class ComboBoxTest
         Assert.AreEqual("Green", harness.Combo.SelectedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeInThePopupClosesWithoutChangingSelection()
     {
@@ -143,6 +151,7 @@ public class ComboBoxTest
         Assert.AreEqual(0, harness.Combo.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOpensTheDropdown()
     {
@@ -154,6 +163,7 @@ public class ComboBoxTest
         Assert.IsTrue(harness.Combo.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SelectionChangedFiresOnCommitOnly()
     {
@@ -170,6 +180,7 @@ public class ComboBoxTest
         Assert.AreEqual(1, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnlyIgnoresInput()
     {
@@ -183,6 +194,7 @@ public class ComboBoxTest
         Assert.AreEqual(0, harness.Combo.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawClosedShowsSelectedItem()
     {
@@ -200,6 +212,7 @@ public class ComboBoxTest
         Assert.IsTrue(buffer.ContentAsString.Contains("▾"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosedPageKeys_MoveTheSelectionByAPage_AndStopAtTheEnds()
     {
@@ -224,6 +237,7 @@ public class ComboBoxTest
         Assert.AreEqual(0, combo.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosedPageKeys_ReadOnlyOrUnfocused_AreIgnored()
     {
@@ -239,6 +253,7 @@ public class ComboBoxTest
         Assert.AreEqual(0, harness.Combo.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosedPageKeys_OnAShortList_GoToTheLastItem()
     {

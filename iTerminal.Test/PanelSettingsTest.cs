@@ -46,6 +46,7 @@ public class PanelSettingsTest
     private int RowOfLeft(string name, iConsole.Test.Core.Automation.ConsoleSnapshot screen) =>
         _app.LeftPanel(screen).ToList().FindIndex(row => row.Length > 1 && row[1..].StartsWith(name + " ", StringComparison.Ordinal));
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ThePage_ShowsWhatIsSaved_IncludingWhatShiftF11Set()
     {
@@ -65,6 +66,7 @@ public class PanelSettingsTest
         Assert.IsTrue(screen.Contains("file2 before file10"), screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task UntickingShowHidden_TakesHiddenFilesOutOfBothPanels_AtOnce_AndForTheNextLaunch()
     {
@@ -89,6 +91,7 @@ public class PanelSettingsTest
         Assert.IsFalse(_app.LeftPanelLists(".hidden.txt"), _app.Screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheLeftOrder_IsChosenFromTheList_AndOnlyTheLeftPanelChanges()
     {
@@ -109,6 +112,7 @@ public class PanelSettingsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task NumbersInNames_SortByValue_UnlessThePageSaysOtherwise()
     {

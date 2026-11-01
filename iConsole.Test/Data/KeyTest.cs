@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class KeyTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyConstructor()
     {
@@ -15,6 +16,7 @@ public class KeyTest
         Assert.IsFalse(key.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyWithShift()
     {
@@ -24,6 +26,7 @@ public class KeyTest
         Assert.IsFalse(key.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyWithAlt()
     {
@@ -33,6 +36,7 @@ public class KeyTest
         Assert.IsFalse(key.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyWithControl()
     {
@@ -42,6 +46,7 @@ public class KeyTest
         Assert.IsTrue(key.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyIsIdentical()
     {
@@ -50,6 +55,7 @@ public class KeyTest
         Assert.IsTrue(key.IsIdentical(keyEvent));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyIsNotIdenticalDifferentKey()
     {
@@ -58,6 +64,7 @@ public class KeyTest
         Assert.IsFalse(key.IsIdentical(keyEvent));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyIsNotIdenticalDifferentModifier()
     {
@@ -66,6 +73,7 @@ public class KeyTest
         Assert.IsFalse(key.IsIdentical(keyEvent));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEquality()
     {

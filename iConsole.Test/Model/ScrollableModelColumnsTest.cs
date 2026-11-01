@@ -25,6 +25,7 @@ public class ScrollableModelColumnsTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollToVisible_CursorBelowTheView_ScrollsByWholeLines()
     {
@@ -36,6 +37,7 @@ public class ScrollableModelColumnsTest
         Assert.AreEqual(3, model.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollToVisible_CursorAboveTheView_ScrollsToItsLine()
     {
@@ -46,6 +48,7 @@ public class ScrollableModelColumnsTest
         Assert.AreEqual(0, model.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollDown_MovesOneRowDownTheSameColumn_AndScrollsWhenTheLineLeavesTheView()
     {
@@ -57,6 +60,7 @@ public class ScrollableModelColumnsTest
         Assert.AreEqual(3, model.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollDown_CursorStaysInTheVisibleLines_DoesNotScroll()
     {
@@ -68,6 +72,7 @@ public class ScrollableModelColumnsTest
         Assert.AreEqual(0, model.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AlignScroll_RoundsDownToALineStart_AndLeavesOneColumnAlone()
     {
@@ -80,6 +85,7 @@ public class ScrollableModelColumnsTest
         Assert.AreEqual(4, single.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColumnCount_BelowOne_ClampsToOne_AndSameValueRaisesNoChange()
     {
@@ -96,6 +102,7 @@ public class ScrollableModelColumnsTest
         Assert.AreEqual(1, changes, "setting the same column count again must not raise PropertyChanged");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PageDown_MovesCursorAndScrollByAPage_ThenClampsAtTheEnd()
     {
@@ -115,6 +122,7 @@ public class ScrollableModelColumnsTest
         Assert.AreEqual(6, model.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PageDown_NearTheEnd_ClampsCursorAndScroll()
     {
@@ -127,6 +135,7 @@ public class ScrollableModelColumnsTest
         Assert.AreEqual(6, model.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void End_InColumns_PutsTheLastLineAtTheBottom()
     {
@@ -138,6 +147,7 @@ public class ScrollableModelColumnsTest
         Assert.AreEqual(6, model.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PageDown_OneColumn_MovesByRowsLikeBefore()
     {
@@ -150,6 +160,7 @@ public class ScrollableModelColumnsTest
         Assert.AreEqual(10, model.ScrollPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PageUp_OneColumn_MovesByRowsLikeBefore()
     {

@@ -11,6 +11,7 @@ namespace iConsole.Test.Controls.StatusBar;
 [TestClass]
 public class DirtyIndicatorTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CreatesInstance()
     {
@@ -22,6 +23,7 @@ public class DirtyIndicatorTest
         Assert.IsNotNull(indicator);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsDefaultViewSize()
     {
@@ -34,6 +36,7 @@ public class DirtyIndicatorTest
         Assert.AreEqual(1, indicator.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsName()
     {
@@ -45,6 +48,7 @@ public class DirtyIndicatorTest
         Assert.AreEqual("DirtyIndicator", indicator.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsChangedWhenDirty()
     {
@@ -64,6 +68,7 @@ public class DirtyIndicatorTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Changed"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsUnchangedWhenNotDirty()
     {
@@ -83,6 +88,7 @@ public class DirtyIndicatorTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Unchanged"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PropertyChanged_OnDirtyModel_TriggersStateChange()
     {
@@ -96,6 +102,7 @@ public class DirtyIndicatorTest
         Assert.IsTrue(indicator.HasStateChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Indicator_IsInstanceOfStatusBarItem()
     {

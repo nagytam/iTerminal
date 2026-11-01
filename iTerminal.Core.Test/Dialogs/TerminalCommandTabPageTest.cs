@@ -9,6 +9,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class TerminalCommandTabPageTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SummarisesTheLastCommand()
     {
@@ -35,6 +36,7 @@ public class TerminalCommandTabPageTest
         CollectionAssert.Contains(lines, "Username: me");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoHistoryThePageSaysSo()
     {
@@ -45,6 +47,7 @@ public class TerminalCommandTabPageTest
         CollectionAssert.AreEqual(new[] { TerminalTextTabPage.NoCommandText }, page.LinesForTest.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NameAndHotKey()
     {

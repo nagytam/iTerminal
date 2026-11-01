@@ -29,6 +29,7 @@ public class MeterTest
 
     // ── Value clamping ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Value_SetAbove1_ClampsTo1()
     {
@@ -37,6 +38,7 @@ public class MeterTest
         Assert.AreEqual(1.0, meter.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Value_SetBelow0_ClampsTo0()
     {
@@ -45,6 +47,7 @@ public class MeterTest
         Assert.AreEqual(0.0, meter.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Value_SetExactBoundaries_Accepted()
     {
@@ -57,6 +60,7 @@ public class MeterTest
 
     // ── Render at 0 % ──────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_At0Percent_AllEmptyChars()
     {
@@ -69,6 +73,7 @@ public class MeterTest
 
     // ── Render at 100 % ────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_At100Percent_AllFillChars()
     {
@@ -81,6 +86,7 @@ public class MeterTest
 
     // ── Render at 50 % ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_At50Percent_HalfFilledHalfEmpty()
     {
@@ -93,6 +99,7 @@ public class MeterTest
 
     // ── Output length ──────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_OutputWidthMatchesViewSize()
     {
@@ -112,6 +119,7 @@ public class MeterTest
 
     // ── Custom fill / empty chars ───────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_CustomFillChar_UsedForFilledPortion()
     {
@@ -130,6 +138,7 @@ public class MeterTest
         Assert.AreEqual("##########", buffer.ContentAsString.Split(Environment.NewLine)[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_CustomEmptyChar_UsedForEmptyPortion()
     {
@@ -150,6 +159,7 @@ public class MeterTest
 
     // ── Label ──────────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithLabel_LabelAppearsBeforeBar()
     {
@@ -168,6 +178,7 @@ public class MeterTest
         Assert.IsTrue(content.StartsWith("CPU ░"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithLabel_BarFillsRemainingWidth()
     {
@@ -187,6 +198,7 @@ public class MeterTest
         Assert.AreEqual("CPU " + "███████████", line);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_NoLabel_EntireWidthIsBar()
     {
@@ -206,6 +218,7 @@ public class MeterTest
 
     // ── Disabled state ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_DisabledState_DoesNotThrow()
     {

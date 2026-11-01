@@ -27,6 +27,7 @@ public class RuntimeDependencyPagesTest
         return service;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StateText_SaysWhatIsMissingWhatIsOutdatedAndWhatIsCurrent()
     {
@@ -35,6 +36,7 @@ public class RuntimeDependencyPagesTest
         Assert.AreEqual("Installed 1.63.0. Up to date.", RuntimeDependencyStepPage.StateText(Installed()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Overview_NamesNoComponent_TheDialogStepsThroughThoseThatNeedWork()
     {
@@ -49,6 +51,7 @@ public class RuntimeDependencyPagesTest
         AssertScreenContains(screen, "1 need to be installed or updated.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Overview_CountsTheComponentsThatNeedWork()
     {
@@ -60,6 +63,7 @@ public class RuntimeDependencyPagesTest
         AssertScreenContains(Render(page, new Size(100, 8)), "1 of 2 need to be installed or updated.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Overview_SaysSoWhenEveryComponentIsInstalled()
     {
@@ -71,6 +75,7 @@ public class RuntimeDependencyPagesTest
         AssertScreenContains(Render(page, new Size(100, 8)), "All components are installed and up to date.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Overview_SaysThereIsNothingToSetUpWithoutAnyComponent()
     {
@@ -82,6 +87,7 @@ public class RuntimeDependencyPagesTest
         AssertScreenContains(Render(page, new Size(100, 8)), "There is nothing to set up.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Summary_SaysNothingIsTickedWhenThePersonLeftEverythingOut()
     {
@@ -93,6 +99,7 @@ public class RuntimeDependencyPagesTest
         AssertScreenContains(Render(page, new Size(100, 8)), "Nothing is ticked.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Summary_ListsTheTickedComponentsWithWhatFinishWillDo()
     {
@@ -107,6 +114,7 @@ public class RuntimeDependencyPagesTest
         AssertScreenContains(screen, "Playwright: Not installed. Install 1.63.0.", "the ticked component says what installing does");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_ShowsTheStateAndTheTickBox_ForAComponentThatNeedsWork()
     {
@@ -121,6 +129,7 @@ public class RuntimeDependencyPagesTest
         AssertScreenContains(screen, "[x] Install this one", "a ticked component says it will be installed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_LeavesOutAComponentThatIsUnticked()
     {
@@ -132,6 +141,7 @@ public class RuntimeDependencyPagesTest
         AssertScreenContains(Render(page, new Size(100, 5)), "[ ] Left out", "an unticked component says it is left out");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_HasNothingToDoForAnInstalledComponent()
     {
@@ -143,6 +153,7 @@ public class RuntimeDependencyPagesTest
         AssertScreenContains(Render(page, new Size(100, 5)), "Nothing to do here.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Step_DrawsNothingWhenTheComponentIsNotInTheSnapshot()
     {

@@ -30,6 +30,7 @@ public class DynamicLabelTest
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabelDrawsInitialValue()
     {
@@ -48,6 +49,7 @@ public class DynamicLabelTest
         Assert.IsTrue(buffer.ContentAsString.Contains(model.Value.ToString()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabelDrawsAfterValueChange()
     {
@@ -74,6 +76,7 @@ public class DynamicLabelTest
         Assert.IsTrue(secondOutput.Contains("Updated"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabelDrawsWithCustomColors()
     {
@@ -92,6 +95,7 @@ public class DynamicLabelTest
         Assert.IsTrue(buffer.ContentAsString.Length > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabelDrawsWithOffset()
     {
@@ -112,6 +116,7 @@ public class DynamicLabelTest
         Assert.IsTrue(lines.Length >= 2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabelHandlesNullValue()
     {
@@ -130,6 +135,7 @@ public class DynamicLabelTest
         Assert.IsTrue(buffer.ContentAsString.Length > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabelUpdatesOnPropertyChange()
     {
@@ -148,6 +154,7 @@ public class DynamicLabelTest
         System.Threading.Thread.Sleep(100);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabelDrawsMultipleUpdates()
     {
@@ -171,6 +178,7 @@ public class DynamicLabelTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabelInheritsFromControl()
     {
@@ -183,6 +191,7 @@ public class DynamicLabelTest
         Assert.IsInstanceOfType(dynamicLabel, typeof(Control));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabelHasObservableValueProperty()
     {
@@ -195,6 +204,7 @@ public class DynamicLabelTest
         Assert.AreEqual(observableValue, dynamicLabel.ObservableValue);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DynamicLabelDoesNotUpdateWhenNotVisible()
     {

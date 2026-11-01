@@ -8,6 +8,7 @@ public class NetworkProfileServiceTest
 {
     private static NetworkProfileService CreateService() => new(new SettingsService());
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAll_WhenEmpty_ReturnsEmptyList()
     {
@@ -16,6 +17,7 @@ public class NetworkProfileServiceTest
         Assert.AreEqual(0, service.GetAll().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_ThenGetAll_ContainsProfile()
     {
@@ -31,6 +33,7 @@ public class NetworkProfileServiceTest
         Assert.AreEqual(NetworkProtocol.Ssh, all[0].Protocol);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_TwiceWithSameId_Overwrites()
     {
@@ -46,6 +49,7 @@ public class NetworkProfileServiceTest
         Assert.AreEqual("bob", all[0].Username);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_DistinctProfiles_KeepsBoth()
     {
@@ -57,6 +61,7 @@ public class NetworkProfileServiceTest
         Assert.AreEqual(2, service.GetAll().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Get_ExistingId_ReturnsProfile()
     {
@@ -70,6 +75,7 @@ public class NetworkProfileServiceTest
         Assert.AreEqual("myhost", found!.Host);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Get_UnknownId_ReturnsNull()
     {
@@ -78,6 +84,7 @@ public class NetworkProfileServiceTest
         Assert.IsNull(service.Get("does-not-exist"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Delete_RemovesProfile()
     {
@@ -90,6 +97,7 @@ public class NetworkProfileServiceTest
         Assert.AreEqual(0, service.GetAll().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Delete_UnknownId_DoesNotThrow()
     {
@@ -98,6 +106,7 @@ public class NetworkProfileServiceTest
         service.Delete("does-not-exist");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SmbProfile_RoundTripsShareNameAndProtocol()
     {
@@ -118,6 +127,7 @@ public class NetworkProfileServiceTest
         Assert.AreEqual("Public", found.ShareName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshProfile_RoundTripsAuthMethodAndKeyPath()
     {
@@ -138,6 +148,7 @@ public class NetworkProfileServiceTest
         Assert.AreEqual("/home/alice/.ssh/id_ed25519", found.PrivateKeyPath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Profiles_PersistAcrossServiceInstances_WithSharedSettingsService()
     {

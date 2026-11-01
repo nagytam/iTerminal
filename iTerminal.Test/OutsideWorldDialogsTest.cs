@@ -23,6 +23,7 @@ public class OutsideWorldDialogsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlNScansTheNetworkAndListsWhatItFinds()
     {
@@ -34,6 +35,7 @@ public class OutsideWorldDialogsTest
         await CloseAndCheckAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlShiftJListsTheBluetoothDevicesOfTheSandbox()
     {
@@ -55,6 +57,7 @@ public class OutsideWorldDialogsTest
         await CloseAndCheckAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task APackageCanBeFoundAndInstalledAfterAConfirmation()
     {
@@ -74,6 +77,7 @@ public class OutsideWorldDialogsTest
         await _app.WaitForTextAsync("Done.");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AnyKeyButYDeclinesTheInstall()
     {
@@ -92,6 +96,7 @@ public class OutsideWorldDialogsTest
         Assert.IsFalse(_app.Screen.Contains("Successfully installed"));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AltF7OpensTheStockBrowserWithTheDefaultStocksQuoted()
     {
@@ -109,6 +114,7 @@ public class OutsideWorldDialogsTest
         await CloseAndCheckAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AStockIsFoundOnAnExchangeAddedAndRemoved()
     {

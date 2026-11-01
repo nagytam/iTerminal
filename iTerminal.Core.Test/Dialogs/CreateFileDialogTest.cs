@@ -52,6 +52,7 @@ public class CreateFileDialogTest
         return (validation.IsValid, validation.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANameAlreadyTakenInThePanelsFolderIsRefusedAndSaysWhy()
     {
@@ -63,6 +64,7 @@ public class CreateFileDialogTest
         Assert.AreEqual(UrlValidationModel.ExistsMessage, message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFreshNameIsAccepted()
     {
@@ -71,6 +73,7 @@ public class CreateFileDialogTest
         Assert.IsTrue(isValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyNameIsInvalidButSaysNothing()
     {
@@ -80,6 +83,7 @@ public class CreateFileDialogTest
         Assert.AreEqual(string.Empty, message, "no red text before anything is typed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpensWithAnEmptyNameBoxAndItsButtons()
     {
@@ -93,6 +97,7 @@ public class CreateFileDialogTest
         AssertScreenContains(screen, "Cancel", "the Cancel button reads Cancel, not a cut-off command name");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCreateCommandWillNotRunOverATakenName()
     {
@@ -105,6 +110,7 @@ public class CreateFileDialogTest
         Assert.AreEqual("keep me", File.ReadAllText(Path.Combine(_folder, "taken.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {

@@ -12,12 +12,14 @@ public class StartupTest
     [TestCleanup]
     public async Task StopAsync() => await _app.DisposeAsync();
 
+    [Timeout(120_000)]
     [TestMethod]
     public void TheMenusAreOnTheTopRow()
     {
         StringAssert.StartsWith(_app.Screen.Line(0), "File Edit Navigate Tools Help");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public void TheKeyBarIsOnTheBottomRow()
     {
@@ -27,6 +29,7 @@ public class StartupTest
         StringAssert.Contains(bottom, "[F10-Quit]");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public void EachPanelListsItsFolder()
     {
@@ -43,6 +46,7 @@ public class StartupTest
         Assert.IsFalse(_app.LeftPanelLists("right_only.txt", screen));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public void FoldersAreListedBeforeFiles()
     {
@@ -51,6 +55,7 @@ public class StartupTest
         Assert.IsTrue(rows.IndexOf("beta") < rows.IndexOf("notes.md"), string.Join(Environment.NewLine, rows));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public void EachPanelIsTitledWithItsFolder()
     {
@@ -63,6 +68,7 @@ public class StartupTest
     }
 
     /// <summary>The count used to be joined to its word with a border character: "══5═entries══".</summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EachPanelFooterCountsItsEntries()
     {
@@ -71,6 +77,7 @@ public class StartupTest
         Assert.IsFalse(screen.Contains("═entries"), screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public void TheLeftPanelHasTheKeyboard()
     {
@@ -78,6 +85,7 @@ public class StartupTest
         Assert.AreEqual("..", _app.FocusedModel!.FilteredEntries[0].DisplayName.Trim());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheSplashScreenIsGoneAndNoWindowIsLeftBehind()
     {
@@ -85,6 +93,7 @@ public class StartupTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public void AFirstRunCreatesItsDatabaseInTheConfiguredDataFolder()
     {
@@ -92,6 +101,7 @@ public class StartupTest
             "the database belongs in the folder the configuration names, not in %APPDATA%");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public void NoKeyIsNeededToStart()
     {

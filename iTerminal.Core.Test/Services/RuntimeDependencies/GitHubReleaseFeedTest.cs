@@ -27,6 +27,7 @@ public class GitHubReleaseFeedTest
         ]
         """;
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListVersions_KeepsStableReleasesOnly()
     {
@@ -37,6 +38,7 @@ public class GitHubReleaseFeedTest
         CollectionAssert.AreEqual(new[] { "0.40.4", "0.40.3" }, versions.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListVersions_SendsTheUserAgentGitHubRequires()
     {
@@ -52,6 +54,7 @@ public class GitHubReleaseFeedTest
         StringAssert.Contains(userAgent, "iTerminal");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetRelease_ReadsEachAssetWithItsDigest()
     {
@@ -72,6 +75,7 @@ public class GitHubReleaseFeedTest
         Assert.IsNull(published.Assets[1].Sha256);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Download_KeepsTheFileWhenItMatchesItsDigest()
     {
@@ -91,6 +95,7 @@ public class GitHubReleaseFeedTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Download_DeletesAFileThatDoesNotMatchItsDigest()
     {
@@ -104,6 +109,7 @@ public class GitHubReleaseFeedTest
         Assert.IsFalse(File.Exists(destination));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Download_RefusesAnAssetWithoutAPublishedDigest()
     {

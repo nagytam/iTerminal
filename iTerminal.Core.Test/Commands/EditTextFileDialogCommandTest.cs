@@ -37,6 +37,7 @@ public class EditTextFileDialogCommandTest
 
     // ── constructor ──────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsF4Key()
     {
@@ -55,6 +56,7 @@ public class EditTextFileDialogCommandTest
 
     // ── CanExecute ───────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsTxt_ReturnsTrue()
     {
@@ -77,6 +79,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsJson_ReturnsTrue()
     {
@@ -99,6 +102,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsCs_ReturnsTrue()
     {
@@ -121,6 +125,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsYaml_ReturnsTrue()
     {
@@ -143,6 +148,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsXml_ReturnsTrue()
     {
@@ -165,6 +171,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileHasNoExtension_ReturnsTrue()
     {
@@ -190,6 +197,7 @@ public class EditTextFileDialogCommandTest
     }
 
     /// <summary>F4 on these did nothing but beep: the list stopped at a few .NET and web formats.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("README.md")]
     [DataRow("settings.ini")]
@@ -215,6 +223,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsTrue(command.CanExecute(), fileName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsPng_ReturnsFalse()
     {
@@ -237,6 +246,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsMp3_ReturnsFalse()
     {
@@ -259,6 +269,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedModelIsNull_ReturnsFalse()
     {
@@ -273,6 +284,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedEntryUrlIsNull_ReturnsFalse()
     {
@@ -293,6 +305,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFileDoesNotExistInModel_ReturnsFalse()
     {
@@ -317,6 +330,7 @@ public class EditTextFileDialogCommandTest
 
     // ── ExecuteAsync ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenContentModelServiceIsNull_DoesNotThrow()
     {
@@ -331,6 +345,7 @@ public class EditTextFileDialogCommandTest
 
     // ── ContentBrowser integration ───────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithTextFileEditorDialog_RegistersEditTextFileDialogCommand()
     {
@@ -362,6 +377,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsTrue(hasCommand, "ContentBrowser should register EditTextFileDialogCommand when a TextFileEditorDialog is supplied.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithoutTextFileEditorDialog_DoesNotRegisterEditTextFileDialogCommand()
     {
@@ -393,6 +409,7 @@ public class EditTextFileDialogCommandTest
 
     // ── FilePanelFactory integration ─────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithTextFileEditorDialog_CreatesFilePanel()
     {
@@ -421,6 +438,7 @@ public class EditTextFileDialogCommandTest
         Assert.IsNotNull(panel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithoutTextFileEditorDialog_CreatesFilePanel()
     {

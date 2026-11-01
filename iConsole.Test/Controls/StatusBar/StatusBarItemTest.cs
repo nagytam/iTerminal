@@ -11,6 +11,7 @@ public class StatusBarItemTest
     {
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WritesPaddedTextToBuffer()
     {

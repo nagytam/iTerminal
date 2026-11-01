@@ -58,6 +58,7 @@ public class ImageMetadataEditorDialogTest
     private ImageMetadataEditorDialog Editor(ImageMetadataEdit current, Action? saved = null) =>
         new(_path, current, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), saved);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFieldsArePrefilledWithTheFilesText()
     {
@@ -66,6 +67,7 @@ public class ImageMetadataEditorDialogTest
         Assert.AreEqual(new ImageMetadataEdit("Sunset", "Tamas", "© 2026", "Lake"), dialog.Edit());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WritesTheTextAndCallsBackThenCloses()
     {
@@ -83,6 +85,7 @@ public class ImageMetadataEditorDialogTest
         Assert.AreEqual("Sunset", ImageInfoReader.ReadFile(_path).Single(f => f.Name == "Description").Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedSave_SaysSoAndDoesNotCallBack()
     {
@@ -99,6 +102,7 @@ public class ImageMetadataEditorDialogTest
         StringAssert.StartsWith(dialog.Message, "Could not save the text:");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileThatCannotTakeText_IsRefusedWithAMessage()
     {
@@ -119,6 +123,7 @@ public class ImageMetadataEditorDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClosesWithoutSaving()
     {

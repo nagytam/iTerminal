@@ -54,6 +54,7 @@ public class MusicTagEditorDialogTest
     private static MusicTagEditorDialog Editor(string path, MusicTagSet current, Action? saved = null) =>
         new(path, current, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), saved);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFieldsArePrefilledWithTheFilesTags()
     {
@@ -69,6 +70,7 @@ public class MusicTagEditorDialogTest
         Assert.AreEqual("live", edit.Comment);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AYearThatIsNotFourDigits_CannotBeSaved()
     {
@@ -79,6 +81,7 @@ public class MusicTagEditorDialogTest
         Assert.AreEqual("The year is four digits, or blank.", dialog.Message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATrackThatIsNotANumber_CannotBeSaved()
     {
@@ -89,6 +92,7 @@ public class MusicTagEditorDialogTest
         StringAssert.Contains(dialog.Message, "The track is a number");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_SavesThroughTheWriter_AndTheEditorThenCloses_AndTheViewerReloads()
     {
@@ -107,6 +111,7 @@ public class MusicTagEditorDialogTest
         Assert.IsFalse(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedSave_SaysWhy_AndKeepsTheEditorOpen()
     {
@@ -123,6 +128,7 @@ public class MusicTagEditorDialogTest
         Assert.IsTrue(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDialogFieldsAreEditableTextBoxes()
     {
@@ -134,6 +140,7 @@ public class MusicTagEditorDialogTest
     private static void SetField(MusicTagEditorDialog dialog, string label, string text) =>
         dialog.Controls.OfType<iConsole.Controls.TextBox>().Single(b => b.Label == label).Text = text;
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task E_OnAFileTagsCannotBeWritten_SaysSoAndOpensNoEditor()
     {

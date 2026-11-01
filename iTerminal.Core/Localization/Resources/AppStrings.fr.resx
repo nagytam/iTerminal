@@ -3295,4 +3295,88 @@
   <data name="Status.Bluetooth.Busy" xml:space="preserve">
     <value>Le dernier changement est encore en cours ; attendez qu'il se termine.</value>
   </data>
+  <data name="Dialog.VirtualMachineManager" xml:space="preserve">
+    <value>Gestionnaire de machines virtuelles</value>
+  </data>
+  <data name="VirtualMachineManager.Reading" xml:space="preserve">
+    <value> Lecture des machines virtuelles…</value>
+  </data>
+  <data name="VirtualMachineManager.None" xml:space="preserve">
+    <value> Aucune machine virtuelle trouvée.</value>
+  </data>
+  <data name="VirtualMachineManager.Working" xml:space="preserve">
+    <value>Traitement de {0}…</value>
+  </data>
+  <data name="VirtualMachineManager.Busy" xml:space="preserve">
+    <value>La dernière demande est toujours en cours.</value>
+  </data>
+  <data name="VirtualMachineManager.NotAvailable" xml:space="preserve">
+    <value>Ce n'est pas possible pour {0} dans son état actuel.</value>
+  </data>
+  <data name="VirtualMachineManager.Confirm.Shutdown" xml:space="preserve">
+    <value> Arrêter {0} ? (y/n)</value>
+  </data>
+  <data name="VirtualMachineManager.Confirm.PowerOff" xml:space="preserve">
+    <value> Éteindre {0} maintenant, en perdant le travail non enregistré ? (y/n)</value>
+  </data>
+  <data name="VirtualMachineManager.Confirm.Restart" xml:space="preserve">
+    <value> Redémarrer {0} ? (y/n)</value>
+  </data>
+  <data name="VirtualMachineManager.Confirm.SaveState" xml:space="preserve">
+    <value> Sauvegarder l'état de {0} et l'arrêter ? (y/n)</value>
+  </data>
+  <data name="VirtualMachineManager.Cancelled" xml:space="preserve">
+    <value>Annulé.</value>
+  </data>
+  <data name="VirtualMachineManager.Refreshing" xml:space="preserve">
+    <value>Actualisation…</value>
+  </data>
+  <data name="VirtualMachineManager.NoneSelected" xml:space="preserve">
+    <value>Aucune machine virtuelle sélectionnée.</value>
+  </data>
+  <data name="DialogHint.StartVirtualMachine" xml:space="preserve">
+    <value>Démarrer</value>
+  </data>
+  <data name="DialogHint.ShutDownVirtualMachine" xml:space="preserve">
+    <value>Arrêter (y/n)</value>
+  </data>
+  <data name="DialogHint.PowerOffVirtualMachine" xml:space="preserve">
+    <value>Éteindre (y/n)</value>
+  </data>
+  <data name="DialogHint.RestartVirtualMachine" xml:space="preserve">
+    <value>Redémarrer (y/n)</value>
+  </data>
+  <data name="DialogHint.PauseResumeVirtualMachine" xml:space="preserve">
+    <value>Pause ou reprise</value>
+  </data>
+  <data name="DialogHint.SaveVirtualMachine" xml:space="preserve">
+    <value>Sauvegarder l'état (y/n)</value>
+  </data>
+  <data name="DialogHint.ConsoleVirtualMachine" xml:space="preserve">
+    <value>Ouvrir la console</value>
+  </data>
+  <data name="DialogHint.RefreshVirtualMachines" xml:space="preserve">
+    <value>Actualiser</value>
+  </data>
+  <data name="Notify.GitSyncing" xml:space="preserve">
+    <value>Synchronisation avec le dépôt distant…</value>
+  </data>
+  <data name="Notify.GitSynced" xml:space="preserve">
+    <value>Synchronisé avec le dépôt distant.</value>
+  </data>
+  <data name="Notify.GitSyncNoUpstream" xml:space="preserve">
+    <value>La branche n'a pas de branche amont à synchroniser.</value>
+  </data>
+  <data name="Notify.GitSyncPullFailed" xml:space="preserve">
+    <value>Synchro git : échec de pull --rebase</value>
+  </data>
+  <data name="Notify.GitSyncRebaseNote" xml:space="preserve">
+    <value>(Rien n'a été poussé. Si git a démarré un rebase, il reste inachevé.)</value>
+  </data>
+  <data name="Notify.GitSyncPushFailed" xml:space="preserve">
+    <value>Synchro git : échec du push</value>
+  </data>
+  <data name="Notify.GitSyncFailed" xml:space="preserve">
+    <value>Échec de la synchro git</value>
+  </data>
 </root>

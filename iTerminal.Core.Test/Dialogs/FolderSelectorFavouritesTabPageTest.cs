@@ -28,6 +28,7 @@ public class FolderSelectorFavouritesTabPageTest
         return (page, harness);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitialize_ReadsTheSavedFavourites()
     {
@@ -38,6 +39,7 @@ public class FolderSelectorFavouritesTabPageTest
             page.Favourites.Select(f => f.FullUrl).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitialize_FocusesTheList()
     {
@@ -50,6 +52,7 @@ public class FolderSelectorFavouritesTabPageTest
         Assert.IsInstanceOfType<iConsole.Controls.ListBox<Url>>(page.GetFocusedControl());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Down_MovesTheCursor()
     {
@@ -61,6 +64,7 @@ public class FolderSelectorFavouritesTabPageTest
         Assert.AreEqual(1, (int)page.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_GoesToTheFavouriteUnderTheCursor()
     {
@@ -74,6 +78,7 @@ public class FolderSelectorFavouritesTabPageTest
         CollectionAssert.AreEqual(new[] { new Url(@"C:\two").FullUrl }, harness.Navigations);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithNothingListed_NavigatesNowhere()
     {
@@ -85,6 +90,7 @@ public class FolderSelectorFavouritesTabPageTest
         Assert.AreEqual(0, harness.Navigations.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetKeyHints_NameTheAddAndRemoveKeys()
     {
@@ -97,6 +103,7 @@ public class FolderSelectorFavouritesTabPageTest
         Assert.IsTrue(hints.Any(h => h.Key == "Enter"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeLayout_KeepsEveryChildOnThePage()
     {
@@ -109,6 +116,7 @@ public class FolderSelectorFavouritesTabPageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_InANarrowPage_DoesNotProduceNegativeGeometry()
     {
@@ -127,6 +135,7 @@ public class FolderSelectorFavouritesTabPageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithoutASettingsService_StillWorks()
     {

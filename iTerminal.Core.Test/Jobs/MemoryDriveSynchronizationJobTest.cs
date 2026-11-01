@@ -49,6 +49,7 @@ public class MemoryDriveSynchronizationJobTest
         await job.ExecuteAsync(cancelled.Token);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Load_TakesTheFoldersOwnFiles_NotThoseInItsSubfolders()
     {
@@ -60,6 +61,7 @@ public class MemoryDriveSynchronizationJobTest
         Assert.IsFalse(drive.Root.Files.ContainsKey("nested.txt"), "a subfolder's file must not appear at the root under its bare name");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnStop_AMemoryFileIsWrittenToTheFolder()
     {
@@ -74,6 +76,7 @@ public class MemoryDriveSynchronizationJobTest
         CollectionAssert.AreEqual(new byte[] { 1, 2 }, File.ReadAllBytes(Path.Combine(_syncFolder, "fresh.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnStop_AFileRemovedInMemory_LeavesTheFolderToo()
     {
@@ -87,6 +90,7 @@ public class MemoryDriveSynchronizationJobTest
         Assert.IsFalse(File.Exists(Path.Combine(_syncFolder, "top.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnStop_WhenTheFolderCannotBeWritten_DoesNotThrow()
     {

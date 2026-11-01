@@ -5,6 +5,7 @@ namespace iConsole.Tasks.Test;
 [TestClass]
 public class PauseGateTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AGate_IsOpenUntilPaused_AndWaitsUntilResumed()
     {
@@ -22,6 +23,7 @@ public class PauseGateTest
         Assert.IsFalse(gate.IsPaused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AWaitingCaller_IsCancelledWithItsToken()
     {

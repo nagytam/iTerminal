@@ -18,6 +18,7 @@ public class NotificationJobTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Running_ExpiresANotification_AndStopsWhenCancelled()
     {
@@ -35,6 +36,7 @@ public class NotificationJobTest
         await run.WaitAsync(Deadline);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhileTheTerminalIsLent_TimeStandsStill()
     {

@@ -39,6 +39,7 @@ public class ListControlsRenderTest
         return listBox;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_DrawsOneItemPerRow_AtItsPosition()
     {
@@ -51,6 +52,7 @@ public class ListControlsRenderTest
             " gamma");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_CursorRow_IsHighlightedAcrossTheWholeWidth()
     {
@@ -63,6 +65,7 @@ public class ListControlsRenderTest
         screen.AssertColors(1, 2, 10, Scheme.SelectedForeground, Scheme.SelectedBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_Focused_UsesTheStrongerCursorHighlight()
     {
@@ -74,6 +77,7 @@ public class ListControlsRenderTest
         screen.AssertColors(1, 1, 10, Scheme.SelectedFocusedForeground, Scheme.SelectedFocusedBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_DisabledItems_UseTheDisabledColours()
     {
@@ -85,6 +89,7 @@ public class ListControlsRenderTest
         screen.AssertColors(1, 3, 10, Scheme.Foreground, Scheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_ShrinkingList_ErasesTheRowsItNoLongerHas()
     {
@@ -103,6 +108,7 @@ public class ListControlsRenderTest
         screen.AssertFillsBounds(listBox);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_Empty_ShowsItsEmptyText()
     {
@@ -118,6 +124,7 @@ public class ListControlsRenderTest
         screen.AssertFillsBounds(listBox);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_EmptyText_IsNotShownOnceThereAreItems()
     {
@@ -131,6 +138,7 @@ public class ListControlsRenderTest
     /// A message longer than the list is wide is wrapped onto the rows below, keeping its indent —
     /// cut at the edge, it lost its end, which is usually the part that says what to do.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_ALongEmptyText_IsWrappedNotCut()
     {
@@ -147,6 +155,7 @@ public class ListControlsRenderTest
         screen.AssertFillsBounds(listBox);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListBox_MovingPastTheLastRow_ScrollsTheCursorIntoView()
     {
@@ -165,6 +174,7 @@ public class ListControlsRenderTest
         screen.AssertColors("a4", Scheme.SelectedFocusedForeground, Scheme.SelectedFocusedBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_LongItem_IsClippedToTheControl()
     {
@@ -189,6 +199,7 @@ public class ListControlsRenderTest
         return table;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Table_DrawsAHeaderAndOneRowPerItem_InColumns()
     {
@@ -200,6 +211,7 @@ public class ListControlsRenderTest
             "photo.jp 3 MB");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Table_Header_UsesTheSelectionColoursAcrossTheWidth()
     {
@@ -208,6 +220,7 @@ public class ListControlsRenderTest
         screen.AssertColors(0, 0, 16, Scheme.SelectedForeground, Scheme.SelectedBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Table_CursorRow_FocusedAndUnfocused()
     {
@@ -221,6 +234,7 @@ public class ListControlsRenderTest
         focused.AssertColors(0, 1, 16, Scheme.SelectedFocusedForeground, Scheme.SelectedFocusedBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Table_LosingRows_ErasesThem()
     {
@@ -238,6 +252,7 @@ public class ListControlsRenderTest
         screen.AssertFillsBounds(table);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Table_Empty_ShowsItsEmptyTextUnderTheHeader()
     {
@@ -252,6 +267,7 @@ public class ListControlsRenderTest
         screen.AssertColors("No holdings", Scheme.DisabledForeground, Scheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Table_EnterOnAnEmptyTable_IsNotHandled()
     {
@@ -265,6 +281,7 @@ public class ListControlsRenderTest
         Assert.IsFalse(activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Table_EnterOnARow_ActivatesIt()
     {
@@ -289,6 +306,7 @@ public class ListControlsRenderTest
     private TreeView CreateTree(HierarchicalItemModel root, int height = 6, int width = 16) =>
         new(root, _theme) { ViewSize = new Size(width, height) };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TreeView_IndentsByDepth_WithAGlyphForEveryParent()
     {
@@ -308,6 +326,7 @@ public class ListControlsRenderTest
             "  ▸ var");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TreeView_DeepNames_AreNotClipped()
     {
@@ -325,6 +344,7 @@ public class ListControlsRenderTest
         Assert.AreEqual("            leaf", screen.Lines[5]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TreeView_Collapsing_ErasesTheChildren()
     {
@@ -345,6 +365,7 @@ public class ListControlsRenderTest
         screen.AssertFillsBounds(tree);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TreeView_FocusedItem_IsHighlightedAcrossTheRow()
     {
@@ -362,6 +383,7 @@ public class ListControlsRenderTest
         focused.AssertColors(0, 1, 16, Scheme.SelectedFocusedForeground, Scheme.SelectedFocusedBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TreeView_FocusBelowTheFold_ScrollsItIntoView()
     {
@@ -385,6 +407,7 @@ public class ListControlsRenderTest
         screen.AssertColors(0, 3, 16, Scheme.SelectedForeground, Scheme.SelectedBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_MovingUpPastTheTop_ScrollsBack()
     {
@@ -409,6 +432,7 @@ public class ListControlsRenderTest
         screen.AssertColors(0, 0, 16, Scheme.SelectedFocusedForeground, Scheme.SelectedFocusedBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TreeView_FormatRow()
     {
@@ -431,6 +455,7 @@ public class ListControlsRenderTest
         return list;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopupListView_IndentsRows_AndHighlightsOne()
     {
@@ -444,6 +469,7 @@ public class ListControlsRenderTest
         screen.AssertColors(0, 2, 10, Scheme.Foreground, Scheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopupListView_HighlightBelowTheFold_IsScrolledIntoView()
     {
@@ -455,6 +481,7 @@ public class ListControlsRenderTest
             " e");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PopupListView_End_MovesTheHighlightToTheLastRow()
     {
@@ -466,6 +493,7 @@ public class ListControlsRenderTest
         screen.AssertColors(" e", Scheme.SelectedFocusedForeground, Scheme.SelectedFocusedBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopupListView_PaintsItsWholeArea()
     {
@@ -477,6 +505,7 @@ public class ListControlsRenderTest
 
     private static KeyEvent Char(char c, ConsoleKey key = ConsoleKey.NoName, bool shift = false) => new(c, key, shift, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_EnterAndSpace_ToggleTheFocusedNode()
     {
@@ -495,6 +524,7 @@ public class ListControlsRenderTest
         Assert.IsFalse(home.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_PlusOpens_MinusCloses_EvenWithShiftHeld()
     {
@@ -516,6 +546,7 @@ public class ListControlsRenderTest
         Assert.IsFalse(home.IsOpened, "minus never opens");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_ExpandKeys_OnALeafOrWithoutFocus_AreLeftToTheHost()
     {
@@ -534,6 +565,7 @@ public class ListControlsRenderTest
         Assert.IsFalse(home.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_Disabled_IgnoresTheExpandKeys()
     {
@@ -550,6 +582,7 @@ public class ListControlsRenderTest
         Assert.IsFalse(home.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_Right_OnAClosedNode_OpensItInPlace_ThenEntersIt()
     {
@@ -570,6 +603,7 @@ public class ListControlsRenderTest
         Assert.IsTrue(home.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_Left_OnAnOpenNode_ClosesItInPlace()
     {
@@ -587,6 +621,7 @@ public class ListControlsRenderTest
         Assert.IsTrue(root.IsOpened, "and its parent is untouched");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_Left_OnAClosedNodeOrALeaf_StepsUpToTheParent_WhichStaysOpen()
     {
@@ -606,6 +641,7 @@ public class ListControlsRenderTest
         Assert.IsNotNull(other);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_Left_OnTheRoot_DoesNothing()
     {

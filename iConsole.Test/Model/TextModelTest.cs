@@ -5,6 +5,7 @@ namespace iConsole.Test.Model;
 [TestClass]
 public class TextModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TextModelConstructorEmpty()
     {
@@ -13,6 +14,7 @@ public class TextModelTest
         Assert.AreEqual(0, model.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextModelConstructorWithText()
     {
@@ -21,6 +23,7 @@ public class TextModelTest
         Assert.AreEqual("Hello", model.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextModelDefaultEncoding()
     {
@@ -28,6 +31,7 @@ public class TextModelTest
         Assert.AreEqual(System.Text.Encoding.UTF8, model.Encoding);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextModelSetEncoding()
     {
@@ -36,6 +40,7 @@ public class TextModelTest
         Assert.AreEqual(System.Text.Encoding.ASCII, model.Encoding);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextModelAddLine()
     {
@@ -45,6 +50,7 @@ public class TextModelTest
         Assert.AreEqual("Line 1", model.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextModelMultipleLines()
     {
@@ -55,6 +61,7 @@ public class TextModelTest
         Assert.AreEqual(3, model.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextModelTriggerPropertyChanged()
     {
@@ -71,6 +78,7 @@ public class TextModelTest
         Assert.IsTrue(propertyChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextModelInterface()
     {

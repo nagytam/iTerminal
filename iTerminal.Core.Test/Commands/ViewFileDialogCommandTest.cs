@@ -39,6 +39,7 @@ public class ViewFileDialogCommandTest
 
     // ── constructor ──────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsF3Key()
     {
@@ -57,6 +58,7 @@ public class ViewFileDialogCommandTest
 
     // ── CanExecute ───────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsTextFile_ReturnsTrue()
     {
@@ -80,6 +82,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsJson_ReturnsTrue()
     {
@@ -103,6 +106,38 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ExecuteAsync_WhenFocusedFileIsLocalHtml_OpensItInTheWebBrowser()
+    {
+        var themeService = CreateThemeService();
+        var path = Path.Combine(Path.GetTempPath(), "iterminal-f3-" + Guid.NewGuid().ToString("N") + ".html");
+        File.WriteAllText(path, "<html><body>Hi</body></html>");
+        try
+        {
+            var fileUrl = new Url(new Uri(path).AbsoluteUri);
+            var contentModel = new Mock<IContentModel>(MockBehavior.Loose);
+            contentModel.Setup(m => m.ExistsFile(fileUrl)).Returns(true);
+            var contentModelService = new Mock<IContentModelService>();
+            contentModelService.Setup(s => s.FocusedFileUrl).Returns(fileUrl);
+            contentModelService.Setup(s => s.GetFocusedModel()).Returns(contentModel.Object);
+
+            var store = new iTerminal.Core.Services.Web.WebBrowserStore(new Mock<ISettingsService>().Object);
+            var webBrowser = new iTerminal.Core.Dialogs.Web.WebBrowserDialog(
+                new iTerminal.Core.Test.Model.Web.FakeWebFetcher(), store, iTerminal.Core.Test.Helper.UiTestHelper.TestTheme());
+            var command = new ViewFileDialogCommand(CreateDialog(themeService), contentModelService.Object, webBrowserDialog: webBrowser);
+
+            await command.ExecuteAsync(null);
+
+            Assert.AreEqual(iTerminal.Core.Model.Web.WebAddress.FileUrl(path), webBrowser.StartAddress);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsHtml_ReturnsTrue()
     {
@@ -126,6 +161,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsPdf_ReturnsTrue()
     {
@@ -149,6 +185,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsPng_ReturnsTrue()
     {
@@ -172,6 +209,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsMp3_ReturnsFalse()
     {
@@ -195,6 +233,7 @@ public class ViewFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsJpeg_ReturnsTrue()
     {
@@ -218,6 +257,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsBmp_ReturnsTrue()
     {
@@ -241,6 +281,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsJpg_ReturnsTrue()
     {
@@ -264,6 +305,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsGif_ReturnsTrue()
     {
@@ -287,6 +329,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsWebp_ReturnsTrue()
     {
@@ -310,6 +353,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsTiff_ReturnsTrue()
     {
@@ -333,6 +377,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileUrlIsEmpty_ReturnsFalse()
     {
@@ -347,6 +392,7 @@ public class ViewFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedModelIsNull_ReturnsFalse()
     {
@@ -364,6 +410,7 @@ public class ViewFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFileDoesNotExistInModel_ReturnsFalse()
     {
@@ -389,6 +436,7 @@ public class ViewFileDialogCommandTest
 
     // ── ExecuteAsync ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenContentModelServiceIsNull_DoesNotThrow()
     {
@@ -427,6 +475,7 @@ public class ViewFileDialogCommandTest
         return contentModelService.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsMp3AndTheMusicViewerIsAvailable_ReturnsTrue()
     {
@@ -450,6 +499,7 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenTheAudioFileIsNotLocal_StaysFalse()
     {
@@ -465,6 +515,7 @@ public class ViewFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExecuteAsync_WithAnAudioFile_PointsTheMusicViewerAtIt()
     {
@@ -492,6 +543,7 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExecuteAsync_WithAnXmlFile_PointsTheXmlViewerAtIt()
     {
@@ -523,6 +575,7 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExecuteAsync_WithAJsonFile_PointsTheJsonViewerAtIt()
     {
@@ -552,6 +605,7 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [Timeout(60_000)]
     [DataTestMethod]
     [DataRow(".csv")]
     [DataRow(".tsv")]
@@ -587,6 +641,7 @@ public class ViewFileDialogCommandTest
 
     // ── ContentBrowser integration ───────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithFileViewerDialog_RegistersViewFileDialogCommand()
     {
@@ -618,6 +673,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(hasCommand, "ContentBrowser should register ViewFileDialogCommand when a FileViewerDialog is supplied.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithoutFileViewerDialog_DoesNotRegisterViewFileDialogCommand()
     {
@@ -649,6 +705,7 @@ public class ViewFileDialogCommandTest
 
     // ── FilePanelFactory integration ─────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithFileViewerDialog_CreatesFilePanel()
     {
@@ -677,6 +734,7 @@ public class ViewFileDialogCommandTest
         Assert.IsNotNull(panel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithoutFileViewerDialog_CreatesFilePanel()
     {

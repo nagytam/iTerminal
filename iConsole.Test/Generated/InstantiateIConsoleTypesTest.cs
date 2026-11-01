@@ -10,6 +10,7 @@ namespace iConsole.Test.Generated;
 [TestClass]
 public class InstantiateIConsoleTypesTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void InstantiatePublicTypesFromIConsoleAssemblies()
     {

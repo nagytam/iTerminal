@@ -12,6 +12,7 @@ public class ToolsAndMenusTest
     [TestCleanup]
     public async Task StopAsync() => await _app.DisposeAsync();
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheCalculatorAddsTypedNumbers()
     {
@@ -25,6 +26,7 @@ public class ToolsAndMenusTest
             "the display to show 42, right-aligned against the frame");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlEOpensTheUnitConverterNotTheEditMenu()
     {
@@ -34,6 +36,33 @@ public class ToolsAndMenusTest
             "Ctrl+E — the key on the converter's own button and in the Tools menu — to open the converter");
     }
 
+    /// <summary>On Linux the Virtual machine manager is listed directly under Calculator in the Tools menu; elsewhere it is not listed at all.</summary>
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheVirtualMachineManagerIsListedRightAfterCalculator()
+    {
+        await _app.PressAsync("Ctrl+F");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar, "the menu");
+        await _app.PressSequenceAsync("Right", "Right", "Right");
+        await _app.WaitForTextAsync("Calculator");
+
+        if (OperatingSystem.IsLinux())
+        {
+            await _app.WaitUntilAsync(
+                s => s.Lines.Zip(s.Lines.Skip(1), (row, next) => (row, next))
+                    .Any(pair => pair.row.Contains("Calculator", StringComparison.Ordinal)
+                        && pair.next.Contains("Virtual machine manager", StringComparison.Ordinal)),
+                "Virtual machine manager on the row directly below Calculator");
+        }
+        else
+        {
+            await _app.WaitUntilAsync(
+                s => !s.Lines.Any(l => l.Contains("Virtual machine manager", StringComparison.Ordinal)),
+                "no Virtual machine manager entry off Linux");
+        }
+    }
+
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheToolsMenuStaysOnAShortScreenAndScrollsToItsLastEntry()
     {
@@ -55,6 +84,7 @@ public class ToolsAndMenusTest
         await small.WaitUntilAsync(s => s.Lines.Any(l => l.Contains('▲')), "a mark that entries are hidden above");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ARemoteConnectionsDialogWrittenFor84ColumnsKeepsItsRightBorderOn80()
     {
@@ -67,6 +97,7 @@ public class ToolsAndMenusTest
             "the dialog's top border to end in a corner inside the screen");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheViewerStatusBarKeepsOnlyWhatFitsOn80Columns()
     {
@@ -81,6 +112,7 @@ public class ToolsAndMenusTest
             "the buttons that fit to be stacked from the left, with nothing drawn over them");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task APanelOn60ColumnsDropsDateAndTimeSoNamesStayReadable()
     {
@@ -91,6 +123,7 @@ public class ToolsAndMenusTest
             narrow.Screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlFOpensTheFileMenu()
     {
@@ -100,6 +133,7 @@ public class ToolsAndMenusTest
         await _app.WaitForTextAsync("Create Folder");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task RightFromTheFileMenuReachesTheEditMenu()
     {
@@ -111,6 +145,7 @@ public class ToolsAndMenusTest
         await _app.WaitForTextAsync("Shift+F6", TimeSpan.FromSeconds(5));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EscClosesTheMenuAndLeavesNothingBehind()
     {
@@ -123,6 +158,7 @@ public class ToolsAndMenusTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheFileViewerShowsTheFile()
     {
@@ -136,6 +172,7 @@ public class ToolsAndMenusTest
         await _app.WaitForTextGoneAsync("Hello from the left panel.");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F4OpensAMarkdownFileInTheEditor()
     {
@@ -147,6 +184,7 @@ public class ToolsAndMenusTest
         await _app.WaitForTextAsync("# Notes");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlShiftOTogglesTheFullScreenCommandLog()
     {
@@ -160,6 +198,7 @@ public class ToolsAndMenusTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlOHandsTheTerminalToAShellAndTakesItBack()
     {

@@ -19,6 +19,7 @@ public class SixelEncoderTest
         return rgb;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Encode_IsADeviceControlStringWithTheRasterSize()
     {
@@ -28,6 +29,7 @@ public class SixelEncoderTest
         Assert.IsTrue(sixel.EndsWith("\u001b\\", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Encode_DefinesAPaletteColourInPercent()
     {
@@ -36,6 +38,7 @@ public class SixelEncoderTest
         StringAssert.Contains(sixel, "#0;2;100;0;0");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Encode_OneSolidBand_IsOneRunOfFullColumns()
     {
@@ -46,6 +49,7 @@ public class SixelEncoderTest
         Assert.IsFalse(sixel.Contains('-'), "a single band has no line feed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Encode_StartsANewBandEverySixRows()
     {
@@ -55,6 +59,7 @@ public class SixelEncoderTest
         Assert.AreEqual(2, sixel.Count(c => c == '-'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Encode_ABandWithTwoColours_SeparatesThemWithACarriageReturn()
     {
@@ -81,6 +86,7 @@ public class SixelEncoderTest
         StringAssert.Contains(sixel, "~~");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Encode_ManyColours_StaysWithinThePaletteLimit()
     {
@@ -100,6 +106,7 @@ public class SixelEncoderTest
         Assert.IsTrue(definitions is > 1 and <= 255, $"palette of {definitions} colours");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Encode_RejectsPixelDataThatIsTooSmall()
     {

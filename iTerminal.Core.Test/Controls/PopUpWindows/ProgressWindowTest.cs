@@ -48,6 +48,7 @@ public class ProgressWindowTest
         return (parent, window);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_WhileTaskIsRunning_KeepsTheWindowOpen()
     {
@@ -60,6 +61,7 @@ public class ProgressWindowTest
         Assert.IsTrue(parent.Controls.Contains(window));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnIdle_AfterTaskCompletes_ClosesAndRemovesTheWindow()
     {
@@ -75,6 +77,7 @@ public class ProgressWindowTest
             "The window is modal, so hiding it is not enough — it has to leave the control tree or it keeps taking every key.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnIdle_WhenTaskFinishedBeforeTheWindowWasBuilt_StillCloses()
     {
@@ -89,6 +92,7 @@ public class ProgressWindowTest
         Assert.IsFalse(parent.Controls.Contains(window));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnIdle_AfterTaskFails_LeavesTheWindowOpen()
     {
@@ -102,6 +106,7 @@ public class ProgressWindowTest
         Assert.IsTrue(parent.Controls.Contains(window));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnIdle_AfterTaskIsCancelled_ClosesTheWindow()
     {
@@ -116,6 +121,7 @@ public class ProgressWindowTest
         Assert.IsFalse(parent.Controls.Contains(window));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnIdle_AfterTheWindowWasAlreadyClosed_IsHarmless()
     {
@@ -131,6 +137,7 @@ public class ProgressWindowTest
         Assert.IsFalse(parent.Controls.Contains(window));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ActionButton_ClosesRatherThanHides()
     {

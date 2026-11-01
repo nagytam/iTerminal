@@ -21,6 +21,7 @@ public class AnsiRendererStyleTest
     [TestCleanup]
     public void Cleanup() => AnsiRenderer.HyperlinksEnabled = _hyperlinks;
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DimBlinkReverseAndOverlineAreWrittenAsTheirOwnCodes()
     {
@@ -31,6 +32,7 @@ public class AnsiRendererStyleTest
         Assert.AreEqual($"{Esc}[1;1H{Esc}[33;104;2;5;7;53ma{Esc}[0m", ansi);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UnderlineStyleAndColourAreSubParameters()
     {
@@ -46,6 +48,7 @@ public class AnsiRendererStyleTest
         Assert.AreEqual($"{Esc}[1;1H{Esc}[33;104;4:3;58:5:9ma{Esc}[0m", ansi);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APlainUnderlineKeepsTheShortForm()
     {
@@ -54,6 +57,7 @@ public class AnsiRendererStyleTest
         Assert.AreEqual($"{Esc}[1;1H{Esc}[33;104;4ma{Esc}[0m", AnsiRenderer.Conxel2Ansi(0, 0, conxel).ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALinkIsOpenedBeforeItsTextAndClosedAfter()
     {
@@ -66,6 +70,7 @@ public class AnsiRendererStyleTest
             $"{Esc}[1;1H{Esc}[33;104m{Esc}]8;id=iT{id};https://example.com/x{Esc}\\a{Esc}]8;;{Esc}\\{Esc}[0m", ansi);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALinkSpanningSeveralCellsIsOpenedOnce()
     {
@@ -79,6 +84,7 @@ public class AnsiRendererStyleTest
         Assert.IsTrue(ansi.Contains($"a{Esc}]8;id=iT{id};https://example.com/span{Esc}\\bc{Esc}]8;;{Esc}\\", StringComparison.Ordinal), ansi);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALinkIsClosedWhenTheStringEnds()
     {
@@ -91,6 +97,7 @@ public class AnsiRendererStyleTest
         Assert.IsTrue(ansi.IndexOf($"{Esc}]8;;", StringComparison.Ordinal) < ansi.LastIndexOf($"{Esc}[0m", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoLinkIsWrittenWhenHyperlinksAreSwitchedOff()
     {
@@ -104,6 +111,7 @@ public class AnsiRendererStyleTest
         Assert.IsFalse(AnsiRenderer.NeedsAnsi(text[0]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnAttributeTurnedOffIsClearedBeforeTheNextCell()
     {
@@ -117,6 +125,7 @@ public class AnsiRendererStyleTest
         Assert.AreEqual($"{Esc}[1;1H{Esc}[33;104;1ma{Esc}[0;33;104mb{Esc}[0m", ansi);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NeedsAnsiIsTrueOnlyForCellsThePlainConsoleCannotDraw()
     {

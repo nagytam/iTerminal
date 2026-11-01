@@ -8,6 +8,7 @@ namespace iTerminal.Core.Commands.Test;
 [TestClass]
 public class ToggleTerminalCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsCtrlShiftO()
     {
@@ -20,6 +21,7 @@ public class ToggleTerminalCommandTest
         Assert.IsFalse(key.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithoutContent_CompletesWithoutThrowing()
     {

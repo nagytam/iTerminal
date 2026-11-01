@@ -25,6 +25,7 @@ public class SettingsMusicTabPageTest
             ? "/home/tamas/nata/music"
             : Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitialize_LoadsTheStoredMusicFolder()
     {
@@ -37,6 +38,7 @@ public class SettingsMusicTabPageTest
         Assert.AreEqual(@"D:\Media\Music", page.MusicFolder);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EditingTheFolder_WritesTheSettingStraightAway()
     {
@@ -49,6 +51,7 @@ public class SettingsMusicTabPageTest
         Assert.AreEqual(@"C:\Songs", settings.Get(Settings.MusicFolder));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClearingTheFolder_StoresAnEmptyValueSoTheSystemDefaultTakesOver()
     {
@@ -65,6 +68,7 @@ public class SettingsMusicTabPageTest
             iTerminal.Core.Services.Music.MusicLibraryService.ResolveMusicFolder(settings));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoStoredFolder_TheBoxIsEmpty()
     {

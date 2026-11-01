@@ -50,6 +50,7 @@ public class ContentModelFileSystemArchiveTest
             Mock.Of<IArchiveFileSystemService>());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheRootOfTheArchive_ListsItsOwnEntries_AndTheDotDotRow()
     {
@@ -63,6 +64,7 @@ public class ContentModelFileSystemArchiveTest
         CollectionAssert.Contains(names, "..");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFolderInsideTheArchive_ListsOnlyItsOwnEntries()
     {
@@ -76,6 +78,7 @@ public class ContentModelFileSystemArchiveTest
         CollectionAssert.DoesNotContain(names, "top.txt", "a file at the root of the archive is not inside sub/");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheParentRow_IsNamedDotDot_AndIsRecognisedAsTheParent()
     {
@@ -89,6 +92,7 @@ public class ContentModelFileSystemArchiveTest
         Assert.IsTrue(iTerminal.Core.Commands.FocusedEntry.IsParentEntry(parent));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InsideASubFolder_TheParentRowGoesUpOneFolderInTheArchive()
     {
@@ -101,6 +105,7 @@ public class ContentModelFileSystemArchiveTest
         StringAssert.EndsWith(parent.Url.FullUrl, "@/");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASubFolderOfASubFolder_ShowsAsOneFolderRow()
     {
@@ -113,6 +118,7 @@ public class ContentModelFileSystemArchiveTest
         Assert.AreEqual(1, names.Count(n => n == "deep"), "one row for the folder, however many entries lie under it");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnArchiveThatIsGone_ShowsOnlyTheWayOut_AndDoesNotThrow()
     {
@@ -126,6 +132,7 @@ public class ContentModelFileSystemArchiveTest
         Assert.AreEqual("..", model.Entries.First().DisplayName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheParentRow_IsShownBeforeTheArchiveIsRead()
     {

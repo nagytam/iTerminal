@@ -8,6 +8,7 @@ namespace iConsole.Test.Buffers;
 [TestClass]
 public class BufferTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Buffer()
     {
@@ -18,6 +19,7 @@ public class BufferTest
         Assert.IsTrue(buffer.Layers.Count != 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Write()
     {
@@ -37,6 +39,7 @@ public class BufferTest
         Assert.AreEqual("", lines[3]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WriteWithOffset()
     {
@@ -56,6 +59,7 @@ public class BufferTest
         Assert.AreEqual("", lines[3]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Merge()
     {
@@ -97,6 +101,7 @@ public class BufferTest
         Assert.AreEqual("", lines[3]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Resize_ShouldHandleGrowth()
     {
@@ -131,6 +136,7 @@ public class BufferTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Resize_ShouldHandleShrink()
     {
@@ -160,6 +166,7 @@ public class BufferTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Resize_ShouldClampCursorPosition()
     {
@@ -178,6 +185,7 @@ public class BufferTest
         Assert.IsTrue(buffer.Cursor.CursorPosition!.Y <= 4);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Resize_ShouldPreserveCursorVisibilityWhileClampingCursorPosition()
     {
@@ -193,6 +201,7 @@ public class BufferTest
         Assert.AreEqual(new Position(4, 4), buffer.Cursor.CursorPosition);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Resize_ShouldKeepCursorInsideBoundsAcrossMultipleShrinks()
     {
@@ -209,6 +218,7 @@ public class BufferTest
         Assert.IsTrue(buffer.Cursor.IsCursorVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Resize_WithZeroSize_ShouldNotCrash()
     {
@@ -228,6 +238,7 @@ public class BufferTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Write_WithNegativePosition_ShouldNotCrash()
     {
@@ -248,6 +259,7 @@ public class BufferTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Clear_ShouldResetAllLayers()
     {

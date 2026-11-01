@@ -5,6 +5,7 @@ namespace iConsole.Tasks.Test;
 [TestClass]
 public class GatedStreamTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AWrite_WaitsWhileTheGateIsPaused_AndLandsOnceResumed()
     {
@@ -23,6 +24,7 @@ public class GatedStreamTest
         CollectionAssert.AreEqual(new byte[] { 1, 2, 3 }, inner.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ItCannotBeReadOrSought()
     {

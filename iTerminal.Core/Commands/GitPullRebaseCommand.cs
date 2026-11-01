@@ -24,25 +24,25 @@ public class GitPullRebaseCommand(
     /// <summary>The pull started last. Nothing waits on it; it exists so a test can.</summary>
     public Task PullTask { get; private set; } = Task.CompletedTask;
 
-    private string? Folder
-    {
-        get
-        {
-            IContentModel? model = contentModelService.GetFocusedModel() ?? contentModelService.GetLastContentModel();
-            if (model is null || model.Url.ContainerType != ContainerType.FileSystem)
-            {
-                return null;
-            }
+    private string? Folder => ResolveFolder(contentModelService);
 
-            try
-            {
-                string path = Path.GetFullPath(model.Url.Path);
-                return Directory.Exists(path) && IsInWorkingTree(path) ? path : null;
-            }
-            catch (Exception exception) when (exception is ArgumentException or IOException or NotSupportedException or UnauthorizedAccessException)
-            {
-                return null;
-            }
+    /// <summary>The local folder of the focused (else the last) panel when it is inside a working tree; shared with the sync command.</summary>
+    internal static string? ResolveFolder(IContentModelService contentModelService)
+    {
+        IContentModel? model = contentModelService.GetFocusedModel() ?? contentModelService.GetLastContentModel();
+        if (model is null || model.Url.ContainerType != ContainerType.FileSystem)
+        {
+            return null;
+        }
+
+        try
+        {
+            string path = Path.GetFullPath(model.Url.Path);
+            return Directory.Exists(path) && IsInWorkingTree(path) ? path : null;
+        }
+        catch (Exception exception) when (exception is ArgumentException or IOException or NotSupportedException or UnauthorizedAccessException)
+        {
+            return null;
         }
     }
 
@@ -105,7 +105,7 @@ public class GitPullRebaseCommand(
     }
 
     /// <summary>A toast has room for one line; git's own explanation of a conflict or a missing upstream is the first.</summary>
-    private static string FirstLine(string output)
+    internal static string FirstLine(string output)
     {
         string line = output.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).FirstOrDefault() ?? string.Empty;
         return line.Length == 0 ? "git returned an error." : line;

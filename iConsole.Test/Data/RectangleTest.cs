@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class RectangleTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleConstructorPositionSize()
     {
@@ -17,6 +18,7 @@ public class RectangleTest
         Assert.AreEqual(60, rect.Bottom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleConstructorInt()
     {
@@ -27,6 +29,7 @@ public class RectangleTest
         Assert.AreEqual(60, rect.Bottom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleConstructorUInt()
     {
@@ -37,6 +40,7 @@ public class RectangleTest
         Assert.AreEqual(60, rect.Bottom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleProperties()
     {
@@ -47,6 +51,7 @@ public class RectangleTest
         Assert.AreEqual(25, rect.Bottom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleContains()
     {
@@ -56,6 +61,7 @@ public class RectangleTest
         Assert.IsTrue(rect.Contains(new Position(29, 29)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleNotContains()
     {
@@ -65,6 +71,7 @@ public class RectangleTest
         Assert.IsFalse(rect.Contains(new Position(31, 15)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleCropWithPositionAndSize()
     {
@@ -76,6 +83,7 @@ public class RectangleTest
         Assert.AreEqual(42, r1.Bottom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleCropWithRectangle()
     {
@@ -88,6 +96,7 @@ public class RectangleTest
         Assert.AreEqual(42, r1.Bottom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleCropMethodReturnsNewRectangle()
     {
@@ -99,6 +108,7 @@ public class RectangleTest
         Assert.AreEqual(25, r2.Bottom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleIncludeTopLeft()
     {
@@ -111,6 +121,7 @@ public class RectangleTest
         Assert.AreEqual(60, r1.Bottom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleIncludeBottomRight()
     {
@@ -123,6 +134,7 @@ public class RectangleTest
         Assert.AreEqual(81, r1.Bottom);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RectangleToString()
     {

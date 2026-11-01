@@ -77,6 +77,7 @@ public class StockBrowserDialogTest
                 && IsDrawnWithPrices(dialog),
             "every stock to be quoted, listed and drawn with its price");
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ItListsTheDefaultStocksWithLivePrices()
     {
@@ -99,6 +100,7 @@ public class StockBrowserDialogTest
         dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePricesFollowTheQuotesWithoutAKeyPress()
     {
@@ -113,6 +115,7 @@ public class StockBrowserDialogTest
         dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingStopsTheRefreshing()
     {
@@ -128,6 +131,7 @@ public class StockBrowserDialogTest
         Assert.AreEqual(updated, service.LastUpdated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCursorStockIsDescribedBelowTheList()
     {
@@ -143,6 +147,7 @@ public class StockBrowserDialogTest
         dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RemovingAsksFirstAndOnlyYesRemoves()
     {
@@ -164,6 +169,7 @@ public class StockBrowserDialogTest
         dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASearchThatFailsWithAnUnexpectedError_SaysWhy_NotLeftSearching()
     {
@@ -180,6 +186,7 @@ public class StockBrowserDialogTest
         Assert.IsFalse(dialog.MessageForTest.Contains("Searching"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AddingSearchesAcrossExchangesAndAddsTheChosenHit()
     {
@@ -207,6 +214,7 @@ public class StockBrowserDialogTest
         dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASearchWithNoHitsAddsTheTextAsASymbolOnTheSecondEnter()
     {
@@ -223,6 +231,7 @@ public class StockBrowserDialogTest
         dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASymbolNoOneQuotesIsRefusedInWords()
     {
@@ -240,6 +249,7 @@ public class StockBrowserDialogTest
         dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeLeavesTheAddFlowBeforeItLeavesTheDialog()
     {
@@ -255,6 +265,7 @@ public class StockBrowserDialogTest
         dialog.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyListSaysHowToStart()
     {

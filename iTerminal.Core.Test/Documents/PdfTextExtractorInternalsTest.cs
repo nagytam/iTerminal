@@ -30,6 +30,7 @@ public class PdfTextExtractorInternalsTest
     private static string Text(string content) =>
         PdfTextExtractor.ExtractFromBytes(Pdf(Encoding.Latin1.GetBytes(content), string.Empty)).Text;
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadLiteralString_HandlesEveryEscape()
     {
@@ -46,6 +47,7 @@ public class PdfTextExtractorInternalsTest
         Assert.AreEqual("end", ReadLiteral("(end\\"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadHexString_HandlesOddDigitsNoiseAndUtf16()
     {
@@ -65,6 +67,7 @@ public class PdfTextExtractorInternalsTest
         Assert.AreEqual("A", PdfTextExtractor.ReadHexString("<41", ref index));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentStream_UnderstandsOperatorsOperandsAndNoise()
     {
@@ -94,6 +97,7 @@ public class PdfTextExtractorInternalsTest
         Assert.IsGreaterThan(3, text.Count(c => c == '\n'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AWordSpaceAdjustment_IsNotDoubledOnAnExistingSpace()
     {
@@ -103,6 +107,7 @@ public class PdfTextExtractorInternalsTest
         Assert.IsFalse(text.Contains("a  b"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UndoPngPredictor_ReversesEveryRowFilter()
     {
@@ -121,6 +126,7 @@ public class PdfTextExtractorInternalsTest
         CollectionAssert.AreEqual(new byte[] { 10, 20, 5, 10, 6, 11, 7, 13, 8, 14 }, decoded);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UndoPngPredictor_WithTooLittleData_ReturnsItUnchanged()
     {
@@ -129,6 +135,7 @@ public class PdfTextExtractorInternalsTest
         Assert.AreSame(data, PdfTextExtractor.UndoPngPredictor(data, columns: 5, colors: 1, bitsPerComponent: 8));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FlateStream_WithPredictor_IsUndoneBeforeReading()
     {
@@ -146,6 +153,7 @@ public class PdfTextExtractorInternalsTest
         StringAssert.Contains(PdfTextExtractor.ExtractFromBytes(pdf).Text, "predicted words");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FlateStream_RawDeflateAndLeadingWhitespace_AreStillInflated()
     {
@@ -169,6 +177,7 @@ public class PdfTextExtractorInternalsTest
         StringAssert.Contains(PdfTextExtractor.ExtractFromBytes(Pdf(padded, "/Filter /FlateDecode")).Text, "padded");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UndecodableAndUnsupportedStreams_YieldNoText()
     {
@@ -181,6 +190,7 @@ public class PdfTextExtractorInternalsTest
         Assert.AreNotEqual(DocumentExtractionStatus.Extracted, whitespaceOnly.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Extract_MissingFile_FailsWithAReason_AndCancellationPropagates()
     {
@@ -197,6 +207,7 @@ public class PdfTextExtractorInternalsTest
         CollectionAssert.AreEqual(new[] { ".pdf" }, extractor.Extensions.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindInfoValue_SkipsLookalikeNamesAndEmptyValues()
     {
@@ -208,6 +219,7 @@ public class PdfTextExtractorInternalsTest
         Assert.AreEqual(512, PdfTextExtractor.FindInfoValue("/Title (" + new string('x', 600) + ")", "Title").Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CountPages_CountsPageObjectsNotTreeNodes()
     {

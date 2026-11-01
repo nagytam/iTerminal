@@ -41,6 +41,7 @@ public class TextInputRenderTest
         });
 
     #region TextBox — caption
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_Label_IsFollowedByAColonAndTheWell()
     {
@@ -49,6 +50,7 @@ public class TextInputRenderTest
         Assert.AreEqual("Name: [readme.md  ]", screen.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_LabelEndingInAColon_KeepsItsOwnColon()
     {
@@ -58,6 +60,7 @@ public class TextInputRenderTest
         Assert.IsFalse(screen.Contains(": :"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_WithoutLabel_StartsWithTheWell()
     {
@@ -66,6 +69,7 @@ public class TextInputRenderTest
         Assert.AreEqual("[commit message   ]", screen.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_FormatLabelPrefix()
     {
@@ -76,6 +80,7 @@ public class TextInputRenderTest
         Assert.AreEqual("Name: ", TextBox.FormatLabelPrefix("Name:  "));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_EditableWidth_IsTheWellInterior()
     {
@@ -89,6 +94,7 @@ public class TextInputRenderTest
     #endregion
 
     #region TextBox — colours
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_Normal_CaptionInForeground_WellInFieldColours()
     {
@@ -98,6 +104,7 @@ public class TextInputRenderTest
         screen.AssertColors(6, 0, 13, WellForeground, WellBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_Focused_HighlightsTheCaption()
     {
@@ -110,6 +117,7 @@ public class TextInputRenderTest
         screen.AssertColors(6, 0, 13, WellForeground, WellBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_ReadOnly_DimsTheCaptionAndTheWell()
     {
@@ -122,6 +130,7 @@ public class TextInputRenderTest
         screen.AssertColors(6, 0, 13, WellForeground, ReadOnlyWellBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_Invalid_DrawsTheWellInTheErrorColour()
     {
@@ -133,6 +142,7 @@ public class TextInputRenderTest
         screen.AssertColors("[abc", WellForeground, Scheme.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_HotKey_IsPickedOutInTheCaption()
     {
@@ -145,6 +155,7 @@ public class TextInputRenderTest
         Assert.AreEqual(Scheme.Foreground, screen.ForegroundAt(1, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_PaintsItsWholeWidth_InTheCaptionBackground()
     {
@@ -157,6 +168,7 @@ public class TextInputRenderTest
     #endregion
 
     #region TextBox — cursor and scrolling
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_Cursor_SitsAfterTheText()
     {
@@ -171,6 +183,7 @@ public class TextInputRenderTest
         Assert.AreEqual(new Position(10, 0), textBox.CursorPosition);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_Typing_ShowsWhatWasTyped()
     {
@@ -183,6 +196,7 @@ public class TextInputRenderTest
         Assert.AreEqual("Name: [hello      ]", ScreenBuffer.Render(textBox, 20, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_TypingPastTheWell_ScrollsAndShowsTheLatestCharacters()
     {
@@ -199,6 +213,7 @@ public class TextInputRenderTest
         Assert.IsTrue(textBox.CursorPosition.X < 20);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_ValueLongerThanTheWell_ShowsTheOpenRightEdge()
     {
@@ -212,6 +227,7 @@ public class TextInputRenderTest
         Assert.AreEqual("Name: [abcdefghijk>", screen.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_Completion_IsGreyedAfterTheTypedText()
     {
@@ -228,6 +244,7 @@ public class TextInputRenderTest
         screen.AssertColors("ngary", Color.Gray, WellBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_LongValueWithACompletion_KeepsTheClosingBracket()
     {
@@ -253,6 +270,7 @@ public class TextInputRenderTest
             ViewSize = new Size(24, 1),
         };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PasswordBox_MasksEveryCharacter_AndNeverDrawsTheValue()
     {
@@ -262,6 +280,7 @@ public class TextInputRenderTest
         Assert.IsFalse(screen.Contains("hunter2"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PasswordBox_NeverDrawsACompletionInClear()
     {
@@ -280,6 +299,7 @@ public class TextInputRenderTest
         Assert.IsFalse(screen.Contains("secret"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PasswordBox_CursorFollowsTheMask()
     {
@@ -292,6 +312,7 @@ public class TextInputRenderTest
         Assert.AreEqual(new Position(14, 0), passwordBox.CursorPosition);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PasswordBox_UsesTheTextBoxCaptionAndWellColours()
     {
@@ -313,6 +334,7 @@ public class TextInputRenderTest
             ViewSize = new Size(20, 1),
         };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SearchBox_DrawsItsPrefixWithoutAColon()
     {
@@ -321,6 +343,7 @@ public class TextInputRenderTest
         Assert.AreEqual("/ [todo           ]", screen.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SearchBox_PrefixIsAlwaysInTheAccentColour()
     {
@@ -330,6 +353,7 @@ public class TextInputRenderTest
         screen.AssertColors("[todo", WellForeground, WellBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SearchBox_CustomPrefix()
     {
@@ -339,6 +363,7 @@ public class TextInputRenderTest
         Assert.AreEqual("Find [x           ]", ScreenBuffer.Render(searchBox, 20, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchBox_Escape_ClearsTheWell()
     {
@@ -360,6 +385,7 @@ public class TextInputRenderTest
         return comboBox;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ComboBox_ShowsTheSelectionInAWellWithADropDownGlyph()
     {
@@ -368,6 +394,7 @@ public class TextInputRenderTest
         Assert.AreEqual("Sort: [Name       ]▾", screen.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ComboBox_LongSelection_IsCutToTheWell()
     {
@@ -377,6 +404,7 @@ public class TextInputRenderTest
         Assert.AreEqual("Order by: [Date mo]▾", ScreenBuffer.Render(comboBox, 20, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ComboBox_Colours_ForNormalFocusedAndReadOnly()
     {
@@ -398,6 +426,7 @@ public class TextInputRenderTest
         readOnly.AssertColors("[Name", WellForeground, ReadOnlyWellBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComboBox_DownArrow_RedrawsTheNextItem()
     {
@@ -409,6 +438,7 @@ public class TextInputRenderTest
         Assert.AreEqual("Sort: [Size       ]▾", ScreenBuffer.Render(comboBox, 20, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ComboBox_Empty_DrawsAnEmptyWell()
     {
@@ -428,6 +458,7 @@ public class TextInputRenderTest
         ViewSize = new Size(16, 1),
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumericUpDown_RightAlignsTheValueToTheWidestBound()
     {
@@ -436,6 +467,7 @@ public class TextInputRenderTest
         Assert.AreEqual("Count: [100]↑↓", ScreenBuffer.Render(CreateNumeric("Count", 100), 16, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumericUpDown_Arrows_TakeTheFocusColourWhenFocused()
     {
@@ -446,6 +478,7 @@ public class TextInputRenderTest
         ScreenBuffer.Render(focused, 16, 1).AssertColors("↑↓", Scheme.SelectedFocusedForeground, Scheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumericUpDown_ReadOnly_DimsTheArrowsAndTheWell()
     {
@@ -458,6 +491,7 @@ public class TextInputRenderTest
         screen.AssertColors("[ 42]", WellForeground, ReadOnlyWellBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_UpArrow_RedrawsTheIncrementedValue()
     {
@@ -469,6 +503,7 @@ public class TextInputRenderTest
         Assert.AreEqual("[ 43]↑↓", ScreenBuffer.Render(numeric, 16, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumericUpDown_PaintsItsWholeWidth()
     {

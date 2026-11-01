@@ -10,6 +10,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class FileToTextConverterServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithNullUrl_ClearsLines()
     {
@@ -23,6 +24,7 @@ public class FileToTextConverterServiceTest
         Assert.AreEqual(0, textModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithNonExistentFile_ClearsLines()
     {
@@ -38,6 +40,7 @@ public class FileToTextConverterServiceTest
         Assert.AreEqual(0, textModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithTextFile_ReadsContent()
     {
@@ -62,6 +65,7 @@ public class FileToTextConverterServiceTest
         Assert.IsTrue(textModel.Lines.Contains("Line 3"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithEmptyFile_ReadsEmptyContent()
     {
@@ -83,6 +87,7 @@ public class FileToTextConverterServiceTest
         Assert.AreEqual(string.Empty, textModel.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_ClearsExistingLines()
     {
@@ -107,6 +112,7 @@ public class FileToTextConverterServiceTest
         Assert.IsFalse(textModel.Lines.Contains("old line 2"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithUtf8File_DetectsEncoding()
     {
@@ -128,6 +134,7 @@ public class FileToTextConverterServiceTest
         Assert.IsNotNull(textModel.Encoding);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithNullContentMemoryFile_HandlesGracefully()
     {
@@ -148,6 +155,7 @@ public class FileToTextConverterServiceTest
         Assert.AreEqual(0, textModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithNullMemoryFile_HandlesGracefully()
     {
@@ -166,6 +174,7 @@ public class FileToTextConverterServiceTest
 
     // ── HTML extraction ──────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithHtmlFile_ExtractsVisibleText()
     {
@@ -187,6 +196,7 @@ public class FileToTextConverterServiceTest
         Assert.IsTrue(joined.Contains("World"), "Expected 'World' in extracted text");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithHtmlFile_StripsScriptContent()
     {
@@ -208,6 +218,7 @@ public class FileToTextConverterServiceTest
         Assert.IsFalse(joined.Contains("secret"), "Expected script content to be stripped");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithHtmlFile_StripsStyleContent()
     {
@@ -229,6 +240,7 @@ public class FileToTextConverterServiceTest
         Assert.IsFalse(joined.Contains("color"), "Expected style content to be stripped");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithHtmExtension_ExtractsVisibleText()
     {
@@ -249,6 +261,7 @@ public class FileToTextConverterServiceTest
         Assert.IsTrue(joined.Contains("HTM content"), "Expected 'HTM content' in extracted text");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithHtmlFile_DecodesHtmlEntities()
     {
@@ -269,6 +282,7 @@ public class FileToTextConverterServiceTest
         Assert.IsTrue(joined.Contains("Hello & World"), "Expected decoded entities in output");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_WithHtmlFile_SkipsBlankLines()
     {

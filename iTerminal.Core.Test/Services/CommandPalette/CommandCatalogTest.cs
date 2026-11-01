@@ -39,6 +39,7 @@ public class CommandCatalogTest
 
     private static string[] Titles(IEnumerable<PaletteEntry> entries) => [.. entries.Select(e => e.Title)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HiddenControlsCountButCursorKeysAndCommandsThatCannotRunDoNot()
     {
@@ -62,6 +63,7 @@ public class CommandCatalogTest
         CollectionAssert.AreEquivalent(new[] { "Calculator", "Mark", "Mark down", "Packages" }, Titles(entries));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OfTwoCommandsOnOneKeyOnlyTheOneThatTakesItIsListed()
     {
@@ -75,6 +77,7 @@ public class CommandCatalogTest
         CollectionAssert.AreEqual(new[] { "View" }, Titles(CommandCatalog.Collect(root)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSameCommandInTwoPlacesIsListedOnce()
     {
@@ -86,6 +89,7 @@ public class CommandCatalogTest
         Assert.AreEqual(1, CommandCatalog.Collect(root).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADescriptionThatRepeatsTheTitleIsDropped()
     {
@@ -111,6 +115,7 @@ public class CommandCatalogTest
         new(new TestCommand("Find files", null), "Find files", "F7", "Search by name; copy hits."),
     ];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryWordMustMatchSomewhereAndTitlesThatStartWithTheQueryLead()
     {
@@ -121,6 +126,7 @@ public class CommandCatalogTest
         Assert.AreEqual(0, CommandCatalog.Filter(Sample, "nothing like this").Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithNoQueryTheCommandsRunLastComeFirst()
     {
@@ -129,6 +135,7 @@ public class CommandCatalogTest
         CollectionAssert.AreEqual(new[] { "Find files", "Copy", "Calculator", "Compress", "Unit Converter" }, Titles(ordered));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LettersThatAppearInOrderInATitleFindItAfterTheSubstringMatches()
     {

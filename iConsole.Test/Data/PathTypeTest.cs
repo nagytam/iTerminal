@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class PathTypeTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void PathType_Empty_HasValue()
     {
@@ -12,6 +13,7 @@ public class PathTypeTest
         Assert.AreEqual(0, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathType_Folder_HasValue()
     {
@@ -19,6 +21,7 @@ public class PathTypeTest
         Assert.IsTrue((int)type > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathType_File_HasValue()
     {
@@ -26,6 +29,7 @@ public class PathTypeTest
         Assert.IsTrue((int)type > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathType_Link_HasValue()
     {
@@ -33,6 +37,7 @@ public class PathTypeTest
         Assert.IsTrue((int)type > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathType_AllValuesAreUnique()
     {
@@ -48,6 +53,7 @@ public class PathTypeTest
         Assert.AreEqual(types.Length, distinctTypes.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathType_CanConvertToString()
     {

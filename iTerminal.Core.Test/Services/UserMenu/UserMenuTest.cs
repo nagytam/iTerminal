@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Services.UserMenu;
 [TestClass]
 public class UserMenuTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Parse_ReadsKeysTitlesScriptsAndPatterns()
     {
@@ -29,6 +30,7 @@ public class UserMenuTest
         Assert.IsFalse(items[1].AppliesTo("main.txt"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expand_QuotesNamesAndKnowsTheMarks()
     {
@@ -43,6 +45,7 @@ public class UserMenuTest
         Assert.AreEqual(quoted, UserMenuMacros.Expand("%s", context with { MarkedFiles = [] }));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetItems_WritesTheDefaultMenuTheFirstTime()
     {

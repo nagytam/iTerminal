@@ -11,6 +11,7 @@ namespace iTerminal.Core.Controls.Test;
 [TestClass]
 public class FolderOrNewFileTextBoxTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void IsValidatedByTheFolderOrNewFileRule()
     {

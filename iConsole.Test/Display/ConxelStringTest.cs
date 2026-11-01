@@ -5,6 +5,7 @@ namespace iConsole.Test.Display;
 [TestClass]
 public class ConxelStringTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringConstructorEmpty()
     {
@@ -13,6 +14,7 @@ public class ConxelStringTest
         Assert.IsFalse(conxelString.Any());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringConstructorWithCharacter()
     {
@@ -21,6 +23,7 @@ public class ConxelStringTest
         Assert.AreEqual('A', conxelString[0].Char);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringConstructorWithString()
     {
@@ -29,6 +32,7 @@ public class ConxelStringTest
         Assert.AreEqual("Hello", conxelString.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringConstructorWithConxels()
     {
@@ -42,6 +46,7 @@ public class ConxelStringTest
         Assert.AreEqual("Hi", conxelString.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringAppendConxel()
     {
@@ -52,6 +57,7 @@ public class ConxelStringTest
         Assert.AreEqual('A', conxelString[0].Char);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringAppendCharacter()
     {
@@ -61,6 +67,7 @@ public class ConxelStringTest
         Assert.AreEqual('A', conxelString[0].Char);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringAppendCharacter_PreservesFormattingFlags()
     {
@@ -78,6 +85,7 @@ public class ConxelStringTest
         Assert.AreEqual(Color.Blue, conxelString[0].BackgroundColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringAppendString()
     {
@@ -87,6 +95,7 @@ public class ConxelStringTest
         Assert.AreEqual("Hello", conxelString.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringAppendConxelString()
     {
@@ -97,6 +106,7 @@ public class ConxelStringTest
         Assert.AreEqual("Hello World", conxelString1.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringAppendNull()
     {
@@ -106,6 +116,7 @@ public class ConxelStringTest
         Assert.AreEqual("Hello", conxelString.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringExpand()
     {
@@ -115,6 +126,7 @@ public class ConxelStringTest
         Assert.AreEqual("Hi   ", conxelString.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringExpandWithFormatting()
     {
@@ -125,6 +137,7 @@ public class ConxelStringTest
         Assert.AreEqual(Color.Blue, conxelString[2].BackgroundColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringHighlightRange()
     {
@@ -137,6 +150,7 @@ public class ConxelStringTest
         Assert.AreEqual(Color.White, conxelString[4].ForegroundColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringEnumerate()
     {
@@ -149,6 +163,7 @@ public class ConxelStringTest
         Assert.AreEqual(3, count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringIndexer()
     {
@@ -158,6 +173,7 @@ public class ConxelStringTest
         Assert.AreEqual('C', conxelString[2].Char);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringText()
     {
@@ -165,6 +181,7 @@ public class ConxelStringTest
         Assert.AreEqual("TestString", conxelString.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringWithFormatting()
     {
@@ -173,6 +190,7 @@ public class ConxelStringTest
         Assert.IsFalse(conxelString[0].IsItalic);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringEmpty()
     {
@@ -182,6 +200,7 @@ public class ConxelStringTest
         Assert.IsTrue(conxelString.Any());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringAppendString_PreservesFormattingFlags()
     {
@@ -198,6 +217,7 @@ public class ConxelStringTest
         Assert.AreEqual(Color.Blue, conxelString[0].BackgroundColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConxelStringAppendString_AppendsToExistingContent()
     {

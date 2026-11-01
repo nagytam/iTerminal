@@ -23,6 +23,7 @@ public class TerminalDialogTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTitleNamesTheLastCommand()
     {
@@ -33,6 +34,7 @@ public class TerminalDialogTest
         Assert.AreEqual("Terminal - dir /s", dialog.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoHistoryTheTitleIsPlain()
     {
@@ -43,6 +45,7 @@ public class TerminalDialogTest
         Assert.AreEqual("Terminal", dialog.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HasTheFourPagesInOrder()
     {
@@ -54,6 +57,7 @@ public class TerminalDialogTest
             dialog.TabForTest.TabPages.Select(p => p.Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePageKeysAreShown()
     {
@@ -63,6 +67,7 @@ public class TerminalDialogTest
         AssertScreenContains(Render(dialog), "Ctrl+1..4");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheOutputPageShowsTheOutput()
     {
@@ -72,6 +77,7 @@ public class TerminalDialogTest
         AssertScreenContains(Render(dialog), "hello world");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BeforeAnyCommandThePageSaysSoRatherThanStayingBlank()
     {
@@ -81,6 +87,7 @@ public class TerminalDialogTest
         AssertScreenContains(Render(dialog), "No terminal command has been run yet.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {

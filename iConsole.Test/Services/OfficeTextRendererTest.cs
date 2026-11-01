@@ -26,6 +26,7 @@ public class OfficeTextRendererTest
         try { Directory.Delete(_directory, true); } catch { /* best effort */ }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColumnNames_RoundTrip()
     {
@@ -36,6 +37,7 @@ public class OfficeTextRendererTest
         Assert.AreEqual(0, OfficeTextRenderer.ColumnIndex("A1"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OpenDocumentText_RendersHeadingsBulletsAndTables()
     {
@@ -79,6 +81,7 @@ public class OfficeTextRendererTest
         Assert.IsTrue(lines.Any(l => l.Contains("│ Apple") && l.Contains("3")), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OpenDocumentText_DamagedFile_ReportsInsteadOfThrowing()
     {
@@ -90,6 +93,7 @@ public class OfficeTextRendererTest
         Assert.IsTrue(lines.Single().StartsWith("[Could not read the document"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Word_RendersHeadingsBulletsAndTables()
     {
@@ -132,6 +136,7 @@ public class OfficeTextRendererTest
         Assert.IsTrue(lines.Any(l => l.Contains("│ Apple") && l.Contains("3")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Spreadsheet_RendersGridWithDatesBooleansAndGaps()
     {
@@ -182,6 +187,7 @@ public class OfficeTextRendererTest
         Assert.IsTrue(lines.Any(l => l.StartsWith("│ 5 ")), all);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Presentation_RendersTitleBulletsAndNotes()
     {
@@ -219,6 +225,7 @@ public class OfficeTextRendererTest
         Assert.IsFalse(all.Contains("• Quarterly review"), "the title is the heading, not a bullet");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DamagedFile_ReportsInsteadOfThrowing()
     {

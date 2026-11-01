@@ -12,6 +12,7 @@ public class ContextMenuAndDiffTest
     [TestCleanup]
     public async Task StopAsync() => await _app.DisposeAsync();
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task RightClickOnAFileOffersWhatCanBeDoneWithIt()
     {
@@ -32,6 +33,7 @@ public class ContextMenuAndDiffTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ChoosingAnItemInTheMenuRunsThatCommandOnTheRow()
     {
@@ -47,6 +49,7 @@ public class ContextMenuAndDiffTest
         await _app.WaitForTextAsync("readme.txt");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task RightClickOnTheParentRowOffersNothing()
     {
@@ -60,6 +63,7 @@ public class ContextMenuAndDiffTest
         Assert.IsFalse((await _app.WaitForTextAsync("..")).Contains("Checksums"));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlF10ComparesTwoMarkedFiles()
     {
@@ -84,6 +88,7 @@ public class ContextMenuAndDiffTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlF10ComparesTheCursorFilesOfBothPanels()
     {

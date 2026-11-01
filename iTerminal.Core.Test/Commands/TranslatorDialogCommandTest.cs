@@ -16,6 +16,7 @@ public class TranslatorDialogCommandTest
     private static TranslatorDialog CreateDialog() =>
         new(Mock.Of<ITranslationService>(), Mock.Of<ISettingsService>(), Options.Create(new TranslationOptions()), TestTheme());
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ItIsOnCtrlShiftF4()
     {
@@ -27,12 +28,14 @@ public class TranslatorDialogCommandTest
         Assert.IsFalse(command.Key.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoControlAttachedItDoesNothing()
     {
         await new TranslatorDialogCommand(CreateDialog()).ExecuteAsync(null);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithAControlAttachedItOpensTheDialog()
     {

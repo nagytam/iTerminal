@@ -23,6 +23,7 @@ public class FolderSelectorTest
     private static int FocusedPageIndex(FolderSelectorDialog dialog) =>
         dialog.TabPages.ToList().FindIndex(page => page.IsFocused);
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlDownAndCtrlUp_MoveBetweenPages()
     {
@@ -42,6 +43,7 @@ public class FolderSelectorTest
         await _app.WaitUntilAsync(() => FocusedPageIndex(dialog) == 0, "Ctrl+Up to return to the Favourites page");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlUpAndCtrlDown_AreNotSwallowedByThePageList()
     {

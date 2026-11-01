@@ -31,6 +31,7 @@ public class DialogTitlesLanguageTest
     private static string[] Placeholders(string text) =>
         [.. Regex.Matches(text, @"\{(\d+)\}").Select(m => m.Groups[1].Value).Distinct().Order()];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryTitle_AndKeepsItsPlaceholders()
     {
@@ -52,6 +53,7 @@ public class DialogTitlesLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFormattedTitles_FillTheirPlaceholders_InEveryLanguage()
     {

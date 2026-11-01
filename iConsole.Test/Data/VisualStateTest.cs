@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class VisualStateTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void VisualState_Normal_HasValue()
     {
@@ -12,6 +13,7 @@ public class VisualStateTest
         Assert.AreEqual(0, (int)state);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VisualState_Focused_HasValue()
     {
@@ -19,6 +21,7 @@ public class VisualStateTest
         Assert.IsTrue((int)state > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VisualState_Selected_HasValue()
     {
@@ -26,6 +29,7 @@ public class VisualStateTest
         Assert.IsTrue((int)state > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VisualState_Disabled_HasValue()
     {
@@ -33,6 +37,7 @@ public class VisualStateTest
         Assert.IsTrue((int)state > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VisualState_SelectedDisabled_HasValue()
     {
@@ -40,6 +45,7 @@ public class VisualStateTest
         Assert.IsTrue((int)state > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VisualState_AllValuesAreUnique()
     {

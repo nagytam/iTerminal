@@ -29,6 +29,7 @@ public class FormatDriveDialogTest
         return (dialog, drives, notifications);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AWrongLetter_IsRefusedAndNothingIsFormatted()
     {
@@ -44,6 +45,7 @@ public class FormatDriveDialogTest
         drives.Verify(d => d.FormatAsync(It.IsAny<string>(), It.IsAny<DriveFormatOptions>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheLetterTypedBack_WithAColonOrSlash_IsAccepted()
     {
@@ -59,6 +61,7 @@ public class FormatDriveDialogTest
         notifications.Verify(n => n.Notify("Format", "Formatted D:", NotificationSeverity.Success), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedFormat_StaysInTheDialogInWords()
     {
@@ -75,6 +78,7 @@ public class FormatDriveDialogTest
         StringAssert.Contains(dialog.Error, "The volume is in use.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANonLetteredRoot_IsRefusedInWords()
     {
@@ -89,6 +93,7 @@ public class FormatDriveDialogTest
         drives.Verify(d => d.FormatAsync(It.IsAny<string>(), It.IsAny<DriveFormatOptions>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFormatAlreadyRunning_RefusesASecondOneAndSaysSo()
     {
@@ -109,6 +114,7 @@ public class FormatDriveDialogTest
         Assert.IsFalse(await first);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Load_AnUnknownFileSystem_FallsBackToNtfs()
     {

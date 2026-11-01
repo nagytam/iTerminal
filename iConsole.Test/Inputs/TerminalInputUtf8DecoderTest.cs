@@ -7,6 +7,7 @@ namespace iConsole.Test.Inputs;
 [TestClass]
 public class TerminalInputUtf8DecoderTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_ParsesSgrLeftPress()
     {
@@ -22,6 +23,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.IsFalse(m.IsRelease);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_ParsesSgrRelease()
     {
@@ -34,6 +36,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.IsFalse(m.LeftClicked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_ParsesArrowUp()
     {
@@ -45,6 +48,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.AreEqual(ConsoleKey.UpArrow, k!.ConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_ParsesWheelUp()
     {
@@ -57,6 +61,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.IsFalse(m.LeftClicked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_MotionWithLeftHeld_DoesNotSetLeftClicked()
     {
@@ -68,6 +73,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.IsFalse(m!.LeftClicked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_ParsesCsiPageUp()
     {
@@ -80,6 +86,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.IsFalse(k.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_ParsesCsiCtrlPageUp_xtermStyleModifier()
     {
@@ -94,6 +101,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.IsFalse(k.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("\x1b[11~", ConsoleKey.F1)]
     [DataRow("\x1b[12~", ConsoleKey.F2)]
@@ -120,6 +128,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.IsFalse(k.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow((byte)'P', ConsoleKey.F1)]
     [DataRow((byte)'Q', ConsoleKey.F2)]
@@ -140,6 +149,7 @@ public class TerminalInputUtf8DecoderTest
     // "\x1b[1;5C", Ctrl+F1 is "\x1b[1;5P". Before this coverage existed, TryParseCsiKey had no
     // branch for this shape at all, so every Ctrl/Shift/Alt+arrow and Ctrl/Shift/Alt+F1-F4 chord
     // was silently discarded on Linux.
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("\x1b[1;5C", ConsoleKey.RightArrow)]
     [DataRow("\x1b[1;5D", ConsoleKey.LeftArrow)]
@@ -166,6 +176,7 @@ public class TerminalInputUtf8DecoderTest
 
     // Terminals that do not send "CSI 1 ; 5 <letter>" for Ctrl+arrow: rxvt sends the lower-case
     // letters in SS3 form, and some send the modifier as a digit inside it ("ESC O 5 A").
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("\x1bOa", ConsoleKey.UpArrow)]
     [DataRow("\x1bOb", ConsoleKey.DownArrow)]
@@ -188,6 +199,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.IsFalse(keys[0].Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_WaitsForTheLetterOfAnSs3ModifierDigit()
     {
@@ -203,6 +215,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.AreEqual(ConsoleKey.UpArrow, keys[0].ConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Drain_ParsesShiftAltModifiedCsiLetterKey()
     {
@@ -217,6 +230,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.IsFalse(k.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrainStandaloneEscape_EmitsEscapeWhenOnlyByteIs0x1b()
     {
@@ -234,6 +248,7 @@ public class TerminalInputUtf8DecoderTest
         Assert.IsFalse(k.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrainStandaloneEscape_DoesNotEmitWhenBufferIsEmpty()
     {
@@ -241,6 +256,7 @@ public class TerminalInputUtf8DecoderTest
         d.DrainStandaloneEscape(_ => Assert.Fail("Should not emit when buffer is empty"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrainStandaloneEscape_DoesNotEmitWhenMoreBytesFollow()
     {

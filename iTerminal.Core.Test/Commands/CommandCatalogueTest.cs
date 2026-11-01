@@ -77,12 +77,14 @@ public class CommandCatalogueTest
         return commands;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCatalogue_CoversAGoodShareOfTheCommands()
     {
         Assert.IsTrue(Build().Count >= 40, "too few commands could be built to check");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryCommand_HasATitleAndADescription()
     {
@@ -93,6 +95,7 @@ public class CommandCatalogueTest
         Assert.AreEqual(0, missing.Count, string.Join(", ", missing));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACommandWithAKey_ShowsItAsText()
     {

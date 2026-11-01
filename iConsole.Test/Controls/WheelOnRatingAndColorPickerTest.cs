@@ -19,6 +19,7 @@ public class WheelOnRatingAndColorPickerTest
 
     private static MouseEvent Wheel(long x, long y, int delta) => new() { Position = new Position(x, y), WheelDelta = delta };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rating_WheelUpAddsAStar_DownTakesOneAway_AndItStopsAtTheEnds()
     {
@@ -41,6 +42,7 @@ public class WheelOnRatingAndColorPickerTest
         Assert.AreEqual(0, rating.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rating_ReadOnlyOrDisabledOrElsewhere_IgnoresTheWheel()
     {
@@ -57,6 +59,7 @@ public class WheelOnRatingAndColorPickerTest
         Assert.AreEqual(2, plain.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_TheWheelMovesTheCursorARow_WithoutChoosing()
     {
@@ -74,6 +77,7 @@ public class WheelOnRatingAndColorPickerTest
         Assert.IsTrue(picker.CursorIndex <= start, "it stops at the top row");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_ReadOnlyOrAwayFromIt_IgnoresTheWheel()
     {

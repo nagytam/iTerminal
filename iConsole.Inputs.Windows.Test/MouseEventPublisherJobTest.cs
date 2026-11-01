@@ -6,6 +6,7 @@ namespace iConsole.Inputs.Windows.Test;
 [TestClass]
 public class MouseEventPublisherJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_LeftButtonPress_SetsLeftClicked()
     {
@@ -26,6 +27,7 @@ public class MouseEventPublisherJobTest
         Assert.AreEqual(0, mouseEvent.WheelDelta);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_ButtonRelease_SetsIsRelease()
     {
@@ -43,6 +45,7 @@ public class MouseEventPublisherJobTest
         Assert.IsFalse(mouseEvent.RightClicked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_WheelUp_SetsWheelDelta()
     {
@@ -60,6 +63,7 @@ public class MouseEventPublisherJobTest
         Assert.IsFalse(mouseEvent.IsRelease);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_MouseMoveWithLeftHeld_DoesNotSetLeftClicked()
     {
@@ -78,6 +82,7 @@ public class MouseEventPublisherJobTest
         Assert.AreEqual(0, mouseEvent.WheelDelta);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_RightButtonPress_SetsRightClicked()
     {
@@ -95,6 +100,7 @@ public class MouseEventPublisherJobTest
         Assert.IsFalse(mouseEvent.IsRelease);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_WheelDown_SetNegativeWheelDelta()
     {
@@ -110,6 +116,7 @@ public class MouseEventPublisherJobTest
         Assert.AreEqual(-1, mouseEvent.WheelDelta);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_ZeroWheelDelta_ReturnsZero()
     {
@@ -125,6 +132,7 @@ public class MouseEventPublisherJobTest
         Assert.AreEqual(0, mouseEvent.WheelDelta);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_DoubleClick_SetsLeftClicked()
     {
@@ -141,6 +149,7 @@ public class MouseEventPublisherJobTest
         Assert.IsFalse(mouseEvent.IsRelease);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow((ushort)0x70, ConsoleKey.F1)]
     [DataRow((ushort)0x71, ConsoleKey.F2)]
@@ -185,6 +194,7 @@ public class MouseEventPublisherJobTest
         // We're testing the logic that would occur when processing a KEY_EVENT
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow((ushort)0x10, ConsoleKey.None)] // SHIFT
     [DataRow((ushort)0x11, ConsoleKey.None)] // CONTROL
@@ -198,6 +208,7 @@ public class MouseEventPublisherJobTest
         Assert.AreEqual(ConsoleKey.None, expectedKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_RightButtonWithMotion_DoesNotSetRightClicked()
     {
@@ -215,6 +226,7 @@ public class MouseEventPublisherJobTest
         Assert.IsFalse(mouseEvent.IsRelease);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_MotionEvent_DoesNotSetClickFlags()
     {
@@ -235,6 +247,7 @@ public class MouseEventPublisherJobTest
         Assert.AreEqual(30, mouseEvent.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_HorizontalWheel_DoesNotSetWheelDelta()
     {
@@ -250,6 +263,7 @@ public class MouseEventPublisherJobTest
         Assert.AreEqual(0, mouseEvent.WheelDelta);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MapMouseEvent_BothWheelAndHorizontalWheel_VerticalWheelTakePrecedence()
     {
@@ -268,6 +282,7 @@ public class MouseEventPublisherJobTest
         Assert.AreEqual(0, mouseEvent.WheelDelta);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(KEY_EVENT_RECORD.SHIFT_PRESSED, true, false, false)]
     [DataRow(KEY_EVENT_RECORD.LEFT_CTRL_PRESSED, false, false, true)]
@@ -296,6 +311,7 @@ public class MouseEventPublisherJobTest
         // These tests document the expected behavior of control key state interpretation
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateKeyEvent_OnlyModifierKeyWithNoAsciiChar_CreatesKeyEvent()
     {
@@ -313,6 +329,7 @@ public class MouseEventPublisherJobTest
 
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateKeyEvent_KeyDown_IncludesEvent()
     {
@@ -331,6 +348,7 @@ public class MouseEventPublisherJobTest
         Assert.IsTrue(record.KeyEvent.bKeyDown);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateKeyEvent_KeyUp_IncludesEvent()
     {
@@ -349,6 +367,7 @@ public class MouseEventPublisherJobTest
         Assert.IsFalse(record.KeyEvent.bKeyDown);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow('a')]
     [DataRow('A')]
@@ -371,6 +390,7 @@ public class MouseEventPublisherJobTest
         Assert.AreEqual((byte)asciiChar, record.KeyEvent.AsciiChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateKeyEvent_LeftCtrlAndAltPressed_BothFlagsSet()
     {

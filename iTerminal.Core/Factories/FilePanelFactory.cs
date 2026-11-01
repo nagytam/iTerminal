@@ -31,6 +31,9 @@ public class FilePanelFactory(
     iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
     iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
     iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? imageFileViewerDialog = null,
+    XmlViewerDialog? xmlViewerDialog = null,
+    JsonViewerDialog? jsonViewerDialog = null,
+    CsvViewerDialog? csvViewerDialog = null,
     MarkPatternDialog? markPatternDialog = null,
     MarkPatternDialog? unmarkPatternDialog = null,
     CompressDialog? compressDialog = null,
@@ -52,6 +55,7 @@ public class FilePanelFactory(
     INotificationService? notificationService = null,
     EditLinkDialog? editLinkDialog = null,
     iTerminal.Core.Services.Git.IGitService? gitService = null,
+    Func<iTerminal.Core.Dialogs.Web.WebBrowserDialog>? webBrowserDialogFactory = null,
     PrintDialog? printDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
@@ -76,6 +80,9 @@ public class FilePanelFactory(
             musicFileViewerDialog: musicFileViewerDialog,
             videoFileViewerDialog: videoFileViewerDialog,
             imageFileViewerDialog: imageFileViewerDialog,
+            xmlViewerDialog: xmlViewerDialog,
+            jsonViewerDialog: jsonViewerDialog,
+            csvViewerDialog: csvViewerDialog,
             markPatternDialog: markPatternDialog,
             unmarkPatternDialog: unmarkPatternDialog,
             compressDialog: compressDialog,
@@ -99,7 +106,9 @@ public class FilePanelFactory(
             notificationService: notificationService,
             editLinkDialog: editLinkDialog,
             gitService: gitService,
-            printDialog: printDialog);
+            printDialog: printDialog,
+            // One per panel: a dialog instance is one control, and each panel's Enter and F3 show it.
+            webBrowserDialog: webBrowserDialogFactory?.Invoke());
         contentModelService.AddContentBrowser(name, contentBrowser);
         return new FilePanel(
             name,

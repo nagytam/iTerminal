@@ -7,6 +7,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class NullServicesTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void NullConsoleDriver_Instance_ReturnsSingletonWithZeroWindowSize()
     {
@@ -17,6 +18,7 @@ public class NullServicesTest
         Assert.AreEqual(new Position(0, 0), driver.GetCursorPosition());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NullConsoleDriver_Methods_DoNotThrow()
     {
@@ -39,6 +41,7 @@ public class NullServicesTest
         Assert.IsTrue(driver.IsCursorVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NullThemeService_Instance_ReturnsSingletonWithDefaultScheme()
     {

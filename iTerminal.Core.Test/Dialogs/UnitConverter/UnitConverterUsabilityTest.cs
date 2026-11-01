@@ -16,6 +16,7 @@ public class UnitConverterUsabilityTest
         return dialog;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EachListIsHeadedWithWhatItChooses()
     {
@@ -30,6 +31,7 @@ public class UnitConverterUsabilityTest
         AssertScreenContains(screen, "Unit Converter — Length");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheFromHeadingSitsOverTheFromList()
     {
@@ -42,6 +44,7 @@ public class UnitConverterUsabilityTest
         Assert.AreEqual((int)dialog.FromUnitListBoxForTest.AbsolutePosition.X, (int)heading!.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AValueThatIsNotANumberSaysSo()
     {
@@ -53,6 +56,7 @@ public class UnitConverterUsabilityTest
         Assert.AreEqual("\"abc\" is not a number.", dialog.ResultLine());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyValueInvitesOne()
     {
@@ -64,6 +68,7 @@ public class UnitConverterUsabilityTest
         StringAssert.StartsWith(dialog.ResultLine(), "Type a value in ");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADecimalCommaIsAccepted()
     {
@@ -76,6 +81,7 @@ public class UnitConverterUsabilityTest
         StringAssert.StartsWith(dialog.ResultLine(), "1,5 ");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSwapKeyIsNamed()
     {

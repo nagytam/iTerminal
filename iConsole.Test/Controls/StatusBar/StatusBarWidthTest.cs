@@ -49,6 +49,7 @@ public class StatusBarWidthTest
     private static long VisibleWidth(Control bar)
         => bar.Controls.Where(c => c.IsVisible).Sum(c => (long)c.ViewSize.Width);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewerBar_KeepsTheWidthItsDialogGaveIt()
     {
@@ -61,6 +62,7 @@ public class StatusBarWidthTest
         Assert.AreEqual(1L, bar.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewerBar_NotYetSized_TakesTheDialogInterior()
     {
@@ -71,6 +73,7 @@ public class StatusBarWidthTest
         Assert.AreEqual(98L, bar.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewerBar_NeverShowsMoreThanItsWidth()
     {
@@ -85,6 +88,7 @@ public class StatusBarWidthTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EditorBar_KeepsTheWidthItsDialogGaveIt_AndTakesTheInteriorWhenNotSized()
     {
@@ -101,6 +105,7 @@ public class StatusBarWidthTest
         Assert.AreEqual(98L, unsized.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EditorBar_NeverShowsMoreThanItsWidth()
     {
@@ -115,6 +120,7 @@ public class StatusBarWidthTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Bars_WithoutAParent_DoNotThrow()
     {

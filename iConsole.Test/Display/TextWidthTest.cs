@@ -5,6 +5,7 @@ namespace iConsole.Test.Display;
 [TestClass]
 public class TextWidthTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Of_CountsColumns_WideCharactersAsTwo()
     {
@@ -14,6 +15,7 @@ public class TextWidthTest
         Assert.AreEqual(4, TextWidth.Of("a😀b"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Of_DropsZeroWidthCharacters()
     {
@@ -23,12 +25,14 @@ public class TextWidthTest
         Assert.AreEqual(4, TextWidth.Of("😀‍😀"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Of_HalfwidthKatakana_IsOneColumn()
     {
         Assert.AreEqual(1, TextWidth.Of("ｱ"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToCells_FollowsAWideBmpCharacterWithAContinuation()
     {
@@ -37,6 +41,7 @@ public class TextWidthTest
         CollectionAssert.AreEqual(new[] { '日', TextWidth.Continuation, 'a' }, cells);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToCells_KeepsAnEmojiAsItsSurrogatePair()
     {
@@ -47,6 +52,7 @@ public class TextWidthTest
         Assert.IsTrue(char.IsLowSurrogate(cells[1]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToCells_ShowsANarrowCharacterOutsideTheBmpAsAReplacement()
     {
@@ -56,6 +62,7 @@ public class TextWidthTest
         CollectionAssert.AreEqual(new[] { TextWidth.Replacement }, cells);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FromCells_ReadsBackWhatToCellsWrote()
     {
@@ -64,6 +71,7 @@ public class TextWidthTest
         Assert.AreEqual(text, TextWidth.FromCells(TextWidth.ToCells(text)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fit_CutsWithoutSplittingAWideCharacter()
     {
@@ -71,12 +79,14 @@ public class TextWidthTest
         Assert.AreEqual("日本", TextWidth.Fit("日本語", 4));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fit_PadsShortTextToTheWidth()
     {
         Assert.AreEqual("abc  ", TextWidth.Fit("abc", 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NeedsCellLayout_IsFalseForPlainLatin()
     {

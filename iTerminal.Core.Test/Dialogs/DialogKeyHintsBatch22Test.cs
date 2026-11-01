@@ -28,6 +28,7 @@ public class DialogKeyHintsBatch22Test
 {
     private static string[] Keys(IEnumerable<(string Key, string Description)> hints) => [.. hints.Select(h => h.Key)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Language_KeyHints_NameChooseAndApply()
     {
@@ -39,6 +40,7 @@ public class DialogKeyHintsBatch22Test
         CollectionAssert.AreEqual(new[] { "Up/Down", "Home/End", "Enter" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Signature_KeyHints_NameTheSigningAndVerifyKeys()
     {
@@ -48,6 +50,7 @@ public class DialogKeyHintsBatch22Test
         CollectionAssert.IsSubsetOf(new[] { "F2", "F3", "F4", "F5" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_KeyHints_NameMovingAddingAndDeleting()
     {
@@ -56,6 +59,7 @@ public class DialogKeyHintsBatch22Test
         CollectionAssert.IsSubsetOf(new[] { "PageUp/PageDown", "Home", "Enter/Insert/N", "F2", "Delete" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MusicFileViewer_KeyHints_NamePlaySeekVolumeAndTags()
     {
@@ -65,6 +69,7 @@ public class DialogKeyHintsBatch22Test
         CollectionAssert.IsSubsetOf(new[] { "Space", "Left/Right", "+/-", "S", "E" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VideoFileViewer_KeyHints_NamePlaySeekStopAndColour()
     {
@@ -73,6 +78,7 @@ public class DialogKeyHintsBatch22Test
         CollectionAssert.AreEqual(new[] { "Space", "Left/Right", "Home", "S", "C" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calculator_KeyHints_NameEvaluateAndClear()
     {
@@ -81,6 +87,7 @@ public class DialogKeyHintsBatch22Test
         CollectionAssert.IsSubsetOf(new[] { "Enter/=", "Backspace", "Delete/C" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Map_KeyHints_NamePanZoomAndSearch()
     {
@@ -89,6 +96,7 @@ public class DialogKeyHintsBatch22Test
         CollectionAssert.IsSubsetOf(new[] { "Arrows", "+/-", "/ or G", "F1" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StockBrowser_KeyHints_NameAddRemoveAndRefresh()
     {
@@ -97,6 +105,7 @@ public class DialogKeyHintsBatch22Test
         CollectionAssert.AreEqual(new[] { "A", "D/Delete", "R" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ImageFileViewer_KeyHints_OfferTheScrollKeysOnlyWhileTheInformationShows()
     {
@@ -105,6 +114,7 @@ public class DialogKeyHintsBatch22Test
         CollectionAssert.AreEqual(new[] { "C", "I" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AccessControl_KeyHints_NameTheListKeys()
     {

@@ -61,6 +61,7 @@ public class FileToTextConverterServiceFixtureTest
 
     // ── text ────────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Txt_MatchesExpected()
     {
@@ -75,6 +76,7 @@ public class FileToTextConverterServiceFixtureTest
 
     // ── HTML ────────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Html_MatchesExpected()
     {
@@ -90,6 +92,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Htm_MatchesExpected()
     {
@@ -105,6 +108,7 @@ public class FileToTextConverterServiceFixtureTest
 
     // ── PDF ─────────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Pdf_ContainsExpectedText()
     {
@@ -121,36 +125,42 @@ public class FileToTextConverterServiceFixtureTest
 
     // ── images ──────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Bmp_ProducesAsciiArt()
     {
         await AssertImageConversionAsync("sample.bmp");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Png_ProducesAsciiArt()
     {
         await AssertImageConversionAsync("sample.png");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Jpg_ProducesAsciiArt()
     {
         await AssertImageConversionAsync("sample.jpg");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Gif_ProducesAsciiArt()
     {
         await AssertImageConversionAsync("sample.gif");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Tiff_ProducesAsciiArt()
     {
         await AssertImageConversionAsync("sample.tiff");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Tif_ProducesAsciiArt()
     {
@@ -158,6 +168,7 @@ public class FileToTextConverterServiceFixtureTest
         await AssertImageConversionAsync("sample.tif");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Jpeg_ProducesAsciiArt()
     {
@@ -165,18 +176,21 @@ public class FileToTextConverterServiceFixtureTest
         await AssertImageConversionAsync("sample.jpeg");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Webp_ProducesAsciiArt()
     {
         await AssertImageConversionAsync("sample.webp");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Ico_ProducesAsciiArt()
     {
         await AssertImageConversionAsync("sample.ico");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Cur_ProducesAsciiArt()
     {
@@ -196,6 +210,7 @@ public class FileToTextConverterServiceFixtureTest
 
     // ── Word ────────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Docx_MatchesExpected()
     {
@@ -211,12 +226,14 @@ public class FileToTextConverterServiceFixtureTest
 
     // ── Excel ───────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Xlsx_MatchesExpected()
     {
         await AssertSpreadsheetConversionAsync("sample.xlsx");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Xlsm_MatchesExpected()
     {
@@ -224,6 +241,7 @@ public class FileToTextConverterServiceFixtureTest
         await AssertSpreadsheetConversionAsync("sample.xlsm");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Xltx_MatchesExpected()
     {
@@ -231,6 +249,7 @@ public class FileToTextConverterServiceFixtureTest
         await AssertSpreadsheetConversionAsync("sample.xltx");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Xltm_MatchesExpected()
     {
@@ -251,12 +270,14 @@ public class FileToTextConverterServiceFixtureTest
 
     // ── PowerPoint ──────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Pptx_MatchesExpected()
     {
         await AssertPresentationConversionAsync("sample.pptx");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Pptm_MatchesExpected()
     {
@@ -264,6 +285,7 @@ public class FileToTextConverterServiceFixtureTest
         await AssertPresentationConversionAsync("sample.pptm");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Potx_MatchesExpected()
     {
@@ -271,6 +293,7 @@ public class FileToTextConverterServiceFixtureTest
         await AssertPresentationConversionAsync("sample.potx");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Potm_MatchesExpected()
     {
@@ -296,6 +319,7 @@ public class FileToTextConverterServiceFixtureTest
     // which is *not* a managed assembly — it exercises the BadImageFormatException
     // fallback branch ("Note: Not a managed .NET assembly").
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Dll_ShowsAssemblyMetadata()
     {
@@ -309,6 +333,7 @@ public class FileToTextConverterServiceFixtureTest
         GetOrCreateExpected(file, actual);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_So_ShowsAssemblyMetadata()
     {
@@ -321,6 +346,7 @@ public class FileToTextConverterServiceFixtureTest
         GetOrCreateExpected(file, actual);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Exe_ShowsFileVersionInfoAndSkipsAssemblyIdentity()
     {
@@ -337,6 +363,7 @@ public class FileToTextConverterServiceFixtureTest
 
     // ── Office 97–2003 binary and OpenDocument presentations ────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Doc_MatchesExpected()
     {
@@ -349,6 +376,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_RichDoc_KeepsTablesAndAccentedText()
     {
@@ -363,6 +391,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Xls_MatchesExpected()
     {
@@ -376,6 +405,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_BookXls_ShowsEverySheetWithDatesAndErrors()
     {
@@ -391,6 +421,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Ppt_MatchesExpected()
     {
@@ -403,6 +434,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_DeckPpt_ShowsSlidesTitlesAndNotes()
     {
@@ -417,6 +449,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Odp_MatchesExpected()
     {
@@ -429,6 +462,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Otp_MatchesExpected()
     {
@@ -441,6 +475,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_DeckOdp_ShowsSlidesTitlesTablesAndNotes()
     {
@@ -458,6 +493,7 @@ public class FileToTextConverterServiceFixtureTest
 
     // ── RTF and EPUB ────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Rtf_MatchesExpected()
     {
@@ -471,6 +507,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_EscapesRtf_DecodesCodePagesAndUnicode()
     {
@@ -486,6 +523,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Epub_MatchesExpected()
     {
@@ -498,6 +536,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_BookEpub_ReadsChaptersInSpineOrder()
     {
@@ -516,6 +555,7 @@ public class FileToTextConverterServiceFixtureTest
 
     // ── Drawings, mail, XPS and e-books ─────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Odg_MatchesExpected()
     {
@@ -529,6 +569,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Eml_MatchesExpected()
     {
@@ -542,6 +583,7 @@ public class FileToTextConverterServiceFixtureTest
         AssertLinesMatch(expected, actual, file);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConvertFile_Fb2_MatchesExpected()
     {

@@ -27,6 +27,7 @@ public class IPhoneBrowserDialogCommandTest
         return new IPhoneBrowserDialog(deviceService.Object, Mock.Of<IContentModelService>(), themeService);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsAltF11Key()
     {
@@ -40,6 +41,7 @@ public class IPhoneBrowserDialogCommandTest
         Assert.IsFalse(command.Key.Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_AlwaysReturnsTrue()
     {
@@ -48,6 +50,7 @@ public class IPhoneBrowserDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithNoControlAttached_DoesNotThrow()
     {
@@ -56,6 +59,7 @@ public class IPhoneBrowserDialogCommandTest
         await command.ExecuteAsync(null);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithControlAttached_OpensDialog()
     {

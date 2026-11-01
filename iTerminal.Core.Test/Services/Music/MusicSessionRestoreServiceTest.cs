@@ -58,6 +58,7 @@ public class MusicSessionRestoreServiceTest
         return (new MusicSessionRestoreService(player, store, files, settings), player, store, settings);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RestoreOnce_PutsTheSavedQueueBackIntoThePlayer()
     {
@@ -73,6 +74,7 @@ public class MusicSessionRestoreServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RestoreOnce_RaisesStateChanged_SoAnAlreadyOpenPanelRedraws()
     {
@@ -96,6 +98,7 @@ public class MusicSessionRestoreServiceTest
     /// The track that was playing comes back cued — named in the panel header, marked in the list —
     /// but stopped. Restoring a session shows where the user was; it does not start making noise.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void RestoreOnce_CuesTheTrackThatWasPlaying_WithoutStartingIt()
     {
@@ -116,6 +119,7 @@ public class MusicSessionRestoreServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RestoreOnce_WithNoSavedTrack_CuesNothing()
     {
@@ -131,6 +135,7 @@ public class MusicSessionRestoreServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RestoreOnce_WithACueThatNoLongerFitsTheQueue_CuesNothing()
     {
@@ -146,6 +151,7 @@ public class MusicSessionRestoreServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RestoreOnce_RestoresTheTransportSettings()
     {
@@ -168,6 +174,7 @@ public class MusicSessionRestoreServiceTest
     /// The queue is read from the table once; after that memory is the truth. Otherwise clearing the
     /// queue and reopening the panel before the next save would hand the old queue straight back.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void RestoreOnce_IsExactlyOnce()
     {

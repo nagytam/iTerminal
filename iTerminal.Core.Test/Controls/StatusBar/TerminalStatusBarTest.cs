@@ -19,6 +19,7 @@ public class TerminalStatusBarTest
         return (bar, parent);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutInjectedPartsItBuildsItsOwn()
     {
@@ -28,6 +29,7 @@ public class TerminalStatusBarTest
         Assert.AreEqual(1, bar.Controls.AsSnapshot().OfType<HotKeys>().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SpansTheScreenOnOneRow()
     {
@@ -38,6 +40,7 @@ public class TerminalStatusBarTest
         Assert.AreEqual(new Size(150, 1), bar.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDateButtonFollowsTheHotKeysDirectly()
     {
