@@ -604,8 +604,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (columns > 1)
         {
             model.AlignScroll();
-            ScrollableModel.ScrollLinesToVisible(model);
         }
+
+        // Every mode change, not only Brief: leaving Brief for one column must still bring the cursor into view.
+        ScrollableModel.ScrollLinesToVisible(model);
     }
 
     /// <summary>Left or Right inside the line of the cursor (−1 / +1). Stays put at the line's ends.</summary>
@@ -661,14 +663,14 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
 
         var ownName = ContentModel?.Name;
         var otherName = ownName == Services.ContentModelService.Left ? Services.ContentModelService.Right : Services.ContentModelService.Left;
-        var other = ContentModelService.ContentModels?.SingleOrDefault(m => m.Name == otherName);
+        IContentModel? other = ContentModelService.ContentModels?.SingleOrDefault(m => m.Name == otherName);
         IEntry? entry = null;
         try
         {
             if (other is not null)
             {
                 var index = (int)other.CursorPosition.Y;
-                var entries = other.FilteredEntries;
+                IList<IEntry> entries = other.FilteredEntries;
                 if (index >= 0 && index < entries.Count)
                 {
                     entry = entries[index];
@@ -680,20 +682,37 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
             entry = null;
         }
 
-        var rows = ListingInfo.Describe(entry, key => UiText.Get(key, key));
-        if (!rows.SequenceEqual(_infoRows))
+        // Rebuild only when the entry or a field the rows show has changed; the rows are cheap to keep and not to rebuild.
+        var size = entry?.Url.FileSize;
+        var date = entry?.Url.Date;
+        var time = entry?.Url.Time;
+        if (_infoBuilt && ReferenceEquals(entry, _infoEntry) && size == _infoSize && date == _infoDate && time == _infoTime)
         {
-            _infoRows = rows;
-            StateHasChanged();
+            return;
         }
+
+        _infoBuilt = true;
+        _infoEntry = entry;
+        _infoSize = size;
+        _infoDate = date;
+        _infoTime = time;
+        _infoRows = ListingInfo.Describe(entry, key => UiText.Get(key, key));
+        StateHasChanged();
     }
+
+    private bool _infoBuilt;
+    private IEntry? _infoEntry;
+    private string? _infoSize;
+    private string? _infoDate;
+    private string? _infoTime;
 
     /// <summary>Draws the Info rows: a label column, then the value, one row per line. Every row is written in full.</summary>
     private void DrawInfoRows(IBuffer buffer, ColorScheme colorScheme)
     {
         var innerWidth = Math.Max(0, (int)ViewSize.Width - 2);
         var rows = Math.Max(0, (int)ViewSize.Height - 2);
-        var labelWidth = Math.Min(12, innerWidth / 3);
+        var longestLabel = _infoRows.Count == 0 ? 0 : _infoRows.Max(row => row.Label.Length);
+        var labelWidth = Math.Min(longestLabel + 1, innerWidth / 2);
         var positionX = AbsolutePosition.X + 1;
         var positionY = AbsolutePosition.Y + 1;
 
@@ -1141,6 +1160,24 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
 
     private bool IsCommandLineVisible() => FindContent()?.IsCommandLineVisible ?? false;
 
+    /// <summary>The keys that still work while Info is on: navigation without modifiers, Tab, F1, F10, Ctrl+T and Ctrl+F.</summary>
+    private static bool IsInfoPassThroughKey(KeyEvent keyEvent)
+    {
+        if (keyEvent.ConsoleKey is ConsoleKey.Tab or ConsoleKey.F1 or ConsoleKey.F10)
+        {
+            return true;
+        }
+
+        var unmodified = !keyEvent.Shift && !keyEvent.Control && !keyEvent.Alt;
+        if (unmodified && keyEvent.ConsoleKey is ConsoleKey.UpArrow or ConsoleKey.DownArrow or ConsoleKey.LeftArrow or ConsoleKey.RightArrow
+            or ConsoleKey.Home or ConsoleKey.End or ConsoleKey.PageUp or ConsoleKey.PageDown)
+        {
+            return true;
+        }
+
+        return keyEvent.Control && !keyEvent.Shift && !keyEvent.Alt && keyEvent.ConsoleKey is ConsoleKey.T or ConsoleKey.F;
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         // Info shows another panel's entry, so keys that would act on this panel's hidden cursor are swallowed here.
@@ -1155,9 +1192,9 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
                 return true;
             }
 
-            if (keyEvent.ConsoleKey is ConsoleKey.Enter or ConsoleKey.Spacebar or ConsoleKey.Insert or ConsoleKey.Delete or ConsoleKey.Backspace
-                || (keyEvent.ConsoleKey is >= ConsoleKey.F2 and <= ConsoleKey.F9)
-                || keyEvent.ConsoleKey is ConsoleKey.F11 or ConsoleKey.F12)
+            // Only keys that move the hidden cursor, switch panels, toggle Brief or open a menu pass. Everything else would
+            // act on the hidden entry or its marks: Shift+arrows, Space, Insert, Ctrl+Space, F3 to F8, '*', '+', '-', Alt+letter.
+            if (!IsInfoPassThroughKey(keyEvent))
             {
                 return true;
             }
