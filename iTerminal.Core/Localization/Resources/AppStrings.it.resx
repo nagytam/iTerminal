@@ -2974,4 +2974,145 @@
   <data name="Folders.Status.SyncCancelled" xml:space="preserve">
     <value>Sincronizzazione annullata: non è stato cambiato nulla.</value>
   </data>
+  <data name="Common.StillWorking" xml:space="preserve">
+    <value>L'ultima richiesta è ancora in corso.</value>
+  </data>
+  <data name="Remote.Status.NoConnection" xml:space="preserve">
+    <value>Nessuna connessione a cui collegarsi ancora. N ne aggiunge una.</value>
+  </data>
+  <data name="Remote.Status.ShellRunning" xml:space="preserve">
+    <value>Una shell è già in esecuzione.</value>
+  </data>
+  <data name="Remote.Status.Connecting" xml:space="preserve">
+    <value>Connessione a {0}…</value>
+  </data>
+  <data name="Remote.Status.SessionEnded" xml:space="preserve">
+    <value>Sessione con {0} terminata (codice di uscita {1}).</value>
+  </data>
+  <data name="Remote.Status.OpeningInPanel" xml:space="preserve">
+    <value>Apertura di {0} nel pannello…</value>
+  </data>
+  <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
+    <value>Solo le connessioni SSH, FTP e WebDAV si possono esplorare come unità.</value>
+  </data>
+  <data name="Remote.Status.SshPort22" xml:space="preserve">
+    <value>L'unità SSH dei pannelli si connette solo sulla porta 22.</value>
+  </data>
+  <data name="Remote.Status.PortRange" xml:space="preserve">
+    <value>La porta deve essere compresa tra 1 e 65535.</value>
+  </data>
+  <data name="Remote.Status.Saved" xml:space="preserve">
+    <value>"{0}" salvata.</value>
+  </data>
+  <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
+    <value>Eliminare "{0}"? Premi y per eliminare, qualsiasi altro tasto annulla.</value>
+  </data>
+  <data name="Remote.Status.Deleted" xml:space="preserve">
+    <value>"{0}" eliminata.</value>
+  </data>
+  <data name="Disk.Status.EjectNotHere" xml:space="preserve">
+    <value>L'espulsione non è disponibile qui.</value>
+  </data>
+  <data name="Disk.Status.ChooseEject" xml:space="preserve">
+    <value>Scegli un'unità da espellere.</value>
+  </data>
+  <data name="Disk.Status.EjectMemory" xml:space="preserve">
+    <value>Un'unità di memoria fa parte del programma: non c'è nulla da espellere.</value>
+  </data>
+  <data name="Disk.Status.Ejecting" xml:space="preserve">
+    <value>Espulsione di {0}…</value>
+  </data>
+  <data name="Disk.Status.FormatNotHere" xml:space="preserve">
+    <value>La formattazione non è disponibile su questo sistema.</value>
+  </data>
+  <data name="Disk.Status.ChooseFormat" xml:space="preserve">
+    <value>Scegli un'unità da formattare.</value>
+  </data>
+  <data name="Disk.Status.FormatMemory" xml:space="preserve">
+    <value>Un'unità di memoria non può essere formattata: si trova nel database del programma.</value>
+  </data>
+  <data name="Mail.Status.InboxEmpty" xml:space="preserve">
+    <value>La posta in arrivo è vuota.</value>
+  </data>
+  <data name="Mail.Status.Messages" xml:space="preserve">
+    <value>{0} messaggi. Invio ne legge uno.</value>
+  </data>
+  <data name="Mail.Status.PressAgainDelete" xml:space="preserve">
+    <value>Premi di nuovo D per eliminare "{0}" dal server.</value>
+  </data>
+  <data name="Mail.Status.Deleted" xml:space="preserve">
+    <value>Eliminato.</value>
+  </data>
+  <data name="Mail.Status.NeedRecipient" xml:space="preserve">
+    <value>Indica prima un destinatario.</value>
+  </data>
+  <data name="Mail.Status.Sent" xml:space="preserve">
+    <value>Inviato a {0}.</value>
+  </data>
+  <data name="Mail.Status.TypeName" xml:space="preserve">
+    <value>Digita un nome o un indirizzo, poi Invio.</value>
+  </data>
+  <data name="Mail.Status.NobodyMatches" xml:space="preserve">
+    <value>Nessuna corrispondenza per "{0}".</value>
+  </data>
+  <data name="Mail.Status.Found" xml:space="preserve">
+    <value>{0} trovati. Invio aggiunge quello evidenziato.</value>
+  </data>
+  <data name="Mail.Status.SetUpAccount" xml:space="preserve">
+    <value>Configura un account: server di posta in arrivo, in uscita e rubrica.</value>
+  </data>
+  <data name="Mail.Status.ChangeAccount" xml:space="preserve">
+    <value>Modifica l'account, poi Ctrl+S per salvare.</value>
+  </data>
+  <data name="Mail.Status.PortsNumbers" xml:space="preserve">
+    <value>Le porte devono essere numeri.</value>
+  </data>
+  <data name="Mail.Status.NeedServer" xml:space="preserve">
+    <value>Indica almeno il server in arrivo (POP3) o in uscita (SMTP).</value>
+  </data>
+  <data name="Mail.Status.Saved" xml:space="preserve">
+    <value>Salvato.</value>
+  </data>
+  <data name="Access.Status.Error" xml:space="preserve">
+    <value>Errore: {0}</value>
+  </data>
+  <data name="Access.Status.Working" xml:space="preserve">
+    <value>In corso…</value>
+  </data>
+  <data name="Access.Status.ReadAgain" xml:space="preserve">
+    <value>Modificato, ma non è stato possibile rileggere l'elenco: {0}</value>
+  </data>
+  <data name="Access.Status.NothingToChange" xml:space="preserve">
+    <value>Niente da modificare. A aggiunge una voce.</value>
+  </data>
+  <data name="Access.Status.Inherited" xml:space="preserve">
+    <value>Questa voce è ereditata dalla cartella padre. Modificala lì, o premi I per interrompere l'ereditarietà.</value>
+  </data>
+  <data name="Access.Status.SpecialRights" xml:space="preserve">
+    <value>Sono permessi speciali: qui si possono rimuovere, ma non modificare. Rimuovili e aggiungi un preset.</value>
+  </data>
+  <data name="Access.Status.NeedPrincipal" xml:space="preserve">
+    <value>Indica prima l'utente o il gruppo.</value>
+  </data>
+  <data name="Access.Status.InheritedRemove" xml:space="preserve">
+    <value>Questa voce è ereditata dalla cartella padre; rimuovila lì.</value>
+  </data>
+  <data name="Access.Status.ConfirmRemove" xml:space="preserve">
+    <value>Rimuovere la voce di {0}? Premi y per rimuovere, qualsiasi altro tasto annulla.</value>
+  </data>
+  <data name="Access.Status.NoInheritanceSwitch" xml:space="preserve">
+    <value>I permessi di questo sistema non hanno un interruttore di ereditarietà.</value>
+  </data>
+  <data name="Access.Status.OwnerLocked" xml:space="preserve">
+    <value>Il proprietario non può essere modificato qui.</value>
+  </data>
+  <data name="FileDiff.Status.Reading" xml:space="preserve">
+    <value>Lettura…</value>
+  </data>
+  <data name="FileDiff.Status.CouldNotRead" xml:space="preserve">
+    <value>Impossibile leggere i file: {0}</value>
+  </data>
+  <data name="Remote.Status.CannotStart" xml:space="preserve">
+    <value>Questa connessione non può essere avviata.</value>
+  </data>
 </root>

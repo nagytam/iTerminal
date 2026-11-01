@@ -105,7 +105,7 @@ public class FileDiffDialog : Dialog
         _hexMode = false;
         Result = null;
         _view.SetResult(null);
-        SetStatus("Reading…", isError: false);
+        SetStatus(Say("FileDiff.Status.Reading", "Reading…"), isError: false);
         StartLoad();
     }
 
@@ -158,7 +158,7 @@ public class FileDiffDialog : Dialog
             }
             catch (Exception exception)
             {
-                SetStatus($"Could not read the files: {exception.Message}", isError: true);
+                SetStatus(Say("FileDiff.Status.CouldNotRead", "Could not read the files: {0}", exception.Message), isError: true);
             }
         });
     }
@@ -313,6 +313,9 @@ public class FileDiffDialog : Dialog
 
         return [.. lines];
     }
+
+    /// <summary>A text in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
     private void SetStatus(string status, bool isError)
     {

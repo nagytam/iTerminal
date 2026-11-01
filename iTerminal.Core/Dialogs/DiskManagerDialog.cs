@@ -309,25 +309,25 @@ public class DiskManagerDialog : Dialog
     {
         if (_driveActions is null)
         {
-            SetStatus("Ejecting is not available here.", isError: true);
+            SetStatus(Say("Disk.Status.EjectNotHere", "Ejecting is not available here."), isError: true);
             return Task.CompletedTask;
         }
 
         if (SelectedDrive is null)
         {
-            SetStatus("Choose a drive to eject.", isError: true);
+            SetStatus(Say("Disk.Status.ChooseEject", "Choose a drive to eject."), isError: true);
             return Task.CompletedTask;
         }
 
         if (SelectedDrive.DriveInfo is null)
         {
-            SetStatus("A memory drive is part of this program: there is nothing to eject.", isError: true);
+            SetStatus(Say("Disk.Status.EjectMemory", "A memory drive is part of this program: there is nothing to eject."), isError: true);
             return Task.CompletedTask;
         }
 
         if (_isBusy)
         {
-            SetStatus("Still working on the last request.", isError: true);
+            SetStatus(Say("Common.StillWorking", "Still working on the last request."), isError: true);
             return PendingOperation;
         }
 
@@ -335,7 +335,7 @@ public class DiskManagerDialog : Dialog
 
         var root = RootOf(drive);
         _isBusy = true;
-        SetStatus($"Ejecting {root} ...", isError: false);
+        SetStatus(Say("Disk.Status.Ejecting", "Ejecting {0}…", root), isError: false);
         PendingOperation = Task.Run(async () =>
         {
             try
@@ -358,25 +358,25 @@ public class DiskManagerDialog : Dialog
     {
         if (_driveActions is null || _formatDialog is null || !_driveActions.CanFormat)
         {
-            SetStatus("Formatting is not available on this system.", isError: true);
+            SetStatus(Say("Disk.Status.FormatNotHere", "Formatting is not available on this system."), isError: true);
             return;
         }
 
         if (SelectedDrive is null)
         {
-            SetStatus("Choose a drive to format.", isError: true);
+            SetStatus(Say("Disk.Status.ChooseFormat", "Choose a drive to format."), isError: true);
             return;
         }
 
         if (SelectedDrive.DriveInfo is null)
         {
-            SetStatus("A memory drive cannot be formatted: it lives in this program's database.", isError: true);
+            SetStatus(Say("Disk.Status.FormatMemory", "A memory drive cannot be formatted: it lives in this program's database."), isError: true);
             return;
         }
 
         if (_isBusy)
         {
-            SetStatus("Still working on the last request.", isError: true);
+            SetStatus(Say("Common.StillWorking", "Still working on the last request."), isError: true);
             return;
         }
 
@@ -423,6 +423,9 @@ public class DiskManagerDialog : Dialog
         _imageDialog.Load(imagePath);
         await ShowDialogAsync(_imageDialog);
     }
+
+    /// <summary>A text in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
     private void SetStatus(string text, bool isError)
     {

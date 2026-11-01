@@ -2974,4 +2974,145 @@
   <data name="Folders.Status.SyncCancelled" xml:space="preserve">
     <value>Synchronisieren abgebrochen – nichts wurde geändert.</value>
   </data>
+  <data name="Common.StillWorking" xml:space="preserve">
+    <value>Die letzte Anfrage läuft noch.</value>
+  </data>
+  <data name="Remote.Status.NoConnection" xml:space="preserve">
+    <value>Noch keine Verbindung zum Herstellen. N legt eine Verbindung an.</value>
+  </data>
+  <data name="Remote.Status.ShellRunning" xml:space="preserve">
+    <value>Eine Shell läuft bereits.</value>
+  </data>
+  <data name="Remote.Status.Connecting" xml:space="preserve">
+    <value>Verbindung zu {0} wird hergestellt…</value>
+  </data>
+  <data name="Remote.Status.SessionEnded" xml:space="preserve">
+    <value>Sitzung mit {0} beendet (Exit-Code {1}).</value>
+  </data>
+  <data name="Remote.Status.OpeningInPanel" xml:space="preserve">
+    <value>{0} wird im Panel geöffnet…</value>
+  </data>
+  <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
+    <value>Nur SSH-, FTP- und WebDAV-Verbindungen können als Laufwerk durchsucht werden.</value>
+  </data>
+  <data name="Remote.Status.SshPort22" xml:space="preserve">
+    <value>Das SSH-Laufwerk der Panels verbindet nur über Port 22.</value>
+  </data>
+  <data name="Remote.Status.PortRange" xml:space="preserve">
+    <value>Der Port muss zwischen 1 und 65535 liegen.</value>
+  </data>
+  <data name="Remote.Status.Saved" xml:space="preserve">
+    <value>"{0}" gespeichert.</value>
+  </data>
+  <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
+    <value>"{0}" löschen? Mit y löschen, jede andere Taste bricht ab.</value>
+  </data>
+  <data name="Remote.Status.Deleted" xml:space="preserve">
+    <value>"{0}" gelöscht.</value>
+  </data>
+  <data name="Disk.Status.EjectNotHere" xml:space="preserve">
+    <value>Auswerfen ist hier nicht verfügbar.</value>
+  </data>
+  <data name="Disk.Status.ChooseEject" xml:space="preserve">
+    <value>Ein Laufwerk zum Auswerfen wählen.</value>
+  </data>
+  <data name="Disk.Status.EjectMemory" xml:space="preserve">
+    <value>Ein Speicherlaufwerk gehört zum Programm: es gibt nichts zum Auswerfen.</value>
+  </data>
+  <data name="Disk.Status.Ejecting" xml:space="preserve">
+    <value>{0} wird ausgeworfen…</value>
+  </data>
+  <data name="Disk.Status.FormatNotHere" xml:space="preserve">
+    <value>Formatieren ist auf diesem System nicht verfügbar.</value>
+  </data>
+  <data name="Disk.Status.ChooseFormat" xml:space="preserve">
+    <value>Ein Laufwerk zum Formatieren wählen.</value>
+  </data>
+  <data name="Disk.Status.FormatMemory" xml:space="preserve">
+    <value>Ein Speicherlaufwerk kann nicht formatiert werden: es liegt in der Datenbank des Programms.</value>
+  </data>
+  <data name="Mail.Status.InboxEmpty" xml:space="preserve">
+    <value>Der Posteingang ist leer.</value>
+  </data>
+  <data name="Mail.Status.Messages" xml:space="preserve">
+    <value>{0} Nachrichten. Enter liest eine.</value>
+  </data>
+  <data name="Mail.Status.PressAgainDelete" xml:space="preserve">
+    <value>D noch einmal drücken, um "{0}" vom Server zu löschen.</value>
+  </data>
+  <data name="Mail.Status.Deleted" xml:space="preserve">
+    <value>Gelöscht.</value>
+  </data>
+  <data name="Mail.Status.NeedRecipient" xml:space="preserve">
+    <value>Zuerst einen Empfänger angeben.</value>
+  </data>
+  <data name="Mail.Status.Sent" xml:space="preserve">
+    <value>Gesendet an {0}.</value>
+  </data>
+  <data name="Mail.Status.TypeName" xml:space="preserve">
+    <value>Name oder Adresse eingeben, dann Enter.</value>
+  </data>
+  <data name="Mail.Status.NobodyMatches" xml:space="preserve">
+    <value>Niemand passt zu "{0}".</value>
+  </data>
+  <data name="Mail.Status.Found" xml:space="preserve">
+    <value>{0} gefunden. Enter fügt den markierten hinzu.</value>
+  </data>
+  <data name="Mail.Status.SetUpAccount" xml:space="preserve">
+    <value>Ein Konto einrichten: Server für Eingang, Ausgang und Adressbuch.</value>
+  </data>
+  <data name="Mail.Status.ChangeAccount" xml:space="preserve">
+    <value>Das Konto ändern, dann Strg+S zum Speichern.</value>
+  </data>
+  <data name="Mail.Status.PortsNumbers" xml:space="preserve">
+    <value>Die Ports müssen Zahlen sein.</value>
+  </data>
+  <data name="Mail.Status.NeedServer" xml:space="preserve">
+    <value>Mindestens den Eingangs- (POP3) oder den Ausgangsserver (SMTP) angeben.</value>
+  </data>
+  <data name="Mail.Status.Saved" xml:space="preserve">
+    <value>Gespeichert.</value>
+  </data>
+  <data name="Access.Status.Error" xml:space="preserve">
+    <value>Fehler: {0}</value>
+  </data>
+  <data name="Access.Status.Working" xml:space="preserve">
+    <value>Wird ausgeführt…</value>
+  </data>
+  <data name="Access.Status.ReadAgain" xml:space="preserve">
+    <value>Geändert, aber die Liste konnte nicht erneut gelesen werden: {0}</value>
+  </data>
+  <data name="Access.Status.NothingToChange" xml:space="preserve">
+    <value>Nichts zu ändern. A fügt einen Eintrag hinzu.</value>
+  </data>
+  <data name="Access.Status.Inherited" xml:space="preserve">
+    <value>Dieser Eintrag wird vom übergeordneten Ordner geerbt. Dort ändern oder I drücken, um das Erben zu beenden.</value>
+  </data>
+  <data name="Access.Status.SpecialRights" xml:space="preserve">
+    <value>Das sind Sonderrechte; sie können hier entfernt, aber nicht bearbeitet werden. Entfernen und eine Vorlage hinzufügen.</value>
+  </data>
+  <data name="Access.Status.NeedPrincipal" xml:space="preserve">
+    <value>Zuerst den Benutzer oder die Gruppe angeben.</value>
+  </data>
+  <data name="Access.Status.InheritedRemove" xml:space="preserve">
+    <value>Dieser Eintrag wird vom übergeordneten Ordner geerbt; dort entfernen.</value>
+  </data>
+  <data name="Access.Status.ConfirmRemove" xml:space="preserve">
+    <value>Eintrag für {0} entfernen? Mit y entfernen, jede andere Taste bricht ab.</value>
+  </data>
+  <data name="Access.Status.NoInheritanceSwitch" xml:space="preserve">
+    <value>Die Berechtigungen dieses Systems haben keinen Vererbungsschalter.</value>
+  </data>
+  <data name="Access.Status.OwnerLocked" xml:space="preserve">
+    <value>Der Besitzer kann hier nicht geändert werden.</value>
+  </data>
+  <data name="FileDiff.Status.Reading" xml:space="preserve">
+    <value>Wird gelesen…</value>
+  </data>
+  <data name="FileDiff.Status.CouldNotRead" xml:space="preserve">
+    <value>Die Dateien konnten nicht gelesen werden: {0}</value>
+  </data>
+  <data name="Remote.Status.CannotStart" xml:space="preserve">
+    <value>Diese Verbindung kann nicht gestartet werden.</value>
+  </data>
 </root>

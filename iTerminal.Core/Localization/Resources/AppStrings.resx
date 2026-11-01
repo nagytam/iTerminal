@@ -2974,4 +2974,145 @@
   <data name="Folders.Status.SyncCancelled" xml:space="preserve">
     <value>Synchronisation cancelled — nothing was changed.</value>
   </data>
+  <data name="Common.StillWorking" xml:space="preserve">
+    <value>Still working on the last request.</value>
+  </data>
+  <data name="Remote.Status.NoConnection" xml:space="preserve">
+    <value>Nothing to connect to yet. N adds a connection.</value>
+  </data>
+  <data name="Remote.Status.ShellRunning" xml:space="preserve">
+    <value>A shell is already running.</value>
+  </data>
+  <data name="Remote.Status.Connecting" xml:space="preserve">
+    <value>Connecting to {0}…</value>
+  </data>
+  <data name="Remote.Status.SessionEnded" xml:space="preserve">
+    <value>Session with {0} ended (exit code {1}).</value>
+  </data>
+  <data name="Remote.Status.OpeningInPanel" xml:space="preserve">
+    <value>Opening {0} in the panel…</value>
+  </data>
+  <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
+    <value>Only SSH, FTP and WebDAV connections can be browsed as a drive.</value>
+  </data>
+  <data name="Remote.Status.SshPort22" xml:space="preserve">
+    <value>The panels' SSH drive connects on port 22 only.</value>
+  </data>
+  <data name="Remote.Status.PortRange" xml:space="preserve">
+    <value>The port must be between 1 and 65535.</value>
+  </data>
+  <data name="Remote.Status.Saved" xml:space="preserve">
+    <value>Saved "{0}".</value>
+  </data>
+  <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
+    <value>Delete "{0}"? Press y to delete, anything else cancels.</value>
+  </data>
+  <data name="Remote.Status.Deleted" xml:space="preserve">
+    <value>Deleted "{0}".</value>
+  </data>
+  <data name="Disk.Status.EjectNotHere" xml:space="preserve">
+    <value>Ejecting is not available here.</value>
+  </data>
+  <data name="Disk.Status.ChooseEject" xml:space="preserve">
+    <value>Choose a drive to eject.</value>
+  </data>
+  <data name="Disk.Status.EjectMemory" xml:space="preserve">
+    <value>A memory drive is part of this program: there is nothing to eject.</value>
+  </data>
+  <data name="Disk.Status.Ejecting" xml:space="preserve">
+    <value>Ejecting {0}…</value>
+  </data>
+  <data name="Disk.Status.FormatNotHere" xml:space="preserve">
+    <value>Formatting is not available on this system.</value>
+  </data>
+  <data name="Disk.Status.ChooseFormat" xml:space="preserve">
+    <value>Choose a drive to format.</value>
+  </data>
+  <data name="Disk.Status.FormatMemory" xml:space="preserve">
+    <value>A memory drive cannot be formatted: it lives in this program's database.</value>
+  </data>
+  <data name="Mail.Status.InboxEmpty" xml:space="preserve">
+    <value>The inbox is empty.</value>
+  </data>
+  <data name="Mail.Status.Messages" xml:space="preserve">
+    <value>{0} messages. Enter reads one.</value>
+  </data>
+  <data name="Mail.Status.PressAgainDelete" xml:space="preserve">
+    <value>Press D again to delete "{0}" from the server.</value>
+  </data>
+  <data name="Mail.Status.Deleted" xml:space="preserve">
+    <value>Deleted.</value>
+  </data>
+  <data name="Mail.Status.NeedRecipient" xml:space="preserve">
+    <value>Give the message a recipient first.</value>
+  </data>
+  <data name="Mail.Status.Sent" xml:space="preserve">
+    <value>Sent to {0}.</value>
+  </data>
+  <data name="Mail.Status.TypeName" xml:space="preserve">
+    <value>Type a name or address, then Enter.</value>
+  </data>
+  <data name="Mail.Status.NobodyMatches" xml:space="preserve">
+    <value>Nobody matches "{0}".</value>
+  </data>
+  <data name="Mail.Status.Found" xml:space="preserve">
+    <value>{0} found. Enter adds the highlighted one.</value>
+  </data>
+  <data name="Mail.Status.SetUpAccount" xml:space="preserve">
+    <value>Set up an account: incoming, outgoing and address book servers.</value>
+  </data>
+  <data name="Mail.Status.ChangeAccount" xml:space="preserve">
+    <value>Change the account, then Ctrl+S to save.</value>
+  </data>
+  <data name="Mail.Status.PortsNumbers" xml:space="preserve">
+    <value>The ports must be numbers.</value>
+  </data>
+  <data name="Mail.Status.NeedServer" xml:space="preserve">
+    <value>Give at least the incoming (POP3) or the outgoing (SMTP) server.</value>
+  </data>
+  <data name="Mail.Status.Saved" xml:space="preserve">
+    <value>Saved.</value>
+  </data>
+  <data name="Access.Status.Error" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="Access.Status.Working" xml:space="preserve">
+    <value>Working…</value>
+  </data>
+  <data name="Access.Status.ReadAgain" xml:space="preserve">
+    <value>Changed, but the list could not be read again: {0}</value>
+  </data>
+  <data name="Access.Status.NothingToChange" xml:space="preserve">
+    <value>Nothing to change. A adds an entry.</value>
+  </data>
+  <data name="Access.Status.Inherited" xml:space="preserve">
+    <value>That entry is inherited from the parent folder. Change it there, or press I to stop inheriting.</value>
+  </data>
+  <data name="Access.Status.SpecialRights" xml:space="preserve">
+    <value>These are special rights; they can be removed but not edited here. Remove it and add a preset.</value>
+  </data>
+  <data name="Access.Status.NeedPrincipal" xml:space="preserve">
+    <value>Give the user or group first.</value>
+  </data>
+  <data name="Access.Status.InheritedRemove" xml:space="preserve">
+    <value>That entry is inherited from the parent folder; remove it there.</value>
+  </data>
+  <data name="Access.Status.ConfirmRemove" xml:space="preserve">
+    <value>Remove the entry for {0}? Press y to remove, anything else cancels.</value>
+  </data>
+  <data name="Access.Status.NoInheritanceSwitch" xml:space="preserve">
+    <value>This system's permissions have no inheritance switch.</value>
+  </data>
+  <data name="Access.Status.OwnerLocked" xml:space="preserve">
+    <value>The owner cannot be changed here.</value>
+  </data>
+  <data name="FileDiff.Status.Reading" xml:space="preserve">
+    <value>Reading…</value>
+  </data>
+  <data name="FileDiff.Status.CouldNotRead" xml:space="preserve">
+    <value>Could not read the files: {0}</value>
+  </data>
+  <data name="Remote.Status.CannotStart" xml:space="preserve">
+    <value>This connection cannot be started.</value>
+  </data>
 </root>

@@ -2974,4 +2974,145 @@
   <data name="Folders.Status.SyncCancelled" xml:space="preserve">
     <value>Sincronización cancelada: no se cambió nada.</value>
   </data>
+  <data name="Common.StillWorking" xml:space="preserve">
+    <value>Todavía se está procesando la última solicitud.</value>
+  </data>
+  <data name="Remote.Status.NoConnection" xml:space="preserve">
+    <value>Aún no hay conexión a la que conectar. N añade una.</value>
+  </data>
+  <data name="Remote.Status.ShellRunning" xml:space="preserve">
+    <value>Ya hay un shell en ejecución.</value>
+  </data>
+  <data name="Remote.Status.Connecting" xml:space="preserve">
+    <value>Conectando con {0}…</value>
+  </data>
+  <data name="Remote.Status.SessionEnded" xml:space="preserve">
+    <value>La sesión con {0} terminó (código de salida {1}).</value>
+  </data>
+  <data name="Remote.Status.OpeningInPanel" xml:space="preserve">
+    <value>Abriendo {0} en el panel…</value>
+  </data>
+  <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
+    <value>Solo las conexiones SSH, FTP y WebDAV se pueden explorar como unidad.</value>
+  </data>
+  <data name="Remote.Status.SshPort22" xml:space="preserve">
+    <value>La unidad SSH de los paneles solo se conecta por el puerto 22.</value>
+  </data>
+  <data name="Remote.Status.PortRange" xml:space="preserve">
+    <value>El puerto debe estar entre 1 y 65535.</value>
+  </data>
+  <data name="Remote.Status.Saved" xml:space="preserve">
+    <value>"{0}" guardada.</value>
+  </data>
+  <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
+    <value>¿Eliminar "{0}"? Pulse y para eliminar, cualquier otra tecla cancela.</value>
+  </data>
+  <data name="Remote.Status.Deleted" xml:space="preserve">
+    <value>"{0}" eliminada.</value>
+  </data>
+  <data name="Disk.Status.EjectNotHere" xml:space="preserve">
+    <value>Expulsar no está disponible aquí.</value>
+  </data>
+  <data name="Disk.Status.ChooseEject" xml:space="preserve">
+    <value>Elija una unidad para expulsar.</value>
+  </data>
+  <data name="Disk.Status.EjectMemory" xml:space="preserve">
+    <value>Una unidad de memoria forma parte del programa: no hay nada que expulsar.</value>
+  </data>
+  <data name="Disk.Status.Ejecting" xml:space="preserve">
+    <value>Expulsando {0}…</value>
+  </data>
+  <data name="Disk.Status.FormatNotHere" xml:space="preserve">
+    <value>El formateo no está disponible en este sistema.</value>
+  </data>
+  <data name="Disk.Status.ChooseFormat" xml:space="preserve">
+    <value>Elija una unidad para formatear.</value>
+  </data>
+  <data name="Disk.Status.FormatMemory" xml:space="preserve">
+    <value>Una unidad de memoria no se puede formatear: vive en la base de datos del programa.</value>
+  </data>
+  <data name="Mail.Status.InboxEmpty" xml:space="preserve">
+    <value>La bandeja de entrada está vacía.</value>
+  </data>
+  <data name="Mail.Status.Messages" xml:space="preserve">
+    <value>{0} mensajes. Intro lee uno.</value>
+  </data>
+  <data name="Mail.Status.PressAgainDelete" xml:space="preserve">
+    <value>Pulse D otra vez para eliminar "{0}" del servidor.</value>
+  </data>
+  <data name="Mail.Status.Deleted" xml:space="preserve">
+    <value>Eliminado.</value>
+  </data>
+  <data name="Mail.Status.NeedRecipient" xml:space="preserve">
+    <value>Indique primero un destinatario.</value>
+  </data>
+  <data name="Mail.Status.Sent" xml:space="preserve">
+    <value>Enviado a {0}.</value>
+  </data>
+  <data name="Mail.Status.TypeName" xml:space="preserve">
+    <value>Escriba un nombre o una dirección y pulse Intro.</value>
+  </data>
+  <data name="Mail.Status.NobodyMatches" xml:space="preserve">
+    <value>Ningún resultado para "{0}".</value>
+  </data>
+  <data name="Mail.Status.Found" xml:space="preserve">
+    <value>{0} encontrados. Intro añade el resaltado.</value>
+  </data>
+  <data name="Mail.Status.SetUpAccount" xml:space="preserve">
+    <value>Configure una cuenta: servidores de entrada, salida y libreta de direcciones.</value>
+  </data>
+  <data name="Mail.Status.ChangeAccount" xml:space="preserve">
+    <value>Cambie la cuenta y luego pulse Ctrl+S para guardar.</value>
+  </data>
+  <data name="Mail.Status.PortsNumbers" xml:space="preserve">
+    <value>Los puertos deben ser números.</value>
+  </data>
+  <data name="Mail.Status.NeedServer" xml:space="preserve">
+    <value>Indique al menos el servidor de entrada (POP3) o el de salida (SMTP).</value>
+  </data>
+  <data name="Mail.Status.Saved" xml:space="preserve">
+    <value>Guardado.</value>
+  </data>
+  <data name="Access.Status.Error" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="Access.Status.Working" xml:space="preserve">
+    <value>Trabajando…</value>
+  </data>
+  <data name="Access.Status.ReadAgain" xml:space="preserve">
+    <value>Cambiado, pero no se pudo volver a leer la lista: {0}</value>
+  </data>
+  <data name="Access.Status.NothingToChange" xml:space="preserve">
+    <value>Nada que cambiar. A añade una entrada.</value>
+  </data>
+  <data name="Access.Status.Inherited" xml:space="preserve">
+    <value>Esta entrada se hereda de la carpeta superior. Cámbiela allí, o pulse I para dejar de heredar.</value>
+  </data>
+  <data name="Access.Status.SpecialRights" xml:space="preserve">
+    <value>Son permisos especiales: aquí se pueden quitar, pero no editar. Quítelo y añada una plantilla.</value>
+  </data>
+  <data name="Access.Status.NeedPrincipal" xml:space="preserve">
+    <value>Indique primero el usuario o el grupo.</value>
+  </data>
+  <data name="Access.Status.InheritedRemove" xml:space="preserve">
+    <value>Esta entrada se hereda de la carpeta superior; quítela allí.</value>
+  </data>
+  <data name="Access.Status.ConfirmRemove" xml:space="preserve">
+    <value>¿Quitar la entrada de {0}? Pulse y para quitar, cualquier otra tecla cancela.</value>
+  </data>
+  <data name="Access.Status.NoInheritanceSwitch" xml:space="preserve">
+    <value>Los permisos de este sistema no tienen interruptor de herencia.</value>
+  </data>
+  <data name="Access.Status.OwnerLocked" xml:space="preserve">
+    <value>El propietario no se puede cambiar aquí.</value>
+  </data>
+  <data name="FileDiff.Status.Reading" xml:space="preserve">
+    <value>Leyendo…</value>
+  </data>
+  <data name="FileDiff.Status.CouldNotRead" xml:space="preserve">
+    <value>No se pudieron leer los archivos: {0}</value>
+  </data>
+  <data name="Remote.Status.CannotStart" xml:space="preserve">
+    <value>Esta conexión no se puede iniciar.</value>
+  </data>
 </root>
