@@ -77,9 +77,14 @@ explained. The reviewer also checks:
 
 On `FAIL`, fix the findings in the working tree, then run the gate again. Commit once it passes.
 
+Then, **before any test run starts**, push the branch with `git push -u github <branch>` and open a **draft** pull
+request with `gh pr create --draft --base main`. The body holds the working record so far (plan, implementation
+gate) and an unticked test plan. Bind it with the `ccd_pr` tools. The draft makes the work visible and lets CI start
+on the pushed commit while the local runs go. Fixes made in phase 3 are committed and pushed to the same branch.
+
 ## Phase 3: Test
 
-**Output.** Test results, pasted as summaries, for:
+Starts only once the draft pull request exists. **Output.** Test results, pasted as summaries, for:
 
 1. `dotnet test` on each test project the change touches, and the full `iConsole.Test` and `iTerminal.Core.Test`
    projects, not only a filter, to catch regressions.
@@ -99,9 +104,9 @@ On `FAIL`, return to phase 2 for the fix, then re-run the tests from step 1.
 
 ## Phase 4: Integrate into main
 
-**Output.** A pull request against `main`, with the working record in its body, the test plan ticked and the
-remaining failures named. Push with `git push -u github <branch>` and open it with `gh pr create --base main`.
-The commit message and PR body end with the attribution lines the session gives.
+**Output.** The draft pull request from phase 2, updated: the working record in its body complete, the test plan
+ticked and the remaining failures named. Push any last commits, edit the body with `gh pr edit`, then mark it ready
+with `gh pr ready`. The commit message and PR body end with the attribution lines the session gives.
 
 **Gate: integration review.** The user reviews the PR and the working record, and decides. The workflow waits here.
 It does not merge on its own. Merge only when the user says so, with `gh pr merge --squash` unless they ask
