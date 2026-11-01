@@ -19,9 +19,6 @@ public sealed class ArchivesSteps
     [Then(@"the archive name changes from {string} to {string}")]
     public void ThenTheArchiveNameChangesFromValueToValue(string value1, string value2) => throw new PendingStepException();
 
-    [When(@"I type {string}")]
-    public void WhenITypeValue(string value1) => throw new PendingStepException();
-
     [Then(@"the format is set to 7z")]
     public void ThenTheFormatIsSetTo7z() => throw new PendingStepException();
 

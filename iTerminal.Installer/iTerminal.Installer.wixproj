@@ -17,7 +17,7 @@
     <!-- Set only on Windows: decides whether the WiX SDK is imported below. -->
     <BuildsInstaller Condition="$([MSBuild]::IsOSPlatform('Windows'))">true</BuildsInstaller>
   </PropertyGroup>
-  <Import Project="Sdk.props" Sdk="WixToolset.Sdk/5.0.2" Condition="'$(BuildsInstaller)' == 'true'" />
+  <Import Project="Sdk.props" Sdk="WixToolset.Sdk" Version="5.0.2" Condition="'$(BuildsInstaller)' == 'true'" />
   <PropertyGroup>
     <Version Condition="'$(Version)' == ''">1.0.0</Version>
     <InstallerPlatform>x64</InstallerPlatform>
@@ -41,7 +41,7 @@
     <RemoveDir Directories="$(AppPublishDir)" />
     <Exec Command="dotnet publish &quot;$(MSBuildProjectDirectory)\..\iTerminal\iTerminal.csproj&quot; -c Release -r $(RuntimeIdentifier) --self-contained true -o &quot;$(AppPublishDir.TrimEnd('\'))&quot; -p:Version=$(Version) -nologo -v q" />
   </Target>
-  <Import Project="Sdk.targets" Sdk="WixToolset.Sdk/5.0.2" Condition="'$(BuildsInstaller)' == 'true'" />
+  <Import Project="Sdk.targets" Sdk="WixToolset.Sdk" Version="5.0.2" Condition="'$(BuildsInstaller)' == 'true'" />
   <!--
     Off Windows there is no WiX SDK, so this is the whole build: a message, and no output. A solution
     test run (dotnet test on the .slnx) calls VSTest on every project, so that is skipped the same way.
