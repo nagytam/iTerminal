@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Model;
 [TestClass]
 public class TerminalCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesDefaultValues()
     {
@@ -23,6 +24,7 @@ public class TerminalCommandTest
         Assert.IsNull(command.CommandTask);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WorkingDirectoryUrl_SetAndGet()
     {
@@ -31,6 +33,7 @@ public class TerminalCommandTest
         Assert.IsTrue(((string)command.WorkingDirectoryUrl).Contains("C:\\Users"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Command_SetAndGet()
     {
@@ -38,6 +41,7 @@ public class TerminalCommandTest
         Assert.AreEqual("dir", command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Command_CanBeEmpty()
     {
@@ -48,6 +52,7 @@ public class TerminalCommandTest
         Assert.AreEqual(string.Empty, command.Command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExitCode_SetAndGet()
     {
@@ -61,6 +66,7 @@ public class TerminalCommandTest
         Assert.AreEqual(-1, command.ExitCode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StartTime_SetAndGet()
     {
@@ -69,6 +75,7 @@ public class TerminalCommandTest
         Assert.AreEqual(now, command.StartTime);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExitTime_SetAndGet()
     {
@@ -77,6 +84,7 @@ public class TerminalCommandTest
         Assert.AreEqual(now, command.ExitTime);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Output_SetAndGet()
     {
@@ -85,6 +93,7 @@ public class TerminalCommandTest
         Assert.AreEqual(output, command.Output);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Error_SetAndGet()
     {
@@ -93,6 +102,7 @@ public class TerminalCommandTest
         Assert.AreEqual(error, command.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EnvironmentVariables_SetAndGet()
     {
@@ -101,6 +111,7 @@ public class TerminalCommandTest
         Assert.AreEqual(envVars, command.EnvironmentVariables);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CommandTask_SetAndGet()
     {
@@ -109,6 +120,7 @@ public class TerminalCommandTest
         Assert.AreEqual(task, command.CommandTask);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Host_SetAndGet()
     {
@@ -116,6 +128,7 @@ public class TerminalCommandTest
         Assert.AreEqual("localhost", command.Host);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Username_SetAndGet()
     {
@@ -123,6 +136,7 @@ public class TerminalCommandTest
         Assert.AreEqual("admin", command.Username);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AllProperties_CanBeSetAndRetrieved()
     {
@@ -157,6 +171,7 @@ public class TerminalCommandTest
         Assert.AreEqual("testuser", command.Username);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MultipleCommands_AreIndependent()
     {

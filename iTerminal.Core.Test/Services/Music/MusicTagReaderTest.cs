@@ -27,6 +27,7 @@ public class MusicTagReaderTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_Id3V2_ReturnsTitleArtistAndAlbum()
     {
@@ -39,6 +40,7 @@ public class MusicTagReaderTest
         Assert.AreEqual("The Wall", tags.Album);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_Id3V1_IsUsedWhenThereIsNoId3V2()
     {
@@ -51,6 +53,7 @@ public class MusicTagReaderTest
         Assert.AreEqual("Old Album", tags.Album);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_UntaggedFile_ReturnsEmptyTags()
     {
@@ -60,12 +63,14 @@ public class MusicTagReaderTest
         Assert.IsTrue(MusicTagReader.Read(path).IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_MissingFile_ReturnsEmptyTagsRatherThanThrowing()
     {
         Assert.IsTrue(MusicTagReader.Read(Path.Combine(_tempRoot, "nope.mp3")).IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateTrack_UsesTagsForTheDisplayName()
     {
@@ -76,6 +81,7 @@ public class MusicTagReaderTest
         Assert.AreEqual("Pink Floyd - Time", track.DisplayName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateTrack_WithoutTags_FallsBackToTheFileName()
     {
@@ -89,6 +95,7 @@ public class MusicTagReaderTest
 
     // ── ReadAll: the whole tag block, for the music file viewer ──────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadAll_ListsEveryFrameUnderItsDisplayName()
     {
@@ -114,6 +121,7 @@ public class MusicTagReaderTest
         Assert.AreEqual("4/10", tags.Tags.Single(tag => tag.Name == "Track").Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadAll_ShowsAnUnknownFrameUnderItsOwnId()
     {
@@ -125,6 +133,7 @@ public class MusicTagReaderTest
         Assert.AreEqual("something", tags.Tags.Single().Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadAll_ResolvesANumericGenreToItsName()
     {
@@ -135,6 +144,7 @@ public class MusicTagReaderTest
         Assert.AreEqual("Rock", tags.Tags.Single(tag => tag.Name == "Genre").Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadAll_KeepsAGenreThatIsAlreadyAWord()
     {
@@ -143,6 +153,7 @@ public class MusicTagReaderTest
         Assert.AreEqual("Shoegaze", MusicTagReader.ReadAll(path).Tags.Single().Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadAll_ReadsTheTextOfACommentFrameWithoutItsDescription()
     {
@@ -154,6 +165,7 @@ public class MusicTagReaderTest
         Assert.AreEqual("Ripped from vinyl", tags.Tags.Single().Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadAll_Id3V1_IncludesYearTrackAndGenre()
     {
@@ -177,6 +189,7 @@ public class MusicTagReaderTest
         Assert.AreEqual("from a tape", tags.Tags.Single(tag => tag.Name == "Comment").Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadAll_UntaggedFile_IsEmptyRatherThanThrowing()
     {

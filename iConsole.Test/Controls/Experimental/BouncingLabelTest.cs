@@ -11,6 +11,7 @@ namespace iConsole.Test.Controls.Experimental;
 [TestClass]
 public class BouncingLabelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void BouncingLabelCanBeCreated()
     {
@@ -23,6 +24,7 @@ public class BouncingLabelTest
         Assert.IsInstanceOfType(bouncingLabel, typeof(Label));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BouncingLabelHasText()
     {
@@ -34,6 +36,7 @@ public class BouncingLabelTest
         Assert.AreEqual("Test Label", bouncingLabel.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BouncingLabelHasPosition()
     {
@@ -46,6 +49,7 @@ public class BouncingLabelTest
         Assert.AreEqual(20U, bouncingLabel.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BouncingLabelPositionCanBeChanged()
     {
@@ -61,6 +65,7 @@ public class BouncingLabelTest
         Assert.AreEqual(10U, bouncingLabel.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BouncingLabelHasDefaultVisibility()
     {
@@ -72,6 +77,7 @@ public class BouncingLabelTest
         Assert.IsTrue(bouncingLabel.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BouncingLabelHasDefaultEnabled()
     {
@@ -83,6 +89,7 @@ public class BouncingLabelTest
         Assert.IsTrue(bouncingLabel.IsEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BouncingLabelTextCanBeEmpty()
     {
@@ -94,6 +101,7 @@ public class BouncingLabelTest
         Assert.AreEqual("", bouncingLabel.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BouncingLabelZeroPosition()
     {
@@ -106,6 +114,7 @@ public class BouncingLabelTest
         Assert.AreEqual(0U, bouncingLabel.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BouncingLabelInheritsFromLabel()
     {
@@ -117,6 +126,7 @@ public class BouncingLabelTest
         Assert.IsInstanceOfType(bouncingLabel, typeof(Label));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RendersTextToBuffer()
     {
@@ -134,6 +144,7 @@ public class BouncingLabelTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Hello"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AtPosition_RenderedAtCorrectRow()
     {
@@ -152,6 +163,7 @@ public class BouncingLabelTest
         Assert.IsTrue(lines[1].Contains("Hi"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_UsesColorSchemeColors()
     {

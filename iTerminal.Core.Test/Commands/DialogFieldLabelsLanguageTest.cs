@@ -29,6 +29,7 @@ public class DialogFieldLabelsLanguageTest
         return localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryKey()
     {
@@ -48,6 +49,7 @@ public class DialogFieldLabelsLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSearchDialogLabels_FollowTheLanguage_AndFallBackToEnglish()
     {

@@ -53,6 +53,7 @@ public class CurrencyConverterDialogTest
         return string.Join("\n", Enumerable.Range(0, height).Select(buffer.Line));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ItDownloadsTheRatesOnOpeningAndConvertsOneEuroToDollars()
     {
@@ -69,6 +70,7 @@ public class CurrencyConverterDialogTest
         StringAssert.Contains(screen, "Rates of 2026-10-16 downloaded.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FreshKeptRatesAreShownAtOnceAndStillRefreshed()
     {
@@ -82,6 +84,7 @@ public class CurrencyConverterDialogTest
         Assert.AreEqual(1, provider.Calls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheAmountAcceptsACommaAndSwapTurnsTheConversionAround()
     {
@@ -96,6 +99,7 @@ public class CurrencyConverterDialogTest
         StringAssert.Contains(Drawn(dialog), "10.50 USD  =  5.25 EUR");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANonNumberIsSaidToBeOne()
     {
@@ -108,6 +112,7 @@ public class CurrencyConverterDialogTest
         StringAssert.Contains(Drawn(dialog), "\"abc\" is not a number.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedDownloadSaysSoAndKeepsTheKeptRates()
     {
@@ -123,6 +128,7 @@ public class CurrencyConverterDialogTest
         StringAssert.Contains(screen, "1.00 EUR  =  2.00 USD");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoRatesAtAllItSaysHowToGetThem()
     {
@@ -134,6 +140,7 @@ public class CurrencyConverterDialogTest
         StringAssert.Contains(Drawn(dialog), "No rates yet — press F5 to download them.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADownloadCancelledLateDoesNotOverwriteTheNewerRates()
     {
@@ -170,6 +177,7 @@ public class CurrencyConverterDialogTest
         Assert.IsFalse(dialog.Status.Contains("Cancelled", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingKeepsTheChoices()
     {
@@ -186,6 +194,7 @@ public class CurrencyConverterDialogTest
         Assert.AreEqual("EUR", settings.Values[CurrencyConverterDialog.ToKey]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("1234.5", 1234.5)]
     [DataRow("1 234,5", 1234.5)]

@@ -25,6 +25,7 @@ public class NumericUpDownTest
         return control;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListDeleteKeysAndOmitSignWhenNoNegatives()
     {
@@ -35,6 +36,7 @@ public class NumericUpDownTest
         CollectionAssert.DoesNotContain(keys, "-");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListSignFlipWhenRangeAllowsNegatives()
     {
@@ -46,6 +48,7 @@ public class NumericUpDownTest
         Assert.AreEqual("Flip the sign", hints.Single(h => h.Key == "-").Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_EmptyWhenReadOnlyOrDisabled()
     {
@@ -59,6 +62,7 @@ public class NumericUpDownTest
     }
 
     /// <summary>A key the focused control declines is offered to every control; an unfocused spinner must let it pass.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnfocusedSpinnerIgnoresTheArrows()
     {
@@ -71,6 +75,7 @@ public class NumericUpDownTest
     private static KeyEvent Key(ConsoleKey consoleKey, char keyChar = '\0') =>
         new(keyChar, consoleKey, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowKeysStepTheValue()
     {
@@ -84,6 +89,7 @@ public class NumericUpDownTest
         Assert.AreEqual(5, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PageKeysUseLargeStepAndClampToBounds()
     {
@@ -104,6 +110,7 @@ public class NumericUpDownTest
         Assert.AreEqual(100, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingDigitsBuildsTheValue()
     {
@@ -118,6 +125,7 @@ public class NumericUpDownTest
         Assert.AreEqual(4, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValueIsClampedToTheRange()
     {
@@ -130,6 +138,7 @@ public class NumericUpDownTest
         Assert.AreEqual(0, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WheelStepsTheValue()
     {
@@ -142,6 +151,7 @@ public class NumericUpDownTest
         Assert.AreEqual(5, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnlyIgnoresInput()
     {
@@ -153,6 +163,7 @@ public class NumericUpDownTest
         Assert.AreEqual(5, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ValueChangedFiresOnChangeOnly()
     {
@@ -170,6 +181,7 @@ public class NumericUpDownTest
         Assert.AreEqual(0, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawRendersLabelAndValue()
     {
@@ -192,6 +204,7 @@ public class NumericUpDownTest
         Assert.IsTrue(buffer.ContentAsString.Contains("42"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Delete_ResetsTheValueToZero()
     {
@@ -202,6 +215,7 @@ public class NumericUpDownTest
         Assert.AreEqual(0, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Delete_ClampsZeroToTheMinimum()
     {
@@ -214,6 +228,7 @@ public class NumericUpDownTest
         Assert.AreEqual(3, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Plus_MakesANegativeValuePositive_AndLeavesAPositiveOne()
     {
@@ -228,6 +243,7 @@ public class NumericUpDownTest
         Assert.AreEqual(7, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnly_IgnoresDeleteAndPlus()
     {
@@ -242,6 +258,7 @@ public class NumericUpDownTest
         Assert.AreEqual(-7, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_DeleteSaysZeroWhenTheRangeHoldsZero()
     {
@@ -251,6 +268,7 @@ public class NumericUpDownTest
         Assert.AreEqual("Set the value to 0", control.GetKeyHints().Single(h => h.Key == "Delete").Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task KeyHints_DeleteSaysNearestBoundWhenTheRangeLeavesZeroOut()
     {
@@ -266,6 +284,7 @@ public class NumericUpDownTest
         Assert.AreEqual(3, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PendingMinusOnZeroShowsAsMinusZero()
     {
@@ -283,6 +302,7 @@ public class NumericUpDownTest
         Assert.AreEqual(0, control.Value, "the sign is only taken with the next digit");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Maximum_WidenedWithTheValueUnchanged_RequestsARepaint()
     {
@@ -296,6 +316,7 @@ public class NumericUpDownTest
         Assert.AreEqual(5, control.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Minimum_ChangedWithTheValueUnchanged_RequestsARepaint()
     {

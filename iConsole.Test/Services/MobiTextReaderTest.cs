@@ -67,6 +67,7 @@ public class MobiTextReaderTest
         return file.ToArray();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PalmDocText_IsDecompressed_AndItsMarkupReadAsLines()
     {
@@ -78,6 +79,7 @@ public class MobiTextReaderTest
         CollectionAssert.AreEqual(new[] { "abcabc", "Hello world!" }, lines);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TrailingEntries_AreStripped_BeforeDecompression()
     {
@@ -89,6 +91,7 @@ public class MobiTextReaderTest
         CollectionAssert.AreEqual(new[] { "Kept" }, lines);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UncompressedText_IsReadAsItIs()
     {
@@ -99,6 +102,7 @@ public class MobiTextReaderTest
         CollectionAssert.AreEqual(new[] { "Plain Ünïcode" }, lines);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HuffmanCompression_IsReportedNotRead()
     {
@@ -107,6 +111,7 @@ public class MobiTextReaderTest
         Assert.IsTrue(lines.Single().Contains("Huffman"), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFileThatIsNotPalmDb_IsReportedAsTooShortOrMissingItsHeader()
     {

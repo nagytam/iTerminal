@@ -91,6 +91,7 @@ public class ContentModelPreviewTest
     private static string Body(IContentModel model) =>
         string.Join("\n", model.Entries.AsSnapshot().OfType<PreviewLineEntry>().Select(e => e.Text));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlF3PreviewsInTheOtherPanelAndFollowsTheCursor()
     {
@@ -115,6 +116,7 @@ public class ContentModelPreviewTest
         await WaitAsync(() => Body(preview).Contains("second file body"), "moving the cursor moves the preview");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlF3AgainGivesThePanelItsFolderBack()
     {
@@ -142,6 +144,7 @@ public class ContentModelPreviewTest
         Assert.AreSame(before, preview.BuildTask);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingInAPreviewIsAFileToActOn()
     {
@@ -152,6 +155,7 @@ public class ContentModelPreviewTest
         Assert.IsTrue(preview.IsReadOnly);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APreviewRowIsDrawnAcrossThePanelWithoutColumns()
     {

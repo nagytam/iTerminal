@@ -121,6 +121,7 @@ public class MusicPanelsHotKeyWithFilePanelTest
         };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlF7_WithFilePanelFocused_ShowsTheTwoMusicPanels()
     {
@@ -136,6 +137,7 @@ public class MusicPanelsHotKeyWithFilePanelTest
             "A function key must not start the panel's search filter");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ControlShiftM_WithFilePanelFocused_ShowsTheTwoMusicPanels()
     {
@@ -153,6 +155,7 @@ public class MusicPanelsHotKeyWithFilePanelTest
     /// than being eaten by type-to-search, and F5 has to add what was marked instead of what the
     /// cursor ended up on.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Insert_MarksCatalogRows_AndF5CopiesThemIntoThePlaylistPanel()
     {
@@ -182,6 +185,7 @@ public class MusicPanelsHotKeyWithFilePanelTest
     /// Documents why Alt+M cannot be the binding: the panel claims it first for type-to-search.
     /// Any future Alt+letter hot key added to the status bar will hit exactly this.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AltM_IsSwallowedByThePanelSearchFilter_SoItCannotBeUsedAsAHotKey()
     {
@@ -200,6 +204,7 @@ public class MusicPanelsHotKeyWithFilePanelTest
     /// of their own, but nothing types into them directly — it arrives as Alt+&lt;letter&gt; then
     /// plain letters, from the same type-to-search the file panels use, and Esc ends it.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AltText_SearchesTheCatalogPanel()
     {
@@ -223,6 +228,7 @@ public class MusicPanelsHotKeyWithFilePanelTest
         Assert.IsFalse(catalog.IsSearching);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AltText_FiltersThePlaylistPanel()
     {

@@ -7,6 +7,7 @@ namespace iConsole.Test.Application;
 [TestClass]
 public class iConsoleApplicationTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RunAsync_StartsAndStopsHost()
     {
@@ -37,6 +38,7 @@ public class iConsoleApplicationTest
         host.Verify(h => h.StopAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateBuilder_ReturnsBuilder()
     {

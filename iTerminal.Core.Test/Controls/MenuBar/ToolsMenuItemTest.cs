@@ -8,6 +8,7 @@ namespace iTerminal.Core.Controls.MenuBar.Test;
 [TestClass]
 public class ToolsMenuItemTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ListsItsEntriesInOrder()
     {
@@ -21,6 +22,7 @@ public class ToolsMenuItemTest
         CollectionAssert.AreEqual(new[] { "Terminal", "Disk Manager", "Network Manager", "iPhone Browser", "Music Player", "Theme Manager", "Settings", "Task Manager", "Process Manager", "System Info" }, entries);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheLargerFeaturesAreListedWithTheirOwnKeys()
     {
@@ -39,6 +41,7 @@ public class ToolsMenuItemTest
         CollectionAssert.Contains(entries, "Unit Converter" + (char)9 + "Ctrl+E");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheTranslatorIsListedWithItsKey()
     {
@@ -58,6 +61,7 @@ public class ToolsMenuItemTest
             string.Join(" | ", entries));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RuntimeDependenciesIsListedWithoutAHotKey()
     {

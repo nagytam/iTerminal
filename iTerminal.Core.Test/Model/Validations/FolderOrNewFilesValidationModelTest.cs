@@ -40,6 +40,7 @@ public class FolderOrNewFilesValidationModelTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnExistingFolder_IsAcceptedAsTheTarget()
     {
@@ -48,6 +49,7 @@ public class FolderOrNewFilesValidationModelTest
         Assert.IsTrue(model.IsValid, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnExistingFile_IsRefusedAndSaysItAlreadyExists()
     {
@@ -57,6 +59,7 @@ public class FolderOrNewFilesValidationModelTest
         Assert.AreEqual(UrlValidationModel.ExistsMessage, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANewName_IsAccepted()
     {

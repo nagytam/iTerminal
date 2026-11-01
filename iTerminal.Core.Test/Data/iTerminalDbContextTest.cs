@@ -8,6 +8,7 @@ namespace iTerminal.Core.Data.Test;
 [TestClass]
 public class iTerminalDbContextTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void AFreshDatabase_KeepsASettingAcrossContexts()
     {

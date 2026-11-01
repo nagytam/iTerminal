@@ -5,6 +5,7 @@ namespace iConsole.Test.Model;
 [TestClass]
 public class ListItemTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ListItemConstructor()
     {
@@ -15,6 +16,7 @@ public class ListItemTest
         Assert.IsFalse(item.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListItemSetValue()
     {
@@ -23,6 +25,7 @@ public class ListItemTest
         Assert.AreEqual("new value", item.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListItemSetEnabled()
     {
@@ -31,6 +34,7 @@ public class ListItemTest
         Assert.IsTrue(item.IsEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListItemSetSelected()
     {
@@ -39,6 +43,7 @@ public class ListItemTest
         Assert.IsTrue(item.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListItemWithCustomObject()
     {
@@ -47,6 +52,7 @@ public class ListItemTest
         Assert.AreEqual(customObj, item.Item);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListItemWithInteger()
     {
@@ -55,6 +61,7 @@ public class ListItemTest
         Assert.AreEqual("42", item.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListItemToString()
     {
@@ -63,6 +70,7 @@ public class ListItemTest
         Assert.IsNotNull(str);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListItemInterface()
     {

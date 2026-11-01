@@ -17,6 +17,7 @@ public class DiskUsageServiceTest
         return root;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Scan_TotalsEveryLevel_AndSortsLargestFirst()
     {
@@ -41,6 +42,7 @@ public class DiskUsageServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ManyFiles_AreFoldedIntoOneRow()
     {
@@ -67,6 +69,7 @@ public class DiskUsageServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Cancel_EndsTheScanWithoutATree()
     {

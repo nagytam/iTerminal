@@ -12,6 +12,7 @@ public class ControlsReviewBatch24Test
 
     private static string[] Keys(IEnumerable<(string Key, string Description)> hints) => [.. hints.Select(h => h.Key)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopupListView_KeyHints_NameTheListKeys()
     {
@@ -20,6 +21,7 @@ public class ControlsReviewBatch24Test
         CollectionAssert.AreEqual(new[] { "Up/Down", "PageUp/PageDown", "Home/End", "Enter/Space", "Esc" }, Keys(view.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuItem_KeyHints_AreOfferedOnlyWhileTheMenuIsOpen()
     {
@@ -33,6 +35,7 @@ public class ControlsReviewBatch24Test
         CollectionAssert.IsSubsetOf(new[] { "Up/Down", "Enter/Space", "Right", "Left", "Esc" }, Keys(parent.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Popup_KeyHints_AreEmptyUntilItIsOpen()
     {
@@ -41,6 +44,7 @@ public class ControlsReviewBatch24Test
         Assert.AreEqual(0, popup.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Popup_KeyHints_NameEscWhileOpen_AndNothingWhenEscDoesNotClose()
     {

@@ -107,6 +107,7 @@ public class QuitHotKeyRoutingTest
         };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F10_WithFilePanelFocused_CancelsDesktop()
     {
@@ -125,6 +126,7 @@ public class QuitHotKeyRoutingTest
     /// has actually been released. Simulate that: start a filter with Alt+A, then send F10
     /// with a (stale) Alt flag still set, exactly as the OS would deliver it in that scenario.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F10_WithStaleAltFlagAfterUsingFilePanelSearch_StillCancelsDesktop()
     {

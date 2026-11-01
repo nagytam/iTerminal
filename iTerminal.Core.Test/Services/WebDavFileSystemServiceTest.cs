@@ -71,6 +71,7 @@ public class WebDavFileSystemServiceTest
         return (service, handler, login);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Escape_EncodesEverySegmentAndKeepsTheTrailingSlash()
     {
@@ -79,6 +80,7 @@ public class WebDavFileSystemServiceTest
         Assert.AreEqual("/x/y.txt", WebDavFileSystemService.Escape("/x/y.txt"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Connect_HandsTheLoginToTheClient_AndSelectsTheSchemeFromTheUrl()
     {
@@ -94,6 +96,7 @@ public class WebDavFileSystemServiceTest
         Assert.AreEqual("https://example.org:8443/a.txt", handler.Requests[0].Uri.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void List_ReadsTheMultiStatus_FoldersFirst_WithDecodedNames()
     {
@@ -115,6 +118,7 @@ public class WebDavFileSystemServiceTest
         Assert.AreEqual("http://example.org/docs/", handler.Requests[0].Uri.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void List_AtTheRoot_HasNoParentRow()
     {
@@ -127,6 +131,7 @@ public class WebDavFileSystemServiceTest
         Assert.IsFalse(entries.Any(e => e.Url.DisplayName == ".."));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListChildren_OfAFolderThatIsNotThere_Throws_SoAWalkDoesNotMistakeItForEmpty()
     {
@@ -137,6 +142,7 @@ public class WebDavFileSystemServiceTest
         Assert.Throws<IOException>(() => service.ListChildren(new Url("dav://example.org/missing/")).ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void List_OfAFolderThatIsNotThere_IsEmpty_AndAFailureIsNotThrown()
     {
@@ -147,6 +153,7 @@ public class WebDavFileSystemServiceTest
         Assert.AreEqual(0, service.List(new Url("dav://example.org/missing/")).Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFile_AndExistsFolder_TellACollectionFromAFile()
     {
@@ -162,6 +169,7 @@ public class WebDavFileSystemServiceTest
         Assert.IsFalse(service.ExistsFolder(new Url("dav://example.org/f.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Write_Read_AndCreateFolder_UseTheirVerbs()
     {
@@ -194,6 +202,7 @@ public class WebDavFileSystemServiceTest
         Assert.AreEqual("MKCOL", handler.Requests[2].Method.Method, "an existing folder (405) is not an error");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Write_RefusedByTheServer_SaysWhy()
     {
@@ -215,6 +224,7 @@ public class WebDavFileSystemServiceTest
         StringAssert.Contains(message, "login");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Delete_ReportsWhetherThereWasSomethingToDelete()
     {
@@ -230,6 +240,7 @@ public class WebDavFileSystemServiceTest
         Assert.IsTrue(handler.Requests[2].Uri.AbsolutePath.EndsWith('/'), "a collection is addressed with its trailing slash");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Move_AndCopy_AreDoneByTheServer_WithDestinationAndOverwrite()
     {
@@ -247,6 +258,7 @@ public class WebDavFileSystemServiceTest
         Assert.AreEqual("T", handler.Requests[1].Headers["Overwrite"]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Move_ThatWouldOverwrite_IsLeftAlone_NotAnError()
     {
@@ -257,6 +269,7 @@ public class WebDavFileSystemServiceTest
         await service.MoveAsync(new Url("dav://example.org/a.txt"), new Url("dav://example.org/b.txt"), overwrite: false);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Streams_ReportProgress_BothWays()
     {
@@ -287,6 +300,7 @@ public class WebDavFileSystemServiceTest
         Assert.AreEqual(6, up.Max());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Connect_ToAnotherUser_ReplacesTheClient()
     {

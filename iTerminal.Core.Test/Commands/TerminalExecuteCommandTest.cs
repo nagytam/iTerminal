@@ -11,6 +11,7 @@ namespace iTerminal.Core.Commands.Test;
 [TestClass]
 public class TerminalExecuteCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsEnter()
     {
@@ -19,6 +20,7 @@ public class TerminalExecuteCommandTest
         Assert.AreEqual(ConsoleKey.Enter, command.Key!.ConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoPanel_StartsNothing()
     {

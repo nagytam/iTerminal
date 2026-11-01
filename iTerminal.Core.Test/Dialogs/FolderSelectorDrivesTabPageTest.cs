@@ -54,6 +54,7 @@ public class FolderSelectorDrivesTabPageTest
         };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SelectedDrive_FollowsTheCursorNotAPreviousEnter()
     {
@@ -66,6 +67,7 @@ public class FolderSelectorDrivesTabPageTest
         Assert.AreEqual(Container.MEMORY_DRIVE, page.SelectedDrive!.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SelectedDrive_WithNoDrives_IsNull()
     {
@@ -74,6 +76,7 @@ public class FolderSelectorDrivesTabPageTest
         Assert.IsNull(page.SelectedDrive);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_GoesToTheDriveUnderTheCursor()
     {
@@ -86,6 +89,7 @@ public class FolderSelectorDrivesTabPageTest
         CollectionAssert.AreEqual(new[] { Container.MEMORY_DRIVE }, harness.Navigations);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnADriveThatIsNotReady_NavigatesNowhere()
     {
@@ -97,6 +101,7 @@ public class FolderSelectorDrivesTabPageTest
         Assert.AreEqual(0, harness.Navigations.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithNoDrives_NavigatesNowhere()
     {
@@ -108,6 +113,7 @@ public class FolderSelectorDrivesTabPageTest
         Assert.AreEqual(0, harness.Navigations.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Down_MovesTheCursor()
     {
@@ -119,6 +125,7 @@ public class FolderSelectorDrivesTabPageTest
         Assert.AreEqual(1, (int)page.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListsReadyDrivesBeforeTheRest()
     {
@@ -128,6 +135,7 @@ public class FolderSelectorDrivesTabPageTest
             "The cursor starts at row zero, which should be a drive that can actually be opened.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithoutADriveModel_StillWorks()
     {
@@ -138,6 +146,7 @@ public class FolderSelectorDrivesTabPageTest
         Assert.IsNull(page.SelectedDrive);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_InANarrowPage_DoesNotProduceNegativeGeometry()
     {
@@ -156,6 +165,7 @@ public class FolderSelectorDrivesTabPageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetKeyHints_DocumentEnterAndEscape()
     {

@@ -35,6 +35,7 @@ public class ControlHintsLanguageTest
         return localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryKey()
     {
@@ -51,6 +52,7 @@ public class ControlHintsLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheEmptyTexts_FollowTheLanguage_UnlessTheyWereSet()
     {
@@ -67,6 +69,7 @@ public class ControlHintsLanguageTest
         Assert.AreEqual("custom", pie.EmptyText, "an explicit text wins over the language");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InGerman_TheCheckBoxHintIsTranslated()
     {

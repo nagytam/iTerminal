@@ -13,6 +13,7 @@ public class CsvEdgeCasesTest
 
     #region Quotes inside quotes
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADoubledSingleQuoteInAValueIsOneQuote()
     {
@@ -23,6 +24,7 @@ public class CsvEdgeCasesTest
         CollectionAssert.AreEqual(new[] { "O'Brien" }, First(result));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADoubledDoubleQuoteInAColumnNameIsOneQuote()
     {
@@ -34,6 +36,7 @@ public class CsvEdgeCasesTest
         Assert.AreEqual("x", result.Rows[0][0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AValueThatEndsInADoubledQuoteStillCloses()
     {
@@ -44,6 +47,7 @@ public class CsvEdgeCasesTest
         CollectionAssert.AreEqual(new[] { "rock'" }, First(result));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnclosedQuoteIsStillReported()
     {
@@ -57,6 +61,7 @@ public class CsvEdgeCasesTest
 
     #region LIKE
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("apple", "a%", true)]
     [DataRow("apple", "%e", true)]
@@ -81,6 +86,7 @@ public class CsvEdgeCasesTest
         Assert.AreEqual(expected, CsvQuery.GlobMatch(text, pattern), $"'{text}' LIKE '{pattern}'");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALikePatternWithManyWildcardsFinishesAtOnce()
     {
@@ -95,6 +101,7 @@ public class CsvEdgeCasesTest
         Assert.IsTrue(clock.ElapsedMilliseconds < 500, $"took {clock.ElapsedMilliseconds} ms");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NotLikeKeepsTheRowsThatDoNotMatch()
     {
@@ -107,6 +114,7 @@ public class CsvEdgeCasesTest
 
     #region Order
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AColumnOfNumbersAndWordsSortsNumbersFirstThenWords()
     {
@@ -120,6 +128,7 @@ public class CsvEdgeCasesTest
         CollectionAssert.AreEqual(new[] { "apple", "1a", "10", "9", "2" }, First(descending));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheOrderDoesNotDependOnWhereTheRowsStarted()
     {
@@ -135,6 +144,7 @@ public class CsvEdgeCasesTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyFieldSortsLastWhicheverWayTheColumnIsSorted()
     {
@@ -144,6 +154,7 @@ public class CsvEdgeCasesTest
         CollectionAssert.AreEqual(new[] { "a", "c", "b" }, First(CsvQuery.Run(document, "ORDER BY v DESC")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("NaN")]
     [DataRow("Infinity")]
@@ -161,6 +172,7 @@ public class CsvEdgeCasesTest
 
     #region Column names
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARepeatedNameNeverCollidesWithOneThatIsThere()
     {
@@ -170,6 +182,7 @@ public class CsvEdgeCasesTest
         CollectionAssert.AreEqual(new[] { "a", "a_2", "a_2_2", "a_3" }, document.Headers.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyAndRepeatedNamesTogetherStayDistinct()
     {
@@ -178,6 +191,7 @@ public class CsvEdgeCasesTest
         Assert.AreEqual(4, document.Headers.Distinct(StringComparer.OrdinalIgnoreCase).Count(), string.Join(",", document.Headers));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryColumnCanBeNamedInAQuery()
     {
@@ -192,6 +206,7 @@ public class CsvEdgeCasesTest
 
     #region Reading the file
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AUtf16FileWithItsByteOrderMarkIsReadAsText()
     {
@@ -203,6 +218,7 @@ public class CsvEdgeCasesTest
         Assert.AreEqual(text, CsvViewerDialog.Decode(big));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AUtf8FileIsStillReadAsUtf8_WithOrWithoutItsMark()
     {
@@ -216,6 +232,7 @@ public class CsvEdgeCasesTest
         Assert.AreEqual("név", document.Headers[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AShortFileIsNotMistakenForUtf16()
     {

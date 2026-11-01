@@ -16,6 +16,7 @@ public class PopUpWindowTest
         public void Center(Size size) => CenterInParent(size);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CenterInParent_NeverMakesThePopupBiggerThanItsParent()
     {
@@ -30,6 +31,7 @@ public class PopUpWindowTest
         Assert.AreEqual(new Position(0, 0), popUp.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CenterInParent_KeepsASmallerPopupAndCentersIt()
     {
@@ -44,6 +46,7 @@ public class PopUpWindowTest
         Assert.AreEqual(new Position(20, 7), popUp.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowCanBeCreated()
     {
@@ -54,6 +57,7 @@ public class PopUpWindowTest
         Assert.IsInstanceOfType(popUpWindow, typeof(Window));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowHasTitle()
     {
@@ -63,6 +67,7 @@ public class PopUpWindowTest
         Assert.AreEqual("My Dialog", popUpWindow.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowIsHiddenByDefault()
     {
@@ -72,6 +77,7 @@ public class PopUpWindowTest
         Assert.IsFalse(popUpWindow.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowCanBeShown()
     {
@@ -83,6 +89,7 @@ public class PopUpWindowTest
         Assert.IsTrue(popUpWindow.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowCanBeHidden()
     {
@@ -95,6 +102,7 @@ public class PopUpWindowTest
         Assert.IsFalse(popUpWindow.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowInitializesActionButtons()
     {
@@ -107,6 +115,7 @@ public class PopUpWindowTest
         Assert.IsTrue(popUpWindow.Controls is not null);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowCanContainControls()
     {
@@ -120,6 +129,7 @@ public class PopUpWindowTest
         Assert.IsTrue(popUpWindow.Controls.Any(c => c == label));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowTitleCanBeChanged()
     {
@@ -131,6 +141,7 @@ public class PopUpWindowTest
         Assert.AreEqual("Changed", popUpWindow.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowIsModalByDefault()
     {
@@ -142,6 +153,7 @@ public class PopUpWindowTest
         Assert.IsNotNull(popUpWindow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowCanHavePosition()
     {
@@ -154,6 +166,7 @@ public class PopUpWindowTest
         Assert.AreEqual(new Position(10, 5), popUpWindow.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowCanHaveSize()
     {
@@ -166,6 +179,7 @@ public class PopUpWindowTest
         Assert.AreEqual(new Size(50, 20), popUpWindow.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowInheritsFromWindow()
     {
@@ -175,6 +189,7 @@ public class PopUpWindowTest
         Assert.IsInstanceOfType(popUpWindow, typeof(Window));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PopUpWindowNestedPopUpWindowsInitialize()
     {
@@ -193,6 +208,7 @@ public class PopUpWindowTest
 [TestClass]
 public class DatePopUpWindowTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowCanBeCreated()
     {
@@ -203,6 +219,7 @@ public class DatePopUpWindowTest
         Assert.IsInstanceOfType(dateWindow, typeof(PopUpWindow));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowHasCorrectTitle()
     {
@@ -212,6 +229,7 @@ public class DatePopUpWindowTest
         Assert.AreEqual("Date, Time and TimeZone", dateWindow.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowIsHiddenByDefault()
     {
@@ -221,6 +239,7 @@ public class DatePopUpWindowTest
         Assert.IsFalse(dateWindow.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowInitializeLayoutSetsSize()
     {
@@ -232,6 +251,7 @@ public class DatePopUpWindowTest
         Assert.AreEqual(new Size(80, 7), dateWindow.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowInitializeLayoutSetsPosition()
     {
@@ -243,6 +263,7 @@ public class DatePopUpWindowTest
         Assert.AreEqual(new Position(10, 10), dateWindow.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowDrawsDateInfo()
     {
@@ -263,6 +284,7 @@ public class DatePopUpWindowTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Date:"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowDrawsTimeInfo()
     {
@@ -283,6 +305,7 @@ public class DatePopUpWindowTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Time:"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowDrawsTimeZoneInfo()
     {
@@ -303,6 +326,7 @@ public class DatePopUpWindowTest
         Assert.IsTrue(buffer.ContentAsString.Length > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowCallsStateHasChangedWhenVisible()
     {
@@ -315,6 +339,7 @@ public class DatePopUpWindowTest
         dateWindow.OnIdle();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowUpdatesDynamically()
     {
@@ -343,6 +368,7 @@ public class DatePopUpWindowTest
         Assert.IsTrue(secondOutput.Contains("Date:"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowInheritsFromPopUpWindow()
     {
@@ -352,6 +378,7 @@ public class DatePopUpWindowTest
         Assert.IsInstanceOfType(dateWindow, typeof(PopUpWindow));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowInitializesActionButtons()
     {
@@ -363,6 +390,7 @@ public class DatePopUpWindowTest
         Assert.IsInstanceOfType(dateWindow, typeof(PopUpWindow));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DatePopUpWindowDisplaysValidDateFormat()
     {

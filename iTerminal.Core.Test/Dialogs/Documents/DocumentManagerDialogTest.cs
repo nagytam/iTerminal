@@ -132,6 +132,7 @@ public class DocumentManagerDialogTest
             $"the result list to settle on {expectedRows} rows (has {dialog.ResultCountForTest})");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpeningWithNoQueryListsEverythingIndexed()
     {
@@ -147,6 +148,7 @@ public class DocumentManagerDialogTest
         AssertScreenContains(screen, "Results (3)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyIndexSaysHowToFillIt()
     {
@@ -158,6 +160,7 @@ public class DocumentManagerDialogTest
         StringAssert.Contains(dialog.MessageForTest, "Ctrl+R");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingNarrowsTheResults()
     {
@@ -173,6 +176,7 @@ public class DocumentManagerDialogTest
         Assert.AreEqual("2 matches.", dialog.MessageForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANoMatchQuerySaysSo()
     {
@@ -188,6 +192,7 @@ public class DocumentManagerDialogTest
         Assert.AreEqual("No document matches \"zzz\".", dialog.MessageForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailingSearchIsReportedInTheStatusLine()
     {
@@ -203,6 +208,7 @@ public class DocumentManagerDialogTest
         StringAssert.Contains(dialog.MessageForTest, "database locked");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FirstEscapeClearsTheQuerySecondCloses()
     {
@@ -225,6 +231,7 @@ public class DocumentManagerDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog), "the second Esc closes the dialog");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheFooterNamesEscapeForWhatItWillDo()
     {
@@ -241,6 +248,7 @@ public class DocumentManagerDialogTest
         AssertScreenContains(Render(dialog), "Esc:clear");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowKeysMoveTheResultCursorWhileTheSearchBoxHasFocus()
     {
@@ -256,6 +264,7 @@ public class DocumentManagerDialogTest
         Assert.AreEqual(service.Documents[1].Path, dialog.SelectedPathForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnIndexRefreshKeepsTheCursorOnTheSameDocument()
     {
@@ -277,6 +286,7 @@ public class DocumentManagerDialogTest
         Assert.AreEqual(service.Documents[3].Path, dialog.SelectedPathForTest, "the cursor follows c.txt to its new row");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANewQueryStartsAtTheTop()
     {
@@ -293,6 +303,7 @@ public class DocumentManagerDialogTest
         Assert.AreEqual(service.Documents[0].Path, dialog.SelectedPathForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePreviewShowsTheSelectedDocumentsText()
     {
@@ -311,6 +322,7 @@ public class DocumentManagerDialogTest
         }, "the preview to load");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASkeletonStandsInForThePreviewWhileItsTextLoads()
     {
@@ -337,6 +349,7 @@ public class DocumentManagerDialogTest
         }, "the skeleton to give way to the text");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADocumentWithoutTextExplainsWhyThereIsNoPreview()
     {
@@ -352,6 +365,7 @@ public class DocumentManagerDialogTest
             string.Join(Environment.NewLine, dialog.PreviewLinesForTest));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlTHidesAndShowsThePreview()
     {
@@ -371,6 +385,7 @@ public class DocumentManagerDialogTest
         AssertScreenContains(Render(dialog), "Preview");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlRStartsARescanThatCtrlXCanStop()
     {
@@ -391,6 +406,7 @@ public class DocumentManagerDialogTest
         Assert.AreEqual(1, service.RefreshCalls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABackgroundScanIsNotAdvertisedAsStoppable()
     {
@@ -414,6 +430,7 @@ public class DocumentManagerDialogTest
         StringAssert.Contains(dialog.MessageForTest, "cannot be stopped from here");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlRDoesNotStartASecondScanWhileOneIsRunning()
     {
@@ -426,6 +443,7 @@ public class DocumentManagerDialogTest
         Assert.AreEqual(0, service.RefreshCalls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterRevealsTheDocumentsFolderInTheFocusedPanelAndCloses()
     {
@@ -448,6 +466,7 @@ public class DocumentManagerDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingUnsubscribesFromTheLibrary()
     {
@@ -466,6 +485,7 @@ public class DocumentManagerDialogTest
         Assert.AreEqual(1, dialog.ResultCountForTest, "a closed dialog does not rebuild its listing");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WrapLinesBreaksAtWordsAndKeepsBlankLines()
     {

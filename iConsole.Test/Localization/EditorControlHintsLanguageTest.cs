@@ -23,6 +23,7 @@ public class EditorControlHintsLanguageTest
         return localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryKey()
     {
@@ -39,6 +40,7 @@ public class EditorControlHintsLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheTextBoxHints_FollowTheLanguage_AndFallBackToEnglish()
     {

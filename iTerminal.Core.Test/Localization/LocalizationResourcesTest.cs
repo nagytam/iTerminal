@@ -36,6 +36,7 @@ public class LocalizationResourcesTest
     private static int[] Placeholders(string text) =>
         [.. Regex.Matches(text, @"\{(\d+)").Select(m => int.Parse(m.Groups[1].Value)).Distinct().Order()];
 
+    [Timeout(60_000)]
     [TestMethod]
     [DynamicData(nameof(Files))]
     public void EveryEnglishKeyIsTranslatedIntoEveryLanguage(string baseName, Assembly assembly)
@@ -55,6 +56,7 @@ public class LocalizationResourcesTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DynamicData(nameof(Files))]
     public void EveryTranslationKeepsThePlaceholdersOfTheEnglishText(string baseName, Assembly assembly)
@@ -70,6 +72,7 @@ public class LocalizationResourcesTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuLabelsMapToTheKeysTheResourcesHold()
     {

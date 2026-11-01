@@ -17,6 +17,7 @@ public class WeatherIndicatorTest
 
     private static WeatherInfo Budapest() => new() { LocationName = "Budapest", TemperatureC = 21.5 };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BeforeTheFirstReadingItSaysItIsLoading()
     {
@@ -25,6 +26,7 @@ public class WeatherIndicatorTest
         StringAssert.StartsWith(indicator.Describe(20), "Weather ");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShowsThePlaceAndTheTemperature()
     {
@@ -33,6 +35,7 @@ public class WeatherIndicatorTest
         Assert.AreEqual($"Budapest {21.5:0.#}°C".PadRight(20), indicator.Describe(20));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACachedReadingUsesTheSameMarkerAsTheQuotes()
     {
@@ -43,6 +46,7 @@ public class WeatherIndicatorTest
         StringAssert.StartsWith(indicator.Describe(40), QuoteIndicator.CachedMarker + " Budapest");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheTextFitsItsWidth()
     {
@@ -55,6 +59,7 @@ public class WeatherIndicatorTest
         Assert.AreEqual(20, text.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawFillsItsWidth()
     {
@@ -67,6 +72,7 @@ public class WeatherIndicatorTest
         StringAssert.StartsWith(buffer.Line(0), "Budapest");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFailedAttempt_SaysUnavailableInsteadOfSpinningForever()
     {
@@ -77,6 +83,7 @@ public class WeatherIndicatorTest
         Assert.AreEqual("Weather unavailable".PadRight(20), indicator.Describe(20));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFailedAttemptBeingRetried_KeepsTheSpinner()
     {

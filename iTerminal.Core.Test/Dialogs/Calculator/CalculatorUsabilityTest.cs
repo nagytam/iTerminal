@@ -31,6 +31,7 @@ public class CalculatorUsabilityTest
     private static Button FocusedButton(CalculatorDialog dialog) =>
         dialog.TabForTest.TabPages[dialog.TabForTest.FocusedTabPage].Controls.AsSnapshot().OfType<Button>().Single(b => b.IsFocused);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheKeysAreListedOnScreen()
     {
@@ -44,6 +45,7 @@ public class CalculatorUsabilityTest
         AssertScreenContains(screen, "Space:press button");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheHintRowDoesNotOverlapTheButtons()
     {
@@ -55,6 +57,7 @@ public class CalculatorUsabilityTest
         Assert.IsTrue(tab.Position.Y + tab.ViewSize.Height <= hintRow, "the tab ends above the hint row");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CaretRaisesToAPower()
     {
@@ -66,6 +69,7 @@ public class CalculatorUsabilityTest
         Assert.AreEqual("1024", dialog.EngineForTest.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PercentKeyIsApplied()
     {
@@ -76,6 +80,7 @@ public class CalculatorUsabilityTest
         Assert.AreEqual("0.5", dialog.EngineForTest.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterIsEqualsEvenWithAButtonFocused()
     {
@@ -89,6 +94,7 @@ public class CalculatorUsabilityTest
         Assert.AreEqual("42", dialog.EngineForTest.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SpacePressesTheFocusedButton()
     {
@@ -105,6 +111,7 @@ public class CalculatorUsabilityTest
         Assert.AreEqual("0", dialog.EngineForTest.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MemoryIsFlaggedInTheHeader()
     {
@@ -117,6 +124,7 @@ public class CalculatorUsabilityTest
         AssertScreenContains(Render(dialog), "M  Calculator");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnErrorIsShownInTheErrorColour()
     {
@@ -130,6 +138,7 @@ public class CalculatorUsabilityTest
         Assert.AreEqual(TestTheme().CurrentColorScheme.Error, display.ForegroundColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ProgrammingModeShowsTheNumeralBase()
     {
@@ -150,6 +159,7 @@ public class CalculatorTabPagesTest
     private static void Press(CalculatorGridTabPage page, string title) =>
         Buttons(page).First(b => b.Title == title).TriggerHotKeyAsync().GetAwaiter().GetResult();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BasicPageHasAFourColumnKeypad()
     {
@@ -161,6 +171,7 @@ public class CalculatorTabPagesTest
             Buttons(page).Select(b => b.Title).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ButtonsAreLaidOutInAGridThatFillsThePage()
     {
@@ -179,6 +190,7 @@ public class CalculatorTabPagesTest
         Assert.IsTrue(buttons.All(b => b.Position.X + b.ViewSize.Width <= 40 && b.Position.Y < 12));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PressingAButtonRunsItsActionAndReportsTheChange()
     {
@@ -195,6 +207,7 @@ public class CalculatorTabPagesTest
         Assert.AreEqual(4, changes, "the dialog repaints after every button");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScientificPageAngleButtonShowsAndTogglesTheUnit()
     {
@@ -208,6 +221,7 @@ public class CalculatorTabPagesTest
         Assert.AreNotEqual(before, angle.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScientificPageAppliesFunctions()
     {
@@ -220,6 +234,7 @@ public class CalculatorTabPagesTest
         Assert.AreEqual("3", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgrammingPageMarksTheActiveBase()
     {
@@ -234,6 +249,7 @@ public class CalculatorTabPagesTest
         CollectionAssert.Contains(titles, "DEC");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgrammingPageDisablesDigitsTheBaseDoesNotHave()
     {

@@ -29,6 +29,7 @@ public class ControlUsabilityTest
         return table;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Table_Click_MovesCursorToRow()
     {
@@ -37,6 +38,7 @@ public class ControlUsabilityTest
         Assert.AreEqual(2, table.CursorRow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Table_ClickOnCursorRow_ActivatesIt()
     {
@@ -47,6 +49,7 @@ public class ControlUsabilityTest
         Assert.AreEqual("a", activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Table_ClickOnHeader_IsIgnored()
     {
@@ -55,6 +58,7 @@ public class ControlUsabilityTest
         Assert.AreEqual(0, table.CursorRow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Table_Wheel_MovesCursor()
     {
@@ -63,6 +67,7 @@ public class ControlUsabilityTest
         Assert.AreEqual(3, table.CursorRow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_Placeholder_ShownWhileEmpty()
     {

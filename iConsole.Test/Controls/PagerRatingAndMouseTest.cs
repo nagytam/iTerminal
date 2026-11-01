@@ -20,6 +20,7 @@ public class PagerRatingAndMouseTest
 
     private static MouseEvent Click(long x, long y) => new() { Position = new Position(x, y), LeftClicked = true };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pagination_PageCount_RoundsUpAndHasOneEmptyPage()
     {
@@ -29,6 +30,7 @@ public class PagerRatingAndMouseTest
         Assert.AreEqual(1, pager.PageCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pagination_Page_IsClampedAndRaisesEvent()
     {
@@ -42,6 +44,7 @@ public class PagerRatingAndMouseTest
         Assert.AreEqual(1, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pagination_ShrinkingTotal_PullsPageBack()
     {
@@ -51,6 +54,7 @@ public class PagerRatingAndMouseTest
         Assert.AreEqual(1, pager.Page);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pagination_ClickArrows_StepPages()
     {
@@ -62,6 +66,7 @@ public class PagerRatingAndMouseTest
         Assert.AreEqual(0, pager.Page);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pagination_Draw_ShowsCaption()
     {
@@ -70,6 +75,7 @@ public class PagerRatingAndMouseTest
         Assert.AreEqual("‹ Page 1 of 3 ›", buffer.ContentAsString.Split(Environment.NewLine)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pagination_Draw_ShortensCaptionToKeepArrowsOnNarrowRow()
     {
@@ -78,6 +84,7 @@ public class PagerRatingAndMouseTest
         Assert.AreEqual("‹ 1/3 ›", buffer.ContentAsString.Split(Environment.NewLine)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pagination_Draw_KeepsRightArrowWhenVeryNarrow()
     {
@@ -86,6 +93,7 @@ public class PagerRatingAndMouseTest
         Assert.AreEqual("‹ 1/ ›", buffer.ContentAsString.Split(Environment.NewLine)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pagination_ClickRightArrowOfNarrowPager_TurnsThePage()
     {
@@ -97,6 +105,7 @@ public class PagerRatingAndMouseTest
         Assert.AreEqual(1, pager.Page);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rating_ClickStar_SetsValueAndClickAgainClears()
     {
@@ -107,6 +116,7 @@ public class PagerRatingAndMouseTest
         Assert.AreEqual(0, rating.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rating_Draw_ShowsFilledAndEmptyStars()
     {
@@ -115,6 +125,7 @@ public class PagerRatingAndMouseTest
         Assert.AreEqual("★★☆☆☆", buffer.ContentAsString.Split(Environment.NewLine)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rating_Value_IsClamped()
     {
@@ -136,6 +147,7 @@ public class PagerRatingAndMouseTest
         return (tree, a, b);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_ClickRow_MovesFocus()
     {
@@ -145,6 +157,7 @@ public class PagerRatingAndMouseTest
         Assert.AreSame(b, tree.GetFocusedItem());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_ClickGlyph_TogglesNode()
     {
@@ -153,6 +166,7 @@ public class PagerRatingAndMouseTest
         Assert.IsTrue(a.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_ClickFocusedRowAgain_TogglesNode()
     {
@@ -163,6 +177,7 @@ public class PagerRatingAndMouseTest
         Assert.IsTrue(a.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_Click_PlacesCursor()
     {

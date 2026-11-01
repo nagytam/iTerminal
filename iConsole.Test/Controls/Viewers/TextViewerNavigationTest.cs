@@ -38,6 +38,7 @@ public class TextViewerNavigationTest
     private static void SetLine(GoToLineDialog dialog, string text) =>
         dialog.Controls.OfType<TextBox>().Single().Text = text;
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutWrapping_ALongLineRunsOffTheRightEdge()
     {
@@ -49,6 +50,7 @@ public class TextViewerNavigationTest
         Assert.IsFalse(screen.Contains("klmno"), screen.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithWrapping_ALongLineContinuesOnTheNextRows()
     {
@@ -63,6 +65,7 @@ public class TextViewerNavigationTest
         Assert.IsTrue(screen.Contains("short"), screen.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WrappedRows_AreCountedForTheScroll()
     {
@@ -73,6 +76,7 @@ public class TextViewerNavigationTest
         Assert.AreEqual(4, viewer.ScrollableModel.ScrollableSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShowLine_BringsTheLineOntoTheScreen()
     {
@@ -86,6 +90,7 @@ public class TextViewerNavigationTest
         Assert.AreEqual(81, viewer.CursorLine);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShowLine_WithWrapping_ReachesTheRowOfTheColumn()
     {
@@ -101,6 +106,7 @@ public class TextViewerNavigationTest
         Assert.AreEqual(41, viewer.CursorLine);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WrapCommand_TogglesWrappingAndKeepsTheCursorLine()
     {
@@ -116,6 +122,7 @@ public class TextViewerNavigationTest
         Assert.AreEqual(31, viewer.CursorLine);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WrapCommand_IsNotAvailableInTheHexView()
     {
@@ -125,6 +132,7 @@ public class TextViewerNavigationTest
         Assert.IsFalse(new ViewerWrapLinesCommand(viewer).CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HitCounter_NamesTheHitTheCursorIsOn()
     {
@@ -143,6 +151,7 @@ public class TextViewerNavigationTest
         Assert.AreEqual("Hit 1/3", indicator.HitText(), "between two hits, the one before");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NextHit_RevealsItThroughTheViewer()
     {
@@ -159,6 +168,7 @@ public class TextViewerNavigationTest
         Assert.IsTrue(screen.Contains("needle here"), screen.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GoToLine_GoesToTheLineTyped()
     {
@@ -174,6 +184,7 @@ public class TextViewerNavigationTest
         Assert.AreEqual(142, viewer.CursorLine);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GoToLine_PastTheEnd_GoesToTheLastLine()
     {
@@ -188,6 +199,7 @@ public class TextViewerNavigationTest
         Assert.AreEqual(3, viewer.CursorLine);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GoToLine_NotANumber_SaysSoAndStaysPut()
     {
@@ -204,6 +216,7 @@ public class TextViewerNavigationTest
         Assert.AreEqual(2, viewer.CursorLine);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GoToLineCommand_IsNotAvailableInTheHexView()
     {

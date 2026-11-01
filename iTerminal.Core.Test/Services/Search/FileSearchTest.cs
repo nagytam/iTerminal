@@ -44,12 +44,14 @@ public class FileSearchTest
     private List<string> Relative(IEnumerable<FileSearchHit> hits) =>
         [.. hits.Select(h => Path.GetRelativePath(_root, h.Path).Replace('\\', '/'))];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AWildcardPatternMatchesAcrossTheTree()
     {
         CollectionAssert.AreEquivalent(new[] { "readme.md", "docs/old/notes.md" }, Relative(Search("*.md")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SeveralPatternsAreSeparatedBySemicolonsOrCommas()
     {
@@ -57,6 +59,7 @@ public class FileSearchTest
         CollectionAssert.AreEquivalent(new[] { "readme.md", "docs/old/notes.md", "docs/2024-report-final.txt" }, Relative(Search("*.md,*.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APlainWordMatchesAnywhereInANameFoldersIncluded()
     {
@@ -66,12 +69,14 @@ public class FileSearchTest
         Assert.IsTrue(hits.Single(h => h.Path.EndsWith("report folder", StringComparison.Ordinal)).IsFolder);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VersionControlInternalsAreNotSearched()
     {
         Assert.IsFalse(Relative(Search("*")).Any(p => p.StartsWith(".git/", StringComparison.Ordinal)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentIsMatchedCaseInsensitivelyWithTheLineItIsOn()
     {
@@ -82,18 +87,21 @@ public class FileSearchTest
         Assert.AreEqual("line two mentions Invoice 42", hit.LineText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABinaryFileIsNeverAContentMatch()
     {
         Assert.IsFalse(Search("*.bin", "invoice").Any());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutSubfoldersOnlyTheStartFolderIsSearched()
     {
         CollectionAssert.AreEquivalent(new[] { "readme.md" }, Relative(Search("*.md", subfolders: false)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressCountsWhatWasWalked()
     {
@@ -107,6 +115,7 @@ public class FileSearchTest
         Assert.IsTrue(reports.Count >= 4, "a report per folder");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACancelledSearchStops()
     {
@@ -117,6 +126,7 @@ public class FileSearchTest
             FileSearch.Run(new FileSearchQuery(_root, "*"), _ => { }, null, cancellation.Token));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMissingFolderSaysSo()
     {
@@ -124,6 +134,7 @@ public class FileSearchTest
             FileSearch.Run(new FileSearchQuery(Path.Combine(_root, "nope"), "*"), _ => { }, null, CancellationToken.None));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASizeLimit_FindsOnlyFilesAtLeastThatLong_AndNoFolders()
     {
@@ -135,6 +146,7 @@ public class FileSearchTest
         Assert.IsTrue(hits.All(h => !h.IsFolder));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnAgeLimit_FindsOnlyFilesChangedAtOrBeforeIt()
     {

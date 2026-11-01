@@ -20,6 +20,7 @@ public class TextBoxExtensionsTest
         };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithAutoCompletion_IEnumerable_ReturnsTextBox()
     {
@@ -32,6 +33,7 @@ public class TextBoxExtensionsTest
         Assert.AreSame(textBox, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithAutoCompletion_IEnumerable_AttachesAutoCompletion()
     {
@@ -43,6 +45,7 @@ public class TextBoxExtensionsTest
         Assert.IsNotNull(textBox.AutoCompletion);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithAutoCompletion_IEnumerable_AutoCompletionIsVisible_WhenItemsExist()
     {
@@ -54,6 +57,7 @@ public class TextBoxExtensionsTest
         Assert.IsTrue(textBox.AutoCompletion!.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithAutoCompletion_IEnumerable_AutoCompletionIsNotVisible_WhenEmpty()
     {
@@ -65,6 +69,7 @@ public class TextBoxExtensionsTest
         Assert.IsFalse(textBox.AutoCompletion!.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithAutoCompletion_ICompletionModel_ReturnsTextBox()
     {
@@ -77,6 +82,7 @@ public class TextBoxExtensionsTest
         Assert.AreSame(textBox, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithAutoCompletion_ICompletionModel_AttachesAutoCompletion()
     {
@@ -88,6 +94,7 @@ public class TextBoxExtensionsTest
         Assert.IsNotNull(textBox.AutoCompletion);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithAutoCompletion_ICompletionModel_IsVisible_WhenCompletionsExist()
     {
@@ -99,6 +106,7 @@ public class TextBoxExtensionsTest
         Assert.IsTrue(textBox.AutoCompletion!.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithAutoCompletion_ICompletionModel_IsNotVisible_WhenEmpty()
     {

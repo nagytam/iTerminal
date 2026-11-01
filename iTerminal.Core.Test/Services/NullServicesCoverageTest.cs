@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Services;
 [TestClass]
 public class NullServicesCoverageTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NullContentModelService_ExposesDefaultStateAndNoOpOperations()
     {
@@ -24,6 +25,7 @@ public class NullServicesCoverageTest
         Assert.IsNull(service.AddContentModel("panel", new Url(Directory.GetCurrentDirectory())));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NullSettingsService_ReturnsDefaultValuesAndIgnoresWrites()
     {

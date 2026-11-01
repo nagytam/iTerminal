@@ -49,6 +49,7 @@ public class PanelRefreshHelperTest
 
     // ── the folder a panel is showing ────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshWhenFinished_RefreshesThePanelShowingTheTargetFolder()
     {
@@ -65,6 +66,7 @@ public class PanelRefreshHelperTest
         Assert.IsTrue(elsewhere.WasNotRefreshed(Immediately), "A panel showing an unrelated folder has nothing new to read.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshWhenFinished_MatchesAPanelUrlWrittenWithoutItsTrailingSeparator()
     {
@@ -80,6 +82,7 @@ public class PanelRefreshHelperTest
         Assert.IsTrue(target.WasRefreshed(Immediately));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshWhenFinished_RefreshesBothPanelsOfACrossDriveMove()
     {
@@ -98,6 +101,7 @@ public class PanelRefreshHelperTest
         Assert.IsTrue(target.WasRefreshed(Immediately));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshWhenFinished_ClampsTheCursorAgainstTheNewListing()
     {
@@ -115,6 +119,7 @@ public class PanelRefreshHelperTest
 
     // ── which outcomes trigger it ────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RefreshWhenFinished_DoesNothingWhileTheTaskIsStillRunning()
     {
@@ -127,6 +132,7 @@ public class PanelRefreshHelperTest
         Assert.IsTrue(target.WasNotRefreshed(Immediately));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshWhenFinished_SkipsAFailedRun()
     {
@@ -141,6 +147,7 @@ public class PanelRefreshHelperTest
         Assert.IsTrue(target.WasNotRefreshed(Immediately));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshWhenFinished_StillRefreshesACancelledRun()
     {
@@ -158,6 +165,7 @@ public class PanelRefreshHelperTest
 
     // ── degenerate inputs ────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshWhenFinished_WithoutAContentModelService_DoesNotThrow()
     {
@@ -169,6 +177,7 @@ public class PanelRefreshHelperTest
         await task.RunAsync();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshWhenFinished_WithNoUsableUrls_DoesNotThrow()
     {
@@ -181,6 +190,7 @@ public class PanelRefreshHelperTest
         Assert.IsTrue(target.WasNotRefreshed(Immediately));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshWhenFinished_WithAUrlWithNoParent_DoesNotThrow()
     {
@@ -195,6 +205,7 @@ public class PanelRefreshHelperTest
         Assert.IsTrue(target.WasNotRefreshed(Immediately));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshWhenFinished_WhenOnePanelThrows_StillRefreshesTheOther()
     {

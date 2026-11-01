@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class UrlCloudTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void S3Url_ParsesAccessKeyBucketAndKey()
     {
@@ -17,6 +18,7 @@ public class UrlCloudTest
         Assert.AreEqual(PathType.File, url.PathType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void S3Url_WithoutABucket_IsTheBucketList()
     {
@@ -28,6 +30,7 @@ public class UrlCloudTest
         Assert.AreEqual(PathType.Folder, url.PathType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OneDriveAndGoogleDriveUrls_ParseAccountAndPath()
     {
@@ -43,6 +46,7 @@ public class UrlCloudTest
         Assert.AreEqual("report.pdf", google.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParentAndRoot_StayOnTheDrive()
     {

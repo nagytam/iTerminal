@@ -8,6 +8,7 @@ namespace iTerminal.Core.Services.Test;
 [TestClass]
 public class WeatherServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void A_NewService_HasNoReadingAndHasFailedNothing()
     {
@@ -19,6 +20,7 @@ public class WeatherServiceTest
         Assert.IsFalse(service.LastRefreshFailed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARetrievedReading_IsKept()
     {

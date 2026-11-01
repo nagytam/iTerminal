@@ -26,6 +26,7 @@ public class ViewerStringsLanguageTest
         return localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryViewerString()
     {
@@ -42,6 +43,7 @@ public class ViewerStringsLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryTranslation_KeepsTheEnglishPlaceholders()
     {
@@ -58,6 +60,7 @@ public class ViewerStringsLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutALocalizer_TheFormattedMessagesKeepTheirEnglishText()
     {
@@ -66,6 +69,7 @@ public class ViewerStringsLanguageTest
         Assert.AreEqual("Showing 1 of 2 matches", string.Format(UiText.Get("Viewer.ShowingMatches", "Showing {0:N0} of {1:N0} matches"), 1, 2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InGerman_TheFormattedMessagesFillTheirPlaceholders()
     {

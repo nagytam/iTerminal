@@ -18,6 +18,7 @@ public class DockerDriveServiceTest
 {
     private static readonly DateTime Now = new(2026, 10, 5, 12, 0, 0);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContainersAreListedRunningFirstWithTheirState()
     {
@@ -35,6 +36,7 @@ public class DockerDriveServiceTest
         StringAssert.Contains(((VirtualDriveEntry)entries[0]).Detail, "nginx:latest");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GnuLsIsReadIntoFoldersThenFiles()
     {
@@ -57,6 +59,7 @@ public class DockerDriveServiceTest
         Assert.AreEqual("23:59", entries[2].Time);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BusyBoxLsIsReadToo()
     {
@@ -72,6 +75,7 @@ public class DockerDriveServiceTest
         Assert.AreEqual("docker://alpine/bin/", entries[0].Url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATimeLaterThanNowBelongsToLastYear()
     {
@@ -80,6 +84,7 @@ public class DockerDriveServiceTest
         Assert.AreEqual("2025-12-24", entries.Single().Date);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderIsListedWithLsInsideTheContainer()
     {
@@ -92,6 +97,7 @@ public class DockerDriveServiceTest
         CollectionAssert.AreEqual(new[] { "exec", "web", "ls", "-lAnL", "--", "/etc" }, runner.Calls.Single().Arguments.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AStoppedDaemonIsSaidInWords()
     {
@@ -105,6 +111,7 @@ public class DockerDriveServiceTest
         StringAssert.StartsWith(exception.Message, "Docker is not running");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AStoppedContainerIsSaidInWords()
     {
@@ -118,6 +125,7 @@ public class DockerDriveServiceTest
         StringAssert.Contains(exception.Message, "stopped");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileIsReadOutOfTheTarDockerCpWrites()
     {
@@ -129,6 +137,7 @@ public class DockerDriveServiceTest
         Assert.AreEqual("web-1\n", Encoding.UTF8.GetString(file!.Content!));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AReaderThatStopsEarlyStopsDockerCpWithItsOwnError()
     {
@@ -145,6 +154,7 @@ public class DockerDriveServiceTest
         Assert.AreEqual(64 * 1024, destination.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedDockerCpIsSaidInTheToolsWords()
     {
@@ -189,6 +199,7 @@ public class DockerDriveServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileIsWrittenAsATarOnDockerCpsStdin()
     {
@@ -205,6 +216,7 @@ public class DockerDriveServiceTest
         Assert.AreEqual("hello", new StreamReader(entry.DataStream!).ReadToEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeletingAndCreatingRunInsideTheContainer()
     {
@@ -218,6 +230,7 @@ public class DockerDriveServiceTest
         CollectionAssert.AreEqual(new[] { "exec", "web", "mkdir", "-p", "--", "/tmp/new" }, runner.Calls[1].Arguments.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDriveRootTakesNoFiles()
     {
@@ -226,6 +239,7 @@ public class DockerDriveServiceTest
         Assert.ThrowsExactly<IOException>(() => service.DeleteFile(new Url("docker://"), false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("docker://", "", "")]
     [DataRow("docker://web/", "web", "")]
@@ -236,6 +250,7 @@ public class DockerDriveServiceTest
         Assert.AreEqual((container, path), DockerDriveService.Split(new Url(url)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnInstalledButSilentCliFallsBackToItsFirstLine()
     {
@@ -244,6 +259,7 @@ public class DockerDriveServiceTest
         Assert.AreEqual("unknown flag: --nope", message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AContainerRowKnowsItsStateAndIsNotAFile()
     {
@@ -260,6 +276,7 @@ public class DockerDriveServiceTest
         Assert.IsInstanceOfType<IDriveObjectEntry>(web, "no file operation may take a container for a folder");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(DockerContainerAction.Start, "docker start web")]
     [DataRow(DockerContainerAction.Stop, "docker stop web")]
@@ -274,6 +291,7 @@ public class DockerDriveServiceTest
         Assert.AreEqual(commandLine, runner.Calls.Single().CommandLine);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedActionIsSaidInWords()
     {
@@ -287,6 +305,7 @@ public class DockerDriveServiceTest
         StringAssert.Contains(exception.Message, "Docker is not running");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheLogMergesStdoutAndStderrInTheOrderTheyWereWritten()
     {
@@ -304,6 +323,7 @@ public class DockerDriveServiceTest
             "by time, with the stamps, colour codes and tabs taken out");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnlyTheLastLinesAreKept()
     {
@@ -314,6 +334,7 @@ public class DockerDriveServiceTest
         CollectionAssert.AreEqual(new[] { "line 7", "line 8", "line 9" }, log.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACommandRunsInsideTheContainerInTheGivenFolderWithAClosedStdin()
     {
@@ -329,6 +350,7 @@ public class DockerDriveServiceTest
         Assert.AreEqual(0, call.StandardInput.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AContainersRootIsNeverDeleted()
     {
@@ -341,6 +363,7 @@ public class DockerDriveServiceTest
         Assert.AreEqual(0, runner.Calls.Count, "rm -rf -- / is what it would have run inside the container");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACommandsOwnStderrIsNotADockerProblem()
     {

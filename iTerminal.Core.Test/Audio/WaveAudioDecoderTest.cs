@@ -28,6 +28,7 @@ public class WaveAudioDecoderTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_Pcm16_PassesSamplesThroughUnchanged()
     {
@@ -46,6 +47,7 @@ public class WaveAudioDecoderTest
         CollectionAssert.AreEqual(samples, buffer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_Pcm8_CentresAndScalesToSixteenBit()
     {
@@ -63,6 +65,7 @@ public class WaveAudioDecoderTest
         Assert.AreEqual((short)(-128 << 8), BinaryPrimitives.ReadInt16LittleEndian(buffer.AsSpan(4)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_IeeeFloat32_ClampsAndScalesToSixteenBit()
     {
@@ -88,6 +91,7 @@ public class WaveAudioDecoderTest
         Assert.AreEqual(short.MinValue, BinaryPrimitives.ReadInt16LittleEndian(buffer.AsSpan(8)), "Values below -1.0 must clamp");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Duration_MatchesSampleCount()
     {
@@ -98,6 +102,7 @@ public class WaveAudioDecoderTest
         Assert.AreEqual(2.0, decoder.Duration.TotalSeconds, 0.01);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_AtEndOfStream_ReturnsZero()
     {
@@ -110,6 +115,7 @@ public class WaveAudioDecoderTest
         Assert.AreEqual(0, decoder.Read(buffer), "A second read past the data chunk is end-of-stream");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TrySeek_RepositionsToRequestedTime()
     {
@@ -134,6 +140,7 @@ public class WaveAudioDecoderTest
         Assert.AreEqual(0.5, decoder.Position.TotalSeconds, 0.01);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_OnNonRiffFile_Throws()
     {
@@ -143,6 +150,7 @@ public class WaveAudioDecoderTest
         Assert.ThrowsExactly<InvalidDataException>(() => new WaveAudioDecoder(path));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanDecode_DistinguishesSupportedFromUnsupportedContainers()
     {
@@ -154,6 +162,7 @@ public class WaveAudioDecoderTest
         Assert.IsFalse(WaveAudioDecoder.CanDecode(garbage));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanDecode_OnCompressedWaveContainer_IsFalseSoFactoryCanFallBack()
     {
@@ -164,6 +173,7 @@ public class WaveAudioDecoderTest
         Assert.IsFalse(WaveAudioDecoder.CanDecode(path));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Read_HonoursBlockAlignmentWhenBufferIsNotAMultipleOfAFrame()
     {

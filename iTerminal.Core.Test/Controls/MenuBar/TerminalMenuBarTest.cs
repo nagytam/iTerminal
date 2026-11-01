@@ -38,6 +38,7 @@ public class TerminalMenuBarTest
         return (bar, settings, taskManager);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnAWideScreenEveryIndicatorIsShown()
     {
@@ -51,6 +52,7 @@ public class TerminalMenuBarTest
         Assert.IsTrue(bar.IsWeatherIndicatorShownForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnANarrowScreenTheOptionalIndicatorsGiveWayToTheMenus()
     {
@@ -64,6 +66,7 @@ public class TerminalMenuBarTest
         Assert.IsFalse(bar.IsWeatherIndicatorShownForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task IndicatorsSwitchedOffInSettingsAreNotShown()
     {
@@ -78,6 +81,7 @@ public class TerminalMenuBarTest
         Assert.IsTrue(bar.IsWeatherIndicatorShownForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASwitchChangedWhileRunningTakesEffectWithoutARestart()
     {
@@ -100,6 +104,7 @@ public class TerminalMenuBarTest
         Assert.IsTrue(bar.IsWeatherIndicatorShownForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheMenusAreFileEditNavigateToolsHelp()
     {

@@ -21,6 +21,7 @@ public class NavigationControlsTest
 
     private static string FirstLine(MockBuffer buffer) => buffer.ContentAsString.Split(Environment.NewLine)[0];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_Layout_FitsUnchanged()
     {
@@ -28,6 +29,7 @@ public class NavigationControlsTest
         Assert.AreEqual(3, parts.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_Layout_FoldsMiddleKeepingFirstAndLast()
     {
@@ -37,6 +39,7 @@ public class NavigationControlsTest
         Assert.AreEqual(4, parts[^1].Index);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_Draw_ShowsSeparators()
     {
@@ -45,6 +48,7 @@ public class NavigationControlsTest
         Assert.AreEqual("A › B", FirstLine(buffer).TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Breadcrumb_Click_ActivatesSegment()
     {
@@ -55,6 +59,7 @@ public class NavigationControlsTest
         Assert.AreEqual(0, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SegmentedControl_Click_SelectsOption()
     {
@@ -63,6 +68,7 @@ public class NavigationControlsTest
         Assert.AreEqual(-1, control.IndexAtColumn(5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SegmentedControl_MouseClick_ChangesSelection()
     {
@@ -71,6 +77,7 @@ public class NavigationControlsTest
         Assert.AreEqual("Week", control.SelectedOption);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SegmentedControl_SelectedIndex_IsClamped()
     {
@@ -81,6 +88,7 @@ public class NavigationControlsTest
         Assert.AreEqual(0, control.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expander_Collapsed_TakesOneRowAndDrawsArrow()
     {
@@ -89,6 +97,7 @@ public class NavigationControlsTest
         Assert.IsTrue(FirstLine(buffer).StartsWith("▶ More"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expander_Expanding_AttachesContentAndGrows()
     {
@@ -106,6 +115,7 @@ public class NavigationControlsTest
         Assert.IsFalse(expander.Controls.Contains(content));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Expander_Space_TogglesWhenFocused()
     {
@@ -115,6 +125,7 @@ public class NavigationControlsTest
         Assert.IsTrue(expander.IsExpanded);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Expander_PlusOpensAndMinusCloses_WhenFocused()
     {
@@ -130,6 +141,7 @@ public class NavigationControlsTest
         Assert.IsFalse(expander.IsExpanded);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Expander_PlusMinus_AreIgnoredWithoutFocus()
     {

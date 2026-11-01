@@ -13,6 +13,7 @@ namespace iConsole.Test.Controls;
 [TestClass]
 public class AutoCompletionTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AutoCompletion_InitializesMatchesAndVisibility()
     {
@@ -35,6 +36,7 @@ public class AutoCompletionTest
             autoCompletion.CompletionModel.MatchingValues.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AutoCompletion_UpdatesVisibilityOnTextChanges()
     {
@@ -65,6 +67,7 @@ public class AutoCompletionTest
         Assert.AreEqual(0, autoCompletion.CompletionModel.MatchingValues.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AutoCompletion_IgnoresUnrelatedTextModelPropertyChanges()
     {
@@ -86,6 +89,7 @@ public class AutoCompletionTest
         CollectionAssert.AreEqual(new string[] { "Germany", "Haiti", "Hungary" }, autoCompletion.CompletionModel.MatchingValues.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AutoCompletion_RendersListInAnAnchoredPopup()
     {
@@ -124,6 +128,7 @@ public class AutoCompletionTest
         Assert.AreEqual(new Size(1, 3), scrollBar.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AutoCompletion_PopupDrawsBorderAndItems()
     {
@@ -157,6 +162,7 @@ public class AutoCompletionTest
         Assert.IsTrue(content.Contains("Haiti"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AutoCompletion_DismissedWhileAMatchUpdateIsInFlight_StaysDismissed()
     {
@@ -194,6 +200,7 @@ public class AutoCompletionTest
         Assert.IsFalse(autoCompletion.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AutoCompletion_DismissedThenTypedInto_ComesBack()
     {
@@ -227,6 +234,7 @@ public class AutoCompletionTest
         Assert.IsTrue(autoCompletion.IsVisible, "Typing after a dismissal should bring the suggestions back.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AutoCompletion_TabCompletesAndHidesControl()
     {
@@ -256,6 +264,7 @@ public class AutoCompletionTest
     /// initialises, and the list used to open with them — the folder selector's hidden Path page
     /// floated its whole history over the dialog, and over the panels once the dialog had closed.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AutoCompletion_ForAnOwnerWithoutFocus_KeepsTheListDown()
     {

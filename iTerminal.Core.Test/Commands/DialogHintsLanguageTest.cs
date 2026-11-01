@@ -11,6 +11,7 @@ public class DialogHintsLanguageTest
     [TestCleanup]
     public void Reset() => UiText.Current = null;
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoDialogHint_SaysCloseOrCancelInEnglish_InGerman()
     {
@@ -43,6 +44,7 @@ public class DialogHintsLanguageTest
         Assert.AreEqual(0, english.Count, string.Join(", ", english));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheGermanHints_AreTheTranslatedWords()
     {

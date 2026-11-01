@@ -8,6 +8,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class SettingsNetworkTabPageTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void PointsAtTheNetworkBrowserInsteadOfStandingEmpty()
     {
@@ -18,6 +19,7 @@ public class SettingsNetworkTabPageTest
         Assert.IsTrue(labels.Any(l => l.Contains("Network browser (Ctrl+N)")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HotKeyIsTwo()
     {

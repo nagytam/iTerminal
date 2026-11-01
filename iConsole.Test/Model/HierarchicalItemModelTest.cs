@@ -6,6 +6,7 @@ namespace iConsole.Test.Model;
 [TestClass]
 public class HierarchicalItemModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesProperties()
     {
@@ -17,6 +18,7 @@ public class HierarchicalItemModelTest
         Assert.AreEqual(0, model.Children.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithParent_SetsParentCorrectly()
     {
@@ -27,6 +29,7 @@ public class HierarchicalItemModelTest
         Assert.AreSame(parent, child.Parent);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Layer_RootItem_ReturnsZero()
     {
@@ -35,6 +38,7 @@ public class HierarchicalItemModelTest
         Assert.AreEqual(0, model.Layer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Layer_ChildItem_ReturnsParentCountPlusOne()
     {
@@ -44,6 +48,7 @@ public class HierarchicalItemModelTest
         Assert.AreEqual(1, child.Layer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsOpened_DefaultValue_IsFalse()
     {
@@ -52,6 +57,7 @@ public class HierarchicalItemModelTest
         Assert.IsFalse(model.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsOpened_SetValue_RaisesPropertyChanged()
     {
@@ -65,6 +71,7 @@ public class HierarchicalItemModelTest
         Assert.IsTrue(model.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsFocused_DefaultValue_IsFalse()
     {
@@ -73,6 +80,7 @@ public class HierarchicalItemModelTest
         Assert.IsFalse(model.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsFocused_SetValue_RaisesPropertyChanged()
     {
@@ -86,6 +94,7 @@ public class HierarchicalItemModelTest
         Assert.IsTrue(model.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Count_NoChildren_ReturnsZero()
     {
@@ -94,6 +103,7 @@ public class HierarchicalItemModelTest
         Assert.AreEqual(0, model.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Count_WithChildren_ReturnsCorrectCount()
     {
@@ -106,6 +116,7 @@ public class HierarchicalItemModelTest
         Assert.AreEqual(2, parent.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Count_WithNestedChildren_ReturnsRecursiveCount()
     {
@@ -118,6 +129,7 @@ public class HierarchicalItemModelTest
         Assert.AreEqual(2, root.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetFocusedItem_WhenFocused_ReturnsItself()
     {
@@ -129,6 +141,7 @@ public class HierarchicalItemModelTest
         Assert.AreSame(model, focused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetFocusedItem_WhenNotFocused_ReturnsNull()
     {
@@ -139,6 +152,7 @@ public class HierarchicalItemModelTest
         Assert.IsNull(focused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetFocusedItem_WithFocusedChild_ReturnsChild()
     {
@@ -152,6 +166,7 @@ public class HierarchicalItemModelTest
         Assert.AreSame(child, focused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetNextItem_WithNextSibling_ReturnsNextSibling()
     {
@@ -166,6 +181,7 @@ public class HierarchicalItemModelTest
         Assert.AreSame(child2, next);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetNextItem_LastSibling_ReturnsItself()
     {
@@ -178,6 +194,7 @@ public class HierarchicalItemModelTest
         Assert.AreSame(child, next);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetPreviousItem_WithPreviousSibling_ReturnsPreviousSibling()
     {
@@ -192,6 +209,7 @@ public class HierarchicalItemModelTest
         Assert.AreSame(child1, previous);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetPreviousItem_FirstSibling_ReturnsParent()
     {
@@ -204,6 +222,7 @@ public class HierarchicalItemModelTest
         Assert.AreSame(parent, previous);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Position_CanBeSetAndGet()
     {
@@ -216,6 +235,7 @@ public class HierarchicalItemModelTest
         Assert.AreEqual(20, model.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Size_CanBeSetAndGet()
     {

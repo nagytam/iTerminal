@@ -37,6 +37,7 @@ public class MouseSelectionTest
         return mice;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Decoder_MotionWithTheLeftButtonHeld_IsADrag()
     {
@@ -48,6 +49,7 @@ public class MouseSelectionTest
         Assert.AreEqual(4L, drag.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Decoder_OtherMotionAndPresses_AreNotDrags()
     {
@@ -78,6 +80,7 @@ public class MouseSelectionTest
     /// <summary>With no label the well's first character is one cell in.</summary>
     private static long ColumnOf(int character) => character + 1;
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_DraggingSelectsFromThePressToThePointer()
     {
@@ -91,6 +94,7 @@ public class MouseSelectionTest
         Assert.AreEqual("llo ", box.SelectedText, "the selection stays after the release");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_DraggingBackwards_AndBackToThePress()
     {
@@ -102,6 +106,7 @@ public class MouseSelectionTest
         Assert.IsFalse(box.HasSelection);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_DraggingPastTheEndOfTheText_SelectsToTheEnd()
     {
@@ -111,6 +116,7 @@ public class MouseSelectionTest
         Assert.AreEqual("ello", box.SelectedText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_DraggingPastTheEdgesOfTheWell_StepsAndScrolls()
     {
@@ -134,6 +140,7 @@ public class MouseSelectionTest
         Assert.AreEqual(15, box.SelectedText.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_ADragWithoutAPressInTheWell_DoesNothing_AndNeitherDoesOneAfterTheRelease()
     {
@@ -147,6 +154,7 @@ public class MouseSelectionTest
         Assert.IsFalse(box.HasSelection);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_ANewPress_StartsOver()
     {
@@ -159,6 +167,7 @@ public class MouseSelectionTest
         Assert.AreEqual("wor", box.SelectedText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_DisabledIgnoresTheDrag()
     {
@@ -197,6 +206,7 @@ public class MouseSelectionTest
             LeftClicked = press,
         };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_DraggingSelectsAcrossLines()
     {
@@ -209,6 +219,7 @@ public class MouseSelectionTest
         Assert.IsTrue(editor.HasSelection);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_DraggingUpwardsAndBackToThePress()
     {
@@ -220,6 +231,7 @@ public class MouseSelectionTest
         Assert.IsFalse(editor.HasSelection);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_DraggingPastTheEndOfALineOrTheText_SelectsToTheEnd()
     {
@@ -229,6 +241,7 @@ public class MouseSelectionTest
         Assert.AreEqual("es are red", editor.SelectedText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_DraggingBelowTheView_StepsDownAndScrolls()
     {
@@ -257,6 +270,7 @@ public class MouseSelectionTest
         Assert.AreEqual(12, editor.SelectedText.Count(c => c == '\n'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_AFreshPressEndsTheOldSelection_AndADragWithoutAPressDoesNothing()
     {
@@ -271,6 +285,7 @@ public class MouseSelectionTest
         Assert.IsFalse(editor.HasSelection);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_TypingAfterADragReplacesTheSelection()
     {

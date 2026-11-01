@@ -18,6 +18,7 @@ public class ConsoleHandleTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReleaseHandle_ReturnsTrue()
     {

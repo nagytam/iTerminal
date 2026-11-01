@@ -27,6 +27,7 @@ public class ControlTextsBatch68LanguageTest
     private static string[] Placeholders(string text) =>
         [.. Regex.Matches(text, @"\{(\d+)").Select(m => m.Groups[1].Value).Distinct().Order()];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryText_AndKeepsItsPlaceholders()
     {
@@ -48,6 +49,7 @@ public class ControlTextsBatch68LanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePagerCaption_FollowsTheLanguage_AndFallsBackToEnglish()
     {
@@ -59,6 +61,7 @@ public class ControlTextsBatch68LanguageTest
         Assert.AreEqual("Seite 1 von 5", pager.Caption);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePageCount_DoesNotOverflow_ForAHugeTotal()
     {

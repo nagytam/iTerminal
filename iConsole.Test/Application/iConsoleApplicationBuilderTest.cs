@@ -9,6 +9,7 @@ namespace iConsole.Application.Test;
 [TestClass]
 public class iConsoleApplicationBuilderTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void AddIConsoleServices_ShouldRegisterExpectedServices()
     {
@@ -20,6 +21,7 @@ public class iConsoleApplicationBuilderTest
         Assert.IsNotNull(sp);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddiConsoleCore_ConfiguresShortShutdownTimeout()
     {

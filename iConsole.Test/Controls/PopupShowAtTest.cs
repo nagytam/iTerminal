@@ -10,6 +10,7 @@ public class PopupShowAtTest
 {
     private readonly TestThemeService _theme = new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowAt_PlacesTheOverlayAtTheAnchor()
     {
@@ -25,6 +26,7 @@ public class PopupShowAtTest
         Assert.IsTrue(root.Controls.Contains(popup));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowAt_KeepsTheOverlayOnScreen()
     {
@@ -38,6 +40,7 @@ public class PopupShowAtTest
         Assert.AreEqual(new Position(50, 17), popup.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowAt_CloseRemovesTheOverlay()
     {

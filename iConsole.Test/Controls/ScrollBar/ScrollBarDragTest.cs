@@ -11,6 +11,7 @@ namespace iConsole.Test.Controls.ScrollBar;
 [TestClass]
 public class ScrollBarDragTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorForDrag_MapsTheTrackProportionallyAndClampsTheArrowCells()
     {
@@ -22,6 +23,7 @@ public class ScrollBarDragTest
         Assert.AreEqual(99, global::iConsole.Controls.ScrollBar.ScrollBar.CursorForDrag(9, 10, 100, 50), "an arrow cell clamps to the last position");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorForDrag_KeepsTheCurrentCursorWhenThereIsNothingToScroll()
     {
@@ -53,6 +55,7 @@ public class ScrollBarDragTest
 
     private static MouseEvent Drag(long row) => new() { Position = new Position(0, row), IsDrag = true };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APressOnTheTrackDragsTheCursorUntilTheReleaseAndAnArrowPressDoesNotDrag()
     {

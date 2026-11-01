@@ -46,6 +46,7 @@ public class UserMenuDialogTest
 
     private static readonly UserMenuItem[] Three = [Item('a', "Archive"), Item('b', "Build"), Item('c', "Clean")];
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ItListsTheEntriesWithTheirKeys_AndTheCursorOnTheFirst()
     {
@@ -59,6 +60,7 @@ public class UserMenuDialogTest
         f.Menu.Verify(m => m.GetItems("notes.txt"), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheArrowsHomeAndEnd_MoveTheCursorAndStopAtTheEnds()
     {
@@ -77,6 +79,7 @@ public class UserMenuDialogTest
         AssertScreenContains(Render(f.Root), "▶ c  Clean");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_RunsTheSelectedEntryWithTheContext_AndClosesTheMenu()
     {
@@ -91,6 +94,7 @@ public class UserMenuDialogTest
         f.Notifications.VerifyNoOtherCalls();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEntrysOwnKey_RunsItAtOnce_WhereverTheCursorIs()
     {
@@ -103,6 +107,7 @@ public class UserMenuDialogTest
         Assert.IsFalse(f.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AKeyNoEntryHas_IsIgnored()
     {
@@ -114,6 +119,7 @@ public class UserMenuDialogTest
         Assert.IsTrue(f.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedRun_IsReportedAsAnErrorNotification()
     {
@@ -125,6 +131,7 @@ public class UserMenuDialogTest
         f.Notifications.Verify(n => n.Notify("Archive", "no shell", NotificationSeverity.Error, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F4_OpensTheMenuFileForEditing_AndClosesTheMenu()
     {
@@ -137,6 +144,7 @@ public class UserMenuDialogTest
         Assert.IsFalse(f.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoEntries_ItSaysWhereToAddSome_AndEnterDoesNothing()
     {
@@ -151,6 +159,7 @@ public class UserMenuDialogTest
         Assert.IsTrue(f.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task KeysWithControlOrAlt_AreNotTheMenusOwn()
     {
@@ -162,6 +171,7 @@ public class UserMenuDialogTest
         f.Menu.Verify(m => m.RunAsync(It.IsAny<UserMenuItem>(), It.IsAny<UserMenuContext>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEntryWithoutAKey_IsStillReachableWithTheCursor()
     {
@@ -176,6 +186,7 @@ public class UserMenuDialogTest
         f.Menu.Verify(m => m.RunAsync(items[0], Context, It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALongMenu_ScrollsOnlyWhenTheCursorLeavesTheWindow()
     {
@@ -196,6 +207,7 @@ public class UserMenuDialogTest
         AssertScreenDoesNotContain(Render(f.Root), "Entry 29");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClosesTheMenuWithoutRunningAnything()
     {
@@ -213,6 +225,7 @@ public class UserMenuDialogTest
         LeftClicked = true,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAnEntry_RunsIt()
     {
@@ -225,6 +238,7 @@ public class UserMenuDialogTest
         Assert.IsFalse(f.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickBelowTheLastEntry_OrOutsideTheList_RunsNothing()
     {
@@ -237,6 +251,7 @@ public class UserMenuDialogTest
         Assert.IsTrue(f.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheel_MovesTheCursorARow_AndStopsAtTheEnds()
     {
@@ -252,6 +267,7 @@ public class UserMenuDialogTest
         Assert.AreEqual("Build", f.Dialog.Selected!.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickInAScrolledMenu_RunsTheEntryUnderThePointer()
     {

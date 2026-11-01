@@ -37,6 +37,7 @@ public class ContentModelFileSystemTest
             Serilog.Log.Logger);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AGoneFolder_OpensItsNearestExistingParent()
     {
@@ -48,6 +49,7 @@ public class ContentModelFileSystemTest
         Assert.AreEqual(_existing, model.Url.Path.TrimEnd(Path.DirectorySeparatorChar));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFolderThatExists_IsOpenedAsAsked()
     {

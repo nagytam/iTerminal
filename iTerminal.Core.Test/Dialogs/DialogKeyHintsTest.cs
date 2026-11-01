@@ -17,6 +17,7 @@ public class DialogKeyHintsTest
 {
     private static string[] Keys(IEnumerable<(string Key, string Description)> hints) => [.. hints.Select(h => h.Key)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UserMenu_KeyHints_NameEnterTheEntryKeysAndF4()
     {
@@ -25,6 +26,7 @@ public class DialogKeyHintsTest
         CollectionAssert.IsSubsetOf(new[] { "Up/Down", "Enter", "Hotkey", "F4" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Update_KeyHints_NameInstallAndSkip()
     {
@@ -33,6 +35,7 @@ public class DialogKeyHintsTest
         CollectionAssert.IsSubsetOf(new[] { "Enter", "S" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StripMetadata_KeyHints_FollowThePhase()
     {
@@ -61,6 +64,7 @@ public class DialogKeyHintsTest
         CollectionAssert.AreEqual(new[] { "Enter", "Any other key" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StartupWarning_KeyHints_NameEnter()
     {
@@ -69,6 +73,7 @@ public class DialogKeyHintsTest
         CollectionAssert.AreEqual(new[] { "Enter" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Checksum_KeyHints_NameTheSaveAndCopyKeys()
     {

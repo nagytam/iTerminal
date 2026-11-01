@@ -30,6 +30,7 @@ public class FtpFileSystemServiceTest
         });
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Connect_AsksForAnEncryptedClientFirst()
     {
@@ -45,6 +46,7 @@ public class FtpFileSystemServiceTest
         CollectionAssert.AreEqual(new[] { true }, _secureRequests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Connect_WithAPasswordRefusesPlainFtpUnlessAllowed()
     {
@@ -62,6 +64,7 @@ public class FtpFileSystemServiceTest
         CollectionAssert.AreEqual(new[] { true }, _secureRequests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Connect_FallsBackToPlainWhenAllowedOrAnonymous()
     {
@@ -90,6 +93,7 @@ public class FtpFileSystemServiceTest
         CollectionAssert.AreEqual(new[] { true, false, true, false }, _secureRequests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SplitHost_ReadsAnOptionalPort()
     {
@@ -98,6 +102,7 @@ public class FtpFileSystemServiceTest
         Assert.AreEqual(("example.org:abc", 21), FtpFileSystemService.SplitHost("example.org:abc"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Url_ParsesUserHostPortAndPathWithSpaces()
     {
@@ -115,6 +120,7 @@ public class FtpFileSystemServiceTest
         Assert.AreEqual("/pub/readme.txt", anonymous.Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Connect_WithoutAUserLogsInAnonymously()
     {
@@ -129,6 +135,7 @@ public class FtpFileSystemServiceTest
         _client.Verify(c => c.Connect(), Times.AtMostOnce);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void List_PutsFoldersFirstAndAddsTheParentRow()
     {
@@ -152,6 +159,7 @@ public class FtpFileSystemServiceTest
         Assert.AreEqual("03:04", rows[2].Time);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListChildren_LeavesOutTheParentRow()
     {
@@ -166,6 +174,7 @@ public class FtpFileSystemServiceTest
         Assert.AreEqual("x.bin", children[0].DisplayName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_ReturnsTheDownloadedBytes()
     {
@@ -182,6 +191,7 @@ public class FtpFileSystemServiceTest
 
     private delegate void DownloadBytesCallback(out byte[]? bytes, string remotePath, long restartPosition, Action<FtpProgress>? progress, long length);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListChildren_WhenTheListingFails_Throws_SoAWalkDoesNotMistakeItForAnEmptyFolder()
     {
@@ -192,6 +202,7 @@ public class FtpFileSystemServiceTest
         Assert.Throws<IOException>(() => service.ListChildren(new Url("ftp://alice@ftp.example.org/pub/")).ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void List_WhenTheListingFails_IsAnEmptyPanel()
     {

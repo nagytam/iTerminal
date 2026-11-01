@@ -41,6 +41,7 @@ public class AccessControlDialogTest
         return new Rig(dialog, service);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheListShowsTheOwnerTheEntriesAndWhichAreInherited()
     {
@@ -54,6 +55,7 @@ public class AccessControlDialogTest
         AssertScreenContains(screen, "inherited, folder, subfolders, files");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APosixListShowsTheGroupAndNoDenyColumn()
     {
@@ -67,6 +69,7 @@ public class AccessControlDialogTest
         AssertScreenDoesNotContain(screen, "Allow ");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedReadIsSaidInTheFooter()
     {
@@ -80,6 +83,7 @@ public class AccessControlDialogTest
         StringAssert.Contains(dialog.StatusForTest, "unauthorized");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AddingAnEntryTypesTheNameAndCyclesTheRights()
     {
@@ -102,6 +106,7 @@ public class AccessControlDialogTest
         Assert.AreEqual("List", rig.Dialog.ModeForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderEntryIsInheritedByChildrenUnlessSwitchedOff()
     {
@@ -118,6 +123,7 @@ public class AccessControlDialogTest
         rig.Service.Verify(s => s.Set(TargetPath, "Guests", AclKind.Allow, "Read", true), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterChangesTheRightsOfTheChosenEntry()
     {
@@ -131,6 +137,7 @@ public class AccessControlDialogTest
         rig.Service.Verify(s => s.Set(TargetPath, "PC\\alice", AclKind.Allow, "Modify", false), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnInheritedEntryIsNotEditedOrRemovedHere()
     {
@@ -146,6 +153,7 @@ public class AccessControlDialogTest
         rig.Service.Verify(s => s.Remove(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<AclKind>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RemovingAskesFirstAndYRemoves()
     {
@@ -159,6 +167,7 @@ public class AccessControlDialogTest
         rig.Service.Verify(s => s.Remove(TargetPath, "PC\\alice", AclKind.Allow), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyOtherKeyCancelsARemoval()
     {
@@ -171,6 +180,7 @@ public class AccessControlDialogTest
         rig.Service.Verify(s => s.Remove(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<AclKind>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task IFlipsInheritanceWhereTheSystemHasIt()
     {
@@ -182,6 +192,7 @@ public class AccessControlDialogTest
         rig.Service.Verify(s => s.SetInheritance(TargetPath, false), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AChangeThatFailsShowsTheReasonAndStillRereadsTheList()
     {
@@ -202,6 +213,7 @@ public class AccessControlDialogTest
         rig.Service.Verify(s => s.Read(It.IsAny<string>()), Times.Exactly(2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OChangesTheOwnerAndTheGroupWhenTheSystemHasOne()
     {
@@ -236,6 +248,7 @@ public class AccessControlDialogTest
         rig.Service.Verify(s => s.SetOwner(TargetPath, "bob", "ops"), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnchangedOwnerAsksForNothing()
     {

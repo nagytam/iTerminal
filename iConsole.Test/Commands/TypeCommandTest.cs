@@ -10,6 +10,7 @@ namespace iConsole.Commands.Test;
 [TestClass]
 public class TypeCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_ShouldInsertCharacter()
     {

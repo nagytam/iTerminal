@@ -11,6 +11,7 @@ namespace iConsole.Test.Controls;
 [TestClass]
 public class ButtonTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ButtonHandlesKeyEvents()
     {
@@ -29,6 +30,7 @@ public class ButtonTest
         mockCommand.Verify(x => x.RunAsync(It.IsAny<object?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw()
     {
@@ -60,6 +62,7 @@ public class ButtonTest
         return (button, mockCommand);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LeftClickRunsTheCommand()
     {
@@ -70,6 +73,7 @@ public class ButtonTest
         command.Verify(x => x.RunAsync(It.IsAny<object?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RightClickDoesNotRunTheCommand()
     {
@@ -82,6 +86,7 @@ public class ButtonTest
         Assert.IsFalse(button.IsPressed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LeftClickDrawsTheButtonPressedUntilTheFeedbackHasPassed()
     {

@@ -29,6 +29,7 @@ public class IndicatorControlsRenderTest
         ViewSize = new Size(width, 1),
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_DrawsLabelBarAndCentredPercentage()
     {
@@ -38,6 +39,7 @@ public class IndicatorControlsRenderTest
         Assert.AreEqual("Progress: [▬▬▬▬▬▬ 50% ‧‧‧‧‧‧‧]", screen.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_KeepsItsWidthAtEveryValue()
     {
@@ -53,6 +55,7 @@ public class IndicatorControlsRenderTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_FullAndEmpty()
     {
@@ -65,6 +68,7 @@ public class IndicatorControlsRenderTest
         Assert.IsTrue(empty.Contains(" 0% "));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_OutOfRange_IsClampedAndStillDrawn()
     {
@@ -74,6 +78,7 @@ public class IndicatorControlsRenderTest
         Assert.AreEqual(0.0, CreateProgressBar(-20).Fraction);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_EmptyRange_DrawsZeroInsteadOfFailing()
     {
@@ -87,6 +92,7 @@ public class IndicatorControlsRenderTest
         Assert.IsTrue(screen.Contains(" 0% "));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_Label_FollowsTheTextBoxCaptionRules()
     {
@@ -99,6 +105,7 @@ public class IndicatorControlsRenderTest
         Assert.IsTrue(ScreenBuffer.Render(colon, 20, 1).Lines[0].StartsWith("Copy: [‧"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_PaintsItsWholeWidth_EvenWhenTooNarrow()
     {
@@ -110,6 +117,7 @@ public class IndicatorControlsRenderTest
         Assert.IsFalse(screen.IsWritten(8, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_Colours_NormalAndDisabled()
     {
@@ -122,6 +130,7 @@ public class IndicatorControlsRenderTest
     #endregion
 
     #region Meter
+    [Timeout(60_000)]
     [TestMethod]
     public void Meter_Disabled_UsesTheDisabledColours()
     {
@@ -142,6 +151,7 @@ public class IndicatorControlsRenderTest
         return new ScrollBarControl(_theme) { ScrollableModel = model, ViewSize = new Size(1, height) };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBar_Vertical_ThumbFollowsTheCursor()
     {
@@ -150,6 +160,7 @@ public class IndicatorControlsRenderTest
         ScreenBuffer.Render(CreateScrollBar(10, 11), 1, 5).AssertLines("↑", "│", "│", "⬤", "↓");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBar_Vertical_PaintsItsWholeHeight()
     {
@@ -158,6 +169,7 @@ public class IndicatorControlsRenderTest
         ScreenBuffer.Render(scrollBar, 1, 8).AssertFillsBounds(scrollBar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBar_Horizontal_ThumbFollowsTheCursor()
     {
@@ -173,6 +185,7 @@ public class IndicatorControlsRenderTest
         Assert.AreEqual("←⎯⎯⎯⬤→", ScreenBuffer.Render(scrollBar, 6, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBar_TooShortForArrows_DrawsOnlyTheThumb()
     {
@@ -181,6 +194,7 @@ public class IndicatorControlsRenderTest
     #endregion
 
     #region Spinner
+    [Timeout(60_000)]
     [TestMethod]
     public void Spinner_ActiveShowsAFrame_InactiveShowsOnlyTheLabel()
     {
@@ -196,6 +210,7 @@ public class IndicatorControlsRenderTest
         Assert.AreEqual("  Indexing", ScreenBuffer.Render(spinner, 12, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Spinner_ColourOverrides_ReachTheBuffer()
     {
@@ -211,6 +226,7 @@ public class IndicatorControlsRenderTest
     #endregion
 
     #region KeybindingLabel
+    [Timeout(60_000)]
     [TestMethod]
     public void KeybindingLabel_DrawsTheKeyCapThenTheDescription()
     {
@@ -229,6 +245,7 @@ public class IndicatorControlsRenderTest
         screen.AssertFillsBounds(label);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeybindingLabel_ArrowAndNamedKeys_UseShortGlyphs()
     {
@@ -243,6 +260,7 @@ public class IndicatorControlsRenderTest
     #endregion
 
     #region Separator
+    [Timeout(60_000)]
     [TestMethod]
     public void Separator_HorizontalAndVertical()
     {
@@ -256,6 +274,7 @@ public class IndicatorControlsRenderTest
     #endregion
 
     #region GroupBox
+    [Timeout(60_000)]
     [TestMethod]
     public void GroupBox_DrawsADoubleBorderWithTheTitleInTheTopEdge()
     {
@@ -271,6 +290,7 @@ public class IndicatorControlsRenderTest
         screen.AssertFillsBounds(groupBox);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GroupBox_ClearsItsInterior_AndDrawsItsContentInside()
     {
@@ -284,6 +304,7 @@ public class IndicatorControlsRenderTest
         Assert.AreEqual("║inside    ║", screen.Lines[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GroupBox_TitleTooLong_IsCutBetweenTheCorners()
     {
@@ -299,6 +320,7 @@ public class IndicatorControlsRenderTest
     private TextBox CreateField(string text) =>
         new(Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), _theme) { Text = text };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormPanel_RightAlignsLabels_AndLinesUpTheFields()
     {
@@ -314,6 +336,7 @@ public class IndicatorControlsRenderTest
         Assert.IsFalse(screen.Contains(": :"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormPanel_HighlightsTheCaptionOfTheFocusedField()
     {
@@ -330,6 +353,7 @@ public class IndicatorControlsRenderTest
         screen.AssertColors("Directory: ", Scheme.SelectedFocusedForeground, Scheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormPanel_RowGap_SpacesTheFields()
     {
@@ -345,6 +369,7 @@ public class IndicatorControlsRenderTest
     }
     #endregion
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScrollBar_Disabled_IgnoresTheWheelAndClicks()
     {
@@ -359,6 +384,7 @@ public class IndicatorControlsRenderTest
         Assert.AreEqual(before, bar.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScrollBar_Enabled_TheWheelMovesTheCursor()
     {

@@ -9,6 +9,7 @@ namespace iConsole.Dialogs.Test;
 [TestClass]
 public class SplashDialogTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_ShouldMakeDialogVisible()
     {
@@ -30,6 +31,7 @@ public class SplashDialogTest
     /// Esc closes the splash and its timer closes it again three seconds later. The second close used
     /// to pop the focus entry of whatever dialog had been opened in between.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingTwiceLeavesTheNextDialogsFocusAlone()
     {

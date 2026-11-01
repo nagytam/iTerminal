@@ -7,6 +7,7 @@ namespace iTerminal.Core.Services.Test;
 [TestClass]
 public class MemoryCacheServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void SetThenGet_ReturnsTheValue()
     {
@@ -17,12 +18,14 @@ public class MemoryCacheServiceTest
         Assert.AreEqual("contents", cache.Get("folder"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Get_OfAMissingKey_IsNull()
     {
         Assert.IsNull(new MemoryCacheService().Get("nothing"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetOverAnExistingKey_ReplacesTheValue()
     {

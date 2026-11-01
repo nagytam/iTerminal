@@ -31,6 +31,7 @@ public class ConflictRegressionGuardTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task R1_CrossDriveFolderCopy_WithoutOverwrite_OverwritesExistingFileSilently()
     {
@@ -58,6 +59,7 @@ public class ConflictRegressionGuardTest
         Assert.IsNull(task.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task R2_SameDriveFolderCopy_WithoutOverwrite_FailsOnFirstExistingFile()
     {
@@ -76,6 +78,7 @@ public class ConflictRegressionGuardTest
         Assert.AreEqual("old", File.ReadAllText(Path.Combine(dstDir, "a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task R3_FileCopy_WithoutOverwrite_ReportsAlreadyExistsAndLeavesTarget()
     {

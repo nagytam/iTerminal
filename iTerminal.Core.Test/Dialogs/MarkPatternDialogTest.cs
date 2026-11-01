@@ -31,6 +31,7 @@ public class MarkPatternDialogTest
 
     private MarkPatternDialog NewDialog() => new(Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme());
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APatternThatMatches_MarksThemAndCloses()
     {
@@ -46,6 +47,7 @@ public class MarkPatternDialogTest
         Assert.IsFalse(root.Controls.Contains(dialog), "a pattern that marked something closes the dialog");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APatternThatMatchesNothing_StaysOpenAndSaysSo()
     {
@@ -62,6 +64,7 @@ public class MarkPatternDialogTest
         AssertScreenContains(Render(dialog), "No file matches *.zip.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Unmarking_WithNothingMarked_SaysNoMarkedFileMatches()
     {
@@ -77,6 +80,7 @@ public class MarkPatternDialogTest
         AssertScreenContains(Render(dialog), "No marked file matches *.jpg.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoPanelToMarkIn_SaysSoAndStaysOpen()
     {

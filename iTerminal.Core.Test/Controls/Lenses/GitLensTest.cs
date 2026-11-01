@@ -73,6 +73,7 @@ public class GitLensTest
         return result;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetHeaderIndicator_WhenFolderIsGitRepository_ReturnsGitIndicator()
     {
@@ -122,6 +123,7 @@ public class GitLensTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetHeaderIndicator_WithAnUpstream_ShowsRemoteSlashLocalCommits()
     {
@@ -133,6 +135,7 @@ public class GitLensTest
         Assert.AreEqual("{Git 1/2}", indicator);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetHeaderIndicator_InSyncWithTheUpstream_ShowsZeroOverZero()
     {
@@ -143,6 +146,7 @@ public class GitLensTest
         Assert.AreEqual("{Git 0/0}", indicator);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetHeaderIndicator_AfterMovingToAnotherFolder_DoesNotKeepTheOldCounts()
     {
@@ -176,6 +180,7 @@ public class GitLensTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DecorateRow_WhenFileIsModified_AppliesBackgroundHighlight()
     {

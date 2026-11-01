@@ -53,6 +53,7 @@ public class ContentModelMusicCatalogTest
     private static IReadOnlyList<MusicEntry> Rows(ContentModelMusicCatalog model) =>
         [.. model.FilteredEntries.OfType<MusicEntry>()];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Root_ListsOneFolderPerArtistAndNothingElse()
     {
@@ -72,6 +73,7 @@ public class ContentModelMusicCatalogTest
     /// what "the catalog is shown from the database" has to mean in practice: the rows a previous
     /// run left in the table are on screen the moment the panel opens.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Root_ListsWhatIsInTheDatabase_WithoutScanningAnything()
     {
@@ -139,6 +141,7 @@ public class ContentModelMusicCatalogTest
     /// event a panel gets until the whole scan lands — so the listing has to follow that, or a first
     /// scan of a large folder would leave the catalog empty for minutes at a time.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void Root_PicksUpEntriesPublishedWhileAScanIsStillRunning()
     {
@@ -157,6 +160,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Root_KeepsListingOnlyArtists_WhileAScanIsRunning()
     {
@@ -172,6 +176,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NavigatingAnArtist_ThenAnAlbum_ReachesTheTracks()
     {
@@ -198,6 +203,7 @@ public class ContentModelMusicCatalogTest
     /// Names with a slash in them are the reason the segments are percent-escaped; without that,
     /// "AC/DC" would look like an album inside an artist called "AC".
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void ArtistNameWithASlash_StillNavigatesAsOneLevel()
     {
@@ -216,6 +222,7 @@ public class ContentModelMusicCatalogTest
             Rows(model).Select(row => row.DisplayName).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SettingTheFilter_ReplacesTheListingWithLibraryWideHits()
     {
@@ -235,6 +242,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClearingTheFilter_RestoresTheFolderListing()
     {
@@ -251,6 +259,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryListedRowCountsAsAMatch_SoSearchHitsAreNotDimmed()
     {
@@ -263,6 +272,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddToPlaylist_ExpandsAnArtistRowIntoEveryTrack()
     {
@@ -278,6 +288,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddToPlaylist_SkipsTracksAlreadyQueued()
     {
@@ -295,6 +306,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ActivatingATrackRow_QueuesIt()
     {
@@ -310,6 +322,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HeaderAndFooter_ShowTheIndexingState()
     {
@@ -326,6 +339,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Title_KeepsTheProgressIntactWhenThePanelIsNarrow()
     {
@@ -344,6 +358,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Title_ShowsTheDiscoveryStageBeforeAnyTotalIsKnown()
     {
@@ -356,6 +371,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HeaderAndFooter_ShowDiscoveryAsItsOwnStage()
     {
@@ -377,6 +393,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HeaderAndFooter_TrackBothStagesWithoutALibraryChange()
     {
@@ -400,6 +417,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ForcedRefresh_KicksOffAReindex()
     {
@@ -417,6 +435,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Insert_MarksTheRowAndStepsDown()
     {
@@ -437,6 +456,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Insert_OnARowThatStandsForNoTracks_StepsOverIt()
     {
@@ -453,6 +473,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Marks_SurviveARepaint()
     {
@@ -471,6 +492,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NavigatingAway_ClearsTheMarks()
     {
@@ -486,6 +508,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SearchingClearsTheMarks_SoF5CannotAddInvisibleRows()
     {
@@ -501,6 +524,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Footer_SaysHowManyRowsAreMarked()
     {
@@ -517,6 +541,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddSelectionToPlaylist_QueuesEveryMarkedRowAndClearsTheMarks()
     {
@@ -534,6 +559,7 @@ public class ContentModelMusicCatalogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Dispose_UnsubscribesFromTheLibrary()
     {

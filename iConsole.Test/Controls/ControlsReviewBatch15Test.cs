@@ -26,6 +26,7 @@ public class ControlsReviewBatch15Test
 
     private static MouseEvent Click(long x, long y = 0) => new() { Position = new Position(x, y), LeftClicked = true };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_ClickRightOfTheGrid_DoesNotPickASwatchFromTheNextRow()
     {
@@ -38,6 +39,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual(before, picker.SelectedColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_ClickInsideTheGrid_StillPicks()
     {
@@ -48,6 +50,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual(1, picker.CursorIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_HighlightOnTheFirstSegment_StaysVisibleWhenNothingFits()
     {
@@ -57,6 +60,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual("Home", layout[0].Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_Disabled_DrawsInTheDisabledColour()
     {
@@ -69,6 +73,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual(Scheme.DisabledForeground, screen.ForegroundAt(8, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pagination_Disabled_DrawsInTheDisabledColour()
     {
@@ -81,6 +86,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual(Scheme.DisabledForeground, screen.ForegroundAt(3, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pagination_Enabled_KeepsTheNormalTextColour()
     {
@@ -91,6 +97,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual(Scheme.Foreground, screen.ForegroundAt(3, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumericUpDown_Disabled_WellIsDimmed()
     {
@@ -102,6 +109,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual(Scheme.DisabledForeground, screen.ForegroundAt(1, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumericUpDown_Enabled_WellKeepsItsFieldColours()
     {
@@ -112,6 +120,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual(Color.Yellow, screen.BackgroundAt(1, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckList_Disabled_CursorRowUsesTheDisabledColour()
     {
@@ -123,6 +132,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual(Scheme.DisabledForeground, screen.ForegroundAt(5, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Meter_NaN_IsAnEmptyBarNotACrash()
     {
@@ -135,6 +145,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual("░░░░░░░░░░", screen.Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StepIndicator_Disabled_DrawsInTheDisabledColour()
     {
@@ -146,6 +157,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual(Scheme.DisabledForeground, screen.ForegroundAt(2, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StepIndicator_Enabled_MarksTheCurrentStepInTheAccent()
     {
@@ -156,6 +168,7 @@ public class ControlsReviewBatch15Test
         Assert.AreEqual(Color.Cyan, screen.ForegroundAt(2, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Timeline_EventWithMissingText_DoesNotThrow()
     {
@@ -167,6 +180,7 @@ public class ControlsReviewBatch15Test
         Assert.IsTrue(screen.Contains("Tests passed"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Countdown_Disabled_DrawsInTheDisabledColour()
     {

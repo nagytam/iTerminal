@@ -46,6 +46,7 @@ public class TextBoxMaskAndValidatorTest
 
     // ---- the mask itself ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Format_AddsLiteralsOnlyBeforeACharacterThatFollows()
     {
@@ -59,6 +60,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual("(___) ___-____", mask.Template);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExtractRaw_ReadsFormattedAndUnformattedText()
     {
@@ -71,6 +73,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual(string.Empty, mask.ExtractRaw(null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slots_TakeTheirKindOfCharacter()
     {
@@ -88,6 +91,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual(4, mask.SlotCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CaseModifiers_AndEscapedLiterals()
     {
@@ -101,6 +105,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual('Q', mask.Normalize(4, 'Q'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsComplete_NeedsEveryRequiredSlot_AndOptionalOnesMayBeLeftOut()
     {
@@ -114,6 +119,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual(2, mask.RequiredCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SlotsBefore_CountsOnlyCharactersTheCursorHasPassed()
     {
@@ -129,6 +135,7 @@ public class TextBoxMaskAndValidatorTest
 
     // ---- typing into a masked box ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_FillsSlotsAndSkipsLiterals()
     {
@@ -142,6 +149,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual(14, box.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_RefusesACharacterTheSlotDoesNotTake_WithABeep()
     {
@@ -153,6 +161,7 @@ public class TextBoxMaskAndValidatorTest
         _beep.Verify(b => b.Beep(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_BeyondTheLastSlotIsRefused()
     {
@@ -164,6 +173,7 @@ public class TextBoxMaskAndValidatorTest
         _beep.Verify(b => b.Beep(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_InTheMiddleInsertsAndPushesLaterCharactersAlong()
     {
@@ -182,6 +192,7 @@ public class TextBoxMaskAndValidatorTest
         _beep.Verify(b => b.Beep(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_LowerCaseInAnUpperCaseSlotIsConverted()
     {
@@ -192,6 +203,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual("AB", box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Backspace_RemovesTheLastCharacterAndItsLiterals()
     {
@@ -211,6 +223,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual(string.Empty, box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Delete_RemovesTheSlotAfterTheCursor()
     {
@@ -224,6 +237,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual(0, box.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Paste_KeepsOnlyWhatTheSlotsTake()
     {
@@ -234,6 +248,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual("(555) 123-4567", box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SettingAMaskReformatsTheTextAlreadyThere()
     {
@@ -247,6 +262,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual("(555) 123-4567", box.MaskedValue);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw_ShowsWhatIsStillToTypeInGrey()
     {
@@ -263,6 +279,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreNotEqual(Color.Gray, screen.ForegroundAt(hint - 1, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadOnlyBox_IgnoresTyping()
     {
@@ -277,6 +294,7 @@ public class TextBoxMaskAndValidatorTest
 
     // ---- validators ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoValidators_BoxIsValid()
     {
@@ -287,6 +305,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.IsNull(box.Validators);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pipeline_RunsRulesInOrderAndReportsTheFirstFailure()
     {
@@ -308,6 +327,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual("At most 5 characters", box.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pipeline_CanCollectEveryFailure()
     {
@@ -319,6 +339,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual("At least 3 characters", pipeline.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pipeline_ARuleThatThrows_CountsAsFailedAndDoesNotBreakTheBox()
     {
@@ -329,6 +350,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual("boom", box.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pipeline_ChecksAgainWhenTheValueChangesAndWhenARuleIsAdded()
     {
@@ -350,6 +372,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.IsTrue(box.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("", null)]
     [DataRow("42", null)]
@@ -363,6 +386,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual(expected, InputValidators.Integer(-100, 100).Validate(text));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("1.5", null)]
     [DataRow("1e3", "At most 10")]
@@ -373,6 +397,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual(expected, InputValidators.Number(0, 10).Validate(text));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("a@b.co", null)]
     [DataRow("first.last@sub.example.org", null)]
@@ -384,6 +409,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual(expected, InputValidators.Email().Validate(text));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PatternAndOneOf_Rules()
     {
@@ -393,6 +419,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.AreEqual("Not one of: Red, Green", InputValidators.OneOf(["Red", "Green"]).Validate("blue"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Validators_SeeTheMaskedValueWithoutLiterals_AndMaskCompleteNeedsEverySlot()
     {
@@ -407,6 +434,7 @@ public class TextBoxMaskAndValidatorTest
         Assert.IsTrue(box.IsValid, box.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InvalidBox_IsDrawnWithTheErrorColour()
     {

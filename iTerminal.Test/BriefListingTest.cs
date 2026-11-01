@@ -19,6 +19,7 @@ public class BriefListingTest
     [TestCleanup]
     public async Task StopAsync() => await _app.DisposeAsync();
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlT_ListsTheFocusedPanelInColumns_AndBack()
     {

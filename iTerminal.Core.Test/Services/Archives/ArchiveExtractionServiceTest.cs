@@ -57,6 +57,7 @@ public class ArchiveExtractionServiceTest
 
     private string Out(params string[] parts) => Path.Combine([_root, "out", .. parts]);
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("x.zip", "ZIP")]
     [DataRow("x.tar", "TAR")]
@@ -75,6 +76,7 @@ public class ArchiveExtractionServiceTest
         Assert.AreEqual(new DateTime(2024, 5, 6, 7, 8, 10), FileIO.GetLastWriteTime(Out("a.txt")), "the entry's date is kept");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(ArchiveEncryption.Aes256)]
     [DataRow(ArchiveEncryption.ZipCrypto)]
@@ -96,6 +98,7 @@ public class ArchiveExtractionServiceTest
         Assert.AreEqual("alpha", FileIO.ReadAllText(Out("a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FilesAlreadyThereAreKeptUnlessOverwriting()
     {
@@ -111,6 +114,7 @@ public class ArchiveExtractionServiceTest
         Assert.AreEqual("alpha", FileIO.ReadAllText(Out("a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEntryThatLeadsOutsideTheTargetIsRefused()
     {
@@ -133,6 +137,7 @@ public class ArchiveExtractionServiceTest
         Assert.IsTrue(FileIO.Exists(Out("fine.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("../x", false)]
     [DataRow("a/../../x", false)]
@@ -150,6 +155,7 @@ public class ArchiveExtractionServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALoneGzHoldsOneFile()
     {
@@ -164,6 +170,7 @@ public class ArchiveExtractionServiceTest
         Assert.AreEqual("plain notes", FileIO.ReadAllText(Out("notes.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("backup.tar.gz", "backup")]
     [DataRow("backup.TGZ", "backup")]
@@ -175,6 +182,7 @@ public class ArchiveExtractionServiceTest
         Assert.AreEqual(folder, Service().FolderNameFor(archive));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SevenZipFormatsAreArchivesThatSayWhatTheyNeed()
     {
@@ -187,6 +195,7 @@ public class ArchiveExtractionServiceTest
         Assert.IsNull(Service(() => "7z").WhyCannotExtract("x.rar"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SevenZipIsGivenThePasswordOnStdinAndTheOverwriteRule()
     {
@@ -202,6 +211,7 @@ public class ArchiveExtractionServiceTest
         StringAssert.StartsWith(Encoding.UTF8.GetString(call.StandardInput), "s3cret");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task A7zWrittenByAlt5UnpacksAndAWrongPasswordIsSaidInWords()
     {

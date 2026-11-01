@@ -15,6 +15,7 @@ public class CsvQueryTest
 
     private static string[] Names(CsvQueryResult result) => result.Rows.Select(row => row[0]).ToArray();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyQueryShowsEveryRowAndColumn()
     {
@@ -25,6 +26,7 @@ public class CsvQueryTest
         Assert.AreEqual(5, result.Matched);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SelectChoosesAndOrdersTheColumns()
     {
@@ -34,6 +36,7 @@ public class CsvQueryTest
         CollectionAssert.AreEqual(new[] { "Pécs", "Apples" }, result.Rows[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumbersCompareAsNumbers_NotAsText()
     {
@@ -43,6 +46,7 @@ public class CsvQueryTest
         CollectionAssert.AreEqual(new[] { "Pears", "Plums", "Limes" }, Names(result));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WhereWithAndOrAndAndBindsTighterThanOr()
     {
@@ -51,6 +55,7 @@ public class CsvQueryTest
         CollectionAssert.AreEqual(new[] { "Apples", "Figs" }, Names(result));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextComparisonIgnoresCase()
     {
@@ -59,6 +64,7 @@ public class CsvQueryTest
         CollectionAssert.AreEqual(new[] { "Apples", "Plums" }, Names(result));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LikeUsesPercentAndUnderscore()
     {
@@ -68,12 +74,14 @@ public class CsvQueryTest
             Names(CsvQuery.Run(Sample, "SELECT name WHERE name NOT LIKE 'zzz'")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContainsIsASubstringMatch()
     {
         CollectionAssert.AreEqual(new[] { "Budapest", "Debrecen" }, Names(CsvQuery.Run(Sample, "SELECT city WHERE city CONTAINS 'PEST' OR city CONTAINS 'rec'")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsEmptyFindsTheBlankFields()
     {
@@ -81,6 +89,7 @@ public class CsvQueryTest
         Assert.AreEqual(4, CsvQuery.Run(Sample, "amount IS NOT EMPTY").Rows.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OrderByAndLimitApplyAfterTheFilter()
     {
@@ -90,6 +99,7 @@ public class CsvQueryTest
         Assert.AreEqual(5, result.Matched, "Matched counts the rows before the limit");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AColumnNameWithSpacesGoesInQuotesOrBrackets()
     {
@@ -98,6 +108,7 @@ public class CsvQueryTest
         CollectionAssert.AreEqual(new[] { "Ada" }, CsvQuery.Run(document, "SELECT [First name] WHERE \"Total\" = 4").Rows[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnknownColumnIsNamedAndTheColumnsAreListed()
     {
@@ -107,6 +118,7 @@ public class CsvQueryTest
         StringAssert.Contains(error.Message, "name, amount, city");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMalformedQueryIsRejectedInWords()
     {

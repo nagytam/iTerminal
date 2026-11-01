@@ -29,6 +29,7 @@ public class PopupPlacementTest
         return (root, owner, popup);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Above_OpensTheHeightOfThePopupAboveTheOwner()
     {
@@ -38,6 +39,7 @@ public class PopupPlacementTest
         Assert.AreEqual((20L, 6L), (popup.Position.X, popup.Position.Y));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Right_OpensBesideTheOwner_AndLeftEndsWhereItBegins()
     {
@@ -52,6 +54,7 @@ public class PopupPlacementTest
         Assert.AreEqual((8L, 10L), (left.Position.X, left.Position.Y));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Manual_OpensAtTheAnchor_AndWithoutOneStaysWhereItWas()
     {
@@ -68,6 +71,7 @@ public class PopupPlacementTest
         Assert.AreEqual((4L, 2L), (unanchored.Position.X, unanchored.Position.Y));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APopupNearAnEdge_IsMovedBackOntoTheScreen()
     {
@@ -83,6 +87,7 @@ public class PopupPlacementTest
         Assert.AreEqual(0L, above.Position.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APopupBiggerThanTheScreen_IsPutAtTheCorner()
     {
@@ -91,6 +96,7 @@ public class PopupPlacementTest
         Assert.AreEqual((0L, 0L), (popup.Position.X, popup.Position.Y));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowingAnOpenPopupAgain_DoesNotAttachItTwice()
     {
@@ -100,6 +106,7 @@ public class PopupPlacementTest
         Assert.AreEqual(1, root.Controls.AsSnapshot().Count(c => ReferenceEquals(c, popup)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SetContent_ReplacesThePreviousContent_AndSizesItToTheInterior()
     {
@@ -119,6 +126,7 @@ public class PopupPlacementTest
         Assert.AreEqual(12L, popup.ContentSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClosesAnOpenPopup_UnlessItIsToldNotTo()
     {
@@ -139,6 +147,7 @@ public class PopupPlacementTest
         Assert.IsTrue(staying.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOutside_ClosesIt_UnlessItIsToldNotTo_AndAClickInsideDoesNot()
     {
@@ -159,6 +168,7 @@ public class PopupPlacementTest
         Assert.IsTrue(inside.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANonModalPopup_LeavesTheFocusWithItsOwner()
     {
@@ -172,6 +182,7 @@ public class PopupPlacementTest
         Assert.IsTrue(owner.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AModalPopup_GivesTheFocusBackWhenItCloses()
     {
@@ -184,6 +195,7 @@ public class PopupPlacementTest
         Assert.IsTrue(owner.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingAPopupThatWasNeverOpened_DoesNotThrow()
     {
@@ -195,6 +207,7 @@ public class PopupPlacementTest
         Assert.IsFalse(popup.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw_PaintsTheBorderAndTitle_AndSkipsWhenEmpty()
     {

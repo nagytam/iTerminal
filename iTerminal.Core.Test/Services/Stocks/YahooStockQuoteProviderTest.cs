@@ -12,6 +12,7 @@ public class YahooStockQuoteProviderTest
         "longName":"Apple Inc.","shortName":"Apple Inc.","chartPreviousClose":342.0}}],"error":null}}
         """;
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AChartResponseBecomesAQuote()
     {
@@ -30,6 +31,7 @@ public class YahooStockQuoteProviderTest
         Assert.IsNotNull(quote.MarketTime);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASymbolTheSourceDoesNotKnowHasNoQuote()
     {
@@ -38,6 +40,7 @@ public class YahooStockQuoteProviderTest
         Assert.IsNull(YahooStockQuoteProvider.ParseChart("NOPE", json));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMissingPreviousCloseMeansNoChange()
     {
@@ -51,6 +54,7 @@ public class YahooStockQuoteProviderTest
         Assert.AreEqual("X", quote.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASearchKeepsOnlyStocksAndNamesTheirExchange()
     {
@@ -70,6 +74,7 @@ public class YahooStockQuoteProviderTest
         Assert.AreEqual("VODAFONE GROUP PLC ORD USD0.20", hits[1].Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnythingElseInASearchResponseIsNoHits()
     {

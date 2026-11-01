@@ -11,6 +11,7 @@ namespace iTerminal.Core.Test.Commands;
 [TestClass]
 public class SelectDriveCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsPlainEnter()
     {
@@ -20,6 +21,7 @@ public class SelectDriveCommandTest
         Assert.IsFalse(command.Key!.Control || command.Key.Alt || command.Key.Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TitleAndDescription_AreWrittenForHelpNotDerivedFromTheTypeName()
     {
@@ -29,6 +31,7 @@ public class SelectDriveCommandTest
         Assert.AreNotEqual(command.Title, command.Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WithNoControl_IsFalse()
     {
@@ -37,6 +40,7 @@ public class SelectDriveCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithNoControl_DoesNothing()
     {

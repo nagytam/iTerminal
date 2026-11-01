@@ -147,6 +147,7 @@ public class FileDiffDialogTest
         StringAssert.Contains(dialog.Status, "Could not read");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LinesSplitOnEveryKindOfBreakAndKeepNoPhantomLastLine()
     {
@@ -155,6 +156,7 @@ public class FileDiffDialogTest
         Assert.AreEqual(0, FileDiffDialog.SplitLines(string.Empty).Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextThatIsNotUtf8IsReadAsLatin1NotWithReplacementCharacters()
     {

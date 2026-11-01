@@ -13,6 +13,7 @@ namespace iTerminal.Core.Test.Factories;
 [TestClass]
 public class FilePanelFactoryTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesFactory()
     {
@@ -37,6 +38,7 @@ public class FilePanelFactoryTest
         Assert.IsNotNull(factory);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Create_ReturnsFilePanel()
     {
@@ -63,6 +65,7 @@ public class FilePanelFactoryTest
         Assert.IsNotNull(filePanel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Create_WithName_UsesProvidedName()
     {
@@ -89,6 +92,7 @@ public class FilePanelFactoryTest
         Assert.IsNotNull(filePanel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Create_RegistersContentBrowser()
     {
@@ -117,6 +121,7 @@ public class FilePanelFactoryTest
             Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Create_MultiplePanels_CreatesIndependentInstances()
     {

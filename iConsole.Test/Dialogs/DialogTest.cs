@@ -10,6 +10,7 @@ namespace iConsole.Test.Dialogs;
 [TestClass]
 public class DialogTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void DialogConstructor()
     {
@@ -22,6 +23,7 @@ public class DialogTest
         Assert.IsFalse(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DialogTitle()
     {
@@ -32,6 +34,7 @@ public class DialogTest
         Assert.AreEqual("My Dialog", dialog.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DialogIsModal()
     {
@@ -42,6 +45,7 @@ public class DialogTest
         Assert.IsTrue(dialog.IsModal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DialogInitiallyNotVisible()
     {
@@ -52,6 +56,7 @@ public class DialogTest
         Assert.IsFalse(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DialogInitialize()
     {
@@ -66,6 +71,7 @@ public class DialogTest
         Assert.AreEqual("Test", dialog.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DialogHasCommands()
     {
@@ -109,6 +115,7 @@ public class DialogTest
     private static KeyEvent Escape() =>
         new('\0', ConsoleKey.Escape, shift: false, alt: false, control: false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_WithNothingFloating_ClosesTheDialog()
     {
@@ -121,6 +128,7 @@ public class DialogTest
         Assert.AreEqual(0, host.CloseCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_WithSomethingFloating_TakesThatDownAndLeavesTheDialogOpen()
     {
@@ -137,6 +145,7 @@ public class DialogTest
         Assert.IsTrue(dialog.IsVisible, "Dismissing what floats over a dialog is not closing the dialog.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_Twice_TakesTheOverlayThenTheDialog()
     {
@@ -150,6 +159,7 @@ public class DialogTest
         Assert.IsFalse(dialog.IsVisible, "One press per layer: the second Esc has nothing left to peel off.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_WithSomethingFloatingDeepInTheTree_StillReachesIt()
     {

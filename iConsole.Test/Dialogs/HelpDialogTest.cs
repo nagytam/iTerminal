@@ -37,6 +37,7 @@ public class HelpDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_Default_ShouldCreateInstance()
     {
@@ -47,6 +48,7 @@ public class HelpDialogTest
         Assert.IsNotNull(dialog);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_ListsVisibleExecutableCommandsWithDescriptions()
     {
@@ -97,6 +99,7 @@ public class HelpDialogTest
         Assert.IsFalse(helpText.Contains("Hidden", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_IncludesMenuNavigationSectionWhenMenuBarPresent()
     {
@@ -121,6 +124,7 @@ public class HelpDialogTest
         StringAssert.Contains(helpText, "Open File menu");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task KeyHintsOfSeveralControlsOfOneKindAreListedOnce()
     {
@@ -146,6 +150,7 @@ public class HelpDialogTest
         lines.TakeWhile(l => !l.StartsWith("All commands in the application:", StringComparison.Ordinal));
 
     /// <summary>Every command of the application is listed, including the hidden ones and those that cannot run here.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCompleteListHoldsEveryCommandEvenWhenItCannotRunOrIsHidden()
     {
@@ -184,6 +189,7 @@ public class HelpDialogTest
     }
 
     /// <summary>A plain string sort listed Alt+F11 and Alt+F12 before Alt+F9, and Ctrl before plain keys.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task KeysAreListedPlainFirstAndFunctionKeysByNumber()
     {
@@ -198,6 +204,7 @@ public class HelpDialogTest
         CollectionAssert.AreEqual(new[] { "F2", "Ctrl+F2", "Alt+F9", "Alt+F11" }, order);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADescriptionThatRepeatsTheTitleIsLeftOut()
     {
@@ -206,6 +213,7 @@ public class HelpDialogTest
         Assert.AreEqual(1, lines.Count(l => l.Contains("Toggle Terminal")), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AShortKeyKeepsItsTitleOnItsLine()
     {
@@ -215,6 +223,7 @@ public class HelpDialogTest
     }
 
     /// <summary>Of two runnable commands on one key, the first takes the key — only it is listed.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnlyTheCommandThatWouldRunIsListedForASharedKey()
     {
@@ -227,6 +236,7 @@ public class HelpDialogTest
         Assert.IsFalse(lines.Any(l => l.Contains("Open or run")), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACommandThatCannotRunDoesNotHideTheOneThatCan()
     {

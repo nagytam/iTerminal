@@ -8,6 +8,7 @@ namespace iTerminal.Core.Commands.Test;
 [TestClass]
 public class VirtualMachineManagerDialogCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void IsBoundToShiftAltF9()
     {
@@ -21,6 +22,7 @@ public class VirtualMachineManagerDialogCommandTest
 
     // Reverted (the OS gate is removed): on Windows CanExecute is true and this fails; on Linux both sides are true.
     // CI runs both platforms, so the Windows run is what proves the gate.
+    [Timeout(60_000)]
     [TestMethod]
     public void IsAvailableOnlyOnLinux()
     {

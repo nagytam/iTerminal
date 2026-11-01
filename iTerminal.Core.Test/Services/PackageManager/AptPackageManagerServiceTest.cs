@@ -27,12 +27,14 @@ public class AptPackageManagerServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DisplayName_IsApt()
     {
         Assert.AreEqual("APT", new AptPackageManagerService().DisplayName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SearchPackagesAsync_EmptyQuery_ReturnsEmptySuccessWithoutRunningAptCache()
     {
@@ -45,6 +47,7 @@ public class AptPackageManagerServiceTest
         Assert.AreEqual(0, result.Packages.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetInstalledPackagesAsync_ParsesAtLeastOneInstalledPackage()
     {
@@ -69,6 +72,7 @@ public class AptPackageManagerServiceTest
         Assert.IsTrue(result.Packages.All(p => p.Id == p.Name), "APT packages have no separate id; the package name is the id.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InstallAsync_UnknownPackageId_StreamsOutputAndReturnsNonZeroExitCode()
     {
@@ -91,6 +95,7 @@ public class AptPackageManagerServiceTest
         Assert.IsTrue(lines.Count > 0, "Expected apt-get to explain why the install failed.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InstallAsync_WhenCancelled_ReturnsNegative()
     {

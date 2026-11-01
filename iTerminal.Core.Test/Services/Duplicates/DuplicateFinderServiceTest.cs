@@ -46,6 +46,7 @@ public class DuplicateFinderServiceTest
         return scan;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FilesWithTheSameBytesAreOneGroupOldestFirst()
     {
@@ -63,6 +64,7 @@ public class DuplicateFinderServiceTest
         Assert.AreEqual("the same picture".Length * 2L, group.Wasted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SameSizeIsNotEnough()
     {
@@ -72,6 +74,7 @@ public class DuplicateFinderServiceTest
         Assert.AreEqual(0, (await ScanAsync()).Groups.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SameStartButADifferentEndIsNotADuplicate()
     {
@@ -88,6 +91,7 @@ public class DuplicateFinderServiceTest
         CollectionAssert.AreEquivalent(new[] { "a.bin", "c.bin" }, group.Files.Select(f => f.Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EmptyFilesAreNotDuplicates()
     {
@@ -97,6 +101,7 @@ public class DuplicateFinderServiceTest
         Assert.AreEqual(0, (await ScanAsync()).Groups.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task VersionControlInternalsAreLeftAlone()
     {
@@ -106,6 +111,7 @@ public class DuplicateFinderServiceTest
         Assert.AreEqual(0, (await ScanAsync()).Groups.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BiggestWasteComesFirst()
     {
@@ -120,6 +126,7 @@ public class DuplicateFinderServiceTest
         Assert.AreEqual(5000, groups[0].Size);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CancellingEndsTheScanWithNothing()
     {
@@ -133,6 +140,7 @@ public class DuplicateFinderServiceTest
         Assert.IsTrue(scan.WasCancelled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AGroupWithOneCopyLeftIsNoLongerADuplicate()
     {

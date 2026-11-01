@@ -42,6 +42,7 @@ public class ContentModelServiceTest
             logger);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesContentModels()
     {
@@ -49,6 +50,7 @@ public class ContentModelServiceTest
         Assert.IsNotNull(svc.ContentModels);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesContentBrowsers()
     {
@@ -56,6 +58,7 @@ public class ContentModelServiceTest
         Assert.IsNotNull(svc.ContentBrowsers);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesCursorPositions()
     {
@@ -63,6 +66,7 @@ public class ContentModelServiceTest
         Assert.IsNotNull(svc.CursorPositions);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddContentModel_FileSystem_AddsModel()
     {
@@ -72,6 +76,7 @@ public class ContentModelServiceTest
         Assert.AreEqual(1, svc.ContentModels.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddContentModel_SameName_ReplacesModel()
     {
@@ -81,6 +86,7 @@ public class ContentModelServiceTest
         Assert.AreEqual(1, svc.ContentModels.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetModel_ReturnsCorrectModel()
     {
@@ -91,6 +97,7 @@ public class ContentModelServiceTest
         Assert.AreEqual("panel1", model.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetModel_ReturnsNull_ForUnknownName()
     {
@@ -98,6 +105,7 @@ public class ContentModelServiceTest
         Assert.IsNull(svc.GetModel("unknown"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetLastContentModel_ReturnsNull_WhenNoLastFocused()
     {
@@ -105,6 +113,7 @@ public class ContentModelServiceTest
         Assert.IsNull(svc.GetLastContentModel());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetLastContentModel_ReturnsModel_WhenLastFocusedSet()
     {
@@ -114,6 +123,7 @@ public class ContentModelServiceTest
         Assert.IsNotNull(svc.GetLastContentModel());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FocusedPanel_CanBeSetAndRead()
     {
@@ -122,6 +132,7 @@ public class ContentModelServiceTest
         Assert.AreEqual("panel1", svc.FocusedPanel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ModelChanged_IsRaisedOnAddContentModel()
     {
@@ -145,6 +156,7 @@ public class ContentModelServiceTest
     /// Going up lands on the folder that was left. Ctrl+PgUp never did: the position was a row
     /// index keyed by a URL string that its trailing-separator parent URL did not match.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void GoingUpOneLevel_RestoresTheCursorToTheFolderLeft()
     {
@@ -155,6 +167,7 @@ public class ContentModelServiceTest
         model.Verify(m => m.RestoreNavigation(Moq.It.Is<string>(u => u.TrimEnd('/') == "file:///tmp/left/alpha"), 3, 0), Moq.Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GoingUpSeveralLevels_RestoresTheCursorToTheChildOnTheWay()
     {
@@ -165,6 +178,7 @@ public class ContentModelServiceTest
         model.Verify(m => m.RestoreNavigation(Moq.It.Is<string>(u => u.TrimEnd('/') == "file:///tmp/left"), 0, 0), Moq.Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GoingDownOrSideways_LeavesTheCursorAlone()
     {
@@ -195,6 +209,7 @@ public class ContentModelServiceTest
     /// -1 while the listing is momentarily empty, which tripped Position's assertion and ended the
     /// key handler before the restore to the folder left was asked for — Ctrl+PgUp then stayed on "..".
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GoingUpWithAnEmptyListingStillLandsOnTheFolderLeft()
     {
@@ -210,6 +225,7 @@ public class ContentModelServiceTest
         model.Verify(m => m.RestoreNavigation(Moq.It.Is<string>(u => u.TrimEnd('/') == "file:///tmp/left/beta"), 2, 0), Moq.Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARememberedRowIsHandedToTheModelNotWrittenIntoTheCursor()
     {
@@ -225,6 +241,7 @@ public class ContentModelServiceTest
         model.Verify(m => m.RestoreNavigation(null, 4, 0), Moq.Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFolderWithAndWithoutItsTrailingSeparatorIsTheSameLocation()
     {

@@ -82,6 +82,7 @@ public class AiModelDialogTest
         return $"http://127.0.0.1:{port}/v1/";
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpensAtOnceWithoutWaitingForTheModelServer()
     {
@@ -97,6 +98,7 @@ public class AiModelDialogTest
         CollectionAssert.Contains(dialog.LinesForTest.ToList(), "  Loading from the model server…");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnreachableServerIsSaidRatherThanLeftOut()
     {
@@ -109,6 +111,7 @@ public class AiModelDialogTest
         Assert.IsFalse(dialog.LinesForTest.Any(l => l.Contains("Loading")), "the loading line is replaced");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheServersModelDetailsAreShown()
     {
@@ -127,6 +130,7 @@ public class AiModelDialogTest
         CollectionAssert.Contains(lines.ToList(), "  Size           : 2.00 GB");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StatusConfigurationAndSessionAreShown()
     {
@@ -147,6 +151,7 @@ public class AiModelDialogTest
         await dialog.DetailsTask;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesTheDialog()
     {

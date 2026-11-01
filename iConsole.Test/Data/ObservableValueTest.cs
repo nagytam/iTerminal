@@ -25,6 +25,7 @@ public class ObservableValueTest
         public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableValueConstructor()
     {
@@ -33,6 +34,7 @@ public class ObservableValueTest
         Assert.AreEqual("initial", observableValue.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableValueReturnsExtractedValue()
     {
@@ -41,6 +43,7 @@ public class ObservableValueTest
         Assert.AreEqual("test", observableValue.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableValueUpdatesWhenSourceChanges()
     {
@@ -51,6 +54,7 @@ public class ObservableValueTest
         Assert.AreEqual("updated", observableValue.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableValueRaisesPropertyChanged()
     {
@@ -68,6 +72,7 @@ public class ObservableValueTest
         Assert.IsTrue(propertyChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ObservableValueWithCustomExtractor()
     {

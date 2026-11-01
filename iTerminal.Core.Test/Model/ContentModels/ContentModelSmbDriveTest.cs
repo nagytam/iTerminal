@@ -36,6 +36,7 @@ public class ContentModelSmbDriveTest
             logger: Mock.Of<Serilog.ILogger>());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsReadOnly_ReturnsFalse()
     {
@@ -43,6 +44,7 @@ public class ContentModelSmbDriveTest
         Assert.IsFalse(model.IsReadOnly);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetUrl_WithoutTrailingSlash_ShowsAFolder()
     {
@@ -54,6 +56,7 @@ public class ContentModelSmbDriveTest
         Assert.AreEqual(PathType.Folder, model.Url.PathType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListChildren_LeavesOutTheParentRow()
     {
@@ -71,6 +74,7 @@ public class ContentModelSmbDriveTest
         Assert.AreEqual("smb://host/Share/dir/a b.txt", children[0].FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetUrl_NoMatchingProfile_ConnectsAnonymously()
     {
@@ -82,6 +86,7 @@ public class ContentModelSmbDriveTest
         smbFileSystemService.Verify(s => s.Connect("host", "Share", "user", string.Empty), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetUrl_MatchingProfileWithSavedCredential_ConnectsWithPasswordFromVault()
     {
@@ -105,6 +110,7 @@ public class ContentModelSmbDriveTest
         smbFileSystemService.Verify(s => s.Connect("host", "Share", "user", "hunter2"), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MoveAsync_DelegatesToSmbFileSystemService()
     {
@@ -118,6 +124,7 @@ public class ContentModelSmbDriveTest
         smbFileSystemService.Verify(s => s.MoveAsync(sourceUrl, targetUrl, true), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CopyAsync_DelegatesToSmbFileSystemService()
     {
@@ -131,6 +138,7 @@ public class ContentModelSmbDriveTest
         smbFileSystemService.Verify(s => s.CopyAsync(sourceUrl, targetUrl, false), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFile_DelegatesToSmbFileSystemService()
     {

@@ -11,6 +11,7 @@ public class ControlsReviewBatch33Test
         => typeof(HtmlTextExtractor).Assembly.GetType("iConsole.Services." + typeName)!
             .GetMethod(method, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!.Invoke(null, arguments);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HtmlTextExtractor_Lines_OfNull_AreNone()
     {
@@ -18,6 +19,7 @@ public class ControlsReviewBatch33Test
         Assert.AreEqual(0, HtmlTextExtractor.Lines((byte[]?)null).Count(l => l.Length > 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MimeMessageReader_QuotedPrintableAndCharsetDecode_AcceptNull()
     {
@@ -25,6 +27,7 @@ public class ControlsReviewBatch33Test
         Assert.AreEqual(string.Empty, Internal("MimeMessageReader", "CharsetDecode", null, null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MobiTextReader_PalmDocDecompress_OfNull_IsEmpty()
     {

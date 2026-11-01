@@ -39,6 +39,7 @@ public class GroupAndToolbarInteractionTest
         return group;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RadioGroup_Disabled_IgnoresKeysAndClicks()
     {
@@ -50,6 +51,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(0, group.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RadioGroup_ReadOnly_IgnoresKeysAndClicks()
     {
@@ -61,6 +63,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(0, group.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RadioGroup_ClickRightOfTheGroup_DoesNotSelect()
     {
@@ -70,6 +73,7 @@ public class GroupAndToolbarInteractionTest
         Assert.IsFalse(group.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RadioGroup_ClickRow_SelectsAndFocuses()
     {
@@ -79,6 +83,7 @@ public class GroupAndToolbarInteractionTest
         Assert.IsTrue(group.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RadioGroup_Horizontal_HitTestsEachOption()
     {
@@ -92,6 +97,7 @@ public class GroupAndToolbarInteractionTest
         Assert.IsFalse(await group.HandleMouseEventAsync(Click(10, 1)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RadioGroup_Keys_ClampAtEnds_AndRaiseEventOnce()
     {
@@ -109,6 +115,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(2, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RadioGroup_Empty_HasNoSelectionAndIgnoresInput()
     {
@@ -122,6 +129,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(-1, group.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RadioGroup_Draw_ShowsEveryOption()
     {
@@ -144,6 +152,7 @@ public class GroupAndToolbarInteractionTest
         return toolbar;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Toolbar_HomeEnd_LandOnEnabledItems()
     {
@@ -158,6 +167,7 @@ public class GroupAndToolbarInteractionTest
         Assert.IsFalse(await toolbar.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toolbar_ActiveIndex_RejectsDisabledAndOutOfRange()
     {
@@ -168,6 +178,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(0, toolbar.ActiveIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toolbar_Items_StartOnFirstEnabled()
     {
@@ -178,6 +189,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(0, toolbar.Items.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Toolbar_SpaceInvokes_AndDisabledToolbarDoesNot()
     {
@@ -193,6 +205,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(1, invoked.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Toolbar_ClickFocusesAndInvokes_ClickOnDisabledItemDoesNothing()
     {
@@ -209,6 +222,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(-1, toolbar.IndexAtColumn(39));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toolbar_Draw_StopsAtTheEdgeOfAShortToolbar()
     {
@@ -221,6 +235,7 @@ public class GroupAndToolbarInteractionTest
 
     // ---- Badge ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Badge_BackgroundFor_MapsEveryKind()
     {
@@ -232,6 +247,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(Color.Red, Badge.BackgroundFor(BadgeKind.Error, neutral));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Badge_EmptyText_HasNoWidthAndDrawsNothing()
     {
@@ -246,6 +262,7 @@ public class GroupAndToolbarInteractionTest
 
     // ---- GroupBox ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GroupBox_SetContent_ReplacesPreviousAndFillsInterior()
     {
@@ -261,6 +278,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(4, (int)second.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GroupBox_TinySizes_NeverGoNegative()
     {
@@ -274,6 +292,7 @@ public class GroupAndToolbarInteractionTest
         box.Draw(new MockBuffer(new Size(1, 1)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GroupBox_NoTitle_DrawsAPlainTopEdge()
     {
@@ -287,6 +306,7 @@ public class GroupAndToolbarInteractionTest
 
     // ---- Toggles ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckBox_Disabled_IgnoresClicks_EnabledToggles()
     {
@@ -298,6 +318,7 @@ public class GroupAndToolbarInteractionTest
         Assert.IsTrue(box.IsChecked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RadioButton_Disabled_IgnoresClicks()
     {
@@ -310,6 +331,7 @@ public class GroupAndToolbarInteractionTest
         Assert.IsTrue(radio.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ToggleButton_Disabled_IgnoresClicks()
     {
@@ -324,6 +346,7 @@ public class GroupAndToolbarInteractionTest
 
     // ---- Disabled pickers ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_Disabled_IgnoresClicks()
     {
@@ -334,6 +357,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(before, picker.SelectedColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_Disabled_IgnoresClicksAndWheel()
     {
@@ -344,6 +368,7 @@ public class GroupAndToolbarInteractionTest
         Assert.IsFalse(picker.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_Disabled_IgnoresWheel()
     {
@@ -353,6 +378,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(new DateOnly(2026, 5, 15), calendar.SelectedDate);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListBox_Disabled_ClickDoesNotMoveCursor()
     {
@@ -369,6 +395,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(2, (int)list.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Toolbar_Wheel_StepsOverTheEnabledItems_AndStopsAtTheEnds()
     {
@@ -388,6 +415,7 @@ public class GroupAndToolbarInteractionTest
         Assert.AreEqual(0, toolbar.ActiveIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Toolbar_WheelElsewhereOrDisabled_IsIgnored()
     {

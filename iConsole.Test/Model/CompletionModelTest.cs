@@ -5,6 +5,7 @@ namespace iConsole.Test.Model;
 [TestClass]
 public class CompletionModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void CompletionModelConstructor()
     {
@@ -14,6 +15,7 @@ public class CompletionModelTest
         Assert.AreEqual(3, model.Completions.Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompletionModelCompletions()
     {
@@ -26,6 +28,7 @@ public class CompletionModelTest
         Assert.AreEqual("apply", list[2]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompletionModelInsertCompletion()
     {
@@ -38,6 +41,7 @@ public class CompletionModelTest
         Assert.IsTrue(model.Completions.Contains("banana"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompletionModelUpdateMatchingValuesAll()
     {
@@ -49,6 +53,7 @@ public class CompletionModelTest
         Assert.AreEqual(3, model.MatchingValues.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompletionModelUpdateMatchingValuesFiltered()
     {
@@ -63,6 +68,7 @@ public class CompletionModelTest
         Assert.IsTrue(model.MatchingValues.Contains("apply"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompletionModelUpdateMatchingValuesCaseless()
     {
@@ -75,6 +81,7 @@ public class CompletionModelTest
         Assert.IsTrue(model.MatchingValues.Contains("Apple"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompletionModelUpdateMatchingValuesNoMatches()
     {
@@ -86,6 +93,7 @@ public class CompletionModelTest
         Assert.AreEqual(0, model.MatchingValues.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompletionModelUpdateMatchingValuesClear()
     {
@@ -99,6 +107,7 @@ public class CompletionModelTest
         Assert.AreEqual(0, model.MatchingValues.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompletionModelMatchingValuesEmpty()
     {
@@ -108,6 +117,7 @@ public class CompletionModelTest
         Assert.AreEqual(0, model.MatchingValues.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CompletionModelInterface()
     {

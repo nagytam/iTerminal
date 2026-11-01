@@ -78,6 +78,7 @@ public class ImageMetadataWriterTest
         return ms.ToArray();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PngText_IsWrittenAndReadBack()
     {
@@ -92,6 +93,7 @@ public class ImageMetadataWriterTest
         Assert.AreEqual("© 2026", Value(fields, "Text", "Copyright"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PngText_KeepsThePictureUnchanged()
     {
@@ -106,6 +108,7 @@ public class ImageMetadataWriterTest
         CollectionAssert.AreEqual(new byte[] { 0xAE, 0x42, 0x60, 0x82 }, written[^4..], "the end marker and its checksum are kept");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PngText_OutsideLatin1_IsWrittenAsUtf8AndReadBack()
     {
@@ -116,6 +119,7 @@ public class ImageMetadataWriterTest
         Assert.AreEqual("Ünïcode 日本", Value(ImageInfoReader.ReadFile(_path + ".png"), "Text", "Description"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PngText_ASecondEditReplacesTheFirst()
     {
@@ -129,6 +133,7 @@ public class ImageMetadataWriterTest
         Assert.AreEqual(1, fields.Count(f => f.Group == "Text" && f.Name == "Description"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PngText_AnEmptyFieldRemovesItsChunk()
     {
@@ -140,6 +145,7 @@ public class ImageMetadataWriterTest
         Assert.IsFalse(ImageInfoReader.ReadFile(_path + ".png").Any(f => f.Group == "Text"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_ExifTextAndComment_AreWrittenAndTheCameraMakeIsKept()
     {
@@ -155,6 +161,7 @@ public class ImageMetadataWriterTest
         Assert.AreEqual("Acme", Value(fields, "Camera", "Make"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_EmptyFieldsRemoveTheirTags_AndTheScanIsKept()
     {
@@ -171,6 +178,7 @@ public class ImageMetadataWriterTest
         CollectionAssert.AreEqual(new byte[] { 0x12, 0x34, 0xFF, 0xD9 }, written[^4..]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_WithNoExif_GetsOne()
     {
@@ -182,6 +190,7 @@ public class ImageMetadataWriterTest
         Assert.AreEqual("Sunset", Value(ImageInfoReader.ReadFile(_path + ".jpeg"), "Image", "Description"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AJpegWithNoImageData_IsRefused_AndNotTouched()
     {
@@ -193,6 +202,7 @@ public class ImageMetadataWriterTest
         CollectionAssert.AreEqual(damaged, File.ReadAllBytes(_path + ".jpg"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AGif_IsRefused_AndNotTouched()
     {
@@ -204,6 +214,7 @@ public class ImageMetadataWriterTest
         CollectionAssert.AreEqual(gif, File.ReadAllBytes(_path + ".gif"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanWrite_IsTrueOnlyForJpegAndPng()
     {
@@ -214,6 +225,7 @@ public class ImageMetadataWriterTest
         Assert.IsFalse(ImageMetadataWriter.CanWrite("a.bmp"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void From_TakesTheEditableTextFromTheFieldsWhereverTheFormatKeepsIt()
     {
@@ -231,6 +243,7 @@ public class ImageMetadataWriterTest
         Assert.AreEqual(new ImageMetadataEdit("Sunset", "Tamas", "© 2026", "Lake"), edit);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void From_TakesThePngAuthorAsTheArtistWhenThereIsNoExif()
     {
@@ -240,6 +253,7 @@ public class ImageMetadataWriterTest
         Assert.AreEqual(string.Empty, edit.Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Strip_JpegLosesItsExifAndComments_AndKeepsThePicture()
     {
@@ -256,6 +270,7 @@ public class ImageMetadataWriterTest
         CollectionAssert.AreEqual(new byte[] { 0x12, 0x34, 0xFF, 0xD9 }, File.ReadAllBytes(_path + ".jpg")[^4..]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Strip_PngLosesItsTextChunks_AndAFileWithNoneIsLeftAlone()
     {
@@ -270,6 +285,7 @@ public class ImageMetadataWriterTest
         CollectionAssert.AreEqual(stripped, File.ReadAllBytes(_path + ".png"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Strip_AFileWithNothingToRemove_IsNotRewritten()
     {
@@ -280,6 +296,7 @@ public class ImageMetadataWriterTest
         Assert.AreEqual(before, File.GetLastWriteTimeUtc(_path + ".jpg"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Strip_OtherFormatsAreRefused()
     {

@@ -30,6 +30,7 @@ public class PlaylistServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SaveThenLoad_RoundTripsPathsAndMetadata()
     {
@@ -54,6 +55,7 @@ public class PlaylistServiceTest
         Assert.AreEqual("Two", loaded[1].Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_WritesExtendedM3UHeader()
     {
@@ -66,6 +68,7 @@ public class PlaylistServiceTest
         Assert.IsTrue(lines[1].StartsWith("#EXTINF:", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Load_ResolvesRelativeEntriesAgainstThePlaylistFolder()
     {
@@ -80,6 +83,7 @@ public class PlaylistServiceTest
         Assert.AreEqual(Path.Combine(musicFolder, "song.mp3"), loaded[0].Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Load_PlainListWithoutDirectives_IsAccepted()
     {
@@ -91,6 +95,7 @@ public class PlaylistServiceTest
         Assert.AreEqual(2, loaded.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Load_SkipsRemoteEntriesTheLocalDecoderCannotOpen()
     {
@@ -103,6 +108,7 @@ public class PlaylistServiceTest
         Assert.IsFalse(loaded[0].Path.Contains("http", StringComparison.OrdinalIgnoreCase));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Load_MissingFile_ReturnsEmptyRatherThanThrowing()
     {
@@ -111,6 +117,7 @@ public class PlaylistServiceTest
         Assert.AreEqual(0, loaded.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseExtInf_SplitsDurationArtistAndTitle()
     {
@@ -121,6 +128,7 @@ public class PlaylistServiceTest
         Assert.AreEqual("Time", title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseExtInf_WithoutArtistSeparator_TreatsWholeLabelAsTitle()
     {
@@ -131,6 +139,7 @@ public class PlaylistServiceTest
         Assert.AreEqual("Just A Title", title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateTracks_ForASingleAudioFile_ReturnsOneTrack()
     {
@@ -142,6 +151,7 @@ public class PlaylistServiceTest
         Assert.AreEqual(path, tracks[0].Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateTracks_ForANonAudioFile_ReturnsNothing()
     {
@@ -151,6 +161,7 @@ public class PlaylistServiceTest
         Assert.AreEqual(0, _service.CreateTracks(path).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateTracks_ForAFolder_CollectsAudioFilesRecursively()
     {
@@ -166,6 +177,7 @@ public class PlaylistServiceTest
         CollectionAssert.AllItemsAreUnique(tracks.Select(t => t.Path).ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateTracks_ForAFolder_WithoutRecursion_StaysAtTheTopLevel()
     {
@@ -179,6 +191,7 @@ public class PlaylistServiceTest
         Assert.AreEqual(1, tracks.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateTracks_ForAPlaylistFile_ExpandsItsEntries()
     {
@@ -194,6 +207,7 @@ public class PlaylistServiceTest
     /// The queue lives in the database now, but the file an older version left behind still has to
     /// be readable — that one read is what carries an upgrading user's queue over.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void LoadLast_ReadsTheQueueFileWrittenByOlderVersions()
     {
@@ -210,12 +224,14 @@ public class PlaylistServiceTest
         Assert.AreEqual("A", restored[0].Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LoadLast_WithNothingSaved_ReturnsEmpty()
     {
         Assert.AreEqual(0, _service.LoadLast().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsPlaylistFile_RecognisesM3UAndM3U8Only()
     {
@@ -225,6 +241,7 @@ public class PlaylistServiceTest
         Assert.IsFalse(_service.IsPlaylistFile(string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_CreatesMissingDirectories()
     {

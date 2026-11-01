@@ -10,6 +10,7 @@ namespace iConsole.Controls.Buttons.Test;
 [TestClass]
 public class CancelButtonTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_ShouldSetHotKey()
     {
@@ -22,6 +23,7 @@ public class CancelButtonTest
         Assert.AreEqual('c', btn.HotKeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RendersTitle()
     {
@@ -40,6 +42,7 @@ public class CancelButtonTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Cancel"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RendersBrackets()
     {

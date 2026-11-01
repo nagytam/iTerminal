@@ -5,6 +5,7 @@ namespace iConsole.Test.Model.Validations;
 [TestClass]
 public class ValidationResultTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationResultConstructor()
     {
@@ -15,6 +16,7 @@ public class ValidationResultTest
         Assert.AreEqual("Valid", result.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationResultInvalid()
     {
@@ -24,6 +26,7 @@ public class ValidationResultTest
         Assert.AreEqual("Error message", result.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationResultNullErrorMessage()
     {
@@ -33,6 +36,7 @@ public class ValidationResultTest
         Assert.IsNull(result.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationResultTimeStamp()
     {
@@ -41,6 +45,7 @@ public class ValidationResultTest
         Assert.AreEqual(now, result.TimeStamp);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ValidationResultProperties()
     {

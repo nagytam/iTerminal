@@ -37,6 +37,7 @@ public class TableTest
         return table;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListThePagingAndJumpKeys()
     {
@@ -52,6 +53,7 @@ public class TableTest
 
     // ── Header ─────────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RendersHeaderOnFirstRow()
     {
@@ -64,6 +66,7 @@ public class TableTest
         Assert.IsTrue(firstRow.Contains("City"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_HeaderColumnsAppearInOrder()
     {
@@ -79,6 +82,7 @@ public class TableTest
 
     // ── Data rows ──────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_SingleRow_RendersDataBelowHeader()
     {
@@ -91,6 +95,7 @@ public class TableTest
         Assert.IsTrue(lines[1].Contains("New York"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_MultipleRows_EachOnItsOwnLine()
     {
@@ -103,6 +108,7 @@ public class TableTest
         Assert.IsTrue(lines[3].Contains("Carol"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_EmptyCollection_RendersOnlyHeader()
     {
@@ -116,6 +122,7 @@ public class TableTest
 
     // ── Column truncation ──────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_LongValue_TruncatedToColumnWidth()
     {
@@ -131,6 +138,7 @@ public class TableTest
 
     // ── Cursor / selection ─────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CursorRow_DefaultsToZero()
     {
@@ -138,6 +146,7 @@ public class TableTest
         Assert.AreEqual(0, table.CursorRow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SelectedRow_DefaultsToFirstRow()
     {
@@ -145,6 +154,7 @@ public class TableTest
         Assert.AreEqual(Alice, table.SelectedRow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SelectedRow_EmptyCollection_ReturnsDefault()
     {
@@ -154,6 +164,7 @@ public class TableTest
 
     // ── Keyboard navigation ────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DownArrow_MovesCursorToNextRow()
     {
@@ -165,6 +176,7 @@ public class TableTest
         Assert.AreEqual(Bob, table.SelectedRow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpArrow_AtFirstRow_StaysAtZero()
     {
@@ -175,6 +187,7 @@ public class TableTest
         Assert.AreEqual(0, table.CursorRow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HomeKey_JumpsToFirstRow()
     {
@@ -187,6 +200,7 @@ public class TableTest
         Assert.AreEqual(0, table.CursorRow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EndKey_JumpsToLastRow()
     {
@@ -199,6 +213,7 @@ public class TableTest
 
     // ── RowActivated event ─────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterKey_FiresRowActivatedWithSelectedRow()
     {
@@ -212,6 +227,7 @@ public class TableTest
         Assert.AreEqual(Alice, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterKey_AfterNavigation_FiresCorrectRow()
     {
@@ -226,6 +242,7 @@ public class TableTest
         Assert.AreEqual(Bob, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterKey_ReturnsHandledTrue()
     {
@@ -239,6 +256,7 @@ public class TableTest
 
     // ── Live collection updates ────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddRow_AfterConstruction_AppearsInNextDraw()
     {
@@ -259,6 +277,7 @@ public class TableTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Alice"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClearRows_AfterConstruction_DrawsNoDataRows()
     {
@@ -282,6 +301,7 @@ public class TableTest
 
     // ── Column definition ──────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColumnDefinition_ExposesHeaderWidthAndSelector()
     {
@@ -292,6 +312,7 @@ public class TableTest
         Assert.AreEqual("Alice", col.ValueSelector(Alice));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterKey_WhenNotFocused_DoesNotActivateARow()
     {
@@ -305,6 +326,7 @@ public class TableTest
         Assert.IsFalse(handled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterKey_WhenDisabled_DoesNotActivateARow()
     {

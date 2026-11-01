@@ -12,6 +12,7 @@ public class MapAsciiRendererTest
     private static MapCell Cell(MapTile tile, double u = 64, double v = 64) =>
         MapAsciiRenderer.Render(tile, u, v, MapAsciiRenderer.CellWidth, MapAsciiRenderer.CellHeight);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WaterIsDrawnAsBlueWaves()
     {
@@ -21,6 +22,7 @@ public class MapAsciiRendererTest
         Assert.AreEqual(Color.Blue, cell.Foreground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GreenSpaceIsDrawnAsGreenQuotes()
     {
@@ -30,10 +32,12 @@ public class MapAsciiRendererTest
         Assert.AreEqual(Color.Green, cell.Foreground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyLandIsBlank() =>
         Assert.AreEqual(' ', Cell(Tile(MapTestSupport.Png(MapTestSupport.Land))).Char);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AStrokeAcrossTheBlockIsDrawnWithDensity()
     {
@@ -43,6 +47,7 @@ public class MapAsciiRendererTest
         Assert.IsTrue(MapAsciiRenderer.Ramp.Contains(cell.Char), "the character is not on the density ramp");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WarmRoadsAreYellow()
     {
@@ -52,14 +57,17 @@ public class MapAsciiRendererTest
         Assert.AreNotEqual(' ', cell.Char);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABlockAtTheEdgeOfTheTileDoesNotThrow() =>
         Assert.AreEqual(' ', MapAsciiRenderer.Render(Tile(MapTestSupport.Png(MapTestSupport.Land)), 254, 254, 4, 8).Char);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABlockSmallerThanAPixelStillSamplesOnePixel() =>
         Assert.AreEqual('~', MapAsciiRenderer.Render(Tile(MapTestSupport.Png(MapTestSupport.Water)), 10.25, 10.5, 0.5, 1).Char);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DecodingGarbageGivesNothing() =>
         Assert.IsNull(MapTile.Decode([1, 2, 3, 4, 5]));

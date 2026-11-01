@@ -30,6 +30,7 @@ public class DialogKeyHintsBatch23Test
 {
     private static string[] Keys(IEnumerable<(string Key, string Description)> hints) => [.. hints.Select(h => h.Key)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProcessManager_KeyHints_NameFilterAndMovement()
     {
@@ -38,6 +39,7 @@ public class DialogKeyHintsBatch23Test
         CollectionAssert.IsSubsetOf(new[] { "Type", "Up/Down", "Ctrl+Home/End" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DiskManager_KeyHints_AreOfferedOnlyWhenDriveActionsExist()
     {
@@ -49,6 +51,7 @@ public class DialogKeyHintsBatch23Test
         CollectionAssert.AreEqual(new[] { "E", "F", "M", "B" }, Keys(with.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SolutionViewer_KeyHints_NameBuildCleanTestAndRun()
     {
@@ -57,6 +60,7 @@ public class DialogKeyHintsBatch23Test
         CollectionAssert.IsSubsetOf(new[] { "Space", "A", "Shift+T", "B", "C", "T", "R", "X", "V" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DocumentManager_KeyHints_NameSearchRescanAndPreview()
     {
@@ -65,6 +69,7 @@ public class DialogKeyHintsBatch23Test
         CollectionAssert.IsSubsetOf(new[] { "Type", "Enter", "Ctrl+R", "Ctrl+X", "Ctrl+T" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CurrencyConverter_KeyHints_NameRefreshAndSwap()
     {
@@ -74,6 +79,7 @@ public class DialogKeyHintsBatch23Test
         CollectionAssert.AreEqual(new[] { "F5", "F6" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IPhoneBrowser_KeyHints_NameConnectAndRescan()
     {
@@ -82,6 +88,7 @@ public class DialogKeyHintsBatch23Test
         CollectionAssert.AreEqual(new[] { "Enter", "R", "Esc" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindFiles_KeyHints_NameSearchSendAndCancel()
     {
@@ -91,6 +98,7 @@ public class DialogKeyHintsBatch23Test
         CollectionAssert.IsSubsetOf(new[] { "Enter", "Ctrl+P", "Ctrl+X" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PasswordManager_KeyHints_NameTheListKeys()
     {
@@ -99,6 +107,7 @@ public class DialogKeyHintsBatch23Test
         CollectionAssert.IsSubsetOf(new[] { "N", "Enter/E", "Delete/D", "V" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PackageManager_KeyHints_NameRefreshSearchAndInstalled()
     {
@@ -107,6 +116,7 @@ public class DialogKeyHintsBatch23Test
         CollectionAssert.IsSubsetOf(new[] { "R", "S", "I", "X" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Translator_KeyHints_NameTranslateSwapDetectAndClear()
     {

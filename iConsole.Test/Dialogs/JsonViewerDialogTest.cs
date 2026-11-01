@@ -26,6 +26,7 @@ public class JsonViewerDialogTest
         return new JsonViewerDialog(models.Object, converter.Object, new ThemeService()) { Url = Document };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Load_BuildsTheTree_ForValidJson()
     {
@@ -39,6 +40,7 @@ public class JsonViewerDialogTest
         Assert.AreEqual("2 top-level item(s)", dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Load_ShowsTheTextAndTheError_ForInvalidJson()
     {
@@ -52,6 +54,7 @@ public class JsonViewerDialogTest
         converter.Verify(c => c.ReadFileAsync(Document, It.IsAny<IFileSystem>(), It.IsAny<ITextModel>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F2_OnValidJson_SaysSo()
     {
@@ -65,6 +68,7 @@ public class JsonViewerDialogTest
         Assert.AreEqual("Valid JSON", dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F2_OnInvalidJson_ReportsWhereItStops()
     {
@@ -80,6 +84,7 @@ public class JsonViewerDialogTest
         Assert.IsTrue(dialog.Status.StartsWith("Not valid JSON: line 1"), dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Star_ExpandsEveryNode()
     {
@@ -95,6 +100,7 @@ public class JsonViewerDialogTest
         Assert.IsTrue(b.IsOpened);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Reveal_OpensTheAncestors_AndFocusesTheNode()
     {
@@ -114,6 +120,7 @@ public class JsonViewerDialogTest
         Assert.IsTrue(deep.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ToggleTextMode_SwitchesToTheFilesText_AndBack()
     {

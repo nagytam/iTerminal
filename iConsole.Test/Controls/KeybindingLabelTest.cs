@@ -30,6 +30,7 @@ public class KeybindingLabelTest
 
     // ── KeyText formatting ──────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyText_FunctionKey_FormatsCorrectly()
     {
@@ -37,6 +38,7 @@ public class KeybindingLabelTest
         Assert.AreEqual("F5", ctrl.KeyText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyText_WithControl_PrefixesCtrl()
     {
@@ -44,6 +46,7 @@ public class KeybindingLabelTest
         Assert.AreEqual("Ctrl+S", ctrl.KeyText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyText_WithAlt_PrefixesAlt()
     {
@@ -51,6 +54,7 @@ public class KeybindingLabelTest
         Assert.AreEqual("Alt+F4", ctrl.KeyText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyText_WithShift_PrefixesShift()
     {
@@ -58,6 +62,7 @@ public class KeybindingLabelTest
         Assert.AreEqual("Shift+Tab", ctrl.KeyText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyText_AllModifiers_OrderIsCtrlAltShift()
     {
@@ -65,6 +70,7 @@ public class KeybindingLabelTest
         Assert.AreEqual("Ctrl+Alt+Shift+Del", ctrl.KeyText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyText_SpecialKeys_UseShortNames()
     {
@@ -85,6 +91,7 @@ public class KeybindingLabelTest
         Assert.AreEqual("→",      Create(new Key(ConsoleKey.RightArrow,false, false, false)).KeyText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyText_NullBinding_ReturnsEmpty()
     {
@@ -93,6 +100,7 @@ public class KeybindingLabelTest
 
     // ── Rendering ───────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RendersKeyInBrackets()
     {
@@ -104,6 +112,7 @@ public class KeybindingLabelTest
         Assert.IsTrue(buffer.ContentAsString.Contains("[F5]"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithLabel_RendersLabelAfterKeyCap()
     {
@@ -119,6 +128,7 @@ public class KeybindingLabelTest
                     < content.IndexOf("Refresh", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_NoLabel_OnlyKeyCap()
     {
@@ -130,6 +140,7 @@ public class KeybindingLabelTest
         Assert.IsTrue(buffer.ContentAsString.Contains("[F1]"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_NullBinding_WritesNothing()
     {
@@ -141,6 +152,7 @@ public class KeybindingLabelTest
         Assert.IsTrue(string.IsNullOrWhiteSpace(buffer.ContentAsString));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_PadsToViewWidth()
     {
@@ -153,6 +165,7 @@ public class KeybindingLabelTest
         Assert.AreEqual(20, line.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_CtrlS_RendersFullModifierCap()
     {
@@ -165,6 +178,7 @@ public class KeybindingLabelTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Save"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AtPosition_RenderedOnCorrectRow()
     {
@@ -185,6 +199,7 @@ public class KeybindingLabelTest
 
     // ── CanFocus ────────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanFocus_IsFalse()
     {

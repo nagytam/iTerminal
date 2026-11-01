@@ -16,6 +16,7 @@ public class ConcurrentListExtensionsTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FromList()
     {
@@ -32,6 +33,7 @@ public class ConcurrentListExtensionsTest
         Assert.AreEqual(3, concurrentList.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FromListClearsExistingItems()
     {
@@ -50,6 +52,7 @@ public class ConcurrentListExtensionsTest
         Assert.AreEqual("new1", concurrentList[0].Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FromListEmpty()
     {
@@ -62,6 +65,7 @@ public class ConcurrentListExtensionsTest
         Assert.AreEqual(0, concurrentList.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FromListPreservesOrder()
     {

@@ -36,6 +36,7 @@ public class ControlInteractionTest
 
     private static Slider NewSlider() => new(Theme()) { Minimum = 0, Maximum = 100, Position = new Position(0, 0), ViewSize = new Size(11, 1) };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_Click_FocusesAndMovesThumb()
     {
@@ -46,6 +47,7 @@ public class ControlInteractionTest
         Assert.AreEqual(50, slider.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_Click_OnValueReadout_FocusesWithoutMovingTheThumb()
     {
@@ -58,6 +60,7 @@ public class ControlInteractionTest
         Assert.AreEqual(30, slider.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_Disabled_IgnoresMouseAndKeys()
     {
@@ -70,6 +73,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, slider.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_ReadOnly_IgnoresMouseAndKeys()
     {
@@ -81,6 +85,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, slider.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_Keys_StepJumpAndStayInBounds()
     {
@@ -102,6 +107,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, slider.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_UnrelatedKey_IsNotHandled()
     {
@@ -110,6 +116,7 @@ public class ControlInteractionTest
         Assert.IsFalse(await slider.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_Wheel_StepsByStep()
     {
@@ -121,6 +128,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, slider.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_ClickOutside_IsIgnored()
     {
@@ -129,6 +137,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, slider.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_BoundsCrossing_DragsTheOtherBound()
     {
@@ -140,6 +149,7 @@ public class ControlInteractionTest
         Assert.AreEqual(5, slider.Minimum);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_ThumbColumn_And_ValueAt_DegenerateRanges()
     {
@@ -150,6 +160,7 @@ public class ControlInteractionTest
         Assert.AreEqual(10, Slider.ValueAt(99, 0, 10, 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_ShowValue_DrawsNumberRightOfTrack()
     {
@@ -158,6 +169,7 @@ public class ControlInteractionTest
         Assert.IsTrue(FirstLine(buffer).TrimEnd().EndsWith("100"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_Colors_FollowState()
     {
@@ -174,6 +186,7 @@ public class ControlInteractionTest
 
     private static SegmentedControl NewSegments() => new(Theme()) { Options = ["Day", "Week", "Month"], Position = new Position(0, 0), ViewSize = new Size(30, 1) };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SegmentedControl_Keys_MoveAndStayInBounds()
     {
@@ -190,6 +203,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, control.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SegmentedControl_Click_FocusesControl()
     {
@@ -199,6 +213,7 @@ public class ControlInteractionTest
         Assert.AreEqual(1, control.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SegmentedControl_ClickOnGap_KeepsSelection()
     {
@@ -207,6 +222,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, control.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SegmentedControl_Wheel_StepsBothWays()
     {
@@ -217,6 +233,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, control.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SegmentedControl_DisabledAndReadOnly_IgnoreInput()
     {
@@ -232,6 +249,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, control.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SegmentedControl_Options_ClampSelectionAndRaiseEvent()
     {
@@ -247,6 +265,7 @@ public class ControlInteractionTest
         Assert.IsNull(control.SelectedOption);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SegmentedControl_Draw_ListsOptionsAndPadsLine()
     {
@@ -257,6 +276,7 @@ public class ControlInteractionTest
 
     // ---- Rating ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rating_Keys_ChangeValueWithinBounds()
     {
@@ -277,6 +297,7 @@ public class ControlInteractionTest
         Assert.IsFalse(await rating.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rating_Click_FocusesControl()
     {
@@ -286,6 +307,7 @@ public class ControlInteractionTest
         Assert.AreEqual(2, rating.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rating_DisabledAndReadOnly_IgnoreInput()
     {
@@ -302,6 +324,7 @@ public class ControlInteractionTest
         Assert.AreEqual(2, rating.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rating_Maximum_ResizesAndClampsValue()
     {
@@ -315,6 +338,7 @@ public class ControlInteractionTest
 
     // ---- Breadcrumb ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Breadcrumb_Keys_MoveActiveSegmentAndActivate()
     {
@@ -336,6 +360,7 @@ public class ControlInteractionTest
         Assert.IsFalse(await crumb.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Breadcrumb_Empty_IgnoresKeys()
     {
@@ -345,6 +370,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, crumb.ActiveIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Breadcrumb_Click_FocusesAndSkipsFoldedMiddle()
     {
@@ -360,6 +386,7 @@ public class ControlInteractionTest
         CollectionAssert.AreEqual(new[] { 0, 4 }, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Breadcrumb_Disabled_IgnoresClick()
     {
@@ -370,6 +397,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_Layout_TooNarrow_KeepsOnlyEllipsisAndLast()
     {
@@ -380,6 +408,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, Breadcrumb.Layout([], 10).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_Draw_FoldedTrailShowsEllipsis()
     {
@@ -397,6 +426,7 @@ public class ControlInteractionTest
 
     private static Pagination NewPager() => new(Theme()) { PageSize = 10, TotalItems = 35, Position = new Position(0, 0), ViewSize = new Size(30, 1) };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pagination_Keys_MoveAndStayInBounds()
     {
@@ -418,6 +448,7 @@ public class ControlInteractionTest
         Assert.IsFalse(await pager.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pagination_ClickArrows_StepAndFocus()
     {
@@ -432,6 +463,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, pager.Page);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pagination_ClickPaddingBesideCaption_DoesNotStep()
     {
@@ -441,6 +473,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, pager.Page);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pagination_Draw_RightArrowSitsAtClickColumn()
     {
@@ -452,6 +485,7 @@ public class ControlInteractionTest
         Assert.AreEqual('›', line[pager.Caption.Length + 3]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pagination_Wheel_StepsPages()
     {
@@ -462,6 +496,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, pager.Page);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pagination_Disabled_IgnoresInput()
     {
@@ -474,6 +509,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, pager.Page);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pagination_ShrinkingTotal_PullsPageBack()
     {
@@ -497,6 +533,7 @@ public class ControlInteractionTest
         return expander;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Expander_Arrows_ExpandAndCollapse()
     {
@@ -513,6 +550,7 @@ public class ControlInteractionTest
         Assert.IsFalse(await expander.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Expander_ClickHeader_TogglesAndFocuses_ClickBodyDoesNot()
     {
@@ -524,6 +562,7 @@ public class ControlInteractionTest
         Assert.IsTrue(expander.IsExpanded);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Expander_Disabled_IgnoresClickAndKeys()
     {
@@ -535,6 +574,7 @@ public class ControlInteractionTest
         Assert.IsFalse(expander.IsExpanded);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expander_ExpandedChanged_FiresOncePerChange()
     {
@@ -547,6 +587,7 @@ public class ControlInteractionTest
         CollectionAssert.AreEqual(new[] { true, false }, seen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expander_ReplacingContent_DetachesOldOne()
     {
@@ -562,6 +603,7 @@ public class ControlInteractionTest
         Assert.IsTrue(expander.Controls.Contains(second));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expander_Draw_ShowsArrowForState()
     {
@@ -577,6 +619,7 @@ public class ControlInteractionTest
 
     // ---- LinkLabel ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LinkLabel_EnterSpaceAndClick_Activate()
     {
@@ -593,6 +636,7 @@ public class ControlInteractionTest
         Assert.AreEqual(3, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LinkLabel_ClickFocusesAndOutsideClickIsIgnored()
     {
@@ -606,6 +650,7 @@ public class ControlInteractionTest
         Assert.AreEqual(1, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LinkLabel_Disabled_DoesNotActivate()
     {
@@ -619,6 +664,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LinkLabel_Text_SizesControlAndDraws()
     {
@@ -641,6 +687,7 @@ public class ControlInteractionTest
         return list;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckList_KeyHints_ListTheInvertKeyWhenEditable()
     {
@@ -649,6 +696,7 @@ public class ControlInteractionTest
         CollectionAssert.Contains(keys, "+/-");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_Keys_NavigateScrollAndToggle()
     {
@@ -669,6 +717,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, list.CursorIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_Star_InvertsAndEnterActivates()
     {
@@ -684,6 +733,7 @@ public class ControlInteractionTest
         Assert.IsFalse(await list.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_ReadOnly_MovesButDoesNotToggle()
     {
@@ -697,6 +747,7 @@ public class ControlInteractionTest
         CollectionAssert.AreEqual(new[] { "b" }, list.CheckedItems.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_ClickRow_FocusesMovesAndToggles()
     {
@@ -711,6 +762,7 @@ public class ControlInteractionTest
         Assert.AreEqual(2, list.CursorIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_ClickBelowLastItem_DoesNotToggle()
     {
@@ -720,6 +772,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, list.CheckedItems.Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_Wheel_MovesThreeRows_AndDisabledIgnoresMouse()
     {
@@ -733,6 +786,7 @@ public class ControlInteractionTest
         Assert.AreEqual(1, list.CheckedItems.Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckList_InvertAll_OnEmptyList_RaisesNothing()
     {
@@ -744,6 +798,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, changed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckList_Draw_ShowsItemsAndEmptyText()
     {
@@ -770,6 +825,7 @@ public class ControlInteractionTest
         return chips;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Chips_Add_TrimsBeforeCheckingDuplicates()
     {
@@ -780,6 +836,7 @@ public class ControlInteractionTest
         Assert.IsFalse(chips.Add(null!));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_Keys_MoveStayInBoundsAndRemove()
     {
@@ -799,6 +856,7 @@ public class ControlInteractionTest
         Assert.IsFalse(await chips.HandleKeyEventAsync(Key(ConsoleKey.A, 'a')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_Enter_OnlyAddsFromPlusChip()
     {
@@ -813,6 +871,7 @@ public class ControlInteractionTest
         Assert.AreEqual(1, requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_ReadOnly_HasNoPlusAndCannotRemove()
     {
@@ -829,6 +888,7 @@ public class ControlInteractionTest
         Assert.AreEqual("[rock] [jazz]", FirstLine(buffer).TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_Click_PlusRequestsAddAndChipHighlights()
     {
@@ -843,6 +903,7 @@ public class ControlInteractionTest
         Assert.AreEqual(2, chips.ActiveIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Chips_Disabled_IgnoresClicks()
     {
@@ -852,6 +913,7 @@ public class ControlInteractionTest
         Assert.IsFalse(chips.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Chips_Visible_SlidesWindowToKeepActiveChipOnScreen()
     {
@@ -879,6 +941,7 @@ public class ControlInteractionTest
         return spinner;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_ClickArrows_FocusAndStep()
     {
@@ -893,6 +956,7 @@ public class ControlInteractionTest
         Assert.AreEqual(5, spinner.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_Disabled_IgnoresMouseAndWheel()
     {
@@ -902,6 +966,7 @@ public class ControlInteractionTest
         Assert.AreEqual(5, spinner.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_Typing_DigitsSignAndBackspace()
     {
@@ -921,6 +986,7 @@ public class ControlInteractionTest
         Assert.AreEqual(9, spinner.Value, "1009 is out of range: the 9 starts a new entry");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_ReadOnly_IgnoresEverything()
     {
@@ -932,6 +998,7 @@ public class ControlInteractionTest
         Assert.AreEqual(5, spinner.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_LargeStepAndOverflow_StayInRange()
     {
@@ -956,6 +1023,7 @@ public class ControlInteractionTest
         return FirstLine(buffer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_UpAndDown_StepLikeRightAndLeft()
     {
@@ -972,6 +1040,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, slider.Value, "and it stops at the minimum");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SegmentedControl_UpAndDown_MoveTheSelectionAndStayInBounds()
     {
@@ -988,6 +1057,7 @@ public class ControlInteractionTest
         Assert.AreEqual(1, control.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Breadcrumb_Space_ActivatesTheSegmentLikeEnter()
     {
@@ -1004,6 +1074,7 @@ public class ControlInteractionTest
         Assert.AreEqual(activated[0], activated[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Breadcrumb_Wheel_StepsTheActiveSegment_AndStopsAtTheEnds()
     {
@@ -1022,6 +1093,7 @@ public class ControlInteractionTest
         Assert.AreEqual(1, crumb.ActiveIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Breadcrumb_WheelElsewhereOrDisabled_IsIgnored()
     {
@@ -1036,6 +1108,7 @@ public class ControlInteractionTest
         Assert.AreEqual(1, crumb.ActiveIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_PlusChecksEverything_MinusUnchecksEverything()
     {
@@ -1053,6 +1126,7 @@ public class ControlInteractionTest
         Assert.AreEqual(2, changed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_PlusWhenAllChecked_RaisesNothingNew()
     {
@@ -1068,6 +1142,7 @@ public class ControlInteractionTest
         Assert.AreEqual(5, list.CheckedItems.Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckList_ReadOnlyOrUnfocused_IgnoresPlusAndMinus()
     {
@@ -1084,6 +1159,7 @@ public class ControlInteractionTest
 
     // ---- Click takes the focus (CheckBox, RadioButton, ToggleButton, Button) ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckBox_Click_TakesFocusFromSibling()
     {
@@ -1101,6 +1177,7 @@ public class ControlInteractionTest
         Assert.IsFalse(first.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RadioButton_Click_TakesFocusFromSibling()
     {
@@ -1118,6 +1195,7 @@ public class ControlInteractionTest
         Assert.IsFalse(first.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ToggleButton_Click_TakesFocusAndFlips()
     {
@@ -1129,6 +1207,7 @@ public class ControlInteractionTest
         Assert.IsTrue(toggle.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnlyToggleButton_Click_DoesNotTakeFocus()
     {
@@ -1140,6 +1219,7 @@ public class ControlInteractionTest
         Assert.IsFalse(toggle.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Button_Click_TakesFocusFromSibling()
     {
@@ -1160,6 +1240,7 @@ public class ControlInteractionTest
 
     // ---- Key hints in Help (Rating, Expander, Toolbar, Slider, SegmentedControl, Chips) ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rating_KeyHints_ListedOnlyWhenEditable()
     {
@@ -1170,6 +1251,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, rating.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expander_KeyHints_NameEveryToggleKey()
     {
@@ -1180,6 +1262,7 @@ public class ControlInteractionTest
         Assert.AreEqual("Collapse the section", hints.Single(h => h.Key == "Left").Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Expander_KeyHints_EmptyWhenDisabled()
     {
@@ -1189,6 +1272,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, expander.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toolbar_KeyHints_EmptyWhenDisabled()
     {
@@ -1200,6 +1284,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, toolbar.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toolbar_KeyHints_EmptyWithoutItems_ListedWithItems()
     {
@@ -1211,6 +1296,7 @@ public class ControlInteractionTest
         CollectionAssert.Contains(toolbar.GetKeyHints().Select(h => h.Key).ToList(), "Enter/Space");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_KeyHints_EmptyWhenReadOnly()
     {
@@ -1221,6 +1307,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, slider.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SegmentedControl_KeyHints_EmptyWhenDisabled()
     {
@@ -1231,6 +1318,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, control.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Chips_KeyHints_OmitEditKeysWhenReadOnly()
     {
@@ -1248,6 +1336,7 @@ public class ControlInteractionTest
 
     // ---- Spinner: any click focuses, only the left button steps ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_ClickOnValueText_FocusesWithoutStepping()
     {
@@ -1260,6 +1349,7 @@ public class ControlInteractionTest
         Assert.AreEqual(5, spinner.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumericUpDown_RightClick_DoesNotStep()
     {
@@ -1273,6 +1363,7 @@ public class ControlInteractionTest
 
     // ---- Key hints in Help (Pagination, NumericUpDown, Breadcrumb, ColorPicker, CheckList, Calendar, ComboBox) ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Pagination_KeyHints_EmptyWhenDisabled()
     {
@@ -1283,6 +1374,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, pager.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumericUpDown_KeyHints_EmptyWhenReadOnly()
     {
@@ -1293,6 +1385,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, spinner.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_KeyHints_EmptyWithoutSegments()
     {
@@ -1304,6 +1397,7 @@ public class ControlInteractionTest
         CollectionAssert.Contains(crumb.GetKeyHints().Select(h => h.Key).ToList(), "Enter/Space");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorPicker_KeyHints_OmitChooseWhenReadOnly()
     {
@@ -1314,6 +1408,7 @@ public class ControlInteractionTest
         CollectionAssert.DoesNotContain(picker.GetKeyHints().Select(h => h.Key).ToList(), "Enter/Space");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckList_KeyHints_OmitEditKeysWhenReadOnly()
     {
@@ -1329,6 +1424,7 @@ public class ControlInteractionTest
         CollectionAssert.DoesNotContain(readOnly, "+/-");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Calendar_KeyHints_OmitTodayAndYearWhenReadOnly()
     {
@@ -1345,6 +1441,7 @@ public class ControlInteractionTest
         CollectionAssert.DoesNotContain(readOnly, "Ctrl+PageUp/PageDown");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ComboBox_KeyHints_EmptyWhenDisabled()
     {
@@ -1359,6 +1456,7 @@ public class ControlInteractionTest
 
     private static List<string> HintKeys(Control control) => control.GetKeyHints().Select(h => h.Key).ToList();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_KeyHints_EditKeysOnlyWhenEditable()
     {
@@ -1376,6 +1474,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, box.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SearchBox_KeyHints_AddEscapeToTheTextKeys()
     {
@@ -1387,6 +1486,7 @@ public class ControlInteractionTest
         CollectionAssert.Contains(keys, "Esc");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TreeView_KeyHints_EmptyWhenDisabled()
     {
@@ -1398,6 +1498,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, tree.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Table_KeyHints_EnterOnlyWhenThereAreRows()
     {
@@ -1410,6 +1511,7 @@ public class ControlInteractionTest
         CollectionAssert.Contains(HintKeys(table), "Enter");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TimePicker_KeyHints_EditKeysOnlyWhenEditable()
     {
@@ -1423,6 +1525,7 @@ public class ControlInteractionTest
         CollectionAssert.DoesNotContain(readOnly, "Backspace/Delete");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RadioGroup_KeyHints_EmptyWithoutOptions()
     {
@@ -1430,6 +1533,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, group.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleButton_KeyHints_EmptyWhenReadOnly()
     {
@@ -1440,6 +1544,7 @@ public class ControlInteractionTest
         Assert.AreEqual(0, toggle.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LinkLabel_KeyHints_EmptyWithoutText()
     {
@@ -1451,6 +1556,7 @@ public class ControlInteractionTest
         CollectionAssert.Contains(HintKeys(link), "Enter/Space");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Alert_KeyHints_OnlyWhenDismissibleWithText()
     {

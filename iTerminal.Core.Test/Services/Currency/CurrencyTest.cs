@@ -70,6 +70,7 @@ public class CurrencyTest
         </gesmes:Envelope>
         """;
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConvertsAnyPairThroughTheEuro()
     {
@@ -81,6 +82,7 @@ public class CurrencyTest
         Assert.AreEqual(100m, rates.Convert(100m, "eur", "EUR"), "codes are not case sensitive");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnknownCurrencyHasNoRate()
     {
@@ -88,12 +90,14 @@ public class CurrencyTest
         Assert.IsNull(Sample().RateBetween("XYZ", "EUR"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCodesIncludeTheEuroAndAreSorted()
     {
         CollectionAssert.AreEqual(new[] { "EUR", "GBP", "USD" }, Sample().Codes.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RatesSurviveSerialization()
     {
@@ -105,6 +109,7 @@ public class CurrencyTest
         Assert.AreEqual(0.5m, back.PerEuro["GBP"]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(null)]
     [DataRow("")]
@@ -116,6 +121,7 @@ public class CurrencyTest
         Assert.IsNull(CurrencyRates.TryParse(text));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheEcbFileIsReadAndBadRowsAreSkipped()
     {
@@ -127,6 +133,7 @@ public class CurrencyTest
         Assert.IsFalse(rates.PerEuro.ContainsKey("BAD"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("<html/>")]
     [DataRow("this is not xml")]
@@ -135,6 +142,7 @@ public class CurrencyTest
         Assert.ThrowsExactly<CurrencyException>(() => EcbCurrencyRateProvider.Parse(xml));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshingKeepsTheRatesForTheNextRun()
     {
@@ -152,6 +160,7 @@ public class CurrencyTest
         Assert.IsTrue(nextRun.IsStale, "kept rates are shown but still refreshed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedDownloadKeepsTheOldRates()
     {

@@ -6,6 +6,7 @@ namespace iConsole.Test.Helper;
 [TestClass]
 public class PathHelperTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperValidSimplePath()
     {
@@ -13,6 +14,7 @@ public class PathHelperTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperValidRelativePath()
     {
@@ -21,6 +23,7 @@ public class PathHelperTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperValidAbsolutePath()
     {
@@ -37,6 +40,7 @@ public class PathHelperTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperInvalidNullPath()
     {
@@ -44,6 +48,7 @@ public class PathHelperTest
         Assert.IsFalse(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperInvalidEmptyPath()
     {
@@ -51,6 +56,7 @@ public class PathHelperTest
         Assert.IsFalse(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperInvalidWhitespacePath()
     {
@@ -58,6 +64,7 @@ public class PathHelperTest
         Assert.IsFalse(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperValidPathWithDots()
     {
@@ -66,6 +73,7 @@ public class PathHelperTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperValidPathWithDashes()
     {
@@ -73,6 +81,7 @@ public class PathHelperTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperValidPathWithUnderscore()
     {
@@ -80,6 +89,7 @@ public class PathHelperTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperValidPathWithNumbers()
     {
@@ -87,6 +97,7 @@ public class PathHelperTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperValidFileExtension()
     {
@@ -94,6 +105,7 @@ public class PathHelperTest
         Assert.IsTrue(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathHelperPathWithoutRootIssue()
     {

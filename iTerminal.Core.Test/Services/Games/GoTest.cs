@@ -17,6 +17,7 @@ public class GoTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AStoneWithNoLibertiesIsCaptured()
     {
@@ -29,6 +30,7 @@ public class GoTest
         Assert.AreEqual(1, game.BlackCaptures);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SuicideIsRefused()
     {
@@ -41,6 +43,7 @@ public class GoTest
         Assert.IsTrue(game.BlackToMove);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RetakingAKoAtOnceIsRefusedButAllowedAfterAnotherMove()
     {
@@ -57,6 +60,7 @@ public class GoTest
         Assert.AreEqual(1, game.WhiteCaptures);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoPassesEndTheGameAndTheDeadStonesAreMarkedByHand()
     {
@@ -77,6 +81,7 @@ public class GoTest
         Assert.IsFalse(game.Dead[At(6, 6)]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMoveAfterAPassResetsTheCount()
     {
@@ -101,6 +106,7 @@ public class GoTest
         return board;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AreaScoreCountsStonesAndSurroundedEmptyPoints()
     {
@@ -110,6 +116,7 @@ public class GoTest
         Assert.AreEqual(10, white, "five stones and the five empty points on the right");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADeadStoneIsCountedForTheSideThatSurroundsIt()
     {
@@ -124,6 +131,7 @@ public class GoTest
         Assert.AreEqual(10, white);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSizeKeyCyclesTheBoardAndRestarts()
     {
@@ -140,6 +148,7 @@ public class GoTest
         Assert.AreEqual(9, game.Size);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UndoTakesBackTheComputersReplyToo()
     {
@@ -155,6 +164,7 @@ public class GoTest
         Assert.IsFalse(game.CanUndo);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerCapturesAStoneInAtari()
     {
@@ -169,6 +179,7 @@ public class GoTest
         Assert.AreEqual(GoRules.White, game.Board[At(1, 2)]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerAnswersOnABigBoardInTime()
     {
@@ -184,6 +195,7 @@ public class GoTest
         Assert.IsTrue(game.BlackToMove);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerPassesWhenThePersonPassedAndItIsAhead()
     {
@@ -198,6 +210,7 @@ public class GoTest
         Assert.IsTrue(game.IsOver);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerPlaysARandomGameThroughWithoutAnIllegalMove()
     {
@@ -215,6 +228,7 @@ public class GoTest
         Assert.IsTrue(game.Board.Count(p => p != GoRules.Empty) > 10);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheBoardDrawsTheLabelsTheGridAndTheStones()
     {

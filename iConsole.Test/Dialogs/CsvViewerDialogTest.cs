@@ -28,6 +28,7 @@ public class CsvViewerDialogTest
             Mock.Of<IDateTimeProviderService>(), new ThemeService()) { Url = document };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpensWithEveryRowAndTheCounts()
     {
@@ -40,6 +41,7 @@ public class CsvViewerDialogTest
         Assert.AreEqual("2 of 2 row(s), 2 column(s)", dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATsvFileIsReadWithTabsEvenWhenItsValuesHaveCommas()
     {
@@ -52,6 +54,7 @@ public class CsvViewerDialogTest
         Assert.AreEqual("one, two", dialog.Grid.CellAt(0, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AQueryLandsOnTheNextIdlePassAndTheStatusSaysHowManyMatched()
     {
@@ -67,6 +70,7 @@ public class CsvViewerDialogTest
         Assert.AreEqual("2 of 3 row(s), 1 column(s)", dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AQueryWithAnErrorKeepsTheRowsAndSaysWhy()
     {
@@ -81,6 +85,7 @@ public class CsvViewerDialogTest
         StringAssert.Contains(dialog.Status, "'colour'");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyFileSaysSo()
     {
@@ -118,6 +123,7 @@ public class CsvViewerDialogTest
         Assert.AreEqual(codePage, dialog.Encoding!.CodePage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileInALegacyCodePageOpensAndF8ReachesTheRightOne()
     {
@@ -138,6 +144,7 @@ public class CsvViewerDialogTest
         Assert.AreEqual("alma", dialog.Grid.CellAt(0, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftF8GoesBackAndF8ComesBackToTheSameReading()
     {
@@ -153,6 +160,7 @@ public class CsvViewerDialogTest
         Assert.AreEqual("t\u0171r\u0151", dialog.Document!.Headers[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTitleNamesTheCurrentCodePage()
     {
@@ -165,6 +173,7 @@ public class CsvViewerDialogTest
         StringAssert.Contains(dialog.Title, TextEncodings.DisplayName(dialog.Encoding!));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AByteOrderMarkNeverReachesTheFirstHeaderUnderAnyCodePage()
     {
@@ -180,6 +189,7 @@ public class CsvViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASwitchDropsTheResultOfAQueryThatWasRunning()
     {
@@ -199,6 +209,7 @@ public class CsvViewerDialogTest
         Assert.AreNotEqual(2, dialog.Grid.RowCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F8InTheTextViewIsHandledAndChangesNothing()
     {
@@ -214,6 +225,7 @@ public class CsvViewerDialogTest
         Assert.IsNull(dialog.SwitchTask);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F8BeforeTheFileIsReadIsHandledAndChangesNothing()
     {
@@ -226,6 +238,7 @@ public class CsvViewerDialogTest
         Assert.IsNull(dialog.SwitchTask);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void F8IsListedInTheKeyHints()
     {
@@ -234,6 +247,7 @@ public class CsvViewerDialogTest
         Assert.IsTrue(dialog.GetKeyHints().Any(h => h.Key == "F8"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DecodeNoLongerTurnsALegacyCodePageIntoReplacementCharacters()
     {
@@ -241,6 +255,7 @@ public class CsvViewerDialogTest
         Assert.IsFalse(CsvViewerDialog.Decode(Windows1250File()).Contains('\uFFFD'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePathDecidesWhichFilesAreCsvAndWhichAreTsv()
     {

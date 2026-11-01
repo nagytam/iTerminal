@@ -10,6 +10,7 @@ namespace iConsole.Test.Dialogs;
 [TestClass]
 public class FileViewerDialogTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CreatesVisibleDialog()
     {
@@ -25,6 +26,7 @@ public class FileViewerDialogTest
         Assert.IsNull(dialog.Url);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CloseSelfCommand_ExecuteAsync_ClosesDialog()
     {
@@ -43,6 +45,7 @@ public class FileViewerDialogTest
         Assert.IsFalse(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ToggleHexModeAsync_LoadsRawBytesAndSwitchesView()
     {

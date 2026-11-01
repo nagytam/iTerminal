@@ -8,6 +8,7 @@ namespace iTerminal.Core.Controls.MenuBar.Test;
 [TestClass]
 public class NavigateMenuItemTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ListsItsEntriesInOrder()
     {

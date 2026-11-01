@@ -69,6 +69,7 @@ public class ContentModelNavigationRaceTest
         Assert.AreEqual(0, failures, "rounds that left the cursor somewhere other than the restored row");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACachedListingDoesNotReplaceAFreshOneThatLandedFirst()
     {
@@ -84,6 +85,7 @@ public class ContentModelNavigationRaceTest
         Assert.AreEqual(fresh.Count, model.FilteredEntries.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACachedListingStillLandsBeforeAnyFreshOne()
     {
@@ -96,6 +98,7 @@ public class ContentModelNavigationRaceTest
         Assert.AreEqual(cached.Count, model.FilteredEntries.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARestoreWaitsOutAStreamedBatchThatDoesNotHoldItsRow()
     {
@@ -115,6 +118,7 @@ public class ContentModelNavigationRaceTest
         Assert.AreEqual(target, model.GetFocusedEntry()?.Url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARestoreWhoseRowIsGoneFromACompleteListingFallsBackToItsIndex()
     {
@@ -127,6 +131,7 @@ public class ContentModelNavigationRaceTest
         Assert.AreEqual(3, model.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARefreshKeepsTheCursorOnItsRowWhenRowsAreAddedAbove()
     {

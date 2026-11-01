@@ -15,26 +15,32 @@ public class VirtualMachineActionsTest
 
     // Reverted (an action is offered in a state it must not be in): the matching test fails.
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AShutOffMachineOnlyStarts() =>
         Assert.AreEqual("Start", Offered(VirtualMachineState.ShutOff));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARunningGuestCanBeShutDownRestartedPausedSavedAndOpened() =>
         Assert.AreEqual("Shutdown,PowerOff,Restart,Pause,SaveState,Console", Offered(VirtualMachineState.Running));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnIdleGuestOffersTheSameActionsAsARunningOne() =>
         Assert.AreEqual(Offered(VirtualMachineState.Running), Offered(VirtualMachineState.Idle));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APausedMachineCanBeResumedButNotPausedAgain() =>
         Assert.AreEqual("PowerOff,Resume,SaveState,Console", Offered(VirtualMachineState.Paused));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnknownStateOffersNothing() =>
         Assert.AreEqual(string.Empty, Offered(VirtualMachineState.Unknown));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StopsAndRestartsAskFirstAndTheRestActOnTheSpot()
     {
@@ -48,6 +54,7 @@ public class VirtualMachineActionsTest
         Assert.IsFalse(VirtualMachineActions.NeedsConfirmation(VirtualMachineAction.Console));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(VirtualMachineAction.Start, "start")]
     [DataRow(VirtualMachineAction.Shutdown, "shutdown")]

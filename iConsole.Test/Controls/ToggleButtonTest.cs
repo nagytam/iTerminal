@@ -29,12 +29,14 @@ public class ToggleButtonTest
 
     // ── Default state ───────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DefaultState_IsOff()
     {
         Assert.IsFalse(Create().IsOn);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DefaultLabels_OnAndOff()
     {
@@ -43,6 +45,7 @@ public class ToggleButtonTest
         Assert.AreEqual("OFF", btn.LabelOff);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanFocus_IsTrue()
     {
@@ -51,6 +54,7 @@ public class ToggleButtonTest
 
     // ── Toggle via keyboard ─────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Space_TogglesFromOffToOn()
     {
@@ -61,6 +65,7 @@ public class ToggleButtonTest
         Assert.IsTrue(btn.IsOn);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_TogglesFromOnToOff()
     {
@@ -71,6 +76,7 @@ public class ToggleButtonTest
         Assert.IsFalse(btn.IsOn);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Space_TogglesBack_WhenPressedTwice()
     {
@@ -82,6 +88,7 @@ public class ToggleButtonTest
         Assert.IsFalse(btn.IsOn);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Space_ReturnsHandledTrue()
     {
@@ -93,6 +100,7 @@ public class ToggleButtonTest
 
     // ── Toggle via mouse ────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LeftClick_TogglesState()
     {
@@ -103,6 +111,7 @@ public class ToggleButtonTest
         Assert.IsTrue(btn.IsOn);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LeftClick_OutsideBounds_DoesNotToggle()
     {
@@ -115,6 +124,7 @@ public class ToggleButtonTest
 
     // ── Toggled event ───────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Toggled_Event_FiredWithNewValue()
     {
@@ -127,6 +137,7 @@ public class ToggleButtonTest
         Assert.AreEqual(true, received);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Toggled_Event_FiredEachToggle()
     {
@@ -140,6 +151,7 @@ public class ToggleButtonTest
         CollectionAssert.AreEqual(new[] { true, false }, calls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetIsOn_Directly_FiresToggled()
     {
@@ -152,6 +164,7 @@ public class ToggleButtonTest
         Assert.AreEqual(true, received);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetIsOn_ToSameValue_DoesNotFireToggled()
     {
@@ -166,6 +179,7 @@ public class ToggleButtonTest
 
     // ── IsReadOnly ──────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnly_SpaceDoesNotToggle()
     {
@@ -177,6 +191,7 @@ public class ToggleButtonTest
         Assert.IsFalse(btn.IsOn);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnly_ClickDoesNotToggle()
     {
@@ -190,6 +205,7 @@ public class ToggleButtonTest
 
     // ── Rendering ───────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WhenOff_ShowsLabelOff()
     {
@@ -201,6 +217,7 @@ public class ToggleButtonTest
         Assert.IsTrue(buffer.ContentAsString.Contains("OFF"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WhenOn_ShowsLabelOn()
     {
@@ -212,6 +229,7 @@ public class ToggleButtonTest
         Assert.IsTrue(buffer.ContentAsString.Contains("ON"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AlwaysHasBrackets()
     {
@@ -224,6 +242,7 @@ public class ToggleButtonTest
         Assert.IsTrue(content.Contains("[") && content.Contains("]"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_CustomLabels_Shown()
     {
@@ -237,6 +256,7 @@ public class ToggleButtonTest
         Assert.IsTrue(buffer.ContentAsString.Contains("ENABLED"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Disabled_DoesNotThrow()
     {
@@ -251,6 +271,7 @@ public class ToggleButtonTest
 
     // ── Discoverability via Commands (so Help lists them) ──────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Commands_IncludeSpaceAndEnterWithNonEmptyKeyDisplayText()
     {

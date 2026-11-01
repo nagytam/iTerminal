@@ -9,6 +9,7 @@ namespace iConsole.Dialogs.Test;
 [TestClass]
 public class TextFileEditorDialogTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_ShouldLoadFileAndReflectDirtyState()
     {
@@ -35,6 +36,7 @@ public class TextFileEditorDialogTest
         new(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
             Mock.Of<IDateTimeProviderService>(), new ThemeService());
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SwitchEncoding_RereadsTheTextAndMarksItChanged()
     {
@@ -51,6 +53,7 @@ public class TextFileEditorDialogTest
         Assert.IsTrue(dlg.TextEditorControl.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SwitchEncoding_LeavesAPdfAlone()
     {

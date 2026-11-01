@@ -22,6 +22,7 @@ public class ProgramFileTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsRunnable_AFileWithoutAnExecuteBit_IsNotAProgram()
     {
@@ -37,6 +38,7 @@ public class ProgramFileTest
         Assert.IsFalse(ProgramFile.IsRunnable(script), "a script without its execute bit goes to the system default");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsRunnable_AFileWithAnExecuteBit_IsAProgram()
     {
@@ -52,6 +54,7 @@ public class ProgramFileTest
         Assert.IsTrue(ProgramFile.IsRunnable(program));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsRunnable_AFolderOrAMissingFile_IsNotAProgram()
     {
@@ -61,6 +64,7 @@ public class ProgramFileTest
         Assert.IsFalse(ProgramFile.IsRunnable(string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CommandFor_OnUnix_RunsTheNameFromTheCurrentFolder_AndKeepsItLiteral()
     {
@@ -74,6 +78,7 @@ public class ProgramFileTest
         Assert.AreEqual("./'it'\\''s'", ProgramFile.CommandFor("it's"), "a single quote is closed, escaped and reopened");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CommandFor_OnWindows_QuotesOnlyANameWithASpace()
     {

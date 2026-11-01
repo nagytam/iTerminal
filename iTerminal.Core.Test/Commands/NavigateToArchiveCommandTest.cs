@@ -6,6 +6,7 @@ namespace iTerminal.Core.Commands.Test;
 [TestClass]
 public class NavigateToArchiveCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_Default_ShouldCreateInstance()
     {

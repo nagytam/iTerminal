@@ -84,6 +84,7 @@ public class ScrollViewTest
 
     private static string[] Draw(ScrollView view, int width, int height) => ScreenBuffer.Render(view, width, height).Lines.ToArray();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentThatFits_ShowsWithoutBars()
     {
@@ -92,6 +93,7 @@ public class ScrollViewTest
         Assert.AreEqual("012345|345678|678901", string.Join("|", Draw(view, 6, 3)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TallContent_ClipsToTheViewAndDrawsAVerticalBar()
     {
@@ -104,6 +106,7 @@ public class ScrollViewTest
         Assert.AreEqual("67890░", lines[2]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WideAndTallContent_DrawsBothBarsAndANotchInTheCorner()
     {
@@ -117,6 +120,7 @@ public class ScrollViewTest
         Assert.AreEqual("██░░░", lines[3]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollTo_ShowsTheShiftedPart_AndClampsToTheContent()
     {
@@ -134,6 +138,7 @@ public class ScrollViewTest
         Assert.AreEqual(0, view.OffsetY);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollBy_RaisesScrolled_OnlyWhenTheViewMoves()
     {
@@ -148,6 +153,7 @@ public class ScrollViewTest
         Assert.AreEqual(2, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingDrawnByTheContent_LeaksOutsideTheView()
     {
@@ -167,6 +173,7 @@ public class ScrollViewTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Keys_ScrollAViewWithStaticContent()
     {
@@ -186,6 +193,7 @@ public class ScrollViewTest
         Assert.IsFalse(await view.HandleKeyEventAsync(Key(ConsoleKey.A)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Keys_ScrollSidewaysWhenTheContentIsWide()
     {
@@ -198,6 +206,7 @@ public class ScrollViewTest
         Assert.AreEqual(0, view.OffsetX);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UnfocusedView_IgnoresKeys()
     {
@@ -207,6 +216,7 @@ public class ScrollViewTest
         Assert.AreEqual(0, view.OffsetY);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Wheel_ScrollsThreeRows()
     {
@@ -218,6 +228,7 @@ public class ScrollViewTest
         Assert.AreEqual(0, view.OffsetY);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Click_ReachesTheContentInItsOwnCoordinates()
     {
@@ -233,6 +244,7 @@ public class ScrollViewTest
         Assert.AreEqual(13, grid.Clicks[0].Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Click_OutsideTheView_IsNotHandled()
     {
@@ -242,6 +254,7 @@ public class ScrollViewTest
         Assert.AreEqual(0, grid.Clicks.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Click_OnTheVerticalBar_JumpsAlongTheTrack()
     {
@@ -256,6 +269,7 @@ public class ScrollViewTest
         Assert.AreEqual(0, grid.Clicks.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FocusMovingIntoTheContent_ScrollsItIntoView()
     {
@@ -276,6 +290,7 @@ public class ScrollViewTest
         Assert.AreEqual("[field]", screen.Line(4)[..7]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RepaintOnlyWhenTheContentChanged()
     {
@@ -292,6 +307,7 @@ public class ScrollViewTest
         Assert.AreEqual(draws + 1, grid.Draws);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FitWidth_MakesTheContentAsWideAsTheView()
     {
@@ -304,6 +320,7 @@ public class ScrollViewTest
         Assert.AreEqual(0, view.OffsetX);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentSize_OverridesTheContentsOwn()
     {
@@ -316,6 +333,7 @@ public class ScrollViewTest
         Assert.AreEqual(9, view.ExtentSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HiddenBars_LeaveTheWholeViewForTheContent()
     {
@@ -328,6 +346,7 @@ public class ScrollViewTest
         Assert.AreEqual("01234", lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplacingTheContent_ResetsTheOffset()
     {
@@ -339,6 +358,7 @@ public class ScrollViewTest
         Assert.AreEqual(0, view.OffsetY);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoContentAndEmptySizes_DrawNothingAndDoNotThrow()
     {
@@ -351,6 +371,7 @@ public class ScrollViewTest
         Assert.AreEqual(0, view.OffsetY);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Thumb_IsProportionalAndStaysInsideTheTrack()
     {
@@ -361,6 +382,7 @@ public class ScrollViewTest
         Assert.AreEqual((0L, 0L), ScrollView.Thumb(0, 20, 10, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListOnlyTheDirectionsThatScroll()
     {

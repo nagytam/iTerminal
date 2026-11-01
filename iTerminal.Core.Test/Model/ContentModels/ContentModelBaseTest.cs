@@ -65,6 +65,7 @@ public class ContentModelBaseTest
     }
 
     /// <summary>The count used to be joined to its word by a border character: "══5═entries══".</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void TheEntryCountIsFramedBySpaces()
     {
@@ -75,6 +76,7 @@ public class ContentModelBaseTest
         Assert.AreEqual(" 2 entries ", model.EntryCountFooterForTest());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OneEntryIsSingular()
     {
@@ -84,6 +86,7 @@ public class ContentModelBaseTest
         Assert.AreEqual(" 1 entry ", model.EntryCountFooterForTest());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFilterFollowsTheCount()
     {
@@ -95,6 +98,7 @@ public class ContentModelBaseTest
         StringAssert.EndsWith(model.EntryCountFooterForTest(), "Filter: al ");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RememberFocusedEntryAndRestoreFocusedEntry_RestoresSelectionByUrl()
     {
@@ -121,6 +125,7 @@ public class ContentModelBaseTest
         Assert.AreEqual(2, model.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Update_ClampsPositionsAndNormalizesEmptyFilter()
     {

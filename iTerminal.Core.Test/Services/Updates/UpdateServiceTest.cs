@@ -60,6 +60,7 @@ public class UpdateServiceTest
         ]
         """;
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANewerReleaseIsAvailableWithItsInstaller()
     {
@@ -73,6 +74,7 @@ public class UpdateServiceTest
         Assert.IsFalse(service.IsSkipped);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheBuildNumberAfterThreeZeros_IsComparedToo()
     {
@@ -82,6 +84,7 @@ public class UpdateServiceTest
         Assert.IsNull(await NewService("0.0.0.12", tags).CheckAsync(CancellationToken.None));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARunningVersionThatIsCurrentOrNewerHasNothingToUpdate()
     {
@@ -89,6 +92,7 @@ public class UpdateServiceTest
         Assert.IsNull(await NewService("2.0.0+abcdef", Tags).CheckAsync(CancellationToken.None));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnOfflineCheckOffersNothingAndDoesNotThrow()
     {
@@ -104,6 +108,7 @@ public class UpdateServiceTest
         Assert.IsNull(service.Available);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SkippingHidesThatReleaseOnly()
     {
@@ -119,6 +124,7 @@ public class UpdateServiceTest
         Assert.IsTrue(next.IsSkipped, "The skip is remembered by the next start.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InstallDownloadsTheCheckedInstallerAndStartsIt()
     {
@@ -145,6 +151,7 @@ public class UpdateServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedInstallIsLoggedAndNothingIsStarted()
     {
@@ -163,6 +170,7 @@ public class UpdateServiceTest
         StringAssert.Contains(service.Log.Last(), "could not be installed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhereNoInstallerCanRun_OnlyTheReleaseIsReported()
     {

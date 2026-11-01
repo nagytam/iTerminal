@@ -27,6 +27,7 @@ public class BenchmarkProbesTest
         File.WriteAllBytes(path, content);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDiskProbesReadAFileAndLeaveTheFolderExactlyAsTheyFoundIt()
     {
@@ -52,6 +53,7 @@ public class BenchmarkProbesTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADiskProbeWithNoLargeFileToReadSaysSoInsteadOfWriting()
     {
@@ -73,6 +75,7 @@ public class BenchmarkProbesTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheLoopbackProbeMovesBytesOverTheLocalNetworkOnly()
     {
@@ -83,6 +86,7 @@ public class BenchmarkProbesTest
         Assert.AreEqual("MB/s", measurement.Unit);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheInternetProbesReportUnavailableWhenTheServerCannotBeReached()
     {
@@ -98,6 +102,7 @@ public class BenchmarkProbesTest
         StringAssert.Contains(download.Reason!, "127.0.0.1");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCpuProbesMeasureAPositiveRate()
     {
@@ -110,6 +115,7 @@ public class BenchmarkProbesTest
         Assert.AreEqual("Mops/s", single.Unit);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMemoryCopyProbeMeasuresAPositiveBandwidth()
     {
@@ -120,6 +126,7 @@ public class BenchmarkProbesTest
         Assert.AreEqual("GB/s", copy.Unit);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTimerProbeMeasuresAWakeUpInMilliseconds()
     {
@@ -129,6 +136,7 @@ public class BenchmarkProbesTest
         Assert.IsFalse(timer.HigherIsBetter);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryProbeHasAUniqueIdAndAName()
     {

@@ -50,6 +50,7 @@ public class PasswordManagerTest
 
     private static PasswordManager Open(Store store) => new(store.DatabasePath, store.KeyDirectory);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFirstUnlockCreatesTheStoreAndLeavesItUnlocked()
     {
@@ -60,6 +61,7 @@ public class PasswordManagerTest
         Assert.IsTrue(manager.IsUnlocked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALockedStoreUnlocksAgainWithoutAnyPassword()
     {
@@ -73,6 +75,7 @@ public class PasswordManagerTest
         Assert.AreEqual("hunter2!", manager.GetSecret("ssh-1"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WhileLockedNothingIsReadAndNothingIsWritten()
     {
@@ -86,6 +89,7 @@ public class PasswordManagerTest
         Throws<InvalidOperationException>(() => manager.SaveSecret("ssh-2", "x"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SavedPasswordsAreThereAfterReopeningAndUnlocking()
     {
@@ -105,6 +109,7 @@ public class PasswordManagerTest
         Assert.AreEqual(PasswordCategory.Network, entry.Category);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SaveSecretKeepsTheTitleOfAnEntryThatAlreadyHasOne()
     {
@@ -118,6 +123,7 @@ public class PasswordManagerTest
         Assert.AreEqual("new", manager.GetSecret("smb-1"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MailSecretsAreCategorisedAsMail()
     {
@@ -129,6 +135,7 @@ public class PasswordManagerTest
         Assert.AreEqual(PasswordCategory.Mail, manager.Get("mail:abc")!.Category);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeletingAnEntryForgetsIt()
     {
@@ -142,6 +149,7 @@ public class PasswordManagerTest
         Assert.AreEqual(0, manager.List().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePasswordIsNotStoredAsPlainTextOnDisk()
     {
@@ -159,6 +167,7 @@ public class PasswordManagerTest
         Assert.IsFalse(reader.GetString(0).Contains("plaintext-canary-value"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheOldVaultsSecretsAreBroughtAcrossOnTheFirstUnlock()
     {
@@ -182,6 +191,7 @@ public class PasswordManagerTest
         Assert.AreEqual(0, check.VaultEntries.Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheKeyIsSealedOnDiskNotStoredRaw()
     {
@@ -198,6 +208,7 @@ public class PasswordManagerTest
         Assert.IsTrue(sealedKey.Length > 44);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AStoreWithoutItsDataProtectionKeysStaysLocked()
     {
@@ -210,6 +221,7 @@ public class PasswordManagerTest
         Assert.IsFalse(elsewhere.IsUnlocked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARememberedMasterPasswordKeyBecomesThePermanentKey()
     {
@@ -234,6 +246,7 @@ public class PasswordManagerTest
         Assert.AreEqual("hunter2", later.GetSecret("ssh:box"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMasterPasswordStoreNothingRemembersIsSetAsideAndReplaced()
     {

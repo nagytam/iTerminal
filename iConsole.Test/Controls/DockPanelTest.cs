@@ -36,6 +36,7 @@ public class DockPanelTest
         return new DockPanel(Theme()) { ViewSize = new Size(width, height), Position = new Position(0, 0) };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MenuStatusTreeAndEditor_AreDockedAroundTheFill()
     {
@@ -50,6 +51,7 @@ public class DockPanelTest
         Assert.AreEqual("mmmmmmmm|ttteeeee|ttteeeee|ttteeeee|ssssssss", string.Join("|", screen.Lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Right_TakesTheRightEdge_AndEarlierChildrenWinTheCorners()
     {
@@ -61,6 +63,7 @@ public class DockPanelTest
         Assert.AreEqual("ffffrr|ffffrr|bbbbrr", string.Join("|", ScreenBuffer.Render(dock, 6, 3).Lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gap_SeparatesStripsFromWhatFollows()
     {
@@ -73,6 +76,7 @@ public class DockPanelTest
         Assert.AreEqual("aaaa||cccc||bbbb", string.Join("|", ScreenBuffer.Render(dock, 4, 5).Lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Percent_IsOfTheSpaceLeftAtThatPoint()
     {
@@ -84,6 +88,7 @@ public class DockPanelTest
         Assert.AreEqual("aaaaabbccc", ScreenBuffer.Render(dock, 10, 1).Line(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChildrenAddedAfterTheFill_GetNoSpace()
     {
@@ -96,6 +101,7 @@ public class DockPanelTest
         Assert.AreEqual(0u, late.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HiddenChild_TakesNoSpace()
     {
@@ -108,6 +114,7 @@ public class DockPanelTest
         Assert.AreEqual("ffff|ffff|ffff", string.Join("|", ScreenBuffer.Render(dock, 4, 3).Lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TooLargeStrip_IsHeldToTheSpaceLeft_AndResizeRelayouts()
     {
@@ -124,6 +131,7 @@ public class DockPanelTest
         Assert.AreEqual("aaaa", screen.Line(3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Remove_DropsTheChild_AndNegativeGapCountsAsZero()
     {

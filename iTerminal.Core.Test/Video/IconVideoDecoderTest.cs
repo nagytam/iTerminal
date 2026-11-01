@@ -60,6 +60,7 @@ public class IconVideoDecoderTest
         return path;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Info_IsTheIconsOwnSize()
     {
@@ -69,6 +70,7 @@ public class IconVideoDecoderTest
         Assert.AreEqual(16, decoder.Info.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadFrame_FillsTheFrameWithTheIconAndEndsTheStream()
     {
@@ -85,6 +87,7 @@ public class IconVideoDecoderTest
         Assert.IsFalse(decoder.ReadFrame(rgb), "the second read reports the end of the stream");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_RefusesAFileThatIsNotAnIcon()
     {
@@ -95,6 +98,7 @@ public class IconVideoDecoderTest
         Assert.ThrowsExactly<InvalidOperationException>(() => new IconVideoDecoder(path));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsIconFile_MatchesTheExtensionOnly()
     {
@@ -104,12 +108,14 @@ public class IconVideoDecoderTest
         Assert.IsFalse(IconVideoDecoder.IsIconFile(string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IconFiles_OpenInTheImageViewer()
     {
         Assert.IsTrue(ImageFileTypes.IsImageFile("app.ico"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFactory_NeedsNoFfmpegForAnIcon()
     {

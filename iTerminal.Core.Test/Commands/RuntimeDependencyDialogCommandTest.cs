@@ -21,18 +21,21 @@ public class RuntimeDependencyDialogCommandTest
         return new RuntimeDependencyDialogCommand(new RuntimeDependencyDialog(service.Object, TestTheme()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCommandIsAvailable_WhenADependencyIsMissing()
     {
         Assert.IsTrue(CommandFor(RuntimeDependencyState.Missing).CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCommandIsAvailable_WhenAnUpdateIsAvailable()
     {
         Assert.IsTrue(CommandFor(RuntimeDependencyState.UpdateAvailable).CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCommandIsUnavailable_WhenEverythingIsUpToDate()
     {

@@ -7,6 +7,7 @@ public class DotnetSdkTest
 {
     private static string Native(string unixPath) => unixPath.Replace('/', Path.DirectorySeparatorChar);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseListing_ReadsEachSdkAndItsInstallRoot_NewestFirst()
     {
@@ -29,6 +30,7 @@ public class DotnetSdkTest
         Assert.AreEqual(Native("/usr/lib/dotnet"), sdks[1].Root);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Default_IsTheNewestStableSdk_EvenWhenAPreviewIsNewer()
     {
@@ -42,6 +44,7 @@ public class DotnetSdkTest
         Assert.AreEqual("10.0.113", DotnetSdk.Default(sdks)!.Version);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Default_OnlyPreviewsInstalled_IsTheNewestPreview()
     {
@@ -50,12 +53,14 @@ public class DotnetSdkTest
         Assert.AreEqual("10.0.200-rc.1", DotnetSdk.Default(sdks)!.Version);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Default_NoSdks_IsNull()
     {
         Assert.IsNull(DotnetSdk.Default([]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HostPath_IsTheDotnetHostOfTheInstall()
     {

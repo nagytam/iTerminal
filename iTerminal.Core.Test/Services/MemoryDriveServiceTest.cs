@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Services;
 [TestClass]
 public class MemoryDriveServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WriteFile()
     {
@@ -19,6 +20,7 @@ public class MemoryDriveServiceTest
         CollectionAssert.AreEqual(inputArray, memFile.Content);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAvailableDiskSpace()
     {
@@ -27,6 +29,7 @@ public class MemoryDriveServiceTest
         Assert.IsTrue(availableDiskSpace.Contains(" GB"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NestedFolder_CreateWriteReadRoundTrip()
     {
@@ -42,6 +45,7 @@ public class MemoryDriveServiceTest
         CollectionAssert.AreEqual(data, file.Content);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetFolder_ResolvesNestedFolder()
     {
@@ -55,6 +59,7 @@ public class MemoryDriveServiceTest
         Assert.AreEqual("b", folder.FolderName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MoveAsync_RenamesNestedFile()
     {
@@ -68,6 +73,7 @@ public class MemoryDriveServiceTest
         Assert.IsTrue(memoryDrive.ExistsFile(new Url("memdrive://a/new.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CopyAsync_CopiesFileContentAndKeepsSource()
     {
@@ -83,6 +89,7 @@ public class MemoryDriveServiceTest
         Assert.IsTrue(memoryDrive.ExistsFile(new Url("memdrive://source.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteFolder_NonRecursive_RefusesWhenNotEmpty()
     {
@@ -96,6 +103,7 @@ public class MemoryDriveServiceTest
         Assert.IsTrue(memoryDrive.ExistsFolder(new Url("memdrive://a/")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteFolder_Recursive_DeletesNonEmptyFolder()
     {
@@ -109,6 +117,7 @@ public class MemoryDriveServiceTest
         Assert.IsFalse(memoryDrive.ExistsFolder(new Url("memdrive://a/")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CopyAsync_FolderIsDeepClonedAndSourceUntouched()
     {
@@ -129,6 +138,7 @@ public class MemoryDriveServiceTest
     /// must still be a folder: its URL used to keep the missing slash, so it parsed as a file and the
     /// panel listed it as one, could not enter it, and a later copy of it failed.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CopyFolderToATargetWithoutATrailingSlashStaysAFolder()
     {
@@ -144,6 +154,7 @@ public class MemoryDriveServiceTest
         Assert.IsTrue(memoryDrive.ExistsFile(new Url("memdrive://acopy/file.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MoveFolderToATargetWithoutATrailingSlashStaysAFolder()
     {

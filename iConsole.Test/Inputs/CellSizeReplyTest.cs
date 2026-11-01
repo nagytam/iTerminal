@@ -6,6 +6,7 @@ namespace iConsole.Test.Inputs;
 [TestClass]
 public class CellSizeReplyTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCellSizeReply_IsReportedAndNotTakenForKeys()
     {
@@ -22,6 +23,7 @@ public class CellSizeReplyTest
         Assert.AreEqual(0, keys);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AKeyAfterTheReply_IsStillDecoded()
     {

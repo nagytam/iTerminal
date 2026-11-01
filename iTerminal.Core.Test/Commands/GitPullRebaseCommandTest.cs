@@ -39,6 +39,7 @@ public class GitPullRebaseCommandTest
         return (new GitPullRebaseCommand(service.Object, git.Object, notes.Object), git, notes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_InTheWorkingTreeRootAndInASubfolder()
     {
@@ -46,24 +47,28 @@ public class GitPullRebaseCommandTest
         Assert.IsTrue(Create(Path.Combine(_root, "repo", "src", "deep")).Command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_IsFalseOutsideAWorkingTree()
     {
         Assert.IsFalse(Create(Path.Combine(_root, "plain")).Command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_IsFalseForAFolderThatIsGone()
     {
         Assert.IsFalse(Create(Path.Combine(_root, "repo", "removed")).Command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_IsFalseOnARemoteDrive()
     {
         Assert.IsFalse(Create(Path.Combine(_root, "repo"), container: ContainerType.FtpFileSystem).Command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsInWorkingTree_AcceptsAGitFileAsAWorktreeOrSubmoduleHas()
     {
@@ -73,6 +78,7 @@ public class GitPullRebaseCommandTest
         Assert.IsTrue(GitPullRebaseCommand.IsInWorkingTree(worktree));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_PullsWithRebaseInTheRepositoryRootAndSaysSo()
     {
@@ -86,6 +92,7 @@ public class GitPullRebaseCommandTest
         notes.Verify(n => n.Notify("Git", "Pulled with rebase.", NotificationSeverity.Info, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_AFailedPull_SaysGitsFirstLine()
     {
@@ -99,6 +106,7 @@ public class GitPullRebaseCommandTest
         notes.Verify(n => n.Notify("Git pull --rebase failed", "error: could not apply 1a2b3c4", NotificationSeverity.Warning, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_AFailureWithNoOutput_StillSaysSomething()
     {
@@ -111,6 +119,7 @@ public class GitPullRebaseCommandTest
         notes.Verify(n => n.Notify("Git pull --rebase failed", "git returned an error.", NotificationSeverity.Warning, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_AServiceThatThrows_IsSaidAsAFailedPull()
     {
@@ -123,6 +132,7 @@ public class GitPullRebaseCommandTest
         notes.Verify(n => n.Notify("Git pull --rebase failed", "git is not installed", NotificationSeverity.Warning, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_WhenGitSaysItIsNoRepository_DoesNotPull()
     {
@@ -135,6 +145,7 @@ public class GitPullRebaseCommandTest
         notes.Verify(n => n.Notify("Git pull --rebase", "This folder is not in a git repository.", NotificationSeverity.Warning, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_OutsideAWorkingTree_DoesNothing()
     {

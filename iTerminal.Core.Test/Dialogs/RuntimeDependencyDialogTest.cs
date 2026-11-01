@@ -25,6 +25,7 @@ public class RuntimeDependencyDialogTest
         return service;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AMissingComponentSaysWhatInstallingWillDo()
     {
@@ -47,6 +48,7 @@ public class RuntimeDependencyDialogTest
         Assert.IsTrue(dialog.ShouldOpenAtStartup);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InitializingAnOpenDialogAgain_KeepsTheFirstPageOnScreen()
     {
@@ -63,6 +65,7 @@ public class RuntimeDependencyDialogTest
         AssertScreenContains(screen, "[x] Install this one");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUpdateSaysWhichVersionItReplaces()
     {
@@ -74,6 +77,7 @@ public class RuntimeDependencyDialogTest
         AssertScreenContains(Render(dialog), "Installed 1.63.0. Update to 1.63.2.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterStartsTheInstallWhenThereIsWork()
     {
@@ -89,6 +93,7 @@ public class RuntimeDependencyDialogTest
         service.Verify(s => s.StartInstall(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterDoesNotStartAnotherInstallWhileOneRuns()
     {
@@ -102,6 +107,7 @@ public class RuntimeDependencyDialogTest
         AssertScreenContains(Render(dialog), "Installing... Esc:hide this (it keeps going)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhileInstalling_ADownloadsProgressShowsAsARealBar_ElseTheSweepRemains()
     {
@@ -123,6 +129,7 @@ public class RuntimeDependencyDialogTest
         AssertScreenContains(screen, "[");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnceTheInstallIsOver_NoBarIsLeftOnScreen()
     {
@@ -135,6 +142,7 @@ public class RuntimeDependencyDialogTest
         AssertScreenDoesNotContain(Render(dialog), "100%");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SkipRemembersTheOffer()
     {
@@ -162,6 +170,7 @@ public class RuntimeDependencyDialogTest
         return service;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EachDependencyGetsItsOwnStepAndTheLastStepSumsUp()
     {
@@ -185,6 +194,7 @@ public class RuntimeDependencyDialogTest
         Assert.IsFalse(dialog.IsWizardActive);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BackspaceGoesBackAStep()
     {
@@ -199,6 +209,7 @@ public class RuntimeDependencyDialogTest
         AssertScreenContains(Render(dialog), "Step 2 of 3: Ollama");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SpaceLeavesTheDependencyOnTheStepOutAndOnlyTheTickedOnesAreInstalled()
     {
@@ -217,6 +228,7 @@ public class RuntimeDependencyDialogTest
         service.Verify(s => s.StartInstall(It.Is<IReadOnlyCollection<string>?>(ids => ids != null && ids.Count == 1 && ids.Contains("playwright"))), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithEverythingLeftOutTheSummaryRefusesToFinish()
     {
@@ -235,6 +247,7 @@ public class RuntimeDependencyDialogTest
         service.Verify(s => s.StartInstall(It.IsAny<IReadOnlyCollection<string>?>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhenNothingIsLeftTheOverviewSaysSoAndOnlyCloses()
     {
@@ -258,6 +271,7 @@ public class RuntimeDependencyDialogTest
         Assert.IsFalse(dialog.ShouldOpenAtStartup);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUpToDateComponentIsNeverOnTheDialogOrTheSummary()
     {
@@ -284,6 +298,7 @@ public class RuntimeDependencyDialogTest
         Assert.IsFalse(summary.Contains("Playwright"), summary.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnlyTheComponentsThatNeedWorkGetAPage()
     {
@@ -307,6 +322,7 @@ public class RuntimeDependencyDialogTest
         AssertScreenDoesNotContain(first, "Playwright");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNothingToCheckTheFirstPageStillSaysSo()
     {
@@ -323,6 +339,7 @@ public class RuntimeDependencyDialogTest
         AssertScreenContains(screen, "There is nothing to set up.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EachDependencyIsItsOwnPageInListOrder_TheFirstPageIsTheFirstDependency()
     {
@@ -336,6 +353,7 @@ public class RuntimeDependencyDialogTest
         AssertScreenDoesNotContain(first, "Ollama");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThereIsNoOverviewPageWhenThereAreDependencies()
     {

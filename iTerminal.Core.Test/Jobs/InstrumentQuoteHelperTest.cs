@@ -16,6 +16,7 @@ public class InstrumentQuoteHelperTest
         await InstrumentQuoteHelper.RecordQuoteAsync(service, cache.Object, "test", name, "USD", InstrumentType.CryptoCurrency, value, DateTime.UtcNow, DateTime.UtcNow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANewQuote_IsTheFirstValueOfItsInstrument()
     {
@@ -27,6 +28,7 @@ public class InstrumentQuoteHelperTest
         Assert.AreEqual(101m, service.Instruments["BTC"].InstrumentValues.First().Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheHistory_IsBounded_AndKeepsTheNewest()
     {
@@ -42,6 +44,7 @@ public class InstrumentQuoteHelperTest
         Assert.AreEqual(InstrumentQuoteHelper.MaxValuesKept + 50m, values.First().Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Priming_RestoresTheCachedValueAsTheLatest()
     {

@@ -47,6 +47,7 @@ public class VirtualListBoxTest
 
     private static KeyEvent Key(ConsoleKey key) => new(' ', key, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawReadsOnlyTheRowsOnScreenEvenForTenMillionRows()
     {
@@ -62,6 +63,7 @@ public class VirtualListBoxTest
         Assert.IsTrue(buffer.Line(4).StartsWith("row 4", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EndJumpsToTheLastRowOfTenMillionAndDrawsIt()
     {
@@ -79,6 +81,7 @@ public class VirtualListBoxTest
         Assert.IsTrue(source.Read.All(index => index >= 9_999_995), "no row far from the screen was read");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowsPagesAndHomeMoveTheCursorAndScroll()
     {
@@ -100,6 +103,7 @@ public class VirtualListBoxTest
         Assert.AreEqual(0, list.TopIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCursorStopsAtBothEnds()
     {
@@ -114,6 +118,7 @@ public class VirtualListBoxTest
         Assert.AreEqual(0, list.TopIndex, "a list shorter than the screen does not scroll");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARowThatHasNotLoadedShowsThePlaceholder()
     {
@@ -128,6 +133,7 @@ public class VirtualListBoxTest
         Assert.IsTrue(buffer.Line(3).StartsWith("row 3", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterRaisesItemActivatedWithTheCursorRow()
     {
@@ -143,6 +149,7 @@ public class VirtualListBoxTest
         Assert.AreEqual("row 2", list.SelectedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickMovesTheCursorAndASecondClickActivates()
     {
@@ -158,6 +165,7 @@ public class VirtualListBoxTest
         CollectionAssert.AreEqual(new[] { 2 }, activated);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickBelowTheLastRowDoesNothing()
     {
@@ -169,6 +177,7 @@ public class VirtualListBoxTest
         Assert.AreEqual(0, list.CursorIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheelMovesTheCursorByThreeRows()
     {
@@ -181,6 +190,7 @@ public class VirtualListBoxTest
         Assert.AreEqual(0, list.CursorIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCursorIsBroughtBackWhenTheSourceShrinks()
     {
@@ -198,6 +208,7 @@ public class VirtualListBoxTest
         Assert.IsTrue(buffer.Line(4).StartsWith("row 9", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptySourceDrawsTheEmptyTextAndNothingElse()
     {
@@ -211,6 +222,7 @@ public class VirtualListBoxTest
         Assert.AreEqual(string.Empty, buffer.Line(1).Trim());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RowsBelowTheLastAreRepaintedBlank()
     {
@@ -225,6 +237,7 @@ public class VirtualListBoxTest
         Assert.AreEqual(string.Empty, buffer.Line(3).Trim(), "a list that loses rows must not keep showing them");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnfocusedListTakesNoKeys()
     {
@@ -237,6 +250,7 @@ public class VirtualListBoxTest
         Assert.AreEqual(0, list.CursorIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACustomTextSelectorFormatsTheRows()
     {
@@ -250,6 +264,7 @@ public class VirtualListBoxTest
         Assert.IsTrue(buffer.Line(0).StartsWith("ROW 0", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APagedSourceFillsInRowsAsTheyArrive()
     {
@@ -280,6 +295,7 @@ public class VirtualListBoxTest
         source.Dispose();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollToMovesTheViewportAndLeavesTheCursorWhereItWas()
     {
@@ -294,6 +310,7 @@ public class VirtualListBoxTest
         Assert.IsTrue(buffer.Line(0).StartsWith("row 50", StringComparison.Ordinal), "the viewport is not pulled back to the cursor");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollToIsClampedToTheLastFullPage()
     {
@@ -307,6 +324,7 @@ public class VirtualListBoxTest
         Assert.IsTrue(buffer.Line(4).StartsWith("row 99", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MovingTheCursorBringsTheViewportBackToIt()
     {
@@ -319,6 +337,7 @@ public class VirtualListBoxTest
         Assert.AreEqual(1, list.TopIndex, "the viewport follows the cursor again: row 1 is now the first row on screen");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyListShowsTheEmptyTextAndNoRows()
     {
@@ -333,6 +352,7 @@ public class VirtualListBoxTest
         Assert.IsNull(list.SelectedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyListTakesNoNavigationOrActivationKeys()
     {

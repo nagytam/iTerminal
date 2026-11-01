@@ -50,6 +50,7 @@ public class PdfTextExtractorTest
         return output.ToArray();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadsTextDrawnByTj()
     {
@@ -61,6 +62,7 @@ public class PdfTextExtractorTest
         StringAssert.Contains(result.Text, "Hello Document");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadsTextFromACompressedStream()
     {
@@ -71,6 +73,7 @@ public class PdfTextExtractorTest
         StringAssert.Contains(result.Text, "Compressed contents");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HonoursACorrectDeclaredLength()
     {
@@ -82,6 +85,7 @@ public class PdfTextExtractorTest
         StringAssert.Contains(result.Text, "Exact length");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TreatsATjArrayAdjustmentAsAWordSpace()
     {
@@ -94,6 +98,7 @@ public class PdfTextExtractorTest
         StringAssert.Contains(result.Text, "Invoice number");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeepsBalancedParenthesesInsideALiteralString()
     {
@@ -104,6 +109,7 @@ public class PdfTextExtractorTest
         StringAssert.Contains(result.Text, "Total (net) due");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DecodesOctalAndBackslashEscapes()
     {
@@ -114,6 +120,7 @@ public class PdfTextExtractorTest
         StringAssert.Contains(result.Text, @"A(B) \ C");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadsTitleAuthorAndPageCount()
     {
@@ -131,6 +138,7 @@ public class PdfTextExtractorTest
         Assert.AreEqual(2, result.PageCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadsAHexEncodedUtf16Title()
     {
@@ -145,6 +153,7 @@ public class PdfTextExtractorTest
         Assert.AreEqual("Ünnepi", result.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReportsAScannedPageAsEmptyWithAReason()
     {
@@ -158,6 +167,7 @@ public class PdfTextExtractorTest
         StringAssert.Contains(result.Note, "scanned");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RefusesAnEncryptedDocumentWithAReason()
     {
@@ -169,6 +179,7 @@ public class PdfTextExtractorTest
         StringAssert.Contains(result.Note, "encrypted");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RejectsAFileThatIsNotAPdf()
     {
@@ -187,6 +198,7 @@ public class PdfTextExtractorTest
     /// points that reproduce the problem cannot survive a round trip through a Latin-1 content
     /// stream, which is the only shape a hand-built fixture can take.</para>
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void LooksLikeText_AcceptsProseAndRejectsGlyphSoup()
     {

@@ -22,6 +22,7 @@ public class ControlsReviewBatch34Test
 
     private static string[] Keys(IEnumerable<(string Key, string Description)> hints) => [.. hints.Select(h => h.Key)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileViewerDialog_KeyHints_NameCloseHexAndCodePage()
     {
@@ -31,6 +32,7 @@ public class ControlsReviewBatch34Test
         CollectionAssert.AreEqual(new[] { "Esc", "F4", "F8" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextFileEditorDialog_KeyHints_NameSaveIndentAndCodePage()
     {
@@ -40,6 +42,7 @@ public class ControlsReviewBatch34Test
         CollectionAssert.AreEqual(new[] { "Ctrl+S", "Tab", "F8" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GoToLineDialog_KeyHints_NameTypeEnterAndEsc()
     {
@@ -48,6 +51,7 @@ public class ControlsReviewBatch34Test
         CollectionAssert.AreEqual(new[] { "0-9", "Enter", "Esc" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GoToOffsetDialog_KeyHints_NameTypeEnterAndEsc()
     {
@@ -56,6 +60,7 @@ public class ControlsReviewBatch34Test
         CollectionAssert.AreEqual(new[] { "0-9, 0x.., ..h", "Enter", "Esc" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UnsavedChangesDialog_KeyHints_NameSaveDiscardCancel()
     {
@@ -64,6 +69,7 @@ public class ControlsReviewBatch34Test
         CollectionAssert.AreEqual(new[] { "S", "D", "C" }, Keys(dialog.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UnsavedChangesDialog_TheLetterAnswers_AndClosingWithoutAnAnswerIsCancel()
     {
@@ -80,6 +86,7 @@ public class ControlsReviewBatch34Test
         Assert.AreEqual(UnsavedChoice.Cancel, await escaped.Choice);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContextMenu_KeyHints_AreOfferedOnlyWhileOpen()
     {
@@ -88,6 +95,7 @@ public class ControlsReviewBatch34Test
         Assert.AreEqual(0, menu.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceTextDialog_CanBeBuiltForAnEditor()
     {
@@ -96,6 +104,7 @@ public class ControlsReviewBatch34Test
         Assert.AreEqual("Replace text", dialog.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBoxExtensions_WithAutoCompletion_AttachesTheListOnlyWhenThereAreCompletions()
     {
@@ -110,6 +119,7 @@ public class ControlsReviewBatch34Test
         Assert.IsFalse(without.AutoCompletion!.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListExtensions_FromList_ReplacesWhatWasThere()
     {
@@ -120,6 +130,7 @@ public class ControlsReviewBatch34Test
         CollectionAssert.AreEqual(new[] { "a", "b" }, list.AsSnapshot().ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void JsonAndXmlFileTypes_RecogniseTheirExtensions_IgnoringCase()
     {

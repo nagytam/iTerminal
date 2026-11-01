@@ -63,12 +63,14 @@ public class MusicLibraryIndexJobTest
         Assert.Fail($"Timed out waiting for: {because}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Priority_IsBackground()
     {
         Assert.AreEqual(JobPriority.Background, CreateJob(new MusicLibraryService(null, _settingsService)).Priority);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_IndexesTheConfiguredFolder()
     {
@@ -86,6 +88,7 @@ public class MusicLibraryIndexJobTest
         await run;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_ReindexesWhenTheMusicFolderSettingChanges()
     {
@@ -116,6 +119,7 @@ public class MusicLibraryIndexJobTest
     /// The cached table has to be read by this job, not by whichever key handler opens the catalog
     /// first — a lazy load on the panel's thread is a full SQLite read inside the 200 ms budget.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_LoadsTheCachedIndexBeforeItEvenWaits()
     {
@@ -136,6 +140,7 @@ public class MusicLibraryIndexJobTest
         await run;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Run_StopsWhenCancelled()
     {

@@ -54,6 +54,7 @@ public class RenameDialogTest
     private static Task PressRenameAsync(RenameDialog dialog) =>
         dialog.Controls.AsSnapshot().OfType<Button>().Single(b => b.Title == "Rename").TriggerHotKeyAsync();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABareNameRenamesTheFileWhereItIs()
     {
@@ -65,6 +66,7 @@ public class RenameDialogTest
         Assert.AreEqual(Path.Combine(_folder, "summary.txt"), dialog.TargetUrl.FullName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABareNameRenamesAFolderBesideItselfNotInsideIt()
     {
@@ -75,6 +77,7 @@ public class RenameDialogTest
         Assert.AreEqual(Path.Combine(_folder, "renamed"), dialog.TargetUrl.FullName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFullPathIsTakenAsTyped()
     {
@@ -86,6 +89,7 @@ public class RenameDialogTest
         Assert.AreEqual(elsewhere, dialog.TargetUrl.FullName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpensWithJustTheNameToEdit()
     {
@@ -96,6 +100,7 @@ public class RenameDialogTest
         AssertScreenContains(Render(dialog), "report.txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RenamingMovesTheEntryAndCloses()
     {
@@ -112,6 +117,7 @@ public class RenameDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnchangedNameJustCloses()
     {
@@ -124,6 +130,7 @@ public class RenameDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyNameIsRefusedWithAMessage()
     {
@@ -138,6 +145,7 @@ public class RenameDialogTest
         model.Verify(m => m.MoveAsync(It.IsAny<Url>(), It.IsAny<Url>(), It.IsAny<bool>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedRenameStaysOpenAndShowsWhy()
     {
@@ -152,6 +160,7 @@ public class RenameDialogTest
         Assert.IsTrue(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {

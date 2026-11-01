@@ -9,6 +9,7 @@ namespace iConsole.Dialogs.Test;
 [TestClass]
 public class SearchTextDialogTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void SearchValue_ShouldReflectTextBoxText()
     {

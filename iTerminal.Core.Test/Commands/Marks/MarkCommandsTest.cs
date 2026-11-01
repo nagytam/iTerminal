@@ -38,6 +38,7 @@ public class MarkCommandsTest
         return service.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InsertMarksTheRowAndStepsDown()
     {
@@ -52,6 +53,7 @@ public class MarkCommandsTest
         Assert.AreEqual(4, model.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InsertOnTheParentRowOnlyStepsDown()
     {
@@ -63,6 +65,7 @@ public class MarkCommandsTest
         Assert.AreEqual(1, model.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InsertOnTheLastRowStaysThere()
     {
@@ -75,6 +78,7 @@ public class MarkCommandsTest
         Assert.AreEqual(4, model.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheUnfocusedPanelDoesNotMark()
     {
@@ -95,6 +99,7 @@ public class MarkCommandsTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftUpAndDownMarkWhileMoving()
     {
@@ -114,6 +119,7 @@ public class MarkCommandsTest
         CollectionAssert.AreEqual(new[] { "a.txt", "b.txt", "c.jpg" }, model.MarkedNames);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NumStarInvertsTheFiles()
     {
@@ -127,6 +133,7 @@ public class MarkCommandsTest
         CollectionAssert.AreEqual(new[] { "b.txt", "c.jpg" }, model.MarkedNames);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MarkAllAndUnmarkAllFromTheMenu()
     {
@@ -141,6 +148,7 @@ public class MarkCommandsTest
         Assert.AreEqual(0, model.MarkedCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePatternDialogMarksAndUnmarks()
     {
@@ -159,6 +167,7 @@ public class MarkCommandsTest
         CollectionAssert.AreEqual(new[] { "b.txt" }, model.MarkedNames);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterInThePatternDialogAppliesAndCloses()
     {
@@ -176,6 +185,7 @@ public class MarkCommandsTest
         Assert.IsFalse(root.Controls.Contains(dialog), "the dialog closed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NumMinusOpensTheUnmarkDialog()
     {

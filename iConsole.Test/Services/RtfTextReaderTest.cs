@@ -8,6 +8,7 @@ public class RtfTextReaderTest
 {
     private static List<string> Read(string rtf) => [.. RtfTextReader.Read(System.Text.Encoding.Latin1.GetBytes(rtf))];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Paragraphs_BecomeLines_AndControlWordsDoNotShow()
     {
@@ -16,6 +17,7 @@ public class RtfTextReaderTest
         CollectionAssert.AreEqual(new[] { "Hello bold world", "Second" }, lines);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HexEscapes_DecodeWithTheDeclaredCodePage()
     {
@@ -25,6 +27,7 @@ public class RtfTextReaderTest
         Assert.AreEqual("Аб", lines.Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UnicodeEscapes_SkipTheirFallbackCharacter()
     {
@@ -33,6 +36,7 @@ public class RtfTextReaderTest
         Assert.AreEqual("éx€y", lines.Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FontAndColourTables_AndMetadata_AreNotShown()
     {
@@ -41,6 +45,7 @@ public class RtfTextReaderTest
         Assert.AreEqual("Body text", lines.Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HeadersAndFootersAndUnknownDestinations_AreNotShown()
     {
@@ -49,6 +54,7 @@ public class RtfTextReaderTest
         Assert.AreEqual("Body", lines.Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EscapedBracesAndBackslashes_AreText()
     {
@@ -57,6 +63,7 @@ public class RtfTextReaderTest
         Assert.AreEqual("{braces} and back\\slash", lines.Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TableCells_AreSeparatedByBars_AndRowsEndTheirLine()
     {

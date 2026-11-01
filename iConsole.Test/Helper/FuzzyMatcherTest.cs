@@ -5,6 +5,7 @@ namespace iConsole.Test.Helper;
 [TestClass]
 public class FuzzyMatcherTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Match_NotASubsequence_ReturnsNull()
     {
@@ -13,6 +14,7 @@ public class FuzzyMatcherTest
         Assert.IsNull(FuzzyMatcher.Match("abc", "ab"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Match_EmptyPattern_MatchesEverything()
     {
@@ -22,6 +24,7 @@ public class FuzzyMatcherTest
         Assert.AreEqual(0, match.Value.Positions.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Match_IgnoresCase_AndReportsPositions()
     {
@@ -31,6 +34,7 @@ public class FuzzyMatcherTest
         CollectionAssert.AreEqual(new[] { 0, 5 }, match.Value.Positions.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Match_PrefersWordStartsOverEarlierLoneLetters()
     {
@@ -40,6 +44,7 @@ public class FuzzyMatcherTest
         CollectionAssert.AreEqual(new[] { 0, 5 }, match.Value.Positions.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Match_ConsecutiveBeatsScattered()
     {
@@ -49,6 +54,7 @@ public class FuzzyMatcherTest
         Assert.IsTrue(tight > loose);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Match_CamelCaseHumpCountsAsWordStart()
     {
@@ -58,6 +64,7 @@ public class FuzzyMatcherTest
         CollectionAssert.AreEqual(new[] { 0, 4 }, match.Value.Positions.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rank_OrdersBestFirst_AndDropsNonMatches()
     {
@@ -69,6 +76,7 @@ public class FuzzyMatcherTest
         Assert.IsFalse(ranked.Any(entry => entry.Item == "Open settings"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rank_EqualScores_KeepOriginalOrder()
     {

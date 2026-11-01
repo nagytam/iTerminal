@@ -42,6 +42,7 @@ public class LocalizerTest
             ],
             store);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EnglishIsTheDefault()
     {
@@ -52,6 +53,7 @@ public class LocalizerTest
         Assert.AreEqual("Close", localizer.Get("Common.Close"), "the framework's own strings are always there");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALanguageWithoutTheKeyShowsTheEnglishText()
     {
@@ -62,6 +64,7 @@ public class LocalizerTest
         Assert.AreEqual("neutral only", localizer.Get("Only.Neutral"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyTranslationFallsBackToEnglish()
     {
@@ -71,6 +74,7 @@ public class LocalizerTest
         Assert.AreEqual("empty in German", localizer.Get("Empty"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AKeyNobodyKnowsShowsTheKeyAndTryGetSaysSo()
     {
@@ -81,6 +85,7 @@ public class LocalizerTest
         Assert.AreEqual(string.Empty, value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALanguageWithNoResourcesAtAllShowsEnglish()
     {
@@ -90,6 +95,7 @@ public class LocalizerTest
         Assert.AreEqual("both in English", localizer.Get("Both"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ArgumentsAreFormattedInTheCurrentLanguage()
     {
@@ -100,6 +106,7 @@ public class LocalizerTest
         Assert.AreEqual("Hallo Ann, du hast 3 Dateien", localizer.Get("Hello", "Ann", 3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoArgumentsReturnsTheTextAsItIs()
     {
@@ -108,6 +115,7 @@ public class LocalizerTest
         Assert.AreEqual("Hello {0}, you have {1} files", localizer.Get("Hello"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABrokenPlaceholderDoesNotThrow()
     {
@@ -118,6 +126,7 @@ public class LocalizerTest
         Assert.AreEqual("broken {0} {1}", Create().Get("Broken", "x"), "too few arguments for the placeholders is the same case");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SwitchingLanguageRaisesTheEventOnceAndNotForTheSameLanguage()
     {
@@ -133,6 +142,7 @@ public class LocalizerTest
         Assert.AreEqual("fr", localizer.LanguageCode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnknownLanguageChangesNothing()
     {
@@ -150,6 +160,7 @@ public class LocalizerTest
         Assert.AreEqual(0, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheChosenLanguageIsSavedAndRestoredByTheNextInstance()
     {
@@ -162,6 +173,7 @@ public class LocalizerTest
         Assert.AreEqual("Chiudi", next.Get("Common.Close"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASavedLanguageThatIsNotSupportedLeavesEnglish()
     {
@@ -169,6 +181,7 @@ public class LocalizerTest
         Assert.AreEqual("en", Create(new MemoryStore("")).LanguageCode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryShippedLanguageIsListedByItsOwnNameEnglishFirst()
     {

@@ -82,6 +82,7 @@ public class DriveCommandsTest
         return service;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheRepositoryIsFoundFromAnyFolderInsideIt()
     {
@@ -92,6 +93,7 @@ public class DriveCommandsTest
         Assert.AreEqual(Path.Combine(_root, "worktree"), GitDriveCommand.FindRepositoryRoot(Path.Combine(_root, "worktree")), "a .git file marks a worktree");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlF9GoesToTheContainersAndBack()
     {
@@ -116,6 +118,7 @@ public class DriveCommandsTest
         Assert.IsInstanceOfType<ContentModelFileSystem>(service.GetFocusedModel());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlF6InARepositoryOpensItsRevisions()
     {
@@ -134,6 +137,7 @@ public class DriveCommandsTest
         Assert.IsNull(revision, "the panel lands on the list of revisions");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlF6OutsideARepositoryOpensTheDriveRoot()
     {
@@ -147,6 +151,7 @@ public class DriveCommandsTest
         Assert.AreEqual(Container.GIT, service.GetFocusedModel()!.Url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CopyAndDeleteFindTheDrivesFileSystemThroughItsPanel()
     {

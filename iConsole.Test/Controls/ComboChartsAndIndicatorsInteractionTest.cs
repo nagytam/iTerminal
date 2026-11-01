@@ -37,6 +37,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         return (root, combo);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComboBox_UpDownHomeEnd_ChangeTheSelectionWithoutOpening()
     {
@@ -54,6 +55,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         Assert.IsFalse(combo.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComboBox_AltDownF4AndSpace_OpenTheList()
     {
@@ -68,6 +70,7 @@ public class ComboChartsAndIndicatorsInteractionTest
 
     private readonly record struct Opener(ConsoleKey Console, char Char = '\0', bool Alt = false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComboBox_TypeAhead_JumpsToTheNextMatchAndWraps()
     {
@@ -82,6 +85,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         Assert.AreEqual(1, combo.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComboBox_Empty_IgnoresMovementAndTypeAhead()
     {
@@ -96,6 +100,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         combo.Draw(new MockBuffer(new Size(80, 25)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComboBox_ClickOpens_WheelSteps_DisabledAndReadOnlyDoNothing()
     {
@@ -119,6 +124,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         combo.Close();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ComboBox_Draw_ShowsTheSelectionAndTruncatesToTheWidth()
     {
@@ -136,6 +142,7 @@ public class ComboChartsAndIndicatorsInteractionTest
 
     // ---- BreakdownChart ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BreakdownChart_Allocate_AlwaysFillsTheWidth()
     {
@@ -153,6 +160,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         Items = [new BreakdownChartItem("Used", 75, Color.Red), new BreakdownChartItem("Free", 25, Color.Green)],
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BreakdownChart_Draw_ShowsTheBarAndALegendWithShares()
     {
@@ -166,6 +174,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         Assert.AreEqual(string.Empty, lines[3].Trim());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BreakdownChart_Draw_WithoutPercentagesOrItems()
     {
@@ -180,6 +189,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         Assert.AreEqual(string.Empty, Lines(empty)[0].Trim());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BreakdownChart_Draw_OnANarrowViewLeavesNoStaleLegendCell()
     {
@@ -194,6 +204,7 @@ public class ComboChartsAndIndicatorsInteractionTest
 
     // ---- Gauge ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gauge_Value_IsClampedAndNaNBecomesZero()
     {
@@ -206,6 +217,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         Assert.AreEqual(0.0, gauge.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gauge_SeverityColor_FollowsTheThresholds()
     {
@@ -215,6 +227,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         Assert.AreEqual(Color.Yellow, Gauge.SeverityColor(0.5, warning: 0.4, critical: 0.6));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gauge_Draw_ShowsLabelBarAndPercent_AndFallsBackToTextWhenTooNarrow()
     {
@@ -232,6 +245,7 @@ public class ComboChartsAndIndicatorsInteractionTest
 
     // ---- StatusDot ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusDot_Draw_ShowsTheDotAndTextCutToTheWidth()
     {
@@ -251,6 +265,7 @@ public class ComboChartsAndIndicatorsInteractionTest
 
     // ---- StepIndicator / Alert ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StepIndicator_ClickRaisesTheStepOnlyWhenEnabledAndOnAGlyph()
     {
@@ -267,6 +282,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         Assert.AreEqual(-1, steps.StepAtColumn(8));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Alert_CloseCrossDismissesOnlyWhenEnabled()
     {
@@ -284,6 +300,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         Assert.AreEqual(string.Empty, alert.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Alert_Enter_DismissesLikeEscape_WhenFocusedAndDismissible()
     {
@@ -300,6 +317,7 @@ public class ComboChartsAndIndicatorsInteractionTest
         Assert.AreEqual(string.Empty, alert.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Alert_Enter_IsLeftAloneWhenNotDismissible()
     {

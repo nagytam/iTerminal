@@ -75,6 +75,7 @@ public class ContentModelCopyPipelineTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StreamCopyHelper_CopyWithProgressAsync_ReportsMonotonicProgressAndCopiesAllBytes()
     {
@@ -96,6 +97,7 @@ public class ContentModelCopyPipelineTest
         CollectionAssert.AreEqual(data, destination.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_OverwriteFalse_ExistingTarget_LeavesTargetUnchanged()
     {
@@ -111,6 +113,7 @@ public class ContentModelCopyPipelineTest
         StringAssert.Contains(task.Description, "already exists");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_Cancelled_DeletesPartialTargetAndReportsCancelled()
     {
@@ -126,6 +129,7 @@ public class ContentModelCopyPipelineTest
         StringAssert.Contains(task.Description, "cancelled");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_MissingSource_ReportsFailure()
     {
@@ -138,6 +142,7 @@ public class ContentModelCopyPipelineTest
         StringAssert.Contains(task.Description, "failed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_CrossInstanceLocalCopy_CopiesContentWithRealProgress()
     {
@@ -152,6 +157,7 @@ public class ContentModelCopyPipelineTest
         Assert.AreEqual(100, task.ProgressPercentage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFolderTask_ToMemoryDrive_CopiesSubfoldersAndReportsBytes()
     {
@@ -180,6 +186,7 @@ public class ContentModelCopyPipelineTest
         Assert.AreEqual(100, task.ProgressPercentage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFolderTask_CopiesFilesConcurrently()
     {
@@ -217,6 +224,7 @@ public class ContentModelCopyPipelineTest
 
     // ---- File conflicts (single file): the prompt decides; nothing is written without an answer. ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_AskAndSkip_KeepsTargetAndReportsNoError()
     {
@@ -235,6 +243,7 @@ public class ContentModelCopyPipelineTest
         Assert.AreEqual(1, prompts.PromptCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_AskAndRename_WritesBesideTheExistingFile()
     {
@@ -252,6 +261,7 @@ public class ContentModelCopyPipelineTest
         Assert.IsNull(task.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFileTask_AskAndCancel_EndsCancelledAndTouchesNothing()
     {

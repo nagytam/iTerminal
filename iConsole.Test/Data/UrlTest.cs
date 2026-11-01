@@ -6,6 +6,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class UrlTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void FolderAbsoluteWithOneLevel()
     {
@@ -21,6 +22,7 @@ public class UrlTest
         Assert.AreEqual(0, url.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FolderAbsoluteWithMultipleLevels()
     {
@@ -31,6 +33,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.FILE, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FolderRelative()
     {
@@ -54,6 +57,7 @@ public class UrlTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileRelative()
     {
@@ -63,6 +67,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.FILE, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Container()
     {
@@ -72,6 +77,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.FILE, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FolderInContainer()
     {
@@ -81,6 +87,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.ZIP_ARCHIVE, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileInContainer()
     {
@@ -90,6 +97,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.ZIP_ARCHIVE, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MemDrive()
     {
@@ -99,6 +107,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.MEMORY_DRIVE, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MemDriveFile()
     {
@@ -109,6 +118,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.MEMORY_DRIVE, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MemDriveFolder()
     {
@@ -119,6 +129,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.MEMORY_DRIVE, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MusicPlaylistRoot()
     {
@@ -128,6 +139,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.MUSIC_PLAYLIST, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MusicPlaylistControlFolder()
     {
@@ -138,6 +150,7 @@ public class UrlTest
         Assert.AreEqual(@"musicplaylist://", url.ParentUrl.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MusicCatalogRoot()
     {
@@ -147,6 +160,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.MUSIC_CATALOG, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MusicCatalogAlbumFolder()
     {
@@ -160,6 +174,7 @@ public class UrlTest
     /// A catalog track carries an escaped file path, which must not be mistaken for a folder — Enter
     /// on it queues the track rather than trying to descend into it.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void MusicCatalogTrackIsAFile()
     {
@@ -168,6 +183,7 @@ public class UrlTest
         Assert.AreEqual(ContainerType.MusicCatalog, url.ContainerType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshFileSystemFile()
     {
@@ -180,6 +196,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.SSH, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshFileSystemFolder()
     {
@@ -194,6 +211,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.SSH, url.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSystemFolder_ParentUrl_ReturnsActualParent()
     {
@@ -210,6 +228,7 @@ public class UrlTest
             $"ParentUrl should contain 'windows', got '{parent.FullUrl}'");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSystemFolder_WithTrailingSlash_ParentUrl_ReturnsActualParent()
     {
@@ -233,6 +252,7 @@ public class UrlTest
 
     // ── Recursive / multi-embedded archive tests ──────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SingleLevelArchive_ContainerFilePath()
     {
@@ -248,6 +268,7 @@ public class UrlTest
         Assert.IsNull(url.InnerUrl, "InnerUrl should be null for a single-level archive URL");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SingleLevelArchive_RootFolder_ContainerFilePath()
     {
@@ -258,6 +279,7 @@ public class UrlTest
         Assert.IsNull(url.InnerUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoLevelRecursiveArchive_FileInInnerZip()
     {
@@ -278,6 +300,7 @@ public class UrlTest
         Assert.AreEqual(iConsole.Data.Container.ZIP_ARCHIVE, url.InnerUrl.Container);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoLevelRecursiveArchive_FolderInInnerZip()
     {
@@ -292,6 +315,7 @@ public class UrlTest
         Assert.AreEqual(PathType.Folder, url.InnerUrl.PathType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThreeLevelRecursiveArchive()
     {
@@ -310,6 +334,7 @@ public class UrlTest
         Assert.IsNull(url.InnerUrl.InnerUrl.InnerUrl, "No further nesting expected");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoLevelRecursiveArchive_InnerUrl_ContainerFilePath()
     {
@@ -320,6 +345,7 @@ public class UrlTest
             $"Expected inner ContainerFilePath to end with 'inner.zip', got '{url.InnerUrl.ContainerFilePath}'");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RecursiveArchive_FullUrl_RoundTrip()
     {
@@ -331,6 +357,7 @@ public class UrlTest
 
     // ── GZ archive tests ──────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GzArchive_FileInside()
     {
@@ -343,6 +370,7 @@ public class UrlTest
         Assert.IsNull(url.InnerUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GzArchive_RootFolder()
     {
@@ -355,6 +383,7 @@ public class UrlTest
 
     // ── TAR.GZ archive tests ──────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TarGzArchive_FileInside()
     {
@@ -367,6 +396,7 @@ public class UrlTest
         Assert.IsNull(url.InnerUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TarGzArchive_FolderInside()
     {
@@ -376,6 +406,7 @@ public class UrlTest
         Assert.IsNull(url.InnerUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TgzArchive_FileInside()
     {
@@ -387,6 +418,7 @@ public class UrlTest
             $"Expected ContainerFilePath to end with 'bundle.tgz', got '{url.ContainerFilePath}'");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TgzArchive_FullUrl_RoundTrip()
     {
@@ -397,6 +429,7 @@ public class UrlTest
 
     // ── Mixed archive combinations ────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mixed_ZipContainingTarGz_FileInInnerArchive()
     {
@@ -414,6 +447,7 @@ public class UrlTest
             $"Expected inner ContainerFilePath to end with 'inner.tar.gz', got '{url.InnerUrl.ContainerFilePath}'");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mixed_TarGzContainingZip_FileInInnerArchive()
     {
@@ -428,6 +462,7 @@ public class UrlTest
         Assert.AreEqual(PathType.File, url.InnerUrl.PathType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mixed_ZipContainingGz_FileInInnerArchive()
     {
@@ -441,6 +476,7 @@ public class UrlTest
         Assert.AreEqual(PathType.File, url.InnerUrl.PathType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mixed_GzContainingTarGz_ThreeLevels()
     {
@@ -457,6 +493,7 @@ public class UrlTest
         Assert.IsNull(url.InnerUrl.InnerUrl.InnerUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Mixed_ZipContainingTarGz_FolderInInner()
     {
@@ -472,6 +509,7 @@ public class UrlTest
 
     // ── FTP tests ─────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FtpFileSystemFile()
     {
@@ -484,6 +522,7 @@ public class UrlTest
         Assert.AreEqual("/pub/data.csv", url.Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FtpFileSystemFolder()
     {
@@ -496,6 +535,7 @@ public class UrlTest
         Assert.AreEqual("/pub/", url.Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FtpFileSystemAnonymousFile()
     {
@@ -508,6 +548,7 @@ public class UrlTest
         Assert.AreEqual("/pub/readme.txt", url.Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FtpFileSystemAnonymousFolder()
     {
@@ -517,6 +558,7 @@ public class UrlTest
         Assert.AreEqual("ftp.example.com", url.Host);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FtpFullUrl_RoundTrip()
     {
@@ -524,6 +566,7 @@ public class UrlTest
         Assert.AreEqual("ftp://user@ftp.example.com/pub/data.csv", url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FtpRootUrl()
     {
@@ -533,6 +576,7 @@ public class UrlTest
 
     // ── FTP embedded archive tests ────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FtpEmbeddedZip_FileInside()
     {
@@ -547,6 +591,7 @@ public class UrlTest
         Assert.IsNull(url.InnerUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FtpEmbeddedZip_RootFolder()
     {
@@ -556,6 +601,7 @@ public class UrlTest
         Assert.IsNull(url.InnerUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FtpEmbeddedTarGz_FileInside()
     {
@@ -567,6 +613,7 @@ public class UrlTest
             $"Expected ContainerFilePath to end with 'release.tar.gz', got '{url.ContainerFilePath}'");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FtpEmbeddedZip_TwoLevels()
     {
@@ -580,6 +627,7 @@ public class UrlTest
         Assert.AreEqual(PathType.File, url.InnerUrl.PathType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FtpAnonymousEmbeddedZip_FileInside()
     {
@@ -594,6 +642,7 @@ public class UrlTest
 
     // ── SSH embedded archive tests ────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshEmbeddedZip_FileInside()
     {
@@ -608,6 +657,7 @@ public class UrlTest
         Assert.IsNull(url.InnerUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshEmbeddedZip_RootFolder()
     {
@@ -617,6 +667,7 @@ public class UrlTest
         Assert.IsNull(url.InnerUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshEmbeddedTarGz_FileInside()
     {
@@ -628,6 +679,7 @@ public class UrlTest
             $"Expected ContainerFilePath to end with 'release.tar.gz', got '{url.ContainerFilePath}'");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshEmbeddedZip_TwoLevels()
     {
@@ -642,6 +694,7 @@ public class UrlTest
         Assert.IsTrue(url.InnerUrl.ContainerFilePath.EndsWith("inner.zip"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshEmbeddedZip_ThreeLevels()
     {
@@ -654,6 +707,7 @@ public class UrlTest
         Assert.AreEqual(PathType.File, url.InnerUrl.PathType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshEmbeddedZip_FullUrl_RoundTrip()
     {
@@ -662,6 +716,7 @@ public class UrlTest
         Assert.AreEqual(raw, url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSystemPath_DirectoryExistsResult_IsCachedForFiveSeconds()
     {
@@ -688,6 +743,7 @@ public class UrlTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSystemPath_DirectoryExistsCache_ExpiresAfterFiveSeconds()
     {
@@ -714,6 +770,7 @@ public class UrlTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSystemPath_FileInfoResult_IsCachedForFiveSeconds()
     {
@@ -739,6 +796,7 @@ public class UrlTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileSystemPath_FileInfoCache_ExpiresAfterFiveSeconds()
     {
@@ -767,6 +825,7 @@ public class UrlTest
 
     // ── SMB tests ────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SmbFileSystemFile()
     {
@@ -781,6 +840,7 @@ public class UrlTest
         Assert.AreEqual("pub/data.csv", url.SharePath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SmbFileSystemFolder()
     {
@@ -793,6 +853,7 @@ public class UrlTest
         Assert.AreEqual("pub/", url.SharePath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SmbFileSystemAnonymousFile()
     {
@@ -805,6 +866,7 @@ public class UrlTest
         Assert.AreEqual("readme.txt", url.SharePath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SmbFileSystemShareRoot()
     {
@@ -813,6 +875,7 @@ public class UrlTest
         Assert.AreEqual(string.Empty, url.SharePath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SmbFullUrl_RoundTrip()
     {
@@ -820,6 +883,7 @@ public class UrlTest
         Assert.AreEqual("smb://user@fileserver/Share/pub/data.csv", url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SmbRootUrl()
     {
@@ -827,6 +891,7 @@ public class UrlTest
         Assert.AreEqual("smb://user@fileserver/Share/", url.RootUrl.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SmbParentUrl()
     {
@@ -834,6 +899,7 @@ public class UrlTest
         Assert.AreEqual("smb://user@fileserver/Share/pub/", url.ParentUrl.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Share_NonSmbUrl_ReturnsEmpty()
     {
@@ -844,6 +910,7 @@ public class UrlTest
 
     // ── iPhone (AFC) tests ────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IPhoneFileSystemFile()
     {
@@ -857,6 +924,7 @@ public class UrlTest
         Assert.AreEqual("IMG_0001.JPG", url.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IPhoneFileSystemFolder()
     {
@@ -867,6 +935,7 @@ public class UrlTest
         Assert.AreEqual("/DCIM/", url.Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IPhoneFileSystemRoot()
     {
@@ -877,6 +946,7 @@ public class UrlTest
         Assert.AreEqual("/", url.Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IPhoneFullUrl_RoundTrip()
     {
@@ -884,6 +954,7 @@ public class UrlTest
         Assert.AreEqual("iphone://00008110-001A2B3C/DCIM/100APPLE/IMG_0001.JPG", url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IPhoneRootUrl()
     {
@@ -891,6 +962,7 @@ public class UrlTest
         Assert.AreEqual("iphone://00008110-001A2B3C/", url.RootUrl.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IPhoneParentUrl()
     {
@@ -898,6 +970,7 @@ public class UrlTest
         Assert.AreEqual("iphone://00008110-001A2B3C/DCIM/100APPLE/", url.ParentUrl.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IPhoneParentUrl_OfTopLevelFolder_IsRoot()
     {
@@ -905,6 +978,7 @@ public class UrlTest
         Assert.AreEqual("iphone://00008110-001A2B3C/", url.ParentUrl.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANewFileMustNotExistYet()
     {

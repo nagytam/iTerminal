@@ -10,6 +10,7 @@ namespace iConsole.Test.Controls;
 [TestClass]
 public class WindowTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowCanBeCreated()
     {
@@ -20,6 +21,7 @@ public class WindowTest
         Assert.IsInstanceOfType(window, typeof(Control));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowHasDefaultProperties()
     {
@@ -33,6 +35,7 @@ public class WindowTest
         Assert.IsNotNull(window.Controls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowPositionCanBeSet()
     {
@@ -45,6 +48,7 @@ public class WindowTest
         Assert.AreEqual(position, window.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowSizeCanBeSet()
     {
@@ -57,6 +61,7 @@ public class WindowTest
         Assert.AreEqual(size, window.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowIsVisibleByDefault()
     {
@@ -66,6 +71,7 @@ public class WindowTest
         Assert.IsTrue(window.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowVisibilityCanBeToggled()
     {
@@ -79,6 +85,7 @@ public class WindowTest
         Assert.IsTrue(window.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowIsEnabledByDefault()
     {
@@ -88,6 +95,7 @@ public class WindowTest
         Assert.IsTrue(window.IsEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowCanBeDisabled()
     {
@@ -98,6 +106,7 @@ public class WindowTest
         Assert.IsFalse(window.IsEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowCanContainChildControls()
     {
@@ -112,6 +121,7 @@ public class WindowTest
         Assert.AreEqual(childControl, window.Controls[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowCanHaveParent()
     {
@@ -124,6 +134,7 @@ public class WindowTest
         Assert.AreEqual(parentWindow, childWindow.Parent);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowZOrderCanBeSet()
     {
@@ -135,6 +146,7 @@ public class WindowTest
         Assert.AreEqual(5, window.ZOrder);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowNameCanBeSet()
     {
@@ -147,6 +159,7 @@ public class WindowTest
         Assert.AreEqual(name, window.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowBoundRectIsCalculatedCorrectly()
     {
@@ -163,6 +176,7 @@ public class WindowTest
         Assert.AreEqual(new Size(20, 15), boundRect.Size);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowAbsolutePositionIsCalculatedWithoutParent()
     {
@@ -175,6 +189,7 @@ public class WindowTest
         Assert.AreEqual(new Position(5, 10), window.AbsolutePosition);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowAbsolutePositionIsCalculatedWithParent()
     {
@@ -193,6 +208,7 @@ public class WindowTest
         Assert.AreEqual(new Position(13, 7), childWindow.AbsolutePosition);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowCanFocusPropertyDefaultsToFalse()
     {
@@ -203,6 +219,7 @@ public class WindowTest
         Assert.IsFalse(window.CanFocus);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowIsModalCanBeSet()
     {
@@ -214,6 +231,7 @@ public class WindowTest
         Assert.IsTrue(window.IsModal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_EmptySize_DrawsNothing()
     {
@@ -231,6 +249,7 @@ public class WindowTest
         Assert.AreEqual(string.Empty, buffer.ContentAsString);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithBorder_DrawsTopRow()
     {
@@ -249,6 +268,7 @@ public class WindowTest
         Assert.AreEqual("╔════════╗", lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithBorder_DrawsSideVerticals()
     {
@@ -268,6 +288,7 @@ public class WindowTest
         Assert.IsTrue(lines[1].EndsWith("║"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithBorder_DrawsBottomRow()
     {
@@ -286,6 +307,7 @@ public class WindowTest
         Assert.AreEqual("╚════════╝", lines[2]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithTitle_ShowsTitleInTopBorder()
     {
@@ -307,6 +329,7 @@ public class WindowTest
         Assert.IsTrue(lines[0].EndsWith("╗"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithChildLabel_ChildIsRendered()
     {

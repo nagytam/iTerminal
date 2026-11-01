@@ -9,6 +9,7 @@ namespace iTerminal.Core.Test.Model.Validations;
 [TestClass]
 public class HostValidationModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyHost()
     {
@@ -17,6 +18,7 @@ public class HostValidationModelTest
         Assert.IsFalse(validationModel.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HostOnly()
     {
@@ -25,6 +27,7 @@ public class HostValidationModelTest
         Assert.IsTrue(validationModel.IsValid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UserNameAndHostOnly()
     {

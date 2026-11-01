@@ -17,6 +17,7 @@ public class SettingsBackgroundTabPageTest
     private static List<ComboBox<BackgroundStartMode>> ModeBoxes(SettingsBackgroundTabPage page) =>
         page.Controls.AsSnapshot().OfType<ComboBox<BackgroundStartMode>>().ToList();
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitialize_ShowsTheStoredMode()
     {
@@ -33,6 +34,7 @@ public class SettingsBackgroundTabPageTest
         Assert.AreEqual(BackgroundStartMode.Delayed, boxes[2].SelectedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitialize_IsOnDemandWhenNothingIsStored()
     {
@@ -46,6 +48,7 @@ public class SettingsBackgroundTabPageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChangingAModeStoresIt()
     {

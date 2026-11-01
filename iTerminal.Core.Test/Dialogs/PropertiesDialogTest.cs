@@ -72,6 +72,7 @@ public class PropertiesDialogTest
         return new Rig { Dialog = dialog, Root = root, Service = service };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFile_ShowsItsFactsAndDates()
     {
@@ -87,6 +88,7 @@ public class PropertiesDialogTest
         AssertScreenDoesNotContain(screen, "Contains");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALink_SaysWhereItPoints_AndIsNotMeasured()
     {
@@ -99,6 +101,7 @@ public class PropertiesDialogTest
         rig.Service.Verify(s => s.MeasureAsync(It.IsAny<string>(), It.IsAny<IProgress<FolderMeasure>?>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolder_ShowsItsTotalOnceMeasured()
     {
@@ -109,6 +112,7 @@ public class PropertiesDialogTest
         Assert.AreEqual(4096, rig.Dialog.Measure!.Bytes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderThatCouldNotBeFullyRead_SaysTheTotalIsALowerBound()
     {
@@ -118,6 +122,7 @@ public class PropertiesDialogTest
         StringAssert.Contains(rig.Dialog.Details, "2 folders could not be read");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhileTheFolderIsStillBeingAdded_ItSaysSoSoFar()
     {
@@ -136,6 +141,7 @@ public class PropertiesDialogTest
         never.TrySetCanceled();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEntryThatCannotBeRead_ShowsTheErrorAndNothingElse()
     {
@@ -147,6 +153,7 @@ public class PropertiesDialogTest
         AssertScreenContains(Render(rig.Root), "Error: gone");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesWithoutWriting()
     {
@@ -158,6 +165,7 @@ public class PropertiesDialogTest
         rig.Service.Verify(s => s.Apply(It.IsAny<string>(), It.IsAny<FileAttributes?>(), It.IsAny<UnixFileMode?>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ApplyingNothingChanged_WritesNothingAndCloses()
     {
@@ -169,6 +177,7 @@ public class PropertiesDialogTest
         rig.Service.Verify(s => s.Apply(It.IsAny<string>(), It.IsAny<FileAttributes?>(), It.IsAny<UnixFileMode?>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ApplyingFromAnEntryThatCouldNotBeRead_JustCloses()
     {
@@ -178,6 +187,7 @@ public class PropertiesDialogTest
         Assert.IsFalse(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Attributes_OnWindows_AreTickedFromTheFile_AndWrittenWhenChanged()
     {
@@ -200,6 +210,7 @@ public class PropertiesDialogTest
         Assert.IsFalse(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterApplies_AndADiskRefusalStaysInTheDialogWithTheReason()
     {
@@ -218,6 +229,7 @@ public class PropertiesDialogTest
         Assert.AreEqual("Error: denied", rig.Dialog.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Mode_OffWindows_IsShownAsOctal_ValidatedAndWritten()
     {
@@ -240,6 +252,7 @@ public class PropertiesDialogTest
         rig.Service.Verify(s => s.Apply(It.IsAny<string>(), null, It.IsAny<UnixFileMode?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingStopsTheFolderWalk()
     {
@@ -261,6 +274,7 @@ public class PropertiesDialogTest
         never.TrySetCanceled();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnASmallTerminal_TheDialogFitsAndStillDraws()
     {
@@ -271,6 +285,7 @@ public class PropertiesDialogTest
         AssertScreenContains(Render(rig.Root, small), "Properties of report.txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AfterAChange_TheLocalPanelsAreReRead_AndOthersAreLeftAlone()
     {
@@ -296,6 +311,7 @@ public class PropertiesDialogTest
         other.Verify(m => m.Refresh(It.IsAny<bool>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDatesAreShownForEditing()
     {
@@ -306,6 +322,7 @@ public class PropertiesDialogTest
         AssertScreenContains(Render(rig.Root), "2025-03-05 05:06:07");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChangingTheModifiedDate_WritesOnlyThatDate()
     {
@@ -317,6 +334,7 @@ public class PropertiesDialogTest
         rig.Service.Verify(s => s.SetTimes(It.IsAny<string>(), null, new DateTime(2020, 1, 2, 3, 4, 5), null), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADateThatIsNotADate_IsRefused_AndNothingIsWritten()
     {
@@ -330,6 +348,7 @@ public class PropertiesDialogTest
         rig.Service.Verify(s => s.SetTimes(It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UnchangedDates_AreNotWritten()
     {
@@ -340,6 +359,7 @@ public class PropertiesDialogTest
         rig.Service.Verify(s => s.SetTimes(It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheColourAndTheTagsAreShown()
     {
@@ -357,6 +377,7 @@ public class PropertiesDialogTest
         AssertScreenContains(screen, "Tags       invoice, 2026");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileWithNoLabel_SaysNoneForBoth()
     {

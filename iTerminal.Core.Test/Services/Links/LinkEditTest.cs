@@ -47,6 +47,7 @@ public class LinkEditTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Symbolic_CanBePointedAtAnotherFile()
     {
@@ -65,6 +66,7 @@ public class LinkEditTest
         Assert.AreEqual(0, Directory.GetFiles(_root, ".*.tmp").Length, "no temporary name left behind");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Symbolic_RelativeTargetIsWrittenRelative()
     {
@@ -81,6 +83,7 @@ public class LinkEditTest
         Assert.AreEqual("second.txt", FileLinkHelper.GetLinkTarget(link));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FolderLink_CanBePointedAtAnotherFolder()
     {
@@ -99,6 +102,7 @@ public class LinkEditTest
         Assert.IsTrue(Directory.Exists(one), "the old target folder is untouched");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Replace_ToAMissingTarget_LeavesTheLinkAsItWas()
     {
@@ -116,6 +120,7 @@ public class LinkEditTest
         Assert.AreEqual("one", File.ReadAllText(link));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Replace_ALinkToItself_IsRefused()
     {
@@ -129,6 +134,7 @@ public class LinkEditTest
         await Assert.ThrowsExactlyAsync<IOException>(() => new LinkService().ReplaceAsync(LinkKind.Symbolic, link, link));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HardLink_NameCanBePointedAtAnotherFile()
     {
@@ -151,6 +157,7 @@ public class LinkEditTest
         Assert.AreEqual("three", File.ReadAllText(other));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OrdinaryFile_IsNotEditable_SoItsDataIsNotLost()
     {
@@ -164,6 +171,7 @@ public class LinkEditTest
         Assert.AreEqual("only copy", File.ReadAllText(file));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Inspect_ReadsASymbolicTargetAsWritten()
     {

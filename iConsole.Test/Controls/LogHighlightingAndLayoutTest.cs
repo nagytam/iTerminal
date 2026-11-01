@@ -14,6 +14,7 @@ public class LogHighlightingAndLayoutTest
 
     // ---- ANSI ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Ansi_ColoursBecomeSpans_AndTheCodesLeaveTheText()
     {
@@ -26,6 +27,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(Color.DarkRed, spans[0].Foreground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Ansi_BoldBrightBackgroundAndUnderline_CombineInOneRun()
     {
@@ -37,6 +39,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(Color.DarkBlue, spans[0].Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Ansi_256AndTrueColour_MapToTheNearestOfSixteen()
     {
@@ -49,6 +52,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(Color.DarkGray, gray[0].Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Ansi_OtherSequencesAreDropped_AndAnUnfinishedOneDoesNotThrow()
     {
@@ -59,6 +63,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual("plain", AnsiText.Parse("plain").Plain);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Ansi_ResetWithNoNumberAndOffCodesClearTheStyle()
     {
@@ -76,6 +81,7 @@ public class LogHighlightingAndLayoutTest
     private static string[] Found(string line) =>
         [.. LogHighlighters.Find(line, LogHighlighters.Default, []).OrderBy(s => s.Start).Select(s => line.Substring(s.Start, s.Length))];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDefaultHighlighters_FindUrlsPathsNumbersTimestampsAndErrorWords()
     {
@@ -88,6 +94,7 @@ public class LogHighlightingAndLayoutTest
         CollectionAssert.AreEqual(new[] { "WARN" }, Found("WARN  low disk"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANumberInsideAWordOrAUrl_IsLeftAlone()
     {
@@ -95,6 +102,7 @@ public class LogHighlightingAndLayoutTest
         CollectionAssert.AreEqual(new[] { "http://x.org/a/12/b" }, Found("http://x.org/a/12/b"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WhereTwoRulesOverlap_TheEarlierOneWins_AndAnsiSpansAreNotCovered()
     {
@@ -106,6 +114,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(10, spans[0].Start);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AVeryLongLine_IsNotHighlighted()
     {
@@ -126,6 +135,7 @@ public class LogHighlightingAndLayoutTest
 
     private LogView NewView(int width = 60, int height = 4) => new(_theme) { ViewSize = new Size(width, height) };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheLogView_DrawsHighlightedPartsInTheirColours()
     {
@@ -140,6 +150,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(new ColorScheme().Foreground, screen.ForegroundAt(30, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheLogView_ReadsAnsiColours_AndTheTextHasNoEscapes()
     {
@@ -154,6 +165,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual("build passed in 3s", view.VisibleEntries[0].Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AColourStaysOnAcrossTheLinesOfOneAppend()
     {
@@ -168,6 +180,7 @@ public class LogHighlightingAndLayoutTest
         CollectionAssert.AreEqual(new[] { "first", "second", "third" }, view.VisibleEntries.Select(e => e.Text).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseAnsiOff_StripsTheCodesButDoesNotColour()
     {
@@ -182,6 +195,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(new ColorScheme().Foreground, screen.ForegroundAt(3, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HighlightingOff_LeavesTheLevelColour_AndCustomHighlightersReplaceTheDefaults()
     {
@@ -198,6 +212,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(new ColorScheme().Foreground, screen.ForegroundAt(6, 0), "the number rule was replaced");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Highlights_FollowSidewaysScrolling()
     {
@@ -214,6 +229,7 @@ public class LogHighlightingAndLayoutTest
         Assert.IsTrue(Enumerable.Range(0, 20).Any(x => screen.ForegroundAt(x, 0) == Color.Cyan));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LinesAreUnchanged_ByHighlightingTheyAreStillFiltersAndCounts()
     {
@@ -236,6 +252,7 @@ public class LogHighlightingAndLayoutTest
     private StackPanel Stack(Orientation orientation, int width, int height, StackAlignment cross = StackAlignment.Stretch) =>
         new(_theme) { Orientation = orientation, ViewSize = new Size(width, height), CrossAlignment = cross };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ByDefault_ChildrenStretchAcrossTheAxis()
     {
@@ -247,6 +264,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(new Position(0, 0), child.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(StackAlignment.Start, 0)]
     [DataRow(StackAlignment.Center, 7)]
@@ -262,6 +280,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(new Position(expectedX, 0), child.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InARow_TheCrossAxisIsTheHeight()
     {
@@ -279,6 +298,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(new Size(4, 3), middle.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AChildWiderThanThePanel_IsHeldToIt_AndSetAlignmentCanTakeASize()
     {
@@ -298,6 +318,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(new Size(10, 2), later.ViewSize, "back to the panel's own alignment, which stretches");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(StackJustify.Start, new[] { 0, 3, 6 })]
     [DataRow(StackJustify.Center, new[] { 6, 9, 12 })]
@@ -318,6 +339,7 @@ public class LogHighlightingAndLayoutTest
         CollectionAssert.AreEqual(expected, children.Select(c => (int)c.Position.X).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithAFillChild_ThereIsNoRoomLeftToShare()
     {
@@ -332,6 +354,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(18, fill.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void JustifyAndGap_WorkTogether_AndAHiddenChildTakesNoSpace()
     {
@@ -351,6 +374,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(11, b.Position.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Distribute_NeverReturnsNegativeOrMissingRoom()
     {
@@ -368,6 +392,7 @@ public class LogHighlightingAndLayoutTest
 
     // ---- wrapper views ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AlignPanel_CentresItsContentAtItsOwnSize()
     {
@@ -380,6 +405,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(new Size(7, 3), content.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AlignPanel_PutsContentAtTheCornersAndStretchesWhereAsked()
     {
@@ -397,6 +423,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(new Size(6, 10), content.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AlignPanel_FollowsAResize_AndShrinksContentThatDoesNotFit()
     {
@@ -415,6 +442,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(new Position(2, 0), content.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConstrainedPanel_HoldsTheContentBetweenTheLimits()
     {
@@ -434,6 +462,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(new Size(50, 10), content.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConstrainedPanel_CanCentreContentThatIsCappedAndAMinimumBeatsAMaximum()
     {
@@ -451,6 +480,7 @@ public class LogHighlightingAndLayoutTest
         Assert.AreEqual(7, ConstrainedPanel.Constrain(7, 0, int.MaxValue));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheWrappers_DrawTheirChildren_AndSurviveTinySizes()
     {

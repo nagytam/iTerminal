@@ -17,6 +17,7 @@ public class CopyDialogTest
     private static CopyDialog Create() =>
         new(null!, Mock.Of<iConsole.Interfaces.IContentModelService>(), null!, null!, null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), null!, null!, null!, null!);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePrimaryButtonIsNamedForTheOperation()
     {
@@ -27,6 +28,7 @@ public class CopyDialogTest
         Assert.IsTrue(buttons.Any(b => b.Title == "Cancel"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheTitleNamesTheOperation()
     {

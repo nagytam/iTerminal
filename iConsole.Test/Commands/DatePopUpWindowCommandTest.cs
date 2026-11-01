@@ -6,6 +6,7 @@ namespace iConsole.Commands.Test;
 [TestClass]
 public class DatePopUpWindowCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TypeExists()
     {

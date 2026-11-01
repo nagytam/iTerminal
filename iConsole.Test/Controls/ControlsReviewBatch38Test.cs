@@ -30,6 +30,7 @@ public class ControlsReviewBatch38Test
         return m.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BouncingLabel_NullText_IsTakenAsEmpty()
     {
@@ -41,6 +42,7 @@ public class ControlsReviewBatch38Test
         Assert.IsNotNull(label);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LiveTable_NullEmptyText_IsTakenAsEmpty_AndDraws()
     {
@@ -52,6 +54,7 @@ public class ControlsReviewBatch38Test
         ScreenBuffer.Render(table, 20, 3);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VirtualListBox_Disabled_GreysItsRows()
     {

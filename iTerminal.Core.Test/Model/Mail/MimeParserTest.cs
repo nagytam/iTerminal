@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Model.Mail;
 [TestClass]
 public class MimeParserTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void APlainMessageGivesItsHeadersAndBody()
     {
@@ -19,6 +20,7 @@ public class MimeParserTest
         Assert.AreEqual("Line one\r\nLine two", item.Body);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FoldedHeadersAreUnfolded()
     {
@@ -27,6 +29,7 @@ public class MimeParserTest
         Assert.AreEqual("A long subject that continues", MimeParser.Parse(1, raw).Subject);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EncodedWordsInHeadersAreDecoded()
     {
@@ -34,12 +37,14 @@ public class MimeParserTest
         Assert.AreEqual("Grüße aus Köln", MimeParser.DecodeWords("=?utf-8?Q?Gr=C3=BC=C3=9Fe_aus_K=C3=B6ln?="));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AdjacentEncodedWordsJoinWithoutTheSpaceBetween()
     {
         Assert.AreEqual("Ab", MimeParser.DecodeWords("=?utf-8?Q?A?= =?utf-8?Q?b?="));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMultipartMessagePrefersItsPlainTextPart()
     {
@@ -61,6 +66,7 @@ public class MimeParserTest
         Assert.AreEqual("Hello plain", MimeParser.Parse(1, raw).Body);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABase64BodyIsDecodedWithItsCharset()
     {
@@ -69,6 +75,7 @@ public class MimeParserTest
         Assert.AreEqual("Árvíztűrő", MimeParser.Parse(1, raw).Body);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AQuotedPrintableBodyDecodesSoftBreaksAndBytes()
     {
@@ -77,6 +84,7 @@ public class MimeParserTest
         Assert.AreEqual("Grüße, this line continues.", MimeParser.Parse(1, raw).Body);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnHtmlOnlyMessageShowsItsTextWithoutTags()
     {
@@ -90,6 +98,7 @@ public class MimeParserTest
         Assert.IsFalse(body.Contains("p{}"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AttachmentsAreNotTakenForTheBody()
     {
@@ -101,6 +110,7 @@ public class MimeParserTest
         Assert.AreEqual("the real body", MimeParser.Parse(1, raw).Body);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheListLineNeedsOnlyTheHeaders()
     {

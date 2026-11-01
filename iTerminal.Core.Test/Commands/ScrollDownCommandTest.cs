@@ -11,6 +11,7 @@ namespace iTerminal.Core.Test.Commands;
 [TestClass]
 public class ScrollDownCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteDownAtLastPosition()
     {
@@ -24,6 +25,7 @@ public class ScrollDownCommandTest
         Assert.AreEqual(0, model.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteDownWithoutScrolling()
     {
@@ -38,6 +40,7 @@ public class ScrollDownCommandTest
         Assert.AreEqual(1, model.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteDownWithScrolling()
     {

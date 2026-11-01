@@ -7,6 +7,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class SystemInfoDialogTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpensAtOnceAndFillsInTheReportInTheBackground()
     {
@@ -23,6 +24,7 @@ public class SystemInfoDialogTest
         Assert.IsTrue(lines.Any(l => l.Contains("Processor Count")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheReportCoversEachSection()
     {
@@ -34,6 +36,7 @@ public class SystemInfoDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {

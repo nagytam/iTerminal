@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Services.SystemSettings;
 [TestClass]
 public class SystemSettingsValidatorTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("WORKSTATION-01", true)]
     [DataRow("a", true)]
@@ -14,6 +15,7 @@ public class SystemSettingsValidatorTest
         Assert.IsNull(SystemSettingsValidator.ValidateComputerName(name, windows));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("", true)]
     [DataRow("   ", false)]
@@ -29,6 +31,7 @@ public class SystemSettingsValidatorTest
         Assert.IsNotNull(SystemSettingsValidator.ValidateComputerName(name, windows));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AllDigitsIsFineOnLinuxAndTooLongForNetBiosIsFineForDns()
     {
@@ -37,6 +40,7 @@ public class SystemSettingsValidatorTest
         Assert.IsNotNull(SystemSettingsValidator.ValidateComputerName(new string('a', 64), windows: false));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("WORKGROUP", true)]
     [DataRow("Home Office", true)]
@@ -49,6 +53,7 @@ public class SystemSettingsValidatorTest
         Assert.AreEqual(valid, SystemSettingsValidator.ValidateWorkgroup(name) is null);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADescriptionIsOneShortLine()
     {
@@ -58,6 +63,7 @@ public class SystemSettingsValidatorTest
         Assert.IsNotNull(SystemSettingsValidator.ValidateDescription(new string('x', 257)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("PATH", true)]
     [DataRow("My Var (x86)", true)]
@@ -68,6 +74,7 @@ public class SystemSettingsValidatorTest
         Assert.IsNull(SystemSettingsValidator.ValidateVariableName(name, windows));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("", true)]
     [DataRow("A=B", true)]
@@ -80,6 +87,7 @@ public class SystemSettingsValidatorTest
         Assert.IsNotNull(SystemSettingsValidator.ValidateVariableName(name, windows));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AValueIsASingleLine()
     {

@@ -18,6 +18,7 @@ public class PathValidationModelTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyPath_IsInvalidButSaysNothing()
     {
@@ -27,6 +28,7 @@ public class PathValidationModelTest
         Assert.AreEqual(string.Empty, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathWithANulCharacter_IsRefusedAndSaysWhy_NotThrown()
     {
@@ -36,6 +38,7 @@ public class PathValidationModelTest
         Assert.AreEqual(UrlValidationModel.InvalidMessage, model.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NullModel_IsInvalid()
     {

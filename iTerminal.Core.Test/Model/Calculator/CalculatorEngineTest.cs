@@ -7,6 +7,7 @@ public class CalculatorEngineTest
 {
     #region Basic entry and arithmetic
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InputDigit_BuildsUpMultiDigitNumber()
     {
@@ -19,6 +20,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("123", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InputDigit_ReplacesLeadingZero()
     {
@@ -30,6 +32,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("5", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InputDecimalPoint_AddsDecimalOnce()
     {
@@ -44,6 +47,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("1.59", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InputDecimalPoint_OnNewEntry_StartsWithZero()
     {
@@ -55,6 +59,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("0.5", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Add_ComputesSumOnEquals()
     {
@@ -68,6 +73,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("5", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChainedOperators_EvaluateLeftToRight()
     {
@@ -84,6 +90,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("20", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Subtract_ProducesNegativeResult()
     {
@@ -97,6 +104,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("-2", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Divide_ByZero_SetsErrorState()
     {
@@ -111,6 +119,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("Error", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InputDigit_AfterError_ClearsAndStartsFresh()
     {
@@ -127,6 +136,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("7", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Clear_ResetsDisplayAndPendingOperator()
     {
@@ -142,6 +152,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("4", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClearEntry_KeepsPendingOperatorAndAccumulator()
     {
@@ -158,6 +169,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("10", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Backspace_RemovesLastDigit()
     {
@@ -171,6 +183,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("12", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Backspace_ToSingleDigit_ResetsToZero()
     {
@@ -182,6 +195,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("0", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleSign_FlipsAndUnflips()
     {
@@ -195,6 +209,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("5", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleSign_OnZero_StaysZero()
     {
@@ -205,6 +220,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("0", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Percent_DividesByOneHundred()
     {
@@ -221,6 +237,7 @@ public class CalculatorEngineTest
 
     #region Memory
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MemoryAddAndRecall_AccumulatesAcrossEntries()
     {
@@ -238,6 +255,7 @@ public class CalculatorEngineTest
         Assert.AreEqual(10, engine.Memory);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MemoryStore_ReplacesPreviousValue()
     {
@@ -252,6 +270,7 @@ public class CalculatorEngineTest
         Assert.AreEqual(9, engine.Memory);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MemorySubtract_DecreasesStoredValue()
     {
@@ -267,6 +286,7 @@ public class CalculatorEngineTest
         Assert.AreEqual(7, engine.Memory);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MemoryClear_ResetsToZero()
     {
@@ -283,6 +303,7 @@ public class CalculatorEngineTest
 
     #region Scientific
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyUnary_Sqrt_ComputesRoot()
     {
@@ -295,6 +316,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("3", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyUnary_SqrtOfNegative_SetsError()
     {
@@ -308,6 +330,7 @@ public class CalculatorEngineTest
         Assert.IsTrue(engine.IsError);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyUnary_Sin_InDegrees_ComputesExpectedValue()
     {
@@ -321,6 +344,7 @@ public class CalculatorEngineTest
         Assert.AreEqual(1.0, double.Parse(engine.Display), 1e-9);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyUnary_Sin_InRadians_ComputesExpectedValue()
     {
@@ -334,6 +358,7 @@ public class CalculatorEngineTest
         Assert.AreEqual(0.0, double.Parse(engine.Display), 1e-9);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyUnary_Square_ComputesExpectedValue()
     {
@@ -346,6 +371,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("25", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyUnary_Factorial_ComputesExpectedValue()
     {
@@ -358,6 +384,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("120", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyUnary_FactorialOfNegative_SetsError()
     {
@@ -371,6 +398,7 @@ public class CalculatorEngineTest
         Assert.IsTrue(engine.IsError);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyUnary_InverseOfZero_SetsError()
     {
@@ -382,6 +410,7 @@ public class CalculatorEngineTest
         Assert.IsTrue(engine.IsError);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyOperator_Pow_ComputesExpectedValue()
     {
@@ -396,6 +425,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("1024", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InputConstant_Pi_SetsDisplayToPi()
     {
@@ -411,6 +441,7 @@ public class CalculatorEngineTest
 
     #region Programming mode
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetMode_Programming_ConvertsCurrentDecimalValueToInteger()
     {
@@ -423,6 +454,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("42", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetNumeralBase_Hexadecimal_ReformatsCurrentValue()
     {
@@ -437,6 +469,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("FF", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetNumeralBase_Binary_ReformatsCurrentValue()
     {
@@ -449,6 +482,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("1001", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InputDigit_InvalidForBinaryBase_IsIgnored()
     {
@@ -461,6 +495,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("0", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InputDigit_HexLetter_IsAcceptedInHexBase()
     {
@@ -474,6 +509,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("A5", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyOperator_And_ComputesBitwiseAnd()
     {
@@ -487,6 +523,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("2", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyOperator_Or_ComputesBitwiseOr()
     {
@@ -500,6 +537,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("7", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyOperator_Xor_ComputesBitwiseXor()
     {
@@ -513,6 +551,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("5", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyUnary_Not_InDecimalBase_ComputesBitwiseComplementOfZero()
     {
@@ -524,6 +563,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("-1", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyUnary_Not_InHexBase_ShowsTwosComplementBitPattern()
     {
@@ -536,6 +576,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("FFFFFFFFFFFFFFFF", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyOperator_ShiftLeft_ComputesExpectedValue()
     {
@@ -549,6 +590,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("16", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ApplyOperator_ShiftRight_ComputesExpectedValue()
     {
@@ -563,6 +605,7 @@ public class CalculatorEngineTest
         Assert.AreEqual("1", engine.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InputDecimalPoint_InProgrammingMode_IsIgnored()
     {

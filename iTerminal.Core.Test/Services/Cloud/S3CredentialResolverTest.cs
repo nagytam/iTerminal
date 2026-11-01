@@ -21,6 +21,7 @@ public class S3CredentialResolverTest
     private static Func<string, string?> Env(Dictionary<string, string> values) =>
         name => values.TryGetValue(name, out var value) ? value : null;
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnS3EntryInThePasswordManager_SuppliesTheKeyAndSecretAndItsNotes()
     {
@@ -39,6 +40,7 @@ public class S3CredentialResolverTest
         Assert.AreEqual("https://minio.local:9000", credentials.Endpoint);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnAccessKeyInTheUrl_SelectsItsOwnEntry()
     {
@@ -51,6 +53,7 @@ public class S3CredentialResolverTest
         Assert.AreEqual("s2", credentials.SecretAccessKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheStandardEnvironment_IsUsedWhenTheVaultHasNothing()
     {
@@ -66,6 +69,7 @@ public class S3CredentialResolverTest
         Assert.AreEqual("envtoken", credentials.SessionToken);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEnvironmentKeyNotTheOneTheUrlNames_IsNotUsed()
     {
@@ -79,6 +83,7 @@ public class S3CredentialResolverTest
         Assert.IsNull(credentials.SecretAccessKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithNothingAtAll_TheRequestIsUnsigned()
     {
@@ -88,6 +93,7 @@ public class S3CredentialResolverTest
         Assert.IsNull(credentials.SecretAccessKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RegionAndEndpoint_FallBackToConfigurationWhenNothingElseSaysSo()
     {
@@ -99,6 +105,7 @@ public class S3CredentialResolverTest
         Assert.AreEqual("https://s3.example", credentials.Endpoint);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheEnvironmentEndpoint_BeatsTheConfiguredOne()
     {
@@ -109,6 +116,7 @@ public class S3CredentialResolverTest
         Assert.AreEqual("https://from-env", credentials.Endpoint);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheEnvironmentRegion_BeatsTheConfiguredOne()
     {

@@ -22,6 +22,7 @@ public class LibvirtVirtualMachineServiceTest
         return (new LibvirtVirtualMachineService(runner.Object, launch), runner, calls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListRunsVirshListAllOnTheSystemConnection()
     {
@@ -34,6 +35,7 @@ public class LibvirtVirtualMachineServiceTest
         CollectionAssert.AreEqual(new[] { "-c", "qemu:///system", "list", "--all" }, call.Arguments);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(VirtualMachineAction.Start, "start")]
     [DataRow(VirtualMachineAction.Shutdown, "shutdown")]
@@ -53,6 +55,7 @@ public class LibvirtVirtualMachineServiceTest
         CollectionAssert.AreEqual(new[] { "-c", "qemu:///system", verb, "web" }, call.Arguments);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANameThatStartsWithADashIsRefusedBeforeAnyCommandRuns()
     {
@@ -64,6 +67,7 @@ public class LibvirtVirtualMachineServiceTest
         runner.Verify(r => r.RunAsync(It.IsAny<string>(), It.IsAny<IReadOnlyList<string>>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConsoleOpensVirtViewerDetachedOnTheSameConnection()
     {
@@ -84,6 +88,7 @@ public class LibvirtVirtualMachineServiceTest
         runner.Verify(r => r.RunAsync(It.IsAny<string>(), It.IsAny<IReadOnlyList<string>>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ConsoleSaysWhenVirtViewerIsMissing()
     {
@@ -95,6 +100,7 @@ public class LibvirtVirtualMachineServiceTest
         StringAssert.Contains(result.Message, "sudo apt install virt-viewer");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PermissionDeniedNamesTheLibvirtGroup()
     {
@@ -106,6 +112,7 @@ public class LibvirtVirtualMachineServiceTest
         StringAssert.Contains(result.Message, "libvirt group");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATimeoutSaysTheHypervisorMayStillBeSavingAndToRefresh()
     {
@@ -117,6 +124,7 @@ public class LibvirtVirtualMachineServiceTest
         StringAssert.Contains(result.Message, "press F5");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedListingThrowsASentenceForTheUser()
     {

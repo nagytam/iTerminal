@@ -52,6 +52,7 @@ public class EditorSelectionTest
 
     private static readonly string[] Poem = ["roses are red", "violets are blue", "sugar is sweet"];
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftRight_SelectsCharactersOnALine()
     {
@@ -65,6 +66,7 @@ public class EditorSelectionTest
         Assert.AreEqual(5L, editor.SelectionTextModel.End!.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftDown_SelectsAcrossLines()
     {
@@ -75,6 +77,7 @@ public class EditorSelectionTest
         Assert.AreEqual((0L, 6L, 2L, 6L), (startRow, startColumn, endRow, endColumn));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftLeft_AtTheStartOfALine_ExtendsOverTheLineBreak()
     {
@@ -84,6 +87,7 @@ public class EditorSelectionTest
         Assert.AreEqual((11L, 0L), Cursor(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftHomeAndShiftEnd_SelectToTheEndsOfTheLine()
     {
@@ -95,6 +99,7 @@ public class EditorSelectionTest
         Assert.AreEqual("s are blue", end.SelectedText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftUp_AndABackwardsSelection_AreReportedInReadingOrder()
     {
@@ -106,6 +111,7 @@ public class EditorSelectionTest
         Assert.AreEqual((2L, 4L), end);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftPageDown_ExtendsByAPage()
     {
@@ -116,6 +122,7 @@ public class EditorSelectionTest
         Assert.IsTrue(editor.SelectedText.Count(c => c == '\n') >= 4);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Reversing_ShrinksTheSelection_AndEndsItWhereItBegan()
     {
@@ -128,6 +135,7 @@ public class EditorSelectionTest
         Assert.IsFalse(editor.SelectionTextModel.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Left_CollapsesToTheStart_AndRightToTheEnd()
     {
@@ -144,6 +152,7 @@ public class EditorSelectionTest
         Assert.AreEqual((6L, 0L), Cursor(right));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OtherMovement_EndsTheSelection()
     {
@@ -157,6 +166,7 @@ public class EditorSelectionTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_ReplacesASelectionOnALine()
     {
@@ -169,6 +179,7 @@ public class EditorSelectionTest
         Assert.IsTrue(editor.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Typing_ReplacesASelectionAcrossLines_JoiningWhatIsLeft()
     {
@@ -179,6 +190,7 @@ public class EditorSelectionTest
         Assert.AreEqual((7L, 0L), Cursor(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BackspaceAndDelete_RemoveTheSelectionAndNothingElse()
     {
@@ -196,6 +208,7 @@ public class EditorSelectionTest
         Assert.AreEqual((0L, 1L), Cursor(delete));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_ReplacesTheSelectionWithALineBreak()
     {
@@ -206,6 +219,7 @@ public class EditorSelectionTest
         Assert.AreEqual(4, editor.TextModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnlyEditor_CanSelectButNotChange()
     {
@@ -219,6 +233,7 @@ public class EditorSelectionTest
         Assert.IsFalse(editor.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingInTheText_EndsTheSelection()
     {
@@ -229,6 +244,7 @@ public class EditorSelectionTest
         Assert.IsFalse(editor.SelectionTextModel.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSelection_IsDrawnHighlighted_OnEveryRowItCovers()
     {
@@ -248,6 +264,7 @@ public class EditorSelectionTest
         Assert.AreNotEqual(scheme.SelectedFocusedBackground, Background(7, 2), "after the selection");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SelectingPastTheBottomOfTheView_ScrollsToKeepTheCursorInSight()
     {
@@ -261,6 +278,7 @@ public class EditorSelectionTest
         Assert.AreEqual(20, editor.SelectedText.Count(c => c == '\n'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EmptyDocument_ShiftMovementIsHarmless()
     {
@@ -274,6 +292,7 @@ public class EditorSelectionTest
         Assert.AreEqual(string.Empty, editor.SelectedText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftWithAnotherKey_IsNotASelection()
     {

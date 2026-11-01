@@ -26,6 +26,7 @@ public class SpinnerTest
         public DateTime UtcNow => Now;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_DefaultsToActive()
     {
@@ -34,6 +35,7 @@ public class SpinnerTest
         Assert.IsTrue(spinner.IsActive);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_DefaultLabelIsEmpty()
     {
@@ -42,6 +44,7 @@ public class SpinnerTest
         Assert.AreEqual(string.Empty, spinner.Label);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RendersFrameCharacter()
     {
@@ -58,6 +61,7 @@ public class SpinnerTest
         Assert.IsTrue(Frames.Any(f => content.Contains(f)), "Expected a spinner frame character");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithLabel_RendersLabelAfterFrame()
     {
@@ -74,6 +78,7 @@ public class SpinnerTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Working"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Inactive_ShowsSpaceInsteadOfFrame()
     {
@@ -91,6 +96,7 @@ public class SpinnerTest
         Assert.IsFalse(Frames.Any(f => content.Contains(f)), "Inactive spinner must not render a frame character");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_Inactive_WithLabel_StillRendersLabel()
     {
@@ -108,6 +114,7 @@ public class SpinnerTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Done"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_PadsOutputToViewWidth()
     {
@@ -125,6 +132,7 @@ public class SpinnerTest
         Assert.AreEqual(15, line.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_BeforeFrameIntervalElapses_DoesNotAdvanceFrame()
     {
@@ -146,6 +154,7 @@ public class SpinnerTest
             "OnIdle fires far more often than the frame should change; it must not advance before FrameInterval elapses");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_Active_AdvancesFrameAfterIntervalElapses()
     {
@@ -169,6 +178,7 @@ public class SpinnerTest
         Assert.AreNotEqual(first, second, "Frame should advance once FrameInterval has elapsed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_Inactive_DoesNotAdvanceFrame()
     {
@@ -190,6 +200,7 @@ public class SpinnerTest
         Assert.AreEqual(buffer1.ContentAsString, buffer2.ContentAsString);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_CyclesAllTenFrames()
     {
@@ -213,6 +224,7 @@ public class SpinnerTest
         Assert.AreEqual(Frames.Length, seen.Count, "All 10 frames should appear exactly once per cycle");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_WrapsAroundAfterLastFrame()
     {

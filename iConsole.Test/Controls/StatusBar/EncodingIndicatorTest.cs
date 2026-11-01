@@ -12,6 +12,7 @@ namespace iConsole.Test.Controls.StatusBar;
 [TestClass]
 public class EncodingIndicatorTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CreatesInstance()
     {
@@ -23,6 +24,7 @@ public class EncodingIndicatorTest
         Assert.IsNotNull(indicator);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsDefaultViewSize()
     {
@@ -35,6 +37,7 @@ public class EncodingIndicatorTest
         Assert.AreEqual(1, indicator.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsName()
     {
@@ -46,6 +49,7 @@ public class EncodingIndicatorTest
         Assert.AreEqual("EncodingIndicator", indicator.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsEncodingName()
     {
@@ -64,6 +68,7 @@ public class EncodingIndicatorTest
         Assert.IsTrue(buffer.ContentAsString.Contains("UTF-8"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsAsciiEncoding()
     {
@@ -82,6 +87,7 @@ public class EncodingIndicatorTest
         Assert.IsTrue(buffer.ContentAsString.ToUpper().Contains("ASCII"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Indicator_IsInstanceOfStatusBarItem()
     {

@@ -35,6 +35,7 @@ public class ContentModelMusicBaseTest
         return (new TestMusicModel(player.Object, guard.Object), player);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CycleRepeat_GoesOffThenAllThenOneThenOff()
     {
@@ -51,6 +52,7 @@ public class ContentModelMusicBaseTest
         Assert.AreEqual(RepeatMode.Off, player.Object.RepeatMode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleShuffle_FlipsItAndSaysSo()
     {
@@ -62,6 +64,7 @@ public class ContentModelMusicBaseTest
         Assert.AreEqual("Shuffle on", model.StatusMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VolumeUp_StepsByFiveAndShowsTheLevel()
     {
@@ -73,6 +76,7 @@ public class ContentModelMusicBaseTest
         Assert.AreEqual("Volume 55%", model.StatusMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VolumeDown_StepsByFiveAndShowsTheLevel()
     {
@@ -84,6 +88,7 @@ public class ContentModelMusicBaseTest
         Assert.AreEqual("Volume 45%", model.StatusMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SeekForward_MovesFiveSecondsOnTheCurrentTrack()
     {
@@ -94,6 +99,7 @@ public class ContentModelMusicBaseTest
         player.Verify(p => p.SeekRelative(TimeSpan.FromSeconds(5)), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SeekBackward_MovesFiveSecondsBack()
     {

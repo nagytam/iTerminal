@@ -10,6 +10,7 @@ namespace iTerminal.Core.Test.Dialogs;
 [TestClass]
 public class CreateEntryDialogTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateButtonHotKey_IsTheFirstLetterOfTheLastWord_ForTheEnglishCaptions()
     {
@@ -17,6 +18,7 @@ public class CreateEntryDialogTest
         Assert.AreEqual('f', CreateEntryDialog.CreateButtonHotKey("Create file"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateButtonHotKey_IsDrawnInTheCaption_ForTheTranslatedCaptions()
     {
@@ -29,6 +31,7 @@ public class CreateEntryDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateButtonHotKey_SkipsTheLettersCancelAndTheNameBoxHold()
     {
@@ -38,6 +41,7 @@ public class CreateEntryDialogTest
         Assert.IsNull(CreateEntryDialog.CreateButtonHotKey("Nc"), "only N and C: both are taken");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateButtonHotKey_IsNullWhenTheCaptionHasNoLetter()
     {
@@ -46,6 +50,7 @@ public class CreateEntryDialogTest
         Assert.IsNull(CreateEntryDialog.CreateButtonHotKey("123 ..."));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CreateButtonHotKey_IgnoresCase()
     {

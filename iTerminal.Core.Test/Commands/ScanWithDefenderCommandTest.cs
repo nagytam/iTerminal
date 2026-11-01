@@ -28,6 +28,7 @@ public class ScanWithDefenderCommandTest
         return (new ScanWithDefenderCommand(service.Object, scanner, notes.Object), mock, notes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AScannerThatThrows_IsSaidAsAFailedScan()
     {
@@ -42,6 +43,7 @@ public class ScanWithDefenderCommandTest
         notes.Verify(n => n.Notify("Microsoft Defender scan failed", "engine not running", NotificationSeverity.Warning, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACleanScan_SaysNoThreatsFound()
     {

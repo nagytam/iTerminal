@@ -38,6 +38,7 @@ public class FilePanelRefreshTaskTest
             => new(Name, colorScheme.Foreground, colorScheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NameComparer_Instance_SortsCaseInsensitively()
     {

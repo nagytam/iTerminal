@@ -76,6 +76,7 @@ public class ContentTest
         };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_DoesNotThrow()
     {
@@ -83,6 +84,7 @@ public class ContentTest
         Assert.IsNotNull(setup.Sut);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_NameIsContent()
     {
@@ -90,6 +92,7 @@ public class ContentTest
         Assert.AreEqual("Content", setup.Sut.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_HasFourControls()
     {
@@ -98,6 +101,7 @@ public class ContentTest
         Assert.AreEqual(4, setup.Sut.Controls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_LeftPanelHasSwitchPanelsCommand()
     {
@@ -107,6 +111,7 @@ public class ContentTest
             "Expected SwitchPanelsCommand to be registered on Content.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_EvenWidth_SplitsPanelsEvenly()
     {
@@ -125,6 +130,7 @@ public class ContentTest
         Assert.AreEqual(40u, right.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_PanelHeight_IsViewHeightMinusBarHeight()
     {
@@ -140,6 +146,7 @@ public class ContentTest
         Assert.AreEqual((uint)(24 - barHeight), left.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_AiPromptBar_HasBarHeight()
     {
@@ -151,6 +158,7 @@ public class ContentTest
         Assert.AreEqual((uint)barHeight, setup.AiPromptBar.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_AiPromptBar_IsAtBottomRows()
     {
@@ -162,6 +170,7 @@ public class ContentTest
         Assert.AreEqual(24 - barHeight, setup.AiPromptBar.Position.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_MinimumSize_DoesNotThrow()
     {
@@ -170,18 +179,21 @@ public class ContentTest
         setup.Sut.OnInitializeLayout();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Content_Left_ConstantValue()
     {
         Assert.AreEqual("LeftPanel", Content.Left);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Content_Right_ConstantValue()
     {
         Assert.AreEqual("RightPanel", Content.Right);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_ImplementsIContent()
     {

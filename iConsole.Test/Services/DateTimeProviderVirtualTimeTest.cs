@@ -6,6 +6,7 @@ namespace iConsole.Test.Services;
 public class DateTimeProviderVirtualTimeTest
 {
     /// <summary>The cached time is kept for the refresh interval and then read again, all without sleeping.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void Now_IsRefreshedOnlyOnceTheRefreshIntervalHasPassed()
     {

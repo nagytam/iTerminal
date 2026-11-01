@@ -55,6 +55,7 @@ public class StripMetadataDialogTest
 
     private StripMetadataDialog Dialog() => new(Mock.Of<IContentModelService>(), TestTheme());
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnlyTheJpegAndPngFilesAreStripped_AndTheRestAreCounted()
     {
@@ -71,6 +72,7 @@ public class StripMetadataDialogTest
         StringAssert.Contains(dialog.Details, "1 other skipped");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheFirstEnterArms_TheSecondStrips_AndTheResultIsCounted()
     {
@@ -98,6 +100,7 @@ public class StripMetadataDialogTest
         Assert.IsFalse(ImageInfoReader.ReadFile(withText).Any(f => f.Group == "Text"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyOtherKeyAfterTheFirstEnter_WithdrawsIt()
     {
@@ -114,6 +117,7 @@ public class StripMetadataDialogTest
         Assert.IsTrue(dialog.StripTask.IsCompletedSuccessfully, "no strip was started");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NothingToStrip_SaysSoAndEnterDoesNothing()
     {

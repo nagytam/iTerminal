@@ -112,6 +112,7 @@ public class ControlInertnessSweepTest
         return changed;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADisabledControl_DrawsTheSame_AfterEveryKeyAndClick()
     {
@@ -120,6 +121,7 @@ public class ControlInertnessSweepTest
         Assert.AreEqual(0, changed.Count, string.Join(", ", changed));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AReadOnlyControl_DrawsTheSame_AfterEveryKeyAndClick()
     {
@@ -165,6 +167,7 @@ public class ControlInertnessSweepTest
         ["PasswordBox"] = c => ((PasswordBox)c).Text = "abc",
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFocusableControl_LooksDifferent_WhenItHasFocus()
     {
@@ -213,6 +216,7 @@ public class ControlInertnessSweepTest
         Assert.AreEqual(0, same.Count, string.Join(", ", same));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADisabledControl_LooksDifferent_FromAnEnabledOne()
     {
@@ -266,6 +270,7 @@ public class ControlInertnessSweepTest
         Assert.AreEqual(0, same.Count, string.Join(", ", same));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryControl_PaintsItsWholeRectangle_SoNothingStaleIsLeftBehind()
     {
@@ -312,6 +317,7 @@ public class ControlInertnessSweepTest
         Assert.AreEqual(0, unpainted.Count, string.Join(", ", unpainted));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryControl_StaysInsideItsRectangle()
     {
@@ -366,6 +372,7 @@ public class ControlInertnessSweepTest
         Assert.AreEqual(0, spilled.Count, string.Join(", ", spilled));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryControl_DrawsTheSameTwiceInARow()
     {
@@ -406,6 +413,7 @@ public class ControlInertnessSweepTest
     /// <summary>Controls whose picture follows the clock.</summary>
     private static readonly HashSet<string> AnimatesItself = ["Spinner", "Skeleton", "Date", "ProgressBar", "Countdown", "ElapsedClock", "ToastHost"];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADisabledControl_ListsNoKeys_ItWillNotTake()
     {
@@ -440,6 +448,7 @@ public class ControlInertnessSweepTest
         Assert.AreEqual(0, lying.Count, string.Join(", ", lying));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheKeyHints_AreWhole_AndNameEachKeyOnce()
     {

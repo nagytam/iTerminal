@@ -11,6 +11,7 @@ public class ElevationServiceTest
 {
     private static ElevationService NewService() => new(Mock.Of<IInteractiveShellService>());
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABlankPath_CannotRunElevated()
     {
@@ -18,6 +19,7 @@ public class ElevationServiceTest
         Assert.IsFalse(NewService().CanRunElevated("   "));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMissingFile_CannotRunElevated()
     {
@@ -26,6 +28,7 @@ public class ElevationServiceTest
         Assert.IsFalse(NewService().CanRunElevated(missing));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnUnix_ANonExecutableFile_CannotRunElevated()
     {

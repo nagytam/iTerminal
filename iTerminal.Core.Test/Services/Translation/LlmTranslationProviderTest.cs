@@ -19,6 +19,7 @@ public class LlmTranslationProviderTest
         return (new LlmTranslationProvider(client.Object, Options.Create(new AiOptions { Provider = provider })), sent);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTextIsTheUserMessageAndTheInstructionsNameTheTarget()
     {
@@ -34,6 +35,7 @@ public class LlmTranslationProviderTest
         Assert.AreEqual("Hello world", sent[0][1].Text, "the text itself, with no wrapping the model could echo back");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutASourceTheModelIsToldToWorkItOut()
     {
@@ -44,6 +46,7 @@ public class LlmTranslationProviderTest
         StringAssert.Contains(sent[0][0].Text, "not given");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReasoningBlocksAreRemovedFromTheAnswer()
     {
@@ -54,6 +57,7 @@ public class LlmTranslationProviderTest
         Assert.AreEqual("Hallo Welt", result.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyAnswerIsAnError()
     {
@@ -62,6 +66,7 @@ public class LlmTranslationProviderTest
         await Assert.ThrowsExactlyAsync<TranslationException>(() => provider.TranslateAsync("Hello", null, "de"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABrokenModelServerBecomesATranslationException()
     {
@@ -75,6 +80,7 @@ public class LlmTranslationProviderTest
         StringAssert.Contains(exception.Message, "connection refused");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhenAiIsOffNoRequestIsMade()
     {
@@ -85,6 +91,7 @@ public class LlmTranslationProviderTest
         Assert.AreEqual(0, sent.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("de", "de")]
     [DataRow("DE.", "de")]
@@ -100,6 +107,7 @@ public class LlmTranslationProviderTest
         Assert.AreEqual(expected, detection!.Code);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnAnswerThatNamesNoKnownLanguageDetectsNothing()
     {
@@ -108,6 +116,7 @@ public class LlmTranslationProviderTest
         Assert.IsNull(await provider.DetectAsync("???"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnlyTheStartOfALongTextIsSentForDetection()
     {

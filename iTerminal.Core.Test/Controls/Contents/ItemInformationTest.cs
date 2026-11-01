@@ -35,6 +35,7 @@ public class ItemInformationTest
             Mock.Of<ILogger>());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_DoesNotThrow()
     {
@@ -42,6 +43,7 @@ public class ItemInformationTest
         Assert.IsNotNull(sut);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CanFocus_IsFalse()
     {
@@ -49,6 +51,7 @@ public class ItemInformationTest
         Assert.IsFalse(sut.CanFocus);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_IsVisible_IsTrue()
     {
@@ -56,6 +59,7 @@ public class ItemInformationTest
         Assert.IsTrue(sut.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_ViewSize_IsSingleRow()
     {
@@ -63,6 +67,7 @@ public class ItemInformationTest
         Assert.AreEqual(1u, sut.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_Text1_IsEmpty()
     {
@@ -70,6 +75,7 @@ public class ItemInformationTest
         Assert.AreEqual(string.Empty, sut.Text1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_Text2_IsEmpty()
     {
@@ -77,6 +83,7 @@ public class ItemInformationTest
         Assert.AreEqual(string.Empty, sut.Text2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_ContentModel_IsNull()
     {
@@ -84,6 +91,7 @@ public class ItemInformationTest
         Assert.IsNull(sut.ContentModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentModel_CanBeAssigned()
     {
@@ -95,6 +103,7 @@ public class ItemInformationTest
         Assert.AreSame(model, sut.ContentModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentModel_AssignSameValue_DoesNotChange()
     {
@@ -108,6 +117,7 @@ public class ItemInformationTest
         Assert.AreSame(model, sut.ContentModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentModel_CanBeReassigned_ToDifferentModel()
     {
@@ -121,6 +131,7 @@ public class ItemInformationTest
         Assert.AreSame(model2, sut.ContentModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ModelChanged_WhenFocusedEntryIsNull_ClearsTexts()
     {
@@ -147,6 +158,7 @@ public class ItemInformationTest
         Assert.AreEqual(string.Empty, sut.Text2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ModelChanged_WhenFocusedEntryIsFile_SetsTexts()
     {
@@ -175,6 +187,7 @@ public class ItemInformationTest
         Assert.AreEqual("1 KB", sut.Text2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ModelChanged_SetsHasStateChanged()
     {
@@ -197,6 +210,7 @@ public class ItemInformationTest
         Assert.IsTrue(sut.HasStateChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CursorMove_ToFolder_DebouncesFileInformationRefreshTask()
     {

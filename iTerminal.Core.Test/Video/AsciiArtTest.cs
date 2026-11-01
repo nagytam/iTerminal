@@ -9,6 +9,7 @@ public class AsciiArtTest
     private static byte[] Pixels(params (byte R, byte G, byte B)[] pixels) =>
         [.. pixels.SelectMany(p => new[] { p.R, p.G, p.B })];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Render_MapsDarkToBlankAndBrightToDense()
     {
@@ -22,6 +23,7 @@ public class AsciiArtTest
             && AsciiArt.Ramp.IndexOf(frame.Characters[1]) < AsciiArt.Ramp.Length - 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Render_MonoUsesOnlyGreyAndWhite()
     {
@@ -32,6 +34,7 @@ public class AsciiArtTest
         Assert.IsTrue(frame.Foregrounds.All(c => c is Color.White or Color.Gray));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Render_ColourModePicksTheHue()
     {
@@ -45,6 +48,7 @@ public class AsciiArtTest
         Assert.AreEqual(Color.Yellow, frame.Foregrounds[3]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorOf_DimColoursUseTheDarkVariantAndGreyStaysGrey()
     {
@@ -53,6 +57,7 @@ public class AsciiArtTest
         Assert.AreEqual(Color.DarkGray, AsciiArt.ColorOf(5, 5, 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Render_ThrowsWhenThePixelsAreTooFew()
     {
@@ -61,6 +66,7 @@ public class AsciiArtTest
         Assert.ThrowsExactly<ArgumentException>(() => AsciiArt.Render(new byte[3], frame, AsciiColorMode.Mono));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fit_AccountsForTallCells()
     {
@@ -71,6 +77,7 @@ public class AsciiArtTest
         Assert.AreEqual(28, rows);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fit_ShrinksTheWidthWhenTheRoomIsShort()
     {
@@ -81,6 +88,7 @@ public class AsciiArtTest
         Assert.AreEqual(71, columns);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fit_NeverReturnsMoreThanTheRoom()
     {
@@ -91,6 +99,7 @@ public class AsciiArtTest
         Assert.AreEqual((0, 0), AsciiArt.Fit(1, 0, 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseProbe_ReadsSizeRateAndDuration()
     {
@@ -107,6 +116,7 @@ public class AsciiArtTest
         Assert.AreEqual(TimeSpan.FromSeconds(12.5), info.Duration);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseProbe_FallsBackToTheContainerDurationAndAStillImageRate()
     {
@@ -120,12 +130,14 @@ public class AsciiArtTest
         Assert.AreEqual(TimeSpan.FromSeconds(4), info.Duration);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseProbe_ThrowsWithoutAVideoStream()
     {
         Assert.ThrowsExactly<InvalidOperationException>(() => FfmpegVideoDecoder.ParseProbe("""{"streams":[]}"""));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FileTypes_RecogniseVideosAndPicturesButNotTypeScript()
     {

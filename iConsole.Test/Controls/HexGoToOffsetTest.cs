@@ -21,6 +21,7 @@ public class HexGoToOffsetTest
         return hex;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnOffsetCanBeDecimal_OrHexWithAPrefixOrASuffix()
     {
@@ -34,6 +35,7 @@ public class HexGoToOffsetTest
         Assert.AreEqual(16, spaced);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NotAnOffset_IsRefused()
     {
@@ -43,6 +45,7 @@ public class HexGoToOffsetTest
         Assert.IsFalse(HexViewer.TryParseOffset("0xZZ", out _));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShowOffset_PutsTheCursorOnTheRowOfTheByte()
     {
@@ -53,6 +56,7 @@ public class HexGoToOffsetTest
         Assert.AreEqual(0x120, hex.SelectedOffset, "the row of the byte starts at the byte's 16-byte boundary");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShowOffset_PastTheEnd_GoesToTheLastByte()
     {
@@ -63,6 +67,7 @@ public class HexGoToOffsetTest
         Assert.AreEqual(96, hex.SelectedOffset, "the last row of 100 bytes starts at byte 96");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShowOffset_OnAnEmptyDump_DoesNothing()
     {
@@ -73,6 +78,7 @@ public class HexGoToOffsetTest
         Assert.AreEqual(0, hex.SelectedOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GoToOffsetDialog_Enter_GoesThereAndCloses()
     {
@@ -85,6 +91,7 @@ public class HexGoToOffsetTest
         Assert.AreEqual(0x200, hex.SelectedOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GoToOffsetDialog_NotAnOffset_SaysSoAndStaysPut()
     {
@@ -98,6 +105,7 @@ public class HexGoToOffsetTest
         Assert.AreEqual(0, hex.SelectedOffset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCommandIsAvailableOnlyInTheHexDump()
     {

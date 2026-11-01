@@ -9,6 +9,7 @@ public class XmlTreeTest
 {
     private static XmlTree Build(string xml) => XmlTree.Build(XDocument.Parse(xml));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Elements_ShowTheirNameAndAttributes()
     {
@@ -19,6 +20,7 @@ public class XmlTreeTest
         Assert.AreEqual("<book id=\"bk101\" lang=\"en\">", book.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnElementWithOnlyText_ShowsTheTextOnItsLine_WithNoChildren()
     {
@@ -30,6 +32,7 @@ public class XmlTreeTest
         Assert.AreEqual(0, title.Children.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyElement_ShowsAsSelfClosing()
     {
@@ -40,6 +43,7 @@ public class XmlTreeTest
         Assert.AreEqual("<empty/>", empty.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MixedContent_KeepsTextAndCommentsAsChildren()
     {
@@ -51,6 +55,7 @@ public class XmlTreeTest
         CollectionAssert.AreEqual(new[] { "\"Hello\"", "<!-- note -->", "<b>there</b>" }, names);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LongText_IsShortened_AndWhitespaceCollapsed()
     {
@@ -63,6 +68,7 @@ public class XmlTreeTest
         Assert.IsFalse(shortened.Contains("  "));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryNode_IsIndexed_SoAResultCanBeShownAtItsPlace()
     {
@@ -76,6 +82,7 @@ public class XmlTreeTest
         Assert.AreSame(b, item.Node);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProcessingInstructions_AreShown()
     {

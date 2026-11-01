@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class SizeTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeConstructorLong()
     {
@@ -13,6 +14,7 @@ public class SizeTest
         Assert.AreEqual(24, size.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeConstructorInt()
     {
@@ -21,6 +23,7 @@ public class SizeTest
         Assert.AreEqual(24, size.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeZero()
     {
@@ -30,6 +33,7 @@ public class SizeTest
         Assert.IsTrue(size.IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeIsEmptyWithZeroWidth()
     {
@@ -37,6 +41,7 @@ public class SizeTest
         Assert.IsTrue(size.IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeIsEmptyWithZeroHeight()
     {
@@ -44,6 +49,7 @@ public class SizeTest
         Assert.IsTrue(size.IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeIsNotEmpty()
     {
@@ -51,6 +57,7 @@ public class SizeTest
         Assert.IsFalse(size.IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeSetWidth()
     {
@@ -59,6 +66,7 @@ public class SizeTest
         Assert.AreEqual(100, size.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeSetHeight()
     {
@@ -67,6 +75,7 @@ public class SizeTest
         Assert.AreEqual(50, size.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeIntersect()
     {
@@ -77,6 +86,7 @@ public class SizeTest
         Assert.AreEqual(50, size1.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeMultiplicationOperator()
     {
@@ -86,6 +96,7 @@ public class SizeTest
         Assert.AreEqual(100, result.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeMultiplicationOperatorFraction()
     {
@@ -95,6 +106,7 @@ public class SizeTest
         Assert.AreEqual(25, result.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeReset()
     {
@@ -104,6 +116,7 @@ public class SizeTest
         Assert.AreEqual(0, size.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizePropertyChanged()
     {
@@ -124,6 +137,7 @@ public class SizeTest
         Assert.IsTrue(heightChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeEquality()
     {
@@ -135,6 +149,7 @@ public class SizeTest
         Assert.AreNotEqual(size1, size3);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeToString()
     {
@@ -143,6 +158,7 @@ public class SizeTest
         Assert.IsTrue(str.Contains("80") && str.Contains("24"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizeLargeValues()
     {

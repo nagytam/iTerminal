@@ -46,6 +46,7 @@ public class GitSyncCommandTest
         return (new GitSyncCommand(service.Object, git.Object, notes.Object), git, notes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_OnlyInsideAWorkingTree()
     {
@@ -53,6 +54,7 @@ public class GitSyncCommandTest
         Assert.IsFalse(Create(Path.Combine(_root, "plain")).Command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_PullsThenPushesInTheRepositoryRoot()
     {
@@ -67,6 +69,7 @@ public class GitSyncCommandTest
         notes.Verify(n => n.Notify("Git", "Synced with the remote.", NotificationSeverity.Info, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_AFailedPull_DoesNotPushAndWarnsAboutTheRebase()
     {
@@ -81,6 +84,7 @@ public class GitSyncCommandTest
         notes.Verify(n => n.Notify("Git sync: pull --rebase failed", "error: could not apply 1a2b3c4 (Nothing was pushed. If git started a rebase, it is left unfinished.)", NotificationSeverity.Warning, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_AFailedPush_SaysGitsFirstLine()
     {
@@ -94,6 +98,7 @@ public class GitSyncCommandTest
         notes.Verify(n => n.Notify("Git sync: push failed", "! [rejected] main -> main", NotificationSeverity.Warning, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_WithNoUpstream_NeitherPullsNorPushes()
     {
@@ -106,6 +111,7 @@ public class GitSyncCommandTest
         notes.Verify(n => n.Notify("Git sync", "The branch has no upstream branch to sync with.", NotificationSeverity.Warning, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_AServiceThatThrows_IsSaid()
     {
@@ -118,6 +124,7 @@ public class GitSyncCommandTest
         notes.Verify(n => n.Notify("Git sync failed", "git is not installed", NotificationSeverity.Warning, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_WhenGitSaysItIsNoRepository_DoesNothingMore()
     {
@@ -130,6 +137,7 @@ public class GitSyncCommandTest
         notes.Verify(n => n.Notify("Git sync", "This folder is not in a git repository.", NotificationSeverity.Warning, It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Execute_OutsideAWorkingTree_DoesNothing()
     {

@@ -24,6 +24,7 @@ public class JsonViewerLanguageTest
     private static string[] Placeholders(string text) =>
         [.. Regex.Matches(text, @"\{(\d+)").Select(m => m.Groups[1].Value).Distinct().Order()];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesEveryText_AndKeepsItsPlaceholders()
     {

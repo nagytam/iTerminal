@@ -23,6 +23,7 @@ public class RadioGroupTest
     }
 
     /// <summary>A key the focused control declines is offered to every control; an unfocused group must let it pass.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnfocusedGroupIgnoresTheArrows()
     {
@@ -35,6 +36,7 @@ public class RadioGroupTest
 
     private static KeyEvent Key(ConsoleKey consoleKey) => new('\0', consoleKey, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetItemsSelectsFirstItem()
     {
@@ -43,6 +45,7 @@ public class RadioGroupTest
         Assert.AreEqual("Small", control.SelectedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowKeysMoveSelectionExclusively()
     {
@@ -62,6 +65,7 @@ public class RadioGroupTest
         Assert.AreEqual(1, control.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HomeAndEndJumpToBounds()
     {
@@ -74,6 +78,7 @@ public class RadioGroupTest
         Assert.AreEqual(0, control.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingOptionSelectsIt()
     {
@@ -86,6 +91,7 @@ public class RadioGroupTest
         Assert.AreEqual("Large", control.SelectedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SelectionChangedFiresOnChangeOnly()
     {
@@ -103,6 +109,7 @@ public class RadioGroupTest
         Assert.AreEqual(0, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnlyIgnoresInput()
     {
@@ -115,6 +122,7 @@ public class RadioGroupTest
         Assert.AreEqual(0, control.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawRendersAllOptionsWithOneSelected()
     {

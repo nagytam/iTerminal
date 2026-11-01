@@ -34,6 +34,7 @@ public class StatusChartsAndClockInteractionTest
 
     // ---- ElapsedClock ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ElapsedClock_Click_FocusesAndTogglesRunning()
     {
@@ -45,6 +46,7 @@ public class StatusChartsAndClockInteractionTest
         Assert.IsFalse(watch.IsRunning);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ElapsedClock_DisabledOrClickedOutside_DoesNothing()
     {
@@ -56,6 +58,7 @@ public class StatusChartsAndClockInteractionTest
         Assert.IsFalse(watch.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ElapsedClock_Draw_ShowsLabelAndTimeAndFollowsTheClockOnIdle()
     {
@@ -76,6 +79,7 @@ public class StatusChartsAndClockInteractionTest
 
     // ---- Date ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Date_ShowsTheProvidersTimeAndFollowsItOnIdle()
     {
@@ -87,6 +91,7 @@ public class StatusChartsAndClockInteractionTest
         Assert.AreEqual("2026-10-18 12:00:05", date.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Date_StartAndDispose_AreSafeToRepeat()
     {
@@ -105,6 +110,7 @@ public class StatusChartsAndClockInteractionTest
         public void Fit(IReadOnlyList<Control> inOrder, IReadOnlyList<Control> byPriority) => StackFitting(inOrder, byPriority);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusBar_StackFitting_KeepsTheMostImportantItemsThatFit()
     {
@@ -125,6 +131,7 @@ public class StatusChartsAndClockInteractionTest
         Assert.IsFalse(b.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task StatusBar_ShowAsync_KeepsLeftOutItemsHidden()
     {
@@ -142,6 +149,7 @@ public class StatusChartsAndClockInteractionTest
         Assert.IsFalse(b.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusBar_Layout_FollowsTheParentWidth()
     {
@@ -155,6 +163,7 @@ public class StatusChartsAndClockInteractionTest
         bar.Draw(new MockBuffer(new Size(60, 5)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewerStatusBar_Layout_IsOneRowHigh()
     {
@@ -173,6 +182,7 @@ public class StatusChartsAndClockInteractionTest
         Assert.IsTrue(bar.Controls.Count >= 6);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewerStatusBar_Layout_OnANarrowParentHidesWhatDoesNotFit()
     {
@@ -192,6 +202,7 @@ public class StatusChartsAndClockInteractionTest
 
     // ---- LineChart ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LineChart_Render_HasTheRequestedShape()
     {
@@ -203,6 +214,7 @@ public class StatusChartsAndClockInteractionTest
         Assert.AreEqual(0, LineChart.Render([1, 2], 4, 0).Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LineChart_Render_EmptyAndNaNSeriesDrawNoDots()
     {
@@ -211,6 +223,7 @@ public class StatusChartsAndClockInteractionTest
         CollectionAssert.AreEqual(new[] { blank }, LineChart.Render([double.NaN, double.NaN], 4, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LineChart_Render_RisingSeriesClimbsFromBottomLeftToTopRight()
     {
@@ -220,6 +233,7 @@ public class StatusChartsAndClockInteractionTest
         Assert.AreEqual('⠀', rows[0][0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LineChart_Render_FlatSeriesStaysOnOneDotRow_AndBoundsClampValues()
     {
@@ -230,6 +244,7 @@ public class StatusChartsAndClockInteractionTest
         CollectionAssert.AreEqual(top, clamped);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LineChart_Draw_WritesEveryRow_AndHonoursTheForegroundOverride()
     {
@@ -252,6 +267,7 @@ public class StatusChartsAndClockInteractionTest
 
     // ---- Disabled Table / TreeView ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Table_Disabled_ClickDoesNotMoveCursorOrSort()
     {
@@ -274,6 +290,7 @@ public class StatusChartsAndClockInteractionTest
         Assert.AreEqual(2, table.CursorRow);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TreeView_Disabled_ClickDoesNotMoveFocus()
     {

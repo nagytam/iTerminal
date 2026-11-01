@@ -39,6 +39,7 @@ public class TaskNotificationHelperTest
         return service.Active[0];
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FinishedTransfer_SaysWhatWasCopiedWhere()
     {
@@ -49,6 +50,7 @@ public class TaskNotificationHelperTest
         Assert.AreEqual(NotificationSeverity.Success, notification.Severity);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASentenceThatSaysEverything_IsTheTitle_AndTheRestTheMessage()
     {
@@ -59,6 +61,7 @@ public class TaskNotificationHelperTest
         Assert.AreEqual(NotificationSeverity.Success, notification.Severity);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FailedTask_IsAnError_WithTheReasonOnce()
     {
@@ -69,6 +72,7 @@ public class TaskNotificationHelperTest
         Assert.AreEqual(NotificationSeverity.Error, notification.Severity);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PartlyFailedFolderOperation_IsAnError_ThoughTheTaskCompleted()
     {
@@ -81,6 +85,7 @@ public class TaskNotificationHelperTest
         Assert.AreEqual(NotificationSeverity.Error, notification.Severity);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CancelledTask_IsAWarning()
     {
@@ -91,6 +96,7 @@ public class TaskNotificationHelperTest
         Assert.AreEqual(NotificationSeverity.Warning, notification.Severity);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TransferSubject_IsNamesNotPaths()
     {
@@ -105,6 +111,7 @@ public class TaskNotificationHelperTest
             TaskNotificationHelper.TransferSubject(new Url("file://C:/left/a.txt"), new Url("memdrive://a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATaskWithASubject_SaysThat_InsteadOfItsPaths()
     {
@@ -116,6 +123,7 @@ public class TaskNotificationHelperTest
         Assert.AreEqual("readme.txt to path", notification.Message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATaskAlreadyOver_IsNotifiedAtOnce_AndOnlyOnce()
     {
@@ -131,12 +139,14 @@ public class TaskNotificationHelperTest
         Assert.AreEqual("Copy finished: 2 item(s)", service.History[0].Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutAService_DoesNothing()
     {
         TaskNotificationHelper.NotifyWhenFinished(new ScriptedTask("x"), notificationService: null);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ProgressWindowFactory_ArmsTheNotification_ForEveryOperationItShows()
     {

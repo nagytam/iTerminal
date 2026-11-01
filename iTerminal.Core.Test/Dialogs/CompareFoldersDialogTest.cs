@@ -77,6 +77,7 @@ public class CompareFoldersDialogTest
         await dialog.CompareTask;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnOpening_ItNamesBothFolders_AndSaysEnterCompares()
     {
@@ -91,6 +92,7 @@ public class CompareFoldersDialogTest
         Assert.IsNull(dialog.Result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutTwoFolders_EnterSaysSo()
     {
@@ -102,6 +104,7 @@ public class CompareFoldersDialogTest
         AssertScreenContains(Render(root, Small), "Both panels must show a folder.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_ComparesTheFolders_ListsOnlyTheDifferences_AndSummarises()
     {
@@ -123,6 +126,7 @@ public class CompareFoldersDialogTest
         StringAssert.Contains(dialog.Status, "1 only on the left");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task IdenticalFolders_SayNothingDiffers()
     {
@@ -136,6 +140,7 @@ public class CompareFoldersDialogTest
         StringAssert.Contains(dialog.Status, "1 identical");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheModeAndSubfolderOptions_ChangeWhatIsFound()
     {
@@ -158,6 +163,7 @@ public class CompareFoldersDialogTest
         Assert.IsTrue(dialog.Result.Items.Any(i => i.Path == "sub/deep.txt"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADifferenceListLongerThanTheView_ScrollsWithTheKeys_AndTheWheel()
     {
@@ -197,6 +203,7 @@ public class CompareFoldersDialogTest
         AssertScreenContains(Render(root, Small), "file00.txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePageKeysScrollTheDifferences_EvenWhileTheCompareModeListHasFocus()
     {
@@ -218,6 +225,7 @@ public class CompareFoldersDialogTest
         AssertScreenContains(Render(root, Small), "file00.txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheelOutsideTheDialog_IsNotTheDialogs()
     {
@@ -226,6 +234,7 @@ public class CompareFoldersDialogTest
         Assert.IsFalse(await dialog.HandleMouseEventAsync(new MouseEvent { Position = new Position(0, 0), WheelDelta = -1 }));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F5BeforeAnyComparison_SaysToCompareFirst()
     {
@@ -237,6 +246,7 @@ public class CompareFoldersDialogTest
         Assert.IsNull(dialog.PendingPlan);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F5WithNothingToDo_SaysSo()
     {
@@ -251,6 +261,7 @@ public class CompareFoldersDialogTest
         Assert.AreEqual(FolderSynchronizer.Plan(dialog.Result!, new SyncOptions(dialog.Direction, dialog.DeleteExtras)).Summary(), dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F5ProposesThePlan_AndAnyOtherKeyWithdrawsIt()
     {
@@ -271,6 +282,7 @@ public class CompareFoldersDialogTest
         Assert.IsTrue(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASecondF5WithoutTheMachineryToRunIt_SaysSoAndKeepsTheDialog()
     {
@@ -286,6 +298,7 @@ public class CompareFoldersDialogTest
         Assert.IsTrue(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDirectionAndDeleteExtras_FeedThePlan()
     {
@@ -302,6 +315,7 @@ public class CompareFoldersDialogTest
         StringAssert.Contains(dialog.Status, "recycle bin");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_Closes()
     {
@@ -312,6 +326,7 @@ public class CompareFoldersDialogTest
         Assert.IsFalse(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DescribeKind_NamesEveryKind()
     {

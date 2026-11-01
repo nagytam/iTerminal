@@ -29,6 +29,7 @@ public class CalculatorDialogTest
     private static KeyEvent Key(char keyChar, ConsoleKey consoleKey = default) =>
         new(keyChar, consoleKey, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowAsync_StartsInBasicModeWithFirstButtonFocused()
     {
@@ -42,6 +43,7 @@ public class CalculatorDialogTest
         Assert.IsTrue(firstButton.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_DigitsOperatorAndEnter_ComputesResult()
     {
@@ -56,6 +58,7 @@ public class CalculatorDialogTest
         Assert.AreEqual("8", dialog.EngineForTest.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_Backspace_RemovesLastDigit()
     {
@@ -69,6 +72,7 @@ public class CalculatorDialogTest
         Assert.AreEqual("1", dialog.EngineForTest.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_Delete_ClearsDisplay()
     {
@@ -81,6 +85,7 @@ public class CalculatorDialogTest
         Assert.AreEqual("0", dialog.EngineForTest.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_LowercaseC_ClearsDisplayInBasicMode()
     {
@@ -93,6 +98,7 @@ public class CalculatorDialogTest
         Assert.AreEqual("0", dialog.EngineForTest.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_Escape_ClosesDialog()
     {
@@ -105,6 +111,7 @@ public class CalculatorDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_RightArrow_SwitchesToScientificMode()
     {
@@ -117,6 +124,7 @@ public class CalculatorDialogTest
         Assert.AreEqual(CalculatorMode.Scientific, dialog.EngineForTest.Mode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_RightArrowTwice_SwitchesToProgrammingMode()
     {
@@ -130,6 +138,7 @@ public class CalculatorDialogTest
         Assert.AreEqual(CalculatorMode.Programming, dialog.EngineForTest.Mode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_LeftArrowBackFromScientific_ReturnsToBasicMode()
     {
@@ -142,6 +151,7 @@ public class CalculatorDialogTest
         Assert.AreEqual(CalculatorMode.Basic, dialog.EngineForTest.Mode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_HexDigitInProgrammingHexMode_EntersDigitInsteadOfClearing()
     {
@@ -158,6 +168,7 @@ public class CalculatorDialogTest
         Assert.AreEqual(NumeralBase.Hexadecimal, dialog.EngineForTest.NumeralBase);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScientificSqrtButton_TriggeredDirectly_UpdatesEngineDisplay()
     {
@@ -172,6 +183,7 @@ public class CalculatorDialogTest
         Assert.AreEqual("3", dialog.EngineForTest.Display);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ProgrammingHexDigitButtons_AreDisabledOutsideHexBase()
     {
@@ -189,6 +201,7 @@ public class CalculatorDialogTest
         Assert.IsTrue(buttonA.IsEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAModesTab_SwitchesTheEngineAtOnce_NotAtTheNextKey()
     {

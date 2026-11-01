@@ -52,6 +52,7 @@ public class IPhoneBrowserDialogTest
         Assert.Fail("Timed out waiting for the expected devices to appear.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_ListsConnectedDevices()
     {
@@ -64,6 +65,7 @@ public class IPhoneBrowserDialogTest
         Assert.IsTrue(dialog.DevicesForTest.Any(d => d.Udid == "00008110-ABC"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnSelectedDevice_MountsIPhoneUrlAndCloses()
     {
@@ -81,6 +83,7 @@ public class IPhoneBrowserDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog), "dialog should close after mounting the device");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Rescan_TriggersSecondEnumeration()
     {
@@ -95,6 +98,7 @@ public class IPhoneBrowserDialogTest
         devices.Verify(s => s.GetDevices(), Times.AtLeast(2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClosesDialog()
     {
@@ -129,6 +133,7 @@ public class IPhoneBrowserDialogTest
         return buffer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoDeviceTheListSaysWhatToDoAndTheKeysStayVisible()
     {
@@ -144,6 +149,7 @@ public class IPhoneBrowserDialogTest
         Assert.IsTrue(screen.Contains(IPhoneBrowserDialog.KeyHints), screen.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AScanErrorIsShownBesideTheKeys()
     {
@@ -158,6 +164,7 @@ public class IPhoneBrowserDialogTest
         Assert.IsTrue(screen.Contains("r:rescan"), screen.ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARescanIsNotStartedOverOneStillRunning()
     {
@@ -178,6 +185,7 @@ public class IPhoneBrowserDialogTest
         devices.Verify(s => s.GetDevices(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedMountStaysOpenAndSaysWhy()
     {

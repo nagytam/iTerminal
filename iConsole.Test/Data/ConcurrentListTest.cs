@@ -15,6 +15,7 @@ public class ConcurrentListTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListConstructor()
     {
@@ -22,6 +23,7 @@ public class ConcurrentListTest
         Assert.AreEqual(0, list.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListAdd()
     {
@@ -32,6 +34,7 @@ public class ConcurrentListTest
         Assert.AreEqual(item, list[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListAddMultiple()
     {
@@ -42,6 +45,7 @@ public class ConcurrentListTest
         Assert.AreEqual(3, list.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListRemove()
     {
@@ -55,6 +59,7 @@ public class ConcurrentListTest
         Assert.AreEqual(item2, list[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListClear()
     {
@@ -65,6 +70,7 @@ public class ConcurrentListTest
         Assert.AreEqual(0, list.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListContains()
     {
@@ -77,6 +83,7 @@ public class ConcurrentListTest
         Assert.IsFalse(list.Contains(new TestItem("item3")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListIndexOf()
     {
@@ -89,6 +96,7 @@ public class ConcurrentListTest
         Assert.AreEqual(1, list.IndexOf(item2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListInsert()
     {
@@ -103,6 +111,7 @@ public class ConcurrentListTest
         Assert.AreEqual(item2, list[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListInsertAt()
     {
@@ -117,6 +126,7 @@ public class ConcurrentListTest
         Assert.AreEqual(item2, list[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListRemoveAt()
     {
@@ -128,6 +138,7 @@ public class ConcurrentListTest
         Assert.AreEqual(2, list.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListAsSnapshot()
     {
@@ -142,6 +153,7 @@ public class ConcurrentListTest
         Assert.AreEqual(item2, snapshot[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListToList()
     {
@@ -156,6 +168,7 @@ public class ConcurrentListTest
         Assert.AreEqual(item2, toList[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListForEach()
     {
@@ -167,6 +180,7 @@ public class ConcurrentListTest
         Assert.AreEqual(2, count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListCopyTo()
     {
@@ -181,6 +195,7 @@ public class ConcurrentListTest
         Assert.AreEqual(item2, array[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListIsReadOnly()
     {
@@ -188,6 +203,7 @@ public class ConcurrentListTest
         Assert.IsFalse(list.IsReadOnly);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConcurrentListGetEnumerator()
     {

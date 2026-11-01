@@ -10,6 +10,7 @@ public class StartupWarningDialogTest
     private const string LongWarning =
         "Another iTerminal instance holds the database; settings changed in this window will not be saved until it closes.";
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALongWarningIsWrappedNotCutOff()
     {
@@ -23,6 +24,7 @@ public class StartupWarningDialogTest
         AssertScreenContains(screen, "until it closes.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EachWarningStartsOnItsOwnLine()
     {
@@ -38,6 +40,7 @@ public class StartupWarningDialogTest
         Assert.AreEqual(first!.Y + 1, second!.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SaysHowToDismissIt()
     {
@@ -47,6 +50,7 @@ public class StartupWarningDialogTest
         AssertScreenContains(Render(dialog), StartupWarningDialog.DismissHint);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnANarrowScreenTheDialogFitsInsteadOfGoingOffTheLeftEdge()
     {
@@ -61,6 +65,7 @@ public class StartupWarningDialogTest
         AssertScreenContains(Render(dialog, screen), "until it closes.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheHeightFollowsTheWrappedText()
     {
@@ -72,6 +77,7 @@ public class StartupWarningDialogTest
         Assert.IsTrue(longDialog.ViewSize.Height > shortDialog.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TooManyWarningsForTheScreenEndWithAnEllipsis()
     {
@@ -86,6 +92,7 @@ public class StartupWarningDialogTest
         Assert.IsTrue(lines[^1].Line.EndsWith("…", StringComparison.Ordinal), lines[^1].Line);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterClosesIt()
     {
@@ -97,6 +104,7 @@ public class StartupWarningDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {

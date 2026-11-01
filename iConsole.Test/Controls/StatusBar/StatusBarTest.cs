@@ -11,6 +11,7 @@ namespace iConsole.Test.Controls.StatusBar;
 [TestClass]
 public class StatusBarTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusBarCanBeCreated()
     {
@@ -21,6 +22,7 @@ public class StatusBarTest
         Assert.IsInstanceOfType(statusBar, typeof(Control));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusBarHasDefaultProperties()
     {
@@ -32,6 +34,7 @@ public class StatusBarTest
         Assert.AreEqual(new Size(0, 1), statusBar.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusBarCannotBeFocused()
     {
@@ -41,6 +44,7 @@ public class StatusBarTest
         Assert.IsFalse(statusBar.CanFocus);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusBarHasFixedHeight()
     {
@@ -50,6 +54,7 @@ public class StatusBarTest
         Assert.AreEqual(1, (int)statusBar.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusBarOnInitializeLayoutWithoutParent()
     {
@@ -61,6 +66,7 @@ public class StatusBarTest
         Assert.AreEqual(new Size(0, 1), statusBar.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusBarDrawCallsBase()
     {
@@ -79,6 +85,7 @@ public class StatusBarTest
         Assert.IsNotNull(buffer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusBarHasDefaultVisibility()
     {
@@ -88,6 +95,7 @@ public class StatusBarTest
         Assert.IsTrue(statusBar.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusBarHasDefaultEnabled()
     {

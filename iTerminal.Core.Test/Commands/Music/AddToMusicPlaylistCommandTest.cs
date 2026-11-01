@@ -71,6 +71,7 @@ public class AddToMusicPlaylistCommandTest
     private static AddToMusicPlaylistCommand CommandFor(Harness harness) =>
         new(harness.Catalog, harness.ContentModelService);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsF5_SoItReadsAsCopyingToTheOtherPanel()
     {
@@ -83,6 +84,7 @@ public class AddToMusicPlaylistCommandTest
         Assert.IsFalse(command.Key.Control || command.Key.Shift || command.Key.Alt);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F5_OnAnArtistRow_QueuesTheWholeCatalogueInTheOtherPanel()
     {
@@ -98,6 +100,7 @@ public class AddToMusicPlaylistCommandTest
             "The playlist panel must show the tracks that just arrived");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_IsFalseWhenTheOtherPanelIsNotThePlaylist()
     {
@@ -109,6 +112,7 @@ public class AddToMusicPlaylistCommandTest
             "Without a playlist panel to copy into, F5 must fall through to the ordinary copy dialog");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_IsFalseWhenTheCatalogPanelIsNotFocused()
     {
@@ -132,6 +136,7 @@ public class AddToMusicPlaylistCommandTest
         harness.Catalog.CursorPosition.Y = index;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F5_WithMarkedRows_QueuesAllOfThem()
     {
@@ -151,6 +156,7 @@ public class AddToMusicPlaylistCommandTest
         Assert.AreEqual(0, harness.Catalog.SelectionCount, "The operation consumes the marks");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F5_WithMarkedRows_IgnoresWhereTheCursorHappensToBe()
     {
@@ -168,6 +174,7 @@ public class AddToMusicPlaylistCommandTest
         Assert.AreEqual("So What", harness.Player.Playlist.Tracks[0].Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_IsTrueWhenRowsAreMarkedEvenIfTheCursorIsOnAnUnmarkableRow()
     {

@@ -10,6 +10,7 @@ namespace iConsole.Test.Controls;
 [TestClass]
 public class CheckBoxTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckBoxHandlesKeyEvents()
     {
@@ -24,6 +25,7 @@ public class CheckBoxTest
         Assert.IsTrue(checkBox.IsChecked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListSpaceOnlyWhenEditable()
     {
@@ -34,6 +36,7 @@ public class CheckBoxTest
         Assert.AreEqual(0, checkBox.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickTogglesCheckBox()
     {
@@ -53,6 +56,7 @@ public class CheckBoxTest
         Assert.IsFalse(checkBox.IsChecked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnlyCheckBoxIgnoresClick()
     {
@@ -70,6 +74,7 @@ public class CheckBoxTest
         Assert.IsFalse(checkBox.IsChecked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw()
     {
@@ -93,6 +98,7 @@ public class CheckBoxTest
         Assert.AreEqual("▣ Label   " + Environment.NewLine, buffer.ContentAsString);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RightClickDoesNotToggleCheckBox()
     {

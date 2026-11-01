@@ -85,6 +85,7 @@ public class CommandPaletteDialogTest
 
     private static string[] Titles(Rig rig) => [.. rig.Dialog.Matches.Select(m => m.Title)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ItListsEveryCommandAlphabetically_WithTheirKeys_AndTheFirstChosen()
     {
@@ -100,6 +101,7 @@ public class CommandPaletteDialogTest
         AssertScreenContains(screen, "A pocket calculator");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingNarrowsTheList_AndTheBestMatchComesFirst()
     {
@@ -113,6 +115,7 @@ public class CommandPaletteDialogTest
         CollectionAssert.AreEqual(new[] { "Delete files", "Disk usage" }, Titles(rig).Take(2).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AQueryCanMatchTheKeyOrTheDescription()
     {
@@ -124,6 +127,7 @@ public class CommandPaletteDialogTest
         CollectionAssert.AreEqual(new[] { "Calculator" }, Titles(rig));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WhenNothingMatches_ItSaysSo_AndEnterRunsNothing()
     {
@@ -138,6 +142,7 @@ public class CommandPaletteDialogTest
         Assert.IsFalse(await rig.Dialog.RunSelectedAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheArrowsAndPages_MoveTheChoiceAndStopAtTheEnds()
     {
@@ -155,6 +160,7 @@ public class CommandPaletteDialogTest
         Assert.AreEqual("Calculator", rig.Dialog.Selected!.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheChosenCommandsDescription_ShowsAboveTheEdge()
     {
@@ -165,6 +171,7 @@ public class CommandPaletteDialogTest
         AssertScreenContains(Render(rig.Root), "Copy the marked files to the other panel");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_ClosesThePaletteFirst_ThenRunsTheCommand_AndRemembersIt()
     {
@@ -180,6 +187,7 @@ public class CommandPaletteDialogTest
         Assert.AreEqual("Quit", rig.Settings.Get(CommandPaletteDialog.RecentKey));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCommandsRunLast_ComeFirstNextTime_NewestFirst_AndNoMoreThanEight()
     {
@@ -208,6 +216,7 @@ public class CommandPaletteDialogTest
         Assert.IsTrue(settings.Get(CommandPaletteDialog.RecentKey)!.StartsWith("Quit\n"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClosesWithoutRunningAnything()
     {
@@ -224,6 +233,7 @@ public class CommandPaletteDialogTest
         Assert.IsNull(rig.Settings.Get(CommandPaletteDialog.RecentKey));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnARow_RunsThatCommand()
     {
@@ -238,6 +248,7 @@ public class CommandPaletteDialogTest
         Assert.IsFalse(rig.Dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickBelowTheLastRow_OrOnTheQueryBox_RunsNothing()
     {
@@ -254,6 +265,7 @@ public class CommandPaletteDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheel_MovesTheChoiceThreeRowsAtATime()
     {
@@ -269,6 +281,7 @@ public class CommandPaletteDialogTest
         Assert.AreEqual("Calculator", rig.Dialog.Selected!.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnASmallTerminal_TheChoiceStaysInTheVisibleRows()
     {

@@ -7,6 +7,7 @@ namespace iTerminal.Core.Model.Test;
 [TestClass]
 public class NetworkInfoModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void A_NewModel_HasNoNetworks_AndIsNotYetRead()
     {

@@ -8,6 +8,7 @@ namespace iConsole.Test.Commands;
 [TestClass]
 public class ScrollCommandsTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollDownCommandKey()
     {
@@ -17,6 +18,7 @@ public class ScrollCommandsTest
         Assert.AreEqual(ConsoleKey.DownArrow, command.Key.ConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollDownCommandCanExecute()
     {
@@ -25,6 +27,7 @@ public class ScrollCommandsTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollDownCommandExecute()
     {
@@ -41,6 +44,7 @@ public class ScrollCommandsTest
         mockScrollableModel.Verify(m => m.Update(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollUpCommandKey()
     {
@@ -50,6 +54,7 @@ public class ScrollCommandsTest
         Assert.AreEqual(ConsoleKey.UpArrow, command.Key.ConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollUpCommandCanExecute()
     {
@@ -58,6 +63,7 @@ public class ScrollCommandsTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollUpCommandExecute()
     {
