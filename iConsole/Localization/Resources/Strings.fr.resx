@@ -775,4 +775,40 @@
   <data name="Conflict.ApplyToAll" xml:space="preserve">
     <value>Appliquer à tous les conflits restants</value>
   </data>
+  <data name="Sqlite.Query.Label" xml:space="preserve">
+    <value>Requête</value>
+  </data>
+  <data name="Sqlite.Query.Placeholder" xml:space="preserve">
+    <value>par ex. SELECT * FROM table LIMIT 20</value>
+  </data>
+  <data name="Sqlite.Grid.Empty" xml:space="preserve">
+    <value>La requête n'a renvoyé aucune ligne</value>
+  </data>
+  <data name="Sqlite.Status.Rows" xml:space="preserve">
+    <value>{0:N0} ligne(s), {1} colonne(s)</value>
+  </data>
+  <data name="Sqlite.Status.Truncated" xml:space="preserve">
+    <value>; seules les {0:N0} premières lignes sont affichées</value>
+  </data>
+  <data name="Sqlite.Error.Unexpected" xml:space="preserve">
+    <value>La requête a échoué : {0}</value>
+  </data>
+  <data name="Sqlite.Hint.RunQuery" xml:space="preserve">
+    <value>Exécuter la requête</value>
+  </data>
+  <data name="Sqlite.Title" xml:space="preserve">
+    <value>SQLite</value>
+  </data>
+  <data name="Sqlite.Text.Rows" xml:space="preserve">
+    <value>{0:N0} ligne(s)</value>
+  </data>
+  <data name="Sqlite.Text.Truncated" xml:space="preserve">
+    <value>, tronqué</value>
+  </data>
+  <data name="Sqlite.Title.Hint" xml:space="preserve">
+    <value>  F4:Texte  Entrée:requête  Tab:grille</value>
+  </data>
+  <data name="Sqlite.Title.TextMode" xml:space="preserve">
+    <value> [TEXTE]</value>
+  </data>
 </root>
