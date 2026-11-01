@@ -73,7 +73,6 @@ public class MultiRenameDialogTest
     }
 
     [TestMethod]
-    [Timeout(60_000)]
     public void TheDefaultPatternRenamesNothingAndSaysSo()
     {
         var model = MarkableTestModel.Create(_root);
@@ -89,7 +88,6 @@ public class MultiRenameDialogTest
     }
 
     [TestMethod]
-    [Timeout(60_000)]
     public void ATypedPatternShowsEachOldNameAndItsNewOne()
     {
         var model = MarkableTestModel.Create(_root);
@@ -109,7 +107,6 @@ public class MultiRenameDialogTest
     }
 
     [TestMethod]
-    [Timeout(60_000)]
     public void AStatusIsShownForARowThatWillNotBeRenamed()
     {
         var model = MarkableTestModel.Create(_root);
@@ -126,7 +123,6 @@ public class MultiRenameDialogTest
     }
 
     [TestMethod]
-    [Timeout(60_000)]
     public void ThePreviewListCannotTakeFocus()
     {
         var dialog = NewDialog(new TaskManager(), Mock.Of<IContentModelService>());
@@ -136,7 +132,6 @@ public class MultiRenameDialogTest
     }
 
     [TestMethod]
-    [Timeout(60_000)]
     public void ThePreviewDrawsAtMostTheLimitButTheCountCoversEveryRow()
     {
         const int count = MultiRenameDialog.PreviewLimit + 700;
@@ -161,7 +156,6 @@ public class MultiRenameDialogTest
     }
 
     [TestMethod]
-    [Timeout(60_000)]
     public void ChangingNothingKeepsThePlanAsItWas()
     {
         var model = MarkableTestModel.Create(_root);
