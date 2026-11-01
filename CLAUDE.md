@@ -113,6 +113,10 @@ Detailed conventions, including the end-to-end suite and `ConsoleAppDriver` auto
 - `Generated/InstantiateAllTypesTest` requires every public type to have a constructor the container can resolve.
 - Performance budgets: key handler < 200 ms, content load < 3 000 ms. Assert on `PhaseDurations`, not wall-clock polling.
 
+## Workflow for incremental improvements
+
+Each improvement goes through `/incremental-improvement` (`.claude/skills/incremental-improvement/SKILL.md`): one branch cut from `main`, one PR, four phases (plan, implement, test, integrate into main). Each phase ends in a review gate that must pass before the next phase starts. Merging into `main` waits for the user's approval.
+
 ## Further reference
 
 - [docs/architecture/key-patterns.md](docs/architecture/key-patterns.md): the full list of UI, navigation and state patterns (why a rule exists, with the bug it fixed).
