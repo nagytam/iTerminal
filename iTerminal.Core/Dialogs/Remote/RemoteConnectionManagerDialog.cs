@@ -432,7 +432,7 @@ public class RemoteConnectionManagerDialog : Dialog
         var connection = Selected;
         if (connection is null)
         {
-            SetStatus("Nothing to connect to yet. N adds a connection.", true);
+            SetStatus(Say("Remote.Status.NoConnection", "Nothing to connect to yet. N adds a connection."), true);
             StateHasChanged();
             return;
         }
@@ -446,19 +446,19 @@ public class RemoteConnectionManagerDialog : Dialog
 
         if (!RemoteShellLaunch.TryCreate(connection, out var launch, out var error) || launch is null)
         {
-            SetStatus(error ?? "This connection cannot be started.", true);
+            SetStatus(error ?? Say("Remote.Status.CannotStart", "This connection cannot be started."), true);
             StateHasChanged();
             return;
         }
 
         if (_shellService.IsRunning)
         {
-            SetStatus("A shell is already running.", true);
+            SetStatus(Say("Remote.Status.ShellRunning", "A shell is already running."), true);
             StateHasChanged();
             return;
         }
 
-        SetStatus($"Connecting to {connection.Name}…", false);
+        SetStatus(Say("Remote.Status.Connecting", "Connecting to {0}…", connection.Name), false);
         var id = connection.Id;
         var name = connection.Name;
         PendingOperation = Task.Run(async () =>
@@ -480,7 +480,7 @@ public class RemoteConnectionManagerDialog : Dialog
                 {
                     _connections.MarkConnected(id);
                     Reload();
-                    SetStatus($"Session with {name} ended (exit code {outcome.ExitCode}).", outcome.ExitCode != 0);
+                    SetStatus(Say("Remote.Status.SessionEnded", "Session with {0} ended (exit code {1}).", name, outcome.ExitCode), outcome.ExitCode != 0);
                 }
                 else
                 {
@@ -514,23 +514,23 @@ public class RemoteConnectionManagerDialog : Dialog
             {
                 _connections.MarkConnected(id);
                 Reload();
-                SetStatus($"Opening {connection.Name} in the panel…", false);
+                SetStatus(Say("Remote.Status.OpeningInPanel", "Opening {0} in the panel…", connection.Name), false);
                 PendingOperation = Task.Run(() => _contentModelService.SetUrlAsync(url));
                 Close();
             }
         }
         else if (connection.Protocol != RemoteProtocol.Ssh)
         {
-            SetStatus("Only SSH, FTP and WebDAV connections can be browsed as a drive.", true);
+            SetStatus(Say("Remote.Status.BrowseProtocols", "Only SSH, FTP and WebDAV connections can be browsed as a drive."), true);
         }
         else if (connection.Port is not null and not 22)
         {
-            SetStatus("The panels' SSH drive connects on port 22 only.", true);
+            SetStatus(Say("Remote.Status.SshPort22", "The panels' SSH drive connects on port 22 only."), true);
         }
         else
         {
             var url = Container.SSH + connection.Destination + ":/";
-            SetStatus($"Opening {connection.Name} in the panel…", false);
+            SetStatus(Say("Remote.Status.OpeningInPanel", "Opening {0} in the panel…", connection.Name), false);
             PendingOperation = Task.Run(() => _contentModelService.SetUrlAsync(url));
             Close();
         }
@@ -590,7 +590,7 @@ public class RemoteConnectionManagerDialog : Dialog
         }
         else
         {
-            SetStatus("The port must be between 1 and 65535.", true);
+            SetStatus(Say("Remote.Status.PortRange", "The port must be between 1 and 65535."), true);
             _field = PortField;
             StateHasChanged();
             return;
@@ -602,7 +602,7 @@ public class RemoteConnectionManagerDialog : Dialog
             _selectedId = connection.Id;
             _mode = Mode.List;
             Reload();
-            SetStatus($"Saved \"{connection.Name}\".", false);
+            SetStatus(Say("Remote.Status.Saved", "Saved \"{0}\".", connection.Name), false);
         }
         catch (InvalidOperationException exception)
         {
@@ -639,7 +639,7 @@ public class RemoteConnectionManagerDialog : Dialog
         }
 
         _confirmDelete = true;
-        SetStatus($"Delete \"{connection.Name}\"? Press y to delete, anything else cancels.", true);
+        SetStatus(Say("Remote.Status.ConfirmDelete", "Delete \"{0}\"? Press y to delete, anything else cancels.", connection.Name), true);
         StateHasChanged();
     }
 
@@ -654,9 +654,12 @@ public class RemoteConnectionManagerDialog : Dialog
 
         _connections.Delete(connection.Id);
         Reload();
-        SetStatus($"Deleted \"{connection.Name}\".", false);
+        SetStatus(Say("Remote.Status.Deleted", "Deleted \"{0}\".", connection.Name), false);
         StateHasChanged();
     }
+
+    /// <summary>A text in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
     private void SetStatus(string text, bool isError)
     {

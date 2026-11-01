@@ -2974,4 +2974,145 @@
   <data name="Folders.Status.SyncCancelled" xml:space="preserve">
     <value>Synchronisation annulée : rien n'a été modifié.</value>
   </data>
+  <data name="Common.StillWorking" xml:space="preserve">
+    <value>La dernière demande est encore en cours.</value>
+  </data>
+  <data name="Remote.Status.NoConnection" xml:space="preserve">
+    <value>Aucune connexion à ouvrir pour l'instant. N en ajoute une.</value>
+  </data>
+  <data name="Remote.Status.ShellRunning" xml:space="preserve">
+    <value>Un shell est déjà en cours.</value>
+  </data>
+  <data name="Remote.Status.Connecting" xml:space="preserve">
+    <value>Connexion à {0}…</value>
+  </data>
+  <data name="Remote.Status.SessionEnded" xml:space="preserve">
+    <value>Session avec {0} terminée (code de sortie {1}).</value>
+  </data>
+  <data name="Remote.Status.OpeningInPanel" xml:space="preserve">
+    <value>Ouverture de {0} dans le panneau…</value>
+  </data>
+  <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
+    <value>Seules les connexions SSH, FTP et WebDAV peuvent être parcourues comme lecteur.</value>
+  </data>
+  <data name="Remote.Status.SshPort22" xml:space="preserve">
+    <value>Le lecteur SSH des panneaux ne se connecte que sur le port 22.</value>
+  </data>
+  <data name="Remote.Status.PortRange" xml:space="preserve">
+    <value>Le port doit être compris entre 1 et 65535.</value>
+  </data>
+  <data name="Remote.Status.Saved" xml:space="preserve">
+    <value>« {0} » enregistré.</value>
+  </data>
+  <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
+    <value>Supprimer « {0} » ? Appuyez sur y pour supprimer, toute autre touche annule.</value>
+  </data>
+  <data name="Remote.Status.Deleted" xml:space="preserve">
+    <value>« {0} » supprimé.</value>
+  </data>
+  <data name="Disk.Status.EjectNotHere" xml:space="preserve">
+    <value>L'éjection n'est pas disponible ici.</value>
+  </data>
+  <data name="Disk.Status.ChooseEject" xml:space="preserve">
+    <value>Choisissez un lecteur à éjecter.</value>
+  </data>
+  <data name="Disk.Status.EjectMemory" xml:space="preserve">
+    <value>Un lecteur mémoire fait partie du programme : il n'y a rien à éjecter.</value>
+  </data>
+  <data name="Disk.Status.Ejecting" xml:space="preserve">
+    <value>Éjection de {0}…</value>
+  </data>
+  <data name="Disk.Status.FormatNotHere" xml:space="preserve">
+    <value>Le formatage n'est pas disponible sur ce système.</value>
+  </data>
+  <data name="Disk.Status.ChooseFormat" xml:space="preserve">
+    <value>Choisissez un lecteur à formater.</value>
+  </data>
+  <data name="Disk.Status.FormatMemory" xml:space="preserve">
+    <value>Un lecteur mémoire ne peut pas être formaté : il réside dans la base de données du programme.</value>
+  </data>
+  <data name="Mail.Status.InboxEmpty" xml:space="preserve">
+    <value>La boîte de réception est vide.</value>
+  </data>
+  <data name="Mail.Status.Messages" xml:space="preserve">
+    <value>{0} messages. Entrée en lit un.</value>
+  </data>
+  <data name="Mail.Status.PressAgainDelete" xml:space="preserve">
+    <value>Appuyez à nouveau sur D pour supprimer « {0} » du serveur.</value>
+  </data>
+  <data name="Mail.Status.Deleted" xml:space="preserve">
+    <value>Supprimé.</value>
+  </data>
+  <data name="Mail.Status.NeedRecipient" xml:space="preserve">
+    <value>Indiquez d'abord un destinataire.</value>
+  </data>
+  <data name="Mail.Status.Sent" xml:space="preserve">
+    <value>Envoyé à {0}.</value>
+  </data>
+  <data name="Mail.Status.TypeName" xml:space="preserve">
+    <value>Saisissez un nom ou une adresse, puis Entrée.</value>
+  </data>
+  <data name="Mail.Status.NobodyMatches" xml:space="preserve">
+    <value>Aucun résultat pour « {0} ».</value>
+  </data>
+  <data name="Mail.Status.Found" xml:space="preserve">
+    <value>{0} trouvé(s). Entrée ajoute celui en surbrillance.</value>
+  </data>
+  <data name="Mail.Status.SetUpAccount" xml:space="preserve">
+    <value>Configurez un compte : serveurs entrant, sortant et carnet d'adresses.</value>
+  </data>
+  <data name="Mail.Status.ChangeAccount" xml:space="preserve">
+    <value>Modifiez le compte, puis Ctrl+S pour enregistrer.</value>
+  </data>
+  <data name="Mail.Status.PortsNumbers" xml:space="preserve">
+    <value>Les ports doivent être des nombres.</value>
+  </data>
+  <data name="Mail.Status.NeedServer" xml:space="preserve">
+    <value>Indiquez au moins le serveur entrant (POP3) ou sortant (SMTP).</value>
+  </data>
+  <data name="Mail.Status.Saved" xml:space="preserve">
+    <value>Enregistré.</value>
+  </data>
+  <data name="Access.Status.Error" xml:space="preserve">
+    <value>Erreur : {0}</value>
+  </data>
+  <data name="Access.Status.Working" xml:space="preserve">
+    <value>En cours…</value>
+  </data>
+  <data name="Access.Status.ReadAgain" xml:space="preserve">
+    <value>Modifié, mais la liste n'a pas pu être relue : {0}</value>
+  </data>
+  <data name="Access.Status.NothingToChange" xml:space="preserve">
+    <value>Rien à modifier. A ajoute une entrée.</value>
+  </data>
+  <data name="Access.Status.Inherited" xml:space="preserve">
+    <value>Cette entrée est héritée du dossier parent. Modifiez-la là-bas, ou appuyez sur I pour arrêter l'héritage.</value>
+  </data>
+  <data name="Access.Status.SpecialRights" xml:space="preserve">
+    <value>Ce sont des droits spéciaux : ils peuvent être retirés, mais pas modifiés ici. Retirez-les et ajoutez un modèle.</value>
+  </data>
+  <data name="Access.Status.NeedPrincipal" xml:space="preserve">
+    <value>Indiquez d'abord l'utilisateur ou le groupe.</value>
+  </data>
+  <data name="Access.Status.InheritedRemove" xml:space="preserve">
+    <value>Cette entrée est héritée du dossier parent ; retirez-la là-bas.</value>
+  </data>
+  <data name="Access.Status.ConfirmRemove" xml:space="preserve">
+    <value>Supprimer l'entrée pour {0} ? Appuyez sur y pour retirer, toute autre touche annule.</value>
+  </data>
+  <data name="Access.Status.NoInheritanceSwitch" xml:space="preserve">
+    <value>Les autorisations de ce système n'ont pas d'interrupteur d'héritage.</value>
+  </data>
+  <data name="Access.Status.OwnerLocked" xml:space="preserve">
+    <value>Le propriétaire ne peut pas être modifié ici.</value>
+  </data>
+  <data name="FileDiff.Status.Reading" xml:space="preserve">
+    <value>Lecture…</value>
+  </data>
+  <data name="FileDiff.Status.CouldNotRead" xml:space="preserve">
+    <value>Impossible de lire les fichiers : {0}</value>
+  </data>
+  <data name="Remote.Status.CannotStart" xml:space="preserve">
+    <value>Cette connexion ne peut pas être démarrée.</value>
+  </data>
 </root>

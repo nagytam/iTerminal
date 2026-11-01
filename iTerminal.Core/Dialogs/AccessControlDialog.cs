@@ -164,7 +164,7 @@ public class AccessControlDialog : Dialog
                 }
                 else
                 {
-                    SetStatus("Error: " + failure, true);
+                    SetStatus(Say("Access.Status.Error", "Error: {0}", failure), true);
                 }
             }
 
@@ -179,7 +179,7 @@ public class AccessControlDialog : Dialog
         var generation = ++_generation;
         var path = _path;
         _busy = true;
-        SetStatus("Working…", false);
+        SetStatus(Say("Access.Status.Working", "Working…"), false);
         PendingOperation = Task.Run(() =>
         {
             string? failure = null;
@@ -219,11 +219,11 @@ public class AccessControlDialog : Dialog
 
                 if (failure is not null)
                 {
-                    SetStatus("Error: " + failure, true);
+                    SetStatus(Say("Access.Status.Error", "Error: {0}", failure), true);
                 }
                 else if (readFailure is not null)
                 {
-                    SetStatus("Changed, but the list could not be read again: " + readFailure, true);
+                    SetStatus(Say("Access.Status.ReadAgain", "Changed, but the list could not be read again: {0}", readFailure), true);
                 }
                 else
                 {
@@ -397,21 +397,21 @@ public class AccessControlDialog : Dialog
         {
             if (entry is null)
             {
-                SetStatus("Nothing to change. A adds an entry.", true);
+                SetStatus(Say("Access.Status.NothingToChange", "Nothing to change. A adds an entry."), true);
                 StateHasChanged();
                 return;
             }
 
             if (entry.Inherited)
             {
-                SetStatus("That entry is inherited from the parent folder. Change it there, or press I to stop inheriting.", true);
+                SetStatus(Say("Access.Status.Inherited", "That entry is inherited from the parent folder. Change it there, or press I to stop inheriting."), true);
                 StateHasChanged();
                 return;
             }
 
             if (!entry.IsPreset)
             {
-                SetStatus("These are special rights; they can be removed but not edited here. Remove it and add a preset.", true);
+                SetStatus(Say("Access.Status.SpecialRights", "These are special rights; they can be removed but not edited here. Remove it and add a preset."), true);
                 StateHasChanged();
                 return;
             }
@@ -555,7 +555,7 @@ public class AccessControlDialog : Dialog
         var principal = _principal.Trim();
         if (principal.Length == 0)
         {
-            SetStatus("Give the user or group first.", true);
+            SetStatus(Say("Access.Status.NeedPrincipal", "Give the user or group first."), true);
             _field = 0;
             StateHasChanged();
             return;
@@ -578,13 +578,13 @@ public class AccessControlDialog : Dialog
 
         if (entry.Inherited)
         {
-            SetStatus("That entry is inherited from the parent folder; remove it there.", true);
+            SetStatus(Say("Access.Status.InheritedRemove", "That entry is inherited from the parent folder; remove it there."), true);
             StateHasChanged();
             return;
         }
 
         _confirmDelete = true;
-        SetStatus($"Remove the entry for {entry.Principal}? Press y to remove, anything else cancels.", true);
+        SetStatus(Say("Access.Status.ConfirmRemove", "Remove the entry for {0}? Press y to remove, anything else cancels.", entry.Principal), true);
         StateHasChanged();
     }
 
@@ -609,7 +609,7 @@ public class AccessControlDialog : Dialog
 
         if (!info.CanChangeInheritance)
         {
-            SetStatus("This system's permissions have no inheritance switch.", true);
+            SetStatus(Say("Access.Status.NoInheritanceSwitch", "This system's permissions have no inheritance switch."), true);
             StateHasChanged();
             return;
         }
@@ -629,7 +629,7 @@ public class AccessControlDialog : Dialog
 
         if (!info.CanChangeOwner)
         {
-            SetStatus("The owner cannot be changed here.", true);
+            SetStatus(Say("Access.Status.OwnerLocked", "The owner cannot be changed here."), true);
             StateHasChanged();
             return;
         }
@@ -744,6 +744,9 @@ public class AccessControlDialog : Dialog
     private const int ListTop = 3;
 
     private int FirstRow() => _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
+
+    /// <summary>A text in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
     private void SetStatus(string text, bool isError)
     {

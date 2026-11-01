@@ -2974,4 +2974,145 @@
   <data name="Folders.Status.SyncCancelled" xml:space="preserve">
     <value>A szinkronizálás megszakítva – semmi sem változott.</value>
   </data>
+  <data name="Common.StillWorking" xml:space="preserve">
+    <value>Az utolsó kérés még folyamatban van.</value>
+  </data>
+  <data name="Remote.Status.NoConnection" xml:space="preserve">
+    <value>Még nincs kapcsolat. Az N új kapcsolatot ad hozzá.</value>
+  </data>
+  <data name="Remote.Status.ShellRunning" xml:space="preserve">
+    <value>Már fut egy shell.</value>
+  </data>
+  <data name="Remote.Status.Connecting" xml:space="preserve">
+    <value>Kapcsolódás: {0}…</value>
+  </data>
+  <data name="Remote.Status.SessionEnded" xml:space="preserve">
+    <value>A(z) {0} munkamenet véget ért (kilépési kód: {1}).</value>
+  </data>
+  <data name="Remote.Status.OpeningInPanel" xml:space="preserve">
+    <value>{0} megnyitása a panelben…</value>
+  </data>
+  <data name="Remote.Status.BrowseProtocols" xml:space="preserve">
+    <value>Csak SSH, FTP és WebDAV kapcsolat böngészhető meghajtóként.</value>
+  </data>
+  <data name="Remote.Status.SshPort22" xml:space="preserve">
+    <value>A panelek SSH meghajtója csak a 22-es porton kapcsolódik.</value>
+  </data>
+  <data name="Remote.Status.PortRange" xml:space="preserve">
+    <value>A portnak 1 és 65535 közé kell esnie.</value>
+  </data>
+  <data name="Remote.Status.Saved" xml:space="preserve">
+    <value>„{0}” mentve.</value>
+  </data>
+  <data name="Remote.Status.ConfirmDelete" xml:space="preserve">
+    <value>Törli: „{0}”? y gombbal törli, más gomb megszakít.</value>
+  </data>
+  <data name="Remote.Status.Deleted" xml:space="preserve">
+    <value>„{0}” törölve.</value>
+  </data>
+  <data name="Disk.Status.EjectNotHere" xml:space="preserve">
+    <value>A kiadás itt nem érhető el.</value>
+  </data>
+  <data name="Disk.Status.ChooseEject" xml:space="preserve">
+    <value>Válasszon ki egy meghajtót a kiadáshoz.</value>
+  </data>
+  <data name="Disk.Status.EjectMemory" xml:space="preserve">
+    <value>A memóriameghajtó a program része: nincs mit kiadni.</value>
+  </data>
+  <data name="Disk.Status.Ejecting" xml:space="preserve">
+    <value>{0} kiadása…</value>
+  </data>
+  <data name="Disk.Status.FormatNotHere" xml:space="preserve">
+    <value>A formázás ezen a rendszeren nem érhető el.</value>
+  </data>
+  <data name="Disk.Status.ChooseFormat" xml:space="preserve">
+    <value>Válasszon ki egy meghajtót a formázáshoz.</value>
+  </data>
+  <data name="Disk.Status.FormatMemory" xml:space="preserve">
+    <value>A memóriameghajtó nem formázható: a program adatbázisában él.</value>
+  </data>
+  <data name="Mail.Status.InboxEmpty" xml:space="preserve">
+    <value>A postafiók üres.</value>
+  </data>
+  <data name="Mail.Status.Messages" xml:space="preserve">
+    <value>{0} üzenet. Enter egyet olvas.</value>
+  </data>
+  <data name="Mail.Status.PressAgainDelete" xml:space="preserve">
+    <value>A D újbóli megnyomásával törli a(z) „{0}” üzenetet a szerverről.</value>
+  </data>
+  <data name="Mail.Status.Deleted" xml:space="preserve">
+    <value>Törölve.</value>
+  </data>
+  <data name="Mail.Status.NeedRecipient" xml:space="preserve">
+    <value>Előbb adjon meg egy címzettet.</value>
+  </data>
+  <data name="Mail.Status.Sent" xml:space="preserve">
+    <value>Elküldve: {0}.</value>
+  </data>
+  <data name="Mail.Status.TypeName" xml:space="preserve">
+    <value>Írjon be egy nevet vagy címet, majd nyomjon Entert.</value>
+  </data>
+  <data name="Mail.Status.NobodyMatches" xml:space="preserve">
+    <value>Nincs találat erre: „{0}”.</value>
+  </data>
+  <data name="Mail.Status.Found" xml:space="preserve">
+    <value>{0} találat. Enter a kijelöltet adja hozzá.</value>
+  </data>
+  <data name="Mail.Status.SetUpAccount" xml:space="preserve">
+    <value>Állítson be egy fiókot: bejövő, kimenő és címjegyzék-szerver.</value>
+  </data>
+  <data name="Mail.Status.ChangeAccount" xml:space="preserve">
+    <value>Módosítsa a fiókot, majd a mentéshez nyomjon Ctrl+S-t.</value>
+  </data>
+  <data name="Mail.Status.PortsNumbers" xml:space="preserve">
+    <value>A portoknak számnak kell lenniük.</value>
+  </data>
+  <data name="Mail.Status.NeedServer" xml:space="preserve">
+    <value>Adja meg legalább a bejövő (POP3) vagy a kimenő (SMTP) szervert.</value>
+  </data>
+  <data name="Mail.Status.Saved" xml:space="preserve">
+    <value>Mentve.</value>
+  </data>
+  <data name="Access.Status.Error" xml:space="preserve">
+    <value>Hiba: {0}</value>
+  </data>
+  <data name="Access.Status.Working" xml:space="preserve">
+    <value>Folyamatban…</value>
+  </data>
+  <data name="Access.Status.ReadAgain" xml:space="preserve">
+    <value>Módosítva, de a listát nem sikerült újra beolvasni: {0}</value>
+  </data>
+  <data name="Access.Status.NothingToChange" xml:space="preserve">
+    <value>Nincs mit módosítani. Az A bejegyzést ad hozzá.</value>
+  </data>
+  <data name="Access.Status.Inherited" xml:space="preserve">
+    <value>Ez a bejegyzés a szülőmappából öröklődik. Módosítsa ott, vagy az I gombbal szüntesse meg az öröklést.</value>
+  </data>
+  <data name="Access.Status.SpecialRights" xml:space="preserve">
+    <value>Ezek különleges jogok; itt eltávolíthatók, de nem szerkeszthetők. Távolítsa el, és adjon hozzá sablont.</value>
+  </data>
+  <data name="Access.Status.NeedPrincipal" xml:space="preserve">
+    <value>Előbb adja meg a felhasználót vagy a csoportot.</value>
+  </data>
+  <data name="Access.Status.InheritedRemove" xml:space="preserve">
+    <value>Ez a bejegyzés a szülőmappából öröklődik; ott távolítsa el.</value>
+  </data>
+  <data name="Access.Status.ConfirmRemove" xml:space="preserve">
+    <value>Eltávolítja a(z) {0} bejegyzését? y gombbal eltávolítja, más gomb megszakít.</value>
+  </data>
+  <data name="Access.Status.NoInheritanceSwitch" xml:space="preserve">
+    <value>Ennek a rendszernek a jogosultságaiban nincs öröklési kapcsoló.</value>
+  </data>
+  <data name="Access.Status.OwnerLocked" xml:space="preserve">
+    <value>A tulajdonos itt nem módosítható.</value>
+  </data>
+  <data name="FileDiff.Status.Reading" xml:space="preserve">
+    <value>Olvasás…</value>
+  </data>
+  <data name="FileDiff.Status.CouldNotRead" xml:space="preserve">
+    <value>A fájlokat nem sikerült beolvasni: {0}</value>
+  </data>
+  <data name="Remote.Status.CannotStart" xml:space="preserve">
+    <value>Ez a kapcsolat nem indítható.</value>
+  </data>
 </root>

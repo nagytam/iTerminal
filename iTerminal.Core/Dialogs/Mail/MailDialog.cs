@@ -642,7 +642,7 @@ public class MailDialog : Dialog
             {
                 _listings = listings;
                 _cursor = Math.Clamp(_cursor, 0, Math.Max(0, listings.Count - 1));
-                SetStatus(listings.Count == 0 ? "The inbox is empty." : $"{listings.Count} messages. Enter reads one.", false);
+                SetStatus(listings.Count == 0 ? Say("Mail.Status.InboxEmpty", "The inbox is empty.") : Say("Mail.Status.Messages", "{0} messages. Enter reads one.", listings.Count), false);
             }
         });
     }
@@ -683,7 +683,7 @@ public class MailDialog : Dialog
         if (_pendingDelete != listing.Number)
         {
             _pendingDelete = listing.Number;
-            SetStatus($"Press D again to delete \"{listing.Subject}\" from the server.", true);
+            SetStatus(Say("Mail.Status.PressAgainDelete", "Press D again to delete \"{0}\" from the server.", listing.Subject), true);
             StateHasChanged();
             return;
         }
@@ -698,7 +698,7 @@ public class MailDialog : Dialog
             {
                 _listings = listings;
                 _cursor = Math.Clamp(_cursor, 0, Math.Max(0, listings.Count - 1));
-                SetStatus("Deleted.", false);
+                SetStatus(Say("Mail.Status.Deleted", "Deleted."), false);
             }
         });
     }
@@ -725,7 +725,7 @@ public class MailDialog : Dialog
         var to = _draft[0].Trim();
         if (to.Length == 0)
         {
-            SetStatus("Give the message a recipient first.", true);
+            SetStatus(Say("Mail.Status.NeedRecipient", "Give the message a recipient first."), true);
             _draftField = 0;
             StateHasChanged();
             return;
@@ -740,7 +740,7 @@ public class MailDialog : Dialog
             {
                 _draft[0] = _draft[1] = _draft[2] = string.Empty;
                 _mode = Mode.List;
-                SetStatus($"Sent to {to}.", false);
+                SetStatus(Say("Mail.Status.Sent", "Sent to {0}.", to), false);
             }
         });
     }
@@ -754,7 +754,7 @@ public class MailDialog : Dialog
         _people = [];
         _personCursor = 0;
         _mode = Mode.Directory;
-        SetStatus(_account is null ? string.Empty : "Type a name or address, then Enter.", false);
+        SetStatus(_account is null ? string.Empty : Say("Mail.Status.TypeName", "Type a name or address, then Enter."), false);
         StateHasChanged();
     }
 
@@ -774,7 +774,7 @@ public class MailDialog : Dialog
             {
                 _people = people.ToList();
                 _personCursor = 0;
-                SetStatus(_people.Count == 0 ? $"Nobody matches \"{term}\"." : $"{_people.Count} found. Enter adds the highlighted one.", false);
+                SetStatus(_people.Count == 0 ? Say("Mail.Status.NobodyMatches", "Nobody matches \"{0}\".", term) : Say("Mail.Status.Found", "{0} found. Enter adds the highlighted one.", _people.Count), false);
             }
         });
     }
@@ -820,7 +820,7 @@ public class MailDialog : Dialog
         ];
         _setupCursor = 0;
         _mode = Mode.Setup;
-        SetStatus(account is null ? "Set up an account: incoming, outgoing and address book servers." : "Change the account, then Ctrl+S to save.", false);
+        SetStatus(account is null ? Say("Mail.Status.SetUpAccount", "Set up an account: incoming, outgoing and address book servers.") : Say("Mail.Status.ChangeAccount", "Change the account, then Ctrl+S to save."), false);
         StateHasChanged();
     }
 
@@ -829,14 +829,14 @@ public class MailDialog : Dialog
         var f = _setup;
         if (!int.TryParse(f[2].Text, out var popPort) || !int.TryParse(f[5].Text, out var smtpPort) || !int.TryParse(f[11].Text, out var ldapPort))
         {
-            SetStatus("The ports must be numbers.", true);
+            SetStatus(Say("Mail.Status.PortsNumbers", "The ports must be numbers."), true);
             StateHasChanged();
             return;
         }
 
         if (f[1].Text.Trim().Length == 0 && f[4].Text.Trim().Length == 0)
         {
-            SetStatus("Give at least the incoming (POP3) or the outgoing (SMTP) server.", true);
+            SetStatus(Say("Mail.Status.NeedServer", "Give at least the incoming (POP3) or the outgoing (SMTP) server."), true);
             StateHasChanged();
             return;
         }
@@ -877,7 +877,7 @@ public class MailDialog : Dialog
         _listings = [];
         _cursor = 0;
         _mode = Mode.List;
-        SetStatus("Saved.", false);
+        SetStatus(Say("Mail.Status.Saved", "Saved."), false);
         RefreshInbox();
     }
 
@@ -903,7 +903,7 @@ public class MailDialog : Dialog
         {
             if (_busy)
             {
-                SetStatus("Still working on the last request.", true);
+                SetStatus(Say("Common.StillWorking", "Still working on the last request."), true);
                 StateHasChanged();
                 return;
             }
@@ -939,6 +939,9 @@ public class MailDialog : Dialog
             }
         });
     }
+
+    /// <summary>A text in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
     private void SetStatus(string text, bool isError)
     {
