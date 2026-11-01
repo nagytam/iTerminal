@@ -326,6 +326,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_gitService is not null)
         {
             AddCommand(new GitPullRebaseCommand(ContentModelService, _gitService, _notificationService));
+            AddCommand(new GitSyncCommand(ContentModelService, _gitService, _notificationService));
         }
         if (_fileDiffDialog is not null)
         {

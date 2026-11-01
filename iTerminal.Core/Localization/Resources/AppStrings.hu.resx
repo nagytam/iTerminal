@@ -3118,4 +3118,25 @@
   <data name="Task.Skipped" xml:space="preserve">
     <value>Kihagyva</value>
   </data>
+  <data name="Notify.GitSyncing" xml:space="preserve">
+    <value>Szinkronizálás a távoli tárolóval…</value>
+  </data>
+  <data name="Notify.GitSynced" xml:space="preserve">
+    <value>Szinkronizálva a távoli tárolóval.</value>
+  </data>
+  <data name="Notify.GitSyncNoUpstream" xml:space="preserve">
+    <value>Az ágnak nincs upstream ága, amellyel szinkronizálni lehetne.</value>
+  </data>
+  <data name="Notify.GitSyncPullFailed" xml:space="preserve">
+    <value>Git-szinkron: a pull --rebase sikertelen</value>
+  </data>
+  <data name="Notify.GitSyncRebaseNote" xml:space="preserve">
+    <value>(Semmi sem lett feltöltve. Ha a git rebase-t indított, az félbemaradt.)</value>
+  </data>
+  <data name="Notify.GitSyncPushFailed" xml:space="preserve">
+    <value>Git-szinkron: a push sikertelen</value>
+  </data>
+  <data name="Notify.GitSyncFailed" xml:space="preserve">
+    <value>A git-szinkron sikertelen</value>
+  </data>
 </root>

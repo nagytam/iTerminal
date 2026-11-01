@@ -3118,4 +3118,25 @@
   <data name="Task.Skipped" xml:space="preserve">
     <value>Ignoré</value>
   </data>
+  <data name="Notify.GitSyncing" xml:space="preserve">
+    <value>Synchronisation avec le dépôt distant…</value>
+  </data>
+  <data name="Notify.GitSynced" xml:space="preserve">
+    <value>Synchronisé avec le dépôt distant.</value>
+  </data>
+  <data name="Notify.GitSyncNoUpstream" xml:space="preserve">
+    <value>La branche n'a pas de branche amont à synchroniser.</value>
+  </data>
+  <data name="Notify.GitSyncPullFailed" xml:space="preserve">
+    <value>Synchro git : échec de pull --rebase</value>
+  </data>
+  <data name="Notify.GitSyncRebaseNote" xml:space="preserve">
+    <value>(Rien n'a été poussé. Si git a démarré un rebase, il reste inachevé.)</value>
+  </data>
+  <data name="Notify.GitSyncPushFailed" xml:space="preserve">
+    <value>Synchro git : échec du push</value>
+  </data>
+  <data name="Notify.GitSyncFailed" xml:space="preserve">
+    <value>Échec de la synchro git</value>
+  </data>
 </root>
