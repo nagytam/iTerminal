@@ -193,6 +193,12 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.Launcher>();
                 services.AddSingleton<Core.Services.FileAssociations.IFileLauncher>(provider => provider.GetRequiredService<SandboxServices.Launcher>());
                 services.AddSingleton<SandboxServices.DockerCli>();
+                services.AddSingleton<SandboxServices.VirtCli>();
+                services.AddSingleton<Core.Services.VirtualMachines.IVirtualMachineService>(provider =>
+                {
+                    var cli = provider.GetRequiredService<SandboxServices.VirtCli>();
+                    return new Core.Services.VirtualMachines.LibvirtVirtualMachineService(cli, cli.LaunchViewer);
+                });
 
                 // No test asks the machine it runs on for its phones: mtp:// is there, and empty-handed.
                 services.AddSingleton<Core.Services.Mtp.IMtpBackend>(

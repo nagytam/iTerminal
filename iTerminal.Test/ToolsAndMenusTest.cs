@@ -34,6 +34,31 @@ public class ToolsAndMenusTest
             "Ctrl+E — the key on the converter's own button and in the Tools menu — to open the converter");
     }
 
+    /// <summary>On Linux the Virtual machine manager is listed directly under Calculator in the Tools menu; elsewhere it is not listed at all.</summary>
+    [TestMethod]
+    public async Task TheVirtualMachineManagerIsListedRightAfterCalculator()
+    {
+        await _app.PressAsync("Ctrl+F");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar, "the menu");
+        await _app.PressSequenceAsync("Right", "Right", "Right");
+        await _app.WaitForTextAsync("Calculator");
+
+        if (OperatingSystem.IsLinux())
+        {
+            await _app.WaitUntilAsync(
+                s => s.Lines.Zip(s.Lines.Skip(1), (row, next) => (row, next))
+                    .Any(pair => pair.row.Contains("Calculator", StringComparison.Ordinal)
+                        && pair.next.Contains("Virtual machine manager", StringComparison.Ordinal)),
+                "Virtual machine manager on the row directly below Calculator");
+        }
+        else
+        {
+            await _app.WaitUntilAsync(
+                s => !s.Lines.Any(l => l.Contains("Virtual machine manager", StringComparison.Ordinal)),
+                "no Virtual machine manager entry off Linux");
+        }
+    }
+
     [TestMethod]
     public async Task TheToolsMenuStaysOnAShortScreenAndScrollsToItsLastEntry()
     {
