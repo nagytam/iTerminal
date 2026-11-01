@@ -19,18 +19,20 @@ public class SyntaxHighlightingServiceTest
     {
         var service = new SyntaxHighlightingService();
 
-        Assert.AreEqual("C-like", service.FindByFile("/src/Program.cs")?.Name);
+        Assert.AreEqual("C#", service.FindByFile("/src/Program.cs")?.Name);
         Assert.AreEqual("Build file", service.FindByFile("Dockerfile")?.Name);
         Assert.IsNull(service.FindByFile("notes.txt"));
         Assert.IsNull(service.FindByFile(null));
     }
 
     [TestMethod]
-    [DataRow("csharp", "C-like")]
-    [DataRow("C#", "C-like")]
+    [DataRow("csharp", "C#")]
+    [DataRow("C#", "C#")]
+    [DataRow("c++", "C++")]
     [DataRow("py", "Python")]
     [DataRow("Python", "Python")]
-    [DataRow("PowerShell", "Shell")]
+    [DataRow("PowerShell", "PowerShell")]
+    [DataRow("pwsh", "PowerShell")]
     [DataRow("bash", "Shell")]
     [DataRow("yaml", "Config")]
     [DataRow(".json", "JSON")]
@@ -78,7 +80,7 @@ public class SyntaxHighlightingServiceTest
         service.Register(mine, extensions: [".cs"]);
 
         Assert.AreSame(mine, service.FindByFile("a.cs"));
-        Assert.AreEqual("C-like", new SyntaxHighlightingService().FindByFile("a.cs")?.Name);
+        Assert.AreEqual("C#", new SyntaxHighlightingService().FindByFile("a.cs")?.Name);
     }
 
     [TestMethod]
