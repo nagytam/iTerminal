@@ -134,6 +134,13 @@ public static class TextWidth
     {
         foreach (var rune in text.EnumerateRunes())
         {
+            if (rune.Value < 0x20 || rune.Value == 0x7F)
+            {
+                // A control character (a tab) keeps its one cell, as it did before cell layout existed.
+                yield return (char)rune.Value;
+                continue;
+            }
+
             switch (Width(rune))
             {
                 case 0:

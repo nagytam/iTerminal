@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -99,6 +100,12 @@ public sealed class TextPromptDialog<T> : PromptDialog<T>
         _box.ViewSize = new Size(Math.Max(1, ContentWidth), 1);
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Enter", UiText.Get("Hint.PromptAccept", "Accept the value"));
+        yield return ("Esc", UiText.Get("Hint.PromptCancel", "Cancel"));
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (keyEvent.ConsoleKey == ConsoleKey.Enter && !keyEvent.Control && !keyEvent.Alt && !keyEvent.Shift)
@@ -159,6 +166,13 @@ public abstract class ChoicePromptDialog<T, TResult> : PromptDialog<TResult>
     {
         base.OnInitializeLayout();
         CenterInParent(new Size(WidthFor(_prompt.Question), PageRows + 6));
+    }
+
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Up/Down", UiText.Get("Hint.PromptMove", "Move the selection"));
+        yield return ("Enter", UiText.Get("Hint.PromptAccept", "Accept"));
+        yield return ("Esc", UiText.Get("Hint.PromptCancel", "Cancel"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -324,6 +338,13 @@ public sealed class ConfirmationPromptDialog : PromptDialog<bool?>
     {
         base.OnInitializeLayout();
         CenterInParent(new Size(WidthFor(_prompt.Question), 6));
+    }
+
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Y/N", UiText.Get("Hint.PromptYesNo", "Answer yes or no"));
+        yield return ("Enter", UiText.Get("Hint.PromptDefault", "Take the default"));
+        yield return ("Esc", UiText.Get("Hint.PromptCancel", "Cancel"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
