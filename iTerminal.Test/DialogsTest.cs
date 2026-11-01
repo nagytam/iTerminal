@@ -78,6 +78,21 @@ public class DialogsTest
         await OpenAndCloseAsync(chord, dialogTypeName);
     }
 
+    /// <summary>The Virtual Machine Manager opens from its chord on Linux and does not open anywhere else.</summary>
+    [TestMethod]
+    public async Task TheVirtualMachineManagerOpensOnLinuxAndNowhereElse()
+    {
+        if (OperatingSystem.IsLinux())
+        {
+            await OpenAndCloseAsync("Shift+Alt+F9", "VirtualMachineManagerDialog");
+            return;
+        }
+
+        await _app.PressAsync("Shift+Alt+F9");
+        await _app.WaitForNoDialogAsync();
+        Assert.IsNull(_app.Driver.FocusedModal);
+    }
+
     /// <summary>The Web Browser through the whole app: opens on its home page, takes an address, follows a link and closes.</summary>
     [TestMethod]
     public async Task TheWebBrowserOpensAnAddressAndFollowsALink()

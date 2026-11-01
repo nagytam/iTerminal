@@ -3217,4 +3217,67 @@
   <data name="Print.Hint.List" xml:space="preserve">
     <value>Enter print  ←→ printer  +/- copies  P hold/resume  Del cancel  F5 refresh  Esc close</value>
   </data>
+  <data name="Dialog.VirtualMachineManager" xml:space="preserve">
+    <value>Virtual machine manager</value>
+  </data>
+  <data name="VirtualMachineManager.Reading" xml:space="preserve">
+    <value> Reading the virtual machines…</value>
+  </data>
+  <data name="VirtualMachineManager.None" xml:space="preserve">
+    <value> No virtual machines found.</value>
+  </data>
+  <data name="VirtualMachineManager.Working" xml:space="preserve">
+    <value>Working on {0}…</value>
+  </data>
+  <data name="VirtualMachineManager.Busy" xml:space="preserve">
+    <value>Still working on the last request.</value>
+  </data>
+  <data name="VirtualMachineManager.NotAvailable" xml:space="preserve">
+    <value>That is not possible for {0} in its current state.</value>
+  </data>
+  <data name="VirtualMachineManager.Confirm.Shutdown" xml:space="preserve">
+    <value> Shut down {0}? (y/n)</value>
+  </data>
+  <data name="VirtualMachineManager.Confirm.PowerOff" xml:space="preserve">
+    <value> Power off {0} now, losing unsaved work? (y/n)</value>
+  </data>
+  <data name="VirtualMachineManager.Confirm.Restart" xml:space="preserve">
+    <value> Restart {0}? (y/n)</value>
+  </data>
+  <data name="VirtualMachineManager.Confirm.SaveState" xml:space="preserve">
+    <value> Save the state of {0} and stop it? (y/n)</value>
+  </data>
+  <data name="VirtualMachineManager.Cancelled" xml:space="preserve">
+    <value>Cancelled.</value>
+  </data>
+  <data name="VirtualMachineManager.Refreshing" xml:space="preserve">
+    <value>Refreshing…</value>
+  </data>
+  <data name="VirtualMachineManager.NoneSelected" xml:space="preserve">
+    <value>No virtual machine is selected.</value>
+  </data>
+  <data name="DialogHint.StartVirtualMachine" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="DialogHint.ShutDownVirtualMachine" xml:space="preserve">
+    <value>Shut down (y/n)</value>
+  </data>
+  <data name="DialogHint.PowerOffVirtualMachine" xml:space="preserve">
+    <value>Power off (y/n)</value>
+  </data>
+  <data name="DialogHint.RestartVirtualMachine" xml:space="preserve">
+    <value>Restart (y/n)</value>
+  </data>
+  <data name="DialogHint.PauseResumeVirtualMachine" xml:space="preserve">
+    <value>Pause or resume</value>
+  </data>
+  <data name="DialogHint.SaveVirtualMachine" xml:space="preserve">
+    <value>Save state (y/n)</value>
+  </data>
+  <data name="DialogHint.ConsoleVirtualMachine" xml:space="preserve">
+    <value>Open the console</value>
+  </data>
+  <data name="DialogHint.RefreshVirtualMachines" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
 </root>
