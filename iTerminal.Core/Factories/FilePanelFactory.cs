@@ -51,7 +51,8 @@ public class FilePanelFactory(
     iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
     INotificationService? notificationService = null,
     EditLinkDialog? editLinkDialog = null,
-    iTerminal.Core.Services.Git.IGitService? gitService = null)
+    iTerminal.Core.Services.Git.IGitService? gitService = null,
+    PrintDialog? printDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -97,7 +98,8 @@ public class FilePanelFactory(
             malwareScanService: malwareScanService,
             notificationService: notificationService,
             editLinkDialog: editLinkDialog,
-            gitService: gitService);
+            gitService: gitService,
+            printDialog: printDialog);
         contentModelService.AddContentBrowser(name, contentBrowser);
         return new FilePanel(
             name,

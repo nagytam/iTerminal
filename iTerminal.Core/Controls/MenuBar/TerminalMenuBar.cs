@@ -121,7 +121,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
-        iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null
+        iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null,
+        PrintDialog? printDialog = null
         )
         : base([], themeService)
     {
@@ -146,7 +147,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             secureWipeDialog: secureWipeDialog,
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
-            notificationService: notificationService));
+            notificationService: notificationService,
+            printDialog: printDialog));
 
         AddMenuItem(new EditMenuItem(
             contentModelService,

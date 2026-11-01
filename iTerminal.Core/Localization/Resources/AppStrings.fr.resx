@@ -3118,4 +3118,103 @@
   <data name="Task.Skipped" xml:space="preserve">
     <value>Ignoré</value>
   </data>
+  <data name="Menu.Print" xml:space="preserve">
+    <value>Imprimer</value>
+  </data>
+  <data name="Menu.PrintItem" xml:space="preserve">
+    <value>Imprimer…</value>
+  </data>
+  <data name="DialogHint.PrintFile" xml:space="preserve">
+    <value>Imprimer le fichier</value>
+  </data>
+  <data name="DialogHint.ChoosePrinter" xml:space="preserve">
+    <value>Choisir l'imprimante</value>
+  </data>
+  <data name="DialogHint.Copies" xml:space="preserve">
+    <value>Plus ou moins de copies</value>
+  </data>
+  <data name="DialogHint.ChooseJob" xml:space="preserve">
+    <value>Choisir un travail d'impression</value>
+  </data>
+  <data name="DialogHint.HoldOrResumeJob" xml:space="preserve">
+    <value>Suspendre ou reprendre le travail</value>
+  </data>
+  <data name="DialogHint.CancelJobAsks" xml:space="preserve">
+    <value>Annuler le travail (demande d'abord)</value>
+  </data>
+  <data name="DialogHint.RefreshQueue" xml:space="preserve">
+    <value>Relire la file d'attente</value>
+  </data>
+  <data name="DialogHint.CancelJobYes" xml:space="preserve">
+    <value>Annuler le travail d'impression</value>
+  </data>
+  <data name="DialogHint.KeepJob" xml:space="preserve">
+    <value>Garder le travail d'impression</value>
+  </data>
+  <data name="Print.Status.AskCancel" xml:space="preserve">
+    <value>Annuler le travail {0} ({1}) ? y l'annule.</value>
+  </data>
+  <data name="Print.Status.NoFile" xml:space="preserve">
+    <value>Aucun fichier à imprimer sous le curseur.</value>
+  </data>
+  <data name="Print.Status.NoPrinter" xml:space="preserve">
+    <value>Il n'y a pas d'imprimante.</value>
+  </data>
+  <data name="Print.Status.Sending" xml:space="preserve">
+    <value>Envoi de {0} à {1}…</value>
+  </data>
+  <data name="Print.State.Printing" xml:space="preserve">
+    <value>En cours</value>
+  </data>
+  <data name="Print.State.Held" xml:space="preserve">
+    <value>En pause</value>
+  </data>
+  <data name="Print.State.Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Print.State.Queued" xml:space="preserve">
+    <value>En file</value>
+  </data>
+  <data name="Print.NoFile" xml:space="preserve">
+    <value>(aucun fichier sous le curseur – la file seulement)</value>
+  </data>
+  <data name="Print.File" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="Print.Printer" xml:space="preserve">
+    <value>Imprimante</value>
+  </data>
+  <data name="Print.Copies" xml:space="preserve">
+    <value>Copies</value>
+  </data>
+  <data name="Print.Col.Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Print.Col.Document" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="Print.Col.Owner" xml:space="preserve">
+    <value>Proprio.</value>
+  </data>
+  <data name="Print.Col.State" xml:space="preserve">
+    <value>État</value>
+  </data>
+  <data name="Print.QueueEmpty" xml:space="preserve">
+    <value>La file d'attente est vide.</value>
+  </data>
+  <data name="Print.Reading" xml:space="preserve">
+    <value>Lecture des imprimantes…</value>
+  </data>
+  <data name="Print.NoPrinters" xml:space="preserve">
+    <value>Aucune imprimante n'est installée.</value>
+  </data>
+  <data name="Print.Default" xml:space="preserve">
+    <value>(par défaut)</value>
+  </data>
+  <data name="Print.Hint.Confirm" xml:space="preserve">
+    <value>y annule le travail  toute autre touche le garde</value>
+  </data>
+  <data name="Print.Hint.List" xml:space="preserve">
+    <value>Entrée imprimer  ←→ imprimante  +/- copies  P suspendre/reprendre  Suppr annuler  F5 actualiser  Échap fermer</value>
+  </data>
 </root>

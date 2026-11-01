@@ -2,6 +2,7 @@ using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Dialogs;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iConsole.Services;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Dialogs;
@@ -36,7 +37,8 @@ public class FileMenuItem : MenuItem
         SignatureDialog? signatureDialog = null,
         iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
         INotificationService? notificationService = null,
-        EditLinkDialog? editLinkDialog = null)
+        EditLinkDialog? editLinkDialog = null,
+        PrintDialog? printDialog = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
@@ -79,6 +81,10 @@ public class FileMenuItem : MenuItem
         if (signatureDialog is not null)
         {
             AddMenuItem(new MenuItem("Signatures	Ctrl+Shift+F7", new SignatureDialogCommand(signatureDialog, contentModelService), [], themeService));
+        }
+        if (printDialog is not null)
+        {
+            AddMenuItem(new MenuItem(UiText.Get("Menu.PrintItem", "Print…") + "	Ctrl+P", new PrintDialogCommand(printDialog, contentModelService), [], themeService));
         }
         if (secureWipeDialog is not null)
         {
