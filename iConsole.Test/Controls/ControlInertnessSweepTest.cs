@@ -143,7 +143,7 @@ public class ControlInertnessSweepTest
     /// <summary>Controls sized by what they hold, or containers that draw only their children: they do not fill a rectangle of their own.</summary>
     private static readonly HashSet<string> SizedByContent =
     [
-        "ActionButton", "TabPage", "ToolTipHost", "TextViewerControl", "BouncingLabel", "Accordion", "Badge", "ColorMap", "Control", "TextEditorControl", "FormPanel", "KeybindingLabel", "LinkLabel", "RadioGroup`1", "ScrollBar", "StepIndicator", "Tab", "ToastHost",
+        "ActionButton", "TabPage", "ToolTipHost", "TextViewerControl", "BouncingLabel", "Accordion", "Badge", "ColorMap", "Control", "TextEditorControl", "FormPanel", "Grid", "KeybindingLabel", "LinkLabel", "RadioGroup`1", "ScrollBar", "StepIndicator", "Tab", "ToastHost",
     ];
 
     private static readonly Dictionary<string, Action<Control>> WithContent = new()
