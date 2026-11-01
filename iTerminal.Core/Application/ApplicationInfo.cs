@@ -2,12 +2,14 @@ using System.Reflection;
 
 namespace iTerminal.Core.Application;
 
-/// <summary>The name and version the app shows: "iTerminal 0.0.0.42".</summary>
+/// <summary>The name and version the app shows: "iTerminal BETA 0.0.0.42".</summary>
 public static class ApplicationInfo
 {
     public static string Version { get; } = ReadVersion();
 
-    public static string Title => $"iTerminal {Version}";
+    public const string Name = "iTerminal BETA";
+
+    public static string Title => $"{Name} {Version}";
 
     private static string ReadVersion()
     {

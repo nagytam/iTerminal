@@ -8,14 +8,14 @@
     MSI find and replace an older install. Everything else that needs a GUID gets a stable one from
     WiX (Guid omitted) or is fixed below.
   -->
-  <Package Name="iTerminal"
+  <Package Name="iTerminal BETA"
            Manufacturer="Tamas Nagy"
            Version="$(var.ProductVersion)"
            UpgradeCode="0e27bcad-3940-4a25-b391-e316a54eacf9"
            Scope="perMachine"
            Compressed="yes">
 
-    <SummaryInformation Description="iTerminal — a two-panel file manager for the terminal" />
+    <SummaryInformation Description="iTerminal BETA — a two-panel file manager for the terminal" />
 
     <!--
       A newer version replaces the older one in place; an older MSI refuses to run over a newer install.
@@ -31,7 +31,7 @@
     <Property Id="ARPPRODUCTICON" Value="iTerminal.ico" />
 
     <!-- Shown in Apps & features. -->
-    <Property Id="ARPCOMMENTS" Value="A two-panel file manager for the terminal." />
+    <Property Id="ARPCOMMENTS" Value="BETA release. A two-panel file manager for the terminal." />
 
     <!--
       The wizard: welcome, install folder, progress. WixUI_InstallDir also has a licence page, which
@@ -45,7 +45,7 @@
       executable so the app starts in Documents like any other launch, and as the user who ran the
       installer, not as the elevated installer process (Impersonate="yes").
     -->
-    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start iTerminal now" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start iTerminal BETA now" />
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
     <!-- A property value is not formatted, so the path is built by an action that runs before the wizard. -->
     <CustomAction Id="SetLaunchTarget" Property="WixShellExecTarget" Value="[ProgramMenuFolder]iTerminal.lnk" />
@@ -78,7 +78,7 @@
     <StandardDirectory Id="ProgramMenuFolder" />
     <StandardDirectory Id="PersonalFolder" />
 
-    <Feature Id="Application" Title="iTerminal" Description="The application and its Start menu shortcut." Level="1" AllowAbsent="no">
+    <Feature Id="Application" Title="iTerminal BETA" Description="The application and its Start menu shortcut." Level="1" AllowAbsent="no">
       <ComponentGroupRef Id="ApplicationFiles" />
       <ComponentRef Id="StartMenuShortcut" />
     </Feature>

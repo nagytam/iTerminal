@@ -17,13 +17,13 @@ public class TerminalTitleJobTest
 
         string title = TerminalTitleJob.BuildTitle(model.Object);
 
-        Assert.AreEqual(model.Object.Url.FullUrl + " - iTerminal", title);
+        Assert.AreEqual(model.Object.Url.FullUrl + " - iTerminal BETA", title);
     }
 
     [TestMethod]
     public void BuildTitle_WithoutAPanel_IsTheApplicationName()
     {
-        Assert.AreEqual("iTerminal", TerminalTitleJob.BuildTitle(null));
+        Assert.AreEqual("iTerminal BETA", TerminalTitleJob.BuildTitle(null));
     }
 
     [TestMethod]
