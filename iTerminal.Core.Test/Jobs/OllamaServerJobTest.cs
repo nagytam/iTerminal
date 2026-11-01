@@ -16,12 +16,47 @@ public class OllamaServerJobTest
             Task.FromResult(respond(request));
     }
 
+    /// <summary>The job without its start-up wait, so a test does not sit through <see cref="OllamaServerJob.StartDelay"/>.</summary>
+    private sealed class ImmediateOllamaServerJob(
+        OllamaServer server,
+        IEnumerable<IRuntimeDependency> runtimeDependencies,
+        IAiChatService chatService,
+        AiChatModel model,
+        Serilog.ILogger logger) : OllamaServerJob(server, runtimeDependencies, chatService, model, logger)
+    {
+        protected override TimeSpan InitialDelay => TimeSpan.Zero;
+    }
+
+    /// <summary>Exposes the protected delay so the start-up wait can be checked.</summary>
+    private sealed class DelayReportingOllamaServerJob(
+        OllamaServer server,
+        IEnumerable<IRuntimeDependency> runtimeDependencies,
+        IAiChatService chatService,
+        AiChatModel model,
+        Serilog.ILogger logger) : OllamaServerJob(server, runtimeDependencies, chatService, model, logger)
+    {
+        public TimeSpan Delay => InitialDelay;
+    }
+
+    [TestMethod]
+    public void WaitsForItsStartDelayBeforeStartingTheServer()
+    {
+        var job = new DelayReportingOllamaServerJob(
+            new OllamaServer(new Uri("http://localhost:11434/")),
+            [],
+            new Mock<IAiChatService>().Object,
+            new AiChatModel(),
+            Serilog.Core.Logger.None);
+
+        Assert.AreEqual(OllamaServerJob.StartDelay, job.Delay);
+    }
+
     [TestMethod]
     [Timeout(5000)]
     public async Task DoesNothing_WhenOllamaIsNotTheProvider()
     {
         var chat = new Mock<IAiChatService>();
-        var job = new OllamaServerJob(
+        var job = new ImmediateOllamaServerJob(
             new OllamaServer(new Uri("http://localhost:11434/")),
             [],
             chat.Object,
@@ -44,7 +79,7 @@ public class OllamaServerJobTest
         chat.Setup(c => c.CheckAvailabilityAsync(It.IsAny<AiChatModel>())).Returns(Task.CompletedTask);
         // Nothing is installed in this folder, so the job only watches the server and never starts one.
         var dependency = new OllamaRuntimeDependency(Path.Combine(Path.GetTempPath(), $"iTerminal.Job.{Guid.NewGuid():N}"), "qwen3.5:0.8b", server);
-        var job = new OllamaServerJob(server, [dependency], chat.Object, new AiChatModel(), Serilog.Core.Logger.None);
+        var job = new ImmediateOllamaServerJob(server, [dependency], chat.Object, new AiChatModel(), Serilog.Core.Logger.None);
         using var cancellation = new CancellationTokenSource(TimeSpan.FromMilliseconds(300));
 
         await job.ExecuteAsync(cancellation.Token);

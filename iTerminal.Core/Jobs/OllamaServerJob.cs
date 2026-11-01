@@ -21,6 +21,13 @@ public class OllamaServerJob(
     internal static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(5);
     internal static readonly TimeSpan RetryAfterFailure = TimeSpan.FromMinutes(1);
 
+    /// <summary>
+    /// Starting the local Ollama server is not needed for the first screen, so it waits until the desktop has settled.
+    /// </summary>
+    internal static readonly TimeSpan StartDelay = TimeSpan.FromSeconds(20);
+
+    protected override TimeSpan InitialDelay => StartDelay;
+
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
         OllamaRuntimeDependency? dependency = runtimeDependencies.OfType<OllamaRuntimeDependency>().FirstOrDefault();

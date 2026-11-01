@@ -18,9 +18,10 @@ public class RuntimeDependencyCheckJob(
     internal static readonly TimeSpan StartDelay = TimeSpan.FromSeconds(30);
     internal static readonly TimeSpan Interval = TimeSpan.FromHours(12);
 
+    protected override TimeSpan InitialDelay => StartDelay;
+
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
-        await Task.Delay(StartDelay, cancellationToken);
         while (!cancellationToken.IsCancellationRequested)
         {
             await runtimeDependencies.CheckAsync(cancellationToken);

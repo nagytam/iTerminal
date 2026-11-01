@@ -27,8 +27,6 @@ public class FolderIndexJob : Job
         driveInfoModel ??= new DriveInfoModel();
         _dbContextFactory = dbContextFactory ?? new TemporaryDbContextFactory();
 
-        LoadCacheEntries();
-
         driveInfoModel.Drives.CollectionChanged += OnDriveCollectionChanged;
         foreach (Drive driveInfo in driveInfoModel.Drives.AsSnapshot())
         {
@@ -74,6 +72,12 @@ public class FolderIndexJob : Job
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
+        // Nothing is walked until the folder selector asks for the index: it walks every folder on every drive, and
+        // started at start-up it was the largest single source of processor load in the first 30 seconds. The cache
+        // is read only then too, which also takes its read off the start-up path.
+        await _folderIndexModel.IndexingRequested.WaitAsync(cancellationToken);
+        LoadCacheEntries();
+
         while (!cancellationToken.IsCancellationRequested)
         {
             try
