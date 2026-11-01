@@ -1,4 +1,4 @@
-<Project Sdk="WixToolset.Sdk/5.0.2" ToolsVersion="4.0">
+<Project ToolsVersion="4.0">
   <!--
     The Windows installer for iTerminal: an MSI that installs the app self-contained (no .NET runtime
     needed on the target machine) into Program Files, with a Start menu shortcut and, optionally, the
@@ -8,9 +8,16 @@
 
     Building it publishes ../iTerminal first (PublishApp below) and packs what was published, so the
     MSI always holds the app as it is in this checkout. Windows only: the WiX toolset does not build
-    MSIs anywhere else. It is in the solution but not part of a solution build, for the same reason
-    and because it publishes and compresses the whole app each time.
+    MSIs anywhere else, so off Windows the WiX SDK is not imported at all and the build only says it
+    was skipped (it succeeds, so a solution build or test run on Linux is not broken by it). It is in
+    the solution but not part of a solution build, for the same reason and because it publishes and
+    compresses the whole app each time.
   -->
+  <PropertyGroup>
+    <!-- Set only on Windows: decides whether the WiX SDK is imported below. -->
+    <BuildsInstaller Condition="$([MSBuild]::IsOSPlatform('Windows'))">true</BuildsInstaller>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="WixToolset.Sdk/5.0.2" Condition="'$(BuildsInstaller)' == 'true'" />
   <PropertyGroup>
     <Version Condition="'$(Version)' == ''">1.0.0</Version>
     <InstallerPlatform>x64</InstallerPlatform>
@@ -20,7 +27,7 @@
     <AppPublishDir>$(MSBuildProjectDirectory)\obj\publish\</AppPublishDir>
     <DefineConstants>PublishDir=$(AppPublishDir);ProductVersion=$(Version);IconPath=$(MSBuildProjectDirectory)\..\iTerminal\Assets\iTerminal.ico</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(BuildsInstaller)' == 'true'">
     <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
     <PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
   </ItemGroup>
@@ -30,8 +37,19 @@
     A separate dotnet publish rather than an MSBuild task call: the runtime identifier and the
     self-contained switch must not leak into this project's own evaluation.
   -->
-  <Target Name="PublishApp" BeforeTargets="BeforeBuild">
+  <Target Name="PublishApp" BeforeTargets="BeforeBuild" Condition="'$(BuildsInstaller)' == 'true'">
     <RemoveDir Directories="$(AppPublishDir)" />
     <Exec Command="dotnet publish &quot;$(MSBuildProjectDirectory)\..\iTerminal\iTerminal.csproj&quot; -c Release -r $(RuntimeIdentifier) --self-contained true -o &quot;$(AppPublishDir.TrimEnd('\'))&quot; -p:Version=$(Version) -nologo -v q" />
+  </Target>
+  <Import Project="Sdk.targets" Sdk="WixToolset.Sdk/5.0.2" Condition="'$(BuildsInstaller)' == 'true'" />
+  <!--
+    Off Windows there is no WiX SDK, so this is the whole build: a message, and no output. A solution
+    test run (dotnet test on the .slnx) calls VSTest on every project, so that is skipped the same way.
+  -->
+  <Target Name="Build" Condition="'$(BuildsInstaller)' != 'true'">
+    <Message Importance="high" Text="Skipping the Windows installer (iTerminal.Installer): the WiX toolset only builds MSIs on Windows." />
+  </Target>
+  <Target Name="VSTest" Condition="'$(BuildsInstaller)' != 'true'">
+    <Message Importance="high" Text="Skipping the Windows installer tests (iTerminal.Installer): there are none, and the WiX toolset only runs on Windows." />
   </Target>
 </Project>
