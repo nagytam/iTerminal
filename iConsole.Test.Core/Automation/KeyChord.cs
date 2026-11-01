@@ -44,6 +44,8 @@ public static class KeyChord
         ["NumPlus"] = (ConsoleKey.Add, '+'),
         ["NumMinus"] = (ConsoleKey.Subtract, '-'),
         ["NumStar"] = (ConsoleKey.Multiply, '*'),
+        // The backslash key (Ctrl+\ is the root-folder chord), which a feature file cannot write inside quotes.
+        ["Backslash"] = (ConsoleKey.Oem5, '\\'),
     };
 
     /// <summary>Parses <paramref name="chord"/>; throws <see cref="FormatException"/> for an unknown key.</summary>
