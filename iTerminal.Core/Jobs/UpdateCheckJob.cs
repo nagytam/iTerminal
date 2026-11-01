@@ -23,11 +23,12 @@ public class UpdateCheckJob(
     internal static readonly TimeSpan StartDelay = TimeSpan.FromSeconds(5);
     internal static readonly TimeSpan Interval = TimeSpan.FromHours(12);
 
+    protected override TimeSpan InitialDelay => StartDelay;
+
     private string? _announced;
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
-        await Task.Delay(StartDelay, cancellationToken);
         bool first = true;
         while (!cancellationToken.IsCancellationRequested)
         {

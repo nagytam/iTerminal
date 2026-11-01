@@ -211,6 +211,13 @@ public class DocumentManagerDialog : SplitPaneDialog
         base.Close();
     }
 
+    public override async Task ShowAsync()
+    {
+        // The index is scanned on demand: opening the manager is what asks for it. Idempotent, so reopening is free.
+        _documentLibraryService.RequestIndexing();
+        await base.ShowAsync();
+    }
+
     private void OnLibraryChanged(object? sender, EventArgs e)
     {
         // The listing the user is looking at was built from an index that has just changed under it.

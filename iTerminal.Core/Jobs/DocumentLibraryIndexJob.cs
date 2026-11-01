@@ -5,9 +5,9 @@ using iTerminal.Core.Services.Documents;
 namespace iTerminal.Core.Jobs;
 
 /// <summary>
-/// Keeps the document index in step with the documents folder. A background job for the same reason
-/// <see cref="MusicLibraryIndexJob"/> is one — the index should be warm before the first search —
-/// but with the intervals turned right down, because the work is a different size: extracting text
+/// Keeps the document index in step with the documents folder. A background job, like
+/// <see cref="MusicLibraryIndexJob"/>, but its first scan waits until the document manager is opened:
+/// the cached index is read at once, and nothing is walked before someone asks for it. With the intervals turned right down, because the work is a different size: extracting text
 /// from a folder of PDFs is minutes, not the second a music rescan costs, and a scan that ran every
 /// quarter of an hour would leave a core busy most of the time for no benefit.
 ///
@@ -16,13 +16,6 @@ namespace iTerminal.Core.Jobs;
 /// </summary>
 public class DocumentLibraryIndexJob(IDocumentLibraryService documentLibraryService) : Job
 {
-    /// <summary>
-    /// Let the app finish starting before walking what may be tens of thousands of documents. Longer
-    /// than the music job's delay so the two first scans do not land on the machine together — the
-    /// document scan is the heavier of the two and should not be competing with anything.
-    /// </summary>
-    public TimeSpan StartupDelay { get; init; } = TimeSpan.FromSeconds(20);
-
     /// <summary>How often the documents-folder setting is re-read.</summary>
     public TimeSpan FolderPollInterval { get; init; } = TimeSpan.FromSeconds(10);
 
@@ -42,9 +35,9 @@ public class DocumentLibraryIndexJob(IDocumentLibraryService documentLibraryServ
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
-        // Before the delay, not after it: the point of the delay is to keep the *scan* out of
-        // start-up, while reading the cached table is what makes the dialog usable at all. Doing it
-        // here means the first time the dialog is opened it never waits on SQLite.
+        // Before the wait, not after it: the wait keeps the *scan* out of start-up, while reading the
+        // cached table is what makes the dialog usable at all. Doing it here means the first time the
+        // dialog is opened it never waits on SQLite.
         try
         {
             _documentLibraryService.Preload();
@@ -54,9 +47,11 @@ public class DocumentLibraryIndexJob(IDocumentLibraryService documentLibraryServ
             // A cache that cannot be read is the service's problem to report, not this job's.
         }
 
+        // The scan extracts text from every file under the folder — minutes on a folder of PDFs — so it is
+        // not started until the document manager is opened. It used to start at start-up whether or not anyone searched.
         try
         {
-            await Task.Delay(StartupDelay, cancellationToken);
+            await _documentLibraryService.IndexingRequested.WaitAsync(cancellationToken);
         }
         catch (OperationCanceledException)
         {

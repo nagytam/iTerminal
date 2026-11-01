@@ -27,6 +27,13 @@ namespace iTerminal.Core.Services.Documents;
 /// </summary>
 public sealed class DocumentLibraryService : IDocumentLibraryService
 {
+    private readonly TaskCompletionSource _indexingRequested = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    /// <summary>Starts the scan the first time it is asked for; later calls do nothing.</summary>
+    public void RequestIndexing() => _indexingRequested.TrySetResult();
+
+    public Task IndexingRequested => _indexingRequested.Task;
+
     /// <summary>
     /// How deep the folder walk goes. A documents folder is nested more deeply than a music folder —
     /// project trees, mail exports, years of scans — so the budget is larger, but it is still a

@@ -1,4 +1,5 @@
-﻿using iTerminal.Core.Data;
+﻿using iConsole.Data;
+using iTerminal.Core.Data;
 using iTerminal.Core.Jobs;
 using iTerminal.Core.Model;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +61,62 @@ public class FolderIndexJobTest
         finally
         {
             CleanupPath(databasePath);
+        }
+    }
+
+    [TestMethod]
+    public async Task Job_WalksNothingUntilTheIndexIsRequested()
+    {
+        string root = Path.Combine(Path.GetTempPath(), $"iTerminal.FolderIndexOnDemand.{Guid.NewGuid():N}");
+        Directory.CreateDirectory(Path.Combine(root, "child"));
+        string databasePath = Path.Combine(Path.GetTempPath(), $"iTerminal.FolderIndex.{Guid.NewGuid():N}.sqlite");
+
+        try
+        {
+            FolderIndexModel folderIndexModel = new();
+            DriveInfoModel driveInfoModel = new();
+            FolderIndexJob job = new(folderIndexModel, driveInfoModel, new TestDbContextFactory(databasePath));
+            using CancellationTokenSource cancellation = new();
+            Task execution = job.ExecuteAsync(cancellation.Token);
+
+            // A ready drive is what makes a drive count as enabled; the folder under test is walked as its root.
+            driveInfoModel.Drives.Add(new Drive { Name = root, Url = new Url(root), DriveInfo = new DriveInfo(Path.GetPathRoot(root)!) });
+            await Task.Delay(200);
+
+            Folder drive = (Folder)folderIndexModel.Children.Single();
+            Assert.AreEqual(0, drive.Children.Count, "The walk ran before the index was asked for.");
+
+            folderIndexModel.RequestIndexing();
+            await WaitUntilAsync(() => drive.Children.Count == 1);
+
+            cancellation.Cancel();
+            await execution;
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+            CleanupPath(databasePath);
+        }
+    }
+
+    [TestMethod]
+    public void RequestIndexing_CanBeCalledAgainWithoutEffect()
+    {
+        FolderIndexModel folderIndexModel = new();
+
+        folderIndexModel.RequestIndexing();
+        folderIndexModel.RequestIndexing();
+
+        Assert.IsTrue(folderIndexModel.IndexingRequested.IsCompletedSuccessfully);
+    }
+
+    private static async Task WaitUntilAsync(Func<bool> condition)
+    {
+        DateTime deadline = DateTime.UtcNow + TimeSpan.FromSeconds(10);
+        while (!condition())
+        {
+            Assert.IsTrue(DateTime.UtcNow < deadline, "The condition was not met in time.");
+            await Task.Delay(20);
         }
     }
 

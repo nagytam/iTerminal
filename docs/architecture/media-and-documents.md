@@ -177,9 +177,11 @@ extracts text from every file an extractor understands, and stores both the meta
 - **A rescan re-extracts only what moved** (size or last-write time), which matters far more than it
   does for music: re-reading every tag in a music folder is a second, re-extracting every PDF and
   re-OCR'ing every scan is minutes — and the job would do it on every pass. That is also why
-  `DocumentLibraryIndexJob`'s intervals are much longer than `MusicLibraryIndexJob`'s (20 s start-up
-  delay, 1 hour rescan), and why the job polls the folder setting rather than subscribing to it
-  (`ISettingsService` has no change notification).
+  `DocumentLibraryIndexJob`'s intervals are much longer than `MusicLibraryIndexJob`'s (1 hour rescan),
+  and why the job polls the folder setting rather than subscribing to it (`ISettingsService` has no
+  change notification). Its first scan is on demand, not timed: nothing is walked until the document
+  manager is opened (`DocumentManagerDialog.ShowAsync` calls `IDocumentLibraryService.RequestIndexing`).
+  The cached table is still read at start-up, so the dialog opens with what was indexed last time.
 - The scan runs in the same two reported stages as the music one (`DocumentIndexingProgress`:
   `Discovering` → `Indexing`), flushes in batches so the dialog fills while a first scan runs, and
   only drops rows for missing files once the whole walk is over. Unlike the music scan, discovery

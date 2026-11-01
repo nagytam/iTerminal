@@ -32,6 +32,8 @@ public class FolderSelectorFolderTreeTabPage : FolderSelectorTabPage
         : base("4-Folder Tree", ConsoleKey.D4, themeService)
     {
         folderIndexModel ??= new FolderIndexModel();
+        // The tree is the first thing that reads the index: building it asks for the walk, which then runs in the background.
+        folderIndexModel.RequestIndexing();
         _frequentExecutionGuardService = frequentExecutionGuardService;
         _treeView = new TreeView(folderIndexModel, themeService);
 
