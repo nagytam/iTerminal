@@ -52,6 +52,7 @@ public class DialogLabelsLanguageTest
         return value.GetType().GetProperty("Label")!.GetValue(value) as string;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithEnglishChosen_EveryCaptionKeepsItsExactEnglishText()
     {
@@ -63,6 +64,7 @@ public class DialogLabelsLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InEveryOtherLanguage_EveryCaptionIsTranslated()
     {
@@ -82,6 +84,7 @@ public class DialogLabelsLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EveryCaption_IsDrawnWhole_InEveryLanguage_OnASmallScreen()
     {

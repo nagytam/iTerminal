@@ -35,6 +35,7 @@ public class ArchiveDriveTest
         Directory.Delete(staging, recursive: true);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EnterOpensATarGzAndF5CopiesOutOfIt()
     {
@@ -67,6 +68,7 @@ public class ArchiveDriveTest
         await _app.WaitUntilAsync(() => _app.FocusedEntryName == "bundle.tar.gz", "the cursor to be on the archive");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F8IsNotOfferedInsideAnArchive()
     {

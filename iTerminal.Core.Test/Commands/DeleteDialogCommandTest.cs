@@ -43,6 +43,7 @@ public class DeleteDialogCommandTest
 
     // ── constructor ──────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsF8Key()
     {
@@ -61,6 +62,7 @@ public class DeleteDialogCommandTest
 
     // ── CanExecute ───────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedEntryIsFile_ReturnsTrue()
     {
@@ -84,6 +86,7 @@ public class DeleteDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedEntryIsFolder_ReturnsTrue()
     {
@@ -107,6 +110,7 @@ public class DeleteDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenNoFocusedModel_ReturnsFalse()
     {
@@ -121,6 +125,7 @@ public class DeleteDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedEntryUrlIsNull_ReturnsFalse()
     {
@@ -141,6 +146,7 @@ public class DeleteDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenEntryExistsNeitherAsFileNorFolder_ReturnsFalse()
     {
@@ -166,6 +172,7 @@ public class DeleteDialogCommandTest
 
     // ── ExecuteAsync ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenContentModelServiceIsNull_DoesNotThrow()
     {
@@ -180,6 +187,7 @@ public class DeleteDialogCommandTest
 
     // ── ContentBrowser integration ───────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithDeleteDialog_RegistersDeleteDialogCommand()
     {
@@ -211,6 +219,7 @@ public class DeleteDialogCommandTest
         Assert.IsTrue(hasCommand, "ContentBrowser should register DeleteDialogCommand when a DeleteDialog is supplied.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithoutDeleteDialog_DoesNotRegisterDeleteDialogCommand()
     {
@@ -242,6 +251,7 @@ public class DeleteDialogCommandTest
 
     // ── FilePanelFactory integration ─────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithDeleteDialog_CreatesFilePanel()
     {
@@ -270,6 +280,7 @@ public class DeleteDialogCommandTest
         Assert.IsNotNull(panel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithoutDeleteDialog_CreatesFilePanel()
     {
@@ -300,6 +311,7 @@ public class DeleteDialogCommandTest
     /// The ".." row's URL is the parent folder and the folder exists, so F8 on it used to offer to
     /// delete the folder the user was standing in — with "Recursively delete folder" ticked.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_OnTheParentRow_ReturnsFalse()
     {

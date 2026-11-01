@@ -52,6 +52,7 @@ public class ContentModelMusicPlaylistTest
     /// necessarily run, so it restores the saved session itself rather than waiting to be handed the
     /// queue — otherwise its first paint is an empty list and the queue appears a moment later.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void Root_ListsTheSavedQueueOnItsFirstPaint()
     {
@@ -91,6 +92,7 @@ public class ContentModelMusicPlaylistTest
     /// the row wanted is as likely to be off-screen as on it — which is exactly what dimming the
     /// non-matching rows cannot help with.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void Filter_NarrowsTheQueueToTheMatchingTracks()
     {
@@ -112,6 +114,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Filter_KeepsTheControlFolders_BecauseTheyAreHowThePanelIsOperated()
     {
@@ -132,6 +135,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Filter_MatchesArtistAlbumTitleAndFileName_InAnyOrder()
     {
@@ -158,6 +162,7 @@ public class ContentModelMusicPlaylistTest
     /// A filtered row still plays the track it stands for. The row keeps its position in the queue,
     /// which is both what the user reads and what Enter acts on.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void Filter_KeepsEachRowsPlaceInTheQueue()
     {
@@ -178,6 +183,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Filter_IsReportedInTheHeaderAndTheFooter()
     {
@@ -199,6 +205,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClearingTheFilter_BringsTheWholeQueueBack()
     {
@@ -222,6 +229,7 @@ public class ContentModelMusicPlaylistTest
     /// Both music drives build their listing *from* the filter, so one left set across a navigation
     /// would have the panel draw the old hits under the new URL.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void NavigatingIntoAControlFolder_EndsTheFilter()
     {
@@ -239,6 +247,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Root_ListsTheControlFoldersBeforeTheTracks()
     {
@@ -257,6 +266,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ControlFolders_AreNavigableUrlsOnTheSameDrive()
     {
@@ -279,6 +289,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ActivatingATransportRow_DrivesThePlayer()
     {
@@ -298,6 +309,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ActivatingAVolumeRow_SetsTheVolume()
     {
@@ -316,6 +328,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ActivatingADeviceRow_SelectsThatOutput()
     {
@@ -334,6 +347,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RemoveFromPlaylist_DropsTheTrackWithoutTouchingTheFile()
     {
@@ -350,6 +364,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Header_ReportsWhatIsCuedAndFitsTheWidth()
     {
@@ -370,6 +385,7 @@ public class ContentModelMusicPlaylistTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Footer_CarriesTheVolumeRepeatShuffleAndOutput()
     {
@@ -392,6 +408,7 @@ public class ContentModelMusicPlaylistTest
     /// <c>MusicPlayerServiceTest.NaturalEnd_AnnouncesTheTrackItMovedTo</c> — the engine announcing
     /// the advance is worth nothing if the rows are not rebuilt from it.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void MovingToTheNextSong_MovesTheHighlightToIt()
     {
@@ -457,6 +474,7 @@ public class ContentModelMusicPlaylistTest
     /// The model subscribes to a singleton that outlives it, so a replaced model has to let go or it
     /// keeps repainting a panel that no longer exists.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void Dispose_UnsubscribesFromThePlayer()
     {

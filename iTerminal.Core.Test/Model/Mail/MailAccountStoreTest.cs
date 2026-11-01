@@ -7,6 +7,7 @@ namespace iTerminal.Core.Test.Model.Mail;
 [TestClass]
 public class MailAccountStoreTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void AnAccountSavedIsThereWhenTheStoreIsReopened()
     {
@@ -23,6 +24,7 @@ public class MailAccountStoreTest
         Assert.AreEqual("mail:" + account.Id, reopened.SecretProfileId);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SavingAgainReplacesTheAccountWithTheSameId()
     {
@@ -36,6 +38,7 @@ public class MailAccountStoreTest
         Assert.AreEqual("Renamed", store.Accounts.Single().Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSettingsValueNeverHoldsAPassword()
     {

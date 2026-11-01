@@ -8,6 +8,7 @@ namespace iTerminal.Core.Dialogs.Test;
 [TestClass]
 public class TerminalEnvironmentVariablesTabPageTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowsOneVariablePerLine()
     {
@@ -19,6 +20,7 @@ public class TerminalEnvironmentVariablesTabPageTest
         CollectionAssert.AreEqual(new[] { "PATH=/bin", "HOME=/home/me" }, page.LinesForTest.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NoRecordedVariablesAreSaidRatherThanLeftBlank()
     {
@@ -29,6 +31,7 @@ public class TerminalEnvironmentVariablesTabPageTest
         CollectionAssert.AreEqual(new[] { "(no environment variables were recorded)" }, page.LinesForTest.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NameAndHotKey()
     {

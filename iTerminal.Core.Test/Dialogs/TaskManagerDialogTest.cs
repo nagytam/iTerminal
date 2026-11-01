@@ -15,6 +15,7 @@ public class TaskManagerDialogTest
         public override Task ExecuteAsync() => Task.CompletedTask;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNothingRunningItSaysSo()
     {
@@ -25,6 +26,7 @@ public class TaskManagerDialogTest
         AssertScreenContains(Render(dialog), "No background tasks are running.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListsTheQueuedTasksAndCountsThemInTheTitle()
     {
@@ -44,6 +46,7 @@ public class TaskManagerDialogTest
         AssertScreenContains(screen, "Index documents");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTitleIsSpelledTheSameBeforeAndAfterTheFirstRefresh()
     {
@@ -56,6 +59,7 @@ public class TaskManagerDialogTest
         StringAssert.StartsWith(dialog.Title, "Task Manager");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheListFillsTheDialog()
     {
@@ -69,6 +73,7 @@ public class TaskManagerDialogTest
         Assert.AreEqual(dialog.ViewSize.Height - 2, list.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {
@@ -81,6 +86,7 @@ public class TaskManagerDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTaskKeysAreOnlyNamedWhenATaskIsUnderTheCursor()
     {
@@ -97,6 +103,7 @@ public class TaskManagerDialogTest
         Assert.IsTrue(dialog.GetKeyHints().Any(hint => hint.Key == "Del"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteAsksBeforeCancellingTheTask()
     {
@@ -113,6 +120,7 @@ public class TaskManagerDialogTest
         Assert.IsTrue(dialog.GetKeyHints().Any(hint => hint.Key == "y / Del"), "the footer names the answers");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task YesCancelsTheAskedTask()
     {
@@ -127,6 +135,7 @@ public class TaskManagerDialogTest
         Assert.IsTrue(task.CancellationTokenSource.IsCancellationRequested);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteAgainAlsoCancelsTheAskedTask()
     {
@@ -141,6 +150,7 @@ public class TaskManagerDialogTest
         Assert.IsTrue(task.CancellationTokenSource.IsCancellationRequested);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyOtherKeyKeepsTheTaskRunning()
     {
@@ -156,6 +166,7 @@ public class TaskManagerDialogTest
         Assert.IsFalse(dialog.GetKeyHints().Any(hint => hint.Key == "y / Del"), "the question is answered");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeAnswersTheQuestionWithoutClosingTheDialog()
     {

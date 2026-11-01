@@ -81,6 +81,7 @@ public class ErrorRecoveryAndTaskVisibilityTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TransferTask_ReportsComputedRates()
     {
@@ -98,6 +99,7 @@ public class ErrorRecoveryAndTaskVisibilityTest
         Assert.AreEqual(0, task.BytesPerSecond);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFolderTask_ErrorPrompt_ContinueSkipsFailedFileAndProceedsWithRest()
     {
@@ -127,6 +129,7 @@ public class ErrorRecoveryAndTaskVisibilityTest
         StringAssert.Contains(task.Description, "bad.txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelCopyFolderTask_ErrorPrompt_CancelStopsRemainingWork()
     {
@@ -162,6 +165,7 @@ public class ErrorRecoveryAndTaskVisibilityTest
         Assert.IsTrue(copiedCount < fileCount, $"Expected the cancel choice to stop some remaining work, but {copiedCount}/{fileCount} files were copied");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CopyFolder_DiscoveryAndProcessingTasks_AreBothIndependentlyVisibleInTaskManager()
     {

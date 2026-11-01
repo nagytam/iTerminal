@@ -71,4 +71,12 @@ public class MultiRenamePatternTest
     {
         Assert.AreEqual("[X]_a.txt", MultiRenamePattern.Expand("[X]_[C]", "a.txt", false, 1, string.Empty, string.Empty));
     }
+
+    [TestMethod]
+    public void AnEmptyNameStaysEmptyAndIsNotAHiddenFile()
+    {
+        // Appending the extension to nothing would give ".pdf", a hidden file the planner would accept.
+        Assert.AreEqual(string.Empty, MultiRenamePattern.Expand("[C]", "report.pdf", false, 1, "report", string.Empty));
+        Assert.AreEqual(string.Empty, MultiRenamePattern.Expand(string.Empty, "report.pdf", false, 1, string.Empty, string.Empty));
+    }
 }

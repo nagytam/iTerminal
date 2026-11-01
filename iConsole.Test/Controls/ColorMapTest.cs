@@ -10,6 +10,7 @@ namespace iConsole.Test.Controls;
 [TestClass]
 public class ColorMapTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesWithCorrectSize()
     {
@@ -22,6 +23,7 @@ public class ColorMapTest
         Assert.AreEqual(2, colorMap.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RendersContent()
     {
@@ -38,6 +40,7 @@ public class ColorMapTest
         Assert.IsTrue(buffer.ContentAsString.Contains("*"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithLargerBuffer_RendersCorrectly()
     {
@@ -54,6 +57,7 @@ public class ColorMapTest
         Assert.IsTrue(buffer.ContentAsString.Length > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewSize_IsCorrect()
     {

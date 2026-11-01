@@ -44,6 +44,7 @@ public class JobTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitialize_SetsDesktop()
     {
@@ -55,6 +56,7 @@ public class JobTest
         Assert.AreSame(desktop.Object, job.Desktop);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenRunSucceeds_CallsStartAndStop()
     {
@@ -67,6 +69,7 @@ public class JobTest
         Assert.IsTrue(job.Stopped);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenRunThrows_StillCallsStop()
     {
@@ -79,6 +82,7 @@ public class JobTest
         Assert.IsTrue(job.Stopped);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Priority_DefaultsToBackground()
     {

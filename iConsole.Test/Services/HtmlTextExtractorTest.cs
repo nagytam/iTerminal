@@ -7,6 +7,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class HtmlTextExtractorTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Headings_AreMarkedWithHashes_AndParagraphsStandOnTheirOwnLines()
     {
@@ -15,6 +16,7 @@ public class HtmlTextExtractorTest
         CollectionAssert.AreEqual(new[] { "## Chapter", "First line.", "Second." }, lines.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListItems_AreBulleted()
     {
@@ -23,6 +25,7 @@ public class HtmlTextExtractorTest
         CollectionAssert.AreEqual(new[] { "• one", "• two" }, lines.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TableCells_AreSeparatedByBars()
     {
@@ -33,6 +36,7 @@ public class HtmlTextExtractorTest
         StringAssert.Contains(lines[0], "b");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AScriptAndItsStyle_AreDropped()
     {
@@ -41,6 +45,7 @@ public class HtmlTextExtractorTest
         CollectionAssert.AreEqual(new[] { "visible" }, lines.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APreformattedBlock_KeepsItsIndentation()
     {
@@ -50,6 +55,7 @@ public class HtmlTextExtractorTest
         CollectionAssert.AreEqual(new[] { "if (x)", "    return  1;" }, lines.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OutsideAPreformattedBlock_SpacesStillCollapse()
     {
@@ -58,6 +64,7 @@ public class HtmlTextExtractorTest
         CollectionAssert.AreEqual(new[] { "one two three" }, lines.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Entities_AreDecoded()
     {

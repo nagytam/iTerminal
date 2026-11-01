@@ -32,6 +32,7 @@ public class TextClipboardTest
 
     // ---- ClipboardKeys ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClipboardKeys_MapTheChordsAndTheOlderKeys()
     {
@@ -44,6 +45,7 @@ public class TextClipboardTest
         Assert.AreEqual(ClipboardKeyAction.SelectAll, ClipboardKeys.ActionFor(Chord(ConsoleKey.A, control: true)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClipboardKeys_IgnoreEverythingElse()
     {
@@ -54,6 +56,7 @@ public class TextClipboardTest
         Assert.AreEqual(ClipboardKeyAction.None, ClipboardKeys.ActionFor(Chord(ConsoleKey.Z, control: true)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClipboardKeys_ABrokenClipboardIsNotAnError()
     {
@@ -65,6 +68,7 @@ public class TextClipboardTest
         Assert.AreEqual("a\nb\nc", ClipboardKeys.NormalizeLineBreaks("a\r\nb\rc"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheAmbientClipboard_IsInProcessUntilTheApplicationReplacesIt()
     {
@@ -104,6 +108,7 @@ public class TextClipboardTest
         return (box, clipboard);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_SelectAll_SelectsTheWholeValue()
     {
@@ -113,6 +118,7 @@ public class TextClipboardTest
         Assert.AreEqual(11L, box.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_SelectAll_OnAnEmptyBoxIsLeftAlone()
     {
@@ -120,6 +126,7 @@ public class TextClipboardTest
         Assert.IsFalse(await box.HandleKeyEventAsync(Chord(ConsoleKey.A, control: true)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_CopyPutsTheSelectionOnTheClipboard_AndKeepsIt()
     {
@@ -132,6 +139,7 @@ public class TextClipboardTest
         Assert.IsTrue(box.HasSelection);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_CopyWithoutASelection_IsLeftToWhoeverElseWantsTheKey()
     {
@@ -141,6 +149,7 @@ public class TextClipboardTest
         Assert.IsNull(await clipboard.GetTextAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_CutRemovesTheSelectionAndCopiesIt()
     {
@@ -152,6 +161,7 @@ public class TextClipboardTest
         Assert.IsFalse(box.HasSelection);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_PasteInsertsAtTheCursor_AndReplacesASelection()
     {
@@ -168,6 +178,7 @@ public class TextClipboardTest
         Assert.IsFalse(box.HasSelection);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_PasteMakesOneLine_DropsWhatTheBoxDoesNotTake_AndStopsAtMaxLength()
     {
@@ -184,6 +195,7 @@ public class TextClipboardTest
         Assert.AreEqual(5, shortBox.TextLength);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_PasteWithNothingOnTheClipboard_IsLeftAlone()
     {
@@ -194,6 +206,7 @@ public class TextClipboardTest
         Assert.IsFalse(await box.HandleKeyEventAsync(Chord(ConsoleKey.V, control: true)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_ReadOnly_CopiesButDoesNotCutOrPaste()
     {
@@ -207,6 +220,7 @@ public class TextClipboardTest
         Assert.AreEqual("hello", box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextBox_KeysAreIgnoredWithoutFocus()
     {
@@ -217,6 +231,7 @@ public class TextClipboardTest
         Assert.AreEqual("hello", box.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PasswordBox_NeverCopiesOrCutsItsValue_ButTakesAPaste()
     {
@@ -268,6 +283,7 @@ public class TextClipboardTest
 
     private static readonly string[] Poem = ["roses are red", "violets are blue", "sugar is sweet"];
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_SelectAll_SelectsEveryLine()
     {
@@ -277,6 +293,7 @@ public class TextClipboardTest
         Assert.AreEqual(2L, editor.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_SelectAll_OnAnEmptyDocumentIsLeftAlone()
     {
@@ -286,6 +303,7 @@ public class TextClipboardTest
         Assert.IsFalse(await blank.HandleKeyEventAsync(Chord(ConsoleKey.A, control: true)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_CopyAndCut_UseTheSelection()
     {
@@ -301,6 +319,7 @@ public class TextClipboardTest
         Assert.IsFalse(editor.HasSelection);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_CopyWithoutASelection_IsLeftToWhoeverElseWantsTheKey()
     {
@@ -309,6 +328,7 @@ public class TextClipboardTest
         Assert.IsNull(await clipboard.GetTextAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_PasteOneLine_InsertsAtTheCursor()
     {
@@ -320,6 +340,7 @@ public class TextClipboardTest
         Assert.IsTrue(editor.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_PasteSeveralLines_SplitsTheLineAroundThem()
     {
@@ -331,6 +352,7 @@ public class TextClipboardTest
         Assert.AreEqual(2L, editor.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_Paste_ReplacesASelection_AndIntoAnEmptyDocument()
     {
@@ -346,6 +368,7 @@ public class TextClipboardTest
         Assert.AreEqual("a|b", Text(empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_Paste_DropsControlCharactersButKeepsTabs()
     {
@@ -355,6 +378,7 @@ public class TextClipboardTest
         Assert.AreEqual("a\tbc", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_ReadOnly_CopiesButDoesNotCutOrPaste()
     {
@@ -368,6 +392,7 @@ public class TextClipboardTest
         Assert.IsFalse(editor.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_PasteFromABrokenOrEmptyClipboard_IsLeftAlone()
     {
@@ -378,6 +403,7 @@ public class TextClipboardTest
         Assert.AreEqual("roses are red|violets are blue|sugar is sweet", Text(editor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Editor_CopyAndPasteRoundTripsAMultiLineSelection()
     {

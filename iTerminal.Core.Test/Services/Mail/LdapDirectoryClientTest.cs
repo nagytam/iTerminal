@@ -9,6 +9,7 @@ namespace iTerminal.Core.Test.Services.Mail;
 [TestClass]
 public class LdapDirectoryClientTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(0, new byte[] { 0x00 })]
     [DataRow(127, new byte[] { 0x7F })]
@@ -24,6 +25,7 @@ public class LdapDirectoryClientTest
         Assert.AreEqual(value, Ber.DecodeInt(content));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LongLengthsUseTheLongForm()
     {
@@ -33,6 +35,7 @@ public class LdapDirectoryClientTest
         Assert.AreEqual(203, encoded.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BindsAndReturnsThePeopleFound()
     {
@@ -48,6 +51,7 @@ public class LdapDirectoryClientTest
         StringAssert.Contains(server.SearchRequestText, "ada");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARefusedBindIsReportedAsSuch()
     {

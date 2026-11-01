@@ -13,6 +13,7 @@ public class ControlsReviewBatch25Test
 
     private static string[] Keys(IEnumerable<(string Key, string Description)> hints) => [.. hints.Select(h => h.Key)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckList_KeyHints_NameEachKeyOnce()
     {
@@ -24,6 +25,7 @@ public class ControlsReviewBatch25Test
         Assert.AreEqual(keys.Length, keys.Distinct().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RadioGroup_KeyHints_DoNotOfferSpace_WhichTheGroupDoesNotTake()
     {
@@ -33,6 +35,7 @@ public class ControlsReviewBatch25Test
         CollectionAssert.DoesNotContain(Keys(group.GetKeyHints()), "Space");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RadioGroup_ChangingTheOrientation_LaysTheOptionsOutAtOnce()
     {
@@ -46,6 +49,7 @@ public class ControlsReviewBatch25Test
         Assert.IsTrue(group.Controls[1].Position.X > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyValueList_NegativeGapAndKeyWidth_AreRaisedToZero_AndStillDraw()
     {
@@ -57,6 +61,7 @@ public class ControlsReviewBatch25Test
         ScreenBuffer.Render(list, 20, 2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ComboBox_KeyHints_NameThePageKeysAndTypeAhead()
     {
@@ -65,6 +70,7 @@ public class ControlsReviewBatch25Test
         CollectionAssert.IsSubsetOf(new[] { "PageUp/PageDown", "Letters" }, Keys(combo.GetKeyHints()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ComboBox_ReadOnly_ListsNoKeys()
     {
@@ -73,6 +79,7 @@ public class ControlsReviewBatch25Test
         Assert.AreEqual(0, combo.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToastHost_NegativeOffsets_AreRaisedToZero()
     {
@@ -82,6 +89,7 @@ public class ControlsReviewBatch25Test
         Assert.AreEqual(0, host.RightMargin);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormPanel_NegativeRowGap_IsRaisedToZero()
     {

@@ -21,6 +21,7 @@ public class MapTileServiceTest
 
     private MapTileService Create(FakeTileFetcher fetcher) => new(fetcher, new MapStore(new MemorySettings()), _folder);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnlineFetchesFromTheOpenStreetMapServerAndSavesTheTile()
     {
@@ -36,6 +37,7 @@ public class MapTileServiceTest
         Assert.IsTrue(service.IsAvailableOffline(key));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OfflineNeverTouchesTheNetwork()
     {
@@ -48,6 +50,7 @@ public class MapTileServiceTest
         Assert.AreEqual(0, fetcher.Requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OfflineReadsTilesSavedByAnEarlierOnlineVisit()
     {
@@ -61,6 +64,7 @@ public class MapTileServiceTest
         Assert.AreEqual(0, offlineFetcher.Requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATileFolderCopiedIntoTheMapFolderIsUsed()
     {
@@ -73,6 +77,7 @@ public class MapTileServiceTest
         Assert.IsNotNull(tile);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadsRasterMbtilesWithTheRowsCountedFromTheSouth()
     {
@@ -99,6 +104,7 @@ public class MapTileServiceTest
         Assert.AreEqual(0, fetcher.Requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATileTheServerCannotSupplyIsNotAskedForAgainAtOnce()
     {
@@ -112,6 +118,7 @@ public class MapTileServiceTest
         Assert.AreEqual(1, fetcher.Requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABodyThatIsNotAnImageIsNotSaved()
     {
@@ -122,6 +129,7 @@ public class MapTileServiceTest
         Assert.IsFalse(service.IsAvailableOffline(key));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TilesOutsideTheWorldAreNeverRequested()
     {
@@ -134,6 +142,7 @@ public class MapTileServiceTest
         Assert.AreEqual(0, fetcher.Requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LoadedTilesAreServedFromMemory()
     {
@@ -149,6 +158,7 @@ public class MapTileServiceTest
         Assert.AreEqual(1, fetcher.Requests);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DownloadSavesOnlyTheTilesNotAlreadySaved()
     {
@@ -167,6 +177,7 @@ public class MapTileServiceTest
         Assert.AreEqual(3, reported);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTileAddressComesFromTheSettings()
     {

@@ -15,6 +15,7 @@ public class TextEditorControlHintsTest
         return new TextEditorControl(theme.Object);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_OfferTheEditsWhileEditable()
     {
@@ -28,6 +29,7 @@ public class TextEditorControlHintsTest
         CollectionAssert.Contains(keys, "Ctrl+X");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_OfferOnlyTheMovesAndSaveWhenReadOnly()
     {

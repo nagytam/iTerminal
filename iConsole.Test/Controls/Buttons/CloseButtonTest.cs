@@ -10,6 +10,7 @@ namespace iConsole.Controls.Buttons.Test;
 [TestClass]
 public class CloseButtonTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_ShouldSetHotKey()
     {
@@ -21,6 +22,7 @@ public class CloseButtonTest
         Assert.AreEqual('l', btn.HotKeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RendersTitle()
     {
@@ -39,6 +41,7 @@ public class CloseButtonTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Close"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RendersBrackets()
     {
@@ -58,6 +61,7 @@ public class CloseButtonTest
         Assert.IsTrue(content.Contains("]"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ExactOutput()
     {

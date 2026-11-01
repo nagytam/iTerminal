@@ -18,6 +18,7 @@ public class ControlsReviewBatch29Test
 
     private static IBeepService Beep => Mock.Of<IBeepService>();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Button_NullTitle_IsEmpty_AndDraws()
     {
@@ -29,6 +30,7 @@ public class ControlsReviewBatch29Test
         ScreenBuffer.Render(button, 10, 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_NullTextAndPlaceholder_AreEmpty_AndDraw()
     {
@@ -42,6 +44,7 @@ public class ControlsReviewBatch29Test
         ScreenBuffer.Render(box, 10, 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleButton_NullLabels_AreEmpty_AndDraw()
     {
@@ -52,6 +55,7 @@ public class ControlsReviewBatch29Test
         ScreenBuffer.Render(toggle, 10, 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ElapsedClock_NullLabel_IsEmpty_AndDraws()
     {
@@ -61,6 +65,7 @@ public class ControlsReviewBatch29Test
         ScreenBuffer.Render(clock, 12, 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckList_NullEmptyText_IsEmpty_AndDraws()
     {
@@ -70,6 +75,7 @@ public class ControlsReviewBatch29Test
         ScreenBuffer.Render(list, 12, 2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusBarItem_NullText_IsEmpty_AndDraws()
     {
@@ -79,6 +85,7 @@ public class ControlsReviewBatch29Test
         ScreenBuffer.Render(item, 12, 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rating_HugeMaximum_IsCapped()
     {
@@ -87,6 +94,7 @@ public class ControlsReviewBatch29Test
         Assert.AreEqual(Rating.MaxStars, rating.Maximum);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StepIndicator_HugeCount_IsCapped()
     {
@@ -96,6 +104,7 @@ public class ControlsReviewBatch29Test
         Assert.AreEqual(StepIndicator.WidthFor(StepIndicator.MaxSteps), (int)steps.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tab_NullPages_MeansNoPages_AndDraws()
     {

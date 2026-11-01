@@ -9,6 +9,7 @@ public class VirtualConsoleDriverTest
     private static ConxelString Text(string text, Color foreground = Color.White, Color background = Color.Black) =>
         new(text, foreground, background);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StartsBlankAtTheRequestedSize()
     {
@@ -22,6 +23,7 @@ public class VirtualConsoleDriverTest
         Assert.AreEqual(30, console.WindowSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WritesLandWhereTheyAreAimedWithTheirColours()
     {
@@ -35,6 +37,7 @@ public class VirtualConsoleDriverTest
         Assert.AreEqual(Color.Blue, screen.BackgroundAt(8, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WritesAreClippedToTheWindow()
     {
@@ -48,6 +51,7 @@ public class VirtualConsoleDriverTest
         Assert.AreEqual(string.Empty, console.Snapshot().Lines[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASingleCellWriteLands()
     {
@@ -58,6 +62,7 @@ public class VirtualConsoleDriverTest
         Assert.AreEqual('#', console.Snapshot().CharAt(2, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClearBlanksTheScreen()
     {
@@ -69,6 +74,7 @@ public class VirtualConsoleDriverTest
         Assert.IsTrue(console.Snapshot().IsBlank);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASnapshotDoesNotChangeAfterItIsTaken()
     {
@@ -83,6 +89,7 @@ public class VirtualConsoleDriverTest
         Assert.IsTrue(before.Version < console.Version);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AResizeTakesEffectWhenTheSizeIsNextPolled()
     {
@@ -99,6 +106,7 @@ public class VirtualConsoleDriverTest
         Assert.AreEqual("keep", screen.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BeepsAreCounted()
     {
@@ -110,6 +118,7 @@ public class VirtualConsoleDriverTest
         Assert.AreEqual(2, console.BeepCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCursorIsKeptInsideTheWindow()
     {
@@ -121,6 +130,7 @@ public class VirtualConsoleDriverTest
         Assert.AreEqual(0, console.GetCursorPosition().Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SnapshotsFindTextAndRegions()
     {
@@ -138,6 +148,7 @@ public class VirtualConsoleDriverTest
         StringAssert.Contains(screen.Dump(), "02|  panel");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CellOfFailsForTextThatIsNotThere()
     {
@@ -146,6 +157,7 @@ public class VirtualConsoleDriverTest
         Assert.ThrowsExactly<AssertFailedException>(() => screen.CellOf("x"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SizesBelowOneAreRejected()
     {

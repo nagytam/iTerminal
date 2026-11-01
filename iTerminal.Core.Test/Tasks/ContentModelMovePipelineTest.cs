@@ -73,6 +73,7 @@ public class ContentModelMovePipelineTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelMoveFileTask_CrossInstanceLocalMove_MovesContentAndDeletesSource()
     {
@@ -88,6 +89,7 @@ public class ContentModelMovePipelineTest
         Assert.AreEqual(100, task.ProgressPercentage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelMoveFileTask_OverwriteFalse_ExistingTarget_LeavesBothFilesUnchanged()
     {
@@ -104,6 +106,7 @@ public class ContentModelMovePipelineTest
         StringAssert.Contains(task.Description, "already exists");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelMoveFileTask_Cancelled_DeletesPartialTargetAndKeepsSource()
     {
@@ -120,6 +123,7 @@ public class ContentModelMovePipelineTest
         StringAssert.Contains(task.Description, "cancelled");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelMoveFileTask_MissingSource_ReportsFailure()
     {
@@ -132,6 +136,7 @@ public class ContentModelMovePipelineTest
         StringAssert.Contains(task.Description, "failed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelMoveFolderTask_MovesFilesConcurrentlyAndDeletesSource()
     {
@@ -170,6 +175,7 @@ public class ContentModelMovePipelineTest
 
     // ---- File conflicts on a move: a skipped source stays; a rename moves to the new name. ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelMoveFileTask_AskAndSkip_KeepsSourceAndTarget()
     {
@@ -187,6 +193,7 @@ public class ContentModelMovePipelineTest
         Assert.IsNull(task.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelMoveFileTask_AskAndRename_MovesToTheNewName()
     {

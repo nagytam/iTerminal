@@ -11,6 +11,7 @@ namespace iConsole.Test.Controls.Buttons;
 [TestClass]
 public class ActionButtonTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ActionButtonCanBeCreated()
     {
@@ -22,6 +23,7 @@ public class ActionButtonTest
         Assert.IsInstanceOfType(actionButton, typeof(Button));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ActionButtonHasTitle()
     {
@@ -33,6 +35,7 @@ public class ActionButtonTest
         Assert.IsNotNull(actionButton);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ActionButtonHasActionView()
     {
@@ -43,6 +46,7 @@ public class ActionButtonTest
         Assert.AreEqual("Ctrl+S", actionButton.ActionView);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ActionButtonDoesNotDrawDefault()
     {
@@ -61,6 +65,7 @@ public class ActionButtonTest
         // So buffer should be empty or unchanged
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ActionButtonHasCommand()
     {
@@ -71,6 +76,7 @@ public class ActionButtonTest
         Assert.IsNotNull(actionButton);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ActionButtonActionViewCanContainComplexKeybinding()
     {
@@ -85,6 +91,7 @@ public class ActionButtonTest
 [TestClass]
 public class CancelButtonTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void CancelButtonCanBeCreated()
     {
@@ -96,6 +103,7 @@ public class CancelButtonTest
         Assert.IsInstanceOfType(cancelButton, typeof(Button));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CancelButtonHasCorrectTitle()
     {
@@ -113,6 +121,7 @@ public class CancelButtonTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Cancel"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CancelButtonHasHotKeyC()
     {
@@ -123,6 +132,7 @@ public class CancelButtonTest
         Assert.AreEqual('c', cancelButton.HotKeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CancelButtonExecutesCancelCommand()
     {
@@ -141,6 +151,7 @@ public class CancelButtonTest
         Assert.IsTrue(cts.Token.IsCancellationRequested);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CancelButtonIsDisposable()
     {
@@ -156,6 +167,7 @@ public class CancelButtonTest
 [TestClass]
 public class CancelDialogButtonTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void CancelDialogButtonCanBeCreated()
     {
@@ -166,6 +178,7 @@ public class CancelDialogButtonTest
         Assert.IsInstanceOfType(cancelButton, typeof(Button));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CancelDialogButtonHasCorrectTitle()
     {
@@ -182,6 +195,7 @@ public class CancelDialogButtonTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Cancel"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CancelDialogButtonHasHotKeyC()
     {
@@ -191,6 +205,7 @@ public class CancelDialogButtonTest
         Assert.AreEqual('c', cancelButton.HotKeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CancelDialogButtonExecutesCancelDialogCommand()
     {
@@ -211,6 +226,7 @@ public class CancelDialogButtonTest
 [TestClass]
 public class CloseButtonTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void CloseButtonCanBeCreated()
     {
@@ -221,6 +237,7 @@ public class CloseButtonTest
         Assert.IsInstanceOfType(closeButton, typeof(Button));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CloseButtonHasCorrectTitle()
     {
@@ -237,6 +254,7 @@ public class CloseButtonTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Close"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CloseButtonHasHotKeyL()
     {
@@ -246,6 +264,7 @@ public class CloseButtonTest
         Assert.AreEqual('l', closeButton.HotKeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CloseButtonExecutesCloseParentCommand()
     {

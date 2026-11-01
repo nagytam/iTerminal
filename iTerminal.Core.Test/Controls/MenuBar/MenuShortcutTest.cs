@@ -90,6 +90,7 @@ public class MenuShortcutTest
     private static IEnumerable<MenuItem> Entries(MenuItem menu) =>
         menu.Controls.AsSnapshot().OfType<MenuItem>().Where(m => m.Text != "-");
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryAdvertisedShortcutIsTheKeyTheCommandIsBoundTo()
     {
@@ -119,6 +120,7 @@ public class MenuShortcutTest
         Assert.AreEqual(0, mismatches.Count, string.Join(Environment.NewLine, mismatches));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryEntryWithABoundKeyAdvertisesIt()
     {
@@ -137,6 +139,7 @@ public class MenuShortcutTest
         Assert.AreEqual(0, silent.Count, string.Join(Environment.NewLine, silent));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryEntryRunsSomething()
     {
@@ -149,6 +152,7 @@ public class MenuShortcutTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheMenusAreInTheirUsualOrder()
     {

@@ -13,6 +13,7 @@ namespace iTerminal.Core.Test.Application;
 [TestClass]
 public class iTerminalApplicationBuilderExtensionTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void AddiTerminal_ReturnsOriginalServiceCollectionAndRegistersCoreServices()
     {

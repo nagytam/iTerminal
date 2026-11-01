@@ -22,6 +22,7 @@ public class SearchPreviewAndDrivesTest
         }
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F7FindsFilesAndCtrlPListsThemInThePanel()
     {
@@ -48,6 +49,7 @@ public class SearchPreviewAndDrivesTest
         await _app.WaitUntilAsync(() => _app.FocusedEntryName == "inside_alpha.txt", "the cursor to be on the file");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F7ClosedWithEscLeavesThePanelsAsTheyWere()
     {
@@ -62,6 +64,7 @@ public class SearchPreviewAndDrivesTest
         Assert.IsTrue(_app.LeftPanelLists("readme.txt"));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlF3PreviewsTheFileUnderTheCursorInTheOtherPanel()
     {
@@ -82,6 +85,7 @@ public class SearchPreviewAndDrivesTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlF9BrowsesAContainerAndComesBack()
     {
@@ -108,6 +112,7 @@ public class SearchPreviewAndDrivesTest
         await _app.WaitUntilAsync(s => _app.LeftPanelLists("readme.txt", s), "Ctrl+F9 again to bring the folder back");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AContainerIsStoppedStartedAndRestartedFromItsRow()
     {
@@ -138,6 +143,7 @@ public class SearchPreviewAndDrivesTest
         Assert.IsInstanceOfType<Core.Screens.TerminalScreen>(_app.Driver.FocusedModal, "no delete dialog opened");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheQuickViewOfAContainerIsItsLog()
     {
@@ -154,6 +160,7 @@ public class SearchPreviewAndDrivesTest
         await _app.WaitUntilAsync(s => _app.RightPanelLists("right_only.txt", s), "the right panel to get its folder back");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlOOpensAShellInAContainerAndTheCommandLogRunsInsideItToo()
     {
@@ -189,6 +196,7 @@ public class SearchPreviewAndDrivesTest
         await _app.WaitUntilAsync(s => _app.LeftPanelLists("motd", s), "the panels to come back");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlF6BrowsesAnOldRevisionAndF5CopiesItOut()
     {

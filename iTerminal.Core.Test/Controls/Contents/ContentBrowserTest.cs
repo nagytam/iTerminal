@@ -112,6 +112,7 @@ public class ContentBrowserTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_DoesNotThrow()
     {
@@ -123,6 +124,7 @@ public class ContentBrowserTest
         Assert.IsNotNull(sut);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsNameCorrectly()
     {
@@ -134,6 +136,7 @@ public class ContentBrowserTest
         Assert.AreEqual("LeftPanel", sut.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_StoresContentModelService()
     {
@@ -145,6 +148,7 @@ public class ContentBrowserTest
         Assert.AreSame(mockService.Object, sut.ContentModelService);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_ContentModelIsNull_Initially()
     {
@@ -156,6 +160,7 @@ public class ContentBrowserTest
         Assert.IsNull(sut.ContentModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentModel_CanBeAssigned()
     {
@@ -169,6 +174,7 @@ public class ContentBrowserTest
         Assert.AreSame(model, sut.ContentModel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithoutDialogs_DoesNotThrow()
     {
@@ -197,6 +203,7 @@ public class ContentBrowserTest
         Assert.IsNotNull(sut);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_ViewSize_IsZero_Initially()
     {
@@ -208,6 +215,7 @@ public class ContentBrowserTest
         Assert.AreEqual(new Size(0, 0), sut.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CanFocus_IsTrue()
     {
@@ -219,6 +227,7 @@ public class ContentBrowserTest
         Assert.IsTrue(sut.CanFocus);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ModelChanged_SetsHasStateChanged_WhenTriggered()
     {
@@ -234,6 +243,7 @@ public class ContentBrowserTest
         Assert.IsTrue(sut.HasStateChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_WithContentModel_SubscribesToPropertyChanged()
     {
@@ -258,6 +268,7 @@ public class ContentBrowserTest
         Assert.IsTrue(sut.HasStateChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitializeAsync_WithNullContentModel_ThrowsArgumentNullException()
     {
@@ -280,6 +291,7 @@ public class ContentBrowserTest
         Assert.IsTrue(threw, "Expected ArgumentNullException when ContentModel is null.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEventAsync_WithWheelDelta_UpdatesScrollOnce()
     {
@@ -313,6 +325,7 @@ public class ContentBrowserTest
         model.Verify(m => m.Update(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FilePanelScroll_WhenRenderedClean_IdleDoesNotInvalidatePanelAgain()
     {
@@ -345,6 +358,7 @@ public class ContentBrowserTest
         Assert.IsFalse(sut.HasStateChanged, "Idle must not force the file panel back into a redraw loop after scrolling.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_WithParentAndModel_SetsModelViewSize()
     {
@@ -368,6 +382,7 @@ public class ContentBrowserTest
         Assert.AreEqual(18u, model.Object.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_WithoutParent_DoesNotThrow()
     {
@@ -381,6 +396,7 @@ public class ContentBrowserTest
         sut.OnInitializeLayout();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WhenRowsAreFullyPopulated_DoesNotFormatBlankRows()
     {
@@ -412,6 +428,7 @@ public class ContentBrowserTest
         model.Verify(m => m.FormatItemName(null, It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<ColorScheme>(), It.IsAny<VisualState>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WhenRowsAreMissing_FormatsBlankRowsForTheRemainder()
     {
@@ -442,6 +459,7 @@ public class ContentBrowserTest
         model.Verify(m => m.FormatItemName(null, 20, false, It.IsAny<ColorScheme>(), It.IsAny<VisualState>()), Times.Exactly(2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithLensIndicator_IncludesIndicatorInHeader()
     {
@@ -481,6 +499,7 @@ public class ContentBrowserTest
         Assert.IsTrue(headerLine.Contains("{Git}", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_WithAltCharacters_KeepsAllEntriesVisibleAndMovesToFirstMatch()
     {
@@ -518,6 +537,7 @@ public class ContentBrowserTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_WithEscape_ClearsFilterAndKeepsCurrentFocusedEntry()
     {
@@ -557,6 +577,7 @@ public class ContentBrowserTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_WithoutAltAfterSearchStarted_ExtendsFilter()
     {
@@ -595,6 +616,7 @@ public class ContentBrowserTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormatItemName_WithFilter_NonMatchingEntryUsesLighterBackground()
     {

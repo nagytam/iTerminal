@@ -23,6 +23,7 @@ public class DialogFocusRestoreTest
         return (root, field);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingADialogGivesFocusBackToTheControlThatHadIt()
     {
@@ -36,6 +37,7 @@ public class DialogFocusRestoreTest
         Assert.IsTrue(field.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TwoScreensKeepTheirOwnFocusWhateverOrderTheirDialogsCloseIn()
     {

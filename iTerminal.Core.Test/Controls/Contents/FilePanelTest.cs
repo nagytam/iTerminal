@@ -455,6 +455,7 @@ public class FilePanelTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetHeader_WhenViewSizeIsZero_StillReturnsPath()
     {
@@ -478,6 +479,7 @@ public class FilePanelTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetHeader_WhenPathExceedsWidth_ShowsDrivePrefixAndFolderName()
     {
@@ -515,6 +517,7 @@ public class FilePanelTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetHeader_AfterResizeToLarger_NeverExceedsWidth()
     {

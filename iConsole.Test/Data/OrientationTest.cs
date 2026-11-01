@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class OrientationTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Orientation_Horizontal_HasValue()
     {
@@ -12,6 +13,7 @@ public class OrientationTest
         Assert.AreEqual(0, (int)orientation);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Orientation_Vertical_HasValue()
     {
@@ -19,6 +21,7 @@ public class OrientationTest
         Assert.AreEqual(1, (int)orientation);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Orientation_AllValuesAreUnique()
     {
@@ -32,6 +35,7 @@ public class OrientationTest
         Assert.AreEqual(orientations.Length, distinctOrientations.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Orientation_CanCompare()
     {

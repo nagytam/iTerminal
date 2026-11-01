@@ -9,6 +9,7 @@ public class VirshListParserTest
     /// <summary>What <c>virsh -c qemu:///system list --all</c> printed on the development machine, with no domains defined.</summary>
     private const string EmptyListCapturedFromLibvirt = " Id   Name   State\n--------------------\n\n";
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParsesEmptyListCapturedFromLibvirt()
     {
@@ -19,6 +20,7 @@ public class VirshListParserTest
     // The fixtures below follow libvirt's documented table layout. They are not captured output yet:
     // they stay _Unverified until a real domain can be listed on a machine.
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParsesRunningPausedAndShutOffRows_Unverified()
     {
@@ -37,6 +39,7 @@ public class VirshListParserTest
         Assert.AreEqual(new VirtualMachine("backup", VirtualMachineState.ShutOff, "shut off"), machines[2]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadsAStateWordsAndANameWithSpaces_Unverified()
     {
@@ -51,6 +54,7 @@ public class VirshListParserTest
         Assert.AreEqual(VirtualMachineState.InShutdown, machine.State);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AStateNobodyKnowsIsKeptAsUnknownAndNotDropped_Unverified()
     {

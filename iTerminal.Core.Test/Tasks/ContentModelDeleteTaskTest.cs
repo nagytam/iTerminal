@@ -72,6 +72,7 @@ public class ContentModelDeleteTaskTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelDeleteTask_DeletesFile()
     {
@@ -85,6 +86,7 @@ public class ContentModelDeleteTaskTest
         StringAssert.Contains(task.Description, "finished");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelDeleteTask_NonRecursiveEmptyFolder_DeletesFolder()
     {
@@ -97,6 +99,7 @@ public class ContentModelDeleteTaskTest
         Assert.IsFalse(Directory.Exists(folderPath));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelDeleteTask_NonRecursiveNonEmptyFolder_ReportsFailureAndLeavesFolder()
     {
@@ -111,6 +114,7 @@ public class ContentModelDeleteTaskTest
         StringAssert.Contains(task.Description, "failed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelDeleteTask_RecursiveFolder_DeletesNestedTree()
     {
@@ -131,6 +135,7 @@ public class ContentModelDeleteTaskTest
         StringAssert.Contains(task.Description, "finished");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelDeleteTask_Cancelled_LeavesTreeUntouched()
     {
@@ -151,6 +156,7 @@ public class ContentModelDeleteTaskTest
         StringAssert.Contains(task.Description, "cancelled");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ContentModelDeleteTask_DeletesFilesConcurrently()
     {

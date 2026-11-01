@@ -46,6 +46,7 @@ public class CompressTaskTest
 
     private Url FileUrl(string name) => new(Path.Combine(_root, name));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EachSourceIsNamedAfterItselfWithItsContentsBelow()
     {
@@ -57,6 +58,7 @@ public class CompressTaskTest
         Assert.AreEqual(4, items.Single(i => i.EntryName == "photos/2024/a.jpg").Size);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheArchiveIsNotPutInsideItself()
     {
@@ -67,6 +69,7 @@ public class CompressTaskTest
         Assert.IsFalse(items.Any(i => i.EntryName.EndsWith("pack.zip")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnArchiveOnTheLocalDiskIsWritten()
     {
@@ -82,6 +85,7 @@ public class CompressTaskTest
         Assert.AreEqual(100, task.ProgressPercentage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnArchiveOnTheMemoryDriveIsBuiltLocallyAndUploadedAndAddedTo()
     {
@@ -98,6 +102,7 @@ public class CompressTaskTest
             "the second run fetched the archive and added to it");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailureIsReportedAndKeepsTheWindowUp()
     {

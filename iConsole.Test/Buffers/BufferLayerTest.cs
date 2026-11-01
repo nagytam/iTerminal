@@ -8,6 +8,7 @@ namespace iConsole.Buffers.Test;
 [TestClass]
 public class BufferLayerTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Clear_Write_Resize_AsString_Behavior()
     {
@@ -29,6 +30,7 @@ public class BufferLayerTest
     /// size, so a list's last row stretched them a list's height below the dialog — and the layer is
     /// composited over everything below across its bounds.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void TheBoundsGrowByWhatIsWrittenNotBySizeArgument()
     {
@@ -43,6 +45,7 @@ public class BufferLayerTest
     }
 
     /// <summary>Two overlays on one layer: the cells between them belong to the layers below.</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void MergingCopiesOnlyTheCellsEachRowWrote()
     {

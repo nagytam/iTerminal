@@ -36,6 +36,7 @@ public class SystemSettingsServiceTest
     private static void VerifyRan(Mock<IExternalProcessRunner> runner, string file, params string[] arguments) =>
         runner.Verify(r => r.RunAsync(file, It.Is<IReadOnlyList<string>>(a => a.SequenceEqual(arguments)), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Once);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LinuxRenamesTheMachineWithHostnamectl()
     {
@@ -48,6 +49,7 @@ public class SystemSettingsServiceTest
         VerifyRan(runner, "hostnamectl", "set-hostname", "web-01");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WindowsRenamesWithRenameComputerAndSaysARestartIsNeeded()
     {
@@ -63,6 +65,7 @@ public class SystemSettingsServiceTest
             It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARenameWithoutAdministratorRightsIsRefusedBeforeAnythingRuns()
     {
@@ -75,6 +78,7 @@ public class SystemSettingsServiceTest
         runner.VerifyNoOtherCalls();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnInvalidNameIsRefusedWithTheReasonAndNothingRuns()
     {
@@ -87,6 +91,7 @@ public class SystemSettingsServiceTest
         runner.VerifyNoOtherCalls();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedToolReportsItsFirstErrorLine()
     {
@@ -101,6 +106,7 @@ public class SystemSettingsServiceTest
         Assert.AreEqual("Failed to set hostname: Access denied", result.Message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADescriptionWithAQuoteIsEscapedForPowerShell()
     {
@@ -116,6 +122,7 @@ public class SystemSettingsServiceTest
         Assert.AreEqual("Tamas'' desk", SystemSettingsService.Quote("Tamas' desk"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADomainMemberCannotBeMovedToAWorkgroupFromHere()
     {
@@ -130,6 +137,7 @@ public class SystemSettingsServiceTest
         StringAssert.Contains(result.Message, "corp.example");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWindowsIdentityIsReadFromTheCimClasses()
     {
@@ -143,6 +151,7 @@ public class SystemSettingsServiceTest
         Assert.AreEqual(new ComputerIdentity("DESK", "HOME", false, "My desk", true, true), identity);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UserVariablesNeedNoAdministratorRightsAndMachineVariablesDo()
     {
@@ -158,6 +167,7 @@ public class SystemSettingsServiceTest
         Assert.AreEqual(0, machine.Values.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnElevatedProcessChangesAndRemovesMachineVariables()
     {
@@ -172,6 +182,7 @@ public class SystemSettingsServiceTest
         Assert.AreEqual(0, machine.Values.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnInvalidVariableNameNeverReachesTheStore()
     {
@@ -183,6 +194,7 @@ public class SystemSettingsServiceTest
         Assert.AreEqual(0, user.Values.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailingStoreIsAMessageNotACrash()
     {
@@ -196,6 +208,7 @@ public class SystemSettingsServiceTest
         Assert.AreEqual("Access to the path is denied.", result.Message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LinuxSetsTheTimeZoneWithTimedatectlAndWindowsWithTzutil()
     {
@@ -209,6 +222,7 @@ public class SystemSettingsServiceTest
         VerifyRan(windowsRunner, "tzutil", "/s", "Central Europe Standard Time");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATimeZoneThatLooksLikeAnOptionIsNotPassedToTheTool()
     {
@@ -220,6 +234,7 @@ public class SystemSettingsServiceTest
         runner.VerifyNoOtherCalls();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSystemTimeZonesAreListedAndIncludeTheCurrentOne()
     {
@@ -231,6 +246,7 @@ public class SystemSettingsServiceTest
         Assert.AreEqual(TimeZoneInfo.Local.Id, service.CurrentTimeZoneId);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EnvironmentSupportFollowsTheStoresThePlatformHas()
     {

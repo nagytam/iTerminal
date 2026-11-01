@@ -7,6 +7,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class ThemeServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeServiceConstructor()
     {
@@ -16,6 +17,7 @@ public class ThemeServiceTest
         Assert.IsTrue(service.ColorSchemes.Count > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeServiceHasDefaultTheme()
     {
@@ -23,6 +25,7 @@ public class ThemeServiceTest
         Assert.IsTrue(service.ColorSchemes.ContainsKey(Theme.Default));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeServiceHasDarkTheme()
     {
@@ -30,6 +33,7 @@ public class ThemeServiceTest
         Assert.IsTrue(service.ColorSchemes.ContainsKey(Theme.Dark));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeServiceCurrentColorSchemeDefault()
     {
@@ -39,6 +43,7 @@ public class ThemeServiceTest
         Assert.IsNotNull(colorScheme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeServiceCurrentColorSchemeDark()
     {
@@ -49,6 +54,7 @@ public class ThemeServiceTest
         Assert.AreEqual(Theme.Dark, colorScheme.Theme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeServiceSetTheme()
     {
@@ -57,6 +63,7 @@ public class ThemeServiceTest
         Assert.AreEqual(Theme.Dark, service.Theme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeServiceDefaultColorSchemeBackground()
     {
@@ -66,6 +73,7 @@ public class ThemeServiceTest
         Assert.AreEqual(Color.Blue, colorScheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeServiceDarkColorSchemeBackground()
     {
@@ -75,6 +83,7 @@ public class ThemeServiceTest
         Assert.AreEqual(Color.Black, colorScheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeServiceAddCustomTheme()
     {
@@ -91,6 +100,7 @@ public class ThemeServiceTest
         Assert.AreEqual(Color.Green, service.CurrentColorScheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeServiceFallbackToFirstScheme()
     {
@@ -101,6 +111,7 @@ public class ThemeServiceTest
         Assert.IsNotNull(colorScheme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThemeServiceColorSchemesIsMutable()
     {
@@ -113,6 +124,7 @@ public class ThemeServiceTest
         Assert.AreEqual(initialCount + 1, service.ColorSchemes.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TrySetThemeSwitchesTheCurrentScheme()
     {
@@ -123,6 +135,7 @@ public class ThemeServiceTest
         Assert.AreEqual(Theme.Dark, themeService.CurrentColorScheme.Theme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AServiceWithAFixedSchemeCannotSwitch()
     {

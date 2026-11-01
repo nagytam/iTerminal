@@ -12,6 +12,7 @@ public class PanelNavigationTest
     [TestCleanup]
     public async Task StopAsync() => await _app.DisposeAsync();
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task DownAndUpMoveTheCursor()
     {
@@ -26,6 +27,7 @@ public class PanelNavigationTest
         Assert.AreEqual("alpha", _app.FocusedEntryName);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task HomeAndEndJumpToTheEnds()
     {
@@ -36,6 +38,7 @@ public class PanelNavigationTest
         Assert.AreEqual("..", _app.FocusedModel!.GetFocusedEntry()!.DisplayName.Trim());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheCursorRowIsDrawnDifferently()
     {
@@ -53,6 +56,7 @@ public class PanelNavigationTest
             "the cursor row has a background of its own" + Environment.NewLine + screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EnterOpensAFolder()
     {
@@ -65,6 +69,7 @@ public class PanelNavigationTest
         StringAssert.Contains(_app.Screen.Line(1), Path.Combine("left", "alpha"));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EnterOnTheParentEntryGoesBackAndKeepsTheCursorOnTheFolderLeft()
     {
@@ -79,6 +84,7 @@ public class PanelNavigationTest
         await _app.WaitUntilAsync(() => _app.FocusedEntryName == "alpha", "the cursor to be back on the folder that was left");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlPageUpGoesToTheParentFolder()
     {
@@ -92,6 +98,7 @@ public class PanelNavigationTest
         await _app.WaitUntilAsync(() => _app.FocusedEntryName == "beta", "the cursor to land on the folder that was left");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TabGivesTheKeyboardToTheOtherPanel()
     {
@@ -106,6 +113,7 @@ public class PanelNavigationTest
     /// Tab goes round the panels and the bar below them, and comes back to where it started — it
     /// never strands the keyboard somewhere Tab cannot leave.
     /// </summary>
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TabComesBackRoundToTheLeftPanel()
     {
@@ -121,6 +129,7 @@ public class PanelNavigationTest
         Assert.Fail("Six presses of Tab never came back to the left panel." + Environment.NewLine + _app.Screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ShiftTabGoesBackToThePanelBefore()
     {
@@ -132,6 +141,7 @@ public class PanelNavigationTest
         Assert.AreEqual(Core.Services.ContentModelService.Left, _app.ContentModels.FocusedPanel);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AltLetterStartsTypeToSearch()
     {
@@ -142,6 +152,7 @@ public class PanelNavigationTest
         Assert.IsTrue(_app.LeftPanelLists("readme.txt", screen));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TypingMoreNarrowsTheSearchAndEscClearsIt()
     {
@@ -156,6 +167,7 @@ public class PanelNavigationTest
         await _app.WaitUntilAsync(s => s.Contains(" 5 entries "), "the full listing back");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task BackspaceShortensTheSearch()
     {
@@ -168,6 +180,7 @@ public class PanelNavigationTest
         await _app.WaitForTextAsync("Filter: r ");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ANewFileOnDiskAppearsWithoutARefresh()
     {
@@ -176,6 +189,7 @@ public class PanelNavigationTest
         await _app.WaitUntilAsync(s => _app.LeftPanelLists("dropped_in.txt", s), "the folder watcher to pick the file up");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlRRefreshesThePanel()
     {

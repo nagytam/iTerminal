@@ -14,6 +14,7 @@ public class ProcessManagerDialogTest
     private static ProcessManagerDialog Create() =>
         new(Mock.Of<IBeepService>(), new ProcessService(), new DateTimeProviderService(), TestTheme());
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListsTheRunningProcesses()
     {
@@ -24,6 +25,7 @@ public class ProcessManagerDialogTest
         Assert.AreEqual("Process manager", dialog.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheFilterNarrowsTheList()
     {
@@ -37,6 +39,7 @@ public class ProcessManagerDialogTest
         await WaitUntilAsync(() => dialog.ListBoxForTest.Count > 0 && dialog.ListBoxForTest.Count < all, "the filter to apply");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFilterThatMatchesNothingSaysSo()
     {
@@ -49,6 +52,7 @@ public class ProcessManagerDialogTest
         AssertScreenContains(Render(dialog), "No process matches the filter.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowKeysMoveTheListWhileTheFilterHasFocus()
     {
@@ -62,6 +66,7 @@ public class ProcessManagerDialogTest
         Assert.AreEqual(1, (int)dialog.ListBoxForTest.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReopeningDoesNotMultiplyTheFilterHandlers()
     {
@@ -78,6 +83,7 @@ public class ProcessManagerDialogTest
         Assert.IsTrue(changes <= 6, $"{changes} scroll-model changes for one keystroke");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {
@@ -89,6 +95,7 @@ public class ProcessManagerDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlEndAndCtrlHomeJumpToTheLastAndFirstProcessWhileTheFilterHasFocus()
     {
@@ -104,6 +111,7 @@ public class ProcessManagerDialogTest
         Assert.AreEqual(0, (int)dialog.ListBoxForTest.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PlainEndStaysWithTheFilterBox()
     {

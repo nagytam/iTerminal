@@ -5,6 +5,7 @@ namespace iConsole.Test.Inputs;
 [TestClass]
 public class TerminalMouseAnsiTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void EnablePreferredMouseReporting_CombinesAnyMotionAndSgrSequences()
     {
@@ -13,6 +14,7 @@ public class TerminalMouseAnsiTest
             TerminalMouseAnsi.EnablePreferredMouseReporting);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DisablePreferredMouseReporting_CombinesDisableSequences()
     {

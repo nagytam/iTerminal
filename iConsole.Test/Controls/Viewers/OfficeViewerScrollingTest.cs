@@ -30,6 +30,7 @@ public class OfficeViewerScrollingTest
         try { Directory.Delete(_directory, true); } catch { /* best effort */ }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TallWordDocument_ScrollsVertically()
     {
@@ -44,6 +45,7 @@ public class OfficeViewerScrollingTest
         await AssertScrollsAsync(path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TallSpreadsheet_ScrollsVertically()
     {

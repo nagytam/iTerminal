@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Services.Remote;
 [TestClass]
 public class RemoteShellLaunchTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void SshIsStartedWithPortKeyAndDestination()
     {
@@ -18,6 +19,7 @@ public class RemoteShellLaunchTest
         CollectionAssert.AreEqual(new[] { "-p", "2222", "-i", "/keys/id", "alice@example.com" }, launch.Arguments.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshWithoutAUserOrPortIsJustTheHost()
     {
@@ -26,6 +28,7 @@ public class RemoteShellLaunchTest
         CollectionAssert.AreEqual(new[] { "example.com" }, launch.Arguments.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PowerShellOverSshUsesHostNameUserAndKey()
     {
@@ -38,6 +41,7 @@ public class RemoteShellLaunchTest
         Assert.AreEqual("Enter-PSSession -HostName 'example.com' -UserName 'alice' -Port 2222 -KeyFilePath '/keys/id'", command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PowerShellOverWinRmAsksForTheCredential()
     {
@@ -50,12 +54,14 @@ public class RemoteShellLaunchTest
         Assert.AreEqual("Enter-PSSession -ComputerName 'srv01' -Credential 'CORP\\alice'", command);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AQuoteInAPowerShellValueIsDoubled()
     {
         Assert.AreEqual("'it''s'", RemoteShellLaunch.QuotePowerShell("it's"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PowerShellOverSshNeedsPowerShellSeven()
     {
@@ -66,6 +72,7 @@ public class RemoteShellLaunchTest
         StringAssert.Contains(error, "PowerShell 7");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PowerShellOverSshRunsInPwshAndEndsWithTheSession()
     {
@@ -77,6 +84,7 @@ public class RemoteShellLaunchTest
         Assert.AreEqual("Enter-PSSession -HostName 'h'", launch.Arguments[^1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnsoundConnectionHasNoLaunch()
     {

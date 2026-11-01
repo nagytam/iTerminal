@@ -42,6 +42,7 @@ public class FileViewerKeysTest
     private static long Cursor(FileViewerDialog dialog) =>
         dialog.Controls.OfType<iConsole.Controls.Viewers.TextViewerControl>().First().ScrollableModel.CursorPosition.Y;
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DownMovesTheCursorWhenTheKeyGoesToTheDialog()
     {
@@ -53,6 +54,7 @@ public class FileViewerKeysTest
         Assert.AreEqual(1, viewer.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheHexDumpTakesTheKeysWhileItIsShown_AndGivesThemBack()
     {
@@ -68,6 +70,7 @@ public class FileViewerKeysTest
         Assert.AreEqual(1, viewer.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PageDownAndEndWorkThroughTheDialogToo()
     {

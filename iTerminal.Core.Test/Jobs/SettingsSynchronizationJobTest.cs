@@ -9,6 +9,7 @@ namespace iTerminal.Core.Jobs.Test;
 [TestClass]
 public class SettingsSynchronizationJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void OnStop_WhenSettingsChanged_SavesThem()
     {
@@ -20,6 +21,7 @@ public class SettingsSynchronizationJobTest
         settings.Verify(s => s.Write(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnStop_WhenNothingChanged_DoesNotWrite()
     {
@@ -31,6 +33,7 @@ public class SettingsSynchronizationJobTest
         settings.Verify(s => s.Write(), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnStop_WhenTheSaveFails_DoesNotThrow()
     {

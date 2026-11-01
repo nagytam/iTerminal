@@ -66,6 +66,12 @@ public static class MultiRenamePattern
             expanded = expanded.Replace(find, replace ?? string.Empty, StringComparison.Ordinal);
         }
 
+        // An empty name stays empty: appending the extension would give a hidden file such as ".pdf".
+        if (expanded.Length == 0)
+        {
+            return string.Empty;
+        }
+
         var keepsExtension = !isFolder && extension.Length > 0 && !pattern.Contains("[E]", StringComparison.Ordinal);
         return keepsExtension ? expanded + "." + extension : expanded;
     }

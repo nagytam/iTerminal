@@ -16,6 +16,7 @@ public class LineCanvasAndBorderedGridTest
 
     // ---- LineCanvas ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARectangle_HasCornersEdgesAndAnEmptyMiddle()
     {
@@ -29,6 +30,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.AreEqual("└────┘", Row(canvas, 3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoBoxesSharingAnEdge_JoinWhereTheEdgeMeetsTheirBorders()
     {
@@ -42,6 +44,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.AreEqual("└───┴───┘", Row(canvas, 3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FourBoxesInAGrid_MeetInACross_AndTheOuterEdgesGetTees()
     {
@@ -57,6 +60,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.AreEqual("└───┴───┘", Row(canvas, 6));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LinesMayBeAddedInAnyOrder_AndOverlapFreely()
     {
@@ -77,6 +81,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.AreEqual('─', first.GlyphAt(0, 1) == '╶' ? '─' : first.GlyphAt(1, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(BorderStyle.Double, "╔═╗", "║ ║", "╚═╝")]
     [DataRow(BorderStyle.Thick, "┏━┓", "┃ ┃", "┗━┛")]
@@ -92,6 +97,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.AreEqual(bottom, Row(canvas, 2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WhereStylesMeet_TheHeavierOneWins_AndRoundedNeedsAllRound()
     {
@@ -107,6 +113,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.AreEqual('┬', rounded.GlyphAt(1, 0), "a tee has no round form");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OutsideTheCanvas_IsIgnored_AndNoStyleDrawsNothing()
     {
@@ -123,6 +130,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.IsFalse(canvas.HasLine(-1, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALineOfOneCell_IsDrawnStraightThrough()
     {
@@ -153,6 +161,7 @@ public class LineCanvasAndBorderedGridTest
         return screen;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoColumns_ShareOneMiddleLineThatJoinsTheFrame()
     {
@@ -167,6 +176,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.AreEqual("└────┴────┘", screen.Line(4));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AGridOfFourCells_HasACrossInTheMiddle()
     {
@@ -186,6 +196,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.AreEqual('┴', screen.CharAt(5, 6));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AWideCell_SpansTracksAndTheLineBetweenThemIsNotDrawnThroughIt()
     {
@@ -201,6 +212,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.AreEqual("├────┬────┤", screen.Line(3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Content_FillsTheInsideOfItsCell()
     {
@@ -221,6 +233,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.IsNull(grid.FrameOf(new Control(_theme)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FixedAndFillTracks_ShareWhatTheLinesLeave()
     {
@@ -236,6 +249,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.AreEqual(new Size(11, 3), content.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATitle_IsSetIntoTheCellsTopLine_AndClipped()
     {
@@ -251,6 +265,7 @@ public class LineCanvasAndBorderedGridTest
         Assert.AreEqual('┐', screen.CharAt(20, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StyleAppliesToEveryLine_AndRedrawFillsTheBounds()
     {
@@ -265,6 +280,7 @@ public class LineCanvasAndBorderedGridTest
         screen.AssertFillsBounds(grid);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TinyAndEmptyGrids_DoNotThrow()
     {

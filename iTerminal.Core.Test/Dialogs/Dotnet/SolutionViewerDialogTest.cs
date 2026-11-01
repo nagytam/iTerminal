@@ -81,6 +81,7 @@ public class SolutionViewerDialogTest
     /// <summary>The host the product runs for an SDK root: dotnet, or dotnet.exe on Windows.</summary>
     private static string HostOf(string root) => Path.Combine(root, OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet");
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListsTheSolutionRowAndEveryProject()
     {
@@ -94,6 +95,7 @@ public class SolutionViewerDialogTest
         AssertScreenContains(screen, "(2 projects)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDialogFillsTheWholeScreen()
     {
@@ -103,6 +105,7 @@ public class SolutionViewerDialogTest
         Assert.AreEqual(new Position(0, 0), dialog.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASolutionThatCannotBeReadSaysWhyOnTheStatusLine()
     {
@@ -114,6 +117,7 @@ public class SolutionViewerDialogTest
         AssertScreenContains(Render(dialog), "Failed to read solution: access denied");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptySolutionSaysSo()
     {
@@ -125,6 +129,7 @@ public class SolutionViewerDialogTest
         AssertScreenContains(Render(dialog), "No projects found in solution.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task KeyHintsStayVisibleAfterARunHasReportedItsStatus()
     {
@@ -140,6 +145,7 @@ public class SolutionViewerDialogTest
         AssertScreenContains(screen, "b:build", "the key hints must survive the first status message");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BuildOnTheSolutionRowBuildsTheSolution()
     {
@@ -152,6 +158,7 @@ public class SolutionViewerDialogTest
         CollectionAssert.AreEqual(new[] { "build", "/src/App.slnx" }, service.Runs.Single().ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SpaceChecksProjectsAndBuildRunsOncePerCheckedProject()
     {
@@ -171,6 +178,7 @@ public class SolutionViewerDialogTest
         StringAssert.Contains(dialog.StatusForTest, "(2 projects)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASelectsAllAndAgainClearsTheSelection()
     {
@@ -183,6 +191,7 @@ public class SolutionViewerDialogTest
         AssertScreenDoesNotContain(Render(dialog), "selected)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CapitalTSelectsOnlyTheTestProjects()
     {
@@ -195,6 +204,7 @@ public class SolutionViewerDialogTest
         AssertScreenContains(screen, "[ ] App  ", "the non-test project stays unchecked");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TestRunsReportTheAggregatedTotals()
     {
@@ -208,6 +218,7 @@ public class SolutionViewerDialogTest
         StringAssert.Contains(dialog.StatusForTest, "Tests: 42 passed, 0 failed, 1 skipped (43 total, 1 project)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedBuildReportsTheExitCode()
     {
@@ -220,6 +231,7 @@ public class SolutionViewerDialogTest
         Assert.AreEqual("dotnet build failed (exit 1).", dialog.StatusForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RunOnTheSolutionRowExplainsThatAProjectIsNeeded()
     {
@@ -232,6 +244,7 @@ public class SolutionViewerDialogTest
         Assert.AreEqual(0, service.Runs.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RunOnAProjectRowRunsThatProject()
     {
@@ -245,6 +258,7 @@ public class SolutionViewerDialogTest
         CollectionAssert.AreEqual(new[] { "run", "--project", "/src/App/App.csproj" }, service.Runs.Single().ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CleanOnTheSolutionRowCleansTheSolution()
     {
@@ -257,6 +271,7 @@ public class SolutionViewerDialogTest
         CollectionAssert.AreEqual(new[] { "clean", "/src/App.slnx" }, service.Runs.Single().ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CleanOnAProjectRowCleansThatProject()
     {
@@ -270,6 +285,7 @@ public class SolutionViewerDialogTest
         CollectionAssert.AreEqual(new[] { "clean", "/src/App/App.csproj" }, service.Runs.Single().ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CleanReportsSuccessOnTheStatusLine()
     {
@@ -286,6 +302,7 @@ public class SolutionViewerDialogTest
     private static readonly DotnetSdk Sdk1013 = new("10.0.113", "/opt/dotnet");
     private static readonly DotnetSdk Sdk10Preview = new("10.0.200-preview.1", "/home/me/dotnet");
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheNewestStableSdkIsSelectedByDefault()
     {
@@ -295,6 +312,7 @@ public class SolutionViewerDialogTest
         Assert.AreEqual("10.0.113", dialog.SdkVersionForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheHeaderShowsTheSdkVersion()
     {
@@ -306,6 +324,7 @@ public class SolutionViewerDialogTest
         AssertScreenContains(screen, ".NET SDK 10.0.113");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BuildUsesTheSelectedSdksHost()
     {
@@ -318,6 +337,7 @@ public class SolutionViewerDialogTest
         Assert.AreEqual(HostOf("/opt/dotnet"), service.Hosts.Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task VCyclesThroughTheInstalledSdks_AndTheNextCommandUsesTheChosenOne()
     {
@@ -338,6 +358,7 @@ public class SolutionViewerDialogTest
         Assert.AreEqual(HostOf("/usr/lib/dotnet"), service.Hosts.Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task VWithOneSdkSaysSo()
     {
@@ -349,6 +370,7 @@ public class SolutionViewerDialogTest
         StringAssert.Contains(dialog.StatusForTest, "Only .NET SDK 10.0.113");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoSdkFoundCommandsUseTheDotnetOnThePath()
     {
@@ -362,6 +384,7 @@ public class SolutionViewerDialogTest
         Assert.AreEqual(string.Empty, dialog.SdkVersionForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASecondCommandWhileBusyIsExplainedNotSwallowed()
     {
@@ -378,6 +401,7 @@ public class SolutionViewerDialogTest
         await WaitIdleAsync(dialog);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task XCancelsARunningCommand()
     {
@@ -392,6 +416,7 @@ public class SolutionViewerDialogTest
         Assert.AreEqual("dotnet build cancelled.", dialog.StatusForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OutputIsShownWithTheCommandLine()
     {
@@ -406,6 +431,7 @@ public class SolutionViewerDialogTest
         AssertScreenContains(Render(dialog), "Build succeeded.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesTheDialog()
     {
@@ -417,6 +443,7 @@ public class SolutionViewerDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheOutputScrollsWithPageKeysAndHomeAndEndJumpToTheEnds()
     {
@@ -441,6 +468,7 @@ public class SolutionViewerDialogTest
         Assert.AreEqual(bottom, dialog.OutputScrollForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CapitalTWithNoTestProjectsSaysSo()
     {
@@ -455,6 +483,7 @@ public class SolutionViewerDialogTest
         Assert.AreEqual("No test projects in this solution.", dialog.StatusForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CapitalTAgainClearsTheTestProjects()
     {

@@ -35,6 +35,7 @@ public class ProgressTimeStateTest
         return buffer.ContentAsString.Split(Environment.NewLine)[0].TrimEnd();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WhileTheTaskRuns_ItShowsElapsedAndRemaining_AndRedrawsOnIdle()
     {
@@ -52,6 +53,7 @@ public class ProgressTimeStateTest
         Assert.IsTrue(line.Contains("Remaining time: "));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnceTheTaskIsOver_ItShowsTheTotal_AndStopsRedrawing()
     {
@@ -68,6 +70,7 @@ public class ProgressTimeStateTest
         Assert.IsFalse(line.Contains("Remaining"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheLabelsCanBeChanged()
     {
@@ -84,6 +87,7 @@ public class ProgressTimeStateTest
         Assert.IsTrue(line.Contains("Left: "));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetColor_FollowsTheVisualState()
     {
@@ -99,6 +103,7 @@ public class ProgressTimeStateTest
         Assert.AreEqual((scheme.Foreground, scheme.Background), (normalFg, normalBg));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANarrowView_DoesNotThrow()
     {

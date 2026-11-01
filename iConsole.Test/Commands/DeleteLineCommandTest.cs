@@ -12,6 +12,7 @@ namespace iConsole.Commands.Test;
 [TestClass]
 public class DeleteLineCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_ShouldClearLineAndResetScroll()
     {
@@ -28,6 +29,7 @@ public class DeleteLineCommandTest
         Assert.AreEqual(0, scrollable.ScrollPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_OnlyClearsTheCursorLine_AndKeepsTheLinesBelowInPlace()
     {
@@ -44,6 +46,7 @@ public class DeleteLineCommandTest
         Assert.AreEqual(0, scrollable.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_OnAnEmptyDocument_DoesNothing()
     {
@@ -55,6 +58,7 @@ public class DeleteLineCommandTest
         Assert.AreEqual(0, textModel.Lines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WithACursorBelowTheLastLine_ClearsTheLastLine()
     {
@@ -69,6 +73,7 @@ public class DeleteLineCommandTest
         Assert.AreEqual(1, scrollable.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_MarksTheEditorDirty_OnlyWhenTheLineHadText()
     {
@@ -86,6 +91,7 @@ public class DeleteLineCommandTest
         Assert.IsTrue(editor.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_IsFalseInAReadOnlyEditor()
     {

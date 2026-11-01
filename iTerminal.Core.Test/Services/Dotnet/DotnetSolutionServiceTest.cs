@@ -36,6 +36,7 @@ public class DotnetSolutionServiceTest
 
     // ── ParseSolution: slnx ──────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseSolution_Slnx_ReturnsProjectsWithAbsolutePaths()
     {
@@ -67,6 +68,7 @@ public class DotnetSolutionServiceTest
             solution.Projects[0].AbsolutePath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseSolution_Slnx_IgnoresNonProjectFilesAndDuplicates()
     {
@@ -93,6 +95,7 @@ public class DotnetSolutionServiceTest
 
     // ── ParseSolution: IsTestProject detection ───────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseSolution_ProjectDeclaresIsTestProjectTrue_IsTestProjectIsTrue()
     {
@@ -115,6 +118,7 @@ public class DotnetSolutionServiceTest
         Assert.IsTrue(solution.Projects[0].IsTestProject);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseSolution_ProjectReferencesTestSdkWithoutIsTestProjectProperty_IsTestProjectIsTrue()
     {
@@ -137,6 +141,7 @@ public class DotnetSolutionServiceTest
         Assert.IsTrue(solution.Projects[0].IsTestProject);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseSolution_OrdinaryProject_IsTestProjectIsFalse()
     {
@@ -159,6 +164,7 @@ public class DotnetSolutionServiceTest
         Assert.IsFalse(solution.Projects[0].IsTestProject);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseSolution_ProjectDeclaresIsTestProjectFalse_OverridesTestSdkReference_IsTestProjectIsFalse()
     {
@@ -186,6 +192,7 @@ public class DotnetSolutionServiceTest
 
     // ── ParseSolution: legacy .sln ───────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseSolution_LegacySln_ReturnsProjectsSkippingSolutionFolders()
     {
@@ -208,6 +215,7 @@ public class DotnetSolutionServiceTest
 
     // ── ParseSolution: error handling ────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseSolution_MissingFile_ReturnsEmpty()
     {
@@ -218,6 +226,7 @@ public class DotnetSolutionServiceTest
         Assert.AreEqual(string.Empty, solution.Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseSolution_MalformedSlnx_ReturnsNoProjects()
     {
@@ -235,6 +244,7 @@ public class DotnetSolutionServiceTest
 
     // ── RunAsync ─────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RunAsync_StreamsOutput_AndReturnsExitCode()
     {
@@ -257,6 +267,7 @@ public class DotnetSolutionServiceTest
         Assert.IsTrue(lines.Count > 0, "Expected dotnet --version to produce output.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RunAsync_WhenCancelled_ReturnsNegative()
     {

@@ -8,6 +8,7 @@ namespace iConsole.Test.Controls;
 [TestClass]
 public class ResizeEventTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void OnWindowSizeChanged_ShouldUpdateViewSize()
     {
@@ -20,6 +21,7 @@ public class ResizeEventTest
         Assert.AreEqual(newSize, control.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnWindowSizeChanged_ShouldPropagateToChildren()
     {
@@ -36,6 +38,7 @@ public class ResizeEventTest
         Assert.AreEqual(newSize, child.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnWindowSizeChanged_ShouldCallOnInitializeLayout()
     {
@@ -48,6 +51,7 @@ public class ResizeEventTest
         Assert.IsTrue(control.OnInitializeLayoutCalled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnWindowSizeChanged_WithZeroSize_ShouldNotCrash()
     {
@@ -66,6 +70,7 @@ public class ResizeEventTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnWindowSizeChanged_MultipleChildren_AllShouldResize()
     {
@@ -88,6 +93,7 @@ public class ResizeEventTest
         Assert.AreEqual(newSize, child3.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnWindowSizeChanged_NestedChildren_ShouldPropagate()
     {
@@ -110,6 +116,7 @@ public class ResizeEventTest
         // unless child explicitly sets it
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnWindowResize_ShouldTriggerStateChange()
     {
@@ -122,6 +129,7 @@ public class ResizeEventTest
         Assert.IsTrue(control.HasStateChanged);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnWindowSizeChanged_SmallSize_ShouldHandleGracefully()
     {
@@ -140,6 +148,7 @@ public class ResizeEventTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnWindowSizeChanged_LargeSize_ShouldHandleGracefully()
     {

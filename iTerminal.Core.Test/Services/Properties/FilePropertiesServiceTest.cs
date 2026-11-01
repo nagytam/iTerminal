@@ -20,6 +20,7 @@ public class FilePropertiesServiceTest
         Directory.Delete(_folder, recursive: true);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetTimes_WritesTheModifiedAndAccessedDatesOfAFile()
     {
@@ -34,6 +35,7 @@ public class FilePropertiesServiceTest
         Assert.AreEqual(when.AddHours(1), read.Accessed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetTimes_WritesTheModifiedDateOfAFolder()
     {
@@ -44,6 +46,7 @@ public class FilePropertiesServiceTest
         Assert.AreEqual(when, new FilePropertiesService().Read(_folder).Modified);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetTimes_WithNothingToSet_TouchesNothing()
     {

@@ -59,6 +59,7 @@ public class ImageFileViewerDialogSixelTest
         return buffer.ContentAsString;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnASixelTerminal_ThePictureIsABitmapSizedInPixels()
     {
@@ -78,6 +79,7 @@ public class ImageFileViewerDialogSixelTest
         Assert.AreEqual(open.Columns, dialog.Picture!.Columns);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheBitmapSitsInsideTheRoomTheDialogHas()
     {
@@ -92,6 +94,7 @@ public class ImageFileViewerDialogSixelTest
         Assert.IsTrue(picture.Y + picture.Rows <= dialog.AbsolutePosition.Y + dialog.ViewSize.Height - 1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowingTheMetadata_WithdrawsTheBitmap()
     {
@@ -106,6 +109,7 @@ public class ImageFileViewerDialogSixelTest
         Assert.IsNull(overlay.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingTheDialog_WithdrawsTheBitmap()
     {
@@ -118,6 +122,7 @@ public class ImageFileViewerDialogSixelTest
         Assert.IsNull(overlay.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutSixel_ThePictureIsAsciiArtAsBefore()
     {

@@ -3217,6 +3217,84 @@
   <data name="Print.Hint.List" xml:space="preserve">
     <value>Enter nyomtat  ←→ nyomtató  +/- példány  P tart/folytat  Del töröl  F5 frissít  Esc bezár</value>
   </data>
+  <data name="Dialog.BluetoothDeviceManager" xml:space="preserve">
+    <value>Bluetooth-eszközök</value>
+  </data>
+  <data name="Empty.BluetoothDevices" xml:space="preserve">
+    <value>Nincs ismert Bluetooth-eszköz. A közeli eszközök kereséséhez nyomja meg az S billentyűt.</value>
+  </data>
+  <data name="Status.Bluetooth.Reading" xml:space="preserve">
+    <value>Bluetooth-eszközök olvasása…</value>
+  </data>
+  <data name="Status.Bluetooth.Unsupported" xml:space="preserve">
+    <value>A Bluetooth-eszközöket Linuxon a BlueZ kezeli; ez a rendszer nem rendelkezik Bluetooth-háttérrel.</value>
+  </data>
+  <data name="Status.Bluetooth.Scanning" xml:space="preserve">
+    <value>Közeli eszközök keresése…</value>
+  </data>
+  <data name="Status.Bluetooth.Scanned" xml:space="preserve">
+    <value>A keresés befejeződött: {0} eszköz ismert.</value>
+  </data>
+  <data name="Status.Bluetooth.Connecting" xml:space="preserve">
+    <value>Csatlakozás: {0}…</value>
+  </data>
+  <data name="Status.Bluetooth.Connected" xml:space="preserve">
+    <value>Csatlakozva: {0}.</value>
+  </data>
+  <data name="Status.Bluetooth.Disconnecting" xml:space="preserve">
+    <value>Kapcsolat bontása: {0}…</value>
+  </data>
+  <data name="Status.Bluetooth.Disconnected" xml:space="preserve">
+    <value>Kapcsolat bontva: {0}.</value>
+  </data>
+  <data name="Status.Bluetooth.Pairing" xml:space="preserve">
+    <value>Párosítás: {0}…</value>
+  </data>
+  <data name="Status.Bluetooth.Paired" xml:space="preserve">
+    <value>Párosítva: {0}.</value>
+  </data>
+  <data name="Status.Bluetooth.AlreadyPaired" xml:space="preserve">
+    <value>{0} már párosítva van.</value>
+  </data>
+  <data name="Status.Bluetooth.Removing" xml:space="preserve">
+    <value>Eltávolítás: {0}…</value>
+  </data>
+  <data name="Status.Bluetooth.Removed" xml:space="preserve">
+    <value>{0} eltávolítva.</value>
+  </data>
+  <data name="Status.Bluetooth.Error" xml:space="preserve">
+    <value>A Bluetooth-művelet sikertelen: {0}</value>
+  </data>
+  <data name="Prompt.Bluetooth.Remove" xml:space="preserve">
+    <value>Eltávolítja a(z) "{0}" eszközt erről a számítógépről? (i/n)</value>
+  </data>
+  <data name="DialogHint.Bluetooth.ConnectDisconnect" xml:space="preserve">
+    <value>Eszköz csatlakoztatása vagy leválasztása</value>
+  </data>
+  <data name="DialogHint.Bluetooth.Pair" xml:space="preserve">
+    <value>Párosítás az eszközzel</value>
+  </data>
+  <data name="DialogHint.Bluetooth.Scan" xml:space="preserve">
+    <value>Közeli eszközök keresése</value>
+  </data>
+  <data name="DialogHint.Bluetooth.Refresh" xml:space="preserve">
+    <value>Eszközök újraolvasása</value>
+  </data>
+  <data name="DialogHint.Bluetooth.Remove" xml:space="preserve">
+    <value>Eszköz elfelejtetése</value>
+  </data>
+  <data name="State.Bluetooth.Connected" xml:space="preserve">
+    <value>csatlakoztatva</value>
+  </data>
+  <data name="State.Bluetooth.Paired" xml:space="preserve">
+    <value>párosítva</value>
+  </data>
+  <data name="State.Bluetooth.Nearby" xml:space="preserve">
+    <value>közeli</value>
+  </data>
+  <data name="Status.Bluetooth.Busy" xml:space="preserve">
+    <value>Az előző művelet még fut; várjon, amíg befejeződik.</value>
+  </data>
   <data name="Dialog.VirtualMachineManager" xml:space="preserve">
     <value>Virtuális gépek kezelője</value>
   </data>
@@ -3342,5 +3420,8 @@
   </data>
   <data name="DialogHint.MultiRename" xml:space="preserve">
     <value>Az előnézetben látható fájlok átnevezése</value>
+  </data>
+  <data name="Multi.Status.CaseOnly" xml:space="preserve">
+    <value>csak kis- és nagybetűs változtatás, nem lesz átnevezve</value>
   </data>
 </root>

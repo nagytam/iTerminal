@@ -28,6 +28,7 @@ public class SettingsAndCacheServiceTest
         return new SettingsService();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Set_And_Get_RoundTrip()
     {
@@ -36,6 +37,7 @@ public class SettingsAndCacheServiceTest
         Assert.AreEqual("value1", svc.Get("key1"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Get_ReturnsNull_ForUnknownKey()
     {
@@ -43,6 +45,7 @@ public class SettingsAndCacheServiceTest
         Assert.IsNull(svc.Get("unknown_key_xyz"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Set_OverwritesExistingValue()
     {
@@ -52,6 +55,7 @@ public class SettingsAndCacheServiceTest
         Assert.AreEqual("second", svc.Get("k"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Delete_RemovesKey()
     {
@@ -61,6 +65,7 @@ public class SettingsAndCacheServiceTest
         Assert.IsNull(svc.Get("toDelete"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Delete_NonExistentKey_DoesNotThrow()
     {
@@ -68,6 +73,7 @@ public class SettingsAndCacheServiceTest
         svc.Delete("neverSet");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsDirty_IsFalse_Initially()
     {
@@ -77,6 +83,7 @@ public class SettingsAndCacheServiceTest
         Assert.IsNotNull(svc);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsDirty_IsTrue_AfterSet()
     {
@@ -85,6 +92,7 @@ public class SettingsAndCacheServiceTest
         Assert.IsTrue(svc.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsDirty_IsTrue_AfterDelete()
     {
@@ -95,6 +103,7 @@ public class SettingsAndCacheServiceTest
         Assert.IsTrue(svc.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAsBool_ReturnsTrue_ForTrueString()
     {
@@ -103,6 +112,7 @@ public class SettingsAndCacheServiceTest
         Assert.AreEqual(true, svc.GetAsBool("flag"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAsBool_ReturnsFalse_ForFalseString()
     {
@@ -111,6 +121,7 @@ public class SettingsAndCacheServiceTest
         Assert.AreEqual(false, svc.GetAsBool("flag"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAsBool_ReturnsDefault_ForMissingKey()
     {
@@ -118,6 +129,7 @@ public class SettingsAndCacheServiceTest
         Assert.AreEqual(false, svc.GetAsBool("missing"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAsBool_ReturnsDefault_ForNonBoolString()
     {
@@ -126,6 +138,7 @@ public class SettingsAndCacheServiceTest
         Assert.AreEqual(false, svc.GetAsBool("flag"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Write_DoesNotThrow()
     {
@@ -135,6 +148,7 @@ public class SettingsAndCacheServiceTest
         Assert.IsFalse(svc.IsDirty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FolderHistory_ConstantIsDefined()
     {
@@ -145,6 +159,7 @@ public class SettingsAndCacheServiceTest
 [TestClass]
 public class MemoryCacheServiceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Set_And_Get_RoundTrip()
     {
@@ -153,6 +168,7 @@ public class MemoryCacheServiceTest
         Assert.AreEqual("value", svc.Get("key"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Get_ReturnsNull_ForUnknownKey()
     {
@@ -160,6 +176,7 @@ public class MemoryCacheServiceTest
         Assert.IsNull(svc.Get("unknown"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Set_OverwritesExistingEntry()
     {
@@ -169,6 +186,7 @@ public class MemoryCacheServiceTest
         Assert.AreEqual("second", svc.Get("k"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Set_AcceptsArbitraryObjects()
     {
@@ -180,6 +198,7 @@ public class MemoryCacheServiceTest
         CollectionAssert.AreEqual(obj, retrieved);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MemoryCacheService_ImplementsInterface()
     {

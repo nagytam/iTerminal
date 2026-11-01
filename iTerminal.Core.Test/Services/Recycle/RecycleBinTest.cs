@@ -64,6 +64,7 @@ public class RecycleBinTest
     private RecycleBinService Service() => new(Store());
 
     #region The Windows record
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseRecord_Version2_AsWindows10WritesIt()
     {
@@ -72,6 +73,7 @@ public class RecycleBinTest
         Assert.AreEqual((@"C:\Users\me\Árvíz report.pdf", 1234L, Monday), parsed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseRecord_Version1_AFixedPathField()
     {
@@ -85,6 +87,7 @@ public class RecycleBinTest
         Assert.AreEqual((@"D:\old\notes.txt", 99L, Monday), WindowsRecycleBinStore.ParseRecord(bytes));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseRecord_WhatIsNotARecord_IsNull()
     {
@@ -99,6 +102,7 @@ public class RecycleBinTest
     #endregion
 
     #region The Windows store
+    [Timeout(60_000)]
     [TestMethod]
     public void List_PairsEveryRecordWithItsContent_AndSkipsWhatIsIncomplete()
     {
@@ -120,6 +124,7 @@ public class RecycleBinTest
         Assert.AreEqual(Monday, items[1].Deleted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Restore_MovesTheFileBack_RecreatingItsFolder_AndRemovesTheRecord()
     {
@@ -133,6 +138,7 @@ public class RecycleBinTest
         Assert.AreEqual(0, Directory.GetFileSystemEntries(Bin).Length, "nothing of it is left in the bin");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Restore_AFolder_ComesBackWithItsContents()
     {
@@ -144,6 +150,7 @@ public class RecycleBinTest
         Assert.AreEqual("inside", File.ReadAllText(Path.Combine(Home, "photos", "inside.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Restore_NeverOverwritesWhatHasTakenItsPlace()
     {
@@ -159,6 +166,7 @@ public class RecycleBinTest
         Assert.AreEqual(1, store.List().Count, "and the deleted one is still in the bin");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Purge_DeletesTheContentAndTheRecord_AFolderWithEverythingInIt()
     {
@@ -178,6 +186,7 @@ public class RecycleBinTest
     #endregion
 
     #region The freedesktop trash
+    [Timeout(60_000)]
     [TestMethod]
     public void FreedesktopTrash_ListsRestoresAndPurges()
     {
@@ -208,6 +217,7 @@ public class RecycleBinTest
         Assert.AreEqual(0, Directory.GetFiles(Path.Combine(trash, "info")).Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FreedesktopRecord_WithoutAPath_IsNotARecord()
     {
@@ -217,6 +227,7 @@ public class RecycleBinTest
     #endregion
 
     #region The service: the drive's listing and its file system
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListAsync_IsNewestFirst_WithUrlsThatAreTheNames()
     {
@@ -234,6 +245,7 @@ public class RecycleBinTest
         StringAssert.Contains(entries[0].GetDisplayFileSize(200), "Deleted from " + Home);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Name_NumbersASecondFileOfTheSameName_TheSameWayEveryTime()
     {
@@ -249,6 +261,7 @@ public class RecycleBinTest
         CollectionAssert.AreEqual(named, again);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RestoreAsync_RestoresWhatItCan_AndReportsWhatItCouldNot()
     {
@@ -268,6 +281,7 @@ public class RecycleBinTest
         Assert.IsTrue(service.ExistsFile(new Url("recycle://b.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADeletedFile_CanBeReadWhereItLies_AndDeletedForGood()
     {
@@ -293,6 +307,7 @@ public class RecycleBinTest
         Assert.IsFalse(File.Exists(Path.Combine(Home, "a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingIsCopiedIntoTheBin()
     {
@@ -302,6 +317,7 @@ public class RecycleBinTest
         StringAssert.Contains(exception.Message, "F8");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASystemWithoutAReadableBin_SaysSo()
     {
@@ -312,6 +328,7 @@ public class RecycleBinTest
         Assert.AreEqual("No bin here.", exception.Message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DescribeRestore_OneOrSeveral_WithAndWithoutFailures()
     {
@@ -325,6 +342,7 @@ public class RecycleBinTest
     }
     #endregion
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheScheme_ParsesAsItsOwnDrive()
     {

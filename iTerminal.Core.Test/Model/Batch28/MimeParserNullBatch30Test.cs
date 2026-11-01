@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Model.Batch28;
 [TestClass]
 public class MimeParserNullBatch30Test
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Parse_OfNull_GivesAnEmptyItem()
     {
@@ -14,6 +15,7 @@ public class MimeParserNullBatch30Test
         Assert.AreEqual(3, item.Number);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseListing_OfNull_GivesAnEmptyListing()
     {

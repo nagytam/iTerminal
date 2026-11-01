@@ -107,6 +107,7 @@ public class MusicFileViewerDialogTest
     private static KeyEvent Key(char keyChar, ConsoleKey consoleKey, bool shift = false) =>
         new(keyChar, consoleKey, shift, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Show_ReadsTheFilesTagsInTheBackground()
     {
@@ -122,6 +123,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw_ShowsArtistTitleAlbumTheTagsAndTheTransport()
     {
@@ -151,6 +153,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw_ListsEveryTagInTheTagList()
     {
@@ -172,6 +175,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Space_QueuesTheFileAndPlaysItThroughTheSharedPlayer()
     {
@@ -192,6 +196,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Space_Twice_PausesTheFileItStarted()
     {
@@ -212,6 +217,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task S_StopsPlayback()
     {
@@ -231,6 +237,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PlusAndMinus_ChangeTheSharedVolume()
     {
@@ -250,6 +257,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClosesTheDialogButLeavesTheMusicPlaying()
     {
@@ -270,6 +278,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Playing_AFileThePlayerCannotDecode_ExplainsInsteadOfQueueingIt()
     {
@@ -293,6 +302,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Show_AMissingFile_ReportsTheErrorRatherThanThrowing()
     {
@@ -307,6 +317,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task S_InAViewerOfAnotherFile_DoesNotStopWhatIsPlaying()
     {
@@ -335,6 +346,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Seeking_AFileThatIsNotPlaying_SaysHowToStartIt()
     {
@@ -350,6 +362,7 @@ public class MusicFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheFooterNamesTheLongSeek()
     {

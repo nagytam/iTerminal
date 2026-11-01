@@ -37,6 +37,7 @@ public class FolderSelectorDialogTest
         };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_ListsOnePageForEveryWayOfNamingAFolder()
     {
@@ -49,6 +50,7 @@ public class FolderSelectorDialogTest
             dialog.TabPages.Select(p => p.Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_GivesEveryPageItsOwnNumberedHotKey()
     {
@@ -67,6 +69,7 @@ public class FolderSelectorDialogTest
         Assert.AreEqual(hotKeys.Count, hotKeys.Distinct().Count(), "Two pages sharing a hot key makes one unreachable.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Ctrl6_JumpsStraightToThePathPage()
     {
@@ -80,6 +83,7 @@ public class FolderSelectorDialogTest
         Assert.IsTrue(dialog.TabPages[6].IsFocused, "Ctrl+6 should focus the Path page.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlDown_MovesToTheNextPage()
     {
@@ -94,6 +98,7 @@ public class FolderSelectorDialogTest
         Assert.IsFalse(dialog.TabPages[0].IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClosesWithoutNavigating()
     {
@@ -108,6 +113,7 @@ public class FolderSelectorDialogTest
         Assert.AreEqual(0, harness.Navigations.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClosesFromEveryPage()
     {
@@ -131,6 +137,7 @@ public class FolderSelectorDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ClosesWhicheverControlOnThePageIsFocused()
     {
@@ -175,6 +182,7 @@ public class FolderSelectorDialogTest
         return autoCompletion;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_WithTheCompletionListOpen_TakesTheListFirstAndTheSelectorNext()
     {
@@ -200,6 +208,7 @@ public class FolderSelectorDialogTest
         Assert.AreEqual(0, harness.Navigations.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_ThenTyping_BringsTheCompletionListBack()
     {
@@ -232,6 +241,7 @@ public class FolderSelectorDialogTest
         Assert.IsTrue(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingTheSelector_WithTheCompletionListOpen_TakesTheListWithIt()
     {
@@ -250,6 +260,7 @@ public class FolderSelectorDialogTest
         Assert.AreEqual(0, root.Controls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCompletionList_OpensOnTheRowDirectlyBelowTheBoxItBelongsTo()
     {
@@ -278,6 +289,7 @@ public class FolderSelectorDialogTest
         Assert.AreEqual((int)textBox.ViewSize.Width, (int)popup.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SwitchingPage_TakesTheCompletionListWithIt()
     {
@@ -295,6 +307,7 @@ public class FolderSelectorDialogTest
         Assert.IsFalse(autoCompletion.IsPopupOpen, "The suggestions belonged to the page that was left.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithTheCompletionListOpen_StillGoesToTheTypedFolderAndCloses()
     {
@@ -317,6 +330,7 @@ public class FolderSelectorDialogTest
         Assert.AreEqual(0, root.Controls.Count, "Neither the selector nor its suggestion list may be left behind.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SelectingAPage_PutsTheCursorOnThatPagesFirstControl()
     {
@@ -342,6 +356,7 @@ public class FolderSelectorDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePageHotKey_OnThePageAlreadyShowing_BringsTheCursorBackToItsFirstControl()
     {
@@ -361,6 +376,7 @@ public class FolderSelectorDialogTest
         Assert.AreSame(page.Controls[0], page.GetFocusedControl());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Escape_WithHelpOpen_ClosesTheHelpFirstAndTheSelectorNext()
     {
@@ -402,6 +418,7 @@ public class FolderSelectorDialogTest
         return ((int)firstPage.X - stripWidth + 2, (int)firstPage.Y + 1 + (2 * page));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingAPageNameInTheLeftStrip_ShowsThatPageAndFocusesItsContent()
     {
@@ -420,6 +437,7 @@ public class FolderSelectorDialogTest
             "The cursor should land in the panel on the right, not stay on the strip.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingThePageAlreadyShowing_PutsTheCursorBackInItsPanel()
     {
@@ -447,6 +465,7 @@ public class FolderSelectorDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithHelpDialog_BindsF1()
     {
@@ -461,6 +480,7 @@ public class FolderSelectorDialogTest
         Assert.IsFalse(helpCommand.Key!.Control || helpCommand.Key.Alt || helpCommand.Key.Shift);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithoutHelpDialog_BindsNoF1()
     {
@@ -471,6 +491,7 @@ public class FolderSelectorDialogTest
         Assert.IsFalse(dialog.Commands.Any(c => c is HelpDialogCommand));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetFooter_NamesTheKeysThatWorkOnEveryPage()
     {
@@ -482,6 +503,7 @@ public class FolderSelectorDialogTest
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(footer, "Esc");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetFooter_OnANarrowBorder_LeavesHintsOutWholeAndKeepsGoHelpAndCancel()
     {
@@ -494,6 +516,7 @@ public class FolderSelectorDialogTest
         Assert.IsFalse(footer.Contains("Ctrl+Up/Down", StringComparison.Ordinal), footer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw_PutsTheKeyHintsOnTheBottomBorder()
     {
@@ -509,6 +532,7 @@ public class FolderSelectorDialogTest
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(lastLine, "Esc cancel");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Draw_InANarrowTerminal_DoesNotThrow()
     {
@@ -525,6 +549,7 @@ public class FolderSelectorDialogTest
         Assert.IsNotNull(buffer.ContentAsString);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetKeyHints_DocumentTheThreeKeysAndThePageSwitch()
     {
@@ -539,6 +564,7 @@ public class FolderSelectorDialogTest
         Assert.IsTrue(hints.All(h => !string.IsNullOrWhiteSpace(h.Description)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnInitialize_FocusesSomethingOnTheFirstPage()
     {
@@ -555,6 +581,7 @@ public class FolderSelectorDialogTest
         Assert.IsTrue(focused!.CanFocus);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryPage_DocumentsTheSameThreeKeysInItsOwnWords()
     {

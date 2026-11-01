@@ -33,6 +33,7 @@ public class MusicMetadataServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadAsync_Wave_ReportsDurationAndFormat()
     {
@@ -51,6 +52,7 @@ public class MusicMetadataServiceTest
         StringAssert.Contains(metadata.FormatSummary, "stereo");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadAsync_TaggedMp3_ReturnsTagsEvenWhenTheAudioCannotBeDecoded()
     {
@@ -66,6 +68,7 @@ public class MusicMetadataServiceTest
         Assert.AreEqual(string.Empty, metadata.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadAsync_Flac_UsesTheMetadataBlocksRatherThanADecoder()
     {
@@ -88,6 +91,7 @@ public class MusicMetadataServiceTest
         StringAssert.Contains(metadata.FormatSummary, "16 bit");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadAsync_UntaggedFile_FallsBackToTheFileNameForTheTitle()
     {
@@ -101,6 +105,7 @@ public class MusicMetadataServiceTest
         Assert.IsTrue(metadata.TagSet.IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadAsync_MissingFile_ReportsTheErrorInsteadOfThrowing()
     {
@@ -110,6 +115,7 @@ public class MusicMetadataServiceTest
         Assert.AreEqual(TimeSpan.Zero, metadata.Duration);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsMusicFile_FollowsTheDecoderFactory()
     {
@@ -120,6 +126,7 @@ public class MusicMetadataServiceTest
         Assert.IsFalse(service.IsMusicFile(@"C:\Music\readme.txt"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadAsync_ProducesATrackTheParticularPlayerCanQueue()
     {

@@ -6,6 +6,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class UrlSpecialCharactersTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void LocalFileWithAtSignInNameIsAFile()
     {
@@ -16,6 +17,7 @@ public class UrlSpecialCharactersTest
         Assert.AreEqual("png", url.Extension);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LocalFolderWithAtSignIsAFolder()
     {
@@ -25,6 +27,7 @@ public class UrlSpecialCharactersTest
         Assert.AreEqual(PathType.Folder, url.PathType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshHostWithHyphenAndUserWithDotAreParsed()
     {
@@ -36,6 +39,7 @@ public class UrlSpecialCharactersTest
         Assert.AreEqual("/home/first/a b.txt", url.Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SshPathKeepsNonAsciiCharacters()
     {
@@ -44,6 +48,7 @@ public class UrlSpecialCharactersTest
         Assert.AreEqual("/home/user/árvíztűrő.txt", url.Path);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SmbPathKeepsBlanksAndNonAsciiCharacters()
     {
@@ -56,6 +61,7 @@ public class UrlSpecialCharactersTest
         Assert.AreEqual("ä.txt", url.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnonymousSmbPathKeepsBlanks()
     {

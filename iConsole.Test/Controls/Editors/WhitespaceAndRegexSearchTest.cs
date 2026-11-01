@@ -49,6 +49,7 @@ public class WhitespaceAndRegexSearchTest
 
     // ---- visible whitespace ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Whitespace_IsDrawnAsMarks_OnlyWhenAsked_AndTheTextIsUntouched()
     {
@@ -62,6 +63,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.AreEqual("a b\tc", editor.TextModel.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TrailingWhitespace_IsDrawnInTheErrorColour_AndInnerWhitespaceDimmed()
     {
@@ -83,6 +85,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.AreEqual(scheme.Error, other.ForegroundAt(7, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Whitespace_WorksWithTheGutterAndWrapping_AndNothingIsMarkedPastTheEndOfALine()
     {
@@ -97,6 +100,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.IsFalse(screen.Line(4).Contains('·'), "the empty rows below the text have no marks");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Whitespace_ScrolledSideways_StillMarksTheVisiblePart()
     {
@@ -111,6 +115,7 @@ public class WhitespaceAndRegexSearchTest
 
     // ---- SearchEngine ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PlainSearch_FindsEveryOccurrence_RespectingCase()
     {
@@ -124,6 +129,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.AreEqual(3, loose.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RegexSearch_ReturnsTheLengthOfEachMatch()
     {
@@ -136,6 +142,7 @@ public class WhitespaceAndRegexSearchTest
             new[] { new SearchHit(0, 0, 5), new SearchHit(0, 7, 6), new SearchHit(2, 0, 4) }, hits.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RegexSearch_IgnoresEmptyMatches_AndCanIgnoreCase()
     {
@@ -146,6 +153,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.AreEqual(2, cased.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABadPattern_GivesAnErrorAndNoHits_InsteadOfThrowing()
     {
@@ -155,6 +163,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.IsFalse(string.IsNullOrEmpty(error));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APatternThatTakesForever_IsGivenUpOn()
     {
@@ -167,6 +176,7 @@ public class WhitespaceAndRegexSearchTest
         StringAssertContains(error!, "too long");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingToSearchFor_FindsNothing()
     {
@@ -174,6 +184,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.IsNull(error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheNumberOfHits_IsCapped()
     {
@@ -184,6 +195,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.AreEqual(SearchEngine.MaxHits, hits.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Replace_UsesGroupsOnlyForARegularExpression()
     {
@@ -198,6 +210,7 @@ public class WhitespaceAndRegexSearchTest
 
     // ---- the search model and what is highlighted ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSearchModel_RemembersHowLongEachHitIs()
     {
@@ -214,6 +227,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.AreEqual(0, model.Hits.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheViewer_HighlightsARegexMatchForItsWholeLength()
     {
@@ -251,6 +265,7 @@ public class WhitespaceAndRegexSearchTest
         return (T)value!;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSearchDialog_WithRegexOn_FindsByPattern_AndKeepsMatchCaseOnByDefault()
     {
@@ -267,6 +282,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.AreEqual(4, model.LengthAt(model.Hits.First()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSearchDialog_WithABadPattern_StaysOpenAndSaysWhy()
     {
@@ -281,6 +297,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.IsTrue(dialog.Parent!.Controls.AsSnapshot().Contains(dialog), "the dialog was not closed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSearchDialog_PlainSearchStillWorks()
     {
@@ -294,6 +311,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.AreEqual(1, model.Hits.Count, $"cursor was {scroll.CursorPosition.X},{scroll.CursorPosition.Y}");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceAll_WithARegularExpression_UsesGroupsAsOneUndoStep()
     {
@@ -307,6 +325,7 @@ public class WhitespaceAndRegexSearchTest
         CollectionAssert.AreEqual(new[] { "first=1", "second=2", "none" }, editor.TextModel.Lines.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceNext_WithARegularExpression_ReplacesTheMatchAfterTheCursorAndMovesPastIt()
     {
@@ -320,6 +339,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.AreEqual(8, editor.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RegexReplace_WithABadPatternOrNoMatch_ChangesNothing()
     {
@@ -331,6 +351,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.AreEqual("abc", editor.TextModel.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePlainReplace_IsUnchanged()
     {
@@ -342,6 +363,7 @@ public class WhitespaceAndRegexSearchTest
         Assert.AreEqual("1 $1 1", editor.TextModel.Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheReplaceDialog_PassesTheRegexChoiceOn_AndRemembersIt()
     {

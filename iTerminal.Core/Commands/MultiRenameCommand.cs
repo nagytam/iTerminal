@@ -51,7 +51,8 @@ public class MultiRenameCommand(
             var sourceUrl = dialog.SourceUrls[row.Index];
             var isFolder = sourceUrl.PathType == PathType.Folder;
             var targetUrl = new Url(UrlPath.Child(folderUrl.FullUrl, row.NewName, isFolder));
-            var fileSystem = fileSystemResolver.Resolve(sourceUrl, operation: UiText.Get("Menu.Rename", "Rename"));
+            // The panel is passed: a per-connection drive (S3, OneDrive, MTP) must use this panel's own connection.
+            var fileSystem = fileSystemResolver.Resolve(sourceUrl, dialog.SourceModel, UiText.Get("Menu.Rename", "Rename"));
             BackgroundTask task = isFolder
                 ? new ContentModelMoveFolderTask(fileSystem, fileSystem, sourceUrl, targetUrl, overwrite: false, discoveryTask: null, errorPromptService)
                 : new ContentModelMoveFileTask(fileSystem, fileSystem, sourceUrl, targetUrl, resolver, errorPromptService);

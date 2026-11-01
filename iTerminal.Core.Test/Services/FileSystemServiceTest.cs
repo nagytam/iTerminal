@@ -20,6 +20,7 @@ public class FileSystemServiceTest
         return dir;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsReadOnly_ReturnsFalse()
     {
@@ -27,6 +28,7 @@ public class FileSystemServiceTest
         Assert.IsFalse(svc.IsReadOnly);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadFileAsync_ReturnsContent()
     {
@@ -42,6 +44,7 @@ public class FileSystemServiceTest
         finally { File.Delete(f); }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WriteFileAsync_WritesContent()
     {
@@ -57,6 +60,7 @@ public class FileSystemServiceTest
         finally { File.Delete(f); }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFile_ReturnsTrueWhenExists()
     {
@@ -67,6 +71,7 @@ public class FileSystemServiceTest
         Assert.IsFalse(File.Exists(f));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFile_ReturnsFalseWhenNotExists()
     {
@@ -75,6 +80,7 @@ public class FileSystemServiceTest
         Assert.IsFalse(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFolder_ReturnsTrueWhenExists()
     {
@@ -85,6 +91,7 @@ public class FileSystemServiceTest
         Assert.IsFalse(Directory.Exists(dir));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFolder_ReturnsFalseWhenNotExists()
     {
@@ -93,6 +100,7 @@ public class FileSystemServiceTest
         Assert.IsFalse(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFolder_NonEmptyWithoutRecursive_ThrowsInsteadOfSwallowing()
     {
@@ -118,6 +126,7 @@ public class FileSystemServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFile_MoveToRecycleBin_RemovesFromOriginalLocation()
     {
@@ -134,6 +143,7 @@ public class FileSystemServiceTest
         Assert.IsFalse(File.Exists(f));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFile_ReturnsTrueWhenExists()
     {
@@ -146,6 +156,7 @@ public class FileSystemServiceTest
         finally { File.Delete(f); }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFile_ReturnsFalseWhenNotExists()
     {
@@ -153,6 +164,7 @@ public class FileSystemServiceTest
         Assert.IsFalse(svc.ExistsFile(new Url(@"c:\definitely_not_there_xyz.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFolder_ReturnsTrueWhenExists()
     {
@@ -160,6 +172,7 @@ public class FileSystemServiceTest
         Assert.IsTrue(svc.ExistsFolder(new Url(Path.GetTempPath())));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExistsFolder_ReturnsFalseWhenNotExists()
     {
@@ -167,6 +180,7 @@ public class FileSystemServiceTest
         Assert.IsFalse(svc.ExistsFolder(new Url(@"c:\nonexistent_folder_xyz123")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CreateFolderAsync_CreatesDirectory()
     {
@@ -183,6 +197,7 @@ public class FileSystemServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MoveAsync_File_MovesFile()
     {
@@ -203,6 +218,7 @@ public class FileSystemServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CopyAsync_File_CopiesFile()
     {
@@ -224,6 +240,7 @@ public class FileSystemServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MoveAsync_Folder_MovesFolderAndContents()
     {
@@ -245,6 +262,7 @@ public class FileSystemServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task MoveAsync_Folder_TargetExistsWithoutOverwrite_Throws()
     {
@@ -263,6 +281,7 @@ public class FileSystemServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CopyAsync_Folder_CopiesNestedContents()
     {
@@ -287,6 +306,7 @@ public class FileSystemServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetAvailableDiskSpace_Throws()
     {

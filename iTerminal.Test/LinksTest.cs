@@ -37,6 +37,7 @@ public class LinksTest
         Assert.AreEqual(0, process.ExitCode, "mklink /J failed");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ALinkedFolder_ShowsWhereItLeads_AndF8RemovesOnlyTheLink()
     {
@@ -71,6 +72,7 @@ public class LinksTest
         await _app.WaitUntilAsync(s => !_app.LeftPanelLists("shortcut", s), "the link to leave the listing");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task DeletingAFolderThatHoldsALink_LeavesTheLinkedFoldersFilesAlone()
     {
@@ -92,6 +94,7 @@ public class LinksTest
         Assert.AreEqual("do not lose me", File.ReadAllText(kept));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlL_MakesAHardLinkInTheOtherPanel()
     {
@@ -119,6 +122,7 @@ public class LinksTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlL_MakesASymbolicLink_OrSaysWhyItMayNot()
     {
@@ -146,6 +150,7 @@ public class LinksTest
         }
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ALinkIsNotMadeOverAnExistingFile()
     {
@@ -161,6 +166,7 @@ public class LinksTest
         Assert.AreEqual("already here", File.ReadAllText(Path.Combine(_app.RightRoot, "readme.txt")));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlL_IsNotOfferedOnTheParentRow()
     {

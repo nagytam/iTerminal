@@ -20,6 +20,7 @@ public class HeatmapProgressTest
 
     private static string[] Lines(MockBuffer buffer) => buffer.ContentAsString.Split(Environment.NewLine);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Heatmap_Level_MapsTheRangeToFiveShades()
     {
@@ -32,6 +33,7 @@ public class HeatmapProgressTest
         Assert.AreEqual(0, Heatmap.Level(double.NaN));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Heatmap_Draw_ShowsLabelsAndShades()
     {
@@ -50,6 +52,7 @@ public class HeatmapProgressTest
         Assert.AreEqual("Tue ████··", lines[2].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Heatmap_SmallerDataSet_LeavesNothingBehind()
     {
@@ -64,6 +67,7 @@ public class HeatmapProgressTest
         Assert.AreEqual(string.Empty, lines[2].Trim());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Heatmap_MoreColumnsThanFit_AreClipped()
     {
@@ -72,6 +76,7 @@ public class HeatmapProgressTest
         Assert.AreEqual("██████", Lines(buffer)[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_IndeterminateBar_BouncesBetweenTheEnds()
     {
@@ -82,6 +87,7 @@ public class HeatmapProgressTest
         Assert.AreEqual(string.Empty, ProgressBar.BuildIndeterminateBar(0, 3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_Indeterminate_AdvancesWithTheClockAndShowsNoPercent()
     {
@@ -109,6 +115,7 @@ public class HeatmapProgressTest
         Assert.IsTrue(line.Contains('▬'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBar_Determinate_IsUnchangedAndDoesNotAnimate()
     {

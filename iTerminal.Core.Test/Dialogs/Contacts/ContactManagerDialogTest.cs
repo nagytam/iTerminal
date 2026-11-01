@@ -37,6 +37,7 @@ public class ContactManagerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AContactTypedFieldByFieldIsAddedAndHighlighted()
     {
@@ -63,6 +64,7 @@ public class ContactManagerDialogTest
         AssertScreenContains(Render(dialog), "ada@example.com");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyNameIsRefusedAndTheFormStaysOpen()
     {
@@ -78,6 +80,7 @@ public class ContactManagerDialogTest
         AssertScreenContains(Render(dialog), "A contact needs a name");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABadEmailIsRefusedAndTheErrorClearsOnTheNextKey()
     {
@@ -98,6 +101,7 @@ public class ContactManagerDialogTest
         Assert.IsNull(dialog.ErrorForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscInTheFormDiscardsItWithoutClosingTheDialog()
     {
@@ -113,6 +117,7 @@ public class ContactManagerDialogTest
         Assert.IsTrue(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EChangesTheHighlightedContactAndKeepsItsOtherFields()
     {
@@ -131,6 +136,7 @@ public class ContactManagerDialogTest
             (changed.Name, changed.Email, changed.Phone, changed.Company, changed.Notes));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftTabGoesBackAField()
     {
@@ -146,6 +152,7 @@ public class ContactManagerDialogTest
         Assert.AreEqual("Ada", store.Find().Single().Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DeleteAsksFirstAndOnlyYRemovesTheContact()
     {
@@ -167,6 +174,7 @@ public class ContactManagerDialogTest
         Assert.AreEqual("Bob", dialog.SelectedForTest!.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSlashFiltersTheListAsItIsTyped()
     {
@@ -187,6 +195,7 @@ public class ContactManagerDialogTest
         Assert.IsFalse(screen.ToString()!.Contains("alice@example.com"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscClearsTheFilterBeforeItClosesTheDialog()
     {
@@ -209,6 +218,7 @@ public class ContactManagerDialogTest
         Assert.IsFalse(dialog.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AContactAddedUnderAFilterThatHidesItClearsTheFilter()
     {
@@ -227,6 +237,7 @@ public class ContactManagerDialogTest
         Assert.AreEqual(string.Empty, dialog.FilterForTest);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheListIsEmptyWithAHintOrANoMatchMessage()
     {
@@ -240,6 +251,7 @@ public class ContactManagerDialogTest
         AssertScreenContains(Render(dialog), "No contact matches \"zzz\".");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowKeysMoveTheHighlightAndHomeEndJump()
     {
@@ -259,6 +271,7 @@ public class ContactManagerDialogTest
         Assert.AreEqual("A", dialog.SelectedForTest!.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDialogDrawsEveryFieldOfTheHighlightedContact()
     {
@@ -272,6 +285,7 @@ public class ContactManagerDialogTest
         AssertScreenContains(screen, "met at the fair");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheKeyHintsNameTheKeysOfTheCurrentMode()
     {
@@ -285,6 +299,7 @@ public class ContactManagerDialogTest
         CollectionAssert.IsSubsetOf(new[] { "Enter/Tab", "Shift+Tab", "Esc" }, dialog.GetKeyHints().Select(h => h.Key).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheContactCount_DoesNotPaintOverTheLastColumnTitle()
     {

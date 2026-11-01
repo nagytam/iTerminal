@@ -32,6 +32,7 @@ public class PanelSortTest
 
     private static string[] Names(PanelSort sort) => [.. sort.Apply(Listing()).Select(e => e.DisplayName)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AsListed_LeavesTheDrivesOwnOrder()
     {
@@ -40,6 +41,7 @@ public class PanelSortTest
         Assert.AreSame(listing, PanelSort.AsListed.Apply(listing));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ByName_ParentFirst_ThenFolders_ThenFiles_IgnoringCase()
     {
@@ -48,6 +50,7 @@ public class PanelSortTest
             Names(new PanelSort(PanelSortMode.Name)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Reversed_FoldersStillComeFirst_AndTheParentRowStillLeads()
     {
@@ -56,6 +59,7 @@ public class PanelSortTest
             Names(new PanelSort(PanelSortMode.Name, Descending: true)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BySize_FilesBySize_TiesAndFoldersByName()
     {
@@ -69,6 +73,7 @@ public class PanelSortTest
             Names(new PanelSort(PanelSortMode.Size, Descending: true)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ByExtension_ThenByName()
     {
@@ -77,6 +82,7 @@ public class PanelSortTest
             Names(new PanelSort(PanelSortMode.Extension)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ByDate_FoldersAmongThemselves_FilesAmongThemselves()
     {
@@ -90,6 +96,7 @@ public class PanelSortTest
     }
 
     #region The settings page's options
+    [Timeout(60_000)]
     [TestMethod]
     public void NaturalCompare_ReadsARunOfDigitsAsANumber()
     {
@@ -108,6 +115,7 @@ public class PanelSortTest
     private static string[] Numbered(PanelViewOptions options) =>
         [.. new PanelSort(PanelSortMode.Name).Apply([File("file10.txt", 1, Monday), Folder("zoo", Monday), File("file2.txt", 1, Monday)], options).Select(e => e.DisplayName)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NaturalOrder_AndFoldersFirst_AreOptions()
     {
@@ -116,6 +124,7 @@ public class PanelSortTest
         CollectionAssert.AreEqual(new[] { "file2.txt", "file10.txt", "zoo" }, Numbered(PanelViewOptions.Default with { FoldersFirst = false }));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HiddenEntries_AreLeftOut_InAnyOrder_ButNeverTheWayOut()
     {
@@ -149,6 +158,7 @@ public class PanelSortTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewOptions_AreKeptInTheSettings_AndDefaultToWhatThePanelsAlwaysDid()
     {
@@ -162,6 +172,7 @@ public class PanelSortTest
     }
     #endregion
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Serialize_AndParse_RoundTrip_AndNonsenseIsTheDrivesOrder()
     {
@@ -181,6 +192,7 @@ public class PanelSortTest
         Assert.AreEqual(new PanelSort(PanelSortMode.Date), PanelSort.Parse(" date "));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Describe_IsForTheFooter_AndSaysNothingForTheDrivesOrder()
     {

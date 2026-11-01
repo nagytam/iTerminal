@@ -14,6 +14,7 @@ public class ToggleAndClearSearchCommandTest
 {
     private static TestThemeService Theme() => new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ToggleCommand_FlipsTheFocusedToggle()
     {
@@ -26,6 +27,7 @@ public class ToggleAndClearSearchCommandTest
         Assert.IsTrue(toggle.IsOn);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleCommand_DoesNotRunOnAReadOnlyToggle()
     {
@@ -35,6 +37,7 @@ public class ToggleAndClearSearchCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClearSearchCommand_EmptiesTheQueryAndSaysSo()
     {
@@ -49,6 +52,7 @@ public class ToggleAndClearSearchCommandTest
         Assert.IsTrue(cleared);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClearSearchCommand_IsEscape()
     {

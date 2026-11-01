@@ -31,6 +31,7 @@ public class WorkspaceServiceTest
         return (new WorkspaceService(settings, layout), layout, settings);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingIsSavedAtFirst()
     {
@@ -41,6 +42,7 @@ public class WorkspaceServiceTest
         Assert.AreEqual("Workspace 1", service.SuggestName());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SavingKeepsTheScreenAsItIsAndMarksItActive()
     {
@@ -55,6 +57,7 @@ public class WorkspaceServiceTest
         Assert.AreEqual("Workspace 1", service.SuggestName());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WorkspacesSurviveANewServiceOverTheSameSettings()
     {
@@ -69,6 +72,7 @@ public class WorkspaceServiceTest
         Assert.AreEqual("Size,desc", reloaded[0].Layout.LeftSort);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SavingUnderAnExistingNameReplacesItInPlace()
     {
@@ -86,6 +90,7 @@ public class WorkspaceServiceTest
         Assert.AreEqual("Two", all[1].Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("")]
     [DataRow("   ")]
@@ -97,6 +102,7 @@ public class WorkspaceServiceTest
         Assert.ThrowsExactly<InvalidOperationException>(() => service.Save(name));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANameThatIsTooLongOrHasControlCharactersIsRefused()
     {
@@ -107,6 +113,7 @@ public class WorkspaceServiceTest
         Assert.IsNull(service.ValidateName(new string('x', IWorkspaceService.MaxNameLength)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATakenNameIsRefusedUnlessItIsTheOneBeingRenamed()
     {
@@ -119,6 +126,7 @@ public class WorkspaceServiceTest
         Assert.IsNotNull(service.ValidateName("Beta", renaming: "Alpha"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RenamingKeepsPositionAndActiveMark()
     {
@@ -133,6 +141,7 @@ public class WorkspaceServiceTest
         Assert.AreEqual("Gamma", service.ActiveName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeletingTheActiveOneLeavesNoneActive()
     {
@@ -145,6 +154,7 @@ public class WorkspaceServiceTest
         Assert.IsNull(service.ActiveName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RestoringPutsTheSavedLayoutOnScreenAndMarksItActive()
     {
@@ -161,6 +171,7 @@ public class WorkspaceServiceTest
         Assert.AreEqual("Home", service.ActiveName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RestoringReportsWhatCouldNotComeBack()
     {
@@ -173,6 +184,7 @@ public class WorkspaceServiceTest
         CollectionAssert.AreEqual(new[] { "Left panel: C:\\gone no longer exists." }, problems.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RestoringAnUnknownNameSaysSoAndChangesNothing()
     {
@@ -184,6 +196,7 @@ public class WorkspaceServiceTest
         Assert.AreEqual(0, layout.Applied.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsCurrentIgnoresWhereTheCursorIs()
     {
@@ -197,6 +210,7 @@ public class WorkspaceServiceTest
         Assert.IsFalse(service.IsCurrent(saved));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BrokenJsonIsAnEmptyList()
     {

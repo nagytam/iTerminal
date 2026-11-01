@@ -27,6 +27,7 @@ public class ToggleControlsRenderTest
         ViewSize = new Size(16, 1),
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckBox_HotKey_IsPickedOutInTheLabel()
     {
@@ -41,6 +42,7 @@ public class ToggleControlsRenderTest
         Assert.AreEqual(Scheme.Foreground, screen.ForegroundAt(9, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckBox_UncheckedAndChecked_UseDistinctGlyphs()
     {
@@ -48,6 +50,7 @@ public class ToggleControlsRenderTest
         Assert.AreEqual("▣ Hidden files", ScreenBuffer.Render(CreateCheckBox("Hidden files", true), 20, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckBox_Normal_UsesForegroundOnBackground()
     {
@@ -56,6 +59,7 @@ public class ToggleControlsRenderTest
         screen.AssertColors(0, 0, 16, Scheme.Foreground, Scheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckBox_Focused_UsesFocusForeground()
     {
@@ -67,6 +71,7 @@ public class ToggleControlsRenderTest
         screen.AssertColors("□ Recurse", Scheme.SelectedFocusedForeground, Scheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckBox_Disabled_IsGreyedAndStruckThrough()
     {
@@ -79,6 +84,7 @@ public class ToggleControlsRenderTest
         Assert.IsTrue(screen.CellOf("Recurse").IsStrikeThrough);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckBox_ReadOnly_IsGreyedButNotStruckThrough()
     {
@@ -93,6 +99,7 @@ public class ToggleControlsRenderTest
         Assert.IsFalse(screen.CellOf("Recurse").IsStrikeThrough);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CheckBox_FillsItsWidth_SoAShorterLabelErasesTheLongerOne()
     {
@@ -107,6 +114,7 @@ public class ToggleControlsRenderTest
         screen.AssertFillsBounds(checkBox);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CheckBox_Space_RedrawsWithTheCheckedGlyph()
     {
@@ -127,6 +135,7 @@ public class ToggleControlsRenderTest
         ViewSize = new Size(12, 1),
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RadioButton_SelectedAndUnselected_UseDistinctGlyphs()
     {
@@ -134,6 +143,7 @@ public class ToggleControlsRenderTest
         Assert.AreEqual("◉ Name", ScreenBuffer.Render(CreateRadioButton("Name", true), 12, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RadioButton_FocusedOrHighlighted_UsesFocusForeground()
     {
@@ -146,6 +156,7 @@ public class ToggleControlsRenderTest
         ScreenBuffer.Render(highlighted, 12, 1).AssertColors("○ Size", Scheme.SelectedFocusedForeground, Scheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RadioButton_ReadOnly_UsesDisabledColours()
     {
@@ -158,6 +169,7 @@ public class ToggleControlsRenderTest
         Assert.IsFalse(screen.CellOf("Name").IsStrikeThrough);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RadioButton_Disabled_IsStruckThrough()
     {
@@ -167,6 +179,7 @@ public class ToggleControlsRenderTest
         Assert.IsTrue(ScreenBuffer.Render(radio, 12, 1).CellOf("Name").IsStrikeThrough);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RadioButton_PaintsItsWholeWidth()
     {
@@ -183,6 +196,7 @@ public class ToggleControlsRenderTest
         ViewSize = new Size(7, 1),
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleButton_CentresItsStateInBrackets()
     {
@@ -190,6 +204,7 @@ public class ToggleControlsRenderTest
         Assert.AreEqual("[ OFF ]", ScreenBuffer.Render(CreateToggle(false), 7, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleButton_CustomLabels()
     {
@@ -200,6 +215,7 @@ public class ToggleControlsRenderTest
         Assert.AreEqual("[ YES ]", ScreenBuffer.Render(toggle, 7, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleButton_OnAndOff_HaveDifferentBackgrounds()
     {
@@ -207,6 +223,7 @@ public class ToggleControlsRenderTest
         ScreenBuffer.Render(CreateToggle(false), 7, 1).AssertColors(0, 0, 7, Scheme.Foreground, Scheme.ButtonBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleButton_Focused_KeepsTheOnOffBackground()
     {
@@ -220,6 +237,7 @@ public class ToggleControlsRenderTest
         ScreenBuffer.Render(off, 7, 1).AssertColors(0, 0, 7, Scheme.SelectedFocusedForeground, Scheme.ButtonBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleButton_DisabledAndReadOnly_UseDisabledColours()
     {
@@ -232,6 +250,7 @@ public class ToggleControlsRenderTest
         ScreenBuffer.Render(readOnly, 7, 1).AssertColors(0, 0, 7, Scheme.DisabledForeground, Scheme.DisabledButtonBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ToggleButton_Enter_RedrawsTheNewState()
     {
@@ -243,6 +262,7 @@ public class ToggleControlsRenderTest
         Assert.AreEqual("[ ON  ]", ScreenBuffer.Render(toggle, 7, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleButton_LabelWiderThanTheButton_IsCutInsideTheBrackets()
     {
@@ -268,12 +288,14 @@ public class ToggleControlsRenderTest
         ViewSize = new Size(width, 1),
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Button_CentresItsTitleInBrackets()
     {
         Assert.AreEqual("[  Save  ]", ScreenBuffer.Render(CreateButton(), 10, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Button_Normal_Focused_Disabled_AreDistinct()
     {
@@ -285,6 +307,7 @@ public class ToggleControlsRenderTest
         ScreenBuffer.Render(CreateButton(canExecute: false), 10, 1).AssertColors(0, 0, 10, Scheme.DisabledForeground, Scheme.DisabledButtonBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Button_Destructive_IsDrawnOnTheErrorColour()
     {
@@ -298,6 +321,7 @@ public class ToggleControlsRenderTest
         ScreenBuffer.Render(disabled, 10, 1).AssertColors(0, 0, 10, Scheme.DisabledForeground, Scheme.DisabledButtonBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Button_HotKey_IsPickedOutInTheTitle()
     {
@@ -312,12 +336,14 @@ public class ToggleControlsRenderTest
         Assert.AreEqual(Scheme.Foreground, screen.ForegroundAt(4, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Button_TitleWiderThanTheButton_IsCut()
     {
         Assert.AreEqual("[Sa]", ScreenBuffer.Render(CreateButton(width: 4), 10, 1).Lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Button_TooNarrowForAnyTitle_DrawsOnlyItsBrackets()
     {

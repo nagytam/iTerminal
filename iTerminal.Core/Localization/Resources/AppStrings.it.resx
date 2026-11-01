@@ -3217,6 +3217,84 @@
   <data name="Print.Hint.List" xml:space="preserve">
     <value>Invio stampa  ←→ stampante  +/- copie  P sospendi/riprendi  Canc annulla  F5 aggiorna  Esc chiudi</value>
   </data>
+  <data name="Dialog.BluetoothDeviceManager" xml:space="preserve">
+    <value>Dispositivi Bluetooth</value>
+  </data>
+  <data name="Empty.BluetoothDevices" xml:space="preserve">
+    <value>Nessun dispositivo Bluetooth noto. Premi S per cercare quelli vicini.</value>
+  </data>
+  <data name="Status.Bluetooth.Reading" xml:space="preserve">
+    <value>Lettura dei dispositivi Bluetooth…</value>
+  </data>
+  <data name="Status.Bluetooth.Unsupported" xml:space="preserve">
+    <value>I dispositivi Bluetooth sono gestiti tramite BlueZ su Linux; questo sistema non ha un backend Bluetooth.</value>
+  </data>
+  <data name="Status.Bluetooth.Scanning" xml:space="preserve">
+    <value>Ricerca dei dispositivi vicini…</value>
+  </data>
+  <data name="Status.Bluetooth.Scanned" xml:space="preserve">
+    <value>Ricerca terminata: {0} dispositivi noti.</value>
+  </data>
+  <data name="Status.Bluetooth.Connecting" xml:space="preserve">
+    <value>Connessione a {0}…</value>
+  </data>
+  <data name="Status.Bluetooth.Connected" xml:space="preserve">
+    <value>Connesso a {0}.</value>
+  </data>
+  <data name="Status.Bluetooth.Disconnecting" xml:space="preserve">
+    <value>Disconnessione di {0}…</value>
+  </data>
+  <data name="Status.Bluetooth.Disconnected" xml:space="preserve">
+    <value>{0} disconnesso.</value>
+  </data>
+  <data name="Status.Bluetooth.Pairing" xml:space="preserve">
+    <value>Accoppiamento con {0}…</value>
+  </data>
+  <data name="Status.Bluetooth.Paired" xml:space="preserve">
+    <value>Accoppiato con {0}.</value>
+  </data>
+  <data name="Status.Bluetooth.AlreadyPaired" xml:space="preserve">
+    <value>{0} è già accoppiato.</value>
+  </data>
+  <data name="Status.Bluetooth.Removing" xml:space="preserve">
+    <value>Rimozione di {0}…</value>
+  </data>
+  <data name="Status.Bluetooth.Removed" xml:space="preserve">
+    <value>{0} rimosso.</value>
+  </data>
+  <data name="Status.Bluetooth.Error" xml:space="preserve">
+    <value>Bluetooth non riuscito: {0}</value>
+  </data>
+  <data name="Prompt.Bluetooth.Remove" xml:space="preserve">
+    <value>Rimuovere "{0}" da questo computer? (s/n)</value>
+  </data>
+  <data name="DialogHint.Bluetooth.ConnectDisconnect" xml:space="preserve">
+    <value>Connetti o disconnetti il dispositivo</value>
+  </data>
+  <data name="DialogHint.Bluetooth.Pair" xml:space="preserve">
+    <value>Accoppia con il dispositivo</value>
+  </data>
+  <data name="DialogHint.Bluetooth.Scan" xml:space="preserve">
+    <value>Cerca dispositivi vicini</value>
+  </data>
+  <data name="DialogHint.Bluetooth.Refresh" xml:space="preserve">
+    <value>Rileggi i dispositivi</value>
+  </data>
+  <data name="DialogHint.Bluetooth.Remove" xml:space="preserve">
+    <value>Dimentica il dispositivo</value>
+  </data>
+  <data name="State.Bluetooth.Connected" xml:space="preserve">
+    <value>connesso</value>
+  </data>
+  <data name="State.Bluetooth.Paired" xml:space="preserve">
+    <value>accoppiato</value>
+  </data>
+  <data name="State.Bluetooth.Nearby" xml:space="preserve">
+    <value>vicino</value>
+  </data>
+  <data name="Status.Bluetooth.Busy" xml:space="preserve">
+    <value>L'ultima modifica è ancora in corso; attendi che finisca.</value>
+  </data>
   <data name="Dialog.VirtualMachineManager" xml:space="preserve">
     <value>Gestore di macchine virtuali</value>
   </data>
@@ -3342,5 +3420,8 @@
   </data>
   <data name="DialogHint.MultiRename" xml:space="preserve">
     <value>Rinomina i file mostrati nell'anteprima</value>
+  </data>
+  <data name="Multi.Status.CaseOnly" xml:space="preserve">
+    <value>solo cambio di maiuscole, non rinominato</value>
   </data>
 </root>

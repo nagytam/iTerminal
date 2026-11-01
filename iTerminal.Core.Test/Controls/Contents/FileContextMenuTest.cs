@@ -34,6 +34,7 @@ public class FileContextMenuTest
         return new iTerminal.Core.Commands.PrintDialogCommand(null!, service.Object);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Print_IsOfferedOnALocalFile_ButNotOnAFolder()
     {
@@ -58,6 +59,7 @@ public class FileContextMenuTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Print_IsNotOfferedOnAnotherDrivesRow()
     {
@@ -69,6 +71,7 @@ public class FileContextMenuTest
         Assert.IsFalse(rows.Any(r => r.Label.StartsWith("Print")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingIsOfferedOnTheParentRow()
     {
@@ -77,6 +80,7 @@ public class FileContextMenuTest
         Assert.AreEqual(0, FileContextMenu.Build(model.Object, [], null, () => Task.CompletedTask).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingIsOfferedWithoutARow()
     {
@@ -86,6 +90,7 @@ public class FileContextMenuTest
         Assert.AreEqual(0, FileContextMenu.Build(model.Object, [], null, () => Task.CompletedTask).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenIsAlwaysFirstAndRunsWhatEnterDoes()
     {

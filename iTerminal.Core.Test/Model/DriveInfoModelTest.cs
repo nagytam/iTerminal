@@ -7,6 +7,7 @@ namespace iTerminal.Core.Model.Test;
 [TestClass]
 public class DriveInfoModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void A_NewModel_HasNoDrives_AndIsNotYetRead()
     {

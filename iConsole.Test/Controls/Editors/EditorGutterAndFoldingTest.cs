@@ -63,6 +63,7 @@ public class EditorGutterAndFoldingTest
 
     // ---- line numbers ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LineNumbers_AreDrawnInAGutterAndShiftTheText()
     {
@@ -78,6 +79,7 @@ public class EditorGutterAndFoldingTest
         Assert.AreEqual(new ColorScheme().DisabledForeground, screen.ForegroundAt(1, 1), "the number of another line is dimmed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheGutterGrowsWithTheNumberOfLines()
     {
@@ -89,6 +91,7 @@ public class EditorGutterAndFoldingTest
         Has(Draw(editor).Line(0), "   1 line 1");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutNumbersOrFolding_TheLayoutIsTheOldOne()
     {
@@ -99,6 +102,7 @@ public class EditorGutterAndFoldingTest
         Assert.AreEqual("alpha", Draw(editor).Line(0).TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WrappedContinuationRowsHaveABlankGutter()
     {
@@ -113,6 +117,7 @@ public class EditorGutterAndFoldingTest
         Assert.IsFalse(screen.Line(1).Substring(0, 3).Any(char.IsDigit));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCaretSitsRightOfTheGutter()
     {
@@ -126,6 +131,7 @@ public class EditorGutterAndFoldingTest
         Assert.AreEqual(1, (int)caret.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnTheTextLandsOnTheRightColumn()
     {
@@ -139,6 +145,7 @@ public class EditorGutterAndFoldingTest
         Assert.AreEqual(2, editor.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingStillEditsTheLineUnderTheGutter()
     {
@@ -154,6 +161,7 @@ public class EditorGutterAndFoldingTest
 
     // ---- soft wrap (already there: the gutter must not break it) ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SoftWrapAndNumbers_FlowTheTextIntoTheWidthLeftByTheGutter()
     {
@@ -167,6 +175,7 @@ public class EditorGutterAndFoldingTest
 
     // ---- folding ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FoldRegion_RunsToTheLastDeeperLine_SkippingBlankLines()
     {
@@ -182,6 +191,7 @@ public class EditorGutterAndFoldingTest
         Assert.IsFalse(editor.CanFold(8));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Fold_HidesTheRegionAndDrawsANote_AndUnfoldBringsItBack()
     {
@@ -206,6 +216,7 @@ public class EditorGutterAndFoldingTest
         Assert.IsTrue(open.Contains("one();"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Markers_ShowWhereAFoldIsPossible()
     {
@@ -219,6 +230,7 @@ public class EditorGutterAndFoldingTest
         Assert.AreEqual(2, editor.GutterWidth);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FoldingIsOffUnlessEnabled()
     {
@@ -228,6 +240,7 @@ public class EditorGutterAndFoldingTest
         Assert.AreEqual(0, editor.FoldedCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleFold_FromInsideARegionFoldsTheOneThatHoldsIt()
     {
@@ -243,6 +256,7 @@ public class EditorGutterAndFoldingTest
         Assert.IsFalse(editor.IsFolded(1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FoldAll_ClosesEveryRegion_AndUnfoldAllOpensThem()
     {
@@ -259,6 +273,7 @@ public class EditorGutterAndFoldingTest
         Assert.AreEqual(Code.Length, editor.ScreenRowLines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FoldingTheRegionHoldingTheCursor_MovesTheCursorToTheFoldLine()
     {
@@ -271,6 +286,7 @@ public class EditorGutterAndFoldingTest
         Assert.AreEqual(1, editor.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AltLeftFolds_AltRightUnfolds_AtTheCursorLine()
     {
@@ -288,6 +304,7 @@ public class EditorGutterAndFoldingTest
         Assert.IsFalse(await Press(editor, ConsoleKey.LeftArrow, alt: true), "nothing to fold on the last line");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task UpAndDown_SkipTheLinesAFoldHides()
     {
@@ -303,6 +320,7 @@ public class EditorGutterAndFoldingTest
         Assert.AreEqual(0, editor.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnAMarkerTogglesTheFold()
     {
@@ -317,6 +335,7 @@ public class EditorGutterAndFoldingTest
         Assert.IsFalse(editor.IsFolded(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShowLine_OpensTheFoldThatHidesTheLine()
     {
@@ -331,6 +350,7 @@ public class EditorGutterAndFoldingTest
         Assert.AreEqual(3, editor.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddingOrRemovingLines_ForgetsTheFolds()
     {
@@ -345,6 +365,7 @@ public class EditorGutterAndFoldingTest
         Assert.AreEqual(Code.Length + 1, editor.ScreenRowLines.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FoldingWithNumbers_ShowsTheRealLineNumbers()
     {
@@ -359,6 +380,7 @@ public class EditorGutterAndFoldingTest
         Has(screen.Line(2), "▾ 7 class B", "the hidden lines still count");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_MentionFoldingOnlyWhenItIsOn()
     {
@@ -369,6 +391,7 @@ public class EditorGutterAndFoldingTest
         Assert.IsTrue(editor.GetKeyHints().Any(h => h.Key.Contains("Alt+Left")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EmptyTextAndTinyViews_DoNotThrow()
     {

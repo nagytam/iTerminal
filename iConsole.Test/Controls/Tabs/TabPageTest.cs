@@ -20,6 +20,7 @@ public class TabPageTest
 
     #region Creation and Basic Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageCanBeCreated()
     {
@@ -30,6 +31,7 @@ public class TabPageTest
         Assert.IsInstanceOfType(tabPage, typeof(Control));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageHasName()
     {
@@ -39,6 +41,7 @@ public class TabPageTest
         Assert.AreEqual("MyTab", tabPage.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageNameCanBeEmpty()
     {
@@ -48,6 +51,7 @@ public class TabPageTest
         Assert.AreEqual("", tabPage.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageNameCanContainSpecialCharacters()
     {
@@ -57,6 +61,7 @@ public class TabPageTest
         Assert.AreEqual("Tab #1 (Active) [Info]", tabPage.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageNameCanBeLong()
     {
@@ -71,6 +76,7 @@ public class TabPageTest
 
     #region Color Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageGetColorEnabledAndFocused()
     {
@@ -95,6 +101,7 @@ public class TabPageTest
         Assert.AreEqual(Color.Blue, background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageGetColorEnabledButNotFocused()
     {
@@ -117,6 +124,7 @@ public class TabPageTest
         Assert.AreEqual(Color.Black, background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageGetColorDisabled()
     {
@@ -139,6 +147,7 @@ public class TabPageTest
         Assert.AreEqual(Color.DarkGray, background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageGetColorDisabledIgnoresFocus()
     {
@@ -165,6 +174,7 @@ public class TabPageTest
         Assert.AreEqual(Color.DarkGray, background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageGetColorUsesThemeServiceColorScheme()
     {
@@ -199,6 +209,7 @@ public class TabPageTest
 
     #region State Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageHasDefaultVisibility()
     {
@@ -208,6 +219,7 @@ public class TabPageTest
         Assert.IsTrue(tabPage.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageHasDefaultEnabled()
     {
@@ -217,6 +229,7 @@ public class TabPageTest
         Assert.IsTrue(tabPage.IsEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageCanBeDisabled()
     {
@@ -228,6 +241,7 @@ public class TabPageTest
         Assert.IsFalse(tabPage.IsEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageCanBeHidden()
     {
@@ -239,6 +253,7 @@ public class TabPageTest
         Assert.IsFalse(tabPage.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageCanBeFocused()
     {
@@ -250,6 +265,7 @@ public class TabPageTest
         Assert.IsTrue(tabPage.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageFocusCanBeReset()
     {
@@ -266,6 +282,7 @@ public class TabPageTest
 
     #region Control Content Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageCanHaveControls()
     {
@@ -278,6 +295,7 @@ public class TabPageTest
         Assert.AreEqual(1, tabPage.Controls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageCanHaveMultipleControls()
     {
@@ -292,6 +310,7 @@ public class TabPageTest
         Assert.AreEqual(5, tabPage.Controls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageControlsCanBeRetrieved()
     {
@@ -311,6 +330,7 @@ public class TabPageTest
 
     #region Inheritance Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageInheritsFromControl()
     {
@@ -320,6 +340,7 @@ public class TabPageTest
         Assert.IsInstanceOfType(tabPage, typeof(Control));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageHasThemeService()
     {
@@ -333,6 +354,7 @@ public class TabPageTest
 
     #region Color Priority Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageColorPriorityEnabledAndFocusedWinsOverEnabled()
     {
@@ -355,6 +377,7 @@ public class TabPageTest
         Assert.AreEqual(Color.Blue, background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageColorPriorityDisabledWinsOverEverything()
     {
@@ -387,6 +410,7 @@ public class TabPageTest
 
     #region Edge Cases
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageCanHandleNullNameInConstructor()
     {
@@ -396,6 +420,7 @@ public class TabPageTest
         Assert.IsNull(tabPage.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageCanHandleUnicodeInName()
     {
@@ -405,6 +430,7 @@ public class TabPageTest
         Assert.AreEqual("Tab 📄 🔒 中文", tabPage.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageGetColorMultipleCalls()
     {
@@ -426,6 +452,7 @@ public class TabPageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithChildLabel_ChildIsRendered()
     {
@@ -449,6 +476,7 @@ public class TabPageTest
         Assert.IsTrue(buffer.ContentAsString.Contains("PageContent"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_EmptyTabPage_WritesNothing()
     {
@@ -465,6 +493,7 @@ public class TabPageTest
         Assert.AreEqual(string.Empty, buffer.ContentAsString);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageCanBeReusedAfterDisable()
     {

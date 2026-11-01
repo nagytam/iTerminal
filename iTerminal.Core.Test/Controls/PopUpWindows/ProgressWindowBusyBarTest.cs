@@ -13,12 +13,14 @@ public class ProgressWindowBusyBarTest
         public override Task ExecuteAsync() => Task.CompletedTask;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATaskThatHasNotReportedProgressYetShowsTheBusyBar()
     {
         Assert.IsTrue(ProgressWindow.ShowsBusyBar(new QuietTask()));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFinishedTaskNeverShowsTheBusyBar()
     {

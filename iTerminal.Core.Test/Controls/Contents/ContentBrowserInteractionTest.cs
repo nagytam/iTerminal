@@ -63,6 +63,7 @@ public class ContentBrowserInteractionTest
     /// <summary>A left click on list row <paramref name="row"/> (0-based, inside the border).</summary>
     private static MouseEvent ClickRow(int row) => new() { Position = new Position(3, row + 1), LeftClicked = true };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASingleClickOnlyMovesTheCursor()
     {
@@ -74,6 +75,7 @@ public class ContentBrowserInteractionTest
         Assert.AreEqual(0, enter.Runs);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADoubleClickOpensTheRowLikeEnter()
     {
@@ -88,6 +90,7 @@ public class ContentBrowserInteractionTest
         Assert.AreEqual(4, enter.LastCursor, "the clicked row is the one opened");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TwoSlowClicksAreNotADoubleClick()
     {
@@ -100,6 +103,7 @@ public class ContentBrowserInteractionTest
         Assert.AreEqual(0, enter.Runs);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClicksOnDifferentRowsAreNotADoubleClick()
     {
@@ -112,6 +116,7 @@ public class ContentBrowserInteractionTest
         Assert.AreEqual(0, enter.Runs);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AThirdQuickClickStartsANewPair()
     {
@@ -126,6 +131,7 @@ public class ContentBrowserInteractionTest
         Assert.AreEqual(1, enter.Runs, "a triple click opens once, not twice");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RightClicksDoNotOpen()
     {
@@ -139,6 +145,7 @@ public class ContentBrowserInteractionTest
         Assert.AreEqual(0, enter.Runs);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task InitializingTwiceSubscribesToTheModelOnce()
     {
@@ -153,6 +160,7 @@ public class ContentBrowserInteractionTest
         model.VerifyRemove(m => m.PropertyChanged -= It.IsAny<PropertyChangedEventHandler>(), Times.Exactly(2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChangingModelUnsubscribesFromTheOldOne()
     {
@@ -186,6 +194,7 @@ public class ContentBrowserInteractionTest
     private static MouseEvent ClickScrollBar(ContentBrowser browser, int row) =>
         new() { Position = new Position((int)browser.ViewSize.Width - 1, row + 1), LeftClicked = true };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheScrollBarsBottomArrowMovesDownALine()
     {
@@ -196,6 +205,7 @@ public class ContentBrowserInteractionTest
         Assert.AreEqual(1, (int)model.Object.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheScrollBarsTopArrowMovesUpALine()
     {
@@ -207,6 +217,7 @@ public class ContentBrowserInteractionTest
         Assert.AreEqual(4, (int)model.Object.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClickOnTheTrackJumpsInProportion()
     {
@@ -219,6 +230,7 @@ public class ContentBrowserInteractionTest
         Assert.AreEqual(14, (int)model.Object.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheelMovesTheCursorAndStopsAtTheEnds()
     {
@@ -232,6 +244,7 @@ public class ContentBrowserInteractionTest
         Assert.AreEqual(20, (int)model.Object.ScrollPosition.Y, "with the last row at the bottom of the view");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheelOverAnEmptyFolderIsHarmless()
     {
@@ -244,6 +257,7 @@ public class ContentBrowserInteractionTest
         Assert.AreEqual(0, (int)model.Object.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClicksOutsideThePanelAreLeftForOthers()
     {
@@ -254,6 +268,7 @@ public class ContentBrowserInteractionTest
         Assert.IsFalse(handled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AltAndALetterStartsASearchThatTypingExtendsAndEscapeEnds()
     {
@@ -273,6 +288,7 @@ public class ContentBrowserInteractionTest
         Assert.IsNull(model.Object.Filter);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task FunctionKeysDoNotStartASearch()
     {

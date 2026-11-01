@@ -17,6 +17,15 @@ public class EditorViewerAndPermissionsTest
         File.WriteAllBytes(Path.Combine(left, "lf.txt"), System.Text.Encoding.UTF8.GetBytes("alpha\nbeta\n"));
         File.WriteAllBytes(Path.Combine(left, "hu.csv"), System.Text.Encoding.Latin1.GetBytes("t\u00fbr\u00f5,n\u00e9v\nalma,3\n"));
         File.WriteAllText(Path.Combine(left, "long.txt"), string.Join("\n", Enumerable.Range(0, 300).Select(i => "row " + i.ToString("000"))));
+        using var database = new Microsoft.Data.Sqlite.SqliteConnection(new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder
+        {
+            DataSource = Path.Combine(left, "shop.sqlite"),
+            Pooling = false,
+        }.ConnectionString);
+        database.Open();
+        using var create = database.CreateCommand();
+        create.CommandText = "CREATE TABLE people (id INTEGER, name TEXT); INSERT INTO people VALUES (1, 'Ada');";
+        create.ExecuteNonQuery();
     });
 
     [TestCleanup]
@@ -30,6 +39,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitForTextAsync(expectedText);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F8AndShiftF8InTheCsvViewerSwitchTheCodePageAndNeverReachDeleteOrSettings()
     {
@@ -43,6 +53,19 @@ public class EditorViewerAndPermissionsTest
         Assert.IsTrue(await _app.PressAsync("F8"));
         Assert.IsTrue(_app.Driver.FocusedModal is iConsole.Dialogs.CsvViewerDialog, "F8 is Delete in the panels");
         Assert.IsTrue(File.Exists(Path.Combine(_app.LeftRoot, "hu.csv")));
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task F3OnASqliteFileOpensTheDatabaseViewerAndF4ShowsItsText()
+    {
+        await _app.SelectEntryAsync("shop.sqlite");
+        Assert.IsTrue(await _app.PressAsync("F3"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.SqliteViewerDialog, "the SQLite viewer to open");
+        await _app.WaitForTextAsync("people");
+
+        Assert.IsTrue(await _app.PressAsync("F4"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.SqliteViewerDialog { IsTextMode: true }, "the text output");
     }
 
     [TestMethod]
@@ -59,6 +82,7 @@ public class EditorViewerAndPermissionsTest
         Assert.AreEqual("    alpha\nbeta\n", File.ReadAllText(LfFile), "saved with the break the file had, not the system's");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EscOnAChangedFileAsksAndDiscardLeavesTheFileAlone()
     {
@@ -75,6 +99,7 @@ public class EditorViewerAndPermissionsTest
         Assert.AreEqual("alpha\nbeta\n", File.ReadAllText(LfFile));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EscOnAnUnchangedFileClosesWithoutAsking()
     {
@@ -85,6 +110,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EnterInTheEditorKeepsTheIndentOfTheLine()
     {
@@ -100,6 +126,7 @@ public class EditorViewerAndPermissionsTest
         Assert.AreEqual("    alpha\n    x\nbeta\n", File.ReadAllText(LfFile));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task F5InTheEditorGoesToALine()
     {
@@ -113,6 +140,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitForTextAsync("row 249");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheViewerScrollsToTheEndAndBack()
     {
@@ -132,6 +160,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitForTextAsync("row 000");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlPInPropertiesOpensThePermissionsAndAnEntryCanBeAdded()
     {
@@ -155,6 +184,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.PropertiesDialog, "back in the properties");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AnFtpConnectionCanBeSavedFromTheRemoteConnectionsForm()
     {

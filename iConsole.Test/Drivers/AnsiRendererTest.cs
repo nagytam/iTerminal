@@ -6,6 +6,7 @@ namespace iConsole.Test.Drivers;
 [TestClass]
 public class AnsiRendererTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void RenderCharacterWithColorsOnly()
     {
@@ -14,6 +15,7 @@ public class AnsiRendererTest
         Assert.AreEqual("\x1b[3;2H\u001b[33;104ma\x1b[0m", ansi);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RenderBoldCharacter()
     {

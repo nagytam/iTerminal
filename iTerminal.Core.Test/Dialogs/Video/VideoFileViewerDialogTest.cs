@@ -62,6 +62,7 @@ public class VideoFileViewerDialogTest
     private static KeyEvent Key(char keyChar, ConsoleKey consoleKey, bool shift = false) =>
         new(keyChar, consoleKey, shift, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Show_StartsPlayingAndDrawsAsciiArtWithTheTransport()
     {
@@ -90,6 +91,7 @@ public class VideoFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Show_FitsThePictureToTheRoomKeepingItsShape()
     {
@@ -111,6 +113,7 @@ public class VideoFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SpaceTogglesPlayPause()
     {
@@ -133,6 +136,7 @@ public class VideoFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowsSeekAndShiftSeeksFurther()
     {
@@ -158,6 +162,7 @@ public class VideoFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SAndHomeStopAndRestart()
     {
@@ -180,6 +185,7 @@ public class VideoFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CTogglesColour()
     {
@@ -200,6 +206,7 @@ public class VideoFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheButtonsDriveThePlayer()
     {
@@ -228,6 +235,7 @@ public class VideoFileViewerDialogTest
         static async Task RunAsync(Button button) => await button.Commands.First().RunAsync(null);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingStopsThePlayerThread()
     {
@@ -242,6 +250,7 @@ public class VideoFileViewerDialogTest
         Assert.ThrowsExactly<ObjectDisposedException>(() => decoder.Open(TimeSpan.Zero, 1, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutFfmpegTheDialogSaysSo()
     {
@@ -258,6 +267,7 @@ public class VideoFileViewerDialogTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileThatCannotBeOpenedShowsTheReason()
     {

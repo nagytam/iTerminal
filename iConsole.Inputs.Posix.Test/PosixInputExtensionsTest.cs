@@ -9,6 +9,7 @@ namespace iConsole.Inputs.Posix.Test;
 [TestClass]
 public class PosixInputExtensionsTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void AddLinuxTerminalInput_ReturnsOriginalServiceCollection()
     {
@@ -19,6 +20,7 @@ public class PosixInputExtensionsTest
         Assert.AreSame(services, result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddLinuxTerminalInput_RegistersLinuxInputServicesOnlyOnLinux()
     {

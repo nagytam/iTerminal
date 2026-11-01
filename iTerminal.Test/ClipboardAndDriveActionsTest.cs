@@ -25,6 +25,7 @@ public class ClipboardAndDriveActionsTest
 
     // ---- clipboard -----------------------------------------------------------------------------
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlCThenCtrlVCopiesAFileToTheOtherPanel()
     {
@@ -46,6 +47,7 @@ public class ClipboardAndDriveActionsTest
         await _app.WaitUntilAsync(s => _app.RightPanelLists("readme.txt", s), "the target panel to list the paste");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlXThenCtrlVMovesAFile()
     {
@@ -63,6 +65,7 @@ public class ClipboardAndDriveActionsTest
         await _app.WaitUntilAsync(() => !File.Exists(Path.Combine(_app.LeftRoot, "notes.md")), "the original to be gone");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task PastingIntoTheFolderACopyCameFromNamesItLikeExplorer()
     {
@@ -75,6 +78,7 @@ public class ClipboardAndDriveActionsTest
         await _app.WaitUntilAsync(() => File.Exists(Path.Combine(_app.LeftRoot, "readme - Copy.txt")), "a 'readme - Copy.txt'");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheCuaKeysWorkToo()
     {
@@ -89,6 +93,7 @@ public class ClipboardAndDriveActionsTest
         await _app.WaitUntilAsync(() => File.Exists(Path.Combine(_app.RightRoot, "readme.txt")), "Shift+Insert to paste");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlCOnTheParentRowStillQuits()
     {
@@ -99,6 +104,7 @@ public class ClipboardAndDriveActionsTest
         await _app.Driver.WaitForExitAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task CtrlVWithNothingOnTheClipboardSaysSo()
     {
@@ -126,6 +132,7 @@ public class ClipboardAndDriveActionsTest
         return dialog;
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheDiskManagerShowsTheDriveUnderTheCursorAndItsBitLockerState()
     {
@@ -136,6 +143,7 @@ public class ClipboardAndDriveActionsTest
         await _app.WaitForTextAsync("E:eject");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EEjectsTheDriveUnderTheCursor()
     {
@@ -148,6 +156,7 @@ public class ClipboardAndDriveActionsTest
         await _app.WaitUntilAsync(() => dialog.Status.Contains("removed safely"), "the status to say so");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task FOpensAFormatDialogThatAsksForTheLetterBack()
     {
@@ -168,6 +177,7 @@ public class ClipboardAndDriveActionsTest
         Assert.IsTrue(Drives.Calls.Any(c => c.StartsWith($"format {root}")), string.Join("; ", Drives.Calls));
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task AFormatTheServiceRefusesIsSaidInTheDiskManager()
     {
@@ -180,6 +190,7 @@ public class ClipboardAndDriveActionsTest
         Assert.IsNotInstanceOfType<FormatDriveDialog>(_app.Driver.FocusedModal);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task MMountsAnImageByPath()
     {
@@ -197,6 +208,7 @@ public class ClipboardAndDriveActionsTest
         CollectionAssert.Contains(Drives.Calls.ToList(), $"mount {image}");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ACursorOnAnImageOffersToMountIt()
     {

@@ -6,6 +6,7 @@ namespace iConsole.Test.Model;
 [TestClass]
 public class ListDataSourceTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void RowsAreReadByIndex()
     {
@@ -16,6 +17,7 @@ public class ListDataSourceTest
         Assert.AreEqual("b", item);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARowOutOfRangeIsMissing()
     {
@@ -25,6 +27,7 @@ public class ListDataSourceTest
         Assert.IsFalse(source.TryGet(-1, out _));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RefreshRaisesChanged()
     {
@@ -37,6 +40,7 @@ public class ListDataSourceTest
         Assert.AreEqual(1, changed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AListThatNotifiesRaisesChangedByItself()
     {

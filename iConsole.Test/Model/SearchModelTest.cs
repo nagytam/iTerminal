@@ -6,6 +6,7 @@ namespace iConsole.Test.Model;
 [TestClass]
 public class SearchModelTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesProperties()
     {
@@ -16,6 +17,7 @@ public class SearchModelTest
         Assert.AreEqual(0, model.Hits.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Search_DefaultValue_IsEmpty()
     {
@@ -24,6 +26,7 @@ public class SearchModelTest
         Assert.AreEqual(string.Empty, model.Search);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Search_SetValue_UpdatesProperty()
     {
@@ -34,6 +37,7 @@ public class SearchModelTest
         Assert.AreEqual("test query", model.Search);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Search_SetValue_RaisesPropertyChanged()
     {
@@ -46,6 +50,7 @@ public class SearchModelTest
         Assert.IsTrue(propertyChangedRaised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Search_SetSameValue_DoesNotRaisePropertyChanged()
     {
@@ -59,6 +64,7 @@ public class SearchModelTest
         Assert.AreEqual(0, propertyChangedCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Hits_CanAddItems()
     {
@@ -72,6 +78,7 @@ public class SearchModelTest
         Assert.AreEqual(5, model.Hits[0].Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Hits_CollectionChanged_RaisesPropertyChanged()
     {
@@ -84,6 +91,7 @@ public class SearchModelTest
         Assert.IsTrue(propertyChangedRaised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Hits_CanClearItems()
     {
@@ -96,6 +104,7 @@ public class SearchModelTest
         Assert.AreEqual(0, model.Hits.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Hits_CanRemoveItems()
     {
@@ -108,6 +117,7 @@ public class SearchModelTest
         Assert.AreEqual(0, model.Hits.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Hits_MultipleHits_MaintainsOrder()
     {

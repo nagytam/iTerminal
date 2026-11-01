@@ -30,6 +30,7 @@ public class SplashDialogSixelTest
         return splash;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnASixelTerminal_TheEmblemIsOfferedToTheRenderer()
     {
@@ -46,6 +47,7 @@ public class SplashDialogSixelTest
         Assert.IsTrue(overlay.Current.Data.StartsWith("\u001bP", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingTheSplash_WithdrawsTheEmblem()
     {
@@ -59,6 +61,7 @@ public class SplashDialogSixelTest
         Assert.IsNull(overlay.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutSixel_TheSplashIsTextOnly()
     {
@@ -72,6 +75,7 @@ public class SplashDialogSixelTest
         Assert.AreEqual(15, (int)splash.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSplash_ListsTheTerminalProtocolsWithTheirState()
     {
@@ -88,6 +92,7 @@ public class SplashDialogSixelTest
         Assert.IsTrue(text.Contains("Hyperlinks OSC 8"), text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheProtocolList_FollowsTheSixelFeatureFlag()
     {
@@ -108,6 +113,7 @@ public class SplashDialogSixelTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFeatureFlag_CannotTurnOnATerminalWithoutSixel()
     {

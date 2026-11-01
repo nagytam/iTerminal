@@ -23,6 +23,7 @@ public class PopupListViewTest
 
     private static KeyEvent Key(ConsoleKey consoleKey) => new('\0', consoleKey, false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetItemsClampsTheHighlight()
     {
@@ -31,6 +32,7 @@ public class PopupListViewTest
         Assert.AreEqual(1, view.Highlight);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowKeysMoveTheHighlight()
     {
@@ -46,6 +48,7 @@ public class PopupListViewTest
         Assert.AreEqual(0, view.Highlight);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterCommitsTheHighlightedRow()
     {
@@ -59,6 +62,7 @@ public class PopupListViewTest
         Assert.AreEqual(1, committed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeCancels()
     {
@@ -71,6 +75,7 @@ public class PopupListViewTest
         Assert.IsTrue(cancelled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingARowCommitsIt()
     {
@@ -84,6 +89,7 @@ public class PopupListViewTest
         Assert.AreEqual(2, committed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WheelMovesTheHighlight()
     {
@@ -96,6 +102,7 @@ public class PopupListViewTest
         Assert.AreEqual(0, view.Highlight);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawRendersRows()
     {
@@ -117,6 +124,7 @@ public class PopupListViewTest
         Assert.IsTrue(content.Contains("Blue"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheWheel_OnlyActsOverTheRows()
     {

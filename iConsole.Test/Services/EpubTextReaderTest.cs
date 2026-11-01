@@ -49,6 +49,7 @@ public class EpubTextReaderTest
         return buffer.ToArray();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Chapters_FollowTheSpine_NotTheZipOrder()
     {
@@ -63,6 +64,7 @@ public class EpubTextReaderTest
         CollectionAssert.AreEqual(new[] { "# One", "Alpha", string.Empty, "## Two", "Beta" }, lines);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HrefsAreUnescaped_AndTheNavigationDocumentIsNotInTheSpine()
     {
@@ -79,6 +81,7 @@ public class EpubTextReaderTest
         Assert.IsFalse(lines.Any(l => l.Contains("Contents only")), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScriptsAndStyles_AreDropped_AndLineBreaksAreKept()
     {
@@ -96,6 +99,7 @@ public class EpubTextReaderTest
         CollectionAssert.Contains(lines, "• item");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutAContainer_TheReaderSaysSo()
     {
@@ -106,6 +110,7 @@ public class EpubTextReaderTest
         Assert.IsTrue(lines.Single().StartsWith("[Could not read the book:"), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NotAZipFile_TheReaderSaysSo()
     {

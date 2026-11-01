@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Data;
 [TestClass]
 public class DriveTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesProperties()
     {
@@ -14,6 +15,7 @@ public class DriveTest
         Assert.AreEqual(string.Empty, drive.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Name_SetAndGet()
     {
@@ -21,6 +23,7 @@ public class DriveTest
         Assert.AreEqual("C:", drive.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Url_SetAndGet()
     {
@@ -30,6 +33,7 @@ public class DriveTest
         Assert.IsTrue(((string)drive.Url).Contains("C:\\"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DriveInfo_SetAndGet()
     {
@@ -38,6 +42,7 @@ public class DriveTest
         Assert.AreEqual(driveInfo, drive.DriveInfo);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsEnabled_WithMemoryDriveName_ReturnsTrue()
     {
@@ -45,6 +50,7 @@ public class DriveTest
         Assert.IsTrue(drive.IsEnabled);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsEnabled_WithReadyDrive_ReturnsTrue()
     {
@@ -56,6 +62,7 @@ public class DriveTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsEnabled_WithNotReadyDrive_ReturnsFalse()
     {
@@ -100,6 +107,7 @@ public class DriveTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsEnabled_WithNullDriveInfo_ReturnsFalse()
     {

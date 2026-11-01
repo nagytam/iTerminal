@@ -7,6 +7,7 @@ namespace iConsole.Jobs.Test;
 [TestClass]
 public class KeyboardEventPublisherJobTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void EnqueueAndEvent_ShouldWorkWhenInvokedManually()
     {

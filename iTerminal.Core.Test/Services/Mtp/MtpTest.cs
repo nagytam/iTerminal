@@ -80,6 +80,7 @@ public class MtpTest
 
     #region URLs
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MtpUrl_IsAVirtualDriveWithTheDeviceAsHost()
     {
@@ -99,6 +100,7 @@ public class MtpTest
 
     #region The service
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheRootListsDevices_ADeviceItsStorages_AndBothAreObjectsNotFiles()
     {
@@ -113,6 +115,7 @@ public class MtpTest
         Assert.AreEqual("mtp://Pixel 7/Internal storage/", storages[0].Url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolder_ListsFoldersFirst_WithSizesAndDates()
     {
@@ -127,6 +130,7 @@ public class MtpTest
         Assert.AreEqual("2026-10-05", entries[1].Date);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadWriteAndCopy_GoThroughTheBackend()
     {
@@ -145,6 +149,7 @@ public class MtpTest
         Assert.IsTrue(service.ExistsFolder(new Url("mtp://Pixel 7/Internal storage/DCIM/")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AMoveOfAFile_IsACopyThenADelete_AndAFolderIsRefused()
     {
@@ -161,6 +166,7 @@ public class MtpTest
             service.MoveAsync(new Url("mtp://Pixel 7/Internal storage/DCIM/"), new Url("mtp://Pixel 7/Internal storage/Other/"), true));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADeviceOrStorage_IsNeverDeletedOrWrittenTo()
     {
@@ -186,6 +192,7 @@ public class MtpTest
         CollectionAssert.AreEqual(new[] { "Internal storage/notes.txt" }, backend.Deleted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithoutAStack_ListingSaysWhy()
     {
@@ -200,6 +207,7 @@ public class MtpTest
 
     #region gio
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gio_FindsDevicesInTheMountList()
     {
@@ -216,6 +224,7 @@ public class MtpTest
         CollectionAssert.AreEqual(new[] { "Pixel_7_1A2B3C" }, GioMtpBackend.ParseDevices(Output).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gio_ReadsAListing()
     {
@@ -232,6 +241,7 @@ public class MtpTest
         Assert.AreEqual(DateTimeOffset.FromUnixTimeSeconds(1790000100).LocalDateTime, items[1].Modified);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Gio_EscapesEachSegmentIntoTheUri_AndNeverUsesAShell()
     {
@@ -254,6 +264,7 @@ public class MtpTest
         Assert.IsTrue(calls.All(c => c.StartsWith("gio ", StringComparison.Ordinal)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Gio_UploadsThroughSaveWithTheBytesOnStdin()
     {
@@ -265,6 +276,7 @@ public class MtpTest
         Assert.AreEqual("payload", Encoding.UTF8.GetString(runner.Calls[0].StandardInput));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gio_ExplainsTheCommonFailures()
     {
@@ -277,12 +289,14 @@ public class MtpTest
 
     #region The Windows shell
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Shell_QuotesValuesAsPowerShellLiterals()
     {
         Assert.AreEqual("'Tom''s phone'", ShellMtpBackend.Quote("Tom's phone"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Shell_ReadsRowsAndNames_ForOneItemAsForMany()
     {
@@ -299,6 +313,7 @@ public class MtpTest
         Assert.AreEqual(0, ShellMtpBackend.ParseNames("[]").Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Shell_PassesNamesAsLiterals_AndRefusesToDelete()
     {

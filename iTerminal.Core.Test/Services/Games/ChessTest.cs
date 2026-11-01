@@ -52,6 +52,7 @@ public class ChessTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheStartingPositionHasTheKnownMoveCounts()
     {
@@ -62,6 +63,7 @@ public class ChessTest
         Assert.AreEqual(8902, Perft(start, 3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CastlingPinsAndCapturesCountRightInTheKiwipetePosition()
     {
@@ -71,6 +73,7 @@ public class ChessTest
         Assert.AreEqual(2039, Perft(state, 2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EnPassantAndDiscoveredChecksCountRight()
     {
@@ -81,6 +84,7 @@ public class ChessTest
         Assert.AreEqual(2812, Perft(state, 3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PromotionsCountRight()
     {
@@ -90,6 +94,7 @@ public class ChessTest
         Assert.AreEqual(496, Perft(state, 2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFoolsMateEndsTheGame()
     {
@@ -100,6 +105,7 @@ public class ChessTest
         StringAssert.Contains(game.Status, "Checkmate — Black wins");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AKingWithNoMoveAndNoCheckIsAStalemate()
     {
@@ -110,6 +116,7 @@ public class ChessTest
         StringAssert.Contains(game.Status, "Stalemate");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BareKingsAreADrawByMaterial()
     {
@@ -120,6 +127,7 @@ public class ChessTest
         StringAssert.Contains(game.Status, "material");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KingsideCastlingMovesTheRook()
     {
@@ -131,6 +139,7 @@ public class ChessTest
         Assert.AreEqual(0, game.State.Board[Square("h1")]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CastlingIsNotAllowedThroughCheck()
     {
@@ -140,6 +149,7 @@ public class ChessTest
         Assert.IsFalse(game.LegalMoves.Contains(Move("e1g1")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EnPassantTakesThePawnThatPassed()
     {
@@ -150,6 +160,7 @@ public class ChessTest
         Assert.AreEqual(0, game.State.Board[Square("d5")], "the pawn that moved two squares is gone");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APawnReachingTheLastRankAsksForThePieceAndPromotes()
     {
@@ -171,6 +182,7 @@ public class ChessTest
         Assert.IsFalse(game.AwaitsPromotion);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ClickingAnotherOwnPieceReselectsAndTheSameSquareDeselects()
     {
@@ -186,6 +198,7 @@ public class ChessTest
         Assert.AreEqual(-1, game.Selected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UndoTakesBackBothMovesAgainstTheComputer()
     {
@@ -204,6 +217,7 @@ public class ChessTest
         Assert.IsFalse(game.CanUndo);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePersonCannotMoveBlacksPiecesAgainstTheComputer()
     {
@@ -216,6 +230,7 @@ public class ChessTest
         Assert.AreEqual(-1, game.Selected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerFindsAMateInOne()
     {
@@ -226,6 +241,7 @@ public class ChessTest
         Assert.AreEqual(Move("a1a8"), move);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerTakesAHangingQueen()
     {
@@ -236,6 +252,7 @@ public class ChessTest
         Assert.AreEqual(Move("d1d5"), move);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerAnswersTheOpeningWithinItsTimeBudget()
     {
@@ -250,6 +267,7 @@ public class ChessTest
         Assert.IsTrue(game.State.WhiteToMove);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMoveChosenForAnOldPositionIsDropped()
     {
@@ -263,6 +281,7 @@ public class ChessTest
         Assert.AreEqual(ChessState.Start().Key(), game.State.Key());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThreefoldRepetitionIsADraw()
     {
@@ -273,6 +292,7 @@ public class ChessTest
         StringAssert.Contains(game.Status, "repetition");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheBoardDrawsTheEightRanksAndTheFileLabels()
     {
@@ -286,6 +306,7 @@ public class ChessTest
         Assert.AreEqual(1, rows.SelectMany(r => r).Count(c => c.Cursor));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheEnPassantSquare_MakesPositionsDifferOnlyWhenAPawnCanUseIt()
     {
@@ -300,6 +321,7 @@ public class ChessTest
             FromFen("4k3/8/8/8/3pP3/8/8/4K3 b - e3 0 1").Key());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BishopsOnOneColourAloneCannotMate_ButMixedMinorsCan()
     {

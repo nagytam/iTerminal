@@ -5,6 +5,7 @@ namespace iConsole.Test.Csv;
 [TestClass]
 public class CsvDocumentTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadsTheHeaderAndTheRows()
     {
@@ -15,6 +16,7 @@ public class CsvDocumentTest
         CollectionAssert.AreEqual(new[] { "Pears", "5" }, document.Rows[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void QuotedFieldsMayHoldTheDelimiterLineBreaksAndDoubledQuotes()
     {
@@ -23,6 +25,7 @@ public class CsvDocumentTest
         CollectionAssert.AreEqual(new[] { "x, y", "line 1\nline \"2\"" }, document.Rows[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATabSeparatedFileIsReadWithTheTabWhateverItsCommas()
     {
@@ -33,6 +36,7 @@ public class CsvDocumentTest
         Assert.AreEqual("one, two, three", document.Rows[0][1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDelimiterIsTheCandidateThatSplitsTheFirstLineMost()
     {
@@ -41,6 +45,7 @@ public class CsvDocumentTest
         Assert.AreEqual(',', CsvDocument.DetectDelimiter("just one column\n"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BlankHeaderAndRepeatedNamesGetUniqueColumnNames()
     {
@@ -49,6 +54,7 @@ public class CsvDocumentTest
         CollectionAssert.AreEqual(new[] { "Column1", "name", "name_2" }, document.Headers.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AShortRowIsKeptAndAByteOrderMarkIsIgnored()
     {
@@ -59,6 +65,7 @@ public class CsvDocumentTest
         Assert.AreEqual(1, document.Rows[0].Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutAHeaderTheColumnsAreNumbered()
     {
@@ -68,6 +75,7 @@ public class CsvDocumentTest
         Assert.AreEqual(2, document.Rows.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyFileHasNoColumns()
     {

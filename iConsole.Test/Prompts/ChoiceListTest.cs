@@ -8,6 +8,7 @@ public class ChoiceListTest
     private static ChoiceList<string> Fruit() =>
         new(["Apple", "Banana", "Blackberry", "Cherry"], item => item);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Move_StopsAtTheFirstAndLastChoice()
     {
@@ -20,6 +21,7 @@ public class ChoiceListTest
         Assert.AreEqual("Cherry", list.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Filter_ShowsOnlyTheChoicesThatContainTheText_IgnoringCase()
     {
@@ -37,6 +39,7 @@ public class ChoiceListTest
         Assert.AreEqual("Blackberry", list.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Backspace_WidensTheFilterAgain()
     {
@@ -50,6 +53,7 @@ public class ChoiceListTest
         Assert.AreEqual(4, list.VisibleCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Marks_SurviveTheFilterChanging()
     {
@@ -63,6 +67,7 @@ public class ChoiceListTest
         CollectionAssert.AreEqual(new[] { "Apple", "Cherry" }, list.MarkedItems.ToList());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToggleTwice_UnmarksTheChoice()
     {
@@ -73,6 +78,7 @@ public class ChoiceListTest
         Assert.AreEqual(0, list.MarkedItems.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ScrollTop_MovesOnlyWhenTheHighlightLeavesTheWindow()
     {

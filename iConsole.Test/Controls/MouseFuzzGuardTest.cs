@@ -38,6 +38,7 @@ public class MouseFuzzGuardTest
         yield return new MouseEvent { Position = at, WheelDelta = -1 };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnyPointerEvent_AtAnyCell_NeverThrows_AndTheControlStillDraws()
     {
@@ -74,6 +75,7 @@ public class MouseFuzzGuardTest
         Assert.AreEqual(0, failures.Count, string.Join("; ", failures));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClick_LeavesTheControlDrawingTheSameTwice()
     {

@@ -18,6 +18,7 @@ namespace iTerminal.Core.Test.Controls.Contents;
 [TestClass]
 public class ItemInformationLayoutTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDetailIsRightAligned()
     {
@@ -28,6 +29,7 @@ public class ItemInformationLayoutTest
         Assert.IsTrue(line.EndsWith("File size: 1 KB", StringComparison.Ordinal), line);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PaddedTextsAreTrimmedBeforeLayout()
     {
@@ -38,6 +40,7 @@ public class ItemInformationLayoutTest
         Assert.IsTrue(line.EndsWith("File size: 9 B", StringComparison.Ordinal), line);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALongNameIsShrunkSoTheSizeStaysVisible()
     {
@@ -48,12 +51,14 @@ public class ItemInformationLayoutTest
         Assert.IsTrue(line.StartsWith("File:", StringComparison.Ordinal), line);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutADetailTheNameUsesTheWholeWidth()
     {
         Assert.AreEqual("..".PadRight(10), ItemInformation.ComposeLine("..", string.Empty, 10));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADetailWiderThanTheStripWins()
     {
@@ -63,12 +68,14 @@ public class ItemInformationLayoutTest
         StringAssert.StartsWith(line, "Num");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANonPositiveWidthIsEmpty()
     {
         Assert.AreEqual(string.Empty, ItemInformation.ComposeLine("a", "b", 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARealFileEntryShowsItsSize()
     {

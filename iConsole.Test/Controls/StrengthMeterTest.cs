@@ -18,6 +18,7 @@ public class StrengthMeterTest
         return m.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("", PasswordStrength.None)]
     [DataRow("abc", PasswordStrength.Weak)]
@@ -34,6 +35,7 @@ public class StrengthMeterTest
         Assert.AreEqual(expected, StrengthMeter.Rate(password));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Render_ShowsFilledStepsAndName()
     {
@@ -42,6 +44,7 @@ public class StrengthMeterTest
         Assert.AreEqual("▰▰▰▰ Strong", StrengthMeter.Render(PasswordStrength.Strong));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ShowsTheRatingOfTheLastPassword()
     {
@@ -52,6 +55,7 @@ public class StrengthMeterTest
         Assert.AreEqual("▰▰▰▰ Strong", buffer.ContentAsString.Split(Environment.NewLine)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_AfterTheTextIsCleared_BlanksTheName()
     {
@@ -76,6 +80,7 @@ public class StrengthMeterTest
 
     private static KeyEvent Letter(char c) => new(c, (ConsoleKey)char.ToUpperInvariant(c), false, false, false);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindPrefix_IgnoresMarkersAndWrapsAround()
     {
@@ -86,6 +91,7 @@ public class StrengthMeterTest
         Assert.AreEqual(-1, ListBox<string>.FindPrefix(values, "z", 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypeAhead_IsOffByDefault()
     {
@@ -95,6 +101,7 @@ public class StrengthMeterTest
         Assert.AreEqual(0, (int)listBox.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypeAhead_MovesTheCursorToTheMatchingRow()
     {
@@ -115,6 +122,7 @@ public class StrengthMeterTest
         Assert.AreEqual(3, (int)listBox.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypeAhead_NoMatchLeavesTheCursorAndTheKey()
     {

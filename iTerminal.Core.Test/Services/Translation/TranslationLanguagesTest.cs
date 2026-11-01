@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Services.Translation;
 [TestClass]
 public class TranslationLanguagesTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("de", "de")]
     [DataRow("DE", "de")]
@@ -17,6 +18,7 @@ public class TranslationLanguagesTest
         Assert.AreEqual(expected, TranslationLanguages.Find(code)?.Code);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(null)]
     [DataRow("")]
@@ -27,6 +29,7 @@ public class TranslationLanguagesTest
         Assert.IsNull(TranslationLanguages.Find(code));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANameFallsBackToTheCode()
     {
@@ -34,6 +37,7 @@ public class TranslationLanguagesTest
         Assert.AreEqual("xx", TranslationLanguages.NameOf("xx"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheListHasNoDuplicatesAndIsSortedByName()
     {

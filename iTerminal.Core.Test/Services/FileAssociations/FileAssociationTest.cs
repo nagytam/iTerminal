@@ -21,6 +21,7 @@ public class FileAssociationTest
         new(Guid.NewGuid().ToString("N"), name, patterns, command, kind, inTerminal);
 
     #region The command line
+    [Timeout(60_000)]
     [TestMethod]
     public void BuildCommandLine_WithoutAPlaceholder_PutsTheFileLast_AsOneArgument()
     {
@@ -30,6 +31,7 @@ public class FileAssociationTest
         CollectionAssert.AreEqual(new[] { "--fit", FilePath }, commandLine.Value.Arguments.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BuildCommandLine_ReplacesThePlaceholders_InsideTheirWords()
     {
@@ -47,6 +49,7 @@ public class FileAssociationTest
             commandLine!.Value.Arguments.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BuildCommandLine_QuotesKeepAProgramPathWithSpacesTogether_AndBackslashesAreLiteral()
     {
@@ -56,6 +59,7 @@ public class FileAssociationTest
         CollectionAssert.AreEqual(new[] { "a b", FilePath }, commandLine.Value.Arguments.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BuildCommandLine_AFileNameCannotAddArguments()
     {
@@ -67,6 +71,7 @@ public class FileAssociationTest
         CollectionAssert.AreEqual(new[] { hostile }, commandLine!.Value.Arguments.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BuildCommandLine_AnUnknownPercentSequence_IsLeftAsWritten()
     {
@@ -75,6 +80,7 @@ public class FileAssociationTest
         CollectionAssert.AreEqual(new[] { "%x", "%", FilePath }, commandLine!.Value.Arguments.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BuildCommandLine_NothingToRun_IsNull()
     {
@@ -84,6 +90,7 @@ public class FileAssociationTest
     #endregion
 
     #region Matching
+    [Timeout(60_000)]
     [TestMethod]
     public void Matches_ByPattern_IgnoringCase()
     {
@@ -95,6 +102,7 @@ public class FileAssociationTest
         Assert.IsTrue(Create("Anything", "*").Matches("Makefile"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PatternFor_IsTheExtension_OrTheWholeNameWithoutOne()
     {
@@ -104,6 +112,7 @@ public class FileAssociationTest
     #endregion
 
     #region The service
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_PutsTheNewProgramFirst_SoItIsTheDefault()
     {
@@ -120,6 +129,7 @@ public class FileAssociationTest
         Assert.IsNull(service.GetDefault("a.txt", FileAssociationKind.Open));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OpenAndEdit_AreSeparateLists()
     {
@@ -131,6 +141,7 @@ public class FileAssociationTest
         Assert.AreEqual(editor, service.GetDefault("a.txt", FileAssociationKind.Edit));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Save_WithAnExistingId_ReplacesItWhereItStands()
     {
@@ -145,6 +156,7 @@ public class FileAssociationTest
         CollectionAssert.AreEqual(new[] { "Viewer", "Paint 3D" }, service.GetAll().Select(a => a.Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MakeDefault_MovesItAheadOfTheOthers_AndRemove_TakesItOut()
     {
@@ -165,6 +177,7 @@ public class FileAssociationTest
         Assert.IsFalse(service.MakeDefault("no such id"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheList_IsKeptInTheSettings_AndReadBackByAnotherInstance()
     {
@@ -177,6 +190,7 @@ public class FileAssociationTest
         Assert.AreEqual(association, reopened.GetDefault("readme.md", FileAssociationKind.Edit));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnreadableSetting_IsNoAssociations_NotAnException()
     {
@@ -223,6 +237,7 @@ public class FileAssociationTest
         return service.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Start_AProgramThatCannotStart_IsReportedAsANotification()
     {
@@ -238,6 +253,7 @@ public class FileAssociationTest
         Assert.AreEqual("viewer was not found on the PATH.", notification.Message);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Start_AProgramThatStarts_SaysNothing()
     {
@@ -253,6 +269,7 @@ public class FileAssociationTest
         Assert.AreEqual(0, notifications.History.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DefaultFor_IsOnlyForAFileOnTheLocalDisk()
     {
@@ -278,6 +295,7 @@ public class FileAssociationTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Launcher_StartsARealProgram_AndSaysWhyItCouldNotStartAMissingOne()
     {
@@ -292,6 +310,7 @@ public class FileAssociationTest
         Assert.AreEqual("no-such-program-4f1c was not found on the PATH.", missing.Failure);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Launcher_ATerminalProgram_IsLentTheTerminal_WithoutTheShellsBanner()
     {
@@ -311,6 +330,7 @@ public class FileAssociationTest
         Assert.AreEqual(Path.GetDirectoryName(FilePath), launch.WorkingDirectory);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ResolveProgram_FindsAProgramOnThePath_AndNotOneThatIsNotThere()
     {

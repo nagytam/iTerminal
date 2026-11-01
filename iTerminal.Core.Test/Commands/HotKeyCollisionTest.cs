@@ -9,6 +9,7 @@ namespace iTerminal.Core.Commands.Test;
 [TestClass]
 public class HotKeyCollisionTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDuplicateFinderAndTheSignaturesHaveDifferentChords()
     {
@@ -24,6 +25,7 @@ public class HotKeyCollisionTest
     /// Print is Ctrl+P: not Ctrl+Shift+P, which Windows Terminal keeps for its own command palette. Alt+P walks the command
     /// history, so the two must stay different chords.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void PrintIsPlainCtrlP_NotTheHostsOrTheHistorysChord()
     {

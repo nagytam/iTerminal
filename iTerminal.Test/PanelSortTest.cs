@@ -49,6 +49,7 @@ public class PanelSortTest
         await _app.WaitForNoDialogAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ShiftF11_SortsTheFocusedPanel_BySizeAndBack()
     {
@@ -73,6 +74,7 @@ public class PanelSortTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ByDateAndByExtension()
     {
@@ -85,6 +87,7 @@ public class PanelSortTest
         await WaitForOrderAsync("zeta.bin", "notes.md", "readme.txt");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheCursorStaysOnItsEntry_AndTheOtherPanelIsLeftAlone()
     {
@@ -99,6 +102,7 @@ public class PanelSortTest
         Assert.AreEqual(PanelSort.AsListed, ((ISortableContentModel)right).Sort);
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TheOrderIsThePanels_AcrossAChangeOfDrive_AndARestart()
     {
@@ -121,6 +125,7 @@ public class PanelSortTest
         await _app.WaitForTextAsync("Sort: size ↓");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task MarksAndTheCursorActOnTheSortedRows()
     {

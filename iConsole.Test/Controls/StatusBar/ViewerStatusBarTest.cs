@@ -31,6 +31,7 @@ public class ViewerStatusBarTest
             mockThemeService.Object);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CreatesInstance()
     {
@@ -39,6 +40,7 @@ public class ViewerStatusBarTest
         Assert.IsNotNull(statusBar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsName()
     {
@@ -47,6 +49,7 @@ public class ViewerStatusBarTest
         Assert.AreEqual("ViewerStatusBar", statusBar.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_HasFixedHeight()
     {
@@ -55,6 +58,7 @@ public class ViewerStatusBarTest
         Assert.AreEqual(1, statusBar.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_HasChildControls()
     {
@@ -63,6 +67,7 @@ public class ViewerStatusBarTest
         Assert.IsTrue(statusBar.Controls.Count > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ViewerStatusBar_IsInstanceOfStatusBar()
     {
@@ -71,6 +76,7 @@ public class ViewerStatusBarTest
         Assert.IsInstanceOfType(statusBar, typeof(global::iConsole.Controls.StatusBar.StatusBar));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_DoesNotThrow()
     {
@@ -82,6 +88,7 @@ public class ViewerStatusBarTest
         statusBar.Draw(buffer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CannotBeFocused()
     {

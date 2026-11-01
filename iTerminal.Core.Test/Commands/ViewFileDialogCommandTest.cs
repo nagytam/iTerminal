@@ -39,6 +39,7 @@ public class ViewFileDialogCommandTest
 
     // ── constructor ──────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsF3Key()
     {
@@ -57,6 +58,7 @@ public class ViewFileDialogCommandTest
 
     // ── CanExecute ───────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsTextFile_ReturnsTrue()
     {
@@ -80,6 +82,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsJson_ReturnsTrue()
     {
@@ -103,6 +106,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenFocusedFileIsLocalHtml_OpensItInTheWebBrowser()
     {
@@ -133,6 +137,7 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsHtml_ReturnsTrue()
     {
@@ -156,6 +161,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsPdf_ReturnsTrue()
     {
@@ -179,6 +185,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsPng_ReturnsTrue()
     {
@@ -202,6 +209,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsMp3_ReturnsFalse()
     {
@@ -225,6 +233,7 @@ public class ViewFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsJpeg_ReturnsTrue()
     {
@@ -248,6 +257,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsBmp_ReturnsTrue()
     {
@@ -271,6 +281,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsJpg_ReturnsTrue()
     {
@@ -294,6 +305,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsGif_ReturnsTrue()
     {
@@ -317,6 +329,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsWebp_ReturnsTrue()
     {
@@ -340,6 +353,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsTiff_ReturnsTrue()
     {
@@ -363,6 +377,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileUrlIsEmpty_ReturnsFalse()
     {
@@ -377,6 +392,7 @@ public class ViewFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedModelIsNull_ReturnsFalse()
     {
@@ -394,6 +410,7 @@ public class ViewFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFileDoesNotExistInModel_ReturnsFalse()
     {
@@ -419,6 +436,7 @@ public class ViewFileDialogCommandTest
 
     // ── ExecuteAsync ─────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_WhenContentModelServiceIsNull_DoesNotThrow()
     {
@@ -457,6 +475,7 @@ public class ViewFileDialogCommandTest
         return contentModelService.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenFocusedFileIsMp3AndTheMusicViewerIsAvailable_ReturnsTrue()
     {
@@ -480,6 +499,7 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CanExecute_WhenTheAudioFileIsNotLocal_StaysFalse()
     {
@@ -495,6 +515,7 @@ public class ViewFileDialogCommandTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExecuteAsync_WithAnAudioFile_PointsTheMusicViewerAtIt()
     {
@@ -522,6 +543,7 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExecuteAsync_WithAnXmlFile_PointsTheXmlViewerAtIt()
     {
@@ -553,6 +575,7 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ExecuteAsync_WithAJsonFile_PointsTheJsonViewerAtIt()
     {
@@ -582,6 +605,7 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [Timeout(60_000)]
     [DataTestMethod]
     [DataRow(".csv")]
     [DataRow(".tsv")]
@@ -615,8 +639,96 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [TestMethod]
+    public void ExecuteAsync_WithALocalDatabaseFile_PointsTheSqliteViewerAtIt()
+    {
+        var themeService = CreateThemeService();
+        var sqliteDialog = new iConsole.Dialogs.SqliteViewerDialog(
+            Mock.Of<iConsole.Sqlite.ISqliteDatabaseReader>(),
+            Mock.Of<IBeepService>(),
+            Mock.Of<IDateTimeProviderService>(),
+            themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.db");
+        File.WriteAllBytes(path, "SQLite format 3\0"u8.ToArray());
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                CreateDialog(themeService),
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                sqliteViewerDialog: sqliteDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, sqliteDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    public void ExecuteAsync_WithADbFileThatIsNotSqlite_UsesTheGenericViewer()
+    {
+        var themeService = CreateThemeService();
+        var sqliteDialog = new iConsole.Dialogs.SqliteViewerDialog(
+            Mock.Of<iConsole.Sqlite.ISqliteDatabaseReader>(),
+            Mock.Of<IBeepService>(),
+            Mock.Of<IDateTimeProviderService>(),
+            themeService);
+        var fileViewer = CreateDialog(themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.db");
+        File.WriteAllText(path, "Thumbs database, not SQLite");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                fileViewer,
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                sqliteViewerDialog: sqliteDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.IsNull(sqliteDialog.Url, "a .db file without the SQLite header is not handed to the SQLite viewer");
+            Assert.AreEqual(path, fileViewer.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    public void ExecuteAsync_WithADatabaseThatIsNotLocal_LeavesTheSqliteViewerAloneAndUsesTheGenericViewer()
+    {
+        var themeService = CreateThemeService();
+        var sqliteDialog = new iConsole.Dialogs.SqliteViewerDialog(
+            Mock.Of<iConsole.Sqlite.ISqliteDatabaseReader>(),
+            Mock.Of<IBeepService>(),
+            Mock.Of<IDateTimeProviderService>(),
+            themeService);
+        var fileViewer = CreateDialog(themeService);
+        // The file does not exist on this machine, which is how a remote path looks to the command.
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.db");
+
+        var command = new ViewFileDialogCommand(
+            fileViewer,
+            CreateServiceForFile(path),
+            solutionViewerDialog: null,
+            sqliteViewerDialog: sqliteDialog);
+
+        command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+        Assert.IsNull(sqliteDialog.Url, "a remote database is not handed to the SQLite viewer");
+        Assert.AreEqual(path, fileViewer.Url?.Path);
+    }
+
     // ── ContentBrowser integration ───────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithFileViewerDialog_RegistersViewFileDialogCommand()
     {
@@ -648,6 +760,7 @@ public class ViewFileDialogCommandTest
         Assert.IsTrue(hasCommand, "ContentBrowser should register ViewFileDialogCommand when a FileViewerDialog is supplied.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentBrowser_WithoutFileViewerDialog_DoesNotRegisterViewFileDialogCommand()
     {
@@ -679,6 +792,7 @@ public class ViewFileDialogCommandTest
 
     // ── FilePanelFactory integration ─────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithFileViewerDialog_CreatesFilePanel()
     {
@@ -707,6 +821,7 @@ public class ViewFileDialogCommandTest
         Assert.IsNotNull(panel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FilePanelFactory_WithoutFileViewerDialog_CreatesFilePanel()
     {

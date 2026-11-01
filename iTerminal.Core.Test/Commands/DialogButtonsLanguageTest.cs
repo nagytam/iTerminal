@@ -54,6 +54,7 @@ public class DialogButtonsLanguageTest
         return ((Button)value).Title;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithEnglishChosen_EveryButtonKeepsItsExactEnglishText()
     {
@@ -65,6 +66,7 @@ public class DialogButtonsLanguageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InEveryOtherLanguage_EveryButtonIsTranslated()
     {

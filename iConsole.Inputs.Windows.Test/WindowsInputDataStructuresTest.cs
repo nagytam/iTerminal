@@ -5,6 +5,7 @@ namespace iConsole.Inputs.Windows.Test;
 [TestClass]
 public class WindowsInputDataStructuresTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void COORD_DefaultInitialization()
     {
@@ -14,6 +15,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreEqual(0, coord.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow((ushort)0, (ushort)0)]
     [DataRow((ushort)10, (ushort)20)]
@@ -26,6 +28,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreEqual(y, coord.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MOUSE_EVENT_RECORD_DefaultInitialization()
     {
@@ -37,6 +40,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreEqual(0, record.dwEventFlags);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MOUSE_EVENT_RECORD_LeftButtonPressedConstant()
     {
@@ -45,6 +49,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(0, leftButtonState);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MOUSE_EVENT_RECORD_RightButtonPressedConstant()
     {
@@ -53,6 +58,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(0, rightButtonState);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MOUSE_EVENT_RECORD_MouseMovedFlagConstant()
     {
@@ -60,6 +66,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(0, movedFlag);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MOUSE_EVENT_RECORD_MouseWheeledFlagConstant()
     {
@@ -67,6 +74,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(0, wheeledFlag);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MOUSE_EVENT_RECORD_MouseHorizontalWheeledFlagConstant()
     {
@@ -74,6 +82,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(0, horizontalWheelFlag);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MOUSE_EVENT_RECORD_DoubleClickFlagConstant()
     {
@@ -81,6 +90,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(0, doubleClickFlag);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KEY_EVENT_RECORD_ShiftPressedConstant()
     {
@@ -88,6 +98,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(0, shiftFlag);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KEY_EVENT_RECORD_LeftCtrlPressedConstant()
     {
@@ -95,6 +106,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(0, leftCtrlFlag);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KEY_EVENT_RECORD_RightCtrlPressedConstant()
     {
@@ -102,6 +114,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(0, rightCtrlFlag);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KEY_EVENT_RECORD_LeftAltPressedConstant()
     {
@@ -109,6 +122,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(0, leftAltFlag);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KEY_EVENT_RECORD_RightAltPressedConstant()
     {
@@ -116,6 +130,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(0, rightAltFlag);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(KEY_EVENT_RECORD.SHIFT_PRESSED)]
     [DataRow(KEY_EVENT_RECORD.LEFT_CTRL_PRESSED)]
@@ -136,6 +151,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreNotEqual(modifierFlag, otherModifiers);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KEY_EVENT_RECORD_DefaultInitialization()
     {
@@ -146,6 +162,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreEqual(0, record.dwControlKeyState);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void INPUT_RECORD_KeyEventType()
     {
@@ -157,6 +174,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreEqual(1, record.EventType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void INPUT_RECORD_MouseEventType()
     {
@@ -168,6 +186,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreEqual(2, record.EventType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void POINT_DefaultInitialization()
     {
@@ -177,6 +196,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreEqual(0, point.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow((ushort)5, (ushort)10)]
     [DataRow((ushort)0, (ushort)0)]
@@ -188,6 +208,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreEqual(y, point.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ConsoleHandle_CanBeCreated()
     {
@@ -196,6 +217,7 @@ public class WindowsInputDataStructuresTest
         Assert.IsNotNull(handle);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow((byte)0)]
     [DataRow((byte)255)]
@@ -210,6 +232,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreEqual(asciiValue, record.AsciiChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventUnicodeChar_CanBeSetAndRetrieved()
     {
@@ -221,6 +244,7 @@ public class WindowsInputDataStructuresTest
         Assert.AreEqual('A', record.UnicodeChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MOUSE_EVENT_RECORD_WithAllFlags_CanBeSet()
     {

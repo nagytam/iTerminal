@@ -23,6 +23,7 @@ public class PickersTest
 
     private static string[] Lines(MockBuffer buffer) => buffer.ContentAsString.Split(Environment.NewLine);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TimePicker_Wrap_StaysInRange()
     {
@@ -31,6 +32,7 @@ public class PickersTest
         Assert.AreEqual(5, TimePicker.Wrap(55, 10, 59));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TimePicker_Draw_ShowsFields()
     {
@@ -39,6 +41,7 @@ public class PickersTest
         Assert.AreEqual("[14:05]", Lines(buffer)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TimePicker_ShowSeconds_AddsThirdField()
     {
@@ -47,6 +50,7 @@ public class PickersTest
         Assert.AreEqual("[01:02:03]", Lines(buffer)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_DigitAfterArrowStep_StartsANewEntry()
     {
@@ -61,6 +65,7 @@ public class PickersTest
         Assert.AreEqual(1, picker.Value.Hour);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Calendar_ClickOnTheChosenDay_ActivatesIt()
     {
@@ -96,6 +101,7 @@ public class PickersTest
         throw new InvalidOperationException($"{day} is not in the grid.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_UpDown_StepsActiveFieldWithWrap()
     {
@@ -108,6 +114,7 @@ public class PickersTest
         Assert.AreEqual(new TimeOnly(0, 59), picker.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_TypingDigits_SetsFieldAndAdvances()
     {
@@ -122,6 +129,7 @@ public class PickersTest
         Assert.AreEqual(1, picker.ActiveField);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_ClickMinutes_SelectsField()
     {
@@ -130,6 +138,7 @@ public class PickersTest
         Assert.AreEqual(1, picker.ActiveField);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorPicker_Move_StopsAtEdges()
     {
@@ -138,6 +147,7 @@ public class PickersTest
         Assert.AreEqual(5, ColorPicker.Move(1, 0, 1, 16));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_EnterPicksCursorColor()
     {
@@ -148,6 +158,7 @@ public class PickersTest
         Assert.AreEqual(Color.DarkBlue, picker.SelectedColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ColorPicker_Click_PicksSwatch()
     {
@@ -156,6 +167,7 @@ public class PickersTest
         Assert.AreEqual(Color.Green, picker.SelectedColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorPicker_Draw_MarksSelectedSwatch()
     {
@@ -173,6 +185,7 @@ public class PickersTest
         return combo;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComboBox_TypeAhead_JumpsToNextMatchAndWraps()
     {
@@ -185,6 +198,7 @@ public class PickersTest
         Assert.AreEqual("Banana", combo.SelectedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComboBox_TypeAhead_NoMatchLeavesSelection()
     {
@@ -193,6 +207,7 @@ public class PickersTest
         Assert.AreEqual("Apple", combo.SelectedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ComboBox_HomeEnd_SelectFirstAndLast()
     {
@@ -203,6 +218,7 @@ public class PickersTest
         Assert.AreEqual("Apple", combo.SelectedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_HomeAndEnd_JumpToTheFirstAndLastField()
     {
@@ -216,6 +232,7 @@ public class PickersTest
         Assert.AreEqual(0, picker.ActiveField);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_WithoutSeconds_EndStopsAtTheMinutes()
     {
@@ -227,6 +244,7 @@ public class PickersTest
         Assert.AreEqual(1, picker.ActiveField);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_ColonAndDot_MoveToTheNextField_SoATimeCanBeTypedAsItIsWritten()
     {
@@ -247,6 +265,7 @@ public class PickersTest
         Assert.AreEqual(3, picker.Value.Minute);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_Delete_ZeroesTheActiveField_AndForgetsAHalfTypedValue()
     {
@@ -264,6 +283,7 @@ public class PickersTest
         Assert.AreEqual(new TimeOnly(14, 0), picker.Value, "Backspace does the same");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TimePicker_ReadOnly_IgnoresHomeEndColonAndDelete()
     {

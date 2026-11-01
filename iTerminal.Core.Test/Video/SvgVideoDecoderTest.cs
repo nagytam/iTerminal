@@ -33,6 +33,7 @@ public class SvgVideoDecoderTest
 
     private const string RedRectangle = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"50\"><rect width=\"100\" height=\"50\" fill=\"#ff0000\"/></svg>";
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Info_IsTheDrawingsOwnSize()
     {
@@ -43,6 +44,7 @@ public class SvgVideoDecoderTest
         Assert.AreEqual(2.0, decoder.Info.AspectRatio, 0.001);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadFrame_FitsTheDrawingIntoTheFrameKeepingItsShape()
     {
@@ -58,6 +60,7 @@ public class SvgVideoDecoderTest
         Pixel(rgb, 40, 39, 39).AssertIs(0, 0, 0, "the bottom row is letterboxed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadFrame_DeliversTheDrawingOnceAndThenEndsTheStream()
     {
@@ -72,6 +75,7 @@ public class SvgVideoDecoderTest
         Assert.IsTrue(decoder.ReadFrame(rgb), "reopening starts the drawing again");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_RefusesAFileThatIsNotASvgDrawing()
     {
@@ -80,6 +84,7 @@ public class SvgVideoDecoderTest
         Assert.ThrowsExactly<InvalidOperationException>(() => new SvgVideoDecoder(path));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsSvgFile_MatchesTheExtensionOnly()
     {
@@ -90,12 +95,14 @@ public class SvgVideoDecoderTest
         Assert.IsFalse(SvgVideoDecoder.IsSvgFile(string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SvgFiles_OpenInTheImageViewer()
     {
         Assert.IsTrue(ImageFileTypes.IsImageFile("diagram.svg"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFactory_NeedsNoFfmpegForASvgDrawing()
     {

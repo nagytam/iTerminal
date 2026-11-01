@@ -19,6 +19,7 @@ public class ChartsTest
 
     private static string[] Lines(MockBuffer buffer) => buffer.ContentAsString.Split(Environment.NewLine);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sparkline_Render_ScalesBetweenLowestAndHighestGlyph()
     {
@@ -26,18 +27,21 @@ public class ChartsTest
         Assert.AreEqual("▁▅█", Sparkline.Render([0, 5, 10], 10));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sparkline_Render_KeepsMostRecentValuesWhenTooWide()
     {
         Assert.AreEqual("▁█", Sparkline.Render([5, 5, 0, 9], 2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sparkline_Render_FlatSeriesDrawsLowestGlyph()
     {
         Assert.AreEqual("▁▁▁", Sparkline.Render([4, 4, 4], 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Sparkline_Draw_PadsToWidth()
     {
@@ -46,6 +50,7 @@ public class ChartsTest
         Assert.AreEqual("▁█    ", Lines(buffer)[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BarChart_BuildBar_UsesEighthCellResolution()
     {
@@ -54,6 +59,7 @@ public class ChartsTest
         Assert.AreEqual("     ", BarChart.BuildBar(0.0, 5));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BarChart_Draw_AlignsLabelsAndShowsValues()
     {
@@ -70,6 +76,7 @@ public class ChartsTest
         Assert.AreEqual("bb ████      5", lines[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BreakdownChart_Allocate_AlwaysFillsTheWidth()
     {
@@ -78,6 +85,7 @@ public class ChartsTest
         CollectionAssert.AreEqual(new[] { 0, 0, 0 }, BreakdownChart.Allocate([0, -1, 0], 10));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BreakdownChart_Draw_ShowsBarAndLegend()
     {

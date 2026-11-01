@@ -108,6 +108,7 @@ public class ImageMetadataReaderTest
 
     private static byte[] Utf16(string text) => Encoding.Unicode.GetBytes(text + "\0");
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MissingFile_AndUnknownFormats_AreEmpty()
     {
@@ -116,6 +117,7 @@ public class ImageMetadataReaderTest
         Assert.IsTrue(ImageMetadataReader.Read(Save([])).IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Png_ReadsTitleAuthorAndLabelledDescriptions()
     {
@@ -140,6 +142,7 @@ public class ImageMetadataReaderTest
         Assert.IsFalse(metadata.IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Png_ReadsCompressedText()
     {
@@ -155,6 +158,7 @@ public class ImageMetadataReaderTest
         Assert.AreEqual("Description: packed words", metadata.Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Png_ReadsInternationalText_PlainAndCompressed()
     {
@@ -178,6 +182,7 @@ public class ImageMetadataReaderTest
         StringAssert.Contains(metadata.Description, "Note: x");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Png_WithTruncatedChunk_StopsCleanly()
     {
@@ -186,6 +191,7 @@ public class ImageMetadataReaderTest
         Assert.AreEqual("Kept", ImageMetadataReader.Read(Save(truncated)).Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_ReadsCommentsAndSkipsOtherSegments()
     {
@@ -202,6 +208,7 @@ public class ImageMetadataReaderTest
         Assert.AreEqual(string.Empty, metadata.Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(true)]
     [DataRow(false)]
@@ -222,6 +229,7 @@ public class ImageMetadataReaderTest
         Assert.AreEqual("A long image description", metadata.Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_ExifWindowsCommentAndSubject_FillAMissingDescription()
     {
@@ -236,6 +244,7 @@ public class ImageMetadataReaderTest
         Assert.AreEqual("Keywords", ImageMetadataReader.Read(subject).Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_ExifWithShortInlineValueAndUnreadableValues_AreHandled()
     {
@@ -252,6 +261,7 @@ public class ImageMetadataReaderTest
         Assert.AreEqual(string.Empty, metadata.Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_ExifWithUnterminatedAsciiAndBadOffsets_AreHandled()
     {
@@ -275,6 +285,7 @@ public class ImageMetadataReaderTest
         Assert.AreEqual(string.Empty, ImageMetadataReader.Read(Save(Jpeg(ExifSegment(hugeCount)))).Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_ExifDirectoryRunningPastTheSegment_StopsCleanly()
     {
@@ -283,6 +294,7 @@ public class ImageMetadataReaderTest
         Assert.AreEqual("Ok", ImageMetadataReader.Read(Save(Jpeg(ExifSegment(tiff)))).Author);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_ReadsXmpDublinCore()
     {
@@ -301,12 +313,14 @@ public class ImageMetadataReaderTest
         Assert.AreEqual("Xmp description", metadata.Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_XmpWithUnclosedElement_IsIgnored()
     {
         Assert.IsTrue(ImageMetadataReader.Read(Save(Jpeg(XmpSegment("<dc:title><rdf:li>never closed")))).IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_ExifWinsOverLaterXmp_ForTitleAndAuthor()
     {
@@ -320,6 +334,7 @@ public class ImageMetadataReaderTest
         Assert.AreEqual("Exif artist", metadata.Author);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Jpeg_BrokenSegmentStructure_StopsCleanly()
     {
@@ -329,6 +344,7 @@ public class ImageMetadataReaderTest
         Assert.IsTrue(ImageMetadataReader.Read(Save([0xFF, 0xD8, 0xFF, 0xD9, 0x00, 0x00])).IsEmpty);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Metadata_Empty_HasNoText()
     {

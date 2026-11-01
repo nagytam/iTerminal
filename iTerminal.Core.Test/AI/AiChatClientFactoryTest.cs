@@ -21,6 +21,7 @@ public class AiChatClientFactoryTest
     private const string BaseUrl = "http://localhost:11434/v1/";
     private const string Answer = """{"id":"1","object":"chat.completion","created":0,"model":"m","choices":[{"index":0,"message":{"role":"assistant","content":"hello"},"finish_reason":"stop"}]}""";
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Ollama_WithDisableThinking_AsksForNoReasoning()
     {
@@ -33,6 +34,7 @@ public class AiChatClientFactoryTest
         Assert.AreEqual(new Uri(BaseUrl + "chat/completions"), handler.Uris.Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Ollama_WithThinkingAllowed_SendsNoReasoningField()
     {
@@ -44,6 +46,7 @@ public class AiChatClientFactoryTest
         Assert.IsFalse(Root(handler.Bodies.Single()).TryGetProperty("reasoning_effort", out _));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenAI_NeverSendsTheOllamaOnlyReasoningField()
     {
@@ -57,6 +60,7 @@ public class AiChatClientFactoryTest
         Assert.AreEqual("Bearer key", handler.Authorizations.Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Ollama_WhenTheServerRefusesTools_RetriesWithoutThem()
     {
@@ -72,6 +76,7 @@ public class AiChatClientFactoryTest
         Assert.AreEqual("hello", response.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpenAI_ServerErrorWithTools_IsReportedNotRetried()
     {
@@ -85,6 +90,7 @@ public class AiChatClientFactoryTest
             "Every attempt keeps the tools: the fallback that drops them is for Ollama alone.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task None_SendsNothingAndSaysAIIsOff()
     {

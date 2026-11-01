@@ -17,6 +17,7 @@ public class GitRuntimeDependencyTest
         bool privileged = false) =>
         new(findOnPath, [], readVersion ?? ((_, _) => Task.FromResult<string?>("2.43.0")), run ?? ((_, _, _) => Task.FromResult(0)), windows, mac, privileged);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParseVersion_ReadsTheFirstThreeNumbers()
     {
@@ -26,6 +27,7 @@ public class GitRuntimeDependencyTest
         Assert.IsNull(GitRuntimeDependency.ParseVersion("command not found"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoGitOnThePath_IsMissing()
     {
@@ -35,6 +37,7 @@ public class GitRuntimeDependencyTest
         Assert.IsFalse(dependency.IsExistingInstall);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GitOnThePath_IsAnExistingInstallAndNeverUpdated()
     {
@@ -45,6 +48,7 @@ public class GitRuntimeDependencyTest
         Assert.IsNotNull(dependency.ExistingInstallNote);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AProgramThatIsNotAWorkingGit_ReadsAsMissing()
     {
@@ -53,6 +57,7 @@ public class GitRuntimeDependencyTest
         Assert.IsNull(dependency.InstalledVersion());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnyMajorTwoOrLaterIsCompatible()
     {
@@ -63,6 +68,7 @@ public class GitRuntimeDependencyTest
         Assert.IsFalse(dependency.IsCompatible(new Version(1, 9, 0)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_Windows_UsesWinget()
     {
@@ -74,10 +80,12 @@ public class GitRuntimeDependencyTest
         Assert.IsFalse(plan.RequiresSudo);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_Windows_WithoutWinget_IsNull() =>
         Assert.IsNull(GitInstallPlan.For(true, false, false, Path()));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_Apt_AsRoot_RunsAptGetDirectly()
     {
@@ -88,6 +96,7 @@ public class GitRuntimeDependencyTest
         Assert.AreEqual("noninteractive", plan.Environment!["DEBIAN_FRONTEND"]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_Apt_AsUser_GoesThroughSudoWithoutAPrompt()
     {
@@ -100,6 +109,7 @@ public class GitRuntimeDependencyTest
         StringAssert.Contains(plan.CommandLine, "apt-get install -y git");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("dnf", "dnf")]
     [DataRow("zypper", "zypper")]
@@ -113,14 +123,17 @@ public class GitRuntimeDependencyTest
         Assert.AreEqual(expectedProgram, plan.Program);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_Mac_UsesHomebrew() =>
         Assert.AreEqual("brew", GitInstallPlan.For(false, true, false, Path("brew"))!.Program);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Plan_NoPackageManager_IsNull() =>
         Assert.IsNull(GitInstallPlan.For(false, false, true, Path()));
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_RunsThePlan_AndSucceedsWhenGitAppears()
     {
@@ -142,6 +155,7 @@ public class GitRuntimeDependencyTest
         Assert.AreEqual("2.43.0", dependency.InstalledVersion());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_FailureNamesTheCommandToRunByHand()
     {
@@ -153,6 +167,7 @@ public class GitRuntimeDependencyTest
         StringAssert.Contains(exception.Message, "sudo apt-get install -y git");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_WithoutAPackageManager_SaysWhereToGetGit()
     {
@@ -164,6 +179,7 @@ public class GitRuntimeDependencyTest
         StringAssert.Contains(exception.Message, "git-scm.com");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Install_WhenGitStillMissingAfterwards_Fails()
     {

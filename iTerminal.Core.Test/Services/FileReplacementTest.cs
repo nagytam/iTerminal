@@ -27,6 +27,7 @@ public class FileReplacementTest
 
     private string[] FileNames() => Directory.GetFiles(_folder).Select(Path.GetFileName).Select(n => n!).Order().ToArray();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceWritesTheNewBytesOverAnExistingFile()
     {
@@ -37,6 +38,7 @@ public class FileReplacementTest
         CollectionAssert.AreEqual("new content"u8.ToArray(), File.ReadAllBytes(In("settings.json")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceCreatesTheFileWhenThereIsNoneYet()
     {
@@ -45,6 +47,7 @@ public class FileReplacementTest
         CollectionAssert.AreEqual(new byte[] { 1, 2, 3 }, File.ReadAllBytes(In("fresh.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceWithEmptyContentEmptiesTheFile()
     {
@@ -55,6 +58,7 @@ public class FileReplacementTest
         Assert.AreEqual(0, new FileInfo(In("log.txt")).Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReplaceLeavesNoTemporaryFileBehind()
     {
@@ -65,6 +69,7 @@ public class FileReplacementTest
         CollectionAssert.AreEqual(new[] { "data.bin" }, FileNames());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFailedWriteLeavesTheOriginalAsItWas()
     {

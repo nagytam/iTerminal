@@ -19,6 +19,7 @@ public class CommandPaletteTest
         await _app.WaitForTextAsync("Enter:run");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task TypingNarrowsTheListAndShowsTheKey()
     {
@@ -31,6 +32,7 @@ public class CommandPaletteTest
         Assert.IsFalse(screen.Contains("Unit converter"), screen.Dump());
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EnterRunsAGlobalCommand()
     {
@@ -42,6 +44,7 @@ public class CommandPaletteTest
         await _app.Driver.WaitForModalAsync<Core.Dialogs.Calculator.CalculatorDialog>();
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task APanelCommandRunsOnThePanelThePaletteWasOpenedOver()
     {
@@ -56,6 +59,7 @@ public class CommandPaletteTest
         await _app.WaitForTextAsync("readme.txt");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ACommandWithNoKeyIsReachableToo()
     {
@@ -69,6 +73,7 @@ public class CommandPaletteTest
         await _app.WaitForTextAsync("4 marked");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task EscClosesItAndTheLastCommandRunComesFirstNextTime()
     {

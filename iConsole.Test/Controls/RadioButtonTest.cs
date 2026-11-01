@@ -18,6 +18,7 @@ public class RadioButtonTest
             ViewSize = new Size(20, 1)
         };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SpaceSelectsWhenFocused()
     {
@@ -29,6 +30,7 @@ public class RadioButtonTest
         Assert.IsTrue(control.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickSelects()
     {
@@ -39,6 +41,7 @@ public class RadioButtonTest
         Assert.IsTrue(control.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ReadOnlyIgnoresClick()
     {
@@ -50,6 +53,7 @@ public class RadioButtonTest
         Assert.IsFalse(control.IsSelected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListSpaceWhenEditable()
     {
@@ -59,6 +63,7 @@ public class RadioButtonTest
         Assert.AreEqual("Space", hints[0].Key);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_EmptyWhenReadOnlyOrDisabled()
     {
@@ -71,6 +76,7 @@ public class RadioButtonTest
         Assert.AreEqual(0, disabled.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SelectRequestedIsRaised()
     {
@@ -83,6 +89,7 @@ public class RadioButtonTest
         Assert.AreEqual(1, raised);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawShowsGlyphForSelectionState()
     {

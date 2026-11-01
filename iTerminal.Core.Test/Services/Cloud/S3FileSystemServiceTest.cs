@@ -25,6 +25,7 @@ public class S3FileSystemServiceTest
         return service;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task List_ReadsFoldersAndFiles_FromAPrefixListing_WithoutThePlaceholderKey()
     {
@@ -48,6 +49,7 @@ public class S3FileSystemServiceTest
         Assert.IsNotNull(request.Header("x-amz-date"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task List_WithoutABucket_ListsTheBuckets()
     {
@@ -67,6 +69,7 @@ public class S3FileSystemServiceTest
         Assert.AreEqual("s3.amazonaws.com", handler.Requests.Single().Uri.Host);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABucketInAnotherRegion_IsLearnedFromTheAnswer_AndTheRequestRepeated()
     {
@@ -93,6 +96,7 @@ public class S3FileSystemServiceTest
         StringAssert.Contains(handler.Requests[1].Header("Authorization"), "/eu-west-1/s3/aws4_request");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Upload_OverPlainHttp_DeclaresTheHashOfTheBody()
     {
@@ -109,6 +113,7 @@ public class S3FileSystemServiceTest
         CollectionAssert.AreEqual(body, request.Body);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Upload_OverTls_DoesNotHashTheBody()
     {
@@ -120,6 +125,7 @@ public class S3FileSystemServiceTest
         Assert.AreEqual("UNSIGNED-PAYLOAD", handler.Requests.Single().Header("x-amz-content-sha256"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteFolder_RemovesEveryKeyUnderThePrefix()
     {
@@ -139,6 +145,7 @@ public class S3FileSystemServiceTest
         CollectionAssert.AreEquivalent(new[] { "/docs/old/a.txt", "/docs/old/sub/b.txt" }, deletes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Copy_UsesAServerSideCopy_NamingTheSource()
     {
@@ -154,6 +161,7 @@ public class S3FileSystemServiceTest
         Assert.AreEqual("/docs/a%20b.txt", put.Header("x-amz-copy-source"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnError_IsReportedWithTheCodeAndMessageS3Gave()
     {
@@ -167,6 +175,7 @@ public class S3FileSystemServiceTest
         StringAssert.Contains(exception.Message, "AccessDenied");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Escape_KeepsSlashesAndEncodesTheRest()
     {

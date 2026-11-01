@@ -33,6 +33,7 @@ public class MenuItemLocalizationTest
     private static List<string> Texts(MenuItem menu) =>
         [.. menu.Controls.AsSnapshot().OfType<MenuItem>().Select(m => m.Text)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheLabelsAreTranslatedAndTheShortcutsKept()
     {
@@ -47,6 +48,7 @@ public class MenuItemLocalizationTest
         CollectionAssert.AreEqual(new[] { "Kopieren\tF5", "-", "Untranslated\tF9" }, Texts(menu));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BackToEnglishRestoresTheOriginalText()
     {

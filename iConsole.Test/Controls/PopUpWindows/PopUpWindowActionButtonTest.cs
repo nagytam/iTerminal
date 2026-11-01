@@ -22,6 +22,7 @@ public class PopUpWindowActionButtonTest
         return (root, window);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickOnTheCloseButton_HidesTheWindow()
     {
@@ -32,6 +33,7 @@ public class PopUpWindowActionButtonTest
         Assert.IsFalse(window.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickElsewhereOnTheTitleBar_DoesNotHideTheWindow()
     {
@@ -45,6 +47,7 @@ public class PopUpWindowActionButtonTest
         Assert.IsTrue(window.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickBelowTheTitleBar_DoesNotPressTheCloseButton()
     {

@@ -19,6 +19,7 @@ public class NuGetPackageFeedTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListVersionsReadsThePublishedVersionsFromTheLowerCaseIndex()
     {
@@ -32,6 +33,7 @@ public class NuGetPackageFeedTest
         Assert.AreEqual("https://api.nuget.org/v3-flatcontainer/microsoft.playwright/index.json", handler.Requests.Single().ToString());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ListVersionsFailsWhenTheFeedDoesNotAnswer()
     {
@@ -63,6 +65,7 @@ public class NuGetPackageFeedTest
     private static HttpResponseMessage Json(string text) =>
         new(HttpStatusCode.OK) { Content = new StringContent(text, Encoding.UTF8, "application/json") };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DownloadWritesThePackageAfterItsChecksumMatches()
     {
@@ -86,6 +89,7 @@ public class NuGetPackageFeedTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ADownloadThatDoesNotMatchItsPublishedChecksumIsDeleted()
     {

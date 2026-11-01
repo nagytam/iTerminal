@@ -15,6 +15,7 @@ public class RuntimeDependencyCheckJobTest
     private static RuntimeDependencyStatus Update(string target) =>
         new("playwright", "Playwright", "Chromium", "1.63.0", target, RuntimeDependencyState.UpdateAvailable);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUpdateIsAnnouncedOnceForEachVersion()
     {
@@ -35,6 +36,7 @@ public class RuntimeDependencyCheckJobTest
         notifications.Verify(n => n.Notify("Playwright 1.63.3 is available", It.IsAny<string>(), It.IsAny<NotificationSeverity>(), It.IsAny<TimeSpan?>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnInstalledOrMissingDependencyIsNotAnnounced()
     {

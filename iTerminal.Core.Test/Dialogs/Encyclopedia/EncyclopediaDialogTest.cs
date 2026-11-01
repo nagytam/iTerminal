@@ -55,6 +55,7 @@ public class EncyclopediaDialogTest
     [TestCleanup]
     public void Reset() => EncyclopediaDialog.CursorDelayMilliseconds = 250;
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASearchFillsTheResultsAndReadsTheFirstIntroduction()
     {
@@ -74,6 +75,7 @@ public class EncyclopediaDialogTest
         StringAssert.Contains(h.Dialog.Status, "Wikipedia (English)");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnTheTermSearches()
     {
@@ -89,6 +91,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual("tulip", h.Provider.LastQuery);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABlankTermAsksForOne_AndDoesNotSearch()
     {
@@ -102,6 +105,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual(0, h.Provider.SearchCalls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task NothingFoundIsSaid_AndTheOldArticleIsGone()
     {
@@ -117,6 +121,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual(0, h.Dialog.Results.ListModel.ListItems.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedSearchShowsItsReason()
     {
@@ -128,6 +133,7 @@ public class EncyclopediaDialogTest
         StringAssert.Contains(h.Dialog.Status, "no network");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F3ReadsTheWholeArticleAndGoesBackToTheIntroduction()
     {
@@ -147,6 +153,7 @@ public class EncyclopediaDialogTest
         Assert.IsFalse(h.Dialog.ArticleIsFull);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnTheResultsReadsTheWholeArticleUnderTheCursor()
     {
@@ -162,6 +169,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual("Whole Tulip mania", h.Dialog.ArticleText);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheCursorMovingOverTheResultsReadsEachIntroductionOnceItRests()
     {
@@ -179,6 +187,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual(before + 1, h.Provider.ArticleCalls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACursorStillMovingDoesNotFetchAnything()
     {
@@ -195,6 +204,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual(before, h.Provider.ArticleCalls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F2OpensTheArticleInTheBrowser()
     {
@@ -209,6 +219,7 @@ public class EncyclopediaDialogTest
         StringAssert.Contains(h.Dialog.Status, "Opened https://en.wikipedia.org/wiki/Tulip in the browser");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F2WithNothingToOpenSaysSo()
     {
@@ -221,6 +232,7 @@ public class EncyclopediaDialogTest
         h.Launcher.Verify(l => l.OpenUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABrowserThatCannotBeStartedIsReported()
     {
@@ -235,6 +247,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual("xdg-open is not installed", h.Dialog.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChangingTheSourceLooksTheSameTermUpThere()
     {
@@ -249,6 +262,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual("wikipedia-de", h.Provider.LastSource!.Id);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ChangingTheSourceWithNoTermSearchesNothing()
     {
@@ -260,6 +274,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual(0, h.Provider.SearchCalls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BritannicaIsOpenedInTheBrowserNotRead()
     {
@@ -276,6 +291,7 @@ public class EncyclopediaDialogTest
         h.Launcher.Verify(l => l.OpenUrlAsync("https://www.britannica.com/search?query=tulip", It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnOutdatedAnswerIsDropped()
     {
@@ -306,6 +322,7 @@ public class EncyclopediaDialogTest
         Assert.IsFalse(h.Dialog.Status.Contains("Cancelled", StringComparison.Ordinal), "not the first one's cancellation");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASearchThatIsCancelledLateDoesNotOverwriteTheNewerResults()
     {
@@ -337,6 +354,7 @@ public class EncyclopediaDialogTest
         Assert.IsFalse(h.Dialog.Status.Contains("Cancelled", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterOnAnEmptyResultListSaysThereIsNothingToReadYet()
     {
@@ -350,6 +368,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual(0, h.Provider.ArticleCalls, "nothing is fetched for a result that is not there");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheSourceAndTheTermAreRememberedWhenTheDialogCloses_AndComeBackWhenItOpens()
     {
@@ -370,6 +389,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual(0, again.Provider.SearchCalls, "opening does not search by itself");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnknownRememberedSourceFallsBackToTheFirst()
     {
@@ -382,6 +402,7 @@ public class EncyclopediaDialogTest
         Assert.AreEqual("wikipedia-en", h.Dialog.SourceBox.SelectedItem!.Id);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheKeyHintsNameEnterF3AndF2()
     {
@@ -393,6 +414,7 @@ public class EncyclopediaDialogTest
         CollectionAssert.IsSubsetOf(new[] { "Enter", "F3", "F2" }, keys);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheFooterShowsTheKeys()
     {
@@ -402,6 +424,7 @@ public class EncyclopediaDialogTest
         StringAssert.Contains(Render(h.Dialog).ToString()!, "F3:whole");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnAnEightyColumnScreen_TheSourceNameAndEveryKeyHintFit()
     {

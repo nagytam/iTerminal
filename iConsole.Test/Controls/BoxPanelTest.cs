@@ -19,6 +19,7 @@ public class BoxPanelTest
 
     private static BoxPanel Panel(int width, int height) => new(Theme()) { ViewSize = new Size(width, height) };
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Thickness_ClampsNegativeValuesAndDeflatesAndInflates()
     {
@@ -33,6 +34,7 @@ public class BoxPanelTest
         Assert.AreEqual(new Thickness(2, 3), new Thickness(1, 1) + new Thickness(1, 2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentArea_IsWhatMarginBorderAndPaddingLeave()
     {
@@ -45,6 +47,7 @@ public class BoxPanelTest
         Assert.AreEqual(new Size(12, 2), panel.ContentSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoBorder_TakesNoCell()
     {
@@ -55,6 +58,7 @@ public class BoxPanelTest
         Assert.AreEqual(new Size(10, 4), panel.ContentSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetContent_FillsTheContentAreaAndFollowsLaterChanges()
     {
@@ -69,6 +73,7 @@ public class BoxPanelTest
         Assert.AreEqual(new Size(16, 4), content.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_PaintsTheBorderInsideTheMarginAndLeavesTheMarginAlone()
     {
@@ -89,6 +94,7 @@ public class BoxPanelTest
         Assert.AreEqual('─', screen.CharAt(3, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(BorderStyle.Single, '┌')]
     [DataRow(BorderStyle.Double, '╔')]
@@ -105,6 +111,7 @@ public class BoxPanelTest
         Assert.AreEqual(topLeft, screen.CharAt(0, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(TextAlignment.Left, 2)]
     [DataRow(TextAlignment.Center, 8)]
@@ -121,6 +128,7 @@ public class BoxPanelTest
         Assert.AreEqual(expectedX, screen.Line(0).IndexOf(" Hi ", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ClipsALongTitleBetweenTheCorners()
     {
@@ -136,6 +144,7 @@ public class BoxPanelTest
         Assert.IsTrue(top.Contains("A very"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ClearsThePaddingOnASecondDraw()
     {
@@ -149,6 +158,7 @@ public class BoxPanelTest
         Assert.AreEqual(' ', screen.CharAt(5, 2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_WithAMarginLargerThanThePanel_DrawsNothingAndDoesNotThrow()
     {

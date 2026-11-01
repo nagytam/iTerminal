@@ -44,6 +44,7 @@ public class OutlookMessageReaderTest
         return file.ToArray();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMessage_ShowsSenderRecipientDateSubjectAndBody()
     {
@@ -57,6 +58,7 @@ public class OutlookMessageReaderTest
         CollectionAssert.Contains(lines, "Second line.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Attachments_AreListedByName()
     {
@@ -65,6 +67,7 @@ public class OutlookMessageReaderTest
         CollectionAssert.Contains(lines, "[Attachment: report.pdf]");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NotACompoundFile_TheReaderSaysSo()
     {

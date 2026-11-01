@@ -10,6 +10,7 @@ public class GridTest
 {
     private readonly TestThemeService _theme = new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FixedStarAndSpanningTracks_SizeTheChildren()
     {
@@ -35,6 +36,7 @@ public class GridTest
         Assert.AreEqual(new Size(23, 8), last.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Auto_TakesTheWidestChildInTheTrack()
     {
@@ -55,6 +57,7 @@ public class GridTest
         Assert.AreEqual(21, rest.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithNoTracks_OneStarTrackFillsTheGrid()
     {
@@ -68,6 +71,7 @@ public class GridTest
         Assert.AreEqual(new Size(20, 4), child.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RearrangesWhenTheGridIsResized()
     {
@@ -81,6 +85,7 @@ public class GridTest
         Assert.AreEqual(new Size(50, 6), child.ViewSize);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Place_RejectsACellOutsideTheGrid()
     {

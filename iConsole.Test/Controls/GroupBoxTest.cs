@@ -17,6 +17,7 @@ public class GroupBoxTest
         return themeService;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ContentSizeIsInteriorOfTheBorder()
     {
@@ -31,6 +32,7 @@ public class GroupBoxTest
         Assert.AreEqual(1, (int)groupBox.ContentPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetContentFillsTheInterior()
     {
@@ -49,6 +51,7 @@ public class GroupBoxTest
         Assert.AreEqual(4, (int)content.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawRendersTitleInBorder()
     {
@@ -65,6 +68,7 @@ public class GroupBoxTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Options"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawRendersHostedContentInsideTheBorder()
     {

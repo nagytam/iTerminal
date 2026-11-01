@@ -21,6 +21,7 @@ public class TabTest
 
     #region Creation and Initialization Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabCanBeCreated()
     {
@@ -31,6 +32,7 @@ public class TabTest
         Assert.IsInstanceOfType(tab, typeof(Control));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabHasEmptyTabPagesOnCreation()
     {
@@ -40,6 +42,7 @@ public class TabTest
         Assert.AreEqual(0, tab.TabPages.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabHasDefaultHorizontalOrientation()
     {
@@ -49,6 +52,7 @@ public class TabTest
         Assert.AreEqual(Orientation.Horizontal, tab.Orientation);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabInitialFocusedPageIsZero()
     {
@@ -58,6 +62,7 @@ public class TabTest
         Assert.AreEqual(0, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabInitializeAsyncInitializesAllPages()
     {
@@ -78,6 +83,7 @@ public class TabTest
 
     #region Tab Page Management Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddTabPageAddsPageToCollection()
     {
@@ -91,6 +97,7 @@ public class TabTest
         Assert.AreEqual(tabPage, tab.TabPages[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddTabPageSetsFocusOnFirstPage()
     {
@@ -104,6 +111,7 @@ public class TabTest
         Assert.AreEqual(0, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddTabPageSetsParent()
     {
@@ -116,6 +124,7 @@ public class TabTest
         Assert.AreEqual(tab, tabPage.Parent);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AddMultipleTabPagesDoesNotFocusSecondPage()
     {
@@ -134,6 +143,7 @@ public class TabTest
 
     #region Focus Management Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FocusedTabPagePropertyGetReturnsCurrentFocus()
     {
@@ -145,6 +155,7 @@ public class TabTest
         Assert.AreEqual(0, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FocusedTabPagePropertySetUpdatesFocus()
     {
@@ -160,6 +171,7 @@ public class TabTest
         Assert.AreEqual(1, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FocusedTabPagePropertyClampsBelowZero()
     {
@@ -173,6 +185,7 @@ public class TabTest
         Assert.AreEqual(0, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FocusedTabPagePropertyClampsAboveMax()
     {
@@ -188,6 +201,7 @@ public class TabTest
         Assert.AreEqual(1, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FocusedTabPagePropertyReturnsZeroWhenEmpty()
     {
@@ -203,6 +217,7 @@ public class TabTest
 
     #region Controls and Commands Delegation Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ControlsPropertyDelegatestoFocusedPage()
     {
@@ -219,6 +234,7 @@ public class TabTest
         Assert.AreEqual(label, controls[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CommandsPropertyDelegatestoFocusedPage()
     {
@@ -236,6 +252,7 @@ public class TabTest
 
     #region Layout Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabControlHorizontalLayout()
     {
@@ -268,6 +285,7 @@ public class TabTest
         Assert.AreEqual(10, (int)tabPage2.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabControlVerticalLayout()
     {
@@ -290,6 +308,7 @@ public class TabTest
         Assert.AreEqual(13, (int)tabPage1.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabControlHorizontal()
     {
@@ -333,6 +352,7 @@ public class TabTest
         Assert.AreEqual("Label1", contentLines[3].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabControlVertical()
     {
@@ -385,6 +405,7 @@ public class TabTest
 
     #region Drawing Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DrawWithEmptyTabPagesDoesNotThrow()
     {
@@ -397,6 +418,7 @@ public class TabTest
         Assert.IsNotNull(buffer);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DrawHorizontalRendersTabStrip()
     {
@@ -417,6 +439,7 @@ public class TabTest
         Assert.IsTrue(contentLines[1].Contains("Page1"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DrawVerticalRendersTabStrip()
     {
@@ -441,6 +464,7 @@ public class TabTest
         Assert.IsTrue(contentLines[1].Contains("Page1"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DrawShowsFocusedPageContent()
     {
@@ -473,6 +497,7 @@ public class TabTest
 
     #region Hot Key Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabControlSwitchByHotKey()
     {
@@ -520,6 +545,7 @@ public class TabTest
         Assert.AreEqual("Label2", after[3].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleHotKeyEventAsyncSwitchesTabsWithControl()
     {
@@ -538,6 +564,7 @@ public class TabTest
         Assert.AreEqual(1, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleHotKeyEventAsync_PutsTheCursorOnTheArrivingPagesFirstControl()
     {
@@ -562,6 +589,7 @@ public class TabTest
             "The page's first control should hold the cursor.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleHotKeyEventAsync_OnThePageAlreadyShowing_BringsTheCursorBackToItsFirstControl()
     {
@@ -600,6 +628,7 @@ public class TabTest
         Assert.IsFalse(laterControl.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task SwitchingPage_TakesAnOpenOverlayWithIt()
     {
@@ -633,6 +662,7 @@ public class TabTest
         public void CloseOverlay() => IsOverlayOpen = false;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleHotKeyEventAsyncIgnoresWithoutControl()
     {
@@ -724,6 +754,7 @@ public class TabTest
     private static MouseEvent Click(int x, int y) =>
         new() { Position = new Position(x, y), LeftClicked = true };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEventAsync_VerticalStrip_ClickingAPageNameGoesThereAndFocusesItsContent()
     {
@@ -744,6 +775,7 @@ public class TabTest
             "The cursor belongs in the page's content, not on the strip that was clicked.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEventAsync_VerticalStrip_ClickingThePageAlreadyShowing_PutsFocusBackInItsContent()
     {
@@ -760,6 +792,7 @@ public class TabTest
         Assert.IsTrue(firstList.IsFocused, "Clicking the current page is the way back into its content.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEventAsync_VerticalStrip_ClickingTheRuleBetweenTwoNamesChangesNothing()
     {
@@ -773,6 +806,7 @@ public class TabTest
         Assert.AreEqual(0, tab.FocusedTabPage, "The rules between the names stand for no page.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEventAsync_VerticalStrip_AClickPastTheStripIsNotATabClick()
     {
@@ -787,6 +821,7 @@ public class TabTest
         Assert.AreEqual(0, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEventAsync_HorizontalStrip_ClickingAPageNameGoesThere()
     {
@@ -802,6 +837,7 @@ public class TabTest
         Assert.AreEqual(1, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_GivesTheKeyToTheFocusedPage_NotStraightToItsChildren()
     {
@@ -823,6 +859,7 @@ public class TabTest
         Assert.AreEqual(1, claimingPage.ClaimCount, "The focused page must be offered the key.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_AnUnfocusedPage_IsNotOfferedTheKeyTwice()
     {
@@ -842,6 +879,7 @@ public class TabTest
         Assert.AreEqual(1, claimingPage.ClaimCount, "The page on screen answers the key once, focused or not.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_VerticalTabWithFocusedList_ArrowMovesTheListNotThePage()
     {
@@ -858,6 +896,7 @@ public class TabTest
         Assert.AreEqual(1, (int)firstList.ScrollableModel.CursorPosition.Y, "The focused list should have moved.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_VerticalTabWithFocusedList_CtrlArrowSwitchesPage()
     {
@@ -874,6 +913,7 @@ public class TabTest
         Assert.AreEqual(0, (int)firstList.ScrollableModel.CursorPosition.Y, "Ctrl+arrow belongs to the tab strip alone.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_VerticalTabWithNothingUsingArrows_ArrowSwitchesPage()
     {
@@ -894,6 +934,7 @@ public class TabTest
         Assert.AreEqual(1, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_HorizontalTabWithFocusedList_LeftRightReachTheTabStrip()
     {
@@ -911,6 +952,7 @@ public class TabTest
         Assert.AreEqual(1, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_VerticalTab_UpAtFirstPageStaysThere()
     {
@@ -931,6 +973,7 @@ public class TabTest
         Assert.AreEqual(0, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_SinglePage_LeavesArrowsToTheContent()
     {
@@ -959,6 +1002,7 @@ public class TabTest
         Assert.AreEqual(1, (int)listBox.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetKeyHints_WithSeveralPages_NamesTheVerticalPageSwitchKeys()
     {
@@ -974,6 +1018,7 @@ public class TabTest
         Assert.IsFalse(hints.Any(h => h.Key.Contains("Left")), "A vertical strip should not advertise Left/Right.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetKeyHints_WithOnePage_SaysNothing()
     {
@@ -984,6 +1029,7 @@ public class TabTest
         Assert.AreEqual(0, tab.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetKeyHints_WhenDisabled_SaysNothing()
     {
@@ -995,6 +1041,7 @@ public class TabTest
         Assert.AreEqual(0, tab.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_WhenDisabled_DoesNotOfferKeysToTheFocusedPage()
     {
@@ -1019,6 +1066,7 @@ public class TabTest
 
     #region Show/Hide Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowAsyncShowsFocusedPage()
     {
@@ -1033,6 +1081,7 @@ public class TabTest
         Assert.IsTrue(tab.IsVisible);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HideHidesFocusedPage()
     {
@@ -1051,6 +1100,7 @@ public class TabTest
 
     #region Edge Cases Tests
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabWithSinglePageInitializesCorrectly()
     {
@@ -1065,6 +1115,7 @@ public class TabTest
         Assert.AreEqual(0, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TabWithThreeOrMorePages()
     {
@@ -1082,6 +1133,7 @@ public class TabTest
         Assert.AreEqual(0, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TabPageNamesWithSpecialCharactersWork()
     {
@@ -1111,6 +1163,7 @@ public class TabTest
     /// that was not showing kept whatever it owned: the folder selector's Path page left its
     /// suggestion list, attached to the root, over the panels after the selector had closed.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public void ClosingATabClosesEveryPageNotOnlyTheOneShowing()
     {
@@ -1131,6 +1184,7 @@ public class TabTest
         Assert.AreEqual(1, onHidden.Closes, "the page that was not showing is closed too");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HidingATabHidesEveryPage()
     {
@@ -1152,6 +1206,7 @@ public class TabTest
     #endregion
 
     /// <summary>Two unselected tabs side by side share one divider; each used to draw its own ("││").</summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AdjacentUnselectedTabsShareOneDivider()
     {
@@ -1190,6 +1245,7 @@ public class TabTest
         return buffer.ContentAsString.Split(Environment.NewLine)[1];
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DrawHorizontal_NamesThatDoNotFit_AreCutOffWithAMarkerOnTheHiddenSide()
     {
@@ -1204,6 +1260,7 @@ public class TabTest
         Assert.IsFalse(strip.StartsWith("\u2039"), strip);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DrawHorizontal_FocusingAHiddenPage_ScrollsTheStripToIt()
     {
@@ -1219,6 +1276,7 @@ public class TabTest
         Assert.IsFalse(strip.EndsWith("\u203a"), strip);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DrawHorizontal_NamesThatFit_HaveNoMarkers()
     {
@@ -1234,6 +1292,7 @@ public class TabTest
         Assert.IsFalse(strip.Contains("\u2039") || strip.Contains("\u203a"), strip);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DrawHorizontal_ANameWiderThanTheStrip_IsCutWithAnEllipsis()
     {
@@ -1249,6 +1308,7 @@ public class TabTest
         Assert.IsTrue(strip.Contains("\u2026"), strip);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEventAsync_HorizontalStrip_ClickingTheRightMarkerGoesToTheNextPage()
     {
@@ -1261,6 +1321,7 @@ public class TabTest
         Assert.AreEqual(1, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEventAsync_HorizontalStrip_ClickingTheLeftMarkerGoesToThePreviousPage()
     {
@@ -1274,6 +1335,7 @@ public class TabTest
         Assert.AreEqual(3, tab.FocusedTabPage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEventAsync_HorizontalStrip_AScrolledStripMapsClicksToWhatIsDrawn()
     {
@@ -1291,6 +1353,7 @@ public class TabTest
     private static MouseEvent Wheel(int x, int y, int delta) =>
         new() { Position = new Position(x, y), WheelDelta = delta };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEventAsync_TheWheelOverTheStrip_StepsThroughThePages()
     {
@@ -1309,6 +1372,7 @@ public class TabTest
         Assert.AreEqual(0, tab.FocusedTabPage, "and stops at the first page");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEventAsync_TheWheelAwayFromThePageNames_IsNotTheStrips()
     {

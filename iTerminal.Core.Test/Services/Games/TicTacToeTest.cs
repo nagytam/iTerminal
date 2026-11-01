@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Services.Games;
 [TestClass]
 public class TicTacToeTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ThreeInARowWins()
     {
@@ -19,6 +20,7 @@ public class TicTacToeTest
         Assert.IsFalse(game.Place(8), "no moves after the game is won");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFullBoardWithoutALineIsADraw()
     {
@@ -32,6 +34,7 @@ public class TicTacToeTest
         Assert.AreEqual("A draw.", game.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATakenSquareIsRefused()
     {
@@ -44,6 +47,7 @@ public class TicTacToeTest
         Assert.AreEqual("That square is taken.", game.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCursorStaysOnTheBoard()
     {
@@ -58,6 +62,7 @@ public class TicTacToeTest
         Assert.AreEqual('X', game.CellAt(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerBlocksALineAndTakesAWin()
     {
@@ -68,6 +73,7 @@ public class TicTacToeTest
         Assert.AreEqual(2, TicTacToeGame.BestMove(win, 'O', new Random(1)), "complete the row");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheComputerNeverLosesToAnyPlay()
     {
@@ -120,6 +126,7 @@ public class TicTacToeTest
         return copy;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UndoTakesBackTheComputersReplyToo()
     {
@@ -134,6 +141,7 @@ public class TicTacToeTest
         Assert.IsTrue(Enumerable.Range(0, 9).All(i => game.CellAt(i) == ' '));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePersonCannotPlayTheComputersMarks()
     {
@@ -146,6 +154,7 @@ public class TicTacToeTest
         Assert.AreEqual(1, Enumerable.Range(0, 9).Count(i => game.CellAt(i) != ' '));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheBoardDrawsFiveRowsWithTheCursorOnTheCentre()
     {

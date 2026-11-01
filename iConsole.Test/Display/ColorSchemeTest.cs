@@ -6,6 +6,7 @@ namespace iConsole.Test.Display;
 [TestClass]
 public class ColorSchemeTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeConstructor()
     {
@@ -16,6 +17,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Theme.Default, colorScheme.Theme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeDefaultColors()
     {
@@ -27,6 +29,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.Red, colorScheme.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetBackground()
     {
@@ -35,6 +38,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.Black, colorScheme.Background);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetForeground()
     {
@@ -43,6 +47,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.Green, colorScheme.Foreground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetSelectedForeground()
     {
@@ -51,6 +56,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.Magenta, colorScheme.SelectedForeground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetSelectedBackground()
     {
@@ -59,6 +65,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.Cyan, colorScheme.SelectedBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetSelectedFocusedForeground()
     {
@@ -67,6 +74,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.Red, colorScheme.SelectedFocusedForeground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetSelectedFocusedBackground()
     {
@@ -75,6 +83,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.Green, colorScheme.SelectedFocusedBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetDisabledForeground()
     {
@@ -83,6 +92,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.Gray, colorScheme.DisabledForeground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetDisabledSelectedForeground()
     {
@@ -91,6 +101,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.DarkGray, colorScheme.DisabledSelectedForeground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetDisabledBackground()
     {
@@ -99,6 +110,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.DarkBlue, colorScheme.DisabledBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetButtonBackground()
     {
@@ -107,6 +119,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.DarkGreen, colorScheme.ButtonBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetDisabledButtonBackground()
     {
@@ -115,6 +128,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.DarkRed, colorScheme.DisabledButtonBackground);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetError()
     {
@@ -123,6 +137,7 @@ public class ColorSchemeTest
         Assert.AreEqual(Color.Yellow, colorScheme.Error);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeSetTheme()
     {
@@ -131,12 +146,14 @@ public class ColorSchemeTest
         Assert.AreEqual(Theme.Dark, colorScheme.Theme);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeAllColorsSet()
     {
         var colorScheme = new ColorScheme();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorSchemeMultipleInstances()
     {

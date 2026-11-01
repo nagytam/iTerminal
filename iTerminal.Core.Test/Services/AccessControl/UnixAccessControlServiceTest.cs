@@ -22,6 +22,7 @@ public class UnixAccessControlServiceTest
         default:other::---
         """;
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetfaclOutputIsReadIntoEntriesWithOwnerAndGroup()
     {
@@ -37,6 +38,7 @@ public class UnixAccessControlServiceTest
         Assert.AreEqual(3, info.Entries.Count(e => e.Scope == "default for new items"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PrincipalsBecomeSetfaclSpecs()
     {
@@ -49,6 +51,7 @@ public class UnixAccessControlServiceTest
         Assert.AreEqual("g:ops", UnixAccessControlService.Spec("group:ops"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("bob,u:evil:rwx")]
     [DataRow("-R")]
@@ -59,6 +62,7 @@ public class UnixAccessControlServiceTest
         Assert.ThrowsExactly<ArgumentException>(() => UnixAccessControlService.Spec("user:" + name));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SetWritesAnEntryAndAFolderAlsoGetsADefaultEntry()
     {
@@ -79,6 +83,7 @@ public class UnixAccessControlServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFileGetsNoDefaultEntry()
     {
@@ -91,6 +96,7 @@ public class UnixAccessControlServiceTest
         StringAssert.StartsWith(runner.Calls[0].CommandLine, "setfacl -m u:bob:rw- --");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DenyAndABadPermissionAreRefusedBeforeAnythingRuns()
     {
@@ -103,6 +109,7 @@ public class UnixAccessControlServiceTest
         Assert.AreEqual(0, runner.Calls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheOwnerEntryCannotBeRemoved()
     {
@@ -111,6 +118,7 @@ public class UnixAccessControlServiceTest
         Assert.ThrowsExactly<ArgumentException>(() => service.Remove("/tmp/x", "owner", AclKind.Allow));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChownIsGivenOwnerAndGroupTogetherAndOnlyWhatChanged()
     {
@@ -127,6 +135,7 @@ public class UnixAccessControlServiceTest
             runner.Calls.Select(c => c.CommandLine[..(c.CommandLine.IndexOf("-- ", StringComparison.Ordinal) + 3)]).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APermissionRefusalSaysWhoMayChangeIt()
     {
@@ -138,6 +147,7 @@ public class UnixAccessControlServiceTest
         StringAssert.Contains(exception.Message, "root");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutGetfaclTheModeBitsAreShownWithANote()
     {

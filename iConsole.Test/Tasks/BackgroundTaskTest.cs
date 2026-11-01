@@ -30,6 +30,7 @@ public class BackgroundTaskTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RunAsync_WhenExecutionCompletes_SetsCompletedStatus()
     {
@@ -42,6 +43,7 @@ public class BackgroundTaskTest
         Assert.AreEqual(task.Name, task.DisplayName);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RunAsync_WhenCanceledDuringExecution_SetsCanceledStatus()
     {
@@ -52,6 +54,7 @@ public class BackgroundTaskTest
         Assert.AreEqual(iConsole.Data.TaskStatus.Canceled, task.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnProgressChanged_UpdatesProgressPercentage()
     {

@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Helper;
 [TestClass]
 public class StreamHelperTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_WithSimpleString_CreatesMemoryStream()
     {
@@ -15,6 +16,7 @@ public class StreamHelperTest
         Assert.IsInstanceOfType(stream, typeof(MemoryStream));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_WithSimpleString_CanBeReadBack()
     {
@@ -27,6 +29,7 @@ public class StreamHelperTest
         Assert.AreEqual(input, output);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_WithEmptyString_CreatesStream()
     {
@@ -39,6 +42,7 @@ public class StreamHelperTest
         Assert.AreEqual(string.Empty, output);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_WithMultilineString_PreservesContent()
     {
@@ -51,6 +55,7 @@ public class StreamHelperTest
         Assert.AreEqual(input, output);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_WithSpecialCharacters_PreservesContent()
     {
@@ -63,6 +68,7 @@ public class StreamHelperTest
         Assert.AreEqual(input, output);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_WithUnicodeCharacters_PreservesContent()
     {
@@ -75,6 +81,7 @@ public class StreamHelperTest
         Assert.AreEqual(input, output);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_StreamPositionIsAtStart()
     {
@@ -84,6 +91,7 @@ public class StreamHelperTest
         Assert.AreEqual(0, stream.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_StreamCanBeReadMultipleTimes()
     {
@@ -102,6 +110,7 @@ public class StreamHelperTest
         Assert.AreEqual(input, output1);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_WithLongString_HandlesCorrectly()
     {
@@ -115,6 +124,7 @@ public class StreamHelperTest
         Assert.AreEqual(input, output);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_WithWhitespaceOnlyString()
     {
@@ -127,6 +137,7 @@ public class StreamHelperTest
         Assert.AreEqual(input, output);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_StreamIsSeekable()
     {
@@ -138,6 +149,7 @@ public class StreamHelperTest
         Assert.IsTrue(stream.CanWrite);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_StreamLengthMatchesStringLength()
     {
@@ -148,6 +160,7 @@ public class StreamHelperTest
         Assert.AreEqual(input.Length, stream.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_WithNumberString()
     {
@@ -160,6 +173,7 @@ public class StreamHelperTest
         Assert.AreEqual(input, output);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ToStream_MultipleStreamsAreIndependent()
     {

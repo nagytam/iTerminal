@@ -27,6 +27,7 @@ public class FocusTraversalTest
 
     private static void Backward(Control root) => root.OnHandleTabBackward();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tab_SkipsADisabledControl_ForwardAndBackward()
     {
@@ -46,6 +47,7 @@ public class FocusTraversalTest
         Assert.AreEqual("a", Focused(root), "Shift+Tab must not stop on the disabled box either.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tab_VisitsSiblingsInOrder_AndWrapsAround()
     {
@@ -66,6 +68,7 @@ public class FocusTraversalTest
         Assert.AreEqual("a", Focused(root));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShiftTab_VisitsSiblingsBackwards_AndWrapsAround()
     {
@@ -86,6 +89,7 @@ public class FocusTraversalTest
         Assert.AreEqual("a", Focused(root));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tab_GoesInsideAContainerThatCannotTakeTheFocusItself()
     {
@@ -112,6 +116,7 @@ public class FocusTraversalTest
         Assert.AreEqual("a", Focused(root));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ShiftTab_GoesBackIntoAContainer()
     {
@@ -134,6 +139,7 @@ public class FocusTraversalTest
         Assert.AreEqual("d", Focused(root));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tab_SkipsDisabledControls()
     {
@@ -153,6 +159,7 @@ public class FocusTraversalTest
         Assert.AreEqual("a", Focused(root));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tab_SkipsHiddenControls()
     {
@@ -170,6 +177,7 @@ public class FocusTraversalTest
         Assert.AreEqual("c", Focused(root));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tab_WithASingleFocusableControl_StaysOnIt()
     {
@@ -184,6 +192,7 @@ public class FocusTraversalTest
         Assert.AreEqual("only", Focused(root));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tab_WithNothingFocused_StartsAtTheFirstControl_AndShiftTabAtTheLast()
     {
@@ -200,6 +209,7 @@ public class FocusTraversalTest
         Assert.AreEqual("b", Focused(other));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tab_WithNothingToFocus_DoesNothingAndDoesNotThrow()
     {
@@ -214,6 +224,7 @@ public class FocusTraversalTest
         Assert.IsFalse(disabled.IsFocused);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tab_StopsAtAControlThatTakesTheFocusItself_NotAtWhatItHolds()
     {
@@ -230,6 +241,7 @@ public class FocusTraversalTest
         Assert.AreEqual("a", Focused(root));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetTabStops_ListsTheVisibleEnabledFocusableControlsInOrder()
     {
@@ -248,6 +260,7 @@ public class FocusTraversalTest
         CollectionAssert.AreEqual(new[] { "a", "g1", "z" }, root.GetTabStops().Select(c => ((Control)c).Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AHiddenContainer_HidesWhatIsInside()
     {
@@ -260,6 +273,7 @@ public class FocusTraversalTest
         CollectionAssert.AreEqual(new[] { "a" }, root.GetTabStops().Select(c => ((Control)c).Name).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Tab_LeavesExactlyOneControlFocused()
     {

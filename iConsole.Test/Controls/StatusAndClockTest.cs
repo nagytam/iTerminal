@@ -31,6 +31,7 @@ public class StatusAndClockTest
         public DateTime UtcNow => Time.ToUniversalTime();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ElapsedClock_KeyHints_NameSpaceForTheCurrentStateAndR()
     {
@@ -44,6 +45,7 @@ public class StatusAndClockTest
         Assert.AreEqual("Stop the clock", clock.GetKeyHints().Single(h => h.Key == "Space").Description);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusDot_Draw_ShowsDotAndText()
     {
@@ -52,6 +54,7 @@ public class StatusAndClockTest
         Assert.AreEqual("● Connected", Lines(buffer)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusDot_ShorterText_LeavesNothingBehind()
     {
@@ -63,6 +66,7 @@ public class StatusAndClockTest
         Assert.AreEqual("● Off", Lines(buffer)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StatusDot_NaturalWidth_FollowsText()
     {
@@ -70,6 +74,7 @@ public class StatusAndClockTest
         Assert.AreEqual(11, new StatusDot(Theme()) { Text = "Connected" }.NaturalWidth);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ElapsedClock_Format_RoundsDownAndShowsHours()
     {
@@ -77,6 +82,7 @@ public class StatusAndClockTest
         Assert.AreEqual("1:01:05", ElapsedClock.Format(TimeSpan.FromSeconds(3665)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ElapsedClock_AddsUpAcrossRestartsUntilReset()
     {
@@ -97,6 +103,7 @@ public class StatusAndClockTest
         Assert.IsTrue(watch.IsRunning);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ElapsedClock_SpaceTogglesAndRResets()
     {
@@ -112,6 +119,7 @@ public class StatusAndClockTest
         Assert.AreEqual(TimeSpan.Zero, watch.Elapsed);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ElapsedClock_Draw_ShowsLabelAndTime()
     {
@@ -133,6 +141,7 @@ public class StatusAndClockTest
         return viewer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextViewer_ClickInEditor_PlacesTheCaret()
     {
@@ -142,6 +151,7 @@ public class StatusAndClockTest
         Assert.AreEqual(3, (int)viewer.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextViewer_ClickPastTheEndOfALine_LandsOnItsEnd()
     {
@@ -151,6 +161,7 @@ public class StatusAndClockTest
         Assert.AreEqual(4, (int)viewer.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextViewer_ClickInReadOnlyViewer_MovesTheRowOnly()
     {
@@ -160,6 +171,7 @@ public class StatusAndClockTest
         Assert.AreEqual(0, (int)viewer.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TextViewer_ClickBelowTheLastLine_SelectsTheLastLine()
     {

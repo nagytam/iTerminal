@@ -12,6 +12,7 @@ namespace iConsole.Test.Controls.Progress;
 [TestClass]
 public class ProgressBarTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarCanBeCreated()
     {
@@ -21,6 +22,7 @@ public class ProgressBarTest
         Assert.IsNotNull(progressBar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarHasDefaultValues()
     {
@@ -32,6 +34,7 @@ public class ProgressBarTest
         Assert.AreEqual(0, progressBar.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarMinCanBeSet()
     {
@@ -42,6 +45,7 @@ public class ProgressBarTest
         Assert.AreEqual(10, progressBar.Min);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarMaxCanBeSet()
     {
@@ -52,6 +56,7 @@ public class ProgressBarTest
         Assert.AreEqual(200, progressBar.Max);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarCurrentCanBeSet()
     {
@@ -62,6 +67,7 @@ public class ProgressBarTest
         Assert.AreEqual(50, progressBar.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarLabelCanBeChanged()
     {
@@ -72,6 +78,7 @@ public class ProgressBarTest
         Assert.AreEqual("Loading...", progressBar.Label);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarDrawsAt0Percent()
     {
@@ -94,6 +101,7 @@ public class ProgressBarTest
         Assert.IsTrue(content.Contains("0%"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarDrawsAt50Percent()
     {
@@ -115,6 +123,7 @@ public class ProgressBarTest
         Assert.IsTrue(content.Contains("‧"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarDrawsAt100Percent()
     {
@@ -136,6 +145,7 @@ public class ProgressBarTest
         Assert.IsFalse(content.Contains("‧"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarClampsWhenAboveRange()
     {
@@ -156,6 +166,7 @@ public class ProgressBarTest
         Assert.IsFalse(buffer.ContentAsString.Contains("‧"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarHandlesCustomRange()
     {
@@ -177,6 +188,7 @@ public class ProgressBarTest
         Assert.IsTrue(buffer.ContentAsString.Contains("50%"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarDraw_CustomLabel_ShowsLabel()
     {
@@ -196,6 +208,7 @@ public class ProgressBarTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Loading:"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarInitialViewSizeIsOnePixelHigh()
     {
@@ -205,6 +218,7 @@ public class ProgressBarTest
         Assert.AreEqual(1, (int)progressBar.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ProgressBarChangesStateWhenCurrentChanges()
     {

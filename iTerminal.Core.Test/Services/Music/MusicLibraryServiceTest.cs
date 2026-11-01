@@ -70,6 +70,7 @@ public class MusicLibraryServiceTest
         return TestAudioFiles.WriteId3V2File(folder, fileName, title, artist, album);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MusicFolder_FallsBackToTheSystemMusicFolderWhenNothingIsConfigured()
     {
@@ -82,12 +83,14 @@ public class MusicLibraryServiceTest
         Assert.AreEqual(expected, MusicLibraryService.ResolveMusicFolder(empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void MusicFolder_UsesTheConfiguredSetting()
     {
         Assert.AreEqual(_musicFolder, CreateService().MusicFolder);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_IndexesEveryAudioFileWithItsTags()
     {
@@ -107,6 +110,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual("The Wall", entry.Album);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_MissingFolder_ReportsItRatherThanThrowing()
     {
@@ -119,6 +123,7 @@ public class MusicLibraryServiceTest
         StringAssert.Contains(service.StatusMessage, "not found");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_DropsRowsWhoseFileIsGone()
     {
@@ -134,6 +139,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual(0, service.TrackCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_CachesMetadataInTheDatabaseForTheNextRun()
     {
@@ -148,6 +154,7 @@ public class MusicLibraryServiceTest
         Assert.IsNotNull(reloaded.LastIndexedUtc);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_KeepsUnchangedRowsAndPicksUpEditedTags()
     {
@@ -167,6 +174,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual("New Title Entirely", service.Entries[0].Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Search_EmptyQuery_ReturnsNothing()
     {
@@ -178,6 +186,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual(0, service.Search("   ").Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Search_MatchesArtistsAlbumsAndTracks()
     {
@@ -202,6 +211,7 @@ public class MusicLibraryServiceTest
         Assert.IsFalse(results.Any(r => r.Artist == "Portishead"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Search_ListsArtistsAndAlbumsBeforeIndividualTracks()
     {
@@ -216,6 +226,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual(MusicSearchResultKind.Track, results[2].Kind);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Search_RequiresEveryToken()
     {
@@ -229,6 +240,7 @@ public class MusicLibraryServiceTest
         Assert.IsTrue(service.Search("floyd numb").Any(r => r.Kind == MusicSearchResultKind.Track));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Search_IsCaseInsensitiveAndMatchesTheFileNameToo()
     {
@@ -239,6 +251,7 @@ public class MusicLibraryServiceTest
         Assert.IsTrue(service.Search("ROADHOUSE").Any(r => r.Kind == MusicSearchResultKind.Track));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Search_HonoursTheLimit()
     {
@@ -253,6 +266,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual(5, service.Search("song", limit: 5).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExpandResult_Artist_ReturnsEveryTrackOfThatArtist()
     {
@@ -270,6 +284,7 @@ public class MusicLibraryServiceTest
         Assert.IsTrue(tracks.All(t => t.Artist == "Pink Floyd"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExpandResult_Album_ReturnsOnlyThatAlbum()
     {
@@ -286,6 +301,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual("Echoes", tracks[0].Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExpandResult_Track_ReturnsJustThatTrack()
     {
@@ -298,6 +314,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual(1, service.ExpandResult(track).Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task LibraryChanged_FiresOnlyWhenTheIndexActuallyMoved()
     {
@@ -314,6 +331,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual(1, changes, "A second scan over an unchanged folder changes nothing");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_ReportsDiscoveryAndIndexingAsSeparateStages()
     {
@@ -362,6 +380,7 @@ public class MusicLibraryServiceTest
         Assert.IsFalse(service.IsIndexing);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_IndexedCountNeverPassesTheDiscoveredTotal()
     {
@@ -395,6 +414,7 @@ public class MusicLibraryServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_DiscoveredCountIsAudioFilesOnly()
     {
@@ -434,6 +454,7 @@ public class MusicLibraryServiceTest
             "Discovery counts what will be indexed, not what is in the folder");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Enumerate_KeepsWhatItReadBeforeAFailure()
     {
@@ -452,6 +473,7 @@ public class MusicLibraryServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Enumerate_LetsCancellationThrough()
     {
@@ -464,6 +486,7 @@ public class MusicLibraryServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Progress_IsIdleBetweenScans()
     {
@@ -493,6 +516,7 @@ public class MusicLibraryServiceTest
         ScanFlushBatchSize = 1,
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_WritesToTheDatabaseWhileItIsStillScanning()
     {
@@ -522,6 +546,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual(4, PersistedRowCount(), "…and everything by the time it finishes");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_PublishesEntriesAsItGoes_SoThePanelFillsInDuringAScan()
     {
@@ -549,6 +574,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual(4, service.TrackCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RefreshAsync_NeverShrinksTheListingWhileItRuns()
     {
@@ -600,6 +626,7 @@ public class MusicLibraryServiceTest
             Task.FromResult(CreateDbContext());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Entries_AreLoadedOnALaterAttemptWhenTheFirstDatabaseReadFails()
     {
@@ -621,6 +648,7 @@ public class MusicLibraryServiceTest
         Assert.AreEqual("Song", service.Entries[0].Title);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Entries_AreReadFromTheTableOnceAndNotOnEveryAccess()
     {

@@ -18,6 +18,7 @@ public class PopoverServiceTest
         return (root, owner);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowAtPointOpensThePopoverAtThePoint()
     {
@@ -33,6 +34,7 @@ public class PopoverServiceTest
         Assert.IsTrue(root.Controls.Contains(popup));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpeningASecondPopoverClosesTheFirst()
     {
@@ -50,6 +52,7 @@ public class PopoverServiceTest
         Assert.AreSame(second, service.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClosingThePopoverClearsCurrent()
     {
@@ -64,6 +67,7 @@ public class PopoverServiceTest
         Assert.IsNull(service.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CloseCurrentClosesWhateverIsOpen()
     {
@@ -79,6 +83,7 @@ public class PopoverServiceTest
         Assert.IsNull(service.Current);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowBesideFlipsAboveWhenThereIsNoRoomBelow()
     {

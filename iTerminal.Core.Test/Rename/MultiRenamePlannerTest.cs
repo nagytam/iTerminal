@@ -77,12 +77,44 @@ public class MultiRenamePlannerTest
     }
 
     [TestMethod]
-    public void ACaseOnlyRenameOfItselfIsOk()
+    public void ACaseOnlyChangeIsCaseOnlyAndNotRun()
     {
-        // The row's own old name is neither a blocker nor a sibling for itself, so a -> A goes ahead on any volume.
+        // On a case-insensitive volume the engine would find the file itself as the target, so the change is not run on any platform.
         var rows = Plan([("a.txt", "A.txt")], "a.txt");
 
-        Assert.AreEqual(RenameStatus.Ok, rows.Single().Status);
+        Assert.AreEqual(RenameStatus.CaseOnly, rows.Single().Status);
+    }
+
+    [TestMethod]
+    public void ACaseVariantOfABatchNameDoesNotBlockAnotherName()
+    {
+        // Foo.txt is in the batch; foo.txt is another file in the folder. Foo.txt -> foo.txt only changes case; Foo.txt -> x.txt is free.
+        var caseOnly = Plan([("Foo.txt", "foo.txt")], "Foo.txt", "foo.txt");
+        var free = Plan([("Foo.txt", "x.txt")], "Foo.txt", "foo.txt");
+
+        Assert.AreEqual(RenameStatus.CaseOnly, caseOnly.Single().Status);
+        Assert.AreEqual(RenameStatus.Ok, free.Single().Status);
+    }
+
+    [TestMethod]
+    public void WindowsNameRulesRefuseTrailingDotsAndReservedNames()
+    {
+        IReadOnlyList<RenameRow> OnWindows(string newName) =>
+            MultiRenamePlanner.Plan([("a.txt", newName)], ["a.txt"], windowsNameRules: true);
+
+        Assert.AreEqual(RenameStatus.InvalidName, OnWindows("report.").Single().Status, "a trailing dot");
+        Assert.AreEqual(RenameStatus.InvalidName, OnWindows("report ").Single().Status, "a trailing blank");
+        Assert.AreEqual(RenameStatus.InvalidName, OnWindows("CON").Single().Status, "a reserved device name");
+        Assert.AreEqual(RenameStatus.InvalidName, OnWindows("nul.txt").Single().Status, "a reserved name with an extension");
+        Assert.AreEqual(RenameStatus.Ok, OnWindows("console.txt").Single().Status, "a stem that only starts like one");
+        Assert.AreEqual(RenameStatus.Ok, OnWindows("report.txt").Single().Status);
+    }
+
+    [TestMethod]
+    public void WithoutWindowsRulesTheseNamesAreAllowed()
+    {
+        Assert.AreEqual(RenameStatus.Ok, MultiRenamePlanner.Plan([("a.txt", "CON")], ["a.txt"]).Single().Status);
+        Assert.AreEqual(RenameStatus.Ok, MultiRenamePlanner.Plan([("a.txt", "report.")], ["a.txt"]).Single().Status);
     }
 
     [TestMethod]

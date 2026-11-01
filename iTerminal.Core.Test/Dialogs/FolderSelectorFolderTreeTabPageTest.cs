@@ -39,6 +39,7 @@ public class FolderSelectorFolderTreeTabPageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_GoesToTheFolderUnderTheCursor()
     {
@@ -52,6 +53,7 @@ public class FolderSelectorFolderTreeTabPageTest
         CollectionAssert.AreEqual(new[] { new Url(@"C:\projects").FullUrl }, harness.Navigations);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_OnTheTreeRoot_NavigatesNowhere()
     {
@@ -64,6 +66,7 @@ public class FolderSelectorFolderTreeTabPageTest
         Assert.AreEqual(0, harness.Navigations.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithoutAFolderIndex_StillWorks()
     {
@@ -76,6 +79,7 @@ public class FolderSelectorFolderTreeTabPageTest
         Assert.AreEqual(ConsoleKey.D4, page.HotConsoleKey);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnInitializeLayout_InANarrowPage_DoesNotProduceNegativeGeometry()
     {
@@ -97,6 +101,7 @@ public class FolderSelectorFolderTreeTabPageTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task GetKeyHints_DocumentEnterAndEscape()
     {

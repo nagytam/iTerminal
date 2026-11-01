@@ -18,6 +18,7 @@ public class ValidationAndMaskExtrasTest
         return new ValidatorPipeline(text) { AsyncDebounce = debounce ?? TimeSpan.Zero };
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnAsyncRule_IsPendingThenLandsItsAnswer()
     {
@@ -43,6 +44,7 @@ public class ValidationAndMaskExtrasTest
         Assert.IsTrue(pipeline.Version > before);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AValueThatChangesMeanwhile_CancelsTheCheck_AndTheStaleAnswerIsDropped()
     {
@@ -79,6 +81,7 @@ public class ValidationAndMaskExtrasTest
         CollectionAssert.Contains(started, "second");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheAsyncRulesWaitForTheSynchronousOnes_AndSkipAnEmptyValue()
     {
@@ -107,6 +110,7 @@ public class ValidationAndMaskExtrasTest
         Assert.AreEqual(1, asked);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnAsyncRuleThatThrows_CountsAsFailed()
     {
@@ -119,6 +123,7 @@ public class ValidationAndMaskExtrasTest
         Assert.AreEqual("server down", pipeline.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheDebounce_HoldsTheQuestionBackUntilTheValueHasRested()
     {
@@ -145,6 +150,7 @@ public class ValidationAndMaskExtrasTest
         Assert.AreEqual(1, asked, "only the value that rested was asked about");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CompletedIsRaised_WhenAnAnswerLands()
     {
@@ -158,6 +164,7 @@ public class ValidationAndMaskExtrasTest
         Assert.AreEqual("no", pipeline.ErrorMessage);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATextBox_ShowsAnAsyncAnswerAfterItsNextIdlePass()
     {
@@ -185,6 +192,7 @@ public class ValidationAndMaskExtrasTest
 
     // ---- mask extras ----
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("0{3}", "000")]
     [DataRow("L{2}-0{2}", "LL-00")]
@@ -202,6 +210,7 @@ public class ValidationAndMaskExtrasTest
         Assert.AreEqual(expanded, new InputMask(pattern).ExpandedPattern);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AVariableLengthPart_NeedsOnlyItsMinimum()
     {
@@ -215,6 +224,7 @@ public class ValidationAndMaskExtrasTest
         Assert.IsFalse(mask.IsValidRaw("12345"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARepeatedGroup_FormatsEveryGroupAndShowsSeparatorsOnlyWhenSomethingFollows()
     {
@@ -227,6 +237,7 @@ public class ValidationAndMaskExtrasTest
         Assert.AreEqual(6, mask.SlotCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnyOptionalCharacter_AcceptsAnythingButMayBeLeftOut()
     {
@@ -237,6 +248,7 @@ public class ValidationAndMaskExtrasTest
         Assert.IsTrue(mask.Accepts(1, '-'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARunawayQuantifier_IsHeldToTheLimits()
     {
@@ -247,6 +259,7 @@ public class ValidationAndMaskExtrasTest
         Assert.IsTrue(nested.ExpandedPattern.Length <= InputMask.MaxExpandedLength);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATextBox_TypesIntoAVariableLengthGroupMask()
     {

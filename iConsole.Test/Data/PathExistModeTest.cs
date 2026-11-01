@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class PathExistModeTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void PathExistMode_Default_HasValue()
     {
@@ -12,6 +13,7 @@ public class PathExistModeTest
         Assert.AreEqual(0, (int)mode);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathExistMode_NewFolder_HasValue()
     {
@@ -19,6 +21,7 @@ public class PathExistModeTest
         Assert.IsTrue((int)mode > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathExistMode_NewFile_HasValue()
     {
@@ -26,6 +29,7 @@ public class PathExistModeTest
         Assert.IsTrue((int)mode > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathExistMode_FolderOrNewFile_HasValue()
     {
@@ -33,6 +37,7 @@ public class PathExistModeTest
         Assert.IsTrue((int)mode > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathExistMode_AllValuesAreUnique()
     {

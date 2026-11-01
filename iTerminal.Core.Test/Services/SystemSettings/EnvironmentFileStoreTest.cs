@@ -19,12 +19,14 @@ public class EnvironmentFileStoreTest
     [TestCleanup]
     public void Delete() => Directory.Delete(_folder, recursive: true);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMissingFileHasNoVariables()
     {
         Assert.AreEqual(0, new EnvironmentFileStore(_path).Read().Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ReadingSkipsCommentsAndBlankLinesAndUnquotes()
     {
@@ -37,6 +39,7 @@ public class EnvironmentFileStoreTest
             variables.Select(v => $"{v.Name}={v.Value}").ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SettingANewVariableKeepsEveryOtherLineAsItWas()
     {
@@ -47,6 +50,7 @@ public class EnvironmentFileStoreTest
         Assert.AreEqual("# set by the distribution\nPATH=\"/usr/bin\"\n\nLANG=en_US.UTF-8\nEDITOR=vim\n", File.ReadAllText(_path));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SettingAnExistingVariableReplacesItsLineInPlace()
     {
@@ -57,6 +61,7 @@ public class EnvironmentFileStoreTest
         Assert.AreEqual("A=1\nB=two\nC=3\n", File.ReadAllText(_path));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARepeatedDefinitionIsCollapsedToOne()
     {
@@ -67,6 +72,7 @@ public class EnvironmentFileStoreTest
         Assert.AreEqual("A=9\nB=2\n", File.ReadAllText(_path));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AValueWithSpacesQuotesOrHashesIsQuotedAndReadsBackIdentical()
     {
@@ -85,6 +91,7 @@ public class EnvironmentFileStoreTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RemovingDeletesOnlyThatVariable()
     {
@@ -98,6 +105,7 @@ public class EnvironmentFileStoreTest
         Assert.AreEqual("# keep\nB=2\n", File.ReadAllText(_path), "removing nothing leaves the file alone");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheFolderIsCreatedOnTheFirstWrite()
     {

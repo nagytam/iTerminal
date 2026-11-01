@@ -14,6 +14,7 @@ public class FolderPathCompletionModelTest
         return (new FolderPathCompletionModel(settingsService, folderHistoryService), settingsService, folderHistoryService);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Completions_IncludeTheFoldersThePanelsHaveVisited()
     {
@@ -23,6 +24,7 @@ public class FolderPathCompletionModelTest
         CollectionAssert.Contains(model.Completions.ToList(), new Url(@"C:\projects").FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Completions_FollowTheHistoryAsItGrows()
     {
@@ -36,6 +38,7 @@ public class FolderPathCompletionModelTest
         Assert.AreEqual(1, model.Completions.Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InsertCompletion_PersistsUnderTheModelsOwnKey()
     {
@@ -47,6 +50,7 @@ public class FolderPathCompletionModelTest
             settings.Get(FolderPathCompletionModel.SettingsKey)!, "smb://server/share/");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void InsertCompletion_DoesNotPersistTheHistory()
     {
@@ -60,6 +64,7 @@ public class FolderPathCompletionModelTest
         Assert.IsFalse(settings.Get(FolderPathCompletionModel.SettingsKey)!.Contains("projects"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Completions_ListATypedPathOnlyOnceEvenAfterVisitingIt()
     {
@@ -70,6 +75,7 @@ public class FolderPathCompletionModelTest
         Assert.AreEqual(1, model.Completions.Count(c => c == @"smb://server/share/"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UpdateMatchingValues_KeepsWhatContainsTheTypedText()
     {
@@ -83,6 +89,7 @@ public class FolderPathCompletionModelTest
         Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert.Contains(model.MatchingValues[0], "crypton");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UpdateMatchingValues_IgnoresCase()
     {
@@ -94,6 +101,7 @@ public class FolderPathCompletionModelTest
         Assert.AreEqual(1, model.MatchingValues.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UpdateMatchingValues_ReplacesThePreviousMatches()
     {
@@ -106,6 +114,7 @@ public class FolderPathCompletionModelTest
         Assert.AreEqual(0, model.MatchingValues.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_WithoutAHistory_StillCompletesWhatWasTyped()
     {

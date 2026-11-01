@@ -38,6 +38,7 @@ public class BracketMatchingTest
 
     // ---- BracketMatcher ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnOpeningBracketFindsItsClosingOne()
     {
@@ -47,6 +48,7 @@ public class BracketMatchingTest
         Assert.AreEqual(new BracketLocation(0, 6), match.Match);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AClosingBracketBeforeTheCursorFindsItsOpeningOne()
     {
@@ -57,6 +59,7 @@ public class BracketMatchingTest
         Assert.AreEqual(new BracketLocation(0, 0), match.Match);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheBracketUnderTheCursorWinsOverTheOneBefore()
     {
@@ -69,6 +72,7 @@ public class BracketMatchingTest
         Assert.AreEqual(new BracketLocation(0, 1), atOpening.Match);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NestedBracketsPairInnermostFirst()
     {
@@ -76,6 +80,7 @@ public class BracketMatchingTest
         Assert.AreEqual(new BracketLocation(0, 3), BracketMatcher.Find(["((a))"], 0, 1)!.Match);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnlyBracketsOfTheSameKindAreCounted()
     {
@@ -83,6 +88,7 @@ public class BracketMatchingTest
         Assert.AreEqual(new BracketLocation(0, 4), BracketMatcher.Find(["( [ ) ]"], 0, 0)!.Match);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMatchCanBeOnAnotherLine()
     {
@@ -92,6 +98,7 @@ public class BracketMatchingTest
         Assert.AreEqual(new BracketLocation(0, 7), BracketMatcher.Find(lines, 2, 0)!.Match);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnclosedBracketHasNoMatch()
     {
@@ -101,6 +108,7 @@ public class BracketMatchingTest
         Assert.IsNull(match.Match);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoBracketNearTheCursorIsNoResult()
     {
@@ -110,6 +118,7 @@ public class BracketMatchingTest
         Assert.IsNull(BracketMatcher.Find(["(x)"], 0, -1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASearchThatWouldCrossTooManyLinesGivesUp()
     {
@@ -125,6 +134,7 @@ public class BracketMatchingTest
 
     // ---- The editor ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheEditorFindsTheBracketAtItsCursor()
     {
@@ -136,6 +146,7 @@ public class BracketMatchingTest
         Assert.AreEqual(new BracketLocation(0, 8), match!.Match);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GoToMatchingBracketMovesTheCursorThere()
     {
@@ -149,6 +160,7 @@ public class BracketMatchingTest
         Assert.AreEqual(1, (int)editor.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GoToMatchingBracketDoesNothingWithoutAPartner()
     {
@@ -161,6 +173,7 @@ public class BracketMatchingTest
         Assert.AreEqual(2, (int)editor.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlF9GoesToTheMatchingBracket()
     {
@@ -173,6 +186,7 @@ public class BracketMatchingTest
         Assert.AreEqual(4, (int)editor.ScrollableModel.CursorPosition.X);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PlainF9StillGoesToTheNextBookmark()
     {
@@ -186,6 +200,7 @@ public class BracketMatchingTest
         Assert.AreEqual(2, (int)editor.ScrollableModel.CursorPosition.Y);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BothBracketsOfAPairAreMarkedWhenDrawn()
     {
@@ -202,6 +217,7 @@ public class BracketMatchingTest
         Assert.AreNotEqual(Color.Cyan, screen.BackgroundAt(0, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABracketWithoutAPartnerIsMarkedInRed()
     {
@@ -214,6 +230,7 @@ public class BracketMatchingTest
         Assert.AreEqual(Color.Red, screen.BackgroundAt(2, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NothingIsMarkedWhenTheFeatureIsOff()
     {
@@ -228,6 +245,7 @@ public class BracketMatchingTest
         Assert.IsFalse(editor.GetKeyHints().Any(hint => hint.Key == "Ctrl+F9"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMarkFollowsTheTextWhenItIsScrolledSideways()
     {
@@ -243,6 +261,7 @@ public class BracketMatchingTest
         Assert.AreEqual(Color.Cyan, screen.BackgroundAt(8, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMatchOnAnotherLineIsMarkedToo()
     {
@@ -256,6 +275,7 @@ public class BracketMatchingTest
         Assert.AreEqual(Color.Cyan, screen.BackgroundAt(0, 2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AWrappedLineMarksTheBracketOnTheRowThatHoldsIt()
     {

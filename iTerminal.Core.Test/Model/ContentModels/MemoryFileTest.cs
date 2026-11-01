@@ -7,6 +7,7 @@ namespace iTerminal.Core.Model.ContentModels.Test;
 [TestClass]
 public class MemoryFileTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void FromAStream_KeepsTheBytesAndTheMemoryDriveUrl()
     {
@@ -17,6 +18,7 @@ public class MemoryFileTest
         Assert.AreEqual(Container.MEMORY_DRIVE + "a.txt", file.Url.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FromAnArray_KeepsTheArray()
     {

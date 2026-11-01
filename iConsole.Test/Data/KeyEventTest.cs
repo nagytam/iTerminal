@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class KeyEventTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventConstructor()
     {
@@ -17,6 +18,7 @@ public class KeyEventTest
         Assert.AreEqual(KeyPressType.Down, keyEvent.KeyPressType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventConstructorWithKeyPressType()
     {
@@ -24,6 +26,7 @@ public class KeyEventTest
         Assert.AreEqual(KeyPressType.Up, keyEvent.KeyPressType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventDefaultKeyPressType()
     {
@@ -31,6 +34,7 @@ public class KeyEventTest
         Assert.AreEqual(KeyPressType.Down, keyEvent.KeyPressType);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventWithModifiers()
     {
@@ -40,6 +44,7 @@ public class KeyEventTest
         Assert.IsTrue(keyEvent.Control);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventDefaultKeyChar()
     {
@@ -47,6 +52,7 @@ public class KeyEventTest
         Assert.AreEqual('\0', keyEvent.KeyChar);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventIsIdentical()
     {
@@ -55,6 +61,7 @@ public class KeyEventTest
         Assert.IsTrue(keyEvent1.IsIdentical(keyEvent2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventIsNotIdenticalDifferentKeyChar()
     {
@@ -63,6 +70,7 @@ public class KeyEventTest
         Assert.IsFalse(keyEvent1.IsIdentical(keyEvent2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventIsNotIdenticalDifferentConsoleKey()
     {
@@ -71,6 +79,7 @@ public class KeyEventTest
         Assert.IsFalse(keyEvent1.IsIdentical(keyEvent2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventIsNotIdenticalDifferentModifier()
     {
@@ -79,6 +88,7 @@ public class KeyEventTest
         Assert.IsFalse(keyEvent1.IsIdentical(keyEvent2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventEquality()
     {
@@ -87,6 +97,7 @@ public class KeyEventTest
         Assert.AreEqual(keyEvent1, keyEvent2);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyEventInheritance()
     {

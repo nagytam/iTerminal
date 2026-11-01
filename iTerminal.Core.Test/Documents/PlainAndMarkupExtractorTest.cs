@@ -36,6 +36,7 @@ public class PlainAndMarkupExtractorTest
         return path;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PlainText_ReadsUtf8WithoutABom()
     {
@@ -49,6 +50,7 @@ public class PlainAndMarkupExtractorTest
         Assert.AreEqual("Árvíztűrő tükörfúrógép", result.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PlainText_FallsBackToLatin1ForBytesThatAreNotUtf8()
     {
@@ -61,6 +63,7 @@ public class PlainAndMarkupExtractorTest
         Assert.AreEqual("café", result.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PlainText_ReportsAnEmptyFileAsEmptyRatherThanExtracted()
     {
@@ -71,6 +74,7 @@ public class PlainAndMarkupExtractorTest
         Assert.AreEqual(DocumentExtractionStatus.Empty, result.Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PlainText_TruncatesAtTheTextLimitAndSaysSo()
     {
@@ -83,6 +87,7 @@ public class PlainAndMarkupExtractorTest
         Assert.IsTrue(result.Text.EndsWith("[truncated]", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Markup_DropsTagsAndScriptBodiesAndKeepsTheTitle()
     {
@@ -104,6 +109,7 @@ public class PlainAndMarkupExtractorTest
         Assert.IsFalse(result.Text.Contains("color: red", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Markup_DecodesEntities()
     {
@@ -114,6 +120,7 @@ public class PlainAndMarkupExtractorTest
         StringAssert.Contains(result.Text, "Ben & Jerry");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Markup_DoesNotMistakeAnElementWhoseNameMerelyStartsWithScript()
     {
@@ -126,6 +133,7 @@ public class PlainAndMarkupExtractorTest
         StringAssert.Contains(result.Text, "after");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Factory_MapsExtensionsToKindsAndExtractors()
     {
@@ -145,6 +153,7 @@ public class PlainAndMarkupExtractorTest
         Assert.AreEqual(DocumentKind.Unknown, DocumentTextExtractorFactory.GetKind("README"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Normalize_CollapsesLineEndingsAndDropsControlCharacters()
     {
@@ -153,6 +162,7 @@ public class PlainAndMarkupExtractorTest
         Assert.AreEqual("a\nb\n\ncd e", normalized);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CountWords_CountsWhitespaceSeparatedRuns()
     {

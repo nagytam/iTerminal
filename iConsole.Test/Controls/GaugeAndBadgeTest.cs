@@ -18,6 +18,7 @@ public class GaugeAndBadgeTest
         return m.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gauge_SeverityColor_FollowsThresholds()
     {
@@ -26,6 +27,7 @@ public class GaugeAndBadgeTest
         Assert.AreEqual(Color.Red, Gauge.SeverityColor(0.95));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gauge_Draw_ShowsLabelBarAndPercent()
     {
@@ -36,6 +38,7 @@ public class GaugeAndBadgeTest
         Assert.IsTrue(line.EndsWith(" 50%"), "[" + line + "]");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Gauge_Value_IsClamped()
     {
@@ -45,6 +48,7 @@ public class GaugeAndBadgeTest
         Assert.AreEqual(0.0, gauge.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Badge_Width_FollowsText()
     {
@@ -52,6 +56,7 @@ public class GaugeAndBadgeTest
         Assert.AreEqual(9, (int)badge.ViewSize.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Badge_Draw_PadsTextWithOneCell()
     {
@@ -60,6 +65,7 @@ public class GaugeAndBadgeTest
         Assert.AreEqual(" OK", buffer.ContentAsString.Split(Environment.NewLine)[0].TrimEnd());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_ShowValue_DrawsNumberAfterTrack()
     {

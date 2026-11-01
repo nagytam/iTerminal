@@ -32,6 +32,7 @@ public class ListBoxTest
         return listBox;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListNavigationAndSelectWhenItemsExist()
     {
@@ -42,6 +43,7 @@ public class ListBoxTest
         CollectionAssert.AreEqual(new[] { "Up/Down", "PageUp/PageDown", "Home/End", "Enter", "Insert" }, keys);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_ListTypeAheadOnlyWhenEnabled()
     {
@@ -53,6 +55,7 @@ public class ListBoxTest
         Assert.IsTrue(listBox.GetKeyHints().Any(h => h.Key == "Letters"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyHints_EmptyWithoutItemsOrWhenDisabled()
     {
@@ -64,6 +67,7 @@ public class ListBoxTest
         Assert.AreEqual(0, disabled.GetKeyHints().Count());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_SingleItem_RendersItem()
     {
@@ -76,6 +80,7 @@ public class ListBoxTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Alpha"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_MultipleItems_RendersAllVisible()
     {
@@ -90,6 +95,7 @@ public class ListBoxTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Third"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ItemsExceedViewHeight_OnlyVisibleItemsRendered()
     {
@@ -105,6 +111,7 @@ public class ListBoxTest
         Assert.IsFalse(content.Contains("Row2"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_EmptyModel_PaintsBlankRows()
     {
@@ -120,6 +127,7 @@ public class ListBoxTest
         Assert.IsTrue(lines.All(line => line == new string(' ', 20)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ItemIsPaddedToViewWidth()
     {
@@ -133,6 +141,7 @@ public class ListBoxTest
         Assert.AreEqual(10, lines[0].Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_LongItem_TruncatedToViewWidth()
     {
@@ -146,6 +155,7 @@ public class ListBoxTest
         Assert.AreEqual(5, lines[0].Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_ItemAtPosition_RenderedAtCorrectRow()
     {
@@ -161,6 +171,7 @@ public class ListBoxTest
         Assert.IsTrue(lines[2].Contains("Three"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetVisualState_CursorRow_ReturnsSelected()
     {
@@ -172,6 +183,7 @@ public class ListBoxTest
         Assert.AreEqual(VisualState.Selected, state);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetVisualState_NonCursorRow_ReturnsNormal()
     {
@@ -183,6 +195,7 @@ public class ListBoxTest
         Assert.AreEqual(VisualState.Normal, state);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEvent_ClickOnRow_MovesCursorAndSelectsItem()
     {
@@ -200,6 +213,7 @@ public class ListBoxTest
         Assert.AreEqual("Beta", listBox.SelectedItem?.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEvent_ClickOnRowBelowLastItem_SelectsNothing()
     {
@@ -216,6 +230,7 @@ public class ListBoxTest
         Assert.IsNull(listBox.SelectedItem);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEvent_ClickOnScrolledRow_SelectsTheItemUnderIt()
     {
@@ -235,6 +250,7 @@ public class ListBoxTest
         Assert.AreEqual("R" + scrolledBy, listBox.SelectedItem?.Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleMouseEvent_Wheel_MovesCursorAndClampsAtTheEnds()
     {

@@ -6,6 +6,7 @@ namespace iTerminal.Core.Test.Helper;
 [TestClass]
 public class UrlPathTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("memdrive://", "one", true, "memdrive://one/")]
     [DataRow("memdrive://x/", "one", false, "memdrive://x/one")]
@@ -19,6 +20,7 @@ public class UrlPathTest
         Assert.AreEqual(expected, UrlPath.Child(folder, relative, isFolder));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("memdrive://", "memdrive://")]
     [DataRow("memdrive:///", "memdrive://")]

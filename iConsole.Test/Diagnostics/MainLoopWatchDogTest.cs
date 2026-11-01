@@ -10,6 +10,7 @@ public class MainLoopWatchDogTest
 
     private MainLoopWatchDog Create() => new(_time, TimeSpan.FromMilliseconds(200));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void A_PassWithinTheBudget_IsNotReported()
     {
@@ -27,6 +28,7 @@ public class MainLoopWatchDogTest
         Assert.AreEqual(0, watchDog.StallCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void A_PassPastTheBudget_IsReportedWhileItIsStillRunning_OnceOnly()
     {
@@ -46,6 +48,7 @@ public class MainLoopWatchDogTest
         Assert.AreEqual(1, watchDog.StallCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AStalledPass_RecoversWithItsTotalDuration_WhenItEnds()
     {
@@ -63,6 +66,7 @@ public class MainLoopWatchDogTest
         Assert.AreEqual(350, recovered[0].ElapsedMilliseconds);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APassThatNeverStalled_DoesNotRecover()
     {
@@ -78,6 +82,7 @@ public class MainLoopWatchDogTest
         Assert.AreEqual(0, recovered.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DisposingTwice_IsHarmless_AndAFinishedPassIsNoLongerChecked()
     {
@@ -94,6 +99,7 @@ public class MainLoopWatchDogTest
         Assert.AreEqual(0, stalls.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SeveralPassesAtOnce_AreEachReportedOnTheirOwn()
     {

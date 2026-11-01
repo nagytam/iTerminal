@@ -65,6 +65,7 @@ public class ListingModeCommandsTest
         return (browser, model);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toggle_CanRun_OnlyWhenItsOwnModelIsFocused()
     {
@@ -79,6 +80,7 @@ public class ListingModeCommandsTest
         Assert.IsFalse(command.CanExecute(), "the other panel must not toggle this one");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toggle_RunsOnTheFocusedPanel_AndSwitchesTheMode()
     {
@@ -92,6 +94,7 @@ public class ListingModeCommandsTest
         Assert.IsTrue(browser.IsBriefListing);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Toggle_CannotRun_OnThePreviewPanel()
     {
@@ -108,6 +111,7 @@ public class ListingModeCommandsTest
         Assert.IsFalse(command.CanExecute());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LeftAndRight_AreClaimed_OnlyInBrief()
     {

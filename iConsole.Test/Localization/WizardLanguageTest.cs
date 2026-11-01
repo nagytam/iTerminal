@@ -45,6 +45,7 @@ public class WizardLanguageTest
     private static string ButtonTitle(Wizard wizard, string field) =>
         ((Button)typeof(Wizard).GetField(field, BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(wizard)!).Title;
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheButtons_FollowTheChosenLanguageAsThePagesChange()
     {
@@ -59,6 +60,7 @@ public class WizardLanguageTest
         Assert.AreEqual("Fertigstellen", ButtonTitle(wizard, "_nextButton"), "the last page offers Finish");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheButtons_AreEnglishWithNoLanguageChosen()
     {

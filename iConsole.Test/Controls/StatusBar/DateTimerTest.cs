@@ -38,6 +38,7 @@ public class DateTimerTest
         return condition();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnceStarted_TheTextFollowsTheClockWithoutAnyIdlePass()
     {
@@ -51,6 +52,7 @@ public class DateTimerTest
         Assert.IsTrue(await BecomesAsync(() => date.Text == "2026-01-02 03:04:35"), date.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BeforeItIsStarted_TheTimerDoesNotRun()
     {
@@ -61,6 +63,7 @@ public class DateTimerTest
         Assert.AreEqual("2026-01-02 03:04:05", date.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AfterItIsDisposed_TheTextStopsChanging()
     {
@@ -75,6 +78,7 @@ public class DateTimerTest
         date.Dispose();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_UpdatesTheTextAndSaysWhenNothingChanged()
     {

@@ -10,6 +10,7 @@ public class AwsSignatureV4Test
     private const string Secret = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY";
     private static readonly DateTime Timestamp = new(2013, 5, 24, 0, 0, 0, DateTimeKind.Utc);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetObject_WithARangeHeader_MatchesTheDocumentedSignature()
     {
@@ -34,6 +35,7 @@ public class AwsSignatureV4Test
             authorization.Replace(", ", ","));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PutObject_WithABodyAndAnEscapedKey_MatchesTheDocumentedSignature()
     {
@@ -57,6 +59,7 @@ public class AwsSignatureV4Test
         Assert.AreEqual("98ad721746da40c64f1a55b78f14c238d841ea1380cd77a1b5971af0ece108bd", signature);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListObjects_SortsAndEncodesTheQuery_AndMatchesTheDocumentedSignature()
     {

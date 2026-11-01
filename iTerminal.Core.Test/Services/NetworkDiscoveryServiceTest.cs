@@ -17,6 +17,7 @@ public class NetworkDiscoveryServiceTest
         return (listener, port);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ProbePortAsync_OpenPort_ReturnsTrue()
     {
@@ -32,6 +33,7 @@ public class NetworkDiscoveryServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ProbePortAsync_ClosedPort_ReturnsFalse()
     {
@@ -43,6 +45,7 @@ public class NetworkDiscoveryServiceTest
         Assert.IsFalse(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ProbePortAsync_UnreachableAddress_ReturnsFalseRatherThanThrowing()
     {
@@ -52,6 +55,7 @@ public class NetworkDiscoveryServiceTest
         Assert.IsFalse(result);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScanAsync_HostWithOpenSshPort_IsReturnedAsSshAvailable()
     {
@@ -83,6 +87,7 @@ public class NetworkDiscoveryServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScanAsync_HostWithOpenSmbPort_ListsSharesBestEffort()
     {
@@ -117,6 +122,7 @@ public class NetworkDiscoveryServiceTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScanAsync_NoAddresses_CompletesImmediatelyWithNoResults()
     {
@@ -131,6 +137,7 @@ public class NetworkDiscoveryServiceTest
         Assert.AreEqual(0, results.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ScanAsync_UnreachableAddresses_ReturnsNoHosts()
     {
@@ -150,6 +157,7 @@ public class NetworkDiscoveryServiceTest
         Assert.AreEqual(0, results.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EnumerateLocalSubnet_ReturnsRangeExcludingSelf()
     {
@@ -165,6 +173,7 @@ public class NetworkDiscoveryServiceTest
         Assert.IsFalse(results.Any(a => a.Equals(IPAddress.Parse("192.168.1.255"))));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void GetCandidateAddresses_DoesNotThrow()
     {

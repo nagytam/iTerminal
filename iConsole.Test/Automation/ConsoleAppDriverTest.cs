@@ -25,6 +25,7 @@ public class ConsoleAppDriverTest
         await _app.DisposeAsync();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheFirstFrameIsOnScreenWhenStartReturns()
     {
@@ -36,6 +37,7 @@ public class ConsoleAppDriverTest
         await _app.WaitForTextAsync(SampleScreen.Hint);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheHintIsOnTheLastRow()
     {
@@ -44,6 +46,7 @@ public class ConsoleAppDriverTest
         Assert.AreEqual(23, screen.RowOf(SampleScreen.Hint));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypedTextReachesTheFocusedTextBox()
     {
@@ -53,6 +56,7 @@ public class ConsoleAppDriverTest
         Assert.AreEqual(2, screen.RowOf("Ada"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task BackspaceEditsWhatWasTyped()
     {
@@ -63,6 +67,7 @@ public class ConsoleAppDriverTest
             "the last letter to be erased");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AKeyBoundToACommandOpensADialogOnTop()
     {
@@ -76,6 +81,7 @@ public class ConsoleAppDriverTest
             "the command log records what ran");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesTheDialogAndKeysGoBackToTheScreen()
     {
@@ -95,6 +101,7 @@ public class ConsoleAppDriverTest
     /// A closed dialog must leave no picture of itself behind, even while another control still
     /// draws on the layer it used. Layers were never cleared, so it stayed on screen.
     /// </summary>
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClosedDialogLeavesNoGhostOnASharedLayer()
     {
@@ -110,6 +117,7 @@ public class ConsoleAppDriverTest
         Assert.IsTrue(screen.Contains(SampleScreen.Badge), "the control sharing the layer is still drawn");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingAButtonRunsIt()
     {
@@ -121,6 +129,7 @@ public class ConsoleAppDriverTest
         await _app.WaitForTextGoneAsync("Hello, !");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnUnhandledKeyBeepsAndReportsFalse()
     {
@@ -131,6 +140,7 @@ public class ConsoleAppDriverTest
         Assert.AreEqual(beepsBefore + 1, _app.Console.BeepCount);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AThrowingHandlerFailsThatKeyAndTheKeyboardKeepsWorking()
     {
@@ -140,6 +150,7 @@ public class ConsoleAppDriverTest
         await _app.WaitForTextAsync("still here");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ResizingTheTerminalReLaysOutTheScreen()
     {
@@ -149,6 +160,7 @@ public class ConsoleAppDriverTest
         Assert.AreEqual(100, screen.Width);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShrinkingTheTerminalLeavesNothingOffScreen()
     {
@@ -157,6 +169,7 @@ public class ConsoleAppDriverTest
         await _app.WaitUntilAsync(s => s.RowOf(SampleScreen.Hint) == 11, "the hint to move up to row 11");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task F10QuitsTheApplication()
     {
@@ -167,6 +180,7 @@ public class ConsoleAppDriverTest
         await Assert.ThrowsExactlyAsync<AssertFailedException>(() => _app.PressAsync("a"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlCQuitsTheApplication()
     {
@@ -175,6 +189,7 @@ public class ConsoleAppDriverTest
         await _app.WaitForExitAsync();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AWaitThatNeverHoldsFailsWithTheScreenInTheMessage()
     {
@@ -185,6 +200,7 @@ public class ConsoleAppDriverTest
         StringAssert.Contains(failure.Message, SampleScreen.Hint);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WaitForIdleReturnsOnceTheScreenStopsChanging()
     {
@@ -195,6 +211,7 @@ public class ConsoleAppDriverTest
         StringAssert.Contains(settled.Line(2), "abc");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMouseWheelIsDelivered()
     {
@@ -202,6 +219,7 @@ public class ConsoleAppDriverTest
         Assert.IsFalse(await _app.ScrollAsync(5, 5, -1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DisposingTwiceIsHarmless()
     {

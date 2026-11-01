@@ -32,6 +32,7 @@ public class ErrorPromptServiceTest
         return (new ErrorPromptService(provider.Object, theme), root);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACancelledOperation_TakesItsPromptDownAtTheNextIdlePass()
     {
@@ -47,6 +48,7 @@ public class ErrorPromptServiceTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(prompt), "an abandoned prompt would keep the keyboard");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnAnsweredPrompt_IsNotTouchedByTheIdlePass()
     {

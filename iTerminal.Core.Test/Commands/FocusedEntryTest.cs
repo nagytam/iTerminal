@@ -26,6 +26,7 @@ public class FocusedEntryTest
         return model;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheParentRowIsNeverActedOn()
     {
@@ -34,6 +35,7 @@ public class FocusedEntryTest
         Assert.IsNull(FocusedEntry.ActionableUrl(model.Object));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheParentRowIsRecognisedWithPadding()
     {
@@ -43,6 +45,7 @@ public class FocusedEntryTest
         Assert.IsTrue(FocusedEntry.IsParentEntry(entry.Object));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFileIsActedOn()
     {
@@ -51,6 +54,7 @@ public class FocusedEntryTest
         Assert.AreEqual("file:///tmp/readme.txt", FocusedEntry.ActionableUrl(model.Object)?.FullUrl);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFolderIsActedOn()
     {
@@ -59,6 +63,7 @@ public class FocusedEntryTest
         Assert.IsNotNull(FocusedEntry.ActionableUrl(model.Object));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEntryThatIsGoneIsNotActedOn()
     {
@@ -67,6 +72,7 @@ public class FocusedEntryTest
         Assert.IsNull(FocusedEntry.ActionableUrl(model.Object));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoModelOrNoEntryMeansNothing()
     {

@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Services.Compare;
 [TestClass]
 public class BinaryComparerTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void IdenticalBytes_HaveNoDifferences()
     {
@@ -14,12 +15,14 @@ public class BinaryComparerTest
         Assert.AreEqual(0, result.DifferingBytes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoEmptyFiles_AreIdentical()
     {
         Assert.IsTrue(BinaryComparer.Compare([], []).Identical);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NeighbouringDifferences_AreOneRun_AndSeparatedOnesAreTwo()
     {
@@ -31,6 +34,7 @@ public class BinaryComparerTest
         Assert.AreEqual(3, result.DifferingBytes);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheLongerFile_DiffersPastTheEndOfTheShorter()
     {
@@ -41,6 +45,7 @@ public class BinaryComparerTest
         Assert.AreEqual(new ByteDifference(2, 2), result.Runs.Single());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsDifferent_IsTrueOnlyInsideARun()
     {

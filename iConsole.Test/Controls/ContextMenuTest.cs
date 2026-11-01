@@ -27,6 +27,7 @@ public class ContextMenuTest
         return (root, owner, menu, ran);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OpensAtThePointAndHighlightsTheFirstEntry()
     {
@@ -40,6 +41,7 @@ public class ContextMenuTest
         Assert.AreEqual(0, menu.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task IsSizedToItsEntriesAndKeptOnScreen()
     {
@@ -53,6 +55,7 @@ public class ContextMenuTest
         Assert.IsTrue(menu.Position.Y + menu.ViewSize.Height <= 20);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ArrowKeysSkipSeparatorsAndDisabledEntries()
     {
@@ -72,6 +75,7 @@ public class ContextMenuTest
         Assert.AreEqual(1, menu.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HomeAndEndJumpToTheFirstAndLastEntry()
     {
@@ -85,6 +89,7 @@ public class ContextMenuTest
         Assert.AreEqual(0, menu.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnterClosesTheMenuThenRunsTheEntry()
     {
@@ -107,6 +112,7 @@ public class ContextMenuTest
         Assert.IsFalse(root.Controls.Contains(menu));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALetterJumpsToTheNextEntryThatStartsWithIt()
     {
@@ -118,6 +124,7 @@ public class ContextMenuTest
         Assert.AreEqual(4, menu.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALetterOfADisabledEntryDoesNotSelectIt()
     {
@@ -129,6 +136,7 @@ public class ContextMenuTest
         Assert.AreEqual(0, menu.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesWithoutRunningAnything()
     {
@@ -141,6 +149,7 @@ public class ContextMenuTest
         Assert.AreEqual(0, ran.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingAnEntryRunsIt()
     {
@@ -154,6 +163,7 @@ public class ContextMenuTest
         Assert.IsFalse(menu.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingADisabledEntryOrASeparatorKeepsTheMenuOpen()
     {
@@ -167,6 +177,7 @@ public class ContextMenuTest
         Assert.AreEqual(0, ran.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HoveringAnEntryHighlightsIt()
     {
@@ -178,6 +189,7 @@ public class ContextMenuTest
         Assert.AreEqual(1, menu.SelectedIndex);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ClickingOutsideClosesIt()
     {
@@ -190,6 +202,7 @@ public class ContextMenuTest
         Assert.AreEqual(0, ran.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task DrawsTheEntriesWithTheirShortcuts()
     {
@@ -209,6 +222,7 @@ public class ContextMenuTest
         Assert.IsFalse(buffer.CellOf("Open").IsDim);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARightClickOnTheControlOpensItsMenuAtThePointer()
     {
@@ -222,6 +236,7 @@ public class ContextMenuTest
         Assert.AreEqual(new Position(8, 7), menu.Position);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ARightClickOutsideTheControlDoesNotOpenItsMenu()
     {
@@ -234,6 +249,7 @@ public class ContextMenuTest
         Assert.IsFalse(menu.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AChildsMenuWinsOverItsParents()
     {
@@ -256,6 +272,7 @@ public class ContextMenuTest
         Assert.IsFalse(parentMenu.IsOpen);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShiftF10OpensTheMenuOfTheFocusedControl()
     {
@@ -270,6 +287,7 @@ public class ContextMenuTest
         Assert.IsTrue(root.Controls.Contains(menu));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task PlainF10DoesNotOpenTheMenu()
     {

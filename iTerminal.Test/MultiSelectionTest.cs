@@ -47,6 +47,7 @@ public class MultiSelectionTest
         return default;
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task InsertMarksRowsAndF5CopiesThemAll()
     {
@@ -74,6 +75,7 @@ public class MultiSelectionTest
         await _app.WaitForTextGoneAsync("2 marked");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task ShiftDownMarksAFolderAndAFileAndShiftF6MovesThem()
     {
@@ -93,6 +95,7 @@ public class MultiSelectionTest
         Assert.IsTrue(Directory.Exists(Path.Combine(_app.LeftRoot, "alpha")), "the row above was not marked");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task NumPlusMarksByPatternAndF8DeletesTheMarkedFiles()
     {
@@ -121,6 +124,7 @@ public class MultiSelectionTest
         await _app.WaitUntilAsync(s => !_app.LeftPanelLists("readme.txt", s) && !_app.LeftPanelLists("notes.md", s), "the panel to drop them");
     }
 
+    [Timeout(120_000)]
     [TestMethod]
     public async Task NumStarInvertsAndLeavingTheFolderDropsTheMarks()
     {

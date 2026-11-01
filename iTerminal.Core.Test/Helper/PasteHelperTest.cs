@@ -17,6 +17,7 @@ public class PasteHelperTest
         public Task<string?> GetTextAsync(CancellationToken cancellationToken = default) => gate.Task;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CtrlVAndShiftInsertArePasteKeys_NothingElseIs()
     {
@@ -29,6 +30,7 @@ public class PasteHelperTest
         Assert.IsFalse(PasteHelper.IsPasteKey(Key(ConsoleKey.C, 'c', control: true)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SingleLine_JoinsLinesAndTabsWithSpaces_AndTrims()
     {
@@ -39,6 +41,7 @@ public class PasteHelperTest
         Assert.AreEqual("keep  inner spaces", PasteHelper.SingleLine("keep  inner spaces"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AClipboardThatAnswersAtOnce_IsUsedOnTheSpot()
     {
@@ -52,6 +55,7 @@ public class PasteHelperTest
         Assert.IsTrue(repainted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnEmptyOrMissingClipboardInsertsNothing()
     {
@@ -63,6 +67,7 @@ public class PasteHelperTest
         Assert.IsFalse(inserted);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASlowClipboard_IsAppliedWhenItLands_NotWaitedFor()
     {
@@ -87,6 +92,7 @@ public class PasteHelperTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ASlowClipboardThatFails_InsertsNothing()
     {
@@ -109,6 +115,7 @@ public class PasteHelperTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void CtrlWAndCtrlBackspaceDeleteAWord_CtrlUClears_NothingElseDoes()
     {
@@ -121,6 +128,7 @@ public class PasteHelperTest
         Assert.IsFalse(PasteHelper.IsClearKey(Key(ConsoleKey.U, 'u')));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteLastWord_TakesTheWordAndTheSpacesAfterIt()
     {
@@ -131,6 +139,7 @@ public class PasteHelperTest
         Assert.AreEqual(string.Empty, PasteHelper.DeleteLastWord(string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DeleteLastWord_TreatsALineBreakAsABoundary_AndRemovesAFinalOneAlone()
     {

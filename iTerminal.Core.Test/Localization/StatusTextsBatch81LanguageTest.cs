@@ -26,6 +26,7 @@ public class StatusTextsBatch81LanguageTest
         UiText.Current = localizer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheGermanStatusLinesFillTheirArguments()
     {
@@ -39,6 +40,7 @@ public class StatusTextsBatch81LanguageTest
         Assert.AreEqual("Fehler: Zugriff verweigert", string.Format(UiText.Get("Access.Status.Error", string.Empty), "Zugriff verweigert"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithNoLanguageChosenTheEnglishFallbackIsUnchanged()
     {
@@ -47,6 +49,7 @@ public class StatusTextsBatch81LanguageTest
         Assert.AreEqual("Press D again to delete \"Invoice\" from the server.", string.Format(UiText.Get("Mail.Status.PressAgainDelete", "Press D again to delete \"{0}\" from the server."), "Invoice"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryLanguage_TranslatesTheStatusLinesThatAreNotEnglish()
     {

@@ -8,6 +8,7 @@ namespace iTerminal.Core.Commands.Test;
 [TestClass]
 public class DiskManagerDialogCommandTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Key_IsAltF9_NotTheTaskManagersF9()
     {

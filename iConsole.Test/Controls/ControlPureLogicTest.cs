@@ -17,6 +17,7 @@ public class ControlPureLogicTest
 {
     private static TestThemeService Theme() => new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_ThumbColumnSpansTheTrackEndToEnd()
     {
@@ -27,6 +28,7 @@ public class ControlPureLogicTest
         Assert.AreEqual(0, Slider.ThumbColumn(50, 10, 10, 11), "an empty range has one position");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Slider_ClickingACellPicksTheValueItStandsFor()
     {
@@ -37,6 +39,7 @@ public class ControlPureLogicTest
         Assert.AreEqual(-20, Slider.ValueAt(3, -20, 20, 1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Slider_StepsClampAtTheBoundsWithoutWrapping()
     {
@@ -49,6 +52,7 @@ public class ControlPureLogicTest
         Assert.AreEqual(long.MaxValue, slider.Value, "a step past the largest value stays there, it does not wrap to the bottom");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StepIndicator_RendersDoneCurrentAndUpcomingSteps()
     {
@@ -60,6 +64,7 @@ public class ControlPureLogicTest
         Assert.AreEqual(0, StepIndicator.WidthFor(0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StepIndicator_ClicksOnlyCountOnTheGlyphs()
     {
@@ -72,6 +77,7 @@ public class ControlPureLogicTest
         Assert.AreEqual(-1, indicator.StepAtColumn(-1));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Timeline_ShowsTheNewestEventsThatFit()
     {
@@ -81,6 +87,7 @@ public class ControlPureLogicTest
         Assert.AreEqual(0, Timeline.FirstVisibleEvent(2, 10), "everything fits");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Breadcrumb_KeepsTheFirstAndLastSegmentsWhenTheTrailIsTooWide()
     {
@@ -95,6 +102,7 @@ public class ControlPureLogicTest
         CollectionAssert.AreEqual(new (int, string)[] { (-1, "…"), (2, "iTerminal") }, tight.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Countdown_FormatRoundsUpSoTheLastSecondStillShows()
     {
@@ -104,6 +112,7 @@ public class ControlPureLogicTest
         Assert.AreEqual("1:01:01", Countdown.Format(TimeSpan.FromSeconds(3661)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Countdown_ReportsFinishedOnceWhenTheTargetPasses()
     {
@@ -123,6 +132,7 @@ public class ControlPureLogicTest
         Assert.AreEqual(1, finished);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Rating_ShrinkingTheStarsClampsTheValue()
     {
@@ -134,6 +144,7 @@ public class ControlPureLogicTest
         Assert.AreEqual(3, rating.Maximum);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void SegmentedControl_AClickOnAVisibleOptionPicksIt()
     {

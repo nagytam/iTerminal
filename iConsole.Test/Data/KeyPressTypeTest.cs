@@ -5,6 +5,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class KeyPressTypeTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyPressType_Down_HasValue()
     {
@@ -12,6 +13,7 @@ public class KeyPressTypeTest
         Assert.AreEqual(0, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyPressType_Up_HasValue()
     {
@@ -19,6 +21,7 @@ public class KeyPressTypeTest
         Assert.AreEqual(1, (int)type);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyPressType_AllValuesAreUnique()
     {
@@ -32,6 +35,7 @@ public class KeyPressTypeTest
         Assert.AreEqual(types.Length, distinctTypes.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void KeyPressType_CanCompare()
     {

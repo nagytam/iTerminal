@@ -9,6 +9,7 @@ namespace iConsole.Test.Helper;
 [TestClass]
 public class RenderingDumpHelperCoverageTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void NullRenderingDumpHelper_IsDisabledAndNoOp()
     {
@@ -25,6 +26,7 @@ public class RenderingDumpHelperCoverageTest
         Assert.AreEqual(string.Empty, helper.DumpDirectoryPath);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RenderingDumpHelper_CreateWindowSummary_IncludesDriverAndWindowSize()
     {
@@ -34,6 +36,7 @@ public class RenderingDumpHelperCoverageTest
         StringAssert.Contains(summary, "window-size=0x0");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RenderingDumpHelper_CreateBufferSummary_ReportsStageAndVisibleCharacters()
     {
@@ -47,6 +50,7 @@ public class RenderingDumpHelperCoverageTest
         StringAssert.Contains(summary, "detail");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RenderingDumpHelper_SanitizeFileName_ReplacesInvalidCharacters()
     {

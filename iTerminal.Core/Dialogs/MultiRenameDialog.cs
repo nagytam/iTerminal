@@ -117,7 +117,8 @@ public class MultiRenameDialog : FormDialog
     /// <summary>One row per source, in batch order, as the planner decided.</summary>
     public IReadOnlyList<RenameRow> Plan { get; private set; } = [];
 
-    public int OkCount => Plan.Count(row => row.Status == RenameStatus.Ok);
+    /// <summary>How many rows will be renamed. Counted once per plan, not on every read.</summary>
+    public int OkCount { get; private set; }
 
     public Label ErrorMessage => _errorLabel;
 
@@ -154,6 +155,7 @@ public class MultiRenameDialog : FormDialog
         SourceModel = null;
         SourceUrls = [];
         Plan = [];
+        OkCount = 0;
         _folderNames = [];
         _previewRows.ReplaceAll([]);
         _countLabel.Text = string.Empty;
@@ -198,7 +200,8 @@ public class MultiRenameDialog : FormDialog
             entries.Add((oldName, newName));
         }
 
-        Plan = MultiRenamePlanner.Plan(entries, _folderNames);
+        Plan = MultiRenamePlanner.Plan(entries, _folderNames, OperatingSystem.IsWindows());
+        OkCount = Plan.Count(row => row.Status == RenameStatus.Ok);
         _previewRows.ReplaceAll([.. Plan.Take(PreviewLimit).Select(FormatRow)]);
 
         var ok = OkCount;
@@ -215,6 +218,7 @@ public class MultiRenameDialog : FormDialog
     private static string StatusText(RenameStatus status) => status switch
     {
         RenameStatus.Unchanged => UiText.Get("Multi.Status.Unchanged", "unchanged"),
+        RenameStatus.CaseOnly => UiText.Get("Multi.Status.CaseOnly", "change of case only, not renamed"),
         RenameStatus.Empty => UiText.Get("Multi.Status.Empty", "empty"),
         RenameStatus.InvalidName => UiText.Get("Multi.Status.InvalidName", "invalid name"),
         RenameStatus.Blocked => UiText.Get("Multi.Status.Blocked", "blocked by another entry"),

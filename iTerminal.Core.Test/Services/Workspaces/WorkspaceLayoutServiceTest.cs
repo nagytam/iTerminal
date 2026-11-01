@@ -43,6 +43,7 @@ public class WorkspaceLayoutServiceTest
         return (service, models, settings);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Capture_RecordsBothPanelsUrlsAndTheirSorts()
     {
@@ -60,6 +61,7 @@ public class WorkspaceLayoutServiceTest
         Assert.AreEqual(PanelSort.AsListed.Serialize(), layout.RightSort);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Capture_ASortThatCannotBeReadFromThePanelComesFromItsSetting()
     {
@@ -72,6 +74,7 @@ public class WorkspaceLayoutServiceTest
         Assert.AreEqual(new PanelSort(PanelSortMode.Extension, Descending: true).Serialize(), layout.LeftSort);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Capture_FocusIsTheRightPanelWhenItWasLastUsed()
     {
@@ -83,6 +86,7 @@ public class WorkspaceLayoutServiceTest
         Assert.AreEqual(ContentModelService.Right, service.Capture().FocusedPanel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Capture_FocusDefaultsToTheLeftPanel()
     {
@@ -92,6 +96,7 @@ public class WorkspaceLayoutServiceTest
         Assert.AreEqual(ContentModelService.Left, service.Capture().FocusedPanel);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Capture_WithNoPanelsOpenRecordsEmptyUrlsAndTheAiBar()
     {

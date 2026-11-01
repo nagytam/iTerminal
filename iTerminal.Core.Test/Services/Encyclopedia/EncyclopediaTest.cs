@@ -66,6 +66,7 @@ public class EncyclopediaTest
 
     #region Sources
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDefaultSourceIsEnglishWikipedia_AndAnUnknownIdFallsBackToIt()
     {
@@ -75,6 +76,7 @@ public class EncyclopediaTest
         Assert.AreEqual("wiktionary-en", EncyclopediaSources.Find("wiktionary-en").Id);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EverySourceHasAnIdAndAName_AndTheIdsAreUnique()
     {
@@ -83,6 +85,7 @@ public class EncyclopediaTest
         Assert.IsTrue(EncyclopediaSources.All.Any(s => s.Kind == EncyclopediaKind.LinkOut), "Britannica is reachable as a link");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APageAddressEscapesTheTerm()
     {
@@ -94,6 +97,7 @@ public class EncyclopediaTest
 
     #region The provider
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASearchAnswerGivesTitlesWithTheirTagsDroppedFromTheSnippet()
     {
@@ -105,6 +109,7 @@ public class EncyclopediaTest
         Assert.AreEqual(new EncyclopediaHit("Tulip mania", string.Empty), hits[1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASearchAnswerWithNothingInItGivesNoHits()
     {
@@ -112,6 +117,7 @@ public class EncyclopediaTest
         Assert.AreEqual(0, WikiEncyclopediaProvider.ParseSearch("""{"query":{"search":[]}}""").Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnAnswerThatIsNotJsonIsReportedAsSuch()
     {
@@ -119,6 +125,7 @@ public class EncyclopediaTest
         Assert.ThrowsExactly<EncyclopediaException>(() => WikiEncyclopediaProvider.ParseArticle(English, "x", false, "<html>"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnArticleAnswerGivesTheTitleTheTextAndTheAddress()
     {
@@ -131,6 +138,7 @@ public class EncyclopediaTest
         Assert.IsFalse(article.IsFull);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnArticleWithoutAnAddressGetsItsPageAddress()
     {
@@ -141,6 +149,7 @@ public class EncyclopediaTest
         Assert.IsTrue(article.IsFull);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMissingArticleIsAnError()
     {
@@ -150,6 +159,7 @@ public class EncyclopediaTest
         StringAssert.Contains(exception.Message, "Wikipedia (English) has no article called \"Xyzzy\"");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheRequestAddressesAskForTheIntroductionOrAllOfIt()
     {
@@ -163,6 +173,7 @@ public class EncyclopediaTest
         StringAssert.Contains(WikiEncyclopediaProvider.SearchUrl(English, "a&b c"), "srsearch=a%26b%20c");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheProviderAsksTheSourcesHost_AndSaysWhoIsAsking()
     {
@@ -178,6 +189,7 @@ public class EncyclopediaTest
         Assert.IsTrue(handler.Requests[0].Headers.UserAgent.ToString().Contains("iTerminal", StringComparison.Ordinal));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ANetworkFailureBecomesAnEncyclopediaException()
     {
@@ -194,6 +206,7 @@ public class EncyclopediaTest
 
     #region The service
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABlankTermFindsNothingWithoutAskingTheProvider()
     {
@@ -204,6 +217,7 @@ public class EncyclopediaTest
         Assert.AreEqual(0, provider.SearchCalls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheTermIsTrimmedBeforeItIsSearched()
     {
@@ -215,6 +229,7 @@ public class EncyclopediaTest
         Assert.AreEqual("tulip", provider.LastQuery);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALinkOutSourceAnswersWithTheTermItself_AndAnArticleThatPointsToTheBrowser()
     {
@@ -232,6 +247,7 @@ public class EncyclopediaTest
         Assert.AreEqual(0, provider.SearchCalls + provider.ArticleCalls, "Britannica is never asked by a program");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnArticleReadTwiceIsFetchedOnce_ButTheIntroductionAndTheWholeAreSeparate()
     {
@@ -246,6 +262,7 @@ public class EncyclopediaTest
         Assert.AreEqual(2, provider.ArticleCalls);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AnArticleWithNoIntroductionIsReadWhole()
     {
@@ -267,6 +284,7 @@ public class EncyclopediaTest
             Task.FromResult(new EncyclopediaArticle(title, full ? "The entry" : string.Empty, "https://x", full));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFailedArticleIsNotRemembered()
     {
@@ -280,6 +298,7 @@ public class EncyclopediaTest
         Assert.AreEqual("Intro Tulip", article.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheMemoryHasALimit()
     {

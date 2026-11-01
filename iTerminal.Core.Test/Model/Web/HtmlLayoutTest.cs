@@ -10,6 +10,7 @@ public class HtmlLayoutTest
 
     private static string[] Text(WebPage page) => page.Lines.Select(l => l.Text.TrimEnd()).ToArray();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParserClosesWhatThePageForgotToClose()
     {
@@ -21,6 +22,7 @@ public class HtmlLayoutTest
         Assert.AreEqual(2, root.Children.Count(c => c.Tag == "p"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParserDropsScriptsAndStylesAndDecodesEntities()
     {
@@ -29,6 +31,7 @@ public class HtmlLayoutTest
         CollectionAssert.AreEqual(new[] { "Fish & chips <3 A" }, Text(page));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParserSurvivesGarbage()
     {
@@ -37,6 +40,7 @@ public class HtmlLayoutTest
         Assert.IsNotNull(page);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ParagraphsWrapAtTheWidthAndAreSeparatedByABlankLine()
     {
@@ -45,6 +49,7 @@ public class HtmlLayoutTest
         CollectionAssert.AreEqual(new[] { "alpha beta", "gamma delta", "", "second" }, Text(page));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WhitespaceCollapsesAndBreaksStart()
     {
@@ -53,6 +58,7 @@ public class HtmlLayoutTest
         CollectionAssert.AreEqual(new[] { "one two", "three", "", "four" }, Text(page));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AWordLongerThanTheLineIsCutRatherThanLost()
     {
@@ -61,6 +67,7 @@ public class HtmlLayoutTest
         CollectionAssert.AreEqual(new[] { "abcdefghij", "klmnop" }, Text(page));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HeadingsAreUnderlined()
     {
@@ -70,6 +77,7 @@ public class HtmlLayoutTest
         Assert.IsTrue(page.Lines[0].Spans[0].Style.HasFlag(WebStyle.Heading | WebStyle.Bold));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListsAreBulletedNumberedAndNested()
     {
@@ -80,6 +88,7 @@ public class HtmlLayoutTest
             Text(page));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ALongListItemWrapsUnderItsText()
     {
@@ -88,6 +97,7 @@ public class HtmlLayoutTest
         CollectionAssert.AreEqual(new[] { "• one two", "  three four", "  five" }, Text(page));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BlockQuotesAreMarkedAndPreformattedTextKeepsItsLines()
     {
@@ -96,6 +106,7 @@ public class HtmlLayoutTest
         CollectionAssert.AreEqual(new[] { "│ quoted", "", "a  b", "  c" }, Text(page));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LinksBecomeItemsInDocumentOrder()
     {
@@ -112,6 +123,7 @@ public class HtmlLayoutTest
         Assert.IsTrue(page.Lines[0].Spans.Any(s => s.Style.HasFlag(WebStyle.Link) && s.Link == 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnchorsPointAtTheLineWhereTheElementStarts()
     {
@@ -122,6 +134,7 @@ public class HtmlLayoutTest
         Assert.IsTrue(page.Anchors.ContainsKey("old"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ImagesShowTheirDescriptionAndHiddenContentIsLeftOut()
     {
@@ -130,6 +143,7 @@ public class HtmlLayoutTest
         CollectionAssert.AreEqual(new[] { "a [A cat] b" }, Text(page));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TablesBecomeAlignedColumns()
     {
@@ -138,6 +152,7 @@ public class HtmlLayoutTest
         CollectionAssert.AreEqual(new[] { "Name   Qty", "apple  3", "fig    12" }, Text(page));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BorderedTablesGetSeparatorsAndRules()
     {
@@ -146,6 +161,7 @@ public class HtmlLayoutTest
         CollectionAssert.AreEqual(new[] { "a │ b", "──┼──", "c │ d" }, Text(page));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANarrowWindowShrinksTableColumnsToFit()
     {
@@ -160,6 +176,7 @@ public class HtmlLayoutTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormControlsReserveRoomAndBecomeItems()
     {
@@ -180,6 +197,7 @@ public class HtmlLayoutTest
         Assert.AreEqual("q=hi&c=on&s=2&h=1", WebForm.Encode(pairs));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void LayoutIsRepeatableAtAnotherWidth()
     {

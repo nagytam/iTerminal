@@ -45,6 +45,7 @@ public class ProgressWindowPresentationTest
         return buffer;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WhileTheTaskRunsTheButtonCancels()
     {
@@ -60,6 +61,7 @@ public class ProgressWindowPresentationTest
         Assert.IsFalse(parent.Controls.AsSnapshot().Contains(window));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnceTheTaskHasFailedTheButtonCloses()
     {
@@ -78,6 +80,7 @@ public class ProgressWindowPresentationTest
         Assert.IsFalse(parent.Controls.AsSnapshot().Contains(window));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALongErrorIsWrappedNotCutAtTheBorder()
     {
@@ -92,6 +95,7 @@ public class ProgressWindowPresentationTest
         AssertScreenContains(screen, "overwritten.", "the end of the message is on screen");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheErrorIsDrawnInTheErrorColour()
     {
@@ -104,6 +108,7 @@ public class ProgressWindowPresentationTest
         Assert.AreEqual(TestTheme().CurrentColorScheme.Error, screen.CellOf("Task failed").ForegroundColor);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EveryDetailRowIsPaintedEdgeToEdge()
     {
@@ -118,6 +123,7 @@ public class ProgressWindowPresentationTest
         Assert.IsTrue(Enumerable.Range(x0, width).All(x => screen.IsWritten(x, row)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DetailLinesWrapEachLineOnItsOwn()
     {

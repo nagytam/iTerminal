@@ -126,6 +126,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
         iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null,
         PrintDialog? printDialog = null,
+        iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
         MultiRenameDialog? multiRenameDialog = null
         )
@@ -233,7 +234,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             encyclopediaDialog,
             performanceBenchmarkDialog,
             gamesDialog,
-            virtualMachineManagerDialog));
+            bluetoothDeviceManagerDialog: bluetoothDeviceManagerDialog,
+            virtualMachineManagerDialog: virtualMachineManagerDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 

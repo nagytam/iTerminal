@@ -12,6 +12,7 @@ namespace iConsole.Test.Controls.StatusBar;
 [TestClass]
 public class TaskStatusTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_CreatesInstance()
     {
@@ -23,6 +24,7 @@ public class TaskStatusTest
         Assert.IsNotNull(taskStatus);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Constructor_SetsDefaultViewSize()
     {
@@ -35,6 +37,7 @@ public class TaskStatusTest
         Assert.AreEqual(1, taskStatus.ViewSize.Height);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_UpdatesTextWithTaskCount()
     {
@@ -50,6 +53,7 @@ public class TaskStatusTest
         Assert.IsTrue(taskStatus.Text.Contains("Tasks:"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_ShowsZeroTasksByDefault()
     {
@@ -65,6 +69,7 @@ public class TaskStatusTest
         Assert.IsTrue(taskStatus.Text.Contains("0"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_PadsTextToViewWidth()
     {
@@ -80,6 +85,7 @@ public class TaskStatusTest
         Assert.AreEqual(20, taskStatus.Text.Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TaskStatus_IsInstanceOfStatusBarItem()
     {
@@ -91,6 +97,7 @@ public class TaskStatusTest
         Assert.IsInstanceOfType(taskStatus, typeof(StatusBarItem));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnIdle_DoesNotThrow()
     {
@@ -105,6 +112,7 @@ public class TaskStatusTest
         taskStatus.OnIdle();
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_RendersTextToBuffer()
     {
@@ -124,6 +132,7 @@ public class TaskStatusTest
         Assert.IsTrue(buffer.ContentAsString.Contains("Tasks:"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_BeforeOnIdle_DrawsEmptyText()
     {
@@ -144,6 +153,7 @@ public class TaskStatusTest
         Assert.AreEqual(20, lines[0].Length);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Draw_TextPaddedToViewWidth()
     {

@@ -30,6 +30,7 @@ public class KeyboardEventConsumerJobTest
         return (job, beep, helpDialog);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_F1UnhandledByModalControl_OpensHelpDialog()
     {
@@ -48,6 +49,7 @@ public class KeyboardEventConsumerJobTest
         beep.Verify(b => b.Beep(), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_KeyHandledByModalControl_DoesNotOpenHelpDialog()
     {
@@ -65,6 +67,7 @@ public class KeyboardEventConsumerJobTest
         beep.Verify(b => b.Beep(), Times.Never);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_NonF1UnhandledKey_StillBeeps()
     {
@@ -82,6 +85,7 @@ public class KeyboardEventConsumerJobTest
         beep.Verify(b => b.Beep(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_F1WhileHelpDialogIsAlreadyModal_DoesNotReopen()
     {
@@ -96,6 +100,7 @@ public class KeyboardEventConsumerJobTest
         beep.Verify(b => b.Beep(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_ModifiedF1_DoesNotOpenHelpDialog()
     {
@@ -113,6 +118,7 @@ public class KeyboardEventConsumerJobTest
         beep.Verify(b => b.Beep(), Times.Once);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task HandleKeyEventAsync_NoModalControl_ReturnsFalseWithoutBeeping()
     {

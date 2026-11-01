@@ -226,6 +226,17 @@ puts a whole working context back.
   reported in the toast ("Left panel: C:\x no longer exists"); an unreachable remote reports the same.
   Nothing secret is stored — a remote panel is only its URL.
 
+### The Bluetooth device manager (`iTerminal.Core/Dialogs/Bluetooth/`, `Services/Bluetooth/`, Ctrl+Shift+J)
+Tools > Bluetooth devices lists the devices BlueZ knows: paired ones, ones seen recently, with their state (connected, paired, nearby). **S** scans for 8 seconds, **C** connects or disconnects the device under the cursor, **P** pairs, **Delete** asks y/n and then forgets it, **R** reads the list again.
+
+- **The backend is `bluetoothctl` on Linux only.** `BluetoothService` runs it through `IExternalProcessRunner` (one short command per call, each with its own timeout), and `BluetoothctlParser` reads what it prints, so the formats are tested against recorded output. Windows reports `IsSupported == false` and the dialog says so; nothing is read there. A device that asks for a PIN cannot be paired here: no agent answers it.
+- **`bluetoothctl` exits 0 after a refused connect.** `BluetoothctlParser.Failed` reads the text as well as the exit code (`Failed to`, `org.bluez.Error`, `not available`, `No default controller`), so the reason reaches the status line.
+- **The highlight is the cursor.** `ListBox` keeps the highlight in `ScrollableModel.CursorPosition`; `ListItem.IsSelected` is the mark that Space toggles, and the dialog does not use it. A refresh rebuilds the rows, so the dialog remembers the highlighted address and `OnIdle` moves the cursor back to that device when the rows changed.
+- **One operation at a time.** A key that starts a change is refused while another runs. The worker writes the result to `_statusText`; `OnIdle` puts it on the status line, so no worker touches the control tree. Each change reads the list again afterwards.
+- **The dialog takes focus for its list when it shows.** A dialog with focus passes arrow keys to no child.
+- **Tests never reach the machine's adapter.** `SandboxServices.Bluetooth` lists two made-up devices and answers every change with success; the unit tests use a recording fake.
+- No setting is stored: the list is read each time the dialog opens.
+
 ### The remote connection manager (`iTerminal.Core/Dialogs/Remote/`, `Services/Remote/`, `Model/Remote/`)
 Alt+F2 (Tools > Remote connections) opens `RemoteConnectionManagerDialog`: saved SSH, PowerShell remoting, **FTP and
 WebDAV** targets. Enter on an SSH or PowerShell entry lends the whole terminal to the session through
@@ -355,6 +366,17 @@ F3 opens a delimited file as a grid: the header on top, the rows below, and the 
 - **`CsvGrid` takes the keyboard only while enabled and focused**, lists its keys for the help screen, takes the focus on a click, and repaints its whole rectangle. Column widths come from the header and the first 500 rows, within 3 to 40 cells.
 - **Tests:** `CsvDocumentTest` (parsing), `CsvQueryTest` (the language), `CsvViewerDialogTest` (loading, queries, the status line, `.tsv`, F8 code pages), `EditorViewerAndPermissionsTest` (F8 and Shift+F8 in the real app) and `ViewFileDialogCommandTest` (F3 routes `.csv` and `.tsv` here).
 - Not built: sorting by clicking a header, saving a query's result, and parentheses in the condition.
+
+### SQLite viewer (`SqliteViewerDialog`, F3 on a local `.sqlite`, `.sqlite3`, `.db` or `.db3` file, `iConsole/Sqlite/`, `iTerminal.Core/Services/Sqlite/`)
+F3 opens a database as a result grid. The query line takes one SQL statement, run read-only; Enter runs it, and F4 switches to the result as aligned plain text. The default query lists the schema (`sqlite_master`), so a database opens on its tables, views and indexes.
+
+- **The UI has no SQLite dependency.** `iConsole` holds the contract (`ISqliteDatabaseReader`, `SqlTable`, `SqlQueryException`), the file-type check and the text formatter. `iTerminal.Core` holds `SqliteDatabaseReader`, which uses `Microsoft.Data.Sqlite` (pinned in `iTerminal.Core.csproj`).
+- **Three write guards, all of which must be bypassed to write.** (1) `SqliteStatementChecker` runs first: it masks comments and the inside of quotes and brackets, so a `;` or `/*` in a string is never code. Only one statement is allowed, and its first keyword must be `SELECT`, `WITH`, `EXPLAIN` (checked recursively) or `PRAGMA`. A `PRAGMA` must be one of a fixed list of read-only names and may not contain `=`. (2) The connection opens `Mode=ReadOnly`. (3) `PRAGMA query_only = ON` is set after open. `WITH ... DELETE` is valid SQLite and passes the checker; the read-only connection is what stops it, and a test checks the file's bytes are unchanged afterwards. Extension loading stays off.
+- **Limits.** A query may run for 10 seconds (`CommandTimeout`), which also applies to a legitimate large query; a longer one shows the error on the status line. Results keep at most 10,000 rows and say so. A `NULL` cell reads `NULL`, a blob reads `<blob N bytes>`.
+- **Cancellation is a native interrupt.** `SqliteCommand.Cancel` does not stop a running step, so cancelling the token calls `sqlite3_interrupt` on the connection's handle. A newer query or closing the dialog cancels the running one; a cancelled or stale result is dropped on the idle pass and writes nothing to the status line.
+- **Files.** Only a local file opens here: a remote `.db` falls through to the generic text viewer, as before. The first 16 bytes must read `SQLite format 3` followed by a NUL, so a non-SQLite `.db` file, and an empty one, is refused with "Not an SQLite database" before SQLite opens it. A WAL database opens when its `-wal` file is present; if SQLite cannot open it, the error appears on the status line.
+- **Tests:** `SqlTableTextTest` and `SqliteViewerDialogTest` (iConsole), `SqliteStatementCheckerTest`, `SqliteDatabaseReaderTest` (temp files only, including the WITH-DELETE byte check, a runaway query cancelled promptly, and WAL), and `ViewFileDialogCommandTest` (F3 routes a local database here and leaves a remote one alone).
+- Not built: writing to the database, a table browser, export, and multi-statement scripts.
 
 ### Printing and the print queue (`PrintDialog`, Ctrl+P, `Services/Printing/`)
 Ctrl+P (also File > Print…, the right-click menu on a local file and the command palette) prints the file under the cursor and manages the queue of a printer, in one dialog. Left/Right choose the printer (remembered in the `Print.Printer` setting), `+`/`-` the copies, Enter prints, P holds or resumes the job under the cursor, Del asks (y/n) and then cancels it, F5 reads the queue again.

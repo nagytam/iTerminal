@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using iConsole.Controls.Buttons;
 using iConsole.Data;
 using iConsole.Interfaces;
@@ -7,6 +8,7 @@ using iTerminal.Core.Commands;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Dialogs.Test;
 using iTerminal.Core.Model.ContentModels;
+using iTerminal.Core.Rename;
 using iTerminal.Core.Tasks;
 using iTerminal.Core.Test.Helper;
 using Moq;
@@ -69,23 +71,51 @@ public class MultiRenameCommandTest
         dialog.Controls.AsSnapshot().OfType<Button>().Single(button => button.Title == "Rename");
 
     /// <summary>
-    /// Presses Rename and waits for the batch it queued. The task manager runs its own workers, so the
-    /// batch is run once, by them; running it again here would find its sources already moved.
+    /// Presses Rename and waits for the batch it queued. The task manager runs its own workers and
+    /// removes a task once it has finished, so the batch is caught as it is added, not read back
+    /// afterwards: a fast batch would already be gone. It is run once, by the workers, and not again here.
     /// </summary>
     private static async Task<IReadOnlyList<BatchOperationTask>> PressRenameAndWaitAsync(MultiRenameDialog dialog, TaskManager taskManager)
     {
-        await RenameButton(dialog).TriggerHotKeyAsync();
-        var batches = taskManager.Tasks.OfType<BatchOperationTask>().ToList();
-        var deadline = DateTime.UtcNow.AddSeconds(20);
-        foreach (var batch in batches)
+        var added = new List<BatchOperationTask>();
+        void OnChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            while (batch.Status == iConsole.Data.TaskStatus.Started && DateTime.UtcNow < deadline)
+            if (e.NewItems is null)
             {
-                await Task.Delay(10);
+                return;
+            }
+
+            lock (added)
+            {
+                added.AddRange(e.NewItems.OfType<BatchOperationTask>());
             }
         }
 
-        return batches;
+        taskManager.Tasks.CollectionChanged += OnChanged;
+        try
+        {
+            await RenameButton(dialog).TriggerHotKeyAsync();
+            List<BatchOperationTask> batches;
+            lock (added)
+            {
+                batches = [.. added];
+            }
+
+            var deadline = DateTime.UtcNow.AddSeconds(20);
+            foreach (var batch in batches)
+            {
+                while (batch.Status == iConsole.Data.TaskStatus.Started && DateTime.UtcNow < deadline)
+                {
+                    await Task.Delay(10);
+                }
+            }
+
+            return batches;
+        }
+        finally
+        {
+            taskManager.Tasks.CollectionChanged -= OnChanged;
+        }
     }
 
     [TestMethod]
@@ -201,5 +231,23 @@ public class MultiRenameCommandTest
         entry.Setup(e => e.DisplayName).Returns(name);
         entry.Setup(e => e.Name).Returns(name);
         return entry.Object;
+    }
+
+    [TestMethod]
+    public async Task ACaseOnlyChangeIsNeverSubmitted()
+    {
+        // a.txt -> A.txt is refused on every platform: on a case-insensitive volume the engine would see the file as its own target.
+        var model = MarkableTestModel.Create(_root);
+        model.SetMark(model.Row("a.txt"), true);
+        var taskManager = new TaskManager();
+        var dialog = MultiRenameDialogTest.NewDialog(taskManager, MultiRenameDialogTest.ServiceFor(model).Object);
+        dialog.Prepare(model, FocusedEntry.ActionableUrls(model));
+        MultiRenameDialogTest.Type(dialog, "[C]", find: "a", replace: "A");
+        Assert.AreEqual(RenameStatus.CaseOnly, dialog.Plan.Single().Status);
+
+        var batches = await PressRenameAndWaitAsync(dialog, taskManager);
+
+        Assert.AreEqual(0, batches.Count);
+        Assert.IsTrue(File.Exists(Path.Combine(_root, "a.txt")));
     }
 }

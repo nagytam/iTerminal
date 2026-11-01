@@ -13,6 +13,7 @@ public class ControlsReviewBatch27Test
 {
     private readonly TestThemeService _theme = new();
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Skeleton_BuildLine_OfNoLength_IsEmpty()
     {
@@ -20,6 +21,7 @@ public class ControlsReviewBatch27Test
         Assert.AreEqual(string.Empty, Skeleton.BuildLine(-4, 3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ColorPicker_Move_OnAnEmptyPaletteStaysAtZero()
     {
@@ -27,6 +29,7 @@ public class ControlsReviewBatch27Test
         Assert.AreEqual(0, ColorPicker.Move(-5, 0, 0, 3));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ListBox_FindPrefix_FromBeforeTheFirstRow_Wraps()
     {
@@ -35,6 +38,7 @@ public class ControlsReviewBatch27Test
         Assert.AreEqual(0, ListBox<string>.FindPrefix(["alpha"], null!, 0));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Countdown_StartingFartherThanTheLastDate_CountsDownToIt()
     {
@@ -47,6 +51,7 @@ public class ControlsReviewBatch27Test
         Assert.AreEqual(DateTime.MaxValue, countdown.Target);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void StrengthMeter_Render_OfAnUnknownStrength_DoesNotThrow()
     {
@@ -54,6 +59,7 @@ public class ControlsReviewBatch27Test
         Assert.AreEqual("▱▱▱▱", StrengthMeter.Render((PasswordStrength)(-3))[..4]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TimePicker_Wrap_SurvivesAHugeDeltaAndAnEmptyRange()
     {
@@ -61,6 +67,7 @@ public class ControlsReviewBatch27Test
         Assert.AreEqual(6, TimePicker.Wrap(59, int.MaxValue, 59));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AlignCenter_WithNullText_ReturnsAnEmptyLine()
     {
@@ -68,6 +75,7 @@ public class ControlsReviewBatch27Test
         Assert.AreEqual("abc", StringHelper.AlignCenter("abc", null));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TreeView_FormatRow_WithANegativeDepth_HasNoIndent()
     {
@@ -78,6 +86,7 @@ public class ControlsReviewBatch27Test
         Assert.AreEqual("  leaf", TreeView.FormatRow(item.Object, -2));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void HexViewer_TryParseOffset_OfNull_IsFalse()
     {
@@ -85,6 +94,7 @@ public class ControlsReviewBatch27Test
         Assert.AreEqual(0, offset);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TextBox_WordKeys_OnNullText_StayAtZero()
     {

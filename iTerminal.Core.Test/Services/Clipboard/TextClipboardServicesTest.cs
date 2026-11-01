@@ -41,6 +41,7 @@ public class TextClipboardServicesTest
 
     // ---- Windows conversions ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Windows_ToClipboardBytes_UsesCrLfAndAWideTerminatingNul()
     {
@@ -48,6 +49,7 @@ public class TextClipboardServicesTest
         Assert.AreEqual("a\r\nb\r\nc\r\nd\0", Encoding.Unicode.GetString(bytes));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Windows_FromClipboardBytes_StopsAtTheNulAndUsesLineFeeds()
     {
@@ -57,6 +59,7 @@ public class TextClipboardServicesTest
         Assert.AreEqual(string.Empty, WindowsTextClipboardService.FromClipboardBytes([]));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Windows_ConversionsRoundTripNonAsciiText()
     {
@@ -66,6 +69,7 @@ public class TextClipboardServicesTest
 
     // ---- Tool-backed (Linux, macOS) ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Process_Set_WritesTheTextToTheFirstToolThatWorks()
     {
@@ -82,6 +86,7 @@ public class TextClipboardServicesTest
         Assert.AreEqual("héllo\nworld", Encoding.UTF8.GetString(runner.Calls[1].StandardInput));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Process_Set_WithNoToolSaysSo()
     {
@@ -90,6 +95,7 @@ public class TextClipboardServicesTest
         Assert.IsTrue(failure.Message.Length > 0);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Process_Get_ReadsFromTheFirstToolThatAnswers_NormalisingLineBreaks()
     {
@@ -102,12 +108,14 @@ public class TextClipboardServicesTest
         Assert.AreEqual("xclip -selection clipboard -o", runner.Calls[^1].CommandLine);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Process_Get_WithNoToolOrNothingOnTheClipboardIsNull()
     {
         Assert.IsNull(await new ProcessTextClipboardService(new FakeProcessRunner()).GetTextAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Process_TriesTheWaylandThenTheX11ThenTheMacTool()
     {
@@ -117,6 +125,7 @@ public class TextClipboardServicesTest
 
     // ---- Fallback ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Fallback_WritesBothClipboardsWhileTheSystemOneWorks()
     {
@@ -131,6 +140,7 @@ public class TextClipboardServicesTest
         Assert.AreEqual("copied", await service.GetTextAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Fallback_AfterTheSystemClipboardFails_AnswersFromTheInProcessOneForGood()
     {
@@ -147,6 +157,7 @@ public class TextClipboardServicesTest
         Assert.AreEqual(0, system.Gets);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Fallback_AReadThatFails_FallsBackToo()
     {
@@ -156,6 +167,7 @@ public class TextClipboardServicesTest
         Assert.AreEqual("kept", await service.GetTextAsync());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Fallback_ACancelledCallIsNotAFailureOfTheSystemClipboard()
     {
@@ -176,6 +188,7 @@ public class TextClipboardServicesTest
 
     // ---- Hosted service ----
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TheHostedService_HandsTheApplicationsClipboardToTheControls()
     {

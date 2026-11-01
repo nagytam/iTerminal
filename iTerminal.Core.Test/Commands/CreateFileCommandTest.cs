@@ -51,6 +51,7 @@ public class CreateFileCommandTest
         return service.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_CreatesTheFileInThePanelsFolderAndClosesTheDialog()
     {
@@ -70,6 +71,7 @@ public class CreateFileCommandTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog), "a created file closes the dialog");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WhenTheWriteFails_KeepsTheDialogOpenAndSaysWhy()
     {
@@ -88,6 +90,7 @@ public class CreateFileCommandTest
         AssertScreenContains(Render(dialog), "Could not create the file: Access denied");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task TypingAfterAFailure_WithdrawsTheMessage()
     {
@@ -105,6 +108,7 @@ public class CreateFileCommandTest
         AssertScreenDoesNotContain(Render(dialog), "Could not create the file");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Enter_WithNoFolderToCreateIn_SaysSo()
     {
@@ -119,6 +123,7 @@ public class CreateFileCommandTest
         AssertScreenContains(Render(dialog), "There is no folder to create the file in.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ExecuteAsync_OverAnExistingFile_RefusesAndDoesNotTruncateIt()
     {

@@ -46,6 +46,7 @@ public class OllamaServerTest
         Content = new StringContent(string.Join("\n", lines) + "\n", Encoding.UTF8, "application/x-ndjson"),
     };
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task IsReachable_IsTrueWhenTheVersionAnswers()
     {
@@ -56,6 +57,7 @@ public class OllamaServerTest
         Assert.IsTrue(await server.IsReachableAsync(CancellationToken.None));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task IsReachable_IsFalseWhenNothingListens()
     {
@@ -64,6 +66,7 @@ public class OllamaServerTest
         Assert.IsFalse(await server.IsReachableAsync(CancellationToken.None));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnsureRunning_DoesNotStartAServerThatAlreadyAnswers()
     {
@@ -74,6 +77,7 @@ public class OllamaServerTest
         Assert.IsFalse(started, "A server that is already there is used, not replaced.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EnsureRunning_RefusesToStartAServerAtAnotherComputer()
     {
@@ -83,6 +87,7 @@ public class OllamaServerTest
             server.EnsureRunningAsync("/does/not/exist/ollama", "/tmp/models", CancellationToken.None));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsLocal_OnlyForThisComputer()
     {
@@ -90,6 +95,7 @@ public class OllamaServerTest
         Assert.IsFalse(NewServer(_ => throw new InvalidOperationException(), "http://ollama.example.net:11434/").IsLocal);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pull_ReportsProgressAndEndsAtSuccess()
     {
@@ -109,6 +115,7 @@ public class OllamaServerTest
         Assert.AreEqual("success", progress.Lines[^1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pull_RaisesTheErrorOllamaReports()
     {
@@ -120,6 +127,7 @@ public class OllamaServerTest
         StringAssert.Contains(error.Message, "file does not exist");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pull_FailsWhenTheDownloadEndsWithoutSuccess()
     {

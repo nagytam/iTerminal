@@ -48,6 +48,7 @@ public class DeleteDialogTest
             null!, null!, null!, null!, null!, null!, null!);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFileIsNamedAndNotOfferedARecursiveDelete()
     {
@@ -59,6 +60,7 @@ public class DeleteDialogTest
         StringAssert.EndsWith(dialog.Url, "report.txt");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AFolderIsDeletedRecursivelyByDefault()
     {
@@ -69,6 +71,7 @@ public class DeleteDialogTest
         Assert.IsTrue(dialog.Recursive);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ShowsWhatWillBeDeletedAndTheButtons()
     {
@@ -83,6 +86,7 @@ public class DeleteDialogTest
         AssertScreenContains(screen, "Cancel", "the Cancel button reads Cancel, not a cut-off command name");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ResetClearsTheError()
     {
@@ -95,6 +99,7 @@ public class DeleteDialogTest
         Assert.AreEqual(string.Empty, dialog.ErrorMessage.Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EscapeClosesIt()
     {
@@ -106,6 +111,7 @@ public class DeleteDialogTest
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ALocalDeleteGoesToTheRecycleBinByDefaultWhereThereIsOne()
     {
@@ -116,6 +122,7 @@ public class DeleteDialogTest
         Assert.AreEqual(OperatingSystem.IsWindows() || OperatingSystem.IsLinux(), dialog.MoveToRecycleBin);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task OnADriveWithoutARecycleBinTheBoxSaysTheDeleteIsPermanent()
     {
@@ -127,6 +134,7 @@ public class DeleteDialogTest
         AssertScreenContains(Render(dialog), "deleted for good");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void OnlyLocalFilesOnWindowsAndLinuxCanBeRecycled()
     {

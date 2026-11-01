@@ -32,6 +32,7 @@ public class MainLoopWatchDogLoggingHostedServiceTest
         return (new MainLoopWatchDog(time, TimeSpan.FromMilliseconds(200)), time);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APassPastItsBudgetIsLoggedAsAWarning()
     {
@@ -52,6 +53,7 @@ public class MainLoopWatchDogLoggingHostedServiceTest
         StringAssert.Contains(warning.RenderMessage(), "Main loop stalled: \"render\"");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ThePassEndingIsLoggedAsInformation()
     {
@@ -71,6 +73,7 @@ public class MainLoopWatchDogLoggingHostedServiceTest
         StringAssert.Contains(recovered.RenderMessage(), "Main loop recovered: \"key\"");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task APassWithinItsBudgetLogsNothing()
     {
@@ -88,6 +91,7 @@ public class MainLoopWatchDogLoggingHostedServiceTest
         Assert.AreEqual(0, sink.Events.Count);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task AfterStoppingNothingIsLogged()
     {
@@ -106,6 +110,7 @@ public class MainLoopWatchDogLoggingHostedServiceTest
         Assert.AreEqual(0, sink.Events.Count, "a stopped service must no longer listen to the watchdog");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task WithNoLoggerAStallIsDroppedWithoutFailingTheWatchdog()
     {
