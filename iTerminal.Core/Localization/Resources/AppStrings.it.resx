@@ -3379,4 +3379,49 @@
   <data name="Notify.GitSyncFailed" xml:space="preserve">
     <value>Sincronizzazione git non riuscita</value>
   </data>
+  <data name="Dialog.MultiRename" xml:space="preserve">
+    <value>Rinomina multipla</value>
+  </data>
+  <data name="Label.Pattern" xml:space="preserve">
+    <value>Modello</value>
+  </data>
+  <data name="Label.Find" xml:space="preserve">
+    <value>Trova</value>
+  </data>
+  <data name="Label.Replace" xml:space="preserve">
+    <value>Sostituisci</value>
+  </data>
+  <data name="Multi.Count" xml:space="preserve">
+    <value>{0} da rinominare, {1} non rinominati</value>
+  </data>
+  <data name="Multi.Row" xml:space="preserve">
+    <value>{0} -&gt; {1}</value>
+  </data>
+  <data name="Multi.Status.Unchanged" xml:space="preserve">
+    <value>invariato</value>
+  </data>
+  <data name="Multi.Status.Empty" xml:space="preserve">
+    <value>vuoto</value>
+  </data>
+  <data name="Multi.Status.InvalidName" xml:space="preserve">
+    <value>nome non valido</value>
+  </data>
+  <data name="Multi.Status.Blocked" xml:space="preserve">
+    <value>bloccato da un'altra voce</value>
+  </data>
+  <data name="Multi.Status.Duplicate" xml:space="preserve">
+    <value>duplicato</value>
+  </data>
+  <data name="Multi.Status.Exists" xml:space="preserve">
+    <value>esiste già</value>
+  </data>
+  <data name="Empty.MultiRename" xml:space="preserve">
+    <value> Seleziona file, o posiziona il cursore su uno, poi digita un modello.</value>
+  </data>
+  <data name="DialogHint.MultiRename" xml:space="preserve">
+    <value>Rinomina i file mostrati nell'anteprima</value>
+  </data>
+  <data name="Multi.Status.CaseOnly" xml:space="preserve">
+    <value>solo cambio di maiuscole, non rinominato</value>
+  </data>
 </root>

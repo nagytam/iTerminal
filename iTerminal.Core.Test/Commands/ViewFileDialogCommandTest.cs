@@ -639,6 +639,93 @@ public class ViewFileDialogCommandTest
         }
     }
 
+    [TestMethod]
+    public void ExecuteAsync_WithALocalDatabaseFile_PointsTheSqliteViewerAtIt()
+    {
+        var themeService = CreateThemeService();
+        var sqliteDialog = new iConsole.Dialogs.SqliteViewerDialog(
+            Mock.Of<iConsole.Sqlite.ISqliteDatabaseReader>(),
+            Mock.Of<IBeepService>(),
+            Mock.Of<IDateTimeProviderService>(),
+            themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.db");
+        File.WriteAllBytes(path, "SQLite format 3\0"u8.ToArray());
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                CreateDialog(themeService),
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                sqliteViewerDialog: sqliteDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, sqliteDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    public void ExecuteAsync_WithADbFileThatIsNotSqlite_UsesTheGenericViewer()
+    {
+        var themeService = CreateThemeService();
+        var sqliteDialog = new iConsole.Dialogs.SqliteViewerDialog(
+            Mock.Of<iConsole.Sqlite.ISqliteDatabaseReader>(),
+            Mock.Of<IBeepService>(),
+            Mock.Of<IDateTimeProviderService>(),
+            themeService);
+        var fileViewer = CreateDialog(themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.db");
+        File.WriteAllText(path, "Thumbs database, not SQLite");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                fileViewer,
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                sqliteViewerDialog: sqliteDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.IsNull(sqliteDialog.Url, "a .db file without the SQLite header is not handed to the SQLite viewer");
+            Assert.AreEqual(path, fileViewer.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    public void ExecuteAsync_WithADatabaseThatIsNotLocal_LeavesTheSqliteViewerAloneAndUsesTheGenericViewer()
+    {
+        var themeService = CreateThemeService();
+        var sqliteDialog = new iConsole.Dialogs.SqliteViewerDialog(
+            Mock.Of<iConsole.Sqlite.ISqliteDatabaseReader>(),
+            Mock.Of<IBeepService>(),
+            Mock.Of<IDateTimeProviderService>(),
+            themeService);
+        var fileViewer = CreateDialog(themeService);
+        // The file does not exist on this machine, which is how a remote path looks to the command.
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.db");
+
+        var command = new ViewFileDialogCommand(
+            fileViewer,
+            CreateServiceForFile(path),
+            solutionViewerDialog: null,
+            sqliteViewerDialog: sqliteDialog);
+
+        command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+        Assert.IsNull(sqliteDialog.Url, "a remote database is not handed to the SQLite viewer");
+        Assert.AreEqual(path, fileViewer.Url?.Path);
+    }
+
     // ── ContentBrowser integration ───────────────────────────────────────────
 
     [Timeout(60_000)]
