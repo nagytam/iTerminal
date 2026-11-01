@@ -8,6 +8,7 @@ using iConsole.Controls.Viewers;
 using iConsole.Model;
 using iConsole.Services;
 using System.ComponentModel;
+using System.Text;
 
 namespace iConsole.Controls.Editors;
 
@@ -294,7 +295,223 @@ public class TextEditorControl
 
     // ---- Undo and redo ----
 
+    // ---- Line operations ----
+
+    /// <summary>The line endings Ctrl+Shift+E moves through, in order.</summary>
+    private static readonly string[] LineEndingCycle = ["\r\n", "\n", "\r"];
+
+    /// <summary>What a line ending is called in the title: CRLF, LF or CR.</summary>
+    public static string LineEndingName(string lineEnding) => lineEnding switch
+    {
+        "\r\n" => "CRLF",
+        "\n" => "LF",
+        "\r" => "CR",
+        _ => "?",
+    };
+
+    /// <summary>
+    /// Upper or lower case for the selected text, character for character (the length does not change). With nothing
+    /// selected nothing changes. Returns whether any character did.
+    /// </summary>
+    public bool ChangeCase(bool upper)
+    {
+        if (IsReadOnly || !HasSelection)
+        {
+            return false;
+        }
+
+        var (start, end) = SelectionRange;
+        var lines = TextModel.Lines;
+        var before = Capture();
+        for (var row = start.Row; row <= end.Row; row++)
+        {
+            var line = lines[(int)row];
+            var from = (int)Math.Clamp(row == start.Row ? start.Column : 0, 0, line.Length);
+            var to = (int)Math.Clamp(row == end.Row ? end.Column : line.Length, from, line.Length);
+            var middle = line[from..to];
+            lines[(int)row] = line[..from] + (upper ? middle.ToUpperInvariant() : middle.ToLowerInvariant()) + line[to..];
+        }
+
+        if (!IsChangedFrom(before))
+        {
+            return false;
+        }
+
+        FinishLineEdit(before, (start, end));
+        return true;
+    }
+
+    /// <summary>
+    /// Sorts the lines the selection touches, or the whole file with nothing selected: ordinal and stable, ascending or
+    /// descending. Returns whether the order changed.
+    /// </summary>
+    public bool SortLines(bool descending)
+    {
+        var lines = TextModel.Lines;
+        if (IsReadOnly || lines.Count < 2)
+        {
+            return false;
+        }
+
+        long first = 0;
+        long last = lines.Count - 1;
+        if (HasSelection)
+        {
+            var ((startRow, _), (endRow, endColumn)) = SelectionRange;
+            first = startRow;
+            // A selection that ends at the very start of a line has not touched that line.
+            last = endColumn == 0 && endRow > startRow ? endRow - 1 : endRow;
+        }
+
+        var segment = Enumerable.Range((int)first, (int)(last - first + 1)).Select(i => lines[i]).ToArray();
+        var sorted = (descending
+            ? segment.OrderByDescending(line => line, StringComparer.Ordinal)
+            : segment.OrderBy(line => line, StringComparer.Ordinal)).ToArray();
+        if (sorted.SequenceEqual(segment, StringComparer.Ordinal))
+        {
+            return false;
+        }
+
+        var before = Capture();
+        for (var i = 0; i < sorted.Length; i++)
+        {
+            lines[(int)first + i] = sorted[i];
+        }
+
+        FinishLineEdit(before, HasSelection ? ((first, 0), (last, lines[(int)last].Length)) : null);
+        return true;
+    }
+
+    /// <summary>
+    /// Moves the file's line ending on: CRLF, LF, CR and back. The file is marked changed and the new break is written on
+    /// save. Not in the undo history. Returns the name of the line ending now in use.
+    /// </summary>
+    public string CycleLineEnding()
+    {
+        if (IsReadOnly)
+        {
+            return LineEndingName(TextModel.LineEnding);
+        }
+
+        var next = LineEndingCycle[(Array.IndexOf(LineEndingCycle, TextModel.LineEnding) + 1) % LineEndingCycle.Length];
+        TextModel.LineEnding = next;
+        IsDirty = true;
+        StateHasChanged();
+        return LineEndingName(next);
+    }
+
+    /// <summary>Records a line operation as one undo step and selects again what it selected, as Refresh would end the selection.</summary>
+    private void FinishLineEdit(EditState before, ((long Row, long Column) Start, (long Row, long Column) End)? selection)
+    {
+        RecordEdit(before, isTyping: false);
+        IsDirty = true;
+        TextModel.TriggerPropertyChanged();
+        Refresh();
+        if (selection is { } range)
+        {
+            SelectRange(range.Start, range.End);
+        }
+
+        KeepCursorInText();
+        StateHasChanged();
+    }
+
+    // ---- Mark all ----
+
+    /// <summary>The source of the marks that Ctrl+Shift+H puts on every match; a source can be replaced or removed as one set.</summary>
+    public const string MarkAllSource = "mark-all";
+
+    private string? _markedText;
+
+    /// <summary>
+    /// Marks every match of the selection (when it is on one line) or else of the last searched text, and takes the marks
+    /// off when they are already there for the same text. Returns how many matches were marked: 0 when cleared or none.
+    /// The marks go when the text is edited.
+    /// </summary>
+    public int ToggleMarkAll()
+    {
+        string text;
+        bool matchCase;
+        if (HasSelection)
+        {
+            var ((startRow, _), (endRow, _)) = SelectionRange;
+            text = startRow == endRow ? SelectedText : string.Empty;
+            matchCase = true;
+        }
+        else
+        {
+            text = LastFind;
+            matchCase = LastMatchCase;
+        }
+
+        var isSameText = _markedText is not null && string.Equals(_markedText, text, StringComparison.Ordinal);
+        if (isSameText || text.Length == 0 || text.Contains('\n'))
+        {
+            ClearMarkAll();
+            return 0;
+        }
+
+        var comparison = ComparisonFor(matchCase);
+        var marks = new List<TextDecoration>();
+        var lines = TextModel.Lines;
+        for (var row = 0; row < lines.Count; row++)
+        {
+            var line = lines[row];
+            var at = 0;
+            while ((at = line.IndexOf(text, at, comparison)) >= 0)
+            {
+                marks.Add(new TextDecoration(row, at, text.Length, MarkAllSource, Color.Black, Color.DarkYellow));
+                at += text.Length;
+            }
+        }
+
+        Decorations.ReplaceSource(MarkAllSource, marks);
+        _markedText = text;
+        StateHasChanged();
+        return marks.Count;
+    }
+
+    /// <summary>Takes the marks Ctrl+Shift+H put on the matches off.</summary>
+    public void ClearMarkAll()
+    {
+        if (_markedText is null)
+        {
+            return;
+        }
+
+        _markedText = null;
+        Decorations.Remove(MarkAllSource);
+        StateHasChanged();
+    }
+
+    // ---- Reloading from disk ----
+
+    /// <summary>
+    /// Puts new text in place of the whole file, as a reload from disk does. The history, bookmarks, marks and selection
+    /// go, and the file counts as saved.
+    /// </summary>
+    public void ReplaceAllText(string[] lines, string lineEnding, Encoding encoding)
+    {
+        TextModel.Lines.ReplaceAll(lines);
+        TextModel.LineEnding = lineEnding;
+        TextModel.Encoding = encoding;
+        _undo.Clear();
+        _redo.Clear();
+        _bookmarks.Clear();
+        _typingEnd = null;
+        ClearMarkAll();
+        ClearSelection();
+        IsDirty = false;
+        TextModel.TriggerPropertyChanged();
+        Refresh();
+        KeepCursorInText();
+        StateHasChanged();
+    }
+
+    // ---- Undo and redo ----
+
     /// <summary>The text, and where the cursor was, at one point of the editing.</summary>
+
     private sealed record EditState(string[] Lines, long Row, long Column);
 
     /// <summary>The most edits that can be taken back.</summary>
@@ -381,6 +598,7 @@ public class TextEditorControl
     {
         TextModel.Lines.ReplaceAll(target.Lines);
         ClearSelection();
+        ClearMarkAll();
         ShiftBookmarks(from.Lines, target.Lines);
         _typingEnd = null;
         IsDirty = true;
@@ -415,6 +633,8 @@ public class TextEditorControl
         }
 
         ShiftBookmarks(before.Lines, TextModel.Lines.AsSnapshot().ToArray());
+        // The marks were found in the text as it was; an edit moves them out of date, so they go and Ctrl+Shift+H puts them back.
+        ClearMarkAll();
         _typingEnd = isTyping
             ? (ScrollableModel.CursorPosition.Y, ScrollableModel.CursorPosition.X)
             : null;
@@ -802,7 +1022,12 @@ public class TextEditorControl
             yield return ("Ctrl+R", UiText.Get("Editor.Replace", "Replace"));
             yield return ("Tab / Shift+Tab", UiText.Get("Hint.IndentOutdent", "Indent / outdent (the selected lines too)"));
             yield return ("Ctrl+K", UiText.Get("Hint.DeleteLine", "Delete the line"));
+            yield return ("Ctrl+Shift+U / Ctrl+Shift+J", UiText.Get("Hint.UpperLowerCase", "Upper / lower case"));
+            yield return ("Ctrl+Shift+S / Ctrl+Shift+D", UiText.Get("Hint.SortLines", "Sort lines up / down"));
+            yield return ("Ctrl+Shift+E", UiText.Get("Hint.LineEnding", "Line ending (CRLF, LF, CR)"));
         }
+
+        yield return ("Ctrl+Shift+H", UiText.Get("Hint.MarkAll", "Mark all matches (again: clear)"));
 
         yield return ("Ctrl+S / F2", iConsole.Localization.UiText.Get("Common.Save", "Save"));
         yield return ("F5", UiText.Get("Editor.GoToLine", "Go to line"));
@@ -832,6 +1057,32 @@ public class TextEditorControl
         {
             MoveCursorByScreenRow(keyEvent.ConsoleKey == ConsoleKey.DownArrow ? 1 : -1);
             return true;
+        }
+
+        // The line commands are consumed whether or not they changed anything, so the chord never reaches another control.
+        if (IsEnabled && !keyEvent.Alt && keyEvent.Control && keyEvent.Shift)
+        {
+            switch (keyEvent.ConsoleKey)
+            {
+                case ConsoleKey.U:
+                    ChangeCase(upper: true);
+                    return true;
+                case ConsoleKey.J:
+                    ChangeCase(upper: false);
+                    return true;
+                case ConsoleKey.S:
+                    SortLines(descending: false);
+                    return true;
+                case ConsoleKey.D:
+                    SortLines(descending: true);
+                    return true;
+                case ConsoleKey.E:
+                    CycleLineEnding();
+                    return true;
+                case ConsoleKey.H:
+                    ToggleMarkAll();
+                    return true;
+            }
         }
 
         if (IsEnabled && !keyEvent.Alt)
