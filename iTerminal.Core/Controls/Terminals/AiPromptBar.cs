@@ -1,3 +1,4 @@
+using iTerminal.Core.Services.BackgroundStart;
 using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
@@ -65,8 +66,10 @@ public class AiPromptBar : Window
         IAiChatService chatService,
         AiModelDialog aiModelDialog,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService) : base(themeService)
+        IThemeService themeService,
+        IBackgroundStartService? backgroundStart = null) : base(themeService)
     {
+        _backgroundStart = backgroundStart;
         _model = model;
         _chatService = chatService;
         _model.PropertyChanged += OnModelChanged;
@@ -84,6 +87,18 @@ public class AiPromptBar : Window
         AddControl(_spinner);
         AddControl(_modelLabel);
         AddControl(_promptLabel);
+    }
+
+    private readonly IBackgroundStartService? _backgroundStart;
+
+    /// <summary>The local AI server starts when the bar is first focused, or as configured (BackgroundStart.OllamaServer).</summary>
+    protected override void OnFocusChanged()
+    {
+        base.OnFocusChanged();
+        if (IsFocused)
+        {
+            _backgroundStart?.Request(BackgroundServices.OllamaServer);
+        }
     }
 
     public override void OnInitializeLayout()

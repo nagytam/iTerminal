@@ -250,3 +250,29 @@ Compared with the Ink ecosystem (`ink-select-input`, `ink-table`, `ink-testing-l
 2. Items 117 and 122: line decorations and mouse capture unblock diagnostics, diffs and drags that leave their control.
 3. Items 115 and 113: bars in cells and a preview list suit the file manager and the dashboards.
 4. Items 120, 121 and 123 once the colour work (34) is done; items 114 and 118 when there is a use for them.
+
+#### Sixth survey: Ruby, PHP, Julia, Scala, BEAM, Perl and C tools
+
+Compared with the TTY toolkit for Ruby (`tty-prompt`, `tty-table`, `tty-progressbar`, `tty-pager`, `tty-font`, `tty-pie`, `tty-logger`, `tty-link`, `tty-spinner`, `tty-reader`), the PHP libraries `symfony/tui` (marked experimental, no widget list on its page), `sugar-dashboard`, `terminalui/framework`, `Parfait`, `xocdr/tui` and `phui` (mostly early releases), Julia's `Tachikoma.jl` and `Term.jl`, Scala's `tui-scala` (the repository link now shows a different project, so this row is **unverified**), étui on BEAM (Gleam; snippet only), Perl's `Curses::UI` and `Curses::Widgets` (snippet only) and the C toolkits STFL and CDK (snippet only). Searched but nothing usable found: Clojure, Erlang, Crystal and Lua. Tools with a page read directly are Ruby's TTY toolkit and Tachikoma; the rest are from search snippets, and their items are marked **unverified**. "Not found" means a grep of `iConsole/` and `iTerminal.Core/` on `feature/syntax-r-perl-php` at b55f011 came back empty. Most features in these libraries already have an item above, so only the new ones are listed below.
+
+**Controls**
+
+124. **Property grid for settings.** Not found (`PropertyGrid`, `PropertyEditor`, `PropertySheet`, `KeyValueEditor`). A grid of named settings where each row edits its own type (text, number, choice, colour, path), groups rows under headings and shows a help line for the selected row. Every settings page in `iTerminal.Core` is built by hand. Closest in the libraries: Tachikoma's `Form` and tty-prompt, which ask one question at a time, not a grid of many. Seen in: partly, Tachikoma `Form`.
+
+125. **Launch an external editor (`$VISUAL` / `$EDITOR`).** Not found (a grep of `EDITOR` and `VISUAL` finds nothing). Opens a file or a text field in the user's editor and reads it back when the editor exits. Seen in: tty-editor (Ruby). The in-app editor covers most cases, so this is for users who prefer their own editor. Lent-terminal handling (`ConsoleOwnership`) would apply.
+
+126. **Pager for long text.** Not found as a reusable control (`Pagination` pages data, not text; the viewers are in-app). Pages a block of text one screen at a time with search, the way `less` does for piped output. Seen in: tty-pager (Ruby). Low priority, since the viewers already scroll and search.
+
+**Framework**
+
+127. **Generated fuzz and property tests for the whole UI.** Partly built: `MouseFuzzGuardTest` (iConsole) and `ParserFuzzGuardTest` (iTerminal.Core) feed random input to one input path each. Not found: a generator of random key sequences that drives a whole screen and asserts that no exception is thrown and focus stays on a visible control. Seen in: Tachikoma (property tests with Supposition.jl, with `TestBackend` for headless rendering). Extends item 80.
+
+#### Items from this survey that are already covered
+
+For the record, so a later run does not add them again: tty-pie and BigText / tty-font (items 70 and 38), tty-logger (item 69), tty-link (item 8, built), tty-spinner (item 71), tty-prompt selection (items 45 and 94), Tachikoma's recording and SVG / GIF export (items 32 and 77), Tachikoma's `Calendar` and `Scrollbar` (both present in iConsole), its tables and editor (items 17 and 118), its floating windows (items 43 and 68), and its pixel graphics over Kitty or sixel (item 7).
+
+#### Suggested order for the sixth survey
+
+1. Item 124 (property grid): the settings pages are the largest repeated code in `iTerminal.Core`.
+2. Item 127 (whole-screen fuzz tests): extends the guard tests that already exist and needs no product change.
+3. Items 125 and 126: small, and both only when a user asks for them.

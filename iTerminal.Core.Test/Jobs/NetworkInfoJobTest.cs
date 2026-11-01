@@ -1,3 +1,5 @@
+using iTerminal.Core.Test.Services.BackgroundStart;
+using iTerminal.Core.Services.BackgroundStart;
 using iTerminal.Core.Data;
 using iTerminal.Core.Jobs;
 using iTerminal.Core.Model;
@@ -13,7 +15,7 @@ public class NetworkInfoJobTest
     {
         var networkInfoModel = new NetworkInfoModel();
 
-        var job = new NetworkInfoJob(networkInfoModel);
+        var job = new NetworkInfoJob(networkInfoModel, TestBackgroundStart.Configured(BackgroundStartMode.Immediately));
 
         Assert.IsNotNull(job);
     }
@@ -23,7 +25,7 @@ public class NetworkInfoJobTest
     {
         var networkInfoModel = new NetworkInfoModel();
 
-        var job = new NetworkInfoJob(networkInfoModel);
+        var job = new NetworkInfoJob(networkInfoModel, TestBackgroundStart.Configured(BackgroundStartMode.Immediately));
 
         Assert.IsNotNull(job);
     }
@@ -32,7 +34,7 @@ public class NetworkInfoJobTest
     public async Task ExecuteAsync_CanBeCancelled()
     {
         var networkInfoModel = new NetworkInfoModel();
-        var job = new NetworkInfoJob(networkInfoModel);
+        var job = new NetworkInfoJob(networkInfoModel, TestBackgroundStart.Configured(BackgroundStartMode.Immediately));
         var cts = new CancellationTokenSource();
 
         cts.Cancel();
@@ -174,7 +176,7 @@ public class NetworkInfoJobTest
     public async Task AfterTheFirstPass_TheListIsMarkedRead()
     {
         var model = new iTerminal.Core.Model.NetworkInfoModel();
-        var job = new NetworkInfoJob(model);
+        var job = new NetworkInfoJob(model, TestBackgroundStart.Configured(BackgroundStartMode.Immediately));
         using var cancellation = new CancellationTokenSource();
         // The job loops synchronously until cancelled, so it runs on a worker and the test polls it.
         var running = Task.Run(() => job.ExecuteAsync(cancellation.Token));

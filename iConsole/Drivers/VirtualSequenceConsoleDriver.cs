@@ -313,6 +313,12 @@ public class VirtualSequenceConsoleDriver : IConsoleDriver
 
     public void Write(int x, int y, Conxel conxel)
     {
+        // The second column of a wide character: the wide character before it already covered it.
+        if (conxel.Char == TextWidth.Continuation)
+        {
+            return;
+        }
+
         if (_supportsVirtualTerminalProcessing)
         {
             var s = AnsiRenderer.Conxel2Ansi(x, y, conxel);

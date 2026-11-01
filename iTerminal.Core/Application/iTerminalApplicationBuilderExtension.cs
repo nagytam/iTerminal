@@ -216,7 +216,8 @@ public static class iTerminalApplicationBuilderExtension
                 serviceProvider.GetRequiredService<ISettingsService>(),
                 serviceProvider.GetRequiredService<iTerminal.Core.Documents.IOcrEngine>(),
                 serviceProvider.GetRequiredService<iTerminal.Core.Documents.DocumentTextExtractorFactory>(),
-                serviceProvider.GetService<Serilog.ILogger>()));
+                serviceProvider.GetService<Serilog.ILogger>(),
+                serviceProvider.GetRequiredService<iTerminal.Core.Services.BackgroundStart.IBackgroundStartService>()));
         services.AddSingleton<IJob, DocumentLibraryIndexJob>();
         services.AddTransient<iTerminal.Core.Dialogs.Documents.DocumentManagerDialog>();
         services.AddTransient<TextFileEditorDialog>();
@@ -347,6 +348,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Defender.IMalwareScanService, iTerminal.Core.Services.Defender.DefenderScanService>();
         services.AddTransient<SecureWipeDialog>();
         services.AddTransient<SignatureDialog>();
+        // Ctrl+P: print the file under the cursor and manage the print queue.
+        services.AddSingleton<iTerminal.Core.Services.Printing.IPrintService, iTerminal.Core.Services.Printing.PrintService>();
+        services.AddTransient<PrintDialog>();
         // File associations: Enter and F4 open a file with the program chosen for it; Shift+F3 and
         // Ctrl+F4 choose. The dialogs are handed out by a factory because one consumer needs two —
         // "Open with" and "Edit with" are separate controls.
@@ -433,6 +437,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iConsole.Jobs.IJob, iTerminal.Core.Services.Terminal.TerminalTitleJob>();
         services.AddSingleton<iTerminal.Core.Services.Clipboard.FileClipboardOperations>();
         services.AddSingleton<ISettingsService, SettingsService>();
+        // Each configurable background service's start mode (BackgroundStart.<service>, default on demand).
+        services.AddSingleton<iTerminal.Core.Services.BackgroundStart.IBackgroundStartService, iTerminal.Core.Services.BackgroundStart.BackgroundStartService>();
         // Where a local delete with the bin ticked goes on Linux: the freedesktop Trash, home or per-volume.
         services.AddSingleton<iTerminal.Core.Services.Recycle.ITrashService, iTerminal.Core.Services.Recycle.FreedesktopTrash>();
         services.AddTransient<IFileSystemService, FileSystemService>();

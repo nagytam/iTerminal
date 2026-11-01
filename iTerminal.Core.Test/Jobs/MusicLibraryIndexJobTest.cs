@@ -1,3 +1,5 @@
+using iTerminal.Core.Test.Services.BackgroundStart;
+using iTerminal.Core.Services.BackgroundStart;
 using iConsole.Jobs;
 using iTerminal.Core.Data;
 using iTerminal.Core.Jobs;
@@ -39,9 +41,8 @@ public class MusicLibraryIndexJobTest
     }
 
     private static MusicLibraryIndexJob CreateJob(IMusicLibraryService library) =>
-        new(library)
+        new(library, TestBackgroundStart.Configured(BackgroundStartMode.Immediately))
         {
-            StartupDelay = TimeSpan.Zero,
             FolderPollInterval = TimeSpan.FromMilliseconds(20),
             RescanInterval = TimeSpan.FromMinutes(15),
         };
@@ -119,10 +120,9 @@ public class MusicLibraryIndexJobTest
     public async Task Run_LoadsTheCachedIndexBeforeItEvenWaits()
     {
         var library = new Test.Services.Music.FakeMusicLibraryService();
-        var job = new MusicLibraryIndexJob(library)
+        // On demand: the job then waits for a request that never comes, so only the preload can have happened.
+        var job = new MusicLibraryIndexJob(library, TestBackgroundStart.Configured(BackgroundStartMode.OnDemand))
         {
-            // Long enough that the test would time out if the preload waited for it.
-            StartupDelay = TimeSpan.FromMinutes(5),
             FolderPollInterval = TimeSpan.FromMilliseconds(20),
         };
 
