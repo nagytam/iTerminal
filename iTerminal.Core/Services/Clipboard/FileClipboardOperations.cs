@@ -36,6 +36,7 @@ public class FileClipboardOperations(
     TaskManager taskManager,
     ProgressWindowFactory progressWindowFactory,
     IErrorPromptService errorPromptService,
+    IConflictPromptService conflictPromptService,
     INotificationService notificationService,
     ILogger logger)
 {
@@ -128,9 +129,9 @@ public class FileClipboardOperations(
         }
 
         var transfer = content.IsCut
-            ? (TransferCommand)new MoveCommand(taskManager, progressWindowFactory, errorPromptService, fileSystemResolver, contentModelService)
-            : new CopyCommand(taskManager, progressWindowFactory, errorPromptService, fileSystemResolver, contentModelService);
-        await transfer.StartAsync(host, plan.Sources, plan.Targets, model.Url, overwrite: false);
+            ? (TransferCommand)new MoveCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService, fileSystemResolver, contentModelService)
+            : new CopyCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService, fileSystemResolver, contentModelService);
+        await transfer.StartAsync(host, plan.Sources, plan.Targets, model.Url, FileConflictMode.Legacy);
 
         if (plan.Skipped.Count > 0)
         {

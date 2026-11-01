@@ -25,6 +25,7 @@ public class CopyDialogCommandTest
             contentModelService: Mock.Of<IContentModelService>(),
             progressWindowFactory: new ProgressWindowFactory(themeService),
             errorPromptService: Mock.Of<IErrorPromptService>(),
+            conflictPromptService: Mock.Of<IConflictPromptService>(),
             beepService: Mock.Of<IBeepService>(),
             dateTimeProviderService: new DateTimeProviderService(),
             themeService: themeService,

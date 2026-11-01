@@ -54,14 +54,14 @@ public class TransferDialogTest
     {
         var dateTime = new Mock<IDateTimeProviderService>();
         dateTime.SetupGet(d => d.Now).Returns(DateTime.Now);
-        return new CopyDialog(null!, contentModelService, null!, null!, new Mock<IBeepService>().Object, dateTime.Object, TestTheme(), null!, null!, null!, null!);
+        return new CopyDialog(null!, contentModelService, null!, null!, null!, new Mock<IBeepService>().Object, dateTime.Object, TestTheme(), null!, null!, null!, null!);
     }
 
     private static MoveDialog Move(IContentModelService contentModelService)
     {
         var dateTime = new Mock<IDateTimeProviderService>();
         dateTime.SetupGet(d => d.Now).Returns(DateTime.Now);
-        return new MoveDialog(null!, contentModelService, null!, null!, new Mock<IBeepService>().Object, dateTime.Object, TestTheme(), null!, null!, null!, null!);
+        return new MoveDialog(null!, contentModelService, null!, null!, null!, new Mock<IBeepService>().Object, dateTime.Object, TestTheme(), null!, null!, null!, null!);
     }
 
     [TestMethod]

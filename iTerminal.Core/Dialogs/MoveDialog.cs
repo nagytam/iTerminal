@@ -15,6 +15,7 @@ public class MoveDialog : TransferDialog
         IContentModelService contentModelService,
         ProgressWindowFactory progressWindowFactory,
         IErrorPromptService errorPromptService,
+        IConflictPromptService conflictPromptService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
@@ -25,7 +26,7 @@ public class MoveDialog : TransferDialog
         : base(
             nameof(MoveDialog),
             "Move",
-            new MoveCommand(taskManager, progressWindowFactory, errorPromptService,
+            new MoveCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService,
                 new FileSystemResolver(fileSystemService, memoryDriveService, sshFileSystemService, archiveFileSystemService, contentModelService),
                 contentModelService),
             'M',

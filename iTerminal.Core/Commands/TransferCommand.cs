@@ -12,16 +12,18 @@ using iTerminal.Core.Tasks;
 namespace iTerminal.Core.Commands;
 
 /// <summary>
-/// Shared engine for the Copy and Move dialog commands: reads source/target/overwrite from the
+/// Shared engine for the Copy and Move dialog commands: reads source/target/conflict mode from the
 /// containing <see cref="TransferDialog"/>, resolves the <see cref="IFileSystem"/> for each end
 /// from the URL's <see cref="ContainerType"/>, and enqueues the file or folder transfer task
-/// (plus a <see cref="FolderDiscoveryTask"/> for cross-drive folder transfers). Subclasses only
-/// supply the operation name and the concrete task types.
+/// (plus a <see cref="FolderDiscoveryTask"/> for cross-drive folder transfers). File steps ask about
+/// an existing target through one <see cref="FileConflictResolver"/> per run; folder steps keep the
+/// overwrite flag. Subclasses only supply the operation name and the concrete task types.
 /// </summary>
 public abstract class TransferCommand(
     TaskManager taskManager,
     ProgressWindowFactory progressWindowFactory,
     IErrorPromptService errorPromptService,
+    IConflictPromptService conflictPromptService,
     FileSystemResolver fileSystemResolver,
     IContentModelService contentModelService)
     : Command
@@ -42,7 +44,7 @@ public abstract class TransferCommand(
     /// </summary>
     protected abstract bool RemovesSource { get; }
 
-    protected abstract BackgroundTask CreateFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite);
+    protected abstract BackgroundTask CreateFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, FileConflictResolver resolver);
 
     protected abstract TransferTask CreateFolderTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite, FolderDiscoveryTask? discoveryTask);
 
@@ -74,9 +76,11 @@ public abstract class TransferCommand(
 
             try
             {
-                var (discoveryTask, task) = CreateTasks(dialog.SourceUrl, dialog.TargetUrl, dialog.Overwrite);
+                var resolver = new FileConflictResolver(dialog.ConflictMode, conflictPromptService);
+                var (discoveryTask, task) = CreateTasks(dialog.SourceUrl, dialog.TargetUrl, resolver);
                 if (task is not null)
                 {
+                    resolver.CancelRun = () => task.CancellationTokenSource.Cancel();
                     // Subscribed before the task is queued: a small local file copy can be finished
                     // before Add returns, and the panels would then never hear about it.
                     PanelRefreshHelper.RefreshWhenFinished(
@@ -123,11 +127,12 @@ public abstract class TransferCommand(
     private async Task RunBatchAsync(TransferDialog dialog)
     {
         var targetFolder = dialog.TargetUrl;
+        var resolver = new FileConflictResolver(dialog.ConflictMode, conflictPromptService);
         var steps = new List<BatchStep>();
         foreach (var sourceUrl in dialog.SourceUrls)
         {
             var targetUrl = dialog.TargetUrlFor(sourceUrl);
-            var (discoveryTask, task) = CreateTasks(sourceUrl, targetUrl, dialog.Overwrite);
+            var (discoveryTask, task) = CreateTasks(sourceUrl, targetUrl, resolver);
             if (task is not null)
             {
                 steps.Add(new BatchStep(FocusedEntry.NameOf(sourceUrl), task, discoveryTask));
@@ -151,6 +156,7 @@ public abstract class TransferCommand(
             }
         });
 
+        resolver.CancelRun = () => batch.CancellationTokenSource.Cancel();
         PanelRefreshHelper.RefreshWhenFinished(
             batch,
             contentModelService,
@@ -170,15 +176,18 @@ public abstract class TransferCommand(
     /// <see cref="BatchOperationTask"/>; either way a progress window is shown over
     /// <paramref name="host"/> and the panels are re-read when it ends.
     /// </summary>
-    internal async Task StartAsync(iConsole.Controls.Control host, IReadOnlyList<Url> sources, IReadOnlyList<Url> targets, Url targetFolder, bool overwrite)
+    internal async Task StartAsync(iConsole.Controls.Control host, IReadOnlyList<Url> sources, IReadOnlyList<Url> targets, Url targetFolder, FileConflictMode mode)
     {
+        var resolver = new FileConflictResolver(mode, conflictPromptService);
         if (sources.Count == 1)
         {
-            var (discoveryTask, task) = CreateTasks(sources[0], targets[0], overwrite);
+            var (discoveryTask, task) = CreateTasks(sources[0], targets[0], resolver);
             if (task is null)
             {
                 return;
             }
+
+            resolver.CancelRun = () => task.CancellationTokenSource.Cancel();
 
             PanelRefreshHelper.RefreshWhenFinished(task, contentModelService, RemovesSource ? sources[0] : null, targets[0]);
             if (discoveryTask is not null)
@@ -194,7 +203,7 @@ public abstract class TransferCommand(
         var steps = new List<BatchStep>();
         for (int i = 0; i < sources.Count; i++)
         {
-            var (discoveryTask, task) = CreateTasks(sources[i], targets[i], overwrite);
+            var (discoveryTask, task) = CreateTasks(sources[i], targets[i], resolver);
             if (task is not null)
             {
                 steps.Add(new BatchStep(FocusedEntry.NameOf(sources[i]), task, discoveryTask));
@@ -218,6 +227,7 @@ public abstract class TransferCommand(
             }
         });
 
+        resolver.CancelRun = () => batch.CancellationTokenSource.Cancel();
         PanelRefreshHelper.RefreshWhenFinished(batch, contentModelService, RemovesSource ? sources[0] : null, targets[0]);
         await taskManager.Add(batch);
         await host.ShowPopUpWindowAsync(progressWindowFactory.Create(batch));
@@ -232,7 +242,7 @@ public abstract class TransferCommand(
         }
     }
 
-    private (FolderDiscoveryTask? DiscoveryTask, BackgroundTask? PrimaryTask) CreateTasks(Url sourceUrl, Url targetUrl, bool overwrite)
+    private (FolderDiscoveryTask? DiscoveryTask, BackgroundTask? PrimaryTask) CreateTasks(Url sourceUrl, Url targetUrl, FileConflictResolver resolver)
     {
         // Streams via IFileSystem.StreamToAsync/StreamFromAsync for every drive-type pair (using
         // the drive's native CopyAsync/MoveAsync as a fast path when source and target are the
@@ -242,7 +252,7 @@ public abstract class TransferCommand(
 
         if (sourceUrl.PathType == PathType.File)
         {
-            return (null, CreateFileTask(source, target, sourceUrl, targetUrl, overwrite));
+            return (null, CreateFileTask(source, target, sourceUrl, targetUrl, resolver));
         }
 
         if (sourceUrl.PathType != PathType.Folder)
@@ -253,14 +263,14 @@ public abstract class TransferCommand(
         if (ReferenceEquals(source, target))
         {
             // One atomic native call — nothing meaningful to discover separately.
-            return (null, CreateFolderTask(source, target, sourceUrl, targetUrl, overwrite, discoveryTask: null));
+            return (null, CreateFolderTask(source, target, sourceUrl, targetUrl, overwrite: resolver.Mode == FileConflictMode.OverwriteAll, discoveryTask: null));
         }
 
         var folderTargetUrl = targetUrl.FullUrl.EndsWith('/') || targetUrl.FullUrl.EndsWith('\\')
             ? targetUrl
             : new Url(targetUrl.FullUrl + "/");
         var discoveryTask = new FolderDiscoveryTask(source, target, sourceUrl, folderTargetUrl);
-        var primaryTask = CreateFolderTask(source, target, sourceUrl, targetUrl, overwrite, discoveryTask);
+        var primaryTask = CreateFolderTask(source, target, sourceUrl, targetUrl, overwrite: resolver.Mode == FileConflictMode.OverwriteAll, discoveryTask);
         return (discoveryTask, primaryTask);
     }
 

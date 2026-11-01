@@ -15,7 +15,7 @@ namespace iTerminal.Core.Dialogs.Test;
 public class MoveDialogTest
 {
     private static MoveDialog Create() =>
-        new(null!, Mock.Of<iConsole.Interfaces.IContentModelService>(), null!, null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), null!, null!, null!, null!);
+        new(null!, Mock.Of<iConsole.Interfaces.IContentModelService>(), null!, null!, null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme(), null!, null!, null!, null!);
 
     [TestMethod]
     public void ThePrimaryButtonIsNamedForTheOperation()

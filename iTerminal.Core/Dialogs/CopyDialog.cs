@@ -15,6 +15,7 @@ public class CopyDialog : TransferDialog
         IContentModelService contentModelService,
         ProgressWindowFactory progressWindowFactory,
         IErrorPromptService errorPromptService,
+        IConflictPromptService conflictPromptService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
@@ -25,7 +26,7 @@ public class CopyDialog : TransferDialog
         : base(
             nameof(CopyDialog),
             "Copy",
-            new CopyCommand(taskManager, progressWindowFactory, errorPromptService,
+            new CopyCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService,
                 new FileSystemResolver(fileSystemService, memoryDriveService, sshFileSystemService, archiveFileSystemService, contentModelService),
                 contentModelService),
             'y',

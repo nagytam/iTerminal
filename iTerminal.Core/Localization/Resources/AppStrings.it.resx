@@ -3115,4 +3115,7 @@
   <data name="Remote.Status.CannotStart" xml:space="preserve">
     <value>Questa connessione non può essere avviata.</value>
   </data>
+  <data name="Task.Skipped" xml:space="preserve">
+    <value>Saltato</value>
+  </data>
 </root>

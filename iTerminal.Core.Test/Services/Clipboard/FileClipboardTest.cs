@@ -48,6 +48,7 @@ public class FileClipboardTest
             new TaskManager(),
             new ProgressWindowFactory(Mock.Of<IThemeService>()),
             Mock.Of<IErrorPromptService>(),
+            Mock.Of<IConflictPromptService>(),
             Mock.Of<INotificationService>(),
             Serilog.Core.Logger.None);
     }

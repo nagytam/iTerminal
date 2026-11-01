@@ -37,7 +37,7 @@ public class BatchOperationTaskTest
     private string Dst(string name) => Path.Combine(_root, "dst", name);
 
     private static BatchStep CopyFile(FileSystemService fs, string source, string target, bool overwrite = false) =>
-        new(Path.GetFileName(source), new ContentModelCopyFileTask(fs, fs, new Url(source), new Url(target), overwrite));
+        new(Path.GetFileName(source), new ContentModelCopyFileTask(fs, fs, new Url(source), new Url(target), ConflictResolvers.Of(overwrite)));
 
     [TestMethod]
     public async Task EveryStepRunsInOrder()

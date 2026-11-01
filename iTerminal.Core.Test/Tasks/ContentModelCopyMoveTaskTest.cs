@@ -40,7 +40,7 @@ public class ContentModelCopyMoveTaskTest
             memoryDriveService,
             new Url(sourcePath),
             new Url("memdrive://source.txt"),
-            overwrite: true);
+            ConflictResolvers.Of(true));
 
         await task.ExecuteAsync();
 
@@ -59,7 +59,7 @@ public class ContentModelCopyMoveTaskTest
         Directory.CreateDirectory(targetFolder);
         var fileSystemService = new FileSystemService();
 
-        var task = new ContentModelCopyFileTask(fileSystemService, fileSystemService, new Url(sourcePath), new Url(targetFolder), overwrite: false);
+        var task = new ContentModelCopyFileTask(fileSystemService, fileSystemService, new Url(sourcePath), new Url(targetFolder), ConflictResolvers.Of(false));
 
         await task.ExecuteAsync();
 
@@ -75,7 +75,7 @@ public class ContentModelCopyMoveTaskTest
         var memoryDriveService = new MemoryDriveService();
         await memoryDriveService.CreateFolderAsync(new Url("memdrive://docs/"));
 
-        var task = new ContentModelCopyFileTask(new FileSystemService(), memoryDriveService, new Url(sourcePath), new Url("memdrive://docs"), overwrite: false);
+        var task = new ContentModelCopyFileTask(new FileSystemService(), memoryDriveService, new Url(sourcePath), new Url("memdrive://docs"), ConflictResolvers.Of(false));
 
         await task.ExecuteAsync();
 
@@ -96,7 +96,7 @@ public class ContentModelCopyMoveTaskTest
             fileSystemService,
             new Url("memdrive://source.txt"),
             new Url(targetPath),
-            overwrite: true);
+            ConflictResolvers.Of(true));
 
         await task.ExecuteAsync();
 
@@ -116,7 +116,7 @@ public class ContentModelCopyMoveTaskTest
             memoryDriveService,
             new Url(sourcePath),
             new Url("memdrive://moved.txt"),
-            overwrite: true);
+            ConflictResolvers.Of(true));
 
         await task.ExecuteAsync();
 
@@ -184,7 +184,7 @@ public class ContentModelCopyMoveTaskTest
             fileSystemService,
             new Url(Container.ZIP_ARCHIVE + zipPath + "@/inside.txt"),
             new Url(targetPath),
-            overwrite: true);
+            ConflictResolvers.Of(true));
 
         await task.ExecuteAsync();
 
@@ -205,7 +205,7 @@ public class ContentModelCopyMoveTaskTest
             archiveFileSystemService,
             new Url(sourcePath),
             new Url(Container.ZIP_ARCHIVE + zipPath + "@/newentry.txt"),
-            overwrite: true);
+            ConflictResolvers.Of(true));
 
         await task.ExecuteAsync();
 
@@ -226,7 +226,7 @@ public class ContentModelCopyMoveTaskTest
             fileSystemService,
             new Url(Container.ZIP_ARCHIVE + zipPath + "@/inside.txt"),
             new Url(targetPath),
-            overwrite: true);
+            ConflictResolvers.Of(true));
 
         await task.ExecuteAsync();
 
