@@ -187,7 +187,8 @@ public class HotKeys : StatusBarItem
         var deleteDialogButton = new Button("F8-Delete", deleteDialogCommand, themeService)
         {
             Position = new Position(71, 0),
-            ViewSize = new Size(11, 1)
+            ViewSize = new Size(11, 1),
+            IsDestructive = true
         };
         AddControl(deleteDialogButton);
         var taskManagerDialogButton = new Button("F9-Tasks", taskManagerDialogCommand, themeService)

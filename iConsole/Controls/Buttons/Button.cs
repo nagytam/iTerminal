@@ -92,23 +92,37 @@ public class Button : Control
         AddCommand(new SpaceCommand());
     }
 
+    /// <summary>
+    /// True for a button that deletes, wipes, formats or discards something. It is drawn on the
+    /// scheme's error colour, so the user sees at a glance which button cannot be taken back.
+    /// </summary>
+    public bool IsDestructive { get; set; }
+
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
         var visualState = GetVisualState();
         var colorScheme = ThemeService.CurrentColorScheme;
         GetColor(colorScheme, visualState, out var foregroundColor, out var backgroundColor);
+        var hotKeyColor = colorScheme.SelectedFocusedForeground;
+        if (IsDestructive && visualState != VisualState.Disabled)
+        {
+            backgroundColor = colorScheme.Error;
+            foregroundColor = visualState == VisualState.Focused ? Color.Yellow : Color.White;
+            hotKeyColor = Color.Yellow;
+        }
         if (IsPressed && visualState != VisualState.Disabled)
         {
             foregroundColor = colorScheme.SelectedFocusedForeground;
             backgroundColor = colorScheme.SelectedFocusedBackground;
+            hotKeyColor = colorScheme.SelectedFocusedForeground;
         }
         var inner = Math.Max(0, (int)ViewSize.Width - 2);
         var title = inner == 0
             ? string.Empty
             : Title.Cut(inner).Expand(inner);
         var titleLine = new ConxelString(Border.Start + title + Border.End, foregroundColor, backgroundColor);
-        titleLine.HighlightHotKey(HotConsoleKey, HotKeyChar, colorScheme.SelectedFocusedForeground, backgroundColor);
+        titleLine.HighlightHotKey(HotConsoleKey, HotKeyChar, hotKeyColor, backgroundColor);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, titleLine);
     }
 

@@ -286,6 +286,19 @@ public class ToggleControlsRenderTest
     }
 
     [TestMethod]
+    public void Button_Destructive_IsDrawnOnTheErrorColour()
+    {
+        var button = CreateButton();
+        button.IsDestructive = true;
+
+        ScreenBuffer.Render(button, 10, 1).AssertColors(0, 0, 10, Color.White, Scheme.Error);
+
+        var disabled = CreateButton(canExecute: false);
+        disabled.IsDestructive = true;
+        ScreenBuffer.Render(disabled, 10, 1).AssertColors(0, 0, 10, Scheme.DisabledForeground, Scheme.DisabledButtonBackground);
+    }
+
+    [TestMethod]
     public void Button_HotKey_IsPickedOutInTheTitle()
     {
         var button = CreateButton();

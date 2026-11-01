@@ -105,7 +105,7 @@ public class DeleteDialog : FormDialog
             IsEnabled = false,
             HotKeyChar = 'R'
         };
-        _deleteButton = new Button(iConsole.Localization.UiText.Get("Menu.Delete", "Delete"), _deleteCommand, themeService) { HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Menu.Delete", "Delete"), 'D') };
+        _deleteButton = new Button(iConsole.Localization.UiText.Get("Menu.Delete", "Delete"), _deleteCommand, themeService) { HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Menu.Delete", "Delete"), 'D'), IsDestructive = true };
         _cancelButton = new CancelDialogButton(themeService);
         _errorLabel = new Label(string.Empty, themeService);
         AddControl(_textBoxName);
