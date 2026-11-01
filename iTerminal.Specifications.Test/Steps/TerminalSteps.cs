@@ -44,8 +44,78 @@ public sealed class TerminalSteps
     [When("I press {string}")]
     public async Task WhenIPress(string key) => await App.PressAsync(key);
 
+    [When("I type {string}")]
+    public async Task WhenIType(string text) => await App.TypeAsync(text);
+
+    [Given("a file {string} appears in the left folder")]
+    public void GivenAFileAppearsInTheLeftFolder(string name) =>
+        File.WriteAllText(Path.Combine(App.LeftRoot, name), "new");
+
     [When("I move the cursor to {string} in the left panel")]
     public async Task WhenIMoveTheCursorToInTheLeftPanel(string name) => await App.SelectEntryAsync(name);
+
+    [When("I move the cursor to {string} in the right panel")]
+    public async Task WhenIMoveTheCursorToInTheRightPanel(string name)
+    {
+        Assert.AreEqual(Core.Services.ContentModelService.Right, App.ContentModels.FocusedPanel, "the right panel has the keyboard");
+        await App.SelectEntryAsync(name);
+    }
+
+    [Then("the right panel has the keyboard")]
+    public void ThenTheRightPanelHasTheKeyboard() =>
+        Assert.AreEqual(Core.Services.ContentModelService.Right, App.ContentModels.FocusedPanel);
+
+    [Then("the screen shows {string}")]
+    public async Task ThenTheScreenShows(string text) =>
+        await App.WaitUntilAsync(screen => screen.Contains(text), $"the screen to show '{text}'");
+
+    [Then("the screen does not show {string}")]
+    public async Task ThenTheScreenDoesNotShow(string text) =>
+        await App.WaitUntilAsync(screen => !screen.Contains(text), $"the screen to stop showing '{text}'");
+
+    [Then("each panel is titled with its folder")]
+    public void ThenEachPanelIsTitledWithItsFolder()
+    {
+        var top = App.Screen.Line(1);
+
+        StringAssert.Contains(top, Path.GetFileName(App.LeftRoot));
+        StringAssert.Contains(top, Path.GetFileName(App.RightRoot));
+        Assert.IsTrue(top.IndexOf("left", StringComparison.Ordinal) < top.IndexOf("right", StringComparison.Ordinal),
+            "the left panel is on the left");
+    }
+
+    [Then("{string} is listed before {string} in the left panel")]
+    public void ThenIsListedBeforeInTheLeftPanel(string first, string second)
+    {
+        var names = App.LeftPanel()
+            .Select(row => row.Length > 1 ? row[1..].Split(' ')[0] : string.Empty)
+            .ToList();
+
+        Assert.IsTrue(names.IndexOf(first) >= 0 && names.IndexOf(first) < names.IndexOf(second),
+            string.Join(Environment.NewLine, names));
+    }
+
+    [Then("the panel footers show {int} and {int} entries")]
+    public async Task ThenThePanelFootersShowEntries(int left, int right) =>
+        await App.WaitUntilAsync(
+            screen => screen.Contains($" {left} entries ") && screen.Contains($" {right} entries "),
+            $"the footers to count {left} and {right} entries");
+
+    [Then("the splash screen is gone")]
+    public async Task ThenTheSplashScreenIsGone()
+    {
+        Assert.IsFalse(App.Screen.Contains("Welcome to iTerminal"));
+        await App.WaitForNoStrayFramesAsync();
+    }
+
+    [Then("nothing beeped")]
+    public void ThenNothingBeeped() =>
+        Assert.AreEqual(0, App.Driver.Console.BeepCount, "nothing beeped while starting");
+
+    [Then("the database is in the data folder")]
+    public void ThenTheDatabaseIsInTheDataFolder() =>
+        Assert.IsTrue(File.Exists(Path.Combine(App.DataDirectory, "iTerminal.sqlite")),
+            "the database belongs in the folder the configuration names, not in %APPDATA%");
 
     [Then("the menu bar is on the top row")]
     public void ThenTheMenuBarIsOnTheTopRow() =>
