@@ -121,7 +121,10 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
-        iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null
+        iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null,
+        XmlViewerDialog? xmlViewerDialog = null,
+        JsonViewerDialog? jsonViewerDialog = null,
+        CsvViewerDialog? csvViewerDialog = null
         )
         : base([], themeService)
     {
@@ -140,6 +143,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             musicFileViewerDialog: musicFileViewerDialog,
             videoFileViewerDialog: videoFileViewerDialog,
             imageFileViewerDialog: imageFileViewerDialog,
+            xmlViewerDialog: xmlViewerDialog,
+            jsonViewerDialog: jsonViewerDialog,
+            csvViewerDialog: csvViewerDialog,
             findFilesDialog: findFilesDialog,
             compressDialog: compressDialog,
             extractDialog: extractDialog,

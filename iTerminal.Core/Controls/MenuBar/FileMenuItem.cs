@@ -36,12 +36,15 @@ public class FileMenuItem : MenuItem
         SignatureDialog? signatureDialog = null,
         iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
         INotificationService? notificationService = null,
-        EditLinkDialog? editLinkDialog = null)
+        EditLinkDialog? editLinkDialog = null,
+        XmlViewerDialog? xmlViewerDialog = null,
+        JsonViewerDialog? jsonViewerDialog = null,
+        CsvViewerDialog? csvViewerDialog = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
 
-        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog), [], themeService));
+        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog), [], themeService));
         AddMenuItem(new MenuItem("Quick View\tCtrl+F3", new iTerminal.Core.Commands.Drives.TogglePreviewCommand(contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Edit\tF4",   new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations), [], themeService));
         if (openWithDialogFactory is not null)

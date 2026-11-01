@@ -78,7 +78,10 @@ public class HotKeys : StatusBarItem
         iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null,
         LanguageDialog? languageDialog = null,
         ILocalizer? localizer = null,
-        iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null)
+        iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
+        XmlViewerDialog? xmlViewerDialog = null,
+        JsonViewerDialog? jsonViewerDialog = null,
+        CsvViewerDialog? csvViewerDialog = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -89,7 +92,7 @@ public class HotKeys : StatusBarItem
         var themeManagerDialogCommand = new ThemeManagerDialogCommand(themeManagerDialog);
         AddCommand(new ProcessManagerDialogCommand(processManagerDialog));
         var screenManagerDialogCommand = new ScreenManagerDialogCommand(themeService);
-        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog);
+        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog);
         var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations);
         var createFolderDialogCommand = new CreateFolderDialogCommand(createFolderDialog, contentModelService);
         var createFileDialogCommand = new CreateFileDialogCommand(createFileDialog, contentModelService);
