@@ -117,6 +117,8 @@ Detailed conventions, including the end-to-end suite and `ConsoleAppDriver` auto
 
 Each improvement goes through `/incremental-improvement` (`.claude/skills/incremental-improvement/SKILL.md`): one branch cut from `main`, one PR, four phases (plan, implement, test, integrate into main). Each phase ends in a review gate that must pass before the next phase starts. Merging into `main` waits for the user's approval.
 
+Two more project skills: `/fix-main` (`.claude/skills/fix-main/SKILL.md`) repairs a failing "Build and test" or "Release builds" pipeline on `main` through a branch and PR, and `/compare-console` (`.claude/skills/compare-console/SKILL.md`) adds a survey of other console UI libraries to `docs/architecture/ui-framework/tui-library-comparison.md`.
+
 ## Further reference
 
 - [docs/architecture/key-patterns.md](docs/architecture/key-patterns.md): the full list of UI, navigation and state patterns (why a rule exists, with the bug it fixed).
