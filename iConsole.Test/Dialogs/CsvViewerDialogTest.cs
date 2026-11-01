@@ -43,6 +43,22 @@ public class CsvViewerDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task OpensWithTheDefaultQueryEnteredAndEveryRowShown()
+    {
+        CsvViewerDialog dialog = CreateDialog("file:///data/sales.csv", "name,amount\nA,1\nB,2\n");
+
+        await dialog.OnInitializeAsync();
+        dialog.StartQuery(dialog.QueryText);
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual("SELECT * FROM file", dialog.QueryText);
+        Assert.AreEqual(2, dialog.Grid.RowCount);
+        Assert.AreEqual(2, dialog.Grid.ColumnCount);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task ATsvFileIsReadWithTabsEvenWhenItsValuesHaveCommas()
     {
         CsvViewerDialog dialog = CreateDialog("file:///data/notes.tsv", "name\tnote\nA\tone, two\n");
