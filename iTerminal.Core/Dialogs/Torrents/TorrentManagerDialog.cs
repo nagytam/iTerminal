@@ -462,7 +462,7 @@ public class TorrentManagerDialog : Dialog
         }
 
         _confirmDelete = true;
-        SetStatus($"Remove \"{item.Name}\"? y keeps the downloaded files, w deletes them too, anything else cancels.", true);
+        SetStatus(string.Format(UiText.Get("Torrent.Confirm.Remove", "Remove \"{0}\"? y keeps the downloaded files, w deletes them too, anything else cancels."), item.Name), true);
         StateHasChanged();
     }
 
@@ -546,14 +546,14 @@ public class TorrentManagerDialog : Dialog
 
     internal static string StatusLabel(TorrentStatus status) => status switch
     {
-        TorrentStatus.Starting => "Starting",
-        TorrentStatus.Metadata => "Metadata",
-        TorrentStatus.Checking => "Checking",
-        TorrentStatus.Downloading => "Down",
-        TorrentStatus.Seeding => "Seeding",
-        TorrentStatus.Paused => "Paused",
-        TorrentStatus.Stopped => "Stopped",
-        _ => "Error",
+        TorrentStatus.Starting => UiText.Get("Torrent.State.Starting", "Starting"),
+        TorrentStatus.Metadata => UiText.Get("Torrent.State.Metadata", "Metadata"),
+        TorrentStatus.Checking => UiText.Get("Torrent.State.Checking", "Checking"),
+        TorrentStatus.Downloading => UiText.Get("Torrent.State.Downloading", "Down"),
+        TorrentStatus.Seeding => UiText.Get("Torrent.State.Seeding", "Seeding"),
+        TorrentStatus.Paused => UiText.Get("Torrent.State.Paused", "Paused"),
+        TorrentStatus.Stopped => UiText.Get("Torrent.State.Stopped", "Stopped"),
+        _ => UiText.Get("Torrent.State.Error", "Error"),
     };
 
     internal static string Row(TorrentItem item, int nameWidth) =>
@@ -599,9 +599,9 @@ public class TorrentManagerDialog : Dialog
 
     private string Hints() => _mode switch
     {
-        Mode.List => _confirmDelete ? "y remove  w remove + delete files  any other key cancels"
-            : "A add  Space pause/resume  D remove  O open folder  Esc close",
-        _ => "Tab field  Enter add  Ctrl+U clear  Esc back",
+        Mode.List => _confirmDelete ? UiText.Get("Torrent.Hint.Confirm", "y remove  w remove + delete files  any other key cancels")
+            : UiText.Get("Torrent.Hint.List", "A add  Space pause/resume  D remove  O open folder  Esc close"),
+        _ => UiText.Get("Torrent.Hint.Edit", "Tab field  Enter add  Ctrl+U clear  Esc back"),
     };
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
@@ -611,7 +611,9 @@ public class TorrentManagerDialog : Dialog
         Put(buffer, 1, 0, iw - 2, $"{_list.Count} torrents  ·  down {FormatRate(down)}  ·  up {FormatRate(up)}", Color.Cyan, colorScheme.Background);
 
         int nameWidth = Math.Max(10, iw - 2 - 2 - 53);
-        Put(buffer, 1, 1, iw - 2, "  " + "Name".PadRight(nameWidth) + " " + "State".PadRight(8) + " " + "Done".PadLeft(6) + " " + "Size".PadLeft(9) + " " + "Down".PadLeft(10) + " " + "Up".PadLeft(10) + " " + "Peer".PadLeft(4), colorScheme.DisabledForeground, colorScheme.Background);
+        Put(buffer, 1, 1, iw - 2, "  " + UiText.Get("Torrent.Col.Name", "Name").PadRight(nameWidth) + " " + UiText.Get("Torrent.Col.State", "State").PadRight(8) + " "
+            + UiText.Get("Torrent.Col.Done", "Done").PadLeft(6) + " " + UiText.Get("Torrent.Col.Size", "Size").PadLeft(9) + " " + UiText.Get("Torrent.Col.Down", "Down").PadLeft(10) + " "
+            + UiText.Get("Torrent.Col.Up", "Up").PadLeft(10) + " " + UiText.Get("Torrent.Col.Peer", "Peer").PadLeft(4), colorScheme.DisabledForeground, colorScheme.Background);
         if (_list.Count == 0)
         {
             Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Torrents.Empty", "No torrents yet. A adds a magnet link, a .torrent file or its URL."), colorScheme.DisabledForeground, colorScheme.Background);

@@ -2677,4 +2677,82 @@
   <data name="Icon.NotReadable" xml:space="preserve">
     <value>Diese Symboldatei konnte nicht gelesen werden.</value>
   </data>
+  <data name="Transfer.Space.Title" xml:space="preserve">
+    <value>Nicht genug freier Speicherplatz</value>
+  </data>
+  <data name="Transfer.Space.Body" xml:space="preserve">
+    <value>Am Ziel sind {0} frei, es müssen aber {1} geschrieben werden{4}({2} zu wenig) nach:{4}{3}{4}{4}Vorgang anhalten, um Speicherplatz freizugeben, oder trotzdem fortfahren?</value>
+  </data>
+  <data name="Transfer.Space.Pause" xml:space="preserve">
+    <value>Anhalten</value>
+  </data>
+  <data name="Transfer.Space.GoOn" xml:space="preserve">
+    <value>Trotzdem fortfahren</value>
+  </data>
+  <data name="Transfer.Paused.Title" xml:space="preserve">
+    <value>Übertragung angehalten</value>
+  </data>
+  <data name="Transfer.Paused.Body" xml:space="preserve">
+    <value>Der Vorgang ist angehalten.{1}Speicherplatz am Ziel freigeben, dann fortsetzen.{1}{1}{0}</value>
+  </data>
+  <data name="Transfer.Paused.Resume" xml:space="preserve">
+    <value>Fortsetzen</value>
+  </data>
+  <data name="Torrent.Col.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Torrent.Col.State" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Torrent.Col.Done" xml:space="preserve">
+    <value>Fertig</value>
+  </data>
+  <data name="Torrent.Col.Size" xml:space="preserve">
+    <value>Größe</value>
+  </data>
+  <data name="Torrent.Col.Down" xml:space="preserve">
+    <value>Laden</value>
+  </data>
+  <data name="Torrent.Col.Up" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="Torrent.Col.Peer" xml:space="preserve">
+    <value>Peer</value>
+  </data>
+  <data name="Torrent.State.Starting" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Torrent.State.Metadata" xml:space="preserve">
+    <value>Metadat.</value>
+  </data>
+  <data name="Torrent.State.Checking" xml:space="preserve">
+    <value>Prüfung</value>
+  </data>
+  <data name="Torrent.State.Downloading" xml:space="preserve">
+    <value>Laden</value>
+  </data>
+  <data name="Torrent.State.Seeding" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="Torrent.State.Paused" xml:space="preserve">
+    <value>Pausiert</value>
+  </data>
+  <data name="Torrent.State.Stopped" xml:space="preserve">
+    <value>Gestoppt</value>
+  </data>
+  <data name="Torrent.State.Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Torrent.Hint.List" xml:space="preserve">
+    <value>A hinzufügen  Leer pausieren/fortsetzen  D entfernen  O Ordner öffnen  Esc schließen</value>
+  </data>
+  <data name="Torrent.Hint.Confirm" xml:space="preserve">
+    <value>y entfernen  w entfernen + Dateien löschen  andere Taste bricht ab</value>
+  </data>
+  <data name="Torrent.Hint.Edit" xml:space="preserve">
+    <value>Tab Feld  Eingabe hinzufügen  Strg+U leeren  Esc zurück</value>
+  </data>
+  <data name="Torrent.Confirm.Remove" xml:space="preserve">
+    <value>"{0}" entfernen? y behält die heruntergeladenen Dateien, w löscht sie auch, jede andere Taste bricht ab.</value>
+  </data>
 </root>

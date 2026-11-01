@@ -2677,4 +2677,82 @@
   <data name="Icon.NotReadable" xml:space="preserve">
     <value>No se pudo leer este archivo de icono.</value>
   </data>
+  <data name="Transfer.Space.Title" xml:space="preserve">
+    <value>No hay suficiente espacio libre</value>
+  </data>
+  <data name="Transfer.Space.Body" xml:space="preserve">
+    <value>El destino tiene {0} libres, pero hay que escribir {1}{4}(faltan {2}) en:{4}{3}{4}{4}¿Pausar la operación para liberar espacio o continuar de todos modos?</value>
+  </data>
+  <data name="Transfer.Space.Pause" xml:space="preserve">
+    <value>Pausar</value>
+  </data>
+  <data name="Transfer.Space.GoOn" xml:space="preserve">
+    <value>Continuar de todos modos</value>
+  </data>
+  <data name="Transfer.Paused.Title" xml:space="preserve">
+    <value>Transferencia en pausa</value>
+  </data>
+  <data name="Transfer.Paused.Body" xml:space="preserve">
+    <value>La operación está en pausa.{1}Libere espacio en el destino y, después, reanude.{1}{1}{0}</value>
+  </data>
+  <data name="Transfer.Paused.Resume" xml:space="preserve">
+    <value>Reanudar</value>
+  </data>
+  <data name="Torrent.Col.Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Torrent.Col.State" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="Torrent.Col.Done" xml:space="preserve">
+    <value>Hecho</value>
+  </data>
+  <data name="Torrent.Col.Size" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
+  <data name="Torrent.Col.Down" xml:space="preserve">
+    <value>Bajada</value>
+  </data>
+  <data name="Torrent.Col.Up" xml:space="preserve">
+    <value>Subida</value>
+  </data>
+  <data name="Torrent.Col.Peer" xml:space="preserve">
+    <value>Par</value>
+  </data>
+  <data name="Torrent.State.Starting" xml:space="preserve">
+    <value>Iniciar</value>
+  </data>
+  <data name="Torrent.State.Metadata" xml:space="preserve">
+    <value>Metadat.</value>
+  </data>
+  <data name="Torrent.State.Checking" xml:space="preserve">
+    <value>Verific.</value>
+  </data>
+  <data name="Torrent.State.Downloading" xml:space="preserve">
+    <value>Bajando</value>
+  </data>
+  <data name="Torrent.State.Seeding" xml:space="preserve">
+    <value>Compart.</value>
+  </data>
+  <data name="Torrent.State.Paused" xml:space="preserve">
+    <value>Pausado</value>
+  </data>
+  <data name="Torrent.State.Stopped" xml:space="preserve">
+    <value>Parado</value>
+  </data>
+  <data name="Torrent.State.Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Torrent.Hint.List" xml:space="preserve">
+    <value>A añadir  Espacio pausar/reanudar  D quitar  O abrir carpeta  Esc cerrar</value>
+  </data>
+  <data name="Torrent.Hint.Confirm" xml:space="preserve">
+    <value>y quitar  w quitar + borrar archivos  otra tecla cancela</value>
+  </data>
+  <data name="Torrent.Hint.Edit" xml:space="preserve">
+    <value>Tab campo  Intro añadir  Ctrl+U borrar  Esc volver</value>
+  </data>
+  <data name="Torrent.Confirm.Remove" xml:space="preserve">
+    <value>¿Quitar "{0}"? y conserva los archivos descargados, w también los borra, cualquier otra tecla cancela.</value>
+  </data>
 </root>

@@ -189,7 +189,7 @@ public class Wizard : Control
 
     private sealed class WizardBackCommand(Wizard wizard) : Command
     {
-        public override string Title => "Back";
+        public override string Title => UiText.Get("Common.Back", "Back");
         public override bool CanExecute() => !wizard.IsFirstStep && !wizard.IsFinished;
 
         public override Task ExecuteAsync(object? args)
@@ -201,7 +201,7 @@ public class Wizard : Control
 
     private sealed class WizardNextCommand(Wizard wizard) : Command
     {
-        public override string Title => wizard.IsLastStep ? "Finish" : "Next";
+        public override string Title => wizard.IsLastStep ? UiText.Get("Wizard.Finish", "Finish") : UiText.Get("Wizard.Next", "Next");
         public override bool CanExecute() => !wizard.IsFinished && wizard.Steps.Count > 0;
 
         public override async Task ExecuteAsync(object? args) => await wizard.NextAsync();
