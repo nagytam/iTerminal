@@ -31,7 +31,7 @@ public sealed class SyntaxLanguage
         char stringEscape = '\\',
         bool verbatimStrings = false,
         bool hyphenatedWords = false,
-        char variableSigil = '\0',
+        string variableSigils = "",
         bool preprocessorDirectives = false,
         bool doubledQuotes = false,
         bool tripleQuotes = false,
@@ -46,7 +46,7 @@ public sealed class SyntaxLanguage
         StringEscape = stringEscape;
         VerbatimStrings = verbatimStrings;
         HyphenatedWords = hyphenatedWords;
-        VariableSigil = variableSigil;
+        VariableSigils = variableSigils;
         PreprocessorDirectives = preprocessorDirectives;
         DoubledQuotes = doubledQuotes;
         TripleQuotes = tripleQuotes;
@@ -69,8 +69,8 @@ public sealed class SyntaxLanguage
     /// <summary>Whether a word may contain hyphens, so <c>Write-Host</c> and <c>ForEach-Object</c> are one word.</summary>
     public bool HyphenatedWords { get; }
 
-    /// <summary>The sigil of a variable (<c>$</c> in PowerShell); a keyword right after it is a name, not a keyword. <c>'\0'</c> for none.</summary>
-    public char VariableSigil { get; }
+    /// <summary>The sigils that start a variable (<c>$</c> in PowerShell, <c>$@%</c> in Perl); a keyword right after one is a name, not a keyword. Empty for none.</summary>
+    public string VariableSigils { get; }
 
     /// <summary>Whether a <c>#</c> at the start of a line opens a preprocessor directive (<c>#include</c>, <c>#region</c>), coloured as a keyword.</summary>
     public bool PreprocessorDirectives { get; }
@@ -248,7 +248,7 @@ public static class SyntaxHighlighter
 
     private static readonly SyntaxLanguage PowerShell = new(
         "PowerShell", PowerShellKeywords, ["#"], ("<#", "#>"), "\"'", ignoreCase: true,
-        stringEscape: '`', hyphenatedWords: true, variableSigil: '$');
+        stringEscape: '`', hyphenatedWords: true, variableSigils: "$");
 
     private static readonly SyntaxLanguage C = new(
         "C", CKeywords, ["//"], ("/*", "*/"), "\"'", preprocessorDirectives: true);
@@ -267,7 +267,7 @@ public static class SyntaxHighlighter
         "Python", PythonKeywords, ["#"], null, "\"'", tripleQuotes: true);
 
     private static readonly SyntaxLanguage Shell = new(
-        "Shell", ShellKeywords, ["#"], null, "\"'", hyphenatedWords: true, variableSigil: '$');
+        "Shell", ShellKeywords, ["#"], null, "\"'", hyphenatedWords: true, variableSigils: "$");
 
     private static readonly SyntaxLanguage Yaml = new(
         "YAML", DataKeywords, ["#"], null, "\"'", ignoreCase: true, doubledQuotes: true, keyDelimiter: ':');
@@ -305,6 +305,33 @@ public static class SyntaxHighlighter
         ["and", "break", "do", "else", "elseif", "end", "false", "for", "function", "goto", "if", "in", "local", "nil", "not", "or",
          "repeat", "return", "then", "true", "until", "while"],
         ["--"], ("--[[", "]]"), "\"'");
+
+    private static readonly SyntaxLanguage R = new(
+        "R",
+        ["if", "else", "repeat", "while", "function", "for", "in", "next", "break", "TRUE", "FALSE", "NULL", "NA",
+         "NA_integer_", "NA_real_", "NA_character_", "Inf", "NaN"],
+        ["#"], null, "\"'");
+
+    private static readonly SyntaxLanguage Perl = new(
+        "Perl",
+        ["abs", "and", "bless", "chomp", "close", "cmp", "defined", "delete", "die", "do", "each", "else", "elsif", "eq",
+         "eval", "exists", "exit", "for", "foreach", "ge", "grep", "gt", "if", "index", "join", "keys", "last", "le", "length",
+         "local", "lc", "uc", "map", "my", "ne", "next", "no", "not", "open", "or", "our", "package", "pop", "print", "printf",
+         "push", "redo", "ref", "require", "return", "reverse", "scalar", "shift", "sort", "splice", "split", "sprintf", "state",
+         "sub", "substr", "undef", "unless", "until", "unshift", "use", "values", "wantarray", "warn", "while", "xor", "qw", "qq",
+         "BEGIN", "END", "__END__", "__DATA__", "__PACKAGE__"],
+        ["#"], null, "\"'", variableSigils: "$@%");
+
+    private static readonly SyntaxLanguage Php = new(
+        "PHP",
+        ["abstract", "and", "array", "as", "break", "callable", "case", "catch", "class", "clone", "const", "continue",
+         "declare", "default", "die", "do", "echo", "else", "elseif", "empty", "enddeclare", "endfor", "endforeach", "endif",
+         "endswitch", "endwhile", "enum", "eval", "exit", "extends", "final", "finally", "fn", "for", "foreach", "function",
+         "global", "goto", "if", "implements", "include", "include_once", "instanceof", "insteadof", "interface", "isset",
+         "list", "match", "namespace", "new", "or", "print", "private", "protected", "public", "readonly", "require",
+         "require_once", "return", "static", "switch", "throw", "trait", "try", "unset", "use", "var", "while", "xor", "yield",
+         "true", "false", "null", "self", "parent"],
+        ["//", "#"], ("/*", "*/"), "\"'", ignoreCase: true, variableSigils: "$");
 
     private static readonly SyntaxLanguage VisualBasic = new(
         "Visual Basic",
@@ -350,9 +377,9 @@ public static class SyntaxHighlighter
         [".vue"] = Markup, [".svelte"] = Markup, [".xhtml"] = Markup, [".resx"] = Markup, [".nuspec"] = Markup,
         [".tf"] = Config, [".tfvars"] = Config, [".gitignore"] = Config,
         [".java"] = Java, [".js"] = JavaScript, [".jsx"] = JavaScript, [".mjs"] = JavaScript,
-        [".ts"] = CLike, [".tsx"] = CLike, [".go"] = Go, [".rs"] = Rust, [".kt"] = CLike, [".swift"] = CLike, [".php"] = CLike,
+        [".ts"] = CLike, [".tsx"] = CLike, [".go"] = Go, [".rs"] = Rust, [".kt"] = CLike, [".swift"] = CLike, [".php"] = Php,
         [".scala"] = CLike, [".dart"] = CLike, [".css"] = CLike, [".scss"] = CLike,
-        [".py"] = Python, [".pyw"] = Python, [".rb"] = Python, [".pl"] = Python, [".r"] = Python,
+        [".py"] = Python, [".pyw"] = Python, [".rb"] = Python, [".pl"] = Perl, [".pm"] = Perl, [".r"] = R,
         [".sh"] = Shell, [".bash"] = Shell, [".zsh"] = Shell,
         [".sql"] = Sql,
         [".xml"] = Markup, [".html"] = Markup, [".htm"] = Markup, [".xaml"] = Markup, [".csproj"] = Markup,
@@ -365,7 +392,7 @@ public static class SyntaxHighlighter
 
     /// <summary>Every language built in, for <see cref="iConsole.Services.ISyntaxHighlightingService"/> to list and look up by name.</summary>
     internal static IReadOnlyList<SyntaxLanguage> BuiltInLanguages { get; } =
-        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, PowerShell, Python, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, VisualBasic, FSharp, BuildFile];
+        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, PowerShell, Python, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, R, Perl, Php, VisualBasic, FSharp, BuildFile];
 
     /// <summary>The language for a file name or path, or null when there is none to colour it with.</summary>
     public static SyntaxLanguage? ForFile(string? fileName)
@@ -510,7 +537,7 @@ public static class SyntaxHighlighter
                 }
 
                 // A name after a sigil ($process, $data) is a variable, not the keyword it spells.
-                bool variable = language.VariableSigil != '\0' && i > 0 && line[i - 1] == language.VariableSigil;
+                bool variable = i > 0 && language.VariableSigils.Contains(line[i - 1]);
                 if (!variable && language.Keywords.Contains(line.Substring(i, stop - i)))
                 {
                     spans.Add(new SyntaxSpan(i, stop - i, SyntaxKind.Keyword));
