@@ -9,7 +9,7 @@ namespace iTerminal.Core.Test.Commands;
 [DoNotParallelize]
 public class NotificationsLanguageTest
 {
-    private static readonly string[] Keys = ["Notify.PullingRebase","Notify.NotGitRepo","Notify.PulledRebase","Notify.PullRebaseFailed","Notify.Scanning","Notify.ThreatsFound","Notify.DefenderFailed","Notify.NoThreats","Notify.Eject","Notify.Format","Notify.Clipboard","Notify.Paste","Notify.WipeStopped","Notify.WipeStoppedBody","Notify.WipeErrors","Notify.WipeErrorsBody","Notify.WipeFinished","Notify.WipeFinishedBody","Notify.ClipboardNoFiles","Notify.SkippedCount"];
+    private static readonly string[] Keys = ["Notify.PullingRebase","Notify.NotGitRepo","Notify.PulledRebase","Notify.PullRebaseFailed","Notify.GitSyncing","Notify.GitSynced","Notify.GitSyncNoUpstream","Notify.GitSyncPullFailed","Notify.GitSyncRebaseNote","Notify.GitSyncPushFailed","Notify.GitSyncFailed","Notify.Scanning","Notify.ThreatsFound","Notify.DefenderFailed","Notify.NoThreats","Notify.Eject","Notify.Format","Notify.Clipboard","Notify.Paste","Notify.WipeStopped","Notify.WipeStoppedBody","Notify.WipeErrors","Notify.WipeErrorsBody","Notify.WipeFinished","Notify.WipeFinishedBody","Notify.ClipboardNoFiles","Notify.SkippedCount"];
 
     [TestCleanup]
     public void Reset() => UiText.Current = null;

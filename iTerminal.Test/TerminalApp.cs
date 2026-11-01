@@ -206,6 +206,9 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.DriveActions>();
                 services.AddSingleton<Core.Services.Drives.IDriveActionsService>(provider => provider.GetRequiredService<SandboxServices.DriveActions>());
                 services.AddSingleton<Core.Services.AccessControl.IAccessControlService, SandboxServices.AccessControl>();
+                // No test prints on, or lists the queue of, a printer of the machine it runs on.
+                services.AddSingleton<SandboxServices.Printing>();
+                services.AddSingleton<Core.Services.Printing.IPrintService>(provider => provider.GetRequiredService<SandboxServices.Printing>());
                 services.AddSingleton<Core.Services.Mail.IMailService, SandboxServices.Mail>();
                 services.AddSingleton<Core.Services.Web.IWebFetcher, SandboxServices.Web>();
                 services.AddSingleton<SandboxServices.SystemSettings>();
@@ -410,7 +413,7 @@ public sealed class TerminalApp : IAsyncDisposable
 
     private async Task DismissSplashAsync()
     {
-        // The splash closes itself after three seconds; Esc closes it at once. Either way the
+        // The splash closes itself after 4.5 seconds; Esc closes it at once. Either way the
         // panels are what the first real frame has to show.
         const string Splash = "Welcome to iTerminal";
         var deadline = DateTime.UtcNow.AddSeconds(10);

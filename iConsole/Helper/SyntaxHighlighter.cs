@@ -228,6 +228,12 @@ public static class SyntaxHighlighter
         "union", "all", "distinct", "as", "and", "or", "not", "null", "is", "in", "like", "between", "exists", "case",
         "when", "then", "else", "end", "limit", "offset", "primary", "key", "foreign", "references", "default",
         "constraint", "unique", "begin", "commit", "rollback", "transaction", "int", "varchar", "text", "date",
+        "integer", "bigint", "smallint", "decimal", "numeric", "float", "double", "char", "boolean", "timestamp", "time",
+        "true", "false", "cross", "full", "natural", "using", "intersect", "except", "with", "recursive", "over",
+        "partition", "asc", "desc", "count", "sum", "avg", "min", "max", "cast", "coalesce", "any", "some", "if",
+        "truncate", "add", "column", "database", "schema", "grant", "revoke", "procedure", "function", "trigger",
+        "returns", "return", "declare", "while", "for", "each", "row", "cascade", "check", "auto_increment",
+        "identity", "explain", "use", "replace", "merge", "fetch", "next", "only", "rows", "first", "last",
     ];
 
     private static readonly string[] MarkupKeywords = [];
@@ -285,7 +291,7 @@ public static class SyntaxHighlighter
         "Properties", [], ["#"], null, "\"'", keyDelimiter: '=');
 
     private static readonly SyntaxLanguage Sql = new(
-        "SQL", SqlKeywords, ["--"], ("/*", "*/"), "\"'", ignoreCase: true);
+        "SQL", SqlKeywords, ["--"], ("/*", "*/"), "\"'`", ignoreCase: true, doubledQuotes: true);
 
     private static readonly SyntaxLanguage Markup = new(
         "Markup", MarkupKeywords, [], ("<!--", "-->"), "\"'");
@@ -297,7 +303,12 @@ public static class SyntaxHighlighter
         "Config", DataKeywords, ["#", ";"], null, "\"'", ignoreCase: true);
 
     private static readonly SyntaxLanguage Batch = new(
-        "Batch", ["if", "else", "for", "in", "do", "goto", "call", "echo", "set", "exit", "rem", "setlocal", "endlocal", "not", "exist"],
+        "Batch",
+        ["if", "else", "for", "in", "do", "goto", "call", "echo", "set", "exit", "rem", "setlocal", "endlocal", "not", "exist",
+         "defined", "errorlevel", "equ", "neq", "lss", "leq", "gtr", "geq", "cmdextversion", "enabledelayedexpansion",
+         "disabledelayedexpansion", "enableextensions", "disableextensions", "pause", "shift", "title", "cls", "cd", "chdir",
+         "md", "mkdir", "rd", "rmdir", "del", "erase", "copy", "xcopy", "robocopy", "move", "ren", "rename", "type", "start",
+         "pushd", "popd", "choice", "findstr", "find", "where", "timeout", "assoc", "ftype", "path", "prompt", "ver", "vol", "color", "mklink"],
         ["rem ", "::"], null, "\"", ignoreCase: true);
 
     private static readonly SyntaxLanguage Lua = new(
@@ -381,7 +392,7 @@ public static class SyntaxHighlighter
         [".scala"] = CLike, [".dart"] = CLike, [".css"] = CLike, [".scss"] = CLike,
         [".py"] = Python, [".pyw"] = Python, [".rb"] = Python, [".pl"] = Perl, [".pm"] = Perl, [".r"] = R,
         [".sh"] = Shell, [".bash"] = Shell, [".zsh"] = Shell,
-        [".sql"] = Sql,
+        [".sql"] = Sql, [".ddl"] = Sql, [".psql"] = Sql, [".pgsql"] = Sql, [".mysql"] = Sql, [".tsql"] = Sql,
         [".xml"] = Markup, [".html"] = Markup, [".htm"] = Markup, [".xaml"] = Markup, [".csproj"] = Markup,
         [".props"] = Markup, [".targets"] = Markup, [".svg"] = Markup, [".slnx"] = Markup, [".wxs"] = Markup,
         [".json"] = Json, [".jsonc"] = Json,

@@ -1,4 +1,5 @@
-﻿using iConsole.Data;
+﻿using iTerminal.Core.Services.BackgroundStart;
+using iConsole.Data;
 using iConsole.Jobs;
 using iConsole.Model;
 using iTerminal.Core.Data;
@@ -15,17 +16,20 @@ public class FolderIndexJob : Job
     private readonly IDbContextFactory<iTerminalDbContext> _dbContextFactory;
     private readonly ConcurrentQueue<IHierarchicalItemModel> _queue = [];
     private readonly Dictionary<string, FolderIndexCacheEntry> _cacheEntries = new(StringComparer.OrdinalIgnoreCase);
+    private readonly IBackgroundStartService _backgroundStart;
 
     private static readonly TimeSpan ScanThrottleDelay = TimeSpan.FromMilliseconds(100);
 
     public FolderIndexJob(
         FolderIndexModel folderIndexModel,
         DriveInfoModel driveInfoModel,
-        IDbContextFactory<iTerminalDbContext> dbContextFactory)
+        IDbContextFactory<iTerminalDbContext> dbContextFactory,
+        IBackgroundStartService backgroundStart)
     {
         _folderIndexModel = folderIndexModel ?? new FolderIndexModel();
         driveInfoModel ??= new DriveInfoModel();
         _dbContextFactory = dbContextFactory ?? new TemporaryDbContextFactory();
+        _backgroundStart = backgroundStart;
 
         driveInfoModel.Drives.CollectionChanged += OnDriveCollectionChanged;
         foreach (Drive driveInfo in driveInfoModel.Drives.AsSnapshot())
@@ -72,10 +76,9 @@ public class FolderIndexJob : Job
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
-        // Nothing is walked until the folder selector asks for the index: it walks every folder on every drive, and
-        // started at start-up it was the largest single source of processor load in the first 30 seconds. The cache
-        // is read only then too, which also takes its read off the start-up path.
-        await _folderIndexModel.IndexingRequested.WaitAsync(cancellationToken);
+        // It walks every folder on every drive, so it starts when the folder selector asks for it, or as configured
+        // (BackgroundStart.FolderIndex). The cache is read only then too, which also takes the read off the start-up path.
+        await _backgroundStart.WaitForStartAsync(BackgroundServices.FolderIndex, cancellationToken);
         LoadCacheEntries();
 
         while (!cancellationToken.IsCancellationRequested)

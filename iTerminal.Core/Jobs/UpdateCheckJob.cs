@@ -1,3 +1,4 @@
+using iTerminal.Core.Services.BackgroundStart;
 using iConsole.Localization;
 using iConsole.Jobs;
 using iConsole.Services;
@@ -18,17 +19,17 @@ namespace iTerminal.Core.Jobs;
 public class UpdateCheckJob(
     IUpdateService updates,
     INotificationService notifications,
-    IServiceProvider serviceProvider) : Job
+    IServiceProvider serviceProvider,
+    IBackgroundStartService backgroundStart) : Job
 {
-    internal static readonly TimeSpan StartDelay = TimeSpan.FromSeconds(5);
     internal static readonly TimeSpan Interval = TimeSpan.FromHours(12);
-
-    protected override TimeSpan InitialDelay => StartDelay;
 
     private string? _announced;
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
+        // The check runs when About is opened, or as configured (BackgroundStart.UpdateCheck).
+        await backgroundStart.WaitForStartAsync(BackgroundServices.UpdateCheck, cancellationToken);
         bool first = true;
         while (!cancellationToken.IsCancellationRequested)
         {

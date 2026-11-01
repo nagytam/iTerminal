@@ -3118,4 +3118,124 @@
   <data name="Task.Skipped" xml:space="preserve">
     <value>Saltato</value>
   </data>
+  <data name="Menu.Print" xml:space="preserve">
+    <value>Stampa</value>
+  </data>
+  <data name="Menu.PrintItem" xml:space="preserve">
+    <value>Stampa…</value>
+  </data>
+  <data name="DialogHint.PrintFile" xml:space="preserve">
+    <value>Stampa il file</value>
+  </data>
+  <data name="DialogHint.ChoosePrinter" xml:space="preserve">
+    <value>Scegli la stampante</value>
+  </data>
+  <data name="DialogHint.Copies" xml:space="preserve">
+    <value>Più o meno copie</value>
+  </data>
+  <data name="DialogHint.ChooseJob" xml:space="preserve">
+    <value>Scegli un lavoro di stampa</value>
+  </data>
+  <data name="DialogHint.HoldOrResumeJob" xml:space="preserve">
+    <value>Sospendi o riprendi il lavoro</value>
+  </data>
+  <data name="DialogHint.CancelJobAsks" xml:space="preserve">
+    <value>Annulla il lavoro (chiede prima)</value>
+  </data>
+  <data name="DialogHint.RefreshQueue" xml:space="preserve">
+    <value>Rileggi la coda</value>
+  </data>
+  <data name="DialogHint.CancelJobYes" xml:space="preserve">
+    <value>Annulla il lavoro di stampa</value>
+  </data>
+  <data name="DialogHint.KeepJob" xml:space="preserve">
+    <value>Mantieni il lavoro di stampa</value>
+  </data>
+  <data name="Print.Status.AskCancel" xml:space="preserve">
+    <value>Annullare il lavoro {0} ({1})? y lo annulla.</value>
+  </data>
+  <data name="Print.Status.NoFile" xml:space="preserve">
+    <value>Nessun file da stampare sotto il cursore.</value>
+  </data>
+  <data name="Print.Status.NoPrinter" xml:space="preserve">
+    <value>Non c'è nessuna stampante.</value>
+  </data>
+  <data name="Print.Status.Sending" xml:space="preserve">
+    <value>Invio di {0} a {1}…</value>
+  </data>
+  <data name="Print.State.Printing" xml:space="preserve">
+    <value>Stampa</value>
+  </data>
+  <data name="Print.State.Held" xml:space="preserve">
+    <value>Sospeso</value>
+  </data>
+  <data name="Print.State.Error" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="Print.State.Queued" xml:space="preserve">
+    <value>In coda</value>
+  </data>
+  <data name="Print.NoFile" xml:space="preserve">
+    <value>(nessun file sotto il cursore: solo la coda)</value>
+  </data>
+  <data name="Print.File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Print.Printer" xml:space="preserve">
+    <value>Stampante</value>
+  </data>
+  <data name="Print.Copies" xml:space="preserve">
+    <value>Copie</value>
+  </data>
+  <data name="Print.Col.Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Print.Col.Document" xml:space="preserve">
+    <value>Documento</value>
+  </data>
+  <data name="Print.Col.Owner" xml:space="preserve">
+    <value>Utente</value>
+  </data>
+  <data name="Print.Col.State" xml:space="preserve">
+    <value>Stato</value>
+  </data>
+  <data name="Print.QueueEmpty" xml:space="preserve">
+    <value>La coda è vuota.</value>
+  </data>
+  <data name="Print.Reading" xml:space="preserve">
+    <value>Lettura delle stampanti…</value>
+  </data>
+  <data name="Print.NoPrinters" xml:space="preserve">
+    <value>Nessuna stampante installata.</value>
+  </data>
+  <data name="Print.Default" xml:space="preserve">
+    <value>(predefinita)</value>
+  </data>
+  <data name="Print.Hint.Confirm" xml:space="preserve">
+    <value>y annulla il lavoro  qualsiasi altro tasto lo mantiene</value>
+  </data>
+  <data name="Print.Hint.List" xml:space="preserve">
+    <value>Invio stampa  ←→ stampante  +/- copie  P sospendi/riprendi  Canc annulla  F5 aggiorna  Esc chiudi</value>
+  </data>
+  <data name="Notify.GitSyncing" xml:space="preserve">
+    <value>Sincronizzazione con il remoto…</value>
+  </data>
+  <data name="Notify.GitSynced" xml:space="preserve">
+    <value>Sincronizzato con il remoto.</value>
+  </data>
+  <data name="Notify.GitSyncNoUpstream" xml:space="preserve">
+    <value>Il branch non ha un branch upstream con cui sincronizzare.</value>
+  </data>
+  <data name="Notify.GitSyncPullFailed" xml:space="preserve">
+    <value>Sincronizzazione git: pull --rebase non riuscito</value>
+  </data>
+  <data name="Notify.GitSyncRebaseNote" xml:space="preserve">
+    <value>(Non è stato inviato nulla. Se git ha avviato un rebase, resta incompleto.)</value>
+  </data>
+  <data name="Notify.GitSyncPushFailed" xml:space="preserve">
+    <value>Sincronizzazione git: push non riuscito</value>
+  </data>
+  <data name="Notify.GitSyncFailed" xml:space="preserve">
+    <value>Sincronizzazione git non riuscita</value>
+  </data>
 </root>

@@ -74,6 +74,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? imageFileViewerDialog = null,
+        iConsole.Dialogs.XmlViewerDialog? xmlViewerDialog = null,
+        iConsole.Dialogs.JsonViewerDialog? jsonViewerDialog = null,
+        iConsole.Dialogs.CsvViewerDialog? csvViewerDialog = null,
         // Tools, the larger features (optional so the menu can be built without them)
         iTerminal.Core.Dialogs.Git.GitClientDialog? gitClientDialog = null,
         iTerminal.Core.Dialogs.Documents.DocumentManagerDialog? documentManagerDialog = null,
@@ -122,9 +125,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
         iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null,
-        XmlViewerDialog? xmlViewerDialog = null,
-        JsonViewerDialog? jsonViewerDialog = null,
-        CsvViewerDialog? csvViewerDialog = null
+        PrintDialog? printDialog = null
         )
         : base([], themeService)
     {
@@ -143,6 +144,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             musicFileViewerDialog: musicFileViewerDialog,
             videoFileViewerDialog: videoFileViewerDialog,
             imageFileViewerDialog: imageFileViewerDialog,
+            webBrowserDialog: webBrowserDialog,
             xmlViewerDialog: xmlViewerDialog,
             jsonViewerDialog: jsonViewerDialog,
             csvViewerDialog: csvViewerDialog,
@@ -152,7 +154,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             secureWipeDialog: secureWipeDialog,
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
-            notificationService: notificationService));
+            notificationService: notificationService,
+            printDialog: printDialog));
 
         AddMenuItem(new EditMenuItem(
             contentModelService,
