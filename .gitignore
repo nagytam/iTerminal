@@ -486,3 +486,6 @@ profile.*.json
 *.~lock.*
 
 CoverageReport/
+
+# Reqnroll generates a .feature.cs beside each feature file at build time
+*.feature.cs
