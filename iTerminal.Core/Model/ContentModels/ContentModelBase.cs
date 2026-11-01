@@ -639,6 +639,11 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
                 cursor = _pendingCursorPositionY;
             }
 
+            // The row to keep is the one that was saved, not whatever this listing has at the index: when the
+            // saved row is missing, the index is only where the cursor is for now, and remembering that row
+            // would have the next, complete listing restore to an unrelated file.
+            var rowToKeep = _pendingEntryUrl;
+
             _hasPendingNavigation = false;
             _pendingEntryUrl = null;
 
@@ -648,7 +653,7 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
 
             // From here the ordinary machinery keeps the panel on this row: the next refresh remembers
             // it and restores it, the way it does for a row the user picked themselves.
-            _focusedEntryUrl = GetFocusedEntry()?.Url.FullUrl;
+            _focusedEntryUrl = rowToKeep ?? GetFocusedEntry()?.Url.FullUrl;
 
             // Only corrects the saved offset when the cursor no longer falls inside it — which is
             // exactly what happens when the remembered row has moved.
