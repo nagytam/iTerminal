@@ -48,7 +48,7 @@ public class KeyHintGuardTest
     public void ApplicationInfo_TitleNamesTheApplicationAndItsVersion()
     {
         Assert.IsFalse(string.IsNullOrWhiteSpace(ApplicationInfo.Version));
-        Assert.AreEqual("iTerminal " + ApplicationInfo.Version, ApplicationInfo.Title);
+        Assert.AreEqual("iTerminal BETA " + ApplicationInfo.Version, ApplicationInfo.Title);
     }
 
     [TestMethod]

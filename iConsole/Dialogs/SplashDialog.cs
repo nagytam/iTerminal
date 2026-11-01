@@ -27,7 +27,7 @@ public class SplashDialog : Dialog
     private int _logoColumns;
 
     public SplashDialog(IThemeService themeService, SixelOverlay? sixelOverlay = null)
-        : base("iTerminal", themeService)
+        : base("iTerminal BETA", themeService)
     {
         _sixelOverlay = sixelOverlay;
         _welcomeLabel = new Label(string.Empty, themeService);
@@ -186,7 +186,7 @@ public class SplashDialog : Dialog
 
         _welcomeLabel.Text = StringHelper.AlignCenter(
             " ".Repeat((int)ViewSize.Width - 2), 
-            "Welcome to iTerminal " + RuntimeInformation.FrameworkDescription);
+            "Welcome to iTerminal BETA " + RuntimeInformation.FrameworkDescription);
         _welcomeLabel.IsBold = true;
         _welcomeLabel.Position = new Position(1, 1 + top);
         _welcomeLabel.ViewSize = new Size(_welcomeLabel.Text.Length, 1);

@@ -62,7 +62,7 @@ public class AboutDialog : Dialog
 
     internal static IReadOnlyList<string> Lines =>
     [
-        "iTerminal",
+        "iTerminal BETA",
         "A keyboard-driven file manager and terminal for the console.",
         string.Empty,
         .. DetailLines,

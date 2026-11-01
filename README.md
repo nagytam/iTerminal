@@ -1,4 +1,6 @@
-# iTerminal
+# iTerminal BETA
+
+> **BETA:** iTerminal is in beta. Expect rough edges and changes between releases, and keep backups of anything you cannot afford to lose.
 
 A two-panel, keyboard-driven file manager and developer toolbox for the terminal, written in C# on .NET 10. It runs on Windows and Linux and is built on `iConsole`, a reusable text-UI framework that lives in the same repository.
 

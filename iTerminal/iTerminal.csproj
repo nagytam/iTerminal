@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ApplicationIcon>Assets\iTerminal.ico</ApplicationIcon>
+    <Product>iTerminal BETA</Product>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,7 +35,7 @@
     <!-- Debian and RPM package names are lower case; the command stays iTerminal. -->
     <PackagePrefix>iterminal</PackagePrefix>
     <PackageMaintainer Condition="'$(PackageMaintainer)' == ''">Tamas Nagy &lt;mail@tamas-nagy.net&gt;</PackageMaintainer>
-    <PackageDescription>A two-panel file manager for the terminal</PackageDescription>
+    <PackageDescription>iTerminal BETA: a two-panel file manager for the terminal</PackageDescription>
     <RpmVendor>Tamas Nagy</RpmVendor>
     <DebSection>utils</DebSection>
     <DebPriority>optional</DebPriority>
