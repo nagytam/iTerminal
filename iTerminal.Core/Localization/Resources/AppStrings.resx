@@ -1042,6 +1042,63 @@
   <data name="DialogHint.PauseOrResumeSnake" xml:space="preserve">
     <value>Pause or resume the snake, or start it moving</value>
   </data>
+  <data name="Games.Risk.SideBlue" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="Games.Risk.SideRed" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="Games.Risk.Draw" xml:space="preserve">
+    <value>A draw: the turn limit was reached.</value>
+  </data>
+  <data name="Games.Risk.Wins" xml:space="preserve">
+    <value>{0} wins!</value>
+  </data>
+  <data name="Games.Risk.ToMove" xml:space="preserve">
+    <value>{0} to move.</value>
+  </data>
+  <data name="Games.Risk.PlaceHint" xml:space="preserve">
+    <value>{0}: place {1} armies on your territories.</value>
+  </data>
+  <data name="Games.Risk.AttackHint" xml:space="preserve">
+    <value>{0}: attack from a territory with 2 or more armies, or E to end the attack.</value>
+  </data>
+  <data name="Games.Risk.FortifyHint" xml:space="preserve">
+    <value>{0}: move one army to an adjacent territory of yours, or E to end the turn.</value>
+  </data>
+  <data name="Games.Risk.PlaceOwn" xml:space="preserve">
+    <value>Place armies on your own territory.</value>
+  </data>
+  <data name="Games.Risk.AttackFromTwo" xml:space="preserve">
+    <value>Attack from a territory with 2 or more armies.</value>
+  </data>
+  <data name="Games.Risk.MoveFromTwo" xml:space="preserve">
+    <value>Move from a territory with 2 or more armies.</value>
+  </data>
+  <data name="Games.Risk.SelectFirst" xml:space="preserve">
+    <value>Select one of your territories to attack from.</value>
+  </data>
+  <data name="Games.Risk.NotAdjacent" xml:space="preserve">
+    <value>That territory is not next to the one you attack from.</value>
+  </data>
+  <data name="Games.Risk.PlaceFirst" xml:space="preserve">
+    <value>Place the {0} remaining armies first.</value>
+  </data>
+  <data name="Games.Risk.MoveToOwn" xml:space="preserve">
+    <value>Move to one of your own territories.</value>
+  </data>
+  <data name="Games.Risk.Battle" xml:space="preserve">
+    <value>{0} rolled {1} and {2} {3}: {0} loses {4}, {2} loses {5}.</value>
+  </data>
+  <data name="Games.Risk.Conquers" xml:space="preserve">
+    <value>{0} takes the territory.</value>
+  </data>
+  <data name="Games.Risk.Select" xml:space="preserve">
+    <value>select</value>
+  </data>
+  <data name="Games.Risk.Hint" xml:space="preserve">
+    <value>Select, attack, move or place</value>
+  </data>
   <data name="Games.Snake.Pause" xml:space="preserve">
     <value>pause</value>
   </data>

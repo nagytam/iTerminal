@@ -1042,6 +1042,63 @@
   <data name="DialogHint.PauseOrResumeSnake" xml:space="preserve">
     <value>Kígyó szüneteltetése vagy folytatása, vagy mozgásba hozása</value>
   </data>
+  <data name="Games.Risk.SideBlue" xml:space="preserve">
+    <value>Kék</value>
+  </data>
+  <data name="Games.Risk.SideRed" xml:space="preserve">
+    <value>Piros</value>
+  </data>
+  <data name="Games.Risk.Draw" xml:space="preserve">
+    <value>Döntetlen: elérte a körszámkorlátot.</value>
+  </data>
+  <data name="Games.Risk.Wins" xml:space="preserve">
+    <value>{0} nyert!</value>
+  </data>
+  <data name="Games.Risk.ToMove" xml:space="preserve">
+    <value>{0} következik.</value>
+  </data>
+  <data name="Games.Risk.PlaceHint" xml:space="preserve">
+    <value>{0}: helyezz le {1} sereget a saját területeidre.</value>
+  </data>
+  <data name="Games.Risk.AttackHint" xml:space="preserve">
+    <value>{0}: támadj legalább 2 sereggel rendelkező területről, vagy E a támadás befejezéséhez.</value>
+  </data>
+  <data name="Games.Risk.FortifyHint" xml:space="preserve">
+    <value>{0}: mozgass egy sereget egy szomszédos saját területre, vagy E a kör befejezéséhez.</value>
+  </data>
+  <data name="Games.Risk.PlaceOwn" xml:space="preserve">
+    <value>Csak saját területre helyezhetsz sereget.</value>
+  </data>
+  <data name="Games.Risk.AttackFromTwo" xml:space="preserve">
+    <value>Legalább 2 sereggel rendelkező területről támadj.</value>
+  </data>
+  <data name="Games.Risk.MoveFromTwo" xml:space="preserve">
+    <value>Legalább 2 sereggel rendelkező területről mozgass.</value>
+  </data>
+  <data name="Games.Risk.SelectFirst" xml:space="preserve">
+    <value>Válassz egy saját területet, ahonnan támadsz.</value>
+  </data>
+  <data name="Games.Risk.NotAdjacent" xml:space="preserve">
+    <value>Ez a terület nem szomszédos azzal, ahonnan támadsz.</value>
+  </data>
+  <data name="Games.Risk.PlaceFirst" xml:space="preserve">
+    <value>Először helyezd le a még hátralévő {0} sereget.</value>
+  </data>
+  <data name="Games.Risk.MoveToOwn" xml:space="preserve">
+    <value>Saját területre mozgass.</value>
+  </data>
+  <data name="Games.Risk.Battle" xml:space="preserve">
+    <value>{0} dobott: {1}, {2} pedig {3}: {0} veszít {4}, {2} veszít {5}.</value>
+  </data>
+  <data name="Games.Risk.Conquers" xml:space="preserve">
+    <value>{0} elfoglalja a területet.</value>
+  </data>
+  <data name="Games.Risk.Select" xml:space="preserve">
+    <value>kiválaszt</value>
+  </data>
+  <data name="Games.Risk.Hint" xml:space="preserve">
+    <value>Kiválasztás, támadás, mozgatás vagy lerakás</value>
+  </data>
   <data name="Games.Snake.Pause" xml:space="preserve">
     <value>szünet</value>
   </data>

@@ -1042,6 +1042,63 @@
   <data name="DialogHint.PauseOrResumeSnake" xml:space="preserve">
     <value>Die Schlange anhalten oder weiterlaufen lassen, oder sie in Bewegung setzen</value>
   </data>
+  <data name="Games.Risk.SideBlue" xml:space="preserve">
+    <value>Blau</value>
+  </data>
+  <data name="Games.Risk.SideRed" xml:space="preserve">
+    <value>Rot</value>
+  </data>
+  <data name="Games.Risk.Draw" xml:space="preserve">
+    <value>Unentschieden: das Zuglimit wurde erreicht.</value>
+  </data>
+  <data name="Games.Risk.Wins" xml:space="preserve">
+    <value>{0} gewinnt!</value>
+  </data>
+  <data name="Games.Risk.ToMove" xml:space="preserve">
+    <value>{0} ist am Zug.</value>
+  </data>
+  <data name="Games.Risk.PlaceHint" xml:space="preserve">
+    <value>{0}: setze {1} Armeen auf deine Gebiete.</value>
+  </data>
+  <data name="Games.Risk.AttackHint" xml:space="preserve">
+    <value>{0}: greife von einem Gebiet mit mindestens 2 Armeen an, oder E, um den Angriff zu beenden.</value>
+  </data>
+  <data name="Games.Risk.FortifyHint" xml:space="preserve">
+    <value>{0}: bewege eine Armee auf ein angrenzendes eigenes Gebiet, oder E, um den Zug zu beenden.</value>
+  </data>
+  <data name="Games.Risk.PlaceOwn" xml:space="preserve">
+    <value>Armeen nur auf deinem eigenen Gebiet platzieren.</value>
+  </data>
+  <data name="Games.Risk.AttackFromTwo" xml:space="preserve">
+    <value>Greife von einem Gebiet mit mindestens 2 Armeen an.</value>
+  </data>
+  <data name="Games.Risk.MoveFromTwo" xml:space="preserve">
+    <value>Bewege von einem Gebiet mit mindestens 2 Armeen aus.</value>
+  </data>
+  <data name="Games.Risk.SelectFirst" xml:space="preserve">
+    <value>Wähle eines deiner Gebiete, von dem aus du angreifst.</value>
+  </data>
+  <data name="Games.Risk.NotAdjacent" xml:space="preserve">
+    <value>Dieses Gebiet grenzt nicht an das, von dem du angreifst.</value>
+  </data>
+  <data name="Games.Risk.PlaceFirst" xml:space="preserve">
+    <value>Setze zuerst die restlichen {0} Armeen.</value>
+  </data>
+  <data name="Games.Risk.MoveToOwn" xml:space="preserve">
+    <value>Bewege auf eines deiner eigenen Gebiete.</value>
+  </data>
+  <data name="Games.Risk.Battle" xml:space="preserve">
+    <value>{0} würfelte {1} und {2} {3}: {0} verliert {4}, {2} verliert {5}.</value>
+  </data>
+  <data name="Games.Risk.Conquers" xml:space="preserve">
+    <value>{0} erobert das Gebiet.</value>
+  </data>
+  <data name="Games.Risk.Select" xml:space="preserve">
+    <value>auswählen</value>
+  </data>
+  <data name="Games.Risk.Hint" xml:space="preserve">
+    <value>Auswählen, angreifen, ziehen oder setzen</value>
+  </data>
   <data name="Games.Snake.Pause" xml:space="preserve">
     <value>pausieren</value>
   </data>

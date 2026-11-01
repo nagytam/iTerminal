@@ -9,7 +9,7 @@ using iTerminal.Core.Services.Games;
 namespace iTerminal.Core.Dialogs.Games;
 
 /// <summary>
-/// Board games to play inside the terminal: Tic-Tac-Toe, Chess, Go, Nine Men's Morris and Snake. The first four play
+/// Board games to play inside the terminal: Tic-Tac-Toe, Chess, Go, Nine Men's Morris, Snake and Risk. All but Snake play
 /// against the computer or a second person at the same keyboard; Snake is for one person. The games keep their positions
 /// while the app runs, so closing the dialog does not end a game.
 ///
@@ -43,7 +43,7 @@ public class GamesDialog : SplitPaneDialog
     private bool _stuck;
 
     public GamesDialog(IThemeService themeService, ITimeProvider timeProvider)
-        : this([new TicTacToeGame(), new ChessGame(), new GoGame(), new NineMensMorrisGame(), new SnakeGame()], themeService, timeProvider)
+        : this([new TicTacToeGame(), new ChessGame(), new GoGame(), new NineMensMorrisGame(), new SnakeGame(), new RiskGame()], themeService, timeProvider)
     {
     }
 
