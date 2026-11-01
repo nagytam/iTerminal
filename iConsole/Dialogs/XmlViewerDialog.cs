@@ -183,9 +183,19 @@ public class XmlViewerDialog : Dialog
         StateHasChanged();
     }
 
-    private string TitleText() =>
-        (Url?.Shrink(Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length)) ?? "XML")
-        + (_textMode ? " [TEXT]" : "  F2:Validate  F4:Text  /:XPath  *:Expand all");
+    /// <summary>The key hints on the title, shown while the tree is up: the open/close keys are the ones a user cannot guess.</summary>
+    private const string TreeHints = "  F2:Validate  F4:Text  /:XPath  +/-:Open/close  *:Expand all";
+
+    /// <summary>
+    /// The title: the file's name, shrunk so the key hints after it still fit the border. The hints come after the name
+    /// and are never the part that gets cut.
+    /// </summary>
+    private string TitleText()
+    {
+        string suffix = _textMode ? " [TEXT]" : TreeHints;
+        int budget = Math.Max(4, (int)ViewSize.Width - 14 - CloseActionView.Length - suffix.Length);
+        return (Url?.Shrink(budget) ?? "XML") + suffix;
+    }
 
     /// <summary>
     /// Starts the query in the background; its results are applied on the next idle pass, on the thread that owns the
