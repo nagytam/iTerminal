@@ -114,6 +114,14 @@ public class SyntaxLanguagesTest
     }
 
     [TestMethod]
+    public void Sql_KeepsADoubledQuoteInsideTheString_AndColoursBacktickNames()
+    {
+        CollectionAssert.Contains(Spans("x.sql", "select 'it''s' from t"), ("'it''s'", SyntaxKind.String));
+        CollectionAssert.Contains(Spans("x.sql", "select `a b` from t"), ("`a b`", SyntaxKind.String));
+        CollectionAssert.Contains(Spans("x.psql", "WITH r AS (SELECT 1) SELECT * FROM r"), ("WITH", SyntaxKind.Keyword));
+    }
+
+    [TestMethod]
     public void R_ColoursNumbersAndSuffixedNumbers()
     {
         CollectionAssert.Contains(Spans("x.r", "x <- 10L + 2.5"), ("10L", SyntaxKind.Number));
