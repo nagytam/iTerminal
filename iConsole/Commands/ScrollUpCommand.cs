@@ -13,17 +13,10 @@ public class ScrollUpCommand(IScrollableModel scrollableModel) : Command
 
     public override Task ExecuteAsync(object? args)
     {
-        if (scrollableModel.CursorPosition.Y == scrollableModel.ScrollPosition.Y)
-        {
-            if (scrollableModel.ScrollPosition.Y > 0)
-            {
-                scrollableModel.ScrollPosition.Y--;
-            }            
-        }
-        if (scrollableModel.CursorPosition.Y > 0)
-        {
-            scrollableModel.CursorPosition.Y--;
-        }
+        // One line up: with several columns the cursor moves to the same column of the previous row.
+        var columns = ScrollableModel.ColumnCountOf(scrollableModel);
+        scrollableModel.CursorPosition.Y = Math.Max(0, scrollableModel.CursorPosition.Y - columns);
+        ScrollableModel.ScrollLinesToVisible(scrollableModel);
         scrollableModel.Update();
         return Task.CompletedTask;
     }

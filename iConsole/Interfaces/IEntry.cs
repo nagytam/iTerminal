@@ -19,4 +19,11 @@ public interface IEntry : INotifyPropertyChanged
     string GetDisplayName(int width);
     string GetDisplayFileSize(int width);
     ConxelString FormatItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState);
+
+    /// <summary>
+    /// The name alone, for a Brief listing cell (no size or date). Defaults to the full row so an entry
+    /// that does not know about Brief still draws.
+    /// </summary>
+    ConxelString FormatBriefItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState) =>
+        FormatItemName(width, cursor, colorScheme, visualState);
 }

@@ -134,7 +134,17 @@ public record MusicEntry : EntryBase, IEntry
     /// </summary>
     public override ConxelString FormatItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState)
     {
-        var conxelString = base.FormatItemName(width, cursor, colorScheme, visualState);
+        return ColorPlaybackState(base.FormatItemName(width, cursor, colorScheme, visualState), cursor);
+    }
+
+    /// <summary>The Brief cell gets the same selected / playing colour as the full row.</summary>
+    public override ConxelString FormatBriefItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState)
+    {
+        return ColorPlaybackState(base.FormatBriefItemName(width, cursor, colorScheme, visualState), cursor);
+    }
+
+    private ConxelString ColorPlaybackState(ConxelString conxelString, bool cursor)
+    {
         if (cursor || !(IsSelected || IsCurrent))
         {
             return conxelString;

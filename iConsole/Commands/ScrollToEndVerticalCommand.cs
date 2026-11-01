@@ -13,8 +13,8 @@ public class ScrollToEndVerticalCommand(IScrollableModel scrollableModel) : Comm
 
     public override Task ExecuteAsync(object? args)
     {
-        scrollableModel.ScrollPosition.Y = Math.Max(0, (int)scrollableModel.ScrollableSize.Height - (int)scrollableModel.ViewSize.Height);
-        scrollableModel.CursorPosition.Y = Math.Max(0, (int)scrollableModel.ScrollableSize.Height - 1);
+        scrollableModel.CursorPosition.Y = Math.Max(0, scrollableModel.ScrollableSize.Height - 1);
+        ScrollableModel.ScrollLinesToVisible(scrollableModel);
         scrollableModel.Update();
         return Task.CompletedTask;
     }

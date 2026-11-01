@@ -7,6 +7,7 @@ using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Interfaces;
+using iConsole.Model;
 using iConsole.Services;
 using iConsole.Tasks;
 using iTerminal.Core.Commands;
@@ -223,6 +224,9 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         AddCommand(new ToggleMarkCommand(ContentModelService, ContentModel));
         AddCommand(new MarkAndMoveCommand(ContentModelService, 1, ContentModel));
         AddCommand(new MarkAndMoveCommand(ContentModelService, -1, ContentModel));
+        AddCommand(new iTerminal.Core.Commands.Listing.ToggleListingModeCommand(ContentModelService, this));
+        AddCommand(new iTerminal.Core.Commands.Listing.ListingModeLeftCommand(this));
+        AddCommand(new iTerminal.Core.Commands.Listing.ListingModeRightCommand(this));
         AddCommand(new InvertMarksCommand(ContentModelService, ContentModel));
         if (_markPatternDialog is not null)
         {
@@ -373,6 +377,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
             var contentWidth = Math.Max(0, ViewSize.Width - 2);
             var contentHeight = Math.Max(0, ViewSize.Height - 2);
             ContentModel.ViewSize = new Size(contentWidth, contentHeight);
+            ApplyListingLayout();
         }
 
         ScrollBar.Position = new Position(Position.X + ViewSize.Width - 1, Position.Y + 1);
@@ -409,6 +414,14 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
 
         if (contentModel is not null)
         {
+            var columns = ScrollableModel.ColumnCountOf(contentModel);
+            if (columns > 1)
+            {
+                DrawBriefRows(buffer, contentModel, columns, colorScheme, visualState);
+                ScrollBar.Draw(buffer);
+                return;
+            }
+
             var filteredEntries = contentModel.FilteredEntries;
             var width = Math.Max(0, (int)ViewSize.Width);
             var rowCount = Math.Max(0, (int)ViewSize.Height - 2);
@@ -503,6 +516,168 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     /// cursor, whose background is yellow already, in dark red. Painted after the lenses so a git
     /// status colour cannot hide a mark: the mark is what the next F5 or F8 will act on.
     /// </summary>
+    /// <summary>The narrowest name column a Brief listing will draw; the column count is the inner width over this.</summary>
+    internal const int MinimumBriefCellWidth = 16;
+
+    /// <summary>
+    /// Brief listing (Ctrl+F): the entries in several columns, filled row-major, names only. The mode lives on
+    /// this control, so it survives a model swap; <see cref="ApplyListingLayout"/> applies it to the model.
+    /// </summary>
+    public bool IsBriefListing { get; private set; }
+
+    /// <summary>Toggles Brief. The Preview panel does not offer it: its entries are text lines.</summary>
+    public void ToggleBriefListing()
+    {
+        if (ContentModel is null || ContentModel is ContentModelPreview)
+        {
+            return;
+        }
+
+        IsBriefListing = !IsBriefListing;
+        ApplyListingLayout();
+        ContentModel.Update();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Sets the model's column count from the mode and the control's width, and keeps the cursor in view on
+    /// the line grid. Called from the layout pass, the toggle and a model swap, never from <see cref="Draw"/>.
+    /// With one column nothing is written to the scroll position, so Long mode is unchanged.
+    /// </summary>
+    internal void ApplyListingLayout()
+    {
+        if (ContentModel is not IColumnScrollableModel model)
+        {
+            return;
+        }
+
+        var innerWidth = Math.Max(0, (int)ViewSize.Width - 2);
+        var columns = IsBriefListing ? Math.Max(1, innerWidth / MinimumBriefCellWidth) : 1;
+        model.ColumnCount = columns;
+        if (columns > 1)
+        {
+            model.AlignScroll();
+            ScrollableModel.ScrollLinesToVisible(model);
+        }
+    }
+
+    /// <summary>Left or Right inside the line of the cursor (−1 / +1). Stays put at the line's ends.</summary>
+    public void MoveWithinLine(int step)
+    {
+        var model = ContentModel;
+        if (model is null || ScrollableModel.ColumnCountOf(model) <= 1)
+        {
+            return;
+        }
+
+        var columns = ScrollableModel.ColumnCountOf(model);
+        var count = model.FilteredEntries.Count;
+        if (count <= 0)
+        {
+            return;
+        }
+
+        var cursor = (int)model.CursorPosition.Y;
+        var target = Math.Clamp(cursor + step, 0, count - 1);
+        if (target == cursor || target / columns != cursor / columns)
+        {
+            return;
+        }
+
+        model.CursorPosition.Y = target;
+        ScrollableModel.ScrollLinesToVisible(model);
+        model.Update();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Draws the Brief cells: <paramref name="columns"/> cells per row, row-major, the last column absorbing the
+    /// width left over. Every cell is written in full, so nothing from the previous frame shows through.
+    /// </summary>
+    private void DrawBriefRows(IBuffer buffer, IContentModel contentModel, int columns, ColorScheme colorScheme, VisualState visualState)
+    {
+        var filteredEntries = contentModel.FilteredEntries;
+        var innerWidth = Math.Max(0, (int)ViewSize.Width - 2);
+        var rows = Math.Max(0, (int)ViewSize.Height - 2);
+        var cellWidth = innerWidth / columns;
+        // The read is floored: a scroll position that is not on a line start is drawn from its line.
+        var firstLine = (int)contentModel.ScrollPosition.Y / columns;
+        var cursor = (int)contentModel.CursorPosition.Y;
+        var count = filteredEntries.Count;
+        var positionX = AbsolutePosition.X + 1;
+        var positionY = AbsolutePosition.Y + 1;
+
+        for (var row = 0; row < rows; row++)
+        {
+            var x = 0;
+            for (var column = 0; column < columns; column++)
+            {
+                var isLast = column == columns - 1;
+                var width = isLast ? innerWidth - cellWidth * (columns - 1) : cellWidth;
+                var index = (firstLine + row) * columns + column;
+                var entry = index < count ? filteredEntries[index] : null;
+                var isCursor = entry is not null && index == cursor;
+
+                // The separator is part of the cell's width, so the name gets one column less than the cell.
+                var text = contentModel.FormatBriefItemName(entry, isLast ? width : width - 1, isCursor, colorScheme, visualState);
+                DecorateRow(contentModel, entry, text, isCursor, colorScheme, visualState);
+                if (entry is not null && contentModel is IMarkableContentModel marks && marks.IsMarked(entry))
+                {
+                    PaintMarked(text, isCursor);
+                }
+
+                if (!isLast)
+                {
+                    text.Append(Border.VerticalSingle, colorScheme.Foreground, colorScheme.Background);
+                }
+
+                PadRow(text, width, colorScheme);
+                buffer.Write(ZOrder,
+                    new Position(positionX + x, positionY + row),
+                    new Size(width, 1),
+                    text);
+                x += width;
+            }
+        }
+    }
+
+    /// <summary>
+    /// The entry under a point of the list, in the current layout. In Brief it is the cell's entry, which may be
+    /// past the last entry; in Long it is the row's entry.
+    /// </summary>
+    private int IndexAtListPoint(int lx, int row)
+    {
+        var model = ContentModel!;
+        var columns = ScrollableModel.ColumnCountOf(model);
+        if (columns <= 1)
+        {
+            return (int)(model.ScrollPosition.Y + row);
+        }
+
+        var innerWidth = Math.Max(0, (int)ViewSize.Width - 2);
+        var cellWidth = Math.Max(1, innerWidth / columns);
+        var column = Math.Min((lx - 1) / cellWidth, columns - 1);
+        var firstLine = (int)model.ScrollPosition.Y / columns;
+        return (firstLine + row) * columns + column;
+    }
+
+    /// <summary>A wheel notch scrolls one line of Brief: the cursor and the view move together.</summary>
+    private void ScrollByWheelLines(int wheelDelta, int columns, int itemCount)
+    {
+        var model = ContentModel!;
+        var step = wheelDelta * columns;
+        var targetCursor = Math.Clamp((int)model.CursorPosition.Y - step, 0, itemCount - 1);
+        var lines = (itemCount + columns - 1) / columns;
+        var viewHeight = Math.Max(0, (int)model.ViewSize.Height);
+        var maxScroll = Math.Max(0, lines - viewHeight) * columns;
+        var targetScroll = Math.Clamp((int)model.ScrollPosition.Y - step, 0, maxScroll);
+
+        model.ScrollPosition = new Position(model.ScrollPosition.X, targetScroll);
+        model.CursorPosition = new Position(model.CursorPosition.X, targetCursor);
+        ScrollableModel.ScrollLinesToVisible(model);
+        model.Update();
+    }
+
     internal static void PaintMarked(ConxelString row, bool isCursor)
     {
         var color = isCursor ? Color.DarkRed : Color.Yellow;
@@ -600,12 +775,17 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
             var openEntry = false;
             if (filteredCount > 0)
             {
-                var index = (int)(ContentModel.ScrollPosition.Y + row);
-                index = Math.Clamp(index, 0, filteredCount - 1);
-                openEntry = mouseEvent.LeftClicked && IsDoubleClick(index);
-                ContentModel.CursorPosition.Y = (uint)index;
-                ContentModel.ScrollToVisible();
-                ContentModel.Update();
+                var index = IndexAtListPoint(lx, row);
+                // In Brief a click on an empty cell selects nothing; Long clamps to the last row.
+                var isBriefEmptyCell = ScrollableModel.ColumnCountOf(ContentModel) > 1 && index >= filteredCount;
+                if (!isBriefEmptyCell)
+                {
+                    index = Math.Clamp(index, 0, filteredCount - 1);
+                    openEntry = mouseEvent.LeftClicked && IsDoubleClick(index);
+                    ContentModel.CursorPosition.Y = (uint)index;
+                    ContentModel.ScrollToVisible();
+                    ContentModel.Update();
+                }
             }
 
             StateHasChanged();
@@ -720,6 +900,13 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
             ContentModel.ScrollPosition = new Position(0, 0);
             ContentModel.CursorPosition = new Position(0, 0);
             ContentModel.Update();
+            return;
+        }
+
+        var columns = ScrollableModel.ColumnCountOf(ContentModel);
+        if (columns > 1)
+        {
+            ScrollByWheelLines(wheelDelta, columns, itemCount);
             return;
         }
 
@@ -927,6 +1114,13 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
 
         ContentModel = ContentModelService.ContentModels.SingleOrDefault(m => m.Name == name);
+        if (ContentModel is ContentModelPreview)
+        {
+            // The Preview panel does not offer Brief; a Brief panel that becomes Preview goes back to Long.
+            IsBriefListing = false;
+        }
+
+        ApplyListingLayout();
         Commands.Clear();
         await OnInitializeAsync();
     }
