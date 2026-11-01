@@ -15,7 +15,9 @@ public readonly record struct SyntaxSpan(int Start, int Length, SyntaxKind Kind)
 
 /// <summary>
 /// The lexical rules of one language, just enough to colour it: keywords, string quotes, a line comment
-/// and a block comment. It is a colouring aid, not a parser — an unterminated string ends with its line.
+/// and a block comment, plus the few spellings that differ between languages (the string escape character,
+/// C# verbatim strings, hyphenated cmdlet names, <c>$variables</c> and <c>#</c> preprocessor lines). It is a
+/// colouring aid, not a parser — an unterminated string ends with its line.
 /// </summary>
 public sealed class SyntaxLanguage
 {
@@ -25,13 +27,27 @@ public sealed class SyntaxLanguage
         string[] lineComments,
         (string Start, string End)? blockComment = null,
         string stringQuotes = "\"'",
-        bool ignoreCase = false)
+        bool ignoreCase = false,
+        char stringEscape = '\\',
+        bool verbatimStrings = false,
+        bool hyphenatedWords = false,
+        char variableSigil = '\0',
+        bool preprocessorDirectives = false,
+        bool doubledQuotes = false,
+        bool tripleQuotes = false)
     {
         Name = name;
         Keywords = new HashSet<string>(keywords, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
         LineComments = lineComments;
         BlockComment = blockComment;
         StringQuotes = stringQuotes;
+        StringEscape = stringEscape;
+        VerbatimStrings = verbatimStrings;
+        HyphenatedWords = hyphenatedWords;
+        VariableSigil = variableSigil;
+        PreprocessorDirectives = preprocessorDirectives;
+        DoubledQuotes = doubledQuotes;
+        TripleQuotes = tripleQuotes;
     }
 
     public string Name { get; }
@@ -39,6 +55,27 @@ public sealed class SyntaxLanguage
     public string[] LineComments { get; }
     public (string Start, string End)? BlockComment { get; }
     public string StringQuotes { get; }
+
+    /// <summary>The character that escapes the next one inside a string; <c>'\0'</c> for none (PowerShell uses the backtick).</summary>
+    public char StringEscape { get; }
+
+    /// <summary>C# <c>@"…"</c> strings: no backslash escapes, and a doubled quote is a quote.</summary>
+    public bool VerbatimStrings { get; }
+
+    /// <summary>Whether a word may contain hyphens, so <c>Write-Host</c> and <c>ForEach-Object</c> are one word.</summary>
+    public bool HyphenatedWords { get; }
+
+    /// <summary>The sigil of a variable (<c>$</c> in PowerShell); a keyword right after it is a name, not a keyword. <c>'\0'</c> for none.</summary>
+    public char VariableSigil { get; }
+
+    /// <summary>Whether a <c>#</c> at the start of a line opens a preprocessor directive (<c>#include</c>, <c>#region</c>), coloured as a keyword.</summary>
+    public bool PreprocessorDirectives { get; }
+
+    /// <summary>VB <c>"say ""hi"""</c>: a doubled quote inside a string is one quote, and there are no backslash escapes.</summary>
+    public bool DoubledQuotes { get; }
+
+    /// <summary>Python triple-quoted strings on one line; a string that runs past the line ends with it.</summary>
+    public bool TripleQuotes { get; }
 }
 
 /// <summary>
@@ -75,8 +112,102 @@ public static class SyntaxHighlighter
     [
         "if", "then", "else", "elif", "fi", "for", "while", "until", "do", "done", "case", "esac", "in", "function",
         "return", "exit", "export", "local", "readonly", "echo", "cd", "set", "unset", "source", "alias", "trap",
-        "param", "foreach", "switch", "begin", "process", "end", "try", "catch", "finally", "throw", "break",
-        "continue", "filter", "workflow", "Write-Host", "Write-Output", "Get-ChildItem", "Set-Location",
+        "break", "continue",
+    ];
+
+    /// <summary>C# keywords and the contextual ones that read as keywords (<c>get</c>, <c>nameof</c>, LINQ's <c>from</c>); not <c>value</c> or <c>by</c>, which are often names.</summary>
+    private static readonly string[] CSharpKeywords =
+    [
+        "abstract", "as", "async", "await", "base", "bool", "break", "byte", "case", "catch", "char", "checked", "class",
+        "const", "continue", "decimal", "default", "delegate", "do", "double", "else", "enum", "event", "explicit",
+        "extern", "false", "finally", "fixed", "float", "for", "foreach", "goto", "if", "implicit", "in", "int",
+        "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out",
+        "override", "params", "private", "protected", "public", "readonly", "ref", "return", "sbyte", "sealed",
+        "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw", "true", "try", "typeof",
+        "uint", "ulong", "unchecked", "unsafe", "ushort", "using", "var", "virtual", "void", "volatile", "while",
+        "nint", "nuint", "dynamic", "record", "init", "required", "file", "scoped", "global", "nameof", "with", "and",
+        "or", "not", "when", "where", "yield", "partial", "get", "set", "from", "select", "orderby", "ascending", "descending",
+    ];
+
+    /// <summary>Java keywords, the literals and the contextual <c>var</c>, <c>record</c>, <c>yield</c>, <c>sealed</c> and <c>permits</c>.</summary>
+    private static readonly string[] JavaKeywords =
+    [
+        "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default",
+        "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "goto", "if", "implements", "import",
+        "instanceof", "int", "interface", "long", "native", "new", "package", "private", "protected", "public", "return",
+        "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try",
+        "void", "volatile", "while", "true", "false", "null", "var", "record", "yield", "sealed", "permits",
+    ];
+
+    /// <summary>C++ keywords, the alternative spellings (<c>and</c>, <c>not_eq</c>) and the contextual <c>final</c>, <c>override</c>, <c>import</c>, <c>module</c>.</summary>
+    private static readonly string[] CppKeywords =
+    [
+        "alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor", "bool", "break", "case", "catch", "char",
+        "char8_t", "char16_t", "char32_t", "class", "compl", "concept", "const", "consteval", "constexpr", "constinit",
+        "const_cast", "continue", "co_await", "co_return", "co_yield", "decltype", "default", "delete", "do", "double",
+        "dynamic_cast", "else", "enum", "explicit", "export", "extern", "false", "float", "for", "friend", "goto", "if",
+        "inline", "int", "long", "mutable", "namespace", "new", "noexcept", "not", "not_eq", "nullptr", "operator", "or",
+        "or_eq", "private", "protected", "public", "register", "reinterpret_cast", "requires", "return", "short", "signed",
+        "sizeof", "static", "static_assert", "static_cast", "struct", "switch", "template", "this", "thread_local", "throw",
+        "true", "try", "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual", "void", "volatile",
+        "wchar_t", "while", "xor", "xor_eq", "override", "final", "import", "module",
+    ];
+
+    /// <summary>
+    /// PowerShell keywords, the operators written after a hyphen (<c>-eq</c> is read as <c>eq</c>), and the common cmdlets.
+    /// PowerShell is case-insensitive, so the list is matched without regard to case.
+    /// </summary>
+    private static readonly string[] PowerShellKeywords =
+    [
+        "begin", "break", "catch", "class", "continue", "data", "define", "do", "dynamicparam", "else", "elseif", "end",
+        "enum", "exit", "filter", "finally", "for", "foreach", "from", "function", "hidden", "if", "in", "param", "process",
+        "return", "static", "switch", "throw", "trap", "try", "until", "using", "var", "while", "workflow", "parallel",
+        "sequence", "configuration", "inlinescript", "true", "false", "null",
+        "and", "or", "not", "xor", "eq", "ne", "gt", "ge", "lt", "le", "is", "isnot", "as", "notin",
+        "Write-Host", "Write-Output", "Write-Error", "Write-Warning", "Write-Verbose", "Read-Host", "Get-ChildItem",
+        "Get-Content", "Set-Content", "Add-Content", "Get-Item", "Get-Process", "Get-Service", "Get-Command", "Get-Help",
+        "Get-Member", "Get-Location", "Set-Location", "Set-Variable", "Get-Variable", "New-Item", "Remove-Item", "Copy-Item",
+        "Move-Item", "Rename-Item", "Test-Path", "Start-Process", "Stop-Process", "Start-Sleep", "Invoke-Expression",
+        "Invoke-Command", "Invoke-WebRequest", "Invoke-RestMethod", "Import-Module", "Export-ModuleMember",
+        "Select-Object", "Where-Object", "ForEach-Object", "Sort-Object", "Group-Object", "Measure-Object",
+        "Format-Table", "Format-List", "Out-File", "Out-Null", "Out-String", "ConvertTo-Json", "ConvertFrom-Json",
+        "Set-StrictMode", "Set-ExecutionPolicy", "Get-ExecutionPolicy", "Start-Job", "Receive-Job", "Wait-Job",
+    ];
+
+    /// <summary>C keywords (C99 and C11), without the C++-only words.</summary>
+    private static readonly string[] CKeywords =
+    [
+        "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float",
+        "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static",
+        "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while", "_Alignas", "_Alignof", "_Atomic",
+        "_Bool", "_Complex", "_Generic", "_Imaginary", "_Noreturn", "_Static_assert", "_Thread_local",
+    ];
+
+    /// <summary>Go keywords, the predeclared constants and the common predeclared types.</summary>
+    private static readonly string[] GoKeywords =
+    [
+        "break", "case", "chan", "const", "continue", "default", "defer", "else", "fallthrough", "for", "func", "go", "goto",
+        "if", "import", "interface", "map", "package", "range", "return", "select", "struct", "switch", "type", "var",
+        "true", "false", "nil", "iota", "any", "error", "string", "bool", "int", "int64", "uint8", "byte", "rune", "float64",
+    ];
+
+    /// <summary>Rust keywords, the reserved words and the primitive types a reader expects to be coloured.</summary>
+    private static readonly string[] RustKeywords =
+    [
+        "as", "async", "await", "break", "const", "continue", "crate", "dyn", "else", "enum", "extern", "false", "fn", "for",
+        "if", "impl", "in", "let", "loop", "match", "mod", "move", "mut", "pub", "ref", "return", "self", "Self", "static",
+        "struct", "super", "trait", "true", "type", "unsafe", "use", "where", "while", "abstract", "become", "box", "do",
+        "final", "macro", "override", "priv", "typeof", "unsized", "virtual", "yield", "try",
+        "bool", "char", "str", "i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64", "u128", "usize", "f32", "f64",
+    ];
+
+    /// <summary>JavaScript keywords, the literals and the contextual <c>let</c>, <c>static</c>, <c>async</c>, <c>await</c>, <c>yield</c>, <c>of</c>.</summary>
+    private static readonly string[] JavaScriptKeywords =
+    [
+        "await", "break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete", "do", "else",
+        "export", "extends", "false", "finally", "for", "function", "if", "import", "in", "instanceof", "let", "new", "null",
+        "return", "static", "super", "switch", "this", "throw", "true", "try", "typeof", "undefined", "var", "void", "while",
+        "with", "yield", "async", "of",
     ];
 
     private static readonly string[] SqlKeywords =
@@ -95,11 +226,37 @@ public static class SyntaxHighlighter
     private static readonly SyntaxLanguage CLike = new(
         "C-like", CLikeKeywords, ["//"], ("/*", "*/"), "\"'`");
 
+    private static readonly SyntaxLanguage CSharp = new(
+        "C#", CSharpKeywords, ["//"], ("/*", "*/"), "\"'", verbatimStrings: true, preprocessorDirectives: true);
+
+    private static readonly SyntaxLanguage Java = new(
+        "Java", JavaKeywords, ["//"], ("/*", "*/"), "\"'");
+
+    private static readonly SyntaxLanguage Cpp = new(
+        "C++", CppKeywords, ["//"], ("/*", "*/"), "\"'", preprocessorDirectives: true);
+
+    private static readonly SyntaxLanguage PowerShell = new(
+        "PowerShell", PowerShellKeywords, ["#"], ("<#", "#>"), "\"'", ignoreCase: true,
+        stringEscape: '`', hyphenatedWords: true, variableSigil: '$');
+
+    private static readonly SyntaxLanguage C = new(
+        "C", CKeywords, ["//"], ("/*", "*/"), "\"'", preprocessorDirectives: true);
+
+    private static readonly SyntaxLanguage Go = new(
+        "Go", GoKeywords, ["//"], ("/*", "*/"), "\"'`");
+
+    // Rust's single quote is also a lifetime ('a), so only double-quoted strings are coloured.
+    private static readonly SyntaxLanguage Rust = new(
+        "Rust", RustKeywords, ["//"], ("/*", "*/"), "\"");
+
+    private static readonly SyntaxLanguage JavaScript = new(
+        "JavaScript", JavaScriptKeywords, ["//"], ("/*", "*/"), "\"'`");
+
     private static readonly SyntaxLanguage Python = new(
-        "Python", PythonKeywords, ["#"], null, "\"'");
+        "Python", PythonKeywords, ["#"], null, "\"'", tripleQuotes: true);
 
     private static readonly SyntaxLanguage Shell = new(
-        "Shell", ShellKeywords, ["#"], null, "\"'");
+        "Shell", ShellKeywords, ["#"], null, "\"'", hyphenatedWords: true, variableSigil: '$');
 
     private static readonly SyntaxLanguage Sql = new(
         "SQL", SqlKeywords, ["--"], ("/*", "*/"), "\"'", ignoreCase: true);
@@ -130,7 +287,7 @@ public static class SyntaxHighlighter
          "Is", "Loop", "Me", "Module", "Namespace", "New", "Next", "Nothing", "Not", "Of", "Option", "Or", "OrElse", "And",
          "AndAlso", "Private", "Property", "Protected", "Public", "Return", "Select", "Shared", "Step", "String", "Structure",
          "Sub", "Then", "Throw", "To", "True", "Try", "Using", "Wend", "While", "With"],
-        ["'", "rem "], null, "\"", ignoreCase: true);
+        ["'", "rem "], null, "\"", ignoreCase: true, stringEscape: '\0', doubledQuotes: true);
 
     private static readonly SyntaxLanguage FSharp = new(
         "F#",
@@ -161,14 +318,16 @@ public static class SyntaxHighlighter
         [".lua"] = Lua, [".vb"] = VisualBasic, [".fs"] = FSharp, [".fsx"] = FSharp, [".fsi"] = FSharp,
         [".mk"] = BuildFile, [".dockerfile"] = BuildFile,
         [".gradle"] = CLike, [".groovy"] = CLike, [".kts"] = CLike, [".proto"] = CLike, [".m"] = CLike, [".mm"] = CLike,
+        [".cs"] = CSharp, [".csx"] = CSharp,
+        [".c"] = C, [".h"] = Cpp, [".cpp"] = Cpp, [".cc"] = Cpp, [".cxx"] = Cpp, [".hpp"] = Cpp, [".hh"] = Cpp, [".hxx"] = Cpp,
+        [".ps1"] = PowerShell, [".psm1"] = PowerShell, [".psd1"] = PowerShell,
         [".vue"] = Markup, [".svelte"] = Markup, [".xhtml"] = Markup, [".resx"] = Markup, [".nuspec"] = Markup,
         [".tf"] = Config, [".tfvars"] = Config, [".gitignore"] = Config,
-        [".cs"] = CLike, [".csx"] = CLike, [".java"] = CLike, [".js"] = CLike, [".jsx"] = CLike, [".mjs"] = CLike,
-        [".ts"] = CLike, [".tsx"] = CLike, [".c"] = CLike, [".h"] = CLike, [".cpp"] = CLike, [".cc"] = CLike,
-        [".hpp"] = CLike, [".go"] = CLike, [".rs"] = CLike, [".kt"] = CLike, [".swift"] = CLike, [".php"] = CLike,
+        [".java"] = Java, [".js"] = JavaScript, [".jsx"] = JavaScript, [".mjs"] = JavaScript,
+        [".ts"] = CLike, [".tsx"] = CLike, [".go"] = Go, [".rs"] = Rust, [".kt"] = CLike, [".swift"] = CLike, [".php"] = CLike,
         [".scala"] = CLike, [".dart"] = CLike, [".css"] = CLike, [".scss"] = CLike,
         [".py"] = Python, [".pyw"] = Python, [".rb"] = Python, [".pl"] = Python, [".r"] = Python,
-        [".sh"] = Shell, [".bash"] = Shell, [".zsh"] = Shell, [".ps1"] = Shell, [".psm1"] = Shell,
+        [".sh"] = Shell, [".bash"] = Shell, [".zsh"] = Shell,
         [".sql"] = Sql,
         [".xml"] = Markup, [".html"] = Markup, [".htm"] = Markup, [".xaml"] = Markup, [".csproj"] = Markup,
         [".props"] = Markup, [".targets"] = Markup, [".svg"] = Markup, [".slnx"] = Markup, [".wxs"] = Markup,
@@ -180,7 +339,7 @@ public static class SyntaxHighlighter
 
     /// <summary>Every language built in, for <see cref="iConsole.Services.ISyntaxHighlightingService"/> to list and look up by name.</summary>
     internal static IReadOnlyList<SyntaxLanguage> BuiltInLanguages { get; } =
-        [CLike, Python, Shell, Sql, Markup, Json, Config, Batch, Lua, VisualBasic, FSharp, BuildFile];
+        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, PowerShell, Python, Shell, Sql, Markup, Json, Config, Batch, Lua, VisualBasic, FSharp, BuildFile];
 
     /// <summary>The language for a file name or path, or null when there is none to colour it with.</summary>
     public static SyntaxLanguage? ForFile(string? fileName)
@@ -238,22 +397,61 @@ public static class SyntaxHighlighter
                 continue;
             }
 
+            if (c == '#' && language.PreprocessorDirectives && line.AsSpan(0, i).Trim().IsEmpty)
+            {
+                // "#include", "#region": the directive word is a keyword, the rest of the line is ordinary code.
+                int stop = i + 1;
+                while (stop < length && char.IsLetter(line[stop]))
+                {
+                    stop++;
+                }
+
+                spans.Add(new SyntaxSpan(i, stop - i, SyntaxKind.Keyword));
+                i = stop;
+                continue;
+            }
+
             if (StartsLineComment(language, line, i))
             {
                 spans.Add(new SyntaxSpan(i, length - i, SyntaxKind.Comment));
                 return false;
             }
 
+            if (language.StringQuotes.Contains(c) && language.TripleQuotes && i + 2 < length && line[i + 1] == c && line[i + 2] == c)
+            {
+                // Python """…""" or '''…''' on one line.
+                int close = line.IndexOf(new string(c, 3), i + 3, StringComparison.Ordinal);
+                int tripleStop = close < 0 ? length : close + 3;
+                spans.Add(new SyntaxSpan(i, tripleStop - i, SyntaxKind.String));
+                i = tripleStop;
+                continue;
+            }
+
             if (language.StringQuotes.Contains(c))
             {
+                // C# @"…": backslashes are plain and a doubled quote stands for one quote; VB's "" is the same doubling.
+                bool verbatim = language.VerbatimStrings && i > 0 && line[i - 1] == '@';
+                int start = verbatim ? i - 1 : i;
                 int stop = i + 1;
-                while (stop < length && line[stop] != c)
+                while (stop < length)
                 {
-                    stop += line[stop] == '\\' ? 2 : 1;
+                    if (line[stop] == c)
+                    {
+                        if ((verbatim || language.DoubledQuotes) && stop + 1 < length && line[stop + 1] == c)
+                        {
+                            stop += 2;
+                            continue;
+                        }
+
+                        break;
+                    }
+
+                    bool escaped = !verbatim && language.StringEscape != '\0' && line[stop] == language.StringEscape;
+                    stop += escaped ? 2 : 1;
                 }
 
                 stop = Math.Min(length, stop + 1);
-                spans.Add(new SyntaxSpan(i, stop - i, SyntaxKind.String));
+                spans.Add(new SyntaxSpan(start, stop - start, SyntaxKind.String));
                 i = stop;
                 continue;
             }
@@ -261,7 +459,9 @@ public static class SyntaxHighlighter
             if (char.IsDigit(c))
             {
                 int stop = i + 1;
-                while (stop < length && (char.IsLetterOrDigit(line[stop]) || line[stop] == '.' || line[stop] == '_'))
+                while (stop < length && (char.IsLetterOrDigit(line[stop]) || line[stop] == '.' || line[stop] == '_'
+                    // C++14 digit separators: 1'000'000.
+                    || line[stop] == '\'' && stop + 1 < length && char.IsLetterOrDigit(line[stop + 1])))
                 {
                     stop++;
                 }
@@ -274,12 +474,14 @@ public static class SyntaxHighlighter
             if (char.IsLetter(c) || c == '_')
             {
                 int stop = i + 1;
-                while (stop < length && (char.IsLetterOrDigit(line[stop]) || line[stop] == '_' || line[stop] == '-' && language.Name == "Shell"))
+                while (stop < length && (char.IsLetterOrDigit(line[stop]) || line[stop] == '_' || line[stop] == '-' && language.HyphenatedWords))
                 {
                     stop++;
                 }
 
-                if (language.Keywords.Contains(line.Substring(i, stop - i)))
+                // A name after a sigil ($process, $data) is a variable, not the keyword it spells.
+                bool variable = language.VariableSigil != '\0' && i > 0 && line[i - 1] == language.VariableSigil;
+                if (!variable && language.Keywords.Contains(line.Substring(i, stop - i)))
                 {
                     spans.Add(new SyntaxSpan(i, stop - i, SyntaxKind.Keyword));
                 }

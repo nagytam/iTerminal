@@ -291,7 +291,9 @@ public class EditorFeaturesTest
     [TestMethod]
     public void Syntax_PicksALanguageByExtension()
     {
-        Assert.AreEqual("C-like", SyntaxHighlighter.ForFile(@"C:\src\Program.CS")?.Name);
+        Assert.AreEqual("C#", SyntaxHighlighter.ForFile(@"C:\src\Program.CS")?.Name);
+        Assert.AreEqual("C++", SyntaxHighlighter.ForFile("/src/main.cpp")?.Name);
+        Assert.AreEqual("PowerShell", SyntaxHighlighter.ForFile(@"C:\scripts\Deploy.ps1")?.Name);
         Assert.AreEqual("Python", SyntaxHighlighter.ForFile("/home/a/run.py")?.Name);
         Assert.AreEqual("JSON", SyntaxHighlighter.ForFile("a.json")?.Name);
         Assert.IsNull(SyntaxHighlighter.ForFile("notes.txt"));

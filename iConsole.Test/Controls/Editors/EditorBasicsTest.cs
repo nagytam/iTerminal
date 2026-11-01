@@ -439,6 +439,127 @@ public class EditorBasicsTest
         Assert.AreEqual(2, spans.Count(s => s.Kind == SyntaxKind.Comment));
     }
 
+    /// <summary>The text of every span of <paramref name="kind"/> on <paramref name="line"/>, joined with <c>|</c>.</summary>
+    private static string SpansOf(string fileName, string line, SyntaxKind kind, bool inBlockComment = false)
+    {
+        SyntaxLanguage language = SyntaxHighlighter.ForFile(fileName)!;
+        List<SyntaxSpan> spans = [];
+        SyntaxHighlighter.Tokenize(language, line, inBlockComment, spans);
+        return string.Join("|", spans.Where(s => s.Kind == kind).Select(s => line.Substring(s.Start, s.Length)));
+    }
+
+    [TestMethod]
+    public void Syntax_CSharpVerbatimStringsKeepTheBackslashesAndDoubledQuotes()
+    {
+        Assert.AreEqual("@\"C:\\dir\\\"", SpansOf("a.cs", "var p = @\"C:\\dir\\\"; x", SyntaxKind.String));
+        Assert.AreEqual("@\"say \"\"hi\"\"\"", SpansOf("a.cs", "var s = @\"say \"\"hi\"\"\";", SyntaxKind.String));
+        Assert.AreEqual("\"a\\\"b\"", SpansOf("a.cs", "var s = \"a\\\"b\";", SyntaxKind.String), "a normal C# string still escapes");
+    }
+
+    [TestMethod]
+    public void Syntax_CSharpKeywordsAndPreprocessorDirectives()
+    {
+        Assert.AreEqual("#region", SpansOf("a.cs", "#region Helpers", SyntaxKind.Keyword));
+        Assert.AreEqual("public|async|record", SpansOf("a.cs", "public async record Person;", SyntaxKind.Keyword));
+        Assert.AreEqual("int", SpansOf("a.cs", "int value = 1;", SyntaxKind.Keyword), "'value' is a name, not a keyword");
+    }
+
+    [TestMethod]
+    public void Syntax_JavaKeywordsStringsAndComments()
+    {
+        Assert.AreEqual("Java", SyntaxHighlighter.ForFile("Main.java")?.Name);
+        Assert.AreEqual("public|class|static|void|int", SpansOf("Main.java", "public class Main { static void main(int n) {", SyntaxKind.Keyword));
+        Assert.AreEqual("\"x\"", SpansOf("Main.java", "String s = \"x\"; // note", SyntaxKind.String));
+        Assert.AreEqual("// note", SpansOf("Main.java", "String s = \"x\"; // note", SyntaxKind.Comment));
+        Assert.AreEqual("int", SpansOf("Main.java", "int value = 1;", SyntaxKind.Keyword), "'value' is a name, not a keyword");
+    }
+
+    [TestMethod]
+    public void Syntax_PythonTripleQuotedStringsOnOneLine()
+    {
+        Assert.AreEqual("\"\"\"doc\"\"\"|'a'", SpansOf("a.py", "x = \"\"\"doc\"\"\" + 'a'", SyntaxKind.String));
+        Assert.AreEqual("'''note", SpansOf("a.py", "y = '''note", SyntaxKind.String), "an unterminated triple quote ends with the line");
+    }
+
+    [TestMethod]
+    public void Syntax_VisualBasicDoubledQuotesAndNoBackslashEscapes()
+    {
+        Assert.AreEqual("\"say \"\"hi\"\"\"", SpansOf("a.vb", "s = \"say \"\"hi\"\"\" ' note", SyntaxKind.String));
+        Assert.AreEqual("\"C:\\\"", SpansOf("a.vb", "p = \"C:\\\" If", SyntaxKind.String), "a backslash does not escape the quote");
+        Assert.AreEqual("If", SpansOf("a.vb", "p = \"C:\\\" If", SyntaxKind.Keyword));
+    }
+
+    [TestMethod]
+    public void Syntax_CPreprocessorAndKeywords()
+    {
+        Assert.AreEqual("#include", SpansOf("a.c", "#include <stdio.h>", SyntaxKind.Keyword));
+        Assert.AreEqual("static|int|void|return", SpansOf("a.c", "static int main(void) { return 0; }", SyntaxKind.Keyword));
+        Assert.AreEqual("\"hi\"", SpansOf("a.c", "puts(\"hi\");", SyntaxKind.String));
+        Assert.AreEqual("C", SyntaxHighlighter.ForFile("main.c")?.Name);
+    }
+
+    [TestMethod]
+    public void Syntax_GoKeywordsAndRaw()
+    {
+        Assert.AreEqual("Go", SyntaxHighlighter.ForFile("main.go")?.Name);
+        Assert.AreEqual("func|error|return|nil", SpansOf("main.go", "func f() error { return nil }", SyntaxKind.Keyword));
+        Assert.AreEqual("\"x\"", SpansOf("main.go", "s := \"x\"", SyntaxKind.String));
+    }
+
+    [TestMethod]
+    public void Syntax_RustLifetimesAreNotStrings()
+    {
+        Assert.AreEqual("", SpansOf("lib.rs", "fn f<'a>(x: &'a str) -> &'a str { x }", SyntaxKind.String));
+        Assert.AreEqual("fn|str|str", SpansOf("lib.rs", "fn f<'a>(x: &'a str) -> &'a str { x }", SyntaxKind.Keyword));
+        Assert.AreEqual("\"hi\"", SpansOf("lib.rs", "let s = \"hi\";", SyntaxKind.String));
+    }
+
+    [TestMethod]
+    public void Syntax_JavaScriptTemplateLiteralsAndKeywords()
+    {
+        Assert.AreEqual("JavaScript", SyntaxHighlighter.ForFile("app.js")?.Name);
+        Assert.AreEqual("const|async|function|await", SpansOf("app.js", "const x = `hi`; async function f() { await g(); }", SyntaxKind.Keyword));
+        Assert.AreEqual("`hi`", SpansOf("app.js", "const x = `hi`; // note", SyntaxKind.String));
+    }
+
+    [TestMethod]
+    public void Syntax_CppKeywordsDigitSeparatorsAndDirectives()
+    {
+        Assert.AreEqual("#include", SpansOf("a.cpp", "#include <vector>", SyntaxKind.Keyword));
+        Assert.AreEqual("constexpr|auto|static_cast|int", SpansOf("a.cpp", "constexpr auto x = static_cast<int>(y);", SyntaxKind.Keyword));
+        Assert.AreEqual("1'000'000", SpansOf("a.cpp", "int n = 1'000'000;", SyntaxKind.Number));
+        Assert.AreEqual("'x'", SpansOf("a.cpp", "char c = 'x';", SyntaxKind.String));
+        Assert.AreEqual("", SpansOf("a.cpp", "int a = 1;", SyntaxKind.String));
+    }
+
+    [TestMethod]
+    public void Syntax_PowerShellIsCaseInsensitiveAndKnowsItsCmdlets()
+    {
+        // "eq" is the operator behind "-eq": the hyphen is not part of the word, so it is read as a keyword.
+        Assert.AreEqual("IF|eq|Write-Host", SpansOf("a.ps1", "IF ($x -eq 1) { Write-Host 'ok' }", SyntaxKind.Keyword));
+        Assert.AreEqual("Function|param|ForEach-Object", SpansOf("a.ps1", "Function Get-Thing { param($data) ForEach-Object { } }", SyntaxKind.Keyword));
+    }
+
+    [TestMethod]
+    public void Syntax_PowerShellVariablesAreNotKeywordsAndBacktickEscapes()
+    {
+        Assert.AreEqual("", SpansOf("a.ps1", "$process = $data", SyntaxKind.Keyword));
+        Assert.AreEqual("\"a`\"b\"", SpansOf("a.ps1", "echo \"a`\"b\" if", SyntaxKind.String));
+        Assert.AreEqual("if", SpansOf("a.ps1", "echo \"a`\"b\" if", SyntaxKind.Keyword));
+    }
+
+    [TestMethod]
+    public void Syntax_PowerShellBlockCommentsRunOverLines()
+    {
+        SyntaxLanguage language = SyntaxHighlighter.ForFile("a.ps1")!;
+        List<SyntaxSpan> spans = [];
+        Assert.IsTrue(SyntaxHighlighter.Tokenize(language, "<# start of a note", false, spans));
+        Assert.IsTrue(SyntaxHighlighter.Tokenize(language, "still a note if", true, spans));
+        Assert.IsFalse(SyntaxHighlighter.Tokenize(language, "end #> if", true, spans));
+        Assert.AreEqual("if", SpansOf("a.ps1", "end #> if", SyntaxKind.Keyword, inBlockComment: true));
+        Assert.AreEqual("end #>", SpansOf("a.ps1", "end #> if", SyntaxKind.Comment, inBlockComment: true));
+    }
+
     private static TextViewerControl NewViewer(bool wrap, params string[] lines)
     {
         IThemeService theme = Theme();
