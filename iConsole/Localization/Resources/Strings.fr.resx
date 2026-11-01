@@ -811,4 +811,19 @@
   <data name="Sqlite.Title.TextMode" xml:space="preserve">
     <value> [TEXTE]</value>
   </data>
+  <data name="Hint.UpperLowerCase" xml:space="preserve">
+    <value>Majuscules / minuscules</value>
+  </data>
+  <data name="Hint.SortLines" xml:space="preserve">
+    <value>Trier les lignes croissant / décroissant</value>
+  </data>
+  <data name="Hint.LineEnding" xml:space="preserve">
+    <value>Fin de ligne (CRLF, LF, CR)</value>
+  </data>
+  <data name="Hint.MarkAll" xml:space="preserve">
+    <value>Marquer toutes les occurrences (encore : effacer)</value>
+  </data>
+  <data name="Viewer.ChangedOnDisk" xml:space="preserve">
+    <value>modifié sur le disque</value>
+  </data>
 </root>

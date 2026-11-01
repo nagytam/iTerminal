@@ -236,6 +236,17 @@ F3 on a video (`VideoFileTypes`) opens `VideoFileViewerDialog`; F3 on a picture 
 - **Saving keeps the file as it was read.** `LineEndings.Detect` records the break the file uses most (`\r\n`, `\n`, `\r`) in
   `ITextModel.LineEnding` and `SaveCommand.WriteAsync` joins with it, with the code page the file was read with. It used to
   join with `Environment.NewLine`, so opening an LF file on Windows and saving it rewrote every line as CRLF.
+- **Line commands** (`TextEditorControl`): Ctrl+Shift+U / Ctrl+Shift+J upper- or lower-case the selection (nothing selected, nothing
+  changes); Ctrl+Shift+S / Ctrl+Shift+D sort the selected lines, or the whole file with nothing selected (ordinal, stable);
+  both are one undo step. Ctrl+Shift+E moves the line ending CRLF → LF → CR; it is not in the undo history, and the title shows
+  the current one (`LineEndingName`). Ctrl+Shift+H marks every match of the selection (one line) or of the last search with a
+  `DecorationSet` source `MarkAllSource`; a second press on the same text clears it, and any edit clears it. These keys are
+  consumed even when they do nothing, so they never reach another control.
+- **Reload when the file changes on disk** (`TextFileEditorDialog.OnIdle` → `CheckDiskAsync` / `ApplyDiskChange`): every 2 s
+  a worker stats the file (`StampOf`: write time and size, local `file://` files only) and reads it only when the stamp moved.
+  The text is put in on the UI thread. A clean editor reloads (`ReplaceAllText`, which drops the history and bookmarks); an
+  edited one keeps its edits and its title says "changed on disk" until it is saved. A save records the new stamp, so the
+  editor's own write is not read back.
 - **Closing a changed file asks** (`UnsavedChangesDialog`: S save, D discard, C or Esc cancel). `TextFileEditorDialog.Close`
   is the one place Esc, the Close button and F10 reach; a read-only editor closes at once. A save that fails keeps the editor
   open with the reason in the title. `PendingClose` is the test seam.
