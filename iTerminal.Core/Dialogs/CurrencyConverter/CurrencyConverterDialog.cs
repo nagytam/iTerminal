@@ -95,7 +95,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
 
         if (_service.Current is { } rates)
         {
-            _status = $"Rates of {rates.Date:yyyy-MM-dd}.";
+            _status = Say("Currency.Status.Rates", "Rates of {0}.", rates.Date.ToString("yyyy-MM-dd"));
         }
 
         if (_service.IsStale)
@@ -198,7 +198,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
         CancellationToken token = _cancellation.Token;
         int generation = NextGeneration();
         _busy = true;
-        SetStatus("Downloading the rates…", isError: false);
+        SetStatus(Say("Currency.Status.Downloading", "Downloading the rates…"), isError: false);
 
         RequestTask = Task.Run(async () =>
         {
@@ -261,18 +261,21 @@ public class CurrencyConverterDialog : SplitPaneDialog
         if (outcome.Rates is { } rates)
         {
             PopulateCurrencies(_from.SelectedItem?.Code ?? _settings.Get(FromKey) ?? "EUR", _to.SelectedItem?.Code ?? _settings.Get(ToKey) ?? "USD");
-            SetStatus($"Rates of {rates.Date:yyyy-MM-dd} downloaded.", isError: false);
+            SetStatus(Say("Currency.Status.Downloaded", "Rates of {0} downloaded.", rates.Date.ToString("yyyy-MM-dd")), isError: false);
         }
         else if (outcome.Error is not null)
         {
-            string kept = _service.Current is { } old ? $" Using the rates of {old.Date:yyyy-MM-dd}." : string.Empty;
+            string kept = _service.Current is { } old ? Say("Currency.Status.UsingOld", " Using the rates of {0}.", old.Date.ToString("yyyy-MM-dd")) : string.Empty;
             SetStatus(outcome.Error + kept, isError: true);
         }
         else
         {
-            SetStatus("Cancelled.", isError: false);
+            SetStatus(Say("Currency.Status.Cancelled", "Cancelled."), isError: false);
         }
     }
+
+    /// <summary>A text in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
     private void SetStatus(string text, bool isError)
     {
@@ -308,7 +311,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
     {
         if (_service.Current is not { } rates)
         {
-            return _busy ? "Waiting for the rates…" : "No rates yet — press F5 to download them.";
+            return _busy ? Say("Currency.Result.Waiting", "Waiting for the rates…") : Say("Currency.Result.NoRates", "No rates yet — press F5 to download them.");
         }
 
         if (_from.SelectedItem is not { } from || _to.SelectedItem is not { } to)
@@ -318,17 +321,17 @@ public class CurrencyConverterDialog : SplitPaneDialog
 
         if (string.IsNullOrWhiteSpace(_amount.Text))
         {
-            return $"Type an amount in {from.Code} to convert it to {to.Code}.";
+            return Say("Currency.Result.TypeAmount", "Type an amount in {0} to convert it to {1}.", from.Code, to.Code);
         }
 
         if (!TryParseAmount(_amount.Text, out decimal amount))
         {
-            return $"\"{_amount.Text}\" is not a number.";
+            return Say("Currency.Result.NotANumber", "\"{0}\" is not a number.", _amount.Text);
         }
 
         decimal? converted = rates.Convert(amount, from.Code, to.Code);
         return converted is null
-            ? $"No rate for {from.Code} → {to.Code}."
+            ? Say("Currency.Result.NoRate", "No rate for {0} → {1}.", from.Code, to.Code)
             : $"{Format(amount)} {from.Code}  =  {Format(converted.Value)} {to.Code}";
     }
 

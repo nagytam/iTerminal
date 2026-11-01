@@ -264,7 +264,7 @@ public class TranslatorDialog : SplitPaneDialog
                     {
                         // A text that was typed or pasted is gone for good: the key asks once.
                         _clearArmed = true;
-                        SetStatus("Press F8 again to clear the text, any other key to keep it.", isError: false);
+                        SetStatus(Say("Translator.Status.ClearAgain", "Press F8 again to clear the text, any other key to keep it."), isError: false);
                         return true;
                     }
 
@@ -284,7 +284,7 @@ public class TranslatorDialog : SplitPaneDialog
         string text = InputText;
         if (string.IsNullOrWhiteSpace(text))
         {
-            SetStatus("Type or paste a text to translate.", isError: true);
+            SetStatus(Say("Translator.Status.NeedText", "Type or paste a text to translate."), isError: true);
             return;
         }
 
@@ -325,7 +325,7 @@ public class TranslatorDialog : SplitPaneDialog
         string text = InputText;
         if (string.IsNullOrWhiteSpace(text))
         {
-            SetStatus("Type or paste a text to detect its language.", isError: true);
+            SetStatus(Say("Translator.Status.NeedTextDetect", "Type or paste a text to detect its language."), isError: true);
             return;
         }
 
@@ -363,7 +363,7 @@ public class TranslatorDialog : SplitPaneDialog
         string? target = _to.SelectedItem?.Code;
         if (source is null || TranslationLanguages.Find(source) is null)
         {
-            SetStatus("Choose the From language first — it is needed to swap.", isError: true);
+            SetStatus(Say("Translator.Status.ChooseFromFirst", "Choose the From language first — it is needed to swap."), isError: true);
             return;
         }
 
@@ -457,6 +457,9 @@ public class TranslatorDialog : SplitPaneDialog
 
     /// <summary>Applies the pending outcome now; the idle pass does the same in the running app.</summary>
     internal void ApplyPendingForTest() => OnIdle();
+
+    /// <summary>A text in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
     private void SetStatus(string text, bool isError)
     {

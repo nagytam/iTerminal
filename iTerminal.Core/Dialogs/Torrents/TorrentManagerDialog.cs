@@ -383,7 +383,7 @@ public class TorrentManagerDialog : Dialog
         _folder = _torrents.DefaultDownloadDirectory;
         _field = 0;
         _mode = Mode.Add;
-        SetStatus("Paste a magnet link, or give a .torrent file or its URL. Enter adds, Esc goes back.", false);
+        SetStatus(Say("Torrent.Status.PasteHint", "Paste a magnet link, or give a .torrent file or its URL. Enter adds, Esc goes back."), false);
         StateHasChanged();
     }
 
@@ -392,7 +392,7 @@ public class TorrentManagerDialog : Dialog
         string source = TorrentSource.Clean(_source);
         if (TorrentSource.Classify(source) == TorrentSourceKind.Invalid)
         {
-            SetStatus("That is not a magnet link, a .torrent file or a URL.", true);
+            SetStatus(Say("Torrent.Status.NotATorrent", "That is not a magnet link, a .torrent file or a URL."), true);
             _field = 0;
             StateHasChanged();
             return;
@@ -400,7 +400,7 @@ public class TorrentManagerDialog : Dialog
 
         string folder = _folder.Trim();
         _mode = Mode.List;
-        SetStatus("Adding the torrent…", false);
+        SetStatus(Say("Torrent.Status.Adding", "Adding the torrent…"), false);
         PendingOperation = Task.Run(async () =>
         {
             try
@@ -410,7 +410,7 @@ public class TorrentManagerDialog : Dialog
                 {
                     _selectedId = id;
                     Reload();
-                    SetStatus("Added. It starts at once.", false);
+                    SetStatus(Say("Torrent.Status.Added", "Added. It starts at once."), false);
                 }
             }
             catch (Exception exception) when (exception is not OperationCanceledException)
@@ -432,7 +432,7 @@ public class TorrentManagerDialog : Dialog
         }
 
         bool resume = item.Status is TorrentStatus.Paused or TorrentStatus.Stopped;
-        SetStatus(resume ? $"Resuming \"{item.Name}\"…" : $"Pausing \"{item.Name}\"…", false);
+        SetStatus(resume ? Say("Torrent.Status.Resuming", "Resuming \"{0}\"…", item.Name) : Say("Torrent.Status.Pausing", "Pausing \"{0}\"…", item.Name), false);
         PendingOperation = Task.Run(async () =>
         {
             try
@@ -441,7 +441,7 @@ public class TorrentManagerDialog : Dialog
                 lock (_sync)
                 {
                     Reload();
-                    SetStatus(resume ? $"Resumed \"{item.Name}\"." : $"Paused \"{item.Name}\".", false);
+                    SetStatus(resume ? Say("Torrent.Status.Resumed", "Resumed \"{0}\".", item.Name) : Say("Torrent.Status.Paused", "Paused \"{0}\".", item.Name), false);
                 }
             }
             catch (Exception exception) when (exception is not OperationCanceledException)
@@ -473,7 +473,7 @@ public class TorrentManagerDialog : Dialog
             return;
         }
 
-        SetStatus($"Removing \"{item.Name}\"…", false);
+        SetStatus(Say("Torrent.Status.Removing", "Removing \"{0}\"…", item.Name), false);
         PendingOperation = Task.Run(async () =>
         {
             try
@@ -483,7 +483,7 @@ public class TorrentManagerDialog : Dialog
                 {
                     _selectedId = null;
                     Reload();
-                    SetStatus($"Removed \"{item.Name}\"" + (deleteData ? " and its files." : "."), false);
+                    SetStatus(deleteData ? Say("Torrent.Status.RemovedWithFiles", "Removed \"{0}\" and its files.", item.Name) : Say("Torrent.Status.Removed", "Removed \"{0}\".", item.Name), false);
                 }
             }
             catch (Exception exception) when (exception is not OperationCanceledException)
@@ -503,7 +503,7 @@ public class TorrentManagerDialog : Dialog
         }
 
         string path = item.SavePath;
-        SetStatus($"Opening {path} in the panel…", false);
+        SetStatus(Say("Torrent.Status.Opening", "Opening {0} in the panel…", path), false);
         PendingOperation = Task.Run(() => _contentModelService.SetUrlAsync(new Url(path)));
         Close();
     }
@@ -517,6 +517,9 @@ public class TorrentManagerDialog : Dialog
 
         StateHasChanged();
     }
+
+    /// <summary>A status message in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
     private void SetStatus(string text, bool isError)
     {

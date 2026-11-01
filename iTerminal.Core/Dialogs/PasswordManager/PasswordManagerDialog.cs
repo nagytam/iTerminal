@@ -406,7 +406,7 @@ public class PasswordManagerDialog : Dialog
         _field = 0;
         _mode = Mode.Edit;
         _reveal = false;
-        SetStatus(entry is null ? "A new saved password. Ctrl+S saves it, Esc goes back." : "Ctrl+S saves, Ctrl+R shows the password, Esc goes back.", false);
+        SetStatus(entry is null ? Say("PasswordManager.Status.NewEntry", "A new saved password. Ctrl+S saves it, Esc goes back.") : Say("PasswordManager.Status.Editing", "Ctrl+S saves, Ctrl+R shows the password, Esc goes back."), false);
         StateHasChanged();
     }
 
@@ -415,7 +415,7 @@ public class PasswordManagerDialog : Dialog
         var title = _fields[0].Text.Trim();
         if (title.Length == 0)
         {
-            SetStatus("Give the password a title, so it can be found in the list.", true);
+            SetStatus(Say("PasswordManager.Status.NeedTitle", "Give the password a title, so it can be found in the list."), true);
             _field = 0;
             StateHasChanged();
             return;
@@ -435,7 +435,7 @@ public class PasswordManagerDialog : Dialog
             _selectedId = _editingId;
             _mode = Mode.List;
             Reload();
-            SetStatus($"Saved \"{title}\".", false);
+            SetStatus(Say("PasswordManager.Status.Saved", "Saved \"{0}\".", title), false);
         }
         catch (InvalidOperationException exception)
         {
@@ -454,7 +454,7 @@ public class PasswordManagerDialog : Dialog
         }
 
         _confirmDelete = true;
-        SetStatus($"Delete \"{entry.Title}\"? Press y to delete, anything else cancels.", true);
+        SetStatus(Say("PasswordManager.Status.ConfirmDelete", "Delete \"{0}\"? Press y to delete, anything else cancels.", entry.Title), true);
         StateHasChanged();
     }
 
@@ -471,7 +471,7 @@ public class PasswordManagerDialog : Dialog
         {
             _passwords.Delete(entry.Id);
             Reload();
-            SetStatus($"Deleted \"{entry.Title}\".", false);
+            SetStatus(Say("PasswordManager.Status.Deleted", "Deleted \"{0}\".", entry.Title), false);
         }
         catch (InvalidOperationException exception)
         {
@@ -480,6 +480,9 @@ public class PasswordManagerDialog : Dialog
 
         StateHasChanged();
     }
+
+    /// <summary>A text in the chosen language, with its arguments filled in.</summary>
+    private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
     private void SetStatus(string text, bool isError)
     {
