@@ -20,6 +20,7 @@ public class GitLens(IGitService gitService) : IContentLens
     private string _lastWorkingDirectory = string.Empty;
     private DateTime _lastRefreshUtc = DateTime.MinValue;
     private bool _isRepository;
+    private SyncState? _syncState;
     private Dictionary<string, GitEntryState> _entryStates = [];
     private bool _refreshInFlight;
 
@@ -34,10 +35,15 @@ public class GitLens(IGitService gitService) : IContentLens
         ScheduleRefreshIfNeeded(workingDirectory);
         lock (_sync)
         {
-            return _isRepository
-                   && string.Equals(_lastWorkingDirectory, workingDirectory, StringComparison.Ordinal)
-                ? "{Git}"
-                : null;
+            if (!_isRepository
+                || !string.Equals(_lastWorkingDirectory, workingDirectory, StringComparison.Ordinal))
+            {
+                return null;
+            }
+
+            // "{Git 1/2}": one commit on the remote that is not here yet, two here that are not on the remote.
+            // The counts come from the last-known remote-tracking branch; nothing here fetches.
+            return _syncState is { } sync ? $"{{Git {sync.Behind}/{sync.Ahead}}}" : "{Git}";
         }
     }
 
@@ -114,6 +120,7 @@ public class GitLens(IGitService gitService) : IContentLens
                 // immediately so we never decorate entries with another folder's git status.
                 _lastWorkingDirectory = workingDirectory;
                 _isRepository = false;
+                _syncState = null;
                 _entryStates = [];
             }
             else if ((now - _lastRefreshUtc) < RefreshInterval)
@@ -144,6 +151,7 @@ public class GitLens(IGitService gitService) : IContentLens
         {
             var isRepository = false;
             var entryStates = new Dictionary<string, GitEntryState>();
+            SyncState? syncState = null;
 
             var root = await gitService.GetRepositoryRootAsync(workingDirectory);
             if (root is not null)
@@ -152,6 +160,10 @@ public class GitLens(IGitService gitService) : IContentLens
                 var status = await gitService.GetStatusAsync(root);
                 AddEntries(status.Unstaged, root, entryStates);
                 AddEntries(status.Staged, root, entryStates);
+                if (status.Upstream is not null)
+                {
+                    syncState = new SyncState(status.Ahead, status.Behind);
+                }
             }
 
             lock (_sync)
@@ -160,6 +172,7 @@ public class GitLens(IGitService gitService) : IContentLens
                 if (string.Equals(_lastWorkingDirectory, workingDirectory, StringComparison.Ordinal))
                 {
                     _isRepository = isRepository;
+                    _syncState = syncState;
                     _entryStates = entryStates;
                     _lastRefreshUtc = DateTime.UtcNow;
                 }
@@ -216,6 +229,9 @@ public class GitLens(IGitService gitService) : IContentLens
             return false;
         }
     }
+
+    /// <summary>Commits the local branch is ahead of and behind its upstream; absent when the branch has none.</summary>
+    private readonly record struct SyncState(int Ahead, int Behind);
 
     private readonly record struct GitEntryState(bool IsModified, bool IsUntracked);
 }

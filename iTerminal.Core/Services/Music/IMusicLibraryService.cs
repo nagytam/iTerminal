@@ -72,6 +72,12 @@ public interface IMusicLibraryService
     Task<int> RefreshAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Asks for the library to be scanned. The music catalog calls this when it opens, so a scan is not started at
+    /// start-up for a feature the user may never use — unless the music library is configured to start sooner. Idempotent.
+    /// </summary>
+    void RequestIndexing();
+
+    /// <summary>
     /// Matches <paramref name="query"/> against artists, albums and track titles. Artist and album
     /// hits come first and are collapsed to one row each; track hits follow. An empty query yields
     /// no results.

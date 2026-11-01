@@ -1,3 +1,5 @@
+using iTerminal.Core.Test.Services.BackgroundStart;
+using iTerminal.Core.Services.BackgroundStart;
 using iConsole.Services;
 using iTerminal.Core.Jobs;
 using iTerminal.Core.Services.Updates;
@@ -22,7 +24,7 @@ public class UpdateCheckJobTest
     public async Task WhereNothingCanBeInstalled_ANewReleaseIsOnlyAToast()
     {
         var notifications = new Mock<INotificationService>();
-        var job = new UpdateCheckJob(Updates(canInstall: false).Object, notifications.Object, Mock.Of<IServiceProvider>());
+        var job = new UpdateCheckJob(Updates(canInstall: false).Object, notifications.Object, Mock.Of<IServiceProvider>(), TestBackgroundStart.Configured(BackgroundStartMode.Immediately));
 
         await job.OfferAsync(openDialog: true, CancellationToken.None);
         await job.OfferAsync(openDialog: false, CancellationToken.None);
@@ -36,7 +38,7 @@ public class UpdateCheckJobTest
         Mock<IUpdateService> updates = Updates(canInstall: false);
         updates.SetupGet(u => u.IsSkipped).Returns(true);
         var notifications = new Mock<INotificationService>();
-        var job = new UpdateCheckJob(updates.Object, notifications.Object, Mock.Of<IServiceProvider>());
+        var job = new UpdateCheckJob(updates.Object, notifications.Object, Mock.Of<IServiceProvider>(), TestBackgroundStart.Configured(BackgroundStartMode.Immediately));
 
         await job.OfferAsync(openDialog: true, CancellationToken.None);
 

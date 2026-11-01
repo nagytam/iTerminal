@@ -1,3 +1,5 @@
+using iTerminal.Core.Test.Services.BackgroundStart;
+using iTerminal.Core.Services.BackgroundStart;
 using iConsole.Data;
 using iConsole.Services;
 using iTerminal.Core.Jobs;
@@ -20,7 +22,7 @@ public class RuntimeDependencyCheckJobTest
         service.SetupGet(s => s.Statuses).Returns([Update("1.63.2")]);
         var notifications = new Mock<INotificationService>();
         var settings = new SettingsService();
-        var job = new RuntimeDependencyCheckJob(service.Object, notifications.Object, settings);
+        var job = new RuntimeDependencyCheckJob(service.Object, notifications.Object, settings, TestBackgroundStart.Configured(BackgroundStartMode.Immediately));
 
         job.AnnounceUpdates();
         job.AnnounceUpdates();
@@ -43,7 +45,7 @@ public class RuntimeDependencyCheckJobTest
             new RuntimeDependencyStatus("other", "Other", "Something", null, "1.0.0", RuntimeDependencyState.Missing),
         ]);
         var notifications = new Mock<INotificationService>();
-        var job = new RuntimeDependencyCheckJob(service.Object, notifications.Object, new SettingsService());
+        var job = new RuntimeDependencyCheckJob(service.Object, notifications.Object, new SettingsService(), TestBackgroundStart.Configured(BackgroundStartMode.Immediately));
 
         job.AnnounceUpdates();
 

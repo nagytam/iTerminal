@@ -155,6 +155,38 @@ public class XmlViewerDialogTest
     }
 
     [TestMethod]
+    public async Task Minus_AndPlus_CloseAndOpenTheFocusedNode()
+    {
+        XmlViewerDialog dialog = CreateDialog(Utf8("<a><b/></a>"), out _);
+        await dialog.OnInitializeAsync();
+        await dialog.ShowAsync();
+        dialog.OnInitializeLayout();
+        Assert.IsTrue(dialog.Tree!.Root.IsOpened);
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('-', ConsoleKey.OemMinus, false, false, false));
+        Assert.IsFalse(dialog.Tree!.Root.IsOpened);
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('+', ConsoleKey.OemPlus, false, false, false));
+        Assert.IsTrue(dialog.Tree!.Root.IsOpened);
+    }
+
+    [TestMethod]
+    public async Task Title_ShowsTheOpenCloseHint_EvenForALongFileName()
+    {
+        string longName = "/some/very/long/folder/structure/that/goes/on/and/on/document-with-a-long-name.xml";
+        XmlViewerDialog dialog = CreateDialog(Utf8("<a/>"), out _);
+        dialog.Url = new Url(longName);
+        // The title is set on layout, and only when the dialog has a parent to size itself from.
+        dialog.Parent = new Control(new ThemeService()) { ViewSize = new Size(80, 24) };
+        await dialog.OnInitializeAsync();
+        await dialog.ShowAsync();
+        dialog.OnInitializeLayout();
+
+        StringAssert.Contains(dialog.Title, "+/-:Open/close");
+        StringAssert.Contains(dialog.Title, "*:Expand all");
+    }
+
+    [TestMethod]
     public async Task Enter_InTheXPathBox_RunsTheTypedQuery()
     {
         XmlViewerDialog dialog = CreateDialog(Utf8("<catalog><book/><book/></catalog>"), out _);

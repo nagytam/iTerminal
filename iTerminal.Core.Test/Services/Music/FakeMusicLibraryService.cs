@@ -32,6 +32,8 @@ internal sealed class FakeMusicLibraryService : IMusicLibraryService
     /// <summary>Nothing to read from: the fake's entries are already in memory.</summary>
     public void Preload() => PreloadCount++;
 
+    public void RequestIndexing() { }
+
     public event EventHandler? LibraryChanged;
 
     public event EventHandler<MusicIndexingProgress>? IndexingProgressChanged;

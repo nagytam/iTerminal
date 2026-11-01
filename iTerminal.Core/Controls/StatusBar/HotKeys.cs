@@ -62,6 +62,10 @@ public class HotKeys : StatusBarItem
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? imageFileViewerDialog = null,
+        iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
+        iConsole.Dialogs.XmlViewerDialog? xmlViewerDialog = null,
+        iConsole.Dialogs.JsonViewerDialog? jsonViewerDialog = null,
+        iConsole.Dialogs.CsvViewerDialog? csvViewerDialog = null,
         iTerminal.Core.Dialogs.Search.FindFilesDialog? findFilesDialog = null,
         CompressDialog? compressDialog = null,
         ExtractDialog? extractDialog = null,
@@ -78,10 +82,7 @@ public class HotKeys : StatusBarItem
         iTerminal.Core.Dialogs.CurrencyConverter.CurrencyConverterDialog? currencyConverterDialog = null,
         LanguageDialog? languageDialog = null,
         ILocalizer? localizer = null,
-        iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
-        XmlViewerDialog? xmlViewerDialog = null,
-        JsonViewerDialog? jsonViewerDialog = null,
-        CsvViewerDialog? csvViewerDialog = null)
+        iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -92,7 +93,7 @@ public class HotKeys : StatusBarItem
         var themeManagerDialogCommand = new ThemeManagerDialogCommand(themeManagerDialog);
         AddCommand(new ProcessManagerDialogCommand(processManagerDialog));
         var screenManagerDialogCommand = new ScreenManagerDialogCommand(themeService);
-        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog);
+        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog);
         var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations);
         var createFolderDialogCommand = new CreateFolderDialogCommand(createFolderDialog, contentModelService);
         var createFileDialogCommand = new CreateFileDialogCommand(createFileDialog, contentModelService);

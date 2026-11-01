@@ -19,4 +19,19 @@ public class HotKeyCollisionTest
         Assert.AreEqual(ConsoleKey.F7, signatures.Key!.ConsoleKey);
         Assert.AreNotEqual(duplicates.Key.ConsoleKey, signatures.Key.ConsoleKey);
     }
+
+    /// <summary>
+    /// Print is Ctrl+P: not Ctrl+Shift+P, which Windows Terminal keeps for its own command palette. Alt+P walks the command
+    /// history, so the two must stay different chords.
+    /// </summary>
+    [TestMethod]
+    public void PrintIsPlainCtrlP_NotTheHostsOrTheHistorysChord()
+    {
+        var print = new PrintDialogCommand(null!, Mock.Of<iConsole.Interfaces.IContentModelService>());
+
+        Assert.AreEqual(new Key(ConsoleKey.P, false, false, true), print.Key);
+        Assert.AreNotEqual(new Key(ConsoleKey.P, true, false, true), print.Key, "Ctrl+Shift+P is the terminal host's");
+        Assert.AreNotEqual(new Key(ConsoleKey.P, false, true, false), print.Key, "Alt+P walks the command history");
+
+    }
 }

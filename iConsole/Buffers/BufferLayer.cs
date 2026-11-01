@@ -177,6 +177,41 @@ public class BufferLayer
         return stringBuilder.ToString();
     }
 
+    /// <summary>
+    /// Replaces each half of a wide character that lost its partner with a space. Layers are composited cell by cell,
+    /// so a narrow character drawn over one column of a wide character leaves the other column behind; drawn
+    /// unrepaired, the terminal would show a character that the cell model does not have. Run once on the merged
+    /// layer, after compositing.
+    /// </summary>
+    public void RepairWideCharacters()
+    {
+        for (int y = 0; y < Content.Length; y++)
+        {
+            var row = Content[y].Span;
+            for (int x = 0; x < row.Length; x++)
+            {
+                var c = row[x].Char;
+                bool isValid = c switch
+                {
+                    TextWidth.Continuation => x > 0 && IsLeadingWide(row[x - 1].Char),
+                    _ when char.IsHighSurrogate(c) => x + 1 < row.Length && char.IsLowSurrogate(row[x + 1].Char),
+                    _ when char.IsLowSurrogate(c) => x > 0 && char.IsHighSurrogate(row[x - 1].Char),
+                    _ when TextWidth.Width(c) == 2 => x + 1 < row.Length && row[x + 1].Char == TextWidth.Continuation,
+                    _ => true,
+                };
+                if (!isValid)
+                {
+                    var cell = row[x];
+                    cell.Char = ' ';
+                    row[x] = cell;
+                }
+            }
+        }
+    }
+
+    private static bool IsLeadingWide(char c) =>
+        c != TextWidth.Continuation && !char.IsSurrogate(c) && TextWidth.Width(c) == 2;
+
     public void CopyLayer(BufferLayer mergedLayer)
     {
         var maxY = Math.Min(Size.Height, Content.Length);

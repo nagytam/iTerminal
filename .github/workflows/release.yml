@@ -32,11 +32,11 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
 
@@ -44,7 +44,7 @@ jobs:
         run: dotnet build iTerminal.Installer/iTerminal.Installer.wixproj -c Release -p:Version=$env:VERSION
 
       - name: Upload the MSI
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: iTerminal-${{ env.VERSION }}-windows-x64
           path: iTerminal.Installer/bin/Release/*.msi
@@ -56,11 +56,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
 
@@ -70,7 +70,7 @@ jobs:
           -p:Version=$VERSION -p:Runtimes="linux-x64+linux-arm64"
 
       - name: Upload the packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: iTerminal-${{ env.VERSION }}-linux
           path: |
@@ -89,7 +89,7 @@ jobs:
       contents: write
     steps:
       - name: Download the packages
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: packages
           pattern: iTerminal-${{ env.VERSION }}-*

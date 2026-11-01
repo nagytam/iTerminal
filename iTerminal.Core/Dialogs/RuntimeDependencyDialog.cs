@@ -1,3 +1,4 @@
+using iTerminal.Core.Services.BackgroundStart;
 using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
@@ -39,10 +40,13 @@ public class RuntimeDependencyDialog : Dialog
     private Wizard? _wizard;
     private bool _wizardActive;
 
-    public RuntimeDependencyDialog(IRuntimeDependencyService service, IThemeService themeService)
+    private readonly IBackgroundStartService? _backgroundStart;
+
+    public RuntimeDependencyDialog(IRuntimeDependencyService service, IThemeService themeService, IBackgroundStartService? backgroundStart = null)
         : base(iConsole.Localization.UiText.Get("Dialog.RuntimeDependencies", "Runtime dependencies"), themeService)
     {
         _service = service;
+        _backgroundStart = backgroundStart;
         Title = iConsole.Localization.UiText.Get("Dialog.RuntimeDependencies", "Runtime dependencies");
     }
 
@@ -108,6 +112,8 @@ public class RuntimeDependencyDialog : Dialog
 
     public override async Task ShowAsync()
     {
+        // Looks for newer versions when the dialog is opened, unless the check is configured to run sooner.
+        _backgroundStart?.Request(BackgroundServices.RuntimeDependencyCheck);
         await base.ShowAsync();
 
         // The base makes every child visible; the wizard shows only while it is the active view.

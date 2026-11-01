@@ -59,6 +59,7 @@ public class SyntaxLanguagesTest
     [DataRow(".gitignore", "# c", null, null, "# c", "Config")]
     [DataRow("x.bat", "echo \"x\"", "echo", "\"x\"", null, "Batch")]
     [DataRow("x.bat", "rem c", null, null, "rem c", "Batch")]
+    [DataRow("x.cmd", "setlocal enabledelayedexpansion", "setlocal", null, null, "Batch")]
     [DataRow("x.lua", "local x = \"s\" -- c", "local", "\"s\"", "-- c", "Lua")]
     [DataRow("x.r", "x <- TRUE # c", "TRUE", null, "# c", "R")]
     [DataRow("x.pl", "my $x = \"s\"; # c", "my", "\"s\"", "# c", "Perl")]
@@ -111,6 +112,14 @@ public class SyntaxLanguagesTest
         // "keys" is a Perl builtin; after @ it names a variable, so it is not a keyword.
         CollectionAssert.DoesNotContain(Spans("x.pl", "@keys"), ("keys", SyntaxKind.Keyword));
         CollectionAssert.Contains(Spans("x.pl", "keys %h"), ("keys", SyntaxKind.Keyword));
+    }
+
+    [TestMethod]
+    public void Sql_KeepsADoubledQuoteInsideTheString_AndColoursBacktickNames()
+    {
+        CollectionAssert.Contains(Spans("x.sql", "select 'it''s' from t"), ("'it''s'", SyntaxKind.String));
+        CollectionAssert.Contains(Spans("x.sql", "select `a b` from t"), ("`a b`", SyntaxKind.String));
+        CollectionAssert.Contains(Spans("x.psql", "WITH r AS (SELECT 1) SELECT * FROM r"), ("WITH", SyntaxKind.Keyword));
     }
 
     [TestMethod]

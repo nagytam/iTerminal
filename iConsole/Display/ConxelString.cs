@@ -70,7 +70,18 @@ public class ConxelString : IEnumerable<Conxel>
         bool isBold = false, bool isItalic = false, bool isUnderline = false,
         bool isStrikeThrough = false)
     {
-        if (!string.IsNullOrEmpty(@string))
+        if (!string.IsNullOrEmpty(@string) && TextWidth.NeedsCellLayout(@string))
+        {
+            // Wide characters, emoji and combining marks take a different number of cells from characters.
+            var conxel = new Conxel('\0', foregroundColor, backgroundColor,
+                isBold, isItalic, isUnderline, isStrikeThrough);
+            foreach (var cell in TextWidth.ToCells(@string))
+            {
+                conxel.Char = cell;
+                String.Add(conxel);
+            }
+        }
+        else if (!string.IsNullOrEmpty(@string))
         {
             var source = @string.AsSpan();
             var length = source.Length;
@@ -203,12 +214,8 @@ public class ConxelString : IEnumerable<Conxel>
     {
         get
         {
-            StringBuilder builder = new();
-            foreach (var conxel in String)
-            {
-                builder.Append(conxel.Char);
-            }
-            return builder.ToString();
+            // The text as a person reads it: continuation cells left out, surrogate pairs joined.
+            return TextWidth.FromCells(String.Select(conxel => conxel.Char));
         }
     }
 }

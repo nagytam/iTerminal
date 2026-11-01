@@ -104,6 +104,36 @@ public class ViewFileDialogCommandTest
     }
 
     [TestMethod]
+    public async Task ExecuteAsync_WhenFocusedFileIsLocalHtml_OpensItInTheWebBrowser()
+    {
+        var themeService = CreateThemeService();
+        var path = Path.Combine(Path.GetTempPath(), "iterminal-f3-" + Guid.NewGuid().ToString("N") + ".html");
+        File.WriteAllText(path, "<html><body>Hi</body></html>");
+        try
+        {
+            var fileUrl = new Url(new Uri(path).AbsoluteUri);
+            var contentModel = new Mock<IContentModel>(MockBehavior.Loose);
+            contentModel.Setup(m => m.ExistsFile(fileUrl)).Returns(true);
+            var contentModelService = new Mock<IContentModelService>();
+            contentModelService.Setup(s => s.FocusedFileUrl).Returns(fileUrl);
+            contentModelService.Setup(s => s.GetFocusedModel()).Returns(contentModel.Object);
+
+            var store = new iTerminal.Core.Services.Web.WebBrowserStore(new Mock<ISettingsService>().Object);
+            var webBrowser = new iTerminal.Core.Dialogs.Web.WebBrowserDialog(
+                new iTerminal.Core.Test.Model.Web.FakeWebFetcher(), store, iTerminal.Core.Test.Helper.UiTestHelper.TestTheme());
+            var command = new ViewFileDialogCommand(CreateDialog(themeService), contentModelService.Object, webBrowserDialog: webBrowser);
+
+            await command.ExecuteAsync(null);
+
+            Assert.AreEqual(iTerminal.Core.Model.Web.WebAddress.FileUrl(path), webBrowser.StartAddress);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
     public void CanExecute_WhenFocusedFileIsHtml_ReturnsTrue()
     {
         var themeService = CreateThemeService();

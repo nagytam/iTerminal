@@ -124,6 +124,12 @@ public class FilePanelPositionRestoreTest
     /// tasks can be replacing the same listing while a panel starts up, so a position that is right
     /// for one poll and wrong for the next is not a restored position.
     /// </summary>
+    private static string? RowUrlUnderCursor(ContentModelFileSystem model)
+    {
+        var index = (int)model.CursorPosition.Y;
+        return index >= 0 && index < model.FilteredEntries.Count ? model.FilteredEntries[index].Url.FullUrl : null;
+    }
+
     private static async Task<bool> SettlesOnAsync(Func<bool> condition)
     {
         // Met, and still met for a quiet window: a position that is right for one poll and moves
@@ -217,18 +223,23 @@ public class FilePanelPositionRestoreTest
 
         leftModel.CursorPosition.Y = 5;
         rightModel.CursorPosition.Y = 12;
+        var leftRow = leftModel.FilteredEntries[5].Url.FullUrl;
+        var rightRow = rightModel.FilteredEntries[12].Url.FullUrl;
         left.Close();
         right.Close();
 
         ContentModelFileSystem restoredLeft = await LoadedModelAsync(StartPanel(ContentModelService.Left));
         ContentModelFileSystem restoredRight = await LoadedModelAsync(StartPanel(ContentModelService.Right));
 
+        // The row is restored by URL: the folder can list in a different order on the next start (a
+        // cached listing first, then the disk), so the same file may come back at another index. The
+        // assertion is on the file the cursor is on, not on its number.
         Assert.IsTrue(
-            await SettlesOnAsync(() => restoredLeft.CursorPosition.Y == 5),
-            $"The left panel came back at {restoredLeft.CursorPosition.Y} instead of 5");
+            await SettlesOnAsync(() => RowUrlUnderCursor(restoredLeft) == leftRow),
+            $"The left panel came back on {RowUrlUnderCursor(restoredLeft)} instead of {leftRow}");
         Assert.IsTrue(
-            await SettlesOnAsync(() => restoredRight.CursorPosition.Y == 12),
-            $"The right panel came back at {restoredRight.CursorPosition.Y} instead of 12");
+            await SettlesOnAsync(() => RowUrlUnderCursor(restoredRight) == rightRow),
+            $"The right panel came back on {RowUrlUnderCursor(restoredRight)} instead of {rightRow}");
     }
 
     /// <summary>

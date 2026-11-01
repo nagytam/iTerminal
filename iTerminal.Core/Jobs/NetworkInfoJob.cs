@@ -1,4 +1,5 @@
-﻿using iConsole.Jobs;
+﻿using iTerminal.Core.Services.BackgroundStart;
+using iConsole.Jobs;
 using iTerminal.Core.Data;
 using iTerminal.Core.Model;
 using System.Net.NetworkInformation;
@@ -9,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace iTerminal.Core.Jobs;
 
-public class NetworkInfoJob(NetworkInfoModel networkInfoModel) : Job
+public class NetworkInfoJob(NetworkInfoModel networkInfoModel, IBackgroundStartService backgroundStart) : Job
 {
     private readonly record struct NetworkInfoSnapshot(
         string? Name,
@@ -20,8 +21,10 @@ public class NetworkInfoJob(NetworkInfoModel networkInfoModel) : Job
 
     private NetworkInfoModel _networkInfoModel { get; set; } = networkInfoModel;
 
-    protected override Task RunAsync(CancellationToken cancellationToken)
+    protected override async Task RunAsync(CancellationToken cancellationToken)
     {
+        // The interfaces are read when the network manager is opened, or as configured (BackgroundStart.NetworkInfo).
+        await backgroundStart.WaitForStartAsync(BackgroundServices.NetworkInfo, cancellationToken);
         while (!cancellationToken.IsCancellationRequested)
         {
             try
@@ -73,7 +76,6 @@ public class NetworkInfoJob(NetworkInfoModel networkInfoModel) : Job
                 cancellationToken.WaitHandle.WaitOne(10000);
             }
         }
-        return Task.CompletedTask;
     }
 
     private void Update(NetworkInfo networkInfo, CancellationToken cancellationToken)

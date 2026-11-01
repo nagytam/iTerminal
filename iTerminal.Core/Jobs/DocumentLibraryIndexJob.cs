@@ -1,5 +1,6 @@
 using iConsole.Jobs;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.BackgroundStart;
 using iTerminal.Core.Services.Documents;
 
 namespace iTerminal.Core.Jobs;
@@ -14,7 +15,7 @@ namespace iTerminal.Core.Jobs;
 /// <para>The folder setting is polled rather than subscribed to: <see cref="ISettingsService"/> is a
 /// plain key/value store with no change notification, and a poll is far cheaper than giving it one.</para>
 /// </summary>
-public class DocumentLibraryIndexJob(IDocumentLibraryService documentLibraryService) : Job
+public class DocumentLibraryIndexJob(IDocumentLibraryService documentLibraryService, IBackgroundStartService backgroundStart) : Job
 {
     /// <summary>How often the documents-folder setting is re-read.</summary>
     public TimeSpan FolderPollInterval { get; init; } = TimeSpan.FromSeconds(10);
@@ -51,7 +52,7 @@ public class DocumentLibraryIndexJob(IDocumentLibraryService documentLibraryServ
         // not started until the document manager is opened. It used to start at start-up whether or not anyone searched.
         try
         {
-            await _documentLibraryService.IndexingRequested.WaitAsync(cancellationToken);
+            await backgroundStart.WaitForStartAsync(BackgroundServices.DocumentLibrary, cancellationToken);
         }
         catch (OperationCanceledException)
         {

@@ -19,7 +19,6 @@ public class DocumentManagerDialogTest
     private sealed class FakeDocumentLibraryService : IDocumentLibraryService
     {
         public List<DocumentEntry> Documents { get; } = [];
-        public Task IndexingRequested { get; } = Task.CompletedTask;
         public void RequestIndexing() { }
         public Dictionary<string, string> Texts { get; } = [];
         private readonly List<string> _queries = [];

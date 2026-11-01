@@ -1,3 +1,4 @@
+using iTerminal.Core.Services.BackgroundStart;
 using iConsole.Jobs;
 using iTerminal.Core.AI;
 using iTerminal.Core.Services.RuntimeDependencies;
@@ -16,17 +17,11 @@ public class OllamaServerJob(
     IEnumerable<IRuntimeDependency> runtimeDependencies,
     IAiChatService chatService,
     AiChatModel model,
-    Serilog.ILogger logger) : Job
+    Serilog.ILogger logger,
+    IBackgroundStartService backgroundStart) : Job
 {
     internal static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(5);
     internal static readonly TimeSpan RetryAfterFailure = TimeSpan.FromMinutes(1);
-
-    /// <summary>
-    /// Starting the local Ollama server is not needed for the first screen, so it waits until the desktop has settled.
-    /// </summary>
-    internal static readonly TimeSpan StartDelay = TimeSpan.FromSeconds(20);
-
-    protected override TimeSpan InitialDelay => StartDelay;
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
@@ -35,6 +30,9 @@ public class OllamaServerJob(
         {
             return;
         }
+
+        // The server starts when the AI bar is used, or as configured (BackgroundStart.OllamaServer).
+        await backgroundStart.WaitForStartAsync(BackgroundServices.OllamaServer, cancellationToken);
 
         bool? wasReachable = null;
         DateTime retryAt = DateTime.MinValue;

@@ -1,3 +1,4 @@
+using iTerminal.Core.Services.BackgroundStart;
 using iConsole.Jobs;
 using iConsole.Services;
 using iTerminal.Core.Services;
@@ -13,15 +14,15 @@ namespace iTerminal.Core.Jobs;
 public class RuntimeDependencyCheckJob(
     IRuntimeDependencyService runtimeDependencies,
     INotificationService notifications,
-    ISettingsService settings) : Job
+    ISettingsService settings,
+    IBackgroundStartService backgroundStart) : Job
 {
-    internal static readonly TimeSpan StartDelay = TimeSpan.FromSeconds(30);
     internal static readonly TimeSpan Interval = TimeSpan.FromHours(12);
-
-    protected override TimeSpan InitialDelay => StartDelay;
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
+        // The check runs when the runtime dependencies are opened, or as configured (BackgroundStart.RuntimeDependencyCheck).
+        await backgroundStart.WaitForStartAsync(BackgroundServices.RuntimeDependencyCheck, cancellationToken);
         while (!cancellationToken.IsCancellationRequested)
         {
             await runtimeDependencies.CheckAsync(cancellationToken);

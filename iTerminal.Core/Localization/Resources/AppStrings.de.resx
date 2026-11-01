@@ -3118,4 +3118,124 @@
   <data name="Task.Skipped" xml:space="preserve">
     <value>Übersprungen</value>
   </data>
+  <data name="Menu.Print" xml:space="preserve">
+    <value>Drucken</value>
+  </data>
+  <data name="Menu.PrintItem" xml:space="preserve">
+    <value>Drucken…</value>
+  </data>
+  <data name="DialogHint.PrintFile" xml:space="preserve">
+    <value>Datei drucken</value>
+  </data>
+  <data name="DialogHint.ChoosePrinter" xml:space="preserve">
+    <value>Drucker wählen</value>
+  </data>
+  <data name="DialogHint.Copies" xml:space="preserve">
+    <value>Mehr oder weniger Kopien</value>
+  </data>
+  <data name="DialogHint.ChooseJob" xml:space="preserve">
+    <value>Druckauftrag wählen</value>
+  </data>
+  <data name="DialogHint.HoldOrResumeJob" xml:space="preserve">
+    <value>Auftrag anhalten oder fortsetzen</value>
+  </data>
+  <data name="DialogHint.CancelJobAsks" xml:space="preserve">
+    <value>Auftrag abbrechen (fragt vorher)</value>
+  </data>
+  <data name="DialogHint.RefreshQueue" xml:space="preserve">
+    <value>Warteschlange neu lesen</value>
+  </data>
+  <data name="DialogHint.CancelJobYes" xml:space="preserve">
+    <value>Druckauftrag abbrechen</value>
+  </data>
+  <data name="DialogHint.KeepJob" xml:space="preserve">
+    <value>Druckauftrag behalten</value>
+  </data>
+  <data name="Print.Status.AskCancel" xml:space="preserve">
+    <value>Auftrag {0} ({1}) abbrechen? y bricht ihn ab.</value>
+  </data>
+  <data name="Print.Status.NoFile" xml:space="preserve">
+    <value>Unter dem Cursor ist keine Datei zum Drucken.</value>
+  </data>
+  <data name="Print.Status.NoPrinter" xml:space="preserve">
+    <value>Es gibt keinen Drucker zum Drucken.</value>
+  </data>
+  <data name="Print.Status.Sending" xml:space="preserve">
+    <value>{0} wird an {1} gesendet…</value>
+  </data>
+  <data name="Print.State.Printing" xml:space="preserve">
+    <value>Druckt</value>
+  </data>
+  <data name="Print.State.Held" xml:space="preserve">
+    <value>Pausiert</value>
+  </data>
+  <data name="Print.State.Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Print.State.Queued" xml:space="preserve">
+    <value>Wartend</value>
+  </data>
+  <data name="Print.NoFile" xml:space="preserve">
+    <value>(keine Datei unter dem Cursor – nur die Warteschlange)</value>
+  </data>
+  <data name="Print.File" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="Print.Printer" xml:space="preserve">
+    <value>Drucker</value>
+  </data>
+  <data name="Print.Copies" xml:space="preserve">
+    <value>Kopien</value>
+  </data>
+  <data name="Print.Col.Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Print.Col.Document" xml:space="preserve">
+    <value>Dokument</value>
+  </data>
+  <data name="Print.Col.Owner" xml:space="preserve">
+    <value>Besitzer</value>
+  </data>
+  <data name="Print.Col.State" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Print.QueueEmpty" xml:space="preserve">
+    <value>Die Warteschlange ist leer.</value>
+  </data>
+  <data name="Print.Reading" xml:space="preserve">
+    <value>Drucker werden gelesen…</value>
+  </data>
+  <data name="Print.NoPrinters" xml:space="preserve">
+    <value>Es sind keine Drucker installiert.</value>
+  </data>
+  <data name="Print.Default" xml:space="preserve">
+    <value>(Standard)</value>
+  </data>
+  <data name="Print.Hint.Confirm" xml:space="preserve">
+    <value>y bricht den Auftrag ab  jede andere Taste behält ihn</value>
+  </data>
+  <data name="Print.Hint.List" xml:space="preserve">
+    <value>Enter drucken  ←→ Drucker  +/- Kopien  P anhalten/fortsetzen  Entf abbrechen  F5 neu  Esc schließen</value>
+  </data>
+  <data name="Notify.GitSyncing" xml:space="preserve">
+    <value>Mit dem Remote wird synchronisiert…</value>
+  </data>
+  <data name="Notify.GitSynced" xml:space="preserve">
+    <value>Mit dem Remote synchronisiert.</value>
+  </data>
+  <data name="Notify.GitSyncNoUpstream" xml:space="preserve">
+    <value>Der Branch hat keinen Upstream-Branch zum Synchronisieren.</value>
+  </data>
+  <data name="Notify.GitSyncPullFailed" xml:space="preserve">
+    <value>Git-Sync: Pull --rebase fehlgeschlagen</value>
+  </data>
+  <data name="Notify.GitSyncRebaseNote" xml:space="preserve">
+    <value>(Es wurde nichts gepusht. Falls git einen Rebase gestartet hat, bleibt er unvollständig.)</value>
+  </data>
+  <data name="Notify.GitSyncPushFailed" xml:space="preserve">
+    <value>Git-Sync: Push fehlgeschlagen</value>
+  </data>
+  <data name="Notify.GitSyncFailed" xml:space="preserve">
+    <value>Git-Sync fehlgeschlagen</value>
+  </data>
 </root>

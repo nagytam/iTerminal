@@ -3,6 +3,9 @@
 public static class Settings
 {
     public const string IsQuotesIndicatorEnabled = nameof(IsQuotesIndicatorEnabled);
+
+    /// <summary>Prefix of the start mode of each configurable background service: <c>BackgroundStart.&lt;service&gt;</c>, one of <c>Immediately</c>, <c>Delayed</c>, <c>OnDemand</c>.</summary>
+    public const string BackgroundStartPrefix = "BackgroundStart.";
     public const string IsWeatherIndicatorEnabled = nameof(IsWeatherIndicatorEnabled);
     public const string NetworkConnectionProfiles = nameof(NetworkConnectionProfiles);
 

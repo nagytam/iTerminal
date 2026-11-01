@@ -1,21 +1,21 @@
-﻿namespace iTerminal.Core.Model;
+﻿using iTerminal.Core.Services.BackgroundStart;
+
+namespace iTerminal.Core.Model;
 
 public class FolderIndexModel : Folder
 {
-    private readonly TaskCompletionSource _indexingRequested = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly IBackgroundStartService? _backgroundStart;
 
-    public FolderIndexModel() : base(null, "My Computer")
+    public FolderIndexModel(IBackgroundStartService? backgroundStart = null) : base(null, "My Computer")
     {
+        _backgroundStart = backgroundStart;
         IsOpened = true;
         IsFocused = true;
     }
 
     /// <summary>
-    /// Asks for the whole-disk index to be built. It is only read by the folder selector, so nothing is walked until
-    /// something opens it. Idempotent: the first call starts the walk, later calls do nothing.
+    /// Asks for the whole-disk index to be built. It is read only by the folder selector, so it is walked on demand:
+    /// the request starts it, unless the folder index is configured to start sooner. Idempotent.
     /// </summary>
-    public void RequestIndexing() => _indexingRequested.TrySetResult();
-
-    /// <summary>Completes once <see cref="RequestIndexing"/> has been called.</summary>
-    internal Task IndexingRequested => _indexingRequested.Task;
+    public void RequestIndexing() => _backgroundStart?.Request(BackgroundServices.FolderIndex);
 }

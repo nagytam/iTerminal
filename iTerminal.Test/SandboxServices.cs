@@ -624,6 +624,100 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// Two printers and a queue, all in memory: printing adds a job, hold, resume and cancel change it, and every call is
+    /// recorded. A test that pressed Enter in the print dialog would otherwise send a page to a real printer.
+    /// </summary>
+    public sealed class Printing : Core.Services.Printing.IPrintService
+    {
+        public static readonly string[] PrinterNames = ["Sandbox Office", "Sandbox Lab"];
+
+        private readonly Lock _lock = new();
+        private readonly List<string> _calls = [];
+        private readonly List<Core.Services.Printing.PrintJob> _jobs = [];
+        private int _nextId = 100;
+
+        /// <summary>Every call so far, in order, as <c>print Printer path copies</c>, <c>hold Printer id</c>…</summary>
+        public IReadOnlyList<string> Calls
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return [.. _calls];
+                }
+            }
+        }
+
+        public IReadOnlyList<Core.Services.Printing.PrintJob> Jobs
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return [.. _jobs];
+                }
+            }
+        }
+
+        public Task<Core.Services.Printing.PrinterListing> ListPrintersAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Core.Services.Printing.PrinterListing(
+                [new(PrinterNames[0], true, "idle"), new(PrinterNames[1], false, "idle")]));
+
+        public Task<Core.Services.Printing.QueueListing> GetQueueAsync(string printer, CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                return Task.FromResult(new Core.Services.Printing.QueueListing([.. _jobs.Where(j => j.Printer == printer)]));
+            }
+        }
+
+        public Task<Core.Services.Printing.PrintResult> PrintFileAsync(string printer, string filePath, int copies, CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                _calls.Add($"print {printer} {filePath} {copies}");
+                _jobs.Add(new(printer, _nextId++, Path.GetFileName(filePath), "sandbox", new FileInfo(filePath).Length, Core.Services.Printing.PrintJobState.Queued));
+            }
+
+            return Task.FromResult(new Core.Services.Printing.PrintResult(true, $"{Path.GetFileName(filePath)} was sent to {printer}."));
+        }
+
+        public Task<Core.Services.Printing.PrintResult> HoldJobAsync(string printer, int jobId, CancellationToken cancellationToken = default) =>
+            Change("hold", printer, jobId, job => job with { State = Core.Services.Printing.PrintJobState.Held }, "is held");
+
+        public Task<Core.Services.Printing.PrintResult> ResumeJobAsync(string printer, int jobId, CancellationToken cancellationToken = default) =>
+            Change("resume", printer, jobId, job => job with { State = Core.Services.Printing.PrintJobState.Queued }, "goes on");
+
+        public Task<Core.Services.Printing.PrintResult> CancelJobAsync(string printer, int jobId, CancellationToken cancellationToken = default) =>
+            Change("cancel", printer, jobId, null, "was cancelled");
+
+        private Task<Core.Services.Printing.PrintResult> Change(
+            string call, string printer, int jobId, Func<Core.Services.Printing.PrintJob, Core.Services.Printing.PrintJob>? change, string outcome)
+        {
+            lock (_lock)
+            {
+                _calls.Add($"{call} {printer} {jobId}");
+                var index = _jobs.FindIndex(j => j.Printer == printer && j.Id == jobId);
+                if (index < 0)
+                {
+                    return Task.FromResult(new Core.Services.Printing.PrintResult(false, $"There is no job {jobId}."));
+                }
+
+                if (change is null)
+                {
+                    _jobs.RemoveAt(index);
+                }
+                else
+                {
+                    _jobs[index] = change(_jobs[index]);
+                }
+            }
+
+            return Task.FromResult(new Core.Services.Printing.PrintResult(true, $"Job {jobId} {outcome}."));
+        }
+    }
+
+    /// <summary>
     /// Does nothing to a drive: records what was asked. A test that pressed E in the disk manager
     /// would otherwise eject a real drive of the machine running the suite.
     /// </summary>

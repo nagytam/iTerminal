@@ -205,6 +205,8 @@ public class ContentModelService(
                 }
             case ContainerType.MusicCatalog:
                 {
+                    // The catalog is what asks for the music library to be scanned (see BackgroundStart.MusicLibrary).
+                    _musicServices.Value.Library.RequestIndexing();
                     contentModel = new ContentModelMusicCatalog(
                         name,
                         settingsService,

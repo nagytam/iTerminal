@@ -41,7 +41,8 @@ public class MenuShortcutTest
                 theme),
             createLinkDialog: new CreateLinkDialog(null!, contentModelService, Mock.Of<IBeepService>(), new DateTimeProviderService(), theme),
             propertiesDialog: new PropertiesDialog(null!, contentModelService, Mock.Of<IBeepService>(), new DateTimeProviderService(), theme),
-            checksumDialog: new ChecksumDialog(null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), theme));
+            checksumDialog: new ChecksumDialog(null!, Mock.Of<IBeepService>(), new DateTimeProviderService(), theme),
+            printDialog: new PrintDialog(Mock.Of<iTerminal.Core.Services.Printing.IPrintService>(), Mock.Of<ISettingsService>(), theme));
         yield return new EditMenuItem(contentModelService, null!, null!, null!, null!, theme,
             new MarkPatternDialog(Mock.Of<IBeepService>(), new DateTimeProviderService(), theme),
             new MarkPatternDialog(Mock.Of<IBeepService>(), new DateTimeProviderService(), theme),

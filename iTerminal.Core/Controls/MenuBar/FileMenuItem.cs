@@ -2,6 +2,7 @@ using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Dialogs;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iConsole.Services;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Dialogs;
@@ -23,6 +24,10 @@ public class FileMenuItem : MenuItem
         iTerminal.Core.Dialogs.Music.MusicFileViewerDialog? musicFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.VideoFileViewerDialog? videoFileViewerDialog = null,
         iTerminal.Core.Dialogs.Video.ImageFileViewerDialog? imageFileViewerDialog = null,
+        iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
+        iConsole.Dialogs.XmlViewerDialog? xmlViewerDialog = null,
+        iConsole.Dialogs.JsonViewerDialog? jsonViewerDialog = null,
+        iConsole.Dialogs.CsvViewerDialog? csvViewerDialog = null,
         iTerminal.Core.Dialogs.Search.FindFilesDialog? findFilesDialog = null,
         CompressDialog? compressDialog = null,
         ExtractDialog? extractDialog = null,
@@ -37,14 +42,12 @@ public class FileMenuItem : MenuItem
         iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
         INotificationService? notificationService = null,
         EditLinkDialog? editLinkDialog = null,
-        XmlViewerDialog? xmlViewerDialog = null,
-        JsonViewerDialog? jsonViewerDialog = null,
-        CsvViewerDialog? csvViewerDialog = null)
+        PrintDialog? printDialog = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
 
-        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog), [], themeService));
+        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog), [], themeService));
         AddMenuItem(new MenuItem("Quick View\tCtrl+F3", new iTerminal.Core.Commands.Drives.TogglePreviewCommand(contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Edit\tF4",   new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations), [], themeService));
         if (openWithDialogFactory is not null)
@@ -82,6 +85,10 @@ public class FileMenuItem : MenuItem
         if (signatureDialog is not null)
         {
             AddMenuItem(new MenuItem("Signatures	Ctrl+Shift+F7", new SignatureDialogCommand(signatureDialog, contentModelService), [], themeService));
+        }
+        if (printDialog is not null)
+        {
+            AddMenuItem(new MenuItem(UiText.Get("Menu.PrintItem", "Print…") + "	Ctrl+P", new PrintDialogCommand(printDialog, contentModelService), [], themeService));
         }
         if (secureWipeDialog is not null)
         {

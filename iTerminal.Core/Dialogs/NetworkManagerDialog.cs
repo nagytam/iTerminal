@@ -1,4 +1,5 @@
-﻿using iConsole.Controls;
+﻿using iTerminal.Core.Services.BackgroundStart;
+using iConsole.Controls;
 using iConsole.Controls.ScrollBar;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -18,9 +19,12 @@ public class NetworkManagerDialog : Dialog
     private ListBox<NetworkInfo> _listBox { get; set; }
     private ScrollBar _scrollBar { get; set; }
 
-    public NetworkManagerDialog(TaskManager taskManager, NetworkInfoModel networkInfoModel, IThemeService themeService) 
+    private readonly IBackgroundStartService? _backgroundStart;
+
+    public NetworkManagerDialog(TaskManager taskManager, NetworkInfoModel networkInfoModel, IThemeService themeService, IBackgroundStartService? backgroundStart = null)
         : base(nameof(NetworkManagerDialog), themeService)
     {
+        _backgroundStart = backgroundStart;
         _taskManager = taskManager ?? new TaskManager();
         _networkInfoModel = networkInfoModel ?? new NetworkInfoModel();
 
@@ -80,6 +84,13 @@ public class NetworkManagerDialog : Dialog
         transformedItem.Value = FormatRow(item.Name, item.NetworkInterface.OperationalStatus.ToString(), item.NetworkInterface.Description);
         transformedItem.IsEnabled = item.NetworkInterface.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up;
         return transformedItem;
+    }
+
+    public override async Task ShowAsync()
+    {
+        // The interfaces are read when the manager is opened, or as configured (BackgroundStart.NetworkInfo).
+        _backgroundStart?.Request(BackgroundServices.NetworkInfo);
+        await base.ShowAsync();
     }
 
     public override void OnInitializeLayout()

@@ -54,7 +54,9 @@ public class FilePanelFactory(
     iTerminal.Core.Services.Defender.IMalwareScanService? malwareScanService = null,
     INotificationService? notificationService = null,
     EditLinkDialog? editLinkDialog = null,
-    iTerminal.Core.Services.Git.IGitService? gitService = null)
+    iTerminal.Core.Services.Git.IGitService? gitService = null,
+    Func<iTerminal.Core.Dialogs.Web.WebBrowserDialog>? webBrowserDialogFactory = null,
+    PrintDialog? printDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -103,7 +105,10 @@ public class FilePanelFactory(
             malwareScanService: malwareScanService,
             notificationService: notificationService,
             editLinkDialog: editLinkDialog,
-            gitService: gitService);
+            gitService: gitService,
+            printDialog: printDialog,
+            // One per panel: a dialog instance is one control, and each panel's Enter and F3 show it.
+            webBrowserDialog: webBrowserDialogFactory?.Invoke());
         contentModelService.AddContentBrowser(name, contentBrowser);
         return new FilePanel(
             name,

@@ -1,23 +1,22 @@
 using iConsole.Jobs;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.BackgroundStart;
 using iTerminal.Core.Services.Music;
 
 namespace iTerminal.Core.Jobs;
 
 /// <summary>
 /// Keeps the music library index in step with the music folder. Runs as a background job rather
-/// than from the player dialog so the index is already warm the first time the user searches, and
-/// so a large library is walked off both the render thread and the key handler.
+/// than from the player dialog so a large library is walked off both the render thread and the key
+/// handler. The cached table is read at once, so the catalog opens with what was indexed last time;
+/// the walk itself waits until the catalog asks for it, or as configured (BackgroundStart.MusicLibrary).
 ///
 /// <para>The folder setting is polled instead of subscribed to: <see cref="ISettingsService"/> is a
 /// plain key/value store with no change notification, and a five-second poll is far cheaper than
 /// giving it one.</para>
 /// </summary>
-public class MusicLibraryIndexJob(IMusicLibraryService musicLibraryService) : Job
+public class MusicLibraryIndexJob(IMusicLibraryService musicLibraryService, IBackgroundStartService backgroundStart) : Job
 {
-    /// <summary>Let the app finish starting before walking what may be tens of thousands of files.</summary>
-    public TimeSpan StartupDelay { get; init; } = TimeSpan.FromSeconds(5);
-
     /// <summary>How often the music-folder setting is re-read.</summary>
     public TimeSpan FolderPollInterval { get; init; } = TimeSpan.FromSeconds(5);
 
@@ -33,8 +32,8 @@ public class MusicLibraryIndexJob(IMusicLibraryService musicLibraryService) : Jo
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
-        // Before the delay, not after it: the point of the delay is to keep the *scan* out of
-        // start-up, while reading the cached table is what makes the catalog panel usable at all.
+        // Before the wait, not after it: the wait keeps the *scan* out of start-up, while reading the
+        // cached table is what makes the catalog panel usable at all.
         // Doing it here means the first Ctrl+F7 never waits on SQLite.
         try
         {
@@ -45,9 +44,10 @@ public class MusicLibraryIndexJob(IMusicLibraryService musicLibraryService) : Jo
             // A cache that cannot be read is the service's problem to report, not this job's.
         }
 
+        // The walk of what may be tens of thousands of files starts when the music catalog asks for it, or as configured.
         try
         {
-            await Task.Delay(StartupDelay, cancellationToken);
+            await backgroundStart.WaitForStartAsync(BackgroundServices.MusicLibrary, cancellationToken);
         }
         catch (OperationCanceledException)
         {

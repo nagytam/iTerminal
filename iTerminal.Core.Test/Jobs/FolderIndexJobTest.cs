@@ -1,4 +1,6 @@
-﻿using iConsole.Data;
+﻿using iTerminal.Core.Test.Services.BackgroundStart;
+using iTerminal.Core.Services.BackgroundStart;
+using iConsole.Data;
 using iTerminal.Core.Data;
 using iTerminal.Core.Jobs;
 using iTerminal.Core.Model;
@@ -73,9 +75,10 @@ public class FolderIndexJobTest
 
         try
         {
-            FolderIndexModel folderIndexModel = new();
+            BackgroundStartService backgroundStart = TestBackgroundStart.Configured(BackgroundStartMode.OnDemand);
+            FolderIndexModel folderIndexModel = new(backgroundStart);
             DriveInfoModel driveInfoModel = new();
-            FolderIndexJob job = new(folderIndexModel, driveInfoModel, new TestDbContextFactory(databasePath));
+            FolderIndexJob job = new(folderIndexModel, driveInfoModel, new TestDbContextFactory(databasePath), backgroundStart);
             using CancellationTokenSource cancellation = new();
             Task execution = job.ExecuteAsync(cancellation.Token);
 
@@ -99,17 +102,6 @@ public class FolderIndexJobTest
         }
     }
 
-    [TestMethod]
-    public void RequestIndexing_CanBeCalledAgainWithoutEffect()
-    {
-        FolderIndexModel folderIndexModel = new();
-
-        folderIndexModel.RequestIndexing();
-        folderIndexModel.RequestIndexing();
-
-        Assert.IsTrue(folderIndexModel.IndexingRequested.IsCompletedSuccessfully);
-    }
-
     private static async Task WaitUntilAsync(Func<bool> condition)
     {
         DateTime deadline = DateTime.UtcNow + TimeSpan.FromSeconds(10);
@@ -124,7 +116,7 @@ public class FolderIndexJobTest
     {
         FolderIndexModel folderIndexModel = new();
         DriveInfoModel driveInfoModel = new();
-        return new FolderIndexJob(folderIndexModel, driveInfoModel, dbContextFactory);
+        return new FolderIndexJob(folderIndexModel, driveInfoModel, dbContextFactory, TestBackgroundStart.Configured(BackgroundStartMode.OnDemand));
     }
 
     private static void InvokeUpdateCacheIfChanged(FolderIndexJob folderIndexJob, string path, long size, DateTimeOffset modifiedUtc)

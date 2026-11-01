@@ -59,12 +59,19 @@ public sealed class MusicLibraryService : IMusicLibraryService
     public MusicLibraryService(
         IDbContextFactory<iTerminalDbContext>? dbContextFactory,
         ISettingsService? settingsService,
-        Serilog.ILogger? logger = null)
+        Serilog.ILogger? logger = null,
+        iTerminal.Core.Services.BackgroundStart.IBackgroundStartService? backgroundStart = null)
     {
         _dbContextFactory = dbContextFactory ?? new TemporaryDbContextFactory("MusicLibrary");
         _settingsService = settingsService ?? NullSettingsService.Instance;
         _logger = logger;
+        _backgroundStart = backgroundStart;
     }
+
+    private readonly iTerminal.Core.Services.BackgroundStart.IBackgroundStartService? _backgroundStart;
+
+    /// <summary>Asks for the scan: it starts now, or as the music library is configured to (BackgroundStart.MusicLibrary).</summary>
+    public void RequestIndexing() => _backgroundStart?.Request(iTerminal.Core.Services.BackgroundStart.BackgroundServices.MusicLibrary);
 
     public event EventHandler? LibraryChanged;
 
