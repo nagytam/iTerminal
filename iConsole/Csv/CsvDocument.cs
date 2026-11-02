@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Text;
 
 namespace iConsole.Csv;
@@ -43,20 +44,18 @@ public sealed record CsvDocument(IReadOnlyList<string> Headers, IReadOnlyList<st
         }
 
         string[] headers;
-        IEnumerable<string[]> body;
         if (hasHeader)
         {
             headers = NameColumns(records[0]);
-            body = records.Skip(1);
+            records.RemoveAt(0);
         }
         else
         {
             int width = records.Max(record => record.Length);
             headers = [.. Enumerable.Range(1, width).Select(i => $"Column{i}")];
-            body = records;
         }
 
-        return new CsvDocument(headers, [.. body], separator, truncated);
+        return new CsvDocument(headers, records, separator, truncated);
     }
 
     /// <summary>The delimiter that makes the first record the widest, comma by default.</summary>
@@ -88,6 +87,9 @@ public sealed record CsvDocument(IReadOnlyList<string> Headers, IReadOnlyList<st
         StringBuilder field = new();
         bool quoted = false;
         bool fieldStarted = false;
+        int i = 0;
+        int n = text.Length;
+        SearchValues<char> special = SearchValues.Create([delimiter, '\r', '\n', '"']);
 
         void EndField()
         {
@@ -96,9 +98,8 @@ public sealed record CsvDocument(IReadOnlyList<string> Headers, IReadOnlyList<st
             fieldStarted = false;
         }
 
-        void EndRecord()
+        void CloseRecord()
         {
-            EndField();
             if (fields.Count > 1 || fields[0].Length > 0)
             {
                 records.Add([.. fields]);
@@ -107,30 +108,101 @@ public sealed record CsvDocument(IReadOnlyList<string> Headers, IReadOnlyList<st
             fields.Clear();
         }
 
-        for (int i = 0; i < text.Length && records.Count < limit; i++)
+        void EndRecord()
         {
-            char c = text[i];
+            EndField();
+            CloseRecord();
+        }
+
+        // Runs of ordinary characters are copied in one span append, found with a vectorized search for the few
+        // characters that change the state; the rest of each loop pass handles those characters one at a time.
+        while (i < n && records.Count < limit)
+        {
             if (quoted)
             {
-                if (c == '"')
+                int quote = text.AsSpan(i).IndexOf('"');
+                if (quote < 0)
                 {
-                    if (i + 1 < text.Length && text[i + 1] == '"')
-                    {
-                        field.Append('"');
-                        i++;
-                    }
-                    else
-                    {
-                        quoted = false;
-                    }
+                    field.Append(text, i, n - i);
+                    break;
+                }
+
+                field.Append(text, i, quote);
+                i += quote;
+                if (i + 1 < n && text[i + 1] == '"')
+                {
+                    field.Append('"');
+                    i += 2;
                 }
                 else
                 {
-                    field.Append(c);
+                    quoted = false;
+                    i++;
                 }
+
+                continue;
             }
-            else if (c == '"' && !fieldStarted)
+
+            int next = text.AsSpan(i).IndexOfAny(special);
+            if (next < 0)
             {
+                field.Append(text, i, n - i);
+                fieldStarted = true;
+                break;
+            }
+
+            // The common case: a field that is one unbroken run of text, ended by a delimiter or a line break. It is
+            // copied straight out of the text, with no builder in between.
+            char end = text[i + next];
+            if (!fieldStarted && end != '"' && (end == delimiter || end == '\r' || end == '\n'))
+            {
+                fields.Add(text.Substring(i, next));
+                i += next + 1;
+                if (end != delimiter)
+                {
+                    if (end == '\r' && i < n && text[i] == '\n')
+                    {
+                        i++;
+                    }
+
+                    CloseRecord();
+                }
+
+                continue;
+            }
+
+            if (next > 0)
+            {
+                field.Append(text, i, next);
+                fieldStarted = true;
+                i += next;
+            }
+
+            char c = text[i];
+            i++;
+            if (c == '"' && !fieldStarted)
+            {
+                // A quoted field with no doubled quote, closed by a delimiter or line break, is also copied straight out.
+                int close = text.AsSpan(i).IndexOf('"');
+                if (close >= 0 && i + close + 1 < n && text[i + close + 1] != '"'
+                    && (text[i + close + 1] == delimiter || text[i + close + 1] is '\r' or '\n'))
+                {
+                    char term = text[i + close + 1];
+                    fields.Add(text.Substring(i, close));
+                    i += close + 2;
+                    if (term != delimiter)
+                    {
+                        if (term == '\r' && i < n && text[i] == '\n')
+                        {
+                            i++;
+                        }
+
+                        CloseRecord();
+                    }
+
+                    continue;
+                }
+
                 quoted = true;
                 fieldStarted = true;
             }
@@ -138,19 +210,20 @@ public sealed record CsvDocument(IReadOnlyList<string> Headers, IReadOnlyList<st
             {
                 EndField();
             }
-            else if (c == '\r' || c == '\n')
+            else if (c == '"')
             {
-                if (c == '\r' && i + 1 < text.Length && text[i + 1] == '\n')
+                // A quote inside an unquoted field is an ordinary character.
+                field.Append('"');
+                fieldStarted = true;
+            }
+            else
+            {
+                if (c == '\r' && i < n && text[i] == '\n')
                 {
                     i++;
                 }
 
                 EndRecord();
-            }
-            else
-            {
-                field.Append(c);
-                fieldStarted = true;
             }
         }
 
