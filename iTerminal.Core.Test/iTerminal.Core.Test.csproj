@@ -7,6 +7,10 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+
+    <!-- The suite runs about 45 workers at once, and workstation GC stops every one of them for each collection.
+         Server GC collects on a heap per core, which took the run from about 52 s to about 34 s on a 48-core machine. -->
+    <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
 
   <ItemGroup>

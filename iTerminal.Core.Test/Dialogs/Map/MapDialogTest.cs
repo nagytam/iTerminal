@@ -9,11 +9,11 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Map;
 
-// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
-[DoNotParallelize]
 [TestClass]
 public class MapDialogTest
 {
+    private IDisposable _clipboardScope = null!;
+
     private sealed class FakeSearch(Func<string, IReadOnlyList<MapPlace>> answer) : IMapSearchService
     {
         public List<string> Queries { get; } = [];
@@ -38,11 +38,16 @@ public class MapDialogTest
     private string _folder = string.Empty;
 
     [TestInitialize]
-    public void Setup() => _folder = Path.Combine(Path.GetTempPath(), "iterminal-mapdialog-" + Guid.NewGuid().ToString("N"));
+    public void Setup()
+    {
+        _clipboardScope = iConsole.Services.TextClipboard.Scope(new iConsole.Services.InProcessTextClipboardService());
+        _folder = Path.Combine(Path.GetTempPath(), "iterminal-mapdialog-" + Guid.NewGuid().ToString("N"));
+    }
 
     [TestCleanup]
     public void Cleanup()
     {
+        _clipboardScope.Dispose();
         MapTestSupport.DeleteFolder(_folder);
     }
 
