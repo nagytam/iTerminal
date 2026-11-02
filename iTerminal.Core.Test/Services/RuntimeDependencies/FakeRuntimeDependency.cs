@@ -22,7 +22,10 @@ internal sealed class FakeRuntimeDependency(string expectedVersion, string id = 
 
     public bool IsCompatible(Version version) => version.Major == _expected.Major && version.Minor == _expected.Minor;
 
-    public string? InstalledVersion() => Installed;
+    /// <summary>Stands in for the probe that finds out what is installed, when a test needs it slow.</summary>
+    public Func<string?>? Probe { get; set; }
+
+    public string? InstalledVersion() => Probe is null ? Installed : Probe();
 
     public Task<IReadOnlyList<string>> ListVersionsAsync(CancellationToken cancellationToken)
     {

@@ -65,6 +65,7 @@ public class Desktop : IHostedService, IDesktop
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
+        Diagnostics.StartupTrace.Mark("desktop-start");
         _timerResolution = new TimerResolution(1);
         _runTask = Task.Run(RunAsync);
         return Task.CompletedTask;
@@ -108,6 +109,7 @@ public class Desktop : IHostedService, IDesktop
     {
         try
         {
+            Diagnostics.StartupTrace.Mark("desktop-run");
             Dump.AppendSessionTrace("desktop:run:start");
             _consoleDriver.RefreshWindowSize();
             var initialWindowSize = _consoleDriver.WindowSize;
@@ -125,6 +127,7 @@ public class Desktop : IHostedService, IDesktop
                 Dump.AppendSessionTrace($"desktop:run:screen-window-size:done;screen={screen.GetType().FullName}");
             }
 
+            Diagnostics.StartupTrace.Mark("screens-initialized");
             Dump.AppendSessionTrace("desktop:run:render-initial-state:start");
             RenderInitialState();
             Dump.AppendSessionTrace("desktop:run:render-initial-state:done");

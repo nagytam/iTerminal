@@ -26,6 +26,7 @@ public class DatabaseInitializationHostedService(
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        iConsole.Diagnostics.StartupTrace.Mark("db-init-start");
         await TryAcquireInstanceLockAsync(cancellationToken);
 
         try
@@ -36,6 +37,8 @@ public class DatabaseInitializationHostedService(
         {
             await RecreateAsync();
         }
+
+        iConsole.Diagnostics.StartupTrace.Mark("db-init-done");
     }
 
     private async Task TryAcquireInstanceLockAsync(CancellationToken cancellationToken)
