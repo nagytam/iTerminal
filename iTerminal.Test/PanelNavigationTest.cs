@@ -69,7 +69,7 @@ public class PanelNavigationTest
         StringAssert.Contains(_app.Screen.Line(1), Path.Combine("left", "alpha"));
     }
 
-    [Timeout(120_000)]
+    [Timeout(180_000)]
     [TestMethod]
     public async Task EnterOnTheParentEntryGoesBackAndKeepsTheCursorOnTheFolderLeft()
     {
@@ -80,8 +80,10 @@ public class PanelNavigationTest
         await _app.PressAsync("Home");
         await _app.PressAsync("Enter");
 
+        // The parent listing is read again from disk on a loaded Windows runner, which took longer than the default wait once.
+        var listingTimeout = TimeSpan.FromSeconds(90);
         await _app.WaitForFocusedFolderAsync(_app.LeftRoot);
-        await _app.WaitUntilAsync(() => _app.FocusedEntryName == "alpha", "the cursor to be back on the folder that was left");
+        await _app.WaitUntilAsync(() => _app.FocusedEntryName == "alpha", "the cursor to be back on the folder that was left", listingTimeout);
     }
 
     [Timeout(120_000)]
