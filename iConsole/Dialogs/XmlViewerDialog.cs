@@ -84,7 +84,7 @@ public class XmlViewerDialog : Dialog
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
-        IFileSystem? fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
+        IFileSystem? fileSystem = (_contentModelService.GetFocusedModel() ?? _contentModelService.GetLastContentModel()) as IFileSystem;
         if (Url is null || fileSystem is null)
         {
             _statusLabel.Text = UiText.Get("Viewer.NothingToShow", "Nothing to show");
@@ -155,7 +155,7 @@ public class XmlViewerDialog : Dialog
     {
         if (!_textLoaded)
         {
-            IFileSystem? fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
+            IFileSystem? fileSystem = (_contentModelService.GetFocusedModel() ?? _contentModelService.GetLastContentModel()) as IFileSystem;
             await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, _textViewerControl.TextModel);
             _textLoaded = true;
         }
