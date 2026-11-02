@@ -13,11 +13,12 @@ namespace iConsole.Test.Localization;
 
 /// <summary>The wizard's Back, Next and Finish buttons speak the chosen language. The language is a static, so these run on their own.</summary>
 [TestClass]
-[DoNotParallelize]
 public class WizardLanguageTest
 {
+    private IDisposable? _language;
+
     [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    public void Reset() => _language?.Dispose();
 
     private static IThemeService Theme()
     {
@@ -26,11 +27,12 @@ public class WizardLanguageTest
         return m.Object;
     }
 
-    private static void Speak(string code)
+    private void Speak(string code)
     {
         Localizer localizer = new();
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
     }
 
     private static Wizard Create()

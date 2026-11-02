@@ -12,6 +12,7 @@ using iTerminal.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Diagnostics;
+using iTerminal.Core.Test.Helper;
 
 namespace iTerminal.Core.Test.Controls.Contents;
 
@@ -34,6 +35,9 @@ namespace iTerminal.Core.Test.Controls.Contents;
 [DoNotParallelize]
 public class FilePanelIntegrationTest
 {
+    [ClassInitialize]
+    public static void ReleaseAbandonedWatchers(TestContext _) => WatcherReclaim.ReleaseAbandonedWatchers();
+
     // Performance budgets — generous to stay green on slow CI agents
     private const int KeyHandlerBudgetMs = 200;  // HandleKeyEventAsync must return before background work
     private const int ContentLoadBudgetMs = 3000; // Internal Enumeration+UiUpdate phases must complete within this window

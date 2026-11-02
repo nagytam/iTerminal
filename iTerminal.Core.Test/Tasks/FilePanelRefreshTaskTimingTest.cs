@@ -6,6 +6,7 @@ using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services;
 using iTerminal.Core.Tasks;
 using Moq;
+using iTerminal.Core.Test.Helper;
 
 namespace iTerminal.Core.Test.Tasks;
 
@@ -22,6 +23,9 @@ namespace iTerminal.Core.Test.Tasks;
 [DoNotParallelize]
 public class FilePanelRefreshTaskTimingTest
 {
+    [ClassInitialize]
+    public static void ReleaseAbandonedWatchers(TestContext _) => WatcherReclaim.ReleaseAbandonedWatchers();
+
     // Generous budgets — these must hold even on slow CI agents.
     private const int CacheLookupBudgetMs = 50;
     private const int EnumerationBudgetMsPerFile = 2;    // 2ms per file is very generous

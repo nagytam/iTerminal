@@ -4,21 +4,23 @@ using iTerminal.Core.Dialogs;
 
 namespace iTerminal.Core.Test.Commands;
 
-/// <summary>The titles and status messages of the contacts, games, git, stock, settings, task manager, terminal and mail dialogs follow the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The titles and status messages of the contacts, games, git, stock, settings, task manager, terminal and mail dialogs follow the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class DialogTitlesLanguageTest
 {
     private static readonly string[] Keys = ["Dialog.ContactsTitle","Dialog.GamesTitle","Msg.Cancelled","Dialog.GitDetails","Msg.FailedTitle","Msg.Searching","Msg.SearchFailed","Settings.Order","Settings.Listing","Dialog.TaskManagerTitle","Dialog.TerminalTitle","Dialog.TerminalCommandTitle","Dialog.MailAccountTitle"];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new([new ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(SortDialog).Assembly))]);
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -57,7 +59,8 @@ public class DialogTitlesLanguageTest
     [TestMethod]
     public void TheFormattedTitles_FillTheirPlaceholders_InEveryLanguage()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         Assert.AreEqual("Task Manager (2)", string.Format(UiText.Get("Dialog.TaskManagerTitle", "Task Manager ({0})"), 2));
 
         Speak("de");

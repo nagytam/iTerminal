@@ -3,9 +3,8 @@ using iConsole.Localization;
 
 namespace iConsole.Test.Localization;
 
-/// <summary>The JSON and XML viewers and the text editor speak the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The JSON and XML viewers and the text editor speak the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class ViewerStringsLanguageTest
 {
     private static readonly string[] Keys =
@@ -15,14 +14,17 @@ public class ViewerStringsLanguageTest
         "ErrorsWarnings", "HintXmlValidate", "HintXPathBox", "HintRunXPath", "NotSaved", "NowhereToSave", "HintSave", "HintIndent", "HintCodePage",
     ];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new();
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -64,7 +66,8 @@ public class ViewerStringsLanguageTest
     [TestMethod]
     public void WithoutALocalizer_TheFormattedMessagesKeepTheirEnglishText()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         Assert.AreEqual("Not valid JSON: x", string.Format(UiText.Get("Viewer.NotValidJson", "Not valid JSON: {0}"), "x"));
         Assert.AreEqual("Showing 1 of 2 matches", string.Format(UiText.Get("Viewer.ShowingMatches", "Showing {0:N0} of {1:N0} matches"), 1, 2));
     }

@@ -8,9 +8,8 @@ using Moq;
 
 namespace iConsole.Test.Localization;
 
-/// <summary>The key hints of the basic controls and the empty texts of the charts and the table follow the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The key hints of the basic controls and the empty texts of the charts and the table follow the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class ControlHintsLanguageTest
 {
     private static readonly string[] Keys =
@@ -24,14 +23,17 @@ public class ControlHintsLanguageTest
         "Hint.RunOrOpenSubmenu", "Hint.OpenSubmenu", "Hint.CloseSubmenu", "Hint.CloseMenu", "Common.NoData", "Common.NoRows",
     ];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new();
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -56,7 +58,8 @@ public class ControlHintsLanguageTest
     [TestMethod]
     public void TheEmptyTexts_FollowTheLanguage_UnlessTheyWereSet()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         PieChart pie = new(null!);
         Assert.AreEqual("No data", pie.EmptyText);
 

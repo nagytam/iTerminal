@@ -4,21 +4,23 @@ using iTerminal.Core.Dialogs;
 
 namespace iTerminal.Core.Test.Commands;
 
-/// <summary>The encyclopedia dialog's labels, hints and messages follow the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The encyclopedia dialog's labels, hints and messages follow the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class EncyclopediaLanguageTest
 {
     private static readonly string[] Keys = ["Menu.Encyclopedia","Encyclopedia.Term","Encyclopedia.TermPlaceholder","Encyclopedia.Source","Encyclopedia.EmptyResults","Encyclopedia.LinkOut","Encyclopedia.TypeTerm","Encyclopedia.Searching","Encyclopedia.SearchFailed","Encyclopedia.Reading","Encyclopedia.ReadFailed","Encyclopedia.NothingToOpen","Encyclopedia.Opened","Encyclopedia.OpenFailed","Encyclopedia.NothingFound","Encyclopedia.Found","Encyclopedia.WholeFrom","Encyclopedia.IntroFrom","Encyclopedia.NoText","Encyclopedia.Results","Encyclopedia.Article","DialogHint.SearchOrRead","DialogHint.WholeArticle","DialogHint.OpenInBrowser"];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new([new ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(SortDialog).Assembly))]);
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -56,7 +58,8 @@ public class EncyclopediaLanguageTest
     [TestMethod]
     public void TheFormattedMessages_FillTheirPlaceholders_InEveryLanguage()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         Assert.AreEqual("Searching Wikipedia…", string.Format(UiText.Get("Encyclopedia.Searching", "Searching {0}…"), "Wikipedia"));
 
         Speak("de");
