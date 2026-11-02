@@ -361,18 +361,28 @@ public class Control : INotifyPropertyChanged, IControl
     {
         if (IsVisible)
         {
-            var controls = Controls.AsSnapshot();
-            foreach (var control in controls
-                .Where(c => c is not null && c.IsVisible)
-                .ToList())
+            // The trace lines are built per child per draw, so only when someone is going to read them.
+            var isDumping = Dump.IsEnabled;
+            // The snapshot is already a private copy, so it is walked as it is.
+            foreach (var control in Controls.AsSnapshot())
             {
+                if (control is null || !control.IsVisible)
+                {
+                    continue;
+                }
                 try
                 {
-                    Dump.AppendSessionTrace(
-                        $"control:draw:start;parent={GetType().FullName};child={control.GetType().FullName};pos={control.AbsolutePosition.X},{control.AbsolutePosition.Y};size={control.ViewSize.Width}x{control.ViewSize.Height}");
+                    if (isDumping)
+                    {
+                        Dump.AppendSessionTrace(
+                            $"control:draw:start;parent={GetType().FullName};child={control.GetType().FullName};pos={control.AbsolutePosition.X},{control.AbsolutePosition.Y};size={control.ViewSize.Width}x{control.ViewSize.Height}");
+                    }
                     control.Draw(buffer);
-                    Dump.AppendSessionTrace(
-                        $"control:draw:done;parent={GetType().FullName};child={control.GetType().FullName}");
+                    if (isDumping)
+                    {
+                        Dump.AppendSessionTrace(
+                            $"control:draw:done;parent={GetType().FullName};child={control.GetType().FullName}");
+                    }
                 }
                 catch (Exception exception)
                 {
@@ -1040,9 +1050,12 @@ public class Control : INotifyPropertyChanged, IControl
     public int GetMaxZOrder()
     {
         var maxZOrder = ZOrder;
-        foreach (var control in Controls.AsSnapshot().Where(c => c.IsVisible))
+        foreach (var control in Controls.AsSnapshot())
         {
-            maxZOrder = Math.Max(maxZOrder, control.GetMaxZOrder());
+            if (control.IsVisible)
+            {
+                maxZOrder = Math.Max(maxZOrder, control.GetMaxZOrder());
+            }
         }
         return maxZOrder;
     }

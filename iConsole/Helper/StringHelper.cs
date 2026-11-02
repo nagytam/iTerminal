@@ -10,7 +10,17 @@ public static class StringHelper
         {
             // A repeat past a screen's size is a mistake, and one to int.MaxValue ran out of memory.
             count = Math.Min(count, MaxPadding / value.Length + 1);
-            return new StringBuilder().Insert(0, value, count).ToString();
+            if (value.Length == 1)
+            {
+                return new string(value[0], count);
+            }
+            return string.Create(value.Length * count, value, static (span, pattern) =>
+            {
+                for (int offset = 0; offset < span.Length; offset += pattern.Length)
+                {
+                    pattern.CopyTo(span[offset..]);
+                }
+            });
         }
         else
         {
