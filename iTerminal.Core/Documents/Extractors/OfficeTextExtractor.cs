@@ -27,7 +27,10 @@ public sealed class OfficeTextExtractor : IDocumentTextExtractor
 
     public IReadOnlyCollection<string> Extensions { get; } =
     [
-        ".docx", ".docm", ".xlsx", ".xlsm", ".pptx", ".pptm", ".odt", ".ods", ".odp",
+        ".docx", ".docm", ".dotx", ".dotm",
+        ".xlsx", ".xlsm", ".xltx", ".xltm",
+        ".pptx", ".pptm", ".potx", ".potm", ".ppsx", ".ppsm",
+        ".odt", ".ott", ".ods", ".ots", ".odp", ".otp", ".odg", ".otg",
     ];
 
     public DocumentTextResult Extract(string path, CancellationToken cancellationToken = default)
@@ -109,18 +112,18 @@ public sealed class OfficeTextExtractor : IDocumentTextExtractor
 
         return extension.ToLowerInvariant() switch
         {
-            ".docx" or ".docm" =>
+            ".docx" or ".docm" or ".dotx" or ".dotm" =>
                 partName.Equals("word/document.xml", StringComparison.OrdinalIgnoreCase)
                 || partName.StartsWith("word/header", StringComparison.OrdinalIgnoreCase)
                 || partName.StartsWith("word/footer", StringComparison.OrdinalIgnoreCase)
                 || partName.Equals("word/footnotes.xml", StringComparison.OrdinalIgnoreCase)
                 || partName.Equals("word/endnotes.xml", StringComparison.OrdinalIgnoreCase),
 
-            ".xlsx" or ".xlsm" =>
+            ".xlsx" or ".xlsm" or ".xltx" or ".xltm" =>
                 partName.Equals("xl/sharedStrings.xml", StringComparison.OrdinalIgnoreCase)
                 || partName.StartsWith("xl/worksheets/sheet", StringComparison.OrdinalIgnoreCase),
 
-            ".pptx" or ".pptm" =>
+            ".pptx" or ".pptm" or ".potx" or ".potm" or ".ppsx" or ".ppsm" =>
                 partName.StartsWith("ppt/slides/slide", StringComparison.OrdinalIgnoreCase)
                 || partName.StartsWith("ppt/notesSlides/notesSlide", StringComparison.OrdinalIgnoreCase),
 
