@@ -104,7 +104,7 @@ public class CsvViewerDialog : Dialog
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
-        IFileSystem? fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
+        IFileSystem? fileSystem = (_contentModelService.GetFocusedModel() ?? _contentModelService.GetLastContentModel()) as IFileSystem;
         if (Url is null || fileSystem is null)
         {
             _statusLabel.Text = UiText.Get("Viewer.NothingToShow", "Nothing to show");
@@ -137,9 +137,17 @@ public class CsvViewerDialog : Dialog
         _document = document;
         _grid.SetData(document.Headers, document.Rows);
         _matched = document.Rows.Count;
+        // The grid already shows every row, which is what this query would give; the line says so and is ready to edit.
+        _queryBox.Text = DefaultQuery;
         UpdateStatus();
         StateHasChanged();
     }
+
+    /// <summary>What the query line says.</summary>
+    public string QueryText => _queryBox.Text;
+
+    /// <summary>The query the line starts with: every column of every row.</summary>
+    public const string DefaultQuery = "SELECT * FROM file";
 
     /// <summary>
     /// The file's text: a byte order mark decides, else UTF-8 when the bytes are valid UTF-8, else the system's ANSI code page
@@ -216,6 +224,11 @@ public class CsvViewerDialog : Dialog
                 _queryError = string.Empty;
                 _matched = _document.Rows.Count;
                 _grid.SetData(_document.Headers, _document.Rows);
+                if (_queryBox.Text.Trim().Length > 0 && !string.Equals(_queryBox.Text, DefaultQuery, StringComparison.Ordinal))
+                {
+                    // The query in the box was written for the old reading; the grid must keep agreeing with it.
+                    StartQuery(_queryBox.Text);
+                }
             }
 
             UpdateStatus();
@@ -289,7 +302,7 @@ public class CsvViewerDialog : Dialog
     {
         if (!_textLoaded)
         {
-            IFileSystem? fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
+            IFileSystem? fileSystem = (_contentModelService.GetFocusedModel() ?? _contentModelService.GetLastContentModel()) as IFileSystem;
             await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, _textViewerControl.TextModel);
             _textLoaded = true;
         }

@@ -1,6 +1,7 @@
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
+using iConsole.Services;
 using iConsole.Test.Core;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Dialogs.Games;
@@ -13,9 +14,10 @@ namespace iTerminal.Core.Test.Dialogs.Games;
 [TestClass]
 public class GamesDialogTest
 {
-    private static GamesDialog Create() => new(
-        [new TicTacToeGame(new Random(1)), new ChessGame(new Random(1)), new GoGame(new Random(1)), new NineMensMorrisGame(new Random(1))],
-        TestTheme());
+    private static GamesDialog Create(ITimeProvider? time = null) => new(
+        [new TicTacToeGame(new Random(1)), new ChessGame(new Random(1)), new GoGame(new Random(1)), new NineMensMorrisGame(new Random(1)), new SnakeGame(new Random(1))],
+        TestTheme(),
+        time);
 
     private static void DrawChildren(IControl parent, IBuffer buffer)
     {
@@ -50,7 +52,7 @@ public class GamesDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task ItListsTheFourGamesAndDrawsTheFirstOne()
+    public async Task ItListsTheFiveGamesAndDrawsTheFirstOne()
     {
         GamesDialog dialog = Create();
         await ShowAsync(dialog);
@@ -61,6 +63,7 @@ public class GamesDialogTest
         StringAssert.Contains(screen, "Chess");
         StringAssert.Contains(screen, "Go");
         StringAssert.Contains(screen, "Nine Men's Morris");
+        StringAssert.Contains(screen, "Snake");
         StringAssert.Contains(screen, "Tic-Tac-Toe — against the computer");
         StringAssert.Contains(screen, "X to move.");
         StringAssert.Contains(screen, "Esc:close");
@@ -81,9 +84,11 @@ public class GamesDialogTest
         Assert.AreEqual("Nine Men's Morris", dialog.Current.Name);
 
         await Press(dialog, ConsoleKey.PageDown);
-        Assert.AreEqual("Tic-Tac-Toe", dialog.Current.Name);
+        Assert.AreEqual("Snake", dialog.Current.Name);
+        await Press(dialog, ConsoleKey.PageDown);
+        Assert.AreEqual("Tic-Tac-Toe", dialog.Current.Name, "the last game wraps to the first");
         await Press(dialog, ConsoleKey.PageUp);
-        Assert.AreEqual("Nine Men's Morris", dialog.Current.Name);
+        Assert.AreEqual("Snake", dialog.Current.Name);
     }
 
     [Timeout(60_000)]
@@ -194,7 +199,7 @@ public class GamesDialogTest
         {
             GamesDialog dialog = Create();
             await ShowAsync(dialog, new Size((uint)width, (uint)height));
-            for (int game = 0; game < 4; game++)
+            for (int game = 0; game < dialog.Games.Count; game++)
             {
                 Drawn(dialog, width, height);
                 await Press(dialog, ConsoleKey.PageDown);
@@ -204,19 +209,143 @@ public class GamesDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void TheKeyHintsNameTheKeysOnceAndTheFooterSaysHowToLeave()
+    public void TheKeyHintsNameEachKeyOnce()
     {
         GamesDialog dialog = Create();
 
         List<(string Key, string Description)> hints = [.. dialog.GetKeyHints()];
 
         Assert.AreEqual(hints.Count, hints.Select(h => h.Key).Distinct().Count());
-        Assert.IsTrue(hints.All(h => h.Key.Length > 0 && h.Description.Length > 0));
-        StringAssert.Contains(GamesDialogKeyHints(), "Esc");
     }
 
-    private static string GamesDialogKeyHints() =>
-        (string)typeof(GamesDialog).GetField("KeyHints", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!.GetRawConstantValue()!;
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheDigitHintFollowsTheNumberOfGames()
+    {
+        GamesDialog dialog = Create();
+
+        Assert.IsTrue(dialog.GetKeyHints().Any(h => h.Key == "1-5"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheFooterOfAFourGameEraGameIsUnchanged()
+    {
+        GamesDialog dialog = Create();
+        await ShowAsync(dialog);
+
+        Assert.AreEqual("Arrows:move  Enter:play  PgUp/PgDn:game  N:new  U:undo  M:mode  Esc:close", dialog.FooterHints());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task SnakeDrawsItsTitleAndOnePlayerAndAFooterWithoutUndoOrMode()
+    {
+        GamesDialog dialog = Create();
+        await ShowAsync(dialog);
+        await Press(dialog, ConsoleKey.D5, '5');
+
+        string screen = Drawn(dialog);
+
+        Assert.AreEqual("Snake", dialog.Current.Name);
+        StringAssert.Contains(screen, "Snake — one player");
+        StringAssert.Contains(screen, "Enter:pause");
+        StringAssert.Contains(screen, "Esc:close");
+        Assert.IsFalse(screen.Contains("U:undo"), "no undo in the footer");
+        Assert.IsFalse(screen.Contains("M:mode"), "no mode in the footer");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task SnakeHelpSaysEnterPausesAndHasNoUndoOrModeKeys()
+    {
+        GamesDialog dialog = Create();
+        await ShowAsync(dialog);
+        await Press(dialog, ConsoleKey.D5, '5');
+
+        List<(string Key, string Description)> hints = [.. dialog.GetKeyHints()];
+
+        StringAssert.Contains(hints.Single(h => h.Key == "Enter").Description, "Pause");
+        Assert.IsFalse(hints.Any(h => h.Key is "U" or "M"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task UndoAndModeAreNotHandledByTheSnake()
+    {
+        GamesDialog dialog = Create();
+        await ShowAsync(dialog);
+        await Press(dialog, ConsoleKey.D5, '5');
+
+        Assert.IsFalse(await Press(dialog, ConsoleKey.U, 'u'), "the key is left to the other controls");
+        Assert.IsFalse(await Press(dialog, ConsoleKey.M, 'm'), "the key is left to the other controls");
+        Assert.IsTrue(dialog.Current.VsComputer, "the mode is not switched");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheSnakeMovesOnTheDialogsClockAndOnlyWhileItIsRunning()
+    {
+        VirtualTimeProvider time = new();
+        GamesDialog dialog = Create(time);
+        await ShowAsync(dialog);
+        await Press(dialog, ConsoleKey.D5, '5');
+        SnakeGame snake = (SnakeGame)dialog.Current;
+        await Press(dialog, ConsoleKey.Enter);
+
+        time.Advance(TimeSpan.FromMilliseconds(120));
+        dialog.OnIdle();
+        Assert.AreEqual(6, snake.Head.X, "one step per 120 ms with no key press");
+
+        // A long pause between idle passes moves it by the capped amount only: 1000 ms is eight steps.
+        time.Advance(TimeSpan.FromSeconds(5));
+        dialog.OnIdle();
+        Assert.AreEqual(14, snake.Head.X);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ClosingPausesAMovingSnakeSoItDoesNotMoveWhenTheDialogOpensAgain()
+    {
+        VirtualTimeProvider time = new();
+        GamesDialog dialog = Create(time);
+        await ShowAsync(dialog);
+        await Press(dialog, ConsoleKey.D5, '5');
+        SnakeGame snake = (SnakeGame)dialog.Current;
+        await Press(dialog, ConsoleKey.Enter);
+
+        await Press(dialog, ConsoleKey.Escape);
+        (int X, int Y) closedAt = snake.Head;
+        time.Advance(TimeSpan.FromSeconds(10));
+        await ShowAsync(dialog);
+        time.Advance(TimeSpan.FromMilliseconds(120));
+        dialog.OnIdle();
+
+        Assert.AreEqual(closedAt, snake.Head);
+        Assert.AreEqual("Paused. Enter to go on.", snake.Status);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task LeavingTheSnakeForAnotherGamePausesIt()
+    {
+        VirtualTimeProvider time = new();
+        GamesDialog dialog = Create(time);
+        await ShowAsync(dialog);
+        await Press(dialog, ConsoleKey.D5, '5');
+        SnakeGame snake = (SnakeGame)dialog.Current;
+        await Press(dialog, ConsoleKey.Enter);
+
+        await Press(dialog, ConsoleKey.PageDown);
+        time.Advance(TimeSpan.FromSeconds(1));
+        dialog.OnIdle();
+        await Press(dialog, ConsoleKey.PageUp);
+        time.Advance(TimeSpan.FromSeconds(1));
+        dialog.OnIdle();
+
+        Assert.AreEqual(5, snake.Head.X, "the snake kept its place and did not move while it was left");
+        Assert.AreEqual("Paused. Enter to go on.", snake.Status);
+    }
 
     [Timeout(60_000)]
     [TestMethod]

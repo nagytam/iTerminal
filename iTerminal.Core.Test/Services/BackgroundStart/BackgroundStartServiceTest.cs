@@ -12,6 +12,7 @@ public class BackgroundStartServiceTest
     public void ModeIsOnDemandWhenNothingIsStored()
     {
         Assert.AreEqual(BackgroundStartMode.OnDemand, TestBackgroundStart.Unset().ModeOf(BackgroundServices.FolderIndex));
+        Assert.AreEqual(BackgroundStartMode.Delayed, TestBackgroundStart.Unset().ModeOf(BackgroundServices.UpdateCheck));
     }
 
     [Timeout(60_000)]

@@ -268,7 +268,7 @@ public sealed partial class UnixAccessControlService(IExternalProcessRunner runn
             (owner, group) = (u, g);
         }
 
-        var mode = File.GetUnixFileMode(full);
+        var mode = OperatingSystem.IsWindows() ? UnixFileMode.None : File.GetUnixFileMode(full);
         static string Triple(UnixFileMode mode, UnixFileMode r, UnixFileMode w, UnixFileMode x) =>
             ((mode & r) != 0 ? "r" : "-") + ((mode & w) != 0 ? "w" : "-") + ((mode & x) != 0 ? "x" : "-");
         AclEntry[] entries =

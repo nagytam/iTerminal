@@ -17,6 +17,7 @@ public class DialogButtonsLanguageTest
         ("DeleteDialog", "_deleteButton", "Menu.Delete", "Delete"),
         ("ExtractDialog", "_extractButton", "Menu.Extract", "Extract"),
         ("RenameDialog", "_renameButton", "Menu.Rename", "Rename"),
+        ("MultiRenameDialog", "_renameButton", "Menu.Rename", "Rename"),
         ("EditLinkDialog", "_saveButton", "Common.Save", "Save"),
         ("FileAssociationDialog", "_saveButton", "Common.Save", "Save"),
         ("FileLabelsDialog", "_applyButton", "Common.Apply", "Apply"),

@@ -23,3 +23,21 @@ Feature: Starting iTerminal
   Scenario: The left panel has the keyboard at first
     Then the left panel has the keyboard
     And the cursor is on ".."
+
+  Scenario: Each panel is titled with its folder, the left one on the left
+    Then each panel is titled with its folder
+
+  Scenario: Folders are listed before files
+    Then "beta" is listed before "notes.md" in the left panel
+
+  Scenario: Each panel footer counts its entries
+    Then the panel footers show 5 and 3 entries
+
+  Scenario: The splash screen is gone once the app is up
+    Then the splash screen is gone
+
+  Scenario: Starting the app makes no sound
+    Then nothing beeped
+
+  Scenario: The database is kept in the configured data folder
+    Then the database is in the data folder

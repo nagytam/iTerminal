@@ -79,12 +79,12 @@ public class DialogsTest
         await OpenAndCloseAsync(chord, dialogTypeName);
     }
 
-    /// <summary>The Virtual Machine Manager opens from its chord on Linux and does not open anywhere else.</summary>
+    /// <summary>The Virtual Machine Manager opens from its chord on Linux (libvirt) and Windows (Hyper-V) and does not open anywhere else.</summary>
     [Timeout(120_000)]
     [TestMethod]
-    public async Task TheVirtualMachineManagerOpensOnLinuxAndNowhereElse()
+    public async Task TheVirtualMachineManagerOpensWhereAHypervisorBackendExists()
     {
-        if (OperatingSystem.IsLinux())
+        if (Core.Commands.VirtualMachineManagerDialogCommand.IsSupported)
         {
             await OpenAndCloseAsync("Shift+Alt+F9", "VirtualMachineManagerDialog");
             return;
@@ -92,7 +92,7 @@ public class DialogsTest
 
         await _app.PressAsync("Shift+Alt+F9");
         await _app.WaitForNoDialogAsync();
-        Assert.IsNull(_app.Driver.FocusedModal);
+        Assert.IsInstanceOfType<Core.Screens.TerminalScreen>(_app.Driver.FocusedModal);
     }
 
     /// <summary>The Web Browser through the whole app: opens on its home page, takes an address, follows a link and closes.</summary>

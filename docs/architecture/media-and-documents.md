@@ -45,9 +45,31 @@ rather than a path, so a document on an SSH, archive or memory drive reads the s
 - **Outlook messages** (`OutlookMessageReader`, `.msg`): the MAPI property streams of the compound file, Unicode
   when present, and the attachment storages' names.
 - **FictionBook 2** (`Fb2TextReader`, `.fb2`): sections as headings, paragraphs, verses, tables, notes bodies.
-- **Kindle MOBI and AZW** (`MobiTextReader`, `.mobi`, `.azw`): the Palm database's PalmDOC text records, with the
-  trailing entries the MOBI header declares stripped and the markup read by `HtmlTextExtractor`. Huffman-compressed
-  (KF8/AZW3) books are reported, not read.
+- **Kindle MOBI, AZW and AZW3** (`MobiTextReader`, `.mobi`, `.azw`, `.azw3`): the Palm database's text records, with the
+  trailing entries the MOBI header declares stripped, then PalmDOC- or Huffman-decompressed, and the markup read by
+  `HtmlTextExtractor`. The extra-record flags are at 0xF2 from the start of record 0; a book whose text is only pictures
+  says so. Huffman decoding (`MobiTextReaderTest`) is ported from the MIT-licensed lingo-reader table walk and is
+  tested on synthetic HUFF/CDIC records; the sample books used during development were all PalmDOC.
+- **iWork** (`IWorkTextReader`, `iConsole/IWork/`, `.pages`, `.numbers`, `.key`): the zip's `Index/*.iwa` archives, each a run
+  of Snappy chunks (`SnappyDecompressor`) of protobuf messages read by field number (`ProtobufWire`, `IwaDocument`). A
+  Pages or Keynote document is its `TSWP.StorageArchive` text storages, the body first; a Numbers document is its sheets,
+  each with the text cells of its tables (`TST` string list, reached sheet → table info → model → data store). Numeric and
+  formula cells are not read. A `.key` that is not a zip is shown as plain text, as before; an iWork '09 or encrypted
+  document says so.
+- **Access** (`AccessDatabaseTextReader`, `.mdb`, `.accdb`): JetDatabaseReader (MIT, managed, no Access or ACE driver)
+  lists each user table with its row count and its first 200 rows as a grid. The reader opens the file by path, so like the
+  SQLite viewer it reads only a local file.
+- **OpenDocument formula and master** (`.odf`, `.odm`): a formula's MathML is written out as a line, with the StarMath
+  source below it when the file has it (`OfficeTextRenderer.RenderOpenDocumentFormula`). A master document shows its own
+  text, then the text of each document its sections link to, read from the same folder; a link that is missing is named,
+  and a master inside a master is not expanded, so a loop of links stays finite.
+- **vCard** (`VCardTextReader`, `.vcf`): one block per contact, with the structured name, organization and address spelled
+  out, TYPE parameters in brackets, and a photo shown as a note. **iCalendar** (`ICalendarTextReader`, `.ics`): each event,
+  task, journal and alarm under its summary, dates as they read (`2026-03-05 09:00 UTC`), organizers without `mailto:`, and
+  folded and multi-line values unfolded (`ContentLines`, shared by both). **mbox** (`MboxTextReader`, `.mbox`): split at its
+  `From ` lines, quoting undone, and each message read by `MimeMessageReader`.
+- **Log files** (`.log`) are plain text, coloured by the `Log` syntax language (severity words as keywords). YAML, TOML and
+  INI files were already coloured by extension in the highlighter.
 - **HTML, PDF, plain text, images as ASCII art and .NET binaries** are read as before.
 
 These readers do not feed the document search index: `DocumentTextExtractorFactory` still lists only the
@@ -240,6 +262,17 @@ F3 on a video (`VideoFileTypes`) opens `VideoFileViewerDialog`; F3 on a picture 
 - **Saving keeps the file as it was read.** `LineEndings.Detect` records the break the file uses most (`\r\n`, `\n`, `\r`) in
   `ITextModel.LineEnding` and `SaveCommand.WriteAsync` joins with it, with the code page the file was read with. It used to
   join with `Environment.NewLine`, so opening an LF file on Windows and saving it rewrote every line as CRLF.
+- **Line commands** (`TextEditorControl`): Ctrl+Shift+U / Ctrl+Shift+J upper- or lower-case the selection (nothing selected, nothing
+  changes); Ctrl+Shift+S / Ctrl+Shift+D sort the selected lines, or the whole file with nothing selected (ordinal, stable);
+  both are one undo step. Ctrl+Shift+E moves the line ending CRLF → LF → CR; it is not in the undo history, and the title shows
+  the current one (`LineEndingName`). Ctrl+Shift+H marks every match of the selection (one line) or of the last search with a
+  `DecorationSet` source `MarkAllSource`; a second press on the same text clears it, and any edit clears it. These keys are
+  consumed even when they do nothing, so they never reach another control.
+- **Reload when the file changes on disk** (`TextFileEditorDialog.OnIdle` → `CheckDiskAsync` / `ApplyDiskChange`): every 2 s
+  a worker stats the file (`StampOf`: write time and size, local `file://` files only) and reads it only when the stamp moved.
+  The text is put in on the UI thread. A clean editor reloads (`ReplaceAllText`, which drops the history and bookmarks); an
+  edited one keeps its edits and its title says "changed on disk" until it is saved. A save records the new stamp, so the
+  editor's own write is not read back.
 - **Closing a changed file asks** (`UnsavedChangesDialog`: S save, D discard, C or Esc cancel). `TextFileEditorDialog.Close`
   is the one place Esc, the Close button and F10 reach; a read-only editor closes at once. A save that fails keeps the editor
   open with the reason in the title. `PendingClose` is the test seam.

@@ -35,10 +35,8 @@ public class ConxelString : IEnumerable<Conxel>
     public ConxelString(Span<Conxel> conxels)
     {
         String = new List<Conxel>(conxels.Length);
-        foreach (var conxel in conxels)
-        {
-            String.Add(conxel);
-        }
+        CollectionsMarshal.SetCount(String, conxels.Length);
+        conxels.CopyTo(CollectionsMarshal.AsSpan(String));
     }
 
     public ConxelString(string @string, Color foreground, Color background, 
@@ -100,10 +98,7 @@ public class ConxelString : IEnumerable<Conxel>
 
     public void Append(ConxelString conxelString)
     {
-        foreach (var conxel in conxelString)
-        {
-            String.Add(conxel);
-        }
+        String.AddRange(conxelString.String);
     }
 
     public void Expand(int width, Color foregroundColor, Color backgroundColor)
@@ -215,7 +210,30 @@ public class ConxelString : IEnumerable<Conxel>
         get
         {
             // The text as a person reads it: continuation cells left out, surrogate pairs joined.
-            return TextWidth.FromCells(String.Select(conxel => conxel.Char));
+            ReadOnlySpan<Conxel> cells = CollectionsMarshal.AsSpan(String);
+            var length = 0;
+            foreach (ref readonly Conxel cell in cells)
+            {
+                if (cell.Char != TextWidth.Continuation)
+                {
+                    length++;
+                }
+            }
+            if (length == 0)
+            {
+                return string.Empty;
+            }
+            return string.Create(length, String, static (span, source) =>
+            {
+                var index = 0;
+                foreach (ref readonly Conxel cell in CollectionsMarshal.AsSpan(source))
+                {
+                    if (cell.Char != TextWidth.Continuation)
+                    {
+                        span[index++] = cell.Char;
+                    }
+                }
+            });
         }
     }
 }

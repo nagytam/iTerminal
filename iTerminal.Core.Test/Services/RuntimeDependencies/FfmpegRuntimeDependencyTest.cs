@@ -188,6 +188,19 @@ public class FfmpegRuntimeDependencyTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DataRow(-1978335189)]
+    [DataRow(-1978335135)]
+    public async Task Install_WinGetSaysAlreadyInstalled_IsNotAFailure(int exitCode)
+    {
+        FfmpegRuntimeDependency dependency = Create(Path("winget", "ffmpeg", "ffprobe"), run: (_, _, _) => Task.FromResult(exitCode), windows: true);
+
+        await dependency.InstallAsync("4.0.0", new Progress<string>(), CancellationToken.None);
+
+        Assert.AreEqual("7.1.0", dependency.InstalledVersion());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task Install_WithoutAPackageManager_SaysWhereToGetFfmpeg()
     {
         FfmpegRuntimeDependency dependency = Create(Path());

@@ -61,7 +61,7 @@ public class SettingsBackgroundTabPage : TabPage
     {
         foreach ((string id, _, ComboBox<BackgroundStartMode> mode) in _rows)
         {
-            mode.SelectedIndex = (int)BackgroundStartService.ParseMode(_settingsService.Get(BackgroundStartService.SettingKey(id)));
+            mode.SelectedIndex = (int)BackgroundStartService.ParseMode(_settingsService.Get(BackgroundStartService.SettingKey(id)), id);
         }
 
         return base.OnInitializeAsync();

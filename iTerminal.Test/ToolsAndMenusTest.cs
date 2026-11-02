@@ -36,7 +36,7 @@ public class ToolsAndMenusTest
             "Ctrl+E — the key on the converter's own button and in the Tools menu — to open the converter");
     }
 
-    /// <summary>On Linux the Virtual machine manager is listed directly under Calculator in the Tools menu; elsewhere it is not listed at all.</summary>
+    /// <summary>On Linux and Windows the Virtual machine manager is listed directly under Calculator in the Tools menu; elsewhere it is not listed at all.</summary>
     [Timeout(120_000)]
     [TestMethod]
     public async Task TheVirtualMachineManagerIsListedRightAfterCalculator()
@@ -46,7 +46,7 @@ public class ToolsAndMenusTest
         await _app.PressSequenceAsync("Right", "Right", "Right");
         await _app.WaitForTextAsync("Calculator");
 
-        if (OperatingSystem.IsLinux())
+        if (Core.Commands.VirtualMachineManagerDialogCommand.IsSupported)
         {
             await _app.WaitUntilAsync(
                 s => s.Lines.Zip(s.Lines.Skip(1), (row, next) => (row, next))
@@ -58,7 +58,7 @@ public class ToolsAndMenusTest
         {
             await _app.WaitUntilAsync(
                 s => !s.Lines.Any(l => l.Contains("Virtual machine manager", StringComparison.Ordinal)),
-                "no Virtual machine manager entry off Linux");
+                "no Virtual machine manager entry where there is no hypervisor backend");
         }
     }
 

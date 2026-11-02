@@ -13,6 +13,8 @@ public class DialogLabelsLanguageTest
     private static readonly (string Type, string Member, string Key, string English)[] Labels =
     [
         ("RenameDialog", "_textBoxName", "Name", "Name"), ("RenameDialog", "_checkBoxOverwrite", "Overwrite", "Overwrite"),
+        ("MultiRenameDialog", "_patternBox", "Pattern", "Pattern"), ("MultiRenameDialog", "_findBox", "Find", "Find"),
+        ("MultiRenameDialog", "_replaceBox", "Replace", "Replace"),
         ("CopyDialog", "TextBoxTarget", "To", "To"), ("CopyDialog", "_checkBoxOverwrite", "Overwrite", "Overwrite"),
         ("DeleteDialog", "_textBoxName", "Name", "Name"), ("EditLinkDialog", "_textBoxTarget", "Target", "Target"),
         ("FileLabelsDialog", "_colour", "Colour", "Colour"), ("LabelFilterDialog", "_colour", "Colour", "Colour"),

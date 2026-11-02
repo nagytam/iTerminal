@@ -8,6 +8,7 @@ namespace iTerminal.Core.Services.Bluetooth.Test;
 public class BluetoothctlParserTest
 {
     [TestMethod]
+    [Timeout(60_000)]
     public void ParseDevices_ReadsAddressAndNameIncludingSpaces()
     {
         const string output = "Device 50:C2:ED:36:8D:55 Jabra Evolve2 65\nDevice 00:02:3C:BD:05:E9 Sound Blaster GS3\n";
@@ -20,6 +21,7 @@ public class BluetoothctlParserTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ParseDevices_ShowsADeviceWithoutANameByItsAddress()
     {
         var devices = BluetoothctlParser.ParseDevices("Device 66:77:88:99:AA:BB\n");
@@ -28,6 +30,7 @@ public class BluetoothctlParserTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ParseDevices_SkipsLinesThatAreNotDevices()
     {
         const string output = "Controller 00:1A:7D:DA:71:13 host\nDeviceSet 00:00:00:00:00:00 not available\nDevice nonsense\n";
@@ -36,6 +39,7 @@ public class BluetoothctlParserTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void Failed_IgnoresADeviceNamedAfterAFailure()
     {
         // A listing is not a failure: a device whose name carries a failure phrase is still a device.
@@ -46,6 +50,7 @@ public class BluetoothctlParserTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void Failed_ReadsAnUnknownAddressButNotAName()
     {
         Assert.IsTrue(BluetoothctlParser.Failed(new ProcessOutput(0, "Device 00:00:00:00:00:00 not available\n", string.Empty)));
@@ -53,6 +58,7 @@ public class BluetoothctlParserTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ParseState_ReadsPairedAndConnected()
     {
         const string output = "Device 50:C2:ED:36:8D:55 (public)\n\tName: Jabra\n\tPaired: yes\n\tBonded: yes\n\tConnected: no\n";
@@ -61,12 +67,14 @@ public class BluetoothctlParserTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ParseState_AnUnknownDeviceIsNeitherPairedNorConnected()
     {
         Assert.AreEqual((false, false), BluetoothctlParser.ParseState("Device 00:00:00:00:00:00 not available\n"));
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void Failed_ReadsARefusedConnectEvenWhenTheExitCodeIsZero()
     {
         var output = new ProcessOutput(0, "Attempting to connect to 50:C2:ED:36:8D:55\nFailed to connect: org.bluez.Error.Failed\n", string.Empty);
@@ -76,6 +84,7 @@ public class BluetoothctlParserTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void Failed_IsFalseForASuccessfulConnect()
     {
         var output = new ProcessOutput(0, "Attempting to connect to 50:C2:ED:36:8D:55\nConnection successful\n", string.Empty);
@@ -84,6 +93,7 @@ public class BluetoothctlParserTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void Failed_IsTrueWhenTheToolIsMissing()
     {
         var output = new ProcessOutput(-1, string.Empty, "bluetoothctl could not be started: No such file or directory");
@@ -93,6 +103,7 @@ public class BluetoothctlParserTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void Failed_IsTrueWhenThereIsNoAdapter()
     {
         var output = new ProcessOutput(0, "No default controller available\n", string.Empty);
@@ -101,6 +112,7 @@ public class BluetoothctlParserTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void IsAddress_AcceptsOnlyTheSixByteForm()
     {
         Assert.IsTrue(BluetoothctlParser.IsAddress("50:C2:ED:36:8D:55"));

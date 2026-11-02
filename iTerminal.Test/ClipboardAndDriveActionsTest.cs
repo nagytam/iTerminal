@@ -122,10 +122,12 @@ public class ClipboardAndDriveActionsTest
         var dialog = (DiskManagerDialog)_app.Driver.FocusedModal!;
         await _app.WaitUntilAsync(() => dialog.SelectedDrive is not null, "a drive under the cursor");
 
-        // The memory drive is listed first and has no volume to act on: walk down to a real one.
-        for (var step = 0; step < 10 && dialog.SelectedDrive?.DriveInfo is null; step++)
+        // The memory drive is listed first and has no volume to act on: walk down to a real one. The real
+        // drives are read in the background and can land after the first keys, so pause between the steps.
+        for (var step = 0; step < 100 && dialog.SelectedDrive?.DriveInfo is null; step++)
         {
             await _app.PressAsync("Down");
+            await Task.Delay(100);
         }
 
         Assert.IsNotNull(dialog.SelectedDrive?.DriveInfo, "the machine has no drive to act on");
@@ -168,6 +170,14 @@ public class ClipboardAndDriveActionsTest
         var format = (FormatDriveDialog)_app.Driver.FocusedModal!;
 
         await format.FormatAsync();
+        if (!OperatingSystem.IsWindows())
+        {
+            // Only a lettered drive (C:\) can be typed back; the sandbox's root here is "/", which is refused in words.
+            StringAssert.Contains(format.Error, "Not a lettered drive.");
+            Assert.AreEqual(0, Drives.Calls.Count(c => c.StartsWith("format")), "nothing is formatted on a root that has no letter");
+            return;
+        }
+
         StringAssert.Contains(format.Error, "to confirm");
         Assert.AreEqual(0, Drives.Calls.Count(c => c.StartsWith("format")), "nothing is formatted without the confirmation");
 

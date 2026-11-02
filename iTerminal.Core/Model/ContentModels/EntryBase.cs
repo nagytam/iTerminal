@@ -217,6 +217,69 @@ public abstract record EntryBase : IEntry
         return conxelString;
     }
 
+    /// <summary>Width of the attributes column in a Long listing row.</summary>
+    internal const int AttributeLength = 9;
+
+    /// <summary>
+    /// The Long listing row: name, attributes, date and time, with no size column. Narrower than the minimum for
+    /// all four columns, it falls back to the full row so nothing is cut mid-column.
+    /// </summary>
+    public virtual ConxelString FormatLongItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState)
+    {
+        var fixedWidth = AttributeLength + 1 + DateLength + 1 + TimeLength + 1;
+        if (Url is null || width < fixedWidth + 8)
+        {
+            return FormatItemName(width, cursor, colorScheme, visualState);
+        }
+
+        ConxelString conxelString = new();
+        var foregroundColor = GetForegroundColor(colorScheme, cursor, visualState);
+        var backgroundColor = GetBackgroundColor(colorScheme, cursor, visualState);
+        var isItalic = Url.PathType == PathType.Folder;
+        var displayName = Url.IsLink ? $"{Url.DisplayName} {LinkArrow} {Url.LinkTarget}" : Url.DisplayName;
+        var nameLength = width - fixedWidth;
+
+        AppendRightPadded(conxelString, displayName, nameLength, foregroundColor, backgroundColor, isItalic);
+        conxelString.Append(Border.VerticalSingle, foregroundColor, backgroundColor, isItalic: isItalic);
+        AppendRightPadded(conxelString, FormatAttributes(Url), AttributeLength, foregroundColor, backgroundColor, isItalic);
+        conxelString.Append(Border.VerticalSingle, foregroundColor, backgroundColor, isItalic: isItalic);
+        AppendRightPadded(conxelString, Date, DateLength, foregroundColor, backgroundColor, isItalic);
+        conxelString.Append(Border.VerticalSingle, foregroundColor, backgroundColor, isItalic: isItalic);
+        AppendRightPadded(conxelString, Time, TimeLength, foregroundColor, backgroundColor, isItalic);
+        return conxelString;
+    }
+
+    /// <summary>
+    /// The attributes of an entry in nine characters: <c>rwxrwxrwx</c> on Unix, <c>RHSA</c> letters on Windows
+    /// (dashes where an attribute is clear), blank when the Url carries no attributes (made from a path string).
+    /// </summary>
+    public static string FormatAttributes(Url url)
+    {
+        if (url.UnixMode is { } mode)
+        {
+            const string letters = "rwxrwxrwx";
+            var bits = (int)mode;
+            var text = new System.Text.StringBuilder(AttributeLength);
+            for (var i = 0; i < AttributeLength; i++)
+            {
+                text.Append((bits & (1 << (AttributeLength - 1 - i))) != 0 ? letters[i] : '-');
+            }
+
+            return text.ToString();
+        }
+
+        if (url.Attributes is { } attributes)
+        {
+            var text = (attributes & System.IO.FileAttributes.ReadOnly) != 0 ? "R" : "-";
+            text += (attributes & System.IO.FileAttributes.Hidden) != 0 ? "H" : "-";
+            text += (attributes & System.IO.FileAttributes.System) != 0 ? "S" : "-";
+            text += (attributes & System.IO.FileAttributes.Archive) != 0 ? "A" : "-";
+            return text.PadRight(AttributeLength);
+        }
+
+        return new string(' ', AttributeLength);
+    }
+
     /// <summary>
     /// The name alone for a Brief listing cell: no size, date or time column. <paramref name="width"/> is the
     /// name width; the caller draws the column separator.

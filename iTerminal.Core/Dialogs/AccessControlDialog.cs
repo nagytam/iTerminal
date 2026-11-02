@@ -164,7 +164,7 @@ public class AccessControlDialog : Dialog
                 }
                 else
                 {
-                    SetStatus(Say("Access.Status.Error", "Error: {0}", failure), true);
+                    SetStatus(Say("Access.Status.Error", "Error: {0}", failure ?? string.Empty), true);
                 }
             }
 

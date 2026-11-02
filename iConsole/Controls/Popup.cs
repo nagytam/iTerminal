@@ -50,7 +50,7 @@ public class Popup : Window
     public bool HasBorder { get; set; } = true;
 
     /// <summary>Draws a drop shadow down the right and along the bottom of the popup (see <see cref="Shadow"/>).</summary>
-    public bool HasShadow { get; set; }
+    public new bool HasShadow { get; set; }
     public bool CloseOnOutsideClick { get; set; } = true;
     public bool CloseOnEscape { get; set; } = true;
 

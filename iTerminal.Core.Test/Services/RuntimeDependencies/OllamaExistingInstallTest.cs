@@ -194,6 +194,29 @@ public class OllamaExistingInstallTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task Install_UpdatesTheOwnCopyEvenWhenAnotherOllamaIsInstalled()
+    {
+        string root = NewFolder();
+        string ownVersion = Path.Combine(root, "0.40.4");
+        Directory.CreateDirectory(ownVersion);
+        File.WriteAllText(Path.Combine(ownVersion, OperatingSystem.IsWindows() ? "ollama.exe" : "ollama"), "program");
+        File.WriteAllText(Path.Combine(root, OllamaRuntimeDependency.ModelMarker), Model);
+        var handler = new StubHandler(request => request.RequestUri!.AbsolutePath switch
+        {
+            "/api/version" => Json("{\"version\":\"0.9.1\"}"),
+            _ => new HttpResponseMessage(HttpStatusCode.NotFound),
+        });
+        var dependency = NewDependency(root, handler, PutProgram());
+
+        // The stub has no release, so the install fails there: what matters is that it went to GitHub for one.
+        await Assert.ThrowsExactlyAsync<HttpRequestException>(
+            () => dependency.InstallAsync("0.40.13", new Progress<string>(), CancellationToken.None));
+
+        Assert.IsTrue(handler.Requests.Contains("/repos/ollama/ollama/releases/tags/v0.40.13"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task Install_DoesNotPullAModelTheServerAlreadyHolds()
     {
         string root = NewFolder();

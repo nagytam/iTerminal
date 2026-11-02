@@ -43,6 +43,38 @@ public class CsvViewerDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task OpensWithTheDefaultQueryEnteredAndEveryRowShown()
+    {
+        CsvViewerDialog dialog = CreateDialog("file:///data/sales.csv", "name,amount\nA,1\nB,2\n");
+
+        await dialog.OnInitializeAsync();
+        dialog.StartQuery(dialog.QueryText);
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual("SELECT * FROM file", dialog.QueryText);
+        Assert.AreEqual(2, dialog.Grid.RowCount);
+        Assert.AreEqual(2, dialog.Grid.ColumnCount);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task SortingDescendingAndFilteringTogetherShowTheRightRowsInOrder()
+    {
+        CsvViewerDialog dialog = CreateDialog("file:///data/sales.csv", "name,amount\nA,5\nB,20\nC,\nD,100\n");
+        await dialog.OnInitializeAsync();
+
+        dialog.StartQuery("SELECT name WHERE amount < 50 ORDER BY amount DESC");
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual(2, dialog.Grid.RowCount, "the blank amount is not smaller than 50");
+        Assert.AreEqual("B", dialog.Grid.CellAt(0, 0));
+        Assert.AreEqual("A", dialog.Grid.CellAt(1, 0));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task ATsvFileIsReadWithTabsEvenWhenItsValuesHaveCommas()
     {
         CsvViewerDialog dialog = CreateDialog("file:///data/notes.tsv", "name\tnote\nA\tone, two\n");
@@ -262,5 +294,27 @@ public class CsvViewerDialogTest
         Assert.IsTrue(CsvFileTypes.IsCsvFile("/x/a.csv"));
         Assert.IsTrue(CsvFileTypes.IsCsvFile("/x/a.TSV"));
         Assert.IsFalse(CsvFileTypes.IsCsvFile("/x/a.txt"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ReadsTheFileFromTheLastPanelWhenNoModelHasFocus()
+    {
+        // Inside a dialog the focused model is null; the file lives on the panel that was focused before the dialog opened.
+        var document = new Url("file:///data/sales.csv");
+        Mock<IMemoryFile> file = new();
+        file.SetupGet(f => f.Content).Returns(Encoding.UTF8.GetBytes("name,amount\nA,1\nB,2\n"));
+        Mock<IContentModel> panel = new();
+        panel.Setup(f => f.ReadFileAsync(document)).ReturnsAsync(file.Object);
+        Mock<IContentModelService> models = new();
+        models.Setup(m => m.GetFocusedModel()).Returns((IContentModel?)null);
+        models.Setup(m => m.GetLastContentModel()).Returns(panel.Object);
+        var dialog = new CsvViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
+            Mock.Of<IDateTimeProviderService>(), new ThemeService()) { Url = document };
+
+        await dialog.OnInitializeAsync();
+
+        Assert.AreEqual(2, dialog.Grid.RowCount);
+        Assert.AreEqual(2, dialog.Grid.ColumnCount);
     }
 }

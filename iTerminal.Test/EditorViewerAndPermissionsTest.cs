@@ -69,6 +69,7 @@ public class EditorViewerAndPermissionsTest
     }
 
     [TestMethod]
+    [Timeout(120_000)]
     public async Task TabIndents_CtrlSSaves_AndAnLfFileStaysLf()
     {
         await OpenInEditorAsync("lf.txt", "alpha");
@@ -204,5 +205,28 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("FTP", StringComparison.Ordinal) && l.Contains("files", StringComparison.Ordinal)),
             "the saved FTP entry in the list");
         await _app.WaitForTextAsync("opens ftp://ftp.example.com/");
+    }
+
+    [TestMethod]
+    public async Task CtrlShiftU_UpperCasesTheSelectionInTheEditor()
+    {
+        await OpenInEditorAsync("lf.txt", "alpha");
+
+        await _app.PressAsync("Ctrl+A");
+        await _app.PressAsync("Ctrl+Shift+U");
+
+        await _app.WaitForTextAsync("ALPHA");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task AFileChangedOnDiskWhileTheEditorIsOpenIsReloaded()
+    {
+        await OpenInEditorAsync("lf.txt", "alpha");
+
+        // Another program saves the file; the editor has no edits, so it takes the new text on its own.
+        File.WriteAllText(LfFile, "written elsewhere\n");
+
+        await _app.WaitForTextAsync("written elsewhere");
     }
 }

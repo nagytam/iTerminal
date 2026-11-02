@@ -1,3 +1,4 @@
+using System.Runtime.Versioning;
 using iTerminal.Core.Services.Shell;
 using iTerminal.Core.Services.Elevation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,6 +31,7 @@ public class ElevationServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [UnsupportedOSPlatform("windows")]
     public void OnUnix_ANonExecutableFile_CannotRunElevated()
     {
         if (OperatingSystem.IsWindows())

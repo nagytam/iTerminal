@@ -42,9 +42,10 @@ public class SettingsBackgroundTabPageTest
 
         await page.OnInitializeAsync();
 
-        foreach (var box in ModeBoxes(page))
+        var boxes = ModeBoxes(page);
+        for (int i = 0; i < boxes.Count; i++)
         {
-            Assert.AreEqual(BackgroundStartMode.OnDemand, box.SelectedItem);
+            Assert.AreEqual(BackgroundStartService.DefaultModeOf(BackgroundServices.All[i].Id), boxes[i].SelectedItem);
         }
     }
 

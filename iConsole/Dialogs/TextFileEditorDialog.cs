@@ -7,7 +7,10 @@ using iConsole.Interfaces;
 using iConsole.Localization;
 using iConsole.Layouts;
 using iConsole.Helper;
+using iConsole.Model;
 using iConsole.Services;
+using System.Text;
+using System.Threading;
 
 namespace iConsole.Dialogs;
 
@@ -15,7 +18,10 @@ public class TextFileEditorDialog : Dialog
 {
     public override string Title
     {
-        get => base.Title + (TextEditorControl.IsDirty ? " (*)" : string.Empty);
+        get => base.Title
+            + (TextEditorControl.IsDirty ? " (*)" : string.Empty)
+            + (_changedOnDisk ? " (" + UiText.Get("Viewer.ChangedOnDisk", "changed on disk") + ")" : string.Empty)
+            + " [" + TextEditorControl.LineEndingName(TextEditorControl.TextModel.LineEnding) + "]";
         set => base.Title = value;
     }
     public Url? Url { get; set; } = null;
@@ -56,8 +62,143 @@ public class TextFileEditorDialog : Dialog
         AddControl(_statusBar);
     }
 
-    /// <summary>Writes the text to its file the way F2 does, keeping the line break and code page it was read with.</summary>
-    public Task<bool> SaveAsync() => SaveCommand.WriteAsync(this, TextEditorControl.TextModel, _contentModelService);
+    /// <summary>
+    /// Writes the text to its file the way F2 does, keeping the code page it was read with. A saved file is what the
+    /// editor shows, so it is no longer changed on disk, and a reload that was read before the save is dropped.
+    /// </summary>
+    public async Task<bool> SaveAsync()
+    {
+        var saved = await SaveCommand.WriteAsync(this, TextEditorControl.TextModel, _contentModelService);
+        if (saved)
+        {
+            _pending = null;
+            _seenStamp = StampOf(Url);
+            _changedOnDisk = false;
+            StateHasChanged();
+        }
+
+        return saved;
+    }
+
+    // ---- Changes on disk ----
+
+    /// <summary>How often the file's size and write time are looked at while the editor is open.</summary>
+    public static readonly TimeSpan DiskCheckInterval = TimeSpan.FromSeconds(2);
+
+    /// <summary>A file's size and write time: what changes when another program saves it.</summary>
+    public readonly record struct DiskStamp(DateTime Modified, long Length);
+
+    /// <summary>The text a check read from disk, waiting for the UI thread to put it in the editor.</summary>
+    private sealed record PendingDiskText(DiskStamp Stamp, string[] Lines, string LineEnding, Encoding Encoding);
+
+    private IFileSystem? _fileSystem;
+
+    /// <summary>The newest state of the file seen on disk; a check reads the file only when this changes.</summary>
+    private DiskStamp? _seenStamp;
+
+    private bool _changedOnDisk;
+    private volatile PendingDiskText? _pending;
+    private long _lastDiskCheck;
+    private int _diskCheckRunning;
+
+    /// <summary>
+    /// The stamp of a local file, or null when the file is not on this machine's disk or cannot be found. Other drives
+    /// (SFTP, archives, memory) are not watched.
+    /// </summary>
+    public static DiskStamp? StampOf(Url? url)
+    {
+        if (url is null || !string.Equals(url.UrlScheme, Container.FILE, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        try
+        {
+            var info = new FileInfo(url.Path);
+            return info.Exists ? new DiskStamp(info.LastWriteTimeUtc, info.Length) : null;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Looks at the file, on a worker thread, and if it changed since the editor last saw it, reads it. The text is only
+    /// put into the editor by <see cref="ApplyDiskChange"/>, on the UI thread. Public so that a test can run one check.
+    /// </summary>
+    public async Task CheckDiskAsync()
+    {
+        var url = Url;
+        var fileSystem = _fileSystem;
+        if (url is null || fileSystem is null)
+        {
+            return;
+        }
+
+        var stamp = await Task.Run(() => StampOf(url));
+        if (stamp is not { } current || current == _seenStamp)
+        {
+            return;
+        }
+
+        var text = new TextModel();
+        try
+        {
+            await _fileToTextConverterService.ReadFileAsync(url, fileSystem, text);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return;
+        }
+
+        _pending = new PendingDiskText(current, text.Lines.AsSnapshot().ToArray(), text.LineEnding, text.Encoding);
+    }
+
+    /// <summary>
+    /// Applies the change the last check read. A file with no unsaved edits is reloaded. One with edits keeps them, and the
+    /// title says the file changed on disk until it is saved.
+    /// </summary>
+    public void ApplyDiskChange()
+    {
+        var pending = _pending;
+        if (pending is null)
+        {
+            return;
+        }
+
+        _pending = null;
+        _seenStamp = pending.Stamp;
+        if (TextEditorControl.IsDirty)
+        {
+            _changedOnDisk = true;
+            StateHasChanged();
+            return;
+        }
+
+        TextEditorControl.ReplaceAllText(pending.Lines, pending.LineEnding, pending.Encoding);
+        _changedOnDisk = false;
+        StateHasChanged();
+    }
+
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        ApplyDiskChange();
+
+        var now = Environment.TickCount64;
+        if (now - _lastDiskCheck >= DiskCheckInterval.TotalMilliseconds
+            && Interlocked.CompareExchange(ref _diskCheckRunning, 1, 0) == 0)
+        {
+            _lastDiskCheck = now;
+            // Observing the exception keeps a failed check from being left unobserved; the next check runs as usual.
+            _ = CheckDiskAsync().ContinueWith(task =>
+            {
+                _ = task.Exception;
+                Interlocked.Exchange(ref _diskCheckRunning, 0);
+            }, TaskScheduler.Default);
+        }
+    }
 
     private bool _asking;
     private bool _closeConfirmed;
@@ -129,7 +270,9 @@ public class TextFileEditorDialog : Dialog
     public override async Task OnInitializeAsync()
     {
         var fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
+        _fileSystem = fileSystem;
         await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, TextEditorControl.TextModel);
+        _seenStamp = StampOf(Url);
         TextEditorControl.Syntax = SyntaxHighlighter.ForFile(Url is null ? null : (Url.Path.Length > 0 ? Url.Path : Url.FullUrl));
 
         await base.OnInitializeAsync();

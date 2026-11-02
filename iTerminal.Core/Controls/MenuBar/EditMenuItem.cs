@@ -24,7 +24,8 @@ public class EditMenuItem : MenuItem
         StripMetadataDialog? stripMetadataDialog = null,
         FileLabelsDialog? fileLabelsDialog = null,
         LabelFilterDialog? labelFilterDialog = null,
-        iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null)
+        iTerminal.Core.Services.Clipboard.FileClipboardOperations? clipboardOperations = null,
+        MultiRenameDialog? multiRenameDialog = null)
         : base("Edit", null, [], themeService)
     {
         HotKeyChar = 'E';
@@ -42,6 +43,11 @@ public class EditMenuItem : MenuItem
         AddMenuItem(new MenuItem("Copy\tF5",        new CopyDialogCommand(copyDialog, contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Move\tShift+F6",  new MoveDialogCommand(moveDialog, contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Rename\tF6",      new RenameDialogCommand(renameDialog, contentModelService), [], themeService));
+        if (multiRenameDialog is not null)
+        {
+            // No chord: see MultiRenameDialogCommand. The menu is the way in.
+            AddMenuItem(new MenuItem("Multi-rename",    new MultiRenameDialogCommand(multiRenameDialog, contentModelService), [], themeService));
+        }
         AddMenuItem(new MenuItem("-", null, [], themeService));
         AddMenuItem(new MenuItem("Delete\tF8",      new DeleteDialogCommand(deleteDialog, contentModelService), [], themeService));
 

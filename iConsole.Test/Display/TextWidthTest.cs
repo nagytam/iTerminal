@@ -73,6 +73,19 @@ public class TextWidthTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void Fit_AndOf_AgreeOnAsciiAndMixedText()
+    {
+        Assert.AreEqual("abc  ", TextWidth.Fit("abc", 5));
+        Assert.AreEqual("ab", TextWidth.Fit("abc", 2));
+        Assert.AreEqual("", TextWidth.Fit(null, 0));
+        Assert.AreEqual("a😀b", TextWidth.Fit("a😀b", 4));
+        Assert.AreEqual("a😀", TextWidth.Fit("a😀b", 3));
+        Assert.AreEqual(5, TextWidth.Of("abc日"));
+        Assert.AreEqual(0, TextWidth.Of(""));
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
     public void Fit_CutsWithoutSplittingAWideCharacter()
     {
         Assert.AreEqual("日本 ", TextWidth.Fit("日本語", 5));

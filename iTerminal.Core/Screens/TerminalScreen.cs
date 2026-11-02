@@ -128,9 +128,12 @@ public class TerminalScreen : iConsole.Screens.Screen
     public override async Task OnInitializeAsync()
     {
         // Before anything is drawn, so the first frame is already in the chosen colours.
+        iConsole.Diagnostics.StartupTrace.Mark("terminal-screen-init");
         ThemePersistence.Restore(ThemeService, _settingsService);
+        iConsole.Diagnostics.StartupTrace.Mark("theme-restored");
 
         await base.OnInitializeAsync();
+        iConsole.Diagnostics.StartupTrace.Mark("terminal-screen-base-init");
 
         // The start-up dialogs wait until the splash has been seen and closed. They are shown from a task, so this
         // method returns at once and the splash is not held back.

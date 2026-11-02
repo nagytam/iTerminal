@@ -26,4 +26,8 @@ public interface IEntry : INotifyPropertyChanged
     /// </summary>
     ConxelString FormatBriefItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState) =>
         FormatItemName(width, cursor, colorScheme, visualState);
+
+    /// <summary>The Long listing row: the name, the attributes, then the date and time. Defaults to <see cref="FormatItemName"/>.</summary>
+    ConxelString FormatLongItemName(int width, bool cursor, ColorScheme colorScheme, VisualState visualState) =>
+        FormatItemName(width, cursor, colorScheme, visualState);
 }

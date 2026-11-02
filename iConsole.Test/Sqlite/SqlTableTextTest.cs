@@ -7,6 +7,7 @@ namespace iConsole.Test.Sqlite;
 public class SqlTableTextTest
 {
     [TestMethod]
+    [Timeout(60_000)]
     public void Format_AlignsTheHeaderRowsAndACountFooter()
     {
         var table = new SqlTable(["name", "n"], [["a", "1"], ["longer", "22"]], false);
@@ -19,6 +20,7 @@ public class SqlTableTextTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void Format_SaysWhenTheRowCapCutTheResultShort()
     {
         var table = new SqlTable(["id"], [["1"]], true);
@@ -29,6 +31,7 @@ public class SqlTableTextTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void Format_CutsALongCellWithAnEllipsisAndFlattensLineBreaks()
     {
         string longValue = new('x', 60);
@@ -41,12 +44,14 @@ public class SqlTableTextTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void Format_WithNoColumns_IsEmpty()
     {
         Assert.AreEqual(0, SqlTableText.Format(new SqlTable([], [], false)).Count);
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void HasSqliteHeader_AcceptsTheExactHeaderOnly()
     {
         byte[] header = "SQLite format 3\0"u8.ToArray();
@@ -67,6 +72,7 @@ public class SqlTableTextTest
     [DataRow("/data/app.db3", true)]
     [DataRow("/data/sales.csv", false)]
     [DataRow("/data/app.dbx", false)]
+    [Timeout(60_000)]
     public void IsSqliteFile_MatchesTheDatabaseEndings(string path, bool expected)
     {
         Assert.AreEqual(expected, SqliteFileTypes.IsSqliteFile(path));

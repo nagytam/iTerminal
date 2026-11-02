@@ -115,7 +115,7 @@ public class ViewFileDialogCommandTest
         File.WriteAllText(path, "<html><body>Hi</body></html>");
         try
         {
-            var fileUrl = new Url(new Uri(path).AbsoluteUri);
+            var fileUrl = new Url(path);
             var contentModel = new Mock<IContentModel>(MockBehavior.Loose);
             contentModel.Setup(m => m.ExistsFile(fileUrl)).Returns(true);
             var contentModelService = new Mock<IContentModelService>();
@@ -606,7 +606,7 @@ public class ViewFileDialogCommandTest
     }
 
     [Timeout(60_000)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(".csv")]
     [DataRow(".tsv")]
     public void ExecuteAsync_WithACsvOrTsvFile_PointsTheCsvViewerAtIt(string extension)
@@ -640,6 +640,7 @@ public class ViewFileDialogCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ExecuteAsync_WithALocalDatabaseFile_PointsTheSqliteViewerAtIt()
     {
         var themeService = CreateThemeService();
@@ -670,6 +671,7 @@ public class ViewFileDialogCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ExecuteAsync_WithADbFileThatIsNotSqlite_UsesTheGenericViewer()
     {
         var themeService = CreateThemeService();
@@ -702,6 +704,7 @@ public class ViewFileDialogCommandTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public void ExecuteAsync_WithADatabaseThatIsNotLocal_LeavesTheSqliteViewerAloneAndUsesTheGenericViewer()
     {
         var themeService = CreateThemeService();

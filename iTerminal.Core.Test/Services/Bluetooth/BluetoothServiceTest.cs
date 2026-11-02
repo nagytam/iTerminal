@@ -11,6 +11,7 @@ public class BluetoothServiceTest
     private const string Keyboard = "66:77:88:99:AA:BB";
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ListAsync_OrdersConnectedThenPairedThenNearby()
     {
         if (!OperatingSystem.IsLinux())
@@ -32,6 +33,7 @@ public class BluetoothServiceTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ListAsync_ReportsWhyTheToolCannotRun()
     {
         if (!OperatingSystem.IsLinux())
@@ -49,6 +51,7 @@ public class BluetoothServiceTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ConnectAsync_ARefusedConnectIsAFailureWithTheReason()
     {
         if (!OperatingSystem.IsLinux())
@@ -66,6 +69,7 @@ public class BluetoothServiceTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ConnectAsync_ASuccessfulConnectSucceeds()
     {
         if (!OperatingSystem.IsLinux())
@@ -82,6 +86,7 @@ public class BluetoothServiceTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ConnectAsync_RefusesAnythingButAMacAddress()
     {
         var runner = new FakeProcessRunner();
@@ -93,6 +98,7 @@ public class BluetoothServiceTest
     }
 
     [TestMethod]
+    [Timeout(60_000)]
     public async Task ScanAsync_ListensForTheScanWindowThenStops()
     {
         if (!OperatingSystem.IsLinux())

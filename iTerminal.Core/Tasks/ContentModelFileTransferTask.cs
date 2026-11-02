@@ -43,10 +43,10 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
             // A file sent to a folder goes inside it under its own name, as in every commander, rather
             // than being written to a path that is the folder's. Asked here, on the task's thread: on a
             // remote drive it is a round trip.
-            var asFolder = new Url(UrlPath.TrimFolder(requestedTargetUrl.FullUrl) + UrlPath.SeparatorOf(requestedTargetUrl.FullUrl));
-            if (target.ExistsFolder(asFolder) && !target.ExistsFile(requestedTargetUrl))
+            var asFolder = new Url(UrlPath.TrimFolder(_targetUrl.FullUrl) + UrlPath.SeparatorOf(_targetUrl.FullUrl));
+            if (target.ExistsFolder(asFolder) && !target.ExistsFile(_targetUrl))
             {
-                _targetUrl = new Url(UrlPath.Child(requestedTargetUrl.FullUrl, FocusedEntry.NameOf(sourceUrl), isFolder: false));
+                _targetUrl = new Url(UrlPath.Child(_targetUrl.FullUrl, FocusedEntry.NameOf(sourceUrl), isFolder: false));
             }
 
             Subject = TaskNotificationHelper.TransferSubject(sourceUrl, _targetUrl);

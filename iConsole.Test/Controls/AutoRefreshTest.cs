@@ -1,6 +1,5 @@
 using iConsole.Controls;
 using iConsole.Services;
-using iConsole.Services;
 using iConsole.Test.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

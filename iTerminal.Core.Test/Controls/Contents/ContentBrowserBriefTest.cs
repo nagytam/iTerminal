@@ -200,4 +200,57 @@ public class ContentBrowserBriefTest
 
         Assert.AreEqual(0, model.CursorPosition.Y);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Long_Toggle_SetsTheMode_IsOneColumn_AndTogglesBack()
+    {
+        var model = CreateModel();
+        var sut = CreateBrowser(model);
+        ShowEntries(model, 7);
+
+        sut.ToggleLongListing();
+
+        Assert.AreEqual(ContentBrowser.PanelListingMode.Long, sut.ListingMode);
+        Assert.IsFalse(sut.IsBriefListing);
+        Assert.AreEqual(1, ((iConsole.Model.IColumnScrollableModel)model).ColumnCount, "Long is one column");
+
+        sut.ToggleLongListing();
+
+        Assert.AreEqual(ContentBrowser.PanelListingMode.Full, sut.ListingMode);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Info_ReplacesBrief_WhenToggledFromBrief()
+    {
+        var model = CreateModel();
+        var sut = CreateBrowser(model);
+        ShowEntries(model, 7);
+
+        sut.ToggleBriefListing();
+        sut.ToggleInfoListing();
+
+        Assert.AreEqual(ContentBrowser.PanelListingMode.Info, sut.ListingMode);
+        Assert.IsFalse(sut.IsBriefListing, "one mode at a time");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void LongAndInfo_OnThePreviewPanel_DoNothing()
+    {
+        var guard = new Mock<IFrequentExecutionGuardService>();
+        guard.Setup(g => g.Execute(It.IsAny<Action>())).Callback<Action>(action => action());
+        var preview = new ContentModelPreview("RightPanel", null, Mock.Of<IContentModelService>(), new FilePreviewService(), guard.Object)
+        {
+            ViewSize = new Size(PanelWidth - 2, PanelHeight - 2)
+        };
+        var sut = CreateBrowser(CreateModel());
+        sut.ContentModel = preview;
+
+        sut.ToggleLongListing();
+        sut.ToggleInfoListing();
+
+        Assert.AreEqual(ContentBrowser.PanelListingMode.Full, sut.ListingMode, "the Preview panel offers no listing mode");
+    }
 }

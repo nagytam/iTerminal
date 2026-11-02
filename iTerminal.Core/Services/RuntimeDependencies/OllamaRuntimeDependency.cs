@@ -302,10 +302,11 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
         Version.Parse(version); // A malformed version is refused before anything is written.
         string target = VersionDirectory(version);
 
-        // Ollama that is already on this computer (a program, or a server that answers) is used instead of a second copy.
+        // Ollama that is already on this computer (a program, or a server that answers) is used instead of a second copy,
+        // unless iTerminal has a copy of its own: that one is being updated, so the new version is downloaded.
         bool useExisting = false;
         string? existingBinary = null;
-        if (FindBinary(target) is null)
+        if (FindBinary(target) is null && !CompleteVersions().Any())
         {
             existingBinary = FindExistingBinary(_searchDirectories, _root);
             useExisting = existingBinary is not null || await _server.IsReachableAsync(cancellationToken);

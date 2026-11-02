@@ -153,8 +153,10 @@ public class TerminalFocusAndShapesTest
     [TestMethod]
     public void FocusReporting_SequencesAreTheOnesTerminalsKnow()
     {
-        Assert.AreEqual("\u001b[?1004h", TerminalFocusReporting.Enable);
-        Assert.AreEqual("\u001b[?1004l", TerminalFocusReporting.Disable);
+        string enable = TerminalFocusReporting.Enable;
+        Assert.AreEqual("\u001b[?1004h", enable);
+        string disable = TerminalFocusReporting.Disable;
+        Assert.AreEqual("\u001b[?1004l", disable);
     }
 
     // ---- polling that stands still ----

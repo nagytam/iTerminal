@@ -21,9 +21,11 @@ public class KittyKeyboardTest
     [TestMethod]
     public void Sequences_AreTheDocumentedOnes()
     {
-        Assert.AreEqual("\x1b[?u", KittyKeyboardProtocol.Query);
+        string query = KittyKeyboardProtocol.Query;
+        Assert.AreEqual("\x1b[?u", query);
         Assert.AreEqual("\x1b[>1u", KittyKeyboardProtocol.Push);
-        Assert.AreEqual("\x1b[<u", KittyKeyboardProtocol.Pop);
+        string pop = KittyKeyboardProtocol.Pop;
+        Assert.AreEqual("\x1b[<u", pop);
     }
 
     [Timeout(60_000)]
