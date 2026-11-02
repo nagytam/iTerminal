@@ -25,6 +25,48 @@ public class BufferLayerTest
         Assert.AreEqual(2, layer.Size.Height);
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Write_ClipsSourceToDestinationWidth()
+    {
+        var layer = new BufferLayer(0, new Size(5, 1), Color.White, Color.Black);
+        var text = new ConxelString("abc", Color.White, Color.Black);
+
+        layer.Write(new Position(4, 0), new Size(3, 1), text);
+
+        Assert.AreEqual("    a", layer.AsString().Split(Environment.NewLine)[0]);
+        Assert.AreEqual(5, layer.BoundRect!.Right);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Write_DoesNotAllocateSourceArrayPerWrite()
+    {
+        const int textLength = 1_024;
+        const int measuredWrites = 1_000;
+        var layer = new BufferLayer(0, new Size(textLength, 1), Color.White, Color.Black);
+        var text = new ConxelString(new string('x', textLength), Color.White, Color.Black);
+        var position = new Position(0, 0);
+        var size = new Size(textLength, 1);
+
+        for (int i = 0; i < 100; i++)
+        {
+            layer.Write(position, size, text);
+        }
+
+        long allocatedBytesBefore = GC.GetAllocatedBytesForCurrentThread();
+        for (int i = 0; i < measuredWrites; i++)
+        {
+            layer.Write(position, size, text);
+        }
+        long allocatedBytes = GC.GetAllocatedBytesForCurrentThread() - allocatedBytesBefore;
+        long sourceArrayBudget = (long)textLength * sizeof(char) * measuredWrites;
+
+        Assert.IsTrue(
+            allocatedBytes < sourceArrayBudget,
+            $"Expected allocations below the minimum source-array size ({sourceArrayBudget:N0} bytes); got {allocatedBytes:N0} bytes.");
+    }
+
     /// <summary>
     /// Controls pass their whole ViewSize for every row they write. The bounds used to grow by that
     /// size, so a list's last row stretched them a list's height below the dialog — and the layer is
