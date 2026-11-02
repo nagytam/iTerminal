@@ -236,6 +236,87 @@ public class AutoCompletionTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task AutoCompletion_ADismissedUpdateFinishingLate_DoesNotCloseTheListANewerKeystrokeOpened()
+    {
+        // On a slow machine the update a keystroke started before Esc can still be running when the next
+        // keystroke has already brought the list back. It lost to the dismissal, so it must leave the screen
+        // alone: before, it closed whatever list was up, and the suggestions went away again.
+        var mockThemeService = CreateThemeService();
+        var textModel = new TextModel(string.Empty);
+        using var firstUpdateStarted = new ManualResetEventSlim();
+        using var releaseFirstUpdate = new ManualResetEventSlim();
+        var completionModel = new GatedCompletionModel(["Hungary", "Honduras"], firstUpdateStarted, releaseFirstUpdate);
+
+        var root = new Window(mockThemeService.Object) { ViewSize = new Size(30, 8) };
+        var owner = new Window(mockThemeService.Object) { Position = new Position(0, 0), ViewSize = new Size(30, 1) };
+        root.AddControl(owner);
+        var autoCompletion = new AutoCompletion(textModel, completionModel, mockThemeService.Object)
+        {
+            ViewSize = new Size(20, 5)
+        };
+        owner.AddControl(autoCompletion);
+        await autoCompletion.OnInitializeAsync();
+        owner.CanFocus = true;
+        owner.SetFocus();
+        autoCompletion.Owner = owner;
+        completionModel.GateNextUpdate();
+
+        textModel.Lines[0] = "H";
+        textModel.TriggerPropertyChanged();
+        Task firstUpdate = completionModel.UpdateTask!;
+        Assert.IsTrue(firstUpdateStarted.Wait(TimeSpan.FromSeconds(10)), "The first update is under way.");
+
+        autoCompletion.CloseOverlay();
+        textModel.Lines[0] = "Ho";
+        textModel.TriggerPropertyChanged();
+        await completionModel.UpdateTask!;
+        for (int i = 0; i < 500 && !autoCompletion.IsPopupOpen; i++)
+        {
+            await Task.Delay(10);
+        }
+
+        Assert.IsTrue(autoCompletion.IsPopupOpen, "Precondition: the newer keystroke brought the list back.");
+
+        releaseFirstUpdate.Set();
+        await firstUpdate;
+
+        Assert.IsTrue(autoCompletion.IsPopupOpen, "A dismissed update finishing late must not close the newer list.");
+    }
+
+    /// <summary>A completion model whose next match update waits until the test lets it go.</summary>
+    private sealed class GatedCompletionModel(IEnumerable<string> values, ManualResetEventSlim started, ManualResetEventSlim release) : ICompletionModel
+    {
+        private readonly CompletionModel _inner = new(values);
+        private int _gateNext;
+
+        public Task? UpdateTask
+        {
+            get => _inner.UpdateTask;
+            set => _inner.UpdateTask = value;
+        }
+
+        public ConcurrentObservableCollection<string> MatchingValues => _inner.MatchingValues;
+
+        public IEnumerable<string> Completions => _inner.Completions;
+
+        public void GateNextUpdate() => Interlocked.Exchange(ref _gateNext, 1);
+
+        public void InsertCompletion(string value) => _inner.InsertCompletion(value);
+
+        public void UpdateMatchingValues(string value)
+        {
+            if (Interlocked.Exchange(ref _gateNext, 0) == 1)
+            {
+                started.Set();
+                release.Wait();
+            }
+
+            _inner.UpdateMatchingValues(value);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task AutoCompletion_TabCompletesAndHidesControl()
     {
         var mockThemeService = CreateThemeService();
