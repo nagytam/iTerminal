@@ -115,7 +115,14 @@ public static class TextWidth
     /// </summary>
     public static bool NeedsCellLayout(ReadOnlySpan<char> text)
     {
-        foreach (var c in text)
+        // Printable ASCII is by far the commonest text, and the vectorized search clears it a vector at a time;
+        // only a character outside it needs the exact check.
+        int first = text.IndexOfAnyExceptInRange(' ', '~');
+        if (first < 0)
+        {
+            return false;
+        }
+        foreach (var c in text[first..])
         {
             if (c >= 0x0300 || c < 0x20 || c == 0x7F)
             {

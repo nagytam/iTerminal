@@ -159,7 +159,8 @@ public class Buffer : IBuffer
         }
         else
         {
-            _mergedLayer.Clear();
+            // CopyLayer below overwrites every cell, so refilling them first would only write the screen twice.
+            _mergedLayer.ResetBounds();
         }
 
         baseLayer.CopyLayer(MergedLayer);
