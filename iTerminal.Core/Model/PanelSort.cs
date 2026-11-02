@@ -92,6 +92,19 @@ public readonly record struct PanelSort(PanelSortMode Mode, bool Descending = fa
         Comparison<IEntry> CompareNames = options.NaturalOrder
             ? (x, y) => NaturalCompare(x.DisplayName, y.DisplayName)
             : (x, y) => string.Compare(x.DisplayName, y.DisplayName, StringComparison.OrdinalIgnoreCase);
+
+        // The date key is built once per row: an entry may format it on every read, and a comparison
+        // runs O(n log n) times.
+        Dictionary<IEntry, string>? dateKeys = null;
+        if (mode == PanelSortMode.Date)
+        {
+            dateKeys = new Dictionary<IEntry, string>(rest.Count, ReferenceEqualityComparer.Instance);
+            foreach (var entry in rest)
+            {
+                dateKeys[entry] = entry.Date + entry.Time;
+            }
+        }
+
         rest.Sort((x, y) =>
         {
             var folders = options.FoldersFirst ? IsFolder(y).CompareTo(IsFolder(x)) : 0;
@@ -104,7 +117,7 @@ public readonly record struct PanelSort(PanelSortMode Mode, bool Descending = fa
             {
                 PanelSortMode.Extension => IsFolder(x) ? 0 : string.Compare(x.Url.Extension, y.Url.Extension, StringComparison.OrdinalIgnoreCase),
                 PanelSortMode.Size => IsFolder(x) ? 0 : SizeOf(x).CompareTo(SizeOf(y)),
-                PanelSortMode.Date => string.CompareOrdinal(x.Date + x.Time, y.Date + y.Time),
+                PanelSortMode.Date => string.CompareOrdinal(dateKeys![x], dateKeys[y]),
                 _ => CompareNames(x, y),
             };
 
