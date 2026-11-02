@@ -10,10 +10,9 @@ namespace iTerminal.Core.Test.Commands;
 
 /// <summary>
 /// The text the custom-drawn dialogs draw and the messages they report follow the chosen language, and the translated
-/// column headers and labels still fit the widths the layouts give them. The language is a static, so this runs on its own.
+/// column headers and labels still fit the widths the layouts give them.
 /// </summary>
 [TestClass]
-[DoNotParallelize]
 public class Batch78LanguageTest
 {
     /// <summary>Translations that are the same word in English (a format string with only a placeholder, or a shared word).</summary>
@@ -30,14 +29,17 @@ public class Batch78LanguageTest
         "Ffmpeg.Missing", "AI.Off", "Terminal.NoCommand", "Screen.Hint", "Startup.Dismiss",
     ];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new([new ResourceLocalizationSource(new ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(ToDoListDialog).Assembly))]);
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -97,7 +99,8 @@ public class Batch78LanguageTest
     [TestMethod]
     public void TheEnglishTexts_AreUnchangedWithoutALanguage()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         Assert.AreEqual("A file or folder with this name already exists.", UrlValidationModel.ExistsMessage);
         Assert.AreEqual("No terminal command has been run yet.", TerminalTextTabPage.NoCommandText);
         Assert.AreEqual("Enter or Esc to continue", StartupWarningDialog.DismissHint);

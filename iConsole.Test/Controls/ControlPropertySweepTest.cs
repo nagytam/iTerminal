@@ -104,58 +104,60 @@ public class ControlPropertySweepTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void NoSetting_ThrowsOrBreaksTheNextDraw_ForAnAwkwardValue()
+    [DynamicData(nameof(NoSetting_ThrowsOrBreaksTheNextDraw_ForAnAwkwardValueCases), DynamicDataSourceType.Method)]
+    public void NoSetting_ThrowsOrBreaksTheNextDraw_ForAnAwkwardValue(Type type)
     {
         List<string> failures = [];
-        foreach (Type type in ControlTypes())
+        foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => p.SetMethod is { IsPublic: true } && !Skipped.Contains(p.Name) && p.GetIndexParameters().Length == 0))
         {
-            foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.SetMethod is { IsPublic: true } && !Skipped.Contains(p.Name) && p.GetIndexParameters().Length == 0))
+            foreach (object? value in ValuesFor(property.PropertyType))
             {
-                foreach (object? value in ValuesFor(property.PropertyType))
+                foreach ((uint width, uint height) in new[] { (20u, 3u), (3u, 1u) })
                 {
-                    foreach ((uint width, uint height) in new[] { (20u, 3u), (3u, 1u) })
+                    try
                     {
-                        try
+                        Control? control = Build(type);
+                        if (control is null)
                         {
-                            Control? control = Build(type);
-                            if (control is null)
-                            {
-                                goto nextType;
-                            }
+                            goto nextType;
+                        }
 
-                            control.Position = new Position(0, 0);
-                            control.ViewSize = new Size(width, height);
-                            property.SetValue(control, value);
-                            ScreenBuffer buffer = new((int)width, (int)height);
-                            control.Draw(buffer);
-                            control.SetFocus();
-                            foreach (ConsoleKey key in Keys)
-                            {
-                                control.HandleKeyEventAsync(new KeyEvent(key == ConsoleKey.A ? 'a' : key == ConsoleKey.D5 ? '5' : '\0', key, false, false, false)).GetAwaiter().GetResult();
-                                control.Draw(buffer);
-                            }
-
-                            foreach ((long x, long y) in new[] { (0L, 0L), (width / 2L, height / 2L), (width + 3L, height + 3L) })
-                            {
-                                control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), LeftClicked = true }).GetAwaiter().GetResult();
-                                control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), WheelDelta = 1 }).GetAwaiter().GetResult();
-                            }
-
+                        control.Position = new Position(0, 0);
+                        control.ViewSize = new Size(width, height);
+                        property.SetValue(control, value);
+                        ScreenBuffer buffer = new((int)width, (int)height);
+                        control.Draw(buffer);
+                        control.SetFocus();
+                        foreach (ConsoleKey key in Keys)
+                        {
+                            control.HandleKeyEventAsync(new KeyEvent(key == ConsoleKey.A ? 'a' : key == ConsoleKey.D5 ? '5' : '\0', key, false, false, false)).GetAwaiter().GetResult();
                             control.Draw(buffer);
                         }
-                        catch (Exception exception)
+
+                        foreach ((long x, long y) in new[] { (0L, 0L), (width / 2L, height / 2L), (width + 3L, height + 3L) })
                         {
-                            Exception inner = exception is TargetInvocationException { InnerException: { } i } ? i : exception;
-                            failures.Add($"{type.Name}.{property.Name} = {value ?? "null"} at {width}x{height}: {inner.GetType().Name} {inner.Message.Split('\n')[0]}");
+                            control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), LeftClicked = true }).GetAwaiter().GetResult();
+                            control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), WheelDelta = 1 }).GetAwaiter().GetResult();
                         }
+
+                        control.Draw(buffer);
+                    }
+                    catch (Exception exception)
+                    {
+                        Exception inner = exception is TargetInvocationException { InnerException: { } i } ? i : exception;
+                        failures.Add($"{type.Name}.{property.Name} = {value ?? "null"} at {width}x{height}: {inner.GetType().Name} {inner.Message.Split('\n')[0]}");
                     }
                 }
             }
-
-            nextType:;
         }
+
+        nextType:;
 
         Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures.Take(60)));
     }
+
+    public static IEnumerable<object[]> NoSetting_ThrowsOrBreaksTheNextDraw_ForAnAwkwardValueCases() =>
+        ControlTypes()
+            .Select(t => new object[] { t });
 }

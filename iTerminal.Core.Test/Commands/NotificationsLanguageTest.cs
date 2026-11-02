@@ -4,21 +4,23 @@ using iTerminal.Core.Dialogs;
 
 namespace iTerminal.Core.Test.Commands;
 
-/// <summary>The messages the git, Defender, secure wipe, format, eject and clipboard actions raise follow the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The messages the git, Defender, secure wipe, format, eject and clipboard actions raise follow the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class NotificationsLanguageTest
 {
     private static readonly string[] Keys = ["Notify.PullingRebase","Notify.NotGitRepo","Notify.PulledRebase","Notify.PullRebaseFailed","Notify.GitSyncing","Notify.GitSynced","Notify.GitSyncNoUpstream","Notify.GitSyncPullFailed","Notify.GitSyncRebaseNote","Notify.GitSyncPushFailed","Notify.GitSyncFailed","Notify.Scanning","Notify.ThreatsFound","Notify.DefenderFailed","Notify.NoThreats","Notify.Eject","Notify.Format","Notify.Clipboard","Notify.Paste","Notify.WipeStopped","Notify.WipeStoppedBody","Notify.WipeErrors","Notify.WipeErrorsBody","Notify.WipeFinished","Notify.WipeFinishedBody","Notify.ClipboardNoFiles","Notify.SkippedCount"];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new([new ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(SortDialog).Assembly))]);
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -47,7 +49,8 @@ public class NotificationsLanguageTest
     [TestMethod]
     public void TheFormattedMessages_FillTheirPlaceholders_InEveryLanguage()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         Assert.AreEqual("3 skipped: a.txt", string.Format(UiText.Get("Notify.SkippedCount", "{0} skipped: {1}"), 3, "a.txt"));
 
         Speak("de");

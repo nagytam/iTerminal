@@ -6,9 +6,8 @@ using iTerminal.Core.Dialogs;
 
 namespace iTerminal.Core.Test.Commands;
 
-/// <summary>The action buttons of the main dialogs say their word in the language the user chose. The language is a static, so this runs on its own.</summary>
+/// <summary>The action buttons of the main dialogs say their word in the language the user chose.</summary>
 [TestClass]
-[DoNotParallelize]
 public class DialogButtonsLanguageTest
 {
     private static readonly (string Type, string Field, string Key, string English)[] Buttons =
@@ -32,14 +31,17 @@ public class DialogButtonsLanguageTest
         ("UnitConverterDialog", "_swapButton", "Button.Swap", "Swap"),
     ];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new([new ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(RenameDialog).Assembly))]);
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 

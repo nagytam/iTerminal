@@ -10,17 +10,18 @@ using Moq;
 
 namespace iConsole.Test.Localization;
 
-/// <summary>The editor's own dialogs (search, replace, unsaved changes, help) speak the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The editor's own dialogs (search, replace, unsaved changes, help) speak the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class EditorDialogsLanguageTest
 {
     private static readonly string[] Keys = ["GoToLine", "Line", "GoToOffset", "Offset", "ReplaceText", "Find", "With", "MatchCase", "RegularExpression", "Replace", "ReplaceAll", "SearchText", "Search", "UnsavedChanges", "Discard"];
 
     private static readonly HashSet<(string Language, string Key)> SameWord = [("de", "Offset"), ("it", "Offset")];
 
+    private IDisposable? _language;
+
     [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    public void Reset() => _language?.Dispose();
 
     private static IThemeService Theme()
     {
@@ -29,11 +30,12 @@ public class EditorDialogsLanguageTest
         return m.Object;
     }
 
-    private static Localizer Speak(string code)
+    private Localizer Speak(string code)
     {
         Localizer localizer = new();
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 

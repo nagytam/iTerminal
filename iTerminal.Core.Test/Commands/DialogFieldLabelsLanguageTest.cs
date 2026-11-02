@@ -4,9 +4,8 @@ using iTerminal.Core.Dialogs;
 
 namespace iTerminal.Core.Test.Commands;
 
-/// <summary>The field labels and placeholders of the dialogs follow the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The field labels and placeholders of the dialogs follow the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class DialogFieldLabelsLanguageTest
 {
     private static readonly string[] Keys = ["Field.Compare","Field.PasteExpectedHash","Field.Run","Field.TypeToFilterCommands","Field.IncludeSubfolders","Field.DeleteTargetLacksSource","Field.EncryptFileNames","Field.ReplaceFilesArchiveHas","Field.Link","Field.HardLink","Field.RelativeTarget","Field.Amount","Field.From","Field.MoveToRecycleBin","Field.RecursivelyDeleteFolder","Field.Image","Field.EachArchiveOwnFolder","Field.OverwriteExisting","Field.AppliesTo","Field.RunsInTerminal","Field.Tags","Field.PathOrUrl","Field.SshUserHost","Field.FileSystem","Field.VolumeLabel","Field.QuickFormat","Field.TypeDriveLetterConfirm","Field.Pattern","Field.FoldersToo","Field.Username","Field.PasswordOrKey","Field.ShareName","Field.SaveConnection","Field.Filter","Field.ProcessNameOrId","Field.ReadOnly","Field.Hidden","Field.System","Field.Archive","Field.ModeOctal","Field.Created","Field.Modified","Field.Accessed","Field.Find","Field.NameOrPattern","Field.Containing","Field.TextInsideFiles","Field.In","Field.FolderToSearch","Field.LargerMb","Field.BlankAny","Field.OlderDays","Field.ReadTextFromImages","Field.EnableQuotes","Field.EnableWeather","Field.Key","Field.MemoryThisProcess","Field.Engine"];
@@ -18,14 +17,17 @@ public class DialogFieldLabelsLanguageTest
         ("fr", "Field.Image"), ("fr", "Field.Archive"), ("fr", "Field.ModeOctal"), ("it", "Field.FileSystem"),
     ];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new([new ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(SortDialog).Assembly))]);
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -53,7 +55,8 @@ public class DialogFieldLabelsLanguageTest
     [TestMethod]
     public void TheSearchDialogLabels_FollowTheLanguage_AndFallBackToEnglish()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         Assert.AreEqual("Containing", Label(typeof(iTerminal.Core.Dialogs.Search.FindFilesDialog), "_textBox"));
 
         Speak("de");

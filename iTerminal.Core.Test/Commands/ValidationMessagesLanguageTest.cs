@@ -4,21 +4,23 @@ using iTerminal.Core.Dialogs;
 
 namespace iTerminal.Core.Test.Commands;
 
-/// <summary>The validation and info messages of the rename, delete, mark, link, file association, labels, format, properties and metadata dialogs follow the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The validation and info messages of the rename, delete, mark, link, file association, labels, format, properties and metadata dialogs follow the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class ValidationMessagesLanguageTest
 {
     private static readonly string[] Keys = ["Msg.NoPanelDelete","Msg.TypeNewName","Msg.ReadingLink","Msg.SymlinkFolder","Msg.SymlinkFile","Msg.HardLinkNames","Msg.TypeCommand","Msg.SayWhichFiles","Msg.BlankTagsRemove","Msg.Saving","Msg.Drive","Msg.DriveErased","Msg.Formatting","Msg.OneTagAtATime","Msg.TypePattern","Msg.NoPanelMark","Msg.ErrorPrefix","Msg.ErrorDate","Msg.ErrorMode","Msg.TextOnlyJpegPng"];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new([new ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(SortDialog).Assembly))]);
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -51,7 +53,8 @@ public class ValidationMessagesLanguageTest
     [TestMethod]
     public void TheFormattedMessages_FillTheirPlaceholders_InEveryLanguage()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         Assert.AreEqual("Drive C:", string.Format(UiText.Get("Msg.Drive", "Drive {0}"), "C:"));
 
         Speak("de");
