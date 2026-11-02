@@ -37,6 +37,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
     private readonly Lock _dumpLock = new();
     private int _dumpFrameIndex;
     private long _renderIterations;
+    private bool _firstFrameMarked;
     private DateTime _lastStatisticsDate = DateTime.Now;
     private DateTime _lastWindowSizeCheck = DateTime.MinValue;
     private readonly Services.ConsoleOwnership? _consoleOwnership;
@@ -128,6 +129,12 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                 using (_watchDog?.Watch("render"))
                 {
                     idle = RenderBuffer();
+                }
+                if (!idle && !_firstFrameMarked)
+                {
+                    _firstFrameMarked = true;
+                    StartupTrace.Mark("first-frame");
+                    StartupTrace.Flush();
                 }
                 DetectWindowSizeChanges(now);
                 _renderIterations++;

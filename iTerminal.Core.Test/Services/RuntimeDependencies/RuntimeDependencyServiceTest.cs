@@ -40,6 +40,75 @@ public class RuntimeDependencyServiceTest
         Assert.IsTrue(service.ShouldOfferAtStartup, "The one not skipped is still offered.");
     }
 
+    [Timeout(20_000)]
+    [TestMethod]
+    public void StartingTheServiceDoesNotWaitForTheProbesButReadingTheStatusesDoes()
+    {
+        // Finding out what is installed starts programs and takes seconds: it must not hold up start-up.
+        using var probeStarted = new ManualResetEventSlim();
+        using var releaseProbe = new ManualResetEventSlim();
+        var dependency = new FakeRuntimeDependency("1.63.0")
+        {
+            Probe = () =>
+            {
+                probeStarted.Set();
+                releaseProbe.Wait();
+                return "1.63.0";
+            },
+        };
+
+        var service = NewService(new SettingsService(), dependency);
+
+        Assert.AreEqual(1, dependency.Activations, "The installed version is still pointed at when the service starts.");
+        Assert.IsTrue(probeStarted.Wait(TimeSpan.FromSeconds(10)), "The probe runs in the background.");
+
+        releaseProbe.Set();
+
+        Assert.AreEqual(RuntimeDependencyState.Installed, service.Statuses.Single().State, "A status read waits for the probe instead of reporting nothing.");
+    }
+
+    [Timeout(20_000)]
+    [TestMethod]
+    public void AProbeThatFailsDoesNotFailEveryLaterRead()
+    {
+        var dependency = new FakeRuntimeDependency("1.63.0") { Probe = () => throw new InvalidOperationException("probe failed") };
+
+        var service = NewService(new SettingsService(), dependency);
+
+        Assert.AreEqual(0, service.Statuses.Count);
+        Assert.IsFalse(service.ShouldOfferAtStartup);
+    }
+
+    [Timeout(20_000)]
+    [TestMethod]
+    public async Task ASlowEarlierBuildDoesNotReplaceALaterOne()
+    {
+        using var firstProbeStarted = new ManualResetEventSlim();
+        using var releaseFirstProbe = new ManualResetEventSlim();
+        int calls = 0;
+        var dependency = new FakeRuntimeDependency("1.63.0")
+        {
+            Probe = () =>
+            {
+                if (Interlocked.Increment(ref calls) == 1)
+                {
+                    firstProbeStarted.Set();
+                    releaseFirstProbe.Wait();
+                    return null;
+                }
+
+                return "1.63.0";
+            },
+        };
+        var service = NewService(new SettingsService(), dependency);
+        Assert.IsTrue(firstProbeStarted.Wait(TimeSpan.FromSeconds(10)));
+
+        await service.CheckAsync(CancellationToken.None);
+        releaseFirstProbe.Set();
+
+        Assert.AreEqual(RuntimeDependencyState.Installed, service.Statuses.Single().State, "The first build saw the older state and finished last.");
+    }
+
     [Timeout(60_000)]
     [TestMethod]
     public void AMissingDependencyIsOfferedAtTheVersionTheBuildWasCompiledAgainst()

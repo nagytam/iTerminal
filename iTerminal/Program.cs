@@ -24,6 +24,7 @@ if (waitForParent >= 0 && waitForParent + 1 < args.Length && int.TryParse(args[w
     }
 }
 
+iConsole.Diagnostics.StartupTrace.Mark("main");
 var builder = iConsoleApplication.CreateBuilder(args);
 
 builder.Services.AddDefaultConsoleDriver();
@@ -41,7 +42,9 @@ builder.Services.AddiTerminal(builder.Configuration);
 builder.UseDesktop<Desktop>();
 builder.UseScreen<TerminalScreen>();
 
+iConsole.Diagnostics.StartupTrace.Mark("services-registered");
 var app = builder.Build();
+iConsole.Diagnostics.StartupTrace.Mark("built");
 
 // The saved passwords open with the key the app generated for them, before any panel restores a remote folder.
 app.Services.GetRequiredService<IPasswordManager>().Unlock();
@@ -64,6 +67,7 @@ if (elevation.IsElevated)
         iConsole.Services.NotificationSeverity.Warning);
 }
 
+iConsole.Diagnostics.StartupTrace.Mark("run");
 await app.RunAsync();
 
 // Restarting as root on Unix replaces this process once the host has stopped and given the terminal back.
