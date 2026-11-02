@@ -141,8 +141,16 @@ public static class StringHelper
         {
             right++;
         }
-        var paddedString = c.Repeat(left) + value + c.Repeat(right);
-        return paddedString;
+        if (c.Length == 1)
+        {
+            return string.Create(value.Length + left + right, (value, left, c[0]), static (span, state) =>
+            {
+                span[..state.left].Fill(state.Item3);
+                state.value.CopyTo(span[state.left..]);
+                span[(state.left + state.value.Length)..].Fill(state.Item3);
+            });
+        }
+        return c.Repeat(left) + value + c.Repeat(right);
     }
 
     public static string ExpandRight(this string? value, int width)
@@ -153,8 +161,16 @@ public static class StringHelper
         }
 
         int right = (int)Math.Max((long)int.MinValue, Math.Min(width, MaxPadding) - (long)value.Length);
-        var paddedString = value + " ".Repeat(right);
-        return paddedString;
+        if (right <= 0)
+        {
+            return value;
+        }
+        // One allocation: the value and its padding written straight into the result.
+        return string.Create(value.Length + right, value, static (span, text) =>
+        {
+            text.CopyTo(span);
+            span[text.Length..].Fill(' ');
+        });
     }
 
     public static string? Shrink(this string? s, int maxLength)

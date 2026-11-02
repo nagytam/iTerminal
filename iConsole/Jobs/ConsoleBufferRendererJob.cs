@@ -500,46 +500,32 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         ICollection<ConsoleDisplayWrite>? displayWrites)
     {
         var changedCharacters = 0;
-        int batchStartX = -1;
-        ConxelString? batch = null;
+        int limit = Math.Min(maxX, Math.Min(line.Length, lastLine.Length));
 
-        // Iterate one past maxX so the loop always flushes any open batch at the end.
-        for (int x = minX; x <= maxX; x++)
+        // Each cell is compared once: a run of changed cells is found by scanning ahead, then copied
+        // as a block instead of one cell at a time.
+        int x = minX;
+        while (x < limit)
         {
-            bool isCellChanged = false;
-            if (x < maxX && x < line.Length && x < lastLine.Length)
+            if (!CellChanged(ref line[x], ref lastLine[x]))
             {
-                isCellChanged = CellChanged(ref line[x], ref lastLine[x]);
+                x++;
+                continue;
             }
 
-            if (isCellChanged)
+            int runStart = x;
+            x++;
+            while (x < limit && CellChanged(ref line[x], ref lastLine[x]))
             {
-                if (batchStartX < 0)
-                {
-                    batchStartX = x;
-                    // Sized to the run of changed cells, so a one-cell change does not reserve a whole row.
-                    int runEnd = x + 1;
-                    while (runEnd < maxX && runEnd < line.Length && runEnd < lastLine.Length
-                           && CellChanged(ref line[runEnd], ref lastLine[runEnd]))
-                    {
-                        runEnd++;
-                    }
-                    batch = new ConxelString();
-                    batch.String.Capacity = runEnd - x;
-                }
-                batch!.Append(line[x]);
-                changedCharacters++;
+                x++;
             }
-            else if (batchStartX >= 0)
-            {
-                // Flush the accumulated run of consecutive changed cells as one write.
-                pendingWrites.Add((batchStartX, y, batch!));
-                displayWrites?.Add(new ConsoleDisplayWrite(
-                    batchStartX, y, batch!.Text,
-                    batch[0].ForegroundColor, batch[0].BackgroundColor, "batch"));
-                batchStartX = -1;
-                batch = null;
-            }
+
+            var batch = new ConxelString(line[runStart..x]);
+            pendingWrites.Add((runStart, y, batch));
+            displayWrites?.Add(new ConsoleDisplayWrite(
+                runStart, y, batch.Text,
+                batch[0].ForegroundColor, batch[0].BackgroundColor, "batch"));
+            changedCharacters += x - runStart;
         }
 
         return changedCharacters;
