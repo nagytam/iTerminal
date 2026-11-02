@@ -295,4 +295,26 @@ public class CsvViewerDialogTest
         Assert.IsTrue(CsvFileTypes.IsCsvFile("/x/a.TSV"));
         Assert.IsFalse(CsvFileTypes.IsCsvFile("/x/a.txt"));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ReadsTheFileFromTheLastPanelWhenNoModelHasFocus()
+    {
+        // Inside a dialog the focused model is null; the file lives on the panel that was focused before the dialog opened.
+        var document = new Url("file:///data/sales.csv");
+        Mock<IMemoryFile> file = new();
+        file.SetupGet(f => f.Content).Returns(Encoding.UTF8.GetBytes("name,amount\nA,1\nB,2\n"));
+        Mock<IContentModel> panel = new();
+        panel.Setup(f => f.ReadFileAsync(document)).ReturnsAsync(file.Object);
+        Mock<IContentModelService> models = new();
+        models.Setup(m => m.GetFocusedModel()).Returns((IContentModel?)null);
+        models.Setup(m => m.GetLastContentModel()).Returns(panel.Object);
+        var dialog = new CsvViewerDialog(models.Object, Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
+            Mock.Of<IDateTimeProviderService>(), new ThemeService()) { Url = document };
+
+        await dialog.OnInitializeAsync();
+
+        Assert.AreEqual(2, dialog.Grid.RowCount);
+        Assert.AreEqual(2, dialog.Grid.ColumnCount);
+    }
 }
