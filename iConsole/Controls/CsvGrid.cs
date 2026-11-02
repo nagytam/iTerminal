@@ -230,7 +230,7 @@ public class CsvGrid : Control
         int last = FirstFittingLast();
         Color text = IsEnabled ? scheme.Foreground : scheme.DisabledForeground;
         Color headerBackground = IsFocused ? scheme.SelectedFocusedBackground : scheme.Background;
-        WriteLine(buffer, 0, width, Compose(first: _firstColumn, last, i => _headers[i]), text, headerBackground);
+        WriteLine(buffer, 0, width, Compose(first: _firstColumn, last, i => Display(_headers[i])), text, headerBackground);
         WriteLine(buffer, 1, width, new string('─', width), scheme.DisabledForeground, scheme.Background);
 
         for (int y = 2; y < height; y++)

@@ -402,12 +402,19 @@ public static class CsvQuery
             {
                 "=" or "==" => row => CsvQuery.Compare(CsvQuery.Field(row, column), value) == 0,
                 "!=" or "<>" => row => CsvQuery.Compare(CsvQuery.Field(row, column), value) != 0,
-                "<" => row => CsvQuery.Compare(CsvQuery.Field(row, column), value) < 0,
-                "<=" => row => CsvQuery.Compare(CsvQuery.Field(row, column), value) <= 0,
-                ">" => row => CsvQuery.Compare(CsvQuery.Field(row, column), value) > 0,
-                ">=" => row => CsvQuery.Compare(CsvQuery.Field(row, column), value) >= 0,
+                // A blank field is no value, so it is neither smaller nor larger than one (as ORDER BY, it goes last).
+                "<" => row => Ordered(row, column, value, c => c < 0),
+                "<=" => row => Ordered(row, column, value, c => c <= 0),
+                ">" => row => Ordered(row, column, value, c => c > 0),
+                ">=" => row => Ordered(row, column, value, c => c >= 0),
                 _ => throw Unexpected("an operator such as = or >", op),
             };
+        }
+
+        private static bool Ordered(string[] row, int column, string value, Func<int, bool> test)
+        {
+            string field = CsvQuery.Field(row, column);
+            return (field.Length > 0 || value.Length == 0) && test(CsvQuery.Compare(field, value));
         }
 
         private static Func<string[], bool> Like(int column, string pattern, bool negate) =>
