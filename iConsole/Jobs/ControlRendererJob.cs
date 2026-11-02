@@ -1,4 +1,5 @@
 ﻿using iConsole.Controls;
+using iConsole.Diagnostics;
 using iConsole.Helper;
 
 namespace iConsole.Jobs;
@@ -124,11 +125,18 @@ public class ControlRendererJob() : Job
                         Desktop.Buffer.Merge();
                     }
 
-                    var renderedControlNames = renderList.Select(control => control?.GetType().FullName ?? "<null>").ToArray();
-                    Desktop.ScreenLogger.Capture(
-                        $"control-render:{screen.GetType().Name}",
-                        Desktop.Buffer.MergedLayer,
-                        renderedControlNames);
+                    // The names are looked up per frame, so only for a logger or a dump that records them.
+                    var needsNames = Desktop.ScreenLogger is not NullScreenLogger || Desktop.Dump.IsEnabled;
+                    var renderedControlNames = needsNames
+                        ? renderList.Select(control => control?.GetType().FullName ?? "<null>").ToArray()
+                        : [];
+                    if (Desktop.ScreenLogger is not NullScreenLogger)
+                    {
+                        Desktop.ScreenLogger.Capture(
+                            $"control-render:{screen.GetType().Name}",
+                            Desktop.Buffer.MergedLayer,
+                            renderedControlNames);
+                    }
 
                     if (Desktop.Dump.IsEnabled)
                     {
