@@ -593,8 +593,22 @@ public partial class TextBox : Control, IReadOnly
     {
         SyncScrollViewport();
         ScrollableModel.ScrollableSize = new Size(TextLength, 1);
-        ScrollableModel.CursorPosition.Y = 0;
-        ScrollableModel.CursorPosition.X = Math.Clamp(ScrollableModel.CursorPosition.X, 0, TextLength);
+
+        // Draw runs this on the render thread while a key handler moves the caret from the input thread. A caret
+        // written back unchanged can land after that handler's increment and undo it, so the next character went in
+        // before the one typed first: only a value that really is out of range is written.
+        if (ScrollableModel.CursorPosition.Y != 0)
+        {
+            ScrollableModel.CursorPosition.Y = 0;
+        }
+
+        var caret = ScrollableModel.CursorPosition.X;
+        var clampedCaret = Math.Clamp(caret, 0, TextLength);
+        if (clampedCaret != caret)
+        {
+            ScrollableModel.CursorPosition.X = clampedCaret;
+        }
+
         var well = ScrollableModel.ViewSize.Width;
         if (well > 0)
         {
@@ -602,7 +616,8 @@ public partial class TextBox : Control, IReadOnly
             // end of a value that just fits. The value is never scrolled further than leaves its end at the right edge:
             // a value shortened while scrolled drew an empty well.
             var cursor = ScrollableModel.CursorPosition.X;
-            var scroll = ScrollableModel.ScrollPosition.X;
+            var current = ScrollableModel.ScrollPosition.X;
+            var scroll = current;
             if (followCursor && cursor < scroll)
             {
                 scroll = cursor;
@@ -612,7 +627,11 @@ public partial class TextBox : Control, IReadOnly
                 scroll = cursor - well;
             }
 
-            ScrollableModel.ScrollPosition.X = Math.Clamp(scroll, 0, Math.Max(0, TextLength - well));
+            var clampedScroll = Math.Clamp(scroll, 0, Math.Max(0, TextLength - well));
+            if (clampedScroll != current)
+            {
+                ScrollableModel.ScrollPosition.X = clampedScroll;
+            }
         }
     }
 

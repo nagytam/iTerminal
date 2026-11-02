@@ -59,6 +59,42 @@ public class TextBoxNavigationTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task Typing_WhileTheRenderThreadDraws_KeepsEveryCharacterInOrder()
+    {
+        // Draw runs on the render thread while a key handler moves the caret: a Draw that wrote the caret back
+        // unchanged could land after the key's increment and move the caret behind the next character, which then
+        // went in before the one typed first ("todo.txt" came out as "too.txtd").
+        TextBox box = NewBox(string.Empty, 0);
+        box.MaxLength = 5000;
+        string typed = string.Concat(Enumerable.Range(0, 3000).Select(i => (char)('a' + (i % 26))));
+        using CancellationTokenSource stop = new();
+        Task drawing = Task.Run(() =>
+        {
+            MockBuffer buffer = new(new Size(80, 1));
+            while (!stop.IsCancellationRequested)
+            {
+                box.Draw(buffer);
+            }
+        });
+
+        try
+        {
+            foreach (char c in typed)
+            {
+                await box.HandleKeyEventAsync(new KeyEvent(c, ConsoleKey.A + (c - 'a'), false, false, false));
+            }
+        }
+        finally
+        {
+            stop.Cancel();
+            await drawing;
+        }
+
+        Assert.AreEqual(typed, box.Text);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task Right_AcrossALongValue_KeepsMovingAndScrolls()
     {
         TextBox box = NewBox(new string('x', 40), 0);
