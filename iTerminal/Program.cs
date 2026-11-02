@@ -25,6 +25,8 @@ if (waitForParent >= 0 && waitForParent + 1 < args.Length && int.TryParse(args[w
 }
 
 iConsole.Diagnostics.StartupTrace.Mark("main");
+// Entity Framework's first use takes over a second; it starts now and runs beside the registrations below.
+_ = iTerminal.Core.Data.DatabaseWarmUp.Start();
 var builder = iConsoleApplication.CreateBuilder(args);
 
 builder.Services.AddDefaultConsoleDriver();
@@ -48,6 +50,9 @@ iConsole.Diagnostics.StartupTrace.Mark("built");
 
 // The saved passwords open with the key the app generated for them, before any panel restores a remote folder.
 app.Services.GetRequiredService<IPasswordManager>().Unlock();
+
+// After the unlock: a service built before it (the AI client reads its key from the store) would be built without its secret.
+iTerminal.Core.Application.StartupWarmUp.Start(app.Services);
 
 var elevation = app.Services.GetRequiredService<IElevationService>();
 if (elevation.IsElevated)
