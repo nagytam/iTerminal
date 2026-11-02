@@ -7,7 +7,6 @@ using iTerminal.Core.Services;
 using iTerminal.Core.Services.Elevation;
 using iTerminal.Core.Screens;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.FeatureManagement;
 
 // A copy restarted with elevated rights is started while the one it replaces is still shutting down.
 // The settings are written back whole when that one exits, so wait for it before touching them.
@@ -27,7 +26,6 @@ if (waitForParent >= 0 && waitForParent + 1 < args.Length && int.TryParse(args[w
 
 var builder = iConsoleApplication.CreateBuilder(args);
 
-builder.Services.AddFeatureManagement();
 builder.Services.AddDefaultConsoleDriver();
 builder.Services.AddiConsoleCore();
 if (OperatingSystem.IsLinux())
@@ -36,7 +34,7 @@ if (OperatingSystem.IsLinux())
 }
 else
 {
-    await builder.Services.AddInputWindowsAsync();
+    await builder.Services.AddInputWindowsAsync(builder.Configuration);
 }
 
 builder.Services.AddiTerminal(builder.Configuration);
