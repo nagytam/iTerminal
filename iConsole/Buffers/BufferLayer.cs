@@ -2,6 +2,7 @@
 using iConsole.Display;
 using iConsole.Helper;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace iConsole.Buffers;
@@ -144,8 +145,7 @@ public class BufferLayer
                         _rowRight[row] = Math.Max(_rowRight[row], (int)position.X + sizeX);
                         _hasRowExtents = true;
                     }                }
-                var sourceArray = conxelString.String.ToArray();
-                var sourceSpan = new Span<Conxel>(sourceArray, 0, sizeX);
+                Span<Conxel> sourceSpan = CollectionsMarshal.AsSpan(conxelString.String)[..sizeX];
                 var destinationLineSpan = this[consoleY].Span;
                 if (position.X < destinationLineSpan.Length)
                 {
