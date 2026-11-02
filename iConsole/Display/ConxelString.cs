@@ -35,10 +35,8 @@ public class ConxelString : IEnumerable<Conxel>
     public ConxelString(Span<Conxel> conxels)
     {
         String = new List<Conxel>(conxels.Length);
-        foreach (var conxel in conxels)
-        {
-            String.Add(conxel);
-        }
+        CollectionsMarshal.SetCount(String, conxels.Length);
+        conxels.CopyTo(CollectionsMarshal.AsSpan(String));
     }
 
     public ConxelString(string @string, Color foreground, Color background, 
