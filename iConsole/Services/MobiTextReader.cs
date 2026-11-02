@@ -4,10 +4,10 @@ using System.Text;
 namespace iConsole.Services;
 
 /// <summary>
-/// Reads the text of a Kindle MOBI or AZW (Palm database) book into lines. The text records are PalmDOC-compressed
-/// HTML: each record is first stripped of the trailing entries the MOBI header declares, then decompressed, and the
-/// markup goes through the shared HTML reader. Images, the table of contents and the book's metadata are not shown.
-/// Books that use Huffman compression (KF8 and AZW3) are reported, not read.
+/// Reads the text of a Kindle MOBI, AZW or AZW3 (Palm database) book into lines. The text records are PalmDOC- or
+/// Huffman-compressed HTML: each record is first stripped of the trailing entries the MOBI header declares, then
+/// decompressed, and the markup goes through the shared HTML reader. Images, the table of contents and the book's
+/// metadata are not shown.
 /// </summary>
 public static class MobiTextReader
 {
@@ -18,6 +18,9 @@ public static class MobiTextReader
     private const ushort HuffmanCompression = 17480;
     private const uint Utf8Encoding = 65001;
     private const int MobiHeaderOffset = 16;
+
+    /// <summary>Where the Huffman header is in record 0, from its start: the index of the HUFF record, then the number of CDIC records.</summary>
+    private const int HuffmanHeaderOffset = 0x70;
 
     public static IReadOnlyList<string> Read(byte[] content)
     {
@@ -47,18 +50,28 @@ public static class MobiTextReader
             ushort textRecords = BinaryPrimitives.ReadUInt16BigEndian(first.AsSpan(8));
             uint mobiLength = BinaryPrimitives.ReadUInt32BigEndian(first.AsSpan(MobiHeaderOffset + 4));
             uint encodingCode = BinaryPrimitives.ReadUInt32BigEndian(first.AsSpan(MobiHeaderOffset + 0x0C));
-            ushort extraFlags = mobiLength >= 0xF4 && first.Length >= MobiHeaderOffset + 0xF4
-                ? BinaryPrimitives.ReadUInt16BigEndian(first.AsSpan(MobiHeaderOffset + 0xF2))
+            // The extra-record flags sit at 0xF2 from the start of record 0 (the header length counts from the MOBI
+            // magic at 0x10), so they are read when the header reaches past that point.
+            ushort extraFlags = MobiHeaderOffset + mobiLength >= 0xF4 && first.Length >= 0xF4
+                ? BinaryPrimitives.ReadUInt16BigEndian(first.AsSpan(0xF2))
                 : (ushort)0;
 
-            if (compression == HuffmanCompression)
-            {
-                return ["[This Kindle book uses Huffman compression (KF8/AZW3), which is not read]"];
-            }
-
-            if (compression is not (NoCompression or PalmDocCompression))
+            if (compression is not (NoCompression or PalmDocCompression or HuffmanCompression))
             {
                 return [$"[Could not read the book: unknown compression {compression}]"];
+            }
+
+            MobiHuffmanDecoder? huffman = null;
+            if (compression == HuffmanCompression)
+            {
+                if (first.Length < HuffmanHeaderOffset + 8)
+                {
+                    return ["[Could not read the book: the Huffman header is missing]"];
+                }
+
+                uint huffIndex = BinaryPrimitives.ReadUInt32BigEndian(first.AsSpan(HuffmanHeaderOffset));
+                uint dictionaryRecords = BinaryPrimitives.ReadUInt32BigEndian(first.AsSpan(HuffmanHeaderOffset + 4));
+                huffman = MobiHuffmanDecoder.Load(index => Record(content, offsets, index), huffIndex, dictionaryRecords);
             }
 
             using MemoryStream text = new();
@@ -66,12 +79,18 @@ public static class MobiTextReader
             for (int i = 1; i <= last; i++)
             {
                 byte[] record = StripTrailingEntries(Record(content, offsets, i), extraFlags);
-                byte[] bytes = compression == PalmDocCompression ? PalmDocDecompress(record) : record;
+                byte[] bytes = compression switch
+                {
+                    PalmDocCompression => PalmDocDecompress(record),
+                    HuffmanCompression => huffman!.Decode(record),
+                    _ => record,
+                };
                 text.Write(bytes);
             }
 
             Encoding encoding = encodingCode == Utf8Encoding ? Encoding.UTF8 : Encoding.GetEncoding(1252);
-            return HtmlTextExtractor.Lines(encoding.GetString(text.ToArray()));
+            IReadOnlyList<string> lines = HtmlTextExtractor.Lines(encoding.GetString(text.ToArray()));
+            return lines.Count > 0 ? lines : ["[The book has no text to show (it is only pictures)]"];
         }
         catch (Exception exception)
         {

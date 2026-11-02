@@ -29,9 +29,10 @@ public class MobiTextReaderTest
     }
 
     /// <summary>A PalmDB file with a MOBI header that declares the given compression, encoding and trailing-entry flags.</summary>
-    private static byte[] MakeMobi(byte[][] textRecords, ushort compression = 2, ushort extraFlags = 0, uint encoding = 65001)
+    private static byte[] MakeMobi(byte[][] textRecords, ushort compression = 2, ushort extraFlags = 0, uint encoding = 65001,
+        (uint Index, uint Count)? huffman = null, params byte[][] trailingRecords)
     {
-        int recordCount = textRecords.Length + 1;
+        int recordCount = textRecords.Length + trailingRecords.Length + 1;
         byte[] record0 = new byte[16 + MobiHeaderLength];
         BinaryPrimitives.WriteUInt16BigEndian(record0, compression);
         BinaryPrimitives.WriteUInt32BigEndian(record0.AsSpan(4), (uint)textRecords.Sum(r => r.Length));
@@ -40,9 +41,15 @@ public class MobiTextReaderTest
         Encoding.ASCII.GetBytes("MOBI").CopyTo(record0, 16);
         BinaryPrimitives.WriteUInt32BigEndian(record0.AsSpan(16 + 4), MobiHeaderLength);
         BinaryPrimitives.WriteUInt32BigEndian(record0.AsSpan(16 + 0x0C), encoding);
-        BinaryPrimitives.WriteUInt16BigEndian(record0.AsSpan(16 + 0xF2), extraFlags);
+        BinaryPrimitives.WriteUInt16BigEndian(record0.AsSpan(0xF2), extraFlags);
+        if (huffman is { } table)
+        {
+            // The Huffman header is at 0x70 from the start of record 0: the HUFF record's index, then the number of records.
+            BinaryPrimitives.WriteUInt32BigEndian(record0.AsSpan(0x70), table.Index);
+            BinaryPrimitives.WriteUInt32BigEndian(record0.AsSpan(0x74), table.Count);
+        }
 
-        List<byte[]> records = [record0, .. textRecords];
+        List<byte[]> records = [record0, .. textRecords, .. trailingRecords];
         int offset = 78 + recordCount * 8;
         using MemoryStream file = new();
         byte[] header = new byte[78];
@@ -102,13 +109,82 @@ public class MobiTextReaderTest
         CollectionAssert.AreEqual(new[] { "Plain Ünïcode" }, lines);
     }
 
+    /// <summary>
+    /// A HUFF record and one CDIC record. The code table maps every 8-bit code to the dictionary entry of the same value,
+    /// and the byte 0x00 is an entry that is itself compressed, so a text byte 0x00 decodes to the entry for 0x41 ("A").
+    /// </summary>
+    private static byte[][] HuffmanRecords()
+    {
+        // HUFF: the cache table at 24 (256 entries), the base table after it (32 entries, left empty here).
+        byte[] huff = new byte[24 + 1024 + 256];
+        Encoding.ASCII.GetBytes("HUFF").CopyTo(huff, 0);
+        BinaryPrimitives.WriteUInt32BigEndian(huff.AsSpan(8), 24);
+        BinaryPrimitives.WriteUInt32BigEndian(huff.AsSpan(12), 24 + 1024);
+        for (int code = 0; code < 256; code++)
+        {
+            // Found in the first table, 8 bits long; the code is value minus the top byte, so value = 2 * code gives code.
+            uint entry = ((uint)(2 * code) << 8) | 0x80 | 8;
+            BinaryPrimitives.WriteUInt32BigEndian(huff.AsSpan(24 + code * 4), entry);
+        }
+
+        // CDIC: a 16-byte header, 256 two-byte offsets (relative to the end of the header), then 256 entries of 3 bytes.
+        byte[] cdic = new byte[16 + 512 + 3 * 256];
+        Encoding.ASCII.GetBytes("CDIC").CopyTo(cdic, 0);
+        BinaryPrimitives.WriteUInt32BigEndian(cdic.AsSpan(4), 16);
+        BinaryPrimitives.WriteUInt32BigEndian(cdic.AsSpan(8), 256);
+        BinaryPrimitives.WriteUInt32BigEndian(cdic.AsSpan(12), 8);
+        for (int code = 0; code < 256; code++)
+        {
+            BinaryPrimitives.WriteUInt16BigEndian(cdic.AsSpan(16 + 2 * code), (ushort)(512 + 3 * code));
+            int at = 16 + 512 + 3 * code;
+            if (code == 0)
+            {
+                // Length 1 with the "compressed" flag clear: the one byte is itself a code, to be decoded again.
+                BinaryPrimitives.WriteUInt16BigEndian(cdic.AsSpan(at), 0x0001);
+                cdic[at + 2] = 0x41;
+            }
+            else
+            {
+                // Length 1 with the flag set: the entry is the byte itself.
+                BinaryPrimitives.WriteUInt16BigEndian(cdic.AsSpan(at), 0x8001);
+                cdic[at + 2] = (byte)code;
+            }
+        }
+
+        return [huff, cdic];
+    }
+
     [Timeout(60_000)]
     [TestMethod]
-    public void HuffmanCompression_IsReportedNotRead()
+    public void HuffmanCompression_DecodesTheDictionary_IncludingEntriesThatAreCompressedThemselves()
     {
-        List<string> lines = [.. MobiTextReader.Read(MakeMobi([[0x00]], compression: 17480))];
+        // The text is "<p>", a byte that decodes to "A", then "</p>", all written as the codes the table maps them to.
+        byte[] text = [0x3C, 0x70, 0x3E, 0x00, 0x3C, 0x2F, 0x70, 0x3E];
 
-        Assert.IsTrue(lines.Single().Contains("Huffman"), string.Join("\n", lines));
+        // Record 0, the text record (1), HUFF (2) and CDIC (3): the HUFF index is 2 and two records follow it.
+        List<string> lines = [.. MobiTextReader.Read(MakeMobi([text], compression: 17480, huffman: (2, 2), trailingRecords: HuffmanRecords()))];
+
+        CollectionAssert.AreEqual(new[] { "A" }, lines);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void HuffmanCompression_WithoutItsTables_IsReportedNotSilentlyEmpty()
+    {
+        List<string> lines = [.. MobiTextReader.Read(MakeMobi([[0x3C, 0x70, 0x3E]], compression: 17480, huffman: (5, 1)))];
+
+        Assert.IsTrue(lines.Single().StartsWith("[Could not read the book:"), string.Join("\n", lines));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ABookWithOnlyPictures_SaysItHasNoText()
+    {
+        byte[] text = Literal("<html><body><img src=\"page1.jpg\"/></body></html>");
+
+        List<string> lines = [.. MobiTextReader.Read(MakeMobi([text]))];
+
+        CollectionAssert.AreEqual(new[] { "[The book has no text to show (it is only pictures)]" }, lines);
     }
 
     [Timeout(60_000)]

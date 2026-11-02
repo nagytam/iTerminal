@@ -235,6 +235,134 @@ public static class OfficeTextRenderer
         return Trim(lines);
     }
 
+    /// <summary>
+    /// Renders an OpenDocument formula (.odf): the formula as a line of text built from its MathML (fractions, powers,
+    /// roots and brackets are written out with brackets), then the formula's own StarMath source when the file has it,
+    /// which is the form LibreOffice edits. Takes the file's bytes.
+    /// </summary>
+    public static IReadOnlyList<string> RenderOpenDocumentFormula(byte[] content)
+    {
+        List<string> lines = [];
+        try
+        {
+            using ZipArchive archive = new(new MemoryStream(content), ZipArchiveMode.Read);
+            ZipArchiveEntry? entry = archive.GetEntry("content.xml");
+            if (entry is null)
+            {
+                lines.Add("[Could not read the formula: content.xml is missing]");
+                return lines;
+            }
+
+            XDocument document;
+            using (Stream stream = entry.Open())
+            {
+                document = XDocument.Load(stream);
+            }
+
+            XElement? math = document.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "math")?.Element(MathNs + "math");
+            if (math is null)
+            {
+                lines.Add("[Could not read the formula: it has no MathML content]");
+                return lines;
+            }
+
+            string text = string.Join(" ", MathText(math).Split(' ', StringSplitOptions.RemoveEmptyEntries)).Trim();
+            AppendHeading(lines, "Formula");
+            lines.Add(text.Length > 0 ? text : "(empty formula)");
+
+            string? source = math.Descendants(MathNs + "annotation")
+                .FirstOrDefault(a => a.Attribute("encoding")?.Value.StartsWith("StarMath", StringComparison.OrdinalIgnoreCase) == true)
+                ?.Value.Trim();
+            if (!string.IsNullOrEmpty(source))
+            {
+                lines.Add(string.Empty);
+                AppendHeading(lines, "Source");
+                lines.Add(source);
+            }
+        }
+        catch (Exception exception)
+        {
+            lines.Add($"[Could not read the formula: {exception.Message}]");
+        }
+
+        return Trim(lines);
+    }
+
+    /// <summary>The text of a MathML element, with the layout written out in plain characters.</summary>
+    private static string MathText(XElement element)
+    {
+        string Child(int index) => index < element.Elements().Count() ? MathText(element.Elements().ElementAt(index)) : string.Empty;
+        string Children() => string.Concat(element.Elements().Select(MathText));
+        return element.Name.LocalName switch
+        {
+            // An operator such as = or + is set off by spaces, as it is when the formula is written out.
+            "mo" when element.Value.Trim() is "=" or "+" or "-" or "−" or "×" or "·" or "<" or ">" or "≤" or "≥" or "≠" or "±"
+                => $" {element.Value.Trim()} ",
+            "mi" or "mn" or "mo" or "mtext" => element.Value.Trim(),
+            "mspace" => " ",
+            "mfrac" => $"({Child(0)})/({Child(1)})",
+            "msup" => $"{Child(0)}^{Wrap(Child(1))}",
+            "msub" => $"{Child(0)}_{Wrap(Child(1))}",
+            "msubsup" => $"{Child(0)}_{Wrap(Child(1))}^{Wrap(Child(2))}",
+            "msqrt" => $"√({Children()})",
+            "mroot" => $"root({Child(1)})({Child(0)})",
+            "mfenced" => $"{(element.Attribute("open")?.Value ?? "(")}{string.Join(", ", element.Elements().Select(MathText))}{(element.Attribute("close")?.Value ?? ")")}",
+            "mtable" => string.Join("; ", element.Elements().Select(row => string.Join(" ", row.Elements().Select(MathText)))),
+            "annotation" or "annotation-xml" => string.Empty,
+            _ => Children(),
+        };
+
+        static string Wrap(string text) => text.Length > 1 ? $"({text})" : text;
+    }
+
+    /// <summary>
+    /// Reads an OpenDocument master document (.odm): its own text, and the names of the documents its sections link to,
+    /// in order. The caller reads each linked document, because they are other files; a linked name that is not a
+    /// relative path, or that is not in the same folder, is listed as it is.
+    /// </summary>
+    public static (IReadOnlyList<string> Lines, IReadOnlyList<string> Links) ReadOpenDocumentMaster(byte[] content)
+    {
+        List<string> lines = [];
+        List<string> links = [];
+        try
+        {
+            using ZipArchive archive = new(new MemoryStream(content), ZipArchiveMode.Read);
+            ZipArchiveEntry? entry = archive.GetEntry("content.xml");
+            if (entry is null)
+            {
+                lines.Add("[Could not read the master document: content.xml is missing]");
+                return (lines, links);
+            }
+
+            XDocument document;
+            using (Stream stream = entry.Open())
+            {
+                document = XDocument.Load(stream);
+            }
+
+            XElement? body = document.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "text");
+            if (body is not null)
+            {
+                AppendOdfBlocks(lines, body, 0);
+            }
+
+            foreach (XElement source in document.Descendants(TextNs + "section-source"))
+            {
+                string? href = (string?)source.Attribute(XlinkNs + "href");
+                if (!string.IsNullOrWhiteSpace(href) && !links.Contains(href))
+                {
+                    links.Add(href);
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            lines.Add($"[Could not read the master document: {exception.Message}]");
+        }
+
+        return (Trim(lines), links);
+    }
+
     public static IReadOnlyList<string> RenderSpreadsheet(string path)
     {
         List<string> lines = [];
@@ -435,6 +563,8 @@ public static class OfficeTextRenderer
     private static readonly XNamespace TableNs = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
     private static readonly XNamespace DrawNs = "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0";
     private static readonly XNamespace PresentationNs = "urn:oasis:names:tc:opendocument:xmlns:presentation:1.0";
+    private static readonly XNamespace MathNs = "http://www.w3.org/1998/Math/MathML";
+    private static readonly XNamespace XlinkNs = "http://www.w3.org/1999/xlink";
 
     /// <summary>
     /// One slide of an OpenDocument presentation: its title frame names the heading, every other frame and custom

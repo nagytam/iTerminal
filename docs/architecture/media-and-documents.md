@@ -42,9 +42,31 @@ rather than a path, so a document on an SSH, archive or memory drive reads the s
 - **Outlook messages** (`OutlookMessageReader`, `.msg`): the MAPI property streams of the compound file, Unicode
   when present, and the attachment storages' names.
 - **FictionBook 2** (`Fb2TextReader`, `.fb2`): sections as headings, paragraphs, verses, tables, notes bodies.
-- **Kindle MOBI and AZW** (`MobiTextReader`, `.mobi`, `.azw`): the Palm database's PalmDOC text records, with the
-  trailing entries the MOBI header declares stripped and the markup read by `HtmlTextExtractor`. Huffman-compressed
-  (KF8/AZW3) books are reported, not read.
+- **Kindle MOBI, AZW and AZW3** (`MobiTextReader`, `.mobi`, `.azw`, `.azw3`): the Palm database's text records, with the
+  trailing entries the MOBI header declares stripped, then PalmDOC- or Huffman-decompressed, and the markup read by
+  `HtmlTextExtractor`. The extra-record flags are at 0xF2 from the start of record 0; a book whose text is only pictures
+  says so. Huffman decoding (`MobiTextReaderTest`) is ported from the MIT-licensed lingo-reader table walk and is
+  tested on synthetic HUFF/CDIC records; the sample books used during development were all PalmDOC.
+- **iWork** (`IWorkTextReader`, `iConsole/IWork/`, `.pages`, `.numbers`, `.key`): the zip's `Index/*.iwa` archives, each a run
+  of Snappy chunks (`SnappyDecompressor`) of protobuf messages read by field number (`ProtobufWire`, `IwaDocument`). A
+  Pages or Keynote document is its `TSWP.StorageArchive` text storages, the body first; a Numbers document is its sheets,
+  each with the text cells of its tables (`TST` string list, reached sheet → table info → model → data store). Numeric and
+  formula cells are not read. A `.key` that is not a zip is shown as plain text, as before; an iWork '09 or encrypted
+  document says so.
+- **Access** (`AccessDatabaseTextReader`, `.mdb`, `.accdb`): JetDatabaseReader (MIT, managed, no Access or ACE driver)
+  lists each user table with its row count and its first 200 rows as a grid. The reader opens the file by path, so like the
+  SQLite viewer it reads only a local file.
+- **OpenDocument formula and master** (`.odf`, `.odm`): a formula's MathML is written out as a line, with the StarMath
+  source below it when the file has it (`OfficeTextRenderer.RenderOpenDocumentFormula`). A master document shows its own
+  text, then the text of each document its sections link to, read from the same folder; a link that is missing is named,
+  and a master inside a master is not expanded, so a loop of links stays finite.
+- **vCard** (`VCardTextReader`, `.vcf`): one block per contact, with the structured name, organization and address spelled
+  out, TYPE parameters in brackets, and a photo shown as a note. **iCalendar** (`ICalendarTextReader`, `.ics`): each event,
+  task, journal and alarm under its summary, dates as they read (`2026-03-05 09:00 UTC`), organizers without `mailto:`, and
+  folded and multi-line values unfolded (`ContentLines`, shared by both). **mbox** (`MboxTextReader`, `.mbox`): split at its
+  `From ` lines, quoting undone, and each message read by `MimeMessageReader`.
+- **Log files** (`.log`) are plain text, coloured by the `Log` syntax language (severity words as keywords). YAML, TOML and
+  INI files were already coloured by extension in the highlighter.
 - **HTML, PDF, plain text, images as ASCII art and .NET binaries** are read as before.
 
 These readers do not feed the document search index: `DocumentTextExtractorFactory` still lists only the
