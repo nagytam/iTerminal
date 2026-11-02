@@ -59,6 +59,22 @@ public class CsvViewerDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task SortingDescendingAndFilteringTogetherShowTheRightRowsInOrder()
+    {
+        CsvViewerDialog dialog = CreateDialog("file:///data/sales.csv", "name,amount\nA,5\nB,20\nC,\nD,100\n");
+        await dialog.OnInitializeAsync();
+
+        dialog.StartQuery("SELECT name WHERE amount < 50 ORDER BY amount DESC");
+        await dialog.QueryTask!;
+        dialog.OnIdle();
+
+        Assert.AreEqual(2, dialog.Grid.RowCount, "the blank amount is not smaller than 50");
+        Assert.AreEqual("B", dialog.Grid.CellAt(0, 0));
+        Assert.AreEqual("A", dialog.Grid.CellAt(1, 0));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task ATsvFileIsReadWithTabsEvenWhenItsValuesHaveCommas()
     {
         CsvViewerDialog dialog = CreateDialog("file:///data/notes.tsv", "name\tnote\nA\tone, two\n");

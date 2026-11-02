@@ -224,6 +224,11 @@ public class CsvViewerDialog : Dialog
                 _queryError = string.Empty;
                 _matched = _document.Rows.Count;
                 _grid.SetData(_document.Headers, _document.Rows);
+                if (_queryBox.Text.Trim().Length > 0 && !string.Equals(_queryBox.Text, DefaultQuery, StringComparison.Ordinal))
+                {
+                    // The query in the box was written for the old reading; the grid must keep agreeing with it.
+                    StartQuery(_queryBox.Text);
+                }
             }
 
             UpdateStatus();
