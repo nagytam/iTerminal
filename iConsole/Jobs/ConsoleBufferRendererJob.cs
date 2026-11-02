@@ -473,6 +473,23 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                             .SequenceEqual(MemoryMarshal.Cast<Conxel, byte>(span2));
     }
 
+    private static bool CellChanged(ref Conxel conxel, ref Conxel lastConxel) =>
+        conxel.Char             != lastConxel.Char             ||
+        conxel.ForegroundColor  != lastConxel.ForegroundColor  ||
+        conxel.BackgroundColor  != lastConxel.BackgroundColor  ||
+        conxel.IsBold           != lastConxel.IsBold           ||
+        conxel.IsItalic         != lastConxel.IsItalic         ||
+        conxel.IsUnderline      != lastConxel.IsUnderline      ||
+        conxel.IsStrikeThrough  != lastConxel.IsStrikeThrough  ||
+        conxel.IsDim            != lastConxel.IsDim            ||
+        conxel.IsReverse        != lastConxel.IsReverse        ||
+        conxel.IsBlink          != lastConxel.IsBlink          ||
+        conxel.IsOverline       != lastConxel.IsOverline       ||
+        conxel.UnderlineStyle   != lastConxel.UnderlineStyle   ||
+        conxel.UnderlineColor   != lastConxel.UnderlineColor   ||
+        conxel.HasUnderlineColor != lastConxel.HasUnderlineColor ||
+        conxel.LinkId           != lastConxel.LinkId;
+
     private int RenderByCharacters(
         int y,
         int minX,
@@ -492,24 +509,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
             bool isCellChanged = false;
             if (x < maxX && x < line.Length && x < lastLine.Length)
             {
-                ref var conxel = ref line[x];
-                ref var lastConxel = ref lastLine[x];
-                isCellChanged =
-                    conxel.Char             != lastConxel.Char             ||
-                    conxel.ForegroundColor  != lastConxel.ForegroundColor  ||
-                    conxel.BackgroundColor  != lastConxel.BackgroundColor  ||
-                    conxel.IsBold           != lastConxel.IsBold           ||
-                    conxel.IsItalic         != lastConxel.IsItalic         ||
-                    conxel.IsUnderline      != lastConxel.IsUnderline      ||
-                    conxel.IsStrikeThrough  != lastConxel.IsStrikeThrough  ||
-                    conxel.IsDim            != lastConxel.IsDim            ||
-                    conxel.IsReverse        != lastConxel.IsReverse        ||
-                    conxel.IsBlink          != lastConxel.IsBlink          ||
-                    conxel.IsOverline       != lastConxel.IsOverline       ||
-                    conxel.UnderlineStyle   != lastConxel.UnderlineStyle   ||
-                    conxel.UnderlineColor   != lastConxel.UnderlineColor   ||
-                    conxel.HasUnderlineColor != lastConxel.HasUnderlineColor ||
-                    conxel.LinkId           != lastConxel.LinkId;
+                isCellChanged = CellChanged(ref line[x], ref lastLine[x]);
             }
 
             if (isCellChanged)
@@ -517,8 +517,15 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                 if (batchStartX < 0)
                 {
                     batchStartX = x;
+                    // Sized to the run of changed cells, so a one-cell change does not reserve a whole row.
+                    int runEnd = x + 1;
+                    while (runEnd < maxX && runEnd < line.Length && runEnd < lastLine.Length
+                           && CellChanged(ref line[runEnd], ref lastLine[runEnd]))
+                    {
+                        runEnd++;
+                    }
                     batch = new ConxelString();
-                    batch.String.Capacity = maxX - x;
+                    batch.String.Capacity = runEnd - x;
                 }
                 batch!.Append(line[x]);
                 changedCharacters++;
