@@ -9,11 +9,17 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Mail;
 
-// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
-[DoNotParallelize]
 [TestClass]
 public class MailDialogTest
 {
+    private IDisposable _clipboardScope = null!;
+
+    [TestCleanup]
+    public void ReleaseOwnClipboard() => _clipboardScope.Dispose();
+
+    [TestInitialize]
+    public void ScopeOwnClipboard() => _clipboardScope = iConsole.Services.TextClipboard.Scope(new iConsole.Services.InProcessTextClipboardService());
+
     /// <summary>Answers from fixed data and records what the dialog asked for.</summary>
     private sealed class FakeMail : IMailService
     {

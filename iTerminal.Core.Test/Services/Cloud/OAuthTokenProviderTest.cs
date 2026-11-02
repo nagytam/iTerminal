@@ -146,7 +146,8 @@ public class OAuthTokenProviderTest
         Mock<IPasswordManager> passwords = new();
         passwords.SetupGet(p => p.IsUnlocked).Returns(false);
         Mock<INotificationService> notifications = new();
-        OAuthTokenProvider provider = new(Config(secret: "s"), passwords.Object, notifications.Object, Mock.Of<ILogger>(), http);
+        // RFC 8628 has the poll wait five seconds longer after a slow_down; a zero step checks the same answers without the wait.
+        OAuthTokenProvider provider = new(Config(secret: "s"), passwords.Object, notifications.Object, Mock.Of<ILogger>(), http, slowDownStep: TimeSpan.Zero);
 
         await Assert.ThrowsExactlyAsync<CloudSignInRequiredException>(
             () => provider.GetAccessTokenAsync("me", CancellationToken.None));

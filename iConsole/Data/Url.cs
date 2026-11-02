@@ -8,10 +8,14 @@ namespace iConsole.Data;
 [DebuggerDisplay("{_url}")]
 public partial class Url
 {
-    private static readonly TimeSpan DirectoryExistsCacheDuration = TimeSpan.FromSeconds(5);
     private static readonly MemoryCache DirectoryExistsCache = new(new MemoryCacheOptions());
-    private static readonly TimeSpan FileInfoCacheDuration = TimeSpan.FromSeconds(5);
     private static readonly MemoryCache FileInfoCache = new(new MemoryCacheOptions());
+
+    /// <summary>
+    /// How long a folder's existence or a file's details are reused before the disk is asked again. Five seconds in the
+    /// application; the expiry tests shorten it so they do not sleep through it.
+    /// </summary>
+    internal static TimeSpan CacheLifetime { get; set; } = TimeSpan.FromSeconds(5);
 
     private sealed record CachedFileInfo(
         string Name,
@@ -957,7 +961,7 @@ public partial class Url
         }
 
         exists = System.IO.Directory.Exists(path);
-        DirectoryExistsCache.Set(path, exists, DirectoryExistsCacheDuration);
+        DirectoryExistsCache.Set(path, exists, CacheLifetime);
         return exists;
     }
 
@@ -983,7 +987,7 @@ public partial class Url
             GetLinkTargetQuietly(fileInfo, path),
             (int)fileInfo.Attributes != -1 && (fileInfo.Attributes & FileAttributes.Hidden) != 0);
 
-        FileInfoCache.Set(path, cachedFileInfo, FileInfoCacheDuration);
+        FileInfoCache.Set(path, cachedFileInfo, CacheLifetime);
         return cachedFileInfo;
     }
 

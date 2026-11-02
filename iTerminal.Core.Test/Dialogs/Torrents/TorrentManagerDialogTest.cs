@@ -7,11 +7,17 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Torrents;
 
-// Some tests paste from the ambient clipboard, so the class does not run beside others that do.
-[DoNotParallelize]
 [TestClass]
 public class TorrentManagerDialogTest
 {
+    private IDisposable _clipboardScope = null!;
+
+    [TestCleanup]
+    public void ReleaseOwnClipboard() => _clipboardScope.Dispose();
+
+    [TestInitialize]
+    public void ScopeOwnClipboard() => _clipboardScope = iConsole.Services.TextClipboard.Scope(new iConsole.Services.InProcessTextClipboardService());
+
     internal sealed class FakeTorrents : ITorrentService
     {
         public List<TorrentItem> Items { get; } = [];

@@ -8,11 +8,17 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Calendar;
 
-// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
-[DoNotParallelize]
 [TestClass]
 public class CalendarDialogTest
 {
+    private IDisposable _clipboardScope = null!;
+
+    [TestCleanup]
+    public void ReleaseOwnClipboard() => _clipboardScope.Dispose();
+
+    [TestInitialize]
+    public void ScopeOwnClipboard() => _clipboardScope = iConsole.Services.TextClipboard.Scope(new iConsole.Services.InProcessTextClipboardService());
+
     private static readonly DateTime Now = new(2026, 10, 14, 10, 0, 0);
 
     private sealed class Fixture
