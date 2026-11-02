@@ -38,11 +38,12 @@ public class FileToTextConverterService : IFileToTextConverterService
     private static readonly HashSet<string> WordExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "docx", "docm", "dotx", "dotm" };
 
+    // The flat forms (.fodt and the rest) hold the same XML as the zipped OpenDocument files, without the zip.
     private static readonly HashSet<string> OpenDocumentTextExtensions =
-        new(StringComparer.OrdinalIgnoreCase) { "odt", "ott" };
+        new(StringComparer.OrdinalIgnoreCase) { "odt", "ott", "fodt" };
 
     private static readonly HashSet<string> OpenDocumentSpreadsheetExtensions =
-        new(StringComparer.OrdinalIgnoreCase) { "ods", "ots" };
+        new(StringComparer.OrdinalIgnoreCase) { "ods", "ots", "fods" };
 
     private static readonly HashSet<string> SpreadsheetExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "xlsx", "xlsm", "xltx", "xltm" };
@@ -51,7 +52,7 @@ public class FileToTextConverterService : IFileToTextConverterService
         new(StringComparer.OrdinalIgnoreCase) { "pptx", "pptm", "potx", "potm", "ppsx", "ppsm" };
 
     private static readonly HashSet<string> OpenDocumentPresentationExtensions =
-        new(StringComparer.OrdinalIgnoreCase) { "odp", "otp" };
+        new(StringComparer.OrdinalIgnoreCase) { "odp", "otp", "fodp" };
 
     private static readonly HashSet<string> EpubExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "epub" };
@@ -59,17 +60,18 @@ public class FileToTextConverterService : IFileToTextConverterService
     private static readonly HashSet<string> RtfExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "rtf" };
 
+    // The Word, Excel and PowerPoint templates and shows share the binary layout of their documents.
     private static readonly HashSet<string> LegacyWordExtensions =
-        new(StringComparer.OrdinalIgnoreCase) { "doc" };
+        new(StringComparer.OrdinalIgnoreCase) { "doc", "dot" };
 
     private static readonly HashSet<string> LegacySpreadsheetExtensions =
-        new(StringComparer.OrdinalIgnoreCase) { "xls" };
+        new(StringComparer.OrdinalIgnoreCase) { "xls", "xlt" };
 
     private static readonly HashSet<string> LegacyPresentationExtensions =
-        new(StringComparer.OrdinalIgnoreCase) { "ppt" };
+        new(StringComparer.OrdinalIgnoreCase) { "ppt", "pot", "pps" };
 
     private static readonly HashSet<string> OpenDocumentDrawingExtensions =
-        new(StringComparer.OrdinalIgnoreCase) { "odg", "otg" };
+        new(StringComparer.OrdinalIgnoreCase) { "odg", "otg", "fodg" };
 
     private static readonly HashSet<string> XpsExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "xps", "oxps" };
@@ -179,25 +181,27 @@ public class FileToTextConverterService : IFileToTextConverterService
             {
                 await ReadAssemblyMetadataAsync(url, fileSystem, textModel);
             }
+            // The Open XML and OpenDocument renderers read the file's bytes, not its path, so a document on an SFTP,
+            // SMB or archive drive is read the same way as a local one.
             else if (WordExtensions.Contains(url.Extension))
             {
-                AddLines(textModel, OfficeTextRenderer.RenderWord(url.Path));
+                await ReadBinaryFileAsync(url, fileSystem, textModel, OfficeTextRenderer.RenderWord);
             }
             else if (OpenDocumentTextExtensions.Contains(url.Extension))
             {
-                AddLines(textModel, OfficeTextRenderer.RenderOpenDocumentText(url.Path));
+                await ReadBinaryFileAsync(url, fileSystem, textModel, OfficeTextRenderer.RenderOpenDocumentText);
             }
             else if (SpreadsheetExtensions.Contains(url.Extension))
             {
-                AddLines(textModel, OfficeTextRenderer.RenderSpreadsheet(url.Path));
+                await ReadBinaryFileAsync(url, fileSystem, textModel, OfficeTextRenderer.RenderSpreadsheet);
             }
             else if (OpenDocumentSpreadsheetExtensions.Contains(url.Extension))
             {
-                AddLines(textModel, OfficeTextRenderer.RenderOpenDocumentSpreadsheet(url.Path));
+                await ReadBinaryFileAsync(url, fileSystem, textModel, OfficeTextRenderer.RenderOpenDocumentSpreadsheet);
             }
             else if (PresentationExtensions.Contains(url.Extension))
             {
-                AddLines(textModel, OfficeTextRenderer.RenderPresentation(url.Path));
+                await ReadBinaryFileAsync(url, fileSystem, textModel, OfficeTextRenderer.RenderPresentation);
             }
             else if (OpenDocumentPresentationExtensions.Contains(url.Extension))
             {
