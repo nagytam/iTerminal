@@ -14,6 +14,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Presentation;
 using System.Reflection;
+using iConsole.IWork;
 
 namespace iConsole.Services;
 
@@ -83,7 +84,28 @@ public class FileToTextConverterService : IFileToTextConverterService
         new(StringComparer.OrdinalIgnoreCase) { "fb2" };
 
     private static readonly HashSet<string> KindleExtensions =
-        new(StringComparer.OrdinalIgnoreCase) { "mobi", "azw" };
+        new(StringComparer.OrdinalIgnoreCase) { "mobi", "azw", "azw3" };
+
+    private static readonly HashSet<string> IWorkExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "pages", "numbers", "key" };
+
+    private static readonly HashSet<string> AccessExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "mdb", "accdb" };
+
+    private static readonly HashSet<string> OpenDocumentFormulaExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "odf" };
+
+    private static readonly HashSet<string> OpenDocumentMasterExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "odm" };
+
+    private static readonly HashSet<string> VCardExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "vcf" };
+
+    private static readonly HashSet<string> ICalendarExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "ics" };
+
+    private static readonly HashSet<string> MboxExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "mbox" };
 
     /// <summary>
     /// Formats whose text is read from their structure rather than from the bytes as a code page: an RTF file carries
@@ -107,7 +129,14 @@ public class FileToTextConverterService : IFileToTextConverterService
         || MessageExtensions.Contains(extension)
         || OutlookMessageExtensions.Contains(extension)
         || Fb2Extensions.Contains(extension)
-        || KindleExtensions.Contains(extension);
+        || KindleExtensions.Contains(extension)
+        || IWorkExtensions.Contains(extension)
+        || AccessExtensions.Contains(extension)
+        || OpenDocumentFormulaExtensions.Contains(extension)
+        || OpenDocumentMasterExtensions.Contains(extension)
+        || VCardExtensions.Contains(extension)
+        || ICalendarExtensions.Contains(extension)
+        || MboxExtensions.Contains(extension);
 
     private static void AddLines(ITextModel textModel, IReadOnlyList<string> lines)
     {
@@ -218,6 +247,34 @@ public class FileToTextConverterService : IFileToTextConverterService
             {
                 await ReadBinaryFileAsync(url, fileSystem, textModel, MobiTextReader.Read);
             }
+            else if (IWorkExtensions.Contains(url.Extension))
+            {
+                await ReadIWorkFileAsync(url, fileSystem, textModel);
+            }
+            else if (AccessExtensions.Contains(url.Extension))
+            {
+                ReadAccessFile(url, textModel);
+            }
+            else if (OpenDocumentFormulaExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, OfficeTextRenderer.RenderOpenDocumentFormula);
+            }
+            else if (OpenDocumentMasterExtensions.Contains(url.Extension))
+            {
+                await ReadOpenDocumentMasterAsync(url, fileSystem, textModel);
+            }
+            else if (VCardExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, VCardTextReader.Read);
+            }
+            else if (ICalendarExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, ICalendarTextReader.Read);
+            }
+            else if (MboxExtensions.Contains(url.Extension))
+            {
+                await ReadBinaryFileAsync(url, fileSystem, textModel, MboxTextReader.Read);
+            }
             else
             {
                 await ReadTextFileAsync(url, fileSystem, textModel);
@@ -288,6 +345,92 @@ public class FileToTextConverterService : IFileToTextConverterService
         {
             AddLines(textModel, render(content));
         }
+    }
+
+    /// <summary>
+    /// An iWork document is a zip, and is read as one. Anything else under a .pages, .numbers or .key name (a key file,
+    /// say) is shown as plain text, as it was before these were read, so nothing that is not iWork is made worse.
+    /// </summary>
+    private static async Task ReadIWorkFileAsync(Url url, IFileSystem fileSystem, ITextModel textModel)
+    {
+        var memoryFile = await fileSystem.ReadFileAsync(url);
+        if (memoryFile?.Content is not { } content)
+        {
+            return;
+        }
+
+        if (IWorkTextReader.IsZip(content))
+        {
+            AddLines(textModel, IWorkTextReader.Read(content));
+        }
+        else
+        {
+            await ReadTextFileAsync(url, fileSystem, textModel);
+        }
+    }
+
+    /// <summary>
+    /// An Access database is opened by its path, as the SQLite viewer opens one, so only a file on this machine is read.
+    /// Anything else says so rather than reading the wrong file.
+    /// </summary>
+    private static void ReadAccessFile(Url url, ITextModel textModel)
+    {
+        IReadOnlyList<string> lines = File.Exists(url.Path)
+            ? AccessDatabaseTextReader.Read(url.Path)
+            : ["[Access databases are read from a local file]"];
+        AddLines(textModel, lines);
+    }
+
+    /// <summary>
+    /// An OpenDocument master document shows its own text, then the text of each document its sections link to, read from
+    /// the same folder. A linked document that links on again is not expanded, which keeps a loop of links finite.
+    /// </summary>
+    private async Task ReadOpenDocumentMasterAsync(Url url, IFileSystem fileSystem, ITextModel textModel)
+    {
+        var memoryFile = await fileSystem.ReadFileAsync(url);
+        if (memoryFile?.Content is not { } content)
+        {
+            return;
+        }
+
+        var (ownLines, links) = OfficeTextRenderer.ReadOpenDocumentMaster(content);
+        AddLines(textModel, ownLines);
+        foreach (string href in links)
+        {
+            string name = Uri.UnescapeDataString(href);
+            List<string> section = [];
+            OfficeTextRenderer.AppendHeading(section, name);
+            Url? linked = SiblingUrl(url, name);
+            if (name.Contains("://", StringComparison.Ordinal) || linked is null)
+            {
+                section.Add("[The linked document is outside this file's folder]");
+            }
+            else if (!fileSystem.ExistsFile(linked))
+            {
+                section.Add("[The linked document is not in this folder]");
+            }
+            else if (linked.Extension.Equals("odm", StringComparison.OrdinalIgnoreCase))
+            {
+                section.Add("[A master document inside a master is not expanded]");
+            }
+            else
+            {
+                TextModel linkedText = new();
+                await ReadFileAsync(linked, fileSystem, linkedText);
+                section.AddRange(linkedText.Lines);
+            }
+
+            section.Add(string.Empty);
+            AddLines(textModel, section);
+        }
+    }
+
+    /// <summary>The URL of a file named <paramref name="name"/> in the same folder as <paramref name="url"/>, or null when the path has no folder.</summary>
+    private static Url? SiblingUrl(Url url, string name)
+    {
+        string full = url.FullUrl;
+        int cut = full.LastIndexOfAny(['/', '\\']);
+        return cut < 0 ? null : new Url(full[..(cut + 1)] + name);
     }
 
     private static async Task ReadTextFileAsync(Url url, IFileSystem fileSystem, ITextModel textModel)

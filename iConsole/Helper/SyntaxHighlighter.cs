@@ -284,6 +284,11 @@ public static class SyntaxHighlighter
     private static readonly SyntaxLanguage Ini = new(
         "INI", [], [";", "#"], null, "\"'", keyDelimiter: '=', sectionHeaders: true);
 
+    /// <summary>Log files: the severity words are coloured as keywords, and the quoted text of a message as strings.</summary>
+    private static readonly SyntaxLanguage Log = new(
+        "Log", ["TRACE", "DEBUG", "INFO", "NOTICE", "WARN", "WARNING", "ERROR", "SEVERE", "CRITICAL", "FATAL", "EXCEPTION"],
+        [], null, "\"'", ignoreCase: true);
+
     private static readonly SyntaxLanguage DotEnv = new(
         "Dotenv", [], ["#"], null, "\"'", keyDelimiter: '=');
 
@@ -396,14 +401,14 @@ public static class SyntaxHighlighter
         [".xml"] = Markup, [".html"] = Markup, [".htm"] = Markup, [".xaml"] = Markup, [".csproj"] = Markup,
         [".props"] = Markup, [".targets"] = Markup, [".svg"] = Markup, [".slnx"] = Markup, [".wxs"] = Markup,
         [".json"] = Json, [".jsonc"] = Json,
-        [".ini"] = Ini, [".conf"] = Ini, [".cfg"] = Ini, [".editorconfig"] = Ini, [".toml"] = Toml, [".yml"] = Yaml,
+        [".log"] = Log, [".ini"] = Ini, [".conf"] = Ini, [".cfg"] = Ini, [".editorconfig"] = Ini, [".toml"] = Toml, [".yml"] = Yaml,
         [".yaml"] = Yaml, [".env"] = DotEnv, [".properties"] = Properties,
         [".bat"] = Batch, [".cmd"] = Batch,
     };
 
     /// <summary>Every language built in, for <see cref="iConsole.Services.ISyntaxHighlightingService"/> to list and look up by name.</summary>
     internal static IReadOnlyList<SyntaxLanguage> BuiltInLanguages { get; } =
-        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, PowerShell, Python, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, R, Perl, Php, VisualBasic, FSharp, BuildFile];
+        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, PowerShell, Python, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, R, Perl, Php, VisualBasic, FSharp, BuildFile, Log];
 
     /// <summary>The language for a file name or path, or null when there is none to colour it with.</summary>
     public static SyntaxLanguage? ForFile(string? fileName)
