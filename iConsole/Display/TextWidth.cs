@@ -73,8 +73,15 @@ public static class TextWidth
             return 0;
         }
 
-        var columns = 0;
-        foreach (var rune in text.EnumerateRunes())
+        // Printable ASCII is one column a char; the vectorized search clears it a vector at a time.
+        var firstOther = text.AsSpan().IndexOfAnyExceptInRange(' ', '~');
+        if (firstOther < 0)
+        {
+            return text.Length;
+        }
+
+        var columns = firstOther;
+        foreach (var rune in text.AsSpan(firstOther).EnumerateRunes())
         {
             columns += Width(rune);
         }
@@ -88,9 +95,16 @@ public static class TextWidth
     public static string Fit(string? text, int columns)
     {
         columns = Math.Max(0, columns);
+        text ??= string.Empty;
+        if (text.AsSpan().IndexOfAnyExceptInRange(' ', '~') < 0)
+        {
+            // Printable ASCII: one column a char, so the text is cut or padded without a builder.
+            return text.Length >= columns ? text[..columns] : text.PadRight(columns);
+        }
+
         var builder = new StringBuilder();
         var used = 0;
-        foreach (var rune in (text ?? string.Empty).EnumerateRunes())
+        foreach (var rune in text.EnumerateRunes())
         {
             var width = Width(rune);
             if (width == 0)
@@ -101,7 +115,8 @@ public static class TextWidth
             {
                 break;
             }
-            builder.Append(rune.ToString());
+            Span<char> units = stackalloc char[2];
+            builder.Append(units[..rune.EncodeToUtf16(units)]);
             used += width;
         }
         builder.Append(' ', columns - used);
