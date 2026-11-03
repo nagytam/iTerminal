@@ -114,9 +114,23 @@ public class DeleteCommand(
         await deleteDialog.ShowPopUpWindowAsync(progressWindow);
     }
 
+    /// <summary>
+    /// A recursive delete of a local folder with the bin ticked goes to the Trash (or Recycle Bin) whole:
+    /// one rename of the tree, instead of a file-by-file walk that trashes every file and every emptied
+    /// folder on its own. Remote, memory and archive drives keep the walk, and so does a delete with the
+    /// bin unticked, which the per-item progress and cancel are for. A folder link is still just removed
+    /// (<see cref="iTerminal.Core.Services.FileSystemService"/>.DeleteFolder takes the link before the bin).
+    /// </summary>
+    internal static bool WholeFolderToTrash(Url url, bool recursive, bool moveToRecycleBin) =>
+        url.PathType == PathType.Folder
+        && recursive
+        && moveToRecycleBin
+        && url.ContainerType == ContainerType.FileSystem;
+
     private (FolderDeleteDiscoveryTask? DiscoveryTask, ContentModelDeleteTask PrimaryTask) CreateTasks(IFileSystem target, Url deleteUrl, bool recursive, bool moveToRecycleBin)
     {
-        if (deleteUrl.PathType != PathType.Folder || !recursive)
+        // Only a folder walked file by file has a discovery task; the whole-folder trash is one task too.
+        if (deleteUrl.PathType != PathType.Folder || !recursive || WholeFolderToTrash(deleteUrl, recursive, moveToRecycleBin))
         {
             return (null, new ContentModelDeleteTask(target, deleteUrl, recursive, moveToRecycleBin, discoveryTask: null, errorPromptService));
         }
