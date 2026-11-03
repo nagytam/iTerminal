@@ -51,6 +51,42 @@ public class ConxelString : IEnumerable<Conxel>
         return String.Count != 0;
     }
 
+    /// <summary>
+    /// Makes this string the row <paramref name="text"/> padded with spaces to <paramref name="width"/> cells (longer text is
+    /// kept whole), reusing the cells already allocated. For a control that draws a row at a time and writes each into the
+    /// buffer at once: the buffer copies the cells, so one scratch string can serve every row instead of a new list and
+    /// array, and the padded copy of the text, for each.
+    /// </summary>
+    public void Reset(ReadOnlySpan<char> text, int width, Color foregroundColor, Color backgroundColor)
+    {
+        String.Clear();
+        if (TextWidth.NeedsCellLayout(text))
+        {
+            // Wide characters and the like take their own number of cells, which the plain copy below cannot give.
+            Append(text.ToString().PadRight(width), foregroundColor, backgroundColor);
+            return;
+        }
+
+        int length = Math.Max(text.Length, width);
+        if (length == 0)
+        {
+            return;
+        }
+
+        if (String.Capacity < length)
+        {
+            String.Capacity = length;
+        }
+
+        CollectionsMarshal.SetCount(String, length);
+        Span<Conxel> cells = CollectionsMarshal.AsSpan(String);
+        cells.Fill(new Conxel(' ', foregroundColor, backgroundColor));
+        for (int i = 0; i < text.Length; i++)
+        {
+            cells[i].Char = text[i];
+        }
+    }
+
     public void Append(Conxel conxel)
     {
         String.Add(conxel);
