@@ -4,21 +4,23 @@ using iTerminal.Core.Dialogs.Contacts;
 
 namespace iTerminal.Core.Test.Commands;
 
-/// <summary>The key hints of the contacts, access control, web browser and mail dialogs follow the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The key hints of the contacts, access control, web browser and mail dialogs follow the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class DialogKeyHintsLanguageTest
 {
     private static readonly string[] Keys = ["DialogHint.NextFieldEnterSaves","DialogHint.PreviousField","DialogHint.MoveBetweenFields","DialogHint.KeepFilterBackToList","DialogHint.ClearFilter","DialogHint.DeleteContact","DialogHint.KeepContact","DialogHint.MoveOverContacts","DialogHint.JumpFirstLastContact","DialogHint.AddContact","DialogHint.ChangeContact","DialogHint.DeleteContactAsks","DialogHint.FilterList","DialogHint.SaveEntry","DialogHint.ChangeChoice","DialogHint.BackToList","DialogHint.SaveOwner","DialogHint.DeleteEntry","DialogHint.KeepEntry","DialogHint.ChooseEntry","DialogHint.AddEntry","DialogHint.EditEntry","DialogHint.DeleteEntryAsks","DialogHint.SwitchInheritance","DialogHint.ChangeOwner","DialogHint.ReadPermissionsAgain","DialogHint.BackToPage","DialogHint.TypeAddress","DialogHint.NextLinkOrField","DialogHint.FollowLinkNewTab","DialogHint.ScrollPageUpDown","DialogHint.ScrollPageDownShiftUp","DialogHint.Forward","DialogHint.Reload","DialogHint.OpenCloseTab","DialogHint.NextTab","DialogHint.BookmarkPage","DialogHint.BookmarksHistory","DialogHint.FindInPage","DialogHint.ChooseMessage","DialogHint.ReadMessage","DialogHint.WriteMessage","DialogHint.RefreshInbox","DialogHint.DeleteMessageAsks","DialogHint.AccountSettings","DialogHint.ScrollMessage","DialogHint.Reply","DialogHint.BackToInbox","DialogHint.SendMessage","DialogHint.LookUpAddress"];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new([new ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(ContactManagerDialog).Assembly))]);
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -43,7 +45,8 @@ public class DialogKeyHintsLanguageTest
     [TestMethod]
     public void TheContactManagerHints_FollowTheLanguage_AndFallBackToEnglish()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         Dialog? english = DialogHintsWholeTest.Resolve(typeof(ContactManagerDialog), 0) as Dialog;
         Assert.IsNotNull(english);
         Assert.IsTrue(english.GetKeyHints().Any(h => h.Description == "Add a contact"));

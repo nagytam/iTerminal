@@ -6,21 +6,23 @@ using Moq;
 
 namespace iConsole.Test.Localization;
 
-/// <summary>The pager caption, the error row, the status-bar texts, the wizard header, the help and splash lines, the XML node count and the tab hints follow the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The pager caption, the error row, the status-bar texts, the wizard header, the help and splash lines, the XML node count and the tab hints follow the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class ControlTextsBatch68LanguageTest
 {
     private static readonly string[] Keys = ["Pagination.Caption","Msg.ErrorPrefix","Hint.OpenMenuNamed","Status.Tasks","Status.Search","Status.Hit","Wizard.Step","Help.FocusedControl","Help.FocusedControlNone","Xml.NodeCount","Splash.SystemInfo","Hint.SwitchTabPage","Hint.SwitchTabPageArrows","Hint.JumpTabPageByNumber"];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new();
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -53,7 +55,8 @@ public class ControlTextsBatch68LanguageTest
     [TestMethod]
     public void ThePagerCaption_FollowsTheLanguage_AndFallsBackToEnglish()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         Pagination pager = new(Mock.Of<IThemeService>()) { TotalItems = 50, PageSize = 10 };
         Assert.AreEqual("Page 1 of 5", pager.Caption);
 

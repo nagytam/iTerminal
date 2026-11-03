@@ -27,6 +27,7 @@ public sealed class DocumentTextExtractorFactory
             new PlainTextExtractor(),
             new MarkupTextExtractor(),
             new OfficeTextExtractor(),
+            new BinaryOfficeTextExtractor(),
             new PdfTextExtractor(),
             new ImageTextExtractor(ocrEngine),
         ])
@@ -81,7 +82,12 @@ public sealed class DocumentTextExtractorFactory
             ".jpg" or ".jpeg" or ".png" or ".gif" or ".bmp" or ".tif" or ".tiff" or ".webp" =>
                 DocumentKind.Image,
 
-            ".docx" or ".docm" or ".xlsx" or ".xlsm" or ".pptx" or ".pptm" or ".odt" or ".ods" or ".odp" =>
+            ".docx" or ".docm" or ".dotx" or ".dotm"
+                or ".xlsx" or ".xlsm" or ".xltx" or ".xltm"
+                or ".pptx" or ".pptm" or ".potx" or ".potm" or ".ppsx" or ".ppsm"
+                or ".odt" or ".ott" or ".ods" or ".ots" or ".odp" or ".otp" or ".odg" or ".otg"
+                or ".doc" or ".dot" or ".xls" or ".xlt" or ".ppt" or ".pot" or ".pps" or ".rtf"
+                or ".fodt" or ".fods" or ".fodp" or ".fodg" =>
                 DocumentKind.Office,
 
             ".html" or ".htm" or ".xhtml" or ".xml" or ".xaml" or ".svg" or ".rss" or ".atom"

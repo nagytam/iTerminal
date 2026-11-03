@@ -57,18 +57,39 @@ public sealed class FilePreviewService(
     private const int HexBytes = 4 * 1024;
     private const int MaxFolderRows = 500;
 
+    /// <summary>
+    /// The kinds the viewer renders rather than dumps as bytes. Every Office family the text converter reads is here,
+    /// so a preview and the F3 viewer show the same text for a file.
+    /// </summary>
     private static readonly HashSet<string> RenderedExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        "pdf", "docx", "odt", "ods", "xlsx", "xlsm", "xltx", "xltm", "pptx", "pptm", "potx", "potm",
+        "pdf",
+        "docx", "docm", "dotx", "dotm", "doc", "dot", "rtf",
+        "odt", "ott", "fodt",
+        "xlsx", "xlsm", "xltx", "xltm", "xls", "xlt",
+        "ods", "ots", "fods",
+        "pptx", "pptm", "potx", "potm", "ppsx", "ppsm", "ppt", "pot", "pps",
+        "odp", "otp", "fodp",
+        "odg", "otg", "fodg",
         "html", "htm",
         "bmp", "png", "jpg", "jpeg", "gif", "tiff", "tif", "webp", "ico",
         "dll", "exe", "so",
     };
 
-    /// <summary>Of the rendered kinds, these read through the file system rather than a local path.</summary>
+    /// <summary>
+    /// Of the rendered kinds, these read through the file system rather than a local path. Every Office family reads
+    /// its bytes through the file system, so only the PDF, which PdfPig opens by path, is local-only.
+    /// </summary>
     private static readonly HashSet<string> RenderedFromStream = new(StringComparer.OrdinalIgnoreCase)
     {
         "html", "htm", "bmp", "png", "jpg", "jpeg", "gif", "tiff", "tif", "webp", "ico",
+        "docx", "docm", "dotx", "dotm", "doc", "dot", "rtf",
+        "odt", "ott", "fodt",
+        "xlsx", "xlsm", "xltx", "xltm", "xls", "xlt",
+        "ods", "ots", "fods",
+        "pptx", "pptm", "potx", "potm", "ppsx", "ppsm", "ppt", "pot", "pps",
+        "odp", "otp", "fodp",
+        "odg", "otg", "fodg",
     };
 
     public async Task<FilePreview> BuildAsync(IEntry? entry, IFileSystem? fileSystem, int width, CancellationToken cancellationToken)

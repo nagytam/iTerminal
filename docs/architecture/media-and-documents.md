@@ -23,8 +23,11 @@ F3 on a file that is not music, video, a picture or a solution opens `FileViewer
 `FileToTextConverterService` for lines. Each format has a reader, and every reader takes the file's bytes
 rather than a path, so a document on an SSH, archive or memory drive reads the same as one on disk:
 
-- **OpenXML and OpenDocument** (`OfficeTextRenderer`): Word, Excel, PowerPoint, and `.odt`, `.ods`, `.odp`/`.otp`.
-- **Office 97–2003** (`LegacyOfficeTextRenderer`): `.doc`, `.xls`, `.ppt`. These are OLE2 compound files, opened
+- **OpenXML and OpenDocument** (`OfficeTextRenderer`): every variant of the three families. Word covers `.docx`,
+  `.docm`, `.dotx`, `.dotm`; Excel `.xlsx`, `.xlsm`, `.xltx`, `.xltm`; PowerPoint `.pptx`, `.pptm`, `.potx`, `.potm`,
+  `.ppsx`, `.ppsm`. OpenDocument covers `.odt`/`.ott`, `.ods`/`.ots`, `.odp`/`.otp`, and the flat XML forms `.fodt`,
+  `.fods`, `.fodp`, `.fodg`, which hold the same XML with no zip around it.
+- **Office 97–2003** (`LegacyOfficeTextRenderer`): `.doc`/`.dot`, `.xls`/`.xlt`, `.ppt`/`.pot`/`.pps`. These are OLE2 compound files, opened
   with OpenMcdf. The reader takes the text streams only: the piece table and text stream of a `.doc`, the BIFF8
   cell records and shared-string table of an `.xls` (dates and stored errors shown as they are in the sheet), and
   the text atoms of a `.ppt` reached through its persist directory, with the notes list for speaker notes.
@@ -42,9 +45,31 @@ rather than a path, so a document on an SSH, archive or memory drive reads the s
 - **Outlook messages** (`OutlookMessageReader`, `.msg`): the MAPI property streams of the compound file, Unicode
   when present, and the attachment storages' names.
 - **FictionBook 2** (`Fb2TextReader`, `.fb2`): sections as headings, paragraphs, verses, tables, notes bodies.
-- **Kindle MOBI and AZW** (`MobiTextReader`, `.mobi`, `.azw`): the Palm database's PalmDOC text records, with the
-  trailing entries the MOBI header declares stripped and the markup read by `HtmlTextExtractor`. Huffman-compressed
-  (KF8/AZW3) books are reported, not read.
+- **Kindle MOBI, AZW and AZW3** (`MobiTextReader`, `.mobi`, `.azw`, `.azw3`): the Palm database's text records, with the
+  trailing entries the MOBI header declares stripped, then PalmDOC- or Huffman-decompressed, and the markup read by
+  `HtmlTextExtractor`. The extra-record flags are at 0xF2 from the start of record 0; a book whose text is only pictures
+  says so. Huffman decoding (`MobiTextReaderTest`) is ported from the MIT-licensed lingo-reader table walk and is
+  tested on synthetic HUFF/CDIC records; the sample books used during development were all PalmDOC.
+- **iWork** (`IWorkTextReader`, `iConsole/IWork/`, `.pages`, `.numbers`, `.key`): the zip's `Index/*.iwa` archives, each a run
+  of Snappy chunks (`SnappyDecompressor`) of protobuf messages read by field number (`ProtobufWire`, `IwaDocument`). A
+  Pages or Keynote document is its `TSWP.StorageArchive` text storages, the body first; a Numbers document is its sheets,
+  each with the text cells of its tables (`TST` string list, reached sheet → table info → model → data store). Numeric and
+  formula cells are not read. A `.key` that is not a zip is shown as plain text, as before; an iWork '09 or encrypted
+  document says so.
+- **Access** (`AccessDatabaseTextReader`, `.mdb`, `.accdb`): JetDatabaseReader (MIT, managed, no Access or ACE driver)
+  lists each user table with its row count and its first 200 rows as a grid. The reader opens the file by path, so like the
+  SQLite viewer it reads only a local file.
+- **OpenDocument formula and master** (`.odf`, `.odm`): a formula's MathML is written out as a line, with the StarMath
+  source below it when the file has it (`OfficeTextRenderer.RenderOpenDocumentFormula`). A master document shows its own
+  text, then the text of each document its sections link to, read from the same folder; a link that is missing is named,
+  and a master inside a master is not expanded, so a loop of links stays finite.
+- **vCard** (`VCardTextReader`, `.vcf`): one block per contact, with the structured name, organization and address spelled
+  out, TYPE parameters in brackets, and a photo shown as a note. **iCalendar** (`ICalendarTextReader`, `.ics`): each event,
+  task, journal and alarm under its summary, dates as they read (`2026-03-05 09:00 UTC`), organizers without `mailto:`, and
+  folded and multi-line values unfolded (`ContentLines`, shared by both). **mbox** (`MboxTextReader`, `.mbox`): split at its
+  `From ` lines, quoting undone, and each message read by `MimeMessageReader`.
+- **Log files** (`.log`) are plain text, coloured by the `Log` syntax language (severity words as keywords). YAML, TOML and
+  INI files were already coloured by extension in the highlighter.
 - **HTML, PDF, plain text, images as ASCII art and .NET binaries** are read as before.
 
 These readers do not feed the document search index: `DocumentTextExtractorFactory` still lists only the
@@ -151,8 +176,9 @@ extracts text from every file an extractor understands, and stores both the meta
   Latin-1 — never to UTF-8 with replacement characters, since a token containing U+FFFD is one no
   query can match), `MarkupTextExtractor` (a scanner, not a parser: the input is whatever is in the
   folder, and a parser would reject exactly the half-saved files most in need of being searchable),
-  `OfficeTextExtractor` (OOXML and OpenDocument are zips of XML — no interop, no package), and
-  `PdfTextExtractor`. Extraction is deliberately **synchronous**: it is CPU and disk work with nothing
+  `OfficeTextExtractor` (OOXML and OpenDocument are zips of XML — no interop, no package),
+  `BinaryOfficeTextExtractor` (the 97–2003 binaries, RTF and the flat `.fod*` files, read by the same
+  renderers the F3 viewer uses, so the index and the viewer agree), and `PdfTextExtractor`. Extraction is deliberately **synchronous**: it is CPU and disk work with nothing
   to await, and what keeps it off the render thread is that only the indexing job calls it.
 - **`PdfTextExtractor` is hand-written for the same reason the ID3 and FLAC readers are.** It scans
   for `stream … endstream` pairs rather than following the xref, which reads damaged and

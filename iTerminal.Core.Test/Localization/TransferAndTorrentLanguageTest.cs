@@ -15,10 +15,8 @@ namespace iTerminal.Core.Test.Localization;
 /// <summary>
 /// The space prompts of a copy and the torrent manager's state words and column headers follow the chosen language. The
 /// headers and state words sit in fixed-width columns, so every translation has to fit its column. The language is a
-/// static, so this runs on its own.
 /// </summary>
 [TestClass]
-[DoNotParallelize]
 public class TransferAndTorrentLanguageTest
 {
     /// <summary>The widest each column's text may be, as the torrent list lays out its columns.</summary>
@@ -34,8 +32,10 @@ public class TransferAndTorrentLanguageTest
         "Transfer.Paused.Title", "Transfer.Paused.Body", "Transfer.Paused.Resume",
     ];
 
+    private IDisposable? _language;
+
     [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    public void Reset() => _language?.Dispose();
 
     /// <summary>The application's two resource sets, as the app registers them.</summary>
     private static Localizer LocalizerFor(string code)
@@ -49,7 +49,11 @@ public class TransferAndTorrentLanguageTest
         return localizer;
     }
 
-    private static void Speak(string code) => UiText.Current = LocalizerFor(code);
+    private void Speak(string code)
+    {
+        _language?.Dispose();
+        _language = UiText.Scope(LocalizerFor(code));
+    }
 
     private static Mock<IErrorPromptService> RecordingPrompts(List<(string Title, string Message, string Accept, string Decline)> asked, params bool[] answers)
     {

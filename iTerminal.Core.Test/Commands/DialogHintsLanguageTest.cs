@@ -3,13 +3,14 @@ using iConsole.Localization;
 
 namespace iTerminal.Core.Test.Commands;
 
-/// <summary>The F1 overlay of a dialog names Close and Cancel in the language the user chose. The language is a static, so this runs on its own.</summary>
+/// <summary>The F1 overlay of a dialog names Close and Cancel in the language the user chose.</summary>
 [TestClass]
-[DoNotParallelize]
 public class DialogHintsLanguageTest
 {
+    private IDisposable? _language;
+
     [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    public void Reset() => _language?.Dispose();
 
     [Timeout(60_000)]
     [TestMethod]
@@ -17,7 +18,8 @@ public class DialogHintsLanguageTest
     {
         Localizer localizer = new();
         Assert.IsTrue(localizer.SetLanguage("de"));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
 
         List<string> english = [];
         foreach (Type type in typeof(iTerminal.Core.Dialogs.SortDialog).Assembly.GetExportedTypes()
@@ -50,7 +52,8 @@ public class DialogHintsLanguageTest
     {
         Localizer localizer = new();
         localizer.SetLanguage("de");
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
 
         Assert.AreEqual("Schließen", UiText.Get("Common.Close", "Close"));
         Assert.AreEqual("Abbrechen", UiText.Get("Common.Cancel", "Cancel"));

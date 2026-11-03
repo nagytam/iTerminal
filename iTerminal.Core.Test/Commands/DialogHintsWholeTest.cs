@@ -136,16 +136,19 @@ public class DialogHintsWholeTest
         Assert.AreEqual(0, stays.Count, string.Join(", ", stays));
     }
 
+    /// <summary>Every dialog class the application has, one case each, so that the sweep below runs them side by side.</summary>
+    public static IEnumerable<object[]> DialogTypes() =>
+        typeof(iTerminal.Core.Dialogs.SortDialog).Assembly.GetExportedTypes()
+            .Where(t => typeof(Dialog).IsAssignableFrom(t) && !t.IsAbstract && !t.IsGenericTypeDefinition)
+            .OrderBy(t => t.FullName, StringComparer.Ordinal)
+            .Select(t => new object[] { t });
+
     [TestMethod]
     [Timeout(120_000)]
-    public async Task EveryDialog_HasATitle_AndDrawsOnASmallAndANormalScreen()
+    [DynamicData(nameof(DialogTypes), DynamicDataSourceType.Method)]
+    public async Task EveryDialog_HasATitle_AndDrawsOnASmallAndANormalScreen(Type type)
     {
         List<string> faulty = [];
-        int checkedDialogs = 0;
-        foreach (Type type in typeof(iTerminal.Core.Dialogs.SortDialog).Assembly.GetExportedTypes()
-            .Where(t => typeof(Dialog).IsAssignableFrom(t) && !t.IsAbstract && !t.IsGenericTypeDefinition)
-            .OrderBy(t => t.FullName, StringComparer.Ordinal))
-        {
             foreach ((uint width, uint height) in new[] { (30u, 8u), (120u, 40u), (4u, 3u), (1u, 1u), (2u, 2u), (10u, 4u), (16u, 6u), (25u, 5u), (60u, 3u), (6u, 30u) })
             {
                 if (Resolve(type, 0) is not Dialog dialog)
@@ -162,7 +165,6 @@ public class DialogHintsWholeTest
                     }
 
                     iConsole.Controls.Control root = await shown;
-                    checkedDialogs++;
                     iConsole.Test.Core.ScreenBuffer.Render(root, (int)width, (int)height);
                     iConsole.Test.Core.ScreenBuffer.Render(root, (int)width, (int)height);
                     foreach (ConsoleKey key in new[] { ConsoleKey.Tab, ConsoleKey.DownArrow, ConsoleKey.PageDown, ConsoleKey.End, ConsoleKey.Home, ConsoleKey.UpArrow, ConsoleKey.RightArrow, ConsoleKey.LeftArrow })
@@ -184,10 +186,14 @@ public class DialogHintsWholeTest
                     faulty.Add($"{type.Name} {width}x{height} ({exception.GetType().Name}: {exception.Message.Split('\n')[0]})");
                 }
             }
-        }
 
-        Assert.IsTrue(checkedDialogs >= 40, $"only {checkedDialogs} dialog screens could be drawn");
         Assert.AreEqual(0, faulty.Count, string.Join(Environment.NewLine, faulty.Take(30)));
+    }
+
+    [TestMethod]
+    public void TheDialogSweep_FindsTheDialogsOfTheApplication()
+    {
+        Assert.IsTrue(DialogTypes().Count() >= 40, $"only {DialogTypes().Count()} dialog types were found");
     }
 
     private static IEnumerable<iConsole.Controls.IControl> Descendants(iConsole.Controls.IControl control)

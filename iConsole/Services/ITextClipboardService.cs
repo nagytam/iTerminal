@@ -49,10 +49,28 @@ public sealed class InProcessTextClipboardService : ITextClipboardService
 public static class TextClipboard
 {
     private static ITextClipboardService _current = new InProcessTextClipboardService();
+    private static readonly AsyncLocal<ITextClipboardService?> _scoped = new();
 
     public static ITextClipboardService Current
     {
-        get => Volatile.Read(ref _current);
+        get => _scoped.Value ?? Volatile.Read(ref _current);
         set => Volatile.Write(ref _current, value ?? throw new ArgumentNullException(nameof(value)));
+    }
+
+    /// <summary>
+    /// Gives the calling async flow its own clipboard until the returned scope is disposed, and leaves the application's
+    /// clipboard alone for every other flow. Tests use it so that several of them can copy and paste at once.
+    /// </summary>
+    public static IDisposable Scope(ITextClipboardService clipboard)
+    {
+        ArgumentNullException.ThrowIfNull(clipboard);
+        ITextClipboardService? previous = _scoped.Value;
+        _scoped.Value = clipboard;
+        return new ClipboardScope(previous);
+    }
+
+    private sealed class ClipboardScope(ITextClipboardService? previous) : IDisposable
+    {
+        public void Dispose() => _scoped.Value = previous;
     }
 }

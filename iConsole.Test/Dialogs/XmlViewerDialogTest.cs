@@ -306,4 +306,25 @@ public class XmlViewerDialogTest
 
         Assert.IsTrue(dialog.Status.Contains("nothing to validate"), dialog.Status);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ReadsTheFileFromTheLastPanelWhenNoModelHasFocus()
+    {
+        // Inside a dialog the focused model is null; the file lives on the panel that was focused before the dialog opened.
+        Mock<IMemoryFile> file = new();
+        file.SetupGet(f => f.Content).Returns(Utf8("<catalog><item id=\"1\"/></catalog>"));
+        Mock<IContentModel> panel = new();
+        panel.Setup(f => f.ReadFileAsync(Document)).ReturnsAsync(file.Object);
+        Mock<IContentModelService> models = new();
+        models.Setup(m => m.GetFocusedModel()).Returns((IContentModel?)null);
+        models.Setup(m => m.GetLastContentModel()).Returns(panel.Object);
+        var dialog = new XmlViewerDialog(models.Object, new Mock<IFileToTextConverterService>().Object, Mock.Of<IBeepService>(),
+            Mock.Of<IDateTimeProviderService>(), new ThemeService()) { Url = Document };
+
+        await dialog.OnInitializeAsync();
+
+        Assert.IsNotNull(dialog.Tree);
+        Assert.IsFalse(dialog.Status.Contains("Nothing", StringComparison.OrdinalIgnoreCase), dialog.Status);
+    }
 }

@@ -98,18 +98,23 @@ public sealed class OAuthTokenProvider : ICloudTokenProvider
     private readonly ConcurrentDictionary<string, Pending> _pending = new(StringComparer.Ordinal);
     private readonly SemaphoreSlim _gate = new(1, 1);
 
+    /// <summary>How much longer the device flow waits after a <c>slow_down</c> answer: five seconds, as RFC 8628 asks. A test may shorten it.</summary>
+    private readonly TimeSpan _slowDownStep;
+
     public OAuthTokenProvider(
         OAuthProviderConfig config,
         IPasswordManager? passwords = null,
         INotificationService? notifications = null,
         ILogger? logger = null,
-        HttpMessageHandler? handler = null)
+        HttpMessageHandler? handler = null,
+        TimeSpan? slowDownStep = null)
     {
         _config = config;
         _passwords = passwords;
         _notifications = notifications;
         _logger = logger;
         _http = handler is null ? new HttpClient() : new HttpClient(handler, disposeHandler: false);
+        _slowDownStep = slowDownStep ?? TimeSpan.FromSeconds(5);
     }
 
     private string SecretId(string account) => $"cloud:{_config.Name.ToLowerInvariant().Replace(" ", string.Empty, StringComparison.Ordinal)}:{account}";
@@ -337,7 +342,7 @@ public sealed class OAuthTokenProvider : ICloudTokenProvider
                     case "authorization_pending":
                         continue;
                     case "slow_down":
-                        interval += TimeSpan.FromSeconds(5);
+                        interval += _slowDownStep;
                         continue;
                     default:
                         _notifications?.Notify(string.Format(UiText.Get("OAuth.Failed", "{0} sign-in failed"), _config.Name), error ?? UiText.Get("OAuth.Refused", "The request was refused."), iConsole.Services.NotificationSeverity.Error);

@@ -104,55 +104,57 @@ public class ControlRobustnessSweepTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task EveryControl_SurvivesDrawKeysAndClicks_AtAwkwardSizes()
+    [DynamicData(nameof(EveryControl_SurvivesDrawKeysAndClicks_AtAwkwardSizesCases), DynamicDataSourceType.Method)]
+    public async Task EveryControl_SurvivesDrawKeysAndClicks_AtAwkwardSizes(Type type)
     {
         List<string> failures = [];
-        foreach (Type type in SimpleControlTypes())
+        foreach ((uint width, uint height) in Sizes)
         {
-            foreach ((uint width, uint height) in Sizes)
+            foreach (int state in new[] { 0, 1, 2 })
             {
-                foreach (int state in new[] { 0, 1, 2 })
+                try
                 {
-                    try
+                    (ConstructorInfo constructor, object?[] arguments) = FindConstructor(type)!.Value;
+                    Control control = (Control)constructor.Invoke(arguments);
+                    control.Position = new Position(0, 0);
+                    control.ViewSize = new Size(width, height);
+                    control.IsEnabled = state != 1;
+                    if (state == 2)
                     {
-                        (ConstructorInfo constructor, object?[] arguments) = FindConstructor(type)!.Value;
-                        Control control = (Control)constructor.Invoke(arguments);
-                        control.Position = new Position(0, 0);
-                        control.ViewSize = new Size(width, height);
-                        control.IsEnabled = state != 1;
-                        if (state == 2)
-                        {
-                            control.SetFocus();
-                        }
+                        control.SetFocus();
+                    }
 
-                        ScreenBuffer buffer = new((int)Math.Max(1, width), (int)Math.Max(1, height));
-                        control.Draw(buffer);
-                        foreach (ConsoleKey key in Keys)
-                        {
-                            await control.HandleKeyEventAsync(new KeyEvent(key == ConsoleKey.A ? 'a' : key == ConsoleKey.D5 ? '5' : '\0', key, false, false, false));
-                            control.Draw(buffer);
-                        }
-
-                        foreach ((long x, long y) in new[] { (0L, 0L), (1L, 0L), (width / 2L, height / 2L), (Math.Max(0L, width - 1L), Math.Max(0L, height - 1L)), (width + 5L, height + 5L) })
-                        {
-                            await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), LeftClicked = true });
-                            await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), RightClicked = true });
-                            await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), WheelDelta = 1 });
-                            await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), WheelDelta = -1 });
-                        }
-
+                    ScreenBuffer buffer = new((int)Math.Max(1, width), (int)Math.Max(1, height));
+                    control.Draw(buffer);
+                    foreach (ConsoleKey key in Keys)
+                    {
+                        await control.HandleKeyEventAsync(new KeyEvent(key == ConsoleKey.A ? 'a' : key == ConsoleKey.D5 ? '5' : '\0', key, false, false, false));
                         control.Draw(buffer);
                     }
-                    catch (Exception exception)
+
+                    foreach ((long x, long y) in new[] { (0L, 0L), (1L, 0L), (width / 2L, height / 2L), (Math.Max(0L, width - 1L), Math.Max(0L, height - 1L)), (width + 5L, height + 5L) })
                     {
-                        failures.Add($"{type.Name} {width}x{height} state {state}: {Describe(exception)}");
+                        await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), LeftClicked = true });
+                        await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), RightClicked = true });
+                        await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), WheelDelta = 1 });
+                        await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(x, y), WheelDelta = -1 });
                     }
+
+                    control.Draw(buffer);
+                }
+                catch (Exception exception)
+                {
+                    failures.Add($"{type.Name} {width}x{height} state {state}: {Describe(exception)}");
                 }
             }
         }
 
         Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures.GroupBy(f => f[..f.IndexOf(' ')]).Select(g => g.First()).Take(40)));
     }
+
+    public static IEnumerable<object[]> EveryControl_SurvivesDrawKeysAndClicks_AtAwkwardSizesCases() =>
+        SimpleControlTypes()
+            .Select(t => new object[] { t });
 
     [Timeout(60_000)]
     [TestMethod]

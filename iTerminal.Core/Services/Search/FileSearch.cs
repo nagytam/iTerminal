@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.IO.Enumeration;
 using System.Text;
 
@@ -240,21 +241,7 @@ public static class FileSearch
 
             stream.Position = 0;
             using var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
-            var lineNumber = 0;
-            while (reader.ReadLine() is { } line)
-            {
-                lineNumber++;
-                if ((lineNumber & 0x3FF) == 0)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                }
-
-                var index = line.IndexOf(text, StringComparison.OrdinalIgnoreCase);
-                if (index >= 0)
-                {
-                    return (lineNumber, Snippet(line, index));
-                }
-            }
+            return FindLine(reader, text, cancellationToken);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
@@ -262,6 +249,92 @@ public static class FileSearch
 
         return null;
     }
+
+    /// <summary>
+    /// The first line of <paramref name="reader"/> containing <paramref name="text"/>, as <see cref="FindInFile"/> reports it.
+    /// The text is read in chunks and each line is searched as a span, so a line is only turned into a string when it matches.
+    /// Lines end the way <see cref="StreamReader.ReadLine"/> ends them: a line feed, a carriage return, or both. A line that
+    /// straddles two chunks is joined in a builder first.
+    /// </summary>
+    private static (int LineNumber, string LineText)? FindLine(StreamReader reader, string text, CancellationToken cancellationToken)
+    {
+        char[] buffer = ArrayPool<char>.Shared.Rent(64 * 1024);
+        var partial = new StringBuilder();
+        try
+        {
+            int lineNumber = 0;
+            bool skipLineFeed = false;
+            int read;
+            while ((read = reader.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                ReadOnlySpan<char> chunk = buffer.AsSpan(0, read);
+                if (skipLineFeed && chunk[0] == '\n')
+                {
+                    chunk = chunk[1..];
+                }
+
+                skipLineFeed = false;
+                while (true)
+                {
+                    int end = chunk.IndexOfAny('\r', '\n');
+                    if (end < 0)
+                    {
+                        partial.Append(chunk);
+                        break;
+                    }
+
+                    ReadOnlySpan<char> segment = chunk[..end];
+                    char terminator = chunk[end];
+                    chunk = chunk[(end + 1)..];
+                    if (terminator == '\r')
+                    {
+                        if (chunk.Length > 0 && chunk[0] == '\n')
+                        {
+                            chunk = chunk[1..];
+                        }
+                        else if (chunk.Length == 0)
+                        {
+                            skipLineFeed = true;
+                        }
+                    }
+
+                    lineNumber++;
+                    if (partial.Length > 0)
+                    {
+                        partial.Append(segment);
+                        if (MatchLine(partial.ToString(), text, lineNumber) is { } joined)
+                        {
+                            return joined;
+                        }
+
+                        partial.Clear();
+                    }
+                    else if (segment.IndexOf(text, StringComparison.OrdinalIgnoreCase) is var index and >= 0)
+                    {
+                        return (lineNumber, Snippet(segment.ToString(), index));
+                    }
+                }
+            }
+
+            if (partial.Length > 0)
+            {
+                lineNumber++;
+                return MatchLine(partial.ToString(), text, lineNumber);
+            }
+        }
+        finally
+        {
+            ArrayPool<char>.Shared.Return(buffer);
+        }
+
+        return null;
+    }
+
+    private static (int LineNumber, string LineText)? MatchLine(string line, string text, int lineNumber) =>
+        line.IndexOf(text, StringComparison.OrdinalIgnoreCase) is var index and >= 0
+            ? (lineNumber, Snippet(line, index))
+            : null;
 
     private static bool LooksBinary(Stream stream)
     {

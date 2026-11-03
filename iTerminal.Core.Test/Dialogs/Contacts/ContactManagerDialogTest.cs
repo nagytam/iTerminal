@@ -6,11 +6,17 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.Contacts;
 
-// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
-[DoNotParallelize]
 [TestClass]
 public class ContactManagerDialogTest
 {
+    private IDisposable _clipboardScope = null!;
+
+    [TestCleanup]
+    public void ReleaseOwnClipboard() => _clipboardScope.Dispose();
+
+    [TestInitialize]
+    public void ScopeOwnClipboard() => _clipboardScope = iConsole.Services.TextClipboard.Scope(new iConsole.Services.InProcessTextClipboardService());
+
     private static (ContactManagerDialog Dialog, ContactStore Store) Create()
     {
         var store = new ContactStore(new Mock<ISettingsService>().Object);

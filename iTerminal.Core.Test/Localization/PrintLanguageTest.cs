@@ -7,10 +7,9 @@ namespace iTerminal.Core.Test.Localization;
 
 /// <summary>
 /// The print dialog follows the chosen language, and its columns are fixed-width, so every translation of a column
-/// header or a job state has to fit. The language is a static, so this runs on its own.
+/// header or a job state has to fit.
 /// </summary>
 [TestClass]
-[DoNotParallelize]
 public class PrintLanguageTest
 {
     private static readonly string[] Languages = ["en", "de", "fr", "es", "it", "hu"];
@@ -32,8 +31,10 @@ public class PrintLanguageTest
         .. ColumnWidths.Select(c => c.Key),
     ];
 
+    private IDisposable? _language;
+
     [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    public void Reset() => _language?.Dispose();
 
     private static Localizer LocalizerFor(string code)
     {
@@ -79,12 +80,14 @@ public class PrintLanguageTest
     [TestMethod]
     public void TheDialogSpeaksTheChosenLanguage()
     {
-        UiText.Current = LocalizerFor("de");
+        _language?.Dispose();
+        _language = UiText.Scope(LocalizerFor("de"));
 
         Assert.AreEqual("Pausiert", PrintDialog.StateLabel(PrintJobState.Held));
         Assert.AreEqual("Wartend", PrintDialog.StateLabel(PrintJobState.Queued));
 
-        UiText.Current = LocalizerFor("en");
+        _language?.Dispose();
+        _language = UiText.Scope(LocalizerFor("en"));
 
         Assert.AreEqual("Held", PrintDialog.StateLabel(PrintJobState.Held));
     }

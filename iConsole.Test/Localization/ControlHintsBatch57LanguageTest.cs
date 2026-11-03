@@ -5,21 +5,23 @@ using Moq;
 
 namespace iConsole.Test.Localization;
 
-/// <summary>The key hints of the remaining controls and the go-to and unsaved-changes dialogs follow the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The key hints of the remaining controls and the go-to and unsaved-changes dialogs follow the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class ControlHintsBatch57LanguageTest
 {
     private static readonly string[] Keys = ["Hint.BackPreviousMenu","Hint.CancelKeepEditing","Hint.CentreDivider","Hint.FirstOrLastSegmentChoose","Hint.ChooseHighlightedItem","Hint.ChoosePreviousNextOption","Hint.ChoosePreviousNextSegment","Hint.ClearRatingOrMax","Hint.ClearSearch","Hint.CloseMenuShort","Hint.CloseList","Hint.ClosePopup","Hint.CloseViewer","Hint.CloseWithoutMoving","Hint.CollapseSection","Hint.DiscardChanges","Hint.ExpandOrCollapseSection","Hint.ExpandSection","Hint.FirstOrLastOption","Hint.FirstOrLastPage","Hint.FollowLink","Hint.GoToTheLine","Hint.GoToTheOffset","Hint.GoTopOrBottom","Hint.GoTopOrEnd","Hint.GoUpFolder","Hint.LowerRaiseRating","Hint.LowerRaiseValue","Hint.MovePageAtATime","Hint.MoveAlongToolbar","Hint.MoveMenuSelection","Hint.MoveDividerBy8","Hint.MoveHighlight","Hint.NewestLineFollow","Hint.OldestLine","Hint.OpenSubmenuRunCommand","Hint.OpenHighlightedRow","Hint.PreviousNextPage","Hint.RaiseLowerLargeStep","Hint.ResetClock","Hint.RunTheItem","Hint.SaveChanges","Hint.Scroll","Hint.ScrollRow","Hint.ScrollOneLine","Hint.ScrollOnePage","Hint.ScrollOneRow","Hint.SelectThisOption","Hint.SetRatingDirectly","Hint.SwitchTextHex","Hint.SwitchSetting","Hint.TypeLineNumber","Hint.TypeOffset"];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new();
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -44,7 +46,8 @@ public class ControlHintsBatch57LanguageTest
     [TestMethod]
     public void TheSliderHints_FollowTheLanguage_AndFallBackToEnglish()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         Slider slider = new(Mock.Of<IThemeService>());
         Assert.IsTrue(slider.GetKeyHints().Any(h => h.Description == "Set the minimum or maximum"));
 

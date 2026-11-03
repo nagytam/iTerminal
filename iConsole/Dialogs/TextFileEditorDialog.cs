@@ -56,8 +56,9 @@ public class TextFileEditorDialog : Dialog
             TextEditorControl);
         // The same key as the viewer's: F5 asks for a line number and goes to it.
         AddCommand(new ViewerGoToLineCommand(TextEditorControl, beepService, dateTimeProviderService, themeService));
-        // F6 wraps the lines in the editor, as F2 does in the viewer; F2 is save here. Wrapped, Up and Down walk the rows.
-        AddCommand(new ViewerWrapLinesCommand(TextEditorControl, new iConsole.Data.Key(ConsoleKey.F6, false, false, false)));
+        // Shift+F2 wraps the lines in the editor, as F2 does in the viewer; F2 is save here, and F6 is the footer's
+        // read-only toggle (the editor's text is never focusable, so the footer always takes F6 first). Wrapped, Up and Down walk the rows.
+        AddCommand(new ViewerWrapLinesCommand(TextEditorControl, new iConsole.Data.Key(ConsoleKey.F2, true, false, false)));
         AddControl(TextEditorControl);
         AddControl(_statusBar);
     }

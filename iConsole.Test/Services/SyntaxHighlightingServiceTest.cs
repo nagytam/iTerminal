@@ -16,6 +16,12 @@ public class SyntaxHighlightingServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void FindByFile_ColoursLogFilesAsALogLanguage()
+    {
+        Assert.AreEqual("Log", SyntaxHighlightingService.Default.FindByFile("server.log")?.Name);
+    }
+
+    [TestMethod]
     public void FindByFile_FallsBackToTheBuiltInLanguages()
     {
         var service = new SyntaxHighlightingService();

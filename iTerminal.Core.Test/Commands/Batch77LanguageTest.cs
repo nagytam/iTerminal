@@ -7,10 +7,9 @@ namespace iTerminal.Core.Test.Commands;
 
 /// <summary>
 /// The delete dialog's recycle-bin option, the runtime dependency wizard, the update dialog's skip button and the splitter's hint
-/// follow the chosen language. The language is a static, so this runs on its own.
+/// follow the chosen language.
 /// </summary>
 [TestClass]
-[DoNotParallelize]
 public class Batch77LanguageTest
 {
     private static readonly string[] Keys =
@@ -25,14 +24,17 @@ public class Batch77LanguageTest
         "Hint.MoveDivider",
     ];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new([new ResourceLocalizationSource(new ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(DeleteDialog).Assembly))]);
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 

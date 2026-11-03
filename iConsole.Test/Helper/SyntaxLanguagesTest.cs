@@ -12,7 +12,7 @@ public class SyntaxLanguagesTest
     [
         "x.ts", "x.cs", "x.java", "x.c", "x.cpp", "x.go", "x.rs", "x.js", "x.ps1", "x.py", "x.sh", "x.yml", "x.toml",
         "x.ini", "x.env", "x.properties", "x.sql", "x.html", "x.json", ".gitignore", "x.bat", "x.lua", "x.r", "x.pl",
-        "x.php", "x.vb", "x.fs", "Dockerfile",
+        "x.php", "x.vb", "x.fs", "Dockerfile", "x.log",
     ];
 
     /// <summary>The colour test helper: every span of <paramref name="line"/>, as (text, kind).</summary>
@@ -68,6 +68,7 @@ public class SyntaxLanguagesTest
     [DataRow("x.php", "<?php echo \"s\"; // c", "echo", "\"s\"", "// c", "PHP")]
     [DataRow("x.vb", "Dim x As String = \"s\" ' c", "Dim", "\"s\"", "' c", "Visual Basic")]
     [DataRow("x.fs", "let x = \"s\" // c", "let", "\"s\"", "// c", "F#")]
+    [DataRow("x.log", "2026-03-01 INFO \"x\" failed", "INFO", "\"x\"", null, "Log")]
     [DataRow("Dockerfile", "RUN echo \"x\" # c", "RUN", "\"x\"", "# c", "Build file")]
     public void ColoursItsOwnRules(string file, string line, string? keyword, string? text, string? comment, string language)
     {

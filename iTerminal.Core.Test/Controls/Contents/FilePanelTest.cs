@@ -9,6 +9,7 @@ using iTerminal.Core.Services;
 using iTerminal.Core.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using iTerminal.Core.Test.Helper;
 
 namespace iTerminal.Core.Test.Controls.Contents;
 
@@ -21,6 +22,9 @@ namespace iTerminal.Core.Test.Controls.Contents;
 [DoNotParallelize]
 public class FilePanelTest
 {
+    [ClassInitialize]
+    public static void ReleaseAbandonedWatchers(TestContext _) => WatcherReclaim.ReleaseAbandonedWatchers();
+
     private sealed class TestContentBrowser(IThemeService themeService) : ContentBrowser(
         name: "TestBrowser",
         contentModelService: Mock.Of<IContentModelService>(),
