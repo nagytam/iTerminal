@@ -64,29 +64,35 @@ public class Rectangle
         return new Rectangle(position, size);
     }
 
-    public void Include(Rectangle rectangle)
+    public void Include(Rectangle rectangle) =>
+        Include(rectangle.Left, rectangle.Top, (int)rectangle.Size.Width, (int)rectangle.Size.Height);
+
+    /// <summary>Grows this rectangle to cover the given one, without making a rectangle of it first: a layer calls this for every row written.</summary>
+    public void Include(int left, int top, int width, int height)
     {
-        if (Left > rectangle.Left)
+        int right = left + width;
+        int bottom = top + height;
+        if (Left > left)
         {
-            var width = (int)Size.Width + (Left - rectangle.Left);
-            Position.X = rectangle.Left;
-            Size.Width = width;
+            var newWidth = (int)Size.Width + (Left - left);
+            Position.X = left;
+            Size.Width = newWidth;
         }
-        if (Top > rectangle.Top)
+        if (Top > top)
         {
-            var height = (int)Size.Height + (Top - rectangle.Top);
-            Position.Y = rectangle.Top;
-            Size.Height = height;
+            var newHeight = (int)Size.Height + (Top - top);
+            Position.Y = top;
+            Size.Height = newHeight;
         }
-        if (Right < rectangle.Right)
+        if (Right < right)
         {
-            var width = (int)Size.Width + (rectangle.Right - Right);
-            Size.Width = width;
+            var newWidth = (int)Size.Width + (right - Right);
+            Size.Width = newWidth;
         }
-        if (Bottom < rectangle.Bottom)
+        if (Bottom < bottom)
         {
-            var height = (int)Size.Height + (rectangle.Bottom - Bottom);
-            Size.Height = height;
+            var newHeight = (int)Size.Height + (bottom - Bottom);
+            Size.Height = newHeight;
         }
     }
 
