@@ -105,6 +105,80 @@ public class DatabaseInitializationHostedServiceTest
         }
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task StartAsync_LeavesObsoleteCacheEntriesForTheDelayedCleanUp()
+    {
+        string databasePath = Path.Combine(Path.GetTempPath(), $"DatabaseInitializationHostedServiceTest.{Guid.NewGuid():N}.sqlite");
+        SqliteDbContextFactory factory = new(databasePath);
+
+        try
+        {
+            await new DatabaseInitializationHostedService(factory, new iTerminal.Core.Services.StartupWarningService())
+                .StartAsync(CancellationToken.None);
+            await SeedObsoleteWeatherAsync(factory);
+
+            // The next start-up, with the default delay: the clean-up is queued, not run on the start-up path.
+            await new DatabaseInitializationHostedService(factory, new iTerminal.Core.Services.StartupWarningService())
+                .StartAsync(CancellationToken.None);
+
+            await using iTerminalDbContext context = await factory.CreateDbContextAsync();
+            Assert.AreEqual(1, context.CachedWeatherInfos.Count(), "The clean-up must not delay start-up");
+        }
+        finally
+        {
+            Cleanup(databasePath);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task StartAsync_RemovesObsoleteCacheEntriesAfterTheCleanUpDelay()
+    {
+        string databasePath = Path.Combine(Path.GetTempPath(), $"DatabaseInitializationHostedServiceTest.{Guid.NewGuid():N}.sqlite");
+        SqliteDbContextFactory factory = new(databasePath);
+
+        try
+        {
+            await new DatabaseInitializationHostedService(factory, new iTerminal.Core.Services.StartupWarningService())
+                .StartAsync(CancellationToken.None);
+            await SeedObsoleteWeatherAsync(factory);
+
+            await new DatabaseInitializationHostedService(
+                factory, new iTerminal.Core.Services.StartupWarningService(), TimeSpan.FromMilliseconds(10))
+                .StartAsync(CancellationToken.None);
+
+            for (int attempt = 0; attempt < 200; attempt++)
+            {
+                await using iTerminalDbContext context = await factory.CreateDbContextAsync();
+                if (!context.CachedWeatherInfos.Any())
+                {
+                    return;
+                }
+
+                await Task.Delay(50);
+            }
+
+            Assert.Fail("The obsolete weather entry was never removed");
+        }
+        finally
+        {
+            Cleanup(databasePath);
+        }
+    }
+
+    private static async Task SeedObsoleteWeatherAsync(SqliteDbContextFactory factory)
+    {
+        await using iTerminalDbContext seed = await factory.CreateDbContextAsync();
+        seed.CachedWeatherInfos.Add(new CachedWeatherInfo
+        {
+            LocationName = "Nowhere",
+            TemperatureC = 1,
+            CachedAtUtc = DateTime.UtcNow - TimeSpan.FromHours(2),
+        });
+        await seed.SaveChangesAsync();
+    }
+
     private static void Cleanup(string databasePath)
     {
         Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();

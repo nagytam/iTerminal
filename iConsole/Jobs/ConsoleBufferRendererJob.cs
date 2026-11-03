@@ -32,12 +32,16 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
     public Cursor LastBufferCursor { get; init; }
     public event EventHandler<Data.Size>? WindowSizeChanged;
 
+    /// <summary>Completes once the first frame has reached the terminal. The desktop starts its background jobs after it.</summary>
+    public Task FirstFrameRendered => _firstFrameRendered.Task;
+
     private Color ConsoleForegroundColor;
     private Color ConsoleBackgroundColor;
     private readonly Lock _dumpLock = new();
     private int _dumpFrameIndex;
     private long _renderIterations;
     private bool _firstFrameMarked;
+    private readonly TaskCompletionSource _firstFrameRendered = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private DateTime _lastStatisticsDate = DateTime.Now;
     private DateTime _lastWindowSizeCheck = DateTime.MinValue;
     private readonly Services.ConsoleOwnership? _consoleOwnership;
@@ -134,6 +138,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                 {
                     _firstFrameMarked = true;
                     StartupTrace.Mark("first-frame");
+                    _firstFrameRendered.TrySetResult();
                     StartupTrace.Flush();
                 }
                 DetectWindowSizeChanges(now);
