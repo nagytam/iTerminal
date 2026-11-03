@@ -101,6 +101,33 @@ public static class TaskNotificationHelper
     /// with the new name too when the transfer renames it ("a.txt to target/b.txt"). Names rather than
     /// paths: two of those do not fit a toast, and the panels already show where the folders are.
     /// </summary>
+    /// <summary>
+    /// The text a failed task shows for <paramref name="exception"/>. A null reference says nothing about where it came
+    /// from, and a failure seen once on a CI runner could not be traced for lack of a stack, so for that one the throwing
+    /// method (and the line, where the build has symbols) is added; other exceptions say enough in their message.
+    /// </summary>
+    public static string FailureText(Exception exception)
+    {
+        if (exception is not NullReferenceException)
+        {
+            return exception.Message;
+        }
+
+        var frame = new System.Diagnostics.StackTrace(exception, true).GetFrame(0);
+        var method = frame?.GetMethod();
+        if (method is null)
+        {
+            return exception.Message;
+        }
+
+        var line = frame!.GetFileLineNumber();
+        var file = frame.GetFileName();
+        var where = $"{method.DeclaringType?.Name}.{method.Name}";
+        return line > 0 && file is not null
+            ? $"{exception.Message} ({where} in {Path.GetFileName(file)}:{line})"
+            : $"{exception.Message} ({where})";
+    }
+
     public static string TransferSubject(Url sourceUrl, Url targetUrl)
     {
         var name = FocusedEntry.NameOf(sourceUrl);
