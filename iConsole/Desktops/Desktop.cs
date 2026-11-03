@@ -25,6 +25,9 @@ public class Desktop : IHostedService, IDesktop
     public bool IsActive => !CancellationTokenSource.Token.IsCancellationRequested;
     public IRenderingDumpHelper Dump { get; }
     public IScreenLogger ScreenLogger { get; }
+
+    /// <summary>The longest the background jobs wait for the first frame before they start anyway.</summary>
+    public TimeSpan BackgroundJobsGracePeriod { get; init; } = TimeSpan.FromSeconds(3);
     private readonly IHostApplicationLifetime? _applicationLifetime;
 
     public Desktop(IConsoleDriver consoleDriver, IScreen screen, IBuffer buffer,
@@ -132,11 +135,39 @@ public class Desktop : IHostedService, IDesktop
             RenderInitialState();
             Dump.AppendSessionTrace("desktop:run:render-initial-state:done");
 
+            // The jobs that draw and read keys start first. The background ones (indexers, weather, quotes, drive
+            // scans, ...) are ~20 threads that would otherwise compete with the first frame for the CPU; they start
+            // once it is on the screen, or after a grace period if it never comes.
+            List<IJob> backgroundJobs = [];
+            ConsoleBufferRendererJob? renderer = null;
             foreach (var job in Jobs.AsSnapshot())
+            {
+                renderer ??= job as ConsoleBufferRendererJob;
+                if (job.Priority == JobPriority.Background)
+                {
+                    backgroundJobs.Add(job);
+                }
+                else
+                {
+                    StartJob(job);
+                }
+            }
+
+            Diagnostics.StartupTrace.Mark("render-jobs-started");
+            if (renderer is not null)
+            {
+                using CancellationTokenSource graceTimer = CancellationTokenSource.CreateLinkedTokenSource(CancellationTokenSource.Token);
+                await Task.WhenAny(renderer.FirstFrameRendered, Task.Delay(BackgroundJobsGracePeriod, graceTimer.Token));
+                graceTimer.Cancel();
+            }
+
+            // Quit while waiting: the jobs would only start to be stopped again.
+            foreach (var job in backgroundJobs.Where(_ => !CancellationTokenSource.IsCancellationRequested))
             {
                 StartJob(job);
             }
 
+            Diagnostics.StartupTrace.Mark("background-jobs-started");
             Dump.AppendSessionTrace("desktop:run:loop:start");
             while (!CancellationTokenSource.IsCancellationRequested)
             {

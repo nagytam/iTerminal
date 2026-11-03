@@ -1,3 +1,4 @@
+using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Desktops;
@@ -274,6 +275,92 @@ public class DesktopTest
         Assert.AreEqual(initialSize, screen.LastWindowSizeChanged);
         Assert.AreEqual(initialSize, screen.ViewSize);
         consoleDriver.Verify(d => d.RefreshWindowSize(), Times.Once);
+    }
+
+    private sealed class StartStampJob(JobPriority priority) : Job
+    {
+        private readonly TaskCompletionSource _started = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public override JobPriority Priority => priority;
+
+        public Task Started => _started.Task;
+
+        protected override Task RunAsync(CancellationToken cancellationToken)
+        {
+            _started.TrySetResult();
+            return Task.Delay(Timeout.Infinite, cancellationToken);
+        }
+    }
+
+    private static Mock<IConsoleDriver> CreateRenderingDriver(Size size)
+    {
+        var consoleDriver = new Mock<IConsoleDriver>();
+        consoleDriver.SetupGet(d => d.WindowSize).Returns(size);
+        consoleDriver.SetupGet(d => d.ForegroundColor).Returns(Color.White);
+        consoleDriver.SetupGet(d => d.BackgroundColor).Returns(Color.Black);
+        return consoleDriver;
+    }
+
+    [TestMethod]
+    [Timeout(10000)]
+    public async Task RunAsync_StartsBackgroundJobsOnlyAfterTheFirstFrameHasBeenDrawn()
+    {
+        var size = new Size(20, 5);
+        var consoleDriver = CreateRenderingDriver(size);
+        var themeService = new Mock<IThemeService>();
+        themeService.SetupGet(t => t.CurrentColorScheme).Returns(new ColorScheme());
+        var buffer = new MockBuffer(size);
+        var renderer = new ConsoleBufferRendererJob(consoleDriver.Object, buffer);
+        var input = new StartStampJob(JobPriority.Input);
+        var background = new StartStampJob(JobPriority.Background);
+
+        var desktop = new Desktop(
+            consoleDriver.Object, new TestLabelScreen(themeService.Object), buffer, [background, input, renderer])
+        {
+            BackgroundJobsGracePeriod = TimeSpan.FromSeconds(8),
+        };
+
+        var runTask = Task.Run(desktop.RunAsync);
+        await input.Started.WaitAsync(TimeSpan.FromSeconds(5));
+        await background.Started.WaitAsync(TimeSpan.FromSeconds(7));
+
+        Assert.IsTrue(
+            renderer.FirstFrameRendered.IsCompleted,
+            "A background job must not start before the first frame is on the screen");
+
+        desktop.CancellationTokenSource.Cancel();
+        await runTask;
+    }
+
+    [TestMethod]
+    [Timeout(10000)]
+    public async Task RunAsync_StartsBackgroundJobsAfterTheGracePeriodWhenNoFrameIsDrawn()
+    {
+        var size = new Size(20, 5);
+        var consoleDriver = CreateRenderingDriver(size);
+        var themeService = new Mock<IThemeService>();
+        var buffer = new MockBuffer(size);
+        var background = new StartStampJob(JobPriority.Background);
+        // A renderer that is in the job list but never completes a frame.
+        var stalledRenderer = new StallingRendererJob(consoleDriver.Object, buffer);
+
+        var desktop = new Desktop(
+            consoleDriver.Object, new TestScreen(themeService.Object), buffer, [background, stalledRenderer])
+        {
+            BackgroundJobsGracePeriod = TimeSpan.FromMilliseconds(300),
+        };
+
+        var runTask = Task.Run(desktop.RunAsync);
+        await background.Started.WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.IsFalse(stalledRenderer.FirstFrameRendered.IsCompleted);
+
+        desktop.CancellationTokenSource.Cancel();
+        await runTask;
+    }
+
+    private sealed class StallingRendererJob(IConsoleDriver driver, IBuffer buffer) : ConsoleBufferRendererJob(driver, buffer)
+    {
+        protected override Task RunAsync(CancellationToken cancellationToken) => Task.Delay(Timeout.Infinite, cancellationToken);
     }
 
     [TestMethod]

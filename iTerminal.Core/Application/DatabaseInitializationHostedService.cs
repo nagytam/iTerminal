@@ -12,7 +12,8 @@ namespace iTerminal.Core.Application;
 
 public class DatabaseInitializationHostedService(
     IDbContextFactory<iTerminalDbContext> dbContextFactory,
-    StartupWarningService startupWarningService) : IHostedService
+    StartupWarningService startupWarningService,
+    TimeSpan? cleanUpDelay = null) : IHostedService
 {
     /// <summary>
     /// Key of the schema stamp in <see cref="iTerminalDbContext.DatabaseMetadata"/>. That table
@@ -90,8 +91,22 @@ public class DatabaseInitializationHostedService(
             await recreateContext.SaveChangesAsync(cancellationToken);
         }
 
+        // Housekeeping only: every reader of these caches judges the age of an entry itself, so the clean-up waits
+        // until the application is up instead of compiling three queries on the start-up path.
+        _ = Task.Run(() => CleanUpObsoleteCacheEntriesAsync(_stopping.Token));
+    }
+
+    /// <summary>How long after start-up the obsolete cache entries are removed.</summary>
+    public static readonly TimeSpan DefaultCleanUpDelay = TimeSpan.FromSeconds(10);
+
+    private readonly TimeSpan _cleanUpDelay = cleanUpDelay ?? DefaultCleanUpDelay;
+    private readonly CancellationTokenSource _stopping = new();
+
+    private async Task CleanUpObsoleteCacheEntriesAsync(CancellationToken cancellationToken)
+    {
         try
         {
+            await Task.Delay(_cleanUpDelay, cancellationToken);
             await using var cleanupContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
 
             var folderThreshold = DateTimeOffset.UtcNow - TimeSpan.FromDays(3);
@@ -189,7 +204,11 @@ public class DatabaseInitializationHostedService(
         return null;
     }
 
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        _stopping.Cancel();
+        return Task.CompletedTask;
+    }
 
     private static string ComputeModelHash(DbContext context)
     {
