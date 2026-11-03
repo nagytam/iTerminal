@@ -232,42 +232,54 @@ public class HexViewer : Control
         }
     }
 
+    private const string HexDigits = "0123456789ABCDEF";
+
     private string FormatRow(int rowIndex)
     {
-        var offset = rowIndex * BytesPerRow;
-        var sb = new StringBuilder();
-
-        // Offset column
-        sb.Append(offset.ToString("X8"));
-        sb.Append("  ");
-
-        // Hex columns — two groups of BytesPerRow/2, separated by an extra space
-        int half = BytesPerRow / 2;
-        for (int i = 0; i < BytesPerRow; i++)
+        int bytesPerRow = BytesPerRow;
+        // Offset, two spaces, the hex pairs with a space between them and a second space in the middle,
+        // two spaces, then the ASCII column between bars.
+        int length = 8 + 2 + 3 * bytesPerRow + 1 + 2 + 1 + bytesPerRow + 1 - 1;
+        return string.Create(Math.Max(length, (int)ViewSize.Width), (_data, rowIndex * bytesPerRow, bytesPerRow), static (span, state) =>
         {
-            if (i > 0) sb.Append(' ');
-            if (i == half) sb.Append(' '); // mid-row gap
-            var byteOffset = offset + i;
-            sb.Append(byteOffset < _data.Length ? _data[byteOffset].ToString("X2") : "  ");
-        }
-
-        // ASCII column
-        sb.Append("  |");
-        for (int i = 0; i < BytesPerRow; i++)
-        {
-            var byteOffset = offset + i;
-            if (byteOffset < _data.Length)
+            (byte[] data, int offset, int count) = state;
+            int p = 0;
+            for (int shift = 28; shift >= 0; shift -= 4)
             {
-                var b = _data[byteOffset];
-                sb.Append(b >= 32 && b < 127 ? (char)b : '.');
+                span[p++] = HexDigits[(offset >> shift) & 0xF];
             }
-            else
-            {
-                sb.Append(' ');
-            }
-        }
-        sb.Append('|');
+            span[p++] = ' ';
+            span[p++] = ' ';
 
-        return sb.ToString().PadRight((int)ViewSize.Width);
+            int half = count / 2;
+            for (int i = 0; i < count; i++)
+            {
+                if (i > 0) span[p++] = ' ';
+                if (i == half) span[p++] = ' '; // mid-row gap
+                int byteOffset = offset + i;
+                if (byteOffset < data.Length)
+                {
+                    byte b = data[byteOffset];
+                    span[p++] = HexDigits[b >> 4];
+                    span[p++] = HexDigits[b & 0xF];
+                }
+                else
+                {
+                    span[p++] = ' ';
+                    span[p++] = ' ';
+                }
+            }
+
+            span[p++] = ' ';
+            span[p++] = ' ';
+            span[p++] = '|';
+            for (int i = 0; i < count; i++)
+            {
+                int byteOffset = offset + i;
+                span[p++] = byteOffset < data.Length ? (data[byteOffset] is >= 32 and < 127 ? (char)data[byteOffset] : '.') : ' ';
+            }
+            span[p++] = '|';
+            span[p..].Fill(' ');
+        });
     }
 }

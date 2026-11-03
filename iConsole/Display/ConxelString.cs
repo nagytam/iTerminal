@@ -103,9 +103,16 @@ public class ConxelString : IEnumerable<Conxel>
 
     public void Expand(int width, Color foregroundColor, Color backgroundColor)
     {
-        while (Count < width)
+        var missing = width - Count;
+        if (missing > 0)
         {
-            String.Add(new Conxel(' ', foregroundColor, backgroundColor));
+            var start = Count;
+            if (String.Capacity < width)
+            {
+                String.Capacity = width;
+            }
+            CollectionsMarshal.SetCount(String, width);
+            CollectionsMarshal.AsSpan(String).Slice(start, missing).Fill(new Conxel(' ', foregroundColor, backgroundColor));
         }
     }
 
@@ -186,12 +193,12 @@ public class ConxelString : IEnumerable<Conxel>
 
     public void HighlightRange(int start, int end, Color foreground, Color background)
     {
-        for (int x = start; x < Math.Min(end, Count); x++)
+        Span<Conxel> cells = CollectionsMarshal.AsSpan(String);
+        for (int x = Math.Max(0, start); x < Math.Min(end, cells.Length); x++)
         {
-            var cell = String[x];
+            ref Conxel cell = ref cells[x];
             cell.ForegroundColor = foreground;
             cell.BackgroundColor = background;
-            String[x] = cell;
         }
     }
 

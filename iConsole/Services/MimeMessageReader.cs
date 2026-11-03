@@ -101,6 +101,14 @@ public static class MimeMessageReader
     {
         try
         {
+            // The decoder skips the line breaks and spaces of a wrapped body itself, so no stripped copy is needed;
+            // it declines only what it cannot read, which the slower path below strips of Unicode white space first.
+            byte[] buffer = new byte[text.Length / 4 * 3 + 3];
+            if (Convert.TryFromBase64Chars(text, buffer, out int written))
+            {
+                return buffer.AsSpan(0, written).ToArray();
+            }
+
             return Convert.FromBase64String(new string(text.Where(c => !char.IsWhiteSpace(c)).ToArray()));
         }
         catch (FormatException)

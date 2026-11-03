@@ -18,24 +18,30 @@ public static class LineEndings
         int crlf = 0;
         int lf = 0;
         int cr = 0;
-        for (int i = 0; i < text.Length; i++)
+        // IndexOfAny is vectorised, so the stretches between breaks are skipped a register at a time.
+        ReadOnlySpan<char> rest = text;
+        while (true)
         {
-            char c = text[i];
-            if (c == '\r')
+            int i = rest.IndexOfAny('\r', '\n');
+            if (i < 0)
             {
-                if (i + 1 < text.Length && text[i + 1] == '\n')
-                {
-                    crlf++;
-                    i++;
-                }
-                else
-                {
-                    cr++;
-                }
+                break;
             }
-            else if (c == '\n')
+
+            if (rest[i] == '\n')
             {
                 lf++;
+                rest = rest[(i + 1)..];
+            }
+            else if (i + 1 < rest.Length && rest[i + 1] == '\n')
+            {
+                crlf++;
+                rest = rest[(i + 2)..];
+            }
+            else
+            {
+                cr++;
+                rest = rest[(i + 1)..];
             }
         }
 
