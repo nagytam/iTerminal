@@ -133,8 +133,9 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
         }
         catch (Exception ex)
         {
-            Description = string.Format(UiText.Get("Task.VerbFileFailed", "{0} file failed: {1}"), Verb, ex.Message);
-            Error = ex.Message;
+            var failure = TaskNotificationHelper.FailureText(ex);
+            Description = string.Format(UiText.Get("Task.VerbFileFailed", "{0} file failed: {1}"), Verb, failure);
+            Error = failure;
         }
     }
 
