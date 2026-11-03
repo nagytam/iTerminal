@@ -269,9 +269,12 @@ public class Desktop : IHostedService, IDesktop
     /// </summary>
     public IControl? GetModalChildControl()
     {
-        var screen = Screens.AsSnapshot().First();
-        foreach (var control in screen.Controls.AsSnapshot().Reverse())
+        var screens = Screens.AsArray();
+        var screen = screens.Length > 0 ? screens[0] : throw new InvalidOperationException("The desktop has no screen.");
+        IControl[] children = screen.Controls.AsArray();
+        for (int i = children.Length - 1; i >= 0; i--)
         {
+            var control = children[i];
             var modalControl = control.GetModalChildControl();
             if (modalControl is not null)
             {
@@ -307,7 +310,7 @@ public class Desktop : IHostedService, IDesktop
         var shape = Display.CursorShape.Default;
         foreach (var screen in Screens.AsSnapshot())
         {
-            foreach (var control in screen.Controls.AsSnapshot())
+            foreach (var control in screen.Controls.AsArray())
             {
                 if (control.IsCursorVisible)
                 {

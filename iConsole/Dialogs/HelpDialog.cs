@@ -223,7 +223,7 @@ public class HelpDialog : Dialog
             }
         }
 
-        foreach (var childControl in control.Controls.AsSnapshot())
+        foreach (var childControl in control.Controls.AsArray())
         {
             foreach (var command in GetEveryCommandInternal(childControl))
             {
@@ -269,7 +269,7 @@ public class HelpDialog : Dialog
             }
         }
 
-        foreach (var childControl in control.Controls.AsSnapshot())
+        foreach (var childControl in control.Controls.AsArray())
         {
             foreach (var command in GetAvailableCommandsInternal(childControl))
             {
@@ -295,7 +295,7 @@ public class HelpDialog : Dialog
             }
         }
 
-        foreach (var childControl in control.Controls.AsSnapshot())
+        foreach (var childControl in control.Controls.AsArray())
         {
             foreach (var hint in GetKeyHints(childControl))
             {

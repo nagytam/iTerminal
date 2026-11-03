@@ -532,7 +532,7 @@ public class HotKeys : StatusBarItem
         // that waits for an idle pass ran at all (dialog lists stayed empty, progress windows open).
         var all = new List<Button>();
         var visible = new List<Button>();
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             if (control is not Button button)
                 continue;
