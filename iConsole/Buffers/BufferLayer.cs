@@ -143,14 +143,13 @@ public class BufferLayer
                 // under every dialog on a small screen), and an open menu blanked the panels beside it.
                 if (sizeX > 0)
                 {
-                    var written = new Rectangle((int)position.X, (int)consoleY, sizeX, 1);
                     if (BoundRect is null)
                     {
-                        BoundRect = written;
+                        BoundRect = new Rectangle((int)position.X, (int)consoleY, sizeX, 1);
                     }
                     else
                     {
-                        BoundRect.Include(written);
+                        BoundRect.Include((int)position.X, (int)consoleY, sizeX, 1);
                     }
                     var row = (int)consoleY;
                     if (row < _rowLeft.Length)

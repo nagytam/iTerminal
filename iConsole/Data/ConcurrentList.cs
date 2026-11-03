@@ -11,6 +11,9 @@ public class ConcurrentList<T> : IList<T> where T : class
     // that takes a copy of every node's children on every pass allocated tens of kilobytes a pass.
     private T[]? _array;
 
+    // The same for a foreach, whose enumerator walks a list that nothing writes to.
+    private List<T>? _copy;
+
     public int Count
     {
         get
@@ -54,6 +57,7 @@ public class ConcurrentList<T> : IList<T> where T : class
             {
                 _list[index] = value;
                 _array = null;
+                _copy = null;
             }
         } 
     }
@@ -64,6 +68,7 @@ public class ConcurrentList<T> : IList<T> where T : class
         {
             _list.Add(item);
             _array = null;
+            _copy = null;
         }
     }
 
@@ -73,6 +78,7 @@ public class ConcurrentList<T> : IList<T> where T : class
         {
             _list.Remove(item);
             _array = null;
+            _copy = null;
         }
     }
 
@@ -82,6 +88,7 @@ public class ConcurrentList<T> : IList<T> where T : class
         {
             _list.Insert(index, item);
             _array = null;
+            _copy = null;
         }
     }
 
@@ -98,6 +105,7 @@ public class ConcurrentList<T> : IList<T> where T : class
             _list.Clear();
             _list.AddRange(replacement);
             _array = null;
+            _copy = null;
         }
     }
 
@@ -107,6 +115,7 @@ public class ConcurrentList<T> : IList<T> where T : class
         {
             _list.Clear();
             _array = null;
+            _copy = null;
         }
     }
 
@@ -130,7 +139,7 @@ public class ConcurrentList<T> : IList<T> where T : class
     {
         lock (_lock)
         {
-            return _list.ToList().GetEnumerator();
+            return (_copy ??= [.. _list]).GetEnumerator();
         }
     }
 
@@ -148,6 +157,7 @@ public class ConcurrentList<T> : IList<T> where T : class
         {
             _list.Insert(index, item);
             _array = null;
+            _copy = null;
         }
     }
 
@@ -157,6 +167,7 @@ public class ConcurrentList<T> : IList<T> where T : class
         {
             _list.RemoveAt(index);
             _array = null;
+            _copy = null;
         }
     }
 
@@ -181,6 +192,7 @@ public class ConcurrentList<T> : IList<T> where T : class
         lock (_lock)
         {
             _array = null;
+            _copy = null;
             return _list.Remove(item);
         }
     }
