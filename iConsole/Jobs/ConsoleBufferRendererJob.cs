@@ -173,6 +173,8 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         return Task.CompletedTask;
     }
 
+    private readonly List<(int X, int Y, ConxelString Text)> _pendingWrites = [];
+
     private void ForceRedraw()
     {
         LastBufferCursor.CursorPosition?.Reset();
@@ -225,7 +227,9 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         bool isCursorVisible = LastBufferCursor.IsCursorVisible;
         List<string>? renderSteps = ShouldDumpFrame() ? [] : null;
         List<ConsoleDisplayWrite>? displayWrites = ShouldDumpFrame() ? [] : null;
-        List<(int X, int Y, ConxelString Text)> pendingWrites = [];
+        // Kept between frames: most passes change nothing and need no list of their own.
+        List<(int X, int Y, ConxelString Text)> pendingWrites = _pendingWrites;
+        pendingWrites.Clear();
         BufferLayer? layerToDump = null;
         var shouldDumpFrame = renderSteps is not null && displayWrites is not null;
         var shouldClearConsole = false;
@@ -334,6 +338,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         }
         finally
         {
+            pendingWrites.Clear();
             UpdateCursor(isCursorVisible);
             _consoleDriver.EndFrame();
             if (shouldDumpFrame && layerToDump is not null)

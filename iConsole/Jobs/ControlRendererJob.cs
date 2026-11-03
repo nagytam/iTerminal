@@ -13,15 +13,19 @@ public class ControlRendererJob() : Job
 
     private long _renderedTreeVersion = -1;
 
+    // The loop passes here about every millisecond while idle, so what it collects each pass is kept and cleared.
+    private readonly HashSet<IControl> _controlsToRender = [];
+    private readonly List<IControl> _renderList = [];
+
     protected override Task RunAsync(CancellationToken cancellationToken)
     {
-        var lastRedraw = DateTime.Now;
+        long lastRedraw = Environment.TickCount64;
         while (!cancellationToken.IsCancellationRequested)
         {
             try
             {
-                var now = DateTime.Now;
-                if (now - lastRedraw >= FullRedrawFallbackInterval)
+                long now = Environment.TickCount64;
+                if (now - lastRedraw >= FullRedrawFallbackInterval.TotalMilliseconds)
                 {
                     ForceRedraw();
                     lastRedraw = now;
@@ -68,9 +72,10 @@ public class ControlRendererJob() : Job
             var treeChanged = treeVersion != _renderedTreeVersion;
             _renderedTreeVersion = treeVersion;
 
-            foreach (var screen in Desktop.Screens.AsSnapshot())
+            foreach (var screen in Desktop.Screens.AsArray())
             {
-                var controlsToRender = new HashSet<IControl>();
+                var controlsToRender = _controlsToRender;
+                controlsToRender.Clear();
                 var maxZOrder = screen.GetMaxZOrder();
                 var newLayers = Desktop.Buffer.UpdateLayers(maxZOrder);
                 if (treeChanged)
@@ -78,7 +83,9 @@ public class ControlRendererJob() : Job
                     RepaintFromScratch(screen);
                 }
                 screen.GetControlsToRender(controlsToRender, newLayers);
-                var renderList = controlsToRender.ToList();
+                var renderList = _renderList;
+                renderList.Clear();
+                renderList.AddRange(controlsToRender);
                 if (Desktop.Dump.IsEnabled)
                 {
                     Desktop.Dump.AppendSessionTrace(
@@ -172,7 +179,7 @@ public class ControlRendererJob() : Job
     {
         lock (Desktop!.Buffer.SyncLock)
         {
-            foreach (var layer in Desktop.Buffer.Layers.AsSnapshot())
+            foreach (var layer in Desktop.Buffer.Layers.AsArray())
             {
                 layer.Clear();
             }

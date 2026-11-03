@@ -79,7 +79,7 @@ public static class CommandCatalog
             }
         }
 
-        foreach (var child in control.Controls.AsSnapshot())
+        foreach (var child in control.Controls.AsArray())
         {
             Walk(child, entries, seen, exclude, depth + 1);
         }
