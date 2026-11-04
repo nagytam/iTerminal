@@ -50,6 +50,9 @@ public sealed class TerminalApp : IAsyncDisposable
     /// <summary>The sandbox's own recycle bin (see <see cref="PutInRecycleBin"/>).</summary>
     public string RecycleBinFolder => Path.Combine(_root, "bin");
 
+    /// <summary>The sandbox's Trash on Linux, where a delete with the bin ticked goes (its <c>files</c> and <c>info</c> folders).</summary>
+    public string TrashFolder => Path.Combine(_root, "trash");
+
     /// <summary>
     /// Puts a file in the sandbox's recycle bin as if it had been deleted from
     /// <paramref name="originalPath"/> at <paramref name="deleted"/>: the content and the record
