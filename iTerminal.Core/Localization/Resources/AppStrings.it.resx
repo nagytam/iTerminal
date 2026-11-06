@@ -3516,5 +3516,52 @@
   </data>
   <data name="DialogHint.RemoveMark" xml:space="preserve">
     <value>Rimuovi il contrassegno di download (chiede y/n)</value>
+  <data name="Checksum.Verified.Caption" xml:space="preserve">
+    <value>Controllo</value>
+  </data>
+  <data name="Checksum.Verified.Changed" xml:space="preserve">
+    <value>✗ {0} è cambiato durante il controllo — non verificato</value>
+  </data>
+  <data name="Checksum.Verified.Waiting" xml:space="preserve">
+    <value>in attesa della lettura del file…</value>
+  </data>
+  <data name="Checksum.Verified.List" xml:space="preserve">
+    <value>✓ il file corrisponde a {0}, firmato da {1}</value>
+  </data>
+  <data name="Checksum.Verified.ListBad" xml:space="preserve">
+    <value>✗ il file NON corrisponde a {0}, che è firmato</value>
+  </data>
+  <data name="Checksum.Verified.File" xml:space="preserve">
+    <value>✓ il file corrisponde alla sua firma di {0}</value>
+  </data>
+  <data name="Checksum.Sig.Caption" xml:space="preserve">
+    <value>Firma</value>
+  </data>
+  <data name="Checksum.Sig.More" xml:space="preserve">
+    <value>+{0} altre firme</value>
+  </data>
+  <data name="Checksum.Sig.Good" xml:space="preserve">
+    <value>valida, con una chiave che hai: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Expired" xml:space="preserve">
+    <value>valida, ma la chiave è scaduta: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Bad" xml:space="preserve">
+    <value>firma NON valida</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
+    <value>chiave sconosciuta {0} (non nel tuo portachiavi)</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
+    <value>chiave sconosciuta (nessuna chiave pubblica configurata)</value>
+  </data>
+  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
+    <value>{0} non è installato — non controllato</value>
+  </data>
+  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
+    <value>non controllato: sigstore richiede l'identità del firmatario</value>
+  </data>
+  <data name="Checksum.Sig.Error" xml:space="preserve">
+    <value>impossibile controllare: {0}</value>
   </data>
 </root>

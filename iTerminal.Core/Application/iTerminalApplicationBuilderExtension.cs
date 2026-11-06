@@ -361,6 +361,7 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+Shift+F8 secure wipe, Ctrl+Shift+F7 signatures, Ctrl+Shift+F6 duplicates (sign and verify).
         services.AddSingleton<iTerminal.Core.Services.Wipe.ISecureWipeService, iTerminal.Core.Services.Wipe.SecureWipeService>();
         services.AddSingleton<iTerminal.Core.Services.Signing.ISignatureService, iTerminal.Core.Services.Signing.SignatureService>();
+        services.AddSingleton<iTerminal.Core.Services.Checksums.IPublisherSignatureService, iTerminal.Core.Services.Checksums.PublisherSignatureService>();
         // Scan with Microsoft Defender (Windows): the file panel's context menu and the File menu.
         services.AddSingleton<iTerminal.Core.Services.Defender.IMalwareScanService, iTerminal.Core.Services.Defender.DefenderScanService>();
         services.AddTransient<SecureWipeDialog>();
