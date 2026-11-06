@@ -44,7 +44,7 @@ public class ChecksumDialogTest
         Directory.Delete(_folder, true);
     }
 
-    private async Task<(ChecksumDialog Dialog, Control Root)> OpenAsync(ChecksumResult? result, Exception? failure = null, string fileName = "data.bin", Size? screen = null)
+    private async Task<(ChecksumDialog Dialog, Control Root)> OpenAsync(ChecksumResult? result, Exception? failure = null, string fileName = "data.bin", Size? screen = null, IPublisherSignatureService? signatures = null)
     {
         string path = Path.Combine(_folder, fileName);
         File.WriteAllText(path, "x");
@@ -58,7 +58,7 @@ public class ChecksumDialogTest
             service.Setup(s => s.ComputeAsync(It.IsAny<Url>(), It.IsAny<IFileSystem>(), It.IsAny<IProgress<long>?>(), It.IsAny<CancellationToken>())).ReturnsAsync(result!);
         }
 
-        ChecksumDialog dialog = new(service.Object, Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), TestTheme());
+        ChecksumDialog dialog = new(service.Object, Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), TestTheme(), signatures);
         dialog.Load(new Url(path), Mock.Of<IFileSystem>());
         Control root = await ShowAsync(dialog, screen);
         await dialog.ComputeTask;
@@ -207,7 +207,7 @@ public class ChecksumDialogTest
     [TestMethod]
     public void InfoHeight_GrowsAsTheDialogNarrows()
     {
-        Assert.AreEqual(10, ChecksumDialog.InfoHeight(66));
+        Assert.AreEqual(14, ChecksumDialog.InfoHeight(66), "ten rows for the facts and four kept free for the signatures");
         Assert.IsTrue(ChecksumDialog.InfoHeight(36) > ChecksumDialog.InfoHeight(66));
     }
 
@@ -223,6 +223,123 @@ public class ChecksumDialogTest
         AssertScreenContains(screen, "✓ matches");
         AssertScreenContains(screen, "F2:save");
         Assert.IsTrue(dialog.ViewSize.Height > 17);
+    }
+
+    private static string Sha256Of(string path) => Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(File.ReadAllBytes(path)));
+
+    private sealed class FixedSignatures(params PublisherVerification[] found) : IPublisherSignatureService
+    {
+        public Task<IReadOnlyList<PublisherVerification>> VerifyAsync(string filePath, string? writtenSource, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<PublisherVerification>>(found);
+    }
+
+    private static PublisherVerification Verified(string subject, PublisherSignatureStatus status, string? listHash = null, string signer = "Ann <ann@example.org>") =>
+        new(PublisherTool.Gpg, subject, subject + ".asc", status, signer, string.Empty, listHash);
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AGoodSignatureOnTheList_VerifiesTheFileAgainstIt()
+    {
+        string list = Path.Combine(_folder, "SHA256SUMS");
+        File.WriteAllText(list, new string('c', 64) + " *data.bin\n");
+        (ChecksumDialog dialog, Control root) = await OpenAsync(Hashes, signatures: new FixedSignatures(Verified("SHA256SUMS", PublisherSignatureStatus.Good, Sha256Of(list))));
+
+        ScreenBuffer screen = Render(root);
+        AssertScreenContains(screen, "✓ file matches SHA256SUMS, signed by Ann");
+        AssertScreenContains(screen, "SHA256SUMS: good, by a key you hold");
+        Assert.AreEqual(1, dialog.Signatures!.Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AGoodSignatureOnAListTheFileDoesNotMatch_SaysSo()
+    {
+        string list = Path.Combine(_folder, "SHA256SUMS");
+        File.WriteAllText(list, new string('9', 64) + " *data.bin\n");
+        (_, Control root) = await OpenAsync(Hashes, signatures: new FixedSignatures(Verified("SHA256SUMS", PublisherSignatureStatus.Good, Sha256Of(list))));
+
+        AssertScreenContains(Render(root), "✗ file does NOT match SHA256SUMS, which is signed");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AListThatChangedAfterItWasVerified_IsNotCalledVerified()
+    {
+        File.WriteAllText(Path.Combine(_folder, "SHA256SUMS"), new string('c', 64) + " *data.bin\n");
+        (_, Control root) = await OpenAsync(Hashes, signatures: new FixedSignatures(Verified("SHA256SUMS", PublisherSignatureStatus.Good, new string('0', 64))));
+
+        ScreenBuffer screen = Render(root);
+        AssertScreenContains(screen, "changed while it was checked");
+        AssertScreenDoesNotContain(screen, "✓ file matches SHA256SUMS");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnExpiredKeyOnTheList_DoesNotVerifyTheFile()
+    {
+        string list = Path.Combine(_folder, "SHA256SUMS");
+        File.WriteAllText(list, new string('c', 64) + " *data.bin\n");
+        (_, Control root) = await OpenAsync(Hashes, signatures: new FixedSignatures(Verified("SHA256SUMS", PublisherSignatureStatus.ExpiredKey, Sha256Of(list))));
+
+        ScreenBuffer screen = Render(root);
+        AssertScreenContains(screen, "key expired");
+        AssertScreenDoesNotContain(screen, "signed by");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AGoodSignatureOnTheFileItself_IsReported()
+    {
+        (_, Control root) = await OpenAsync(Hashes, signatures: new FixedSignatures(Verified("data.bin", PublisherSignatureStatus.Good)));
+
+        AssertScreenContains(Render(root), "✓ file matches its signature by Ann");
+    }
+
+    [Timeout(60_000)]
+    [DataRow(PublisherSignatureStatus.Bad, "BAD signature")]
+    [DataRow(PublisherSignatureStatus.UnknownKey, "unknown key (no public key is configured)")]
+    [DataRow(PublisherSignatureStatus.ToolMissing, "is not installed")]
+    [DataRow(PublisherSignatureStatus.Unchecked, "sigstore needs the signer")]
+    [DataRow(PublisherSignatureStatus.Error, "could not be checked")]
+    [TestMethod]
+    public async Task ASignatureThatIsNotGood_IsShownAndVerifiesNothing(PublisherSignatureStatus status, string expected)
+    {
+        (_, Control root) = await OpenAsync(Hashes, signatures: new FixedSignatures(Verified("data.bin", status, signer: string.Empty)));
+
+        ScreenBuffer screen = Render(root);
+        AssertScreenContains(screen, expected);
+        AssertScreenDoesNotContain(screen, "✓ file matches its signature");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task OnAnEightyByTwentyFourTerminal_TheVerdictOnTheSignedListIsStillOnScreen()
+    {
+        string list = Path.Combine(_folder, "SHA256SUMS");
+        File.WriteAllText(list, new string('c', 64) + " *data.bin\n");
+        Size small = new(80, 24);
+        (_, Control root) = await OpenAsync(
+            Hashes,
+            screen: small,
+            signatures: new FixedSignatures(
+                Verified("SHA256SUMS", PublisherSignatureStatus.Good, Sha256Of(list)),
+                Verified("data.bin", PublisherSignatureStatus.UnknownKey, signer: string.Empty)));
+
+        ScreenBuffer screen = Render(root, small);
+        AssertScreenContains(screen, "✓ file matches SHA256SUMS, signed by Ann");
+        AssertScreenContains(screen, "F2:save");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task MoreThanTwoSignatures_AreCollapsedToOneRowAndACount()
+    {
+        (_, Control root) = await OpenAsync(Hashes, signatures: new FixedSignatures(
+            Verified("data.bin", PublisherSignatureStatus.Bad),
+            Verified("data.bin", PublisherSignatureStatus.Bad),
+            Verified("data.bin", PublisherSignatureStatus.Bad)));
+
+        AssertScreenContains(Render(root), "+2 more signatures");
     }
 
     [Timeout(60_000)]
