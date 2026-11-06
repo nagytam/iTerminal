@@ -8,6 +8,7 @@ namespace iTerminal.Core.Test.Commands;
 [TestClass]
 public class WholeFolderToTrashTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("/home/u/tree/", true, true, ContainerType.FileSystem, true, DisplayName = "local folder, recursive, bin ticked")]
     [DataRow("/home/u/file.txt", true, true, ContainerType.FileSystem, false, DisplayName = "a file is not a folder")]

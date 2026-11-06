@@ -10,6 +10,7 @@ namespace iConsole.Test.Services;
 [TestClass]
 public class AccessDatabaseTextReaderTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void AFileThatIsNotAJetDatabase_IsReportedNotRead()
     {

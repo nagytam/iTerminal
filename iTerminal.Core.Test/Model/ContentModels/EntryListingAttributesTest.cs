@@ -10,6 +10,7 @@ namespace iTerminal.Core.Test.Model.ContentModels;
 [TestClass]
 public class EntryListingAttributesTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void FormatAttributes_ReadsTheUnixPermissionBits()
     {
@@ -34,6 +35,7 @@ public class EntryListingAttributesTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormatAttributes_OfAPathStringIsBlank()
     {
@@ -42,6 +44,7 @@ public class EntryListingAttributesTest
         Assert.AreEqual(new string(' ', EntryBase.AttributeLength), text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FormatLongItemName_HasTheAttributesAndNoSizeColumn()
     {

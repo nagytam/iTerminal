@@ -132,6 +132,7 @@ public class IWorkTextReaderTest
 
     // ── Pages and Keynote ───────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APagesDocument_ShowsItsBodyParagraphsThenItsOtherStorages()
     {
@@ -144,6 +145,7 @@ public class IWorkTextReaderTest
             Read(document).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AttachmentCharacters_AreLeftOutOfTheText()
     {
@@ -154,6 +156,7 @@ public class IWorkTextReaderTest
 
     // ── Numbers ─────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANumbersDocument_ListsTheTextCellsOfEachTableUnderItsSheet()
     {
@@ -197,6 +200,7 @@ public class IWorkTextReaderTest
         CollectionAssert.Contains(lines.ToArray(), "  Item B");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ARealNumbersFile_IsReadWithItsSheetsAndCells()
     {
@@ -211,6 +215,7 @@ public class IWorkTextReaderTest
 
     // ── failures ────────────────────────────────────────────────────────────
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AZipWithNoIwork_SaysNoIWorkContentWasFound()
     {
@@ -221,6 +226,7 @@ public class IWorkTextReaderTest
             Read(document).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnIWork09Document_SaysItIsNotRead()
     {
@@ -229,6 +235,7 @@ public class IWorkTextReaderTest
         CollectionAssert.AreEqual(new[] { "[This is an iWork '09 document, which is not read]" }, Read(document).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnArchiveThatDoesNotDecompress_IsLeftOutRatherThanFailingTheDocument()
     {
@@ -238,6 +245,7 @@ public class IWorkTextReaderTest
         Assert.IsTrue(Read(document).Single().StartsWith("[Could not read the document: no iWork content"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void IsZip_RecognisesTheZipSignatureOnly()
     {

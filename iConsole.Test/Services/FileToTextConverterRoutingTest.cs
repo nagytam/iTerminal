@@ -52,6 +52,7 @@ public class FileToTextConverterRoutingTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Vcf_IsReadAsContacts()
     {
@@ -60,6 +61,7 @@ public class FileToTextConverterRoutingTest
         CollectionAssert.AreEqual(new[] { "Jane Doe", "--------" }, (await ReadAsync("contacts.vcf")).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Ics_IsReadAsCalendarItems()
     {
@@ -71,6 +73,7 @@ public class FileToTextConverterRoutingTest
         CollectionAssert.Contains(lines.ToArray(), "Event: Standup");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Mbox_IsReadAsMessages()
     {
@@ -79,6 +82,7 @@ public class FileToTextConverterRoutingTest
         Assert.AreEqual("Message 1 of 1", (await ReadAsync("mail.mbox"))[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Log_IsPlainTextAsBefore()
     {
@@ -87,6 +91,7 @@ public class FileToTextConverterRoutingTest
         Assert.AreEqual("2026-03-01 10:00:01 INFO Server started", (await ReadAsync("server.log"))[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Odf_IsReadAsAFormula()
     {
@@ -103,6 +108,7 @@ public class FileToTextConverterRoutingTest
         CollectionAssert.Contains(lines.ToArray(), "x = 2");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Odm_ShowsItsSectionsFromTheSameFolder()
     {
@@ -125,6 +131,7 @@ public class FileToTextConverterRoutingTest
         CollectionAssert.Contains(lines.ToArray(), "The first chapter says hello.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Odm_ReportsALinkedDocumentThatIsNotThere()
     {
@@ -138,6 +145,7 @@ public class FileToTextConverterRoutingTest
         CollectionAssert.Contains((await ReadAsync("missing.odm")).ToArray(), "[The linked document is not in this folder]");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Key_ThatIsNotAZip_IsShownAsPlainTextAsBefore()
     {
@@ -146,6 +154,7 @@ public class FileToTextConverterRoutingTest
         Assert.AreEqual("-----BEGIN PRIVATE KEY-----", (await ReadAsync("signing.key"))[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Pages_ThatIsAZipWithNoIWorkContent_SaysSo()
     {
@@ -156,6 +165,7 @@ public class FileToTextConverterRoutingTest
         Assert.IsTrue(lines.Single().StartsWith("[Could not read the document:"), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task Mdb_ThatIsNotAccess_SaysSo()
     {

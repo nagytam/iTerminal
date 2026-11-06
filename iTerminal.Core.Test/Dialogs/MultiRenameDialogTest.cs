@@ -72,6 +72,7 @@ public class MultiRenameDialogTest
         return list;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDefaultPatternRenamesNothingAndSaysSo()
     {
@@ -87,6 +88,7 @@ public class MultiRenameDialogTest
         Assert.AreEqual("0 to rename, 2 not renamed", CountLine(dialog).Text);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ATypedPatternShowsEachOldNameAndItsNewOne()
     {
@@ -106,6 +108,7 @@ public class MultiRenameDialogTest
         Assert.AreEqual("b.txt -> b_02.txt", rows.ListModel.ListItems[1].Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AStatusIsShownForARowThatWillNotBeRenamed()
     {
@@ -122,6 +125,7 @@ public class MultiRenameDialogTest
         StringAssert.Contains(Preview(dialog).ListModel.ListItems[0].Value, "already exists");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePreviewListCannotTakeFocus()
     {
@@ -131,6 +135,7 @@ public class MultiRenameDialogTest
             "a focusable list would take Enter ahead of the Rename command");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ThePreviewDrawsAtMostTheLimitButTheCountCoversEveryRow()
     {
@@ -155,6 +160,7 @@ public class MultiRenameDialogTest
         StringAssert.Contains(CountLine(dialog).Text, $"{count} to rename");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ChangingNothingKeepsThePlanAsItWas()
     {
