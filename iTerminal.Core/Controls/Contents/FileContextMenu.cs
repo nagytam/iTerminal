@@ -86,6 +86,7 @@ public static class FileContextMenu
         AddCommands<ChecksumDialogCommand>(items, snapshot, "Checksums");
         AddCommands<SignatureDialogCommand>(items, snapshot, "Signatures");
         AddPrintCommand(items, snapshot);
+        AddCommands<FileEncryptionDialogCommand>(items, snapshot, "Encrypt / decrypt");
         AddCommands<SecureWipeDialogCommand>(items, snapshot, "Secure wipe");
         AddCommands<ScanWithDefenderCommand>(items, snapshot, "Scan with Microsoft Defender");
         AddCommands<GitPullRebaseCommand>(items, snapshot, null);

@@ -129,7 +129,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
         MultiRenameDialog? multiRenameDialog = null,
-        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null
+        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+        FileEncryptionDialog? fileEncryptionDialog = null
         )
         : base([], themeService)
     {
@@ -156,6 +157,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             compressDialog: compressDialog,
             extractDialog: extractDialog,
             secureWipeDialog: secureWipeDialog,
+            fileEncryptionDialog: fileEncryptionDialog,
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
             notificationService: notificationService,

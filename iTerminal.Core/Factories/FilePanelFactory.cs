@@ -58,7 +58,8 @@ public class FilePanelFactory(
     Func<iTerminal.Core.Dialogs.Web.WebBrowserDialog>? webBrowserDialogFactory = null,
     PrintDialog? printDialog = null,
     iConsole.Dialogs.SqliteViewerDialog? sqliteViewerDialog = null,
-    iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
+    iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+    FileEncryptionDialog? fileEncryptionDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -105,6 +106,7 @@ public class FilePanelFactory(
             clipboardOperations: clipboardOperations,
             diskImageDialog: diskImageDialog,
             secureWipeDialog: secureWipeDialog,
+            fileEncryptionDialog: fileEncryptionDialog,
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
             notificationService: notificationService,

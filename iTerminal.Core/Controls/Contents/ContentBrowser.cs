@@ -67,6 +67,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private iTerminal.Core.Services.Clipboard.FileClipboardOperations? _clipboard { get; set; }
     private DiskImageDialog? _diskImageDialog { get; set; }
     private SecureWipeDialog? _secureWipeDialog { get; set; }
+    private FileEncryptionDialog? _fileEncryptionDialog { get; set; }
     private SignatureDialog? _signatureDialog { get; set; }
     private PrintDialog? _printDialog { get; set; }
     private iTerminal.Core.Services.Defender.IMalwareScanService? _malwareScanService { get; set; }
@@ -119,7 +120,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
         PrintDialog? printDialog = null,
         SqliteViewerDialog? sqliteViewerDialog = null,
-        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
+        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+        FileEncryptionDialog? fileEncryptionDialog = null)
         : base(themeService)
     {
         _webBrowserDialog = webBrowserDialog;
@@ -132,6 +134,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _notificationService = notificationService;
         _diskImageDialog = diskImageDialog;
         _secureWipeDialog = secureWipeDialog;
+        _fileEncryptionDialog = fileEncryptionDialog;
         _signatureDialog = signatureDialog;
         _printDialog = printDialog;
         _clipboard = clipboardOperations;
@@ -329,6 +332,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_secureWipeDialog is not null)
         {
             AddCommand(new SecureWipeDialogCommand(_secureWipeDialog, ContentModelService));
+        }
+        if (_fileEncryptionDialog is not null)
+        {
+            AddCommand(new FileEncryptionDialogCommand(_fileEncryptionDialog, ContentModelService));
         }
         if (_malwareScanService is { IsAvailable: true })
         {
