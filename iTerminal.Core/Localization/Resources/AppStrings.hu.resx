@@ -3492,6 +3492,7 @@
   </data>
   <data name="Task.VerifyFailed" xml:space="preserve">
     <value>Az ellenőrzés sikertelen: {0} eltér a forrástól; a másolat megmaradt</value>
+  </data>
   <data name="Checksum.Verified.Caption" xml:space="preserve">
     <value>Ellenőrz.</value>
   </data>

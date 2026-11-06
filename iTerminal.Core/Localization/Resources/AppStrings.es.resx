@@ -3492,6 +3492,7 @@
   </data>
   <data name="Task.VerifyFailed" xml:space="preserve">
     <value>La verificación falló: {0} difiere del origen; se conservó la copia</value>
+  </data>
   <data name="Checksum.Verified.Caption" xml:space="preserve">
     <value>Validado</value>
   </data>

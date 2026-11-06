@@ -3492,6 +3492,7 @@
   </data>
   <data name="Task.VerifyFailed" xml:space="preserve">
     <value>Verifica non riuscita: {0} differisce dall'origine; la copia è stata conservata</value>
+  </data>
   <data name="Checksum.Verified.Caption" xml:space="preserve">
     <value>Controllo</value>
   </data>
