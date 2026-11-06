@@ -69,6 +69,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private SecureWipeDialog? _secureWipeDialog { get; set; }
     private SignatureDialog? _signatureDialog { get; set; }
     private PrintDialog? _printDialog { get; set; }
+    private StreamsDialog? _streamsDialog { get; set; }
     private iTerminal.Core.Services.Defender.IMalwareScanService? _malwareScanService { get; set; }
     private INotificationService? _notificationService { get; set; }
     private iTerminal.Core.Services.Git.IGitService? _gitService { get; set; }
@@ -119,7 +120,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
         PrintDialog? printDialog = null,
         SqliteViewerDialog? sqliteViewerDialog = null,
-        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
+        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+        StreamsDialog? streamsDialog = null)
         : base(themeService)
     {
         _webBrowserDialog = webBrowserDialog;
@@ -134,6 +136,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _secureWipeDialog = secureWipeDialog;
         _signatureDialog = signatureDialog;
         _printDialog = printDialog;
+        _streamsDialog = streamsDialog;
         _clipboard = clipboardOperations;
         _fileDiffDialog = fileDiffDialog;
         Name = name;
@@ -341,6 +344,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_printDialog is not null)
         {
             AddCommand(new PrintDialogCommand(_printDialog, ContentModelService));
+        }
+        if (_streamsDialog is not null)
+        {
+            AddCommand(new StreamsDialogCommand(_streamsDialog, ContentModelService));
         }
         if (_gitService is not null)
         {

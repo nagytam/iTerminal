@@ -3484,4 +3484,88 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>hivatkozás</value>
   </data>
+  <data name="Dialog.Streams" xml:space="preserve">
+    <value>Adatfolyamok és attribútumok</value>
+  </data>
+  <data name="Menu.StreamsItem" xml:space="preserve">
+    <value>Adatfolyamok és attribútumok…</value>
+  </data>
+  <data name="Streams.Kind.Streams" xml:space="preserve">
+    <value>Adatfolyamok</value>
+  </data>
+  <data name="Streams.Kind.Attributes" xml:space="preserve">
+    <value>Attribútumok</value>
+  </data>
+  <data name="Streams.Error.BadName" xml:space="preserve">
+    <value>A(z) „{0}” nem érvényes név.</value>
+  </data>
+  <data name="Streams.Error.Unsupported" xml:space="preserve">
+    <value>Ezen a rendszeren nincsenek adatfolyamok vagy kiterjesztett attribútumok.</value>
+  </data>
+  <data name="Streams.Error.Changing" xml:space="preserve">
+    <value>Az attribútumok folyamatosan változnak; próbálja újra.</value>
+  </data>
+  <data name="Streams.Error.TooLarge" xml:space="preserve">
+    <value>Túl nagy az előnézethez.</value>
+  </data>
+  <data name="Streams.Deleted" xml:space="preserve">
+    <value>{0} törölve.</value>
+  </data>
+  <data name="DialogHint.DeleteStreamYes" xml:space="preserve">
+    <value>Az adatfolyam vagy attribútum törlése</value>
+  </data>
+  <data name="DialogHint.KeepStream" xml:space="preserve">
+    <value>Megtartás</value>
+  </data>
+  <data name="DialogHint.ChooseStream" xml:space="preserve">
+    <value>Adatfolyam vagy attribútum kiválasztása</value>
+  </data>
+  <data name="DialogHint.StreamHexText" xml:space="preserve">
+    <value>Előnézet váltása szöveg és hex között</value>
+  </data>
+  <data name="DialogHint.DeleteStreamAsks" xml:space="preserve">
+    <value>Törlés (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.StreamsRefresh" xml:space="preserve">
+    <value>A lista újraolvasása</value>
+  </data>
+  <data name="Streams.Status.AskDelete" xml:space="preserve">
+    <value>Törli ezt: {0}? y törli.</value>
+  </data>
+  <data name="Streams.Target" xml:space="preserve">
+    <value>Fájl</value>
+  </data>
+  <data name="Streams.Col.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Streams.Col.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="Streams.Reading" xml:space="preserve">
+    <value>Olvasás…</value>
+  </data>
+  <data name="Streams.None" xml:space="preserve">
+    <value>Ennek a bejegyzésnek nincs {0}.</value>
+  </data>
+  <data name="Streams.Hint.Confirm" xml:space="preserve">
+    <value>y töröl  bármely más billentyű megtartja</value>
+  </data>
+  <data name="Streams.Hint.List" xml:space="preserve">
+    <value>↑↓ választ  H szöveg/hex  Del töröl  F5 újraolvas  Esc bezár</value>
+  </data>
+  <data name="Streams.Preview" xml:space="preserve">
+    <value>Előnézet</value>
+  </data>
+  <data name="Streams.Mode.Hex" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Streams.Mode.Text" xml:space="preserve">
+    <value>szöveg</value>
+  </data>
+  <data name="Streams.Truncated" xml:space="preserve">
+    <value>első {0} / {1}</value>
+  </data>
+  <data name="Streams.Empty" xml:space="preserve">
+    <value>(üres)</value>
+  </data>
 </root>

@@ -220,6 +220,9 @@ public sealed class TerminalApp : IAsyncDisposable
                 // No test prints on, or lists the queue of, a printer of the machine it runs on.
                 services.AddSingleton<SandboxServices.Printing>();
                 services.AddSingleton<Core.Services.Printing.IPrintService>(provider => provider.GetRequiredService<SandboxServices.Printing>());
+                // No test lists, reads or deletes the alternate data streams or attributes of a real file.
+                services.AddSingleton<SandboxServices.StreamAttributes>();
+                services.AddSingleton<Core.Services.Streams.IStreamAttributeService>(provider => provider.GetRequiredService<SandboxServices.StreamAttributes>());
                 services.AddSingleton<Core.Services.Mail.IMailService, SandboxServices.Mail>();
                 services.AddSingleton<Core.Services.Web.IWebFetcher, SandboxServices.Web>();
                 services.AddSingleton<SandboxServices.SystemSettings>();

@@ -364,6 +364,9 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+P: print the file under the cursor and manage the print queue.
         services.AddSingleton<iTerminal.Core.Services.Printing.IPrintService, iTerminal.Core.Services.Printing.PrintService>();
         services.AddTransient<PrintDialog>();
+        // Streams and attributes: NTFS alternate data streams (Windows) or extended attributes (Linux, macOS) of the entry under the cursor.
+        services.AddSingleton<iTerminal.Core.Services.Streams.IStreamAttributeService, iTerminal.Core.Services.Streams.StreamAttributeService>();
+        services.AddTransient<StreamsDialog>();
         // File associations: Enter and F4 open a file with the program chosen for it; Shift+F3 and
         // Ctrl+F4 choose. The dialogs are handed out by a factory because one consumer needs two —
         // "Open with" and "Edit with" are separate controls.

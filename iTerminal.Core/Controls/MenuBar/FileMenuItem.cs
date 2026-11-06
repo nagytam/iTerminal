@@ -43,7 +43,8 @@ public class FileMenuItem : MenuItem
         INotificationService? notificationService = null,
         EditLinkDialog? editLinkDialog = null,
         PrintDialog? printDialog = null,
-        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
+        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+        StreamsDialog? streamsDialog = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
@@ -98,6 +99,10 @@ public class FileMenuItem : MenuItem
         if (malwareScanService is { IsAvailable: true })
         {
             AddMenuItem(new MenuItem("Scan with Microsoft Defender", new ScanWithDefenderCommand(contentModelService, malwareScanService, notificationService), [], themeService));
+        }
+        if (streamsDialog is not null)
+        {
+            AddMenuItem(new MenuItem(UiText.Get("Menu.StreamsItem", "Streams and Attributes…"), new StreamsDialogCommand(streamsDialog, contentModelService), [], themeService));
         }
         if (propertiesDialog is not null)
         {

@@ -87,6 +87,7 @@ public static class FileContextMenu
         AddCommands<SignatureDialogCommand>(items, snapshot, "Signatures");
         AddPrintCommand(items, snapshot);
         AddCommands<SecureWipeDialogCommand>(items, snapshot, "Secure wipe");
+        AddCommands<StreamsDialogCommand>(items, snapshot, "Streams and attributes");
         AddCommands<ScanWithDefenderCommand>(items, snapshot, "Scan with Microsoft Defender");
         AddCommands<GitPullRebaseCommand>(items, snapshot, null);
         AddCommands<GitSyncCommand>(items, snapshot, null);

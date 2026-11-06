@@ -3484,4 +3484,88 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>enlace</value>
   </data>
+  <data name="Dialog.Streams" xml:space="preserve">
+    <value>Flujos y atributos</value>
+  </data>
+  <data name="Menu.StreamsItem" xml:space="preserve">
+    <value>Flujos y atributos…</value>
+  </data>
+  <data name="Streams.Kind.Streams" xml:space="preserve">
+    <value>Flujos</value>
+  </data>
+  <data name="Streams.Kind.Attributes" xml:space="preserve">
+    <value>Atributos</value>
+  </data>
+  <data name="Streams.Error.BadName" xml:space="preserve">
+    <value>«{0}» no es un nombre válido.</value>
+  </data>
+  <data name="Streams.Error.Unsupported" xml:space="preserve">
+    <value>Este sistema no tiene flujos ni atributos extendidos.</value>
+  </data>
+  <data name="Streams.Error.Changing" xml:space="preserve">
+    <value>Los atributos siguen cambiando; inténtelo de nuevo.</value>
+  </data>
+  <data name="Streams.Error.TooLarge" xml:space="preserve">
+    <value>Demasiado grande para la vista previa.</value>
+  </data>
+  <data name="Streams.Deleted" xml:space="preserve">
+    <value>{0} eliminado.</value>
+  </data>
+  <data name="DialogHint.DeleteStreamYes" xml:space="preserve">
+    <value>Eliminar el flujo o el atributo</value>
+  </data>
+  <data name="DialogHint.KeepStream" xml:space="preserve">
+    <value>Conservarlo</value>
+  </data>
+  <data name="DialogHint.ChooseStream" xml:space="preserve">
+    <value>Elegir un flujo o un atributo</value>
+  </data>
+  <data name="DialogHint.StreamHexText" xml:space="preserve">
+    <value>Cambiar la vista previa entre texto y hexadecimal</value>
+  </data>
+  <data name="DialogHint.DeleteStreamAsks" xml:space="preserve">
+    <value>Eliminarlo (pregunta antes)</value>
+  </data>
+  <data name="DialogHint.StreamsRefresh" xml:space="preserve">
+    <value>Leer la lista de nuevo</value>
+  </data>
+  <data name="Streams.Status.AskDelete" xml:space="preserve">
+    <value>¿Eliminar {0}? y lo elimina.</value>
+  </data>
+  <data name="Streams.Target" xml:space="preserve">
+    <value>Archivo</value>
+  </data>
+  <data name="Streams.Col.Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Streams.Col.Size" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
+  <data name="Streams.Reading" xml:space="preserve">
+    <value>Leyendo…</value>
+  </data>
+  <data name="Streams.None" xml:space="preserve">
+    <value>Esta entrada no tiene {0}.</value>
+  </data>
+  <data name="Streams.Hint.Confirm" xml:space="preserve">
+    <value>y elimina  cualquier otra tecla conserva</value>
+  </data>
+  <data name="Streams.Hint.List" xml:space="preserve">
+    <value>↑↓ elegir  H texto/hex  Supr eliminar  F5 releer  Esc cerrar</value>
+  </data>
+  <data name="Streams.Preview" xml:space="preserve">
+    <value>Vista previa</value>
+  </data>
+  <data name="Streams.Mode.Hex" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Streams.Mode.Text" xml:space="preserve">
+    <value>texto</value>
+  </data>
+  <data name="Streams.Truncated" xml:space="preserve">
+    <value>primeros {0} de {1}</value>
+  </data>
+  <data name="Streams.Empty" xml:space="preserve">
+    <value>(vacío)</value>
+  </data>
 </root>

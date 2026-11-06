@@ -58,7 +58,8 @@ public class FilePanelFactory(
     Func<iTerminal.Core.Dialogs.Web.WebBrowserDialog>? webBrowserDialogFactory = null,
     PrintDialog? printDialog = null,
     iConsole.Dialogs.SqliteViewerDialog? sqliteViewerDialog = null,
-    iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
+    iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+    StreamsDialog? streamsDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -111,6 +112,7 @@ public class FilePanelFactory(
             editLinkDialog: editLinkDialog,
             gitService: gitService,
             printDialog: printDialog,
+            streamsDialog: streamsDialog,
             // One per panel: a dialog instance is one control, and each panel's Enter and F3 show it.
             webBrowserDialog: webBrowserDialogFactory?.Invoke());
         contentModelService.AddContentBrowser(name, contentBrowser);
