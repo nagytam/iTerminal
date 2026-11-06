@@ -108,6 +108,32 @@ public class SystemInfoDialog : Dialog
         base.OnInitializeLayout();
     }
 
+    /// <summary>How long, in all, the report waits for the drives to say how full they are.</summary>
+    private static readonly TimeSpan DriveProbeBudget = TimeSpan.FromSeconds(3);
+
+    private static string DriveLine(DriveInfo drive)
+    {
+        try
+        {
+            if (!drive.IsReady)
+            {
+                return $"  {drive.Name,-6} {drive.DriveType,-10} (not ready)";
+            }
+
+            var totalGb = drive.TotalSize / 1024.0 / 1024 / 1024;
+            var freeGb = drive.TotalFreeSpace / 1024.0 / 1024 / 1024;
+            var usedGb = (drive.TotalSize - drive.TotalFreeSpace) / 1024.0 / 1024 / 1024;
+            return $"  {drive.Name,-6} {drive.DriveType,-10} {drive.DriveFormat,-8}  " +
+                   $"Total: {totalGb,8:N2} GB  Used: {usedGb,8:N2} GB  Free: {freeGb,8:N2} GB  " +
+                   $"{BarChart.BuildBar(drive.TotalSize == 0 ? 0 : (double)(drive.TotalSize - drive.TotalFreeSpace) / drive.TotalSize, 10).Replace(' ', '░')}  " +
+                   $"Label: {drive.VolumeLabel}";
+        }
+        catch
+        {
+            return $"  {drive.Name,-6} (access denied)";
+        }
+    }
+
     internal static string BuildSystemInfo()
     {
         var sb = new StringBuilder();
@@ -150,29 +176,17 @@ public class SystemInfoDialog : Dialog
         // ── Drives ────────────────────────────────────────────────────────
         sb.AppendLine();
         sb.AppendLine("══ Drives ════════════════════════════════════════════════════");
-        foreach (var drive in DriveInfo.GetDrives())
+        // Every drive is asked at the same moment and only waited for a few seconds in all: a mapped
+        // network drive whose server is switched off can take a minute to answer, one drive after
+        // another, and the whole report waited for them.
+        var drives = DriveInfo.GetDrives();
+        var driveLines = drives.Select(drive => Task.Run(() => DriveLine(drive))).ToArray();
+        Task.WaitAll(driveLines, DriveProbeBudget);
+        for (int i = 0; i < drives.Length; i++)
         {
-            try
-            {
-                if (drive.IsReady)
-                {
-                    var totalGb  = drive.TotalSize           / 1024.0 / 1024 / 1024;
-                    var freeGb   = drive.TotalFreeSpace      / 1024.0 / 1024 / 1024;
-                    var usedGb   = (drive.TotalSize - drive.TotalFreeSpace) / 1024.0 / 1024 / 1024;
-                    sb.AppendLine($"  {drive.Name,-6} {drive.DriveType,-10} {drive.DriveFormat,-8}  " +
-                                  $"Total: {totalGb,8:N2} GB  Used: {usedGb,8:N2} GB  Free: {freeGb,8:N2} GB  " +
-                                  $"{BarChart.BuildBar(drive.TotalSize == 0 ? 0 : (double)(drive.TotalSize - drive.TotalFreeSpace) / drive.TotalSize, 10).Replace(' ', '░')}  " +
-                                  $"Label: {drive.VolumeLabel}");
-                }
-                else
-                {
-                    sb.AppendLine($"  {drive.Name,-6} {drive.DriveType,-10} (not ready)");
-                }
-            }
-            catch
-            {
-                sb.AppendLine($"  {drive.Name,-6} (access denied)");
-            }
+            sb.AppendLine(driveLines[i].IsCompletedSuccessfully
+                ? driveLines[i].Result
+                : $"  {drives[i].Name,-6} (not answering)");
         }
 
         // ── Network Interfaces ────────────────────────────────────────────
