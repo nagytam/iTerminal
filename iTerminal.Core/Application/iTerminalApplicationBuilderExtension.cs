@@ -112,6 +112,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IContentLens, GitLens>();
         services.AddSingleton<IContentLens, FileLabelLens>();
         services.AddSingleton<IFileLabelService, FileLabelService>();
+        services.AddSingleton<iTerminal.Core.Services.Security.FileDisguiseChecker>();
         services.AddTransient<iTerminal.Core.Dialogs.Git.GitClientDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Calculator.CalculatorDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog>();
