@@ -196,6 +196,9 @@ public static class iTerminalApplicationBuilderExtension
         // The SQLite viewer reads a database through the read-only reader; the reader holds no state.
         services.AddTransient<iConsole.Sqlite.ISqliteDatabaseReader, iTerminal.Core.Services.Sqlite.SqliteDatabaseReader>();
         services.AddTransient<iConsole.Dialogs.SqliteViewerDialog>();
+        // The HDF5 viewer reads a file through the read-only reader; the reader holds no state.
+        services.AddTransient<iConsole.Hdf.IHdfFileReader, iTerminal.Core.Services.Hdf.Hdf5FileReader>();
+        services.AddTransient<iConsole.Dialogs.HdfViewerDialog>();
         // The library index is a singleton so the in-memory copy of the table is shared by the
         // indexing job and every dialog that searches it.
         services.AddSingleton<iTerminal.Core.Services.Music.IMusicLibraryService, iTerminal.Core.Services.Music.MusicLibraryService>();

@@ -729,6 +729,121 @@ public class ViewFileDialogCommandTest
         Assert.AreEqual(path, fileViewer.Url?.Path);
     }
 
+    private static iConsole.Dialogs.HdfViewerDialog CreateHdfDialog(IThemeService themeService) =>
+        new(Mock.Of<iConsole.Hdf.IHdfFileReader>(), themeService);
+
+    [TestMethod]
+    [Timeout(60_000)]
+    [DataRow(".h5")]
+    [DataRow(".hdf5")]
+    [DataRow(".hdf")]
+    [DataRow(".he5")]
+    public void ExecuteAsync_WithALocalHdf5File_PointsTheHdfViewerAtIt(string extension)
+    {
+        var themeService = CreateThemeService();
+        var hdfDialog = CreateHdfDialog(themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}{extension}");
+        File.WriteAllBytes(path, [.. iConsole.Hdf.HdfFileTypes.Signature, 0, 0, 0, 0]);
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                CreateDialog(themeService),
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                hdfViewerDialog: hdfDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, hdfDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithAnHdfFileThatIsNotHdf5_UsesTheGenericViewer()
+    {
+        var themeService = CreateThemeService();
+        var hdfDialog = CreateHdfDialog(themeService);
+        var fileViewer = CreateDialog(themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.hdf");
+        // HDF4 starts 0x0E 0x03 0x13 0x01 and is a different format.
+        File.WriteAllBytes(path, [0x0E, 0x03, 0x13, 0x01, 0, 0, 0, 0, 0, 0, 0, 0]);
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                fileViewer,
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                hdfViewerDialog: hdfDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.IsNull(hdfDialog.Url, "an HDF4 file is not handed to the HDF5 viewer");
+            Assert.AreEqual(path, fileViewer.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithAZeroByteH5File_UsesTheGenericViewer()
+    {
+        var themeService = CreateThemeService();
+        var hdfDialog = CreateHdfDialog(themeService);
+        var fileViewer = CreateDialog(themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.h5");
+        File.WriteAllBytes(path, []);
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                fileViewer,
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                hdfViewerDialog: hdfDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.IsNull(hdfDialog.Url);
+            Assert.AreEqual(path, fileViewer.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithAnHdf5FileThatIsNotLocal_LeavesTheHdfViewerAloneAndUsesTheGenericViewer()
+    {
+        var themeService = CreateThemeService();
+        var hdfDialog = CreateHdfDialog(themeService);
+        var fileViewer = CreateDialog(themeService);
+        // The file does not exist on this machine, which is how a remote path looks to the command.
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.h5");
+
+        var command = new ViewFileDialogCommand(
+            fileViewer,
+            CreateServiceForFile(path),
+            solutionViewerDialog: null,
+            hdfViewerDialog: hdfDialog);
+
+        command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+        Assert.IsNull(hdfDialog.Url, "a remote file is not handed to the HDF5 viewer");
+        Assert.AreEqual(path, fileViewer.Url?.Path);
+    }
+
     // ── ContentBrowser integration ───────────────────────────────────────────
 
     [Timeout(60_000)]

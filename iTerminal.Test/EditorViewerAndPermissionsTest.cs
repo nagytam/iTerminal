@@ -26,6 +26,21 @@ public class EditorViewerAndPermissionsTest
         using var create = database.CreateCommand();
         create.CommandText = "CREATE TABLE people (id INTEGER, name TEXT); INSERT INTO people VALUES (1, 'Ada');";
         create.ExecuteNonQuery();
+
+        // A 3 x 4 x 5 cube where cube[i, j, k] = 100 i + 10 j + k, so a cell's value says which slice it is from.
+        var cube = new double[3, 4, 5];
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                for (int k = 0; k < 5; k++)
+                {
+                    cube[i, j, k] = (i * 100) + (j * 10) + k;
+                }
+            }
+        }
+
+        new PureHDF.H5File { ["cube"] = cube }.Write(Path.Combine(left, "cube.h5"));
     });
 
     [TestCleanup]
@@ -66,6 +81,38 @@ public class EditorViewerAndPermissionsTest
 
         Assert.IsTrue(await _app.PressAsync("F4"));
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.SqliteViewerDialog { IsTextMode: true }, "the text output");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task F3OnAnHdf5FileShowsASliceAsAGridAndTheSliceKeysMoveThroughTheCube()
+    {
+        await _app.SelectEntryAsync("cube.h5");
+        Assert.IsTrue(await _app.PressAsync("F3"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.HdfViewerDialog, "the HDF5 viewer to open");
+        await _app.WaitForTextAsync("/cube  float64 [3 × 4 × 5]");
+        await _app.WaitForTextAsync("index 1 of 3");
+        await _app.WaitForTextAsync("34");
+        Assert.IsFalse(_app.Driver.Screen.Lines.Any(l => l.Contains("134", StringComparison.Ordinal)), "slice 0 holds 0..34, never 134");
+
+        // The typed keys: + steps the index of the leading dimension, and the next slice's cells are 100 more.
+        Assert.IsTrue(await _app.PressAsync("+"));
+        await _app.WaitForTextAsync("index 2 of 3");
+        await _app.WaitForTextAsync("134");
+
+        // The layout-independent pair: Ctrl+Up steps the index too.
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Up"));
+        await _app.WaitForTextAsync("index 3 of 3");
+        await _app.WaitForTextAsync("234");
+
+        Assert.IsTrue(await _app.PressAsync("-"));
+        await _app.WaitForTextAsync("index 2 of 3");
+        await _app.WaitForTextGoneAsync("234");
+
+        // The viewer is still the modal, and Esc closes it.
+        Assert.IsTrue(_app.Driver.FocusedModal is iConsole.Dialogs.HdfViewerDialog);
+        Assert.IsTrue(await _app.PressAsync("Esc"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.HdfViewerDialog, "the HDF5 viewer to close");
     }
 
     [TestMethod]

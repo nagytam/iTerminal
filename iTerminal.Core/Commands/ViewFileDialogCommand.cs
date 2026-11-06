@@ -1,6 +1,7 @@
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Csv;
+using iConsole.Hdf;
 using iConsole.Dialogs;
 using iConsole.Json;
 using iConsole.Sqlite;
@@ -27,7 +28,8 @@ public class ViewFileDialogCommand(
     JsonViewerDialog? jsonViewerDialog = null,
     CsvViewerDialog? csvViewerDialog = null,
     WebBrowserDialog? webBrowserDialog = null,
-    SqliteViewerDialog? sqliteViewerDialog = null) : Command
+    SqliteViewerDialog? sqliteViewerDialog = null,
+    HdfViewerDialog? hdfViewerDialog = null) : Command
 {
     private readonly WebBrowserDialog? _webBrowserDialog = webBrowserDialog;
     private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
@@ -40,6 +42,7 @@ public class ViewFileDialogCommand(
     private readonly JsonViewerDialog? _jsonViewerDialog = jsonViewerDialog;
     private readonly CsvViewerDialog? _csvViewerDialog = csvViewerDialog;
     private readonly SqliteViewerDialog? _sqliteViewerDialog = sqliteViewerDialog;
+    private readonly HdfViewerDialog? _hdfViewerDialog = hdfViewerDialog;
 
     public override string Title => "View";
     public override string Description => "Open the selected file in the viewer.";
@@ -166,6 +169,20 @@ public class ViewFileDialogCommand(
         {
             _sqliteViewerDialog.Url = focusedFileUrl;
             await (Control?.ShowDialogAsync(_sqliteViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // An HDF5 file opens in the HDF5 viewer, only when it is a local file: PureHDF opens a path, so a remote file falls
+        // through to the generic text viewer. A .hdf file that is not HDF5 (HDF4 is a different format) is read by the generic
+        // viewer, as it always was. The signature read runs on a worker thread.
+        if (_hdfViewerDialog is not null
+            && focusedFileUrl is not null
+            && HdfFileTypes.IsHdfFile(focusedFileUrl.Path)
+            && File.Exists(focusedFileUrl.Path)
+            && await Task.Run(() => HdfFileTypes.FileHasSignature(focusedFileUrl.Path)))
+        {
+            _hdfViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_hdfViewerDialog) ?? Task.CompletedTask);
             return;
         }
 
