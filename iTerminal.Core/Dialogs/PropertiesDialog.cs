@@ -10,6 +10,7 @@ using iConsole.Services;
 using iTerminal.Core.Controls;
 using iTerminal.Core.Helper;
 using iTerminal.Core.Services.Labels;
+using iTerminal.Core.Services.Origin;
 using iTerminal.Core.Services.Properties;
 using iTerminal.Core.Services.Security;
 using System.Globalization;
@@ -29,12 +30,13 @@ namespace iTerminal.Core.Dialogs;
 public class PropertiesDialog : FormDialog
 {
     private const int CaptionWidth = 11;
-    private const int InfoRows = 15;
+    private const int InfoRows = 18;
     private static readonly string[] DateFormats = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm"];
 
     private readonly IFilePropertiesService _propertiesService;
     private readonly IContentModelService _contentModelService;
     private readonly IFileLabelService? _labels;
+    private readonly IFileOriginService? _originService;
     private readonly InfoLines _info;
     private readonly CheckBox _checkBoxReadOnly;
     private readonly CheckBox _checkBoxHidden;
@@ -48,6 +50,7 @@ public class PropertiesDialog : FormDialog
     private readonly Button _applyButton;
     private readonly Button _cancelButton;
     private readonly Button? _permissionsButton;
+    private readonly Button? _removeMarkButton;
     private readonly AccessControlDialog? _accessControlDialog;
     private readonly bool _usesAttributes = OperatingSystem.IsWindows();
 
@@ -66,13 +69,15 @@ public class PropertiesDialog : FormDialog
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
         IFileLabelService? labels = null,
-        AccessControlDialog? accessControlDialog = null)
+        AccessControlDialog? accessControlDialog = null,
+        IFileOriginService? originService = null)
         : base(nameof(PropertiesDialog), themeService)
     {
         _propertiesService = propertiesService;
         _contentModelService = contentModelService;
         _labels = labels;
         _accessControlDialog = accessControlDialog;
+        _originService = originService;
         Title = iConsole.Localization.UiText.Get("Menu.Properties", "Properties");
         var applyCommand = new ApplyCommand();
         AddCommand(applyCommand);
@@ -81,6 +86,13 @@ public class PropertiesDialog : FormDialog
             var permissionsCommand = new PermissionsCommand();
             AddCommand(permissionsCommand);
             _permissionsButton = new Button("Permissions… (^P)", permissionsCommand, themeService);
+        }
+
+        if (originService is not null)
+        {
+            var removeMarkCommand = new RemoveMarkCommand();
+            AddCommand(removeMarkCommand);
+            _removeMarkButton = new Button(UiText.Get("Button.RemoveMark", "Remove mark (^F)"), removeMarkCommand, themeService);
         }
 
         _info = new InfoLines(themeService);
@@ -124,8 +136,138 @@ public class PropertiesDialog : FormDialog
             AddControl(_permissionsButton);
         }
 
+        if (_removeMarkButton is not null)
+        {
+            AddControl(_removeMarkButton);
+        }
+
         AddControl(_applyButton);
         AddControl(_cancelButton);
+    }
+
+    private CancellationTokenSource? _originCancellation;
+    private int _originGeneration;
+    private volatile FileOrigin? _origin;
+    private volatile bool _removeArmed;
+    private volatile string? _removeError;
+
+    /// <summary>The mark of the file shown, once read on its background task; null when it has none.</summary>
+    public FileOrigin? Origin => _origin;
+
+    /// <summary>The read of the mark (and the re-read after a removal); nothing waits on it, it exists so a test can.</summary>
+    public Task OriginTask { get; private set; } = Task.CompletedTask;
+
+    /// <summary>True between asking to remove the mark and the answer.</summary>
+    public bool IsRemoveArmed => _removeArmed;
+
+    /// <summary>A file, not a folder and not a link: the entry the mark can be read of.</summary>
+    private bool CanHaveOrigin => _originService is not null && Properties is { IsFolder: false, LinkTarget: null };
+
+    private void StartReadingOrigin()
+    {
+        _originCancellation?.Cancel();
+        int generation = Interlocked.Increment(ref _originGeneration);
+        _origin = null;
+        if (!CanHaveOrigin || Properties is not { } properties)
+        {
+            OriginTask = Task.CompletedTask;
+            return;
+        }
+
+        CancellationTokenSource cancellation = _originCancellation = new CancellationTokenSource();
+        OriginTask = Task.Run(async () =>
+        {
+            try
+            {
+                FileOrigin? origin = await _originService!.ReadAsync(properties.Path, cancellation.Token);
+                if (generation == Volatile.Read(ref _originGeneration) && !cancellation.IsCancellationRequested)
+                {
+                    _origin = origin;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+                // A file whose mark cannot be read shows none.
+            }
+        });
+    }
+
+    /// <summary>Ctrl+F, or the button: asks whether to remove the mark. Nothing is asked of a file that has none.</summary>
+    public void ArmRemoveMark()
+    {
+        if (_origin is null || !CanHaveOrigin)
+        {
+            return;
+        }
+
+        _removeError = null;
+        _removeArmed = true;
+        UpdateLines();
+    }
+
+    /// <summary>The answer to the question: y removes on a task and reads the mark again; anything else withdraws.</summary>
+    private void AnswerRemoveMark(bool yes)
+    {
+        _removeArmed = false;
+        if (yes && Properties is { } properties && _originService is not null)
+        {
+            _originCancellation?.Cancel();
+            int generation = Interlocked.Increment(ref _originGeneration);
+            CancellationTokenSource cancellation = _originCancellation = new CancellationTokenSource();
+            OriginTask = Task.Run(async () =>
+            {
+                try
+                {
+                    bool removed = await _originService.RemoveAsync(properties.Path, cancellation.Token);
+                    FileOrigin? origin = await _originService.ReadAsync(properties.Path, cancellation.Token);
+                    if (generation == Volatile.Read(ref _originGeneration) && !cancellation.IsCancellationRequested)
+                    {
+                        _origin = origin;
+                        _removeError = removed ? null : UiText.Get("Msg.RemoveMarkFailed", "Error: the mark could not be removed.");
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                }
+                catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+                {
+                    _removeError = string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), exception.Message);
+                }
+            });
+        }
+
+        UpdateLines();
+    }
+
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_removeArmed)
+        {
+            yield return ("y", UiText.Get("DialogHint.RemoveMarkYes", "Remove the mark"));
+            yield return ("n / Esc", UiText.Get("DialogHint.RemoveMarkNo", "Keep the mark"));
+            yield break;
+        }
+
+        if (_originService is not null)
+        {
+            yield return ("Ctrl+F", UiText.Get("DialogHint.RemoveMark", "Remove the download mark (asks y/n)"));
+        }
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        if (_removeArmed)
+        {
+            // The question is answered ahead of the text boxes, so a y or n is never typed into a date.
+            bool plain = !keyEvent.Alt && !keyEvent.Control;
+            AnswerRemoveMark(keyEvent.ConsoleKey == ConsoleKey.Y && plain);
+            return true;
+        }
+
+        return await base.HandleKeyEventAsync(keyEvent);
     }
 
     /// <summary>Opens the access control list of the entry shown, over this dialog.</summary>
@@ -181,6 +323,9 @@ public class PropertiesDialog : FormDialog
         _measure = null;
         _measureComplete = false;
         _errorLabel.Text = string.Empty;
+        _removeArmed = false;
+        _removeError = null;
+        _origin = null;
 
         try
         {
@@ -220,6 +365,7 @@ public class PropertiesDialog : FormDialog
 
         await base.OnInitializeAsync();
         StartMeasuring();
+        StartReadingOrigin();
         UpdateLines();
     }
 
@@ -313,6 +459,14 @@ public class PropertiesDialog : FormDialog
             _permissionsButton.ViewSize = new Size(PrimaryButtonWidth + 2, 1);
         }
 
+        if (_removeMarkButton is not null)
+        {
+            // Beside Permissions when there is one, else on the row it would have taken.
+            long x = _permissionsButton is not null ? FieldX + PrimaryButtonWidth + 4 : FieldX;
+            _removeMarkButton.Position = new Position(x, dateRow + DateBoxes.Length + 1);
+            _removeMarkButton.ViewSize = new Size(PrimaryButtonWidth + 4, 1);
+        }
+
         LayoutButtonRow(_applyButton, _cancelButton);
     }
 
@@ -399,7 +553,41 @@ public class PropertiesDialog : FormDialog
             lines.Add(new(Row("Tags", label.Tags.Count == 0 ? "none" : (FileLabelTags.Format(label.Tags)).Shrink(valueWidth) ?? string.Empty)));
         }
 
+        if (CanHaveOrigin)
+        {
+            AddOriginLines(lines, valueWidth);
+        }
+
         _info.Lines = lines;
+    }
+
+    private void AddOriginLines(List<InfoLines.Line> lines, int valueWidth)
+    {
+        if (_origin is { } origin)
+        {
+            string marked = origin.ZoneId is { } zone
+                ? $"{origin.ZoneName} (zone {zone})"
+                : origin.Quarantine is not null ? UiText.Get("Field.OriginQuarantined", "Quarantined") : UiText.Get("Field.OriginDownloaded", "Downloaded");
+            lines.Add(new(Row(UiText.Get("Field.OriginMarked", "Marked"), marked.Shrink(valueWidth) ?? string.Empty), origin.ZoneId is < 3 ? null : ThemeService.CurrentColorScheme.Error));
+            if (origin.Source is { } source)
+            {
+                lines.Add(new(Row(UiText.Get("Field.OriginFrom", "From"), source.Shrink(valueWidth) ?? string.Empty)));
+            }
+
+            if (origin.ReferrerUrl is { } referrer)
+            {
+                lines.Add(new(Row(UiText.Get("Field.OriginReferrer", "Referrer"), referrer.Shrink(valueWidth) ?? string.Empty)));
+            }
+        }
+
+        if (_removeArmed)
+        {
+            lines.Add(new(UiText.Get("Msg.RemoveMarkAsk", "Remove the mark so the file is no longer flagged as downloaded? y/n"), ThemeService.CurrentColorScheme.Error));
+        }
+        else if (_removeError is { } error)
+        {
+            lines.Add(new(error.Shrink(valueWidth + CaptionWidth) ?? string.Empty, ThemeService.CurrentColorScheme.Error));
+        }
     }
 
     /// <summary>
@@ -492,6 +680,8 @@ public class PropertiesDialog : FormDialog
     {
         // Nobody is left to read the total, and the walk can be of a whole disk.
         _cancellation?.Cancel();
+        _originCancellation?.Cancel();
+        _removeArmed = false;
         base.Close();
     }
 
@@ -511,6 +701,23 @@ public class PropertiesDialog : FormDialog
             {
                 await dialog.ShowPermissionsAsync();
             }
+        }
+    }
+
+    /// <summary>Ctrl+F, or the Remove mark button: asks, then removes the download mark like Unblock-File.</summary>
+    private sealed class RemoveMarkCommand : Command
+    {
+        public override string Title => "Remove mark";
+        public override string Description => "Remove the mark that says the file came from the internet.";
+
+        public override Key? Key { get; init; } =
+            new Key(ConsoleKey.F, false, false, true);
+
+        public override Task ExecuteAsync(object? args)
+        {
+            var dialog = Control as PropertiesDialog ?? Control?.Parent as PropertiesDialog;
+            dialog?.ArmRemoveMark();
+            return Task.CompletedTask;
         }
     }
 
