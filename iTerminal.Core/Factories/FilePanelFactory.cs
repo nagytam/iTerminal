@@ -59,6 +59,7 @@ public class FilePanelFactory(
     PrintDialog? printDialog = null,
     iConsole.Dialogs.SqliteViewerDialog? sqliteViewerDialog = null,
     iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+    StreamsDialog? streamsDialog = null,
     iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
     FileEncryptionDialog? fileEncryptionDialog = null)
 {
@@ -115,6 +116,7 @@ public class FilePanelFactory(
             editLinkDialog: editLinkDialog,
             gitService: gitService,
             printDialog: printDialog,
+            streamsDialog: streamsDialog,
             // One per panel: a dialog instance is one control, and each panel's Enter and F3 show it.
             webBrowserDialog: webBrowserDialogFactory?.Invoke());
         contentModelService.AddContentBrowser(name, contentBrowser);

@@ -3574,6 +3574,90 @@
   <data name="Checksum.Sig.Error" xml:space="preserve">
     <value>konnte nicht geprüft werden: {0}</value>
   </data>
+  <data name="Dialog.Streams" xml:space="preserve">
+    <value>Streams und Attribute</value>
+  </data>
+  <data name="Menu.StreamsItem" xml:space="preserve">
+    <value>Streams und Attribute…</value>
+  </data>
+  <data name="Streams.Kind.Streams" xml:space="preserve">
+    <value>Streams</value>
+  </data>
+  <data name="Streams.Kind.Attributes" xml:space="preserve">
+    <value>Attribute</value>
+  </data>
+  <data name="Streams.Error.BadName" xml:space="preserve">
+    <value>„{0}“ ist kein gültiger Name.</value>
+  </data>
+  <data name="Streams.Error.Unsupported" xml:space="preserve">
+    <value>Dieses System hat keine Streams oder erweiterten Attribute.</value>
+  </data>
+  <data name="Streams.Error.Changing" xml:space="preserve">
+    <value>Die Attribute ändern sich laufend; versuchen Sie es erneut.</value>
+  </data>
+  <data name="Streams.Error.TooLarge" xml:space="preserve">
+    <value>Zu groß für eine Vorschau.</value>
+  </data>
+  <data name="Streams.Deleted" xml:space="preserve">
+    <value>{0} gelöscht.</value>
+  </data>
+  <data name="DialogHint.DeleteStreamYes" xml:space="preserve">
+    <value>Stream oder Attribut löschen</value>
+  </data>
+  <data name="DialogHint.KeepStream" xml:space="preserve">
+    <value>Behalten</value>
+  </data>
+  <data name="DialogHint.ChooseStream" xml:space="preserve">
+    <value>Stream oder Attribut wählen</value>
+  </data>
+  <data name="DialogHint.StreamHexText" xml:space="preserve">
+    <value>Vorschau zwischen Text und Hex umschalten</value>
+  </data>
+  <data name="DialogHint.DeleteStreamAsks" xml:space="preserve">
+    <value>Löschen (fragt vorher)</value>
+  </data>
+  <data name="DialogHint.StreamsRefresh" xml:space="preserve">
+    <value>Liste neu einlesen</value>
+  </data>
+  <data name="Streams.Status.AskDelete" xml:space="preserve">
+    <value>{0} löschen? y löscht es.</value>
+  </data>
+  <data name="Streams.Target" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="Streams.Col.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Streams.Col.Size" xml:space="preserve">
+    <value>Größe</value>
+  </data>
+  <data name="Streams.Reading" xml:space="preserve">
+    <value>Wird gelesen…</value>
+  </data>
+  <data name="Streams.None" xml:space="preserve">
+    <value>Dieser Eintrag hat keine {0}.</value>
+  </data>
+  <data name="Streams.Hint.Confirm" xml:space="preserve">
+    <value>y löscht  jede andere Taste behält</value>
+  </data>
+  <data name="Streams.Hint.List" xml:space="preserve">
+    <value>↑↓ wählen  H Text/Hex  Entf löschen  F5 neu lesen  Esc schließen</value>
+  </data>
+  <data name="Streams.Preview" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="Streams.Mode.Hex" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="Streams.Mode.Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Streams.Truncated" xml:space="preserve">
+    <value>erste {0} von {1}</value>
+  </data>
+  <data name="Streams.Empty" xml:space="preserve">
+    <value>(leer)</value>
+  </data>
   <data name="Dialog.FileEncryption" xml:space="preserve">
     <value>Dateien ver-/entschlüsseln</value>
   </data>
