@@ -826,4 +826,43 @@
   <data name="Viewer.ChangedOnDisk" xml:space="preserve">
     <value>changed on disk</value>
   </data>
+  <data name="Hdf.Picker.Label" xml:space="preserve">
+    <value>Dataset</value>
+  </data>
+  <data name="Hdf.Grid.Empty" xml:space="preserve">
+    <value>This dataset has no values</value>
+  </data>
+  <data name="Hdf.Status.NoDatasets" xml:space="preserve">
+    <value>This file has no datasets</value>
+  </data>
+  <data name="Hdf.Error.Unexpected" xml:space="preserve">
+    <value>The file could not be read: {0}</value>
+  </data>
+  <data name="Hdf.Shape.Scalar" xml:space="preserve">
+    <value>scalar</value>
+  </data>
+  <data name="Hdf.Status.RowsCut" xml:space="preserve">
+    <value>; only the first {0:N0} rows are shown</value>
+  </data>
+  <data name="Hdf.Status.ColumnsCut" xml:space="preserve">
+    <value>; only the first {0:N0} columns are shown</value>
+  </data>
+  <data name="Hdf.Status.DatasetsCut" xml:space="preserve">
+    <value>; the list holds only the first {0:N0} datasets</value>
+  </data>
+  <data name="Hdf.Slice.Line" xml:space="preserve">
+    <value>Slice [{0}]  dimension {1} of {2}, index {3} of {4}   [ ] dimension   + - index</value>
+  </data>
+  <data name="Hdf.Title" xml:space="preserve">
+    <value>HDF5</value>
+  </data>
+  <data name="Hdf.Title.Hint" xml:space="preserve">
+    <value>  Tab:grid  [ ]:dimension  +/-:index</value>
+  </data>
+  <data name="Hdf.Hint.Index" xml:space="preserve">
+    <value>Step the index of the active dimension</value>
+  </data>
+  <data name="Hdf.Hint.Dimension" xml:space="preserve">
+    <value>Choose the active dimension</value>
+  </data>
 </root>
