@@ -826,4 +826,43 @@
   <data name="Viewer.ChangedOnDisk" xml:space="preserve">
     <value>lemezen módosult</value>
   </data>
+  <data name="Hdf.Picker.Label" xml:space="preserve">
+    <value>Adathalmaz</value>
+  </data>
+  <data name="Hdf.Grid.Empty" xml:space="preserve">
+    <value>Ennek az adathalmaznak nincsenek értékei</value>
+  </data>
+  <data name="Hdf.Status.NoDatasets" xml:space="preserve">
+    <value>Ez a fájl nem tartalmaz adathalmazt</value>
+  </data>
+  <data name="Hdf.Error.Unexpected" xml:space="preserve">
+    <value>A fájl nem olvasható: {0}</value>
+  </data>
+  <data name="Hdf.Shape.Scalar" xml:space="preserve">
+    <value>skalár</value>
+  </data>
+  <data name="Hdf.Status.RowsCut" xml:space="preserve">
+    <value>; csak az első {0:N0} sor látható</value>
+  </data>
+  <data name="Hdf.Status.ColumnsCut" xml:space="preserve">
+    <value>; csak az első {0:N0} oszlop látható</value>
+  </data>
+  <data name="Hdf.Status.DatasetsCut" xml:space="preserve">
+    <value>; a lista csak az első {0:N0} adathalmazt tartalmazza</value>
+  </data>
+  <data name="Hdf.Slice.Line" xml:space="preserve">
+    <value>Szelet [{0}]  {1}. dimenzió ({2}-ből), {3}. index ({4}-ből)   [ ] dimenzió   + - index</value>
+  </data>
+  <data name="Hdf.Title" xml:space="preserve">
+    <value>HDF5</value>
+  </data>
+  <data name="Hdf.Title.Hint" xml:space="preserve">
+    <value>  Tab:rács  [ ]:dimenzió  +/-:index</value>
+  </data>
+  <data name="Hdf.Hint.Index" xml:space="preserve">
+    <value>Az aktív dimenzió indexének léptetése</value>
+  </data>
+  <data name="Hdf.Hint.Dimension" xml:space="preserve">
+    <value>Az aktív dimenzió kiválasztása</value>
+  </data>
 </root>

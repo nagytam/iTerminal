@@ -7,7 +7,6 @@ using iTerminal.Core.Services;
 using iTerminal.Core.Services.Elevation;
 using iTerminal.Core.Screens;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.FeatureManagement;
 
 // A copy restarted with elevated rights is started while the one it replaces is still shutting down.
 // The settings are written back whole when that one exits, so wait for it before touching them.
@@ -25,9 +24,11 @@ if (waitForParent >= 0 && waitForParent + 1 < args.Length && int.TryParse(args[w
     }
 }
 
+iConsole.Diagnostics.StartupTrace.Mark("main");
+// Entity Framework's first use takes over a second; it starts now and runs beside the registrations below.
+_ = iTerminal.Core.Data.DatabaseWarmUp.Start();
 var builder = iConsoleApplication.CreateBuilder(args);
 
-builder.Services.AddFeatureManagement();
 builder.Services.AddDefaultConsoleDriver();
 builder.Services.AddiConsoleCore();
 if (OperatingSystem.IsLinux())
@@ -36,17 +37,22 @@ if (OperatingSystem.IsLinux())
 }
 else
 {
-    await builder.Services.AddInputWindowsAsync();
+    await builder.Services.AddInputWindowsAsync(builder.Configuration);
 }
 
 builder.Services.AddiTerminal(builder.Configuration);
 builder.UseDesktop<Desktop>();
 builder.UseScreen<TerminalScreen>();
 
+iConsole.Diagnostics.StartupTrace.Mark("services-registered");
 var app = builder.Build();
+iConsole.Diagnostics.StartupTrace.Mark("built");
 
 // The saved passwords open with the key the app generated for them, before any panel restores a remote folder.
 app.Services.GetRequiredService<IPasswordManager>().Unlock();
+
+// After the unlock: a service built before it (the AI client reads its key from the store) would be built without its secret.
+iTerminal.Core.Application.StartupWarmUp.Start(app.Services);
 
 var elevation = app.Services.GetRequiredService<IElevationService>();
 if (elevation.IsElevated)
@@ -66,6 +72,7 @@ if (elevation.IsElevated)
         iConsole.Services.NotificationSeverity.Warning);
 }
 
+iConsole.Diagnostics.StartupTrace.Mark("run");
 await app.RunAsync();
 
 // Restarting as root on Unix replaces this process once the host has stopped and given the terminal back.

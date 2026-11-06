@@ -230,4 +230,36 @@ public class ConxelStringTest
         Assert.AreEqual(Color.Yellow, conxelString[1].ForegroundColor);
         Assert.AreEqual(Color.Yellow, conxelString[2].ForegroundColor);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Reset_PadsTheTextToTheWidth_AndReusesTheStringForTheNextRow()
+    {
+        var scratch = new ConxelString();
+
+        scratch.Reset("abc", 6, Color.Red, Color.Blue);
+        Assert.AreEqual("abc   ", scratch.Text);
+        Assert.AreEqual(Color.Blue, scratch[5].BackgroundColor);
+
+        // A shorter row after a longer one leaves nothing of the first behind.
+        scratch.Reset("x", 2, Color.Green, Color.Black);
+        Assert.AreEqual("x ", scratch.Text);
+        Assert.AreEqual(2, scratch.Count);
+        Assert.AreEqual(Color.Green, scratch[0].ForegroundColor);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Reset_KeepsTextLongerThanTheWidth_AndMatchesAFreshStringForWideText()
+    {
+        var scratch = new ConxelString();
+
+        scratch.Reset("abcdef", 3, Color.White, Color.Black);
+        Assert.AreEqual("abcdef", scratch.Text);
+
+        scratch.Reset("hi 日本", 10, Color.White, Color.Black);
+        var fresh = new ConxelString("hi 日本".PadRight(10), Color.White, Color.Black);
+        Assert.AreEqual(fresh.Count, scratch.Count);
+        Assert.AreEqual(fresh.Text, scratch.Text);
+    }
 }

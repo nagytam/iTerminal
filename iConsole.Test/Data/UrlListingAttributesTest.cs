@@ -10,6 +10,7 @@ namespace iConsole.Test.Data;
 [TestClass]
 public class UrlListingAttributesTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void FromEnumeratedFileSystemInfo_CapturesTheAttributes()
     {
@@ -35,6 +36,7 @@ public class UrlListingAttributesTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FromPathString_KeepsNoAttributes()
     {

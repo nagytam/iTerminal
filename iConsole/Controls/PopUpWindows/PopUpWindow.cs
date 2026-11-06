@@ -190,7 +190,7 @@ public class PopUpWindow : Window
         // the dialog may not be added to a parent control, so avoid throwing
         // when Parent is null and default to ZOrder 1 in that case.
         ZOrder = (Parent?.ZOrder + 1) ?? 1;
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             control.OnInitializeZOrder();
         }

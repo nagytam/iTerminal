@@ -22,6 +22,9 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
     private readonly List<string> _log = [];
     private IReadOnlyList<RuntimeDependencyStatus> _statuses = [];
     private bool _installing;
+    private readonly Task _initialBuild;
+    private int _ticket;
+    private int _assignedTicket;
 
     public RuntimeDependencyService(ISettingsService settings, IEnumerable<IRuntimeDependency> dependencies)
     {
@@ -35,10 +38,32 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
             dependency.Activate();
         }
 
-        Rebuild();
+        // Finding out what is installed starts programs and walks the PATH, which took seconds on the start-up path
+        // and nothing waits for it until the first status is read, which is long after the splash.
+        _initialBuild = Task.Run(() =>
+        {
+            try
+            {
+                Rebuild();
+            }
+            catch (Exception)
+            {
+                // A probe that fails leaves the list empty rather than failing every later read; the next rebuild tries again.
+            }
+        });
     }
 
-    public IReadOnlyList<RuntimeDependencyStatus> Statuses => _statuses;
+    /// <summary>The statuses, waiting for the first build if it is still running.</summary>
+    private IReadOnlyList<RuntimeDependencyStatus> Current
+    {
+        get
+        {
+            _initialBuild.Wait();
+            return _statuses;
+        }
+    }
+
+    public IReadOnlyList<RuntimeDependencyStatus> Statuses => Current;
 
     public IReadOnlyList<string> Log
     {
@@ -62,9 +87,9 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
         }
     }
 
-    public bool ShouldOfferAtStartup => _statuses.Any(IsOffered);
+    public bool ShouldOfferAtStartup => Current.Any(IsOffered);
 
-    public bool IsInstalled(string id) => _statuses.Any(status => status.Id == id && status.State != RuntimeDependencyState.Missing);
+    public bool IsInstalled(string id) => Current.Any(status => status.Id == id && status.State != RuntimeDependencyState.Missing);
 
     public async Task CheckAsync(CancellationToken cancellationToken)
     {
@@ -138,7 +163,7 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
 
         try
         {
-            foreach (RuntimeDependencyStatus status in _statuses.Where(status => status.State != RuntimeDependencyState.Installed && Wanted(ids, status.Id)).ToList())
+            foreach (RuntimeDependencyStatus status in Current.Where(status => status.State != RuntimeDependencyState.Installed && Wanted(ids, status.Id)).ToList())
             {
                 IRuntimeDependency dependency = _dependencies.First(d => d.Id == status.Id);
                 string target = status.TargetVersion ?? dependency.ExpectedVersion;
@@ -173,7 +198,7 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
 
     public void SkipOffers(IReadOnlyCollection<string>? ids)
     {
-        foreach (RuntimeDependencyStatus status in _statuses.Where(status => status.TargetVersion is not null && Wanted(ids, status.Id)))
+        foreach (RuntimeDependencyStatus status in Current.Where(status => status.TargetVersion is not null && Wanted(ids, status.Id)))
         {
             _settings.Set(SkippedSettingPrefix + status.Id, status.TargetVersion!);
         }
@@ -197,10 +222,16 @@ public sealed class RuntimeDependencyService : IRuntimeDependencyService
 
     private void Rebuild()
     {
+        int ticket = Interlocked.Increment(ref _ticket);
         List<RuntimeDependencyStatus> statuses = _dependencies.Select(Describe).ToList();
         lock (_gate)
         {
-            _statuses = statuses;
+            // A build that started later has seen later state: an earlier one finishing last must not replace it.
+            if (ticket > _assignedTicket)
+            {
+                _assignedTicket = ticket;
+                _statuses = statuses;
+            }
         }
     }
 

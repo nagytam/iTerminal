@@ -61,11 +61,14 @@ public class Buffer : IBuffer
 
     public IEnumerable<int> UpdateLayers(int maxZOrder)
     {
-        List<int> layersToRefresh = [];
-        var layersToRemove = Layers.AsSnapshot().Where(l => l.ZOrder > maxZOrder);
-        foreach (var layer in layersToRemove)
+        // Nothing changes on almost every call, which runs once per pass of the render loop: no list is made then.
+        List<int>? layersToRefresh = null;
+        foreach (var layer in Layers.AsArray())
         {
-            Layers.Remove(layer);
+            if (layer.ZOrder > maxZOrder)
+            {
+                Layers.Remove(layer);
+            }
         }
         if (_layersByZOrder.Length > maxZOrder + 1)
         {
@@ -73,13 +76,25 @@ public class Buffer : IBuffer
         }
         for (int i = 0; i <= maxZOrder; i++)
         {
-            if (!Layers.Any(l => l.ZOrder == i))
+            if (!HasLayer(i))
             {
-                layersToRefresh.Add(i);
+                (layersToRefresh ??= []).Add(i);
                 AddLayer(i);
             }
         }
-        return layersToRefresh;
+        return layersToRefresh ?? (IEnumerable<int>)[];
+    }
+
+    private bool HasLayer(int zOrder)
+    {
+        foreach (var layer in Layers.AsArray())
+        {
+            if (layer.ZOrder == zOrder)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void Resize(Size size)
@@ -146,8 +161,8 @@ public class Buffer : IBuffer
     {
         // Take a single snapshot to avoid repeated lock acquisitions and LINQ allocations.
         // Layers are always maintained in ZOrder order (0, 1, …, n) by UpdateLayers().
-        var snapshot = Layers.AsSnapshot();
-        if (snapshot.Count == 0) return;
+        var snapshot = Layers.AsArray();
+        if (snapshot.Length == 0) return;
 
         var baseLayer = snapshot[0];
 
@@ -159,11 +174,12 @@ public class Buffer : IBuffer
         }
         else
         {
-            _mergedLayer.Clear();
+            // CopyLayer below overwrites every cell, so refilling them first would only write the screen twice.
+            _mergedLayer.ResetBounds();
         }
 
         baseLayer.CopyLayer(MergedLayer);
-        for (int z = 1; z < snapshot.Count; z++)
+        for (int z = 1; z < snapshot.Length; z++)
         {
             var layer = snapshot[z];
             if (layer is not null && layer.BoundRect is not null)

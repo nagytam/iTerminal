@@ -10,15 +10,16 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Localization;
 
-/// <summary>The converter's result line follows the chosen language, with the amount and the currencies filled in. The language is a static, so this runs on its own.</summary>
+/// <summary>The converter's result line follows the chosen language, with the amount and the currencies filled in.</summary>
 [TestClass]
-[DoNotParallelize]
 public class CurrencyResultLanguageTest
 {
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static void Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private void Speak(string code)
     {
         Localizer localizer = new(
         [
@@ -26,7 +27,8 @@ public class CurrencyResultLanguageTest
             new ResourceLocalizationSource(new ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(CurrencyConverterDialog).Assembly)),
         ]);
         Assert.IsTrue(localizer.SetLanguage(code), code);
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
     }
 
     private static CurrencyConverterDialog Create()

@@ -176,6 +176,10 @@ public class ArchiveExtractionServiceTest
     [DataRow("backup.TGZ", "backup")]
     [DataRow("photos.zip", "photos")]
     [DataRow("disk.iso", "disk")]
+    [DataRow("disk.img", "disk")]
+    [DataRow("disk.VMDK", "disk")]
+    [DataRow("install.wim", "install")]
+    [DataRow("setup.dmg", "setup")]
     [DataRow("notes.txt.gz", "notes.txt")]
     public void TheOwnFolderIsTheNameWithoutTheArchiveEnding(string archive, string folder)
     {
@@ -193,6 +197,30 @@ public class ArchiveExtractionServiceTest
         Assert.AreEqual(".rar archives need 7-Zip installed.", service.WhyCannotExtract("x.rar"));
         Assert.IsNull(service.WhyCannotExtract("x.zip"), "ZIP needs nothing installed");
         Assert.IsNull(Service(() => "7z").WhyCannotExtract("x.rar"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow(".img")]
+    [DataRow(".vmdk")]
+    [DataRow(".wim")]
+    [DataRow(".dmg")]
+    public void DiskImagesAreSevenZipArchivesToo(string ending)
+    {
+        string name = "x" + ending;
+
+        Assert.IsTrue(Service().IsArchive(name));
+        Assert.AreEqual($"{ending} archives need 7-Zip installed.", Service().WhyCannotExtract(name));
+        Assert.IsNull(Service(() => "7z").WhyCannotExtract(name));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("x.vhd")]
+    [DataRow("x.vhdx")]
+    public void VirtualHardDisksAreLeftToTheMountDialog(string name)
+    {
+        Assert.IsFalse(Service().IsArchive(name));
     }
 
     [Timeout(60_000)]

@@ -150,7 +150,7 @@ public class ToastHost : Control
         if (Parent is not null)
         {
             zOrder = Parent.ZOrder + 1;
-            foreach (var sibling in Parent.Controls.AsSnapshot())
+            foreach (var sibling in Parent.Controls.AsArray())
             {
                 if (!ReferenceEquals(sibling, this) && sibling.IsVisible)
                 {
@@ -160,7 +160,7 @@ public class ToastHost : Control
         }
 
         var changed = false;
-        foreach (var toast in Controls.AsSnapshot())
+        foreach (var toast in Controls.AsArray())
         {
             if (toast.ZOrder != zOrder)
             {

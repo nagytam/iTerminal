@@ -14,6 +14,7 @@ public class ListingInfoTest
 {
     private static string Key(string key) => key;
 
+    [Timeout(60_000)]
     [TestMethod]
     public void NoEntry_IsTheSingleNoEntryRow()
     {
@@ -23,6 +24,7 @@ public class ListingInfoTest
         Assert.AreEqual("Listing.NoEntry", rows[0].Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DotDot_IsTheNoEntryRow()
     {
@@ -32,6 +34,7 @@ public class ListingInfoTest
         Assert.AreEqual("Listing.NoEntry", rows[0].Value);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void File_ListsNameTypePathSizeModifiedAndAttributes()
     {
@@ -53,6 +56,7 @@ public class ListingInfoTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void Folder_IsTypedAsAFolder()
     {
@@ -70,6 +74,7 @@ public class ListingInfoTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void PathString_ReportsUnknownAttributes()
     {

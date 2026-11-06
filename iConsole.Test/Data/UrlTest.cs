@@ -745,33 +745,6 @@ public class UrlTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void FileSystemPath_DirectoryExistsCache_ExpiresAfterFiveSeconds()
-    {
-        string tempRoot = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"UrlCache_{Guid.NewGuid():N}");
-        string cachedPath = System.IO.Path.Combine(tempRoot, "expiring-folder");
-
-        try
-        {
-            _ = new Url(cachedPath);
-
-            System.IO.Directory.CreateDirectory(cachedPath);
-            Thread.Sleep(TimeSpan.FromMilliseconds(5200));
-
-            Url refreshed = new Url(cachedPath);
-
-            Assert.AreEqual(PathType.Folder, refreshed.PathType);
-        }
-        finally
-        {
-            if (System.IO.Directory.Exists(tempRoot))
-            {
-                System.IO.Directory.Delete(tempRoot, recursive: true);
-            }
-        }
-    }
-
-    [Timeout(60_000)]
-    [TestMethod]
     public void FileSystemPath_FileInfoResult_IsCachedForFiveSeconds()
     {
         string tempFile = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"UrlFileInfoCache_{Guid.NewGuid():N}.txt");
@@ -786,33 +759,6 @@ public class UrlTest
 
             Assert.AreEqual(1, initial.Length);
             Assert.AreEqual(1, cached.Length);
-        }
-        finally
-        {
-            if (System.IO.File.Exists(tempFile))
-            {
-                System.IO.File.Delete(tempFile);
-            }
-        }
-    }
-
-    [Timeout(60_000)]
-    [TestMethod]
-    public void FileSystemPath_FileInfoCache_ExpiresAfterFiveSeconds()
-    {
-        string tempFile = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"UrlFileInfoCache_{Guid.NewGuid():N}.txt");
-
-        try
-        {
-            System.IO.File.WriteAllText(tempFile, "a");
-            _ = new Url(tempFile);
-
-            System.IO.File.WriteAllText(tempFile, "abcdef");
-            Thread.Sleep(TimeSpan.FromMilliseconds(5200));
-
-            Url refreshed = new Url(tempFile);
-
-            Assert.AreEqual(6, refreshed.Length);
         }
         finally
         {

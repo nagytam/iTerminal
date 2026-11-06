@@ -32,11 +32,16 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
     public Cursor LastBufferCursor { get; init; }
     public event EventHandler<Data.Size>? WindowSizeChanged;
 
+    /// <summary>Completes once the first frame has reached the terminal. The desktop starts its background jobs after it.</summary>
+    public Task FirstFrameRendered => _firstFrameRendered.Task;
+
     private Color ConsoleForegroundColor;
     private Color ConsoleBackgroundColor;
     private readonly Lock _dumpLock = new();
     private int _dumpFrameIndex;
     private long _renderIterations;
+    private bool _firstFrameMarked;
+    private readonly TaskCompletionSource _firstFrameRendered = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private DateTime _lastStatisticsDate = DateTime.Now;
     private DateTime _lastWindowSizeCheck = DateTime.MinValue;
     private readonly Services.ConsoleOwnership? _consoleOwnership;
@@ -129,6 +134,13 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                 {
                     idle = RenderBuffer();
                 }
+                if (!idle && !_firstFrameMarked)
+                {
+                    _firstFrameMarked = true;
+                    StartupTrace.Mark("first-frame");
+                    _firstFrameRendered.TrySetResult();
+                    StartupTrace.Flush();
+                }
                 DetectWindowSizeChanges(now);
                 _renderIterations++;
                 if (idle)
@@ -165,6 +177,8 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
 
         return Task.CompletedTask;
     }
+
+    private readonly List<(int X, int Y, ConxelString Text)> _pendingWrites = [];
 
     private void ForceRedraw()
     {
@@ -218,7 +232,9 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         bool isCursorVisible = LastBufferCursor.IsCursorVisible;
         List<string>? renderSteps = ShouldDumpFrame() ? [] : null;
         List<ConsoleDisplayWrite>? displayWrites = ShouldDumpFrame() ? [] : null;
-        List<(int X, int Y, ConxelString Text)> pendingWrites = [];
+        // Kept between frames: most passes change nothing and need no list of their own.
+        List<(int X, int Y, ConxelString Text)> pendingWrites = _pendingWrites;
+        pendingWrites.Clear();
         BufferLayer? layerToDump = null;
         var shouldDumpFrame = renderSteps is not null && displayWrites is not null;
         var shouldClearConsole = false;
@@ -327,6 +343,7 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         }
         finally
         {
+            pendingWrites.Clear();
             UpdateCursor(isCursorVisible);
             _consoleDriver.EndFrame();
             if (shouldDumpFrame && layerToDump is not null)
@@ -466,6 +483,23 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
                             .SequenceEqual(MemoryMarshal.Cast<Conxel, byte>(span2));
     }
 
+    private static bool CellChanged(ref Conxel conxel, ref Conxel lastConxel) =>
+        conxel.Char             != lastConxel.Char             ||
+        conxel.ForegroundColor  != lastConxel.ForegroundColor  ||
+        conxel.BackgroundColor  != lastConxel.BackgroundColor  ||
+        conxel.IsBold           != lastConxel.IsBold           ||
+        conxel.IsItalic         != lastConxel.IsItalic         ||
+        conxel.IsUnderline      != lastConxel.IsUnderline      ||
+        conxel.IsStrikeThrough  != lastConxel.IsStrikeThrough  ||
+        conxel.IsDim            != lastConxel.IsDim            ||
+        conxel.IsReverse        != lastConxel.IsReverse        ||
+        conxel.IsBlink          != lastConxel.IsBlink          ||
+        conxel.IsOverline       != lastConxel.IsOverline       ||
+        conxel.UnderlineStyle   != lastConxel.UnderlineStyle   ||
+        conxel.UnderlineColor   != lastConxel.UnderlineColor   ||
+        conxel.HasUnderlineColor != lastConxel.HasUnderlineColor ||
+        conxel.LinkId           != lastConxel.LinkId;
+
     private int RenderByCharacters(
         int y,
         int minX,
@@ -476,56 +510,32 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
         ICollection<ConsoleDisplayWrite>? displayWrites)
     {
         var changedCharacters = 0;
-        int batchStartX = -1;
-        ConxelString? batch = null;
+        int limit = Math.Min(maxX, Math.Min(line.Length, lastLine.Length));
 
-        // Iterate one past maxX so the loop always flushes any open batch at the end.
-        for (int x = minX; x <= maxX; x++)
+        // Each cell is compared once: a run of changed cells is found by scanning ahead, then copied
+        // as a block instead of one cell at a time.
+        int x = minX;
+        while (x < limit)
         {
-            bool isCellChanged = false;
-            if (x < maxX && x < line.Length && x < lastLine.Length)
+            if (!CellChanged(ref line[x], ref lastLine[x]))
             {
-                ref var conxel = ref line[x];
-                ref var lastConxel = ref lastLine[x];
-                isCellChanged =
-                    conxel.Char             != lastConxel.Char             ||
-                    conxel.ForegroundColor  != lastConxel.ForegroundColor  ||
-                    conxel.BackgroundColor  != lastConxel.BackgroundColor  ||
-                    conxel.IsBold           != lastConxel.IsBold           ||
-                    conxel.IsItalic         != lastConxel.IsItalic         ||
-                    conxel.IsUnderline      != lastConxel.IsUnderline      ||
-                    conxel.IsStrikeThrough  != lastConxel.IsStrikeThrough  ||
-                    conxel.IsDim            != lastConxel.IsDim            ||
-                    conxel.IsReverse        != lastConxel.IsReverse        ||
-                    conxel.IsBlink          != lastConxel.IsBlink          ||
-                    conxel.IsOverline       != lastConxel.IsOverline       ||
-                    conxel.UnderlineStyle   != lastConxel.UnderlineStyle   ||
-                    conxel.UnderlineColor   != lastConxel.UnderlineColor   ||
-                    conxel.HasUnderlineColor != lastConxel.HasUnderlineColor ||
-                    conxel.LinkId           != lastConxel.LinkId;
+                x++;
+                continue;
             }
 
-            if (isCellChanged)
+            int runStart = x;
+            x++;
+            while (x < limit && CellChanged(ref line[x], ref lastLine[x]))
             {
-                if (batchStartX < 0)
-                {
-                    batchStartX = x;
-                    batch = new ConxelString();
-                    batch.String.Capacity = maxX - x;
-                }
-                batch!.Append(line[x]);
-                changedCharacters++;
+                x++;
             }
-            else if (batchStartX >= 0)
-            {
-                // Flush the accumulated run of consecutive changed cells as one write.
-                pendingWrites.Add((batchStartX, y, batch!));
-                displayWrites?.Add(new ConsoleDisplayWrite(
-                    batchStartX, y, batch!.Text,
-                    batch[0].ForegroundColor, batch[0].BackgroundColor, "batch"));
-                batchStartX = -1;
-                batch = null;
-            }
+
+            var batch = new ConxelString(line[runStart..x]);
+            pendingWrites.Add((runStart, y, batch));
+            displayWrites?.Add(new ConsoleDisplayWrite(
+                runStart, y, batch.Text,
+                batch[0].ForegroundColor, batch[0].BackgroundColor, "batch"));
+            changedCharacters += x - runStart;
         }
 
         return changedCharacters;

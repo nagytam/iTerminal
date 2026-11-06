@@ -14,11 +14,17 @@ namespace iTerminal.Core.Test.Controls.Terminals;
 /// The AI prompt bar: one prompt row and, below it, the last answer. What is pinned down is what the
 /// user can see of what they type and of what comes back.
 /// </summary>
-// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
-[DoNotParallelize]
 [TestClass]
 public class AiPromptBarTest
 {
+    private IDisposable _clipboardScope = null!;
+
+    [TestCleanup]
+    public void ReleaseOwnClipboard() => _clipboardScope.Dispose();
+
+    [TestInitialize]
+    public void ScopeOwnClipboard() => _clipboardScope = iConsole.Services.TextClipboard.Scope(new iConsole.Services.InProcessTextClipboardService());
+
     private static (AiPromptBar Bar, AiChatModel Model, Mock<IAiChatService> Chat) Create(int width = 40, int height = 4, bool available = true)
     {
         var model = new AiChatModel { IsAvailable = available, ModelInfo = "m" };

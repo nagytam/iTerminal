@@ -12,11 +12,11 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 namespace iTerminal.Core.Test.Dialogs;
 
 /// <summary>Shift+F12: reading a file, comparing a typed checksum, saving name.sha256 and fitting a narrow terminal.</summary>
-// Some tests put text on the ambient clipboard and read it back, so the class does not run beside others that do.
-[DoNotParallelize]
 [TestClass]
 public class ChecksumDialogTest
 {
+    private IDisposable _clipboardScope = null!;
+
     private static readonly ChecksumResult Hashes = new(
         new Dictionary<ChecksumAlgorithm, string>
         {
@@ -32,12 +32,17 @@ public class ChecksumDialogTest
     [TestInitialize]
     public void Init()
     {
+        _clipboardScope = iConsole.Services.TextClipboard.Scope(new iConsole.Services.InProcessTextClipboardService());
         _folder = Path.Combine(Path.GetTempPath(), "checksum-dialog-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(_folder);
     }
 
     [TestCleanup]
-    public void Cleanup() => Directory.Delete(_folder, true);
+    public void Cleanup()
+    {
+        _clipboardScope.Dispose();
+        Directory.Delete(_folder, true);
+    }
 
     private async Task<(ChecksumDialog Dialog, Control Root)> OpenAsync(ChecksumResult? result, Exception? failure = null, string fileName = "data.bin", Size? screen = null)
     {

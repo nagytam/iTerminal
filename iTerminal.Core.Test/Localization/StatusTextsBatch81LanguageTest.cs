@@ -6,16 +6,17 @@ namespace iTerminal.Core.Test.Localization;
 
 /// <summary>
 /// The status lines of the remote, disk, mail, access control and file diff dialogs follow the chosen language, with their
-/// arguments filled in, and the English they fall back to is unchanged. The language is a static, so this runs on its own.
+/// arguments filled in, and the English they fall back to is unchanged.
 /// </summary>
 [TestClass]
-[DoNotParallelize]
 public class StatusTextsBatch81LanguageTest
 {
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static void Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private void Speak(string code)
     {
         Localizer localizer = new(
         [
@@ -23,7 +24,8 @@ public class StatusTextsBatch81LanguageTest
             new ResourceLocalizationSource(new ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(RemoteConnectionManagerDialog).Assembly)),
         ]);
         Assert.IsTrue(localizer.SetLanguage(code), code);
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
     }
 
     [Timeout(60_000)]

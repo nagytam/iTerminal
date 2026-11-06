@@ -130,7 +130,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
         MultiRenameDialog? multiRenameDialog = null,
         HashManifestDialog? hashManifestDialog = null,
-        iTerminal.Core.Services.FileSystemResolver? fileSystemResolver = null
+        iTerminal.Core.Services.FileSystemResolver? fileSystemResolver = null,
+        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null
         )
         : base([], themeService)
     {
@@ -162,7 +163,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             notificationService: notificationService,
             printDialog: printDialog,
             hashManifestDialog: hashManifestDialog,
-            fileSystemResolver: fileSystemResolver));
+            fileSystemResolver: fileSystemResolver,
+            hdfViewerDialog: hdfViewerDialog));
 
         AddMenuItem(new EditMenuItem(
             contentModelService,

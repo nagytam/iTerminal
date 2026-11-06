@@ -35,10 +35,8 @@ public class ConxelString : IEnumerable<Conxel>
     public ConxelString(Span<Conxel> conxels)
     {
         String = new List<Conxel>(conxels.Length);
-        foreach (var conxel in conxels)
-        {
-            String.Add(conxel);
-        }
+        CollectionsMarshal.SetCount(String, conxels.Length);
+        conxels.CopyTo(CollectionsMarshal.AsSpan(String));
     }
 
     public ConxelString(string @string, Color foreground, Color background, 
@@ -51,6 +49,42 @@ public class ConxelString : IEnumerable<Conxel>
     public bool Any()
     {
         return String.Count != 0;
+    }
+
+    /// <summary>
+    /// Makes this string the row <paramref name="text"/> padded with spaces to <paramref name="width"/> cells (longer text is
+    /// kept whole), reusing the cells already allocated. For a control that draws a row at a time and writes each into the
+    /// buffer at once: the buffer copies the cells, so one scratch string can serve every row instead of a new list and
+    /// array, and the padded copy of the text, for each.
+    /// </summary>
+    public void Reset(ReadOnlySpan<char> text, int width, Color foregroundColor, Color backgroundColor)
+    {
+        String.Clear();
+        if (TextWidth.NeedsCellLayout(text))
+        {
+            // Wide characters and the like take their own number of cells, which the plain copy below cannot give.
+            Append(text.ToString().PadRight(width), foregroundColor, backgroundColor);
+            return;
+        }
+
+        int length = Math.Max(text.Length, width);
+        if (length == 0)
+        {
+            return;
+        }
+
+        if (String.Capacity < length)
+        {
+            String.Capacity = length;
+        }
+
+        CollectionsMarshal.SetCount(String, length);
+        Span<Conxel> cells = CollectionsMarshal.AsSpan(String);
+        cells.Fill(new Conxel(' ', foregroundColor, backgroundColor));
+        for (int i = 0; i < text.Length; i++)
+        {
+            cells[i].Char = text[i];
+        }
     }
 
     public void Append(Conxel conxel)
@@ -100,17 +134,21 @@ public class ConxelString : IEnumerable<Conxel>
 
     public void Append(ConxelString conxelString)
     {
-        foreach (var conxel in conxelString)
-        {
-            String.Add(conxel);
-        }
+        String.AddRange(conxelString.String);
     }
 
     public void Expand(int width, Color foregroundColor, Color backgroundColor)
     {
-        while (Count < width)
+        var missing = width - Count;
+        if (missing > 0)
         {
-            String.Add(new Conxel(' ', foregroundColor, backgroundColor));
+            var start = Count;
+            if (String.Capacity < width)
+            {
+                String.Capacity = width;
+            }
+            CollectionsMarshal.SetCount(String, width);
+            CollectionsMarshal.AsSpan(String).Slice(start, missing).Fill(new Conxel(' ', foregroundColor, backgroundColor));
         }
     }
 
@@ -191,12 +229,12 @@ public class ConxelString : IEnumerable<Conxel>
 
     public void HighlightRange(int start, int end, Color foreground, Color background)
     {
-        for (int x = start; x < Math.Min(end, Count); x++)
+        Span<Conxel> cells = CollectionsMarshal.AsSpan(String);
+        for (int x = Math.Max(0, start); x < Math.Min(end, cells.Length); x++)
         {
-            var cell = String[x];
+            ref Conxel cell = ref cells[x];
             cell.ForegroundColor = foreground;
             cell.BackgroundColor = background;
-            String[x] = cell;
         }
     }
 
@@ -215,7 +253,30 @@ public class ConxelString : IEnumerable<Conxel>
         get
         {
             // The text as a person reads it: continuation cells left out, surrogate pairs joined.
-            return TextWidth.FromCells(String.Select(conxel => conxel.Char));
+            ReadOnlySpan<Conxel> cells = CollectionsMarshal.AsSpan(String);
+            var length = 0;
+            foreach (ref readonly Conxel cell in cells)
+            {
+                if (cell.Char != TextWidth.Continuation)
+                {
+                    length++;
+                }
+            }
+            if (length == 0)
+            {
+                return string.Empty;
+            }
+            return string.Create(length, String, static (span, source) =>
+            {
+                var index = 0;
+                foreach (ref readonly Conxel cell in CollectionsMarshal.AsSpan(source))
+                {
+                    if (cell.Char != TextWidth.Continuation)
+                    {
+                        span[index++] = cell.Char;
+                    }
+                }
+            });
         }
     }
 }

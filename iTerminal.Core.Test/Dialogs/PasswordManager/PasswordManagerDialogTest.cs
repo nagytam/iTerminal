@@ -8,11 +8,17 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Test.Dialogs.PasswordManager;
 
-// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
-[DoNotParallelize]
 [TestClass]
 public class PasswordManagerDialogTest
 {
+    private IDisposable _clipboardScope = null!;
+
+    [TestCleanup]
+    public void ReleaseOwnClipboard() => _clipboardScope.Dispose();
+
+    [TestInitialize]
+    public void ScopeOwnClipboard() => _clipboardScope = iConsole.Services.TextClipboard.Scope(new iConsole.Services.InProcessTextClipboardService());
+
     private sealed class SqliteDbContextFactory(string databasePath) : IDbContextFactory<iTerminalDbContext>
     {
         private readonly DbContextOptions<iTerminalDbContext> _options = new DbContextOptionsBuilder<iTerminalDbContext>()

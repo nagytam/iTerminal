@@ -174,12 +174,20 @@ public class ValidationAndMaskExtrasTest
         {
             ViewSize = new Size(30, 1),
         };
-        box.AddAsyncValidator((value, _) => Task.FromResult<string?>(value == "admin" ? "Reserved name" : null));
+        // The answer waits for the test to release it, so "still validating" is seen deterministically rather than
+        // racing a validator that finishes on the thread pool before the assertion runs.
+        TaskCompletionSource release = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        box.AddAsyncValidator(async (value, _) =>
+        {
+            await release.Task;
+            return value == "admin" ? "Reserved name" : null;
+        });
         box.Validators!.AsyncDebounce = TimeSpan.Zero;
 
         box.Text = "admin";
         Assert.IsTrue(box.IsValid);
         Assert.IsTrue(box.IsValidating);
+        release.SetResult();
         await box.Validators.WaitForPendingAsync();
         box.HasStateChanged = false;
         box.OnIdle();

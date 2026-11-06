@@ -259,28 +259,36 @@ public class ContentModelFileSystem(
         {
             if (cancellationToken.IsCancellationRequested) return;
 
+            // One snapshot of what is queued, instead of one per folder: a folder with thousands of
+            // children otherwise took the task list's lock thousands of times, and many panels doing
+            // that at once starved each other.
+            HashSet<string> queued = PendingRefreshUrls();
+
             // Parent folder
             if (folderUrl.Path != Path.GetPathRoot(folderUrl.Path))
             {
                 var parent = folderUrl.ParentUrl;
-                if (!cancellationToken.IsCancellationRequested && !HasPendingTaskFor(parent))
+                if (!cancellationToken.IsCancellationRequested && queued.Add(parent.FullUrl))
                 {
                     _taskManager.Add(new FilePanelRefreshTask(parent, Name, memoryCacheService, logger, _dbContextFactory));
                 }
             }
 
-            // Child folders
+            // Child folders: only the first few. Warming a cache for a folder that holds thousands of
+            // subfolders queues thousands of listings nobody asked for.
             var dir = new DirectoryInfo(folderUrl.Path);
+            int scheduled = 0;
             foreach (var sub in dir.EnumerateDirectories())
             {
-                if (cancellationToken.IsCancellationRequested) break;
+                if (cancellationToken.IsCancellationRequested || scheduled >= MaxPrefetchedChildren) break;
                 if (sub is null) continue;
                 try
                 {
                     var childUrl = new Url(sub);
-                    if (!HasPendingTaskFor(childUrl))
+                    if (queued.Add(childUrl.FullUrl))
                     {
                         _taskManager.Add(new FilePanelRefreshTask(childUrl, Name, memoryCacheService, logger, _dbContextFactory));
+                        scheduled++;
                     }
                 }
                 catch
@@ -294,6 +302,15 @@ public class ContentModelFileSystem(
             // Best-effort only; swallow any errors to avoid affecting UI refresh
         }
     }
+
+    /// <summary>The most child folders one refresh warms the cache for.</summary>
+    internal const int MaxPrefetchedChildren = 64;
+
+    private HashSet<string> PendingRefreshUrls() =>
+        _taskManager.GetTasks<FilePanelRefreshTask>(t => !t.CancellationTokenSource.IsCancellationRequested)
+            .OfType<FilePanelRefreshTask>()
+            .Select(t => t.Url.FullUrl)
+            .ToHashSet();
 
     private bool HasPendingTaskFor(Url url) =>
         _taskManager.GetTasks<FilePanelRefreshTask>(

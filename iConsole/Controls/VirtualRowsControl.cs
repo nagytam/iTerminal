@@ -22,6 +22,9 @@ namespace iConsole.Controls;
 public abstract class VirtualRowsControl<T> : Control
 {
     /// <summary>Rows the wheel moves the cursor by in one notch.</summary>
+    // One row at a time is built here and written into the buffer, which copies it: no new string per row.
+    private readonly ConxelString _rowScratch = new();
+
     private const int WheelRows = 3;
 
     private int _cursor;
@@ -262,7 +265,8 @@ public abstract class VirtualRowsControl<T> : Control
                 }
             }
 
-            buffer.Write(ZOrder, position, ViewSize, new ConxelString(text.Cut(width).PadRight(width), foreground, background));
+            _rowScratch.Reset(text.AsSpan(0, Math.Min(text.Length, Math.Max(0, width))), width, foreground, background);
+            buffer.Write(ZOrder, position, ViewSize, _rowScratch);
         }
     }
 

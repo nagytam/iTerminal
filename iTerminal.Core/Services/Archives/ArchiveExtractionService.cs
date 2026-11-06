@@ -45,7 +45,7 @@ public interface IArchiveExtractionService
 /// See <see cref="IArchiveExtractionService"/>. The formats Alt+F5 writes in-process — ZIP and the
 /// TAR family — are read in-process too, with SharpZipLib (so an AES-encrypted ZIP opens, which the
 /// BCL cannot do), as are a lone <c>.gz</c> or <c>.bz2</c>. Everything else 7-Zip reads — 7z, RAR,
-/// XZ, ISO, CAB — goes to the 7-Zip command-line tool when it is installed.
+/// XZ, CAB and the disk images ISO, IMG, VMDK, WIM and DMG — goes to the 7-Zip command-line tool when it is installed.
 ///
 /// <para><b>Nothing is written outside the target folder.</b> An entry named <c>../../evil.exe</c>
 /// (the "zip slip") is refused and counted, not followed. 7-Zip refuses such paths itself.</para>
@@ -59,7 +59,7 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
     private static readonly string[] ManagedEndings = [".tar.bz2", ".tar.gz", ".tbz2", ".tgz", ".tbz", ".tar", ".zip", ".gz", ".bz2"];
 
     /// <summary>Endings only 7-Zip reads.</summary>
-    private static readonly string[] SevenZipEndings = [".tar.xz", ".txz", ".7z", ".rar", ".xz", ".iso", ".cab", ".lzma"];
+    private static readonly string[] SevenZipEndings = [".tar.xz", ".txz", ".7z", ".rar", ".xz", ".iso", ".cab", ".lzma", ".img", ".vmdk", ".wim", ".dmg"];
 
     public string? SevenZipExecutable => _sevenZip.Value;
 

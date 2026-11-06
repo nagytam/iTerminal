@@ -7,6 +7,13 @@ public class ConcurrentList<T> : IList<T> where T : class
     private readonly List<T> _list = new() { Capacity = 1024 };
     private readonly Lock _lock = new();
 
+    // The content as an array, handed out again and again until the list changes. A walk of the control tree
+    // that takes a copy of every node's children on every pass allocated tens of kilobytes a pass.
+    private T[]? _array;
+
+    // The same for a foreach, whose enumerator walks a list that nothing writes to.
+    private List<T>? _copy;
+
     public int Count
     {
         get
@@ -20,6 +27,19 @@ public class ConcurrentList<T> : IList<T> where T : class
 
     public bool IsReadOnly => false;
 
+    /// <summary>
+    /// The content as an array that is shared until the list next changes, for a walk that must not allocate.
+    /// The caller must not write to it. A change made while it is read goes to a new array, so the walk keeps
+    /// seeing the content as it was when it was taken.
+    /// </summary>
+    public T[] AsArray()
+    {
+        lock (_lock)
+        {
+            return _array ??= _list.ToArray();
+        }
+    }
+
     public IList<T> AsSnapshot()
     {
         lock (_lock)
@@ -31,7 +51,15 @@ public class ConcurrentList<T> : IList<T> where T : class
     public T this[int index] 
     { 
         get => _list[index]; 
-        set => _list[index] = value; 
+        set
+        {
+            lock (_lock)
+            {
+                _list[index] = value;
+                _array = null;
+                _copy = null;
+            }
+        } 
     }
 
     public void Add(T item)
@@ -39,6 +67,8 @@ public class ConcurrentList<T> : IList<T> where T : class
         lock (_lock)
         {
             _list.Add(item);
+            _array = null;
+            _copy = null;
         }
     }
 
@@ -47,6 +77,8 @@ public class ConcurrentList<T> : IList<T> where T : class
         lock (_lock)
         {
             _list.Remove(item);
+            _array = null;
+            _copy = null;
         }
     }
 
@@ -55,6 +87,8 @@ public class ConcurrentList<T> : IList<T> where T : class
         lock (_lock)
         {
             _list.Insert(index, item);
+            _array = null;
+            _copy = null;
         }
     }
 
@@ -70,6 +104,8 @@ public class ConcurrentList<T> : IList<T> where T : class
         {
             _list.Clear();
             _list.AddRange(replacement);
+            _array = null;
+            _copy = null;
         }
     }
 
@@ -78,6 +114,8 @@ public class ConcurrentList<T> : IList<T> where T : class
         lock (_lock)
         {
             _list.Clear();
+            _array = null;
+            _copy = null;
         }
     }
 
@@ -101,7 +139,7 @@ public class ConcurrentList<T> : IList<T> where T : class
     {
         lock (_lock)
         {
-            return _list.ToList().GetEnumerator();
+            return (_copy ??= [.. _list]).GetEnumerator();
         }
     }
 
@@ -118,6 +156,8 @@ public class ConcurrentList<T> : IList<T> where T : class
         lock (_lock) 
         {
             _list.Insert(index, item);
+            _array = null;
+            _copy = null;
         }
     }
 
@@ -126,6 +166,8 @@ public class ConcurrentList<T> : IList<T> where T : class
         lock (_lock)
         {
             _list.RemoveAt(index);
+            _array = null;
+            _copy = null;
         }
     }
 
@@ -149,6 +191,8 @@ public class ConcurrentList<T> : IList<T> where T : class
     {
         lock (_lock)
         {
+            _array = null;
+            _copy = null;
             return _list.Remove(item);
         }
     }

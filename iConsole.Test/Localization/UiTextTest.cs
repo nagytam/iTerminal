@@ -17,7 +17,6 @@ namespace iConsole.Test.Localization;
 /// held in a static, so these tests run on their own and put it back.
 /// </summary>
 [TestClass]
-[DoNotParallelize]
 public class UiTextTest
 {
     private static IThemeService Theme()
@@ -27,8 +26,10 @@ public class UiTextTest
         return m.Object;
     }
 
+    private IDisposable? _language;
+
     [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    public void Reset() => _language?.Dispose();
 
     private static string Answers(ErrorPromptDialog dialog)
     {
@@ -46,18 +47,20 @@ public class UiTextTest
         return accept.HotKeyChar + "|" + decline.HotKeyChar;
     }
 
-    private static void Speak(string code)
+    private void Speak(string code)
     {
         Localizer localizer = new();
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
     }
 
     [Timeout(60_000)]
     [TestMethod]
     public void WithNoLocalizer_TheEnglishTextShows()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
 
         Assert.AreEqual("Cancel", new CancelDialogButton(Theme()).Title);
         Assert.AreEqual("Cancel", new CancelButton(new CancellationTokenSource(), Theme()).Title);
@@ -148,7 +151,8 @@ public class UiTextTest
     [TestMethod]
     public void TheEnglishPrompt_KeepsContinueOnCAndCancelOnA()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
 
         Assert.AreEqual("C|a", HotKeys(new ErrorPromptDialog("t", "m", Theme())));
     }

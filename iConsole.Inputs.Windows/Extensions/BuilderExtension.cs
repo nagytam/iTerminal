@@ -5,48 +5,39 @@ using iConsole.Inputs.Windows.Jobs;
 using iConsole.Jobs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.FeatureManagement;
 
 namespace iConsole.Inputs.Windows.Extensions;
 
 public static class BuilderExtension
 {
-    public static async Task<IServiceCollection> AddInputWindowsAsync(this IServiceCollection services)
+    public static Task<IServiceCollection> AddInputWindowsAsync(this IServiceCollection services)
     {
+        IConfiguration configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appSettings.json", optional: true)
+            .Build();
 
-        services.AddSingleton<IConfiguration>(serviceProvider =>
+        return services.AddInputWindowsAsync(configuration);
+    }
+
+    public static Task<IServiceCollection> AddInputWindowsAsync(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSingleton(configuration);
+
+        bool useWindowsConsoleDriver = configuration.GetValue<bool>(
+            $"FeatureManagement:{nameof(Features.WindowsConsoleDriver)}");
+        if (OperatingSystem.IsWindows() && useWindowsConsoleDriver)
         {
-            var configurationRoot = new ConfigurationBuilder()
-                .AddJsonFile("appSettings.json")
-                .Build();
-
-            return configurationRoot;
-        }
-        );
-
-        var serviceProvider = services.BuildServiceProvider();
-
-        if (OperatingSystem.IsWindows())
-        {
-            var featureManager = serviceProvider.GetService<IFeatureManager>();
-            if ((featureManager != null)
-                && (await featureManager.IsEnabledAsync(nameof(Features.WindowsConsoleDriver))))
-            {
-                services.AddSingleton<MouseEventPublisherJob>();
-                services.AddSingleton<ITerminalInputSource>(sp => sp.GetRequiredService<MouseEventPublisherJob>());
-                services.AddSingleton<IJob>(sp => sp.GetRequiredService<MouseEventPublisherJob>());
-                services.AddSingleton<IJob, TerminalInputConsumerJob>();
-            }
-            else
-            {
-                services.AddPollingConsoleKeyboard();
-            }
+            services.AddSingleton<MouseEventPublisherJob>();
+            services.AddSingleton<ITerminalInputSource>(serviceProvider => serviceProvider.GetRequiredService<MouseEventPublisherJob>());
+            services.AddSingleton<IJob>(serviceProvider => serviceProvider.GetRequiredService<MouseEventPublisherJob>());
+            services.AddSingleton<IJob, TerminalInputConsumerJob>();
         }
         else
         {
             services.AddPollingConsoleKeyboard();
         }
 
-        return services;
+        return Task.FromResult(services);
     }
 }

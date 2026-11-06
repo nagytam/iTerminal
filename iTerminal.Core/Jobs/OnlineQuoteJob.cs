@@ -19,6 +19,9 @@ public class OnlineQuoteJob(
     private readonly ICacheService _cacheService = cacheService;
     private readonly IRuntimeDependencyService _runtimeDependencies = runtimeDependencies;
 
+    /// <summary>How long after the cached quotes are shown the browser is started for the first refresh.</summary>
+    public TimeSpan FirstRefreshDelay { get; init; } = StartupDelays.FirstNetworkRefresh;
+
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
         // Load from cache if available
@@ -28,6 +31,8 @@ public class OnlineQuoteJob(
             InstrumentQuoteHelper.PrimeFromCache(_onlineQuoteService, cachedInstruments, nameof(OnlineQuoteJob));
             _onlineQuoteService.IsFromCache = true;
         }
+
+        await Task.Delay(FirstRefreshDelay, cancellationToken);
 
         while (!cancellationToken.IsCancellationRequested)
         {

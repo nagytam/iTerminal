@@ -122,10 +122,12 @@ public class ClipboardAndDriveActionsTest
         var dialog = (DiskManagerDialog)_app.Driver.FocusedModal!;
         await _app.WaitUntilAsync(() => dialog.SelectedDrive is not null, "a drive under the cursor");
 
-        // The memory drive is listed first and has no volume to act on: walk down to a real one.
-        for (var step = 0; step < 10 && dialog.SelectedDrive?.DriveInfo is null; step++)
+        // The memory drive is listed first and has no volume to act on: walk down to a real one. The real
+        // drives are read in the background and can land after the first keys, so pause between the steps.
+        for (var step = 0; step < 100 && dialog.SelectedDrive?.DriveInfo is null; step++)
         {
             await _app.PressAsync("Down");
+            await Task.Delay(100);
         }
 
         Assert.IsNotNull(dialog.SelectedDrive?.DriveInfo, "the machine has no drive to act on");

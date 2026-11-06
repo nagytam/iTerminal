@@ -563,7 +563,7 @@ public class MenuItem : PopUpWindow
             }
         }
 
-        foreach (var child in concrete.Controls.AsSnapshot())
+        foreach (var child in concrete.Controls.AsArray())
         {
             if (IsBoundToACommand(child, keyEvent))
             {

@@ -1,6 +1,6 @@
 @ignore
 Feature: Virtual machines with libvirt
-  Shift+Alt+F9 lists the libvirt virtual machines and starts, stops, saves, pauses and opens their consoles. Linux only.
+  Shift+Alt+F9 lists the virtual machines of libvirt (Linux) or Hyper-V (Windows) and starts, stops, saves, pauses and opens their consoles.
 
   Background:
     Given iTerminal has just started
@@ -40,6 +40,6 @@ Feature: Virtual machines with libvirt
     When I press "Shift+Alt+F9"
     Then the message names the libvirt group
 
-  Scenario: Windows does not offer the manager
-    Given the machine runs Windows
+  Scenario: macOS does not offer the manager
+    Given the machine runs macOS
     Then the Tools menu does not list "Virtual Machine Manager"

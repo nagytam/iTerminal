@@ -6,6 +6,11 @@ namespace iTerminal.Core.Test.Data;
 [TestClass]
 public class DriveTest
 {
+    // Asking a mapped network drive whether it is ready blocks for as long as its server takes to answer
+    // (25 s each for an unreachable NAS), and which drive comes first depends on the machine.
+    private static IEnumerable<DriveInfo> LocalDrives() =>
+        DriveInfo.GetDrives().Where(d => d.DriveType != DriveType.Network);
+
     [Timeout(60_000)]
     [TestMethod]
     public void Constructor_InitializesProperties()
@@ -54,7 +59,7 @@ public class DriveTest
     [TestMethod]
     public void IsEnabled_WithReadyDrive_ReturnsTrue()
     {
-        var driveInfo = DriveInfo.GetDrives().FirstOrDefault(d => d.IsReady);
+        var driveInfo = LocalDrives().FirstOrDefault(d => d.IsReady);
         if (driveInfo != null)
         {
             var drive = new Drive { DriveInfo = driveInfo };
@@ -66,7 +71,7 @@ public class DriveTest
     [TestMethod]
     public void IsEnabled_WithNotReadyDrive_ReturnsFalse()
     {
-        var driveInfo = DriveInfo.GetDrives().FirstOrDefault(d => !d.IsReady);
+        var driveInfo = LocalDrives().FirstOrDefault(d => !d.IsReady);
         if (driveInfo != null)
         {
             var drive = new Drive { DriveInfo = driveInfo, Name = "NotMemDrive" };

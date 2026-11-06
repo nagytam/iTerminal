@@ -38,7 +38,7 @@ public class LongAndInfoListingTest
 
         // rwxrwxrwx on Unix; the RHSA letters, dashes where clear, on Windows.
         var attributes = OperatingSystem.IsWindows()
-            ? @"\s[RHSA-]{4}\s"
+            ? @"[│\s][RHSA-]{4}\s"
             : @"[r-][w-][x-][r-][w-][x-][r-][w-][x-]";
         var screen = await _app.WaitUntilAsync(
             s => _app.LeftPanel(s).Any(row => row.Contains(Target) && Regex.IsMatch(row, attributes)),

@@ -7,10 +7,9 @@ namespace iTerminal.Core.Test.Commands;
 
 /// <summary>
 /// The folder selector's buttons, key hints and page descriptions, the create dialogs' titles and the strings of the
-/// torrent form, mark dialog, update dialog and date popup follow the chosen language. The language is a static, so this runs on its own.
+/// torrent form, mark dialog, update dialog and date popup follow the chosen language.
 /// </summary>
 [TestClass]
-[DoNotParallelize]
 public class FolderSelectorBatch76LanguageTest
 {
     /// <summary>Keys whose translation is supposed to differ from English. Field.MagnetFileOrUrl is left out: Italian uses the same words.</summary>
@@ -27,14 +26,17 @@ public class FolderSelectorBatch76LanguageTest
         "Dialog.DateTimeTimeZone", "Dialog.ImageText", "Field.SaveTo", "Dialog.AddTorrent",
     ];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new([new ResourceLocalizationSource(new ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(FolderSelectorDialog).Assembly))]);
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 
@@ -74,7 +76,8 @@ public class FolderSelectorBatch76LanguageTest
     [TestMethod]
     public void EveryFolderSelectorPage_TheHelpAndSelectHints_FollowTheLanguage()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         var english = DialogHintsWholeTest.Resolve(typeof(FolderSelectorDrivesTabPage), 0) as FolderSelectorTabPage;
         Assert.IsNotNull(english);
         Assert.IsTrue(english.GetKeyHints().Any(h => h.Description == "Show this help."));
@@ -91,7 +94,8 @@ public class FolderSelectorBatch76LanguageTest
     [TestMethod]
     public void TheFolderSelector_HintsFollowTheLanguage()
     {
-        UiText.Current = null;
+        _language?.Dispose();
+        _language = UiText.Scope(null);
         var english = DialogHintsWholeTest.Resolve(typeof(FolderSelectorDialog), 0) as Dialog;
         Assert.IsNotNull(english);
         Assert.IsTrue(english.GetKeyHints().Any(h => h.Description == "Go to the folder the focused page has under its cursor, and close."));

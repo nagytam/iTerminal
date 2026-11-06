@@ -24,7 +24,7 @@ A two-panel, keyboard-driven file manager and developer toolbox for the terminal
 | `iphone://` | iPhone file access (AFC) |
 | `docker://` | Container file systems, logs, start/stop/restart |
 | `git://` | Browse any revision, branch, tag or commit without checkout |
-| `archive://`, `zip://`, `gz://`, `targz://` | Archives as folders (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, ISO, CAB with 7-Zip) |
+| `archive://`, `zip://`, `gz://`, `targz://` | Archives as folders (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB and the ISO, IMG, VMDK, WIM, DMG disk images with 7-Zip) |
 | `recycle://` | Recycle bin / trash, restore and delete for good |
 | `memdrive://` | In-memory drive |
 | `search://`, `preview://` | Search results and quick preview |

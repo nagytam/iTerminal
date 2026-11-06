@@ -38,6 +38,9 @@ public class ListBox<T> : Control
     }
 
     /// <summary>Rows the wheel moves the cursor by in one notch.</summary>
+    // One row at a time is built here and written into the buffer, which copies it: no new string per row.
+    private readonly ConxelString _rowScratch = new();
+
     private const int WheelRows = 3;
 
     private readonly SelectListItemCommand<T> _selectItemCommand;
@@ -274,10 +277,10 @@ public class ListBox<T> : Control
                 backgroundColor = colorScheme.Background;
             }
 
-            var textString = new ConxelString(text.PadRight(width), foregroundColor, backgroundColor);
+            _rowScratch.Reset(text, width, foregroundColor, backgroundColor);
             buffer.Write(ZOrder,
                 new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + y)), ViewSize,
-                textString);
+                _rowScratch);
         }
     }
 

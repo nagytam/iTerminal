@@ -5,11 +5,17 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 namespace iTerminal.Core.Test.Helper;
 
 /// <summary>Paste for the dialogs that edit their own lines: which keys are a paste, how text is cut down to one line, and a slow clipboard.</summary>
-// Some tests put text on the ambient clipboard and paste it back, so the class does not run beside others that do.
-[DoNotParallelize]
 [TestClass]
 public class PasteHelperTest
 {
+    private IDisposable _clipboardScope = null!;
+
+    [TestInitialize]
+    public void ScopeOwnClipboard() => _clipboardScope = iConsole.Services.TextClipboard.Scope(new iConsole.Services.InProcessTextClipboardService());
+
+    [TestCleanup]
+    public void ReleaseOwnClipboard() => _clipboardScope.Dispose();
+
     private sealed class SlowClipboard(TaskCompletionSource<string?> gate) : ITextClipboardService
     {
         public Task SetTextAsync(string text, CancellationToken cancellationToken = default) => Task.CompletedTask;
@@ -71,48 +77,34 @@ public class PasteHelperTest
     [TestMethod]
     public async Task ASlowClipboard_IsAppliedWhenItLands_NotWaitedFor()
     {
-        ITextClipboardService original = TextClipboard.Current;
         TaskCompletionSource<string?> gate = new();
-        TextClipboard.Current = new SlowClipboard(gate);
-        try
-        {
-            string? got = null;
-            TaskCompletionSource repainted = new();
+        using var _ = TextClipboard.Scope(new SlowClipboard(gate));
 
-            PasteHelper.Paste(text => got = text, () => repainted.TrySetResult());
-            Assert.IsNull(got, "the key handler did not wait");
+        string? got = null;
+        TaskCompletionSource repainted = new();
 
-            gate.SetResult("late");
-            await repainted.Task.WaitAsync(TimeSpan.FromSeconds(10));
-            Assert.AreEqual("late", got);
-        }
-        finally
-        {
-            TextClipboard.Current = original;
-        }
+        PasteHelper.Paste(text => got = text, () => repainted.TrySetResult());
+        Assert.IsNull(got, "the key handler did not wait");
+
+        gate.SetResult("late");
+        await repainted.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        Assert.AreEqual("late", got);
     }
 
     [Timeout(60_000)]
     [TestMethod]
     public async Task ASlowClipboardThatFails_InsertsNothing()
     {
-        ITextClipboardService original = TextClipboard.Current;
         TaskCompletionSource<string?> gate = new();
-        TextClipboard.Current = new SlowClipboard(gate);
-        try
-        {
-            bool inserted = false;
-            PasteHelper.Paste(_ => inserted = true, () => inserted = true);
+        using var _ = TextClipboard.Scope(new SlowClipboard(gate));
 
-            gate.SetException(new InvalidOperationException("busy"));
-            await Task.Delay(100);
+        bool inserted = false;
+        PasteHelper.Paste(_ => inserted = true, () => inserted = true);
 
-            Assert.IsFalse(inserted);
-        }
-        finally
-        {
-            TextClipboard.Current = original;
-        }
+        gate.SetException(new InvalidOperationException("busy"));
+        await Task.Delay(100);
+
+        Assert.IsFalse(inserted);
     }
 
     [Timeout(60_000)]

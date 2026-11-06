@@ -75,13 +75,69 @@ public class CoreControlSweepTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task EveryCoreControl_SurvivesAwkwardSizes_Keys_AndClicks()
+    [DynamicData(nameof(EveryCoreControl_SurvivesAwkwardSizes_Keys_AndClicksCases), DynamicDataSourceType.Method)]
+    public async Task EveryCoreControl_SurvivesAwkwardSizes_Keys_AndClicks(Type type)
     {
         List<string> failed = [];
-        int built = 0;
-        foreach (Type type in CoreControls())
+        foreach ((uint width, uint height) in new[] { (0u, 0u), (1u, 1u), (3u, 2u), (30u, 3u), (200u, 60u) })
         {
-            foreach ((uint width, uint height) in new[] { (0u, 0u), (1u, 1u), (3u, 2u), (30u, 3u), (200u, 60u) })
+            try
+            {
+                if (Resolve(type, 0) is not Control control)
+                {
+                    break;
+                }
+
+                control.Position = new Position(0, 0);
+                control.ViewSize = new Size(width, height);
+                ScreenBuffer screen = new((int)Math.Max(1, width), (int)Math.Max(1, height));
+                control.Draw(screen);
+                control.SetFocus();
+                foreach (ConsoleKey key in new[] { ConsoleKey.DownArrow, ConsoleKey.Enter, ConsoleKey.Backspace, ConsoleKey.A, ConsoleKey.Delete, ConsoleKey.End })
+                {
+                    await control.HandleKeyEventAsync(new KeyEvent(key == ConsoleKey.A ? 'a' : '\0', key, false, false, false));
+                    control.Draw(screen);
+                }
+
+                await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(0, 0), LeftClicked = true });
+                await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(1, 0), WheelDelta = 1 });
+                control.Draw(screen);
+            }
+            catch (Exception exception) when (IsRigNoise(exception))
+            {
+            }
+            catch (Exception exception)
+            {
+                failed.Add($"{type.Name} {width}x{height}: {exception.GetType().Name} {exception.Message.Split('\n')[0]}");
+            }
+        }
+
+        Assert.AreEqual(0, failed.Count, string.Join(Environment.NewLine, failed.Take(30)));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheCoreControlSweep_FindsTheControls()
+    {
+        Assert.IsTrue(EveryCoreControl_SurvivesAwkwardSizes_Keys_AndClicksCases().Count() >= 10, "too few controls were found");
+    }
+
+    public static IEnumerable<object[]> EveryCoreControl_SurvivesAwkwardSizes_Keys_AndClicksCases() =>
+        CoreControls()
+            .Select(t => new object[] { t });
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DynamicData(nameof(EveryCoreControl_AcceptsNullAndHugeSettingsCases), DynamicDataSourceType.Method)]
+    public void EveryCoreControl_AcceptsNullAndHugeSettings(Type type)
+    {
+        List<string> failed = [];
+        foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => p.SetMethod is { IsPublic: true } && p.GetIndexParameters().Length == 0
+                && p.Name is not (nameof(Control.Position) or nameof(Control.ViewSize) or nameof(Control.Parent) or nameof(Control.Name) or nameof(Control.IsVisible) or nameof(Control.CanFocus) or nameof(Control.ZOrder))
+                && (p.PropertyType == typeof(string) || p.PropertyType == typeof(int))))
+        {
+            foreach (object? value in property.PropertyType == typeof(string) ? new object?[] { null, string.Empty, new string('x', 400) } : [-1, int.MaxValue])
             {
                 try
                 {
@@ -90,74 +146,26 @@ public class CoreControlSweepTest
                         break;
                     }
 
-                    built++;
                     control.Position = new Position(0, 0);
-                    control.ViewSize = new Size(width, height);
-                    ScreenBuffer screen = new((int)Math.Max(1, width), (int)Math.Max(1, height));
-                    control.Draw(screen);
-                    control.SetFocus();
-                    foreach (ConsoleKey key in new[] { ConsoleKey.DownArrow, ConsoleKey.Enter, ConsoleKey.Backspace, ConsoleKey.A, ConsoleKey.Delete, ConsoleKey.End })
-                    {
-                        await control.HandleKeyEventAsync(new KeyEvent(key == ConsoleKey.A ? 'a' : '\0', key, false, false, false));
-                        control.Draw(screen);
-                    }
-
-                    await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(0, 0), LeftClicked = true });
-                    await control.HandleMouseEventAsync(new MouseEvent { Position = new Position(1, 0), WheelDelta = 1 });
-                    control.Draw(screen);
+                    control.ViewSize = new Size(20, 3);
+                    property.SetValue(control, value);
+                    control.Draw(new ScreenBuffer(20, 3));
                 }
                 catch (Exception exception) when (IsRigNoise(exception))
                 {
                 }
                 catch (Exception exception)
                 {
-                    failed.Add($"{type.Name} {width}x{height}: {exception.GetType().Name} {exception.Message.Split('\n')[0]}");
-                }
-            }
-        }
-
-        Assert.IsTrue(built >= 10, $"only {built} controls could be built");
-        Assert.AreEqual(0, failed.Count, string.Join(Environment.NewLine, failed.Take(30)));
-    }
-
-    [Timeout(60_000)]
-    [TestMethod]
-    public void EveryCoreControl_AcceptsNullAndHugeSettings()
-    {
-        List<string> failed = [];
-        foreach (Type type in CoreControls())
-        {
-            foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.SetMethod is { IsPublic: true } && p.GetIndexParameters().Length == 0
-                    && p.Name is not (nameof(Control.Position) or nameof(Control.ViewSize) or nameof(Control.Parent) or nameof(Control.Name) or nameof(Control.IsVisible) or nameof(Control.CanFocus) or nameof(Control.ZOrder))
-                    && (p.PropertyType == typeof(string) || p.PropertyType == typeof(int))))
-            {
-                foreach (object? value in property.PropertyType == typeof(string) ? new object?[] { null, string.Empty, new string('x', 400) } : [-1, int.MaxValue])
-                {
-                    try
-                    {
-                        if (Resolve(type, 0) is not Control control)
-                        {
-                            break;
-                        }
-
-                        control.Position = new Position(0, 0);
-                        control.ViewSize = new Size(20, 3);
-                        property.SetValue(control, value);
-                        control.Draw(new ScreenBuffer(20, 3));
-                    }
-                    catch (Exception exception) when (IsRigNoise(exception))
-                    {
-                    }
-                    catch (Exception exception)
-                    {
-                        Exception inner = exception is TargetInvocationException { InnerException: { } i } ? i : exception;
-                        failed.Add($"{type.Name}.{property.Name} = {value ?? "null"}: {inner.GetType().Name} {inner.Message.Split('\n')[0]}");
-                    }
+                    Exception inner = exception is TargetInvocationException { InnerException: { } i } ? i : exception;
+                    failed.Add($"{type.Name}.{property.Name} = {value ?? "null"}: {inner.GetType().Name} {inner.Message.Split('\n')[0]}");
                 }
             }
         }
 
         Assert.AreEqual(0, failed.Count, string.Join(Environment.NewLine, failed.Take(30)));
     }
+
+    public static IEnumerable<object[]> EveryCoreControl_AcceptsNullAndHugeSettingsCases() =>
+        CoreControls()
+            .Select(t => new object[] { t });
 }

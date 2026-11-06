@@ -14,6 +14,9 @@ public class WeatherJob(WeatherService weatherService, ICacheService cacheServic
     private readonly ICacheService _cacheService = cacheService;
     private WeatherLocation? _weatherLocation;
 
+    /// <summary>How long after the cached weather is shown the first request goes out.</summary>
+    public TimeSpan FirstRefreshDelay { get; init; } = StartupDelays.FirstNetworkRefresh;
+
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
         // Load from cache if available
@@ -30,6 +33,8 @@ public class WeatherJob(WeatherService weatherService, ICacheService cacheServic
             };
             _weatherService.IsFromCache = true;
         }
+
+        await Task.Delay(FirstRefreshDelay, cancellationToken);
 
         while (!cancellationToken.IsCancellationRequested)
         {

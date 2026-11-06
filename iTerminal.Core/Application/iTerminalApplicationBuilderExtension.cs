@@ -196,6 +196,9 @@ public static class iTerminalApplicationBuilderExtension
         // The SQLite viewer reads a database through the read-only reader; the reader holds no state.
         services.AddTransient<iConsole.Sqlite.ISqliteDatabaseReader, iTerminal.Core.Services.Sqlite.SqliteDatabaseReader>();
         services.AddTransient<iConsole.Dialogs.SqliteViewerDialog>();
+        // The HDF5 viewer reads a file through the read-only reader; the reader holds no state.
+        services.AddTransient<iConsole.Hdf.IHdfFileReader, iTerminal.Core.Services.Hdf.Hdf5FileReader>();
+        services.AddTransient<iConsole.Dialogs.HdfViewerDialog>();
         // The library index is a singleton so the in-memory copy of the table is shared by the
         // indexing job and every dialog that searches it.
         services.AddSingleton<iTerminal.Core.Services.Music.IMusicLibraryService, iTerminal.Core.Services.Music.MusicLibraryService>();
@@ -249,8 +252,11 @@ public static class iTerminalApplicationBuilderExtension
         // the remembered repositories, the last search's results.
         services.AddSingleton<iTerminal.Core.Services.Processes.IExternalProcessRunner, iTerminal.Core.Services.Processes.ExternalProcessRunner>();
         services.AddSingleton<iTerminal.Core.Services.VirtualMachines.IVirtualMachineService>(provider =>
-            new iTerminal.Core.Services.VirtualMachines.LibvirtVirtualMachineService(
-                provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>()));
+            OperatingSystem.IsWindows()
+                ? new iTerminal.Core.Services.VirtualMachines.HyperVVirtualMachineService(
+                    provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>())
+                : new iTerminal.Core.Services.VirtualMachines.LibvirtVirtualMachineService(
+                    provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>()));
         services.AddSingleton<iTerminal.Core.Services.Git.IGitDriveService, iTerminal.Core.Services.Git.GitDriveService>();
         services.AddSingleton<iTerminal.Core.Services.Docker.IDockerDriveService, iTerminal.Core.Services.Docker.DockerDriveService>();
         services.AddSingleton<iTerminal.Core.Services.Search.IFileSearchService, iTerminal.Core.Services.Search.FileSearchService>();

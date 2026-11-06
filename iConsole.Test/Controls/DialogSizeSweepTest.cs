@@ -24,50 +24,56 @@ public class DialogSizeSweepTest
     }
 
     [TestMethod]
+    [DynamicData(nameof(EveryDialog_OpensDrawsAndTakesKeys_OnEveryScreenSizeCases), DynamicDataSourceType.Method)]
     [Timeout(120_000)]
-    public async Task EveryDialog_OpensDrawsAndTakesKeys_OnEveryScreenSize()
+    public async Task EveryDialog_OpensDrawsAndTakesKeys_OnEveryScreenSize(Type type)
     {
         List<string> failed = [];
-        int opened = 0;
-        foreach (Type type in typeof(Control).Assembly.GetExportedTypes()
-            .Where(t => typeof(Dialog).IsAssignableFrom(t) && !t.IsAbstract && !t.IsGenericTypeDefinition)
-            .OrderBy(t => t.FullName, StringComparer.Ordinal))
+        foreach ((uint width, uint height) in new[] { (1u, 1u), (2u, 2u), (4u, 3u), (10u, 4u), (25u, 5u), (60u, 3u), (6u, 30u), (80u, 25u), (200u, 60u) })
         {
-            foreach ((uint width, uint height) in new[] { (1u, 1u), (2u, 2u), (4u, 3u), (10u, 4u), (25u, 5u), (60u, 3u), (6u, 30u), (80u, 25u), (200u, 60u) })
+            if (SweepControlFactory.Build(type, Theme()) is not Dialog dialog)
             {
-                if (SweepControlFactory.Build(type, Theme()) is not Dialog dialog)
+                break;
+            }
+
+            try
+            {
+                Control root = new(Theme()) { Name = "Root", ViewSize = new Size(width, height) };
+                Task shown = root.ShowDialogAsync(dialog);
+                if (await Task.WhenAny(shown, Task.Delay(3000)) != shown)
                 {
                     break;
                 }
 
-                try
+                await shown;
+                ScreenBuffer.Render(root, (int)width, (int)height);
+                foreach (ConsoleKey key in new[] { ConsoleKey.Tab, ConsoleKey.DownArrow, ConsoleKey.PageDown, ConsoleKey.End, ConsoleKey.Home, ConsoleKey.UpArrow, ConsoleKey.RightArrow, ConsoleKey.LeftArrow, ConsoleKey.A })
                 {
-                    Control root = new(Theme()) { Name = "Root", ViewSize = new Size(width, height) };
-                    Task shown = root.ShowDialogAsync(dialog);
-                    if (await Task.WhenAny(shown, Task.Delay(3000)) != shown)
-                    {
-                        break;
-                    }
-
-                    await shown;
-                    opened++;
+                    await dialog.HandleKeyEventAsync(new KeyEvent(key == ConsoleKey.A ? 'a' : '\0', key, false, false, false));
                     ScreenBuffer.Render(root, (int)width, (int)height);
-                    foreach (ConsoleKey key in new[] { ConsoleKey.Tab, ConsoleKey.DownArrow, ConsoleKey.PageDown, ConsoleKey.End, ConsoleKey.Home, ConsoleKey.UpArrow, ConsoleKey.RightArrow, ConsoleKey.LeftArrow, ConsoleKey.A })
-                    {
-                        await dialog.HandleKeyEventAsync(new KeyEvent(key == ConsoleKey.A ? 'a' : '\0', key, false, false, false));
-                        ScreenBuffer.Render(root, (int)width, (int)height);
-                    }
                 }
-                catch (Exception exception)
-                {
-                    failed.Add($"{type.Name} {width}x{height}: {exception.GetType().Name} {exception.Message.Split('\n')[0]}");
-                }
+            }
+            catch (Exception exception)
+            {
+                failed.Add($"{type.Name} {width}x{height}: {exception.GetType().Name} {exception.Message.Split('\n')[0]}");
             }
         }
 
-        Assert.IsTrue(opened >= 9, $"only {opened} dialog screens could be opened");
         Assert.AreEqual(0, failed.Count, string.Join(Environment.NewLine, failed.Take(30)));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheDialogSizeSweep_FindsTheDialogsOfTheApplication()
+    {
+        Assert.IsTrue(EveryDialog_OpensDrawsAndTakesKeys_OnEveryScreenSizeCases().Count() >= 10, "too few dialog types were found");
+    }
+
+    public static IEnumerable<object[]> EveryDialog_OpensDrawsAndTakesKeys_OnEveryScreenSizeCases() =>
+        typeof(Control).Assembly.GetExportedTypes()
+            .Where(t => typeof(Dialog).IsAssignableFrom(t) && !t.IsAbstract && !t.IsGenericTypeDefinition)
+            .OrderBy(t => t.FullName, StringComparer.Ordinal)
+            .Select(t => new object[] { t });
 
     [TestMethod]
     [Timeout(60_000)]

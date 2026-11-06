@@ -99,7 +99,7 @@ public class Control : INotifyPropertyChanged, IControl
             var cursorPosition = _cursorPosition;   
             if (cursorPosition is null)
             {
-                foreach (var control in Controls.AsSnapshot())
+                foreach (var control in Controls.AsArray())
                 {
                     cursorPosition = control.CursorPosition;
                     if (cursorPosition is not null)
@@ -132,7 +132,7 @@ public class Control : INotifyPropertyChanged, IControl
                 return CursorShape;
             }
 
-            foreach (var control in Controls.AsSnapshot())
+            foreach (var control in Controls.AsArray())
             {
                 if (control is not null && control.IsCursorVisible)
                 {
@@ -183,7 +183,7 @@ public class Control : INotifyPropertyChanged, IControl
             // Focus is handled elsewhere (e.g., when determining the cursor position).
             // This allows Desktop-level logic to enable the cursor whenever any control requests it.
             var isCursorVisible = _isCursorVisible && IsEnabled;
-            foreach (var control in Controls.AsSnapshot())
+            foreach (var control in Controls.AsArray())
             {
                 isCursorVisible = isCursorVisible || control.IsCursorVisible;
                 if (isCursorVisible)
@@ -222,7 +222,7 @@ public class Control : INotifyPropertyChanged, IControl
         OnInitializeZOrder();
         OnInitializeLayout();
 
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             await control.OnInitializeAsync();
         }
@@ -234,7 +234,7 @@ public class Control : INotifyPropertyChanged, IControl
     public virtual void OnInitializeZOrder()
     {
         ZOrder = Parent?.ZOrder ?? 0;
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             control.OnInitializeZOrder();
         }
@@ -243,7 +243,7 @@ public class Control : INotifyPropertyChanged, IControl
 
     public virtual void OnInitializeLayout()
     {
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             control.OnInitializeLayout();
         }
@@ -252,7 +252,7 @@ public class Control : INotifyPropertyChanged, IControl
 
     public virtual void OnInitializeCommands()
     {
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             control.OnInitializeCommands();
         }
@@ -279,7 +279,7 @@ public class Control : INotifyPropertyChanged, IControl
         ViewSize = size;
 
         OnWindowResize(size);
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             control.ViewSize = size;
             control.OnWindowResize(size);
@@ -335,7 +335,7 @@ public class Control : INotifyPropertyChanged, IControl
             }
         }
 
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             if (control is null) continue;
             isIdle = isIdle && control.Render(buffer);
@@ -351,7 +351,7 @@ public class Control : INotifyPropertyChanged, IControl
             controlsToRender.Add(this);
         }
 
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             control.GetControlsToRender(controlsToRender, layersToRefresh);
         }
@@ -361,18 +361,28 @@ public class Control : INotifyPropertyChanged, IControl
     {
         if (IsVisible)
         {
-            var controls = Controls.AsSnapshot();
-            foreach (var control in controls
-                .Where(c => c is not null && c.IsVisible)
-                .ToList())
+            // The trace lines are built per child per draw, so only when someone is going to read them.
+            var isDumping = Dump.IsEnabled;
+            // The snapshot is already a private copy, so it is walked as it is.
+            foreach (var control in Controls.AsArray())
             {
+                if (control is null || !control.IsVisible)
+                {
+                    continue;
+                }
                 try
                 {
-                    Dump.AppendSessionTrace(
-                        $"control:draw:start;parent={GetType().FullName};child={control.GetType().FullName};pos={control.AbsolutePosition.X},{control.AbsolutePosition.Y};size={control.ViewSize.Width}x{control.ViewSize.Height}");
+                    if (isDumping)
+                    {
+                        Dump.AppendSessionTrace(
+                            $"control:draw:start;parent={GetType().FullName};child={control.GetType().FullName};pos={control.AbsolutePosition.X},{control.AbsolutePosition.Y};size={control.ViewSize.Width}x{control.ViewSize.Height}");
+                    }
                     control.Draw(buffer);
-                    Dump.AppendSessionTrace(
-                        $"control:draw:done;parent={GetType().FullName};child={control.GetType().FullName}");
+                    if (isDumping)
+                    {
+                        Dump.AppendSessionTrace(
+                            $"control:draw:done;parent={GetType().FullName};child={control.GetType().FullName}");
+                    }
                 }
                 catch (Exception exception)
                 {
@@ -401,7 +411,7 @@ public class Control : INotifyPropertyChanged, IControl
         {
             HasStateChanged = true;
         }
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             if (control is null) continue;
             control.Refresh(zOrder);
@@ -450,7 +460,7 @@ public class Control : INotifyPropertyChanged, IControl
                 }
             }
         }
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             var isHandled = await control.HandleKeyEventAsync(keyEvent);
             if (isHandled)
@@ -472,8 +482,10 @@ public class Control : INotifyPropertyChanged, IControl
     /// </summary>
     public IControl? GetModalChildControl()
     {
-        foreach (var control in Controls.AsSnapshot().Reverse())
+        IControl[] children = Controls.AsArray();
+        for (int i = children.Length - 1; i >= 0; i--)
         {
+            var control = children[i];
             // Look inside before taking the control itself: anything nested is drawn after it.
             var modalControl = control.GetModalChildControl();
             if (modalControl is not null)
@@ -544,7 +556,7 @@ public class Control : INotifyPropertyChanged, IControl
             IsFocused = false;
         }
         OnFocusChanged();
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             control.ResetFocus();
         }
@@ -579,7 +591,7 @@ public class Control : INotifyPropertyChanged, IControl
         {
             command.CommandLogger = commandLogger;
         }
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             control.SetCommandLogger(commandLogger);
         }
@@ -588,7 +600,7 @@ public class Control : INotifyPropertyChanged, IControl
     public IControl? GetFocusedControl()
     {
         IControl focusedControl = this;
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             var childFocusedControl = control.GetFocusedControl();
             if (childFocusedControl is not null && 
@@ -627,7 +639,7 @@ public class Control : INotifyPropertyChanged, IControl
 
     public bool HasFocusableControl(out IControl? focusableControl)
     {
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             if (control.CanFocus && control.IsEnabled)
             {
@@ -672,7 +684,7 @@ public class Control : INotifyPropertyChanged, IControl
     /// </summary>
     public IEnumerable<IControl> GetTabStops()
     {
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             if (control is null || !control.IsVisible)
             {
@@ -784,7 +796,7 @@ public class Control : INotifyPropertyChanged, IControl
         {
             StateHasChanged();
         }
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             if (control is null) continue;
             control.Refresh();
@@ -812,7 +824,7 @@ public class Control : INotifyPropertyChanged, IControl
         OnBeforeClose();
         Hide();
 
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             control.Close();
         }
@@ -853,7 +865,7 @@ public class Control : INotifyPropertyChanged, IControl
     {
         var isHandled = false;
 
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             isHandled = await control.HandleMouseEventAsync(mouseEvent);
             if (isHandled)
@@ -939,7 +951,7 @@ public class Control : INotifyPropertyChanged, IControl
     {
         IsVisible = true;
         await OnInitializeAsync();
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             await control.ShowAsync();
         }
@@ -949,7 +961,7 @@ public class Control : INotifyPropertyChanged, IControl
     public virtual void Hide()
     {
         IsVisible = false;
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             control?.Hide();
         }
@@ -1040,9 +1052,12 @@ public class Control : INotifyPropertyChanged, IControl
     public int GetMaxZOrder()
     {
         var maxZOrder = ZOrder;
-        foreach (var control in Controls.AsSnapshot().Where(c => c.IsVisible))
+        foreach (var control in Controls.AsArray())
         {
-            maxZOrder = Math.Max(maxZOrder, control.GetMaxZOrder());
+            if (control.IsVisible)
+            {
+                maxZOrder = Math.Max(maxZOrder, control.GetMaxZOrder());
+            }
         }
         return maxZOrder;
     }

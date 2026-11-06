@@ -2,6 +2,7 @@
 using iConsole.Display;
 using iConsole.Helper;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace iConsole.Buffers;
@@ -36,8 +37,15 @@ public class BufferLayer
 
     private void ResetRowExtents()
     {
-        _rowLeft = new int[Size.Height];
-        _rowRight = new int[Size.Height];
+        if (_rowLeft.Length != Size.Height)
+        {
+            _rowLeft = new int[Size.Height];
+            _rowRight = new int[Size.Height];
+        }
+        else
+        {
+            Array.Clear(_rowRight);
+        }
         Array.Fill(_rowLeft, int.MaxValue);
         _hasRowExtents = false;
     }
@@ -99,6 +107,13 @@ public class BufferLayer
         ResetRowExtents();
     }
 
+    /// <summary>Forgets what was written since the last clear without touching the cells, for a layer about to be overwritten whole.</summary>
+    public void ResetBounds()
+    {
+        BoundRect = null;
+        ResetRowExtents();
+    }
+
     public void Clear(Conxel fill)
     {
         for (int y = 0; y < Size.Height; y++)
@@ -128,14 +143,13 @@ public class BufferLayer
                 // under every dialog on a small screen), and an open menu blanked the panels beside it.
                 if (sizeX > 0)
                 {
-                    var written = new Rectangle((int)position.X, (int)consoleY, sizeX, 1);
                     if (BoundRect is null)
                     {
-                        BoundRect = written;
+                        BoundRect = new Rectangle((int)position.X, (int)consoleY, sizeX, 1);
                     }
                     else
                     {
-                        BoundRect.Include(written);
+                        BoundRect.Include((int)position.X, (int)consoleY, sizeX, 1);
                     }
                     var row = (int)consoleY;
                     if (row < _rowLeft.Length)
@@ -144,8 +158,7 @@ public class BufferLayer
                         _rowRight[row] = Math.Max(_rowRight[row], (int)position.X + sizeX);
                         _hasRowExtents = true;
                     }                }
-                var sourceArray = conxelString.String.ToArray();
-                var sourceSpan = new Span<Conxel>(sourceArray, 0, sizeX);
+                Span<Conxel> sourceSpan = CollectionsMarshal.AsSpan(conxelString.String)[..sizeX];
                 var destinationLineSpan = this[consoleY].Span;
                 if (position.X < destinationLineSpan.Length)
                 {
@@ -191,6 +204,11 @@ public class BufferLayer
             for (int x = 0; x < row.Length; x++)
             {
                 var c = row[x].Char;
+                // Printable ASCII is one column and never half of a pair: skip the checks below for it.
+                if (c is >= ' ' and <= '~')
+                {
+                    continue;
+                }
                 bool isValid = c switch
                 {
                     TextWidth.Continuation => x > 0 && IsLeadingWide(row[x - 1].Char),

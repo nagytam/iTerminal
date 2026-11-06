@@ -10,7 +10,9 @@ namespace iTerminal.Core.Tasks;
 /// <summary>
 /// Deletes a file or folder on an <see cref="IFileSystem"/> as a background task instead of
 /// blocking the caller's thread. A non-recursive folder delete keeps the existing single-call
-/// semantics (only succeeds if empty); a recursive folder delete is fed by a separate
+/// semantics (only succeeds if empty). A local folder to the bin, recursive, has no discovery task:
+/// it is one <c>DeleteFolder</c> call, one rename of the whole tree. Any other recursive folder
+/// delete is fed by a separate
 /// <see cref="FolderDeleteDiscoveryTask"/> (constructed and added to the
 /// <see cref="iConsole.Tasks.TaskManager"/> alongside this task, running concurrently) that this
 /// task drains (see <see cref="FolderDeletePipeline"/>) — two visibly separate tasks rather than
@@ -39,9 +41,20 @@ public class ContentModelDeleteTask(
 
             IReadOnlyList<(Url Url, string Error)> failedItems = [];
 
-            if (url.PathType == PathType.Folder && recursive)
+            // A recursive folder with a discovery task is walked file by file. Without one (a folder
+            // sent to the Trash whole, see DeleteCommand.WholeFolderToTrash) the folder is handed to
+            // DeleteFolder as one call: on the Trash that is one rename of the whole tree.
+            // Only a local folder may go whole, and only to the bin: anywhere else a recursive delete is
+            // a walk, and the walk needs its discovery task. Refuse rather than remove the tree in one
+            // call with no progress and no cancel.
+            if (url.PathType == PathType.Folder && recursive && discoveryTask is null
+                && (!moveToRecycleBin || url.ContainerType != ContainerType.FileSystem))
             {
-                ArgumentNullException.ThrowIfNull(discoveryTask);
+                throw new InvalidOperationException("A recursive folder delete needs its discovery task unless it goes whole to the local bin.");
+            }
+
+            if (url.PathType == PathType.Folder && recursive && discoveryTask is not null)
+            {
                 // The discovery task has its own CancellationTokenSource — cancelling this task
                 // (e.g. the progress window's Cancel button) must also cancel discovery, or it
                 // could block forever writing to a channel nobody's draining anymore.
@@ -56,7 +69,13 @@ public class ContentModelDeleteTask(
             }
             else if (url.PathType == PathType.Folder)
             {
-                target.DeleteFolder(url, recursive: false, moveToRecycleBin);
+                // One call that cannot be interrupted once started (on Windows the shell's recycle of
+                // a large tree can take a while), so the cancel is honoured before it, not during it.
+                CancellationToken.ThrowIfCancellationRequested();
+                if (!target.DeleteFolder(url, recursive, moveToRecycleBin))
+                {
+                    throw new DirectoryNotFoundException($"The folder is no longer there: {url.FullName}");
+                }
             }
             else
             {

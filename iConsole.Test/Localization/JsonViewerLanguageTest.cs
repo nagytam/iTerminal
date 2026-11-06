@@ -3,21 +3,23 @@ using iConsole.Localization;
 
 namespace iConsole.Test.Localization;
 
-/// <summary>The JSON viewer status line follows the chosen language. The language is a static, so this runs on its own.</summary>
+/// <summary>The JSON viewer status line follows the chosen language.</summary>
 [TestClass]
-[DoNotParallelize]
 public class JsonViewerLanguageTest
 {
     private static readonly string[] Keys = ["Json.TopLevelItems"];
 
-    [TestCleanup]
-    public void Reset() => UiText.Current = null;
+    private IDisposable? _language;
 
-    private static Localizer Speak(string code)
+    [TestCleanup]
+    public void Reset() => _language?.Dispose();
+
+    private Localizer Speak(string code)
     {
         Localizer localizer = new();
         Assert.IsTrue(localizer.SetLanguage(code));
-        UiText.Current = localizer;
+        _language?.Dispose();
+        _language = UiText.Scope(localizer);
         return localizer;
     }
 

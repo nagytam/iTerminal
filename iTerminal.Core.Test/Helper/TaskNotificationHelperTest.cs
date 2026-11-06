@@ -159,4 +159,39 @@ public class TaskNotificationHelperTest
 
         Assert.AreEqual("Delete finished", service.Active.Single().Title);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FailureText_NullReference_NamesTheThrowingMethod()
+    {
+        Exception thrown;
+        try
+        {
+            ThrowsNullReference();
+            throw new InvalidOperationException("unreachable");
+        }
+        catch (NullReferenceException exception)
+        {
+            thrown = exception;
+        }
+
+        var text = TaskNotificationHelper.FailureText(thrown);
+
+        StringAssert.StartsWith(text, thrown.Message);
+        StringAssert.Contains(text, nameof(ThrowsNullReference));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void FailureText_OtherExceptions_KeepTheirMessage()
+    {
+        Assert.AreEqual("disk full", TaskNotificationHelper.FailureText(new IOException("disk full")));
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static void ThrowsNullReference()
+    {
+        string? value = null;
+        _ = value!.Length;
+    }
 }

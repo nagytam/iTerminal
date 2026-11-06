@@ -184,7 +184,7 @@ public class Popup : Window
         // Keep the elevated z computed in ShowAsync (the base would reset us to the root's layer),
         // and put our content on the same layer.
         ZOrder = _desiredZOrder;
-        foreach (var control in Controls.AsSnapshot())
+        foreach (var control in Controls.AsArray())
         {
             control.OnInitializeZOrder();
         }

@@ -25,6 +25,9 @@ public class Desktop : IHostedService, IDesktop
     public bool IsActive => !CancellationTokenSource.Token.IsCancellationRequested;
     public IRenderingDumpHelper Dump { get; }
     public IScreenLogger ScreenLogger { get; }
+
+    /// <summary>The longest the background jobs wait for the first frame before they start anyway.</summary>
+    public TimeSpan BackgroundJobsGracePeriod { get; init; } = TimeSpan.FromSeconds(3);
     private readonly IHostApplicationLifetime? _applicationLifetime;
 
     public Desktop(IConsoleDriver consoleDriver, IScreen screen, IBuffer buffer,
@@ -65,6 +68,7 @@ public class Desktop : IHostedService, IDesktop
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
+        Diagnostics.StartupTrace.Mark("desktop-start");
         _timerResolution = new TimerResolution(1);
         _runTask = Task.Run(RunAsync);
         return Task.CompletedTask;
@@ -108,6 +112,7 @@ public class Desktop : IHostedService, IDesktop
     {
         try
         {
+            Diagnostics.StartupTrace.Mark("desktop-run");
             Dump.AppendSessionTrace("desktop:run:start");
             _consoleDriver.RefreshWindowSize();
             var initialWindowSize = _consoleDriver.WindowSize;
@@ -125,15 +130,44 @@ public class Desktop : IHostedService, IDesktop
                 Dump.AppendSessionTrace($"desktop:run:screen-window-size:done;screen={screen.GetType().FullName}");
             }
 
+            Diagnostics.StartupTrace.Mark("screens-initialized");
             Dump.AppendSessionTrace("desktop:run:render-initial-state:start");
             RenderInitialState();
             Dump.AppendSessionTrace("desktop:run:render-initial-state:done");
 
+            // The jobs that draw and read keys start first. The background ones (indexers, weather, quotes, drive
+            // scans, ...) are ~20 threads that would otherwise compete with the first frame for the CPU; they start
+            // once it is on the screen, or after a grace period if it never comes.
+            List<IJob> backgroundJobs = [];
+            ConsoleBufferRendererJob? renderer = null;
             foreach (var job in Jobs.AsSnapshot())
+            {
+                renderer ??= job as ConsoleBufferRendererJob;
+                if (job.Priority == JobPriority.Background)
+                {
+                    backgroundJobs.Add(job);
+                }
+                else
+                {
+                    StartJob(job);
+                }
+            }
+
+            Diagnostics.StartupTrace.Mark("render-jobs-started");
+            if (renderer is not null)
+            {
+                using CancellationTokenSource graceTimer = CancellationTokenSource.CreateLinkedTokenSource(CancellationTokenSource.Token);
+                await Task.WhenAny(renderer.FirstFrameRendered, Task.Delay(BackgroundJobsGracePeriod, graceTimer.Token));
+                graceTimer.Cancel();
+            }
+
+            // Quit while waiting: the jobs would only start to be stopped again.
+            foreach (var job in backgroundJobs.Where(_ => !CancellationTokenSource.IsCancellationRequested))
             {
                 StartJob(job);
             }
 
+            Diagnostics.StartupTrace.Mark("background-jobs-started");
             Dump.AppendSessionTrace("desktop:run:loop:start");
             while (!CancellationTokenSource.IsCancellationRequested)
             {
@@ -266,9 +300,12 @@ public class Desktop : IHostedService, IDesktop
     /// </summary>
     public IControl? GetModalChildControl()
     {
-        var screen = Screens.AsSnapshot().First();
-        foreach (var control in screen.Controls.AsSnapshot().Reverse())
+        var screens = Screens.AsArray();
+        var screen = screens.Length > 0 ? screens[0] : throw new InvalidOperationException("The desktop has no screen.");
+        IControl[] children = screen.Controls.AsArray();
+        for (int i = children.Length - 1; i >= 0; i--)
         {
+            var control = children[i];
             var modalControl = control.GetModalChildControl();
             if (modalControl is not null)
             {
@@ -304,7 +341,7 @@ public class Desktop : IHostedService, IDesktop
         var shape = Display.CursorShape.Default;
         foreach (var screen in Screens.AsSnapshot())
         {
-            foreach (var control in screen.Controls.AsSnapshot())
+            foreach (var control in screen.Controls.AsArray())
             {
                 if (control.IsCursorVisible)
                 {

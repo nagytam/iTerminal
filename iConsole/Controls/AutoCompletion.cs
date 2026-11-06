@@ -220,8 +220,14 @@ public class AutoCompletion : Window, ITransientOverlayHost
         // this update showed it again.
         lock (_updateGate)
         {
+            // An update that lost to a dismissal has nothing to say about the list: Hide already closed it, and a
+            // newer update may have opened it again since. Applying "not visible" here closed that newer list.
+            if (generation != CurrentGeneration)
+            {
+                return;
+            }
+
             var visible = CompletionModel.MatchingValues.Any()
-                && generation == CurrentGeneration
                 && Interlocked.Exchange(ref _suppressVisibilityUpdates, 0) == 0;
             ApplyVisibility(visible);
         }

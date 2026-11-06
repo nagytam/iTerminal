@@ -48,23 +48,25 @@ public class FfmpegAudioFormatsTest
         }
     }
 
+    /// <summary>One case per sample, so each ffmpeg process runs beside the others rather than after them.</summary>
+    public static IEnumerable<object[]> Samples() =>
+        Directory.GetFiles(SampleDirectory, "sample.*").Select(sample => new object[] { Path.GetFileName(sample) });
+
     [Timeout(60_000)]
     [TestMethod]
-    public void SampleFiles_DecodeThroughFfmpeg()
+    [DynamicData(nameof(Samples))]
+    public void SampleFile_DecodesThroughFfmpeg(string fileName)
     {
         if (!FfmpegAudioDecoder.IsAvailable())
         {
             Assert.Inconclusive("ffmpeg is not on the PATH");
         }
 
-        foreach (string sample in Directory.GetFiles(SampleDirectory, "sample.*"))
-        {
-            using FfmpegAudioDecoder decoder = new(sample);
-            byte[] buffer = new byte[4096];
+        using FfmpegAudioDecoder decoder = new(Path.Combine(SampleDirectory, fileName));
+        byte[] buffer = new byte[4096];
 
-            int read = decoder.Read(buffer);
+        int read = decoder.Read(buffer);
 
-            Assert.IsTrue(read > 0, $"{Path.GetFileName(sample)} gave no audio");
-        }
+        Assert.IsTrue(read > 0, $"{fileName} gave no audio");
     }
 }

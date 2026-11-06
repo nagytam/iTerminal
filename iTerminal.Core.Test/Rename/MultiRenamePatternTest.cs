@@ -5,6 +5,7 @@ namespace iTerminal.Core.Test.Rename;
 [TestClass]
 public class MultiRenamePatternTest
 {
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDefaultPatternRenamesNothing()
     {
@@ -12,6 +13,7 @@ public class MultiRenamePatternTest
         Assert.AreEqual("Photos", MultiRenamePattern.Expand(MultiRenamePattern.DefaultPattern, "Photos", isFolder: true, 1, string.Empty, string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheCounterStartsAtOneAndIsPaddedToTheWidthGiven()
     {
@@ -20,12 +22,14 @@ public class MultiRenamePatternTest
         Assert.AreEqual("a_0012.txt", MultiRenamePattern.Expand("[C]_[N:4]", "a.txt", false, 12, string.Empty, string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFileKeepsItsExtensionWhenThePatternDoesNotNameIt()
     {
         Assert.AreEqual("holiday_02.jpg", MultiRenamePattern.Expand("holiday_[N:2]", "IMG_9.jpg", false, 2, string.Empty, string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheExtensionTokenPlacesTheExtensionWhereThePatternPutsIt()
     {
@@ -34,6 +38,7 @@ public class MultiRenamePatternTest
         Assert.AreEqual("txt-a", MultiRenamePattern.Expand("[E]-[C]", "a.txt", false, 1, string.Empty, string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ADotfileHasNoExtension()
     {
@@ -42,6 +47,7 @@ public class MultiRenamePatternTest
         Assert.AreEqual(string.Empty, MultiRenamePattern.Expand("[E]", ".bashrc", false, 1, string.Empty, string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANameWithoutAnExtensionKeepsNothingExtra()
     {
@@ -50,6 +56,7 @@ public class MultiRenamePatternTest
             "a trailing dot is part of the name, not an empty extension");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFolderHasNoExtensionSoItsWholeNameIsTheStem()
     {
@@ -57,6 +64,7 @@ public class MultiRenamePatternTest
         Assert.AreEqual(string.Empty, MultiRenamePattern.Expand("[E]", "v1.2", isFolder: true, 1, string.Empty, string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindAndReplaceApplyToTheExpandedPatternAsPlainText()
     {
@@ -66,12 +74,14 @@ public class MultiRenamePatternTest
         Assert.AreEqual("0x_0.txt", MultiRenamePattern.Expand("[N:2]", "a.txt", false, 1, "1", "x_0"));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnUnknownTokenIsCopiedAsTyped()
     {
         Assert.AreEqual("[X]_a.txt", MultiRenamePattern.Expand("[X]_[C]", "a.txt", false, 1, string.Empty, string.Empty));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEmptyNameStaysEmptyAndIsNotAHiddenFile()
     {

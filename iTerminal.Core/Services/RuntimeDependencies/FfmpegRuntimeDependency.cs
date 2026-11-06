@@ -128,7 +128,7 @@ public sealed partial class FfmpegRuntimeDependency : IRuntimeDependency
 
         progress.Report($"Installing ffmpeg with {plan.DisplayName}: {plan.CommandLine}");
         int exitCode = await _run(plan, progress.Report, cancellationToken);
-        if (exitCode != 0)
+        if (exitCode != 0 && !(_isWindows && IsWinGetAlreadyInstalledCode(exitCode)))
         {
             string manual = plan.ManualCommand is null ? string.Empty : $" Run it yourself in a shell: {plan.ManualCommand}";
             throw new InvalidOperationException($"{plan.DisplayName} exited with code {exitCode}.{manual}");
@@ -141,6 +141,14 @@ public sealed partial class FfmpegRuntimeDependency : IRuntimeDependency
             throw new InvalidOperationException($"{plan.DisplayName} finished, but ffmpeg and ffprobe were not found afterwards. Restart iTerminal or add them to the PATH.");
         }
     }
+
+    /// <summary>
+    /// winget exits non-zero when the package is already there: 0x8A15002B (no applicable upgrade) or 0x8A150061
+    /// (already installed). Either way the program is on the machine, so the install counts as done and the lookup
+    /// afterwards decides whether it can be found.
+    /// </summary>
+    internal static bool IsWinGetAlreadyInstalledCode(int exitCode) =>
+        unchecked((uint)exitCode) is 0x8A15002Bu or 0x8A150061u;
 
     /// <summary>
     /// Programs installed in a standard place that is not on this process's PATH (winget's link folder is added to
