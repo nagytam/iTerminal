@@ -84,6 +84,43 @@ Printing the file under the cursor and managing the print queue is one dialog, l
 - **PowerShell calls a file type that cannot carry a signature (`.txt`) `UnknownError` with no signer**; `ParseAuthenticode` reads that as "not signed", not as an untrusted signer.
 - **Tests fake the tools** (`FakeProcessRunner`); the end-to-end suite uses the real service, which only reads (`gpg --version`, `Get-AuthenticodeSignature`) and signs with a throwaway PEM key in the sandbox. Signing with gpg and with a certificate from the store has not been run against a real key or certificate.
 
+### File encryption (Ctrl+Shift+E) (`Services/Encryption/`, `FileEncryptionDialog`)
+`FileEncryptionDialog` encrypts the marked files (or the cursor file) with a passphrase into a separate `name.enc` beside each, or decrypts `.enc` files back. It is in the File menu, the right-click menu and the command palette. Local files only; the mode starts as Decrypt when every selected file already ends in `.enc`, and the Mode box changes it. `FileEncryptionService` does the work on a background task (`RunTask`); closing the dialog cancels it.
+
+- **Nothing here is invented crypto.** AES-256-GCM (`System.Security.Cryptography.AesGcm`, 16-byte tag) with a key from PBKDF2-HMAC-SHA256 (`Rfc2898DeriveBytes.Pbkdf2`) over the NFC-normalised UTF-8 passphrase, 600 000 iterations (OWASP 2023), a random 16-byte salt per file. PBKDF2 and not Argon2 because no vetted Argon2 package is referenced; the header carries a KDF id, so Argon2 can be added as id 2 without breaking old files.
+- **File format, version 1** (all integers little-endian unless noted):
+
+  | Offset | Size | Field |
+  | --- | --- | --- |
+  | 0 | 5 | magic `ITENC` |
+  | 5 | 1 | version (`1`) |
+  | 6 | 1 | KDF id (`1` = PBKDF2-HMAC-SHA256) |
+  | 7 | 1 | cipher id (`1` = AES-256-GCM) |
+  | 8 | 4 | PBKDF2 iterations (accepted range 1 000 – 10 000 000) |
+  | 12 | 4 | plaintext chunk size (accepted range 1 – 16 MiB; written as 1 MiB) |
+  | 16 | 16 | salt |
+  | 32 | 8 | nonce prefix (random) |
+  | 40 | … | chunks, back to back |
+
+  Each chunk is `ciphertext || 16-byte tag`. Every chunk but the last holds exactly *chunk size* plaintext bytes; the last holds 0 – *chunk size* (an empty file is one empty chunk). The 12-byte nonce of chunk *n* is `noncePrefix || n` (*n* as a 32-bit big-endian counter, so a file holds up to 2^32 chunks). The associated data of every chunk is the **whole 40-byte header plus one byte, 1 for the last chunk and 0 for the others**.
+- **What that buys.** Flipping a bit anywhere (header, any chunk, any tag) fails authentication. Swapping or repeating chunks fails (the counter is in the nonce). A file cut at a chunk boundary, or with bytes appended, fails because the chunk that was last no longer carries the final flag the reader derives from end-of-file. A reader never allocates more than the header's chunk size, and rejects out-of-range iteration counts before deriving a key, so a hostile file cannot make it hang or exhaust memory. Memory is two chunks however large the file is.
+- **Wrong passphrase and corrupt look the same on the first chunk** (GCM cannot tell them apart), so the message says "Wrong passphrase, or the file is damaged"; a failure on a later chunk says which part is damaged. A decrypted chunk is written only after it authenticates, into a temp file that is deleted on any failure, so a failed run leaves nothing but the untouched `.enc`.
+- **Writes are temp-then-move and never overwrite.** The output is written to `.<target>.<guid>.tmp` beside the target and moved with `IFileSystemService.MoveAsync(overwrite: false)`; an existing target makes that one file fail (the others still run) and is never replaced. The streaming itself uses local `FileStream`s, so the dialog refuses a selection that reaches another drive.
+- **The passphrase is typed in a `PasswordBox` and confirmed a second time to encrypt.** It is never stored, logged, shown, put in a URL or on a command line; the boxes are emptied the moment Run starts and again on close. There is no vault or password-manager source: neither offers an API for handing a passphrase to a dialog without showing it. A .NET `string` cannot be zeroed, so the copy that lives on is the `string` passed to the service for the duration of the run (the derived key and the buffers are zeroed).
+- **Deleting an original is a separate y/n, never silent.** After a run that wrote at least one file the dialog asks, naming whether the originals go to the recycle bin (`DeleteDialog.CanRecycle`) or, where there is none, are overwritten and removed with the secure wipe (one random pass). Only originals whose output was written are offered; any other key than `y` keeps them. The output is flushed to disk before it is moved into place but not decrypted again to verify before an original goes, and a plaintext original in the recycle bin stays readable there until it is emptied. Timestamps, permissions and the executable bit are not stored in the file.
+- **Error messages from the service are English**, like the wipe's; every string the dialog itself draws is in the six `.resx` files.
+- **Tests.** `FileEncryptionServiceTest` (round trips at the chunk boundaries, wrong passphrase, tamper in header/chunk/tag, swapped chunks, truncation at and inside a chunk, appended bytes, header bounds, no overwrite, no temp file left, cancel) uses a low iteration count and a 1 000-byte chunk through the public `Iterations` / `ChunkSize` properties; `FileEncryptionDialogTest` drives the dialog; `FileEncryptionTest` in `iTerminal.Test` runs it in the whole app. The end-to-end test answers `n` to the delete question: `y` reaches the machine's real recycle bin (`FileSystemService`), which the sandbox does not replace, and is covered with a mock in the dialog test.
+
+### Streams and attributes (`StreamsDialog`, `Services/Streams/`)
+`StreamsDialog` lists the NTFS alternate data streams (Windows) or extended attributes (Linux, macOS) of the file or folder under the cursor, with the size of each, previews the one under its cursor as text or hex, and deletes it. It is in the File menu, the right-click menu and the command palette, and **has no chord**: every free chord was being claimed by another feature at the time.
+
+- **`IStreamAttributeService` is the seam**, async by contract and never throwing for a failed call (the failure is a sentence in the result). `StreamAttributeService` P/Invokes `FindFirstStreamW`/`FindNextStreamW` and opens a stream as `path:name` through `CreateFileW` with backup semantics (a folder cannot be opened without them) and `FILE_FLAG_OPEN_REPARSE_POINT`; on Unix `llistxattr`/`lgetxattr`/`lremovexattr` (Linux) and `listxattr`/`getxattr`/`removexattr` with `XATTR_NOFOLLOW` (macOS) — **the two have different signatures, so they are separate imports**. The unnamed main stream is not listed. An attribute that cannot be read (`security.*` without root) is listed with size 0 and refused with the system's own sentence.
+- **A name is validated before it reaches the system** (`IsValidName`): on Windows no `:`, separator or wildcard, so `..\other.txt` cannot address another file; on Unix any non-empty name without NUL, since `:` is legal there.
+- **Delete asks in the footer**: Del arms "Delete X? y deletes it", `y` deletes, any other key (Esc included) keeps it, and the list is read again afterwards. Deleting `Zone.Identifier` is "unblock this file" and is meant to work.
+- **Every call is a background task** guarded by generation counters (a preview for an entry the cursor has left is dropped); only the first 64 KB of a stream is read, and the preview says so. Text or hex is chosen from the bytes (valid UTF-8 without control characters is text); `H` switches.
+- **The command gates on `FocusedEntry.ActionableUrl`** (never `..`, never a container row) with a `file://` URL, and uses `GetFocusedModel() ?? GetLastContentModel()`.
+- The end-to-end suite registers `SandboxServices.StreamAttributes`, an in-memory store that records calls: no test lists or deletes a stream of a real file through the app. `StreamAttributeServiceTest` uses real files in a folder it owns on Windows and skips when the volume keeps no streams; the Linux xattr test skips without `setfattr`. The macOS imports have not been run.
+
 ### The file clipboard: Ctrl+C / Ctrl+X / Ctrl+V (`Services/Clipboard/`, `Commands/Clipboard/`)
 Files copied here paste in Explorer, a mail client or an upload dialog, and what they copied pastes here. The Edit menu lists the three; Ctrl+Insert, Shift+Delete and Shift+Insert are the CUA twins.
 

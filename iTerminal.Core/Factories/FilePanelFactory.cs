@@ -60,7 +60,9 @@ public class FilePanelFactory(
     iConsole.Dialogs.SqliteViewerDialog? sqliteViewerDialog = null,
     HashManifestDialog? hashManifestDialog = null,
     iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
-    iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null)
+    StreamsDialog? streamsDialog = null,
+    iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
+    FileEncryptionDialog? fileEncryptionDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -108,6 +110,7 @@ public class FilePanelFactory(
             clipboardOperations: clipboardOperations,
             diskImageDialog: diskImageDialog,
             secureWipeDialog: secureWipeDialog,
+            fileEncryptionDialog: fileEncryptionDialog,
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
             notificationService: notificationService,
@@ -115,6 +118,7 @@ public class FilePanelFactory(
             gitService: gitService,
             printDialog: printDialog,
             hashManifestDialog: hashManifestDialog,
+            streamsDialog: streamsDialog,
             // One per panel: a dialog instance is one control, and each panel's Enter and F3 show it.
             webBrowserDialog: webBrowserDialogFactory?.Invoke());
         contentModelService.AddContentBrowser(name, contentBrowser);

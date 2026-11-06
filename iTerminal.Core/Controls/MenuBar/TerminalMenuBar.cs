@@ -132,7 +132,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         HashManifestDialog? hashManifestDialog = null,
         iTerminal.Core.Services.FileSystemResolver? fileSystemResolver = null,
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
-        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null
+        StreamsDialog? streamsDialog = null,
+        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
+        FileEncryptionDialog? fileEncryptionDialog = null
         )
         : base([], themeService)
     {
@@ -159,6 +161,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             compressDialog: compressDialog,
             extractDialog: extractDialog,
             secureWipeDialog: secureWipeDialog,
+            fileEncryptionDialog: fileEncryptionDialog,
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
             notificationService: notificationService,
@@ -166,6 +169,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             hashManifestDialog: hashManifestDialog,
             fileSystemResolver: fileSystemResolver,
             hdfViewerDialog: hdfViewerDialog,
+            streamsDialog: streamsDialog,
             executableAnalysisDialog: executableAnalysisDialog));
 
         AddMenuItem(new EditMenuItem(

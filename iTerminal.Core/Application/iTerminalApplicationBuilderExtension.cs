@@ -369,11 +369,17 @@ public static class iTerminalApplicationBuilderExtension
         // Scan with Microsoft Defender (Windows): the file panel's context menu and the File menu.
         services.AddSingleton<iTerminal.Core.Services.Defender.IMalwareScanService, iTerminal.Core.Services.Defender.DefenderScanService>();
         services.AddTransient<SecureWipeDialog>();
+        // Ctrl+Shift+E: encrypt and decrypt files with a passphrase (AES-256-GCM, PBKDF2).
+        services.AddSingleton<iTerminal.Core.Services.Encryption.IFileEncryptionService, iTerminal.Core.Services.Encryption.FileEncryptionService>();
+        services.AddTransient<FileEncryptionDialog>();
         services.AddTransient<SignatureDialog>();
         services.AddTransient<HashManifestDialog>();
         // Ctrl+P: print the file under the cursor and manage the print queue.
         services.AddSingleton<iTerminal.Core.Services.Printing.IPrintService, iTerminal.Core.Services.Printing.PrintService>();
         services.AddTransient<PrintDialog>();
+        // Streams and attributes: NTFS alternate data streams (Windows) or extended attributes (Linux, macOS) of the entry under the cursor.
+        services.AddSingleton<iTerminal.Core.Services.Streams.IStreamAttributeService, iTerminal.Core.Services.Streams.StreamAttributeService>();
+        services.AddTransient<StreamsDialog>();
         // File associations: Enter and F4 open a file with the program chosen for it; Shift+F3 and
         // Ctrl+F4 choose. The dialogs are handed out by a factory because one consumer needs two —
         // "Open with" and "Edit with" are separate controls.

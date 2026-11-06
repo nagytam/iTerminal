@@ -45,7 +45,9 @@ public class FileMenuItem : MenuItem
         PrintDialog? printDialog = null,
         HashManifestDialog? hashManifestDialog = null,
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
-        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null)
+        StreamsDialog? streamsDialog = null,
+        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
+        FileEncryptionDialog? fileEncryptionDialog = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
@@ -101,9 +103,17 @@ public class FileMenuItem : MenuItem
         {
             AddMenuItem(new MenuItem("Secure Wipe	Ctrl+Shift+F8", new SecureWipeDialogCommand(secureWipeDialog, contentModelService), [], themeService));
         }
+        if (fileEncryptionDialog is not null)
+        {
+            AddMenuItem(new MenuItem(UiText.Get("Menu.EncryptFiles", "Encrypt / Decrypt…") + "	Ctrl+Shift+E", new FileEncryptionDialogCommand(fileEncryptionDialog, contentModelService), [], themeService));
+        }
         if (malwareScanService is { IsAvailable: true })
         {
             AddMenuItem(new MenuItem("Scan with Microsoft Defender", new ScanWithDefenderCommand(contentModelService, malwareScanService, notificationService), [], themeService));
+        }
+        if (streamsDialog is not null)
+        {
+            AddMenuItem(new MenuItem(UiText.Get("Menu.StreamsItem", "Streams and Attributes…"), new StreamsDialogCommand(streamsDialog, contentModelService), [], themeService));
         }
         if (propertiesDialog is not null)
         {
