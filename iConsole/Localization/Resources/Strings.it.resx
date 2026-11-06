@@ -1045,4 +1045,16 @@
   <data name="Exe.Hint.Timestamp" xml:space="preserve">
     <value>Il timestamp è zero o futuro, quindi non viene mostrato</value>
   </data>
+  <data name="Disguise.TypeMismatch" xml:space="preserve">
+    <value>Il contenuto è {0}, ma il nome dice .{1}</value>
+  </data>
+  <data name="Disguise.DoubleExtension" xml:space="preserve">
+    <value>Doppia estensione: mostra .{0}, si esegue come .{1}</value>
+  </data>
+  <data name="Disguise.HiddenCharacters" xml:space="preserve">
+    <value>Il nome contiene caratteri nascosti o che cambiano la direzione</value>
+  </data>
+  <data name="Disguise.Caption" xml:space="preserve">
+    <value>Avviso</value>
+  </data>
 </root>

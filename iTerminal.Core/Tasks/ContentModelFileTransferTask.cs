@@ -7,6 +7,7 @@ using iConsole.Tasks;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Helper;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Checksums;
 
 namespace iTerminal.Core.Tasks;
 
@@ -20,7 +21,7 @@ namespace iTerminal.Core.Tasks;
 /// Copy and move differ only in the verb, the native fast path, and whether the source is deleted
 /// afterwards (<see cref="DeletesSource"/>).
 /// </summary>
-public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url requestedTargetUrl, FileConflictResolver resolver, IErrorPromptService? errorPromptService = null) : BackgroundTask
+public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url requestedTargetUrl, FileConflictResolver resolver, IErrorPromptService? errorPromptService = null, TransferVerifier? verifier = null) : BackgroundTask
 {
     private Url _targetUrl = requestedTargetUrl;
 
@@ -81,14 +82,17 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
             if (sourceUrl.Length > 0)
             {
                 // Before anything is written: a file that does not fit warns instead of failing half way.
-                var spaceGuard = TransferSpaceGuard.For(source, sourceUrl, target, _targetUrl, DeletesSource, errorPromptService);
+                var spaceGuard = TransferSpaceGuard.For(source, sourceUrl, target, _targetUrl, DeletesSource && verifier is null, errorPromptService);
                 if (spaceGuard is not null)
                 {
                     await spaceGuard.EnsureAsync(() => sourceUrl.Length, CancellationToken);
                 }
             }
 
-            if (ReferenceEquals(source, target))
+            // With verification the bytes have to go through a copy that can be checked, so a one-drive
+            // transfer is streamed too (a move is then copy, check, delete instead of a rename) - except onto
+            // itself, where streaming would truncate the file it is reading and there is nothing to compare.
+            if (ReferenceEquals(source, target) && (verifier is null || UrlPath.SameOrInside(sourceUrl, _targetUrl)))
             {
                 await SameFileSystemTransferAsync(source, sourceUrl, _targetUrl, replace);
             }
@@ -116,6 +120,16 @@ public abstract class ContentModelFileTransferTask(IFileSystem source, IFileSyst
                 {
                     TryDeletePartialTarget();
                     throw;
+                }
+
+                if (verifier is not null)
+                {
+                    // Outside the try above: a cancel now leaves a complete copy, not a partial one to remove.
+                    // A mismatch throws before the source is touched, and the bad copy stays.
+                    var verifyProgress = new SynchronousProgress<long>(bytesRead =>
+                        Description = string.Join(Environment.NewLine, UiText.Get("Verb.Verifying", "Verifying"), sourceUrl.Name, bytesRead.ToFileSize()));
+                    Description = string.Join(Environment.NewLine, UiText.Get("Verb.Verifying", "Verifying"), sourceUrl.Name);
+                    await verifier.VerifyAsync(source, target, sourceUrl, _targetUrl, verifyProgress, CancellationToken);
                 }
 
                 if (DeletesSource)

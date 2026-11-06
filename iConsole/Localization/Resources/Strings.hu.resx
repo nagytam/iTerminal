@@ -1045,4 +1045,16 @@
   <data name="Exe.Hint.Timestamp" xml:space="preserve">
     <value>Az időbélyeg nulla vagy jövőbeli, ezért nem jelenik meg</value>
   </data>
+  <data name="Disguise.TypeMismatch" xml:space="preserve">
+    <value>A tartalom {0}, de a név .{1} kiterjesztést mutat</value>
+  </data>
+  <data name="Disguise.DoubleExtension" xml:space="preserve">
+    <value>Dupla kiterjesztés: .{0}-nak látszik, .{1}-ként fut</value>
+  </data>
+  <data name="Disguise.HiddenCharacters" xml:space="preserve">
+    <value>A név rejtett vagy írásirányt módosító karaktereket tartalmaz</value>
+  </data>
+  <data name="Disguise.Caption" xml:space="preserve">
+    <value>Figyelmeztetés</value>
+  </data>
 </root>

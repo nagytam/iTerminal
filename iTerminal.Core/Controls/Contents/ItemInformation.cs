@@ -5,9 +5,11 @@ using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Model;
+using iConsole.Security;
 using iConsole.Services;
 using iConsole.Tasks;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Security;
 using iTerminal.Core.Tasks;
 using Serilog;
 using System.ComponentModel;
@@ -24,6 +26,9 @@ public class ItemInformation : iConsole.Controls.Control
     private IContentModel? _pendingFolderInformationRefreshModel;
     private string? _lastFocusedInformationUrl;
     private IMemoryCacheService _memoryCacheService;
+    private readonly FileDisguiseChecker? _disguiseChecker;
+    private CancellationTokenSource? _disguiseCancellation;
+    private string? _lastDisguiseUrl;
     private IContentModel? _contentModel;
     public IContentModel? ContentModel 
     { 
@@ -50,13 +55,15 @@ public class ItemInformation : iConsole.Controls.Control
         TaskManager taskManager,
         IMemoryCacheService memoryCacheService,
         IThemeService themeService,
-        ILogger logger) 
+        ILogger logger,
+        FileDisguiseChecker? disguiseChecker = null) 
         : base(themeService)
     {
         _contentModelService = contentModelService ?? NullContentModelService.Instance;
         _contentModelService.ModelChanged += OnContentModelServiceModelChanged;
         _taskManager = taskManager ?? new TaskManager();
         _memoryCacheService = memoryCacheService;
+        _disguiseChecker = disguiseChecker;
         _logger = logger ?? new LoggerConfiguration().CreateLogger();
         ViewSize = new Size(0, 1); // single row
         CanFocus = false;
@@ -131,8 +138,9 @@ public class ItemInformation : iConsole.Controls.Control
         else if (focusedEntry != null)
         {
             ScheduleFolderInformationRefresh(focusedEntry);
-            Text1 = focusedEntry.GetDisplayName((int)ViewSize.Width);
+            Text1 = FileDisguise.Mask(focusedEntry.GetDisplayName((int)ViewSize.Width));
             Text2 = focusedEntry.GetDisplayFileSize((int)ViewSize.Width);
+            ApplyDisguiseWarning(focusedEntry);
         }
         else
         {
@@ -142,7 +150,83 @@ public class ItemInformation : iConsole.Controls.Control
             Text1 = string.Empty;
             Text2 = string.Empty;
         }
+
+        if (focusedEntry is null || iTerminal.Core.Commands.FocusedEntry.IsParentEntry(focusedEntry))
+        {
+            CancelDisguiseCheck();
+        }
+
         StateHasChanged();
+    }
+
+    private void CancelDisguiseCheck()
+    {
+        _lastDisguiseUrl = null;
+        CancellationTokenSource? previous = Interlocked.Exchange(ref _disguiseCancellation, null);
+        previous?.Cancel();
+        previous?.Dispose();
+    }
+
+    /// <summary>
+    /// A local file whose name or first bytes are not what they claim gets a warning in place of the name's
+    /// "File:" line. The name checks are immediate; the first bytes are read on a background task, once per
+    /// cursor stop, and the line is rewritten only if the cursor is still on that file when the read ends.
+    /// </summary>
+    private void ApplyDisguiseWarning(IEntry entry)
+    {
+        Url url = entry.Url;
+        if (url.PathType != PathType.File || url.UrlScheme != iConsole.Data.Container.FILE)
+        {
+            CancelDisguiseCheck();
+            return;
+        }
+
+        string path = url.FullName;
+        string name = url.DisplayName;
+        FileDisguiseCache.TryGet(path, out FileKind kind);
+        DisguiseFindings findings = FileDisguiseCache.Findings(path, name);
+        if (findings != DisguiseFindings.None)
+        {
+            Text1 = FileDisguiseMessage.Summary(name, findings, kind);
+        }
+
+        // One read per cursor stop on a file, so a file that was replaced is looked at again, and one that cannot
+        // be read is not retried on every refresh of the line.
+        if (_disguiseChecker is null || _lastDisguiseUrl == url.FullUrl)
+        {
+            return;
+        }
+
+        _lastDisguiseUrl = url.FullUrl;
+        CancellationTokenSource source = new();
+        CancellationTokenSource? previous = Interlocked.Exchange(ref _disguiseCancellation, source);
+        previous?.Cancel();
+        previous?.Dispose();
+        IContentModel? expectedModel = ContentModel;
+        string expectedUrl = url.FullUrl;
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await _disguiseChecker.DetectAsync(path, source.Token);
+                // Stale-result guard: the cursor must still be on the file that was read.
+                if (!source.IsCancellationRequested
+                    && ReferenceEquals(ContentModel, expectedModel)
+                    && ContentModel?.GetFocusedEntry()?.Url.FullUrl == expectedUrl
+                    && FileDisguiseCache.TryGet(path, out FileKind _))
+                {
+                    RefreshFocusedItemTexts();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // the cursor moved on
+            }
+            catch (Exception ex)
+            {
+                _logger?.Warning(ex, "File type check failed for {Url}", expectedUrl);
+            }
+        });
     }
 
     private void CancelPendingFolderInformationRefresh()

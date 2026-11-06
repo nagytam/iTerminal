@@ -112,6 +112,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IContentLens, GitLens>();
         services.AddSingleton<IContentLens, FileLabelLens>();
         services.AddSingleton<IFileLabelService, FileLabelService>();
+        services.AddSingleton<iTerminal.Core.Services.Security.FileDisguiseChecker>();
         services.AddTransient<iTerminal.Core.Dialogs.Git.GitClientDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Calculator.CalculatorDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog>();
@@ -349,6 +350,10 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();
+        services.AddSingleton<iTerminal.Core.Services.Origin.IFileOriginService>(provider =>
+            new iTerminal.Core.Services.Origin.FileOriginService(
+                provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>(),
+                provider.GetService<Serilog.ILogger>()));
         services.AddSingleton<iTerminal.Core.Services.AccessControl.IAccessControlService>(provider =>
             OperatingSystem.IsWindows()
                 ? new iTerminal.Core.Services.AccessControl.WindowsAccessControlService()

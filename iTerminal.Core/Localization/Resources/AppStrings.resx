@@ -3484,6 +3484,48 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>link</value>
   </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Remove mark (^F)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Marked</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Referrer</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>Quarantined</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Downloaded</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>Remove the mark so the file is no longer flagged as downloaded? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Error: the mark could not be removed.</value>
+  </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Remove the mark</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Keep the mark</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Remove the download mark (asks y/n)</value>
+  </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Verify after copy</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Verifying</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Verification failed: {0} differs from the source; the copy was kept</value>
+  </data>
   <data name="Checksum.Verified.Caption" xml:space="preserve">
     <value>Verified</value>
   </data>

@@ -3,6 +3,7 @@ using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
+using iTerminal.Core.Services.Checksums;
 
 namespace iTerminal.Core.Tasks;
 
@@ -10,8 +11,8 @@ namespace iTerminal.Core.Tasks;
 /// Copies a single file between two <see cref="IFileSystem"/> implementations. See
 /// <see cref="ContentModelFileTransferTask"/> for the shared streaming engine.
 /// </summary>
-public class ContentModelCopyFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, FileConflictResolver resolver, IErrorPromptService? errorPromptService = null)
-    : ContentModelFileTransferTask(source, target, sourceUrl, targetUrl, resolver, errorPromptService)
+public class ContentModelCopyFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, FileConflictResolver resolver, IErrorPromptService? errorPromptService = null, TransferVerifier? verifier = null)
+    : ContentModelFileTransferTask(source, target, sourceUrl, targetUrl, resolver, errorPromptService, verifier)
 {
     protected override string Verb => UiText.Get("Verb.Copy", "Copy");
     protected override string ProgressVerb => UiText.Get("Verb.Copying", "Copying");
