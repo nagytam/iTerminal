@@ -3658,4 +3658,106 @@
   <data name="Streams.Empty" xml:space="preserve">
     <value>(üres)</value>
   </data>
+  <data name="Dialog.FileEncryption" xml:space="preserve">
+    <value>Fájlok titkosítása / visszafejtése</value>
+  </data>
+  <data name="Field.Mode" xml:space="preserve">
+    <value>Mód</value>
+  </data>
+  <data name="Field.Passphrase" xml:space="preserve">
+    <value>Jelmondat</value>
+  </data>
+  <data name="Field.PassphraseConfirm" xml:space="preserve">
+    <value>Megerősítés</value>
+  </data>
+  <data name="Encryption.Run" xml:space="preserve">
+    <value>Indítás</value>
+  </data>
+  <data name="Encryption.ModeEncrypt" xml:space="preserve">
+    <value>Titkosítás</value>
+  </data>
+  <data name="Encryption.ModeDecrypt" xml:space="preserve">
+    <value>Visszafejtés</value>
+  </data>
+  <data name="Encryption.HintEncrypt" xml:space="preserve">
+    <value>Minden fájl mellé nev.enc készül; a jelmondatot soha nem tároljuk.</value>
+  </data>
+  <data name="Encryption.HintDecrypt" xml:space="preserve">
+    <value>Az eredetit a .enc fájl mellé írja; semmi sem íródik felül.</value>
+  </data>
+  <data name="Encryption.HintLose" xml:space="preserve">
+    <value>Jelmondat nélkül az adatok nem állíthatók helyre.</value>
+  </data>
+  <data name="Encryption.Nothing" xml:space="preserve">
+    <value>Nincs mit feldolgozni: előbb jelöljön ki fájlokat.</value>
+  </data>
+  <data name="Encryption.EmptyPassphrase" xml:space="preserve">
+    <value>Adjon meg egy jelmondatot.</value>
+  </data>
+  <data name="Encryption.Mismatch" xml:space="preserve">
+    <value>A jelmondatok nem egyeznek.</value>
+  </data>
+  <data name="Encryption.Working" xml:space="preserve">
+    <value>Folyamatban… {0}%  {1}</value>
+  </data>
+  <data name="Encryption.AskDelete" xml:space="preserve">
+    <value>Törli a(z) {0} eredeti fájlt? A lomtárba kerülnek.  y/n</value>
+  </data>
+  <data name="Encryption.AskDeleteWipe" xml:space="preserve">
+    <value>Törli a(z) {0} eredeti fájlt? Nincs lomtár: felülírja és véglegesen eltávolítja.  y/n</value>
+  </data>
+  <data name="Encryption.Deleting" xml:space="preserve">
+    <value>Az eredetik törlése…</value>
+  </data>
+  <data name="Encryption.Stopped" xml:space="preserve">
+    <value>Leállítva: {0} fájl kész.</value>
+  </data>
+  <data name="Encryption.Done" xml:space="preserve">
+    <value>Kész: {0} fájl, {1} sikertelen.</value>
+  </data>
+  <data name="Encryption.Kept" xml:space="preserve">
+    <value>Az eredetik megmaradtak.</value>
+  </data>
+  <data name="Encryption.Deleted" xml:space="preserve">
+    <value>{0} eredeti törölve.</value>
+  </data>
+  <data name="Encryption.DeleteFailed" xml:space="preserve">
+    <value>{0} eredeti törölve; {1} sikertelen: {2}</value>
+  </data>
+  <data name="Notify.EncryptionStopped" xml:space="preserve">
+    <value>A fájltitkosítás leállt</value>
+  </data>
+  <data name="Notify.EncryptionStoppedBody" xml:space="preserve">
+    <value>{0} fájl készült el a megszakítás előtt.</value>
+  </data>
+  <data name="Notify.EncryptionErrors" xml:space="preserve">
+    <value>A fájltitkosítás hibákkal ért véget</value>
+  </data>
+  <data name="Notify.EncryptionErrorsBody" xml:space="preserve">
+    <value>{0} kész; {1} sikertelen. Első: {2}</value>
+  </data>
+  <data name="Notify.EncryptionFinished" xml:space="preserve">
+    <value>A fájltitkosítás befejeződött</value>
+  </data>
+  <data name="Notify.EncryptionFinishedBody" xml:space="preserve">
+    <value>{0} fájl kész.</value>
+  </data>
+  <data name="DialogHint.EncryptionRun" xml:space="preserve">
+    <value>Titkosítás vagy visszafejtés a jelmondattal</value>
+  </data>
+  <data name="DialogHint.EncryptionNextField" xml:space="preserve">
+    <value>Következő mező</value>
+  </data>
+  <data name="DialogHint.EncryptionStop" xml:space="preserve">
+    <value>Leállítás; a kész fájlok kész maradnak</value>
+  </data>
+  <data name="DialogHint.EncryptionDeleteOriginals" xml:space="preserve">
+    <value>Az eredetik törlése</value>
+  </data>
+  <data name="DialogHint.EncryptionKeepOriginals" xml:space="preserve">
+    <value>Az eredetik megtartása</value>
+  </data>
+  <data name="Menu.EncryptFiles" xml:space="preserve">
+    <value>Titkosítás / Visszafejtés…</value>
+  </data>
 </root>

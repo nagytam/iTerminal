@@ -45,7 +45,8 @@ public class FileMenuItem : MenuItem
         PrintDialog? printDialog = null,
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
         StreamsDialog? streamsDialog = null,
-        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null)
+        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
+        FileEncryptionDialog? fileEncryptionDialog = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
@@ -96,6 +97,10 @@ public class FileMenuItem : MenuItem
         if (secureWipeDialog is not null)
         {
             AddMenuItem(new MenuItem("Secure Wipe	Ctrl+Shift+F8", new SecureWipeDialogCommand(secureWipeDialog, contentModelService), [], themeService));
+        }
+        if (fileEncryptionDialog is not null)
+        {
+            AddMenuItem(new MenuItem(UiText.Get("Menu.EncryptFiles", "Encrypt / Decrypt…") + "	Ctrl+Shift+E", new FileEncryptionDialogCommand(fileEncryptionDialog, contentModelService), [], themeService));
         }
         if (malwareScanService is { IsAvailable: true })
         {

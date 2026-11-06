@@ -60,7 +60,8 @@ public class FilePanelFactory(
     iConsole.Dialogs.SqliteViewerDialog? sqliteViewerDialog = null,
     iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
     StreamsDialog? streamsDialog = null,
-    iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null)
+    iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
+    FileEncryptionDialog? fileEncryptionDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -108,6 +109,7 @@ public class FilePanelFactory(
             clipboardOperations: clipboardOperations,
             diskImageDialog: diskImageDialog,
             secureWipeDialog: secureWipeDialog,
+            fileEncryptionDialog: fileEncryptionDialog,
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
             notificationService: notificationService,

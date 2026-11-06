@@ -131,7 +131,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         MultiRenameDialog? multiRenameDialog = null,
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
         StreamsDialog? streamsDialog = null,
-        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null
+        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
+        FileEncryptionDialog? fileEncryptionDialog = null
         )
         : base([], themeService)
     {
@@ -158,6 +159,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             compressDialog: compressDialog,
             extractDialog: extractDialog,
             secureWipeDialog: secureWipeDialog,
+            fileEncryptionDialog: fileEncryptionDialog,
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
             notificationService: notificationService,

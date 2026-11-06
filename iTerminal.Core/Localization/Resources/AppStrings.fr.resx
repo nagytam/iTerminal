@@ -3658,4 +3658,106 @@
   <data name="Streams.Empty" xml:space="preserve">
     <value>(vide)</value>
   </data>
+  <data name="Dialog.FileEncryption" xml:space="preserve">
+    <value>Chiffrer / déchiffrer des fichiers</value>
+  </data>
+  <data name="Field.Mode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Field.Passphrase" xml:space="preserve">
+    <value>Phrase secrète</value>
+  </data>
+  <data name="Field.PassphraseConfirm" xml:space="preserve">
+    <value>Confirmer</value>
+  </data>
+  <data name="Encryption.Run" xml:space="preserve">
+    <value>Lancer</value>
+  </data>
+  <data name="Encryption.ModeEncrypt" xml:space="preserve">
+    <value>Chiffrer</value>
+  </data>
+  <data name="Encryption.ModeDecrypt" xml:space="preserve">
+    <value>Déchiffrer</value>
+  </data>
+  <data name="Encryption.HintEncrypt" xml:space="preserve">
+    <value>Écrit nom.enc à côté de chaque fichier ; la phrase secrète n'est jamais conservée.</value>
+  </data>
+  <data name="Encryption.HintDecrypt" xml:space="preserve">
+    <value>Écrit l'original à côté de chaque fichier .enc ; rien n'est écrasé.</value>
+  </data>
+  <data name="Encryption.HintLose" xml:space="preserve">
+    <value>Sans la phrase secrète, les données sont irrécupérables.</value>
+  </data>
+  <data name="Encryption.Nothing" xml:space="preserve">
+    <value>Rien à traiter : marquez d'abord des fichiers.</value>
+  </data>
+  <data name="Encryption.EmptyPassphrase" xml:space="preserve">
+    <value>Saisissez une phrase secrète.</value>
+  </data>
+  <data name="Encryption.Mismatch" xml:space="preserve">
+    <value>Les phrases secrètes ne correspondent pas.</value>
+  </data>
+  <data name="Encryption.Working" xml:space="preserve">
+    <value>En cours… {0} %  {1}</value>
+  </data>
+  <data name="Encryption.AskDelete" xml:space="preserve">
+    <value>Supprimer les {0} fichier(s) d'origine ? Ils vont dans la corbeille.  y/n</value>
+  </data>
+  <data name="Encryption.AskDeleteWipe" xml:space="preserve">
+    <value>Supprimer les {0} fichier(s) d'origine ? Pas de corbeille : écrasés et effacés définitivement.  y/n</value>
+  </data>
+  <data name="Encryption.Deleting" xml:space="preserve">
+    <value>Suppression des originaux…</value>
+  </data>
+  <data name="Encryption.Stopped" xml:space="preserve">
+    <value>Arrêté : {0} fichier(s) terminé(s).</value>
+  </data>
+  <data name="Encryption.Done" xml:space="preserve">
+    <value>Terminé : {0} fichier(s), {1} en échec.</value>
+  </data>
+  <data name="Encryption.Kept" xml:space="preserve">
+    <value>Les originaux ont été conservés.</value>
+  </data>
+  <data name="Encryption.Deleted" xml:space="preserve">
+    <value>{0} original(aux) supprimé(s).</value>
+  </data>
+  <data name="Encryption.DeleteFailed" xml:space="preserve">
+    <value>{0} original(aux) supprimé(s) ; {1} en échec : {2}</value>
+  </data>
+  <data name="Notify.EncryptionStopped" xml:space="preserve">
+    <value>Chiffrement de fichiers arrêté</value>
+  </data>
+  <data name="Notify.EncryptionStoppedBody" xml:space="preserve">
+    <value>{0} fichier(s) terminé(s) avant l'annulation.</value>
+  </data>
+  <data name="Notify.EncryptionErrors" xml:space="preserve">
+    <value>Chiffrement de fichiers terminé avec des erreurs</value>
+  </data>
+  <data name="Notify.EncryptionErrorsBody" xml:space="preserve">
+    <value>{0} terminé(s) ; {1} en échec. Premier : {2}</value>
+  </data>
+  <data name="Notify.EncryptionFinished" xml:space="preserve">
+    <value>Chiffrement de fichiers terminé</value>
+  </data>
+  <data name="Notify.EncryptionFinishedBody" xml:space="preserve">
+    <value>{0} fichier(s) terminé(s).</value>
+  </data>
+  <data name="DialogHint.EncryptionRun" xml:space="preserve">
+    <value>Chiffrer ou déchiffrer avec la phrase secrète</value>
+  </data>
+  <data name="DialogHint.EncryptionNextField" xml:space="preserve">
+    <value>Champ suivant</value>
+  </data>
+  <data name="DialogHint.EncryptionStop" xml:space="preserve">
+    <value>Arrêter ; les fichiers terminés le restent</value>
+  </data>
+  <data name="DialogHint.EncryptionDeleteOriginals" xml:space="preserve">
+    <value>Supprimer les originaux</value>
+  </data>
+  <data name="DialogHint.EncryptionKeepOriginals" xml:space="preserve">
+    <value>Conserver les originaux</value>
+  </data>
+  <data name="Menu.EncryptFiles" xml:space="preserve">
+    <value>Chiffrer / Déchiffrer…</value>
+  </data>
 </root>

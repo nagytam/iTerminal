@@ -369,6 +369,9 @@ public static class iTerminalApplicationBuilderExtension
         // Scan with Microsoft Defender (Windows): the file panel's context menu and the File menu.
         services.AddSingleton<iTerminal.Core.Services.Defender.IMalwareScanService, iTerminal.Core.Services.Defender.DefenderScanService>();
         services.AddTransient<SecureWipeDialog>();
+        // Ctrl+Shift+E: encrypt and decrypt files with a passphrase (AES-256-GCM, PBKDF2).
+        services.AddSingleton<iTerminal.Core.Services.Encryption.IFileEncryptionService, iTerminal.Core.Services.Encryption.FileEncryptionService>();
+        services.AddTransient<FileEncryptionDialog>();
         services.AddTransient<SignatureDialog>();
         // Ctrl+P: print the file under the cursor and manage the print queue.
         services.AddSingleton<iTerminal.Core.Services.Printing.IPrintService, iTerminal.Core.Services.Printing.PrintService>();

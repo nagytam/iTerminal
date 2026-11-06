@@ -3658,4 +3658,106 @@
   <data name="Streams.Empty" xml:space="preserve">
     <value>(empty)</value>
   </data>
+  <data name="Dialog.FileEncryption" xml:space="preserve">
+    <value>Encrypt / decrypt files</value>
+  </data>
+  <data name="Field.Mode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Field.Passphrase" xml:space="preserve">
+    <value>Passphrase</value>
+  </data>
+  <data name="Field.PassphraseConfirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Encryption.Run" xml:space="preserve">
+    <value>Run</value>
+  </data>
+  <data name="Encryption.ModeEncrypt" xml:space="preserve">
+    <value>Encrypt</value>
+  </data>
+  <data name="Encryption.ModeDecrypt" xml:space="preserve">
+    <value>Decrypt</value>
+  </data>
+  <data name="Encryption.HintEncrypt" xml:space="preserve">
+    <value>Writes name.enc beside each file; the passphrase is never stored.</value>
+  </data>
+  <data name="Encryption.HintDecrypt" xml:space="preserve">
+    <value>Writes the original beside each .enc file; nothing is overwritten.</value>
+  </data>
+  <data name="Encryption.HintLose" xml:space="preserve">
+    <value>Lose the passphrase and the data cannot be recovered.</value>
+  </data>
+  <data name="Encryption.Nothing" xml:space="preserve">
+    <value>Nothing to process: mark files first.</value>
+  </data>
+  <data name="Encryption.EmptyPassphrase" xml:space="preserve">
+    <value>Type a passphrase.</value>
+  </data>
+  <data name="Encryption.Mismatch" xml:space="preserve">
+    <value>The passphrases do not match.</value>
+  </data>
+  <data name="Encryption.Working" xml:space="preserve">
+    <value>Working… {0}%  {1}</value>
+  </data>
+  <data name="Encryption.AskDelete" xml:space="preserve">
+    <value>Delete the {0} original file(s)? They go to the recycle bin.  y/n</value>
+  </data>
+  <data name="Encryption.AskDeleteWipe" xml:space="preserve">
+    <value>Delete the {0} original file(s)? No recycle bin: overwritten and removed for good.  y/n</value>
+  </data>
+  <data name="Encryption.Deleting" xml:space="preserve">
+    <value>Deleting the originals…</value>
+  </data>
+  <data name="Encryption.Stopped" xml:space="preserve">
+    <value>Stopped: {0} file(s) done.</value>
+  </data>
+  <data name="Encryption.Done" xml:space="preserve">
+    <value>Done: {0} file(s), {1} failed.</value>
+  </data>
+  <data name="Encryption.Kept" xml:space="preserve">
+    <value>The originals were kept.</value>
+  </data>
+  <data name="Encryption.Deleted" xml:space="preserve">
+    <value>{0} original(s) deleted.</value>
+  </data>
+  <data name="Encryption.DeleteFailed" xml:space="preserve">
+    <value>{0} original(s) deleted; {1} failed: {2}</value>
+  </data>
+  <data name="Notify.EncryptionStopped" xml:space="preserve">
+    <value>File encryption stopped</value>
+  </data>
+  <data name="Notify.EncryptionStoppedBody" xml:space="preserve">
+    <value>{0} file(s) done before it was cancelled.</value>
+  </data>
+  <data name="Notify.EncryptionErrors" xml:space="preserve">
+    <value>File encryption finished with errors</value>
+  </data>
+  <data name="Notify.EncryptionErrorsBody" xml:space="preserve">
+    <value>{0} done; {1} failed. First: {2}</value>
+  </data>
+  <data name="Notify.EncryptionFinished" xml:space="preserve">
+    <value>File encryption finished</value>
+  </data>
+  <data name="Notify.EncryptionFinishedBody" xml:space="preserve">
+    <value>{0} file(s) done.</value>
+  </data>
+  <data name="DialogHint.EncryptionRun" xml:space="preserve">
+    <value>Encrypt or decrypt with the passphrase</value>
+  </data>
+  <data name="DialogHint.EncryptionNextField" xml:space="preserve">
+    <value>Next field</value>
+  </data>
+  <data name="DialogHint.EncryptionStop" xml:space="preserve">
+    <value>Stop; files already done stay done</value>
+  </data>
+  <data name="DialogHint.EncryptionDeleteOriginals" xml:space="preserve">
+    <value>Delete the originals</value>
+  </data>
+  <data name="DialogHint.EncryptionKeepOriginals" xml:space="preserve">
+    <value>Keep the originals</value>
+  </data>
+  <data name="Menu.EncryptFiles" xml:space="preserve">
+    <value>Encrypt / Decrypt…</value>
+  </data>
 </root>
