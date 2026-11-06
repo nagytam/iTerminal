@@ -826,4 +826,43 @@
   <data name="Viewer.ChangedOnDisk" xml:space="preserve">
     <value>modifié sur le disque</value>
   </data>
+  <data name="Hdf.Picker.Label" xml:space="preserve">
+    <value>Jeu de données</value>
+  </data>
+  <data name="Hdf.Grid.Empty" xml:space="preserve">
+    <value>Ce jeu de données n'a aucune valeur</value>
+  </data>
+  <data name="Hdf.Status.NoDatasets" xml:space="preserve">
+    <value>Ce fichier ne contient aucun jeu de données</value>
+  </data>
+  <data name="Hdf.Error.Unexpected" xml:space="preserve">
+    <value>Le fichier n'a pas pu être lu : {0}</value>
+  </data>
+  <data name="Hdf.Shape.Scalar" xml:space="preserve">
+    <value>scalaire</value>
+  </data>
+  <data name="Hdf.Status.RowsCut" xml:space="preserve">
+    <value>; seules les {0:N0} premières lignes sont affichées</value>
+  </data>
+  <data name="Hdf.Status.ColumnsCut" xml:space="preserve">
+    <value>; seules les {0:N0} premières colonnes sont affichées</value>
+  </data>
+  <data name="Hdf.Status.DatasetsCut" xml:space="preserve">
+    <value>; la liste ne contient que les {0:N0} premiers jeux de données</value>
+  </data>
+  <data name="Hdf.Slice.Line" xml:space="preserve">
+    <value>Tranche [{0}]  dimension {1} sur {2}, indice {3} sur {4}   [ ] dimension   + - indice</value>
+  </data>
+  <data name="Hdf.Title" xml:space="preserve">
+    <value>HDF5</value>
+  </data>
+  <data name="Hdf.Title.Hint" xml:space="preserve">
+    <value>  Tab:grille  [ ]:dimension  +/-:indice</value>
+  </data>
+  <data name="Hdf.Hint.Index" xml:space="preserve">
+    <value>Changer l'indice de la dimension active</value>
+  </data>
+  <data name="Hdf.Hint.Dimension" xml:space="preserve">
+    <value>Choisir la dimension active</value>
+  </data>
 </root>

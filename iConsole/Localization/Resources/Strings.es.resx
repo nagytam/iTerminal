@@ -826,4 +826,43 @@
   <data name="Viewer.ChangedOnDisk" xml:space="preserve">
     <value>modificado en disco</value>
   </data>
+  <data name="Hdf.Picker.Label" xml:space="preserve">
+    <value>Conjunto de datos</value>
+  </data>
+  <data name="Hdf.Grid.Empty" xml:space="preserve">
+    <value>Este conjunto de datos no tiene valores</value>
+  </data>
+  <data name="Hdf.Status.NoDatasets" xml:space="preserve">
+    <value>Este archivo no tiene conjuntos de datos</value>
+  </data>
+  <data name="Hdf.Error.Unexpected" xml:space="preserve">
+    <value>No se pudo leer el archivo: {0}</value>
+  </data>
+  <data name="Hdf.Shape.Scalar" xml:space="preserve">
+    <value>escalar</value>
+  </data>
+  <data name="Hdf.Status.RowsCut" xml:space="preserve">
+    <value>; solo se muestran las primeras {0:N0} filas</value>
+  </data>
+  <data name="Hdf.Status.ColumnsCut" xml:space="preserve">
+    <value>; solo se muestran las primeras {0:N0} columnas</value>
+  </data>
+  <data name="Hdf.Status.DatasetsCut" xml:space="preserve">
+    <value>; la lista contiene solo los primeros {0:N0} conjuntos de datos</value>
+  </data>
+  <data name="Hdf.Slice.Line" xml:space="preserve">
+    <value>Corte [{0}]  dimensión {1} de {2}, índice {3} de {4}   [ ] dimensión   + - índice</value>
+  </data>
+  <data name="Hdf.Title" xml:space="preserve">
+    <value>HDF5</value>
+  </data>
+  <data name="Hdf.Title.Hint" xml:space="preserve">
+    <value>  Tab:cuadrícula  [ ]:dimensión  +/-:índice</value>
+  </data>
+  <data name="Hdf.Hint.Index" xml:space="preserve">
+    <value>Cambiar el índice de la dimensión activa</value>
+  </data>
+  <data name="Hdf.Hint.Dimension" xml:space="preserve">
+    <value>Elegir la dimensión activa</value>
+  </data>
 </root>

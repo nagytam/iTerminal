@@ -57,7 +57,8 @@ public class FilePanelFactory(
     iTerminal.Core.Services.Git.IGitService? gitService = null,
     Func<iTerminal.Core.Dialogs.Web.WebBrowserDialog>? webBrowserDialogFactory = null,
     PrintDialog? printDialog = null,
-    iConsole.Dialogs.SqliteViewerDialog? sqliteViewerDialog = null)
+    iConsole.Dialogs.SqliteViewerDialog? sqliteViewerDialog = null,
+    iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -77,6 +78,7 @@ public class FilePanelFactory(
             helpDialog: helpDialog,
             fileViewerDialog: fileViewerDialog,
             sqliteViewerDialog: sqliteViewerDialog,
+            hdfViewerDialog: hdfViewerDialog,
             solutionViewerDialog: solutionViewerDialog,
             contentLenses: contentLenses,
             musicFileViewerDialog: musicFileViewerDialog,
