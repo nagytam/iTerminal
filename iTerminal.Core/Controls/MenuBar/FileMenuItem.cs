@@ -43,13 +43,9 @@ public class FileMenuItem : MenuItem
         INotificationService? notificationService = null,
         EditLinkDialog? editLinkDialog = null,
         PrintDialog? printDialog = null,
-<<<<<<< HEAD
         HashManifestDialog? hashManifestDialog = null,
-        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
-=======
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
         iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null)
->>>>>>> github/main
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';

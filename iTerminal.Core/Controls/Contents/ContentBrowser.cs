@@ -121,13 +121,9 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
         PrintDialog? printDialog = null,
         SqliteViewerDialog? sqliteViewerDialog = null,
-<<<<<<< HEAD
         HashManifestDialog? hashManifestDialog = null,
-        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
-=======
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
         iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null)
->>>>>>> github/main
         : base(themeService)
     {
         _webBrowserDialog = webBrowserDialog;
