@@ -16,6 +16,7 @@ public class MultiRenameTest
     [TestCleanup]
     public async Task StopAsync() => await _app.DisposeAsync();
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task EditMenuRenamesTheMarkedFilesByThePattern()
     {

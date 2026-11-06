@@ -118,6 +118,7 @@ public class MultiRenameCommandTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RenameRunsTheMarkedFilesAsOneBatchAndLeavesTheRestAlone()
     {
@@ -141,6 +142,7 @@ public class MultiRenameCommandTest
         Assert.AreEqual(0, model.MarkedCount, "the marks are consumed");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task RenameMovesAMarkedFolderUnderItsNewName()
     {
@@ -158,6 +160,7 @@ public class MultiRenameCommandTest
         Assert.IsFalse(Directory.Exists(Path.Combine(_root, "photos")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ABlockedRowIsNotSubmittedSoRenameQueuesNothing()
     {
@@ -178,6 +181,7 @@ public class MultiRenameCommandTest
         Assert.IsTrue(File.Exists(Path.Combine(_root, "b.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ATargetTakenAfterPlanningFailsItsStepAndIsNeverOverwritten()
     {
@@ -199,6 +203,7 @@ public class MultiRenameCommandTest
         Assert.AreEqual("aaaa", File.ReadAllText(Path.Combine(_root, "a.txt")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheMenuCommandIsRefusedOnAReadOnlyPanel()
     {
@@ -213,6 +218,7 @@ public class MultiRenameCommandTest
         Assert.IsFalse(command.CanExecute(), "an archive, a search or a preview cannot take a move");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheMenuCommandIsOfferedOnAWritablePanelWithAMark()
     {
@@ -233,6 +239,7 @@ public class MultiRenameCommandTest
         return entry.Object;
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task ACaseOnlyChangeIsNeverSubmitted()
     {
