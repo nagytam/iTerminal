@@ -27,15 +27,47 @@ public class GitServiceTest
         }
     }
 
+    // Four git processes per test repository was most of what these tests cost; the repository every
+    // test starts from is made once and copied, which is a few small files instead of four processes.
+    private static readonly Lazy<string> RepoTemplate = new(() =>
+    {
+        var template = Path.Combine(Path.GetTempPath(), "gitsvc_template_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(template);
+        Run(template, "init");
+        Run(template, "config user.email test@example.com");
+        Run(template, "config user.name Test");
+        Run(template, "commit --allow-empty -m initial");
+        return template;
+    });
+
+    [ClassCleanup]
+    public static void RemoveTemplate()
+    {
+        if (RepoTemplate.IsValueCreated)
+        {
+            TryDelete(RepoTemplate.Value);
+        }
+    }
+
     private static string CreateTempRepo()
     {
         var root = Path.Combine(Path.GetTempPath(), "gitsvc_" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(root);
-        Run(root, "init");
-        Run(root, "config user.email test@example.com");
-        Run(root, "config user.name Test");
-        Run(root, "commit --allow-empty -m initial");
+        CopyDirectory(RepoTemplate.Value, root);
         return root;
+    }
+
+    private static void CopyDirectory(string from, string to)
+    {
+        Directory.CreateDirectory(to);
+        foreach (var file in Directory.GetFiles(from))
+        {
+            File.Copy(file, Path.Combine(to, Path.GetFileName(file)));
+        }
+
+        foreach (var directory in Directory.GetDirectories(from))
+        {
+            CopyDirectory(directory, Path.Combine(to, Path.GetFileName(directory)));
+        }
     }
 
     /// <summary>
