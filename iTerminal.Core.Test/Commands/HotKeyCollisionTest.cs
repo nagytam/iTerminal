@@ -21,6 +21,17 @@ public class HotKeyCollisionTest
         Assert.AreNotEqual(duplicates.Key.ConsoleKey, signatures.Key.ConsoleKey);
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheHashManifestChordIsShiftAltF3_AndNotOneOfTheOthers()
+    {
+        var manifest = new HashManifestDialogCommand(null!, Mock.Of<iConsole.Interfaces.IContentModelService>());
+        var signatures = new SignatureDialogCommand(null!, Mock.Of<iConsole.Interfaces.IContentModelService>());
+
+        Assert.AreEqual(new Key(ConsoleKey.F3, true, true, false), manifest.Key);
+        Assert.AreNotEqual(signatures.Key, manifest.Key);
+    }
+
     /// <summary>
     /// Print is Ctrl+P: not Ctrl+Shift+P, which Windows Terminal keeps for its own command palette. Alt+P walks the command
     /// history, so the two must stay different chords.

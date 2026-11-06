@@ -173,7 +173,7 @@ public static class HashManifest
         {
             cancellationToken.ThrowIfCancellationRequested();
             long before = bytesBefore;
-            Reporter reporter = new(read => progress?.Report(new ManifestProgress(done, files.Count, before + read, bytesTotal)));
+            iTerminal.Core.Helper.SynchronousProgress<long> reporter = new(read => progress?.Report(new ManifestProgress(done, files.Count, before + read, bytesTotal)));
             try
             {
                 string hash = await ChecksumService.ComputeOneAsync(file.Url, fileSystem, algorithm, reporter, cancellationToken);
@@ -266,7 +266,7 @@ public static class HashManifest
 
         string manifestName = FocusedEntry.NameOf(manifestUrl);
         List<ManifestFile> tree = await ListAsync(baseFolder, [], fileSystem, path => string.Equals(path, manifestName, StringComparison.OrdinalIgnoreCase), cancellationToken);
-        StringComparer comparer = baseFolder.ContainerType == ContainerType.FileSystem && !OperatingSystem.IsWindows() ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
+        StringComparer comparer = baseFolder.ContainerType == ContainerType.FileSystem && OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
         Dictionary<string, ManifestFile> present = new(comparer);
         foreach (ManifestFile file in tree)
         {
@@ -301,7 +301,7 @@ public static class HashManifest
             else
             {
                 long before = bytesBefore;
-                Reporter reporter = new(read => progress?.Report(new ManifestProgress(done, total, before + read, bytesTotal)));
+                iTerminal.Core.Helper.SynchronousProgress<long> reporter = new(read => progress?.Report(new ManifestProgress(done, total, before + read, bytesTotal)));
                 try
                 {
                     string hash = await ChecksumService.ComputeOneAsync(file.Url, fileSystem, entry.Algorithm, reporter, cancellationToken);
@@ -329,7 +329,7 @@ public static class HashManifest
 
     /// <summary>A manifest is read for what it says about files in its own folder: an absolute path or a <c>..</c> is never followed.</summary>
     private static bool IsOutsideTheFolder(string path) =>
-        path.StartsWith('/') || path.Contains(':') || path.Split('/').Contains("..");
+        path.StartsWith('/') || path.Contains("://", StringComparison.Ordinal) || (path.Length >= 2 && path[1] == ':' && char.IsLetter(path[0])) || path.Split('/').Contains("..");
 
     private static async Task<string> ReadTextAsync(Url url, IFileSystem fileSystem, CancellationToken cancellationToken)
     {
@@ -348,12 +348,6 @@ public static class HashManifest
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
     }
     #endregion
-
-    /// <summary><see cref="Progress{T}"/> posts to a synchronization context; this reports where it is called.</summary>
-    private sealed class Reporter(Action<long> report) : IProgress<long>
-    {
-        public void Report(long value) => report(value);
-    }
 
     /// <summary>Passes writes on to a stream until a limit, then fails: a drive that streams without end must not fill the memory.</summary>
     private sealed class LimitedStream(Stream inner, long limit) : Stream

@@ -17,8 +17,6 @@ public class HashManifestDialogCommand(
     FileSystemResolver? fileSystemResolver = null)
     : ShowDialogCommand<HashManifestDialog>(dialog)
 {
-    private static readonly string[] ChecksumExtensions = [".sha256", ".sha512", ".sha1", ".md5"];
-
     public override string Title => "Hash manifest";
     public override string Description => "Create a SHA256SUMS-style manifest for the marked rows or the whole folder, or verify the folder against one.";
 
@@ -58,5 +56,5 @@ public class HashManifestDialogCommand(
     }
 
     private static bool IsManifestFile(string name) =>
-        HashManifest.IsManifestName(name) || ChecksumExtensions.Any(extension => name.EndsWith(extension, StringComparison.OrdinalIgnoreCase));
+        HashManifest.IsManifestName(name) || ChecksumService.Algorithms.Any(algorithm => name.EndsWith(ChecksumService.Extension(algorithm), StringComparison.OrdinalIgnoreCase));
 }

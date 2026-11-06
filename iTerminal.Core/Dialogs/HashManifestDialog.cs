@@ -149,7 +149,7 @@ public class HashManifestDialog : Dialog
     #region Running
     private bool TryBegin(out CancellationTokenSource cancellation, out Url? baseFolder, out IFileSystem? fileSystem)
     {
-        cancellation = new CancellationTokenSource();
+        cancellation = null!;
         baseFolder = BaseFolder;
         fileSystem = _fileSystem;
         if (IsRunning)
@@ -163,7 +163,7 @@ public class HashManifestDialog : Dialog
             return false;
         }
 
-        _cancellation = cancellation;
+        cancellation = _cancellation = new CancellationTokenSource();
         _progress = null;
         _list.Clear();
         Interlocked.Increment(ref _version);
@@ -189,7 +189,7 @@ public class HashManifestDialog : Dialog
         {
             try
             {
-                SyncProgress progress = new(value => { _progress = value; Interlocked.Increment(ref _version); });
+                Helper.SynchronousProgress<ManifestProgress> progress = new(value => { _progress = value; Interlocked.Increment(ref _version); });
                 ManifestCreated created = await HashManifest.CreateAsync(baseFolder!, roots, fileSystem!, algorithm, progress, cancellation.Token);
                 Created = created;
                 _list.SetItems(created.Failures);
@@ -266,7 +266,7 @@ public class HashManifestDialog : Dialog
                     return;
                 }
 
-                SyncProgress progress = new(value => { _progress = value; Interlocked.Increment(ref _version); });
+                Helper.SynchronousProgress<ManifestProgress> progress = new(value => { _progress = value; Interlocked.Increment(ref _version); });
                 ManifestVerified verified = await HashManifest.VerifyAsync(manifest, baseFolder!, fileSystem!, progress, item => _list.Add(item), cancellation.Token);
                 Verified = verified;
                 SetStatus(
@@ -314,11 +314,6 @@ public class HashManifestDialog : Dialog
         }
 
         return null;
-    }
-
-    private sealed class SyncProgress(Action<ManifestProgress> report) : IProgress<ManifestProgress>
-    {
-        public void Report(ManifestProgress value) => report(value);
     }
 
     /// <summary>Stops a running create or verify; the dialog stays up.</summary>
