@@ -2,6 +2,7 @@ using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Services;
 using Moq;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
 
@@ -111,6 +112,54 @@ public class TransferDialogTest
 
         Assert.AreEqual(TransferDialog.DialogHeight, (int)dialog.ViewSize.Height);
         AssertScreenContains(Render(dialog), "Overwrite");
+    }
+
+    private CopyDialog CopyWith(Mock<ISettingsService> settings)
+    {
+        var dateTime = new Mock<IDateTimeProviderService>();
+        dateTime.SetupGet(d => d.Now).Returns(DateTime.Now);
+        return new CopyDialog(null!, ContentModels().Object, null!, null!, null!, new Mock<IBeepService>().Object, dateTime.Object, TestTheme(), null!, null!, null!, null!, settings.Object);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task VerifyAfterCopy_IsOffByDefault_AndShown()
+    {
+        var dialog = Copy(ContentModels().Object);
+        await ShowAsync(dialog);
+
+        Assert.IsFalse(dialog.VerifyAfterCopy);
+        AssertScreenContains(Render(dialog), "Verify after copy");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task VerifyAfterCopy_IsReadFromTheSettingEachTimeTheDialogOpens()
+    {
+        var settings = new Mock<ISettingsService>();
+        settings.Setup(s => s.GetAsBool(iTerminal.Core.Data.Settings.TransferVerifyAfterCopy, It.IsAny<bool?>())).Returns(true);
+        var dialog = CopyWith(settings);
+        await ShowAsync(dialog);
+        Assert.IsTrue(dialog.VerifyAfterCopy);
+
+        settings.Setup(s => s.GetAsBool(iTerminal.Core.Data.Settings.TransferVerifyAfterCopy, It.IsAny<bool?>())).Returns(false);
+        await dialog.OnInitializeAsync();
+        Assert.IsFalse(dialog.VerifyAfterCopy, "the dialog is created once; the setting is read when it opens");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task VerifyAfterCopy_IsRememberedWhenTheTransferStarts()
+    {
+        var settings = new Mock<ISettingsService>();
+        var dialog = CopyWith(settings);
+        await ShowAsync(dialog);
+
+        dialog.VerifyAfterCopy = true;
+        dialog.RememberVerifyChoice();
+
+        settings.Verify(s => s.Set(iTerminal.Core.Data.Settings.TransferVerifyAfterCopy, "True"), Times.Once);
+        Assert.IsFalse(iTerminal.Core.Data.Settings.TransferVerifyAfterCopy.StartsWith("__"));
     }
 
     [Timeout(60_000)]

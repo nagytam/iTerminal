@@ -5,6 +5,7 @@ using iConsole.Interfaces;
 using iConsole.Services;
 using iConsole.Tasks;
 using iTerminal.Core.Helper;
+using iTerminal.Core.Services.Checksums;
 
 namespace iTerminal.Core.Tasks;
 
@@ -28,7 +29,8 @@ public abstract class ContentModelFolderTransferTask(
     Url targetUrl,
     bool overwrite,
     FolderDiscoveryTask? discoveryTask,
-    IErrorPromptService errorPromptService) : TransferTask
+    IErrorPromptService errorPromptService,
+    TransferVerifier? verifier = null) : TransferTask
 {
     /// <summary>Verb for task descriptions, e.g. "Copy".</summary>
     protected abstract string Verb { get; }
@@ -61,9 +63,10 @@ public abstract class ContentModelFolderTransferTask(
             IReadOnlyList<(Url Url, string Error)> failedItems = [];
 
             // Room for everything written; none is needed for a move within one volume (a rename).
-            var spaceGuard = TransferSpaceGuard.For(source, sourceUrl, target, targetUrl, DeletesSource, errorPromptService);
+            var spaceGuard = TransferSpaceGuard.For(source, sourceUrl, target, targetUrl, DeletesSource && verifier is null, errorPromptService);
 
-            if (ReferenceEquals(source, target))
+            // With verification each file is streamed (and checked) even on one drive; the command then supplies a discovery task.
+            if (ReferenceEquals(source, target) && verifier is null)
             {
                 if (spaceGuard is not null)
                 {
@@ -127,7 +130,15 @@ public abstract class ContentModelFolderTransferTask(
                         currentFile = url.FullName.Shrink(60) ?? string.Empty;
                         Description = string.Join(Environment.NewLine, string.Format(UiText.Get("Task.ProgressFiles", "{0} {1}/{2} file(s)"), ProgressVerb, ItemsProcessed, discoveryTask.ItemsProcessed), currentFile);
                     },
-                    pauseGate: PauseGate);
+                    pauseGate: PauseGate,
+                    verify: verifier is null
+                        ? null
+                        : (from, to, token) => verifier.VerifyAsync(source, target, from, to, null, token),
+                    onVerifyStarted: url =>
+                    {
+                        currentFile = url.FullName.Shrink(60) ?? string.Empty;
+                        Description = string.Join(Environment.NewLine, UiText.Get("Verb.Verifying", "Verifying"), currentFile);
+                    });
                 ReportBytes(Interlocked.Read(ref _bytesCopied), discoveryTask.TotalBytes);
 
                 if (DeletesSource && failedItems.Count == 0)

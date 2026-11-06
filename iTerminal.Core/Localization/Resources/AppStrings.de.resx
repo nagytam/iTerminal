@@ -3484,6 +3484,15 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>Link</value>
   </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Nach dem Kopieren prüfen</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Prüfe</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Prüfung fehlgeschlagen: {0} weicht von der Quelle ab; die Kopie wurde behalten</value>
+  </data>
   <data name="Checksum.Verified.Caption" xml:space="preserve">
     <value>Geprüft</value>
   </data>
