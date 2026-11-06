@@ -7,6 +7,7 @@ using iTerminal.Core.Dialogs;
 using iTerminal.Core.Factories;
 using iTerminal.Core.Helper;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Checksums;
 using iTerminal.Core.Tasks;
 
 namespace iTerminal.Core.Commands;
@@ -25,7 +26,8 @@ public abstract class TransferCommand(
     IErrorPromptService errorPromptService,
     IConflictPromptService conflictPromptService,
     FileSystemResolver fileSystemResolver,
-    IContentModelService contentModelService)
+    IContentModelService contentModelService,
+    IChecksumService? checksumService = null)
     : Command
 {
     public override Key? Key { get; init; } =
@@ -44,20 +46,26 @@ public abstract class TransferCommand(
     /// </summary>
     protected abstract bool RemovesSource { get; }
 
-    protected abstract BackgroundTask CreateFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, FileConflictResolver resolver);
+    protected abstract BackgroundTask CreateFileTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, FileConflictResolver resolver, TransferVerifier? verifier);
 
-    protected abstract TransferTask CreateFolderTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite, FolderDiscoveryTask? discoveryTask);
+    protected abstract TransferTask CreateFolderTask(IFileSystem source, IFileSystem target, Url sourceUrl, Url targetUrl, bool overwrite, FolderDiscoveryTask? discoveryTask, TransferVerifier? verifier);
+
+    /// <summary>The verifier for a run when the dialog's "Verify after copy" box is ticked, else none.</summary>
+    private TransferVerifier? VerifierFor(TransferDialog dialog) =>
+        checksumService is not null && dialog.VerifyAfterCopy ? new TransferVerifier(checksumService) : null;
 
     public override async Task ExecuteAsync(object? args)
     {
         if (Control?.Parent is TransferDialog dialog)
         {
+            dialog.RememberVerifyChoice();
+            TransferVerifier? verifier = VerifierFor(dialog);
             bool isSuccess = false;
             if (dialog.IsMultiple)
             {
                 try
                 {
-                    await RunBatchAsync(dialog);
+                    await RunBatchAsync(dialog, verifier);
                     isSuccess = true;
                 }
                 catch (Exception exception)
@@ -77,7 +85,7 @@ public abstract class TransferCommand(
             try
             {
                 var resolver = new FileConflictResolver(dialog.ConflictMode, conflictPromptService);
-                var (discoveryTask, task) = CreateTasks(dialog.SourceUrl, dialog.TargetUrl, resolver);
+                var (discoveryTask, task) = CreateTasks(dialog.SourceUrl, dialog.TargetUrl, resolver, verifier);
                 if (task is not null)
                 {
                     resolver.CancelRun = () => task.CancellationTokenSource.Cancel();
@@ -124,7 +132,7 @@ public abstract class TransferCommand(
     /// trip this key handler cannot afford. The marks are consumed: they described what to copy,
     /// and left standing they would quietly make the next F5 copy the same rows again.
     /// </summary>
-    private async Task RunBatchAsync(TransferDialog dialog)
+    private async Task RunBatchAsync(TransferDialog dialog, TransferVerifier? verifier)
     {
         var targetFolder = dialog.TargetUrl;
         var resolver = new FileConflictResolver(dialog.ConflictMode, conflictPromptService);
@@ -132,7 +140,7 @@ public abstract class TransferCommand(
         foreach (var sourceUrl in dialog.SourceUrls)
         {
             var targetUrl = dialog.TargetUrlFor(sourceUrl);
-            var (discoveryTask, task) = CreateTasks(sourceUrl, targetUrl, resolver);
+            var (discoveryTask, task) = CreateTasks(sourceUrl, targetUrl, resolver, verifier);
             if (task is not null)
             {
                 steps.Add(new BatchStep(FocusedEntry.NameOf(sourceUrl), task, discoveryTask));
@@ -181,7 +189,7 @@ public abstract class TransferCommand(
         var resolver = new FileConflictResolver(mode, conflictPromptService);
         if (sources.Count == 1)
         {
-            var (discoveryTask, task) = CreateTasks(sources[0], targets[0], resolver);
+            var (discoveryTask, task) = CreateTasks(sources[0], targets[0], resolver, verifier: null);
             if (task is null)
             {
                 return;
@@ -203,7 +211,7 @@ public abstract class TransferCommand(
         var steps = new List<BatchStep>();
         for (int i = 0; i < sources.Count; i++)
         {
-            var (discoveryTask, task) = CreateTasks(sources[i], targets[i], resolver);
+            var (discoveryTask, task) = CreateTasks(sources[i], targets[i], resolver, verifier: null);
             if (task is not null)
             {
                 steps.Add(new BatchStep(FocusedEntry.NameOf(sources[i]), task, discoveryTask));
@@ -242,7 +250,7 @@ public abstract class TransferCommand(
         }
     }
 
-    private (FolderDiscoveryTask? DiscoveryTask, BackgroundTask? PrimaryTask) CreateTasks(Url sourceUrl, Url targetUrl, FileConflictResolver resolver)
+    internal (FolderDiscoveryTask? DiscoveryTask, BackgroundTask? PrimaryTask) CreateTasks(Url sourceUrl, Url targetUrl, FileConflictResolver resolver, TransferVerifier? verifier)
     {
         // Streams via IFileSystem.StreamToAsync/StreamFromAsync for every drive-type pair (using
         // the drive's native CopyAsync/MoveAsync as a fast path when source and target are the
@@ -250,9 +258,16 @@ public abstract class TransferCommand(
         var source = ResolveFileSystem(sourceUrl);
         var target = ResolveFileSystem(targetUrl);
 
+        // A copy into itself or a folder of its own tree stays with the drive's native call: streaming it
+        // would read what it is writing. There is nothing to compare there, so it is not verified.
+        if (ReferenceEquals(source, target) && UrlPath.SameOrInside(sourceUrl, targetUrl))
+        {
+            verifier = null;
+        }
+
         if (sourceUrl.PathType == PathType.File)
         {
-            return (null, CreateFileTask(source, target, sourceUrl, targetUrl, resolver));
+            return (null, CreateFileTask(source, target, sourceUrl, targetUrl, resolver, verifier));
         }
 
         if (sourceUrl.PathType != PathType.Folder)
@@ -260,17 +275,17 @@ public abstract class TransferCommand(
             return (null, null);
         }
 
-        if (ReferenceEquals(source, target))
+        if (ReferenceEquals(source, target) && verifier is null)
         {
             // One atomic native call — nothing meaningful to discover separately.
-            return (null, CreateFolderTask(source, target, sourceUrl, targetUrl, overwrite: resolver.Mode == FileConflictMode.OverwriteAll, discoveryTask: null));
+            return (null, CreateFolderTask(source, target, sourceUrl, targetUrl, overwrite: resolver.Mode == FileConflictMode.OverwriteAll, discoveryTask: null, verifier: null));
         }
 
         var folderTargetUrl = targetUrl.FullUrl.EndsWith('/') || targetUrl.FullUrl.EndsWith('\\')
             ? targetUrl
             : new Url(targetUrl.FullUrl + "/");
         var discoveryTask = new FolderDiscoveryTask(source, target, sourceUrl, folderTargetUrl);
-        var primaryTask = CreateFolderTask(source, target, sourceUrl, targetUrl, overwrite: resolver.Mode == FileConflictMode.OverwriteAll, discoveryTask);
+        var primaryTask = CreateFolderTask(source, target, sourceUrl, targetUrl, overwrite: resolver.Mode == FileConflictMode.OverwriteAll, discoveryTask, verifier);
         return (discoveryTask, primaryTask);
     }
 

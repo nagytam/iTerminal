@@ -3517,6 +3517,15 @@
   <data name="DialogHint.RemoveMark" xml:space="preserve">
     <value>Letöltési jelölés eltávolítása (y/n kérdés)</value>
   </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Ellenőrzés másolás után</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Ellenőrzés</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Az ellenőrzés sikertelen: {0} eltér a forrástól; a másolat megmaradt</value>
+  </data>
   <data name="Checksum.Verified.Caption" xml:space="preserve">
     <value>Ellenőrz.</value>
   </data>

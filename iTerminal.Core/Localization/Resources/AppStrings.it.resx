@@ -3517,6 +3517,15 @@
   <data name="DialogHint.RemoveMark" xml:space="preserve">
     <value>Rimuovi il contrassegno di download (chiede y/n)</value>
   </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Verifica dopo la copia</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Verifica in corso</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Verifica non riuscita: {0} differisce dall'origine; la copia è stata conservata</value>
+  </data>
   <data name="Checksum.Verified.Caption" xml:space="preserve">
     <value>Controllo</value>
   </data>

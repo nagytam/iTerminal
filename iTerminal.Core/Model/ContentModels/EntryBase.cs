@@ -3,6 +3,7 @@ using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Interfaces;
+using iConsole.Security;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -113,9 +114,27 @@ public abstract record EntryBase : IEntry
         }
     }
 
+    /// <summary>
+    /// What is off about this local file's name, and about its content once a background task has read the
+    /// first bytes (<see cref="FileDisguiseCache"/>). Name checks only; no I/O, so the listing can ask on every draw.
+    /// </summary>
+    public DisguiseFindings Disguise =>
+        Url is { PathType: PathType.File, UrlScheme: iConsole.Data.Container.FILE } url
+            ? FileDisguiseCache.Findings(url.FullName, url.DisplayName)
+            : DisguiseFindings.None;
+
+    /// <summary>The cell between the name and the size: a bar, "}" for a cut name, "!" for a suspicious file.</summary>
+    private string NameSeparator(bool nameFits) =>
+        !nameFits ? "}" : Disguise != DisguiseFindings.None ? "!" : Border.VerticalSingle.ToString();
+
     public Color GetForegroundColor(ColorScheme colorScheme, bool cursor, VisualState visualState)
     {
         var color = colorScheme.Foreground;
+        if (!cursor && Disguise != DisguiseFindings.None)
+        {
+            return Color.Red;
+        }
+
         if (Url is not null)
         {
             if (Url.Exists)
@@ -195,10 +214,10 @@ public abstract record EntryBase : IEntry
             var isItalic = Url.PathType == PathType.Folder;
             // A link says where it leads, in the name column: that is the one thing that tells it
             // from the file or folder it stands for, and what F8 on it will — and will not — delete.
-            var displayName = Url.IsLink ? $"{Url.DisplayName} {LinkArrow} {Url.LinkTarget}" : Url.DisplayName;
+            var displayName = FileDisguise.Mask(Url.IsLink ? $"{Url.DisplayName} {LinkArrow} {Url.LinkTarget}" : Url.DisplayName);
 
             AppendRightPadded(conxelString, displayName, nameLength, foregroundColor, backgroundColor, isItalic);
-            conxelString.Append(displayName.Length <= nameLength ? Border.VerticalSingle : "}", foregroundColor, backgroundColor, isItalic: isItalic);
+            conxelString.Append(NameSeparator(displayName.Length <= nameLength), foregroundColor, backgroundColor, isItalic: isItalic);
             AppendLeftPadded(conxelString, FileSize, sizeLength, foregroundColor, backgroundColor, isItalic);
             // Padded to their columns: a row that has no date (the '..' of a tool-backed drive) must
             // still paint every cell, or the previous frame's date stays on screen beside it.
@@ -236,11 +255,11 @@ public abstract record EntryBase : IEntry
         var foregroundColor = GetForegroundColor(colorScheme, cursor, visualState);
         var backgroundColor = GetBackgroundColor(colorScheme, cursor, visualState);
         var isItalic = Url.PathType == PathType.Folder;
-        var displayName = Url.IsLink ? $"{Url.DisplayName} {LinkArrow} {Url.LinkTarget}" : Url.DisplayName;
+        var displayName = FileDisguise.Mask(Url.IsLink ? $"{Url.DisplayName} {LinkArrow} {Url.LinkTarget}" : Url.DisplayName);
         var nameLength = width - fixedWidth;
 
         AppendRightPadded(conxelString, displayName, nameLength, foregroundColor, backgroundColor, isItalic);
-        conxelString.Append(Border.VerticalSingle, foregroundColor, backgroundColor, isItalic: isItalic);
+        conxelString.Append(NameSeparator(true), foregroundColor, backgroundColor, isItalic: isItalic);
         AppendRightPadded(conxelString, FormatAttributes(Url), AttributeLength, foregroundColor, backgroundColor, isItalic);
         conxelString.Append(Border.VerticalSingle, foregroundColor, backgroundColor, isItalic: isItalic);
         AppendRightPadded(conxelString, Date, DateLength, foregroundColor, backgroundColor, isItalic);
@@ -292,7 +311,7 @@ public abstract record EntryBase : IEntry
             var foregroundColor = GetForegroundColor(colorScheme, cursor, visualState);
             var backgroundColor = GetBackgroundColor(colorScheme, cursor, visualState);
             var isItalic = Url.PathType == PathType.Folder;
-            var displayName = Url.IsLink ? $"{Url.DisplayName} {LinkArrow} {Url.LinkTarget}" : Url.DisplayName;
+            var displayName = FileDisguise.Mask(Url.IsLink ? $"{Url.DisplayName} {LinkArrow} {Url.LinkTarget}" : Url.DisplayName);
             AppendRightPadded(conxelString, displayName, width, foregroundColor, backgroundColor, isItalic);
         }
         return conxelString;
