@@ -44,6 +44,7 @@ public class ArchiveDriveServiceTest
     private static ArchiveDriveService Service(Func<string?>? sevenZip = null) =>
         new(new FakeProcessRunner(), sevenZip ?? (() => null));
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("disc.iso")]
     [DataRow("disk.img")]
@@ -57,6 +58,7 @@ public class ArchiveDriveServiceTest
         Assert.IsTrue(Service(() => "7z").CanBrowse(name));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("disk.vhd")]
     [DataRow("disk.vhdx")]
