@@ -44,6 +44,7 @@ public class StreamsDialog : Dialog
     private IReadOnlyList<StreamItem> _items = [];
     private StreamData? _content;
     private string? _contentName;
+    private bool _contentIsBinary;
     private bool? _forceHex;
     private int _cursor;
     private bool _loaded;
@@ -234,6 +235,7 @@ public class StreamsDialog : Dialog
 
             _content = content;
             _contentName = name;
+            _contentIsBinary = LooksLikeBinary(content); // Once, here, not on every redraw.
         }
     }
 
@@ -339,7 +341,7 @@ public class StreamsDialog : Dialog
                 default:
                     if (char.ToLowerInvariant(keyEvent.KeyChar) == 'h')
                     {
-                        _forceHex = !(_forceHex ?? LooksLikeBinary(_content));
+                        _forceHex = !(_forceHex ?? _contentIsBinary);
                     }
                     else
                     {
@@ -598,7 +600,7 @@ public class StreamsDialog : Dialog
         }
         else
         {
-            bool hex = _forceHex ?? LooksLikeBinary(_content);
+            bool hex = _forceHex ?? _contentIsBinary;
             string mode = hex ? UiText.Get("Streams.Mode.Hex", "hex") : UiText.Get("Streams.Mode.Text", "text");
             header = $"{UiText.Get("Streams.Preview", "Preview")}  {selected.Name}  ({mode})";
             if (_content.IsTruncated)
@@ -608,7 +610,7 @@ public class StreamsDialog : Dialog
 
             lines = _content.Bytes.Length == 0
                 ? [UiText.Get("Streams.Empty", "(empty)")]
-                : hex ? HexLines(_content.Bytes, rows) : TextLines(_content.Bytes, rows);
+                : hex ? HexLines(_content.Bytes, rows) : TextLines(_content.Bytes.AsSpan(0, Math.Min(_content.Bytes.Length, rows * iw * 4)).ToArray(), rows); // Only what can be seen is decoded.
         }
 
         Put(buffer, 1, top - 1, iw - 2, header, colors.DisabledForeground, colors.Background);
