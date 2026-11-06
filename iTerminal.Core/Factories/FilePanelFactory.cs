@@ -58,7 +58,10 @@ public class FilePanelFactory(
     Func<iTerminal.Core.Dialogs.Web.WebBrowserDialog>? webBrowserDialogFactory = null,
     PrintDialog? printDialog = null,
     iConsole.Dialogs.SqliteViewerDialog? sqliteViewerDialog = null,
-    iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
+    iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+    StreamsDialog? streamsDialog = null,
+    iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
+    FileEncryptionDialog? fileEncryptionDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -79,6 +82,7 @@ public class FilePanelFactory(
             fileViewerDialog: fileViewerDialog,
             sqliteViewerDialog: sqliteViewerDialog,
             hdfViewerDialog: hdfViewerDialog,
+            executableAnalysisDialog: executableAnalysisDialog,
             solutionViewerDialog: solutionViewerDialog,
             contentLenses: contentLenses,
             musicFileViewerDialog: musicFileViewerDialog,
@@ -105,12 +109,14 @@ public class FilePanelFactory(
             clipboardOperations: clipboardOperations,
             diskImageDialog: diskImageDialog,
             secureWipeDialog: secureWipeDialog,
+            fileEncryptionDialog: fileEncryptionDialog,
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
             notificationService: notificationService,
             editLinkDialog: editLinkDialog,
             gitService: gitService,
             printDialog: printDialog,
+            streamsDialog: streamsDialog,
             // One per panel: a dialog instance is one control, and each panel's Enter and F3 show it.
             webBrowserDialog: webBrowserDialogFactory?.Invoke());
         contentModelService.AddContentBrowser(name, contentBrowser);

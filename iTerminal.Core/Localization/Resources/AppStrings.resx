@@ -3529,6 +3529,48 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>link</value>
   </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Remove mark (^F)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Marked</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Referrer</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>Quarantined</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Downloaded</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>Remove the mark so the file is no longer flagged as downloaded? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Error: the mark could not be removed.</value>
+  </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Remove the mark</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Keep the mark</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Remove the download mark (asks y/n)</value>
+  </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Verify after copy</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Verifying</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Verification failed: {0} differs from the source; the copy was kept</value>
+  </data>
   <data name="Checksum.Verified.Caption" xml:space="preserve">
     <value>Verified</value>
   </data>
@@ -3576,5 +3618,191 @@
   </data>
   <data name="Checksum.Sig.Error" xml:space="preserve">
     <value>could not be checked: {0}</value>
+  </data>
+  <data name="Dialog.Streams" xml:space="preserve">
+    <value>Streams and attributes</value>
+  </data>
+  <data name="Menu.StreamsItem" xml:space="preserve">
+    <value>Streams and Attributes…</value>
+  </data>
+  <data name="Streams.Kind.Streams" xml:space="preserve">
+    <value>Streams</value>
+  </data>
+  <data name="Streams.Kind.Attributes" xml:space="preserve">
+    <value>Attributes</value>
+  </data>
+  <data name="Streams.Error.BadName" xml:space="preserve">
+    <value>'{0}' is not a valid name.</value>
+  </data>
+  <data name="Streams.Error.Unsupported" xml:space="preserve">
+    <value>This system has no streams or extended attributes.</value>
+  </data>
+  <data name="Streams.Error.Changing" xml:space="preserve">
+    <value>The attributes keep changing; try again.</value>
+  </data>
+  <data name="Streams.Error.TooLarge" xml:space="preserve">
+    <value>Too large to preview.</value>
+  </data>
+  <data name="Streams.Deleted" xml:space="preserve">
+    <value>Deleted {0}.</value>
+  </data>
+  <data name="DialogHint.DeleteStreamYes" xml:space="preserve">
+    <value>Delete the stream or attribute</value>
+  </data>
+  <data name="DialogHint.KeepStream" xml:space="preserve">
+    <value>Keep it</value>
+  </data>
+  <data name="DialogHint.ChooseStream" xml:space="preserve">
+    <value>Choose a stream or attribute</value>
+  </data>
+  <data name="DialogHint.StreamHexText" xml:space="preserve">
+    <value>Switch the preview between text and hex</value>
+  </data>
+  <data name="DialogHint.DeleteStreamAsks" xml:space="preserve">
+    <value>Delete it (asks first)</value>
+  </data>
+  <data name="DialogHint.StreamsRefresh" xml:space="preserve">
+    <value>Read the list again</value>
+  </data>
+  <data name="Streams.Status.AskDelete" xml:space="preserve">
+    <value>Delete {0}? y deletes it.</value>
+  </data>
+  <data name="Streams.Target" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Streams.Col.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Streams.Col.Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Streams.Reading" xml:space="preserve">
+    <value>Reading…</value>
+  </data>
+  <data name="Streams.None" xml:space="preserve">
+    <value>This entry has no {0}.</value>
+  </data>
+  <data name="Streams.Hint.Confirm" xml:space="preserve">
+    <value>y deletes it  any other key keeps it</value>
+  </data>
+  <data name="Streams.Hint.List" xml:space="preserve">
+    <value>↑↓ choose  H text/hex  Del delete  F5 refresh  Esc close</value>
+  </data>
+  <data name="Streams.Preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Streams.Mode.Hex" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Streams.Mode.Text" xml:space="preserve">
+    <value>text</value>
+  </data>
+  <data name="Streams.Truncated" xml:space="preserve">
+    <value>first {0} of {1}</value>
+  </data>
+  <data name="Streams.Empty" xml:space="preserve">
+    <value>(empty)</value>
+  </data>
+  <data name="Dialog.FileEncryption" xml:space="preserve">
+    <value>Encrypt / decrypt files</value>
+  </data>
+  <data name="Field.Mode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Field.Passphrase" xml:space="preserve">
+    <value>Passphrase</value>
+  </data>
+  <data name="Field.PassphraseConfirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Encryption.Run" xml:space="preserve">
+    <value>Run</value>
+  </data>
+  <data name="Encryption.ModeEncrypt" xml:space="preserve">
+    <value>Encrypt</value>
+  </data>
+  <data name="Encryption.ModeDecrypt" xml:space="preserve">
+    <value>Decrypt</value>
+  </data>
+  <data name="Encryption.HintEncrypt" xml:space="preserve">
+    <value>Writes name.enc beside each file; the passphrase is never stored.</value>
+  </data>
+  <data name="Encryption.HintDecrypt" xml:space="preserve">
+    <value>Writes the original beside each .enc file; nothing is overwritten.</value>
+  </data>
+  <data name="Encryption.HintLose" xml:space="preserve">
+    <value>Lose the passphrase and the data cannot be recovered.</value>
+  </data>
+  <data name="Encryption.Nothing" xml:space="preserve">
+    <value>Nothing to process: mark files first.</value>
+  </data>
+  <data name="Encryption.EmptyPassphrase" xml:space="preserve">
+    <value>Type a passphrase.</value>
+  </data>
+  <data name="Encryption.Mismatch" xml:space="preserve">
+    <value>The passphrases do not match.</value>
+  </data>
+  <data name="Encryption.Working" xml:space="preserve">
+    <value>Working… {0}%  {1}</value>
+  </data>
+  <data name="Encryption.AskDelete" xml:space="preserve">
+    <value>Delete the {0} original file(s)? They go to the recycle bin.  y/n</value>
+  </data>
+  <data name="Encryption.AskDeleteWipe" xml:space="preserve">
+    <value>Delete the {0} original file(s)? No recycle bin: overwritten and removed for good.  y/n</value>
+  </data>
+  <data name="Encryption.Deleting" xml:space="preserve">
+    <value>Deleting the originals…</value>
+  </data>
+  <data name="Encryption.Stopped" xml:space="preserve">
+    <value>Stopped: {0} file(s) done.</value>
+  </data>
+  <data name="Encryption.Done" xml:space="preserve">
+    <value>Done: {0} file(s), {1} failed.</value>
+  </data>
+  <data name="Encryption.Kept" xml:space="preserve">
+    <value>The originals were kept.</value>
+  </data>
+  <data name="Encryption.Deleted" xml:space="preserve">
+    <value>{0} original(s) deleted.</value>
+  </data>
+  <data name="Encryption.DeleteFailed" xml:space="preserve">
+    <value>{0} original(s) deleted; {1} failed: {2}</value>
+  </data>
+  <data name="Notify.EncryptionStopped" xml:space="preserve">
+    <value>File encryption stopped</value>
+  </data>
+  <data name="Notify.EncryptionStoppedBody" xml:space="preserve">
+    <value>{0} file(s) done before it was cancelled.</value>
+  </data>
+  <data name="Notify.EncryptionErrors" xml:space="preserve">
+    <value>File encryption finished with errors</value>
+  </data>
+  <data name="Notify.EncryptionErrorsBody" xml:space="preserve">
+    <value>{0} done; {1} failed. First: {2}</value>
+  </data>
+  <data name="Notify.EncryptionFinished" xml:space="preserve">
+    <value>File encryption finished</value>
+  </data>
+  <data name="Notify.EncryptionFinishedBody" xml:space="preserve">
+    <value>{0} file(s) done.</value>
+  </data>
+  <data name="DialogHint.EncryptionRun" xml:space="preserve">
+    <value>Encrypt or decrypt with the passphrase</value>
+  </data>
+  <data name="DialogHint.EncryptionNextField" xml:space="preserve">
+    <value>Next field</value>
+  </data>
+  <data name="DialogHint.EncryptionStop" xml:space="preserve">
+    <value>Stop; files already done stay done</value>
+  </data>
+  <data name="DialogHint.EncryptionDeleteOriginals" xml:space="preserve">
+    <value>Delete the originals</value>
+  </data>
+  <data name="DialogHint.EncryptionKeepOriginals" xml:space="preserve">
+    <value>Keep the originals</value>
+  </data>
+  <data name="Menu.EncryptFiles" xml:space="preserve">
+    <value>Encrypt / Decrypt…</value>
   </data>
 </root>

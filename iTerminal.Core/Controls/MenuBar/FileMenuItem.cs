@@ -43,12 +43,15 @@ public class FileMenuItem : MenuItem
         INotificationService? notificationService = null,
         EditLinkDialog? editLinkDialog = null,
         PrintDialog? printDialog = null,
-        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
+        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+        StreamsDialog? streamsDialog = null,
+        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
+        FileEncryptionDialog? fileEncryptionDialog = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
 
-        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, hdfViewerDialog: hdfViewerDialog), [], themeService));
+        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog), [], themeService));
         AddMenuItem(new MenuItem("Quick View\tCtrl+F3", new iTerminal.Core.Commands.Drives.TogglePreviewCommand(contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Edit\tF4",   new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations), [], themeService));
         if (openWithDialogFactory is not null)
@@ -95,9 +98,17 @@ public class FileMenuItem : MenuItem
         {
             AddMenuItem(new MenuItem("Secure Wipe	Ctrl+Shift+F8", new SecureWipeDialogCommand(secureWipeDialog, contentModelService), [], themeService));
         }
+        if (fileEncryptionDialog is not null)
+        {
+            AddMenuItem(new MenuItem(UiText.Get("Menu.EncryptFiles", "Encrypt / Decrypt…") + "	Ctrl+Shift+E", new FileEncryptionDialogCommand(fileEncryptionDialog, contentModelService), [], themeService));
+        }
         if (malwareScanService is { IsAvailable: true })
         {
             AddMenuItem(new MenuItem("Scan with Microsoft Defender", new ScanWithDefenderCommand(contentModelService, malwareScanService, notificationService), [], themeService));
+        }
+        if (streamsDialog is not null)
+        {
+            AddMenuItem(new MenuItem(UiText.Get("Menu.StreamsItem", "Streams and Attributes…"), new StreamsDialogCommand(streamsDialog, contentModelService), [], themeService));
         }
         if (propertiesDialog is not null)
         {
