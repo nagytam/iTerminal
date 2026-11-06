@@ -3492,5 +3492,52 @@
   </data>
   <data name="Task.VerifyFailed" xml:space="preserve">
     <value>Az ellenőrzés sikertelen: {0} eltér a forrástól; a másolat megmaradt</value>
+  <data name="Checksum.Verified.Caption" xml:space="preserve">
+    <value>Ellenőrz.</value>
+  </data>
+  <data name="Checksum.Verified.Changed" xml:space="preserve">
+    <value>✗ {0} megváltozott az ellenőrzés közben — nincs ellenőrizve</value>
+  </data>
+  <data name="Checksum.Verified.Waiting" xml:space="preserve">
+    <value>várakozás a fájl beolvasására…</value>
+  </data>
+  <data name="Checksum.Verified.List" xml:space="preserve">
+    <value>✓ a fájl egyezik a(z) {0} listával, aláírta: {1}</value>
+  </data>
+  <data name="Checksum.Verified.ListBad" xml:space="preserve">
+    <value>✗ a fájl NEM egyezik a(z) {0} listával, pedig az alá van írva</value>
+  </data>
+  <data name="Checksum.Verified.File" xml:space="preserve">
+    <value>✓ a fájl egyezik az aláírásával ({0})</value>
+  </data>
+  <data name="Checksum.Sig.Caption" xml:space="preserve">
+    <value>Aláírás</value>
+  </data>
+  <data name="Checksum.Sig.More" xml:space="preserve">
+    <value>+{0} további aláírás</value>
+  </data>
+  <data name="Checksum.Sig.Good" xml:space="preserve">
+    <value>érvényes, a birtokolt kulccsal: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Expired" xml:space="preserve">
+    <value>érvényes, de a kulcs lejárt: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Bad" xml:space="preserve">
+    <value>ÉRVÉNYTELEN aláírás</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
+    <value>ismeretlen kulcs: {0} (nincs a kulcstartóban)</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
+    <value>ismeretlen kulcs (nincs beállított nyilvános kulcs)</value>
+  </data>
+  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
+    <value>a(z) {0} nincs telepítve — nincs ellenőrizve</value>
+  </data>
+  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
+    <value>nincs ellenőrizve: a sigstore-hoz az aláíró azonosítója kell</value>
+  </data>
+  <data name="Checksum.Sig.Error" xml:space="preserve">
+    <value>nem ellenőrizhető: {0}</value>
   </data>
 </root>
