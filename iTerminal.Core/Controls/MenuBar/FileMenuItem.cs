@@ -44,12 +44,13 @@ public class FileMenuItem : MenuItem
         EditLinkDialog? editLinkDialog = null,
         PrintDialog? printDialog = null,
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
         FileEncryptionDialog? fileEncryptionDialog = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
 
-        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, hdfViewerDialog: hdfViewerDialog), [], themeService));
+        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog), [], themeService));
         AddMenuItem(new MenuItem("Quick View\tCtrl+F3", new iTerminal.Core.Commands.Drives.TogglePreviewCommand(contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Edit\tF4",   new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations), [], themeService));
         if (openWithDialogFactory is not null)

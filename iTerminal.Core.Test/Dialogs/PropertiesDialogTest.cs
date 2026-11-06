@@ -6,6 +6,7 @@ using iConsole.Services;
 using iConsole.Test.Core;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Services.Labels;
+using iTerminal.Core.Services.Origin;
 using iTerminal.Core.Services.Properties;
 using Moq;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
@@ -50,7 +51,7 @@ public class PropertiesDialogTest
         public required Mock<IFilePropertiesService> Service { get; init; }
     }
 
-    private static async Task<Rig> OpenAsync(FileProperties? properties, Exception? readFailure = null, FolderMeasure? measure = null, Size? screen = null)
+    private static async Task<Rig> OpenAsync(FileProperties? properties, Exception? readFailure = null, FolderMeasure? measure = null, Size? screen = null, IFileOriginService? origin = null)
     {
         Mock<IFilePropertiesService> service = new();
         if (readFailure is not null)
@@ -64,10 +65,11 @@ public class PropertiesDialogTest
 
         service.Setup(s => s.MeasureAsync(It.IsAny<string>(), It.IsAny<IProgress<FolderMeasure>?>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(measure ?? new FolderMeasure(3, 2, 4096, 0));
-        PropertiesDialog dialog = new(service.Object, Panels(), Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), TestTheme());
+        PropertiesDialog dialog = new(service.Object, Panels(), Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), TestTheme(), originService: origin);
         dialog.Load(Path.Combine(Path.GetTempPath(), "dir", "report.txt"));
         Control root = await ShowAsync(dialog, screen);
         await dialog.MeasureTask;
+        await dialog.OriginTask;
         dialog.OnIdle();
         return new Rig { Dialog = dialog, Root = root, Service = service };
     }
@@ -86,6 +88,112 @@ public class PropertiesDialogTest
         AssertScreenContains(screen, "2025-03-05 05:06:07");
         AssertScreenContains(screen, "2025-03-06 05:06:07");
         AssertScreenDoesNotContain(screen, "Contains");
+    }
+
+    private static readonly FileOrigin Marked = new(3, "https://example.com/page", "https://example.com/report.txt", null, null);
+
+    private static Mock<IFileOriginService> OriginService(FileOrigin? origin)
+    {
+        Mock<IFileOriginService> service = new();
+        FileOrigin? current = origin;
+        service.Setup(s => s.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => current);
+        service.Setup(s => s.RemoveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Callback(() => current = null)
+            .ReturnsAsync(true);
+        return service;
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AMarkedFile_ShowsWhereItCameFrom_AndFitsTheDialogWhenDrawnTwice()
+    {
+        Rig rig = await OpenAsync(File(), origin: OriginService(Marked).Object);
+        rig.Dialog.OnIdle();
+
+        Render(rig.Root);
+        ScreenBuffer screen = Render(rig.Root);
+        AssertScreenContains(screen, "Marked");
+        AssertScreenContains(screen, "Internet (zone 3)");
+        AssertScreenContains(screen, "https://example.com/report.txt");
+        AssertScreenContains(screen, "https://example.com/page");
+        AssertScreenContains(screen, "Remove mark");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFileWithoutAMark_ShowsNoOriginRows_AndHasNothingToRemove()
+    {
+        Rig rig = await OpenAsync(File(), origin: OriginService(null).Object);
+
+        AssertScreenDoesNotContain(Render(rig.Root), "Marked");
+        rig.Dialog.ArmRemoveMark();
+        Assert.IsFalse(rig.Dialog.IsRemoveArmed);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFolder_IsNeverAskedForAMark()
+    {
+        Mock<IFileOriginService> service = OriginService(Marked);
+        Rig rig = await OpenAsync(File(folder: true), origin: service.Object);
+
+        Assert.IsNull(rig.Dialog.Origin);
+        service.Verify(s => s.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task RemovingTheMark_AsksFirst_ThenRemovesOnY_AndTheRowsGo()
+    {
+        Mock<IFileOriginService> service = OriginService(Marked);
+        Rig rig = await OpenAsync(File(), origin: service.Object);
+        rig.Dialog.OnIdle();
+        rig.Dialog.ArmRemoveMark();
+
+        StringAssert.Contains(rig.Dialog.Details, "y/n");
+        service.Verify(s => s.RemoveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+
+        await rig.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Y, 'y'));
+        await rig.Dialog.OriginTask;
+        rig.Dialog.OnIdle();
+
+        service.Verify(s => s.RemoveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+        Assert.IsNull(rig.Dialog.Origin);
+        Assert.IsFalse(rig.Dialog.IsRemoveArmed);
+        Assert.IsFalse(rig.Dialog.Details.Contains("Marked"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnswerN_KeepsTheMark_AndTheKeyIsNotTypedIntoABox()
+    {
+        Mock<IFileOriginService> service = OriginService(Marked);
+        Rig rig = await OpenAsync(File(), origin: service.Object);
+        string modified = rig.Dialog.ModifiedText;
+        rig.Dialog.ArmRemoveMark();
+
+        await rig.Dialog.HandleKeyEventAsync(Key(ConsoleKey.N, 'n'));
+
+        service.Verify(s => s.RemoveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        Assert.IsNotNull(rig.Dialog.Origin);
+        Assert.IsFalse(rig.Dialog.IsRemoveArmed);
+        Assert.AreEqual(modified, rig.Dialog.ModifiedText);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AFailedRemoval_IsReported()
+    {
+        Mock<IFileOriginService> service = OriginService(Marked);
+        service.Setup(s => s.RemoveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
+        Rig rig = await OpenAsync(File(), origin: service.Object);
+        rig.Dialog.ArmRemoveMark();
+
+        await rig.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Y, 'y'));
+        await rig.Dialog.OriginTask;
+        rig.Dialog.OnIdle();
+
+        StringAssert.Contains(rig.Dialog.Details, "could not be removed");
     }
 
     [Timeout(60_000)]

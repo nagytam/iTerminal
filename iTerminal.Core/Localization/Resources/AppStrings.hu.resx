@@ -3484,6 +3484,96 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>hivatkozás</value>
   </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Jelölés eltávolítása (^F)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Megjelölve</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>Innen</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Hivatkozó</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>Karanténban</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Letöltve</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>Eltávolítja a jelölést, hogy a fájl ne számítson letöltöttnek? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Hiba: a jelölést nem sikerült eltávolítani.</value>
+  </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Jelölés eltávolítása</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Jelölés megtartása</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Letöltési jelölés eltávolítása (y/n kérdés)</value>
+  </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Ellenőrzés másolás után</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Ellenőrzés</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Az ellenőrzés sikertelen: {0} eltér a forrástól; a másolat megmaradt</value>
+  </data>
+  <data name="Checksum.Verified.Caption" xml:space="preserve">
+    <value>Ellenőrz.</value>
+  </data>
+  <data name="Checksum.Verified.Changed" xml:space="preserve">
+    <value>✗ {0} megváltozott az ellenőrzés közben — nincs ellenőrizve</value>
+  </data>
+  <data name="Checksum.Verified.Waiting" xml:space="preserve">
+    <value>várakozás a fájl beolvasására…</value>
+  </data>
+  <data name="Checksum.Verified.List" xml:space="preserve">
+    <value>✓ a fájl egyezik a(z) {0} listával, aláírta: {1}</value>
+  </data>
+  <data name="Checksum.Verified.ListBad" xml:space="preserve">
+    <value>✗ a fájl NEM egyezik a(z) {0} listával, pedig az alá van írva</value>
+  </data>
+  <data name="Checksum.Verified.File" xml:space="preserve">
+    <value>✓ a fájl egyezik az aláírásával ({0})</value>
+  </data>
+  <data name="Checksum.Sig.Caption" xml:space="preserve">
+    <value>Aláírás</value>
+  </data>
+  <data name="Checksum.Sig.More" xml:space="preserve">
+    <value>+{0} további aláírás</value>
+  </data>
+  <data name="Checksum.Sig.Good" xml:space="preserve">
+    <value>érvényes, a birtokolt kulccsal: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Expired" xml:space="preserve">
+    <value>érvényes, de a kulcs lejárt: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Bad" xml:space="preserve">
+    <value>ÉRVÉNYTELEN aláírás</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
+    <value>ismeretlen kulcs: {0} (nincs a kulcstartóban)</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
+    <value>ismeretlen kulcs (nincs beállított nyilvános kulcs)</value>
+  </data>
+  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
+    <value>a(z) {0} nincs telepítve — nincs ellenőrizve</value>
+  </data>
+  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
+    <value>nincs ellenőrizve: a sigstore-hoz az aláíró azonosítója kell</value>
+  </data>
+  <data name="Checksum.Sig.Error" xml:space="preserve">
+    <value>nem ellenőrizhető: {0}</value>
+  </data>
   <data name="Dialog.FileEncryption" xml:space="preserve">
     <value>Fájlok titkosítása / visszafejtése</value>
   </data>
@@ -3585,53 +3675,5 @@
   </data>
   <data name="Menu.EncryptFiles" xml:space="preserve">
     <value>Titkosítás / Visszafejtés…</value>
-  </data>
-  <data name="Checksum.Verified.Caption" xml:space="preserve">
-    <value>Ellenőrz.</value>
-  </data>
-  <data name="Checksum.Verified.Changed" xml:space="preserve">
-    <value>✗ {0} megváltozott az ellenőrzés közben — nincs ellenőrizve</value>
-  </data>
-  <data name="Checksum.Verified.Waiting" xml:space="preserve">
-    <value>várakozás a fájl beolvasására…</value>
-  </data>
-  <data name="Checksum.Verified.List" xml:space="preserve">
-    <value>✓ a fájl egyezik a(z) {0} listával, aláírta: {1}</value>
-  </data>
-  <data name="Checksum.Verified.ListBad" xml:space="preserve">
-    <value>✗ a fájl NEM egyezik a(z) {0} listával, pedig az alá van írva</value>
-  </data>
-  <data name="Checksum.Verified.File" xml:space="preserve">
-    <value>✓ a fájl egyezik az aláírásával ({0})</value>
-  </data>
-  <data name="Checksum.Sig.Caption" xml:space="preserve">
-    <value>Aláírás</value>
-  </data>
-  <data name="Checksum.Sig.More" xml:space="preserve">
-    <value>+{0} további aláírás</value>
-  </data>
-  <data name="Checksum.Sig.Good" xml:space="preserve">
-    <value>érvényes, a birtokolt kulccsal: {0}</value>
-  </data>
-  <data name="Checksum.Sig.Expired" xml:space="preserve">
-    <value>érvényes, de a kulcs lejárt: {0}</value>
-  </data>
-  <data name="Checksum.Sig.Bad" xml:space="preserve">
-    <value>ÉRVÉNYTELEN aláírás</value>
-  </data>
-  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
-    <value>ismeretlen kulcs: {0} (nincs a kulcstartóban)</value>
-  </data>
-  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
-    <value>ismeretlen kulcs (nincs beállított nyilvános kulcs)</value>
-  </data>
-  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
-    <value>a(z) {0} nincs telepítve — nincs ellenőrizve</value>
-  </data>
-  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
-    <value>nincs ellenőrizve: a sigstore-hoz az aláíró azonosítója kell</value>
-  </data>
-  <data name="Checksum.Sig.Error" xml:space="preserve">
-    <value>nem ellenőrizhető: {0}</value>
   </data>
 </root>

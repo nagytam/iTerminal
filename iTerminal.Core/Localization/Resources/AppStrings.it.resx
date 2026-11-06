@@ -3484,6 +3484,96 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>collegamento</value>
   </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Rimuovi contrassegno (^F)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Contrassegnato</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>Da</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Referrer</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>In quarantena</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Scaricato</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>Rimuovere il contrassegno così il file non risulta più scaricato? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Errore: impossibile rimuovere il contrassegno.</value>
+  </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Rimuovi il contrassegno</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Mantieni il contrassegno</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Rimuovi il contrassegno di download (chiede y/n)</value>
+  </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Verifica dopo la copia</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Verifica in corso</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Verifica non riuscita: {0} differisce dall'origine; la copia è stata conservata</value>
+  </data>
+  <data name="Checksum.Verified.Caption" xml:space="preserve">
+    <value>Controllo</value>
+  </data>
+  <data name="Checksum.Verified.Changed" xml:space="preserve">
+    <value>✗ {0} è cambiato durante il controllo — non verificato</value>
+  </data>
+  <data name="Checksum.Verified.Waiting" xml:space="preserve">
+    <value>in attesa della lettura del file…</value>
+  </data>
+  <data name="Checksum.Verified.List" xml:space="preserve">
+    <value>✓ il file corrisponde a {0}, firmato da {1}</value>
+  </data>
+  <data name="Checksum.Verified.ListBad" xml:space="preserve">
+    <value>✗ il file NON corrisponde a {0}, che è firmato</value>
+  </data>
+  <data name="Checksum.Verified.File" xml:space="preserve">
+    <value>✓ il file corrisponde alla sua firma di {0}</value>
+  </data>
+  <data name="Checksum.Sig.Caption" xml:space="preserve">
+    <value>Firma</value>
+  </data>
+  <data name="Checksum.Sig.More" xml:space="preserve">
+    <value>+{0} altre firme</value>
+  </data>
+  <data name="Checksum.Sig.Good" xml:space="preserve">
+    <value>valida, con una chiave che hai: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Expired" xml:space="preserve">
+    <value>valida, ma la chiave è scaduta: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Bad" xml:space="preserve">
+    <value>firma NON valida</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
+    <value>chiave sconosciuta {0} (non nel tuo portachiavi)</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
+    <value>chiave sconosciuta (nessuna chiave pubblica configurata)</value>
+  </data>
+  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
+    <value>{0} non è installato — non controllato</value>
+  </data>
+  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
+    <value>non controllato: sigstore richiede l'identità del firmatario</value>
+  </data>
+  <data name="Checksum.Sig.Error" xml:space="preserve">
+    <value>impossibile controllare: {0}</value>
+  </data>
   <data name="Dialog.FileEncryption" xml:space="preserve">
     <value>Cifra / decifra file</value>
   </data>
@@ -3585,53 +3675,5 @@
   </data>
   <data name="Menu.EncryptFiles" xml:space="preserve">
     <value>Cifra / Decifra…</value>
-  </data>
-  <data name="Checksum.Verified.Caption" xml:space="preserve">
-    <value>Controllo</value>
-  </data>
-  <data name="Checksum.Verified.Changed" xml:space="preserve">
-    <value>✗ {0} è cambiato durante il controllo — non verificato</value>
-  </data>
-  <data name="Checksum.Verified.Waiting" xml:space="preserve">
-    <value>in attesa della lettura del file…</value>
-  </data>
-  <data name="Checksum.Verified.List" xml:space="preserve">
-    <value>✓ il file corrisponde a {0}, firmato da {1}</value>
-  </data>
-  <data name="Checksum.Verified.ListBad" xml:space="preserve">
-    <value>✗ il file NON corrisponde a {0}, che è firmato</value>
-  </data>
-  <data name="Checksum.Verified.File" xml:space="preserve">
-    <value>✓ il file corrisponde alla sua firma di {0}</value>
-  </data>
-  <data name="Checksum.Sig.Caption" xml:space="preserve">
-    <value>Firma</value>
-  </data>
-  <data name="Checksum.Sig.More" xml:space="preserve">
-    <value>+{0} altre firme</value>
-  </data>
-  <data name="Checksum.Sig.Good" xml:space="preserve">
-    <value>valida, con una chiave che hai: {0}</value>
-  </data>
-  <data name="Checksum.Sig.Expired" xml:space="preserve">
-    <value>valida, ma la chiave è scaduta: {0}</value>
-  </data>
-  <data name="Checksum.Sig.Bad" xml:space="preserve">
-    <value>firma NON valida</value>
-  </data>
-  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
-    <value>chiave sconosciuta {0} (non nel tuo portachiavi)</value>
-  </data>
-  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
-    <value>chiave sconosciuta (nessuna chiave pubblica configurata)</value>
-  </data>
-  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
-    <value>{0} non è installato — non controllato</value>
-  </data>
-  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
-    <value>non controllato: sigstore richiede l'identità del firmatario</value>
-  </data>
-  <data name="Checksum.Sig.Error" xml:space="preserve">
-    <value>impossibile controllare: {0}</value>
   </data>
 </root>

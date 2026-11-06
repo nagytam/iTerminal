@@ -3484,6 +3484,96 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>enlace</value>
   </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Quitar marca (^F)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Marcado</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>Desde</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Referente</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>En cuarentena</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Descargado</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>¿Quitar la marca para que el archivo ya no figure como descargado? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Error: no se pudo quitar la marca.</value>
+  </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Quitar la marca</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Conservar la marca</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Quitar la marca de descarga (pregunta y/n)</value>
+  </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Verificar después de copiar</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Verificando</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>La verificación falló: {0} difiere del origen; se conservó la copia</value>
+  </data>
+  <data name="Checksum.Verified.Caption" xml:space="preserve">
+    <value>Validado</value>
+  </data>
+  <data name="Checksum.Verified.Changed" xml:space="preserve">
+    <value>✗ {0} cambió durante la comprobación — no verificado</value>
+  </data>
+  <data name="Checksum.Verified.Waiting" xml:space="preserve">
+    <value>esperando a que se lea el archivo…</value>
+  </data>
+  <data name="Checksum.Verified.List" xml:space="preserve">
+    <value>✓ el archivo coincide con {0}, firmado por {1}</value>
+  </data>
+  <data name="Checksum.Verified.ListBad" xml:space="preserve">
+    <value>✗ el archivo NO coincide con {0}, que está firmado</value>
+  </data>
+  <data name="Checksum.Verified.File" xml:space="preserve">
+    <value>✓ el archivo coincide con su firma de {0}</value>
+  </data>
+  <data name="Checksum.Sig.Caption" xml:space="preserve">
+    <value>Firma</value>
+  </data>
+  <data name="Checksum.Sig.More" xml:space="preserve">
+    <value>+{0} firmas más</value>
+  </data>
+  <data name="Checksum.Sig.Good" xml:space="preserve">
+    <value>válida, con una clave que usted tiene: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Expired" xml:space="preserve">
+    <value>válida, pero la clave ha caducado: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Bad" xml:space="preserve">
+    <value>firma NO válida</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
+    <value>clave desconocida {0} (no está en su llavero)</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
+    <value>clave desconocida (no hay clave pública configurada)</value>
+  </data>
+  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
+    <value>{0} no está instalado — no comprobado</value>
+  </data>
+  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
+    <value>no comprobado: sigstore necesita la identidad del firmante</value>
+  </data>
+  <data name="Checksum.Sig.Error" xml:space="preserve">
+    <value>no se pudo comprobar: {0}</value>
+  </data>
   <data name="Dialog.FileEncryption" xml:space="preserve">
     <value>Cifrar / descifrar archivos</value>
   </data>
@@ -3585,53 +3675,5 @@
   </data>
   <data name="Menu.EncryptFiles" xml:space="preserve">
     <value>Cifrar / Descifrar…</value>
-  </data>
-  <data name="Checksum.Verified.Caption" xml:space="preserve">
-    <value>Validado</value>
-  </data>
-  <data name="Checksum.Verified.Changed" xml:space="preserve">
-    <value>✗ {0} cambió durante la comprobación — no verificado</value>
-  </data>
-  <data name="Checksum.Verified.Waiting" xml:space="preserve">
-    <value>esperando a que se lea el archivo…</value>
-  </data>
-  <data name="Checksum.Verified.List" xml:space="preserve">
-    <value>✓ el archivo coincide con {0}, firmado por {1}</value>
-  </data>
-  <data name="Checksum.Verified.ListBad" xml:space="preserve">
-    <value>✗ el archivo NO coincide con {0}, que está firmado</value>
-  </data>
-  <data name="Checksum.Verified.File" xml:space="preserve">
-    <value>✓ el archivo coincide con su firma de {0}</value>
-  </data>
-  <data name="Checksum.Sig.Caption" xml:space="preserve">
-    <value>Firma</value>
-  </data>
-  <data name="Checksum.Sig.More" xml:space="preserve">
-    <value>+{0} firmas más</value>
-  </data>
-  <data name="Checksum.Sig.Good" xml:space="preserve">
-    <value>válida, con una clave que usted tiene: {0}</value>
-  </data>
-  <data name="Checksum.Sig.Expired" xml:space="preserve">
-    <value>válida, pero la clave ha caducado: {0}</value>
-  </data>
-  <data name="Checksum.Sig.Bad" xml:space="preserve">
-    <value>firma NO válida</value>
-  </data>
-  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
-    <value>clave desconocida {0} (no está en su llavero)</value>
-  </data>
-  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
-    <value>clave desconocida (no hay clave pública configurada)</value>
-  </data>
-  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
-    <value>{0} no está instalado — no comprobado</value>
-  </data>
-  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
-    <value>no comprobado: sigstore necesita la identidad del firmante</value>
-  </data>
-  <data name="Checksum.Sig.Error" xml:space="preserve">
-    <value>no se pudo comprobar: {0}</value>
   </data>
 </root>

@@ -1,4 +1,4 @@
-using iConsole.Data;
+﻿using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Interfaces;
@@ -842,6 +842,85 @@ public class ViewFileDialogCommandTest
 
         Assert.IsNull(hdfDialog.Url, "a remote file is not handed to the HDF5 viewer");
         Assert.AreEqual(path, fileViewer.Url?.Path);
+    }
+
+    private static iConsole.Dialogs.ExecutableAnalysisDialog CreateExecutableDialog(IThemeService themeService) =>
+        new(Mock.Of<iConsole.Executables.IExecutableAnalyzer>(), themeService);
+
+    private static (iConsole.Dialogs.ExecutableAnalysisDialog Executable, FileViewerDialog Viewer) RunExecutableRoute(string path, byte[] content)
+    {
+        var themeService = CreateThemeService();
+        var executableDialog = CreateExecutableDialog(themeService);
+        var fileViewer = CreateDialog(themeService);
+        File.WriteAllBytes(path, content);
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                fileViewer,
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                executableAnalysisDialog: executableDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+
+        return (executableDialog, fileViewer);
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    [DataRow(".exe", new byte[] { 0x4D, 0x5A, 0x90, 0, 0, 0, 0, 0 })]
+    [DataRow(".dll", new byte[] { 0x4D, 0x5A, 0x90, 0, 0, 0, 0, 0 })]
+    [DataRow(".so", new byte[] { 0x7F, 0x45, 0x4C, 0x46, 2, 1, 1, 0 })]
+    [DataRow("", new byte[] { 0x7F, 0x45, 0x4C, 0x46, 2, 1, 1, 0 })]
+    [DataRow(".dylib", new byte[] { 0xCF, 0xFA, 0xED, 0xFE, 0, 0, 0, 0 })]
+    public void ExecuteAsync_WithALocalExecutable_PointsTheAnalysisViewAtIt(string extension, byte[] content)
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}{extension}");
+
+        var (executable, viewer) = RunExecutableRoute(path, content);
+
+        Assert.AreEqual(path, executable.Url?.Path);
+        Assert.IsNull(viewer.Url, "an executable is not handed to the generic viewer");
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithAnExeThatIsAScript_UsesTheGenericViewer()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.exe");
+
+        var (executable, viewer) = RunExecutableRoute(path, "@echo off"u8.ToArray());
+
+        Assert.IsNull(executable.Url, "the magic bytes decide, not the ending");
+        Assert.AreEqual(path, viewer.Url?.Path);
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithATruncatedExecutable_StillOpensTheAnalysisViewSoItCanSayWhy()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.exe");
+
+        var (executable, _) = RunExecutableRoute(path, [0x4D, 0x5A]);
+
+        Assert.AreEqual(path, executable.Url?.Path);
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithATextFile_NeverProbesTheAnalysisView()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.txt");
+
+        var (executable, viewer) = RunExecutableRoute(path, [0x4D, 0x5A, 0, 0]);
+
+        Assert.IsNull(executable.Url);
+        Assert.AreEqual(path, viewer.Url?.Path);
     }
 
     // ── ContentBrowser integration ───────────────────────────────────────────
