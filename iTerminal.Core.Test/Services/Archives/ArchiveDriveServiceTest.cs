@@ -44,6 +44,28 @@ public class ArchiveDriveServiceTest
     private static ArchiveDriveService Service(Func<string?>? sevenZip = null) =>
         new(new FakeProcessRunner(), sevenZip ?? (() => null));
 
+    [TestMethod]
+    [DataRow("disc.iso")]
+    [DataRow("disk.img")]
+    [DataRow("disk.VMDK")]
+    [DataRow("install.wim")]
+    [DataRow("setup.dmg")]
+    public void DiskImagesOpenWhenSevenZipIsThere(string name)
+    {
+        Assert.IsTrue(ArchiveDriveService.LooksBrowsable(name), "offered even without 7-Zip, so the footer can say what is missing");
+        Assert.IsFalse(Service().CanBrowse(name));
+        Assert.IsTrue(Service(() => "7z").CanBrowse(name));
+    }
+
+    [TestMethod]
+    [DataRow("disk.vhd")]
+    [DataRow("disk.vhdx")]
+    public void VirtualHardDisksKeepTheirFileAssociation(string name)
+    {
+        Assert.IsFalse(ArchiveDriveService.LooksBrowsable(name));
+        Assert.IsFalse(Service(() => "7z").CanBrowse(name));
+    }
+
     private string Src(params string[] parts) => Path.Combine([_root, "src", .. parts]);
 
     private List<ArchiveItem> Items() =>

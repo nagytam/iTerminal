@@ -34,8 +34,10 @@ public interface IArchiveDriveService : IEntryListingFileSystem
 ///
 /// <para>Three readers behind one listing. ZIP is read with SharpZipLib's <see cref="ZipFile"/>,
 /// which seeks straight to an entry. The TAR family is one stream from front to back, so a listing
-/// reads it through and a file is found by reading up to it. 7z, RAR, ISO and CAB go to the 7-Zip
-/// command-line tool: <c>7z l -slt</c> to list, <c>7z x -so</c> to stream one entry to stdout.</para>
+/// reads it through and a file is found by reading up to it. 7z, RAR, CAB and the disk images (ISO,
+/// IMG, VMDK, WIM, DMG) go to the 7-Zip command-line tool (VHD and VHDX are left to the mount
+/// dialog, so Enter on them keeps its file association): <c>7z l -slt</c> to list, <c>7z x -so</c>
+/// to stream one entry to stdout.</para>
 ///
 /// <para>An archive's listing is read once and kept — keyed by the file's size and time, so an
 /// archive rewritten by Alt+F5 is read again — because every folder of it is drawn from that one
@@ -46,7 +48,7 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
 {
     private static readonly string[] ZipEndings = [".zip"];
     private static readonly string[] TarEndings = [".tar.gz", ".tar.bz2", ".tgz", ".tbz2", ".tbz", ".tar"];
-    private static readonly string[] SevenZipEndings = [".7z", ".rar", ".iso", ".cab"];
+    private static readonly string[] SevenZipEndings = [".7z", ".rar", ".iso", ".cab", ".img", ".vmdk", ".wim", ".dmg"];
 
     private readonly Lazy<string?> _sevenZip = new(locateSevenZip ?? SevenZipArchiveWriter.FindExecutable);
     private readonly ConcurrentDictionary<string, (long Size, DateTime Time, IReadOnlyList<ArchiveIndexEntry> Index)> _indexes = new(StringComparer.OrdinalIgnoreCase);
