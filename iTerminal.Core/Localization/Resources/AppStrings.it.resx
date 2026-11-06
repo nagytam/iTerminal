@@ -3485,7 +3485,7 @@
     <value>collegamento</value>
   </data>
   <data name="Button.RemoveMark" xml:space="preserve">
-    <value>Rimuovi contrassegno (^K)</value>
+    <value>Rimuovi contrassegno (^F)</value>
   </data>
   <data name="Field.OriginMarked" xml:space="preserve">
     <value>Contrassegnato</value>

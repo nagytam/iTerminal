@@ -90,7 +90,7 @@ public class PropertiesDialog : FormDialog
         {
             var removeMarkCommand = new RemoveMarkCommand();
             AddCommand(removeMarkCommand);
-            _removeMarkButton = new Button(UiText.Get("Button.RemoveMark", "Remove mark (^K)"), removeMarkCommand, themeService);
+            _removeMarkButton = new Button(UiText.Get("Button.RemoveMark", "Remove mark (^F)"), removeMarkCommand, themeService);
         }
 
         _info = new InfoLines(themeService);
@@ -193,7 +193,7 @@ public class PropertiesDialog : FormDialog
         });
     }
 
-    /// <summary>Ctrl+K, or the button: asks whether to remove the mark. Nothing is asked of a file that has none.</summary>
+    /// <summary>Ctrl+F, or the button: asks whether to remove the mark. Nothing is asked of a file that has none.</summary>
     public void ArmRemoveMark()
     {
         if (_origin is null || !CanHaveOrigin)
@@ -251,7 +251,7 @@ public class PropertiesDialog : FormDialog
 
         if (_originService is not null)
         {
-            yield return ("Ctrl+K", UiText.Get("DialogHint.RemoveMark", "Remove the download mark (asks y/n)"));
+            yield return ("Ctrl+F", UiText.Get("DialogHint.RemoveMark", "Remove the download mark (asks y/n)"));
         }
     }
 
@@ -686,14 +686,14 @@ public class PropertiesDialog : FormDialog
         }
     }
 
-    /// <summary>Ctrl+K, or the Remove mark button: asks, then removes the download mark like Unblock-File.</summary>
+    /// <summary>Ctrl+F, or the Remove mark button: asks, then removes the download mark like Unblock-File.</summary>
     private sealed class RemoveMarkCommand : Command
     {
         public override string Title => "Remove mark";
         public override string Description => "Remove the mark that says the file came from the internet.";
 
         public override Key? Key { get; init; } =
-            new Key(ConsoleKey.K, false, false, true);
+            new Key(ConsoleKey.F, false, false, true);
 
         public override Task ExecuteAsync(object? args)
         {

@@ -3485,7 +3485,7 @@
     <value>hivatkozás</value>
   </data>
   <data name="Button.RemoveMark" xml:space="preserve">
-    <value>Jelölés eltávolítása (^K)</value>
+    <value>Jelölés eltávolítása (^F)</value>
   </data>
   <data name="Field.OriginMarked" xml:space="preserve">
     <value>Megjelölve</value>

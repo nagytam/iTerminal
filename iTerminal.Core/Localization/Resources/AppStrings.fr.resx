@@ -3485,7 +3485,7 @@
     <value>lien</value>
   </data>
   <data name="Button.RemoveMark" xml:space="preserve">
-    <value>Retirer la marque (^K)</value>
+    <value>Retirer la marque (^F)</value>
   </data>
   <data name="Field.OriginMarked" xml:space="preserve">
     <value>Marqué</value>
