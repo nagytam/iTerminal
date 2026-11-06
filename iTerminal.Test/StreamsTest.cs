@@ -33,7 +33,7 @@ public class StreamsTest
 
     private async Task OpenFromTheFileMenuAsync()
     {
-        await _app.PressAsync("Alt+F");
+        await _app.PressAsync("Ctrl+F");
         await _app.WaitForTextAsync("Streams and Attributes");
         await _app.Driver.ClickAsync("Streams and Attributes");
         await _app.Driver.WaitForModalAsync<StreamsDialog>();
@@ -109,7 +109,7 @@ public class StreamsTest
     public async Task OnTheParentRow_TheMenuEntryDoesNothing()
     {
         _app = await TerminalApp.StartAsync();
-        await _app.SelectEntryAsync("..");
+        await _app.PressAsync("Home");
 
         await _app.PressAsync("Shift+F1");
         await _app.Driver.WaitForModalAsync<CommandPaletteDialog>();
