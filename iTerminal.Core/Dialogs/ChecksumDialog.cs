@@ -32,7 +32,11 @@ public class ChecksumDialog : Dialog
 {
     private const int CaptionWidth = 10;
 
+    /// <summary>Rows kept free for the signatures, because the dialog is sized before they are found: a gap, "Verified", and two signature rows.</summary>
+    private const int SignatureRows = 4;
+
     private readonly IChecksumService _checksumService;
+    private readonly IPublisherSignatureService? _publisherSignatures;
     private readonly InfoLines _info;
     private readonly TextBox _textBoxCompare;
     private readonly InfoLines _verdict;
@@ -47,10 +51,12 @@ public class ChecksumDialog : Dialog
         IChecksumService checksumService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        IPublisherSignatureService? publisherSignatures = null)
         : base(nameof(ChecksumDialog), themeService)
     {
         _checksumService = checksumService;
+        _publisherSignatures = publisherSignatures;
         Title = iConsole.Localization.UiText.Get("Menu.Checksums", "Checksums");
         _textBoxCompare = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Compare", "Compare"), Placeholder = UiText.Get("Field.PasteExpectedHash", "paste the expected hash") };
         _info = new InfoLines(themeService);
@@ -74,6 +80,12 @@ public class ChecksumDialog : Dialog
 
     /// <summary>A checksum found written down beside the file, if any.</summary>
     public ExpectedChecksum? Written { get; private set; }
+
+    /// <summary>
+    /// The publisher signatures found beside the file (or beside the checksum list that names it) and what gpg or
+    /// minisign said; null until the check has run, empty when there are none.
+    /// </summary>
+    public IReadOnlyList<PublisherVerification>? Signatures { get; private set; }
 
     /// <summary>The read started when the dialog opened; nothing waits on it, it exists so a test can.</summary>
     public Task ComputeTask { get; private set; } = Task.CompletedTask;
@@ -100,6 +112,7 @@ public class ChecksumDialog : Dialog
         Result = null;
         Error = null;
         Written = null;
+        Signatures = null;
         Compare = string.Empty;
         _lastCompare = string.Empty;
         _saveStatus = string.Empty;
@@ -130,9 +143,11 @@ public class ChecksumDialog : Dialog
         {
             try
             {
+                Task signatureTask = Task.CompletedTask;
                 if (url.ContainerType == ContainerType.FileSystem)
                 {
                     Written = ChecksumService.FindWrittenChecksum(url.FullName);
+                    signatureTask = VerifySignaturesAsync(url.FullName, Written?.Source, cancellation.Token);
                 }
 
                 var progress = new InlineProgress(bytes => Interlocked.Exchange(ref _bytesRead, bytes));
@@ -141,6 +156,8 @@ public class ChecksumDialog : Dialog
                 {
                     Result = result;
                 }
+
+                await signatureTask;
             }
             catch (OperationCanceledException)
             {
@@ -153,6 +170,31 @@ public class ChecksumDialog : Dialog
                 }
             }
         });
+    }
+
+    /// <summary>The tools run beside the read, on this background task; a failure here never hides the checksums.</summary>
+    private async Task VerifySignaturesAsync(string path, string? writtenSource, CancellationToken cancellationToken)
+    {
+        if (_publisherSignatures is null)
+        {
+            return;
+        }
+
+        try
+        {
+            IReadOnlyList<PublisherVerification> found = await _publisherSignatures.VerifyAsync(path, writtenSource, cancellationToken);
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                Signatures = found;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            Signatures = [];
+        }
     }
 
     /// <summary><see cref="Progress{T}"/> posts to a synchronization context; this reports where it is called.</summary>
@@ -199,7 +241,8 @@ public class ChecksumDialog : Dialog
             rows += (length + valueWidth - 1) / valueWidth;
         }
 
-        return Math.Max(10, rows);
+        // Beside the written checksum's row: a gap, the verdict on the file, and at most two signature rows.
+        return Math.Max(10, rows + SignatureRows);
     }
 
     private static string Row(string caption, string value) => caption.PadRight(CaptionWidth) + value;
@@ -265,6 +308,8 @@ public class ChecksumDialog : Dialog
                     : new(Row("Written", $"✗ does NOT match {written.Source}"), colorScheme.Error));
         }
 
+        AddSignatureLines(lines, result, valueWidth, colorScheme);
+
         _hashRows = hashRows;
         _info.Lines = lines;
 
@@ -289,6 +334,85 @@ public class ChecksumDialog : Dialog
 
         _verdict.Lines = verdict;
     }
+
+    /// <summary>
+    /// The verdict on the file first (it is the row to lose last when the terminal is small), then what each tool said.
+    /// A checksum list counts as verified only for a Good signature made on the very bytes the checksum was read from.
+    /// </summary>
+    private void AddSignatureLines(List<InfoLines.Line> lines, ChecksumResult? result, int valueWidth, ColorScheme colorScheme)
+    {
+        if (Signatures is not { Count: > 0 } signatures || Url is null)
+        {
+            return;
+        }
+
+        string fileName = iTerminal.Core.Commands.FocusedEntry.NameOf(Url);
+        int full = valueWidth + CaptionWidth;
+        lines.Add(default);
+        string caption = UiText.Get("Checksum.Verified.Caption", "Verified");
+        InfoLines.Line? verified = null;
+        foreach (PublisherVerification signature in signatures.Where(s => s.Status == PublisherSignatureStatus.Good))
+        {
+            string signer = signature.Signer.Length > 0 ? signature.Signer : signature.Tool.ToString();
+            if (Written is { } written && signature.Subject == written.Source)
+            {
+                if (signature.SubjectSha256 is null || signature.SubjectSha256 != written.SourceSha256)
+                {
+                    verified = new(Row(caption, string.Format(UiText.Get("Checksum.Verified.Changed", "✗ {0} changed while it was checked — not verified"), written.Source)).Shrink(full) ?? string.Empty, colorScheme.Error);
+                }
+                else if (result is null)
+                {
+                    verified = new(Row(caption, UiText.Get("Checksum.Verified.Waiting", "waiting for the file to be read…")), colorScheme.DisabledForeground);
+                }
+                else if (string.Equals(result.Hashes[written.Algorithm], written.Hash, StringComparison.OrdinalIgnoreCase))
+                {
+                    verified = new(Row(caption, string.Format(UiText.Get("Checksum.Verified.List", "✓ file matches {0}, signed by {1}"), written.Source, signer)).Shrink(full) ?? string.Empty, Color.Green);
+                    break;
+                }
+                else
+                {
+                    verified = new(Row(caption, string.Format(UiText.Get("Checksum.Verified.ListBad", "✗ file does NOT match {0}, which is signed"), written.Source)).Shrink(full) ?? string.Empty, colorScheme.Error);
+                    break;
+                }
+            }
+            else if (signature.Subject == fileName)
+            {
+                verified = new(Row(caption, string.Format(UiText.Get("Checksum.Verified.File", "✓ file matches its signature by {0}"), signer)).Shrink(full) ?? string.Empty, Color.Green);
+                break;
+            }
+        }
+
+        if (verified is { } verifiedLine)
+        {
+            lines.Add(verifiedLine);
+        }
+
+        string captionSig = UiText.Get("Checksum.Sig.Caption", "Signature");
+        int shown = signatures.Count > 2 ? 1 : signatures.Count;
+        for (int i = 0; i < shown; i++)
+        {
+            (string text, Color? color) = DescribeSignature(signatures[i], colorScheme);
+            lines.Add(new(Row(captionSig, $"{signatures[i].Subject}: {text}").Shrink(full) ?? string.Empty, color));
+        }
+
+        if (signatures.Count > shown)
+        {
+            lines.Add(new(Row(captionSig, string.Format(UiText.Get("Checksum.Sig.More", "+{0} more signatures"), signatures.Count - shown)), colorScheme.DisabledForeground));
+        }
+    }
+
+    internal static (string Text, Color? Color) DescribeSignature(PublisherVerification signature, ColorScheme colorScheme) => signature.Status switch
+    {
+        PublisherSignatureStatus.Good => (string.Format(UiText.Get("Checksum.Sig.Good", "good, by a key you hold: {0}"), signature.Signer), Color.Green),
+        PublisherSignatureStatus.ExpiredKey => (string.Format(UiText.Get("Checksum.Sig.Expired", "good, but the key expired: {0}"), signature.Signer), Color.Yellow),
+        PublisherSignatureStatus.Bad => (UiText.Get("Checksum.Sig.Bad", "BAD signature"), colorScheme.Error),
+        PublisherSignatureStatus.UnknownKey => (signature.Signer.Length > 0
+            ? string.Format(UiText.Get("Checksum.Sig.UnknownKey", "unknown key {0} (not in your keyring)"), signature.Signer)
+            : UiText.Get("Checksum.Sig.UnknownKeyNone", "unknown key (no public key is configured)"), Color.Yellow),
+        PublisherSignatureStatus.ToolMissing => (string.Format(UiText.Get("Checksum.Sig.ToolMissing", "{0} is not installed — not checked"), signature.Detail), Color.Yellow),
+        PublisherSignatureStatus.Unchecked => (UiText.Get("Checksum.Sig.Unchecked", "not checked: sigstore needs the signer's identity"), Color.Yellow),
+        _ => (string.Format(UiText.Get("Checksum.Sig.Error", "could not be checked: {0}"), signature.Detail), colorScheme.Error),
+    };
 
     /// <summary>
     /// What to say about a checksum typed into the box: nothing while the box is empty, that it is
