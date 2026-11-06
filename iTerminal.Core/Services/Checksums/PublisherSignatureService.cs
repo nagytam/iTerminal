@@ -231,7 +231,14 @@ public class PublisherSignatureService(IExternalProcessRunner runner) : IPublish
             return Make(PublisherSignatureStatus.Error, detail: exception.Message);
         }
 
-        return verdict with { SubjectSha256 = before.Sha256 };
+        return verdict with { SubjectSha256 = before.Sha256, Signer = Clean(verdict.Signer), Detail = Clean(verdict.Detail) };
+    }
+
+    /// <summary>Text that came out of a signature (a user id, a trusted comment) is the signer's, not ours: no control characters, bounded.</summary>
+    internal static string Clean(string text)
+    {
+        string clean = new([.. text.Where(c => !char.IsControl(c))]);
+        return clean.Length > 80 ? clean[..80] : clean;
     }
 
     private static PublisherVerification FromGpg(ProcessOutput output, Func<PublisherSignatureStatus, string, string, string?, PublisherVerification> make)

@@ -191,8 +191,9 @@ public class ChecksumDialog : Dialog
         catch (OperationCanceledException)
         {
         }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
+        catch (Exception)
         {
+            // Whatever the tools did, the checksums above are still good.
             Signatures = [];
         }
     }

@@ -308,4 +308,14 @@ public class PublisherSignatureServiceTest
         Assert.AreEqual(Convert.ToHexStringLower(SHA256.HashData(bytes)), written.SourceSha256);
         Assert.IsNull(ChecksumService.ParseWritten(bytes, "other.zip", "SHA256SUMS"));
     }
+
+    [Timeout(30_000)]
+    [TestMethod]
+    public void TheSignersText_LosesControlCharactersAndIsBounded()
+    {
+        string cleaned = PublisherSignatureService.Clean("Ann[31m" + new string('x', 200));
+
+        Assert.IsFalse(cleaned.Any(char.IsControl));
+        Assert.AreEqual(80, cleaned.Length);
+    }
 }
