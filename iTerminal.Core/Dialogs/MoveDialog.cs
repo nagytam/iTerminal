@@ -4,6 +4,7 @@ using iConsole.Tasks;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Factories;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Checksums;
 
 namespace iTerminal.Core.Dialogs;
 
@@ -22,18 +23,21 @@ public class MoveDialog : TransferDialog
         IFileSystemService fileSystemService,
         IMemoryDriveService memoryDriveService,
         ISshFileSystemService sshFileSystemService,
-        IArchiveFileSystemService archiveFileSystemService)
+        IArchiveFileSystemService archiveFileSystemService,
+        ISettingsService? settingsService = null,
+        IChecksumService? checksumService = null)
         : base(
             nameof(MoveDialog),
             "Move",
             new MoveCommand(taskManager, progressWindowFactory, errorPromptService, conflictPromptService,
                 new FileSystemResolver(fileSystemService, memoryDriveService, sshFileSystemService, archiveFileSystemService, contentModelService),
-                contentModelService),
+                contentModelService, checksumService),
             'M',
             contentModelService,
             beepService,
             dateTimeProviderService,
-            themeService)
+            themeService,
+            settingsService)
     {
     }
 }

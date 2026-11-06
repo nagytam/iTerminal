@@ -3484,4 +3484,13 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>lien</value>
   </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Vérifier après la copie</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Vérification</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Échec de la vérification : {0} diffère de la source ; la copie a été conservée</value>
+  </data>
 </root>
