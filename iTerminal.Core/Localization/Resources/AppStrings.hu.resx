@@ -3484,4 +3484,28 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>hivatkozás</value>
   </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Jelölés eltávolítása (^K)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Megjelölve</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>Innen</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Hivatkozó</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>Karanténban</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Letöltve</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>Eltávolítja a jelölést, hogy a fájl ne számítson letöltöttnek? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Hiba: a jelölést nem sikerült eltávolítani.</value>
+  </data>
 </root>

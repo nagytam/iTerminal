@@ -3484,4 +3484,28 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>enlace</value>
   </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Quitar marca (^K)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Marcado</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>Desde</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Referente</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>En cuarentena</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Descargado</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>¿Quitar la marca para que el archivo ya no figure como descargado? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Error: no se pudo quitar la marca.</value>
+  </data>
 </root>

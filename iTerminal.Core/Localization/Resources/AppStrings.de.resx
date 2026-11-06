@@ -3484,4 +3484,28 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>Link</value>
   </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Markierung entfernen (^K)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Markiert</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>Von</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Verweis</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>Unter Quarantäne</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Heruntergeladen</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>Markierung entfernen, damit die Datei nicht mehr als heruntergeladen gilt? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Fehler: Die Markierung konnte nicht entfernt werden.</value>
+  </data>
 </root>
