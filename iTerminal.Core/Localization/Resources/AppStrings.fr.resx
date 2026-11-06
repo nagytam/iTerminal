@@ -3484,6 +3484,96 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>lien</value>
   </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Retirer la marque (^F)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Marqué</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>Depuis</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Référent</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>En quarantaine</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Téléchargé</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>Retirer la marque pour que le fichier ne soit plus signalé comme téléchargé ? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Erreur : la marque n'a pas pu être retirée.</value>
+  </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Retirer la marque</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Garder la marque</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Retirer la marque de téléchargement (demande y/n)</value>
+  </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Vérifier après la copie</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Vérification</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Échec de la vérification : {0} diffère de la source ; la copie a été conservée</value>
+  </data>
+  <data name="Checksum.Verified.Caption" xml:space="preserve">
+    <value>Vérifié</value>
+  </data>
+  <data name="Checksum.Verified.Changed" xml:space="preserve">
+    <value>✗ {0} a changé pendant la vérification — non vérifié</value>
+  </data>
+  <data name="Checksum.Verified.Waiting" xml:space="preserve">
+    <value>attend la lecture du fichier…</value>
+  </data>
+  <data name="Checksum.Verified.List" xml:space="preserve">
+    <value>✓ le fichier correspond à {0}, signé par {1}</value>
+  </data>
+  <data name="Checksum.Verified.ListBad" xml:space="preserve">
+    <value>✗ le fichier ne correspond PAS à {0}, qui est signé</value>
+  </data>
+  <data name="Checksum.Verified.File" xml:space="preserve">
+    <value>✓ le fichier correspond à sa signature par {0}</value>
+  </data>
+  <data name="Checksum.Sig.Caption" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="Checksum.Sig.More" xml:space="preserve">
+    <value>+{0} autres signatures</value>
+  </data>
+  <data name="Checksum.Sig.Good" xml:space="preserve">
+    <value>valide, par une clé que vous détenez : {0}</value>
+  </data>
+  <data name="Checksum.Sig.Expired" xml:space="preserve">
+    <value>valide, mais la clé a expiré : {0}</value>
+  </data>
+  <data name="Checksum.Sig.Bad" xml:space="preserve">
+    <value>signature INVALIDE</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
+    <value>clé inconnue {0} (absente de votre trousseau)</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
+    <value>clé inconnue (aucune clé publique configurée)</value>
+  </data>
+  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
+    <value>{0} n'est pas installé — non vérifié</value>
+  </data>
+  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
+    <value>non vérifié : sigstore exige l'identité du signataire</value>
+  </data>
+  <data name="Checksum.Sig.Error" xml:space="preserve">
+    <value>vérification impossible : {0}</value>
+  </data>
   <data name="Dialog.Streams" xml:space="preserve">
     <value>Flux et attributs</value>
   </data>
@@ -3567,53 +3657,5 @@
   </data>
   <data name="Streams.Empty" xml:space="preserve">
     <value>(vide)</value>
-  </data>
-  <data name="Checksum.Verified.Caption" xml:space="preserve">
-    <value>Vérifié</value>
-  </data>
-  <data name="Checksum.Verified.Changed" xml:space="preserve">
-    <value>✗ {0} a changé pendant la vérification — non vérifié</value>
-  </data>
-  <data name="Checksum.Verified.Waiting" xml:space="preserve">
-    <value>attend la lecture du fichier…</value>
-  </data>
-  <data name="Checksum.Verified.List" xml:space="preserve">
-    <value>✓ le fichier correspond à {0}, signé par {1}</value>
-  </data>
-  <data name="Checksum.Verified.ListBad" xml:space="preserve">
-    <value>✗ le fichier ne correspond PAS à {0}, qui est signé</value>
-  </data>
-  <data name="Checksum.Verified.File" xml:space="preserve">
-    <value>✓ le fichier correspond à sa signature par {0}</value>
-  </data>
-  <data name="Checksum.Sig.Caption" xml:space="preserve">
-    <value>Signature</value>
-  </data>
-  <data name="Checksum.Sig.More" xml:space="preserve">
-    <value>+{0} autres signatures</value>
-  </data>
-  <data name="Checksum.Sig.Good" xml:space="preserve">
-    <value>valide, par une clé que vous détenez : {0}</value>
-  </data>
-  <data name="Checksum.Sig.Expired" xml:space="preserve">
-    <value>valide, mais la clé a expiré : {0}</value>
-  </data>
-  <data name="Checksum.Sig.Bad" xml:space="preserve">
-    <value>signature INVALIDE</value>
-  </data>
-  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
-    <value>clé inconnue {0} (absente de votre trousseau)</value>
-  </data>
-  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
-    <value>clé inconnue (aucune clé publique configurée)</value>
-  </data>
-  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
-    <value>{0} n'est pas installé — non vérifié</value>
-  </data>
-  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
-    <value>non vérifié : sigstore exige l'identité du signataire</value>
-  </data>
-  <data name="Checksum.Sig.Error" xml:space="preserve">
-    <value>vérification impossible : {0}</value>
   </data>
 </root>

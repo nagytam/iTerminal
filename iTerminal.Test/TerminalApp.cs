@@ -215,6 +215,9 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.DriveActions>();
                 services.AddSingleton<Core.Services.Drives.IDriveActionsService>(provider => provider.GetRequiredService<SandboxServices.DriveActions>());
                 services.AddSingleton<Core.Services.AccessControl.IAccessControlService, SandboxServices.AccessControl>();
+                // No test reads or removes the download mark of a file of the machine it runs on.
+                services.AddSingleton<SandboxServices.FileOrigins>();
+                services.AddSingleton<Core.Services.Origin.IFileOriginService>(provider => provider.GetRequiredService<SandboxServices.FileOrigins>());
                 // No test scans for, pairs with or forgets a device of the machine it runs on.
                 services.AddSingleton<Core.Services.Bluetooth.IBluetoothService, SandboxServices.Bluetooth>();
                 // No test prints on, or lists the queue of, a printer of the machine it runs on.

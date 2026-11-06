@@ -3484,6 +3484,96 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>Link</value>
   </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Markierung entfernen (^F)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Markiert</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>Von</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Verweis</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>Unter Quarantäne</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Heruntergeladen</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>Markierung entfernen, damit die Datei nicht mehr als heruntergeladen gilt? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Fehler: Die Markierung konnte nicht entfernt werden.</value>
+  </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Markierung entfernen</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Markierung behalten</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Download-Markierung entfernen (fragt y/n)</value>
+  </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Nach dem Kopieren prüfen</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Prüfe</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Prüfung fehlgeschlagen: {0} weicht von der Quelle ab; die Kopie wurde behalten</value>
+  </data>
+  <data name="Checksum.Verified.Caption" xml:space="preserve">
+    <value>Geprüft</value>
+  </data>
+  <data name="Checksum.Verified.Changed" xml:space="preserve">
+    <value>✗ {0} wurde während der Prüfung geändert — nicht verifiziert</value>
+  </data>
+  <data name="Checksum.Verified.Waiting" xml:space="preserve">
+    <value>wartet auf das Lesen der Datei…</value>
+  </data>
+  <data name="Checksum.Verified.List" xml:space="preserve">
+    <value>✓ Datei stimmt mit {0} überein, signiert von {1}</value>
+  </data>
+  <data name="Checksum.Verified.ListBad" xml:space="preserve">
+    <value>✗ Datei stimmt NICHT mit {0} überein, das signiert ist</value>
+  </data>
+  <data name="Checksum.Verified.File" xml:space="preserve">
+    <value>✓ Datei stimmt mit ihrer Signatur von {0} überein</value>
+  </data>
+  <data name="Checksum.Sig.Caption" xml:space="preserve">
+    <value>Signatur</value>
+  </data>
+  <data name="Checksum.Sig.More" xml:space="preserve">
+    <value>+{0} weitere Signaturen</value>
+  </data>
+  <data name="Checksum.Sig.Good" xml:space="preserve">
+    <value>gut, von einem Schlüssel, den Sie besitzen: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Expired" xml:space="preserve">
+    <value>gut, aber der Schlüssel ist abgelaufen: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Bad" xml:space="preserve">
+    <value>FALSCHE Signatur</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
+    <value>unbekannter Schlüssel {0} (nicht in Ihrem Schlüsselring)</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
+    <value>unbekannter Schlüssel (kein öffentlicher Schlüssel eingerichtet)</value>
+  </data>
+  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
+    <value>{0} ist nicht installiert — nicht geprüft</value>
+  </data>
+  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
+    <value>nicht geprüft: Sigstore braucht die Identität des Unterzeichners</value>
+  </data>
+  <data name="Checksum.Sig.Error" xml:space="preserve">
+    <value>konnte nicht geprüft werden: {0}</value>
+  </data>
   <data name="Dialog.Streams" xml:space="preserve">
     <value>Streams und Attribute</value>
   </data>
@@ -3567,53 +3657,5 @@
   </data>
   <data name="Streams.Empty" xml:space="preserve">
     <value>(leer)</value>
-  </data>
-  <data name="Checksum.Verified.Caption" xml:space="preserve">
-    <value>Geprüft</value>
-  </data>
-  <data name="Checksum.Verified.Changed" xml:space="preserve">
-    <value>✗ {0} wurde während der Prüfung geändert — nicht verifiziert</value>
-  </data>
-  <data name="Checksum.Verified.Waiting" xml:space="preserve">
-    <value>wartet auf das Lesen der Datei…</value>
-  </data>
-  <data name="Checksum.Verified.List" xml:space="preserve">
-    <value>✓ Datei stimmt mit {0} überein, signiert von {1}</value>
-  </data>
-  <data name="Checksum.Verified.ListBad" xml:space="preserve">
-    <value>✗ Datei stimmt NICHT mit {0} überein, das signiert ist</value>
-  </data>
-  <data name="Checksum.Verified.File" xml:space="preserve">
-    <value>✓ Datei stimmt mit ihrer Signatur von {0} überein</value>
-  </data>
-  <data name="Checksum.Sig.Caption" xml:space="preserve">
-    <value>Signatur</value>
-  </data>
-  <data name="Checksum.Sig.More" xml:space="preserve">
-    <value>+{0} weitere Signaturen</value>
-  </data>
-  <data name="Checksum.Sig.Good" xml:space="preserve">
-    <value>gut, von einem Schlüssel, den Sie besitzen: {0}</value>
-  </data>
-  <data name="Checksum.Sig.Expired" xml:space="preserve">
-    <value>gut, aber der Schlüssel ist abgelaufen: {0}</value>
-  </data>
-  <data name="Checksum.Sig.Bad" xml:space="preserve">
-    <value>FALSCHE Signatur</value>
-  </data>
-  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
-    <value>unbekannter Schlüssel {0} (nicht in Ihrem Schlüsselring)</value>
-  </data>
-  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
-    <value>unbekannter Schlüssel (kein öffentlicher Schlüssel eingerichtet)</value>
-  </data>
-  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
-    <value>{0} ist nicht installiert — nicht geprüft</value>
-  </data>
-  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
-    <value>nicht geprüft: Sigstore braucht die Identität des Unterzeichners</value>
-  </data>
-  <data name="Checksum.Sig.Error" xml:space="preserve">
-    <value>konnte nicht geprüft werden: {0}</value>
   </data>
 </root>

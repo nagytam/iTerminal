@@ -1,3 +1,5 @@
+using iConsole.Data;
+
 namespace iTerminal.Core.Helper;
 
 /// <summary>
@@ -17,6 +19,15 @@ internal static class UrlPath
         var trimmed = url.TrimEnd('/', '\\');
         var scheme = url.IndexOf("://", StringComparison.Ordinal);
         return scheme >= 0 && trimmed.Length < scheme + 3 ? url[..(scheme + 3)] : trimmed;
+    }
+
+    /// <summary>True when <paramref name="inner"/> is <paramref name="outer"/> itself or lies inside it (case-insensitive, either separator).</summary>
+    public static bool SameOrInside(Url outer, Url inner)
+    {
+        static string Norm(string? url) => TrimFolder(url).Replace('\\', '/');
+        string o = Norm(outer.FullUrl);
+        string i = Norm(inner.FullUrl);
+        return i.Equals(o, StringComparison.OrdinalIgnoreCase) || i.StartsWith(o + "/", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>The separator a URL is written with: backslashes only on a local Windows path ("file://C:\x" still has the scheme's slashes).</summary>

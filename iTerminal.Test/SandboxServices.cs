@@ -939,4 +939,39 @@ public static class SandboxServices
 
         public string? WhyCannotFormat(string root, IEnumerable<string> foldersInUse) => FormatRefusal;
     }
+
+    /// <summary>
+    /// Download marks kept in memory: no test reads or removes the Zone.Identifier stream or extended attributes of a file of the
+    /// machine running the suite. <see cref="Mark"/> gives a path a mark; <see cref="RemoveAsync"/> forgets it.
+    /// </summary>
+    public sealed class FileOrigins : Core.Services.Origin.IFileOriginService
+    {
+        private readonly Lock _lock = new();
+        private readonly Dictionary<string, Core.Services.Origin.FileOrigin> _marks = new(StringComparer.OrdinalIgnoreCase);
+
+        public void Mark(string path, Core.Services.Origin.FileOrigin origin)
+        {
+            lock (_lock)
+            {
+                _marks[Path.GetFullPath(path)] = origin;
+            }
+        }
+
+        public Task<Core.Services.Origin.FileOrigin?> ReadAsync(string path, CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                return Task.FromResult(_marks.GetValueOrDefault(Path.GetFullPath(path)));
+            }
+        }
+
+        public Task<bool> RemoveAsync(string path, CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                _marks.Remove(Path.GetFullPath(path));
+                return Task.FromResult(true);
+            }
+        }
+    }
 }

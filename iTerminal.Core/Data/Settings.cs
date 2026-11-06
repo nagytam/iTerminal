@@ -53,6 +53,12 @@ public static class Settings
     public const string DocumentsOcrEnabled = nameof(DocumentsOcrEnabled);
 
     /// <summary>
+    /// The "Verify after copy" check box of the Copy and Move dialogs: hash the source and the copy after each file and compare.
+    /// Off by default (it reads every file twice more); remembered from the last transfer started, read when the dialog opens.
+    /// </summary>
+    public const string TransferVerifyAfterCopy = nameof(TransferVerifyAfterCopy);
+
+    /// <summary>
     /// The feature flag for Sixel bitmaps (the image viewer and the splash emblem). On by default, and then used only where the
     /// terminal is detected to draw Sixel; off draws the ASCII art and the text splash everywhere. Read live, so it applies the
     /// next time a picture is drawn.
