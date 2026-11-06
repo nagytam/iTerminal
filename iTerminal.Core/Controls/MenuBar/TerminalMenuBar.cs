@@ -128,7 +128,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         PrintDialog? printDialog = null,
         iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
-        MultiRenameDialog? multiRenameDialog = null
+        MultiRenameDialog? multiRenameDialog = null,
+        HashManifestDialog? hashManifestDialog = null,
+        iTerminal.Core.Services.FileSystemResolver? fileSystemResolver = null
         )
         : base([], themeService)
     {
@@ -158,7 +160,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             signatureDialog: signatureDialog,
             malwareScanService: malwareScanService,
             notificationService: notificationService,
-            printDialog: printDialog));
+            printDialog: printDialog,
+            hashManifestDialog: hashManifestDialog,
+            fileSystemResolver: fileSystemResolver));
 
         AddMenuItem(new EditMenuItem(
             contentModelService,

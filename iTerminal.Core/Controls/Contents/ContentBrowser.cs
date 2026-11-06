@@ -67,6 +67,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private DiskImageDialog? _diskImageDialog { get; set; }
     private SecureWipeDialog? _secureWipeDialog { get; set; }
     private SignatureDialog? _signatureDialog { get; set; }
+    private HashManifestDialog? _hashManifestDialog { get; set; }
     private PrintDialog? _printDialog { get; set; }
     private iTerminal.Core.Services.Defender.IMalwareScanService? _malwareScanService { get; set; }
     private INotificationService? _notificationService { get; set; }
@@ -117,7 +118,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         CsvViewerDialog? csvViewerDialog = null,
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
         PrintDialog? printDialog = null,
-        SqliteViewerDialog? sqliteViewerDialog = null)
+        SqliteViewerDialog? sqliteViewerDialog = null,
+        HashManifestDialog? hashManifestDialog = null)
         : base(themeService)
     {
         _webBrowserDialog = webBrowserDialog;
@@ -130,6 +132,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _diskImageDialog = diskImageDialog;
         _secureWipeDialog = secureWipeDialog;
         _signatureDialog = signatureDialog;
+        _hashManifestDialog = hashManifestDialog;
         _printDialog = printDialog;
         _clipboard = clipboardOperations;
         _fileDiffDialog = fileDiffDialog;
@@ -330,6 +333,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_malwareScanService is { IsAvailable: true })
         {
             AddCommand(new ScanWithDefenderCommand(ContentModelService, _malwareScanService, _notificationService));
+        }
+        if (_hashManifestDialog is not null)
+        {
+            AddCommand(new HashManifestDialogCommand(_hashManifestDialog, ContentModelService, _fileSystemResolver));
         }
         if (_signatureDialog is not null)
         {

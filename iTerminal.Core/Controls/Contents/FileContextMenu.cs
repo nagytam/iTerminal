@@ -84,6 +84,7 @@ public static class FileContextMenu
         AddCommands<CreateLinkDialogCommand>(items, snapshot, "Create link");
         AddCommands<EditLinkDialogCommand>(items, snapshot, "Edit link");
         AddCommands<ChecksumDialogCommand>(items, snapshot, "Checksums");
+        AddCommands<HashManifestDialogCommand>(items, snapshot, "Hash manifest");
         AddCommands<SignatureDialogCommand>(items, snapshot, "Signatures");
         AddPrintCommand(items, snapshot);
         AddCommands<SecureWipeDialogCommand>(items, snapshot, "Secure wipe");

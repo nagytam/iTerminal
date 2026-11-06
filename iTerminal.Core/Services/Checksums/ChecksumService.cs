@@ -112,6 +112,44 @@ public partial class ChecksumService : IChecksumService
         }
     }
 
+    /// <summary>
+    /// One algorithm in one pass over the file — what a manifest needs, where hashing with all four
+    /// would be four times the work for a tree of files. Any drive, like <see cref="ComputeAsync"/>.
+    /// </summary>
+    /// <param name="progress">Reports the bytes read so far in this file.</param>
+    public static async Task<string> ComputeOneAsync(Url url, IFileSystem? fileSystem, ChecksumAlgorithm algorithm, IProgress<long>? progress = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(url);
+
+        using IncrementalHash hash = IncrementalHash.CreateHash(NameOf(algorithm));
+        long total = 0;
+        void Append(ReadOnlySpan<byte> data)
+        {
+            hash.AppendData(data);
+            total += data.Length;
+            progress?.Report(total);
+        }
+
+        if (url.ContainerType == ContainerType.FileSystem)
+        {
+            await using var file = new FileStream(url.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, 1 << 16, FileOptions.Asynchronous | FileOptions.SequentialScan);
+            byte[] buffer = new byte[1 << 16];
+            int read;
+            while ((read = await file.ReadAsync(buffer, cancellationToken)) > 0)
+            {
+                Append(buffer.AsSpan(0, read));
+            }
+        }
+        else
+        {
+            ArgumentNullException.ThrowIfNull(fileSystem);
+            await fileSystem.StreamToAsync(url, new HashingStream(Append, cancellationToken), null, cancellationToken);
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+        return Convert.ToHexStringLower(hash.GetHashAndReset());
+    }
+
     #region Reading a checksum someone wrote down
     /// <summary>The algorithm a hex string of this length is a checksum of, or null when it is none of them.</summary>
     public static ChecksumAlgorithm? AlgorithmFor(string? hash)
@@ -173,6 +211,48 @@ public partial class ChecksumService : IChecksumService
         // A file that is just the hash: only when it is the single thing in it, or a list of
         // other files' checksums would be read as this file's.
         return lines.Count == 1 && AlgorithmFor(lines[0]) is not null ? Normalize(lines[0]) : null;
+    }
+
+    /// <summary>One line of a checksum list: the hash, the algorithm its length says, and the path as written ('/'-separated, no leading <c>./</c>).</summary>
+    public sealed record ManifestEntry(string Hash, ChecksumAlgorithm Algorithm, string Path);
+
+    /// <summary>
+    /// Every entry of a checksum list (<c>hash  path</c>, <c>hash *path</c>, BSD <c>SHA256 (path) = hash</c>) —
+    /// the same line formats <see cref="ParseChecksumFile"/> reads for one file, here for all of them.
+    /// Comments, blank lines and lines that are no checksum are skipped.
+    /// </summary>
+    public static IReadOnlyList<ManifestEntry> ParseManifest(string? text)
+    {
+        List<ManifestEntry> entries = [];
+        foreach (string raw in (text ?? string.Empty).Split('\n'))
+        {
+            string line = raw.Trim().TrimStart('﻿');
+            if (line.Length == 0 || line.StartsWith('#'))
+            {
+                continue;
+            }
+
+            Match match = GnuLine().Match(line);
+            if (!match.Success)
+            {
+                match = BsdLine().Match(line);
+            }
+
+            if (!match.Success || AlgorithmFor(match.Groups["hash"].Value) is not { } algorithm)
+            {
+                continue;
+            }
+
+            string path = match.Groups["name"].Value.Trim().Replace('\\', '/');
+            while (path.StartsWith("./", StringComparison.Ordinal))
+            {
+                path = path[2..];
+            }
+
+            entries.Add(new ManifestEntry(Normalize(match.Groups["hash"].Value), algorithm, path));
+        }
+
+        return entries;
     }
 
     /// <summary>A list names files as they were when it was written — often with a folder in front (<c>./dist/app.zip</c>).</summary>

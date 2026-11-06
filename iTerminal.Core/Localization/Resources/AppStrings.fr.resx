@@ -3484,4 +3484,100 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>lien</value>
   </data>
+  <data name="Dialog.HashManifest" xml:space="preserve">
+    <value>Manifeste de hachages</value>
+  </data>
+  <data name="Menu.HashManifestItem" xml:space="preserve">
+    <value>Manifeste de hachages…</value>
+  </data>
+  <data name="Manifest.Field.Algorithm" xml:space="preserve">
+    <value>Algorithme</value>
+  </data>
+  <data name="Manifest.Status.Ready" xml:space="preserve">
+    <value>F2 crée un manifeste, F3 en vérifie un.</value>
+  </data>
+  <data name="Manifest.Status.NoFolder" xml:space="preserve">
+    <value>Il n'y a aucun dossier sur lequel travailler.</value>
+  </data>
+  <data name="Manifest.Verb.Creating" xml:space="preserve">
+    <value>Création</value>
+  </data>
+  <data name="Manifest.Verb.Verifying" xml:space="preserve">
+    <value>Vérification</value>
+  </data>
+  <data name="Manifest.Status.Listing" xml:space="preserve">
+    <value>Liste des fichiers…</value>
+  </data>
+  <data name="Manifest.Status.CreateFailures" xml:space="preserve">
+    <value>Non écrit : {0} fichier(s) illisible(s).</value>
+  </data>
+  <data name="Manifest.Status.NoFiles" xml:space="preserve">
+    <value>Il n'y a rien à hacher ici.</value>
+  </data>
+  <data name="Manifest.Status.Saved" xml:space="preserve">
+    <value>{0} enregistré : {1} fichier(s).</value>
+  </data>
+  <data name="Manifest.Status.AlreadySaysSo" xml:space="preserve">
+    <value>{0} dit déjà la même chose.</value>
+  </data>
+  <data name="Manifest.Status.SaysSomethingElse" xml:space="preserve">
+    <value>{0} existe et dit autre chose — non écrasé.</value>
+  </data>
+  <data name="Manifest.Status.NotLocal" xml:space="preserve">
+    <value>Un manifeste ne peut être écrit que dans un dossier du disque local.</value>
+  </data>
+  <data name="Manifest.Status.WriteFailed" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="Manifest.Status.StoppedCreate" xml:space="preserve">
+    <value>Arrêté — rien n'a été écrit.</value>
+  </data>
+  <data name="Manifest.Status.Stopped" xml:space="preserve">
+    <value>Arrêté.</value>
+  </data>
+  <data name="Manifest.Status.Failed" xml:space="preserve">
+    <value>Échec : {0}</value>
+  </data>
+  <data name="Manifest.Status.NoManifest" xml:space="preserve">
+    <value>Aucun manifeste ici : placez le curseur sur un (SHA256SUMS…) ou créez-en un avec F2.</value>
+  </data>
+  <data name="Manifest.Summary" xml:space="preserve">
+    <value>{0} : {1} OK, {2} modifié(s), {3} manquant(s), {4} en trop, {5} illisible(s).</value>
+  </data>
+  <data name="Manifest.Hint.Create" xml:space="preserve">
+    <value>Créer le manifeste</value>
+  </data>
+  <data name="Manifest.Hint.Verify" xml:space="preserve">
+    <value>Vérifier d'après un manifeste</value>
+  </data>
+  <data name="Manifest.Hint.Stop" xml:space="preserve">
+    <value>Arrêter la vérification ou fermer</value>
+  </data>
+  <data name="Manifest.Kind.Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Manifest.Kind.Changed" xml:space="preserve">
+    <value>modifié</value>
+  </data>
+  <data name="Manifest.Kind.Missing" xml:space="preserve">
+    <value>manquant</value>
+  </data>
+  <data name="Manifest.Kind.Extra" xml:space="preserve">
+    <value>en trop</value>
+  </data>
+  <data name="Manifest.Kind.Unreadable" xml:space="preserve">
+    <value>illisible</value>
+  </data>
+  <data name="Manifest.Scope.Whole" xml:space="preserve">
+    <value>Couvre : toute l'arborescence du dossier</value>
+  </data>
+  <data name="Manifest.Scope.Rows" xml:space="preserve">
+    <value>Couvre : {0} ligne(s) sélectionnée(s) et tout ce qu'elles contiennent</value>
+  </data>
+  <data name="Manifest.Scope.Folder" xml:space="preserve">
+    <value>Dossier : {0}</value>
+  </data>
+  <data name="Manifest.Working" xml:space="preserve">
+    <value>{0}… {1} % ({2} sur {3} fichiers)</value>
+  </data>
 </root>
