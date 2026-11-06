@@ -865,4 +865,16 @@
   <data name="Hdf.Hint.Dimension" xml:space="preserve">
     <value>Elegir la dimensión activa</value>
   </data>
+  <data name="Disguise.TypeMismatch" xml:space="preserve">
+    <value>El contenido es {0}, pero el nombre dice .{1}</value>
+  </data>
+  <data name="Disguise.DoubleExtension" xml:space="preserve">
+    <value>Doble extensión: muestra .{0}, se ejecuta como .{1}</value>
+  </data>
+  <data name="Disguise.HiddenCharacters" xml:space="preserve">
+    <value>El nombre tiene caracteres ocultos o que cambian la dirección</value>
+  </data>
+  <data name="Disguise.Caption" xml:space="preserve">
+    <value>Advertencia</value>
+  </data>
 </root>

@@ -5,11 +5,13 @@ using iConsole.Controls.Buttons;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
+using iConsole.Security;
 using iConsole.Services;
 using iTerminal.Core.Controls;
 using iTerminal.Core.Helper;
 using iTerminal.Core.Services.Labels;
 using iTerminal.Core.Services.Properties;
+using iTerminal.Core.Services.Security;
 using System.Globalization;
 
 namespace iTerminal.Core.Dialogs;
@@ -27,7 +29,7 @@ namespace iTerminal.Core.Dialogs;
 public class PropertiesDialog : FormDialog
 {
     private const int CaptionWidth = 11;
-    private const int InfoRows = 13;
+    private const int InfoRows = 15;
     private static readonly string[] DateFormats = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm"];
 
     private readonly IFilePropertiesService _propertiesService;
@@ -338,10 +340,26 @@ public class PropertiesDialog : FormDialog
         var kind = (isLink ? "Link to a " : string.Empty) + (properties.IsFolder ? "folder" : "file");
         var lines = new List<InfoLines.Line>
         {
-            new(Row("Name", properties.Name.Shrink(valueWidth) ?? string.Empty)),
+            new(Row("Name", FileDisguise.Mask(properties.Name).Shrink(valueWidth) ?? string.Empty)),
             new(Row("Location", (Path.GetDirectoryName(properties.Path) ?? string.Empty).Shrink(valueWidth) ?? string.Empty)),
             new(Row("Type", char.ToUpperInvariant(kind[0]) + kind[1..])),
         };
+
+        if (!properties.IsFolder && !isLink)
+        {
+            // Name checks, plus the first bytes when the info strip has already read them (the cache; no I/O here).
+            DisguiseFindings findings = FileDisguiseCache.Findings(properties.Path, properties.Name);
+            FileDisguiseCache.TryGet(properties.Path, out FileKind detected);
+            foreach (string sentence in FileDisguiseMessage.Describe(properties.Name, findings, detected))
+            {
+                lines.Add(new(Row(UiText.Get("Disguise.Caption", "Warning"), sentence.Shrink(valueWidth) ?? string.Empty), ThemeService.CurrentColorScheme.Error));
+            }
+
+            if (findings.HasFlag(DisguiseFindings.HiddenCharacters))
+            {
+                lines.Add(new(Row(string.Empty, FileDisguise.Reveal(properties.Name).Shrink(valueWidth) ?? string.Empty), ThemeService.CurrentColorScheme.Error));
+            }
+        }
 
         if (isLink)
         {
