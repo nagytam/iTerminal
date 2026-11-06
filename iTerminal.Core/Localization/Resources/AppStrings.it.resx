@@ -3508,4 +3508,13 @@
   <data name="Msg.RemoveMarkFailed" xml:space="preserve">
     <value>Errore: impossibile rimuovere il contrassegno.</value>
   </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Rimuovi il contrassegno</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Mantieni il contrassegno</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Rimuovi il contrassegno di download (chiede y/n)</value>
+  </data>
 </root>

@@ -3508,4 +3508,13 @@
   <data name="Msg.RemoveMarkFailed" xml:space="preserve">
     <value>Fehler: Die Markierung konnte nicht entfernt werden.</value>
   </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Markierung entfernen</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Markierung behalten</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Download-Markierung entfernen (fragt y/n)</value>
+  </data>
 </root>

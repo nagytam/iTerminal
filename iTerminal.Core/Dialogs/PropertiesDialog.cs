@@ -240,6 +240,21 @@ public class PropertiesDialog : FormDialog
         UpdateLines();
     }
 
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        if (_removeArmed)
+        {
+            yield return ("y", UiText.Get("DialogHint.RemoveMarkYes", "Remove the mark"));
+            yield return ("n / Esc", UiText.Get("DialogHint.RemoveMarkNo", "Keep the mark"));
+            yield break;
+        }
+
+        if (_originService is not null)
+        {
+            yield return ("Ctrl+K", UiText.Get("DialogHint.RemoveMark", "Remove the download mark (asks y/n)"));
+        }
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         if (_removeArmed)

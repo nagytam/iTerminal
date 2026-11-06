@@ -3508,4 +3508,13 @@
   <data name="Msg.RemoveMarkFailed" xml:space="preserve">
     <value>Erreur : la marque n'a pas pu être retirée.</value>
   </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Retirer la marque</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Garder la marque</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Retirer la marque de téléchargement (demande y/n)</value>
+  </data>
 </root>

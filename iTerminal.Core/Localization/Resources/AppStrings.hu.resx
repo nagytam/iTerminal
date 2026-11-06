@@ -3508,4 +3508,13 @@
   <data name="Msg.RemoveMarkFailed" xml:space="preserve">
     <value>Hiba: a jelölést nem sikerült eltávolítani.</value>
   </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Jelölés eltávolítása</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Jelölés megtartása</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Letöltési jelölés eltávolítása (y/n kérdés)</value>
+  </data>
 </root>
