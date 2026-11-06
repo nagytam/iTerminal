@@ -129,9 +129,14 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
         MultiRenameDialog? multiRenameDialog = null,
+<<<<<<< HEAD
         HashManifestDialog? hashManifestDialog = null,
         iTerminal.Core.Services.FileSystemResolver? fileSystemResolver = null,
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null
+=======
+        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null
+>>>>>>> github/main
         )
         : base([], themeService)
     {
@@ -162,9 +167,14 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             malwareScanService: malwareScanService,
             notificationService: notificationService,
             printDialog: printDialog,
+<<<<<<< HEAD
             hashManifestDialog: hashManifestDialog,
             fileSystemResolver: fileSystemResolver,
             hdfViewerDialog: hdfViewerDialog));
+=======
+            hdfViewerDialog: hdfViewerDialog,
+            executableAnalysisDialog: executableAnalysisDialog));
+>>>>>>> github/main
 
         AddMenuItem(new EditMenuItem(
             contentModelService,

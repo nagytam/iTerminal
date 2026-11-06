@@ -3579,6 +3579,49 @@
   </data>
   <data name="Manifest.Working" xml:space="preserve">
     <value>{0}… {1}% ({2} di {3} file)</value>
+  </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Rimuovi contrassegno (^F)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Contrassegnato</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>Da</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Referrer</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>In quarantena</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Scaricato</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>Rimuovere il contrassegno così il file non risulta più scaricato? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Errore: impossibile rimuovere il contrassegno.</value>
+  </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Rimuovi il contrassegno</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Mantieni il contrassegno</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Rimuovi il contrassegno di download (chiede y/n)</value>
+  </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Verifica dopo la copia</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Verifica in corso</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Verifica non riuscita: {0} differisce dall'origine; la copia è stata conservata</value>
+  </data>
   <data name="Checksum.Verified.Caption" xml:space="preserve">
     <value>Controllo</value>
   </data>

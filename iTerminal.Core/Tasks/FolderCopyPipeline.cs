@@ -3,6 +3,7 @@ using iConsole.Interfaces;
 using iConsole.Services;
 using iConsole.Tasks;
 using iTerminal.Core.Helper;
+using iTerminal.Core.Services.Checksums;
 
 namespace iTerminal.Core.Tasks;
 
@@ -34,7 +35,9 @@ internal static class FolderCopyPipeline
         Action<long>? reportBytes = null,
         Action<Url>? onFileStarted = null,
         Func<CancellationToken, Task>? beforeFile = null,
-        PauseGate? pauseGate = null)
+        PauseGate? pauseGate = null,
+        Func<Url, Url, CancellationToken, Task>? verify = null,
+        Action<Url>? onVerifyStarted = null)
     {
         long processedFiles = 0;
         long processedBytes = 0;
@@ -97,6 +100,13 @@ internal static class FolderCopyPipeline
                             });
 
                         await PipelinedFileCopyHelper.CopyAsync(source, target, item.Source, item.Target, fileProgress, linkedCts.Token, pauseGate);
+                        if (verify is not null)
+                        {
+                            // Before the source goes: a move removes it only once the copy is known good.
+                            onVerifyStarted?.Invoke(item.Source);
+                            await verify(item.Source, item.Target, linkedCts.Token);
+                        }
+
                         onItemSucceeded?.Invoke(item.Source);
                     }
                     catch (OperationCanceledException)
@@ -119,7 +129,11 @@ internal static class FolderCopyPipeline
                         {
                             failedItems.Add((item.Source, ex.Message));
                         }
-                        TryDeletePartialTarget(target, item.Target);
+                        if (ex is not VerificationFailedException)
+                        {
+                            // A copy that failed its check is complete and kept for the user to look at.
+                            TryDeletePartialTarget(target, item.Target);
+                        }
                     }
 
                     Interlocked.Increment(ref processedFiles);

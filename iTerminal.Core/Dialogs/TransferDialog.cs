@@ -62,6 +62,20 @@ public abstract class TransferDialog : FormDialog
     private CheckBox _checkBoxOverwrite { get; set; }
     public bool Overwrite => _checkBoxOverwrite.IsChecked;
 
+    private CheckBox _checkBoxVerify { get; set; }
+    private readonly ISettingsService? _settingsService;
+
+    /// <summary>Ticked: every file is hashed at source and copy after it is copied, and a move removes the source only when they match.</summary>
+    public bool VerifyAfterCopy
+    {
+        get => _checkBoxVerify.IsChecked;
+        set => _checkBoxVerify.IsChecked = value;
+    }
+
+    /// <summary>Remembers the box for the next time the dialog opens. Called as the transfer starts.</summary>
+    internal void RememberVerifyChoice() =>
+        _settingsService?.Set(iTerminal.Core.Data.Settings.TransferVerifyAfterCopy, _checkBoxVerify.IsChecked.ToString());
+
     /// <summary>Unticked: each existing target is asked about. Ticked: every one is overwritten.</summary>
     public FileConflictMode ConflictMode => _checkBoxOverwrite.IsChecked ? FileConflictMode.OverwriteAll : FileConflictMode.Ask;
     private Label _labelSource { get; set; }
@@ -81,9 +95,11 @@ public abstract class TransferDialog : FormDialog
         IContentModelService contentModelService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        ISettingsService? settingsService = null)
         : base(name, themeService)
     {
+        _settingsService = settingsService;
         _contentModelService = contentModelService;
         _operationName = operationName;
         Title = operationName;
@@ -112,12 +128,20 @@ public abstract class TransferDialog : FormDialog
             IsEnabled = true,
             HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Label.Target", "Target"), 'O')
         };
+        _checkBoxVerify = new CheckBox(themeService)
+        {
+            Label = iConsole.Localization.UiText.Get("Label.VerifyAfterCopy", "Verify after copy"),
+            IsChecked = false,
+            IsEnabled = true,
+            HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Label.VerifyAfterCopy", "Verify after copy"), 'V')
+        };
         _primaryButton = new Button(operationName, transferCommand, themeService) { HotKeyChar = primaryHotKeyChar };
         _cancelButton = new CancelDialogButton(themeService);
         AddControl(_labelSource);
         AddControl(TextBoxTarget);
         AddControl(_labelTarget);
         AddControl(_checkBoxOverwrite);
+        AddControl(_checkBoxVerify);
         AddControl(ErrorMessage);
         AddControl(_primaryButton);
         AddControl(_cancelButton);
@@ -126,6 +150,8 @@ public abstract class TransferDialog : FormDialog
     public override async Task OnInitializeAsync()
     {
         BaseUrl = _contentModelService.Url;
+        // Read now, not at construction: the dialog is created once and settings have no change notification.
+        _checkBoxVerify.IsChecked = _settingsService?.GetAsBool(iTerminal.Core.Data.Settings.TransferVerifyAfterCopy) ?? false;
         var sourceModel = SourceModel ?? _contentModelService.GetFocusedModel() ?? _contentModelService.GetLastContentModel();
         var sources = iTerminal.Core.Commands.FocusedEntry.ActionableUrls(sourceModel);
         var url = sources.Count > 0 ? sources[0] : _contentModelService.FocusedFileUrl;
@@ -155,8 +181,8 @@ public abstract class TransferDialog : FormDialog
         await base.OnInitializeAsync();
     }
 
-    /// <summary>Rows: border, blank, source, target box, resolved target, overwrite, error, blank, buttons, border.</summary>
-    internal const int DialogHeight = 10;
+    /// <summary>Rows: border, blank, source, target box, resolved target, overwrite, verify, error, blank, buttons, border.</summary>
+    internal const int DialogHeight = 11;
 
     public override void OnInitializeLayout()
     {
@@ -171,7 +197,7 @@ public abstract class TransferDialog : FormDialog
         _labelSource.Text = iConsole.Localization.UiText.Get("Label.Source", "Source") + ": " + (IsMultiple
             ? DescribeSources(SourceUrls).Shrink((int)FieldWidth - 8)
             : SourceUrl.Shrink((int)FieldWidth - 8));
-        // One column for every row — the box's caption, the two path lines, the check box and the
+        // One column for every row — the box's caption, the two path lines, the check boxes and the
         // error — as in the rename and delete dialogs; they used to start two columns apart.
         _labelSource.Position = new Position(FieldX, 2);
         _labelSource.ViewSize = new Size(FieldWidth, 1);
@@ -181,7 +207,9 @@ public abstract class TransferDialog : FormDialog
         _labelTarget.ViewSize = new Size(FieldWidth, 1);
         _checkBoxOverwrite.Position = new Position(FieldX, 5);
         _checkBoxOverwrite.ViewSize = new Size(FieldWidth, 1);
-        ErrorMessage.Position = new Position(FieldX, 6);
+        _checkBoxVerify.Position = new Position(FieldX, 6);
+        _checkBoxVerify.ViewSize = new Size(FieldWidth, 1);
+        ErrorMessage.Position = new Position(FieldX, 7);
         ErrorMessage.ViewSize = new Size(FieldWidth, 1);
         LayoutButtonRow(_primaryButton, _cancelButton);
 

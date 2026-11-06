@@ -112,6 +112,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IContentLens, GitLens>();
         services.AddSingleton<IContentLens, FileLabelLens>();
         services.AddSingleton<IFileLabelService, FileLabelService>();
+        services.AddSingleton<iTerminal.Core.Services.Security.FileDisguiseChecker>();
         services.AddTransient<iTerminal.Core.Dialogs.Git.GitClientDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Calculator.CalculatorDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog>();
@@ -199,6 +200,9 @@ public static class iTerminalApplicationBuilderExtension
         // The HDF5 viewer reads a file through the read-only reader; the reader holds no state.
         services.AddTransient<iConsole.Hdf.IHdfFileReader, iTerminal.Core.Services.Hdf.Hdf5FileReader>();
         services.AddTransient<iConsole.Dialogs.HdfViewerDialog>();
+        // The executable analysis view parses a PE, ELF or Mach-O file in-process; the analyzer holds no state.
+        services.AddTransient<iConsole.Executables.IExecutableAnalyzer, iTerminal.Core.Services.Executables.ExecutableAnalyzer>();
+        services.AddTransient<iConsole.Dialogs.ExecutableAnalysisDialog>();
         // The library index is a singleton so the in-memory copy of the table is shared by the
         // indexing job and every dialog that searches it.
         services.AddSingleton<iTerminal.Core.Services.Music.IMusicLibraryService, iTerminal.Core.Services.Music.MusicLibraryService>();
@@ -346,6 +350,10 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();
+        services.AddSingleton<iTerminal.Core.Services.Origin.IFileOriginService>(provider =>
+            new iTerminal.Core.Services.Origin.FileOriginService(
+                provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>(),
+                provider.GetService<Serilog.ILogger>()));
         services.AddSingleton<iTerminal.Core.Services.AccessControl.IAccessControlService>(provider =>
             OperatingSystem.IsWindows()
                 ? new iTerminal.Core.Services.AccessControl.WindowsAccessControlService()

@@ -2,6 +2,7 @@ using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
+using iTerminal.Core.Services.Checksums;
 
 namespace iTerminal.Core.Tasks;
 
@@ -16,8 +17,9 @@ public class ContentModelCopyFolderTask(
     Url targetUrl,
     bool overwrite,
     FolderDiscoveryTask? discoveryTask,
-    IErrorPromptService errorPromptService)
-    : ContentModelFolderTransferTask(source, target, sourceUrl, targetUrl, overwrite, discoveryTask, errorPromptService)
+    IErrorPromptService errorPromptService,
+    TransferVerifier? verifier = null)
+    : ContentModelFolderTransferTask(source, target, sourceUrl, targetUrl, overwrite, discoveryTask, errorPromptService, verifier)
 {
     protected override string Verb => UiText.Get("Verb.Copy", "Copy");
     protected override string ProgressVerb => UiText.Get("Verb.Copying", "Copying");

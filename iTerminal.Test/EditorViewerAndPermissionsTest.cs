@@ -41,6 +41,20 @@ public class EditorViewerAndPermissionsTest
         }
 
         new PureHDF.H5File { ["cube"] = cube }.Write(Path.Combine(left, "cube.h5"));
+
+        // A bare ELF64 header (x86-64, little-endian, executable) and an "executable" cut off after its magic.
+        byte[] elf = new byte[64];
+        elf[0] = 0x7F;
+        elf[1] = (byte)'E';
+        elf[2] = (byte)'L';
+        elf[3] = (byte)'F';
+        elf[4] = 2;
+        elf[5] = 1;
+        elf[6] = 1;
+        elf[16] = 2;
+        elf[18] = 62;
+        File.WriteAllBytes(Path.Combine(left, "tool.elf"), elf);
+        File.WriteAllBytes(Path.Combine(left, "broken.exe"), [(byte)'M', (byte)'Z']);
     });
 
     [TestCleanup]
@@ -113,6 +127,39 @@ public class EditorViewerAndPermissionsTest
         Assert.IsTrue(_app.Driver.FocusedModal is iConsole.Dialogs.HdfViewerDialog);
         Assert.IsTrue(await _app.PressAsync("Esc"));
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.HdfViewerDialog, "the HDF5 viewer to close");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task F3OnAnElfFileShowsItsAnalysisAndEscClosesIt()
+    {
+        await _app.SelectEntryAsync("tool.elf");
+        Assert.IsTrue(await _app.PressAsync("F3"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.ExecutableAnalysisDialog, "the executable analysis to open");
+        await _app.WaitForTextAsync("ELF64 little-endian, x86-64, 64 bytes");
+        await _app.WaitForTextAsync("Hardening");
+        await _app.WaitForTextAsync("Stack canary");
+
+        Assert.IsTrue(await _app.PressAsync("Down"));
+        Assert.IsTrue(_app.Driver.FocusedModal is iConsole.Dialogs.ExecutableAnalysisDialog, "the grid keeps the keys inside the dialog");
+        Assert.IsTrue(await _app.PressAsync("Esc"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.ExecutableAnalysisDialog, "the analysis to close");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task F3OnATruncatedExecutableOpensTheAnalysisAndSaysItCannotBeRead()
+    {
+        await _app.SelectEntryAsync("broken.exe");
+        Assert.IsTrue(await _app.PressAsync("F3"));
+        await _app.WaitUntilAsync(
+            () => _app.Driver.FocusedModal is iConsole.Dialogs.ExecutableAnalysisDialog { Report: null } dialog
+                && dialog.Status.Length > 0
+                && !dialog.Status.StartsWith("Reading", StringComparison.Ordinal),
+            "the analysis to report a failure");
+
+        Assert.IsTrue(await _app.PressAsync("Esc"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.ExecutableAnalysisDialog, "the analysis to close");
     }
 
     [TestMethod]
