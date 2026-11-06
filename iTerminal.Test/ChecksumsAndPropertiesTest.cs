@@ -102,6 +102,47 @@ public class ChecksumsAndPropertiesTest
         Assert.AreNotEqual(ReadmeSha256, File.ReadAllText(ReadmePath + ".sha256")[..64], "the old checksum is still the one on disk");
     }
 
+    private SandboxServices.HashReputation Reputation => _app.Driver.GetRequiredService<SandboxServices.HashReputation>();
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task F4_LooksTheSha256UpOnRequest_AndSendsNothingBefore()
+    {
+        _app = await TerminalApp.StartAsync();
+        var passwords = _app.Driver.GetRequiredService<Core.Services.IPasswordManager>();
+        passwords.Save(new Core.Model.Passwords.PasswordEntry { Title = "VirusTotal", Password = "sandbox-key" });
+        await OpenChecksumsAsync("readme.txt");
+        await _app.WaitForTextAsync(ReadmeSha256);
+        Assert.AreEqual(0, Reputation.Hashes.Count, "opening the dialog asks nobody");
+
+        await _app.PressAsync("F4");
+
+        await _app.WaitForTextAsync("3/70 engines flag this file");
+        CollectionAssert.AreEqual(new[] { ReadmeSha256 }, Reputation.Hashes.ToArray(), "exactly the SHA-256, nothing else");
+        Assert.AreEqual("sandbox-key", Reputation.LastKey);
+        var launcher = _app.Driver.GetRequiredService<SandboxServices.Launcher>();
+        Assert.AreEqual(0, launcher.Launches.Count);
+
+        await _app.PressAsync("F5");
+        await _app.WaitUntilAsync(() => launcher.Launches.Any(l => l.FilePath == "https://www.virustotal.com/gui/file/" + ReadmeSha256), "the VirusTotal page to be opened");
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task F4_WithoutAKey_SaysHowToAddOne()
+    {
+        _app = await TerminalApp.StartAsync();
+        await OpenChecksumsAsync("readme.txt");
+        await _app.WaitForTextAsync(ReadmeSha256);
+
+        await _app.PressAsync("F4");
+
+        await _app.WaitForTextAsync("No VirusTotal key");
+        Assert.AreEqual(0, Reputation.Hashes.Count);
+    }
+
     [Timeout(120_000)]
     [TestMethod]
     public async Task ChecksumsAreNotOfferedOnAFolder()

@@ -413,6 +413,47 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// A reputation service that never reaches VirusTotal: it records the hashes (and keys) it was asked
+    /// about and answers with a canned result, so a test can assert that only a hash was sent, and when.
+    /// </summary>
+    public sealed class HashReputation : Core.Services.Reputation.IHashReputationService
+    {
+        private readonly Lock _lock = new();
+        private readonly List<string> _hashes = [];
+
+        /// <summary>What every look-up answers with.</summary>
+        public Core.Services.Reputation.ReputationResult Answer { get; set; } = new(
+            Core.Services.Reputation.ReputationStatus.Found, Malicious: 2, Suspicious: 1, Total: 70,
+            FirstSeen: new DateTimeOffset(2020, 1, 2, 12, 0, 0, TimeSpan.Zero), LastSeen: new DateTimeOffset(2026, 3, 4, 12, 0, 0, TimeSpan.Zero));
+
+        /// <summary>The key of the last look-up.</summary>
+        public string? LastKey { get; private set; }
+
+        /// <summary>Every hash asked about, in order.</summary>
+        public IReadOnlyList<string> Hashes
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return [.. _hashes];
+                }
+            }
+        }
+
+        public Task<Core.Services.Reputation.ReputationResult> LookUpAsync(string sha256, string apiKey, CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                _hashes.Add(sha256);
+                LastKey = apiKey;
+            }
+
+            return Task.FromResult(Answer with { Link = Core.Services.Reputation.VirusTotalReputationService.GuiLink(sha256) });
+        }
+    }
+
+    /// <summary>
     /// Starts nothing: records which program was asked to open which file. A test that pressed Enter
     /// on a file would otherwise start a real program on the machine running the suite.
     /// </summary>

@@ -1234,6 +1234,51 @@
   <data name="DialogHint.SaveChecksumsNextToFiles" xml:space="preserve">
     <value>Enregistrer les sommes de contrôle à côté des fichiers</value>
   </data>
+  <data name="DialogHint.LookUpReputation" xml:space="preserve">
+    <value>Chercher le SHA-256 sur VirusTotal (seul le hash est envoyé)</value>
+  </data>
+  <data name="DialogHint.OpenReputationPage" xml:space="preserve">
+    <value>Ouvrir la page VirusTotal dans le navigateur</value>
+  </data>
+  <data name="Reputation.Seen" xml:space="preserve">
+    <value>Vu pour la première fois {0}, dernière fois {1}</value>
+  </data>
+  <data name="Reputation.OpenHint" xml:space="preserve">
+    <value>F5 ouvre la page VirusTotal dans le navigateur</value>
+  </data>
+  <data name="Reputation.Detections" xml:space="preserve">
+    <value>VirusTotal : {0}/{1} moteurs signalent ce fichier</value>
+  </data>
+  <data name="Reputation.NotFound" xml:space="preserve">
+    <value>VirusTotal ne connaît pas ce fichier (ouvrez la page pour l'envoyer vous-même).</value>
+  </data>
+  <data name="Reputation.RateLimitedAfter" xml:space="preserve">
+    <value>Limite VirusTotal atteinte : réessayez dans {0} s.</value>
+  </data>
+  <data name="Reputation.RateLimited" xml:space="preserve">
+    <value>Limite VirusTotal atteinte : réessayez dans une minute.</value>
+  </data>
+  <data name="Reputation.Offline" xml:space="preserve">
+    <value>VirusTotal injoignable : vous semblez hors ligne.</value>
+  </data>
+  <data name="Reputation.InvalidKey" xml:space="preserve">
+    <value>VirusTotal a refusé la clé d'API : vérifiez l'entrée du gestionnaire de mots de passe.</value>
+  </data>
+  <data name="Reputation.Error" xml:space="preserve">
+    <value>Échec de la recherche VirusTotal : {0}</value>
+  </data>
+  <data name="Reputation.OpenFailed" xml:space="preserve">
+    <value>Le navigateur n'a pas pu être lancé.</value>
+  </data>
+  <data name="Reputation.Wait" xml:space="preserve">
+    <value>Attendez la fin de la lecture du fichier, puis appuyez sur F4.</value>
+  </data>
+  <data name="Reputation.NoKey" xml:space="preserve">
+    <value>Pas de clé VirusTotal : ajoutez au gestionnaire de mots de passe une entrée intitulée « VirusTotal » avec votre clé d'API comme mot de passe.</value>
+  </data>
+  <data name="Reputation.Asking" xml:space="preserve">
+    <value>Interrogation de VirusTotal sur le SHA-256 (seul le hash est envoyé)…</value>
+  </data>
   <data name="DialogHint.CopySha256" xml:space="preserve">
     <value>Copier la somme de contrôle SHA-256</value>
   </data>

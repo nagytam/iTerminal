@@ -346,6 +346,9 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();
+        // F4 in the checksum dialog: the SHA-256 (never the file) is looked up on VirusTotal, on request only.
+        services.AddSingleton<iTerminal.Core.Services.Reputation.IHashReputationService>(_ => new iTerminal.Core.Services.Reputation.VirusTotalReputationService(
+            new HttpClient { Timeout = TimeSpan.FromSeconds(15) }));
         services.AddSingleton<iTerminal.Core.Services.AccessControl.IAccessControlService>(provider =>
             OperatingSystem.IsWindows()
                 ? new iTerminal.Core.Services.AccessControl.WindowsAccessControlService()
