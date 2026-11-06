@@ -1,6 +1,7 @@
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Csv;
+using iConsole.Executables;
 using iConsole.Hdf;
 using iConsole.Dialogs;
 using iConsole.Json;
@@ -29,7 +30,8 @@ public class ViewFileDialogCommand(
     CsvViewerDialog? csvViewerDialog = null,
     WebBrowserDialog? webBrowserDialog = null,
     SqliteViewerDialog? sqliteViewerDialog = null,
-    HdfViewerDialog? hdfViewerDialog = null) : Command
+    HdfViewerDialog? hdfViewerDialog = null,
+    ExecutableAnalysisDialog? executableAnalysisDialog = null) : Command
 {
     private readonly WebBrowserDialog? _webBrowserDialog = webBrowserDialog;
     private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
@@ -43,6 +45,7 @@ public class ViewFileDialogCommand(
     private readonly CsvViewerDialog? _csvViewerDialog = csvViewerDialog;
     private readonly SqliteViewerDialog? _sqliteViewerDialog = sqliteViewerDialog;
     private readonly HdfViewerDialog? _hdfViewerDialog = hdfViewerDialog;
+    private readonly ExecutableAnalysisDialog? _executableAnalysisDialog = executableAnalysisDialog;
 
     public override string Title => "View";
     public override string Description => "Open the selected file in the viewer.";
@@ -183,6 +186,20 @@ public class ViewFileDialogCommand(
         {
             _hdfViewerDialog.Url = focusedFileUrl;
             await (Control?.ShowDialogAsync(_hdfViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // A PE, ELF or Mach-O file opens in the executable analysis view, only when it is a local file: the analyzer opens a
+        // path. The name is only a first filter (a known ending, or none at all); the magic bytes decide, and they are read on a
+        // worker thread. Anything else, such as a script called .exe, is read by the generic viewer as it always was.
+        if (_executableAnalysisDialog is not null
+            && focusedFileUrl is not null
+            && ExecutableFileTypes.IsCandidate(focusedFileUrl.Path)
+            && File.Exists(focusedFileUrl.Path)
+            && await Task.Run(() => ExecutableFileTypes.FileHasSignature(focusedFileUrl.Path)))
+        {
+            _executableAnalysisDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_executableAnalysisDialog) ?? Task.CompletedTask);
             return;
         }
 

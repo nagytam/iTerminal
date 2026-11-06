@@ -865,6 +865,186 @@
   <data name="Hdf.Hint.Dimension" xml:space="preserve">
     <value>Aktive Dimension wählen</value>
   </data>
+  <data name="Exe.Title" xml:space="preserve">
+    <value>Programmanalyse</value>
+  </data>
+  <data name="Exe.Title.Hint" xml:space="preserve">
+    <value>  Auf/Ab:Blättern</value>
+  </data>
+  <data name="Exe.Grid.Empty" xml:space="preserve">
+    <value>Nichts anzuzeigen</value>
+  </data>
+  <data name="Exe.Col.Item" xml:space="preserve">
+    <value>Eigenschaft</value>
+  </data>
+  <data name="Exe.Col.Value" xml:space="preserve">
+    <value>Wert</value>
+  </data>
+  <data name="Exe.Status.Reading" xml:space="preserve">
+    <value>Datei wird gelesen…</value>
+  </data>
+  <data name="Exe.Status.Summary" xml:space="preserve">
+    <value>{0}, {1}, {2:N0} Bytes</value>
+  </data>
+  <data name="Exe.Error.Unexpected" xml:space="preserve">
+    <value>Die Datei konnte nicht analysiert werden: {0}</value>
+  </data>
+  <data name="Exe.Sec.General" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="Exe.Sec.Hardening" xml:space="preserve">
+    <value>Härtung</value>
+  </data>
+  <data name="Exe.Sec.Imports" xml:space="preserve">
+    <value>Importe</value>
+  </data>
+  <data name="Exe.Sec.Exports" xml:space="preserve">
+    <value>Exporte</value>
+  </data>
+  <data name="Exe.Sec.Sections" xml:space="preserve">
+    <value>Abschnitte (Größe in der Datei, Entropie, Zugriff)</value>
+  </data>
+  <data name="Exe.Sec.Signature" xml:space="preserve">
+    <value>Signatur</value>
+  </data>
+  <data name="Exe.Sec.Hints" xml:space="preserve">
+    <value>Hinweise</value>
+  </data>
+  <data name="Exe.Row.Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Exe.Row.Architecture" xml:space="preserve">
+    <value>Architektur</value>
+  </data>
+  <data name="Exe.Row.Kind" xml:space="preserve">
+    <value>Art</value>
+  </data>
+  <data name="Exe.Row.Subsystem" xml:space="preserve">
+    <value>Plattform / Subsystem</value>
+  </data>
+  <data name="Exe.Row.Timestamp" xml:space="preserve">
+    <value>Erstellt</value>
+  </data>
+  <data name="Exe.Row.Managed" xml:space="preserve">
+    <value>Verwalteter Code</value>
+  </data>
+  <data name="Exe.Value.Managed" xml:space="preserve">
+    <value>.NET-Assembly (CLR)</value>
+  </data>
+  <data name="Exe.Row.Entry" xml:space="preserve">
+    <value>Einstiegspunkt</value>
+  </data>
+  <data name="Exe.Row.Size" xml:space="preserve">
+    <value>Dateigröße</value>
+  </data>
+  <data name="Exe.Row.Summary" xml:space="preserve">
+    <value>Zusammenfassung</value>
+  </data>
+  <data name="Exe.Row.Signature" xml:space="preserve">
+    <value>Signatur</value>
+  </data>
+  <data name="Exe.Value.Yes" xml:space="preserve">
+    <value>ja</value>
+  </data>
+  <data name="Exe.Value.No" xml:space="preserve">
+    <value>nein</value>
+  </data>
+  <data name="Exe.Value.NA" xml:space="preserve">
+    <value>nicht zutreffend oder unbekannt</value>
+  </data>
+  <data name="Exe.Imports.Functions" xml:space="preserve">
+    <value>{0} Bibliotheken, {1:N0} importierte Symbole</value>
+  </data>
+  <data name="Exe.Imports.Libraries" xml:space="preserve">
+    <value>{0} Bibliotheken</value>
+  </data>
+  <data name="Exe.Imports.FunctionCount" xml:space="preserve">
+    <value>{0:N0} Funktionen</value>
+  </data>
+  <data name="Exe.Exports.None" xml:space="preserve">
+    <value>keine</value>
+  </data>
+  <data name="Exe.Exports.Count" xml:space="preserve">
+    <value>{0:N0} exportiert</value>
+  </data>
+  <data name="Exe.Signature.None" xml:space="preserve">
+    <value>nicht signiert</value>
+  </data>
+  <data name="Exe.Signature.Embedded" xml:space="preserve">
+    <value>eingebettete Signatur, nicht geprüft</value>
+  </data>
+  <data name="Exe.Signature.Code" xml:space="preserve">
+    <value>Codesignatur vorhanden, nicht geprüft</value>
+  </data>
+  <data name="Exe.Signature.NoCertificates" xml:space="preserve">
+    <value>keine Zertifikate lesbar</value>
+  </data>
+  <data name="Exe.Cert.Subject" xml:space="preserve">
+    <value>Antragsteller</value>
+  </data>
+  <data name="Exe.Cert.Issuer" xml:space="preserve">
+    <value>Aussteller</value>
+  </data>
+  <data name="Exe.Cert.Valid" xml:space="preserve">
+    <value>Gültig</value>
+  </data>
+  <data name="Exe.Cert.Thumbprint" xml:space="preserve">
+    <value>SHA-1</value>
+  </data>
+  <data name="Exe.Hint.None" xml:space="preserve">
+    <value>nichts Auffälliges gefunden</value>
+  </data>
+  <data name="Exe.Kind.Executable" xml:space="preserve">
+    <value>Programm</value>
+  </data>
+  <data name="Exe.Kind.Pie" xml:space="preserve">
+    <value>Positionsunabhängiges Programm</value>
+  </data>
+  <data name="Exe.Kind.Library" xml:space="preserve">
+    <value>Gemeinsame Bibliothek</value>
+  </data>
+  <data name="Exe.Kind.Object" xml:space="preserve">
+    <value>Objektdatei</value>
+  </data>
+  <data name="Exe.Kind.Driver" xml:space="preserve">
+    <value>Treiber</value>
+  </data>
+  <data name="Exe.Kind.Core" xml:space="preserve">
+    <value>Speicherabbild</value>
+  </data>
+  <data name="Exe.Kind.Bundle" xml:space="preserve">
+    <value>Bundle</value>
+  </data>
+  <data name="Exe.Kind.Other" xml:space="preserve">
+    <value>Sonstiges</value>
+  </data>
+  <data name="Exe.Hint.HighEntropy" xml:space="preserve">
+    <value>Abschnitt {0} ist fast zufällig (Entropie über 7,2): gepackt, komprimiert oder verschlüsselt</value>
+  </data>
+  <data name="Exe.Hint.PackerSection" xml:space="preserve">
+    <value>Der Abschnittsname {0} stammt von einem Packer oder Protektor</value>
+  </data>
+  <data name="Exe.Hint.Wx" xml:space="preserve">
+    <value>Abschnitt {0} ist beschreibbar und ausführbar</value>
+  </data>
+  <data name="Exe.Hint.FewImports" xml:space="preserve">
+    <value>Sehr wenige Importe, wie bei einem gepackten Programm</value>
+  </data>
+  <data name="Exe.Hint.PackerSignature" xml:space="preserve">
+    <value>{0}-Packer-Signatur gefunden</value>
+  </data>
+  <data name="Exe.Hint.Sampled" xml:space="preserve">
+    <value>Die Entropie von {0} stammt nur aus den ersten 32 MB</value>
+  </data>
+  <data name="Exe.Hint.Malformed" xml:space="preserve">
+    <value>Die Datei ist beschädigt oder ungewöhnlich bei: {0}</value>
+  </data>
+  <data name="Exe.Hint.ListCut" xml:space="preserve">
+    <value>Eine Grenze hat die Liste gekürzt: {0}</value>
+  </data>
+  <data name="Exe.Hint.Timestamp" xml:space="preserve">
+    <value>Der Zeitstempel ist null oder liegt in der Zukunft und wird nicht angezeigt</value>
+  </data>
   <data name="Disguise.TypeMismatch" xml:space="preserve">
     <value>Inhalt ist {0}, aber der Name sagt .{1}</value>
   </data>

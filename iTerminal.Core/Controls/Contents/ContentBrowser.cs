@@ -48,6 +48,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private CsvViewerDialog? _csvViewerDialog { get; set; }
     private SqliteViewerDialog? _sqliteViewerDialog { get; set; }
     private iConsole.Dialogs.HdfViewerDialog? _hdfViewerDialog { get; set; }
+    private iConsole.Dialogs.ExecutableAnalysisDialog? _executableAnalysisDialog { get; set; }
     private iTerminal.Core.Dialogs.Web.WebBrowserDialog? _webBrowserDialog { get; set; }
     private MarkPatternDialog? _markPatternDialog { get; set; }
     private MarkPatternDialog? _unmarkPatternDialog { get; set; }
@@ -119,7 +120,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
         PrintDialog? printDialog = null,
         SqliteViewerDialog? sqliteViewerDialog = null,
-        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
+        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null)
         : base(themeService)
     {
         _webBrowserDialog = webBrowserDialog;
@@ -127,6 +129,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _csvViewerDialog = csvViewerDialog;
         _sqliteViewerDialog = sqliteViewerDialog;
         _hdfViewerDialog = hdfViewerDialog;
+        _executableAnalysisDialog = executableAnalysisDialog;
         _editLinkDialog = editLinkDialog;
         _malwareScanService = malwareScanService;
         _notificationService = notificationService;
@@ -369,7 +372,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
         if (_fileViewerDialog is not null)
         {
-            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, _webBrowserDialog, sqliteViewerDialog: _sqliteViewerDialog, hdfViewerDialog: _hdfViewerDialog));
+            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, _webBrowserDialog, sqliteViewerDialog: _sqliteViewerDialog, hdfViewerDialog: _hdfViewerDialog, executableAnalysisDialog: _executableAnalysisDialog));
         }
         if (_textFileEditorDialog is not null)
         {

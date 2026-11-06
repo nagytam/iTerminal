@@ -865,6 +865,186 @@
   <data name="Hdf.Hint.Dimension" xml:space="preserve">
     <value>Az aktív dimenzió kiválasztása</value>
   </data>
+  <data name="Exe.Title" xml:space="preserve">
+    <value>Futtatható fájl elemzése</value>
+  </data>
+  <data name="Exe.Title.Hint" xml:space="preserve">
+    <value>  Fel/Le:görgetés</value>
+  </data>
+  <data name="Exe.Grid.Empty" xml:space="preserve">
+    <value>Nincs mit megjeleníteni</value>
+  </data>
+  <data name="Exe.Col.Item" xml:space="preserve">
+    <value>Tulajdonság</value>
+  </data>
+  <data name="Exe.Col.Value" xml:space="preserve">
+    <value>Érték</value>
+  </data>
+  <data name="Exe.Status.Reading" xml:space="preserve">
+    <value>A fájl olvasása…</value>
+  </data>
+  <data name="Exe.Status.Summary" xml:space="preserve">
+    <value>{0}, {1}, {2:N0} bájt</value>
+  </data>
+  <data name="Exe.Error.Unexpected" xml:space="preserve">
+    <value>A fájlt nem sikerült elemezni: {0}</value>
+  </data>
+  <data name="Exe.Sec.General" xml:space="preserve">
+    <value>Általános</value>
+  </data>
+  <data name="Exe.Sec.Hardening" xml:space="preserve">
+    <value>Védelmi kapcsolók</value>
+  </data>
+  <data name="Exe.Sec.Imports" xml:space="preserve">
+    <value>Importok</value>
+  </data>
+  <data name="Exe.Sec.Exports" xml:space="preserve">
+    <value>Exportok</value>
+  </data>
+  <data name="Exe.Sec.Sections" xml:space="preserve">
+    <value>Szakaszok (méret a fájlban, entrópia, hozzáférés)</value>
+  </data>
+  <data name="Exe.Sec.Signature" xml:space="preserve">
+    <value>Aláírás</value>
+  </data>
+  <data name="Exe.Sec.Hints" xml:space="preserve">
+    <value>Jelzések</value>
+  </data>
+  <data name="Exe.Row.Format" xml:space="preserve">
+    <value>Formátum</value>
+  </data>
+  <data name="Exe.Row.Architecture" xml:space="preserve">
+    <value>Architektúra</value>
+  </data>
+  <data name="Exe.Row.Kind" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Exe.Row.Subsystem" xml:space="preserve">
+    <value>Platform / alrendszer</value>
+  </data>
+  <data name="Exe.Row.Timestamp" xml:space="preserve">
+    <value>Fordítva</value>
+  </data>
+  <data name="Exe.Row.Managed" xml:space="preserve">
+    <value>Felügyelt kód</value>
+  </data>
+  <data name="Exe.Value.Managed" xml:space="preserve">
+    <value>.NET-szerelvény (CLR)</value>
+  </data>
+  <data name="Exe.Row.Entry" xml:space="preserve">
+    <value>Belépési pont</value>
+  </data>
+  <data name="Exe.Row.Size" xml:space="preserve">
+    <value>Fájlméret</value>
+  </data>
+  <data name="Exe.Row.Summary" xml:space="preserve">
+    <value>Összegzés</value>
+  </data>
+  <data name="Exe.Row.Signature" xml:space="preserve">
+    <value>Aláírás</value>
+  </data>
+  <data name="Exe.Value.Yes" xml:space="preserve">
+    <value>igen</value>
+  </data>
+  <data name="Exe.Value.No" xml:space="preserve">
+    <value>nem</value>
+  </data>
+  <data name="Exe.Value.NA" xml:space="preserve">
+    <value>nem releváns vagy ismeretlen</value>
+  </data>
+  <data name="Exe.Imports.Functions" xml:space="preserve">
+    <value>{0} könyvtár, {1:N0} importált szimbólum</value>
+  </data>
+  <data name="Exe.Imports.Libraries" xml:space="preserve">
+    <value>{0} könyvtár</value>
+  </data>
+  <data name="Exe.Imports.FunctionCount" xml:space="preserve">
+    <value>{0:N0} függvény</value>
+  </data>
+  <data name="Exe.Exports.None" xml:space="preserve">
+    <value>nincs</value>
+  </data>
+  <data name="Exe.Exports.Count" xml:space="preserve">
+    <value>{0:N0} exportálva</value>
+  </data>
+  <data name="Exe.Signature.None" xml:space="preserve">
+    <value>nincs aláírva</value>
+  </data>
+  <data name="Exe.Signature.Embedded" xml:space="preserve">
+    <value>beágyazott aláírás, nincs ellenőrizve</value>
+  </data>
+  <data name="Exe.Signature.Code" xml:space="preserve">
+    <value>kódaláírás van, nincs ellenőrizve</value>
+  </data>
+  <data name="Exe.Signature.NoCertificates" xml:space="preserve">
+    <value>egy tanúsítvány sem olvasható</value>
+  </data>
+  <data name="Exe.Cert.Subject" xml:space="preserve">
+    <value>Alany</value>
+  </data>
+  <data name="Exe.Cert.Issuer" xml:space="preserve">
+    <value>Kibocsátó</value>
+  </data>
+  <data name="Exe.Cert.Valid" xml:space="preserve">
+    <value>Érvényes</value>
+  </data>
+  <data name="Exe.Cert.Thumbprint" xml:space="preserve">
+    <value>SHA-1</value>
+  </data>
+  <data name="Exe.Hint.None" xml:space="preserve">
+    <value>nem található semmi gyanús</value>
+  </data>
+  <data name="Exe.Kind.Executable" xml:space="preserve">
+    <value>Futtatható</value>
+  </data>
+  <data name="Exe.Kind.Pie" xml:space="preserve">
+    <value>Pozíciófüggetlen futtatható</value>
+  </data>
+  <data name="Exe.Kind.Library" xml:space="preserve">
+    <value>Megosztott könyvtár</value>
+  </data>
+  <data name="Exe.Kind.Object" xml:space="preserve">
+    <value>Tárgykód</value>
+  </data>
+  <data name="Exe.Kind.Driver" xml:space="preserve">
+    <value>Illesztőprogram</value>
+  </data>
+  <data name="Exe.Kind.Core" xml:space="preserve">
+    <value>Memóriakép (core)</value>
+  </data>
+  <data name="Exe.Kind.Bundle" xml:space="preserve">
+    <value>Csomag (bundle)</value>
+  </data>
+  <data name="Exe.Kind.Other" xml:space="preserve">
+    <value>Egyéb</value>
+  </data>
+  <data name="Exe.Hint.HighEntropy" xml:space="preserve">
+    <value>A(z) {0} szakasz majdnem véletlenszerű (entrópia 7,2 felett): tömörített, csomagolt vagy titkosított</value>
+  </data>
+  <data name="Exe.Hint.PackerSection" xml:space="preserve">
+    <value>A(z) {0} szakasznév csomagoló vagy védelmi program jellemzője</value>
+  </data>
+  <data name="Exe.Hint.Wx" xml:space="preserve">
+    <value>A(z) {0} szakasz írható és futtatható is</value>
+  </data>
+  <data name="Exe.Hint.FewImports" xml:space="preserve">
+    <value>Nagyon kevés import, mint egy csomagolt programnál</value>
+  </data>
+  <data name="Exe.Hint.PackerSignature" xml:space="preserve">
+    <value>{0} csomagoló jele található</value>
+  </data>
+  <data name="Exe.Hint.Sampled" xml:space="preserve">
+    <value>A(z) {0} entrópiája csak az első 32 MB-ból származik</value>
+  </data>
+  <data name="Exe.Hint.Malformed" xml:space="preserve">
+    <value>A fájl sérült vagy szokatlan itt: {0}</value>
+  </data>
+  <data name="Exe.Hint.ListCut" xml:space="preserve">
+    <value>Egy korlát megvágta a listát: {0}</value>
+  </data>
+  <data name="Exe.Hint.Timestamp" xml:space="preserve">
+    <value>Az időbélyeg nulla vagy jövőbeli, ezért nem jelenik meg</value>
+  </data>
   <data name="Disguise.TypeMismatch" xml:space="preserve">
     <value>A tartalom {0}, de a név .{1} kiterjesztést mutat</value>
   </data>
