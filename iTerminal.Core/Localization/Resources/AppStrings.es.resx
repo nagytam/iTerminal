@@ -3516,6 +3516,7 @@
   </data>
   <data name="DialogHint.RemoveMark" xml:space="preserve">
     <value>Quitar la marca de descarga (pregunta y/n)</value>
+  </data>
   <data name="Checksum.Verified.Caption" xml:space="preserve">
     <value>Validado</value>
   </data>

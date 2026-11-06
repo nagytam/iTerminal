@@ -3516,6 +3516,7 @@
   </data>
   <data name="DialogHint.RemoveMark" xml:space="preserve">
     <value>Letöltési jelölés eltávolítása (y/n kérdés)</value>
+  </data>
   <data name="Checksum.Verified.Caption" xml:space="preserve">
     <value>Ellenőrz.</value>
   </data>
