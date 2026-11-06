@@ -44,6 +44,7 @@ public class FileMenuItem : MenuItem
         EditLinkDialog? editLinkDialog = null,
         PrintDialog? printDialog = null,
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+        StreamsDialog? streamsDialog = null,
         iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null)
     : base("File", null, [], themeService)
     {
@@ -99,6 +100,10 @@ public class FileMenuItem : MenuItem
         if (malwareScanService is { IsAvailable: true })
         {
             AddMenuItem(new MenuItem("Scan with Microsoft Defender", new ScanWithDefenderCommand(contentModelService, malwareScanService, notificationService), [], themeService));
+        }
+        if (streamsDialog is not null)
+        {
+            AddMenuItem(new MenuItem(UiText.Get("Menu.StreamsItem", "Streams and Attributes…"), new StreamsDialogCommand(streamsDialog, contentModelService), [], themeService));
         }
         if (propertiesDialog is not null)
         {

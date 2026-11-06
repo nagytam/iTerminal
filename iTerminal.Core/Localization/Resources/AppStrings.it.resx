@@ -3574,4 +3574,88 @@
   <data name="Checksum.Sig.Error" xml:space="preserve">
     <value>impossibile controllare: {0}</value>
   </data>
+  <data name="Dialog.Streams" xml:space="preserve">
+    <value>Flussi e attributi</value>
+  </data>
+  <data name="Menu.StreamsItem" xml:space="preserve">
+    <value>Flussi e attributi…</value>
+  </data>
+  <data name="Streams.Kind.Streams" xml:space="preserve">
+    <value>Flussi</value>
+  </data>
+  <data name="Streams.Kind.Attributes" xml:space="preserve">
+    <value>Attributi</value>
+  </data>
+  <data name="Streams.Error.BadName" xml:space="preserve">
+    <value>«{0}» non è un nome valido.</value>
+  </data>
+  <data name="Streams.Error.Unsupported" xml:space="preserve">
+    <value>Questo sistema non ha flussi né attributi estesi.</value>
+  </data>
+  <data name="Streams.Error.Changing" xml:space="preserve">
+    <value>Gli attributi continuano a cambiare; riprova.</value>
+  </data>
+  <data name="Streams.Error.TooLarge" xml:space="preserve">
+    <value>Troppo grande per l'anteprima.</value>
+  </data>
+  <data name="Streams.Deleted" xml:space="preserve">
+    <value>{0} eliminato.</value>
+  </data>
+  <data name="DialogHint.DeleteStreamYes" xml:space="preserve">
+    <value>Elimina il flusso o l'attributo</value>
+  </data>
+  <data name="DialogHint.KeepStream" xml:space="preserve">
+    <value>Mantienilo</value>
+  </data>
+  <data name="DialogHint.ChooseStream" xml:space="preserve">
+    <value>Scegli un flusso o un attributo</value>
+  </data>
+  <data name="DialogHint.StreamHexText" xml:space="preserve">
+    <value>Passa l'anteprima tra testo ed esadecimale</value>
+  </data>
+  <data name="DialogHint.DeleteStreamAsks" xml:space="preserve">
+    <value>Eliminalo (chiede prima)</value>
+  </data>
+  <data name="DialogHint.StreamsRefresh" xml:space="preserve">
+    <value>Rileggi l'elenco</value>
+  </data>
+  <data name="Streams.Status.AskDelete" xml:space="preserve">
+    <value>Eliminare {0}? y lo elimina.</value>
+  </data>
+  <data name="Streams.Target" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Streams.Col.Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Streams.Col.Size" xml:space="preserve">
+    <value>Dimensione</value>
+  </data>
+  <data name="Streams.Reading" xml:space="preserve">
+    <value>Lettura…</value>
+  </data>
+  <data name="Streams.None" xml:space="preserve">
+    <value>Questa voce non ha {0}.</value>
+  </data>
+  <data name="Streams.Hint.Confirm" xml:space="preserve">
+    <value>y elimina  ogni altro tasto mantiene</value>
+  </data>
+  <data name="Streams.Hint.List" xml:space="preserve">
+    <value>↑↓ scegli  H testo/hex  Canc elimina  F5 rileggi  Esc chiudi</value>
+  </data>
+  <data name="Streams.Preview" xml:space="preserve">
+    <value>Anteprima</value>
+  </data>
+  <data name="Streams.Mode.Hex" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Streams.Mode.Text" xml:space="preserve">
+    <value>testo</value>
+  </data>
+  <data name="Streams.Truncated" xml:space="preserve">
+    <value>primi {0} di {1}</value>
+  </data>
+  <data name="Streams.Empty" xml:space="preserve">
+    <value>(vuoto)</value>
+  </data>
 </root>
