@@ -330,7 +330,7 @@ public class ChecksumDialog : Dialog
         var rows = new List<InfoLines.Line>();
         if (_reputation is { } reputation)
         {
-            rows.Add(ReputationHeadline(reputation, colorScheme, width));
+            rows.AddRange(Wrap(ReputationHeadline(reputation, colorScheme), width));
             if (reputation.Status == ReputationStatus.Found)
             {
                 var first = reputation.FirstSeen is { } f ? f.LocalDateTime.ToString("yyyy-MM-dd HH:mm") : "–";
@@ -345,32 +345,56 @@ public class ChecksumDialog : Dialog
         }
         else if (_reputationNote is { } note)
         {
-            rows.Add(new(note.Shrink(width) ?? string.Empty, _reputationFailed ? colorScheme.Error : null));
+            rows.AddRange(Wrap(new InfoLines.Line(note, _reputationFailed ? colorScheme.Error : null), width));
         }
 
-        return rows;
+        // The block is three rows high: a long message wraps, and the hint line is the first to go.
+        return rows.Count > 3 ? rows.GetRange(0, 3) : rows;
     }
 
-    private static InfoLines.Line ReputationHeadline(ReputationResult reputation, ColorScheme colorScheme, int width)
+    /// <summary>Breaks a sentence at spaces over as many rows as it needs, rather than cutting the middle out of it.</summary>
+    private static IEnumerable<InfoLines.Line> Wrap(InfoLines.Line line, int width)
+    {
+        var current = string.Empty;
+        foreach (var word in line.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (current.Length > 0 && current.Length + 1 + word.Length > width)
+            {
+                yield return new(current, line.Foreground);
+                current = word;
+            }
+            else
+            {
+                current = current.Length == 0 ? word : current + " " + word;
+            }
+        }
+
+        if (current.Length > 0)
+        {
+            yield return new(current, line.Foreground);
+        }
+    }
+
+    private static InfoLines.Line ReputationHeadline(ReputationResult reputation, ColorScheme colorScheme)
     {
         switch (reputation.Status)
         {
             case ReputationStatus.Found:
                 var text = string.Format(UiText.Get("Reputation.Detections", "VirusTotal: {0}/{1} engines flag this file"), reputation.Detections, reputation.Total);
-                return new(text.Shrink(width) ?? string.Empty, reputation.Detections > 0 ? colorScheme.Error : Color.Green);
+                return new(text, reputation.Detections > 0 ? colorScheme.Error : Color.Green);
             case ReputationStatus.NotFound:
-                return new(UiText.Get("Reputation.NotFound", "VirusTotal has never seen this file (open the page to upload it yourself).").Shrink(width) ?? string.Empty);
+                return new(UiText.Get("Reputation.NotFound", "VirusTotal has never seen this file (open the page to upload it yourself)."));
             case ReputationStatus.RateLimited:
                 var message = reputation.RetryAfter is { } wait
                     ? string.Format(UiText.Get("Reputation.RateLimitedAfter", "VirusTotal rate limit reached: try again in {0} s."), (int)Math.Ceiling(wait.TotalSeconds))
                     : UiText.Get("Reputation.RateLimited", "VirusTotal rate limit reached: try again in a minute.");
-                return new(message.Shrink(width) ?? string.Empty, colorScheme.Error);
+                return new(message, colorScheme.Error);
             case ReputationStatus.Offline:
-                return new(UiText.Get("Reputation.Offline", "Could not reach VirusTotal: you seem to be offline.").Shrink(width) ?? string.Empty, colorScheme.Error);
+                return new(UiText.Get("Reputation.Offline", "Could not reach VirusTotal: you seem to be offline."), colorScheme.Error);
             case ReputationStatus.InvalidKey:
-                return new(UiText.Get("Reputation.InvalidKey", "VirusTotal refused the API key: check the Password Manager entry.").Shrink(width) ?? string.Empty, colorScheme.Error);
+                return new(UiText.Get("Reputation.InvalidKey", "VirusTotal refused the API key: check the Password Manager entry."), colorScheme.Error);
             default:
-                return new(string.Format(UiText.Get("Reputation.Error", "VirusTotal look-up failed: {0}"), reputation.Message ?? "?").Shrink(width) ?? string.Empty, colorScheme.Error);
+                return new(string.Format(UiText.Get("Reputation.Error", "VirusTotal look-up failed: {0}"), reputation.Message ?? "?"), colorScheme.Error);
         }
     }
 

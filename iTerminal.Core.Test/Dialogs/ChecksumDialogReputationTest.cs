@@ -204,6 +204,7 @@ public class ChecksumDialogReputationTest
 
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.F4));
         Task firstTask = dialog.LookupTask;
+        SpinWait.SpinUntil(() => Volatile.Read(ref calls) == 1, TimeSpan.FromSeconds(10));
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.F4));
         await dialog.LookupTask;
         first.SetResult(Flagged);
