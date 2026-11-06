@@ -3586,4 +3586,52 @@
   <data name="Menu.EncryptFiles" xml:space="preserve">
     <value>Chiffrer / Déchiffrer…</value>
   </data>
+  <data name="Checksum.Verified.Caption" xml:space="preserve">
+    <value>Vérifié</value>
+  </data>
+  <data name="Checksum.Verified.Changed" xml:space="preserve">
+    <value>✗ {0} a changé pendant la vérification — non vérifié</value>
+  </data>
+  <data name="Checksum.Verified.Waiting" xml:space="preserve">
+    <value>attend la lecture du fichier…</value>
+  </data>
+  <data name="Checksum.Verified.List" xml:space="preserve">
+    <value>✓ le fichier correspond à {0}, signé par {1}</value>
+  </data>
+  <data name="Checksum.Verified.ListBad" xml:space="preserve">
+    <value>✗ le fichier ne correspond PAS à {0}, qui est signé</value>
+  </data>
+  <data name="Checksum.Verified.File" xml:space="preserve">
+    <value>✓ le fichier correspond à sa signature par {0}</value>
+  </data>
+  <data name="Checksum.Sig.Caption" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="Checksum.Sig.More" xml:space="preserve">
+    <value>+{0} autres signatures</value>
+  </data>
+  <data name="Checksum.Sig.Good" xml:space="preserve">
+    <value>valide, par une clé que vous détenez : {0}</value>
+  </data>
+  <data name="Checksum.Sig.Expired" xml:space="preserve">
+    <value>valide, mais la clé a expiré : {0}</value>
+  </data>
+  <data name="Checksum.Sig.Bad" xml:space="preserve">
+    <value>signature INVALIDE</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
+    <value>clé inconnue {0} (absente de votre trousseau)</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
+    <value>clé inconnue (aucune clé publique configurée)</value>
+  </data>
+  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
+    <value>{0} n'est pas installé — non vérifié</value>
+  </data>
+  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
+    <value>non vérifié : sigstore exige l'identité du signataire</value>
+  </data>
+  <data name="Checksum.Sig.Error" xml:space="preserve">
+    <value>vérification impossible : {0}</value>
+  </data>
 </root>
