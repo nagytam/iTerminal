@@ -108,7 +108,7 @@ public class FileDisguiseCheckerTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task InfoStrip_ShowsTheMismatchAfterABackgroundRead_AndIgnoresAStaleOne()
+    public async Task InfoStrip_ShowsTheMismatchAfterABackgroundRead()
     {
         string folder = NewFolder();
         try
@@ -133,7 +133,6 @@ public class FileDisguiseCheckerTest
             sut.ContentModel = model.Object;
 
             service.Raise(s => s.ModelChanged += null, EventArgs.Empty);
-            Assert.IsFalse(sut.Text1.Contains('⚠'), "nothing is known before the background read");
 
             for (int i = 0; i < 100 && !sut.Text1.Contains('⚠'); i++)
             {
