@@ -3529,4 +3529,52 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>Link</value>
   </data>
+  <data name="Checksum.Verified.Caption" xml:space="preserve">
+    <value>Geprüft</value>
+  </data>
+  <data name="Checksum.Verified.Changed" xml:space="preserve">
+    <value>✗ {0} wurde während der Prüfung geändert — nicht verifiziert</value>
+  </data>
+  <data name="Checksum.Verified.Waiting" xml:space="preserve">
+    <value>wartet auf das Lesen der Datei…</value>
+  </data>
+  <data name="Checksum.Verified.List" xml:space="preserve">
+    <value>✓ Datei stimmt mit {0} überein, signiert von {1}</value>
+  </data>
+  <data name="Checksum.Verified.ListBad" xml:space="preserve">
+    <value>✗ Datei stimmt NICHT mit {0} überein, das signiert ist</value>
+  </data>
+  <data name="Checksum.Verified.File" xml:space="preserve">
+    <value>✓ Datei stimmt mit ihrer Signatur von {0} überein</value>
+  </data>
+  <data name="Checksum.Sig.Caption" xml:space="preserve">
+    <value>Signatur</value>
+  </data>
+  <data name="Checksum.Sig.More" xml:space="preserve">
+    <value>+{0} weitere Signaturen</value>
+  </data>
+  <data name="Checksum.Sig.Good" xml:space="preserve">
+    <value>gut, von einem Schlüssel, den Sie besitzen: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Expired" xml:space="preserve">
+    <value>gut, aber der Schlüssel ist abgelaufen: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Bad" xml:space="preserve">
+    <value>FALSCHE Signatur</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
+    <value>unbekannter Schlüssel {0} (nicht in Ihrem Schlüsselring)</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
+    <value>unbekannter Schlüssel (kein öffentlicher Schlüssel eingerichtet)</value>
+  </data>
+  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
+    <value>{0} ist nicht installiert — nicht geprüft</value>
+  </data>
+  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
+    <value>nicht geprüft: Sigstore braucht die Identität des Unterzeichners</value>
+  </data>
+  <data name="Checksum.Sig.Error" xml:space="preserve">
+    <value>konnte nicht geprüft werden: {0}</value>
+  </data>
 </root>

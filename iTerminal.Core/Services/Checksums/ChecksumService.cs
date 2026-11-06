@@ -16,8 +16,8 @@ public enum ChecksumAlgorithm
 /// <summary>Every checksum of one file, as lower-case hex, and how many bytes went into them.</summary>
 public sealed record ChecksumResult(IReadOnlyDictionary<ChecksumAlgorithm, string> Hashes, long Bytes);
 
-/// <summary>A checksum found written down for a file: the value, the algorithm its length implies, and where it was found.</summary>
-public sealed record ExpectedChecksum(ChecksumAlgorithm Algorithm, string Hash, string Source);
+/// <summary>A checksum found written down for a file: the value, the algorithm its length implies, and where it was found. <c>SourceSha256</c> is the SHA-256 of the exact bytes of the source it was parsed from, so a signature check on that file can be tied to what was read.</summary>
+public sealed record ExpectedChecksum(ChecksumAlgorithm Algorithm, string Hash, string Source, string? SourceSha256 = null);
 
 /// <summary>
 /// Computes the checksums of a file on any drive. Async by contract: a file is read from start to
@@ -221,9 +221,9 @@ public partial class ChecksumService : IChecksumService
                     continue;
                 }
 
-                if (ParseChecksumFile(File.ReadAllText(path), name) is { } hash && AlgorithmFor(hash) is { } algorithm)
+                if (ParseWritten(File.ReadAllBytes(path), name, candidate) is { } written)
                 {
-                    return new ExpectedChecksum(algorithm, hash, candidate);
+                    return written;
                 }
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
@@ -232,6 +232,18 @@ public partial class ChecksumService : IChecksumService
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// The checksum the bytes of a checksum file give for <paramref name="fileName"/>, with the SHA-256 of those same
+    /// bytes. Parsing and hashing the one buffer is what lets a signature on the file be tied to what was read.
+    /// </summary>
+    public static ExpectedChecksum? ParseWritten(byte[] content, string fileName, string source)
+    {
+        ArgumentNullException.ThrowIfNull(content);
+        return ParseChecksumFile(System.Text.Encoding.UTF8.GetString(content), fileName) is { } hash && AlgorithmFor(hash) is { } algorithm
+            ? new ExpectedChecksum(algorithm, hash, source, Convert.ToHexStringLower(SHA256.HashData(content)))
+            : null;
     }
 
     /// <summary>The line the common tools write and read: the hash, a blank, <c>*</c> for "binary", the name.</summary>

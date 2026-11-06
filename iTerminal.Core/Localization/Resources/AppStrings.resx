@@ -3529,4 +3529,52 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>link</value>
   </data>
+  <data name="Checksum.Verified.Caption" xml:space="preserve">
+    <value>Verified</value>
+  </data>
+  <data name="Checksum.Verified.Changed" xml:space="preserve">
+    <value>✗ {0} changed while it was checked — not verified</value>
+  </data>
+  <data name="Checksum.Verified.Waiting" xml:space="preserve">
+    <value>waiting for the file to be read…</value>
+  </data>
+  <data name="Checksum.Verified.List" xml:space="preserve">
+    <value>✓ file matches {0}, signed by {1}</value>
+  </data>
+  <data name="Checksum.Verified.ListBad" xml:space="preserve">
+    <value>✗ file does NOT match {0}, which is signed</value>
+  </data>
+  <data name="Checksum.Verified.File" xml:space="preserve">
+    <value>✓ file matches its signature by {0}</value>
+  </data>
+  <data name="Checksum.Sig.Caption" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="Checksum.Sig.More" xml:space="preserve">
+    <value>+{0} more signatures</value>
+  </data>
+  <data name="Checksum.Sig.Good" xml:space="preserve">
+    <value>good, by a key you hold: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Expired" xml:space="preserve">
+    <value>good, but the key expired: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Bad" xml:space="preserve">
+    <value>BAD signature</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
+    <value>unknown key {0} (not in your keyring)</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
+    <value>unknown key (no public key is configured)</value>
+  </data>
+  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
+    <value>{0} is not installed — not checked</value>
+  </data>
+  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
+    <value>not checked: sigstore needs the signer's identity</value>
+  </data>
+  <data name="Checksum.Sig.Error" xml:space="preserve">
+    <value>could not be checked: {0}</value>
+  </data>
 </root>

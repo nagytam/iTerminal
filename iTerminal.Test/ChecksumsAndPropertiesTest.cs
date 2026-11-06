@@ -1,4 +1,5 @@
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Services.Checksums;
 using System.Security.Cryptography;
 
 namespace iTerminal.Test;
@@ -45,6 +46,29 @@ public class ChecksumsAndPropertiesTest
         Assert.IsTrue(screen.Contains("SHA-512"), screen.Dump());
         Assert.IsTrue(screen.Contains(Convert.ToHexStringLower(MD5.HashData(File.ReadAllBytes(ReadmePath)))), screen.Dump());
         Assert.IsNull(dialog.Written, "nothing is written down beside this file");
+
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task ASignatureFileBesideTheFile_IsCheckedByItsToolAndNeverTrusted()
+    {
+        _app = await TerminalApp.StartAsync();
+        // Not a real signature: gpg (read-only --verify) says it is not one, or is not installed at all.
+        File.WriteAllText(ReadmePath + ".asc", "-----BEGIN PGP SIGNATURE-----\n\nnot a signature\n-----END PGP SIGNATURE-----\n");
+
+        var dialog = await OpenChecksumsAsync("readme.txt");
+
+        var screen = await _app.WaitForTextAsync("readme.txt: ");
+        var found = dialog.Signatures;
+        Assert.IsNotNull(found, screen.Dump());
+        var signature = found.Single();
+        Assert.AreEqual("readme.txt", signature.Subject);
+        Assert.AreNotEqual(PublisherSignatureStatus.Good, signature.Status, "a made-up signature is never good");
+        Assert.IsFalse(screen.Contains("✓ file matches its signature"), screen.Dump());
 
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();
