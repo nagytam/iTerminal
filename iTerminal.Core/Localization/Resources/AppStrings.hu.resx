@@ -5236,4 +5236,91 @@
   <data name="CmdDesc.70f70296" xml:space="preserve">
     <value>A kurzor alatti sor megjelölése vagy a jelölés megszüntetése, majd felfelé lépés.</value>
   </data>
+  <data name="Button.Permissions" xml:space="preserve">
+    <value>Jogosultságok… (^P)</value>
+  </data>
+  <data name="Dialog.PropertiesOf" xml:space="preserve">
+    <value>{0} tulajdonságai</value>
+  </data>
+  <data name="Properties.Cap.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Properties.Cap.Location" xml:space="preserve">
+    <value>Hely</value>
+  </data>
+  <data name="Properties.Cap.Type" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Properties.Cap.Pointsto" xml:space="preserve">
+    <value>Mutat ide</value>
+  </data>
+  <data name="Properties.Cap.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="Properties.Cap.Contains" xml:space="preserve">
+    <value>Tartalma</value>
+  </data>
+  <data name="Properties.Cap.Created" xml:space="preserve">
+    <value>Létrehozva</value>
+  </data>
+  <data name="Properties.Cap.Modified" xml:space="preserve">
+    <value>Módosítva</value>
+  </data>
+  <data name="Properties.Cap.Accessed" xml:space="preserve">
+    <value>Elérve</value>
+  </data>
+  <data name="Properties.Cap.Permissions" xml:space="preserve">
+    <value>Jogok</value>
+  </data>
+  <data name="Properties.Cap.Colour" xml:space="preserve">
+    <value>Szín</value>
+  </data>
+  <data name="Properties.Cap.Tags" xml:space="preserve">
+    <value>Címkék</value>
+  </data>
+  <data name="Properties.Kind.File" xml:space="preserve">
+    <value>Fájl</value>
+  </data>
+  <data name="Properties.Kind.Folder" xml:space="preserve">
+    <value>Mappa</value>
+  </data>
+  <data name="Properties.Kind.LinkFile" xml:space="preserve">
+    <value>Hivatkozás egy fájlra</value>
+  </data>
+  <data name="Properties.Kind.LinkFolder" xml:space="preserve">
+    <value>Hivatkozás egy mappára</value>
+  </data>
+  <data name="Properties.Files.One" xml:space="preserve">
+    <value>{0} fájl</value>
+  </data>
+  <data name="Properties.Files.Many" xml:space="preserve">
+    <value>{0} fájl</value>
+  </data>
+  <data name="Properties.Folders.One" xml:space="preserve">
+    <value>{0} mappa</value>
+  </data>
+  <data name="Properties.Folders.Many" xml:space="preserve">
+    <value>{0} mappa</value>
+  </data>
+  <data name="Properties.SoFar" xml:space="preserve">
+    <value>{0} eddig</value>
+  </data>
+  <data name="Properties.Unreadable" xml:space="preserve">
+    <value>legalább — {0} nem olvasható</value>
+  </data>
+  <data name="Properties.NoColour" xml:space="preserve">
+    <value>nincs</value>
+  </data>
+  <data name="Properties.NoTags" xml:space="preserve">
+    <value>nincs</value>
+  </data>
+  <data name="Command.Permissions" xml:space="preserve">
+    <value>Jogosultságok</value>
+  </data>
+  <data name="Command.RemoveMark" xml:space="preserve">
+    <value>Jelölés eltávolítása</value>
+  </data>
+  <data name="Button.Apply" xml:space="preserve">
+    <value>Alkalmaz</value>
+  </data>
 </root>

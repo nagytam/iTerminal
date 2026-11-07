@@ -5236,4 +5236,91 @@
   <data name="CmdDesc.70f70296" xml:space="preserve">
     <value>Marquer ou démarquer la ligne sous le curseur et monter.</value>
   </data>
+  <data name="Button.Permissions" xml:space="preserve">
+    <value>Droits… (^P)</value>
+  </data>
+  <data name="Dialog.PropertiesOf" xml:space="preserve">
+    <value>Propriétés de {0}</value>
+  </data>
+  <data name="Properties.Cap.Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Properties.Cap.Location" xml:space="preserve">
+    <value>Emplacement</value>
+  </data>
+  <data name="Properties.Cap.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Properties.Cap.Pointsto" xml:space="preserve">
+    <value>Pointe vers</value>
+  </data>
+  <data name="Properties.Cap.Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="Properties.Cap.Contains" xml:space="preserve">
+    <value>Contient</value>
+  </data>
+  <data name="Properties.Cap.Created" xml:space="preserve">
+    <value>Créé</value>
+  </data>
+  <data name="Properties.Cap.Modified" xml:space="preserve">
+    <value>Modifié</value>
+  </data>
+  <data name="Properties.Cap.Accessed" xml:space="preserve">
+    <value>Accès</value>
+  </data>
+  <data name="Properties.Cap.Permissions" xml:space="preserve">
+    <value>Droits</value>
+  </data>
+  <data name="Properties.Cap.Colour" xml:space="preserve">
+    <value>Couleur</value>
+  </data>
+  <data name="Properties.Cap.Tags" xml:space="preserve">
+    <value>Étiquettes</value>
+  </data>
+  <data name="Properties.Kind.File" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="Properties.Kind.Folder" xml:space="preserve">
+    <value>Dossier</value>
+  </data>
+  <data name="Properties.Kind.LinkFile" xml:space="preserve">
+    <value>Lien vers un fichier</value>
+  </data>
+  <data name="Properties.Kind.LinkFolder" xml:space="preserve">
+    <value>Lien vers un dossier</value>
+  </data>
+  <data name="Properties.Files.One" xml:space="preserve">
+    <value>{0} fichier</value>
+  </data>
+  <data name="Properties.Files.Many" xml:space="preserve">
+    <value>{0} fichiers</value>
+  </data>
+  <data name="Properties.Folders.One" xml:space="preserve">
+    <value>{0} dossier</value>
+  </data>
+  <data name="Properties.Folders.Many" xml:space="preserve">
+    <value>{0} dossiers</value>
+  </data>
+  <data name="Properties.SoFar" xml:space="preserve">
+    <value>{0} jusqu’ici</value>
+  </data>
+  <data name="Properties.Unreadable" xml:space="preserve">
+    <value>au moins — {0} n’ont pas pu être lus</value>
+  </data>
+  <data name="Properties.NoColour" xml:space="preserve">
+    <value>aucune</value>
+  </data>
+  <data name="Properties.NoTags" xml:space="preserve">
+    <value>aucune</value>
+  </data>
+  <data name="Command.Permissions" xml:space="preserve">
+    <value>Droits</value>
+  </data>
+  <data name="Command.RemoveMark" xml:space="preserve">
+    <value>Retirer la marque</value>
+  </data>
+  <data name="Button.Apply" xml:space="preserve">
+    <value>Appliquer</value>
+  </data>
 </root>

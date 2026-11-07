@@ -90,6 +90,30 @@ public class PropertiesDialogTest
         AssertScreenDoesNotContain(screen, "Contains");
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task InGerman_TheFactsAndTheirCaptionsAreGerman_AndNoCaptionTouchesItsValue()
+    {
+        iConsole.Localization.Localizer localizer = new(
+        [
+            new iConsole.Localization.ResourceLocalizationSource(new System.Resources.ResourceManager("iConsole.Localization.Resources.Strings", typeof(iConsole.Localization.Localizer).Assembly)),
+            new iConsole.Localization.ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(PropertiesDialog).Assembly)),
+        ]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+
+        Rig rig = await OpenAsync(File(mode: Octal644));
+
+        ScreenBuffer screen = Render(rig.Root);
+        AssertScreenContains(screen, "Eigenschaften von report.txt");
+        AssertScreenContains(screen, "Typ ");
+        AssertScreenContains(screen, "Datei");
+        AssertScreenContains(screen, "Größe");
+        AssertScreenContains(screen, "Rechte ");
+        AssertScreenDoesNotContain(screen, "Location");
+        AssertScreenDoesNotContain(screen, "Permissions");
+    }
+
     private static readonly FileOrigin Marked = new(3, "https://example.com/page", "https://example.com/report.txt", null, null);
 
     private static Mock<IFileOriginService> OriginService(FileOrigin? origin)

@@ -5377,4 +5377,91 @@
     <value>Mark or unmark the row under the cursor and move up.</value>
     <comment>Mark or unmark the row under the cursor and move up.</comment>
   </data>
+  <data name="Button.Permissions" xml:space="preserve">
+    <value>Permissions… (^P)</value>
+  </data>
+  <data name="Dialog.PropertiesOf" xml:space="preserve">
+    <value>Properties of {0}</value>
+  </data>
+  <data name="Properties.Cap.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Properties.Cap.Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="Properties.Cap.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Properties.Cap.Pointsto" xml:space="preserve">
+    <value>Points to</value>
+  </data>
+  <data name="Properties.Cap.Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Properties.Cap.Contains" xml:space="preserve">
+    <value>Contains</value>
+  </data>
+  <data name="Properties.Cap.Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="Properties.Cap.Modified" xml:space="preserve">
+    <value>Modified</value>
+  </data>
+  <data name="Properties.Cap.Accessed" xml:space="preserve">
+    <value>Accessed</value>
+  </data>
+  <data name="Properties.Cap.Permissions" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="Properties.Cap.Colour" xml:space="preserve">
+    <value>Colour</value>
+  </data>
+  <data name="Properties.Cap.Tags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="Properties.Kind.File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Properties.Kind.Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="Properties.Kind.LinkFile" xml:space="preserve">
+    <value>Link to a file</value>
+  </data>
+  <data name="Properties.Kind.LinkFolder" xml:space="preserve">
+    <value>Link to a folder</value>
+  </data>
+  <data name="Properties.Files.One" xml:space="preserve">
+    <value>{0} file</value>
+  </data>
+  <data name="Properties.Files.Many" xml:space="preserve">
+    <value>{0} files</value>
+  </data>
+  <data name="Properties.Folders.One" xml:space="preserve">
+    <value>{0} folder</value>
+  </data>
+  <data name="Properties.Folders.Many" xml:space="preserve">
+    <value>{0} folders</value>
+  </data>
+  <data name="Properties.SoFar" xml:space="preserve">
+    <value>{0} so far</value>
+  </data>
+  <data name="Properties.Unreadable" xml:space="preserve">
+    <value>at least — {0} could not be read</value>
+  </data>
+  <data name="Properties.NoColour" xml:space="preserve">
+    <value>none</value>
+  </data>
+  <data name="Properties.NoTags" xml:space="preserve">
+    <value>none</value>
+  </data>
+  <data name="Command.Permissions" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="Command.RemoveMark" xml:space="preserve">
+    <value>Remove mark</value>
+  </data>
+  <data name="Button.Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
 </root>

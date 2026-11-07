@@ -5236,4 +5236,91 @@
   <data name="CmdDesc.70f70296" xml:space="preserve">
     <value>Contrassegna o rimuove il contrassegno dalla riga sotto il cursore e sale.</value>
   </data>
+  <data name="Button.Permissions" xml:space="preserve">
+    <value>Permessi… (^P)</value>
+  </data>
+  <data name="Dialog.PropertiesOf" xml:space="preserve">
+    <value>Proprietà di {0}</value>
+  </data>
+  <data name="Properties.Cap.Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Properties.Cap.Location" xml:space="preserve">
+    <value>Posizione</value>
+  </data>
+  <data name="Properties.Cap.Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Properties.Cap.Pointsto" xml:space="preserve">
+    <value>Punta a</value>
+  </data>
+  <data name="Properties.Cap.Size" xml:space="preserve">
+    <value>Dimensione</value>
+  </data>
+  <data name="Properties.Cap.Contains" xml:space="preserve">
+    <value>Contiene</value>
+  </data>
+  <data name="Properties.Cap.Created" xml:space="preserve">
+    <value>Creato</value>
+  </data>
+  <data name="Properties.Cap.Modified" xml:space="preserve">
+    <value>Modificato</value>
+  </data>
+  <data name="Properties.Cap.Accessed" xml:space="preserve">
+    <value>Accesso</value>
+  </data>
+  <data name="Properties.Cap.Permissions" xml:space="preserve">
+    <value>Permessi</value>
+  </data>
+  <data name="Properties.Cap.Colour" xml:space="preserve">
+    <value>Colore</value>
+  </data>
+  <data name="Properties.Cap.Tags" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="Properties.Kind.File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Properties.Kind.Folder" xml:space="preserve">
+    <value>Cartella</value>
+  </data>
+  <data name="Properties.Kind.LinkFile" xml:space="preserve">
+    <value>Collegamento a un file</value>
+  </data>
+  <data name="Properties.Kind.LinkFolder" xml:space="preserve">
+    <value>Collegamento a una cartella</value>
+  </data>
+  <data name="Properties.Files.One" xml:space="preserve">
+    <value>{0} file</value>
+  </data>
+  <data name="Properties.Files.Many" xml:space="preserve">
+    <value>{0} file</value>
+  </data>
+  <data name="Properties.Folders.One" xml:space="preserve">
+    <value>{0} cartella</value>
+  </data>
+  <data name="Properties.Folders.Many" xml:space="preserve">
+    <value>{0} cartelle</value>
+  </data>
+  <data name="Properties.SoFar" xml:space="preserve">
+    <value>{0} finora</value>
+  </data>
+  <data name="Properties.Unreadable" xml:space="preserve">
+    <value>almeno — non è stato possibile leggere {0}</value>
+  </data>
+  <data name="Properties.NoColour" xml:space="preserve">
+    <value>nessuno</value>
+  </data>
+  <data name="Properties.NoTags" xml:space="preserve">
+    <value>nessuno</value>
+  </data>
+  <data name="Command.Permissions" xml:space="preserve">
+    <value>Permessi</value>
+  </data>
+  <data name="Command.RemoveMark" xml:space="preserve">
+    <value>Rimuovi contrassegno</value>
+  </data>
+  <data name="Button.Apply" xml:space="preserve">
+    <value>Applica</value>
+  </data>
 </root>
