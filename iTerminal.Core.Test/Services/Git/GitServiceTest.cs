@@ -3,6 +3,7 @@ using iTerminal.Core.Services.Git;
 namespace iTerminal.Core.Test.Services.Git;
 
 [TestClass]
+[DoNotParallelize]
 public class GitServiceTest
 {
     private static bool GitAvailable()

@@ -1,4 +1,4 @@
-using iConsole.Controls;
+﻿using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Services;
@@ -178,6 +178,27 @@ public class DialogTest
         Assert.IsTrue(handled);
         Assert.AreEqual(1, host.CloseCount);
         Assert.IsTrue(dialog.IsVisible);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void OpeningFocusSkipsReadOnlyAndDisabledControls()
+    {
+        var theme = new Mock<IThemeService>();
+        theme.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
+        var dialog = new Dialog("Test", theme.Object);
+        var readOnlyBox = new TextBox(new Mock<IBeepService>().Object, new Mock<IDateTimeProviderService>().Object, theme.Object) { IsReadOnly = true };
+        var disabled = new CheckBox(theme.Object) { IsEnabled = false };
+        var usable = new CheckBox(theme.Object);
+        dialog.AddControl(readOnlyBox);
+        dialog.AddControl(disabled);
+        dialog.AddControl(usable);
+
+        dialog.OnInitializeLayout();
+
+        Assert.IsTrue(usable.IsFocused);
+        Assert.IsFalse(readOnlyBox.IsFocused);
+        Assert.IsFalse(disabled.IsFocused);
     }
 
     #endregion

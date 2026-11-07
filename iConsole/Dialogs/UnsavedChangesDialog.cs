@@ -47,7 +47,11 @@ public class UnsavedChangesDialog : Dialog
     public UnsavedChangesDialog(string fileName, IThemeService themeService)
         : base(iConsole.Localization.UiText.Get("Editor.UnsavedChanges", "Unsaved changes"), themeService)
     {
-        _message = string.Format(UiText.Get("Msg.UnsavedChangesIn", "{0} has unsaved changes."), fileName);
+        string template = UiText.Get("Msg.UnsavedChangesIn", "{0} has unsaved changes.");
+        // The width the message gets (80 less the margins). A long path loses its start, not the name and extension that say which file it is.
+        int room = Math.Max(8, 72 - (template.Length - 3));
+        string shown = fileName.Length > room ? "…" + fileName[^(room - 1)..] : fileName;
+        _message = string.Format(template, shown);
         _saveButton = new Button(iConsole.Localization.UiText.Get("Common.Save", "Save") + " (S)", new ChoiceCommand(_choice, UnsavedChoice.Save), themeService);
         _discardButton = new Button(iConsole.Localization.UiText.Get("Editor.Discard", "Discard") + " (D)", new ChoiceCommand(_choice, UnsavedChoice.Discard), themeService) { IsDestructive = true };
         _cancelButton = new Button(iConsole.Localization.UiText.Get("Common.Cancel", "Cancel") + " (C)", new ChoiceCommand(_choice, UnsavedChoice.Cancel), themeService);
