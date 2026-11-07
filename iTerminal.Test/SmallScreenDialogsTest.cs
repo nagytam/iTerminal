@@ -33,4 +33,30 @@ public class SmallScreenDialogsTest
         await small.WaitForTextAsync("Translator");
         await small.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("[Detect language")), "the whole of \"Detect language\" in the From box");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheChecksumsCompareBoxOn60x20_IsNotHiddenUnderTheBottomBorder()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+        await narrow.SelectEntryAsync("readme.txt");
+
+        await narrow.PressAsync("Shift+F12");
+
+        await narrow.WaitForTextAsync("Checksums");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Compare:")), "the compare box inside the frame");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Esc:close")), "the footer hints on the bottom border");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheTranslatorsEngineBoxOn60Columns_KeepsRoomForItsNames()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Ctrl+Shift+F4");
+
+        await narrow.WaitForTextAsync("Translator");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Engine:") && l.Contains("[Automa")), "more of the engine name than \"Aut\"");
+    }
 }
