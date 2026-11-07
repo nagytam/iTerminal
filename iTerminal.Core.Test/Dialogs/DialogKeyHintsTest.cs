@@ -77,8 +77,8 @@ public class DialogKeyHintsTest
     [TestMethod]
     public void Checksum_KeyHints_NameTheSaveAndCopyKeys()
     {
-        ChecksumDialog dialog = new(Mock.Of<IChecksumService>(), Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme());
+        ChecksumDialog dialog = new(Mock.Of<IChecksumService>(), Mock.Of<iTerminal.Core.Services.Reputation.IHashReputationService>(), Mock.Of<iTerminal.Core.Services.IPasswordManager>(), Mock.Of<iTerminal.Core.Services.FileAssociations.IFileLauncher>(), Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme());
 
-        CollectionAssert.IsSubsetOf(new[] { "F2", "F3", "Enter" }, Keys(dialog.GetKeyHints()));
+        CollectionAssert.IsSubsetOf(new[] { "F2", "F3", "F4", "F5", "Enter" }, Keys(dialog.GetKeyHints()));
     }
 }

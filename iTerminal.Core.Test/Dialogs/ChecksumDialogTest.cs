@@ -58,7 +58,7 @@ public class ChecksumDialogTest
             service.Setup(s => s.ComputeAsync(It.IsAny<Url>(), It.IsAny<IFileSystem>(), It.IsAny<IProgress<long>?>(), It.IsAny<CancellationToken>())).ReturnsAsync(result!);
         }
 
-        ChecksumDialog dialog = new(service.Object, Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), TestTheme(), signatures);
+        ChecksumDialog dialog = new(service.Object, Mock.Of<iTerminal.Core.Services.Reputation.IHashReputationService>(), Mock.Of<iTerminal.Core.Services.IPasswordManager>(), Mock.Of<iTerminal.Core.Services.FileAssociations.IFileLauncher>(), Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), TestTheme(), signatures);
         dialog.Load(new Url(path), Mock.Of<IFileSystem>());
         Control root = await ShowAsync(dialog, screen);
         await dialog.ComputeTask;
@@ -170,7 +170,7 @@ public class ChecksumDialogTest
         service.Setup(s => s.ComputeAsync(It.IsAny<Url>(), It.IsAny<IFileSystem>(), It.IsAny<IProgress<long>?>(), It.IsAny<CancellationToken>())).Returns(never.Task);
         string path = Path.Combine(_folder, "slow.bin");
         File.WriteAllText(path, "x");
-        ChecksumDialog dialog = new(service.Object, Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), TestTheme());
+        ChecksumDialog dialog = new(service.Object, Mock.Of<iTerminal.Core.Services.Reputation.IHashReputationService>(), Mock.Of<iTerminal.Core.Services.IPasswordManager>(), Mock.Of<iTerminal.Core.Services.FileAssociations.IFileLauncher>(), Mock.Of<IBeepService>(), Mock.Of<IDateTimeProviderService>(), TestTheme());
         dialog.Load(new Url(path), Mock.Of<IFileSystem>());
         Control root = await ShowAsync(dialog);
 

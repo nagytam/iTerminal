@@ -8,8 +8,11 @@ using iConsole.Helper;
 using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Controls;
+using iTerminal.Core.Services;
 using iTerminal.Core.Services.Checksums;
+using iTerminal.Core.Services.FileAssociations;
 using iTerminal.Core.Services.Properties;
+using iTerminal.Core.Services.Reputation;
 
 namespace iTerminal.Core.Dialogs;
 
@@ -26,6 +29,9 @@ namespace iTerminal.Core.Dialogs;
 /// (<c>name.sha256</c>, <c>SHA256SUMS</c>): that file is there to be checked against.</item>
 /// <item><b>F2 writes <c>name.sha256</c></b> in the format the common tools read — never over a
 /// file that says something else.</item>
+/// <item><b>F4 asks VirusTotal about the SHA-256, and only when pressed</b>: the hash is sent, never the
+/// file. The key is a password-manager entry titled <c>VirusTotal…</c>. The look-up runs on its own
+/// task, which closing the dialog (or a newer F4) cancels; F5 opens the VirusTotal page.</item>
 /// </list>
 /// </summary>
 public class ChecksumDialog : Dialog
@@ -36,6 +42,15 @@ public class ChecksumDialog : Dialog
     private const int SignatureRows = 4;
 
     private readonly IChecksumService _checksumService;
+    private readonly IHashReputationService _reputationService;
+    private readonly IPasswordManager _passwords;
+    private readonly IFileLauncher _launcher;
+    private readonly InfoLines _reputationLines;
+    private CancellationTokenSource? _lookupCancellation;
+    private int _lookupGeneration;
+    private volatile ReputationResult? _reputation;
+    private volatile string? _reputationNote;
+    private bool _reputationFailed;
     private readonly IPublisherSignatureService? _publisherSignatures;
     private readonly InfoLines _info;
     private readonly TextBox _textBoxCompare;
@@ -49,6 +64,9 @@ public class ChecksumDialog : Dialog
 
     public ChecksumDialog(
         IChecksumService checksumService,
+        IHashReputationService reputationService,
+        IPasswordManager passwords,
+        IFileLauncher launcher,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
@@ -56,18 +74,29 @@ public class ChecksumDialog : Dialog
         : base(nameof(ChecksumDialog), themeService)
     {
         _checksumService = checksumService;
+        _reputationService = reputationService;
+        _passwords = passwords;
+        _launcher = launcher;
         _publisherSignatures = publisherSignatures;
         Title = iConsole.Localization.UiText.Get("Menu.Checksums", "Checksums");
         _textBoxCompare = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Compare", "Compare"), Placeholder = UiText.Get("Field.PasteExpectedHash", "paste the expected hash") };
         _info = new InfoLines(themeService);
         _verdict = new InfoLines(themeService);
+        _reputationLines = new InfoLines(themeService);
 
         // The box first: it is the one thing to type into, and the first focusable control is
         // where the cursor lands.
         AddControl(_textBoxCompare);
         AddControl(_info);
         AddControl(_verdict);
+        AddControl(_reputationLines);
     }
+
+    /// <summary>The last F4 look-up; nothing waits on it, it exists so a test can.</summary>
+    public Task LookupTask { get; private set; } = Task.CompletedTask;
+
+    /// <summary>What the dialog says about the reputation look-up.</summary>
+    public string Reputation => _reputationLines.Text;
 
     /// <summary>The file being read.</summary>
     public Url? Url { get; private set; }
@@ -112,6 +141,9 @@ public class ChecksumDialog : Dialog
         Result = null;
         Error = null;
         Written = null;
+        CancelLookup();
+        _reputation = null;
+        _reputationNote = null;
         Signatures = null;
         Compare = string.Empty;
         _lastCompare = string.Empty;
@@ -212,7 +244,7 @@ public class ChecksumDialog : Dialog
         var infoHeight = InfoHeight(Math.Max(16, width - 4 - CaptionWidth));
         if (Parent is not null)
         {
-            CenterInParent(new Size(width, Math.Min(infoHeight + 7, Math.Max(17, (int)Parent.ViewSize.Height - 2))));
+            CenterInParent(new Size(width, Math.Min(infoHeight + 10, Math.Max(17, (int)Parent.ViewSize.Height - 2))));
         }
 
         var inner = Math.Max(1, ViewSize.Width - 4);
@@ -222,7 +254,10 @@ public class ChecksumDialog : Dialog
         _textBoxCompare.ViewSize = new Size(inner, 1);
         _textBoxCompare.ScrollableModel.ViewSize = _textBoxCompare.ViewSize;
         _verdict.Position = new Position(2, infoHeight + 3);
-        _verdict.ViewSize = new Size(inner, 2);
+        _verdict.ViewSize = new Size(inner, Math.Clamp(ViewSize.Height - 1 - _verdict.Position.Y, 0, 2));
+        _reputationLines.Position = new Position(2, infoHeight + 5);
+        // Never over the bottom border: on a short terminal the dialog is clipped and the footer lives there.
+        _reputationLines.ViewSize = new Size(inner, Math.Clamp(ViewSize.Height - 1 - _reputationLines.Position.Y, 0, 3));
         base.OnInitializeLayout();
     }
 
@@ -334,6 +369,163 @@ public class ChecksumDialog : Dialog
         }
 
         _verdict.Lines = verdict;
+        _reputationLines.Lines = ReputationRows(colorScheme, Math.Max(16, (int)_reputationLines.ViewSize.Width));
+    }
+
+    private List<InfoLines.Line> ReputationRows(ColorScheme colorScheme, int width)
+    {
+        var rows = new List<InfoLines.Line>();
+        if (_reputation is { } reputation)
+        {
+            rows.AddRange(Wrap(ReputationHeadline(reputation, colorScheme), width));
+            if (reputation.Status == ReputationStatus.Found)
+            {
+                var first = reputation.FirstSeen is { } f ? f.LocalDateTime.ToString("yyyy-MM-dd HH:mm") : "–";
+                var last = reputation.LastSeen is { } l ? l.LocalDateTime.ToString("yyyy-MM-dd HH:mm") : "–";
+                rows.Add(new(string.Format(UiText.Get("Reputation.Seen", "First seen {0}, last seen {1}"), first, last).Shrink(width) ?? string.Empty));
+            }
+
+            if (reputation.Link is not null)
+            {
+                rows.Add(new(UiText.Get("Reputation.OpenHint", "F5 opens the VirusTotal page in the browser").Shrink(width) ?? string.Empty, colorScheme.DisabledForeground));
+            }
+        }
+        else if (_reputationNote is { } note)
+        {
+            rows.AddRange(Wrap(new InfoLines.Line(note, _reputationFailed ? colorScheme.Error : null), width));
+        }
+
+        // The block is three rows high: a long message wraps, and the hint line is the first to go.
+        return rows.Count > 3 ? rows.GetRange(0, 3) : rows;
+    }
+
+    /// <summary>Breaks a sentence at spaces over as many rows as it needs, rather than cutting the middle out of it.</summary>
+    private static IEnumerable<InfoLines.Line> Wrap(InfoLines.Line line, int width)
+    {
+        var current = string.Empty;
+        foreach (var word in line.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (current.Length > 0 && current.Length + 1 + word.Length > width)
+            {
+                yield return new(current, line.Foreground);
+                current = word;
+            }
+            else
+            {
+                current = current.Length == 0 ? word : current + " " + word;
+            }
+        }
+
+        if (current.Length > 0)
+        {
+            yield return new(current, line.Foreground);
+        }
+    }
+
+    private static InfoLines.Line ReputationHeadline(ReputationResult reputation, ColorScheme colorScheme)
+    {
+        switch (reputation.Status)
+        {
+            case ReputationStatus.Found:
+                var text = string.Format(UiText.Get("Reputation.Detections", "VirusTotal: {0}/{1} engines flag this file"), reputation.Detections, reputation.Total);
+                return new(text, reputation.Detections > 0 ? colorScheme.Error : Color.Green);
+            case ReputationStatus.NotFound:
+                return new(UiText.Get("Reputation.NotFound", "VirusTotal has never seen this file (open the page to upload it yourself)."));
+            case ReputationStatus.RateLimited:
+                var message = reputation.RetryAfter is { } wait
+                    ? string.Format(UiText.Get("Reputation.RateLimitedAfter", "VirusTotal rate limit reached: try again in {0} s."), (int)Math.Ceiling(wait.TotalSeconds))
+                    : UiText.Get("Reputation.RateLimited", "VirusTotal rate limit reached: try again in a minute.");
+                return new(message, colorScheme.Error);
+            case ReputationStatus.Offline:
+                return new(UiText.Get("Reputation.Offline", "Could not reach VirusTotal: you seem to be offline."), colorScheme.Error);
+            case ReputationStatus.InvalidKey:
+                return new(UiText.Get("Reputation.InvalidKey", "VirusTotal refused the API key: check the Password Manager entry."), colorScheme.Error);
+            default:
+                return new(string.Format(UiText.Get("Reputation.Error", "VirusTotal look-up failed: {0}"), reputation.Message ?? "?"), colorScheme.Error);
+        }
+    }
+
+    private void SetReputationNote(string note, bool failed)
+    {
+        _reputation = null;
+        _reputationNote = note;
+        _reputationFailed = failed;
+    }
+
+    private void CancelLookup()
+    {
+        // A pending look-up is of no use once the dialog is gone or shows another file; its answer is
+        // dropped by the generation as well as by the token.
+        Interlocked.Increment(ref _lookupGeneration);
+        _lookupCancellation?.Cancel();
+        _lookupCancellation = null;
+    }
+
+    /// <summary>
+    /// F4: asks VirusTotal about the file's SHA-256. Never started by itself. Only the hash leaves the
+    /// machine, and the key is read from the password manager for this one call.
+    /// </summary>
+    public void LookUpReputation()
+    {
+        if (Result is not { } result)
+        {
+            SetReputationNote(UiText.Get("Reputation.Wait", "Wait until the file has been read, then press F4."), true);
+        }
+        else if (VirusTotalKey.Resolve(_passwords) is not { } key)
+        {
+            SetReputationNote(UiText.Get("Reputation.NoKey", "No VirusTotal key: add a Password Manager entry titled \"VirusTotal\" with your API key as its password."), true);
+        }
+        else
+        {
+            CancelLookup();
+            var cancellation = _lookupCancellation = new CancellationTokenSource();
+            var generation = Volatile.Read(ref _lookupGeneration);
+            var hash = result.Hashes[ChecksumAlgorithm.Sha256];
+            SetReputationNote(UiText.Get("Reputation.Asking", "Asking VirusTotal about the SHA-256 (only the hash is sent)…"), false);
+            LookupTask = Task.Run(async () =>
+            {
+                ReputationResult answer;
+                try
+                {
+                    answer = await _reputationService.LookUpAsync(hash, key, cancellation.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+                catch (Exception exception)
+                {
+                    answer = new ReputationResult(ReputationStatus.Error, Message: exception.Message);
+                }
+
+                if (!cancellation.IsCancellationRequested && generation == Volatile.Read(ref _lookupGeneration))
+                {
+                    _reputation = answer;
+                }
+            });
+        }
+
+        UpdateLines();
+        StateHasChanged();
+    }
+
+    /// <summary>F5: opens the VirusTotal page of a file the look-up has answered for.</summary>
+    public void OpenReputationPage()
+    {
+        if (_reputation?.Link is not { } link)
+        {
+            return;
+        }
+
+        var generation = Volatile.Read(ref _lookupGeneration);
+        _ = Task.Run(async () =>
+        {
+            var outcome = await _launcher.OpenUrlAsync(link);
+            if (!outcome.Started && generation == Volatile.Read(ref _lookupGeneration))
+            {
+                SetReputationNote(outcome.Failure ?? UiText.Get("Reputation.OpenFailed", "The browser could not be started."), true);
+            }
+        });
     }
 
     /// <summary>
@@ -447,6 +639,8 @@ public class ChecksumDialog : Dialog
     {
         yield return ("F2", UiText.Get("DialogHint.SaveChecksumsNextToFiles", "Save the checksums next to the files"));
         yield return ("F3", UiText.Get("DialogHint.CopySha256", "Copy the SHA-256 checksum"));
+        yield return ("F4", UiText.Get("DialogHint.LookUpReputation", "Look the SHA-256 up on VirusTotal (sends only the hash)"));
+        yield return ("F5", UiText.Get("DialogHint.OpenReputationPage", "Open the VirusTotal page in the browser"));
         yield return ("Click", UiText.Get("DialogHint.CopyChecksumUnderPointer", "Copy the checksum under the pointer"));
         yield return ("Enter", UiText.Get("DialogHint.CloseReportCompareEmpty", "Close the report while the compare box is empty"));
     }
@@ -462,6 +656,18 @@ public class ChecksumDialog : Dialog
         if (keyEvent.ConsoleKey == ConsoleKey.F3 && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)
         {
             CopyHash(ChecksumAlgorithm.Sha256);
+            return true;
+        }
+
+        if (keyEvent.ConsoleKey == ConsoleKey.F4 && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)
+        {
+            LookUpReputation();
+            return true;
+        }
+
+        if (keyEvent.ConsoleKey == ConsoleKey.F5 && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)
+        {
+            OpenReputationPage();
             return true;
         }
 
@@ -576,6 +782,7 @@ public class ChecksumDialog : Dialog
     {
         // The read is of no use to anyone once the dialog is gone, and over ssh it is a transfer.
         _cancellation?.Cancel();
+        CancelLookup();
         base.Close();
     }
 
@@ -585,7 +792,7 @@ public class ChecksumDialog : Dialog
         var colorScheme = ThemeService.CurrentColorScheme;
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
         var width = (int)ViewSize.Width;
-        var footer = " F2:save .sha256  F3 or click:copy  Esc:close ".FitHints(Math.Max(0, width - 4));
+        var footer = " F2:save .sha256  F3 or click:copy  F4:VirusTotal  F5:open  Esc:close ".FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);

@@ -228,6 +228,9 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<Core.Services.Streams.IStreamAttributeService>(provider => provider.GetRequiredService<SandboxServices.StreamAttributes>());
                 services.AddSingleton<Core.Services.Mail.IMailService, SandboxServices.Mail>();
                 services.AddSingleton<Core.Services.Web.IWebFetcher, SandboxServices.Web>();
+                // No test asks VirusTotal about anything.
+                services.AddSingleton<SandboxServices.HashReputation>();
+                services.AddSingleton<Core.Services.Reputation.IHashReputationService>(provider => provider.GetRequiredService<SandboxServices.HashReputation>());
                 services.AddSingleton<SandboxServices.SystemSettings>();
                 services.AddSingleton<Core.Services.SystemSettings.ISystemSettingsService>(provider => provider.GetRequiredService<SandboxServices.SystemSettings>());
                 services.AddSingleton<SandboxServices.MalwareScanner>();
