@@ -27,6 +27,7 @@ namespace iTerminal.Core.Dialogs;
 public class DiskUsageDialog : Dialog
 {
     private const int BarWidth = 16;
+    private const int MinNameWidth = 16;
 
     private readonly IDiskUsageService _service;
     private readonly IContentModelService? _contentModelService;
@@ -268,7 +269,9 @@ public class DiskUsageDialog : Dialog
             _top = _cursor - visible + 1;
         }
 
-        var nameWidth = Math.Max(8, width - (2 + BarWidth + 2 + 10 + 2 + 4 + 2 + 10));
+        // The file count is the first column to go: with it, a 60-column terminal left a name 8 characters ("readme.t").
+        var withFiles = width - (2 + BarWidth + 2 + 10 + 2 + 4 + 2 + 10) >= MinNameWidth;
+        var nameWidth = Math.Max(8, width - (2 + BarWidth + 2 + 10 + 2 + 4 + (withFiles ? 2 + 10 : 0)));
         if (rows.Count == 0)
         {
             lines.Add(new("  (empty)", colorScheme.Foreground));
@@ -280,7 +283,7 @@ public class DiskUsageDialog : Dialog
             var name = row.IsFolder ? row.Name + "/" : row.Name;
             var files = row.IsFolder ? $"{row.FileCount:N0}" : string.Empty;
             var text = $"{(i == _cursor ? "▶" : " ")} {name.Cut(nameWidth).ExpandRight(nameWidth)} "
-                + $"{Bar(row.Size, _current.Size)} {row.Size.ToFileSize(),10} {Percent(row.Size, _current.Size)} {files,10}";
+                + $"{Bar(row.Size, _current.Size)} {row.Size.ToFileSize(),10} {Percent(row.Size, _current.Size)}" + (withFiles ? $" {files,10}" : string.Empty);
             Color? color = i == _cursor
                 ? Color.Yellow
                 : row.IsFolder ? Color.Cyan : row.IsOther ? Color.Gray : null;

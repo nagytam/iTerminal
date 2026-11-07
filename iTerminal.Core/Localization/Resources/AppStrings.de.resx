@@ -5335,4 +5335,7 @@
   <data name="Translator.EngineAi" xml:space="preserve">
     <value>KI-Modell</value>
   </data>
+  <data name="Git.NoRepoHint" xml:space="preserve">
+    <value>Öffnen Sie im Panel einen Ordner innerhalb eines Repositorys und drücken Sie dann erneut Ctrl+G.</value>
+  </data>
 </root>

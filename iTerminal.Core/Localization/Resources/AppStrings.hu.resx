@@ -5335,4 +5335,7 @@
   <data name="Translator.EngineAi" xml:space="preserve">
     <value>MI-modell</value>
   </data>
+  <data name="Git.NoRepoHint" xml:space="preserve">
+    <value>Nyisson meg a panelben egy tárhelyen belüli mappát, majd nyomja meg újra a Ctrl+G-t.</value>
+  </data>
 </root>
