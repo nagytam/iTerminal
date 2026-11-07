@@ -70,6 +70,27 @@ public static class SandboxServices
         }
     }
 
+    /// <summary>The running process's environment, in memory: a test that edits the session scope never changes the test host's own.</summary>
+    public sealed class SessionEnvironment : Core.Services.SystemSettings.ISessionEnvironment
+    {
+        private readonly SortedDictionary<string, string> _values = new(StringComparer.Ordinal) { ["SANDBOX_SESSION"] = "yes" };
+
+        public IReadOnlyList<Core.Services.SystemSettings.SystemEnvironmentVariable> Read() =>
+            [.. _values.Select(p => new Core.Services.SystemSettings.SystemEnvironmentVariable(p.Key, p.Value))];
+
+        public Core.Services.SystemSettings.SystemSettingResult Set(string name, string value)
+        {
+            _values[name] = value;
+            return Core.Services.SystemSettings.SystemSettingResult.Ok($"{name} was set.");
+        }
+
+        public Core.Services.SystemSettings.SystemSettingResult Remove(string name)
+        {
+            _values.Remove(name);
+            return Core.Services.SystemSettings.SystemSettingResult.Ok($"{name} was removed.");
+        }
+    }
+
     /// <summary>
     /// A machine called SANDBOX in the workgroup TESTGROUP, with two variables in each scope and three
     /// time zones, all in memory — recording nothing but keeping what it was told, so a test can read it back.

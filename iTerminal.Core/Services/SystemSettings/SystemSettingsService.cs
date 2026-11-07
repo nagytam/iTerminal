@@ -5,7 +5,8 @@ namespace iTerminal.Core.Services.SystemSettings;
 /// <summary>
 /// Windows through the registry and PowerShell (<c>Get-CimInstance</c>, <c>Rename-Computer</c>,
 /// <c>Add-Computer -WorkgroupName</c>, <c>tzutil</c>); Linux through <c>hostnamectl</c>,
-/// <c>timedatectl</c>, <c>/etc/environment</c> and the user's <c>environment.d</c>. Every external tool
+/// <c>timedatectl</c>, <c>/etc/environment</c> and the user's <c>environment.d</c>; macOS keeps only the
+/// user's environment, as a block in <c>~/.zprofile</c>. Every external tool
 /// goes through <see cref="IExternalProcessRunner"/>, so the service is tested against recorded output.
 ///
 /// <para>Joining a <em>domain</em> is not offered: it takes a directory account's credentials, and
@@ -22,7 +23,7 @@ public sealed class SystemSettingsService : ISystemSettingsService
     private readonly IEnvironmentVariableStore? _machineStore;
 
     public SystemSettingsService(IExternalProcessRunner runner, Elevation.IElevationService elevationService)
-        : this(runner, () => elevationService.IsElevated, OperatingSystem.IsWindows(), OperatingSystem.IsLinux(), null, null)
+        : this(runner, () => elevationService.IsElevated, OperatingSystem.IsWindows(), OperatingSystem.IsLinux(), null, null, OperatingSystem.IsMacOS())
     {
     }
 
@@ -33,21 +34,30 @@ public sealed class SystemSettingsService : ISystemSettingsService
         bool windows,
         bool linux,
         IEnvironmentVariableStore? userStore,
-        IEnvironmentVariableStore? machineStore)
+        IEnvironmentVariableStore? machineStore,
+        bool macOs = false)
     {
         _runner = runner;
         _isElevated = isElevated;
         _windows = windows;
         _linux = linux;
-        _userStore = userStore ?? DefaultStore(EnvironmentScope.User, windows, linux);
-        _machineStore = machineStore ?? DefaultStore(EnvironmentScope.Machine, windows, linux);
+        _userStore = userStore ?? DefaultStore(EnvironmentScope.User, windows, linux, macOs);
+        _machineStore = machineStore ?? DefaultStore(EnvironmentScope.Machine, windows, linux, macOs);
     }
 
-    private static IEnvironmentVariableStore? DefaultStore(EnvironmentScope scope, bool windows, bool linux)
+    private static IEnvironmentVariableStore? DefaultStore(EnvironmentScope scope, bool windows, bool linux, bool macOs)
     {
         if (windows && OperatingSystem.IsWindows())
         {
             return new RegistryEnvironmentStore(scope);
+        }
+
+        if (macOs)
+        {
+            // Macs keep no machine-wide file this app may write, so only the user's own environment is offered.
+            return scope == EnvironmentScope.User
+                ? new ProfileEnvironmentStore(ProfileEnvironmentStore.DefaultPath())
+                : null;
         }
 
         if (!linux)

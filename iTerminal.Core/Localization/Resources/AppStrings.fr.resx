@@ -3985,4 +3985,100 @@
   <data name="Voice.Transcribing" xml:space="preserve">
     <value>transcription…</value>
   </data>
+  <data name="Dialog.EnvVarsTitle" xml:space="preserve">
+    <value>Variables d'environnement</value>
+  </data>
+  <data name="DialogHint.EnvVars.NextFieldEnterSaves" xml:space="preserve">
+    <value>Champ suivant ; Entrée sur la valeur enregistre</value>
+  </data>
+  <data name="DialogHint.EnvVars.Delete" xml:space="preserve">
+    <value>Supprimer la variable</value>
+  </data>
+  <data name="DialogHint.EnvVars.Keep" xml:space="preserve">
+    <value>Garder la variable</value>
+  </data>
+  <data name="DialogHint.EnvVars.Move" xml:space="preserve">
+    <value>Parcourir les variables</value>
+  </data>
+  <data name="DialogHint.EnvVars.Add" xml:space="preserve">
+    <value>Ajouter une variable</value>
+  </data>
+  <data name="DialogHint.EnvVars.Change" xml:space="preserve">
+    <value>Modifier la valeur</value>
+  </data>
+  <data name="DialogHint.EnvVars.DeleteAsks" xml:space="preserve">
+    <value>Supprimer la variable (demande confirmation)</value>
+  </data>
+  <data name="DialogHint.EnvVars.Scope" xml:space="preserve">
+    <value>Basculer entre session, utilisateur et machine</value>
+  </data>
+  <data name="DialogHint.EnvVars.Reload" xml:space="preserve">
+    <value>Relire les variables</value>
+  </data>
+  <data name="EnvVars.ReadFailed" xml:space="preserve">
+    <value>Impossible de lire les variables : {0}</value>
+  </data>
+  <data name="EnvVars.Busy" xml:space="preserve">
+    <value>Une autre modification est encore en cours.</value>
+  </data>
+  <data name="EnvVars.Working" xml:space="preserve">
+    <value>En cours…</value>
+  </data>
+  <data name="EnvVars.Session" xml:space="preserve">
+    <value>Session</value>
+  </data>
+  <data name="EnvVars.User" xml:space="preserve">
+    <value>Utilisateur</value>
+  </data>
+  <data name="EnvVars.Machine" xml:space="preserve">
+    <value>Machine</value>
+  </data>
+  <data name="EnvVars.NoteSession" xml:space="preserve">
+    <value>Vue par iTerminal et les programmes qu'il lance ; disparaît à sa fermeture.</value>
+  </data>
+  <data name="EnvVars.NoteWindows" xml:space="preserve">
+    <value>Enregistrée dans le registre ; les programmes lancés ensuite la voient.</value>
+  </data>
+  <data name="EnvVars.NoteMac" xml:space="preserve">
+    <value>Enregistrée dans ~/.zprofile ; les nouveaux shells de connexion la lisent, pas les shells en cours ni les shells hors connexion.</value>
+  </data>
+  <data name="EnvVars.NoteLinux" xml:space="preserve">
+    <value>Enregistrée pour les sessions utilisateur systemd à la prochaine connexion ; les shells de terminal peuvent l'ignorer.</value>
+  </data>
+  <data name="EnvVars.FooterForm" xml:space="preserve">
+    <value>Entrée champ suivant  Tab/Maj+Tab déplacer  Échap annuler</value>
+  </data>
+  <data name="EnvVars.FooterFilter" xml:space="preserve">
+    <value>Tapez pour filtrer  Entrée garder  Échap effacer</value>
+  </data>
+  <data name="EnvVars.FooterBrowse" xml:space="preserve">
+    <value>N nouveau  E modifier  D supprimer  S portée  R relire  / filtre  Échap fermer</value>
+  </data>
+  <data name="EnvVars.Reading" xml:space="preserve">
+    <value>lecture…</value>
+  </data>
+  <data name="EnvVars.ColumnName" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="EnvVars.ColumnValue" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="EnvVars.NoMatch" xml:space="preserve">
+    <value>Aucune variable ne correspond à « {0} ».</value>
+  </data>
+  <data name="EnvVars.Empty" xml:space="preserve">
+    <value>Aucune variable ici. N en ajoute une.</value>
+  </data>
+  <data name="EnvVars.NewHint" xml:space="preserve">
+    <value>Nouvelle variable de portée {0}</value>
+  </data>
+  <data name="EnvVars.ChangeHint" xml:space="preserve">
+    <value>Modifier la valeur ; le nom reste</value>
+  </data>
+  <data name="EnvVars.FilterInput" xml:space="preserve">
+    <value>Filtre : {0}_</value>
+  </data>
+  <data name="EnvVars.FilterHint" xml:space="preserve">
+    <value>Filtre : {0}  (Échap montre toutes les variables)</value>
+  </data>
 </root>

@@ -37,7 +37,7 @@ public sealed record SystemSettingResult(bool Success, string Message, bool Rest
 /// The settings a system administrator reaches for first — computer name, workgroup, description,
 /// environment variables and time zone — read and changed through the operating system's own
 /// mechanisms (the registry, <c>Rename-Computer</c>, <c>hostnamectl</c>, <c>/etc/environment</c>,
-/// <c>tzutil</c>, <c>timedatectl</c>). Nothing here touches iTerminal's own settings.
+/// <c>tzutil</c>, <c>timedatectl</c>, <c>~/.zprofile</c> on a Mac). Nothing here touches iTerminal's own settings.
 ///
 /// <para>A change that needs administrator rights and finds none is refused with a message that says
 /// so, rather than attempted and failed half way: <see cref="IsElevated"/> is what the dialog shows.</para>

@@ -3985,4 +3985,100 @@
   <data name="Voice.Transcribing" xml:space="preserve">
     <value>transcribiendo…</value>
   </data>
+  <data name="Dialog.EnvVarsTitle" xml:space="preserve">
+    <value>Variables de entorno</value>
+  </data>
+  <data name="DialogHint.EnvVars.NextFieldEnterSaves" xml:space="preserve">
+    <value>Campo siguiente; Intro en el valor guarda</value>
+  </data>
+  <data name="DialogHint.EnvVars.Delete" xml:space="preserve">
+    <value>Eliminar la variable</value>
+  </data>
+  <data name="DialogHint.EnvVars.Keep" xml:space="preserve">
+    <value>Conservar la variable</value>
+  </data>
+  <data name="DialogHint.EnvVars.Move" xml:space="preserve">
+    <value>Moverse por las variables</value>
+  </data>
+  <data name="DialogHint.EnvVars.Add" xml:space="preserve">
+    <value>Añadir una variable</value>
+  </data>
+  <data name="DialogHint.EnvVars.Change" xml:space="preserve">
+    <value>Cambiar el valor</value>
+  </data>
+  <data name="DialogHint.EnvVars.DeleteAsks" xml:space="preserve">
+    <value>Eliminar la variable (pregunta antes)</value>
+  </data>
+  <data name="DialogHint.EnvVars.Scope" xml:space="preserve">
+    <value>Alternar entre sesión, usuario y equipo</value>
+  </data>
+  <data name="DialogHint.EnvVars.Reload" xml:space="preserve">
+    <value>Volver a leer las variables</value>
+  </data>
+  <data name="EnvVars.ReadFailed" xml:space="preserve">
+    <value>No se pudieron leer las variables: {0}</value>
+  </data>
+  <data name="EnvVars.Busy" xml:space="preserve">
+    <value>Otro cambio sigue en curso.</value>
+  </data>
+  <data name="EnvVars.Working" xml:space="preserve">
+    <value>Trabajando…</value>
+  </data>
+  <data name="EnvVars.Session" xml:space="preserve">
+    <value>Sesión</value>
+  </data>
+  <data name="EnvVars.User" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="EnvVars.Machine" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="EnvVars.NoteSession" xml:space="preserve">
+    <value>La ven iTerminal y los programas que inicia; desaparece al cerrarlo.</value>
+  </data>
+  <data name="EnvVars.NoteWindows" xml:space="preserve">
+    <value>Guardada en el registro; los programas iniciados desde ahora la ven.</value>
+  </data>
+  <data name="EnvVars.NoteMac" xml:space="preserve">
+    <value>Guardada en ~/.zprofile; los nuevos shells de inicio de sesión la leen, los que ya corren y los que no son de inicio de sesión no.</value>
+  </data>
+  <data name="EnvVars.NoteLinux" xml:space="preserve">
+    <value>Guardada para las sesiones de usuario de systemd en el próximo inicio de sesión; los shells de terminal pueden no leerla.</value>
+  </data>
+  <data name="EnvVars.FooterForm" xml:space="preserve">
+    <value>Intro campo siguiente  Tab/Mayús+Tab mover  Esc descartar</value>
+  </data>
+  <data name="EnvVars.FooterFilter" xml:space="preserve">
+    <value>Escriba para filtrar  Intro conservar  Esc borrar</value>
+  </data>
+  <data name="EnvVars.FooterBrowse" xml:space="preserve">
+    <value>N nueva  E cambiar  D eliminar  S ámbito  R releer  / filtro  Esc cerrar</value>
+  </data>
+  <data name="EnvVars.Reading" xml:space="preserve">
+    <value>leyendo…</value>
+  </data>
+  <data name="EnvVars.ColumnName" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="EnvVars.ColumnValue" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+  <data name="EnvVars.NoMatch" xml:space="preserve">
+    <value>Ninguna variable coincide con «{0}».</value>
+  </data>
+  <data name="EnvVars.Empty" xml:space="preserve">
+    <value>No hay variables. N añade una.</value>
+  </data>
+  <data name="EnvVars.NewHint" xml:space="preserve">
+    <value>Nueva variable en el ámbito {0}</value>
+  </data>
+  <data name="EnvVars.ChangeHint" xml:space="preserve">
+    <value>Cambiar el valor; el nombre se mantiene</value>
+  </data>
+  <data name="EnvVars.FilterInput" xml:space="preserve">
+    <value>Filtro: {0}_</value>
+  </data>
+  <data name="EnvVars.FilterHint" xml:space="preserve">
+    <value>Filtro: {0}  (Esc muestra todas las variables)</value>
+  </data>
 </root>
