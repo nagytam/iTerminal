@@ -49,7 +49,12 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog? environmentVariablesDialog = null,
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
-        iTerminal.Core.Dialogs.Games.GamesDialog? gamesDialog = null,
+        iTerminal.Core.Dialogs.Games.TicTacToeDialog? ticTacToeDialog = null,
+        iTerminal.Core.Dialogs.Games.ChessDialog? chessDialog = null,
+        iTerminal.Core.Dialogs.Games.GoDialog? goDialog = null,
+        iTerminal.Core.Dialogs.Games.NineMensMorrisDialog? nineMensMorrisDialog = null,
+        iTerminal.Core.Dialogs.Games.SnakeDialog? snakeDialog = null,
+        iTerminal.Core.Dialogs.Games.TetrisDialog? tetrisDialog = null,
         iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null)
         : base("Tools", null, [], themeService)
@@ -95,7 +100,12 @@ public class ToolsMenuItem : MenuItem
         if (environmentVariablesDialog is not null) features.Add(new EnvironmentVariablesDialogCommand(environmentVariablesDialog));
         if (encyclopediaDialog is not null) features.Add(new EncyclopediaDialogCommand(encyclopediaDialog));
         if (performanceBenchmarkDialog is not null) features.Add(new PerformanceBenchmarkDialogCommand(performanceBenchmarkDialog));
-        if (gamesDialog is not null) features.Add(new GamesDialogCommand(gamesDialog));
+        if (ticTacToeDialog is not null) features.Add(new TicTacToeDialogCommand(ticTacToeDialog));
+        if (chessDialog is not null) features.Add(new ChessDialogCommand(chessDialog));
+        if (goDialog is not null) features.Add(new GoDialogCommand(goDialog));
+        if (nineMensMorrisDialog is not null) features.Add(new NineMensMorrisDialogCommand(nineMensMorrisDialog));
+        if (snakeDialog is not null) features.Add(new SnakeDialogCommand(snakeDialog));
+        if (tetrisDialog is not null) features.Add(new TetrisDialogCommand(tetrisDialog));
         if (bluetoothDeviceManagerDialog is not null) features.Add(new BluetoothDeviceManagerDialogCommand(bluetoothDeviceManagerDialog));
         if (remoteConnectionManagerDialog is not null) features.Add(new RemoteConnectionManagerDialogCommand(remoteConnectionManagerDialog));
         if (workspaceManagerDialog is not null) features.Add(new WorkspaceManagerDialogCommand(workspaceManagerDialog));
