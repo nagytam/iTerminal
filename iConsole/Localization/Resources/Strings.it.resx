@@ -1093,4 +1093,64 @@
   <data name="Hint.PreviousField" xml:space="preserve">
     <value>Campo precedente</value>
   </data>
+  <data name="CmdDesc.27b25e9c" xml:space="preserve">
+    <value>Chiude la finestra di dialogo o il popup corrente.</value>
+  </data>
+  <data name="CmdDesc.f55d8933" xml:space="preserve">
+    <value>Mostra il popup del calendario.</value>
+  </data>
+  <data name="CmdDesc.62d2e829" xml:space="preserve">
+    <value>Mostra i comandi disponibili nel contesto corrente.</value>
+  </data>
+  <data name="CmdDesc.73b65037" xml:space="preserve">
+    <value>Esce dall’applicazione.</value>
+  </data>
+  <data name="CmdDesc.67104805" xml:space="preserve">
+    <value>Sposta la selezione o l’area visibile di una riga in basso.</value>
+  </data>
+  <data name="CmdDesc.cfdf1c79" xml:space="preserve">
+    <value>Sposta il cursore o l’area visibile di una colonna a sinistra.</value>
+  </data>
+  <data name="CmdDesc.db8d76c8" xml:space="preserve">
+    <value>Sposta la selezione o l’area visibile di una pagina in basso.</value>
+  </data>
+  <data name="CmdDesc.751aa6ef" xml:space="preserve">
+    <value>Sposta la selezione o l’area visibile di una pagina in alto.</value>
+  </data>
+  <data name="CmdDesc.7f1a55c8" xml:space="preserve">
+    <value>Sposta il cursore o l’area visibile di una colonna a destra.</value>
+  </data>
+  <data name="CmdDesc.bca6dd95" xml:space="preserve">
+    <value>Salta alla fine della riga corrente.</value>
+  </data>
+  <data name="CmdDesc.293229ee" xml:space="preserve">
+    <value>Salta all’ultima riga.</value>
+  </data>
+  <data name="CmdDesc.fa38de03" xml:space="preserve">
+    <value>Salta all’inizio della riga corrente.</value>
+  </data>
+  <data name="CmdDesc.126bd270" xml:space="preserve">
+    <value>Salta alla prima riga.</value>
+  </data>
+  <data name="CmdDesc.f6c2fd91" xml:space="preserve">
+    <value>Sposta la selezione o l’area visibile di una riga in alto.</value>
+  </data>
+  <data name="CmdDesc.fc3303d5" xml:space="preserve">
+    <value>Sposta lo stato attivo sul pannello o controllo attivabile precedente.</value>
+  </data>
+  <data name="CmdDesc.f5dbb885" xml:space="preserve">
+    <value>Sposta lo stato attivo sul pannello o controllo attivabile successivo.</value>
+  </data>
+  <data name="Help.AvailableCommands" xml:space="preserve">
+    <value>Comandi disponibili:</value>
+  </data>
+  <data name="Help.NoCommands" xml:space="preserve">
+    <value>Al momento non ci sono comandi da tastiera disponibili.</value>
+  </data>
+  <data name="Help.AllCommands" xml:space="preserve">
+    <value>Tutti i comandi dell’applicazione:</value>
+  </data>
+  <data name="Help.MenuNavigation" xml:space="preserve">
+    <value>Navigazione nei menu:</value>
+  </data>
 </root>

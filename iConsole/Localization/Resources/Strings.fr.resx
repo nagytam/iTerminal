@@ -1093,4 +1093,64 @@
   <data name="Hint.PreviousField" xml:space="preserve">
     <value>Champ précédent</value>
   </data>
+  <data name="CmdDesc.27b25e9c" xml:space="preserve">
+    <value>Fermer la boîte de dialogue ou la fenêtre contextuelle actuelle.</value>
+  </data>
+  <data name="CmdDesc.f55d8933" xml:space="preserve">
+    <value>Afficher le calendrier contextuel.</value>
+  </data>
+  <data name="CmdDesc.62d2e829" xml:space="preserve">
+    <value>Afficher les commandes disponibles dans le contexte actuel.</value>
+  </data>
+  <data name="CmdDesc.73b65037" xml:space="preserve">
+    <value>Quitter l’application.</value>
+  </data>
+  <data name="CmdDesc.67104805" xml:space="preserve">
+    <value>Déplacer la sélection ou la zone visible d’une ligne vers le bas.</value>
+  </data>
+  <data name="CmdDesc.cfdf1c79" xml:space="preserve">
+    <value>Déplacer le curseur ou la zone visible d’une colonne vers la gauche.</value>
+  </data>
+  <data name="CmdDesc.db8d76c8" xml:space="preserve">
+    <value>Déplacer la sélection ou la zone visible d’une page vers le bas.</value>
+  </data>
+  <data name="CmdDesc.751aa6ef" xml:space="preserve">
+    <value>Déplacer la sélection ou la zone visible d’une page vers le haut.</value>
+  </data>
+  <data name="CmdDesc.7f1a55c8" xml:space="preserve">
+    <value>Déplacer le curseur ou la zone visible d’une colonne vers la droite.</value>
+  </data>
+  <data name="CmdDesc.bca6dd95" xml:space="preserve">
+    <value>Aller à la fin de la ligne actuelle.</value>
+  </data>
+  <data name="CmdDesc.293229ee" xml:space="preserve">
+    <value>Aller à la dernière ligne.</value>
+  </data>
+  <data name="CmdDesc.fa38de03" xml:space="preserve">
+    <value>Aller au début de la ligne actuelle.</value>
+  </data>
+  <data name="CmdDesc.126bd270" xml:space="preserve">
+    <value>Aller à la première ligne.</value>
+  </data>
+  <data name="CmdDesc.f6c2fd91" xml:space="preserve">
+    <value>Déplacer la sélection ou la zone visible d’une ligne vers le haut.</value>
+  </data>
+  <data name="CmdDesc.fc3303d5" xml:space="preserve">
+    <value>Déplacer le focus vers le panneau ou contrôle focalisable précédent.</value>
+  </data>
+  <data name="CmdDesc.f5dbb885" xml:space="preserve">
+    <value>Déplacer le focus vers le panneau ou contrôle focalisable suivant.</value>
+  </data>
+  <data name="Help.AvailableCommands" xml:space="preserve">
+    <value>Commandes disponibles :</value>
+  </data>
+  <data name="Help.NoCommands" xml:space="preserve">
+    <value>Aucune commande clavier n’est disponible pour le moment.</value>
+  </data>
+  <data name="Help.AllCommands" xml:space="preserve">
+    <value>Toutes les commandes de l’application :</value>
+  </data>
+  <data name="Help.MenuNavigation" xml:space="preserve">
+    <value>Navigation dans les menus :</value>
+  </data>
 </root>

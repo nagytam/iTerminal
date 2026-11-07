@@ -1093,4 +1093,64 @@
   <data name="Hint.PreviousField" xml:space="preserve">
     <value>Campo anterior</value>
   </data>
+  <data name="CmdDesc.27b25e9c" xml:space="preserve">
+    <value>Cerrar el cuadro de diálogo o la ventana emergente actual.</value>
+  </data>
+  <data name="CmdDesc.f55d8933" xml:space="preserve">
+    <value>Mostrar la ventana emergente del calendario.</value>
+  </data>
+  <data name="CmdDesc.62d2e829" xml:space="preserve">
+    <value>Mostrar los comandos disponibles en el contexto actual.</value>
+  </data>
+  <data name="CmdDesc.73b65037" xml:space="preserve">
+    <value>Salir de la aplicación.</value>
+  </data>
+  <data name="CmdDesc.67104805" xml:space="preserve">
+    <value>Mover la selección o la vista una línea hacia abajo.</value>
+  </data>
+  <data name="CmdDesc.cfdf1c79" xml:space="preserve">
+    <value>Mover el cursor o la vista una columna a la izquierda.</value>
+  </data>
+  <data name="CmdDesc.db8d76c8" xml:space="preserve">
+    <value>Mover la selección o la vista una página hacia abajo.</value>
+  </data>
+  <data name="CmdDesc.751aa6ef" xml:space="preserve">
+    <value>Mover la selección o la vista una página hacia arriba.</value>
+  </data>
+  <data name="CmdDesc.7f1a55c8" xml:space="preserve">
+    <value>Mover el cursor o la vista una columna a la derecha.</value>
+  </data>
+  <data name="CmdDesc.bca6dd95" xml:space="preserve">
+    <value>Saltar al final de la línea actual.</value>
+  </data>
+  <data name="CmdDesc.293229ee" xml:space="preserve">
+    <value>Saltar a la última línea.</value>
+  </data>
+  <data name="CmdDesc.fa38de03" xml:space="preserve">
+    <value>Saltar al inicio de la línea actual.</value>
+  </data>
+  <data name="CmdDesc.126bd270" xml:space="preserve">
+    <value>Saltar a la primera línea.</value>
+  </data>
+  <data name="CmdDesc.f6c2fd91" xml:space="preserve">
+    <value>Mover la selección o la vista una línea hacia arriba.</value>
+  </data>
+  <data name="CmdDesc.fc3303d5" xml:space="preserve">
+    <value>Mover el foco al panel o control enfocable anterior.</value>
+  </data>
+  <data name="CmdDesc.f5dbb885" xml:space="preserve">
+    <value>Mover el foco al siguiente panel o control enfocable.</value>
+  </data>
+  <data name="Help.AvailableCommands" xml:space="preserve">
+    <value>Comandos disponibles:</value>
+  </data>
+  <data name="Help.NoCommands" xml:space="preserve">
+    <value>No hay comandos de teclado disponibles por ahora.</value>
+  </data>
+  <data name="Help.AllCommands" xml:space="preserve">
+    <value>Todos los comandos de la aplicación:</value>
+  </data>
+  <data name="Help.MenuNavigation" xml:space="preserve">
+    <value>Navegación por los menús:</value>
+  </data>
 </root>

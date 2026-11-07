@@ -94,12 +94,12 @@ public class HelpDialog : Dialog
                 ? string.Format(UiText.Get("Help.FocusedControl", "Focused control: {0}"), focusedControl.Name)
                 : UiText.Get("Help.FocusedControlNone", "Focused control: n/a"),
             string.Empty,
-            "Available commands:",
+            UiText.Get("Help.AvailableCommands", "Available commands:"),
         };
 
         if (commands.Count == 0)
         {
-            lines.Add("  No keyboard commands are currently available.");
+            lines.Add("  " + UiText.Get("Help.NoCommands", "No keyboard commands are currently available."));
         }
         else
         {
@@ -121,7 +121,7 @@ public class HelpDialog : Dialog
                 }
                 // A description that only repeats the title ("Toggle Terminal" / "Toggle Terminal")
                 // is a line of noise per command; a long one is wrapped, not cut at the frame.
-                var description = command.Description?.Trim() ?? string.Empty;
+                var description = UiText.Describe(command.Description?.Trim() ?? string.Empty);
                 if (description.Length > 0 && !string.Equals(description.TrimEnd('.'), command.Title, StringComparison.OrdinalIgnoreCase))
                 {
                     foreach (var part in description.WrapWords(Math.Max(20, width - indent.Length)))
@@ -136,7 +136,7 @@ public class HelpDialog : Dialog
         // so a key or a dialog not reachable from the focused control is still found: hidden menus and
         // the hot key bar's layers included, and commands that cannot run in this context too.
         lines.Add(string.Empty);
-        lines.Add("All commands in the application:");
+        lines.Add(UiText.Get("Help.AllCommands", "All commands in the application:"));
         var everything = GetEveryCommand(rootControl)
             .OrderBy(c => string.IsNullOrWhiteSpace(c.KeyDisplayText) ? 1 : 0)
             .ThenBy(c => KeySortOrder(c.KeyDisplayText ?? string.Empty))
@@ -163,7 +163,7 @@ public class HelpDialog : Dialog
         if (keyHints.Count > 0)
         {
             lines.Add(string.Empty);
-            lines.Add("Menu navigation:");
+            lines.Add(UiText.Get("Help.MenuNavigation", "Menu navigation:"));
             foreach (var hint in keyHints)
             {
                 lines.Add($"  {hint.Key.PadRight(18)} {hint.Description}");

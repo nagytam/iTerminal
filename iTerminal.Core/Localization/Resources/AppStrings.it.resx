@@ -4813,4 +4813,514 @@
   <data name="Translator.InputHeader" xml:space="preserve">
     <value>Testo</value>
   </data>
+  <data name="CmdDesc.fb899019" xml:space="preserve">
+    <value>Mette negli appunti i file e le cartelle contrassegnati, o quello sotto il cursore, per incollarli in questa app o in un altro programma.</value>
+  </data>
+  <data name="CmdDesc.f13f518c" xml:space="preserve">
+    <value>Mette negli appunti i file e le cartelle contrassegnati, o quello sotto il cursore, per spostarli dove vengono incollati.</value>
+  </data>
+  <data name="CmdDesc.80bf9a22" xml:space="preserve">
+    <value>Copia o sposta i file degli appunti nella cartella mostrata da questo pannello.</value>
+  </data>
+  <data name="CmdDesc.aec2e334" xml:space="preserve">
+    <value>Esegue il comando digitato nella riga di comando, nella cartella di questo pannello.</value>
+  </data>
+  <data name="CmdDesc.38e9dd82" xml:space="preserve">
+    <value>Riavvia il container Docker sotto il cursore.</value>
+  </data>
+  <data name="CmdDesc.a833d933" xml:space="preserve">
+    <value>Avvia il container Docker sotto il cursore, o lo ferma se è in esecuzione.</value>
+  </data>
+  <data name="CmdDesc.f0199710" xml:space="preserve">
+    <value>Esplora i file dei container Docker nel pannello attivo; premi di nuovo per tornare indietro.</value>
+  </data>
+  <data name="CmdDesc.4d727e92" xml:space="preserve">
+    <value>Esplora i branch, i tag e i commit di questo repository come cartelle; premi di nuovo per tornare indietro.</value>
+  </data>
+  <data name="CmdDesc.8886d79c" xml:space="preserve">
+    <value>Esplora i file eliminati nel pannello attivo, per ripristinarli o eliminarli definitivamente; premi di nuovo per tornare indietro.</value>
+  </data>
+  <data name="CmdDesc.00c3d78d" xml:space="preserve">
+    <value>Rimette i file eliminati selezionati dove si trovavano prima di essere eliminati.</value>
+  </data>
+  <data name="CmdDesc.4a29b669" xml:space="preserve">
+    <value>Mostra l’anteprima del file sotto il cursore nell’altro pannello; premi di nuovo per chiuderla.</value>
+  </data>
+  <data name="CmdDesc.a8e893de" xml:space="preserve">
+    <value>Sposta il cursore di una colonna a sinistra nella sua riga.</value>
+  </data>
+  <data name="CmdDesc.b9f55e3f" xml:space="preserve">
+    <value>Sposta il cursore di una colonna a destra nella sua riga.</value>
+  </data>
+  <data name="CmdDesc.e5eb05a0" xml:space="preserve">
+    <value>Mostra le voci in più colonne di nomi, o di nuovo in una sola.</value>
+  </data>
+  <data name="CmdDesc.f51143b0" xml:space="preserve">
+    <value>Rimuove il contrassegno da tutte le righe del pannello.</value>
+  </data>
+  <data name="CmdDesc.943e368e" xml:space="preserve">
+    <value>Contrassegna ogni file non contrassegnato e rimuove il contrassegno da quelli contrassegnati.</value>
+  </data>
+  <data name="CmdDesc.a6f633e5" xml:space="preserve">
+    <value>Contrassegna tutti i file e le cartelle del pannello.</value>
+  </data>
+  <data name="CmdDesc.41e7c914" xml:space="preserve">
+    <value>Contrassegna o rimuove il contrassegno dalla riga sotto il cursore e scende di una riga.</value>
+  </data>
+  <data name="CmdDesc.d67a9b85" xml:space="preserve">
+    <value>Apre la cartella musicale selezionata, o esegue ciò che rappresenta la riga selezionata.</value>
+  </data>
+  <data name="CmdDesc.7926c8ad" xml:space="preserve">
+    <value>Copia gli artisti, gli album o i brani contrassegnati — o la riga sotto il cursore — dal catalogo alla playlist.</value>
+  </data>
+  <data name="CmdDesc.73053b13" xml:space="preserve">
+    <value>Mostra il catalogo musicale e la playlist come i due pannelli di file.</value>
+  </data>
+  <data name="CmdDesc.62f33052" xml:space="preserve">
+    <value>Avvia o mette in pausa la riproduzione senza lasciare la cartella corrente.</value>
+  </data>
+  <data name="CmdDesc.94441ab1" xml:space="preserve">
+    <value>Aumenta il volume di riproduzione del 5%.</value>
+  </data>
+  <data name="CmdDesc.919dae4f" xml:space="preserve">
+    <value>Diminuisce il volume di riproduzione del 5%.</value>
+  </data>
+  <data name="CmdDesc.b2cf0726" xml:space="preserve">
+    <value>Toglie il brano selezionato dalla coda di riproduzione. Il file non viene toccato.</value>
+  </data>
+  <data name="CmdDesc.fddd7d8b" xml:space="preserve">
+    <value>Mostra le informazioni sull’applicazione e i dettagli della versione.</value>
+  </data>
+  <data name="CmdDesc.40255d06" xml:space="preserve">
+    <value>Mostra la configurazione, lo stato e i dettagli di sessione del modello di IA.</value>
+  </data>
+  <data name="CmdDesc.e9d16235" xml:space="preserve">
+    <value>Cerca, connette, associa e dimentica dispositivi Bluetooth.</value>
+  </data>
+  <data name="CmdDesc.a083301c" xml:space="preserve">
+    <value>Calcola la dimensione della cartella sotto il cursore (o delle cartelle contrassegnate).</value>
+  </data>
+  <data name="CmdDesc.d5fc1b5b" xml:space="preserve">
+    <value>Apre la calcolatrice (modalità base, scientifica e programmatore).</value>
+  </data>
+  <data name="CmdDesc.021459f8" xml:space="preserve">
+    <value>Apre il calendario del mese, con gli appuntamenti del giorno.</value>
+  </data>
+  <data name="CmdDesc.f388f305" xml:space="preserve">
+    <value>Calcola MD5, SHA-1, SHA-256 e SHA-512 del file selezionato e li confronta con un checksum.</value>
+  </data>
+  <data name="CmdDesc.a82461e3" xml:space="preserve">
+    <value>Trova qualsiasi comando per nome ed eseguilo; il suo tasto è mostrato accanto.</value>
+  </data>
+  <data name="CmdDesc.057b971d" xml:space="preserve">
+    <value>Confronta le cartelle dei due pannelli, elenca le differenze e contrassegna ciò che va copiato dall’altra parte.</value>
+  </data>
+  <data name="CmdDesc.5420f0c4" xml:space="preserve">
+    <value>Comprime i file e le cartelle contrassegnati, o quello sotto il cursore, in un archivio nuovo o esistente.</value>
+  </data>
+  <data name="CmdDesc.0ea98a07" xml:space="preserve">
+    <value>Apre la gestione dei contatti: nomi, indirizzi e-mail, numeri di telefono e aziende, con un filtro.</value>
+  </data>
+  <data name="CmdDesc.ef464e93" xml:space="preserve">
+    <value>Copia i file e le cartelle contrassegnati, o quello sotto il cursore, in un’altra posizione.</value>
+  </data>
+  <data name="CmdDesc.eb6ce6ec" xml:space="preserve">
+    <value>Crea un nuovo file vuoto nella cartella corrente.</value>
+  </data>
+  <data name="CmdDesc.652112bb" xml:space="preserve">
+    <value>Crea una nuova cartella nella posizione corrente.</value>
+  </data>
+  <data name="CmdDesc.07df0ced" xml:space="preserve">
+    <value>Crea un collegamento simbolico o fisico al file o alla cartella selezionati.</value>
+  </data>
+  <data name="CmdDesc.4363c7ec" xml:space="preserve">
+    <value>Apre il convertitore di valute: scarica i tassi di cambio attuali e converte tra valute.</value>
+  </data>
+  <data name="CmdDesc.2afe83cc" xml:space="preserve">
+    <value>Passa la barra sotto i pannelli tra il prompt dell’IA e la riga di comando del terminale.</value>
+  </data>
+  <data name="CmdDesc.6542e220" xml:space="preserve">
+    <value>Elimina i file e le cartelle contrassegnati, o quello sotto il cursore.</value>
+  </data>
+  <data name="CmdDesc.251ba63d" xml:space="preserve">
+    <value>Mostra due file affiancati con le loro differenze: il file sotto il cursore e quello dell’altro pannello, o due file contrassegnati.</value>
+  </data>
+  <data name="CmdDesc.709fa9f3" xml:space="preserve">
+    <value>Mostra i dischi disponibili e i loro dettagli.</value>
+  </data>
+  <data name="CmdDesc.94ee3b92" xml:space="preserve">
+    <value>Mostra dove è andato lo spazio sotto questa cartella: ogni livello per dimensione, con barre.</value>
+  </data>
+  <data name="CmdDesc.33add7a4" xml:space="preserve">
+    <value>Cerca nella cartella dei documenti indicizzata e mostra l’anteprima del contenuto.</value>
+  </data>
+  <data name="CmdDesc.71c816f1" xml:space="preserve">
+    <value>Trova i file con contenuto identico sotto questa cartella, poi contrassegna ed elimina le copie in più.</value>
+  </data>
+  <data name="CmdDesc.0445fdd8" xml:space="preserve">
+    <value>Cambia la destinazione del collegamento simbolico o fisico selezionato.</value>
+  </data>
+  <data name="CmdDesc.86d5c50c" xml:space="preserve">
+    <value>Apre il file di testo selezionato nell’editor.</value>
+  </data>
+  <data name="CmdDesc.2c506e85" xml:space="preserve">
+    <value>Riavvia iTerminal con i diritti di amministratore (root) e chiude questa copia.</value>
+  </data>
+  <data name="CmdDesc.1d6919ca" xml:space="preserve">
+    <value>Esegue il programma sotto il cursore con i diritti di amministratore (root).</value>
+  </data>
+  <data name="CmdDesc.1866310e" xml:space="preserve">
+    <value>Apre l’enciclopedia: cerca un termine in Wikipedia, Wikizionario e altro, e leggi la voce.</value>
+  </data>
+  <data name="CmdDesc.f602a2c7" xml:space="preserve">
+    <value>Visualizza, aggiunge, modifica ed elimina le variabili d’ambiente per questa sessione, l’utente o la macchina.</value>
+  </data>
+  <data name="CmdDesc.86cc06e0" xml:space="preserve">
+    <value>Esegue il programma selezionato nel registro dei comandi.</value>
+  </data>
+  <data name="CmdDesc.c821bfe7" xml:space="preserve">
+    <value>Estrae gli archivi contrassegnati, o quello sotto il cursore, in una cartella.</value>
+  </data>
+  <data name="CmdDesc.85281618" xml:space="preserve">
+    <value>Cifra i file contrassegnati (o quello sotto il cursore) con una passphrase in file .enc separati, o decifra i file .enc.</value>
+  </data>
+  <data name="CmdDesc.9f9b5e79" xml:space="preserve">
+    <value>Assegna un colore e dei tag ai file e alle cartelle contrassegnati (o a quello sotto il cursore).</value>
+  </data>
+  <data name="CmdDesc.4e510244" xml:space="preserve">
+    <value>Cerca i file per nome e contenuto; i risultati possono essere elencati in un pannello.</value>
+  </data>
+  <data name="CmdDesc.8ad8fe3f" xml:space="preserve">
+    <value>Trova i file di almeno 100 MB sotto la cartella del pannello.</value>
+  </data>
+  <data name="CmdDesc.bfbb3c05" xml:space="preserve">
+    <value>Trova i file non modificati da un anno sotto la cartella del pannello.</value>
+  </data>
+  <data name="CmdDesc.d7281e69" xml:space="preserve">
+    <value>Apre il selettore di cartelle per passare a un’altra unità o cartella.</value>
+  </data>
+  <data name="CmdDesc.8383ab8d" xml:space="preserve">
+    <value>Gioca a tris contro il computer o un amico.</value>
+  </data>
+  <data name="CmdDesc.de30c520" xml:space="preserve">
+    <value>Gioca a scacchi contro il computer o un amico.</value>
+  </data>
+  <data name="CmdDesc.a282a3ac" xml:space="preserve">
+    <value>Gioca a go (9x9, 13x13 o 19x19) contro il computer o un amico.</value>
+  </data>
+  <data name="CmdDesc.72042987" xml:space="preserve">
+    <value>Gioca al mulino contro il computer o un amico.</value>
+  </data>
+  <data name="CmdDesc.6e61f7db" xml:space="preserve">
+    <value>Gioca a Snake: guida il serpente al cibo senza colpire un muro né sé stesso.</value>
+  </data>
+  <data name="CmdDesc.8213ddf1" xml:space="preserve">
+    <value>Gioca a Tetris: impila i pezzi che cadono in righe complete.</value>
+  </data>
+  <data name="CmdDesc.9f0f2eb0" xml:space="preserve">
+    <value>Apre il client Git (file modificati, staging, cronologia dei commit).</value>
+  </data>
+  <data name="CmdDesc.bcd8375e" xml:space="preserve">
+    <value>Esegue il pull dell’upstream del branch corrente e vi esegue il rebase dei commit locali (la cartella del pannello è una working tree git).</value>
+  </data>
+  <data name="CmdDesc.7ddd151d" xml:space="preserve">
+    <value>Esegue il pull dell’upstream del branch corrente con un rebase, poi il push dei commit locali (la cartella del pannello è una working tree git).</value>
+  </data>
+  <data name="CmdDesc.79b43e62" xml:space="preserve">
+    <value>Porta il pannello attivo al percorso o all’URL digitato.</value>
+  </data>
+  <data name="CmdDesc.ed757203" xml:space="preserve">
+    <value>Crea un manifesto in stile SHA256SUMS per le righe contrassegnate o l’intera cartella, o verifica la cartella rispetto a uno.</value>
+  </data>
+  <data name="CmdDesc.2dd71192" xml:space="preserve">
+    <value>Apre una shell interattiva dove si trova il pannello attivo — una cartella locale, un container Docker, un host SSH; exit riporta qui.</value>
+  </data>
+  <data name="CmdDesc.2b34cda5" xml:space="preserve">
+    <value>Esplora un iPhone / iPad collegato e lo monta come unità.</value>
+  </data>
+  <data name="CmdDesc.181870d9" xml:space="preserve">
+    <value>Mostra solo i file con un colore o un tag nel pannello. Qualsiasi colore e un tag vuoto mostrano tutto.</value>
+  </data>
+  <data name="CmdDesc.7348d768" xml:space="preserve">
+    <value>Sceglie la lingua di menu, suggerimenti e finestre: English, Deutsch, Français, Español, Italiano o Magyar.</value>
+  </data>
+  <data name="CmdDesc.d9b9654c" xml:space="preserve">
+    <value>Apre il client di posta: posta in arrivo (POP3), invio (SMTP) e rubrica (LDAP).</value>
+  </data>
+  <data name="CmdDesc.3e312e63" xml:space="preserve">
+    <value>Apre la mappa: OpenStreetMap disegnata come ASCII art, online o offline, con zoom, spostamento e ricerca di luoghi.</value>
+  </data>
+  <data name="CmdDesc.ef0ceb82" xml:space="preserve">
+    <value>Monta il file ISO, VHD o VHDX sotto il cursore come unità, o lo scollega.</value>
+  </data>
+  <data name="CmdDesc.f09302c4" xml:space="preserve">
+    <value>Sposta i file e le cartelle contrassegnati, o quello sotto il cursore, in un’altra posizione.</value>
+  </data>
+  <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
+    <value>Rinomina i file e le cartelle contrassegnati, o quello sotto il cursore, secondo un modello.</value>
+  </data>
+  <data name="CmdDesc.9ddb1617" xml:space="preserve">
+    <value>Apre l’archivio sotto il cursore come cartella (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG con 7-Zip).</value>
+  </data>
+  <data name="CmdDesc.4f25d89a" xml:space="preserve">
+    <value>Apre la cartella selezionata o segue la voce superiore.</value>
+  </data>
+  <data name="CmdDesc.d55dcd4f" xml:space="preserve">
+    <value>Va alla cartella superiore della posizione corrente.</value>
+  </data>
+  <data name="CmdDesc.05a68ca0" xml:space="preserve">
+    <value>Passa alla radice dell’unità o del container corrente.</value>
+  </data>
+  <data name="CmdDesc.adc840e9" xml:space="preserve">
+    <value>Esplora e si connette agli host SSH/SMB della rete locale.</value>
+  </data>
+  <data name="CmdDesc.eaff170f" xml:space="preserve">
+    <value>Mostra le interfacce di rete e i relativi dettagli.</value>
+  </data>
+  <data name="CmdDesc.4081fc44" xml:space="preserve">
+    <value>Apre il file selezionato con il programma scelto per i file di quel tipo.</value>
+  </data>
+  <data name="CmdDesc.0f8ffdd8" xml:space="preserve">
+    <value>Apre il file selezionato con il programma che il sistema assegna al suo tipo, fuori dall’applicazione.</value>
+  </data>
+  <data name="CmdDesc.4f26007b" xml:space="preserve">
+    <value>Apre la gestione pacchetti (elenca, installa, disinstalla applicazioni).</value>
+  </data>
+  <data name="CmdDesc.26098a96" xml:space="preserve">
+    <value>Apre la gestione password: ogni password salvata di rete, posta e servizi.</value>
+  </data>
+  <data name="CmdDesc.9ba1a714" xml:space="preserve">
+    <value>Valuta CPU, memoria, disco, rete e latenza del timer di questa macchina, con un punteggio complessivo. Legge soltanto; non scrive mai sul disco.</value>
+  </data>
+  <data name="CmdDesc.11457f3b" xml:space="preserve">
+    <value>Stampa il file sotto il cursore e gestisce la coda di stampa: sospende, riprende e annulla i lavori.</value>
+  </data>
+  <data name="CmdDesc.dbf0a1c1" xml:space="preserve">
+    <value>Mostra i processi in esecuzione.</value>
+  </data>
+  <data name="CmdDesc.9402ba07" xml:space="preserve">
+    <value>Mostra dimensione, date e destinazione del collegamento della voce selezionata e ne modifica attributi o permessi.</value>
+  </data>
+  <data name="CmdDesc.c4129160" xml:space="preserve">
+    <value>Ricarica il contenuto della cartella corrente.</value>
+  </data>
+  <data name="CmdDesc.ef9d4cc1" xml:space="preserve">
+    <value>Apre la gestione delle connessioni remote: host SSH e PowerShell remoting salvati, ognuno a un tasto da una sessione di terminale attiva.</value>
+  </data>
+  <data name="CmdDesc.29b6f09c" xml:space="preserve">
+    <value>Rinomina il file o la cartella selezionati.</value>
+  </data>
+  <data name="CmdDesc.34125f3b" xml:space="preserve">
+    <value>Installa o aggiorna i componenti che iTerminal scarica (Playwright e il suo Chromium).</value>
+  </data>
+  <data name="CmdDesc.b3dc4f7c" xml:space="preserve">
+    <value>Analizza i file e le cartelle contrassegnati (o quello sotto il cursore) alla ricerca di malware con Microsoft Defender.</value>
+  </data>
+  <data name="CmdDesc.4dc29860" xml:space="preserve">
+    <value>Mostra e gestisce le schermate aperte.</value>
+  </data>
+  <data name="CmdDesc.8f7a1d59" xml:space="preserve">
+    <value>Sovrascrive ed elimina i file e le cartelle contrassegnati (o quello sotto il cursore) in modo che non siano recuperabili.</value>
+  </data>
+  <data name="CmdDesc.3c6d17b5" xml:space="preserve">
+    <value>Va all’unità sotto il cursore.</value>
+  </data>
+  <data name="CmdDesc.e710dca5" xml:space="preserve">
+    <value>Va alla cartella preferita sotto il cursore.</value>
+  </data>
+  <data name="CmdDesc.e547cb15" xml:space="preserve">
+    <value>Torna alla cartella visitata sotto il cursore.</value>
+  </data>
+  <data name="CmdDesc.c12da6f4" xml:space="preserve">
+    <value>Va alla cartella speciale o all’unità virtuale sotto il cursore.</value>
+  </data>
+  <data name="CmdDesc.3556d6f4" xml:space="preserve">
+    <value>Va alla cartella sotto il cursore nell’albero.</value>
+  </data>
+  <data name="CmdDesc.40713f76" xml:space="preserve">
+    <value>Apre le impostazioni dell’applicazione.</value>
+  </data>
+  <data name="CmdDesc.1b2c6360" xml:space="preserve">
+    <value>Controlla le firme del file sotto il cursore (OpenPGP, Authenticode, file di chiave) e lo firma.</value>
+  </data>
+  <data name="CmdDesc.4f6046fa" xml:space="preserve">
+    <value>Ordina le righe del pannello per nome, estensione, dimensione o data, in entrambi i sensi.</value>
+  </data>
+  <data name="CmdDesc.6b4bbacf" xml:space="preserve">
+    <value>Apre l’esplora azioni: prezzi in tempo reale per una watchlist, con azioni di qualsiasi borsa da aggiungere e rimuovere.</value>
+  </data>
+  <data name="CmdDesc.88f43dfe" xml:space="preserve">
+    <value>Elenca, mostra in anteprima ed elimina i flussi di dati alternativi (Windows) o gli attributi estesi (Linux, macOS) della voce sotto il cursore.</value>
+  </data>
+  <data name="CmdDesc.4e765e19" xml:space="preserve">
+    <value>Rimuove il testo di fotocamera, GPS, autore e commenti dai file JPEG e PNG contrassegnati (o da quello sotto il cursore). I file vengono sovrascritti.</value>
+  </data>
+  <data name="CmdDesc.5f35fd6a" xml:space="preserve">
+    <value>Scambia le cartelle mostrate nei pannelli sinistro e destro.</value>
+  </data>
+  <data name="CmdDesc.e4ae0c07" xml:space="preserve">
+    <value>Confronta le cartelle dei due pannelli e copia le differenze dall’altra parte, dopo aver mostrato cosa cambierebbe.</value>
+  </data>
+  <data name="CmdDesc.4c8807b0" xml:space="preserve">
+    <value>Mostra le informazioni di sistema della macchina corrente.</value>
+  </data>
+  <data name="CmdDesc.1dccc52c" xml:space="preserve">
+    <value>Cambia il nome del computer, il gruppo di lavoro, le variabili d’ambiente e il fuso orario.</value>
+  </data>
+  <data name="CmdDesc.0d4c831b" xml:space="preserve">
+    <value>Mostra le attività in background e il loro avanzamento.</value>
+  </data>
+  <data name="CmdDesc.dd82d2ff" xml:space="preserve">
+    <value>Apre la finestra del terminale.</value>
+  </data>
+  <data name="CmdDesc.e0da83ca" xml:space="preserve">
+    <value>Sceglie il tema dei colori.</value>
+  </data>
+  <data name="CmdDesc.682ec499" xml:space="preserve">
+    <value>Apre l’elenco attività: oggetti, scadenze e priorità, con le attività completate in fondo.</value>
+  </data>
+  <data name="CmdDesc.24c1aa18" xml:space="preserve">
+    <value>Mostra o nasconde il pannello del terminale a schermo intero: i comandi vengono eseguiti uno alla volta e il loro output viene conservato.</value>
+  </data>
+  <data name="CmdDesc.3fb63d44" xml:space="preserve">
+    <value>Apre la gestione BitTorrent: scarica link magnet e file .torrent, li mette in pausa, li riprende e li rimuove.</value>
+  </data>
+  <data name="CmdDesc.932217ca" xml:space="preserve">
+    <value>Apre il traduttore: rileva una lingua e traduce testo tramite un’API di traduzione o il modello di IA collegato.</value>
+  </data>
+  <data name="CmdDesc.37b77193" xml:space="preserve">
+    <value>Apre il convertitore di unità (lunghezza, massa, temperatura e altro).</value>
+  </data>
+  <data name="CmdDesc.bdbe9e9a" xml:space="preserve">
+    <value>Esegue uno dei tuoi comandi sul file sotto il cursore (il menu F2 di mc).</value>
+  </data>
+  <data name="CmdDesc.59bf9cc1" xml:space="preserve">
+    <value>Apre il file selezionato nel visualizzatore.</value>
+  </data>
+  <data name="CmdDesc.2e8c9462" xml:space="preserve">
+    <value>Avvia, ferma, mette in pausa, riavvia e apre le console delle macchine virtuali.</value>
+  </data>
+  <data name="CmdDesc.8191e852" xml:space="preserve">
+    <value>Registra una domanda parlata e la scrive nel prompt dell’IA (Whisper, offline).</value>
+  </data>
+  <data name="CmdDesc.089189cb" xml:space="preserve">
+    <value>Apre il browser web: un browser in modalità testo a schermo intero con schede, segnalibri, cronologia, ricerca e moduli.</value>
+  </data>
+  <data name="CmdDesc.6a8f435b" xml:space="preserve">
+    <value>Apre la gestione delle aree di lavoro: salva la disposizione dello schermo (i due pannelli, il loro ordinamento e la barra in basso) con un nome e torna a una qualsiasi di quelle salvate.</value>
+  </data>
+  <data name="CmdDesc.148a10e2" xml:space="preserve">
+    <value>Copia il nome del file sotto il cursore nella riga di comando.</value>
+  </data>
+  <data name="CmdDesc.a9752744" xml:space="preserve">
+    <value>Copia i nomi dei file contrassegnati (o del file sotto il cursore) nella riga di comando.</value>
+  </data>
+  <data name="CmdDesc.ce371dd0" xml:space="preserve">
+    <value>Copia il percorso della cartella mostrata da questo pannello nella riga di comando.</value>
+  </data>
+  <data name="CmdDesc.7de6874f" xml:space="preserve">
+    <value>Sceglie l’editor per il file selezionato, o imposta quello che F4 usa per i file di quel tipo.</value>
+  </data>
+  <data name="CmdDesc.758a1d81" xml:space="preserve">
+    <value>Sceglie il programma con cui aprire il file selezionato, o imposta quello che Invio usa per i file di quel tipo.</value>
+  </data>
+  <data name="CmdDesc.4fbb2ac8" xml:space="preserve">
+    <value>Contrassegna i file i cui nomi corrispondono a un modello.</value>
+  </data>
+  <data name="CmdDesc.da630bcf" xml:space="preserve">
+    <value>Rimuove il contrassegno dai file i cui nomi corrispondono a un modello.</value>
+  </data>
+  <data name="CmdDesc.528b9b74" xml:space="preserve">
+    <value>Contrassegna o rimuove il contrassegno dalla riga sotto il cursore e scende.</value>
+  </data>
+  <data name="CmdDesc.70f70296" xml:space="preserve">
+    <value>Contrassegna o rimuove il contrassegno dalla riga sotto il cursore e sale.</value>
+  </data>
+  <data name="Button.Permissions" xml:space="preserve">
+    <value>Permessi… (^P)</value>
+  </data>
+  <data name="Dialog.PropertiesOf" xml:space="preserve">
+    <value>Proprietà di {0}</value>
+  </data>
+  <data name="Properties.Cap.Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Properties.Cap.Location" xml:space="preserve">
+    <value>Posizione</value>
+  </data>
+  <data name="Properties.Cap.Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Properties.Cap.Pointsto" xml:space="preserve">
+    <value>Punta a</value>
+  </data>
+  <data name="Properties.Cap.Size" xml:space="preserve">
+    <value>Dimensione</value>
+  </data>
+  <data name="Properties.Cap.Contains" xml:space="preserve">
+    <value>Contiene</value>
+  </data>
+  <data name="Properties.Cap.Created" xml:space="preserve">
+    <value>Creato</value>
+  </data>
+  <data name="Properties.Cap.Modified" xml:space="preserve">
+    <value>Modificato</value>
+  </data>
+  <data name="Properties.Cap.Accessed" xml:space="preserve">
+    <value>Accesso</value>
+  </data>
+  <data name="Properties.Cap.Permissions" xml:space="preserve">
+    <value>Permessi</value>
+  </data>
+  <data name="Properties.Cap.Colour" xml:space="preserve">
+    <value>Colore</value>
+  </data>
+  <data name="Properties.Cap.Tags" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="Properties.Kind.File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Properties.Kind.Folder" xml:space="preserve">
+    <value>Cartella</value>
+  </data>
+  <data name="Properties.Kind.LinkFile" xml:space="preserve">
+    <value>Collegamento a un file</value>
+  </data>
+  <data name="Properties.Kind.LinkFolder" xml:space="preserve">
+    <value>Collegamento a una cartella</value>
+  </data>
+  <data name="Properties.Files.One" xml:space="preserve">
+    <value>{0} file</value>
+  </data>
+  <data name="Properties.Files.Many" xml:space="preserve">
+    <value>{0} file</value>
+  </data>
+  <data name="Properties.Folders.One" xml:space="preserve">
+    <value>{0} cartella</value>
+  </data>
+  <data name="Properties.Folders.Many" xml:space="preserve">
+    <value>{0} cartelle</value>
+  </data>
+  <data name="Properties.SoFar" xml:space="preserve">
+    <value>{0} finora</value>
+  </data>
+  <data name="Properties.Unreadable" xml:space="preserve">
+    <value>almeno — non è stato possibile leggere {0}</value>
+  </data>
+  <data name="Properties.NoColour" xml:space="preserve">
+    <value>nessuno</value>
+  </data>
+  <data name="Properties.NoTags" xml:space="preserve">
+    <value>nessuno</value>
+  </data>
+  <data name="Command.Permissions" xml:space="preserve">
+    <value>Permessi</value>
+  </data>
+  <data name="Command.RemoveMark" xml:space="preserve">
+    <value>Rimuovi contrassegno</value>
+  </data>
+  <data name="Button.Apply" xml:space="preserve">
+    <value>Applica</value>
+  </data>
 </root>

@@ -29,8 +29,7 @@ namespace iTerminal.Core.Dialogs;
 /// </summary>
 public class PropertiesDialog : FormDialog
 {
-    // One more than the longest caption ("Permissions"), so a value never touches it.
-    private const int CaptionWidth = 12;
+    private static readonly string[] CaptionNames = ["Name", "Location", "Type", "Points to", "Size", "Contains", "Created", "Modified", "Accessed", "Permissions", "Colour", "Tags"];
     private const int InfoRows = 18;
     private const int MinInfoRows = 4;
     private static readonly string[] DateFormats = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm"];
@@ -87,7 +86,7 @@ public class PropertiesDialog : FormDialog
         {
             var permissionsCommand = new PermissionsCommand();
             AddCommand(permissionsCommand);
-            _permissionsButton = new Button("Permissions… (^P)", permissionsCommand, themeService);
+            _permissionsButton = new Button(UiText.Get("Button.Permissions", "Permissions… (^P)"), permissionsCommand, themeService);
         }
 
         if (originService is not null)
@@ -354,7 +353,7 @@ public class PropertiesDialog : FormDialog
 
     public override async Task OnInitializeAsync()
     {
-        Title = Properties is { } properties ? "Properties of " + properties.Name : "Properties";
+        Title = Properties is { } properties ? string.Format(UiText.Get("Dialog.PropertiesOf", "Properties of {0}"), properties.Name) : UiText.Get("Menu.Properties", "Properties");
         _textBoxMode.ScrollableModel.Reset();
         _textBoxMode.ScrollableModel.ScrollableSize = new Size(Mode.Length, 1);
         _textBoxMode.ScrollableModel.CursorPosition.X = Mode.Length;
@@ -485,7 +484,19 @@ public class PropertiesDialog : FormDialog
         UpdateLines();
     }
 
-    private static string Row(string caption, string value) => caption.PadRight(CaptionWidth) + value;
+    /// <summary>A caption in the chosen language; one that is not in the list (the warning's) is already translated.</summary>
+    private static string Caption(string english) =>
+        english.Length > 0 && Array.IndexOf(CaptionNames, english) >= 0 ? UiText.Get("Properties.Cap." + english.Replace(" ", string.Empty), english) : english;
+
+    /// <summary>One more than the longest caption, so a value never touches it, whatever the language.</summary>
+    private static int CaptionWidth => Math.Max(CaptionNames.Max(name => Caption(name).Length), UiText.Get("Disguise.Caption", "Warning").Length) + 1;
+
+    private static string Row(string caption, string value) => Caption(caption).PadRight(CaptionWidth) + value;
+
+    /// <summary>"3 files" in the chosen language, with its own singular and plural.</summary>
+    private static string Counted(long count, string noun) =>
+        string.Format(UiText.Get(count == 1 ? $"Properties.{noun}.One" : $"Properties.{noun}.Many", noun == "Files" ? (count == 1 ? "{0} file" : "{0} files") : (count == 1 ? "{0} folder" : "{0} folders")),
+            count.ToString("N0", CultureInfo.InvariantCulture));
 
     private static string Date(DateTime time) => time.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
 
@@ -499,12 +510,14 @@ public class PropertiesDialog : FormDialog
 
         var valueWidth = Math.Max(10, (int)_info.ViewSize.Width - CaptionWidth);
         var isLink = properties.LinkTarget is not null;
-        var kind = (isLink ? "Link to a " : string.Empty) + (properties.IsFolder ? "folder" : "file");
+        var kind = isLink
+            ? (properties.IsFolder ? UiText.Get("Properties.Kind.LinkFolder", "Link to a folder") : UiText.Get("Properties.Kind.LinkFile", "Link to a file"))
+            : (properties.IsFolder ? UiText.Get("Properties.Kind.Folder", "Folder") : UiText.Get("Properties.Kind.File", "File"));
         var lines = new List<InfoLines.Line>
         {
             new(Row("Name", FileDisguise.Mask(properties.Name).Shrink(valueWidth) ?? string.Empty)),
             new(Row("Location", (Path.GetDirectoryName(properties.Path) ?? string.Empty).Shrink(valueWidth) ?? string.Empty)),
-            new(Row("Type", char.ToUpperInvariant(kind[0]) + kind[1..])),
+            new(Row("Type", kind)),
         };
 
         if (!properties.IsFolder && !isLink)
@@ -535,13 +548,13 @@ public class PropertiesDialog : FormDialog
         else if (!isLink)
         {
             var measure = _measure ?? FolderMeasure.Empty;
-            var contains = $"{FilePropertiesService.Count(measure.Files, "file")}, {FilePropertiesService.Count(measure.Folders, "folder")}";
+            var contains = $"{Counted(measure.Files, "Files")}, {Counted(measure.Folders, "Folders")}";
             lines.Add(new(Row("Size", FilePropertiesService.FormatSize(measure.Bytes) + (_measureComplete ? string.Empty : " …"))));
-            lines.Add(new(Row("Contains", contains + (_measureComplete ? string.Empty : " so far"))));
+            lines.Add(new(Row("Contains", _measureComplete ? contains : string.Format(UiText.Get("Properties.SoFar", "{0} so far"), contains))));
             if (measure.Unreadable > 0)
             {
                 // A total that left folders out is a lower bound, and has to say so.
-                lines.Add(new(Row(string.Empty, $"at least — {FilePropertiesService.Count(measure.Unreadable, "folder")} could not be read"), ThemeService.CurrentColorScheme.Error));
+                lines.Add(new(Row(string.Empty, string.Format(UiText.Get("Properties.Unreadable", "at least — {0} could not be read"), Counted(measure.Unreadable, "Folders"))), ThemeService.CurrentColorScheme.Error));
             }
         }
 
@@ -557,8 +570,8 @@ public class PropertiesDialog : FormDialog
         {
             // The colour and the tags the file was given in the labels dialog; "none" where it has none.
             var label = _labels.Get(properties.Path);
-            lines.Add(new(Row("Colour", label.Colour == LabelColour.None ? "none" : LabelColours.Name(label.Colour))));
-            lines.Add(new(Row("Tags", label.Tags.Count == 0 ? "none" : (FileLabelTags.Format(label.Tags)).Shrink(valueWidth) ?? string.Empty)));
+            lines.Add(new(Row("Colour", label.Colour == LabelColour.None ? UiText.Get("Properties.NoColour", "none") : LabelColours.Name(label.Colour))));
+            lines.Add(new(Row("Tags", label.Tags.Count == 0 ? UiText.Get("Properties.NoTags", "none") : (FileLabelTags.Format(label.Tags)).Shrink(valueWidth) ?? string.Empty)));
         }
 
         if (CanHaveOrigin)
@@ -696,7 +709,7 @@ public class PropertiesDialog : FormDialog
     /// <summary>Ctrl+P, or the Permissions button: who may do what (<see cref="AccessControlDialog"/>).</summary>
     private sealed class PermissionsCommand : Command
     {
-        public override string Title => "Permissions";
+        public override string Title => UiText.Get("Command.Permissions", "Permissions");
         public override string Description => "Edit the access control list and the owner of this entry.";
 
         public override Key? Key { get; init; } =
@@ -715,7 +728,7 @@ public class PropertiesDialog : FormDialog
     /// <summary>Ctrl+F, or the Remove mark button: asks, then removes the download mark like Unblock-File.</summary>
     private sealed class RemoveMarkCommand : Command
     {
-        public override string Title => "Remove mark";
+        public override string Title => UiText.Get("Command.RemoveMark", "Remove mark");
         public override string Description => "Remove the mark that says the file came from the internet.";
 
         public override Key? Key { get; init; } =
@@ -732,7 +745,7 @@ public class PropertiesDialog : FormDialog
     /// <summary>Enter, or the Apply button.</summary>
     private sealed class ApplyCommand : Command
     {
-        public override string Title => "Apply";
+        public override string Title => UiText.Get("Button.Apply", "Apply");
         public override string Description => "Write the changed attributes and close.";
 
         public override Key? Key { get; init; } =
