@@ -1,3 +1,4 @@
+using iConsole.Helper;
 using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
@@ -23,6 +24,15 @@ public class CalendarDialog : Dialog
     private const int DialogHeight = 25;
     private const int GridWidth = iConsole.Controls.Calendar.Columns + iConsole.Controls.Calendar.WeekNumberWidth;
     private const int MeetingRows = 4;
+
+    /// <summary>Two hint lines when the dialog is tall, one when it is short; the prompt and the error sit above them.</summary>
+    private int HintRows => (int)ViewSize.Height - 2 >= 23 ? 2 : 1;
+
+    /// <summary>The row of the delete question, the new-meeting prompt and the idle hint (18 when tall); the error is the row under it.</summary>
+    private int MessageY => Math.Min(18, (int)ViewSize.Height - 2 - HintRows - 2);
+
+    /// <summary>Up to four meetings; fewer where a short dialog needs the rows for the prompt and the hints.</summary>
+    private int VisibleMeetingRows => Math.Clamp(MessageY - 14, 1, MeetingRows);
     private const int MaxEntryLength = 80;
 
     private readonly IDateTimeProviderService _dateTimeProviderService;
@@ -350,7 +360,7 @@ public class CalendarDialog : Dialog
             if (mouseEvent.LeftClicked)
             {
                 int row = (int)(mouseEvent.Position.Y - (AbsolutePosition.Y + 1 + MeetingFirstRow));
-                int first = _meetingCursor >= MeetingRows ? _meetingCursor - MeetingRows + 1 : 0;
+                int first = _meetingCursor >= VisibleMeetingRows ? _meetingCursor - VisibleMeetingRows + 1 : 0;
                 var count = _meetings.On(_calendar.SelectedDate).Count;
                 int index = first + row;
                 if (index < count)
@@ -371,7 +381,7 @@ public class CalendarDialog : Dialog
     {
         long row = position.Y - (AbsolutePosition.Y + 1 + MeetingFirstRow);
         long column = position.X - (AbsolutePosition.X + 1);
-        return row >= 0 && row < MeetingRows && column >= 0 && column < ViewSize.Width - 2;
+        return row >= 0 && row < VisibleMeetingRows && column >= 0 && column < ViewSize.Width - 2;
     }
 
     private void DeleteHighlightedMeeting()
@@ -485,13 +495,13 @@ public class CalendarDialog : Dialog
         var header = list.Count == 0 ? "No meetings on this day" : $"Meetings ({list.Count})";
         Put(buffer, 1, 13, iw - 2, header, Color.Cyan, colorScheme.Background);
 
-        var first = _meetingCursor >= MeetingRows ? _meetingCursor - MeetingRows + 1 : 0;
-        for (var i = 0; i < MeetingRows; i++)
+        var first = _meetingCursor >= VisibleMeetingRows ? _meetingCursor - VisibleMeetingRows + 1 : 0;
+        for (var i = 0; i < VisibleMeetingRows; i++)
         {
             var index = first + i;
             var y = 14 + i;
-            var remaining = list.Count - (first + MeetingRows);
-            if (i == MeetingRows - 1 && remaining > 0)
+            var remaining = list.Count - (first + VisibleMeetingRows);
+            if (i == VisibleMeetingRows - 1 && remaining > 0)
             {
                 Put(buffer, 1, y, iw - 2, $"… {remaining + 1} more", colorScheme.DisabledForeground, colorScheme.Background);
                 continue;
@@ -512,27 +522,33 @@ public class CalendarDialog : Dialog
 
         if (_confirmingDelete && _meetingCursor < list.Count)
         {
-            Put(buffer, 1, 18, iw - 2, $"Delete \"{list[_meetingCursor].Title}\"? (y/n)", colorScheme.Error, colorScheme.Background);
+            Put(buffer, 1, MessageY, iw - 2, $"Delete \"{list[_meetingCursor].Title}\"? (y/n)", colorScheme.Error, colorScheme.Background);
         }
         else if (_entry is not null)
         {
-            Put(buffer, 1, 18, iw - 2, $"{(_editing is null ? "New" : "Change")} meeting: {_entry}_", colorScheme.SelectedFocusedForeground, colorScheme.Background);
+            Put(buffer, 1, MessageY, iw - 2, $"{(_editing is null ? "New" : "Change")} meeting: {_entry}_", colorScheme.SelectedFocusedForeground, colorScheme.Background);
             if (_entryError is not null)
             {
-                Put(buffer, 1, 19, iw - 2, _entryError, colorScheme.Error, colorScheme.Background);
+                Put(buffer, 1, MessageY + 1, iw - 2, _entryError, colorScheme.Error, colorScheme.Background);
             }
         }
         else
         {
-            Put(buffer, 1, 18, iw - 2, "N: add a meeting, e.g. 14:30 45 Standup", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, MessageY, iw - 2, "N: add a meeting, e.g. 14:30 45 Standup", colorScheme.DisabledForeground, colorScheme.Background);
         }
     }
 
     private void DrawHints(IBuffer buffer, int iw, int ih, ColorScheme colorScheme)
     {
-        var first = ih - 2;
-        Put(buffer, 1, first, iw - 2, "Arrows day/week  PgUp/PgDn month  Ctrl+PgUp/PgDn year", colorScheme.Foreground, colorScheme.Background);
-        Put(buffer, 1, first + 1, iw - 2, "Home today  N add  E change  Alt+Up/Down choose  D remove  Esc close", colorScheme.Foreground, colorScheme.Background);
+        // Whole hints only, and on a short dialog just the second line, which is the one that says how to leave.
+        const string moving = "Arrows day/week  PgUp/PgDn month  Ctrl+PgUp/PgDn year";
+        const string acting = "Home today  N add  E change  Alt+Up/Down choose  D remove  Esc close";
+        if (HintRows == 2)
+        {
+            Put(buffer, 1, ih - 2, iw - 2, moving.FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
+        }
+
+        Put(buffer, 1, ih - 1, iw - 2, acting.FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
     }
 
     private void Put(IBuffer buffer, int x, int y, int width, string text, Color foreground, Color background)

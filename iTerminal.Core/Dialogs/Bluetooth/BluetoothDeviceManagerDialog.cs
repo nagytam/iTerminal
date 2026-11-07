@@ -115,6 +115,13 @@ public class BluetoothDeviceManagerDialog : Dialog
         _listBox.ViewSize = new Size(ViewSize.Width - 2, ViewSize.Height - 5);
         _listBox.ScrollableModel.ViewSize = _listBox.ViewSize;
 
+        int nameWidth = Math.Clamp((int)ViewSize.Width - 2 - 1 - 17 - 2 - 10, 10, NameColumnWidth);
+        if (nameWidth != _nameWidth)
+        {
+            _nameWidth = nameWidth;
+            _listBox.UpdateModel();
+        }
+
         _status.Position = new Position(1, ViewSize.Height - 3);
         _status.ViewSize = new Size(ViewSize.Width - 2, 1);
 
@@ -125,11 +132,14 @@ public class BluetoothDeviceManagerDialog : Dialog
     }
 
     /// <summary>One device as a row: name in a fixed column, then the address, then its state.</summary>
-    internal static string FormatRow(BluetoothDevice device, string stateText)
+    internal static string FormatRow(BluetoothDevice device, string stateText, int nameWidth = NameColumnWidth)
     {
-        var name = (device.Name ?? string.Empty).Trim().Shrink(NameColumnWidth - 1) ?? string.Empty;
-        return name.PadRight(NameColumnWidth) + " " + device.Address.PadRight(17) + "  " + stateText;
+        var name = (device.Name ?? string.Empty).Trim().Shrink(nameWidth - 1) ?? string.Empty;
+        return name.PadRight(nameWidth) + " " + device.Address.PadRight(17) + "  " + stateText;
     }
+
+    /// <summary>The name column as wide as the dialog allows: at the full 30 a 60-column terminal cut the address after 15 characters.</summary>
+    private int _nameWidth = NameColumnWidth;
 
     private ListItem<BluetoothDevice> TransformItem(BluetoothDevice device, CancellationToken cancellationToken)
     {
@@ -140,7 +150,7 @@ public class BluetoothDeviceManagerDialog : Dialog
                 : UiText.Get("State.Bluetooth.Nearby", "nearby");
         return new ListItem<BluetoothDevice>(device)
         {
-            Value = FormatRow(device, state),
+            Value = FormatRow(device, state, _nameWidth),
             IsEnabled = true,
         };
     }

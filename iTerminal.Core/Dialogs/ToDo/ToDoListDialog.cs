@@ -1,3 +1,4 @@
+using iConsole.Helper;
 using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
@@ -19,7 +20,10 @@ public class ToDoListDialog : Dialog
 {
     private const int DialogWidth = 76;
     private const int DialogHeight = 24;
-    private const int ListRows = 16;
+    private const int MaxListRows = 16;
+
+    /// <summary>16 rows when the dialog is tall; fewer on a short terminal, so the prompt, the error line and the hints stay inside the frame.</summary>
+    private int ListRows => Math.Clamp((int)ViewSize.Height - 2 - 6, 3, MaxListRows);
     private const int MaxEntryLength = 120;
     private static string DoneColumn => iConsole.Localization.UiText.Get("ToDo.Done", "Done").PadRight(6);
     private static string PriorityColumn => iConsole.Localization.UiText.Get("ToDo.Priority", "Priority").PadRight(9);
@@ -468,7 +472,7 @@ public class ToDoListDialog : Dialog
         DrawHeader(buffer, iw, colorScheme);
         DrawRows(buffer, iw, colorScheme);
         DrawEntry(buffer, iw, colorScheme);
-        Put(buffer, 1, ih - 1, iw - 2, iConsole.Localization.UiText.Get("ToDo.Hint", "Space done  N new  E edit  P priority  D delete  H show done  Esc close"), colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, ih - 1, iw - 2, iConsole.Localization.UiText.Get("ToDo.Hint", "Space done  N new  E edit  P priority  D delete  H show done  Esc close").FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
     }
 
     private void DrawHeader(IBuffer buffer, int iw, ColorScheme colorScheme)
