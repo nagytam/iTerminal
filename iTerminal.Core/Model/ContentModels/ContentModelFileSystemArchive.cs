@@ -165,5 +165,5 @@ public class ContentModelFileSystemArchive(
     public override Task WriteFileAsync(Url url, MemoryStream inputStream) => throw ReadOnlyException();
 
     private static NotSupportedException ReadOnlyException() =>
-        new("Archives are read-only; only copying files out of an archive is supported.");
+        new(iConsole.Localization.UiText.Get("Archive.ReadOnly", "Archives are read-only; only copying files out of an archive is supported."));
 }
