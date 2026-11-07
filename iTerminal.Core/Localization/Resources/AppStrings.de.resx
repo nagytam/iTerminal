@@ -4384,4 +4384,100 @@
   <data name="Workspaces.OnScreen" xml:space="preserve">
     <value>Auf dem Bildschirm: {0}</value>
   </data>
+  <data name="Settings.LeftOrder" xml:space="preserve">
+    <value>Sortierung links</value>
+  </data>
+  <data name="Settings.RightOrder" xml:space="preserve">
+    <value>Sortierung rechts</value>
+  </data>
+  <data name="Settings.Reversed" xml:space="preserve">
+    <value>Umgekehrt</value>
+  </data>
+  <data name="Settings.ShowHidden" xml:space="preserve">
+    <value>Versteckte Dateien und Ordner anzeigen</value>
+  </data>
+  <data name="Settings.FoldersFirst" xml:space="preserve">
+    <value>Ordner beim Sortieren vor Dateien halten</value>
+  </data>
+  <data name="Settings.NaturalOrder" xml:space="preserve">
+    <value>Zahlen in Namen nach Wert sortieren (file2 vor file10)</value>
+  </data>
+  <data name="Settings.OrderHint" xml:space="preserve">
+    <value>Shift+F11 ändert die Sortierung des aktiven Panels, ohne hierher zu kommen.</value>
+  </data>
+  <data name="Compress.Nothing" xml:space="preserve">
+    <value>Nichts zu komprimieren.</value>
+  </data>
+  <data name="Compress.TypeName" xml:space="preserve">
+    <value>Geben Sie den Namen des Archivs ein.</value>
+  </data>
+  <data name="Compress.ChooseFormat" xml:space="preserve">
+    <value>Wählen Sie ein Format.</value>
+  </data>
+  <data name="Compress.NameFormatMismatch" xml:space="preserve">
+    <value>Der Name endet auf {0}, das Format ist aber {1}.</value>
+  </data>
+  <data name="Compress.PasswordMismatch" xml:space="preserve">
+    <value>Die Kennwörter stimmen nicht überein.</value>
+  </data>
+  <data name="Compress.AddsToExisting" xml:space="preserve">
+    <value>Fügt dem vorhandenen Archiv hinzu.</value>
+  </data>
+  <data name="Compress.NoPassword" xml:space="preserve">
+    <value>{0} unterstützt kein Kennwort.</value>
+  </data>
+  <data name="Wipe.Pass3" xml:space="preserve">
+    <value>3 Durchgänge (Nullen, Einsen, Zufall)</value>
+  </data>
+  <data name="Wipe.Pass7" xml:space="preserve">
+    <value>7 Durchgänge</value>
+  </data>
+  <data name="Wipe.Pass1" xml:space="preserve">
+    <value>1 Durchgang mit Zufallsbytes</value>
+  </data>
+  <data name="Wipe.Method" xml:space="preserve">
+    <value>Verfahren  {0}</value>
+  </data>
+  <data name="Wipe.MethodKeys" xml:space="preserve">
+    <value>        1: einmal   3: dreimal   7: siebenmal   (oder ↑↓)</value>
+  </data>
+  <data name="Wipe.Overwritten" xml:space="preserve">
+    <value>Der Inhalt wird überschrieben, die Namen werden entfernt.</value>
+  </data>
+  <data name="Wipe.NoUndo" xml:space="preserve">
+    <value>Das lässt sich nicht rückgängig machen.</value>
+  </data>
+  <data name="Wipe.Copies1" xml:space="preserve">
+    <value>Es erreicht keine Kopien, die Snapshots, Backups,</value>
+  </data>
+  <data name="Wipe.Copies2" xml:space="preserve">
+    <value>Copy-on-Write-Dateisysteme oder SSDs behalten.</value>
+  </data>
+  <data name="Wipe.Continue" xml:space="preserve">
+    <value>Enter:weiter</value>
+  </data>
+  <data name="Wipe.Armed1" xml:space="preserve">
+    <value>Dies zerstört die Daten endgültig. Zum Löschen erneut Enter drücken,</value>
+  </data>
+  <data name="Wipe.Armed2" xml:space="preserve">
+    <value>eine andere Taste zum Zurückgehen.</value>
+  </data>
+  <data name="Wipe.Overwriting" xml:space="preserve">
+    <value>Überschreiben…{0}  {1} von {2}</value>
+  </data>
+  <data name="Wipe.EscStops" xml:space="preserve">
+    <value>Esc bricht ab; bereits gelöschte Dateien bleiben gelöscht.</value>
+  </data>
+  <data name="Update.NoInstaller" xml:space="preserve">
+    <value>Diese Version hat noch kein Windows-Installationsprogramm.</value>
+  </data>
+  <data name="Update.ClosesDuring" xml:space="preserve">
+    <value>iTerminal wird beendet, während das Installationsprogramm läuft.</value>
+  </data>
+  <data name="Update.DownloadFrom" xml:space="preserve">
+    <value>Herunterladen von {0}</value>
+  </data>
+  <data name="Update.Available" xml:space="preserve">
+    <value>iTerminal {0} ist verfügbar. Sie haben {1}.</value>
+  </data>
 </root>

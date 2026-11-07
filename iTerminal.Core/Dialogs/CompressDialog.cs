@@ -309,13 +309,13 @@ public class CompressDialog : FormDialog
         var hint = format.HasLevels ? $"Level: {format.LevelHint}." : format.LevelHint + ".";
         if (!format.SupportsPassword)
         {
-            hint += $" {format.Name} takes no password.";
+            hint += " " + string.Format(iConsole.Localization.UiText.Get("Compress.NoPassword", "{0} takes no password."), format.Name);
         }
 
         var unavailable = ArchiveFormat.All.Where(f => !_comboFormat.Items.Contains(f))
             .Select(f => _compressionService.WhyUnavailable(f))
             .FirstOrDefault(reason => reason is not null);
-        _labelHint.Text = (ExistsLocally(ArchivePath) ? "Adds to the existing archive. " : string.Empty)
+        _labelHint.Text = (ExistsLocally(ArchivePath) ? iConsole.Localization.UiText.Get("Compress.AddsToExisting", "Adds to the existing archive.") + " " : string.Empty)
             + hint
             + (unavailable is null ? string.Empty : $" ({unavailable}.)");
         StateHasChanged();
@@ -370,28 +370,28 @@ public class CompressDialog : FormDialog
     {
         if (SourceUrls.Count == 0)
         {
-            return (null, "Nothing to compress.");
+            return (null, iConsole.Localization.UiText.Get("Compress.Nothing", "Nothing to compress."));
         }
 
         if (string.IsNullOrWhiteSpace(ArchivePath))
         {
-            return (null, "Type the archive's name.");
+            return (null, iConsole.Localization.UiText.Get("Compress.TypeName", "Type the archive's name."));
         }
 
         if (Format is not { } format)
         {
-            return (null, "Choose a format.");
+            return (null, iConsole.Localization.UiText.Get("Compress.ChooseFormat", "Choose a format."));
         }
 
         if (ArchiveFormat.FromFileName(ArchivePath) is { } named && named != format)
         {
-            return (null, $"The name ends in {named.Extension}, but the format is {format.Name}.");
+            return (null, string.Format(iConsole.Localization.UiText.Get("Compress.NameFormatMismatch", "The name ends in {0}, but the format is {1}."), named.Extension, format.Name));
         }
 
         var password = format.SupportsPassword ? Password : string.Empty;
         if (password.Length > 0 && password != PasswordConfirmation)
         {
-            return (null, "The passwords do not match.");
+            return (null, iConsole.Localization.UiText.Get("Compress.PasswordMismatch", "The passwords do not match."));
         }
 
         return (new CompressionOptions(

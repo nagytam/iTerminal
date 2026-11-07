@@ -97,9 +97,9 @@ public class SecureWipeDialog : Dialog
 
     public static string PatternName(WipePattern pattern) => pattern switch
     {
-        WipePattern.ThreePass => "3 passes (zeros, ones, random)",
-        WipePattern.SevenPass => "7 passes",
-        _ => "1 pass of random bytes",
+        WipePattern.ThreePass => iConsole.Localization.UiText.Get("Wipe.Pass3", "3 passes (zeros, ones, random)"),
+        WipePattern.SevenPass => iConsole.Localization.UiText.Get("Wipe.Pass7", "7 passes"),
+        _ => iConsole.Localization.UiText.Get("Wipe.Pass1", "1 pass of random bytes"),
     };
 
     public void ChoosePattern(WipePattern pattern)
@@ -235,23 +235,23 @@ public class SecureWipeDialog : Dialog
         {
             case WipePhase.Choosing:
                 lines.Add(default);
-                lines.Add(new($"Method  {PatternName(Pattern)}"));
-                lines.Add(new("        1: one pass   3: three   7: seven   (or ↑↓)", colors.DisabledForeground));
+                lines.Add(new(string.Format(iConsole.Localization.UiText.Get("Wipe.Method", "Method  {0}"), PatternName(Pattern))));
+                lines.Add(new(iConsole.Localization.UiText.Get("Wipe.MethodKeys", "        1: one pass   3: three   7: seven   (or ↑↓)"), colors.DisabledForeground));
                 lines.Add(default);
                 // Short lines: the one-line form was 72 columns, and "undone." was cut off on 80.
-                lines.Add(new("The contents are overwritten and the names removed."));
-                lines.Add(new("This cannot be undone.", colors.Error));
-                lines.Add(new("It cannot reach copies that snapshots, backups,", colors.DisabledForeground));
-                lines.Add(new("copy-on-write file systems or SSDs keep.", colors.DisabledForeground));
+                lines.Add(new(iConsole.Localization.UiText.Get("Wipe.Overwritten", "The contents are overwritten and the names removed.")));
+                lines.Add(new(iConsole.Localization.UiText.Get("Wipe.NoUndo", "This cannot be undone."), colors.Error));
+                lines.Add(new(iConsole.Localization.UiText.Get("Wipe.Copies1", "It cannot reach copies that snapshots, backups,"), colors.DisabledForeground));
+                lines.Add(new(iConsole.Localization.UiText.Get("Wipe.Copies2", "copy-on-write file systems or SSDs keep."), colors.DisabledForeground));
                 lines.Add(default);
-                lines.Add(new("Enter:continue", colors.DisabledForeground));
+                lines.Add(new(iConsole.Localization.UiText.Get("Wipe.Continue", "Enter:continue"), colors.DisabledForeground));
                 break;
             case WipePhase.Armed:
                 lines.Add(default);
-                lines.Add(new($"Method  {PatternName(Pattern)}"));
+                lines.Add(new(string.Format(iConsole.Localization.UiText.Get("Wipe.Method", "Method  {0}"), PatternName(Pattern))));
                 lines.Add(default);
-                lines.Add(new("This destroys the data for good. Press Enter again to wipe,", colors.Error));
-                lines.Add(new("any other key to go back.", colors.Error));
+                lines.Add(new(iConsole.Localization.UiText.Get("Wipe.Armed1", "This destroys the data for good. Press Enter again to wipe,"), colors.Error));
+                lines.Add(new(iConsole.Localization.UiText.Get("Wipe.Armed2", "any other key to go back."), colors.Error));
                 break;
             case WipePhase.Running:
                 {
@@ -259,10 +259,10 @@ public class SecureWipeDialog : Dialog
                     var total = Interlocked.Read(ref _bytesTotal);
                     var percent = total > 0 ? $" {Math.Min(100, done * 100 / total)}%" : string.Empty;
                     lines.Add(default);
-                    lines.Add(new($"Overwriting…{percent}  {FilePropertiesService.FormatSize(done)} of {FilePropertiesService.FormatSize(total)}"));
+                    lines.Add(new(string.Format(iConsole.Localization.UiText.Get("Wipe.Overwriting", "Overwriting…{0}  {1} of {2}"), percent, FilePropertiesService.FormatSize(done), FilePropertiesService.FormatSize(total))));
                     lines.Add(new(Path.GetFileName(_current).Shrink(width) ?? string.Empty, colors.DisabledForeground));
                     lines.Add(default);
-                    lines.Add(new("Esc stops it; files already wiped stay wiped.", colors.DisabledForeground));
+                    lines.Add(new(iConsole.Localization.UiText.Get("Wipe.EscStops", "Esc stops it; files already wiped stay wiped."), colors.DisabledForeground));
                     break;
                 }
             default:

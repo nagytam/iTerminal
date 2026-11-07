@@ -4384,4 +4384,100 @@
   <data name="Workspaces.OnScreen" xml:space="preserve">
     <value>On screen: {0}</value>
   </data>
+  <data name="Settings.LeftOrder" xml:space="preserve">
+    <value>Left panel order</value>
+  </data>
+  <data name="Settings.RightOrder" xml:space="preserve">
+    <value>Right panel order</value>
+  </data>
+  <data name="Settings.Reversed" xml:space="preserve">
+    <value>Reversed</value>
+  </data>
+  <data name="Settings.ShowHidden" xml:space="preserve">
+    <value>Show hidden files and folders</value>
+  </data>
+  <data name="Settings.FoldersFirst" xml:space="preserve">
+    <value>Keep folders ahead of files when sorting</value>
+  </data>
+  <data name="Settings.NaturalOrder" xml:space="preserve">
+    <value>Sort numbers in names by value (file2 before file10)</value>
+  </data>
+  <data name="Settings.OrderHint" xml:space="preserve">
+    <value>Shift+F11 changes the focused panel's order without coming here.</value>
+  </data>
+  <data name="Compress.Nothing" xml:space="preserve">
+    <value>Nothing to compress.</value>
+  </data>
+  <data name="Compress.TypeName" xml:space="preserve">
+    <value>Type the archive's name.</value>
+  </data>
+  <data name="Compress.ChooseFormat" xml:space="preserve">
+    <value>Choose a format.</value>
+  </data>
+  <data name="Compress.NameFormatMismatch" xml:space="preserve">
+    <value>The name ends in {0}, but the format is {1}.</value>
+  </data>
+  <data name="Compress.PasswordMismatch" xml:space="preserve">
+    <value>The passwords do not match.</value>
+  </data>
+  <data name="Compress.AddsToExisting" xml:space="preserve">
+    <value>Adds to the existing archive.</value>
+  </data>
+  <data name="Compress.NoPassword" xml:space="preserve">
+    <value>{0} takes no password.</value>
+  </data>
+  <data name="Wipe.Pass3" xml:space="preserve">
+    <value>3 passes (zeros, ones, random)</value>
+  </data>
+  <data name="Wipe.Pass7" xml:space="preserve">
+    <value>7 passes</value>
+  </data>
+  <data name="Wipe.Pass1" xml:space="preserve">
+    <value>1 pass of random bytes</value>
+  </data>
+  <data name="Wipe.Method" xml:space="preserve">
+    <value>Method  {0}</value>
+  </data>
+  <data name="Wipe.MethodKeys" xml:space="preserve">
+    <value>        1: one pass   3: three   7: seven   (or ↑↓)</value>
+  </data>
+  <data name="Wipe.Overwritten" xml:space="preserve">
+    <value>The contents are overwritten and the names removed.</value>
+  </data>
+  <data name="Wipe.NoUndo" xml:space="preserve">
+    <value>This cannot be undone.</value>
+  </data>
+  <data name="Wipe.Copies1" xml:space="preserve">
+    <value>It cannot reach copies that snapshots, backups,</value>
+  </data>
+  <data name="Wipe.Copies2" xml:space="preserve">
+    <value>copy-on-write file systems or SSDs keep.</value>
+  </data>
+  <data name="Wipe.Continue" xml:space="preserve">
+    <value>Enter:continue</value>
+  </data>
+  <data name="Wipe.Armed1" xml:space="preserve">
+    <value>This destroys the data for good. Press Enter again to wipe,</value>
+  </data>
+  <data name="Wipe.Armed2" xml:space="preserve">
+    <value>any other key to go back.</value>
+  </data>
+  <data name="Wipe.Overwriting" xml:space="preserve">
+    <value>Overwriting…{0}  {1} of {2}</value>
+  </data>
+  <data name="Wipe.EscStops" xml:space="preserve">
+    <value>Esc stops it; files already wiped stay wiped.</value>
+  </data>
+  <data name="Update.NoInstaller" xml:space="preserve">
+    <value>This release has no Windows installer yet.</value>
+  </data>
+  <data name="Update.ClosesDuring" xml:space="preserve">
+    <value>iTerminal closes while the installer runs.</value>
+  </data>
+  <data name="Update.DownloadFrom" xml:space="preserve">
+    <value>Download it from {0}</value>
+  </data>
+  <data name="Update.Available" xml:space="preserve">
+    <value>iTerminal {0} is available. You have {1}.</value>
+  </data>
 </root>

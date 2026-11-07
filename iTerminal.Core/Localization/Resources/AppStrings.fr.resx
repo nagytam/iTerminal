@@ -4384,4 +4384,100 @@
   <data name="Workspaces.OnScreen" xml:space="preserve">
     <value>À l’écran : {0}</value>
   </data>
+  <data name="Settings.LeftOrder" xml:space="preserve">
+    <value>Tri du panneau gauche</value>
+  </data>
+  <data name="Settings.RightOrder" xml:space="preserve">
+    <value>Tri du panneau droit</value>
+  </data>
+  <data name="Settings.Reversed" xml:space="preserve">
+    <value>Inversé</value>
+  </data>
+  <data name="Settings.ShowHidden" xml:space="preserve">
+    <value>Afficher les fichiers et dossiers cachés</value>
+  </data>
+  <data name="Settings.FoldersFirst" xml:space="preserve">
+    <value>Garder les dossiers avant les fichiers au tri</value>
+  </data>
+  <data name="Settings.NaturalOrder" xml:space="preserve">
+    <value>Trier les nombres des noms par valeur (file2 avant file10)</value>
+  </data>
+  <data name="Settings.OrderHint" xml:space="preserve">
+    <value>Shift+F11 change le tri du panneau actif sans passer par ici.</value>
+  </data>
+  <data name="Compress.Nothing" xml:space="preserve">
+    <value>Rien à compresser.</value>
+  </data>
+  <data name="Compress.TypeName" xml:space="preserve">
+    <value>Saisissez le nom de l’archive.</value>
+  </data>
+  <data name="Compress.ChooseFormat" xml:space="preserve">
+    <value>Choisissez un format.</value>
+  </data>
+  <data name="Compress.NameFormatMismatch" xml:space="preserve">
+    <value>Le nom se termine par {0}, mais le format est {1}.</value>
+  </data>
+  <data name="Compress.PasswordMismatch" xml:space="preserve">
+    <value>Les mots de passe ne correspondent pas.</value>
+  </data>
+  <data name="Compress.AddsToExisting" xml:space="preserve">
+    <value>Ajoute à l’archive existante.</value>
+  </data>
+  <data name="Compress.NoPassword" xml:space="preserve">
+    <value>{0} n’accepte pas de mot de passe.</value>
+  </data>
+  <data name="Wipe.Pass3" xml:space="preserve">
+    <value>3 passes (zéros, uns, aléatoire)</value>
+  </data>
+  <data name="Wipe.Pass7" xml:space="preserve">
+    <value>7 passes</value>
+  </data>
+  <data name="Wipe.Pass1" xml:space="preserve">
+    <value>1 passe d’octets aléatoires</value>
+  </data>
+  <data name="Wipe.Method" xml:space="preserve">
+    <value>Méthode  {0}</value>
+  </data>
+  <data name="Wipe.MethodKeys" xml:space="preserve">
+    <value>        1 : une passe   3 : trois   7 : sept   (ou ↑↓)</value>
+  </data>
+  <data name="Wipe.Overwritten" xml:space="preserve">
+    <value>Le contenu est écrasé et les noms supprimés.</value>
+  </data>
+  <data name="Wipe.NoUndo" xml:space="preserve">
+    <value>Cette action est irréversible.</value>
+  </data>
+  <data name="Wipe.Copies1" xml:space="preserve">
+    <value>Il n’atteint pas les copies que conservent les instantanés, sauvegardes,</value>
+  </data>
+  <data name="Wipe.Copies2" xml:space="preserve">
+    <value>systèmes de fichiers copy-on-write ou SSD.</value>
+  </data>
+  <data name="Wipe.Continue" xml:space="preserve">
+    <value>Enter:continuer</value>
+  </data>
+  <data name="Wipe.Armed1" xml:space="preserve">
+    <value>Cela détruit définitivement les données. Appuyez encore sur Entrée pour effacer,</value>
+  </data>
+  <data name="Wipe.Armed2" xml:space="preserve">
+    <value>toute autre touche pour revenir.</value>
+  </data>
+  <data name="Wipe.Overwriting" xml:space="preserve">
+    <value>Écrasement…{0}  {1} sur {2}</value>
+  </data>
+  <data name="Wipe.EscStops" xml:space="preserve">
+    <value>Échap l’arrête ; les fichiers déjà effacés le restent.</value>
+  </data>
+  <data name="Update.NoInstaller" xml:space="preserve">
+    <value>Cette version n’a pas encore d’installeur Windows.</value>
+  </data>
+  <data name="Update.ClosesDuring" xml:space="preserve">
+    <value>iTerminal se ferme pendant l’exécution de l’installeur.</value>
+  </data>
+  <data name="Update.DownloadFrom" xml:space="preserve">
+    <value>Téléchargez-la depuis {0}</value>
+  </data>
+  <data name="Update.Available" xml:space="preserve">
+    <value>iTerminal {0} est disponible. Vous avez {1}.</value>
+  </data>
 </root>

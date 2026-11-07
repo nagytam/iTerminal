@@ -4384,4 +4384,100 @@
   <data name="Workspaces.OnScreen" xml:space="preserve">
     <value>En pantalla: {0}</value>
   </data>
+  <data name="Settings.LeftOrder" xml:space="preserve">
+    <value>Orden del panel izquierdo</value>
+  </data>
+  <data name="Settings.RightOrder" xml:space="preserve">
+    <value>Orden del panel derecho</value>
+  </data>
+  <data name="Settings.Reversed" xml:space="preserve">
+    <value>Invertido</value>
+  </data>
+  <data name="Settings.ShowHidden" xml:space="preserve">
+    <value>Mostrar archivos y carpetas ocultos</value>
+  </data>
+  <data name="Settings.FoldersFirst" xml:space="preserve">
+    <value>Mantener las carpetas antes que los archivos al ordenar</value>
+  </data>
+  <data name="Settings.NaturalOrder" xml:space="preserve">
+    <value>Ordenar los números de los nombres por valor (file2 antes de file10)</value>
+  </data>
+  <data name="Settings.OrderHint" xml:space="preserve">
+    <value>Shift+F11 cambia el orden del panel activo sin venir aquí.</value>
+  </data>
+  <data name="Compress.Nothing" xml:space="preserve">
+    <value>No hay nada que comprimir.</value>
+  </data>
+  <data name="Compress.TypeName" xml:space="preserve">
+    <value>Escriba el nombre del archivo.</value>
+  </data>
+  <data name="Compress.ChooseFormat" xml:space="preserve">
+    <value>Elija un formato.</value>
+  </data>
+  <data name="Compress.NameFormatMismatch" xml:space="preserve">
+    <value>El nombre termina en {0}, pero el formato es {1}.</value>
+  </data>
+  <data name="Compress.PasswordMismatch" xml:space="preserve">
+    <value>Las contraseñas no coinciden.</value>
+  </data>
+  <data name="Compress.AddsToExisting" xml:space="preserve">
+    <value>Añade al archivo existente.</value>
+  </data>
+  <data name="Compress.NoPassword" xml:space="preserve">
+    <value>{0} no admite contraseña.</value>
+  </data>
+  <data name="Wipe.Pass3" xml:space="preserve">
+    <value>3 pasadas (ceros, unos, aleatorio)</value>
+  </data>
+  <data name="Wipe.Pass7" xml:space="preserve">
+    <value>7 pasadas</value>
+  </data>
+  <data name="Wipe.Pass1" xml:space="preserve">
+    <value>1 pasada de bytes aleatorios</value>
+  </data>
+  <data name="Wipe.Method" xml:space="preserve">
+    <value>Método  {0}</value>
+  </data>
+  <data name="Wipe.MethodKeys" xml:space="preserve">
+    <value>        1: una pasada   3: tres   7: siete   (o ↑↓)</value>
+  </data>
+  <data name="Wipe.Overwritten" xml:space="preserve">
+    <value>El contenido se sobrescribe y los nombres se eliminan.</value>
+  </data>
+  <data name="Wipe.NoUndo" xml:space="preserve">
+    <value>Esto no se puede deshacer.</value>
+  </data>
+  <data name="Wipe.Copies1" xml:space="preserve">
+    <value>No alcanza las copias que guardan instantáneas, copias de seguridad,</value>
+  </data>
+  <data name="Wipe.Copies2" xml:space="preserve">
+    <value>sistemas de archivos copy-on-write o SSD.</value>
+  </data>
+  <data name="Wipe.Continue" xml:space="preserve">
+    <value>Enter:continuar</value>
+  </data>
+  <data name="Wipe.Armed1" xml:space="preserve">
+    <value>Esto destruye los datos para siempre. Pulse Enter otra vez para borrar,</value>
+  </data>
+  <data name="Wipe.Armed2" xml:space="preserve">
+    <value>cualquier otra tecla para volver.</value>
+  </data>
+  <data name="Wipe.Overwriting" xml:space="preserve">
+    <value>Sobrescribiendo…{0}  {1} de {2}</value>
+  </data>
+  <data name="Wipe.EscStops" xml:space="preserve">
+    <value>Esc lo detiene; los archivos ya borrados siguen borrados.</value>
+  </data>
+  <data name="Update.NoInstaller" xml:space="preserve">
+    <value>Esta versión aún no tiene instalador de Windows.</value>
+  </data>
+  <data name="Update.ClosesDuring" xml:space="preserve">
+    <value>iTerminal se cierra mientras se ejecuta el instalador.</value>
+  </data>
+  <data name="Update.DownloadFrom" xml:space="preserve">
+    <value>Descárguela desde {0}</value>
+  </data>
+  <data name="Update.Available" xml:space="preserve">
+    <value>iTerminal {0} está disponible. Tiene {1}.</value>
+  </data>
 </root>
