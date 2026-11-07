@@ -61,6 +61,7 @@ public class DialogsTest
     [DataRow("Ctrl+Shift+F4", "TranslatorDialog")]
     [DataRow("Ctrl+Shift+F5", "CurrencyConverterDialog")]
     [DataRow("Ctrl+Shift+K", "ContactManagerDialog")]
+    [DataRow("Ctrl+Shift+E", "EnvironmentVariablesDialog")]
     [DataRow("Ctrl+Shift+W", "EncyclopediaDialog")]
     [DataRow("Ctrl+Shift+B", "PerformanceBenchmarkDialog")]
     [DataRow("Alt+F2", "RemoteConnectionManagerDialog")]
@@ -136,6 +137,38 @@ public class DialogsTest
 
         await _app.WaitForTextAsync("[en] Guten Tag");
         await _app.WaitForTextAsync("German (detected) → English");
+
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
+    /// <summary>The environment variables editor through the whole app: add a user variable, see it, move to the session scope, delete.</summary>
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheEnvironmentVariablesEditorAddsShowsAndDeletesAVariable()
+    {
+        await _app.PressAsync("Ctrl+Shift+E");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.EnvVars.EnvironmentVariablesDialog, "the environment editor to open");
+        await _app.WaitForTextAsync("SANDBOX_USER");
+
+        await _app.TypeAsync("n");
+        await _app.TypeAsync("E2E_VARIABLE");
+        await _app.PressAsync("Enter");
+        await _app.TypeAsync("hello world");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("hello world");
+        await _app.WaitForTextAsync("E2E_VARIABLE");
+
+        await _app.TypeAsync("d");
+        await _app.WaitForTextAsync("Delete \"E2E_VARIABLE\"? (y/n)");
+        await _app.TypeAsync("y");
+        await _app.WaitForTextGoneAsync("hello world");
+
+        // The session scope is the second stop of S on the sandbox (user, machine, session).
+        await _app.TypeAsync("s");
+        await _app.TypeAsync("s");
+        await _app.WaitForTextAsync("SANDBOX_SESSION");
 
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();

@@ -235,6 +235,7 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.HashReputation>();
                 services.AddSingleton<Core.Services.Reputation.IHashReputationService>(provider => provider.GetRequiredService<SandboxServices.HashReputation>());
                 services.AddSingleton<SandboxServices.SystemSettings>();
+                services.AddSingleton<Core.Services.SystemSettings.ISessionEnvironment, SandboxServices.SessionEnvironment>();
                 services.AddSingleton<Core.Services.SystemSettings.ISystemSettingsService>(provider => provider.GetRequiredService<SandboxServices.SystemSettings>());
                 services.AddSingleton<SandboxServices.MalwareScanner>();
                 services.AddSingleton<Core.Services.Defender.IMalwareScanService>(provider => provider.GetRequiredService<SandboxServices.MalwareScanner>());

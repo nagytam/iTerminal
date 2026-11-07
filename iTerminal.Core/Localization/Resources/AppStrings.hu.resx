@@ -3985,4 +3985,100 @@
   <data name="Voice.Transcribing" xml:space="preserve">
     <value>felismerés…</value>
   </data>
+  <data name="Dialog.EnvVarsTitle" xml:space="preserve">
+    <value>Környezeti változók</value>
+  </data>
+  <data name="DialogHint.EnvVars.NextFieldEnterSaves" xml:space="preserve">
+    <value>Következő mező; az értéknél az Enter ment</value>
+  </data>
+  <data name="DialogHint.EnvVars.Delete" xml:space="preserve">
+    <value>Változó törlése</value>
+  </data>
+  <data name="DialogHint.EnvVars.Keep" xml:space="preserve">
+    <value>Változó megtartása</value>
+  </data>
+  <data name="DialogHint.EnvVars.Move" xml:space="preserve">
+    <value>Mozgás a változók között</value>
+  </data>
+  <data name="DialogHint.EnvVars.Add" xml:space="preserve">
+    <value>Változó hozzáadása</value>
+  </data>
+  <data name="DialogHint.EnvVars.Change" xml:space="preserve">
+    <value>Érték módosítása</value>
+  </data>
+  <data name="DialogHint.EnvVars.DeleteAsks" xml:space="preserve">
+    <value>Változó törlése (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.EnvVars.Scope" xml:space="preserve">
+    <value>Váltás munkamenet, felhasználó és gép között</value>
+  </data>
+  <data name="DialogHint.EnvVars.Reload" xml:space="preserve">
+    <value>Változók újraolvasása</value>
+  </data>
+  <data name="EnvVars.ReadFailed" xml:space="preserve">
+    <value>A változók nem olvashatók: {0}</value>
+  </data>
+  <data name="EnvVars.Busy" xml:space="preserve">
+    <value>Egy másik módosítás még fut.</value>
+  </data>
+  <data name="EnvVars.Working" xml:space="preserve">
+    <value>Folyamatban…</value>
+  </data>
+  <data name="EnvVars.Session" xml:space="preserve">
+    <value>Munkamenet</value>
+  </data>
+  <data name="EnvVars.User" xml:space="preserve">
+    <value>Felhasználó</value>
+  </data>
+  <data name="EnvVars.Machine" xml:space="preserve">
+    <value>Gép</value>
+  </data>
+  <data name="EnvVars.NoteSession" xml:space="preserve">
+    <value>Az iTerminal és az általa indított programok látják; bezáráskor eltűnik.</value>
+  </data>
+  <data name="EnvVars.NoteWindows" xml:space="preserve">
+    <value>A beállításjegyzékben tárolva; a mostantól indított programok látják.</value>
+  </data>
+  <data name="EnvVars.NoteMac" xml:space="preserve">
+    <value>A ~/.zprofile fájlban tárolva; az új bejelentkezési shellek olvassák, a futók és a nem bejelentkezési shellek nem.</value>
+  </data>
+  <data name="EnvVars.NoteLinux" xml:space="preserve">
+    <value>A systemd felhasználói munkamenetekhez tárolva a következő bejelentkezéskor; a terminál shellek nem biztos, hogy olvassák.</value>
+  </data>
+  <data name="EnvVars.FooterForm" xml:space="preserve">
+    <value>Enter következő mező  Tab/Shift+Tab mozgás  Esc elvet</value>
+  </data>
+  <data name="EnvVars.FooterFilter" xml:space="preserve">
+    <value>Gépeljen a szűréshez  Enter megtart  Esc töröl</value>
+  </data>
+  <data name="EnvVars.FooterBrowse" xml:space="preserve">
+    <value>N új  E módosít  D töröl  S hatókör  R újraolvas  / szűrő  Esc bezár</value>
+  </data>
+  <data name="EnvVars.Reading" xml:space="preserve">
+    <value>olvasás…</value>
+  </data>
+  <data name="EnvVars.ColumnName" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="EnvVars.ColumnValue" xml:space="preserve">
+    <value>Érték</value>
+  </data>
+  <data name="EnvVars.NoMatch" xml:space="preserve">
+    <value>Egy változó sem egyezik a(z) „{0}” szűrővel.</value>
+  </data>
+  <data name="EnvVars.Empty" xml:space="preserve">
+    <value>Itt nincs változó. Az N újat ad hozzá.</value>
+  </data>
+  <data name="EnvVars.NewHint" xml:space="preserve">
+    <value>Új változó a(z) {0} hatókörben</value>
+  </data>
+  <data name="EnvVars.ChangeHint" xml:space="preserve">
+    <value>Az érték módosítása; a név marad</value>
+  </data>
+  <data name="EnvVars.FilterInput" xml:space="preserve">
+    <value>Szűrő: {0}_</value>
+  </data>
+  <data name="EnvVars.FilterHint" xml:space="preserve">
+    <value>Szűrő: {0}  (Esc minden változót mutat)</value>
+  </data>
 </root>

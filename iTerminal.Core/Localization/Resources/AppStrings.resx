@@ -3985,4 +3985,100 @@
   <data name="Voice.Transcribing" xml:space="preserve">
     <value>transcribing…</value>
   </data>
+  <data name="Dialog.EnvVarsTitle" xml:space="preserve">
+    <value>Environment Variables</value>
+  </data>
+  <data name="DialogHint.EnvVars.NextFieldEnterSaves" xml:space="preserve">
+    <value>Next field; Enter on the value saves</value>
+  </data>
+  <data name="DialogHint.EnvVars.Delete" xml:space="preserve">
+    <value>Delete the variable</value>
+  </data>
+  <data name="DialogHint.EnvVars.Keep" xml:space="preserve">
+    <value>Keep the variable</value>
+  </data>
+  <data name="DialogHint.EnvVars.Move" xml:space="preserve">
+    <value>Move over the variables</value>
+  </data>
+  <data name="DialogHint.EnvVars.Add" xml:space="preserve">
+    <value>Add a variable</value>
+  </data>
+  <data name="DialogHint.EnvVars.Change" xml:space="preserve">
+    <value>Change the value</value>
+  </data>
+  <data name="DialogHint.EnvVars.DeleteAsks" xml:space="preserve">
+    <value>Delete the variable (asks first)</value>
+  </data>
+  <data name="DialogHint.EnvVars.Scope" xml:space="preserve">
+    <value>Switch between session, user and machine</value>
+  </data>
+  <data name="DialogHint.EnvVars.Reload" xml:space="preserve">
+    <value>Read the variables again</value>
+  </data>
+  <data name="EnvVars.ReadFailed" xml:space="preserve">
+    <value>Could not read the variables: {0}</value>
+  </data>
+  <data name="EnvVars.Busy" xml:space="preserve">
+    <value>Another change is still running.</value>
+  </data>
+  <data name="EnvVars.Working" xml:space="preserve">
+    <value>Working…</value>
+  </data>
+  <data name="EnvVars.Session" xml:space="preserve">
+    <value>Session</value>
+  </data>
+  <data name="EnvVars.User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="EnvVars.Machine" xml:space="preserve">
+    <value>Machine</value>
+  </data>
+  <data name="EnvVars.NoteSession" xml:space="preserve">
+    <value>Seen by iTerminal and the programs it starts; gone when it closes.</value>
+  </data>
+  <data name="EnvVars.NoteWindows" xml:space="preserve">
+    <value>Saved in the registry; programs started from now on see it.</value>
+  </data>
+  <data name="EnvVars.NoteMac" xml:space="preserve">
+    <value>Saved in ~/.zprofile; new login shells read it, running ones and non-login shells do not.</value>
+  </data>
+  <data name="EnvVars.NoteLinux" xml:space="preserve">
+    <value>Saved for systemd user sessions at the next login; terminal shells may not read it.</value>
+  </data>
+  <data name="EnvVars.FooterForm" xml:space="preserve">
+    <value>Enter next field  Tab/Shift+Tab move  Esc discard</value>
+  </data>
+  <data name="EnvVars.FooterFilter" xml:space="preserve">
+    <value>Type to filter  Enter keep  Esc clear</value>
+  </data>
+  <data name="EnvVars.FooterBrowse" xml:space="preserve">
+    <value>N new  E change  D delete  S scope  R reload  / filter  Esc close</value>
+  </data>
+  <data name="EnvVars.Reading" xml:space="preserve">
+    <value>reading…</value>
+  </data>
+  <data name="EnvVars.ColumnName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="EnvVars.ColumnValue" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="EnvVars.NoMatch" xml:space="preserve">
+    <value>No variable matches "{0}".</value>
+  </data>
+  <data name="EnvVars.Empty" xml:space="preserve">
+    <value>No variables here. Press N to add one.</value>
+  </data>
+  <data name="EnvVars.NewHint" xml:space="preserve">
+    <value>New variable in the {0} scope</value>
+  </data>
+  <data name="EnvVars.ChangeHint" xml:space="preserve">
+    <value>Change the value; the name stays</value>
+  </data>
+  <data name="EnvVars.FilterInput" xml:space="preserve">
+    <value>Filter: {0}_</value>
+  </data>
+  <data name="EnvVars.FilterHint" xml:space="preserve">
+    <value>Filter: {0}  (Esc shows every variable)</value>
+  </data>
 </root>

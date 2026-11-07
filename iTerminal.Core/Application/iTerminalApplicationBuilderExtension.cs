@@ -1,4 +1,4 @@
-﻿using iConsole.Dialogs;
+using iConsole.Dialogs;
 using iConsole.Interfaces;
 using iConsole.Jobs;
 using iConsole.Services;
@@ -125,6 +125,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iTerminal.Core.Dialogs.ToDo.ToDoListDialog>();
         services.AddSingleton<iTerminal.Core.Model.Contacts.ContactStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>();
+        services.AddSingleton<iTerminal.Core.Services.SystemSettings.ISessionEnvironment, iTerminal.Core.Services.SystemSettings.SessionEnvironment>();
+        services.AddTransient<iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog>();
         services.AddSingleton<iTerminal.Core.Model.Mail.MailAccountStore>();
         services.AddSingleton<iTerminal.Core.Services.Mail.IMailService, iTerminal.Core.Services.Mail.MailService>();
         services.AddTransient<iTerminal.Core.Dialogs.Mail.MailDialog>();

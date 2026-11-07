@@ -46,6 +46,7 @@ public class ToolsMenuItem : MenuItem
         LanguageDialog? languageDialog = null,
         iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog? torrentManagerDialog = null,
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
+        iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog? environmentVariablesDialog = null,
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
         iTerminal.Core.Dialogs.Games.TicTacToeDialog? ticTacToeDialog = null,
@@ -96,6 +97,7 @@ public class ToolsMenuItem : MenuItem
         if (currencyConverterDialog is not null) features.Add(new CurrencyConverterDialogCommand(currencyConverterDialog));
         if (torrentManagerDialog is not null) features.Add(new TorrentManagerDialogCommand(torrentManagerDialog));
         if (contactManagerDialog is not null) features.Add(new ContactManagerDialogCommand(contactManagerDialog));
+        if (environmentVariablesDialog is not null) features.Add(new EnvironmentVariablesDialogCommand(environmentVariablesDialog));
         if (encyclopediaDialog is not null) features.Add(new EncyclopediaDialogCommand(encyclopediaDialog));
         if (performanceBenchmarkDialog is not null) features.Add(new PerformanceBenchmarkDialogCommand(performanceBenchmarkDialog));
         if (ticTacToeDialog is not null) features.Add(new TicTacToeDialogCommand(ticTacToeDialog));

@@ -3985,4 +3985,100 @@
   <data name="Voice.Transcribing" xml:space="preserve">
     <value>Erkennung läuft…</value>
   </data>
+  <data name="Dialog.EnvVarsTitle" xml:space="preserve">
+    <value>Umgebungsvariablen</value>
+  </data>
+  <data name="DialogHint.EnvVars.NextFieldEnterSaves" xml:space="preserve">
+    <value>Nächstes Feld; Enter beim Wert speichert</value>
+  </data>
+  <data name="DialogHint.EnvVars.Delete" xml:space="preserve">
+    <value>Variable löschen</value>
+  </data>
+  <data name="DialogHint.EnvVars.Keep" xml:space="preserve">
+    <value>Variable behalten</value>
+  </data>
+  <data name="DialogHint.EnvVars.Move" xml:space="preserve">
+    <value>Über die Variablen bewegen</value>
+  </data>
+  <data name="DialogHint.EnvVars.Add" xml:space="preserve">
+    <value>Variable hinzufügen</value>
+  </data>
+  <data name="DialogHint.EnvVars.Change" xml:space="preserve">
+    <value>Wert ändern</value>
+  </data>
+  <data name="DialogHint.EnvVars.DeleteAsks" xml:space="preserve">
+    <value>Variable löschen (fragt vorher)</value>
+  </data>
+  <data name="DialogHint.EnvVars.Scope" xml:space="preserve">
+    <value>Zwischen Sitzung, Benutzer und Computer wechseln</value>
+  </data>
+  <data name="DialogHint.EnvVars.Reload" xml:space="preserve">
+    <value>Variablen neu lesen</value>
+  </data>
+  <data name="EnvVars.ReadFailed" xml:space="preserve">
+    <value>Variablen konnten nicht gelesen werden: {0}</value>
+  </data>
+  <data name="EnvVars.Busy" xml:space="preserve">
+    <value>Eine andere Änderung läuft noch.</value>
+  </data>
+  <data name="EnvVars.Working" xml:space="preserve">
+    <value>Wird ausgeführt…</value>
+  </data>
+  <data name="EnvVars.Session" xml:space="preserve">
+    <value>Sitzung</value>
+  </data>
+  <data name="EnvVars.User" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="EnvVars.Machine" xml:space="preserve">
+    <value>Computer</value>
+  </data>
+  <data name="EnvVars.NoteSession" xml:space="preserve">
+    <value>Gilt für iTerminal und die von ihm gestarteten Programme; weg, wenn es schließt.</value>
+  </data>
+  <data name="EnvVars.NoteWindows" xml:space="preserve">
+    <value>In der Registrierung gespeichert; ab jetzt gestartete Programme sehen es.</value>
+  </data>
+  <data name="EnvVars.NoteMac" xml:space="preserve">
+    <value>In ~/.zprofile gespeichert; neue Login-Shells lesen es, laufende und Nicht-Login-Shells nicht.</value>
+  </data>
+  <data name="EnvVars.NoteLinux" xml:space="preserve">
+    <value>Für systemd-Benutzersitzungen bei der nächsten Anmeldung gespeichert; Terminal-Shells lesen es evtl. nicht.</value>
+  </data>
+  <data name="EnvVars.FooterForm" xml:space="preserve">
+    <value>Enter nächstes Feld  Tab/Umschalt+Tab bewegen  Esc verwerfen</value>
+  </data>
+  <data name="EnvVars.FooterFilter" xml:space="preserve">
+    <value>Zum Filtern tippen  Enter behalten  Esc löschen</value>
+  </data>
+  <data name="EnvVars.FooterBrowse" xml:space="preserve">
+    <value>N neu  E ändern  D löschen  S Bereich  R neu lesen  / Filter  Esc schließen</value>
+  </data>
+  <data name="EnvVars.Reading" xml:space="preserve">
+    <value>wird gelesen…</value>
+  </data>
+  <data name="EnvVars.ColumnName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="EnvVars.ColumnValue" xml:space="preserve">
+    <value>Wert</value>
+  </data>
+  <data name="EnvVars.NoMatch" xml:space="preserve">
+    <value>Keine Variable passt zu „{0}“.</value>
+  </data>
+  <data name="EnvVars.Empty" xml:space="preserve">
+    <value>Hier gibt es keine Variablen. N fügt eine hinzu.</value>
+  </data>
+  <data name="EnvVars.NewHint" xml:space="preserve">
+    <value>Neue Variable im Bereich {0}</value>
+  </data>
+  <data name="EnvVars.ChangeHint" xml:space="preserve">
+    <value>Wert ändern; der Name bleibt</value>
+  </data>
+  <data name="EnvVars.FilterInput" xml:space="preserve">
+    <value>Filter: {0}_</value>
+  </data>
+  <data name="EnvVars.FilterHint" xml:space="preserve">
+    <value>Filter: {0}  (Esc zeigt alle Variablen)</value>
+  </data>
 </root>
