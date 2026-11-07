@@ -24,7 +24,7 @@ namespace iTerminal.Core.Dialogs.Encyclopedia;
 /// </summary>
 public class EncyclopediaDialog : SplitPaneDialog
 {
-    internal const string KeyHints = "Enter:search/read  Tab:field  F3:whole  F2:browser  Esc:close";
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.Encyclopedia", "Enter:search/read  Tab:field  F3:whole  F2:browser  Esc:close");
 
     internal const string SourceKey = "Encyclopedia.Source";
     internal const string QueryKey = "Encyclopedia.Query";

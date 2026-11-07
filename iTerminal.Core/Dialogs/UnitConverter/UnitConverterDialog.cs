@@ -259,7 +259,7 @@ public class UnitConverterDialog : SplitPaneDialog
         WriteLine(buffer, ix, footerY, iw, KeyHints.FitHints(iw), colorScheme.Foreground, colorScheme.Background);
     }
 
-    internal const string KeyHints = "Tab:next list  Up/Down:choose  type a value  Ctrl+S:swap units  Esc:close";
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.UnitConverter", "Tab:next list  Up/Down:choose  type a value  Ctrl+S:swap units  Esc:close");
 
     /// <summary>
     /// "1 m = 3.28 ft", or — when the value is not a number — says so, rather than the bare "?" that

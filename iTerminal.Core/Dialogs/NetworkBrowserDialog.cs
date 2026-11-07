@@ -640,8 +640,8 @@ public class NetworkBrowserDialog : SplitPaneDialog
     }
 
     internal string KeyHints => _mode == Mode.Browse
-        ? "Enter:connect  r:rescan  d:delete saved  Esc:close"
-        : "Tab:move  Enter:connect  Ctrl+B:back  Esc:back";
+        ? iConsole.Localization.UiText.Get("Hints.NetworkBrowse", "Enter:connect  r:rescan  d:delete saved  Esc:close")
+        : iConsole.Localization.UiText.Get("Hints.NetworkForm", "Tab:move  Enter:connect  Ctrl+B:back  Esc:back");
 
     private void DrawFooter(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
     {

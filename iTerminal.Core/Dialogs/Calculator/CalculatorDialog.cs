@@ -23,8 +23,7 @@ public class CalculatorDialog : SplitPaneDialog
     private const int HeaderRows = 3;
     private const int FooterRows = 1;
 
-    internal const string KeyHints =
-        "0-9 . + - * / ^ %  Enter:=  Bksp:back  Del/c:clear  Space:press button  Ctrl+←/→:mode  Esc:close";
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.Calculator", "0-9 . + - * / ^ %  Enter:=  Bksp:back  Del/c:clear  Space:press button  Ctrl+←/→:mode  Esc:close");
 
     private readonly CalculatorEngine _engine = new();
     private readonly Tab _tab;

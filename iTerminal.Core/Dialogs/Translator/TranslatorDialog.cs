@@ -25,7 +25,7 @@ namespace iTerminal.Core.Dialogs.Translator;
 /// </summary>
 public class TranslatorDialog : SplitPaneDialog
 {
-    internal const string KeyHints = "F5:translate  F6:swap  F7:detect  F8:clear  Tab:next field  Esc:close";
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.Translator", "F5:translate  F6:swap  F7:detect  F8:clear  Tab:next field  Esc:close");
 
     internal const string SourceKey = "Translator.Source";
     internal const string TargetKey = "Translator.Target";

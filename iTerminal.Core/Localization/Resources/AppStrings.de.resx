@@ -4231,4 +4231,58 @@
   <data name="MusicViewer.ReadingTags" xml:space="preserve">
     <value>Tags werden gelesen…</value>
   </data>
+  <data name="Hints.CurrencyConverter" xml:space="preserve">
+    <value>Tab:nächstes Feld  Auf/Ab:wählen  F5:Kurse aktualisieren  F6:tauschen  Esc:schließen</value>
+  </data>
+  <data name="Hints.Encyclopedia" xml:space="preserve">
+    <value>Enter:suchen/lesen  Tab:Feld  F3:ganz  F2:Browser  Esc:schließen</value>
+  </data>
+  <data name="Hints.StockBrowser" xml:space="preserve">
+    <value>a:hinzufügen  d/Del:entfernen  r:aktualisieren  Esc:schließen</value>
+  </data>
+  <data name="Hints.StockBrowserAdd" xml:space="preserve">
+    <value>Enter:suchen/hinzufügen  ↑↓:wählen  Esc:zurück</value>
+  </data>
+  <data name="Hints.Terminal" xml:space="preserve">
+    <value>Ctrl+1..4 oder Ctrl+Links/Rechts:Seite   Auf/Ab:scrollen   Esc:schließen</value>
+  </data>
+  <data name="Hints.UnitConverter" xml:space="preserve">
+    <value>Tab:nächste Liste  Auf/Ab:wählen  Wert eintippen  Ctrl+S:Einheiten tauschen  Esc:schließen</value>
+  </data>
+  <data name="Hints.Translator" xml:space="preserve">
+    <value>F5:übersetzen  F6:tauschen  F7:erkennen  F8:leeren  Tab:nächstes Feld  Esc:schließen</value>
+  </data>
+  <data name="Hints.IPhoneBrowser" xml:space="preserve">
+    <value>r:neu suchen  Enter:öffnen  Esc:schließen</value>
+  </data>
+  <data name="Hints.ImageViewer" xml:space="preserve">
+    <value> c:Farbe  i:Info  Esc:schließen</value>
+  </data>
+  <data name="Hints.Calculator" xml:space="preserve">
+    <value>0-9 . + - * / ^ %  Enter:=  Bksp:zurück  Del/c:löschen  Space:Taste drücken  Ctrl+←/→:Modus  Esc:schließen</value>
+  </data>
+  <data name="Hints.SolutionViewer" xml:space="preserve">
+    <value>b:erstellen c:bereinigen t:testen r:ausführen x:abbrechen v:SDK Space:markieren a:alle T:Tests PgUp/PgDn/Home/End:Ausgabe Esc:schließen</value>
+  </data>
+  <data name="Hints.MusicViewer" xml:space="preserve">
+    <value> Space:Wiedergabe/Pause Enter:von vorn s:Stopp ←/→:spulen Shift+←/→:weiter spulen +/-:Lautstärke e:Tags Esc:schließen</value>
+  </data>
+  <data name="Hints.VideoViewer" xml:space="preserve">
+    <value> Space:Wiedergabe/Pause  ←/→:spulen  Shift+←/→:weiter spulen  Home:neu starten  s:Stopp  c:Farbe  Esc:schließen</value>
+  </data>
+  <data name="Hints.NetworkBrowse" xml:space="preserve">
+    <value>Enter:verbinden  r:neu suchen  d:Gespeicherte löschen  Esc:schließen</value>
+  </data>
+  <data name="Hints.NetworkForm" xml:space="preserve">
+    <value>Tab:wechseln  Enter:verbinden  Ctrl+B:zurück  Esc:zurück</value>
+  </data>
+  <data name="Hints.PackagesInstalled" xml:space="preserve">
+    <value>Space/Enter:deinstallieren  s:suchen  r:aktualisieren  x:abbrechen  PgUp/PgDn:Ausgabe  Esc:schließen</value>
+  </data>
+  <data name="Hints.PackagesSearch" xml:space="preserve">
+    <value>Space/Enter:installieren  i:installiert  s:neue Suche  r:aktualisieren  x:abbrechen  PgUp/PgDn:Ausgabe  Esc:schließen</value>
+  </data>
+  <data name="Solution.ReadFailed" xml:space="preserve">
+    <value>Die Projektmappe konnte nicht gelesen werden: {0}</value>
+  </data>
 </root>

@@ -4231,4 +4231,58 @@
   <data name="MusicViewer.ReadingTags" xml:space="preserve">
     <value>Lettura dei tag…</value>
   </data>
+  <data name="Hints.CurrencyConverter" xml:space="preserve">
+    <value>Tab:campo successivo  Su/Giù:scegli  F5:aggiorna tassi  F6:scambia  Esc:chiudi</value>
+  </data>
+  <data name="Hints.Encyclopedia" xml:space="preserve">
+    <value>Enter:cerca/leggi  Tab:campo  F3:intero  F2:browser  Esc:chiudi</value>
+  </data>
+  <data name="Hints.StockBrowser" xml:space="preserve">
+    <value>a:aggiungi  d/Del:rimuovi  r:aggiorna  Esc:chiudi</value>
+  </data>
+  <data name="Hints.StockBrowserAdd" xml:space="preserve">
+    <value>Enter:cerca/aggiungi  ↑↓:scegli  Esc:indietro</value>
+  </data>
+  <data name="Hints.Terminal" xml:space="preserve">
+    <value>Ctrl+1..4 o Ctrl+Sinistra/Destra:pagina   Su/Giù:scorri   Esc:chiudi</value>
+  </data>
+  <data name="Hints.UnitConverter" xml:space="preserve">
+    <value>Tab:elenco successivo  Su/Giù:scegli  digita un valore  Ctrl+S:scambia unità  Esc:chiudi</value>
+  </data>
+  <data name="Hints.Translator" xml:space="preserve">
+    <value>F5:traduci  F6:scambia  F7:rileva  F8:cancella  Tab:campo successivo  Esc:chiudi</value>
+  </data>
+  <data name="Hints.IPhoneBrowser" xml:space="preserve">
+    <value>r:ripeti scansione  Enter:apri  Esc:chiudi</value>
+  </data>
+  <data name="Hints.ImageViewer" xml:space="preserve">
+    <value> c:colore  i:info  Esc:chiudi</value>
+  </data>
+  <data name="Hints.Calculator" xml:space="preserve">
+    <value>0-9 . + - * / ^ %  Enter:=  Bksp:indietro  Del/c:cancella  Space:premi il tasto  Ctrl+←/→:modalità  Esc:chiudi</value>
+  </data>
+  <data name="Hints.SolutionViewer" xml:space="preserve">
+    <value>b:compila c:pulisci t:testa r:esegui x:annulla v:SDK Space:seleziona a:tutto T:test PgUp/PgDn/Home/End:output Esc:chiudi</value>
+  </data>
+  <data name="Hints.MusicViewer" xml:space="preserve">
+    <value> Space:riproduci/pausa Enter:dall’inizio s:stop ←/→:sposta Shift+←/→:sposta di più +/-:volume e:tag Esc:chiudi</value>
+  </data>
+  <data name="Hints.VideoViewer" xml:space="preserve">
+    <value> Space:riproduci/pausa  ←/→:sposta  Shift+←/→:sposta di più  Home:riavvia  s:stop  c:colore  Esc:chiudi</value>
+  </data>
+  <data name="Hints.NetworkBrowse" xml:space="preserve">
+    <value>Enter:connetti  r:ripeti scansione  d:elimina salvata  Esc:chiudi</value>
+  </data>
+  <data name="Hints.NetworkForm" xml:space="preserve">
+    <value>Tab:sposta  Enter:connetti  Ctrl+B:indietro  Esc:indietro</value>
+  </data>
+  <data name="Hints.PackagesInstalled" xml:space="preserve">
+    <value>Space/Enter:disinstalla  s:cerca  r:aggiorna  x:annulla  PgUp/PgDn:output  Esc:chiudi</value>
+  </data>
+  <data name="Hints.PackagesSearch" xml:space="preserve">
+    <value>Space/Enter:installa  i:installati  s:nuova ricerca  r:aggiorna  x:annulla  PgUp/PgDn:output  Esc:chiudi</value>
+  </data>
+  <data name="Solution.ReadFailed" xml:space="preserve">
+    <value>Impossibile leggere la soluzione: {0}</value>
+  </data>
 </root>

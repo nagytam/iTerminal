@@ -4231,4 +4231,58 @@
   <data name="MusicViewer.ReadingTags" xml:space="preserve">
     <value>Címkék olvasása…</value>
   </data>
+  <data name="Hints.CurrencyConverter" xml:space="preserve">
+    <value>Tab:következő mező  Fel/Le:választás  F5:árfolyamok frissítése  F6:csere  Esc:bezár</value>
+  </data>
+  <data name="Hints.Encyclopedia" xml:space="preserve">
+    <value>Enter:keresés/olvasás  Tab:mező  F3:teljes  F2:böngésző  Esc:bezár</value>
+  </data>
+  <data name="Hints.StockBrowser" xml:space="preserve">
+    <value>a:hozzáadás  d/Del:eltávolítás  r:frissítés  Esc:bezár</value>
+  </data>
+  <data name="Hints.StockBrowserAdd" xml:space="preserve">
+    <value>Enter:keresés/hozzáadás  ↑↓:választás  Esc:vissza</value>
+  </data>
+  <data name="Hints.Terminal" xml:space="preserve">
+    <value>Ctrl+1..4 vagy Ctrl+Bal/Jobb:lap   Fel/Le:görgetés   Esc:bezár</value>
+  </data>
+  <data name="Hints.UnitConverter" xml:space="preserve">
+    <value>Tab:következő lista  Fel/Le:választás  írjon be értéket  Ctrl+S:egységek cseréje  Esc:bezár</value>
+  </data>
+  <data name="Hints.Translator" xml:space="preserve">
+    <value>F5:fordítás  F6:csere  F7:felismerés  F8:törlés  Tab:következő mező  Esc:bezár</value>
+  </data>
+  <data name="Hints.IPhoneBrowser" xml:space="preserve">
+    <value>r:újrakeresés  Enter:megnyitás  Esc:bezár</value>
+  </data>
+  <data name="Hints.ImageViewer" xml:space="preserve">
+    <value> c:szín  i:infó  Esc:bezár</value>
+  </data>
+  <data name="Hints.Calculator" xml:space="preserve">
+    <value>0-9 . + - * / ^ %  Enter:=  Bksp:vissza  Del/c:törlés  Space:gomb megnyomása  Ctrl+←/→:mód  Esc:bezár</value>
+  </data>
+  <data name="Hints.SolutionViewer" xml:space="preserve">
+    <value>b:fordítás c:tisztítás t:teszt r:futtatás x:megszakítás v:SDK Space:kijelölés a:mind T:tesztek PgUp/PgDn/Home/End:kimenet Esc:bezár</value>
+  </data>
+  <data name="Hints.MusicViewer" xml:space="preserve">
+    <value> Space:lejátszás/szünet Enter:elölről s:leállítás ←/→:tekerés Shift+←/→:nagyobb tekerés +/-:hangerő e:címkék Esc:bezár</value>
+  </data>
+  <data name="Hints.VideoViewer" xml:space="preserve">
+    <value> Space:lejátszás/szünet  ←/→:tekerés  Shift+←/→:nagyobb tekerés  Home:újraindítás  s:leállítás  c:szín  Esc:bezár</value>
+  </data>
+  <data name="Hints.NetworkBrowse" xml:space="preserve">
+    <value>Enter:csatlakozás  r:újrakeresés  d:mentett törlése  Esc:bezár</value>
+  </data>
+  <data name="Hints.NetworkForm" xml:space="preserve">
+    <value>Tab:váltás  Enter:csatlakozás  Ctrl+B:vissza  Esc:vissza</value>
+  </data>
+  <data name="Hints.PackagesInstalled" xml:space="preserve">
+    <value>Space/Enter:eltávolítás  s:keresés  r:frissítés  x:megszakítás  PgUp/PgDn:kimenet  Esc:bezár</value>
+  </data>
+  <data name="Hints.PackagesSearch" xml:space="preserve">
+    <value>Space/Enter:telepítés  i:telepítettek  s:új keresés  r:frissítés  x:megszakítás  PgUp/PgDn:kimenet  Esc:bezár</value>
+  </data>
+  <data name="Solution.ReadFailed" xml:space="preserve">
+    <value>A megoldás olvasása sikertelen: {0}</value>
+  </data>
 </root>

@@ -378,8 +378,10 @@ public class DialogHintsWholeTest
         foreach (Type type in typeof(iTerminal.Core.Dialogs.SortDialog).Assembly.GetTypes()
             .Where(t => typeof(Dialog).IsAssignableFrom(t) && !t.IsAbstract))
         {
+            // A footer is a constant, or a static property that looks the text up so it follows the chosen language.
             FieldInfo? field = type.GetField("KeyHints", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-            if (field?.GetRawConstantValue() is not string footer)
+            PropertyInfo? property = type.GetProperty("KeyHints", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+            if ((field?.IsLiteral == true ? field.GetRawConstantValue() : property?.GetValue(null)) is not string footer)
             {
                 continue;
             }

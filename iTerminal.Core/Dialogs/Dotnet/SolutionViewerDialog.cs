@@ -272,7 +272,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         catch (Exception exception)
         {
             _solution = SolutionInfo.Empty;
-            _loadError = $"Failed to read solution: {exception.Message}";
+            _loadError = string.Format(iConsole.Localization.UiText.Get("Solution.ReadFailed", "Failed to read solution: {0}"), exception.Message);
         }
 
         RebuildProjectRows();
@@ -757,8 +757,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         WriteLine(buffer, x, y, w, text, Color.Cyan, colorScheme.Background);
     }
 
-    internal const string KeyHints =
-        "b:build c:clean t:test r:run x:cancel v:SDK Space:check a:all T:tests PgUp/PgDn/Home/End:output Esc:close";
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.SolutionViewer", "b:build c:clean t:test r:run x:cancel v:SDK Space:check a:all T:tests PgUp/PgDn/Home/End:output Esc:close");
 
     /// <summary>The SDK new commands run with: the one chosen with v, the newest stable one by default.</summary>
     private DotnetSdk? SelectedSdk => _sdkIndex >= 0 && _sdkIndex < _sdks.Count ? _sdks[_sdkIndex] : null;

@@ -4231,4 +4231,58 @@
   <data name="MusicViewer.ReadingTags" xml:space="preserve">
     <value>Reading tags…</value>
   </data>
+  <data name="Hints.CurrencyConverter" xml:space="preserve">
+    <value>Tab:next field  Up/Down:choose  F5:refresh rates  F6:swap  Esc:close</value>
+  </data>
+  <data name="Hints.Encyclopedia" xml:space="preserve">
+    <value>Enter:search/read  Tab:field  F3:whole  F2:browser  Esc:close</value>
+  </data>
+  <data name="Hints.StockBrowser" xml:space="preserve">
+    <value>a:add  d/Del:remove  r:refresh  Esc:close</value>
+  </data>
+  <data name="Hints.StockBrowserAdd" xml:space="preserve">
+    <value>Enter:search/add  ↑↓:choose  Esc:back</value>
+  </data>
+  <data name="Hints.Terminal" xml:space="preserve">
+    <value>Ctrl+1..4 or Ctrl+Left/Right:page   Up/Down:scroll   Esc:close</value>
+  </data>
+  <data name="Hints.UnitConverter" xml:space="preserve">
+    <value>Tab:next list  Up/Down:choose  type a value  Ctrl+S:swap units  Esc:close</value>
+  </data>
+  <data name="Hints.Translator" xml:space="preserve">
+    <value>F5:translate  F6:swap  F7:detect  F8:clear  Tab:next field  Esc:close</value>
+  </data>
+  <data name="Hints.IPhoneBrowser" xml:space="preserve">
+    <value>r:rescan  Enter:open  Esc:close</value>
+  </data>
+  <data name="Hints.ImageViewer" xml:space="preserve">
+    <value> c:colour  i:info  Esc:close</value>
+  </data>
+  <data name="Hints.Calculator" xml:space="preserve">
+    <value>0-9 . + - * / ^ %  Enter:=  Bksp:back  Del/c:clear  Space:press button  Ctrl+←/→:mode  Esc:close</value>
+  </data>
+  <data name="Hints.SolutionViewer" xml:space="preserve">
+    <value>b:build c:clean t:test r:run x:cancel v:SDK Space:check a:all T:tests PgUp/PgDn/Home/End:output Esc:close</value>
+  </data>
+  <data name="Hints.MusicViewer" xml:space="preserve">
+    <value> Space:play/pause Enter:from start s:stop ←/→:seek Shift+←/→:seek further +/-:volume e:tags Esc:close</value>
+  </data>
+  <data name="Hints.VideoViewer" xml:space="preserve">
+    <value> Space:play/pause  ←/→:seek  Shift+←/→:seek further  Home:restart  s:stop  c:colour  Esc:close</value>
+  </data>
+  <data name="Hints.NetworkBrowse" xml:space="preserve">
+    <value>Enter:connect  r:rescan  d:delete saved  Esc:close</value>
+  </data>
+  <data name="Hints.NetworkForm" xml:space="preserve">
+    <value>Tab:move  Enter:connect  Ctrl+B:back  Esc:back</value>
+  </data>
+  <data name="Hints.PackagesInstalled" xml:space="preserve">
+    <value>Space/Enter:uninstall  s:search  r:refresh  x:cancel  PgUp/PgDn:output  Esc:close</value>
+  </data>
+  <data name="Hints.PackagesSearch" xml:space="preserve">
+    <value>Space/Enter:install  i:installed  s:new search  r:refresh  x:cancel  PgUp/PgDn:output  Esc:close</value>
+  </data>
+  <data name="Solution.ReadFailed" xml:space="preserve">
+    <value>Failed to read solution: {0}</value>
+  </data>
 </root>
