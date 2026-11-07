@@ -4780,4 +4780,37 @@
   <data name="WebHelp.30" xml:space="preserve">
     <value>Zum Zurückgehen eine beliebige Taste drücken.</value>
   </data>
+  <data name="Translator.Translating" xml:space="preserve">
+    <value>Übersetzen mit {0}…</value>
+  </data>
+  <data name="Translator.Cancelled" xml:space="preserve">
+    <value>Abgebrochen.</value>
+  </data>
+  <data name="Translator.Failed" xml:space="preserve">
+    <value>Übersetzung fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Translator.Detecting" xml:space="preserve">
+    <value>Sprache wird erkannt…</value>
+  </data>
+  <data name="Translator.NoDetection" xml:space="preserve">
+    <value>Die Sprache ließ sich nicht erkennen — wählen Sie sie in der Liste „Von“.</value>
+  </data>
+  <data name="Translator.Detected" xml:space="preserve">
+    <value>{0} erkannt (zu {1:P0} sicher)</value>
+  </data>
+  <data name="Translator.DetectFailed" xml:space="preserve">
+    <value>Erkennung fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Translator.DetectedName" xml:space="preserve">
+    <value>{0} (erkannt)</value>
+  </data>
+  <data name="Translator.UnknownLanguage" xml:space="preserve">
+    <value>unbekannte Sprache</value>
+  </data>
+  <data name="Translator.OutputHeader" xml:space="preserve">
+    <value>Übersetzung</value>
+  </data>
+  <data name="Translator.InputHeader" xml:space="preserve">
+    <value>Text</value>
+  </data>
 </root>

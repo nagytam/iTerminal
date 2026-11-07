@@ -294,7 +294,7 @@ public class TranslatorDialog : SplitPaneDialog
         string source = _from.SelectedItem?.Code ?? TranslationLanguages.Auto;
         string target = _to.SelectedItem?.Code ?? "en";
         TranslationEngine engine = SelectedEngine;
-        int generation = BeginRequest($"Translating with {EngineName(engine)}…");
+        int generation = BeginRequest(Say("Translator.Translating", "Translating with {0}…", EngineName(engine)));
         CancellationToken token = _cancellation!.Token;
 
         RequestTask = Task.Run(async () =>
@@ -303,13 +303,13 @@ public class TranslatorDialog : SplitPaneDialog
             {
                 TranslationResult result = await _service.TranslateAsync(text, source, target, engine, token);
                 string from = source == TranslationLanguages.Auto
-                    ? (result.DetectedSource is { } detected ? $"{TranslationLanguages.NameOf(detected)} (detected)" : "unknown language")
+                    ? (result.DetectedSource is { } detected ? Say("Translator.DetectedName", "{0} (detected)", TranslationLanguages.NameOf(detected)) : Say("Translator.UnknownLanguage", "unknown language"))
                     : TranslationLanguages.NameOf(source);
                 Land(new Outcome(generation, $"{from} → {TranslationLanguages.NameOf(target)} · {result.EngineName}", false, result.Text, result.DetectedSource, result.EngineName));
             }
             catch (OperationCanceledException)
             {
-                Land(new Outcome(generation, "Cancelled.", false));
+                Land(new Outcome(generation, Say("Translator.Cancelled", "Cancelled."), false));
             }
             catch (TranslationException exception)
             {
@@ -317,7 +317,7 @@ public class TranslatorDialog : SplitPaneDialog
             }
             catch (Exception exception)
             {
-                Land(new Outcome(generation, $"Translation failed: {exception.Message}", true));
+                Land(new Outcome(generation, Say("Translator.Failed", "Translation failed: {0}", exception.Message), true));
             }
         });
     }
@@ -333,7 +333,7 @@ public class TranslatorDialog : SplitPaneDialog
         }
 
         TranslationEngine engine = SelectedEngine;
-        int generation = BeginRequest("Detecting the language…");
+        int generation = BeginRequest(Say("Translator.Detecting", "Detecting the language…"));
         CancellationToken token = _cancellation!.Token;
 
         RequestTask = Task.Run(async () =>
@@ -342,16 +342,16 @@ public class TranslatorDialog : SplitPaneDialog
             {
                 LanguageDetection? detection = await _service.DetectAsync(text, engine, token);
                 Land(detection is null
-                    ? new Outcome(generation, "Could not tell the language — choose it from the From list.", true)
-                    : new Outcome(generation, $"Detected {TranslationLanguages.NameOf(detection.Code)} ({detection.Confidence:P0} sure)", false, DetectedSource: detection.Code));
+                    ? new Outcome(generation, Say("Translator.NoDetection", "Could not tell the language — choose it from the From list."), true)
+                    : new Outcome(generation, Say("Translator.Detected", "Detected {0} ({1:P0} sure)", TranslationLanguages.NameOf(detection.Code), detection.Confidence), false, DetectedSource: detection.Code));
             }
             catch (OperationCanceledException)
             {
-                Land(new Outcome(generation, "Cancelled.", false));
+                Land(new Outcome(generation, Say("Translator.Cancelled", "Cancelled."), false));
             }
             catch (Exception exception)
             {
-                Land(new Outcome(generation, $"Detection failed: {exception.Message}", true));
+                Land(new Outcome(generation, Say("Translator.DetectFailed", "Detection failed: {0}", exception.Message), true));
             }
         });
     }
@@ -540,8 +540,8 @@ public class TranslatorDialog : SplitPaneDialog
 
         int leftWidth = (int)_input.ViewSize.Width;
         int rightWidth = (int)_output.ViewSize.Width;
-        DrawSectionHeader(buffer, ix, iy + 2, leftWidth, "Text", _input.IsFocused, colorScheme);
-        DrawSectionHeader(buffer, ix + leftWidth + 1, iy + 2, rightWidth, "Translation", _output.IsFocused, colorScheme);
+        DrawSectionHeader(buffer, ix, iy + 2, leftWidth, Say("Translator.InputHeader", "Text"), _input.IsFocused, colorScheme);
+        DrawSectionHeader(buffer, ix + leftWidth + 1, iy + 2, rightWidth, Say("Translator.OutputHeader", "Translation"), _output.IsFocused, colorScheme);
 
         DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, _status, _statusIsError ? colorScheme.Error : Color.Cyan, KeyHints, colorScheme);
     }

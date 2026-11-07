@@ -4780,4 +4780,37 @@
   <data name="WebHelp.30" xml:space="preserve">
     <value>Pulse cualquier tecla para volver.</value>
   </data>
+  <data name="Translator.Translating" xml:space="preserve">
+    <value>Traduciendo con {0}…</value>
+  </data>
+  <data name="Translator.Cancelled" xml:space="preserve">
+    <value>Cancelado.</value>
+  </data>
+  <data name="Translator.Failed" xml:space="preserve">
+    <value>Falló la traducción: {0}</value>
+  </data>
+  <data name="Translator.Detecting" xml:space="preserve">
+    <value>Detectando el idioma…</value>
+  </data>
+  <data name="Translator.NoDetection" xml:space="preserve">
+    <value>No se pudo identificar el idioma: elíjalo en la lista «De».</value>
+  </data>
+  <data name="Translator.Detected" xml:space="preserve">
+    <value>{0} detectado ({1:P0} de certeza)</value>
+  </data>
+  <data name="Translator.DetectFailed" xml:space="preserve">
+    <value>Falló la detección: {0}</value>
+  </data>
+  <data name="Translator.DetectedName" xml:space="preserve">
+    <value>{0} (detectado)</value>
+  </data>
+  <data name="Translator.UnknownLanguage" xml:space="preserve">
+    <value>idioma desconocido</value>
+  </data>
+  <data name="Translator.OutputHeader" xml:space="preserve">
+    <value>Traducción</value>
+  </data>
+  <data name="Translator.InputHeader" xml:space="preserve">
+    <value>Texto</value>
+  </data>
 </root>
