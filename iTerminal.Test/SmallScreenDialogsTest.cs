@@ -122,6 +122,21 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task TheChessRulesOn20Rows_EndOnAnEllipsisInsteadOfASentenceCutInTheAir()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Shift+F1");
+        await narrow.WaitForTextAsync("Run:");
+        await narrow.TypeAsync("Chess");
+        await narrow.PressAsync("Enter");
+
+        await narrow.WaitForTextAsync("against the computer");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Select a piece") && l.Contains('…')), "the rules, cut at a clear ellipsis");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheStocksOn60Columns_ShowTheCompanyNameInsteadOfThreeLetters()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);

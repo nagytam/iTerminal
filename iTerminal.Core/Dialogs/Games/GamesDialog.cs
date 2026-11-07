@@ -442,14 +442,18 @@ public abstract class GamesDialog : SplitPaneDialog
         }
 
         int rulesTop = boardTop + rows.Count + 1;
-        foreach (string part in Wrap(game.Rules, width - 1))
+        List<string> ruleLines = [.. Wrap(game.Rules, width - 1)];
+        int rulesRoom = Math.Max(0, ih - 1 - rulesTop);
+        for (int i = 0; i < ruleLines.Count && i < rulesRoom; i++)
         {
-            if (rulesTop < ih - 1)
+            string part = ruleLines[i];
+            if (i == rulesRoom - 1 && ruleLines.Count > rulesRoom)
             {
-                WriteLine(buffer, x0, iy + rulesTop, width, " " + part, colorScheme.DisabledForeground, colorScheme.Background);
+                // More to say than the dialog has rows for: end on an ellipsis rather than a sentence cut in the air.
+                part = (part.Length > width - 4 ? part[..Math.Max(0, width - 4)] : part).TrimEnd() + " …";
             }
 
-            rulesTop++;
+            WriteLine(buffer, x0, iy + rulesTop + i, width, " " + part, colorScheme.DisabledForeground, colorScheme.Background);
         }
 
         DrawStatusAndHints(buffer, ix, iy + ih - 1, iw, string.Empty, colorScheme.Foreground, FooterHints(), colorScheme);
