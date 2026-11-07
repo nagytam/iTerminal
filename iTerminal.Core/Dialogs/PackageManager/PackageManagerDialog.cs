@@ -775,8 +775,8 @@ public class PackageManagerDialog : SplitPaneDialog
     }
 
     internal string KeyHints => _mode == Mode.Installed
-        ? "Space/Enter:uninstall  s:search  r:refresh  x:cancel  PgUp/PgDn:output  Esc:close"
-        : "Space/Enter:install  i:installed  s:new search  r:refresh  x:cancel  PgUp/PgDn:output  Esc:close";
+        ? iConsole.Localization.UiText.Get("Hints.PackagesInstalled", "Space/Enter:uninstall  s:search  r:refresh  x:cancel  PgUp/PgDn:output  Esc:close")
+        : iConsole.Localization.UiText.Get("Hints.PackagesSearch", "Space/Enter:install  i:installed  s:new search  r:refresh  x:cancel  PgUp/PgDn:output  Esc:close");
 
     private void DrawFooter(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
     {

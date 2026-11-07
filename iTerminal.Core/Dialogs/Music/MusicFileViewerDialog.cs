@@ -513,8 +513,7 @@ public class MusicFileViewerDialog : Dialog
             colorScheme.Background);
     }
 
-    internal const string KeyHints =
-        " Space:play/pause Enter:from start s:stop ←/→:seek Shift+←/→:seek further +/-:volume e:tags Esc:close";
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.MusicViewer", " Space:play/pause Enter:from start s:stop ←/→:seek Shift+←/→:seek further +/-:volume e:tags Esc:close");
 
     internal string StatusForTest => _status;
 

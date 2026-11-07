@@ -21,7 +21,7 @@ namespace iTerminal.Core.Dialogs.CurrencyConverter;
 /// </summary>
 public class CurrencyConverterDialog : SplitPaneDialog
 {
-    internal const string KeyHints = "Tab:next field  Up/Down:choose  F5:refresh rates  F6:swap  Esc:close";
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.CurrencyConverter", "Tab:next field  Up/Down:choose  F5:refresh rates  F6:swap  Esc:close");
 
     internal const string AmountKey = "CurrencyConverter.Amount";
     internal const string FromKey = "CurrencyConverter.From";

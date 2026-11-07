@@ -38,8 +38,7 @@ public class VideoFileViewerDialog : Dialog
 
     private const int ButtonGap = 1;
 
-    internal const string KeyHints =
-        " Space:play/pause  ←/→:seek  Shift+←/→:seek further  Home:restart  s:stop  c:colour  Esc:close";
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.VideoViewer", " Space:play/pause  ←/→:seek  Shift+←/→:seek further  Home:restart  s:stop  c:colour  Esc:close");
 
     private readonly IVideoDecoderFactory _decoderFactory;
     private readonly Button[] _buttons;

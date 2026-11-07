@@ -549,8 +549,8 @@ public class StockBrowserDialog : SplitPaneDialog
 
     #region Draw
 
-    internal const string KeyHints = "a:add  d/Del:remove  r:refresh  Esc:close";
-    internal const string AddKeyHints = "Enter:search/add  ↑↓:choose  Esc:back";
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.StockBrowser", "a:add  d/Del:remove  r:refresh  Esc:close");
+    internal static string AddKeyHints => iConsole.Localization.UiText.Get("Hints.StockBrowserAdd", "Enter:search/add  ↑↓:choose  Esc:back");
 
     public override void Draw(IBuffer buffer)
     {

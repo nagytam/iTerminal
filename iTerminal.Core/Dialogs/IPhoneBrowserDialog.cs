@@ -69,7 +69,7 @@ public class IPhoneBrowserDialog : Dialog
         base.OnInitializeLayout();
     }
 
-    internal const string KeyHints = "r:rescan  Enter:open  Esc:close";
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.IPhoneBrowser", "r:rescan  Enter:open  Esc:close");
     internal const string NoDevicesText = " No iOS devices found. Connect an iPhone, unlock it and trust this computer — then r rescans.";
 
     private void Rescan()

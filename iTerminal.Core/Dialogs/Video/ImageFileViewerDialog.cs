@@ -25,7 +25,7 @@ namespace iTerminal.Core.Dialogs.Video;
 /// </summary>
 public class ImageFileViewerDialog : Dialog
 {
-    internal const string KeyHints = " c:colour  i:info  Esc:close";
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.ImageViewer", " c:colour  i:info  Esc:close");
 
     private const int HeaderRows = 1;
     private const int FooterRows = 2;
