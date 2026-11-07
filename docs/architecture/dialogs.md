@@ -174,8 +174,8 @@ Tools > BitTorrent: every torrent with state, progress, size, speeds and peers, 
 - **Dispose stops the engine** (`TorrentService` is `IAsyncDisposable`, so the container does it at shutdown).
 - **Not yet covered by the end-to-end sandbox:** the engine is only reached when a torrent is added, which no end-to-end test does; a test that adds one needs a `SandboxServices` replacement for `ITorrentService` first.
 
-### Games (`GamesDialog`, Tools > Games, `Services/Games/`)
-Tic-Tac-Toe, Chess, Go (9x9, 13x13, 19x19) and Nine Men's Morris, against the computer or two people at one keyboard, and Snake, for one person. There is no hot key: every Ctrl+Shift+F-key is taken, so it opens from the Tools menu, the command palette or the AI `ui` tool ("games", "chess", "go", "snake", ...).
+### Games (`GamesDialog`, Tools menu, `Services/Games/`)
+Every game opens in a dialog of its own (`TicTacToeDialog`, `ChessDialog`, `GoDialog`, `NineMensMorrisDialog`, `SnakeDialog`, `TetrisDialog`, each with its own command in the Tools menu). They derive from the abstract `GamesDialog`, which hosts the game list when given several games and hides the list, PgUp/PgDn and the digit keys when given one. Tic-Tac-Toe, Chess, Go (9x9, 13x13, 19x19) and Nine Men's Morris play against the computer or two people at one keyboard; Snake and Tetris are for one person (Tetris: arrows slide and soft-drop, Up or X turns, Z turns back, D drops at once, Enter pauses). There is no hot key: every Ctrl+Shift+F-key is taken, so each opens from the Tools menu, the command palette or the AI `ui` tool ("tictactoe", "chess", "go", "morris", "snake", "tetris").
 
 Arrows move the cursor, Enter or Space plays, PgUp/PgDn or 1-5 choose the game (the digit row follows the number of games), N starts again, U takes a move back (and the computer's answer with it), M switches between the computer and two players. A game may ask for more: Go has P (pass) and S (board size); chess asks for the promotion piece with Q, R, B or N. Games that do not offer U or M (Snake) leave those keys to the other controls.
 

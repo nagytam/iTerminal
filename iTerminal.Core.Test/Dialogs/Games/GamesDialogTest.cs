@@ -14,7 +14,11 @@ namespace iTerminal.Core.Test.Dialogs.Games;
 [TestClass]
 public class GamesDialogTest
 {
-    private static GamesDialog Create(ITimeProvider? time = null) => new(
+    /// <summary>The shipped dialogs each host one game; this host takes several, to test the game list.</summary>
+    private sealed class HostDialog(IGame[] games, iConsole.Services.IThemeService theme, ITimeProvider? time = null)
+        : GamesDialog(nameof(HostDialog), "Games", games, theme, time);
+
+    private static GamesDialog Create(ITimeProvider? time = null) => new HostDialog(
         [new TicTacToeGame(new Random(1)), new ChessGame(new Random(1)), new GoGame(new Random(1)), new NineMensMorrisGame(new Random(1)), new SnakeGame(new Random(1))],
         TestTheme(),
         time);
@@ -360,10 +364,37 @@ public class GamesDialogTest
     [TestMethod]
     public void TheCommandIsCalledGamesAndHasNoHotKey()
     {
-        GamesDialogCommand command = new(Create());
+        TetrisDialogCommand command = new(new TetrisDialog(TestTheme(), new VirtualTimeProvider()));
 
-        Assert.AreEqual("Games", command.Title);
+        Assert.AreEqual("Tetris", command.Title);
         Assert.IsNull(command.Key);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EachGameOpensInADialogOfItsOwnWithoutAGameList()
+    {
+        GamesDialog[] dialogs =
+        [
+            new TicTacToeDialog(TestTheme(), new VirtualTimeProvider()),
+            new ChessDialog(TestTheme(), new VirtualTimeProvider()),
+            new GoDialog(TestTheme(), new VirtualTimeProvider()),
+            new NineMensMorrisDialog(TestTheme(), new VirtualTimeProvider()),
+            new SnakeDialog(TestTheme(), new VirtualTimeProvider()),
+            new TetrisDialog(TestTheme(), new VirtualTimeProvider()),
+        ];
+
+        foreach (GamesDialog dialog in dialogs)
+        {
+            Assert.AreEqual(1, dialog.Games.Count);
+            Assert.AreEqual(dialog.Current.Name, dialog.Title);
+            await ShowAsync(dialog);
+            string screen = Drawn(dialog);
+            Assert.IsFalse(screen.Contains("PgUp/PgDn"), dialog.Title + " has no game to page to");
+            Assert.IsFalse(dialog.GetKeyHints().Any(h => h.Key.StartsWith("1-")));
+            await Press(dialog, ConsoleKey.PageDown);
+            Assert.AreSame(dialog.Games[0], dialog.Current);
+        }
     }
 
     [Timeout(60_000)]
@@ -373,7 +404,7 @@ public class GamesDialogTest
         // The first search ignores its cancellation until the second has answered, so its (stale) move is parked last.
         TaskCompletionSource gate = new();
         ScriptedGame game = new(gate.Task);
-        var dialog = new GamesDialog([game], TestTheme());
+        var dialog = new HostDialog([game], TestTheme());
         await ShowAsync(dialog);
 
         dialog.OnIdle();
