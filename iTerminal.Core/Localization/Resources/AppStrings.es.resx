@@ -4480,4 +4480,109 @@
   <data name="Update.Available" xml:space="preserve">
     <value>iTerminal {0} está disponible. Tiene {1}.</value>
   </data>
+  <data name="Git.LoadingDiff" xml:space="preserve">
+    <value>Cargando diferencias...</value>
+  </data>
+  <data name="Git.Staged" xml:space="preserve">
+    <value>En el área de preparación</value>
+  </data>
+  <data name="Git.WorkingTree" xml:space="preserve">
+    <value>Árbol de trabajo</value>
+  </data>
+  <data name="Git.CheckingOut" xml:space="preserve">
+    <value>Cambiando a {0}</value>
+  </data>
+  <data name="Git.NowTracking" xml:space="preserve">
+    <value>Ahora en una rama local que sigue a {0}.</value>
+  </data>
+  <data name="Git.On" xml:space="preserve">
+    <value>En {0}.</value>
+  </data>
+  <data name="Git.Creating" xml:space="preserve">
+    <value>Creando {0}</value>
+  </data>
+  <data name="Git.Created" xml:space="preserve">
+    <value>{0} creada y activada.</value>
+  </data>
+  <data name="Git.ConfirmDeleteBranch" xml:space="preserve">
+    <value>¿Eliminar la rama {0}, esté fusionada o no? (y/n)</value>
+  </data>
+  <data name="Git.Deleting" xml:space="preserve">
+    <value>Eliminando {0}</value>
+  </data>
+  <data name="Git.Deleted" xml:space="preserve">
+    <value>{0} eliminada.</value>
+  </data>
+  <data name="Git.AbortingMerge" xml:space="preserve">
+    <value>Cancelando la fusión...</value>
+  </data>
+  <data name="Git.MergeAborted" xml:space="preserve">
+    <value>Fusión cancelada.</value>
+  </data>
+  <data name="Git.Publishing" xml:space="preserve">
+    <value>Publicando la rama...</value>
+  </data>
+  <data name="Git.Pushing" xml:space="preserve">
+    <value>Enviando...</value>
+  </data>
+  <data name="Git.Published" xml:space="preserve">
+    <value>{0} publicada y su upstream definido.</value>
+  </data>
+  <data name="Git.Pushed" xml:space="preserve">
+    <value>Enviado.</value>
+  </data>
+  <data name="Git.StashPrompt" xml:space="preserve">
+    <value>Mensaje del stash (Enter para ninguno)</value>
+  </data>
+  <data name="Git.Stashing" xml:space="preserve">
+    <value>Guardando los cambios en stash...</value>
+  </data>
+  <data name="Git.Stashed" xml:space="preserve">
+    <value>Guardado en stash.</value>
+  </data>
+  <data name="Git.Popping" xml:space="preserve">
+    <value>Aplicando y quitando {0}</value>
+  </data>
+  <data name="Git.Popped" xml:space="preserve">
+    <value>{0} aplicado y quitado.</value>
+  </data>
+  <data name="Git.Applying" xml:space="preserve">
+    <value>Aplicando {0}</value>
+  </data>
+  <data name="Git.Applied" xml:space="preserve">
+    <value>{0} aplicado.</value>
+  </data>
+  <data name="Git.ConfirmDrop" xml:space="preserve">
+    <value>¿Descartar {0} para siempre? (y/n)</value>
+  </data>
+  <data name="Git.Dropping" xml:space="preserve">
+    <value>Descartando {0}</value>
+  </data>
+  <data name="Git.Dropped" xml:space="preserve">
+    <value>{0} descartado.</value>
+  </data>
+  <data name="Git.NothingStagedHint" xml:space="preserve">
+    <value>Nada preparado: prepare un archivo con Espacio, o todo con a.</value>
+  </data>
+  <data name="Git.NothingStaged" xml:space="preserve">
+    <value>Nada preparado para confirmar.</value>
+  </data>
+  <data name="Git.AmendPrompt" xml:space="preserve">
+    <value>Enmendar el último commit</value>
+  </data>
+  <data name="Git.NewBranch" xml:space="preserve">
+    <value>Nueva rama</value>
+  </data>
+  <data name="Git.ConfirmDeleteUntracked" xml:space="preserve">
+    <value>¿Eliminar el archivo sin seguimiento {0}? (y/n)</value>
+  </data>
+  <data name="Git.ConfirmDiscard" xml:space="preserve">
+    <value>¿Descartar sus cambios en {0}? (y/n)</value>
+  </data>
+  <data name="Git.Loading" xml:space="preserve">
+    <value>Cargando...</value>
+  </data>
+  <data name="Git.NoRepo" xml:space="preserve">
+    <value>Sin repositorio</value>
+  </data>
 </root>
