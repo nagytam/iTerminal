@@ -84,8 +84,20 @@ public class UnitConverterDialog : SplitPaneDialog
     private static ListItem<UnitCategory> TransformCategory(UnitCategory category, CancellationToken cancellationToken) =>
         new(category) { Value = UnitCatalog.GetCategoryName(category), IsEnabled = true };
 
-    private static ListItem<UnitDefinition> TransformUnit(UnitDefinition unit, CancellationToken cancellationToken) =>
-        new(unit) { Value = $"{unit.Name} ({unit.Symbol})", IsEnabled = true };
+    /// <summary>The width a unit may use in its list; 0 until the layout knows it.</summary>
+    private int _unitTextWidth;
+
+    /// <summary>"Name (sym)", cut with an ellipsis where the column ends: the two unit columns touch, and a long name ran into the next one.</summary>
+    private ListItem<UnitDefinition> TransformUnit(UnitDefinition unit, CancellationToken cancellationToken)
+    {
+        string text = $"{unit.Name} ({unit.Symbol})";
+        if (_unitTextWidth > 2 && text.Length > _unitTextWidth - 1)
+        {
+            text = text[..(_unitTextWidth - 2)] + "…";
+        }
+
+        return new(unit) { Value = text, IsEnabled = true };
+    }
 
     private void RepopulateUnitLists()
     {
@@ -138,6 +150,13 @@ public class UnitConverterDialog : SplitPaneDialog
 
             _toUnitListBox.Position = new Position(1 + categoryWidth + fromWidth, listY);
             _toUnitListBox.ViewSize = new Size(toWidth, listHeight);
+
+            int unitTextWidth = Math.Min(fromWidth, toWidth);
+            if (unitTextWidth != _unitTextWidth)
+            {
+                _unitTextWidth = unitTextWidth;
+                RepopulateUnitLists();
+            }
 
             var inputY = listY + listHeight + 1;
             var inputWidth = Math.Max(1, iw - 12);

@@ -1,3 +1,4 @@
+using iConsole.Helper;
 using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Data;
@@ -596,7 +597,7 @@ public class TorrentManagerDialog : Dialog
             }
 
             Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colorScheme.Error : Color.Cyan, colorScheme.Background);
-            Put(buffer, 1, ih - 1, iw - 2, Hints(), colorScheme.Foreground, colorScheme.Background);
+            Put(buffer, 1, ih - 1, iw - 2, Hints().FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
         }
     }
 

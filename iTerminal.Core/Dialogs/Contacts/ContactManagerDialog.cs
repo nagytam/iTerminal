@@ -20,14 +20,20 @@ public class ContactManagerDialog : Dialog
 {
     private const int DialogWidth = 76;
     private const int DialogHeight = 24;
-    private const int ListRows = 12;
+    private const int MaxListRows = 12;
     private const int MaxFieldLength = 120;
     private const int FieldCount = 5;
-    private const int FieldsTop = 14;
+    // Header, a blank row, the five fields, the message and the footer sit around the list.
+    private const int RowsAroundList = 9;
     private const int NameColumn = 20;
     private const int EmailColumn = 24;
     private const int PhoneColumn = 15;
     private const int LabelWidth = 10;
+
+    /// <summary>12 rows when the dialog is tall; fewer on a short terminal, so the fields and the footer stay inside the frame.</summary>
+    private int ListRows => Math.Clamp((int)ViewSize.Height - 2 - RowsAroundList, 2, MaxListRows);
+
+    private int FieldsTop => ListRows + 2;
 
     private static readonly string[] FieldLabels = ["Name", "Email", "Phone", "Company", "Notes"];
 

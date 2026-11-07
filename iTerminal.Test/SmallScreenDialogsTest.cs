@@ -61,4 +61,46 @@ public class SmallScreenDialogsTest
         await narrow.WaitForTextAsync("Translator");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Engine:") && l.Contains("[Automa")), "more of the engine name than \"Aut\"");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheContactsFormOn20Rows_KeepsAllFiveFieldsAndTheFooterInsideItsFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Ctrl+Shift+K");
+
+        await narrow.WaitForTextAsync("Contacts");
+        await narrow.WaitUntilAsync(
+            s => new[] { "Name:", "Email:", "Phone:", "Company:", "Notes:" }.All(field => s.Lines.Any(l => l.Contains(field)))
+                && s.Lines.Any(l => l.Contains("Esc close") || l.Contains("Esc:close")),
+            "all five fields and the footer on rows of their own");
+        string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
+        Assert.IsTrue(last.TrimStart().StartsWith('╚') && !last.Contains("Notes:"), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheUnitConvertersColumnsOn60Columns_DoNotRunIntoEachOther()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Ctrl+E");
+
+        await narrow.WaitForTextAsync("Unit Converter");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Nautical")), "the longest unit name");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains("(nmiNautical")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheTorrentManagersFooterOn60Columns_StillSaysHowToLeave()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Ctrl+Shift+F1");
+
+        await narrow.WaitForTextAsync("BitTorrent");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Esc close")), "the hint that closes the dialog, whole");
+    }
 }

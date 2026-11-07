@@ -5323,4 +5323,16 @@
   <data name="Button.Apply" xml:space="preserve">
     <value>Applica</value>
   </data>
+  <data name="Translator.DetectLanguage" xml:space="preserve">
+    <value>Rileva lingua</value>
+  </data>
+  <data name="Translator.EngineAuto" xml:space="preserve">
+    <value>Automatico</value>
+  </data>
+  <data name="Translator.EngineApi" xml:space="preserve">
+    <value>API di traduzione</value>
+  </data>
+  <data name="Translator.EngineAi" xml:space="preserve">
+    <value>Modello di IA</value>
+  </data>
 </root>

@@ -791,7 +791,7 @@ public class AccessControlDialog : Dialog
             }
 
             Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colors.Error : Color.Cyan, colors.Background);
-            Put(buffer, 1, ih - 1, iw - 2, Hints(), colors.Foreground, colors.Background);
+            Put(buffer, 1, ih - 1, iw - 2, Hints().FitHints(iw - 2), colors.Foreground, colors.Background);
         }
     }
 
