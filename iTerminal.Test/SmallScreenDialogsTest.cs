@@ -122,6 +122,24 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    [DataRow("Shift+F2", "Delete what the target", false)]
+    [DataRow("Ctrl+Shift+E", "Writes name.enc beside", true)]
+    [DataRow("Ctrl+W", "Set up an account", false)]
+    public async Task ALineTooLongForTheDialogOn60Columns_EndsOnAnEllipsis(string chord, string start, bool needsAFile)
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+        if (needsAFile)
+        {
+            await narrow.SelectEntryAsync("readme.txt");
+        }
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(start) && l.Contains('…')), $"the line starting \"{start}\" to end on an ellipsis");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheChessRulesOn20Rows_EndOnAnEllipsisInsteadOfASentenceCutInTheAir()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);

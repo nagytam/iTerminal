@@ -208,14 +208,27 @@ public class FileEncryptionDialog : FormDialog
     {
         var encrypt = Mode == EncryptionMode.Encrypt;
         _confirm.IsEnabled = encrypt && _phase == EncryptionPhase.Entering;
-        _labelHint.Text = encrypt
+        _hintText = encrypt
             ? UiText.Get("Encryption.HintEncrypt", "Writes name.enc beside each file; the passphrase is never stored.")
             : UiText.Get("Encryption.HintDecrypt", "Writes the original beside each .enc file; nothing is overwritten.");
-        _labelHint2.Text = encrypt
+        _hint2Text = encrypt
             ? UiText.Get("Encryption.HintLose", "Lose the passphrase and the data cannot be recovered.")
             : string.Empty;
+        ShowHints();
         StateHasChanged();
     }
+
+    private string _hintText = string.Empty;
+    private string _hint2Text = string.Empty;
+
+    /// <summary>The two notes under the fields, each ending on an ellipsis where the dialog is too narrow for it.</summary>
+    private void ShowHints()
+    {
+        _labelHint.Text = Fitted(_hintText, _labelHint.ViewSize.Width);
+        _labelHint2.Text = Fitted(_hint2Text, _labelHint2.ViewSize.Width);
+    }
+
+    private static string Fitted(string text, long width) => width > 1 && text.Length > width ? text[..(int)(width - 1)] + "…" : text;
 
     /// <summary>The settings as the run takes them, or the reason it cannot start. Checked when Run is pressed.</summary>
     internal string? Validate()
@@ -402,6 +415,7 @@ public class FileEncryptionDialog : FormDialog
         _labelHint.ViewSize = width;
         _labelHint2.Position = new Position(FieldX, 9);
         _labelHint2.ViewSize = width;
+        ShowHints();
         _labelStatus.Position = new Position(FieldX, 11);
         _labelStatus.ViewSize = width;
         _errorLabel.Position = new Position(FieldX, 12);
