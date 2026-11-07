@@ -70,7 +70,7 @@ public class ToolsAndMenusTest
         await small.PressAsync("Ctrl+F");
         await small.WaitUntilAsync(() => small.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar, "the menu");
         await small.PressSequenceAsync("Right", "Right", "Right");
-        await small.WaitForTextAsync("Calculator");
+        await small.WaitForTextAsync("Disk Manager");
 
         // Its entries are more than the screen has rows: the bottom border and a "more below" mark must show.
         await small.WaitUntilAsync(
@@ -80,8 +80,8 @@ public class ToolsAndMenusTest
         // Up from the first entry wraps to the last one, whatever the menu's length.
         await small.PressAsync("Up");
 
-        await small.WaitForTextAsync("Remote connections");
-        await small.WaitUntilAsync(s => s.Lines.Any(l => l.Contains('▲')), "a mark that entries are hidden above");
+        // The last entry is in view: entries are hidden above it and none below.
+        await small.WaitUntilAsync(s => s.Lines.Any(l => l.Contains('▲')) && !s.Lines.Any(l => l.Contains('▼')), "a mark that entries are hidden above and none below");
     }
 
     [Timeout(120_000)]
