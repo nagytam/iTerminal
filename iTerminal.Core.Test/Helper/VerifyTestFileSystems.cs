@@ -57,13 +57,16 @@ internal sealed class CorruptingFileSystem(IFileSystem inner, string corruptName
 internal sealed class CountingChecksumService(IChecksumService? inner = null) : IChecksumService
 {
     private readonly IChecksumService _inner = inner ?? new ChecksumService();
-    public int Calls { get; private set; }
+    private int _calls;
+
+    /// <summary>Counted atomically: the verifier reads the source and the copy side by side, and a plain ++ lost a call now and then.</summary>
+    public int Calls => Volatile.Read(ref _calls);
     public Action<int>? BeforeCompute { get; set; }
 
     public Task<ChecksumResult> ComputeAsync(Url url, IFileSystem fileSystem, IProgress<long>? progress = null, CancellationToken cancellationToken = default)
     {
-        Calls++;
-        BeforeCompute?.Invoke(Calls);
+        int calls = Interlocked.Increment(ref _calls);
+        BeforeCompute?.Invoke(calls);
         return _inner.ComputeAsync(url, fileSystem, progress, cancellationToken);
     }
 }

@@ -1,3 +1,4 @@
+using iConsole.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Dialogs;
@@ -533,10 +534,11 @@ public class PrintDialog : Dialog
             }
 
             Put(buffer, 1, ih - 2, iw - 2, _status, _statusIsError ? colors.Error : Color.Cyan, colors.Background);
-            Put(buffer, 1, ih - 1, iw - 2, _confirmCancel
+            // Whole hints only: cut at the edge, the row ended in "Del can" on a narrow terminal.
+            string hints = _confirmCancel
                 ? UiText.Get("Print.Hint.Confirm", "y cancels the job  any other key keeps it")
-                : UiText.Get("Print.Hint.List", "Enter print  ←→ printer  +/- copies  P hold/resume  Del cancel  F5 refresh  Esc close"),
-                colors.Foreground, colors.Background);
+                : UiText.Get("Print.Hint.List", "Enter print  ←→ printer  +/- copies  P hold/resume  Del cancel  F5 refresh  Esc close");
+            Put(buffer, 1, ih - 1, iw - 2, hints.FitHints(iw - 2), colors.Foreground, colors.Background);
         }
     }
 

@@ -245,6 +245,9 @@ public class ChecksumDialog : Dialog
         if (Parent is not null)
         {
             CenterInParent(new Size(width, Math.Min(infoHeight + 10, Math.Max(17, (int)Parent.ViewSize.Height - 2))));
+            // The compare box sits two rows under the facts. On a short terminal the dialog is clipped, and a box at
+            // infoHeight + 2 fell on the bottom border, where it and the footer hints could not be seen: the facts give way.
+            infoHeight = Math.Min(infoHeight, Math.Max(4, (int)ViewSize.Height - 5));
         }
 
         var inner = Math.Max(1, ViewSize.Width - 4);

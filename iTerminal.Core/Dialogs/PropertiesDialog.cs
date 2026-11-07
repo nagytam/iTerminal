@@ -29,8 +29,10 @@ namespace iTerminal.Core.Dialogs;
 /// </summary>
 public class PropertiesDialog : FormDialog
 {
-    private const int CaptionWidth = 11;
+    // One more than the longest caption ("Permissions"), so a value never touches it.
+    private const int CaptionWidth = 12;
     private const int InfoRows = 18;
+    private const int MinInfoRows = 4;
     private static readonly string[] DateFormats = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm"];
 
     private readonly IFilePropertiesService _propertiesService;
@@ -412,15 +414,21 @@ public class PropertiesDialog : FormDialog
     {
         base.OnInitializeLayout();
 
+        // The info block is as tall as the screen leaves room for. At a fixed 18 rows the dialog was 30 rows tall:
+        // on a 24-row terminal it was cut down to the screen and the last date box landed on the bottom border.
+        int infoRows = Parent is { ViewSize.Height: > 0 } host
+            ? Math.Clamp((int)host.ViewSize.Height - 9 - DateBoxes.Length, MinInfoRows, InfoRows)
+            : InfoRows;
+
         if (Parent != null)
         {
-            CenterInParent(new Size(Math.Clamp((int)Parent.ViewSize.Width - 8, 50, 86), InfoRows + 9 + DateBoxes.Length));
+            CenterInParent(new Size(Math.Clamp((int)Parent.ViewSize.Width - 8, 50, 86), infoRows + 9 + DateBoxes.Length));
         }
 
         _info.Position = new Position(FieldX, 1);
-        _info.ViewSize = new Size(FieldWidth, InfoRows);
+        _info.ViewSize = new Size(FieldWidth, infoRows);
 
-        var row = InfoRows + 2;
+        var row = infoRows + 2;
         if (_usesAttributes)
         {
             // Two to a row.

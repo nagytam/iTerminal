@@ -4705,4 +4705,112 @@
   <data name="Elevation.NotRestarted" xml:space="preserve">
     <value>Nem indult újra rendszergazdaként</value>
   </data>
+  <data name="WebHelp.00" xml:space="preserve">
+    <value>Webböngésző</value>
+  </data>
+  <data name="WebHelp.02" xml:space="preserve">
+    <value>Navigáció</value>
+  </data>
+  <data name="WebHelp.03" xml:space="preserve">
+    <value>  Ctrl+L, F6          Címsor: írjon be címet, fájlútvonalat vagy keresőszavakat</value>
+  </data>
+  <data name="WebHelp.04" xml:space="preserve">
+    <value>  Alt+Left, Backspace Vissza            Alt+Right, Shift+Backspace  Előre</value>
+  </data>
+  <data name="WebHelp.05" xml:space="preserve">
+    <value>  F5, Ctrl+R          Újratöltés        Alt+Home                    Kezdőlap</value>
+  </data>
+  <data name="WebHelp.06" xml:space="preserve">
+    <value>  Esc                 Betöltés leállítása; ha nem tölt, a böngésző bezárása</value>
+  </data>
+  <data name="WebHelp.08" xml:space="preserve">
+    <value>Oldal</value>
+  </data>
+  <data name="WebHelp.09" xml:space="preserve">
+    <value>  Up Down PgUp PgDn Home End, egérgörgő   Görgetés</value>
+  </data>
+  <data name="WebHelp.10" xml:space="preserve">
+    <value>  Tab, Shift+Tab      Következő / előző hivatkozás vagy űrlapelem</value>
+  </data>
+  <data name="WebHelp.11" xml:space="preserve">
+    <value>  Enter               Hivatkozás követése, gomb megnyomása, szövegmező szerkesztése, lista megnyitása</value>
+  </data>
+  <data name="WebHelp.12" xml:space="preserve">
+    <value>  Ctrl+Enter          Hivatkozás megnyitása új lapon</value>
+  </data>
+  <data name="WebHelp.13" xml:space="preserve">
+    <value>  Space               Jelölőnégyzet bejelölése vagy választógomb kiválasztása; egyébként lapozás lefelé</value>
+  </data>
+  <data name="WebHelp.14" xml:space="preserve">
+    <value>  Left, Right         Legördülő lista előző / következő elemének kiválasztása</value>
+  </data>
+  <data name="WebHelp.15" xml:space="preserve">
+    <value>  Ctrl+F, /           Keresés az oldalon    F3, n  következő találat    Shift+F3, N  előző találat</value>
+  </data>
+  <data name="WebHelp.16" xml:space="preserve">
+    <value>  F9                  Az oldal forrásának / a megjelenített oldalnak a mutatása</value>
+  </data>
+  <data name="WebHelp.17" xml:space="preserve">
+    <value>  F7                  Az oldal (vagy a fájl) mentése a letöltési mappába</value>
+  </data>
+  <data name="WebHelp.19" xml:space="preserve">
+    <value>Lapok, könyvjelzők és előzmények</value>
+  </data>
+  <data name="WebHelp.20" xml:space="preserve">
+    <value>  Ctrl+T              Új lap            Ctrl+W                      Lap bezárása</value>
+  </data>
+  <data name="WebHelp.21" xml:space="preserve">
+    <value>  Ctrl+PgDn, Ctrl+Tab Következő lap     Ctrl+PgUp, Ctrl+Shift+Tab   Előző lap        Alt+1…9  Ugrás lapra</value>
+  </data>
+  <data name="WebHelp.22" xml:space="preserve">
+    <value>  Ctrl+D              Az oldal könyvjelzőzése, vagy a könyvjelző eltávolítása</value>
+  </data>
+  <data name="WebHelp.23" xml:space="preserve">
+    <value>  F2                  Könyvjelzők       F4                          Előzmények (Del töröl egy bejegyzést)</value>
+  </data>
+  <data name="WebHelp.25" xml:space="preserve">
+    <value>Szövegmezőben</value>
+  </data>
+  <data name="WebHelp.26" xml:space="preserve">
+    <value>  Gépeléssel szerkeszthet; az Enter elküldi az űrlapot; a Tab továbblép; az Esc befejezi a szerkesztést; a Ctrl+U törli.</value>
+  </data>
+  <data name="WebHelp.28" xml:space="preserve">
+    <value>Nem támogatott: JavaScript, CSS-elrendezés, képek, bővítmények. A szöveg folyamatosan jelenik meg, a táblázatok oszlopokként.</value>
+  </data>
+  <data name="WebHelp.30" xml:space="preserve">
+    <value>Nyomjon meg egy billentyűt a visszalépéshez.</value>
+  </data>
+  <data name="Translator.Translating" xml:space="preserve">
+    <value>Fordítás ezzel: {0}…</value>
+  </data>
+  <data name="Translator.Cancelled" xml:space="preserve">
+    <value>Megszakítva.</value>
+  </data>
+  <data name="Translator.Failed" xml:space="preserve">
+    <value>A fordítás sikertelen: {0}</value>
+  </data>
+  <data name="Translator.Detecting" xml:space="preserve">
+    <value>Nyelv felismerése…</value>
+  </data>
+  <data name="Translator.NoDetection" xml:space="preserve">
+    <value>A nyelv nem ismerhető fel — válassza ki az „Ettől” listából.</value>
+  </data>
+  <data name="Translator.Detected" xml:space="preserve">
+    <value>Felismert nyelv: {0} ({1:P0} biztos)</value>
+  </data>
+  <data name="Translator.DetectFailed" xml:space="preserve">
+    <value>A felismerés sikertelen: {0}</value>
+  </data>
+  <data name="Translator.DetectedName" xml:space="preserve">
+    <value>{0} (felismerve)</value>
+  </data>
+  <data name="Translator.UnknownLanguage" xml:space="preserve">
+    <value>ismeretlen nyelv</value>
+  </data>
+  <data name="Translator.OutputHeader" xml:space="preserve">
+    <value>Fordítás</value>
+  </data>
+  <data name="Translator.InputHeader" xml:space="preserve">
+    <value>Szöveg</value>
+  </data>
 </root>

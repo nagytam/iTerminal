@@ -82,7 +82,7 @@ public class PropertiesDialogTest
 
         ScreenBuffer screen = Render(rig.Root);
         AssertScreenContains(screen, "Properties of report.txt");
-        AssertScreenContains(screen, "Type       File");
+        AssertScreenContains(screen, "Type        File");
         AssertScreenContains(screen, "Size");
         AssertScreenContains(screen, "2025-03-04 05:06:07");
         AssertScreenContains(screen, "2025-03-05 05:06:07");
@@ -481,8 +481,8 @@ public class PropertiesDialogTest
         dialog.OnIdle();
 
         ScreenBuffer screen = Render(root);
-        AssertScreenContains(screen, "Colour     red");
-        AssertScreenContains(screen, "Tags       invoice, 2026");
+        AssertScreenContains(screen, "Colour      red");
+        AssertScreenContains(screen, "Tags        invoice, 2026");
     }
 
     [Timeout(60_000)]
@@ -499,7 +499,7 @@ public class PropertiesDialogTest
         dialog.OnIdle();
 
         ScreenBuffer screen = Render(root);
-        AssertScreenContains(screen, "Colour     none");
-        AssertScreenContains(screen, "Tags       none");
+        AssertScreenContains(screen, "Colour      none");
+        AssertScreenContains(screen, "Tags        none");
     }
 }

@@ -4705,4 +4705,112 @@
   <data name="Elevation.NotRestarted" xml:space="preserve">
     <value>Not restarted as administrator</value>
   </data>
+  <data name="WebHelp.00" xml:space="preserve">
+    <value>Web Browser</value>
+  </data>
+  <data name="WebHelp.02" xml:space="preserve">
+    <value>Navigation</value>
+  </data>
+  <data name="WebHelp.03" xml:space="preserve">
+    <value>  Ctrl+L, F6          Address bar: type an address, a file path or words to search for</value>
+  </data>
+  <data name="WebHelp.04" xml:space="preserve">
+    <value>  Alt+Left, Backspace Back              Alt+Right, Shift+Backspace  Forward</value>
+  </data>
+  <data name="WebHelp.05" xml:space="preserve">
+    <value>  F5, Ctrl+R          Reload            Alt+Home                    Home page</value>
+  </data>
+  <data name="WebHelp.06" xml:space="preserve">
+    <value>  Esc                 Stop loading; with nothing loading, close the browser</value>
+  </data>
+  <data name="WebHelp.08" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="WebHelp.09" xml:space="preserve">
+    <value>  Up Down PgUp PgDn Home End, mouse wheel   Scroll</value>
+  </data>
+  <data name="WebHelp.10" xml:space="preserve">
+    <value>  Tab, Shift+Tab      Next / previous link or form control</value>
+  </data>
+  <data name="WebHelp.11" xml:space="preserve">
+    <value>  Enter               Follow the link, press the button, edit the text box, open the list</value>
+  </data>
+  <data name="WebHelp.12" xml:space="preserve">
+    <value>  Ctrl+Enter          Open the link in a new tab</value>
+  </data>
+  <data name="WebHelp.13" xml:space="preserve">
+    <value>  Space               Tick a box or choose a radio button; otherwise page down</value>
+  </data>
+  <data name="WebHelp.14" xml:space="preserve">
+    <value>  Left, Right         Choose the previous / next option of a drop-down list</value>
+  </data>
+  <data name="WebHelp.15" xml:space="preserve">
+    <value>  Ctrl+F, /           Find in page    F3, n  next match    Shift+F3, N  previous match</value>
+  </data>
+  <data name="WebHelp.16" xml:space="preserve">
+    <value>  F9                  Show the page source / the rendered page</value>
+  </data>
+  <data name="WebHelp.17" xml:space="preserve">
+    <value>  F7                  Save the page (or the file it is) to the download folder</value>
+  </data>
+  <data name="WebHelp.19" xml:space="preserve">
+    <value>Tabs, bookmarks and history</value>
+  </data>
+  <data name="WebHelp.20" xml:space="preserve">
+    <value>  Ctrl+T              New tab           Ctrl+W                      Close tab</value>
+  </data>
+  <data name="WebHelp.21" xml:space="preserve">
+    <value>  Ctrl+PgDn, Ctrl+Tab Next tab          Ctrl+PgUp, Ctrl+Shift+Tab   Previous tab     Alt+1…9  Go to tab</value>
+  </data>
+  <data name="WebHelp.22" xml:space="preserve">
+    <value>  Ctrl+D              Bookmark this page, or remove the bookmark</value>
+  </data>
+  <data name="WebHelp.23" xml:space="preserve">
+    <value>  F2                  Bookmarks         F4                          History (Del removes an entry)</value>
+  </data>
+  <data name="WebHelp.25" xml:space="preserve">
+    <value>In a text box</value>
+  </data>
+  <data name="WebHelp.26" xml:space="preserve">
+    <value>  Type to edit; Enter sends the form; Tab moves on; Esc stops editing; Ctrl+U clears it.</value>
+  </data>
+  <data name="WebHelp.28" xml:space="preserve">
+    <value>Not supported: JavaScript, CSS layout, images, plug-ins. Text is shown as it flows, tables as columns.</value>
+  </data>
+  <data name="WebHelp.30" xml:space="preserve">
+    <value>Press any key to go back.</value>
+  </data>
+  <data name="Translator.Translating" xml:space="preserve">
+    <value>Translating with {0}…</value>
+  </data>
+  <data name="Translator.Cancelled" xml:space="preserve">
+    <value>Cancelled.</value>
+  </data>
+  <data name="Translator.Failed" xml:space="preserve">
+    <value>Translation failed: {0}</value>
+  </data>
+  <data name="Translator.Detecting" xml:space="preserve">
+    <value>Detecting the language…</value>
+  </data>
+  <data name="Translator.NoDetection" xml:space="preserve">
+    <value>Could not tell the language — choose it from the From list.</value>
+  </data>
+  <data name="Translator.Detected" xml:space="preserve">
+    <value>Detected {0} ({1:P0} sure)</value>
+  </data>
+  <data name="Translator.DetectFailed" xml:space="preserve">
+    <value>Detection failed: {0}</value>
+  </data>
+  <data name="Translator.DetectedName" xml:space="preserve">
+    <value>{0} (detected)</value>
+  </data>
+  <data name="Translator.UnknownLanguage" xml:space="preserve">
+    <value>unknown language</value>
+  </data>
+  <data name="Translator.OutputHeader" xml:space="preserve">
+    <value>Translation</value>
+  </data>
+  <data name="Translator.InputHeader" xml:space="preserve">
+    <value>Text</value>
+  </data>
 </root>
