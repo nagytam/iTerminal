@@ -3946,4 +3946,43 @@
   <data name="DialogHint.StopOtherInstance" xml:space="preserve">
     <value>Stop the other instance</value>
   </data>
+  <data name="DialogHint.VoiceInput" xml:space="preserve">
+    <value>Speak the question (start and stop)</value>
+  </data>
+  <data name="Voice.Title" xml:space="preserve">
+    <value>Voice input</value>
+  </data>
+  <data name="Voice.ModelMissing" xml:space="preserve">
+    <value>Voice input needs the Whisper model. Install it from Tools &gt; Runtime Dependencies.</value>
+  </data>
+  <data name="Voice.Silence" xml:space="preserve">
+    <value>The microphone delivered silence. Check that it is not muted and that this program may use it.</value>
+  </data>
+  <data name="Voice.MicDenied" xml:space="preserve">
+    <value>Microphone access was denied. Allow your terminal in System Settings &gt; Privacy &amp; Security &gt; Microphone.</value>
+  </data>
+  <data name="Voice.NoMicrophone" xml:space="preserve">
+    <value>No microphone was found.</value>
+  </data>
+  <data name="Voice.RecorderFailed" xml:space="preserve">
+    <value>The recorder could not start:</value>
+  </data>
+  <data name="Voice.NoFfmpeg" xml:space="preserve">
+    <value>Voice input needs ffmpeg to record. Install it from Tools &gt; Runtime Dependencies.</value>
+  </data>
+  <data name="Voice.NoRecorder" xml:space="preserve">
+    <value>Voice input needs parecord (pulseaudio-utils) or arecord (alsa-utils) to record.</value>
+  </data>
+  <data name="Voice.MicOpenFailed" xml:space="preserve">
+    <value>The microphone could not be opened</value>
+  </data>
+  <data name="Voice.EngineFailed" xml:space="preserve">
+    <value>The speech engine could not be loaded on this system</value>
+  </data>
+  <data name="Voice.Recording" xml:space="preserve">
+    <value>REC</value>
+  </data>
+  <data name="Voice.Transcribing" xml:space="preserve">
+    <value>transcribing…</value>
+  </data>
 </root>

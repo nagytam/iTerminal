@@ -178,6 +178,9 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<Core.Services.PackageManager.IPackageManagerService, SandboxServices.PackageManager>();
                 services.AddSingleton<Core.Services.RuntimeDependencies.IRuntimeDependencyService, SandboxServices.Dependencies>();
                 services.AddSingleton<Core.Services.Stocks.IStockQuoteProvider, SandboxServices.StockQuotes>();
+                // Voice input records from no microphone and recognises with no model: the real service runs on stand-ins.
+                services.AddSingleton<Core.Speech.ISpeechRecognizer, SandboxServices.SpeechRecognizer>();
+                services.AddSingleton<Core.Speech.IMicrophoneCaptureFactory, SandboxServices.Microphone>();
                 // Neither the translation API nor the local model is asked: both providers give way to one that answers at once.
                 Microsoft.Extensions.DependencyInjection.Extensions.ServiceCollectionDescriptorExtensions
                     .RemoveAll<Core.Services.Translation.ITranslationProvider>(services);

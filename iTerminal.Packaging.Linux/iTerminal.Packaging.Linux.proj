@@ -45,6 +45,8 @@
     <RpmRequire Include="libgssapi_krb5.so.2()(64bit)" />
     <RpmRequire Include="libz.so.1()(64bit)" />
     <RpmRequire Include="libstdc++.so.6()(64bit)" />
+    <!-- The Whisper engine behind voice input (libggml-cpu-whisper.so) is built with OpenMP. -->
+    <RpmRequire Include="libgomp.so.1()(64bit)" />
     <RpmRequire Include="(libicuuc.so.80()(64bit) or libicuuc.so.79()(64bit) or libicuuc.so.78()(64bit) or libicuuc.so.77()(64bit) or libicuuc.so.76()(64bit) or libicuuc.so.75()(64bit) or libicuuc.so.74()(64bit) or libicuuc.so.73()(64bit) or libicuuc.so.72()(64bit) or libicuuc.so.71()(64bit) or libicuuc.so.70()(64bit) or libicuuc.so.69()(64bit) or libicuuc.so.68()(64bit) or libicuuc.so.67()(64bit) or libicuuc.so.66()(64bit) or libicuuc.so.65()(64bit) or libicuuc.so.64()(64bit) or libicuuc.so.63()(64bit) or libicuuc.so.62()(64bit) or libicuuc.so.61()(64bit) or libicuuc.so.60()(64bit))" />
   </ItemGroup>
 

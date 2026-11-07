@@ -72,6 +72,8 @@
     <DebDotNetDependencies Include="libgcc-s1 | libgcc1" />
     <DebDotNetDependencies Include="libgssapi-krb5-2" />
     <DebDotNetDependencies Include="libstdc++6" />
+    <!-- The Whisper engine behind voice input (libggml-cpu-whisper.so) is built with OpenMP. -->
+    <DebDotNetDependencies Include="libgomp1" />
     <DebDotNetDependencies Include="zlib1g" />
     <DebDotNetDependencies Include="libssl3t64 | libssl3 | libssl1.1" />
     <DebDotNetDependencies Include="libicu76 | libicu74 | libicu72 | libicu71 | libicu70 | libicu69 | libicu67 | libicu66" />

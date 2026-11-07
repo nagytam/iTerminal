@@ -3946,4 +3946,43 @@
   <data name="DialogHint.StopOtherInstance" xml:space="preserve">
     <value>Arrêter l&apos;autre instance</value>
   </data>
+  <data name="DialogHint.VoiceInput" xml:space="preserve">
+    <value>Dicter la question (début et fin)</value>
+  </data>
+  <data name="Voice.Title" xml:space="preserve">
+    <value>Saisie vocale</value>
+  </data>
+  <data name="Voice.ModelMissing" xml:space="preserve">
+    <value>La saisie vocale a besoin du modèle Whisper. Installez-le depuis Outils &gt; Dépendances d'exécution.</value>
+  </data>
+  <data name="Voice.Silence" xml:space="preserve">
+    <value>Le microphone n'a transmis que du silence. Vérifiez qu'il n'est pas coupé et que ce programme peut l'utiliser.</value>
+  </data>
+  <data name="Voice.MicDenied" xml:space="preserve">
+    <value>L'accès au microphone a été refusé. Autorisez votre terminal dans Réglages Système &gt; Confidentialité et sécurité &gt; Microphone.</value>
+  </data>
+  <data name="Voice.NoMicrophone" xml:space="preserve">
+    <value>Aucun microphone n'a été trouvé.</value>
+  </data>
+  <data name="Voice.RecorderFailed" xml:space="preserve">
+    <value>L'enregistreur n'a pas pu démarrer :</value>
+  </data>
+  <data name="Voice.NoFfmpeg" xml:space="preserve">
+    <value>La saisie vocale a besoin de ffmpeg pour enregistrer. Installez-le depuis Outils &gt; Dépendances d'exécution.</value>
+  </data>
+  <data name="Voice.NoRecorder" xml:space="preserve">
+    <value>La saisie vocale a besoin de parecord (pulseaudio-utils) ou d'arecord (alsa-utils) pour enregistrer.</value>
+  </data>
+  <data name="Voice.MicOpenFailed" xml:space="preserve">
+    <value>Le microphone n'a pas pu être ouvert</value>
+  </data>
+  <data name="Voice.EngineFailed" xml:space="preserve">
+    <value>Le moteur de reconnaissance vocale n'a pas pu être chargé sur ce système</value>
+  </data>
+  <data name="Voice.Recording" xml:space="preserve">
+    <value>REC</value>
+  </data>
+  <data name="Voice.Transcribing" xml:space="preserve">
+    <value>transcription…</value>
+  </data>
 </root>
