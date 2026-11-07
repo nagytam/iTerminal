@@ -1093,4 +1093,64 @@
   <data name="Hint.PreviousField" xml:space="preserve">
     <value>Vorheriges Feld</value>
   </data>
+  <data name="CmdDesc.27b25e9c" xml:space="preserve">
+    <value>Den aktuellen Dialog oder das Popup schließen.</value>
+  </data>
+  <data name="CmdDesc.f55d8933" xml:space="preserve">
+    <value>Das Kalender-Popup zeigen.</value>
+  </data>
+  <data name="CmdDesc.62d2e829" xml:space="preserve">
+    <value>Die im aktuellen Kontext verfügbaren Befehle anzeigen.</value>
+  </data>
+  <data name="CmdDesc.73b65037" xml:space="preserve">
+    <value>Die Anwendung beenden.</value>
+  </data>
+  <data name="CmdDesc.67104805" xml:space="preserve">
+    <value>Die Auswahl oder den Ansichtsbereich um eine Zeile nach unten bewegen.</value>
+  </data>
+  <data name="CmdDesc.cfdf1c79" xml:space="preserve">
+    <value>Den Cursor oder den Ansichtsbereich um eine Spalte nach links bewegen.</value>
+  </data>
+  <data name="CmdDesc.db8d76c8" xml:space="preserve">
+    <value>Die Auswahl oder den Ansichtsbereich um eine Seite nach unten bewegen.</value>
+  </data>
+  <data name="CmdDesc.751aa6ef" xml:space="preserve">
+    <value>Die Auswahl oder den Ansichtsbereich um eine Seite nach oben bewegen.</value>
+  </data>
+  <data name="CmdDesc.7f1a55c8" xml:space="preserve">
+    <value>Den Cursor oder den Ansichtsbereich um eine Spalte nach rechts bewegen.</value>
+  </data>
+  <data name="CmdDesc.bca6dd95" xml:space="preserve">
+    <value>Zum Ende der aktuellen Zeile springen.</value>
+  </data>
+  <data name="CmdDesc.293229ee" xml:space="preserve">
+    <value>Zur letzten Zeile springen.</value>
+  </data>
+  <data name="CmdDesc.fa38de03" xml:space="preserve">
+    <value>Zum Anfang der aktuellen Zeile springen.</value>
+  </data>
+  <data name="CmdDesc.126bd270" xml:space="preserve">
+    <value>Zur ersten Zeile springen.</value>
+  </data>
+  <data name="CmdDesc.f6c2fd91" xml:space="preserve">
+    <value>Die Auswahl oder den Ansichtsbereich um eine Zeile nach oben bewegen.</value>
+  </data>
+  <data name="CmdDesc.fc3303d5" xml:space="preserve">
+    <value>Den Fokus auf das vorherige fokussierbare Panel oder Steuerelement setzen.</value>
+  </data>
+  <data name="CmdDesc.f5dbb885" xml:space="preserve">
+    <value>Den Fokus auf das nächste fokussierbare Panel oder Steuerelement setzen.</value>
+  </data>
+  <data name="Help.AvailableCommands" xml:space="preserve">
+    <value>Verfügbare Befehle:</value>
+  </data>
+  <data name="Help.NoCommands" xml:space="preserve">
+    <value>Derzeit sind keine Tastaturbefehle verfügbar.</value>
+  </data>
+  <data name="Help.AllCommands" xml:space="preserve">
+    <value>Alle Befehle der Anwendung:</value>
+  </data>
+  <data name="Help.MenuNavigation" xml:space="preserve">
+    <value>Menünavigation:</value>
+  </data>
 </root>

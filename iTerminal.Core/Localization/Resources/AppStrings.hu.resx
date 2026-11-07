@@ -4813,4 +4813,427 @@
   <data name="Translator.InputHeader" xml:space="preserve">
     <value>Szöveg</value>
   </data>
+  <data name="CmdDesc.fb899019" xml:space="preserve">
+    <value>A megjelölt fájlok és mappák (vagy a kurzor alattiak) vágólapra helyezése, hogy beilleszthetők legyenek ebben az alkalmazásban vagy másik programban.</value>
+  </data>
+  <data name="CmdDesc.f13f518c" xml:space="preserve">
+    <value>A megjelölt fájlok és mappák (vagy a kurzor alattiak) vágólapra helyezése, hogy beillesztéskor áthelyeződjenek.</value>
+  </data>
+  <data name="CmdDesc.80bf9a22" xml:space="preserve">
+    <value>A vágólapon lévő fájlok másolása vagy áthelyezése a panel mappájába.</value>
+  </data>
+  <data name="CmdDesc.aec2e334" xml:space="preserve">
+    <value>A parancssorba beírt parancs futtatása a panel mappájában.</value>
+  </data>
+  <data name="CmdDesc.38e9dd82" xml:space="preserve">
+    <value>A kurzor alatti Docker-konténer újraindítása.</value>
+  </data>
+  <data name="CmdDesc.a833d933" xml:space="preserve">
+    <value>A kurzor alatti Docker-konténer indítása, vagy leállítása, ha fut.</value>
+  </data>
+  <data name="CmdDesc.f0199710" xml:space="preserve">
+    <value>A Docker-konténerek fájljainak böngészése az aktív panelben; újabb megnyomásra vissza.</value>
+  </data>
+  <data name="CmdDesc.4d727e92" xml:space="preserve">
+    <value>A tárhely ágainak, címkéinek és commitjainak böngészése mappaként; újabb megnyomásra vissza.</value>
+  </data>
+  <data name="CmdDesc.8886d79c" xml:space="preserve">
+    <value>A törölt fájlok böngészése az aktív panelben, visszaállításhoz vagy végleges törléshez; újabb megnyomásra vissza.</value>
+  </data>
+  <data name="CmdDesc.00c3d78d" xml:space="preserve">
+    <value>A kijelölt törölt fájlok visszahelyezése oda, ahonnan töröltük őket.</value>
+  </data>
+  <data name="CmdDesc.4a29b669" xml:space="preserve">
+    <value>A kurzor alatti fájl előnézete a másik panelben; újabb megnyomásra az előnézet bezárul.</value>
+  </data>
+  <data name="CmdDesc.a8e893de" xml:space="preserve">
+    <value>A kurzor egy oszloppal balra a soron belül.</value>
+  </data>
+  <data name="CmdDesc.b9f55e3f" xml:space="preserve">
+    <value>A kurzor egy oszloppal jobbra a soron belül.</value>
+  </data>
+  <data name="CmdDesc.e5eb05a0" xml:space="preserve">
+    <value>A bejegyzések megjelenítése több névoszlopban, vagy újra egyben.</value>
+  </data>
+  <data name="CmdDesc.f51143b0" xml:space="preserve">
+    <value>A panel összes sorának jelölését megszünteti.</value>
+  </data>
+  <data name="CmdDesc.943e368e" xml:space="preserve">
+    <value>Minden jelöletlen fájl megjelölése, és minden megjelölt fájl jelölésének megszüntetése.</value>
+  </data>
+  <data name="CmdDesc.a6f633e5" xml:space="preserve">
+    <value>A panel összes fájljának és mappájának megjelölése.</value>
+  </data>
+  <data name="CmdDesc.41e7c914" xml:space="preserve">
+    <value>A kurzor alatti sor megjelölése vagy a jelölés megszüntetése, majd lépés egy sorral lejjebb.</value>
+  </data>
+  <data name="CmdDesc.d67a9b85" xml:space="preserve">
+    <value>A kijelölt zenemappa megnyitása, vagy a kijelölt sor végrehajtása.</value>
+  </data>
+  <data name="CmdDesc.7926c8ad" xml:space="preserve">
+    <value>A megjelölt előadók, albumok vagy számok (vagy a kurzor alatti sor) másolása a katalógusból a lejátszási listába.</value>
+  </data>
+  <data name="CmdDesc.73053b13" xml:space="preserve">
+    <value>A zenekatalógus és a lejátszási lista megjelenítése a két fájlpanelként.</value>
+  </data>
+  <data name="CmdDesc.62f33052" xml:space="preserve">
+    <value>A lejátszás indítása vagy szüneteltetése a jelenlegi mappa elhagyása nélkül.</value>
+  </data>
+  <data name="CmdDesc.94441ab1" xml:space="preserve">
+    <value>A lejátszás hangerejének növelése 5%-kal.</value>
+  </data>
+  <data name="CmdDesc.919dae4f" xml:space="preserve">
+    <value>A lejátszás hangerejének csökkentése 5%-kal.</value>
+  </data>
+  <data name="CmdDesc.b2cf0726" xml:space="preserve">
+    <value>A kijelölt szám eltávolítása a lejátszási sorból. A fájl érintetlen marad.</value>
+  </data>
+  <data name="CmdDesc.fddd7d8b" xml:space="preserve">
+    <value>Az alkalmazás adatainak és a verzió részleteinek megjelenítése.</value>
+  </data>
+  <data name="CmdDesc.40255d06" xml:space="preserve">
+    <value>Az MI-modell beállításainak, állapotának és munkamenet-adatainak megjelenítése.</value>
+  </data>
+  <data name="CmdDesc.e9d16235" xml:space="preserve">
+    <value>Bluetooth-eszközök keresése, csatlakoztatása, párosítása és elfelejtése.</value>
+  </data>
+  <data name="CmdDesc.a083301c" xml:space="preserve">
+    <value>A kurzor alatti mappa (vagy a megjelölt mappák) méretének kiszámítása.</value>
+  </data>
+  <data name="CmdDesc.d5fc1b5b" xml:space="preserve">
+    <value>A számológép megnyitása (alap, tudományos és programozói mód).</value>
+  </data>
+  <data name="CmdDesc.021459f8" xml:space="preserve">
+    <value>A havi naptár megnyitása a nap találkozóival.</value>
+  </data>
+  <data name="CmdDesc.f388f305" xml:space="preserve">
+    <value>A kijelölt fájl MD5, SHA-1, SHA-256 és SHA-512 értékének kiszámítása és összehasonlítása egy ellenőrző összeggel.</value>
+  </data>
+  <data name="CmdDesc.a82461e3" xml:space="preserve">
+    <value>Bármely parancs megkeresése név szerint és futtatása; a billentyűje mellette látszik.</value>
+  </data>
+  <data name="CmdDesc.057b971d" xml:space="preserve">
+    <value>A két panel mappáinak összehasonlítása, a különbségek listázása, és a másolandók megjelölése.</value>
+  </data>
+  <data name="CmdDesc.5420f0c4" xml:space="preserve">
+    <value>A megjelölt fájlok és mappák (vagy a kurzor alattiak) becsomagolása új vagy meglévő archívumba.</value>
+  </data>
+  <data name="CmdDesc.0ea98a07" xml:space="preserve">
+    <value>A névjegykezelő megnyitása: nevek, e-mail-címek, telefonszámok és cégek, szűrővel.</value>
+  </data>
+  <data name="CmdDesc.ef464e93" xml:space="preserve">
+    <value>A megjelölt fájlok és mappák (vagy a kurzor alattiak) másolása másik helyre.</value>
+  </data>
+  <data name="CmdDesc.eb6ce6ec" xml:space="preserve">
+    <value>Új, üres fájl létrehozása a jelenlegi mappában.</value>
+  </data>
+  <data name="CmdDesc.652112bb" xml:space="preserve">
+    <value>Új mappa létrehozása a jelenlegi helyen.</value>
+  </data>
+  <data name="CmdDesc.07df0ced" xml:space="preserve">
+    <value>Szimbolikus vagy kemény hivatkozás létrehozása a kijelölt fájlra vagy mappára.</value>
+  </data>
+  <data name="CmdDesc.4363c7ec" xml:space="preserve">
+    <value>A pénzváltó megnyitása: az aktuális árfolyamok letöltése és átváltás pénznemek között.</value>
+  </data>
+  <data name="CmdDesc.2afe83cc" xml:space="preserve">
+    <value>A panelek alatti sáv váltása az MI-prompt és a terminál parancssora között.</value>
+  </data>
+  <data name="CmdDesc.6542e220" xml:space="preserve">
+    <value>A megjelölt fájlok és mappák (vagy a kurzor alattiak) törlése.</value>
+  </data>
+  <data name="CmdDesc.251ba63d" xml:space="preserve">
+    <value>Két fájl egymás mellett, a különbségeikkel: a kurzor alatti fájl a másik panelbelivel, vagy két megjelölt fájl.</value>
+  </data>
+  <data name="CmdDesc.709fa9f3" xml:space="preserve">
+    <value>Az elérhető lemezek és részleteik megjelenítése.</value>
+  </data>
+  <data name="CmdDesc.94ee3b92" xml:space="preserve">
+    <value>Megmutatja, hová ment a hely e mappa alatt: minden szint méret szerint, oszlopokkal.</value>
+  </data>
+  <data name="CmdDesc.33add7a4" xml:space="preserve">
+    <value>Keresés az indexelt dokumentummappában, és a tartalom előnézete.</value>
+  </data>
+  <data name="CmdDesc.71c816f1" xml:space="preserve">
+    <value>Azonos tartalmú fájlok keresése e mappa alatt, majd a felesleges másolatok megjelölése és törlése.</value>
+  </data>
+  <data name="CmdDesc.0445fdd8" xml:space="preserve">
+    <value>A kijelölt szimbolikus vagy kemény hivatkozás céljának módosítása.</value>
+  </data>
+  <data name="CmdDesc.86d5c50c" xml:space="preserve">
+    <value>A kijelölt szövegfájl megnyitása a szerkesztőben.</value>
+  </data>
+  <data name="CmdDesc.2c506e85" xml:space="preserve">
+    <value>Az iTerminal újraindítása rendszergazdai (root) jogokkal, és ez a példány bezárása.</value>
+  </data>
+  <data name="CmdDesc.1d6919ca" xml:space="preserve">
+    <value>A kurzor alatti program futtatása rendszergazdai (root) jogokkal.</value>
+  </data>
+  <data name="CmdDesc.1866310e" xml:space="preserve">
+    <value>Az enciklopédia megnyitása: kifejezés keresése a Wikipédiában, a Wikiszótárban és másutt, majd a cikk elolvasása.</value>
+  </data>
+  <data name="CmdDesc.f602a2c7" xml:space="preserve">
+    <value>Környezeti változók megtekintése, hozzáadása, módosítása és törlése a munkamenetre, a felhasználóra vagy a gépre.</value>
+  </data>
+  <data name="CmdDesc.86cc06e0" xml:space="preserve">
+    <value>A kijelölt program futtatása a parancsnaplóban.</value>
+  </data>
+  <data name="CmdDesc.c821bfe7" xml:space="preserve">
+    <value>A megjelölt archívumok (vagy a kurzor alatti) kicsomagolása egy mappába.</value>
+  </data>
+  <data name="CmdDesc.85281618" xml:space="preserve">
+    <value>A megjelölt fájlok (vagy a kurzor alatti) titkosítása jelmondattal külön .enc fájlokba, vagy .enc fájlok visszafejtése.</value>
+  </data>
+  <data name="CmdDesc.9f9b5e79" xml:space="preserve">
+    <value>Szín és címkék adása a megjelölt fájloknak és mappáknak (vagy a kurzor alattinak).</value>
+  </data>
+  <data name="CmdDesc.4e510244" xml:space="preserve">
+    <value>Fájlok keresése név és tartalom szerint; az eredmények panelben is listázhatók.</value>
+  </data>
+  <data name="CmdDesc.8ad8fe3f" xml:space="preserve">
+    <value>A panel mappája alatti, legalább 100 MB méretű fájlok keresése.</value>
+  </data>
+  <data name="CmdDesc.bfbb3c05" xml:space="preserve">
+    <value>A panel mappája alatti, egy éve nem módosított fájlok keresése.</value>
+  </data>
+  <data name="CmdDesc.d7281e69" xml:space="preserve">
+    <value>A mappaválasztó megnyitása, hogy másik meghajtóra vagy mappába ugorjon.</value>
+  </data>
+  <data name="CmdDesc.8383ab8d" xml:space="preserve">
+    <value>Tic-tac-toe játék a számítógép vagy egy barát ellen.</value>
+  </data>
+  <data name="CmdDesc.de30c520" xml:space="preserve">
+    <value>Sakk a számítógép vagy egy barát ellen.</value>
+  </data>
+  <data name="CmdDesc.a282a3ac" xml:space="preserve">
+    <value>Go (9x9, 13x13 vagy 19x19) a számítógép vagy egy barát ellen.</value>
+  </data>
+  <data name="CmdDesc.72042987" xml:space="preserve">
+    <value>Malom a számítógép vagy egy barát ellen.</value>
+  </data>
+  <data name="CmdDesc.6e61f7db" xml:space="preserve">
+    <value>Snake játék: vezesse a kígyót az élelemhez anélkül, hogy falnak vagy önmagának ütközne.</value>
+  </data>
+  <data name="CmdDesc.8213ddf1" xml:space="preserve">
+    <value>Tetris játék: rakja a lehulló elemeket teli sorokba.</value>
+  </data>
+  <data name="CmdDesc.9f0f2eb0" xml:space="preserve">
+    <value>A Git-kliens megnyitása (módosított fájlok, előkészítés, commitelőzmények).</value>
+  </data>
+  <data name="CmdDesc.bcd8375e" xml:space="preserve">
+    <value>Az aktuális ág upstreamjének lehúzása és a helyi commitok rebase-elése rá (a panel mappája git munkafa).</value>
+  </data>
+  <data name="CmdDesc.7ddd151d" xml:space="preserve">
+    <value>Az aktuális ág upstreamjének lehúzása rebase-szel, majd a helyi commitok feltöltése (a panel mappája git munkafa).</value>
+  </data>
+  <data name="CmdDesc.79b43e62" xml:space="preserve">
+    <value>Az aktív panel átirányítása a beírt útvonalra vagy URL-re.</value>
+  </data>
+  <data name="CmdDesc.ed757203" xml:space="preserve">
+    <value>SHA256SUMS-stílusú jegyzék létrehozása a megjelölt sorokhoz vagy az egész mappához, vagy a mappa ellenőrzése egy jegyzék alapján.</value>
+  </data>
+  <data name="CmdDesc.2dd71192" xml:space="preserve">
+    <value>Interaktív shell megnyitása ott, ahol az aktív panel van – helyi mappa, Docker-konténer, SSH-gép; az exit visszahoz.</value>
+  </data>
+  <data name="CmdDesc.2b34cda5" xml:space="preserve">
+    <value>Csatlakoztatott iPhone / iPad böngészése és meghajtóként csatolása.</value>
+  </data>
+  <data name="CmdDesc.181870d9" xml:space="preserve">
+    <value>Csak a színnel vagy címkével rendelkező fájlok megjelenítése a panelben. Bármely szín és üres címke mindent megmutat.</value>
+  </data>
+  <data name="CmdDesc.7348d768" xml:space="preserve">
+    <value>A menük, súgók és párbeszédablakok nyelvének kiválasztása: English, Deutsch, Français, Español, Italiano vagy Magyar.</value>
+  </data>
+  <data name="CmdDesc.d9b9654c" xml:space="preserve">
+    <value>A levelezőkliens megnyitása: beérkezett üzenetek (POP3), küldés (SMTP) és címjegyzék (LDAP).</value>
+  </data>
+  <data name="CmdDesc.3e312e63" xml:space="preserve">
+    <value>A térkép megnyitása: ASCII-art OpenStreetMap, online vagy offline, nagyítással, mozgatással és helykereséssel.</value>
+  </data>
+  <data name="CmdDesc.ef0ceb82" xml:space="preserve">
+    <value>A kurzor alatti ISO-, VHD- vagy VHDX-fájl meghajtóként csatolása, vagy leválasztása.</value>
+  </data>
+  <data name="CmdDesc.f09302c4" xml:space="preserve">
+    <value>A megjelölt fájlok és mappák (vagy a kurzor alattiak) áthelyezése másik helyre.</value>
+  </data>
+  <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
+    <value>A megjelölt fájlok és mappák (vagy a kurzor alattiak) átnevezése minta szerint.</value>
+  </data>
+  <data name="CmdDesc.9ddb1617" xml:space="preserve">
+    <value>A kurzor alatti archívum megnyitása mappaként (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG a 7-Zippel).</value>
+  </data>
+  <data name="CmdDesc.4f25d89a" xml:space="preserve">
+    <value>A kijelölt mappa megnyitása, vagy a szülőbejegyzés követése.</value>
+  </data>
+  <data name="CmdDesc.d55dcd4f" xml:space="preserve">
+    <value>Ugrás a jelenlegi hely szülőmappájába.</value>
+  </data>
+  <data name="CmdDesc.05a68ca0" xml:space="preserve">
+    <value>Ugrás a jelenlegi meghajtó vagy konténer gyökerébe.</value>
+  </data>
+  <data name="CmdDesc.adc840e9" xml:space="preserve">
+    <value>SSH/SMB-gépek böngészése és csatlakozás a helyi hálózaton.</value>
+  </data>
+  <data name="CmdDesc.eaff170f" xml:space="preserve">
+    <value>A hálózati csatolók és kapcsolódó adataik megjelenítése.</value>
+  </data>
+  <data name="CmdDesc.4081fc44" xml:space="preserve">
+    <value>A kijelölt fájl megnyitása az ilyen fájlokhoz választott programmal.</value>
+  </data>
+  <data name="CmdDesc.0f8ffdd8" xml:space="preserve">
+    <value>A kijelölt fájl megnyitása a rendszer által a típusához rendelt programmal, az alkalmazáson kívül.</value>
+  </data>
+  <data name="CmdDesc.4f26007b" xml:space="preserve">
+    <value>A csomagkezelő megnyitása (alkalmazások listázása, telepítése, eltávolítása).</value>
+  </data>
+  <data name="CmdDesc.26098a96" xml:space="preserve">
+    <value>A jelszókezelő megnyitása: minden mentett hálózati, levelezési és szolgáltatási jelszó.</value>
+  </data>
+  <data name="CmdDesc.9ba1a714" xml:space="preserve">
+    <value>A gép processzorának, memóriájának, lemezének, hálózatának és időzítési késleltetésének pontozása, összpontszámmal. Csak olvas; sosem ír lemezre.</value>
+  </data>
+  <data name="CmdDesc.11457f3b" xml:space="preserve">
+    <value>A kurzor alatti fájl nyomtatása és a nyomtatási sor kezelése: feladatok felfüggesztése, folytatása és törlése.</value>
+  </data>
+  <data name="CmdDesc.dbf0a1c1" xml:space="preserve">
+    <value>A futó folyamatok megjelenítése.</value>
+  </data>
+  <data name="CmdDesc.9402ba07" xml:space="preserve">
+    <value>A kijelölt bejegyzés méretének, dátumainak és hivatkozáscéljának megjelenítése, attribútumainak vagy jogosultságainak módosítása.</value>
+  </data>
+  <data name="CmdDesc.c4129160" xml:space="preserve">
+    <value>A jelenlegi mappa tartalmának újratöltése.</value>
+  </data>
+  <data name="CmdDesc.ef9d4cc1" xml:space="preserve">
+    <value>A távoli kapcsolatok kezelőjének megnyitása: mentett SSH- és PowerShell-távelérési gépek, mindegyik egy billentyűleütésre egy élő terminálmunkamenettől.</value>
+  </data>
+  <data name="CmdDesc.29b6f09c" xml:space="preserve">
+    <value>A kijelölt fájl vagy mappa átnevezése.</value>
+  </data>
+  <data name="CmdDesc.34125f3b" xml:space="preserve">
+    <value>Az iTerminal által letöltött összetevők telepítése vagy frissítése (a Playwright és Chromiumja).</value>
+  </data>
+  <data name="CmdDesc.b3dc4f7c" xml:space="preserve">
+    <value>A megjelölt fájlok és mappák (vagy a kurzor alatti) kártevőkereső átvizsgálása a Microsoft Defenderrel.</value>
+  </data>
+  <data name="CmdDesc.4dc29860" xml:space="preserve">
+    <value>A megnyitott képernyők megjelenítése és kezelése.</value>
+  </data>
+  <data name="CmdDesc.8f7a1d59" xml:space="preserve">
+    <value>A megjelölt fájlok és mappák (vagy a kurzor alatti) felülírása és törlése úgy, hogy ne legyenek helyreállíthatók.</value>
+  </data>
+  <data name="CmdDesc.3c6d17b5" xml:space="preserve">
+    <value>Ugrás a kurzor alatti meghajtóra.</value>
+  </data>
+  <data name="CmdDesc.e710dca5" xml:space="preserve">
+    <value>Ugrás a kurzor alatti kedvenc mappába.</value>
+  </data>
+  <data name="CmdDesc.e547cb15" xml:space="preserve">
+    <value>Visszalépés a kurzor alatti korábban látogatott mappába.</value>
+  </data>
+  <data name="CmdDesc.c12da6f4" xml:space="preserve">
+    <value>Ugrás a kurzor alatti különleges mappába vagy virtuális meghajtóra.</value>
+  </data>
+  <data name="CmdDesc.3556d6f4" xml:space="preserve">
+    <value>Ugrás a kurzor alatti mappába a fában.</value>
+  </data>
+  <data name="CmdDesc.40713f76" xml:space="preserve">
+    <value>Az alkalmazás beállításainak megnyitása.</value>
+  </data>
+  <data name="CmdDesc.1b2c6360" xml:space="preserve">
+    <value>A kurzor alatti fájl aláírásainak ellenőrzése (OpenPGP, Authenticode, kulcsfájl) és aláírása.</value>
+  </data>
+  <data name="CmdDesc.4f6046fa" xml:space="preserve">
+    <value>A panel sorainak rendezése név, kiterjesztés, méret vagy dátum szerint, bármelyik irányban.</value>
+  </data>
+  <data name="CmdDesc.6b4bbacf" xml:space="preserve">
+    <value>A tőzsdei böngésző megnyitása: élő árfolyamok egy figyelőlistához, bármely tőzsde részvényeinek hozzáadásával és eltávolításával.</value>
+  </data>
+  <data name="CmdDesc.88f43dfe" xml:space="preserve">
+    <value>A kurzor alatti bejegyzés alternatív adatfolyamainak (Windows) vagy kiterjesztett attribútumainak (Linux, macOS) listázása, előnézete és törlése.</value>
+  </data>
+  <data name="CmdDesc.4e765e19" xml:space="preserve">
+    <value>A fényképezőgép, GPS, szerző és megjegyzés szövegének eltávolítása a megjelölt JPEG- és PNG-fájlokból (vagy a kurzor alattiból). A fájlok felülíródnak.</value>
+  </data>
+  <data name="CmdDesc.5f35fd6a" xml:space="preserve">
+    <value>A bal és jobb panelben látható mappák felcserélése.</value>
+  </data>
+  <data name="CmdDesc.e4ae0c07" xml:space="preserve">
+    <value>A két panel mappáinak összehasonlítása és a különbségek átmásolása, miután megmutattuk, mi változna.</value>
+  </data>
+  <data name="CmdDesc.4c8807b0" xml:space="preserve">
+    <value>A jelenlegi gép rendszeradatainak megjelenítése.</value>
+  </data>
+  <data name="CmdDesc.1dccc52c" xml:space="preserve">
+    <value>A számítógép nevének, munkacsoportjának, környezeti változóinak és időzónájának módosítása.</value>
+  </data>
+  <data name="CmdDesc.0d4c831b" xml:space="preserve">
+    <value>A háttérfeladatok és előrehaladásuk megjelenítése.</value>
+  </data>
+  <data name="CmdDesc.dd82d2ff" xml:space="preserve">
+    <value>A terminál párbeszédablak megnyitása.</value>
+  </data>
+  <data name="CmdDesc.e0da83ca" xml:space="preserve">
+    <value>A színtéma kiválasztása.</value>
+  </data>
+  <data name="CmdDesc.682ec499" xml:space="preserve">
+    <value>A feladatlista megnyitása: tárgyak, határidők és prioritások, az elkészült feladatok alul maradnak.</value>
+  </data>
+  <data name="CmdDesc.24c1aa18" xml:space="preserve">
+    <value>A terminálpanel teljes képernyős megjelenítése vagy elrejtése: a parancsok egyenként futnak, a kimenetük megmarad.</value>
+  </data>
+  <data name="CmdDesc.3fb63d44" xml:space="preserve">
+    <value>A BitTorrent-kezelő megnyitása: magnet-hivatkozások és .torrent fájlok letöltése, szüneteltetése, folytatása és eltávolítása.</value>
+  </data>
+  <data name="CmdDesc.932217ca" xml:space="preserve">
+    <value>A fordító megnyitása: nyelv felismerése és szöveg fordítása fordító-API-n vagy a csatlakoztatott MI-modellen át.</value>
+  </data>
+  <data name="CmdDesc.37b77193" xml:space="preserve">
+    <value>A mértékegység-átváltó megnyitása (hossz, tömeg, hőmérséklet és más).</value>
+  </data>
+  <data name="CmdDesc.bdbe9e9a" xml:space="preserve">
+    <value>Saját parancs futtatása a kurzor alatti fájlon (az mc F2 menüje).</value>
+  </data>
+  <data name="CmdDesc.59bf9cc1" xml:space="preserve">
+    <value>A kijelölt fájl megnyitása a megjelenítőben.</value>
+  </data>
+  <data name="CmdDesc.2e8c9462" xml:space="preserve">
+    <value>Virtuális gépek indítása, leállítása, szüneteltetése, újraindítása és konzoljaik megnyitása.</value>
+  </data>
+  <data name="CmdDesc.8191e852" xml:space="preserve">
+    <value>Beszélt kérdés rögzítése és beírása az MI-promptba (Whisper, offline).</value>
+  </data>
+  <data name="CmdDesc.089189cb" xml:space="preserve">
+    <value>A webböngésző megnyitása: teljes képernyős szöveges böngésző lapokkal, könyvjelzőkkel, előzményekkel, kereséssel és űrlapokkal.</value>
+  </data>
+  <data name="CmdDesc.6a8f435b" xml:space="preserve">
+    <value>A munkaterület-kezelő megnyitása: a képernyő elrendezésének (két panel, rendezésük és az alsó sáv) mentése névvel, és visszaváltás bármelyik mentettre.</value>
+  </data>
+  <data name="CmdDesc.148a10e2" xml:space="preserve">
+    <value>A kurzor alatti fájl nevének másolása a parancssorba.</value>
+  </data>
+  <data name="CmdDesc.a9752744" xml:space="preserve">
+    <value>A megjelölt fájlok (vagy a kurzor alatti fájl) nevének másolása a parancssorba.</value>
+  </data>
+  <data name="CmdDesc.ce371dd0" xml:space="preserve">
+    <value>A panelen látható mappa útvonalának másolása a parancssorba.</value>
+  </data>
+  <data name="CmdDesc.7de6874f" xml:space="preserve">
+    <value>A kijelölt fájl szerkesztőjének kiválasztása, vagy az F4 által az ilyen fájlokhoz használt beállítása.</value>
+  </data>
+  <data name="CmdDesc.758a1d81" xml:space="preserve">
+    <value>A kijelölt fájl megnyitására szolgáló program kiválasztása, vagy az Enter által az ilyen fájlokhoz használt beállítása.</value>
+  </data>
+  <data name="CmdDesc.4fbb2ac8" xml:space="preserve">
+    <value>A mintára illeszkedő nevű fájlok megjelölése.</value>
+  </data>
+  <data name="CmdDesc.da630bcf" xml:space="preserve">
+    <value>A mintára illeszkedő nevű fájlok jelölésének megszüntetése.</value>
+  </data>
+  <data name="CmdDesc.528b9b74" xml:space="preserve">
+    <value>A kurzor alatti sor megjelölése vagy a jelölés megszüntetése, majd lefelé lépés.</value>
+  </data>
+  <data name="CmdDesc.70f70296" xml:space="preserve">
+    <value>A kurzor alatti sor megjelölése vagy a jelölés megszüntetése, majd felfelé lépés.</value>
+  </data>
 </root>

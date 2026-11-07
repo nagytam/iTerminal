@@ -1093,4 +1093,64 @@
   <data name="Hint.PreviousField" xml:space="preserve">
     <value>Előző mező</value>
   </data>
+  <data name="CmdDesc.27b25e9c" xml:space="preserve">
+    <value>A jelenlegi párbeszédablak vagy felugró ablak bezárása.</value>
+  </data>
+  <data name="CmdDesc.f55d8933" xml:space="preserve">
+    <value>A naptár felugró ablakának megjelenítése.</value>
+  </data>
+  <data name="CmdDesc.62d2e829" xml:space="preserve">
+    <value>Az aktuális környezetben elérhető parancsok megjelenítése.</value>
+  </data>
+  <data name="CmdDesc.73b65037" xml:space="preserve">
+    <value>Kilépés az alkalmazásból.</value>
+  </data>
+  <data name="CmdDesc.67104805" xml:space="preserve">
+    <value>A kijelölés vagy a nézet mozgatása egy sorral lefelé.</value>
+  </data>
+  <data name="CmdDesc.cfdf1c79" xml:space="preserve">
+    <value>A kurzor vagy a nézet mozgatása egy oszloppal balra.</value>
+  </data>
+  <data name="CmdDesc.db8d76c8" xml:space="preserve">
+    <value>A kijelölés vagy a nézet mozgatása egy oldallal lefelé.</value>
+  </data>
+  <data name="CmdDesc.751aa6ef" xml:space="preserve">
+    <value>A kijelölés vagy a nézet mozgatása egy oldallal felfelé.</value>
+  </data>
+  <data name="CmdDesc.7f1a55c8" xml:space="preserve">
+    <value>A kurzor vagy a nézet mozgatása egy oszloppal jobbra.</value>
+  </data>
+  <data name="CmdDesc.bca6dd95" xml:space="preserve">
+    <value>Ugrás az aktuális sor végére.</value>
+  </data>
+  <data name="CmdDesc.293229ee" xml:space="preserve">
+    <value>Ugrás az utolsó sorra.</value>
+  </data>
+  <data name="CmdDesc.fa38de03" xml:space="preserve">
+    <value>Ugrás az aktuális sor elejére.</value>
+  </data>
+  <data name="CmdDesc.126bd270" xml:space="preserve">
+    <value>Ugrás az első sorra.</value>
+  </data>
+  <data name="CmdDesc.f6c2fd91" xml:space="preserve">
+    <value>A kijelölés vagy a nézet mozgatása egy sorral felfelé.</value>
+  </data>
+  <data name="CmdDesc.fc3303d5" xml:space="preserve">
+    <value>A fókusz áthelyezése az előző fókuszálható panelre vagy vezérlőre.</value>
+  </data>
+  <data name="CmdDesc.f5dbb885" xml:space="preserve">
+    <value>A fókusz áthelyezése a következő fókuszálható panelre vagy vezérlőre.</value>
+  </data>
+  <data name="Help.AvailableCommands" xml:space="preserve">
+    <value>Elérhető parancsok:</value>
+  </data>
+  <data name="Help.NoCommands" xml:space="preserve">
+    <value>Jelenleg nincs elérhető billentyűparancs.</value>
+  </data>
+  <data name="Help.AllCommands" xml:space="preserve">
+    <value>Az alkalmazás összes parancsa:</value>
+  </data>
+  <data name="Help.MenuNavigation" xml:space="preserve">
+    <value>Navigáció a menükben:</value>
+  </data>
 </root>
