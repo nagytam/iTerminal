@@ -112,6 +112,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IContentLens, GitLens>();
         services.AddSingleton<IContentLens, FileLabelLens>();
         services.AddSingleton<IFileLabelService, FileLabelService>();
+        services.AddSingleton<iTerminal.Core.Services.Security.FileDisguiseChecker>();
         services.AddTransient<iTerminal.Core.Dialogs.Git.GitClientDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Calculator.CalculatorDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog>();
@@ -199,6 +200,9 @@ public static class iTerminalApplicationBuilderExtension
         // The HDF5 viewer reads a file through the read-only reader; the reader holds no state.
         services.AddTransient<iConsole.Hdf.IHdfFileReader, iTerminal.Core.Services.Hdf.Hdf5FileReader>();
         services.AddTransient<iConsole.Dialogs.HdfViewerDialog>();
+        // The executable analysis view parses a PE, ELF or Mach-O file in-process; the analyzer holds no state.
+        services.AddTransient<iConsole.Executables.IExecutableAnalyzer, iTerminal.Core.Services.Executables.ExecutableAnalyzer>();
+        services.AddTransient<iConsole.Dialogs.ExecutableAnalysisDialog>();
         // The library index is a singleton so the in-memory copy of the table is shared by the
         // indexing job and every dialog that searches it.
         services.AddSingleton<iTerminal.Core.Services.Music.IMusicLibraryService, iTerminal.Core.Services.Music.MusicLibraryService>();
@@ -349,6 +353,10 @@ public static class iTerminalApplicationBuilderExtension
         // F4 in the checksum dialog: the SHA-256 (never the file) is looked up on VirusTotal, on request only.
         services.AddSingleton<iTerminal.Core.Services.Reputation.IHashReputationService>(_ => new iTerminal.Core.Services.Reputation.VirusTotalReputationService(
             new HttpClient { Timeout = TimeSpan.FromSeconds(15) }));
+        services.AddSingleton<iTerminal.Core.Services.Origin.IFileOriginService>(provider =>
+            new iTerminal.Core.Services.Origin.FileOriginService(
+                provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>(),
+                provider.GetService<Serilog.ILogger>()));
         services.AddSingleton<iTerminal.Core.Services.AccessControl.IAccessControlService>(provider =>
             OperatingSystem.IsWindows()
                 ? new iTerminal.Core.Services.AccessControl.WindowsAccessControlService()
@@ -360,13 +368,20 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+Shift+F8 secure wipe, Ctrl+Shift+F7 signatures, Ctrl+Shift+F6 duplicates (sign and verify).
         services.AddSingleton<iTerminal.Core.Services.Wipe.ISecureWipeService, iTerminal.Core.Services.Wipe.SecureWipeService>();
         services.AddSingleton<iTerminal.Core.Services.Signing.ISignatureService, iTerminal.Core.Services.Signing.SignatureService>();
+        services.AddSingleton<iTerminal.Core.Services.Checksums.IPublisherSignatureService, iTerminal.Core.Services.Checksums.PublisherSignatureService>();
         // Scan with Microsoft Defender (Windows): the file panel's context menu and the File menu.
         services.AddSingleton<iTerminal.Core.Services.Defender.IMalwareScanService, iTerminal.Core.Services.Defender.DefenderScanService>();
         services.AddTransient<SecureWipeDialog>();
+        // Ctrl+Shift+E: encrypt and decrypt files with a passphrase (AES-256-GCM, PBKDF2).
+        services.AddSingleton<iTerminal.Core.Services.Encryption.IFileEncryptionService, iTerminal.Core.Services.Encryption.FileEncryptionService>();
+        services.AddTransient<FileEncryptionDialog>();
         services.AddTransient<SignatureDialog>();
         // Ctrl+P: print the file under the cursor and manage the print queue.
         services.AddSingleton<iTerminal.Core.Services.Printing.IPrintService, iTerminal.Core.Services.Printing.PrintService>();
         services.AddTransient<PrintDialog>();
+        // Streams and attributes: NTFS alternate data streams (Windows) or extended attributes (Linux, macOS) of the entry under the cursor.
+        services.AddSingleton<iTerminal.Core.Services.Streams.IStreamAttributeService, iTerminal.Core.Services.Streams.StreamAttributeService>();
+        services.AddTransient<StreamsDialog>();
         // File associations: Enter and F4 open a file with the program chosen for it; Shift+F3 and
         // Ctrl+F4 choose. The dialogs are handed out by a factory because one consumer needs two —
         // "Open with" and "Edit with" are separate controls.

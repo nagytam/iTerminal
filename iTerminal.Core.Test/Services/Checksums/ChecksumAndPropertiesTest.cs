@@ -163,11 +163,11 @@ public class ChecksumAndPropertiesTest
 
         CreateFile("SHA256SUMS", $"{new string('1', 64)}  other.zip\n{AbcSha256}  abc.txt\n");
         var fromList = ChecksumService.FindWrittenChecksum(path);
-        Assert.AreEqual(new ExpectedChecksum(ChecksumAlgorithm.Sha256, AbcSha256, "SHA256SUMS"), fromList);
+        Assert.AreEqual(new ExpectedChecksum(ChecksumAlgorithm.Sha256, AbcSha256, "SHA256SUMS"), fromList! with { SourceSha256 = null });
 
         // The file's own checksum file is asked before the folder's list.
         CreateFile("abc.txt.md5", AbcMd5);
-        Assert.AreEqual(new ExpectedChecksum(ChecksumAlgorithm.Md5, AbcMd5, "abc.txt.md5"), ChecksumService.FindWrittenChecksum(path));
+        Assert.AreEqual(new ExpectedChecksum(ChecksumAlgorithm.Md5, AbcMd5, "abc.txt.md5"), ChecksumService.FindWrittenChecksum(path)! with { SourceSha256 = null });
     }
 
     [Timeout(60_000)]

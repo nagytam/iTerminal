@@ -86,7 +86,8 @@ public class HotKeys : StatusBarItem
         iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
         iConsole.Dialogs.SqliteViewerDialog? sqliteViewerDialog = null,
-        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null)
+        iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
+        iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -105,7 +106,7 @@ public class HotKeys : StatusBarItem
             AddCommand(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
         }
         var screenManagerDialogCommand = new ScreenManagerDialogCommand(themeService);
-        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, sqliteViewerDialog: sqliteViewerDialog, hdfViewerDialog: hdfViewerDialog);
+        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, sqliteViewerDialog: sqliteViewerDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog);
         var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations);
         var createFolderDialogCommand = new CreateFolderDialogCommand(createFolderDialog, contentModelService);
         var createFileDialogCommand = new CreateFileDialogCommand(createFileDialog, contentModelService);

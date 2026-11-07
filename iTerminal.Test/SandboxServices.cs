@@ -754,6 +754,85 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// Streams and extended attributes kept in memory, by path: a test seeds them and reads back what is left. The real service
+    /// reads and deletes the alternate data streams of actual files, which no test may do to a file it did not create itself.
+    /// </summary>
+    public sealed class StreamAttributes : Core.Services.Streams.IStreamAttributeService
+    {
+        private readonly Lock _lock = new();
+        private readonly Dictionary<string, List<(string Name, byte[] Data)>> _streams = new(StringComparer.OrdinalIgnoreCase);
+        private readonly List<string> _calls = [];
+
+        public string Kind => "Streams";
+
+        /// <summary>Every call so far, in order, as <c>list path</c>, <c>read path name</c>, <c>delete path name</c>.</summary>
+        public IReadOnlyList<string> Calls
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return [.. _calls];
+                }
+            }
+        }
+
+        public void Set(string path, string name, string text)
+        {
+            lock (_lock)
+            {
+                if (!_streams.TryGetValue(path, out var list))
+                {
+                    _streams[path] = list = [];
+                }
+
+                list.RemoveAll(s => s.Name == name);
+                list.Add((name, System.Text.Encoding.UTF8.GetBytes(text)));
+            }
+        }
+
+        public IReadOnlyList<string> NamesOf(string path)
+        {
+            lock (_lock)
+            {
+                return _streams.TryGetValue(path, out var list) ? [.. list.Select(s => s.Name)] : [];
+            }
+        }
+
+        public Task<Core.Services.Streams.StreamListing> ListAsync(string path, CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                _calls.Add("list " + path);
+                return Task.FromResult(new Core.Services.Streams.StreamListing(
+                    _streams.TryGetValue(path, out var list) ? [.. list.Select(s => new Core.Services.Streams.StreamItem(s.Name, s.Data.Length))] : []));
+            }
+        }
+
+        public Task<Core.Services.Streams.StreamData> ReadAsync(string path, string name, int maxBytes, CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                _calls.Add($"read {path} {name}");
+                var data = _streams.TryGetValue(path, out var list) ? list.FirstOrDefault(s => s.Name == name).Data : null;
+                return Task.FromResult(data is null
+                    ? new Core.Services.Streams.StreamData([], 0, name + " no longer exists.")
+                    : new Core.Services.Streams.StreamData(data.Take(maxBytes).ToArray(), data.Length));
+            }
+        }
+
+        public Task<Core.Services.Streams.StreamResult> DeleteAsync(string path, string name, CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                _calls.Add($"delete {path} {name}");
+                bool removed = _streams.TryGetValue(path, out var list) && list.RemoveAll(s => s.Name == name) > 0;
+                return Task.FromResult(new Core.Services.Streams.StreamResult(removed, removed ? $"Deleted {name}." : $"{name} no longer exists."));
+            }
+        }
+    }
+
+    /// <summary>
     /// Two printers and a queue, all in memory: printing adds a job, hold, resume and cancel change it, and every call is
     /// recorded. A test that pressed Enter in the print dialog would otherwise send a page to a real printer.
     /// </summary>
@@ -900,5 +979,40 @@ public static class SandboxServices
             Task.FromResult(new Core.Services.Drives.BitLockerStatus(Core.Services.Drives.BitLockerState.Off, "Off (sandbox)"));
 
         public string? WhyCannotFormat(string root, IEnumerable<string> foldersInUse) => FormatRefusal;
+    }
+
+    /// <summary>
+    /// Download marks kept in memory: no test reads or removes the Zone.Identifier stream or extended attributes of a file of the
+    /// machine running the suite. <see cref="Mark"/> gives a path a mark; <see cref="RemoveAsync"/> forgets it.
+    /// </summary>
+    public sealed class FileOrigins : Core.Services.Origin.IFileOriginService
+    {
+        private readonly Lock _lock = new();
+        private readonly Dictionary<string, Core.Services.Origin.FileOrigin> _marks = new(StringComparer.OrdinalIgnoreCase);
+
+        public void Mark(string path, Core.Services.Origin.FileOrigin origin)
+        {
+            lock (_lock)
+            {
+                _marks[Path.GetFullPath(path)] = origin;
+            }
+        }
+
+        public Task<Core.Services.Origin.FileOrigin?> ReadAsync(string path, CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                return Task.FromResult(_marks.GetValueOrDefault(Path.GetFullPath(path)));
+            }
+        }
+
+        public Task<bool> RemoveAsync(string path, CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                _marks.Remove(Path.GetFullPath(path));
+                return Task.FromResult(true);
+            }
+        }
     }
 }

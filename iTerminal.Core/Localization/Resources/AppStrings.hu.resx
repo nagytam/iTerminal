@@ -3529,4 +3529,280 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>hivatkozás</value>
   </data>
+  <data name="Button.RemoveMark" xml:space="preserve">
+    <value>Jelölés eltávolítása (^F)</value>
+  </data>
+  <data name="Field.OriginMarked" xml:space="preserve">
+    <value>Megjelölve</value>
+  </data>
+  <data name="Field.OriginFrom" xml:space="preserve">
+    <value>Innen</value>
+  </data>
+  <data name="Field.OriginReferrer" xml:space="preserve">
+    <value>Hivatkozó</value>
+  </data>
+  <data name="Field.OriginQuarantined" xml:space="preserve">
+    <value>Karanténban</value>
+  </data>
+  <data name="Field.OriginDownloaded" xml:space="preserve">
+    <value>Letöltve</value>
+  </data>
+  <data name="Msg.RemoveMarkAsk" xml:space="preserve">
+    <value>Eltávolítja a jelölést, hogy a fájl ne számítson letöltöttnek? y/n</value>
+  </data>
+  <data name="Msg.RemoveMarkFailed" xml:space="preserve">
+    <value>Hiba: a jelölést nem sikerült eltávolítani.</value>
+  </data>
+  <data name="DialogHint.RemoveMarkYes" xml:space="preserve">
+    <value>Jelölés eltávolítása</value>
+  </data>
+  <data name="DialogHint.RemoveMarkNo" xml:space="preserve">
+    <value>Jelölés megtartása</value>
+  </data>
+  <data name="DialogHint.RemoveMark" xml:space="preserve">
+    <value>Letöltési jelölés eltávolítása (y/n kérdés)</value>
+  </data>
+  <data name="Label.VerifyAfterCopy" xml:space="preserve">
+    <value>Ellenőrzés másolás után</value>
+  </data>
+  <data name="Verb.Verifying" xml:space="preserve">
+    <value>Ellenőrzés</value>
+  </data>
+  <data name="Task.VerifyFailed" xml:space="preserve">
+    <value>Az ellenőrzés sikertelen: {0} eltér a forrástól; a másolat megmaradt</value>
+  </data>
+  <data name="Checksum.Verified.Caption" xml:space="preserve">
+    <value>Ellenőrz.</value>
+  </data>
+  <data name="Checksum.Verified.Changed" xml:space="preserve">
+    <value>✗ {0} megváltozott az ellenőrzés közben — nincs ellenőrizve</value>
+  </data>
+  <data name="Checksum.Verified.Waiting" xml:space="preserve">
+    <value>várakozás a fájl beolvasására…</value>
+  </data>
+  <data name="Checksum.Verified.List" xml:space="preserve">
+    <value>✓ a fájl egyezik a(z) {0} listával, aláírta: {1}</value>
+  </data>
+  <data name="Checksum.Verified.ListBad" xml:space="preserve">
+    <value>✗ a fájl NEM egyezik a(z) {0} listával, pedig az alá van írva</value>
+  </data>
+  <data name="Checksum.Verified.File" xml:space="preserve">
+    <value>✓ a fájl egyezik az aláírásával ({0})</value>
+  </data>
+  <data name="Checksum.Sig.Caption" xml:space="preserve">
+    <value>Aláírás</value>
+  </data>
+  <data name="Checksum.Sig.More" xml:space="preserve">
+    <value>+{0} további aláírás</value>
+  </data>
+  <data name="Checksum.Sig.Good" xml:space="preserve">
+    <value>érvényes, a birtokolt kulccsal: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Expired" xml:space="preserve">
+    <value>érvényes, de a kulcs lejárt: {0}</value>
+  </data>
+  <data name="Checksum.Sig.Bad" xml:space="preserve">
+    <value>ÉRVÉNYTELEN aláírás</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKey" xml:space="preserve">
+    <value>ismeretlen kulcs: {0} (nincs a kulcstartóban)</value>
+  </data>
+  <data name="Checksum.Sig.UnknownKeyNone" xml:space="preserve">
+    <value>ismeretlen kulcs (nincs beállított nyilvános kulcs)</value>
+  </data>
+  <data name="Checksum.Sig.ToolMissing" xml:space="preserve">
+    <value>a(z) {0} nincs telepítve — nincs ellenőrizve</value>
+  </data>
+  <data name="Checksum.Sig.Unchecked" xml:space="preserve">
+    <value>nincs ellenőrizve: a sigstore-hoz az aláíró azonosítója kell</value>
+  </data>
+  <data name="Checksum.Sig.Error" xml:space="preserve">
+    <value>nem ellenőrizhető: {0}</value>
+  </data>
+  <data name="Dialog.Streams" xml:space="preserve">
+    <value>Adatfolyamok és attribútumok</value>
+  </data>
+  <data name="Menu.StreamsItem" xml:space="preserve">
+    <value>Adatfolyamok és attribútumok…</value>
+  </data>
+  <data name="Streams.Kind.Streams" xml:space="preserve">
+    <value>Adatfolyamok</value>
+  </data>
+  <data name="Streams.Kind.Attributes" xml:space="preserve">
+    <value>Attribútumok</value>
+  </data>
+  <data name="Streams.Error.BadName" xml:space="preserve">
+    <value>A(z) „{0}” nem érvényes név.</value>
+  </data>
+  <data name="Streams.Error.Unsupported" xml:space="preserve">
+    <value>Ezen a rendszeren nincsenek adatfolyamok vagy kiterjesztett attribútumok.</value>
+  </data>
+  <data name="Streams.Error.Changing" xml:space="preserve">
+    <value>Az attribútumok folyamatosan változnak; próbálja újra.</value>
+  </data>
+  <data name="Streams.Error.TooLarge" xml:space="preserve">
+    <value>Túl nagy az előnézethez.</value>
+  </data>
+  <data name="Streams.Deleted" xml:space="preserve">
+    <value>{0} törölve.</value>
+  </data>
+  <data name="DialogHint.DeleteStreamYes" xml:space="preserve">
+    <value>Az adatfolyam vagy attribútum törlése</value>
+  </data>
+  <data name="DialogHint.KeepStream" xml:space="preserve">
+    <value>Megtartás</value>
+  </data>
+  <data name="DialogHint.ChooseStream" xml:space="preserve">
+    <value>Adatfolyam vagy attribútum kiválasztása</value>
+  </data>
+  <data name="DialogHint.StreamHexText" xml:space="preserve">
+    <value>Előnézet váltása szöveg és hex között</value>
+  </data>
+  <data name="DialogHint.DeleteStreamAsks" xml:space="preserve">
+    <value>Törlés (előbb rákérdez)</value>
+  </data>
+  <data name="DialogHint.StreamsRefresh" xml:space="preserve">
+    <value>A lista újraolvasása</value>
+  </data>
+  <data name="Streams.Status.AskDelete" xml:space="preserve">
+    <value>Törli ezt: {0}? y törli.</value>
+  </data>
+  <data name="Streams.Target" xml:space="preserve">
+    <value>Fájl</value>
+  </data>
+  <data name="Streams.Col.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Streams.Col.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="Streams.Reading" xml:space="preserve">
+    <value>Olvasás…</value>
+  </data>
+  <data name="Streams.None" xml:space="preserve">
+    <value>Ennek a bejegyzésnek nincs {0}.</value>
+  </data>
+  <data name="Streams.Hint.Confirm" xml:space="preserve">
+    <value>y töröl  bármely más billentyű megtartja</value>
+  </data>
+  <data name="Streams.Hint.List" xml:space="preserve">
+    <value>↑↓ választ  H szöveg/hex  Del töröl  F5 újraolvas  Esc bezár</value>
+  </data>
+  <data name="Streams.Preview" xml:space="preserve">
+    <value>Előnézet</value>
+  </data>
+  <data name="Streams.Mode.Hex" xml:space="preserve">
+    <value>hex</value>
+  </data>
+  <data name="Streams.Mode.Text" xml:space="preserve">
+    <value>szöveg</value>
+  </data>
+  <data name="Streams.Truncated" xml:space="preserve">
+    <value>első {0} / {1}</value>
+  </data>
+  <data name="Streams.Empty" xml:space="preserve">
+    <value>(üres)</value>
+  </data>
+  <data name="Dialog.FileEncryption" xml:space="preserve">
+    <value>Fájlok titkosítása / visszafejtése</value>
+  </data>
+  <data name="Field.Mode" xml:space="preserve">
+    <value>Mód</value>
+  </data>
+  <data name="Field.Passphrase" xml:space="preserve">
+    <value>Jelmondat</value>
+  </data>
+  <data name="Field.PassphraseConfirm" xml:space="preserve">
+    <value>Megerősítés</value>
+  </data>
+  <data name="Encryption.Run" xml:space="preserve">
+    <value>Indítás</value>
+  </data>
+  <data name="Encryption.ModeEncrypt" xml:space="preserve">
+    <value>Titkosítás</value>
+  </data>
+  <data name="Encryption.ModeDecrypt" xml:space="preserve">
+    <value>Visszafejtés</value>
+  </data>
+  <data name="Encryption.HintEncrypt" xml:space="preserve">
+    <value>Minden fájl mellé nev.enc készül; a jelmondatot soha nem tároljuk.</value>
+  </data>
+  <data name="Encryption.HintDecrypt" xml:space="preserve">
+    <value>Az eredetit a .enc fájl mellé írja; semmi sem íródik felül.</value>
+  </data>
+  <data name="Encryption.HintLose" xml:space="preserve">
+    <value>Jelmondat nélkül az adatok nem állíthatók helyre.</value>
+  </data>
+  <data name="Encryption.Nothing" xml:space="preserve">
+    <value>Nincs mit feldolgozni: előbb jelöljön ki fájlokat.</value>
+  </data>
+  <data name="Encryption.EmptyPassphrase" xml:space="preserve">
+    <value>Adjon meg egy jelmondatot.</value>
+  </data>
+  <data name="Encryption.Mismatch" xml:space="preserve">
+    <value>A jelmondatok nem egyeznek.</value>
+  </data>
+  <data name="Encryption.Working" xml:space="preserve">
+    <value>Folyamatban… {0}%  {1}</value>
+  </data>
+  <data name="Encryption.AskDelete" xml:space="preserve">
+    <value>Törli a(z) {0} eredeti fájlt? A lomtárba kerülnek.  y/n</value>
+  </data>
+  <data name="Encryption.AskDeleteWipe" xml:space="preserve">
+    <value>Törli a(z) {0} eredeti fájlt? Nincs lomtár: felülírja és véglegesen eltávolítja.  y/n</value>
+  </data>
+  <data name="Encryption.Deleting" xml:space="preserve">
+    <value>Az eredetik törlése…</value>
+  </data>
+  <data name="Encryption.Stopped" xml:space="preserve">
+    <value>Leállítva: {0} fájl kész.</value>
+  </data>
+  <data name="Encryption.Done" xml:space="preserve">
+    <value>Kész: {0} fájl, {1} sikertelen.</value>
+  </data>
+  <data name="Encryption.Kept" xml:space="preserve">
+    <value>Az eredetik megmaradtak.</value>
+  </data>
+  <data name="Encryption.Deleted" xml:space="preserve">
+    <value>{0} eredeti törölve.</value>
+  </data>
+  <data name="Encryption.DeleteFailed" xml:space="preserve">
+    <value>{0} eredeti törölve; {1} sikertelen: {2}</value>
+  </data>
+  <data name="Notify.EncryptionStopped" xml:space="preserve">
+    <value>A fájltitkosítás leállt</value>
+  </data>
+  <data name="Notify.EncryptionStoppedBody" xml:space="preserve">
+    <value>{0} fájl készült el a megszakítás előtt.</value>
+  </data>
+  <data name="Notify.EncryptionErrors" xml:space="preserve">
+    <value>A fájltitkosítás hibákkal ért véget</value>
+  </data>
+  <data name="Notify.EncryptionErrorsBody" xml:space="preserve">
+    <value>{0} kész; {1} sikertelen. Első: {2}</value>
+  </data>
+  <data name="Notify.EncryptionFinished" xml:space="preserve">
+    <value>A fájltitkosítás befejeződött</value>
+  </data>
+  <data name="Notify.EncryptionFinishedBody" xml:space="preserve">
+    <value>{0} fájl kész.</value>
+  </data>
+  <data name="DialogHint.EncryptionRun" xml:space="preserve">
+    <value>Titkosítás vagy visszafejtés a jelmondattal</value>
+  </data>
+  <data name="DialogHint.EncryptionNextField" xml:space="preserve">
+    <value>Következő mező</value>
+  </data>
+  <data name="DialogHint.EncryptionStop" xml:space="preserve">
+    <value>Leállítás; a kész fájlok kész maradnak</value>
+  </data>
+  <data name="DialogHint.EncryptionDeleteOriginals" xml:space="preserve">
+    <value>Az eredetik törlése</value>
+  </data>
+  <data name="DialogHint.EncryptionKeepOriginals" xml:space="preserve">
+    <value>Az eredetik megtartása</value>
+  </data>
+  <data name="Menu.EncryptFiles" xml:space="preserve">
+    <value>Titkosítás / Visszafejtés…</value>
+  </data>
 </root>
