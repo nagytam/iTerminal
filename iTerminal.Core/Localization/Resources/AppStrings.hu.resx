@@ -4480,4 +4480,109 @@
   <data name="Update.Available" xml:space="preserve">
     <value>Elérhető az iTerminal {0}. Az Öné: {1}.</value>
   </data>
+  <data name="Git.LoadingDiff" xml:space="preserve">
+    <value>Különbség betöltése...</value>
+  </data>
+  <data name="Git.Staged" xml:space="preserve">
+    <value>Előkészítve</value>
+  </data>
+  <data name="Git.WorkingTree" xml:space="preserve">
+    <value>Munkakönyvtár</value>
+  </data>
+  <data name="Git.CheckingOut" xml:space="preserve">
+    <value>Váltás erre: {0}</value>
+  </data>
+  <data name="Git.NowTracking" xml:space="preserve">
+    <value>Most egy {0}-t követő helyi ágon.</value>
+  </data>
+  <data name="Git.On" xml:space="preserve">
+    <value>Itt: {0}.</value>
+  </data>
+  <data name="Git.Creating" xml:space="preserve">
+    <value>{0} létrehozása</value>
+  </data>
+  <data name="Git.Created" xml:space="preserve">
+    <value>{0} létrehozva és kiválasztva.</value>
+  </data>
+  <data name="Git.ConfirmDeleteBranch" xml:space="preserve">
+    <value>Törli a(z) {0} ágat, egyesítve vagy sem? (y/n)</value>
+  </data>
+  <data name="Git.Deleting" xml:space="preserve">
+    <value>{0} törlése</value>
+  </data>
+  <data name="Git.Deleted" xml:space="preserve">
+    <value>{0} törölve.</value>
+  </data>
+  <data name="Git.AbortingMerge" xml:space="preserve">
+    <value>Egyesítés megszakítása...</value>
+  </data>
+  <data name="Git.MergeAborted" xml:space="preserve">
+    <value>Egyesítés megszakítva.</value>
+  </data>
+  <data name="Git.Publishing" xml:space="preserve">
+    <value>Ág közzététele...</value>
+  </data>
+  <data name="Git.Pushing" xml:space="preserve">
+    <value>Push folyamatban...</value>
+  </data>
+  <data name="Git.Published" xml:space="preserve">
+    <value>{0} közzétéve, upstream beállítva.</value>
+  </data>
+  <data name="Git.Pushed" xml:space="preserve">
+    <value>Push kész.</value>
+  </data>
+  <data name="Git.StashPrompt" xml:space="preserve">
+    <value>Stash üzenete (Enter: nincs)</value>
+  </data>
+  <data name="Git.Stashing" xml:space="preserve">
+    <value>Módosítások félretétele...</value>
+  </data>
+  <data name="Git.Stashed" xml:space="preserve">
+    <value>Félretéve.</value>
+  </data>
+  <data name="Git.Popping" xml:space="preserve">
+    <value>{0} alkalmazása és eltávolítása</value>
+  </data>
+  <data name="Git.Popped" xml:space="preserve">
+    <value>{0} alkalmazva és eltávolítva.</value>
+  </data>
+  <data name="Git.Applying" xml:space="preserve">
+    <value>{0} alkalmazása</value>
+  </data>
+  <data name="Git.Applied" xml:space="preserve">
+    <value>{0} alkalmazva.</value>
+  </data>
+  <data name="Git.ConfirmDrop" xml:space="preserve">
+    <value>Véglegesen elveti a(z) {0} elemet? (y/n)</value>
+  </data>
+  <data name="Git.Dropping" xml:space="preserve">
+    <value>{0} elvetése</value>
+  </data>
+  <data name="Git.Dropped" xml:space="preserve">
+    <value>{0} elvetve.</value>
+  </data>
+  <data name="Git.NothingStagedHint" xml:space="preserve">
+    <value>Semmi sincs előkészítve — egy fájl a Szóközzel, mind az a billentyűvel.</value>
+  </data>
+  <data name="Git.NothingStaged" xml:space="preserve">
+    <value>Nincs előkészített, commitolható változás.</value>
+  </data>
+  <data name="Git.AmendPrompt" xml:space="preserve">
+    <value>Utolsó commit módosítása</value>
+  </data>
+  <data name="Git.NewBranch" xml:space="preserve">
+    <value>Új ág</value>
+  </data>
+  <data name="Git.ConfirmDeleteUntracked" xml:space="preserve">
+    <value>Törli a nem követett {0} fájlt? (y/n)</value>
+  </data>
+  <data name="Git.ConfirmDiscard" xml:space="preserve">
+    <value>Elveti a(z) {0} módosításait? (y/n)</value>
+  </data>
+  <data name="Git.Loading" xml:space="preserve">
+    <value>Betöltés...</value>
+  </data>
+  <data name="Git.NoRepo" xml:space="preserve">
+    <value>Nincs tárhely</value>
+  </data>
 </root>

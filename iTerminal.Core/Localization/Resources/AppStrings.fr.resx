@@ -4480,4 +4480,109 @@
   <data name="Update.Available" xml:space="preserve">
     <value>iTerminal {0} est disponible. Vous avez {1}.</value>
   </data>
+  <data name="Git.LoadingDiff" xml:space="preserve">
+    <value>Chargement du diff...</value>
+  </data>
+  <data name="Git.Staged" xml:space="preserve">
+    <value>Indexé</value>
+  </data>
+  <data name="Git.WorkingTree" xml:space="preserve">
+    <value>Arbre de travail</value>
+  </data>
+  <data name="Git.CheckingOut" xml:space="preserve">
+    <value>Basculement vers {0}</value>
+  </data>
+  <data name="Git.NowTracking" xml:space="preserve">
+    <value>Sur une branche locale qui suit {0}.</value>
+  </data>
+  <data name="Git.On" xml:space="preserve">
+    <value>Sur {0}.</value>
+  </data>
+  <data name="Git.Creating" xml:space="preserve">
+    <value>Création de {0}</value>
+  </data>
+  <data name="Git.Created" xml:space="preserve">
+    <value>{0} créée et activée.</value>
+  </data>
+  <data name="Git.ConfirmDeleteBranch" xml:space="preserve">
+    <value>Supprimer la branche {0}, fusionnée ou non ? (y/n)</value>
+  </data>
+  <data name="Git.Deleting" xml:space="preserve">
+    <value>Suppression de {0}</value>
+  </data>
+  <data name="Git.Deleted" xml:space="preserve">
+    <value>{0} supprimée.</value>
+  </data>
+  <data name="Git.AbortingMerge" xml:space="preserve">
+    <value>Annulation de la fusion...</value>
+  </data>
+  <data name="Git.MergeAborted" xml:space="preserve">
+    <value>Fusion annulée.</value>
+  </data>
+  <data name="Git.Publishing" xml:space="preserve">
+    <value>Publication de la branche...</value>
+  </data>
+  <data name="Git.Pushing" xml:space="preserve">
+    <value>Envoi...</value>
+  </data>
+  <data name="Git.Published" xml:space="preserve">
+    <value>{0} publiée et son amont défini.</value>
+  </data>
+  <data name="Git.Pushed" xml:space="preserve">
+    <value>Envoyé.</value>
+  </data>
+  <data name="Git.StashPrompt" xml:space="preserve">
+    <value>Message du stash (Entrée pour aucun)</value>
+  </data>
+  <data name="Git.Stashing" xml:space="preserve">
+    <value>Mise de côté des modifications...</value>
+  </data>
+  <data name="Git.Stashed" xml:space="preserve">
+    <value>Mis de côté.</value>
+  </data>
+  <data name="Git.Popping" xml:space="preserve">
+    <value>Application et suppression de {0}</value>
+  </data>
+  <data name="Git.Popped" xml:space="preserve">
+    <value>{0} appliqué et supprimé.</value>
+  </data>
+  <data name="Git.Applying" xml:space="preserve">
+    <value>Application de {0}</value>
+  </data>
+  <data name="Git.Applied" xml:space="preserve">
+    <value>{0} appliqué.</value>
+  </data>
+  <data name="Git.ConfirmDrop" xml:space="preserve">
+    <value>Abandonner {0} définitivement ? (y/n)</value>
+  </data>
+  <data name="Git.Dropping" xml:space="preserve">
+    <value>Abandon de {0}</value>
+  </data>
+  <data name="Git.Dropped" xml:space="preserve">
+    <value>{0} abandonné.</value>
+  </data>
+  <data name="Git.NothingStagedHint" xml:space="preserve">
+    <value>Rien d’indexé — indexez un fichier avec Espace, ou tout avec a.</value>
+  </data>
+  <data name="Git.NothingStaged" xml:space="preserve">
+    <value>Rien d’indexé à valider.</value>
+  </data>
+  <data name="Git.AmendPrompt" xml:space="preserve">
+    <value>Modifier le dernier commit</value>
+  </data>
+  <data name="Git.NewBranch" xml:space="preserve">
+    <value>Nouvelle branche</value>
+  </data>
+  <data name="Git.ConfirmDeleteUntracked" xml:space="preserve">
+    <value>Supprimer le fichier non suivi {0} ? (y/n)</value>
+  </data>
+  <data name="Git.ConfirmDiscard" xml:space="preserve">
+    <value>Abandonner vos modifications de {0} ? (y/n)</value>
+  </data>
+  <data name="Git.Loading" xml:space="preserve">
+    <value>Chargement...</value>
+  </data>
+  <data name="Git.NoRepo" xml:space="preserve">
+    <value>Aucun dépôt</value>
+  </data>
 </root>
