@@ -205,7 +205,7 @@ public class ContentModelDockerDrive(
         var command = terminalModel.Command;
         if (TerminalTarget(command.WorkingDirectoryUrl) is not { } target)
         {
-            command.Error = "Open a container, or put the cursor on one, to run commands inside it.";
+            command.Error = iConsole.Localization.UiText.Get("Docker.OpenContainer", "Open a container, or put the cursor on one, to run commands inside it.");
             return;
         }
 

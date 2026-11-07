@@ -4666,4 +4666,43 @@
   <data name="SettingsPage.OnDemand" xml:space="preserve">
     <value>On demand</value>
   </data>
+  <data name="Remote.NameNeeded" xml:space="preserve">
+    <value>Give the connection a name, so it can be found in the list.</value>
+  </data>
+  <data name="Remote.NameLong" xml:space="preserve">
+    <value>The name is longer than {0} characters.</value>
+  </data>
+  <data name="Remote.HostInvalid" xml:space="preserve">
+    <value>The host must be a host name or an IP address.</value>
+  </data>
+  <data name="Remote.PortInvalid" xml:space="preserve">
+    <value>The port must be between 1 and 65535.</value>
+  </data>
+  <data name="Remote.UserInvalid" xml:space="preserve">
+    <value>The user name has characters that cannot be passed on safely.</value>
+  </data>
+  <data name="Remote.KeyInvalid" xml:space="preserve">
+    <value>The key file path has control characters.</value>
+  </data>
+  <data name="Remote.FileUserInvalid" xml:space="preserve">
+    <value>An FTP or WebDAV user name cannot contain @ / \ or : (it is written into the drive's address).</value>
+  </data>
+  <data name="Remote.FolderInvalid" xml:space="preserve">
+    <value>The folder has control characters.</value>
+  </data>
+  <data name="Folder.NoSuch" xml:space="preserve">
+    <value>No such folder.</value>
+  </data>
+  <data name="Archive.ReadOnly" xml:space="preserve">
+    <value>Archives are read-only; only copying files out of an archive is supported.</value>
+  </data>
+  <data name="Docker.OpenContainer" xml:space="preserve">
+    <value>Open a container, or put the cursor on one, to run commands inside it.</value>
+  </data>
+  <data name="Elevation.NotCarriedOut" xml:space="preserve">
+    <value>The request was not carried out.</value>
+  </data>
+  <data name="Elevation.NotRestarted" xml:space="preserve">
+    <value>Not restarted as administrator</value>
+  </data>
 </root>
