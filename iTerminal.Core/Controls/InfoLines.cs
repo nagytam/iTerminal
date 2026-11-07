@@ -20,6 +20,32 @@ public class InfoLines(IThemeService themeService) : Control(themeService)
     /// <summary>One row: its text, and its colour — null for the theme's ordinary foreground.</summary>
     public readonly record struct Line(string Text, Color? Foreground = null);
 
+    /// <summary>
+    /// The lines with every one that is wider than <paramref name="width"/> broken at its spaces, the pieces keeping its colour and its indent.
+    /// For a block of sentences: cut at the edge they stopped mid-word.
+    /// </summary>
+    public static List<Line> Wrap(IEnumerable<Line> lines, int width)
+    {
+        List<Line> wrapped = [];
+        foreach (Line line in lines)
+        {
+            string text = line.Text ?? string.Empty;
+            if (width < 8 || text.Length <= width)
+            {
+                wrapped.Add(line);
+                continue;
+            }
+
+            int indent = text.Length - text.TrimStart(' ').Length;
+            foreach (string piece in text.TrimStart(' ').WrapWords(width - indent))
+            {
+                wrapped.Add(new Line(new string(' ', indent) + piece, line.Foreground));
+            }
+        }
+
+        return wrapped;
+    }
+
     private IReadOnlyList<Line> _lines = [];
 
     public IReadOnlyList<Line> Lines

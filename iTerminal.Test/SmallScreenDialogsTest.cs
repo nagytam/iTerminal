@@ -140,6 +140,35 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task TheUnitConvertersCategoriesOn50Columns_DoNotTouchTheFirstUnitColumn()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+
+        await narrow.PressAsync("Ctrl+E");
+
+        await narrow.WaitForTextAsync("Unit Converter");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Temperat")), "the Temperature category");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains("TemperaturInch") || l.Contains("TemperatureInch")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheStripMetadataNotesOn50Columns_AreWrappedAndNotCutMidWord()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+        await narrow.SelectEntryAsync("readme.txt");
+
+        await narrow.PressAsync("Shift+F1");
+        await narrow.WaitForTextAsync("Run:");
+        await narrow.TypeAsync("Strip");
+        await narrow.PressAsync("Enter");
+
+        await narrow.WaitForTextAsync("Strip metadata");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("are removed.")) && s.Lines.Any(l => l.Contains("recovered.")), "the ends of the two sentences");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheKeyBarOn40Columns_KeepsWholeKeysAndNotJustTheLetterF()
     {
         await using TerminalApp tiny = await TerminalApp.StartAsync(width: 40, height: 15);

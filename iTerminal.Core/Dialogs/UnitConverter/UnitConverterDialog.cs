@@ -81,8 +81,20 @@ public class UnitConverterDialog : SplitPaneDialog
         RepopulateUnitLists();
     }
 
-    private static ListItem<UnitCategory> TransformCategory(UnitCategory category, CancellationToken cancellationToken) =>
-        new(category) { Value = UnitCatalog.GetCategoryName(category), IsEnabled = true };
+    /// <summary>The width a category name may use; 0 until the layout knows it.</summary>
+    private int _categoryTextWidth;
+
+    /// <summary>The category name, cut with an ellipsis where its column ends: "Temperature" ran into the first unit column.</summary>
+    private ListItem<UnitCategory> TransformCategory(UnitCategory category, CancellationToken cancellationToken)
+    {
+        string name = UnitCatalog.GetCategoryName(category);
+        if (_categoryTextWidth > 2 && name.Length > _categoryTextWidth - 1)
+        {
+            name = name[..(_categoryTextWidth - 2)] + "…";
+        }
+
+        return new(category) { Value = name, IsEnabled = true };
+    }
 
     /// <summary>The width a unit may use in its list; 0 until the layout knows it.</summary>
     private int _unitTextWidth;
@@ -137,7 +149,7 @@ public class UnitConverterDialog : SplitPaneDialog
             var listHeight = Math.Max(1, ih - headerRows - footerRows);
             var listY = 1 + headerRows;
 
-            var categoryWidth = Math.Max(10, Math.Min(22, iw / 4));
+            var categoryWidth = Math.Max(10, Math.Min(22, iw / 3));
             var unitsWidth = Math.Max(1, iw - categoryWidth);
             var fromWidth = Math.Max(1, unitsWidth / 2);
             var toWidth = Math.Max(1, unitsWidth - fromWidth);
@@ -150,6 +162,13 @@ public class UnitConverterDialog : SplitPaneDialog
 
             _toUnitListBox.Position = new Position(1 + categoryWidth + fromWidth, listY);
             _toUnitListBox.ViewSize = new Size(toWidth, listHeight);
+
+            if (categoryWidth != _categoryTextWidth)
+            {
+                _categoryTextWidth = categoryWidth;
+                _categoryItems.ReplaceAll(Enum.GetValues<UnitCategory>());
+                _categoryListBox.UpdateModel();
+            }
 
             int unitTextWidth = Math.Min(fromWidth, toWidth);
             if (unitTextWidth != _unitTextWidth)
