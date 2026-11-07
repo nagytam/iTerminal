@@ -21,7 +21,7 @@ namespace iTerminal.Core.Dialogs.Games;
 /// idle pass, capped at one second. The idle passes may come less often while the screen changes, so a game must not
 /// count passes; the elapsed time is what moves it.</para>
 /// </summary>
-public class GamesDialog : SplitPaneDialog
+public abstract class GamesDialog : SplitPaneDialog
 {
     private const int MenuWidth = 24;
 
@@ -42,18 +42,16 @@ public class GamesDialog : SplitPaneDialog
     private volatile bool _thinking;
     private bool _stuck;
 
-    public GamesDialog(IThemeService themeService, ITimeProvider timeProvider)
-        : this([new TicTacToeGame(), new ChessGame(), new GoGame(), new NineMensMorrisGame(), new SnakeGame()], themeService, timeProvider)
-    {
-    }
-
-    internal GamesDialog(IGame[] games, IThemeService themeService, ITimeProvider? timeProvider = null)
-        : base(nameof(GamesDialog), themeService)
+    /// <summary>Each game opens in a dialog of its own: the concrete dialogs pass their one game here. With several games the dialog also shows a game list.</summary>
+    protected internal GamesDialog(string dialogName, string title, IGame[] games, IThemeService themeService, ITimeProvider? timeProvider = null)
+        : base(dialogName, themeService)
     {
         _games = games;
         _time = timeProvider ?? new SystemTimeProvider();
-        Title = UiText.Get("Dialog.GamesTitle", "Games");
+        Title = title;
     }
+
+    private bool HasSeveralGames => _games.Length > 1;
 
     #region Test seams
 
@@ -98,8 +96,12 @@ public class GamesDialog : SplitPaneDialog
         yield return ("Arrows", UiText.Get("Hint.MoveCursor", "Move the cursor"));
         yield return ("Enter", Current.ActivateHint);
         yield return ("Space", UiText.Get("DialogHint.SameAsEnter", "Same as Enter"));
-        yield return ("PgUp / PgDn", UiText.Get("DialogHint.PreviousNextGame", "Previous or next game"));
-        yield return ($"1-{_games.Length}", UiText.Get("DialogHint.ChooseGame", "Choose a game"));
+        if (HasSeveralGames)
+        {
+            yield return ("PgUp / PgDn", UiText.Get("DialogHint.PreviousNextGame", "Previous or next game"));
+            yield return ($"1-{_games.Length}", UiText.Get("DialogHint.ChooseGame", "Choose a game"));
+        }
+
         yield return ("N", UiText.Get("DialogHint.StartGameAgain", "Start the game again"));
         if (Current.OffersUndo)
         {
@@ -154,16 +156,16 @@ public class GamesDialog : SplitPaneDialog
                 _stuck = false;
                 game.Activate();
                 return true;
-            case ConsoleKey.PageUp:
+            case ConsoleKey.PageUp when HasSeveralGames:
                 SelectGame((_current + _games.Length - 1) % _games.Length);
                 return true;
-            case ConsoleKey.PageDown:
+            case ConsoleKey.PageDown when HasSeveralGames:
                 SelectGame((_current + 1) % _games.Length);
                 return true;
         }
 
         char c = keyEvent.KeyChar;
-        if (c >= '1' && c < '1' + _games.Length)
+        if (HasSeveralGames && c >= '1' && c < '1' + _games.Length)
         {
             SelectGame(c - '1');
             return true;
@@ -380,7 +382,7 @@ public class GamesDialog : SplitPaneDialog
         }
 
         IGame game = Current;
-        int menuWidth = iw >= 64 ? MenuWidth : 0;
+        int menuWidth = HasSeveralGames && iw >= 64 ? MenuWidth : 0;
         if (menuWidth > 0)
         {
             DrawMenu(buffer, ix, iy, menuWidth, ih - 1, colorScheme);
@@ -457,7 +459,13 @@ public class GamesDialog : SplitPaneDialog
     internal string FooterHints()
     {
         IGame game = Current;
-        List<string> hints = ["Arrows:move", "Enter:" + game.ActivateLabel, "PgUp/PgDn:game", "N:new"];
+        List<string> hints = ["Arrows:move", "Enter:" + game.ActivateLabel];
+        if (HasSeveralGames)
+        {
+            hints.Add("PgUp/PgDn:game");
+        }
+
+        hints.Add("N:new");
         if (game.OffersUndo)
         {
             hints.Add("U:undo");

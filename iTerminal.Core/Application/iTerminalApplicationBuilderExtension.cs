@@ -348,8 +348,13 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Torrents.ITorrentService>(provider => new iTerminal.Core.Services.Torrents.TorrentService(
             provider.GetRequiredService<ISettingsService>(), databaseDirectory));
         services.AddTransient<iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog>();
-        // Tools > Games: Tic-Tac-Toe, Chess, Go and Nine Men's Morris. The dialog is a transient that keeps the games' positions for the run.
-        services.AddTransient<iTerminal.Core.Dialogs.Games.GamesDialog>();
+        // Tools menu: every game opens in a dialog of its own.
+        services.AddTransient<iTerminal.Core.Dialogs.Games.TicTacToeDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.ChessDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.GoDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.NineMensMorrisDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.SnakeDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.TetrisDialog>();
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();
