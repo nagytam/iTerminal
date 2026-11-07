@@ -129,6 +129,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
         MultiRenameDialog? multiRenameDialog = null,
+        HashManifestDialog? hashManifestDialog = null,
+        iTerminal.Core.Services.FileSystemResolver? fileSystemResolver = null,
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
         StreamsDialog? streamsDialog = null,
         iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
@@ -164,6 +166,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             malwareScanService: malwareScanService,
             notificationService: notificationService,
             printDialog: printDialog,
+            hashManifestDialog: hashManifestDialog,
+            fileSystemResolver: fileSystemResolver,
             hdfViewerDialog: hdfViewerDialog,
             streamsDialog: streamsDialog,
             executableAnalysisDialog: executableAnalysisDialog));

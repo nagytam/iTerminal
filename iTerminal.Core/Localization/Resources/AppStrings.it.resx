@@ -3484,6 +3484,102 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>collegamento</value>
   </data>
+  <data name="Dialog.HashManifest" xml:space="preserve">
+    <value>Manifest degli hash</value>
+  </data>
+  <data name="Menu.HashManifestItem" xml:space="preserve">
+    <value>Manifest degli hash…</value>
+  </data>
+  <data name="Manifest.Field.Algorithm" xml:space="preserve">
+    <value>Algoritmo</value>
+  </data>
+  <data name="Manifest.Status.Ready" xml:space="preserve">
+    <value>F2 crea un manifest, F3 ne verifica uno.</value>
+  </data>
+  <data name="Manifest.Status.NoFolder" xml:space="preserve">
+    <value>Non c'è nessuna cartella su cui lavorare.</value>
+  </data>
+  <data name="Manifest.Verb.Creating" xml:space="preserve">
+    <value>Creazione</value>
+  </data>
+  <data name="Manifest.Verb.Verifying" xml:space="preserve">
+    <value>Verifica</value>
+  </data>
+  <data name="Manifest.Status.Listing" xml:space="preserve">
+    <value>Elenco dei file…</value>
+  </data>
+  <data name="Manifest.Status.CreateFailures" xml:space="preserve">
+    <value>Non scritto: {0} file non leggibili.</value>
+  </data>
+  <data name="Manifest.Status.NoFiles" xml:space="preserve">
+    <value>Non c'è nulla da calcolare qui.</value>
+  </data>
+  <data name="Manifest.Status.Saved" xml:space="preserve">
+    <value>{0} salvato: {1} file.</value>
+  </data>
+  <data name="Manifest.Status.AlreadySaysSo" xml:space="preserve">
+    <value>{0} dice già lo stesso.</value>
+  </data>
+  <data name="Manifest.Status.SaysSomethingElse" xml:space="preserve">
+    <value>{0} esiste e dice altro — non sovrascritto.</value>
+  </data>
+  <data name="Manifest.Status.NotLocal" xml:space="preserve">
+    <value>Un manifest può essere scritto solo in una cartella del disco locale.</value>
+  </data>
+  <data name="Manifest.Status.WriteFailed" xml:space="preserve">
+    <value>Impossibile salvare {0}: {1}</value>
+  </data>
+  <data name="Manifest.Status.StoppedCreate" xml:space="preserve">
+    <value>Interrotto — non è stato scritto nulla.</value>
+  </data>
+  <data name="Manifest.Status.Stopped" xml:space="preserve">
+    <value>Interrotto.</value>
+  </data>
+  <data name="Manifest.Status.Failed" xml:space="preserve">
+    <value>Non riuscito: {0}</value>
+  </data>
+  <data name="Manifest.Status.NoManifest" xml:space="preserve">
+    <value>Nessun manifest qui: posiziona il cursore su uno (SHA256SUMS…) o creane uno con F2.</value>
+  </data>
+  <data name="Manifest.Summary" xml:space="preserve">
+    <value>{0}: {1} OK, {2} modificati, {3} mancanti, {4} in più, {5} illeggibili.</value>
+  </data>
+  <data name="Manifest.Hint.Create" xml:space="preserve">
+    <value>Crea il manifest</value>
+  </data>
+  <data name="Manifest.Hint.Verify" xml:space="preserve">
+    <value>Verifica con un manifest</value>
+  </data>
+  <data name="Manifest.Hint.Stop" xml:space="preserve">
+    <value>Ferma la verifica o chiudi</value>
+  </data>
+  <data name="Manifest.Kind.Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Manifest.Kind.Changed" xml:space="preserve">
+    <value>modificato</value>
+  </data>
+  <data name="Manifest.Kind.Missing" xml:space="preserve">
+    <value>mancante</value>
+  </data>
+  <data name="Manifest.Kind.Extra" xml:space="preserve">
+    <value>in più</value>
+  </data>
+  <data name="Manifest.Kind.Unreadable" xml:space="preserve">
+    <value>illeggibile</value>
+  </data>
+  <data name="Manifest.Scope.Whole" xml:space="preserve">
+    <value>Copre: l'intero albero della cartella</value>
+  </data>
+  <data name="Manifest.Scope.Rows" xml:space="preserve">
+    <value>Copre: {0} righe selezionate e tutto ciò che contengono</value>
+  </data>
+  <data name="Manifest.Scope.Folder" xml:space="preserve">
+    <value>Cartella: {0}</value>
+  </data>
+  <data name="Manifest.Working" xml:space="preserve">
+    <value>{0}… {1}% ({2} di {3} file)</value>
+  </data>
   <data name="Button.RemoveMark" xml:space="preserve">
     <value>Rimuovi contrassegno (^F)</value>
   </data>

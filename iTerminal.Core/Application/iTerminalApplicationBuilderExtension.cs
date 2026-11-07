@@ -373,6 +373,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Encryption.IFileEncryptionService, iTerminal.Core.Services.Encryption.FileEncryptionService>();
         services.AddTransient<FileEncryptionDialog>();
         services.AddTransient<SignatureDialog>();
+        services.AddTransient<HashManifestDialog>();
         // Ctrl+P: print the file under the cursor and manage the print queue.
         services.AddSingleton<iTerminal.Core.Services.Printing.IPrintService, iTerminal.Core.Services.Printing.PrintService>();
         services.AddTransient<PrintDialog>();

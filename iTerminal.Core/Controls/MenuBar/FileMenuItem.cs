@@ -43,6 +43,7 @@ public class FileMenuItem : MenuItem
         INotificationService? notificationService = null,
         EditLinkDialog? editLinkDialog = null,
         PrintDialog? printDialog = null,
+        HashManifestDialog? hashManifestDialog = null,
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
         StreamsDialog? streamsDialog = null,
         iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
@@ -85,6 +86,10 @@ public class FileMenuItem : MenuItem
         if (checksumDialog is not null)
         {
             AddMenuItem(new MenuItem("Checksums\tShift+F12", new ChecksumDialogCommand(checksumDialog, contentModelService, fileSystemResolver), [], themeService));
+        }
+        if (hashManifestDialog is not null)
+        {
+            AddMenuItem(new MenuItem(UiText.Get("Menu.HashManifestItem", "Hash Manifest…") + "	Shift+Alt+F3", new HashManifestDialogCommand(hashManifestDialog, contentModelService, fileSystemResolver), [], themeService));
         }
         if (signatureDialog is not null)
         {

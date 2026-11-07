@@ -3484,6 +3484,102 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>link</value>
   </data>
+  <data name="Dialog.HashManifest" xml:space="preserve">
+    <value>Hash manifest</value>
+  </data>
+  <data name="Menu.HashManifestItem" xml:space="preserve">
+    <value>Hash Manifest…</value>
+  </data>
+  <data name="Manifest.Field.Algorithm" xml:space="preserve">
+    <value>Algorithm</value>
+  </data>
+  <data name="Manifest.Status.Ready" xml:space="preserve">
+    <value>F2 creates a manifest, F3 verifies one.</value>
+  </data>
+  <data name="Manifest.Status.NoFolder" xml:space="preserve">
+    <value>There is no folder to work on.</value>
+  </data>
+  <data name="Manifest.Verb.Creating" xml:space="preserve">
+    <value>Creating</value>
+  </data>
+  <data name="Manifest.Verb.Verifying" xml:space="preserve">
+    <value>Verifying</value>
+  </data>
+  <data name="Manifest.Status.Listing" xml:space="preserve">
+    <value>Listing the files…</value>
+  </data>
+  <data name="Manifest.Status.CreateFailures" xml:space="preserve">
+    <value>Not written: {0} file(s) could not be read.</value>
+  </data>
+  <data name="Manifest.Status.NoFiles" xml:space="preserve">
+    <value>There is nothing to hash here.</value>
+  </data>
+  <data name="Manifest.Status.Saved" xml:space="preserve">
+    <value>Saved {0}: {1} file(s).</value>
+  </data>
+  <data name="Manifest.Status.AlreadySaysSo" xml:space="preserve">
+    <value>{0} already says so.</value>
+  </data>
+  <data name="Manifest.Status.SaysSomethingElse" xml:space="preserve">
+    <value>{0} exists and says something else — not overwritten.</value>
+  </data>
+  <data name="Manifest.Status.NotLocal" xml:space="preserve">
+    <value>A manifest can only be written into a folder on the local disk.</value>
+  </data>
+  <data name="Manifest.Status.WriteFailed" xml:space="preserve">
+    <value>Could not save {0}: {1}</value>
+  </data>
+  <data name="Manifest.Status.StoppedCreate" xml:space="preserve">
+    <value>Stopped — nothing was written.</value>
+  </data>
+  <data name="Manifest.Status.Stopped" xml:space="preserve">
+    <value>Stopped.</value>
+  </data>
+  <data name="Manifest.Status.Failed" xml:space="preserve">
+    <value>Failed: {0}</value>
+  </data>
+  <data name="Manifest.Status.NoManifest" xml:space="preserve">
+    <value>No manifest here: put the cursor on one (SHA256SUMS…) or create one with F2.</value>
+  </data>
+  <data name="Manifest.Summary" xml:space="preserve">
+    <value>{0}: {1} OK, {2} changed, {3} missing, {4} extra, {5} unreadable.</value>
+  </data>
+  <data name="Manifest.Hint.Create" xml:space="preserve">
+    <value>Create the manifest</value>
+  </data>
+  <data name="Manifest.Hint.Verify" xml:space="preserve">
+    <value>Verify against a manifest</value>
+  </data>
+  <data name="Manifest.Hint.Stop" xml:space="preserve">
+    <value>Stop a running check, or close</value>
+  </data>
+  <data name="Manifest.Kind.Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Manifest.Kind.Changed" xml:space="preserve">
+    <value>changed</value>
+  </data>
+  <data name="Manifest.Kind.Missing" xml:space="preserve">
+    <value>missing</value>
+  </data>
+  <data name="Manifest.Kind.Extra" xml:space="preserve">
+    <value>extra</value>
+  </data>
+  <data name="Manifest.Kind.Unreadable" xml:space="preserve">
+    <value>unreadable</value>
+  </data>
+  <data name="Manifest.Scope.Whole" xml:space="preserve">
+    <value>Covers: the whole folder tree</value>
+  </data>
+  <data name="Manifest.Scope.Rows" xml:space="preserve">
+    <value>Covers: {0} selected row(s) and everything under them</value>
+  </data>
+  <data name="Manifest.Scope.Folder" xml:space="preserve">
+    <value>Folder: {0}</value>
+  </data>
+  <data name="Manifest.Working" xml:space="preserve">
+    <value>{0}… {1}% ({2} of {3} files)</value>
+  </data>
   <data name="Button.RemoveMark" xml:space="preserve">
     <value>Remove mark (^F)</value>
   </data>

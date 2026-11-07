@@ -187,6 +187,13 @@ Each panel's order (the same `<panel>.Sort` setting Shift+F11 writes, here for b
   finishes. Changing an option clears the listed plan, so the list never shows an old set of actions.
 - `FileSystemResolver` is the one answer to "which `IFileSystem` serves this URL" — copy, move, delete, compress, extract and compare all ask it (see the URL-scheme notes).
 
+### Hash manifest (`HashManifestDialog`, Shift+Alt+F3)
+Creates and verifies a `SHA256SUMS`-style manifest (`hash *relative/path`, `/`-separated) for the marked rows or the whole folder tree. All twelve Ctrl+Shift+F chords were taken, so the chord is Shift+Alt+F3 (function key, no Alt+letter).
+
+- **F2 creates** the manifest in the panel's folder (SHA-256 by default; SHA-512, SHA-1, MD5 selectable). It is written only to a local folder and **never over a manifest that says something else** (same rule as `name.sha256` in `ChecksumDialog`; an identical one is "already says so"). A file that cannot be read is listed and nothing is written, so a manifest never silently lacks files.
+- **F3 verifies**: the manifest under the cursor (`SHA256SUMS`, `*.sha256`...), else `SHA256SUMS`/`SHA512SUMS`/`SHA1SUMS`/`MD5SUMS` in the folder. Every row is OK / changed / missing / unreadable and every file the manifest does not list is extra. `ChecksumService.ParseManifest` reads the same line formats as `ParseChecksumFile` (GNU, BSD) but returns every row; each row is hashed with the algorithm its hash length says. A path that is absolute or contains `..` is never read.
+- **Any drive**: listing goes through `FolderComparer.ListAsync`, bytes through `IFileSystem.StreamToAsync` (`ChecksumService.ComputeOneAsync`, one read per file, one algorithm). Work runs on a background task (`RunTask` is the test seam) with a percentage (bytes, or files when sizes are unknown); Esc stops a running one, closing the dialog cancels it.
+
 ### Comparing files (Ctrl+F10) and the right-click menu
 `DiffFilesDialogCommand` opens `FileDiffDialog`: two files side by side, differences coloured, `N`/`P` to the next/previous difference, `W` ignores whitespace, `C` ignores case. Which two: exactly two marked files in the focused panel, otherwise the cursor file against the other panel's cursor file.
 

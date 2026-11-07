@@ -70,6 +70,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private SecureWipeDialog? _secureWipeDialog { get; set; }
     private FileEncryptionDialog? _fileEncryptionDialog { get; set; }
     private SignatureDialog? _signatureDialog { get; set; }
+    private HashManifestDialog? _hashManifestDialog { get; set; }
     private PrintDialog? _printDialog { get; set; }
     private StreamsDialog? _streamsDialog { get; set; }
     private iTerminal.Core.Services.Defender.IMalwareScanService? _malwareScanService { get; set; }
@@ -122,6 +123,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iTerminal.Core.Dialogs.Web.WebBrowserDialog? webBrowserDialog = null,
         PrintDialog? printDialog = null,
         SqliteViewerDialog? sqliteViewerDialog = null,
+        HashManifestDialog? hashManifestDialog = null,
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
         StreamsDialog? streamsDialog = null,
         iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
@@ -141,6 +143,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _secureWipeDialog = secureWipeDialog;
         _fileEncryptionDialog = fileEncryptionDialog;
         _signatureDialog = signatureDialog;
+        _hashManifestDialog = hashManifestDialog;
         _printDialog = printDialog;
         _streamsDialog = streamsDialog;
         _clipboard = clipboardOperations;
@@ -346,6 +349,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_malwareScanService is { IsAvailable: true })
         {
             AddCommand(new ScanWithDefenderCommand(ContentModelService, _malwareScanService, _notificationService));
+        }
+        if (_hashManifestDialog is not null)
+        {
+            AddCommand(new HashManifestDialogCommand(_hashManifestDialog, ContentModelService, _fileSystemResolver));
         }
         if (_signatureDialog is not null)
         {

@@ -3484,6 +3484,102 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>Link</value>
   </data>
+  <data name="Dialog.HashManifest" xml:space="preserve">
+    <value>Hash-Manifest</value>
+  </data>
+  <data name="Menu.HashManifestItem" xml:space="preserve">
+    <value>Hash-Manifest…</value>
+  </data>
+  <data name="Manifest.Field.Algorithm" xml:space="preserve">
+    <value>Algorithmus</value>
+  </data>
+  <data name="Manifest.Status.Ready" xml:space="preserve">
+    <value>F2 erstellt ein Manifest, F3 prüft eines.</value>
+  </data>
+  <data name="Manifest.Status.NoFolder" xml:space="preserve">
+    <value>Es gibt keinen Ordner zum Bearbeiten.</value>
+  </data>
+  <data name="Manifest.Verb.Creating" xml:space="preserve">
+    <value>Erstelle</value>
+  </data>
+  <data name="Manifest.Verb.Verifying" xml:space="preserve">
+    <value>Prüfe</value>
+  </data>
+  <data name="Manifest.Status.Listing" xml:space="preserve">
+    <value>Dateien werden aufgelistet…</value>
+  </data>
+  <data name="Manifest.Status.CreateFailures" xml:space="preserve">
+    <value>Nicht geschrieben: {0} Datei(en) konnten nicht gelesen werden.</value>
+  </data>
+  <data name="Manifest.Status.NoFiles" xml:space="preserve">
+    <value>Hier gibt es nichts zu hashen.</value>
+  </data>
+  <data name="Manifest.Status.Saved" xml:space="preserve">
+    <value>{0} gespeichert: {1} Datei(en).</value>
+  </data>
+  <data name="Manifest.Status.AlreadySaysSo" xml:space="preserve">
+    <value>{0} sagt bereits dasselbe.</value>
+  </data>
+  <data name="Manifest.Status.SaysSomethingElse" xml:space="preserve">
+    <value>{0} existiert und enthält etwas anderes — nicht überschrieben.</value>
+  </data>
+  <data name="Manifest.Status.NotLocal" xml:space="preserve">
+    <value>Ein Manifest kann nur in einen Ordner auf dem lokalen Datenträger geschrieben werden.</value>
+  </data>
+  <data name="Manifest.Status.WriteFailed" xml:space="preserve">
+    <value>{0} konnte nicht gespeichert werden: {1}</value>
+  </data>
+  <data name="Manifest.Status.StoppedCreate" xml:space="preserve">
+    <value>Angehalten — nichts wurde geschrieben.</value>
+  </data>
+  <data name="Manifest.Status.Stopped" xml:space="preserve">
+    <value>Angehalten.</value>
+  </data>
+  <data name="Manifest.Status.Failed" xml:space="preserve">
+    <value>Fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Manifest.Status.NoManifest" xml:space="preserve">
+    <value>Hier gibt es kein Manifest: Cursor auf eines setzen (SHA256SUMS…) oder mit F2 erstellen.</value>
+  </data>
+  <data name="Manifest.Summary" xml:space="preserve">
+    <value>{0}: {1} OK, {2} geändert, {3} fehlend, {4} zusätzlich, {5} unlesbar.</value>
+  </data>
+  <data name="Manifest.Hint.Create" xml:space="preserve">
+    <value>Manifest erstellen</value>
+  </data>
+  <data name="Manifest.Hint.Verify" xml:space="preserve">
+    <value>Gegen ein Manifest prüfen</value>
+  </data>
+  <data name="Manifest.Hint.Stop" xml:space="preserve">
+    <value>Laufende Prüfung stoppen oder schließen</value>
+  </data>
+  <data name="Manifest.Kind.Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Manifest.Kind.Changed" xml:space="preserve">
+    <value>geändert</value>
+  </data>
+  <data name="Manifest.Kind.Missing" xml:space="preserve">
+    <value>fehlt</value>
+  </data>
+  <data name="Manifest.Kind.Extra" xml:space="preserve">
+    <value>zusätzlich</value>
+  </data>
+  <data name="Manifest.Kind.Unreadable" xml:space="preserve">
+    <value>unlesbar</value>
+  </data>
+  <data name="Manifest.Scope.Whole" xml:space="preserve">
+    <value>Umfasst: den ganzen Ordnerbaum</value>
+  </data>
+  <data name="Manifest.Scope.Rows" xml:space="preserve">
+    <value>Umfasst: {0} ausgewählte Zeile(n) und alles darunter</value>
+  </data>
+  <data name="Manifest.Scope.Folder" xml:space="preserve">
+    <value>Ordner: {0}</value>
+  </data>
+  <data name="Manifest.Working" xml:space="preserve">
+    <value>{0}… {1} % ({2} von {3} Dateien)</value>
+  </data>
   <data name="Button.RemoveMark" xml:space="preserve">
     <value>Markierung entfernen (^F)</value>
   </data>

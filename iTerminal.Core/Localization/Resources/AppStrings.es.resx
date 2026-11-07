@@ -3484,6 +3484,102 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>enlace</value>
   </data>
+  <data name="Dialog.HashManifest" xml:space="preserve">
+    <value>Manifiesto de hashes</value>
+  </data>
+  <data name="Menu.HashManifestItem" xml:space="preserve">
+    <value>Manifiesto de hashes…</value>
+  </data>
+  <data name="Manifest.Field.Algorithm" xml:space="preserve">
+    <value>Algoritmo</value>
+  </data>
+  <data name="Manifest.Status.Ready" xml:space="preserve">
+    <value>F2 crea un manifiesto, F3 verifica uno.</value>
+  </data>
+  <data name="Manifest.Status.NoFolder" xml:space="preserve">
+    <value>No hay ninguna carpeta con la que trabajar.</value>
+  </data>
+  <data name="Manifest.Verb.Creating" xml:space="preserve">
+    <value>Creando</value>
+  </data>
+  <data name="Manifest.Verb.Verifying" xml:space="preserve">
+    <value>Verificando</value>
+  </data>
+  <data name="Manifest.Status.Listing" xml:space="preserve">
+    <value>Listando los archivos…</value>
+  </data>
+  <data name="Manifest.Status.CreateFailures" xml:space="preserve">
+    <value>No escrito: no se pudieron leer {0} archivo(s).</value>
+  </data>
+  <data name="Manifest.Status.NoFiles" xml:space="preserve">
+    <value>No hay nada que calcular aquí.</value>
+  </data>
+  <data name="Manifest.Status.Saved" xml:space="preserve">
+    <value>{0} guardado: {1} archivo(s).</value>
+  </data>
+  <data name="Manifest.Status.AlreadySaysSo" xml:space="preserve">
+    <value>{0} ya dice lo mismo.</value>
+  </data>
+  <data name="Manifest.Status.SaysSomethingElse" xml:space="preserve">
+    <value>{0} existe y dice otra cosa: no se sobrescribió.</value>
+  </data>
+  <data name="Manifest.Status.NotLocal" xml:space="preserve">
+    <value>Un manifiesto solo puede escribirse en una carpeta del disco local.</value>
+  </data>
+  <data name="Manifest.Status.WriteFailed" xml:space="preserve">
+    <value>No se pudo guardar {0}: {1}</value>
+  </data>
+  <data name="Manifest.Status.StoppedCreate" xml:space="preserve">
+    <value>Detenido: no se escribió nada.</value>
+  </data>
+  <data name="Manifest.Status.Stopped" xml:space="preserve">
+    <value>Detenido.</value>
+  </data>
+  <data name="Manifest.Status.Failed" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="Manifest.Status.NoManifest" xml:space="preserve">
+    <value>No hay manifiesto aquí: ponga el cursor en uno (SHA256SUMS…) o cree uno con F2.</value>
+  </data>
+  <data name="Manifest.Summary" xml:space="preserve">
+    <value>{0}: {1} OK, {2} cambiados, {3} ausentes, {4} sobrantes, {5} ilegibles.</value>
+  </data>
+  <data name="Manifest.Hint.Create" xml:space="preserve">
+    <value>Crear el manifiesto</value>
+  </data>
+  <data name="Manifest.Hint.Verify" xml:space="preserve">
+    <value>Verificar con un manifiesto</value>
+  </data>
+  <data name="Manifest.Hint.Stop" xml:space="preserve">
+    <value>Detener la comprobación o cerrar</value>
+  </data>
+  <data name="Manifest.Kind.Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Manifest.Kind.Changed" xml:space="preserve">
+    <value>cambiado</value>
+  </data>
+  <data name="Manifest.Kind.Missing" xml:space="preserve">
+    <value>ausente</value>
+  </data>
+  <data name="Manifest.Kind.Extra" xml:space="preserve">
+    <value>sobrante</value>
+  </data>
+  <data name="Manifest.Kind.Unreadable" xml:space="preserve">
+    <value>ilegible</value>
+  </data>
+  <data name="Manifest.Scope.Whole" xml:space="preserve">
+    <value>Abarca: todo el árbol de la carpeta</value>
+  </data>
+  <data name="Manifest.Scope.Rows" xml:space="preserve">
+    <value>Abarca: {0} fila(s) seleccionada(s) y todo lo que contienen</value>
+  </data>
+  <data name="Manifest.Scope.Folder" xml:space="preserve">
+    <value>Carpeta: {0}</value>
+  </data>
+  <data name="Manifest.Working" xml:space="preserve">
+    <value>{0}… {1} % ({2} de {3} archivos)</value>
+  </data>
   <data name="Button.RemoveMark" xml:space="preserve">
     <value>Quitar marca (^F)</value>
   </data>

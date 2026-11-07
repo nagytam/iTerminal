@@ -3484,6 +3484,102 @@
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>hivatkozás</value>
   </data>
+  <data name="Dialog.HashManifest" xml:space="preserve">
+    <value>Hash-jegyzék</value>
+  </data>
+  <data name="Menu.HashManifestItem" xml:space="preserve">
+    <value>Hash-jegyzék…</value>
+  </data>
+  <data name="Manifest.Field.Algorithm" xml:space="preserve">
+    <value>Algoritmus</value>
+  </data>
+  <data name="Manifest.Status.Ready" xml:space="preserve">
+    <value>F2 jegyzéket készít, F3 ellenőrzi.</value>
+  </data>
+  <data name="Manifest.Status.NoFolder" xml:space="preserve">
+    <value>Nincs mappa, amelyen dolgozni lehetne.</value>
+  </data>
+  <data name="Manifest.Verb.Creating" xml:space="preserve">
+    <value>Készítés</value>
+  </data>
+  <data name="Manifest.Verb.Verifying" xml:space="preserve">
+    <value>Ellenőrzés</value>
+  </data>
+  <data name="Manifest.Status.Listing" xml:space="preserve">
+    <value>Fájlok listázása…</value>
+  </data>
+  <data name="Manifest.Status.CreateFailures" xml:space="preserve">
+    <value>Nem íródott meg: {0} fájl nem olvasható.</value>
+  </data>
+  <data name="Manifest.Status.NoFiles" xml:space="preserve">
+    <value>Itt nincs mit hashelni.</value>
+  </data>
+  <data name="Manifest.Status.Saved" xml:space="preserve">
+    <value>{0} mentve: {1} fájl.</value>
+  </data>
+  <data name="Manifest.Status.AlreadySaysSo" xml:space="preserve">
+    <value>A(z) {0} már ezt mondja.</value>
+  </data>
+  <data name="Manifest.Status.SaysSomethingElse" xml:space="preserve">
+    <value>A(z) {0} létezik és mást tartalmaz — nem íródott felül.</value>
+  </data>
+  <data name="Manifest.Status.NotLocal" xml:space="preserve">
+    <value>A jegyzéket csak a helyi lemez egy mappájába lehet írni.</value>
+  </data>
+  <data name="Manifest.Status.WriteFailed" xml:space="preserve">
+    <value>A(z) {0} mentése nem sikerült: {1}</value>
+  </data>
+  <data name="Manifest.Status.StoppedCreate" xml:space="preserve">
+    <value>Leállítva — semmi sem íródott meg.</value>
+  </data>
+  <data name="Manifest.Status.Stopped" xml:space="preserve">
+    <value>Leállítva.</value>
+  </data>
+  <data name="Manifest.Status.Failed" xml:space="preserve">
+    <value>Sikertelen: {0}</value>
+  </data>
+  <data name="Manifest.Status.NoManifest" xml:space="preserve">
+    <value>Nincs itt jegyzék: vigye a kurzort egyre (SHA256SUMS…), vagy készítsen az F2-vel.</value>
+  </data>
+  <data name="Manifest.Summary" xml:space="preserve">
+    <value>{0}: {1} rendben, {2} módosult, {3} hiányzik, {4} többlet, {5} olvashatatlan.</value>
+  </data>
+  <data name="Manifest.Hint.Create" xml:space="preserve">
+    <value>Jegyzék készítése</value>
+  </data>
+  <data name="Manifest.Hint.Verify" xml:space="preserve">
+    <value>Ellenőrzés jegyzék alapján</value>
+  </data>
+  <data name="Manifest.Hint.Stop" xml:space="preserve">
+    <value>Futó ellenőrzés leállítása vagy bezárás</value>
+  </data>
+  <data name="Manifest.Kind.Ok" xml:space="preserve">
+    <value>rendben</value>
+  </data>
+  <data name="Manifest.Kind.Changed" xml:space="preserve">
+    <value>módosult</value>
+  </data>
+  <data name="Manifest.Kind.Missing" xml:space="preserve">
+    <value>hiányzik</value>
+  </data>
+  <data name="Manifest.Kind.Extra" xml:space="preserve">
+    <value>többlet</value>
+  </data>
+  <data name="Manifest.Kind.Unreadable" xml:space="preserve">
+    <value>olvashatatlan</value>
+  </data>
+  <data name="Manifest.Scope.Whole" xml:space="preserve">
+    <value>Hatókör: a teljes mappafa</value>
+  </data>
+  <data name="Manifest.Scope.Rows" xml:space="preserve">
+    <value>Hatókör: {0} kijelölt sor és minden alattuk</value>
+  </data>
+  <data name="Manifest.Scope.Folder" xml:space="preserve">
+    <value>Mappa: {0}</value>
+  </data>
+  <data name="Manifest.Working" xml:space="preserve">
+    <value>{0}… {1}% ({2}/{3} fájl)</value>
+  </data>
   <data name="Button.RemoveMark" xml:space="preserve">
     <value>Jelölés eltávolítása (^F)</value>
   </data>

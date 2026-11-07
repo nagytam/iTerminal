@@ -74,6 +74,7 @@ public class DialogsTest
     [DataRow("F7", "FindFilesDialog")]
     [DataRow("Shift+F7", "CreateFolderDialog")]
     [DataRow("Shift+F4", "CreateFileDialog")]
+    [DataRow("Shift+Alt+F3", "HashManifestDialog")]
     public async Task AGlobalDialogOpensOnTopAndClosesCleanly(string chord, string dialogTypeName)
     {
         await OpenAndCloseAsync(chord, dialogTypeName);
