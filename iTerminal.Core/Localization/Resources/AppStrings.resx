@@ -4813,4 +4813,568 @@
   <data name="Translator.InputHeader" xml:space="preserve">
     <value>Text</value>
   </data>
+  <data name="CmdDesc.fb899019" xml:space="preserve">
+    <value>Put the marked files and folders, or the one under the cursor, on the system clipboard, to paste in this app or another program.</value>
+    <comment>Put the marked files and folders, or the one under the cursor, on the system clipboard, to paste in this app or another program.</comment>
+  </data>
+  <data name="CmdDesc.f13f518c" xml:space="preserve">
+    <value>Put the marked files and folders, or the one under the cursor, on the system clipboard, to be moved where they are pasted.</value>
+    <comment>Put the marked files and folders, or the one under the cursor, on the system clipboard, to be moved where they are pasted.</comment>
+  </data>
+  <data name="CmdDesc.80bf9a22" xml:space="preserve">
+    <value>Copy or move the files on the system clipboard into the folder this panel shows.</value>
+    <comment>Copy or move the files on the system clipboard into the folder this panel shows.</comment>
+  </data>
+  <data name="CmdDesc.aec2e334" xml:space="preserve">
+    <value>Run the command typed on the command line, in this panel's folder.</value>
+    <comment>Run the command typed on the command line, in this panel's folder.</comment>
+  </data>
+  <data name="CmdDesc.38e9dd82" xml:space="preserve">
+    <value>Restart the Docker container under the cursor.</value>
+    <comment>Restart the Docker container under the cursor.</comment>
+  </data>
+  <data name="CmdDesc.a833d933" xml:space="preserve">
+    <value>Start the Docker container under the cursor, or stop it if it is running.</value>
+    <comment>Start the Docker container under the cursor, or stop it if it is running.</comment>
+  </data>
+  <data name="CmdDesc.f0199710" xml:space="preserve">
+    <value>Browse Docker containers' files in the focused panel; press again to go back.</value>
+    <comment>Browse Docker containers' files in the focused panel; press again to go back.</comment>
+  </data>
+  <data name="CmdDesc.4d727e92" xml:space="preserve">
+    <value>Browse this repository's branches, tags and commits as folders; press again to go back.</value>
+    <comment>Browse this repository's branches, tags and commits as folders; press again to go back.</comment>
+  </data>
+  <data name="CmdDesc.8886d79c" xml:space="preserve">
+    <value>Browse deleted files in the focused panel, to restore them or delete them for good; press again to go back.</value>
+    <comment>Browse deleted files in the focused panel, to restore them or delete them for good; press again to go back.</comment>
+  </data>
+  <data name="CmdDesc.00c3d78d" xml:space="preserve">
+    <value>Put the selected deleted files back where they were deleted from.</value>
+    <comment>Put the selected deleted files back where they were deleted from.</comment>
+  </data>
+  <data name="CmdDesc.4a29b669" xml:space="preserve">
+    <value>Preview the file under the cursor in the other panel; press again to close the preview.</value>
+    <comment>Preview the file under the cursor in the other panel; press again to close the preview.</comment>
+  </data>
+  <data name="CmdDesc.a8e893de" xml:space="preserve">
+    <value>Move the cursor one column left within its row.</value>
+    <comment>Move the cursor one column left within its row.</comment>
+  </data>
+  <data name="CmdDesc.b9f55e3f" xml:space="preserve">
+    <value>Move the cursor one column right within its row.</value>
+    <comment>Move the cursor one column right within its row.</comment>
+  </data>
+  <data name="CmdDesc.e5eb05a0" xml:space="preserve">
+    <value>Show the entries in several name columns, or back to one column.</value>
+    <comment>Show the entries in several name columns, or back to one column.</comment>
+  </data>
+  <data name="CmdDesc.f51143b0" xml:space="preserve">
+    <value>Unmark every row in the panel.</value>
+    <comment>Unmark every row in the panel.</comment>
+  </data>
+  <data name="CmdDesc.943e368e" xml:space="preserve">
+    <value>Mark every unmarked file and unmark every marked one.</value>
+    <comment>Mark every unmarked file and unmark every marked one.</comment>
+  </data>
+  <data name="CmdDesc.a6f633e5" xml:space="preserve">
+    <value>Mark every file and folder in the panel.</value>
+    <comment>Mark every file and folder in the panel.</comment>
+  </data>
+  <data name="CmdDesc.41e7c914" xml:space="preserve">
+    <value>Mark or unmark the row under the cursor and step down.</value>
+    <comment>Mark or unmark the row under the cursor and step down.</comment>
+  </data>
+  <data name="CmdDesc.d67a9b85" xml:space="preserve">
+    <value>Open the selected music folder, or run what the selected row stands for.</value>
+    <comment>Open the selected music folder, or run what the selected row stands for.</comment>
+  </data>
+  <data name="CmdDesc.7926c8ad" xml:space="preserve">
+    <value>Copy the marked artists, albums or tracks — or the row under the cursor — from the catalog into the playlist.</value>
+    <comment>Copy the marked artists, albums or tracks — or the row under the cursor — from the catalog into the playlist.</comment>
+  </data>
+  <data name="CmdDesc.73053b13" xml:space="preserve">
+    <value>Show the music catalog and the playlist as the two file panels.</value>
+    <comment>Show the music catalog and the playlist as the two file panels.</comment>
+  </data>
+  <data name="CmdDesc.62f33052" xml:space="preserve">
+    <value>Start or pause playback without leaving the current folder.</value>
+    <comment>Start or pause playback without leaving the current folder.</comment>
+  </data>
+  <data name="CmdDesc.94441ab1" xml:space="preserve">
+    <value>Raise the playback volume by 5%.</value>
+    <comment>Raise the playback volume by 5%.</comment>
+  </data>
+  <data name="CmdDesc.919dae4f" xml:space="preserve">
+    <value>Lower the playback volume by 5%.</value>
+    <comment>Lower the playback volume by 5%.</comment>
+  </data>
+  <data name="CmdDesc.b2cf0726" xml:space="preserve">
+    <value>Take the selected track out of the playing queue. The file is left alone.</value>
+    <comment>Take the selected track out of the playing queue. The file is left alone.</comment>
+  </data>
+  <data name="CmdDesc.fddd7d8b" xml:space="preserve">
+    <value>Show application information and version details.</value>
+    <comment>Show application information and version details.</comment>
+  </data>
+  <data name="CmdDesc.40255d06" xml:space="preserve">
+    <value>Show AI model configuration, status, and session details.</value>
+    <comment>Show AI model configuration, status, and session details.</comment>
+  </data>
+  <data name="CmdDesc.e9d16235" xml:space="preserve">
+    <value>Scan for, connect, pair and forget Bluetooth devices.</value>
+    <comment>Scan for, connect, pair and forget Bluetooth devices.</comment>
+  </data>
+  <data name="CmdDesc.a083301c" xml:space="preserve">
+    <value>Calculate the size of the folder under the cursor (or of the marked folders).</value>
+    <comment>Calculate the size of the folder under the cursor (or of the marked folders).</comment>
+  </data>
+  <data name="CmdDesc.d5fc1b5b" xml:space="preserve">
+    <value>Open the calculator (basic, scientific and programming modes).</value>
+    <comment>Open the calculator (basic, scientific and programming modes).</comment>
+  </data>
+  <data name="CmdDesc.021459f8" xml:space="preserve">
+    <value>Open the month calendar, with the day's meetings.</value>
+    <comment>Open the month calendar, with the day's meetings.</comment>
+  </data>
+  <data name="CmdDesc.f388f305" xml:space="preserve">
+    <value>Compute the selected file's MD5, SHA-1, SHA-256 and SHA-512, and compare them with a checksum.</value>
+    <comment>Compute the selected file's MD5, SHA-1, SHA-256 and SHA-512, and compare them with a checksum.</comment>
+  </data>
+  <data name="CmdDesc.a82461e3" xml:space="preserve">
+    <value>Find any command by name and run it; its key is shown beside it.</value>
+    <comment>Find any command by name and run it; its key is shown beside it.</comment>
+  </data>
+  <data name="CmdDesc.057b971d" xml:space="preserve">
+    <value>Compare the two panels' folders, list the differences and mark what to copy across.</value>
+    <comment>Compare the two panels' folders, list the differences and mark what to copy across.</comment>
+  </data>
+  <data name="CmdDesc.5420f0c4" xml:space="preserve">
+    <value>Pack the marked files and folders, or the one under the cursor, into a new or existing archive.</value>
+    <comment>Pack the marked files and folders, or the one under the cursor, into a new or existing archive.</comment>
+  </data>
+  <data name="CmdDesc.0ea98a07" xml:space="preserve">
+    <value>Open the contact manager: names, email addresses, phone numbers and companies, with a filter.</value>
+    <comment>Open the contact manager: names, email addresses, phone numbers and companies, with a filter.</comment>
+  </data>
+  <data name="CmdDesc.ef464e93" xml:space="preserve">
+    <value>Copy the marked files and folders, or the one under the cursor, to another location.</value>
+    <comment>Copy the marked files and folders, or the one under the cursor, to another location.</comment>
+  </data>
+  <data name="CmdDesc.eb6ce6ec" xml:space="preserve">
+    <value>Create a new, empty file in the current folder.</value>
+    <comment>Create a new, empty file in the current folder.</comment>
+  </data>
+  <data name="CmdDesc.652112bb" xml:space="preserve">
+    <value>Create a new folder in the current location.</value>
+    <comment>Create a new folder in the current location.</comment>
+  </data>
+  <data name="CmdDesc.07df0ced" xml:space="preserve">
+    <value>Make a symbolic or hard link to the selected file or folder.</value>
+    <comment>Make a symbolic or hard link to the selected file or folder.</comment>
+  </data>
+  <data name="CmdDesc.4363c7ec" xml:space="preserve">
+    <value>Open the currency converter: download the current exchange rates and convert between currencies.</value>
+    <comment>Open the currency converter: download the current exchange rates and convert between currencies.</comment>
+  </data>
+  <data name="CmdDesc.2afe83cc" xml:space="preserve">
+    <value>Switch the bar under the panels between the AI prompt and the terminal command line.</value>
+    <comment>Switch the bar under the panels between the AI prompt and the terminal command line.</comment>
+  </data>
+  <data name="CmdDesc.6542e220" xml:space="preserve">
+    <value>Delete the marked files and folders, or the one under the cursor.</value>
+    <comment>Delete the marked files and folders, or the one under the cursor.</comment>
+  </data>
+  <data name="CmdDesc.251ba63d" xml:space="preserve">
+    <value>Show two files side by side with their differences: the cursor file against the other panel's, or two marked files.</value>
+    <comment>Show two files side by side with their differences: the cursor file against the other panel's, or two marked files.</comment>
+  </data>
+  <data name="CmdDesc.709fa9f3" xml:space="preserve">
+    <value>Show available disks and disk details.</value>
+    <comment>Show available disks and disk details.</comment>
+  </data>
+  <data name="CmdDesc.94ee3b92" xml:space="preserve">
+    <value>Show where the space went under this folder: every level by size, with bars.</value>
+    <comment>Show where the space went under this folder: every level by size, with bars.</comment>
+  </data>
+  <data name="CmdDesc.33add7a4" xml:space="preserve">
+    <value>Search the indexed documents folder and preview what is in it.</value>
+    <comment>Search the indexed documents folder and preview what is in it.</comment>
+  </data>
+  <data name="CmdDesc.71c816f1" xml:space="preserve">
+    <value>Find files with identical content under this folder, then mark and delete the extra copies.</value>
+    <comment>Find files with identical content under this folder, then mark and delete the extra copies.</comment>
+  </data>
+  <data name="CmdDesc.0445fdd8" xml:space="preserve">
+    <value>Change the target of the selected symbolic or hard link.</value>
+    <comment>Change the target of the selected symbolic or hard link.</comment>
+  </data>
+  <data name="CmdDesc.86d5c50c" xml:space="preserve">
+    <value>Open the selected text file in the editor.</value>
+    <comment>Open the selected text file in the editor.</comment>
+  </data>
+  <data name="CmdDesc.2c506e85" xml:space="preserve">
+    <value>Start iTerminal again with administrator (root) rights, and close this copy.</value>
+    <comment>Start iTerminal again with administrator (root) rights, and close this copy.</comment>
+  </data>
+  <data name="CmdDesc.1d6919ca" xml:space="preserve">
+    <value>Run the program under the cursor with administrator (root) rights.</value>
+    <comment>Run the program under the cursor with administrator (root) rights.</comment>
+  </data>
+  <data name="CmdDesc.1866310e" xml:space="preserve">
+    <value>Open the encyclopedia: look a term up in Wikipedia, Wiktionary and more, and read the article.</value>
+    <comment>Open the encyclopedia: look a term up in Wikipedia, Wiktionary and more, and read the article.</comment>
+  </data>
+  <data name="CmdDesc.f602a2c7" xml:space="preserve">
+    <value>View, add, change and delete environment variables for this session, the user or the machine.</value>
+    <comment>View, add, change and delete environment variables for this session, the user or the machine.</comment>
+  </data>
+  <data name="CmdDesc.86cc06e0" xml:space="preserve">
+    <value>Run the selected program in the command log.</value>
+    <comment>Run the selected program in the command log.</comment>
+  </data>
+  <data name="CmdDesc.c821bfe7" xml:space="preserve">
+    <value>Unpack the marked archives, or the one under the cursor, into a folder.</value>
+    <comment>Unpack the marked archives, or the one under the cursor, into a folder.</comment>
+  </data>
+  <data name="CmdDesc.85281618" xml:space="preserve">
+    <value>Encrypt the marked files (or the one under the cursor) with a passphrase into separate .enc files, or decrypt .enc files.</value>
+    <comment>Encrypt the marked files (or the one under the cursor) with a passphrase into separate .enc files, or decrypt .enc files.</comment>
+  </data>
+  <data name="CmdDesc.9f9b5e79" xml:space="preserve">
+    <value>Give the marked files and folders (or the one under the cursor) a colour and tags.</value>
+    <comment>Give the marked files and folders (or the one under the cursor) a colour and tags.</comment>
+  </data>
+  <data name="CmdDesc.4e510244" xml:space="preserve">
+    <value>Search for files by name and content; results can be listed in a panel.</value>
+    <comment>Search for files by name and content; results can be listed in a panel.</comment>
+  </data>
+  <data name="CmdDesc.8ad8fe3f" xml:space="preserve">
+    <value>Find the files at least 100 MB long under the panel's folder.</value>
+    <comment>Find the files at least 100 MB long under the panel's folder.</comment>
+  </data>
+  <data name="CmdDesc.bfbb3c05" xml:space="preserve">
+    <value>Find the files not changed for a year under the panel's folder.</value>
+    <comment>Find the files not changed for a year under the panel's folder.</comment>
+  </data>
+  <data name="CmdDesc.d7281e69" xml:space="preserve">
+    <value>Open the folder selector to jump to another drive or folder.</value>
+    <comment>Open the folder selector to jump to another drive or folder.</comment>
+  </data>
+  <data name="CmdDesc.8383ab8d" xml:space="preserve">
+    <value>Play Tic-Tac-Toe against the computer or a friend.</value>
+    <comment>Play Tic-Tac-Toe against the computer or a friend.</comment>
+  </data>
+  <data name="CmdDesc.de30c520" xml:space="preserve">
+    <value>Play Chess against the computer or a friend.</value>
+    <comment>Play Chess against the computer or a friend.</comment>
+  </data>
+  <data name="CmdDesc.a282a3ac" xml:space="preserve">
+    <value>Play Go (9x9, 13x13 or 19x19) against the computer or a friend.</value>
+    <comment>Play Go (9x9, 13x13 or 19x19) against the computer or a friend.</comment>
+  </data>
+  <data name="CmdDesc.72042987" xml:space="preserve">
+    <value>Play Nine Men's Morris against the computer or a friend.</value>
+    <comment>Play Nine Men's Morris against the computer or a friend.</comment>
+  </data>
+  <data name="CmdDesc.6e61f7db" xml:space="preserve">
+    <value>Play Snake: steer the snake to the food without hitting a wall or yourself.</value>
+    <comment>Play Snake: steer the snake to the food without hitting a wall or yourself.</comment>
+  </data>
+  <data name="CmdDesc.8213ddf1" xml:space="preserve">
+    <value>Play Tetris: stack the falling pieces into full rows.</value>
+    <comment>Play Tetris: stack the falling pieces into full rows.</comment>
+  </data>
+  <data name="CmdDesc.9f0f2eb0" xml:space="preserve">
+    <value>Open the Git client (changed files, staging, commit history).</value>
+    <comment>Open the Git client (changed files, staging, commit history).</comment>
+  </data>
+  <data name="CmdDesc.bcd8375e" xml:space="preserve">
+    <value>Pull the current branch's upstream and rebase the local commits onto it (the panel's folder is a git working tree).</value>
+    <comment>Pull the current branch's upstream and rebase the local commits onto it (the panel's folder is a git working tree).</comment>
+  </data>
+  <data name="CmdDesc.7ddd151d" xml:space="preserve">
+    <value>Pull the current branch's upstream with a rebase, then push the local commits (the panel's folder is a git working tree).</value>
+    <comment>Pull the current branch's upstream with a rebase, then push the local commits (the panel's folder is a git working tree).</comment>
+  </data>
+  <data name="CmdDesc.79b43e62" xml:space="preserve">
+    <value>Point the active panel at the typed path or URL.</value>
+    <comment>Point the active panel at the typed path or URL.</comment>
+  </data>
+  <data name="CmdDesc.ed757203" xml:space="preserve">
+    <value>Create a SHA256SUMS-style manifest for the marked rows or the whole folder, or verify the folder against one.</value>
+    <comment>Create a SHA256SUMS-style manifest for the marked rows or the whole folder, or verify the folder against one.</comment>
+  </data>
+  <data name="CmdDesc.2dd71192" xml:space="preserve">
+    <value>Open an interactive shell where the focused panel is — a local folder, a Docker container, an SSH host; exit comes back.</value>
+    <comment>Open an interactive shell where the focused panel is — a local folder, a Docker container, an SSH host; exit comes back.</comment>
+  </data>
+  <data name="CmdDesc.2b34cda5" xml:space="preserve">
+    <value>Browse a connected iPhone / iPad and mount it as a drive.</value>
+    <comment>Browse a connected iPhone / iPad and mount it as a drive.</comment>
+  </data>
+  <data name="CmdDesc.181870d9" xml:space="preserve">
+    <value>Show only the files with a colour or a tag in the panel. Any colour and a blank tag show everything.</value>
+    <comment>Show only the files with a colour or a tag in the panel. Any colour and a blank tag show everything.</comment>
+  </data>
+  <data name="CmdDesc.7348d768" xml:space="preserve">
+    <value>Choose the language of the menus, hints and dialogs: English, Deutsch, Français, Español, Italiano or Magyar.</value>
+    <comment>Choose the language of the menus, hints and dialogs: English, Deutsch, Français, Español, Italiano or Magyar.</comment>
+  </data>
+  <data name="CmdDesc.d9b9654c" xml:space="preserve">
+    <value>Open the mail client: the inbox (POP3), sending (SMTP) and the address book (LDAP).</value>
+    <comment>Open the mail client: the inbox (POP3), sending (SMTP) and the address book (LDAP).</comment>
+  </data>
+  <data name="CmdDesc.3e312e63" xml:space="preserve">
+    <value>Open the Map: OpenStreetMap drawn as ASCII art, online or offline, with zoom, panning and place search.</value>
+    <comment>Open the Map: OpenStreetMap drawn as ASCII art, online or offline, with zoom, panning and place search.</comment>
+  </data>
+  <data name="CmdDesc.ef0ceb82" xml:space="preserve">
+    <value>Mount the ISO, VHD or VHDX under the cursor as a drive, or detach it.</value>
+    <comment>Mount the ISO, VHD or VHDX under the cursor as a drive, or detach it.</comment>
+  </data>
+  <data name="CmdDesc.f09302c4" xml:space="preserve">
+    <value>Move the marked files and folders, or the one under the cursor, to another location.</value>
+    <comment>Move the marked files and folders, or the one under the cursor, to another location.</comment>
+  </data>
+  <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
+    <value>Rename the marked files and folders, or the one under the cursor, by a pattern.</value>
+    <comment>Rename the marked files and folders, or the one under the cursor, by a pattern.</comment>
+  </data>
+  <data name="CmdDesc.9ddb1617" xml:space="preserve">
+    <value>Open the archive under the cursor as a folder (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG with 7-Zip).</value>
+    <comment>Open the archive under the cursor as a folder (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG with 7-Zip).</comment>
+  </data>
+  <data name="CmdDesc.4f25d89a" xml:space="preserve">
+    <value>Open the selected folder or follow the parent entry.</value>
+    <comment>Open the selected folder or follow the parent entry.</comment>
+  </data>
+  <data name="CmdDesc.d55dcd4f" xml:space="preserve">
+    <value>Go to the parent folder of the current location.</value>
+    <comment>Go to the parent folder of the current location.</comment>
+  </data>
+  <data name="CmdDesc.05a68ca0" xml:space="preserve">
+    <value>Jump to the root of the current drive or container.</value>
+    <comment>Jump to the root of the current drive or container.</comment>
+  </data>
+  <data name="CmdDesc.adc840e9" xml:space="preserve">
+    <value>Browse and connect to SSH/SMB hosts on the local network.</value>
+    <comment>Browse and connect to SSH/SMB hosts on the local network.</comment>
+  </data>
+  <data name="CmdDesc.eaff170f" xml:space="preserve">
+    <value>Show network interfaces and related details.</value>
+    <comment>Show network interfaces and related details.</comment>
+  </data>
+  <data name="CmdDesc.4081fc44" xml:space="preserve">
+    <value>Open the selected file with the program chosen for files like it.</value>
+    <comment>Open the selected file with the program chosen for files like it.</comment>
+  </data>
+  <data name="CmdDesc.0f8ffdd8" xml:space="preserve">
+    <value>Open the selected file with the program the system assigns to its type, outside the application.</value>
+    <comment>Open the selected file with the program the system assigns to its type, outside the application.</comment>
+  </data>
+  <data name="CmdDesc.4f26007b" xml:space="preserve">
+    <value>Open the package manager (list, install, uninstall applications).</value>
+    <comment>Open the package manager (list, install, uninstall applications).</comment>
+  </data>
+  <data name="CmdDesc.26098a96" xml:space="preserve">
+    <value>Open the password manager: every saved network, mail and service password.</value>
+    <comment>Open the password manager: every saved network, mail and service password.</comment>
+  </data>
+  <data name="CmdDesc.9ba1a714" xml:space="preserve">
+    <value>Score this machine's CPU, memory, disk, network and timer latency, with an overall score. Only reads; never writes to disk.</value>
+    <comment>Score this machine's CPU, memory, disk, network and timer latency, with an overall score. Only reads; never writes to disk.</comment>
+  </data>
+  <data name="CmdDesc.11457f3b" xml:space="preserve">
+    <value>Print the file under the cursor and manage the print queue: hold, resume and cancel jobs.</value>
+    <comment>Print the file under the cursor and manage the print queue: hold, resume and cancel jobs.</comment>
+  </data>
+  <data name="CmdDesc.dbf0a1c1" xml:space="preserve">
+    <value>Show running processes.</value>
+    <comment>Show running processes.</comment>
+  </data>
+  <data name="CmdDesc.9402ba07" xml:space="preserve">
+    <value>Show the selected entry's size, dates and link target, and change its attributes or permissions.</value>
+    <comment>Show the selected entry's size, dates and link target, and change its attributes or permissions.</comment>
+  </data>
+  <data name="CmdDesc.c4129160" xml:space="preserve">
+    <value>Reload the current folder content.</value>
+    <comment>Reload the current folder content.</comment>
+  </data>
+  <data name="CmdDesc.ef9d4cc1" xml:space="preserve">
+    <value>Open the remote connection manager: saved SSH and PowerShell remoting hosts, each one a keypress from a live terminal session.</value>
+    <comment>Open the remote connection manager: saved SSH and PowerShell remoting hosts, each one a keypress from a live terminal session.</comment>
+  </data>
+  <data name="CmdDesc.29b6f09c" xml:space="preserve">
+    <value>Rename the selected file or folder.</value>
+    <comment>Rename the selected file or folder.</comment>
+  </data>
+  <data name="CmdDesc.34125f3b" xml:space="preserve">
+    <value>Install or update the components iTerminal downloads (Playwright and its Chromium).</value>
+    <comment>Install or update the components iTerminal downloads (Playwright and its Chromium).</comment>
+  </data>
+  <data name="CmdDesc.b3dc4f7c" xml:space="preserve">
+    <value>Scan the marked files and folders (or the one under the cursor) for malware with Microsoft Defender.</value>
+    <comment>Scan the marked files and folders (or the one under the cursor) for malware with Microsoft Defender.</comment>
+  </data>
+  <data name="CmdDesc.4dc29860" xml:space="preserve">
+    <value>Show and manage open screens.</value>
+    <comment>Show and manage open screens.</comment>
+  </data>
+  <data name="CmdDesc.8f7a1d59" xml:space="preserve">
+    <value>Overwrite the marked files and folders (or the one under the cursor) and delete them so they cannot be recovered.</value>
+    <comment>Overwrite the marked files and folders (or the one under the cursor) and delete them so they cannot be recovered.</comment>
+  </data>
+  <data name="CmdDesc.3c6d17b5" xml:space="preserve">
+    <value>Go to the drive under the cursor.</value>
+    <comment>Go to the drive under the cursor.</comment>
+  </data>
+  <data name="CmdDesc.e710dca5" xml:space="preserve">
+    <value>Go to the favourite folder under the cursor.</value>
+    <comment>Go to the favourite folder under the cursor.</comment>
+  </data>
+  <data name="CmdDesc.e547cb15" xml:space="preserve">
+    <value>Go back to the visited folder under the cursor.</value>
+    <comment>Go back to the visited folder under the cursor.</comment>
+  </data>
+  <data name="CmdDesc.c12da6f4" xml:space="preserve">
+    <value>Go to the special folder or virtual drive under the cursor.</value>
+    <comment>Go to the special folder or virtual drive under the cursor.</comment>
+  </data>
+  <data name="CmdDesc.3556d6f4" xml:space="preserve">
+    <value>Go to the folder under the cursor in the tree.</value>
+    <comment>Go to the folder under the cursor in the tree.</comment>
+  </data>
+  <data name="CmdDesc.40713f76" xml:space="preserve">
+    <value>Open application settings.</value>
+    <comment>Open application settings.</comment>
+  </data>
+  <data name="CmdDesc.1b2c6360" xml:space="preserve">
+    <value>Check the signatures of the file under the cursor (OpenPGP, Authenticode, key file) and sign it.</value>
+    <comment>Check the signatures of the file under the cursor (OpenPGP, Authenticode, key file) and sign it.</comment>
+  </data>
+  <data name="CmdDesc.4f6046fa" xml:space="preserve">
+    <value>Order the panel's rows by name, extension, size or date, either way.</value>
+    <comment>Order the panel's rows by name, extension, size or date, either way.</comment>
+  </data>
+  <data name="CmdDesc.6b4bbacf" xml:space="preserve">
+    <value>Open the stock browser: live prices for a watchlist of stocks, with stocks from any exchange to add and remove.</value>
+    <comment>Open the stock browser: live prices for a watchlist of stocks, with stocks from any exchange to add and remove.</comment>
+  </data>
+  <data name="CmdDesc.88f43dfe" xml:space="preserve">
+    <value>List, preview and delete the alternate data streams (Windows) or extended attributes (Linux, macOS) of the entry under the cursor.</value>
+    <comment>List, preview and delete the alternate data streams (Windows) or extended attributes (Linux, macOS) of the entry under the cursor.</comment>
+  </data>
+  <data name="CmdDesc.4e765e19" xml:space="preserve">
+    <value>Remove the camera, GPS, author and comment text from the marked JPEG and PNG files (or the one under the cursor). The files are overwritten.</value>
+    <comment>Remove the camera, GPS, author and comment text from the marked JPEG and PNG files (or the one under the cursor). The files are overwritten.</comment>
+  </data>
+  <data name="CmdDesc.5f35fd6a" xml:space="preserve">
+    <value>Swap the folders shown in the left and right panels.</value>
+    <comment>Swap the folders shown in the left and right panels.</comment>
+  </data>
+  <data name="CmdDesc.e4ae0c07" xml:space="preserve">
+    <value>Compare the two panels' folders and copy the differences across, after showing what would change.</value>
+    <comment>Compare the two panels' folders and copy the differences across, after showing what would change.</comment>
+  </data>
+  <data name="CmdDesc.4c8807b0" xml:space="preserve">
+    <value>Show system information for the current machine.</value>
+    <comment>Show system information for the current machine.</comment>
+  </data>
+  <data name="CmdDesc.1dccc52c" xml:space="preserve">
+    <value>Change the computer name, workgroup, environment variables and time zone.</value>
+    <comment>Change the computer name, workgroup, environment variables and time zone.</comment>
+  </data>
+  <data name="CmdDesc.0d4c831b" xml:space="preserve">
+    <value>Show background tasks and their progress.</value>
+    <comment>Show background tasks and their progress.</comment>
+  </data>
+  <data name="CmdDesc.dd82d2ff" xml:space="preserve">
+    <value>Open the terminal dialog.</value>
+    <comment>Open the terminal dialog.</comment>
+  </data>
+  <data name="CmdDesc.e0da83ca" xml:space="preserve">
+    <value>Choose the colour theme.</value>
+    <comment>Choose the colour theme.</comment>
+  </data>
+  <data name="CmdDesc.682ec499" xml:space="preserve">
+    <value>Open the task list: subjects, due dates and priorities, with done tasks kept below.</value>
+    <comment>Open the task list: subjects, due dates and priorities, with done tasks kept below.</comment>
+  </data>
+  <data name="CmdDesc.24c1aa18" xml:space="preserve">
+    <value>Show or hide the terminal panel full screen: commands run one at a time, with their output kept.</value>
+    <comment>Show or hide the terminal panel full screen: commands run one at a time, with their output kept.</comment>
+  </data>
+  <data name="CmdDesc.3fb63d44" xml:space="preserve">
+    <value>Open the BitTorrent manager: download magnet links and .torrent files, pause, resume and remove them.</value>
+    <comment>Open the BitTorrent manager: download magnet links and .torrent files, pause, resume and remove them.</comment>
+  </data>
+  <data name="CmdDesc.932217ca" xml:space="preserve">
+    <value>Open the translator: detect a language and translate text through a translation API or the connected AI model.</value>
+    <comment>Open the translator: detect a language and translate text through a translation API or the connected AI model.</comment>
+  </data>
+  <data name="CmdDesc.37b77193" xml:space="preserve">
+    <value>Open the unit converter (length, mass, temperature and more).</value>
+    <comment>Open the unit converter (length, mass, temperature and more).</comment>
+  </data>
+  <data name="CmdDesc.bdbe9e9a" xml:space="preserve">
+    <value>Run one of your own commands on the file under the cursor (the F2 menu of mc).</value>
+    <comment>Run one of your own commands on the file under the cursor (the F2 menu of mc).</comment>
+  </data>
+  <data name="CmdDesc.59bf9cc1" xml:space="preserve">
+    <value>Open the selected file in the viewer.</value>
+    <comment>Open the selected file in the viewer.</comment>
+  </data>
+  <data name="CmdDesc.2e8c9462" xml:space="preserve">
+    <value>Start, stop, pause, restart and open the consoles of the virtual machines.</value>
+    <comment>Start, stop, pause, restart and open the consoles of the virtual machines.</comment>
+  </data>
+  <data name="CmdDesc.8191e852" xml:space="preserve">
+    <value>Record a spoken question and type it into the AI prompt (offline Whisper).</value>
+    <comment>Record a spoken question and type it into the AI prompt (offline Whisper).</comment>
+  </data>
+  <data name="CmdDesc.089189cb" xml:space="preserve">
+    <value>Open the Web Browser: a full-screen, text-mode browser with tabs, bookmarks, history, find and forms.</value>
+    <comment>Open the Web Browser: a full-screen, text-mode browser with tabs, bookmarks, history, find and forms.</comment>
+  </data>
+  <data name="CmdDesc.6a8f435b" xml:space="preserve">
+    <value>Open the workspace manager: save the screen layout (both panels, their sort order and the bottom bar) under a name, and switch back to any saved one.</value>
+    <comment>Open the workspace manager: save the screen layout (both panels, their sort order and the bottom bar) under a name, and switch back to any saved one.</comment>
+  </data>
+  <data name="CmdDesc.148a10e2" xml:space="preserve">
+    <value>Copy the name of the file under the cursor to the command line.</value>
+    <comment>Copy the name of the file under the cursor to the command line.</comment>
+  </data>
+  <data name="CmdDesc.a9752744" xml:space="preserve">
+    <value>Copy the names of the marked files (or the file under the cursor) to the command line.</value>
+    <comment>Copy the names of the marked files (or the file under the cursor) to the command line.</comment>
+  </data>
+  <data name="CmdDesc.ce371dd0" xml:space="preserve">
+    <value>Copy the path of the folder this panel shows to the command line.</value>
+    <comment>Copy the path of the folder this panel shows to the command line.</comment>
+  </data>
+  <data name="CmdDesc.7de6874f" xml:space="preserve">
+    <value>Choose the editor for the selected file, or set the one F4 uses for files like it.</value>
+    <comment>Choose the editor for the selected file, or set the one F4 uses for files like it.</comment>
+  </data>
+  <data name="CmdDesc.758a1d81" xml:space="preserve">
+    <value>Choose the program to open the selected file with, or set the one Enter uses for files like it.</value>
+    <comment>Choose the program to open the selected file with, or set the one Enter uses for files like it.</comment>
+  </data>
+  <data name="CmdDesc.4fbb2ac8" xml:space="preserve">
+    <value>Mark the files whose names match a pattern.</value>
+    <comment>Mark the files whose names match a pattern.</comment>
+  </data>
+  <data name="CmdDesc.da630bcf" xml:space="preserve">
+    <value>Unmark the files whose names match a pattern.</value>
+    <comment>Unmark the files whose names match a pattern.</comment>
+  </data>
+  <data name="CmdDesc.528b9b74" xml:space="preserve">
+    <value>Mark or unmark the row under the cursor and move down.</value>
+    <comment>Mark or unmark the row under the cursor and move down.</comment>
+  </data>
+  <data name="CmdDesc.70f70296" xml:space="preserve">
+    <value>Mark or unmark the row under the cursor and move up.</value>
+    <comment>Mark or unmark the row under the cursor and move up.</comment>
+  </data>
 </root>

@@ -4813,4 +4813,427 @@
   <data name="Translator.InputHeader" xml:space="preserve">
     <value>Text</value>
   </data>
+  <data name="CmdDesc.fb899019" xml:space="preserve">
+    <value>Die markierten Dateien und Ordner oder den unter dem Cursor in die Zwischenablage legen, um sie in dieser App oder einem anderen Programm einzufügen.</value>
+  </data>
+  <data name="CmdDesc.f13f518c" xml:space="preserve">
+    <value>Die markierten Dateien und Ordner oder den unter dem Cursor in die Zwischenablage legen, damit sie beim Einfügen verschoben werden.</value>
+  </data>
+  <data name="CmdDesc.80bf9a22" xml:space="preserve">
+    <value>Die Dateien aus der Zwischenablage in den Ordner dieses Panels kopieren oder verschieben.</value>
+  </data>
+  <data name="CmdDesc.aec2e334" xml:space="preserve">
+    <value>Den in der Befehlszeile eingegebenen Befehl im Ordner dieses Panels ausführen.</value>
+  </data>
+  <data name="CmdDesc.38e9dd82" xml:space="preserve">
+    <value>Den Docker-Container unter dem Cursor neu starten.</value>
+  </data>
+  <data name="CmdDesc.a833d933" xml:space="preserve">
+    <value>Den Docker-Container unter dem Cursor starten oder, wenn er läuft, stoppen.</value>
+  </data>
+  <data name="CmdDesc.f0199710" xml:space="preserve">
+    <value>Dateien von Docker-Containern im aktiven Panel durchsuchen; erneut drücken, um zurückzugehen.</value>
+  </data>
+  <data name="CmdDesc.4d727e92" xml:space="preserve">
+    <value>Branches, Tags und Commits dieses Repositorys als Ordner durchsuchen; erneut drücken, um zurückzugehen.</value>
+  </data>
+  <data name="CmdDesc.8886d79c" xml:space="preserve">
+    <value>Gelöschte Dateien im aktiven Panel durchsuchen, um sie wiederherzustellen oder endgültig zu löschen; erneut drücken, um zurückzugehen.</value>
+  </data>
+  <data name="CmdDesc.00c3d78d" xml:space="preserve">
+    <value>Die ausgewählten gelöschten Dateien dorthin zurücklegen, von wo sie gelöscht wurden.</value>
+  </data>
+  <data name="CmdDesc.4a29b669" xml:space="preserve">
+    <value>Die Datei unter dem Cursor im anderen Panel in der Vorschau zeigen; erneut drücken, um die Vorschau zu schließen.</value>
+  </data>
+  <data name="CmdDesc.a8e893de" xml:space="preserve">
+    <value>Den Cursor in seiner Zeile um eine Spalte nach links bewegen.</value>
+  </data>
+  <data name="CmdDesc.b9f55e3f" xml:space="preserve">
+    <value>Den Cursor in seiner Zeile um eine Spalte nach rechts bewegen.</value>
+  </data>
+  <data name="CmdDesc.e5eb05a0" xml:space="preserve">
+    <value>Die Einträge in mehreren Namensspalten oder wieder in einer Spalte zeigen.</value>
+  </data>
+  <data name="CmdDesc.f51143b0" xml:space="preserve">
+    <value>Die Markierung aller Zeilen im Panel aufheben.</value>
+  </data>
+  <data name="CmdDesc.943e368e" xml:space="preserve">
+    <value>Jede nicht markierte Datei markieren und jede markierte Markierung aufheben.</value>
+  </data>
+  <data name="CmdDesc.a6f633e5" xml:space="preserve">
+    <value>Alle Dateien und Ordner im Panel markieren.</value>
+  </data>
+  <data name="CmdDesc.41e7c914" xml:space="preserve">
+    <value>Die Zeile unter dem Cursor markieren oder die Markierung aufheben und eine Zeile nach unten gehen.</value>
+  </data>
+  <data name="CmdDesc.d67a9b85" xml:space="preserve">
+    <value>Den ausgewählten Musikordner öffnen oder ausführen, wofür die ausgewählte Zeile steht.</value>
+  </data>
+  <data name="CmdDesc.7926c8ad" xml:space="preserve">
+    <value>Die markierten Interpreten, Alben oder Titel – oder die Zeile unter dem Cursor – aus dem Katalog in die Wiedergabeliste kopieren.</value>
+  </data>
+  <data name="CmdDesc.73053b13" xml:space="preserve">
+    <value>Den Musikkatalog und die Wiedergabeliste als die zwei Dateipanels zeigen.</value>
+  </data>
+  <data name="CmdDesc.62f33052" xml:space="preserve">
+    <value>Die Wiedergabe starten oder pausieren, ohne den aktuellen Ordner zu verlassen.</value>
+  </data>
+  <data name="CmdDesc.94441ab1" xml:space="preserve">
+    <value>Die Wiedergabelautstärke um 5 % erhöhen.</value>
+  </data>
+  <data name="CmdDesc.919dae4f" xml:space="preserve">
+    <value>Die Wiedergabelautstärke um 5 % senken.</value>
+  </data>
+  <data name="CmdDesc.b2cf0726" xml:space="preserve">
+    <value>Den ausgewählten Titel aus der Wiedergabewarteschlange nehmen. Die Datei bleibt unberührt.</value>
+  </data>
+  <data name="CmdDesc.fddd7d8b" xml:space="preserve">
+    <value>Anwendungsinformationen und Versionsdetails anzeigen.</value>
+  </data>
+  <data name="CmdDesc.40255d06" xml:space="preserve">
+    <value>Konfiguration, Status und Sitzungsdetails des KI-Modells anzeigen.</value>
+  </data>
+  <data name="CmdDesc.e9d16235" xml:space="preserve">
+    <value>Bluetooth-Geräte suchen, verbinden, koppeln und vergessen.</value>
+  </data>
+  <data name="CmdDesc.a083301c" xml:space="preserve">
+    <value>Die Größe des Ordners unter dem Cursor (oder der markierten Ordner) berechnen.</value>
+  </data>
+  <data name="CmdDesc.d5fc1b5b" xml:space="preserve">
+    <value>Den Rechner öffnen (Standard-, wissenschaftlicher und Programmiermodus).</value>
+  </data>
+  <data name="CmdDesc.021459f8" xml:space="preserve">
+    <value>Den Monatskalender mit den Terminen des Tages öffnen.</value>
+  </data>
+  <data name="CmdDesc.f388f305" xml:space="preserve">
+    <value>MD5, SHA-1, SHA-256 und SHA-512 der ausgewählten Datei berechnen und mit einer Prüfsumme vergleichen.</value>
+  </data>
+  <data name="CmdDesc.a82461e3" xml:space="preserve">
+    <value>Einen beliebigen Befehl nach Namen finden und ausführen; sein Tastenkürzel steht daneben.</value>
+  </data>
+  <data name="CmdDesc.057b971d" xml:space="preserve">
+    <value>Die Ordner der beiden Panels vergleichen, die Unterschiede auflisten und markieren, was hinüberkopiert werden soll.</value>
+  </data>
+  <data name="CmdDesc.5420f0c4" xml:space="preserve">
+    <value>Die markierten Dateien und Ordner oder den unter dem Cursor in ein neues oder vorhandenes Archiv packen.</value>
+  </data>
+  <data name="CmdDesc.0ea98a07" xml:space="preserve">
+    <value>Die Kontaktverwaltung öffnen: Namen, E-Mail-Adressen, Telefonnummern und Firmen, mit Filter.</value>
+  </data>
+  <data name="CmdDesc.ef464e93" xml:space="preserve">
+    <value>Die markierten Dateien und Ordner oder den unter dem Cursor an einen anderen Ort kopieren.</value>
+  </data>
+  <data name="CmdDesc.eb6ce6ec" xml:space="preserve">
+    <value>Eine neue, leere Datei im aktuellen Ordner erstellen.</value>
+  </data>
+  <data name="CmdDesc.652112bb" xml:space="preserve">
+    <value>Einen neuen Ordner am aktuellen Ort erstellen.</value>
+  </data>
+  <data name="CmdDesc.07df0ced" xml:space="preserve">
+    <value>Einen symbolischen oder harten Link auf die ausgewählte Datei oder den ausgewählten Ordner erstellen.</value>
+  </data>
+  <data name="CmdDesc.4363c7ec" xml:space="preserve">
+    <value>Den Währungsrechner öffnen: aktuelle Wechselkurse laden und zwischen Währungen umrechnen.</value>
+  </data>
+  <data name="CmdDesc.2afe83cc" xml:space="preserve">
+    <value>Die Leiste unter den Panels zwischen KI-Eingabe und Terminal-Befehlszeile umschalten.</value>
+  </data>
+  <data name="CmdDesc.6542e220" xml:space="preserve">
+    <value>Die markierten Dateien und Ordner oder den unter dem Cursor löschen.</value>
+  </data>
+  <data name="CmdDesc.251ba63d" xml:space="preserve">
+    <value>Zwei Dateien nebeneinander mit ihren Unterschieden zeigen: die Datei unter dem Cursor gegen die des anderen Panels oder zwei markierte Dateien.</value>
+  </data>
+  <data name="CmdDesc.709fa9f3" xml:space="preserve">
+    <value>Verfügbare Datenträger und Datenträgerdetails anzeigen.</value>
+  </data>
+  <data name="CmdDesc.94ee3b92" xml:space="preserve">
+    <value>Zeigen, wohin der Platz unter diesem Ordner gegangen ist: jede Ebene nach Größe, mit Balken.</value>
+  </data>
+  <data name="CmdDesc.33add7a4" xml:space="preserve">
+    <value>Den indizierten Dokumentenordner durchsuchen und eine Vorschau des Inhalts zeigen.</value>
+  </data>
+  <data name="CmdDesc.71c816f1" xml:space="preserve">
+    <value>Dateien mit identischem Inhalt unter diesem Ordner finden, dann die überzähligen Kopien markieren und löschen.</value>
+  </data>
+  <data name="CmdDesc.0445fdd8" xml:space="preserve">
+    <value>Das Ziel des ausgewählten symbolischen oder harten Links ändern.</value>
+  </data>
+  <data name="CmdDesc.86d5c50c" xml:space="preserve">
+    <value>Die ausgewählte Textdatei im Editor öffnen.</value>
+  </data>
+  <data name="CmdDesc.2c506e85" xml:space="preserve">
+    <value>iTerminal mit Administrator-(Root-)Rechten neu starten und diese Kopie schließen.</value>
+  </data>
+  <data name="CmdDesc.1d6919ca" xml:space="preserve">
+    <value>Das Programm unter dem Cursor mit Administrator-(Root-)Rechten ausführen.</value>
+  </data>
+  <data name="CmdDesc.1866310e" xml:space="preserve">
+    <value>Die Enzyklopädie öffnen: einen Begriff in Wikipedia, Wiktionary und mehr nachschlagen und den Artikel lesen.</value>
+  </data>
+  <data name="CmdDesc.f602a2c7" xml:space="preserve">
+    <value>Umgebungsvariablen für diese Sitzung, den Benutzer oder den Computer anzeigen, hinzufügen, ändern und löschen.</value>
+  </data>
+  <data name="CmdDesc.86cc06e0" xml:space="preserve">
+    <value>Das ausgewählte Programm im Befehlsprotokoll ausführen.</value>
+  </data>
+  <data name="CmdDesc.c821bfe7" xml:space="preserve">
+    <value>Die markierten Archive oder das unter dem Cursor in einen Ordner entpacken.</value>
+  </data>
+  <data name="CmdDesc.85281618" xml:space="preserve">
+    <value>Die markierten Dateien (oder die unter dem Cursor) mit einer Passphrase in eigene .enc-Dateien verschlüsseln oder .enc-Dateien entschlüsseln.</value>
+  </data>
+  <data name="CmdDesc.9f9b5e79" xml:space="preserve">
+    <value>Den markierten Dateien und Ordnern (oder dem unter dem Cursor) eine Farbe und Tags geben.</value>
+  </data>
+  <data name="CmdDesc.4e510244" xml:space="preserve">
+    <value>Dateien nach Name und Inhalt suchen; die Ergebnisse können in einem Panel aufgelistet werden.</value>
+  </data>
+  <data name="CmdDesc.8ad8fe3f" xml:space="preserve">
+    <value>Die Dateien von mindestens 100 MB Größe unter dem Ordner des Panels finden.</value>
+  </data>
+  <data name="CmdDesc.bfbb3c05" xml:space="preserve">
+    <value>Die Dateien finden, die seit einem Jahr nicht geändert wurden, unter dem Ordner des Panels.</value>
+  </data>
+  <data name="CmdDesc.d7281e69" xml:space="preserve">
+    <value>Die Ordnerauswahl öffnen, um zu einem anderen Laufwerk oder Ordner zu springen.</value>
+  </data>
+  <data name="CmdDesc.8383ab8d" xml:space="preserve">
+    <value>Tic-Tac-Toe gegen den Computer oder einen Freund spielen.</value>
+  </data>
+  <data name="CmdDesc.de30c520" xml:space="preserve">
+    <value>Schach gegen den Computer oder einen Freund spielen.</value>
+  </data>
+  <data name="CmdDesc.a282a3ac" xml:space="preserve">
+    <value>Go (9x9, 13x13 oder 19x19) gegen den Computer oder einen Freund spielen.</value>
+  </data>
+  <data name="CmdDesc.72042987" xml:space="preserve">
+    <value>Mühle gegen den Computer oder einen Freund spielen.</value>
+  </data>
+  <data name="CmdDesc.6e61f7db" xml:space="preserve">
+    <value>Snake spielen: Die Schlange zum Futter lenken, ohne eine Wand oder sich selbst zu treffen.</value>
+  </data>
+  <data name="CmdDesc.8213ddf1" xml:space="preserve">
+    <value>Tetris spielen: Die fallenden Teile zu vollen Reihen stapeln.</value>
+  </data>
+  <data name="CmdDesc.9f0f2eb0" xml:space="preserve">
+    <value>Den Git-Client öffnen (geänderte Dateien, Staging, Commit-Verlauf).</value>
+  </data>
+  <data name="CmdDesc.bcd8375e" xml:space="preserve">
+    <value>Den Upstream des aktuellen Branches pullen und die lokalen Commits darauf rebasen (der Ordner des Panels ist ein Git-Arbeitsverzeichnis).</value>
+  </data>
+  <data name="CmdDesc.7ddd151d" xml:space="preserve">
+    <value>Den Upstream des aktuellen Branches mit Rebase pullen, dann die lokalen Commits pushen (der Ordner des Panels ist ein Git-Arbeitsverzeichnis).</value>
+  </data>
+  <data name="CmdDesc.79b43e62" xml:space="preserve">
+    <value>Das aktive Panel auf den eingegebenen Pfad oder die URL richten.</value>
+  </data>
+  <data name="CmdDesc.ed757203" xml:space="preserve">
+    <value>Ein Manifest im SHA256SUMS-Stil für die markierten Zeilen oder den ganzen Ordner erstellen oder den Ordner gegen eines prüfen.</value>
+  </data>
+  <data name="CmdDesc.2dd71192" xml:space="preserve">
+    <value>Eine interaktive Shell dort öffnen, wo das aktive Panel ist – ein lokaler Ordner, ein Docker-Container, ein SSH-Host; exit führt zurück.</value>
+  </data>
+  <data name="CmdDesc.2b34cda5" xml:space="preserve">
+    <value>Ein angeschlossenes iPhone / iPad durchsuchen und als Laufwerk einbinden.</value>
+  </data>
+  <data name="CmdDesc.181870d9" xml:space="preserve">
+    <value>Nur die Dateien mit einer Farbe oder einem Tag im Panel zeigen. Jede Farbe und ein leeres Tag zeigen alles.</value>
+  </data>
+  <data name="CmdDesc.7348d768" xml:space="preserve">
+    <value>Die Sprache der Menüs, Hinweise und Dialoge wählen: English, Deutsch, Français, Español, Italiano oder Magyar.</value>
+  </data>
+  <data name="CmdDesc.d9b9654c" xml:space="preserve">
+    <value>Den Mail-Client öffnen: Posteingang (POP3), Senden (SMTP) und Adressbuch (LDAP).</value>
+  </data>
+  <data name="CmdDesc.3e312e63" xml:space="preserve">
+    <value>Die Karte öffnen: OpenStreetMap als ASCII-Art, online oder offline, mit Zoom, Verschieben und Ortssuche.</value>
+  </data>
+  <data name="CmdDesc.ef0ceb82" xml:space="preserve">
+    <value>Die ISO-, VHD- oder VHDX-Datei unter dem Cursor als Laufwerk einbinden oder trennen.</value>
+  </data>
+  <data name="CmdDesc.f09302c4" xml:space="preserve">
+    <value>Die markierten Dateien und Ordner oder den unter dem Cursor an einen anderen Ort verschieben.</value>
+  </data>
+  <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
+    <value>Die markierten Dateien und Ordner oder den unter dem Cursor nach einem Muster umbenennen.</value>
+  </data>
+  <data name="CmdDesc.9ddb1617" xml:space="preserve">
+    <value>Das Archiv unter dem Cursor als Ordner öffnen (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG mit 7-Zip).</value>
+  </data>
+  <data name="CmdDesc.4f25d89a" xml:space="preserve">
+    <value>Den ausgewählten Ordner öffnen oder dem übergeordneten Eintrag folgen.</value>
+  </data>
+  <data name="CmdDesc.d55dcd4f" xml:space="preserve">
+    <value>Zum übergeordneten Ordner des aktuellen Orts gehen.</value>
+  </data>
+  <data name="CmdDesc.05a68ca0" xml:space="preserve">
+    <value>Zur Wurzel des aktuellen Laufwerks oder Containers springen.</value>
+  </data>
+  <data name="CmdDesc.adc840e9" xml:space="preserve">
+    <value>SSH/SMB-Hosts im lokalen Netzwerk durchsuchen und verbinden.</value>
+  </data>
+  <data name="CmdDesc.eaff170f" xml:space="preserve">
+    <value>Netzwerkschnittstellen und zugehörige Details anzeigen.</value>
+  </data>
+  <data name="CmdDesc.4081fc44" xml:space="preserve">
+    <value>Die ausgewählte Datei mit dem für solche Dateien gewählten Programm öffnen.</value>
+  </data>
+  <data name="CmdDesc.0f8ffdd8" xml:space="preserve">
+    <value>Die ausgewählte Datei mit dem Programm öffnen, das das System ihrem Typ zuweist, außerhalb der Anwendung.</value>
+  </data>
+  <data name="CmdDesc.4f26007b" xml:space="preserve">
+    <value>Die Paketverwaltung öffnen (Anwendungen auflisten, installieren, deinstallieren).</value>
+  </data>
+  <data name="CmdDesc.26098a96" xml:space="preserve">
+    <value>Die Kennwortverwaltung öffnen: jedes gespeicherte Netzwerk-, Mail- und Dienstkennwort.</value>
+  </data>
+  <data name="CmdDesc.9ba1a714" xml:space="preserve">
+    <value>CPU, Speicher, Datenträger, Netzwerk und Timer-Latenz dieses Rechners bewerten, mit Gesamtwertung. Liest nur; schreibt nie auf den Datenträger.</value>
+  </data>
+  <data name="CmdDesc.11457f3b" xml:space="preserve">
+    <value>Die Datei unter dem Cursor drucken und die Druckwarteschlange verwalten: Aufträge anhalten, fortsetzen und abbrechen.</value>
+  </data>
+  <data name="CmdDesc.dbf0a1c1" xml:space="preserve">
+    <value>Laufende Prozesse anzeigen.</value>
+  </data>
+  <data name="CmdDesc.9402ba07" xml:space="preserve">
+    <value>Größe, Daten und Linkziel des ausgewählten Eintrags zeigen und seine Attribute oder Berechtigungen ändern.</value>
+  </data>
+  <data name="CmdDesc.c4129160" xml:space="preserve">
+    <value>Den Inhalt des aktuellen Ordners neu laden.</value>
+  </data>
+  <data name="CmdDesc.ef9d4cc1" xml:space="preserve">
+    <value>Die Verwaltung der Remoteverbindungen öffnen: gespeicherte SSH- und PowerShell-Remoting-Hosts, jeder einen Tastendruck von einer Live-Terminalsitzung entfernt.</value>
+  </data>
+  <data name="CmdDesc.29b6f09c" xml:space="preserve">
+    <value>Die ausgewählte Datei oder den ausgewählten Ordner umbenennen.</value>
+  </data>
+  <data name="CmdDesc.34125f3b" xml:space="preserve">
+    <value>Die von iTerminal heruntergeladenen Komponenten installieren oder aktualisieren (Playwright und sein Chromium).</value>
+  </data>
+  <data name="CmdDesc.b3dc4f7c" xml:space="preserve">
+    <value>Die markierten Dateien und Ordner (oder den unter dem Cursor) mit Microsoft Defender auf Schadsoftware prüfen.</value>
+  </data>
+  <data name="CmdDesc.4dc29860" xml:space="preserve">
+    <value>Geöffnete Bildschirme anzeigen und verwalten.</value>
+  </data>
+  <data name="CmdDesc.8f7a1d59" xml:space="preserve">
+    <value>Die markierten Dateien und Ordner (oder den unter dem Cursor) überschreiben und löschen, sodass sie nicht wiederherstellbar sind.</value>
+  </data>
+  <data name="CmdDesc.3c6d17b5" xml:space="preserve">
+    <value>Zum Laufwerk unter dem Cursor gehen.</value>
+  </data>
+  <data name="CmdDesc.e710dca5" xml:space="preserve">
+    <value>Zum Favoritenordner unter dem Cursor gehen.</value>
+  </data>
+  <data name="CmdDesc.e547cb15" xml:space="preserve">
+    <value>Zum besuchten Ordner unter dem Cursor zurückgehen.</value>
+  </data>
+  <data name="CmdDesc.c12da6f4" xml:space="preserve">
+    <value>Zum Spezialordner oder virtuellen Laufwerk unter dem Cursor gehen.</value>
+  </data>
+  <data name="CmdDesc.3556d6f4" xml:space="preserve">
+    <value>Zum Ordner unter dem Cursor im Baum gehen.</value>
+  </data>
+  <data name="CmdDesc.40713f76" xml:space="preserve">
+    <value>Die Anwendungseinstellungen öffnen.</value>
+  </data>
+  <data name="CmdDesc.1b2c6360" xml:space="preserve">
+    <value>Die Signaturen der Datei unter dem Cursor prüfen (OpenPGP, Authenticode, Schlüsseldatei) und sie signieren.</value>
+  </data>
+  <data name="CmdDesc.4f6046fa" xml:space="preserve">
+    <value>Die Zeilen des Panels nach Name, Erweiterung, Größe oder Datum ordnen, in beide Richtungen.</value>
+  </data>
+  <data name="CmdDesc.6b4bbacf" xml:space="preserve">
+    <value>Den Aktienbrowser öffnen: Live-Kurse für eine Beobachtungsliste, mit Aktien jeder Börse zum Hinzufügen und Entfernen.</value>
+  </data>
+  <data name="CmdDesc.88f43dfe" xml:space="preserve">
+    <value>Die alternativen Datenströme (Windows) oder erweiterten Attribute (Linux, macOS) des Eintrags unter dem Cursor auflisten, ansehen und löschen.</value>
+  </data>
+  <data name="CmdDesc.4e765e19" xml:space="preserve">
+    <value>Kamera-, GPS-, Autoren- und Kommentartext aus den markierten JPEG- und PNG-Dateien (oder der unter dem Cursor) entfernen. Die Dateien werden überschrieben.</value>
+  </data>
+  <data name="CmdDesc.5f35fd6a" xml:space="preserve">
+    <value>Die in linkem und rechtem Panel gezeigten Ordner vertauschen.</value>
+  </data>
+  <data name="CmdDesc.e4ae0c07" xml:space="preserve">
+    <value>Die Ordner der beiden Panels vergleichen und die Unterschiede hinüberkopieren, nachdem gezeigt wurde, was sich ändern würde.</value>
+  </data>
+  <data name="CmdDesc.4c8807b0" xml:space="preserve">
+    <value>Systeminformationen des aktuellen Rechners anzeigen.</value>
+  </data>
+  <data name="CmdDesc.1dccc52c" xml:space="preserve">
+    <value>Computername, Arbeitsgruppe, Umgebungsvariablen und Zeitzone ändern.</value>
+  </data>
+  <data name="CmdDesc.0d4c831b" xml:space="preserve">
+    <value>Hintergrundaufgaben und ihren Fortschritt anzeigen.</value>
+  </data>
+  <data name="CmdDesc.dd82d2ff" xml:space="preserve">
+    <value>Den Terminaldialog öffnen.</value>
+  </data>
+  <data name="CmdDesc.e0da83ca" xml:space="preserve">
+    <value>Das Farbschema wählen.</value>
+  </data>
+  <data name="CmdDesc.682ec499" xml:space="preserve">
+    <value>Die Aufgabenliste öffnen: Betreffs, Fälligkeitsdaten und Prioritäten, erledigte Aufgaben bleiben darunter.</value>
+  </data>
+  <data name="CmdDesc.24c1aa18" xml:space="preserve">
+    <value>Das Terminalpanel im Vollbild zeigen oder verbergen: Befehle laufen einzeln, ihre Ausgabe bleibt erhalten.</value>
+  </data>
+  <data name="CmdDesc.3fb63d44" xml:space="preserve">
+    <value>Die BitTorrent-Verwaltung öffnen: Magnet-Links und .torrent-Dateien laden, pausieren, fortsetzen und entfernen.</value>
+  </data>
+  <data name="CmdDesc.932217ca" xml:space="preserve">
+    <value>Den Übersetzer öffnen: eine Sprache erkennen und Text über eine Übersetzungs-API oder das verbundene KI-Modell übersetzen.</value>
+  </data>
+  <data name="CmdDesc.37b77193" xml:space="preserve">
+    <value>Den Einheitenumrechner öffnen (Länge, Masse, Temperatur und mehr).</value>
+  </data>
+  <data name="CmdDesc.bdbe9e9a" xml:space="preserve">
+    <value>Einen eigenen Befehl auf die Datei unter dem Cursor ausführen (das F2-Menü von mc).</value>
+  </data>
+  <data name="CmdDesc.59bf9cc1" xml:space="preserve">
+    <value>Die ausgewählte Datei im Viewer öffnen.</value>
+  </data>
+  <data name="CmdDesc.2e8c9462" xml:space="preserve">
+    <value>Virtuelle Maschinen starten, stoppen, pausieren, neu starten und ihre Konsolen öffnen.</value>
+  </data>
+  <data name="CmdDesc.8191e852" xml:space="preserve">
+    <value>Eine gesprochene Frage aufnehmen und in die KI-Eingabe tippen (Whisper, offline).</value>
+  </data>
+  <data name="CmdDesc.089189cb" xml:space="preserve">
+    <value>Den Webbrowser öffnen: ein Vollbild-Textbrowser mit Tabs, Lesezeichen, Verlauf, Suche und Formularen.</value>
+  </data>
+  <data name="CmdDesc.6a8f435b" xml:space="preserve">
+    <value>Die Arbeitsbereichsverwaltung öffnen: das Bildschirmlayout (beide Panels, ihre Sortierung und die untere Leiste) unter einem Namen speichern und zu jedem gespeicherten zurückwechseln.</value>
+  </data>
+  <data name="CmdDesc.148a10e2" xml:space="preserve">
+    <value>Den Namen der Datei unter dem Cursor in die Befehlszeile kopieren.</value>
+  </data>
+  <data name="CmdDesc.a9752744" xml:space="preserve">
+    <value>Die Namen der markierten Dateien (oder der Datei unter dem Cursor) in die Befehlszeile kopieren.</value>
+  </data>
+  <data name="CmdDesc.ce371dd0" xml:space="preserve">
+    <value>Den Pfad des in diesem Panel gezeigten Ordners in die Befehlszeile kopieren.</value>
+  </data>
+  <data name="CmdDesc.7de6874f" xml:space="preserve">
+    <value>Den Editor für die ausgewählte Datei wählen oder den festlegen, den F4 für solche Dateien verwendet.</value>
+  </data>
+  <data name="CmdDesc.758a1d81" xml:space="preserve">
+    <value>Das Programm zum Öffnen der ausgewählten Datei wählen oder das festlegen, das Enter für solche Dateien verwendet.</value>
+  </data>
+  <data name="CmdDesc.4fbb2ac8" xml:space="preserve">
+    <value>Die Dateien markieren, deren Namen zu einem Muster passen.</value>
+  </data>
+  <data name="CmdDesc.da630bcf" xml:space="preserve">
+    <value>Die Markierung der Dateien aufheben, deren Namen zu einem Muster passen.</value>
+  </data>
+  <data name="CmdDesc.528b9b74" xml:space="preserve">
+    <value>Die Zeile unter dem Cursor markieren oder die Markierung aufheben und nach unten gehen.</value>
+  </data>
+  <data name="CmdDesc.70f70296" xml:space="preserve">
+    <value>Die Zeile unter dem Cursor markieren oder die Markierung aufheben und nach oben gehen.</value>
+  </data>
 </root>

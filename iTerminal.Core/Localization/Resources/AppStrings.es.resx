@@ -4813,4 +4813,427 @@
   <data name="Translator.InputHeader" xml:space="preserve">
     <value>Texto</value>
   </data>
+  <data name="CmdDesc.fb899019" xml:space="preserve">
+    <value>Poner en el portapapeles los archivos y carpetas marcados, o el que está bajo el cursor, para pegarlos en esta aplicación u otro programa.</value>
+  </data>
+  <data name="CmdDesc.f13f518c" xml:space="preserve">
+    <value>Poner en el portapapeles los archivos y carpetas marcados, o el que está bajo el cursor, para moverlos adonde se peguen.</value>
+  </data>
+  <data name="CmdDesc.80bf9a22" xml:space="preserve">
+    <value>Copiar o mover los archivos del portapapeles a la carpeta que muestra este panel.</value>
+  </data>
+  <data name="CmdDesc.aec2e334" xml:space="preserve">
+    <value>Ejecutar el comando escrito en la línea de comandos, en la carpeta de este panel.</value>
+  </data>
+  <data name="CmdDesc.38e9dd82" xml:space="preserve">
+    <value>Reiniciar el contenedor de Docker bajo el cursor.</value>
+  </data>
+  <data name="CmdDesc.a833d933" xml:space="preserve">
+    <value>Iniciar el contenedor de Docker bajo el cursor, o detenerlo si está en ejecución.</value>
+  </data>
+  <data name="CmdDesc.f0199710" xml:space="preserve">
+    <value>Explorar los archivos de los contenedores de Docker en el panel activo; pulse de nuevo para volver.</value>
+  </data>
+  <data name="CmdDesc.4d727e92" xml:space="preserve">
+    <value>Explorar las ramas, etiquetas y commits de este repositorio como carpetas; pulse de nuevo para volver.</value>
+  </data>
+  <data name="CmdDesc.8886d79c" xml:space="preserve">
+    <value>Explorar los archivos eliminados en el panel activo, para restaurarlos o eliminarlos definitivamente; pulse de nuevo para volver.</value>
+  </data>
+  <data name="CmdDesc.00c3d78d" xml:space="preserve">
+    <value>Devolver los archivos eliminados seleccionados al lugar del que se eliminaron.</value>
+  </data>
+  <data name="CmdDesc.4a29b669" xml:space="preserve">
+    <value>Previsualizar el archivo bajo el cursor en el otro panel; pulse de nuevo para cerrar la vista previa.</value>
+  </data>
+  <data name="CmdDesc.a8e893de" xml:space="preserve">
+    <value>Mover el cursor una columna a la izquierda dentro de su fila.</value>
+  </data>
+  <data name="CmdDesc.b9f55e3f" xml:space="preserve">
+    <value>Mover el cursor una columna a la derecha dentro de su fila.</value>
+  </data>
+  <data name="CmdDesc.e5eb05a0" xml:space="preserve">
+    <value>Mostrar las entradas en varias columnas de nombres, o de nuevo en una sola.</value>
+  </data>
+  <data name="CmdDesc.f51143b0" xml:space="preserve">
+    <value>Quitar la marca de todas las filas del panel.</value>
+  </data>
+  <data name="CmdDesc.943e368e" xml:space="preserve">
+    <value>Marcar cada archivo sin marcar y desmarcar cada archivo marcado.</value>
+  </data>
+  <data name="CmdDesc.a6f633e5" xml:space="preserve">
+    <value>Marcar todos los archivos y carpetas del panel.</value>
+  </data>
+  <data name="CmdDesc.41e7c914" xml:space="preserve">
+    <value>Marcar o desmarcar la fila bajo el cursor y bajar una fila.</value>
+  </data>
+  <data name="CmdDesc.d67a9b85" xml:space="preserve">
+    <value>Abrir la carpeta de música seleccionada, o ejecutar lo que representa la fila seleccionada.</value>
+  </data>
+  <data name="CmdDesc.7926c8ad" xml:space="preserve">
+    <value>Copiar los artistas, álbumes o pistas marcados —o la fila bajo el cursor— del catálogo a la lista de reproducción.</value>
+  </data>
+  <data name="CmdDesc.73053b13" xml:space="preserve">
+    <value>Mostrar el catálogo de música y la lista de reproducción como los dos paneles de archivos.</value>
+  </data>
+  <data name="CmdDesc.62f33052" xml:space="preserve">
+    <value>Iniciar o pausar la reproducción sin salir de la carpeta actual.</value>
+  </data>
+  <data name="CmdDesc.94441ab1" xml:space="preserve">
+    <value>Subir el volumen de reproducción un 5 %.</value>
+  </data>
+  <data name="CmdDesc.919dae4f" xml:space="preserve">
+    <value>Bajar el volumen de reproducción un 5 %.</value>
+  </data>
+  <data name="CmdDesc.b2cf0726" xml:space="preserve">
+    <value>Quitar la pista seleccionada de la cola de reproducción. El archivo no se toca.</value>
+  </data>
+  <data name="CmdDesc.fddd7d8b" xml:space="preserve">
+    <value>Mostrar información de la aplicación y detalles de la versión.</value>
+  </data>
+  <data name="CmdDesc.40255d06" xml:space="preserve">
+    <value>Mostrar la configuración, el estado y los detalles de sesión del modelo de IA.</value>
+  </data>
+  <data name="CmdDesc.e9d16235" xml:space="preserve">
+    <value>Buscar, conectar, emparejar y olvidar dispositivos Bluetooth.</value>
+  </data>
+  <data name="CmdDesc.a083301c" xml:space="preserve">
+    <value>Calcular el tamaño de la carpeta bajo el cursor (o de las carpetas marcadas).</value>
+  </data>
+  <data name="CmdDesc.d5fc1b5b" xml:space="preserve">
+    <value>Abrir la calculadora (modos básico, científico y de programación).</value>
+  </data>
+  <data name="CmdDesc.021459f8" xml:space="preserve">
+    <value>Abrir el calendario del mes, con las reuniones del día.</value>
+  </data>
+  <data name="CmdDesc.f388f305" xml:space="preserve">
+    <value>Calcular el MD5, SHA-1, SHA-256 y SHA-512 del archivo seleccionado y compararlos con una suma de comprobación.</value>
+  </data>
+  <data name="CmdDesc.a82461e3" xml:space="preserve">
+    <value>Encontrar cualquier comando por su nombre y ejecutarlo; su tecla se muestra al lado.</value>
+  </data>
+  <data name="CmdDesc.057b971d" xml:space="preserve">
+    <value>Comparar las carpetas de los dos paneles, listar las diferencias y marcar lo que se debe copiar al otro lado.</value>
+  </data>
+  <data name="CmdDesc.5420f0c4" xml:space="preserve">
+    <value>Empaquetar los archivos y carpetas marcados, o el que está bajo el cursor, en un archivo nuevo o existente.</value>
+  </data>
+  <data name="CmdDesc.0ea98a07" xml:space="preserve">
+    <value>Abrir el administrador de contactos: nombres, correos electrónicos, teléfonos y empresas, con filtro.</value>
+  </data>
+  <data name="CmdDesc.ef464e93" xml:space="preserve">
+    <value>Copiar los archivos y carpetas marcados, o el que está bajo el cursor, a otra ubicación.</value>
+  </data>
+  <data name="CmdDesc.eb6ce6ec" xml:space="preserve">
+    <value>Crear un archivo nuevo y vacío en la carpeta actual.</value>
+  </data>
+  <data name="CmdDesc.652112bb" xml:space="preserve">
+    <value>Crear una carpeta nueva en la ubicación actual.</value>
+  </data>
+  <data name="CmdDesc.07df0ced" xml:space="preserve">
+    <value>Crear un enlace simbólico o físico al archivo o carpeta seleccionado.</value>
+  </data>
+  <data name="CmdDesc.4363c7ec" xml:space="preserve">
+    <value>Abrir el conversor de divisas: descargar los tipos de cambio actuales y convertir entre monedas.</value>
+  </data>
+  <data name="CmdDesc.2afe83cc" xml:space="preserve">
+    <value>Cambiar la barra bajo los paneles entre el indicador de IA y la línea de comandos del terminal.</value>
+  </data>
+  <data name="CmdDesc.6542e220" xml:space="preserve">
+    <value>Eliminar los archivos y carpetas marcados, o el que está bajo el cursor.</value>
+  </data>
+  <data name="CmdDesc.251ba63d" xml:space="preserve">
+    <value>Mostrar dos archivos lado a lado con sus diferencias: el archivo bajo el cursor frente al del otro panel, o dos archivos marcados.</value>
+  </data>
+  <data name="CmdDesc.709fa9f3" xml:space="preserve">
+    <value>Mostrar los discos disponibles y sus detalles.</value>
+  </data>
+  <data name="CmdDesc.94ee3b92" xml:space="preserve">
+    <value>Mostrar adónde fue el espacio bajo esta carpeta: cada nivel por tamaño, con barras.</value>
+  </data>
+  <data name="CmdDesc.33add7a4" xml:space="preserve">
+    <value>Buscar en la carpeta de documentos indexada y previsualizar su contenido.</value>
+  </data>
+  <data name="CmdDesc.71c816f1" xml:space="preserve">
+    <value>Encontrar archivos con contenido idéntico bajo esta carpeta, luego marcar y eliminar las copias sobrantes.</value>
+  </data>
+  <data name="CmdDesc.0445fdd8" xml:space="preserve">
+    <value>Cambiar el destino del enlace simbólico o físico seleccionado.</value>
+  </data>
+  <data name="CmdDesc.86d5c50c" xml:space="preserve">
+    <value>Abrir el archivo de texto seleccionado en el editor.</value>
+  </data>
+  <data name="CmdDesc.2c506e85" xml:space="preserve">
+    <value>Iniciar iTerminal de nuevo con derechos de administrador (root) y cerrar esta copia.</value>
+  </data>
+  <data name="CmdDesc.1d6919ca" xml:space="preserve">
+    <value>Ejecutar el programa bajo el cursor con derechos de administrador (root).</value>
+  </data>
+  <data name="CmdDesc.1866310e" xml:space="preserve">
+    <value>Abrir la enciclopedia: buscar un término en Wikipedia, Wikcionario y más, y leer el artículo.</value>
+  </data>
+  <data name="CmdDesc.f602a2c7" xml:space="preserve">
+    <value>Ver, añadir, cambiar y eliminar variables de entorno de esta sesión, del usuario o del equipo.</value>
+  </data>
+  <data name="CmdDesc.86cc06e0" xml:space="preserve">
+    <value>Ejecutar el programa seleccionado en el registro de comandos.</value>
+  </data>
+  <data name="CmdDesc.c821bfe7" xml:space="preserve">
+    <value>Descomprimir los archivos comprimidos marcados, o el que está bajo el cursor, en una carpeta.</value>
+  </data>
+  <data name="CmdDesc.85281618" xml:space="preserve">
+    <value>Cifrar los archivos marcados (o el que está bajo el cursor) con una frase de contraseña en archivos .enc separados, o descifrar archivos .enc.</value>
+  </data>
+  <data name="CmdDesc.9f9b5e79" xml:space="preserve">
+    <value>Dar un color y etiquetas a los archivos y carpetas marcados (o al que está bajo el cursor).</value>
+  </data>
+  <data name="CmdDesc.4e510244" xml:space="preserve">
+    <value>Buscar archivos por nombre y contenido; los resultados se pueden listar en un panel.</value>
+  </data>
+  <data name="CmdDesc.8ad8fe3f" xml:space="preserve">
+    <value>Encontrar los archivos de al menos 100 MB bajo la carpeta del panel.</value>
+  </data>
+  <data name="CmdDesc.bfbb3c05" xml:space="preserve">
+    <value>Encontrar los archivos sin cambios desde hace un año bajo la carpeta del panel.</value>
+  </data>
+  <data name="CmdDesc.d7281e69" xml:space="preserve">
+    <value>Abrir el selector de carpetas para saltar a otra unidad o carpeta.</value>
+  </data>
+  <data name="CmdDesc.8383ab8d" xml:space="preserve">
+    <value>Jugar al tres en raya contra el ordenador o un amigo.</value>
+  </data>
+  <data name="CmdDesc.de30c520" xml:space="preserve">
+    <value>Jugar al ajedrez contra el ordenador o un amigo.</value>
+  </data>
+  <data name="CmdDesc.a282a3ac" xml:space="preserve">
+    <value>Jugar al go (9x9, 13x13 o 19x19) contra el ordenador o un amigo.</value>
+  </data>
+  <data name="CmdDesc.72042987" xml:space="preserve">
+    <value>Jugar al molino contra el ordenador o un amigo.</value>
+  </data>
+  <data name="CmdDesc.6e61f7db" xml:space="preserve">
+    <value>Jugar a Snake: guiar la serpiente hasta la comida sin chocar con una pared ni consigo misma.</value>
+  </data>
+  <data name="CmdDesc.8213ddf1" xml:space="preserve">
+    <value>Jugar a Tetris: apilar las piezas que caen en filas completas.</value>
+  </data>
+  <data name="CmdDesc.9f0f2eb0" xml:space="preserve">
+    <value>Abrir el cliente de Git (archivos cambiados, preparación, historial de commits).</value>
+  </data>
+  <data name="CmdDesc.bcd8375e" xml:space="preserve">
+    <value>Traer el upstream de la rama actual y rebasar los commits locales sobre él (la carpeta del panel es un árbol de trabajo de git).</value>
+  </data>
+  <data name="CmdDesc.7ddd151d" xml:space="preserve">
+    <value>Traer el upstream de la rama actual con un rebase y luego enviar los commits locales (la carpeta del panel es un árbol de trabajo de git).</value>
+  </data>
+  <data name="CmdDesc.79b43e62" xml:space="preserve">
+    <value>Dirigir el panel activo a la ruta o URL escrita.</value>
+  </data>
+  <data name="CmdDesc.ed757203" xml:space="preserve">
+    <value>Crear un manifiesto al estilo SHA256SUMS para las filas marcadas o toda la carpeta, o verificar la carpeta contra uno.</value>
+  </data>
+  <data name="CmdDesc.2dd71192" xml:space="preserve">
+    <value>Abrir un shell interactivo donde está el panel activo: una carpeta local, un contenedor de Docker, un host SSH; exit vuelve.</value>
+  </data>
+  <data name="CmdDesc.2b34cda5" xml:space="preserve">
+    <value>Explorar un iPhone / iPad conectado y montarlo como unidad.</value>
+  </data>
+  <data name="CmdDesc.181870d9" xml:space="preserve">
+    <value>Mostrar solo los archivos con un color o una etiqueta en el panel. Cualquier color y una etiqueta vacía muestran todo.</value>
+  </data>
+  <data name="CmdDesc.7348d768" xml:space="preserve">
+    <value>Elegir el idioma de los menús, avisos y cuadros de diálogo: English, Deutsch, Français, Español, Italiano o Magyar.</value>
+  </data>
+  <data name="CmdDesc.d9b9654c" xml:space="preserve">
+    <value>Abrir el cliente de correo: bandeja de entrada (POP3), envío (SMTP) y libreta de direcciones (LDAP).</value>
+  </data>
+  <data name="CmdDesc.3e312e63" xml:space="preserve">
+    <value>Abrir el mapa: OpenStreetMap dibujado como arte ASCII, en línea o sin conexión, con zoom, desplazamiento y búsqueda de lugares.</value>
+  </data>
+  <data name="CmdDesc.ef0ceb82" xml:space="preserve">
+    <value>Montar el archivo ISO, VHD o VHDX bajo el cursor como unidad, o desmontarlo.</value>
+  </data>
+  <data name="CmdDesc.f09302c4" xml:space="preserve">
+    <value>Mover los archivos y carpetas marcados, o el que está bajo el cursor, a otra ubicación.</value>
+  </data>
+  <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
+    <value>Renombrar los archivos y carpetas marcados, o el que está bajo el cursor, según un patrón.</value>
+  </data>
+  <data name="CmdDesc.9ddb1617" xml:space="preserve">
+    <value>Abrir el archivo bajo el cursor como una carpeta (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG con 7-Zip).</value>
+  </data>
+  <data name="CmdDesc.4f25d89a" xml:space="preserve">
+    <value>Abrir la carpeta seleccionada o seguir la entrada superior.</value>
+  </data>
+  <data name="CmdDesc.d55dcd4f" xml:space="preserve">
+    <value>Ir a la carpeta superior de la ubicación actual.</value>
+  </data>
+  <data name="CmdDesc.05a68ca0" xml:space="preserve">
+    <value>Saltar a la raíz de la unidad o contenedor actual.</value>
+  </data>
+  <data name="CmdDesc.adc840e9" xml:space="preserve">
+    <value>Explorar y conectarse a hosts SSH/SMB de la red local.</value>
+  </data>
+  <data name="CmdDesc.eaff170f" xml:space="preserve">
+    <value>Mostrar las interfaces de red y sus detalles.</value>
+  </data>
+  <data name="CmdDesc.4081fc44" xml:space="preserve">
+    <value>Abrir el archivo seleccionado con el programa elegido para archivos como él.</value>
+  </data>
+  <data name="CmdDesc.0f8ffdd8" xml:space="preserve">
+    <value>Abrir el archivo seleccionado con el programa que el sistema asigna a su tipo, fuera de la aplicación.</value>
+  </data>
+  <data name="CmdDesc.4f26007b" xml:space="preserve">
+    <value>Abrir el administrador de paquetes (listar, instalar, desinstalar aplicaciones).</value>
+  </data>
+  <data name="CmdDesc.26098a96" xml:space="preserve">
+    <value>Abrir el administrador de contraseñas: todas las contraseñas guardadas de red, correo y servicios.</value>
+  </data>
+  <data name="CmdDesc.9ba1a714" xml:space="preserve">
+    <value>Puntuar la CPU, la memoria, el disco, la red y la latencia del temporizador de este equipo, con una puntuación global. Solo lee; nunca escribe en el disco.</value>
+  </data>
+  <data name="CmdDesc.11457f3b" xml:space="preserve">
+    <value>Imprimir el archivo bajo el cursor y gestionar la cola de impresión: retener, reanudar y cancelar trabajos.</value>
+  </data>
+  <data name="CmdDesc.dbf0a1c1" xml:space="preserve">
+    <value>Mostrar los procesos en ejecución.</value>
+  </data>
+  <data name="CmdDesc.9402ba07" xml:space="preserve">
+    <value>Mostrar el tamaño, las fechas y el destino del enlace de la entrada seleccionada, y cambiar sus atributos o permisos.</value>
+  </data>
+  <data name="CmdDesc.c4129160" xml:space="preserve">
+    <value>Recargar el contenido de la carpeta actual.</value>
+  </data>
+  <data name="CmdDesc.ef9d4cc1" xml:space="preserve">
+    <value>Abrir el administrador de conexiones remotas: hosts SSH y de comunicación remota de PowerShell guardados, cada uno a una pulsación de una sesión de terminal en vivo.</value>
+  </data>
+  <data name="CmdDesc.29b6f09c" xml:space="preserve">
+    <value>Renombrar el archivo o carpeta seleccionado.</value>
+  </data>
+  <data name="CmdDesc.34125f3b" xml:space="preserve">
+    <value>Instalar o actualizar los componentes que iTerminal descarga (Playwright y su Chromium).</value>
+  </data>
+  <data name="CmdDesc.b3dc4f7c" xml:space="preserve">
+    <value>Analizar los archivos y carpetas marcados (o el que está bajo el cursor) en busca de malware con Microsoft Defender.</value>
+  </data>
+  <data name="CmdDesc.4dc29860" xml:space="preserve">
+    <value>Mostrar y gestionar las pantallas abiertas.</value>
+  </data>
+  <data name="CmdDesc.8f7a1d59" xml:space="preserve">
+    <value>Sobrescribir y eliminar los archivos y carpetas marcados (o el que está bajo el cursor) para que no se puedan recuperar.</value>
+  </data>
+  <data name="CmdDesc.3c6d17b5" xml:space="preserve">
+    <value>Ir a la unidad bajo el cursor.</value>
+  </data>
+  <data name="CmdDesc.e710dca5" xml:space="preserve">
+    <value>Ir a la carpeta favorita bajo el cursor.</value>
+  </data>
+  <data name="CmdDesc.e547cb15" xml:space="preserve">
+    <value>Volver a la carpeta visitada bajo el cursor.</value>
+  </data>
+  <data name="CmdDesc.c12da6f4" xml:space="preserve">
+    <value>Ir a la carpeta especial o unidad virtual bajo el cursor.</value>
+  </data>
+  <data name="CmdDesc.3556d6f4" xml:space="preserve">
+    <value>Ir a la carpeta bajo el cursor en el árbol.</value>
+  </data>
+  <data name="CmdDesc.40713f76" xml:space="preserve">
+    <value>Abrir la configuración de la aplicación.</value>
+  </data>
+  <data name="CmdDesc.1b2c6360" xml:space="preserve">
+    <value>Comprobar las firmas del archivo bajo el cursor (OpenPGP, Authenticode, archivo de clave) y firmarlo.</value>
+  </data>
+  <data name="CmdDesc.4f6046fa" xml:space="preserve">
+    <value>Ordenar las filas del panel por nombre, extensión, tamaño o fecha, en cualquier sentido.</value>
+  </data>
+  <data name="CmdDesc.6b4bbacf" xml:space="preserve">
+    <value>Abrir el explorador de acciones: precios en vivo de una lista de seguimiento, con acciones de cualquier bolsa para añadir y quitar.</value>
+  </data>
+  <data name="CmdDesc.88f43dfe" xml:space="preserve">
+    <value>Listar, previsualizar y eliminar los flujos de datos alternativos (Windows) o atributos extendidos (Linux, macOS) de la entrada bajo el cursor.</value>
+  </data>
+  <data name="CmdDesc.4e765e19" xml:space="preserve">
+    <value>Quitar el texto de cámara, GPS, autor y comentarios de los archivos JPEG y PNG marcados (o del que está bajo el cursor). Los archivos se sobrescriben.</value>
+  </data>
+  <data name="CmdDesc.5f35fd6a" xml:space="preserve">
+    <value>Intercambiar las carpetas mostradas en los paneles izquierdo y derecho.</value>
+  </data>
+  <data name="CmdDesc.e4ae0c07" xml:space="preserve">
+    <value>Comparar las carpetas de los dos paneles y copiar las diferencias al otro lado, tras mostrar qué cambiaría.</value>
+  </data>
+  <data name="CmdDesc.4c8807b0" xml:space="preserve">
+    <value>Mostrar la información del sistema del equipo actual.</value>
+  </data>
+  <data name="CmdDesc.1dccc52c" xml:space="preserve">
+    <value>Cambiar el nombre del equipo, el grupo de trabajo, las variables de entorno y la zona horaria.</value>
+  </data>
+  <data name="CmdDesc.0d4c831b" xml:space="preserve">
+    <value>Mostrar las tareas en segundo plano y su progreso.</value>
+  </data>
+  <data name="CmdDesc.dd82d2ff" xml:space="preserve">
+    <value>Abrir el cuadro de diálogo del terminal.</value>
+  </data>
+  <data name="CmdDesc.e0da83ca" xml:space="preserve">
+    <value>Elegir el tema de color.</value>
+  </data>
+  <data name="CmdDesc.682ec499" xml:space="preserve">
+    <value>Abrir la lista de tareas: asuntos, fechas de vencimiento y prioridades, con las tareas hechas debajo.</value>
+  </data>
+  <data name="CmdDesc.24c1aa18" xml:space="preserve">
+    <value>Mostrar u ocultar el panel del terminal a pantalla completa: los comandos se ejecutan de uno en uno y su salida se conserva.</value>
+  </data>
+  <data name="CmdDesc.3fb63d44" xml:space="preserve">
+    <value>Abrir el administrador de BitTorrent: descargar enlaces magnet y archivos .torrent, pausarlos, reanudarlos y quitarlos.</value>
+  </data>
+  <data name="CmdDesc.932217ca" xml:space="preserve">
+    <value>Abrir el traductor: detectar un idioma y traducir texto mediante una API de traducción o el modelo de IA conectado.</value>
+  </data>
+  <data name="CmdDesc.37b77193" xml:space="preserve">
+    <value>Abrir el conversor de unidades (longitud, masa, temperatura y más).</value>
+  </data>
+  <data name="CmdDesc.bdbe9e9a" xml:space="preserve">
+    <value>Ejecutar uno de sus propios comandos sobre el archivo bajo el cursor (el menú F2 de mc).</value>
+  </data>
+  <data name="CmdDesc.59bf9cc1" xml:space="preserve">
+    <value>Abrir el archivo seleccionado en el visor.</value>
+  </data>
+  <data name="CmdDesc.2e8c9462" xml:space="preserve">
+    <value>Iniciar, detener, pausar, reiniciar y abrir las consolas de las máquinas virtuales.</value>
+  </data>
+  <data name="CmdDesc.8191e852" xml:space="preserve">
+    <value>Grabar una pregunta hablada y escribirla en el indicador de IA (Whisper, sin conexión).</value>
+  </data>
+  <data name="CmdDesc.089189cb" xml:space="preserve">
+    <value>Abrir el navegador web: un navegador en modo texto a pantalla completa con pestañas, marcadores, historial, búsqueda y formularios.</value>
+  </data>
+  <data name="CmdDesc.6a8f435b" xml:space="preserve">
+    <value>Abrir el administrador de espacios de trabajo: guardar la disposición de la pantalla (ambos paneles, su orden y la barra inferior) con un nombre, y volver a cualquiera guardado.</value>
+  </data>
+  <data name="CmdDesc.148a10e2" xml:space="preserve">
+    <value>Copiar el nombre del archivo bajo el cursor a la línea de comandos.</value>
+  </data>
+  <data name="CmdDesc.a9752744" xml:space="preserve">
+    <value>Copiar los nombres de los archivos marcados (o del archivo bajo el cursor) a la línea de comandos.</value>
+  </data>
+  <data name="CmdDesc.ce371dd0" xml:space="preserve">
+    <value>Copiar la ruta de la carpeta que muestra este panel a la línea de comandos.</value>
+  </data>
+  <data name="CmdDesc.7de6874f" xml:space="preserve">
+    <value>Elegir el editor del archivo seleccionado, o fijar el que usa F4 para archivos como él.</value>
+  </data>
+  <data name="CmdDesc.758a1d81" xml:space="preserve">
+    <value>Elegir el programa con el que abrir el archivo seleccionado, o fijar el que usa Enter para archivos como él.</value>
+  </data>
+  <data name="CmdDesc.4fbb2ac8" xml:space="preserve">
+    <value>Marcar los archivos cuyos nombres coinciden con un patrón.</value>
+  </data>
+  <data name="CmdDesc.da630bcf" xml:space="preserve">
+    <value>Quitar la marca de los archivos cuyos nombres coinciden con un patrón.</value>
+  </data>
+  <data name="CmdDesc.528b9b74" xml:space="preserve">
+    <value>Marcar o desmarcar la fila bajo el cursor y bajar.</value>
+  </data>
+  <data name="CmdDesc.70f70296" xml:space="preserve">
+    <value>Marcar o desmarcar la fila bajo el cursor y subir.</value>
+  </data>
 </root>

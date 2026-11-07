@@ -32,6 +32,26 @@ public static class UiText
     public static string Get(string key, string fallback) =>
         Current is { } localizer && localizer.TryGet(key, out string value) && !string.IsNullOrEmpty(value) ? value : fallback;
 
+    /// <summary>
+    /// A command's one-sentence description in the chosen language. There are well over a hundred of them and each is
+    /// written once, as an English literal in its command; the translations are found by the text itself, under
+    /// <c>CmdDesc.</c> and the first eight hex digits of the SHA-256 of the English sentence, so no command carries a
+    /// key. A sentence no language has comes back as it was.
+    /// </summary>
+    public static string Describe(string english)
+    {
+        if (string.IsNullOrWhiteSpace(english))
+        {
+            return english;
+        }
+
+        return Get(DescriptionKey(english), english);
+    }
+
+    /// <summary>The resource key of a command description: <c>CmdDesc.</c> and eight hex digits of its SHA-256.</summary>
+    public static string DescriptionKey(string english) =>
+        "CmdDesc." + Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(english.Trim())))[..8].ToLowerInvariant();
+
     private sealed record ScopedLocalizer(ILocalizer? Localizer);
 
     private sealed class LanguageScope(ScopedLocalizer? previous) : IDisposable
