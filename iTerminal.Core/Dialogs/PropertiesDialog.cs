@@ -102,9 +102,12 @@ public class PropertiesDialog : FormDialog
         _checkBoxSystem = new CheckBox(themeService) { Label = UiText.Get("Field.System", "System") };
         _checkBoxArchive = new CheckBox(themeService) { Label = UiText.Get("Field.Archive", "Archive") };
         _textBoxMode = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.ModeOctal", "Mode (octal)") };
-        _textBoxCreated = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Created", "Created") };
-        _textBoxModified = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Modified", "Modified") };
-        _textBoxAccessed = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Accessed", "Accessed") };
+        // The three date boxes are labelled to the same width, so their fields start in one column instead of three.
+        string createdLabel = UiText.Get("Field.Created", "Created"), modifiedLabel = UiText.Get("Field.Modified", "Modified"), accessedLabel = UiText.Get("Field.Accessed", "Accessed");
+        int dateLabelWidth = Math.Max(createdLabel.Length, Math.Max(modifiedLabel.Length, accessedLabel.Length));
+        _textBoxCreated = new TextBox(beepService, dateTimeProviderService, themeService) { Label = createdLabel.PadLeft(dateLabelWidth) };
+        _textBoxModified = new TextBox(beepService, dateTimeProviderService, themeService) { Label = modifiedLabel.PadLeft(dateLabelWidth) };
+        _textBoxAccessed = new TextBox(beepService, dateTimeProviderService, themeService) { Label = accessedLabel.PadLeft(dateLabelWidth) };
         _errorLabel = new Label(string.Empty, themeService);
         _applyButton = new Button(iConsole.Localization.UiText.Get("Common.Apply", "Apply"), applyCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);

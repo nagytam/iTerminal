@@ -122,6 +122,39 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    [DataRow("Shift+F2", "Delete what the target", false)]
+    [DataRow("Ctrl+Shift+E", "Writes name.enc beside", true)]
+    [DataRow("Ctrl+W", "Set up an account", false)]
+    public async Task ALineTooLongForTheDialogOn60Columns_EndsOnAnEllipsis(string chord, string start, bool needsAFile)
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+        if (needsAFile)
+        {
+            await narrow.SelectEntryAsync("readme.txt");
+        }
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(start) && l.Contains('…')), $"the line starting \"{start}\" to end on an ellipsis");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheChessRulesOn20Rows_EndOnAnEllipsisInsteadOfASentenceCutInTheAir()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Shift+F1");
+        await narrow.WaitForTextAsync("Run:");
+        await narrow.TypeAsync("Chess");
+        await narrow.PressAsync("Enter");
+
+        await narrow.WaitForTextAsync("against the computer");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Select a piece") && l.Contains('…')), "the rules, cut at a clear ellipsis");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheStocksOn60Columns_ShowTheCompanyNameInsteadOfThreeLetters()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
@@ -179,5 +212,20 @@ public class SmallScreenDialogsTest
 
         await narrow.WaitForTextAsync("System Settings");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("restart.")), "the end of the note about a restart");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheDateBoxesOfTheProperties_StartInOneColumn()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+
+        await app.PressAsync("Ctrl+F12");
+
+        await app.WaitForTextAsync("Properties of readme.txt");
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Modified: [")) && s.Lines.Any(l => l.Contains("Accessed: [")), "the date boxes");
+        int[] columns = [.. app.Screen.Lines.Where(l => l.Contains("Modified: [") || l.Contains("Accessed: [") || l.Contains("Created: [")).Select(l => l.IndexOf('['))];
+        Assert.IsTrue(columns.Length >= 2 && columns.Distinct().Count() == 1, app.Screen.Dump());
     }
 }

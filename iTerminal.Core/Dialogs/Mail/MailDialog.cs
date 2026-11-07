@@ -944,6 +944,9 @@ public class MailDialog : Dialog
     /// <summary>A text in the chosen language, with its arguments filled in.</summary>
     private static string Say(string key, string english, params object[] args) => string.Format(UiText.Get(key, english), args);
 
+    /// <summary>A line that does not fit ends on an ellipsis: cut at the edge, "address book s" stopped in the air.</summary>
+    private static string Ellipsize(string text, int width) => width > 1 && text.Length > width ? text[..(width - 1)] + "…" : text;
+
     private void SetStatus(string text, bool isError)
     {
         _status = text;
@@ -999,7 +1002,7 @@ public class MailDialog : Dialog
             }
 
             var statusColor = _statusIsError ? colorScheme.Error : Color.Cyan;
-            Put(buffer, 1, ih - 2, iw - 2, _status, statusColor, colorScheme.Background);
+            Put(buffer, 1, ih - 2, iw - 2, Ellipsize(_status, iw - 2), statusColor, colorScheme.Background);
             Put(buffer, 1, ih - 1, iw - 2, Hints().FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
         }
     }

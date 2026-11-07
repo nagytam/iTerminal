@@ -87,7 +87,14 @@ public class CheckBox : Control, IReadOnly
         var colorScheme = ThemeService.CurrentColorScheme;
         var line = IsChecked ? CheckedText : UncheckedText;
         line += Label;
-        line = line.PadRight((int)ViewSize.Width);
+        int width = (int)ViewSize.Width;
+        if (width > 1 && line.Length > width)
+        {
+            // A label that does not fit ends on an ellipsis: cut at the edge, "(one-way sync only)" just stopped.
+            line = line[..(width - 1)] + "…";
+        }
+
+        line = line.PadRight(width);
         // Read-only draws in the disabled colours, as RadioButton does: a box that looks live but
         // ignores Space reads as broken. It is not struck through — the value is still meaningful.
         var visualState = IsReadOnly && IsEnabled ? VisualState.Disabled : GetVisualState();
