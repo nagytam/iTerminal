@@ -29,15 +29,18 @@ public class StockBrowserDialog : SplitPaneDialog
     private const int ChangeWidth = 10;
     private const int PercentWidth = 9;
     private const int ExchangeWidth = 14;
+    private const int MinNameWidth = 14;
 
     internal sealed record StockRow(WatchedStock Stock, StockQuote? Quote);
 
     /// <summary>One layout for the rows and the headings above them.</summary>
     internal static string FormatColumns(string symbol, string name, string price, string change, string percent, string exchange, int width)
     {
-        var nameWidth = Math.Max(4, width - 1 - SymbolWidth - PriceWidth - ChangeWidth - PercentWidth - ExchangeWidth - 5);
+        // The exchange is the first column to go: on a narrow dialog it left the company name 3 characters ("Nam").
+        var withExchange = width - 1 - SymbolWidth - PriceWidth - ChangeWidth - PercentWidth - ExchangeWidth - 5 >= MinNameWidth;
+        var nameWidth = Math.Max(4, width - 1 - SymbolWidth - PriceWidth - ChangeWidth - PercentWidth - (withExchange ? ExchangeWidth + 5 : 3));
         var text = " " + Cut(symbol, SymbolWidth - 1).PadRight(SymbolWidth) + Cut(name, nameWidth - 1).PadRight(nameWidth)
-            + $" {price,PriceWidth} {change,ChangeWidth} {percent,PercentWidth}  " + Cut(exchange, ExchangeWidth - 2);
+            + $" {price,PriceWidth} {change,ChangeWidth} {percent,PercentWidth}" + (withExchange ? "  " + Cut(exchange, ExchangeWidth - 2) : string.Empty);
         return Cut(text, width);
     }
 

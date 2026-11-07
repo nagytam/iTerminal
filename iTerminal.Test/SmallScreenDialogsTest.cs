@@ -103,4 +103,44 @@ public class SmallScreenDialogsTest
         await narrow.WaitForTextAsync("BitTorrent");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Esc close")), "the hint that closes the dialog, whole");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Ctrl+D", "Calendar", "N: add a meeting")]
+    [DataRow("Ctrl+Y", "Tasks", "N: new task")]
+    public async Task TheCalendarAndTheTaskListOn20Rows_KeepTheirPromptAndHintsInsideTheFrame(string chord, string title, string prompt)
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitForTextAsync(title);
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(prompt)) && s.Lines.Any(l => l.Contains("Esc close")), "the prompt and the hint that closes the dialog");
+        string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
+        Assert.IsTrue(last.TrimStart().StartsWith('╚') && !last.Contains(prompt), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheStocksOn60Columns_ShowTheCompanyNameInsteadOfThreeLetters()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Alt+F7");
+
+        await narrow.WaitForTextAsync("Stocks");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("AAPL") && l.Contains("AAPL Inc") && l.Contains("100.00")), "the whole company name in the table row, beside the symbol and the price");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheBluetoothAddressesOn60Columns_AreShownInFull()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Ctrl+Shift+J");
+
+        await narrow.WaitForTextAsync("Bluetooth devices");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("00:11:22:33:44:55")), "a whole 17-character address");
+    }
 }
