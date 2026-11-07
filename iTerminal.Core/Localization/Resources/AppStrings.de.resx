@@ -4705,4 +4705,79 @@
   <data name="Elevation.NotRestarted" xml:space="preserve">
     <value>Nicht als Administrator neu gestartet</value>
   </data>
+  <data name="WebHelp.00" xml:space="preserve">
+    <value>Webbrowser</value>
+  </data>
+  <data name="WebHelp.02" xml:space="preserve">
+    <value>Navigation</value>
+  </data>
+  <data name="WebHelp.03" xml:space="preserve">
+    <value>  Ctrl+L, F6          Adressleiste: Adresse, Dateipfad oder Suchbegriffe eingeben</value>
+  </data>
+  <data name="WebHelp.04" xml:space="preserve">
+    <value>  Alt+Left, Backspace Zurück            Alt+Right, Shift+Backspace  Vor</value>
+  </data>
+  <data name="WebHelp.05" xml:space="preserve">
+    <value>  F5, Ctrl+R          Neu laden         Alt+Home                    Startseite</value>
+  </data>
+  <data name="WebHelp.06" xml:space="preserve">
+    <value>  Esc                 Laden abbrechen; lädt nichts, den Browser schließen</value>
+  </data>
+  <data name="WebHelp.08" xml:space="preserve">
+    <value>Seite</value>
+  </data>
+  <data name="WebHelp.09" xml:space="preserve">
+    <value>  Up Down PgUp PgDn Home End, Mausrad   Scrollen</value>
+  </data>
+  <data name="WebHelp.10" xml:space="preserve">
+    <value>  Tab, Shift+Tab      Nächster / vorheriger Link oder Formularelement</value>
+  </data>
+  <data name="WebHelp.11" xml:space="preserve">
+    <value>  Enter               Link folgen, Schaltfläche drücken, Textfeld bearbeiten, Liste öffnen</value>
+  </data>
+  <data name="WebHelp.12" xml:space="preserve">
+    <value>  Ctrl+Enter          Link in neuem Tab öffnen</value>
+  </data>
+  <data name="WebHelp.13" xml:space="preserve">
+    <value>  Space               Kontrollkästchen setzen oder Optionsfeld wählen; sonst eine Seite nach unten</value>
+  </data>
+  <data name="WebHelp.14" xml:space="preserve">
+    <value>  Left, Right         Vorherige / nächste Option einer Dropdown-Liste wählen</value>
+  </data>
+  <data name="WebHelp.15" xml:space="preserve">
+    <value>  Ctrl+F, /           Auf Seite suchen    F3, n  nächster Treffer    Shift+F3, N  vorheriger Treffer</value>
+  </data>
+  <data name="WebHelp.16" xml:space="preserve">
+    <value>  F9                  Seitenquelltext / gerenderte Seite anzeigen</value>
+  </data>
+  <data name="WebHelp.17" xml:space="preserve">
+    <value>  F7                  Seite (oder die Datei, die sie ist) im Download-Ordner speichern</value>
+  </data>
+  <data name="WebHelp.19" xml:space="preserve">
+    <value>Tabs, Lesezeichen und Verlauf</value>
+  </data>
+  <data name="WebHelp.20" xml:space="preserve">
+    <value>  Ctrl+T              Neuer Tab         Ctrl+W                      Tab schließen</value>
+  </data>
+  <data name="WebHelp.21" xml:space="preserve">
+    <value>  Ctrl+PgDn, Ctrl+Tab Nächster Tab      Ctrl+PgUp, Ctrl+Shift+Tab   Vorheriger Tab   Alt+1…9  Zu Tab</value>
+  </data>
+  <data name="WebHelp.22" xml:space="preserve">
+    <value>  Ctrl+D              Seite als Lesezeichen speichern oder Lesezeichen entfernen</value>
+  </data>
+  <data name="WebHelp.23" xml:space="preserve">
+    <value>  F2                  Lesezeichen       F4                          Verlauf (Entf löscht einen Eintrag)</value>
+  </data>
+  <data name="WebHelp.25" xml:space="preserve">
+    <value>In einem Textfeld</value>
+  </data>
+  <data name="WebHelp.26" xml:space="preserve">
+    <value>  Tippen zum Bearbeiten; Enter sendet das Formular; Tab geht weiter; Esc beendet das Bearbeiten; Ctrl+U leert es.</value>
+  </data>
+  <data name="WebHelp.28" xml:space="preserve">
+    <value>Nicht unterstützt: JavaScript, CSS-Layout, Bilder, Plug-ins. Text wird fließend dargestellt, Tabellen als Spalten.</value>
+  </data>
+  <data name="WebHelp.30" xml:space="preserve">
+    <value>Zum Zurückgehen eine beliebige Taste drücken.</value>
+  </data>
 </root>

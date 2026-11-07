@@ -4705,4 +4705,79 @@
   <data name="Elevation.NotRestarted" xml:space="preserve">
     <value>Non riavviato come amministratore</value>
   </data>
+  <data name="WebHelp.00" xml:space="preserve">
+    <value>Browser web</value>
+  </data>
+  <data name="WebHelp.02" xml:space="preserve">
+    <value>Navigazione</value>
+  </data>
+  <data name="WebHelp.03" xml:space="preserve">
+    <value>  Ctrl+L, F6          Barra degli indirizzi: digita un indirizzo, un percorso o parole da cercare</value>
+  </data>
+  <data name="WebHelp.04" xml:space="preserve">
+    <value>  Alt+Left, Backspace Indietro          Alt+Right, Shift+Backspace  Avanti</value>
+  </data>
+  <data name="WebHelp.05" xml:space="preserve">
+    <value>  F5, Ctrl+R          Ricarica          Alt+Home                    Pagina iniziale</value>
+  </data>
+  <data name="WebHelp.06" xml:space="preserve">
+    <value>  Esc                 Interrompi il caricamento; se non carica nulla, chiudi il browser</value>
+  </data>
+  <data name="WebHelp.08" xml:space="preserve">
+    <value>Pagina</value>
+  </data>
+  <data name="WebHelp.09" xml:space="preserve">
+    <value>  Up Down PgUp PgDn Home End, rotellina   Scorri</value>
+  </data>
+  <data name="WebHelp.10" xml:space="preserve">
+    <value>  Tab, Shift+Tab      Collegamento o controllo del modulo successivo / precedente</value>
+  </data>
+  <data name="WebHelp.11" xml:space="preserve">
+    <value>  Enter               Segui il collegamento, premi il pulsante, modifica la casella di testo, apri l’elenco</value>
+  </data>
+  <data name="WebHelp.12" xml:space="preserve">
+    <value>  Ctrl+Enter          Apri il collegamento in una nuova scheda</value>
+  </data>
+  <data name="WebHelp.13" xml:space="preserve">
+    <value>  Space               Spunta una casella o scegli un’opzione; altrimenti pagina giù</value>
+  </data>
+  <data name="WebHelp.14" xml:space="preserve">
+    <value>  Left, Right         Scegli l’opzione precedente / successiva di un elenco a discesa</value>
+  </data>
+  <data name="WebHelp.15" xml:space="preserve">
+    <value>  Ctrl+F, /           Trova nella pagina    F3, n  successivo    Shift+F3, N  precedente</value>
+  </data>
+  <data name="WebHelp.16" xml:space="preserve">
+    <value>  F9                  Mostra il sorgente della pagina / la pagina renderizzata</value>
+  </data>
+  <data name="WebHelp.17" xml:space="preserve">
+    <value>  F7                  Salva la pagina (o il file che è) nella cartella dei download</value>
+  </data>
+  <data name="WebHelp.19" xml:space="preserve">
+    <value>Schede, segnalibri e cronologia</value>
+  </data>
+  <data name="WebHelp.20" xml:space="preserve">
+    <value>  Ctrl+T              Nuova scheda      Ctrl+W                      Chiudi scheda</value>
+  </data>
+  <data name="WebHelp.21" xml:space="preserve">
+    <value>  Ctrl+PgDn, Ctrl+Tab Scheda successiva Ctrl+PgUp, Ctrl+Shift+Tab   Scheda precedente Alt+1…9 Vai alla scheda</value>
+  </data>
+  <data name="WebHelp.22" xml:space="preserve">
+    <value>  Ctrl+D              Aggiungi questa pagina ai segnalibri, o rimuovi il segnalibro</value>
+  </data>
+  <data name="WebHelp.23" xml:space="preserve">
+    <value>  F2                  Segnalibri        F4                          Cronologia (Canc rimuove una voce)</value>
+  </data>
+  <data name="WebHelp.25" xml:space="preserve">
+    <value>In una casella di testo</value>
+  </data>
+  <data name="WebHelp.26" xml:space="preserve">
+    <value>  Digita per modificare; Invio invia il modulo; Tab passa oltre; Esc termina la modifica; Ctrl+U cancella.</value>
+  </data>
+  <data name="WebHelp.28" xml:space="preserve">
+    <value>Non supportati: JavaScript, layout CSS, immagini, plug-in. Il testo scorre liberamente, le tabelle sono colonne.</value>
+  </data>
+  <data name="WebHelp.30" xml:space="preserve">
+    <value>Premi un tasto qualsiasi per tornare indietro.</value>
+  </data>
 </root>
