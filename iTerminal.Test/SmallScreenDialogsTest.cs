@@ -140,6 +140,23 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task TheFolderSelectorsTabsOn18Rows_StayInsideTheDialogsFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+
+        await narrow.PressAsync("Ctrl+F1");
+
+        await narrow.WaitForTextAsync("Folder Selector");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("6-Path")), "the last tab name");
+        string[] lines = narrow.Screen.Lines.ToArray();
+        int lastTab = Array.FindIndex(lines, l => l.Contains("6-Path"));
+        int footer = Array.FindIndex(lines, l => l.Contains("Esc cancel"));
+        Assert.IsTrue(footer > lastTab, "the dialog's bottom border must come after the last tab name\n" + narrow.Screen.Dump());
+        Assert.IsFalse(lines.Skip(footer + 1).Any(l => l.Contains("╠") || l.Contains("-Path")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheUnitConvertersCategoriesOn50Columns_DoNotTouchTheFirstUnitColumn()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
