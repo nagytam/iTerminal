@@ -208,12 +208,15 @@ public class TranslatorDialog : SplitPaneDialog
         if (iw > 0 && ih > 0)
         {
             int boxWidth = Math.Max(10, (iw - 2) / 3);
+            // "Detect language" is the longest entry the source box starts with and was cut to "Detect langua" at three
+            // equal widths, so it takes a little more while the engine box keeps room for its own names.
+            int fromWidth = boxWidth + 4 <= iw - boxWidth - 2 - 10 ? boxWidth + 4 : boxWidth;
             _from.Position = new Position(1, 1);
-            _from.ViewSize = new Size(boxWidth, 1);
-            _to.Position = new Position(1 + boxWidth + 1, 1);
+            _from.ViewSize = new Size(fromWidth, 1);
+            _to.Position = new Position(1 + fromWidth + 1, 1);
             _to.ViewSize = new Size(boxWidth, 1);
-            _engine.Position = new Position(1 + (boxWidth + 1) * 2, 1);
-            _engine.ViewSize = new Size(Math.Max(10, iw - (boxWidth + 1) * 2), 1);
+            _engine.Position = new Position(1 + fromWidth + 1 + boxWidth + 1, 1);
+            _engine.ViewSize = new Size(Math.Max(10, iw - (fromWidth + boxWidth + 2)), 1);
 
             int paneHeight = Math.Max(1, ih - 5);
             int leftWidth = Math.Max(1, (iw - 1) / 2);
