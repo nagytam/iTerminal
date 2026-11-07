@@ -99,7 +99,7 @@ public class IPhoneBrowserDialog : Dialog
             }
             catch (Exception exception)
             {
-                _status = $"Device scan error: {exception.Message}";
+                _status = string.Format(iConsole.Localization.UiText.Get("IPhone.ScanError", "Device scan error: {0}"), exception.Message);
                 _statusIsError = true;
                 _listBox.EmptyText = string.Empty;
             }
@@ -134,7 +134,7 @@ public class IPhoneBrowserDialog : Dialog
             return;
         }
 
-        _status = $"Opening {device.Name}...";
+        _status = string.Format(iConsole.Localization.UiText.Get("IPhone.Opening", "Opening {0}..."), device.Name);
         _statusIsError = false;
         StateHasChanged();
 
@@ -145,7 +145,7 @@ public class IPhoneBrowserDialog : Dialog
         }
         catch (Exception exception)
         {
-            _status = $"Could not open {device.Name}: {exception.Message}";
+            _status = string.Format(iConsole.Localization.UiText.Get("IPhone.OpenFailed", "Could not open {0}: {1}"), device.Name, exception.Message);
             _statusIsError = true;
             StateHasChanged();
         }

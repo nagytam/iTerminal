@@ -410,18 +410,18 @@ public class MapDialog : Dialog
 
         if (!MapProjection.TryParseCoordinates(query, out _, out _) && !_model.Online)
         {
-            _status = "Searching for a name needs the network. Press O to go online, or type coordinates.";
+            _status = iConsole.Localization.UiText.Get("Map.NeedsNetwork", "Searching for a name needs the network. Press O to go online, or type coordinates.");
             return;
         }
 
         if (_searching)
         {
-            _status = "A search is already running.";
+            _status = iConsole.Localization.UiText.Get("Map.SearchRunning", "A search is already running.");
             return;
         }
 
         _searching = true;
-        _status = $"Searching for “{query}”…";
+        _status = string.Format(iConsole.Localization.UiText.Get("Map.Searching", "Searching for “{0}”…"), query);
         _ = Task.Run(async () =>
         {
             try
@@ -447,7 +447,7 @@ public class MapDialog : Dialog
 
         if (outcome.Places.Count == 0)
         {
-            _status = $"Nothing found for “{outcome.Query}”.";
+            _status = string.Format(iConsole.Localization.UiText.Get("Map.NothingFound", "Nothing found for “{0}”."), outcome.Query);
             return;
         }
 
@@ -481,7 +481,7 @@ public class MapDialog : Dialog
         _listScroll = 0;
         if (_list.Count == 0)
         {
-            _status = "No saved places yet. Press M to save the centre of the map.";
+            _status = iConsole.Localization.UiText.Get("Map.NoPlaces", "No saved places yet. Press M to save the centre of the map.");
             return;
         }
 
@@ -507,7 +507,7 @@ public class MapDialog : Dialog
             ? last.Name
             : MapProjection.FormatCoordinates(_model.Latitude, _model.Longitude);
         _model.Store.AddPlace(new MapPlace(name, _model.Latitude, _model.Longitude));
-        _status = "Saved: " + name;
+        _status = string.Format(iConsole.Localization.UiText.Get("Map.Saved", "Saved: {0}"), name);
     }
 
     private bool HandleListKey(KeyEvent key)
@@ -559,7 +559,7 @@ public class MapDialog : Dialog
                 return true;
             case ConsoleKey.Delete when _listKind == ListKind.Places && _list.Count > 0:
                 _confirmingRemovePlace = true;
-                _status = $"Remove the saved place \"{_list[_listIndex].Name}\"? (y/n)";
+                _status = string.Format(iConsole.Localization.UiText.Get("Map.RemovePlace", "Remove the saved place \"{0}\"? (y/n)"), _list[_listIndex].Name);
                 return true;
             default:
                 return true;

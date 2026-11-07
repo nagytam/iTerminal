@@ -108,7 +108,7 @@ public class SystemSettingsDialog : Dialog
     {
         await base.OnInitializeAsync();
         ApplyInputVisibility();
-        _message = "Reading the system settings…";
+        _message = iConsole.Localization.UiText.Get("SysSettings.Reading", "Reading the system settings…");
         Render();
         LoadTask = Task.Run(async () =>
         {
@@ -125,7 +125,7 @@ public class SystemSettingsDialog : Dialog
             {
                 // Said on the dialog. Left alone, "Reading the system settings…" and the "Reading…" rows stayed for ever.
                 _loadFailed = true;
-                _message = $"Could not read the system settings: {exception.Message}";
+                _message = string.Format(iConsole.Localization.UiText.Get("SysSettings.ReadFailed", "Could not read the system settings: {0}"), exception.Message);
                 _messageIsError = true;
                 Render();
             }
