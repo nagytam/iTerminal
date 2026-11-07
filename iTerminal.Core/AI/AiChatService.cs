@@ -15,14 +15,20 @@ public class AiChatService : IAiChatService
     private readonly IUiService _uiService;
     private readonly AiOptions _aiOptions;
     private readonly List<AITool> _tools;
+    private readonly AiPanelTools _panelTools;
 
     private static readonly string SystemPrompt =
         "You are an AI assistant integrated into iTerminal, a TUI file manager. " +
         "You can navigate file panels, control panel layout, and open dialogs. " +
+        "You can also read, mark, sort and filter the two file panels, copy, move, rename, create and delete files, compress and extract archives, and compare or synchronise the two folders through them; " +
+        "panel tools take panel = left, right, focused or other. " +
+        "Look at a panel (get_panel_state, list_panel_entries) before acting on it. " +
+        "Never delete or synchronise anything until the user has said yes to that exact action in chat; preview a synchronisation first. " +
         "Keep responses short — they are displayed in a small terminal bar.";
 
-    public AiChatService(IChatClient chatClient, IContentModelService contentModelService, IUiService uiService, IOptions<AiOptions> aiOptions)
+    public AiChatService(IChatClient chatClient, IContentModelService contentModelService, IUiService uiService, IOptions<AiOptions> aiOptions, AiPanelTools? panelTools = null)
     {
+        _panelTools = panelTools ?? new AiPanelTools(contentModelService);
         _chatClient = chatClient;
         _contentModelService = contentModelService;
         _uiService = uiService;
@@ -174,6 +180,8 @@ public class AiChatService : IAiChatService
 
     private List<AITool> BuildTools() =>
     [
+        .. _panelTools.Create(),
+
         AIFunctionFactory.Create(
             () => _contentModelService.Url?.Path ?? "/",
             "get_current_path",
