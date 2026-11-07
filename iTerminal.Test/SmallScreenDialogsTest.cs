@@ -180,4 +180,19 @@ public class SmallScreenDialogsTest
         await narrow.WaitForTextAsync("System Settings");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("restart.")), "the end of the note about a restart");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheDateBoxesOfTheProperties_StartInOneColumn()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+
+        await app.PressAsync("Ctrl+F12");
+
+        await app.WaitForTextAsync("Properties of readme.txt");
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Modified: [")) && s.Lines.Any(l => l.Contains("Accessed: [")), "the date boxes");
+        int[] columns = [.. app.Screen.Lines.Where(l => l.Contains("Modified: [") || l.Contains("Accessed: [") || l.Contains("Created: [")).Select(l => l.IndexOf('['))];
+        Assert.IsTrue(columns.Length >= 2 && columns.Distinct().Count() == 1, app.Screen.Dump());
+    }
 }
