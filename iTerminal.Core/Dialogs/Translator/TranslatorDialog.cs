@@ -110,9 +110,9 @@ public class TranslatorDialog : SplitPaneDialog
         _options = options.Value;
         Title = iConsole.Localization.UiText.Get("Menu.Translator", "Translator");
 
-        _from = new ComboBox<TranslationLanguage>(themeService) { Label = UiText.Get("Field.From", "From"), DisplaySelector = language => language.Name, MaxDropDownRows = 10 };
+        _from = new ComboBox<TranslationLanguage>(themeService) { Label = UiText.Get("Field.From", "From"), DisplaySelector = LanguageName, MaxDropDownRows = 10 };
         _to = new ComboBox<TranslationLanguage>(themeService) { Label = iConsole.Localization.UiText.Get("Label.To", "To"), DisplaySelector = language => language.Name, MaxDropDownRows = 10 };
-        _engine = new ComboBox<EngineChoice>(themeService) { Label = UiText.Get("Field.Engine", "Engine"), DisplaySelector = choice => choice.Name };
+        _engine = new ComboBox<EngineChoice>(themeService) { Label = UiText.Get("Field.Engine", "Engine"), DisplaySelector = choice => EngineLabel(choice.Engine) };
         // Neither is focusable by default, which left Tab cycling through the three pickers only.
         _input = new PaneEditor(themeService) { CanFocus = true };
         _output = new PaneViewer(themeService) { CanFocus = true };
@@ -471,7 +471,24 @@ public class TranslatorDialog : SplitPaneDialog
         StateHasChanged();
     }
 
-    private static string EngineName(TranslationEngine engine) => EngineChoices.First(choice => choice.Engine == engine).Name.ToLowerInvariant();
+    /// <summary>The engine as the lists show it, in the chosen language.</summary>
+    private static string EngineLabel(TranslationEngine engine) => engine switch
+    {
+        TranslationEngine.Auto => UiText.Get("Translator.EngineAuto", "Automatic"),
+        TranslationEngine.Api => UiText.Get("Translator.EngineApi", "Translation API"),
+        TranslationEngine.Llm => UiText.Get("Translator.EngineAi", "AI model"),
+        _ => engine.ToString(),
+    };
+
+    /// <summary>The engine inside a sentence ("Translating with automatic…"): lower case in English, as the language has it elsewhere.</summary>
+    private static string EngineName(TranslationEngine engine) =>
+        string.Equals(UiText.Get("Translator.EngineAuto", "Automatic"), "Automatic", StringComparison.Ordinal)
+            ? EngineLabel(engine).ToLowerInvariant()
+            : EngineLabel(engine);
+
+    /// <summary>The first entry of the source list is not a language but "detect it"; the others carry their own names.</summary>
+    private static string LanguageName(TranslationLanguage language) =>
+        language.Code == TranslationLanguages.Auto ? UiText.Get("Translator.DetectLanguage", "Detect language") : language.Name;
 
     /// <summary>Puts the translation in the right-hand pane, wrapped to the pane's width — the viewer only scrolls sideways otherwise.</summary>
     private void ShowTranslation()

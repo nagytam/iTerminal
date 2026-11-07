@@ -5323,4 +5323,16 @@
   <data name="Button.Apply" xml:space="preserve">
     <value>Alkalmaz</value>
   </data>
+  <data name="Translator.DetectLanguage" xml:space="preserve">
+    <value>Nyelv felismerése</value>
+  </data>
+  <data name="Translator.EngineAuto" xml:space="preserve">
+    <value>Automatikus</value>
+  </data>
+  <data name="Translator.EngineApi" xml:space="preserve">
+    <value>Fordító-API</value>
+  </data>
+  <data name="Translator.EngineAi" xml:space="preserve">
+    <value>MI-modell</value>
+  </data>
 </root>

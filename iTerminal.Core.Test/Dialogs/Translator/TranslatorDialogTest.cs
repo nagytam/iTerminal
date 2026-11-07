@@ -85,6 +85,27 @@ public class TranslatorDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task InGerman_TheDetectEntryAndTheEnginesAreShownInGerman()
+    {
+        iConsole.Localization.Localizer localizer = new(
+        [
+            new iConsole.Localization.ResourceLocalizationSource(new System.Resources.ResourceManager("iConsole.Localization.Resources.Strings", typeof(iConsole.Localization.Localizer).Assembly)),
+            new iConsole.Localization.ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(TranslatorDialog).Assembly)),
+        ]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+
+        var (dialog, _, _, _) = Create();
+        await ShowAsync(dialog);
+
+        string screen = Drawn(dialog);
+        StringAssert.Contains(screen, "Sprache erkennen");
+        StringAssert.Contains(screen, "Automatisch");
+        Assert.IsFalse(screen.Contains("Detect language", StringComparison.Ordinal), screen);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task ItOpensWithDetectLanguageAndEnglishAndShowsTheKeys()
     {
         var (dialog, _, _, _) = Create();
