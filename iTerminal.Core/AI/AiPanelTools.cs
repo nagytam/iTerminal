@@ -5,6 +5,8 @@ using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Helper;
 using iTerminal.Core.Model;
 using iTerminal.Core.Model.ContentModels;
+using iTerminal.Core.Services;
+using iTerminal.Core.Services.Archives;
 using Microsoft.Extensions.AI;
 using System.Text;
 
@@ -23,7 +25,11 @@ namespace iTerminal.Core.AI;
 /// moves to the recycle bin and needs <c>confirmed=true</c>, which the system prompt tells the model to
 /// obtain from the user first.</para>
 /// </summary>
-public class AiPanelTools(IContentModelService contentModelService)
+public partial class AiPanelTools(
+    IContentModelService contentModelService,
+    IArchiveCompressionService? compressionService = null,
+    IArchiveExtractionService? extractionService = null,
+    FileSystemResolver? fileSystemResolver = null)
 {
     /// <summary>The most rows a listing tool returns, so a huge folder cannot swamp the model's context.</summary>
     internal const int MaxListedEntries = 200;
@@ -74,6 +80,7 @@ public class AiPanelTools(IContentModelService contentModelService)
             "Rename an entry of a panel (the one under the cursor when name is empty) to a new name within the same folder."),
         AIFunctionFactory.Create(DeleteEntries, "delete_entries",
             "Move the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) to the recycle bin. DESTRUCTIVE: ask the user in chat first and pass confirmed=true only after they said yes."),
+        .. CreateArchiveAndFolderTools(),
     ];
 
     #region Panel resolution
