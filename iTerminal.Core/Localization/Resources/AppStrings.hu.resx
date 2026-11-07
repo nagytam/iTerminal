@@ -3949,6 +3949,12 @@
   <data name="DialogHint.VoiceInput" xml:space="preserve">
     <value>Kérdés bemondása (indítás és leállítás)</value>
   </data>
+  <data name="Voice.MicButton" xml:space="preserve">
+    <value>Mikrofon</value>
+  </data>
+  <data name="Voice.StopButton" xml:space="preserve">
+    <value>Leállít</value>
+  </data>
   <data name="Voice.Title" xml:space="preserve">
     <value>Hangbevitel</value>
   </data>

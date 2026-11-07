@@ -261,4 +261,47 @@ public class AiPromptBarVoiceTest
 
         CollectionAssert.AreEqual(new[] { "VoiceInputCommand.cs" }, binders);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheMicButton_NamesTheKey_AndFollowsTheState()
+    {
+        var (bar, _, speech, _) = Create();
+
+        StringAssert.Contains(Render(bar).Line(0), "[● Mic: Alt+F1]");
+
+        speech.State = SpeechState.Recording;
+        StringAssert.Contains(Render(bar).Line(0), "[■ Stop: Alt+F1]");
+
+        speech.State = SpeechState.Transcribing;
+        StringAssert.Contains(Render(bar).Line(0), "transcribing");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ClickingTheMicButton_TogglesTheRecording_ButOtherClicksDoNot()
+    {
+        var (bar, _, speech, _) = Create(focused: false);
+        string line = Render(bar).Line(0);
+        int mic = line.IndexOf("[● Mic", StringComparison.Ordinal);
+
+        Assert.IsTrue(mic > 0);
+        Assert.IsFalse(await bar.HandleMouseEventAsync(new MouseEvent { Position = new Position(mic - 5, 0), LeftClicked = true }));
+        Assert.AreEqual(0, speech.Toggles);
+
+        Assert.IsTrue(await bar.HandleMouseEventAsync(new MouseEvent { Position = new Position(mic + 2, 0), LeftClicked = true }));
+        Assert.AreEqual(1, speech.Toggles);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task CtrlF7_IsASecondKeyForTheRecording_AndHasItsOwnHint()
+    {
+        var (bar, _, speech, _) = Create();
+
+        Assert.IsTrue(await bar.HandleKeyEventAsync(new KeyEvent(' ', ConsoleKey.F7, false, false, true)));
+
+        Assert.AreEqual(1, speech.Toggles);
+        Assert.IsTrue(bar.GetKeyHints().Any(h => h.Key == "Ctrl+F7"));
+    }
 }

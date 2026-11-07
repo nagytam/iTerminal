@@ -3949,6 +3949,12 @@
   <data name="DialogHint.VoiceInput" xml:space="preserve">
     <value>Frage sprechen (Start und Stopp)</value>
   </data>
+  <data name="Voice.MicButton" xml:space="preserve">
+    <value>Mikro</value>
+  </data>
+  <data name="Voice.StopButton" xml:space="preserve">
+    <value>Stopp</value>
+  </data>
   <data name="Voice.Title" xml:space="preserve">
     <value>Spracheingabe</value>
   </data>

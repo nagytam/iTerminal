@@ -3949,6 +3949,12 @@
   <data name="DialogHint.VoiceInput" xml:space="preserve">
     <value>Dettare la domanda (avvio e arresto)</value>
   </data>
+  <data name="Voice.MicButton" xml:space="preserve">
+    <value>Mic</value>
+  </data>
+  <data name="Voice.StopButton" xml:space="preserve">
+    <value>Ferma</value>
+  </data>
   <data name="Voice.Title" xml:space="preserve">
     <value>Input vocale</value>
   </data>
