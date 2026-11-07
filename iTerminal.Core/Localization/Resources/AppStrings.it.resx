@@ -4780,4 +4780,37 @@
   <data name="WebHelp.30" xml:space="preserve">
     <value>Premi un tasto qualsiasi per tornare indietro.</value>
   </data>
+  <data name="Translator.Translating" xml:space="preserve">
+    <value>Traduzione con {0}…</value>
+  </data>
+  <data name="Translator.Cancelled" xml:space="preserve">
+    <value>Annullato.</value>
+  </data>
+  <data name="Translator.Failed" xml:space="preserve">
+    <value>Traduzione non riuscita: {0}</value>
+  </data>
+  <data name="Translator.Detecting" xml:space="preserve">
+    <value>Rilevamento della lingua…</value>
+  </data>
+  <data name="Translator.NoDetection" xml:space="preserve">
+    <value>Lingua non riconosciuta — sceglila dall’elenco «Da».</value>
+  </data>
+  <data name="Translator.Detected" xml:space="preserve">
+    <value>{0} rilevato ({1:P0} di certezza)</value>
+  </data>
+  <data name="Translator.DetectFailed" xml:space="preserve">
+    <value>Rilevamento non riuscito: {0}</value>
+  </data>
+  <data name="Translator.DetectedName" xml:space="preserve">
+    <value>{0} (rilevata)</value>
+  </data>
+  <data name="Translator.UnknownLanguage" xml:space="preserve">
+    <value>lingua sconosciuta</value>
+  </data>
+  <data name="Translator.OutputHeader" xml:space="preserve">
+    <value>Traduzione</value>
+  </data>
+  <data name="Translator.InputHeader" xml:space="preserve">
+    <value>Testo</value>
+  </data>
 </root>

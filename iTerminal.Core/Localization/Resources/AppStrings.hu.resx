@@ -4780,4 +4780,37 @@
   <data name="WebHelp.30" xml:space="preserve">
     <value>Nyomjon meg egy billentyűt a visszalépéshez.</value>
   </data>
+  <data name="Translator.Translating" xml:space="preserve">
+    <value>Fordítás ezzel: {0}…</value>
+  </data>
+  <data name="Translator.Cancelled" xml:space="preserve">
+    <value>Megszakítva.</value>
+  </data>
+  <data name="Translator.Failed" xml:space="preserve">
+    <value>A fordítás sikertelen: {0}</value>
+  </data>
+  <data name="Translator.Detecting" xml:space="preserve">
+    <value>Nyelv felismerése…</value>
+  </data>
+  <data name="Translator.NoDetection" xml:space="preserve">
+    <value>A nyelv nem ismerhető fel — válassza ki az „Ettől” listából.</value>
+  </data>
+  <data name="Translator.Detected" xml:space="preserve">
+    <value>Felismert nyelv: {0} ({1:P0} biztos)</value>
+  </data>
+  <data name="Translator.DetectFailed" xml:space="preserve">
+    <value>A felismerés sikertelen: {0}</value>
+  </data>
+  <data name="Translator.DetectedName" xml:space="preserve">
+    <value>{0} (felismerve)</value>
+  </data>
+  <data name="Translator.UnknownLanguage" xml:space="preserve">
+    <value>ismeretlen nyelv</value>
+  </data>
+  <data name="Translator.OutputHeader" xml:space="preserve">
+    <value>Fordítás</value>
+  </data>
+  <data name="Translator.InputHeader" xml:space="preserve">
+    <value>Szöveg</value>
+  </data>
 </root>
