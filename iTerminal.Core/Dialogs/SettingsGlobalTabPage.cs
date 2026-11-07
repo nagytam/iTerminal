@@ -15,11 +15,11 @@ namespace iTerminal.Core.Dialogs;
 /// </summary>
 public class SettingsGlobalTabPage : TabPage
 {
-    internal static readonly string[] Lines =
+    internal static string[] Lines =>
     [
-        "Colour theme: Theme manager (Alt+F6).",
-        "Folders, favourites and remote hosts: Folder selector (Ctrl+F1).",
-        "Quote and weather indicators, music and documents folders: pages 3 to 5.",
+        iConsole.Localization.UiText.Get("SettingsPage.Theme", "Colour theme: Theme manager (Alt+F6)."),
+        iConsole.Localization.UiText.Get("SettingsPage.Folders", "Folders, favourites and remote hosts: Folder selector (Ctrl+F1)."),
+        iConsole.Localization.UiText.Get("SettingsPage.Others", "Quote and weather indicators, music and documents folders: pages 3 to 5."),
     ];
 
     private readonly List<Label> _labels = [];

@@ -53,8 +53,8 @@ public class SettingsBackgroundTabPage : TabPage
     private static string DisplayName(BackgroundStartMode mode) => mode switch
     {
         BackgroundStartMode.Immediately => "Immediately",
-        BackgroundStartMode.Delayed => $"Delayed ({BackgroundStartService.DelayedStart.TotalSeconds:0} s)",
-        _ => "On demand",
+        BackgroundStartMode.Delayed => string.Format(iConsole.Localization.UiText.Get("SettingsPage.Delayed", "Delayed ({0:0} s)"), BackgroundStartService.DelayedStart.TotalSeconds),
+        _ => iConsole.Localization.UiText.Get("SettingsPage.OnDemand", "On demand"),
     };
 
     public override Task OnInitializeAsync()

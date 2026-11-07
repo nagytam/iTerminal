@@ -4480,4 +4480,49 @@
   <data name="Update.Available" xml:space="preserve">
     <value>Elérhető az iTerminal {0}. Az Öné: {1}.</value>
   </data>
+  <data name="SettingsPage.Theme" xml:space="preserve">
+    <value>Színtéma: Témakezelő (Alt+F6).</value>
+  </data>
+  <data name="SettingsPage.Folders" xml:space="preserve">
+    <value>Mappák, kedvencek és távoli gépek: Mappaválasztó (Ctrl+F1).</value>
+  </data>
+  <data name="SettingsPage.Others" xml:space="preserve">
+    <value>Árfolyam- és időjárás-jelzők, zene- és dokumentummappák: 3–5. oldal.</value>
+  </data>
+  <data name="SettingsPage.DocumentsFolder" xml:space="preserve">
+    <value>Dokumentummappa:</value>
+  </data>
+  <data name="SettingsPage.DocumentsDefault" xml:space="preserve">
+    <value>Üresen az alapértelmezett mappa: {0}</value>
+  </data>
+  <data name="SettingsPage.FolderFound" xml:space="preserve">
+    <value>A mappa megvan — a háttérben indexeli.</value>
+  </data>
+  <data name="SettingsPage.FolderMissing" xml:space="preserve">
+    <value>A mappa még nem létezik.</value>
+  </data>
+  <data name="SettingsPage.Ocr" xml:space="preserve">
+    <value>A Tesseract kell a PATH-ban. A mostantól indexelt képekre vonatkozik.</value>
+  </data>
+  <data name="SettingsPage.OcrOff" xml:space="preserve">
+    <value>A képeket csak a beágyazott feliratuk alapján indexeli.</value>
+  </data>
+  <data name="SettingsPage.MusicFolder" xml:space="preserve">
+    <value>Zenemappa:</value>
+  </data>
+  <data name="SettingsPage.MusicDefault" xml:space="preserve">
+    <value>Üresen a rendszer Zene mappája: {0}</value>
+  </data>
+  <data name="SettingsPage.Hosts" xml:space="preserve">
+    <value>Mentett gépek és hitelesítő adataik: Hálózatböngésző (Ctrl+N).</value>
+  </data>
+  <data name="SettingsPage.Interfaces" xml:space="preserve">
+    <value>Hálózati csatolók: Hálózatkezelő.</value>
+  </data>
+  <data name="SettingsPage.Delayed" xml:space="preserve">
+    <value>Késleltetett ({0:0} mp)</value>
+  </data>
+  <data name="SettingsPage.OnDemand" xml:space="preserve">
+    <value>Igény szerint</value>
+  </data>
 </root>
