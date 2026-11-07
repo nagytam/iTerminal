@@ -14,12 +14,14 @@ public class SmallScreenDialogsTest
         await small.PressAsync("Ctrl+F12");
 
         await small.WaitForTextAsync("Properties of readme.txt");
+        // Windows lists three editable dates and Linux two, so the last one both have, Accessed, stands for them all.
         await small.WaitUntilAsync(
             s => s.Lines[s.Height - 1].Contains('╚') && s.Lines[s.Height - 1].Contains('╝')
-                && s.Lines.Any(l => l.Contains("Created:")) && s.Lines.Any(l => l.Contains("[     Apply     ]")),
+                && s.Lines.Any(l => l.Contains("Accessed:")) && s.Lines.Any(l => l.Contains("[     Apply     ]")),
             "the dates and the Apply button above the dialog's bottom border");
         // The bottom border carries nothing but the frame: no text box was drawn over it.
-        Assert.IsFalse(small.Screen.Lines[small.Screen.Height - 1].Contains("Created:"), small.Screen.Dump());
+        string last = small.Screen.Lines[small.Screen.Height - 1];
+        Assert.IsFalse(last.Contains("Accessed:") || last.Contains("Modified:") || last.Contains("Created:"), small.Screen.Dump());
     }
 
     [Timeout(120_000)]

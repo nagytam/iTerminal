@@ -29,7 +29,8 @@ namespace iTerminal.Core.Dialogs;
 /// </summary>
 public class PropertiesDialog : FormDialog
 {
-    private const int CaptionWidth = 11;
+    // One more than the longest caption ("Permissions"), so a value never touches it.
+    private const int CaptionWidth = 12;
     private const int InfoRows = 18;
     private const int MinInfoRows = 4;
     private static readonly string[] DateFormats = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm"];
