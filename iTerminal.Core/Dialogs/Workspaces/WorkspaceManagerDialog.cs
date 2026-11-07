@@ -616,11 +616,11 @@ public class WorkspaceManagerDialog : Dialog
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
         var summary = _workspaces.ActiveName is null
-            ? "The screen is not saved as a workspace."
+            ? Say("Workspaces.NotSaved", "The screen is not saved as a workspace.")
             : Selected is not null && _activeName is not null && _list.FirstOrDefault(w => w.Name == _activeName) is { } active
-                ? $"On screen: {active.Name}" + (_now is not null && active.Layout.SameScreenAs(_now) ? string.Empty : "  (the screen has changed since)")
-                : "The screen is not saved as a workspace.";
-        Put(buffer, 1, 0, iw - 2, $"{_list.Count} saved  ·  {summary}", Color.Cyan, colorScheme.Background);
+                ? Say("Workspaces.OnScreen", "On screen: {0}", active.Name) + (_now is not null && active.Layout.SameScreenAs(_now) ? string.Empty : Say("Workspaces.ScreenChanged", "  (the screen has changed since)"))
+                : Say("Workspaces.NotSaved", "The screen is not saved as a workspace.");
+        Put(buffer, 1, 0, iw - 2, Say("Workspaces.SavedCount", "{0} saved  ·  {1}", _list.Count, summary), Color.Cyan, colorScheme.Background);
         Put(buffer, 1, 1, iw - 2, "     # Name                      Left panel  →  Right panel", colorScheme.DisabledForeground, colorScheme.Background);
 
         if (_list.Count == 0)
@@ -681,7 +681,7 @@ public class WorkspaceManagerDialog : Dialog
     private void DrawName(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
         var top = 2 + ListRows + 1;
-        Put(buffer, 1, top, iw - 2, _renaming is null ? "Save the screen as a workspace:" : $"Rename '{_renaming}':", Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, top, iw - 2, _renaming is null ? Say("Workspaces.SavePrompt", "Save the screen as a workspace:") : Say("Workspaces.RenamePrompt", "Rename '{0}':", _renaming), Color.Cyan, colorScheme.Background);
         Put(buffer, 1, top + 1, 6, "Name", colorScheme.DisabledForeground, colorScheme.Background);
         Put(buffer, 8, top + 1, iw - 10, _textIsSelected ? _text : _text + "_",
             _textIsSelected ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground,

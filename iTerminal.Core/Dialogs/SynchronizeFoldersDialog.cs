@@ -293,7 +293,7 @@ public class SynchronizeFoldersDialog : Dialog
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
-        yield return ("Enter", _shown is null ? "Preview what the synchronisation would do" : "Run the previewed synchronisation");
+        yield return ("Enter", _shown is null ? Say("Folders.HintPreview", "Preview what the synchronisation would do") : Say("Folders.HintRun", "Run the previewed synchronisation"));
         yield return ("Esc", UiText.Get("DialogHint.CloseWithoutChanging", "Close without changing anything"));
     }
 

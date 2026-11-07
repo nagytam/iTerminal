@@ -4285,4 +4285,103 @@
   <data name="Solution.ReadFailed" xml:space="preserve">
     <value>Failed to read solution: {0}</value>
   </data>
+  <data name="Access.Hint.TypeWindows" xml:space="preserve">
+    <value>Type a user or group, such as Users or DOMAIN\name.</value>
+  </data>
+  <data name="Access.Hint.TypePosix" xml:space="preserve">
+    <value>A user, or group:name. Bare owner, group, other and mask work too.</value>
+  </data>
+  <data name="Access.Hint.EditRights" xml:space="preserve">
+    <value>Space or ←/→ changes the rights. Enter saves, Esc goes back.</value>
+  </data>
+  <data name="Access.Removed" xml:space="preserve">
+    <value>Removed the entry for {0}.</value>
+  </data>
+  <data name="Access.InheritOn" xml:space="preserve">
+    <value>Entries from the parent folder apply again.</value>
+  </data>
+  <data name="Access.InheritOff" xml:space="preserve">
+    <value>Stopped inheriting; the parent's entries were kept as explicit copies.</value>
+  </data>
+  <data name="Access.OwnerUnchanged" xml:space="preserve">
+    <value>The owner is unchanged.</value>
+  </data>
+  <data name="Access.Inheriting" xml:space="preserve">
+    <value>Inheriting entries from the parent folder</value>
+  </data>
+  <data name="Access.NotInheriting" xml:space="preserve">
+    <value>Not inheriting: only the entries below apply</value>
+  </data>
+  <data name="Access.FolderDefaults" xml:space="preserve">
+    <value>A folder's default entries are what new items start with</value>
+  </data>
+  <data name="Mail.Reading" xml:space="preserve">
+    <value>Reading the inbox…</value>
+  </data>
+  <data name="Mail.SearchingBook" xml:space="preserve">
+    <value>Searching the address book…</value>
+  </data>
+  <data name="Workspaces.NotSaved" xml:space="preserve">
+    <value>The screen is not saved as a workspace.</value>
+  </data>
+  <data name="Workspaces.ScreenChanged" xml:space="preserve">
+    <value>  (the screen has changed since)</value>
+  </data>
+  <data name="Workspaces.SavedCount" xml:space="preserve">
+    <value>{0} saved  ·  {1}</value>
+  </data>
+  <data name="Workspaces.SavePrompt" xml:space="preserve">
+    <value>Save the screen as a workspace:</value>
+  </data>
+  <data name="Workspaces.RenamePrompt" xml:space="preserve">
+    <value>Rename '{0}':</value>
+  </data>
+  <data name="Folders.DirBoth" xml:space="preserve">
+    <value>Both ways — newer copy wins</value>
+  </data>
+  <data name="Folders.DirLtr" xml:space="preserve">
+    <value>Left to right — left is the source</value>
+  </data>
+  <data name="Folders.DirRtl" xml:space="preserve">
+    <value>Right to left — right is the source</value>
+  </data>
+  <data name="Folders.ModeDate" xml:space="preserve">
+    <value>Name, size and date</value>
+  </data>
+  <data name="Folders.ModeSize" xml:space="preserve">
+    <value>Name and size (dates ignored)</value>
+  </data>
+  <data name="Folders.ModeContent" xml:space="preserve">
+    <value>Name and content (reads both files)</value>
+  </data>
+  <data name="Folders.HintPreview" xml:space="preserve">
+    <value>Preview what the synchronisation would do</value>
+  </data>
+  <data name="Folders.HintRun" xml:space="preserve">
+    <value>Run the previewed synchronisation</value>
+  </data>
+  <data name="DupFinder.NothingToSearch" xml:space="preserve">
+    <value>Nothing to search.</value>
+  </data>
+  <data name="DupFinder.Looking" xml:space="preserve">
+    <value>Looking for duplicates in {0}</value>
+  </data>
+  <data name="DupFinder.Listing" xml:space="preserve">
+    <value>Listing files: {0:N0} so far</value>
+  </data>
+  <data name="DupFinder.Sampling" xml:space="preserve">
+    <value>Comparing the start of files that are the same size…</value>
+  </data>
+  <data name="DupFinder.Hashing" xml:space="preserve">
+    <value>Reading files that still look alike: {0} of {1}</value>
+  </data>
+  <data name="DupFinder.EscStops" xml:space="preserve">
+    <value>Esc stops and closes.</value>
+  </data>
+  <data name="Disk.ReadFailed" xml:space="preserve">
+    <value>Could not read {0}: {1}</value>
+  </data>
+  <data name="Workspaces.OnScreen" xml:space="preserve">
+    <value>On screen: {0}</value>
+  </data>
 </root>

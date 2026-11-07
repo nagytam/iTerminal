@@ -635,7 +635,7 @@ public class MailDialog : Dialog
             return;
         }
 
-        StartWork("Reading the inbox…", async ct =>
+        StartWork(Say("Mail.Reading", "Reading the inbox…"), async ct =>
         {
             var listings = await _mail.ListAsync(account, PasswordOf(account), ct);
             lock (_sync)
@@ -767,7 +767,7 @@ public class MailDialog : Dialog
         }
 
         var term = _directoryTerm.Trim();
-        StartWork("Searching the address book…", async ct =>
+        StartWork(Say("Mail.SearchingBook", "Searching the address book…"), async ct =>
         {
             var people = await _mail.SearchDirectoryAsync(account, PasswordOf(account), term, ct);
             lock (_sync)
