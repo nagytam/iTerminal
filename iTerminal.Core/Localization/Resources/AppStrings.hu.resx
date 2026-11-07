@@ -4081,4 +4081,154 @@
   <data name="EnvVars.FilterHint" xml:space="preserve">
     <value>Szűrő: {0}  (Esc minden változót mutat)</value>
   </data>
+  <data name="Net.Scanning" xml:space="preserve">
+    <value>Helyi hálózat keresése...</value>
+  </data>
+  <data name="Net.ScanError" xml:space="preserve">
+    <value>Keresési hiba: {0}</value>
+  </data>
+  <data name="Net.ShareRequired" xml:space="preserve">
+    <value>Meg kell adni a megosztás nevét.</value>
+  </data>
+  <data name="Net.Connecting" xml:space="preserve">
+    <value>Csatlakozás...</value>
+  </data>
+  <data name="Net.ConnectionFailed" xml:space="preserve">
+    <value>A csatlakozás sikertelen: {0}</value>
+  </data>
+  <data name="Net.DeleteSaved" xml:space="preserve">
+    <value>Törli a mentett {0} kapcsolatot és jelszavát?  y:igen  n:nem</value>
+  </data>
+  <data name="Net.Deleted" xml:space="preserve">
+    <value>{0} törölve.</value>
+  </data>
+  <data name="MusicViewer.TagsWritable" xml:space="preserve">
+    <value>A címkék MP3- és FLAC-fájlokba írhatók.</value>
+  </data>
+  <data name="MusicViewer.StillReading" xml:space="preserve">
+    <value>A fájl olvasása még folyamatban…</value>
+  </data>
+  <data name="MusicViewer.Queued" xml:space="preserve">
+    <value>Hozzáadva a lejátszási listához</value>
+  </data>
+  <data name="MusicViewer.QueueFailed" xml:space="preserve">
+    <value>A fájlt nem sikerült sorba állítani.</value>
+  </data>
+  <data name="MusicViewer.SeekNeedsPlay" xml:space="preserve">
+    <value>A tekeréshez le kell játszani a fájlt — a Szóköz lejátssza.</value>
+  </data>
+  <data name="MusicViewer.Volume" xml:space="preserve">
+    <value>Hangerő: {0}%</value>
+  </data>
+  <data name="MusicViewer.NotPlaying" xml:space="preserve">
+    <value>Ez a fájl nem szól.</value>
+  </data>
+  <data name="MusicViewer.Artist" xml:space="preserve">
+    <value>Előadó</value>
+  </data>
+  <data name="MusicViewer.Title" xml:space="preserve">
+    <value>Cím</value>
+  </data>
+  <data name="MusicViewer.Album" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="MusicViewer.Format" xml:space="preserve">
+    <value>Formátum</value>
+  </data>
+  <data name="Map.NeedsNetwork" xml:space="preserve">
+    <value>A névkereséshez hálózat kell. Az O online módra vált, vagy írjon be koordinátákat.</value>
+  </data>
+  <data name="Map.SearchRunning" xml:space="preserve">
+    <value>Már fut egy keresés.</value>
+  </data>
+  <data name="Map.Searching" xml:space="preserve">
+    <value>Keresés: „{0}”…</value>
+  </data>
+  <data name="Map.NothingFound" xml:space="preserve">
+    <value>Nincs találat erre: „{0}”.</value>
+  </data>
+  <data name="Map.NoPlaces" xml:space="preserve">
+    <value>Még nincs mentett hely. Az M elmenti a térkép közepét.</value>
+  </data>
+  <data name="Map.Saved" xml:space="preserve">
+    <value>Mentve: {0}</value>
+  </data>
+  <data name="Map.RemovePlace" xml:space="preserve">
+    <value>Eltávolítja a mentett „{0}” helyet? (y/n)</value>
+  </data>
+  <data name="Solution.NoTests" xml:space="preserve">
+    <value>Ebben a megoldásban nincs tesztprojekt.</value>
+  </data>
+  <data name="Solution.SelectToRun" xml:space="preserve">
+    <value>Válasszon egy futtatandó projektet (a teljes megoldás nem futtatható).</value>
+  </data>
+  <data name="Msg.Cancelling" xml:space="preserve">
+    <value>Megszakítás...</value>
+  </data>
+  <data name="Solution.NoSdk" xml:space="preserve">
+    <value>Nem található .NET SDK; a parancsok a PATH-ban lévő dotnetet használják.</value>
+  </data>
+  <data name="Solution.OnlySdk" xml:space="preserve">
+    <value>Csak a(z) {0} .NET SDK van telepítve.</value>
+  </data>
+  <data name="Solution.UsingSdk" xml:space="preserve">
+    <value>Használt .NET SDK: {0}.</value>
+  </data>
+  <data name="Docs.SearchFailed" xml:space="preserve">
+    <value>A keresés sikertelen: {0}</value>
+  </data>
+  <data name="Docs.Scanning" xml:space="preserve">
+    <value>Vizsgálat…</value>
+  </data>
+  <data name="Docs.ScanCancelled" xml:space="preserve">
+    <value>A vizsgálat megszakítva.</value>
+  </data>
+  <data name="Docs.ScanFailed" xml:space="preserve">
+    <value>A vizsgálat sikertelen: {0}</value>
+  </data>
+  <data name="Msg.CancellingEllipsis" xml:space="preserve">
+    <value>Megszakítás…</value>
+  </data>
+  <data name="Docs.IndexerBusy" xml:space="preserve">
+    <value>A háttérindexelő éppen vizsgál; innen nem állítható le.</value>
+  </data>
+  <data name="Pkg.Error" xml:space="preserve">
+    <value>Hiba: {0}</value>
+  </data>
+  <data name="Pkg.StillWorking" xml:space="preserve">
+    <value>Az utolsó kérés még fut — az x megszakítja.</value>
+  </data>
+  <data name="IPhone.ScanError" xml:space="preserve">
+    <value>Eszközkeresési hiba: {0}</value>
+  </data>
+  <data name="IPhone.Opening" xml:space="preserve">
+    <value>{0} megnyitása...</value>
+  </data>
+  <data name="IPhone.OpenFailed" xml:space="preserve">
+    <value>Nem sikerült megnyitni: {0}: {1}</value>
+  </data>
+  <data name="Checksum.NothingToCopy" xml:space="preserve">
+    <value>Még nincs mit másolni: a fájl olvasása folyamatban van.</value>
+  </data>
+  <data name="Checksum.Copied" xml:space="preserve">
+    <value>{0} a vágólapra másolva.</value>
+  </data>
+  <data name="Checksum.CopyFailed" xml:space="preserve">
+    <value>Nem sikerült másolni: {0}: {1}</value>
+  </data>
+  <data name="SysSettings.Reading" xml:space="preserve">
+    <value>A rendszerbeállítások olvasása…</value>
+  </data>
+  <data name="SysSettings.ReadFailed" xml:space="preserve">
+    <value>A rendszerbeállításokat nem sikerült olvasni: {0}</value>
+  </data>
+  <data name="Theme.CannotApply" xml:space="preserve">
+    <value>A(z) {0} téma itt nem alkalmazható.</value>
+  </data>
+  <data name="Solution.SdkPreview" xml:space="preserve">
+    <value>{0} (előzetes)</value>
+  </data>
+  <data name="MusicViewer.ReadingTags" xml:space="preserve">
+    <value>Címkék olvasása…</value>
+  </data>
 </root>

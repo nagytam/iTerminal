@@ -302,7 +302,7 @@ public class PackageManagerDialog : SplitPaneDialog
 
             if (error is not null)
             {
-                _message = $"Error: {error}";
+                _message = string.Format(iConsole.Localization.UiText.Get("Pkg.Error", "Error: {0}"), error);
                 _packageListBox.EmptyText = UiText.Get("Empty.PackagesFailed", UiText.Get("Empty.PackagesFailed", " Could not list packages — r retries."));
             }
             else
@@ -456,7 +456,7 @@ public class PackageManagerDialog : SplitPaneDialog
     {
         if (_busy && _runCts is not null)
         {
-            _status = "Cancelling...";
+            _status = iConsole.Localization.UiText.Get("Msg.Cancelling", "Cancelling...");
             _statusSeverity = StatusSeverity.Info;
             _runCts.Cancel();
             StateHasChanged();
@@ -600,7 +600,7 @@ public class PackageManagerDialog : SplitPaneDialog
     {
         if (_busy)
         {
-            _status = "Still working on the last request — x cancels it.";
+            _status = iConsole.Localization.UiText.Get("Pkg.StillWorking", "Still working on the last request — x cancels it.");
             _statusSeverity = StatusSeverity.Info;
             StateHasChanged();
             return;

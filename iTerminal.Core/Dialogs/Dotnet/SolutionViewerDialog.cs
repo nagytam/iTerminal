@@ -216,7 +216,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         if (testProjects.Count == 0)
         {
             // Said rather than ignored, or T reads as a key that does nothing.
-            _status = "No test projects in this solution.";
+            _status = iConsole.Localization.UiText.Get("Solution.NoTests", "No test projects in this solution.");
             _statusSeverity = StatusSeverity.Info;
             StateHasChanged();
             return;
@@ -349,7 +349,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         var project = SelectedProject;
         if (project is null)
         {
-            _status = "Select a project to run (the whole solution cannot be run).";
+            _status = iConsole.Localization.UiText.Get("Solution.SelectToRun", "Select a project to run (the whole solution cannot be run).");
             _statusSeverity = StatusSeverity.Info;
             StateHasChanged();
             return;
@@ -560,7 +560,7 @@ public class SolutionViewerDialog : SplitPaneDialog
     {
         if (_busy && _runCts is not null)
         {
-            _status = "Cancelling...";
+            _status = iConsole.Localization.UiText.Get("Msg.Cancelling", "Cancelling...");
             _statusSeverity = StatusSeverity.Info;
             _runCts.Cancel();
             StateHasChanged();
@@ -773,16 +773,16 @@ public class SolutionViewerDialog : SplitPaneDialog
     {
         if (_sdks.Count == 0)
         {
-            _status = "No .NET SDK was found; commands run with the dotnet on the PATH.";
+            _status = iConsole.Localization.UiText.Get("Solution.NoSdk", "No .NET SDK was found; commands run with the dotnet on the PATH.");
         }
         else if (_sdks.Count == 1)
         {
-            _status = $"Only .NET SDK {SelectedSdk!.Version} is installed.";
+            _status = string.Format(iConsole.Localization.UiText.Get("Solution.OnlySdk", "Only .NET SDK {0} is installed."), SelectedSdk!.Version);
         }
         else
         {
             _sdkIndex = (_sdkIndex + 1) % _sdks.Count;
-            _status = $"Using .NET SDK {SelectedSdk!.Version}{(SelectedSdk.IsPrerelease ? " (preview)" : string.Empty)}.";
+            _status = string.Format(iConsole.Localization.UiText.Get("Solution.UsingSdk", "Using .NET SDK {0}."), SelectedSdk!.IsPrerelease ? string.Format(iConsole.Localization.UiText.Get("Solution.SdkPreview", "{0} (preview)"), SelectedSdk!.Version) : SelectedSdk!.Version);
         }
 
         _statusSeverity = StatusSeverity.Info;

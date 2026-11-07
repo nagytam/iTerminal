@@ -194,7 +194,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
         var cts = new CancellationTokenSource();
         _scanCts = cts;
         _scanning = true;
-        _status = "Scanning local network...";
+        _status = iConsole.Localization.UiText.Get("Net.Scanning", "Scanning local network...");
         _statusIsError = false;
         _hostListBox.EmptyText = UiText.Get("Empty.HostsLooking", UiText.Get("Empty.HostsLooking", " Looking for hosts on the local network…"));
 
@@ -226,7 +226,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
             }
             catch (Exception exception)
             {
-                _status = $"Scan error: {exception.Message}";
+                _status = string.Format(iConsole.Localization.UiText.Get("Net.ScanError", "Scan error: {0}"), exception.Message);
                 _statusIsError = true;
             }
             finally
@@ -406,7 +406,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
 
         if (isSmb && shareName.Length == 0)
         {
-            _status = "A share name is required.";
+            _status = iConsole.Localization.UiText.Get("Net.ShareRequired", "A share name is required.");
             _statusIsError = true;
             StateHasChanged();
             return;
@@ -428,7 +428,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
 
     private async Task ConnectAsync(NetworkConnectionProfile profile, bool saveConnection, string? secretOverride = null)
     {
-        _status = "Connecting...";
+        _status = iConsole.Localization.UiText.Get("Net.Connecting", "Connecting...");
         _statusIsError = false;
         StateHasChanged();
 
@@ -468,7 +468,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
         }
         catch (Exception exception)
         {
-            _status = $"Connection failed: {exception.Message}";
+            _status = string.Format(iConsole.Localization.UiText.Get("Net.ConnectionFailed", "Connection failed: {0}"), exception.Message);
             _statusIsError = true;
             StateHasChanged();
         }
@@ -487,7 +487,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
         }
 
         _pendingDelete = row;
-        _status = $"Delete the saved connection {row.DisplayName} and its stored password?  y:yes  n:no";
+        _status = string.Format(iConsole.Localization.UiText.Get("Net.DeleteSaved", "Delete the saved connection {0} and its stored password?  y:yes  n:no"), row.DisplayName);
         _statusIsError = true;
         StateHasChanged();
     }
@@ -501,7 +501,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
             return;
         }
 
-        _status = $"Deleted {row.DisplayName}.";
+        _status = string.Format(iConsole.Localization.UiText.Get("Net.Deleted", "Deleted {0}."), row.DisplayName);
         _statusIsError = false;
         _networkProfileService.Delete(row.Profile.Id);
         _passwordManager.DeleteSecret(row.Profile.Id);

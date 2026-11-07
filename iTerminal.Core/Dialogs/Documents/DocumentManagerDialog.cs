@@ -286,7 +286,7 @@ public class DocumentManagerDialog : SplitPaneDialog
                 if (generation == Volatile.Read(ref _searchGeneration))
                 {
                     _searching = false;
-                    _message = $"Search failed: {exception.Message}";
+                    _message = string.Format(iConsole.Localization.UiText.Get("Docs.SearchFailed", "Search failed: {0}"), exception.Message);
                 }
             }
             finally
@@ -551,7 +551,7 @@ public class DocumentManagerDialog : SplitPaneDialog
 
         CancellationTokenSource cts = new();
         _rescanCts = cts;
-        _message = "Scanning…";
+        _message = iConsole.Localization.UiText.Get("Docs.Scanning", "Scanning…");
         StateHasChanged();
 
         _ = Task.Run(async () =>
@@ -563,11 +563,11 @@ public class DocumentManagerDialog : SplitPaneDialog
             }
             catch (OperationCanceledException)
             {
-                _message = "Scan cancelled.";
+                _message = iConsole.Localization.UiText.Get("Docs.ScanCancelled", "Scan cancelled.");
             }
             catch (Exception exception)
             {
-                _message = $"Scan failed: {exception.Message}";
+                _message = string.Format(iConsole.Localization.UiText.Get("Docs.ScanFailed", "Scan failed: {0}"), exception.Message);
             }
             finally
             {
@@ -581,14 +581,14 @@ public class DocumentManagerDialog : SplitPaneDialog
         if (_rescanCts is { IsCancellationRequested: false })
         {
             _rescanCts.Cancel();
-            _message = "Cancelling…";
+            _message = iConsole.Localization.UiText.Get("Msg.CancellingEllipsis", "Cancelling…");
             StateHasChanged();
         }
         else if (_documentLibraryService.IsIndexing)
         {
             // The periodic indexer's scan is not this dialog's to stop; saying so beats a key that
             // silently does nothing.
-            _message = "The background indexer is scanning; it cannot be stopped from here.";
+            _message = iConsole.Localization.UiText.Get("Docs.IndexerBusy", "The background indexer is scanning; it cannot be stopped from here.");
             StateHasChanged();
         }
     }

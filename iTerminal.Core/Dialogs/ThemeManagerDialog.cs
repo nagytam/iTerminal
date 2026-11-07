@@ -129,7 +129,7 @@ public class ThemeManagerDialog : Dialog
 
         if (!ThemeService.TrySetTheme(scheme.Theme))
         {
-            _status = $"The {scheme.Theme} theme cannot be applied here.";
+            _status = string.Format(iConsole.Localization.UiText.Get("Theme.CannotApply", "The {0} theme cannot be applied here."), scheme.Theme);
             StateHasChanged();
             return;
         }

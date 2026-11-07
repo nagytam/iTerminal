@@ -705,7 +705,7 @@ public class ChecksumDialog : Dialog
     {
         if (Result is not { } result)
         {
-            _saveStatus = "Nothing to copy yet: the file is still being read.";
+            _saveStatus = iConsole.Localization.UiText.Get("Checksum.NothingToCopy", "Nothing to copy yet: the file is still being read.");
             _saveFailed = true;
             UpdateLines();
             StateHasChanged();
@@ -714,13 +714,13 @@ public class ChecksumDialog : Dialog
 
         string name = ChecksumService.DisplayName(algorithm);
         Task copy = TextClipboard.Current.SetTextAsync(result.Hashes[algorithm]);
-        _saveStatus = $"Copied the {name} to the clipboard.";
+        _saveStatus = string.Format(iConsole.Localization.UiText.Get("Checksum.Copied", "Copied the {0} to the clipboard."), name);
         _saveFailed = false;
         _ = copy.ContinueWith(task =>
         {
             if (task.IsFaulted)
             {
-                _saveStatus = $"Could not copy the {name}: {task.Exception?.GetBaseException().Message}";
+                _saveStatus = string.Format(iConsole.Localization.UiText.Get("Checksum.CopyFailed", "Could not copy the {0}: {1}"), name, task.Exception?.GetBaseException().Message);
                 _saveFailed = true;
                 StateHasChanged();
             }

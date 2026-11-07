@@ -4081,4 +4081,154 @@
   <data name="EnvVars.FilterHint" xml:space="preserve">
     <value>Filtre : {0}  (Échap montre toutes les variables)</value>
   </data>
+  <data name="Net.Scanning" xml:space="preserve">
+    <value>Analyse du réseau local...</value>
+  </data>
+  <data name="Net.ScanError" xml:space="preserve">
+    <value>Erreur d’analyse : {0}</value>
+  </data>
+  <data name="Net.ShareRequired" xml:space="preserve">
+    <value>Un nom de partage est requis.</value>
+  </data>
+  <data name="Net.Connecting" xml:space="preserve">
+    <value>Connexion...</value>
+  </data>
+  <data name="Net.ConnectionFailed" xml:space="preserve">
+    <value>Échec de la connexion : {0}</value>
+  </data>
+  <data name="Net.DeleteSaved" xml:space="preserve">
+    <value>Supprimer la connexion enregistrée {0} et son mot de passe ?  y:oui  n:non</value>
+  </data>
+  <data name="Net.Deleted" xml:space="preserve">
+    <value>{0} supprimé.</value>
+  </data>
+  <data name="MusicViewer.TagsWritable" xml:space="preserve">
+    <value>Les balises peuvent être écrites dans les fichiers MP3 et FLAC.</value>
+  </data>
+  <data name="MusicViewer.StillReading" xml:space="preserve">
+    <value>Lecture du fichier en cours…</value>
+  </data>
+  <data name="MusicViewer.Queued" xml:space="preserve">
+    <value>Ajouté à la liste de lecture</value>
+  </data>
+  <data name="MusicViewer.QueueFailed" xml:space="preserve">
+    <value>Le fichier n’a pas pu être ajouté à la file.</value>
+  </data>
+  <data name="MusicViewer.SeekNeedsPlay" xml:space="preserve">
+    <value>Pour se déplacer, ce fichier doit être en lecture — Espace le lit.</value>
+  </data>
+  <data name="MusicViewer.Volume" xml:space="preserve">
+    <value>Volume {0} %</value>
+  </data>
+  <data name="MusicViewer.NotPlaying" xml:space="preserve">
+    <value>Ce fichier n’est pas en lecture.</value>
+  </data>
+  <data name="MusicViewer.Artist" xml:space="preserve">
+    <value>Artiste</value>
+  </data>
+  <data name="MusicViewer.Title" xml:space="preserve">
+    <value>Titre</value>
+  </data>
+  <data name="MusicViewer.Album" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="MusicViewer.Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Map.NeedsNetwork" xml:space="preserve">
+    <value>La recherche par nom nécessite le réseau. Appuyez sur O pour passer en ligne, ou saisissez des coordonnées.</value>
+  </data>
+  <data name="Map.SearchRunning" xml:space="preserve">
+    <value>Une recherche est déjà en cours.</value>
+  </data>
+  <data name="Map.Searching" xml:space="preserve">
+    <value>Recherche de « {0} »…</value>
+  </data>
+  <data name="Map.NothingFound" xml:space="preserve">
+    <value>Aucun résultat pour « {0} ».</value>
+  </data>
+  <data name="Map.NoPlaces" xml:space="preserve">
+    <value>Aucun lieu enregistré. Appuyez sur M pour enregistrer le centre de la carte.</value>
+  </data>
+  <data name="Map.Saved" xml:space="preserve">
+    <value>Enregistré : {0}</value>
+  </data>
+  <data name="Map.RemovePlace" xml:space="preserve">
+    <value>Supprimer le lieu enregistré « {0} » ? (y/n)</value>
+  </data>
+  <data name="Solution.NoTests" xml:space="preserve">
+    <value>Cette solution ne contient aucun projet de test.</value>
+  </data>
+  <data name="Solution.SelectToRun" xml:space="preserve">
+    <value>Choisissez un projet à exécuter (la solution entière ne peut pas être exécutée).</value>
+  </data>
+  <data name="Msg.Cancelling" xml:space="preserve">
+    <value>Annulation...</value>
+  </data>
+  <data name="Solution.NoSdk" xml:space="preserve">
+    <value>Aucun SDK .NET trouvé ; les commandes utilisent le dotnet du PATH.</value>
+  </data>
+  <data name="Solution.OnlySdk" xml:space="preserve">
+    <value>Seul le SDK .NET {0} est installé.</value>
+  </data>
+  <data name="Solution.UsingSdk" xml:space="preserve">
+    <value>Utilisation du SDK .NET {0}.</value>
+  </data>
+  <data name="Docs.SearchFailed" xml:space="preserve">
+    <value>Échec de la recherche : {0}</value>
+  </data>
+  <data name="Docs.Scanning" xml:space="preserve">
+    <value>Analyse…</value>
+  </data>
+  <data name="Docs.ScanCancelled" xml:space="preserve">
+    <value>Analyse annulée.</value>
+  </data>
+  <data name="Docs.ScanFailed" xml:space="preserve">
+    <value>Échec de l’analyse : {0}</value>
+  </data>
+  <data name="Msg.CancellingEllipsis" xml:space="preserve">
+    <value>Annulation…</value>
+  </data>
+  <data name="Docs.IndexerBusy" xml:space="preserve">
+    <value>L’indexeur en arrière-plan est en cours d’analyse ; il ne peut pas être arrêté d’ici.</value>
+  </data>
+  <data name="Pkg.Error" xml:space="preserve">
+    <value>Erreur : {0}</value>
+  </data>
+  <data name="Pkg.StillWorking" xml:space="preserve">
+    <value>La dernière requête est en cours — x l’annule.</value>
+  </data>
+  <data name="IPhone.ScanError" xml:space="preserve">
+    <value>Erreur d’analyse des appareils : {0}</value>
+  </data>
+  <data name="IPhone.Opening" xml:space="preserve">
+    <value>Ouverture de {0}...</value>
+  </data>
+  <data name="IPhone.OpenFailed" xml:space="preserve">
+    <value>Impossible d’ouvrir {0} : {1}</value>
+  </data>
+  <data name="Checksum.NothingToCopy" xml:space="preserve">
+    <value>Rien à copier pour l’instant : le fichier est encore en cours de lecture.</value>
+  </data>
+  <data name="Checksum.Copied" xml:space="preserve">
+    <value>{0} copié dans le presse-papiers.</value>
+  </data>
+  <data name="Checksum.CopyFailed" xml:space="preserve">
+    <value>Impossible de copier {0} : {1}</value>
+  </data>
+  <data name="SysSettings.Reading" xml:space="preserve">
+    <value>Lecture des paramètres système…</value>
+  </data>
+  <data name="SysSettings.ReadFailed" xml:space="preserve">
+    <value>Impossible de lire les paramètres système : {0}</value>
+  </data>
+  <data name="Theme.CannotApply" xml:space="preserve">
+    <value>Le thème {0} ne peut pas être appliqué ici.</value>
+  </data>
+  <data name="Solution.SdkPreview" xml:space="preserve">
+    <value>{0} (préversion)</value>
+  </data>
+  <data name="MusicViewer.ReadingTags" xml:space="preserve">
+    <value>Lecture des balises…</value>
+  </data>
 </root>

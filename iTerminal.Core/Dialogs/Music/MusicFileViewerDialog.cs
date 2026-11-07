@@ -115,7 +115,7 @@ public class MusicFileViewerDialog : Dialog
         string path = FilePath;
         if (!AudioTagWriter.CanWrite(path))
         {
-            _status = "Tags can be written to MP3 and FLAC files.";
+            _status = iConsole.Localization.UiText.Get("MusicViewer.TagsWritable", "Tags can be written to MP3 and FLAC files.");
             StateHasChanged();
             return;
         }
@@ -224,7 +224,7 @@ public class MusicFileViewerDialog : Dialog
         // Queueing before the read lands would queue a track with no title and an unknown length.
         if (_isLoading)
         {
-            _status = "Still reading the file…";
+            _status = iConsole.Localization.UiText.Get("MusicViewer.StillReading", "Still reading the file…");
             return;
         }
 
@@ -241,12 +241,12 @@ public class MusicFileViewerDialog : Dialog
         {
             _player.Playlist.Add(_metadata.ToTrack());
             index = IndexInPlaylist();
-            _status = "Added to the playlist";
+            _status = iConsole.Localization.UiText.Get("MusicViewer.Queued", "Added to the playlist");
         }
 
         if (index < 0)
         {
-            _status = "The file could not be queued.";
+            _status = iConsole.Localization.UiText.Get("MusicViewer.QueueFailed", "The file could not be queued.");
             return;
         }
 
@@ -283,7 +283,7 @@ public class MusicFileViewerDialog : Dialog
         if (!IsThisFileCued)
         {
             // Said rather than ignored: the arrows seek only the track this viewer is playing.
-            _status = "Seeking needs this file playing — Space plays it.";
+            _status = iConsole.Localization.UiText.Get("MusicViewer.SeekNeedsPlay", "Seeking needs this file playing — Space plays it.");
             return;
         }
 
@@ -293,7 +293,7 @@ public class MusicFileViewerDialog : Dialog
     private void ChangeVolume(int delta)
     {
         _player.Volume += delta;
-        _status = $"Volume {_player.Volume}%";
+        _status = string.Format(iConsole.Localization.UiText.Get("MusicViewer.Volume", "Volume {0}%"), _player.Volume);
     }
 
     #endregion
@@ -381,7 +381,7 @@ public class MusicFileViewerDialog : Dialog
                 }
                 else
                 {
-                    _status = "This file is not playing.";
+                    _status = iConsole.Localization.UiText.Get("MusicViewer.NotPlaying", "This file is not playing.");
                 }
 
                 StateHasChanged();
@@ -449,16 +449,16 @@ public class MusicFileViewerDialog : Dialog
         var size = _metadata.Size > 0 ? $"   {FormatSize(_metadata.Size)}" : string.Empty;
         WriteLine(buffer, x, y, w, $" {FilePath}{size}", Color.Cyan, colorScheme.Background);
 
-        WriteField(buffer, x, y + 1, w, "Artist", string.IsNullOrEmpty(_metadata.Artist) ? "—" : _metadata.Artist, colorScheme);
-        WriteField(buffer, x, y + 2, w, "Title", _isLoading ? "Reading tags…" : _metadata.Title, colorScheme);
-        WriteField(buffer, x, y + 3, w, "Album", string.IsNullOrEmpty(_metadata.Album) ? "—" : _metadata.Album, colorScheme);
+        WriteField(buffer, x, y + 1, w, iConsole.Localization.UiText.Get("MusicViewer.Artist", "Artist"), string.IsNullOrEmpty(_metadata.Artist) ? "—" : _metadata.Artist, colorScheme);
+        WriteField(buffer, x, y + 2, w, iConsole.Localization.UiText.Get("MusicViewer.Title", "Title"), _isLoading ? iConsole.Localization.UiText.Get("MusicViewer.ReadingTags", "Reading tags…") : _metadata.Title, colorScheme);
+        WriteField(buffer, x, y + 3, w, iConsole.Localization.UiText.Get("MusicViewer.Album", "Album"), string.IsNullOrEmpty(_metadata.Album) ? "—" : _metadata.Album, colorScheme);
 
         var format = _metadata.FormatSummary;
         var duration = _metadata.Duration > TimeSpan.Zero ? $"   {FormatTime(_metadata.Duration)}" : string.Empty;
         var playable = _metadata.CanPlay || string.IsNullOrEmpty(_metadata.Format)
             ? string.Empty
             : "   (needs ffmpeg)";
-        WriteField(buffer, x, y + 4, w, "Format", $"{format}{duration}{playable}", colorScheme);
+        WriteField(buffer, x, y + 4, w, iConsole.Localization.UiText.Get("MusicViewer.Format", "Format"), $"{format}{duration}{playable}", colorScheme);
 
         var source = string.IsNullOrEmpty(_metadata.TagSet.Source)
             ? "Tags"
