@@ -5335,4 +5335,7 @@
   <data name="Translator.EngineAi" xml:space="preserve">
     <value>Modèle d’IA</value>
   </data>
+  <data name="Git.NoRepoHint" xml:space="preserve">
+    <value>Ouvrez dans le panneau un dossier situé dans un dépôt, puis appuyez de nouveau sur Ctrl+G.</value>
+  </data>
 </root>

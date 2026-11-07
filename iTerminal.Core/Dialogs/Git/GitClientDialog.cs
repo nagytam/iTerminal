@@ -482,7 +482,7 @@ public class GitClientDialog : SplitPaneDialog
     #region Refresh (background)
 
     private const string CleanWorkingTreeText = "  (working tree clean)";
-    private const string NoRepositoryText = "  Open a folder inside a repository in the panel, then press Ctrl+G again.";
+    private static string NoRepositoryText => UiText.Get("Git.NoRepoHint", "Open a folder inside a repository in the panel, then press Ctrl+G again.");
     private void StartRefresh(bool reloadLog) => PendingOperation = Task.Run(() => RefreshAllAsync(reloadLog));
 
     private async Task RefreshAllAsync(bool reloadLog)
@@ -497,7 +497,8 @@ public class GitClientDialog : SplitPaneDialog
             {
                 _root = null;
                 // "(working tree clean)" under "Not a git repository" contradicted the line above it.
-                _unstagedListBox.EmptyText = NoRepositoryText;
+                // The explanation is drawn across the whole dialog (see Draw); as the empty text of the list it wrapped in a 30-column strip.
+                _unstagedListBox.EmptyText = string.Empty;
                 SetMessage(string.Format(UiText.Get("Msg.NotGitRepo", "Not a git repository: {0}"), _startDirectory), MessageSeverity.Error);
                 _loading = false;
                 StateHasChanged();
@@ -1581,6 +1582,20 @@ public class GitClientDialog : SplitPaneDialog
         if (_root is null)
         {
             WriteLine(buffer, ix, midY, iw, _loading ? UiText.Get("Git.Loading", "Loading...") : _message, colorScheme.Foreground, colorScheme.Background);
+            if (!_loading)
+            {
+                int row = 2;
+                foreach (string part in NoRepositoryText.WrapWords(Math.Max(10, iw - 2)))
+                {
+                    if (row >= midH)
+                    {
+                        break;
+                    }
+
+                    WriteLine(buffer, ix, midY + row++, iw, "  " + part, colorScheme.DisabledForeground, colorScheme.Background);
+                }
+            }
+
             return;
         }
 

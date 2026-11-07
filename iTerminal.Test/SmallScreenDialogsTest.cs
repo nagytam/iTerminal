@@ -143,4 +143,41 @@ public class SmallScreenDialogsTest
         await narrow.WaitForTextAsync("Bluetooth devices");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("00:11:22:33:44:55")), "a whole 17-character address");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheGitDialogOutsideARepository_ExplainsWhatToDoAcrossItsWholeWidth()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Ctrl+G");
+
+        await narrow.WaitForTextAsync("No repository");
+        // In the list's own 30-column strip the sentence broke after "a"; across the dialog the first words stay together.
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Open a folder inside a repository")), "the explanation, wrapped to the dialog and not to a narrow strip");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheDiskUsageOn60Columns_ShowsWholeFileNames()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Ctrl+Shift+F12");
+
+        await narrow.WaitForTextAsync("Disk usage");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("readme.txt") && l.Contains("68%")), "readme.txt in full beside its share");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheSystemSettingsNoteOn60Columns_IsWrappedAndNotCutOff()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Ctrl+Shift+F10");
+
+        await narrow.WaitForTextAsync("System Settings");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("restart.")), "the end of the note about a restart");
+    }
 }

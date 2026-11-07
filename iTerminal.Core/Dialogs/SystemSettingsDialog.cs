@@ -229,6 +229,15 @@ public class SystemSettingsDialog : Dialog
         return new(_message, _messageIsError ? Color.DarkRed : scheme.Foreground);
     }
 
+    /// <summary>A note under the rows, wrapped to the dialog's width: cut at the edge, "takes effect after" lost its ending on a narrow terminal.</summary>
+    private void AddWrapped(List<InfoLines.Line> body, string text, Color? color)
+    {
+        foreach (string part in text.WrapWords(Math.Max(10, (int)_lines.ViewSize.Width - 2)))
+        {
+            body.Add(new("  " + part, color));
+        }
+    }
+
     private void BuildComputer(List<InfoLines.Line> body, ColorScheme scheme)
     {
         if (_identity is not { } identity)
@@ -255,10 +264,10 @@ public class SystemSettingsDialog : Dialog
         }
 
         body.Add(default);
-        body.Add(new("  A new computer name or workgroup takes effect after a restart.", scheme.DisabledForeground));
+        AddWrapped(body, "A new computer name or workgroup takes effect after a restart.", scheme.DisabledForeground);
         if (identity.IsDomainMember)
         {
-            body.Add(new("  Leaving a domain needs a directory account: use Windows' System Properties.", scheme.DisabledForeground));
+            AddWrapped(body, "Leaving a domain needs a directory account: use Windows' System Properties.", scheme.DisabledForeground);
         }
     }
 

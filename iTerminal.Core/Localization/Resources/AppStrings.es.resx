@@ -5335,4 +5335,7 @@
   <data name="Translator.EngineAi" xml:space="preserve">
     <value>Modelo de IA</value>
   </data>
+  <data name="Git.NoRepoHint" xml:space="preserve">
+    <value>Abra en el panel una carpeta dentro de un repositorio y vuelva a pulsar Ctrl+G.</value>
+  </data>
 </root>

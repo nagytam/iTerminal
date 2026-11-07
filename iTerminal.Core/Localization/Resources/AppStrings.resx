@@ -5476,4 +5476,7 @@
   <data name="Translator.EngineAi" xml:space="preserve">
     <value>AI model</value>
   </data>
+  <data name="Git.NoRepoHint" xml:space="preserve">
+    <value>Open a folder inside a repository in the panel, then press Ctrl+G again.</value>
+  </data>
 </root>
