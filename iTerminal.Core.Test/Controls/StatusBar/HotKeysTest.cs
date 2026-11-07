@@ -241,6 +241,27 @@ public class HotKeysTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void WhenEvenOneLetterEachDoesNotFitTheButtonsAreDropped_NotTheirKeysCut()
+    {
+        string[] titles = ["F1-Help", "F2-Terminal", "F3-View", "F4-Edit", "F5-Copy", "F6-Rename", "F7-Find", "F8-Delete", "F9-Tasks", "F10-Quit", "F12-Screens"];
+        var naturals = titles.Select(t => t.Length + 2).ToList();
+
+        // 36 columns, the bar of a 40-column terminal: it used to come out as "[F][F][F][F][F][F6][F][F8]…".
+        var widths = HotKeys.FitTitlesToBudget(titles, naturals, 36);
+
+        Assert.IsTrue(widths.Sum() <= 36, string.Join(",", widths));
+        for (int i = 0; i < titles.Length; i++)
+        {
+            int key = titles[i].IndexOf('-') + 1;
+            Assert.IsTrue(widths[i] == 0 || widths[i] >= 2 + key + 1, $"{titles[i]} keeps its whole key or is left out, was {widths[i]}");
+        }
+
+        Assert.AreNotEqual(0, widths[0], "Help stays");
+        Assert.AreNotEqual(0, widths[9], "Quit stays");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void At100ColumnsTheBaseLayerKeepsReadableWords()
     {
         var (hotKeys, _) = Create(screenWidth: 100);

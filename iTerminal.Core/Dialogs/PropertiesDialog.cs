@@ -31,7 +31,8 @@ public class PropertiesDialog : FormDialog
 {
     private static readonly string[] CaptionNames = ["Name", "Location", "Type", "Points to", "Size", "Contains", "Created", "Modified", "Accessed", "Permissions", "Colour", "Tags"];
     private const int InfoRows = 18;
-    private const int MinInfoRows = 4;
+    // Two is all a 15-row terminal leaves with three date boxes: at four the buttons overlapped and drew "])]" over each other.
+    private const int MinInfoRows = 2;
     private static readonly string[] DateFormats = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm"];
 
     private readonly IFilePropertiesService _propertiesService;

@@ -140,6 +140,32 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task TheKeyBarOn40Columns_KeepsWholeKeysAndNotJustTheLetterF()
+    {
+        await using TerminalApp tiny = await TerminalApp.StartAsync(width: 40, height: 15);
+
+        // The bar used to be "[F][F][F][F][F][F6][F][F8]…": every key but two cut to its first letter.
+        string bar = tiny.Screen.Lines[tiny.Screen.Height - 1];
+        Assert.IsTrue(bar.Contains("[F1-"), tiny.Screen.Dump());
+        Assert.IsFalse(bar.Contains("[F]"), tiny.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheButtonsOfThePropertiesOn15Rows_DoNotDrawOverEachOther()
+    {
+        await using TerminalApp tiny = await TerminalApp.StartAsync(width: 40, height: 15);
+        await tiny.SelectEntryAsync("readme.txt");
+
+        await tiny.PressAsync("Ctrl+F12");
+
+        await tiny.WaitForTextAsync("Properties of readme.txt");
+        await tiny.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("[     Apply     ]") && l.Contains("Cancel")), "Apply and Cancel whole, on a row of their own");
+        Assert.IsFalse(tiny.Screen.Lines.Any(l => l.Contains("])]")), tiny.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheChessRulesOn20Rows_EndOnAnEllipsisInsteadOfASentenceCutInTheAir()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);

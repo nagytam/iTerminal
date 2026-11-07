@@ -661,6 +661,27 @@ public class HotKeys : StatusBarItem
             }
         }
 
+        // 4. Not even a letter each for the half that is left: keep leaving buttons out, the expendable first and never
+        // the last two, rather than scale them all down until the keys themselves are cut ("[F][F][F]" at 40 columns).
+        foreach (var index in DropOrder(titles))
+        {
+            if (!included[index])
+            {
+                continue;
+            }
+
+            if (included.Count(i => i) <= 2)
+            {
+                break;
+            }
+
+            included[index] = false;
+            if (Widths(1).Sum() <= budget)
+            {
+                return Widths(1);
+            }
+        }
+
         return FitWidthsToBudget(naturals, budget);
     }
 

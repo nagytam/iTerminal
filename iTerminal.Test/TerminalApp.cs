@@ -109,7 +109,8 @@ public sealed class TerminalApp : IAsyncDisposable
         try
         {
             await app.Driver.WaitUntilAsync(
-                screen => screen.Contains("alpha") && screen.Contains("right_only.txt"),
+                // "right_only" and not the whole name: on a very narrow terminal the right panel cuts the name.
+                screen => screen.Contains("alpha") && screen.Contains("right_only"),
                 "both panels to list their folders");
         }
         catch
