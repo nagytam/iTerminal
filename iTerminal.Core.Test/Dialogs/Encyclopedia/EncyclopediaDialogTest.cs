@@ -302,6 +302,15 @@ public class EncyclopediaDialogTest
         h.Dialog.StartSearch();
         Task first = h.Dialog.RequestTask;
 
+        // The search starts on a worker. Opening the gate for the next one before this one has reached the provider let
+        // the first finish last on a busy machine, and "first" was then the last query it had seen.
+        for (int waited = 0; h.Provider.SearchCalls < 1 && waited < 500; waited++)
+        {
+            await Task.Delay(10);
+        }
+
+        Assert.AreEqual(1, h.Provider.SearchCalls, "the first search to reach the provider");
+
         h.Provider.Gate = null;
         h.Dialog.QueryBox.Text = "second";
         h.Dialog.StartSearch();
