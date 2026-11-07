@@ -4384,4 +4384,100 @@
   <data name="Workspaces.OnScreen" xml:space="preserve">
     <value>Sullo schermo: {0}</value>
   </data>
+  <data name="Settings.LeftOrder" xml:space="preserve">
+    <value>Ordine pannello sinistro</value>
+  </data>
+  <data name="Settings.RightOrder" xml:space="preserve">
+    <value>Ordine pannello destro</value>
+  </data>
+  <data name="Settings.Reversed" xml:space="preserve">
+    <value>Invertito</value>
+  </data>
+  <data name="Settings.ShowHidden" xml:space="preserve">
+    <value>Mostra file e cartelle nascosti</value>
+  </data>
+  <data name="Settings.FoldersFirst" xml:space="preserve">
+    <value>Tieni le cartelle prima dei file nell’ordinamento</value>
+  </data>
+  <data name="Settings.NaturalOrder" xml:space="preserve">
+    <value>Ordina i numeri nei nomi per valore (file2 prima di file10)</value>
+  </data>
+  <data name="Settings.OrderHint" xml:space="preserve">
+    <value>Shift+F11 cambia l’ordine del pannello attivo senza passare da qui.</value>
+  </data>
+  <data name="Compress.Nothing" xml:space="preserve">
+    <value>Niente da comprimere.</value>
+  </data>
+  <data name="Compress.TypeName" xml:space="preserve">
+    <value>Digita il nome dell’archivio.</value>
+  </data>
+  <data name="Compress.ChooseFormat" xml:space="preserve">
+    <value>Scegli un formato.</value>
+  </data>
+  <data name="Compress.NameFormatMismatch" xml:space="preserve">
+    <value>Il nome termina con {0}, ma il formato è {1}.</value>
+  </data>
+  <data name="Compress.PasswordMismatch" xml:space="preserve">
+    <value>Le password non corrispondono.</value>
+  </data>
+  <data name="Compress.AddsToExisting" xml:space="preserve">
+    <value>Aggiunge all’archivio esistente.</value>
+  </data>
+  <data name="Compress.NoPassword" xml:space="preserve">
+    <value>{0} non supporta la password.</value>
+  </data>
+  <data name="Wipe.Pass3" xml:space="preserve">
+    <value>3 passaggi (zeri, uni, casuale)</value>
+  </data>
+  <data name="Wipe.Pass7" xml:space="preserve">
+    <value>7 passaggi</value>
+  </data>
+  <data name="Wipe.Pass1" xml:space="preserve">
+    <value>1 passaggio di byte casuali</value>
+  </data>
+  <data name="Wipe.Method" xml:space="preserve">
+    <value>Metodo  {0}</value>
+  </data>
+  <data name="Wipe.MethodKeys" xml:space="preserve">
+    <value>        1: un passaggio   3: tre   7: sette   (o ↑↓)</value>
+  </data>
+  <data name="Wipe.Overwritten" xml:space="preserve">
+    <value>Il contenuto viene sovrascritto e i nomi rimossi.</value>
+  </data>
+  <data name="Wipe.NoUndo" xml:space="preserve">
+    <value>Non si può annullare.</value>
+  </data>
+  <data name="Wipe.Copies1" xml:space="preserve">
+    <value>Non raggiunge le copie che snapshot, backup,</value>
+  </data>
+  <data name="Wipe.Copies2" xml:space="preserve">
+    <value>file system copy-on-write o SSD conservano.</value>
+  </data>
+  <data name="Wipe.Continue" xml:space="preserve">
+    <value>Enter:continua</value>
+  </data>
+  <data name="Wipe.Armed1" xml:space="preserve">
+    <value>Questo distrugge i dati per sempre. Premi di nuovo Invio per cancellare,</value>
+  </data>
+  <data name="Wipe.Armed2" xml:space="preserve">
+    <value>qualsiasi altro tasto per tornare indietro.</value>
+  </data>
+  <data name="Wipe.Overwriting" xml:space="preserve">
+    <value>Sovrascrittura…{0}  {1} di {2}</value>
+  </data>
+  <data name="Wipe.EscStops" xml:space="preserve">
+    <value>Esc lo ferma; i file già cancellati restano cancellati.</value>
+  </data>
+  <data name="Update.NoInstaller" xml:space="preserve">
+    <value>Questa versione non ha ancora un programma di installazione per Windows.</value>
+  </data>
+  <data name="Update.ClosesDuring" xml:space="preserve">
+    <value>iTerminal si chiude mentre il programma di installazione è in esecuzione.</value>
+  </data>
+  <data name="Update.DownloadFrom" xml:space="preserve">
+    <value>Scaricala da {0}</value>
+  </data>
+  <data name="Update.Available" xml:space="preserve">
+    <value>iTerminal {0} è disponibile. Hai {1}.</value>
+  </data>
 </root>

@@ -164,10 +164,10 @@ public partial class UpdateDialog : FormDialog
         string latest = _service.Available?.Version ?? "?";
         List<(string Text, Color Color)> rows =
         [
-            ($"iTerminal {latest} is available. You have {_service.CurrentVersion}.", scheme.Foreground),
+            (string.Format(iConsole.Localization.UiText.Get("Update.Available", "iTerminal {0} is available. You have {1}."), latest, _service.CurrentVersion), scheme.Foreground),
             (_service.CanInstall
-                ? _service.Available?.Installer is null ? "This release has no Windows installer yet." : "iTerminal closes while the installer runs."
-                : $"Download it from {_service.ReleasesAddress}", scheme.DisabledForeground),
+                ? _service.Available?.Installer is null ? iConsole.Localization.UiText.Get("Update.NoInstaller", "This release has no Windows installer yet.") : iConsole.Localization.UiText.Get("Update.ClosesDuring", "iTerminal closes while the installer runs.")
+                : string.Format(iConsole.Localization.UiText.Get("Update.DownloadFrom", "Download it from {0}"), _service.ReleasesAddress), scheme.DisabledForeground),
             (string.Empty, scheme.Foreground),
         ];
 

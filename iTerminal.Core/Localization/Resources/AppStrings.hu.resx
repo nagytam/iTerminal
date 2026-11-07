@@ -4384,4 +4384,100 @@
   <data name="Workspaces.OnScreen" xml:space="preserve">
     <value>A képernyőn: {0}</value>
   </data>
+  <data name="Settings.LeftOrder" xml:space="preserve">
+    <value>Bal panel rendezése</value>
+  </data>
+  <data name="Settings.RightOrder" xml:space="preserve">
+    <value>Jobb panel rendezése</value>
+  </data>
+  <data name="Settings.Reversed" xml:space="preserve">
+    <value>Fordított</value>
+  </data>
+  <data name="Settings.ShowHidden" xml:space="preserve">
+    <value>Rejtett fájlok és mappák megjelenítése</value>
+  </data>
+  <data name="Settings.FoldersFirst" xml:space="preserve">
+    <value>Rendezéskor a mappák a fájlok előtt maradnak</value>
+  </data>
+  <data name="Settings.NaturalOrder" xml:space="preserve">
+    <value>A nevekben lévő számok érték szerinti rendezése (file2 a file10 előtt)</value>
+  </data>
+  <data name="Settings.OrderHint" xml:space="preserve">
+    <value>A Shift+F11 az aktív panel rendezését változtatja, anélkül hogy ide kellene jönni.</value>
+  </data>
+  <data name="Compress.Nothing" xml:space="preserve">
+    <value>Nincs mit tömöríteni.</value>
+  </data>
+  <data name="Compress.TypeName" xml:space="preserve">
+    <value>Írja be az archívum nevét.</value>
+  </data>
+  <data name="Compress.ChooseFormat" xml:space="preserve">
+    <value>Válasszon formátumot.</value>
+  </data>
+  <data name="Compress.NameFormatMismatch" xml:space="preserve">
+    <value>A név {0} végű, de a formátum {1}.</value>
+  </data>
+  <data name="Compress.PasswordMismatch" xml:space="preserve">
+    <value>A jelszavak nem egyeznek.</value>
+  </data>
+  <data name="Compress.AddsToExisting" xml:space="preserve">
+    <value>Hozzáadja a meglévő archívumhoz.</value>
+  </data>
+  <data name="Compress.NoPassword" xml:space="preserve">
+    <value>A(z) {0} nem támogat jelszót.</value>
+  </data>
+  <data name="Wipe.Pass3" xml:space="preserve">
+    <value>3 menet (nullák, egyesek, véletlen)</value>
+  </data>
+  <data name="Wipe.Pass7" xml:space="preserve">
+    <value>7 menet</value>
+  </data>
+  <data name="Wipe.Pass1" xml:space="preserve">
+    <value>1 menet véletlen bájtokkal</value>
+  </data>
+  <data name="Wipe.Method" xml:space="preserve">
+    <value>Módszer  {0}</value>
+  </data>
+  <data name="Wipe.MethodKeys" xml:space="preserve">
+    <value>        1: egy menet   3: három   7: hét   (vagy ↑↓)</value>
+  </data>
+  <data name="Wipe.Overwritten" xml:space="preserve">
+    <value>A tartalom felülíródik, a nevek törlődnek.</value>
+  </data>
+  <data name="Wipe.NoUndo" xml:space="preserve">
+    <value>Ez nem vonható vissza.</value>
+  </data>
+  <data name="Wipe.Copies1" xml:space="preserve">
+    <value>Nem éri el azokat a másolatokat, amelyeket pillanatképek, mentések,</value>
+  </data>
+  <data name="Wipe.Copies2" xml:space="preserve">
+    <value>copy-on-write fájlrendszerek vagy SSD-k őriznek.</value>
+  </data>
+  <data name="Wipe.Continue" xml:space="preserve">
+    <value>Enter:tovább</value>
+  </data>
+  <data name="Wipe.Armed1" xml:space="preserve">
+    <value>Ez végleg megsemmisíti az adatokat. A törléshez nyomja meg újra az Entert,</value>
+  </data>
+  <data name="Wipe.Armed2" xml:space="preserve">
+    <value>bármely más billentyű a visszalépéshez.</value>
+  </data>
+  <data name="Wipe.Overwriting" xml:space="preserve">
+    <value>Felülírás…{0}  {1} / {2}</value>
+  </data>
+  <data name="Wipe.EscStops" xml:space="preserve">
+    <value>Az Esc leállítja; a már törölt fájlok törölve maradnak.</value>
+  </data>
+  <data name="Update.NoInstaller" xml:space="preserve">
+    <value>Ehhez a kiadáshoz még nincs Windows-telepítő.</value>
+  </data>
+  <data name="Update.ClosesDuring" xml:space="preserve">
+    <value>Az iTerminal bezárul, amíg a telepítő fut.</value>
+  </data>
+  <data name="Update.DownloadFrom" xml:space="preserve">
+    <value>Letöltés innen: {0}</value>
+  </data>
+  <data name="Update.Available" xml:space="preserve">
+    <value>Elérhető az iTerminal {0}. Az Öné: {1}.</value>
+  </data>
 </root>

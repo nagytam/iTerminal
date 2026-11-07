@@ -48,14 +48,14 @@ public class SettingsPanelsTabPage : TabPage
         _settingsService = settingsService ?? NullSettingsService.Instance;
         _contentModelService = contentModelService;
 
-        _leftSort = CreateSortBox("Left panel order ", themeService);
-        _leftReversed = CreateCheckBox("Reversed", themeService);
-        _rightSort = CreateSortBox("Right panel order", themeService);
-        _rightReversed = CreateCheckBox("Reversed", themeService);
-        _showHidden = CreateCheckBox("Show hidden files and folders", themeService);
-        _foldersFirst = CreateCheckBox("Keep folders ahead of files when sorting", themeService);
-        _naturalOrder = CreateCheckBox("Sort numbers in names by value (file2 before file10)", themeService);
-        _hintLabel = new Label("Shift+F11 changes the focused panel's order without coming here.", themeService);
+        _leftSort = CreateSortBox(OrderLabel("Settings.LeftOrder", "Left panel order"), themeService);
+        _leftReversed = CreateCheckBox(iConsole.Localization.UiText.Get("Settings.Reversed", "Reversed"), themeService);
+        _rightSort = CreateSortBox(OrderLabel("Settings.RightOrder", "Right panel order"), themeService);
+        _rightReversed = CreateCheckBox(iConsole.Localization.UiText.Get("Settings.Reversed", "Reversed"), themeService);
+        _showHidden = CreateCheckBox(iConsole.Localization.UiText.Get("Settings.ShowHidden", "Show hidden files and folders"), themeService);
+        _foldersFirst = CreateCheckBox(iConsole.Localization.UiText.Get("Settings.FoldersFirst", "Keep folders ahead of files when sorting"), themeService);
+        _naturalOrder = CreateCheckBox(iConsole.Localization.UiText.Get("Settings.NaturalOrder", "Sort numbers in names by value (file2 before file10)"), themeService);
+        _hintLabel = new Label(iConsole.Localization.UiText.Get("Settings.OrderHint", "Shift+F11 changes the focused panel's order without coming here."), themeService);
 
         // Two titled rules group the page: what orders the panels, and what both of them list.
         _orderRule = new Separator(themeService) { Title = UiText.Get("Settings.Order", "Order") };
@@ -80,6 +80,13 @@ public class SettingsPanelsTabPage : TabPage
         box.SetItems(Modes);
         box.SelectionChanged += OnChanged;
         return box;
+    }
+
+    /// <summary>Both order boxes are labelled to the same width, whatever the language, so their fields line up.</summary>
+    private static string OrderLabel(string key, string english)
+    {
+        int width = Math.Max(UiText.Get("Settings.LeftOrder", "Left panel order").Length, UiText.Get("Settings.RightOrder", "Right panel order").Length);
+        return UiText.Get(key, english).PadRight(width);
     }
 
     private CheckBox CreateCheckBox(string label, IThemeService themeService)
