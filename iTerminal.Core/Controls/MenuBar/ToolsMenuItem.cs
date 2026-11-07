@@ -86,7 +86,7 @@ public class ToolsMenuItem : MenuItem
         if (packageManagerDialog is not null) groups["files"].Add(new PackageManagerDialogCommand(packageManagerDialog));
         if (stockBrowserDialog is not null) groups["office"].Add(new StockBrowserDialogCommand(stockBrowserDialog));
         if (calculatorDialog is not null) groups["office"].Add(new CalculatorDialogCommand(calculatorDialog));
-        if (virtualMachineManagerDialog is not null && VirtualMachineManagerDialogCommand.IsSupported) groups["sys"].Add(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
+        if (virtualMachineManagerDialog is not null && VirtualMachineManagerDialogCommand.IsSupported) groups["office"].Add(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
         if (unitConverterDialog is not null) groups["office"].Add(new UnitConverterDialogCommand(unitConverterDialog));
         if (calendarDialog is not null) groups["office"].Add(new CalendarDialogCommand(calendarDialog));
         if (toDoListDialog is not null) groups["office"].Add(new ToDoListDialogCommand(toDoListDialog));
