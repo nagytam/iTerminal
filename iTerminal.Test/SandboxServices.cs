@@ -1015,4 +1015,43 @@ public static class SandboxServices
             }
         }
     }
+
+    /// <summary>The Whisper model as if it were installed, and a recogniser that answers with a fixed sentence at once: no model is read, no engine loaded.</summary>
+    public sealed class SpeechRecognizer : Core.Speech.ISpeechRecognizer
+    {
+        public const string Sentence = "what is the weather in Budapest";
+
+        public bool IsModelInstalled => true;
+
+        public Task<string> TranscribeAsync(float[] samples, CancellationToken cancellationToken) => Task.FromResult(Sentence);
+    }
+
+    /// <summary>A microphone that records one second of a tone: no device is opened and no recorder program started.</summary>
+    public sealed class Microphone : Core.Speech.IMicrophoneCaptureFactory
+    {
+        public Core.Speech.IMicrophoneCapture Create() => new Tone();
+
+        private sealed class Tone : Core.Speech.IMicrophoneCapture
+        {
+            public void Start()
+            {
+            }
+
+            public byte[] Stop()
+            {
+                byte[] pcm = new byte[Core.Speech.Pcm.BytesPerSecond];
+                for (int i = 0; i < pcm.Length; i += 2)
+                {
+                    pcm[i] = 0x10;
+                    pcm[i + 1] = 0x10;
+                }
+
+                return pcm;
+            }
+
+            public void Dispose()
+            {
+            }
+        }
+    }
 }

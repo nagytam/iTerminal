@@ -562,6 +562,14 @@ public static class iTerminalApplicationBuilderExtension
             services.AddSingleton<IJob, OllamaServerJob>();
         }
 
+        // The Whisper speech model for voice input in the AI bar. The engine ships with the application; the model is
+        // offered at start-up like Ollama until it is installed or skipped.
+        services.AddSingleton(_ => new WhisperRuntimeDependency(Path.Combine(runtimesDirectory, "whisper")));
+        services.AddSingleton<IRuntimeDependency>(sp => sp.GetRequiredService<WhisperRuntimeDependency>());
+        services.AddSingleton<iTerminal.Core.Speech.ISpeechRecognizer, iTerminal.Core.Speech.WhisperRecognizer>();
+        services.AddSingleton<iTerminal.Core.Speech.IMicrophoneCaptureFactory, iTerminal.Core.Speech.MicrophoneCaptureFactory>();
+        services.AddSingleton<iTerminal.Core.Speech.ISpeechToTextService, iTerminal.Core.Speech.SpeechToTextService>();
+
         services.AddSingleton<IRuntimeDependencyService, RuntimeDependencyService>();
         services.AddSingleton<IJob, RuntimeDependencyCheckJob>();
         services.AddTransient<RuntimeDependencyDialog>();

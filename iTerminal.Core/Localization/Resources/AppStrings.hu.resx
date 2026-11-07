@@ -3946,4 +3946,43 @@
   <data name="DialogHint.StopOtherInstance" xml:space="preserve">
     <value>A másik példány leállítása</value>
   </data>
+  <data name="DialogHint.VoiceInput" xml:space="preserve">
+    <value>Kérdés bemondása (indítás és leállítás)</value>
+  </data>
+  <data name="Voice.Title" xml:space="preserve">
+    <value>Hangbevitel</value>
+  </data>
+  <data name="Voice.ModelMissing" xml:space="preserve">
+    <value>A hangbevitelhez a Whisper modell kell. Telepítse az Eszközök &gt; Futtatókörnyezeti függőségek menüből.</value>
+  </data>
+  <data name="Voice.Silence" xml:space="preserve">
+    <value>A mikrofon csak csendet adott. Ellenőrizze, hogy nincs-e némítva, és hogy a program használhatja-e.</value>
+  </data>
+  <data name="Voice.MicDenied" xml:space="preserve">
+    <value>A mikrofonhoz való hozzáférést megtagadták. Engedélyezze a terminált a Rendszerbeállítások &gt; Adatvédelem és biztonság &gt; Mikrofon alatt.</value>
+  </data>
+  <data name="Voice.NoMicrophone" xml:space="preserve">
+    <value>Nem található mikrofon.</value>
+  </data>
+  <data name="Voice.RecorderFailed" xml:space="preserve">
+    <value>A felvevő nem indult el:</value>
+  </data>
+  <data name="Voice.NoFfmpeg" xml:space="preserve">
+    <value>A hangbevitelhez ffmpeg kell a felvételhez. Telepítse az Eszközök &gt; Futtatókörnyezeti függőségek menüből.</value>
+  </data>
+  <data name="Voice.NoRecorder" xml:space="preserve">
+    <value>A hangbevitelhez parecord (pulseaudio-utils) vagy arecord (alsa-utils) kell a felvételhez.</value>
+  </data>
+  <data name="Voice.MicOpenFailed" xml:space="preserve">
+    <value>A mikrofont nem sikerült megnyitni</value>
+  </data>
+  <data name="Voice.EngineFailed" xml:space="preserve">
+    <value>A beszédfelismerő motor nem tölthető be ezen a rendszeren</value>
+  </data>
+  <data name="Voice.Recording" xml:space="preserve">
+    <value>REC</value>
+  </data>
+  <data name="Voice.Transcribing" xml:space="preserve">
+    <value>felismerés…</value>
+  </data>
 </root>

@@ -12,6 +12,7 @@ using iTerminal.Core.AI;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Speech;
 using System.ComponentModel;
 
 namespace iTerminal.Core.Controls.Terminals;
@@ -67,15 +68,24 @@ public class AiPromptBar : Window
         AiModelDialog aiModelDialog,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
-        IBackgroundStartService? backgroundStart = null) : base(themeService)
+        IBackgroundStartService? backgroundStart = null,
+        ISpeechToTextService? speech = null) : base(themeService)
     {
         _backgroundStart = backgroundStart;
         _model = model;
         _chatService = chatService;
+        _speech = speech;
         _model.PropertyChanged += OnModelChanged;
         _wasCollapsed = IsCollapsed;
         CanFocus = true;
         AddCommand(new AiModelDialogCommand(aiModelDialog));
+        if (_speech is not null)
+        {
+            _speech.Changed += (_, _) => StateHasChanged();
+            // Only for a bar that can take a question and has the focus; the key is offered to every control otherwise.
+            AddCommand(new VoiceInputCommand(() => _model.IsAvailable && IsFocused, () => _speech.Toggle()));
+        }
+
         AddCommand(new TabForwardCommand());
         AddCommand(new TabBackwardCommand());
 
@@ -90,6 +100,38 @@ public class AiPromptBar : Window
     }
 
     private readonly IBackgroundStartService? _backgroundStart;
+    private readonly ISpeechToTextService? _speech;
+
+    /// <summary>
+    /// Types what the voice input recognised into the question. Done here, on the UI thread, from the idle pass: the
+    /// recogniser finishes on a worker, and appending there would race with typing. Text typed meanwhile is kept.
+    /// </summary>
+    public override void OnIdle()
+    {
+        base.OnIdle();
+        if (_speech?.TakeResult() is not { } text)
+        {
+            return;
+        }
+
+        string spoken = PasteHelper.SingleLine(text).Trim();
+        if (spoken.Length == 0)
+        {
+            return;
+        }
+
+        string separator = _model.Input.Length > 0 && !char.IsWhiteSpace(_model.Input[^1]) ? " " : string.Empty;
+        _model.Input += separator + spoken;
+        _historyIndex = -1;
+    }
+
+    /// <summary>The model label's text: the model, or what the voice input is doing.</summary>
+    private string ModelBracket() => _speech?.State switch
+    {
+        SpeechState.Recording => $"[{UiText.Get("Voice.Recording", "REC")} ●]",
+        SpeechState.Transcribing => $"[{UiText.Get("Voice.Transcribing", "transcribing…")}]",
+        _ => _model.IsThinking ? $"[{_model.ModelInfo}]" : $"[{_model.ModelInfo}]>",
+    };
 
     /// <summary>The local AI server starts when the bar is first focused, or as configured (BackgroundStart.OllamaServer).</summary>
     protected override void OnFocusChanged()
@@ -178,6 +220,10 @@ public class AiPromptBar : Window
         yield return ("Esc", UiText.Get("DialogHint.ClearQuestionCancelAnswer", "Clear the question, or cancel the answer"));
         yield return ("Up/Down", UiText.Get("DialogHint.RecallQuestions", "Recall the questions already sent"));
         yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollAnswer", "Scroll the answer"));
+        if (_speech is not null)
+        {
+            yield return ("Alt+F1", UiText.Get("DialogHint.VoiceInput", "Speak the question (start and stop)"));
+        }
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -220,6 +266,7 @@ public class AiPromptBar : Window
 
             case ConsoleKey.Escape:
                 _cts?.Cancel();
+                _speech?.Cancel();
                 _model.Input = string.Empty;
                 _historyIndex = -1;
                 return true;
@@ -388,7 +435,7 @@ public class AiPromptBar : Window
         _spinner.Background = bg;
 
         // Model label: " [ModelInfo]" while thinking, " [ModelInfo]>" once idle again.
-        var bracket = _model.IsThinking ? $"[{_model.ModelInfo}]" : $"[{_model.ModelInfo}]>";
+        var bracket = ModelBracket();
         var modelText = " " + bracket;
         var modelWidth = Math.Min(modelText.Length, Math.Max(0, width - ModelLabelColumn));
         _modelLabel.Text = modelText.Shrink(modelWidth) ?? string.Empty;

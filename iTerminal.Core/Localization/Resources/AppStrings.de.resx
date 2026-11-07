@@ -3946,4 +3946,43 @@
   <data name="DialogHint.StopOtherInstance" xml:space="preserve">
     <value>Die andere Instanz beenden</value>
   </data>
+  <data name="DialogHint.VoiceInput" xml:space="preserve">
+    <value>Frage sprechen (Start und Stopp)</value>
+  </data>
+  <data name="Voice.Title" xml:space="preserve">
+    <value>Spracheingabe</value>
+  </data>
+  <data name="Voice.ModelMissing" xml:space="preserve">
+    <value>Die Spracheingabe braucht das Whisper-Modell. Installieren Sie es unter Werkzeuge &gt; Laufzeitabhängigkeiten.</value>
+  </data>
+  <data name="Voice.Silence" xml:space="preserve">
+    <value>Das Mikrofon hat nur Stille geliefert. Prüfen Sie, ob es stummgeschaltet ist und ob dieses Programm es verwenden darf.</value>
+  </data>
+  <data name="Voice.MicDenied" xml:space="preserve">
+    <value>Der Mikrofonzugriff wurde verweigert. Erlauben Sie Ihr Terminal unter Systemeinstellungen &gt; Datenschutz &amp; Sicherheit &gt; Mikrofon.</value>
+  </data>
+  <data name="Voice.NoMicrophone" xml:space="preserve">
+    <value>Es wurde kein Mikrofon gefunden.</value>
+  </data>
+  <data name="Voice.RecorderFailed" xml:space="preserve">
+    <value>Die Aufnahme konnte nicht gestartet werden:</value>
+  </data>
+  <data name="Voice.NoFfmpeg" xml:space="preserve">
+    <value>Die Spracheingabe braucht ffmpeg zum Aufnehmen. Installieren Sie es unter Werkzeuge &gt; Laufzeitabhängigkeiten.</value>
+  </data>
+  <data name="Voice.NoRecorder" xml:space="preserve">
+    <value>Die Spracheingabe braucht parecord (pulseaudio-utils) oder arecord (alsa-utils) zum Aufnehmen.</value>
+  </data>
+  <data name="Voice.MicOpenFailed" xml:space="preserve">
+    <value>Das Mikrofon konnte nicht geöffnet werden</value>
+  </data>
+  <data name="Voice.EngineFailed" xml:space="preserve">
+    <value>Die Spracherkennung konnte auf diesem System nicht geladen werden</value>
+  </data>
+  <data name="Voice.Recording" xml:space="preserve">
+    <value>REC</value>
+  </data>
+  <data name="Voice.Transcribing" xml:space="preserve">
+    <value>Erkennung läuft…</value>
+  </data>
 </root>

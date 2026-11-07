@@ -3946,4 +3946,43 @@
   <data name="DialogHint.StopOtherInstance" xml:space="preserve">
     <value>Detener la otra instancia</value>
   </data>
+  <data name="DialogHint.VoiceInput" xml:space="preserve">
+    <value>Dictar la pregunta (iniciar y detener)</value>
+  </data>
+  <data name="Voice.Title" xml:space="preserve">
+    <value>Entrada de voz</value>
+  </data>
+  <data name="Voice.ModelMissing" xml:space="preserve">
+    <value>La entrada de voz necesita el modelo Whisper. Instálelo desde Herramientas &gt; Dependencias de ejecución.</value>
+  </data>
+  <data name="Voice.Silence" xml:space="preserve">
+    <value>El micrófono solo entregó silencio. Compruebe que no está silenciado y que este programa puede usarlo.</value>
+  </data>
+  <data name="Voice.MicDenied" xml:space="preserve">
+    <value>Se denegó el acceso al micrófono. Permita su terminal en Ajustes del Sistema &gt; Privacidad y seguridad &gt; Micrófono.</value>
+  </data>
+  <data name="Voice.NoMicrophone" xml:space="preserve">
+    <value>No se encontró ningún micrófono.</value>
+  </data>
+  <data name="Voice.RecorderFailed" xml:space="preserve">
+    <value>No se pudo iniciar el grabador:</value>
+  </data>
+  <data name="Voice.NoFfmpeg" xml:space="preserve">
+    <value>La entrada de voz necesita ffmpeg para grabar. Instálelo desde Herramientas &gt; Dependencias de ejecución.</value>
+  </data>
+  <data name="Voice.NoRecorder" xml:space="preserve">
+    <value>La entrada de voz necesita parecord (pulseaudio-utils) o arecord (alsa-utils) para grabar.</value>
+  </data>
+  <data name="Voice.MicOpenFailed" xml:space="preserve">
+    <value>No se pudo abrir el micrófono</value>
+  </data>
+  <data name="Voice.EngineFailed" xml:space="preserve">
+    <value>No se pudo cargar el motor de voz en este sistema</value>
+  </data>
+  <data name="Voice.Recording" xml:space="preserve">
+    <value>REC</value>
+  </data>
+  <data name="Voice.Transcribing" xml:space="preserve">
+    <value>transcribiendo…</value>
+  </data>
 </root>
