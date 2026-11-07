@@ -170,14 +170,16 @@ public class FindFilesDialog : SplitPaneDialog
         var folder = (_folderBox.Text ?? string.Empty).Trim().Trim('"');
         if (folder.Length == 0 || !Directory.Exists(folder))
         {
-            _message = folder.Length == 0 ? "Say where to search." : $"No such folder: {folder}";
+            _message = folder.Length == 0
+                ? iConsole.Localization.UiText.Get("Msg.SayWhereToSearch", "Say where to search.")
+                : string.Format(iConsole.Localization.UiText.Get("Msg.NoSuchFolder", "No such folder: {0}"), folder);
             StateHasChanged();
             return;
         }
 
         if (!TryParseOptional(_largerBox.Text, out var largerMegabytes) || !TryParseOptional(_olderBox.Text, out var olderDays))
         {
-            _message = "Larger MB and Older days are numbers, or blank.";
+            _message = iConsole.Localization.UiText.Get("Msg.FindFilesNumbers", "Larger MB and Older days are numbers, or blank.");
             StateHasChanged();
             return;
         }

@@ -3901,4 +3901,34 @@
   <data name="Menu.EncryptFiles" xml:space="preserve">
     <value>Chiffrer / Déchiffrer…</value>
   </data>
+  <data name="Menu.Unmark" xml:space="preserve">
+    <value>Démarquer</value>
+  </data>
+  <data name="Msg.NoFileMatches" xml:space="preserve">
+    <value>Aucun fichier ne correspond à {0}.</value>
+  </data>
+  <data name="Msg.NoMarkedFileMatches" xml:space="preserve">
+    <value>Aucun fichier marqué ne correspond à {0}.</value>
+  </data>
+  <data name="Msg.SayWhereToSearch" xml:space="preserve">
+    <value>Indiquez où chercher.</value>
+  </data>
+  <data name="Msg.NoSuchFolder" xml:space="preserve">
+    <value>Dossier introuvable : {0}</value>
+  </data>
+  <data name="Msg.FindFilesNumbers" xml:space="preserve">
+    <value>Plus grand (Mo) et Plus ancien (jours) sont des nombres, ou vides.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFile" xml:space="preserve">
+    <value>Il n'y a aucun dossier où créer le fichier.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFolder" xml:space="preserve">
+    <value>Il n'y a aucun dossier où créer le dossier.</value>
+  </data>
+  <data name="Msg.CouldNotCreateFile" xml:space="preserve">
+    <value>Impossible de créer le fichier : {0}</value>
+  </data>
+  <data name="Msg.CouldNotCreateFolder" xml:space="preserve">
+    <value>Impossible de créer le dossier : {0}</value>
+  </data>
 </root>

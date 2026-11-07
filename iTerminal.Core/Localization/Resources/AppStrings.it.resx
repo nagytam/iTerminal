@@ -3901,4 +3901,34 @@
   <data name="Menu.EncryptFiles" xml:space="preserve">
     <value>Cifra / Decifra…</value>
   </data>
+  <data name="Menu.Unmark" xml:space="preserve">
+    <value>Deseleziona</value>
+  </data>
+  <data name="Msg.NoFileMatches" xml:space="preserve">
+    <value>Nessun file corrisponde a {0}.</value>
+  </data>
+  <data name="Msg.NoMarkedFileMatches" xml:space="preserve">
+    <value>Nessun file selezionato corrisponde a {0}.</value>
+  </data>
+  <data name="Msg.SayWhereToSearch" xml:space="preserve">
+    <value>Indica dove cercare.</value>
+  </data>
+  <data name="Msg.NoSuchFolder" xml:space="preserve">
+    <value>Cartella non trovata: {0}</value>
+  </data>
+  <data name="Msg.FindFilesNumbers" xml:space="preserve">
+    <value>Più grande (MB) e Più vecchio (giorni) sono numeri, o vuoti.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFile" xml:space="preserve">
+    <value>Non c'è nessuna cartella in cui creare il file.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFolder" xml:space="preserve">
+    <value>Non c'è nessuna cartella in cui creare la cartella.</value>
+  </data>
+  <data name="Msg.CouldNotCreateFile" xml:space="preserve">
+    <value>Impossibile creare il file: {0}</value>
+  </data>
+  <data name="Msg.CouldNotCreateFolder" xml:space="preserve">
+    <value>Impossibile creare la cartella: {0}</value>
+  </data>
 </root>

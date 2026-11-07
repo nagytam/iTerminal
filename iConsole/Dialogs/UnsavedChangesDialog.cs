@@ -47,7 +47,7 @@ public class UnsavedChangesDialog : Dialog
     public UnsavedChangesDialog(string fileName, IThemeService themeService)
         : base(iConsole.Localization.UiText.Get("Editor.UnsavedChanges", "Unsaved changes"), themeService)
     {
-        _message = $"{fileName} has unsaved changes.";
+        _message = string.Format(UiText.Get("Msg.UnsavedChangesIn", "{0} has unsaved changes."), fileName);
         _saveButton = new Button(iConsole.Localization.UiText.Get("Common.Save", "Save") + " (S)", new ChoiceCommand(_choice, UnsavedChoice.Save), themeService);
         _discardButton = new Button(iConsole.Localization.UiText.Get("Editor.Discard", "Discard") + " (D)", new ChoiceCommand(_choice, UnsavedChoice.Discard), themeService) { IsDestructive = true };
         _cancelButton = new Button(iConsole.Localization.UiText.Get("Common.Cancel", "Cancel") + " (C)", new ChoiceCommand(_choice, UnsavedChoice.Cancel), themeService);
@@ -129,6 +129,6 @@ public class UnsavedChangesDialog : Dialog
             ZOrder,
             new Position(AbsolutePosition.X + 2, (uint)(AbsolutePosition.Y + 3)),
             new Size(Math.Max(0, ViewSize.Width - 4), 1),
-            new ConxelString("Save them before closing?".PadRight((int)Math.Max(0, ViewSize.Width - 4)), colors.DisabledForeground, colors.Background));
+            new ConxelString(UiText.Get("Msg.SaveBeforeClosing", "Save them before closing?").PadRight((int)Math.Max(0, ViewSize.Width - 4)), colors.DisabledForeground, colors.Background));
     }
 }

@@ -42,7 +42,7 @@ public class CreateFileCommand(
 
             if (model is null)
             {
-                createFileDialog.ReportFailure("There is no folder to create the file in.");
+                createFileDialog.ReportFailure(iConsole.Localization.UiText.Get("Msg.NoFolderForNewFile", "There is no folder to create the file in."));
                 return;
             }
 
@@ -53,7 +53,7 @@ public class CreateFileCommand(
             }
             catch (Exception exception)
             {
-                createFileDialog.ReportFailure($"Could not create the file: {exception.Message}");
+                createFileDialog.ReportFailure(string.Format(iConsole.Localization.UiText.Get("Msg.CouldNotCreateFile", "Could not create the file: {0}"), exception.Message));
                 return;
             }
 

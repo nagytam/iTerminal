@@ -36,7 +36,7 @@ public class CreateFolderCommand(
             var contentModel = contentModelService.GetLastContentModel();
             if (contentModel is null)
             {
-                createFolderDialog.ReportFailure("There is no folder to create the folder in.");
+                createFolderDialog.ReportFailure(iConsole.Localization.UiText.Get("Msg.NoFolderForNewFolder", "There is no folder to create the folder in."));
                 return;
             }
 
@@ -47,7 +47,7 @@ public class CreateFolderCommand(
             }
             catch (Exception exception)
             {
-                createFolderDialog.ReportFailure($"Could not create the folder: {exception.Message}");
+                createFolderDialog.ReportFailure(string.Format(iConsole.Localization.UiText.Get("Msg.CouldNotCreateFolder", "Could not create the folder: {0}"), exception.Message));
                 return;
             }
 

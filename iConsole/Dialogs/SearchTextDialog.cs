@@ -15,6 +15,7 @@ public class SearchTextDialog : Dialog
     private Button _cancelButton { get; set; }
     private readonly CheckBox _regexBox;
     private readonly CheckBox _matchCaseBox;
+    private readonly Label _errorLabel;
     private static string DialogTitle => iConsole.Localization.UiText.Get("Editor.SearchText", "Search text");
     public string SearchValue => _textBoxSearch.Text;
 
@@ -24,12 +25,37 @@ public class SearchTextDialog : Dialog
     /// <summary>Upper and lower case must match. On by default, as the search has always been.</summary>
     public bool MatchCase => _matchCaseBox.IsChecked;
 
-    /// <summary>Says in the title why the search could not run, such as a pattern that does not compile.</summary>
+    /// <summary>What the dialog says above its buttons: empty, or why the search could not run.</summary>
+    public string ErrorText => _errorLabel.Text;
+
+    /// <summary>
+    /// Says on a line of its own why the search could not run, such as a pattern that does not compile. It used to go
+    /// into the title, cut at 40 characters, where it read as part of the caption and lost the end of the reason.
+    /// </summary>
     public void ShowError(string message)
     {
-        var firstLine = message.Split('\n')[0].Trim();
-        Title = DialogTitle + ": " + (firstLine.Length > 40 ? firstLine[..40] : firstLine);
+        _errorLabel.Text = message.Split('\n')[0].Trim();
+        _errorLabel.ForegroundColor = ThemeService.CurrentColorScheme.Error;
         StateHasChanged();
+    }
+
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Enter", iConsole.Localization.UiText.Get("Hint.RunTheSearch", "Run the search"));
+        yield return ("Tab", iConsole.Localization.UiText.Get("Hint.NextField", "Move to the next field"));
+        yield return ("Esc", iConsole.Localization.UiText.Get("Hint.CloseWithoutSearching", "Close without searching"));
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        bool handled = await base.HandleKeyEventAsync(keyEvent);
+        if (handled && _errorLabel.Text.Length > 0 && _textBoxSearch.IsFocused && Helper.ConsoleKeyHelper.IsTypingKey(keyEvent))
+        {
+            // Typing is the answer to what the message said.
+            _errorLabel.Text = string.Empty;
+        }
+
+        return handled;
     }
 
     public SearchTextDialog(
@@ -47,7 +73,9 @@ public class SearchTextDialog : Dialog
         _cancelButton = new CancelDialogButton(themeService);
         _regexBox = new CheckBox(themeService) { Label = iConsole.Localization.UiText.Get("Editor.RegularExpression", "Regular expression"), IsChecked = searchModel.UseRegex };
         _matchCaseBox = new CheckBox(themeService) { Label = iConsole.Localization.UiText.Get("Editor.MatchCase", "Match case"), IsChecked = searchModel.MatchCase };
+        _errorLabel = new Label(string.Empty, themeService);
         AddControl(_textBoxSearch);
+        AddControl(_errorLabel);
         AddControl(_regexBox);
         AddControl(_matchCaseBox);
         AddControl(_searchTextButton);
@@ -77,6 +105,9 @@ public class SearchTextDialog : Dialog
         _regexBox.ViewSize = new Size(24, 1);
         _matchCaseBox.Position = new Position(30, 4);
         _matchCaseBox.ViewSize = new Size(16, 1);
+
+        _errorLabel.Position = new Position(3, 6);
+        _errorLabel.ViewSize = new Size(textBoxWidth, 1);
 
         var searchButtonY = Math.Max(0, ViewSize.Height - 2);
         _searchTextButton.Position = new Position(3, searchButtonY);

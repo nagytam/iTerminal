@@ -131,7 +131,7 @@ public class MarkPatternDialog : FormDialog
     /// <summary>Enter, or the Mark/Unmark button: applies the pattern and closes.</summary>
     private sealed class ApplyCommand(Func<bool> marking) : Command
     {
-        public override string Title => marking() ? "Mark" : "Unmark";
+        public override string Title => marking() ? UiText.Get("Menu.Mark", "Mark") : UiText.Get("Menu.Unmark", "Unmark");
         public override string Description => "Mark or unmark the rows matching the pattern.";
 
         public override Key? Key { get; init; } =
@@ -162,8 +162,8 @@ public class MarkPatternDialog : FormDialog
             if (dialog.Apply() == 0)
             {
                 dialog.ErrorMessage.Text = dialog.Marking
-                    ? $"No file matches {dialog.Pattern.Trim()}."
-                    : $"No marked file matches {dialog.Pattern.Trim()}.";
+                    ? string.Format(UiText.Get("Msg.NoFileMatches", "No file matches {0}."), dialog.Pattern.Trim())
+                    : string.Format(UiText.Get("Msg.NoMarkedFileMatches", "No marked file matches {0}."), dialog.Pattern.Trim());
                 return Task.CompletedTask;
             }
 
