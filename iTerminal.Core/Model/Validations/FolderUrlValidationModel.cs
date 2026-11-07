@@ -86,7 +86,7 @@ public class FolderUrlValidationModel(ITextModel model, IDateTimeProviderService
             }
             else
             {
-                SetValidationResult(now, false, "No such folder.");
+                SetValidationResult(now, false, iConsole.Localization.UiText.Get("Folder.NoSuch", "No such folder."));
             }
         }
         catch (Exception exception)

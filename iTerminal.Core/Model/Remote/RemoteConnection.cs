@@ -112,32 +112,32 @@ public sealed partial class RemoteConnection
         var name = Name.Trim();
         if (name.Length == 0)
         {
-            return "Give the connection a name, so it can be found in the list.";
+            return iConsole.Localization.UiText.Get("Remote.NameNeeded", "Give the connection a name, so it can be found in the list.");
         }
 
         if (name.Length > MaxNameLength)
         {
-            return $"The name is longer than {MaxNameLength} characters.";
+            return string.Format(iConsole.Localization.UiText.Get("Remote.NameLong", "The name is longer than {0} characters."), MaxNameLength);
         }
 
         if (!IsValidHost(Host))
         {
-            return "The host must be a host name or an IP address.";
+            return iConsole.Localization.UiText.Get("Remote.HostInvalid", "The host must be a host name or an IP address.");
         }
 
         if (Port is { } port && (port < 1 || port > 65535))
         {
-            return "The port must be between 1 and 65535.";
+            return iConsole.Localization.UiText.Get("Remote.PortInvalid", "The port must be between 1 and 65535.");
         }
 
         if (!IsValidUsername(Username))
         {
-            return "The user name has characters that cannot be passed on safely.";
+            return iConsole.Localization.UiText.Get("Remote.UserInvalid", "The user name has characters that cannot be passed on safely.");
         }
 
         if (!string.IsNullOrEmpty(PrivateKeyPath) && PrivateKeyPath.Any(char.IsControl))
         {
-            return "The key file path has control characters.";
+            return iConsole.Localization.UiText.Get("Remote.KeyInvalid", "The key file path has control characters.");
         }
 
         if (IsFileDrive)
@@ -145,12 +145,12 @@ public sealed partial class RemoteConnection
             // The user name is written into a URL, where these end it early.
             if (Username.IndexOfAny(['@', '/', '\\', ':']) >= 0)
             {
-                return "An FTP or WebDAV user name cannot contain @ / \\ or : (it is written into the drive's address).";
+                return iConsole.Localization.UiText.Get("Remote.FileUserInvalid", "An FTP or WebDAV user name cannot contain @ / \\ or : (it is written into the drive's address).");
             }
 
             if (!string.IsNullOrEmpty(RemotePath) && RemotePath.Any(char.IsControl))
             {
-                return "The folder has control characters.";
+                return iConsole.Localization.UiText.Get("Remote.FolderInvalid", "The folder has control characters.");
             }
         }
 

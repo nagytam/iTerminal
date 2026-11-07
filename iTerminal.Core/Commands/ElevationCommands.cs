@@ -51,8 +51,8 @@ public class RestartAsAdministratorCommand(
             }
 
             notificationService?.Notify(
-                "Not restarted as administrator",
-                outcome.Message ?? "The request was not carried out.",
+                iConsole.Localization.UiText.Get("Elevation.NotRestarted", "Not restarted as administrator"),
+                outcome.Message ?? iConsole.Localization.UiText.Get("Elevation.NotCarriedOut", "The request was not carried out."),
                 outcome.Result == ElevationResult.Cancelled ? NotificationSeverity.Info : NotificationSeverity.Warning);
         });
 
