@@ -11,10 +11,10 @@ namespace iTerminal.Core.Dialogs;
 /// </summary>
 public class SettingsNetworkTabPage : TabPage
 {
-    internal static readonly string[] Lines =
+    internal static string[] Lines =>
     [
-        "Saved hosts and their credentials: Network browser (Ctrl+N).",
-        "Network interfaces: Network manager.",
+        iConsole.Localization.UiText.Get("SettingsPage.Hosts", "Saved hosts and their credentials: Network browser (Ctrl+N)."),
+        iConsole.Localization.UiText.Get("SettingsPage.Interfaces", "Network interfaces: Network manager."),
     ];
 
     private readonly List<Label> _labels = [];

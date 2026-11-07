@@ -4585,4 +4585,85 @@
   <data name="Git.NoRepo" xml:space="preserve">
     <value>Nessun repository</value>
   </data>
+  <data name="Web.NoEarlier" xml:space="preserve">
+    <value>Non c’è una pagina precedente.</value>
+  </data>
+  <data name="Web.NoLater" xml:space="preserve">
+    <value>Non c’è una pagina successiva.</value>
+  </data>
+  <data name="Web.NoLinks" xml:space="preserve">
+    <value>Questa pagina non ha collegamenti.</value>
+  </data>
+  <data name="Web.NoBookmark" xml:space="preserve">
+    <value>Questa pagina non può essere aggiunta ai segnalibri.</value>
+  </data>
+  <data name="Web.Bookmarked" xml:space="preserve">
+    <value>Aggiunto ai segnalibri.</value>
+  </data>
+  <data name="Web.BookmarkRemoved" xml:space="preserve">
+    <value>Segnalibro rimosso.</value>
+  </data>
+  <data name="Web.SavedTo" xml:space="preserve">
+    <value>Salvato in {0}</value>
+  </data>
+  <data name="Web.SaveFailed" xml:space="preserve">
+    <value>Impossibile salvare: {0}</value>
+  </data>
+  <data name="Web.NeedsScript" xml:space="preserve">
+    <value>Questo pulsante richiede JavaScript, che il browser web non esegue.</value>
+  </data>
+  <data name="Web.NoUpload" xml:space="preserve">
+    <value>Il caricamento di file non è supportato.</value>
+  </data>
+  <data name="Web.EnterAddress" xml:space="preserve">
+    <value>Ctrl+L per inserire un indirizzo, o F1 per la guida.</value>
+  </data>
+  <data name="Web.Layout" xml:space="preserve">
+    <value>Impaginazione della pagina…</value>
+  </data>
+  <data name="SettingsPage.Theme" xml:space="preserve">
+    <value>Tema colori: gestione temi (Alt+F6).</value>
+  </data>
+  <data name="SettingsPage.Folders" xml:space="preserve">
+    <value>Cartelle, preferiti e host remoti: selettore cartelle (Ctrl+F1).</value>
+  </data>
+  <data name="SettingsPage.Others" xml:space="preserve">
+    <value>Indicatori di quotazioni e meteo, cartelle musica e documenti: pagine da 3 a 5.</value>
+  </data>
+  <data name="SettingsPage.DocumentsFolder" xml:space="preserve">
+    <value>Cartella dei documenti:</value>
+  </data>
+  <data name="SettingsPage.DocumentsDefault" xml:space="preserve">
+    <value>Vuoto usa la cartella predefinita: {0}</value>
+  </data>
+  <data name="SettingsPage.FolderFound" xml:space="preserve">
+    <value>Cartella trovata — viene indicizzata in background.</value>
+  </data>
+  <data name="SettingsPage.FolderMissing" xml:space="preserve">
+    <value>La cartella non esiste ancora.</value>
+  </data>
+  <data name="SettingsPage.Ocr" xml:space="preserve">
+    <value>Richiede Tesseract nel PATH. Vale per le immagini indicizzate da ora.</value>
+  </data>
+  <data name="SettingsPage.OcrOff" xml:space="preserve">
+    <value>Le immagini sono indicizzate solo in base alle didascalie incorporate.</value>
+  </data>
+  <data name="SettingsPage.MusicFolder" xml:space="preserve">
+    <value>Cartella della musica:</value>
+  </data>
+  <data name="SettingsPage.MusicDefault" xml:space="preserve">
+    <value>Vuoto usa la cartella Musica di sistema: {0}</value>
+  </data>
+  <data name="SettingsPage.Hosts" xml:space="preserve">
+    <value>Host salvati e loro credenziali: esplora rete (Ctrl+N).</value>
+  </data>
+  <data name="SettingsPage.Interfaces" xml:space="preserve">
+    <value>Interfacce di rete: gestione rete.</value>
+  </data>
+  <data name="SettingsPage.Delayed" xml:space="preserve">
+    <value>Ritardato ({0:0} s)</value>
+  </data>
+  <data name="SettingsPage.OnDemand" xml:space="preserve">
+    <value>Su richiesta</value>
+  </data>
 </root>

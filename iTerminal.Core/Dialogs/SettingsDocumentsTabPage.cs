@@ -37,7 +37,7 @@ public class SettingsDocumentsTabPage : TabPage
         HotConsoleKey = ConsoleKey.D5;
         _settingsService = settingsService ?? NullSettingsService.Instance;
 
-        _documentsFolderLabel = new Label("Documents folder:", themeService);
+        _documentsFolderLabel = new Label(iConsole.Localization.UiText.Get("SettingsPage.DocumentsFolder", "Documents folder:"), themeService);
         AddControl(_documentsFolderLabel);
 
         _documentsFolderTextBox = new TextBox(beepService, dateTimeProviderService, themeService)
@@ -111,14 +111,14 @@ public class SettingsDocumentsTabPage : TabPage
         string effective = DocumentLibraryService.ResolveDocumentsFolder(_settingsService);
 
         _hintLabel.Text = string.IsNullOrWhiteSpace(_documentsFolderTextBox.Text)
-            ? $"Empty uses the default folder: {effective}"
+            ? string.Format(iConsole.Localization.UiText.Get("SettingsPage.DocumentsDefault", "Empty uses the default folder: {0}"), effective)
             : Directory.Exists(effective)
-                ? "Folder found — it is indexed in the background."
-                : "Folder does not exist yet.";
+                ? iConsole.Localization.UiText.Get("SettingsPage.FolderFound", "Folder found — it is indexed in the background.")
+                : iConsole.Localization.UiText.Get("SettingsPage.FolderMissing", "Folder does not exist yet.");
 
         _ocrHintLabel.Text = _ocrCheckBox.IsChecked
-            ? "Needs Tesseract on PATH. Applies to images indexed from now on."
-            : "Images are indexed by their embedded captions only.";
+            ? iConsole.Localization.UiText.Get("SettingsPage.Ocr", "Needs Tesseract on PATH. Applies to images indexed from now on.")
+            : iConsole.Localization.UiText.Get("SettingsPage.OcrOff", "Images are indexed by their embedded captions only.");
     }
 
     public override void OnInitializeLayout()

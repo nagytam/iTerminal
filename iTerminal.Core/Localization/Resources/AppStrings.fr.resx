@@ -4585,4 +4585,85 @@
   <data name="Git.NoRepo" xml:space="preserve">
     <value>Aucun dépôt</value>
   </data>
+  <data name="Web.NoEarlier" xml:space="preserve">
+    <value>Il n’y a pas de page précédente.</value>
+  </data>
+  <data name="Web.NoLater" xml:space="preserve">
+    <value>Il n’y a pas de page suivante.</value>
+  </data>
+  <data name="Web.NoLinks" xml:space="preserve">
+    <value>Il n’y a aucun lien sur cette page.</value>
+  </data>
+  <data name="Web.NoBookmark" xml:space="preserve">
+    <value>Cette page ne peut pas être ajoutée aux favoris.</value>
+  </data>
+  <data name="Web.Bookmarked" xml:space="preserve">
+    <value>Ajouté aux favoris.</value>
+  </data>
+  <data name="Web.BookmarkRemoved" xml:space="preserve">
+    <value>Favori supprimé.</value>
+  </data>
+  <data name="Web.SavedTo" xml:space="preserve">
+    <value>Enregistré dans {0}</value>
+  </data>
+  <data name="Web.SaveFailed" xml:space="preserve">
+    <value>Enregistrement impossible : {0}</value>
+  </data>
+  <data name="Web.NeedsScript" xml:space="preserve">
+    <value>Ce bouton nécessite JavaScript, que le navigateur web n’exécute pas.</value>
+  </data>
+  <data name="Web.NoUpload" xml:space="preserve">
+    <value>L’envoi de fichiers n’est pas pris en charge.</value>
+  </data>
+  <data name="Web.EnterAddress" xml:space="preserve">
+    <value>Ctrl+L pour saisir une adresse, ou F1 pour l’aide.</value>
+  </data>
+  <data name="Web.Layout" xml:space="preserve">
+    <value>Mise en page…</value>
+  </data>
+  <data name="SettingsPage.Theme" xml:space="preserve">
+    <value>Thème de couleurs : gestionnaire de thèmes (Alt+F6).</value>
+  </data>
+  <data name="SettingsPage.Folders" xml:space="preserve">
+    <value>Dossiers, favoris et hôtes distants : sélecteur de dossiers (Ctrl+F1).</value>
+  </data>
+  <data name="SettingsPage.Others" xml:space="preserve">
+    <value>Indicateurs de cours et de météo, dossiers musique et documents : pages 3 à 5.</value>
+  </data>
+  <data name="SettingsPage.DocumentsFolder" xml:space="preserve">
+    <value>Dossier de documents :</value>
+  </data>
+  <data name="SettingsPage.DocumentsDefault" xml:space="preserve">
+    <value>Vide : le dossier par défaut est utilisé : {0}</value>
+  </data>
+  <data name="SettingsPage.FolderFound" xml:space="preserve">
+    <value>Dossier trouvé — il est indexé en arrière-plan.</value>
+  </data>
+  <data name="SettingsPage.FolderMissing" xml:space="preserve">
+    <value>Le dossier n’existe pas encore.</value>
+  </data>
+  <data name="SettingsPage.Ocr" xml:space="preserve">
+    <value>Nécessite Tesseract dans le PATH. S’applique aux images indexées à partir de maintenant.</value>
+  </data>
+  <data name="SettingsPage.OcrOff" xml:space="preserve">
+    <value>Les images ne sont indexées que d’après leurs légendes intégrées.</value>
+  </data>
+  <data name="SettingsPage.MusicFolder" xml:space="preserve">
+    <value>Dossier de musique :</value>
+  </data>
+  <data name="SettingsPage.MusicDefault" xml:space="preserve">
+    <value>Vide : le dossier Musique du système est utilisé : {0}</value>
+  </data>
+  <data name="SettingsPage.Hosts" xml:space="preserve">
+    <value>Hôtes enregistrés et leurs identifiants : navigateur réseau (Ctrl+N).</value>
+  </data>
+  <data name="SettingsPage.Interfaces" xml:space="preserve">
+    <value>Interfaces réseau : gestionnaire réseau.</value>
+  </data>
+  <data name="SettingsPage.Delayed" xml:space="preserve">
+    <value>Différé ({0:0} s)</value>
+  </data>
+  <data name="SettingsPage.OnDemand" xml:space="preserve">
+    <value>À la demande</value>
+  </data>
 </root>

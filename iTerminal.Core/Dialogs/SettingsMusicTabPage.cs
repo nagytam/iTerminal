@@ -35,7 +35,7 @@ public class SettingsMusicTabPage : TabPage
         HotConsoleKey = ConsoleKey.D4;
         _settingsService = settingsService ?? NullSettingsService.Instance;
 
-        _musicFolderLabel = new Label("Music folder:", themeService);
+        _musicFolderLabel = new Label(iConsole.Localization.UiText.Get("SettingsPage.MusicFolder", "Music folder:"), themeService);
         AddControl(_musicFolderLabel);
 
         _musicFolderTextBox = new TextBox(beepService, dateTimeProviderService, themeService)
@@ -118,8 +118,8 @@ public class SettingsMusicTabPage : TabPage
     {
         string effective = MusicLibraryService.ResolveMusicFolder(_settingsService);
         _hintLabel.Text = string.IsNullOrWhiteSpace(_musicFolderTextBox.Text)
-            ? $"Empty uses the system Music folder: {effective}"
-            : (Directory.Exists(effective) ? "Folder found — it is indexed in the background." : "Folder does not exist yet.");
+            ? string.Format(iConsole.Localization.UiText.Get("SettingsPage.MusicDefault", "Empty uses the system Music folder: {0}"), effective)
+            : (Directory.Exists(effective) ? iConsole.Localization.UiText.Get("SettingsPage.FolderFound", "Folder found — it is indexed in the background.") : iConsole.Localization.UiText.Get("SettingsPage.FolderMissing", "Folder does not exist yet."));
     }
 
     public override void OnInitializeLayout()
