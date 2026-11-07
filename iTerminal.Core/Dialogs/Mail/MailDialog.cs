@@ -1,3 +1,4 @@
+using iConsole.Helper;
 using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
@@ -999,7 +1000,7 @@ public class MailDialog : Dialog
 
             var statusColor = _statusIsError ? colorScheme.Error : Color.Cyan;
             Put(buffer, 1, ih - 2, iw - 2, _status, statusColor, colorScheme.Background);
-            Put(buffer, 1, ih - 1, iw - 2, Hints(), colorScheme.Foreground, colorScheme.Background);
+            Put(buffer, 1, ih - 1, iw - 2, Hints().FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
         }
     }
 
