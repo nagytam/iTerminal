@@ -24,12 +24,45 @@ public class StartupWarningDialog : Dialog
     internal static string DismissHint => iConsole.Localization.UiText.Get("Startup.Dismiss", "Enter or Esc to continue");
 
     private readonly IReadOnlyList<string> _warnings;
+    private readonly Func<string?>? _stopOtherInstance;
+    private volatile string _stopStatus = string.Empty;
+    private int _stopStarted;
 
-    public StartupWarningDialog(IReadOnlyList<string> warnings, IThemeService themeService)
+    /// <param name="stopOtherInstance">
+    /// When given, K offers to stop the other instance. It returns null on success or the reason it failed,
+    /// and runs on a background task: it waits for the process to exit.
+    /// </param>
+    public StartupWarningDialog(IReadOnlyList<string> warnings, IThemeService themeService, Func<string?>? stopOtherInstance = null)
         : base(iConsole.Localization.UiText.Get("Dialog.Warning", "Warning"), themeService)
     {
         _warnings = warnings;
+        _stopOtherInstance = stopOtherInstance;
         Title = iConsole.Localization.UiText.Get("Dialog.Warning", "Warning");
+        if (stopOtherInstance is not null)
+        {
+            _stopStatus = UiText.Get("Startup.StopOther", "Press K to stop the other instance and remove its lock file.");
+        }
+    }
+
+    /// <summary>What the stop offer currently says: the prompt, then progress, then the outcome.</summary>
+    internal string StopStatus => _stopStatus;
+
+    /// <summary>Starts stopping the other instance, once. Returns the running task, or null when there is no offer or it was already taken.</summary>
+    internal Task? StopOtherInstance()
+    {
+        if (_stopOtherInstance is null || Interlocked.Exchange(ref _stopStarted, 1) != 0)
+        {
+            return null;
+        }
+
+        _stopStatus = UiText.Get("Startup.StopOtherRunning", "Stopping the other instance...");
+        return Task.Run(() =>
+        {
+            string? error = _stopOtherInstance();
+            _stopStatus = error is null
+                ? UiText.Get("Startup.StopOtherDone", "The other instance was stopped. Restart iTerminal to use the saved database.")
+                : string.Format(UiText.Get("Startup.StopOtherFailed", "The other instance could not be stopped: {0}"), error);
+        });
     }
 
     /// <summary>The warnings as display lines for an inner width; each warning starts on a new line.</summary>
@@ -37,7 +70,8 @@ public class StartupWarningDialog : Dialog
     {
         List<string> lines = [];
         int textWidth = Math.Max(1, innerWidth - 2);
-        foreach (string warning in _warnings)
+        IEnumerable<string> all = _stopStatus.Length > 0 ? _warnings.Append(_stopStatus) : _warnings;
+        foreach (string warning in all)
         {
             List<string> wrapped = (warning ?? string.Empty).WrapWords(textWidth);
             lines.AddRange(wrapped.Count == 0 ? [string.Empty] : wrapped);
@@ -84,6 +118,10 @@ public class StartupWarningDialog : Dialog
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Enter", UiText.Get("DialogHint.DismissWarning", "Dismiss the warning"));
+        if (_stopOtherInstance is not null)
+        {
+            yield return ("K", UiText.Get("DialogHint.StopOtherInstance", "Stop the other instance"));
+        }
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -93,6 +131,11 @@ public class StartupWarningDialog : Dialog
         if (keyEvent.ConsoleKey == ConsoleKey.Enter)
         {
             Close();
+            return true;
+        }
+
+        if (keyEvent.ConsoleKey == ConsoleKey.K && !keyEvent.Alt && !keyEvent.Control && StopOtherInstance() is not null)
+        {
             return true;
         }
 

@@ -3931,4 +3931,19 @@
   <data name="Msg.CouldNotCreateFolder" xml:space="preserve">
     <value>Der Ordner konnte nicht erstellt werden: {0}</value>
   </data>
+  <data name="Startup.StopOther" xml:space="preserve">
+    <value>K drücken, um die andere Instanz zu beenden und ihre Sperrdatei zu entfernen.</value>
+  </data>
+  <data name="Startup.StopOtherRunning" xml:space="preserve">
+    <value>Die andere Instanz wird beendet...</value>
+  </data>
+  <data name="Startup.StopOtherDone" xml:space="preserve">
+    <value>Die andere Instanz wurde beendet. iTerminal neu starten, um die gespeicherte Datenbank zu verwenden.</value>
+  </data>
+  <data name="Startup.StopOtherFailed" xml:space="preserve">
+    <value>Die andere Instanz konnte nicht beendet werden: {0}</value>
+  </data>
+  <data name="DialogHint.StopOtherInstance" xml:space="preserve">
+    <value>Die andere Instanz beenden</value>
+  </data>
 </root>

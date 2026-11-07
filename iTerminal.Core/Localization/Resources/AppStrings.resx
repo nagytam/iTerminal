@@ -3931,4 +3931,19 @@
   <data name="Msg.CouldNotCreateFolder" xml:space="preserve">
     <value>Could not create the folder: {0}</value>
   </data>
+  <data name="Startup.StopOther" xml:space="preserve">
+    <value>Press K to stop the other instance and remove its lock file.</value>
+  </data>
+  <data name="Startup.StopOtherRunning" xml:space="preserve">
+    <value>Stopping the other instance...</value>
+  </data>
+  <data name="Startup.StopOtherDone" xml:space="preserve">
+    <value>The other instance was stopped. Restart iTerminal to use the saved database.</value>
+  </data>
+  <data name="Startup.StopOtherFailed" xml:space="preserve">
+    <value>The other instance could not be stopped: {0}</value>
+  </data>
+  <data name="DialogHint.StopOtherInstance" xml:space="preserve">
+    <value>Stop the other instance</value>
+  </data>
 </root>
