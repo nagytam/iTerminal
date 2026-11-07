@@ -1057,4 +1057,37 @@
   <data name="Disguise.Caption" xml:space="preserve">
     <value>Avviso</value>
   </data>
+  <data name="Msg.EnterLineNumber" xml:space="preserve">
+    <value>Inserisci un numero di riga.</value>
+  </data>
+  <data name="Msg.EnterOffset" xml:space="preserve">
+    <value>Inserisci un offset: un numero, o un numero esadecimale come 0x1F o 1Fh.</value>
+  </data>
+  <data name="Editor.LineRange" xml:space="preserve">
+    <value>Riga (1-{0})</value>
+  </data>
+  <data name="Msg.TypeFindText" xml:space="preserve">
+    <value>Inserisci il testo da cercare.</value>
+  </data>
+  <data name="Msg.NothingToReplace" xml:space="preserve">
+    <value>Niente da sostituire: "{0}" non è stato trovato.</value>
+  </data>
+  <data name="Msg.UnsavedChangesIn" xml:space="preserve">
+    <value>{0} ha modifiche non salvate.</value>
+  </data>
+  <data name="Msg.SaveBeforeClosing" xml:space="preserve">
+    <value>Salvarle prima di chiudere?</value>
+  </data>
+  <data name="Hint.RunTheSearch" xml:space="preserve">
+    <value>Avvia la ricerca</value>
+  </data>
+  <data name="Hint.CloseWithoutSearching" xml:space="preserve">
+    <value>Chiudi senza cercare</value>
+  </data>
+  <data name="Hint.RenameTheEntry" xml:space="preserve">
+    <value>Rinomina la voce</value>
+  </data>
+  <data name="Hint.CloseWithoutRenaming" xml:space="preserve">
+    <value>Chiudi senza rinominare</value>
+  </data>
 </root>

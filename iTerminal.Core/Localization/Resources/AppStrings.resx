@@ -3901,4 +3901,34 @@
   <data name="Menu.EncryptFiles" xml:space="preserve">
     <value>Encrypt / Decrypt…</value>
   </data>
+  <data name="Menu.Unmark" xml:space="preserve">
+    <value>Unmark</value>
+  </data>
+  <data name="Msg.NoFileMatches" xml:space="preserve">
+    <value>No file matches {0}.</value>
+  </data>
+  <data name="Msg.NoMarkedFileMatches" xml:space="preserve">
+    <value>No marked file matches {0}.</value>
+  </data>
+  <data name="Msg.SayWhereToSearch" xml:space="preserve">
+    <value>Say where to search.</value>
+  </data>
+  <data name="Msg.NoSuchFolder" xml:space="preserve">
+    <value>No such folder: {0}</value>
+  </data>
+  <data name="Msg.FindFilesNumbers" xml:space="preserve">
+    <value>Larger MB and Older days are numbers, or blank.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFile" xml:space="preserve">
+    <value>There is no folder to create the file in.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFolder" xml:space="preserve">
+    <value>There is no folder to create the folder in.</value>
+  </data>
+  <data name="Msg.CouldNotCreateFile" xml:space="preserve">
+    <value>Could not create the file: {0}</value>
+  </data>
+  <data name="Msg.CouldNotCreateFolder" xml:space="preserve">
+    <value>Could not create the folder: {0}</value>
+  </data>
 </root>

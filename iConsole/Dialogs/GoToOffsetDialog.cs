@@ -14,6 +14,7 @@ public class GoToOffsetDialog : Dialog
 {
     private readonly HexViewer _hexViewer;
     private readonly TextBox _offsetBox;
+    private readonly Label _messageLabel;
     private string _message = string.Empty;
 
     public GoToOffsetDialog(
@@ -29,7 +30,9 @@ public class GoToOffsetDialog : Dialog
             Label = iConsole.Localization.UiText.Get("Editor.Offset", "Offset"),
             Text = "0x0",
         };
+        _messageLabel = new Label(string.Empty, themeService);
         AddControl(_offsetBox);
+        AddControl(_messageLabel);
     }
 
     /// <summary>What the dialog says under the box: empty, or why the offset was not taken.</summary>
@@ -40,13 +43,22 @@ public class GoToOffsetDialog : Dialog
     {
         if (!HexViewer.TryParseOffset(_offsetBox.Text, out long offset))
         {
-            _message = "Enter an offset: a number, or a hex number as 0x1F or 1Fh.";
+            SetMessage(UiText.Get("Msg.EnterOffset", "Enter an offset: a number, or a hex number as 0x1F or 1Fh."));
             return false;
         }
 
         _hexViewer.ShowOffset(offset);
-        _message = string.Empty;
+        SetMessage(string.Empty);
         return true;
+    }
+
+    /// <summary>Says it on the line under the box; the message used to be kept but never drawn.</summary>
+    private void SetMessage(string message)
+    {
+        _message = message;
+        _messageLabel.Text = message;
+        _messageLabel.ForegroundColor = ThemeService.CurrentColorScheme.Error;
+        StateHasChanged();
     }
 
     /// <summary>The box opens holding "0x0"; the first character typed replaces it rather than following it.</summary>
@@ -96,9 +108,11 @@ public class GoToOffsetDialog : Dialog
     {
         if (Parent != null)
         {
-            CenterInParent(new Size(44, 5));
+            CenterInParent(new Size(64, 5));
         }
 
+        _messageLabel.Position = new Position(3, 3);
+        _messageLabel.ViewSize = new Size(Math.Max(0, ViewSize.Width - 6), 1);
         _offsetBox.Position = new Position(3, 2);
         _offsetBox.ViewSize = new Size(Math.Max(0, ViewSize.Width - 6), 1);
         _offsetBox.ScrollableModel.ScrollableSize = new Size(_offsetBox.MaxLength, 1);

@@ -123,6 +123,29 @@ public class RenameDialog : FormDialog
         _textBoxName.ScrollableModel.ScrollableSize = new Size(_textBoxName.Text.Length, 1);
 
         await base.OnInitializeAsync();
+        _selectPending = true;
+        SelectNameWithoutExtension();
+    }
+
+    /// <summary>
+    /// What a rename most often changes is the name, not the extension, so a file's name is selected up to its last
+    /// dot: typing replaces <c>report</c> in <c>report.docx</c> and the extension stays. A folder, a name that is only
+    /// an extension (<c>.gitignore</c>) and a box holding a path are selected whole.
+    /// </summary>
+    internal static (int Start, int Length) NameSelection(string text, bool isFile)
+    {
+        int dot = text.LastIndexOf('.');
+        bool bare = text.IndexOfAny(['/', '\\']) < 0;
+        return isFile && bare && dot > 0 ? (0, dot) : (0, text.Length);
+    }
+
+    /// <summary>Set when the dialog opens; the selection is made once the layout has run, after the box has placed its own cursor.</summary>
+    private bool _selectPending;
+
+    private void SelectNameWithoutExtension()
+    {
+        (int start, int length) = NameSelection(_textBoxName.Text ?? string.Empty, SourceUrl?.PathType == PathType.File);
+        _textBoxName.Select(start, length);
     }
 
     public override void OnInitializeLayout()
@@ -143,6 +166,25 @@ public class RenameDialog : FormDialog
 
         Layout.Bottom(_checkBoxOverwrite, _textBoxName);
         Layout.Bottom(_errorLabel, _checkBoxOverwrite);
+
+        if (_selectPending)
+        {
+            SelectNameWithoutExtension();
+        }
+    }
+
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Enter", iConsole.Localization.UiText.Get("Hint.RenameTheEntry", "Rename the entry"));
+        yield return ("Tab", iConsole.Localization.UiText.Get("Hint.NextField", "Move to the next field"));
+        yield return ("Esc", iConsole.Localization.UiText.Get("Hint.CloseWithoutRenaming", "Close without renaming"));
+    }
+
+    public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
+    {
+        // The first key is the person's answer; later layouts must not select again over what they typed.
+        _selectPending = false;
+        return await base.HandleKeyEventAsync(keyEvent);
     }
 
     public void Reset()

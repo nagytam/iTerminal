@@ -171,4 +171,29 @@ public class RenameDialogTest
 
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("report.docx", true, 0, 6)]
+    [DataRow("archive.tar.gz", true, 0, 11)]
+    [DataRow(".gitignore", true, 0, 10)]
+    [DataRow("README", true, 0, 6)]
+    [DataRow("photos.2024", false, 0, 11)]
+    [DataRow("sub/report.docx", true, 0, 15)]
+    public void NameSelection_LeavesAFilesExtensionOutOfIt(string text, bool isFile, int start, int length)
+    {
+        Assert.AreEqual((start, length), RenameDialog.NameSelection(text, isFile));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task OpeningItOnAFile_SelectsTheNameButNotTheExtension()
+    {
+        var (dialog, _) = Create("report.txt");
+        await ShowAsync(dialog);
+
+        var box = dialog.Controls.OfType<iConsole.Controls.TextBox>().First();
+
+        Assert.AreEqual("report", box.SelectedText);
+    }
 }

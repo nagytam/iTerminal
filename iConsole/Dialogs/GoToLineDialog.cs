@@ -14,6 +14,7 @@ public class GoToLineDialog : Dialog
 {
     private readonly TextViewerControl _viewer;
     private readonly TextBox _lineBox;
+    private readonly Label _messageLabel;
     private string _message = string.Empty;
 
     public GoToLineDialog(
@@ -29,7 +30,9 @@ public class GoToLineDialog : Dialog
             Label = iConsole.Localization.UiText.Get("Editor.Line", "Line"),
             Text = viewer.CursorLine.ToString(),
         };
+        _messageLabel = new Label(string.Empty, themeService);
         AddControl(_lineBox);
+        AddControl(_messageLabel);
     }
 
     /// <summary>What the dialog says under the box: empty, or why the number was not taken.</summary>
@@ -44,14 +47,23 @@ public class GoToLineDialog : Dialog
     {
         if (RequestedLine is not long line)
         {
-            _message = "Enter a line number.";
+            SetMessage(UiText.Get("Msg.EnterLineNumber", "Enter a line number."));
             return false;
         }
 
         long last = Math.Max(1, _viewer.TextModel.Lines.Count);
         _viewer.ShowLine(Math.Clamp(line, 1, last) - 1, 0);
-        _message = string.Empty;
+        SetMessage(string.Empty);
         return true;
+    }
+
+    /// <summary>Says it on the line under the box; the message used to be kept but never drawn, so a bad number closed nothing and told nothing.</summary>
+    private void SetMessage(string message)
+    {
+        _message = message;
+        _messageLabel.Text = message;
+        _messageLabel.ForegroundColor = ThemeService.CurrentColorScheme.Error;
+        StateHasChanged();
     }
 
     /// <summary>The box opens holding the current line; the first character typed replaces it, rather than being added to it ("1" + "250" went to line 1250).</summary>
@@ -104,6 +116,10 @@ public class GoToLineDialog : Dialog
             CenterInParent(new Size(44, 5));
         }
 
+        // The label says how far the number may go, so the answer is not a guess.
+        _lineBox.Label = string.Format(UiText.Get("Editor.LineRange", "Line (1-{0})"), Math.Max(1, _viewer.TextModel.Lines.Count));
+        _messageLabel.Position = new Position(3, 3);
+        _messageLabel.ViewSize = new Size(Math.Max(0, ViewSize.Width - 6), 1);
         _lineBox.Position = new Position(3, 2);
         _lineBox.ViewSize = new Size(Math.Max(0, ViewSize.Width - 6), 1);
         _lineBox.ScrollableModel.ScrollableSize = new Size(_lineBox.MaxLength, 1);

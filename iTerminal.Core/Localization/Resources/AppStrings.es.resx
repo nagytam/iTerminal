@@ -3901,4 +3901,34 @@
   <data name="Menu.EncryptFiles" xml:space="preserve">
     <value>Cifrar / Descifrar…</value>
   </data>
+  <data name="Menu.Unmark" xml:space="preserve">
+    <value>Desmarcar</value>
+  </data>
+  <data name="Msg.NoFileMatches" xml:space="preserve">
+    <value>Ningún archivo coincide con {0}.</value>
+  </data>
+  <data name="Msg.NoMarkedFileMatches" xml:space="preserve">
+    <value>Ningún archivo marcado coincide con {0}.</value>
+  </data>
+  <data name="Msg.SayWhereToSearch" xml:space="preserve">
+    <value>Indique dónde buscar.</value>
+  </data>
+  <data name="Msg.NoSuchFolder" xml:space="preserve">
+    <value>No existe la carpeta: {0}</value>
+  </data>
+  <data name="Msg.FindFilesNumbers" xml:space="preserve">
+    <value>Mayor (MB) y Más antiguo (días) son números, o quedan en blanco.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFile" xml:space="preserve">
+    <value>No hay ninguna carpeta donde crear el archivo.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFolder" xml:space="preserve">
+    <value>No hay ninguna carpeta donde crear la carpeta.</value>
+  </data>
+  <data name="Msg.CouldNotCreateFile" xml:space="preserve">
+    <value>No se pudo crear el archivo: {0}</value>
+  </data>
+  <data name="Msg.CouldNotCreateFolder" xml:space="preserve">
+    <value>No se pudo crear la carpeta: {0}</value>
+  </data>
 </root>

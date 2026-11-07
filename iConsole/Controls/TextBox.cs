@@ -100,7 +100,11 @@ public partial class TextBox : Control, IReadOnly
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
-        ScrollableModel.CursorPosition.X = Text.Length;
+        if (!HasSelection)
+        {
+            // A selection made before the box was shown (Select) keeps the cursor at its end.
+            ScrollableModel.CursorPosition.X = Text.Length;
+        }
     }
 
     /// <summary>Where the selection started; the selection runs from here to the cursor. Null when nothing is selected.</summary>
@@ -108,6 +112,21 @@ public partial class TextBox : Control, IReadOnly
 
     /// <summary>True from a press in the well until the button is released: movement then selects.</summary>
     private bool _dragSelecting;
+
+    /// <summary>
+    /// Selects <paramref name="length"/> characters from <paramref name="start"/> and leaves the cursor at the end of
+    /// them, so the next character typed replaces them. A dialog uses it to pre-select the part of a prefilled value
+    /// that is likely to change, such as a file name without its extension.
+    /// </summary>
+    public void Select(int start, int length)
+    {
+        int from = Math.Clamp(start, 0, TextLength);
+        int to = Math.Clamp(from + Math.Max(0, length), 0, TextLength);
+        _selectionAnchor = from;
+        ScrollableModel.CursorPosition.X = to;
+        UpdateSelectionModel();
+        KeepCursorVisible();
+    }
 
     /// <summary>Whether any characters are selected.</summary>
     public bool HasSelection => _selectionAnchor is long anchor && anchor != ScrollableModel.CursorPosition.X;

@@ -22,6 +22,7 @@ public class ReplaceTextDialog : Dialog
     private readonly Button _replaceButton;
     private readonly Button _replaceAllButton;
     private readonly Button _cancelButton;
+    private readonly Label _messageLabel;
 
     public ReplaceTextDialog(
         TextEditorControl editor,
@@ -49,10 +50,12 @@ public class ReplaceTextDialog : Dialog
         _replaceButton = new Button(iConsole.Localization.UiText.Get("Editor.Replace", "Replace"), new ReplaceCommand(this, all: false), themeService) { HotKeyChar = 'R' };
         _replaceAllButton = new Button(iConsole.Localization.UiText.Get("Editor.ReplaceAll", "Replace all"), new ReplaceCommand(this, all: true), themeService) { HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Editor.ReplaceAll", "Replace all"), 'A') };
         _cancelButton = new CancelDialogButton(themeService);
+        _messageLabel = new Label(string.Empty, themeService);
         AddControl(_findBox);
         AddControl(_replaceBox);
         AddControl(_matchCaseBox);
         AddControl(_regexBox);
+        AddControl(_messageLabel);
         AddControl(_replaceButton);
         AddControl(_replaceAllButton);
         AddControl(_cancelButton);
@@ -70,9 +73,27 @@ public class ReplaceTextDialog : Dialog
     /// <summary>How many occurrences the last "Replace" or "Replace all" changed.</summary>
     public int ReplacedCount { get; private set; }
 
-    /// <summary>Does the replacing; beeps when there was nothing to replace, closes the dialog when there was.</summary>
+    /// <summary>What the dialog says above its buttons: empty, or why nothing was replaced.</summary>
+    public string Message => _messageLabel.Text;
+
+    private void SetMessage(string message)
+    {
+        _messageLabel.Text = message;
+        _messageLabel.ForegroundColor = ThemeService.CurrentColorScheme.Error;
+        StateHasChanged();
+    }
+
+    /// <summary>Does the replacing; says so (and beeps) when there was nothing to replace, closes the dialog when there was.</summary>
     internal void Replace(bool all)
     {
+        if (FindValue.Length == 0)
+        {
+            ReplacedCount = 0;
+            SetMessage(iConsole.Localization.UiText.Get("Msg.TypeFindText", "Type the text to find."));
+            _beepService.Beep();
+            return;
+        }
+
         _editor.LastFind = FindValue;
         _editor.LastReplacement = ReplacementValue;
         _editor.LastMatchCase = MatchCase;
@@ -82,6 +103,7 @@ public class ReplaceTextDialog : Dialog
             : _editor.ReplaceNext(FindValue, ReplacementValue, MatchCase, UseRegex) ? 1 : 0;
         if (ReplacedCount == 0)
         {
+            SetMessage(string.Format(iConsole.Localization.UiText.Get("Msg.NothingToReplace", "Nothing to replace: \"{0}\" was not found."), FindValue));
             _beepService.Beep();
             return;
         }
@@ -112,6 +134,8 @@ public class ReplaceTextDialog : Dialog
         _matchCaseBox.ViewSize = new Size(16, 1);
         _regexBox.Position = new Position(24, 6);
         _regexBox.ViewSize = new Size(24, 1);
+        _messageLabel.Position = new Position(3, 8);
+        _messageLabel.ViewSize = new Size(width, 1);
 
         var buttonY = Math.Max(0, ViewSize.Height - 2);
         _replaceButton.Position = new Position(3, buttonY);

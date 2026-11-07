@@ -1057,4 +1057,37 @@
   <data name="Disguise.Caption" xml:space="preserve">
     <value>Figyelmeztetés</value>
   </data>
+  <data name="Msg.EnterLineNumber" xml:space="preserve">
+    <value>Adjon meg egy sorszámot.</value>
+  </data>
+  <data name="Msg.EnterOffset" xml:space="preserve">
+    <value>Adjon meg egy eltolást: számot, vagy hexa számot, például 0x1F vagy 1Fh.</value>
+  </data>
+  <data name="Editor.LineRange" xml:space="preserve">
+    <value>Sor (1-{0})</value>
+  </data>
+  <data name="Msg.TypeFindText" xml:space="preserve">
+    <value>Írja be a keresett szöveget.</value>
+  </data>
+  <data name="Msg.NothingToReplace" xml:space="preserve">
+    <value>Nincs mit cserélni: a(z) "{0}" nem található.</value>
+  </data>
+  <data name="Msg.UnsavedChangesIn" xml:space="preserve">
+    <value>A(z) {0} fájlnak mentetlen módosításai vannak.</value>
+  </data>
+  <data name="Msg.SaveBeforeClosing" xml:space="preserve">
+    <value>Menti őket bezárás előtt?</value>
+  </data>
+  <data name="Hint.RunTheSearch" xml:space="preserve">
+    <value>A keresés indítása</value>
+  </data>
+  <data name="Hint.CloseWithoutSearching" xml:space="preserve">
+    <value>Bezárás keresés nélkül</value>
+  </data>
+  <data name="Hint.RenameTheEntry" xml:space="preserve">
+    <value>A bejegyzés átnevezése</value>
+  </data>
+  <data name="Hint.CloseWithoutRenaming" xml:space="preserve">
+    <value>Bezárás átnevezés nélkül</value>
+  </data>
 </root>

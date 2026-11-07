@@ -1057,4 +1057,37 @@
   <data name="Disguise.Caption" xml:space="preserve">
     <value>Avertissement</value>
   </data>
+  <data name="Msg.EnterLineNumber" xml:space="preserve">
+    <value>Saisissez un numéro de ligne.</value>
+  </data>
+  <data name="Msg.EnterOffset" xml:space="preserve">
+    <value>Saisissez un décalage : un nombre, ou un nombre hexadécimal comme 0x1F ou 1Fh.</value>
+  </data>
+  <data name="Editor.LineRange" xml:space="preserve">
+    <value>Ligne (1-{0})</value>
+  </data>
+  <data name="Msg.TypeFindText" xml:space="preserve">
+    <value>Saisissez le texte à rechercher.</value>
+  </data>
+  <data name="Msg.NothingToReplace" xml:space="preserve">
+    <value>Rien à remplacer : « {0} » est introuvable.</value>
+  </data>
+  <data name="Msg.UnsavedChangesIn" xml:space="preserve">
+    <value>{0} contient des modifications non enregistrées.</value>
+  </data>
+  <data name="Msg.SaveBeforeClosing" xml:space="preserve">
+    <value>Les enregistrer avant de fermer ?</value>
+  </data>
+  <data name="Hint.RunTheSearch" xml:space="preserve">
+    <value>Lancer la recherche</value>
+  </data>
+  <data name="Hint.CloseWithoutSearching" xml:space="preserve">
+    <value>Fermer sans rechercher</value>
+  </data>
+  <data name="Hint.RenameTheEntry" xml:space="preserve">
+    <value>Renommer l'élément</value>
+  </data>
+  <data name="Hint.CloseWithoutRenaming" xml:space="preserve">
+    <value>Fermer sans renommer</value>
+  </data>
 </root>

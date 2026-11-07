@@ -3901,4 +3901,34 @@
   <data name="Menu.EncryptFiles" xml:space="preserve">
     <value>Ver-/Entschlüsseln…</value>
   </data>
+  <data name="Menu.Unmark" xml:space="preserve">
+    <value>Markierung aufheben</value>
+  </data>
+  <data name="Msg.NoFileMatches" xml:space="preserve">
+    <value>Keine Datei passt zu {0}.</value>
+  </data>
+  <data name="Msg.NoMarkedFileMatches" xml:space="preserve">
+    <value>Keine markierte Datei passt zu {0}.</value>
+  </data>
+  <data name="Msg.SayWhereToSearch" xml:space="preserve">
+    <value>Geben Sie an, wo gesucht werden soll.</value>
+  </data>
+  <data name="Msg.NoSuchFolder" xml:space="preserve">
+    <value>Ordner nicht gefunden: {0}</value>
+  </data>
+  <data name="Msg.FindFilesNumbers" xml:space="preserve">
+    <value>Größer (MB) und Älter (Tage) sind Zahlen oder leer.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFile" xml:space="preserve">
+    <value>Es gibt keinen Ordner, in dem die Datei erstellt werden kann.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFolder" xml:space="preserve">
+    <value>Es gibt keinen Ordner, in dem der Ordner erstellt werden kann.</value>
+  </data>
+  <data name="Msg.CouldNotCreateFile" xml:space="preserve">
+    <value>Die Datei konnte nicht erstellt werden: {0}</value>
+  </data>
+  <data name="Msg.CouldNotCreateFolder" xml:space="preserve">
+    <value>Der Ordner konnte nicht erstellt werden: {0}</value>
+  </data>
 </root>

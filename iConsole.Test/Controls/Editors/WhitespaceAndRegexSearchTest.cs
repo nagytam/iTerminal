@@ -293,7 +293,8 @@ public class WhitespaceAndRegexSearchTest
         await Field<iConsole.Controls.Buttons.Button>(dialog, "_searchTextButton").TriggerHotKeyAsync();
 
         Assert.AreEqual(0, model.Hits.Count);
-        Assert.IsTrue(dialog.Title.StartsWith("Search text: "), dialog.Title);
+        Assert.IsTrue(dialog.ErrorText.Length > 0, "the reason is on the dialog's error line");
+        Assert.IsFalse(dialog.Title.Contains(':'), "and no longer squeezed into the title: " + dialog.Title);
         Assert.IsTrue(dialog.Parent!.Controls.AsSnapshot().Contains(dialog), "the dialog was not closed");
     }
 

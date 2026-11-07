@@ -3901,4 +3901,34 @@
   <data name="Menu.EncryptFiles" xml:space="preserve">
     <value>Titkosítás / Visszafejtés…</value>
   </data>
+  <data name="Menu.Unmark" xml:space="preserve">
+    <value>Jelölés törlése</value>
+  </data>
+  <data name="Msg.NoFileMatches" xml:space="preserve">
+    <value>Egy fájl sem felel meg: {0}.</value>
+  </data>
+  <data name="Msg.NoMarkedFileMatches" xml:space="preserve">
+    <value>Egy jelölt fájl sem felel meg: {0}.</value>
+  </data>
+  <data name="Msg.SayWhereToSearch" xml:space="preserve">
+    <value>Adja meg, hol keressen.</value>
+  </data>
+  <data name="Msg.NoSuchFolder" xml:space="preserve">
+    <value>Nincs ilyen mappa: {0}</value>
+  </data>
+  <data name="Msg.FindFilesNumbers" xml:space="preserve">
+    <value>A Nagyobb (MB) és az Régebbi (nap) szám, vagy üres.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFile" xml:space="preserve">
+    <value>Nincs mappa, amelyben a fájl létrehozható.</value>
+  </data>
+  <data name="Msg.NoFolderForNewFolder" xml:space="preserve">
+    <value>Nincs mappa, amelyben a mappa létrehozható.</value>
+  </data>
+  <data name="Msg.CouldNotCreateFile" xml:space="preserve">
+    <value>A fájl nem hozható létre: {0}</value>
+  </data>
+  <data name="Msg.CouldNotCreateFolder" xml:space="preserve">
+    <value>A mappa nem hozható létre: {0}</value>
+  </data>
 </root>
