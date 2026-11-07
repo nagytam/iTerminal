@@ -3931,4 +3931,19 @@
   <data name="Msg.CouldNotCreateFolder" xml:space="preserve">
     <value>A mappa nem hozható létre: {0}</value>
   </data>
+  <data name="Startup.StopOther" xml:space="preserve">
+    <value>Nyomja meg a K-t a másik példány leállításához és a zárolófájl törléséhez.</value>
+  </data>
+  <data name="Startup.StopOtherRunning" xml:space="preserve">
+    <value>A másik példány leállítása...</value>
+  </data>
+  <data name="Startup.StopOtherDone" xml:space="preserve">
+    <value>A másik példány leállt. Indítsa újra az iTerminalt a mentett adatbázis használatához.</value>
+  </data>
+  <data name="Startup.StopOtherFailed" xml:space="preserve">
+    <value>A másik példányt nem sikerült leállítani: {0}</value>
+  </data>
+  <data name="DialogHint.StopOtherInstance" xml:space="preserve">
+    <value>A másik példány leállítása</value>
+  </data>
 </root>

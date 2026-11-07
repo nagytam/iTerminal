@@ -24,6 +24,7 @@ public class TerminalScreen : iConsole.Screens.Screen
     private readonly Content? _content;
     private readonly TerminalStatusBar? _statusBar;
     private readonly StartupWarningService _startupWarningService;
+    private readonly DatabaseLocation? _databaseLocation;
     private readonly GitClientDialog? _gitClientDialog;
     private readonly NetworkBrowserDialog? _networkBrowserDialog;
     private readonly ISettingsService _settingsService;
@@ -43,9 +44,11 @@ public class TerminalScreen : iConsole.Screens.Screen
         ToastHost? toastHost = null,
         RuntimeDependencyDialog? runtimeDependencyDialog = null,
         ToolTipHost? toolTipHost = null,
-        iConsole.Graphics.SixelOverlay? sixelOverlay = null)
+        iConsole.Graphics.SixelOverlay? sixelOverlay = null,
+        DatabaseLocation? databaseLocation = null)
         : base(consoleDriver, themeService)
     {
+        _databaseLocation = databaseLocation;
         _consoleDriver = consoleDriver ?? NullConsoleDriver.Instance;
         Title = ApplicationInfo.Title;
         _menuBar = menuBar;
@@ -159,7 +162,11 @@ public class TerminalScreen : iConsole.Screens.Screen
 
         if (_startupWarningService.Warnings.Count > 0)
         {
-            var dialog = new StartupWarningDialog(_startupWarningService.Warnings, ThemeService);
+            // An instance running on the in-memory database was locked out by another one: offer to stop it.
+            var dialog = new StartupWarningDialog(
+                _startupWarningService.Warnings,
+                ThemeService,
+                _databaseLocation is { IsInMemory: true } location ? location.StopOtherInstance : null);
             await ShowDialogAsync(dialog);
         }
     }

@@ -3931,4 +3931,19 @@
   <data name="Msg.CouldNotCreateFolder" xml:space="preserve">
     <value>No se pudo crear la carpeta: {0}</value>
   </data>
+  <data name="Startup.StopOther" xml:space="preserve">
+    <value>Pulse K para detener la otra instancia y eliminar su archivo de bloqueo.</value>
+  </data>
+  <data name="Startup.StopOtherRunning" xml:space="preserve">
+    <value>Deteniendo la otra instancia...</value>
+  </data>
+  <data name="Startup.StopOtherDone" xml:space="preserve">
+    <value>Se detuvo la otra instancia. Reinicie iTerminal para usar la base de datos guardada.</value>
+  </data>
+  <data name="Startup.StopOtherFailed" xml:space="preserve">
+    <value>No se pudo detener la otra instancia: {0}</value>
+  </data>
+  <data name="DialogHint.StopOtherInstance" xml:space="preserve">
+    <value>Detener la otra instancia</value>
+  </data>
 </root>

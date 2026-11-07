@@ -99,8 +99,10 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iConsole.Localization.ILanguageStore, iTerminal.Core.Services.SettingsLanguageStore>();
         services.AddTransient<LanguageDialog>();
 
-        services.AddDbContextFactory<iTerminalDbContext>(options =>
-            options.UseSqlite($"Data Source={databasePath}"));
+        // The first instance uses the database file; a second one finds it locked and gets an in-memory database.
+        services.AddSingleton(provider => new DatabaseLocation(databasePath, provider.GetRequiredService<StartupWarningService>()));
+        services.AddDbContextFactory<iTerminalDbContext>((provider, options) =>
+            options.UseSqlite(provider.GetRequiredService<DatabaseLocation>().ConnectionString));
         services.AddScoped<ICacheService, CacheService>();
         services.AddHostedService<DatabaseInitializationHostedService>();
         services.AddTransient<TerminalMenuBar>();

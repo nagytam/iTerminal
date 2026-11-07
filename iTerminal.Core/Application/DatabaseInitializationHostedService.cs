@@ -13,7 +13,8 @@ namespace iTerminal.Core.Application;
 public class DatabaseInitializationHostedService(
     IDbContextFactory<iTerminalDbContext> dbContextFactory,
     StartupWarningService startupWarningService,
-    TimeSpan? cleanUpDelay = null) : IHostedService
+    TimeSpan? cleanUpDelay = null,
+    DatabaseLocation? databaseLocation = null) : IHostedService
 {
     /// <summary>
     /// Key of the schema stamp in <see cref="iTerminalDbContext.DatabaseMetadata"/>. That table
@@ -28,7 +29,16 @@ public class DatabaseInitializationHostedService(
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         iConsole.Diagnostics.StartupTrace.Mark("db-init-start");
-        await TryAcquireInstanceLockAsync(cancellationToken);
+        if (databaseLocation is not null)
+        {
+            // The location took (or failed to take) the lock when the first context was configured, and
+            // chose the in-memory database in the second case; nothing is left to decide here.
+            _ = databaseLocation.ConnectionString;
+        }
+        else
+        {
+            await TryAcquireInstanceLockAsync(cancellationToken);
+        }
 
         try
         {
@@ -154,7 +164,7 @@ public class DatabaseInitializationHostedService(
             // connection opened during the failed initialization still holds the file open.
             Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
 
-            if (dbPath is not null)
+            if (dbPath is not null && databaseLocation?.IsInMemory != true)
             {
                 foreach (var side in new[] { dbPath + "-wal", dbPath + "-shm" })
                     if (File.Exists(side)) File.Delete(side);

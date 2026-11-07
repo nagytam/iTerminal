@@ -3931,4 +3931,19 @@
   <data name="Msg.CouldNotCreateFolder" xml:space="preserve">
     <value>Impossibile creare la cartella: {0}</value>
   </data>
+  <data name="Startup.StopOther" xml:space="preserve">
+    <value>Premi K per arrestare l&apos;altra istanza e rimuovere il suo file di blocco.</value>
+  </data>
+  <data name="Startup.StopOtherRunning" xml:space="preserve">
+    <value>Arresto dell&apos;altra istanza...</value>
+  </data>
+  <data name="Startup.StopOtherDone" xml:space="preserve">
+    <value>L&apos;altra istanza è stata arrestata. Riavvia iTerminal per usare il database salvato.</value>
+  </data>
+  <data name="Startup.StopOtherFailed" xml:space="preserve">
+    <value>Impossibile arrestare l&apos;altra istanza: {0}</value>
+  </data>
+  <data name="DialogHint.StopOtherInstance" xml:space="preserve">
+    <value>Arresta l&apos;altra istanza</value>
+  </data>
 </root>
