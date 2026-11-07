@@ -4585,4 +4585,40 @@
   <data name="Git.NoRepo" xml:space="preserve">
     <value>Nessun repository</value>
   </data>
+  <data name="Web.NoEarlier" xml:space="preserve">
+    <value>Non c’è una pagina precedente.</value>
+  </data>
+  <data name="Web.NoLater" xml:space="preserve">
+    <value>Non c’è una pagina successiva.</value>
+  </data>
+  <data name="Web.NoLinks" xml:space="preserve">
+    <value>Questa pagina non ha collegamenti.</value>
+  </data>
+  <data name="Web.NoBookmark" xml:space="preserve">
+    <value>Questa pagina non può essere aggiunta ai segnalibri.</value>
+  </data>
+  <data name="Web.Bookmarked" xml:space="preserve">
+    <value>Aggiunto ai segnalibri.</value>
+  </data>
+  <data name="Web.BookmarkRemoved" xml:space="preserve">
+    <value>Segnalibro rimosso.</value>
+  </data>
+  <data name="Web.SavedTo" xml:space="preserve">
+    <value>Salvato in {0}</value>
+  </data>
+  <data name="Web.SaveFailed" xml:space="preserve">
+    <value>Impossibile salvare: {0}</value>
+  </data>
+  <data name="Web.NeedsScript" xml:space="preserve">
+    <value>Questo pulsante richiede JavaScript, che il browser web non esegue.</value>
+  </data>
+  <data name="Web.NoUpload" xml:space="preserve">
+    <value>Il caricamento di file non è supportato.</value>
+  </data>
+  <data name="Web.EnterAddress" xml:space="preserve">
+    <value>Ctrl+L per inserire un indirizzo, o F1 per la guida.</value>
+  </data>
+  <data name="Web.Layout" xml:space="preserve">
+    <value>Impaginazione della pagina…</value>
+  </data>
 </root>

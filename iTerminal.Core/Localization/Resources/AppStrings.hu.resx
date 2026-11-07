@@ -4585,4 +4585,40 @@
   <data name="Git.NoRepo" xml:space="preserve">
     <value>Nincs tárhely</value>
   </data>
+  <data name="Web.NoEarlier" xml:space="preserve">
+    <value>Nincs korábbi oldal.</value>
+  </data>
+  <data name="Web.NoLater" xml:space="preserve">
+    <value>Nincs későbbi oldal.</value>
+  </data>
+  <data name="Web.NoLinks" xml:space="preserve">
+    <value>Ezen az oldalon nincsenek hivatkozások.</value>
+  </data>
+  <data name="Web.NoBookmark" xml:space="preserve">
+    <value>Ez az oldal nem könyvjelzőzhető.</value>
+  </data>
+  <data name="Web.Bookmarked" xml:space="preserve">
+    <value>Könyvjelzőzve.</value>
+  </data>
+  <data name="Web.BookmarkRemoved" xml:space="preserve">
+    <value>Könyvjelző eltávolítva.</value>
+  </data>
+  <data name="Web.SavedTo" xml:space="preserve">
+    <value>Mentve ide: {0}</value>
+  </data>
+  <data name="Web.SaveFailed" xml:space="preserve">
+    <value>A mentés nem sikerült: {0}</value>
+  </data>
+  <data name="Web.NeedsScript" xml:space="preserve">
+    <value>Ehhez a gombhoz JavaScript kell, amit a webböngésző nem futtat.</value>
+  </data>
+  <data name="Web.NoUpload" xml:space="preserve">
+    <value>A fájlfeltöltés nem támogatott.</value>
+  </data>
+  <data name="Web.EnterAddress" xml:space="preserve">
+    <value>Ctrl+L: cím megadása, F1: súgó.</value>
+  </data>
+  <data name="Web.Layout" xml:space="preserve">
+    <value>Oldal elrendezése…</value>
+  </data>
 </root>

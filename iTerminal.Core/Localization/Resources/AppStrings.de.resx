@@ -4585,4 +4585,40 @@
   <data name="Git.NoRepo" xml:space="preserve">
     <value>Kein Repository</value>
   </data>
+  <data name="Web.NoEarlier" xml:space="preserve">
+    <value>Es gibt keine frühere Seite.</value>
+  </data>
+  <data name="Web.NoLater" xml:space="preserve">
+    <value>Es gibt keine spätere Seite.</value>
+  </data>
+  <data name="Web.NoLinks" xml:space="preserve">
+    <value>Auf dieser Seite gibt es keine Links.</value>
+  </data>
+  <data name="Web.NoBookmark" xml:space="preserve">
+    <value>Diese Seite lässt sich nicht als Lesezeichen speichern.</value>
+  </data>
+  <data name="Web.Bookmarked" xml:space="preserve">
+    <value>Lesezeichen gesetzt.</value>
+  </data>
+  <data name="Web.BookmarkRemoved" xml:space="preserve">
+    <value>Lesezeichen entfernt.</value>
+  </data>
+  <data name="Web.SavedTo" xml:space="preserve">
+    <value>Gespeichert in {0}</value>
+  </data>
+  <data name="Web.SaveFailed" xml:space="preserve">
+    <value>Speichern nicht möglich: {0}</value>
+  </data>
+  <data name="Web.NeedsScript" xml:space="preserve">
+    <value>Diese Schaltfläche braucht JavaScript, das der Webbrowser nicht ausführt.</value>
+  </data>
+  <data name="Web.NoUpload" xml:space="preserve">
+    <value>Das Hochladen von Dateien wird nicht unterstützt.</value>
+  </data>
+  <data name="Web.EnterAddress" xml:space="preserve">
+    <value>Ctrl+L gibt eine Adresse ein, F1 zeigt die Hilfe.</value>
+  </data>
+  <data name="Web.Layout" xml:space="preserve">
+    <value>Seite wird aufgebaut…</value>
+  </data>
 </root>

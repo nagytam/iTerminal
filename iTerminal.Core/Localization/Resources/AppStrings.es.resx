@@ -4585,4 +4585,40 @@
   <data name="Git.NoRepo" xml:space="preserve">
     <value>Sin repositorio</value>
   </data>
+  <data name="Web.NoEarlier" xml:space="preserve">
+    <value>No hay una página anterior.</value>
+  </data>
+  <data name="Web.NoLater" xml:space="preserve">
+    <value>No hay una página posterior.</value>
+  </data>
+  <data name="Web.NoLinks" xml:space="preserve">
+    <value>Esta página no tiene enlaces.</value>
+  </data>
+  <data name="Web.NoBookmark" xml:space="preserve">
+    <value>Esta página no se puede añadir a marcadores.</value>
+  </data>
+  <data name="Web.Bookmarked" xml:space="preserve">
+    <value>Añadido a marcadores.</value>
+  </data>
+  <data name="Web.BookmarkRemoved" xml:space="preserve">
+    <value>Marcador quitado.</value>
+  </data>
+  <data name="Web.SavedTo" xml:space="preserve">
+    <value>Guardado en {0}</value>
+  </data>
+  <data name="Web.SaveFailed" xml:space="preserve">
+    <value>No se pudo guardar: {0}</value>
+  </data>
+  <data name="Web.NeedsScript" xml:space="preserve">
+    <value>Este botón necesita JavaScript, que el navegador web no ejecuta.</value>
+  </data>
+  <data name="Web.NoUpload" xml:space="preserve">
+    <value>No se admite la subida de archivos.</value>
+  </data>
+  <data name="Web.EnterAddress" xml:space="preserve">
+    <value>Ctrl+L para escribir una dirección, o F1 para la ayuda.</value>
+  </data>
+  <data name="Web.Layout" xml:space="preserve">
+    <value>Maquetando la página…</value>
+  </data>
 </root>

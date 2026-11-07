@@ -4585,4 +4585,40 @@
   <data name="Git.NoRepo" xml:space="preserve">
     <value>Aucun dépôt</value>
   </data>
+  <data name="Web.NoEarlier" xml:space="preserve">
+    <value>Il n’y a pas de page précédente.</value>
+  </data>
+  <data name="Web.NoLater" xml:space="preserve">
+    <value>Il n’y a pas de page suivante.</value>
+  </data>
+  <data name="Web.NoLinks" xml:space="preserve">
+    <value>Il n’y a aucun lien sur cette page.</value>
+  </data>
+  <data name="Web.NoBookmark" xml:space="preserve">
+    <value>Cette page ne peut pas être ajoutée aux favoris.</value>
+  </data>
+  <data name="Web.Bookmarked" xml:space="preserve">
+    <value>Ajouté aux favoris.</value>
+  </data>
+  <data name="Web.BookmarkRemoved" xml:space="preserve">
+    <value>Favori supprimé.</value>
+  </data>
+  <data name="Web.SavedTo" xml:space="preserve">
+    <value>Enregistré dans {0}</value>
+  </data>
+  <data name="Web.SaveFailed" xml:space="preserve">
+    <value>Enregistrement impossible : {0}</value>
+  </data>
+  <data name="Web.NeedsScript" xml:space="preserve">
+    <value>Ce bouton nécessite JavaScript, que le navigateur web n’exécute pas.</value>
+  </data>
+  <data name="Web.NoUpload" xml:space="preserve">
+    <value>L’envoi de fichiers n’est pas pris en charge.</value>
+  </data>
+  <data name="Web.EnterAddress" xml:space="preserve">
+    <value>Ctrl+L pour saisir une adresse, ou F1 pour l’aide.</value>
+  </data>
+  <data name="Web.Layout" xml:space="preserve">
+    <value>Mise en page…</value>
+  </data>
 </root>

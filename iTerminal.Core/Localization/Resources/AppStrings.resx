@@ -4585,4 +4585,40 @@
   <data name="Git.NoRepo" xml:space="preserve">
     <value>No repository</value>
   </data>
+  <data name="Web.NoEarlier" xml:space="preserve">
+    <value>There is no earlier page.</value>
+  </data>
+  <data name="Web.NoLater" xml:space="preserve">
+    <value>There is no later page.</value>
+  </data>
+  <data name="Web.NoLinks" xml:space="preserve">
+    <value>There are no links on this page.</value>
+  </data>
+  <data name="Web.NoBookmark" xml:space="preserve">
+    <value>This page cannot be bookmarked.</value>
+  </data>
+  <data name="Web.Bookmarked" xml:space="preserve">
+    <value>Bookmarked.</value>
+  </data>
+  <data name="Web.BookmarkRemoved" xml:space="preserve">
+    <value>Bookmark removed.</value>
+  </data>
+  <data name="Web.SavedTo" xml:space="preserve">
+    <value>Saved to {0}</value>
+  </data>
+  <data name="Web.SaveFailed" xml:space="preserve">
+    <value>Could not save: {0}</value>
+  </data>
+  <data name="Web.NeedsScript" xml:space="preserve">
+    <value>This button needs JavaScript, which the Web Browser does not run.</value>
+  </data>
+  <data name="Web.NoUpload" xml:space="preserve">
+    <value>Uploading files is not supported.</value>
+  </data>
+  <data name="Web.EnterAddress" xml:space="preserve">
+    <value>Press Ctrl+L to enter an address, or F1 for help.</value>
+  </data>
+  <data name="Web.Layout" xml:space="preserve">
+    <value>Laying out the page…</value>
+  </data>
 </root>

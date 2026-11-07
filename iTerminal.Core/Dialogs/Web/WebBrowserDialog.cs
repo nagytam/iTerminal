@@ -282,7 +282,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Backspace when !key.Shift && !key.Control && !key.Alt:
                 if (!_model.GoBack(tab))
                 {
-                    _model.Say(tab, "There is no earlier page.");
+                    _model.Say(tab, UiText.Get("Web.NoEarlier", "There is no earlier page."));
                 }
 
                 return true;
@@ -290,7 +290,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Backspace when key.Shift:
                 if (!_model.GoForward(tab))
                 {
-                    _model.Say(tab, "There is no later page.");
+                    _model.Say(tab, UiText.Get("Web.NoLater", "There is no later page."));
                 }
 
                 return true;
@@ -346,7 +346,7 @@ public class WebBrowserDialog : Dialog
             case ConsoleKey.Tab when !key.Alt:
                 if (!tab.MoveFocus(!key.Shift, ViewHeight))
                 {
-                    _model.Say(tab, "There are no links on this page.");
+                    _model.Say(tab, UiText.Get("Web.NoLinks", "There are no links on this page."));
                 }
 
                 return true;
@@ -753,11 +753,11 @@ public class WebBrowserDialog : Dialog
         var url = tab.Url;
         if (url.Length == 0 || url.StartsWith("about:", StringComparison.OrdinalIgnoreCase))
         {
-            _model.Say(tab, "This page cannot be bookmarked.");
+            _model.Say(tab, UiText.Get("Web.NoBookmark", "This page cannot be bookmarked."));
             return;
         }
 
-        _model.Say(tab, _model.Store.ToggleBookmark(url, tab.Title) ? "Bookmarked." : "Bookmark removed.");
+        _model.Say(tab, _model.Store.ToggleBookmark(url, tab.Title) ? UiText.Get("Web.Bookmarked", "Bookmarked.") : UiText.Get("Web.BookmarkRemoved", "Bookmark removed."));
     }
 
     private void ToggleSource()
@@ -780,11 +780,11 @@ public class WebBrowserDialog : Dialog
         var tab = _model.Active;
         try
         {
-            _model.Say(tab, "Saved to " + _model.Save(tab));
+            _model.Say(tab, string.Format(UiText.Get("Web.SavedTo", "Saved to {0}"), _model.Save(tab)));
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
-            _model.Say(tab, "Could not save: " + exception.Message);
+            _model.Say(tab, string.Format(UiText.Get("Web.SaveFailed", "Could not save: {0}"), exception.Message));
         }
     }
 
@@ -897,10 +897,10 @@ public class WebBrowserDialog : Dialog
                 _model.ResetForm(tab, field);
                 break;
             case WebFieldKind.Button:
-                _model.Say(tab, "This button needs JavaScript, which the Web Browser does not run.");
+                _model.Say(tab, UiText.Get("Web.NeedsScript", "This button needs JavaScript, which the Web Browser does not run."));
                 break;
             case WebFieldKind.File:
-                _model.Say(tab, "Uploading files is not supported.");
+                _model.Say(tab, UiText.Get("Web.NoUpload", "Uploading files is not supported."));
                 break;
         }
     }
@@ -1275,7 +1275,7 @@ public class WebBrowserDialog : Dialog
             document = entry?.Document;
             scroll = entry?.Scroll ?? 0;
             focusedIndex = entry?.FocusedItem ?? -1;
-            notice = tab.IsLoading && entry is null ? "Loading " + tab.LoadingUrl + "…" : entry is null ? "Press Ctrl+L to enter an address, or F1 for help." : "Laying out the page…";
+            notice = tab.IsLoading && entry is null ? string.Format(UiText.Get("Web.Loading", "Loading {0}…"), tab.LoadingUrl) : entry is null ? UiText.Get("Web.EnterAddress", "Press Ctrl+L to enter an address, or F1 for help.") : UiText.Get("Web.Layout", "Laying out the page…");
         }
 
         WebItem? focus = page is not null && focusedIndex >= 0 && focusedIndex < page.Items.Count ? page.Items[focusedIndex] : null;
