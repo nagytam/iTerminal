@@ -4285,4 +4285,103 @@
   <data name="Solution.ReadFailed" xml:space="preserve">
     <value>A megoldás olvasása sikertelen: {0}</value>
   </data>
+  <data name="Access.Hint.TypeWindows" xml:space="preserve">
+    <value>Írjon be felhasználót vagy csoportot, például Users vagy TARTOMÁNY\név.</value>
+  </data>
+  <data name="Access.Hint.TypePosix" xml:space="preserve">
+    <value>Egy felhasználó, vagy csoport:név. A puszta owner, group, other és mask is megfelel.</value>
+  </data>
+  <data name="Access.Hint.EditRights" xml:space="preserve">
+    <value>A Szóköz vagy ←/→ módosítja a jogokat. Enter ment, Esc visszalép.</value>
+  </data>
+  <data name="Access.Removed" xml:space="preserve">
+    <value>{0} bejegyzése eltávolítva.</value>
+  </data>
+  <data name="Access.InheritOn" xml:space="preserve">
+    <value>A szülőmappa bejegyzései ismét érvényesek.</value>
+  </data>
+  <data name="Access.InheritOff" xml:space="preserve">
+    <value>Az öröklés megszűnt; a szülő bejegyzései saját másolatként megmaradtak.</value>
+  </data>
+  <data name="Access.OwnerUnchanged" xml:space="preserve">
+    <value>A tulajdonos nem változott.</value>
+  </data>
+  <data name="Access.Inheriting" xml:space="preserve">
+    <value>A szülőmappa bejegyzéseit örökli</value>
+  </data>
+  <data name="Access.NotInheriting" xml:space="preserve">
+    <value>Nincs öröklés: csak az alábbi bejegyzések érvényesek</value>
+  </data>
+  <data name="Access.FolderDefaults" xml:space="preserve">
+    <value>A mappa alapértelmezett bejegyzései az új elemek kiindulópontja</value>
+  </data>
+  <data name="Mail.Reading" xml:space="preserve">
+    <value>Beérkezett üzenetek olvasása…</value>
+  </data>
+  <data name="Mail.SearchingBook" xml:space="preserve">
+    <value>Keresés a címjegyzékben…</value>
+  </data>
+  <data name="Workspaces.NotSaved" xml:space="preserve">
+    <value>A képernyő nincs munkaterületként mentve.</value>
+  </data>
+  <data name="Workspaces.ScreenChanged" xml:space="preserve">
+    <value>  (a képernyő azóta megváltozott)</value>
+  </data>
+  <data name="Workspaces.SavedCount" xml:space="preserve">
+    <value>{0} mentve  ·  {1}</value>
+  </data>
+  <data name="Workspaces.SavePrompt" xml:space="preserve">
+    <value>A képernyő mentése munkaterületként:</value>
+  </data>
+  <data name="Workspaces.RenamePrompt" xml:space="preserve">
+    <value>„{0}” átnevezése:</value>
+  </data>
+  <data name="Folders.DirBoth" xml:space="preserve">
+    <value>Mindkét irányban — az újabb másolat nyer</value>
+  </data>
+  <data name="Folders.DirLtr" xml:space="preserve">
+    <value>Balról jobbra — a bal az forrás</value>
+  </data>
+  <data name="Folders.DirRtl" xml:space="preserve">
+    <value>Jobbról balra — a jobb az forrás</value>
+  </data>
+  <data name="Folders.ModeDate" xml:space="preserve">
+    <value>Név, méret és dátum</value>
+  </data>
+  <data name="Folders.ModeSize" xml:space="preserve">
+    <value>Név és méret (a dátum figyelmen kívül marad)</value>
+  </data>
+  <data name="Folders.ModeContent" xml:space="preserve">
+    <value>Név és tartalom (mindkét fájlt beolvassa)</value>
+  </data>
+  <data name="Folders.HintPreview" xml:space="preserve">
+    <value>Előnézet: mit tenne a szinkronizálás</value>
+  </data>
+  <data name="Folders.HintRun" xml:space="preserve">
+    <value>Az előnézett szinkronizálás futtatása</value>
+  </data>
+  <data name="DupFinder.NothingToSearch" xml:space="preserve">
+    <value>Nincs mit keresni.</value>
+  </data>
+  <data name="DupFinder.Looking" xml:space="preserve">
+    <value>Másolatok keresése itt: {0}</value>
+  </data>
+  <data name="DupFinder.Listing" xml:space="preserve">
+    <value>Fájlok listázása: eddig {0:N0}</value>
+  </data>
+  <data name="DupFinder.Sampling" xml:space="preserve">
+    <value>Az azonos méretű fájlok elejének összehasonlítása…</value>
+  </data>
+  <data name="DupFinder.Hashing" xml:space="preserve">
+    <value>Még hasonlónak tűnő fájlok olvasása: {0} / {1}</value>
+  </data>
+  <data name="DupFinder.EscStops" xml:space="preserve">
+    <value>Az Esc leállítja és bezárja.</value>
+  </data>
+  <data name="Disk.ReadFailed" xml:space="preserve">
+    <value>Nem sikerült olvasni: {0}: {1}</value>
+  </data>
+  <data name="Workspaces.OnScreen" xml:space="preserve">
+    <value>A képernyőn: {0}</value>
+  </data>
 </root>

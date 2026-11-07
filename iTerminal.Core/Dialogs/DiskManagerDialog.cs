@@ -188,7 +188,7 @@ public class DiskManagerDialog : Dialog
             catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 // A failed read is said on the pane; left alone, the "Reading the drive…" line stayed for ever.
-                lines = [new InfoLines.Line($"Could not read {root}: {exception.Message}", Color.Red)];
+                lines = [new InfoLines.Line(Say("Disk.ReadFailed", "Could not read {0}: {1}", root, exception.Message), Color.Red)];
             }
             // Only the drive still under the cursor may write: a slow read must not paint over a
             // faster one that belongs to the row the user moved to.

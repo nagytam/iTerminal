@@ -101,9 +101,9 @@ public class CompareFoldersDialog : Dialog
 
     private static string DescribeDirection(SyncDirection direction) => direction switch
     {
-        SyncDirection.Both => "Both ways — newer copy wins",
-        SyncDirection.LeftToRight => "Left to right — left is the source",
-        SyncDirection.RightToLeft => "Right to left — right is the source",
+        SyncDirection.Both => Say("Folders.DirBoth", "Both ways — newer copy wins"),
+        SyncDirection.LeftToRight => Say("Folders.DirLtr", "Left to right — left is the source"),
+        SyncDirection.RightToLeft => Say("Folders.DirRtl", "Right to left — right is the source"),
         _ => direction.ToString(),
     };
 
@@ -127,9 +127,9 @@ public class CompareFoldersDialog : Dialog
 
     private static string DescribeMode(CompareMode mode) => mode switch
     {
-        CompareMode.SizeAndDate => "Name, size and date",
-        CompareMode.SizeOnly => "Name and size (dates ignored)",
-        CompareMode.Content => "Name and content (reads both files)",
+        CompareMode.SizeAndDate => Say("Folders.ModeDate", "Name, size and date"),
+        CompareMode.SizeOnly => Say("Folders.ModeSize", "Name and size (dates ignored)"),
+        CompareMode.Content => Say("Folders.ModeContent", "Name and content (reads both files)"),
         _ => mode.ToString(),
     };
 

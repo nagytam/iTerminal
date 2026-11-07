@@ -4285,4 +4285,103 @@
   <data name="Solution.ReadFailed" xml:space="preserve">
     <value>Impossibile leggere la soluzione: {0}</value>
   </data>
+  <data name="Access.Hint.TypeWindows" xml:space="preserve">
+    <value>Digita un utente o un gruppo, ad esempio Users o DOMINIO\nome.</value>
+  </data>
+  <data name="Access.Hint.TypePosix" xml:space="preserve">
+    <value>Un utente, o gruppo:nome. Funzionano anche owner, group, other e mask da soli.</value>
+  </data>
+  <data name="Access.Hint.EditRights" xml:space="preserve">
+    <value>Spazio o ←/→ cambia i permessi. Invio salva, Esc torna indietro.</value>
+  </data>
+  <data name="Access.Removed" xml:space="preserve">
+    <value>La voce di {0} è stata rimossa.</value>
+  </data>
+  <data name="Access.InheritOn" xml:space="preserve">
+    <value>Le voci della cartella superiore si applicano di nuovo.</value>
+  </data>
+  <data name="Access.InheritOff" xml:space="preserve">
+    <value>Ereditarietà interrotta; le voci della cartella superiore sono state mantenute come copie esplicite.</value>
+  </data>
+  <data name="Access.OwnerUnchanged" xml:space="preserve">
+    <value>Il proprietario è invariato.</value>
+  </data>
+  <data name="Access.Inheriting" xml:space="preserve">
+    <value>Eredita le voci dalla cartella superiore</value>
+  </data>
+  <data name="Access.NotInheriting" xml:space="preserve">
+    <value>Nessuna ereditarietà: valgono solo le voci qui sotto</value>
+  </data>
+  <data name="Access.FolderDefaults" xml:space="preserve">
+    <value>Le voci predefinite di una cartella valgono per i nuovi elementi</value>
+  </data>
+  <data name="Mail.Reading" xml:space="preserve">
+    <value>Lettura della posta in arrivo…</value>
+  </data>
+  <data name="Mail.SearchingBook" xml:space="preserve">
+    <value>Ricerca nella rubrica…</value>
+  </data>
+  <data name="Workspaces.NotSaved" xml:space="preserve">
+    <value>Lo schermo non è salvato come area di lavoro.</value>
+  </data>
+  <data name="Workspaces.ScreenChanged" xml:space="preserve">
+    <value>  (lo schermo è cambiato da allora)</value>
+  </data>
+  <data name="Workspaces.SavedCount" xml:space="preserve">
+    <value>{0} salvati  ·  {1}</value>
+  </data>
+  <data name="Workspaces.SavePrompt" xml:space="preserve">
+    <value>Salva lo schermo come area di lavoro:</value>
+  </data>
+  <data name="Workspaces.RenamePrompt" xml:space="preserve">
+    <value>Rinomina «{0}»:</value>
+  </data>
+  <data name="Folders.DirBoth" xml:space="preserve">
+    <value>In entrambe le direzioni — vince la copia più recente</value>
+  </data>
+  <data name="Folders.DirLtr" xml:space="preserve">
+    <value>Da sinistra a destra — la sinistra è l’origine</value>
+  </data>
+  <data name="Folders.DirRtl" xml:space="preserve">
+    <value>Da destra a sinistra — la destra è l’origine</value>
+  </data>
+  <data name="Folders.ModeDate" xml:space="preserve">
+    <value>Nome, dimensione e data</value>
+  </data>
+  <data name="Folders.ModeSize" xml:space="preserve">
+    <value>Nome e dimensione (date ignorate)</value>
+  </data>
+  <data name="Folders.ModeContent" xml:space="preserve">
+    <value>Nome e contenuto (legge entrambi i file)</value>
+  </data>
+  <data name="Folders.HintPreview" xml:space="preserve">
+    <value>Anteprima di ciò che farebbe la sincronizzazione</value>
+  </data>
+  <data name="Folders.HintRun" xml:space="preserve">
+    <value>Esegui la sincronizzazione mostrata in anteprima</value>
+  </data>
+  <data name="DupFinder.NothingToSearch" xml:space="preserve">
+    <value>Niente da cercare.</value>
+  </data>
+  <data name="DupFinder.Looking" xml:space="preserve">
+    <value>Ricerca di duplicati in {0}</value>
+  </data>
+  <data name="DupFinder.Listing" xml:space="preserve">
+    <value>Elenco dei file: finora {0:N0}</value>
+  </data>
+  <data name="DupFinder.Sampling" xml:space="preserve">
+    <value>Confronto dell’inizio dei file della stessa dimensione…</value>
+  </data>
+  <data name="DupFinder.Hashing" xml:space="preserve">
+    <value>Lettura dei file ancora simili: {0} di {1}</value>
+  </data>
+  <data name="DupFinder.EscStops" xml:space="preserve">
+    <value>Esc interrompe e chiude.</value>
+  </data>
+  <data name="Disk.ReadFailed" xml:space="preserve">
+    <value>Impossibile leggere {0}: {1}</value>
+  </data>
+  <data name="Workspaces.OnScreen" xml:space="preserve">
+    <value>Sullo schermo: {0}</value>
+  </data>
 </root>

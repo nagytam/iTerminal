@@ -210,23 +210,23 @@ public class DuplicateFinderDialog : Dialog
 
         if (_scan is null)
         {
-            lines.Add(new("Nothing to search.", Color.Yellow));
+            lines.Add(new(Say("DupFinder.NothingToSearch", "Nothing to search."), Color.Yellow));
             Status();
             return;
         }
 
         if (!_scan.IsComplete)
         {
-            lines.Add(new($"Looking for duplicates in {_scan.Path}", colorScheme.Foreground));
+            lines.Add(new(Say("DupFinder.Looking", "Looking for duplicates in {0}", _scan.Path), colorScheme.Foreground));
             lines.Add(new(_scan.Phase switch
             {
-                DuplicateScanPhase.Listing => $"Listing files: {_scan.FilesScanned:N0} so far",
-                DuplicateScanPhase.Sampling => "Comparing the start of files that are the same size…",
-                _ => $"Reading files that still look alike: {_scan.BytesHashed.ToFileSize()} of {_scan.BytesToHash.ToFileSize()}",
+                DuplicateScanPhase.Listing => Say("DupFinder.Listing", "Listing files: {0:N0} so far", _scan.FilesScanned),
+                DuplicateScanPhase.Sampling => Say("DupFinder.Sampling", "Comparing the start of files that are the same size…"),
+                _ => Say("DupFinder.Hashing", "Reading files that still look alike: {0} of {1}", _scan.BytesHashed.ToFileSize(), _scan.BytesToHash.ToFileSize()),
             }, Color.Yellow));
             lines.Add(new(_scan.Current, Color.Cyan));
             lines.Add(default);
-            lines.Add(new("Esc stops and closes.", colorScheme.Foreground));
+            lines.Add(new(Say("DupFinder.EscStops", "Esc stops and closes."), colorScheme.Foreground));
             Status();
             return;
         }

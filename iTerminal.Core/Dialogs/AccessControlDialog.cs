@@ -112,7 +112,7 @@ public class AccessControlDialog : Dialog
             _mode = Mode.List;
             _confirmDelete = false;
             SetStatus(string.Empty, false);
-            StartRead("Reading the permissions…");
+            StartRead(Say("Access.Reading", "Reading the permissions…"));
         }
     }
 
@@ -366,7 +366,7 @@ public class AccessControlDialog : Dialog
                 OpenOwner();
                 return true;
             case 'r':
-                StartRead("Reading the permissions…");
+                StartRead(Say("Access.Reading", "Reading the permissions…"));
                 return true;
         }
 
@@ -425,8 +425,8 @@ public class AccessControlDialog : Dialog
         _field = adding ? 0 : EditFields().IndexOf(EditField.Rights);
         _mode = Mode.Edit;
         SetStatus(adding
-            ? (info.SupportsDeny ? "Type a user or group, such as Users or DOMAIN\\name." : "A user, or group:name. Bare owner, group, other and mask work too.")
-            : "Space or ←/→ changes the rights. Enter saves, Esc goes back.", false);
+            ? (info.SupportsDeny ? Say("Access.Hint.TypeWindows", "Type a user or group, such as Users or DOMAIN\\name.") : Say("Access.Hint.TypePosix", "A user, or group:name. Bare owner, group, other and mask work too."))
+            : Say("Access.Hint.EditRights", "Space or ←/→ changes the rights. Enter saves, Esc goes back."), false);
         StateHasChanged();
     }
 
@@ -597,7 +597,7 @@ public class AccessControlDialog : Dialog
         }
 
         var path = _path;
-        StartChange(service => service.Remove(path, entry.Principal, entry.Kind), $"Removed the entry for {entry.Principal}.");
+        StartChange(service => service.Remove(path, entry.Principal, entry.Kind), Say("Access.Removed", "Removed the entry for {0}.", entry.Principal));
     }
 
     private void ToggleInheritance()
@@ -617,7 +617,7 @@ public class AccessControlDialog : Dialog
         var path = _path;
         var inherit = !info.Inherits;
         StartChange(service => service.SetInheritance(path, inherit),
-            inherit ? "Entries from the parent folder apply again." : "Stopped inheriting; the parent's entries were kept as explicit copies.");
+            inherit ? Say("Access.InheritOn", "Entries from the parent folder apply again.") : Say("Access.InheritOff", "Stopped inheriting; the parent's entries were kept as explicit copies."));
     }
 
     private void OpenOwner()
@@ -668,7 +668,7 @@ public class AccessControlDialog : Dialog
             _mode = Mode.List;
             if (string.IsNullOrEmpty(newOwner) && string.IsNullOrEmpty(newGroup))
             {
-                SetStatus("The owner is unchanged.", false);
+                SetStatus(Say("Access.OwnerUnchanged", "The owner is unchanged."), false);
                 StateHasChanged();
                 return true;
             }
@@ -816,8 +816,8 @@ public class AccessControlDialog : Dialog
         Put(buffer, 1, 1, iw - 2, ownerLine, colors.Foreground, colors.Background);
         Put(buffer, 1, 2, iw - 2,
             info.CanChangeInheritance
-                ? (info.Inherits ? "Inheriting entries from the parent folder" : "Not inheriting: only the entries below apply")
-                : (info.IsFolder ? "A folder's default entries are what new items start with" : string.Empty),
+                ? (info.Inherits ? Say("Access.Inheriting", "Inheriting entries from the parent folder") : Say("Access.NotInheriting", "Not inheriting: only the entries below apply"))
+                : (info.IsFolder ? Say("Access.FolderDefaults", "A folder's default entries are what new items start with") : string.Empty),
             colors.DisabledForeground, colors.Background);
         Put(buffer, 1, ListTop, iw - 2, "  " + (info.SupportsDeny ? "Type  " : string.Empty) + "Who".PadRight(26) + "Rights".PadRight(22) + "Applies to", colors.DisabledForeground, colors.Background);
         if (info.Entries.Count == 0)
