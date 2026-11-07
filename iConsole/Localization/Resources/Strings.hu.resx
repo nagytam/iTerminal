@@ -1090,4 +1090,7 @@
   <data name="Hint.CloseWithoutRenaming" xml:space="preserve">
     <value>Bezárás átnevezés nélkül</value>
   </data>
+  <data name="Hint.PreviousField" xml:space="preserve">
+    <value>Előző mező</value>
+  </data>
 </root>

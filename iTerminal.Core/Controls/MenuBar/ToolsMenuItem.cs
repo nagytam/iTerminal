@@ -79,59 +79,60 @@ public class ToolsMenuItem : MenuItem
         // The app's larger features were reachable only through hot keys nothing listed — no menu
         // led to the Git client, the document search or the calculator. Their labels are built
         // from the commands themselves, so the menu cannot teach a key the command does not answer to.
-        List<iConsole.Commands.ICommand> features = [];
-        if (gitClientDialog is not null) features.Add(new GitClientDialogCommand(gitClientDialog));
-        if (documentManagerDialog is not null) features.Add(new DocumentManagerDialogCommand(documentManagerDialog));
-        if (networkBrowserDialog is not null) features.Add(new NetworkBrowserDialogCommand(networkBrowserDialog));
-        if (packageManagerDialog is not null) features.Add(new PackageManagerDialogCommand(packageManagerDialog));
-        if (stockBrowserDialog is not null) features.Add(new StockBrowserDialogCommand(stockBrowserDialog));
-        if (calculatorDialog is not null) features.Add(new CalculatorDialogCommand(calculatorDialog));
-        if (virtualMachineManagerDialog is not null && VirtualMachineManagerDialogCommand.IsSupported) features.Add(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
-        if (unitConverterDialog is not null) features.Add(new UnitConverterDialogCommand(unitConverterDialog));
-        if (calendarDialog is not null) features.Add(new CalendarDialogCommand(calendarDialog));
-        if (toDoListDialog is not null) features.Add(new ToDoListDialogCommand(toDoListDialog));
-        if (mailDialog is not null) features.Add(new MailDialogCommand(mailDialog));
-        if (webBrowserDialog is not null) features.Add(new WebBrowserDialogCommand(webBrowserDialog));
-        if (mapDialog is not null) features.Add(new MapDialogCommand(mapDialog));
-        if (translatorDialog is not null) features.Add(new TranslatorDialogCommand(translatorDialog));
-        if (currencyConverterDialog is not null) features.Add(new CurrencyConverterDialogCommand(currencyConverterDialog));
-        if (torrentManagerDialog is not null) features.Add(new TorrentManagerDialogCommand(torrentManagerDialog));
-        if (contactManagerDialog is not null) features.Add(new ContactManagerDialogCommand(contactManagerDialog));
-        if (environmentVariablesDialog is not null) features.Add(new EnvironmentVariablesDialogCommand(environmentVariablesDialog));
-        if (encyclopediaDialog is not null) features.Add(new EncyclopediaDialogCommand(encyclopediaDialog));
-        if (performanceBenchmarkDialog is not null) features.Add(new PerformanceBenchmarkDialogCommand(performanceBenchmarkDialog));
-        if (ticTacToeDialog is not null) features.Add(new TicTacToeDialogCommand(ticTacToeDialog));
-        if (chessDialog is not null) features.Add(new ChessDialogCommand(chessDialog));
-        if (goDialog is not null) features.Add(new GoDialogCommand(goDialog));
-        if (nineMensMorrisDialog is not null) features.Add(new NineMensMorrisDialogCommand(nineMensMorrisDialog));
-        if (snakeDialog is not null) features.Add(new SnakeDialogCommand(snakeDialog));
-        if (tetrisDialog is not null) features.Add(new TetrisDialogCommand(tetrisDialog));
-        if (bluetoothDeviceManagerDialog is not null) features.Add(new BluetoothDeviceManagerDialogCommand(bluetoothDeviceManagerDialog));
-        if (remoteConnectionManagerDialog is not null) features.Add(new RemoteConnectionManagerDialogCommand(remoteConnectionManagerDialog));
-        if (workspaceManagerDialog is not null) features.Add(new WorkspaceManagerDialogCommand(workspaceManagerDialog));
-        if (languageDialog is not null) features.Add(new LanguageDialogCommand(languageDialog));
-        if (passwordManagerDialog is not null) features.Add(new PasswordManagerDialogCommand(passwordManagerDialog));
-        if (systemSettingsDialog is not null) features.Add(new SystemSettingsDialogCommand(systemSettingsDialog));
-        if (runtimeDependencyDialog is not null) features.Add(new RuntimeDependencyDialogCommand(runtimeDependencyDialog));
-        if (diskUsageDialog is not null) features.Add(new DiskUsageDialogCommand(diskUsageDialog, contentModelService));
-        if (duplicateFinderDialog is not null) features.Add(new DuplicateFinderDialogCommand(duplicateFinderDialog, contentModelService));
+        Dictionary<string, List<iConsole.Commands.ICommand>> groups = new[] { "files", "net", "office", "games", "sys" }.ToDictionary(k => k, _ => new List<iConsole.Commands.ICommand>());
+        if (gitClientDialog is not null) groups["files"].Add(new GitClientDialogCommand(gitClientDialog));
+        if (documentManagerDialog is not null) groups["files"].Add(new DocumentManagerDialogCommand(documentManagerDialog));
+        if (networkBrowserDialog is not null) groups["net"].Add(new NetworkBrowserDialogCommand(networkBrowserDialog));
+        if (packageManagerDialog is not null) groups["files"].Add(new PackageManagerDialogCommand(packageManagerDialog));
+        if (stockBrowserDialog is not null) groups["office"].Add(new StockBrowserDialogCommand(stockBrowserDialog));
+        if (calculatorDialog is not null) groups["office"].Add(new CalculatorDialogCommand(calculatorDialog));
+        if (virtualMachineManagerDialog is not null && VirtualMachineManagerDialogCommand.IsSupported) groups["sys"].Add(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
+        if (unitConverterDialog is not null) groups["office"].Add(new UnitConverterDialogCommand(unitConverterDialog));
+        if (calendarDialog is not null) groups["office"].Add(new CalendarDialogCommand(calendarDialog));
+        if (toDoListDialog is not null) groups["office"].Add(new ToDoListDialogCommand(toDoListDialog));
+        if (mailDialog is not null) groups["net"].Add(new MailDialogCommand(mailDialog));
+        if (webBrowserDialog is not null) groups["net"].Add(new WebBrowserDialogCommand(webBrowserDialog));
+        if (mapDialog is not null) groups["office"].Add(new MapDialogCommand(mapDialog));
+        if (translatorDialog is not null) groups["office"].Add(new TranslatorDialogCommand(translatorDialog));
+        if (currencyConverterDialog is not null) groups["office"].Add(new CurrencyConverterDialogCommand(currencyConverterDialog));
+        if (torrentManagerDialog is not null) groups["net"].Add(new TorrentManagerDialogCommand(torrentManagerDialog));
+        if (contactManagerDialog is not null) groups["office"].Add(new ContactManagerDialogCommand(contactManagerDialog));
+        if (environmentVariablesDialog is not null) groups["files"].Add(new EnvironmentVariablesDialogCommand(environmentVariablesDialog));
+        if (encyclopediaDialog is not null) groups["office"].Add(new EncyclopediaDialogCommand(encyclopediaDialog));
+        if (performanceBenchmarkDialog is not null) groups["sys"].Add(new PerformanceBenchmarkDialogCommand(performanceBenchmarkDialog));
+        if (ticTacToeDialog is not null) groups["games"].Add(new TicTacToeDialogCommand(ticTacToeDialog));
+        if (chessDialog is not null) groups["games"].Add(new ChessDialogCommand(chessDialog));
+        if (goDialog is not null) groups["games"].Add(new GoDialogCommand(goDialog));
+        if (nineMensMorrisDialog is not null) groups["games"].Add(new NineMensMorrisDialogCommand(nineMensMorrisDialog));
+        if (snakeDialog is not null) groups["games"].Add(new SnakeDialogCommand(snakeDialog));
+        if (tetrisDialog is not null) groups["games"].Add(new TetrisDialogCommand(tetrisDialog));
+        if (bluetoothDeviceManagerDialog is not null) groups["sys"].Add(new BluetoothDeviceManagerDialogCommand(bluetoothDeviceManagerDialog));
+        if (remoteConnectionManagerDialog is not null) groups["net"].Add(new RemoteConnectionManagerDialogCommand(remoteConnectionManagerDialog));
+        if (workspaceManagerDialog is not null) groups["sys"].Add(new WorkspaceManagerDialogCommand(workspaceManagerDialog));
+        if (languageDialog is not null) groups["sys"].Add(new LanguageDialogCommand(languageDialog));
+        if (passwordManagerDialog is not null) groups["office"].Add(new PasswordManagerDialogCommand(passwordManagerDialog));
+        if (systemSettingsDialog is not null) groups["sys"].Add(new SystemSettingsDialogCommand(systemSettingsDialog));
+        if (runtimeDependencyDialog is not null) groups["sys"].Add(new RuntimeDependencyDialogCommand(runtimeDependencyDialog));
+        if (diskUsageDialog is not null) groups["files"].Add(new DiskUsageDialogCommand(diskUsageDialog, contentModelService));
+        if (duplicateFinderDialog is not null) groups["files"].Add(new DuplicateFinderDialogCommand(duplicateFinderDialog, contentModelService));
         if (elevationService is not null)
         {
-            features.Add(new RestartAsAdministratorCommand(elevationService, notificationService));
-            features.Add(new RunAsAdministratorCommand(contentModelService, elevationService, notificationService));
+            groups["sys"].Add(new RestartAsAdministratorCommand(elevationService, notificationService));
+            groups["sys"].Add(new RunAsAdministratorCommand(contentModelService, elevationService, notificationService));
         }
 
-        if (features.Count > 0)
+        // Related tools sit together between separators — files, network, everyday helpers, games, system —
+        // rather than in one unbroken run of forty rows.
+        foreach (List<iConsole.Commands.ICommand> group in groups.Values.Where(g => g.Count > 0))
         {
             AddMenuItem(new MenuItem("-", null, [], themeService));
-            foreach (var command in features)
+            foreach (iConsole.Commands.ICommand command in group)
             {
                 string label = string.IsNullOrEmpty(command.KeyDisplayText)
                     ? command.Title
-                    : $"{command.Title}\t{command.KeyDisplayText}";
+                    : $"{command.Title}	{command.KeyDisplayText}";
                 AddMenuItem(new MenuItem(label, command, [], themeService));
             }
         }
     }
 }
-

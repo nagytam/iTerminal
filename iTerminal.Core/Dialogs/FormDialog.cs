@@ -32,6 +32,16 @@ public abstract class FormDialog : Dialog
         && (keyEvent.ConsoleKey is ConsoleKey.Backspace or ConsoleKey.Delete
             || (keyEvent.KeyChar >= ' ' && keyEvent.KeyChar != '\u007F' && keyEvent.ConsoleKey is not (ConsoleKey.Enter or ConsoleKey.Escape or ConsoleKey.Tab)));
 
+    /// <summary>
+    /// What every form shares and no command lists: Tab and Shift+Tab move between the fields. Enter and Esc are
+    /// commands, so the help overlay already names them. A dialog with keys of its own overrides this.
+    /// </summary>
+    public override IEnumerable<(string Key, string Description)> GetKeyHints()
+    {
+        yield return ("Tab", iConsole.Localization.UiText.Get("Hint.NextField", "Move to the next field"));
+        yield return ("Shift+Tab", iConsole.Localization.UiText.Get("Hint.PreviousField", "Previous field"));
+    }
+
     /// <summary>Drops the error line. Called when the user starts typing again, which is the answer to what it said.</summary>
     protected virtual void ClearError()
     {

@@ -1090,4 +1090,7 @@
   <data name="Hint.CloseWithoutRenaming" xml:space="preserve">
     <value>Fermer sans renommer</value>
   </data>
+  <data name="Hint.PreviousField" xml:space="preserve">
+    <value>Champ précédent</value>
+  </data>
 </root>
