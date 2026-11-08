@@ -241,7 +241,7 @@ public class DuplicateFinderDialog : Dialog
         lines.Add(new(_scan.Path, Color.Cyan));
         if (_groups.Count == 0)
         {
-            lines.Add(new($"No duplicate files among the {_scan.FilesScanned:N0} files looked at.", colorScheme.Foreground));
+            lines.Add(new(string.Format(iConsole.Localization.UiText.Get("Duplicates.None", "No duplicate files among the {0:N0} files looked at."), _scan.FilesScanned), colorScheme.Foreground));
             Status();
             return;
         }

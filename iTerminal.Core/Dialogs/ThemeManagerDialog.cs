@@ -179,7 +179,7 @@ public class ThemeManagerDialog : Dialog
         }
 
         var colorScheme = ThemeService.CurrentColorScheme;
-        var text = _status.Length > 0 ? _status : "Enter:apply  Esc:close";
+        var text = _status.Length > 0 ? _status : $"{iConsole.Localization.UiText.Get("Hint.Part.Apply", "Enter:apply")}  {iConsole.Localization.UiText.Get("Hint.Part.EscClose", "Esc:close")}";
         buffer.Write(
             ZOrder,
             new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + ViewSize.Height - 2),

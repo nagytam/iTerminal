@@ -5749,4 +5749,43 @@
   <data name="AiModel.Unavailable" xml:space="preserve">
     <value>  Indisponible : le serveur est injoignable ou ne les signale pas.</value>
   </data>
+  <data name="Hint.Part.Apply" xml:space="preserve">
+    <value>Entrée:appliquer</value>
+  </data>
+  <data name="Signature.Footer" xml:space="preserve">
+    <value> F2:signer gpg  F3:signer Authenticode  F4:signer fichier de clé  F5:revérifier  Échap:fermer </value>
+  </data>
+  <data name="Wipe.Footer" xml:space="preserve">
+    <value> Entrée:effacer  1/3/7 ou ↑↓:passes  Échap:fermer </value>
+  </data>
+  <data name="FolderSelector.HintGo" xml:space="preserve">
+    <value>Entrée aller</value>
+  </data>
+  <data name="FolderSelector.HintMove" xml:space="preserve">
+    <value>Haut/Bas déplacer</value>
+  </data>
+  <data name="FolderSelector.HintPage" xml:space="preserve">
+    <value>Ctrl+Haut/Bas page</value>
+  </data>
+  <data name="FolderSelector.HintHelp" xml:space="preserve">
+    <value>F1 aide</value>
+  </data>
+  <data name="FolderSelector.HintCancel" xml:space="preserve">
+    <value>Échap annuler</value>
+  </data>
+  <data name="Documents.NothingIndexed" xml:space="preserve">
+    <value>Rien d&apos;indexé pour l&apos;instant : Ctrl+R analyse le dossier de documents.</value>
+  </data>
+  <data name="Documents.Indexed" xml:space="preserve">
+    <value>{0} documents indexés, {1} avec texte interrogeable.</value>
+  </data>
+  <data name="Documents.IndexedOne" xml:space="preserve">
+    <value>{0} document indexé, {1} avec texte interrogeable.</value>
+  </data>
+  <data name="IPhone.NoDevices" xml:space="preserve">
+    <value> Aucun appareil iOS trouvé. Branchez un iPhone, déverrouillez-le et faites confiance à cet ordinateur, puis r relance la recherche.</value>
+  </data>
+  <data name="Duplicates.None" xml:space="preserve">
+    <value>Aucun fichier en double parmi les {0:N0} fichiers examinés.</value>
+  </data>
 </root>

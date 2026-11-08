@@ -95,7 +95,7 @@ public class IPhoneBrowserDialog : Dialog
                 _listBox.UpdateModel();
                 // Said in the list, where the devices would be; the footer keeps the keys, and with no
                 // device found "r:rescan" is the one the user needs.
-                _listBox.EmptyText = NoDevicesText;
+                _listBox.EmptyText = iConsole.Localization.UiText.Get("IPhone.NoDevices", NoDevicesText);
             }
             catch (Exception exception)
             {

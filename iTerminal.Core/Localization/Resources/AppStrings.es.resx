@@ -5749,4 +5749,43 @@
   <data name="AiModel.Unavailable" xml:space="preserve">
     <value>  No disponible: el servidor no responde o no los informa.</value>
   </data>
+  <data name="Hint.Part.Apply" xml:space="preserve">
+    <value>Intro:aplicar</value>
+  </data>
+  <data name="Signature.Footer" xml:space="preserve">
+    <value> F2:firmar gpg  F3:firmar Authenticode  F4:firmar archivo de clave  F5:comprobar de nuevo  Esc:cerrar </value>
+  </data>
+  <data name="Wipe.Footer" xml:space="preserve">
+    <value> Intro:borrar  1/3/7 o ↑↓:pasadas  Esc:cerrar </value>
+  </data>
+  <data name="FolderSelector.HintGo" xml:space="preserve">
+    <value>Intro ir</value>
+  </data>
+  <data name="FolderSelector.HintMove" xml:space="preserve">
+    <value>Arriba/Abajo mover</value>
+  </data>
+  <data name="FolderSelector.HintPage" xml:space="preserve">
+    <value>Ctrl+Arriba/Abajo página</value>
+  </data>
+  <data name="FolderSelector.HintHelp" xml:space="preserve">
+    <value>F1 ayuda</value>
+  </data>
+  <data name="FolderSelector.HintCancel" xml:space="preserve">
+    <value>Esc cancelar</value>
+  </data>
+  <data name="Documents.NothingIndexed" xml:space="preserve">
+    <value>Nada indexado aún: Ctrl+R analiza la carpeta de documentos.</value>
+  </data>
+  <data name="Documents.Indexed" xml:space="preserve">
+    <value>{0} documentos indexados, {1} con texto buscable.</value>
+  </data>
+  <data name="Documents.IndexedOne" xml:space="preserve">
+    <value>{0} documento indexado, {1} con texto buscable.</value>
+  </data>
+  <data name="IPhone.NoDevices" xml:space="preserve">
+    <value> No se encontraron dispositivos iOS. Conecte un iPhone, desbloquéelo y confíe en este equipo; luego r vuelve a buscar.</value>
+  </data>
+  <data name="Duplicates.None" xml:space="preserve">
+    <value>No hay archivos duplicados entre los {0:N0} archivos examinados.</value>
+  </data>
 </root>
