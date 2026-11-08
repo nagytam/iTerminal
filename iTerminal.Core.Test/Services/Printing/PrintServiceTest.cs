@@ -143,6 +143,26 @@ public class PrintServiceTest
 
         CollectionAssert.AreEqual(new[] { "lp -i Office-12 -H hold", "lp -i Office-12 -H resume", "cancel Office-12" }, runner.Calls.Select(c => c.CommandLine).ToArray());
     }
+
+    [TestMethod]
+    [Timeout(15_000)]
+    [DoNotParallelize]
+    public async Task TheJobOutcomesAndRefusalsFollowTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(PrintService).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        var service = Cups(new FakeProcessRunner().Answer("lp", string.Empty).Answer("cancel", string.Empty));
+
+        var held = await service.HoldJobAsync("Office", 12);
+        var cancelled = await service.CancelJobAsync("Office", 12);
+        var refused = await service.HoldJobAsync("", 12);
+
+        Assert.AreEqual("Auftrag 12 ist angehalten.", held.Message);
+        Assert.AreEqual("Auftrag 12 wurde abgebrochen.", cancelled.Message);
+        Assert.AreEqual("Wählen Sie zuerst einen Drucker.", refused.Message);
+    }
     #endregion
 
     #region Windows

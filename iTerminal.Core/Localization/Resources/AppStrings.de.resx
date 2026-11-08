@@ -7828,4 +7828,88 @@
   <data name="Music.Prog.Indexing" xml:space="preserve">
     <value>Indizierung {0}/{1}{2}</value>
   </data>
+  <data name="Print.LocalOnly" xml:space="preserve">
+    <value>Nur eine Datei auf diesem Computer kann gedruckt werden.</value>
+  </data>
+  <data name="Print.NotAJob" xml:space="preserve">
+    <value>Das ist kein Druckauftrag.</value>
+  </data>
+  <data name="Print.ChoosePrinter" xml:space="preserve">
+    <value>Wählen Sie zuerst einen Drucker.</value>
+  </data>
+  <data name="Print.NotPrinter" xml:space="preserve">
+    <value>Das ist kein Druckername.</value>
+  </data>
+  <data name="Print.JobHeld" xml:space="preserve">
+    <value>Auftrag {0} ist angehalten.</value>
+  </data>
+  <data name="Print.JobResumed" xml:space="preserve">
+    <value>Auftrag {0} wird fortgesetzt.</value>
+  </data>
+  <data name="Print.JobCancelled" xml:space="preserve">
+    <value>Auftrag {0} wurde abgebrochen.</value>
+  </data>
+  <data name="Preview.Title" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="Preview.Nothing" xml:space="preserve">
+    <value>Unter dem Cursor ist nichts.</value>
+  </data>
+  <data name="Preview.WayUp" xml:space="preserve">
+    <value>Der Weg nach oben — bewegen Sie den Cursor auf eine Datei oder einen Ordner.</value>
+  </data>
+  <data name="Preview.FileGone" xml:space="preserve">
+    <value>Die Datei ist nicht mehr da.</value>
+  </data>
+  <data name="Preview.Cannot" xml:space="preserve">
+    <value>Keine Vorschau möglich: {0}</value>
+  </data>
+  <data name="Preview.FolderGone" xml:space="preserve">
+    <value>Der Ordner ist nicht mehr da.</value>
+  </data>
+  <data name="Preview.CannotReadFolder" xml:space="preserve">
+    <value>Der Ordner kann nicht gelesen werden: {0}</value>
+  </data>
+  <data name="Workspace.NeedsName" xml:space="preserve">
+    <value>Geben Sie dem Arbeitsbereich einen Namen.</value>
+  </data>
+  <data name="Workspace.Exists" xml:space="preserve">
+    <value>Es gibt bereits einen Arbeitsbereich namens „{0}“.</value>
+  </data>
+  <data name="Workspace.Missing" xml:space="preserve">
+    <value>Es gibt keinen Arbeitsbereich namens „{0}“.</value>
+  </data>
+  <data name="Elevate.Already" xml:space="preserve">
+    <value>Läuft bereits mit erhöhten Rechten.</value>
+  </data>
+  <data name="Elevate.NotStarted" xml:space="preserve">
+    <value>Windows hat die Kopie mit erhöhten Rechten nicht gestartet.</value>
+  </data>
+  <data name="Elevate.Dismissed" xml:space="preserve">
+    <value>Die Administratorabfrage wurde abgebrochen.</value>
+  </data>
+  <data name="Music.NoOutput" xml:space="preserve">
+    <value>Auf diesem System ist kein Audioausgabe-Backend verfügbar.</value>
+  </data>
+  <data name="Music.NoSeek" xml:space="preserve">
+    <value>In diesem Format kann nicht gesprungen werden.</value>
+  </data>
+  <data name="Music.DeviceStopped" xml:space="preserve">
+    <value>Das Audiogerät nimmt keine Daten mehr an.</value>
+  </data>
+  <data name="Startup.NoPid" xml:space="preserve">
+    <value>Die andere Instanz konnte nicht identifiziert werden (keine Prozess-ID gespeichert).</value>
+  </data>
+  <data name="Startup.OwnLock" xml:space="preserve">
+    <value>Die Sperre gehört zu dieser Instanz.</value>
+  </data>
+  <data name="Startup.NotITerminal" xml:space="preserve">
+    <value>Prozess {0} ist keine iTerminal-Instanz ({1}); er wird nicht beendet.</value>
+  </data>
+  <data name="Startup.DidNotExit" xml:space="preserve">
+    <value>Prozess {0} wurde nicht beendet.</value>
+  </data>
+  <data name="Startup.LockInUse" xml:space="preserve">
+    <value>Die Sperrdatei ist noch in Benutzung und konnte nicht entfernt werden.</value>
+  </data>
 </root>

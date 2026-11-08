@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Diagnostics;
 
 namespace iTerminal.Core.Services;
@@ -67,12 +68,12 @@ public sealed class StartupWarningService : IDisposable
         {
             if (!File.Exists(pidPath) || !int.TryParse(File.ReadAllText(pidPath).Trim(), out int pid))
             {
-                return "The other instance could not be identified (no process id recorded).";
+                return UiText.Get("Startup.NoPid", "The other instance could not be identified (no process id recorded).");
             }
 
             if (pid == Environment.ProcessId)
             {
-                return "The lock belongs to this instance.";
+                return UiText.Get("Startup.OwnLock", "The lock belongs to this instance.");
             }
 
             try
@@ -81,13 +82,13 @@ public sealed class StartupWarningService : IDisposable
                 using Process self = Process.GetCurrentProcess();
                 if (!string.Equals(other.ProcessName, self.ProcessName, StringComparison.OrdinalIgnoreCase))
                 {
-                    return $"Process {pid} is not an iTerminal instance ({other.ProcessName}); not stopping it.";
+                    return string.Format(UiText.Get("Startup.NotITerminal", "Process {0} is not an iTerminal instance ({1}); not stopping it."), pid, other.ProcessName);
                 }
 
                 other.Kill();
                 if (!other.WaitForExit(5000))
                 {
-                    return $"Process {pid} did not exit.";
+                    return string.Format(UiText.Get("Startup.DidNotExit", "Process {0} did not exit."), pid);
                 }
             }
             catch (ArgumentException)
@@ -110,7 +111,7 @@ public sealed class StartupWarningService : IDisposable
                 }
             }
 
-            return "The lock file is still in use and could not be removed.";
+            return UiText.Get("Startup.LockInUse", "The lock file is still in use and could not be removed.");
         }
         catch (Exception ex)
         {

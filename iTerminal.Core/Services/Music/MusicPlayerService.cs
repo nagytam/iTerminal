@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Audio;
 using iTerminal.Core.Data.Music;
 
@@ -427,7 +428,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
             sink = _deviceService.CreateSink();
             if (sink is null)
             {
-                SetStatus("No audio output backend is available on this system.", isError: true);
+                SetStatus(UiText.Get("Music.NoOutput", "No audio output backend is available on this system."), isError: true);
                 SetState(PlaybackState.Stopped);
                 return;
             }
@@ -527,7 +528,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
                 }
                 else
                 {
-                    SetStatus("This format cannot be seeked.", isError: false);
+                    SetStatus(UiText.Get("Music.NoSeek", "This format cannot be seeked."), isError: false);
                 }
             }
 
@@ -559,7 +560,7 @@ public sealed class MusicPlayerService : IMusicPlayerService
                 {
                     if (!_requestedStop && _requestedIndex is null)
                     {
-                        SetStatus("The audio device stopped accepting data.", isError: true);
+                        SetStatus(UiText.Get("Music.DeviceStopped", "The audio device stopped accepting data."), isError: true);
                         return false;
                     }
                 }

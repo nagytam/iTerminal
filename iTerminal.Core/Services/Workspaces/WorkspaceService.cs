@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Data;
 using iTerminal.Core.Model.Workspaces;
 using System.Text.Json;
@@ -45,7 +46,7 @@ public sealed class WorkspaceService(
         var trimmed = (name ?? string.Empty).Trim();
         if (trimmed.Length == 0)
         {
-            return "Give the workspace a name.";
+            return UiText.Get("Workspace.NeedsName", "Give the workspace a name.");
         }
 
         if (trimmed.Length > IWorkspaceService.MaxNameLength)
@@ -62,7 +63,7 @@ public sealed class WorkspaceService(
         {
             if (Read().Any(w => Same(w.Name, trimmed) && !(renaming is not null && Same(w.Name, renaming))))
             {
-                return $"There is already a workspace called '{trimmed}'.";
+                return string.Format(UiText.Get("Workspace.Exists", "There is already a workspace called '{0}'."), trimmed);
             }
         }
 
@@ -160,7 +161,7 @@ public sealed class WorkspaceService(
 
         if (workspace is null)
         {
-            return [$"There is no workspace called '{name}'."];
+            return [string.Format(UiText.Get("Workspace.Missing", "There is no workspace called '{0}'."), name)];
         }
 
         var problems = await layoutService.ApplyAsync(workspace.Layout);
