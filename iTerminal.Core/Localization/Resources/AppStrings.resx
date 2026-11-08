@@ -7438,4 +7438,100 @@
   <data name="Info.UpTo" xml:space="preserve">
     <value>Up to: {0}</value>
   </data>
+  <data name="Link.TypeWhere" xml:space="preserve">
+    <value>Type where the link goes.</value>
+  </data>
+  <data name="Link.FolderNotLink" xml:space="preserve">
+    <value>A folder is not a link.</value>
+  </data>
+  <data name="Link.NotALink" xml:space="preserve">
+    <value>This is not a link, and the file has no other name; pointing it elsewhere would lose it.</value>
+  </data>
+  <data name="Link.TypeLead" xml:space="preserve">
+    <value>Type where the link should lead.</value>
+  </data>
+  <data name="DiskImage.TypePath" xml:space="preserve">
+    <value>Type the path of an .iso, .vhd or .vhdx file.</value>
+  </data>
+  <data name="Format.Already" xml:space="preserve">
+    <value>The drive is already being formatted.</value>
+  </data>
+  <data name="Format.NotLettered" xml:space="preserve">
+    <value>Not a lettered drive.</value>
+  </data>
+  <data name="Format.TypeLetter" xml:space="preserve">
+    <value>Type {0} to confirm that {0}: is to be erased.</value>
+  </data>
+  <data name="Documents.NoMatch" xml:space="preserve">
+    <value>No document matches "{0}".</value>
+  </data>
+  <data name="Documents.MatchOne" xml:space="preserve">
+    <value>{0} match.</value>
+  </data>
+  <data name="Documents.MatchMany" xml:space="preserve">
+    <value>{0} matches.</value>
+  </data>
+  <data name="Documents.NoteUnsupported" xml:space="preserve">
+    <value>no extractor handles this file type</value>
+  </data>
+  <data name="Documents.NoteTooLarge" xml:space="preserve">
+    <value>the file is over the extraction size limit</value>
+  </data>
+  <data name="Documents.NoteFailed" xml:space="preserve">
+    <value>text extraction failed</value>
+  </data>
+  <data name="Documents.NoteNotYet" xml:space="preserve">
+    <value>not extracted yet</value>
+  </data>
+  <data name="Documents.NoteNoText" xml:space="preserve">
+    <value>no text was found</value>
+  </data>
+  <data name="Documents.NoPreview" xml:space="preserve">
+    <value>No preview: {0}.</value>
+  </data>
+  <data name="MusicTag.Year" xml:space="preserve">
+    <value>The year is four digits, or blank.</value>
+  </data>
+  <data name="MusicTag.Track" xml:space="preserve">
+    <value>The track is a number, or number/total, or blank.</value>
+  </data>
+  <data name="MusicView.NeedsFfmpeg" xml:space="preserve">
+    <value>Playing {0} files needs ffmpeg on PATH.</value>
+  </data>
+  <data name="MusicView.NotAudio" xml:space="preserve">
+    <value>This file is not an audio format the player knows.</value>
+  </data>
+  <data name="Signature.NoCert" xml:space="preserve">
+    <value>No code-signing certificate in your store.</value>
+  </data>
+  <data name="Signature.SeveralCerts" xml:space="preserve">
+    <value>Several certificates: type the thumbprint of the one to use in Key.</value>
+  </data>
+  <data name="Signature.KeySignature" xml:space="preserve">
+    <value>Key signature</value>
+  </data>
+  <data name="Stocks.NoneFound" xml:space="preserve">
+    <value>No stock found for "{0}". Enter again adds it as a symbol (exchange suffix: VOD.L).</value>
+  </data>
+  <data name="Stocks.Found" xml:space="preserve">
+    <value>{0} found — ↑↓ choose, Enter adds the chosen one</value>
+  </data>
+  <data name="Stocks.ConfirmRemove" xml:space="preserve">
+    <value>Remove {0} from the list?  y:yes  any other key:no</value>
+  </data>
+  <data name="Mail.Deleting" xml:space="preserve">
+    <value>Deleting message {0}…</value>
+  </data>
+  <data name="Solution.NoProjects" xml:space="preserve">
+    <value>No projects found in solution.</value>
+  </data>
+  <data name="Image.NoMetadata" xml:space="preserve">
+    <value>No metadata in this file.</value>
+  </data>
+  <data name="Network.ConnectOver" xml:space="preserve">
+    <value>Connect to {0} over {1}</value>
+  </data>
+  <data name="OpenWith.ConfirmRemove" xml:space="preserve">
+    <value>Remove {0} from the list? (y/n)</value>
+  </data>
 </root>

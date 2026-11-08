@@ -146,8 +146,8 @@ public class SignatureDialog : Dialog
                 else
                 {
                     (_status, _statusFailed) = (Certificates.Count == 0
-                        ? "No code-signing certificate in your store."
-                        : "Several certificates: type the thumbprint of the one to use in Key.", true);
+                        ? UiText.Get("Signature.NoCert", "No code-signing certificate in your store.")
+                        : UiText.Get("Signature.SeveralCerts", "Several certificates: type the thumbprint of the one to use in Key."), true);
                     return;
                 }
             }
@@ -292,7 +292,7 @@ public class SignatureDialog : Dialog
     {
         SignatureMethod.Gpg => "OpenPGP",
         SignatureMethod.Authenticode => "Authenticode",
-        _ => "Key signature",
+        _ => UiText.Get("Signature.KeySignature", "Key signature"),
     };
 
     public override IEnumerable<(string Key, string Description)> GetKeyHints()

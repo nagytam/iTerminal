@@ -357,8 +357,8 @@ public class StockBrowserDialog : SplitPaneDialog
                 _hitListBox.UpdateModel();
                 ClampCursor(_hitListBox.ScrollableModel, hits.Count);
                 SetMessage(hits.Count == 0
-                    ? $"No stock found for \"{query}\". Enter again adds it as a symbol (exchange suffix: VOD.L)."
-                    : $"{hits.Count} found — ↑↓ choose, Enter adds the chosen one");
+                    ? string.Format(UiText.Get("Stocks.NoneFound", "No stock found for \"{0}\". Enter again adds it as a symbol (exchange suffix: VOD.L)."), query)
+                    : string.Format(UiText.Get("Stocks.Found", "{0} found — ↑↓ choose, Enter adds the chosen one"), hits.Count));
             }
             catch (Exception exception)
             {
@@ -434,7 +434,7 @@ public class StockBrowserDialog : SplitPaneDialog
         }
 
         var symbol = row.Stock.Symbol;
-        _confirmPrompt = $"Remove {symbol} from the list?  y:yes  any other key:no";
+        _confirmPrompt = string.Format(UiText.Get("Stocks.ConfirmRemove", "Remove {0} from the list?  y:yes  any other key:no"), symbol);
         _confirmAction = () =>
         {
             _ = Task.Run(() =>

@@ -7297,4 +7297,100 @@
   <data name="Info.UpTo" xml:space="preserve">
     <value>Remonter à : {0}</value>
   </data>
+  <data name="Link.TypeWhere" xml:space="preserve">
+    <value>Saisissez l’emplacement du lien.</value>
+  </data>
+  <data name="Link.FolderNotLink" xml:space="preserve">
+    <value>Un dossier n’est pas un lien.</value>
+  </data>
+  <data name="Link.NotALink" xml:space="preserve">
+    <value>Ce n’est pas un lien et le fichier n’a pas d’autre nom ; le rediriger le ferait perdre.</value>
+  </data>
+  <data name="Link.TypeLead" xml:space="preserve">
+    <value>Saisissez la destination du lien.</value>
+  </data>
+  <data name="DiskImage.TypePath" xml:space="preserve">
+    <value>Saisissez le chemin d’un fichier .iso, .vhd ou .vhdx.</value>
+  </data>
+  <data name="Format.Already" xml:space="preserve">
+    <value>Le lecteur est déjà en cours de formatage.</value>
+  </data>
+  <data name="Format.NotLettered" xml:space="preserve">
+    <value>Pas un lecteur avec une lettre.</value>
+  </data>
+  <data name="Format.TypeLetter" xml:space="preserve">
+    <value>Saisissez {0} pour confirmer que {0}: sera effacé.</value>
+  </data>
+  <data name="Documents.NoMatch" xml:space="preserve">
+    <value>Aucun document ne correspond à « {0} ».</value>
+  </data>
+  <data name="Documents.MatchOne" xml:space="preserve">
+    <value>{0} résultat.</value>
+  </data>
+  <data name="Documents.MatchMany" xml:space="preserve">
+    <value>{0} résultats.</value>
+  </data>
+  <data name="Documents.NoteUnsupported" xml:space="preserve">
+    <value>aucun extracteur ne gère ce type de fichier</value>
+  </data>
+  <data name="Documents.NoteTooLarge" xml:space="preserve">
+    <value>le fichier dépasse la taille limite d’extraction</value>
+  </data>
+  <data name="Documents.NoteFailed" xml:space="preserve">
+    <value>l’extraction du texte a échoué</value>
+  </data>
+  <data name="Documents.NoteNotYet" xml:space="preserve">
+    <value>pas encore extrait</value>
+  </data>
+  <data name="Documents.NoteNoText" xml:space="preserve">
+    <value>aucun texte trouvé</value>
+  </data>
+  <data name="Documents.NoPreview" xml:space="preserve">
+    <value>Pas d’aperçu : {0}.</value>
+  </data>
+  <data name="MusicTag.Year" xml:space="preserve">
+    <value>L’année comporte quatre chiffres, ou reste vide.</value>
+  </data>
+  <data name="MusicTag.Track" xml:space="preserve">
+    <value>La piste est un nombre, nombre/total, ou reste vide.</value>
+  </data>
+  <data name="MusicView.NeedsFfmpeg" xml:space="preserve">
+    <value>La lecture des fichiers {0} nécessite ffmpeg dans le PATH.</value>
+  </data>
+  <data name="MusicView.NotAudio" xml:space="preserve">
+    <value>Ce fichier n’est pas un format audio connu du lecteur.</value>
+  </data>
+  <data name="Signature.NoCert" xml:space="preserve">
+    <value>Aucun certificat de signature de code dans votre magasin.</value>
+  </data>
+  <data name="Signature.SeveralCerts" xml:space="preserve">
+    <value>Plusieurs certificats : saisissez dans Clé l’empreinte de celui à utiliser.</value>
+  </data>
+  <data name="Signature.KeySignature" xml:space="preserve">
+    <value>Signature par clé</value>
+  </data>
+  <data name="Stocks.NoneFound" xml:space="preserve">
+    <value>Aucune action trouvée pour « {0} ». Entrée l’ajoute comme symbole (suffixe de place : VOD.L).</value>
+  </data>
+  <data name="Stocks.Found" xml:space="preserve">
+    <value>{0} trouvé(s) — ↑↓ choisir, Entrée ajoute le choix</value>
+  </data>
+  <data name="Stocks.ConfirmRemove" xml:space="preserve">
+    <value>Retirer {0} de la liste ?  y:oui  autre touche:non</value>
+  </data>
+  <data name="Mail.Deleting" xml:space="preserve">
+    <value>Suppression du message {0}…</value>
+  </data>
+  <data name="Solution.NoProjects" xml:space="preserve">
+    <value>Aucun projet trouvé dans la solution.</value>
+  </data>
+  <data name="Image.NoMetadata" xml:space="preserve">
+    <value>Aucune métadonnée dans ce fichier.</value>
+  </data>
+  <data name="Network.ConnectOver" xml:space="preserve">
+    <value>Se connecter à {0} via {1}</value>
+  </data>
+  <data name="OpenWith.ConfirmRemove" xml:space="preserve">
+    <value>Retirer {0} de la liste ? (y/n)</value>
+  </data>
 </root>

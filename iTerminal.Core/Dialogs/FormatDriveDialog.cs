@@ -187,20 +187,20 @@ public class FormatDriveDialog : FormDialog
         if (_isFormatting)
         {
             // Enter again while the drive is being formatted: say so, rather than doing nothing that looks like a failure.
-            SetError("The drive is already being formatted.");
+            SetError(UiText.Get("Format.Already", "The drive is already being formatted."));
             return false;
         }
 
         if (!DriveActionsService.TryLetter(Root, out var letter))
         {
-            SetError("Not a lettered drive.");
+            SetError(UiText.Get("Format.NotLettered", "Not a lettered drive."));
             return false;
         }
 
         var typed = Confirmation.Trim().TrimEnd(':', '\\', '/');
         if (!string.Equals(typed, letter.ToString(), StringComparison.OrdinalIgnoreCase))
         {
-            SetError($"Type {letter} to confirm that {letter}: is to be erased.");
+            SetError(string.Format(UiText.Get("Format.TypeLetter", "Type {0} to confirm that {0}: is to be erased."), letter));
             return false;
         }
 

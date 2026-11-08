@@ -636,7 +636,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
         }
 
         var protocol = _pendingRow.Kind is HostRowKind.DiscoveredSmbHost or HostRowKind.DiscoveredSmbShare ? "SMB" : "SSH";
-        return $"Connect to {_pendingRow.Host} over {protocol}";
+        return string.Format(UiText.Get("Network.ConnectOver", "Connect to {0} over {1}"), _pendingRow.Host, protocol);
     }
 
     internal string KeyHints => _mode == Mode.Browse

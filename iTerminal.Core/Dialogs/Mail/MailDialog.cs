@@ -657,7 +657,7 @@ public class MailDialog : Dialog
         }
 
         var number = _listings[_cursor].Number;
-        StartWork($"Reading message {number}…", async ct =>
+        StartWork(string.Format(UiText.Get("Mail.Reading", "Reading message {0}…"), number), async ct =>
         {
             var item = await _mail.ReadAsync(account, PasswordOf(account), number, ct);
             lock (_sync)
@@ -690,7 +690,7 @@ public class MailDialog : Dialog
         }
 
         _pendingDelete = null;
-        StartWork($"Deleting message {listing.Number}…", async ct =>
+        StartWork(string.Format(UiText.Get("Mail.Deleting", "Deleting message {0}…"), listing.Number), async ct =>
         {
             var password = PasswordOf(account);
             await _mail.DeleteAsync(account, password, listing.Number, ct);

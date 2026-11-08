@@ -156,7 +156,7 @@ public class DiskImageDialog : FormDialog
 
         if (path.Length == 0)
         {
-            SetError("Type the path of an .iso, .vhd or .vhdx file.");
+            SetError(UiText.Get("DiskImage.TypePath", "Type the path of an .iso, .vhd or .vhdx file."));
             return false;
         }
 

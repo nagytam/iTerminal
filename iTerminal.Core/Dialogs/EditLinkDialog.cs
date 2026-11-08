@@ -153,8 +153,8 @@ public class EditLinkDialog : FormDialog
         {
             _labelKind.Text = string.Empty;
             SetError(info.IsFolder
-                ? "A folder is not a link."
-                : "This is not a link, and the file has no other name; pointing it elsewhere would lose it.");
+                ? UiText.Get("Link.FolderNotLink", "A folder is not a link.")
+                : UiText.Get("Link.NotALink", "This is not a link, and the file has no other name; pointing it elsewhere would lose it."));
         }
 
         var length = TargetPath.Length;
@@ -213,7 +213,7 @@ public class EditLinkDialog : FormDialog
         var target = TargetPath.Trim();
         if (target.Length == 0)
         {
-            SetError("Type where the link should lead.");
+            SetError(UiText.Get("Link.TypeLead", "Type where the link should lead."));
             return false;
         }
 

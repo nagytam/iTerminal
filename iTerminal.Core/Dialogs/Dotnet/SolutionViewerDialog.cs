@@ -265,7 +265,7 @@ public class SolutionViewerDialog : SplitPaneDialog
         {
             _solution = _dotnetSolutionService.ParseSolution(SolutionPath);
             _loadError = _solution.Projects.Count == 0
-                ? "No projects found in solution."
+                ? UiText.Get("Solution.NoProjects", "No projects found in solution.")
                 : string.Empty;
             Title = string.IsNullOrEmpty(_solution.Name) ? "Solution" : $"Solution: {_solution.Name}";
         }

@@ -324,8 +324,8 @@ public class DocumentManagerDialog : SplitPaneDialog
         }
 
         return count == 0
-            ? $"No document matches \"{query.Trim()}\"."
-            : $"{count}{(count >= MaxResults ? "+" : string.Empty)} match{(count == 1 ? string.Empty : "es")}.";
+            ? string.Format(UiText.Get("Documents.NoMatch", "No document matches \"{0}\"."), query.Trim())
+            : string.Format(count == 1 ? UiText.Get("Documents.MatchOne", "{0} match.") : UiText.Get("Documents.MatchMany", "{0} matches."), count + (count >= MaxResults ? "+" : string.Empty));
     }
 
     private void ApplyResults(IReadOnlyList<DocumentSearchHit> hits, bool preserveSelection = false)
@@ -476,14 +476,14 @@ public class DocumentManagerDialog : SplitPaneDialog
             ? entry.ExtractionNote
             : entry.ExtractionStatus switch
             {
-                DocumentExtractionStatus.Unsupported => "no extractor handles this file type",
-                DocumentExtractionStatus.TooLarge => "the file is over the extraction size limit",
-                DocumentExtractionStatus.Failed => "text extraction failed",
-                DocumentExtractionStatus.NotAttempted => "not extracted yet",
-                _ => "no text was found",
+                DocumentExtractionStatus.Unsupported => UiText.Get("Documents.NoteUnsupported", "no extractor handles this file type"),
+                DocumentExtractionStatus.TooLarge => UiText.Get("Documents.NoteTooLarge", "the file is over the extraction size limit"),
+                DocumentExtractionStatus.Failed => UiText.Get("Documents.NoteFailed", "text extraction failed"),
+                DocumentExtractionStatus.NotAttempted => UiText.Get("Documents.NoteNotYet", "not extracted yet"),
+                _ => UiText.Get("Documents.NoteNoText", "no text was found"),
             };
 
-        return $"No preview: {reason}.";
+        return string.Format(UiText.Get("Documents.NoPreview", "No preview: {0}."), reason);
     }
 
     /// <summary>

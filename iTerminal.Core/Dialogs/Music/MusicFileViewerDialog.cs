@@ -231,8 +231,8 @@ public class MusicFileViewerDialog : Dialog
         if (!_metadata.CanPlay)
         {
             _status = _metadataService.IsMusicFile(FilePath)
-                ? $"Playing {_metadata.Format} files needs ffmpeg on PATH."
-                : "This file is not an audio format the player knows.";
+                ? string.Format(UiText.Get("MusicView.NeedsFfmpeg", "Playing {0} files needs ffmpeg on PATH."), _metadata.Format)
+                : UiText.Get("MusicView.NotAudio", "This file is not an audio format the player knows.");
             return;
         }
 

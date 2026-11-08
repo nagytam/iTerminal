@@ -139,6 +139,22 @@ public class CreateLinkDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task AnEmptyPath_SaysSoInTheChosenLanguage_WithTheErrorPrefixTranslatedToo()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(iTerminal.Core.Dialogs.CreateLinkDialog).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        Rig rig = await OpenAsync();
+        rig.Dialog.LinkPath = "   ";
+
+        Assert.IsFalse(await rig.Dialog.CreateAsync());
+
+        AssertScreenContains(Render(rig.Root), "Fehler: Geben Sie ein, wo der Link liegen soll.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task AnEmptyPath_SaysWhereTheLinkMustGo_AndNothingIsCreated()
     {
         Rig rig = await OpenAsync();
