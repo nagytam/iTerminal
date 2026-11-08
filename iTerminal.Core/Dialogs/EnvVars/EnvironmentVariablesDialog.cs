@@ -35,7 +35,10 @@ public class EnvironmentVariablesDialog : Dialog
 
     private const int DialogWidth = 84;
     private const int DialogHeight = 26;
-    private const int ListRows = 15;
+    private const int MaxListRows = 15;
+
+    /// <summary>The rows the list gets: all 15 on a full-height dialog, fewer on a short terminal so the form and the footer stay inside the frame.</summary>
+    private int ListRows => Math.Clamp((int)ViewSize.Height - 2 - (ListTop + 1 + 4), 3, MaxListRows);
     private const int MaxFieldLength = 4000;
     private const int NameColumn = 30;
     private const int LabelWidth = 8;
