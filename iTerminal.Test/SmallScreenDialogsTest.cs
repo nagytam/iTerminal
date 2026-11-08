@@ -399,4 +399,16 @@ public class SmallScreenDialogsTest
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Network")), "the Network group");
         Assert.IsTrue(narrow.Screen.Lines.Count(l => l.Contains("waiting")) >= 8, narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheDiskManagerOn70Columns_WrapsALongFactInsteadOfCuttingIt()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 70, height: 22);
+
+        await narrow.PressAsync("Alt+F9");
+
+        await narrow.WaitForTextAsync("Disk manager");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("saved to its database")), "the end of the memory drive's description");
+    }
 }

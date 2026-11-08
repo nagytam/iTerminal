@@ -249,7 +249,8 @@ public class DiskManagerDialog : Dialog
 
     private IReadOnlyList<InfoLines.Line> BuildLines()
     {
-        var lines = new List<InfoLines.Line>(_detailLines);
+        // A long fact wraps under itself instead of running off the right edge; the status below keeps its rows.
+        var lines = InfoLines.Wrap(_detailLines, (int)ViewSize.Width - 4).Take(DetailRows - 3).ToList();
         while (lines.Count < DetailRows - 3)
         {
             lines.Add(new InfoLines.Line(string.Empty));
