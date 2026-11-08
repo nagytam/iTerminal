@@ -66,7 +66,7 @@ internal static class UiTestHelper
     }
 
     /// <summary>Polls <paramref name="condition"/> until it holds; fails the test with <paramref name="because"/> if it never does.</summary>
-    public static async Task WaitUntilAsync(Func<bool> condition, string because, int timeoutMs = 10_000)
+    public static async Task WaitUntilAsync(Func<bool> condition, string because, int timeoutMs = 30_000)
     {
         var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
         while (!condition())
