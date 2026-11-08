@@ -724,15 +724,15 @@ public class GitClientDialog : SplitPaneDialog
         {
             // Staging a conflicted file is how git spells "I resolved this", so say so rather than
             // letting it look like an ordinary stage.
-            RunAction($"Marking {file.Path} resolved", $"Resolved {file.Path}", root => _gitService.StageAsync(root, file.Path), reloadLog: false);
+            RunAction(string.Format(UiText.Get("Git.Act.MarkingResolved", "Marking {0} resolved"), file.Path), string.Format(UiText.Get("Git.Act.Resolved", "Resolved {0}"), file.Path), root => _gitService.StageAsync(root, file.Path), reloadLog: false);
             return;
         }
 
         // Staging moves a row between two panels and leaves the history alone, so it does not pay
         // for a `git log` — this is the key pressed most often in the dialog.
         RunAction(
-            staged ? $"Unstaging {file.Path}" : $"Staging {file.Path}",
-            staged ? $"Unstaged {file.Path}" : $"Staged {file.Path}",
+            staged ? string.Format(UiText.Get("Git.Act.Unstaging", "Unstaging {0}"), file.Path) : string.Format(UiText.Get("Git.Act.Staging", "Staging {0}"), file.Path),
+            staged ? string.Format(UiText.Get("Git.Act.Unstaged", "Unstaged {0}"), file.Path) : string.Format(UiText.Get("Git.Act.Staged", "Staged {0}"), file.Path),
             root => staged ? _gitService.UnstageAsync(root, file.Path) : _gitService.StageAsync(root, file.Path),
             reloadLog: false);
     }
@@ -743,7 +743,7 @@ public class GitClientDialog : SplitPaneDialog
         {
             if (_status.Staged.Count > 0)
             {
-                RunAction("Unstaging everything...", "Unstaged everything.", root => _gitService.UnstageAllAsync(root), reloadLog: false);
+                RunAction(UiText.Get("Git.Act.UnstagingAll", "Unstaging everything..."), UiText.Get("Git.Act.UnstagedAll", "Unstaged everything."), root => _gitService.UnstageAllAsync(root), reloadLog: false);
             }
 
             return;
@@ -751,7 +751,7 @@ public class GitClientDialog : SplitPaneDialog
 
         if (_activeSection == Section.Unstaged && _status.Unstaged.Count > 0)
         {
-            RunAction("Staging everything...", $"Staged {_status.Unstaged.Count} file(s).", root => _gitService.StageAllAsync(root), reloadLog: false);
+            RunAction(UiText.Get("Git.Act.StagingAll", "Staging everything..."), string.Format(UiText.Get("Git.Act.StagedCount", "Staged {0} file(s)."), _status.Unstaged.Count), root => _gitService.StageAllAsync(root), reloadLog: false);
         }
     }
 
@@ -766,8 +766,8 @@ public class GitClientDialog : SplitPaneDialog
         }
 
         RunAction(
-            amend ? "Amending..." : "Committing...",
-            amend ? "Amended." : "Committed.",
+            amend ? UiText.Get("Git.Act.Amending", "Amending...") : UiText.Get("Git.Act.Committing", "Committing..."),
+            amend ? UiText.Get("Git.Act.Amended", "Amended.") : UiText.Get("Git.Act.Committed", "Committed."),
             root => _gitService.CommitAsync(root, message, amend));
     }
 
@@ -868,7 +868,7 @@ public class GitClientDialog : SplitPaneDialog
             return;
         }
 
-        RunAction($"Merging {branch.Name}", $"Merged {branch.Name}.", root => _gitService.MergeBranchAsync(root, branch.Name));
+        RunAction(string.Format(UiText.Get("Git.Act.Merging", "Merging {0}"), branch.Name), string.Format(UiText.Get("Git.Act.Merged", "Merged {0}."), branch.Name), root => _gitService.MergeBranchAsync(root, branch.Name));
     }
 
     private void BeginDeleteBranch()
@@ -885,9 +885,9 @@ public class GitClientDialog : SplitPaneDialog
 
     private void AbortMerge() => RunAction(UiText.Get("Git.AbortingMerge", "Aborting merge..."), UiText.Get("Git.MergeAborted", "Merge aborted."), root => _gitService.AbortMergeAsync(root));
 
-    private void Fetch() => RunAction("Fetching...", "Fetched.", root => _gitService.FetchAsync(root));
+    private void Fetch() => RunAction(UiText.Get("Git.Act.Fetching", "Fetching..."), UiText.Get("Git.Act.Fetched", "Fetched."), root => _gitService.FetchAsync(root));
 
-    private void Pull() => RunAction("Pulling...", "Pulled.", root => _gitService.PullAsync(root));
+    private void Pull() => RunAction(UiText.Get("Git.Act.Pulling", "Pulling..."), UiText.Get("Git.Act.Pulled", "Pulled."), root => _gitService.PullAsync(root));
 
     /// <summary>
     /// Pushes the current branch, publishing it first when it has no upstream — which is the case a
@@ -1375,7 +1375,7 @@ public class GitClientDialog : SplitPaneDialog
             ? string.Format(UiText.Get("Git.ConfirmDeleteUntracked", "Delete untracked file {0}? (y/n)"), file.Path)
             : string.Format(UiText.Get("Git.ConfirmDiscard", "Throw away your changes to {0}? (y/n)"), file.Path);
         BeginConfirm(prompt,
-            () => RunAction($"Discarding {file.Path}", $"Discarded {file.Path}.", root => _gitService.DiscardAsync(root, file.Path, file.IsUntracked)));
+            () => RunAction(string.Format(UiText.Get("Git.Act.Discarding", "Discarding {0}"), file.Path), string.Format(UiText.Get("Git.Act.Discarded", "Discarded {0}."), file.Path), root => _gitService.DiscardAsync(root, file.Path, file.IsUntracked)));
     }
 
     /// <summary>The item under the cursor in <paramref name="box"/>, or null if the cursor is out of range.</summary>

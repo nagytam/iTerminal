@@ -6820,4 +6820,70 @@
   <data name="Units.Heading" xml:space="preserve">
     <value>Conversor de unidades — {0}</value>
   </data>
+  <data name="Git.Act.MarkingResolved" xml:space="preserve">
+    <value>Marcando {0} como resuelto</value>
+  </data>
+  <data name="Git.Act.Resolved" xml:space="preserve">
+    <value>{0} resuelto</value>
+  </data>
+  <data name="Git.Act.Unstaging" xml:space="preserve">
+    <value>Quitando {0} del área de preparación</value>
+  </data>
+  <data name="Git.Act.Staging" xml:space="preserve">
+    <value>Preparando {0}</value>
+  </data>
+  <data name="Git.Act.Unstaged" xml:space="preserve">
+    <value>{0} quitado del área de preparación</value>
+  </data>
+  <data name="Git.Act.Staged" xml:space="preserve">
+    <value>{0} preparado</value>
+  </data>
+  <data name="Git.Act.UnstagingAll" xml:space="preserve">
+    <value>Quitando todo del área de preparación...</value>
+  </data>
+  <data name="Git.Act.UnstagedAll" xml:space="preserve">
+    <value>Todo quitado del área de preparación.</value>
+  </data>
+  <data name="Git.Act.StagingAll" xml:space="preserve">
+    <value>Preparando todo...</value>
+  </data>
+  <data name="Git.Act.StagedCount" xml:space="preserve">
+    <value>{0} archivo(s) preparado(s).</value>
+  </data>
+  <data name="Git.Act.Amending" xml:space="preserve">
+    <value>Enmendando...</value>
+  </data>
+  <data name="Git.Act.Committing" xml:space="preserve">
+    <value>Confirmando...</value>
+  </data>
+  <data name="Git.Act.Amended" xml:space="preserve">
+    <value>Commit enmendado.</value>
+  </data>
+  <data name="Git.Act.Committed" xml:space="preserve">
+    <value>Commit realizado.</value>
+  </data>
+  <data name="Git.Act.Merging" xml:space="preserve">
+    <value>Fusionando {0}</value>
+  </data>
+  <data name="Git.Act.Merged" xml:space="preserve">
+    <value>{0} fusionado.</value>
+  </data>
+  <data name="Git.Act.Fetching" xml:space="preserve">
+    <value>Obteniendo...</value>
+  </data>
+  <data name="Git.Act.Fetched" xml:space="preserve">
+    <value>Obtenido.</value>
+  </data>
+  <data name="Git.Act.Pulling" xml:space="preserve">
+    <value>Haciendo pull...</value>
+  </data>
+  <data name="Git.Act.Pulled" xml:space="preserve">
+    <value>Pull realizado.</value>
+  </data>
+  <data name="Git.Act.Discarding" xml:space="preserve">
+    <value>Descartando {0}</value>
+  </data>
+  <data name="Git.Act.Discarded" xml:space="preserve">
+    <value>{0} descartado.</value>
+  </data>
 </root>
