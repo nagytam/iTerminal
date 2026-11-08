@@ -1,6 +1,7 @@
 using iConsole.Controls.Viewers;
 using iConsole.Data;
 using iConsole.Dialogs;
+using iConsole.Localization;
 using iConsole.Services;
 using iTerminal.Core.AI;
 using Microsoft.Extensions.Options;
@@ -68,6 +69,16 @@ public class AiModelDialog : Dialog
         base.OnInitializeLayout();
     }
 
+    /// <summary>A section heading: the words, then a rule out to the same width in every language.</summary>
+    private static string Heading(string key, string english)
+    {
+        string text = "══ " + UiText.Get(key, english) + " ";
+        return text + new string('═', Math.Max(3, 62 - text.Length));
+    }
+
+    /// <summary>A label column of fixed width, then the value.</summary>
+    private static string Row(string key, string english, string value) => "  " + UiText.Get(key, english).PadRight(15) + ": " + value;
+
     private string BuildInfo(ModelDetails? details, DetailsState state)
     {
         var sb = new StringBuilder();
@@ -76,50 +87,52 @@ public class AiModelDialog : Dialog
         var assistantCount = _model.History.Count(m => m.Role == "assistant");
         var apiKeySet = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable(_options.ApiKeyEnvVar));
 
-        sb.AppendLine("══ Status ════════════════════════════════════════════════════");
-        sb.AppendLine($"  Available      : {(_model.IsAvailable ? "Yes" : "No")}");
-        sb.AppendLine($"  Info           : {_model.ModelInfo}");
+        string yes = UiText.Get("AiModel.Yes", "Yes");
+        string no = UiText.Get("AiModel.No", "No");
+
+        sb.AppendLine(Heading("AiModel.Status", "Status"));
+        sb.AppendLine(Row("AiModel.Available", "Available", _model.IsAvailable ? yes : no));
+        sb.AppendLine(Row("AiModel.Info", "Info", _model.ModelInfo));
 
         sb.AppendLine();
-        sb.AppendLine("══ Configuration ═════════════════════════════════════════════");
-        sb.AppendLine($"  Model ID       : {_options.ModelId}");
-        sb.AppendLine($"  API URL        : {_options.ApiBaseUrl}");
-        sb.AppendLine($"  API Key Env    : {_options.ApiKeyEnvVar}");
-        sb.AppendLine($"  API Key Set    : {(apiKeySet ? "Yes" : "No (unauthenticated)")}");
+        sb.AppendLine(Heading("AiModel.Configuration", "Configuration"));
+        sb.AppendLine(Row("AiModel.ModelId", "Model ID", _options.ModelId));
+        sb.AppendLine(Row("AiModel.ApiUrl", "API URL", _options.ApiBaseUrl));
+        sb.AppendLine(Row("AiModel.ApiKeyEnv", "API Key Env", _options.ApiKeyEnvVar));
+        sb.AppendLine(Row("AiModel.ApiKeySet", "API Key Set", apiKeySet ? yes : UiText.Get("AiModel.NoKey", "No (unauthenticated)")));
 
         sb.AppendLine();
-        sb.AppendLine("══ Session ═══════════════════════════════════════════════════");
-        sb.AppendLine($"  Messages       : {_model.History.Count} ({userCount} user, {assistantCount} assistant)");
-        sb.AppendLine($"  Thinking       : {(_model.IsThinking ? "Yes" : "No")}");
+        sb.AppendLine(Heading("AiModel.Session", "Session"));
+        sb.AppendLine(Row("AiModel.Messages", "Messages", string.Format(UiText.Get("AiModel.MessagesValue", "{0} ({1} user, {2} assistant)"), _model.History.Count, userCount, assistantCount)));
+        sb.AppendLine(Row("AiModel.Thinking", "Thinking", _model.IsThinking ? yes : no));
 
         sb.AppendLine();
-        sb.AppendLine("══ Model Details ═════════════════════════════════════════════");
+        sb.AppendLine(Heading("AiModel.ModelDetails", "Model Details"));
         if (state == DetailsState.Loading)
         {
-            sb.AppendLine("  Loading from the model server…");
+            sb.AppendLine(UiText.Get("AiModel.Loading", "  Loading from the model server…"));
         }
         else if (details is null)
         {
             // Said rather than left out: a missing section reads as "this model has no details".
-            sb.AppendLine("  Not available — the server is unreachable or does not report them.");
+            sb.AppendLine(UiText.Get("AiModel.Unavailable", "  Not available — the server is unreachable or does not report them."));
         }
         else
         {
             if (details.ParameterSize is not null)
-                sb.AppendLine($"  Parameters     : {details.ParameterSize}");
+                sb.AppendLine(Row("AiModel.Parameters", "Parameters", details.ParameterSize));
             if (details.Family is not null)
-                sb.AppendLine($"  Family         : {details.Family}");
+                sb.AppendLine(Row("AiModel.Family", "Family", details.Family));
             if (details.Quantization is not null)
-                sb.AppendLine($"  Quantization   : {details.Quantization}");
+                sb.AppendLine(Row("AiModel.Quantization", "Quantization", details.Quantization));
             if (details.Format is not null)
-                sb.AppendLine($"  Format         : {details.Format}");
+                sb.AppendLine(Row("AiModel.Format", "Format", details.Format));
             if (details.SizeBytes is not null)
-                sb.AppendLine($"  Size           : {details.SizeBytes.Value / 1024.0 / 1024 / 1024:F2} GB");
+                sb.AppendLine(Row("AiModel.Size", "Size", $"{details.SizeBytes.Value / 1024.0 / 1024 / 1024:F2} GB"));
         }
 
         sb.AppendLine();
-        sb.AppendLine("  Esc:close");
-
+        sb.AppendLine("  " + UiText.Get("Hint.Part.EscClose", "Esc:close"));
         return sb.ToString();
     }
 
