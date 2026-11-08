@@ -524,4 +524,24 @@ public class SmallScreenDialogsTest
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Email")), "the heading");
         Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Phone") && l.Contains("Company")), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheMailSetupOn16Rows_ScrollsItsFieldsAndKeepsTheBorderWhole()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+W");
+
+        await narrow.WaitForTextAsync("Account name");
+        for (int i = 0; i < 14; i++)
+        {
+            await narrow.PressAsync("Tab");
+            await Task.Delay(100);
+        }
+
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("LDAP bind DN")), "the last field scrolled into view");
+        string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
+        Assert.IsTrue(last.Trim().StartsWith('╚') && !last.Trim().Contains(' '), narrow.Screen.Dump());
+    }
 }
