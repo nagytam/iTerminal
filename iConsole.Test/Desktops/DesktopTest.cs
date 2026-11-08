@@ -277,6 +277,51 @@ public class DesktopTest
         consoleDriver.Verify(d => d.RefreshWindowSize(), Times.Once);
     }
 
+    private sealed class ResizingDuringInitScreen(IThemeService themeService, IBuffer buffer, Size resizedTo) : Control(themeService), IScreen
+    {
+        public IDesktop Desktop { get; set; } = default!;
+        public Size? LastWindowSizeChanged { get; private set; }
+
+        public override async Task OnInitializeAsync()
+        {
+            // The renderer job polls the terminal size on its own thread: a drag during start-up lands here.
+            buffer.Resize(resizedTo);
+            await base.OnInitializeAsync();
+        }
+
+        public override void OnWindowSizeChanged(object? sender, Size size)
+        {
+            LastWindowSizeChanged = size;
+            base.OnWindowSizeChanged(sender, size);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(5000)]
+    public async Task RunAsync_LaysTheScreenOutForTheSizeTheBufferHasAfterInitializing()
+    {
+        var consoleDriver = new Mock<IConsoleDriver>(MockBehavior.Strict);
+        consoleDriver.Setup(d => d.RefreshWindowSize());
+        consoleDriver.SetupGet(d => d.WindowSize).Returns(new Size(80, 24));
+        consoleDriver.Setup(d => d.Clear());
+        consoleDriver.SetupGet(d => d.ForegroundColor).Returns(Color.White);
+        consoleDriver.SetupGet(d => d.BackgroundColor).Returns(Color.Black);
+        consoleDriver.SetupGet(d => d.IsCursorVisible).Returns(false);
+
+        var resized = new Size(100, 30);
+        var themeService = new Mock<IThemeService>();
+        var buffer = new MockBuffer(new Size(10, 10));
+        var screen = new ResizingDuringInitScreen(themeService.Object, buffer, resized);
+        var desktop = new Desktop(consoleDriver.Object, screen, buffer, Enumerable.Empty<IJob>());
+
+        var runTask = Task.Run(desktop.RunAsync);
+        await WaitUntilAsync(() => screen.LastWindowSizeChanged is not null, 4000);
+        desktop.CancellationTokenSource.Cancel();
+        await runTask;
+
+        Assert.AreEqual(resized, screen.LastWindowSizeChanged, "a stale 80x24 here keeps the old layout after the resize");
+    }
+
     private sealed class StartStampJob(JobPriority priority) : Job
     {
         private readonly TaskCompletionSource _started = new(TaskCreationOptions.RunContinuationsAsynchronously);

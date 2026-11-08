@@ -126,7 +126,9 @@ public class Desktop : IHostedService, IDesktop
                 Dump.AppendSessionTrace($"desktop:run:screen-initialize:start;screen={screen.GetType().FullName}");
                 await screen.OnInitializeAsync();
                 Dump.AppendSessionTrace($"desktop:run:screen-initialize:done;screen={screen.GetType().FullName}");
-                screen.OnWindowSizeChanged(this, initialWindowSize);
+                // The renderer may have seen a resize while the screen initialized: lay out for the size the buffer has now, not the
+                // one read before, or the screen keeps the old layout until the next resize.
+                screen.OnWindowSizeChanged(this, Buffer.Size);
                 Dump.AppendSessionTrace($"desktop:run:screen-window-size:done;screen={screen.GetType().FullName}");
             }
 
