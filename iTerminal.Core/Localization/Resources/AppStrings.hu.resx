@@ -7447,4 +7447,55 @@
   <data name="Sign.CouldNotSign" xml:space="preserve">
     <value>Az aláírás nem sikerült: {0}</value>
   </data>
+  <data name="Drive.EjectLetter" xml:space="preserve">
+    <value>Csak betűjelű meghajtó adható ki.</value>
+  </data>
+  <data name="Drive.FormatWindowsMkfs" xml:space="preserve">
+    <value>A formázás csak Windowson érhető el; itt használja az mkfs-t vagy a lemezkezelőt.</value>
+  </data>
+  <data name="Drive.FormatLetter" xml:space="preserve">
+    <value>Csak betűjelű meghajtó formázható.</value>
+  </data>
+  <data name="Drive.UnknownFs" xml:space="preserve">
+    <value>Ismeretlen fájlrendszer: „{0}”.</value>
+  </data>
+  <data name="Drive.FormatWindowsOnly" xml:space="preserve">
+    <value>A formázás csak Windowson érhető el.</value>
+  </data>
+  <data name="Drive.SystemDrive" xml:space="preserve">
+    <value>Ez a rendszermeghajtó.</value>
+  </data>
+  <data name="Drive.CannotFormatType" xml:space="preserve">
+    <value>A(z) „{0}” típusú meghajtó itt nem formázható.</value>
+  </data>
+  <data name="Drive.NotADrive" xml:space="preserve">
+    <value>Ez nem meghajtó.</value>
+  </data>
+  <data name="Drive.MountTypes" xml:space="preserve">
+    <value>Csak .iso, .vhd és .vhdx fájlok csatolhatók.</value>
+  </data>
+  <data name="Drive.BitLockerWindows" xml:space="preserve">
+    <value>A BitLocker a Windows egyik funkciója.</value>
+  </data>
+  <data name="Drive.NotLettered" xml:space="preserve">
+    <value>Nem betűjelű meghajtó.</value>
+  </data>
+  <data name="Drive.CouldNotRead" xml:space="preserve">
+    <value>Nem olvasható.</value>
+  </data>
+  <data name="Drive.NotReported" xml:space="preserve">
+    <value>Ehhez a meghajtóhoz nincs adat.</value>
+  </data>
+  <data name="Drive.BitLockerOff" xml:space="preserve">
+    <value>Ki (nem titkosított)</value>
+  </data>
+  <data name="Drive.BitLockerOn" xml:space="preserve">
+    <value>Be (védett)</value>
+  </data>
+  <data name="Drive.BitLockerUnknown" xml:space="preserve">
+    <value>Ismeretlen állapot ({0})</value>
+  </data>
+  <data name="Drive.Unavailable" xml:space="preserve">
+    <value>A meghajtóműveletek ezen a rendszeren nem érhetők el.</value>
+  </data>
 </root>

@@ -7447,4 +7447,55 @@
   <data name="Sign.CouldNotSign" xml:space="preserve">
     <value>Signieren nicht möglich: {0}</value>
   </data>
+  <data name="Drive.EjectLetter" xml:space="preserve">
+    <value>Nur ein Laufwerk mit Buchstaben kann ausgeworfen werden.</value>
+  </data>
+  <data name="Drive.FormatWindowsMkfs" xml:space="preserve">
+    <value>Formatieren gibt es nur unter Windows; verwenden Sie hier mkfs oder Ihr Datenträgerprogramm.</value>
+  </data>
+  <data name="Drive.FormatLetter" xml:space="preserve">
+    <value>Nur ein Laufwerk mit Buchstaben kann formatiert werden.</value>
+  </data>
+  <data name="Drive.UnknownFs" xml:space="preserve">
+    <value>Unbekanntes Dateisystem „{0}“.</value>
+  </data>
+  <data name="Drive.FormatWindowsOnly" xml:space="preserve">
+    <value>Formatieren gibt es nur unter Windows.</value>
+  </data>
+  <data name="Drive.SystemDrive" xml:space="preserve">
+    <value>Das ist das Systemlaufwerk.</value>
+  </data>
+  <data name="Drive.CannotFormatType" xml:space="preserve">
+    <value>Ein Laufwerk vom Typ „{0}“ kann hier nicht formatiert werden.</value>
+  </data>
+  <data name="Drive.NotADrive" xml:space="preserve">
+    <value>Das ist kein Laufwerk.</value>
+  </data>
+  <data name="Drive.MountTypes" xml:space="preserve">
+    <value>Nur .iso-, .vhd- und .vhdx-Dateien können eingebunden werden.</value>
+  </data>
+  <data name="Drive.BitLockerWindows" xml:space="preserve">
+    <value>BitLocker ist eine Windows-Funktion.</value>
+  </data>
+  <data name="Drive.NotLettered" xml:space="preserve">
+    <value>Kein Laufwerk mit Buchstaben.</value>
+  </data>
+  <data name="Drive.CouldNotRead" xml:space="preserve">
+    <value>Konnte nicht gelesen werden.</value>
+  </data>
+  <data name="Drive.NotReported" xml:space="preserve">
+    <value>Für dieses Laufwerk nicht gemeldet.</value>
+  </data>
+  <data name="Drive.BitLockerOff" xml:space="preserve">
+    <value>Aus (nicht verschlüsselt)</value>
+  </data>
+  <data name="Drive.BitLockerOn" xml:space="preserve">
+    <value>An (geschützt)</value>
+  </data>
+  <data name="Drive.BitLockerUnknown" xml:space="preserve">
+    <value>Unbekannter Zustand ({0})</value>
+  </data>
+  <data name="Drive.Unavailable" xml:space="preserve">
+    <value>Laufwerksaktionen sind auf diesem System nicht verfügbar.</value>
+  </data>
 </root>

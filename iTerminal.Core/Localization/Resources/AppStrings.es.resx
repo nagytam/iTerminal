@@ -7447,4 +7447,55 @@
   <data name="Sign.CouldNotSign" xml:space="preserve">
     <value>No se pudo firmar: {0}</value>
   </data>
+  <data name="Drive.EjectLetter" xml:space="preserve">
+    <value>Solo se puede expulsar una unidad con letra.</value>
+  </data>
+  <data name="Drive.FormatWindowsMkfs" xml:space="preserve">
+    <value>El formateo solo se ofrece en Windows; use mkfs o su utilidad de discos aquí.</value>
+  </data>
+  <data name="Drive.FormatLetter" xml:space="preserve">
+    <value>Solo se puede formatear una unidad con letra.</value>
+  </data>
+  <data name="Drive.UnknownFs" xml:space="preserve">
+    <value>Sistema de archivos «{0}» desconocido.</value>
+  </data>
+  <data name="Drive.FormatWindowsOnly" xml:space="preserve">
+    <value>El formateo solo se ofrece en Windows.</value>
+  </data>
+  <data name="Drive.SystemDrive" xml:space="preserve">
+    <value>Esa es la unidad del sistema.</value>
+  </data>
+  <data name="Drive.CannotFormatType" xml:space="preserve">
+    <value>Una unidad de tipo «{0}» no se puede formatear aquí.</value>
+  </data>
+  <data name="Drive.NotADrive" xml:space="preserve">
+    <value>Eso no es una unidad.</value>
+  </data>
+  <data name="Drive.MountTypes" xml:space="preserve">
+    <value>Solo se pueden montar archivos .iso, .vhd y .vhdx.</value>
+  </data>
+  <data name="Drive.BitLockerWindows" xml:space="preserve">
+    <value>BitLocker es una función de Windows.</value>
+  </data>
+  <data name="Drive.NotLettered" xml:space="preserve">
+    <value>No es una unidad con letra.</value>
+  </data>
+  <data name="Drive.CouldNotRead" xml:space="preserve">
+    <value>No se pudo leer.</value>
+  </data>
+  <data name="Drive.NotReported" xml:space="preserve">
+    <value>No se informa para esta unidad.</value>
+  </data>
+  <data name="Drive.BitLockerOff" xml:space="preserve">
+    <value>Desactivado (sin cifrar)</value>
+  </data>
+  <data name="Drive.BitLockerOn" xml:space="preserve">
+    <value>Activado (protegido)</value>
+  </data>
+  <data name="Drive.BitLockerUnknown" xml:space="preserve">
+    <value>Estado desconocido ({0})</value>
+  </data>
+  <data name="Drive.Unavailable" xml:space="preserve">
+    <value>Las acciones de unidad no están disponibles en este sistema.</value>
+  </data>
 </root>
