@@ -5833,4 +5833,49 @@
   <data name="CmdDesc.d47fe680" xml:space="preserve">
     <value>Scollegare l&apos;immagine.</value>
   </data>
+  <data name="Games.HintMove" xml:space="preserve">
+    <value>Frecce:muovi</value>
+  </data>
+  <data name="Games.HintEnter" xml:space="preserve">
+    <value>Invio:{0}</value>
+  </data>
+  <data name="Games.HintPlay" xml:space="preserve">
+    <value>gioca</value>
+  </data>
+  <data name="Games.HintGame" xml:space="preserve">
+    <value>PagSu/PagGiù:gioco</value>
+  </data>
+  <data name="Games.HintNew" xml:space="preserve">
+    <value>N:nuovo</value>
+  </data>
+  <data name="Games.HintUndo" xml:space="preserve">
+    <value>U:annulla</value>
+  </data>
+  <data name="Games.HintMode" xml:space="preserve">
+    <value>M:modalità</value>
+  </data>
+  <data name="Sort.Footer" xml:space="preserve">
+    <value> Invio:applica  Esc:chiudi </value>
+  </data>
+  <data name="OpenWith.FooterFull" xml:space="preserve">
+    <value> Invio:apri  Ins:aggiungi  F4:modifica  Canc:rimuovi  Spazio:predefinito  Esc:chiudi </value>
+  </data>
+  <data name="OpenWith.FooterShort" xml:space="preserve">
+    <value> Invio:apri  Ins:aggiungi  Esc:chiudi </value>
+  </data>
+  <data name="Strip.Removed" xml:space="preserve">
+    <value>Fotocamera, posizione GPS, autore, copyright e commenti vengono rimossi.</value>
+  </data>
+  <data name="Strip.Kept" xml:space="preserve">
+    <value>L&apos;immagine, il profilo colore e la disposizione vengono mantenuti.</value>
+  </data>
+  <data name="Strip.Overwritten" xml:space="preserve">
+    <value>I file vengono sovrascritti; il testo rimosso non può essere recuperato.</value>
+  </data>
+  <data name="Strip.Nothing" xml:space="preserve">
+    <value>Niente da rimuovere: marca prima dei file JPEG o PNG.</value>
+  </data>
+  <data name="Strip.Continue" xml:space="preserve">
+    <value>Invio:continua</value>
+  </data>
 </root>

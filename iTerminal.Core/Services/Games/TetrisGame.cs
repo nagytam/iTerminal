@@ -80,7 +80,7 @@ public class TetrisGame : GameBase
 
     public override bool OffersUndo => false;
 
-    public override string ActivateLabel => "pause";
+    public override string ActivateLabel => iConsole.Localization.UiText.Get("Games.Snake.Pause", "pause");
 
     public override string ActivateHint => "Pause or resume the game, or start the pieces falling";
 

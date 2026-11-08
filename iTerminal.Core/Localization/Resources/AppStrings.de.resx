@@ -5833,4 +5833,49 @@
   <data name="CmdDesc.d47fe680" xml:space="preserve">
     <value>Das Abbild trennen.</value>
   </data>
+  <data name="Games.HintMove" xml:space="preserve">
+    <value>Pfeile:bewegen</value>
+  </data>
+  <data name="Games.HintEnter" xml:space="preserve">
+    <value>Enter:{0}</value>
+  </data>
+  <data name="Games.HintPlay" xml:space="preserve">
+    <value>setzen</value>
+  </data>
+  <data name="Games.HintGame" xml:space="preserve">
+    <value>BildAuf/Ab:Spiel</value>
+  </data>
+  <data name="Games.HintNew" xml:space="preserve">
+    <value>N:neu</value>
+  </data>
+  <data name="Games.HintUndo" xml:space="preserve">
+    <value>U:zurück</value>
+  </data>
+  <data name="Games.HintMode" xml:space="preserve">
+    <value>M:Modus</value>
+  </data>
+  <data name="Sort.Footer" xml:space="preserve">
+    <value> Enter:anwenden  Esc:schließen </value>
+  </data>
+  <data name="OpenWith.FooterFull" xml:space="preserve">
+    <value> Enter:öffnen  Einfg:hinzufügen  F4:ändern  Entf:entfernen  Leertaste:Standard  Esc:schließen </value>
+  </data>
+  <data name="OpenWith.FooterShort" xml:space="preserve">
+    <value> Enter:öffnen  Einfg:hinzufügen  Esc:schließen </value>
+  </data>
+  <data name="Strip.Removed" xml:space="preserve">
+    <value>Kamera, GPS-Position, Autor, Urheberrecht und Kommentare werden entfernt.</value>
+  </data>
+  <data name="Strip.Kept" xml:space="preserve">
+    <value>Das Bild, sein Farbprofil und sein Layout bleiben erhalten.</value>
+  </data>
+  <data name="Strip.Overwritten" xml:space="preserve">
+    <value>Die Dateien werden überschrieben; der entfernte Text lässt sich nicht wiederherstellen.</value>
+  </data>
+  <data name="Strip.Nothing" xml:space="preserve">
+    <value>Nichts zu bereinigen: zuerst JPEG- oder PNG-Dateien markieren.</value>
+  </data>
+  <data name="Strip.Continue" xml:space="preserve">
+    <value>Enter:weiter</value>
+  </data>
 </root>

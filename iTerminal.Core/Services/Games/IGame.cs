@@ -73,7 +73,7 @@ public interface IGame
     bool OffersUndo => true;
 
     /// <summary>The short footer word for Enter.</summary>
-    string ActivateLabel => "play";
+    string ActivateLabel => iConsole.Localization.UiText.Get("Games.HintPlay", "play");
 
     /// <summary>The help text for Enter.</summary>
     string ActivateHint => UiText.Get("DialogHint.PlaySelectTake", "Play, select or take a piece at the cursor");
@@ -111,7 +111,7 @@ public abstract class GameBase(Random? random) : IGame
 
     public virtual bool OffersComputerOpponent => true;
     public virtual bool OffersUndo => true;
-    public virtual string ActivateLabel => "play";
+    public virtual string ActivateLabel => iConsole.Localization.UiText.Get("Games.HintPlay", "play");
     public virtual string ActivateHint => UiText.Get("DialogHint.PlaySelectTake", "Play, select or take a piece at the cursor");
 
     /// <summary>The cursor stays on the board.</summary>

@@ -319,8 +319,8 @@ public class OpenWithDialog : Dialog
         buffer.Write(ZOrder, new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + ViewSize.Height - 3), new Size(rule.Count, 1), rule);
 
         var hints = Selected?.Association is not null
-            ? " Enter:open  Ins:add  F4:change  Del:remove  Space:default  Esc:close "
-            : " Enter:open  Ins:add  Esc:close ";
+            ? iConsole.Localization.UiText.Get("OpenWith.FooterFull", " Enter:open  Ins:add  F4:change  Del:remove  Space:default  Esc:close ")
+            : iConsole.Localization.UiText.Get("OpenWith.FooterShort", " Enter:open  Ins:add  Esc:close ");
         var footer = hints.FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);
