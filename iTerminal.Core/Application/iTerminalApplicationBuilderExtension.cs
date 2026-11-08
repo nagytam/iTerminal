@@ -106,6 +106,7 @@ public static class iTerminalApplicationBuilderExtension
             options.UseSqlite(provider.GetRequiredService<DatabaseLocation>().ConnectionString));
         services.AddScoped<ICacheService, CacheService>();
         services.AddHostedService<DatabaseInitializationHostedService>();
+        services.AddHostedService<iTerminal.Core.Commands.DialogRefreshHostedService>();
         services.AddTransient<TerminalMenuBar>();
         services.AddSingleton<Content>();
         services.AddSingleton<FilePanelFactory>();
