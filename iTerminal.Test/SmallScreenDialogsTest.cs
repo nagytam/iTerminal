@@ -499,4 +499,16 @@ public class SmallScreenDialogsTest
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Level: 0 stores")), "the level hint");
         Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Level: 0 stores") && l.Contains('…')), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheHelpOn45Columns_WrapsEachDescriptionWithinTheFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("F1");
+
+        await narrow.WaitForTextAsync("Available commands");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("context.")), "the end of the first description");
+    }
 }
