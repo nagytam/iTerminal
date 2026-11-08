@@ -772,4 +772,20 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCalendarInGerman_HasGermanDayNames()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync("Ctrl+D");
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Mo Di Mi Do Fr Sa So")), "the German day names over the month");
+    }
 }
