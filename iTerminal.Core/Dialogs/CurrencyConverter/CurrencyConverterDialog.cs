@@ -148,14 +148,15 @@ public class CurrencyConverterDialog : SplitPaneDialog
         int ih = (int)ViewSize.Height - 2;
         if (iw > 0 && ih > 0)
         {
-            int boxWidth = Math.Max(10, (iw - 2) / 3);
+            // Three boxes and the gaps between them must end inside the frame: 10 columns each ran out of it on a narrow dialog.
+            int boxWidth = Math.Max(6, Math.Min((iw - 2) / 3, (iw - 4) / 3 + 1));
             _amount.Position = new Position(1, 1);
             _amount.ViewSize = new Size(boxWidth, 1);
             _amount.ScrollableModel.ViewSize = _amount.ViewSize;
             _from.Position = new Position(1 + boxWidth + 1, 1);
             _from.ViewSize = new Size(boxWidth, 1);
             _to.Position = new Position(1 + (boxWidth + 1) * 2, 1);
-            _to.ViewSize = new Size(Math.Max(10, iw - (boxWidth + 1) * 2), 1);
+            _to.ViewSize = new Size(Math.Max(6, iw - 1 - (boxWidth + 1) * 2), 1);
         }
 
         base.OnInitializeLayout();

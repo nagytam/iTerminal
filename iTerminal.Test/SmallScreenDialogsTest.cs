@@ -558,4 +558,79 @@ public class SmallScreenDialogsTest
         await narrow.WaitForTextAsync("Synchronise folders");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Delete extras")), "the delete-extras option");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCalculatorOn16Rows_KeepsItsKeysInsideTheFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+A");
+
+        await narrow.WaitForTextAsync("Calculator");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("[  =")) || s.Lines.Any(l => l.Contains("=  ]")), "the equals key");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains("]═[") || l.Contains("]║[")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("F3", "F7", "Search text")]
+    [DataRow("F4", "Ctrl+R", "Replace text")]
+    public async Task TheSearchAndReplaceDialogsOn45Columns_KeepTheirOptionsAndButtonsInsideTheFrame(string open, string chord, string title)
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+        await narrow.SelectEntryAsync("readme.txt");
+        await narrow.PressAsync(open);
+        await narrow.WaitForTextAsync("Hello from the left panel");
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitForTextAsync(title);
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Regular expression")), "the options");
+        foreach (string line in narrow.Screen.Lines.Where(l => l.Contains("Regular expression") || l.Contains("Match case") || l.Contains("Cancel")))
+        {
+            Assert.IsTrue(line.TrimEnd().EndsWith('║') && !line.Contains("a[") && !line.Contains("l[") , narrow.Screen.Dump());
+        }
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCurrencyBoxesOn40Columns_EndInsideTheFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 40, height: 15);
+
+        await narrow.PressAsync("Ctrl+Shift+F5");
+
+        await narrow.WaitForTextAsync("Currency Converter");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Amount:")), "the boxes");
+        string row = narrow.Screen.Lines.First(l => l.Contains("Amount:"));
+        Assert.IsTrue(row[row.IndexOf("To:", StringComparison.Ordinal)..].Contains('║'), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheDiskUsageOn40Columns_ShowsEachRowsPercentage()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 40, height: 15);
+
+        await narrow.PressAsync("Ctrl+Shift+F12");
+
+        await narrow.WaitForTextAsync("Disk usage");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("readme")), "the rows");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("readme") && l.Contains('%')), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task ThePasswordsOn15Rows_KeepTheBottomBorderWhole()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 40, height: 15);
+
+        await narrow.PressAsync("Ctrl+X");
+
+        await narrow.WaitForTextAsync("Passwords");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Enter edit")), "the footer");
+        string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
+        Assert.IsTrue(last.Trim().StartsWith('╚') && !last.Trim().Contains(' '), narrow.Screen.Dump());
+    }
 }

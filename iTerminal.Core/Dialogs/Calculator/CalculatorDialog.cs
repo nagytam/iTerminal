@@ -45,7 +45,10 @@ public class CalculatorDialog : SplitPaneDialog
     {
         if (Parent is not null)
         {
-            CenterInParent(Parent.ViewSize * 0.8);
+            // Four fifths of the screen, but the keypad needs about 24 rows: a shorter terminal gives it all it has, so the
+            // keys are not drawn below the frame.
+            var height = Math.Max(Parent.ViewSize.Height * 4 / 5, Math.Min(Parent.ViewSize.Height, 24));
+            CenterInParent(new Size(Parent.ViewSize.Width * 4 / 5, height));
         }
 
         var iw = Math.Max(0, (int)ViewSize.Width - 2);

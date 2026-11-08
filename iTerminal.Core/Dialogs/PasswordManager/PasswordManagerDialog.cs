@@ -43,7 +43,10 @@ public class PasswordManagerDialog : Dialog
 
     private const int DialogWidth = 80;
     private const int DialogHeight = 24;
-    private const int ListRows = 14;
+    private const int MaxListRows = 14;
+
+    /// <summary>All 14 rows on a full-height dialog, fewer on a short terminal so the details, the status and the hints stay inside the frame.</summary>
+    private int ListRows => Math.Clamp((int)ViewSize.Height - 2 - 8, 3, MaxListRows);
     private const int MaxFieldLength = 500;
     private const string Mask = "••••••••";
 
