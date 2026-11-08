@@ -309,7 +309,7 @@ public class PerformanceBenchmarkDialog : Dialog
         }
 
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
-        List<(string Text, Color Color)> rows = Rows(innerWidth, colorScheme);
+        List<(string Text, Color Color)> rows = Compact(Rows(innerWidth, colorScheme), (int)ViewSize.Height - 3);
         // Stops above the hint row, so a short screen cuts the list and never the hint.
         for (int i = 0; i < rows.Count && i + 1 < ViewSize.Height - 2; i++)
         {
@@ -320,6 +320,20 @@ public class PerformanceBenchmarkDialog : Dialog
             ? UiText.Get("Benchmark.Hint.Footer.Running", "Esc:cancel the run")
             : UiText.Get("Benchmark.Hint.Footer", "Enter:run  Esc:close");
         WriteRow(buffer, colorScheme, innerWidth, (int)ViewSize.Height - 2, hint.Length <= innerWidth ? hint : hint.Cut(innerWidth), colorScheme.DisabledForeground);
+    }
+
+    /// <summary>On a short screen the blank rows between the groups go first, from the bottom, so the last group is not cut off.</summary>
+    internal static List<(string Text, Color Color)> Compact(List<(string Text, Color Color)> rows, int room)
+    {
+        for (int i = rows.Count - 1; i > 0 && rows.Count > room; i--)
+        {
+            if (rows[i].Text.Length == 0)
+            {
+                rows.RemoveAt(i);
+            }
+        }
+
+        return rows;
     }
 
     private void WriteRow(IBuffer buffer, ColorScheme colorScheme, int innerWidth, int row, string text, Color color)

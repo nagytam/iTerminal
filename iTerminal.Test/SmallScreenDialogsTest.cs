@@ -386,4 +386,17 @@ public class SmallScreenDialogsTest
         Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Nothing saved yet") && l.Contains("…")), narrow.Screen.Dump());
         Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains(" saved  ·") && l.Contains("…")), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheBenchmarkOn22Rows_ShowsItsNetworkGroup()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 70, height: 22);
+
+        await narrow.PressAsync("Ctrl+Shift+B");
+
+        await narrow.WaitForTextAsync("Performance benchmark");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Network")), "the Network group");
+        Assert.IsTrue(narrow.Screen.Lines.Count(l => l.Contains("waiting")) >= 8, narrow.Screen.Dump());
+    }
 }
