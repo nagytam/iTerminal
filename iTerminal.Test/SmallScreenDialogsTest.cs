@@ -1,4 +1,4 @@
-﻿namespace iTerminal.Test;
+namespace iTerminal.Test;
 
 /// <summary>Dialogs on an 80 x 24 terminal: everything inside its frame, nothing cut mid-word that fits.</summary>
 [TestClass]
@@ -410,5 +410,21 @@ public class SmallScreenDialogsTest
 
         await narrow.WaitForTextAsync("Disk manager");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("saved to its database")), "the end of the memory drive's description");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheEnvironmentVariablesAndTheEncryptionHaveTheirOwnKeys_WithAFileUnderTheCursor()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
+        await app.SelectEntryAsync("readme.txt");
+
+        await app.PressAsync("Ctrl+Shift+H");
+        await app.WaitUntilAsync(() => app.Driver.FocusedModal is Core.Dialogs.EnvVars.EnvironmentVariablesDialog, "the environment editor to open");
+        await app.PressAsync("Esc");
+        await app.WaitForNoDialogAsync();
+
+        await app.PressAsync("Ctrl+Shift+E");
+        await app.WaitUntilAsync(() => app.Driver.FocusedModal is Core.Dialogs.FileEncryptionDialog, "the encryption dialog to open");
     }
 }

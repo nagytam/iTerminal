@@ -61,7 +61,7 @@ public class DialogsTest
     [DataRow("Ctrl+Shift+F4", "TranslatorDialog")]
     [DataRow("Ctrl+Shift+F5", "CurrencyConverterDialog")]
     [DataRow("Ctrl+Shift+K", "ContactManagerDialog")]
-    [DataRow("Ctrl+Shift+E", "EnvironmentVariablesDialog")]
+    [DataRow("Ctrl+Shift+H", "EnvironmentVariablesDialog")]
     [DataRow("Ctrl+Shift+W", "EncyclopediaDialog")]
     [DataRow("Ctrl+Shift+B", "PerformanceBenchmarkDialog")]
     [DataRow("Alt+F2", "RemoteConnectionManagerDialog")]
@@ -148,7 +148,7 @@ public class DialogsTest
     [TestMethod]
     public async Task TheEnvironmentVariablesEditorAddsShowsAndDeletesAVariable()
     {
-        await _app.PressAsync("Ctrl+Shift+E");
+        await _app.PressAsync("Ctrl+Shift+H");
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is Core.Dialogs.EnvVars.EnvironmentVariablesDialog, "the environment editor to open");
         await _app.WaitForTextAsync("SANDBOX_USER");
 

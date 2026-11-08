@@ -8,7 +8,7 @@ public class EnvironmentVariablesDialogCommand(EnvironmentVariablesDialog enviro
     public override string Title => "Environment variables";
     public override string Description => "View, add, change and delete environment variables for this session, the user or the machine.";
 
-    // Ctrl+Shift+E. Key constructor order is (consoleKey, shift, alt, control).
+    // Ctrl+Shift+H (Ctrl+Shift+E is the file encryption, Ctrl+Shift+X the password manager). Key constructor order is (consoleKey, shift, alt, control).
     public override Key? Key { get; init; } =
-        new Key(ConsoleKey.E, true, false, true);
+        new Key(ConsoleKey.H, true, false, true);
 }
