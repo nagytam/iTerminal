@@ -119,6 +119,24 @@ public class SignatureServiceTest
 
     [TestMethod]
     [Timeout(15_000)]
+    [DoNotParallelize]
+    public async Task VerifyAsync_SpeaksTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(SignatureService).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        var file = Write("plain-de.txt", "x");
+
+        var signed = await new SignatureService(Runner()).VerifyAsync(file);
+        var missing = await new SignatureService(Runner()).VerifyAsync(file + ".gone");
+
+        StringAssert.StartsWith(signed[0].Message, "Keine Signatur gefunden");
+        Assert.AreEqual("Die Datei ist nicht vorhanden.", missing[0].Message);
+    }
+
+    [TestMethod]
+    [Timeout(15_000)]
     public async Task VerifyAsync_NoSignatureAnywhere_SaysSoOnce()
     {
         var file = Write("plain.txt", "x");

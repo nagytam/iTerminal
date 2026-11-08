@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Services.Processes;
 using System.Security.Cryptography;
 using System.Text;
@@ -118,7 +119,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
         var verdicts = new List<SignatureVerdict>();
         if (!File.Exists(filePath))
         {
-            return [new(SignatureMethod.Pem, SignatureStatus.Unavailable, string.Empty, "The file is not there.")];
+            return [new(SignatureMethod.Pem, SignatureStatus.Unavailable, string.Empty, UiText.Get("Sign.NoFile", "The file is not there."))];
         }
 
         if (OperatingSystem.IsWindows() && signaturePath is null)
@@ -144,7 +145,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
                 OperatingSystem.IsWindows() ? SignatureMethod.Authenticode : SignatureMethod.Gpg,
                 SignatureStatus.NotSigned,
                 string.Empty,
-                "No signature found: nothing embedded in the file and no .asc, .sig, .gpg or .sign beside it."));
+                UiText.Get("Sign.NoneFound", "No signature found: nothing embedded in the file and no .asc, .sig, .gpg or .sign beside it.")));
         }
 
         return verdicts;
@@ -204,17 +205,17 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
 
         if (Find("GOODSIG") is { } good)
         {
-            return new(SignatureMethod.Gpg, SignatureStatus.Valid, Signer(good, "GOODSIG"), "Good signature.");
+            return new(SignatureMethod.Gpg, SignatureStatus.Valid, Signer(good, "GOODSIG"), UiText.Get("Sign.Good", "Good signature."));
         }
 
         if (Find("EXPKEYSIG") is { } expiredKey)
         {
-            return new(SignatureMethod.Gpg, SignatureStatus.Valid, Signer(expiredKey, "EXPKEYSIG"), "Good signature, but the key has expired.");
+            return new(SignatureMethod.Gpg, SignatureStatus.Valid, Signer(expiredKey, "EXPKEYSIG"), UiText.Get("Sign.GoodExpired", "Good signature, but the key has expired."));
         }
 
         if (Find("REVKEYSIG") is { } revokedKey)
         {
-            return new(SignatureMethod.Gpg, SignatureStatus.Invalid, Signer(revokedKey, "REVKEYSIG"), "The signature is good but the key was revoked — do not trust it.");
+            return new(SignatureMethod.Gpg, SignatureStatus.Invalid, Signer(revokedKey, "REVKEYSIG"), UiText.Get("Sign.Revoked", "The signature is good but the key was revoked — do not trust it."));
         }
 
         if (Find("BADSIG") is { } bad)
@@ -225,12 +226,12 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
         if (Find("NO_PUBKEY") is { } missing)
         {
             var key = missing["[GNUPG:] NO_PUBKEY".Length..].Trim();
-            return new(SignatureMethod.Gpg, SignatureStatus.UnknownSigner, key, $"Signed with key {key}, which is not in your keyring (gpg --recv-keys {key}).");
+            return new(SignatureMethod.Gpg, SignatureStatus.UnknownSigner, key, string.Format(UiText.Get("Sign.UnknownKey", "Signed with key {0}, which is not in your keyring (gpg --recv-keys {0})."), key));
         }
 
         if (Find("NODATA") is not null)
         {
-            return new(SignatureMethod.Gpg, SignatureStatus.NotSigned, string.Empty, "That is not an OpenPGP signature.");
+            return new(SignatureMethod.Gpg, SignatureStatus.NotSigned, string.Empty, UiText.Get("Sign.NotOpenPgp", "That is not an OpenPGP signature."));
         }
 
         return new(SignatureMethod.Gpg, SignatureStatus.Unavailable, string.Empty, exitCode == 0 ? "gpg gave no verdict." : fallback);
@@ -250,7 +251,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
             // A key id starting with '-' would be read as an option.
             if (keyIdentifier.TrimStart().StartsWith('-'))
             {
-                return new(false, null, "That is not a key id.");
+                return new(false, null, UiText.Get("Sign.NotKeyId", "That is not a key id."));
             }
 
             arguments.AddRange(["--local-user", keyIdentifier.Trim()]);
@@ -264,7 +265,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
         }
 
         return output.Success && File.Exists(target)
-            ? new(true, target, $"Wrote {Path.GetFileName(target)}.")
+            ? new(true, target, string.Format(UiText.Get("Sign.Wrote", "Wrote {0}."), Path.GetFileName(target)))
             : new(false, null, output.FirstErrorLine);
     }
 
@@ -292,7 +293,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
         var lines = text.Split(['\r', '\n'], StringSplitOptions.None).Select(line => line.Trim()).ToArray();
         if (failure is not null || lines.Length == 0 || lines[0].Length == 0)
         {
-            return new(SignatureMethod.Authenticode, SignatureStatus.Unavailable, string.Empty, failure ?? "No answer from PowerShell.");
+            return new(SignatureMethod.Authenticode, SignatureStatus.Unavailable, string.Empty, failure ?? UiText.Get("Sign.NoPowerShell", "No answer from PowerShell."));
         }
 
         var signer = lines.Length > 1 ? lines[1] : string.Empty;
@@ -315,12 +316,12 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
     {
         if (!OperatingSystem.IsWindows())
         {
-            return new(false, null, "Authenticode signing is only available on Windows.");
+            return new(false, null, UiText.Get("Sign.WindowsOnly", "Authenticode signing is only available on Windows."));
         }
 
         if (thumbprint is null || !ThumbprintPattern().IsMatch(thumbprint.Trim()))
         {
-            return new(false, null, "Choose a certificate (a 40-digit hexadecimal thumbprint).");
+            return new(false, null, UiText.Get("Sign.ChooseCert", "Choose a certificate (a 40-digit hexadecimal thumbprint)."));
         }
 
         var script =
@@ -397,7 +398,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
             var fields = (await File.ReadAllTextAsync(signaturePath, cancellationToken)).Trim().Split(' ', 3, StringSplitOptions.TrimEntries);
             if (fields.Length != 3 || fields[0] != PemPrefix)
             {
-                return new(SignatureMethod.Pem, SignatureStatus.Invalid, string.Empty, "The signature file is damaged.");
+                return new(SignatureMethod.Pem, SignatureStatus.Invalid, string.Empty, UiText.Get("Sign.Damaged", "The signature file is damaged."));
             }
 
             var signature = Convert.FromBase64String(fields[2]);
@@ -410,12 +411,12 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
                 _ => throw new CryptographicException($"Unknown algorithm '{fields[1]}'."),
             };
             return valid
-                ? new(SignatureMethod.Pem, SignatureStatus.Valid, fingerprint, $"Good {fields[1].ToUpperInvariant()} signature.")
+                ? new(SignatureMethod.Pem, SignatureStatus.Valid, fingerprint, string.Format(UiText.Get("Sign.GoodAlgo", "Good {0} signature."), fields[1].ToUpperInvariant()))
                 : new(SignatureMethod.Pem, SignatureStatus.Invalid, fingerprint, "BAD signature: the file was changed, or the key is not the signer's.");
         }
         catch (Exception exception) when (exception is CryptographicException or FormatException or IOException or UnauthorizedAccessException or ArgumentException)
         {
-            return new(SignatureMethod.Pem, SignatureStatus.Unavailable, string.Empty, $"Could not check it: {exception.Message}");
+            return new(SignatureMethod.Pem, SignatureStatus.Unavailable, string.Empty, string.Format(UiText.Get("Sign.CouldNotCheck", "Could not check it: {0}"), exception.Message));
         }
     }
 
@@ -437,7 +438,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
     {
         if (string.IsNullOrWhiteSpace(keyPath) || !File.Exists(keyPath))
         {
-            return new(false, null, "Give the private key file (PEM).");
+            return new(false, null, UiText.Get("Sign.GiveKey", "Give the private key file (PEM)."));
         }
 
         var target = filePath + ".sig";
@@ -451,7 +452,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
             var pem = await File.ReadAllTextAsync(keyPath, cancellationToken);
             if (pem.Contains("ENCRYPTED", StringComparison.Ordinal))
             {
-                return new(false, null, "That key is passphrase-protected. Use gpg for an encrypted key.");
+                return new(false, null, UiText.Get("Sign.Passphrase", "That key is passphrase-protected. Use gpg for an encrypted key."));
             }
 
             var hash = await HashAsync(filePath, cancellationToken);
@@ -473,11 +474,11 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
             }
 
             await File.WriteAllTextAsync(target, $"{PemPrefix} {algorithm} {Convert.ToBase64String(signature)}\n", cancellationToken);
-            return new(true, target, $"Wrote {Path.GetFileName(target)}.");
+            return new(true, target, string.Format(UiText.Get("Sign.Wrote", "Wrote {0}."), Path.GetFileName(target)));
         }
         catch (Exception exception) when (exception is CryptographicException or IOException or UnauthorizedAccessException or ArgumentException)
         {
-            return new(false, null, $"Could not sign: {exception.Message}");
+            return new(false, null, string.Format(UiText.Get("Sign.CouldNotSign", "Could not sign: {0}"), exception.Message));
         }
     }
 
@@ -520,7 +521,7 @@ public partial class SignatureService(IExternalProcessRunner runner) : ISignatur
     {
         if (!File.Exists(filePath))
         {
-            return Task.FromResult(new SignResult(false, null, "The file is not there."));
+            return Task.FromResult(new SignResult(false, null, UiText.Get("Sign.NoFile", "The file is not there.")));
         }
 
         return method switch
