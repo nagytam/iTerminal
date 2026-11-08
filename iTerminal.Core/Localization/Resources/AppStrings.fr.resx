@@ -5392,4 +5392,55 @@
   <data name="Hint.Part.Toggle" xml:space="preserve">
     <value>Espace:basculer</value>
   </data>
+  <data name="Calendar.HintMoving" xml:space="preserve">
+    <value>Flèches jour/semaine  PgPréc/PgSuiv mois  Ctrl+PgPréc/PgSuiv année</value>
+  </data>
+  <data name="Calendar.HintActing" xml:space="preserve">
+    <value>Début aujourd’hui  N ajouter  E modifier  Alt+Haut/Bas choisir  D retirer  Échap fermer</value>
+  </data>
+  <data name="Mail.HintSetup" xml:space="preserve">
+    <value>Tab/Haut/Bas champ  Espace basculer  Ctrl+V coller  Ctrl+S enregistrer  Échap retour</value>
+  </data>
+  <data name="Mail.HintList" xml:space="preserve">
+    <value>Entrée lire  R actualiser  C écrire  D supprimer  S configurer  Échap fermer</value>
+  </data>
+  <data name="Mail.HintView" xml:space="preserve">
+    <value>Haut/Bas défiler  R répondre  Échap retour à la liste</value>
+  </data>
+  <data name="Mail.HintCompose" xml:space="preserve">
+    <value>Tab champ  Entrée saut de ligne  Ctrl+V coller  Ctrl+S envoyer  Ctrl+L carnet d’adresses  Échap retour</value>
+  </data>
+  <data name="Mail.HintDirectory" xml:space="preserve">
+    <value>Tapez un nom, Entrée cherche, Entrée encore ajoute la personne choisie  Échap retour</value>
+  </data>
+  <data name="Hint.ConfirmDelete" xml:space="preserve">
+    <value>y supprimer  toute autre touche annule</value>
+  </data>
+  <data name="Passwords.HintUnavailable" xml:space="preserve">
+    <value>Échap fermer</value>
+  </data>
+  <data name="Passwords.HintList" xml:space="preserve">
+    <value>Entrée modifier  N nouveau  D supprimer  V afficher  Échap fermer</value>
+  </data>
+  <data name="Passwords.HintEdit" xml:space="preserve">
+    <value>Tab champ  Espace catégorie  Ctrl+R afficher le mot de passe  Ctrl+S enregistrer  Échap retour</value>
+  </data>
+  <data name="Remote.HintList" xml:space="preserve">
+    <value>Entrée connecter  B parcourir les fichiers  N nouvelle  E modifier  D supprimer  Échap fermer</value>
+  </data>
+  <data name="Remote.HintForm" xml:space="preserve">
+    <value>Tab champ  Espace change type/transport  Entrée/Ctrl+S enregistrer  Échap retour</value>
+  </data>
+  <data name="Workspaces.HintSave" xml:space="preserve">
+    <value>Entrée enregistrer  Échap annuler</value>
+  </data>
+  <data name="Workspaces.HintRename" xml:space="preserve">
+    <value>Entrée renommer  Échap annuler</value>
+  </data>
+  <data name="Workspaces.HintConfirm" xml:space="preserve">
+    <value>y confirmer  Échap garder</value>
+  </data>
+  <data name="Workspaces.HintList" xml:space="preserve">
+    <value>Entrée basculer  1-9 sauter  S enregistrer  U mettre à jour  R renommer  D supprimer  Échap fermer</value>
+  </data>
 </root>

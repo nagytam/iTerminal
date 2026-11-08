@@ -5392,4 +5392,55 @@
   <data name="Hint.Part.Toggle" xml:space="preserve">
     <value>Spazio:attiva</value>
   </data>
+  <data name="Calendar.HintMoving" xml:space="preserve">
+    <value>Frecce giorno/settimana  PagSu/PagGiù mese  Ctrl+PagSu/PagGiù anno</value>
+  </data>
+  <data name="Calendar.HintActing" xml:space="preserve">
+    <value>Home oggi  N aggiungi  E cambia  Alt+Su/Giù scegli  D rimuovi  Esc chiudi</value>
+  </data>
+  <data name="Mail.HintSetup" xml:space="preserve">
+    <value>Tab/Su/Giù campo  Spazio attiva  Ctrl+V incolla  Ctrl+S salva  Esc indietro</value>
+  </data>
+  <data name="Mail.HintList" xml:space="preserve">
+    <value>Invio leggi  R aggiorna  C scrivi  D elimina  S imposta  Esc chiudi</value>
+  </data>
+  <data name="Mail.HintView" xml:space="preserve">
+    <value>Su/Giù scorri  R rispondi  Esc torna alla lista</value>
+  </data>
+  <data name="Mail.HintCompose" xml:space="preserve">
+    <value>Tab campo  Invio a capo  Ctrl+V incolla  Ctrl+S invia  Ctrl+L rubrica  Esc indietro</value>
+  </data>
+  <data name="Mail.HintDirectory" xml:space="preserve">
+    <value>Digita un nome, Invio cerca, Invio di nuovo aggiunge la persona evidenziata  Esc indietro</value>
+  </data>
+  <data name="Hint.ConfirmDelete" xml:space="preserve">
+    <value>y elimina  qualsiasi altro tasto annulla</value>
+  </data>
+  <data name="Passwords.HintUnavailable" xml:space="preserve">
+    <value>Esc chiudi</value>
+  </data>
+  <data name="Passwords.HintList" xml:space="preserve">
+    <value>Invio modifica  N nuova  D elimina  V mostra  Esc chiudi</value>
+  </data>
+  <data name="Passwords.HintEdit" xml:space="preserve">
+    <value>Tab campo  Spazio categoria  Ctrl+R mostra password  Ctrl+S salva  Esc indietro</value>
+  </data>
+  <data name="Remote.HintList" xml:space="preserve">
+    <value>Invio connetti  B sfoglia file  N nuova  E modifica  D elimina  Esc chiudi</value>
+  </data>
+  <data name="Remote.HintForm" xml:space="preserve">
+    <value>Tab campo  Spazio cambia tipo/trasporto  Invio/Ctrl+S salva  Esc indietro</value>
+  </data>
+  <data name="Workspaces.HintSave" xml:space="preserve">
+    <value>Invio salva  Esc annulla</value>
+  </data>
+  <data name="Workspaces.HintRename" xml:space="preserve">
+    <value>Invio rinomina  Esc annulla</value>
+  </data>
+  <data name="Workspaces.HintConfirm" xml:space="preserve">
+    <value>y conferma  Esc mantieni</value>
+  </data>
+  <data name="Workspaces.HintList" xml:space="preserve">
+    <value>Invio passa  1-9 salta  S salva  U aggiorna  R rinomina  D elimina  Esc chiudi</value>
+  </data>
 </root>

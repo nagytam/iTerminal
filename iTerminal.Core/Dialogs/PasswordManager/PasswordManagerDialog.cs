@@ -543,10 +543,10 @@ public class PasswordManagerDialog : Dialog
 
     private string Hints() => _mode switch
     {
-        Mode.Unavailable => "Esc close",
-        Mode.List => _confirmDelete ? "y delete  any other key cancels"
-            : "Enter edit  N new  D delete  V show  Esc close",
-        _ => "Tab field  Space category  Ctrl+R show password  Ctrl+S save  Esc back",
+        Mode.Unavailable => iConsole.Localization.UiText.Get("Passwords.HintUnavailable", "Esc close"),
+        Mode.List => _confirmDelete ? iConsole.Localization.UiText.Get("Hint.ConfirmDelete", "y delete  any other key cancels")
+            : iConsole.Localization.UiText.Get("Passwords.HintList", "Enter edit  N new  D delete  V show  Esc close"),
+        _ => iConsole.Localization.UiText.Get("Passwords.HintEdit", "Tab field  Space category  Ctrl+R show password  Ctrl+S save  Esc back"),
     };
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)

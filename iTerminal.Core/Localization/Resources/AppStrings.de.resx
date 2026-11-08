@@ -5392,4 +5392,55 @@
   <data name="Hint.Part.Toggle" xml:space="preserve">
     <value>Leertaste:umschalten</value>
   </data>
+  <data name="Calendar.HintMoving" xml:space="preserve">
+    <value>Pfeile Tag/Woche  BildAuf/Ab Monat  Strg+BildAuf/Ab Jahr</value>
+  </data>
+  <data name="Calendar.HintActing" xml:space="preserve">
+    <value>Pos1 heute  N neu  E ändern  Alt+Auf/Ab wählen  D entfernen  Esc schließen</value>
+  </data>
+  <data name="Mail.HintSetup" xml:space="preserve">
+    <value>Tab/Auf/Ab Feld  Leer umschalten  Ctrl+V einfügen  Ctrl+S speichern  Esc zurück</value>
+  </data>
+  <data name="Mail.HintList" xml:space="preserve">
+    <value>Enter lesen  R aktualisieren  C verfassen  D löschen  S Einrichten  Esc schließen</value>
+  </data>
+  <data name="Mail.HintView" xml:space="preserve">
+    <value>Auf/Ab scrollen  R antworten  Esc zurück zur Liste</value>
+  </data>
+  <data name="Mail.HintCompose" xml:space="preserve">
+    <value>Tab Feld  Enter Zeilenumbruch  Ctrl+V einfügen  Ctrl+S senden  Ctrl+L Adressbuch  Esc zurück</value>
+  </data>
+  <data name="Mail.HintDirectory" xml:space="preserve">
+    <value>Namen tippen, Enter sucht, erneut Enter fügt die markierte Person hinzu  Esc zurück</value>
+  </data>
+  <data name="Hint.ConfirmDelete" xml:space="preserve">
+    <value>y löschen  jede andere Taste bricht ab</value>
+  </data>
+  <data name="Passwords.HintUnavailable" xml:space="preserve">
+    <value>Esc schließen</value>
+  </data>
+  <data name="Passwords.HintList" xml:space="preserve">
+    <value>Enter bearbeiten  N neu  D löschen  V zeigen  Esc schließen</value>
+  </data>
+  <data name="Passwords.HintEdit" xml:space="preserve">
+    <value>Tab Feld  Leer Kategorie  Ctrl+R Passwort zeigen  Ctrl+S speichern  Esc zurück</value>
+  </data>
+  <data name="Remote.HintList" xml:space="preserve">
+    <value>Enter verbinden  B Dateien durchsuchen  N neu  E bearbeiten  D löschen  Esc schließen</value>
+  </data>
+  <data name="Remote.HintForm" xml:space="preserve">
+    <value>Tab Feld  Leer ändert Typ/Transport  Enter/Ctrl+S speichern  Esc zurück</value>
+  </data>
+  <data name="Workspaces.HintSave" xml:space="preserve">
+    <value>Enter speichern  Esc abbrechen</value>
+  </data>
+  <data name="Workspaces.HintRename" xml:space="preserve">
+    <value>Enter umbenennen  Esc abbrechen</value>
+  </data>
+  <data name="Workspaces.HintConfirm" xml:space="preserve">
+    <value>y bestätigen  Esc behalten</value>
+  </data>
+  <data name="Workspaces.HintList" xml:space="preserve">
+    <value>Enter wechseln  1-9 springen  S speichern  U aktualisieren  R umbenennen  D löschen  Esc schließen</value>
+  </data>
 </root>

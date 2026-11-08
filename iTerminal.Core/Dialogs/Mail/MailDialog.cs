@@ -1009,11 +1009,11 @@ public class MailDialog : Dialog
 
     private string Hints() => _mode switch
     {
-        Mode.Setup => "Tab/Up/Down field  Space toggle  Ctrl+V paste  Ctrl+S save  Esc back",
-        Mode.List => "Enter read  R refresh  C compose  D delete  S setup  Esc close",
-        Mode.View => "Up/Down scroll  R reply  Esc back to the list",
-        Mode.Compose => "Tab field  Enter newline  Ctrl+V paste  Ctrl+S send  Ctrl+L address book  Esc back",
-        _ => "Type a name, Enter search, Enter again adds the highlighted person  Esc back",
+        Mode.Setup => iConsole.Localization.UiText.Get("Mail.HintSetup", "Tab/Up/Down field  Space toggle  Ctrl+V paste  Ctrl+S save  Esc back"),
+        Mode.List => iConsole.Localization.UiText.Get("Mail.HintList", "Enter read  R refresh  C compose  D delete  S setup  Esc close"),
+        Mode.View => iConsole.Localization.UiText.Get("Mail.HintView", "Up/Down scroll  R reply  Esc back to the list"),
+        Mode.Compose => iConsole.Localization.UiText.Get("Mail.HintCompose", "Tab field  Enter newline  Ctrl+V paste  Ctrl+S send  Ctrl+L address book  Esc back"),
+        _ => iConsole.Localization.UiText.Get("Mail.HintDirectory", "Type a name, Enter search, Enter again adds the highlighted person  Esc back"),
     };
 
     private void DrawList(IBuffer buffer, int iw, int rows, ColorScheme colorScheme)
