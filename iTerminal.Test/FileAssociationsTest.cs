@@ -86,7 +86,9 @@ public class FileAssociationsTest
 
         // Back on the list: the new program, named after its command, is the default.
         var screen = await _app.WaitForTextAsync("reader");
-        await _app.WaitUntilAsync(s => s.Contains("default") && s.Contains("System default"), "the list to show the new program as the default");
+        // "default" is also in "System default", which the list showed before the program was added: the wait has to be for the
+        // row of the new program being the one marked, or Enter below could still run the system default.
+        await _app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("reader") && l.Contains("default")), "the list to mark the new program as the default");
         var saved = Associations.GetDefault("readme.txt", FileAssociationKind.Open);
         Assert.IsNotNull(saved, screen.Dump());
         Assert.AreEqual("reader", saved.Name);
