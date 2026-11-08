@@ -210,7 +210,7 @@ public class GoGame : GameBase
 
     public override string Name => "Go";
 
-    public override string Rules => "Surround points and capture stones with no free neighbour points left. P passes; after two passes mark the dead stones and the score is shown.";
+    public override string Rules => GameText.Get("Games.Go.Rules", "Surround points and capture stones with no free neighbour points left. P passes; after two passes mark the dead stones and the score is shown.");
 
     public override bool IsOver => _passes >= 2;
 
@@ -218,7 +218,7 @@ public class GoGame : GameBase
 
     public override bool IsComputerTurn => VsComputer && !IsOver && !_blackToMove;
 
-    public override IEnumerable<(string Key, string Description)> ExtraKeys => [("P", "Pass"), ("S", "Change the board size and start again")];
+    public override IEnumerable<(string Key, string Description)> ExtraKeys => [("P", GameText.Get("Games.Go.Pass", "Pass")), ("S", GameText.Get("Games.Go.Resize", "Change the board size and start again"))];
 
     internal int Size => _size;
 
@@ -257,13 +257,13 @@ public class GoGame : GameBase
             {
                 (int black, int white) = GoRules.AreaScore(_board, _size, _dead);
                 double whiteTotal = white + Komi;
-                string winner = black > whiteTotal ? $"Black wins by {black - whiteTotal:0.#}" : $"White wins by {whiteTotal - black:0.#}";
-                return $"Both passed. Select dead stones. Black {black}, White {white} + {Komi} komi: {winner}.";
+                string winner = black > whiteTotal ? string.Format(GameText.Get("Games.Go.BlackWins", "Black wins by {0:0.#}"), black - whiteTotal) : string.Format(GameText.Get("Games.Go.WhiteWins", "White wins by {0:0.#}"), whiteTotal - black);
+                return string.Format(GameText.Get("Games.Go.Final", "Both passed. Select dead stones. Black {0}, White {1} + {2} komi: {3}."), black, white, Komi, winner);
             }
 
-            string side = _blackToMove ? "Black" : "White";
+            string side = GameText.Side(!_blackToMove);
             string passed = _note.Length > 0 ? $" {_note}" : string.Empty;
-            return $"{side} to move. Captured: Black {_blackCaptures}, White {_whiteCaptures}.{passed}";
+            return string.Format(GameText.Get("Games.Go.Status", "{0} to move. Captured: Black {1}, White {2}.{3}"), side, _blackCaptures, _whiteCaptures, passed);
         }
     }
 
@@ -312,7 +312,7 @@ public class GoGame : GameBase
 
         if (!TryPlay(CursorIndex))
         {
-            _message = _board[CursorIndex] != GoRules.Empty ? "That point is taken." : "That move is not allowed: it is suicide or breaks the ko rule.";
+            _message = _board[CursorIndex] != GoRules.Empty ? GameText.Get("Games.PointTaken", "That point is taken.") : GameText.Get("Games.Go.Illegal", "That move is not allowed: it is suicide or breaks the ko rule.");
         }
     }
 
@@ -377,7 +377,7 @@ public class GoGame : GameBase
 
         Version++;
         Push();
-        _note = $"{(_blackToMove ? "Black" : "White")} passed.";
+        _note = string.Format(GameText.Get("Games.Go.Passed", "{0} passed."), GameText.Side(!_blackToMove));
         _previous = _board;
         _blackToMove = !_blackToMove;
         _passes++;

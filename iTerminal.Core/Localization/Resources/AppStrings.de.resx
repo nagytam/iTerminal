@@ -5878,4 +5878,160 @@
   <data name="Strip.Continue" xml:space="preserve">
     <value>Enter:weiter</value>
   </data>
+  <data name="Games.White" xml:space="preserve">
+    <value>Weiß</value>
+  </data>
+  <data name="Games.Black" xml:space="preserve">
+    <value>Schwarz</value>
+  </data>
+  <data name="Games.ToMove" xml:space="preserve">
+    <value>{0} ist am Zug.</value>
+  </data>
+  <data name="Games.Wins" xml:space="preserve">
+    <value>{0} gewinnt!</value>
+  </data>
+  <data name="Games.Draw" xml:space="preserve">
+    <value>Unentschieden.</value>
+  </data>
+  <data name="Games.SquareTaken" xml:space="preserve">
+    <value>Das Feld ist besetzt.</value>
+  </data>
+  <data name="Games.PointTaken" xml:space="preserve">
+    <value>Der Punkt ist besetzt.</value>
+  </data>
+  <data name="Games.PressArrow" xml:space="preserve">
+    <value>Zum Starten eine Pfeiltaste drücken.</value>
+  </data>
+  <data name="Games.Paused" xml:space="preserve">
+    <value>Pausiert. Enter zum Fortsetzen.</value>
+  </data>
+  <data name="Games.TicTacToe.Rules" xml:space="preserve">
+    <value>Bring drei deiner Zeichen in eine Reihe, Spalte oder Diagonale. X beginnt.</value>
+  </data>
+  <data name="Games.Snake.Rules" xml:space="preserve">
+    <value>Steuere die Schlange zum Futter. Sie wächst mit jedem Bissen. Gegen eine Wand oder sich selbst zu stoßen beendet das Spiel.</value>
+  </data>
+  <data name="Games.Snake.Over" xml:space="preserve">
+    <value>Spiel vorbei mit {0} Punkten. N für ein neues Spiel.</value>
+  </data>
+  <data name="Games.Snake.Score" xml:space="preserve">
+    <value>Punkte {0}.</value>
+  </data>
+  <data name="Games.Tetris.Rules" xml:space="preserve">
+    <value>Staple die fallenden Teile zu vollen Reihen. Eine volle Reihe verschwindet. Das Spiel endet, wenn die Teile oben ankommen.</value>
+  </data>
+  <data name="Games.Tetris.Over" xml:space="preserve">
+    <value>Spiel vorbei mit {0} Punkten und {1} Reihen. N für ein neues Spiel.</value>
+  </data>
+  <data name="Games.Tetris.Status" xml:space="preserve">
+    <value>Punkte {0}  Reihen {1}  Stufe {2}  Nächste {3}</value>
+  </data>
+  <data name="Games.Tetris.ActivateHint" xml:space="preserve">
+    <value>Das Spiel anhalten oder fortsetzen, oder die Teile fallen lassen</value>
+  </data>
+  <data name="Games.Tetris.Turn" xml:space="preserve">
+    <value>Das Teil im Uhrzeigersinn drehen</value>
+  </data>
+  <data name="Games.Tetris.TurnBack" xml:space="preserve">
+    <value>Das Teil gegen den Uhrzeigersinn drehen</value>
+  </data>
+  <data name="Games.Tetris.Drop" xml:space="preserve">
+    <value>Das Teil sofort fallen lassen</value>
+  </data>
+  <data name="Games.Chess.Rules" xml:space="preserve">
+    <value>Wähle eine Figur und dann das Zielfeld. Rochade: den König zwei Felder ziehen. Ein Bauer auf der letzten Reihe wird umgewandelt: Q, R, B oder N drücken.</value>
+  </data>
+  <data name="Games.Chess.PromoteKey" xml:space="preserve">
+    <value>Umwandlungsfigur wählen</value>
+  </data>
+  <data name="Games.Chess.Promote" xml:space="preserve">
+    <value>Bauer umwandeln in: Q Dame, R Turm, B Läufer, N Springer.</value>
+  </data>
+  <data name="Games.Chess.InCheck" xml:space="preserve">
+    <value>{0} steht im Schach.</value>
+  </data>
+  <data name="Games.Chess.LastMove" xml:space="preserve">
+    <value> Letzter Zug {0}.</value>
+  </data>
+  <data name="Games.Chess.Checkmate" xml:space="preserve">
+    <value>Schachmatt – {0} gewinnt!</value>
+  </data>
+  <data name="Games.Chess.Stalemate" xml:space="preserve">
+    <value>Patt – unentschieden.</value>
+  </data>
+  <data name="Games.Chess.FiftyMove" xml:space="preserve">
+    <value>Unentschieden nach der 50-Züge-Regel.</value>
+  </data>
+  <data name="Games.Chess.Material" xml:space="preserve">
+    <value>Unentschieden – keine Seite hat genug Material zum Mattsetzen.</value>
+  </data>
+  <data name="Games.Chess.Threefold" xml:space="preserve">
+    <value>Unentschieden durch dreifache Stellungswiederholung.</value>
+  </data>
+  <data name="Games.Chess.CannotMove" xml:space="preserve">
+    <value>Diese Figur kann nicht ziehen.</value>
+  </data>
+  <data name="Games.Chess.NotLegal" xml:space="preserve">
+    <value>Das ist kein legaler Zug.</value>
+  </data>
+  <data name="Games.Go.Rules" xml:space="preserve">
+    <value>Umschließe Punkte und schlage Steine ohne freie Nachbarpunkte. P passt; nach zwei Pässen markierst du die toten Steine und die Wertung erscheint.</value>
+  </data>
+  <data name="Games.Go.Pass" xml:space="preserve">
+    <value>Passen</value>
+  </data>
+  <data name="Games.Go.Resize" xml:space="preserve">
+    <value>Brettgröße ändern und neu beginnen</value>
+  </data>
+  <data name="Games.Go.BlackWins" xml:space="preserve">
+    <value>Schwarz gewinnt mit {0:0.#}</value>
+  </data>
+  <data name="Games.Go.WhiteWins" xml:space="preserve">
+    <value>Weiß gewinnt mit {0:0.#}</value>
+  </data>
+  <data name="Games.Go.Final" xml:space="preserve">
+    <value>Beide haben gepasst. Wähle tote Steine. Schwarz {0}, Weiß {1} + {2} Komi: {3}.</value>
+  </data>
+  <data name="Games.Go.Status" xml:space="preserve">
+    <value>{0} ist am Zug. Geschlagen: Schwarz {1}, Weiß {2}.{3}</value>
+  </data>
+  <data name="Games.Go.Passed" xml:space="preserve">
+    <value>{0} hat gepasst.</value>
+  </data>
+  <data name="Games.Go.Illegal" xml:space="preserve">
+    <value>Dieser Zug ist nicht erlaubt: Selbstmord oder Verstoß gegen die Ko-Regel.</value>
+  </data>
+  <data name="Games.Nmm.Rules" xml:space="preserve">
+    <value>Setze deine neun Steine, dann schiebe sie entlang der Linien. Drei in einer Reihe sind eine Mühle: nimm einen gegnerischen Stein. Mit nur drei Steinen darfst du springen.</value>
+  </data>
+  <data name="Games.Nmm.DrawQuiet" xml:space="preserve">
+    <value>Unentschieden: hundert Züge ohne Mühle.</value>
+  </data>
+  <data name="Games.Nmm.DrawRepeat" xml:space="preserve">
+    <value>Unentschieden: dieselbe Stellung kam dreimal vor.</value>
+  </data>
+  <data name="Games.Nmm.Mill" xml:space="preserve">
+    <value>{0} hat eine Mühle: nimm einen gegnerischen Stein.</value>
+  </data>
+  <data name="Games.Nmm.InHand" xml:space="preserve">
+    <value>In der Hand: Weiß {0}, Schwarz {1}.</value>
+  </data>
+  <data name="Games.Nmm.Place" xml:space="preserve">
+    <value>{0} setzt einen Stein. {1}</value>
+  </data>
+  <data name="Games.Nmm.MoveStatus" xml:space="preserve">
+    <value>{0} ist am Zug{1}. {2}</value>
+  </data>
+  <data name="Games.Nmm.Flying" xml:space="preserve">
+    <value> (springend)</value>
+  </data>
+  <data name="Games.Nmm.TakeOutside" xml:space="preserve">
+    <value>Nimm einen Stein außerhalb einer Mühle, falls es einen gibt.</value>
+  </data>
+  <data name="Games.Nmm.CannotMoveMan" xml:space="preserve">
+    <value>Dieser Stein kann nicht ziehen.</value>
+  </data>
+  <data name="Games.Nmm.Slide" xml:space="preserve">
+    <value>Ein Stein rutscht auf einen benachbarten freien Punkt.</value>
+  </data>
 </root>

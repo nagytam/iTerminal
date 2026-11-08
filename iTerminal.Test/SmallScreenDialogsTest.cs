@@ -852,4 +852,29 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Tic-Tac-Toe", "X ist am Zug.")]
+    [DataRow("Chess", "Weiß ist am Zug.")]
+    [DataRow("Go", "Schwarz ist am Zug.")]
+    [DataRow("Nine Men", "Weiß setzt einen Stein.")]
+    [DataRow("Snake", "Zum Starten eine Pfeiltaste")]
+    [DataRow("Tetris", "Staple die fallenden Teile")]
+    public async Task TheGamesStatusLinesAndRulesInGerman_AreGerman(string game, string expected)
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync("Shift+F1");
+        await app.TypeAsync(game);
+        await app.PressAsync("Enter");
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German status line or rules");
+    }
 }

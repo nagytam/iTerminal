@@ -5878,4 +5878,160 @@
   <data name="Strip.Continue" xml:space="preserve">
     <value>Invio:continua</value>
   </data>
+  <data name="Games.White" xml:space="preserve">
+    <value>Bianco</value>
+  </data>
+  <data name="Games.Black" xml:space="preserve">
+    <value>Nero</value>
+  </data>
+  <data name="Games.ToMove" xml:space="preserve">
+    <value>Tocca a {0}.</value>
+  </data>
+  <data name="Games.Wins" xml:space="preserve">
+    <value>Vince {0}!</value>
+  </data>
+  <data name="Games.Draw" xml:space="preserve">
+    <value>Pareggio.</value>
+  </data>
+  <data name="Games.SquareTaken" xml:space="preserve">
+    <value>Quella casella è occupata.</value>
+  </data>
+  <data name="Games.PointTaken" xml:space="preserve">
+    <value>Quel punto è occupato.</value>
+  </data>
+  <data name="Games.PressArrow" xml:space="preserve">
+    <value>Premi un tasto freccia per iniziare.</value>
+  </data>
+  <data name="Games.Paused" xml:space="preserve">
+    <value>In pausa. Invio per continuare.</value>
+  </data>
+  <data name="Games.TicTacToe.Rules" xml:space="preserve">
+    <value>Metti tre tuoi segni in riga, colonna o diagonale. Inizia X.</value>
+  </data>
+  <data name="Games.Snake.Rules" xml:space="preserve">
+    <value>Guida il serpente verso il cibo. Cresce a ogni boccone. Sbattere contro un muro o contro se stesso termina la partita.</value>
+  </data>
+  <data name="Games.Snake.Over" xml:space="preserve">
+    <value>Partita finita con {0} punti. N per rigiocare.</value>
+  </data>
+  <data name="Games.Snake.Score" xml:space="preserve">
+    <value>Punti {0}.</value>
+  </data>
+  <data name="Games.Tetris.Rules" xml:space="preserve">
+    <value>Impila i pezzi che cadono in righe complete. Una riga completa scompare. La partita finisce quando i pezzi arrivano in cima.</value>
+  </data>
+  <data name="Games.Tetris.Over" xml:space="preserve">
+    <value>Partita finita con {0} punti e {1} righe. N per rigiocare.</value>
+  </data>
+  <data name="Games.Tetris.Status" xml:space="preserve">
+    <value>Punti {0}  Righe {1}  Livello {2}  Prossimo {3}</value>
+  </data>
+  <data name="Games.Tetris.ActivateHint" xml:space="preserve">
+    <value>Mettere in pausa o riprendere il gioco, o far cadere i pezzi</value>
+  </data>
+  <data name="Games.Tetris.Turn" xml:space="preserve">
+    <value>Ruotare il pezzo in senso orario</value>
+  </data>
+  <data name="Games.Tetris.TurnBack" xml:space="preserve">
+    <value>Ruotare il pezzo in senso antiorario</value>
+  </data>
+  <data name="Games.Tetris.Drop" xml:space="preserve">
+    <value>Far cadere subito il pezzo</value>
+  </data>
+  <data name="Games.Chess.Rules" xml:space="preserve">
+    <value>Seleziona un pezzo e poi la destinazione. Arrocco: muovi il re di due caselle. Un pedone che arriva in fondo viene promosso: premi Q, R, B o N.</value>
+  </data>
+  <data name="Games.Chess.PromoteKey" xml:space="preserve">
+    <value>Scegliere il pezzo della promozione</value>
+  </data>
+  <data name="Games.Chess.Promote" xml:space="preserve">
+    <value>Promuovi il pedone a: Q donna, R torre, B alfiere, N cavallo.</value>
+  </data>
+  <data name="Games.Chess.InCheck" xml:space="preserve">
+    <value>{0} è sotto scacco.</value>
+  </data>
+  <data name="Games.Chess.LastMove" xml:space="preserve">
+    <value> Ultima mossa {0}.</value>
+  </data>
+  <data name="Games.Chess.Checkmate" xml:space="preserve">
+    <value>Scacco matto: vince {0}!</value>
+  </data>
+  <data name="Games.Chess.Stalemate" xml:space="preserve">
+    <value>Stallo: pareggio.</value>
+  </data>
+  <data name="Games.Chess.FiftyMove" xml:space="preserve">
+    <value>Patta per la regola delle cinquanta mosse.</value>
+  </data>
+  <data name="Games.Chess.Material" xml:space="preserve">
+    <value>Patta: nessuno dei due ha materiale per dare matto.</value>
+  </data>
+  <data name="Games.Chess.Threefold" xml:space="preserve">
+    <value>Patta per triplice ripetizione.</value>
+  </data>
+  <data name="Games.Chess.CannotMove" xml:space="preserve">
+    <value>Quel pezzo non può muoversi.</value>
+  </data>
+  <data name="Games.Chess.NotLegal" xml:space="preserve">
+    <value>Non è una mossa legale.</value>
+  </data>
+  <data name="Games.Go.Rules" xml:space="preserve">
+    <value>Circonda punti e cattura le pietre senza punti vicini liberi. P passa; dopo due passaggi segna le pietre morte e appare il punteggio.</value>
+  </data>
+  <data name="Games.Go.Pass" xml:space="preserve">
+    <value>Passa</value>
+  </data>
+  <data name="Games.Go.Resize" xml:space="preserve">
+    <value>Cambiare la dimensione della scacchiera e ricominciare</value>
+  </data>
+  <data name="Games.Go.BlackWins" xml:space="preserve">
+    <value>Vince il nero di {0:0.#}</value>
+  </data>
+  <data name="Games.Go.WhiteWins" xml:space="preserve">
+    <value>Vince il bianco di {0:0.#}</value>
+  </data>
+  <data name="Games.Go.Final" xml:space="preserve">
+    <value>Entrambi hanno passato. Seleziona le pietre morte. Nero {0}, Bianco {1} + {2} komi: {3}.</value>
+  </data>
+  <data name="Games.Go.Status" xml:space="preserve">
+    <value>Tocca a {0}. Catturate: Nero {1}, Bianco {2}.{3}</value>
+  </data>
+  <data name="Games.Go.Passed" xml:space="preserve">
+    <value>{0} ha passato.</value>
+  </data>
+  <data name="Games.Go.Illegal" xml:space="preserve">
+    <value>Questa mossa non è consentita: è un suicidio o viola la regola del ko.</value>
+  </data>
+  <data name="Games.Nmm.Rules" xml:space="preserve">
+    <value>Posiziona le tue nove pedine, poi fale scorrere lungo le linee. Tre in fila sono un mulino: prendi una pedina avversaria. Con tre pedine puoi volare.</value>
+  </data>
+  <data name="Games.Nmm.DrawQuiet" xml:space="preserve">
+    <value>Pareggio: sono passate cento mosse senza mulino.</value>
+  </data>
+  <data name="Games.Nmm.DrawRepeat" xml:space="preserve">
+    <value>Pareggio: la stessa posizione si è ripetuta tre volte.</value>
+  </data>
+  <data name="Games.Nmm.Mill" xml:space="preserve">
+    <value>{0} ha fatto un mulino: prendi una pedina avversaria.</value>
+  </data>
+  <data name="Games.Nmm.InHand" xml:space="preserve">
+    <value>In mano: Bianco {0}, Nero {1}.</value>
+  </data>
+  <data name="Games.Nmm.Place" xml:space="preserve">
+    <value>{0} piazza una pedina. {1}</value>
+  </data>
+  <data name="Games.Nmm.MoveStatus" xml:space="preserve">
+    <value>Tocca a {0}{1}. {2}</value>
+  </data>
+  <data name="Games.Nmm.Flying" xml:space="preserve">
+    <value> (volando)</value>
+  </data>
+  <data name="Games.Nmm.TakeOutside" xml:space="preserve">
+    <value>Prendi una pedina fuori da un mulino, se c&apos;è.</value>
+  </data>
+  <data name="Games.Nmm.CannotMoveMan" xml:space="preserve">
+    <value>Quella pedina non può muoversi.</value>
+  </data>
+  <data name="Games.Nmm.Slide" xml:space="preserve">
+    <value>Una pedina scivola su un punto vicino libero.</value>
+  </data>
 </root>

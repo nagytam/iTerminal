@@ -6019,4 +6019,160 @@
   <data name="Strip.Continue" xml:space="preserve">
     <value>Enter:continue</value>
   </data>
+  <data name="Games.White" xml:space="preserve">
+    <value>White</value>
+  </data>
+  <data name="Games.Black" xml:space="preserve">
+    <value>Black</value>
+  </data>
+  <data name="Games.ToMove" xml:space="preserve">
+    <value>{0} to move.</value>
+  </data>
+  <data name="Games.Wins" xml:space="preserve">
+    <value>{0} wins!</value>
+  </data>
+  <data name="Games.Draw" xml:space="preserve">
+    <value>A draw.</value>
+  </data>
+  <data name="Games.SquareTaken" xml:space="preserve">
+    <value>That square is taken.</value>
+  </data>
+  <data name="Games.PointTaken" xml:space="preserve">
+    <value>That point is taken.</value>
+  </data>
+  <data name="Games.PressArrow" xml:space="preserve">
+    <value>Press an arrow key to start.</value>
+  </data>
+  <data name="Games.Paused" xml:space="preserve">
+    <value>Paused. Enter to go on.</value>
+  </data>
+  <data name="Games.TicTacToe.Rules" xml:space="preserve">
+    <value>Get three of your marks in a row, column or diagonal. X moves first.</value>
+  </data>
+  <data name="Games.Snake.Rules" xml:space="preserve">
+    <value>Steer the snake to the food. It grows with every bite. Hitting a wall or yourself ends the game.</value>
+  </data>
+  <data name="Games.Snake.Over" xml:space="preserve">
+    <value>Game over with {0} points. N to play again.</value>
+  </data>
+  <data name="Games.Snake.Score" xml:space="preserve">
+    <value>Score {0}.</value>
+  </data>
+  <data name="Games.Tetris.Rules" xml:space="preserve">
+    <value>Stack the falling pieces into full rows. A full row disappears. The game ends when the pieces reach the top.</value>
+  </data>
+  <data name="Games.Tetris.Over" xml:space="preserve">
+    <value>Game over with {0} points and {1} rows. N to play again.</value>
+  </data>
+  <data name="Games.Tetris.Status" xml:space="preserve">
+    <value>Score {0}  Rows {1}  Level {2}  Next {3}</value>
+  </data>
+  <data name="Games.Tetris.ActivateHint" xml:space="preserve">
+    <value>Pause or resume the game, or start the pieces falling</value>
+  </data>
+  <data name="Games.Tetris.Turn" xml:space="preserve">
+    <value>Turn the piece clockwise</value>
+  </data>
+  <data name="Games.Tetris.TurnBack" xml:space="preserve">
+    <value>Turn the piece counter-clockwise</value>
+  </data>
+  <data name="Games.Tetris.Drop" xml:space="preserve">
+    <value>Drop the piece at once</value>
+  </data>
+  <data name="Games.Chess.Rules" xml:space="preserve">
+    <value>Select a piece and then where it goes. Castle by moving the king two squares. A pawn reaching the far rank is promoted: press Q, R, B or N.</value>
+  </data>
+  <data name="Games.Chess.PromoteKey" xml:space="preserve">
+    <value>Choose the promotion piece</value>
+  </data>
+  <data name="Games.Chess.Promote" xml:space="preserve">
+    <value>Promote the pawn to: Q queen, R rook, B bishop, N knight.</value>
+  </data>
+  <data name="Games.Chess.InCheck" xml:space="preserve">
+    <value>{0} is in check.</value>
+  </data>
+  <data name="Games.Chess.LastMove" xml:space="preserve">
+    <value> Last move {0}.</value>
+  </data>
+  <data name="Games.Chess.Checkmate" xml:space="preserve">
+    <value>Checkmate — {0} wins!</value>
+  </data>
+  <data name="Games.Chess.Stalemate" xml:space="preserve">
+    <value>Stalemate — a draw.</value>
+  </data>
+  <data name="Games.Chess.FiftyMove" xml:space="preserve">
+    <value>A draw by the fifty-move rule.</value>
+  </data>
+  <data name="Games.Chess.Material" xml:space="preserve">
+    <value>A draw — neither side has the material to mate.</value>
+  </data>
+  <data name="Games.Chess.Threefold" xml:space="preserve">
+    <value>A draw by threefold repetition.</value>
+  </data>
+  <data name="Games.Chess.CannotMove" xml:space="preserve">
+    <value>That piece cannot move.</value>
+  </data>
+  <data name="Games.Chess.NotLegal" xml:space="preserve">
+    <value>That is not a legal move.</value>
+  </data>
+  <data name="Games.Go.Rules" xml:space="preserve">
+    <value>Surround points and capture stones with no free neighbour points left. P passes; after two passes mark the dead stones and the score is shown.</value>
+  </data>
+  <data name="Games.Go.Pass" xml:space="preserve">
+    <value>Pass</value>
+  </data>
+  <data name="Games.Go.Resize" xml:space="preserve">
+    <value>Change the board size and start again</value>
+  </data>
+  <data name="Games.Go.BlackWins" xml:space="preserve">
+    <value>Black wins by {0:0.#}</value>
+  </data>
+  <data name="Games.Go.WhiteWins" xml:space="preserve">
+    <value>White wins by {0:0.#}</value>
+  </data>
+  <data name="Games.Go.Final" xml:space="preserve">
+    <value>Both passed. Select dead stones. Black {0}, White {1} + {2} komi: {3}.</value>
+  </data>
+  <data name="Games.Go.Status" xml:space="preserve">
+    <value>{0} to move. Captured: Black {1}, White {2}.{3}</value>
+  </data>
+  <data name="Games.Go.Passed" xml:space="preserve">
+    <value>{0} passed.</value>
+  </data>
+  <data name="Games.Go.Illegal" xml:space="preserve">
+    <value>That move is not allowed: it is suicide or breaks the ko rule.</value>
+  </data>
+  <data name="Games.Nmm.Rules" xml:space="preserve">
+    <value>Place your nine men, then slide them along the lines. Three in a row is a mill: take an opposing man. With three men left you may fly.</value>
+  </data>
+  <data name="Games.Nmm.DrawQuiet" xml:space="preserve">
+    <value>A draw: a hundred moves went by without a mill.</value>
+  </data>
+  <data name="Games.Nmm.DrawRepeat" xml:space="preserve">
+    <value>A draw: the same position came up three times.</value>
+  </data>
+  <data name="Games.Nmm.Mill" xml:space="preserve">
+    <value>{0} made a mill: take an opposing man.</value>
+  </data>
+  <data name="Games.Nmm.InHand" xml:space="preserve">
+    <value>In hand: White {0}, Black {1}.</value>
+  </data>
+  <data name="Games.Nmm.Place" xml:space="preserve">
+    <value>{0} to place a man. {1}</value>
+  </data>
+  <data name="Games.Nmm.MoveStatus" xml:space="preserve">
+    <value>{0} to move{1}. {2}</value>
+  </data>
+  <data name="Games.Nmm.Flying" xml:space="preserve">
+    <value> (flying)</value>
+  </data>
+  <data name="Games.Nmm.TakeOutside" xml:space="preserve">
+    <value>Take a man outside a mill if there is one.</value>
+  </data>
+  <data name="Games.Nmm.CannotMoveMan" xml:space="preserve">
+    <value>That man cannot move.</value>
+  </data>
+  <data name="Games.Nmm.Slide" xml:space="preserve">
+    <value>A man slides to a neighbouring empty point.</value>
+  </data>
 </root>
