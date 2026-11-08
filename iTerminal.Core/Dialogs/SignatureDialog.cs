@@ -277,7 +277,7 @@ public class SignatureDialog : Dialog
 
         if (Capabilities is { } capabilities && !capabilities.Gpg)
         {
-            lines.Add(new("gpg is not installed: .asc signatures can be neither made nor checked.", colors.DisabledForeground));
+            lines.Add(new(iConsole.Localization.UiText.Get("Sign.NoGpg", "gpg is not installed: .asc signatures can be neither made nor checked."), colors.DisabledForeground));
         }
 
         if (Capabilities?.Authenticode == true && Certificates.Count > 0)

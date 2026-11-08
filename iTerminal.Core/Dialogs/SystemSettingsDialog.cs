@@ -186,7 +186,7 @@ public class SystemSettingsDialog : Dialog
         switch (_section)
         {
             case SettingsSection.Computer:
-                lines.Add(new("The name this machine goes by on the network.", scheme.DisabledForeground));
+                lines.Add(new(iConsole.Localization.UiText.Get("SysSettings.ComputerNameNote", "The name this machine goes by on the network."), scheme.DisabledForeground));
                 BuildComputer(body, scheme);
                 break;
             case SettingsSection.Environment:
@@ -267,7 +267,7 @@ public class SystemSettingsDialog : Dialog
         AddWrapped(body, iConsole.Localization.UiText.Get("SysSettings.RestartNote", "A new computer name or workgroup takes effect after a restart."), scheme.DisabledForeground);
         if (identity.IsDomainMember)
         {
-            AddWrapped(body, "Leaving a domain needs a directory account: use Windows' System Properties.", scheme.DisabledForeground);
+            AddWrapped(body, iConsole.Localization.UiText.Get("SysSettings.DomainNote", "Leaving a domain needs a directory account: use Windows' System Properties."), scheme.DisabledForeground);
         }
     }
 
@@ -671,7 +671,7 @@ public class SystemSettingsDialog : Dialog
             return;
         }
 
-        ShowInput("New variable name", string.Empty, name =>
+        ShowInput(iConsole.Localization.UiText.Get("SysSettings.NewVariable", "New variable name"), string.Empty, name =>
         {
             name = name.Trim();
             var windows = OperatingSystem.IsWindows();

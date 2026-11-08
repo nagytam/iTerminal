@@ -201,7 +201,7 @@ public class IPhoneBrowserDialog : Dialog
         }
 
         var scanning = _scanning ? "  (scanning…)" : string.Empty;
-        WriteLine(buffer, ix, iy, iw, $"Connected devices{scanning}", Color.Cyan, colorScheme.Background);
+        WriteLine(buffer, ix, iy, iw, iConsole.Localization.UiText.Get("IPhone.Connected", "Connected devices") + scanning, Color.Cyan, colorScheme.Background);
 
         var fg = _statusIsError ? colorScheme.Error : colorScheme.Foreground;
         if (_status.Length == 0)

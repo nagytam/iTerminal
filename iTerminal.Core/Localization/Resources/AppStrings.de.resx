@@ -6748,4 +6748,76 @@
   <data name="OpenWith.TitleEdit" xml:space="preserve">
     <value>{0} bearbeiten mit</value>
   </data>
+  <data name="Disk.NothingToMeasure" xml:space="preserve">
+    <value>Nichts zu messen.</value>
+  </data>
+  <data name="Disk.EscStops" xml:space="preserve">
+    <value>Esc stoppt und schließt.</value>
+  </data>
+  <data name="Disk.Cancelled" xml:space="preserve">
+    <value>Abgebrochen.</value>
+  </data>
+  <data name="Disk.CouldNotMeasure" xml:space="preserve">
+    <value>{0} konnte nicht gemessen werden.</value>
+  </data>
+  <data name="Labels.SaveFailed" xml:space="preserve">
+    <value>Die Markierungen konnten nicht gespeichert werden.</value>
+  </data>
+  <data name="Labels.SaveFailedWhy" xml:space="preserve">
+    <value>Die Markierungen konnten nicht gespeichert werden: {0}</value>
+  </data>
+  <data name="Tags.SaveFailed" xml:space="preserve">
+    <value>Die Tags konnten nicht gespeichert werden.</value>
+  </data>
+  <data name="Tags.SaveFailedWhy" xml:space="preserve">
+    <value>Die Tags konnten nicht gespeichert werden: {0}</value>
+  </data>
+  <data name="TextMeta.SaveFailed" xml:space="preserve">
+    <value>Der Text konnte nicht gespeichert werden.</value>
+  </data>
+  <data name="TextMeta.SaveFailedWhy" xml:space="preserve">
+    <value>Der Text konnte nicht gespeichert werden: {0}</value>
+  </data>
+  <data name="IPhone.Connected" xml:space="preserve">
+    <value>Verbundene Geräte</value>
+  </data>
+  <data name="Network.Heading" xml:space="preserve">
+    <value>Netzwerkbrowser</value>
+  </data>
+  <data name="OpenWith.Editor" xml:space="preserve">
+    <value>iTerminal-Editor</value>
+  </data>
+  <data name="OpenWith.EditorDesc" xml:space="preserve">
+    <value>Der eingebaute Texteditor.</value>
+  </data>
+  <data name="Sign.NoGpg" xml:space="preserve">
+    <value>gpg ist nicht installiert: .asc-Signaturen können weder erstellt noch geprüft werden.</value>
+  </data>
+  <data name="Strip.ConfirmOne" xml:space="preserve">
+    <value>Das überschreibt {0} Datei endgültig. Enter erneut drücken zum Bereinigen,</value>
+  </data>
+  <data name="Strip.ConfirmMany" xml:space="preserve">
+    <value>Das überschreibt {0} Dateien endgültig. Enter erneut drücken zum Bereinigen,</value>
+  </data>
+  <data name="Strip.ConfirmBack" xml:space="preserve">
+    <value>jede andere Taste geht zurück.</value>
+  </data>
+  <data name="SysSettings.ComputerNameNote" xml:space="preserve">
+    <value>Der Name, unter dem dieser Rechner im Netzwerk auftritt.</value>
+  </data>
+  <data name="SysSettings.DomainNote" xml:space="preserve">
+    <value>Eine Domäne zu verlassen erfordert ein Verzeichniskonto: die Windows-Systemeigenschaften verwenden.</value>
+  </data>
+  <data name="SysSettings.NewVariable" xml:space="preserve">
+    <value>Name der neuen Variablen</value>
+  </data>
+  <data name="Remote.SessionFailed" xml:space="preserve">
+    <value>Die Sitzung wurde nicht gestartet.</value>
+  </data>
+  <data name="Stocks.FindPrompt" xml:space="preserve">
+    <value>Aktie nach Symbol oder Firmenname suchen</value>
+  </data>
+  <data name="Units.Heading" xml:space="preserve">
+    <value>Einheitenumrechner — {0}</value>
+  </data>
 </root>

@@ -6748,4 +6748,76 @@
   <data name="OpenWith.TitleEdit" xml:space="preserve">
     <value>Modifier {0} avec</value>
   </data>
+  <data name="Disk.NothingToMeasure" xml:space="preserve">
+    <value>Rien à mesurer.</value>
+  </data>
+  <data name="Disk.EscStops" xml:space="preserve">
+    <value>Échap arrête et ferme.</value>
+  </data>
+  <data name="Disk.Cancelled" xml:space="preserve">
+    <value>Annulé.</value>
+  </data>
+  <data name="Disk.CouldNotMeasure" xml:space="preserve">
+    <value>Impossible de mesurer {0}.</value>
+  </data>
+  <data name="Labels.SaveFailed" xml:space="preserve">
+    <value>Impossible d&apos;enregistrer les étiquettes.</value>
+  </data>
+  <data name="Labels.SaveFailedWhy" xml:space="preserve">
+    <value>Impossible d&apos;enregistrer les étiquettes : {0}</value>
+  </data>
+  <data name="Tags.SaveFailed" xml:space="preserve">
+    <value>Impossible d&apos;enregistrer les étiquettes.</value>
+  </data>
+  <data name="Tags.SaveFailedWhy" xml:space="preserve">
+    <value>Impossible d&apos;enregistrer les étiquettes : {0}</value>
+  </data>
+  <data name="TextMeta.SaveFailed" xml:space="preserve">
+    <value>Impossible d&apos;enregistrer le texte.</value>
+  </data>
+  <data name="TextMeta.SaveFailedWhy" xml:space="preserve">
+    <value>Impossible d&apos;enregistrer le texte : {0}</value>
+  </data>
+  <data name="IPhone.Connected" xml:space="preserve">
+    <value>Appareils connectés</value>
+  </data>
+  <data name="Network.Heading" xml:space="preserve">
+    <value>Navigateur réseau</value>
+  </data>
+  <data name="OpenWith.Editor" xml:space="preserve">
+    <value>Éditeur iTerminal</value>
+  </data>
+  <data name="OpenWith.EditorDesc" xml:space="preserve">
+    <value>L&apos;éditeur de texte intégré.</value>
+  </data>
+  <data name="Sign.NoGpg" xml:space="preserve">
+    <value>gpg n&apos;est pas installé : les signatures .asc ne peuvent être ni créées ni vérifiées.</value>
+  </data>
+  <data name="Strip.ConfirmOne" xml:space="preserve">
+    <value>Cela écrase {0} fichier définitivement. Appuyez encore sur Entrée pour nettoyer,</value>
+  </data>
+  <data name="Strip.ConfirmMany" xml:space="preserve">
+    <value>Cela écrase {0} fichiers définitivement. Appuyez encore sur Entrée pour nettoyer,</value>
+  </data>
+  <data name="Strip.ConfirmBack" xml:space="preserve">
+    <value>toute autre touche revient en arrière.</value>
+  </data>
+  <data name="SysSettings.ComputerNameNote" xml:space="preserve">
+    <value>Le nom sous lequel cette machine apparaît sur le réseau.</value>
+  </data>
+  <data name="SysSettings.DomainNote" xml:space="preserve">
+    <value>Quitter un domaine demande un compte d&apos;annuaire : utilisez les Propriétés système de Windows.</value>
+  </data>
+  <data name="SysSettings.NewVariable" xml:space="preserve">
+    <value>Nom de la nouvelle variable</value>
+  </data>
+  <data name="Remote.SessionFailed" xml:space="preserve">
+    <value>La session n&apos;a pas démarré.</value>
+  </data>
+  <data name="Stocks.FindPrompt" xml:space="preserve">
+    <value>Rechercher une action par symbole ou nom de société</value>
+  </data>
+  <data name="Units.Heading" xml:space="preserve">
+    <value>Convertisseur d&apos;unités — {0}</value>
+  </data>
 </root>

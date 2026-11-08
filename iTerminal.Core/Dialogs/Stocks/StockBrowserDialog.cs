@@ -285,7 +285,7 @@ public class StockBrowserDialog : SplitPaneDialog
         _searchedQuery = string.Empty;
         _hitItems.ReplaceAll([]);
         _hitListBox.UpdateModel();
-        ShowInput("Find stock by symbol or company name");
+        ShowInput(iConsole.Localization.UiText.Get("Stocks.FindPrompt", "Find stock by symbol or company name"));
         ApplyVisibility();
         SetMessage(string.Empty);
     }

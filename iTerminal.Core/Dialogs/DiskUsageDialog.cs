@@ -220,7 +220,7 @@ public class DiskUsageDialog : Dialog
         UpdateChart([], false);
         if (_scan is null)
         {
-            lines.Add(new("Nothing to measure.", Color.Yellow));
+            lines.Add(new(iConsole.Localization.UiText.Get("Disk.NothingToMeasure", "Nothing to measure."), Color.Yellow));
             _lines.Lines = lines;
             StateHasChanged();
             return;
@@ -232,7 +232,7 @@ public class DiskUsageDialog : Dialog
             lines.Add(new($"{_scan.FilesScanned:N0} files, {_scan.BytesScanned.ToFileSize()} so far", Color.Yellow));
             lines.Add(new(_scan.CurrentFolder, Color.Cyan));
             lines.Add(default);
-            lines.Add(new("Esc stops and closes.", colorScheme.Foreground));
+            lines.Add(new(iConsole.Localization.UiText.Get("Disk.EscStops", "Esc stops and closes."), colorScheme.Foreground));
             _lines.Lines = lines;
             StateHasChanged();
             return;
@@ -240,7 +240,7 @@ public class DiskUsageDialog : Dialog
 
         if (_current is null)
         {
-            lines.Add(new(_scan.WasCancelled ? "Cancelled." : $"Could not measure {_scan.Path}.", Color.Yellow));
+            lines.Add(new(_scan.WasCancelled ? iConsole.Localization.UiText.Get("Disk.Cancelled", "Cancelled.") : string.Format(iConsole.Localization.UiText.Get("Disk.CouldNotMeasure", "Could not measure {0}."), _scan.Path), Color.Yellow));
             _lines.Lines = lines;
             StateHasChanged();
             return;

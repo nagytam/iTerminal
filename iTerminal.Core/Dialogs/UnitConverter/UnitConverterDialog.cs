@@ -277,7 +277,7 @@ public class UnitConverterDialog : SplitPaneDialog
             return;
         }
 
-        WriteLine(buffer, ix, iy, iw, $"Unit Converter — {UnitCatalog.GetCategoryName(_engine.Category)}", Color.Cyan, colorScheme.Background);
+        WriteLine(buffer, ix, iy, iw, string.Format(iConsole.Localization.UiText.Get("Units.Heading", "Unit Converter — {0}"), UnitCatalog.GetCategoryName(_engine.Category)), Color.Cyan, colorScheme.Background);
 
         var resultLine = ResultLine();
         var resultColor = string.IsNullOrEmpty(_engine.ResultText) ? colorScheme.Error : colorScheme.SelectedFocusedForeground;
