@@ -7729,4 +7729,103 @@
   <data name="Music.StateStopped" xml:space="preserve">
     <value>leállítva</value>
   </data>
+  <data name="Music.Cat.Albums" xml:space="preserve">
+    <value>{0} album</value>
+  </data>
+  <data name="Music.Cat.Artist" xml:space="preserve">
+    <value>előadó</value>
+  </data>
+  <data name="Music.Cat.Album" xml:space="preserve">
+    <value>album</value>
+  </data>
+  <data name="Music.Cat.NothingToAdd" xml:space="preserve">
+    <value>Ebből a sorból nincs mit hozzáadni</value>
+  </data>
+  <data name="Music.Cat.Quoted" xml:space="preserve">
+    <value>„{0}”</value>
+  </data>
+  <data name="Music.Cat.AlreadyIn" xml:space="preserve">
+    <value>{0} már a lejátszási listán van</value>
+  </data>
+  <data name="Music.Cat.RowOne" xml:space="preserve">
+    <value>1 megjelölt sor</value>
+  </data>
+  <data name="Music.Cat.RowMany" xml:space="preserve">
+    <value>{0} megjelölt sor</value>
+  </data>
+  <data name="Music.Cat.AllIn" xml:space="preserve">
+    <value>A(z) {0} minden száma már a lejátszási listán van</value>
+  </data>
+  <data name="Music.Cat.AlreadyIndexing" xml:space="preserve">
+    <value>Az indexelés már folyamatban van</value>
+  </data>
+  <data name="Music.Cat.Indexing" xml:space="preserve">
+    <value>{0} indexelése…</value>
+  </data>
+  <data name="Music.Cat.IndexedOne" xml:space="preserve">
+    <value>1 szám indexelve</value>
+  </data>
+  <data name="Music.Cat.IndexedMany" xml:space="preserve">
+    <value>{0} szám indexelve</value>
+  </data>
+  <data name="Music.Cat.IndexFailed" xml:space="preserve">
+    <value>Az indexelés nem sikerült: {0}</value>
+  </data>
+  <data name="Music.Cat.HeaderSearch" xml:space="preserve">
+    <value>Katalóguskeresés: „{0}” ({1} találat)</value>
+  </data>
+  <data name="Music.Cat.Header" xml:space="preserve">
+    <value>Katalógus {0}</value>
+  </data>
+  <data name="Music.Cat.TrackCount" xml:space="preserve">
+    <value>{0} szám</value>
+  </data>
+  <data name="Music.Cat.Hits" xml:space="preserve">
+    <value>{0} találat</value>
+  </data>
+  <data name="Music.Cat.EscSearch" xml:space="preserve">
+    <value>Esc törli a keresést</value>
+  </data>
+  <data name="Music.Cat.Entries" xml:space="preserve">
+    <value>{0} bejegyzés</value>
+  </data>
+  <data name="Music.Cat.AltSearch" xml:space="preserve">
+    <value>Alt+&lt;szöveg&gt; keres a könyvtárban</value>
+  </data>
+  <data name="Music.Cat.Marked" xml:space="preserve">
+    <value>{0} megjelölve</value>
+  </data>
+  <data name="Music.Cat.F5Adds" xml:space="preserve">
+    <value>F5 hozzáadja őket a lejátszási listához</value>
+  </data>
+  <data name="Music.Cat.InsMarks" xml:space="preserve">
+    <value>Ins megjelöl egy sort</value>
+  </data>
+  <data name="Music.Cat.CtrlR" xml:space="preserve">
+    <value>Ctrl+R újraindexel</value>
+  </data>
+  <data name="Music.Cat.IndexedAt" xml:space="preserve">
+    <value>indexelve: {0}</value>
+  </data>
+  <data name="Music.Cat.NeverIndexed" xml:space="preserve">
+    <value>még nem indexelt</value>
+  </data>
+  <data name="Music.Cat.AddedOne" xml:space="preserve">
+    <value>1 szám hozzáadva innen: {0}</value>
+  </data>
+  <data name="Music.Cat.AddedMany" xml:space="preserve">
+    <value>{0} szám hozzáadva innen: {1}</value>
+  </data>
+  <data name="Music.Prog.DiscoveringShort" xml:space="preserve">
+    <value>keresés… {0} hangfájl található</value>
+  </data>
+  <data name="Music.Prog.IndexingShort" xml:space="preserve">
+    <value>{0} hangfájl található, indexelés {1}/{0}{2}</value>
+  </data>
+  <data name="Music.Prog.Discovering" xml:space="preserve">
+    <value>Keresés… {0} hangfájl</value>
+  </data>
+  <data name="Music.Prog.Indexing" xml:space="preserve">
+    <value>Indexelés {0}/{1}{2}</value>
+  </data>
 </root>

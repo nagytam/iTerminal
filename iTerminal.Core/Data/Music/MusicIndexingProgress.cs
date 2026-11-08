@@ -1,3 +1,4 @@
+using iConsole.Localization;
 namespace iTerminal.Core.Data.Music;
 
 /// <summary>
@@ -63,9 +64,9 @@ public sealed record MusicIndexingProgress(
     /// </summary>
     public string Describe() => Phase switch
     {
-        MusicIndexingPhase.Discovering => $"discovering… {DiscoveredFiles} audio files found",
+        MusicIndexingPhase.Discovering => string.Format(UiText.Get("Music.Prog.DiscoveringShort", "discovering… {0} audio files found"), DiscoveredFiles),
         MusicIndexingPhase.Indexing =>
-            $"{DiscoveredFiles} audio files discovered, indexing {IndexedFiles}/{DiscoveredFiles}{PercentSuffix}",
+            string.Format(UiText.Get("Music.Prog.IndexingShort", "{0} audio files discovered, indexing {1}/{0}{2}"), DiscoveredFiles, IndexedFiles, PercentSuffix),
         _ => string.Empty,
     };
 
@@ -75,8 +76,8 @@ public sealed record MusicIndexingProgress(
     /// </summary>
     public string DescribeShort() => Phase switch
     {
-        MusicIndexingPhase.Discovering => $"Discovering… {DiscoveredFiles} audio files",
-        MusicIndexingPhase.Indexing => $"Indexing {IndexedFiles}/{DiscoveredFiles}{PercentSuffix}",
+        MusicIndexingPhase.Discovering => string.Format(UiText.Get("Music.Prog.Discovering", "Discovering… {0} audio files"), DiscoveredFiles),
+        MusicIndexingPhase.Indexing => string.Format(UiText.Get("Music.Prog.Indexing", "Indexing {0}/{1}{2}"), IndexedFiles, DiscoveredFiles, PercentSuffix),
         _ => string.Empty,
     };
 
