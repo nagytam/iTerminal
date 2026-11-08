@@ -712,9 +712,9 @@ public class RemoteConnectionManagerDialog : Dialog
 
     private string Hints() => _mode switch
     {
-        Mode.List => _confirmDelete ? "y delete  any other key cancels"
-            : "Enter connect  B browse files  N new  E edit  D delete  Esc close",
-        _ => "Tab field  Space changes type/transport  Enter/Ctrl+S save  Esc back",
+        Mode.List => _confirmDelete ? iConsole.Localization.UiText.Get("Hint.ConfirmDelete", "y delete  any other key cancels")
+            : iConsole.Localization.UiText.Get("Remote.HintList", "Enter connect  B browse files  N new  E edit  D delete  Esc close"),
+        _ => iConsole.Localization.UiText.Get("Remote.HintForm", "Tab field  Space changes type/transport  Enter/Ctrl+S save  Esc back"),
     };
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)

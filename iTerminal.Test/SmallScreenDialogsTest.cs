@@ -656,6 +656,11 @@ public class SmallScreenDialogsTest
     [DataRow("Ctrl+Shift+K", "Esc schließen")]
     [DataRow("F7", "Esc:schließen")]
     [DataRow("Alt+F3", "Esc:schließen")]
+    [DataRow("Ctrl+D", "Esc schließen")]
+    [DataRow("Ctrl+W", "Esc zurück")]
+    [DataRow("Ctrl+X", "Esc schließen")]
+    [DataRow("Alt+F2", "Esc schließen")]
+    [DataRow("Ctrl+Shift+F2", "Esc schließen")]
     public async Task TheFootersOfContactsFindAndDocumentsInGerman_AreGerman(string chord, string expected)
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);

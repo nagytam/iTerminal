@@ -608,10 +608,10 @@ public class WorkspaceManagerDialog : Dialog
     }
 
     private string Hints() => _mode == Mode.Name
-        ? (_renaming is null ? "Enter save  Esc cancel" : "Enter rename  Esc cancel")
+        ? (_renaming is null ? iConsole.Localization.UiText.Get("Workspaces.HintSave", "Enter save  Esc cancel") : iConsole.Localization.UiText.Get("Workspaces.HintRename", "Enter rename  Esc cancel"))
         : _pending != Pending.None
-            ? "y confirm  Esc keep"
-            : "Enter switch  1-9 jump  S save  U update  R rename  D delete  Esc close";
+            ? iConsole.Localization.UiText.Get("Workspaces.HintConfirm", "y confirm  Esc keep")
+            : iConsole.Localization.UiText.Get("Workspaces.HintList", "Enter switch  1-9 jump  S save  U update  R rename  D delete  Esc close");
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {

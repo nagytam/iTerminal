@@ -5533,4 +5533,55 @@
   <data name="Hint.Part.Toggle" xml:space="preserve">
     <value>Space:toggle</value>
   </data>
+  <data name="Calendar.HintMoving" xml:space="preserve">
+    <value>Arrows day/week  PgUp/PgDn month  Ctrl+PgUp/PgDn year</value>
+  </data>
+  <data name="Calendar.HintActing" xml:space="preserve">
+    <value>Home today  N add  E change  Alt+Up/Down choose  D remove  Esc close</value>
+  </data>
+  <data name="Mail.HintSetup" xml:space="preserve">
+    <value>Tab/Up/Down field  Space toggle  Ctrl+V paste  Ctrl+S save  Esc back</value>
+  </data>
+  <data name="Mail.HintList" xml:space="preserve">
+    <value>Enter read  R refresh  C compose  D delete  S setup  Esc close</value>
+  </data>
+  <data name="Mail.HintView" xml:space="preserve">
+    <value>Up/Down scroll  R reply  Esc back to the list</value>
+  </data>
+  <data name="Mail.HintCompose" xml:space="preserve">
+    <value>Tab field  Enter newline  Ctrl+V paste  Ctrl+S send  Ctrl+L address book  Esc back</value>
+  </data>
+  <data name="Mail.HintDirectory" xml:space="preserve">
+    <value>Type a name, Enter search, Enter again adds the highlighted person  Esc back</value>
+  </data>
+  <data name="Hint.ConfirmDelete" xml:space="preserve">
+    <value>y delete  any other key cancels</value>
+  </data>
+  <data name="Passwords.HintUnavailable" xml:space="preserve">
+    <value>Esc close</value>
+  </data>
+  <data name="Passwords.HintList" xml:space="preserve">
+    <value>Enter edit  N new  D delete  V show  Esc close</value>
+  </data>
+  <data name="Passwords.HintEdit" xml:space="preserve">
+    <value>Tab field  Space category  Ctrl+R show password  Ctrl+S save  Esc back</value>
+  </data>
+  <data name="Remote.HintList" xml:space="preserve">
+    <value>Enter connect  B browse files  N new  E edit  D delete  Esc close</value>
+  </data>
+  <data name="Remote.HintForm" xml:space="preserve">
+    <value>Tab field  Space changes type/transport  Enter/Ctrl+S save  Esc back</value>
+  </data>
+  <data name="Workspaces.HintSave" xml:space="preserve">
+    <value>Enter save  Esc cancel</value>
+  </data>
+  <data name="Workspaces.HintRename" xml:space="preserve">
+    <value>Enter rename  Esc cancel</value>
+  </data>
+  <data name="Workspaces.HintConfirm" xml:space="preserve">
+    <value>y confirm  Esc keep</value>
+  </data>
+  <data name="Workspaces.HintList" xml:space="preserve">
+    <value>Enter switch  1-9 jump  S save  U update  R rename  D delete  Esc close</value>
+  </data>
 </root>
