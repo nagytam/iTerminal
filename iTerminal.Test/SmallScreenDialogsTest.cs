@@ -558,4 +558,17 @@ public class SmallScreenDialogsTest
         await narrow.WaitForTextAsync("Synchronise folders");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Delete extras")), "the delete-extras option");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCalculatorOn16Rows_KeepsItsKeysInsideTheFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+A");
+
+        await narrow.WaitForTextAsync("Calculator");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("[  =")) || s.Lines.Any(l => l.Contains("=  ]")), "the equals key");
+        Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains("]═[") || l.Contains("]║[")), narrow.Screen.Dump());
+    }
 }
