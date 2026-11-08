@@ -5680,4 +5680,73 @@
   <data name="Translator.LooksLikeGuess" xml:space="preserve">
     <value> Úgy tűnik: {0} (tipp).</value>
   </data>
+  <data name="AiModel.Status" xml:space="preserve">
+    <value>Állapot</value>
+  </data>
+  <data name="AiModel.Configuration" xml:space="preserve">
+    <value>Konfiguráció</value>
+  </data>
+  <data name="AiModel.Session" xml:space="preserve">
+    <value>Munkamenet</value>
+  </data>
+  <data name="AiModel.ModelDetails" xml:space="preserve">
+    <value>Modell részletei</value>
+  </data>
+  <data name="AiModel.Available" xml:space="preserve">
+    <value>Elérhető</value>
+  </data>
+  <data name="AiModel.Info" xml:space="preserve">
+    <value>Infó</value>
+  </data>
+  <data name="AiModel.ModelId" xml:space="preserve">
+    <value>Modellazonosító</value>
+  </data>
+  <data name="AiModel.ApiUrl" xml:space="preserve">
+    <value>API URL</value>
+  </data>
+  <data name="AiModel.ApiKeyEnv" xml:space="preserve">
+    <value>Kulcs-változó</value>
+  </data>
+  <data name="AiModel.ApiKeySet" xml:space="preserve">
+    <value>Kulcs megadva</value>
+  </data>
+  <data name="AiModel.Messages" xml:space="preserve">
+    <value>Üzenetek</value>
+  </data>
+  <data name="AiModel.Thinking" xml:space="preserve">
+    <value>Gondolkodás</value>
+  </data>
+  <data name="AiModel.Parameters" xml:space="preserve">
+    <value>Paraméterek</value>
+  </data>
+  <data name="AiModel.Family" xml:space="preserve">
+    <value>Család</value>
+  </data>
+  <data name="AiModel.Quantization" xml:space="preserve">
+    <value>Kvantálás</value>
+  </data>
+  <data name="AiModel.Format" xml:space="preserve">
+    <value>Formátum</value>
+  </data>
+  <data name="AiModel.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="AiModel.Yes" xml:space="preserve">
+    <value>Igen</value>
+  </data>
+  <data name="AiModel.No" xml:space="preserve">
+    <value>Nem</value>
+  </data>
+  <data name="AiModel.NoKey" xml:space="preserve">
+    <value>Nem (hitelesítés nélkül)</value>
+  </data>
+  <data name="AiModel.MessagesValue" xml:space="preserve">
+    <value>{0} ({1} felhasználó, {2} asszisztens)</value>
+  </data>
+  <data name="AiModel.Loading" xml:space="preserve">
+    <value>  Betöltés a modellkiszolgálóról…</value>
+  </data>
+  <data name="AiModel.Unavailable" xml:space="preserve">
+    <value>  Nem elérhető – a kiszolgáló nem érhető el, vagy nem jelenti őket.</value>
+  </data>
 </root>

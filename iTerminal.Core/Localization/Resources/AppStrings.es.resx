@@ -5680,4 +5680,73 @@
   <data name="Translator.LooksLikeGuess" xml:space="preserve">
     <value> Parece {0} (suposición).</value>
   </data>
+  <data name="AiModel.Status" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="AiModel.Configuration" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
+  <data name="AiModel.Session" xml:space="preserve">
+    <value>Sesión</value>
+  </data>
+  <data name="AiModel.ModelDetails" xml:space="preserve">
+    <value>Detalles del modelo</value>
+  </data>
+  <data name="AiModel.Available" xml:space="preserve">
+    <value>Disponible</value>
+  </data>
+  <data name="AiModel.Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="AiModel.ModelId" xml:space="preserve">
+    <value>ID del modelo</value>
+  </data>
+  <data name="AiModel.ApiUrl" xml:space="preserve">
+    <value>URL de la API</value>
+  </data>
+  <data name="AiModel.ApiKeyEnv" xml:space="preserve">
+    <value>Var. clave API</value>
+  </data>
+  <data name="AiModel.ApiKeySet" xml:space="preserve">
+    <value>Clave definida</value>
+  </data>
+  <data name="AiModel.Messages" xml:space="preserve">
+    <value>Mensajes</value>
+  </data>
+  <data name="AiModel.Thinking" xml:space="preserve">
+    <value>Razonamiento</value>
+  </data>
+  <data name="AiModel.Parameters" xml:space="preserve">
+    <value>Parámetros</value>
+  </data>
+  <data name="AiModel.Family" xml:space="preserve">
+    <value>Familia</value>
+  </data>
+  <data name="AiModel.Quantization" xml:space="preserve">
+    <value>Cuantización</value>
+  </data>
+  <data name="AiModel.Format" xml:space="preserve">
+    <value>Formato</value>
+  </data>
+  <data name="AiModel.Size" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
+  <data name="AiModel.Yes" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="AiModel.No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="AiModel.NoKey" xml:space="preserve">
+    <value>No (sin autenticar)</value>
+  </data>
+  <data name="AiModel.MessagesValue" xml:space="preserve">
+    <value>{0} ({1} usuario, {2} asistente)</value>
+  </data>
+  <data name="AiModel.Loading" xml:space="preserve">
+    <value>  Cargando desde el servidor del modelo…</value>
+  </data>
+  <data name="AiModel.Unavailable" xml:space="preserve">
+    <value>  No disponible: el servidor no responde o no los informa.</value>
+  </data>
 </root>
