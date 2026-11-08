@@ -5833,4 +5833,49 @@
   <data name="CmdDesc.d47fe680" xml:space="preserve">
     <value>Détacher l&apos;image.</value>
   </data>
+  <data name="Games.HintMove" xml:space="preserve">
+    <value>Flèches:déplacer</value>
+  </data>
+  <data name="Games.HintEnter" xml:space="preserve">
+    <value>Entrée:{0}</value>
+  </data>
+  <data name="Games.HintPlay" xml:space="preserve">
+    <value>jouer</value>
+  </data>
+  <data name="Games.HintGame" xml:space="preserve">
+    <value>PgPréc/PgSuiv:jeu</value>
+  </data>
+  <data name="Games.HintNew" xml:space="preserve">
+    <value>N:nouveau</value>
+  </data>
+  <data name="Games.HintUndo" xml:space="preserve">
+    <value>U:annuler</value>
+  </data>
+  <data name="Games.HintMode" xml:space="preserve">
+    <value>M:mode</value>
+  </data>
+  <data name="Sort.Footer" xml:space="preserve">
+    <value> Entrée:appliquer  Échap:fermer </value>
+  </data>
+  <data name="OpenWith.FooterFull" xml:space="preserve">
+    <value> Entrée:ouvrir  Ins:ajouter  F4:modifier  Suppr:retirer  Espace:défaut  Échap:fermer </value>
+  </data>
+  <data name="OpenWith.FooterShort" xml:space="preserve">
+    <value> Entrée:ouvrir  Ins:ajouter  Échap:fermer </value>
+  </data>
+  <data name="Strip.Removed" xml:space="preserve">
+    <value>L&apos;appareil, la position GPS, l&apos;auteur, le copyright et les commentaires sont supprimés.</value>
+  </data>
+  <data name="Strip.Kept" xml:space="preserve">
+    <value>L&apos;image, son profil colorimétrique et sa mise en page sont conservés.</value>
+  </data>
+  <data name="Strip.Overwritten" xml:space="preserve">
+    <value>Les fichiers sont écrasés ; le texte supprimé est irrécupérable.</value>
+  </data>
+  <data name="Strip.Nothing" xml:space="preserve">
+    <value>Rien à nettoyer : marquez d&apos;abord des fichiers JPEG ou PNG.</value>
+  </data>
+  <data name="Strip.Continue" xml:space="preserve">
+    <value>Entrée:continuer</value>
+  </data>
 </root>

@@ -5974,4 +5974,49 @@
   <data name="CmdDesc.d47fe680" xml:space="preserve">
     <value>Detach the image.</value>
   </data>
+  <data name="Games.HintMove" xml:space="preserve">
+    <value>Arrows:move</value>
+  </data>
+  <data name="Games.HintEnter" xml:space="preserve">
+    <value>Enter:{0}</value>
+  </data>
+  <data name="Games.HintPlay" xml:space="preserve">
+    <value>play</value>
+  </data>
+  <data name="Games.HintGame" xml:space="preserve">
+    <value>PgUp/PgDn:game</value>
+  </data>
+  <data name="Games.HintNew" xml:space="preserve">
+    <value>N:new</value>
+  </data>
+  <data name="Games.HintUndo" xml:space="preserve">
+    <value>U:undo</value>
+  </data>
+  <data name="Games.HintMode" xml:space="preserve">
+    <value>M:mode</value>
+  </data>
+  <data name="Sort.Footer" xml:space="preserve">
+    <value> Enter:apply  Esc:close </value>
+  </data>
+  <data name="OpenWith.FooterFull" xml:space="preserve">
+    <value> Enter:open  Ins:add  F4:change  Del:remove  Space:default  Esc:close </value>
+  </data>
+  <data name="OpenWith.FooterShort" xml:space="preserve">
+    <value> Enter:open  Ins:add  Esc:close </value>
+  </data>
+  <data name="Strip.Removed" xml:space="preserve">
+    <value>Camera, GPS position, author, copyright and comments are removed.</value>
+  </data>
+  <data name="Strip.Kept" xml:space="preserve">
+    <value>The picture, its colour profile and its layout are kept.</value>
+  </data>
+  <data name="Strip.Overwritten" xml:space="preserve">
+    <value>The files are overwritten; the removed text cannot be recovered.</value>
+  </data>
+  <data name="Strip.Nothing" xml:space="preserve">
+    <value>Nothing to strip: mark JPEG or PNG files first.</value>
+  </data>
+  <data name="Strip.Continue" xml:space="preserve">
+    <value>Enter:continue</value>
+  </data>
 </root>

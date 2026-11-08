@@ -214,12 +214,12 @@ public class StripMetadataDialog : Dialog
         {
             case StripPhase.Choosing:
                 lines.Add(default);
-                lines.Add(new("Camera, GPS position, author, copyright and comments are removed."));
-                lines.Add(new("The picture, its colour profile and its layout are kept.", colors.DisabledForeground));
+                lines.Add(new(iConsole.Localization.UiText.Get("Strip.Removed", "Camera, GPS position, author, copyright and comments are removed.")));
+                lines.Add(new(iConsole.Localization.UiText.Get("Strip.Kept", "The picture, its colour profile and its layout are kept."), colors.DisabledForeground));
                 lines.Add(default);
-                lines.Add(new("The files are overwritten; the removed text cannot be recovered.", colors.Error));
+                lines.Add(new(iConsole.Localization.UiText.Get("Strip.Overwritten", "The files are overwritten; the removed text cannot be recovered."), colors.Error));
                 lines.Add(default);
-                lines.Add(new(Files.Count == 0 ? "Nothing to strip: mark JPEG or PNG files first." : "Enter:continue", colors.DisabledForeground));
+                lines.Add(new(Files.Count == 0 ? iConsole.Localization.UiText.Get("Strip.Nothing", "Nothing to strip: mark JPEG or PNG files first.") : iConsole.Localization.UiText.Get("Strip.Continue", "Enter:continue"), colors.DisabledForeground));
                 break;
             case StripPhase.Armed:
                 lines.Add(default);

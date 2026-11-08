@@ -5833,4 +5833,49 @@
   <data name="CmdDesc.d47fe680" xml:space="preserve">
     <value>A lemezkép leválasztása.</value>
   </data>
+  <data name="Games.HintMove" xml:space="preserve">
+    <value>Nyilak:mozgás</value>
+  </data>
+  <data name="Games.HintEnter" xml:space="preserve">
+    <value>Enter:{0}</value>
+  </data>
+  <data name="Games.HintPlay" xml:space="preserve">
+    <value>lép</value>
+  </data>
+  <data name="Games.HintGame" xml:space="preserve">
+    <value>PgUp/PgDn:játék</value>
+  </data>
+  <data name="Games.HintNew" xml:space="preserve">
+    <value>N:új</value>
+  </data>
+  <data name="Games.HintUndo" xml:space="preserve">
+    <value>U:visszavon</value>
+  </data>
+  <data name="Games.HintMode" xml:space="preserve">
+    <value>M:mód</value>
+  </data>
+  <data name="Sort.Footer" xml:space="preserve">
+    <value> Enter:alkalmaz  Esc:bezár </value>
+  </data>
+  <data name="OpenWith.FooterFull" xml:space="preserve">
+    <value> Enter:megnyit  Ins:hozzáad  F4:módosít  Del:eltávolít  Szóköz:alapért.  Esc:bezár </value>
+  </data>
+  <data name="OpenWith.FooterShort" xml:space="preserve">
+    <value> Enter:megnyit  Ins:hozzáad  Esc:bezár </value>
+  </data>
+  <data name="Strip.Removed" xml:space="preserve">
+    <value>A fényképezőgép, a GPS-pozíció, a szerző, a szerzői jog és a megjegyzések törlődnek.</value>
+  </data>
+  <data name="Strip.Kept" xml:space="preserve">
+    <value>A kép, a színprofilja és az elrendezése megmarad.</value>
+  </data>
+  <data name="Strip.Overwritten" xml:space="preserve">
+    <value>A fájlok felülíródnak; a törölt szöveg nem állítható helyre.</value>
+  </data>
+  <data name="Strip.Nothing" xml:space="preserve">
+    <value>Nincs mit eltávolítani: előbb jelöljön ki JPEG- vagy PNG-fájlokat.</value>
+  </data>
+  <data name="Strip.Continue" xml:space="preserve">
+    <value>Enter:tovább</value>
+  </data>
 </root>

@@ -463,24 +463,24 @@ public abstract class GamesDialog : SplitPaneDialog
     internal string FooterHints()
     {
         IGame game = Current;
-        List<string> hints = ["Arrows:move", "Enter:" + game.ActivateLabel];
+        List<string> hints = [iConsole.Localization.UiText.Get("Games.HintMove", "Arrows:move"), string.Format(iConsole.Localization.UiText.Get("Games.HintEnter", "Enter:{0}"), game.ActivateLabel)];
         if (HasSeveralGames)
         {
-            hints.Add("PgUp/PgDn:game");
+            hints.Add(iConsole.Localization.UiText.Get("Games.HintGame", "PgUp/PgDn:game"));
         }
 
-        hints.Add("N:new");
+        hints.Add(iConsole.Localization.UiText.Get("Games.HintNew", "N:new"));
         if (game.OffersUndo)
         {
-            hints.Add("U:undo");
+            hints.Add(iConsole.Localization.UiText.Get("Games.HintUndo", "U:undo"));
         }
 
         if (game.OffersComputerOpponent)
         {
-            hints.Add("M:mode");
+            hints.Add(iConsole.Localization.UiText.Get("Games.HintMode", "M:mode"));
         }
 
-        hints.Add("Esc:close");
+        hints.Add(iConsole.Localization.UiText.Get("Hint.Part.EscClose", "Esc:close"));
         return string.Join("  ", hints);
     }
 

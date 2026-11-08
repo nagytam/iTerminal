@@ -828,4 +828,28 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Snake", "Pfeile:bewegen")]
+    [DataRow("Tetris", "Enter:pausieren")]
+    [DataRow("Sort by", "Enter:anwenden")]
+    [DataRow("Open with", "Einfg:hinzufügen")]
+    [DataRow("Strip Metadata", "Kamera, GPS")]
+    public async Task TheGamesSortOpenWithAndStripDialogsInGerman_AreGerman(string command, string expected)
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync("Shift+F1");
+        await app.TypeAsync(command);
+        await app.PressAsync("Enter");
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
+    }
 }
