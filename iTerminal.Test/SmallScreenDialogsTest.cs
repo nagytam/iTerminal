@@ -157,6 +157,18 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task TheFolderSelectorsButtonsOn50Columns_EndOnAnEllipsisWhenTheirCaptionIsCut()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+
+        await narrow.PressAsync("Ctrl+F1");
+
+        await narrow.WaitForTextAsync("Folder Selector");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("…]")), "a button caption that ends on an ellipsis instead of stopping mid-word");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheUnitConvertersCategoriesOn50Columns_DoNotTouchTheFirstUnitColumn()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);

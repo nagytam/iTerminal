@@ -41,6 +41,17 @@ public abstract class FolderSelectorTabPage : TabPage
     /// <summary>What this page's Enter does, for the F1 help. One line.</summary>
     protected abstract string SelectDescription { get; }
 
+    public override void OnInitializeLayout()
+    {
+        // The buttons are as wide as the dialog leaves them; a caption that does not fit ends on an ellipsis, not mid-word.
+        foreach (Button button in Controls.AsArray().OfType<Button>())
+        {
+            button.EllipsisWhenClipped = true;
+        }
+
+        base.OnInitializeLayout();
+    }
+
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         // A focused Button keeps Enter for itself: "Add to favourites" under the cursor has to add,
