@@ -621,7 +621,7 @@ public class GitClientDialog : SplitPaneDialog
 
         if (commit is not null)
         {
-            return $"Commit {commit.ShortHash}";
+            return string.Format(UiText.Get("Git.Sec.CommitHash", "Commit {0}"), commit.ShortHash);
         }
 
         return _activeSection switch
@@ -1243,7 +1243,7 @@ public class GitClientDialog : SplitPaneDialog
             return;
         }
 
-        ShowInput($"Commit {_status.Staged.Count} staged file(s)", string.Empty, message => CommitStagedFromInput(message, amend: false));
+        ShowInput(string.Format(UiText.Get("Git.Sec.CommitPrompt", "Commit {0} staged file(s)"), _status.Staged.Count), string.Empty, message => CommitStagedFromInput(message, amend: false));
     }
 
     /// <summary>
@@ -1605,10 +1605,10 @@ public class GitClientDialog : SplitPaneDialog
         var baseY = (int)AbsolutePosition.Y;
 
         DrawSection(buffer, ix, baseY, leftW, Section.Unstaged, UnstagedTitle(), colorScheme);
-        DrawSection(buffer, ix, baseY, leftW, Section.Staged, $"Staged ({_status.Staged.Count})", colorScheme);
-        DrawSection(buffer, ix, baseY, leftW, Section.Branches, $"Branches ({_branches.Count(branch => !branch.IsRemote)})", colorScheme);
-        DrawSection(buffer, ix, baseY, leftW, Section.Commits, $"Commits ({_commits.Count})", colorScheme);
-        DrawSection(buffer, ix, baseY, leftW, Section.Stashes, $"Stashes ({_stashes.Count})", colorScheme);
+        DrawSection(buffer, ix, baseY, leftW, Section.Staged, string.Format(UiText.Get("Git.Sec.Staged", "Staged ({0})"), _status.Staged.Count), colorScheme);
+        DrawSection(buffer, ix, baseY, leftW, Section.Branches, string.Format(UiText.Get("Git.Sec.Branches", "Branches ({0})"), _branches.Count(branch => !branch.IsRemote)), colorScheme);
+        DrawSection(buffer, ix, baseY, leftW, Section.Commits, string.Format(UiText.Get("Git.Sec.Commits", "Commits ({0})"), _commits.Count), colorScheme);
+        DrawSection(buffer, ix, baseY, leftW, Section.Stashes, string.Format(UiText.Get("Git.Sec.Stashes", "Stashes ({0})"), _stashes.Count), colorScheme);
 
         if (rightW > 0)
         {
@@ -1620,8 +1620,8 @@ public class GitClientDialog : SplitPaneDialog
     {
         var conflicts = _status.Unstaged.Count(file => file.IsConflicted);
         return conflicts > 0
-            ? $"Unstaged ({_status.Unstaged.Count}, {conflicts} conflicted)"
-            : $"Unstaged ({_status.Unstaged.Count})";
+            ? string.Format(UiText.Get("Git.Sec.UnstagedConflicted", "Unstaged ({0}, {1} conflicted)"), _status.Unstaged.Count, conflicts)
+            : string.Format(UiText.Get("Git.Sec.Unstaged", "Unstaged ({0})"), _status.Unstaged.Count);
     }
 
     /// <summary>Draws a section's header band, and its empty-state line when it has rows but nothing to put in them.</summary>

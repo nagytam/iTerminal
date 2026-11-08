@@ -6886,4 +6886,28 @@
   <data name="Git.Act.Discarded" xml:space="preserve">
     <value>{0} annulé.</value>
   </data>
+  <data name="Git.Sec.CommitHash" xml:space="preserve">
+    <value>Commit {0}</value>
+  </data>
+  <data name="Git.Sec.CommitPrompt" xml:space="preserve">
+    <value>Valider {0} fichier(s) indexé(s)</value>
+  </data>
+  <data name="Git.Sec.Staged" xml:space="preserve">
+    <value>Indexés ({0})</value>
+  </data>
+  <data name="Git.Sec.Branches" xml:space="preserve">
+    <value>Branches ({0})</value>
+  </data>
+  <data name="Git.Sec.Commits" xml:space="preserve">
+    <value>Commits ({0})</value>
+  </data>
+  <data name="Git.Sec.Stashes" xml:space="preserve">
+    <value>Remises ({0})</value>
+  </data>
+  <data name="Git.Sec.Unstaged" xml:space="preserve">
+    <value>Non indexés ({0})</value>
+  </data>
+  <data name="Git.Sec.UnstagedConflicted" xml:space="preserve">
+    <value>Non indexés ({0}, {1} en conflit)</value>
+  </data>
 </root>
