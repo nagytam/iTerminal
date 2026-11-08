@@ -695,7 +695,7 @@ public class MapDialog : Dialog
 
     private void DrawHeader(IBuffer buffer, ColorScheme scheme, int x, int y, int width)
     {
-        var left = $" {(_model.Online ? "ONLINE" : "OFFLINE")}  {MapProjection.FormatCoordinates(_model.Latitude, _model.Longitude)}  zoom {_model.Zoom}/{MapProjection.MaxZoom}";
+        var left = string.Format(iConsole.Localization.UiText.Get("Map.Header", " {0}  {1}  zoom {2}/{3}"), _model.Online ? iConsole.Localization.UiText.Get("Map.Online", "ONLINE") : iConsole.Localization.UiText.Get("Map.Offline", "OFFLINE"), MapProjection.FormatCoordinates(_model.Latitude, _model.Longitude), _model.Zoom, MapProjection.MaxZoom);
         var right = width >= left.Length + Attribution.Length + 3 ? Attribution + " " : string.Empty;
         var line = left.PadRight(Math.Max(0, width - right.Length)) + right;
         WriteText(buffer, x, y, width, line, _model.Online ? Color.Cyan : Color.Yellow, scheme.Background, true);
@@ -784,7 +784,7 @@ public class MapDialog : Dialog
         }
         else
         {
-            left = " F1:help  Arrows:pan  +/-:zoom  /:search  M:save place  B:places  O:online/offline  D:save offline  Esc:close";
+            left = iConsole.Localization.UiText.Get("Map.Footer", " F1:help  Arrows:pan  +/-:zoom  /:search  M:save place  B:places  O:online/offline  D:save offline  Esc:close");
             color = scheme.DisabledForeground;
         }
 
@@ -800,8 +800,8 @@ public class MapDialog : Dialog
             return string.Empty;
         }
 
-        return frame.Loading > 0 ? $"[{frame.Loading} loading]"
-            : frame.Unavailable > 0 ? $"[{frame.Unavailable} missing]"
+        return frame.Loading > 0 ? string.Format(iConsole.Localization.UiText.Get("Map.Loading", "[{0} loading]"), frame.Loading)
+            : frame.Unavailable > 0 ? string.Format(iConsole.Localization.UiText.Get("Map.Missing", "[{0} missing]"), frame.Unavailable)
             : string.Empty;
     }
 

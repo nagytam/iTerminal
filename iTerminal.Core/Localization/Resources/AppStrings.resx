@@ -6175,4 +6175,64 @@
   <data name="Games.Nmm.Slide" xml:space="preserve">
     <value>A man slides to a neighbouring empty point.</value>
   </data>
+  <data name="DiskMgr.Drive" xml:space="preserve">
+    <value>Drive</value>
+  </data>
+  <data name="DiskMgr.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="DiskMgr.State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="DiskMgr.Space" xml:space="preserve">
+    <value>Space</value>
+  </data>
+  <data name="DiskMgr.MemoryDrive" xml:space="preserve">
+    <value>Memory drive (lives in this program and is saved to its database)</value>
+  </data>
+  <data name="DiskMgr.NotReady" xml:space="preserve">
+    <value>Not ready (no media, or locked)</value>
+  </data>
+  <data name="DiskMgr.NoLabel" xml:space="preserve">
+    <value>(no label)</value>
+  </data>
+  <data name="DiskMgr.FreeOf" xml:space="preserve">
+    <value>{0} free of {1}</value>
+  </data>
+  <data name="SysSettings.RestartNote" xml:space="preserve">
+    <value>A new computer name or workgroup takes effect after a restart.</value>
+  </data>
+  <data name="Map.Footer" xml:space="preserve">
+    <value> F1:help  Arrows:pan  +/-:zoom  /:search  M:save place  B:places  O:online/offline  D:save offline  Esc:close</value>
+  </data>
+  <data name="Map.Header" xml:space="preserve">
+    <value> {0}  {1}  zoom {2}/{3}</value>
+  </data>
+  <data name="Map.Online" xml:space="preserve">
+    <value>ONLINE</value>
+  </data>
+  <data name="Map.Offline" xml:space="preserve">
+    <value>OFFLINE</value>
+  </data>
+  <data name="Map.Loading" xml:space="preserve">
+    <value>[{0} loading]</value>
+  </data>
+  <data name="Map.Missing" xml:space="preserve">
+    <value>[{0} missing]</value>
+  </data>
+  <data name="Web.HintHelp" xml:space="preserve">
+    <value>F1:help</value>
+  </data>
+  <data name="Web.HintAddress" xml:space="preserve">
+    <value>Ctrl+L:address</value>
+  </data>
+  <data name="Web.HintLinks" xml:space="preserve">
+    <value>Tab:links</value>
+  </data>
+  <data name="Web.HintNewTab" xml:space="preserve">
+    <value>Ctrl+T:new tab</value>
+  </data>
+  <data name="Web.HintBookmarks" xml:space="preserve">
+    <value>F2:bookmarks</value>
+  </data>
 </root>

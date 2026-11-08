@@ -200,14 +200,17 @@ public class DiskManagerDialog : Dialog
         });
     }
 
+    /// <summary>A label in a column of fixed width, then its value.</summary>
+    private static string Detail(string key, string english, string value) => UiText.Get(key, english).PadRight(12) + value;
+
     private async Task<IReadOnlyList<InfoLines.Line>> ReadDetailsAsync(Drive drive, string root)
     {
         var lines = new List<InfoLines.Line>();
         var info = drive.DriveInfo;
         if (info is null)
         {
-            lines.Add(new InfoLines.Line($"Drive       {root}"));
-            lines.Add(new InfoLines.Line("Type        Memory drive (lives in this program and is saved to its database)"));
+            lines.Add(new InfoLines.Line(Detail("DiskMgr.Drive", "Drive", root)));
+            lines.Add(new InfoLines.Line(Detail("DiskMgr.Type", "Type", UiText.Get("DiskMgr.MemoryDrive", "Memory drive (lives in this program and is saved to its database)"))));
             return lines;
         }
 
@@ -215,21 +218,21 @@ public class DiskManagerDialog : Dialog
         {
             if (!info.IsReady)
             {
-                lines.Add(new InfoLines.Line($"Drive       {root}"));
-                lines.Add(new InfoLines.Line($"Type        {info.DriveType}"));
-                lines.Add(new InfoLines.Line("State       Not ready (no media, or locked)"));
+                lines.Add(new InfoLines.Line(Detail("DiskMgr.Drive", "Drive", root)));
+                lines.Add(new InfoLines.Line(Detail("DiskMgr.Type", "Type", info.DriveType.ToString())));
+                lines.Add(new InfoLines.Line(Detail("DiskMgr.State", "State", UiText.Get("DiskMgr.NotReady", "Not ready (no media, or locked)"))));
                 return lines;
             }
 
-            var label = string.IsNullOrEmpty(info.VolumeLabel) ? "(no label)" : info.VolumeLabel;
-            lines.Add(new InfoLines.Line($"Drive       {root}   {label}"));
-            lines.Add(new InfoLines.Line($"Type        {info.DriveType}   {info.DriveFormat}"));
-            lines.Add(new InfoLines.Line($"Space       {FormatSize(info.AvailableFreeSpace)} free of {FormatSize(info.TotalSize)}"));
+            var label = string.IsNullOrEmpty(info.VolumeLabel) ? UiText.Get("DiskMgr.NoLabel", "(no label)") : info.VolumeLabel;
+            lines.Add(new InfoLines.Line(Detail("DiskMgr.Drive", "Drive", $"{root}   {label}")));
+            lines.Add(new InfoLines.Line(Detail("DiskMgr.Type", "Type", $"{info.DriveType}   {info.DriveFormat}")));
+            lines.Add(new InfoLines.Line(Detail("DiskMgr.Space", "Space", string.Format(UiText.Get("DiskMgr.FreeOf", "{0} free of {1}"), FormatSize(info.AvailableFreeSpace), FormatSize(info.TotalSize)))));
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
-            lines.Add(new InfoLines.Line($"Drive       {root}"));
-            lines.Add(new InfoLines.Line($"State       {exception.Message}"));
+            lines.Add(new InfoLines.Line(Detail("DiskMgr.Drive", "Drive", root)));
+            lines.Add(new InfoLines.Line(Detail("DiskMgr.State", "State", exception.Message)));
         }
 
         if (_driveActions is not null)

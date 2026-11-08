@@ -6034,4 +6034,64 @@
   <data name="Games.Nmm.Slide" xml:space="preserve">
     <value>Una ficha se desliza a un punto vecino vacío.</value>
   </data>
+  <data name="DiskMgr.Drive" xml:space="preserve">
+    <value>Unidad</value>
+  </data>
+  <data name="DiskMgr.Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="DiskMgr.State" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="DiskMgr.Space" xml:space="preserve">
+    <value>Espacio</value>
+  </data>
+  <data name="DiskMgr.MemoryDrive" xml:space="preserve">
+    <value>Unidad de memoria (vive en este programa y se guarda en su base de datos)</value>
+  </data>
+  <data name="DiskMgr.NotReady" xml:space="preserve">
+    <value>No lista (sin medio o bloqueada)</value>
+  </data>
+  <data name="DiskMgr.NoLabel" xml:space="preserve">
+    <value>(sin etiqueta)</value>
+  </data>
+  <data name="DiskMgr.FreeOf" xml:space="preserve">
+    <value>{0} libres de {1}</value>
+  </data>
+  <data name="SysSettings.RestartNote" xml:space="preserve">
+    <value>Un nuevo nombre de equipo o grupo de trabajo surte efecto tras reiniciar.</value>
+  </data>
+  <data name="Map.Footer" xml:space="preserve">
+    <value> F1:ayuda  Flechas:desplazar  +/-:zoom  /:buscar  M:guardar lugar  B:lugares  O:en línea/sin conexión  D:guardar sin conexión  Esc:cerrar</value>
+  </data>
+  <data name="Map.Header" xml:space="preserve">
+    <value> {0}  {1}  zoom {2}/{3}</value>
+  </data>
+  <data name="Map.Online" xml:space="preserve">
+    <value>EN LÍNEA</value>
+  </data>
+  <data name="Map.Offline" xml:space="preserve">
+    <value>SIN CONEXIÓN</value>
+  </data>
+  <data name="Map.Loading" xml:space="preserve">
+    <value>[{0} cargando]</value>
+  </data>
+  <data name="Map.Missing" xml:space="preserve">
+    <value>[{0} faltan]</value>
+  </data>
+  <data name="Web.HintHelp" xml:space="preserve">
+    <value>F1:ayuda</value>
+  </data>
+  <data name="Web.HintAddress" xml:space="preserve">
+    <value>Ctrl+L:dirección</value>
+  </data>
+  <data name="Web.HintLinks" xml:space="preserve">
+    <value>Tab:enlaces</value>
+  </data>
+  <data name="Web.HintNewTab" xml:space="preserve">
+    <value>Ctrl+T:nueva pestaña</value>
+  </data>
+  <data name="Web.HintBookmarks" xml:space="preserve">
+    <value>F2:marcadores</value>
+  </data>
 </root>

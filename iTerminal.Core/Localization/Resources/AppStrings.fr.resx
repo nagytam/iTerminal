@@ -6034,4 +6034,64 @@
   <data name="Games.Nmm.Slide" xml:space="preserve">
     <value>Un pion glisse vers un point voisin libre.</value>
   </data>
+  <data name="DiskMgr.Drive" xml:space="preserve">
+    <value>Lecteur</value>
+  </data>
+  <data name="DiskMgr.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="DiskMgr.State" xml:space="preserve">
+    <value>État</value>
+  </data>
+  <data name="DiskMgr.Space" xml:space="preserve">
+    <value>Espace</value>
+  </data>
+  <data name="DiskMgr.MemoryDrive" xml:space="preserve">
+    <value>Lecteur mémoire (vit dans ce programme et est enregistré dans sa base de données)</value>
+  </data>
+  <data name="DiskMgr.NotReady" xml:space="preserve">
+    <value>Non prêt (pas de support, ou verrouillé)</value>
+  </data>
+  <data name="DiskMgr.NoLabel" xml:space="preserve">
+    <value>(sans nom)</value>
+  </data>
+  <data name="DiskMgr.FreeOf" xml:space="preserve">
+    <value>{0} libres sur {1}</value>
+  </data>
+  <data name="SysSettings.RestartNote" xml:space="preserve">
+    <value>Un nouveau nom d&apos;ordinateur ou groupe de travail prend effet après un redémarrage.</value>
+  </data>
+  <data name="Map.Footer" xml:space="preserve">
+    <value> F1:aide  Flèches:déplacer  +/-:zoom  /:chercher  M:enregistrer le lieu  B:lieux  O:en ligne/hors ligne  D:enregistrer hors ligne  Échap:fermer</value>
+  </data>
+  <data name="Map.Header" xml:space="preserve">
+    <value> {0}  {1}  zoom {2}/{3}</value>
+  </data>
+  <data name="Map.Online" xml:space="preserve">
+    <value>EN LIGNE</value>
+  </data>
+  <data name="Map.Offline" xml:space="preserve">
+    <value>HORS LIGNE</value>
+  </data>
+  <data name="Map.Loading" xml:space="preserve">
+    <value>[{0} en chargement]</value>
+  </data>
+  <data name="Map.Missing" xml:space="preserve">
+    <value>[{0} manquants]</value>
+  </data>
+  <data name="Web.HintHelp" xml:space="preserve">
+    <value>F1:aide</value>
+  </data>
+  <data name="Web.HintAddress" xml:space="preserve">
+    <value>Ctrl+L:adresse</value>
+  </data>
+  <data name="Web.HintLinks" xml:space="preserve">
+    <value>Tab:liens</value>
+  </data>
+  <data name="Web.HintNewTab" xml:space="preserve">
+    <value>Ctrl+T:nouvel onglet</value>
+  </data>
+  <data name="Web.HintBookmarks" xml:space="preserve">
+    <value>F2:favoris</value>
+  </data>
 </root>
