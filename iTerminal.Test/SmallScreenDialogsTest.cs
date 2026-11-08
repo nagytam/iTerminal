@@ -485,4 +485,18 @@ public class SmallScreenDialogsTest
             Assert.IsTrue(line.TrimEnd().EndsWith('║'), narrow.Screen.Dump());
         }
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCompressHintOn45Columns_EndsOnAnEllipsis()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 20);
+        await narrow.SelectEntryAsync("readme.txt");
+
+        await narrow.PressAsync("Alt+F5");
+
+        await narrow.WaitForTextAsync("Compress readme.txt");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Level: 0 stores")), "the level hint");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Level: 0 stores") && l.Contains('…')), narrow.Screen.Dump());
+    }
 }
