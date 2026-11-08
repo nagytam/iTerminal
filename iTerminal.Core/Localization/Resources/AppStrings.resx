@@ -5587,4 +5587,79 @@
   <data name="Language.RestartNote" xml:space="preserve">
     <value>Menus and the key bar changed at once. Some dialogs change language after a restart.</value>
   </data>
+  <data name="Contacts.ColName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Contacts.ColEmail" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Contacts.ColPhone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="Contacts.ColCompany" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="Contacts.ColNotes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Contacts.Count" xml:space="preserve">
+    <value>{0} contacts</value>
+  </data>
+  <data name="Contacts.CountFiltered" xml:space="preserve">
+    <value>{0} of {1} contacts</value>
+  </data>
+  <data name="Contacts.NoMatch" xml:space="preserve">
+    <value>No contact matches &quot;{0}&quot;.</value>
+  </data>
+  <data name="Contacts.Empty" xml:space="preserve">
+    <value>No contacts. Press N to add one.</value>
+  </data>
+  <data name="Contacts.FormNew" xml:space="preserve">
+    <value>New contact: only the name is needed</value>
+  </data>
+  <data name="Contacts.FormChange" xml:space="preserve">
+    <value>Change contact: only the name is needed</value>
+  </data>
+  <data name="Workspaces.ConfirmDelete" xml:space="preserve">
+    <value>Delete &apos;{0}&apos;? y deletes, any other key keeps it.</value>
+  </data>
+  <data name="Workspaces.ConfirmUpdate" xml:space="preserve">
+    <value>Replace &apos;{0}&apos; with the screen as it is now? y replaces, any other key keeps it.</value>
+  </data>
+  <data name="Workspaces.Header" xml:space="preserve">
+    <value>     # Name                      Left panel  →  Right panel</value>
+  </data>
+  <data name="Workspaces.Empty1" xml:space="preserve">
+    <value>No workspaces yet. S saves the screen as it is now: both panels,</value>
+  </data>
+  <data name="Workspaces.Empty2" xml:space="preserve">
+    <value>their sort order and what is under them. Enter brings one back.</value>
+  </data>
+  <data name="Workspaces.LeftLine" xml:space="preserve">
+    <value>Left   {0}{1}</value>
+  </data>
+  <data name="Workspaces.RightLine" xml:space="preserve">
+    <value>Right  {0}{1}</value>
+  </data>
+  <data name="Workspaces.BelowLine" xml:space="preserve">
+    <value>Below  {0}  ·  cursor: {1}  ·  saved {2:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Workspaces.SideLeft" xml:space="preserve">
+    <value>left</value>
+  </data>
+  <data name="Workspaces.SideRight" xml:space="preserve">
+    <value>right</value>
+  </data>
+  <data name="Workspaces.OnScreenNow" xml:space="preserve">
+    <value>● This is what is on screen now.</value>
+  </data>
+  <data name="Workspaces.ScreenChangedNote" xml:space="preserve">
+    <value>○ The screen has changed since. U updates this, Enter puts it back.</value>
+  </data>
+  <data name="Workspaces.NameLabel" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Workspaces.SavesLine" xml:space="preserve">
+    <value>Saves: {0} → {1}  ·  {2}</value>
+  </data>
 </root>

@@ -5446,4 +5446,79 @@
   <data name="Language.RestartNote" xml:space="preserve">
     <value>A menük és a billentyűsor azonnal váltanak. Egyes párbeszédablakok nyelve újraindítás után változik.</value>
   </data>
+  <data name="Contacts.ColName" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Contacts.ColEmail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Contacts.ColPhone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Contacts.ColCompany" xml:space="preserve">
+    <value>Cég</value>
+  </data>
+  <data name="Contacts.ColNotes" xml:space="preserve">
+    <value>Megjegyzés</value>
+  </data>
+  <data name="Contacts.Count" xml:space="preserve">
+    <value>{0} névjegy</value>
+  </data>
+  <data name="Contacts.CountFiltered" xml:space="preserve">
+    <value>{0} / {1} névjegy</value>
+  </data>
+  <data name="Contacts.NoMatch" xml:space="preserve">
+    <value>Egyetlen névjegy sem felel meg: „{0}”.</value>
+  </data>
+  <data name="Contacts.Empty" xml:space="preserve">
+    <value>Nincs névjegy. N újat ad hozzá.</value>
+  </data>
+  <data name="Contacts.FormNew" xml:space="preserve">
+    <value>Új névjegy: csak a név szükséges</value>
+  </data>
+  <data name="Contacts.FormChange" xml:space="preserve">
+    <value>Névjegy módosítása: csak a név szükséges</value>
+  </data>
+  <data name="Workspaces.ConfirmDelete" xml:space="preserve">
+    <value>Törli a(z) &apos;{0}&apos; munkaterületet? y töröl, bármely más billentyű megtartja.</value>
+  </data>
+  <data name="Workspaces.ConfirmUpdate" xml:space="preserve">
+    <value>Lecseréli a(z) &apos;{0}&apos; munkaterületet a jelenlegi képernyőre? y csere, bármely más billentyű megtartja.</value>
+  </data>
+  <data name="Workspaces.Header" xml:space="preserve">
+    <value>     # Név                       Bal panel  →  Jobb panel</value>
+  </data>
+  <data name="Workspaces.Empty1" xml:space="preserve">
+    <value>Még nincs munkaterület. S elmenti a képernyőt úgy, ahogy van: mindkét panelt,</value>
+  </data>
+  <data name="Workspaces.Empty2" xml:space="preserve">
+    <value>a rendezésüket és ami alattuk van. Enter visszaállít egyet.</value>
+  </data>
+  <data name="Workspaces.LeftLine" xml:space="preserve">
+    <value>Bal    {0}{1}</value>
+  </data>
+  <data name="Workspaces.RightLine" xml:space="preserve">
+    <value>Jobb   {0}{1}</value>
+  </data>
+  <data name="Workspaces.BelowLine" xml:space="preserve">
+    <value>Alul   {0}  ·  kurzor: {1}  ·  mentve {2:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Workspaces.SideLeft" xml:space="preserve">
+    <value>bal</value>
+  </data>
+  <data name="Workspaces.SideRight" xml:space="preserve">
+    <value>jobb</value>
+  </data>
+  <data name="Workspaces.OnScreenNow" xml:space="preserve">
+    <value>● Ez van most a képernyőn.</value>
+  </data>
+  <data name="Workspaces.ScreenChangedNote" xml:space="preserve">
+    <value>○ A képernyő azóta megváltozott. U frissíti, Enter visszaállítja.</value>
+  </data>
+  <data name="Workspaces.NameLabel" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Workspaces.SavesLine" xml:space="preserve">
+    <value>Menti: {0} → {1}  ·  {2}</value>
+  </data>
 </root>

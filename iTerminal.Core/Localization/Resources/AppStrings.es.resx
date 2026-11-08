@@ -5446,4 +5446,79 @@
   <data name="Language.RestartNote" xml:space="preserve">
     <value>Los menús y la barra de teclas cambian al instante. Algunos diálogos cambian de idioma tras reiniciar.</value>
   </data>
+  <data name="Contacts.ColName" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Contacts.ColEmail" xml:space="preserve">
+    <value>Correo</value>
+  </data>
+  <data name="Contacts.ColPhone" xml:space="preserve">
+    <value>Teléfono</value>
+  </data>
+  <data name="Contacts.ColCompany" xml:space="preserve">
+    <value>Empresa</value>
+  </data>
+  <data name="Contacts.ColNotes" xml:space="preserve">
+    <value>Notas</value>
+  </data>
+  <data name="Contacts.Count" xml:space="preserve">
+    <value>{0} contactos</value>
+  </data>
+  <data name="Contacts.CountFiltered" xml:space="preserve">
+    <value>{0} de {1} contactos</value>
+  </data>
+  <data name="Contacts.NoMatch" xml:space="preserve">
+    <value>Ningún contacto coincide con «{0}».</value>
+  </data>
+  <data name="Contacts.Empty" xml:space="preserve">
+    <value>Sin contactos. N añade uno.</value>
+  </data>
+  <data name="Contacts.FormNew" xml:space="preserve">
+    <value>Nuevo contacto: solo el nombre es necesario</value>
+  </data>
+  <data name="Contacts.FormChange" xml:space="preserve">
+    <value>Cambiar contacto: solo el nombre es necesario</value>
+  </data>
+  <data name="Workspaces.ConfirmDelete" xml:space="preserve">
+    <value>¿Eliminar &apos;{0}&apos;? y elimina, cualquier otra tecla lo conserva.</value>
+  </data>
+  <data name="Workspaces.ConfirmUpdate" xml:space="preserve">
+    <value>¿Reemplazar &apos;{0}&apos; por la pantalla actual? y reemplaza, cualquier otra tecla lo conserva.</value>
+  </data>
+  <data name="Workspaces.Header" xml:space="preserve">
+    <value>     # Nombre                    Panel izq.  →  Panel der.</value>
+  </data>
+  <data name="Workspaces.Empty1" xml:space="preserve">
+    <value>Aún no hay espacios de trabajo. S guarda la pantalla tal como está: ambos paneles,</value>
+  </data>
+  <data name="Workspaces.Empty2" xml:space="preserve">
+    <value>su orden y lo que hay debajo. Intro recupera uno.</value>
+  </data>
+  <data name="Workspaces.LeftLine" xml:space="preserve">
+    <value>Izq.   {0}{1}</value>
+  </data>
+  <data name="Workspaces.RightLine" xml:space="preserve">
+    <value>Der.   {0}{1}</value>
+  </data>
+  <data name="Workspaces.BelowLine" xml:space="preserve">
+    <value>Abajo  {0}  ·  cursor: {1}  ·  guardado {2:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Workspaces.SideLeft" xml:space="preserve">
+    <value>izquierda</value>
+  </data>
+  <data name="Workspaces.SideRight" xml:space="preserve">
+    <value>derecha</value>
+  </data>
+  <data name="Workspaces.OnScreenNow" xml:space="preserve">
+    <value>● Esto es lo que hay ahora en pantalla.</value>
+  </data>
+  <data name="Workspaces.ScreenChangedNote" xml:space="preserve">
+    <value>○ La pantalla ha cambiado desde entonces. U lo actualiza, Intro lo restaura.</value>
+  </data>
+  <data name="Workspaces.NameLabel" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Workspaces.SavesLine" xml:space="preserve">
+    <value>Guarda: {0} → {1}  ·  {2}</value>
+  </data>
 </root>

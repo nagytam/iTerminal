@@ -5446,4 +5446,79 @@
   <data name="Language.RestartNote" xml:space="preserve">
     <value>Menüs und Tastenleiste wechseln sofort. Einige Dialoge wechseln die Sprache erst nach einem Neustart.</value>
   </data>
+  <data name="Contacts.ColName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Contacts.ColEmail" xml:space="preserve">
+    <value>E-Mail</value>
+  </data>
+  <data name="Contacts.ColPhone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Contacts.ColCompany" xml:space="preserve">
+    <value>Firma</value>
+  </data>
+  <data name="Contacts.ColNotes" xml:space="preserve">
+    <value>Notizen</value>
+  </data>
+  <data name="Contacts.Count" xml:space="preserve">
+    <value>{0} Kontakte</value>
+  </data>
+  <data name="Contacts.CountFiltered" xml:space="preserve">
+    <value>{0} von {1} Kontakten</value>
+  </data>
+  <data name="Contacts.NoMatch" xml:space="preserve">
+    <value>Kein Kontakt passt zu „{0}“.</value>
+  </data>
+  <data name="Contacts.Empty" xml:space="preserve">
+    <value>Keine Kontakte. N fügt einen hinzu.</value>
+  </data>
+  <data name="Contacts.FormNew" xml:space="preserve">
+    <value>Neuer Kontakt: nur der Name ist nötig</value>
+  </data>
+  <data name="Contacts.FormChange" xml:space="preserve">
+    <value>Kontakt ändern: nur der Name ist nötig</value>
+  </data>
+  <data name="Workspaces.ConfirmDelete" xml:space="preserve">
+    <value>&apos;{0}&apos; löschen? y löscht, jede andere Taste behält es.</value>
+  </data>
+  <data name="Workspaces.ConfirmUpdate" xml:space="preserve">
+    <value>&apos;{0}&apos; durch den aktuellen Bildschirm ersetzen? y ersetzt, jede andere Taste behält es.</value>
+  </data>
+  <data name="Workspaces.Header" xml:space="preserve">
+    <value>     # Name                      Linkes Panel  →  Rechtes Panel</value>
+  </data>
+  <data name="Workspaces.Empty1" xml:space="preserve">
+    <value>Noch keine Arbeitsbereiche. S speichert den Bildschirm, wie er ist: beide Panels,</value>
+  </data>
+  <data name="Workspaces.Empty2" xml:space="preserve">
+    <value>ihre Sortierung und was darunter liegt. Enter holt einen zurück.</value>
+  </data>
+  <data name="Workspaces.LeftLine" xml:space="preserve">
+    <value>Links   {0}{1}</value>
+  </data>
+  <data name="Workspaces.RightLine" xml:space="preserve">
+    <value>Rechts  {0}{1}</value>
+  </data>
+  <data name="Workspaces.BelowLine" xml:space="preserve">
+    <value>Unten   {0}  ·  Cursor: {1}  ·  gespeichert {2:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Workspaces.SideLeft" xml:space="preserve">
+    <value>links</value>
+  </data>
+  <data name="Workspaces.SideRight" xml:space="preserve">
+    <value>rechts</value>
+  </data>
+  <data name="Workspaces.OnScreenNow" xml:space="preserve">
+    <value>● Das ist, was jetzt auf dem Bildschirm ist.</value>
+  </data>
+  <data name="Workspaces.ScreenChangedNote" xml:space="preserve">
+    <value>○ Der Bildschirm hat sich seither geändert. U aktualisiert dies, Enter stellt es wieder her.</value>
+  </data>
+  <data name="Workspaces.NameLabel" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Workspaces.SavesLine" xml:space="preserve">
+    <value>Speichert: {0} → {1}  ·  {2}</value>
+  </data>
 </root>
