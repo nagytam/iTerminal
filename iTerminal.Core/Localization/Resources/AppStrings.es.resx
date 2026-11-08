@@ -5788,4 +5788,49 @@
   <data name="Duplicates.None" xml:space="preserve">
     <value>No hay archivos duplicados entre los {0:N0} archivos examinados.</value>
   </data>
+  <data name="CmdDesc.c5d657d4" xml:space="preserve">
+    <value>Comparar las carpetas de los dos paneles.</value>
+  </data>
+  <data name="CmdDesc.c2109680" xml:space="preserve">
+    <value>Escribir el archivo comprimido.</value>
+  </data>
+  <data name="CmdDesc.03b5daee" xml:space="preserve">
+    <value>Crear el enlace.</value>
+  </data>
+  <data name="CmdDesc.749a269e" xml:space="preserve">
+    <value>Guardar el enlace modificado.</value>
+  </data>
+  <data name="CmdDesc.1d4924ca" xml:space="preserve">
+    <value>Descomprimir los archivos.</value>
+  </data>
+  <data name="CmdDesc.247f4ead" xml:space="preserve">
+    <value>Guardar el programa y volver a la lista.</value>
+  </data>
+  <data name="CmdDesc.10e630f4" xml:space="preserve">
+    <value>Cifrar o descifrar los archivos con la frase de contraseña.</value>
+  </data>
+  <data name="CmdDesc.dc83b433" xml:space="preserve">
+    <value>Guardar el color y las etiquetas y cerrar.</value>
+  </data>
+  <data name="CmdDesc.6f3f167b" xml:space="preserve">
+    <value>Formatear la unidad.</value>
+  </data>
+  <data name="CmdDesc.cb195d52" xml:space="preserve">
+    <value>Filtrar el panel y cerrar.</value>
+  </data>
+  <data name="CmdDesc.3e40361b" xml:space="preserve">
+    <value>Marcar o desmarcar las filas que coinciden con el patrón.</value>
+  </data>
+  <data name="CmdDesc.bfd6ba2c" xml:space="preserve">
+    <value>Editar la lista de control de acceso y el propietario de esta entrada.</value>
+  </data>
+  <data name="CmdDesc.b859909d" xml:space="preserve">
+    <value>Quitar la marca que indica que el archivo viene de internet.</value>
+  </data>
+  <data name="CmdDesc.2ef2dd1f" xml:space="preserve">
+    <value>Escribir los atributos modificados y cerrar.</value>
+  </data>
+  <data name="CmdDesc.d47fe680" xml:space="preserve">
+    <value>Desmontar la imagen.</value>
+  </data>
 </root>

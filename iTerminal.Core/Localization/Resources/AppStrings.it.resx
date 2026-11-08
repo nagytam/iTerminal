@@ -5788,4 +5788,49 @@
   <data name="Duplicates.None" xml:space="preserve">
     <value>Nessun file duplicato tra i {0:N0} file esaminati.</value>
   </data>
+  <data name="CmdDesc.c5d657d4" xml:space="preserve">
+    <value>Confrontare le cartelle dei due pannelli.</value>
+  </data>
+  <data name="CmdDesc.c2109680" xml:space="preserve">
+    <value>Scrivere l&apos;archivio.</value>
+  </data>
+  <data name="CmdDesc.03b5daee" xml:space="preserve">
+    <value>Creare il collegamento.</value>
+  </data>
+  <data name="CmdDesc.749a269e" xml:space="preserve">
+    <value>Salvare il collegamento modificato.</value>
+  </data>
+  <data name="CmdDesc.1d4924ca" xml:space="preserve">
+    <value>Estrarre gli archivi.</value>
+  </data>
+  <data name="CmdDesc.247f4ead" xml:space="preserve">
+    <value>Salvare il programma e tornare all&apos;elenco.</value>
+  </data>
+  <data name="CmdDesc.10e630f4" xml:space="preserve">
+    <value>Cifrare o decifrare i file con la passphrase.</value>
+  </data>
+  <data name="CmdDesc.dc83b433" xml:space="preserve">
+    <value>Salvare il colore e le etichette e chiudere.</value>
+  </data>
+  <data name="CmdDesc.6f3f167b" xml:space="preserve">
+    <value>Formattare l&apos;unità.</value>
+  </data>
+  <data name="CmdDesc.cb195d52" xml:space="preserve">
+    <value>Filtrare il pannello e chiudere.</value>
+  </data>
+  <data name="CmdDesc.3e40361b" xml:space="preserve">
+    <value>Marcare o smarcare le righe che corrispondono al modello.</value>
+  </data>
+  <data name="CmdDesc.bfd6ba2c" xml:space="preserve">
+    <value>Modificare l&apos;elenco di controllo di accesso e il proprietario di questa voce.</value>
+  </data>
+  <data name="CmdDesc.b859909d" xml:space="preserve">
+    <value>Rimuovere il contrassegno che indica che il file proviene da internet.</value>
+  </data>
+  <data name="CmdDesc.2ef2dd1f" xml:space="preserve">
+    <value>Scrivere gli attributi modificati e chiudere.</value>
+  </data>
+  <data name="CmdDesc.d47fe680" xml:space="preserve">
+    <value>Scollegare l&apos;immagine.</value>
+  </data>
 </root>

@@ -5788,4 +5788,49 @@
   <data name="Duplicates.None" xml:space="preserve">
     <value>Keine doppelten Dateien unter den {0:N0} geprüften Dateien.</value>
   </data>
+  <data name="CmdDesc.c5d657d4" xml:space="preserve">
+    <value>Die Ordner der beiden Panels vergleichen.</value>
+  </data>
+  <data name="CmdDesc.c2109680" xml:space="preserve">
+    <value>Das Archiv schreiben.</value>
+  </data>
+  <data name="CmdDesc.03b5daee" xml:space="preserve">
+    <value>Den Link erstellen.</value>
+  </data>
+  <data name="CmdDesc.749a269e" xml:space="preserve">
+    <value>Den geänderten Link speichern.</value>
+  </data>
+  <data name="CmdDesc.1d4924ca" xml:space="preserve">
+    <value>Die Archive entpacken.</value>
+  </data>
+  <data name="CmdDesc.247f4ead" xml:space="preserve">
+    <value>Das Programm speichern und zur Liste zurückkehren.</value>
+  </data>
+  <data name="CmdDesc.10e630f4" xml:space="preserve">
+    <value>Die Dateien mit der Passphrase ver- oder entschlüsseln.</value>
+  </data>
+  <data name="CmdDesc.dc83b433" xml:space="preserve">
+    <value>Farbe und Tags speichern und schließen.</value>
+  </data>
+  <data name="CmdDesc.6f3f167b" xml:space="preserve">
+    <value>Das Laufwerk formatieren.</value>
+  </data>
+  <data name="CmdDesc.cb195d52" xml:space="preserve">
+    <value>Das Panel filtern und schließen.</value>
+  </data>
+  <data name="CmdDesc.3e40361b" xml:space="preserve">
+    <value>Die zum Muster passenden Zeilen markieren oder die Markierung aufheben.</value>
+  </data>
+  <data name="CmdDesc.bfd6ba2c" xml:space="preserve">
+    <value>Die Zugriffssteuerungsliste und den Besitzer dieses Eintrags bearbeiten.</value>
+  </data>
+  <data name="CmdDesc.b859909d" xml:space="preserve">
+    <value>Die Markierung entfernen, die besagt, dass die Datei aus dem Internet stammt.</value>
+  </data>
+  <data name="CmdDesc.2ef2dd1f" xml:space="preserve">
+    <value>Die geänderten Attribute schreiben und schließen.</value>
+  </data>
+  <data name="CmdDesc.d47fe680" xml:space="preserve">
+    <value>Das Abbild trennen.</value>
+  </data>
 </root>

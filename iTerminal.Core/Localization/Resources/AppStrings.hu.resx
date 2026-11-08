@@ -5788,4 +5788,49 @@
   <data name="Duplicates.None" xml:space="preserve">
     <value>Nincs ismétlődő fájl a {0:N0} vizsgált fájl között.</value>
   </data>
+  <data name="CmdDesc.c5d657d4" xml:space="preserve">
+    <value>A két panel mappáinak összehasonlítása.</value>
+  </data>
+  <data name="CmdDesc.c2109680" xml:space="preserve">
+    <value>Az archívum megírása.</value>
+  </data>
+  <data name="CmdDesc.03b5daee" xml:space="preserve">
+    <value>A hivatkozás létrehozása.</value>
+  </data>
+  <data name="CmdDesc.749a269e" xml:space="preserve">
+    <value>A módosított hivatkozás mentése.</value>
+  </data>
+  <data name="CmdDesc.1d4924ca" xml:space="preserve">
+    <value>Az archívumok kicsomagolása.</value>
+  </data>
+  <data name="CmdDesc.247f4ead" xml:space="preserve">
+    <value>A program mentése és vissza a listához.</value>
+  </data>
+  <data name="CmdDesc.10e630f4" xml:space="preserve">
+    <value>A fájlok titkosítása vagy visszafejtése a jelmondattal.</value>
+  </data>
+  <data name="CmdDesc.dc83b433" xml:space="preserve">
+    <value>A szín és a címkék mentése, majd bezárás.</value>
+  </data>
+  <data name="CmdDesc.6f3f167b" xml:space="preserve">
+    <value>A meghajtó formázása.</value>
+  </data>
+  <data name="CmdDesc.cb195d52" xml:space="preserve">
+    <value>A panel szűrése, majd bezárás.</value>
+  </data>
+  <data name="CmdDesc.3e40361b" xml:space="preserve">
+    <value>A mintára illeszkedő sorok kijelölése vagy kijelölésének törlése.</value>
+  </data>
+  <data name="CmdDesc.bfd6ba2c" xml:space="preserve">
+    <value>A bejegyzés hozzáférés-vezérlési listájának és tulajdonosának szerkesztése.</value>
+  </data>
+  <data name="CmdDesc.b859909d" xml:space="preserve">
+    <value>Az internetes eredetre utaló jelölés eltávolítása a fájlról.</value>
+  </data>
+  <data name="CmdDesc.2ef2dd1f" xml:space="preserve">
+    <value>A módosított attribútumok mentése, majd bezárás.</value>
+  </data>
+  <data name="CmdDesc.d47fe680" xml:space="preserve">
+    <value>A lemezkép leválasztása.</value>
+  </data>
 </root>

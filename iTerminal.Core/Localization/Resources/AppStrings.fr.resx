@@ -5788,4 +5788,49 @@
   <data name="Duplicates.None" xml:space="preserve">
     <value>Aucun fichier en double parmi les {0:N0} fichiers examinés.</value>
   </data>
+  <data name="CmdDesc.c5d657d4" xml:space="preserve">
+    <value>Comparer les dossiers des deux panneaux.</value>
+  </data>
+  <data name="CmdDesc.c2109680" xml:space="preserve">
+    <value>Écrire l&apos;archive.</value>
+  </data>
+  <data name="CmdDesc.03b5daee" xml:space="preserve">
+    <value>Créer le lien.</value>
+  </data>
+  <data name="CmdDesc.749a269e" xml:space="preserve">
+    <value>Enregistrer le lien modifié.</value>
+  </data>
+  <data name="CmdDesc.1d4924ca" xml:space="preserve">
+    <value>Décompresser les archives.</value>
+  </data>
+  <data name="CmdDesc.247f4ead" xml:space="preserve">
+    <value>Enregistrer le programme et revenir à la liste.</value>
+  </data>
+  <data name="CmdDesc.10e630f4" xml:space="preserve">
+    <value>Chiffrer ou déchiffrer les fichiers avec la phrase secrète.</value>
+  </data>
+  <data name="CmdDesc.dc83b433" xml:space="preserve">
+    <value>Enregistrer la couleur et les étiquettes puis fermer.</value>
+  </data>
+  <data name="CmdDesc.6f3f167b" xml:space="preserve">
+    <value>Formater le lecteur.</value>
+  </data>
+  <data name="CmdDesc.cb195d52" xml:space="preserve">
+    <value>Filtrer le panneau puis fermer.</value>
+  </data>
+  <data name="CmdDesc.3e40361b" xml:space="preserve">
+    <value>Marquer ou démarquer les lignes correspondant au motif.</value>
+  </data>
+  <data name="CmdDesc.bfd6ba2c" xml:space="preserve">
+    <value>Modifier la liste de contrôle d&apos;accès et le propriétaire de cette entrée.</value>
+  </data>
+  <data name="CmdDesc.b859909d" xml:space="preserve">
+    <value>Retirer la marque indiquant que le fichier vient d&apos;internet.</value>
+  </data>
+  <data name="CmdDesc.2ef2dd1f" xml:space="preserve">
+    <value>Écrire les attributs modifiés puis fermer.</value>
+  </data>
+  <data name="CmdDesc.d47fe680" xml:space="preserve">
+    <value>Détacher l&apos;image.</value>
+  </data>
 </root>
