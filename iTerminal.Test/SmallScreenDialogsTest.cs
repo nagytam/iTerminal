@@ -907,4 +907,42 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCommandPaletteInGerman_ListsGermanNamesAndStillFindsEnglishOnes()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 120, height: 36);
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync("Shift+F1");
+        await app.TypeAsync("Ordner vergl");
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Ordner vergleichen")), "the German name found by its German words");
+        await app.PressAsync("Esc");
+        await app.WaitForNoDialogAsync();
+
+        await app.PressAsync("Shift+F1");
+        await app.TypeAsync("compare fold");
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Ordner vergleichen")), "the German name found by its English words");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheHelpInGerman_NamesTheCommandsInGerman()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 120, height: 36);
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync("F1");
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("F7") && l.Contains("Dateien suchen")), "F7 named Dateien suchen");
+    }
 }

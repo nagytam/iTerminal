@@ -115,11 +115,11 @@ public class HelpDialog : Dialog
                 if (key.Length > keyColumn)
                 {
                     lines.Add($"  {key}");
-                    lines.Add(indent + command.Title);
+                    lines.Add(indent + UiText.Title(command.Title));
                 }
                 else
                 {
-                    lines.Add($"  {key.PadRight(keyColumn)} {command.Title}");
+                    lines.Add($"  {key.PadRight(keyColumn)} {UiText.Title(command.Title)}");
                 }
                 // A description that only repeats the title ("Toggle Terminal" / "Toggle Terminal")
                 // is a line of noise per command; a long one is wrapped, not cut at the frame.
@@ -148,7 +148,7 @@ public class HelpDialog : Dialog
         foreach (var command in everything)
         {
             var key = command.KeyDisplayText ?? string.Empty;
-            var title = command.Title.Trim();
+            var title = UiText.Title(command.Title.Trim());
             if (key.Length > everyKeyColumn)
             {
                 lines.Add($"  {key}");
