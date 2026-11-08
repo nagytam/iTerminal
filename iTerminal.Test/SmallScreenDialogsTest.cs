@@ -1,4 +1,4 @@
-namespace iTerminal.Test;
+﻿namespace iTerminal.Test;
 
 /// <summary>Dialogs on an 80 x 24 terminal: everything inside its frame, nothing cut mid-word that fits.</summary>
 [TestClass]
@@ -343,5 +343,20 @@ public class SmallScreenDialogsTest
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Modified: [")) && s.Lines.Any(l => l.Contains("Accessed: [")), "the date boxes");
         int[] columns = [.. app.Screen.Lines.Where(l => l.Contains("Modified: [") || l.Contains("Accessed: [") || l.Contains("Created: [")).Select(l => l.IndexOf('['))];
         Assert.IsTrue(columns.Length >= 2 && columns.Distinct().Count() == 1, app.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheGlobalSettingsPageOn45Columns_KeepsItsTextAndCheckBoxInsideTheFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Shift+F8");
+
+        await narrow.WaitForTextAsync("Draw pict");
+        string[] lines = narrow.Screen.Lines.ToArray();
+        int box = Array.FindIndex(lines, l => l.Contains("Draw pict"));
+        int bottom = Array.FindLastIndex(lines, l => l.Contains('╚'));
+        Assert.IsTrue(box >= 0 && box < bottom, narrow.Screen.Dump());
     }
 }

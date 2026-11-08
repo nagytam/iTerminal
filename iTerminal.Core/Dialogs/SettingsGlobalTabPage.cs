@@ -91,6 +91,17 @@ public class SettingsGlobalTabPage : TabPage
         base.OnInitializeLayout();
 
         var rows = WrapLines((int)ViewSize.Width);
+        // Only as many rows as the page has, leaving a blank row and the check box under them: at 12 fixed rows the text and the
+        // box hung below the dialog's frame on a short terminal. What does not fit ends on an ellipsis.
+        var room = Math.Max(1, (int)ViewSize.Height - 2);
+        if (ViewSize.Height > 0 && rows.Count > room)
+        {
+            rows = rows.Take(room).ToList();
+            var last = rows[^1].TrimEnd();
+            var width = Math.Max(2, (int)ViewSize.Width);
+            rows[^1] = (last.Length > width - 2 ? last[..(width - 2)].TrimEnd() : last) + " …";
+        }
+
         for (var i = 0; i < _labels.Count; i++)
         {
             _labels[i].Text = i < rows.Count ? rows[i] : string.Empty;
