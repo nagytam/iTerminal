@@ -135,7 +135,8 @@ public class AboutDialog : Dialog
                 continue; // drawn by the KeyValueList
             }
 
-            var text = lines[i].Length <= innerWidth ? lines[i].Expand(innerWidth) : lines[i].Cut(innerWidth);
+            // A line wider than the dialog ends on an ellipsis: cut at the edge, "the hot key b" stopped mid-word.
+            var text = lines[i].Length <= innerWidth ? lines[i].Expand(innerWidth) : innerWidth > 1 ? lines[i][..(innerWidth - 1)] + "…" : lines[i].Cut(innerWidth);
             var foreground = i == 0 ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
             buffer.Write(
                 ZOrder,

@@ -157,6 +157,23 @@ public class SmallScreenDialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    [DataRow("About", "A keyboard-driven")]
+    [DataRow("Label", "Blank tags remove")]
+    public async Task ASentenceTooLongForTheDialogOn50Columns_EndsOnAnEllipsis(string command, string start)
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+        await narrow.SelectEntryAsync("readme.txt");
+
+        await narrow.PressAsync("Shift+F1");
+        await narrow.WaitForTextAsync("Run:");
+        await narrow.TypeAsync(command);
+        await narrow.PressAsync("Enter");
+
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(start) && l.Contains('…')), $"the line starting \"{start}\" to end on an ellipsis");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task TheFolderSelectorsButtonsOn50Columns_EndOnAnEllipsisWhenTheirCaptionIsCut()
     {
         await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
