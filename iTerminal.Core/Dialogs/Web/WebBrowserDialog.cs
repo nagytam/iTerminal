@@ -1533,7 +1533,7 @@ public class WebBrowserDialog : Dialog
                     // Hints that no longer fit are dropped, least useful first — the line used to be
                     // cut at the right edge, which on 80 columns took "Esc:close" with it.
                     left = " " + FitHints(
-                        ["F1:help", "Ctrl+L:address", "Tab:links", "Ctrl+T:new tab", "F2:bookmarks", "Esc:close"],
+                        [iConsole.Localization.UiText.Get("Web.HintHelp", "F1:help"), iConsole.Localization.UiText.Get("Web.HintAddress", "Ctrl+L:address"), iConsole.Localization.UiText.Get("Web.HintLinks", "Tab:links"), iConsole.Localization.UiText.Get("Web.HintNewTab", "Ctrl+T:new tab"), iConsole.Localization.UiText.Get("Web.HintBookmarks", "F2:bookmarks"), iConsole.Localization.UiText.Get("Hint.Part.EscClose", "Esc:close")],
                         [4, 3, 2, 1, 0, 5],
                         Math.Max(1, width - 8));
                     color = scheme.DisabledForeground;

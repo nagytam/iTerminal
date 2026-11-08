@@ -6034,4 +6034,64 @@
   <data name="Games.Nmm.Slide" xml:space="preserve">
     <value>Egy korong a szomszédos üres pontra csúszik.</value>
   </data>
+  <data name="DiskMgr.Drive" xml:space="preserve">
+    <value>Meghajtó</value>
+  </data>
+  <data name="DiskMgr.Type" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="DiskMgr.State" xml:space="preserve">
+    <value>Állapot</value>
+  </data>
+  <data name="DiskMgr.Space" xml:space="preserve">
+    <value>Hely</value>
+  </data>
+  <data name="DiskMgr.MemoryDrive" xml:space="preserve">
+    <value>Memóriameghajtó (ebben a programban él, és az adatbázisába mentődik)</value>
+  </data>
+  <data name="DiskMgr.NotReady" xml:space="preserve">
+    <value>Nem kész (nincs adathordozó, vagy zárolt)</value>
+  </data>
+  <data name="DiskMgr.NoLabel" xml:space="preserve">
+    <value>(nincs címke)</value>
+  </data>
+  <data name="DiskMgr.FreeOf" xml:space="preserve">
+    <value>{0} szabad {1}-ból</value>
+  </data>
+  <data name="SysSettings.RestartNote" xml:space="preserve">
+    <value>Az új számítógépnév vagy munkacsoport újraindítás után lép érvénybe.</value>
+  </data>
+  <data name="Map.Footer" xml:space="preserve">
+    <value> F1:súgó  Nyilak:görgetés  +/-:nagyítás  /:keresés  M:hely mentése  B:helyek  O:online/offline  D:mentés offline  Esc:bezár</value>
+  </data>
+  <data name="Map.Header" xml:space="preserve">
+    <value> {0}  {1}  nagyítás {2}/{3}</value>
+  </data>
+  <data name="Map.Online" xml:space="preserve">
+    <value>ONLINE</value>
+  </data>
+  <data name="Map.Offline" xml:space="preserve">
+    <value>OFFLINE</value>
+  </data>
+  <data name="Map.Loading" xml:space="preserve">
+    <value>[{0} töltődik]</value>
+  </data>
+  <data name="Map.Missing" xml:space="preserve">
+    <value>[{0} hiányzik]</value>
+  </data>
+  <data name="Web.HintHelp" xml:space="preserve">
+    <value>F1:súgó</value>
+  </data>
+  <data name="Web.HintAddress" xml:space="preserve">
+    <value>Ctrl+L:cím</value>
+  </data>
+  <data name="Web.HintLinks" xml:space="preserve">
+    <value>Tab:hivatkozások</value>
+  </data>
+  <data name="Web.HintNewTab" xml:space="preserve">
+    <value>Ctrl+T:új lap</value>
+  </data>
+  <data name="Web.HintBookmarks" xml:space="preserve">
+    <value>F2:könyvjelzők</value>
+  </data>
 </root>

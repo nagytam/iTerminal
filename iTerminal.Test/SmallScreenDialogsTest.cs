@@ -877,4 +877,34 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German status line or rules");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Alt+F9", null, "Speicherlaufwerk")]
+    [DataRow("Ctrl+Shift+F10", null, "Arbeitsgruppe gilt")]
+    [DataRow(null, "Map", "Pfeile:schwenken")]
+    [DataRow(null, "Web Browser", "F1:Hilfe")]
+    public async Task TheDiskManagerSystemSettingsMapAndWebBrowserInGerman_AreGerman(string? chord, string? command, string expected)
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 160, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        if (chord is not null)
+        {
+            await app.PressAsync(chord);
+        }
+        else
+        {
+            await app.PressAsync("Shift+F1");
+            await app.TypeAsync(command!);
+            await app.PressAsync("Enter");
+        }
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
+    }
 }

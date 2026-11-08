@@ -264,7 +264,7 @@ public class SystemSettingsDialog : Dialog
         }
 
         body.Add(default);
-        AddWrapped(body, "A new computer name or workgroup takes effect after a restart.", scheme.DisabledForeground);
+        AddWrapped(body, iConsole.Localization.UiText.Get("SysSettings.RestartNote", "A new computer name or workgroup takes effect after a restart."), scheme.DisabledForeground);
         if (identity.IsDomainMember)
         {
             AddWrapped(body, "Leaving a domain needs a directory account: use Windows' System Properties.", scheme.DisabledForeground);
