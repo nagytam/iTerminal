@@ -639,8 +639,8 @@ public class AccessControlDialog : Dialog
         _ownerField = 0;
         _mode = Mode.Owner;
         SetStatus(info.Group is null
-            ? "Type the new owner. Changing it needs the right to take ownership (an administrator)."
-            : "The new owner and/or group. Changing the owner needs root; blank leaves one alone.", false);
+            ? UiText.Get("Access.OwnerHintWindows", "Type the new owner. Changing it needs the right to take ownership (an administrator).")
+            : UiText.Get("Access.OwnerHintUnix", "The new owner and/or group. Changing the owner needs root; blank leaves one alone."), false);
         StateHasChanged();
     }
 
@@ -797,10 +797,10 @@ public class AccessControlDialog : Dialog
 
     private string Hints() => _mode switch
     {
-        Mode.List => _confirmDelete ? "y remove  any other key cancels"
-            : "A add  Enter change  Del remove  O owner" + (_info is { CanChangeInheritance: true } ? "  I inherit" : string.Empty) + "  R reread  Esc close",
-        Mode.Edit => "Tab field  Space/←→ change  Enter save  Esc back",
-        _ => "Tab field  Enter save  Esc back",
+        Mode.List => _confirmDelete ? UiText.Get("Access.HintConfirm", "y remove  any other key cancels")
+            : UiText.Get("Access.HintList", "A add  Enter change  Del remove  O owner") + (_info is { CanChangeInheritance: true } ? "  " + UiText.Get("Access.HintInherit", "I inherit") : string.Empty) + "  " + UiText.Get("Access.HintListEnd", "R reread  Esc close"),
+        Mode.Edit => UiText.Get("Access.HintEdit", "Tab field  Space/←→ change  Enter save  Esc back"),
+        _ => UiText.Get("Access.HintOwner", "Tab field  Enter save  Esc back"),
     };
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colors)

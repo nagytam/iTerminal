@@ -7087,4 +7087,130 @@
   <data name="Git.Footer.Common" xml:space="preserve">
     <value>Tab:panel  p/P:pull/push  ?:billentyűk  Esc:bezár</value>
   </data>
+  <data name="Video.Btn.Start" xml:space="preserve">
+    <value>|&lt; Eleje</value>
+  </data>
+  <data name="Video.Tip.Start" xml:space="preserve">
+    <value>Vissza az elejére és lejátszás</value>
+  </data>
+  <data name="Video.Btn.Back" xml:space="preserve">
+    <value>&lt;&lt; 10 mp</value>
+  </data>
+  <data name="Video.Tip.Back" xml:space="preserve">
+    <value>Tíz másodperc vissza</value>
+  </data>
+  <data name="Video.Btn.Pause" xml:space="preserve">
+    <value>Szünet</value>
+  </data>
+  <data name="Video.Btn.Play" xml:space="preserve">
+    <value>Lejátszás</value>
+  </data>
+  <data name="Video.Tip.PlayPause" xml:space="preserve">
+    <value>Lejátszás vagy szünet</value>
+  </data>
+  <data name="Video.Btn.Stop" xml:space="preserve">
+    <value>Leállítás</value>
+  </data>
+  <data name="Video.Tip.Stop" xml:space="preserve">
+    <value>Leállítás és vissza az első képhez</value>
+  </data>
+  <data name="Video.Btn.Forward" xml:space="preserve">
+    <value>10 mp &gt;&gt;</value>
+  </data>
+  <data name="Video.Tip.Forward" xml:space="preserve">
+    <value>Tíz másodperc előre</value>
+  </data>
+  <data name="Video.Btn.ColourOn" xml:space="preserve">
+    <value>Szín: be</value>
+  </data>
+  <data name="Video.Btn.ColourOff" xml:space="preserve">
+    <value>Szín: ki</value>
+  </data>
+  <data name="Video.Tip.Colour" xml:space="preserve">
+    <value>Szín be- vagy kikapcsolása</value>
+  </data>
+  <data name="Terminal.Tab.Command" xml:space="preserve">
+    <value>Parancs: {0}</value>
+  </data>
+  <data name="Terminal.Tab.ExitCode" xml:space="preserve">
+    <value>Kilépési kód: {0}</value>
+  </data>
+  <data name="Terminal.Tab.WorkDir" xml:space="preserve">
+    <value>Munkakönyvtár: {0}</value>
+  </data>
+  <data name="Terminal.Tab.Start" xml:space="preserve">
+    <value>Kezdési idő: {0}</value>
+  </data>
+  <data name="Terminal.Tab.End" xml:space="preserve">
+    <value>Befejezési idő: {0}</value>
+  </data>
+  <data name="Terminal.Tab.Elapsed" xml:space="preserve">
+    <value>Eltelt idő: {0} [ms]</value>
+  </data>
+  <data name="Terminal.Tab.Host" xml:space="preserve">
+    <value>Gép: {0}</value>
+  </data>
+  <data name="Terminal.Tab.User" xml:space="preserve">
+    <value>Felhasználónév: {0}</value>
+  </data>
+  <data name="Packages.LoadingInstalled" xml:space="preserve">
+    <value>Telepített csomagok betöltése innen: {0}…</value>
+  </data>
+  <data name="Packages.ConfirmInstall" xml:space="preserve">
+    <value>{0} ({1}) telepítése?  y:igen  más billentyű:nem</value>
+  </data>
+  <data name="Packages.Installing" xml:space="preserve">
+    <value>{0} telepítése...</value>
+  </data>
+  <data name="Packages.ConfirmUninstall" xml:space="preserve">
+    <value>{0} ({1}) eltávolítása?  y:igen  más billentyű:nem</value>
+  </data>
+  <data name="Packages.Uninstalling" xml:space="preserve">
+    <value>{0} eltávolítása...</value>
+  </data>
+  <data name="Checksum.NotYet" xml:space="preserve">
+    <value>Még nem ellenőrzőösszeg: {0} karakter (32, 40, 64 vagy 128 várt).</value>
+  </data>
+  <data name="Checksum.NothingToSave" xml:space="preserve">
+    <value>Még nincs mit menteni: a fájl olvasása tart.</value>
+  </data>
+  <data name="Checksum.LocalOnly" xml:space="preserve">
+    <value>Ellenőrzőösszeg-fájl csak a helyi lemezen lévő fájl mellé írható.</value>
+  </data>
+  <data name="Checksum.AlreadySaid" xml:space="preserve">
+    <value>{0} már ezt tartalmazza.</value>
+  </data>
+  <data name="Checksum.Exists" xml:space="preserve">
+    <value>{0} létezik és mást tartalmaz — nem lett felülírva.</value>
+  </data>
+  <data name="Checksum.Saved" xml:space="preserve">
+    <value>{0} elmentve.</value>
+  </data>
+  <data name="Checksum.CouldNotSave" xml:space="preserve">
+    <value>{0} nem menthető: {1}</value>
+  </data>
+  <data name="Access.OwnerHintWindows" xml:space="preserve">
+    <value>Írja be az új tulajdonost. A módosításhoz tulajdonjog-átvételi jog kell (rendszergazda).</value>
+  </data>
+  <data name="Access.OwnerHintUnix" xml:space="preserve">
+    <value>Az új tulajdonos és/vagy csoport. A tulajdonos módosításához root kell; üresen hagyva nem változik.</value>
+  </data>
+  <data name="Access.HintConfirm" xml:space="preserve">
+    <value>y eltávolít  bármely más billentyű mégse</value>
+  </data>
+  <data name="Access.HintList" xml:space="preserve">
+    <value>A hozzáad  Enter módosít  Del töröl  O tulajdonos</value>
+  </data>
+  <data name="Access.HintInherit" xml:space="preserve">
+    <value>I öröklés</value>
+  </data>
+  <data name="Access.HintListEnd" xml:space="preserve">
+    <value>R újraolvas  Esc bezár</value>
+  </data>
+  <data name="Access.HintEdit" xml:space="preserve">
+    <value>Tab mező  Szóköz/←→ változtat  Enter mentés  Esc vissza</value>
+  </data>
+  <data name="Access.HintOwner" xml:space="preserve">
+    <value>Tab mező  Enter mentés  Esc vissza</value>
+  </data>
 </root>

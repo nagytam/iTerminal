@@ -70,12 +70,12 @@ public class VideoFileViewerDialog : Dialog
 
         _buttons =
         [
-            CreateButton(() => "|< Start", "Back to the start and play", Restart),
-            CreateButton(() => "<< 10s", "Back ten seconds", () => SeekBy(-ButtonSeekStep)),
-            CreateButton(() => State == VideoPlaybackState.Playing ? "Pause" : "Play", "Play or pause", TogglePlayPause),
-            CreateButton(() => "Stop", "Stop and go back to the first picture", Stop),
-            CreateButton(() => "10s >>", "Forward ten seconds", () => SeekBy(ButtonSeekStep)),
-            CreateButton(() => _colorMode == AsciiColorMode.Color ? "Colour: on" : "Colour: off", "Switch colour on or off", ToggleColor),
+            CreateButton(() => UiText.Get("Video.Btn.Start", "|< Start"), UiText.Get("Video.Tip.Start", "Back to the start and play"), Restart),
+            CreateButton(() => UiText.Get("Video.Btn.Back", "<< 10s"), UiText.Get("Video.Tip.Back", "Back ten seconds"), () => SeekBy(-ButtonSeekStep)),
+            CreateButton(() => State == VideoPlaybackState.Playing ? UiText.Get("Video.Btn.Pause", "Pause") : UiText.Get("Video.Btn.Play", "Play"), UiText.Get("Video.Tip.PlayPause", "Play or pause"), TogglePlayPause),
+            CreateButton(() => UiText.Get("Video.Btn.Stop", "Stop"), UiText.Get("Video.Tip.Stop", "Stop and go back to the first picture"), Stop),
+            CreateButton(() => UiText.Get("Video.Btn.Forward", "10s >>"), UiText.Get("Video.Tip.Forward", "Forward ten seconds"), () => SeekBy(ButtonSeekStep)),
+            CreateButton(() => _colorMode == AsciiColorMode.Color ? UiText.Get("Video.Btn.ColourOn", "Colour: on") : UiText.Get("Video.Btn.ColourOff", "Colour: off"), UiText.Get("Video.Tip.Colour", "Switch colour on or off"), ToggleColor),
         ];
     }
 

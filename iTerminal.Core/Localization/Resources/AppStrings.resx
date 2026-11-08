@@ -7228,4 +7228,130 @@
   <data name="Git.Footer.Common" xml:space="preserve">
     <value>Tab:panel  p/P:pull/push  ?:keys  Esc:close</value>
   </data>
+  <data name="Video.Btn.Start" xml:space="preserve">
+    <value>|&lt; Start</value>
+  </data>
+  <data name="Video.Tip.Start" xml:space="preserve">
+    <value>Back to the start and play</value>
+  </data>
+  <data name="Video.Btn.Back" xml:space="preserve">
+    <value>&lt;&lt; 10s</value>
+  </data>
+  <data name="Video.Tip.Back" xml:space="preserve">
+    <value>Back ten seconds</value>
+  </data>
+  <data name="Video.Btn.Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Video.Btn.Play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="Video.Tip.PlayPause" xml:space="preserve">
+    <value>Play or pause</value>
+  </data>
+  <data name="Video.Btn.Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Video.Tip.Stop" xml:space="preserve">
+    <value>Stop and go back to the first picture</value>
+  </data>
+  <data name="Video.Btn.Forward" xml:space="preserve">
+    <value>10s &gt;&gt;</value>
+  </data>
+  <data name="Video.Tip.Forward" xml:space="preserve">
+    <value>Forward ten seconds</value>
+  </data>
+  <data name="Video.Btn.ColourOn" xml:space="preserve">
+    <value>Colour: on</value>
+  </data>
+  <data name="Video.Btn.ColourOff" xml:space="preserve">
+    <value>Colour: off</value>
+  </data>
+  <data name="Video.Tip.Colour" xml:space="preserve">
+    <value>Switch colour on or off</value>
+  </data>
+  <data name="Terminal.Tab.Command" xml:space="preserve">
+    <value>Command: {0}</value>
+  </data>
+  <data name="Terminal.Tab.ExitCode" xml:space="preserve">
+    <value>Exit code: {0}</value>
+  </data>
+  <data name="Terminal.Tab.WorkDir" xml:space="preserve">
+    <value>Working directory: {0}</value>
+  </data>
+  <data name="Terminal.Tab.Start" xml:space="preserve">
+    <value>Start time: {0}</value>
+  </data>
+  <data name="Terminal.Tab.End" xml:space="preserve">
+    <value>Exit time: {0}</value>
+  </data>
+  <data name="Terminal.Tab.Elapsed" xml:space="preserve">
+    <value>Elapsed time: {0} [msec]</value>
+  </data>
+  <data name="Terminal.Tab.Host" xml:space="preserve">
+    <value>Host: {0}</value>
+  </data>
+  <data name="Terminal.Tab.User" xml:space="preserve">
+    <value>Username: {0}</value>
+  </data>
+  <data name="Packages.LoadingInstalled" xml:space="preserve">
+    <value>Loading installed packages from {0}…</value>
+  </data>
+  <data name="Packages.ConfirmInstall" xml:space="preserve">
+    <value>Install {0} ({1})?  y:yes  any other key:no</value>
+  </data>
+  <data name="Packages.Installing" xml:space="preserve">
+    <value>Installing {0}...</value>
+  </data>
+  <data name="Packages.ConfirmUninstall" xml:space="preserve">
+    <value>Uninstall {0} ({1})?  y:yes  any other key:no</value>
+  </data>
+  <data name="Packages.Uninstalling" xml:space="preserve">
+    <value>Uninstalling {0}...</value>
+  </data>
+  <data name="Checksum.NotYet" xml:space="preserve">
+    <value>Not a checksum yet: {0} characters (32, 40, 64 or 128 expected).</value>
+  </data>
+  <data name="Checksum.NothingToSave" xml:space="preserve">
+    <value>Nothing to save yet: the file is still being read.</value>
+  </data>
+  <data name="Checksum.LocalOnly" xml:space="preserve">
+    <value>A checksum file can only be written beside a file on the local disk.</value>
+  </data>
+  <data name="Checksum.AlreadySaid" xml:space="preserve">
+    <value>{0} already says so.</value>
+  </data>
+  <data name="Checksum.Exists" xml:space="preserve">
+    <value>{0} exists and says something else — not overwritten.</value>
+  </data>
+  <data name="Checksum.Saved" xml:space="preserve">
+    <value>Saved {0}.</value>
+  </data>
+  <data name="Checksum.CouldNotSave" xml:space="preserve">
+    <value>Could not save {0}: {1}</value>
+  </data>
+  <data name="Access.OwnerHintWindows" xml:space="preserve">
+    <value>Type the new owner. Changing it needs the right to take ownership (an administrator).</value>
+  </data>
+  <data name="Access.OwnerHintUnix" xml:space="preserve">
+    <value>The new owner and/or group. Changing the owner needs root; blank leaves one alone.</value>
+  </data>
+  <data name="Access.HintConfirm" xml:space="preserve">
+    <value>y remove  any other key cancels</value>
+  </data>
+  <data name="Access.HintList" xml:space="preserve">
+    <value>A add  Enter change  Del remove  O owner</value>
+  </data>
+  <data name="Access.HintInherit" xml:space="preserve">
+    <value>I inherit</value>
+  </data>
+  <data name="Access.HintListEnd" xml:space="preserve">
+    <value>R reread  Esc close</value>
+  </data>
+  <data name="Access.HintEdit" xml:space="preserve">
+    <value>Tab field  Space/←→ change  Enter save  Esc back</value>
+  </data>
+  <data name="Access.HintOwner" xml:space="preserve">
+    <value>Tab field  Enter save  Esc back</value>
+  </data>
 </root>

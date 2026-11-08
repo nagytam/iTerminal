@@ -93,6 +93,33 @@ public class VideoFileViewerDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task TheTransportButtonsFollowTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(VideoFileViewerDialog).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        var dialog = CreateDialog();
+        await ShowAsync(dialog);
+        try
+        {
+            await WaitForAsync(() => dialog.State == VideoPlaybackState.Playing, "playing");
+
+            var text = Render(dialog);
+
+            StringAssert.Contains(text, "Farbe: aus");
+            StringAssert.Contains(text, "Stopp");
+            StringAssert.Contains(text, "10 s >>");
+            Assert.IsFalse(text.Contains("Colour: off", StringComparison.Ordinal), text);
+        }
+        finally
+        {
+            dialog.Close();
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task Show_FitsThePictureToTheRoomKeepingItsShape()
     {
         var dialog = CreateDialog();

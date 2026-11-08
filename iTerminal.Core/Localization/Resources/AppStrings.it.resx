@@ -7087,4 +7087,130 @@
   <data name="Git.Footer.Common" xml:space="preserve">
     <value>Tab:pannello  p/P:pull/push  ?:tasti  Esc:chiudi</value>
   </data>
+  <data name="Video.Btn.Start" xml:space="preserve">
+    <value>|&lt; Inizio</value>
+  </data>
+  <data name="Video.Tip.Start" xml:space="preserve">
+    <value>Torna all’inizio e riproduce</value>
+  </data>
+  <data name="Video.Btn.Back" xml:space="preserve">
+    <value>&lt;&lt; 10 s</value>
+  </data>
+  <data name="Video.Tip.Back" xml:space="preserve">
+    <value>Indietro di dieci secondi</value>
+  </data>
+  <data name="Video.Btn.Pause" xml:space="preserve">
+    <value>Pausa</value>
+  </data>
+  <data name="Video.Btn.Play" xml:space="preserve">
+    <value>Riproduci</value>
+  </data>
+  <data name="Video.Tip.PlayPause" xml:space="preserve">
+    <value>Riproduci o metti in pausa</value>
+  </data>
+  <data name="Video.Btn.Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Video.Tip.Stop" xml:space="preserve">
+    <value>Ferma e torna al primo fotogramma</value>
+  </data>
+  <data name="Video.Btn.Forward" xml:space="preserve">
+    <value>10 s &gt;&gt;</value>
+  </data>
+  <data name="Video.Tip.Forward" xml:space="preserve">
+    <value>Avanti di dieci secondi</value>
+  </data>
+  <data name="Video.Btn.ColourOn" xml:space="preserve">
+    <value>Colore: sì</value>
+  </data>
+  <data name="Video.Btn.ColourOff" xml:space="preserve">
+    <value>Colore: no</value>
+  </data>
+  <data name="Video.Tip.Colour" xml:space="preserve">
+    <value>Attiva o disattiva il colore</value>
+  </data>
+  <data name="Terminal.Tab.Command" xml:space="preserve">
+    <value>Comando: {0}</value>
+  </data>
+  <data name="Terminal.Tab.ExitCode" xml:space="preserve">
+    <value>Codice di uscita: {0}</value>
+  </data>
+  <data name="Terminal.Tab.WorkDir" xml:space="preserve">
+    <value>Cartella di lavoro: {0}</value>
+  </data>
+  <data name="Terminal.Tab.Start" xml:space="preserve">
+    <value>Ora di inizio: {0}</value>
+  </data>
+  <data name="Terminal.Tab.End" xml:space="preserve">
+    <value>Ora di uscita: {0}</value>
+  </data>
+  <data name="Terminal.Tab.Elapsed" xml:space="preserve">
+    <value>Tempo trascorso: {0} [ms]</value>
+  </data>
+  <data name="Terminal.Tab.Host" xml:space="preserve">
+    <value>Host: {0}</value>
+  </data>
+  <data name="Terminal.Tab.User" xml:space="preserve">
+    <value>Utente: {0}</value>
+  </data>
+  <data name="Packages.LoadingInstalled" xml:space="preserve">
+    <value>Caricamento dei pacchetti installati da {0}…</value>
+  </data>
+  <data name="Packages.ConfirmInstall" xml:space="preserve">
+    <value>Installare {0} ({1})?  y:sì  altro tasto:no</value>
+  </data>
+  <data name="Packages.Installing" xml:space="preserve">
+    <value>Installazione di {0}...</value>
+  </data>
+  <data name="Packages.ConfirmUninstall" xml:space="preserve">
+    <value>Disinstallare {0} ({1})?  y:sì  altro tasto:no</value>
+  </data>
+  <data name="Packages.Uninstalling" xml:space="preserve">
+    <value>Disinstallazione di {0}...</value>
+  </data>
+  <data name="Checksum.NotYet" xml:space="preserve">
+    <value>Non ancora un checksum: {0} caratteri (attesi 32, 40, 64 o 128).</value>
+  </data>
+  <data name="Checksum.NothingToSave" xml:space="preserve">
+    <value>Ancora niente da salvare: il file è ancora in lettura.</value>
+  </data>
+  <data name="Checksum.LocalOnly" xml:space="preserve">
+    <value>Un file di checksum può essere scritto solo accanto a un file sul disco locale.</value>
+  </data>
+  <data name="Checksum.AlreadySaid" xml:space="preserve">
+    <value>{0} lo indica già.</value>
+  </data>
+  <data name="Checksum.Exists" xml:space="preserve">
+    <value>{0} esiste e indica altro — non sovrascritto.</value>
+  </data>
+  <data name="Checksum.Saved" xml:space="preserve">
+    <value>{0} salvato.</value>
+  </data>
+  <data name="Checksum.CouldNotSave" xml:space="preserve">
+    <value>Impossibile salvare {0}: {1}</value>
+  </data>
+  <data name="Access.OwnerHintWindows" xml:space="preserve">
+    <value>Digitare il nuovo proprietario. Cambiarlo richiede il diritto di assumere la proprietà (amministratore).</value>
+  </data>
+  <data name="Access.OwnerHintUnix" xml:space="preserve">
+    <value>Il nuovo proprietario e/o gruppo. Cambiare il proprietario richiede root; vuoto lascia il valore invariato.</value>
+  </data>
+  <data name="Access.HintConfirm" xml:space="preserve">
+    <value>y rimuovi  qualsiasi altro tasto annulla</value>
+  </data>
+  <data name="Access.HintList" xml:space="preserve">
+    <value>A aggiungi  Invio modifica  Canc rimuovi  O proprietario</value>
+  </data>
+  <data name="Access.HintInherit" xml:space="preserve">
+    <value>I ereditarietà</value>
+  </data>
+  <data name="Access.HintListEnd" xml:space="preserve">
+    <value>R rileggi  Esc chiudi</value>
+  </data>
+  <data name="Access.HintEdit" xml:space="preserve">
+    <value>Tab campo  Spazio/←→ cambia  Invio salva  Esc indietro</value>
+  </data>
+  <data name="Access.HintOwner" xml:space="preserve">
+    <value>Tab campo  Invio salva  Esc indietro</value>
+  </data>
 </root>

@@ -624,7 +624,7 @@ public class ChecksumDialog : Dialog
 
         if (ChecksumService.AlgorithmFor(normalized) is not { } algorithm)
         {
-            return ($"Not a checksum yet: {normalized.Length} characters (32, 40, 64 or 128 expected).", null);
+            return (string.Format(UiText.Get("Checksum.NotYet", "Not a checksum yet: {0} characters (32, 40, 64 or 128 expected)."), normalized.Length), null);
         }
 
         var name = ChecksumService.DisplayName(algorithm);
@@ -750,12 +750,12 @@ public class ChecksumDialog : Dialog
         {
             if (url is null || Result is not { } result)
             {
-                return ("Nothing to save yet: the file is still being read.", true);
+                return (UiText.Get("Checksum.NothingToSave", "Nothing to save yet: the file is still being read."), true);
             }
 
             if (url.ContainerType != ContainerType.FileSystem)
             {
-                return ("A checksum file can only be written beside a file on the local disk.", true);
+                return (UiText.Get("Checksum.LocalOnly", "A checksum file can only be written beside a file on the local disk."), true);
             }
 
             var name = Path.GetFileName(url.FullName);
@@ -767,16 +767,16 @@ public class ChecksumDialog : Dialog
                 {
                     var existing = ChecksumService.ParseChecksumFile(File.ReadAllText(target), name);
                     return string.Equals(existing, result.Hashes[ChecksumAlgorithm.Sha256], StringComparison.OrdinalIgnoreCase)
-                        ? ($"{Path.GetFileName(target)} already says so.", false)
-                        : ($"{Path.GetFileName(target)} exists and says something else — not overwritten.", true);
+                        ? (string.Format(UiText.Get("Checksum.AlreadySaid", "{0} already says so."), Path.GetFileName(target)), false)
+                        : (string.Format(UiText.Get("Checksum.Exists", "{0} exists and says something else — not overwritten."), Path.GetFileName(target)), true);
                 }
 
                 File.WriteAllText(target, line + "\n");
-                return ($"Saved {Path.GetFileName(target)}.", false);
+                return (string.Format(UiText.Get("Checksum.Saved", "Saved {0}."), Path.GetFileName(target)), false);
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
             {
-                return ($"Could not save {Path.GetFileName(target)}: {exception.Message}", true);
+                return (string.Format(UiText.Get("Checksum.CouldNotSave", "Could not save {0}: {1}"), Path.GetFileName(target), exception.Message), true);
             }
         }
     }
