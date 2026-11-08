@@ -468,4 +468,21 @@ public class SmallScreenDialogsTest
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(text)), "the empty-list help");
         Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains(text) && l.Contains('…')), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task ThePropertiesButtonsOn45Columns_StayInsideTheFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+        await narrow.SelectEntryAsync("readme.txt");
+
+        await narrow.PressAsync("Ctrl+F12");
+
+        await narrow.WaitForTextAsync("Properties of readme.txt");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Apply")), "the buttons");
+        foreach (string line in narrow.Screen.Lines.Where(l => l.Contains("Permissions") || l.Contains("Remove mark") || l.Contains("Apply")))
+        {
+            Assert.IsTrue(line.TrimEnd().EndsWith('║'), narrow.Screen.Dump());
+        }
+    }
 }
