@@ -115,7 +115,16 @@ public class CompressDialog : FormDialog
 
     protected override void ClearError() => _errorLabel.Text = string.Empty;
 
-    internal string HintForTest => _labelHint.Text;
+    internal string HintForTest => _hintFull;
+
+    private string _hintFull = string.Empty;
+
+    /// <summary>The hint ends on an ellipsis where the dialog is too narrow for it, instead of being cut mid-word.</summary>
+    private void ShowHint()
+    {
+        var room = (int)_labelHint.ViewSize.Width;
+        _labelHint.Text = room > 1 && _hintFull.Length > room ? _hintFull[..(room - 1)] + "…" : _hintFull;
+    }
     internal string SourceLabelForTest => _labelSource.Text;
     internal bool IsLevelEnabledForTest => _level.IsEnabled;
     internal bool IsPasswordEnabledForTest => _password.IsEnabled;
@@ -315,9 +324,10 @@ public class CompressDialog : FormDialog
         var unavailable = ArchiveFormat.All.Where(f => !_comboFormat.Items.Contains(f))
             .Select(f => _compressionService.WhyUnavailable(f))
             .FirstOrDefault(reason => reason is not null);
-        _labelHint.Text = (ExistsLocally(ArchivePath) ? iConsole.Localization.UiText.Get("Compress.AddsToExisting", "Adds to the existing archive.") + " " : string.Empty)
+        _hintFull = (ExistsLocally(ArchivePath) ? iConsole.Localization.UiText.Get("Compress.AddsToExisting", "Adds to the existing archive.") + " " : string.Empty)
             + hint
             + (unavailable is null ? string.Empty : $" ({unavailable}.)");
+        ShowHint();
         StateHasChanged();
     }
 
@@ -354,6 +364,7 @@ public class CompressDialog : FormDialog
         _checkBoxReplace.ViewSize = width;
         _labelHint.Position = new Position(FieldX, 12);
         _labelHint.ViewSize = width;
+        ShowHint();
         _errorLabel.Position = new Position(FieldX, 13);
         _errorLabel.ViewSize = width;
         LayoutButtonRow(_compressButton, _cancelButton);

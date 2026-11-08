@@ -106,6 +106,8 @@ public class HelpDialog : Dialog
             // The key column fits the keys, within reason; a key longer than that gets a line of its
             // own rather than pushing its title out of the column ("Ctrl+Shift+M / Ctrl+F7 Music…").
             var keyColumn = Math.Clamp(commands.Max(c => c.KeyDisplayText.Length), MinimumKeyColumn, MaximumKeyColumn);
+            // On a narrow terminal the descriptions keep 24 columns to wrap in; a longer key takes a line of its own.
+            keyColumn = Math.Min(keyColumn, Math.Max(8, width - 3 - 24));
             var indent = new string(' ', keyColumn + 3);
             foreach (var command in commands)
             {
