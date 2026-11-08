@@ -238,7 +238,7 @@ public class PackageManagerDialog : SplitPaneDialog
 
     private void StartRefreshInstalled() =>
         StartQuery(
-            $"Loading installed packages from {_packageManagerService.DisplayName}…",
+            string.Format(UiText.Get("Packages.LoadingInstalled", "Loading installed packages from {0}…"), _packageManagerService.DisplayName),
             ct => _packageManagerService.GetInstalledPackagesAsync(),
             packages =>
             {
@@ -384,8 +384,8 @@ public class PackageManagerDialog : SplitPaneDialog
             return;
         }
 
-        BeginConfirm($"Install {package.Name} ({package.Id})?  y:yes  any other key:no",
-            () => RunPackageManager($"Installing {package.Name}...", ct => _packageManagerService.InstallAsync(package.Id, AppendOutput, ct)));
+        BeginConfirm(string.Format(UiText.Get("Packages.ConfirmInstall", "Install {0} ({1})?  y:yes  any other key:no"), package.Name, package.Id),
+            () => RunPackageManager(string.Format(UiText.Get("Packages.Installing", "Installing {0}..."), package.Name), ct => _packageManagerService.InstallAsync(package.Id, AppendOutput, ct)));
     }
 
     private void UninstallSelected()
@@ -401,8 +401,8 @@ public class PackageManagerDialog : SplitPaneDialog
             return;
         }
 
-        BeginConfirm($"Uninstall {package.Name} ({package.Id})?  y:yes  any other key:no",
-            () => RunPackageManager($"Uninstalling {package.Name}...", ct => _packageManagerService.UninstallAsync(package.Id, AppendOutput, ct)));
+        BeginConfirm(string.Format(UiText.Get("Packages.ConfirmUninstall", "Uninstall {0} ({1})?  y:yes  any other key:no"), package.Name, package.Id),
+            () => RunPackageManager(string.Format(UiText.Get("Packages.Uninstalling", "Uninstalling {0}..."), package.Name), ct => _packageManagerService.UninstallAsync(package.Id, AppendOutput, ct)));
     }
 
     /// <summary>Runs an install/uninstall in the background, streaming output, then refreshes the installed list.</summary>

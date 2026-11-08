@@ -7087,4 +7087,130 @@
   <data name="Git.Footer.Common" xml:space="preserve">
     <value>Tab:panneau  p/P:pull/push  ?:touches  Échap:fermer</value>
   </data>
+  <data name="Video.Btn.Start" xml:space="preserve">
+    <value>|&lt; Début</value>
+  </data>
+  <data name="Video.Tip.Start" xml:space="preserve">
+    <value>Retour au début et lecture</value>
+  </data>
+  <data name="Video.Btn.Back" xml:space="preserve">
+    <value>&lt;&lt; 10 s</value>
+  </data>
+  <data name="Video.Tip.Back" xml:space="preserve">
+    <value>Reculer de dix secondes</value>
+  </data>
+  <data name="Video.Btn.Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Video.Btn.Play" xml:space="preserve">
+    <value>Lecture</value>
+  </data>
+  <data name="Video.Tip.PlayPause" xml:space="preserve">
+    <value>Lecture ou pause</value>
+  </data>
+  <data name="Video.Btn.Stop" xml:space="preserve">
+    <value>Arrêt</value>
+  </data>
+  <data name="Video.Tip.Stop" xml:space="preserve">
+    <value>Arrêter et revenir à la première image</value>
+  </data>
+  <data name="Video.Btn.Forward" xml:space="preserve">
+    <value>10 s &gt;&gt;</value>
+  </data>
+  <data name="Video.Tip.Forward" xml:space="preserve">
+    <value>Avancer de dix secondes</value>
+  </data>
+  <data name="Video.Btn.ColourOn" xml:space="preserve">
+    <value>Couleur : oui</value>
+  </data>
+  <data name="Video.Btn.ColourOff" xml:space="preserve">
+    <value>Couleur : non</value>
+  </data>
+  <data name="Video.Tip.Colour" xml:space="preserve">
+    <value>Activer ou désactiver la couleur</value>
+  </data>
+  <data name="Terminal.Tab.Command" xml:space="preserve">
+    <value>Commande : {0}</value>
+  </data>
+  <data name="Terminal.Tab.ExitCode" xml:space="preserve">
+    <value>Code de sortie : {0}</value>
+  </data>
+  <data name="Terminal.Tab.WorkDir" xml:space="preserve">
+    <value>Dossier de travail : {0}</value>
+  </data>
+  <data name="Terminal.Tab.Start" xml:space="preserve">
+    <value>Heure de début : {0}</value>
+  </data>
+  <data name="Terminal.Tab.End" xml:space="preserve">
+    <value>Heure de fin : {0}</value>
+  </data>
+  <data name="Terminal.Tab.Elapsed" xml:space="preserve">
+    <value>Durée : {0} [ms]</value>
+  </data>
+  <data name="Terminal.Tab.Host" xml:space="preserve">
+    <value>Hôte : {0}</value>
+  </data>
+  <data name="Terminal.Tab.User" xml:space="preserve">
+    <value>Utilisateur : {0}</value>
+  </data>
+  <data name="Packages.LoadingInstalled" xml:space="preserve">
+    <value>Chargement des paquets installés depuis {0}…</value>
+  </data>
+  <data name="Packages.ConfirmInstall" xml:space="preserve">
+    <value>Installer {0} ({1}) ?  y:oui  autre touche:non</value>
+  </data>
+  <data name="Packages.Installing" xml:space="preserve">
+    <value>Installation de {0}...</value>
+  </data>
+  <data name="Packages.ConfirmUninstall" xml:space="preserve">
+    <value>Désinstaller {0} ({1}) ?  y:oui  autre touche:non</value>
+  </data>
+  <data name="Packages.Uninstalling" xml:space="preserve">
+    <value>Désinstallation de {0}...</value>
+  </data>
+  <data name="Checksum.NotYet" xml:space="preserve">
+    <value>Pas encore une somme de contrôle : {0} caractères (32, 40, 64 ou 128 attendus).</value>
+  </data>
+  <data name="Checksum.NothingToSave" xml:space="preserve">
+    <value>Rien à enregistrer pour l’instant : le fichier est encore en lecture.</value>
+  </data>
+  <data name="Checksum.LocalOnly" xml:space="preserve">
+    <value>Un fichier de somme de contrôle ne peut être écrit qu’à côté d’un fichier du disque local.</value>
+  </data>
+  <data name="Checksum.AlreadySaid" xml:space="preserve">
+    <value>{0} le dit déjà.</value>
+  </data>
+  <data name="Checksum.Exists" xml:space="preserve">
+    <value>{0} existe et indique autre chose — non écrasé.</value>
+  </data>
+  <data name="Checksum.Saved" xml:space="preserve">
+    <value>{0} enregistré.</value>
+  </data>
+  <data name="Checksum.CouldNotSave" xml:space="preserve">
+    <value>Impossible d’enregistrer {0} : {1}</value>
+  </data>
+  <data name="Access.OwnerHintWindows" xml:space="preserve">
+    <value>Saisissez le nouveau propriétaire. Le changer exige le droit de prendre possession (administrateur).</value>
+  </data>
+  <data name="Access.OwnerHintUnix" xml:space="preserve">
+    <value>Le nouveau propriétaire et/ou groupe. Changer le propriétaire exige root ; vide laisse la valeur inchangée.</value>
+  </data>
+  <data name="Access.HintConfirm" xml:space="preserve">
+    <value>y supprimer  toute autre touche annule</value>
+  </data>
+  <data name="Access.HintList" xml:space="preserve">
+    <value>A ajouter  Entrée modifier  Suppr supprimer  O propriétaire</value>
+  </data>
+  <data name="Access.HintInherit" xml:space="preserve">
+    <value>I héritage</value>
+  </data>
+  <data name="Access.HintListEnd" xml:space="preserve">
+    <value>R relire  Échap fermer</value>
+  </data>
+  <data name="Access.HintEdit" xml:space="preserve">
+    <value>Tab champ  Espace/←→ changer  Entrée enregistrer  Échap retour</value>
+  </data>
+  <data name="Access.HintOwner" xml:space="preserve">
+    <value>Tab champ  Entrée enregistrer  Échap retour</value>
+  </data>
 </root>
