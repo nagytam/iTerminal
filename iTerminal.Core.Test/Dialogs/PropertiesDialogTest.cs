@@ -1,4 +1,4 @@
-using iConsole.Controls;
+﻿using iConsole.Controls;
 using iConsole.Helper;
 using iConsole.Data;
 using iConsole.Interfaces;
@@ -525,5 +525,22 @@ public class PropertiesDialogTest
         ScreenBuffer screen = Render(root);
         AssertScreenContains(screen, "Colour      none");
         AssertScreenContains(screen, "Tags        none");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task InGerman_TheRemoveMarkButtonShowsItsWholeCaption()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(PropertiesDialog).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        Size screen = new(80, 30);
+        Rig rig = await OpenAsync(File(), origin: OriginService(Marked).Object, screen: screen);
+        rig.Dialog.OnIdle();
+
+        Render(rig.Root, screen);
+        ScreenBuffer drawn = Render(rig.Root, screen);
+
+        AssertScreenContains(drawn, "Markierung entfernen");
     }
 }
