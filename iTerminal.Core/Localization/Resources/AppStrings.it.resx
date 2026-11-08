@@ -7393,4 +7393,58 @@
   <data name="OpenWith.ConfirmRemove" xml:space="preserve">
     <value>Rimuovere {0} dall’elenco? (y/n)</value>
   </data>
+  <data name="Sign.NoFile" xml:space="preserve">
+    <value>Il file non esiste.</value>
+  </data>
+  <data name="Sign.NoneFound" xml:space="preserve">
+    <value>Nessuna firma trovata: nulla incorporato nel file e nessun .asc, .sig, .gpg o .sign accanto.</value>
+  </data>
+  <data name="Sign.Good" xml:space="preserve">
+    <value>Firma valida.</value>
+  </data>
+  <data name="Sign.GoodExpired" xml:space="preserve">
+    <value>Firma valida, ma la chiave è scaduta.</value>
+  </data>
+  <data name="Sign.Revoked" xml:space="preserve">
+    <value>La firma è valida ma la chiave è stata revocata — non fidarti.</value>
+  </data>
+  <data name="Sign.UnknownKey" xml:space="preserve">
+    <value>Firmato con la chiave {0}, che non è nel tuo portachiavi (gpg --recv-keys {0}).</value>
+  </data>
+  <data name="Sign.NotOpenPgp" xml:space="preserve">
+    <value>Questa non è una firma OpenPGP.</value>
+  </data>
+  <data name="Sign.NotKeyId" xml:space="preserve">
+    <value>Questo non è un id di chiave.</value>
+  </data>
+  <data name="Sign.Wrote" xml:space="preserve">
+    <value>{0} scritto.</value>
+  </data>
+  <data name="Sign.NoPowerShell" xml:space="preserve">
+    <value>Nessuna risposta da PowerShell.</value>
+  </data>
+  <data name="Sign.WindowsOnly" xml:space="preserve">
+    <value>La firma Authenticode è disponibile solo su Windows.</value>
+  </data>
+  <data name="Sign.ChooseCert" xml:space="preserve">
+    <value>Scegli un certificato (un’identificazione personale esadecimale di 40 cifre).</value>
+  </data>
+  <data name="Sign.Damaged" xml:space="preserve">
+    <value>Il file della firma è danneggiato.</value>
+  </data>
+  <data name="Sign.GoodAlgo" xml:space="preserve">
+    <value>Firma {0} valida.</value>
+  </data>
+  <data name="Sign.CouldNotCheck" xml:space="preserve">
+    <value>Impossibile verificare: {0}</value>
+  </data>
+  <data name="Sign.GiveKey" xml:space="preserve">
+    <value>Indica il file della chiave privata (PEM).</value>
+  </data>
+  <data name="Sign.Passphrase" xml:space="preserve">
+    <value>Quella chiave è protetta da passphrase. Usa gpg per una chiave cifrata.</value>
+  </data>
+  <data name="Sign.CouldNotSign" xml:space="preserve">
+    <value>Impossibile firmare: {0}</value>
+  </data>
 </root>

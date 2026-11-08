@@ -7393,4 +7393,58 @@
   <data name="OpenWith.ConfirmRemove" xml:space="preserve">
     <value>{0} aus der Liste entfernen? (y/n)</value>
   </data>
+  <data name="Sign.NoFile" xml:space="preserve">
+    <value>Die Datei ist nicht vorhanden.</value>
+  </data>
+  <data name="Sign.NoneFound" xml:space="preserve">
+    <value>Keine Signatur gefunden: nichts in der Datei eingebettet und keine .asc-, .sig-, .gpg- oder .sign-Datei daneben.</value>
+  </data>
+  <data name="Sign.Good" xml:space="preserve">
+    <value>Gültige Signatur.</value>
+  </data>
+  <data name="Sign.GoodExpired" xml:space="preserve">
+    <value>Gültige Signatur, aber der Schlüssel ist abgelaufen.</value>
+  </data>
+  <data name="Sign.Revoked" xml:space="preserve">
+    <value>Die Signatur ist gültig, aber der Schlüssel wurde widerrufen — nicht vertrauen.</value>
+  </data>
+  <data name="Sign.UnknownKey" xml:space="preserve">
+    <value>Mit Schlüssel {0} signiert, der nicht in Ihrem Schlüsselbund ist (gpg --recv-keys {0}).</value>
+  </data>
+  <data name="Sign.NotOpenPgp" xml:space="preserve">
+    <value>Das ist keine OpenPGP-Signatur.</value>
+  </data>
+  <data name="Sign.NotKeyId" xml:space="preserve">
+    <value>Das ist keine Schlüssel-ID.</value>
+  </data>
+  <data name="Sign.Wrote" xml:space="preserve">
+    <value>{0} geschrieben.</value>
+  </data>
+  <data name="Sign.NoPowerShell" xml:space="preserve">
+    <value>Keine Antwort von PowerShell.</value>
+  </data>
+  <data name="Sign.WindowsOnly" xml:space="preserve">
+    <value>Authenticode-Signierung ist nur unter Windows verfügbar.</value>
+  </data>
+  <data name="Sign.ChooseCert" xml:space="preserve">
+    <value>Wählen Sie ein Zertifikat (ein 40-stelliger hexadezimaler Fingerabdruck).</value>
+  </data>
+  <data name="Sign.Damaged" xml:space="preserve">
+    <value>Die Signaturdatei ist beschädigt.</value>
+  </data>
+  <data name="Sign.GoodAlgo" xml:space="preserve">
+    <value>Gültige {0}-Signatur.</value>
+  </data>
+  <data name="Sign.CouldNotCheck" xml:space="preserve">
+    <value>Konnte nicht geprüft werden: {0}</value>
+  </data>
+  <data name="Sign.GiveKey" xml:space="preserve">
+    <value>Geben Sie die Datei mit dem privaten Schlüssel an (PEM).</value>
+  </data>
+  <data name="Sign.Passphrase" xml:space="preserve">
+    <value>Dieser Schlüssel ist passwortgeschützt. Verwenden Sie gpg für einen verschlüsselten Schlüssel.</value>
+  </data>
+  <data name="Sign.CouldNotSign" xml:space="preserve">
+    <value>Signieren nicht möglich: {0}</value>
+  </data>
 </root>

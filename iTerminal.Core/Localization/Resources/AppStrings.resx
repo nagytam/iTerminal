@@ -7534,4 +7534,58 @@
   <data name="OpenWith.ConfirmRemove" xml:space="preserve">
     <value>Remove {0} from the list? (y/n)</value>
   </data>
+  <data name="Sign.NoFile" xml:space="preserve">
+    <value>The file is not there.</value>
+  </data>
+  <data name="Sign.NoneFound" xml:space="preserve">
+    <value>No signature found: nothing embedded in the file and no .asc, .sig, .gpg or .sign beside it.</value>
+  </data>
+  <data name="Sign.Good" xml:space="preserve">
+    <value>Good signature.</value>
+  </data>
+  <data name="Sign.GoodExpired" xml:space="preserve">
+    <value>Good signature, but the key has expired.</value>
+  </data>
+  <data name="Sign.Revoked" xml:space="preserve">
+    <value>The signature is good but the key was revoked — do not trust it.</value>
+  </data>
+  <data name="Sign.UnknownKey" xml:space="preserve">
+    <value>Signed with key {0}, which is not in your keyring (gpg --recv-keys {0}).</value>
+  </data>
+  <data name="Sign.NotOpenPgp" xml:space="preserve">
+    <value>That is not an OpenPGP signature.</value>
+  </data>
+  <data name="Sign.NotKeyId" xml:space="preserve">
+    <value>That is not a key id.</value>
+  </data>
+  <data name="Sign.Wrote" xml:space="preserve">
+    <value>Wrote {0}.</value>
+  </data>
+  <data name="Sign.NoPowerShell" xml:space="preserve">
+    <value>No answer from PowerShell.</value>
+  </data>
+  <data name="Sign.WindowsOnly" xml:space="preserve">
+    <value>Authenticode signing is only available on Windows.</value>
+  </data>
+  <data name="Sign.ChooseCert" xml:space="preserve">
+    <value>Choose a certificate (a 40-digit hexadecimal thumbprint).</value>
+  </data>
+  <data name="Sign.Damaged" xml:space="preserve">
+    <value>The signature file is damaged.</value>
+  </data>
+  <data name="Sign.GoodAlgo" xml:space="preserve">
+    <value>Good {0} signature.</value>
+  </data>
+  <data name="Sign.CouldNotCheck" xml:space="preserve">
+    <value>Could not check it: {0}</value>
+  </data>
+  <data name="Sign.GiveKey" xml:space="preserve">
+    <value>Give the private key file (PEM).</value>
+  </data>
+  <data name="Sign.Passphrase" xml:space="preserve">
+    <value>That key is passphrase-protected. Use gpg for an encrypted key.</value>
+  </data>
+  <data name="Sign.CouldNotSign" xml:space="preserve">
+    <value>Could not sign: {0}</value>
+  </data>
 </root>
