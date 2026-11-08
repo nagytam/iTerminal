@@ -1,4 +1,4 @@
-using iConsole.Localization;
+﻿using iConsole.Localization;
 using System.Globalization;
 using iConsole.Buffers;
 using iConsole.Controls.Charts;
@@ -36,11 +36,21 @@ public class StockBrowserDialog : SplitPaneDialog
     /// <summary>One layout for the rows and the headings above them.</summary>
     internal static string FormatColumns(string symbol, string name, string price, string change, string percent, string exchange, int width)
     {
-        // The exchange is the first column to go: on a narrow dialog it left the company name 3 characters ("Nam").
-        var withExchange = width - 1 - SymbolWidth - PriceWidth - ChangeWidth - PercentWidth - ExchangeWidth - 5 >= MinNameWidth;
-        var nameWidth = Math.Max(4, width - 1 - SymbolWidth - PriceWidth - ChangeWidth - PercentWidth - (withExchange ? ExchangeWidth + 5 : 3));
-        var text = " " + Cut(symbol, SymbolWidth - 1).PadRight(SymbolWidth) + Cut(name, nameWidth - 1).PadRight(nameWidth)
-            + $" {price,PriceWidth} {change,ChangeWidth} {percent,PercentWidth}" + (withExchange ? "  " + Cut(exchange, ExchangeWidth - 2) : string.Empty);
+        // Columns go from the right when the company name would get fewer than MinNameWidth: the exchange first, then the
+        // change in percent, then the change. The price stays. At 45 columns all of them stayed and the name got 3 ("Nam").
+        int[] extra = [ChangeWidth + 1, PercentWidth + 1, ExchangeWidth + 2];
+        var keep = extra.Length;
+        int Room(int kept) => width - 1 - SymbolWidth - (PriceWidth + 1) - extra.Take(kept).Sum();
+        while (keep > 0 && Room(keep) < MinNameWidth)
+        {
+            keep--;
+        }
+
+        var nameWidth = Math.Max(4, Room(keep));
+        var text = " " + Cut(symbol, SymbolWidth - 1).PadRight(SymbolWidth) + Cut(name, nameWidth - 1).PadRight(nameWidth) + $" {price,PriceWidth}"
+            + (keep >= 1 ? $" {change,ChangeWidth}" : string.Empty)
+            + (keep >= 2 ? $" {percent,PercentWidth}" : string.Empty)
+            + (keep >= 3 ? "  " + Cut(exchange, ExchangeWidth - 2) : string.Empty);
         return Cut(text, width);
     }
 
