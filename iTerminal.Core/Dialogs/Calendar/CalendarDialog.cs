@@ -103,8 +103,12 @@ public class CalendarDialog : Dialog
         await base.ShowAsync();
     }
 
+    /// <summary>Month and day names follow the language the user chose, not the one the process runs in.</summary>
+    private static CultureInfo LanguageCulture => iConsole.Localization.UiText.Current?.Culture ?? CultureInfo.CurrentCulture;
+
     public override void OnInitializeLayout()
     {
+        _grid.Culture = LanguageCulture;
         if (Parent is not null)
         {
             CenterInParent(new Size(DialogWidth, DialogHeight));
@@ -485,7 +489,7 @@ public class CalendarDialog : Dialog
         var week = CalendarModel.IsoWeek(selected);
         var relative = CalendarModel.RelativeTo(selected, _calendar.Today);
 
-        Put(buffer, 0, 10, iw, Center(selected.ToString("dddd, d MMMM yyyy"), iw), colorScheme.SelectedFocusedForeground, colorScheme.Background);
+        Put(buffer, 0, 10, iw, Center(selected.ToString("dddd, d MMMM yyyy", LanguageCulture), iw), colorScheme.SelectedFocusedForeground, colorScheme.Background);
         Put(buffer, 0, 11, iw, Center(string.Format(iConsole.Localization.UiText.Get("Calendar.WeekLine", "Week {0}  |  day {1} of {2}  |  {3}"), week, selected.DayOfYear, daysInYear, relative), iw), colorScheme.Foreground, colorScheme.Background);
     }
 
