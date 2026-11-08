@@ -10,7 +10,7 @@ using iTerminal.Core.Services.SystemSettings;
 namespace iTerminal.Core.Dialogs.EnvVars;
 
 /// <summary>
-/// The environment variables editor (Ctrl+Shift+E). Three scopes, cycled with S: <b>Session</b> is the
+/// The environment variables editor (Ctrl+Shift+H). Three scopes, cycled with S: <b>Session</b> is the
 /// environment of this running iTerminal (what the programs it starts inherit; gone when it closes),
 /// <b>User</b> is the signed-in user's saved environment and <b>Machine</b> is every user's (administrator
 /// rights; Windows and Linux). Where the user's environment lives depends on the system — the registry on

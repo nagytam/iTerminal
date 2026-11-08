@@ -1,4 +1,4 @@
-﻿namespace iTerminal.Test;
+namespace iTerminal.Test;
 
 /// <summary>Dialogs on an 80 x 24 terminal: everything inside its frame, nothing cut mid-word that fits.</summary>
 [TestClass]
@@ -371,5 +371,60 @@ public class SmallScreenDialogsTest
         await narrow.WaitForTextAsync("Calendar");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Esc close")), "the hint that closes the dialog");
         Assert.IsTrue(narrow.Screen.Lines[narrow.Screen.Height - 1].TrimStart().StartsWith("╚═") && narrow.Screen.Lines[narrow.Screen.Height - 1].Count(c => c == '═') >= 40, narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheRemoteConnectionsHelpOn60Columns_EndsOnAnEllipsisNotMidWord()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Alt+F2");
+
+        await narrow.WaitForTextAsync("Remote connections");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Nothing saved yet")), "the empty-list help");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Nothing saved yet") && l.Contains("…")), narrow.Screen.Dump());
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains(" saved  ·") && l.Contains("…")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheBenchmarkOn22Rows_ShowsItsNetworkGroup()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 70, height: 22);
+
+        await narrow.PressAsync("Ctrl+Shift+B");
+
+        await narrow.WaitForTextAsync("Performance benchmark");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Network")), "the Network group");
+        Assert.IsTrue(narrow.Screen.Lines.Count(l => l.Contains("waiting")) >= 8, narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheDiskManagerOn70Columns_WrapsALongFactInsteadOfCuttingIt()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 70, height: 22);
+
+        await narrow.PressAsync("Alt+F9");
+
+        await narrow.WaitForTextAsync("Disk manager");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("saved to its database")), "the end of the memory drive's description");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheEnvironmentVariablesAndTheEncryptionHaveTheirOwnKeys_WithAFileUnderTheCursor()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
+        await app.SelectEntryAsync("readme.txt");
+
+        await app.PressAsync("Ctrl+Shift+H");
+        await app.WaitUntilAsync(() => app.Driver.FocusedModal is Core.Dialogs.EnvVars.EnvironmentVariablesDialog, "the environment editor to open");
+        await app.PressAsync("Esc");
+        await app.WaitForNoDialogAsync();
+
+        await app.PressAsync("Ctrl+Shift+E");
+        await app.WaitUntilAsync(() => app.Driver.FocusedModal is Core.Dialogs.FileEncryptionDialog, "the encryption dialog to open");
     }
 }
