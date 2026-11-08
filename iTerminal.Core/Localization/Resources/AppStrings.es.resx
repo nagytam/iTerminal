@@ -7588,4 +7588,145 @@
   <data name="SysSet.TzNow" xml:space="preserve">
     <value>La zona horaria ahora es {0}.</value>
   </data>
+  <data name="Music.Repeat" xml:space="preserve">
+    <value>Repetir: {0}</value>
+  </data>
+  <data name="Music.Shuffle" xml:space="preserve">
+    <value>Aleatorio: {0}</value>
+  </data>
+  <data name="Music.Volume" xml:space="preserve">
+    <value>Volumen {0} %</value>
+  </data>
+  <data name="Music.Up" xml:space="preserve">
+    <value>Subir</value>
+  </data>
+  <data name="Music.Filter" xml:space="preserve">
+    <value>Filtro: {0}</value>
+  </data>
+  <data name="Music.On" xml:space="preserve">
+    <value>activado</value>
+  </data>
+  <data name="Music.Off" xml:space="preserve">
+    <value>desactivado</value>
+  </data>
+  <data name="Music.RepeatAll" xml:space="preserve">
+    <value>todo</value>
+  </data>
+  <data name="Music.RepeatOne" xml:space="preserve">
+    <value>uno</value>
+  </data>
+  <data name="Music.Transport" xml:space="preserve">
+    <value>[Reproducción]</value>
+  </data>
+  <data name="Music.VolumeFolder" xml:space="preserve">
+    <value>[Volumen]</value>
+  </data>
+  <data name="Music.Output" xml:space="preserve">
+    <value>[Salida]</value>
+  </data>
+  <data name="Music.None" xml:space="preserve">
+    <value>ninguna</value>
+  </data>
+  <data name="Music.PlayPause" xml:space="preserve">
+    <value>Reproducir / Pausa</value>
+  </data>
+  <data name="Music.Stop" xml:space="preserve">
+    <value>Detener</value>
+  </data>
+  <data name="Music.Next" xml:space="preserve">
+    <value>Pista siguiente</value>
+  </data>
+  <data name="Music.Previous" xml:space="preserve">
+    <value>Pista anterior</value>
+  </data>
+  <data name="Music.Rewind" xml:space="preserve">
+    <value>Retroceder 5 s</value>
+  </data>
+  <data name="Music.Forward" xml:space="preserve">
+    <value>Avanzar 5 s</value>
+  </data>
+  <data name="Music.RepeatMode" xml:space="preserve">
+    <value>Modo de repetición</value>
+  </data>
+  <data name="Music.ShuffleLabel" xml:space="preserve">
+    <value>Aleatorio</value>
+  </data>
+  <data name="Music.ClearPlaylist" xml:space="preserve">
+    <value>Vaciar la lista de reproducción</value>
+  </data>
+  <data name="Music.Louder" xml:space="preserve">
+    <value>Más alto (+5)</value>
+  </data>
+  <data name="Music.Quieter" xml:space="preserve">
+    <value>Más bajo (-5)</value>
+  </data>
+  <data name="Music.Mute" xml:space="preserve">
+    <value>Silencio</value>
+  </data>
+  <data name="Music.SetTo" xml:space="preserve">
+    <value>Poner en {0} %</value>
+  </data>
+  <data name="Music.Rescan" xml:space="preserve">
+    <value>[Volver a buscar dispositivos]</value>
+  </data>
+  <data name="Music.Default" xml:space="preserve">
+    <value>[predeterminado]</value>
+  </data>
+  <data name="Music.NoBackend" xml:space="preserve">
+    <value>No hay ningún motor de audio disponible en este equipo</value>
+  </data>
+  <data name="Music.Playing" xml:space="preserve">
+    <value>Reproduciendo {0}</value>
+  </data>
+  <data name="Music.OutputSet" xml:space="preserve">
+    <value>Salida: {0}</value>
+  </data>
+  <data name="Music.Cleared" xml:space="preserve">
+    <value>Lista de reproducción vaciada</value>
+  </data>
+  <data name="Music.Rescanned" xml:space="preserve">
+    <value>Dispositivos buscados de nuevo ({0})</value>
+  </data>
+  <data name="Music.Removed" xml:space="preserve">
+    <value>{0} quitado</value>
+  </data>
+  <data name="Music.HeaderFiltered" xml:space="preserve">
+    <value>Lista «{0}» ({1} de {2})</value>
+  </data>
+  <data name="Music.Header" xml:space="preserve">
+    <value>Lista de reproducción ({0})</value>
+  </data>
+  <data name="Music.FooterTracksFiltered" xml:space="preserve">
+    <value>{0} de {1} pistas</value>
+  </data>
+  <data name="Music.FooterTracks" xml:space="preserve">
+    <value>{0} pistas</value>
+  </data>
+  <data name="Music.FooterVol" xml:space="preserve">
+    <value>Vol {0} %</value>
+  </data>
+  <data name="Music.FooterRepeat" xml:space="preserve">
+    <value>Repetir {0}</value>
+  </data>
+  <data name="Music.FooterShuffle" xml:space="preserve">
+    <value>Aleatorio {0}</value>
+  </data>
+  <data name="Music.FooterEsc" xml:space="preserve">
+    <value>Esc borra el filtro</value>
+  </data>
+  <data name="Music.FooterAlt" xml:space="preserve">
+    <value>Alt+&lt;texto&gt; filtra la cola</value>
+  </data>
+  <data name="Music.DefaultOutput" xml:space="preserve">
+    <value>Salida predeterminada</value>
+  </data>
+  <data name="Music.StatePlaying" xml:space="preserve">
+    <value>reproduciendo</value>
+  </data>
+  <data name="Music.StatePaused" xml:space="preserve">
+    <value>en pausa</value>
+  </data>
+  <data name="Music.StateStopped" xml:space="preserve">
+    <value>detenido</value>
+  </data>
 </root>
