@@ -1116,15 +1116,20 @@ public class MailDialog : Dialog
 
     private void DrawSetup(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        for (var i = 0; i < _setup.Length; i++)
+        // The fields scroll with the cursor where the dialog is too short for all of them; they used to run over the
+        // status line, the hints and the bottom border.
+        var rows = Math.Max(1, (int)ViewSize.Height - 2 - 3);
+        var first = Math.Clamp(_setupCursor - rows + 1, 0, Math.Max(0, _setup.Length - rows));
+        for (var i = first; i < _setup.Length && i - first < rows; i++)
         {
             var field = _setup[i];
             var focused = i == _setupCursor;
-            Put(buffer, 1, i, 22, field.Label, focused ? Color.Cyan : colorScheme.DisabledForeground, colorScheme.Background);
+            var y = i - first;
+            Put(buffer, 1, y, 22, field.Label, focused ? Color.Cyan : colorScheme.DisabledForeground, colorScheme.Background);
             var value = field.IsToggle ? (field.On ? "[x] yes" : "[ ] no")
                 : field.IsSecret ? new string('*', field.Text.Length)
                 : field.Text;
-            Put(buffer, 23, i, iw - 24, value + (focused && !field.IsToggle ? "_" : string.Empty), colorScheme.Foreground,
+            Put(buffer, 23, y, iw - 24, value + (focused && !field.IsToggle ? "_" : string.Empty), colorScheme.Foreground,
                 focused ? colorScheme.SelectedBackground : colorScheme.Background);
         }
     }

@@ -34,6 +34,7 @@ public class SynchronizeFoldersDialog : Dialog
     private readonly TaskManager? _taskManager;
     private readonly ProgressWindowFactory? _progressWindowFactory;
     private readonly Label _optionsLabel;
+    private readonly Label _optionsLabel2;
     private readonly ListBox<string> _listBox;
     private readonly ConcurrentObservableCollection<string> _rows = [];
     private readonly Label _statusLabel;
@@ -67,12 +68,14 @@ public class SynchronizeFoldersDialog : Dialog
         Title = iConsole.Localization.UiText.Get("Dialog.SynchroniseFolders", "Synchronise folders");
 
         _optionsLabel = new Label(string.Empty, themeService);
+        _optionsLabel2 = new Label(string.Empty, themeService);
         _listBox = new ListBox<string>(new ListBoxModel<string>(_rows), themeService)
         {
             EmptyText = UiText.Get("Empty.Sync", " Press p to compare the two panels and list what would change."),
         };
         _statusLabel = new Label(string.Empty, themeService);
         AddControl(_optionsLabel);
+        AddControl(_optionsLabel2);
         AddControl(_listBox);
         AddControl(_statusLabel);
         UpdateOptionsLine();
@@ -249,7 +252,13 @@ public class SynchronizeFoldersDialog : Dialog
 
     private void UpdateOptionsLine()
     {
-        _optionsLabel.Text = string.Format(UiText.Get("Sync.Options", " Direction: {0}   Subfolders: {1}   Delete extras: {2}"), DescribeDirection(_direction), _subfolders ? UiText.Get("Sync.Yes", "yes") : UiText.Get("Sync.No", "no"), _deleteExtras ? UiText.Get("Sync.Yes", "yes") : UiText.Get("Sync.No", "no"));
+        var text = string.Format(UiText.Get("Sync.Options", " Direction: {0}   Subfolders: {1}   Delete extras: {2}"), DescribeDirection(_direction), _subfolders ? UiText.Get("Sync.Yes", "yes") : UiText.Get("Sync.No", "no"), _deleteExtras ? UiText.Get("Sync.Yes", "yes") : UiText.Get("Sync.No", "no"));
+
+        // Where the line does not fit, the options after the direction go on the blank row under it instead of being cut off.
+        var room = (int)_optionsLabel.ViewSize.Width;
+        var split = room > 0 && text.Length > room ? text.IndexOf("   ", 2, StringComparison.Ordinal) : -1;
+        _optionsLabel.Text = split > 0 ? text[..split] : text;
+        _optionsLabel2.Text = split > 0 ? " " + text[(split + 3)..] : string.Empty;
     }
 
     /// <summary>A text in the chosen language, with its arguments filled in.</summary>
@@ -355,6 +364,9 @@ public class SynchronizeFoldersDialog : Dialog
         int inner = (int)Math.Max(1, ViewSize.Width - 2);
         _optionsLabel.Position = new Position(1, 1);
         _optionsLabel.ViewSize = new Size(inner, 1);
+        _optionsLabel2.Position = new Position(1, 2);
+        _optionsLabel2.ViewSize = new Size(inner, 1);
+        UpdateOptionsLine();
         _listBox.Position = new Position(1, 3);
         _listBox.ViewSize = new Size(inner, Math.Max(1, ViewSize.Height - 6));
         _statusLabel.Position = new Position(1, Math.Max(0, ViewSize.Height - 2));

@@ -511,4 +511,51 @@ public class SmallScreenDialogsTest
         await narrow.WaitForTextAsync("Available commands");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("available in the current")), "the first description wrapped at the frame, not at the old indent");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheContactsHeadingOn50Columns_ShowsEveryColumnTitle()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+
+        await narrow.PressAsync("Ctrl+Shift+K");
+
+        await narrow.WaitForTextAsync("Contacts");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Email")), "the heading");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Phone") && l.Contains("Company")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheMailSetupOn16Rows_ScrollsItsFieldsAndKeepsTheBorderWhole()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+W");
+
+        await narrow.WaitForTextAsync("Account name");
+        for (int i = 0; i < 14; i++)
+        {
+            await narrow.PressAsync("Tab");
+            await Task.Delay(100);
+        }
+
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("LDAP bind DN")), "the last field scrolled into view");
+        string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
+        Assert.IsTrue(last.Trim().StartsWith('╚') && !last.Trim().Contains(' '), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheSynchroniseOptionsOn60Columns_ContinueOnASecondLineInsteadOfBeingCut()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Shift+F1");
+        await narrow.TypeAsync("Synchronise");
+        await narrow.PressAsync("Enter");
+
+        await narrow.WaitForTextAsync("Synchronise folders");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Delete extras")), "the delete-extras option");
+    }
 }
