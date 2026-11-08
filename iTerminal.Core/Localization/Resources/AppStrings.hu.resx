@@ -6682,4 +6682,40 @@
   <data name="CmdTitle.2ad51f6d" xml:space="preserve">
     <value>Leválasztás</value>
   </data>
+  <data name="Palette.Footer" xml:space="preserve">
+    <value> {0} / {1}  ↑↓:választ  Enter:futtat  Esc:bezár </value>
+  </data>
+  <data name="Checksums.Footer" xml:space="preserve">
+    <value> F2:.sha256 mentése  F3 vagy kattintás:másolás  F4:VirusTotal  F5:megnyitás  Esc:bezár </value>
+  </data>
+  <data name="About.Tagline" xml:space="preserve">
+    <value>Billentyűvel vezérelt fájlkezelő és terminál a konzolhoz.</value>
+  </data>
+  <data name="About.Hint" xml:space="preserve">
+    <value>Az F1 egy fájlpanelen felsorolja a billentyűit; a többit a billentyűsor mutatja.</value>
+  </data>
+  <data name="LabelFilter.Note" xml:space="preserve">
+    <value>A mappák listázva maradnak, így a panelen továbbra is lehet navigálni.</value>
+  </data>
+  <data name="Passwords.NothingSaved2" xml:space="preserve">
+    <value>a hálózati és levelezési jelszavak itt jelennek meg, amint mentésre kerülnek.</value>
+  </data>
+  <data name="OpenWith.SystemDefault" xml:space="preserve">
+    <value>Rendszer-alapértelmezett</value>
+  </data>
+  <data name="OpenWith.SystemDefaultDesc" xml:space="preserve">
+    <value>Amivel a rendszer az ilyen típusú fájlt megnyitja.</value>
+  </data>
+  <data name="Documents.Capability" xml:space="preserve">
+    <value>Keresés: {0} · Képek: {1}</value>
+  </data>
+  <data name="Documents.SearchFts" xml:space="preserve">
+    <value>teljes szöveges index</value>
+  </data>
+  <data name="Documents.SearchScan" xml:space="preserve">
+    <value>átvizsgálás (FTS5 nélkül)</value>
+  </data>
+  <data name="Documents.NoOcr" xml:space="preserve">
+    <value>nincs OCR-motor</value>
+  </data>
 </root>

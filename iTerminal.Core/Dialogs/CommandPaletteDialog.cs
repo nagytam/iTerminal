@@ -229,7 +229,7 @@ public class CommandPaletteDialog : Dialog
         var line = new ConxelString(text, colorScheme.DisabledForeground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + ViewSize.Height - 2), new Size(line.Count, 1), line);
 
-        var footer = $" {Matches.Count} of {_all.Count}  ↑↓:choose  Enter:run  Esc:close ".FitHints(Math.Max(0, width - 4));
+        var footer = string.Format(iConsole.Localization.UiText.Get("Palette.Footer", " {0} of {1}  ↑↓:choose  Enter:run  Esc:close "), Matches.Count, _all.Count).FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);

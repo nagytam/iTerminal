@@ -576,7 +576,7 @@ public class PasswordManagerDialog : Dialog
         {
             // After the rows: they blank every row they do not fill, and used to paint this message away.
             Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Passwords.NothingSaved", "Nothing saved yet. N adds a password;"), colorScheme.DisabledForeground, colorScheme.Background);
-            Put(buffer, 1, 3, iw - 2, "network and mail passwords appear here as they are saved.", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 3, iw - 2, iConsole.Localization.UiText.Get("Passwords.NothingSaved2", "network and mail passwords appear here as they are saved."), colorScheme.DisabledForeground, colorScheme.Background);
         }
 
         var selected = Selected;

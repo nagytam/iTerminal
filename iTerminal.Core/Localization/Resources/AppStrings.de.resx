@@ -6682,4 +6682,40 @@
   <data name="CmdTitle.2ad51f6d" xml:space="preserve">
     <value>Aushängen</value>
   </data>
+  <data name="Palette.Footer" xml:space="preserve">
+    <value> {0} von {1}  ↑↓:wählen  Enter:ausführen  Esc:schließen </value>
+  </data>
+  <data name="Checksums.Footer" xml:space="preserve">
+    <value> F2:.sha256 speichern  F3 oder Klick:kopieren  F4:VirusTotal  F5:öffnen  Esc:schließen </value>
+  </data>
+  <data name="About.Tagline" xml:space="preserve">
+    <value>Ein tastaturgesteuerter Dateimanager und ein Terminal für die Konsole.</value>
+  </data>
+  <data name="About.Hint" xml:space="preserve">
+    <value>F1 im Dateipanel listet seine Tasten; die Tastenleiste zeigt den Rest.</value>
+  </data>
+  <data name="LabelFilter.Note" xml:space="preserve">
+    <value>Ordner bleiben aufgelistet, damit man weiter durch das Panel navigieren kann.</value>
+  </data>
+  <data name="Passwords.NothingSaved2" xml:space="preserve">
+    <value>Netzwerk- und Mail-Passwörter erscheinen hier, sobald sie gespeichert werden.</value>
+  </data>
+  <data name="OpenWith.SystemDefault" xml:space="preserve">
+    <value>Systemstandard</value>
+  </data>
+  <data name="OpenWith.SystemDefaultDesc" xml:space="preserve">
+    <value>Womit das System diese Art von Datei öffnet.</value>
+  </data>
+  <data name="Documents.Capability" xml:space="preserve">
+    <value>Suche: {0} · Bilder: {1}</value>
+  </data>
+  <data name="Documents.SearchFts" xml:space="preserve">
+    <value>Volltextindex</value>
+  </data>
+  <data name="Documents.SearchScan" xml:space="preserve">
+    <value>Durchsuchen (kein FTS5)</value>
+  </data>
+  <data name="Documents.NoOcr" xml:space="preserve">
+    <value>keine OCR-Engine</value>
+  </data>
 </root>

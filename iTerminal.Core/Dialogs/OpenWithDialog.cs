@@ -91,7 +91,7 @@ public class OpenWithDialog : Dialog
 
         if (Kind == FileAssociationKind.Open)
         {
-            choices.Add(new Choice("System default", "Whatever the system opens this kind of file with.", null));
+            choices.Add(new Choice(iConsole.Localization.UiText.Get("OpenWith.SystemDefault", "System default"), iConsole.Localization.UiText.Get("OpenWith.SystemDefaultDesc", "Whatever the system opens this kind of file with."), null));
         }
         else if (BuiltInEditor is not null)
         {
