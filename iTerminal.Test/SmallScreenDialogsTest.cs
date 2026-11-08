@@ -509,6 +509,6 @@ public class SmallScreenDialogsTest
         await narrow.PressAsync("F1");
 
         await narrow.WaitForTextAsync("Available commands");
-        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("context.")), "the end of the first description");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("available in the current")), "the first description wrapped at the frame, not at the old indent");
     }
 }
