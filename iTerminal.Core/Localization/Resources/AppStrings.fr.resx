@@ -5620,4 +5620,64 @@
   <data name="Remote.ListHeader" xml:space="preserve">
     <value>  Type  Nom                           Destination</value>
   </data>
+  <data name="Mail.FieldAccount" xml:space="preserve">
+    <value>Nom du compte</value>
+  </data>
+  <data name="Mail.FieldIncoming" xml:space="preserve">
+    <value>Entrant (POP3)</value>
+  </data>
+  <data name="Mail.FieldPopPort" xml:space="preserve">
+    <value>Port POP3</value>
+  </data>
+  <data name="Mail.FieldPopSsl" xml:space="preserve">
+    <value>POP3 SSL</value>
+  </data>
+  <data name="Mail.FieldOutgoing" xml:space="preserve">
+    <value>Sortant (SMTP)</value>
+  </data>
+  <data name="Mail.FieldSmtpPort" xml:space="preserve">
+    <value>Port SMTP</value>
+  </data>
+  <data name="Mail.FieldStartTls" xml:space="preserve">
+    <value>SMTP STARTTLS</value>
+  </data>
+  <data name="Mail.FieldUser" xml:space="preserve">
+    <value>Nom d&apos;utilisateur</value>
+  </data>
+  <data name="Mail.FieldPassword" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="Mail.FieldFrom" xml:space="preserve">
+    <value>Adresse d&apos;expéditeur</value>
+  </data>
+  <data name="Mail.FieldLdap" xml:space="preserve">
+    <value>Carnet adr. (LDAP)</value>
+  </data>
+  <data name="Mail.FieldLdapPort" xml:space="preserve">
+    <value>Port LDAP</value>
+  </data>
+  <data name="Mail.FieldLdapSsl" xml:space="preserve">
+    <value>LDAP SSL</value>
+  </data>
+  <data name="Mail.FieldLdapBase" xml:space="preserve">
+    <value>DN de base LDAP</value>
+  </data>
+  <data name="Mail.FieldLdapBind" xml:space="preserve">
+    <value>DN de liaison LDAP</value>
+  </data>
+  <data name="Mail.ToggleOn" xml:space="preserve">
+    <value>[x] oui</value>
+  </data>
+  <data name="Mail.ToggleOff" xml:space="preserve">
+    <value>[ ] non</value>
+  </data>
+  <data name="Translator.DetectNote" xml:space="preserve">
+    <value> La langue source est détectée à la traduction.</value>
+  </data>
+  <data name="Translator.LooksLike" xml:space="preserve">
+    <value> On dirait du {0}.</value>
+  </data>
+  <data name="Translator.LooksLikeGuess" xml:space="preserve">
+    <value> On dirait du {0} (supposition).</value>
+  </data>
 </root>

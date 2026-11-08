@@ -579,8 +579,8 @@ public class TranslatorDialog : SplitPaneDialog
                 : null;
             string? code = _detectedSource ?? offline?.Code;
             return code is null
-                ? " The source language is detected when you translate."
-                : $" Looks like {TranslationLanguages.NameOf(code)}{(_detectedSource is null ? " (a guess)" : string.Empty)}.";
+                ? iConsole.Localization.UiText.Get("Translator.DetectNote", " The source language is detected when you translate.")
+                : string.Format(_detectedSource is null ? iConsole.Localization.UiText.Get("Translator.LooksLikeGuess", " Looks like {0} (a guess).") : iConsole.Localization.UiText.Get("Translator.LooksLike", " Looks like {0}."), TranslationLanguages.NameOf(code));
         }
 
         return string.Empty;

@@ -5620,4 +5620,64 @@
   <data name="Remote.ListHeader" xml:space="preserve">
     <value>  Typ   Name                          Ziel</value>
   </data>
+  <data name="Mail.FieldAccount" xml:space="preserve">
+    <value>Kontoname</value>
+  </data>
+  <data name="Mail.FieldIncoming" xml:space="preserve">
+    <value>Eingang (POP3)</value>
+  </data>
+  <data name="Mail.FieldPopPort" xml:space="preserve">
+    <value>POP3-Port</value>
+  </data>
+  <data name="Mail.FieldPopSsl" xml:space="preserve">
+    <value>POP3 SSL</value>
+  </data>
+  <data name="Mail.FieldOutgoing" xml:space="preserve">
+    <value>Ausgang (SMTP)</value>
+  </data>
+  <data name="Mail.FieldSmtpPort" xml:space="preserve">
+    <value>SMTP-Port</value>
+  </data>
+  <data name="Mail.FieldStartTls" xml:space="preserve">
+    <value>SMTP STARTTLS</value>
+  </data>
+  <data name="Mail.FieldUser" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="Mail.FieldPassword" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="Mail.FieldFrom" xml:space="preserve">
+    <value>Absenderadresse</value>
+  </data>
+  <data name="Mail.FieldLdap" xml:space="preserve">
+    <value>Adressbuch (LDAP)</value>
+  </data>
+  <data name="Mail.FieldLdapPort" xml:space="preserve">
+    <value>LDAP-Port</value>
+  </data>
+  <data name="Mail.FieldLdapSsl" xml:space="preserve">
+    <value>LDAP SSL</value>
+  </data>
+  <data name="Mail.FieldLdapBase" xml:space="preserve">
+    <value>LDAP-Basis-DN</value>
+  </data>
+  <data name="Mail.FieldLdapBind" xml:space="preserve">
+    <value>LDAP-Bind-DN</value>
+  </data>
+  <data name="Mail.ToggleOn" xml:space="preserve">
+    <value>[x] ja</value>
+  </data>
+  <data name="Mail.ToggleOff" xml:space="preserve">
+    <value>[ ] nein</value>
+  </data>
+  <data name="Translator.DetectNote" xml:space="preserve">
+    <value> Die Ausgangssprache wird beim Übersetzen erkannt.</value>
+  </data>
+  <data name="Translator.LooksLike" xml:space="preserve">
+    <value> Sieht aus wie {0}.</value>
+  </data>
+  <data name="Translator.LooksLikeGuess" xml:space="preserve">
+    <value> Sieht aus wie {0} (geraten).</value>
+  </data>
 </root>

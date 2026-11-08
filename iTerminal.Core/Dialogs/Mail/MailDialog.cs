@@ -803,21 +803,21 @@ public class MailDialog : Dialog
     {
         _setup =
         [
-            new SetupField("Account name") { Text = account?.Name ?? string.Empty },
-            new SetupField("Incoming (POP3)") { Text = account?.PopHost ?? string.Empty },
-            new SetupField("POP3 port") { Text = (account?.PopPort ?? 995).ToString() },
-            new SetupField("POP3 SSL", isToggle: true) { On = account?.PopTls ?? true },
-            new SetupField("Outgoing (SMTP)") { Text = account?.SmtpHost ?? string.Empty },
-            new SetupField("SMTP port") { Text = (account?.SmtpPort ?? 587).ToString() },
-            new SetupField("SMTP STARTTLS", isToggle: true) { On = account?.SmtpTls ?? true },
-            new SetupField("User name") { Text = account?.UserName ?? string.Empty },
-            new SetupField("Password", isSecret: true),
-            new SetupField("From address") { Text = account?.FromAddress ?? string.Empty },
-            new SetupField("Address book (LDAP)") { Text = account?.LdapHost ?? string.Empty },
-            new SetupField("LDAP port") { Text = (account?.LdapPort ?? 636).ToString() },
-            new SetupField("LDAP SSL", isToggle: true) { On = account?.LdapTls ?? true },
-            new SetupField("LDAP base DN") { Text = account?.LdapBaseDn ?? string.Empty },
-            new SetupField("LDAP bind DN") { Text = account?.LdapBindDn ?? string.Empty },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldAccount", "Account name")) { Text = account?.Name ?? string.Empty },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldIncoming", "Incoming (POP3)")) { Text = account?.PopHost ?? string.Empty },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldPopPort", "POP3 port")) { Text = (account?.PopPort ?? 995).ToString() },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldPopSsl", "POP3 SSL"), isToggle: true) { On = account?.PopTls ?? true },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldOutgoing", "Outgoing (SMTP)")) { Text = account?.SmtpHost ?? string.Empty },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldSmtpPort", "SMTP port")) { Text = (account?.SmtpPort ?? 587).ToString() },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldStartTls", "SMTP STARTTLS"), isToggle: true) { On = account?.SmtpTls ?? true },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldUser", "User name")) { Text = account?.UserName ?? string.Empty },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldPassword", "Password"), isSecret: true),
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldFrom", "From address")) { Text = account?.FromAddress ?? string.Empty },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldLdap", "Address book (LDAP)")) { Text = account?.LdapHost ?? string.Empty },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldLdapPort", "LDAP port")) { Text = (account?.LdapPort ?? 636).ToString() },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldLdapSsl", "LDAP SSL"), isToggle: true) { On = account?.LdapTls ?? true },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldLdapBase", "LDAP base DN")) { Text = account?.LdapBaseDn ?? string.Empty },
+            new SetupField(iConsole.Localization.UiText.Get("Mail.FieldLdapBind", "LDAP bind DN")) { Text = account?.LdapBindDn ?? string.Empty },
         ];
         _setupCursor = 0;
         _mode = Mode.Setup;
@@ -1126,7 +1126,7 @@ public class MailDialog : Dialog
             var focused = i == _setupCursor;
             var y = i - first;
             Put(buffer, 1, y, 22, field.Label, focused ? Color.Cyan : colorScheme.DisabledForeground, colorScheme.Background);
-            var value = field.IsToggle ? (field.On ? "[x] yes" : "[ ] no")
+            var value = field.IsToggle ? (field.On ? iConsole.Localization.UiText.Get("Mail.ToggleOn", "[x] yes") : iConsole.Localization.UiText.Get("Mail.ToggleOff", "[ ] no"))
                 : field.IsSecret ? new string('*', field.Text.Length)
                 : field.Text;
             Put(buffer, 23, y, iw - 24, value + (focused && !field.IsToggle ? "_" : string.Empty), colorScheme.Foreground,
