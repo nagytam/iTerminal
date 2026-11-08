@@ -359,4 +359,17 @@ public class SmallScreenDialogsTest
         int bottom = Array.FindLastIndex(lines, l => l.Contains('╚'));
         Assert.IsTrue(box >= 0 && box < bottom, narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCalendarOn16Rows_DrawsNothingOnItsBottomBorder()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+D");
+
+        await narrow.WaitForTextAsync("Calendar");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Esc close")), "the hint that closes the dialog");
+        Assert.IsTrue(narrow.Screen.Lines[narrow.Screen.Height - 1].TrimStart().StartsWith("╚═") && narrow.Screen.Lines[narrow.Screen.Height - 1].Count(c => c == '═') >= 40, narrow.Screen.Dump());
+    }
 }

@@ -1,4 +1,4 @@
-using iConsole.Helper;
+﻿using iConsole.Helper;
 using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
@@ -553,7 +553,8 @@ public class CalendarDialog : Dialog
 
     private void Put(IBuffer buffer, int x, int y, int width, string text, Color foreground, Color background)
     {
-        if (width <= 0)
+        // A row below the inner area would be drawn on the bottom border: a short dialog has no room for the meetings.
+        if (width <= 0 || y < 0 || y >= (int)ViewSize.Height - 2)
         {
             return;
         }
