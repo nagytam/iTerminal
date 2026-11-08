@@ -208,8 +208,8 @@ public class DiskUsageDialog : Dialog
     private static string Percent(long part, long whole) =>
         whole <= 0 ? "  0%" : $"{Math.Min(100d, 100d * part / whole),3:0}%";
 
-    private static string Bar(long part, long whole) =>
-        BarChart.BuildBar(whole <= 0 ? 0 : (double)part / whole, BarWidth).Replace(' ', '░');
+    private static string Bar(long part, long whole, int barWidth = BarWidth) =>
+        BarChart.BuildBar(whole <= 0 ? 0 : (double)part / whole, barWidth).Replace(' ', '░');
 
     private void UpdateLines()
     {
@@ -271,7 +271,9 @@ public class DiskUsageDialog : Dialog
 
         // The file count is the first column to go: with it, a 60-column terminal left a name 8 characters ("readme.t").
         var withFiles = width - (2 + BarWidth + 2 + 10 + 2 + 4 + 2 + 10) >= MinNameWidth;
-        var nameWidth = Math.Max(8, width - (2 + BarWidth + 2 + 10 + 2 + 4 + (withFiles ? 2 + 10 : 0)));
+        // The bar shrinks where even an 8-character name and the size and percentage would not fit beside it (40 columns cut the "B" and the percentage).
+        var barWidth = Math.Clamp(width - (2 + 8 + 2 + 10 + 2 + 4), 4, BarWidth);
+        var nameWidth = Math.Max(8, width - (2 + barWidth + 2 + 10 + 2 + 4 + (withFiles ? 2 + 10 : 0)));
         if (rows.Count == 0)
         {
             lines.Add(new("  (empty)", colorScheme.Foreground));
@@ -283,7 +285,7 @@ public class DiskUsageDialog : Dialog
             var name = row.IsFolder ? row.Name + "/" : row.Name;
             var files = row.IsFolder ? $"{row.FileCount:N0}" : string.Empty;
             var text = $"{(i == _cursor ? "▶" : " ")} {name.Cut(nameWidth).ExpandRight(nameWidth)} "
-                + $"{Bar(row.Size, _current.Size)} {row.Size.ToFileSize(),10} {Percent(row.Size, _current.Size)}" + (withFiles ? $" {files,10}" : string.Empty);
+                + $"{Bar(row.Size, _current.Size, barWidth)} {row.Size.ToFileSize(),10} {Percent(row.Size, _current.Size)}" + (withFiles ? $" {files,10}" : string.Empty);
             Color? color = i == _cursor
                 ? Color.Yellow
                 : row.IsFolder ? Color.Cyan : row.IsOther ? Color.Gray : null;

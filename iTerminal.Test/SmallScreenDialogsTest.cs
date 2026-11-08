@@ -606,4 +606,17 @@ public class SmallScreenDialogsTest
         string row = narrow.Screen.Lines.First(l => l.Contains("Amount:"));
         Assert.IsTrue(row[row.IndexOf("To:", StringComparison.Ordinal)..].Contains('║'), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheDiskUsageOn40Columns_ShowsEachRowsPercentage()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 40, height: 15);
+
+        await narrow.PressAsync("Ctrl+Shift+F12");
+
+        await narrow.WaitForTextAsync("Disk usage");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("readme")), "the rows");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("readme") && l.Contains('%')), narrow.Screen.Dump());
+    }
 }
