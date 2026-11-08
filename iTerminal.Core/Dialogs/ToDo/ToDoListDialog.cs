@@ -478,9 +478,20 @@ public class ToDoListDialog : Dialog
     private void DrawHeader(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
         var open = _store.Visible(false).Count;
+        var heading = DoneColumn + PriorityColumn + DueColumn + iConsole.Localization.UiText.Get("ToDo.Subject", "Subject");
+        Put(buffer, 1, 0, iw - 2, heading, Color.Cyan, colorScheme.Background);
+
+        // The counts sit at the right edge; where the full text would run into the heading, only the open count, else none.
         var title = $"{open} open  ·  {_store.Visible(true).Count - open} done";
-        Put(buffer, 1, 0, iw - 2, DoneColumn + PriorityColumn + DueColumn + iConsole.Localization.UiText.Get("ToDo.Subject", "Subject"), Color.Cyan, colorScheme.Background);
-        Put(buffer, iw - title.Length - 1, 0, title.Length, title, colorScheme.DisabledForeground, colorScheme.Background);
+        if (heading.Length + 2 + title.Length > iw - 2)
+        {
+            title = $"{open} open";
+        }
+
+        if (heading.Length + 2 + title.Length <= iw - 2)
+        {
+            Put(buffer, iw - title.Length - 1, 0, title.Length, title, colorScheme.DisabledForeground, colorScheme.Background);
+        }
     }
 
     private void DrawRows(IBuffer buffer, int iw, ColorScheme colorScheme)

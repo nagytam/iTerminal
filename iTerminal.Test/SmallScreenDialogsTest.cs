@@ -441,4 +441,17 @@ public class SmallScreenDialogsTest
         string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
         Assert.IsTrue(last.Trim().StartsWith('╚') && !last.Trim().Contains(' '), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheTaskHeadingOn50Columns_KeepsTheWordSubjectWhole()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+
+        await narrow.PressAsync("Ctrl+Y");
+
+        await narrow.WaitForTextAsync("Tasks");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Priority")), "the heading");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Priority") && l.Contains("Subject")), narrow.Screen.Dump());
+    }
 }
