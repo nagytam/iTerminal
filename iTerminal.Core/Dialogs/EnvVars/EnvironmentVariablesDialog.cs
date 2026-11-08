@@ -173,6 +173,13 @@ public class EnvironmentVariablesDialog : Dialog
     {
         lock (_outcomeLock)
         {
+            // A read that was overtaken must not replace the one that overtook it. Two quick scope switches start two reads;
+            // when the older finished last it used to overwrite the newer, Apply then dropped it as stale, and the list stayed empty.
+            if (_parked is { Rows: not null } newer && outcome.Rows is not null && outcome.Generation < newer.Generation)
+            {
+                return;
+            }
+
             // A change's outcome (status, reload) must not be lost to a read landing right after it.
             _parked = _parked is { Rows: null } older && outcome.Rows is not null
                 ? outcome with { Status = outcome.Status ?? older.Status, IsError = outcome.Status is null ? older.IsError : outcome.IsError, Reload = outcome.Reload || older.Reload }
@@ -913,6 +920,12 @@ public class EnvironmentVariablesDialog : Dialog
 
     /// <summary>Takes a parked outcome now, as the next idle pass would.</summary>
     internal void ApplyParkedForTest() => OnIdle();
+
+    /// <summary>Lands a finished read as the background load does, so a test can choose the order two reads arrive in.</summary>
+    internal void ParkReadForTest(int generation, IReadOnlyList<SystemEnvironmentVariable> rows) => Park(new Outcome(generation, rows, null, false, false));
+
+    /// <summary>The generation of the read waiting to be applied, or null.</summary>
+    internal int? ParkedGenerationForTest { get { lock (_outcomeLock) { return _parked?.Generation; } } }
 
     #endregion
 }

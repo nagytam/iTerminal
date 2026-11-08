@@ -327,6 +327,22 @@ public class EnvironmentVariablesDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task AReadThatFinishesAfterANewerOne_DoesNotReplaceIt()
+    {
+        var (dialog, _, _, _) = Create();
+        await OpenAsync(dialog);
+        await SettleAsync(dialog);
+        IReadOnlyList<SystemEnvironmentVariable> newer = [new SystemEnvironmentVariable("NEWER", "1")];
+        IReadOnlyList<SystemEnvironmentVariable> older = [new SystemEnvironmentVariable("OLDER", "1")];
+
+        dialog.ParkReadForTest(5, newer);
+        dialog.ParkReadForTest(4, older);
+
+        Assert.AreEqual(5, dialog.ParkedGenerationForTest, "the read that was started later is the one that stays");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task ASessionVariableWithAnUnportableNameCanStillBeChanged()
     {
         var (dialog, _, _, session) = Create();
