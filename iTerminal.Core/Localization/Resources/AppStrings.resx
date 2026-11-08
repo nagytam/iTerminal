@@ -5929,4 +5929,49 @@
   <data name="Duplicates.None" xml:space="preserve">
     <value>No duplicate files among the {0:N0} files looked at.</value>
   </data>
+  <data name="CmdDesc.c5d657d4" xml:space="preserve">
+    <value>Compare the two panels&apos; folders.</value>
+  </data>
+  <data name="CmdDesc.c2109680" xml:space="preserve">
+    <value>Write the archive.</value>
+  </data>
+  <data name="CmdDesc.03b5daee" xml:space="preserve">
+    <value>Create the link.</value>
+  </data>
+  <data name="CmdDesc.749a269e" xml:space="preserve">
+    <value>Save the changed link.</value>
+  </data>
+  <data name="CmdDesc.1d4924ca" xml:space="preserve">
+    <value>Unpack the archives.</value>
+  </data>
+  <data name="CmdDesc.247f4ead" xml:space="preserve">
+    <value>Save the program and return to the list.</value>
+  </data>
+  <data name="CmdDesc.10e630f4" xml:space="preserve">
+    <value>Encrypt or decrypt the files with the passphrase.</value>
+  </data>
+  <data name="CmdDesc.dc83b433" xml:space="preserve">
+    <value>Save the colour and the tags and close.</value>
+  </data>
+  <data name="CmdDesc.6f3f167b" xml:space="preserve">
+    <value>Format the drive.</value>
+  </data>
+  <data name="CmdDesc.cb195d52" xml:space="preserve">
+    <value>Filter the panel and close.</value>
+  </data>
+  <data name="CmdDesc.3e40361b" xml:space="preserve">
+    <value>Mark or unmark the rows matching the pattern.</value>
+  </data>
+  <data name="CmdDesc.bfd6ba2c" xml:space="preserve">
+    <value>Edit the access control list and the owner of this entry.</value>
+  </data>
+  <data name="CmdDesc.b859909d" xml:space="preserve">
+    <value>Remove the mark that says the file came from the internet.</value>
+  </data>
+  <data name="CmdDesc.2ef2dd1f" xml:space="preserve">
+    <value>Write the changed attributes and close.</value>
+  </data>
+  <data name="CmdDesc.d47fe680" xml:space="preserve">
+    <value>Detach the image.</value>
+  </data>
 </root>

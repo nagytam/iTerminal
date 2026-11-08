@@ -14,7 +14,7 @@ public class CommandDescriptionLanguageTest
 
     private static IEnumerable<Type> CommandTypes() =>
         new[] { typeof(iTerminal.Core.Dialogs.SortDialog).Assembly, typeof(Command).Assembly }
-            .SelectMany(a => a.GetExportedTypes())
+            .SelectMany(a => a.GetTypes())
             .Where(t => typeof(Command).IsAssignableFrom(t) && !t.IsAbstract && !t.IsGenericTypeDefinition)
             .OrderBy(t => t.FullName, StringComparer.Ordinal);
 
