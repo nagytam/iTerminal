@@ -992,6 +992,6 @@ public class SmallScreenDialogsTest
 
         await app.PressAsync("Ctrl+F12");
 
-        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Schreibgeschützt")), "the Read-only box in German");
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Erstellt: [")), "the date boxes in German (the Read-only box is Windows-only)");
     }
 }
