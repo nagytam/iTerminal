@@ -58,6 +58,20 @@ public class DriveActionsServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public void TheBitLockerTextsFollowTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(DriveActionsService).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+
+        Assert.AreEqual("An (geschützt)", DriveActionsService.ParseBitLocker(new ProcessOutput(0, "BL=1", "")).Text);
+        Assert.AreEqual("Aus (nicht verschlüsselt)", DriveActionsService.ParseBitLocker(new ProcessOutput(0, "BL=0", "")).Text);
+        Assert.AreEqual("Konnte nicht gelesen werden.", DriveActionsService.ParseBitLocker(new ProcessOutput(1, "", "boom")).Text);
+    }
+
+    [TestMethod]
     public void BitLockerValuesAreNamed()
     {
         var on = DriveActionsService.ParseBitLocker(new ProcessOutput(0, "BL=1\r\n", ""));

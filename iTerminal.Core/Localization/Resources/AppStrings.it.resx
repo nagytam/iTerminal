@@ -7447,4 +7447,55 @@
   <data name="Sign.CouldNotSign" xml:space="preserve">
     <value>Impossibile firmare: {0}</value>
   </data>
+  <data name="Drive.EjectLetter" xml:space="preserve">
+    <value>Si può espellere solo un’unità con lettera.</value>
+  </data>
+  <data name="Drive.FormatWindowsMkfs" xml:space="preserve">
+    <value>La formattazione è offerta solo su Windows; qui usa mkfs o l’utilità dei dischi.</value>
+  </data>
+  <data name="Drive.FormatLetter" xml:space="preserve">
+    <value>Si può formattare solo un’unità con lettera.</value>
+  </data>
+  <data name="Drive.UnknownFs" xml:space="preserve">
+    <value>File system «{0}» sconosciuto.</value>
+  </data>
+  <data name="Drive.FormatWindowsOnly" xml:space="preserve">
+    <value>La formattazione è offerta solo su Windows.</value>
+  </data>
+  <data name="Drive.SystemDrive" xml:space="preserve">
+    <value>Questa è l’unità di sistema.</value>
+  </data>
+  <data name="Drive.CannotFormatType" xml:space="preserve">
+    <value>Un’unità di tipo «{0}» non può essere formattata qui.</value>
+  </data>
+  <data name="Drive.NotADrive" xml:space="preserve">
+    <value>Questa non è un’unità.</value>
+  </data>
+  <data name="Drive.MountTypes" xml:space="preserve">
+    <value>Si possono montare solo file .iso, .vhd e .vhdx.</value>
+  </data>
+  <data name="Drive.BitLockerWindows" xml:space="preserve">
+    <value>BitLocker è una funzionalità di Windows.</value>
+  </data>
+  <data name="Drive.NotLettered" xml:space="preserve">
+    <value>Non è un’unità con lettera.</value>
+  </data>
+  <data name="Drive.CouldNotRead" xml:space="preserve">
+    <value>Impossibile leggere.</value>
+  </data>
+  <data name="Drive.NotReported" xml:space="preserve">
+    <value>Non riportato per questa unità.</value>
+  </data>
+  <data name="Drive.BitLockerOff" xml:space="preserve">
+    <value>Disattivato (non cifrato)</value>
+  </data>
+  <data name="Drive.BitLockerOn" xml:space="preserve">
+    <value>Attivo (protetto)</value>
+  </data>
+  <data name="Drive.BitLockerUnknown" xml:space="preserve">
+    <value>Stato sconosciuto ({0})</value>
+  </data>
+  <data name="Drive.Unavailable" xml:space="preserve">
+    <value>Le azioni sulle unità non sono disponibili su questo sistema.</value>
+  </data>
 </root>

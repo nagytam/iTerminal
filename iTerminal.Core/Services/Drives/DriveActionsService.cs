@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Text.RegularExpressions;
 using iTerminal.Core.Services.Processes;
 
@@ -45,7 +46,7 @@ public sealed partial class DriveActionsService : IDriveActionsService
     {
         if (!TryLetter(root, out var letter))
         {
-            return Fail("Only a drive with a letter can be ejected.");
+            return Fail(UiText.Get("Drive.EjectLetter", "Only a drive with a letter can be ejected."));
         }
 
         var script = $$"""
@@ -113,18 +114,18 @@ public sealed partial class DriveActionsService : IDriveActionsService
     {
         if (!OperatingSystem.IsWindows())
         {
-            return Fail("Formatting is offered on Windows only; use mkfs or your disk utility here.");
+            return Fail(UiText.Get("Drive.FormatWindowsMkfs", "Formatting is offered on Windows only; use mkfs or your disk utility here."));
         }
 
         if (!TryLetter(root, out var letter))
         {
-            return Fail("Only a drive with a letter can be formatted.");
+            return Fail(UiText.Get("Drive.FormatLetter", "Only a drive with a letter can be formatted."));
         }
 
         var fileSystem = FileSystems.FirstOrDefault(f => string.Equals(f, options.FileSystem, StringComparison.OrdinalIgnoreCase));
         if (fileSystem is null)
         {
-            return Fail($"Unknown file system '{options.FileSystem}'.");
+            return Fail(string.Format(UiText.Get("Drive.UnknownFs", "Unknown file system '{0}'."), options.FileSystem));
         }
 
         var script = $"""
@@ -142,19 +143,19 @@ public sealed partial class DriveActionsService : IDriveActionsService
     {
         if (!CanFormat)
         {
-            return "Formatting is offered on Windows only.";
+            return UiText.Get("Drive.FormatWindowsOnly", "Formatting is offered on Windows only.");
         }
 
         if (!TryLetter(root, out var letter))
         {
-            return "Only a drive with a letter can be formatted.";
+            return UiText.Get("Drive.FormatLetter", "Only a drive with a letter can be formatted.");
         }
 
         var drive = $"{letter}:\\";
         var system = Path.GetPathRoot(Environment.SystemDirectory) ?? string.Empty;
         if (string.Equals(drive, system, StringComparison.OrdinalIgnoreCase))
         {
-            return "That is the system drive.";
+            return UiText.Get("Drive.SystemDrive", "That is the system drive.");
         }
 
         try
@@ -162,12 +163,12 @@ public sealed partial class DriveActionsService : IDriveActionsService
             var type = new DriveInfo(drive).DriveType;
             if (type is DriveType.Network or DriveType.CDRom or DriveType.Ram or DriveType.NoRootDirectory or DriveType.Unknown)
             {
-                return $"A {type.ToString().ToLowerInvariant()} drive cannot be formatted here.";
+                return string.Format(UiText.Get("Drive.CannotFormatType", "A {0} drive cannot be formatted here."), type.ToString().ToLowerInvariant());
             }
         }
         catch (ArgumentException)
         {
-            return "That is not a drive.";
+            return UiText.Get("Drive.NotADrive", "That is not a drive.");
         }
 
         var inUse = foldersInUse.Append(AppContext.BaseDirectory).Append(Environment.CurrentDirectory);
@@ -186,7 +187,7 @@ public sealed partial class DriveActionsService : IDriveActionsService
     // ---- disk images ---------------------------------------------------------------------------
 
     public Task<DriveActionResult> MountImageAsync(string imagePath, CancellationToken cancellationToken = default) =>
-        !IsImage(imagePath) ? Task.FromResult(Fail("Only .iso, .vhd and .vhdx files can be mounted."))
+        !IsImage(imagePath) ? Task.FromResult(Fail(UiText.Get("Drive.MountTypes", "Only .iso, .vhd and .vhdx files can be mounted.")))
         : OperatingSystem.IsWindows() ? MountWindowsAsync(imagePath, cancellationToken)
         : OperatingSystem.IsLinux() ? MountLinuxAsync(imagePath, cancellationToken)
         : Unsupported();
@@ -269,12 +270,12 @@ public sealed partial class DriveActionsService : IDriveActionsService
     {
         if (!OperatingSystem.IsWindows())
         {
-            return new BitLockerStatus(BitLockerState.NotApplicable, "BitLocker is a Windows feature.");
+            return new BitLockerStatus(BitLockerState.NotApplicable, UiText.Get("Drive.BitLockerWindows", "BitLocker is a Windows feature."));
         }
 
         if (!TryLetter(root, out var letter))
         {
-            return new BitLockerStatus(BitLockerState.NotApplicable, "Not a lettered drive.");
+            return new BitLockerStatus(BitLockerState.NotApplicable, UiText.Get("Drive.NotLettered", "Not a lettered drive."));
         }
 
         // The shell's own property: the one Explorer draws its padlock overlay from, and — unlike
@@ -291,7 +292,7 @@ public sealed partial class DriveActionsService : IDriveActionsService
     {
         if (!output.Success)
         {
-            return new BitLockerStatus(BitLockerState.Unavailable, "Could not be read.");
+            return new BitLockerStatus(BitLockerState.Unavailable, UiText.Get("Drive.CouldNotRead", "Could not be read."));
         }
 
         var line = output.StandardOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
@@ -299,14 +300,14 @@ public sealed partial class DriveActionsService : IDriveActionsService
         var text = line?["BL=".Length..].Trim() ?? string.Empty;
         if (text.Length == 0)
         {
-            return new BitLockerStatus(BitLockerState.Unavailable, "Not reported for this drive.");
+            return new BitLockerStatus(BitLockerState.Unavailable, UiText.Get("Drive.NotReported", "Not reported for this drive."));
         }
 
         return text switch
         {
-            "0" => new BitLockerStatus(BitLockerState.Off, "Off (not encrypted)"),
-            "1" => new BitLockerStatus(BitLockerState.On, "On (protected)"),
-            _ => new BitLockerStatus(BitLockerState.Unknown, $"Unknown state ({text})"),
+            "0" => new BitLockerStatus(BitLockerState.Off, UiText.Get("Drive.BitLockerOff", "Off (not encrypted)")),
+            "1" => new BitLockerStatus(BitLockerState.On, UiText.Get("Drive.BitLockerOn", "On (protected)")),
+            _ => new BitLockerStatus(BitLockerState.Unknown, string.Format(UiText.Get("Drive.BitLockerUnknown", "Unknown state ({0})"), text)),
         };
     }
 
@@ -383,7 +384,7 @@ public sealed partial class DriveActionsService : IDriveActionsService
     private static DriveActionResult Fail(string message) => new(false, message);
 
     private static Task<DriveActionResult> Unsupported() =>
-        Task.FromResult(Fail("Drive actions are not available on this system."));
+        Task.FromResult(Fail(UiText.Get("Drive.Unavailable", "Drive actions are not available on this system.")));
 
     [GeneratedRegex(@"^([A-Za-z]):?[\\/]?$")]
     private static partial Regex DriveRootRegex();

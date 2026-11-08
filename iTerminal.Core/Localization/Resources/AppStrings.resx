@@ -7588,4 +7588,55 @@
   <data name="Sign.CouldNotSign" xml:space="preserve">
     <value>Could not sign: {0}</value>
   </data>
+  <data name="Drive.EjectLetter" xml:space="preserve">
+    <value>Only a drive with a letter can be ejected.</value>
+  </data>
+  <data name="Drive.FormatWindowsMkfs" xml:space="preserve">
+    <value>Formatting is offered on Windows only; use mkfs or your disk utility here.</value>
+  </data>
+  <data name="Drive.FormatLetter" xml:space="preserve">
+    <value>Only a drive with a letter can be formatted.</value>
+  </data>
+  <data name="Drive.UnknownFs" xml:space="preserve">
+    <value>Unknown file system '{0}'.</value>
+  </data>
+  <data name="Drive.FormatWindowsOnly" xml:space="preserve">
+    <value>Formatting is offered on Windows only.</value>
+  </data>
+  <data name="Drive.SystemDrive" xml:space="preserve">
+    <value>That is the system drive.</value>
+  </data>
+  <data name="Drive.CannotFormatType" xml:space="preserve">
+    <value>A {0} drive cannot be formatted here.</value>
+  </data>
+  <data name="Drive.NotADrive" xml:space="preserve">
+    <value>That is not a drive.</value>
+  </data>
+  <data name="Drive.MountTypes" xml:space="preserve">
+    <value>Only .iso, .vhd and .vhdx files can be mounted.</value>
+  </data>
+  <data name="Drive.BitLockerWindows" xml:space="preserve">
+    <value>BitLocker is a Windows feature.</value>
+  </data>
+  <data name="Drive.NotLettered" xml:space="preserve">
+    <value>Not a lettered drive.</value>
+  </data>
+  <data name="Drive.CouldNotRead" xml:space="preserve">
+    <value>Could not be read.</value>
+  </data>
+  <data name="Drive.NotReported" xml:space="preserve">
+    <value>Not reported for this drive.</value>
+  </data>
+  <data name="Drive.BitLockerOff" xml:space="preserve">
+    <value>Off (not encrypted)</value>
+  </data>
+  <data name="Drive.BitLockerOn" xml:space="preserve">
+    <value>On (protected)</value>
+  </data>
+  <data name="Drive.BitLockerUnknown" xml:space="preserve">
+    <value>Unknown state ({0})</value>
+  </data>
+  <data name="Drive.Unavailable" xml:space="preserve">
+    <value>Drive actions are not available on this system.</value>
+  </data>
 </root>

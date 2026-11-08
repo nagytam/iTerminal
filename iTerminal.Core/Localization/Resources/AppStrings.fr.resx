@@ -7447,4 +7447,55 @@
   <data name="Sign.CouldNotSign" xml:space="preserve">
     <value>Signature impossible : {0}</value>
   </data>
+  <data name="Drive.EjectLetter" xml:space="preserve">
+    <value>Seul un lecteur avec une lettre peut être éjecté.</value>
+  </data>
+  <data name="Drive.FormatWindowsMkfs" xml:space="preserve">
+    <value>Le formatage n’est proposé que sous Windows ; utilisez mkfs ou votre utilitaire de disque ici.</value>
+  </data>
+  <data name="Drive.FormatLetter" xml:space="preserve">
+    <value>Seul un lecteur avec une lettre peut être formaté.</value>
+  </data>
+  <data name="Drive.UnknownFs" xml:space="preserve">
+    <value>Système de fichiers « {0} » inconnu.</value>
+  </data>
+  <data name="Drive.FormatWindowsOnly" xml:space="preserve">
+    <value>Le formatage n’est proposé que sous Windows.</value>
+  </data>
+  <data name="Drive.SystemDrive" xml:space="preserve">
+    <value>C’est le lecteur système.</value>
+  </data>
+  <data name="Drive.CannotFormatType" xml:space="preserve">
+    <value>Un lecteur de type « {0} » ne peut pas être formaté ici.</value>
+  </data>
+  <data name="Drive.NotADrive" xml:space="preserve">
+    <value>Ce n’est pas un lecteur.</value>
+  </data>
+  <data name="Drive.MountTypes" xml:space="preserve">
+    <value>Seuls les fichiers .iso, .vhd et .vhdx peuvent être montés.</value>
+  </data>
+  <data name="Drive.BitLockerWindows" xml:space="preserve">
+    <value>BitLocker est une fonctionnalité de Windows.</value>
+  </data>
+  <data name="Drive.NotLettered" xml:space="preserve">
+    <value>Pas un lecteur avec une lettre.</value>
+  </data>
+  <data name="Drive.CouldNotRead" xml:space="preserve">
+    <value>Lecture impossible.</value>
+  </data>
+  <data name="Drive.NotReported" xml:space="preserve">
+    <value>Non communiqué pour ce lecteur.</value>
+  </data>
+  <data name="Drive.BitLockerOff" xml:space="preserve">
+    <value>Désactivé (non chiffré)</value>
+  </data>
+  <data name="Drive.BitLockerOn" xml:space="preserve">
+    <value>Activé (protégé)</value>
+  </data>
+  <data name="Drive.BitLockerUnknown" xml:space="preserve">
+    <value>État inconnu ({0})</value>
+  </data>
+  <data name="Drive.Unavailable" xml:space="preserve">
+    <value>Les actions sur les lecteurs ne sont pas disponibles sur ce système.</value>
+  </data>
 </root>
