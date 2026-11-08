@@ -160,4 +160,36 @@ public class ConsoleBufferRendererJobRunTest
         job.OnIdle();
         job.OnIdle();
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Run_WhenTheResizeHandlerFailsOnce_TellsItAgainSoTheLayoutDoesNotStayStale()
+    {
+        Mock<IConsoleDriver> driver = CreateDriver(new Size(20, 5));
+        Buffer buffer = new(driver.Object);
+        buffer.UpdateLayers(0);
+        buffer.Write(0, new Position(0, 1), new Size(5, 1), new ConxelString("hello", Color.White, Color.Black));
+        buffer.Merge();
+
+        ConsoleBufferRendererJob job = new(driver.Object, buffer, dumpHelper: null, consoleOwnership: new ConsoleOwnership());
+        int calls = 0;
+        Size? laidOut = null;
+        job.WindowSizeChanged += (_, size) =>
+        {
+            if (Interlocked.Increment(ref calls) == 1)
+            {
+                throw new InvalidOperationException("Collection was modified");
+            }
+
+            laidOut = size;
+        };
+
+        Task run = RunFor(job, 1200);
+        await Task.Delay(250);
+        driver.SetupGet(d => d.WindowSize).Returns(new Size(30, 6));
+        await run;
+
+        Assert.AreEqual(new Size(30, 6), laidOut, "the controls must be laid out for the new size even if the first attempt failed");
+        Assert.IsTrue(calls >= 2);
+    }
 }
