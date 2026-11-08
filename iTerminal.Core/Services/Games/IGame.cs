@@ -3,6 +3,14 @@ using iConsole.Localization;
 
 namespace iTerminal.Core.Services.Games;
 
+/// <summary>The words the games say, in the language the user chose.</summary>
+internal static class GameText
+{
+    public static string Get(string key, string english) => UiText.Get(key, english);
+
+    public static string Side(bool white) => white ? Get("Games.White", "White") : Get("Games.Black", "Black");
+}
+
 /// <summary>One piece of a drawn board: some text and, optionally, the colours it is drawn in (null takes the theme's).</summary>
 public readonly record struct GameCell(string Text, Color? Foreground = null, Color? Background = null, bool Cursor = false)
 {

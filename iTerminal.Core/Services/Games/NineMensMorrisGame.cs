@@ -520,7 +520,7 @@ public class NineMensMorrisGame : GameBase
 
     public override string Name => "Nine Men's Morris";
 
-    public override string Rules => "Place your nine men, then slide them along the lines. Three in a row is a mill: take an opposing man. With three men left you may fly.";
+    public override string Rules => GameText.Get("Games.Nmm.Rules", "Place your nine men, then slide them along the lines. Three in a row is a mill: take an opposing man. With three men left you may fly.");
 
     public override bool IsOver => _winner >= 0;
 
@@ -542,7 +542,7 @@ public class NineMensMorrisGame : GameBase
         set => _cursor = value;
     }
 
-    private static string SideName(int side) => side == 0 ? "White" : "Black";
+    private static string SideName(int side) => GameText.Side(side == 0);
 
     public override string Status
     {
@@ -556,28 +556,28 @@ public class NineMensMorrisGame : GameBase
             if (_winner == 2)
             {
                 return _state.QuietMoves >= 100
-                    ? "A draw: a hundred moves went by without a mill."
-                    : "A draw: the same position came up three times.";
+                    ? GameText.Get("Games.Nmm.DrawQuiet", "A draw: a hundred moves went by without a mill.")
+                    : GameText.Get("Games.Nmm.DrawRepeat", "A draw: the same position came up three times.");
             }
 
             if (_winner >= 0)
             {
-                return $"{SideName(_winner)} wins!";
+                return string.Format(GameText.Get("Games.Wins", "{0} wins!"), SideName(_winner));
             }
 
             string side = SideName(_state.Turn);
             if (_mustRemove)
             {
-                return $"{side} made a mill: take an opposing man.";
+                return string.Format(GameText.Get("Games.Nmm.Mill", "{0} made a mill: take an opposing man."), side);
             }
 
-            string hands = $"In hand: White {_state.InHand[0]}, Black {_state.InHand[1]}.";
+            string hands = string.Format(GameText.Get("Games.Nmm.InHand", "In hand: White {0}, Black {1}."), _state.InHand[0], _state.InHand[1]);
             if (_state.Placing(_state.Turn))
             {
-                return $"{side} to place a man. {hands}";
+                return string.Format(GameText.Get("Games.Nmm.Place", "{0} to place a man. {1}"), side, hands);
             }
 
-            return $"{side} to move{(_state.Flying(_state.Turn) ? " (flying)" : string.Empty)}. {hands}";
+            return string.Format(GameText.Get("Games.Nmm.MoveStatus", "{0} to move{1}. {2}"), side, _state.Flying(_state.Turn) ? GameText.Get("Games.Nmm.Flying", " (flying)") : string.Empty, hands);
         }
     }
 
@@ -637,7 +637,7 @@ public class NineMensMorrisGame : GameBase
         {
             if (!TryRemove(_cursor))
             {
-                _message = "Take a man outside a mill if there is one.";
+                _message = GameText.Get("Games.Nmm.TakeOutside", "Take a man outside a mill if there is one.");
             }
 
             return;
@@ -648,7 +648,7 @@ public class NineMensMorrisGame : GameBase
         {
             if (!PlayMove(new MorrisMove(-1, _cursor, -1)))
             {
-                _message = "That point is taken.";
+                _message = GameText.Get("Games.PointTaken", "That point is taken.");
             }
 
             return;
@@ -664,14 +664,14 @@ public class NineMensMorrisGame : GameBase
             if (!MorrisState.Moves(_state).Any(m => m.From == _cursor))
             {
                 _selected = -1;
-                _message = "That man cannot move.";
+                _message = GameText.Get("Games.Nmm.CannotMoveMan", "That man cannot move.");
             }
         }
         else if (_selected >= 0)
         {
             if (!PlayMove(new MorrisMove(_selected, _cursor, -1)))
             {
-                _message = "A man slides to a neighbouring empty point.";
+                _message = GameText.Get("Games.Nmm.Slide", "A man slides to a neighbouring empty point.");
             }
         }
     }

@@ -32,7 +32,7 @@ public class TicTacToeGame : GameBase
 
     public override string Name => "Tic-Tac-Toe";
 
-    public override string Rules => "Get three of your marks in a row, column or diagonal. X moves first.";
+    public override string Rules => GameText.Get("Games.TicTacToe.Rules", "Get three of your marks in a row, column or diagonal. X moves first.");
 
     public override bool IsOver => _winningLine is not null || _board.All(c => c != ' ');
 
@@ -56,10 +56,10 @@ public class TicTacToeGame : GameBase
             if (_winningLine is not null)
             {
                 char winner = _board[_winningLine[0]];
-                return $"{winner} wins!";
+                return string.Format(GameText.Get("Games.Wins", "{0} wins!"), winner);
             }
 
-            return IsOver ? "A draw." : $"{(_xToMove ? 'X' : 'O')} to move.";
+            return IsOver ? GameText.Get("Games.Draw", "A draw.") : string.Format(GameText.Get("Games.ToMove", "{0} to move."), _xToMove ? 'X' : 'O');
         }
     }
 
@@ -91,7 +91,7 @@ public class TicTacToeGame : GameBase
 
         if (!Place(_cursor))
         {
-            _message = "That square is taken.";
+            _message = GameText.Get("Games.SquareTaken", "That square is taken.");
         }
     }
 

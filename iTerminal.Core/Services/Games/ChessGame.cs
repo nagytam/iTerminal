@@ -34,7 +34,7 @@ public class ChessGame : GameBase
 
     public override string Name => "Chess";
 
-    public override string Rules => "Select a piece and then where it goes. Castle by moving the king two squares. A pawn reaching the far rank is promoted: press Q, R, B or N.";
+    public override string Rules => GameText.Get("Games.Chess.Rules", "Select a piece and then where it goes. Castle by moving the king two squares. A pawn reaching the far rank is promoted: press Q, R, B or N.");
 
     public override bool IsOver => _result is not null;
 
@@ -42,7 +42,7 @@ public class ChessGame : GameBase
 
     public override bool IsComputerTurn => VsComputer && !IsOver && !_state.WhiteToMove;
 
-    public override IEnumerable<(string Key, string Description)> ExtraKeys => [("Q R B N", "Choose the promotion piece")];
+    public override IEnumerable<(string Key, string Description)> ExtraKeys => [("Q R B N", GameText.Get("Games.Chess.PromoteKey", "Choose the promotion piece"))];
 
     internal ChessState State => _state;
 
@@ -80,12 +80,12 @@ public class ChessGame : GameBase
 
             if (_promotions is not null)
             {
-                return "Promote the pawn to: Q queen, R rook, B bishop, N knight.";
+                return GameText.Get("Games.Chess.Promote", "Promote the pawn to: Q queen, R rook, B bishop, N knight.");
             }
 
-            string side = _state.WhiteToMove ? "White" : "Black";
-            string last = _lastMove.Length > 0 ? $" Last move {_lastMove}." : string.Empty;
-            return (ChessRules.InCheck(_state) ? $"{side} is in check." : $"{side} to move.") + last;
+            string side = GameText.Side(_state.WhiteToMove);
+            string last = _lastMove.Length > 0 ? string.Format(GameText.Get("Games.Chess.LastMove", " Last move {0}."), _lastMove) : string.Empty;
+            return string.Format(ChessRules.InCheck(_state) ? GameText.Get("Games.Chess.InCheck", "{0} is in check.") : GameText.Get("Games.ToMove", "{0} to move."), side) + last;
         }
     }
 
@@ -119,20 +119,20 @@ public class ChessGame : GameBase
         if (_legal.Count == 0)
         {
             _result = ChessRules.InCheck(_state)
-                ? $"Checkmate — {(_state.WhiteToMove ? "Black" : "White")} wins!"
-                : "Stalemate — a draw.";
+                ? string.Format(GameText.Get("Games.Chess.Checkmate", "Checkmate — {0} wins!"), GameText.Side(!_state.WhiteToMove))
+                : GameText.Get("Games.Chess.Stalemate", "Stalemate — a draw.");
         }
         else if (_state.HalfMove >= 100)
         {
-            _result = "A draw by the fifty-move rule.";
+            _result = GameText.Get("Games.Chess.FiftyMove", "A draw by the fifty-move rule.");
         }
         else if (ChessRules.InsufficientMaterial(_state))
         {
-            _result = "A draw — neither side has the material to mate.";
+            _result = GameText.Get("Games.Chess.Material", "A draw — neither side has the material to mate.");
         }
         else if (_keys.Count(k => k == _keys[^1]) >= 3)
         {
-            _result = "A draw by threefold repetition.";
+            _result = GameText.Get("Games.Chess.Threefold", "A draw by threefold repetition.");
         }
     }
 
@@ -179,12 +179,12 @@ public class ChessGame : GameBase
             _selected = _legal.Any(m => m.From == square) ? square : -1;
             if (_selected < 0)
             {
-                _message = "That piece cannot move.";
+                _message = GameText.Get("Games.Chess.CannotMove", "That piece cannot move.");
             }
         }
         else if (_selected >= 0)
         {
-            _message = "That is not a legal move.";
+            _message = GameText.Get("Games.Chess.NotLegal", "That is not a legal move.");
         }
     }
 

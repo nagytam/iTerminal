@@ -41,14 +41,14 @@ public class SnakeGame : GameBase
 
     public override string Name => "Snake";
 
-    public override string Rules => "Steer the snake to the food. It grows with every bite. Hitting a wall or yourself ends the game.";
+    public override string Rules => GameText.Get("Games.Snake.Rules", "Steer the snake to the food. It grows with every bite. Hitting a wall or yourself ends the game.");
 
     public override string Status => _state switch
     {
-        SnakeState.Stopped => "Press an arrow key to start.",
-        SnakeState.Paused => "Paused. Enter to go on.",
-        SnakeState.Over => $"Game over with {Score} points. N to play again.",
-        _ => $"Score {Score}.",
+        SnakeState.Stopped => GameText.Get("Games.PressArrow", "Press an arrow key to start."),
+        SnakeState.Paused => GameText.Get("Games.Paused", "Paused. Enter to go on."),
+        SnakeState.Over => string.Format(GameText.Get("Games.Snake.Over", "Game over with {0} points. N to play again."), Score),
+        _ => string.Format(GameText.Get("Games.Snake.Score", "Score {0}."), Score),
     };
 
     public override bool IsOver => _state == SnakeState.Over;

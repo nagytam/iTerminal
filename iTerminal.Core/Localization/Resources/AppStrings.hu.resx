@@ -5878,4 +5878,160 @@
   <data name="Strip.Continue" xml:space="preserve">
     <value>Enter:tovább</value>
   </data>
+  <data name="Games.White" xml:space="preserve">
+    <value>Fehér</value>
+  </data>
+  <data name="Games.Black" xml:space="preserve">
+    <value>Fekete</value>
+  </data>
+  <data name="Games.ToMove" xml:space="preserve">
+    <value>{0} következik.</value>
+  </data>
+  <data name="Games.Wins" xml:space="preserve">
+    <value>{0} nyer!</value>
+  </data>
+  <data name="Games.Draw" xml:space="preserve">
+    <value>Döntetlen.</value>
+  </data>
+  <data name="Games.SquareTaken" xml:space="preserve">
+    <value>Az a mező foglalt.</value>
+  </data>
+  <data name="Games.PointTaken" xml:space="preserve">
+    <value>Az a pont foglalt.</value>
+  </data>
+  <data name="Games.PressArrow" xml:space="preserve">
+    <value>Indításhoz nyomj egy nyílbillentyűt.</value>
+  </data>
+  <data name="Games.Paused" xml:space="preserve">
+    <value>Szünet. Enter a folytatáshoz.</value>
+  </data>
+  <data name="Games.TicTacToe.Rules" xml:space="preserve">
+    <value>Szerezz három jelet egy sorban, oszlopban vagy átlóban. X kezd.</value>
+  </data>
+  <data name="Games.Snake.Rules" xml:space="preserve">
+    <value>Vezesd a kígyót az ételhez. Minden falattól nő. Ha falnak vagy önmagának ütközik, vége a játéknak.</value>
+  </data>
+  <data name="Games.Snake.Over" xml:space="preserve">
+    <value>Vége a játéknak {0} ponttal. N az új játékhoz.</value>
+  </data>
+  <data name="Games.Snake.Score" xml:space="preserve">
+    <value>Pontszám {0}.</value>
+  </data>
+  <data name="Games.Tetris.Rules" xml:space="preserve">
+    <value>Rakd a leeső elemeket teljes sorokba. A teli sor eltűnik. A játék véget ér, ha az elemek felérnek.</value>
+  </data>
+  <data name="Games.Tetris.Over" xml:space="preserve">
+    <value>Vége a játéknak {0} ponttal és {1} sorral. N az új játékhoz.</value>
+  </data>
+  <data name="Games.Tetris.Status" xml:space="preserve">
+    <value>Pont {0}  Sor {1}  Szint {2}  Következő {3}</value>
+  </data>
+  <data name="Games.Tetris.ActivateHint" xml:space="preserve">
+    <value>A játék szüneteltetése vagy folytatása, illetve az elemek indítása</value>
+  </data>
+  <data name="Games.Tetris.Turn" xml:space="preserve">
+    <value>Az elem forgatása óramutató irányában</value>
+  </data>
+  <data name="Games.Tetris.TurnBack" xml:space="preserve">
+    <value>Az elem forgatása óramutatóval szemben</value>
+  </data>
+  <data name="Games.Tetris.Drop" xml:space="preserve">
+    <value>Az elem azonnali ledobása</value>
+  </data>
+  <data name="Games.Chess.Rules" xml:space="preserve">
+    <value>Válassz egy bábut, majd a célmezőt. Sáncolás: a király két mezőt lép. Az utolsó sorba érő gyalog előlép: nyomj Q, R, B vagy N gombot.</value>
+  </data>
+  <data name="Games.Chess.PromoteKey" xml:space="preserve">
+    <value>Az előléptetett bábu kiválasztása</value>
+  </data>
+  <data name="Games.Chess.Promote" xml:space="preserve">
+    <value>Gyalog előléptetése: Q vezér, R bástya, B futó, N huszár.</value>
+  </data>
+  <data name="Games.Chess.InCheck" xml:space="preserve">
+    <value>{0} sakkban áll.</value>
+  </data>
+  <data name="Games.Chess.LastMove" xml:space="preserve">
+    <value> Utolsó lépés {0}.</value>
+  </data>
+  <data name="Games.Chess.Checkmate" xml:space="preserve">
+    <value>Matt – {0} nyer!</value>
+  </data>
+  <data name="Games.Chess.Stalemate" xml:space="preserve">
+    <value>Patt – döntetlen.</value>
+  </data>
+  <data name="Games.Chess.FiftyMove" xml:space="preserve">
+    <value>Döntetlen az ötvenlépéses szabály szerint.</value>
+  </data>
+  <data name="Games.Chess.Material" xml:space="preserve">
+    <value>Döntetlen – egyik félnek sincs elég anyaga a mattadáshoz.</value>
+  </data>
+  <data name="Games.Chess.Threefold" xml:space="preserve">
+    <value>Döntetlen háromszori ismétlés miatt.</value>
+  </data>
+  <data name="Games.Chess.CannotMove" xml:space="preserve">
+    <value>Az a bábu nem léphet.</value>
+  </data>
+  <data name="Games.Chess.NotLegal" xml:space="preserve">
+    <value>Ez nem szabályos lépés.</value>
+  </data>
+  <data name="Games.Go.Rules" xml:space="preserve">
+    <value>Vegyél körbe pontokat, és fogd el a szabad szomszédpont nélküli köveket. P passz; két passz után jelöld a halott köveket, és megjelenik az eredmény.</value>
+  </data>
+  <data name="Games.Go.Pass" xml:space="preserve">
+    <value>Passz</value>
+  </data>
+  <data name="Games.Go.Resize" xml:space="preserve">
+    <value>A tábla méretének módosítása és újrakezdés</value>
+  </data>
+  <data name="Games.Go.BlackWins" xml:space="preserve">
+    <value>A fekete nyer {0:0.#} ponttal</value>
+  </data>
+  <data name="Games.Go.WhiteWins" xml:space="preserve">
+    <value>A fehér nyer {0:0.#} ponttal</value>
+  </data>
+  <data name="Games.Go.Final" xml:space="preserve">
+    <value>Mindketten passzoltak. Jelöld a halott köveket. Fekete {0}, Fehér {1} + {2} komi: {3}.</value>
+  </data>
+  <data name="Games.Go.Status" xml:space="preserve">
+    <value>{0} következik. Fogságban: Fekete {1}, Fehér {2}.{3}</value>
+  </data>
+  <data name="Games.Go.Passed" xml:space="preserve">
+    <value>{0} passzolt.</value>
+  </data>
+  <data name="Games.Go.Illegal" xml:space="preserve">
+    <value>Ez a lépés nem megengedett: öngyilkosság, vagy sérti a ko-szabályt.</value>
+  </data>
+  <data name="Games.Nmm.Rules" xml:space="preserve">
+    <value>Tedd le kilenc korongodat, majd told őket a vonalak mentén. Három egy sorban malom: vegyél el egy ellenfél-korongot. Három koronggal repülhetsz.</value>
+  </data>
+  <data name="Games.Nmm.DrawQuiet" xml:space="preserve">
+    <value>Döntetlen: száz lépés telt el malom nélkül.</value>
+  </data>
+  <data name="Games.Nmm.DrawRepeat" xml:space="preserve">
+    <value>Döntetlen: ugyanaz az állás háromszor adódott.</value>
+  </data>
+  <data name="Games.Nmm.Mill" xml:space="preserve">
+    <value>{0} malmot csinált: vegyél el egy ellenfél-korongot.</value>
+  </data>
+  <data name="Games.Nmm.InHand" xml:space="preserve">
+    <value>Kézben: Fehér {0}, Fekete {1}.</value>
+  </data>
+  <data name="Games.Nmm.Place" xml:space="preserve">
+    <value>{0} korongot tesz le. {1}</value>
+  </data>
+  <data name="Games.Nmm.MoveStatus" xml:space="preserve">
+    <value>{0} következik{1}. {2}</value>
+  </data>
+  <data name="Games.Nmm.Flying" xml:space="preserve">
+    <value> (repülve)</value>
+  </data>
+  <data name="Games.Nmm.TakeOutside" xml:space="preserve">
+    <value>Vegyél el egy malmon kívüli korongot, ha van.</value>
+  </data>
+  <data name="Games.Nmm.CannotMoveMan" xml:space="preserve">
+    <value>Az a korong nem léphet.</value>
+  </data>
+  <data name="Games.Nmm.Slide" xml:space="preserve">
+    <value>Egy korong a szomszédos üres pontra csúszik.</value>
+  </data>
 </root>

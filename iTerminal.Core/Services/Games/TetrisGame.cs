@@ -60,14 +60,14 @@ public class TetrisGame : GameBase
 
     public override string Name => "Tetris";
 
-    public override string Rules => "Stack the falling pieces into full rows. A full row disappears. The game ends when the pieces reach the top.";
+    public override string Rules => GameText.Get("Games.Tetris.Rules", "Stack the falling pieces into full rows. A full row disappears. The game ends when the pieces reach the top.");
 
     public override string Status => _state switch
     {
-        TetrisState.Stopped => "Press an arrow key to start.",
-        TetrisState.Paused => "Paused. Enter to go on.",
-        TetrisState.Over => $"Game over with {Score} points and {Lines} rows. N to play again.",
-        _ => $"Score {Score}  Rows {Lines}  Level {Level}  Next {PieceNames[_next]}",
+        TetrisState.Stopped => GameText.Get("Games.PressArrow", "Press an arrow key to start."),
+        TetrisState.Paused => GameText.Get("Games.Paused", "Paused. Enter to go on."),
+        TetrisState.Over => string.Format(GameText.Get("Games.Tetris.Over", "Game over with {0} points and {1} rows. N to play again."), Score, Lines),
+        _ => string.Format(GameText.Get("Games.Tetris.Status", "Score {0}  Rows {1}  Level {2}  Next {3}"), Score, Lines, Level, PieceNames[_next]),
     };
 
     public override bool IsOver => _state == TetrisState.Over;
@@ -82,13 +82,13 @@ public class TetrisGame : GameBase
 
     public override string ActivateLabel => iConsole.Localization.UiText.Get("Games.Snake.Pause", "pause");
 
-    public override string ActivateHint => "Pause or resume the game, or start the pieces falling";
+    public override string ActivateHint => GameText.Get("Games.Tetris.ActivateHint", "Pause or resume the game, or start the pieces falling");
 
     public override IEnumerable<(string Key, string Description)> ExtraKeys =>
     [
-        ("Up / X", "Turn the piece clockwise"),
-        ("Z", "Turn the piece counter-clockwise"),
-        ("D", "Drop the piece at once"),
+        ("Up / X", GameText.Get("Games.Tetris.Turn", "Turn the piece clockwise")),
+        ("Z", GameText.Get("Games.Tetris.TurnBack", "Turn the piece counter-clockwise")),
+        ("D", GameText.Get("Games.Tetris.Drop", "Drop the piece at once")),
     ];
 
     public int Score { get; private set; }
