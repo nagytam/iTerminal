@@ -7,6 +7,22 @@ public class SystemSettingsValidatorTest
 {
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public void TheRefusalsFollowTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(SystemSettingsValidator).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+
+        Assert.AreEqual("Der Computername darf nicht leer sein.", SystemSettingsValidator.ValidateComputerName("", true));
+        Assert.AreEqual("Der Computername darf höchstens 15 Zeichen lang sein.", SystemSettingsValidator.ValidateComputerName(new string('a', 16), true));
+        StringAssert.Contains(SystemSettingsValidator.ValidateWorkgroup("a/b"), "Arbeitsgruppenname darf diese Zeichen nicht enthalten: \\ /");
+        Assert.AreEqual("Der Wert muss einzeilig sein.", SystemSettingsValidator.ValidateVariableValue("a\nb", true));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     [DataRow("WORKSTATION-01", true)]
     [DataRow("a", true)]
     [DataRow("web1", false)]
