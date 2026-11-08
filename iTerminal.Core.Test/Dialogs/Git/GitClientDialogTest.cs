@@ -704,6 +704,26 @@ public class GitClientDialogTest
     }
 
     [Timeout(60_000)]
+    [DataTestMethod]
+    [DataRow(' ', ConsoleKey.Enter, "vorgemerkt")]
+    [DataRow('f', ConsoleKey.F, "Abgerufen")]
+    [DataRow('p', ConsoleKey.P, "Pull abgeschlossen")]
+    public async Task TheActionMessagesFollowTheChosenLanguage(char character, ConsoleKey consoleKey, string expected)
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(GitClientDialog).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        var gitService = new RecordingGitService { Status = StatusWith(unstaged: [Modified("src/Foo.cs")]) };
+        var dialog = CreateDialog(gitService);
+        await ShowAsync(dialog);
+
+        await PressAsync(dialog, Key(character, consoleKey));
+
+        Contains(Render(dialog), expected);
+    }
+
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CapitalAAbortsAMergeOnlyWhileOneIsInProgress()
     {

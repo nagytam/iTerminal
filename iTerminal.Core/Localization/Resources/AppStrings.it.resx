@@ -6820,4 +6820,70 @@
   <data name="Units.Heading" xml:space="preserve">
     <value>Convertitore di unità — {0}</value>
   </data>
+  <data name="Git.Act.MarkingResolved" xml:space="preserve">
+    <value>Segno {0} come risolto</value>
+  </data>
+  <data name="Git.Act.Resolved" xml:space="preserve">
+    <value>{0} risolto</value>
+  </data>
+  <data name="Git.Act.Unstaging" xml:space="preserve">
+    <value>Rimuovo {0} dall’area di staging</value>
+  </data>
+  <data name="Git.Act.Staging" xml:space="preserve">
+    <value>Aggiungo {0} allo staging</value>
+  </data>
+  <data name="Git.Act.Unstaged" xml:space="preserve">
+    <value>{0} rimosso dallo staging</value>
+  </data>
+  <data name="Git.Act.Staged" xml:space="preserve">
+    <value>{0} aggiunto allo staging</value>
+  </data>
+  <data name="Git.Act.UnstagingAll" xml:space="preserve">
+    <value>Rimuovo tutto dallo staging...</value>
+  </data>
+  <data name="Git.Act.UnstagedAll" xml:space="preserve">
+    <value>Tutto rimosso dallo staging.</value>
+  </data>
+  <data name="Git.Act.StagingAll" xml:space="preserve">
+    <value>Aggiungo tutto allo staging...</value>
+  </data>
+  <data name="Git.Act.StagedCount" xml:space="preserve">
+    <value>{0} file aggiunti allo staging.</value>
+  </data>
+  <data name="Git.Act.Amending" xml:space="preserve">
+    <value>Modifico il commit...</value>
+  </data>
+  <data name="Git.Act.Committing" xml:space="preserve">
+    <value>Eseguo il commit...</value>
+  </data>
+  <data name="Git.Act.Amended" xml:space="preserve">
+    <value>Commit modificato.</value>
+  </data>
+  <data name="Git.Act.Committed" xml:space="preserve">
+    <value>Commit eseguito.</value>
+  </data>
+  <data name="Git.Act.Merging" xml:space="preserve">
+    <value>Unisco {0}</value>
+  </data>
+  <data name="Git.Act.Merged" xml:space="preserve">
+    <value>{0} unito.</value>
+  </data>
+  <data name="Git.Act.Fetching" xml:space="preserve">
+    <value>Scarico...</value>
+  </data>
+  <data name="Git.Act.Fetched" xml:space="preserve">
+    <value>Scaricato.</value>
+  </data>
+  <data name="Git.Act.Pulling" xml:space="preserve">
+    <value>Eseguo il pull...</value>
+  </data>
+  <data name="Git.Act.Pulled" xml:space="preserve">
+    <value>Pull eseguito.</value>
+  </data>
+  <data name="Git.Act.Discarding" xml:space="preserve">
+    <value>Scarto {0}</value>
+  </data>
+  <data name="Git.Act.Discarded" xml:space="preserve">
+    <value>{0} scartato.</value>
+  </data>
 </root>

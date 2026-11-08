@@ -6820,4 +6820,70 @@
   <data name="Units.Heading" xml:space="preserve">
     <value>Mértékegység-váltó — {0}</value>
   </data>
+  <data name="Git.Act.MarkingResolved" xml:space="preserve">
+    <value>{0} megjelölése megoldottként</value>
+  </data>
+  <data name="Git.Act.Resolved" xml:space="preserve">
+    <value>{0} megoldva</value>
+  </data>
+  <data name="Git.Act.Unstaging" xml:space="preserve">
+    <value>{0} kivétele az előkészítésből</value>
+  </data>
+  <data name="Git.Act.Staging" xml:space="preserve">
+    <value>{0} előkészítése</value>
+  </data>
+  <data name="Git.Act.Unstaged" xml:space="preserve">
+    <value>{0} kivéve az előkészítésből</value>
+  </data>
+  <data name="Git.Act.Staged" xml:space="preserve">
+    <value>{0} előkészítve</value>
+  </data>
+  <data name="Git.Act.UnstagingAll" xml:space="preserve">
+    <value>Minden kivétele az előkészítésből...</value>
+  </data>
+  <data name="Git.Act.UnstagedAll" xml:space="preserve">
+    <value>Minden kivéve az előkészítésből.</value>
+  </data>
+  <data name="Git.Act.StagingAll" xml:space="preserve">
+    <value>Minden előkészítése...</value>
+  </data>
+  <data name="Git.Act.StagedCount" xml:space="preserve">
+    <value>{0} fájl előkészítve.</value>
+  </data>
+  <data name="Git.Act.Amending" xml:space="preserve">
+    <value>Commit módosítása...</value>
+  </data>
+  <data name="Git.Act.Committing" xml:space="preserve">
+    <value>Commit készítése...</value>
+  </data>
+  <data name="Git.Act.Amended" xml:space="preserve">
+    <value>Commit módosítva.</value>
+  </data>
+  <data name="Git.Act.Committed" xml:space="preserve">
+    <value>Commit kész.</value>
+  </data>
+  <data name="Git.Act.Merging" xml:space="preserve">
+    <value>{0} egyesítése</value>
+  </data>
+  <data name="Git.Act.Merged" xml:space="preserve">
+    <value>{0} egyesítve.</value>
+  </data>
+  <data name="Git.Act.Fetching" xml:space="preserve">
+    <value>Letöltés...</value>
+  </data>
+  <data name="Git.Act.Fetched" xml:space="preserve">
+    <value>Letöltve.</value>
+  </data>
+  <data name="Git.Act.Pulling" xml:space="preserve">
+    <value>Pull folyamatban...</value>
+  </data>
+  <data name="Git.Act.Pulled" xml:space="preserve">
+    <value>Pull kész.</value>
+  </data>
+  <data name="Git.Act.Discarding" xml:space="preserve">
+    <value>{0} elvetése</value>
+  </data>
+  <data name="Git.Act.Discarded" xml:space="preserve">
+    <value>{0} elvetve.</value>
+  </data>
 </root>
