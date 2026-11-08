@@ -7498,4 +7498,55 @@
   <data name="Drive.Unavailable" xml:space="preserve">
     <value>A meghajtóműveletek ezen a rendszeren nem érhetők el.</value>
   </data>
+  <data name="SysVal.NameEmpty" xml:space="preserve">
+    <value>A számítógép neve nem lehet üres.</value>
+  </data>
+  <data name="SysVal.NameLong" xml:space="preserve">
+    <value>A számítógép neve legfeljebb {0} karakter lehet.</value>
+  </data>
+  <data name="SysVal.NameChars" xml:space="preserve">
+    <value>Csak betűt, számjegyet és kötőjelet használjon; betűvel vagy számjeggyel kezdődjön, és ne kötőjelre végződjön.</value>
+  </data>
+  <data name="SysVal.NameDigits" xml:space="preserve">
+    <value>A számítógép neve nem állhat csak számjegyekből.</value>
+  </data>
+  <data name="SysVal.GroupEmpty" xml:space="preserve">
+    <value>A munkacsoport neve nem lehet üres.</value>
+  </data>
+  <data name="SysVal.GroupLong" xml:space="preserve">
+    <value>A munkacsoport neve legfeljebb {0} karakter lehet.</value>
+  </data>
+  <data name="SysVal.GroupChars" xml:space="preserve">
+    <value>A munkacsoport neve nem tartalmazhatja: \ / : * ? " &lt; &gt; | ; ,</value>
+  </data>
+  <data name="SysVal.DescLine" xml:space="preserve">
+    <value>A leírásnak egysorosnak kell lennie.</value>
+  </data>
+  <data name="SysVal.DescLong" xml:space="preserve">
+    <value>A leírás legfeljebb 256 karakter lehet.</value>
+  </data>
+  <data name="SysVal.VarEmpty" xml:space="preserve">
+    <value>A változó neve nem lehet üres.</value>
+  </data>
+  <data name="SysVal.VarSpace" xml:space="preserve">
+    <value>A változó neve nem kezdődhet és nem végződhet szóközzel.</value>
+  </data>
+  <data name="SysVal.VarChars" xml:space="preserve">
+    <value>A változó neve nem tartalmazhat =-t és vezérlőkaraktert.</value>
+  </data>
+  <data name="SysVal.VarLong" xml:space="preserve">
+    <value>A változó neve legfeljebb 255 karakter lehet.</value>
+  </data>
+  <data name="SysVal.VarPortable" xml:space="preserve">
+    <value>Betűt, számjegyet és aláhúzást használjon, számjeggyel ne kezdődjön.</value>
+  </data>
+  <data name="SysVal.ValNeeded" xml:space="preserve">
+    <value>A változónak értékre van szüksége.</value>
+  </data>
+  <data name="SysVal.ValLine" xml:space="preserve">
+    <value>Az értéknek egysorosnak kell lennie.</value>
+  </data>
+  <data name="SysVal.ValLong" xml:space="preserve">
+    <value>Az érték túl hosszú a beállításjegyzékhez.</value>
+  </data>
 </root>

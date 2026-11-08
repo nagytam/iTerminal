@@ -7498,4 +7498,55 @@
   <data name="Drive.Unavailable" xml:space="preserve">
     <value>Le azioni sulle unità non sono disponibili su questo sistema.</value>
   </data>
+  <data name="SysVal.NameEmpty" xml:space="preserve">
+    <value>Il nome del computer non può essere vuoto.</value>
+  </data>
+  <data name="SysVal.NameLong" xml:space="preserve">
+    <value>Il nome del computer può avere al massimo {0} caratteri.</value>
+  </data>
+  <data name="SysVal.NameChars" xml:space="preserve">
+    <value>Usa solo lettere, cifre e trattini, iniziando con una lettera o una cifra e non finendo con un trattino.</value>
+  </data>
+  <data name="SysVal.NameDigits" xml:space="preserve">
+    <value>Il nome di un computer non può essere composto solo da cifre.</value>
+  </data>
+  <data name="SysVal.GroupEmpty" xml:space="preserve">
+    <value>Il nome del gruppo di lavoro non può essere vuoto.</value>
+  </data>
+  <data name="SysVal.GroupLong" xml:space="preserve">
+    <value>Il nome del gruppo di lavoro può avere al massimo {0} caratteri.</value>
+  </data>
+  <data name="SysVal.GroupChars" xml:space="preserve">
+    <value>Il nome del gruppo di lavoro non può contenere: \ / : * ? " &lt; &gt; | ; ,</value>
+  </data>
+  <data name="SysVal.DescLine" xml:space="preserve">
+    <value>La descrizione deve essere su una sola riga.</value>
+  </data>
+  <data name="SysVal.DescLong" xml:space="preserve">
+    <value>La descrizione può avere al massimo 256 caratteri.</value>
+  </data>
+  <data name="SysVal.VarEmpty" xml:space="preserve">
+    <value>Il nome della variabile non può essere vuoto.</value>
+  </data>
+  <data name="SysVal.VarSpace" xml:space="preserve">
+    <value>Il nome della variabile non può iniziare o finire con uno spazio.</value>
+  </data>
+  <data name="SysVal.VarChars" xml:space="preserve">
+    <value>Il nome della variabile non può contenere = o caratteri di controllo.</value>
+  </data>
+  <data name="SysVal.VarLong" xml:space="preserve">
+    <value>Il nome della variabile può avere al massimo 255 caratteri.</value>
+  </data>
+  <data name="SysVal.VarPortable" xml:space="preserve">
+    <value>Usa lettere, cifre e trattini bassi, senza iniziare con una cifra.</value>
+  </data>
+  <data name="SysVal.ValNeeded" xml:space="preserve">
+    <value>La variabile richiede un valore.</value>
+  </data>
+  <data name="SysVal.ValLine" xml:space="preserve">
+    <value>Il valore deve essere su una sola riga.</value>
+  </data>
+  <data name="SysVal.ValLong" xml:space="preserve">
+    <value>Il valore è troppo lungo per il registro.</value>
+  </data>
 </root>

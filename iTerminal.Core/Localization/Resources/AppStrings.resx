@@ -7639,4 +7639,55 @@
   <data name="Drive.Unavailable" xml:space="preserve">
     <value>Drive actions are not available on this system.</value>
   </data>
+  <data name="SysVal.NameEmpty" xml:space="preserve">
+    <value>The computer name cannot be empty.</value>
+  </data>
+  <data name="SysVal.NameLong" xml:space="preserve">
+    <value>The computer name can be at most {0} characters.</value>
+  </data>
+  <data name="SysVal.NameChars" xml:space="preserve">
+    <value>Use only letters, digits and hyphens, starting with a letter or digit and not ending with a hyphen.</value>
+  </data>
+  <data name="SysVal.NameDigits" xml:space="preserve">
+    <value>A computer name cannot be made of digits only.</value>
+  </data>
+  <data name="SysVal.GroupEmpty" xml:space="preserve">
+    <value>The workgroup name cannot be empty.</value>
+  </data>
+  <data name="SysVal.GroupLong" xml:space="preserve">
+    <value>The workgroup name can be at most {0} characters.</value>
+  </data>
+  <data name="SysVal.GroupChars" xml:space="preserve">
+    <value>The workgroup name cannot contain \ / : * ? " &lt; &gt; | ; ,</value>
+  </data>
+  <data name="SysVal.DescLine" xml:space="preserve">
+    <value>The description must be a single line.</value>
+  </data>
+  <data name="SysVal.DescLong" xml:space="preserve">
+    <value>The description can be at most 256 characters.</value>
+  </data>
+  <data name="SysVal.VarEmpty" xml:space="preserve">
+    <value>The variable name cannot be empty.</value>
+  </data>
+  <data name="SysVal.VarSpace" xml:space="preserve">
+    <value>The variable name cannot start or end with a space.</value>
+  </data>
+  <data name="SysVal.VarChars" xml:space="preserve">
+    <value>The variable name cannot contain = or control characters.</value>
+  </data>
+  <data name="SysVal.VarLong" xml:space="preserve">
+    <value>The variable name can be at most 255 characters.</value>
+  </data>
+  <data name="SysVal.VarPortable" xml:space="preserve">
+    <value>Use letters, digits and underscores, not starting with a digit.</value>
+  </data>
+  <data name="SysVal.ValNeeded" xml:space="preserve">
+    <value>The variable needs a value.</value>
+  </data>
+  <data name="SysVal.ValLine" xml:space="preserve">
+    <value>The value must be a single line.</value>
+  </data>
+  <data name="SysVal.ValLong" xml:space="preserve">
+    <value>The value is too long for the registry.</value>
+  </data>
 </root>

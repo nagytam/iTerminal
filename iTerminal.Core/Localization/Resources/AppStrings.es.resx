@@ -7498,4 +7498,55 @@
   <data name="Drive.Unavailable" xml:space="preserve">
     <value>Las acciones de unidad no están disponibles en este sistema.</value>
   </data>
+  <data name="SysVal.NameEmpty" xml:space="preserve">
+    <value>El nombre del equipo no puede estar vacío.</value>
+  </data>
+  <data name="SysVal.NameLong" xml:space="preserve">
+    <value>El nombre del equipo puede tener como máximo {0} caracteres.</value>
+  </data>
+  <data name="SysVal.NameChars" xml:space="preserve">
+    <value>Use solo letras, dígitos y guiones, empezando por una letra o dígito y sin terminar en guion.</value>
+  </data>
+  <data name="SysVal.NameDigits" xml:space="preserve">
+    <value>Un nombre de equipo no puede estar formado solo por dígitos.</value>
+  </data>
+  <data name="SysVal.GroupEmpty" xml:space="preserve">
+    <value>El nombre del grupo de trabajo no puede estar vacío.</value>
+  </data>
+  <data name="SysVal.GroupLong" xml:space="preserve">
+    <value>El nombre del grupo de trabajo puede tener como máximo {0} caracteres.</value>
+  </data>
+  <data name="SysVal.GroupChars" xml:space="preserve">
+    <value>El nombre del grupo de trabajo no puede contener: \ / : * ? " &lt; &gt; | ; ,</value>
+  </data>
+  <data name="SysVal.DescLine" xml:space="preserve">
+    <value>La descripción debe ser de una sola línea.</value>
+  </data>
+  <data name="SysVal.DescLong" xml:space="preserve">
+    <value>La descripción puede tener como máximo 256 caracteres.</value>
+  </data>
+  <data name="SysVal.VarEmpty" xml:space="preserve">
+    <value>El nombre de la variable no puede estar vacío.</value>
+  </data>
+  <data name="SysVal.VarSpace" xml:space="preserve">
+    <value>El nombre de la variable no puede empezar ni terminar con un espacio.</value>
+  </data>
+  <data name="SysVal.VarChars" xml:space="preserve">
+    <value>El nombre de la variable no puede contener = ni caracteres de control.</value>
+  </data>
+  <data name="SysVal.VarLong" xml:space="preserve">
+    <value>El nombre de la variable puede tener como máximo 255 caracteres.</value>
+  </data>
+  <data name="SysVal.VarPortable" xml:space="preserve">
+    <value>Use letras, dígitos y guiones bajos, sin empezar por un dígito.</value>
+  </data>
+  <data name="SysVal.ValNeeded" xml:space="preserve">
+    <value>La variable necesita un valor.</value>
+  </data>
+  <data name="SysVal.ValLine" xml:space="preserve">
+    <value>El valor debe ser de una sola línea.</value>
+  </data>
+  <data name="SysVal.ValLong" xml:space="preserve">
+    <value>El valor es demasiado largo para el registro.</value>
+  </data>
 </root>
