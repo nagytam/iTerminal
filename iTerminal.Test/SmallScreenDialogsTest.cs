@@ -994,4 +994,25 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("[") && l.Contains("Übernehmen")), "the Apply button in German");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("F5", "Überschreiben")]
+    [DataRow("F6", "Überschreiben")]
+    [DataRow("Shift+F7", "Ordner erstellen")]
+    [DataRow("F8", "Datei löschen")]
+    public async Task TheFileOperationDialogsOpenedAfterALiveSwitchToGerman_AreGerman(string key, string expected)
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 120, height: 36);
+        await app.SelectEntryAsync("readme.txt");
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync(key);
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the dialog in German");
+    }
 }
