@@ -1,4 +1,4 @@
-using System.Resources;
+﻿using System.Resources;
 using iConsole.Controls;
 using iConsole.Localization;
 using iTerminal.Core.Dialogs;
@@ -82,5 +82,34 @@ public class LanguageDialogTest
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
 
         Assert.AreEqual("en", localizer.LanguageCode);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ApplyingAnotherLanguage_SaysThatSomeDialogsChangeAfterARestart()
+    {
+        var localizer = CreateLocalizer(new SettingsService());
+        var notifications = new Moq.Mock<iConsole.Services.INotificationService>();
+        var dialog = new LanguageDialog(localizer, TestTheme(), notifications.Object);
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.DownArrow));
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        notifications.Verify(n => n.Notify(Moq.It.IsAny<string>(), Moq.It.Is<string?>(m => m != null && m.Contains("Neustart")), Moq.It.IsAny<iConsole.Services.NotificationSeverity>(), Moq.It.IsAny<TimeSpan?>()), Moq.Times.Once);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ApplyingTheLanguageAlreadyInUse_SaysNothing()
+    {
+        var localizer = CreateLocalizer(new SettingsService());
+        var notifications = new Moq.Mock<iConsole.Services.INotificationService>();
+        var dialog = new LanguageDialog(localizer, TestTheme(), notifications.Object);
+        await ShowAsync(dialog);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        notifications.Verify(n => n.Notify(Moq.It.IsAny<string>(), Moq.It.IsAny<string?>(), Moq.It.IsAny<iConsole.Services.NotificationSeverity>(), Moq.It.IsAny<TimeSpan?>()), Moq.Times.Never);
     }
 }

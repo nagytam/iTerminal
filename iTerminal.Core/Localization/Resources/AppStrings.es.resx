@@ -5443,4 +5443,7 @@
   <data name="Workspaces.HintList" xml:space="preserve">
     <value>Intro cambiar  1-9 saltar  S guardar  U actualizar  R renombrar  D eliminar  Esc cerrar</value>
   </data>
+  <data name="Language.RestartNote" xml:space="preserve">
+    <value>Los menús y la barra de teclas cambian al instante. Algunos diálogos cambian de idioma tras reiniciar.</value>
+  </data>
 </root>

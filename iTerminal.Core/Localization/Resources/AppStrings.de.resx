@@ -5443,4 +5443,7 @@
   <data name="Workspaces.HintList" xml:space="preserve">
     <value>Enter wechseln  1-9 springen  S speichern  U aktualisieren  R umbenennen  D löschen  Esc schließen</value>
   </data>
+  <data name="Language.RestartNote" xml:space="preserve">
+    <value>Menüs und Tastenleiste wechseln sofort. Einige Dialoge wechseln die Sprache erst nach einem Neustart.</value>
+  </data>
 </root>
