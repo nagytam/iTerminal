@@ -44,6 +44,13 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
     private readonly TaskCompletionSource _firstFrameRendered = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private DateTime _lastStatisticsDate = DateTime.Now;
     private DateTime _lastWindowSizeCheck = DateTime.MinValue;
+
+    /// <summary>The size the controls still have to be laid out for: set when the buffer is resized, cleared once the handler has run.</summary>
+    private Data.Size? _layoutPending;
+
+    private int _layoutAttempts;
+
+    private const int MaxLayoutAttempts = 5;
     private readonly Services.ConsoleOwnership? _consoleOwnership;
     private readonly Graphics.SixelOverlay? _sixelOverlay;
 
@@ -222,7 +229,29 @@ public class ConsoleBufferRendererJob : Job, Services.IConsoleHandoverParticipan
             {
                 Buffer.Resize(newSize);
             }
-            WindowSizeChanged?.Invoke(this, newSize);
+
+            _layoutPending = newSize;
+            _layoutAttempts = 0;
+        }
+
+        // The buffer has its new size by now, so the next check sees no difference: if the handler that lays the controls
+        // out throws (the tree can change under it), the screen would stay at the old layout for good. It is told again on
+        // the next check instead, a few times.
+        if (_layoutPending is { } pending)
+        {
+            try
+            {
+                WindowSizeChanged?.Invoke(this, pending);
+                _layoutPending = null;
+            }
+            catch (Exception exception)
+            {
+                WriteDiagnosticError(exception);
+                if (++_layoutAttempts >= MaxLayoutAttempts)
+                {
+                    _layoutPending = null;
+                }
+            }
         }
     }
 
