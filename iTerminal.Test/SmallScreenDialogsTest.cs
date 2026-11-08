@@ -619,4 +619,18 @@ public class SmallScreenDialogsTest
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("readme")), "the rows");
         Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("readme") && l.Contains('%')), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task ThePasswordsOn15Rows_KeepTheBottomBorderWhole()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 40, height: 15);
+
+        await narrow.PressAsync("Ctrl+X");
+
+        await narrow.WaitForTextAsync("Passwords");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Enter edit")), "the footer");
+        string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
+        Assert.IsTrue(last.Trim().StartsWith('╚') && !last.Trim().Contains(' '), narrow.Screen.Dump());
+    }
 }
