@@ -592,4 +592,18 @@ public class SmallScreenDialogsTest
             Assert.IsTrue(line.TrimEnd().EndsWith('║') && !line.Contains("a[") && !line.Contains("l[") , narrow.Screen.Dump());
         }
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCurrencyBoxesOn40Columns_EndInsideTheFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 40, height: 15);
+
+        await narrow.PressAsync("Ctrl+Shift+F5");
+
+        await narrow.WaitForTextAsync("Currency Converter");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Amount:")), "the boxes");
+        string row = narrow.Screen.Lines.First(l => l.Contains("Amount:"));
+        Assert.IsTrue(row[row.IndexOf("To:", StringComparison.Ordinal)..].Contains('║'), narrow.Screen.Dump());
+    }
 }
