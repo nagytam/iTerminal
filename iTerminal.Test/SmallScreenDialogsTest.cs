@@ -1,4 +1,4 @@
-namespace iTerminal.Test;
+﻿namespace iTerminal.Test;
 
 /// <summary>Dialogs on an 80 x 24 terminal: everything inside its frame, nothing cut mid-word that fits.</summary>
 [TestClass]
@@ -426,5 +426,46 @@ public class SmallScreenDialogsTest
 
         await app.PressAsync("Ctrl+Shift+E");
         await app.WaitUntilAsync(() => app.Driver.FocusedModal is Core.Dialogs.FileEncryptionDialog, "the encryption dialog to open");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheEnvironmentVariablesOn18Rows_KeepTheBottomBorderWhole()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+
+        await narrow.PressAsync("Ctrl+Shift+H");
+
+        await narrow.WaitForTextAsync("Environment Variables");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("N new")), "the footer");
+        string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
+        Assert.IsTrue(last.Trim().StartsWith('╚') && !last.Trim().Contains(' '), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheTaskHeadingOn50Columns_KeepsTheWordSubjectWhole()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+
+        await narrow.PressAsync("Ctrl+Y");
+
+        await narrow.WaitForTextAsync("Tasks");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Priority")), "the heading");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Priority") && l.Contains("Subject")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Ctrl+Shift+F1", "No torrents yet")]
+    [DataRow("Ctrl+Shift+F2", "No workspaces yet")]
+    public async Task TheEmptyListHelpOn50Columns_EndsOnAnEllipsis(string chord, string text)
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(text)), "the empty-list help");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains(text) && l.Contains('…')), narrow.Screen.Dump());
     }
 }
