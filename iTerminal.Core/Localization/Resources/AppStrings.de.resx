@@ -7549,4 +7549,43 @@
   <data name="SysVal.ValLong" xml:space="preserve">
     <value>Der Wert ist für die Registrierung zu lang.</value>
   </data>
+  <data name="SysSet.NeedsAdmin" xml:space="preserve">
+    <value>Das ändert den ganzen Computer und erfordert Administratorrechte. Starten Sie iTerminal als Administrator neu (Strg+Umschalt+A) und versuchen Sie es erneut.</value>
+  </data>
+  <data name="SysSet.NameUnsupported" xml:space="preserve">
+    <value>Das Ändern des Computernamens wird auf diesem System nicht unterstützt.</value>
+  </data>
+  <data name="SysSet.NameAfterRestart" xml:space="preserve">
+    <value>Der Computer heißt nach dem nächsten Neustart {0}.</value>
+  </data>
+  <data name="SysSet.NameNow" xml:space="preserve">
+    <value>Der Computer heißt jetzt {0}.</value>
+  </data>
+  <data name="SysSet.GroupWindows" xml:space="preserve">
+    <value>Eine Arbeitsgruppe ist eine Windows-Einstellung.</value>
+  </data>
+  <data name="SysSet.DomainMember" xml:space="preserve">
+    <value>Dieser Computer ist Mitglied der Domäne {0}. Zum Verlassen einer Domäne ist ein Verzeichniskonto nötig; verwenden Sie die Systemeigenschaften von Windows.</value>
+  </data>
+  <data name="SysSet.GroupAfterRestart" xml:space="preserve">
+    <value>Die Arbeitsgruppe heißt nach dem nächsten Neustart {0}.</value>
+  </data>
+  <data name="SysSet.DescUnsupported" xml:space="preserve">
+    <value>Das Ändern der Computerbeschreibung wird auf diesem System nicht unterstützt.</value>
+  </data>
+  <data name="SysSet.DescSaved" xml:space="preserve">
+    <value>Die Beschreibung wurde gespeichert.</value>
+  </data>
+  <data name="SysSet.EnvUnsupported" xml:space="preserve">
+    <value>Umgebungsvariablen können auf diesem System nicht geändert werden.</value>
+  </data>
+  <data name="SysSet.TzUnsupported" xml:space="preserve">
+    <value>Das Ändern der Zeitzone wird auf diesem System nicht unterstützt.</value>
+  </data>
+  <data name="SysSet.NotTz" xml:space="preserve">
+    <value>Das ist keine Zeitzone.</value>
+  </data>
+  <data name="SysSet.TzNow" xml:space="preserve">
+    <value>Die Zeitzone ist jetzt {0}.</value>
+  </data>
 </root>

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Services.Processes;
 
 namespace iTerminal.Core.Services.SystemSettings;
@@ -80,8 +81,8 @@ public sealed class SystemSettingsService : ISystemSettingsService
         return new EnvironmentFileStore(Path.Combine(config, "environment.d", "60-iterminal.conf"));
     }
 
-    private const string NeedsAdministrator =
-        "This changes the whole machine, so it needs administrator rights. Restart iTerminal as administrator (Ctrl+Shift+A) and try again.";
+    private static string NeedsAdministrator =>
+        UiText.Get("SysSet.NeedsAdmin", "This changes the whole machine, so it needs administrator rights. Restart iTerminal as administrator (Ctrl+Shift+A) and try again.");
 
     public bool IsElevated => _isElevated();
 
@@ -155,7 +156,7 @@ public sealed class SystemSettingsService : ISystemSettingsService
 
         if (!_windows && !_linux)
         {
-            return SystemSettingResult.Fail("Changing the computer name is not supported on this system.");
+            return SystemSettingResult.Fail(UiText.Get("SysSet.NameUnsupported", "Changing the computer name is not supported on this system."));
         }
 
         if (!IsElevated)
@@ -167,13 +168,13 @@ public sealed class SystemSettingsService : ISystemSettingsService
         {
             var output = await RunPowerShellAsync($"Rename-Computer -NewName '{Quote(name)}' -Force -ErrorAction Stop", cancellationToken).ConfigureAwait(false);
             return output.Success
-                ? SystemSettingResult.Ok($"The computer will be called {name} after the next restart.", restartRequired: true)
+                ? SystemSettingResult.Ok(string.Format(UiText.Get("SysSet.NameAfterRestart", "The computer will be called {0} after the next restart."), name), restartRequired: true)
                 : SystemSettingResult.Fail(output.FirstErrorLine);
         }
 
         var result = await _runner.RunAsync("hostnamectl", ["set-hostname", name], null, cancellationToken).ConfigureAwait(false);
         return result.Success
-            ? SystemSettingResult.Ok($"The computer is now called {name}.")
+            ? SystemSettingResult.Ok(string.Format(UiText.Get("SysSet.NameNow", "The computer is now called {0}."), name))
             : SystemSettingResult.Fail(result.FirstErrorLine);
     }
 
@@ -182,7 +183,7 @@ public sealed class SystemSettingsService : ISystemSettingsService
         workgroup = workgroup.Trim();
         if (!_windows)
         {
-            return SystemSettingResult.Fail("A workgroup is a Windows setting.");
+            return SystemSettingResult.Fail(UiText.Get("SysSet.GroupWindows", "A workgroup is a Windows setting."));
         }
 
         if (SystemSettingsValidator.ValidateWorkgroup(workgroup) is { } problem)
@@ -198,12 +199,12 @@ public sealed class SystemSettingsService : ISystemSettingsService
         var identity = await GetComputerAsync(cancellationToken).ConfigureAwait(false);
         if (identity.IsDomainMember)
         {
-            return SystemSettingResult.Fail($"This computer is a member of the domain {identity.Membership}. Leaving a domain needs a directory account; use Windows' own System Properties.");
+            return SystemSettingResult.Fail(string.Format(UiText.Get("SysSet.DomainMember", "This computer is a member of the domain {0}. Leaving a domain needs a directory account; use Windows' own System Properties."), identity.Membership));
         }
 
         var output = await RunPowerShellAsync($"Add-Computer -WorkgroupName '{Quote(workgroup)}' -Force -ErrorAction Stop", cancellationToken).ConfigureAwait(false);
         return output.Success
-            ? SystemSettingResult.Ok($"The workgroup will be {workgroup} after the next restart.", restartRequired: true)
+            ? SystemSettingResult.Ok(string.Format(UiText.Get("SysSet.GroupAfterRestart", "The workgroup will be {0} after the next restart."), workgroup), restartRequired: true)
             : SystemSettingResult.Fail(output.FirstErrorLine);
     }
 
@@ -217,7 +218,7 @@ public sealed class SystemSettingsService : ISystemSettingsService
 
         if (!_windows && !_linux)
         {
-            return SystemSettingResult.Fail("Changing the computer description is not supported on this system.");
+            return SystemSettingResult.Fail(UiText.Get("SysSet.DescUnsupported", "Changing the computer description is not supported on this system."));
         }
 
         if (!IsElevated)
@@ -231,13 +232,13 @@ public sealed class SystemSettingsService : ISystemSettingsService
                 $"Get-CimInstance Win32_OperatingSystem | Set-CimInstance -Property @{{Description='{Quote(description)}'}} -ErrorAction Stop",
                 cancellationToken).ConfigureAwait(false);
             return output.Success
-                ? SystemSettingResult.Ok("The description was saved.")
+                ? SystemSettingResult.Ok(UiText.Get("SysSet.DescSaved", "The description was saved."))
                 : SystemSettingResult.Fail(output.FirstErrorLine);
         }
 
         var result = await _runner.RunAsync("hostnamectl", ["set-hostname", "--pretty", description], null, cancellationToken).ConfigureAwait(false);
         return result.Success
-            ? SystemSettingResult.Ok("The description was saved.")
+            ? SystemSettingResult.Ok(UiText.Get("SysSet.DescSaved", "The description was saved."))
             : SystemSettingResult.Fail(result.FirstErrorLine);
     }
 
@@ -281,7 +282,7 @@ public sealed class SystemSettingsService : ISystemSettingsService
         var store = StoreOf(scope);
         if (store is null)
         {
-            return Task.FromResult(SystemSettingResult.Fail("Environment variables cannot be changed on this system."));
+            return Task.FromResult(SystemSettingResult.Fail(UiText.Get("SysSet.EnvUnsupported", "Environment variables cannot be changed on this system.")));
         }
 
         if (scope == EnvironmentScope.Machine && !IsElevated)
@@ -314,12 +315,12 @@ public sealed class SystemSettingsService : ISystemSettingsService
     {
         if (!SupportsTimeZone)
         {
-            return SystemSettingResult.Fail("Changing the time zone is not supported on this system.");
+            return SystemSettingResult.Fail(UiText.Get("SysSet.TzUnsupported", "Changing the time zone is not supported on this system."));
         }
 
         if (string.IsNullOrWhiteSpace(id) || id.Any(char.IsControl) || id.StartsWith('-'))
         {
-            return SystemSettingResult.Fail("That is not a time zone.");
+            return SystemSettingResult.Fail(UiText.Get("SysSet.NotTz", "That is not a time zone."));
         }
 
         if (!IsElevated)
@@ -336,7 +337,7 @@ public sealed class SystemSettingsService : ISystemSettingsService
         }
 
         TimeZoneInfo.ClearCachedData();
-        return SystemSettingResult.Ok($"The time zone is now {id}.");
+        return SystemSettingResult.Ok(string.Format(UiText.Get("SysSet.TzNow", "The time zone is now {0}."), id));
     }
 
     // ── Helpers ─────────────────────────────────────────────────────────────
