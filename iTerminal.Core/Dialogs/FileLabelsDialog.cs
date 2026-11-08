@@ -97,6 +97,15 @@ public class FileLabelsDialog : FormDialog
         }
     }
 
+    private string _infoText = string.Empty;
+
+    /// <summary>The note under the fields, ending on an ellipsis where the dialog is too narrow for it.</summary>
+    private void ShowInfo()
+    {
+        long width = _info.ViewSize.Width;
+        _info.Text = width > 1 && _infoText.Length > width ? _infoText[..(int)(width - 1)] + "…" : _infoText;
+    }
+
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
@@ -109,14 +118,16 @@ public class FileLabelsDialog : FormDialog
             var label = _labels.Get(_paths[0]);
             ChooseColour(LabelColours.Name(label.Colour));
             Tags = FileLabelTags.Format(label.Tags);
-            _info.Text = UiText.Get("Msg.BlankTagsRemove", "Blank tags remove them. Tags are separated by commas.");
+            _infoText = UiText.Get("Msg.BlankTagsRemove", "Blank tags remove them. Tags are separated by commas.");
         }
         else
         {
             ChooseColour(Keep);
             Tags = string.Empty;
-            _info.Text = string.Format(UiText.Get("Msg.LabelsMultiple", "{0} items. Leave (keep) and the tags blank to change only what you type."), _paths.Count);
+            _infoText = string.Format(UiText.Get("Msg.LabelsMultiple", "{0} items. Leave (keep) and the tags blank to change only what you type."), _paths.Count);
         }
+
+        ShowInfo();
 
         Title = single ? string.Format(UiText.Get("Dialog.LabelsTitleFile", "Colour labels and tags — {0}"), Path.GetFileName(_paths[0])) : UiText.Get("Dialog.LabelsTitle", "Colour labels and tags");
         StateHasChanged();
@@ -197,6 +208,7 @@ public class FileLabelsDialog : FormDialog
         _tags.ScrollableModel.ViewSize = new Size(Math.Max(0, _tags.EditableWidth), 1);
         _info.Position = new Position(FieldX, 5);
         _info.ViewSize = new Size(FieldWidth, 1);
+        ShowInfo();
         _message.Position = new Position(FieldX, 6);
         _message.ViewSize = new Size(FieldWidth, 1);
         base.OnInitializeLayout();
