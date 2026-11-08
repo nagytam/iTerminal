@@ -622,7 +622,7 @@ public class NetworkBrowserDialog : SplitPaneDialog
         }
 
         var scanning = _scanning ? "  (scanning…)" : string.Empty;
-        WriteLine(buffer, ix, iy, iw, $"Network Browser{scanning}", Color.Cyan, colorScheme.Background);
+        WriteLine(buffer, ix, iy, iw, iConsole.Localization.UiText.Get("Network.Heading", "Network Browser") + scanning, Color.Cyan, colorScheme.Background);
         DrawSectionHeader(buffer, ix, iy + 1, iw, SectionTitle(), true, colorScheme);
         DrawFooter(buffer, ix, iy + ih - 1, iw, colorScheme);
     }

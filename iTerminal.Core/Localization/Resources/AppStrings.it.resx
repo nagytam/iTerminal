@@ -6748,4 +6748,76 @@
   <data name="OpenWith.TitleEdit" xml:space="preserve">
     <value>Modifica {0} con</value>
   </data>
+  <data name="Disk.NothingToMeasure" xml:space="preserve">
+    <value>Niente da misurare.</value>
+  </data>
+  <data name="Disk.EscStops" xml:space="preserve">
+    <value>Esc ferma e chiude.</value>
+  </data>
+  <data name="Disk.Cancelled" xml:space="preserve">
+    <value>Annullato.</value>
+  </data>
+  <data name="Disk.CouldNotMeasure" xml:space="preserve">
+    <value>Impossibile misurare {0}.</value>
+  </data>
+  <data name="Labels.SaveFailed" xml:space="preserve">
+    <value>Impossibile salvare le etichette.</value>
+  </data>
+  <data name="Labels.SaveFailedWhy" xml:space="preserve">
+    <value>Impossibile salvare le etichette: {0}</value>
+  </data>
+  <data name="Tags.SaveFailed" xml:space="preserve">
+    <value>Impossibile salvare i tag.</value>
+  </data>
+  <data name="Tags.SaveFailedWhy" xml:space="preserve">
+    <value>Impossibile salvare i tag: {0}</value>
+  </data>
+  <data name="TextMeta.SaveFailed" xml:space="preserve">
+    <value>Impossibile salvare il testo.</value>
+  </data>
+  <data name="TextMeta.SaveFailedWhy" xml:space="preserve">
+    <value>Impossibile salvare il testo: {0}</value>
+  </data>
+  <data name="IPhone.Connected" xml:space="preserve">
+    <value>Dispositivi connessi</value>
+  </data>
+  <data name="Network.Heading" xml:space="preserve">
+    <value>Esplora rete</value>
+  </data>
+  <data name="OpenWith.Editor" xml:space="preserve">
+    <value>Editor di iTerminal</value>
+  </data>
+  <data name="OpenWith.EditorDesc" xml:space="preserve">
+    <value>L&apos;editor di testo integrato.</value>
+  </data>
+  <data name="Sign.NoGpg" xml:space="preserve">
+    <value>gpg non è installato: le firme .asc non possono essere né create né verificate.</value>
+  </data>
+  <data name="Strip.ConfirmOne" xml:space="preserve">
+    <value>Questo sovrascrive {0} file definitivamente. Premi di nuovo Invio per rimuovere,</value>
+  </data>
+  <data name="Strip.ConfirmMany" xml:space="preserve">
+    <value>Questo sovrascrive {0} file definitivamente. Premi di nuovo Invio per rimuovere,</value>
+  </data>
+  <data name="Strip.ConfirmBack" xml:space="preserve">
+    <value>qualsiasi altro tasto torna indietro.</value>
+  </data>
+  <data name="SysSettings.ComputerNameNote" xml:space="preserve">
+    <value>Il nome con cui questa macchina compare in rete.</value>
+  </data>
+  <data name="SysSettings.DomainNote" xml:space="preserve">
+    <value>Lasciare un dominio richiede un account di directory: usa le Proprietà del sistema di Windows.</value>
+  </data>
+  <data name="SysSettings.NewVariable" xml:space="preserve">
+    <value>Nome della nuova variabile</value>
+  </data>
+  <data name="Remote.SessionFailed" xml:space="preserve">
+    <value>La sessione non è stata avviata.</value>
+  </data>
+  <data name="Stocks.FindPrompt" xml:space="preserve">
+    <value>Cerca un&apos;azione per simbolo o nome della società</value>
+  </data>
+  <data name="Units.Heading" xml:space="preserve">
+    <value>Convertitore di unità — {0}</value>
+  </data>
 </root>

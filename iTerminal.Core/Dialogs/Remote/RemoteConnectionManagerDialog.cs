@@ -485,7 +485,7 @@ public class RemoteConnectionManagerDialog : Dialog
                 }
                 else
                 {
-                    SetStatus(outcome.Failure ?? "The session did not start.", true);
+                    SetStatus(outcome.Failure ?? iConsole.Localization.UiText.Get("Remote.SessionFailed", "The session did not start."), true);
                 }
             }
 

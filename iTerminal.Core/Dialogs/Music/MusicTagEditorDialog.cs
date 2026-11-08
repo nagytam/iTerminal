@@ -141,7 +141,7 @@ public class MusicTagEditorDialog : Dialog
             }
             else
             {
-                _message.Text = Failure is null ? "Could not save the tags." : $"Could not save the tags: {Failure}";
+                _message.Text = Failure is null ? iConsole.Localization.UiText.Get("Tags.SaveFailed", "Could not save the tags.") : string.Format(iConsole.Localization.UiText.Get("Tags.SaveFailedWhy", "Could not save the tags: {0}"), Failure);
             }
 
             StateHasChanged();

@@ -223,8 +223,8 @@ public class StripMetadataDialog : Dialog
                 break;
             case StripPhase.Armed:
                 lines.Add(default);
-                lines.Add(new($"This overwrites {Files.Count} file{(Files.Count == 1 ? string.Empty : "s")} for good. Press Enter again to strip,", colors.Error));
-                lines.Add(new("any other key to go back.", colors.Error));
+                lines.Add(new(string.Format(Files.Count == 1 ? iConsole.Localization.UiText.Get("Strip.ConfirmOne", "This overwrites {0} file for good. Press Enter again to strip,") : iConsole.Localization.UiText.Get("Strip.ConfirmMany", "This overwrites {0} files for good. Press Enter again to strip,"), Files.Count), colors.Error));
+                lines.Add(new(iConsole.Localization.UiText.Get("Strip.ConfirmBack", "any other key to go back."), colors.Error));
                 break;
             case StripPhase.Running:
                 lines.Add(default);

@@ -95,7 +95,7 @@ public class OpenWithDialog : Dialog
         }
         else if (BuiltInEditor is not null)
         {
-            choices.Add(new Choice("iTerminal editor", "The built-in text editor.", null));
+            choices.Add(new Choice(iConsole.Localization.UiText.Get("OpenWith.Editor", "iTerminal editor"), iConsole.Localization.UiText.Get("OpenWith.EditorDesc", "The built-in text editor."), null));
         }
 
         _list.SetItems(choices, choices.FindIndex(c => selectId is not null && c.Association?.Id == selectId));

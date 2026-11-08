@@ -6889,4 +6889,76 @@
   <data name="OpenWith.TitleEdit" xml:space="preserve">
     <value>Edit {0} with</value>
   </data>
+  <data name="Disk.NothingToMeasure" xml:space="preserve">
+    <value>Nothing to measure.</value>
+  </data>
+  <data name="Disk.EscStops" xml:space="preserve">
+    <value>Esc stops and closes.</value>
+  </data>
+  <data name="Disk.Cancelled" xml:space="preserve">
+    <value>Cancelled.</value>
+  </data>
+  <data name="Disk.CouldNotMeasure" xml:space="preserve">
+    <value>Could not measure {0}.</value>
+  </data>
+  <data name="Labels.SaveFailed" xml:space="preserve">
+    <value>Could not save the labels.</value>
+  </data>
+  <data name="Labels.SaveFailedWhy" xml:space="preserve">
+    <value>Could not save the labels: {0}</value>
+  </data>
+  <data name="Tags.SaveFailed" xml:space="preserve">
+    <value>Could not save the tags.</value>
+  </data>
+  <data name="Tags.SaveFailedWhy" xml:space="preserve">
+    <value>Could not save the tags: {0}</value>
+  </data>
+  <data name="TextMeta.SaveFailed" xml:space="preserve">
+    <value>Could not save the text.</value>
+  </data>
+  <data name="TextMeta.SaveFailedWhy" xml:space="preserve">
+    <value>Could not save the text: {0}</value>
+  </data>
+  <data name="IPhone.Connected" xml:space="preserve">
+    <value>Connected devices</value>
+  </data>
+  <data name="Network.Heading" xml:space="preserve">
+    <value>Network Browser</value>
+  </data>
+  <data name="OpenWith.Editor" xml:space="preserve">
+    <value>iTerminal editor</value>
+  </data>
+  <data name="OpenWith.EditorDesc" xml:space="preserve">
+    <value>The built-in text editor.</value>
+  </data>
+  <data name="Sign.NoGpg" xml:space="preserve">
+    <value>gpg is not installed: .asc signatures can be neither made nor checked.</value>
+  </data>
+  <data name="Strip.ConfirmOne" xml:space="preserve">
+    <value>This overwrites {0} file for good. Press Enter again to strip,</value>
+  </data>
+  <data name="Strip.ConfirmMany" xml:space="preserve">
+    <value>This overwrites {0} files for good. Press Enter again to strip,</value>
+  </data>
+  <data name="Strip.ConfirmBack" xml:space="preserve">
+    <value>any other key to go back.</value>
+  </data>
+  <data name="SysSettings.ComputerNameNote" xml:space="preserve">
+    <value>The name this machine goes by on the network.</value>
+  </data>
+  <data name="SysSettings.DomainNote" xml:space="preserve">
+    <value>Leaving a domain needs a directory account: use Windows&apos; System Properties.</value>
+  </data>
+  <data name="SysSettings.NewVariable" xml:space="preserve">
+    <value>New variable name</value>
+  </data>
+  <data name="Remote.SessionFailed" xml:space="preserve">
+    <value>The session did not start.</value>
+  </data>
+  <data name="Stocks.FindPrompt" xml:space="preserve">
+    <value>Find stock by symbol or company name</value>
+  </data>
+  <data name="Units.Heading" xml:space="preserve">
+    <value>Unit Converter — {0}</value>
+  </data>
 </root>

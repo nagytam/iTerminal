@@ -6748,4 +6748,76 @@
   <data name="OpenWith.TitleEdit" xml:space="preserve">
     <value>Editar {0} con</value>
   </data>
+  <data name="Disk.NothingToMeasure" xml:space="preserve">
+    <value>Nada que medir.</value>
+  </data>
+  <data name="Disk.EscStops" xml:space="preserve">
+    <value>Esc detiene y cierra.</value>
+  </data>
+  <data name="Disk.Cancelled" xml:space="preserve">
+    <value>Cancelado.</value>
+  </data>
+  <data name="Disk.CouldNotMeasure" xml:space="preserve">
+    <value>No se pudo medir {0}.</value>
+  </data>
+  <data name="Labels.SaveFailed" xml:space="preserve">
+    <value>No se pudieron guardar las etiquetas.</value>
+  </data>
+  <data name="Labels.SaveFailedWhy" xml:space="preserve">
+    <value>No se pudieron guardar las etiquetas: {0}</value>
+  </data>
+  <data name="Tags.SaveFailed" xml:space="preserve">
+    <value>No se pudieron guardar las marcas.</value>
+  </data>
+  <data name="Tags.SaveFailedWhy" xml:space="preserve">
+    <value>No se pudieron guardar las marcas: {0}</value>
+  </data>
+  <data name="TextMeta.SaveFailed" xml:space="preserve">
+    <value>No se pudo guardar el texto.</value>
+  </data>
+  <data name="TextMeta.SaveFailedWhy" xml:space="preserve">
+    <value>No se pudo guardar el texto: {0}</value>
+  </data>
+  <data name="IPhone.Connected" xml:space="preserve">
+    <value>Dispositivos conectados</value>
+  </data>
+  <data name="Network.Heading" xml:space="preserve">
+    <value>Explorador de red</value>
+  </data>
+  <data name="OpenWith.Editor" xml:space="preserve">
+    <value>Editor de iTerminal</value>
+  </data>
+  <data name="OpenWith.EditorDesc" xml:space="preserve">
+    <value>El editor de texto integrado.</value>
+  </data>
+  <data name="Sign.NoGpg" xml:space="preserve">
+    <value>gpg no está instalado: no se pueden crear ni comprobar firmas .asc.</value>
+  </data>
+  <data name="Strip.ConfirmOne" xml:space="preserve">
+    <value>Esto sobrescribe {0} archivo para siempre. Pulsa Intro otra vez para limpiar,</value>
+  </data>
+  <data name="Strip.ConfirmMany" xml:space="preserve">
+    <value>Esto sobrescribe {0} archivos para siempre. Pulsa Intro otra vez para limpiar,</value>
+  </data>
+  <data name="Strip.ConfirmBack" xml:space="preserve">
+    <value>cualquier otra tecla vuelve.</value>
+  </data>
+  <data name="SysSettings.ComputerNameNote" xml:space="preserve">
+    <value>El nombre con el que este equipo se identifica en la red.</value>
+  </data>
+  <data name="SysSettings.DomainNote" xml:space="preserve">
+    <value>Salir de un dominio requiere una cuenta de directorio: usa las Propiedades del sistema de Windows.</value>
+  </data>
+  <data name="SysSettings.NewVariable" xml:space="preserve">
+    <value>Nombre de la nueva variable</value>
+  </data>
+  <data name="Remote.SessionFailed" xml:space="preserve">
+    <value>La sesión no se inició.</value>
+  </data>
+  <data name="Stocks.FindPrompt" xml:space="preserve">
+    <value>Buscar acción por símbolo o nombre de empresa</value>
+  </data>
+  <data name="Units.Heading" xml:space="preserve">
+    <value>Conversor de unidades — {0}</value>
+  </data>
 </root>

@@ -108,7 +108,7 @@ public class ImageMetadataEditorDialog : Dialog
             }
             else
             {
-                _message.Text = _failure is null ? "Could not save the text." : $"Could not save the text: {_failure}";
+                _message.Text = _failure is null ? iConsole.Localization.UiText.Get("TextMeta.SaveFailed", "Could not save the text.") : string.Format(iConsole.Localization.UiText.Get("TextMeta.SaveFailedWhy", "Could not save the text: {0}"), _failure);
             }
 
             StateHasChanged();

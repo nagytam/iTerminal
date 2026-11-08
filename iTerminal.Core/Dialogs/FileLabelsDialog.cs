@@ -186,7 +186,7 @@ public class FileLabelsDialog : FormDialog
             }
             else
             {
-                _message.Text = _failure is null ? "Could not save the labels." : $"Could not save the labels: {_failure}";
+                _message.Text = _failure is null ? iConsole.Localization.UiText.Get("Labels.SaveFailed", "Could not save the labels.") : string.Format(iConsole.Localization.UiText.Get("Labels.SaveFailedWhy", "Could not save the labels: {0}"), _failure);
             }
 
             StateHasChanged();

@@ -1039,4 +1039,26 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Alt+F11", "Verbundene Geräte")]
+    [DataRow("Ctrl+N", "Netzwerkbrowser")]
+    [DataRow("Ctrl+E", "Einheitenumrechner —")]
+    [DataRow("Ctrl+F4", "iTerminal-Editor")]
+    [DataRow("Ctrl+Shift+F10", "Der Name, unter dem")]
+    public async Task SixMoreHeadingsAndNotesInGerman_AreGerman(string chord, string expected)
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync(chord);
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
+    }
 }
