@@ -834,7 +834,7 @@ public class DocumentManagerDialog : SplitPaneDialog
                 : colorScheme.Foreground;
         }
 
-        WriteLine(buffer, x, y, width, text, foreground, colorScheme.Background);
+        WriteLine(buffer, x, y, width, Ellipsize(text, width), foreground, colorScheme.Background);
     }
 
     private string DescribePreviewHeader()

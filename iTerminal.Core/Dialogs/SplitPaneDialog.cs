@@ -57,7 +57,8 @@ public abstract class SplitPaneDialog : Dialog
         const string separator = "  │ ";
         if (status.Length + separator.Length >= w)
         {
-            WriteLine(buffer, x, y, w, status, statusForeground, colorScheme.Background);
+            // The status wins over the hints, and one wider than the row ends on an ellipsis: cut at the edge, "when you t" stopped mid-word.
+            WriteLine(buffer, x, y, w, Ellipsize(status, w), statusForeground, colorScheme.Background);
             return;
         }
 
@@ -66,6 +67,9 @@ public abstract class SplitPaneDialog : Dialog
     }
 
     /// <summary>Writes a single padded/truncated line of styled text at <paramref name="x"/>,<paramref name="y"/>.</summary>
+    /// <summary>The text, or its start and an ellipsis when it is wider than <paramref name="width"/>.</summary>
+    protected static string Ellipsize(string text, int width) => width > 1 && text.Length > width ? text[..(width - 1)] + "…" : text;
+
     protected void WriteLine(IBuffer buffer, int x, int y, int w, string text, Color foreground, Color background)
     {
         if (w <= 0)

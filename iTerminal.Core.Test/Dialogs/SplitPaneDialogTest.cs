@@ -52,7 +52,7 @@ public class SplitPaneDialogTest
 
         new Probe().Footer(buffer, 10, "A long failure message");
 
-        Assert.AreEqual("A long fai", buffer.Line(0));
+        Assert.AreEqual("A long fa…", buffer.Line(0), "the status keeps the row, and ends on an ellipsis where it is cut");
     }
 
     [Timeout(60_000)]

@@ -553,7 +553,7 @@ public class TranslatorDialog : SplitPaneDialog
             return;
         }
 
-        WriteLine(buffer, ix, iy + 1, iw, InfoLine(), colorScheme.Foreground, colorScheme.Background);
+        WriteLine(buffer, ix, iy + 1, iw, Ellipsize(InfoLine(), iw), colorScheme.Foreground, colorScheme.Background);
 
         int leftWidth = (int)_input.ViewSize.Width;
         int rightWidth = (int)_output.ViewSize.Width;
