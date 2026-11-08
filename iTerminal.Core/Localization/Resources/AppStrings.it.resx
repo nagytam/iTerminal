@@ -5479,4 +5479,46 @@
   <data name="Contacts.FormChange" xml:space="preserve">
     <value>Modifica contatto: serve solo il nome</value>
   </data>
+  <data name="Workspaces.ConfirmDelete" xml:space="preserve">
+    <value>Eliminare &apos;{0}&apos;? y elimina, qualsiasi altro tasto lo mantiene.</value>
+  </data>
+  <data name="Workspaces.ConfirmUpdate" xml:space="preserve">
+    <value>Sostituire &apos;{0}&apos; con lo schermo attuale? y sostituisce, qualsiasi altro tasto lo mantiene.</value>
+  </data>
+  <data name="Workspaces.Header" xml:space="preserve">
+    <value>     # Nome                      Pannello sin.  →  Pannello des.</value>
+  </data>
+  <data name="Workspaces.Empty1" xml:space="preserve">
+    <value>Nessuno spazio di lavoro. S salva lo schermo così com&apos;è: entrambi i pannelli,</value>
+  </data>
+  <data name="Workspaces.Empty2" xml:space="preserve">
+    <value>il loro ordinamento e ciò che sta sotto. Invio ne ripristina uno.</value>
+  </data>
+  <data name="Workspaces.LeftLine" xml:space="preserve">
+    <value>Sin.   {0}{1}</value>
+  </data>
+  <data name="Workspaces.RightLine" xml:space="preserve">
+    <value>Des.   {0}{1}</value>
+  </data>
+  <data name="Workspaces.BelowLine" xml:space="preserve">
+    <value>Sotto  {0}  ·  cursore: {1}  ·  salvato {2:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Workspaces.SideLeft" xml:space="preserve">
+    <value>sinistra</value>
+  </data>
+  <data name="Workspaces.SideRight" xml:space="preserve">
+    <value>destra</value>
+  </data>
+  <data name="Workspaces.OnScreenNow" xml:space="preserve">
+    <value>● Questo è ciò che è ora sullo schermo.</value>
+  </data>
+  <data name="Workspaces.ScreenChangedNote" xml:space="preserve">
+    <value>○ Lo schermo è cambiato da allora. U aggiorna, Invio ripristina.</value>
+  </data>
+  <data name="Workspaces.NameLabel" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Workspaces.SavesLine" xml:space="preserve">
+    <value>Salva: {0} → {1}  ·  {2}</value>
+  </data>
 </root>

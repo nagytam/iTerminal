@@ -5479,4 +5479,46 @@
   <data name="Contacts.FormChange" xml:space="preserve">
     <value>Modifier le contact : seul le nom est requis</value>
   </data>
+  <data name="Workspaces.ConfirmDelete" xml:space="preserve">
+    <value>Supprimer &apos;{0}&apos; ? y supprime, toute autre touche le garde.</value>
+  </data>
+  <data name="Workspaces.ConfirmUpdate" xml:space="preserve">
+    <value>Remplacer &apos;{0}&apos; par l&apos;écran actuel ? y remplace, toute autre touche le garde.</value>
+  </data>
+  <data name="Workspaces.Header" xml:space="preserve">
+    <value>     # Nom                       Panneau gauche  →  Panneau droit</value>
+  </data>
+  <data name="Workspaces.Empty1" xml:space="preserve">
+    <value>Aucun espace de travail. S enregistre l&apos;écran tel qu&apos;il est : les deux panneaux,</value>
+  </data>
+  <data name="Workspaces.Empty2" xml:space="preserve">
+    <value>leur tri et ce qu&apos;il y a dessous. Entrée en rétablit un.</value>
+  </data>
+  <data name="Workspaces.LeftLine" xml:space="preserve">
+    <value>Gauche {0}{1}</value>
+  </data>
+  <data name="Workspaces.RightLine" xml:space="preserve">
+    <value>Droit  {0}{1}</value>
+  </data>
+  <data name="Workspaces.BelowLine" xml:space="preserve">
+    <value>Dessous {0}  ·  curseur : {1}  ·  enregistré {2:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Workspaces.SideLeft" xml:space="preserve">
+    <value>gauche</value>
+  </data>
+  <data name="Workspaces.SideRight" xml:space="preserve">
+    <value>droit</value>
+  </data>
+  <data name="Workspaces.OnScreenNow" xml:space="preserve">
+    <value>● C&apos;est ce qui est à l&apos;écran maintenant.</value>
+  </data>
+  <data name="Workspaces.ScreenChangedNote" xml:space="preserve">
+    <value>○ L&apos;écran a changé depuis. U met à jour, Entrée rétablit.</value>
+  </data>
+  <data name="Workspaces.NameLabel" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Workspaces.SavesLine" xml:space="preserve">
+    <value>Enregistre : {0} → {1}  ·  {2}</value>
+  </data>
 </root>

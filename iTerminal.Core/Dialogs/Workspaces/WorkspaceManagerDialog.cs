@@ -601,8 +601,8 @@ public class WorkspaceManagerDialog : Dialog
         var name = Selected?.Name ?? string.Empty;
         return _pending switch
         {
-            Pending.Delete => $"Delete '{name}'? y deletes, any other key keeps it.",
-            Pending.Update => $"Replace '{name}' with the screen as it is now? y replaces, any other key keeps it.",
+            Pending.Delete => Say("Workspaces.ConfirmDelete", "Delete '{0}'? y deletes, any other key keeps it.", name),
+            Pending.Update => Say("Workspaces.ConfirmUpdate", "Replace '{0}' with the screen as it is now? y replaces, any other key keeps it.", name),
             _ => _status,
         };
     }
@@ -621,12 +621,12 @@ public class WorkspaceManagerDialog : Dialog
                 ? Say("Workspaces.OnScreen", "On screen: {0}", active.Name) + (_now is not null && active.Layout.SameScreenAs(_now) ? string.Empty : Say("Workspaces.ScreenChanged", "  (the screen has changed since)"))
                 : Say("Workspaces.NotSaved", "The screen is not saved as a workspace.");
         Put(buffer, 1, 0, iw - 2, Say("Workspaces.SavedCount", "{0} saved  ·  {1}", _list.Count, summary), Color.Cyan, colorScheme.Background);
-        Put(buffer, 1, 1, iw - 2, "     # Name                      Left panel  →  Right panel", colorScheme.DisabledForeground, colorScheme.Background);
+        Put(buffer, 1, 1, iw - 2, Say("Workspaces.Header", "     # Name                      Left panel  →  Right panel"), colorScheme.DisabledForeground, colorScheme.Background);
 
         if (_list.Count == 0)
         {
-            Put(buffer, 1, 2, iw - 2, "No workspaces yet. S saves the screen as it is now: both panels,", colorScheme.DisabledForeground, colorScheme.Background);
-            Put(buffer, 1, 3, iw - 2, "their sort order and what is under them. Enter brings one back.", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 2, iw - 2, Say("Workspaces.Empty1", "No workspaces yet. S saves the screen as it is now: both panels,"), colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 3, iw - 2, Say("Workspaces.Empty2", "their sort order and what is under them. Enter brings one back."), colorScheme.DisabledForeground, colorScheme.Background);
             return;
         }
 
@@ -663,17 +663,17 @@ public class WorkspaceManagerDialog : Dialog
         }
 
         var layout = selected.Layout;
-        Put(buffer, 1, top, iw - 2, $"Left   {layout.LeftUrl}{DescribeSort(layout.LeftSort)}", colorScheme.Foreground, colorScheme.Background);
-        Put(buffer, 1, top + 1, iw - 2, $"Right  {layout.RightUrl}{DescribeSort(layout.RightSort)}", colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, top, iw - 2, Say("Workspaces.LeftLine", "Left   {0}{1}", layout.LeftUrl, DescribeSort(layout.LeftSort)), colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, top + 1, iw - 2, Say("Workspaces.RightLine", "Right  {0}{1}", layout.RightUrl, DescribeSort(layout.RightSort)), colorScheme.Foreground, colorScheme.Background);
         Put(buffer, 1, top + 2, iw - 2,
-            $"Below  {DescribeBar(layout.Bar)}  ·  cursor: {(layout.FocusedPanel == "RightPanel" ? "right" : "left")}  ·  saved {selected.SavedUtc.ToLocalTime():yyyy-MM-dd HH:mm}",
+            Say("Workspaces.BelowLine", "Below  {0}  ·  cursor: {1}  ·  saved {2:yyyy-MM-dd HH:mm}", DescribeBar(layout.Bar), layout.FocusedPanel == "RightPanel" ? Say("Workspaces.SideRight", "right") : Say("Workspaces.SideLeft", "left"), selected.SavedUtc.ToLocalTime()),
             colorScheme.DisabledForeground, colorScheme.Background);
 
         if (selected.Name == _activeName)
         {
             var same = _now is not null && layout.SameScreenAs(_now);
             Put(buffer, 1, top + 3, iw - 2,
-                same ? "● This is what is on screen now." : "○ The screen has changed since. U updates this, Enter puts it back.",
+                same ? Say("Workspaces.OnScreenNow", "● This is what is on screen now.") : Say("Workspaces.ScreenChangedNote", "○ The screen has changed since. U updates this, Enter puts it back."),
                 same ? Color.DarkGreen : Color.DarkYellow, colorScheme.Background);
         }
     }
@@ -682,13 +682,13 @@ public class WorkspaceManagerDialog : Dialog
     {
         var top = 2 + ListRows + 1;
         Put(buffer, 1, top, iw - 2, _renaming is null ? Say("Workspaces.SavePrompt", "Save the screen as a workspace:") : Say("Workspaces.RenamePrompt", "Rename '{0}':", _renaming), Color.Cyan, colorScheme.Background);
-        Put(buffer, 1, top + 1, 6, "Name", colorScheme.DisabledForeground, colorScheme.Background);
+        Put(buffer, 1, top + 1, 6, Say("Workspaces.NameLabel", "Name"), colorScheme.DisabledForeground, colorScheme.Background);
         Put(buffer, 8, top + 1, iw - 10, _textIsSelected ? _text : _text + "_",
             _textIsSelected ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground,
             _textIsSelected ? colorScheme.SelectedFocusedBackground : colorScheme.SelectedBackground);
         if (_renaming is null && _now is not null)
         {
-            Put(buffer, 1, top + 3, iw - 2, $"Saves: {Short(_now.LeftUrl)} → {Short(_now.RightUrl)}  ·  {DescribeBar(_now.Bar)}", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, top + 3, iw - 2, Say("Workspaces.SavesLine", "Saves: {0} → {1}  ·  {2}", Short(_now.LeftUrl), Short(_now.RightUrl), DescribeBar(_now.Bar)), colorScheme.DisabledForeground, colorScheme.Background);
         }
     }
 
