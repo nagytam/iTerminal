@@ -6094,4 +6094,592 @@
   <data name="Web.HintBookmarks" xml:space="preserve">
     <value>F2:marcadores</value>
   </data>
+  <data name="CmdTitle.4efca0d1" xml:space="preserve">
+    <value>Acerca de</value>
+  </data>
+  <data name="CmdTitle.5d020094" xml:space="preserve">
+    <value>Añadir a la lista</value>
+  </data>
+  <data name="CmdTitle.d4f59192" xml:space="preserve">
+    <value>Barra de IA / de terminal</value>
+  </data>
+  <data name="CmdTitle.7b44c7eb" xml:space="preserve">
+    <value>Información del modelo de IA</value>
+  </data>
+  <data name="CmdTitle.31e392d1" xml:space="preserve">
+    <value>Aplicar</value>
+  </data>
+  <data name="CmdTitle.7b0c2dec" xml:space="preserve">
+    <value>BitTorrent</value>
+  </data>
+  <data name="CmdTitle.62b2e1b1" xml:space="preserve">
+    <value>Dispositivos Bluetooth</value>
+  </data>
+  <data name="CmdTitle.479ad21a" xml:space="preserve">
+    <value>Final</value>
+  </data>
+  <data name="CmdTitle.21a25681" xml:space="preserve">
+    <value>Lista breve</value>
+  </data>
+  <data name="CmdTitle.668b8045" xml:space="preserve">
+    <value>Calculadora</value>
+  </data>
+  <data name="CmdTitle.d5d0a30b" xml:space="preserve">
+    <value>Calendario</value>
+  </data>
+  <data name="CmdTitle.64f7af9a" xml:space="preserve">
+    <value>Sumas de verificación</value>
+  </data>
+  <data name="CmdTitle.c1aade82" xml:space="preserve">
+    <value>Ajedrez</value>
+  </data>
+  <data name="CmdTitle.26c79900" xml:space="preserve">
+    <value>Etiquetas de color y marcas</value>
+  </data>
+  <data name="CmdTitle.0347f794" xml:space="preserve">
+    <value>Paleta de comandos</value>
+  </data>
+  <data name="CmdTitle.e888155d" xml:space="preserve">
+    <value>Comparar</value>
+  </data>
+  <data name="CmdTitle.6d0ae8bc" xml:space="preserve">
+    <value>Comparar archivos</value>
+  </data>
+  <data name="CmdTitle.5cf3985f" xml:space="preserve">
+    <value>Comparar carpetas</value>
+  </data>
+  <data name="CmdTitle.033fc044" xml:space="preserve">
+    <value>Comprimir</value>
+  </data>
+  <data name="CmdTitle.b450645d" xml:space="preserve">
+    <value>Contactos</value>
+  </data>
+  <data name="CmdTitle.e21f935f" xml:space="preserve">
+    <value>Copiar</value>
+  </data>
+  <data name="CmdTitle.b749e205" xml:space="preserve">
+    <value>Copiar al portapapeles</value>
+  </data>
+  <data name="CmdTitle.4759498a" xml:space="preserve">
+    <value>Crear</value>
+  </data>
+  <data name="CmdTitle.6990d321" xml:space="preserve">
+    <value>Crear archivo</value>
+  </data>
+  <data name="CmdTitle.82b9e1ef" xml:space="preserve">
+    <value>Crear carpeta</value>
+  </data>
+  <data name="CmdTitle.e6b850cf" xml:space="preserve">
+    <value>Crear enlace</value>
+  </data>
+  <data name="CmdTitle.424dc8eb" xml:space="preserve">
+    <value>Conversor de divisas</value>
+  </data>
+  <data name="CmdTitle.a954b4a3" xml:space="preserve">
+    <value>Cortar al portapapeles</value>
+  </data>
+  <data name="CmdTitle.e2d0a549" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="CmdTitle.c8e463ed" xml:space="preserve">
+    <value>Administrador de discos</value>
+  </data>
+  <data name="CmdTitle.4fe60c10" xml:space="preserve">
+    <value>Uso del disco</value>
+  </data>
+  <data name="CmdTitle.f0f09afa" xml:space="preserve">
+    <value>Contenedores Docker</value>
+  </data>
+  <data name="CmdTitle.b4e929d8" xml:space="preserve">
+    <value>Documentos</value>
+  </data>
+  <data name="CmdTitle.464c4ffd" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="CmdTitle.94026ca2" xml:space="preserve">
+    <value>Editar enlace</value>
+  </data>
+  <data name="CmdTitle.a7f5203f" xml:space="preserve">
+    <value>Cifrar / descifrar archivos</value>
+  </data>
+  <data name="CmdTitle.66609440" xml:space="preserve">
+    <value>Enciclopedia</value>
+  </data>
+  <data name="CmdTitle.aac7246f" xml:space="preserve">
+    <value>Variables de entorno</value>
+  </data>
+  <data name="CmdTitle.c15301c0" xml:space="preserve">
+    <value>Extraer</value>
+  </data>
+  <data name="CmdTitle.16d8320f" xml:space="preserve">
+    <value>Filtrar por etiqueta</value>
+  </data>
+  <data name="CmdTitle.7190c142" xml:space="preserve">
+    <value>Buscar archivos duplicados</value>
+  </data>
+  <data name="CmdTitle.15d12bc1" xml:space="preserve">
+    <value>Buscar archivos</value>
+  </data>
+  <data name="CmdTitle.7c64e68b" xml:space="preserve">
+    <value>Buscar archivos grandes</value>
+  </data>
+  <data name="CmdTitle.9dbe08ce" xml:space="preserve">
+    <value>Buscar archivos antiguos</value>
+  </data>
+  <data name="CmdTitle.50254cb1" xml:space="preserve">
+    <value>Tamaño de carpeta</value>
+  </data>
+  <data name="CmdTitle.2f343666" xml:space="preserve">
+    <value>Formatear</value>
+  </data>
+  <data name="CmdTitle.50328128" xml:space="preserve">
+    <value>Registro de comandos a pantalla completa</value>
+  </data>
+  <data name="CmdTitle.b949c922" xml:space="preserve">
+    <value>Git</value>
+  </data>
+  <data name="CmdTitle.452144b6" xml:space="preserve">
+    <value>Historial de Git</value>
+  </data>
+  <data name="CmdTitle.a38f9099" xml:space="preserve">
+    <value>Git pull --rebase</value>
+  </data>
+  <data name="CmdTitle.49e4dcaf" xml:space="preserve">
+    <value>Sincronizar Git</value>
+  </data>
+  <data name="CmdTitle.6cc8519b" xml:space="preserve">
+    <value>Go</value>
+  </data>
+  <data name="CmdTitle.fb657027" xml:space="preserve">
+    <value>Ir a la ruta</value>
+  </data>
+  <data name="CmdTitle.8b3f7b0f" xml:space="preserve">
+    <value>Manifiesto de hashes</value>
+  </data>
+  <data name="CmdTitle.b79cac92" xml:space="preserve">
+    <value>Ayuda</value>
+  </data>
+  <data name="CmdTitle.c5644bc8" xml:space="preserve">
+    <value>Invertir marcas</value>
+  </data>
+  <data name="CmdTitle.c12678c5" xml:space="preserve">
+    <value>Explorador de iPhone</value>
+  </data>
+  <data name="CmdTitle.6e271c3b" xml:space="preserve">
+    <value>Idioma…</value>
+  </data>
+  <data name="CmdTitle.1786337e" xml:space="preserve">
+    <value>Izquierda en lista breve</value>
+  </data>
+  <data name="CmdTitle.122f48c5" xml:space="preserve">
+    <value>Fin de línea</value>
+  </data>
+  <data name="CmdTitle.b9ac3ade" xml:space="preserve">
+    <value>Inicio de línea</value>
+  </data>
+  <data name="CmdTitle.07ed6ccf" xml:space="preserve">
+    <value>Correo</value>
+  </data>
+  <data name="CmdTitle.be176b00" xml:space="preserve">
+    <value>Mapa</value>
+  </data>
+  <data name="CmdTitle.d7cda0ca" xml:space="preserve">
+    <value>Marcar</value>
+  </data>
+  <data name="CmdTitle.d7977505" xml:space="preserve">
+    <value>Marcar todo</value>
+  </data>
+  <data name="CmdTitle.70dbfc95" xml:space="preserve">
+    <value>Montar imagen de disco</value>
+  </data>
+  <data name="CmdTitle.6ecc3df6" xml:space="preserve">
+    <value>Mover</value>
+  </data>
+  <data name="CmdTitle.40bb50da" xml:space="preserve">
+    <value>Mover abajo</value>
+  </data>
+  <data name="CmdTitle.6c94221e" xml:space="preserve">
+    <value>Mover a la izquierda</value>
+  </data>
+  <data name="CmdTitle.8d60decd" xml:space="preserve">
+    <value>Mover a la derecha</value>
+  </data>
+  <data name="CmdTitle.c66feb5e" xml:space="preserve">
+    <value>Mover arriba</value>
+  </data>
+  <data name="CmdTitle.5ceb1a23" xml:space="preserve">
+    <value>Renombrar varios</value>
+  </data>
+  <data name="CmdTitle.8a6ebac9" xml:space="preserve">
+    <value>Reproductor de música</value>
+  </data>
+  <data name="CmdTitle.25d732dc" xml:space="preserve">
+    <value>Explorador de red</value>
+  </data>
+  <data name="CmdTitle.43d4471d" xml:space="preserve">
+    <value>Administrador de red</value>
+  </data>
+  <data name="CmdTitle.3bf4885a" xml:space="preserve">
+    <value>Panel siguiente</value>
+  </data>
+  <data name="CmdTitle.32f256bd" xml:space="preserve">
+    <value>Molino</value>
+  </data>
+  <data name="CmdTitle.be0252a6" xml:space="preserve">
+    <value>Abrir archivo comprimido</value>
+  </data>
+  <data name="CmdTitle.6a908402" xml:space="preserve">
+    <value>Abrir carpeta</value>
+  </data>
+  <data name="CmdTitle.fa7d4143" xml:space="preserve">
+    <value>Abrir o reproducir</value>
+  </data>
+  <data name="CmdTitle.d3b56e0e" xml:space="preserve">
+    <value>Abrir con su programa</value>
+  </data>
+  <data name="CmdTitle.ef2d9b2a" xml:space="preserve">
+    <value>Abrir con el predeterminado del sistema</value>
+  </data>
+  <data name="CmdTitle.40a20853" xml:space="preserve">
+    <value>Paquetes</value>
+  </data>
+  <data name="CmdTitle.72a825fc" xml:space="preserve">
+    <value>Avanzar página</value>
+  </data>
+  <data name="CmdTitle.43f41b59" xml:space="preserve">
+    <value>Retroceder página</value>
+  </data>
+  <data name="CmdTitle.158f5a01" xml:space="preserve">
+    <value>Carpeta superior</value>
+  </data>
+  <data name="CmdTitle.be146b37" xml:space="preserve">
+    <value>Contraseñas</value>
+  </data>
+  <data name="CmdTitle.dc2d6f20" xml:space="preserve">
+    <value>Pegar del portapapeles</value>
+  </data>
+  <data name="CmdTitle.9d4f39b2" xml:space="preserve">
+    <value>Prueba de rendimiento</value>
+  </data>
+  <data name="CmdTitle.a78afaff" xml:space="preserve">
+    <value>Reproducir o pausar</value>
+  </data>
+  <data name="CmdTitle.4d9ee15b" xml:space="preserve">
+    <value>Panel anterior</value>
+  </data>
+  <data name="CmdTitle.df0fe798" xml:space="preserve">
+    <value>Imprimir</value>
+  </data>
+  <data name="CmdTitle.913f7d42" xml:space="preserve">
+    <value>Administrador de procesos</value>
+  </data>
+  <data name="CmdTitle.ae43692b" xml:space="preserve">
+    <value>Propiedades</value>
+  </data>
+  <data name="CmdTitle.90f3f0b2" xml:space="preserve">
+    <value>Vista rápida</value>
+  </data>
+  <data name="CmdTitle.b3eb37ac" xml:space="preserve">
+    <value>Salir</value>
+  </data>
+  <data name="CmdTitle.ac72175e" xml:space="preserve">
+    <value>Papelera de reciclaje</value>
+  </data>
+  <data name="CmdTitle.0e916101" xml:space="preserve">
+    <value>Actualizar</value>
+  </data>
+  <data name="CmdTitle.69161a30" xml:space="preserve">
+    <value>Conexiones remotas</value>
+  </data>
+  <data name="CmdTitle.4f04fac1" xml:space="preserve">
+    <value>Quitar de la lista</value>
+  </data>
+  <data name="CmdTitle.3064d79a" xml:space="preserve">
+    <value>Renombrar</value>
+  </data>
+  <data name="CmdTitle.117e3104" xml:space="preserve">
+    <value>Reiniciar como administrador</value>
+  </data>
+  <data name="CmdTitle.9b7d9308" xml:space="preserve">
+    <value>Reiniciar contenedor</value>
+  </data>
+  <data name="CmdTitle.a76e13b9" xml:space="preserve">
+    <value>Restaurar</value>
+  </data>
+  <data name="CmdTitle.580a5805" xml:space="preserve">
+    <value>Derecha en lista breve</value>
+  </data>
+  <data name="CmdTitle.6d92528b" xml:space="preserve">
+    <value>Carpeta raíz</value>
+  </data>
+  <data name="CmdTitle.00d60e31" xml:space="preserve">
+    <value>Ejecutar</value>
+  </data>
+  <data name="CmdTitle.fe9ae39c" xml:space="preserve">
+    <value>Ejecutar como administrador</value>
+  </data>
+  <data name="CmdTitle.2d254ba0" xml:space="preserve">
+    <value>Ejecutar programa</value>
+  </data>
+  <data name="CmdTitle.8465c0cf" xml:space="preserve">
+    <value>Ejecutar la línea de comandos</value>
+  </data>
+  <data name="CmdTitle.c387cb05" xml:space="preserve">
+    <value>Dependencias de ejecución</value>
+  </data>
+  <data name="CmdTitle.1509f561" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="CmdTitle.5efb77ca" xml:space="preserve">
+    <value>Analizar con Microsoft Defender</value>
+  </data>
+  <data name="CmdTitle.b8f0cb84" xml:space="preserve">
+    <value>Administrador de pantallas</value>
+  </data>
+  <data name="CmdTitle.49c266ba" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="CmdTitle.d4e1aa98" xml:space="preserve">
+    <value>Borrado seguro</value>
+  </data>
+  <data name="CmdTitle.d47f0fb2" xml:space="preserve">
+    <value>Elegir unidad</value>
+  </data>
+  <data name="CmdTitle.d21368e7" xml:space="preserve">
+    <value>Elegir unidad o carpeta</value>
+  </data>
+  <data name="CmdTitle.8f6158cd" xml:space="preserve">
+    <value>Elegir favorito</value>
+  </data>
+  <data name="CmdTitle.2ed6bf93" xml:space="preserve">
+    <value>Elegir carpeta</value>
+  </data>
+  <data name="CmdTitle.74a883a0" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
+  <data name="CmdTitle.a7332854" xml:space="preserve">
+    <value>Shell</value>
+  </data>
+  <data name="CmdTitle.d348acae" xml:space="preserve">
+    <value>Firmas</value>
+  </data>
+  <data name="CmdTitle.aaa73ac7" xml:space="preserve">
+    <value>Serpiente</value>
+  </data>
+  <data name="CmdTitle.d83b9465" xml:space="preserve">
+    <value>Ordenar por…</value>
+  </data>
+  <data name="CmdTitle.ed4de0a3" xml:space="preserve">
+    <value>Iniciar / detener contenedor</value>
+  </data>
+  <data name="CmdTitle.df09c2fb" xml:space="preserve">
+    <value>Acciones</value>
+  </data>
+  <data name="CmdTitle.1b31941d" xml:space="preserve">
+    <value>Flujos y atributos</value>
+  </data>
+  <data name="CmdTitle.9688b11c" xml:space="preserve">
+    <value>Quitar metadatos</value>
+  </data>
+  <data name="CmdTitle.0593f374" xml:space="preserve">
+    <value>Intercambiar paneles</value>
+  </data>
+  <data name="CmdTitle.bc88c4ad" xml:space="preserve">
+    <value>Sincronizar carpetas</value>
+  </data>
+  <data name="CmdTitle.b120922c" xml:space="preserve">
+    <value>Información del sistema</value>
+  </data>
+  <data name="CmdTitle.28c83220" xml:space="preserve">
+    <value>Configuración del sistema</value>
+  </data>
+  <data name="CmdTitle.4e510b97" xml:space="preserve">
+    <value>Lista de tareas</value>
+  </data>
+  <data name="CmdTitle.45b9ef99" xml:space="preserve">
+    <value>Administrador de tareas</value>
+  </data>
+  <data name="CmdTitle.e0926fda" xml:space="preserve">
+    <value>Terminal</value>
+  </data>
+  <data name="CmdTitle.c2028759" xml:space="preserve">
+    <value>Tetris</value>
+  </data>
+  <data name="CmdTitle.43ae3265" xml:space="preserve">
+    <value>Temas</value>
+  </data>
+  <data name="CmdTitle.e2cb7aca" xml:space="preserve">
+    <value>Tres en raya</value>
+  </data>
+  <data name="CmdTitle.d5cdfcf7" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="CmdTitle.e6fe8ee2" xml:space="preserve">
+    <value>Traductor</value>
+  </data>
+  <data name="CmdTitle.de3e449e" xml:space="preserve">
+    <value>Conversor de unidades</value>
+  </data>
+  <data name="CmdTitle.904dcddf" xml:space="preserve">
+    <value>Desmarcar todo</value>
+  </data>
+  <data name="CmdTitle.6fa25be1" xml:space="preserve">
+    <value>Menú de usuario</value>
+  </data>
+  <data name="CmdTitle.dcc839a4" xml:space="preserve">
+    <value>Ver</value>
+  </data>
+  <data name="CmdTitle.99c92d8a" xml:space="preserve">
+    <value>Administrador de máquinas virtuales</value>
+  </data>
+  <data name="CmdTitle.8748f239" xml:space="preserve">
+    <value>Entrada de voz</value>
+  </data>
+  <data name="CmdTitle.6ad50765" xml:space="preserve">
+    <value>Bajar volumen</value>
+  </data>
+  <data name="CmdTitle.81233d97" xml:space="preserve">
+    <value>Subir volumen</value>
+  </data>
+  <data name="CmdTitle.649891a2" xml:space="preserve">
+    <value>Navegador web</value>
+  </data>
+  <data name="CmdTitle.1377264b" xml:space="preserve">
+    <value>Espacios de trabajo</value>
+  </data>
+  <data name="CmdTitle.70bfd7fb" xml:space="preserve">
+    <value>Ajustar línea</value>
+  </data>
+  <data name="CmdTitle.03dfc084" xml:space="preserve">
+    <value>Añadir a favoritos</value>
+  </data>
+  <data name="CmdTitle.2094a5ae" xml:space="preserve">
+    <value>Autocompletar</value>
+  </data>
+  <data name="CmdTitle.76900f1b" xml:space="preserve">
+    <value>Atrás</value>
+  </data>
+  <data name="CmdTitle.292fffe3" xml:space="preserve">
+    <value>Retroceso</value>
+  </data>
+  <data name="CmdTitle.19766ed6" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="CmdTitle.52bc181a" xml:space="preserve">
+    <value>Cancelar diálogo</value>
+  </data>
+  <data name="CmdTitle.efa0389a" xml:space="preserve">
+    <value>Elección</value>
+  </data>
+  <data name="CmdTitle.81c2c4f3" xml:space="preserve">
+    <value>Borrar búsqueda</value>
+  </data>
+  <data name="CmdTitle.7d9eb7ac" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="CmdTitle.3458ce1b" xml:space="preserve">
+    <value>Cerrar menú</value>
+  </data>
+  <data name="CmdTitle.5a4aca35" xml:space="preserve">
+    <value>Cerrar el superior</value>
+  </data>
+  <data name="CmdTitle.e103a9fa" xml:space="preserve">
+    <value>Cerrarse</value>
+  </data>
+  <data name="CmdTitle.ee2425cb" xml:space="preserve">
+    <value>Eliminar carácter</value>
+  </data>
+  <data name="CmdTitle.c8f53f58" xml:space="preserve">
+    <value>Eliminar favorito</value>
+  </data>
+  <data name="CmdTitle.c724af2a" xml:space="preserve">
+    <value>Eliminar línea</value>
+  </data>
+  <data name="CmdTitle.5539b312" xml:space="preserve">
+    <value>Nombre de archivo a la línea de comandos</value>
+  </data>
+  <data name="CmdTitle.a6c7a84b" xml:space="preserve">
+    <value>Finalizar</value>
+  </data>
+  <data name="CmdTitle.ac20a57b" xml:space="preserve">
+    <value>Ocultar</value>
+  </data>
+  <data name="CmdTitle.b1d13221" xml:space="preserve">
+    <value>Lista de información</value>
+  </data>
+  <data name="CmdTitle.b47144ab" xml:space="preserve">
+    <value>Instalar actualizaciones</value>
+  </data>
+  <data name="CmdTitle.2247fe6a" xml:space="preserve">
+    <value>Lista larga</value>
+  </data>
+  <data name="CmdTitle.f71acd28" xml:space="preserve">
+    <value>Marcar hacia arriba</value>
+  </data>
+  <data name="CmdTitle.cdcd3bc6" xml:space="preserve">
+    <value>Marcar hacia abajo</value>
+  </data>
+  <data name="CmdTitle.144103cc" xml:space="preserve">
+    <value>Marcar por patrón</value>
+  </data>
+  <data name="CmdTitle.51ab858b" xml:space="preserve">
+    <value>Desmarcar por patrón</value>
+  </data>
+  <data name="CmdTitle.973ab19c" xml:space="preserve">
+    <value>Renombrar varios</value>
+  </data>
+  <data name="CmdTitle.0ef49b87" xml:space="preserve">
+    <value>Abrir con…</value>
+  </data>
+  <data name="CmdTitle.abccc78c" xml:space="preserve">
+    <value>Permisos</value>
+  </data>
+  <data name="CmdTitle.4fee5e5e" xml:space="preserve">
+    <value>Quitar marca</value>
+  </data>
+  <data name="CmdTitle.95e15439" xml:space="preserve">
+    <value>Reemplazar</value>
+  </data>
+  <data name="CmdTitle.2dfbee9a" xml:space="preserve">
+    <value>Siguiente token</value>
+  </data>
+  <data name="CmdTitle.55510159" xml:space="preserve">
+    <value>Token anterior</value>
+  </data>
+  <data name="CmdTitle.e95ea540" xml:space="preserve">
+    <value>Seleccionar a la izquierda</value>
+  </data>
+  <data name="CmdTitle.12549c6f" xml:space="preserve">
+    <value>Seleccionar a la derecha</value>
+  </data>
+  <data name="CmdTitle.6f4676c4" xml:space="preserve">
+    <value>Omitir esta versión</value>
+  </data>
+  <data name="CmdTitle.20eac5aa" xml:space="preserve">
+    <value>Espacio</value>
+  </data>
+  <data name="CmdTitle.fd40ab96" xml:space="preserve">
+    <value>Ejecutar en terminal</value>
+  </data>
+  <data name="CmdTitle.3d03a1de" xml:space="preserve">
+    <value>Alternar</value>
+  </data>
+  <data name="CmdTitle.f89d12df" xml:space="preserve">
+    <value>Alternar casilla</value>
+  </data>
+  <data name="CmdTitle.07d1e104" xml:space="preserve">
+    <value>Árbol hacia abajo</value>
+  </data>
+  <data name="CmdTitle.e9018338" xml:space="preserve">
+    <value>Árbol a la izquierda</value>
+  </data>
+  <data name="CmdTitle.586f3919" xml:space="preserve">
+    <value>Árbol a la derecha</value>
+  </data>
+  <data name="CmdTitle.34add8dc" xml:space="preserve">
+    <value>Árbol hacia arriba</value>
+  </data>
+  <data name="CmdTitle.2ad51f6d" xml:space="preserve">
+    <value>Desmontar</value>
+  </data>
 </root>

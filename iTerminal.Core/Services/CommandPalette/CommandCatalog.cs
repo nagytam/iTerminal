@@ -7,7 +7,16 @@ namespace iTerminal.Core.Services.CommandPalette;
 /// <summary>One command as the palette lists it.</summary>
 /// <param name="Key">The key it is bound to as the help screen writes it ("Alt+F5"), or empty.</param>
 /// <param name="Description">What it does, or empty when that would only repeat the title.</param>
-public sealed record PaletteEntry(ICommand Command, string Title, string Key, string Description);
+/// <summary>
+/// One command in the palette. <see cref="Title"/> is what is shown, in the language the user chose; <see cref="English"/> is the
+/// title as written in the code, which a query still matches and which the recently-run list is kept by, so neither depends on
+/// the language.
+/// </summary>
+public sealed record PaletteEntry(ICommand Command, string Title, string Key, string Description, string English = "")
+{
+    /// <summary>The stable name of the command: its English title.</summary>
+    public string Name => English.Length > 0 ? English : Title;
+}
 
 /// <summary>
 /// What Shift+F1 lists, and how a query narrows it.
@@ -74,7 +83,7 @@ public static class CommandCatalog
                         description = string.Empty;
                     }
 
-                    entries.Add(new PaletteEntry(command, command.Title.Trim(), key, description));
+                    entries.Add(new PaletteEntry(command, iConsole.Localization.UiText.Title(command.Title.Trim()), key, description, command.Title.Trim()));
                 }
             }
         }
@@ -132,7 +141,7 @@ public static class CommandCatalog
         var phrase = string.Join(' ', words);
         var letters = string.Concat(words);
         return [.. entries
-            .Select(e => (Entry: e, Tier: Tier(e, words, phrase), Fuzzy: FuzzyScore(letters, e.Title)))
+            .Select(e => (Entry: e, Tier: Tier(e, words, phrase), Fuzzy: Math.Max(FuzzyScore(letters, e.Title), FuzzyScore(letters, e.Name))))
             .Where(x => x.Tier < 4 || x.Fuzzy > 0)
             .OrderBy(x => x.Tier)
             .ThenByDescending(x => x.Tier == 4 ? x.Fuzzy : 0)
@@ -145,19 +154,22 @@ public static class CommandCatalog
     // typed appear in the title in order ("cfld" finds "Compare folders"); ranked below the others.
     private static int Tier(PaletteEntry e, string[] words, string phrase)
     {
-        if (!words.All(w => Contains(e.Title, w) || Contains(e.Key, w) || Contains(e.Description, w)))
+        if (!words.All(w => InTitle(e, w) || Contains(e.Key, w) || Contains(e.Description, w)))
         {
             return 4;
         }
 
-        return e.Title.StartsWith(phrase, StringComparison.OrdinalIgnoreCase) ? 0
-            : words.All(w => Contains(e.Title, w)) ? 1
-            : words.All(w => Contains(e.Title, w) || Contains(e.Key, w)) ? 2
+        return e.Title.StartsWith(phrase, StringComparison.OrdinalIgnoreCase) || e.Name.StartsWith(phrase, StringComparison.OrdinalIgnoreCase) ? 0
+            : words.All(w => InTitle(e, w)) ? 1
+            : words.All(w => InTitle(e, w) || Contains(e.Key, w)) ? 2
             : 3;
     }
 
     private static int FuzzyScore(string letters, string title) =>
         letters.Length >= 3 ? iConsole.Helper.FuzzyMatcher.Match(letters, title)?.Score ?? 0 : 0;
+
+    /// <summary>The word is in the title shown or in the English one: "Compare" finds the command whatever language is on screen.</summary>
+    private static bool InTitle(PaletteEntry e, string word) => Contains(e.Title, word) || Contains(e.Name, word);
 
     private static bool Contains(string text, string word) => text.Contains(word, StringComparison.OrdinalIgnoreCase);
 
@@ -165,7 +177,7 @@ public static class CommandCatalog
     {
         for (var index = 0; index < recent.Count; index++)
         {
-            if (string.Equals(recent[index], entry.Title, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(recent[index], entry.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return index;
             }

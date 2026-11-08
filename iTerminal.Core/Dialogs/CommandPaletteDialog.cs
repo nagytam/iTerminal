@@ -201,7 +201,7 @@ public class CommandPaletteDialog : Dialog
             return false;
         }
 
-        Remember(entry.Title);
+        Remember(entry.Name);
         Close();
         return await entry.Command.RunAsync(null);
     }

@@ -48,6 +48,24 @@ public static class UiText
         return Get(DescriptionKey(english), english);
     }
 
+    /// <summary>
+    /// A command's title in the language the user chose: the title written in English is the lookup (through <see cref="TitleKey"/>),
+    /// and a title no language has comes back as it was.
+    /// </summary>
+    public static string Title(string english)
+    {
+        if (string.IsNullOrWhiteSpace(english))
+        {
+            return english;
+        }
+
+        return Get(TitleKey(english), english);
+    }
+
+    /// <summary>The resource key of a command title: <c>CmdTitle.</c> and eight hex digits of its SHA-256.</summary>
+    public static string TitleKey(string english) =>
+        "CmdTitle." + Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(english.Trim())))[..8].ToLowerInvariant();
+
     /// <summary>The resource key of a command description: <c>CmdDesc.</c> and eight hex digits of its SHA-256.</summary>
     public static string DescriptionKey(string english) =>
         "CmdDesc." + Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(english.Trim())))[..8].ToLowerInvariant();

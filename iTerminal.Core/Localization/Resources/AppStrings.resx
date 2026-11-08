@@ -6235,4 +6235,592 @@
   <data name="Web.HintBookmarks" xml:space="preserve">
     <value>F2:bookmarks</value>
   </data>
+  <data name="CmdTitle.4efca0d1" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="CmdTitle.5d020094" xml:space="preserve">
+    <value>Add to playlist</value>
+  </data>
+  <data name="CmdTitle.d4f59192" xml:space="preserve">
+    <value>AI bar / terminal bar</value>
+  </data>
+  <data name="CmdTitle.7b44c7eb" xml:space="preserve">
+    <value>AI model info</value>
+  </data>
+  <data name="CmdTitle.31e392d1" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="CmdTitle.7b0c2dec" xml:space="preserve">
+    <value>BitTorrent</value>
+  </data>
+  <data name="CmdTitle.62b2e1b1" xml:space="preserve">
+    <value>Bluetooth devices</value>
+  </data>
+  <data name="CmdTitle.479ad21a" xml:space="preserve">
+    <value>Bottom</value>
+  </data>
+  <data name="CmdTitle.21a25681" xml:space="preserve">
+    <value>Brief listing</value>
+  </data>
+  <data name="CmdTitle.668b8045" xml:space="preserve">
+    <value>Calculator</value>
+  </data>
+  <data name="CmdTitle.d5d0a30b" xml:space="preserve">
+    <value>Calendar</value>
+  </data>
+  <data name="CmdTitle.64f7af9a" xml:space="preserve">
+    <value>Checksums</value>
+  </data>
+  <data name="CmdTitle.c1aade82" xml:space="preserve">
+    <value>Chess</value>
+  </data>
+  <data name="CmdTitle.26c79900" xml:space="preserve">
+    <value>Colour Labels and Tags</value>
+  </data>
+  <data name="CmdTitle.0347f794" xml:space="preserve">
+    <value>Command palette</value>
+  </data>
+  <data name="CmdTitle.e888155d" xml:space="preserve">
+    <value>Compare</value>
+  </data>
+  <data name="CmdTitle.6d0ae8bc" xml:space="preserve">
+    <value>Compare files</value>
+  </data>
+  <data name="CmdTitle.5cf3985f" xml:space="preserve">
+    <value>Compare folders</value>
+  </data>
+  <data name="CmdTitle.033fc044" xml:space="preserve">
+    <value>Compress</value>
+  </data>
+  <data name="CmdTitle.b450645d" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
+  <data name="CmdTitle.e21f935f" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="CmdTitle.b749e205" xml:space="preserve">
+    <value>Copy to clipboard</value>
+  </data>
+  <data name="CmdTitle.4759498a" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="CmdTitle.6990d321" xml:space="preserve">
+    <value>Create file</value>
+  </data>
+  <data name="CmdTitle.82b9e1ef" xml:space="preserve">
+    <value>Create folder</value>
+  </data>
+  <data name="CmdTitle.e6b850cf" xml:space="preserve">
+    <value>Create link</value>
+  </data>
+  <data name="CmdTitle.424dc8eb" xml:space="preserve">
+    <value>Currency Converter</value>
+  </data>
+  <data name="CmdTitle.a954b4a3" xml:space="preserve">
+    <value>Cut to clipboard</value>
+  </data>
+  <data name="CmdTitle.e2d0a549" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="CmdTitle.c8e463ed" xml:space="preserve">
+    <value>Disk manager</value>
+  </data>
+  <data name="CmdTitle.4fe60c10" xml:space="preserve">
+    <value>Disk usage</value>
+  </data>
+  <data name="CmdTitle.f0f09afa" xml:space="preserve">
+    <value>Docker containers</value>
+  </data>
+  <data name="CmdTitle.b4e929d8" xml:space="preserve">
+    <value>Documents</value>
+  </data>
+  <data name="CmdTitle.464c4ffd" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="CmdTitle.94026ca2" xml:space="preserve">
+    <value>Edit link</value>
+  </data>
+  <data name="CmdTitle.a7f5203f" xml:space="preserve">
+    <value>Encrypt / Decrypt Files</value>
+  </data>
+  <data name="CmdTitle.66609440" xml:space="preserve">
+    <value>Encyclopedia</value>
+  </data>
+  <data name="CmdTitle.aac7246f" xml:space="preserve">
+    <value>Environment variables</value>
+  </data>
+  <data name="CmdTitle.c15301c0" xml:space="preserve">
+    <value>Extract</value>
+  </data>
+  <data name="CmdTitle.16d8320f" xml:space="preserve">
+    <value>Filter by Label</value>
+  </data>
+  <data name="CmdTitle.7190c142" xml:space="preserve">
+    <value>Find duplicate files</value>
+  </data>
+  <data name="CmdTitle.15d12bc1" xml:space="preserve">
+    <value>Find files</value>
+  </data>
+  <data name="CmdTitle.7c64e68b" xml:space="preserve">
+    <value>Find Large Files</value>
+  </data>
+  <data name="CmdTitle.9dbe08ce" xml:space="preserve">
+    <value>Find Old Files</value>
+  </data>
+  <data name="CmdTitle.50254cb1" xml:space="preserve">
+    <value>Folder size</value>
+  </data>
+  <data name="CmdTitle.2f343666" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="CmdTitle.50328128" xml:space="preserve">
+    <value>Full-screen command log</value>
+  </data>
+  <data name="CmdTitle.b949c922" xml:space="preserve">
+    <value>Git</value>
+  </data>
+  <data name="CmdTitle.452144b6" xml:space="preserve">
+    <value>Git history</value>
+  </data>
+  <data name="CmdTitle.a38f9099" xml:space="preserve">
+    <value>Git pull --rebase</value>
+  </data>
+  <data name="CmdTitle.49e4dcaf" xml:space="preserve">
+    <value>Git sync</value>
+  </data>
+  <data name="CmdTitle.6cc8519b" xml:space="preserve">
+    <value>Go</value>
+  </data>
+  <data name="CmdTitle.fb657027" xml:space="preserve">
+    <value>Go to path</value>
+  </data>
+  <data name="CmdTitle.8b3f7b0f" xml:space="preserve">
+    <value>Hash manifest</value>
+  </data>
+  <data name="CmdTitle.b79cac92" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="CmdTitle.c5644bc8" xml:space="preserve">
+    <value>Invert marks</value>
+  </data>
+  <data name="CmdTitle.c12678c5" xml:space="preserve">
+    <value>iPhone Browser</value>
+  </data>
+  <data name="CmdTitle.6e271c3b" xml:space="preserve">
+    <value>Language…</value>
+  </data>
+  <data name="CmdTitle.1786337e" xml:space="preserve">
+    <value>Left in brief listing</value>
+  </data>
+  <data name="CmdTitle.122f48c5" xml:space="preserve">
+    <value>Line end</value>
+  </data>
+  <data name="CmdTitle.b9ac3ade" xml:space="preserve">
+    <value>Line start</value>
+  </data>
+  <data name="CmdTitle.07ed6ccf" xml:space="preserve">
+    <value>Mail</value>
+  </data>
+  <data name="CmdTitle.be176b00" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="CmdTitle.d7cda0ca" xml:space="preserve">
+    <value>Mark</value>
+  </data>
+  <data name="CmdTitle.d7977505" xml:space="preserve">
+    <value>Mark all</value>
+  </data>
+  <data name="CmdTitle.70dbfc95" xml:space="preserve">
+    <value>Mount disk image</value>
+  </data>
+  <data name="CmdTitle.6ecc3df6" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="CmdTitle.40bb50da" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="CmdTitle.6c94221e" xml:space="preserve">
+    <value>Move left</value>
+  </data>
+  <data name="CmdTitle.8d60decd" xml:space="preserve">
+    <value>Move right</value>
+  </data>
+  <data name="CmdTitle.c66feb5e" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="CmdTitle.5ceb1a23" xml:space="preserve">
+    <value>Multi-rename</value>
+  </data>
+  <data name="CmdTitle.8a6ebac9" xml:space="preserve">
+    <value>Music player</value>
+  </data>
+  <data name="CmdTitle.25d732dc" xml:space="preserve">
+    <value>Network Browser</value>
+  </data>
+  <data name="CmdTitle.43d4471d" xml:space="preserve">
+    <value>Network manager</value>
+  </data>
+  <data name="CmdTitle.3bf4885a" xml:space="preserve">
+    <value>Next panel</value>
+  </data>
+  <data name="CmdTitle.32f256bd" xml:space="preserve">
+    <value>Nine Men&apos;s Morris</value>
+  </data>
+  <data name="CmdTitle.be0252a6" xml:space="preserve">
+    <value>Open archive</value>
+  </data>
+  <data name="CmdTitle.6a908402" xml:space="preserve">
+    <value>Open folder</value>
+  </data>
+  <data name="CmdTitle.fa7d4143" xml:space="preserve">
+    <value>Open or play</value>
+  </data>
+  <data name="CmdTitle.d3b56e0e" xml:space="preserve">
+    <value>Open with its program</value>
+  </data>
+  <data name="CmdTitle.ef2d9b2a" xml:space="preserve">
+    <value>Open with the system default</value>
+  </data>
+  <data name="CmdTitle.40a20853" xml:space="preserve">
+    <value>Packages</value>
+  </data>
+  <data name="CmdTitle.72a825fc" xml:space="preserve">
+    <value>Page down</value>
+  </data>
+  <data name="CmdTitle.43f41b59" xml:space="preserve">
+    <value>Page up</value>
+  </data>
+  <data name="CmdTitle.158f5a01" xml:space="preserve">
+    <value>Parent folder</value>
+  </data>
+  <data name="CmdTitle.be146b37" xml:space="preserve">
+    <value>Passwords</value>
+  </data>
+  <data name="CmdTitle.dc2d6f20" xml:space="preserve">
+    <value>Paste from clipboard</value>
+  </data>
+  <data name="CmdTitle.9d4f39b2" xml:space="preserve">
+    <value>Performance benchmark</value>
+  </data>
+  <data name="CmdTitle.a78afaff" xml:space="preserve">
+    <value>Play or pause</value>
+  </data>
+  <data name="CmdTitle.4d9ee15b" xml:space="preserve">
+    <value>Previous panel</value>
+  </data>
+  <data name="CmdTitle.df0fe798" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="CmdTitle.913f7d42" xml:space="preserve">
+    <value>Process manager</value>
+  </data>
+  <data name="CmdTitle.ae43692b" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="CmdTitle.90f3f0b2" xml:space="preserve">
+    <value>Quick view</value>
+  </data>
+  <data name="CmdTitle.b3eb37ac" xml:space="preserve">
+    <value>Quit</value>
+  </data>
+  <data name="CmdTitle.ac72175e" xml:space="preserve">
+    <value>Recycle bin</value>
+  </data>
+  <data name="CmdTitle.0e916101" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="CmdTitle.69161a30" xml:space="preserve">
+    <value>Remote connections</value>
+  </data>
+  <data name="CmdTitle.4f04fac1" xml:space="preserve">
+    <value>Remove from playlist</value>
+  </data>
+  <data name="CmdTitle.3064d79a" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="CmdTitle.117e3104" xml:space="preserve">
+    <value>Restart as administrator</value>
+  </data>
+  <data name="CmdTitle.9b7d9308" xml:space="preserve">
+    <value>Restart container</value>
+  </data>
+  <data name="CmdTitle.a76e13b9" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="CmdTitle.580a5805" xml:space="preserve">
+    <value>Right in brief listing</value>
+  </data>
+  <data name="CmdTitle.6d92528b" xml:space="preserve">
+    <value>Root folder</value>
+  </data>
+  <data name="CmdTitle.00d60e31" xml:space="preserve">
+    <value>Run</value>
+  </data>
+  <data name="CmdTitle.fe9ae39c" xml:space="preserve">
+    <value>Run as administrator</value>
+  </data>
+  <data name="CmdTitle.2d254ba0" xml:space="preserve">
+    <value>Run program</value>
+  </data>
+  <data name="CmdTitle.8465c0cf" xml:space="preserve">
+    <value>Run the command line</value>
+  </data>
+  <data name="CmdTitle.c387cb05" xml:space="preserve">
+    <value>Runtime Dependencies</value>
+  </data>
+  <data name="CmdTitle.1509f561" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="CmdTitle.5efb77ca" xml:space="preserve">
+    <value>Scan with Microsoft Defender</value>
+  </data>
+  <data name="CmdTitle.b8f0cb84" xml:space="preserve">
+    <value>Screen manager</value>
+  </data>
+  <data name="CmdTitle.49c266ba" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="CmdTitle.d4e1aa98" xml:space="preserve">
+    <value>Secure Wipe</value>
+  </data>
+  <data name="CmdTitle.d47f0fb2" xml:space="preserve">
+    <value>Select drive</value>
+  </data>
+  <data name="CmdTitle.d21368e7" xml:space="preserve">
+    <value>Select drive or folder</value>
+  </data>
+  <data name="CmdTitle.8f6158cd" xml:space="preserve">
+    <value>Select favourite</value>
+  </data>
+  <data name="CmdTitle.2ed6bf93" xml:space="preserve">
+    <value>Select folder</value>
+  </data>
+  <data name="CmdTitle.74a883a0" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="CmdTitle.a7332854" xml:space="preserve">
+    <value>Shell</value>
+  </data>
+  <data name="CmdTitle.d348acae" xml:space="preserve">
+    <value>Signatures</value>
+  </data>
+  <data name="CmdTitle.aaa73ac7" xml:space="preserve">
+    <value>Snake</value>
+  </data>
+  <data name="CmdTitle.d83b9465" xml:space="preserve">
+    <value>Sort by…</value>
+  </data>
+  <data name="CmdTitle.ed4de0a3" xml:space="preserve">
+    <value>Start / stop container</value>
+  </data>
+  <data name="CmdTitle.df09c2fb" xml:space="preserve">
+    <value>Stocks</value>
+  </data>
+  <data name="CmdTitle.1b31941d" xml:space="preserve">
+    <value>Streams and Attributes</value>
+  </data>
+  <data name="CmdTitle.9688b11c" xml:space="preserve">
+    <value>Strip Metadata</value>
+  </data>
+  <data name="CmdTitle.0593f374" xml:space="preserve">
+    <value>Swap panels</value>
+  </data>
+  <data name="CmdTitle.bc88c4ad" xml:space="preserve">
+    <value>Synchronise folders</value>
+  </data>
+  <data name="CmdTitle.b120922c" xml:space="preserve">
+    <value>System information</value>
+  </data>
+  <data name="CmdTitle.28c83220" xml:space="preserve">
+    <value>System settings</value>
+  </data>
+  <data name="CmdTitle.4e510b97" xml:space="preserve">
+    <value>Task List</value>
+  </data>
+  <data name="CmdTitle.45b9ef99" xml:space="preserve">
+    <value>Task manager</value>
+  </data>
+  <data name="CmdTitle.e0926fda" xml:space="preserve">
+    <value>Terminal</value>
+  </data>
+  <data name="CmdTitle.c2028759" xml:space="preserve">
+    <value>Tetris</value>
+  </data>
+  <data name="CmdTitle.43ae3265" xml:space="preserve">
+    <value>Themes</value>
+  </data>
+  <data name="CmdTitle.e2cb7aca" xml:space="preserve">
+    <value>Tic-Tac-Toe</value>
+  </data>
+  <data name="CmdTitle.d5cdfcf7" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="CmdTitle.e6fe8ee2" xml:space="preserve">
+    <value>Translator</value>
+  </data>
+  <data name="CmdTitle.de3e449e" xml:space="preserve">
+    <value>Unit Converter</value>
+  </data>
+  <data name="CmdTitle.904dcddf" xml:space="preserve">
+    <value>Unmark all</value>
+  </data>
+  <data name="CmdTitle.6fa25be1" xml:space="preserve">
+    <value>User menu</value>
+  </data>
+  <data name="CmdTitle.dcc839a4" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="CmdTitle.99c92d8a" xml:space="preserve">
+    <value>Virtual machine manager</value>
+  </data>
+  <data name="CmdTitle.8748f239" xml:space="preserve">
+    <value>Voice input</value>
+  </data>
+  <data name="CmdTitle.6ad50765" xml:space="preserve">
+    <value>Volume down</value>
+  </data>
+  <data name="CmdTitle.81233d97" xml:space="preserve">
+    <value>Volume up</value>
+  </data>
+  <data name="CmdTitle.649891a2" xml:space="preserve">
+    <value>Web Browser</value>
+  </data>
+  <data name="CmdTitle.1377264b" xml:space="preserve">
+    <value>Workspaces</value>
+  </data>
+  <data name="CmdTitle.70bfd7fb" xml:space="preserve">
+    <value>Wrap</value>
+  </data>
+  <data name="CmdTitle.03dfc084" xml:space="preserve">
+    <value>Add To Favourites</value>
+  </data>
+  <data name="CmdTitle.2094a5ae" xml:space="preserve">
+    <value>Auto Complete</value>
+  </data>
+  <data name="CmdTitle.76900f1b" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="CmdTitle.292fffe3" xml:space="preserve">
+    <value>Backspace</value>
+  </data>
+  <data name="CmdTitle.19766ed6" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CmdTitle.52bc181a" xml:space="preserve">
+    <value>Cancel Dialog</value>
+  </data>
+  <data name="CmdTitle.efa0389a" xml:space="preserve">
+    <value>Choice</value>
+  </data>
+  <data name="CmdTitle.81c2c4f3" xml:space="preserve">
+    <value>Clear Search</value>
+  </data>
+  <data name="CmdTitle.7d9eb7ac" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="CmdTitle.3458ce1b" xml:space="preserve">
+    <value>Close Menu</value>
+  </data>
+  <data name="CmdTitle.5a4aca35" xml:space="preserve">
+    <value>Close Parent</value>
+  </data>
+  <data name="CmdTitle.e103a9fa" xml:space="preserve">
+    <value>Close Self</value>
+  </data>
+  <data name="CmdTitle.ee2425cb" xml:space="preserve">
+    <value>Delete Character</value>
+  </data>
+  <data name="CmdTitle.c8f53f58" xml:space="preserve">
+    <value>Delete Favourite</value>
+  </data>
+  <data name="CmdTitle.c724af2a" xml:space="preserve">
+    <value>Delete Line</value>
+  </data>
+  <data name="CmdTitle.5539b312" xml:space="preserve">
+    <value>File name to command line</value>
+  </data>
+  <data name="CmdTitle.a6c7a84b" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="CmdTitle.ac20a57b" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="CmdTitle.b1d13221" xml:space="preserve">
+    <value>Info listing</value>
+  </data>
+  <data name="CmdTitle.b47144ab" xml:space="preserve">
+    <value>Install updates</value>
+  </data>
+  <data name="CmdTitle.2247fe6a" xml:space="preserve">
+    <value>Long listing</value>
+  </data>
+  <data name="CmdTitle.f71acd28" xml:space="preserve">
+    <value>Mark up</value>
+  </data>
+  <data name="CmdTitle.cdcd3bc6" xml:space="preserve">
+    <value>Mark down</value>
+  </data>
+  <data name="CmdTitle.144103cc" xml:space="preserve">
+    <value>Mark by pattern</value>
+  </data>
+  <data name="CmdTitle.51ab858b" xml:space="preserve">
+    <value>Unmark by pattern</value>
+  </data>
+  <data name="CmdTitle.973ab19c" xml:space="preserve">
+    <value>Multi Rename</value>
+  </data>
+  <data name="CmdTitle.0ef49b87" xml:space="preserve">
+    <value>Open with…</value>
+  </data>
+  <data name="CmdTitle.abccc78c" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="CmdTitle.4fee5e5e" xml:space="preserve">
+    <value>Remove mark</value>
+  </data>
+  <data name="CmdTitle.95e15439" xml:space="preserve">
+    <value>Replace</value>
+  </data>
+  <data name="CmdTitle.2dfbee9a" xml:space="preserve">
+    <value>Scroll Next Token</value>
+  </data>
+  <data name="CmdTitle.55510159" xml:space="preserve">
+    <value>Scroll Previous Token</value>
+  </data>
+  <data name="CmdTitle.e95ea540" xml:space="preserve">
+    <value>Select Left</value>
+  </data>
+  <data name="CmdTitle.12549c6f" xml:space="preserve">
+    <value>Select Right</value>
+  </data>
+  <data name="CmdTitle.6f4676c4" xml:space="preserve">
+    <value>Skip this version</value>
+  </data>
+  <data name="CmdTitle.20eac5aa" xml:space="preserve">
+    <value>Space</value>
+  </data>
+  <data name="CmdTitle.fd40ab96" xml:space="preserve">
+    <value>Terminal Execute</value>
+  </data>
+  <data name="CmdTitle.3d03a1de" xml:space="preserve">
+    <value>Toggle</value>
+  </data>
+  <data name="CmdTitle.f89d12df" xml:space="preserve">
+    <value>Toggle Check Box</value>
+  </data>
+  <data name="CmdTitle.07d1e104" xml:space="preserve">
+    <value>Tree Scroll Down</value>
+  </data>
+  <data name="CmdTitle.e9018338" xml:space="preserve">
+    <value>Tree Scroll Left</value>
+  </data>
+  <data name="CmdTitle.586f3919" xml:space="preserve">
+    <value>Tree Scroll Right</value>
+  </data>
+  <data name="CmdTitle.34add8dc" xml:space="preserve">
+    <value>Tree Scroll Up</value>
+  </data>
+  <data name="CmdTitle.2ad51f6d" xml:space="preserve">
+    <value>Unmount</value>
+  </data>
 </root>
