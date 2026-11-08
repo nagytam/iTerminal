@@ -334,6 +334,24 @@ public class Tab(IThemeService themeService) : Control(themeService)
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + 2), ViewSize, line3String);
     }
 
+    /// <summary>
+    /// How a vertical strip lays its names out: a name and a rule under it (2 rows each) when the strip is tall enough for all of
+    /// them, else one row per name, scrolled so the focused page is shown. At two rows each, seven pages needed 15 rows and the
+    /// strip hung below its dialog on a short terminal. Drawing and the mouse both read this.
+    /// </summary>
+    private (int RowsPerTab, int First, int Visible) VerticalPlan(int count)
+    {
+        int height = (int)ViewSize.Height;
+        if (height <= 0 || count * 2 + 1 <= height)
+        {
+            return (2, 0, count);
+        }
+
+        int visible = Math.Min(count, Math.Max(1, height - 2));
+        int first = Math.Clamp(FocusedTabPage - (visible - 1) / 2, 0, count - visible);
+        return (1, first, visible);
+    }
+
     public void DrawVertical(IBuffer buffer)
     {
         var consoleColor = ThemeService.CurrentColorScheme;
@@ -346,7 +364,8 @@ public class Tab(IThemeService themeService) : Control(themeService)
         borderLine = new(borderLineString, consoleColor.Foreground, consoleColor.Background);
         int y = 1;
         var maxTabWidth = tabPages.Max(p => p.Name.Length);
-        for (int i = 0; i < tabPages.Count; i++)
+        var plan = VerticalPlan(tabPages.Count);
+        for (int i = plan.First; i < plan.First + plan.Visible; i++)
         {
             var tabPage = tabPages[i];
             tabPage.GetColor(out var foregroundColor, out var backgroundColor);
@@ -366,13 +385,18 @@ public class Tab(IThemeService themeService) : Control(themeService)
             tabName.HighlightHotKey(tabPage.HotConsoleKey, tabPage.HotKeyChar, Color.Green, Color.Blue);
             buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + y), ViewSize, tabName);
             y++;
-            if (i == tabPages.Count - 1)
+            bool lastShown = i == plan.First + plan.Visible - 1;
+            if (lastShown)
             {
                 borderLineString = Border.BottomLeft + Border.Horizontal.Repeat(maxWidth) + Border.BottomRight;
                 borderLine = new(borderLineString, consoleColor.Foreground, consoleColor.Background);
             }
-            buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + y), ViewSize, borderLine);
-            y++;
+
+            if (plan.RowsPerTab == 2 || lastShown)
+            {
+                buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + y), ViewSize, borderLine);
+                y++;
+            }
         }
         while (y < ViewSize.Height)
         {
@@ -552,11 +576,23 @@ public class Tab(IThemeService themeService) : Control(themeService)
             {
                 return -1;
             }
+            var plan = VerticalPlan(tabPages.Count);
             var row = y - 1;
-            if (row < 0 || row % 2 != 0)
+            if (row < 0)
             {
                 return -1;
             }
+
+            if (plan.RowsPerTab == 1)
+            {
+                return row < plan.Visible ? plan.First + row : -1;
+            }
+
+            if (row % 2 != 0)
+            {
+                return -1;
+            }
+
             var index = row / 2;
             return index < tabPages.Count ? index : -1;
         }

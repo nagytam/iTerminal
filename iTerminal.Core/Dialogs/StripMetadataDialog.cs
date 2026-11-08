@@ -246,6 +246,6 @@ public class StripMetadataDialog : Dialog
                 break;
         }
 
-        _info.Lines = lines;
+        _info.Lines = InfoLines.Wrap(lines, (int)_info.ViewSize.Width);
     }
 }
