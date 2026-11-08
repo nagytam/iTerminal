@@ -6886,4 +6886,28 @@
   <data name="Git.Act.Discarded" xml:space="preserve">
     <value>{0} scartato.</value>
   </data>
+  <data name="Git.Sec.CommitHash" xml:space="preserve">
+    <value>Commit {0}</value>
+  </data>
+  <data name="Git.Sec.CommitPrompt" xml:space="preserve">
+    <value>Commit di {0} file in staging</value>
+  </data>
+  <data name="Git.Sec.Staged" xml:space="preserve">
+    <value>In staging ({0})</value>
+  </data>
+  <data name="Git.Sec.Branches" xml:space="preserve">
+    <value>Branch ({0})</value>
+  </data>
+  <data name="Git.Sec.Commits" xml:space="preserve">
+    <value>Commit ({0})</value>
+  </data>
+  <data name="Git.Sec.Stashes" xml:space="preserve">
+    <value>Stash ({0})</value>
+  </data>
+  <data name="Git.Sec.Unstaged" xml:space="preserve">
+    <value>Non in staging ({0})</value>
+  </data>
+  <data name="Git.Sec.UnstagedConflicted" xml:space="preserve">
+    <value>Non in staging ({0}, {1} in conflitto)</value>
+  </data>
 </root>

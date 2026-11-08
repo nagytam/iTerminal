@@ -6886,4 +6886,28 @@
   <data name="Git.Act.Discarded" xml:space="preserve">
     <value>{0} verworfen.</value>
   </data>
+  <data name="Git.Sec.CommitHash" xml:space="preserve">
+    <value>Commit {0}</value>
+  </data>
+  <data name="Git.Sec.CommitPrompt" xml:space="preserve">
+    <value>{0} vorgemerkte Datei(en) committen</value>
+  </data>
+  <data name="Git.Sec.Staged" xml:space="preserve">
+    <value>Vorgemerkt ({0})</value>
+  </data>
+  <data name="Git.Sec.Branches" xml:space="preserve">
+    <value>Branches ({0})</value>
+  </data>
+  <data name="Git.Sec.Commits" xml:space="preserve">
+    <value>Commits ({0})</value>
+  </data>
+  <data name="Git.Sec.Stashes" xml:space="preserve">
+    <value>Stashes ({0})</value>
+  </data>
+  <data name="Git.Sec.Unstaged" xml:space="preserve">
+    <value>Nicht vorgemerkt ({0})</value>
+  </data>
+  <data name="Git.Sec.UnstagedConflicted" xml:space="preserve">
+    <value>Nicht vorgemerkt ({0}, {1} mit Konflikt)</value>
+  </data>
 </root>

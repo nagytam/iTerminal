@@ -6886,4 +6886,28 @@
   <data name="Git.Act.Discarded" xml:space="preserve">
     <value>{0} elvetve.</value>
   </data>
+  <data name="Git.Sec.CommitHash" xml:space="preserve">
+    <value>Commit {0}</value>
+  </data>
+  <data name="Git.Sec.CommitPrompt" xml:space="preserve">
+    <value>{0} előkészített fájl commitolása</value>
+  </data>
+  <data name="Git.Sec.Staged" xml:space="preserve">
+    <value>Előkészítve ({0})</value>
+  </data>
+  <data name="Git.Sec.Branches" xml:space="preserve">
+    <value>Ágak ({0})</value>
+  </data>
+  <data name="Git.Sec.Commits" xml:space="preserve">
+    <value>Commitok ({0})</value>
+  </data>
+  <data name="Git.Sec.Stashes" xml:space="preserve">
+    <value>Stash-ek ({0})</value>
+  </data>
+  <data name="Git.Sec.Unstaged" xml:space="preserve">
+    <value>Nem előkészített ({0})</value>
+  </data>
+  <data name="Git.Sec.UnstagedConflicted" xml:space="preserve">
+    <value>Nem előkészített ({0}, {1} ütközik)</value>
+  </data>
 </root>
