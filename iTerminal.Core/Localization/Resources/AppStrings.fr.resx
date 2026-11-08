@@ -5446,4 +5446,37 @@
   <data name="Language.RestartNote" xml:space="preserve">
     <value>Les menus et la barre de touches changent aussitôt. Certaines boîtes de dialogue changent de langue après un redémarrage.</value>
   </data>
+  <data name="Contacts.ColName" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Contacts.ColEmail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Contacts.ColPhone" xml:space="preserve">
+    <value>Téléphone</value>
+  </data>
+  <data name="Contacts.ColCompany" xml:space="preserve">
+    <value>Société</value>
+  </data>
+  <data name="Contacts.ColNotes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Contacts.Count" xml:space="preserve">
+    <value>{0} contacts</value>
+  </data>
+  <data name="Contacts.CountFiltered" xml:space="preserve">
+    <value>{0} sur {1} contacts</value>
+  </data>
+  <data name="Contacts.NoMatch" xml:space="preserve">
+    <value>Aucun contact ne correspond à « {0} ».</value>
+  </data>
+  <data name="Contacts.Empty" xml:space="preserve">
+    <value>Aucun contact. N en ajoute un.</value>
+  </data>
+  <data name="Contacts.FormNew" xml:space="preserve">
+    <value>Nouveau contact : seul le nom est requis</value>
+  </data>
+  <data name="Contacts.FormChange" xml:space="preserve">
+    <value>Modifier le contact : seul le nom est requis</value>
+  </data>
 </root>

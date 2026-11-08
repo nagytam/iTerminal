@@ -41,7 +41,14 @@ public class ContactManagerDialog : Dialog
 
     private int FieldsTop => ListRows + 2;
 
-    private static readonly string[] FieldLabels = ["Name", "Email", "Phone", "Company", "Notes"];
+    private static string[] FieldLabels =>
+    [
+        iConsole.Localization.UiText.Get("Contacts.ColName", "Name"),
+        iConsole.Localization.UiText.Get("Contacts.ColEmail", "Email"),
+        iConsole.Localization.UiText.Get("Contacts.ColPhone", "Phone"),
+        iConsole.Localization.UiText.Get("Contacts.ColCompany", "Company"),
+        iConsole.Localization.UiText.Get("Contacts.ColNotes", "Notes"),
+    ];
 
     private enum Mode
     {
@@ -533,9 +540,12 @@ public class ContactManagerDialog : Dialog
     {
         var total = _store.Count;
         var shown = Visible.Count;
-        var count = _filter.Length > 0 ? $"{shown} of {total} contacts" : $"{total} contacts";
+        var count = _filter.Length > 0
+            ? string.Format(iConsole.Localization.UiText.Get("Contacts.CountFiltered", "{0} of {1} contacts"), shown, total)
+            : string.Format(iConsole.Localization.UiText.Get("Contacts.Count", "{0} contacts"), total);
         var (nameWidth, emailWidth, phoneWidth) = Columns(iw - 2);
-        string header = Fit("Name", nameWidth) + Fit("Email", emailWidth) + Fit("Phone", phoneWidth) + "Company";
+        var titles = FieldLabels;
+        string header = Fit(titles[0], nameWidth) + Fit(titles[1], emailWidth) + Fit(titles[2], phoneWidth) + titles[3];
         Put(buffer, 1, 0, iw - 2, header, Color.Cyan, colorScheme.Background);
 
         // The count sits at the right edge and must not paint over the last column title: the short form
@@ -554,7 +564,9 @@ public class ContactManagerDialog : Dialog
         var selectedId = Selected?.Id;
         if (visible.Count == 0)
         {
-            var empty = _filter.Length > 0 ? $"No contact matches \"{_filter}\"." : "No contacts. Press N to add one.";
+            var empty = _filter.Length > 0
+                ? string.Format(iConsole.Localization.UiText.Get("Contacts.NoMatch", "No contact matches \"{0}\"."), _filter)
+                : iConsole.Localization.UiText.Get("Contacts.Empty", "No contacts. Press N to add one.");
             Put(buffer, 1, 1, iw - 2, empty, colorScheme.DisabledForeground, colorScheme.Background);
             return;
         }
@@ -607,7 +619,7 @@ public class ContactManagerDialog : Dialog
         }
         else if (_mode == Mode.Form)
         {
-            Put(buffer, 1, y, iw - 2, _error ?? $"{(_editing is null ? "New" : "Change")} contact: only the name is needed", _error is null ? colorScheme.DisabledForeground : colorScheme.Error, colorScheme.Background);
+            Put(buffer, 1, y, iw - 2, _error ?? (_editing is null ? iConsole.Localization.UiText.Get("Contacts.FormNew", "New contact: only the name is needed") : iConsole.Localization.UiText.Get("Contacts.FormChange", "Change contact: only the name is needed")), _error is null ? colorScheme.DisabledForeground : colorScheme.Error, colorScheme.Background);
         }
         else if (_mode == Mode.Filter)
         {

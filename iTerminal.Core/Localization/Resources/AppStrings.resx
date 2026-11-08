@@ -5587,4 +5587,37 @@
   <data name="Language.RestartNote" xml:space="preserve">
     <value>Menus and the key bar changed at once. Some dialogs change language after a restart.</value>
   </data>
+  <data name="Contacts.ColName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Contacts.ColEmail" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Contacts.ColPhone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="Contacts.ColCompany" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="Contacts.ColNotes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Contacts.Count" xml:space="preserve">
+    <value>{0} contacts</value>
+  </data>
+  <data name="Contacts.CountFiltered" xml:space="preserve">
+    <value>{0} of {1} contacts</value>
+  </data>
+  <data name="Contacts.NoMatch" xml:space="preserve">
+    <value>No contact matches &quot;{0}&quot;.</value>
+  </data>
+  <data name="Contacts.Empty" xml:space="preserve">
+    <value>No contacts. Press N to add one.</value>
+  </data>
+  <data name="Contacts.FormNew" xml:space="preserve">
+    <value>New contact: only the name is needed</value>
+  </data>
+  <data name="Contacts.FormChange" xml:space="preserve">
+    <value>Change contact: only the name is needed</value>
+  </data>
 </root>
