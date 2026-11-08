@@ -650,4 +650,19 @@ public class SmallScreenDialogsTest
         string hint = narrow.Screen.Lines.First(l => l.Contains("choose"));
         Assert.IsTrue(hint.Contains("Esc close") || !hint.Contains("Esc"), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheScientificCalculatorOn16Rows_ShowsItsLastKeyRow()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 16);
+
+        await narrow.PressAsync("Ctrl+A");
+        await narrow.WaitForTextAsync("Basic");
+        await narrow.PressAsync("Ctrl+Right");
+
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("[ sin")), "the scientific keys");
+        await Task.Delay(1000);
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("+/-") && l.Contains("[  =")), narrow.Screen.Dump());
+    }
 }

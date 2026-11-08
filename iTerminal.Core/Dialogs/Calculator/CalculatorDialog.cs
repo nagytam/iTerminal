@@ -20,7 +20,8 @@ namespace iTerminal.Core.Dialogs.Calculator;
 /// </summary>
 public class CalculatorDialog : SplitPaneDialog
 {
-    private const int HeaderRows = 3;
+    /// <summary>The title line, the expression and the display; on a short dialog the title gives way, so the scientific keypad fits in 16 rows.</summary>
+    private int HeaderRows => ViewSize.Height < 17 ? 2 : 3;
     private const int FooterRows = 1;
 
     internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.Calculator", "0-9 . + - * / ^ %  Enter:=  Bksp:back  Del/c:clear  Space:press button  Ctrl+←/→:mode  Esc:close");
@@ -202,11 +203,19 @@ public class CalculatorDialog : SplitPaneDialog
 
         var memoryFlag = _engine.Memory != 0 ? "M  " : string.Empty;
         var modeLabel = _engine.Mode == CalculatorMode.Programming ? $"  [{_engine.NumeralBase}]" : string.Empty;
-        WriteLine(buffer, ix, iy, iw, $"{memoryFlag}Calculator{modeLabel}", Color.Cyan, colorScheme.Background);
-        WriteLine(buffer, ix, iy + 1, iw, _engine.Expression, colorScheme.Foreground, colorScheme.Background);
-
         var displayColor = _engine.IsError ? colorScheme.Error : colorScheme.SelectedFocusedForeground;
-        WriteLine(buffer, ix, iy + 2, iw, _engine.Display.PadLeft(iw), displayColor, colorScheme.Background);
+        if (HeaderRows == 2)
+        {
+            // The memory flag and the base lead the expression line where the title line has been dropped.
+            WriteLine(buffer, ix, iy, iw, $"{memoryFlag}{modeLabel.Trim()} {_engine.Expression}".TrimStart(), colorScheme.Foreground, colorScheme.Background);
+            WriteLine(buffer, ix, iy + 1, iw, _engine.Display.PadLeft(iw), displayColor, colorScheme.Background);
+        }
+        else
+        {
+            WriteLine(buffer, ix, iy, iw, $"{memoryFlag}Calculator{modeLabel}", Color.Cyan, colorScheme.Background);
+            WriteLine(buffer, ix, iy + 1, iw, _engine.Expression, colorScheme.Foreground, colorScheme.Background);
+            WriteLine(buffer, ix, iy + 2, iw, _engine.Display.PadLeft(iw), displayColor, colorScheme.Background);
+        }
 
         var ih = (int)ViewSize.Height - 2;
         if (ih > HeaderRows)
