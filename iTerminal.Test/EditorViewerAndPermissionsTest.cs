@@ -97,6 +97,14 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.SqliteViewerDialog { IsTextMode: true }, "the text output");
     }
 
+    /// <summary>
+    /// Waits for <paramref name="text"/> to be in (or gone from) the viewer's grid. The first screen line is the viewer's title, which
+    /// holds the path of the sandbox folder, whose random name can contain any short run of digits: a whole-screen wait for "234" then
+    /// failed whenever the folder was called iTerminal.E2E.234…
+    /// </summary>
+    private Task WaitForGridAsync(string text, bool present) =>
+        _app.WaitUntilAsync(() => _app.Driver.Screen.Lines.Skip(1).Any(l => l.Contains(text, StringComparison.Ordinal)) == present, present ? $"'{text}' in the grid" : $"'{text}' gone from the grid");
+
     [Timeout(120_000)]
     [TestMethod]
     public async Task F3OnAnHdf5FileShowsASliceAsAGridAndTheSliceKeysMoveThroughTheCube()
@@ -106,22 +114,22 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.HdfViewerDialog, "the HDF5 viewer to open");
         await _app.WaitForTextAsync("/cube  float64 [3 × 4 × 5]");
         await _app.WaitForTextAsync("index 1 of 3");
-        await _app.WaitForTextAsync("34");
-        Assert.IsFalse(_app.Driver.Screen.Lines.Any(l => l.Contains("134", StringComparison.Ordinal)), "slice 0 holds 0..34, never 134");
+        await WaitForGridAsync("34", present: true);
+        Assert.IsFalse(_app.Driver.Screen.Lines.Skip(1).Any(l => l.Contains("134", StringComparison.Ordinal)), "slice 0 holds 0..34, never 134");
 
         // The typed keys: + steps the index of the leading dimension, and the next slice's cells are 100 more.
         Assert.IsTrue(await _app.PressAsync("+"));
         await _app.WaitForTextAsync("index 2 of 3");
-        await _app.WaitForTextAsync("134");
+        await WaitForGridAsync("134", present: true);
 
         // The layout-independent pair: Ctrl+Up steps the index too.
         Assert.IsTrue(await _app.PressAsync("Ctrl+Up"));
         await _app.WaitForTextAsync("index 3 of 3");
-        await _app.WaitForTextAsync("234");
+        await WaitForGridAsync("234", present: true);
 
         Assert.IsTrue(await _app.PressAsync("-"));
         await _app.WaitForTextAsync("index 2 of 3");
-        await _app.WaitForTextGoneAsync("234");
+        await WaitForGridAsync("234", present: false);
 
         // The viewer is still the modal, and Esc closes it.
         Assert.IsTrue(_app.Driver.FocusedModal is iConsole.Dialogs.HdfViewerDialog);
