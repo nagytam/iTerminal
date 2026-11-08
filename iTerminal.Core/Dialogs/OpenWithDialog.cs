@@ -104,7 +104,7 @@ public class OpenWithDialog : Dialog
 
     public override async Task OnInitializeAsync()
     {
-        Title = (Kind == FileAssociationKind.Edit ? "Edit " : "Open ") + FileName + " with";
+        Title = string.Format(Kind == FileAssociationKind.Edit ? iConsole.Localization.UiText.Get("OpenWith.TitleEdit", "Edit {0} with") : iConsole.Localization.UiText.Get("OpenWith.TitleOpen", "Open {0} with"), FileName);
         await base.OnInitializeAsync();
     }
 

@@ -123,7 +123,7 @@ public class FileViewerDialog : Dialog
 
     /// <summary>The keys the text view adds; the wrap key says whether wrapping is on.</summary>
     private string TextHints() =>
-        $"  F2:Wrap{(_textViewerControl.WrapLines ? "[on]" : string.Empty)}  F4:Hex  F5:Line  F8:Codepage";
+        string.Format(iConsole.Localization.UiText.Get("Viewer.TitleHints", "  F2:Wrap{0}  F4:Hex  F5:Line  F8:Codepage"), _textViewerControl.WrapLines ? "[on]" : string.Empty);
 
     public override void OnInitializeActionButtons()
     {

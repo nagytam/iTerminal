@@ -43,7 +43,7 @@ public class ScreenManagerDialog : Dialog
 
     private ListItem<IScreen> TransformItem(IScreen screen, CancellationToken cancellationToken)
     {
-        var current = ReferenceEquals(screen, GetRootControl()) ? "  (current)" : string.Empty;
+        var current = ReferenceEquals(screen, GetRootControl()) ? iConsole.Localization.UiText.Get("ScreenManager.Current", "  (current)") : string.Empty;
         return new ListItem<IScreen>(screen)
         {
             Value = " " + DisplayName(screen.Name) + current,

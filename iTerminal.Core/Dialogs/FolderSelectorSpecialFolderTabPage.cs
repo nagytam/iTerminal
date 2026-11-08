@@ -61,7 +61,7 @@ public class FolderSelectorSpecialFoldersTabPage : FolderSelectorTabPage
     public FolderSelectorSpecialFoldersTabPage(
         IContentModelService contentModelService,
         IThemeService themeService)
-        : base("3-Places", ConsoleKey.D3, themeService)
+        : base(iConsole.Localization.UiText.Get("FolderSelector.Tab3", "3-Places"), ConsoleKey.D3, themeService)
     {
         _specialFolders.CollectionChanged += OnCollectionChanged;
         var listModel = new ListBoxModel<string>(_specialFolders)

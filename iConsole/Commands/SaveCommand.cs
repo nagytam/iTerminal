@@ -13,7 +13,7 @@ public class SaveCommand(
 {
     private readonly ITextModel _textModel = textModel;
     private readonly IContentModelService _contentModelService = contentModelService;
-    public override string Title => "F2-Save";
+    public override string Title => iConsole.Localization.UiText.Get("Key.Save", "F2-Save");
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F2, false, false, false);
 

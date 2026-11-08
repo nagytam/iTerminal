@@ -4,6 +4,7 @@ using iConsole.Controls.Editors;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Layouts;
+using iConsole.Localization;
 using iConsole.Model;
 using iConsole.Services;
 
@@ -84,16 +85,23 @@ public class EditorStatusBar : StatusBar
         base.OnInitializeLayout();
         ViewSize = new Size(width, 1);
 
-        _saveButton.ViewSize = new Size(9, 1);
-        _findNextButton.ViewSize = new Size(13, 1);
-        _findPreviousButton.ViewSize = new Size(18, 1);
-        _toggleReadOnlyButton.ViewSize = new Size(13, 1);
-        _searchTextDialogButton.ViewSize = new Size(11, 1);
-        _replaceButton?.ViewSize = new Size(13, 1);
+        // Wide enough for the caption in the chosen language ("[F2-Speichern]"), never narrower than the English one needed.
+        static Size ForTitle(Button button, int minimum) => new(Math.Max(minimum, button.Title.Length + 2), 1);
+        static Size ForWords(int minimum, params string[] words) => new(Math.Max(minimum, words.Max(w => w.Length) + 1), 1);
+        _saveButton.ViewSize = ForTitle(_saveButton, 9);
+        _findNextButton.ViewSize = ForTitle(_findNextButton, 13);
+        _findPreviousButton.ViewSize = ForTitle(_findPreviousButton, 18);
+        _toggleReadOnlyButton.ViewSize = ForTitle(_toggleReadOnlyButton, 13);
+        _searchTextDialogButton.ViewSize = ForTitle(_searchTextDialogButton, 11);
+        if (_replaceButton is not null)
+        {
+            _replaceButton.ViewSize = ForTitle(_replaceButton, 13);
+        }
+
         _encodingIndicator.ViewSize = new Size(10, 1);
         _cursorPositionIndicator.ViewSize = new Size(20, 1);
-        _readOnlyIndicator.ViewSize = new Size(10, 1);
-        _dirtyIndicator.ViewSize = new Size(10, 1);
+        _readOnlyIndicator.ViewSize = ForWords(10, UiText.Get("Status.ReadOnly", "Read-Only"), UiText.Get("Status.Writable", "Writable"));
+        _dirtyIndicator.ViewSize = ForWords(10, UiText.Get("Status.Changed", "Changed"), UiText.Get("Status.Unchanged", "Unchanged"));
         _searchResultsIndicator.ViewSize = new Size(20, 1);
 
         List<Control> order =
