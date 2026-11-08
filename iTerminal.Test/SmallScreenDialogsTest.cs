@@ -454,4 +454,18 @@ public class SmallScreenDialogsTest
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Priority")), "the heading");
         Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Priority") && l.Contains("Subject")), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Ctrl+Shift+F1", "No torrents yet")]
+    [DataRow("Ctrl+Shift+F2", "No workspaces yet")]
+    public async Task TheEmptyListHelpOn50Columns_EndsOnAnEllipsis(string chord, string text)
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(text)), "the empty-list help");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains(text) && l.Contains('…')), narrow.Screen.Dump());
+    }
 }

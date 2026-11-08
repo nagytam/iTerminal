@@ -1,4 +1,4 @@
-using iConsole.Localization;
+﻿using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
 using iConsole.Data;
@@ -734,7 +734,7 @@ public class WorkspaceManagerDialog : Dialog
             return;
         }
 
-        var clipped = text.Length > width ? text[..width] : text.PadRight(width);
+        var clipped = text.Length > width ? (width > 1 ? text[..(width - 1)] + "…" : text[..width]) : text.PadRight(width);
         buffer.Write(
             ZOrder,
             new Position(AbsolutePosition.X + 1 + x, AbsolutePosition.Y + 1 + y),
