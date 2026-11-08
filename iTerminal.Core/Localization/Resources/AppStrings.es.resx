@@ -7729,4 +7729,103 @@
   <data name="Music.StateStopped" xml:space="preserve">
     <value>detenido</value>
   </data>
+  <data name="Music.Cat.Albums" xml:space="preserve">
+    <value>{0} álbumes</value>
+  </data>
+  <data name="Music.Cat.Artist" xml:space="preserve">
+    <value>artista</value>
+  </data>
+  <data name="Music.Cat.Album" xml:space="preserve">
+    <value>álbum</value>
+  </data>
+  <data name="Music.Cat.NothingToAdd" xml:space="preserve">
+    <value>Nada que añadir desde esa fila</value>
+  </data>
+  <data name="Music.Cat.Quoted" xml:space="preserve">
+    <value>«{0}»</value>
+  </data>
+  <data name="Music.Cat.AlreadyIn" xml:space="preserve">
+    <value>{0} ya está en la lista de reproducción</value>
+  </data>
+  <data name="Music.Cat.RowOne" xml:space="preserve">
+    <value>1 fila marcada</value>
+  </data>
+  <data name="Music.Cat.RowMany" xml:space="preserve">
+    <value>{0} filas marcadas</value>
+  </data>
+  <data name="Music.Cat.AllIn" xml:space="preserve">
+    <value>Todo en {0} ya está en la lista de reproducción</value>
+  </data>
+  <data name="Music.Cat.AlreadyIndexing" xml:space="preserve">
+    <value>Ya se está indexando</value>
+  </data>
+  <data name="Music.Cat.Indexing" xml:space="preserve">
+    <value>Indexando {0}…</value>
+  </data>
+  <data name="Music.Cat.IndexedOne" xml:space="preserve">
+    <value>1 pista indexada</value>
+  </data>
+  <data name="Music.Cat.IndexedMany" xml:space="preserve">
+    <value>{0} pistas indexadas</value>
+  </data>
+  <data name="Music.Cat.IndexFailed" xml:space="preserve">
+    <value>Falló la indexación: {0}</value>
+  </data>
+  <data name="Music.Cat.HeaderSearch" xml:space="preserve">
+    <value>Búsqueda en el catálogo «{0}» ({1} resultados)</value>
+  </data>
+  <data name="Music.Cat.Header" xml:space="preserve">
+    <value>Catálogo {0}</value>
+  </data>
+  <data name="Music.Cat.TrackCount" xml:space="preserve">
+    <value>{0} pistas</value>
+  </data>
+  <data name="Music.Cat.Hits" xml:space="preserve">
+    <value>{0} resultados</value>
+  </data>
+  <data name="Music.Cat.EscSearch" xml:space="preserve">
+    <value>Esc borra la búsqueda</value>
+  </data>
+  <data name="Music.Cat.Entries" xml:space="preserve">
+    <value>{0} entradas</value>
+  </data>
+  <data name="Music.Cat.AltSearch" xml:space="preserve">
+    <value>Alt+&lt;texto&gt; busca en la biblioteca</value>
+  </data>
+  <data name="Music.Cat.Marked" xml:space="preserve">
+    <value>{0} marcadas</value>
+  </data>
+  <data name="Music.Cat.F5Adds" xml:space="preserve">
+    <value>F5 las añade a la lista de reproducción</value>
+  </data>
+  <data name="Music.Cat.InsMarks" xml:space="preserve">
+    <value>Ins marca una fila</value>
+  </data>
+  <data name="Music.Cat.CtrlR" xml:space="preserve">
+    <value>Ctrl+R vuelve a indexar</value>
+  </data>
+  <data name="Music.Cat.IndexedAt" xml:space="preserve">
+    <value>indexado a las {0}</value>
+  </data>
+  <data name="Music.Cat.NeverIndexed" xml:space="preserve">
+    <value>nunca indexado</value>
+  </data>
+  <data name="Music.Cat.AddedOne" xml:space="preserve">
+    <value>1 pista añadida desde {0}</value>
+  </data>
+  <data name="Music.Cat.AddedMany" xml:space="preserve">
+    <value>{0} pistas añadidas desde {1}</value>
+  </data>
+  <data name="Music.Prog.DiscoveringShort" xml:space="preserve">
+    <value>buscando… {0} archivos de audio encontrados</value>
+  </data>
+  <data name="Music.Prog.IndexingShort" xml:space="preserve">
+    <value>{0} archivos de audio encontrados, indexando {1}/{0}{2}</value>
+  </data>
+  <data name="Music.Prog.Discovering" xml:space="preserve">
+    <value>Buscando… {0} archivos de audio</value>
+  </data>
+  <data name="Music.Prog.Indexing" xml:space="preserve">
+    <value>Indexando {0}/{1}{2}</value>
+  </data>
 </root>

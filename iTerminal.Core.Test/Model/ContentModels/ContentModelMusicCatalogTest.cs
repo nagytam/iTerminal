@@ -55,6 +55,24 @@ public class ContentModelMusicCatalogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public void TheHeaderAndFooterFollowTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(ContentModelMusicCatalog).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        var (model, _, player) = Create();
+        using (player)
+        {
+            StringAssert.Contains(model.GetHeader(80), "4 Titel");
+            StringAssert.Contains(model.GetFooter(), "Einfg markiert eine Zeile");
+            StringAssert.Contains(model.GetFooter(), "Alt+<Text> durchsucht die Bibliothek");
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void Root_ListsOneFolderPerArtistAndNothingElse()
     {
         var (model, _, player) = Create();
