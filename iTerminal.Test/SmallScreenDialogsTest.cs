@@ -754,4 +754,22 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("gespeichert")) && s.Lines.Any(l => l.Contains("Ziel")), "the German summary and column heading");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Ctrl+W", "Kontoname")]
+    [DataRow("Ctrl+Shift+F4", "Ausgangssprache")]
+    public async Task TheMailFormAndTheTranslatorNoteInGerman_AreGerman(string chord, string expected)
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync(chord);
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
+    }
 }

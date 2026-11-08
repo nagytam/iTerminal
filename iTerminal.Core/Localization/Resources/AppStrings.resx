@@ -5761,4 +5761,64 @@
   <data name="Remote.ListHeader" xml:space="preserve">
     <value>  Type  Name                          Destination</value>
   </data>
+  <data name="Mail.FieldAccount" xml:space="preserve">
+    <value>Account name</value>
+  </data>
+  <data name="Mail.FieldIncoming" xml:space="preserve">
+    <value>Incoming (POP3)</value>
+  </data>
+  <data name="Mail.FieldPopPort" xml:space="preserve">
+    <value>POP3 port</value>
+  </data>
+  <data name="Mail.FieldPopSsl" xml:space="preserve">
+    <value>POP3 SSL</value>
+  </data>
+  <data name="Mail.FieldOutgoing" xml:space="preserve">
+    <value>Outgoing (SMTP)</value>
+  </data>
+  <data name="Mail.FieldSmtpPort" xml:space="preserve">
+    <value>SMTP port</value>
+  </data>
+  <data name="Mail.FieldStartTls" xml:space="preserve">
+    <value>SMTP STARTTLS</value>
+  </data>
+  <data name="Mail.FieldUser" xml:space="preserve">
+    <value>User name</value>
+  </data>
+  <data name="Mail.FieldPassword" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Mail.FieldFrom" xml:space="preserve">
+    <value>From address</value>
+  </data>
+  <data name="Mail.FieldLdap" xml:space="preserve">
+    <value>Address book (LDAP)</value>
+  </data>
+  <data name="Mail.FieldLdapPort" xml:space="preserve">
+    <value>LDAP port</value>
+  </data>
+  <data name="Mail.FieldLdapSsl" xml:space="preserve">
+    <value>LDAP SSL</value>
+  </data>
+  <data name="Mail.FieldLdapBase" xml:space="preserve">
+    <value>LDAP base DN</value>
+  </data>
+  <data name="Mail.FieldLdapBind" xml:space="preserve">
+    <value>LDAP bind DN</value>
+  </data>
+  <data name="Mail.ToggleOn" xml:space="preserve">
+    <value>[x] yes</value>
+  </data>
+  <data name="Mail.ToggleOff" xml:space="preserve">
+    <value>[ ] no</value>
+  </data>
+  <data name="Translator.DetectNote" xml:space="preserve">
+    <value> The source language is detected when you translate.</value>
+  </data>
+  <data name="Translator.LooksLike" xml:space="preserve">
+    <value> Looks like {0}.</value>
+  </data>
+  <data name="Translator.LooksLikeGuess" xml:space="preserve">
+    <value> Looks like {0} (a guess).</value>
+  </data>
 </root>
