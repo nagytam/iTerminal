@@ -544,4 +544,18 @@ public class SmallScreenDialogsTest
         string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
         Assert.IsTrue(last.Trim().StartsWith('╚') && !last.Trim().Contains(' '), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheSynchroniseOptionsOn60Columns_ContinueOnASecondLineInsteadOfBeingCut()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Shift+F1");
+        await narrow.TypeAsync("Synchronise");
+        await narrow.PressAsync("Enter");
+
+        await narrow.WaitForTextAsync("Synchronise folders");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Delete extras")), "the delete-extras option");
+    }
 }
