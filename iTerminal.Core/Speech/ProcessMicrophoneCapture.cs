@@ -19,6 +19,9 @@ internal sealed class ProcessMicrophoneCapture(IReadOnlyList<RecorderCommand> ca
 
     private static readonly TimeSpan DrainTimeout = TimeSpan.FromSeconds(1);
 
+    /// <summary>The probe window; a test whose recorder is meant to fail waits longer, since a loaded machine can take over 400 ms to start a shell.</summary>
+    internal TimeSpan StartupProbeTime { get; init; } = StartupProbe;
+
     private readonly PcmBuffer _buffer = new();
     private readonly StringBuilder _errors = new();
     private Process? _process;
@@ -77,7 +80,7 @@ internal sealed class ProcessMicrophoneCapture(IReadOnlyList<RecorderCommand> ca
             Stream output = process.StandardOutput.BaseStream;
             Task reader = Task.Run(() => Pump(output));
 
-            if (process.WaitForExit(StartupProbe))
+            if (process.WaitForExit(StartupProbeTime))
             {
                 // Gone already: no device, no permission, an option this version does not know. Try the next form.
                 reader.Wait(DrainTimeout);

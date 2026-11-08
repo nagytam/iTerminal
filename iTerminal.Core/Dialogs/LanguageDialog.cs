@@ -18,13 +18,15 @@ namespace iTerminal.Core.Dialogs;
 public class LanguageDialog : Dialog
 {
     private readonly ILocalizer _localizer;
+    private readonly INotificationService? _notifications;
     private readonly InfoLines _lines;
     private int _cursor;
 
-    public LanguageDialog(ILocalizer localizer, IThemeService themeService)
+    public LanguageDialog(ILocalizer localizer, IThemeService themeService, INotificationService? notifications = null)
         : base(nameof(LanguageDialog), themeService)
     {
         _localizer = localizer;
+        _notifications = notifications;
         Title = localizer.Get("Language.Title");
         _lines = new InfoLines(themeService);
         AddControl(_lines);
@@ -137,7 +139,14 @@ public class LanguageDialog : Dialog
     /// <summary>Switches the interface to the language under the cursor, which saves it, and closes.</summary>
     public void Apply()
     {
+        var changed = !string.Equals(_localizer.LanguageCode, Selected.Code, StringComparison.OrdinalIgnoreCase);
         _localizer.SetLanguage(Selected.Code);
+        if (changed)
+        {
+            // The menus and the key bar re-read at once; a dialog built at start-up keeps the words it was built with.
+            _notifications?.Notify(_localizer.Get("Language.Title"), _localizer.Get("Language.RestartNote"));
+        }
+
         Close();
     }
 

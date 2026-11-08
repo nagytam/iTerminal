@@ -5443,4 +5443,7 @@
   <data name="Workspaces.HintList" xml:space="preserve">
     <value>Enter vált  1-9 ugrik  S ment  U frissít  R átnevez  D töröl  Esc bezár</value>
   </data>
+  <data name="Language.RestartNote" xml:space="preserve">
+    <value>A menük és a billentyűsor azonnal váltanak. Egyes párbeszédablakok nyelve újraindítás után változik.</value>
+  </data>
 </root>

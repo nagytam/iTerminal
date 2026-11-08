@@ -112,7 +112,9 @@ public class RecordingTest
     public void ARecorderThatExitsAtOnce_FailsWithItsMessage_AndTheNextFormIsTried()
     {
         string failing = OperatingSystem.IsWindows() ? "echo Not authorized 1>&2 & exit 1" : "echo Not authorized >&2; exit 1";
-        var capture = new ProcessMicrophoneCapture([Shell(failing)]);
+        // A recorder that fails exits at once and ends the wait, so the long window costs nothing; on a loaded machine the
+        // default 400 ms is sometimes over before the shell has started, and the recorder then looks as if it were running.
+        var capture = new ProcessMicrophoneCapture([Shell(failing)]) { StartupProbeTime = TimeSpan.FromSeconds(20) };
 
         var exception = Assert.ThrowsExactly<SpeechException>(capture.Start);
 

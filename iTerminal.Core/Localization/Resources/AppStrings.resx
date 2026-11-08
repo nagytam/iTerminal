@@ -5584,4 +5584,7 @@
   <data name="Workspaces.HintList" xml:space="preserve">
     <value>Enter switch  1-9 jump  S save  U update  R rename  D delete  Esc close</value>
   </data>
+  <data name="Language.RestartNote" xml:space="preserve">
+    <value>Menus and the key bar changed at once. Some dialogs change language after a restart.</value>
+  </data>
 </root>
