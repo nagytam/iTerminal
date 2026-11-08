@@ -633,4 +633,21 @@ public class SmallScreenDialogsTest
         string last = narrow.Screen.Lines[narrow.Screen.Height - 1];
         Assert.IsTrue(last.Trim().StartsWith('╚') && !last.Trim().Contains(' '), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheStreamsHintOn60Columns_EndsOnAWholeHint()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+        await narrow.SelectEntryAsync("readme.txt");
+
+        await narrow.PressAsync("Shift+F1");
+        await narrow.TypeAsync("Streams and Attributes");
+        await narrow.PressAsync("Enter");
+
+        await narrow.WaitForTextAsync("Streams and attributes");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("choose")), "the hint line");
+        string hint = narrow.Screen.Lines.First(l => l.Contains("choose"));
+        Assert.IsTrue(hint.Contains("Esc close") || !hint.Contains("Esc"), narrow.Screen.Dump());
+    }
 }
