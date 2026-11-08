@@ -229,7 +229,7 @@ public class CompressDialog : FormDialog
         Password = string.Empty;
         PasswordConfirmation = string.Empty;
 
-        Title = SourceUrls.Count == 1 ? $"Compress {FocusedEntry.NameOf(SourceUrls[0])}" : $"Compress {SourceUrls.Count} items";
+        Title = SourceUrls.Count == 1 ? string.Format(UiText.Get("Compress.TitleOne", "Compress {0}"), FocusedEntry.NameOf(SourceUrls[0])) : string.Format(UiText.Get("Compress.TitleMany", "Compress {0} items"), SourceUrls.Count);
         _labelSource.Text = iConsole.Localization.UiText.Get("Label.Source", "Source") + ": " + (SourceUrls.Count == 0 ? string.Empty : TransferDialog.DescribeSources(SourceUrls));
 
         var format = Format ?? ArchiveFormat.Zip;

@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Display;
@@ -132,7 +133,7 @@ public class ItemInformation : iConsole.Controls.Control
             _lastFocusedInformationUrl = null;
             _taskManager.CancelTask(typeof(FileInformationRefreshTask));
             var parentName = Path.GetFileName(focusedEntry!.Url.FullName.TrimEnd('\\', '/'));
-            Text1 = string.IsNullOrEmpty(parentName) ? "Up to the parent folder" : $"Up to: {parentName}";
+            Text1 = string.IsNullOrEmpty(parentName) ? UiText.Get("Info.UpParent", "Up to the parent folder") : string.Format(UiText.Get("Info.UpTo", "Up to: {0}"), parentName);
             Text2 = string.Empty;
         }
         else if (focusedEntry != null)

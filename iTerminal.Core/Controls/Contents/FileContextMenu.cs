@@ -61,39 +61,39 @@ public static class FileContextMenu
             foreach (var program in associations.Associations.GetFor(name, FileAssociationKind.Open).Take(MaxPrograms))
             {
                 var chosen = program;
-                items.Add(($"Open with {chosen.Name}", string.Empty, () => associations.Start(chosen, path)));
+                items.Add((string.Format(UiText.Get("Ctx.OpenWith", "Open with {0}"), chosen.Name), string.Empty, () => associations.Start(chosen, path)));
             }
 
             foreach (var program in associations.Associations.GetFor(name, FileAssociationKind.Edit).Take(MaxPrograms))
             {
                 var chosen = program;
-                items.Add(($"Edit with {chosen.Name}", string.Empty, () => associations.Start(chosen, path)));
+                items.Add((string.Format(UiText.Get("Ctx.EditWith", "Edit with {0}"), chosen.Name), string.Empty, () => associations.Start(chosen, path)));
             }
         }
 
         // In the order a person scans a menu: look at it, change it, move it, pack it, know about it.
-        AddCommands<ViewFileDialogCommand>(items, snapshot, "View");
-        AddCommands<EditTextFileDialogCommand>(items, snapshot, "Edit");
+        AddCommands<ViewFileDialogCommand>(items, snapshot, UiText.Get("Ctx.View", "View"));
+        AddCommands<EditTextFileDialogCommand>(items, snapshot, UiText.Get("Ctx.Edit", "Edit"));
         AddCommands<OpenWithDialogCommand>(items, snapshot, null);
-        AddCommands<DiffFilesDialogCommand>(items, snapshot, "Compare files");
-        AddCommands<CopyDialogCommand>(items, snapshot, "Copy");
-        AddCommands<MoveDialogCommand>(items, snapshot, "Move");
-        AddCommands<DeleteDialogCommand>(items, snapshot, "Delete");
-        AddCommands<CompressDialogCommand>(items, snapshot, "Compress");
-        AddCommands<ExtractDialogCommand>(items, snapshot, "Extract");
-        AddCommands<CreateLinkDialogCommand>(items, snapshot, "Create link");
-        AddCommands<EditLinkDialogCommand>(items, snapshot, "Edit link");
-        AddCommands<ChecksumDialogCommand>(items, snapshot, "Checksums");
-        AddCommands<HashManifestDialogCommand>(items, snapshot, "Hash manifest");
-        AddCommands<SignatureDialogCommand>(items, snapshot, "Signatures");
+        AddCommands<DiffFilesDialogCommand>(items, snapshot, UiText.Get("Ctx.CompareFiles", "Compare files"));
+        AddCommands<CopyDialogCommand>(items, snapshot, UiText.Get("Ctx.Copy", "Copy"));
+        AddCommands<MoveDialogCommand>(items, snapshot, UiText.Get("Ctx.Move", "Move"));
+        AddCommands<DeleteDialogCommand>(items, snapshot, UiText.Get("Ctx.Delete", "Delete"));
+        AddCommands<CompressDialogCommand>(items, snapshot, UiText.Get("Ctx.Compress", "Compress"));
+        AddCommands<ExtractDialogCommand>(items, snapshot, UiText.Get("Ctx.Extract", "Extract"));
+        AddCommands<CreateLinkDialogCommand>(items, snapshot, UiText.Get("Ctx.CreateLink", "Create link"));
+        AddCommands<EditLinkDialogCommand>(items, snapshot, UiText.Get("Ctx.EditLink", "Edit link"));
+        AddCommands<ChecksumDialogCommand>(items, snapshot, UiText.Get("Ctx.Checksums", "Checksums"));
+        AddCommands<HashManifestDialogCommand>(items, snapshot, UiText.Get("Ctx.HashManifest", "Hash manifest"));
+        AddCommands<SignatureDialogCommand>(items, snapshot, UiText.Get("Ctx.Signatures", "Signatures"));
         AddPrintCommand(items, snapshot);
-        AddCommands<FileEncryptionDialogCommand>(items, snapshot, "Encrypt / decrypt");
-        AddCommands<SecureWipeDialogCommand>(items, snapshot, "Secure wipe");
-        AddCommands<StreamsDialogCommand>(items, snapshot, "Streams and attributes");
-        AddCommands<ScanWithDefenderCommand>(items, snapshot, "Scan with Microsoft Defender");
+        AddCommands<FileEncryptionDialogCommand>(items, snapshot, UiText.Get("Ctx.EncryptDecrypt", "Encrypt / decrypt"));
+        AddCommands<SecureWipeDialogCommand>(items, snapshot, UiText.Get("Ctx.SecureWipe", "Secure wipe"));
+        AddCommands<StreamsDialogCommand>(items, snapshot, UiText.Get("Ctx.StreamsAndAttributes", "Streams and attributes"));
+        AddCommands<ScanWithDefenderCommand>(items, snapshot, UiText.Get("Ctx.ScanWithMicrosoftDefender", "Scan with Microsoft Defender"));
         AddCommands<GitPullRebaseCommand>(items, snapshot, null);
         AddCommands<GitSyncCommand>(items, snapshot, null);
-        AddCommands<PropertiesDialogCommand>(items, snapshot, "Properties");
+        AddCommands<PropertiesDialogCommand>(items, snapshot, UiText.Get("Ctx.Properties", "Properties"));
 
         // A panel's commands are initialised more than once as its model changes, so the same
         // command can be in the list several times: one row each is enough.

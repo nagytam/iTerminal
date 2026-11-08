@@ -7213,4 +7213,88 @@
   <data name="Access.HintOwner" xml:space="preserve">
     <value>Tab mező  Enter mentés  Esc vissza</value>
   </data>
+  <data name="Ctx.View" xml:space="preserve">
+    <value>Megtekintés</value>
+  </data>
+  <data name="Ctx.Edit" xml:space="preserve">
+    <value>Szerkesztés</value>
+  </data>
+  <data name="Ctx.CompareFiles" xml:space="preserve">
+    <value>Fájlok összehasonlítása</value>
+  </data>
+  <data name="Ctx.Copy" xml:space="preserve">
+    <value>Másolás</value>
+  </data>
+  <data name="Ctx.Move" xml:space="preserve">
+    <value>Áthelyezés</value>
+  </data>
+  <data name="Ctx.Delete" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
+  <data name="Ctx.Compress" xml:space="preserve">
+    <value>Tömörítés</value>
+  </data>
+  <data name="Ctx.Extract" xml:space="preserve">
+    <value>Kicsomagolás</value>
+  </data>
+  <data name="Ctx.CreateLink" xml:space="preserve">
+    <value>Hivatkozás létrehozása</value>
+  </data>
+  <data name="Ctx.EditLink" xml:space="preserve">
+    <value>Hivatkozás szerkesztése</value>
+  </data>
+  <data name="Ctx.Checksums" xml:space="preserve">
+    <value>Ellenőrzőösszegek</value>
+  </data>
+  <data name="Ctx.HashManifest" xml:space="preserve">
+    <value>Hash-jegyzék</value>
+  </data>
+  <data name="Ctx.Signatures" xml:space="preserve">
+    <value>Aláírások</value>
+  </data>
+  <data name="Ctx.EncryptDecrypt" xml:space="preserve">
+    <value>Titkosítás / visszafejtés</value>
+  </data>
+  <data name="Ctx.SecureWipe" xml:space="preserve">
+    <value>Biztonságos törlés</value>
+  </data>
+  <data name="Ctx.StreamsAndAttributes" xml:space="preserve">
+    <value>Adatfolyamok és attribútumok</value>
+  </data>
+  <data name="Ctx.ScanWithMicrosoftDefender" xml:space="preserve">
+    <value>Vizsgálat a Microsoft Defenderrel</value>
+  </data>
+  <data name="Ctx.Properties" xml:space="preserve">
+    <value>Tulajdonságok</value>
+  </data>
+  <data name="Ctx.OpenWith" xml:space="preserve">
+    <value>Megnyitás: {0}</value>
+  </data>
+  <data name="Ctx.EditWith" xml:space="preserve">
+    <value>Szerkesztés: {0}</value>
+  </data>
+  <data name="Compress.TitleOne" xml:space="preserve">
+    <value>{0} tömörítése</value>
+  </data>
+  <data name="Compress.TitleMany" xml:space="preserve">
+    <value>{0} elem tömörítése</value>
+  </data>
+  <data name="Extract.TitleOne" xml:space="preserve">
+    <value>{0} kicsomagolása</value>
+  </data>
+  <data name="Extract.TitleMany" xml:space="preserve">
+    <value>{0} archívum kicsomagolása</value>
+  </data>
+  <data name="Extract.NothingToExtract" xml:space="preserve">
+    <value>Nincs mit kicsomagolni: jelöljön meg vagy válasszon egy archívumot.</value>
+  </data>
+  <data name="Extract.TypeFolder" xml:space="preserve">
+    <value>Írja be a célmappát.</value>
+  </data>
+  <data name="Info.UpParent" xml:space="preserve">
+    <value>A szülőmappába</value>
+  </data>
+  <data name="Info.UpTo" xml:space="preserve">
+    <value>Fel ide: {0}</value>
+  </data>
 </root>
