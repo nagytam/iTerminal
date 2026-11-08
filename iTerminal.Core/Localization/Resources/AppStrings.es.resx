@@ -6910,4 +6910,181 @@
   <data name="Git.Sec.UnstagedConflicted" xml:space="preserve">
     <value>Sin preparar ({0}, {1} en conflicto)</value>
   </data>
+  <data name="Git.Help.c1" xml:space="preserve">
+    <value>MOVERSE</value>
+  </data>
+  <data name="Git.Help.r1" xml:space="preserve">
+    <value>Panel siguiente / anterior (el panel de diferencias es uno de ellos)</value>
+  </data>
+  <data name="Git.Help.r2" xml:space="preserve">
+    <value>Moverse dentro del panel activo</value>
+  </data>
+  <data name="Git.Help.r3" xml:space="preserve">
+    <value>Desplazar el panel de diferencias, desde cualquier panel</value>
+  </data>
+  <data name="Git.Help.r4" xml:space="preserve">
+    <value>Inicio / fin de las diferencias, con el panel de diferencias activo</value>
+  </data>
+  <data name="Git.Help.r5" xml:space="preserve">
+    <value>Esta ayuda</value>
+  </data>
+  <data name="Git.Help.r6" xml:space="preserve">
+    <value>La cierra y luego cierra el diálogo</value>
+  </data>
+  <data name="Git.Help.c2" xml:space="preserve">
+    <value>CUALQUIER PANEL</value>
+  </data>
+  <data name="Git.Help.r7" xml:space="preserve">
+    <value>Recargar todo desde el disco</value>
+  </data>
+  <data name="Git.Help.r8" xml:space="preserve">
+    <value>Obtener todos los remotos y limpiar</value>
+  </data>
+  <data name="Git.Help.r9" xml:space="preserve">
+    <value>Pull / Push  (una rama sin upstream se publica y se sigue)</value>
+  </data>
+  <data name="Git.Help.r10" xml:space="preserve">
+    <value>Confirmar lo preparado</value>
+  </data>
+  <data name="Git.Help.r11" xml:space="preserve">
+    <value>Enmendar el último commit con su mensaje rellenado</value>
+  </data>
+  <data name="Git.Help.r12" xml:space="preserve">
+    <value>Guardar todo en stash, incluidos los archivos sin seguimiento</value>
+  </data>
+  <data name="Git.Help.r13" xml:space="preserve">
+    <value>Nueva rama desde HEAD</value>
+  </data>
+  <data name="Git.Help.r14" xml:space="preserve">
+    <value>Abortar la fusión en curso (solo visible mientras hay una)</value>
+  </data>
+  <data name="Git.Help.c3" xml:space="preserve">
+    <value>SIN PREPARAR — el árbol de trabajo</value>
+  </data>
+  <data name="Git.Help.r15" xml:space="preserve">
+    <value>Preparar el archivo bajo el cursor</value>
+  </data>
+  <data name="Git.Help.r16" xml:space="preserve">
+    <value>Preparar todo, incluidos los archivos sin seguimiento</value>
+  </data>
+  <data name="Git.Help.r17" xml:space="preserve">
+    <value>Descartar los cambios del archivo; lo elimina si no tiene seguimiento. Pregunta antes.</value>
+  </data>
+  <data name="Git.Help.n1" xml:space="preserve">
+    <value>Los archivos en conflicto se marcan con ! y solo se ven aquí. Prepararlos los marca como resueltos.</value>
+  </data>
+  <data name="Git.Help.c4" xml:space="preserve">
+    <value>PREPARADOS — lo que contendrá el próximo commit</value>
+  </data>
+  <data name="Git.Help.r18" xml:space="preserve">
+    <value>Quitar de preparación el archivo bajo el cursor</value>
+  </data>
+  <data name="Git.Help.r19" xml:space="preserve">
+    <value>Quitar todo de preparación</value>
+  </data>
+  <data name="Git.Help.c5" xml:space="preserve">
+    <value>RAMAS</value>
+  </data>
+  <data name="Git.Help.r20" xml:space="preserve">
+    <value>Cambiar a la rama. En una rama remota, crea una local que la sigue.</value>
+  </data>
+  <data name="Git.Help.r21" xml:space="preserve">
+    <value>Fusionar en la rama actual</value>
+  </data>
+  <data name="Git.Help.r22" xml:space="preserve">
+    <value>Eliminar, fusionada o no. Pregunta antes.</value>
+  </data>
+  <data name="Git.Help.n2" xml:space="preserve">
+    <value>Las filas grises son ramas de seguimiento remoto.</value>
+  </data>
+  <data name="Git.Help.c6" xml:space="preserve">
+    <value>COMMITS</value>
+  </data>
+  <data name="Git.Help.r23" xml:space="preserve">
+    <value>Mostrar el parche completo de ese commit en el panel de diferencias</value>
+  </data>
+  <data name="Git.Help.c7" xml:space="preserve">
+    <value>STASHES</value>
+  </data>
+  <data name="Git.Help.r24" xml:space="preserve">
+    <value>Pop (aplicar y eliminar)</value>
+  </data>
+  <data name="Git.Help.r25" xml:space="preserve">
+    <value>Aplicar conservando el stash</value>
+  </data>
+  <data name="Git.Help.r26" xml:space="preserve">
+    <value>Eliminarlo. Pregunta antes.</value>
+  </data>
+  <data name="Git.Help.More" xml:space="preserve">
+    <value>más abajo (Abajo/AvPág)</value>
+  </data>
+  <data name="Git.Help.AnyKey" xml:space="preserve">
+    <value>Cualquier otra tecla cierra esta ayuda.</value>
+  </data>
+  <data name="Git.Help.Title" xml:space="preserve">
+    <value>Git — teclas</value>
+  </data>
+  <data name="Git.Detail.NoStashes" xml:space="preserve">
+    <value>(sin stashes)</value>
+  </data>
+  <data name="Git.Detail.StashHint" xml:space="preserve">
+    <value>S guarda todos los cambios en stash, incluidos los archivos sin seguimiento.</value>
+  </data>
+  <data name="Git.Detail.StashKeys" xml:space="preserve">
+    <value>Espacio/Intro pop   a aplicar   x eliminar</value>
+  </data>
+  <data name="Git.Detail.RemoteBranch" xml:space="preserve">
+    <value>rama remota {0}</value>
+  </data>
+  <data name="Git.Detail.RemoteKeys" xml:space="preserve">
+    <value>Espacio/Intro crea una rama local que la sigue.</value>
+  </data>
+  <data name="Git.Detail.Branch" xml:space="preserve">
+    <value>rama {0}</value>
+  </data>
+  <data name="Git.Detail.Current" xml:space="preserve">
+    <value>(actual)</value>
+  </data>
+  <data name="Git.Detail.NoUpstream" xml:space="preserve">
+    <value>upstream: (ninguno)</value>
+  </data>
+  <data name="Git.Detail.Upstream" xml:space="preserve">
+    <value>upstream: {0}</value>
+  </data>
+  <data name="Git.Detail.BranchKeys" xml:space="preserve">
+    <value>Espacio/Intro cambiar   m fusionar   D eliminar   n nueva</value>
+  </data>
+  <data name="Git.Detail.Commit" xml:space="preserve">
+    <value>commit {0}</value>
+  </data>
+  <data name="Git.Detail.Author" xml:space="preserve">
+    <value>Autor:  {0}</value>
+  </data>
+  <data name="Git.Detail.Date" xml:space="preserve">
+    <value>Fecha:  {0}</value>
+  </data>
+  <data name="Git.Footer.Diff" xml:space="preserve">
+    <value>Arr/Abj:desplazar  Inicio/Fin:inicio/fin   Tab:panel  r:recargar  ?:teclas  Esc:cerrar</value>
+  </data>
+  <data name="Git.Footer.Unstaged" xml:space="preserve">
+    <value>Espacio:preparar  a:todo  d:descartar  c:commit</value>
+  </data>
+  <data name="Git.Footer.Staged" xml:space="preserve">
+    <value>Espacio:quitar  a:todo  c:commit</value>
+  </data>
+  <data name="Git.Footer.Branches" xml:space="preserve">
+    <value>Espacio:cambiar  n:nueva  m:fusionar  D:eliminar</value>
+  </data>
+  <data name="Git.Footer.Commits" xml:space="preserve">
+    <value>Arr/Abj:ver parche</value>
+  </data>
+  <data name="Git.Footer.Stashes" xml:space="preserve">
+    <value>Espacio:pop  a:aplicar  x:eliminar</value>
+  </data>
+  <data name="Git.Footer.Abort" xml:space="preserve">
+    <value>A:abortar fusión</value>
+  </data>
+  <data name="Git.Footer.Common" xml:space="preserve">
+    <value>Tab:panel  p/P:pull/push  ?:teclas  Esc:cerrar</value>
+  </data>
 </root>

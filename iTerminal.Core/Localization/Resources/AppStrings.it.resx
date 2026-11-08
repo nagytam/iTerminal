@@ -6910,4 +6910,181 @@
   <data name="Git.Sec.UnstagedConflicted" xml:space="preserve">
     <value>Non in staging ({0}, {1} in conflitto)</value>
   </data>
+  <data name="Git.Help.c1" xml:space="preserve">
+    <value>SPOSTARSI</value>
+  </data>
+  <data name="Git.Help.r1" xml:space="preserve">
+    <value>Pannello successivo / precedente (anche quello delle differenze)</value>
+  </data>
+  <data name="Git.Help.r2" xml:space="preserve">
+    <value>Spostarsi nel pannello attivo</value>
+  </data>
+  <data name="Git.Help.r3" xml:space="preserve">
+    <value>Scorrere le differenze, da qualsiasi pannello</value>
+  </data>
+  <data name="Git.Help.r4" xml:space="preserve">
+    <value>Inizio / fine delle differenze, con il pannello delle differenze attivo</value>
+  </data>
+  <data name="Git.Help.r5" xml:space="preserve">
+    <value>Questa guida</value>
+  </data>
+  <data name="Git.Help.r6" xml:space="preserve">
+    <value>La chiude, poi chiude la finestra</value>
+  </data>
+  <data name="Git.Help.c2" xml:space="preserve">
+    <value>QUALSIASI PANNELLO</value>
+  </data>
+  <data name="Git.Help.r7" xml:space="preserve">
+    <value>Ricarica tutto dal disco</value>
+  </data>
+  <data name="Git.Help.r8" xml:space="preserve">
+    <value>Scarica tutti i remoti e ripulisce</value>
+  </data>
+  <data name="Git.Help.r9" xml:space="preserve">
+    <value>Pull / Push  (un branch senza upstream viene pubblicato e tracciato)</value>
+  </data>
+  <data name="Git.Help.r10" xml:space="preserve">
+    <value>Esegue il commit di ciò che è in staging</value>
+  </data>
+  <data name="Git.Help.r11" xml:space="preserve">
+    <value>Modifica l’ultimo commit, con il messaggio precompilato</value>
+  </data>
+  <data name="Git.Help.r12" xml:space="preserve">
+    <value>Mette tutto in stash, anche i file non tracciati</value>
+  </data>
+  <data name="Git.Help.r13" xml:space="preserve">
+    <value>Nuovo branch da HEAD</value>
+  </data>
+  <data name="Git.Help.r14" xml:space="preserve">
+    <value>Annulla il merge in corso (visibile solo durante un merge)</value>
+  </data>
+  <data name="Git.Help.c3" xml:space="preserve">
+    <value>NON IN STAGING — l’albero di lavoro</value>
+  </data>
+  <data name="Git.Help.r15" xml:space="preserve">
+    <value>Aggiunge allo staging il file sotto il cursore</value>
+  </data>
+  <data name="Git.Help.r16" xml:space="preserve">
+    <value>Aggiunge tutto allo staging, anche i file non tracciati</value>
+  </data>
+  <data name="Git.Help.r17" xml:space="preserve">
+    <value>Scarta le modifiche del file; lo elimina se non tracciato. Chiede prima.</value>
+  </data>
+  <data name="Git.Help.n1" xml:space="preserve">
+    <value>I file in conflitto sono segnati con ! e visibili solo qui. Metterli in staging li segna come risolti.</value>
+  </data>
+  <data name="Git.Help.c4" xml:space="preserve">
+    <value>IN STAGING — il contenuto del prossimo commit</value>
+  </data>
+  <data name="Git.Help.r18" xml:space="preserve">
+    <value>Toglie dallo staging il file sotto il cursore</value>
+  </data>
+  <data name="Git.Help.r19" xml:space="preserve">
+    <value>Toglie tutto dallo staging</value>
+  </data>
+  <data name="Git.Help.c5" xml:space="preserve">
+    <value>BRANCH</value>
+  </data>
+  <data name="Git.Help.r20" xml:space="preserve">
+    <value>Passa al branch. Su uno remoto, crea un branch locale che lo traccia.</value>
+  </data>
+  <data name="Git.Help.r21" xml:space="preserve">
+    <value>Unisce nel branch corrente</value>
+  </data>
+  <data name="Git.Help.r22" xml:space="preserve">
+    <value>Elimina, unito o no. Chiede prima.</value>
+  </data>
+  <data name="Git.Help.n2" xml:space="preserve">
+    <value>Le righe grigie sono branch di tracciamento remoto.</value>
+  </data>
+  <data name="Git.Help.c6" xml:space="preserve">
+    <value>COMMIT</value>
+  </data>
+  <data name="Git.Help.r23" xml:space="preserve">
+    <value>Mostra la patch completa di quel commit nel pannello delle differenze</value>
+  </data>
+  <data name="Git.Help.c7" xml:space="preserve">
+    <value>STASH</value>
+  </data>
+  <data name="Git.Help.r24" xml:space="preserve">
+    <value>Pop (applica e rimuove)</value>
+  </data>
+  <data name="Git.Help.r25" xml:space="preserve">
+    <value>Applica mantenendo lo stash</value>
+  </data>
+  <data name="Git.Help.r26" xml:space="preserve">
+    <value>Lo elimina. Chiede prima.</value>
+  </data>
+  <data name="Git.Help.More" xml:space="preserve">
+    <value>altro sotto (Giù/PgGiù)</value>
+  </data>
+  <data name="Git.Help.AnyKey" xml:space="preserve">
+    <value>Qualsiasi altro tasto chiude questa guida.</value>
+  </data>
+  <data name="Git.Help.Title" xml:space="preserve">
+    <value>Git — tasti</value>
+  </data>
+  <data name="Git.Detail.NoStashes" xml:space="preserve">
+    <value>(nessuno stash)</value>
+  </data>
+  <data name="Git.Detail.StashHint" xml:space="preserve">
+    <value>S mette in stash ogni modifica, anche i file non tracciati.</value>
+  </data>
+  <data name="Git.Detail.StashKeys" xml:space="preserve">
+    <value>Spazio/Invio pop   a applica   x elimina</value>
+  </data>
+  <data name="Git.Detail.RemoteBranch" xml:space="preserve">
+    <value>branch remoto {0}</value>
+  </data>
+  <data name="Git.Detail.RemoteKeys" xml:space="preserve">
+    <value>Spazio/Invio crea un branch locale che lo traccia.</value>
+  </data>
+  <data name="Git.Detail.Branch" xml:space="preserve">
+    <value>branch {0}</value>
+  </data>
+  <data name="Git.Detail.Current" xml:space="preserve">
+    <value>(corrente)</value>
+  </data>
+  <data name="Git.Detail.NoUpstream" xml:space="preserve">
+    <value>upstream: (nessuno)</value>
+  </data>
+  <data name="Git.Detail.Upstream" xml:space="preserve">
+    <value>upstream: {0}</value>
+  </data>
+  <data name="Git.Detail.BranchKeys" xml:space="preserve">
+    <value>Spazio/Invio passa   m unisci   D elimina   n nuovo</value>
+  </data>
+  <data name="Git.Detail.Commit" xml:space="preserve">
+    <value>commit {0}</value>
+  </data>
+  <data name="Git.Detail.Author" xml:space="preserve">
+    <value>Autore: {0}</value>
+  </data>
+  <data name="Git.Detail.Date" xml:space="preserve">
+    <value>Data:   {0}</value>
+  </data>
+  <data name="Git.Footer.Diff" xml:space="preserve">
+    <value>Su/Giù:scorri  Home/Fine:inizio/fine   Tab:pannello  r:aggiorna  ?:tasti  Esc:chiudi</value>
+  </data>
+  <data name="Git.Footer.Unstaged" xml:space="preserve">
+    <value>Spazio:staging  a:tutto  d:scarta  c:commit</value>
+  </data>
+  <data name="Git.Footer.Staged" xml:space="preserve">
+    <value>Spazio:rimuovi  a:tutto  c:commit</value>
+  </data>
+  <data name="Git.Footer.Branches" xml:space="preserve">
+    <value>Spazio:passa  n:nuovo  m:unisci  D:elimina</value>
+  </data>
+  <data name="Git.Footer.Commits" xml:space="preserve">
+    <value>Su/Giù:mostra patch</value>
+  </data>
+  <data name="Git.Footer.Stashes" xml:space="preserve">
+    <value>Spazio:pop  a:applica  x:elimina</value>
+  </data>
+  <data name="Git.Footer.Abort" xml:space="preserve">
+    <value>A:annulla merge</value>
+  </data>
+  <data name="Git.Footer.Common" xml:space="preserve">
+    <value>Tab:pannello  p/P:pull/push  ?:tasti  Esc:chiudi</value>
+  </data>
 </root>

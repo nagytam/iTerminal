@@ -648,13 +648,13 @@ public class GitClientDialog : SplitPaneDialog
         {
             var stash = CursorItem(_stashesListBox);
             return stash is null
-                ? ["(no stashes)", string.Empty, "S stashes every change, untracked files included."]
+                ? [UiText.Get("Git.Detail.NoStashes", "(no stashes)"), string.Empty, UiText.Get("Git.Detail.StashHint", "S stashes every change, untracked files included.")]
                 :
                 [
                     $"stash@{{{stash.Index}}}",
                     stash.Message,
                     string.Empty,
-                    "Space/Enter pop   a apply   x drop",
+                    UiText.Get("Git.Detail.StashKeys", "Space/Enter pop   a apply   x drop"),
                 ];
         }
 
@@ -669,16 +669,16 @@ public class GitClientDialog : SplitPaneDialog
             return branch.IsRemote
                 ?
                 [
-                    $"remote branch {branch.Name}",
+                    string.Format(UiText.Get("Git.Detail.RemoteBranch", "remote branch {0}"), branch.Name),
                     string.Empty,
-                    "Space/Enter creates a local branch tracking it.",
+                    UiText.Get("Git.Detail.RemoteKeys", "Space/Enter creates a local branch tracking it."),
                 ]
                 :
                 [
-                    $"branch {branch.Name}{(branch.IsCurrent ? "  (current)" : string.Empty)}",
-                    branch.Upstream is null ? "upstream: (none)" : $"upstream: {branch.Upstream}",
+                    string.Format(UiText.Get("Git.Detail.Branch", "branch {0}"), branch.Name) + (branch.IsCurrent ? "  " + UiText.Get("Git.Detail.Current", "(current)") : string.Empty),
+                    branch.Upstream is null ? UiText.Get("Git.Detail.NoUpstream", "upstream: (none)") : string.Format(UiText.Get("Git.Detail.Upstream", "upstream: {0}"), branch.Upstream),
                     string.Empty,
-                    "Space/Enter checkout   m merge   D delete   n new",
+                    UiText.Get("Git.Detail.BranchKeys", "Space/Enter checkout   m merge   D delete   n new"),
                 ];
         }
 
@@ -687,9 +687,9 @@ public class GitClientDialog : SplitPaneDialog
             ? []
             :
             [
-                $"commit {head.ShortHash}",
-                $"Author: {head.Author}",
-                $"Date:   {head.RelativeDate}",
+                string.Format(UiText.Get("Git.Detail.Commit", "commit {0}"), head.ShortHash),
+                string.Format(UiText.Get("Git.Detail.Author", "Author: {0}"), head.Author),
+                string.Format(UiText.Get("Git.Detail.Date", "Date:   {0}"), head.RelativeDate),
                 string.Empty,
                 $"    {head.Subject}",
             ];
@@ -1412,48 +1412,70 @@ public class GitClientDialog : SplitPaneDialog
     /// The key reference. The dialog binds three dozen keys that no menu bar advertises, and the
     /// footer can only ever carry the handful that apply where the cursor is standing.
     /// </summary>
-    private static readonly string[] HelpLines =
+    private string[]? _helpLines;
+    private string? _helpLanguage;
+
+    /// <summary>The help text in the chosen language; the key names stay as they are on the keyboard, the descriptions are translated.</summary>
+    private string[] HelpLines
+    {
+        get
+        {
+            string language = UiText.Current?.LanguageCode ?? string.Empty;
+            if (_helpLines is null || _helpLanguage != language)
+            {
+                _helpLines = BuildHelpLines();
+                _helpLanguage = language;
+            }
+
+            return _helpLines;
+        }
+    }
+
+    private static string Row(string keys, string key, string english) => "  " + keys.PadRight(21) + UiText.Get(key, english);
+
+    private static string[] BuildHelpLines() =>
     [
-        "MOVING AROUND",
-        "  Tab / Shift+Tab      Next / previous panel (the diff pane is one of them)",
-        "  Up / Down            Move within the focused panel",
-        "  PgUp / PgDn          Scroll the diff pane, from any panel",
-        "  Home / End           Top / bottom of the diff, with the diff pane focused",
-        "  ? or F1              This help          Esc  Close it, then close the dialog",
+        UiText.Get("Git.Help.c1", "MOVING AROUND"),
+        Row("Tab / Shift+Tab", "Git.Help.r1", "Next / previous panel (the diff pane is one of them)"),
+        Row("Up / Down", "Git.Help.r2", "Move within the focused panel"),
+        Row("PgUp / PgDn", "Git.Help.r3", "Scroll the diff pane, from any panel"),
+        Row("Home / End", "Git.Help.r4", "Top / bottom of the diff, with the diff pane focused"),
+        Row("? or F1", "Git.Help.r5", "This help"),
+        Row("Esc", "Git.Help.r6", "Close it, then close the dialog"),
         "",
-        "ANY PANEL",
-        "  r                    Reload everything from disk",
-        "  f                    Fetch all remotes and prune",
-        "  p / P                Pull / Push  (a branch with no upstream is published and tracked)",
-        "  c                    Commit what is staged",
-        "  C                    Amend the last commit, its message pre-filled",
-        "  S                    Stash everything, untracked files included",
-        "  n                    New branch from HEAD",
-        "  A                    Abort the merge in progress (shown only while one is)",
+        UiText.Get("Git.Help.c2", "ANY PANEL"),
+        Row("r", "Git.Help.r7", "Reload everything from disk"),
+        Row("f", "Git.Help.r8", "Fetch all remotes and prune"),
+        Row("p / P", "Git.Help.r9", "Pull / Push  (a branch with no upstream is published and tracked)"),
+        Row("c", "Git.Help.r10", "Commit what is staged"),
+        Row("C", "Git.Help.r11", "Amend the last commit, its message pre-filled"),
+        Row("S", "Git.Help.r12", "Stash everything, untracked files included"),
+        Row("n", "Git.Help.r13", "New branch from HEAD"),
+        Row("A", "Git.Help.r14", "Abort the merge in progress (shown only while one is)"),
         "",
-        "UNSTAGED — the working tree",
-        "  Space / Enter / s    Stage the file under the cursor",
-        "  a                    Stage everything, untracked files included",
-        "  d                    Discard the file's changes; deletes it if untracked. Asks first.",
-        "  Conflicted files are marked ! and shown here only. Staging one marks it resolved.",
+        UiText.Get("Git.Help.c3", "UNSTAGED — the working tree"),
+        Row("Space / Enter / s", "Git.Help.r15", "Stage the file under the cursor"),
+        Row("a", "Git.Help.r16", "Stage everything, untracked files included"),
+        Row("d", "Git.Help.r17", "Discard the file's changes; deletes it if untracked. Asks first."),
+        "  " + UiText.Get("Git.Help.n1", "Conflicted files are marked ! and shown here only. Staging one marks it resolved."),
         "",
-        "STAGED — what the next commit will contain",
-        "  Space / Enter / u    Unstage the file under the cursor",
-        "  a                    Unstage everything",
+        UiText.Get("Git.Help.c4", "STAGED — what the next commit will contain"),
+        Row("Space / Enter / u", "Git.Help.r18", "Unstage the file under the cursor"),
+        Row("a", "Git.Help.r19", "Unstage everything"),
         "",
-        "BRANCHES",
-        "  Space / Enter        Check out. On a remote branch, create a local one tracking it.",
-        "  m                    Merge into the current branch",
-        "  D                    Delete, merged or not. Asks first.",
-        "  Grey rows are remote-tracking branches.",
+        UiText.Get("Git.Help.c5", "BRANCHES"),
+        Row("Space / Enter", "Git.Help.r20", "Check out. On a remote branch, create a local one tracking it."),
+        Row("m", "Git.Help.r21", "Merge into the current branch"),
+        Row("D", "Git.Help.r22", "Delete, merged or not. Asks first."),
+        "  " + UiText.Get("Git.Help.n2", "Grey rows are remote-tracking branches."),
         "",
-        "COMMITS",
-        "  Up / Down            Show that commit's full patch in the diff pane",
+        UiText.Get("Git.Help.c6", "COMMITS"),
+        Row("Up / Down", "Git.Help.r23", "Show that commit's full patch in the diff pane"),
         "",
-        "STASHES",
-        "  Space / Enter        Pop (apply and drop)",
-        "  a                    Apply, keeping the stash",
-        "  x                    Drop it. Asks first.",
+        UiText.Get("Git.Help.c7", "STASHES"),
+        Row("Space / Enter", "Git.Help.r24", "Pop (apply and drop)"),
+        Row("a", "Git.Help.r25", "Apply, keeping the stash"),
+        Row("x", "Git.Help.r26", "Drop it. Asks first."),
     ];
 
     private void ShowHelp()
@@ -1531,8 +1553,8 @@ public class GitClientDialog : SplitPaneDialog
             WriteLine(buffer, x, y + row, w, " " + line, isCaption ? Color.Cyan : colorScheme.Foreground, colorScheme.Background);
         }
 
-        var more = _helpScroll + rows < HelpLines.Length ? "  more below (Down/PgDn)" : string.Empty;
-        WriteLine(buffer, x, y + rows, w, $" Any other key closes this help.{more}", Color.DarkGray, colorScheme.Background);
+        var more = _helpScroll + rows < HelpLines.Length ? "  " + UiText.Get("Git.Help.More", "more below (Down/PgDn)") : string.Empty;
+        WriteLine(buffer, x, y + rows, w, " " + UiText.Get("Git.Help.AnyKey", "Any other key closes this help.") + more, Color.DarkGray, colorScheme.Background);
     }
 
     #endregion
@@ -1560,7 +1582,7 @@ public class GitClientDialog : SplitPaneDialog
 
         if (_helpVisible)
         {
-            DrawSectionHeader(buffer, ix, iy, iw, "Git — keys", true, colorScheme);
+            DrawSectionHeader(buffer, ix, iy, iw, UiText.Get("Git.Help.Title", "Git — keys"), true, colorScheme);
             DrawHelp(buffer, ix, iy + 1, iw, ih - 1, colorScheme);
             return;
         }
@@ -1727,20 +1749,20 @@ public class GitClientDialog : SplitPaneDialog
     {
         if (_diffListBox.IsFocused)
         {
-            return "Up/Dn:scroll  Home/End:top/bottom   Tab:panel  r:refresh  ?:keys  Esc:close";
+            return UiText.Get("Git.Footer.Diff", "Up/Dn:scroll  Home/End:top/bottom   Tab:panel  r:refresh  ?:keys  Esc:close");
         }
 
         var panelKeys = _activeSection switch
         {
-            Section.Unstaged => "Space:stage  a:stage-all  d:discard  c:commit",
-            Section.Staged => "Space:unstage  a:unstage-all  c:commit",
-            Section.Branches => "Space:checkout  n:new  m:merge  D:delete",
-            Section.Commits => "Up/Dn:show patch",
-            _ => "Space:pop  a:apply  x:drop",
+            Section.Unstaged => UiText.Get("Git.Footer.Unstaged", "Space:stage  a:stage-all  d:discard  c:commit"),
+            Section.Staged => UiText.Get("Git.Footer.Staged", "Space:unstage  a:unstage-all  c:commit"),
+            Section.Branches => UiText.Get("Git.Footer.Branches", "Space:checkout  n:new  m:merge  D:delete"),
+            Section.Commits => UiText.Get("Git.Footer.Commits", "Up/Dn:show patch"),
+            _ => UiText.Get("Git.Footer.Stashes", "Space:pop  a:apply  x:drop"),
         };
 
-        var mergeHint = _mergeInProgress ? "  A:abort-merge" : string.Empty;
-        return $"{panelKeys}   Tab:panel  p/P:pull/push  ?:keys  Esc:close{mergeHint}";
+        var mergeHint = _mergeInProgress ? "  " + UiText.Get("Git.Footer.Abort", "A:abort-merge") : string.Empty;
+        return panelKeys + "   " + UiText.Get("Git.Footer.Common", "Tab:panel  p/P:pull/push  ?:keys  Esc:close") + mergeHint;
     }
 
     #endregion

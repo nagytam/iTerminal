@@ -6910,4 +6910,181 @@
   <data name="Git.Sec.UnstagedConflicted" xml:space="preserve">
     <value>Nem előkészített ({0}, {1} ütközik)</value>
   </data>
+  <data name="Git.Help.c1" xml:space="preserve">
+    <value>MOZGÁS</value>
+  </data>
+  <data name="Git.Help.r1" xml:space="preserve">
+    <value>Következő / előző panel (a különbségnézet is az)</value>
+  </data>
+  <data name="Git.Help.r2" xml:space="preserve">
+    <value>Mozgás az aktív panelen belül</value>
+  </data>
+  <data name="Git.Help.r3" xml:space="preserve">
+    <value>A különbségnézet görgetése bármelyik panelről</value>
+  </data>
+  <data name="Git.Help.r4" xml:space="preserve">
+    <value>A különbség eleje / vége, ha a különbségnézet aktív</value>
+  </data>
+  <data name="Git.Help.r5" xml:space="preserve">
+    <value>Ez a súgó</value>
+  </data>
+  <data name="Git.Help.r6" xml:space="preserve">
+    <value>Bezárja, majd a párbeszédablakot</value>
+  </data>
+  <data name="Git.Help.c2" xml:space="preserve">
+    <value>BÁRMELY PANEL</value>
+  </data>
+  <data name="Git.Help.r7" xml:space="preserve">
+    <value>Minden újratöltése a lemezről</value>
+  </data>
+  <data name="Git.Help.r8" xml:space="preserve">
+    <value>Az összes távoli lekérése és tisztítása</value>
+  </data>
+  <data name="Git.Help.r9" xml:space="preserve">
+    <value>Pull / Push  (az upstream nélküli ág közzétételre kerül és követett lesz)</value>
+  </data>
+  <data name="Git.Help.r10" xml:space="preserve">
+    <value>Az előkészített változások commitolása</value>
+  </data>
+  <data name="Git.Help.r11" xml:space="preserve">
+    <value>Az utolsó commit módosítása, az üzenet kitöltve</value>
+  </data>
+  <data name="Git.Help.r12" xml:space="preserve">
+    <value>Minden stash-elése, a nem követett fájlokat is</value>
+  </data>
+  <data name="Git.Help.r13" xml:space="preserve">
+    <value>Új ág a HEAD-ből</value>
+  </data>
+  <data name="Git.Help.r14" xml:space="preserve">
+    <value>A folyamatban lévő egyesítés megszakítása (csak egyesítés közben látszik)</value>
+  </data>
+  <data name="Git.Help.c3" xml:space="preserve">
+    <value>NEM ELŐKÉSZÍTETT — a munkakönyvtár</value>
+  </data>
+  <data name="Git.Help.r15" xml:space="preserve">
+    <value>A kurzor alatti fájl előkészítése</value>
+  </data>
+  <data name="Git.Help.r16" xml:space="preserve">
+    <value>Minden előkészítése, a nem követett fájlokat is</value>
+  </data>
+  <data name="Git.Help.r17" xml:space="preserve">
+    <value>A fájl módosításainak elvetése; követetlen fájlt töröl. Előbb rákérdez.</value>
+  </data>
+  <data name="Git.Help.n1" xml:space="preserve">
+    <value>Az ütköző fájlok !-lel jelöltek és csak itt látszanak. Előkészítésük megoldottnak jelöli őket.</value>
+  </data>
+  <data name="Git.Help.c4" xml:space="preserve">
+    <value>ELŐKÉSZÍTVE — a következő commit tartalma</value>
+  </data>
+  <data name="Git.Help.r18" xml:space="preserve">
+    <value>A kurzor alatti fájl kivétele az előkészítésből</value>
+  </data>
+  <data name="Git.Help.r19" xml:space="preserve">
+    <value>Minden kivétele az előkészítésből</value>
+  </data>
+  <data name="Git.Help.c5" xml:space="preserve">
+    <value>ÁGAK</value>
+  </data>
+  <data name="Git.Help.r20" xml:space="preserve">
+    <value>Átváltás. Távoli ágnál létrehoz egy követő helyi ágat.</value>
+  </data>
+  <data name="Git.Help.r21" xml:space="preserve">
+    <value>Egyesítés az aktuális ágba</value>
+  </data>
+  <data name="Git.Help.r22" xml:space="preserve">
+    <value>Törlés, egyesített vagy sem. Előbb rákérdez.</value>
+  </data>
+  <data name="Git.Help.n2" xml:space="preserve">
+    <value>A szürke sorok távoli követő ágak.</value>
+  </data>
+  <data name="Git.Help.c6" xml:space="preserve">
+    <value>COMMITOK</value>
+  </data>
+  <data name="Git.Help.r23" xml:space="preserve">
+    <value>A commit teljes patchének mutatása a különbségnézetben</value>
+  </data>
+  <data name="Git.Help.c7" xml:space="preserve">
+    <value>STASH-EK</value>
+  </data>
+  <data name="Git.Help.r24" xml:space="preserve">
+    <value>Pop (alkalmazás és eltávolítás)</value>
+  </data>
+  <data name="Git.Help.r25" xml:space="preserve">
+    <value>Alkalmazás, a stash megmarad</value>
+  </data>
+  <data name="Git.Help.r26" xml:space="preserve">
+    <value>Eltávolítás. Előbb rákérdez.</value>
+  </data>
+  <data name="Git.Help.More" xml:space="preserve">
+    <value>tovább lent (Le/PgDn)</value>
+  </data>
+  <data name="Git.Help.AnyKey" xml:space="preserve">
+    <value>Bármely más billentyű bezárja a súgót.</value>
+  </data>
+  <data name="Git.Help.Title" xml:space="preserve">
+    <value>Git — billentyűk</value>
+  </data>
+  <data name="Git.Detail.NoStashes" xml:space="preserve">
+    <value>(nincs stash)</value>
+  </data>
+  <data name="Git.Detail.StashHint" xml:space="preserve">
+    <value>Az S minden változást stash-be tesz, a nem követett fájlokat is.</value>
+  </data>
+  <data name="Git.Detail.StashKeys" xml:space="preserve">
+    <value>Szóköz/Enter pop   a alkalmaz   x elvet</value>
+  </data>
+  <data name="Git.Detail.RemoteBranch" xml:space="preserve">
+    <value>távoli ág: {0}</value>
+  </data>
+  <data name="Git.Detail.RemoteKeys" xml:space="preserve">
+    <value>Szóköz/Enter létrehoz egy követő helyi ágat.</value>
+  </data>
+  <data name="Git.Detail.Branch" xml:space="preserve">
+    <value>ág: {0}</value>
+  </data>
+  <data name="Git.Detail.Current" xml:space="preserve">
+    <value>(aktuális)</value>
+  </data>
+  <data name="Git.Detail.NoUpstream" xml:space="preserve">
+    <value>upstream: (nincs)</value>
+  </data>
+  <data name="Git.Detail.Upstream" xml:space="preserve">
+    <value>upstream: {0}</value>
+  </data>
+  <data name="Git.Detail.BranchKeys" xml:space="preserve">
+    <value>Szóköz/Enter váltás   m egyesít   D töröl   n új</value>
+  </data>
+  <data name="Git.Detail.Commit" xml:space="preserve">
+    <value>commit: {0}</value>
+  </data>
+  <data name="Git.Detail.Author" xml:space="preserve">
+    <value>Szerző: {0}</value>
+  </data>
+  <data name="Git.Detail.Date" xml:space="preserve">
+    <value>Dátum:  {0}</value>
+  </data>
+  <data name="Git.Footer.Diff" xml:space="preserve">
+    <value>Fel/Le:görgetés  Home/End:eleje/vége   Tab:panel  r:frissítés  ?:billentyűk  Esc:bezár</value>
+  </data>
+  <data name="Git.Footer.Unstaged" xml:space="preserve">
+    <value>Szóköz:előkészít  a:mind  d:elvet  c:commit</value>
+  </data>
+  <data name="Git.Footer.Staged" xml:space="preserve">
+    <value>Szóköz:kivesz  a:mind  c:commit</value>
+  </data>
+  <data name="Git.Footer.Branches" xml:space="preserve">
+    <value>Szóköz:váltás  n:új  m:egyesít  D:töröl</value>
+  </data>
+  <data name="Git.Footer.Commits" xml:space="preserve">
+    <value>Fel/Le:patch mutatása</value>
+  </data>
+  <data name="Git.Footer.Stashes" xml:space="preserve">
+    <value>Szóköz:pop  a:alkalmaz  x:elvet</value>
+  </data>
+  <data name="Git.Footer.Abort" xml:space="preserve">
+    <value>A:egyesítés megszakítása</value>
+  </data>
+  <data name="Git.Footer.Common" xml:space="preserve">
+    <value>Tab:panel  p/P:pull/push  ?:billentyűk  Esc:bezár</value>
+  </data>
 </root>

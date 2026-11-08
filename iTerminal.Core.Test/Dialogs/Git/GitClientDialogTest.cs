@@ -744,6 +744,28 @@ public class GitClientDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task TheFooterHintsAndTheHelpFollowTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(GitClientDialog).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        var gitService = new RecordingGitService { Status = StatusWith(unstaged: [Modified("a.cs")]) };
+        var dialog = CreateDialog(gitService);
+        await ShowAsync(dialog);
+
+        Contains(Render(dialog), "Leertaste:vormerken");
+
+        await PressAsync(dialog, Key('?', ConsoleKey.Oem2));
+
+        var help = Render(dialog);
+        Contains(help, "NAVIGATION");
+        Contains(help, "Alles vormerken");
+        Assert.IsFalse(help.Contains("MOVING AROUND", StringComparison.Ordinal), help);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task CapitalAAbortsAMergeOnlyWhileOneIsInProgress()
     {
         var gitService = new RecordingGitService();
