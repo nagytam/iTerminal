@@ -51,7 +51,7 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
         IDateTimeProviderService dateTimeProviderService,
         ISettingsService settingsService,
         IThemeService themeService)
-        : base("6-Path", ConsoleKey.D6, themeService)
+        : base(iConsole.Localization.UiText.Get("FolderSelector.Tab6", "6-Path"), ConsoleKey.D6, themeService)
     {
         var completionModel = new FolderPathCompletionModel(settingsService, folderHistoryService);
         TextBoxPath = new TextBox(beepService, dateTimeProviderService, themeService)

@@ -12,7 +12,7 @@ public class ViewerGoToOffsetCommand(
     IDateTimeProviderService dateTimeProviderService,
     IThemeService themeService) : Command
 {
-    public override string Title => "F5-GoToOffset";
+    public override string Title => iConsole.Localization.UiText.Get("Key.GoToOffset", "F5-GoToOffset");
     public override Key? Key { get; init; } = new Key(ConsoleKey.F5, false, false, false);
 
     /// <summary>Only in the hex dump; in the text view F5 is go to line.</summary>

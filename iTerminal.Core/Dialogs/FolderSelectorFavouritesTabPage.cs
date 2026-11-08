@@ -38,7 +38,7 @@ public class FolderSelectorFavouritesTabPage : FolderSelectorTabPage
         IContentModelService contentModelService,
         ISettingsService settingsService,
         IThemeService themeService)
-        : base("0-Favourites", ConsoleKey.D0, themeService)
+        : base(iConsole.Localization.UiText.Get("FolderSelector.Tab0", "0-Favourites"), ConsoleKey.D0, themeService)
     {
         _settingsService = settingsService ?? NullSettingsService.Instance;
         _favourites = [];

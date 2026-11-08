@@ -14,7 +14,7 @@ public class SearchTextDialogCommand(
     IThemeService themeService) 
     : Command
 {
-    public override string Title => "F7-Search";
+    public override string Title => iConsole.Localization.UiText.Get("Key.Search", "F7-Search");
     private SearchTextDialog? _searchTextDialog { get; set; } 
 
     public override Key? Key { get; init; } =

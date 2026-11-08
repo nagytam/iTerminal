@@ -1153,4 +1153,46 @@
   <data name="Help.MenuNavigation" xml:space="preserve">
     <value>Navegación por los menús:</value>
   </data>
+  <data name="Viewer.TitleHints" xml:space="preserve">
+    <value>  F2:Ajuste{0}  F4:Hex  F5:Línea  F8:Codificación</value>
+  </data>
+  <data name="Key.FindNext" xml:space="preserve">
+    <value>F3-Siguiente</value>
+  </data>
+  <data name="Key.FindPrev" xml:space="preserve">
+    <value>Ctrl-F3-Anterior</value>
+  </data>
+  <data name="Key.Search" xml:space="preserve">
+    <value>F7-Buscar</value>
+  </data>
+  <data name="Key.Save" xml:space="preserve">
+    <value>F2-Guardar</value>
+  </data>
+  <data name="Key.Replace" xml:space="preserve">
+    <value>^R-Reemplazar</value>
+  </data>
+  <data name="Key.Writable" xml:space="preserve">
+    <value>F6-Editable</value>
+  </data>
+  <data name="Key.ReadOnly" xml:space="preserve">
+    <value>F6-SoloLectura</value>
+  </data>
+  <data name="Key.GoToLine" xml:space="preserve">
+    <value>F5-IrALínea</value>
+  </data>
+  <data name="Key.GoToOffset" xml:space="preserve">
+    <value>F5-IrAOffset</value>
+  </data>
+  <data name="Status.Changed" xml:space="preserve">
+    <value>Modificado</value>
+  </data>
+  <data name="Status.Unchanged" xml:space="preserve">
+    <value>Sin cambios</value>
+  </data>
+  <data name="Status.ReadOnly" xml:space="preserve">
+    <value>Solo lectura</value>
+  </data>
+  <data name="Status.Writable" xml:space="preserve">
+    <value>Editable</value>
+  </data>
 </root>

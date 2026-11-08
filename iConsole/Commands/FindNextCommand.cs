@@ -6,7 +6,7 @@ namespace iConsole.Commands;
 public class FindNextCommand(ISearchModel searchModel, IScrollableModel scrollableModel, Action<long, long>? reveal = null)
     : Command
 {
-    public override string Title => "F3-FindNext";
+    public override string Title => iConsole.Localization.UiText.Get("Key.FindNext", "F3-FindNext");
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.F3, false, false, false);
 

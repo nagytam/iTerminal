@@ -12,7 +12,7 @@ public class ViewerGoToLineCommand(
     IDateTimeProviderService dateTimeProviderService,
     IThemeService themeService) : Command
 {
-    public override string Title => "F5-GoToLine";
+    public override string Title => iConsole.Localization.UiText.Get("Key.GoToLine", "F5-GoToLine");
     public override Key? Key { get; init; } = new Key(ConsoleKey.F5, false, false, false);
 
     /// <summary>Only in the text view: a hex dump has lines of bytes, not lines of text.</summary>

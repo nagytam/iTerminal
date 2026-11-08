@@ -25,11 +25,11 @@ public class ToggleReadOnlyCommand : Command
         {
             if (_readOnly.IsReadOnly)
             {
-                return "F6-Writable";
+                return iConsole.Localization.UiText.Get("Key.Writable", "F6-Writable");
             }
             else
             {
-                return "F6-ReadOnly";
+                return iConsole.Localization.UiText.Get("Key.ReadOnly", "F6-ReadOnly");
             }
         }
     }

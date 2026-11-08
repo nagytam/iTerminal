@@ -49,7 +49,7 @@ public class FolderSelectorDrivesTabPage : FolderSelectorTabPage
         DriveInfoModel driveInfoModel,
         IContentModelService contentModelService,
         IThemeService themeService)
-        : base("1-Drives", ConsoleKey.D1, themeService)
+        : base(iConsole.Localization.UiText.Get("FolderSelector.Tab1", "1-Drives"), ConsoleKey.D1, themeService)
     {
         _driveInfoModel = driveInfoModel ?? new DriveInfoModel();
         _driveInfoModel.Drives.CollectionChanged += OnCollectionChanged;

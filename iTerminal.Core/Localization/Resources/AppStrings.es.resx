@@ -6718,4 +6718,34 @@
   <data name="Documents.NoOcr" xml:space="preserve">
     <value>sin motor OCR</value>
   </data>
+  <data name="FolderSelector.Tab0" xml:space="preserve">
+    <value>0-Favoritos</value>
+  </data>
+  <data name="FolderSelector.Tab1" xml:space="preserve">
+    <value>1-Unidades</value>
+  </data>
+  <data name="FolderSelector.Tab2" xml:space="preserve">
+    <value>2-Recientes</value>
+  </data>
+  <data name="FolderSelector.Tab3" xml:space="preserve">
+    <value>3-Lugares</value>
+  </data>
+  <data name="FolderSelector.Tab4" xml:space="preserve">
+    <value>4-Árbol</value>
+  </data>
+  <data name="FolderSelector.Tab5" xml:space="preserve">
+    <value>5-SSH</value>
+  </data>
+  <data name="FolderSelector.Tab6" xml:space="preserve">
+    <value>6-Ruta</value>
+  </data>
+  <data name="ScreenManager.Current" xml:space="preserve">
+    <value>  (actual)</value>
+  </data>
+  <data name="OpenWith.TitleOpen" xml:space="preserve">
+    <value>Abrir {0} con</value>
+  </data>
+  <data name="OpenWith.TitleEdit" xml:space="preserve">
+    <value>Editar {0} con</value>
+  </data>
 </root>

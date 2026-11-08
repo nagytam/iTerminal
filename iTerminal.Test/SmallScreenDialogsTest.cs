@@ -1015,4 +1015,28 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the dialog in German");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Ctrl+F1", "0-Favoriten")]
+    [DataRow("F12", "(aktuell)")]
+    [DataRow("Shift+F3", "öffnen mit")]
+    [DataRow("F3", "F7-Suchen")]
+    [DataRow("F3", "Umbruch")]
+    [DataRow("F4", "F2-Speichern]")]
+    [DataRow("F4", "Beschreibbar")]
+    public async Task TheFolderSelectorTabsScreenManagerOpenWithViewerAndEditorInGerman_AreGerman(string key, string expected)
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync(key);
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
+    }
 }

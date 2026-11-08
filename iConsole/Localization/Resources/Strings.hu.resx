@@ -1153,4 +1153,46 @@
   <data name="Help.MenuNavigation" xml:space="preserve">
     <value>Navigáció a menükben:</value>
   </data>
+  <data name="Viewer.TitleHints" xml:space="preserve">
+    <value>  F2:Sortörés{0}  F4:Hex  F5:Sor  F8:Kódlap</value>
+  </data>
+  <data name="Key.FindNext" xml:space="preserve">
+    <value>F3-Köv.</value>
+  </data>
+  <data name="Key.FindPrev" xml:space="preserve">
+    <value>Ctrl-F3-Előző</value>
+  </data>
+  <data name="Key.Search" xml:space="preserve">
+    <value>F7-Keres</value>
+  </data>
+  <data name="Key.Save" xml:space="preserve">
+    <value>F2-Mentés</value>
+  </data>
+  <data name="Key.Replace" xml:space="preserve">
+    <value>^R-Csere</value>
+  </data>
+  <data name="Key.Writable" xml:space="preserve">
+    <value>F6-Írható</value>
+  </data>
+  <data name="Key.ReadOnly" xml:space="preserve">
+    <value>F6-Csakolv.</value>
+  </data>
+  <data name="Key.GoToLine" xml:space="preserve">
+    <value>F5-Sorra</value>
+  </data>
+  <data name="Key.GoToOffset" xml:space="preserve">
+    <value>F5-Címre</value>
+  </data>
+  <data name="Status.Changed" xml:space="preserve">
+    <value>Módosítva</value>
+  </data>
+  <data name="Status.Unchanged" xml:space="preserve">
+    <value>Változatlan</value>
+  </data>
+  <data name="Status.ReadOnly" xml:space="preserve">
+    <value>Csak olvasható</value>
+  </data>
+  <data name="Status.Writable" xml:space="preserve">
+    <value>Írható</value>
+  </data>
 </root>

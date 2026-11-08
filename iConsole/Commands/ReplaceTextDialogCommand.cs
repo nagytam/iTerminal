@@ -13,7 +13,7 @@ public class ReplaceTextDialogCommand(
     IThemeService themeService)
     : Command
 {
-    public override string Title => "^R-Replace";
+    public override string Title => iConsole.Localization.UiText.Get("Key.Replace", "^R-Replace");
 
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.R, false, false, true);

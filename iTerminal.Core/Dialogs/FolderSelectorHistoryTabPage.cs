@@ -29,7 +29,7 @@ public class FolderSelectorHistoryTabPage : FolderSelectorTabPage
         FolderHistoryService folderHistoryService,
         IContentModelService contentModelService,
         IThemeService themeService)
-        : base("2-Recent", ConsoleKey.D2, themeService)
+        : base(iConsole.Localization.UiText.Get("FolderSelector.Tab2", "2-Recent"), ConsoleKey.D2, themeService)
     {
         folderHistoryService ??= new FolderHistoryService(NullSettingsService.Instance);
 

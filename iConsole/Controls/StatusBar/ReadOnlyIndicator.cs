@@ -29,7 +29,7 @@ public class ReadOnlyIndicator : StatusBarItem
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
-        var s = new ConxelString($"{(_readOnly.IsReadOnly ? "Read-Only" : "Writable")}"
+        var s = new ConxelString(_readOnly.IsReadOnly ? iConsole.Localization.UiText.Get("Status.ReadOnly", "Read-Only") : iConsole.Localization.UiText.Get("Status.Writable", "Writable")
         , Color.Green, Color.Blue);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, s);
     }

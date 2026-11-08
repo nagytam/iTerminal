@@ -34,7 +34,7 @@ public class FolderSelectorRemoteShellTabPage : FolderSelectorTabPage
         ISettingsService settingsService,
         IFrequentExecutionGuardService frequentExecutionGuardService,
         IThemeService themeService)
-        : base("5-SSH", ConsoleKey.D5, themeService)
+        : base(iConsole.Localization.UiText.Get("FolderSelector.Tab5", "5-SSH"), ConsoleKey.D5, themeService)
     {
         _frequentExecutionGuardService = frequentExecutionGuardService;
 

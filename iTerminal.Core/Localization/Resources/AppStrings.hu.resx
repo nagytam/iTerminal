@@ -6718,4 +6718,34 @@
   <data name="Documents.NoOcr" xml:space="preserve">
     <value>nincs OCR-motor</value>
   </data>
+  <data name="FolderSelector.Tab0" xml:space="preserve">
+    <value>0-Kedvencek</value>
+  </data>
+  <data name="FolderSelector.Tab1" xml:space="preserve">
+    <value>1-Meghajtók</value>
+  </data>
+  <data name="FolderSelector.Tab2" xml:space="preserve">
+    <value>2-Legutóbbi</value>
+  </data>
+  <data name="FolderSelector.Tab3" xml:space="preserve">
+    <value>3-Helyek</value>
+  </data>
+  <data name="FolderSelector.Tab4" xml:space="preserve">
+    <value>4-Mappafa</value>
+  </data>
+  <data name="FolderSelector.Tab5" xml:space="preserve">
+    <value>5-SSH</value>
+  </data>
+  <data name="FolderSelector.Tab6" xml:space="preserve">
+    <value>6-Útvonal</value>
+  </data>
+  <data name="ScreenManager.Current" xml:space="preserve">
+    <value>  (jelenlegi)</value>
+  </data>
+  <data name="OpenWith.TitleOpen" xml:space="preserve">
+    <value>{0} megnyitása ezzel</value>
+  </data>
+  <data name="OpenWith.TitleEdit" xml:space="preserve">
+    <value>{0} szerkesztése ezzel</value>
+  </data>
 </root>

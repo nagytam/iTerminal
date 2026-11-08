@@ -30,7 +30,7 @@ public class DirtyIndicator : StatusBarItem
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
-        var s = new ConxelString($"{(_dirtyModel.IsDirty ? "Changed" : "Unchanged")}", Color.Green, Color.Blue);
+        var s = new ConxelString(_dirtyModel.IsDirty ? iConsole.Localization.UiText.Get("Status.Changed", "Changed") : iConsole.Localization.UiText.Get("Status.Unchanged", "Unchanged"), Color.Green, Color.Blue);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, s);
     }
 }
