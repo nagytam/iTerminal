@@ -650,4 +650,23 @@ public class SmallScreenDialogsTest
         string hint = narrow.Screen.Lines.First(l => l.Contains("choose"));
         Assert.IsTrue(hint.Contains("Esc close") || !hint.Contains("Esc"), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Ctrl+Shift+K", "Esc schließen")]
+    [DataRow("F7", "Esc:schließen")]
+    [DataRow("Alt+F3", "Esc:schließen")]
+    public async Task TheFootersOfContactsFindAndDocumentsInGerman_AreGerman(string chord, string expected)
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync(chord);
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the footer in German");
+    }
 }

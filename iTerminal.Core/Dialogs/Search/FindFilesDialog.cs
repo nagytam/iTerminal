@@ -455,8 +455,8 @@ public class FindFilesDialog : SplitPaneDialog
 
         var running = _searchService.IsRunning;
         var hints = running
-            ? "Enter:go to  Ctrl+P:to panel  Ctrl+X:stop  Tab:next field  Esc:close"
-            : "Enter:search / go to  Ctrl+P:results to panel  Tab:next field  Space:toggle  Esc:close";
+            ? $"{UiText.Get("Hint.Part.GoTo", "Enter:go to")}  {UiText.Get("Hint.Part.ToPanel", "Ctrl+P:to panel")}  {UiText.Get("Hint.Part.Stop", "Ctrl+X:stop")}  {UiText.Get("Hint.Part.NextField", "Tab:next field")}  {UiText.Get("Hint.Part.EscClose", "Esc:close")}"
+            : $"{UiText.Get("Hint.Part.SearchGoTo", "Enter:search / go to")}  {UiText.Get("Hint.Part.ResultsToPanel", "Ctrl+P:results to panel")}  {UiText.Get("Hint.Part.NextField", "Tab:next field")}  {UiText.Get("Hint.Part.Toggle", "Space:toggle")}  {UiText.Get("Hint.Part.EscClose", "Esc:close")}";
         WriteLine(buffer, x, y + innerHeight - 1, innerWidth, hints.FitHints(innerWidth), colorScheme.Foreground, colorScheme.Background);
     }
 
