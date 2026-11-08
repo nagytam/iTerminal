@@ -107,10 +107,11 @@ public class FolderSelectorDialog : Dialog
     /// </summary>
     public static string GetFooter(int maxWidth)
     {
-        string[] hints = ["Enter go", "Up/Down move", "Ctrl+Up/Down page", "F1 help", "Esc cancel"];
+        string go = iConsole.Localization.UiText.Get("FolderSelector.HintGo", "Enter go"), move = iConsole.Localization.UiText.Get("FolderSelector.HintMove", "Up/Down move"), page = iConsole.Localization.UiText.Get("FolderSelector.HintPage", "Ctrl+Up/Down page");
+        string[] hints = [go, move, page, iConsole.Localization.UiText.Get("FolderSelector.HintHelp", "F1 help"), iConsole.Localization.UiText.Get("FolderSelector.HintCancel", "Esc cancel")];
         List<string> kept = [.. hints];
         string Join() => " " + string.Join(" " + Border.Vertical + " ", kept) + " ";
-        foreach (string drop in new[] { "Ctrl+Up/Down page", "Up/Down move" })
+        foreach (string drop in new[] { page, move })
         {
             if (Join().Length <= maxWidth)
             {

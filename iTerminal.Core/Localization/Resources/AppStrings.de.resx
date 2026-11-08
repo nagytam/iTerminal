@@ -5749,4 +5749,43 @@
   <data name="AiModel.Unavailable" xml:space="preserve">
     <value>  Nicht verfügbar – der Server ist nicht erreichbar oder meldet sie nicht.</value>
   </data>
+  <data name="Hint.Part.Apply" xml:space="preserve">
+    <value>Enter:anwenden</value>
+  </data>
+  <data name="Signature.Footer" xml:space="preserve">
+    <value> F2:signieren gpg  F3:signieren Authenticode  F4:signieren Schlüsseldatei  F5:neu prüfen  Esc:schließen </value>
+  </data>
+  <data name="Wipe.Footer" xml:space="preserve">
+    <value> Enter:löschen  1/3/7 oder ↑↓:Durchgänge  Esc:schließen </value>
+  </data>
+  <data name="FolderSelector.HintGo" xml:space="preserve">
+    <value>Enter öffnen</value>
+  </data>
+  <data name="FolderSelector.HintMove" xml:space="preserve">
+    <value>Auf/Ab bewegen</value>
+  </data>
+  <data name="FolderSelector.HintPage" xml:space="preserve">
+    <value>Ctrl+Auf/Ab Seite</value>
+  </data>
+  <data name="FolderSelector.HintHelp" xml:space="preserve">
+    <value>F1 Hilfe</value>
+  </data>
+  <data name="FolderSelector.HintCancel" xml:space="preserve">
+    <value>Esc abbrechen</value>
+  </data>
+  <data name="Documents.NothingIndexed" xml:space="preserve">
+    <value>Noch nichts indiziert – Ctrl+R durchsucht den Dokumentenordner.</value>
+  </data>
+  <data name="Documents.Indexed" xml:space="preserve">
+    <value>{0} Dokumente indiziert, {1} mit durchsuchbarem Text.</value>
+  </data>
+  <data name="Documents.IndexedOne" xml:space="preserve">
+    <value>{0} Dokument indiziert, {1} mit durchsuchbarem Text.</value>
+  </data>
+  <data name="IPhone.NoDevices" xml:space="preserve">
+    <value> Keine iOS-Geräte gefunden. iPhone anschließen, entsperren und diesem Computer vertrauen – dann r zum erneuten Suchen.</value>
+  </data>
+  <data name="Duplicates.None" xml:space="preserve">
+    <value>Keine doppelten Dateien unter den {0:N0} geprüften Dateien.</value>
+  </data>
 </root>

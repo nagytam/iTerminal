@@ -804,4 +804,28 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Konfiguration")) && s.Lines.Any(l => l.Contains("Verfügbar")), "the German sections");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Alt+F6", "Enter:anwenden")]
+    [DataRow("Ctrl+Shift+F7", "signieren")]
+    [DataRow("Ctrl+Shift+F8", "Enter:löschen")]
+    [DataRow("Ctrl+F1", "Enter öffnen")]
+    [DataRow("Alt+F3", "Noch nichts indiziert")]
+    [DataRow("Alt+F11", "Keine iOS-Geräte")]
+    [DataRow("Ctrl+Shift+F6", "Keine doppelten Dateien")]
+    public async Task TheFootersAndMessagesOfSevenMoreDialogsInGerman_AreGerman(string chord, string expected)
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync(chord);
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
+    }
 }

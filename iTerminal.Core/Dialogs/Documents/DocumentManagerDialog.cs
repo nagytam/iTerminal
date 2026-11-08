@@ -319,9 +319,8 @@ public class DocumentManagerDialog : SplitPaneDialog
         {
             int total = _documentLibraryService.DocumentCount;
             return total == 0
-                ? "Nothing indexed yet — Ctrl+R scans the documents folder."
-                : $"{total} document{(total == 1 ? string.Empty : "s")} indexed, "
-                  + $"{_documentLibraryService.IndexedTextCount} with searchable text.";
+                ? iConsole.Localization.UiText.Get("Documents.NothingIndexed", "Nothing indexed yet — Ctrl+R scans the documents folder.")
+                : string.Format(total == 1 ? iConsole.Localization.UiText.Get("Documents.IndexedOne", "{0} document indexed, {1} with searchable text.") : iConsole.Localization.UiText.Get("Documents.Indexed", "{0} documents indexed, {1} with searchable text."), total, _documentLibraryService.IndexedTextCount);
         }
 
         return count == 0

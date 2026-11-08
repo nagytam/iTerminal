@@ -5749,4 +5749,43 @@
   <data name="AiModel.Unavailable" xml:space="preserve">
     <value>  Nem elérhető – a kiszolgáló nem érhető el, vagy nem jelenti őket.</value>
   </data>
+  <data name="Hint.Part.Apply" xml:space="preserve">
+    <value>Enter:alkalmaz</value>
+  </data>
+  <data name="Signature.Footer" xml:space="preserve">
+    <value> F2:aláír gpg  F3:aláír Authenticode  F4:aláír kulcsfájllal  F5:újraellenőriz  Esc:bezár </value>
+  </data>
+  <data name="Wipe.Footer" xml:space="preserve">
+    <value> Enter:töröl  1/3/7 vagy ↑↓:menet  Esc:bezár </value>
+  </data>
+  <data name="FolderSelector.HintGo" xml:space="preserve">
+    <value>Enter ugrás</value>
+  </data>
+  <data name="FolderSelector.HintMove" xml:space="preserve">
+    <value>Fel/Le mozgás</value>
+  </data>
+  <data name="FolderSelector.HintPage" xml:space="preserve">
+    <value>Ctrl+Fel/Le lap</value>
+  </data>
+  <data name="FolderSelector.HintHelp" xml:space="preserve">
+    <value>F1 súgó</value>
+  </data>
+  <data name="FolderSelector.HintCancel" xml:space="preserve">
+    <value>Esc mégse</value>
+  </data>
+  <data name="Documents.NothingIndexed" xml:space="preserve">
+    <value>Még nincs indexelve semmi – a Ctrl+R átvizsgálja a dokumentummappát.</value>
+  </data>
+  <data name="Documents.Indexed" xml:space="preserve">
+    <value>{0} dokumentum indexelve, {1} kereshető szöveggel.</value>
+  </data>
+  <data name="Documents.IndexedOne" xml:space="preserve">
+    <value>{0} dokumentum indexelve, {1} kereshető szöveggel.</value>
+  </data>
+  <data name="IPhone.NoDevices" xml:space="preserve">
+    <value> Nem található iOS-eszköz. Csatlakoztasson egy iPhone-t, oldja fel, és bízzon meg ebben a számítógépben – utána r újra keres.</value>
+  </data>
+  <data name="Duplicates.None" xml:space="preserve">
+    <value>Nincs ismétlődő fájl a {0:N0} vizsgált fájl között.</value>
+  </data>
 </root>

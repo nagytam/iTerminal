@@ -393,7 +393,7 @@ public class SecureWipeDialog : Dialog
         var colorScheme = ThemeService.CurrentColorScheme;
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
         var width = (int)ViewSize.Width;
-        var footer = " Enter:wipe  1/3/7 or ↑↓:passes  Esc:close ".FitHints(Math.Max(0, width - 4));
+        var footer = iConsole.Localization.UiText.Get("Wipe.Footer", " Enter:wipe  1/3/7 or ↑↓:passes  Esc:close ").FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);
