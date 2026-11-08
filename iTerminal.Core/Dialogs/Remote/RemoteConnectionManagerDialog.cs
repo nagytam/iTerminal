@@ -548,20 +548,20 @@ public class RemoteConnectionManagerDialog : Dialog
         _editSecure = source.Secure;
         _fields =
         [
-            new Field("Name", FieldKind.Text, source.Name),
-            new Field("Type", FieldKind.Protocol),
-            new Field("Host", FieldKind.Text, source.Host),
-            new Field("Port", FieldKind.Number, source.Port?.ToString() ?? string.Empty),
-            new Field("User", FieldKind.Text, source.Username),
-            new Field("Key file", FieldKind.Text, source.PrivateKeyPath ?? string.Empty),
-            new Field("Transport", FieldKind.Transport),
-            new Field("Notes", FieldKind.Text, source.Notes ?? string.Empty),
-            new Field("Password", FieldKind.Secret),
-            new Field("Folder", FieldKind.Text, source.RemotePath ?? string.Empty),
+            new Field(iConsole.Localization.UiText.Get("Remote.FieldName", "Name"), FieldKind.Text, source.Name),
+            new Field(iConsole.Localization.UiText.Get("Remote.FieldType", "Type"), FieldKind.Protocol),
+            new Field(iConsole.Localization.UiText.Get("Remote.FieldHost", "Host"), FieldKind.Text, source.Host),
+            new Field(iConsole.Localization.UiText.Get("Remote.FieldPort", "Port"), FieldKind.Number, source.Port?.ToString() ?? string.Empty),
+            new Field(iConsole.Localization.UiText.Get("Remote.FieldUser", "User"), FieldKind.Text, source.Username),
+            new Field(iConsole.Localization.UiText.Get("Remote.FieldKeyFile", "Key file"), FieldKind.Text, source.PrivateKeyPath ?? string.Empty),
+            new Field(iConsole.Localization.UiText.Get("Remote.FieldTransport", "Transport"), FieldKind.Transport),
+            new Field(iConsole.Localization.UiText.Get("Remote.FieldNotes", "Notes"), FieldKind.Text, source.Notes ?? string.Empty),
+            new Field(iConsole.Localization.UiText.Get("Remote.FieldPassword", "Password"), FieldKind.Secret),
+            new Field(iConsole.Localization.UiText.Get("Remote.FieldFolder", "Folder"), FieldKind.Text, source.RemotePath ?? string.Empty),
         ];
         _field = 0;
         _mode = Mode.Edit;
-        SetStatus(connection is null ? "A new connection. Enter or Ctrl+S saves it, Esc goes back." : "Enter or Ctrl+S saves, Esc goes back.", false);
+        SetStatus(connection is null ? iConsole.Localization.UiText.Get("Remote.EditHintNew", "A new connection. Enter or Ctrl+S saves it, Esc goes back.") : iConsole.Localization.UiText.Get("Remote.EditHint", "Enter or Ctrl+S saves, Esc goes back."), false);
         StateHasChanged();
     }
 
@@ -719,8 +719,8 @@ public class RemoteConnectionManagerDialog : Dialog
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, Ellipsize($"{_list.Count} saved  ·  shells ask for a password; FTP/WebDAV use the password manager", iw - 2), Color.Cyan, colorScheme.Background);
-        Put(buffer, 1, 1, iw - 2, "  Type  Name                          Destination", colorScheme.DisabledForeground, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, Ellipsize(string.Format(iConsole.Localization.UiText.Get("Remote.Summary", "{0} saved  ·  shells ask for a password; FTP/WebDAV use the password manager"), _list.Count), iw - 2), Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 1, iw - 2, iConsole.Localization.UiText.Get("Remote.ListHeader", "  Type  Name                          Destination"), colorScheme.DisabledForeground, colorScheme.Background);
         if (_list.Count == 0)
         {
             Put(buffer, 1, 2, iw - 2, Ellipsize(iConsole.Localization.UiText.Get("Remote.Empty", "Nothing saved yet. N adds an SSH, PowerShell, FTP or WebDAV connection."), iw - 2), colorScheme.DisabledForeground, colorScheme.Background);
@@ -748,7 +748,7 @@ public class RemoteConnectionManagerDialog : Dialog
         {
             var y = 2 + ListRows + 1;
             Put(buffer, 1, y, iw - 2, string.Format(iConsole.Localization.UiText.Get("Remote.Runs", "Runs: {0}"), DescribeCommand(selected)), colorScheme.Foreground, colorScheme.Background);
-            var last = selected.LastConnectedUtc is { } at ? $"Last connected {at.ToLocalTime():yyyy-MM-dd HH:mm}" : "Never connected";
+            var last = selected.LastConnectedUtc is { } at ? string.Format(iConsole.Localization.UiText.Get("Remote.LastConnected", "Last connected {0:yyyy-MM-dd HH:mm}"), at.ToLocalTime()) : iConsole.Localization.UiText.Get("Remote.NeverConnected", "Never connected");
             Put(buffer, 1, y + 1, iw - 2, string.IsNullOrEmpty(selected.Notes) ? last : $"{last}  ·  {selected.Notes}", colorScheme.DisabledForeground, colorScheme.Background);
         }
     }
@@ -783,14 +783,14 @@ public class RemoteConnectionManagerDialog : Dialog
             Put(buffer, 1, row, 16, field.Label, focused ? Color.Cyan : colorScheme.DisabledForeground, colorScheme.Background);
             var value = field.Kind switch
             {
-                FieldKind.Protocol => ProtocolLabel() + "  (Space changes)",
+                FieldKind.Protocol => ProtocolLabel() + iConsole.Localization.UiText.Get("Remote.SpaceChanges", "  (Space changes)"),
                 FieldKind.Transport => _editProtocol == RemoteProtocol.PowerShell
-                    ? (_editTransport == PowerShellTransport.WinRm ? "WinRM (Windows)" : "SSH (PowerShell 7)") + "  (Space changes)"
-                    : "only for PowerShell",
-                FieldKind.Secret => !fileDrive ? "only for FTP and WebDAV"
+                    ? (_editTransport == PowerShellTransport.WinRm ? "WinRM (Windows)" : "SSH (PowerShell 7)") + iConsole.Localization.UiText.Get("Remote.SpaceChanges", "  (Space changes)")
+                    : iConsole.Localization.UiText.Get("Remote.OnlyPowerShell", "only for PowerShell"),
+                FieldKind.Secret => !fileDrive ? iConsole.Localization.UiText.Get("Remote.OnlyFileDrives", "only for FTP and WebDAV")
                     : field.Text.Length > 0 ? new string('*', field.Text.Length)
-                    : _editing?.HasSavedCredential == true ? "(saved - type to replace)" : "(none: anonymous or asks nothing)",
-                FieldKind.Number when field.Text.Length == 0 => $"(default {DefaultPortFor()})",
+                    : _editing?.HasSavedCredential == true ? iConsole.Localization.UiText.Get("Remote.PasswordSaved", "(saved - type to replace)") : iConsole.Localization.UiText.Get("Remote.PasswordNone", "(none: anonymous or asks nothing)"),
+                FieldKind.Number when field.Text.Length == 0 => string.Format(iConsole.Localization.UiText.Get("Remote.DefaultPort", "(default {0})"), DefaultPortFor()),
                 _ => field.Text,
             };
             var editable = field.Kind is FieldKind.Text or FieldKind.Number or FieldKind.Secret;

@@ -722,4 +722,36 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Noch keine Arbeitsbereiche")), "the empty help in German");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCalendarInGerman_SaysTodayAndNoMeetingsInGerman()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync("Ctrl+D");
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Keine Termine")) && s.Lines.Any(l => l.Contains("Woche") && l.Contains("heute")), "the German day line and meetings header");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheRemoteConnectionsListInGerman_HasGermanHeadings()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 120, height: 30);
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync("Alt+F2");
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("gespeichert")) && s.Lines.Any(l => l.Contains("Ziel")), "the German summary and column heading");
+    }
 }

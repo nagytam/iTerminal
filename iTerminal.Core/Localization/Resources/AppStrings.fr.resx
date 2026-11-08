@@ -5521,4 +5521,103 @@
   <data name="Workspaces.SavesLine" xml:space="preserve">
     <value>Enregistre : {0} → {1}  ·  {2}</value>
   </data>
+  <data name="Calendar.Today" xml:space="preserve">
+    <value>aujourd&apos;hui</value>
+  </data>
+  <data name="Calendar.Tomorrow" xml:space="preserve">
+    <value>demain</value>
+  </data>
+  <data name="Calendar.Yesterday" xml:space="preserve">
+    <value>hier</value>
+  </data>
+  <data name="Calendar.InDays" xml:space="preserve">
+    <value>dans {0} jours</value>
+  </data>
+  <data name="Calendar.DaysAgo" xml:space="preserve">
+    <value>il y a {0} jours</value>
+  </data>
+  <data name="Calendar.WeekLine" xml:space="preserve">
+    <value>Semaine {0}  |  jour {1} sur {2}  |  {3}</value>
+  </data>
+  <data name="Calendar.NoMeetings" xml:space="preserve">
+    <value>Aucune réunion ce jour</value>
+  </data>
+  <data name="Calendar.Meetings" xml:space="preserve">
+    <value>Réunions ({0})</value>
+  </data>
+  <data name="Calendar.NewMeeting" xml:space="preserve">
+    <value>Nouvelle réunion : {0}_</value>
+  </data>
+  <data name="Calendar.ChangeMeeting" xml:space="preserve">
+    <value>Modifier la réunion : {0}_</value>
+  </data>
+  <data name="Calendar.AddHint" xml:space="preserve">
+    <value>N : ajouter une réunion, ex. 14:30 45 Standup</value>
+  </data>
+  <data name="Remote.FieldName" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Remote.FieldType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Remote.FieldHost" xml:space="preserve">
+    <value>Hôte</value>
+  </data>
+  <data name="Remote.FieldPort" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="Remote.FieldUser" xml:space="preserve">
+    <value>Utilisateur</value>
+  </data>
+  <data name="Remote.FieldKeyFile" xml:space="preserve">
+    <value>Fichier de clé</value>
+  </data>
+  <data name="Remote.FieldTransport" xml:space="preserve">
+    <value>Transport</value>
+  </data>
+  <data name="Remote.FieldNotes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Remote.FieldPassword" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="Remote.FieldFolder" xml:space="preserve">
+    <value>Dossier</value>
+  </data>
+  <data name="Remote.SpaceChanges" xml:space="preserve">
+    <value>  (Espace change)</value>
+  </data>
+  <data name="Remote.OnlyPowerShell" xml:space="preserve">
+    <value>seulement pour PowerShell</value>
+  </data>
+  <data name="Remote.OnlyFileDrives" xml:space="preserve">
+    <value>seulement pour FTP et WebDAV</value>
+  </data>
+  <data name="Remote.PasswordSaved" xml:space="preserve">
+    <value>(enregistré – tapez pour remplacer)</value>
+  </data>
+  <data name="Remote.PasswordNone" xml:space="preserve">
+    <value>(aucun : anonyme ou sans demande)</value>
+  </data>
+  <data name="Remote.DefaultPort" xml:space="preserve">
+    <value>(défaut {0})</value>
+  </data>
+  <data name="Remote.LastConnected" xml:space="preserve">
+    <value>Dernière connexion {0:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Remote.NeverConnected" xml:space="preserve">
+    <value>Jamais connecté</value>
+  </data>
+  <data name="Remote.EditHintNew" xml:space="preserve">
+    <value>Une nouvelle connexion. Entrée ou Ctrl+S l&apos;enregistre, Échap revient.</value>
+  </data>
+  <data name="Remote.EditHint" xml:space="preserve">
+    <value>Entrée ou Ctrl+S enregistre, Échap revient.</value>
+  </data>
+  <data name="Remote.Summary" xml:space="preserve">
+    <value>{0} enregistrées  ·  les shells demandent un mot de passe ; FTP/WebDAV utilisent le gestionnaire de mots de passe</value>
+  </data>
+  <data name="Remote.ListHeader" xml:space="preserve">
+    <value>  Type  Nom                           Destination</value>
+  </data>
 </root>

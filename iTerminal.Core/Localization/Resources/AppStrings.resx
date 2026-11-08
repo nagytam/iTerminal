@@ -5662,4 +5662,103 @@
   <data name="Workspaces.SavesLine" xml:space="preserve">
     <value>Saves: {0} → {1}  ·  {2}</value>
   </data>
+  <data name="Calendar.Today" xml:space="preserve">
+    <value>today</value>
+  </data>
+  <data name="Calendar.Tomorrow" xml:space="preserve">
+    <value>tomorrow</value>
+  </data>
+  <data name="Calendar.Yesterday" xml:space="preserve">
+    <value>yesterday</value>
+  </data>
+  <data name="Calendar.InDays" xml:space="preserve">
+    <value>in {0} days</value>
+  </data>
+  <data name="Calendar.DaysAgo" xml:space="preserve">
+    <value>{0} days ago</value>
+  </data>
+  <data name="Calendar.WeekLine" xml:space="preserve">
+    <value>Week {0}  |  day {1} of {2}  |  {3}</value>
+  </data>
+  <data name="Calendar.NoMeetings" xml:space="preserve">
+    <value>No meetings on this day</value>
+  </data>
+  <data name="Calendar.Meetings" xml:space="preserve">
+    <value>Meetings ({0})</value>
+  </data>
+  <data name="Calendar.NewMeeting" xml:space="preserve">
+    <value>New meeting: {0}_</value>
+  </data>
+  <data name="Calendar.ChangeMeeting" xml:space="preserve">
+    <value>Change meeting: {0}_</value>
+  </data>
+  <data name="Calendar.AddHint" xml:space="preserve">
+    <value>N: add a meeting, e.g. 14:30 45 Standup</value>
+  </data>
+  <data name="Remote.FieldName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Remote.FieldType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Remote.FieldHost" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="Remote.FieldPort" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="Remote.FieldUser" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="Remote.FieldKeyFile" xml:space="preserve">
+    <value>Key file</value>
+  </data>
+  <data name="Remote.FieldTransport" xml:space="preserve">
+    <value>Transport</value>
+  </data>
+  <data name="Remote.FieldNotes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Remote.FieldPassword" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Remote.FieldFolder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="Remote.SpaceChanges" xml:space="preserve">
+    <value>  (Space changes)</value>
+  </data>
+  <data name="Remote.OnlyPowerShell" xml:space="preserve">
+    <value>only for PowerShell</value>
+  </data>
+  <data name="Remote.OnlyFileDrives" xml:space="preserve">
+    <value>only for FTP and WebDAV</value>
+  </data>
+  <data name="Remote.PasswordSaved" xml:space="preserve">
+    <value>(saved - type to replace)</value>
+  </data>
+  <data name="Remote.PasswordNone" xml:space="preserve">
+    <value>(none: anonymous or asks nothing)</value>
+  </data>
+  <data name="Remote.DefaultPort" xml:space="preserve">
+    <value>(default {0})</value>
+  </data>
+  <data name="Remote.LastConnected" xml:space="preserve">
+    <value>Last connected {0:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Remote.NeverConnected" xml:space="preserve">
+    <value>Never connected</value>
+  </data>
+  <data name="Remote.EditHintNew" xml:space="preserve">
+    <value>A new connection. Enter or Ctrl+S saves it, Esc goes back.</value>
+  </data>
+  <data name="Remote.EditHint" xml:space="preserve">
+    <value>Enter or Ctrl+S saves, Esc goes back.</value>
+  </data>
+  <data name="Remote.Summary" xml:space="preserve">
+    <value>{0} saved  ·  shells ask for a password; FTP/WebDAV use the password manager</value>
+  </data>
+  <data name="Remote.ListHeader" xml:space="preserve">
+    <value>  Type  Name                          Destination</value>
+  </data>
 </root>
