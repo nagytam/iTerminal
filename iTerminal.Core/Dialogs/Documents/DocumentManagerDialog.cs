@@ -882,10 +882,10 @@ public class DocumentManagerDialog : SplitPaneDialog
         // Only a scan this dialog started can be stopped from it; advertising Ctrl+X over the
         // periodic indexer's scan offered a key that did nothing.
         string scanKey = OwnsRunningScan
-            ? "Ctrl+X:stop scan"
-            : _documentLibraryService.IsIndexing ? "scanning…" : "Ctrl+R:rescan";
-        string escKey = _query.Length > 0 ? "Esc:clear" : "Esc:close";
-        string keys = $"Enter:reveal  Ctrl+T:preview  {scanKey}  Tab:focus  {escKey}";
+            ? UiText.Get("Hint.Part.StopScan", "Ctrl+X:stop scan")
+            : _documentLibraryService.IsIndexing ? UiText.Get("Hint.Part.Scanning", "scanning…") : UiText.Get("Hint.Part.Rescan", "Ctrl+R:rescan");
+        string escKey = _query.Length > 0 ? UiText.Get("Hint.Part.EscClear", "Esc:clear") : UiText.Get("Hint.Part.EscClose", "Esc:close");
+        string keys = $"{UiText.Get("Hint.Part.Reveal", "Enter:reveal")}  {UiText.Get("Hint.Part.Preview", "Ctrl+T:preview")}  {scanKey}  {UiText.Get("Hint.Part.Focus", "Tab:focus")}  {escKey}";
 
         // The capability line is on the same row on purpose: whether search is indexed and whether
         // OCR ran are the two things that explain a result the user did not expect, and a row of

@@ -541,8 +541,8 @@ public class CalendarDialog : Dialog
     private void DrawHints(IBuffer buffer, int iw, int ih, ColorScheme colorScheme)
     {
         // Whole hints only, and on a short dialog just the second line, which is the one that says how to leave.
-        const string moving = "Arrows day/week  PgUp/PgDn month  Ctrl+PgUp/PgDn year";
-        const string acting = "Home today  N add  E change  Alt+Up/Down choose  D remove  Esc close";
+        var moving = iConsole.Localization.UiText.Get("Calendar.HintMoving", "Arrows day/week  PgUp/PgDn month  Ctrl+PgUp/PgDn year");
+        var acting = iConsole.Localization.UiText.Get("Calendar.HintActing", "Home today  N add  E change  Alt+Up/Down choose  D remove  Esc close");
         if (HintRows == 2)
         {
             Put(buffer, 1, ih - 2, iw - 2, moving.FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);

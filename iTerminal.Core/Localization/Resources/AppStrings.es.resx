@@ -5338,4 +5338,109 @@
   <data name="Git.NoRepoHint" xml:space="preserve">
     <value>Abra en el panel una carpeta dentro de un repositorio y vuelva a pulsar Ctrl+G.</value>
   </data>
+  <data name="Contacts.FooterForm" xml:space="preserve">
+    <value>Intro campo siguiente  Tab/Mayús+Tab mover  Esc descartar</value>
+  </data>
+  <data name="Contacts.FooterFilter" xml:space="preserve">
+    <value>Escriba para filtrar  Intro conservar  Esc borrar</value>
+  </data>
+  <data name="Contacts.FooterBrowse" xml:space="preserve">
+    <value>N nuevo  E cambiar  D eliminar  / filtro  Esc cerrar</value>
+  </data>
+  <data name="Hint.Part.Reveal" xml:space="preserve">
+    <value>Intro:mostrar</value>
+  </data>
+  <data name="Hint.Part.Preview" xml:space="preserve">
+    <value>Ctrl+T:vista previa</value>
+  </data>
+  <data name="Hint.Part.StopScan" xml:space="preserve">
+    <value>Ctrl+X:detener análisis</value>
+  </data>
+  <data name="Hint.Part.Scanning" xml:space="preserve">
+    <value>analizando…</value>
+  </data>
+  <data name="Hint.Part.Rescan" xml:space="preserve">
+    <value>Ctrl+R:reanalizar</value>
+  </data>
+  <data name="Hint.Part.Focus" xml:space="preserve">
+    <value>Tab:foco</value>
+  </data>
+  <data name="Hint.Part.EscClear" xml:space="preserve">
+    <value>Esc:borrar</value>
+  </data>
+  <data name="Hint.Part.EscClose" xml:space="preserve">
+    <value>Esc:cerrar</value>
+  </data>
+  <data name="Hint.Part.GoTo" xml:space="preserve">
+    <value>Intro:ir a</value>
+  </data>
+  <data name="Hint.Part.ToPanel" xml:space="preserve">
+    <value>Ctrl+P:al panel</value>
+  </data>
+  <data name="Hint.Part.Stop" xml:space="preserve">
+    <value>Ctrl+X:detener</value>
+  </data>
+  <data name="Hint.Part.NextField" xml:space="preserve">
+    <value>Tab:campo siguiente</value>
+  </data>
+  <data name="Hint.Part.SearchGoTo" xml:space="preserve">
+    <value>Intro:buscar / ir a</value>
+  </data>
+  <data name="Hint.Part.ResultsToPanel" xml:space="preserve">
+    <value>Ctrl+P:resultados al panel</value>
+  </data>
+  <data name="Hint.Part.Toggle" xml:space="preserve">
+    <value>Espacio:alternar</value>
+  </data>
+  <data name="Calendar.HintMoving" xml:space="preserve">
+    <value>Flechas día/semana  RePág/AvPág mes  Ctrl+RePág/AvPág año</value>
+  </data>
+  <data name="Calendar.HintActing" xml:space="preserve">
+    <value>Inicio hoy  N añadir  E cambiar  Alt+Arriba/Abajo elegir  D quitar  Esc cerrar</value>
+  </data>
+  <data name="Mail.HintSetup" xml:space="preserve">
+    <value>Tab/Arriba/Abajo campo  Espacio alternar  Ctrl+V pegar  Ctrl+S guardar  Esc volver</value>
+  </data>
+  <data name="Mail.HintList" xml:space="preserve">
+    <value>Intro leer  R actualizar  C redactar  D eliminar  S configurar  Esc cerrar</value>
+  </data>
+  <data name="Mail.HintView" xml:space="preserve">
+    <value>Arriba/Abajo desplazar  R responder  Esc volver a la lista</value>
+  </data>
+  <data name="Mail.HintCompose" xml:space="preserve">
+    <value>Tab campo  Intro salto de línea  Ctrl+V pegar  Ctrl+S enviar  Ctrl+L libreta  Esc volver</value>
+  </data>
+  <data name="Mail.HintDirectory" xml:space="preserve">
+    <value>Escriba un nombre, Intro busca, Intro otra vez añade la persona resaltada  Esc volver</value>
+  </data>
+  <data name="Hint.ConfirmDelete" xml:space="preserve">
+    <value>y eliminar  cualquier otra tecla cancela</value>
+  </data>
+  <data name="Passwords.HintUnavailable" xml:space="preserve">
+    <value>Esc cerrar</value>
+  </data>
+  <data name="Passwords.HintList" xml:space="preserve">
+    <value>Intro editar  N nueva  D eliminar  V mostrar  Esc cerrar</value>
+  </data>
+  <data name="Passwords.HintEdit" xml:space="preserve">
+    <value>Tab campo  Espacio categoría  Ctrl+R mostrar contraseña  Ctrl+S guardar  Esc volver</value>
+  </data>
+  <data name="Remote.HintList" xml:space="preserve">
+    <value>Intro conectar  B explorar archivos  N nueva  E editar  D eliminar  Esc cerrar</value>
+  </data>
+  <data name="Remote.HintForm" xml:space="preserve">
+    <value>Tab campo  Espacio cambia tipo/transporte  Intro/Ctrl+S guardar  Esc volver</value>
+  </data>
+  <data name="Workspaces.HintSave" xml:space="preserve">
+    <value>Intro guardar  Esc cancelar</value>
+  </data>
+  <data name="Workspaces.HintRename" xml:space="preserve">
+    <value>Intro renombrar  Esc cancelar</value>
+  </data>
+  <data name="Workspaces.HintConfirm" xml:space="preserve">
+    <value>y confirmar  Esc conservar</value>
+  </data>
+  <data name="Workspaces.HintList" xml:space="preserve">
+    <value>Intro cambiar  1-9 saltar  S guardar  U actualizar  R renombrar  D eliminar  Esc cerrar</value>
+  </data>
 </root>

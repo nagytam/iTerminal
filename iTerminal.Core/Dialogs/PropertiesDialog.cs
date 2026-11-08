@@ -467,16 +467,17 @@ public class PropertiesDialog : FormDialog
         {
             // The row under the error line, which the two-button row below has no room beside.
             _permissionsButton.Position = new Position(FieldX, dateRow + DateBoxes.Length + 1);
-            _permissionsButton.ViewSize = new Size(Math.Min(PrimaryButtonWidth + 2, FieldWidth), 1);
+            _permissionsButton.ViewSize = new Size(Math.Min(Math.Max(PrimaryButtonWidth + 2, _permissionsButton.Title.Length + 2), FieldWidth), 1);
         }
 
         if (_removeMarkButton is not null)
         {
             // Beside Permissions when there is one, else on the row it would have taken.
-            long x = _permissionsButton is not null ? FieldX + PrimaryButtonWidth + 4 : FieldX;
+            // Wide enough for the caption in the chosen language ("Markierung entfernen (^F)").
+            long x = _permissionsButton is not null ? FieldX + _permissionsButton.ViewSize.Width + 2 : FieldX;
             _removeMarkButton.Position = new Position(x, dateRow + DateBoxes.Length + 1);
             // Never past the field's right edge: on a narrow dialog the button ran over the border.
-            _removeMarkButton.ViewSize = new Size(Math.Max(1, Math.Min(PrimaryButtonWidth + 4, FieldX + FieldWidth - x)), 1);
+            _removeMarkButton.ViewSize = new Size(Math.Max(1, Math.Min(Math.Max(PrimaryButtonWidth + 4, _removeMarkButton.Title.Length + 2), FieldX + FieldWidth - x)), 1);
         }
 
         LayoutButtonRow(_applyButton, _cancelButton);
