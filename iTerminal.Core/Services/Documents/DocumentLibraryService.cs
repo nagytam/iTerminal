@@ -139,12 +139,12 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
     {
         get
         {
-            string search = _searchIndex.IsAvailable ? "full-text index" : "scan (no FTS5)";
+            string search = _searchIndex.IsAvailable ? iConsole.Localization.UiText.Get("Documents.SearchFts", "full-text index") : iConsole.Localization.UiText.Get("Documents.SearchScan", "scan (no FTS5)");
 
             // The engine names its own state — "off", "not installed", or its version — because
             // those are three different things to a user and only one of them is a problem.
-            string ocr = _ocrEngine?.DisplayName ?? "no OCR engine";
-            return $"Search: {search} · Images: {ocr}";
+            string ocr = _ocrEngine?.DisplayName ?? iConsole.Localization.UiText.Get("Documents.NoOcr", "no OCR engine");
+            return string.Format(iConsole.Localization.UiText.Get("Documents.Capability", "Search: {0} · Images: {1}"), search, ocr);
         }
     }
 

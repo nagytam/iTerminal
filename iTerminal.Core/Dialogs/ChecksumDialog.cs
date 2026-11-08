@@ -795,7 +795,7 @@ public class ChecksumDialog : Dialog
         var colorScheme = ThemeService.CurrentColorScheme;
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
         var width = (int)ViewSize.Width;
-        var footer = " F2:save .sha256  F3 or click:copy  F4:VirusTotal  F5:open  Esc:close ".FitHints(Math.Max(0, width - 4));
+        var footer = iConsole.Localization.UiText.Get("Checksums.Footer", " F2:save .sha256  F3 or click:copy  F4:VirusTotal  F5:open  Esc:close ").FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);

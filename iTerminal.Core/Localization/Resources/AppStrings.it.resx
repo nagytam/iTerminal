@@ -6682,4 +6682,40 @@
   <data name="CmdTitle.2ad51f6d" xml:space="preserve">
     <value>Smonta</value>
   </data>
+  <data name="Palette.Footer" xml:space="preserve">
+    <value> {0} di {1}  ↑↓:scegli  Invio:esegui  Esc:chiudi </value>
+  </data>
+  <data name="Checksums.Footer" xml:space="preserve">
+    <value> F2:salva .sha256  F3 o clic:copia  F4:VirusTotal  F5:apri  Esc:chiudi </value>
+  </data>
+  <data name="About.Tagline" xml:space="preserve">
+    <value>Un file manager e terminale da console, comandato da tastiera.</value>
+  </data>
+  <data name="About.Hint" xml:space="preserve">
+    <value>F1 su un pannello file elenca i suoi tasti; la barra dei tasti mostra il resto.</value>
+  </data>
+  <data name="LabelFilter.Note" xml:space="preserve">
+    <value>Le cartelle restano elencate, così il pannello resta navigabile.</value>
+  </data>
+  <data name="Passwords.NothingSaved2" xml:space="preserve">
+    <value>le password di rete e di posta compaiono qui quando vengono salvate.</value>
+  </data>
+  <data name="OpenWith.SystemDefault" xml:space="preserve">
+    <value>Predefinito di sistema</value>
+  </data>
+  <data name="OpenWith.SystemDefaultDesc" xml:space="preserve">
+    <value>Ciò con cui il sistema apre questo tipo di file.</value>
+  </data>
+  <data name="Documents.Capability" xml:space="preserve">
+    <value>Ricerca: {0} · Immagini: {1}</value>
+  </data>
+  <data name="Documents.SearchFts" xml:space="preserve">
+    <value>indice full-text</value>
+  </data>
+  <data name="Documents.SearchScan" xml:space="preserve">
+    <value>scansione (senza FTS5)</value>
+  </data>
+  <data name="Documents.NoOcr" xml:space="preserve">
+    <value>nessun motore OCR</value>
+  </data>
 </root>

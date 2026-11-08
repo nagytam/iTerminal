@@ -43,7 +43,7 @@ public class LabelFilterDialog : FormDialog
         _colour = new ComboBox<string>(themeService) { Label = iConsole.Localization.UiText.Get("Label.Colour", "Colour") };
         _colour.SetItems([AnyColour, NoColour, .. Enum.GetValues<LabelColour>().Where(colour => colour != LabelColour.None).Select(LabelColours.Name)]);
         _tag = new TextBox(beepService, dateTimeProviderService, themeService) { Label = iConsole.Localization.UiText.Get("Label.Tag", "Tag") };
-        _info = new Label("Folders stay listed, so the panel can still be walked.", themeService);
+        _info = new Label(iConsole.Localization.UiText.Get("LabelFilter.Note", "Folders stay listed, so the panel can still be walked."), themeService);
         _message = new Label(string.Empty, themeService);
         _applyButton = new Button(iConsole.Localization.UiText.Get("Common.Apply", "Apply"), applyCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);

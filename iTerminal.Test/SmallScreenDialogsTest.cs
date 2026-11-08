@@ -945,4 +945,36 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("F7") && l.Contains("Dateien suchen")), "F7 named Dateien suchen");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Voice input", "wählen")]
+    [DataRow("Checksums", "F2:.sha256 speichern")]
+    [DataRow("About", "tastaturgesteuerter")]
+    [DataRow("Filter by Label", "Ordner bleiben aufgelistet")]
+    [DataRow("Open with", "Systemstandard")]
+    [DataRow("Passwords", "Netzwerk- und Mail-Passwörter")]
+    [DataRow("Documents", "· Bilder:")]
+    public async Task ThePaletteFooterAndSixMoreDialogsInGerman_AreGerman(string command, string expected)
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+
+        await app.PressAsync("Shift+F1");
+        await app.TypeAsync(command);
+        await app.PressAsync(command == "Voice input" ? "Esc" : "Enter");
+        if (command == "Voice input")
+        {
+            await app.WaitForNoDialogAsync();
+            await app.PressAsync("Shift+F1");
+            await app.TypeAsync("zzzz");
+        }
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
+    }
 }

@@ -67,13 +67,13 @@ public class AboutDialog : Dialog
     internal static IReadOnlyList<string> Lines =>
     [
         "iTerminal BETA",
-        "A keyboard-driven file manager and terminal for the console.",
+        iConsole.Localization.UiText.Get("About.Tagline", "A keyboard-driven file manager and terminal for the console."),
         string.Empty,
         .. DetailLines,
         string.Empty,
-        "F1 on a file panel lists its keys; the hot key bar shows the rest.",
+        iConsole.Localization.UiText.Get("About.Hint", "F1 on a file panel lists its keys; the hot key bar shows the rest."),
         string.Empty,
-        "Esc:close",
+        iConsole.Localization.UiText.Get("Hint.Part.EscClose", "Esc:close"),
     ];
 
     /// <summary>

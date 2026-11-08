@@ -6682,4 +6682,40 @@
   <data name="CmdTitle.2ad51f6d" xml:space="preserve">
     <value>Démonter</value>
   </data>
+  <data name="Palette.Footer" xml:space="preserve">
+    <value> {0} sur {1}  ↑↓:choisir  Entrée:exécuter  Échap:fermer </value>
+  </data>
+  <data name="Checksums.Footer" xml:space="preserve">
+    <value> F2:enregistrer .sha256  F3 ou clic:copier  F4:VirusTotal  F5:ouvrir  Échap:fermer </value>
+  </data>
+  <data name="About.Tagline" xml:space="preserve">
+    <value>Un gestionnaire de fichiers et terminal pour la console, piloté au clavier.</value>
+  </data>
+  <data name="About.Hint" xml:space="preserve">
+    <value>F1 sur un panneau de fichiers liste ses touches ; la barre de touches montre le reste.</value>
+  </data>
+  <data name="LabelFilter.Note" xml:space="preserve">
+    <value>Les dossiers restent listés, pour pouvoir toujours parcourir le panneau.</value>
+  </data>
+  <data name="Passwords.NothingSaved2" xml:space="preserve">
+    <value>les mots de passe réseau et courrier apparaissent ici dès qu&apos;ils sont enregistrés.</value>
+  </data>
+  <data name="OpenWith.SystemDefault" xml:space="preserve">
+    <value>Défaut du système</value>
+  </data>
+  <data name="OpenWith.SystemDefaultDesc" xml:space="preserve">
+    <value>Ce avec quoi le système ouvre ce type de fichier.</value>
+  </data>
+  <data name="Documents.Capability" xml:space="preserve">
+    <value>Recherche : {0} · Images : {1}</value>
+  </data>
+  <data name="Documents.SearchFts" xml:space="preserve">
+    <value>index plein texte</value>
+  </data>
+  <data name="Documents.SearchScan" xml:space="preserve">
+    <value>balayage (sans FTS5)</value>
+  </data>
+  <data name="Documents.NoOcr" xml:space="preserve">
+    <value>aucun moteur OCR</value>
+  </data>
 </root>

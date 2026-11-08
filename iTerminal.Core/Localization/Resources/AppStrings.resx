@@ -6823,4 +6823,40 @@
   <data name="CmdTitle.2ad51f6d" xml:space="preserve">
     <value>Unmount</value>
   </data>
+  <data name="Palette.Footer" xml:space="preserve">
+    <value> {0} of {1}  ↑↓:choose  Enter:run  Esc:close </value>
+  </data>
+  <data name="Checksums.Footer" xml:space="preserve">
+    <value> F2:save .sha256  F3 or click:copy  F4:VirusTotal  F5:open  Esc:close </value>
+  </data>
+  <data name="About.Tagline" xml:space="preserve">
+    <value>A keyboard-driven file manager and terminal for the console.</value>
+  </data>
+  <data name="About.Hint" xml:space="preserve">
+    <value>F1 on a file panel lists its keys; the hot key bar shows the rest.</value>
+  </data>
+  <data name="LabelFilter.Note" xml:space="preserve">
+    <value>Folders stay listed, so the panel can still be walked.</value>
+  </data>
+  <data name="Passwords.NothingSaved2" xml:space="preserve">
+    <value>network and mail passwords appear here as they are saved.</value>
+  </data>
+  <data name="OpenWith.SystemDefault" xml:space="preserve">
+    <value>System default</value>
+  </data>
+  <data name="OpenWith.SystemDefaultDesc" xml:space="preserve">
+    <value>Whatever the system opens this kind of file with.</value>
+  </data>
+  <data name="Documents.Capability" xml:space="preserve">
+    <value>Search: {0} · Images: {1}</value>
+  </data>
+  <data name="Documents.SearchFts" xml:space="preserve">
+    <value>full-text index</value>
+  </data>
+  <data name="Documents.SearchScan" xml:space="preserve">
+    <value>scan (no FTS5)</value>
+  </data>
+  <data name="Documents.NoOcr" xml:space="preserve">
+    <value>no OCR engine</value>
+  </data>
 </root>
