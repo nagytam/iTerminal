@@ -76,8 +76,8 @@ public class ImageFileViewerDialog : Dialog
 
         _colorButton = new Button(
             new VideoActionCommand(
-                () => _colorMode == AsciiColorMode.Color ? "Colour: on" : "Colour: off",
-                "Switch colour on or off",
+                () => _colorMode == AsciiColorMode.Color ? UiText.Get("Video.Btn.ColourOn", "Colour: on") : UiText.Get("Video.Btn.ColourOff", "Colour: off"),
+                UiText.Get("Video.Tip.Colour", "Switch colour on or off"),
                 () =>
                 {
                     ToggleColor();
@@ -471,7 +471,7 @@ public class ImageFileViewerDialog : Dialog
 
         if (lines.Count == 0)
         {
-            lines.Add("No metadata in this file.");
+            lines.Add(UiText.Get("Image.NoMetadata", "No metadata in this file."));
         }
 
         _metadataLines = lines;

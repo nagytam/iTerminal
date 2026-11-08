@@ -62,7 +62,7 @@ public class OpenWithDialog : Dialog
     public Choice? Selected => _list.SelectedItem;
 
     /// <summary>The y/n question in the footer, or empty.</summary>
-    public string Question => _pendingRemoval is { } choice ? $"Remove {choice.Title} from the list? (y/n)" : string.Empty;
+    public string Question => _pendingRemoval is { } choice ? string.Format(UiText.Get("OpenWith.ConfirmRemove", "Remove {0} from the list? (y/n)"), choice.Title) : string.Empty;
 
     /// <summary>Sets what the dialog is about; call before showing it.</summary>
     public void Load(FileAssociationKind kind, string filePath, Func<Task>? builtInEditor = null)

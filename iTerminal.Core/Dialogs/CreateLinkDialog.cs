@@ -185,7 +185,7 @@ public class CreateLinkDialog : FormDialog
         var linkPath = LinkPath.Trim();
         if (linkPath.Length == 0)
         {
-            SetError("Type where the link goes.");
+            SetError(UiText.Get("Link.TypeWhere", "Type where the link goes."));
             return false;
         }
 
