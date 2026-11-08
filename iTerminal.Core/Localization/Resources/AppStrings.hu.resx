@@ -5554,4 +5554,70 @@
   <data name="Calendar.AddHint" xml:space="preserve">
     <value>N: találkozó hozzáadása, pl. 14:30 45 Standup</value>
   </data>
+  <data name="Remote.FieldName" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Remote.FieldType" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Remote.FieldHost" xml:space="preserve">
+    <value>Gép</value>
+  </data>
+  <data name="Remote.FieldPort" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="Remote.FieldUser" xml:space="preserve">
+    <value>Felhasználó</value>
+  </data>
+  <data name="Remote.FieldKeyFile" xml:space="preserve">
+    <value>Kulcsfájl</value>
+  </data>
+  <data name="Remote.FieldTransport" xml:space="preserve">
+    <value>Átvitel</value>
+  </data>
+  <data name="Remote.FieldNotes" xml:space="preserve">
+    <value>Megjegyzés</value>
+  </data>
+  <data name="Remote.FieldPassword" xml:space="preserve">
+    <value>Jelszó</value>
+  </data>
+  <data name="Remote.FieldFolder" xml:space="preserve">
+    <value>Mappa</value>
+  </data>
+  <data name="Remote.SpaceChanges" xml:space="preserve">
+    <value>  (Szóköz vált)</value>
+  </data>
+  <data name="Remote.OnlyPowerShell" xml:space="preserve">
+    <value>csak PowerShellhez</value>
+  </data>
+  <data name="Remote.OnlyFileDrives" xml:space="preserve">
+    <value>csak FTP-hez és WebDAV-hoz</value>
+  </data>
+  <data name="Remote.PasswordSaved" xml:space="preserve">
+    <value>(mentve – gépeljen a cseréhez)</value>
+  </data>
+  <data name="Remote.PasswordNone" xml:space="preserve">
+    <value>(nincs: névtelen vagy nem kér semmit)</value>
+  </data>
+  <data name="Remote.DefaultPort" xml:space="preserve">
+    <value>(alapértelmezett {0})</value>
+  </data>
+  <data name="Remote.LastConnected" xml:space="preserve">
+    <value>Utoljára csatlakozva {0:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Remote.NeverConnected" xml:space="preserve">
+    <value>Soha nem csatlakozott</value>
+  </data>
+  <data name="Remote.EditHintNew" xml:space="preserve">
+    <value>Új kapcsolat. Az Enter vagy a Ctrl+S menti, az Esc visszalép.</value>
+  </data>
+  <data name="Remote.EditHint" xml:space="preserve">
+    <value>Az Enter vagy a Ctrl+S ment, az Esc visszalép.</value>
+  </data>
+  <data name="Remote.Summary" xml:space="preserve">
+    <value>{0} mentve  ·  a shellek jelszót kérnek; az FTP/WebDAV a jelszókezelőt használja</value>
+  </data>
+  <data name="Remote.ListHeader" xml:space="preserve">
+    <value>  Típ.  Név                           Cél</value>
+  </data>
 </root>

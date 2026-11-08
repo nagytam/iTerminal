@@ -5554,4 +5554,70 @@
   <data name="Calendar.AddHint" xml:space="preserve">
     <value>N: añadir una reunión, p. ej. 14:30 45 Standup</value>
   </data>
+  <data name="Remote.FieldName" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Remote.FieldType" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Remote.FieldHost" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="Remote.FieldPort" xml:space="preserve">
+    <value>Puerto</value>
+  </data>
+  <data name="Remote.FieldUser" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="Remote.FieldKeyFile" xml:space="preserve">
+    <value>Archivo de clave</value>
+  </data>
+  <data name="Remote.FieldTransport" xml:space="preserve">
+    <value>Transporte</value>
+  </data>
+  <data name="Remote.FieldNotes" xml:space="preserve">
+    <value>Notas</value>
+  </data>
+  <data name="Remote.FieldPassword" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="Remote.FieldFolder" xml:space="preserve">
+    <value>Carpeta</value>
+  </data>
+  <data name="Remote.SpaceChanges" xml:space="preserve">
+    <value>  (Espacio cambia)</value>
+  </data>
+  <data name="Remote.OnlyPowerShell" xml:space="preserve">
+    <value>solo para PowerShell</value>
+  </data>
+  <data name="Remote.OnlyFileDrives" xml:space="preserve">
+    <value>solo para FTP y WebDAV</value>
+  </data>
+  <data name="Remote.PasswordSaved" xml:space="preserve">
+    <value>(guardada: escriba para reemplazar)</value>
+  </data>
+  <data name="Remote.PasswordNone" xml:space="preserve">
+    <value>(ninguna: anónimo o sin preguntar)</value>
+  </data>
+  <data name="Remote.DefaultPort" xml:space="preserve">
+    <value>(predeterminado {0})</value>
+  </data>
+  <data name="Remote.LastConnected" xml:space="preserve">
+    <value>Última conexión {0:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Remote.NeverConnected" xml:space="preserve">
+    <value>Nunca conectada</value>
+  </data>
+  <data name="Remote.EditHintNew" xml:space="preserve">
+    <value>Una conexión nueva. Intro o Ctrl+S la guarda, Esc vuelve.</value>
+  </data>
+  <data name="Remote.EditHint" xml:space="preserve">
+    <value>Intro o Ctrl+S guarda, Esc vuelve.</value>
+  </data>
+  <data name="Remote.Summary" xml:space="preserve">
+    <value>{0} guardadas  ·  los shells piden una contraseña; FTP/WebDAV usan el gestor de contraseñas</value>
+  </data>
+  <data name="Remote.ListHeader" xml:space="preserve">
+    <value>  Tipo  Nombre                        Destino</value>
+  </data>
 </root>
