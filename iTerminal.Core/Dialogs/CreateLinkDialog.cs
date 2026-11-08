@@ -168,7 +168,7 @@ public class CreateLinkDialog : FormDialog
     /// <summary>A failure's message is a sentence or two: wrapped over the rows kept for it, not cut at the border.</summary>
     private void SetError(string message)
     {
-        var lines = message.Length == 0 ? [] : ("Error: " + message).WrapWords((int)Math.Max(10, FieldWidth));
+        var lines = message.Length == 0 ? [] : string.Format(UiText.Get("Msg.ErrorPrefix", "Error: {0}"), message).WrapWords((int)Math.Max(10, FieldWidth));
         for (var i = 0; i < _errorLabels.Length; i++)
         {
             _errorLabels[i].Text = i < lines.Count ? lines[i] : string.Empty;

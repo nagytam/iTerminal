@@ -1061,4 +1061,27 @@ public class SmallScreenDialogsTest
 
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(expected)), "the German text");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheFileContextMenuInGerman_IsGerman()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+        await app.PressAsync("Ctrl+Shift+F3");
+        await Task.Delay(400);
+        await app.PressAsync("Down");
+        await app.PressAsync("Enter");
+        await Task.Delay(500);
+        var screen = await app.WaitForTextAsync("readme.txt");
+        var position = screen.Find("readme.txt")!;
+
+        await app.Driver.RightClickAsync((int)position.X, (int)position.Y);
+
+        screen = await app.WaitForTextAsync("Eigenschaften");
+        foreach (string item in new[] { "Kopieren", "Löschen", "Prüfsummen" })
+        {
+            Assert.IsTrue(screen.Contains(item), item + " missing:" + screen.Dump());
+        }
+    }
 }

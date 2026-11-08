@@ -156,7 +156,7 @@ public class ExtractDialog : FormDialog
         Password = string.Empty;
         _errorLabel.Text = string.Empty;
 
-        Title = Archives.Count == 1 ? $"Extract {FocusedEntry.NameOf(Archives[0])}" : $"Extract {Archives.Count} archives";
+        Title = Archives.Count == 1 ? string.Format(UiText.Get("Extract.TitleOne", "Extract {0}"), FocusedEntry.NameOf(Archives[0])) : string.Format(UiText.Get("Extract.TitleMany", "Extract {0} archives"), Archives.Count);
         _labelSource.Text = iConsole.Localization.UiText.Get("Label.Source", "Source") + ": " + string.Join(", ", Archives.Select(FocusedEntry.NameOf));
         var target = _contentModelService.NonFocusedFolderUrl ?? sourceModel?.Url;
         TargetFolder = target?.FullUrl ?? string.Empty;
@@ -240,12 +240,12 @@ public class ExtractDialog : FormDialog
     {
         if (Archives.Count == 0)
         {
-            return (null, "Nothing to extract: mark or choose an archive.");
+            return (null, UiText.Get("Extract.NothingToExtract", "Nothing to extract: mark or choose an archive."));
         }
 
         if (string.IsNullOrWhiteSpace(TargetFolder))
         {
-            return (null, "Type the folder to extract into.");
+            return (null, UiText.Get("Extract.TypeFolder", "Type the folder to extract into."));
         }
 
         return (new ExtractionOptions(Password.Length > 0 ? Password : null, Overwrite), null);

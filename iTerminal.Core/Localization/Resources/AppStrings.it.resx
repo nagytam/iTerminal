@@ -7213,4 +7213,88 @@
   <data name="Access.HintOwner" xml:space="preserve">
     <value>Tab campo  Invio salva  Esc indietro</value>
   </data>
+  <data name="Ctx.View" xml:space="preserve">
+    <value>Visualizza</value>
+  </data>
+  <data name="Ctx.Edit" xml:space="preserve">
+    <value>Modifica</value>
+  </data>
+  <data name="Ctx.CompareFiles" xml:space="preserve">
+    <value>Confronta file</value>
+  </data>
+  <data name="Ctx.Copy" xml:space="preserve">
+    <value>Copia</value>
+  </data>
+  <data name="Ctx.Move" xml:space="preserve">
+    <value>Sposta</value>
+  </data>
+  <data name="Ctx.Delete" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="Ctx.Compress" xml:space="preserve">
+    <value>Comprimi</value>
+  </data>
+  <data name="Ctx.Extract" xml:space="preserve">
+    <value>Estrai</value>
+  </data>
+  <data name="Ctx.CreateLink" xml:space="preserve">
+    <value>Crea collegamento</value>
+  </data>
+  <data name="Ctx.EditLink" xml:space="preserve">
+    <value>Modifica collegamento</value>
+  </data>
+  <data name="Ctx.Checksums" xml:space="preserve">
+    <value>Checksum</value>
+  </data>
+  <data name="Ctx.HashManifest" xml:space="preserve">
+    <value>Manifest degli hash</value>
+  </data>
+  <data name="Ctx.Signatures" xml:space="preserve">
+    <value>Firme</value>
+  </data>
+  <data name="Ctx.EncryptDecrypt" xml:space="preserve">
+    <value>Cifra / decifra</value>
+  </data>
+  <data name="Ctx.SecureWipe" xml:space="preserve">
+    <value>Cancellazione sicura</value>
+  </data>
+  <data name="Ctx.StreamsAndAttributes" xml:space="preserve">
+    <value>Stream e attributi</value>
+  </data>
+  <data name="Ctx.ScanWithMicrosoftDefender" xml:space="preserve">
+    <value>Analizza con Microsoft Defender</value>
+  </data>
+  <data name="Ctx.Properties" xml:space="preserve">
+    <value>Proprietà</value>
+  </data>
+  <data name="Ctx.OpenWith" xml:space="preserve">
+    <value>Apri con {0}</value>
+  </data>
+  <data name="Ctx.EditWith" xml:space="preserve">
+    <value>Modifica con {0}</value>
+  </data>
+  <data name="Compress.TitleOne" xml:space="preserve">
+    <value>Comprimi {0}</value>
+  </data>
+  <data name="Compress.TitleMany" xml:space="preserve">
+    <value>Comprimi {0} elementi</value>
+  </data>
+  <data name="Extract.TitleOne" xml:space="preserve">
+    <value>Estrai {0}</value>
+  </data>
+  <data name="Extract.TitleMany" xml:space="preserve">
+    <value>Estrai {0} archivi</value>
+  </data>
+  <data name="Extract.NothingToExtract" xml:space="preserve">
+    <value>Niente da estrarre: seleziona o scegli un archivio.</value>
+  </data>
+  <data name="Extract.TypeFolder" xml:space="preserve">
+    <value>Digita la cartella di destinazione.</value>
+  </data>
+  <data name="Info.UpParent" xml:space="preserve">
+    <value>Alla cartella superiore</value>
+  </data>
+  <data name="Info.UpTo" xml:space="preserve">
+    <value>Su a: {0}</value>
+  </data>
 </root>
