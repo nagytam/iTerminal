@@ -112,6 +112,10 @@ public sealed class TerminalApp : IAsyncDisposable
                 // "right_only" and not the whole name: on a very narrow terminal the right panel cuts the name.
                 screen => screen.Contains("alpha") && screen.Contains("right_only"),
                 "both panels to list their folders");
+
+            // The listings are on screen before the left panel has its cursor and the keyboard; a key sent in that gap is lost,
+            // which is how "Down and Up move the cursor" and "Ctrl+PgUp goes to the parent folder" failed now and then on a busy CI machine.
+            await app.WaitUntilAsync(() => app.FocusedEntryName is not null, "the left panel to have a cursor");
         }
         catch
         {
