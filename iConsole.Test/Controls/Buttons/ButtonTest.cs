@@ -35,6 +35,25 @@ public class ButtonTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void Draw_ACaptionTooLongEndsOnAnEllipsis_OnlyWhenAskedTo()
+    {
+        var mockCmd = new Mock<ICommand>();
+        mockCmd.SetupGet(c => c.Title).Returns("T");
+        mockCmd.Setup(c => c.CanExecute()).Returns(true);
+        var mockTheme = new Mock<IThemeService>();
+        mockTheme.SetupGet(t => t.CurrentColorScheme).Returns(new iConsole.Display.ColorScheme());
+        var btn = new Button("Select favourite", mockCmd.Object, mockTheme.Object) { ViewSize = new Size(12, 1) };
+
+        string cut = ScreenBuffer.Render(btn, 14, 1).Lines[0];
+        btn.EllipsisWhenClipped = true;
+        string marked = ScreenBuffer.Render(btn, 14, 1).Lines[0];
+
+        Assert.IsFalse(cut.Contains('…'), cut);
+        Assert.AreEqual("[Select fa…]", marked.TrimEnd());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void KeyHints_ListSpaceForAButtonThatCanRun()
     {
         var mockCmd = new Mock<ICommand>();

@@ -1,4 +1,4 @@
-﻿using iConsole.Localization;
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Data;
@@ -98,6 +98,12 @@ public class Button : Control
     /// </summary>
     public bool IsDestructive { get; set; }
 
+    /// <summary>
+    /// True to end a caption the button is too narrow for on an ellipsis ("Select favou…"); false, the default, cuts it at
+    /// the edge. The function-key bar relies on the cut, and so does any button sized in cells on purpose.
+    /// </summary>
+    public bool EllipsisWhenClipped { get; set; }
+
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
@@ -120,7 +126,7 @@ public class Button : Control
         var inner = Math.Max(0, (int)ViewSize.Width - 2);
         var title = inner == 0
             ? string.Empty
-            : Title.Cut(inner).Expand(inner);
+            : EllipsisWhenClipped && inner > 1 && Title.Length > inner ? (Title[..(inner - 1)] + "…").Expand(inner) : Title.Cut(inner).Expand(inner);
         var titleLine = new ConxelString(Border.Start + title + Border.End, foregroundColor, backgroundColor);
         titleLine.HighlightHotKey(HotConsoleKey, HotKeyChar, hotKeyColor, backgroundColor);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, titleLine);
