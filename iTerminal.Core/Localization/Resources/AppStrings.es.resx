@@ -7549,4 +7549,43 @@
   <data name="SysVal.ValLong" xml:space="preserve">
     <value>El valor es demasiado largo para el registro.</value>
   </data>
+  <data name="SysSet.NeedsAdmin" xml:space="preserve">
+    <value>Esto cambia todo el equipo, por lo que requiere derechos de administrador. Reinicie iTerminal como administrador (Ctrl+Mayús+A) e inténtelo de nuevo.</value>
+  </data>
+  <data name="SysSet.NameUnsupported" xml:space="preserve">
+    <value>Cambiar el nombre del equipo no es compatible con este sistema.</value>
+  </data>
+  <data name="SysSet.NameAfterRestart" xml:space="preserve">
+    <value>El equipo se llamará {0} después del próximo reinicio.</value>
+  </data>
+  <data name="SysSet.NameNow" xml:space="preserve">
+    <value>El equipo ahora se llama {0}.</value>
+  </data>
+  <data name="SysSet.GroupWindows" xml:space="preserve">
+    <value>Un grupo de trabajo es una configuración de Windows.</value>
+  </data>
+  <data name="SysSet.DomainMember" xml:space="preserve">
+    <value>Este equipo es miembro del dominio {0}. Salir de un dominio requiere una cuenta de directorio; use las Propiedades del sistema de Windows.</value>
+  </data>
+  <data name="SysSet.GroupAfterRestart" xml:space="preserve">
+    <value>El grupo de trabajo será {0} después del próximo reinicio.</value>
+  </data>
+  <data name="SysSet.DescUnsupported" xml:space="preserve">
+    <value>Cambiar la descripción del equipo no es compatible con este sistema.</value>
+  </data>
+  <data name="SysSet.DescSaved" xml:space="preserve">
+    <value>La descripción se guardó.</value>
+  </data>
+  <data name="SysSet.EnvUnsupported" xml:space="preserve">
+    <value>Las variables de entorno no se pueden cambiar en este sistema.</value>
+  </data>
+  <data name="SysSet.TzUnsupported" xml:space="preserve">
+    <value>Cambiar la zona horaria no es compatible con este sistema.</value>
+  </data>
+  <data name="SysSet.NotTz" xml:space="preserve">
+    <value>Eso no es una zona horaria.</value>
+  </data>
+  <data name="SysSet.TzNow" xml:space="preserve">
+    <value>La zona horaria ahora es {0}.</value>
+  </data>
 </root>

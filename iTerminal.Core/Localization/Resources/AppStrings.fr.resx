@@ -7549,4 +7549,43 @@
   <data name="SysVal.ValLong" xml:space="preserve">
     <value>La valeur est trop longue pour le registre.</value>
   </data>
+  <data name="SysSet.NeedsAdmin" xml:space="preserve">
+    <value>Cela modifie toute la machine et nécessite des droits d’administrateur. Relancez iTerminal en tant qu’administrateur (Ctrl+Maj+A) et réessayez.</value>
+  </data>
+  <data name="SysSet.NameUnsupported" xml:space="preserve">
+    <value>Changer le nom de l’ordinateur n’est pas pris en charge sur ce système.</value>
+  </data>
+  <data name="SysSet.NameAfterRestart" xml:space="preserve">
+    <value>L’ordinateur s’appellera {0} après le prochain redémarrage.</value>
+  </data>
+  <data name="SysSet.NameNow" xml:space="preserve">
+    <value>L’ordinateur s’appelle maintenant {0}.</value>
+  </data>
+  <data name="SysSet.GroupWindows" xml:space="preserve">
+    <value>Un groupe de travail est un paramètre Windows.</value>
+  </data>
+  <data name="SysSet.DomainMember" xml:space="preserve">
+    <value>Cet ordinateur est membre du domaine {0}. Quitter un domaine nécessite un compte d’annuaire ; utilisez les Propriétés système de Windows.</value>
+  </data>
+  <data name="SysSet.GroupAfterRestart" xml:space="preserve">
+    <value>Le groupe de travail sera {0} après le prochain redémarrage.</value>
+  </data>
+  <data name="SysSet.DescUnsupported" xml:space="preserve">
+    <value>Changer la description de l’ordinateur n’est pas pris en charge sur ce système.</value>
+  </data>
+  <data name="SysSet.DescSaved" xml:space="preserve">
+    <value>La description a été enregistrée.</value>
+  </data>
+  <data name="SysSet.EnvUnsupported" xml:space="preserve">
+    <value>Les variables d’environnement ne peuvent pas être modifiées sur ce système.</value>
+  </data>
+  <data name="SysSet.TzUnsupported" xml:space="preserve">
+    <value>Changer le fuseau horaire n’est pas pris en charge sur ce système.</value>
+  </data>
+  <data name="SysSet.NotTz" xml:space="preserve">
+    <value>Ce n’est pas un fuseau horaire.</value>
+  </data>
+  <data name="SysSet.TzNow" xml:space="preserve">
+    <value>Le fuseau horaire est maintenant {0}.</value>
+  </data>
 </root>

@@ -7690,4 +7690,43 @@
   <data name="SysVal.ValLong" xml:space="preserve">
     <value>The value is too long for the registry.</value>
   </data>
+  <data name="SysSet.NeedsAdmin" xml:space="preserve">
+    <value>This changes the whole machine, so it needs administrator rights. Restart iTerminal as administrator (Ctrl+Shift+A) and try again.</value>
+  </data>
+  <data name="SysSet.NameUnsupported" xml:space="preserve">
+    <value>Changing the computer name is not supported on this system.</value>
+  </data>
+  <data name="SysSet.NameAfterRestart" xml:space="preserve">
+    <value>The computer will be called {0} after the next restart.</value>
+  </data>
+  <data name="SysSet.NameNow" xml:space="preserve">
+    <value>The computer is now called {0}.</value>
+  </data>
+  <data name="SysSet.GroupWindows" xml:space="preserve">
+    <value>A workgroup is a Windows setting.</value>
+  </data>
+  <data name="SysSet.DomainMember" xml:space="preserve">
+    <value>This computer is a member of the domain {0}. Leaving a domain needs a directory account; use Windows' own System Properties.</value>
+  </data>
+  <data name="SysSet.GroupAfterRestart" xml:space="preserve">
+    <value>The workgroup will be {0} after the next restart.</value>
+  </data>
+  <data name="SysSet.DescUnsupported" xml:space="preserve">
+    <value>Changing the computer description is not supported on this system.</value>
+  </data>
+  <data name="SysSet.DescSaved" xml:space="preserve">
+    <value>The description was saved.</value>
+  </data>
+  <data name="SysSet.EnvUnsupported" xml:space="preserve">
+    <value>Environment variables cannot be changed on this system.</value>
+  </data>
+  <data name="SysSet.TzUnsupported" xml:space="preserve">
+    <value>Changing the time zone is not supported on this system.</value>
+  </data>
+  <data name="SysSet.NotTz" xml:space="preserve">
+    <value>That is not a time zone.</value>
+  </data>
+  <data name="SysSet.TzNow" xml:space="preserve">
+    <value>The time zone is now {0}.</value>
+  </data>
 </root>

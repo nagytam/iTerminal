@@ -67,6 +67,25 @@ public class SystemSettingsServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public async Task TheRefusalsAndConfirmationsFollowTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(SystemSettingsService).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        var (refused, _, _, _) = Create(windows: false, elevated: false);
+        var (allowed, _, _, _) = Create(windows: false, elevated: true);
+
+        var withoutRights = await refused.SetComputerNameAsync("web-01");
+        var renamed = await allowed.SetComputerNameAsync("web-01");
+
+        StringAssert.Contains(withoutRights.Message, "Administratorrechte");
+        Assert.AreEqual("Der Computer heißt jetzt web-01.", renamed.Message);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task ARenameWithoutAdministratorRightsIsRefusedBeforeAnythingRuns()
     {
         var (service, runner, _, _) = Create(windows: false, elevated: false);

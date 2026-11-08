@@ -7549,4 +7549,43 @@
   <data name="SysVal.ValLong" xml:space="preserve">
     <value>Il valore è troppo lungo per il registro.</value>
   </data>
+  <data name="SysSet.NeedsAdmin" xml:space="preserve">
+    <value>Questo modifica l’intero computer e richiede i diritti di amministratore. Riavvia iTerminal come amministratore (Ctrl+Maiusc+A) e riprova.</value>
+  </data>
+  <data name="SysSet.NameUnsupported" xml:space="preserve">
+    <value>Cambiare il nome del computer non è supportato su questo sistema.</value>
+  </data>
+  <data name="SysSet.NameAfterRestart" xml:space="preserve">
+    <value>Il computer si chiamerà {0} dopo il prossimo riavvio.</value>
+  </data>
+  <data name="SysSet.NameNow" xml:space="preserve">
+    <value>Il computer ora si chiama {0}.</value>
+  </data>
+  <data name="SysSet.GroupWindows" xml:space="preserve">
+    <value>Un gruppo di lavoro è un’impostazione di Windows.</value>
+  </data>
+  <data name="SysSet.DomainMember" xml:space="preserve">
+    <value>Questo computer è membro del dominio {0}. Per lasciare un dominio serve un account di directory; usa le Proprietà del sistema di Windows.</value>
+  </data>
+  <data name="SysSet.GroupAfterRestart" xml:space="preserve">
+    <value>Il gruppo di lavoro sarà {0} dopo il prossimo riavvio.</value>
+  </data>
+  <data name="SysSet.DescUnsupported" xml:space="preserve">
+    <value>Cambiare la descrizione del computer non è supportato su questo sistema.</value>
+  </data>
+  <data name="SysSet.DescSaved" xml:space="preserve">
+    <value>La descrizione è stata salvata.</value>
+  </data>
+  <data name="SysSet.EnvUnsupported" xml:space="preserve">
+    <value>Le variabili d’ambiente non possono essere modificate su questo sistema.</value>
+  </data>
+  <data name="SysSet.TzUnsupported" xml:space="preserve">
+    <value>Cambiare il fuso orario non è supportato su questo sistema.</value>
+  </data>
+  <data name="SysSet.NotTz" xml:space="preserve">
+    <value>Questo non è un fuso orario.</value>
+  </data>
+  <data name="SysSet.TzNow" xml:space="preserve">
+    <value>Il fuso orario ora è {0}.</value>
+  </data>
 </root>

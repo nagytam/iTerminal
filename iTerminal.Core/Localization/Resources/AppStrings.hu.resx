@@ -7549,4 +7549,43 @@
   <data name="SysVal.ValLong" xml:space="preserve">
     <value>Az érték túl hosszú a beállításjegyzékhez.</value>
   </data>
+  <data name="SysSet.NeedsAdmin" xml:space="preserve">
+    <value>Ez az egész gépet módosítja, ezért rendszergazdai jog kell. Indítsa újra az iTerminalt rendszergazdaként (Ctrl+Shift+A), és próbálja újra.</value>
+  </data>
+  <data name="SysSet.NameUnsupported" xml:space="preserve">
+    <value>A számítógép nevének módosítása ezen a rendszeren nem támogatott.</value>
+  </data>
+  <data name="SysSet.NameAfterRestart" xml:space="preserve">
+    <value>A számítógép neve a következő újraindítás után {0} lesz.</value>
+  </data>
+  <data name="SysSet.NameNow" xml:space="preserve">
+    <value>A számítógép neve mostantól {0}.</value>
+  </data>
+  <data name="SysSet.GroupWindows" xml:space="preserve">
+    <value>A munkacsoport Windows-beállítás.</value>
+  </data>
+  <data name="SysSet.DomainMember" xml:space="preserve">
+    <value>Ez a számítógép a(z) {0} tartomány tagja. A tartomány elhagyásához címtárfiók kell; használja a Windows Rendszertulajdonságok párbeszédpanelét.</value>
+  </data>
+  <data name="SysSet.GroupAfterRestart" xml:space="preserve">
+    <value>A munkacsoport a következő újraindítás után {0} lesz.</value>
+  </data>
+  <data name="SysSet.DescUnsupported" xml:space="preserve">
+    <value>A számítógép leírásának módosítása ezen a rendszeren nem támogatott.</value>
+  </data>
+  <data name="SysSet.DescSaved" xml:space="preserve">
+    <value>A leírás elmentve.</value>
+  </data>
+  <data name="SysSet.EnvUnsupported" xml:space="preserve">
+    <value>A környezeti változók ezen a rendszeren nem módosíthatók.</value>
+  </data>
+  <data name="SysSet.TzUnsupported" xml:space="preserve">
+    <value>Az időzóna módosítása ezen a rendszeren nem támogatott.</value>
+  </data>
+  <data name="SysSet.NotTz" xml:space="preserve">
+    <value>Ez nem időzóna.</value>
+  </data>
+  <data name="SysSet.TzNow" xml:space="preserve">
+    <value>Az időzóna mostantól {0}.</value>
+  </data>
 </root>
