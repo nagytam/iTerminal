@@ -5338,4 +5338,58 @@
   <data name="Git.NoRepoHint" xml:space="preserve">
     <value>Apri nel pannello una cartella all’interno di un repository, poi premi di nuovo Ctrl+G.</value>
   </data>
+  <data name="Contacts.FooterForm" xml:space="preserve">
+    <value>Invio campo successivo  Tab/Maiusc+Tab sposta  Esc annulla</value>
+  </data>
+  <data name="Contacts.FooterFilter" xml:space="preserve">
+    <value>Digita per filtrare  Invio mantieni  Esc cancella</value>
+  </data>
+  <data name="Contacts.FooterBrowse" xml:space="preserve">
+    <value>N nuovo  E cambia  D elimina  / filtro  Esc chiudi</value>
+  </data>
+  <data name="Hint.Part.Reveal" xml:space="preserve">
+    <value>Invio:mostra</value>
+  </data>
+  <data name="Hint.Part.Preview" xml:space="preserve">
+    <value>Ctrl+T:anteprima</value>
+  </data>
+  <data name="Hint.Part.StopScan" xml:space="preserve">
+    <value>Ctrl+X:ferma scansione</value>
+  </data>
+  <data name="Hint.Part.Scanning" xml:space="preserve">
+    <value>scansione…</value>
+  </data>
+  <data name="Hint.Part.Rescan" xml:space="preserve">
+    <value>Ctrl+R:riscansiona</value>
+  </data>
+  <data name="Hint.Part.Focus" xml:space="preserve">
+    <value>Tab:focus</value>
+  </data>
+  <data name="Hint.Part.EscClear" xml:space="preserve">
+    <value>Esc:cancella</value>
+  </data>
+  <data name="Hint.Part.EscClose" xml:space="preserve">
+    <value>Esc:chiudi</value>
+  </data>
+  <data name="Hint.Part.GoTo" xml:space="preserve">
+    <value>Invio:vai a</value>
+  </data>
+  <data name="Hint.Part.ToPanel" xml:space="preserve">
+    <value>Ctrl+P:nel pannello</value>
+  </data>
+  <data name="Hint.Part.Stop" xml:space="preserve">
+    <value>Ctrl+X:ferma</value>
+  </data>
+  <data name="Hint.Part.NextField" xml:space="preserve">
+    <value>Tab:campo successivo</value>
+  </data>
+  <data name="Hint.Part.SearchGoTo" xml:space="preserve">
+    <value>Invio:cerca / vai a</value>
+  </data>
+  <data name="Hint.Part.ResultsToPanel" xml:space="preserve">
+    <value>Ctrl+P:risultati nel pannello</value>
+  </data>
+  <data name="Hint.Part.Toggle" xml:space="preserve">
+    <value>Spazio:attiva</value>
+  </data>
 </root>

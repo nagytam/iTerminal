@@ -524,9 +524,9 @@ public class ContactManagerDialog : Dialog
 
     private string FooterText() => _mode switch
     {
-        Mode.Form => "Enter next field  Tab/Shift+Tab move  Esc discard",
-        Mode.Filter => "Type to filter  Enter keep  Esc clear",
-        _ => "N new  E change  D delete  / filter  Esc close",
+        Mode.Form => iConsole.Localization.UiText.Get("Contacts.FooterForm", "Enter next field  Tab/Shift+Tab move  Esc discard"),
+        Mode.Filter => iConsole.Localization.UiText.Get("Contacts.FooterFilter", "Type to filter  Enter keep  Esc clear"),
+        _ => iConsole.Localization.UiText.Get("Contacts.FooterBrowse", "N new  E change  D delete  / filter  Esc close"),
     };
 
     private void DrawHeader(IBuffer buffer, int iw, ColorScheme colorScheme)

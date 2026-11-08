@@ -5338,4 +5338,58 @@
   <data name="Git.NoRepoHint" xml:space="preserve">
     <value>Nyisson meg a panelben egy tárhelyen belüli mappát, majd nyomja meg újra a Ctrl+G-t.</value>
   </data>
+  <data name="Contacts.FooterForm" xml:space="preserve">
+    <value>Enter következő mező  Tab/Shift+Tab mozgás  Esc elvet</value>
+  </data>
+  <data name="Contacts.FooterFilter" xml:space="preserve">
+    <value>Gépeljen a szűréshez  Enter megtart  Esc töröl</value>
+  </data>
+  <data name="Contacts.FooterBrowse" xml:space="preserve">
+    <value>N új  E módosít  D töröl  / szűrő  Esc bezár</value>
+  </data>
+  <data name="Hint.Part.Reveal" xml:space="preserve">
+    <value>Enter:megmutat</value>
+  </data>
+  <data name="Hint.Part.Preview" xml:space="preserve">
+    <value>Ctrl+T:előnézet</value>
+  </data>
+  <data name="Hint.Part.StopScan" xml:space="preserve">
+    <value>Ctrl+X:vizsgálat leáll</value>
+  </data>
+  <data name="Hint.Part.Scanning" xml:space="preserve">
+    <value>vizsgálat…</value>
+  </data>
+  <data name="Hint.Part.Rescan" xml:space="preserve">
+    <value>Ctrl+R:újravizsgál</value>
+  </data>
+  <data name="Hint.Part.Focus" xml:space="preserve">
+    <value>Tab:fókusz</value>
+  </data>
+  <data name="Hint.Part.EscClear" xml:space="preserve">
+    <value>Esc:töröl</value>
+  </data>
+  <data name="Hint.Part.EscClose" xml:space="preserve">
+    <value>Esc:bezár</value>
+  </data>
+  <data name="Hint.Part.GoTo" xml:space="preserve">
+    <value>Enter:ugrás</value>
+  </data>
+  <data name="Hint.Part.ToPanel" xml:space="preserve">
+    <value>Ctrl+P:panelbe</value>
+  </data>
+  <data name="Hint.Part.Stop" xml:space="preserve">
+    <value>Ctrl+X:leállít</value>
+  </data>
+  <data name="Hint.Part.NextField" xml:space="preserve">
+    <value>Tab:következő mező</value>
+  </data>
+  <data name="Hint.Part.SearchGoTo" xml:space="preserve">
+    <value>Enter:keres / ugrás</value>
+  </data>
+  <data name="Hint.Part.ResultsToPanel" xml:space="preserve">
+    <value>Ctrl+P:találatok panelbe</value>
+  </data>
+  <data name="Hint.Part.Toggle" xml:space="preserve">
+    <value>Szóköz:vált</value>
+  </data>
 </root>

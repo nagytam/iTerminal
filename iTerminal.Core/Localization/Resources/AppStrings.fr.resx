@@ -5338,4 +5338,58 @@
   <data name="Git.NoRepoHint" xml:space="preserve">
     <value>Ouvrez dans le panneau un dossier situé dans un dépôt, puis appuyez de nouveau sur Ctrl+G.</value>
   </data>
+  <data name="Contacts.FooterForm" xml:space="preserve">
+    <value>Entrée champ suivant  Tab/Maj+Tab déplacer  Échap annuler</value>
+  </data>
+  <data name="Contacts.FooterFilter" xml:space="preserve">
+    <value>Tapez pour filtrer  Entrée garder  Échap effacer</value>
+  </data>
+  <data name="Contacts.FooterBrowse" xml:space="preserve">
+    <value>N nouveau  E modifier  D supprimer  / filtre  Échap fermer</value>
+  </data>
+  <data name="Hint.Part.Reveal" xml:space="preserve">
+    <value>Entrée:révéler</value>
+  </data>
+  <data name="Hint.Part.Preview" xml:space="preserve">
+    <value>Ctrl+T:aperçu</value>
+  </data>
+  <data name="Hint.Part.StopScan" xml:space="preserve">
+    <value>Ctrl+X:arrêter l&apos;analyse</value>
+  </data>
+  <data name="Hint.Part.Scanning" xml:space="preserve">
+    <value>analyse…</value>
+  </data>
+  <data name="Hint.Part.Rescan" xml:space="preserve">
+    <value>Ctrl+R:réanalyser</value>
+  </data>
+  <data name="Hint.Part.Focus" xml:space="preserve">
+    <value>Tab:focus</value>
+  </data>
+  <data name="Hint.Part.EscClear" xml:space="preserve">
+    <value>Échap:effacer</value>
+  </data>
+  <data name="Hint.Part.EscClose" xml:space="preserve">
+    <value>Échap:fermer</value>
+  </data>
+  <data name="Hint.Part.GoTo" xml:space="preserve">
+    <value>Entrée:aller à</value>
+  </data>
+  <data name="Hint.Part.ToPanel" xml:space="preserve">
+    <value>Ctrl+P:vers le panneau</value>
+  </data>
+  <data name="Hint.Part.Stop" xml:space="preserve">
+    <value>Ctrl+X:arrêter</value>
+  </data>
+  <data name="Hint.Part.NextField" xml:space="preserve">
+    <value>Tab:champ suivant</value>
+  </data>
+  <data name="Hint.Part.SearchGoTo" xml:space="preserve">
+    <value>Entrée:chercher / aller à</value>
+  </data>
+  <data name="Hint.Part.ResultsToPanel" xml:space="preserve">
+    <value>Ctrl+P:résultats vers le panneau</value>
+  </data>
+  <data name="Hint.Part.Toggle" xml:space="preserve">
+    <value>Espace:basculer</value>
+  </data>
 </root>
