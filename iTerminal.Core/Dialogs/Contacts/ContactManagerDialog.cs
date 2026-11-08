@@ -30,6 +30,12 @@ public class ContactManagerDialog : Dialog
     private const int PhoneColumn = 15;
     private const int LabelWidth = 10;
 
+    /// <summary>The Name, Email and Phone column widths: the full ones where there is room for a Company too, else shares of the width.</summary>
+    private static (int Name, int Email, int Phone) Columns(int innerWidth) =>
+        innerWidth >= NameColumn + EmailColumn + PhoneColumn + 10
+            ? (NameColumn, EmailColumn, PhoneColumn)
+            : (Math.Max(6, innerWidth * 30 / 100), Math.Max(6, innerWidth * 36 / 100), Math.Max(6, innerWidth * 20 / 100));
+
     /// <summary>12 rows when the dialog is tall; fewer on a short terminal, so the fields and the footer stay inside the frame.</summary>
     private int ListRows => Math.Clamp((int)ViewSize.Height - 2 - RowsAroundList, 2, MaxListRows);
 
@@ -528,7 +534,8 @@ public class ContactManagerDialog : Dialog
         var total = _store.Count;
         var shown = Visible.Count;
         var count = _filter.Length > 0 ? $"{shown} of {total} contacts" : $"{total} contacts";
-        string header = Fit("Name", NameColumn) + Fit("Email", EmailColumn) + Fit("Phone", PhoneColumn) + "Company";
+        var (nameWidth, emailWidth, phoneWidth) = Columns(iw - 2);
+        string header = Fit("Name", nameWidth) + Fit("Email", emailWidth) + Fit("Phone", phoneWidth) + "Company";
         Put(buffer, 1, 0, iw - 2, header, Color.Cyan, colorScheme.Background);
 
         // The count sits at the right edge and must not paint over the last column title: the short form
@@ -567,7 +574,8 @@ public class ContactManagerDialog : Dialog
             var highlighted = contact.Id == selectedId;
             var foreground = highlighted ? colorScheme.SelectedFocusedForeground : colorScheme.Foreground;
             var background = highlighted ? colorScheme.SelectedFocusedBackground : colorScheme.Background;
-            var line = Fit(contact.Name, NameColumn) + Fit(contact.Email, EmailColumn) + Fit(contact.Phone, PhoneColumn) + contact.Company;
+            var (nameWidth, emailWidth, phoneWidth) = Columns(iw - 2);
+            var line = Fit(contact.Name, nameWidth) + Fit(contact.Email, emailWidth) + Fit(contact.Phone, phoneWidth) + contact.Company;
             Put(buffer, 1, y, iw - 2, line, foreground, background);
         }
     }

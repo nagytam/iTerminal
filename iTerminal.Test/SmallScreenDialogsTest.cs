@@ -511,4 +511,17 @@ public class SmallScreenDialogsTest
         await narrow.WaitForTextAsync("Available commands");
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("available in the current")), "the first description wrapped at the frame, not at the old indent");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheContactsHeadingOn50Columns_ShowsEveryColumnTitle()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+
+        await narrow.PressAsync("Ctrl+Shift+K");
+
+        await narrow.WaitForTextAsync("Contacts");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Email")), "the heading");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Phone") && l.Contains("Company")), narrow.Screen.Dump());
+    }
 }
