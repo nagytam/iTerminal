@@ -144,11 +144,11 @@ public sealed class CalendarModel : ICalendarModel
         var days = date.DayNumber - today.DayNumber;
         return days switch
         {
-            0 => "today",
-            1 => "tomorrow",
-            -1 => "yesterday",
-            > 1 => $"in {days} days",
-            _ => $"{-days} days ago",
+            0 => iConsole.Localization.UiText.Get("Calendar.Today", "today"),
+            1 => iConsole.Localization.UiText.Get("Calendar.Tomorrow", "tomorrow"),
+            -1 => iConsole.Localization.UiText.Get("Calendar.Yesterday", "yesterday"),
+            > 1 => string.Format(iConsole.Localization.UiText.Get("Calendar.InDays", "in {0} days"), days),
+            _ => string.Format(iConsole.Localization.UiText.Get("Calendar.DaysAgo", "{0} days ago"), -days),
         };
     }
 

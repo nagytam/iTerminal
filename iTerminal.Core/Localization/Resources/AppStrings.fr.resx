@@ -5521,4 +5521,37 @@
   <data name="Workspaces.SavesLine" xml:space="preserve">
     <value>Enregistre : {0} → {1}  ·  {2}</value>
   </data>
+  <data name="Calendar.Today" xml:space="preserve">
+    <value>aujourd&apos;hui</value>
+  </data>
+  <data name="Calendar.Tomorrow" xml:space="preserve">
+    <value>demain</value>
+  </data>
+  <data name="Calendar.Yesterday" xml:space="preserve">
+    <value>hier</value>
+  </data>
+  <data name="Calendar.InDays" xml:space="preserve">
+    <value>dans {0} jours</value>
+  </data>
+  <data name="Calendar.DaysAgo" xml:space="preserve">
+    <value>il y a {0} jours</value>
+  </data>
+  <data name="Calendar.WeekLine" xml:space="preserve">
+    <value>Semaine {0}  |  jour {1} sur {2}  |  {3}</value>
+  </data>
+  <data name="Calendar.NoMeetings" xml:space="preserve">
+    <value>Aucune réunion ce jour</value>
+  </data>
+  <data name="Calendar.Meetings" xml:space="preserve">
+    <value>Réunions ({0})</value>
+  </data>
+  <data name="Calendar.NewMeeting" xml:space="preserve">
+    <value>Nouvelle réunion : {0}_</value>
+  </data>
+  <data name="Calendar.ChangeMeeting" xml:space="preserve">
+    <value>Modifier la réunion : {0}_</value>
+  </data>
+  <data name="Calendar.AddHint" xml:space="preserve">
+    <value>N : ajouter une réunion, ex. 14:30 45 Standup</value>
+  </data>
 </root>

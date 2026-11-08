@@ -5521,4 +5521,37 @@
   <data name="Workspaces.SavesLine" xml:space="preserve">
     <value>Menti: {0} → {1}  ·  {2}</value>
   </data>
+  <data name="Calendar.Today" xml:space="preserve">
+    <value>ma</value>
+  </data>
+  <data name="Calendar.Tomorrow" xml:space="preserve">
+    <value>holnap</value>
+  </data>
+  <data name="Calendar.Yesterday" xml:space="preserve">
+    <value>tegnap</value>
+  </data>
+  <data name="Calendar.InDays" xml:space="preserve">
+    <value>{0} nap múlva</value>
+  </data>
+  <data name="Calendar.DaysAgo" xml:space="preserve">
+    <value>{0} napja</value>
+  </data>
+  <data name="Calendar.WeekLine" xml:space="preserve">
+    <value>{0}. hét  |  {1}. nap / {2}  |  {3}</value>
+  </data>
+  <data name="Calendar.NoMeetings" xml:space="preserve">
+    <value>Nincs találkozó ezen a napon</value>
+  </data>
+  <data name="Calendar.Meetings" xml:space="preserve">
+    <value>Találkozók ({0})</value>
+  </data>
+  <data name="Calendar.NewMeeting" xml:space="preserve">
+    <value>Új találkozó: {0}_</value>
+  </data>
+  <data name="Calendar.ChangeMeeting" xml:space="preserve">
+    <value>Találkozó módosítása: {0}_</value>
+  </data>
+  <data name="Calendar.AddHint" xml:space="preserve">
+    <value>N: találkozó hozzáadása, pl. 14:30 45 Standup</value>
+  </data>
 </root>

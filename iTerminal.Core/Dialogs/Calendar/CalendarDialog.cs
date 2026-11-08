@@ -486,13 +486,13 @@ public class CalendarDialog : Dialog
         var relative = CalendarModel.RelativeTo(selected, _calendar.Today);
 
         Put(buffer, 0, 10, iw, Center(selected.ToString("dddd, d MMMM yyyy"), iw), colorScheme.SelectedFocusedForeground, colorScheme.Background);
-        Put(buffer, 0, 11, iw, Center($"Week {week}  |  day {selected.DayOfYear} of {daysInYear}  |  {relative}", iw), colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 0, 11, iw, Center(string.Format(iConsole.Localization.UiText.Get("Calendar.WeekLine", "Week {0}  |  day {1} of {2}  |  {3}"), week, selected.DayOfYear, daysInYear, relative), iw), colorScheme.Foreground, colorScheme.Background);
     }
 
     private void DrawMeetings(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
         var list = _meetings.On(_calendar.SelectedDate);
-        var header = list.Count == 0 ? "No meetings on this day" : $"Meetings ({list.Count})";
+        var header = list.Count == 0 ? iConsole.Localization.UiText.Get("Calendar.NoMeetings", "No meetings on this day") : string.Format(iConsole.Localization.UiText.Get("Calendar.Meetings", "Meetings ({0})"), list.Count);
         Put(buffer, 1, 13, iw - 2, header, Color.Cyan, colorScheme.Background);
 
         var first = _meetingCursor >= VisibleMeetingRows ? _meetingCursor - VisibleMeetingRows + 1 : 0;
@@ -522,11 +522,11 @@ public class CalendarDialog : Dialog
 
         if (_confirmingDelete && _meetingCursor < list.Count)
         {
-            Put(buffer, 1, MessageY, iw - 2, $"Delete \"{list[_meetingCursor].Title}\"? (y/n)", colorScheme.Error, colorScheme.Background);
+            Put(buffer, 1, MessageY, iw - 2, string.Format(iConsole.Localization.UiText.Get("Prompt.DeleteNamed", "Delete \"{0}\"? (y/n)"), list[_meetingCursor].Title), colorScheme.Error, colorScheme.Background);
         }
         else if (_entry is not null)
         {
-            Put(buffer, 1, MessageY, iw - 2, $"{(_editing is null ? "New" : "Change")} meeting: {_entry}_", colorScheme.SelectedFocusedForeground, colorScheme.Background);
+            Put(buffer, 1, MessageY, iw - 2, string.Format(_editing is null ? iConsole.Localization.UiText.Get("Calendar.NewMeeting", "New meeting: {0}_") : iConsole.Localization.UiText.Get("Calendar.ChangeMeeting", "Change meeting: {0}_"), _entry), colorScheme.SelectedFocusedForeground, colorScheme.Background);
             if (_entryError is not null)
             {
                 Put(buffer, 1, MessageY + 1, iw - 2, _entryError, colorScheme.Error, colorScheme.Background);
@@ -534,7 +534,7 @@ public class CalendarDialog : Dialog
         }
         else
         {
-            Put(buffer, 1, MessageY, iw - 2, "N: add a meeting, e.g. 14:30 45 Standup", colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, MessageY, iw - 2, iConsole.Localization.UiText.Get("Calendar.AddHint", "N: add a meeting, e.g. 14:30 45 Standup"), colorScheme.DisabledForeground, colorScheme.Background);
         }
     }
 

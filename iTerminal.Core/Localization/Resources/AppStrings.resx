@@ -5662,4 +5662,37 @@
   <data name="Workspaces.SavesLine" xml:space="preserve">
     <value>Saves: {0} → {1}  ·  {2}</value>
   </data>
+  <data name="Calendar.Today" xml:space="preserve">
+    <value>today</value>
+  </data>
+  <data name="Calendar.Tomorrow" xml:space="preserve">
+    <value>tomorrow</value>
+  </data>
+  <data name="Calendar.Yesterday" xml:space="preserve">
+    <value>yesterday</value>
+  </data>
+  <data name="Calendar.InDays" xml:space="preserve">
+    <value>in {0} days</value>
+  </data>
+  <data name="Calendar.DaysAgo" xml:space="preserve">
+    <value>{0} days ago</value>
+  </data>
+  <data name="Calendar.WeekLine" xml:space="preserve">
+    <value>Week {0}  |  day {1} of {2}  |  {3}</value>
+  </data>
+  <data name="Calendar.NoMeetings" xml:space="preserve">
+    <value>No meetings on this day</value>
+  </data>
+  <data name="Calendar.Meetings" xml:space="preserve">
+    <value>Meetings ({0})</value>
+  </data>
+  <data name="Calendar.NewMeeting" xml:space="preserve">
+    <value>New meeting: {0}_</value>
+  </data>
+  <data name="Calendar.ChangeMeeting" xml:space="preserve">
+    <value>Change meeting: {0}_</value>
+  </data>
+  <data name="Calendar.AddHint" xml:space="preserve">
+    <value>N: add a meeting, e.g. 14:30 45 Standup</value>
+  </data>
 </root>
