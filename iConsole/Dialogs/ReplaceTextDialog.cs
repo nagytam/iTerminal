@@ -132,18 +132,20 @@ public class ReplaceTextDialog : Dialog
         _replaceBox.Position = new Position(3, 4);
         _matchCaseBox.Position = new Position(3, 6);
         _matchCaseBox.ViewSize = new Size(16, 1);
-        _regexBox.Position = new Position(24, 6);
+        // The two options side by side need 50 columns; a narrower dialog stacks them instead of running over its border.
+        var narrow = ViewSize.Width < 56;
+        _regexBox.Position = narrow ? new Position(3, 7) : new Position(24, 6);
         _regexBox.ViewSize = new Size(24, 1);
         _messageLabel.Position = new Position(3, 8);
         _messageLabel.ViewSize = new Size(width, 1);
 
         var buttonY = Math.Max(0, ViewSize.Height - 2);
         _replaceButton.Position = new Position(3, buttonY);
-        _replaceButton.ViewSize = new Size(15, 1);
-        _replaceAllButton.Position = new Position(20, buttonY);
-        _replaceAllButton.ViewSize = new Size(17, 1);
-        _cancelButton.Position = new Position(Math.Max(0, ViewSize.Width - 17), buttonY);
-        _cancelButton.ViewSize = new Size(15, 1);
+        _replaceButton.ViewSize = new Size(narrow ? 12 : 15, 1);
+        _replaceAllButton.Position = new Position(narrow ? 16 : 20, buttonY);
+        _replaceAllButton.ViewSize = new Size(narrow ? 14 : 17, 1);
+        _cancelButton.Position = new Position(Math.Max(0, ViewSize.Width - (narrow ? 14 : 17)), buttonY);
+        _cancelButton.ViewSize = new Size(narrow ? 12 : 15, 1);
     }
 
     /// <summary>Enter on the "Replace" button replaces the next one; the other button has no key of its own.</summary>

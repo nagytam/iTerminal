@@ -571,4 +571,25 @@ public class SmallScreenDialogsTest
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("[  =")) || s.Lines.Any(l => l.Contains("=  ]")), "the equals key");
         Assert.IsFalse(narrow.Screen.Lines.Any(l => l.Contains("]═[") || l.Contains("]║[")), narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("F3", "F7", "Search text")]
+    [DataRow("F4", "Ctrl+R", "Replace text")]
+    public async Task TheSearchAndReplaceDialogsOn45Columns_KeepTheirOptionsAndButtonsInsideTheFrame(string open, string chord, string title)
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+        await narrow.SelectEntryAsync("readme.txt");
+        await narrow.PressAsync(open);
+        await narrow.WaitForTextAsync("Hello from the left panel");
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitForTextAsync(title);
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Regular expression")), "the options");
+        foreach (string line in narrow.Screen.Lines.Where(l => l.Contains("Regular expression") || l.Contains("Match case") || l.Contains("Cancel")))
+        {
+            Assert.IsTrue(line.TrimEnd().EndsWith('║') && !line.Contains("a[") && !line.Contains("l[") , narrow.Screen.Dump());
+        }
+    }
 }

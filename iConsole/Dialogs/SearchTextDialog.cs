@@ -103,7 +103,9 @@ public class SearchTextDialog : Dialog
 
         _regexBox.Position = new Position(3, 4);
         _regexBox.ViewSize = new Size(24, 1);
-        _matchCaseBox.Position = new Position(30, 4);
+        // The two options side by side need 46 columns; a narrower dialog stacks them instead of running over its border.
+        var sideBySide = ViewSize.Width >= 50;
+        _matchCaseBox.Position = sideBySide ? new Position(30, 4) : new Position(3, 5);
         _matchCaseBox.ViewSize = new Size(16, 1);
 
         _errorLabel.Position = new Position(3, 6);
