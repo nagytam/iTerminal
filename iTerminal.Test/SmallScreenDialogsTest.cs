@@ -1,4 +1,4 @@
-namespace iTerminal.Test;
+﻿namespace iTerminal.Test;
 
 /// <summary>Dialogs on an 80 x 24 terminal: everything inside its frame, nothing cut mid-word that fits.</summary>
 [TestClass]
@@ -153,6 +153,21 @@ public class SmallScreenDialogsTest
         int footer = Array.FindIndex(lines, l => l.Contains("Esc cancel"));
         Assert.IsTrue(footer > lastTab, "the dialog's bottom border must come after the last tab name\n" + narrow.Screen.Dump());
         Assert.IsFalse(lines.Skip(footer + 1).Any(l => l.Contains("╠") || l.Contains("-Path")), narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    [DataRow("Ctrl+Shift+F4", "The source language")]
+    [DataRow("Alt+F3", "Nothing indexed yet")]
+    [DataRow("Ctrl+Shift+F5", "1 EUR =")]
+    public async Task AStatusOrRateLineTooLongFor50Columns_EndsOnAnEllipsis(string chord, string start)
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 50, height: 18);
+        await narrow.SelectEntryAsync("readme.txt");
+
+        await narrow.PressAsync(chord);
+
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains(start) && l.Contains('…')), $"the line starting \"{start}\" to end on an ellipsis");
     }
 
     [Timeout(120_000)]
@@ -328,5 +343,33 @@ public class SmallScreenDialogsTest
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Modified: [")) && s.Lines.Any(l => l.Contains("Accessed: [")), "the date boxes");
         int[] columns = [.. app.Screen.Lines.Where(l => l.Contains("Modified: [") || l.Contains("Accessed: [") || l.Contains("Created: [")).Select(l => l.IndexOf('['))];
         Assert.IsTrue(columns.Length >= 2 && columns.Distinct().Count() == 1, app.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheGlobalSettingsPageOn45Columns_KeepsItsTextAndCheckBoxInsideTheFrame()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Shift+F8");
+
+        await narrow.WaitForTextAsync("Draw pict");
+        string[] lines = narrow.Screen.Lines.ToArray();
+        int box = Array.FindIndex(lines, l => l.Contains("Draw pict"));
+        int bottom = Array.FindLastIndex(lines, l => l.Contains('╚'));
+        Assert.IsTrue(box >= 0 && box < bottom, narrow.Screen.Dump());
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheCalendarOn16Rows_DrawsNothingOnItsBottomBorder()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 45, height: 16);
+
+        await narrow.PressAsync("Ctrl+D");
+
+        await narrow.WaitForTextAsync("Calendar");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Esc close")), "the hint that closes the dialog");
+        Assert.IsTrue(narrow.Screen.Lines[narrow.Screen.Height - 1].TrimStart().StartsWith("╚═") && narrow.Screen.Lines[narrow.Screen.Height - 1].Count(c => c == '═') >= 40, narrow.Screen.Dump());
     }
 }

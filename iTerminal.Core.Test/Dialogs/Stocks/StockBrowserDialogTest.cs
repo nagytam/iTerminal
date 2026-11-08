@@ -1,4 +1,4 @@
-using iConsole.Services;
+﻿using iConsole.Services;
 using iTerminal.Core.Dialogs.Stocks;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Stocks;
@@ -279,5 +279,23 @@ public class StockBrowserDialogTest
 
         AssertScreenContains(Render(dialog), "The watchlist is empty — press a to add a stock.");
         dialog.Close();
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow(110, true, true, true)]
+    [DataRow(65, true, true, false)]
+    [DataRow(50, true, false, false)]
+    [DataRow(45, false, false, false)]
+    public void FormatColumns_DropsColumnsFromTheRight_SoTheCompanyNameKeepsRoom(int width, bool change, bool percent, bool exchange)
+    {
+        string row = StockBrowserDialog.FormatColumns("AAPL", "Apple Incorporated", "100.00", "+1.00", "+1.0%", "NASDAQ", width);
+
+        Assert.IsTrue(row.Length <= width, row);
+        Assert.AreEqual(change, row.Contains("+1.00"), row);
+        Assert.AreEqual(percent, row.Contains("+1.0%"), row);
+        Assert.AreEqual(exchange, row.Contains("NASDAQ"), row);
+        Assert.IsTrue(row.Contains("100.00"), row);
+        Assert.IsTrue(row.Contains("Apple Inc"), "the name keeps at least 13 characters: " + row);
     }
 }

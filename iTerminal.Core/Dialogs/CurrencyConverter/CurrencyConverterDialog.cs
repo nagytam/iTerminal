@@ -370,7 +370,7 @@ public class CurrencyConverterDialog : SplitPaneDialog
         bool failed = result.Length == 0 || result.Contains("not a number", StringComparison.Ordinal) || result.StartsWith("No ", StringComparison.Ordinal);
         WriteLine(buffer, ix, iy + 2, iw, string.Empty, colorScheme.Foreground, colorScheme.Background);
         WriteLine(buffer, ix, iy + 3, iw, " " + result, failed ? colorScheme.Error : colorScheme.SelectedFocusedForeground, colorScheme.Background);
-        WriteLine(buffer, ix, iy + 4, iw, " " + RateLine(), colorScheme.Foreground, colorScheme.Background);
+        WriteLine(buffer, ix, iy + 4, iw, Ellipsize(" " + RateLine(), iw), colorScheme.Foreground, colorScheme.Background);
         for (int row = 5; row < ih - 1; row++)
         {
             WriteLine(buffer, ix, iy + row, iw, string.Empty, colorScheme.Foreground, colorScheme.Background);
