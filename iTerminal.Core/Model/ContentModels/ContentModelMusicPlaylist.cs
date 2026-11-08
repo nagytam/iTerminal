@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -163,16 +164,16 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
 
     private void BuildRootEntries(List<IEntry> entries)
     {
-        entries.Add(new MusicEntry(MusicEntryKind.Folder, ChildUrl(TransportSection), "[Transport]")
+        entries.Add(new MusicEntry(MusicEntryKind.Folder, ChildUrl(TransportSection), UiText.Get("Music.Transport", "[Transport]"))
             .WithValue(StateLabel(Player.State))
             .WithContext(Player.CurrentTrack?.DisplayTitle ?? string.Empty));
 
-        entries.Add(new MusicEntry(MusicEntryKind.Folder, ChildUrl(VolumeSection), "[Volume]")
+        entries.Add(new MusicEntry(MusicEntryKind.Folder, ChildUrl(VolumeSection), UiText.Get("Music.VolumeFolder", "[Volume]"))
             .WithValue($"{Player.Volume}%")
             .WithContext(VolumeBar(Player.Volume)));
 
-        entries.Add(new MusicEntry(MusicEntryKind.Folder, ChildUrl(DevicesSection), "[Output]")
-            .WithValue(_deviceService.HasAudioOutput ? _deviceService.ActiveBackendName : "none")
+        entries.Add(new MusicEntry(MusicEntryKind.Folder, ChildUrl(DevicesSection), UiText.Get("Music.Output", "[Output]"))
+            .WithValue(_deviceService.HasAudioOutput ? _deviceService.ActiveBackendName : UiText.Get("Music.None", "none"))
             .WithContext(CurrentDeviceName()));
 
         var tracks = Player.Playlist.Tracks;
@@ -237,23 +238,23 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
     {
         AddParentEntry(entries);
 
-        AddAction(entries, MusicAction.PlayPause, "Play / Pause", StateLabel(Player.State), Player.CurrentTrack?.DisplayName ?? string.Empty);
-        AddAction(entries, MusicAction.Stop, "Stop", string.Empty, string.Empty);
-        AddAction(entries, MusicAction.Next, "Next track", string.Empty, string.Empty);
-        AddAction(entries, MusicAction.Previous, "Previous track", string.Empty, string.Empty);
-        AddAction(entries, MusicAction.SeekBackward, "Rewind 5s", FormatDuration(Player.Position), string.Empty);
-        AddAction(entries, MusicAction.SeekForward, "Forward 5s", FormatDuration(Player.Duration), string.Empty);
-        AddAction(entries, MusicAction.CycleRepeat, "Repeat mode", RepeatLabel(Player.RepeatMode), string.Empty);
-        AddAction(entries, MusicAction.ToggleShuffle, "Shuffle", Player.IsShuffled ? "on" : "off", string.Empty);
-        AddAction(entries, MusicAction.ClearPlaylist, "Clear the playlist", $"{Player.Playlist.Count}", string.Empty);
+        AddAction(entries, MusicAction.PlayPause, UiText.Get("Music.PlayPause", "Play / Pause"), StateLabel(Player.State), Player.CurrentTrack?.DisplayName ?? string.Empty);
+        AddAction(entries, MusicAction.Stop, UiText.Get("Music.Stop", "Stop"), string.Empty, string.Empty);
+        AddAction(entries, MusicAction.Next, UiText.Get("Music.Next", "Next track"), string.Empty, string.Empty);
+        AddAction(entries, MusicAction.Previous, UiText.Get("Music.Previous", "Previous track"), string.Empty, string.Empty);
+        AddAction(entries, MusicAction.SeekBackward, UiText.Get("Music.Rewind", "Rewind 5s"), FormatDuration(Player.Position), string.Empty);
+        AddAction(entries, MusicAction.SeekForward, UiText.Get("Music.Forward", "Forward 5s"), FormatDuration(Player.Duration), string.Empty);
+        AddAction(entries, MusicAction.CycleRepeat, UiText.Get("Music.RepeatMode", "Repeat mode"), RepeatLabel(Player.RepeatMode), string.Empty);
+        AddAction(entries, MusicAction.ToggleShuffle, UiText.Get("Music.ShuffleLabel", "Shuffle"), OnOff(Player.IsShuffled), string.Empty);
+        AddAction(entries, MusicAction.ClearPlaylist, UiText.Get("Music.ClearPlaylist", "Clear the playlist"), $"{Player.Playlist.Count}", string.Empty);
     }
 
     private void BuildVolumeEntries(List<IEntry> entries)
     {
         AddParentEntry(entries);
 
-        AddAction(entries, MusicAction.VolumeUp, "Louder (+5)", $"{Math.Min(100, Player.Volume + 5)}%", string.Empty);
-        AddAction(entries, MusicAction.VolumeDown, "Quieter (-5)", $"{Math.Max(0, Player.Volume - 5)}%", string.Empty);
+        AddAction(entries, MusicAction.VolumeUp, UiText.Get("Music.Louder", "Louder (+5)"), $"{Math.Min(100, Player.Volume + 5)}%", string.Empty);
+        AddAction(entries, MusicAction.VolumeDown, UiText.Get("Music.Quieter", "Quieter (-5)"), $"{Math.Max(0, Player.Volume - 5)}%", string.Empty);
 
         foreach (var level in VolumePresets)
         {
@@ -261,7 +262,7 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
             entries.Add(new MusicEntry(
                 MusicEntryKind.Action,
                 ActionUrl(MusicAction.SetVolume, level.ToString()),
-                $"{(isCurrent ? "•" : " ")} {(level == 0 ? "Mute" : $"Set to {level}%")}")
+                $"{(isCurrent ? "•" : " ")} {(level == 0 ? UiText.Get("Music.Mute", "Mute") : string.Format(UiText.Get("Music.SetTo", "Set to {0}%"), level))}")
             {
                 Action = MusicAction.SetVolume,
                 VolumeLevel = level,
@@ -276,7 +277,7 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
     {
         AddParentEntry(entries);
 
-        AddAction(entries, MusicAction.RescanDevices, "[Rescan devices]", _deviceService.ActiveBackendName, string.Empty);
+        AddAction(entries, MusicAction.RescanDevices, UiText.Get("Music.Rescan", "[Rescan devices]"), _deviceService.ActiveBackendName, string.Empty);
 
         var currentId = Player.DeviceId ?? string.Empty;
         foreach (var device in _deviceService.GetDevices())
@@ -291,7 +292,7 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
                 IsCurrent = isCurrent,
             }
                 .WithValue(device.Backend)
-                .WithContext(device.IsDefault ? "[default]" : string.Empty));
+                .WithContext(device.IsDefault ? UiText.Get("Music.Default", "[default]") : string.Empty));
         }
 
         if (!_deviceService.HasAudioOutput)
@@ -299,7 +300,7 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
             entries.Add(new MusicEntry(
                 MusicEntryKind.Action,
                 ActionUrl(MusicAction.None, "no-output"),
-                "  No audio backend is available on this machine")
+                "  " + UiText.Get("Music.NoBackend", "No audio backend is available on this machine"))
             {
                 Action = MusicAction.None,
             });
@@ -330,12 +331,12 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
         {
             case MusicEntryKind.Track when musicEntry.PlaylistIndex >= 0:
                 Player.PlayIndex(musicEntry.PlaylistIndex);
-                SetStatus($"Playing {musicEntry.Track?.DisplayName}");
+                SetStatus(string.Format(UiText.Get("Music.Playing", "Playing {0}"), musicEntry.Track?.DisplayName));
                 break;
 
             case MusicEntryKind.Device:
                 Player.SetDevice(musicEntry.DeviceId);
-                SetStatus($"Output: {musicEntry.DisplayName.Trim(' ', '•')}");
+                SetStatus(string.Format(UiText.Get("Music.OutputSet", "Output: {0}"), musicEntry.DisplayName.Trim(' ', '•')));
                 Refresh();
                 break;
 
@@ -352,17 +353,17 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
             case MusicAction.ClearPlaylist:
                 Player.Stop();
                 Player.Playlist.Clear();
-                SetStatus("Playlist cleared");
+                SetStatus(UiText.Get("Music.Cleared", "Playlist cleared"));
                 break;
 
             case MusicAction.SetVolume when entry.VolumeLevel >= 0:
                 Player.Volume = entry.VolumeLevel;
-                SetStatus($"Volume {Player.Volume}%");
+                SetStatus(string.Format(UiText.Get("Music.Volume", "Volume {0}%"), Player.Volume));
                 break;
 
             case MusicAction.RescanDevices:
                 _deviceService.Refresh();
-                SetStatus($"Devices rescanned ({_deviceService.ActiveBackendName})");
+                SetStatus(string.Format(UiText.Get("Music.Rescanned", "Devices rescanned ({0})"), _deviceService.ActiveBackendName));
                 break;
 
             default:
@@ -382,7 +383,7 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
             return false;
         }
 
-        SetStatus($"Removed {musicEntry.Track?.DisplayName}");
+        SetStatus(string.Format(UiText.Get("Music.Removed", "Removed {0}"), musicEntry.Track?.DisplayName));
         Refresh();
         return true;
     }
@@ -407,8 +408,8 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
     public override string GetHeader(int width)
     {
         var header = IsFiltering
-            ? $"Playlist \"{Filter}\" ({MatchCount()} of {Player.Playlist.Count})"
-            : $"Playlist ({Player.Playlist.Count})";
+            ? string.Format(UiText.Get("Music.HeaderFiltered", "Playlist \"{0}\" ({1} of {2})"), Filter, MatchCount(), Player.Playlist.Count)
+            : string.Format(UiText.Get("Music.Header", "Playlist ({0})"), Player.Playlist.Count);
         var track = Player.CurrentTrack;
         if (track is null)
         {
@@ -453,17 +454,17 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
     {
         var footer = string.Join(
             Border.Horizontal,
-            IsFiltering ? $"{MatchCount()} of {Player.Playlist.Count} tracks" : $"{Player.Playlist.Count} tracks",
-            $"Vol {Player.Volume}%",
-            $"Repeat {RepeatLabel(Player.RepeatMode)}",
-            $"Shuffle {(Player.IsShuffled ? "on" : "off")}",
+            IsFiltering ? string.Format(UiText.Get("Music.FooterTracksFiltered", "{0} of {1} tracks"), MatchCount(), Player.Playlist.Count) : string.Format(UiText.Get("Music.FooterTracks", "{0} tracks"), Player.Playlist.Count),
+            string.Format(UiText.Get("Music.FooterVol", "Vol {0}%"), Player.Volume),
+            string.Format(UiText.Get("Music.FooterRepeat", "Repeat {0}"), RepeatLabel(Player.RepeatMode)),
+            string.Format(UiText.Get("Music.FooterShuffle", "Shuffle {0}"), OnOff(Player.IsShuffled)),
             CurrentDeviceName());
 
         // The key that starts a filter, and the one that ends it — a panel that narrows itself has
         // to say how to get everything back.
         footer += IsFiltering
-            ? $"{Border.Horizontal}Esc clears the filter"
-            : $"{Border.Horizontal}Alt+<text> filters the queue";
+            ? Border.Horizontal + UiText.Get("Music.FooterEsc", "Esc clears the filter")
+            : Border.Horizontal + UiText.Get("Music.FooterAlt", "Alt+<text> filters the queue");
 
         // The engine's own trouble (a missing codec, a dead device) outranks the panel's chatter.
         if (!string.IsNullOrEmpty(Player.StatusMessage))
@@ -485,7 +486,7 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
     {
         var currentId = Player.DeviceId ?? string.Empty;
         var device = _deviceService.GetDevices().FirstOrDefault(d => string.Equals(d.Id, currentId, StringComparison.Ordinal));
-        return device?.Name ?? "Default output";
+        return device?.Name ?? UiText.Get("Music.DefaultOutput", "Default output");
     }
 
     private static string StateGlyph(PlaybackState state) => state switch
@@ -497,16 +498,9 @@ public sealed class ContentModelMusicPlaylist : ContentModelMusicBase
 
     private static string StateLabel(PlaybackState state) => state switch
     {
-        PlaybackState.Playing => "playing",
-        PlaybackState.Paused => "paused",
-        _ => "stopped",
-    };
-
-    private static string RepeatLabel(RepeatMode mode) => mode switch
-    {
-        RepeatMode.All => "all",
-        RepeatMode.One => "one",
-        _ => "off",
+        PlaybackState.Playing => UiText.Get("Music.StatePlaying", "playing"),
+        PlaybackState.Paused => UiText.Get("Music.StatePaused", "paused"),
+        _ => UiText.Get("Music.StateStopped", "stopped"),
     };
 
     private static string VolumeBar(int volume)

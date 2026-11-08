@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -105,22 +106,22 @@ public abstract class ContentModelMusicBase : ContentModelBase, IMusicContentMod
                     RepeatMode.All => RepeatMode.One,
                     _ => RepeatMode.Off,
                 };
-                SetStatus($"Repeat {Player.RepeatMode.ToString().ToLowerInvariant()}");
+                SetStatus(string.Format(UiText.Get("Music.Repeat", "Repeat {0}"), RepeatLabel(Player.RepeatMode)));
                 return;
 
             case MusicAction.ToggleShuffle:
                 Player.IsShuffled = !Player.IsShuffled;
-                SetStatus($"Shuffle {(Player.IsShuffled ? "on" : "off")}");
+                SetStatus(string.Format(UiText.Get("Music.Shuffle", "Shuffle {0}"), OnOff(Player.IsShuffled)));
                 return;
 
             case MusicAction.VolumeUp:
                 Player.Volume += 5;
-                SetStatus($"Volume {Player.Volume}%");
+                SetStatus(string.Format(UiText.Get("Music.Volume", "Volume {0}%"), Player.Volume));
                 return;
 
             case MusicAction.VolumeDown:
                 Player.Volume -= 5;
-                SetStatus($"Volume {Player.Volume}%");
+                SetStatus(string.Format(UiText.Get("Music.Volume", "Volume {0}%"), Player.Volume));
                 return;
         }
 
@@ -176,10 +177,21 @@ public abstract class ContentModelMusicBase : ContentModelBase, IMusicContentMod
     protected Url ChildUrl(params string[] segments) =>
         new(UrlScheme + string.Join('/', segments.Select(Uri.EscapeDataString)) + "/");
 
+    /// <summary>"on" or "off", in the chosen language.</summary>
+    protected static string OnOff(bool on) => on ? UiText.Get("Music.On", "on") : UiText.Get("Music.Off", "off");
+
+    /// <summary>The repeat mode as a word, in the chosen language.</summary>
+    protected static string RepeatLabel(RepeatMode mode) => mode switch
+    {
+        RepeatMode.All => UiText.Get("Music.RepeatAll", "all"),
+        RepeatMode.One => UiText.Get("Music.RepeatOne", "one"),
+        _ => UiText.Get("Music.Off", "off"),
+    };
+
     /// <summary>Adds the <c>..</c> row. Only called below the root, where there is somewhere to go.</summary>
     protected void AddParentEntry(List<IEntry> entries)
     {
-        entries.Add(new MusicEntry(MusicEntryKind.Folder, Url.ParentUrl, "..").WithValue("Up"));
+        entries.Add(new MusicEntry(MusicEntryKind.Folder, Url.ParentUrl, "..").WithValue(UiText.Get("Music.Up", "Up")));
     }
 
     protected static string FormatDuration(TimeSpan value)
@@ -205,7 +217,7 @@ public abstract class ContentModelMusicBase : ContentModelBase, IMusicContentMod
 
         if (Filter is not null)
         {
-            text += $"{Border.Horizontal}Filter: {Filter}";
+            text += Border.Horizontal + string.Format(UiText.Get("Music.Filter", "Filter: {0}"), Filter);
         }
 
         return text;

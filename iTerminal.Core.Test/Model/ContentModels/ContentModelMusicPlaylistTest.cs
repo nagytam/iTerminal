@@ -47,6 +47,34 @@ public class ContentModelMusicPlaylistTest
             .OfType<MusicEntry>()
             .FirstOrDefault(entry => entry.DisplayName.Contains(displayNameContains, StringComparison.OrdinalIgnoreCase));
 
+    [Timeout(60_000)]
+    [TestMethod]
+    [DoNotParallelize]
+    public void TheRowsHeaderAndFooterFollowTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(ContentModelMusicPlaylist).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        var (model, player, _) = Create();
+        using (player)
+        {
+            player.Playlist.AddRange([
+                new MusicTrack(@"C:\Music.mp3") { Title = "Echoes" },
+                new MusicTrack(@"C:\Music.mp3") { Title = "Glory Box" }]);
+            model.Refresh();
+
+            Assert.IsNotNull(Row(model, "[Wiedergabe]"));
+            Assert.IsNotNull(Row(model, "[Lautstärke]"));
+            StringAssert.Contains(model.GetFooter(), "2 Titel");
+            StringAssert.Contains(model.GetFooter(), "Alt+<Text> filtert die Warteschlange");
+
+            model.Filter = "echo";
+
+            StringAssert.Contains(model.GetHeader(80), "Wiedergabeliste „echo“ (1 von 2)");
+        }
+    }
+
     /// <summary>
     /// The panel is created while the app is still starting, before the background jobs have
     /// necessarily run, so it restores the saved session itself rather than waiting to be handed the
