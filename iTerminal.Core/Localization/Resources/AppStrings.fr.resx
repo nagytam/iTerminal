@@ -6910,4 +6910,181 @@
   <data name="Git.Sec.UnstagedConflicted" xml:space="preserve">
     <value>Non indexés ({0}, {1} en conflit)</value>
   </data>
+  <data name="Git.Help.c1" xml:space="preserve">
+    <value>SE DÉPLACER</value>
+  </data>
+  <data name="Git.Help.r1" xml:space="preserve">
+    <value>Panneau suivant / précédent (le volet des différences en fait partie)</value>
+  </data>
+  <data name="Git.Help.r2" xml:space="preserve">
+    <value>Se déplacer dans le panneau actif</value>
+  </data>
+  <data name="Git.Help.r3" xml:space="preserve">
+    <value>Faire défiler les différences, depuis n’importe quel panneau</value>
+  </data>
+  <data name="Git.Help.r4" xml:space="preserve">
+    <value>Début / fin des différences, volet des différences actif</value>
+  </data>
+  <data name="Git.Help.r5" xml:space="preserve">
+    <value>Cette aide</value>
+  </data>
+  <data name="Git.Help.r6" xml:space="preserve">
+    <value>La ferme, puis ferme la fenêtre</value>
+  </data>
+  <data name="Git.Help.c2" xml:space="preserve">
+    <value>TOUT PANNEAU</value>
+  </data>
+  <data name="Git.Help.r7" xml:space="preserve">
+    <value>Tout recharger depuis le disque</value>
+  </data>
+  <data name="Git.Help.r8" xml:space="preserve">
+    <value>Récupérer tous les dépôts distants et nettoyer</value>
+  </data>
+  <data name="Git.Help.r9" xml:space="preserve">
+    <value>Pull / Push  (une branche sans amont est publiée et suivie)</value>
+  </data>
+  <data name="Git.Help.r10" xml:space="preserve">
+    <value>Valider ce qui est indexé</value>
+  </data>
+  <data name="Git.Help.r11" xml:space="preserve">
+    <value>Modifier le dernier commit, message prérempli</value>
+  </data>
+  <data name="Git.Help.r12" xml:space="preserve">
+    <value>Tout remiser, fichiers non suivis compris</value>
+  </data>
+  <data name="Git.Help.r13" xml:space="preserve">
+    <value>Nouvelle branche depuis HEAD</value>
+  </data>
+  <data name="Git.Help.r14" xml:space="preserve">
+    <value>Abandonner la fusion en cours (visible seulement pendant une fusion)</value>
+  </data>
+  <data name="Git.Help.c3" xml:space="preserve">
+    <value>NON INDEXÉS — l’arbre de travail</value>
+  </data>
+  <data name="Git.Help.r15" xml:space="preserve">
+    <value>Indexer le fichier sous le curseur</value>
+  </data>
+  <data name="Git.Help.r16" xml:space="preserve">
+    <value>Tout indexer, fichiers non suivis compris</value>
+  </data>
+  <data name="Git.Help.r17" xml:space="preserve">
+    <value>Annuler les modifications du fichier ; le supprime s’il n’est pas suivi. Demande d’abord.</value>
+  </data>
+  <data name="Git.Help.n1" xml:space="preserve">
+    <value>Les fichiers en conflit sont marqués ! et visibles ici seulement. Les indexer les marque comme résolus.</value>
+  </data>
+  <data name="Git.Help.c4" xml:space="preserve">
+    <value>INDEXÉS — le contenu du prochain commit</value>
+  </data>
+  <data name="Git.Help.r18" xml:space="preserve">
+    <value>Retirer de l’index le fichier sous le curseur</value>
+  </data>
+  <data name="Git.Help.r19" xml:space="preserve">
+    <value>Tout retirer de l’index</value>
+  </data>
+  <data name="Git.Help.c5" xml:space="preserve">
+    <value>BRANCHES</value>
+  </data>
+  <data name="Git.Help.r20" xml:space="preserve">
+    <value>Basculer. Sur une branche distante, créer une branche locale qui la suit.</value>
+  </data>
+  <data name="Git.Help.r21" xml:space="preserve">
+    <value>Fusionner dans la branche courante</value>
+  </data>
+  <data name="Git.Help.r22" xml:space="preserve">
+    <value>Supprimer, fusionnée ou non. Demande d’abord.</value>
+  </data>
+  <data name="Git.Help.n2" xml:space="preserve">
+    <value>Les lignes grises sont des branches de suivi distantes.</value>
+  </data>
+  <data name="Git.Help.c6" xml:space="preserve">
+    <value>COMMITS</value>
+  </data>
+  <data name="Git.Help.r23" xml:space="preserve">
+    <value>Afficher le patch complet de ce commit dans le volet des différences</value>
+  </data>
+  <data name="Git.Help.c7" xml:space="preserve">
+    <value>REMISES</value>
+  </data>
+  <data name="Git.Help.r24" xml:space="preserve">
+    <value>Pop (appliquer et supprimer)</value>
+  </data>
+  <data name="Git.Help.r25" xml:space="preserve">
+    <value>Appliquer en gardant la remise</value>
+  </data>
+  <data name="Git.Help.r26" xml:space="preserve">
+    <value>La supprimer. Demande d’abord.</value>
+  </data>
+  <data name="Git.Help.More" xml:space="preserve">
+    <value>suite plus bas (Bas/PgDn)</value>
+  </data>
+  <data name="Git.Help.AnyKey" xml:space="preserve">
+    <value>Toute autre touche ferme cette aide.</value>
+  </data>
+  <data name="Git.Help.Title" xml:space="preserve">
+    <value>Git — touches</value>
+  </data>
+  <data name="Git.Detail.NoStashes" xml:space="preserve">
+    <value>(aucune remise)</value>
+  </data>
+  <data name="Git.Detail.StashHint" xml:space="preserve">
+    <value>S remise toutes les modifications, fichiers non suivis compris.</value>
+  </data>
+  <data name="Git.Detail.StashKeys" xml:space="preserve">
+    <value>Espace/Entrée pop   a appliquer   x supprimer</value>
+  </data>
+  <data name="Git.Detail.RemoteBranch" xml:space="preserve">
+    <value>branche distante {0}</value>
+  </data>
+  <data name="Git.Detail.RemoteKeys" xml:space="preserve">
+    <value>Espace/Entrée crée une branche locale qui la suit.</value>
+  </data>
+  <data name="Git.Detail.Branch" xml:space="preserve">
+    <value>branche {0}</value>
+  </data>
+  <data name="Git.Detail.Current" xml:space="preserve">
+    <value>(courante)</value>
+  </data>
+  <data name="Git.Detail.NoUpstream" xml:space="preserve">
+    <value>amont : (aucun)</value>
+  </data>
+  <data name="Git.Detail.Upstream" xml:space="preserve">
+    <value>amont : {0}</value>
+  </data>
+  <data name="Git.Detail.BranchKeys" xml:space="preserve">
+    <value>Espace/Entrée basculer   m fusionner   D supprimer   n nouvelle</value>
+  </data>
+  <data name="Git.Detail.Commit" xml:space="preserve">
+    <value>commit {0}</value>
+  </data>
+  <data name="Git.Detail.Author" xml:space="preserve">
+    <value>Auteur : {0}</value>
+  </data>
+  <data name="Git.Detail.Date" xml:space="preserve">
+    <value>Date :  {0}</value>
+  </data>
+  <data name="Git.Footer.Diff" xml:space="preserve">
+    <value>Haut/Bas:défiler  Début/Fin:haut/bas   Tab:panneau  r:actualiser  ?:touches  Échap:fermer</value>
+  </data>
+  <data name="Git.Footer.Unstaged" xml:space="preserve">
+    <value>Espace:indexer  a:tout  d:annuler  c:commit</value>
+  </data>
+  <data name="Git.Footer.Staged" xml:space="preserve">
+    <value>Espace:retirer  a:tout  c:commit</value>
+  </data>
+  <data name="Git.Footer.Branches" xml:space="preserve">
+    <value>Espace:basculer  n:nouvelle  m:fusionner  D:supprimer</value>
+  </data>
+  <data name="Git.Footer.Commits" xml:space="preserve">
+    <value>Haut/Bas:voir le patch</value>
+  </data>
+  <data name="Git.Footer.Stashes" xml:space="preserve">
+    <value>Espace:pop  a:appliquer  x:supprimer</value>
+  </data>
+  <data name="Git.Footer.Abort" xml:space="preserve">
+    <value>A:abandonner la fusion</value>
+  </data>
+  <data name="Git.Footer.Common" xml:space="preserve">
+    <value>Tab:panneau  p/P:pull/push  ?:touches  Échap:fermer</value>
+  </data>
 </root>
