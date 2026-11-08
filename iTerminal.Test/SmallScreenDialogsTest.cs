@@ -372,4 +372,18 @@ public class SmallScreenDialogsTest
         await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Esc close")), "the hint that closes the dialog");
         Assert.IsTrue(narrow.Screen.Lines[narrow.Screen.Height - 1].TrimStart().StartsWith("╚═") && narrow.Screen.Lines[narrow.Screen.Height - 1].Count(c => c == '═') >= 40, narrow.Screen.Dump());
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheRemoteConnectionsHelpOn60Columns_EndsOnAnEllipsisNotMidWord()
+    {
+        await using TerminalApp narrow = await TerminalApp.StartAsync(width: 60, height: 20);
+
+        await narrow.PressAsync("Alt+F2");
+
+        await narrow.WaitForTextAsync("Remote connections");
+        await narrow.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Nothing saved yet")), "the empty-list help");
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains("Nothing saved yet") && l.Contains("…")), narrow.Screen.Dump());
+        Assert.IsTrue(narrow.Screen.Lines.Any(l => l.Contains(" saved  ·") && l.Contains("…")), narrow.Screen.Dump());
+    }
 }

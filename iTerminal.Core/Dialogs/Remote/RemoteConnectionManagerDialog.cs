@@ -719,11 +719,11 @@ public class RemoteConnectionManagerDialog : Dialog
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, $"{_list.Count} saved  ·  shells ask for a password; FTP/WebDAV use the password manager", Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, Ellipsize($"{_list.Count} saved  ·  shells ask for a password; FTP/WebDAV use the password manager", iw - 2), Color.Cyan, colorScheme.Background);
         Put(buffer, 1, 1, iw - 2, "  Type  Name                          Destination", colorScheme.DisabledForeground, colorScheme.Background);
         if (_list.Count == 0)
         {
-            Put(buffer, 1, 2, iw - 2, iConsole.Localization.UiText.Get("Remote.Empty", "Nothing saved yet. N adds an SSH, PowerShell, FTP or WebDAV connection."), colorScheme.DisabledForeground, colorScheme.Background);
+            Put(buffer, 1, 2, iw - 2, Ellipsize(iConsole.Localization.UiText.Get("Remote.Empty", "Nothing saved yet. N adds an SSH, PowerShell, FTP or WebDAV connection."), iw - 2), colorScheme.DisabledForeground, colorScheme.Background);
         }
 
         var first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
@@ -812,6 +812,8 @@ public class RemoteConnectionManagerDialog : Dialog
         RemoteProtocol.WebDav => _editSecure ? "WebDAV over HTTPS (davs://)" : "WebDAV over HTTP (dav://)",
         _ => "PowerShell remoting",
     };
+
+    private static string Ellipsize(string text, int width) => width > 1 && text.Length > width ? text[..(width - 1)] + "…" : text;
 
     private void Put(IBuffer buffer, int x, int y, int width, string text, Color foreground, Color background)
     {
