@@ -8836,4 +8836,40 @@
   <data name="Unit.Terabyte" xml:space="preserve">
     <value>Terabyte</value>
   </data>
+  <data name="Progress.Failed" xml:space="preserve">
+    <value>failed — {0}</value>
+  </data>
+  <data name="Progress.TaskStatus" xml:space="preserve">
+    <value>Task {0}</value>
+  </data>
+  <data name="Progress.StatusStarted" xml:space="preserve">
+    <value>Started</value>
+  </data>
+  <data name="Progress.StatusCompleted" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Progress.StatusCanceled" xml:space="preserve">
+    <value>Canceled</value>
+  </data>
+  <data name="Progress.Files" xml:space="preserve">
+    <value>Files: {0}/{1}</value>
+  </data>
+  <data name="Progress.SizeOf" xml:space="preserve">
+    <value>Size: {0}/{1}</value>
+  </data>
+  <data name="Progress.Size" xml:space="preserve">
+    <value>Size: {0}</value>
+  </data>
+  <data name="Progress.Speed" xml:space="preserve">
+    <value>Speed: {0}/s ({1} files/s)</value>
+  </data>
+  <data name="Info.Files" xml:space="preserve">
+    <value>Files: {0}</value>
+  </data>
+  <data name="Info.FilesPending" xml:space="preserve">
+    <value>Files:</value>
+  </data>
+  <data name="Listing.FolderMark" xml:space="preserve">
+    <value>Folder</value>
+  </data>
 </root>

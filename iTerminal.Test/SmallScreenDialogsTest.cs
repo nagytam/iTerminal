@@ -1025,4 +1025,17 @@ public class SmallScreenDialogsTest
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Datei: readme.txt") && l.Contains("Dateigröße:")), "the information strip in German");
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("nicht verfügbar")), "the AI bar in German");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheFolderMarkAndTheFileCountInGerman_AreGerman()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        await app.SwitchToGermanAsync();
+
+        await app.SelectEntryAsync("alpha");
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("alpha") && l.Contains("Ordner")), "the folder mark in German");
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Dateien:")), "the file count in German");
+    }
 }

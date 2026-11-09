@@ -1211,4 +1211,16 @@
   <data name="Status.Writable" xml:space="preserve">
     <value>Writable</value>
   </data>
+  <data name="Progress.Elapsed" xml:space="preserve">
+    <value>Elapsed time</value>
+  </data>
+  <data name="Progress.Remaining" xml:space="preserve">
+    <value>Remaining time</value>
+  </data>
+  <data name="Progress.Total" xml:space="preserve">
+    <value>Total time</value>
+  </data>
+  <data name="Progress.Label" xml:space="preserve">
+    <value>Progress</value>
+  </data>
 </root>

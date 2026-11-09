@@ -15,7 +15,9 @@ public abstract record EntryBase : IEntry
     protected string fileSize = string.Empty;
     public virtual string FileSize //=> Url.FileSize;
     {
-        get { return fileSize; }
+        // The folder marker is stored as the constant everything compares against and shown in the chosen language; the
+        // abbreviations fit the size column, which is six cells wide.
+        get { return fileSize == iConsole.Data.Url.Folder ? UiText.Get("Listing.FolderMark", "Folder") : fileSize; }
         set { fileSize = value; }
     }
     protected string date = string.Empty;
@@ -106,12 +108,12 @@ public abstract record EntryBase : IEntry
         }
         else if (NumberOfFiles != null)
         {
-            return $"Files: {NumberOfFiles}".PadRight(width);
+            return string.Format(UiText.Get("Info.Files", "Files: {0}"), NumberOfFiles).PadRight(width);
         }
         else
         {
             // Not counted yet: the count starts shortly after the cursor stops on the folder.
-            return "Files: …".PadRight(width);
+            return (UiText.Get("Info.FilesPending", "Files:") + " …").PadRight(width);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
 using iConsole.Controls.PopUpWindows;
@@ -118,9 +119,9 @@ public class ProgressWindow : PopUpWindow
         // A task that failed still reports Status.Completed — it caught its exception rather than
         // letting it escape — so showing the raw status next to a "failed" description would
         // contradict it on the one screen the user has to read the failure from.
-        var status = _task.Error is null ? _task.Status.ToString() : $"failed — {_task.Error}";
+        var status = _task.Error is null ? StatusText(_task.Status) : string.Format(UiText.Get("Progress.Failed", "failed — {0}"), _task.Error);
         var text = _task.Description + Environment.NewLine
-            + $"Task {status}";
+            + string.Format(UiText.Get("Progress.TaskStatus", "Task {0}"), status);
         if (_task is TransferTask transferTask)
         {
             text += Environment.NewLine + FormatStatistics(transferTask);
@@ -160,13 +161,21 @@ public class ProgressWindow : PopUpWindow
 
     internal string CancelButtonTitleForTest => _cancelButton.Title;
 
+    private static string StatusText(iConsole.Data.TaskStatus status) => status switch
+    {
+        iConsole.Data.TaskStatus.Started => UiText.Get("Progress.StatusStarted", "Started"),
+        iConsole.Data.TaskStatus.Completed => UiText.Get("Progress.StatusCompleted", "Completed"),
+        iConsole.Data.TaskStatus.Canceled => UiText.Get("Progress.StatusCanceled", "Canceled"),
+        _ => status.ToString(),
+    };
+
     private static string FormatStatistics(TransferTask task)
     {
-        var files = $"Files: {task.ItemsProcessed}/{task.TotalItems}";
+        var files = string.Format(UiText.Get("Progress.Files", "Files: {0}/{1}"), task.ItemsProcessed, task.TotalItems);
         var size = task.TotalBytes > 0
-            ? $"Size: {task.BytesProcessed.ToFileSize()}/{task.TotalBytes.ToFileSize()}"
-            : $"Size: {task.BytesProcessed.ToFileSize()}";
-        var speed = $"Speed: {((long)task.BytesPerSecond).ToFileSize()}/s ({task.ItemsPerSecond:N1} files/s)";
+            ? string.Format(UiText.Get("Progress.SizeOf", "Size: {0}/{1}"), task.BytesProcessed.ToFileSize(), task.TotalBytes.ToFileSize())
+            : string.Format(UiText.Get("Progress.Size", "Size: {0}"), task.BytesProcessed.ToFileSize());
+        var speed = string.Format(UiText.Get("Progress.Speed", "Speed: {0}/s ({1} files/s)"), ((long)task.BytesPerSecond).ToFileSize(), task.ItemsPerSecond.ToString("N1"));
         return string.Join(Environment.NewLine, files, size, speed);
     }
 
