@@ -7528,6 +7528,21 @@
   <data name="Image.NoMetadata" xml:space="preserve">
     <value>No metadata in this file.</value>
   </data>
+  <data name="Image.Metadata" xml:space="preserve">
+    <value>metadata</value>
+  </data>
+  <data name="Image.EditText" xml:space="preserve">
+    <value>e:edit text</value>
+  </data>
+  <data name="Video.Info.SourceSize" xml:space="preserve">
+    <value>{0}×{1} pixels</value>
+  </data>
+  <data name="Video.Info.ShownAsPixels" xml:space="preserve">
+    <value>shown as {0}×{1} pixels</value>
+  </data>
+  <data name="Video.Info.ShownAsCharacters" xml:space="preserve">
+    <value>shown as {0}×{1} characters</value>
+  </data>
   <data name="Network.ConnectOver" xml:space="preserve">
     <value>Connect to {0} over {1}</value>
   </data>

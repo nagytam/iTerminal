@@ -397,7 +397,7 @@ public class VideoFileViewerDialog : Dialog
         if (player is not null)
         {
             var info = player.Info;
-            text += $"   {info.Width}×{info.Height}  {info.FrameRate:0.##} fps";
+            text += $"   {string.Format(UiText.Get("Video.Info.SourceSize", "{0}×{1} pixels"), info.Width, info.Height)}  {info.FrameRate:0.##} fps";
             if (info.Duration > TimeSpan.Zero)
             {
                 text += $"  {FormatTime(info.Duration)}";
@@ -405,7 +405,7 @@ public class VideoFileViewerDialog : Dialog
 
             if (player.Frame is { } frame)
             {
-                text += $"   shown as {frame.Columns}×{frame.Rows} characters";
+                text += $"   {string.Format(UiText.Get("Video.Info.ShownAsCharacters", "shown as {0}×{1} characters"), frame.Columns, frame.Rows)}";
             }
         }
 

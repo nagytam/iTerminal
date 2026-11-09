@@ -82,6 +82,48 @@ public class ImageFileViewerMetadataTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task TheMetadataHeaderAndEditHintFollowEveryChosenLanguage()
+    {
+        string path = Path.Combine(Path.GetTempPath(), "meta-" + Guid.NewGuid().ToString("N") + ".png");
+        File.WriteAllBytes(path, [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0, 0, 0, 0, 0, 0, 0, 0]);
+        try
+        {
+            foreach (string code in new[] { "de", "fr", "es", "it", "hu" })
+            {
+                iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+                    new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(ImageFileViewerDialog).Assembly))]);
+                Assert.IsTrue(localizer.SetLanguage(code));
+                using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+
+                Assert.IsTrue(localizer.TryGet("Image.Metadata", out string metadata));
+                Assert.IsTrue(localizer.TryGet("Image.EditText", out string editText));
+                Assert.AreNotEqual("metadata", metadata, code);
+                Assert.AreNotEqual("e:edit text", editText, code);
+
+                ImageFileViewerDialog dialog = new(Mock.Of<IVideoDecoderFactory>(), Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme()) { FilePath = path };
+                iConsole.Controls.Control root = await ShowAsync(dialog);
+                try
+                {
+                    await dialog.HandleKeyEventAsync(new KeyEvent('i', ConsoleKey.I, false, false, false));
+
+                    iConsole.Test.Core.ScreenBuffer screen = iConsole.Test.Core.ScreenBuffer.Render(root, 120, 40);
+                    Assert.IsTrue(screen.Contains(metadata), $"{code}: {screen}");
+                    Assert.IsTrue(screen.Contains(editText), $"{code}: {screen}");
+                }
+                finally
+                {
+                    dialog.Close();
+                }
+            }
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task E_OutsideTheMetadataView_IsNotHandled()
     {
         string path = Path.Combine(Path.GetTempPath(), "meta-" + Guid.NewGuid().ToString("N") + ".png");

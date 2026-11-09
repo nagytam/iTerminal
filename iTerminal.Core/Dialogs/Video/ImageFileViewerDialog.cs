@@ -485,7 +485,8 @@ public class ImageFileViewerDialog : Dialog
     {
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
         var size = new Size(Math.Max(0, iw), 1);
-        var header = $" {FilePath}   metadata" + (ImageMetadataWriter.CanWrite(FilePath) ? "   e:edit text" : string.Empty);
+        var header = $" {FilePath}   {UiText.Get("Image.Metadata", "metadata")}"
+            + (ImageMetadataWriter.CanWrite(FilePath) ? "   " + UiText.Get("Image.EditText", "e:edit text") : string.Empty);
         buffer.Write(ZOrder, new Position((uint)ix, (uint)iy), size, new ConxelString(Fit(header, iw), Color.Cyan, colorScheme.Background));
 
         List<string> lines = MetadataLines();
@@ -549,12 +550,12 @@ public class ImageFileViewerDialog : Dialog
         var header = $" {FilePath}";
         if (info is not null)
         {
-            header += $"   {info.Width}×{info.Height} pixels";
+            header += $"   {string.Format(UiText.Get("Video.Info.SourceSize", "{0}×{1} pixels"), info.Width, info.Height)}";
             if (picture is not null)
             {
                 header += sixel is not null
-                    ? $"   shown as {picture.Columns}×{picture.Rows} pixels"
-                    : $"   shown as {picture.Columns}×{picture.Rows} characters";
+                    ? $"   {string.Format(UiText.Get("Video.Info.ShownAsPixels", "shown as {0}×{1} pixels"), picture.Columns, picture.Rows)}"
+                    : $"   {string.Format(UiText.Get("Video.Info.ShownAsCharacters", "shown as {0}×{1} characters"), picture.Columns, picture.Rows)}";
             }
         }
 
