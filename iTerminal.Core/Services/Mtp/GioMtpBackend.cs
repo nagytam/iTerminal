@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using iTerminal.Core.Helper;
@@ -57,12 +58,12 @@ public sealed partial class GioMtpBackend(IExternalProcessRunner processRunner) 
         if (text.Contains("Location is not mounted", StringComparison.OrdinalIgnoreCase)
             || text.Contains("Operation not supported", StringComparison.OrdinalIgnoreCase))
         {
-            return "The device is not mounted: unlock the phone, choose File transfer, and open it once in a file manager (or run gio mount).";
+            return UiText.Get("Mtp.NotMounted", "The device is not mounted: unlock the phone, choose File transfer, and open it once in a file manager (or run gio mount).");
         }
 
         if (text.Contains("Permission denied", StringComparison.OrdinalIgnoreCase))
         {
-            return "The device refused access: unlock the phone and allow file transfer.";
+            return UiText.Get("Mtp.Refused", "The device refused access: unlock the phone and allow file transfer.");
         }
 
         return result.FirstErrorLine;

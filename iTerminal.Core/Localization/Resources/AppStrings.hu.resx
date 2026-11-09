@@ -8020,4 +8020,82 @@
   <data name="SysSettings.ConfirmRemove" xml:space="preserve">
     <value>{0} eltávolítása?</value>
   </data>
+  <data name="Dep.DownloadingOf" xml:space="preserve">
+    <value>{0} letöltése: {1} / {2} MB</value>
+  </data>
+  <data name="Dep.Downloaded" xml:space="preserve">
+    <value>{0} letöltve ({1} MB, ellenőrzőösszeg rendben)</value>
+  </data>
+  <data name="Dep.Downloading" xml:space="preserve">
+    <value>{0} letöltése: {1} MB</value>
+  </data>
+  <data name="Dep.FfmpegPurpose" xml:space="preserve">
+    <value>Videó- és képnézegetők, FLAC/Ogg/Opus/M4A lejátszás</value>
+  </data>
+  <data name="Dep.UsingFfmpeg" xml:space="preserve">
+    <value>A telepített ffmpeg használata ({0}).</value>
+  </data>
+  <data name="Dep.NoPackageManager" xml:space="preserve">
+    <value>Nem található támogatott csomagkezelő (winget, apt, dnf, zypper, pacman, apk vagy brew). Telepítse a(z) {0} programot innen: {1}.</value>
+  </data>
+  <data name="Dep.InstallingWith" xml:space="preserve">
+    <value>{0} telepítése ezzel: {1}: {2}</value>
+  </data>
+  <data name="Dep.GitPurpose" xml:space="preserve">
+    <value>Git-kliens, Git-meghajtó és Git-állapotszínek</value>
+  </data>
+  <data name="Dep.UsingGit" xml:space="preserve">
+    <value>A telepített git használata ({0}).</value>
+  </data>
+  <data name="Dep.PlaywrightPurpose" xml:space="preserve">
+    <value>Chromium az árfolyamjelzőhöz (Swissquote)</value>
+  </data>
+  <data name="Dep.PwUnpack" xml:space="preserve">
+    <value>A Playwright {0} illesztő kicsomagolása</value>
+  </data>
+  <data name="Dep.PwChromium" xml:space="preserve">
+    <value>A Playwright {0} által vezérelt Chromium telepítése (eltarthat néhány percig)</value>
+  </data>
+  <data name="Dep.PwReady" xml:space="preserve">
+    <value>A Playwright {0} kész</value>
+  </data>
+  <data name="Dep.WhisperPurpose" xml:space="preserve">
+    <value>Offline beszédmodell (alap, 148 MB) a hangbevitelhez az MI-sávban</value>
+  </data>
+  <data name="Dep.WhisperReady" xml:space="preserve">
+    <value>A Whisper {0} modell kész</value>
+  </data>
+  <data name="Dep.OllamaOnlyModel" xml:space="preserve">
+    <value>Az Ollama már telepítve van ({0}); csak a(z) {1} modell töltődik le.</value>
+  </data>
+  <data name="Dep.OllamaUsing" xml:space="preserve">
+    <value>A már telepített Ollama használata ({0}).</value>
+  </data>
+  <data name="Dep.OllamaAsIs" xml:space="preserve">
+    <value>Az Ollama már telepítve van ({0}); változtatás nélkül használjuk</value>
+  </data>
+  <data name="Dep.OllamaStarting" xml:space="preserve">
+    <value>{0} indítása a(z) {1} letöltéséhez</value>
+  </data>
+  <data name="Dep.OllamaReady" xml:space="preserve">
+    <value>Az Ollama kész a(z) {0} modellel</value>
+  </data>
+  <data name="Dep.OllamaVersionReady" xml:space="preserve">
+    <value>Az Ollama {0} kész a(z) {1} modellel</value>
+  </data>
+  <data name="Mtp.NotMounted" xml:space="preserve">
+    <value>Az eszköz nincs csatolva: oldja fel a telefont, válassza a Fájlátvitelt, és nyissa meg egyszer egy fájlkezelőben (vagy futtassa a gio mount parancsot).</value>
+  </data>
+  <data name="Mtp.Refused" xml:space="preserve">
+    <value>Az eszköz megtagadta a hozzáférést: oldja fel a telefont, és engedélyezze a fájlátvitelt.</value>
+  </data>
+  <data name="Mtp.NotConnected" xml:space="preserve">
+    <value>Az eszköz nincs csatlakoztatva vagy zárolva van: oldja fel a telefont, és válassza a Fájlátvitelt.</value>
+  </data>
+  <data name="Docker.NotRunning" xml:space="preserve">
+    <value>A Docker nem fut — indítsa el a Docker Desktopot vagy a docker szolgáltatást.</value>
+  </data>
+  <data name="Docker.Stopped" xml:space="preserve">
+    <value>A konténer le van állítva — előbb indítsa el (Shift+F9 a során).</value>
+  </data>
 </root>

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
@@ -70,7 +71,7 @@ public sealed class ShellMtpBackend(IExternalProcessRunner processRunner, string
         {
             var message = result.FirstErrorLine;
             throw new IOException(message.Contains("Device not found", StringComparison.Ordinal)
-                ? "The device is not connected, or is locked: unlock the phone and choose File transfer."
+                ? UiText.Get("Mtp.NotConnected", "The device is not connected, or is locked: unlock the phone and choose File transfer.")
                 : message);
         }
 

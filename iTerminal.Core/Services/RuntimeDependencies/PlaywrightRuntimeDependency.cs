@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
@@ -59,7 +60,7 @@ public sealed class PlaywrightRuntimeDependency : IRuntimeDependency
 
     public string Name => "Playwright";
 
-    public string Purpose => "Chromium for the quote indicator (Swissquote)";
+    public string Purpose => UiText.Get("Dep.PlaywrightPurpose", "Chromium for the quote indicator (Swissquote)");
 
     public string ExpectedVersion => _expected.ToString(3);
 
@@ -90,7 +91,7 @@ public sealed class PlaywrightRuntimeDependency : IRuntimeDependency
             try
             {
                 await _feed.DownloadAsync(PackageId, version, package, progress, cancellationToken);
-                progress.Report($"Unpacking the Playwright {version} driver");
+                progress.Report(string.Format(UiText.Get("Dep.PwUnpack", "Unpacking the Playwright {0} driver"), version));
                 string staging = target + ".staging";
                 DeleteDirectory(staging);
                 ExtractDriver(package, staging, PlatformFolder());
@@ -106,14 +107,14 @@ public sealed class PlaywrightRuntimeDependency : IRuntimeDependency
 
         if (!File.Exists(Path.Combine(target, CompleteMarker)))
         {
-            progress.Report($"Installing the Chromium that Playwright {version} drives (this can take a few minutes)");
+            progress.Report(string.Format(UiText.Get("Dep.PwChromium", "Installing the Chromium that Playwright {0} drives (this can take a few minutes)"), version));
             await InstallBrowserAsync(target, progress, cancellationToken);
             await File.WriteAllTextAsync(Path.Combine(target, CompleteMarker), version, cancellationToken);
         }
 
         PruneOlderVersions(version);
         Activate();
-        progress.Report($"Playwright {version} is ready");
+        progress.Report(string.Format(UiText.Get("Dep.PwReady", "Playwright {0} is ready"), version));
     }
 
     public void Activate()

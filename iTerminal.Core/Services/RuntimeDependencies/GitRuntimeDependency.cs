@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using iTerminal.Core.Services.PackageManager;
@@ -61,7 +62,7 @@ public sealed partial class GitRuntimeDependency : IRuntimeDependency
 
     public string Name => "Git";
 
-    public string Purpose => "Git client, git drive and git status colours";
+    public string Purpose => UiText.Get("Dep.GitPurpose", "Git client, git drive and git status colours");
 
     public string ExpectedVersion => MinimumVersion;
 
@@ -70,7 +71,7 @@ public sealed partial class GitRuntimeDependency : IRuntimeDependency
     /// <summary>A git is a system install: it is used as found and the system updates it.</summary>
     public bool IsExistingInstall => InstalledVersion() is not null;
 
-    public string? ExistingInstallNote => FindGit() is { } path && InstalledVersion() is not null ? $"Using the git that is installed ({path})." : null;
+    public string? ExistingInstallNote => FindGit() is { } path && InstalledVersion() is not null ? string.Format(UiText.Get("Dep.UsingGit", "Using the git that is installed ({0})."), path) : null;
 
     public string? InstalledVersion()
     {
@@ -108,9 +109,9 @@ public sealed partial class GitRuntimeDependency : IRuntimeDependency
     {
         GitInstallPlan plan = GitInstallPlan.For(_isWindows, _isMac, _isPrivileged, _findOnPath)
             ?? throw new InvalidOperationException(
-                "No supported package manager was found (winget, apt, dnf, zypper, pacman, apk or brew). Install git from https://git-scm.com/downloads.");
+                string.Format(UiText.Get("Dep.NoPackageManager", "No supported package manager was found (winget, apt, dnf, zypper, pacman, apk or brew). Install {0} from {1}."), "git", "https://git-scm.com/downloads"));
 
-        progress.Report($"Installing git with {plan.DisplayName}: {plan.CommandLine}");
+        progress.Report(string.Format(UiText.Get("Dep.InstallingWith", "Installing {0} with {1}: {2}"), "git", plan.DisplayName, plan.CommandLine));
         int exitCode = await _run(plan, progress.Report, cancellationToken);
         if (exitCode != 0)
         {

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using iTerminal.Core.Audio.Decoders;
@@ -76,7 +77,7 @@ public sealed partial class FfmpegRuntimeDependency : IRuntimeDependency
 
     public string Name => "FFmpeg";
 
-    public string Purpose => "Video and picture viewers, FLAC/Ogg/Opus/M4A playback";
+    public string Purpose => UiText.Get("Dep.FfmpegPurpose", "Video and picture viewers, FLAC/Ogg/Opus/M4A playback");
 
     public string ExpectedVersion => MinimumVersion;
 
@@ -86,7 +87,7 @@ public sealed partial class FfmpegRuntimeDependency : IRuntimeDependency
     public bool IsExistingInstall => InstalledVersion() is not null;
 
     public string? ExistingInstallNote =>
-        FindTool("ffmpeg") is { } path && InstalledVersion() is not null ? $"Using the ffmpeg that is installed ({path})." : null;
+        FindTool("ffmpeg") is { } path && InstalledVersion() is not null ? string.Format(UiText.Get("Dep.UsingFfmpeg", "Using the ffmpeg that is installed ({0})."), path) : null;
 
     public string? InstalledVersion()
     {
@@ -124,9 +125,9 @@ public sealed partial class FfmpegRuntimeDependency : IRuntimeDependency
     {
         SystemPackageInstallPlan plan = SystemPackageInstallPlan.For(PackageNames, _isWindows, _isMac, _isPrivileged, _findOnPath)
             ?? throw new InvalidOperationException(
-                "No supported package manager was found (winget, apt, dnf, zypper, pacman, apk or brew). Install ffmpeg from https://ffmpeg.org/download.html.");
+                string.Format(UiText.Get("Dep.NoPackageManager", "No supported package manager was found (winget, apt, dnf, zypper, pacman, apk or brew). Install {0} from {1}."), "ffmpeg", "https://ffmpeg.org/download.html"));
 
-        progress.Report($"Installing ffmpeg with {plan.DisplayName}: {plan.CommandLine}");
+        progress.Report(string.Format(UiText.Get("Dep.InstallingWith", "Installing {0} with {1}: {2}"), "ffmpeg", plan.DisplayName, plan.CommandLine));
         int exitCode = await _run(plan, progress.Report, cancellationToken);
         if (exitCode != 0 && !(_isWindows && IsWinGetAlreadyInstalledCode(exitCode)))
         {

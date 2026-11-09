@@ -1,3 +1,4 @@
+using iConsole.Localization;
 namespace iTerminal.Core.Services.RuntimeDependencies;
 
 /// <summary>
@@ -54,7 +55,7 @@ public sealed class WhisperRuntimeDependency : IRuntimeDependency
 
     public string Name => "Whisper";
 
-    public string Purpose => "Offline speech model (base, 148 MB) for voice input in the AI bar";
+    public string Purpose => UiText.Get("Dep.WhisperPurpose", "Offline speech model (base, 148 MB) for voice input in the AI bar");
 
     public string ExpectedVersion => _expected.ToString(3);
 
@@ -93,7 +94,7 @@ public sealed class WhisperRuntimeDependency : IRuntimeDependency
 
         string target = ModelPathFor(parsed.ToString(3));
         await VerifiedDownload.DownloadAsync(_httpClient, _address, target, _size, _sha256, progress, cancellationToken);
-        progress.Report($"Whisper model {parsed.ToString(3)} is ready");
+        progress.Report(string.Format(UiText.Get("Dep.WhisperReady", "Whisper model {0} is ready"), parsed.ToString(3)));
     }
 
     /// <summary>Nothing is process-wide: the model path is read when a recording is transcribed.</summary>

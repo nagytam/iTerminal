@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Diagnostics;
 using System.Security.Cryptography;
 
@@ -47,7 +48,7 @@ internal static class VerifiedDownload
                     if (progress is not null && (lastReport is null || clock.Elapsed - lastReport.Value >= ProgressInterval))
                     {
                         lastReport = clock.Elapsed;
-                        progress.Report($"Downloading {name}: {Megabytes(received)} of {Megabytes(expectedSize)} MB");
+                        progress.Report(string.Format(UiText.Get("Dep.DownloadingOf", "Downloading {0}: {1} of {2} MB"), name, Megabytes(received), Megabytes(expectedSize)));
                     }
                 }
             }
@@ -69,7 +70,7 @@ internal static class VerifiedDownload
             }
 
             File.Move(partial, destinationPath, overwrite: true);
-            progress?.Report($"Downloaded {name} ({Megabytes(received)} MB, checksum verified)");
+            progress?.Report(string.Format(UiText.Get("Dep.Downloaded", "Downloaded {0} ({1} MB, checksum verified)"), name, Megabytes(received)));
         }
         catch
         {
