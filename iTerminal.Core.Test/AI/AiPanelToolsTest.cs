@@ -19,6 +19,7 @@ public class AiPanelToolsTest
         public Mock<IMarkableContentModel> LeftMarks { get; }
         public Mock<ISortableContentModel> LeftSort { get; }
         public Mock<IContentModelService> Service { get; } = new();
+        public Mock<IAiActionApprovalService> Approval { get; } = new();
         public AiPanelTools Tools { get; }
         public List<IEntry> LeftEntries { get; } = [];
 
@@ -37,7 +38,7 @@ public class AiPanelToolsTest
 
             Service.Setup(s => s.ContentModels).Returns([Left.Object, Right.Object]);
             Service.Setup(s => s.GetFocusedModel()).Returns(Left.Object);
-            Tools = new AiPanelTools(Service.Object);
+            Tools = new AiPanelTools(Service.Object, approvalService: Approval.Object);
         }
 
         public IEntry AddEntry(string name, bool folder = false)
@@ -169,28 +170,49 @@ public class AiPanelToolsTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void DeleteEntries_WithoutConfirmation_DeletesNothing()
+    public async Task DeleteEntries_WithoutConfirmation_DeletesNothing()
     {
         var f = new Fixture();
         f.AddEntry("keep.txt");
 
-        string text = f.Tools.DeleteEntries("left", "keep.txt", confirmed: false);
+        string text = await f.Tools.DeleteEntries("left", "keep.txt", confirmed: false);
 
         StringAssert.Contains(text, "Not deleted");
+        f.Left.Verify(m => m.Delete(It.IsAny<Url>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+        f.Approval.Verify(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task DeleteEntries_ConfirmedButDeclined_DeletesNothing()
+    {
+        var f = new Fixture();
+        f.AddEntry("keep.txt");
+        f.Approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        string text = await f.Tools.DeleteEntries("left", "keep.txt", confirmed: true);
+
+        StringAssert.Contains(text, "declined or cancelled");
         f.Left.Verify(m => m.Delete(It.IsAny<Url>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
     }
 
     [Timeout(60_000)]
     [TestMethod]
-    public void DeleteEntries_Confirmed_MovesNamedEntryToTheRecycleBin()
+    public async Task DeleteEntries_Approved_MovesNamedEntryToTheRecycleBin()
     {
         var f = new Fixture();
         f.AddEntry("gone.txt");
+        AiActionApprovalRequest? request = null;
+        f.Approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .Callback<AiActionApprovalRequest, CancellationToken>((value, _) => request = value)
+            .ReturnsAsync(true);
 
-        string text = f.Tools.DeleteEntries("left", "gone.txt", confirmed: true);
+        string text = await f.Tools.DeleteEntries("left", "gone.txt", confirmed: true);
 
         StringAssert.Contains(text, "Deleted");
         f.Left.Verify(m => m.Delete(It.IsAny<Url>(), false, true), Times.Once);
+        Assert.AreEqual(new Url(Path.Combine(Path.GetTempPath(), "gone.txt")).FullUrl, request!.Actions.Single());
     }
 
     [Timeout(60_000)]

@@ -87,6 +87,7 @@ public static class iTerminalApplicationBuilderExtension
 
         services.AddSingleton<AiChatModel>();
         services.AddSingleton<IUiService, UiService>();
+        services.AddSingleton<IAiActionApprovalService, AiActionApprovalService>();
         services.AddSingleton<AiPanelTools>();
         services.AddSingleton<IAiChatService, AiChatService>();
         services.AddTransient<AiModelDialog>();

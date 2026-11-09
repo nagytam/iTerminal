@@ -8308,6 +8308,24 @@
   <data name="Ai.Hints" xml:space="preserve">
     <value>Ctrl+F2: részletek, Ctrl+B: terminálsáv</value>
   </data>
+  <data name="Ai.Approval.Title" xml:space="preserve">
+    <value>Jóváhagyja az MI fájlműveletét?</value>
+  </data>
+  <data name="Ai.Approval.Hint" xml:space="preserve">
+    <value>Y: jóváhagyás    N/Esc: mégse</value>
+  </data>
+  <data name="Ai.Approval.HintApprove" xml:space="preserve">
+    <value>A megjelenített műveletek jóváhagyása</value>
+  </data>
+  <data name="Ai.Approval.HintCancel" xml:space="preserve">
+    <value>Megszakítás módosítás nélkül</value>
+  </data>
+  <data name="Ai.Approval.DeleteSummary" xml:space="preserve">
+    <value>Az MI {0} elemet helyezne át a kukába innen: {1}. Ellenőrizze lent az összes célt.</value>
+  </data>
+  <data name="Ai.Approval.SyncSummary" xml:space="preserve">
+    <value>Az MI szinkronizálná ezt: {0} ezzel: {1}. Ellenőrizze lent a teljes tervet.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>Egy parancs sem felel meg.</value>
   </data>

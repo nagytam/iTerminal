@@ -19,6 +19,7 @@ public class AiPanelToolsArchivesAndFoldersTest
     private string _right = null!;
     private Mock<IContentModel> _leftModel = null!;
     private Mock<IContentModel> _rightModel = null!;
+    private Mock<IAiActionApprovalService> _approval = null!;
     private AiPanelTools _tools = null!;
 
     [TestInitialize]
@@ -32,6 +33,7 @@ public class AiPanelToolsArchivesAndFoldersTest
 
         _leftModel = Panel(Content.Left, _left);
         _rightModel = Panel(Content.Right, _right);
+        _approval = new Mock<IAiActionApprovalService>();
 
         var service = new Mock<IContentModelService>();
         service.Setup(s => s.ContentModels).Returns([_leftModel.Object, _rightModel.Object]);
@@ -42,7 +44,8 @@ public class AiPanelToolsArchivesAndFoldersTest
             service.Object,
             new ArchiveCompressionService(runner, new SevenZipArchiveWriter(runner, () => null)),
             new ArchiveExtractionService(runner, () => null),
-            new FileSystemResolver(new FileSystemService(), null!, null!, null!, service.Object));
+            new FileSystemResolver(new FileSystemService(), null!, null!, null!, service.Object),
+            _approval.Object);
     }
 
     [TestCleanup]
@@ -141,6 +144,26 @@ public class AiPanelToolsArchivesAndFoldersTest
 
         StringAssert.Contains(preview, "confirmed=true");
         Assert.IsFalse(File.Exists(Path.Combine(_right, "new.txt")));
+        _approval.Verify(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Synchronize_ConfirmedButDeclined_LeavesFilesUnchanged()
+    {
+        File.WriteAllText(Path.Combine(_left, "new.txt"), "1");
+        AiActionApprovalRequest? request = null;
+        _approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .Callback<AiActionApprovalRequest, CancellationToken>((value, _) => request = value)
+            .ReturnsAsync(false);
+
+        string result = await _tools.SynchronizeFolders("left_to_right", confirmed: true);
+
+        StringAssert.Contains(result, "declined or cancelled");
+        Assert.IsFalse(File.Exists(Path.Combine(_right, "new.txt")));
+        Assert.IsTrue(request!.Actions.Any(action => action.Contains("new.txt", StringComparison.Ordinal)));
+        StringAssert.Contains(request.Summary, _left);
+        StringAssert.Contains(request.Summary, _right);
     }
 
     [Timeout(60_000)]
@@ -148,6 +171,8 @@ public class AiPanelToolsArchivesAndFoldersTest
     public async Task Synchronize_Confirmed_CopiesAcross()
     {
         File.WriteAllText(Path.Combine(_left, "new.txt"), "1");
+        _approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
         string text = await _tools.SynchronizeFolders("left_to_right", confirmed: true);
 
