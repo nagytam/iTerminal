@@ -1156,6 +1156,12 @@
   <data name="Viewer.TitleHints" xml:space="preserve">
     <value>  F2:Sortörés{0}  F4:Hex  F5:Sor  F8:Kódlap</value>
   </data>
+  <data name="Viewer.Disassembling" xml:space="preserve">
+    <value>Visszafejtés folyamatban…</value>
+  </data>
+  <data name="Viewer.DisassemblyFailed" xml:space="preserve">
+    <value>A visszafejtés nem sikerült: {0}</value>
+  </data>
   <data name="Key.FindNext" xml:space="preserve">
     <value>F3-Köv.</value>
   </data>

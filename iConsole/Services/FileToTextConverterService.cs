@@ -159,6 +159,27 @@ public class FileToTextConverterService : IFileToTextConverterService
         && !ImageExtensions.Contains(url.Extension)
         && !AssemblyExtensions.Contains(url.Extension);
 
+    /// <summary>True for the binaries whose F3 view adds a disassembly after the metadata page.</summary>
+    public static bool HasDisassembly(Url? url) =>
+        url is not null && AssemblyExtensions.Contains(url.Extension);
+
+    public async Task<IReadOnlyList<string>> BuildDisassemblyAsync(Url? url, IFileSystem fileSystem, CancellationToken cancellationToken)
+    {
+        if (url is null || !HasDisassembly(url) || !fileSystem.ExistsFile(url))
+        {
+            return [];
+        }
+
+        var file = await fileSystem.ReadFileAsync(url);
+        if (file?.Content is null)
+        {
+            return ["Could not read file."];
+        }
+
+        // Only the bytes are read, so the result is the same for a file on an SSH, archive or memory drive.
+        return Disassembly.DisassemblyBuilder.Build(file.Content, cancellationToken);
+    }
+
     public async Task ReadFileAsync(Url? url, IFileSystem fileSystem, ITextModel textModel)
     {
         textModel.Lines.Clear();

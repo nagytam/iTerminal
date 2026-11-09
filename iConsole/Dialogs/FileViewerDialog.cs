@@ -25,6 +25,13 @@ public class FileViewerDialog : Dialog
     private bool _hexMode;
     private bool _hexLoaded;
 
+    // The disassembly of a .dll, .exe or .so is built on a worker after the metadata page is already on screen and lands from
+    // OnIdle, like the HDF5 and SQLite viewers' reads. The worker only returns lines; the text model is changed on the UI thread.
+    private Task<IReadOnlyList<string>>? _disassembly;
+    private CancellationTokenSource? _disassemblyCancellation;
+    private List<string>? _metadataLines;
+    private string? _disassemblyUrl;
+
     public FileViewerDialog(
         IContentModelService contentModelService,
         IFileToTextConverterService fileToTextConverterService,
@@ -55,6 +62,9 @@ public class FileViewerDialog : Dialog
 
     /// <summary>True while the file is shown as a hex dump instead of text (F4 toggles).</summary>
     public bool IsHexMode => _hexMode;
+
+    /// <summary>The disassembly that is being built in the background, or null; exposed so tests can wait for it.</summary>
+    public Task? DisassemblyTask => _disassembly;
 
     /// <summary>The hex dump control; exposed so tests can read the loaded bytes.</summary>
     public HexViewer HexViewer => _hexViewer;
@@ -220,8 +230,110 @@ public class FileViewerDialog : Dialog
         var fileSystem = _contentModelService.GetFocusedModel() as IFileSystem;
         await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, _textViewerControl.TextModel);
         _textViewerControl.Syntax = SyntaxHighlighter.ForFile(Url is null ? null : (Url.Path.Length > 0 ? Url.Path : Url.FullUrl));
+        StartDisassembly(fileSystem);
 
         await base.OnInitializeAsync();
+    }
+
+    /// <summary>Starts the disassembly of a binary in the background and marks the end of the metadata page as in progress.</summary>
+    private void StartDisassembly(IFileSystem? fileSystem)
+    {
+        if (Url is null || fileSystem is null || !FileToTextConverterService.HasDisassembly(Url))
+        {
+            return;
+        }
+
+        CancelDisassembly();
+        _metadataLines = _textViewerControl.TextModel.Lines.ToList();
+        _disassemblyUrl = Url.FullUrl;
+        _textViewerControl.TextModel.Lines.Add(string.Empty);
+        _textViewerControl.TextModel.Lines.Add(UiText.Get("Viewer.Disassembling", "Disassembling…"));
+
+        _disassemblyCancellation = new CancellationTokenSource();
+        CancellationToken token = _disassemblyCancellation.Token;
+        Url url = Url;
+        IFileToTextConverterService converter = _fileToTextConverterService;
+        // A converter that hands back no task (a test double) means there is nothing to add.
+        _disassembly = Task.Run(
+            async () => await (converter.BuildDisassemblyAsync(url, fileSystem, token) ?? Task.FromResult<IReadOnlyList<string>>([])),
+            token);
+    }
+
+    /// <summary>Puts a finished disassembly on screen. A cancelled one, or one for another file, is dropped without a word.</summary>
+    public override void OnIdle()
+    {
+        if (LandDisassembly())
+        {
+            StateHasChanged();
+        }
+
+        base.OnIdle();
+    }
+
+    private bool LandDisassembly()
+    {
+        if (_disassembly is not { IsCompleted: true } task)
+        {
+            return false;
+        }
+
+        List<string>? metadata = _metadataLines;
+        string? startedFor = _disassemblyUrl;
+        _disassembly = null;
+        _metadataLines = null;
+        _disassemblyCancellation?.Dispose();
+        _disassemblyCancellation = null;
+        if (metadata is null || task.IsCanceled || !string.Equals(startedFor, Url?.FullUrl, StringComparison.Ordinal))
+        {
+            // Reading the exception marks it observed, so a failed worker leaves no unobserved-exception noise behind.
+            _ = task.Exception;
+            return false;
+        }
+
+        List<string> lines = [.. metadata];
+        if (task.IsFaulted)
+        {
+            lines.Add(string.Empty);
+            lines.Add(string.Format(UiText.Get("Viewer.DisassemblyFailed", "Disassembly failed: {0}"), task.Exception?.GetBaseException().Message));
+        }
+        else if (task.Result is { Count: > 0 } disassembly)
+        {
+            lines.Add(string.Empty);
+            lines.AddRange(disassembly);
+        }
+
+        _textViewerControl.TextModel.Lines.ReplaceAll(lines);
+        return true;
+    }
+
+    /// <summary>Cancels a disassembly that is being replaced or dropped, so nothing lands on a dialog that is gone.</summary>
+    public override void Close()
+    {
+        CancelDisassembly();
+        base.Close();
+    }
+
+    private void CancelDisassembly()
+    {
+        CancellationTokenSource? source = _disassemblyCancellation;
+        Task? running = _disassembly;
+        _disassemblyCancellation = null;
+        _disassembly = null;
+        _metadataLines = null;
+        if (source is null)
+        {
+            return;
+        }
+
+        source.Cancel();
+        // The running worker still holds the token, so the source is disposed only once the worker has finished.
+        (running ?? Task.CompletedTask).ContinueWith(
+            finished =>
+            {
+                _ = finished.Exception;
+                source.Dispose();
+            },
+            TaskScheduler.Default);
     }
 
     public override void OnInitializeLayout()
