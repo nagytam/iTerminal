@@ -8449,4 +8449,250 @@
   <data name="Remote.Opens" xml:space="preserve">
     <value>megnyitja: {0}</value>
   </data>
+  <data name="Unit.Millimeter" xml:space="preserve">
+    <value>Milliméter</value>
+  </data>
+  <data name="Unit.Centimeter" xml:space="preserve">
+    <value>Centiméter</value>
+  </data>
+  <data name="Unit.Meter" xml:space="preserve">
+    <value>Méter</value>
+  </data>
+  <data name="Unit.Kilometer" xml:space="preserve">
+    <value>Kilométer</value>
+  </data>
+  <data name="Unit.Inch" xml:space="preserve">
+    <value>Hüvelyk</value>
+  </data>
+  <data name="Unit.Foot" xml:space="preserve">
+    <value>Láb</value>
+  </data>
+  <data name="Unit.Yard" xml:space="preserve">
+    <value>Yard</value>
+  </data>
+  <data name="Unit.Mile" xml:space="preserve">
+    <value>Mérföld</value>
+  </data>
+  <data name="Unit.NauticalMile" xml:space="preserve">
+    <value>Tengeri mérföld</value>
+  </data>
+  <data name="Unit.SquareMillimeter" xml:space="preserve">
+    <value>Négyzetmilliméter</value>
+  </data>
+  <data name="Unit.SquareCentimeter" xml:space="preserve">
+    <value>Négyzetcentiméter</value>
+  </data>
+  <data name="Unit.SquareMeter" xml:space="preserve">
+    <value>Négyzetméter</value>
+  </data>
+  <data name="Unit.Hectare" xml:space="preserve">
+    <value>Hektár</value>
+  </data>
+  <data name="Unit.SquareKilometer" xml:space="preserve">
+    <value>Négyzetkilométer</value>
+  </data>
+  <data name="Unit.SquareInch" xml:space="preserve">
+    <value>Négyzethüvelyk</value>
+  </data>
+  <data name="Unit.SquareFoot" xml:space="preserve">
+    <value>Négyzetláb</value>
+  </data>
+  <data name="Unit.SquareYard" xml:space="preserve">
+    <value>Négyzetyard</value>
+  </data>
+  <data name="Unit.Acre" xml:space="preserve">
+    <value>Hold (acre)</value>
+  </data>
+  <data name="Unit.SquareMile" xml:space="preserve">
+    <value>Négyzetmérföld</value>
+  </data>
+  <data name="Unit.Milliliter" xml:space="preserve">
+    <value>Milliliter</value>
+  </data>
+  <data name="Unit.Liter" xml:space="preserve">
+    <value>Liter</value>
+  </data>
+  <data name="Unit.CubicMeter" xml:space="preserve">
+    <value>Köbméter</value>
+  </data>
+  <data name="Unit.Teaspoon" xml:space="preserve">
+    <value>Teáskanál</value>
+  </data>
+  <data name="Unit.Tablespoon" xml:space="preserve">
+    <value>Evőkanál</value>
+  </data>
+  <data name="Unit.FluidOunce" xml:space="preserve">
+    <value>Folyadékuncia</value>
+  </data>
+  <data name="Unit.Cup" xml:space="preserve">
+    <value>Csésze</value>
+  </data>
+  <data name="Unit.Pint" xml:space="preserve">
+    <value>Pint</value>
+  </data>
+  <data name="Unit.Quart" xml:space="preserve">
+    <value>Quart</value>
+  </data>
+  <data name="Unit.Gallon" xml:space="preserve">
+    <value>Gallon</value>
+  </data>
+  <data name="Unit.CubicInch" xml:space="preserve">
+    <value>Köbhüvelyk</value>
+  </data>
+  <data name="Unit.CubicFoot" xml:space="preserve">
+    <value>Köbláb</value>
+  </data>
+  <data name="Unit.Milligram" xml:space="preserve">
+    <value>Milligramm</value>
+  </data>
+  <data name="Unit.Gram" xml:space="preserve">
+    <value>Gramm</value>
+  </data>
+  <data name="Unit.Kilogram" xml:space="preserve">
+    <value>Kilogramm</value>
+  </data>
+  <data name="Unit.MetricTon" xml:space="preserve">
+    <value>Tonna</value>
+  </data>
+  <data name="Unit.Ounce" xml:space="preserve">
+    <value>Uncia</value>
+  </data>
+  <data name="Unit.Pound" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="Unit.Stone" xml:space="preserve">
+    <value>Stone</value>
+  </data>
+  <data name="Unit.ShortTon" xml:space="preserve">
+    <value>Rövid tonna</value>
+  </data>
+  <data name="Unit.LongTon" xml:space="preserve">
+    <value>Hosszú tonna</value>
+  </data>
+  <data name="Unit.Celsius" xml:space="preserve">
+    <value>Celsius</value>
+  </data>
+  <data name="Unit.Fahrenheit" xml:space="preserve">
+    <value>Fahrenheit</value>
+  </data>
+  <data name="Unit.Kelvin" xml:space="preserve">
+    <value>Kelvin</value>
+  </data>
+  <data name="Unit.MeterSecond" xml:space="preserve">
+    <value>Méter/másodperc</value>
+  </data>
+  <data name="Unit.KilometerHour" xml:space="preserve">
+    <value>Kilométer/óra</value>
+  </data>
+  <data name="Unit.MileHour" xml:space="preserve">
+    <value>Mérföld/óra</value>
+  </data>
+  <data name="Unit.FootSecond" xml:space="preserve">
+    <value>Láb/másodperc</value>
+  </data>
+  <data name="Unit.Knot" xml:space="preserve">
+    <value>Csomó</value>
+  </data>
+  <data name="Unit.Millisecond" xml:space="preserve">
+    <value>Ezredmásodperc</value>
+  </data>
+  <data name="Unit.Second" xml:space="preserve">
+    <value>Másodperc</value>
+  </data>
+  <data name="Unit.Minute" xml:space="preserve">
+    <value>Perc</value>
+  </data>
+  <data name="Unit.Hour" xml:space="preserve">
+    <value>Óra</value>
+  </data>
+  <data name="Unit.Day" xml:space="preserve">
+    <value>Nap</value>
+  </data>
+  <data name="Unit.Week" xml:space="preserve">
+    <value>Hét</value>
+  </data>
+  <data name="Unit.Month" xml:space="preserve">
+    <value>Hónap</value>
+  </data>
+  <data name="Unit.Year" xml:space="preserve">
+    <value>Év</value>
+  </data>
+  <data name="Unit.Pascal" xml:space="preserve">
+    <value>Pascal</value>
+  </data>
+  <data name="Unit.Kilopascal" xml:space="preserve">
+    <value>Kilopascal</value>
+  </data>
+  <data name="Unit.Bar" xml:space="preserve">
+    <value>Bar</value>
+  </data>
+  <data name="Unit.PSI" xml:space="preserve">
+    <value>PSI</value>
+  </data>
+  <data name="Unit.Atmosphere" xml:space="preserve">
+    <value>Atmoszféra</value>
+  </data>
+  <data name="Unit.mmHg" xml:space="preserve">
+    <value>mmHg</value>
+  </data>
+  <data name="Unit.Joule" xml:space="preserve">
+    <value>Joule</value>
+  </data>
+  <data name="Unit.Kilojoule" xml:space="preserve">
+    <value>Kilojoule</value>
+  </data>
+  <data name="Unit.Calorie" xml:space="preserve">
+    <value>Kalória</value>
+  </data>
+  <data name="Unit.Kilocalorie" xml:space="preserve">
+    <value>Kilokalória</value>
+  </data>
+  <data name="Unit.Watthour" xml:space="preserve">
+    <value>Wattóra</value>
+  </data>
+  <data name="Unit.Kilowatthour" xml:space="preserve">
+    <value>Kilowattóra</value>
+  </data>
+  <data name="Unit.BTU" xml:space="preserve">
+    <value>BTU</value>
+  </data>
+  <data name="Unit.Watt" xml:space="preserve">
+    <value>Watt</value>
+  </data>
+  <data name="Unit.Kilowatt" xml:space="preserve">
+    <value>Kilowatt</value>
+  </data>
+  <data name="Unit.Megawatt" xml:space="preserve">
+    <value>Megawatt</value>
+  </data>
+  <data name="Unit.Horsepower" xml:space="preserve">
+    <value>Lóerő</value>
+  </data>
+  <data name="Unit.Degree" xml:space="preserve">
+    <value>Fok</value>
+  </data>
+  <data name="Unit.Radian" xml:space="preserve">
+    <value>Radián</value>
+  </data>
+  <data name="Unit.Gradian" xml:space="preserve">
+    <value>Gradián</value>
+  </data>
+  <data name="Unit.Bit" xml:space="preserve">
+    <value>Bit</value>
+  </data>
+  <data name="Unit.Byte" xml:space="preserve">
+    <value>Bájt</value>
+  </data>
+  <data name="Unit.Kilobyte" xml:space="preserve">
+    <value>Kilobájt</value>
+  </data>
+  <data name="Unit.Megabyte" xml:space="preserve">
+    <value>Megabájt</value>
+  </data>
+  <data name="Unit.Gigabyte" xml:space="preserve">
+    <value>Gigabájt</value>
+  </data>
+  <data name="Unit.Terabyte" xml:space="preserve">
+    <value>Terabájt</value>
+  </data>
 </root>

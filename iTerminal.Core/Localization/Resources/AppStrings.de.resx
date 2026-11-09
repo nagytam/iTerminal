@@ -8449,4 +8449,250 @@
   <data name="Remote.Opens" xml:space="preserve">
     <value>öffnet {0}</value>
   </data>
+  <data name="Unit.Millimeter" xml:space="preserve">
+    <value>Millimeter</value>
+  </data>
+  <data name="Unit.Centimeter" xml:space="preserve">
+    <value>Zentimeter</value>
+  </data>
+  <data name="Unit.Meter" xml:space="preserve">
+    <value>Meter</value>
+  </data>
+  <data name="Unit.Kilometer" xml:space="preserve">
+    <value>Kilometer</value>
+  </data>
+  <data name="Unit.Inch" xml:space="preserve">
+    <value>Zoll</value>
+  </data>
+  <data name="Unit.Foot" xml:space="preserve">
+    <value>Fuß</value>
+  </data>
+  <data name="Unit.Yard" xml:space="preserve">
+    <value>Yard</value>
+  </data>
+  <data name="Unit.Mile" xml:space="preserve">
+    <value>Meile</value>
+  </data>
+  <data name="Unit.NauticalMile" xml:space="preserve">
+    <value>Seemeile</value>
+  </data>
+  <data name="Unit.SquareMillimeter" xml:space="preserve">
+    <value>Quadratmillimeter</value>
+  </data>
+  <data name="Unit.SquareCentimeter" xml:space="preserve">
+    <value>Quadratzentimeter</value>
+  </data>
+  <data name="Unit.SquareMeter" xml:space="preserve">
+    <value>Quadratmeter</value>
+  </data>
+  <data name="Unit.Hectare" xml:space="preserve">
+    <value>Hektar</value>
+  </data>
+  <data name="Unit.SquareKilometer" xml:space="preserve">
+    <value>Quadratkilometer</value>
+  </data>
+  <data name="Unit.SquareInch" xml:space="preserve">
+    <value>Quadratzoll</value>
+  </data>
+  <data name="Unit.SquareFoot" xml:space="preserve">
+    <value>Quadratfuß</value>
+  </data>
+  <data name="Unit.SquareYard" xml:space="preserve">
+    <value>Quadratyard</value>
+  </data>
+  <data name="Unit.Acre" xml:space="preserve">
+    <value>Acre</value>
+  </data>
+  <data name="Unit.SquareMile" xml:space="preserve">
+    <value>Quadratmeile</value>
+  </data>
+  <data name="Unit.Milliliter" xml:space="preserve">
+    <value>Milliliter</value>
+  </data>
+  <data name="Unit.Liter" xml:space="preserve">
+    <value>Liter</value>
+  </data>
+  <data name="Unit.CubicMeter" xml:space="preserve">
+    <value>Kubikmeter</value>
+  </data>
+  <data name="Unit.Teaspoon" xml:space="preserve">
+    <value>Teelöffel</value>
+  </data>
+  <data name="Unit.Tablespoon" xml:space="preserve">
+    <value>Esslöffel</value>
+  </data>
+  <data name="Unit.FluidOunce" xml:space="preserve">
+    <value>Flüssigunze</value>
+  </data>
+  <data name="Unit.Cup" xml:space="preserve">
+    <value>Tasse</value>
+  </data>
+  <data name="Unit.Pint" xml:space="preserve">
+    <value>Pint</value>
+  </data>
+  <data name="Unit.Quart" xml:space="preserve">
+    <value>Quart</value>
+  </data>
+  <data name="Unit.Gallon" xml:space="preserve">
+    <value>Gallone</value>
+  </data>
+  <data name="Unit.CubicInch" xml:space="preserve">
+    <value>Kubikzoll</value>
+  </data>
+  <data name="Unit.CubicFoot" xml:space="preserve">
+    <value>Kubikfuß</value>
+  </data>
+  <data name="Unit.Milligram" xml:space="preserve">
+    <value>Milligramm</value>
+  </data>
+  <data name="Unit.Gram" xml:space="preserve">
+    <value>Gramm</value>
+  </data>
+  <data name="Unit.Kilogram" xml:space="preserve">
+    <value>Kilogramm</value>
+  </data>
+  <data name="Unit.MetricTon" xml:space="preserve">
+    <value>Tonne</value>
+  </data>
+  <data name="Unit.Ounce" xml:space="preserve">
+    <value>Unze</value>
+  </data>
+  <data name="Unit.Pound" xml:space="preserve">
+    <value>Pfund</value>
+  </data>
+  <data name="Unit.Stone" xml:space="preserve">
+    <value>Stone</value>
+  </data>
+  <data name="Unit.ShortTon" xml:space="preserve">
+    <value>Short Ton</value>
+  </data>
+  <data name="Unit.LongTon" xml:space="preserve">
+    <value>Long Ton</value>
+  </data>
+  <data name="Unit.Celsius" xml:space="preserve">
+    <value>Celsius</value>
+  </data>
+  <data name="Unit.Fahrenheit" xml:space="preserve">
+    <value>Fahrenheit</value>
+  </data>
+  <data name="Unit.Kelvin" xml:space="preserve">
+    <value>Kelvin</value>
+  </data>
+  <data name="Unit.MeterSecond" xml:space="preserve">
+    <value>Meter/Sekunde</value>
+  </data>
+  <data name="Unit.KilometerHour" xml:space="preserve">
+    <value>Kilometer/Stunde</value>
+  </data>
+  <data name="Unit.MileHour" xml:space="preserve">
+    <value>Meile/Stunde</value>
+  </data>
+  <data name="Unit.FootSecond" xml:space="preserve">
+    <value>Fuß/Sekunde</value>
+  </data>
+  <data name="Unit.Knot" xml:space="preserve">
+    <value>Knoten</value>
+  </data>
+  <data name="Unit.Millisecond" xml:space="preserve">
+    <value>Millisekunde</value>
+  </data>
+  <data name="Unit.Second" xml:space="preserve">
+    <value>Sekunde</value>
+  </data>
+  <data name="Unit.Minute" xml:space="preserve">
+    <value>Minute</value>
+  </data>
+  <data name="Unit.Hour" xml:space="preserve">
+    <value>Stunde</value>
+  </data>
+  <data name="Unit.Day" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="Unit.Week" xml:space="preserve">
+    <value>Woche</value>
+  </data>
+  <data name="Unit.Month" xml:space="preserve">
+    <value>Monat</value>
+  </data>
+  <data name="Unit.Year" xml:space="preserve">
+    <value>Jahr</value>
+  </data>
+  <data name="Unit.Pascal" xml:space="preserve">
+    <value>Pascal</value>
+  </data>
+  <data name="Unit.Kilopascal" xml:space="preserve">
+    <value>Kilopascal</value>
+  </data>
+  <data name="Unit.Bar" xml:space="preserve">
+    <value>Bar</value>
+  </data>
+  <data name="Unit.PSI" xml:space="preserve">
+    <value>PSI</value>
+  </data>
+  <data name="Unit.Atmosphere" xml:space="preserve">
+    <value>Atmosphäre</value>
+  </data>
+  <data name="Unit.mmHg" xml:space="preserve">
+    <value>mmHg</value>
+  </data>
+  <data name="Unit.Joule" xml:space="preserve">
+    <value>Joule</value>
+  </data>
+  <data name="Unit.Kilojoule" xml:space="preserve">
+    <value>Kilojoule</value>
+  </data>
+  <data name="Unit.Calorie" xml:space="preserve">
+    <value>Kalorie</value>
+  </data>
+  <data name="Unit.Kilocalorie" xml:space="preserve">
+    <value>Kilokalorie</value>
+  </data>
+  <data name="Unit.Watthour" xml:space="preserve">
+    <value>Wattstunde</value>
+  </data>
+  <data name="Unit.Kilowatthour" xml:space="preserve">
+    <value>Kilowattstunde</value>
+  </data>
+  <data name="Unit.BTU" xml:space="preserve">
+    <value>BTU</value>
+  </data>
+  <data name="Unit.Watt" xml:space="preserve">
+    <value>Watt</value>
+  </data>
+  <data name="Unit.Kilowatt" xml:space="preserve">
+    <value>Kilowatt</value>
+  </data>
+  <data name="Unit.Megawatt" xml:space="preserve">
+    <value>Megawatt</value>
+  </data>
+  <data name="Unit.Horsepower" xml:space="preserve">
+    <value>Pferdestärke</value>
+  </data>
+  <data name="Unit.Degree" xml:space="preserve">
+    <value>Grad</value>
+  </data>
+  <data name="Unit.Radian" xml:space="preserve">
+    <value>Radiant</value>
+  </data>
+  <data name="Unit.Gradian" xml:space="preserve">
+    <value>Gon</value>
+  </data>
+  <data name="Unit.Bit" xml:space="preserve">
+    <value>Bit</value>
+  </data>
+  <data name="Unit.Byte" xml:space="preserve">
+    <value>Byte</value>
+  </data>
+  <data name="Unit.Kilobyte" xml:space="preserve">
+    <value>Kilobyte</value>
+  </data>
+  <data name="Unit.Megabyte" xml:space="preserve">
+    <value>Megabyte</value>
+  </data>
+  <data name="Unit.Gigabyte" xml:space="preserve">
+    <value>Gigabyte</value>
+  </data>
+  <data name="Unit.Terabyte" xml:space="preserve">
+    <value>Terabyte</value>
+  </data>
 </root>

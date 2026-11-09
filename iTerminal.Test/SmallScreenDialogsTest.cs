@@ -980,6 +980,7 @@ public class SmallScreenDialogsTest
     [DataRow("Ctrl+N", "Netzwerkbrowser")]
     [DataRow("Ctrl+E", "Einheitenumrechner —")]
     [DataRow("Ctrl+E", "Länge")]
+    [DataRow("Ctrl+E", "Zentimeter")]
     [DataRow("Ctrl+F4", "iTerminal-Editor")]
     [DataRow("Ctrl+Shift+F10", "Der Name, unter dem")]
     [DataRow("Ctrl+Shift+F10", "Umgebung")]
