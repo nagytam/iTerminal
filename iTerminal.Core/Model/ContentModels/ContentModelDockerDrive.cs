@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
@@ -52,7 +53,7 @@ public class ContentModelDockerDrive(
     protected override string DescribeLocation()
     {
         var (container, path) = DockerDriveService.Split(Url);
-        return container.Length == 0 ? "docker: containers" : $"docker: {container}:/{path}";
+        return container.Length == 0 ? UiText.Get("Docker.Drive.Containers", "docker: containers") : $"docker: {container}:/{path}";
     }
 
     public override string GetFooter()
@@ -61,7 +62,7 @@ public class ContentModelDockerDrive(
         // Short enough for a half-width panel at 140 columns — the border elides a longer one in the middle.
         var footer = base.GetFooter();
         return IsContainerList && StatusMessage.Length == 0
-            ? $"{footer}│ Shift+F9: start/stop  Ctrl+Shift+F9: restart "
+            ? footer + "│ " + UiText.Get("Docker.Drive.Hints", "Shift+F9: start/stop  Ctrl+Shift+F9: restart") + " "
             : footer;
     }
 

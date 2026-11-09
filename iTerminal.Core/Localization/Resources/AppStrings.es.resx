@@ -8758,4 +8758,25 @@
   <data name="Checksum.RowSize" xml:space="preserve">
     <value>Tamaño</value>
   </data>
+  <data name="Git.Drive.Repos" xml:space="preserve">
+    <value>git: repositorios</value>
+  </data>
+  <data name="Git.Drive.Repo" xml:space="preserve">
+    <value>git: {0} — ramas, etiquetas, commits</value>
+  </data>
+  <data name="Docker.Drive.Containers" xml:space="preserve">
+    <value>docker: contenedores</value>
+  </data>
+  <data name="Docker.Drive.Hints" xml:space="preserve">
+    <value>Mayús+F9: iniciar/detener  Ctrl+Mayús+F9: reiniciar</value>
+  </data>
+  <data name="Recycle.Drive.Title" xml:space="preserve">
+    <value>Papelera de reciclaje</value>
+  </data>
+  <data name="Recycle.Drive.Hints" xml:space="preserve">
+    <value>Intro:restaurar  F8:eliminar definitivamente</value>
+  </data>
+  <data name="Listing.UpMark" xml:space="preserve">
+    <value>Subir</value>
+  </data>
 </root>

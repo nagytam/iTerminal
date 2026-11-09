@@ -17,7 +17,7 @@ public abstract record EntryBase : IEntry
     {
         // The folder marker is stored as the constant everything compares against and shown in the chosen language; the
         // abbreviations fit the size column, which is six cells wide.
-        get { return fileSize == iConsole.Data.Url.Folder ? UiText.Get("Listing.FolderMark", "Folder") : fileSize; }
+        get { return fileSize == iConsole.Data.Url.Folder ? UiText.Get("Listing.FolderMark", "Folder") : fileSize == "Up" && DisplayName == ".." ? UiText.Get("Listing.UpMark", "Up") : fileSize; }
         set { fileSize = value; }
     }
     protected string date = string.Empty;

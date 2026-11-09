@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
@@ -42,13 +43,13 @@ public class ContentModelGitDrive(
         GitDriveUrl.Parse(Url, out var repositoryRoot, out var revision, out var path);
         if (repositoryRoot is null)
         {
-            return "git: repositories";
+            return UiText.Get("Git.Drive.Repos", "git: repositories");
         }
 
         var repositoryName = Path.GetFileName(repositoryRoot.TrimEnd('\\', '/'));
         if (revision is null)
         {
-            return $"git: {repositoryName} — branches, tags, commits";
+            return string.Format(UiText.Get("Git.Drive.Repo", "git: {0} — branches, tags, commits"), repositoryName);
         }
 
         return $"git: {repositoryName} @ {ShortRevision(revision)}:/{path}";

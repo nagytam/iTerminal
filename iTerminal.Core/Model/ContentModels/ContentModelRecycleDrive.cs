@@ -35,7 +35,7 @@ public class ContentModelRecycleDrive(
     protected override Task<IReadOnlyList<IEntry>> ListAsync(Url url, CancellationToken cancellationToken) =>
         recycleBinService.ListAsync(cancellationToken);
 
-    protected override string DescribeLocation() => "Recycle bin";
+    protected override string DescribeLocation() => UiText.Get("Recycle.Drive.Title", "Recycle bin");
 
     /// <summary>The drive is one flat list: wherever a URL on it points, <c>..</c> leaves the drive.</summary>
     protected override bool IsDriveRoot(Url url) => true;
@@ -44,7 +44,7 @@ public class ContentModelRecycleDrive(
     {
         // The two keys that mean something else here than on a folder are named: no row says them.
         var footer = base.GetFooter();
-        return StatusMessage.Length == 0 ? $"{footer}│ Enter:restore  F8:delete for good " : footer;
+        return StatusMessage.Length == 0 ? footer + "│ " + UiText.Get("Recycle.Drive.Hints", "Enter:restore  F8:delete for good") + " " : footer;
     }
 
     /// <summary>
