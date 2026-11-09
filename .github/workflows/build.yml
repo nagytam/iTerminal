@@ -29,7 +29,8 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '11.0.100-rc.2.26504.105'
+          include-prerelease: true
 
       # The solution marks the Posix test project as non-building (it only compiles on Linux),
       # so restoring the solution skips it: restore it by name.
@@ -103,7 +104,8 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '11.0.100-rc.2.26504.105'
+          include-prerelease: true
 
       - name: Restore
         run: dotnet restore iTerminal.slnx
