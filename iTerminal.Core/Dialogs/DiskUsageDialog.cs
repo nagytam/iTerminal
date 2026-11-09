@@ -228,8 +228,8 @@ public class DiskUsageDialog : Dialog
 
         if (!_scan.IsComplete)
         {
-            lines.Add(new($"Measuring {_scan.Path}", colorScheme.Foreground));
-            lines.Add(new($"{_scan.FilesScanned:N0} files, {_scan.BytesScanned.ToFileSize()} so far", Color.Yellow));
+            lines.Add(new(string.Format(UiText.Get("DiskUsage.Measuring", "Measuring {0}"), _scan.Path), colorScheme.Foreground));
+            lines.Add(new(string.Format(UiText.Get("DiskUsage.SoFar", "{0} files, {1} so far"), _scan.FilesScanned.ToString("N0"), _scan.BytesScanned.ToFileSize()), Color.Yellow));
             lines.Add(new(_scan.CurrentFolder, Color.Cyan));
             lines.Add(default);
             lines.Add(new(iConsole.Localization.UiText.Get("Disk.EscStops", "Esc stops and closes."), colorScheme.Foreground));

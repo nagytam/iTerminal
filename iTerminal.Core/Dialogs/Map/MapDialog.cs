@@ -41,37 +41,56 @@ public class MapDialog : Dialog
     private const int ChromeRows = 2;
     private const string Attribution = "© OpenStreetMap contributors";
 
-    private static readonly string[] HelpLines =
+    private string[]? _helpLines;
+    private string? _helpLanguage;
+
+    /// <summary>The help text in the chosen language, rebuilt when the language changes.</summary>
+    private string[] HelpLines
+    {
+        get
+        {
+            string language = UiText.Current?.LanguageCode ?? string.Empty;
+            if (_helpLines is null || _helpLanguage != language)
+            {
+                _helpLines = BuildHelpLines();
+                _helpLanguage = language;
+            }
+
+            return _helpLines;
+        }
+    }
+
+    private static string[] BuildHelpLines() =>
     [
-        "Map — OpenStreetMap as ASCII art",
+        UiText.Get("Map.Help.0", "Map — OpenStreetMap as ASCII art"),
         "",
-        "Moving",
-        "  Arrows               Pan a little       Shift+Arrows   Pan half a screen",
-        "  Click                Centre the map on that spot",
-        "  Home                 Back to the home place (Budapest)",
+        UiText.Get("Map.Help.2", "Moving"),
+        UiText.Get("Map.Help.3", "  Arrows               Pan a little       Shift+Arrows   Pan half a screen"),
+        UiText.Get("Map.Help.4", "  Click                Centre the map on that spot"),
+        UiText.Get("Map.Help.5", "  Home                 Back to the home place (Budapest)"),
         "",
-        "Zoom",
-        "  +  =  PgUp           Zoom in            -  PgDn        Zoom out",
-        "  Mouse wheel          Zoom in or out at the pointer",
+        UiText.Get("Map.Help.7", "Zoom"),
+        UiText.Get("Map.Help.8", "  +  =  PgUp           Zoom in            -  PgDn        Zoom out"),
+        UiText.Get("Map.Help.9", "  Mouse wheel          Zoom in or out at the pointer"),
         "",
-        "Finding places",
-        "  /  F6  G             Search a name (needs the network) or type coordinates: 47.5, 19.04",
-        "  M                    Save the centre as a place        B  F2   Saved places (Del removes one)",
+        UiText.Get("Map.Help.11", "Finding places"),
+        UiText.Get("Map.Help.12", "  /  F6  G             Search a name (needs the network) or type coordinates: 47.5, 19.04"),
+        UiText.Get("Map.Help.13", "  M                    Save the centre as a place        B  F2   Saved places (Del removes one)"),
         "",
-        "Online and offline",
-        "  O                    Switch online / offline. Offline never opens a connection.",
-        "  D                    Save the tiles of this view (and two zoom levels in) for offline use",
-        "  R  F5                Ask again for tiles that failed",
+        UiText.Get("Map.Help.15", "Online and offline"),
+        UiText.Get("Map.Help.16", "  O                    Switch online / offline. Offline never opens a connection."),
+        UiText.Get("Map.Help.17", "  D                    Save the tiles of this view (and two zoom levels in) for offline use"),
+        UiText.Get("Map.Help.18", "  R  F5                Ask again for tiles that failed"),
         "",
-        "Legend",
-        "  ~ water    \" green space    . : - = + * # % @  more drawn there (roads, buildings, labels)",
-        "  X the centre    P a saved place    / a tile that is not available    . a tile still loading",
+        UiText.Get("Map.Help.20", "Legend"),
+        UiText.Get("Map.Help.21", "  ~ water    \" green space    . : - = + * # % @  more drawn there (roads, buildings, labels)"),
+        UiText.Get("Map.Help.22", "  X the centre    P a saved place    / a tile that is not available    . a tile still loading"),
         "",
-        "Offline data",
-        "  Visited tiles are saved as tiles/z/x/y.png in the map folder, and any raster .mbtiles file put there",
-        "  is read too. The folder is shown in the status line after pressing D.",
+        UiText.Get("Map.Help.24", "Offline data"),
+        UiText.Get("Map.Help.25", "  Visited tiles are saved as tiles/z/x/y.png in the map folder, and any raster .mbtiles file put there"),
+        UiText.Get("Map.Help.26", "  is read too. The folder is shown in the status line after pressing D."),
         "",
-        "Press any key to go back.",
+        UiText.Get("Map.Help.28", "Press any key to go back."),
     ];
 
     private readonly MapModel _model;
@@ -169,7 +188,7 @@ public class MapDialog : Dialog
             changed = true;
         }
 
-        var title = _model.Online ? "Map" : "Map (offline)";
+        var title = _model.Online ? UiText.Get("Dialog.Map", "Map") : UiText.Get("Map.TitleOffline", "Map (offline)");
         if (title != _appliedTitle)
         {
             _appliedTitle = title;
@@ -727,8 +746,8 @@ public class MapDialog : Dialog
 
     private void DrawList(IBuffer buffer, ColorScheme scheme, int x, int y, int width, int height)
     {
-        var heading = _listKind == ListKind.Places ? "Saved places" : "Search results";
-        var hint = _listKind == ListKind.Places ? "Enter:go   Del:remove   Esc:back" : "Enter:go   Esc:back";
+        var heading = _listKind == ListKind.Places ? UiText.Get("Map.SavedPlaces", "Saved places") : UiText.Get("Map.SearchResults", "Search results");
+        var hint = _listKind == ListKind.Places ? UiText.Get("Map.PlacesHint", "Enter:go   Del:remove   Esc:back") : UiText.Get("Map.ResultsHint", "Enter:go   Esc:back");
         WriteText(buffer, x, y, width, $" {heading} ({_list.Count})   {hint}", Color.Yellow, scheme.Background, true);
         for (var row = 0; row < height - 1; row++)
         {
@@ -754,7 +773,7 @@ public class MapDialog : Dialog
         {
             var index = _helpScroll + row;
             var text = index < HelpLines.Length ? HelpLines[index] : string.Empty;
-            var heading = index < HelpLines.Length && (index == 0 || text is "Moving" or "Zoom" or "Finding places" or "Online and offline" or "Legend" or "Offline data");
+            var heading = index < HelpLines.Length - 1 && text.Length > 0 && text[0] != ' ';
             WriteText(buffer, x, y + row, width, " " + text, heading ? Color.Yellow : scheme.Foreground, scheme.Background, heading);
         }
     }
@@ -765,11 +784,11 @@ public class MapDialog : Dialog
         var color = scheme.Foreground;
         if (_mode == Mode.Search)
         {
-            left = " Search or coordinates: " + _input + "█   Enter:go   Esc:cancel";
+            left = " " + UiText.Get("Map.SearchPrompt", "Search or coordinates: ") + _input + "█   " + UiText.Get("Map.SearchKeys", "Enter:go   Esc:cancel");
         }
         else if (_mode == Mode.Help)
         {
-            left = " Up/Down:scroll   any other key:back";
+            left = " " + UiText.Get("Map.HelpKeys", "Up/Down:scroll   any other key:back");
             color = scheme.DisabledForeground;
         }
         else if (_status.Length > 0)
