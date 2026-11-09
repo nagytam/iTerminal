@@ -1,4 +1,5 @@
 ﻿using iConsole.Helper;
+using iConsole.Localization;
 using iConsole.Model;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;
 using UglyToad.PdfPig;
@@ -9,6 +10,7 @@ using System.IO;
 using HtmlAgilityPack;
 using SkiaSharp;
 using System.Diagnostics;
+using System.Globalization;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -173,7 +175,7 @@ public class FileToTextConverterService : IFileToTextConverterService
         var file = await fileSystem.ReadFileAsync(url);
         if (file?.Content is null)
         {
-            return ["Could not read file."];
+            return [ViewerText.Get("File.CouldNotRead", "Could not read file.")];
         }
 
         // Only the bytes are read, so the result is the same for a file on an SSH, archive or memory drive.
@@ -402,7 +404,7 @@ public class FileToTextConverterService : IFileToTextConverterService
     {
         IReadOnlyList<string> lines = File.Exists(url.Path)
             ? AccessDatabaseTextReader.Read(url.Path)
-            : ["[Access databases are read from a local file]"];
+            : [$"[{ViewerText.Get("File.AccessLocalOnly", "Access databases are read from a local file")}]"];
         AddLines(textModel, lines);
     }
 
@@ -428,15 +430,15 @@ public class FileToTextConverterService : IFileToTextConverterService
             Url? linked = SiblingUrl(url, name);
             if (name.Contains("://", StringComparison.Ordinal) || linked is null)
             {
-                section.Add("[The linked document is outside this file's folder]");
+                section.Add($"[{ViewerText.Get("File.LinkedDocumentOutsideFolder", "The linked document is outside this file's folder")}]");
             }
             else if (!fileSystem.ExistsFile(linked))
             {
-                section.Add("[The linked document is not in this folder]");
+                section.Add($"[{ViewerText.Get("File.LinkedDocumentMissing", "The linked document is not in this folder")}]");
             }
             else if (linked.Extension.Equals("odm", StringComparison.OrdinalIgnoreCase))
             {
-                section.Add("[A master document inside a master is not expanded]");
+                section.Add($"[{ViewerText.Get("File.NestedMasterNotExpanded", "A master document inside a master is not expanded")}]");
             }
             else
             {
@@ -635,7 +637,7 @@ public class FileToTextConverterService : IFileToTextConverterService
         var memoryFile = await fileSystem.ReadFileAsync(url);
         if (memoryFile?.Content is null)
         {
-            textModel.Lines.Add("Could not read file.");
+            textModel.Lines.Add(ViewerText.Get("File.CouldNotRead", "Could not read file."));
             return;
         }
 
@@ -656,32 +658,35 @@ public class FileToTextConverterService : IFileToTextConverterService
 
     private static void BuildAssemblyMetadataLines(Url url, string tempPath, long fileSize, ITextModel textModel)
     {
-        AddHeading(textModel, "File");
-        AddField(textModel, "Name",          url.Name);
-        AddField(textModel, "Size",          $"{fileSize:N0} bytes");
+        AddHeading(textModel, ViewerText.Get("BinaryMetadata.File", "File"));
+        AddField(textModel, ViewerText.Get("BinaryMetadata.Name", "Name"), url.Name);
+        AddField(
+            textModel,
+            ViewerText.Get("BinaryMetadata.Size", "Size"),
+            ViewerText.Format("BinaryMetadata.Bytes", "{0:N0} bytes", fileSize));
         textModel.Lines.Add(string.Empty);
 
         // ── File Version Info (works for any PE binary, managed or native) ──────
         try
         {
             var fvi = FileVersionInfo.GetVersionInfo(tempPath);
-            AddHeading(textModel, "File Version Info");
-            AddField(textModel, "File Description",  fvi.FileDescription);
-            AddField(textModel, "File Version",      fvi.FileVersion);
-            AddField(textModel, "Product Name",      fvi.ProductName);
-            AddField(textModel, "Product Version",   fvi.ProductVersion);
-            AddField(textModel, "Company Name",      fvi.CompanyName);
-            AddField(textModel, "Legal Copyright",   fvi.LegalCopyright);
-            AddField(textModel, "Legal Trademarks",  fvi.LegalTrademarks);
-            AddField(textModel, "Comments",          fvi.Comments);
-            AddField(textModel, "Internal Name",     fvi.InternalName);
-            AddField(textModel, "Original Filename", fvi.OriginalFilename);
-            AddField(textModel, "Language",          fvi.Language);
+            AddHeading(textModel, ViewerText.Get("BinaryMetadata.FileVersionInfo", "File Version Info"));
+            AddField(textModel, ViewerText.Get("BinaryMetadata.FileDescription", "File Description"), fvi.FileDescription);
+            AddField(textModel, ViewerText.Get("BinaryMetadata.FileVersion", "File Version"), fvi.FileVersion);
+            AddField(textModel, ViewerText.Get("BinaryMetadata.ProductName", "Product Name"), fvi.ProductName);
+            AddField(textModel, ViewerText.Get("BinaryMetadata.ProductVersion", "Product Version"), fvi.ProductVersion);
+            AddField(textModel, ViewerText.Get("BinaryMetadata.CompanyName", "Company Name"), fvi.CompanyName);
+            AddField(textModel, ViewerText.Get("BinaryMetadata.LegalCopyright", "Legal Copyright"), fvi.LegalCopyright);
+            AddField(textModel, ViewerText.Get("BinaryMetadata.LegalTrademarks", "Legal Trademarks"), fvi.LegalTrademarks);
+            AddField(textModel, ViewerText.Get("BinaryMetadata.Comments", "Comments"), fvi.Comments);
+            AddField(textModel, ViewerText.Get("BinaryMetadata.InternalName", "Internal Name"), fvi.InternalName);
+            AddField(textModel, ViewerText.Get("BinaryMetadata.OriginalFilename", "Original Filename"), fvi.OriginalFilename);
+            AddField(textModel, ViewerText.Get("BinaryMetadata.Language", "Language"), fvi.Language);
             textModel.Lines.Add(string.Empty);
         }
         catch (Exception ex)
         {
-            textModel.Lines.Add($"File version info unavailable: {ex.Message}");
+            textModel.Lines.Add(ViewerText.Format("File.FileVersionInfoUnavailable", "File version info unavailable: {0}", ex.Message));
             textModel.Lines.Add(string.Empty);
         }
 
@@ -689,26 +694,28 @@ public class FileToTextConverterService : IFileToTextConverterService
         try
         {
             var asmName = AssemblyName.GetAssemblyName(tempPath);
-            AddHeading(textModel, "Assembly Identity");
-            AddField(textModel, "Assembly Name",    asmName.Name);
-            AddField(textModel, "Version",          asmName.Version?.ToString());
-            AddField(textModel, "Culture",          string.IsNullOrEmpty(asmName.CultureName) ? "neutral" : asmName.CultureName);
+            AddHeading(textModel, ViewerText.Get("BinaryMetadata.AssemblyIdentity", "Assembly Identity"));
+            AddField(textModel, ViewerText.Get("BinaryMetadata.AssemblyName", "Assembly Name"), asmName.Name);
+            AddField(textModel, ViewerText.Get("BinaryMetadata.Version", "Version"), asmName.Version?.ToString());
+            AddField(textModel, ViewerText.Get("BinaryMetadata.Culture", "Culture"), string.IsNullOrEmpty(asmName.CultureName) ? "neutral" : asmName.CultureName);
             var pkt = asmName.GetPublicKeyToken();
-            AddField(textModel, "Public Key Token", pkt is { Length: > 0 }
+            AddField(textModel, ViewerText.Get("BinaryMetadata.PublicKeyToken", "Public Key Token"), pkt is { Length: > 0 }
                 ? BitConverter.ToString(pkt).Replace("-", string.Empty).ToLowerInvariant()
                 : "null");
-            AddField(textModel, "Content Type",     asmName.ContentType.ToString());
-            AddField(textModel, "Flags",            asmName.Flags.ToString());
+            AddField(textModel, ViewerText.Get("BinaryMetadata.ContentType", "Content Type"), asmName.ContentType.ToString());
+            AddField(textModel, ViewerText.Get("BinaryMetadata.Flags", "Flags"), asmName.Flags.ToString());
             textModel.Lines.Add(string.Empty);
         }
         catch (BadImageFormatException)
         {
-            textModel.Lines.Add("Note: Not a managed .NET assembly — no CLR identity available.");
+            textModel.Lines.Add(ViewerText.Get(
+                "BinaryMetadata.NotManagedAssembly",
+                "Note: Not a managed .NET assembly — no CLR identity available."));
             textModel.Lines.Add(string.Empty);
         }
         catch (Exception ex)
         {
-            textModel.Lines.Add($"Assembly identity unavailable: {ex.Message}");
+            textModel.Lines.Add(ViewerText.Format("File.AssemblyIdentityUnavailable", "Assembly identity unavailable: {0}", ex.Message));
             textModel.Lines.Add(string.Empty);
         }
     }
@@ -723,3 +730,25 @@ public class FileToTextConverterService : IFileToTextConverterService
     }
 }
 
+internal static class ViewerText
+{
+    internal static string Get(string key, string fallback) =>
+        UiText.Get("Viewer." + key, fallback);
+
+    internal static string Format(string key, string fallback, params object?[] arguments)
+    {
+        string resourceKey = "Viewer." + key;
+        if (UiText.Current is { } localizer && localizer.TryGet(resourceKey, out _))
+        {
+            return localizer.Get(resourceKey, arguments);
+        }
+
+        return string.Format(CultureInfo.CurrentCulture, fallback, arguments);
+    }
+
+    internal static string Heading(string key, string fallback)
+    {
+        string heading = Get(key, fallback);
+        return $"── {heading} {new string('─', Math.Max(0, 60 - heading.Length))}";
+    }
+}

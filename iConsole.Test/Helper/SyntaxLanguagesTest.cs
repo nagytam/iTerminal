@@ -10,7 +10,7 @@ public class SyntaxLanguagesTest
     /// <summary>One file per built-in language, so the coverage test can tell whether a new language has no sample.</summary>
     private static readonly string[] SampleFiles =
     [
-        "x.ts", "x.cs", "x.java", "x.c", "x.cpp", "x.go", "x.rs", "x.js", "x.ps1", "x.py", "x.sh", "x.yml", "x.toml",
+        "x.kt", "x.ts", "x.cs", "x.java", "x.c", "x.cpp", "x.go", "x.rs", "x.js", "x.ps1", "x.py", "x.sh", "x.yml", "x.toml",
         "x.ini", "x.env", "x.properties", "x.sql", "x.html", "x.json", ".gitignore", "x.bat", "x.lua", "x.r", "x.pl",
         "x.php", "x.vb", "x.fs", "x.rb", "Dockerfile", "x.log",
     ];
@@ -39,7 +39,8 @@ public class SyntaxLanguagesTest
 
     [Timeout(60_000)]
     [TestMethod]
-    [DataRow("x.ts", "const x = \"s\"; // c", "const", "\"s\"", "// c", "C-like")]
+    [DataRow("x.kt", "const x = \"s\"; // c", "const", "\"s\"", "// c", "C-like")]
+    [DataRow("x.ts", "const x = \"s\"; // c", "const", "\"s\"", "// c", "TypeScript")]
     [DataRow("x.cs", "return \"s\"; // c", "return", "\"s\"", "// c", "C#")]
     [DataRow("x.java", "return \"s\"; // c", "return", "\"s\"", "// c", "Java")]
     [DataRow("x.c", "return \"s\"; /* c */", "return", "\"s\"", "/* c */", "C")]
@@ -109,6 +110,36 @@ public class SyntaxLanguagesTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DataRow("x.ts")]
+    [DataRow("x.tsx")]
+    public void TypeScript_ColoursItsOwnKeywordsInsteadOfCOnlyWords(string file)
+    {
+        var spans = Spans(file, "type T = unknown; value satisfies T; interface Producer<out T> {} typedef struct");
+
+        CollectionAssert.Contains(spans, ("type", SyntaxKind.Keyword));
+        CollectionAssert.Contains(spans, ("unknown", SyntaxKind.Keyword));
+        CollectionAssert.Contains(spans, ("satisfies", SyntaxKind.Keyword));
+        CollectionAssert.Contains(spans, ("out", SyntaxKind.Keyword));
+        CollectionAssert.DoesNotContain(spans, ("typedef", SyntaxKind.Keyword));
+        CollectionAssert.DoesNotContain(spans, ("struct", SyntaxKind.Keyword));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TypeScript_BlockCommentContinuesAcrossLines()
+    {
+        SyntaxLanguage language = SyntaxHighlighter.ForFile("x.ts")!;
+        List<SyntaxSpan> spans = [];
+
+        Assert.IsTrue(SyntaxHighlighter.Tokenize(language, "/* start", false, spans));
+        spans.Clear();
+        Assert.IsFalse(SyntaxHighlighter.Tokenize(language, "end */ type", true, spans));
+        CollectionAssert.Contains(spans, new SyntaxSpan(0, 6, SyntaxKind.Comment));
+        CollectionAssert.Contains(spans, new SyntaxSpan(7, 4, SyntaxKind.Keyword));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void Ruby_UsesCaseSensitiveRubyKeywordsRatherThanPythonKeywords()
     {
         var spans = Spans("x.rb", "unless ready; elsif done; end; elif; None; UNLESS");
@@ -152,5 +183,33 @@ public class SyntaxLanguagesTest
     {
         CollectionAssert.Contains(Spans("x.r", "x <- 10L + 2.5"), ("10L", SyntaxKind.Number));
         CollectionAssert.Contains(Spans("x.r", "x <- 2.5"), ("2.5", SyntaxKind.Number));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("x.ps1")]
+    [DataRow("x.py")]
+    [DataRow("x.go")]
+    [DataRow("x.java")]
+    [DataRow("x.rb")]
+    [DataRow("x.cpp")]
+    public void DecimalNumbers_IncludeSignedExponentsButNotFollowingOperators(string file)
+    {
+        List<string> numbers = Spans(file, "1e-3+4 1.5E+6-7 1e3 12 0x1e-3 1e-foo 1e3e-4")
+            .Where(s => s.Kind == SyntaxKind.Number)
+            .Select(s => s.Text)
+            .ToList();
+
+        CollectionAssert.AreEqual(
+            new[] { "1e-3", "4", "1.5E+6", "7", "1e3", "12", "0x1e", "3", "1e", "1e3e", "4" },
+            numbers);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Cpp_DecimalDigitSeparatorsDoNotSplitSignedExponents()
+    {
+        CollectionAssert.Contains(Spans("x.cpp", "1'000e-3"), ("1'000e-3", SyntaxKind.Number));
+        CollectionAssert.DoesNotContain(Spans("x.cpp", "0x1'e-3"), ("0x1'e-3", SyntaxKind.Number));
     }
 }

@@ -159,6 +159,15 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<TaskManagerDialog>();
         services.AddTransient<ProcessManagerDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.VirtualMachineManagerDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog>();
+        services.AddSingleton<iTerminal.Core.Services.UsersAndGroups.IUserGroupService>(provider =>
+        {
+            iTerminal.Core.Services.Processes.IExternalProcessRunner runner =
+                provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>();
+            return OperatingSystem.IsWindows()
+                ? new iTerminal.Core.Services.UsersAndGroups.WindowsUserGroupService(runner)
+                : new iTerminal.Core.Services.UsersAndGroups.LinuxUserGroupService(runner);
+        });
         services.AddSingleton<ProcessService>();
         services.AddTransient<FileViewerDialog>();
         services.AddSingleton<iTerminal.Core.Services.Dotnet.IDotnetSolutionService, iTerminal.Core.Services.Dotnet.DotnetSolutionService>();

@@ -17,6 +17,8 @@ public class FileViewerDialogDisassemblyTest
     {
         public TaskCompletionSource<IReadOnlyList<string>> Gate { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
+        public TaskCompletionSource<bool> Started { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
         public int DisassemblyCalls { get; private set; }
 
         public CancellationToken Token { get; private set; }
@@ -38,6 +40,7 @@ public class FileViewerDialogDisassemblyTest
         {
             DisassemblyCalls++;
             Token = cancellationToken;
+            Started.TrySetResult(true);
             return ReturnNullTask ? null! : Gate.Task;
         }
     }
@@ -105,6 +108,7 @@ public class FileViewerDialogDisassemblyTest
         FileViewerDialog dialog = CreateDialog(converter);
         await dialog.OnInitializeAsync();
         Task pending = dialog.DisassemblyTask!;
+        await converter.Started.Task;
 
         dialog.Close();
         Assert.IsTrue(converter.Token.IsCancellationRequested, "Closing must cancel the disassembly.");

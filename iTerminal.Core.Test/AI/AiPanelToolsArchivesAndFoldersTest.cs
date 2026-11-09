@@ -85,16 +85,107 @@ public class AiPanelToolsArchivesAndFoldersTest
     public async Task CompressThenExtract_RoundTripsAFileThroughTheOtherPanel()
     {
         File.WriteAllText(Path.Combine(_left, "a.txt"), "hello");
+        _approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
-        string compressed = await _tools.CompressEntries("pack", "left", "a.txt");
+        string compressed = await _tools.CompressEntries("pack", "left", "a.txt", confirmed: true);
 
         Assert.IsTrue(File.Exists(Path.Combine(_right, "pack.zip")), compressed);
 
         // Unpack the archive from the right panel back into the left one.
-        string extracted = await _tools.ExtractArchives("right", "pack.zip", intoOtherPanel: true);
+        string extracted = await _tools.ExtractArchives("right", "pack.zip", intoOtherPanel: true, confirmed: true);
 
         Assert.IsTrue(File.Exists(Path.Combine(_left, "pack", "a.txt")), extracted);
         Assert.AreEqual("hello", File.ReadAllText(Path.Combine(_left, "pack", "a.txt")));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Compress_WithoutConfirmationOnlyPreviews()
+    {
+        File.WriteAllText(Path.Combine(_left, "a.txt"), "hello");
+
+        string preview = await _tools.CompressEntries("pack", "left", "a.txt");
+
+        StringAssert.Contains(preview, "Preview, nothing changed");
+        StringAssert.Contains(preview, "pack.zip");
+        Assert.IsFalse(File.Exists(Path.Combine(_right, "pack.zip")));
+        _approval.Verify(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Compress_ConfirmedButDeclined_DoesNotCreateArchive()
+    {
+        File.WriteAllText(Path.Combine(_left, "a.txt"), "hello");
+        AiActionApprovalRequest? request = null;
+        _approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .Callback<AiActionApprovalRequest, CancellationToken>((value, _) => request = value)
+            .ReturnsAsync(false);
+
+        string result = await _tools.CompressEntries("pack", "left", "a.txt", confirmed: true);
+
+        StringAssert.Contains(result, "declined or cancelled");
+        Assert.IsFalse(File.Exists(Path.Combine(_right, "pack.zip")));
+        StringAssert.Contains(request!.Actions.Single(), "a.txt");
+        StringAssert.Contains(request.Actions.Single(), "pack.zip");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Compress_ArchiveAppearsWhileApprovalIsOpen_DoesNotReplaceIt()
+    {
+        File.WriteAllText(Path.Combine(_left, "a.txt"), "hello");
+        string archivePath = Path.Combine(_right, "pack.zip");
+        _approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .Callback<AiActionApprovalRequest, CancellationToken>((_, _) => File.WriteAllText(archivePath, "created elsewhere"))
+            .ReturnsAsync(true);
+
+        string result = await _tools.CompressEntries("pack", "left", "a.txt", confirmed: true);
+
+        StringAssert.Contains(result, "appeared while approval was pending");
+        Assert.AreEqual("created elsewhere", File.ReadAllText(archivePath));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Extract_WithoutConfirmationOnlyPreviews()
+    {
+        File.WriteAllText(Path.Combine(_left, "a.txt"), "hello");
+        _approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        await _tools.CompressEntries("pack", "left", "a.txt", confirmed: true);
+        _approval.Reset();
+
+        string preview = await _tools.ExtractArchives("right", "pack.zip");
+
+        StringAssert.Contains(preview, "Preview, nothing changed");
+        StringAssert.Contains(preview, "pack.zip");
+        Assert.IsFalse(Directory.Exists(Path.Combine(_left, "pack")));
+        _approval.Verify(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Extract_ConfirmedButDeclined_DoesNotWriteFiles()
+    {
+        File.WriteAllText(Path.Combine(_left, "a.txt"), "hello");
+        _approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        await _tools.CompressEntries("pack", "left", "a.txt", confirmed: true);
+        _approval.Reset();
+        AiActionApprovalRequest? request = null;
+        _approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .Callback<AiActionApprovalRequest, CancellationToken>((value, _) => request = value)
+            .ReturnsAsync(false);
+
+        string result = await _tools.ExtractArchives("right", "pack.zip", confirmed: true);
+
+        StringAssert.Contains(result, "declined or cancelled");
+        Assert.IsFalse(Directory.Exists(Path.Combine(_left, "pack")));
+        StringAssert.Contains(request!.Actions.Single(), "pack.zip");
+        StringAssert.Contains(request.Actions.Single(), Path.Combine(_left, "pack"));
+        StringAssert.Contains(request.Actions.Single(), "overwrite existing files: no");
     }
 
     [Timeout(60_000)]

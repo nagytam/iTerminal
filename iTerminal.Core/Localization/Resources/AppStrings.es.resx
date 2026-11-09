@@ -7344,6 +7344,18 @@
   <data name="DiskImage.TypePath" xml:space="preserve">
     <value>Escriba la ruta de un archivo .iso, .vhd o .vhdx.</value>
   </data>
+  <data name="DiskImage.Hint" xml:space="preserve">
+    <value>Un archivo .iso, .vhd o .vhdx.</value>
+  </data>
+  <data name="DiskImage.MissingFile" xml:space="preserve">
+    <value>Archivo no encontrado: {0}</value>
+  </data>
+  <data name="DiskImage.Mounted" xml:space="preserve">
+    <value>Imagen montada</value>
+  </data>
+  <data name="DiskImage.Unmounted" xml:space="preserve">
+    <value>Imagen desmontada</value>
+  </data>
   <data name="Format.Already" xml:space="preserve">
     <value>La unidad ya se está formateando.</value>
   </data>
@@ -8253,6 +8265,9 @@
   <data name="Assoc.ChangeOpen" xml:space="preserve">
     <value>Cambiar el programa para abrir</value>
   </data>
+  <data name="Assoc.PlaceholderHint" xml:space="preserve">
+    <value>%f archivo  %d carpeta  %n nombre — sin %f, el archivo va al final</value>
+  </data>
   <data name="DiskUsage.Measuring" xml:space="preserve">
     <value>Midiendo {0}</value>
   </data>
@@ -8372,6 +8387,12 @@
   </data>
   <data name="Ai.Approval.SyncSummary" xml:space="preserve">
     <value>La IA solicita sincronizar {0} con {1}. Revise el plan completo.</value>
+  </data>
+  <data name="Ai.Approval.WriteSummary" xml:space="preserve">
+    <value>La IA solicita {0}. Revise todas las acciones siguientes.</value>
+  </data>
+  <data name="Ai.Approval.ReadFileSummary" xml:space="preserve">
+    <value>La IA solicita leer la vista previa de {0}. Su contenido se enviará al proveedor de IA configurado (que puede ser remoto). Apruebe para continuar.</value>
   </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>Ningún comando coincide.</value>
@@ -9161,5 +9182,98 @@
   </data>
   <data name="ImgInfo.Software" xml:space="preserve">
     <value>Software</value>
+  </data>
+  <data name="Dialog.UserGroupTitle" xml:space="preserve">
+    <value>Administrador de usuarios y grupos</value>
+  </data>
+  <data name="UserGroup.Loading" xml:space="preserve">
+    <value>Cargando cuentas locales...</value>
+  </data>
+  <data name="UserGroup.HintFilter" xml:space="preserve">
+    <value>Filtrar la lista</value>
+  </data>
+  <data name="UserGroup.HintKeepFilter" xml:space="preserve">
+    <value>Conservar el filtro</value>
+  </data>
+  <data name="UserGroup.HintClearFilter" xml:space="preserve">
+    <value>Borrar el filtro</value>
+  </data>
+  <data name="UserGroup.HintSwitch" xml:space="preserve">
+    <value>Cambiar entre usuarios y grupos</value>
+  </data>
+  <data name="UserGroup.HintAdd" xml:space="preserve">
+    <value>Añadir un usuario o grupo</value>
+  </data>
+  <data name="UserGroup.HintEdit" xml:space="preserve">
+    <value>Editar el usuario o grupo seleccionado</value>
+  </data>
+  <data name="UserGroup.HintDelete" xml:space="preserve">
+    <value>Eliminar la cuenta o grupo seleccionado</value>
+  </data>
+  <data name="UserGroup.HintPassword" xml:space="preserve">
+    <value>Establecer la contraseña del usuario</value>
+  </data>
+  <data name="UserGroup.HintMembership" xml:space="preserve">
+    <value>Añadir o quitar pertenencia a un grupo</value>
+  </data>
+  <data name="UserGroup.UsersTitle" xml:space="preserve">
+    <value>Usuarios locales  [Tab: grupos]</value>
+  </data>
+  <data name="UserGroup.GroupsTitle" xml:space="preserve">
+    <value>Grupos locales  [Tab: usuarios]</value>
+  </data>
+  <data name="UserGroup.Filter" xml:space="preserve">
+    <value>Filtro</value>
+  </data>
+  <data name="UserGroup.NoMatches" xml:space="preserve">
+    <value>Ninguna cuenta coincide con el filtro.</value>
+  </data>
+  <data name="UserGroup.NoUsers" xml:space="preserve">
+    <value>No hay usuarios locales.</value>
+  </data>
+  <data name="UserGroup.NoGroups" xml:space="preserve">
+    <value>No hay grupos locales.</value>
+  </data>
+  <data name="UserGroup.Busy" xml:space="preserve">
+    <value>Espere...</value>
+  </data>
+  <data name="UserGroup.Working" xml:space="preserve">
+    <value>Aplicando el cambio de cuenta...</value>
+  </data>
+  <data name="UserGroup.GroupName" xml:space="preserve">
+    <value>Nombre del grupo</value>
+  </data>
+  <data name="UserGroup.UserName" xml:space="preserve">
+    <value>Nombre de usuario</value>
+  </data>
+  <data name="UserGroup.FullName" xml:space="preserve">
+    <value>Nombre completo</value>
+  </data>
+  <data name="UserGroup.EditFullName" xml:space="preserve">
+    <value>Nombre completo de {0}</value>
+  </data>
+  <data name="UserGroup.Password" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="UserGroup.DeleteConfirm" xml:space="preserve">
+    <value>¿Eliminar {0} "{1}"?</value>
+  </data>
+  <data name="UserGroup.InvalidText" xml:space="preserve">
+    <value>No se permiten caracteres de control.</value>
+  </data>
+  <data name="UserGroup.InvalidPassword" xml:space="preserve">
+    <value>La contraseña no debe contener saltos de línea.</value>
+  </data>
+  <data name="UserGroup.HintLine" xml:space="preserve">
+    <value>N: añadir  E: editar usuario  D: eliminar  P: contraseña  A/R: grupo  /: filtrar</value>
+  </data>
+  <data name="UserGroup.RenameGroup" xml:space="preserve">
+    <value>Nuevo nombre de {0}</value>
+  </data>
+  <data name="CmdTitle.5007140b" xml:space="preserve">
+    <value>Administrador de usuarios y grupos</value>
+  </data>
+  <data name="CmdDesc.980a9856" xml:space="preserve">
+    <value>Administra usuarios locales, grupos, contraseñas y membresías de grupo.</value>
   </data>
 </root>

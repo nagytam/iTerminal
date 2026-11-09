@@ -44,8 +44,9 @@ The detailed write-ups, one file per subsystem:
   tab is never translated. The footer does the same with `Footer.` + the label of `F5-Copy`. An entry without a key stays English, so
   a new menu entry needs a `Menu.*` row in every `AppStrings*.resx` (the completeness test fails otherwise).
 - **Adding a string:** add the key to the neutral file and to all five language files; `LocalizationResourcesTest` fails when a
-  language lacks a key, has an extra one, or changes the `{n}` placeholders. Strings are extracted in stages: the menu bar, the hot key
-  bar and the language dialog are done; dialog bodies, the command palette and the commands' own titles are still English.
+  language lacks a key, has an extra one, or changes the `{n}` placeholders. Strings are extracted in stages: the menu bar, hot key
+  bar, language dialog, command palette, command titles and many dialog bodies are localized. Continue extracting app-authored feature
+  output in focused increments, and pair new keys with output assertions because resource completeness does not detect hard-coded literals.
 
 ### Built from the comparison
 
@@ -181,8 +182,10 @@ The first comparison above was against Terminal.Gui only. This one widens it to 
 - **`ISyntaxHighlightingService`** (`iConsole/Services/`, default instance `SyntaxHighlightingService.Default`, registered in DI) is the one place that colours source text for `TextViewerControl`, `TextEditorControl` and `MarkdownViewerControl`. It finds a language (`FindByFile` for a file name, path or URL; `FindByName` for a fence name such as `csharp`, `py`, `PowerShell` or `.json`), tokenizes a line (`Tokenize`, which returns whether the next line starts inside a block comment) and holds the `Palette`.
 - **Add a language once.** `Register(language, extensions, fileNames, aliases)` makes a `SyntaxLanguage` known to every control; registered extensions and file names win over the built-in ones, so an application can also replace a built-in mapping. The built-in rules stay in the static `SyntaxHighlighter`, which the service falls back to.
 - **Colours.** `SyntaxPalette` maps `Keyword`, `String`, `Comment` and `Number` to a colour (cyan, green, gray and magenta by default). Set `Palette` on the service to recolour all controls; a control can also be given its own service through its `Highlighting` property.
+- **Numbers.** The line-oriented scanner includes a signed decimal exponent such as `1e-3` or `1.5E+6` in the number span. It is not a numeric-literal validator; hexadecimal floating-point exponents are not parsed.
 - **Markdown code fences.** The parser keeps the first word after the fence marker (`MarkdownBlock.Language`, `MarkdownLine.Language`). A fence whose name the service knows is drawn in the language's colours, and a block comment that starts on an earlier line of the same block is followed. A fence with no name, or an unknown one, keeps the plain code colour.
 - **Ruby.** `.rb`, `Gemfile` and `Rakefile` use Ruby keywords, quoted strings and `#` comments; Ruby code fences use the same rules. The line-oriented tokenizer does not understand regex literals, heredocs, multiline strings, interpolation or embedded documents; a `#` inside a regex is treated as a comment.
+- **TypeScript.** `.ts`, `.tsx` and TypeScript code fences use JavaScript and TypeScript keywords, quoted strings and comments. Contextual words are coloured without parsing their context; JSX, regular expressions, multiline template literals and interpolation are not parsed.
 - **Not built:** more token kinds (types, functions, operators, attributes), nested languages (script in HTML, code in Markdown inside a viewer), a grammar-based tokenizer, and colour roles per theme rather than per palette.
 
 ### Statistical charts

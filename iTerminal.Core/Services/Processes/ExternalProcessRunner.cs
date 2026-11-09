@@ -18,14 +18,41 @@ public sealed class ExternalProcessRunner : IExternalProcessRunner
         string fileName,
         IReadOnlyList<string> arguments,
         string? workingDirectory = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default) =>
+        await RunCoreAsync(fileName, arguments, workingDirectory, null, cancellationToken);
+
+    public async Task<ProcessOutput> RunWithStandardInputAsync(
+        string fileName,
+        IReadOnlyList<string> arguments,
+        Func<Stream, Task> writeStandardInput,
+        string? workingDirectory = null,
+        CancellationToken cancellationToken = default) =>
+        await RunCoreAsync(fileName, arguments, workingDirectory, writeStandardInput, cancellationToken);
+
+    private async Task<ProcessOutput> RunCoreAsync(
+        string fileName,
+        IReadOnlyList<string> arguments,
+        string? workingDirectory,
+        Func<Stream, Task>? writeStandardInput,
+        CancellationToken cancellationToken)
     {
         Process? process = null;
         try
         {
-            process = Start(fileName, arguments, workingDirectory, redirectInput: false);
+            process = Start(fileName, arguments, workingDirectory, redirectInput: writeStandardInput is not null);
             var stdoutTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
             var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
+            if (writeStandardInput is not null)
+            {
+                try
+                {
+                    await writeStandardInput(process.StandardInput.BaseStream);
+                }
+                finally
+                {
+                    process.StandardInput.Close();
+                }
+            }
 
             using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeoutCts.CancelAfter(Timeout);

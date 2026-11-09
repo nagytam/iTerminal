@@ -142,6 +142,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
         FileEncryptionDialog? fileEncryptionDialog = null,
         iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null
+        iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null
         )
         : base([], themeService)
     {
@@ -261,7 +262,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             tetrisDialog,
             bluetoothDeviceManagerDialog: bluetoothDeviceManagerDialog,
             virtualMachineManagerDialog: virtualMachineManagerDialog,
-            jassDialog: jassDialog));
+            jassDialog: jassDialog,
+            userGroupManagerDialog: userGroupManagerDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 
