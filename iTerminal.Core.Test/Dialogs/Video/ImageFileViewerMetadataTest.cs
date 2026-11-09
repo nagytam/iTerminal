@@ -15,7 +15,7 @@ public class ImageFileViewerMetadataTest
     [TestMethod]
     public async Task I_ShowsTheMetadataInPlaceOfThePicture_AndAgainHidesIt()
     {
-        string path = Path.Combine(Path.GetTempPath(), "meta-" + Guid.NewGuid().ToString("N") + ".png");
+        string path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + new string('m', 42) + ".png");
         File.WriteAllBytes(path, [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0, 0, 0, 0, 0, 0, 0, 0]);
         try
         {
@@ -107,6 +107,7 @@ public class ImageFileViewerMetadataTest
                     await dialog.HandleKeyEventAsync(new KeyEvent('i', ConsoleKey.I, false, false, false));
 
                     iConsole.Test.Core.ScreenBuffer screen = iConsole.Test.Core.ScreenBuffer.Render(root, 120, 40);
+                    Assert.IsTrue(screen.Contains(Path.GetFileName(path)), $"{code}: {screen}");
                     Assert.IsTrue(screen.Contains(metadata), $"{code}: {screen}");
                     Assert.IsTrue(screen.Contains(editText), $"{code}: {screen}");
                 }
