@@ -486,7 +486,7 @@ public abstract class GamesDialog : SplitPaneDialog
 
     private void DrawMenu(IBuffer buffer, int x, int y, int width, int height, ColorScheme colorScheme)
     {
-        DrawSectionHeader(buffer, x, y, width, "Games", false, colorScheme);
+        DrawSectionHeader(buffer, x, y, width, UiText.Get("Games.Header", "Games"), false, colorScheme);
         for (int i = 0; i < _games.Length && 1 + i < height; i++)
         {
             bool selected = i == _current;

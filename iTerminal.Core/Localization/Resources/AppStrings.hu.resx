@@ -9007,4 +9007,94 @@
   <data name="FolderUrl.UnknownScheme" xml:space="preserve">
     <value>Ismeretlen séma — lásd az alábbi listát.</value>
   </data>
+  <data name="Solution.Projects" xml:space="preserve">
+    <value>Projektek</value>
+  </data>
+  <data name="Games.Header" xml:space="preserve">
+    <value>Játékok</value>
+  </data>
+  <data name="Settings.VolumeLabel" xml:space="preserve">
+    <value>Hangerő:</value>
+  </data>
+  <data name="ImgInfo.File" xml:space="preserve">
+    <value>Fájl</value>
+  </data>
+  <data name="ImgInfo.Image" xml:space="preserve">
+    <value>Kép</value>
+  </data>
+  <data name="ImgInfo.Location" xml:space="preserve">
+    <value>Hely</value>
+  </data>
+  <data name="ImgInfo.Text" xml:space="preserve">
+    <value>Szöveg</value>
+  </data>
+  <data name="ImgInfo.Camera" xml:space="preserve">
+    <value>Kamera</value>
+  </data>
+  <data name="ImgInfo.Capture" xml:space="preserve">
+    <value>Felvétel</value>
+  </data>
+  <data name="ImgInfo.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="ImgInfo.Dimensions" xml:space="preserve">
+    <value>Méretek</value>
+  </data>
+  <data name="ImgInfo.Format" xml:space="preserve">
+    <value>Formátum</value>
+  </data>
+  <data name="ImgInfo.Altitude" xml:space="preserve">
+    <value>Magasság</value>
+  </data>
+  <data name="ImgInfo.Position" xml:space="preserve">
+    <value>Pozíció</value>
+  </data>
+  <data name="ImgInfo.Comment" xml:space="preserve">
+    <value>Megjegyzés</value>
+  </data>
+  <data name="ImgInfo.Artist" xml:space="preserve">
+    <value>Előadó</value>
+  </data>
+  <data name="ImgInfo.Copyright" xml:space="preserve">
+    <value>Szerzői jog</value>
+  </data>
+  <data name="ImgInfo.Modified" xml:space="preserve">
+    <value>Módosítva</value>
+  </data>
+  <data name="ImgInfo.Digitised" xml:space="preserve">
+    <value>Digitalizálva</value>
+  </data>
+  <data name="ImgInfo.Taken" xml:space="preserve">
+    <value>Készült</value>
+  </data>
+  <data name="ImgInfo.Exposure" xml:space="preserve">
+    <value>Expozíció</value>
+  </data>
+  <data name="ImgInfo.Aperture" xml:space="preserve">
+    <value>Rekesz</value>
+  </data>
+  <data name="ImgInfo.Focallength" xml:space="preserve">
+    <value>Gyújtótávolság</value>
+  </data>
+  <data name="ImgInfo.Description" xml:space="preserve">
+    <value>Leírás</value>
+  </data>
+  <data name="ImgInfo.ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="ImgInfo.Lens" xml:space="preserve">
+    <value>Objektív</value>
+  </data>
+  <data name="ImgInfo.Make" xml:space="preserve">
+    <value>Gyártó</value>
+  </data>
+  <data name="ImgInfo.Model" xml:space="preserve">
+    <value>Modell</value>
+  </data>
+  <data name="ImgInfo.Orientation" xml:space="preserve">
+    <value>Tájolás</value>
+  </data>
+  <data name="ImgInfo.Software" xml:space="preserve">
+    <value>Szoftver</value>
+  </data>
 </root>

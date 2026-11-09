@@ -27,6 +27,9 @@ public class ImageFileViewerDialog : Dialog
 {
     internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.ImageViewer", " c:colour  i:info  Esc:close");
 
+    /// <summary>A metadata group or field name in the chosen language; the reader names them in English, and the writer finds them by that name.</summary>
+    private static string InfoLabel(string english) => UiText.Get("ImgInfo." + System.Text.RegularExpressions.Regex.Replace(english, "[^A-Za-z]", string.Empty), english);
+
     private const int HeaderRows = 1;
     private const int FooterRows = 2;
 
@@ -462,10 +465,10 @@ public class ImageFileViewerDialog : Dialog
                 lines.Add(string.Empty);
             }
 
-            lines.Add($"── {group.Key} ──────────────────────────────");
+            lines.Add($"── {InfoLabel(group.Key)} ──────────────────────────────");
             foreach (ImageInfoField field in group)
             {
-                lines.Add($"  {field.Name,-16} {field.Value}");
+                lines.Add($"  {InfoLabel(field.Name),-16} {field.Value}");
             }
         }
 

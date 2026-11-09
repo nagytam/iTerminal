@@ -738,11 +738,11 @@ public class SolutionViewerDialog : SplitPaneDialog
         var rightX = ix + leftW + 1;
         var rightW = iw - leftW - 1;
 
-        DrawSectionHeader(buffer, ix, midY, leftW, "Projects", true, colorScheme);
+        DrawSectionHeader(buffer, ix, midY, leftW, UiText.Get("Solution.Projects", "Projects"), true, colorScheme);
 
         if (rightW > 0)
         {
-            DrawSectionHeader(buffer, rightX, midY, rightW, "Output", false, colorScheme);
+            DrawSectionHeader(buffer, rightX, midY, rightW, UiText.Get("Packages.Output", "Output"), false, colorScheme);
         }
     }
 
