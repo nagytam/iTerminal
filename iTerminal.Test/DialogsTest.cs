@@ -208,14 +208,15 @@ public class DialogsTest
         await _app.TypeAsync("e2e-group");
         await _app.WaitForTextAsync("e2e-group");
         await _app.PressAsync("Enter");
-        await _app.WaitForTextAsync("e2e-group");
+        await _app.WaitForTextAsync("e2e-group was created.");
 
+        await _app.PressAsync("Home");
         await _app.PressAsync("e");
         await _app.WaitForTextAsync("New name for e2e-group");
         await _app.TypeAsync("e2e-renamed-group");
         await _app.WaitForTextAsync("e2e-renamed-group");
         await _app.PressAsync("Enter");
-        await _app.WaitForTextAsync("e2e-renamed-group");
+        await _app.WaitForTextAsync("e2e-group was renamed to e2e-renamed-group.");
 
         await _app.PressAsync("Tab");
         await _app.PressAsync("n");
@@ -234,6 +235,7 @@ public class DialogsTest
         var passwordScreen = await _app.Driver.WaitForIdleAsync();
         Assert.IsFalse(passwordScreen.ToString()!.Contains(password, StringComparison.Ordinal));
         await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("e2e-user was created.");
         await _app.WaitForTextAsync("e2e-user");
 
         await _app.PressAsync("a");
@@ -247,12 +249,14 @@ public class DialogsTest
         await _app.WaitForTextAsync("Delete user \"e2e-user\"?");
         await _app.PressAsync("y");
         await _app.WaitUntilAsync(() => !sandbox.HasUser("e2e-user"), "the sandbox user to be deleted");
+        await _app.WaitForTextAsync("e2e-user was deleted.");
 
         await _app.PressAsync("Tab");
         await _app.PressAsync("d");
         await _app.WaitForTextAsync("Delete group \"e2e-renamed-group\"?");
         await _app.PressAsync("y");
         await _app.WaitUntilAsync(() => !sandbox.HasGroup("e2e-renamed-group"), "the sandbox group to be deleted");
+        await _app.WaitForTextAsync("e2e-renamed-group was deleted.");
 
         CollectionAssert.IsSubsetOf(new[] { "create-user", "create-group", "rename-group", "add-member", "delete-user", "delete-group" }, sandbox.Calls.ToArray());
         await _app.PressAsync("Esc");
