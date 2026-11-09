@@ -8221,6 +8221,9 @@
   <data name="Assoc.ChangeOpen" xml:space="preserve">
     <value>Programm zum Öffnen ändern</value>
   </data>
+  <data name="Assoc.PlaceholderHint" xml:space="preserve">
+    <value>%f Datei  %d Ordner  %n Name — ohne %f kommt die Datei ans Ende</value>
+  </data>
   <data name="DiskUsage.Measuring" xml:space="preserve">
     <value>{0} wird vermessen</value>
   </data>
