@@ -12,7 +12,7 @@ public class SyntaxLanguagesTest
     [
         "x.ts", "x.cs", "x.java", "x.c", "x.cpp", "x.go", "x.rs", "x.js", "x.ps1", "x.py", "x.sh", "x.yml", "x.toml",
         "x.ini", "x.env", "x.properties", "x.sql", "x.html", "x.json", ".gitignore", "x.bat", "x.lua", "x.r", "x.pl",
-        "x.php", "x.vb", "x.fs", "Dockerfile", "x.log",
+        "x.php", "x.vb", "x.fs", "x.rb", "Dockerfile", "x.log",
     ];
 
     /// <summary>The colour test helper: every span of <paramref name="line"/>, as (text, kind).</summary>
@@ -49,6 +49,7 @@ public class SyntaxLanguagesTest
     [DataRow("x.js", "const a = 'x'; // c", "const", "'x'", "// c", "JavaScript")]
     [DataRow("x.ps1", "if ($a) { Write-Host 'x' } # c", "Write-Host", "'x'", "# c", "PowerShell")]
     [DataRow("x.py", "def f(): return 'x'  # c", "def", "'x'", "# c", "Python")]
+    [DataRow("x.rb", "unless ready; puts 'x'; end # c", "unless", "'x'", "# c", "Ruby")]
     [DataRow("x.sh", "if [ -f x ]; then echo \"x\"; fi # c", "then", "\"x\"", "# c", "Shell")]
     [DataRow("x.yml", "name: \"x\" # c", "name", "\"x\"", "# c", "YAML")]
     [DataRow("x.toml", "name = \"x\" # c", "name", "\"x\"", "# c", "TOML")]
@@ -99,9 +100,25 @@ public class SyntaxLanguagesTest
     [DataRow("x.pl", "my @keys = %values;", "values")]
     [DataRow("x.ps1", "$process = 1", "process")]
     [DataRow("x.sh", "echo $then", "then")]
+    [DataRow("x.rb", "@class = $end", "class")]
+    [DataRow("x.rb", "@class = $end", "end")]
     public void AVariableNamedLikeAKeyword_IsNotColouredAsOne(string file, string line, string name)
     {
         CollectionAssert.DoesNotContain(Spans(file, line), (name, SyntaxKind.Keyword));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Ruby_UsesCaseSensitiveRubyKeywordsRatherThanPythonKeywords()
+    {
+        var spans = Spans("x.rb", "unless ready; elsif done; end; elif; None; UNLESS");
+
+        CollectionAssert.Contains(spans, ("unless", SyntaxKind.Keyword));
+        CollectionAssert.Contains(spans, ("elsif", SyntaxKind.Keyword));
+        CollectionAssert.Contains(spans, ("end", SyntaxKind.Keyword));
+        CollectionAssert.DoesNotContain(spans, ("elif", SyntaxKind.Keyword));
+        CollectionAssert.DoesNotContain(spans, ("None", SyntaxKind.Keyword));
+        CollectionAssert.DoesNotContain(spans, ("UNLESS", SyntaxKind.Keyword));
     }
 
     [Timeout(60_000)]
