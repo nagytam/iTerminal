@@ -525,8 +525,9 @@ public class LspClientTest
             Assert.IsTrue(binding.Flush());
             Assert.IsFalse(binding.Flush(), "sent once");
 
-            await WaitFor(() => editor.Decorations.Count == 0, "the marks to go");
-            Assert.AreEqual(0, binding.Diagnostics.Count);
+            // The marks are replaced before the list is published: the list is what to wait for, and the marks are then already gone.
+            await WaitFor(() => binding.Diagnostics.Count == 0, "the diagnostics to go");
+            Assert.AreEqual(0, editor.Decorations.Count);
             Assert.AreEqual("fine", server.Text);
         }
     }

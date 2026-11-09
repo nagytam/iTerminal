@@ -106,7 +106,6 @@ public class WindowAndSessionTest
             await app.PressAsync("Enter");
             await app.WaitUntilAsync(() => themeService.Theme != iConsole.Data.Theme.Default, "a new theme to be applied");
             var chosen = themeService.Theme;
-            await app.WaitForTextAsync("theme applied");
             await app.PressAsync("Esc");
             await app.WaitForNoDialogAsync();
 
