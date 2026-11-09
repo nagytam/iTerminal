@@ -21,10 +21,21 @@ public class AiChatModel : INotifyPropertyChanged
         set { _isAvailable = value; OnPropertyChanged(); }
     }
 
+    private Func<string>? _modelInfoSource;
+
     public string ModelInfo
     {
-        get => _modelInfo;
-        set { _modelInfo = value; OnPropertyChanged(); }
+        get => _modelInfoSource?.Invoke() ?? _modelInfo;
+        set { _modelInfoSource = null; _modelInfo = value; OnPropertyChanged(); }
+    }
+
+    /// <summary>
+    /// A status that is a sentence in the chosen language: read again each time it is shown, so a language change
+    /// reaches it instead of leaving the words it was first worded in.
+    /// </summary>
+    public Func<string> ModelInfoSource
+    {
+        set { _modelInfoSource = value; OnPropertyChanged(nameof(ModelInfo)); }
     }
 
     public string Input

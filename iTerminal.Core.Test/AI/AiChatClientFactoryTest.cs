@@ -92,6 +92,25 @@ public class AiChatClientFactoryTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public async Task TheStatusIsWordedWhenItIsShown_SoALanguageChangeReachesIt()
+    {
+        var options = new AiOptions { Provider = AiProvider.None };
+        var chat = new AiChatService(AiChatClientFactory.Create(options, null, new HttpClient(new ScriptedHandler((HttpStatusCode.OK, Answer)))), Mock.Of<IContentModelService>(), Mock.Of<IUiService>(), Options.Create(options));
+        var model = new AiChatModel();
+        await chat.CheckAvailabilityAsync(model);
+        Assert.AreEqual("AI is off (AI:Provider)", model.ModelInfo);
+
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(AiChatService).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+
+        Assert.AreEqual("KI ist aus (AI:Provider)", model.ModelInfo);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task None_SendsNothingAndSaysAIIsOff()
     {
         var handler = new ScriptedHandler((HttpStatusCode.OK, Answer));
