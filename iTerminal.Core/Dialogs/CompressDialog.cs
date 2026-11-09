@@ -177,12 +177,12 @@ public class CompressDialog : FormDialog
         _comboEncryption.SetItems([ArchiveEncryption.Aes256, ArchiveEncryption.ZipCrypto]);
 
         _form = new FormPanel(themeService);
-        _form.AddField("Archive", _textBoxArchive);
-        _form.AddField("Format", _comboFormat);
-        _form.AddField("Level", _level);
-        _form.AddField("Password", _password);
-        _form.AddField("Confirm", _confirm);
-        _form.AddField("Encryption", _comboEncryption);
+        _form.AddField(UiText.Get("Form.Archive", "Archive"), _textBoxArchive);
+        _form.AddField(UiText.Get("Form.Format", "Format"), _comboFormat);
+        _form.AddField(UiText.Get("Form.Level", "Level"), _level);
+        _form.AddField(UiText.Get("Form.Password", "Password"), _password);
+        _form.AddField(UiText.Get("Form.Confirm", "Confirm"), _confirm);
+        _form.AddField(UiText.Get("Form.Encryption", "Encryption"), _comboEncryption);
 
         _checkBoxEncryptNames = new CheckBox(themeService)
         {
@@ -315,7 +315,8 @@ public class CompressDialog : FormDialog
         _comboEncryption.IsEnabled = hasPassword && format.Encryptions.Count > 1;
         _checkBoxEncryptNames.IsEnabled = hasPassword && format.CanEncryptNames;
 
-        var hint = format.HasLevels ? $"Level: {format.LevelHint}." : format.LevelHint + ".";
+        var levelHint = DescribeLevelHint(format.LevelHint);
+        var hint = format.HasLevels ? string.Format(UiText.Get("Compress.LevelLine", "Level: {0}."), levelHint) : levelHint + ".";
         if (!format.SupportsPassword)
         {
             hint += " " + string.Format(iConsole.Localization.UiText.Get("Compress.NoPassword", "{0} takes no password."), format.Name);
@@ -473,4 +474,14 @@ public class CompressDialog : FormDialog
 
         private IFileSystem ResolveFileSystem(Url url) => fileSystemResolver.Resolve(url, operation: "Compressing");
     }
+
+    /// <summary>What the levels mean, in the chosen language; the formats carry the English sentence.</summary>
+    private static string DescribeLevelHint(string english) => english switch
+    {
+        "0 stores, 1 is fastest, 9 is smallest" => UiText.Get("Compress.Hint.Zip", "0 stores, 1 is fastest, 9 is smallest"),
+        "0 stores, 1 is fastest, 9 is ultra" => UiText.Get("Compress.Hint.SevenZip", "0 stores, 1 is fastest, 9 is ultra"),
+        "1 is fastest, 9 is smallest" => UiText.Get("Compress.Hint.Tar", "1 is fastest, 9 is smallest"),
+        "TAR does not compress" => UiText.Get("Compress.Hint.NoCompress", "TAR does not compress"),
+        _ => english,
+    };
 }
