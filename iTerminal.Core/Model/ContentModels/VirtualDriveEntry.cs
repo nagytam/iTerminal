@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
 using System.Diagnostics;
@@ -39,6 +40,6 @@ public record VirtualDriveEntry : EntryBase, IEntry
 
     public override string GetDisplayFileSize(int width) =>
         Url.PathType == PathType.File && Detail.Length == 0
-            ? $"File size: {FileSize}".PadRight(width)
+            ? string.Format(UiText.Get("Virtual.FileSize", "File size: {0}"), FileSize).PadRight(width)
             : GetFileSize(width);
 }

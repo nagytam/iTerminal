@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Display;
@@ -28,8 +29,8 @@ public class WeatherIndicator(WeatherService weatherService, IThemeService theme
         {
             // A spinner means "still trying": once the last attempt has failed and none is running, say so.
             text = _weatherService.LastRefreshFailed && !_weatherService.IsRefreshing
-                ? "Weather unavailable"
-                : $"Weather {ProgressChar()}";
+                ? UiText.Get("Weather.Unavailable", "Weather unavailable")
+                : string.Format(UiText.Get("Weather.Loading", "Weather {0}"), ProgressChar());
         }
         else
         {

@@ -310,8 +310,8 @@ public class UnitConverterDialog : SplitPaneDialog
         if (string.IsNullOrEmpty(_engine.ResultText))
         {
             return string.IsNullOrWhiteSpace(_engine.InputText)
-                ? $"Type a value in {fromUnit.Name} to convert it to {toUnit.Name}."
-                : $"\"{_engine.InputText}\" is not a number.";
+                ? string.Format(UiText.Get("Units.TypeValue", "Type a value in {0} to convert it to {1}."), fromUnit.Name, toUnit.Name)
+                : string.Format(UiText.Get("Units.NotANumber", "\"{0}\" is not a number."), _engine.InputText);
         }
 
         return $"{_engine.InputText} {fromUnit.Symbol}  =  {_engine.ResultText} {toUnit.Symbol}";

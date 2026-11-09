@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Services;
 using iTerminal.Core.Model.Network;
@@ -38,5 +39,5 @@ public class ContentModelSmbDrive(
     }
 
     protected override string FormatConnectionError(Url url, Exception exception) =>
-        $"Connection error: {url.Host}\\{url.Share}: {exception.Message}";
+        string.Format(UiText.Get("Remote.ConnError", "Connection error: {0}: {1}"), url.Host + "\\" + url.Share, exception.Message);
 }

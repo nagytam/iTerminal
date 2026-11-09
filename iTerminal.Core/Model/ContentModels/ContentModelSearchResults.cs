@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -84,7 +85,7 @@ public sealed class ContentModelSearchResults : ContentModelAsyncDrive, IDisposa
             entries.Add(new VirtualDriveEntry(hitUrl, relative, hit.IsFolder ? Url.Folder : hit.Size.ToFileSize(), hit.Modified)
             {
                 Size = hit.Size,
-                Detail = hit.LineNumber > 0 ? $"Line {hit.LineNumber}: {hit.LineText}" : string.Empty,
+                Detail = hit.LineNumber > 0 ? string.Format(UiText.Get("Search.Line", "Line {0}: {1}"), hit.LineNumber, hit.LineText) : string.Empty,
             });
         }
 

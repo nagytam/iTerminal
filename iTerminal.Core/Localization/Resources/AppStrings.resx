@@ -8368,4 +8368,34 @@
   <data name="Strip.ResultFailed" xml:space="preserve">
     <value>, failed {0}</value>
   </data>
+  <data name="Units.TypeValue" xml:space="preserve">
+    <value>Type a value in {0} to convert it to {1}.</value>
+  </data>
+  <data name="Units.NotANumber" xml:space="preserve">
+    <value>"{0}" is not a number.</value>
+  </data>
+  <data name="Meeting.TypeTime" xml:space="preserve">
+    <value>Type a start time and a title, e.g. 14:30 Standup</value>
+  </data>
+  <data name="Remote.ConnError" xml:space="preserve">
+    <value>Connection error: {0}: {1}</value>
+  </data>
+  <data name="Search.Line" xml:space="preserve">
+    <value>Line {0}: {1}</value>
+  </data>
+  <data name="Virtual.FileSize" xml:space="preserve">
+    <value>File size: {0}</value>
+  </data>
+  <data name="Audio.NeedsFfmpeg" xml:space="preserve">
+    <value>Playing {0} files needs ffmpeg on PATH. Install ffmpeg, or use WAV/MP3.</value>
+  </data>
+  <data name="Settings.BgHint" xml:space="preserve">
+    <value>Applies the next time iTerminal starts. Delayed starts after {0} s, or sooner when the feature is opened.</value>
+  </data>
+  <data name="Weather.Unavailable" xml:space="preserve">
+    <value>Weather unavailable</value>
+  </data>
+  <data name="Weather.Loading" xml:space="preserve">
+    <value>Weather {0}</value>
+  </data>
 </root>
