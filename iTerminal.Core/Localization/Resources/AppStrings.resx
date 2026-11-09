@@ -9358,4 +9358,13 @@
   <data name="UserGroup.RenameGroup" xml:space="preserve">
     <value>New name for {0}</value>
   </data>
+  <data name="Dialog.UserGroupTitle" xml:space="preserve">
+    <value>User and group manager</value>
+  </data>
+  <data name="CmdTitle.5007140b" xml:space="preserve">
+    <value>User and group manager</value>
+  </data>
+  <data name="CmdDesc.980a9856" xml:space="preserve">
+    <value>Manage local users, groups, passwords and group membership.</value>
+  </data>
 </root>

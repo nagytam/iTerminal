@@ -8,8 +8,8 @@ public sealed class UserGroupManagerDialogCommand(UserGroupManagerDialog userGro
 {
     public static bool IsSupported => OperatingSystem.IsLinux() || OperatingSystem.IsWindows();
 
-    public override string Title => iConsole.Localization.UiText.Get("Dialog.UserGroupTitle", "User and group manager");
-    public override string Description => "Manage local users, groups, passwords and group membership.";
+    public override string Title => iConsole.Localization.UiText.Title("User and group manager");
+    public override string Description => iConsole.Localization.UiText.Describe("Manage local users, groups, passwords and group membership.");
 
     public override bool CanExecute() => IsSupported && base.CanExecute();
 }
