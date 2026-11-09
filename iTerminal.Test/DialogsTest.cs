@@ -180,11 +180,19 @@ public class DialogsTest
     public async Task UserGroupManagerCreatesRenamesAndDeletesSandboxAccounts()
     {
         await _app.Driver.ClickAsync("Tools");
+        await _app.WaitUntilAsync(
+            () => _app.Driver.FocusedModal is Core.Controls.MenuBar.TerminalMenuBar,
+            "the Tools menu to take the keyboard");
         for (int attempt = 0; attempt < 100
             && !_app.Screen.Lines.Any(line => line.Contains("User and group manager", StringComparison.Ordinal));
             attempt++)
         {
+            iConsole.Test.Core.Automation.ConsoleSnapshot previous = _app.Screen;
             await _app.PressAsync("Down");
+            await _app.Driver.WaitUntilAsync(
+                screen => !screen.HasSameContent(previous),
+                "the Tools menu to redraw after moving selection",
+                TimeSpan.FromSeconds(2));
         }
         await _app.WaitForTextAsync("User and group manager");
         await _app.Driver.ClickAsync("User and group manager");
@@ -198,12 +206,14 @@ public class DialogsTest
         await _app.PressAsync("n");
         await _app.WaitForTextAsync("Group name");
         await _app.TypeAsync("e2e-group");
+        await _app.WaitForTextAsync("e2e-group");
         await _app.PressAsync("Enter");
         await _app.WaitForTextAsync("e2e-group");
 
         await _app.PressAsync("e");
         await _app.WaitForTextAsync("New name for e2e-group");
         await _app.TypeAsync("e2e-renamed-group");
+        await _app.WaitForTextAsync("e2e-renamed-group");
         await _app.PressAsync("Enter");
         await _app.WaitForTextAsync("e2e-renamed-group");
 
@@ -211,8 +221,11 @@ public class DialogsTest
         await _app.PressAsync("n");
         await _app.WaitForTextAsync("User name");
         await _app.TypeAsync("e2e-user");
+        await _app.WaitForTextAsync("e2e-user");
         await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("Full name");
         await _app.TypeAsync("End-to-end User");
+        await _app.WaitForTextAsync("End-to-end User");
         await _app.PressAsync("Enter");
         await _app.WaitForTextAsync("Password");
         const string password = "E2E-Secret-123";
@@ -226,6 +239,7 @@ public class DialogsTest
         await _app.PressAsync("a");
         await _app.WaitForTextAsync("Group name");
         await _app.TypeAsync("e2e-renamed-group");
+        await _app.WaitForTextAsync("e2e-renamed-group");
         await _app.PressAsync("Enter");
         await _app.WaitForTextAsync("Membership changed.");
 
