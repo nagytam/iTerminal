@@ -798,6 +798,7 @@ public class SmallScreenDialogsTest
     [DataRow("Snake", "Pfeile:bewegen")]
     [DataRow("Tetris", "Enter:pausieren")]
     [DataRow("Sort by", "Enter:anwenden")]
+    [DataRow("Sort by", "Umgekehrt")]
     [DataRow("Open with", "Einfg:hinzufügen")]
     [DataRow("Strip Metadata", "Kamera, GPS")]
     public async Task TheGamesSortOpenWithAndStripDialogsInGerman_AreGerman(string command, string expected)

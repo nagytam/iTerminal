@@ -8863,4 +8863,22 @@
   <data name="Packages.Output" xml:space="preserve">
     <value>Ausgabe</value>
   </data>
+  <data name="Sort.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Sort.Extension" xml:space="preserve">
+    <value>Endung</value>
+  </data>
+  <data name="Sort.Size" xml:space="preserve">
+    <value>Größe</value>
+  </data>
+  <data name="Sort.Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="Sort.AsListed" xml:space="preserve">
+    <value>Wie gelistet</value>
+  </data>
+  <data name="Sort.Reversed" xml:space="preserve">
+    <value>Umgekehrt</value>
+  </data>
 </root>

@@ -376,6 +376,24 @@ public class ItemInformation : iConsole.Controls.Control
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, text);
     }
 
+    /// <summary>Where the value starts in "Label: value" (after the colon and its spaces), or null when there is no label.</summary>
+    private static int? LabelEnd(string text)
+    {
+        var colon = text.IndexOf(':');
+        if (colon <= 0 || colon > 40)
+        {
+            return null;
+        }
+
+        var start = colon + 1;
+        while (start < text.Length && text[start] == ' ')
+        {
+            start++;
+        }
+
+        return start;
+    }
+
     /// <summary>
     /// The name on the left, the size (or file count) right-aligned. The entry pads both texts to the
     /// full width, so joined naively the size always started past the right edge and was never seen;
@@ -399,6 +417,17 @@ public class ItemInformation : iConsole.Controls.Control
         if (right.Length + 2 >= width)
         {
             return (right.Shrink(width) ?? string.Empty).ExpandRight(width);
+        }
+
+        // A long label ("Taille du fichier : 40 B") must not cost the name its beginning: when the name fits only without it,
+        // the label goes and the value stays — a size is recognised by its unit, a name only by its letters.
+        if (left.Length > width - right.Length - 2 && LabelEnd(right) is { } valueStart && valueStart < right.Length)
+        {
+            var value = right[valueStart..];
+            if (left.Length <= width - value.Length - 2)
+            {
+                right = value;
+            }
         }
 
         var leftWidth = width - right.Length - 2;

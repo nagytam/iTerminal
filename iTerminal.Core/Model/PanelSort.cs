@@ -24,11 +24,11 @@ public readonly record struct PanelSort(PanelSortMode Mode, bool Descending = fa
 
     public static string DisplayName(PanelSortMode mode) => mode switch
     {
-        PanelSortMode.Name => "Name",
-        PanelSortMode.Extension => "Extension",
-        PanelSortMode.Size => "Size",
-        PanelSortMode.Date => "Date",
-        _ => "As listed",
+        PanelSortMode.Name => iConsole.Localization.UiText.Get("Sort.Name", "Name"),
+        PanelSortMode.Extension => iConsole.Localization.UiText.Get("Sort.Extension", "Extension"),
+        PanelSortMode.Size => iConsole.Localization.UiText.Get("Sort.Size", "Size"),
+        PanelSortMode.Date => iConsole.Localization.UiText.Get("Sort.Date", "Date"),
+        _ => iConsole.Localization.UiText.Get("Sort.AsListed", "As listed"),
     };
 
     /// <summary>For a panel's footer: "size ↓", "name ↑" — empty for the drive's own order, which needs no saying.</summary>

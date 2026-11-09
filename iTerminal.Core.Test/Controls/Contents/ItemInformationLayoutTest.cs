@@ -31,6 +31,19 @@ public class ItemInformationLayoutTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void ALongLabelGoesBeforeTheNameLosesItsBeginning()
+    {
+        // 40 cells: the name and the long label do not fit together, the name and the bare size do.
+        var line = ItemInformation.ComposeLine("Fichier : readme.txt", "Taille du fichier : 40 B", 40);
+
+        Assert.AreEqual(40, line.Length);
+        Assert.IsTrue(line.StartsWith("Fichier : readme.txt", StringComparison.Ordinal), line);
+        Assert.IsTrue(line.EndsWith("40 B", StringComparison.Ordinal), line);
+        Assert.IsFalse(line.Contains("Taille", StringComparison.Ordinal), line);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void PaddedTextsAreTrimmedBeforeLayout()
     {
         // The entry pads both texts to the full width; joined as they came, the size started past

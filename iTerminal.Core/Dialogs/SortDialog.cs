@@ -85,7 +85,7 @@ public class SortDialog : Dialog
         }
 
         lines.Add(default);
-        lines.Add(new($"  [{(Descending ? "x" : " ")}] Reversed       r", colorScheme.Foreground));
+        lines.Add(new($"  [{(Descending ? "x" : " ")}] " + iConsole.Localization.UiText.Get("Sort.Reversed", "Reversed").PadRight(12) + "   r", colorScheme.Foreground));
         _lines.Lines = lines;
         StateHasChanged();
     }
