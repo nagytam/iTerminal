@@ -51,7 +51,7 @@ public class AiActionApprovalTest
         Task<object?> invocation = function.InvokeAsync(arguments).AsTask();
 
         await app.Driver.WaitForModalAsync<AiActionApprovalDialog>();
-        await app.WaitForTextAsync("ai-approved");
+        await app.WaitForTextAsync("Create folder:");
         Assert.IsFalse(Directory.Exists(target), "The tool must not write before the user approves in the app.");
         await app.PressAsync("y");
 
