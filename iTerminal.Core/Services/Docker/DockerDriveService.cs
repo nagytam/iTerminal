@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -600,7 +601,7 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
             || text.Contains("Cannot connect to the Docker daemon", StringComparison.OrdinalIgnoreCase)
             || text.Contains("dockerDesktopLinuxEngine", StringComparison.OrdinalIgnoreCase))
         {
-            return "Docker is not running — start Docker Desktop or the docker service.";
+            return UiText.Get("Docker.NotRunning", "Docker is not running — start Docker Desktop or the docker service.");
         }
 
         // The daemon's own words, so a command inside the container that prints "is not running"
@@ -608,7 +609,7 @@ public sealed partial class DockerDriveService(IExternalProcessRunner processRun
         if (text.Contains("Error response from daemon", StringComparison.OrdinalIgnoreCase)
             && text.Contains("is not running", StringComparison.OrdinalIgnoreCase))
         {
-            return "The container is stopped — start it first (Shift+F9 on its row).";
+            return UiText.Get("Docker.Stopped", "The container is stopped — start it first (Shift+F9 on its row).");
         }
 
         return null;

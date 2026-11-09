@@ -8161,4 +8161,82 @@
   <data name="SysSettings.ConfirmRemove" xml:space="preserve">
     <value>Remove {0}?</value>
   </data>
+  <data name="Dep.DownloadingOf" xml:space="preserve">
+    <value>Downloading {0}: {1} of {2} MB</value>
+  </data>
+  <data name="Dep.Downloaded" xml:space="preserve">
+    <value>Downloaded {0} ({1} MB, checksum verified)</value>
+  </data>
+  <data name="Dep.Downloading" xml:space="preserve">
+    <value>Downloading {0}: {1} MB</value>
+  </data>
+  <data name="Dep.FfmpegPurpose" xml:space="preserve">
+    <value>Video and picture viewers, FLAC/Ogg/Opus/M4A playback</value>
+  </data>
+  <data name="Dep.UsingFfmpeg" xml:space="preserve">
+    <value>Using the ffmpeg that is installed ({0}).</value>
+  </data>
+  <data name="Dep.NoPackageManager" xml:space="preserve">
+    <value>No supported package manager was found (winget, apt, dnf, zypper, pacman, apk or brew). Install {0} from {1}.</value>
+  </data>
+  <data name="Dep.InstallingWith" xml:space="preserve">
+    <value>Installing {0} with {1}: {2}</value>
+  </data>
+  <data name="Dep.GitPurpose" xml:space="preserve">
+    <value>Git client, git drive and git status colours</value>
+  </data>
+  <data name="Dep.UsingGit" xml:space="preserve">
+    <value>Using the git that is installed ({0}).</value>
+  </data>
+  <data name="Dep.PlaywrightPurpose" xml:space="preserve">
+    <value>Chromium for the quote indicator (Swissquote)</value>
+  </data>
+  <data name="Dep.PwUnpack" xml:space="preserve">
+    <value>Unpacking the Playwright {0} driver</value>
+  </data>
+  <data name="Dep.PwChromium" xml:space="preserve">
+    <value>Installing the Chromium that Playwright {0} drives (this can take a few minutes)</value>
+  </data>
+  <data name="Dep.PwReady" xml:space="preserve">
+    <value>Playwright {0} is ready</value>
+  </data>
+  <data name="Dep.WhisperPurpose" xml:space="preserve">
+    <value>Offline speech model (base, 148 MB) for voice input in the AI bar</value>
+  </data>
+  <data name="Dep.WhisperReady" xml:space="preserve">
+    <value>Whisper model {0} is ready</value>
+  </data>
+  <data name="Dep.OllamaOnlyModel" xml:space="preserve">
+    <value>Ollama is already installed ({0}); only the {1} model is downloaded.</value>
+  </data>
+  <data name="Dep.OllamaUsing" xml:space="preserve">
+    <value>Using the Ollama that is already installed ({0}).</value>
+  </data>
+  <data name="Dep.OllamaAsIs" xml:space="preserve">
+    <value>Ollama is already installed ({0}); it is used as it is</value>
+  </data>
+  <data name="Dep.OllamaStarting" xml:space="preserve">
+    <value>Starting {0} to download {1}</value>
+  </data>
+  <data name="Dep.OllamaReady" xml:space="preserve">
+    <value>Ollama is ready with {0}</value>
+  </data>
+  <data name="Dep.OllamaVersionReady" xml:space="preserve">
+    <value>Ollama {0} is ready with {1}</value>
+  </data>
+  <data name="Mtp.NotMounted" xml:space="preserve">
+    <value>The device is not mounted: unlock the phone, choose File transfer, and open it once in a file manager (or run gio mount).</value>
+  </data>
+  <data name="Mtp.Refused" xml:space="preserve">
+    <value>The device refused access: unlock the phone and allow file transfer.</value>
+  </data>
+  <data name="Mtp.NotConnected" xml:space="preserve">
+    <value>The device is not connected, or is locked: unlock the phone and choose File transfer.</value>
+  </data>
+  <data name="Docker.NotRunning" xml:space="preserve">
+    <value>Docker is not running — start Docker Desktop or the docker service.</value>
+  </data>
+  <data name="Docker.Stopped" xml:space="preserve">
+    <value>The container is stopped — start it first (Shift+F9 on its row).</value>
+  </data>
 </root>

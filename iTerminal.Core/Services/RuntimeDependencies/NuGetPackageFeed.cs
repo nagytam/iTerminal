@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -64,8 +65,8 @@ public sealed class NuGetPackageFeed(
                 {
                     lastReport = clock.Elapsed;
                     progress.Report(total is > 0
-                        ? $"Downloading {packageId} {version}: {Megabytes(received)} of {Megabytes(total.Value)} MB"
-                        : $"Downloading {packageId} {version}: {Megabytes(received)} MB");
+                        ? string.Format(UiText.Get("Dep.DownloadingOf", "Downloading {0}: {1} of {2} MB"), packageId + " " + version, Megabytes(received), Megabytes(total.Value))
+                        : string.Format(UiText.Get("Dep.Downloading", "Downloading {0}: {1} MB"), packageId + " " + version, Megabytes(received)));
                 }
             }
         }
@@ -81,7 +82,7 @@ public sealed class NuGetPackageFeed(
             }
         }
 
-        progress?.Report($"Downloaded {packageId} {version} ({Megabytes(received)} MB, checksum verified)");
+        progress?.Report(string.Format(UiText.Get("Dep.Downloaded", "Downloaded {0} ({1} MB, checksum verified)"), packageId + " " + version, Megabytes(received)));
     }
 
     /// <summary>The package hash the catalog records for this version. The flat container does not publish one.</summary>

@@ -8020,4 +8020,82 @@
   <data name="SysSettings.ConfirmRemove" xml:space="preserve">
     <value>¿Quitar {0}?</value>
   </data>
+  <data name="Dep.DownloadingOf" xml:space="preserve">
+    <value>Descargando {0}: {1} de {2} MB</value>
+  </data>
+  <data name="Dep.Downloaded" xml:space="preserve">
+    <value>{0} descargado ({1} MB, suma de comprobación verificada)</value>
+  </data>
+  <data name="Dep.Downloading" xml:space="preserve">
+    <value>Descargando {0}: {1} MB</value>
+  </data>
+  <data name="Dep.FfmpegPurpose" xml:space="preserve">
+    <value>Visores de vídeo e imagen, reproducción de FLAC/Ogg/Opus/M4A</value>
+  </data>
+  <data name="Dep.UsingFfmpeg" xml:space="preserve">
+    <value>Se usa el ffmpeg instalado ({0}).</value>
+  </data>
+  <data name="Dep.NoPackageManager" xml:space="preserve">
+    <value>No se encontró ningún gestor de paquetes compatible (winget, apt, dnf, zypper, pacman, apk o brew). Instale {0} desde {1}.</value>
+  </data>
+  <data name="Dep.InstallingWith" xml:space="preserve">
+    <value>Instalando {0} con {1}: {2}</value>
+  </data>
+  <data name="Dep.GitPurpose" xml:space="preserve">
+    <value>Cliente Git, unidad Git y colores de estado de Git</value>
+  </data>
+  <data name="Dep.UsingGit" xml:space="preserve">
+    <value>Se usa el git instalado ({0}).</value>
+  </data>
+  <data name="Dep.PlaywrightPurpose" xml:space="preserve">
+    <value>Chromium para el indicador de cotizaciones (Swissquote)</value>
+  </data>
+  <data name="Dep.PwUnpack" xml:space="preserve">
+    <value>Descomprimiendo el controlador de Playwright {0}</value>
+  </data>
+  <data name="Dep.PwChromium" xml:space="preserve">
+    <value>Instalando el Chromium que controla Playwright {0} (puede tardar unos minutos)</value>
+  </data>
+  <data name="Dep.PwReady" xml:space="preserve">
+    <value>Playwright {0} está listo</value>
+  </data>
+  <data name="Dep.WhisperPurpose" xml:space="preserve">
+    <value>Modelo de voz sin conexión (base, 148 MB) para la entrada de voz en la barra de IA</value>
+  </data>
+  <data name="Dep.WhisperReady" xml:space="preserve">
+    <value>El modelo Whisper {0} está listo</value>
+  </data>
+  <data name="Dep.OllamaOnlyModel" xml:space="preserve">
+    <value>Ollama ya está instalado ({0}); solo se descarga el modelo {1}.</value>
+  </data>
+  <data name="Dep.OllamaUsing" xml:space="preserve">
+    <value>Se usa el Ollama ya instalado ({0}).</value>
+  </data>
+  <data name="Dep.OllamaAsIs" xml:space="preserve">
+    <value>Ollama ya está instalado ({0}); se usa tal cual</value>
+  </data>
+  <data name="Dep.OllamaStarting" xml:space="preserve">
+    <value>Iniciando {0} para descargar {1}</value>
+  </data>
+  <data name="Dep.OllamaReady" xml:space="preserve">
+    <value>Ollama está listo con {0}</value>
+  </data>
+  <data name="Dep.OllamaVersionReady" xml:space="preserve">
+    <value>Ollama {0} está listo con {1}</value>
+  </data>
+  <data name="Mtp.NotMounted" xml:space="preserve">
+    <value>El dispositivo no está montado: desbloquee el teléfono, elija Transferencia de archivos y ábralo una vez en un gestor de archivos (o ejecute gio mount).</value>
+  </data>
+  <data name="Mtp.Refused" xml:space="preserve">
+    <value>El dispositivo rechazó el acceso: desbloquee el teléfono y permita la transferencia de archivos.</value>
+  </data>
+  <data name="Mtp.NotConnected" xml:space="preserve">
+    <value>El dispositivo no está conectado o está bloqueado: desbloquee el teléfono y elija Transferencia de archivos.</value>
+  </data>
+  <data name="Docker.NotRunning" xml:space="preserve">
+    <value>Docker no se está ejecutando — inicie Docker Desktop o el servicio docker.</value>
+  </data>
+  <data name="Docker.Stopped" xml:space="preserve">
+    <value>El contenedor está detenido — inícielo primero (Mayús+F9 en su fila).</value>
+  </data>
 </root>

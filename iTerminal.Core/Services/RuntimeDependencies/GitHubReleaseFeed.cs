@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -72,8 +73,8 @@ public sealed class GitHubReleaseFeed(HttpClient httpClient, string apiAddress =
                 {
                     lastReport = clock.Elapsed;
                     progress.Report(total is > 0
-                        ? $"Downloading {asset.Name}: {Megabytes(received)} of {Megabytes(total.Value)} MB"
-                        : $"Downloading {asset.Name}: {Megabytes(received)} MB");
+                        ? string.Format(UiText.Get("Dep.DownloadingOf", "Downloading {0}: {1} of {2} MB"), asset.Name, Megabytes(received), Megabytes(total.Value))
+                        : string.Format(UiText.Get("Dep.Downloading", "Downloading {0}: {1} MB"), asset.Name, Megabytes(received)));
                 }
             }
         }
@@ -89,7 +90,7 @@ public sealed class GitHubReleaseFeed(HttpClient httpClient, string apiAddress =
             }
         }
 
-        progress?.Report($"Downloaded {asset.Name} ({Megabytes(received)} MB, checksum verified)");
+        progress?.Report(string.Format(UiText.Get("Dep.Downloaded", "Downloaded {0} ({1} MB, checksum verified)"), asset.Name, Megabytes(received)));
     }
 
     private async Task<JsonDocument> GetJsonAsync(string address, CancellationToken cancellationToken)

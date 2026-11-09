@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Formats.Tar;
 using System.IO.Compression;
 using System.Diagnostics;
@@ -109,8 +110,8 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
 
             string where = existing.BinaryPath ?? _server.Address;
             return InstalledVersion() is null
-                ? $"Ollama is already installed ({where}); only the {_model} model is downloaded."
-                : $"Using the Ollama that is already installed ({where}).";
+                ? string.Format(UiText.Get("Dep.OllamaOnlyModel", "Ollama is already installed ({0}); only the {1} model is downloaded."), where, _model)
+                : string.Format(UiText.Get("Dep.OllamaUsing", "Using the Ollama that is already installed ({0})."), where);
         }
     }
 
@@ -314,7 +315,7 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
 
         if (useExisting)
         {
-            progress.Report($"Ollama is already installed ({existingBinary ?? _server.Address}); it is used as it is");
+            progress.Report(string.Format(UiText.Get("Dep.OllamaAsIs", "Ollama is already installed ({0}); it is used as it is"), existingBinary ?? _server.Address));
         }
         else if (FindBinary(target) is null)
         {
@@ -357,7 +358,7 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
                     // A server that answers is used as it is; otherwise the program found is started with its own models folder.
                     if (existingBinary is not null)
                     {
-                        progress.Report($"Starting {existingBinary} to download {_model}");
+                        progress.Report(string.Format(UiText.Get("Dep.OllamaStarting", "Starting {0} to download {1}"), existingBinary, _model));
                         started = await _server.EnsureRunningAsync(existingBinary, null, cancellationToken);
                     }
 
@@ -397,12 +398,12 @@ public sealed class OllamaRuntimeDependency : IRuntimeDependency
 
         if (useExisting)
         {
-            progress.Report($"Ollama is ready with {_model}");
+            progress.Report(string.Format(UiText.Get("Dep.OllamaReady", "Ollama is ready with {0}"), _model));
             return;
         }
 
         PruneOlderVersions(version);
-        progress.Report($"Ollama {version} is ready with {_model}");
+        progress.Report(string.Format(UiText.Get("Dep.OllamaVersionReady", "Ollama {0} is ready with {1}"), version, _model));
     }
 
     /// <summary>Nothing is process-wide: the server is started with its own environment when it is needed.</summary>

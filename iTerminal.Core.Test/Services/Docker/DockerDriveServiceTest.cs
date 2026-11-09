@@ -365,6 +365,21 @@ public class DockerDriveServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public void TheDockerProblemsFollowTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(DockerDriveService).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+
+        StringAssert.StartsWith(DockerDriveService.DescribeDockerProblem(new ProcessOutput(1, string.Empty, "Cannot connect to the Docker daemon")), "Docker läuft nicht");
+        StringAssert.StartsWith(DockerDriveService.DescribeDockerProblem(
+            new ProcessOutput(1, string.Empty, "Error response from daemon: container 4f2a is not running")), "Der Container ist angehalten");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void ACommandsOwnStderrIsNotADockerProblem()
     {
         Assert.IsNull(DockerDriveService.DescribeDockerProblem(new ProcessOutput(3, string.Empty, "nginx is not running")));
