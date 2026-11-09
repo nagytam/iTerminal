@@ -95,7 +95,7 @@ public class DialogsTest
         await _app.PressAsync("Enter");
         await _app.WaitForTextAsync("choose trump");
         await _app.TypeAsync("c");
-        await _app.WaitForTextAsync("Trump: Clubs");
+        await _app.WaitForTextAsync("Trump: clubs");
 
         await _app.PressAsync("Enter");
         await _app.WaitForTextAsync("Player 1's hand");

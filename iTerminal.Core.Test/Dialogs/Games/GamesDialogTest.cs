@@ -403,17 +403,22 @@ public class GamesDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task JassShowsItsWholeHandAndTrickOnAnEightyByTwentyScreen()
+    public async Task JassShowsItsWholeHandAndTrickOnNarrowScreens()
     {
-        JassDialog dialog = new(TestTheme(), new VirtualTimeProvider());
-        await ShowAsync(dialog, new Size(80, 20));
-        await Press(dialog, ConsoleKey.Enter);
+        foreach (int width in new[] { 80, 64, 52 })
+        {
+            JassDialog dialog = new(TestTheme(), new VirtualTimeProvider());
+            await ShowAsync(dialog, new Size((uint)width, 20));
+            await Press(dialog, ConsoleKey.Enter);
 
-        string screen = Drawn(dialog, 80, 20);
+            string screen = Drawn(dialog, width, 20);
 
-        StringAssert.Contains(screen, "Player 1's hand");
-        StringAssert.Contains(screen, "1:");
-        StringAssert.Contains(screen, "No cards played in this trick.");
+            StringAssert.Contains(screen, "Swiss Jass — four players (hot-seat)");
+            StringAssert.Contains(screen, "Player 1's hand");
+            StringAssert.Contains(screen, "1:");
+            StringAssert.Contains(screen, "9:", $"all nine cards fit at width {width}");
+            StringAssert.Contains(screen, "No cards played in this trick.");
+        }
     }
 
     [Timeout(60_000)]

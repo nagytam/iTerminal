@@ -5919,6 +5919,7 @@
   </data>
   <data name="Games.Jass.Rules" xml:space="preserve"><value>Quatre joueurs en deux équipes. Fournissez la couleur ; sans cette couleur, coupez et surcoupez si possible. Une donne vaut 157 points.</value></data>
   <data name="Games.Jass.CommandDescription" xml:space="preserve"><value>Jouez au Jass Schieber à quatre joueurs en équipes sur un même clavier.</value></data>
+  <data name="Games.Jass.Mode" xml:space="preserve"><value>quatre joueurs (sur le même appareil)</value></data>
   <data name="Games.Jass.Winner" xml:space="preserve"><value>L'équipe {0} gagne avec {1} points. N commence une nouvelle partie.</value></data>
   <data name="Games.Jass.HandComplete" xml:space="preserve"><value>Donne terminée. {0} – {1}. Entrée distribue la donne suivante.</value></data>
   <data name="Games.Jass.Reveal" xml:space="preserve"><value>Passez l'appareil au joueur {0} et appuyez sur Entrée pour révéler les cartes.</value></data>

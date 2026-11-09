@@ -122,6 +122,8 @@ public class JassGame : GameBase
 
     public override bool OffersUndo => false;
 
+    public override string? ModeLabel => GameText.Get("Games.Jass.Mode", "four players (hot-seat)");
+
     public override bool IsComputerTurn => false;
 
     public override bool CanUndo => false;
@@ -575,11 +577,26 @@ public class JassGame : GameBase
                 : string.Format(GameText.Get("Games.Jass.PlayerHand", "Player {0}'s hand (press 1–9 to play a card):"), _currentPlayer + 1))],
         ];
 
-        string hand = _awaitingReveal
-            ? string.Format(GameText.Get("Games.Jass.HiddenHand", "Player {0}'s cards are hidden."), _currentPlayer + 1)
-            : string.Join("  ", _hands[_currentPlayer].Select((card, index) =>
-                index == _cursor ? $"[{index + 1}:{card.ShortName}]" : $"{index + 1}:{card.ShortName}"));
-        rows.Add([new GameCell(hand)]);
+        if (_awaitingReveal)
+        {
+            rows.Add([new GameCell(string.Format(
+                GameText.Get("Games.Jass.HiddenHand", "Player {0}'s cards are hidden."),
+                _currentPlayer + 1))]);
+        }
+        else
+        {
+            for (int group = 0; group < 3; group++)
+            {
+                string handRow = string.Join("  ", Enumerable.Range(group * 3, 3)
+                    .Where(index => index < _hands[_currentPlayer].Count)
+                    .Select(index =>
+                    {
+                        string card = $"{index + 1}:{_hands[_currentPlayer][index].ShortName}";
+                        return index == _cursor ? $"[{card}]" : card;
+                    }));
+                rows.Add([new GameCell(handRow)]);
+            }
+        }
 
         IReadOnlyList<JassPlay> shownTrick = _trick.Count == 0 ? _lastTrick : _trick;
         string played = shownTrick.Count == 0

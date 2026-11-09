@@ -6058,6 +6058,9 @@
   <data name="Games.Jass.CommandDescription" xml:space="preserve">
     <value>Play four-player partnership Jass (Schieber) at one keyboard.</value>
   </data>
+  <data name="Games.Jass.Mode" xml:space="preserve">
+    <value>four players (hot-seat)</value>
+  </data>
   <data name="Games.Jass.Winner" xml:space="preserve">
     <value>Partnership {0} wins with {1} points. N starts a new match.</value>
   </data>

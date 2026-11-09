@@ -5919,6 +5919,7 @@
   </data>
   <data name="Games.Jass.Rules" xml:space="preserve"><value>Quattro giocatori in due squadre. Segui il seme; se non puoi, taglia e supera il taglio quando possibile. Una mano vale 157 punti.</value></data>
   <data name="Games.Jass.CommandDescription" xml:space="preserve"><value>Gioca a Jass Schieber in quattro, a squadre, su una sola tastiera.</value></data>
+  <data name="Games.Jass.Mode" xml:space="preserve"><value>quattro giocatori (stesso dispositivo)</value></data>
   <data name="Games.Jass.Winner" xml:space="preserve"><value>La squadra {0} vince con {1} punti. N inizia una nuova partita.</value></data>
   <data name="Games.Jass.HandComplete" xml:space="preserve"><value>Mano completata. {0} – {1}. Invio distribuisce la mano successiva.</value></data>
   <data name="Games.Jass.Reveal" xml:space="preserve"><value>Passa il dispositivo al giocatore {0} e premi Invio per rivelare le carte.</value></data>

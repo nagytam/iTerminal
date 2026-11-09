@@ -5917,6 +5917,9 @@
   <data name="Games.Jass.CommandDescription" xml:space="preserve">
     <value>Spiele Jass-Schieber für vier Spieler in Partnerschaften an einer Tastatur.</value>
   </data>
+  <data name="Games.Jass.Mode" xml:space="preserve">
+    <value>vier Spieler (am selben Gerät)</value>
+  </data>
   <data name="Games.Jass.Winner" xml:space="preserve">
     <value>Partnerschaft {0} gewinnt mit {1} Punkten. N startet ein neues Match.</value>
   </data>

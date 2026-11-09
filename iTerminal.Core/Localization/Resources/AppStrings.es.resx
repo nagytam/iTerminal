@@ -5919,6 +5919,7 @@
   </data>
   <data name="Games.Jass.Rules" xml:space="preserve"><value>Cuatro jugadores en dos parejas. Hay que asistir al palo; si no se tiene, triunfar y, si se puede, superar el triunfo. Cada mano suma 157 puntos.</value></data>
   <data name="Games.Jass.CommandDescription" xml:space="preserve"><value>Juega al Jass Schieber, con cuatro jugadores por parejas, en un mismo teclado.</value></data>
+  <data name="Games.Jass.Mode" xml:space="preserve"><value>cuatro jugadores (en el mismo dispositivo)</value></data>
   <data name="Games.Jass.Winner" xml:space="preserve"><value>La pareja {0} gana con {1} puntos. N inicia una nueva partida.</value></data>
   <data name="Games.Jass.HandComplete" xml:space="preserve"><value>Mano terminada. {0} – {1}. Enter reparte la siguiente mano.</value></data>
   <data name="Games.Jass.Reveal" xml:space="preserve"><value>Pasa el dispositivo al jugador {0} y pulsa Enter para revelar.</value></data>
