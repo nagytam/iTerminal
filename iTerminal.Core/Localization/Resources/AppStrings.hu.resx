@@ -7318,6 +7318,12 @@
   <data name="DiskImage.MissingFile" xml:space="preserve">
     <value>A fájl nem található: {0}</value>
   </data>
+  <data name="DiskImage.Mounted" xml:space="preserve">
+    <value>Lemezkép csatolva</value>
+  </data>
+  <data name="DiskImage.Unmounted" xml:space="preserve">
+    <value>Lemezkép leválasztva</value>
+  </data>
   <data name="Format.Already" xml:space="preserve">
     <value>A meghajtó formázása már folyamatban van.</value>
   </data>

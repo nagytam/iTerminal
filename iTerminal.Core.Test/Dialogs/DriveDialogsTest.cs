@@ -156,6 +156,39 @@ public class DriveDialogsTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public async Task Image_SuccessNotificationsUseLocalizedTitles()
+    {
+        Localizer localizer = new([new ResourceLocalizationSource(new ResourceManager(
+            "iTerminal.Core.Localization.Resources.AppStrings",
+            typeof(DiskImageDialog).Assembly))]);
+        (string Code, string MountTitle, string UnmountTitle)[] translations =
+        [
+            ("en", "Mounted", "Unmounted"),
+            ("de", "Eingebunden", "Ausgehängt"),
+            ("fr", "Image montée", "Image démontée"),
+            ("es", "Imagen montada", "Imagen desmontada"),
+            ("it", "Immagine montata", "Immagine smontata"),
+            ("hu", "Lemezkép csatolva", "Lemezkép leválasztva"),
+        ];
+
+        foreach ((string code, string mountTitle, string unmountTitle) in translations)
+        {
+            Assert.IsTrue(localizer.SetLanguage(code), code);
+            using IDisposable language = UiText.Scope(localizer);
+
+            ImageRig mountRig = await OpenImageAsync(MakeImage());
+            Assert.IsTrue(await mountRig.Dialog.RunAsync(mount: true));
+            mountRig.Notifications.Verify(n => n.Notify(mountTitle, "Mounted as E:", NotificationSeverity.Success), Times.Once);
+
+            ImageRig unmountRig = await OpenImageAsync(Path.Combine(_folder, $"gone-{code}.vhd"));
+            Assert.IsTrue(await unmountRig.Dialog.RunAsync(mount: false));
+            unmountRig.Notifications.Verify(n => n.Notify(unmountTitle, "Unmounted", NotificationSeverity.Success), Times.Once);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task Image_Unmount_DoesNotNeedTheFileToExist()
     {
         string path = Path.Combine(_folder, "gone.vhd");

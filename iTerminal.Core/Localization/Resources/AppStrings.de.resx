@@ -7318,6 +7318,12 @@
   <data name="DiskImage.MissingFile" xml:space="preserve">
     <value>Datei nicht gefunden: {0}</value>
   </data>
+  <data name="DiskImage.Mounted" xml:space="preserve">
+    <value>Eingebunden</value>
+  </data>
+  <data name="DiskImage.Unmounted" xml:space="preserve">
+    <value>Ausgehängt</value>
+  </data>
   <data name="Format.Already" xml:space="preserve">
     <value>Das Laufwerk wird bereits formatiert.</value>
   </data>

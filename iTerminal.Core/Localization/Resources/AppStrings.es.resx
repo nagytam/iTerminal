@@ -7318,6 +7318,12 @@
   <data name="DiskImage.MissingFile" xml:space="preserve">
     <value>Archivo no encontrado: {0}</value>
   </data>
+  <data name="DiskImage.Mounted" xml:space="preserve">
+    <value>Imagen montada</value>
+  </data>
+  <data name="DiskImage.Unmounted" xml:space="preserve">
+    <value>Imagen desmontada</value>
+  </data>
   <data name="Format.Already" xml:space="preserve">
     <value>La unidad ya se está formateando.</value>
   </data>

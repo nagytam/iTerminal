@@ -7318,6 +7318,12 @@
   <data name="DiskImage.MissingFile" xml:space="preserve">
     <value>Fichier introuvable : {0}</value>
   </data>
+  <data name="DiskImage.Mounted" xml:space="preserve">
+    <value>Image montée</value>
+  </data>
+  <data name="DiskImage.Unmounted" xml:space="preserve">
+    <value>Image démontée</value>
+  </data>
   <data name="Format.Already" xml:space="preserve">
     <value>Le lecteur est déjà en cours de formatage.</value>
   </data>

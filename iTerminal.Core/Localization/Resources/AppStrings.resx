@@ -7459,6 +7459,12 @@
   <data name="DiskImage.MissingFile" xml:space="preserve">
     <value>File not found: {0}</value>
   </data>
+  <data name="DiskImage.Mounted" xml:space="preserve">
+    <value>Mounted</value>
+  </data>
+  <data name="DiskImage.Unmounted" xml:space="preserve">
+    <value>Unmounted</value>
+  </data>
   <data name="Format.Already" xml:space="preserve">
     <value>The drive is already being formatted.</value>
   </data>
