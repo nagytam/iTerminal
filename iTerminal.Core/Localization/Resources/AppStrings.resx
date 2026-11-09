@@ -8872,4 +8872,31 @@
   <data name="Listing.FolderMark" xml:space="preserve">
     <value>Folder</value>
   </data>
+  <data name="Panel.EntryOne" xml:space="preserve">
+    <value>1 entry</value>
+  </data>
+  <data name="Panel.EntryMany" xml:space="preserve">
+    <value>{0} entries</value>
+  </data>
+  <data name="Panel.Marked" xml:space="preserve">
+    <value>{0} marked</value>
+  </data>
+  <data name="Panel.Filter" xml:space="preserve">
+    <value>Filter: {0}</value>
+  </data>
+  <data name="Panel.Sort" xml:space="preserve">
+    <value>Sort: {0}</value>
+  </data>
+  <data name="Checksum.RowFile" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Checksum.RowFailed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="Checksum.RowReading" xml:space="preserve">
+    <value>Reading…</value>
+  </data>
+  <data name="Checksum.RowSize" xml:space="preserve">
+    <value>Size</value>
+  </data>
 </root>

@@ -8731,4 +8731,31 @@
   <data name="Listing.FolderMark" xml:space="preserve">
     <value>Ordner</value>
   </data>
+  <data name="Panel.EntryOne" xml:space="preserve">
+    <value>1 Eintrag</value>
+  </data>
+  <data name="Panel.EntryMany" xml:space="preserve">
+    <value>{0} Einträge</value>
+  </data>
+  <data name="Panel.Marked" xml:space="preserve">
+    <value>{0} markiert</value>
+  </data>
+  <data name="Panel.Filter" xml:space="preserve">
+    <value>Filter: {0}</value>
+  </data>
+  <data name="Panel.Sort" xml:space="preserve">
+    <value>Sortierung: {0}</value>
+  </data>
+  <data name="Checksum.RowFile" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="Checksum.RowFailed" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Checksum.RowReading" xml:space="preserve">
+    <value>Lesen…</value>
+  </data>
+  <data name="Checksum.RowSize" xml:space="preserve">
+    <value>Größe</value>
+  </data>
 </root>

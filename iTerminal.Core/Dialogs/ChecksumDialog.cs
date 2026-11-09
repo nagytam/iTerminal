@@ -298,23 +298,23 @@ public class ChecksumDialog : Dialog
         var valueWidth = Math.Max(16, (int)_info.ViewSize.Width - CaptionWidth);
         var lines = new List<InfoLines.Line>
         {
-            new(Row("File", iTerminal.Core.Commands.FocusedEntry.NameOf(url).Shrink(valueWidth) ?? string.Empty)),
+            new(Row(UiText.Get("Checksum.RowFile", "File"), iTerminal.Core.Commands.FocusedEntry.NameOf(url).Shrink(valueWidth) ?? string.Empty)),
         };
 
         var result = Result;
         if (Error is { } error)
         {
-            lines.Add(new(Row("Failed", error.Shrink(valueWidth) ?? string.Empty), colorScheme.Error));
+            lines.Add(new(Row(UiText.Get("Checksum.RowFailed", "Failed"), error.Shrink(valueWidth) ?? string.Empty), colorScheme.Error));
         }
         else if (result is null)
         {
             var read = Interlocked.Read(ref _bytesRead);
             var percent = url.Length > 0 ? $" {Math.Min(100, read * 100 / url.Length)}%" : string.Empty;
-            lines.Add(new(Row("Reading…", $"{read.ToFileSize().Trim().Replace("  ", " ")}{percent}")));
+            lines.Add(new(Row(UiText.Get("Checksum.RowReading", "Reading…"), $"{read.ToFileSize().Trim().Replace("  ", " ")}{percent}")));
         }
         else
         {
-            lines.Add(new(Row("Size", FilePropertiesService.FormatSize(result.Bytes))));
+            lines.Add(new(Row(UiText.Get("Checksum.RowSize", "Size"), FilePropertiesService.FormatSize(result.Bytes))));
         }
 
         lines.Add(default);
