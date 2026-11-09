@@ -843,6 +843,9 @@ public class SmallScreenDialogsTest
     [DataRow(null, "Compare Folders", "Enter:vergleichen")]
     [DataRow(null, "Duplicate", "Leertaste/Klick:markieren")]
     [DataRow(null, "Disk usage", "g:zum Panel")]
+    [DataRow(null, "Stocks", "Kurs")]
+    [DataRow(null, "Passwords", "gespeichert")]
+    [DataRow("Ctrl+Shift+F1", null, "Upload")]
     public async Task TheDiskManagerSystemSettingsMapAndWebBrowserInGerman_AreGerman(string? chord, string? command, string expected)
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 160, height: 40);
@@ -976,6 +979,7 @@ public class SmallScreenDialogsTest
     [DataRow("Alt+F11", "Verbundene Geräte")]
     [DataRow("Ctrl+N", "Netzwerkbrowser")]
     [DataRow("Ctrl+E", "Einheitenumrechner —")]
+    [DataRow("Ctrl+E", "Länge")]
     [DataRow("Ctrl+F4", "iTerminal-Editor")]
     [DataRow("Ctrl+Shift+F10", "Der Name, unter dem")]
     [DataRow("Ctrl+Shift+F10", "Umgebung")]

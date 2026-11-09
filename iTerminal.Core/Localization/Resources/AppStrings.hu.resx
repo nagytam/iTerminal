@@ -8338,4 +8338,115 @@
   <data name="Dup.Hints" xml:space="preserve">
     <value>Szóköz/kattintás:jelöl  a:legrégebbi marad  n:legújabb marad  u:jelölés törlése  Del:töröl  Enter/g:ugrás  r:újrakeresés  Esc:bezár</value>
   </data>
+  <data name="Passwords.ListHeader" xml:space="preserve">
+    <value>{0} mentve  ·  feloldva</value>
+  </data>
+  <data name="Passwords.ColCategory" xml:space="preserve">
+    <value>Kategória</value>
+  </data>
+  <data name="Passwords.ColTitle" xml:space="preserve">
+    <value>Cím</value>
+  </data>
+  <data name="Passwords.ColUsername" xml:space="preserve">
+    <value>Felhasználónév</value>
+  </data>
+  <data name="Torrents.Header" xml:space="preserve">
+    <value>{0} torrent  ·  letöltés {1}  ·  feltöltés {2}</value>
+  </data>
+  <data name="Stocks.ColSymbol" xml:space="preserve">
+    <value>Jel</value>
+  </data>
+  <data name="Stocks.ColName" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Stocks.ColPrice" xml:space="preserve">
+    <value>Árfolyam</value>
+  </data>
+  <data name="Stocks.ColChange" xml:space="preserve">
+    <value>Változás</value>
+  </data>
+  <data name="Stocks.ColChangePct" xml:space="preserve">
+    <value>Vált. %</value>
+  </data>
+  <data name="Stocks.ColExchange" xml:space="preserve">
+    <value>Tőzsde</value>
+  </data>
+  <data name="Stocks.ColCompany" xml:space="preserve">
+    <value>Cég</value>
+  </data>
+  <data name="Stocks.ColType" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Stocks.HeaderAdd" xml:space="preserve">
+    <value>Részvények — részvény hozzáadása</value>
+  </data>
+  <data name="Stocks.HeaderCount" xml:space="preserve">
+    <value>Részvények — {0} a listán</value>
+  </data>
+  <data name="Stocks.Live" xml:space="preserve">
+    <value>élő, frissítve: {0}</value>
+  </data>
+  <data name="Stocks.Waiting" xml:space="preserve">
+    <value>várakozás az első árfolyamokra…</value>
+  </data>
+  <data name="Stocks.Removed" xml:space="preserve">
+    <value>{0} eltávolítva</value>
+  </data>
+  <data name="Stocks.NotOnList" xml:space="preserve">
+    <value>{0} nincs a listán</value>
+  </data>
+  <data name="UnitCat.Length" xml:space="preserve">
+    <value>Hossz</value>
+  </data>
+  <data name="UnitCat.Area" xml:space="preserve">
+    <value>Terület</value>
+  </data>
+  <data name="UnitCat.Volume" xml:space="preserve">
+    <value>Térfogat</value>
+  </data>
+  <data name="UnitCat.Mass" xml:space="preserve">
+    <value>Tömeg</value>
+  </data>
+  <data name="UnitCat.Temperature" xml:space="preserve">
+    <value>Hőmérséklet</value>
+  </data>
+  <data name="UnitCat.Speed" xml:space="preserve">
+    <value>Sebesség</value>
+  </data>
+  <data name="UnitCat.Time" xml:space="preserve">
+    <value>Idő</value>
+  </data>
+  <data name="UnitCat.Pressure" xml:space="preserve">
+    <value>Nyomás</value>
+  </data>
+  <data name="UnitCat.Energy" xml:space="preserve">
+    <value>Energia</value>
+  </data>
+  <data name="UnitCat.Power" xml:space="preserve">
+    <value>Teljesítmény</value>
+  </data>
+  <data name="UnitCat.Angle" xml:space="preserve">
+    <value>Szög</value>
+  </data>
+  <data name="UnitCat.DigitalStorage" xml:space="preserve">
+    <value>Digitális tároló</value>
+  </data>
+  <data name="Units.Category" xml:space="preserve">
+    <value>Kategória</value>
+  </data>
+  <data name="Units.From" xml:space="preserve">
+    <value>Ebből</value>
+  </data>
+  <data name="Units.To" xml:space="preserve">
+    <value>Erre</value>
+  </data>
+  <data name="Network.SavedSmb" xml:space="preserve">
+    <value>(SMB, mentve)</value>
+  </data>
+  <data name="Network.SavedSsh" xml:space="preserve">
+    <value>(SSH, mentve)</value>
+  </data>
+  <data name="Remote.Opens" xml:space="preserve">
+    <value>megnyitja: {0}</value>
+  </data>
 </root>

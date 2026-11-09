@@ -254,8 +254,8 @@ public class NetworkBrowserDialog : SplitPaneDialog
         return [.. _networkProfileService.GetAll().Select(profile =>
         {
             var label = profile.Protocol == NetworkProtocol.Smb
-                ? $"* {profile.Username}@{profile.Host}/{profile.ShareName} (SMB, saved)"
-                : $"* {profile.Username}@{profile.Host} (SSH, saved)";
+                ? $"* {profile.Username}@{profile.Host}/{profile.ShareName} " + UiText.Get("Network.SavedSmb", "(SMB, saved)")
+                : $"* {profile.Username}@{profile.Host} " + UiText.Get("Network.SavedSsh", "(SSH, saved)");
             return new HostRow(label, HostRowKind.SavedProfile, profile.Host, profile.ShareName, profile);
         })];
     }

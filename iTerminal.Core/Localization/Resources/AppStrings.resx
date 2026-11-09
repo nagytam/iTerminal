@@ -8479,4 +8479,115 @@
   <data name="Dup.Hints" xml:space="preserve">
     <value>Space or click:mark  a:keep oldest  n:keep newest  u:unmark  Del:delete  Enter or g:go to  r:rescan  Esc:close</value>
   </data>
+  <data name="Passwords.ListHeader" xml:space="preserve">
+    <value>{0} saved  ·  unlocked</value>
+  </data>
+  <data name="Passwords.ColCategory" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Passwords.ColTitle" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Passwords.ColUsername" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Torrents.Header" xml:space="preserve">
+    <value>{0} torrents  ·  down {1}  ·  up {2}</value>
+  </data>
+  <data name="Stocks.ColSymbol" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
+  <data name="Stocks.ColName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Stocks.ColPrice" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="Stocks.ColChange" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="Stocks.ColChangePct" xml:space="preserve">
+    <value>Change %</value>
+  </data>
+  <data name="Stocks.ColExchange" xml:space="preserve">
+    <value>Exchange</value>
+  </data>
+  <data name="Stocks.ColCompany" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="Stocks.ColType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Stocks.HeaderAdd" xml:space="preserve">
+    <value>Stocks — add a stock</value>
+  </data>
+  <data name="Stocks.HeaderCount" xml:space="preserve">
+    <value>Stocks — {0} on the list</value>
+  </data>
+  <data name="Stocks.Live" xml:space="preserve">
+    <value>live, updated {0}</value>
+  </data>
+  <data name="Stocks.Waiting" xml:space="preserve">
+    <value>waiting for the first quotes…</value>
+  </data>
+  <data name="Stocks.Removed" xml:space="preserve">
+    <value>Removed {0}</value>
+  </data>
+  <data name="Stocks.NotOnList" xml:space="preserve">
+    <value>{0} is not on the list</value>
+  </data>
+  <data name="UnitCat.Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="UnitCat.Area" xml:space="preserve">
+    <value>Area</value>
+  </data>
+  <data name="UnitCat.Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="UnitCat.Mass" xml:space="preserve">
+    <value>Mass</value>
+  </data>
+  <data name="UnitCat.Temperature" xml:space="preserve">
+    <value>Temperature</value>
+  </data>
+  <data name="UnitCat.Speed" xml:space="preserve">
+    <value>Speed</value>
+  </data>
+  <data name="UnitCat.Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="UnitCat.Pressure" xml:space="preserve">
+    <value>Pressure</value>
+  </data>
+  <data name="UnitCat.Energy" xml:space="preserve">
+    <value>Energy</value>
+  </data>
+  <data name="UnitCat.Power" xml:space="preserve">
+    <value>Power</value>
+  </data>
+  <data name="UnitCat.Angle" xml:space="preserve">
+    <value>Angle</value>
+  </data>
+  <data name="UnitCat.DigitalStorage" xml:space="preserve">
+    <value>Digital Storage</value>
+  </data>
+  <data name="Units.Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Units.From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="Units.To" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="Network.SavedSmb" xml:space="preserve">
+    <value>(SMB, saved)</value>
+  </data>
+  <data name="Network.SavedSsh" xml:space="preserve">
+    <value>(SSH, saved)</value>
+  </data>
+  <data name="Remote.Opens" xml:space="preserve">
+    <value>opens {0}</value>
+  </data>
 </root>

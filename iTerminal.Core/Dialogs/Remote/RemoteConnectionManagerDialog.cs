@@ -763,7 +763,7 @@ public class RemoteConnectionManagerDialog : Dialog
 
     private static string DescribeCommand(RemoteConnection connection) =>
         connection.IsFileDrive
-            ? "opens " + connection.DriveUrl + (connection.HasSavedCredential ? "  (password saved)" : string.Empty)
+            ? string.Format(UiText.Get("Remote.Opens", "opens {0}"), connection.DriveUrl) + (connection.HasSavedCredential ? "  " + UiText.Get("Remote.PasswordSaved", "(password saved)") : string.Empty)
             : RemoteShellLaunch.TryCreate(connection, out var launch, out var error) && launch is not null
                 ? Path.GetFileNameWithoutExtension(launch.FileName) + " " + string.Join(' ', launch.Arguments.Select(a => a.Contains(' ') ? $"\"{a}\"" : a))
                 : error ?? string.Empty;

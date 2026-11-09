@@ -439,7 +439,7 @@ public class StockBrowserDialog : SplitPaneDialog
         {
             _ = Task.Run(() =>
             {
-                SetMessage(_stockService.Remove(symbol) ? $"Removed {symbol}" : $"{symbol} is not on the list");
+                SetMessage(_stockService.Remove(symbol) ? string.Format(UiText.Get("Stocks.Removed", "Removed {0}"), symbol) : string.Format(UiText.Get("Stocks.NotOnList", "{0} is not on the list"), symbol));
             });
         };
         StateHasChanged();
@@ -587,7 +587,7 @@ public class StockBrowserDialog : SplitPaneDialog
         DrawHeader(buffer, ix, iy, iw, colorScheme);
         var headings = _adding
             ? FormatHitHeadings(iw)
-            : FormatColumns("Symbol", "Name", "Price", "Change", "Change %", "Exchange", iw);
+            : FormatColumns(UiText.Get("Stocks.ColSymbol", "Symbol"), UiText.Get("Stocks.ColName", "Name"), UiText.Get("Stocks.ColPrice", "Price"), UiText.Get("Stocks.ColChange", "Change"), UiText.Get("Stocks.ColChangePct", "Change %"), UiText.Get("Stocks.ColExchange", "Exchange"), iw);
         DrawSectionHeader(buffer, ix, iy + 1, iw, headings.TrimStart(), _adding ? _hitListBox.IsFocused : _stockListBox.IsFocused, colorScheme);
 
         if (ih >= 3)
@@ -609,15 +609,15 @@ public class StockBrowserDialog : SplitPaneDialog
     private static string FormatHitHeadings(int width)
     {
         var nameWidth = Math.Max(4, width - 1 - SymbolWidth - ExchangeWidth - 6);
-        return Cut(" " + "Symbol".PadRight(SymbolWidth) + "Company".PadRight(nameWidth) + " " + "Exchange".PadRight(ExchangeWidth) + " Type", width);
+        return Cut(" " + UiText.Get("Stocks.ColSymbol", "Symbol").PadRight(SymbolWidth) + UiText.Get("Stocks.ColCompany", "Company").PadRight(nameWidth) + " " + UiText.Get("Stocks.ColExchange", "Exchange").PadRight(ExchangeWidth) + " " + UiText.Get("Stocks.ColType", "Type"), width);
     }
 
     private void DrawHeader(IBuffer buffer, int x, int y, int w, ColorScheme colorScheme)
     {
         var updated = _stockService.LastUpdated;
         var text = _adding
-            ? "Stocks — add a stock"
-            : $"Stocks — {_rowItems.Count} on the list" + (updated is { } time ? $"   live, updated {time:HH:mm:ss}" : "   waiting for the first quotes…");
+            ? UiText.Get("Stocks.HeaderAdd", "Stocks — add a stock")
+            : string.Format(UiText.Get("Stocks.HeaderCount", "Stocks — {0} on the list"), _rowItems.Count) + (updated is { } time ? "   " + string.Format(UiText.Get("Stocks.Live", "live, updated {0}"), time.ToString("HH:mm:ss")) : "   " + UiText.Get("Stocks.Waiting", "waiting for the first quotes…"));
         WriteLine(buffer, x, y, w, text, Color.Cyan, colorScheme.Background);
     }
 

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 namespace iTerminal.Core.Model.UnitConverter;
 
 public enum UnitCategory
@@ -28,18 +29,18 @@ public static class UnitCatalog
 {
     public static string GetCategoryName(UnitCategory category) => category switch
     {
-        UnitCategory.Length => "Length",
-        UnitCategory.Area => "Area",
-        UnitCategory.Volume => "Volume",
-        UnitCategory.Mass => "Mass",
-        UnitCategory.Temperature => "Temperature",
-        UnitCategory.Speed => "Speed",
-        UnitCategory.Time => "Time",
-        UnitCategory.Pressure => "Pressure",
-        UnitCategory.Energy => "Energy",
-        UnitCategory.Power => "Power",
-        UnitCategory.Angle => "Angle",
-        UnitCategory.DigitalStorage => "Digital Storage",
+        UnitCategory.Length => UiText.Get("UnitCat.Length", "Length"),
+        UnitCategory.Area => UiText.Get("UnitCat.Area", "Area"),
+        UnitCategory.Volume => UiText.Get("UnitCat.Volume", "Volume"),
+        UnitCategory.Mass => UiText.Get("UnitCat.Mass", "Mass"),
+        UnitCategory.Temperature => UiText.Get("UnitCat.Temperature", "Temperature"),
+        UnitCategory.Speed => UiText.Get("UnitCat.Speed", "Speed"),
+        UnitCategory.Time => UiText.Get("UnitCat.Time", "Time"),
+        UnitCategory.Pressure => UiText.Get("UnitCat.Pressure", "Pressure"),
+        UnitCategory.Energy => UiText.Get("UnitCat.Energy", "Energy"),
+        UnitCategory.Power => UiText.Get("UnitCat.Power", "Power"),
+        UnitCategory.Angle => UiText.Get("UnitCat.Angle", "Angle"),
+        UnitCategory.DigitalStorage => UiText.Get("UnitCat.DigitalStorage", "Digital Storage"),
         _ => category.ToString()
     };
 

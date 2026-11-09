@@ -612,7 +612,7 @@ public class TorrentManagerDialog : Dialog
     {
         long down = _list.Sum(t => t.DownloadRate);
         long up = _list.Sum(t => t.UploadRate);
-        Put(buffer, 1, 0, iw - 2, $"{_list.Count} torrents  ·  down {FormatRate(down)}  ·  up {FormatRate(up)}", Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, string.Format(UiText.Get("Torrents.Header", "{0} torrents  ·  down {1}  ·  up {2}"), _list.Count, FormatRate(down), FormatRate(up)), Color.Cyan, colorScheme.Background);
 
         int nameWidth = Math.Max(10, iw - 2 - 2 - 53);
         Put(buffer, 1, 1, iw - 2, "  " + UiText.Get("Torrent.Col.Name", "Name").PadRight(nameWidth) + " " + UiText.Get("Torrent.Col.State", "State").PadRight(8) + " "
