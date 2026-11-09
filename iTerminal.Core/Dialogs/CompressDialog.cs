@@ -212,12 +212,12 @@ public class CompressDialog : FormDialog
     }
 
     private static string DescribeFormat(ArchiveFormat format) =>
-        format.SupportsPassword ? $"{format.Name}  ({format.Extension}, password)" : $"{format.Name}  ({format.Extension})";
+        format.SupportsPassword ? $"{format.Name}  ({format.Extension}, " + UiText.Get("Compress.FormatPassword", "password") + ")" : $"{format.Name}  ({format.Extension})";
 
     private static string DescribeEncryption(ArchiveEncryption encryption) => encryption switch
     {
         ArchiveEncryption.Aes256 => "AES-256",
-        ArchiveEncryption.ZipCrypto => "ZipCrypto (weak, opens anywhere)",
+        ArchiveEncryption.ZipCrypto => UiText.Get("Compress.ZipCrypto", "ZipCrypto (weak, opens anywhere)"),
         _ => encryption.ToString(),
     };
 

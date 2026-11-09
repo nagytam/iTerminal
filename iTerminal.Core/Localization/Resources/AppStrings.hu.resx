@@ -8953,4 +8953,22 @@
   <data name="Calc.Back" xml:space="preserve">
     <value>Vissza</value>
   </data>
+  <data name="Transfer.OneFile" xml:space="preserve">
+    <value>1 fájl</value>
+  </data>
+  <data name="Transfer.Files" xml:space="preserve">
+    <value>{0} fájl</value>
+  </data>
+  <data name="Transfer.OneFolder" xml:space="preserve">
+    <value>1 mappa</value>
+  </data>
+  <data name="Transfer.Folders" xml:space="preserve">
+    <value>{0} mappa</value>
+  </data>
+  <data name="Compress.FormatPassword" xml:space="preserve">
+    <value>jelszó</value>
+  </data>
+  <data name="Compress.ZipCrypto" xml:space="preserve">
+    <value>ZipCrypto (gyenge, mindenhol megnyílik)</value>
+  </data>
 </root>
