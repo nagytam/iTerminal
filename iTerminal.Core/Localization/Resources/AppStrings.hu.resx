@@ -8863,4 +8863,22 @@
   <data name="Packages.Output" xml:space="preserve">
     <value>Kimenet</value>
   </data>
+  <data name="Sort.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Sort.Extension" xml:space="preserve">
+    <value>Kiterjesztés</value>
+  </data>
+  <data name="Sort.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="Sort.Date" xml:space="preserve">
+    <value>Dátum</value>
+  </data>
+  <data name="Sort.AsListed" xml:space="preserve">
+    <value>Eredeti</value>
+  </data>
+  <data name="Sort.Reversed" xml:space="preserve">
+    <value>Fordított</value>
+  </data>
 </root>
