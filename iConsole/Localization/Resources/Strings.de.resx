@@ -1156,6 +1156,12 @@
   <data name="Viewer.TitleHints" xml:space="preserve">
     <value>  F2:Umbruch{0}  F4:Hex  F5:Zeile  F8:Codepage</value>
   </data>
+  <data name="Viewer.Disassembling" xml:space="preserve">
+    <value>Disassemblierung läuft…</value>
+  </data>
+  <data name="Viewer.DisassemblyFailed" xml:space="preserve">
+    <value>Disassemblierung fehlgeschlagen: {0}</value>
+  </data>
   <data name="Key.FindNext" xml:space="preserve">
     <value>F3-Weiter</value>
   </data>

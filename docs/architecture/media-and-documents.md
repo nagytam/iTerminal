@@ -70,7 +70,18 @@ rather than a path, so a document on an SSH, archive or memory drive reads the s
   `From ` lines, quoting undone, and each message read by `MimeMessageReader`.
 - **Log files** (`.log`) are plain text, coloured by the `Log` syntax language (severity words as keywords). YAML, TOML and
   INI files were already coloured by extension in the highlighter.
-- **HTML, PDF, plain text, images as ASCII art and .NET binaries** are read as before.
+- **HTML, PDF, plain text and images as ASCII art** are read as before. **.dll, .exe and .so** show the metadata page as before
+  (`ReadFileAsync`, which the preview and the F4 editor also use), and F3 adds a **Disassembly** section below it.
+- **Disassembly of binaries** (`iConsole/Services/Disassembly/`, F3 only): `IFileToTextConverterService.BuildDisassemblyAsync` reads
+  the file's bytes, never loads or runs it, and returns lines. A managed assembly gets its IL, method by method, with metadata tokens
+  resolved to names (`ManagedIlDisassembler`, `System.Reflection.Metadata`); any other PE or ELF gets its executable sections swept
+  linearly with Iced (`NativeDisassembler`, x86 and x86-64 only; ARM, AArch64 and the rest print a "not supported" note, and so do
+  big-endian ELF and stripped ELF without section headers). Because the file is untrusted, `DisassemblyBudget` caps it: 2,000 methods,
+  5,000 instructions per method, 100,000 lines, 4 MB of code and 5 s; a cut-off listing ends with a "truncated" line. Parsing is bounds-checked
+  and a parser failure ends as a note. `FileViewerDialog` shows the metadata page at once, adds a "Disassembling…" line, builds the listing
+  on a `Task.Run` worker and lands it from `OnIdle` with one `Lines.ReplaceAll` (the worker never touches the text model); `Close()` cancels it,
+  and a result for another `Url` is dropped. The headings are English literals, like the metadata page's. Versioned names such as `libc.so.6`,
+  `.sys`, `.ocx`, `.dylib` and Mach-O are not covered.
 
 These readers do not feed the document search index: `DocumentTextExtractorFactory` still lists only the
 extensions it always had.
