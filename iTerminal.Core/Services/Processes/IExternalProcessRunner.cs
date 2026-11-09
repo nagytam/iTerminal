@@ -28,6 +28,15 @@ public interface IExternalProcessRunner
         string? workingDirectory = null,
         CancellationToken cancellationToken = default);
 
+    /// <summary>Runs a text command, writing the supplied input to redirected stdin before waiting for it.</summary>
+    Task<ProcessOutput> RunWithStandardInputAsync(
+        string fileName,
+        IReadOnlyList<string> arguments,
+        Func<Stream, Task> writeStandardInput,
+        string? workingDirectory = null,
+        CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This process runner does not support redirected standard input.");
+
     /// <summary>
     /// Runs to completion, copying stdout byte for byte into <paramref name="destination"/> — for
     /// file contents and tar streams, which are not text. <paramref name="writeStandardInput"/>, when

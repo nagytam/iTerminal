@@ -9130,4 +9130,91 @@
   <data name="ImgInfo.Software" xml:space="preserve">
     <value>Software</value>
   </data>
+  <data name="Dialog.UserGroupTitle" xml:space="preserve">
+    <value>Gestione utenti e gruppi</value>
+  </data>
+  <data name="UserGroup.Loading" xml:space="preserve">
+    <value>Caricamento degli account locali...</value>
+  </data>
+  <data name="UserGroup.HintFilter" xml:space="preserve">
+    <value>Filtra l'elenco</value>
+  </data>
+  <data name="UserGroup.HintKeepFilter" xml:space="preserve">
+    <value>Mantieni il filtro</value>
+  </data>
+  <data name="UserGroup.HintClearFilter" xml:space="preserve">
+    <value>Cancella il filtro</value>
+  </data>
+  <data name="UserGroup.HintSwitch" xml:space="preserve">
+    <value>Passa tra utenti e gruppi</value>
+  </data>
+  <data name="UserGroup.HintAdd" xml:space="preserve">
+    <value>Aggiungi un utente o un gruppo</value>
+  </data>
+  <data name="UserGroup.HintEdit" xml:space="preserve">
+    <value>Modifica l'utente o il gruppo selezionato</value>
+  </data>
+  <data name="UserGroup.HintDelete" xml:space="preserve">
+    <value>Elimina l'account o il gruppo selezionato</value>
+  </data>
+  <data name="UserGroup.HintPassword" xml:space="preserve">
+    <value>Imposta la password dell'utente</value>
+  </data>
+  <data name="UserGroup.HintMembership" xml:space="preserve">
+    <value>Aggiungi o rimuovi l'appartenenza a un gruppo</value>
+  </data>
+  <data name="UserGroup.UsersTitle" xml:space="preserve">
+    <value>Utenti locali  [Tab: gruppi]</value>
+  </data>
+  <data name="UserGroup.GroupsTitle" xml:space="preserve">
+    <value>Gruppi locali  [Tab: utenti]</value>
+  </data>
+  <data name="UserGroup.Filter" xml:space="preserve">
+    <value>Filtro</value>
+  </data>
+  <data name="UserGroup.NoMatches" xml:space="preserve">
+    <value>Nessun account corrisponde al filtro.</value>
+  </data>
+  <data name="UserGroup.NoUsers" xml:space="preserve">
+    <value>Nessun utente locale.</value>
+  </data>
+  <data name="UserGroup.NoGroups" xml:space="preserve">
+    <value>Nessun gruppo locale.</value>
+  </data>
+  <data name="UserGroup.Busy" xml:space="preserve">
+    <value>Attendere...</value>
+  </data>
+  <data name="UserGroup.Working" xml:space="preserve">
+    <value>Applicazione della modifica all'account...</value>
+  </data>
+  <data name="UserGroup.GroupName" xml:space="preserve">
+    <value>Nome del gruppo</value>
+  </data>
+  <data name="UserGroup.UserName" xml:space="preserve">
+    <value>Nome utente</value>
+  </data>
+  <data name="UserGroup.FullName" xml:space="preserve">
+    <value>Nome completo</value>
+  </data>
+  <data name="UserGroup.EditFullName" xml:space="preserve">
+    <value>Nome completo per {0}</value>
+  </data>
+  <data name="UserGroup.Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="UserGroup.DeleteConfirm" xml:space="preserve">
+    <value>Eliminare {0} "{1}"?</value>
+  </data>
+  <data name="UserGroup.InvalidText" xml:space="preserve">
+    <value>I caratteri di controllo non sono consentiti.</value>
+  </data>
+  <data name="UserGroup.InvalidPassword" xml:space="preserve">
+    <value>La password non deve contenere interruzioni di riga.</value>
+  </data>
+  <data name="UserGroup.HintLine" xml:space="preserve">
+    <value>N: aggiungi  E: modifica utente  D: elimina  P: password  A/R: gruppo  /: filtra</value>
+  </data>
+  <data name="UserGroup.RenameGroup" xml:space="preserve">
+    <value>Nuovo nome per {0}</value>
+  </data>
 </root>

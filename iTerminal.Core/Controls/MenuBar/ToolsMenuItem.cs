@@ -56,7 +56,8 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Games.SnakeDialog? snakeDialog = null,
         iTerminal.Core.Dialogs.Games.TetrisDialog? tetrisDialog = null,
         iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
-        VirtualMachineManagerDialog? virtualMachineManagerDialog = null)
+        VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
+        iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -87,6 +88,7 @@ public class ToolsMenuItem : MenuItem
         if (stockBrowserDialog is not null) groups["office"].Add(new StockBrowserDialogCommand(stockBrowserDialog));
         if (calculatorDialog is not null) groups["office"].Add(new CalculatorDialogCommand(calculatorDialog));
         if (virtualMachineManagerDialog is not null && VirtualMachineManagerDialogCommand.IsSupported) groups["office"].Add(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
+        if (userGroupManagerDialog is not null && UserGroupManagerDialogCommand.IsSupported) groups["sys"].Add(new UserGroupManagerDialogCommand(userGroupManagerDialog));
         if (unitConverterDialog is not null) groups["office"].Add(new UnitConverterDialogCommand(unitConverterDialog));
         if (calendarDialog is not null) groups["office"].Add(new CalendarDialogCommand(calendarDialog));
         if (toDoListDialog is not null) groups["office"].Add(new ToDoListDialogCommand(toDoListDialog));

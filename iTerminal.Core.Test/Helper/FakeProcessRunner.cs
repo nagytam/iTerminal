@@ -48,11 +48,25 @@ internal sealed class FakeProcessRunner : IExternalProcessRunner
         return this;
     }
 
-    public Task<ProcessOutput> RunAsync(string fileName, IReadOnlyList<string> arguments, string? workingDirectory = null, CancellationToken cancellationToken = default)
+    public Task<ProcessOutput> RunAsync(string fileName, IReadOnlyList<string> arguments, string? workingDirectory = null, CancellationToken cancellationToken = default) =>
+        RunCoreAsync(fileName, arguments, workingDirectory, null, cancellationToken);
+
+    public Task<ProcessOutput> RunWithStandardInputAsync(string fileName, IReadOnlyList<string> arguments, Func<Stream, Task> writeStandardInput, string? workingDirectory = null, CancellationToken cancellationToken = default) =>
+        RunCoreAsync(fileName, arguments, workingDirectory, writeStandardInput, cancellationToken);
+
+    private async Task<ProcessOutput> RunCoreAsync(string fileName, IReadOnlyList<string> arguments, string? workingDirectory, Func<Stream, Task>? writeStandardInput, CancellationToken cancellationToken)
     {
-        var call = Record(fileName, arguments, []);
+        byte[] stdin = [];
+        if (writeStandardInput is not null)
+        {
+            using var buffer = new MemoryStream();
+            await writeStandardInput(buffer);
+            stdin = buffer.ToArray();
+        }
+
+        var call = Record(fileName, arguments, stdin);
         var rule = Find(call);
-        return Task.FromResult(rule?.Text() ?? new ProcessOutput(1, string.Empty, $"no fake answer for: {call.CommandLine}"));
+        return rule?.Text() ?? new ProcessOutput(1, string.Empty, $"no fake answer for: {call.CommandLine}");
     }
 
     public async Task<ProcessOutput> RunToStreamAsync(string fileName, IReadOnlyList<string> arguments, Stream destination, string? workingDirectory = null, Func<Stream, Task>? writeStandardInput = null, CancellationToken cancellationToken = default)

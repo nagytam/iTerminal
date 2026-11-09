@@ -175,6 +175,77 @@ public class DialogsTest
         await _app.WaitForNoStrayFramesAsync();
     }
 
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task UserGroupManagerCreatesRenamesAndDeletesSandboxAccounts()
+    {
+        await _app.Driver.ClickAsync("Tools");
+        for (int attempt = 0; attempt < 100
+            && !_app.Screen.Lines.Any(line => line.Contains("User and group manager", StringComparison.Ordinal));
+            attempt++)
+        {
+            await _app.PressAsync("Down");
+        }
+        await _app.WaitForTextAsync("User and group manager");
+        await _app.Driver.ClickAsync("User and group manager");
+        await _app.WaitUntilAsync(
+            () => _app.Driver.FocusedModal is Core.Dialogs.UsersAndGroups.UserGroupManagerDialog,
+            "the user and group manager to open from Tools");
+        await _app.WaitForTextAsync("sandbox-user");
+        SandboxServices.SystemSettings.UsersAndGroups sandbox = _app.Driver.GetRequiredService<SandboxServices.SystemSettings.UsersAndGroups>();
+
+        await _app.PressAsync("Tab");
+        await _app.PressAsync("n");
+        await _app.WaitForTextAsync("Group name");
+        await _app.TypeAsync("e2e-group");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("e2e-group");
+
+        await _app.PressAsync("e");
+        await _app.WaitForTextAsync("New name for e2e-group");
+        await _app.TypeAsync("e2e-renamed-group");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("e2e-renamed-group");
+
+        await _app.PressAsync("Tab");
+        await _app.PressAsync("n");
+        await _app.WaitForTextAsync("User name");
+        await _app.TypeAsync("e2e-user");
+        await _app.PressAsync("Enter");
+        await _app.TypeAsync("End-to-end User");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("Password");
+        const string password = "E2E-Secret-123";
+        await _app.TypeAsync(password);
+        await _app.WaitForTextAsync("●");
+        var passwordScreen = await _app.Driver.WaitForIdleAsync();
+        Assert.IsFalse(passwordScreen.ToString()!.Contains(password, StringComparison.Ordinal));
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("e2e-user");
+
+        await _app.PressAsync("a");
+        await _app.WaitForTextAsync("Group name");
+        await _app.TypeAsync("e2e-renamed-group");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("Membership changed.");
+
+        await _app.PressAsync("d");
+        await _app.WaitForTextAsync("Delete user \"e2e-user\"?");
+        await _app.PressAsync("y");
+        await _app.WaitUntilAsync(() => !sandbox.HasUser("e2e-user"), "the sandbox user to be deleted");
+
+        await _app.PressAsync("Tab");
+        await _app.PressAsync("d");
+        await _app.WaitForTextAsync("Delete group \"e2e-renamed-group\"?");
+        await _app.PressAsync("y");
+        await _app.WaitUntilAsync(() => !sandbox.HasGroup("e2e-renamed-group"), "the sandbox group to be deleted");
+
+        CollectionAssert.IsSubsetOf(new[] { "create-user", "create-group", "rename-group", "add-member", "delete-user", "delete-group" }, sandbox.Calls.ToArray());
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
     /// <summary>The encyclopedia through the whole app: type a term, search, read the introduction, read the whole article, open it in the browser.</summary>
     [Timeout(120_000)]
     [TestMethod]
