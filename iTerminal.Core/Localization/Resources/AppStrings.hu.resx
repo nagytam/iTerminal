@@ -8758,4 +8758,25 @@
   <data name="Checksum.RowSize" xml:space="preserve">
     <value>Méret</value>
   </data>
+  <data name="Git.Drive.Repos" xml:space="preserve">
+    <value>git: tárolók</value>
+  </data>
+  <data name="Git.Drive.Repo" xml:space="preserve">
+    <value>git: {0} — ágak, címkék, commitok</value>
+  </data>
+  <data name="Docker.Drive.Containers" xml:space="preserve">
+    <value>docker: konténerek</value>
+  </data>
+  <data name="Docker.Drive.Hints" xml:space="preserve">
+    <value>Shift+F9: indít/leállít  Ctrl+Shift+F9: újraindít</value>
+  </data>
+  <data name="Recycle.Drive.Title" xml:space="preserve">
+    <value>Lomtár</value>
+  </data>
+  <data name="Recycle.Drive.Hints" xml:space="preserve">
+    <value>Enter:visszaállít  F8:végleges törlés</value>
+  </data>
+  <data name="Listing.UpMark" xml:space="preserve">
+    <value>Fel</value>
+  </data>
 </root>

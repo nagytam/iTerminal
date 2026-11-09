@@ -8758,4 +8758,25 @@
   <data name="Checksum.RowSize" xml:space="preserve">
     <value>Größe</value>
   </data>
+  <data name="Git.Drive.Repos" xml:space="preserve">
+    <value>git: Repositories</value>
+  </data>
+  <data name="Git.Drive.Repo" xml:space="preserve">
+    <value>git: {0} — Branches, Tags, Commits</value>
+  </data>
+  <data name="Docker.Drive.Containers" xml:space="preserve">
+    <value>docker: Container</value>
+  </data>
+  <data name="Docker.Drive.Hints" xml:space="preserve">
+    <value>Umschalt+F9: starten/stoppen  Strg+Umschalt+F9: neu starten</value>
+  </data>
+  <data name="Recycle.Drive.Title" xml:space="preserve">
+    <value>Papierkorb</value>
+  </data>
+  <data name="Recycle.Drive.Hints" xml:space="preserve">
+    <value>Enter:wiederherstellen  F8:endgültig löschen</value>
+  </data>
+  <data name="Listing.UpMark" xml:space="preserve">
+    <value>Hoch</value>
+  </data>
 </root>

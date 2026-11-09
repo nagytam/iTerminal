@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -38,7 +39,7 @@ public sealed class ContentModelPreview : ContentModelBase, IDisposable
     private string? _shownKey;
     private int _generation;
     private CancellationTokenSource? _buildCancellation;
-    private string _title = "Preview";
+    private string _title = UiText.Get("Preview.Title", "Preview");
     private string _summary = string.Empty;
     private bool _isDisposed;
 
