@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Services.Processes;
 using iTerminal.Core.Services.Signing;
 using System.Globalization;
@@ -108,7 +109,7 @@ public sealed partial class PrintService : IPrintService
 
         if (!Path.IsPathRooted(filePath) || filePath.Any(char.IsControl) || !File.Exists(filePath))
         {
-            return new PrintResult(false, "Only a file on this computer can be printed.");
+            return new PrintResult(false, UiText.Get("Print.LocalOnly", "Only a file on this computer can be printed."));
         }
 
         copies = Math.Clamp(copies, 1, MaxCopies);
@@ -149,16 +150,16 @@ public sealed partial class PrintService : IPrintService
     }
 
     public Task<PrintResult> HoldJobAsync(string printer, int jobId, CancellationToken cancellationToken = default) =>
-        ChangeJobAsync(printer, jobId, "Suspend-PrintJob", ["-H", "hold"], "is held", cancellationToken);
+        ChangeJobAsync(printer, jobId, "Suspend-PrintJob", ["-H", "hold"], "Print.JobHeld", "Job {0} is held.", cancellationToken);
 
     public Task<PrintResult> ResumeJobAsync(string printer, int jobId, CancellationToken cancellationToken = default) =>
-        ChangeJobAsync(printer, jobId, "Resume-PrintJob", ["-H", "resume"], "goes on", cancellationToken);
+        ChangeJobAsync(printer, jobId, "Resume-PrintJob", ["-H", "resume"], "Print.JobResumed", "Job {0} goes on.", cancellationToken);
 
     public Task<PrintResult> CancelJobAsync(string printer, int jobId, CancellationToken cancellationToken = default) =>
-        ChangeJobAsync(printer, jobId, "Remove-PrintJob", null, "was cancelled", cancellationToken);
+        ChangeJobAsync(printer, jobId, "Remove-PrintJob", null, "Print.JobCancelled", "Job {0} was cancelled.", cancellationToken);
 
     private async Task<PrintResult> ChangeJobAsync(
-        string printer, int jobId, string cmdlet, string[]? cupsOptions, string outcome, CancellationToken cancellationToken)
+        string printer, int jobId, string cmdlet, string[]? cupsOptions, string outcomeKey, string outcomeEnglish, CancellationToken cancellationToken)
     {
         if (CheckPrinter(printer) is { } refusal)
         {
@@ -167,7 +168,7 @@ public sealed partial class PrintService : IPrintService
 
         if (jobId < 0)
         {
-            return new PrintResult(false, "That is not a job.");
+            return new PrintResult(false, UiText.Get("Print.NotAJob", "That is not a job."));
         }
 
         var id = jobId.ToString(CultureInfo.InvariantCulture);
@@ -186,13 +187,13 @@ public sealed partial class PrintService : IPrintService
                 : await RunAsync("lp", ["-i", request, .. cupsOptions], cancellationToken);
         }
 
-        return output.Success ? new PrintResult(true, $"Job {id} {outcome}.") : new PrintResult(false, Describe(output));
+        return output.Success ? new PrintResult(true, string.Format(UiText.Get(outcomeKey, outcomeEnglish), id)) : new PrintResult(false, Describe(output));
     }
 
     /// <summary>The reason <paramref name="printer"/> may not be handed to a tool, or null.</summary>
     private static string? CheckPrinter(string printer) =>
-        string.IsNullOrWhiteSpace(printer) ? "Choose a printer first."
-        : printer.StartsWith('-') || printer.Any(char.IsControl) ? "That is not a printer name."
+        string.IsNullOrWhiteSpace(printer) ? UiText.Get("Print.ChoosePrinter", "Choose a printer first.")
+        : printer.StartsWith('-') || printer.Any(char.IsControl) ? UiText.Get("Print.NotPrinter", "That is not a printer name.")
         : null;
 
     private static string Describe(ProcessOutput output) =>

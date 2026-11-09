@@ -7828,4 +7828,88 @@
   <data name="Music.Prog.Indexing" xml:space="preserve">
     <value>Indexation {0}/{1}{2}</value>
   </data>
+  <data name="Print.LocalOnly" xml:space="preserve">
+    <value>Seul un fichier de cet ordinateur peut être imprimé.</value>
+  </data>
+  <data name="Print.NotAJob" xml:space="preserve">
+    <value>Ce n’est pas un travail d’impression.</value>
+  </data>
+  <data name="Print.ChoosePrinter" xml:space="preserve">
+    <value>Choisissez d’abord une imprimante.</value>
+  </data>
+  <data name="Print.NotPrinter" xml:space="preserve">
+    <value>Ce n’est pas un nom d’imprimante.</value>
+  </data>
+  <data name="Print.JobHeld" xml:space="preserve">
+    <value>Le travail {0} est suspendu.</value>
+  </data>
+  <data name="Print.JobResumed" xml:space="preserve">
+    <value>Le travail {0} reprend.</value>
+  </data>
+  <data name="Print.JobCancelled" xml:space="preserve">
+    <value>Le travail {0} a été annulé.</value>
+  </data>
+  <data name="Preview.Title" xml:space="preserve">
+    <value>Aperçu</value>
+  </data>
+  <data name="Preview.Nothing" xml:space="preserve">
+    <value>Rien sous le curseur.</value>
+  </data>
+  <data name="Preview.WayUp" xml:space="preserve">
+    <value>Le chemin vers le haut — placez le curseur sur un fichier ou un dossier.</value>
+  </data>
+  <data name="Preview.FileGone" xml:space="preserve">
+    <value>Le fichier a disparu.</value>
+  </data>
+  <data name="Preview.Cannot" xml:space="preserve">
+    <value>Aperçu impossible : {0}</value>
+  </data>
+  <data name="Preview.FolderGone" xml:space="preserve">
+    <value>Le dossier a disparu.</value>
+  </data>
+  <data name="Preview.CannotReadFolder" xml:space="preserve">
+    <value>Impossible de lire le dossier : {0}</value>
+  </data>
+  <data name="Workspace.NeedsName" xml:space="preserve">
+    <value>Donnez un nom à l’espace de travail.</value>
+  </data>
+  <data name="Workspace.Exists" xml:space="preserve">
+    <value>Il existe déjà un espace de travail nommé « {0} ».</value>
+  </data>
+  <data name="Workspace.Missing" xml:space="preserve">
+    <value>Il n’existe aucun espace de travail nommé « {0} ».</value>
+  </data>
+  <data name="Elevate.Already" xml:space="preserve">
+    <value>Déjà exécuté avec des droits élevés.</value>
+  </data>
+  <data name="Elevate.NotStarted" xml:space="preserve">
+    <value>Windows n’a pas lancé la copie avec droits élevés.</value>
+  </data>
+  <data name="Elevate.Dismissed" xml:space="preserve">
+    <value>La demande d’administrateur a été fermée.</value>
+  </data>
+  <data name="Music.NoOutput" xml:space="preserve">
+    <value>Aucun moteur de sortie audio n’est disponible sur ce système.</value>
+  </data>
+  <data name="Music.NoSeek" xml:space="preserve">
+    <value>Ce format ne permet pas de se déplacer.</value>
+  </data>
+  <data name="Music.DeviceStopped" xml:space="preserve">
+    <value>Le périphérique audio n’accepte plus de données.</value>
+  </data>
+  <data name="Startup.NoPid" xml:space="preserve">
+    <value>L’autre instance n’a pas pu être identifiée (aucun identifiant de processus enregistré).</value>
+  </data>
+  <data name="Startup.OwnLock" xml:space="preserve">
+    <value>Le verrou appartient à cette instance.</value>
+  </data>
+  <data name="Startup.NotITerminal" xml:space="preserve">
+    <value>Le processus {0} n’est pas une instance d’iTerminal ({1}) ; il n’est pas arrêté.</value>
+  </data>
+  <data name="Startup.DidNotExit" xml:space="preserve">
+    <value>Le processus {0} ne s’est pas arrêté.</value>
+  </data>
+  <data name="Startup.LockInUse" xml:space="preserve">
+    <value>Le fichier verrou est toujours utilisé et n’a pas pu être supprimé.</value>
+  </data>
 </root>

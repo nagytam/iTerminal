@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -97,14 +98,14 @@ public sealed class FilePreviewService(
         width = Math.Max(10, width);
         if (entry is null)
         {
-            return FilePreview.Message("Preview", "Nothing under the cursor.");
+            return FilePreview.Message(UiText.Get("Preview.Title", "Preview"), UiText.Get("Preview.Nothing", "Nothing under the cursor."));
         }
 
         var url = entry.Url;
         var name = entry.DisplayName;
         if (name == "..")
         {
-            return FilePreview.Message("Preview", "The way up — move the cursor onto a file or folder.");
+            return FilePreview.Message(UiText.Get("Preview.Title", "Preview"), UiText.Get("Preview.WayUp", "The way up — move the cursor onto a file or folder."));
         }
 
         try
@@ -123,7 +124,7 @@ public sealed class FilePreviewService(
             var isLocal = url.ContainerType == ContainerType.FileSystem;
             if (isLocal && !File.Exists(url.FullName))
             {
-                return FilePreview.Message(name, "The file is gone.");
+                return FilePreview.Message(name, UiText.Get("Preview.FileGone", "The file is gone."));
             }
 
             var size = isLocal ? new FileInfo(url.FullName).Length : (entry as Model.ContentModels.VirtualDriveEntry)?.Size ?? url.Length;
@@ -157,7 +158,7 @@ public sealed class FilePreviewService(
         }
         catch (Exception exception)
         {
-            return FilePreview.Message(name, $"Cannot preview: {exception.Message}");
+            return FilePreview.Message(name, string.Format(UiText.Get("Preview.Cannot", "Cannot preview: {0}"), exception.Message));
         }
     }
 
@@ -171,7 +172,7 @@ public sealed class FilePreviewService(
             var directory = new DirectoryInfo(url.FullName);
             if (!directory.Exists)
             {
-                return FilePreview.Message(name, "The folder is gone.");
+                return FilePreview.Message(name, UiText.Get("Preview.FolderGone", "The folder is gone."));
             }
 
             List<FileSystemInfo> children;
@@ -181,7 +182,7 @@ public sealed class FilePreviewService(
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
             {
-                return FilePreview.Message(name, $"Cannot read the folder: {exception.Message}");
+                return FilePreview.Message(name, string.Format(UiText.Get("Preview.CannotReadFolder", "Cannot read the folder: {0}"), exception.Message));
             }
 
             var folders = children.OfType<DirectoryInfo>().OrderBy(d => d.Name, StringComparer.OrdinalIgnoreCase).ToList();

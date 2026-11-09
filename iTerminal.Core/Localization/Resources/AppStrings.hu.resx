@@ -7828,4 +7828,88 @@
   <data name="Music.Prog.Indexing" xml:space="preserve">
     <value>Indexelés {0}/{1}{2}</value>
   </data>
+  <data name="Print.LocalOnly" xml:space="preserve">
+    <value>Csak a számítógépen lévő fájl nyomtatható.</value>
+  </data>
+  <data name="Print.NotAJob" xml:space="preserve">
+    <value>Ez nem nyomtatási feladat.</value>
+  </data>
+  <data name="Print.ChoosePrinter" xml:space="preserve">
+    <value>Előbb válasszon nyomtatót.</value>
+  </data>
+  <data name="Print.NotPrinter" xml:space="preserve">
+    <value>Ez nem nyomtatónév.</value>
+  </data>
+  <data name="Print.JobHeld" xml:space="preserve">
+    <value>A(z) {0}. feladat felfüggesztve.</value>
+  </data>
+  <data name="Print.JobResumed" xml:space="preserve">
+    <value>A(z) {0}. feladat folytatódik.</value>
+  </data>
+  <data name="Print.JobCancelled" xml:space="preserve">
+    <value>A(z) {0}. feladat megszakítva.</value>
+  </data>
+  <data name="Preview.Title" xml:space="preserve">
+    <value>Előnézet</value>
+  </data>
+  <data name="Preview.Nothing" xml:space="preserve">
+    <value>A kurzor alatt nincs semmi.</value>
+  </data>
+  <data name="Preview.WayUp" xml:space="preserve">
+    <value>A felfelé vezető út — vigye a kurzort egy fájlra vagy mappára.</value>
+  </data>
+  <data name="Preview.FileGone" xml:space="preserve">
+    <value>A fájl eltűnt.</value>
+  </data>
+  <data name="Preview.Cannot" xml:space="preserve">
+    <value>Az előnézet nem készíthető el: {0}</value>
+  </data>
+  <data name="Preview.FolderGone" xml:space="preserve">
+    <value>A mappa eltűnt.</value>
+  </data>
+  <data name="Preview.CannotReadFolder" xml:space="preserve">
+    <value>A mappa nem olvasható: {0}</value>
+  </data>
+  <data name="Workspace.NeedsName" xml:space="preserve">
+    <value>Adjon nevet a munkaterületnek.</value>
+  </data>
+  <data name="Workspace.Exists" xml:space="preserve">
+    <value>Már van „{0}” nevű munkaterület.</value>
+  </data>
+  <data name="Workspace.Missing" xml:space="preserve">
+    <value>Nincs „{0}” nevű munkaterület.</value>
+  </data>
+  <data name="Elevate.Already" xml:space="preserve">
+    <value>Már emelt jogosultsággal fut.</value>
+  </data>
+  <data name="Elevate.NotStarted" xml:space="preserve">
+    <value>A Windows nem indította el az emelt jogosultságú példányt.</value>
+  </data>
+  <data name="Elevate.Dismissed" xml:space="preserve">
+    <value>A rendszergazdai kérést elvetették.</value>
+  </data>
+  <data name="Music.NoOutput" xml:space="preserve">
+    <value>Ezen a rendszeren nincs elérhető hangkimeneti motor.</value>
+  </data>
+  <data name="Music.NoSeek" xml:space="preserve">
+    <value>Ebben a formátumban nem lehet tekerni.</value>
+  </data>
+  <data name="Music.DeviceStopped" xml:space="preserve">
+    <value>A hangeszköz leállt az adatok fogadásával.</value>
+  </data>
+  <data name="Startup.NoPid" xml:space="preserve">
+    <value>A másik példány nem azonosítható (nincs rögzített folyamatazonosító).</value>
+  </data>
+  <data name="Startup.OwnLock" xml:space="preserve">
+    <value>A zárolás ehhez a példányhoz tartozik.</value>
+  </data>
+  <data name="Startup.NotITerminal" xml:space="preserve">
+    <value>A(z) {0}. folyamat nem iTerminal-példány ({1}); nem állítom le.</value>
+  </data>
+  <data name="Startup.DidNotExit" xml:space="preserve">
+    <value>A(z) {0}. folyamat nem lépett ki.</value>
+  </data>
+  <data name="Startup.LockInUse" xml:space="preserve">
+    <value>A zárolófájl még használatban van, és nem távolítható el.</value>
+  </data>
 </root>

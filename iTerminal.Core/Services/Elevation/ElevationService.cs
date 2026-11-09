@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -133,7 +134,7 @@ public sealed class ElevationService(IInteractiveShellService shellService) : IE
     {
         if (IsElevated)
         {
-            return Task.FromResult(new ElevationOutcome(ElevationResult.Failed, "Already running with elevated rights."));
+            return Task.FromResult(new ElevationOutcome(ElevationResult.Failed, UiText.Get("Elevate.Already", "Already running with elevated rights.")));
         }
 
         return OperatingSystem.IsWindows() ? RestartWindowsAsync(cancellationToken) : RestartUnixAsync(cancellationToken);
@@ -155,12 +156,12 @@ public sealed class ElevationService(IInteractiveShellService shellService) : IE
                     WorkingDirectory = Environment.CurrentDirectory,
                 });
                 return process is null
-                    ? new ElevationOutcome(ElevationResult.Failed, "Windows did not start the elevated copy.")
+                    ? new ElevationOutcome(ElevationResult.Failed, UiText.Get("Elevate.NotStarted", "Windows did not start the elevated copy."))
                     : new ElevationOutcome(ElevationResult.Started);
             }
             catch (Win32Exception exception) when (exception.NativeErrorCode == ErrorCancelled)
             {
-                return new ElevationOutcome(ElevationResult.Cancelled, "The administrator prompt was dismissed.");
+                return new ElevationOutcome(ElevationResult.Cancelled, UiText.Get("Elevate.Dismissed", "The administrator prompt was dismissed."));
             }
             catch (Win32Exception exception)
             {
@@ -242,7 +243,7 @@ public sealed class ElevationService(IInteractiveShellService shellService) : IE
                 }
                 catch (Win32Exception exception) when (exception.NativeErrorCode == ErrorCancelled)
                 {
-                    return new ElevationOutcome(ElevationResult.Cancelled, "The administrator prompt was dismissed.");
+                    return new ElevationOutcome(ElevationResult.Cancelled, UiText.Get("Elevate.Dismissed", "The administrator prompt was dismissed."));
                 }
                 catch (Win32Exception exception)
                 {

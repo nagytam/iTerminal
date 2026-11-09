@@ -7969,4 +7969,88 @@
   <data name="Music.Prog.Indexing" xml:space="preserve">
     <value>Indexing {0}/{1}{2}</value>
   </data>
+  <data name="Print.LocalOnly" xml:space="preserve">
+    <value>Only a file on this computer can be printed.</value>
+  </data>
+  <data name="Print.NotAJob" xml:space="preserve">
+    <value>That is not a job.</value>
+  </data>
+  <data name="Print.ChoosePrinter" xml:space="preserve">
+    <value>Choose a printer first.</value>
+  </data>
+  <data name="Print.NotPrinter" xml:space="preserve">
+    <value>That is not a printer name.</value>
+  </data>
+  <data name="Print.JobHeld" xml:space="preserve">
+    <value>Job {0} is held.</value>
+  </data>
+  <data name="Print.JobResumed" xml:space="preserve">
+    <value>Job {0} goes on.</value>
+  </data>
+  <data name="Print.JobCancelled" xml:space="preserve">
+    <value>Job {0} was cancelled.</value>
+  </data>
+  <data name="Preview.Title" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Preview.Nothing" xml:space="preserve">
+    <value>Nothing under the cursor.</value>
+  </data>
+  <data name="Preview.WayUp" xml:space="preserve">
+    <value>The way up — move the cursor onto a file or folder.</value>
+  </data>
+  <data name="Preview.FileGone" xml:space="preserve">
+    <value>The file is gone.</value>
+  </data>
+  <data name="Preview.Cannot" xml:space="preserve">
+    <value>Cannot preview: {0}</value>
+  </data>
+  <data name="Preview.FolderGone" xml:space="preserve">
+    <value>The folder is gone.</value>
+  </data>
+  <data name="Preview.CannotReadFolder" xml:space="preserve">
+    <value>Cannot read the folder: {0}</value>
+  </data>
+  <data name="Workspace.NeedsName" xml:space="preserve">
+    <value>Give the workspace a name.</value>
+  </data>
+  <data name="Workspace.Exists" xml:space="preserve">
+    <value>There is already a workspace called '{0}'.</value>
+  </data>
+  <data name="Workspace.Missing" xml:space="preserve">
+    <value>There is no workspace called '{0}'.</value>
+  </data>
+  <data name="Elevate.Already" xml:space="preserve">
+    <value>Already running with elevated rights.</value>
+  </data>
+  <data name="Elevate.NotStarted" xml:space="preserve">
+    <value>Windows did not start the elevated copy.</value>
+  </data>
+  <data name="Elevate.Dismissed" xml:space="preserve">
+    <value>The administrator prompt was dismissed.</value>
+  </data>
+  <data name="Music.NoOutput" xml:space="preserve">
+    <value>No audio output backend is available on this system.</value>
+  </data>
+  <data name="Music.NoSeek" xml:space="preserve">
+    <value>This format cannot be seeked.</value>
+  </data>
+  <data name="Music.DeviceStopped" xml:space="preserve">
+    <value>The audio device stopped accepting data.</value>
+  </data>
+  <data name="Startup.NoPid" xml:space="preserve">
+    <value>The other instance could not be identified (no process id recorded).</value>
+  </data>
+  <data name="Startup.OwnLock" xml:space="preserve">
+    <value>The lock belongs to this instance.</value>
+  </data>
+  <data name="Startup.NotITerminal" xml:space="preserve">
+    <value>Process {0} is not an iTerminal instance ({1}); not stopping it.</value>
+  </data>
+  <data name="Startup.DidNotExit" xml:space="preserve">
+    <value>Process {0} did not exit.</value>
+  </data>
+  <data name="Startup.LockInUse" xml:space="preserve">
+    <value>The lock file is still in use and could not be removed.</value>
+  </data>
 </root>

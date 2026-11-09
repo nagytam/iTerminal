@@ -7828,4 +7828,88 @@
   <data name="Music.Prog.Indexing" xml:space="preserve">
     <value>Indexando {0}/{1}{2}</value>
   </data>
+  <data name="Print.LocalOnly" xml:space="preserve">
+    <value>Solo se puede imprimir un archivo de este equipo.</value>
+  </data>
+  <data name="Print.NotAJob" xml:space="preserve">
+    <value>Eso no es un trabajo de impresión.</value>
+  </data>
+  <data name="Print.ChoosePrinter" xml:space="preserve">
+    <value>Elija primero una impresora.</value>
+  </data>
+  <data name="Print.NotPrinter" xml:space="preserve">
+    <value>Ese no es un nombre de impresora.</value>
+  </data>
+  <data name="Print.JobHeld" xml:space="preserve">
+    <value>El trabajo {0} está en espera.</value>
+  </data>
+  <data name="Print.JobResumed" xml:space="preserve">
+    <value>El trabajo {0} continúa.</value>
+  </data>
+  <data name="Print.JobCancelled" xml:space="preserve">
+    <value>El trabajo {0} se canceló.</value>
+  </data>
+  <data name="Preview.Title" xml:space="preserve">
+    <value>Vista previa</value>
+  </data>
+  <data name="Preview.Nothing" xml:space="preserve">
+    <value>Nada bajo el cursor.</value>
+  </data>
+  <data name="Preview.WayUp" xml:space="preserve">
+    <value>El camino hacia arriba — mueva el cursor a un archivo o carpeta.</value>
+  </data>
+  <data name="Preview.FileGone" xml:space="preserve">
+    <value>El archivo ya no está.</value>
+  </data>
+  <data name="Preview.Cannot" xml:space="preserve">
+    <value>No se puede previsualizar: {0}</value>
+  </data>
+  <data name="Preview.FolderGone" xml:space="preserve">
+    <value>La carpeta ya no está.</value>
+  </data>
+  <data name="Preview.CannotReadFolder" xml:space="preserve">
+    <value>No se puede leer la carpeta: {0}</value>
+  </data>
+  <data name="Workspace.NeedsName" xml:space="preserve">
+    <value>Dé un nombre al espacio de trabajo.</value>
+  </data>
+  <data name="Workspace.Exists" xml:space="preserve">
+    <value>Ya existe un espacio de trabajo llamado «{0}».</value>
+  </data>
+  <data name="Workspace.Missing" xml:space="preserve">
+    <value>No existe ningún espacio de trabajo llamado «{0}».</value>
+  </data>
+  <data name="Elevate.Already" xml:space="preserve">
+    <value>Ya se ejecuta con derechos elevados.</value>
+  </data>
+  <data name="Elevate.NotStarted" xml:space="preserve">
+    <value>Windows no inició la copia con derechos elevados.</value>
+  </data>
+  <data name="Elevate.Dismissed" xml:space="preserve">
+    <value>Se descartó la solicitud de administrador.</value>
+  </data>
+  <data name="Music.NoOutput" xml:space="preserve">
+    <value>No hay ningún motor de salida de audio disponible en este sistema.</value>
+  </data>
+  <data name="Music.NoSeek" xml:space="preserve">
+    <value>Este formato no permite buscar.</value>
+  </data>
+  <data name="Music.DeviceStopped" xml:space="preserve">
+    <value>El dispositivo de audio dejó de aceptar datos.</value>
+  </data>
+  <data name="Startup.NoPid" xml:space="preserve">
+    <value>No se pudo identificar la otra instancia (no hay id de proceso registrado).</value>
+  </data>
+  <data name="Startup.OwnLock" xml:space="preserve">
+    <value>El bloqueo pertenece a esta instancia.</value>
+  </data>
+  <data name="Startup.NotITerminal" xml:space="preserve">
+    <value>El proceso {0} no es una instancia de iTerminal ({1}); no se detiene.</value>
+  </data>
+  <data name="Startup.DidNotExit" xml:space="preserve">
+    <value>El proceso {0} no terminó.</value>
+  </data>
+  <data name="Startup.LockInUse" xml:space="preserve">
+    <value>El archivo de bloqueo sigue en uso y no se pudo eliminar.</value>
+  </data>
 </root>
