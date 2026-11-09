@@ -116,6 +116,21 @@ public class LogHighlightingAndLayoutTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void APatternThatTimesOut_IsSkipped_AndDoesNotBreakTheLine()
+    {
+        // Catastrophic backtracking: the 50 ms match timeout fires while the matches are being read.
+        LogHighlighter slow = LogHighlighter.Create("(a+)+$", Color.Red);
+        LogHighlighter url = LogHighlighter.Create("https?://[^ ]+", Color.Blue);
+        string line = new string('a', 40) + "! https://example.com";
+
+        LogSpan[] spans = [.. LogHighlighters.Find(line, [slow, url], [])];
+
+        Assert.AreEqual(1, spans.Length);
+        Assert.AreEqual("https://example.com", line.Substring(spans[0].Start, spans[0].Length));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void AVeryLongLine_IsNotHighlighted()
     {
         string line = new string('1', LogHighlighters.MaxLineLength + 1);
