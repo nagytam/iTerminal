@@ -66,11 +66,11 @@ public class PagedDataSourceTest
 
         Assert.IsFalse(source.TryGet(25, out _));
         source.Prefetch(25, 1);
-        WaitFor(() => source.TryGet(25, out _));
+        WaitFor(() => source.TryGet(25, out _) && Volatile.Read(ref changed) >= 1);
 
         Assert.IsTrue(source.TryGet(25, out int item));
         Assert.AreEqual(25, item);
-        Assert.IsTrue(changed >= 1);
+        Assert.IsTrue(Volatile.Read(ref changed) >= 1);
     }
 
     [Timeout(60_000)]
