@@ -8779,4 +8779,34 @@
   <data name="Listing.UpMark" xml:space="preserve">
     <value>Su</value>
   </data>
+  <data name="Stocks.Day" xml:space="preserve">
+    <value>giorno {0}–{1}</value>
+  </data>
+  <data name="Stocks.Year" xml:space="preserve">
+    <value>52 sett {0} ▕{1}▏ {2}</value>
+  </data>
+  <data name="Stocks.PrevClose" xml:space="preserve">
+    <value>chiusura prec. {0} {1}</value>
+  </data>
+  <data name="Stocks.Volume" xml:space="preserve">
+    <value>vol. {0}</value>
+  </data>
+  <data name="Stocks.LastTrade" xml:space="preserve">
+    <value>ultimo scambio {0}</value>
+  </data>
+  <data name="Stocks.Summary" xml:space="preserve">
+    <value>{0} in rialzo   {1} in ribasso   {2} invariati</value>
+  </data>
+  <data name="Stocks.NotQuoted" xml:space="preserve">
+    <value>{0} senza quotazione</value>
+  </data>
+  <data name="Preview.Close" xml:space="preserve">
+    <value>Ctrl+F3: chiudi</value>
+  </data>
+  <data name="Props.BytesOne" xml:space="preserve">
+    <value>({0} byte)</value>
+  </data>
+  <data name="Props.BytesMany" xml:space="preserve">
+    <value>({0} byte)</value>
+  </data>
 </root>

@@ -630,24 +630,24 @@ public class StockBrowserDialog : SplitPaneDialog
             var parts = new List<string> { quote.Name };
             if (quote is { DayLow: { } dayLow, DayHigh: { } dayHigh })
             {
-                parts.Add($"day {FormatPrice(dayLow)}–{FormatPrice(dayHigh)}");
+                parts.Add(string.Format(UiText.Get("Stocks.Day", "day {0}–{1}"), FormatPrice(dayLow), FormatPrice(dayHigh)));
             }
 
             if (quote is { YearLow: { } yearLow, YearHigh: { } yearHigh })
             {
                 var position = yearHigh > yearLow ? (double)((quote.Price - yearLow) / (yearHigh - yearLow)) : 0;
-                parts.Add($"52w {FormatPrice(yearLow)} ▕{BarChart.BuildBar(position, 8)}▏ {FormatPrice(yearHigh)}");
+                parts.Add(string.Format(UiText.Get("Stocks.Year", "52w {0} ▕{1}▏ {2}"), FormatPrice(yearLow), BarChart.BuildBar(position, 8), FormatPrice(yearHigh)));
             }
 
-            parts.Add($"prev close {FormatPrice(quote.PreviousClose)} {quote.Currency}");
+            parts.Add(string.Format(UiText.Get("Stocks.PrevClose", "prev close {0} {1}"), FormatPrice(quote.PreviousClose), quote.Currency));
             if (quote.Volume is { } volume)
             {
-                parts.Add($"vol {volume.ToString("N0", CultureInfo.InvariantCulture)}");
+                parts.Add(string.Format(UiText.Get("Stocks.Volume", "vol {0}"), volume.ToString("N0", CultureInfo.InvariantCulture)));
             }
 
             if (quote.MarketTime is { } last)
             {
-                parts.Add($"last trade {last:yyyy-MM-dd HH:mm}");
+                parts.Add(string.Format(UiText.Get("Stocks.LastTrade", "last trade {0}"), last.ToString("yyyy-MM-dd HH:mm")));
             }
 
             text = " " + string.Join("   ", parts);
@@ -665,7 +665,7 @@ public class StockBrowserDialog : SplitPaneDialog
         // While adding, the input box has taken the footer, so the status lives on this line.
         var text = _adding
             ? " " + _message
-            : $" {up} up   {down} down   {quotes.Count - up - down} unchanged" + (_rowItems.Count > quotes.Count ? $"   {_rowItems.Count - quotes.Count} not quoted" : string.Empty);
+            : " " + string.Format(UiText.Get("Stocks.Summary", "{0} up   {1} down   {2} unchanged"), up, down, quotes.Count - up - down) + (_rowItems.Count > quotes.Count ? "   " + string.Format(UiText.Get("Stocks.NotQuoted", "{0} not quoted"), _rowItems.Count - quotes.Count) : string.Empty);
         WriteLine(buffer, x, y, w, text, colorScheme.Foreground, colorScheme.Background);
     }
 

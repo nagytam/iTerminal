@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Helper;
 using System.Globalization;
 
@@ -260,7 +261,9 @@ public class FilePropertiesService : IFilePropertiesService
     /// <summary>A size for reading and for checking: "1.4 MB (1,468,006 bytes)".</summary>
     public static string FormatSize(long bytes) =>
         // ToFileSize pads its unit for the panel's size column ("40  B"); here it is prose.
-        $"{bytes.ToFileSize().Trim().Replace("  ", " ")} ({bytes.ToString("N0", CultureInfo.InvariantCulture)} byte{(bytes == 1 ? string.Empty : "s")})";
+        bytes.ToFileSize().Trim().Replace("  ", " ") + " " + (bytes == 1
+            ? string.Format(UiText.Get("Props.BytesOne", "({0} byte)"), bytes.ToString("N0", CultureInfo.InvariantCulture))
+            : string.Format(UiText.Get("Props.BytesMany", "({0} bytes)"), bytes.ToString("N0", CultureInfo.InvariantCulture)));
 
     /// <summary>"1 file", "2 files".</summary>
     public static string Count(long count, string noun) =>
