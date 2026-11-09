@@ -8323,6 +8323,24 @@
   <data name="Ai.Hints" xml:space="preserve">
     <value>Ctrl+F2: detalles, Ctrl+B: barra de terminal</value>
   </data>
+  <data name="Ai.Approval.Title" xml:space="preserve">
+    <value>¿Aprobar la acción de archivos de IA?</value>
+  </data>
+  <data name="Ai.Approval.Hint" xml:space="preserve">
+    <value>Y: aprobar    N/Esc: cancelar</value>
+  </data>
+  <data name="Ai.Approval.HintApprove" xml:space="preserve">
+    <value>Aprobar las acciones mostradas</value>
+  </data>
+  <data name="Ai.Approval.HintCancel" xml:space="preserve">
+    <value>Cancelar sin cambios</value>
+  </data>
+  <data name="Ai.Approval.DeleteSummary" xml:space="preserve">
+    <value>La IA solicita mover {0} elemento(s) de {1} a la papelera. Revise todos los destinos.</value>
+  </data>
+  <data name="Ai.Approval.SyncSummary" xml:space="preserve">
+    <value>La IA solicita sincronizar {0} con {1}. Revise el plan completo.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>Ningún comando coincide.</value>
   </data>

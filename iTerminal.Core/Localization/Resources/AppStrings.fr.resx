@@ -8323,6 +8323,24 @@
   <data name="Ai.Hints" xml:space="preserve">
     <value>Ctrl+F2 : détails, Ctrl+B : barre de terminal</value>
   </data>
+  <data name="Ai.Approval.Title" xml:space="preserve">
+    <value>Approuver l’action de fichier IA ?</value>
+  </data>
+  <data name="Ai.Approval.Hint" xml:space="preserve">
+    <value>Y : approuver    N/Esc : annuler</value>
+  </data>
+  <data name="Ai.Approval.HintApprove" xml:space="preserve">
+    <value>Approuver les actions affichées</value>
+  </data>
+  <data name="Ai.Approval.HintCancel" xml:space="preserve">
+    <value>Annuler sans changement</value>
+  </data>
+  <data name="Ai.Approval.DeleteSummary" xml:space="preserve">
+    <value>L’IA demande de déplacer {0} élément(s) de {1} vers la corbeille. Vérifiez toutes les cibles ci-dessous.</value>
+  </data>
+  <data name="Ai.Approval.SyncSummary" xml:space="preserve">
+    <value>L’IA demande de synchroniser {0} avec {1}. Vérifiez le plan complet ci-dessous.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>Aucune commande ne correspond.</value>
   </data>

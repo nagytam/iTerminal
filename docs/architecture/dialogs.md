@@ -129,6 +129,12 @@ plan that deletes is always seen before it runs. The test seam is `StartPreview`
 properties; the tests cover the option keys, the preview, the second Enter for deletions, and the two refusals (no task
 services, no panel folder).
 
+### AI action approval (`AiActionApprovalDialog`, `iTerminal.Core/AI/`)
+AI delete and folder-sync tools that reach `confirmed=true` open an app-owned approval dialog. It displays the complete
+set of delete targets or the full synchronization plan in a scrollable viewer; Y approves, while N, Esc or cancellation
+refuses the operation. The model's tool argument only requests the dialog and cannot authorize the action. Approval
+prompts are serialized so concurrent tool calls cannot stack modal dialogs.
+
 ### Web Browser (`WebBrowserDialog`, `Model/Web/`, `Services/Web/`)
 A full-screen, text-mode browser (Tools > Web Browser, Ctrl+S; Ctrl+T would open the Tools menu): tabs, address bar, back/forward, reload/stop, bookmarks, history, find in page, forms, cookies, page source (F9) and saving (F7). F1 lists the keys.
 
