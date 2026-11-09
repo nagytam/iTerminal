@@ -243,25 +243,26 @@ public class SystemSettingsDialog : Dialog
     {
         if (_identity is not { } identity)
         {
-            body.Add(new(_loadFailed ? "  Not available" : "  Reading…", scheme.DisabledForeground));
+            body.Add(new("  " + (_loadFailed ? UiText.Get("SysSettings.NotAvailable", "Not available") : UiText.Get("SysSettings.ReadingShort", "Reading…")), scheme.DisabledForeground));
             return;
         }
 
-        var membershipLabel = identity.IsDomainMember ? "Domain" : "Workgroup";
+        var membershipLabel = identity.IsDomainMember ? UiText.Get("SysSettings.RowDomain", "Domain") : UiText.Get("SysSettings.RowWorkgroup", "Workgroup");
         (string Label, string Value, bool Editable)[] rows =
         [
-            ("Computer name", identity.ComputerName, true),
+            (UiText.Get("SysSettings.RowName", "Computer name"), identity.ComputerName, true),
             (membershipLabel, identity.Membership, identity.CanChangeMembership),
-            ("Description", identity.Description, identity.CanChangeDescription),
+            (UiText.Get("SysSettings.RowDescription", "Description"), identity.Description, identity.CanChangeDescription),
         ];
 
+        var labelWidth = Math.Max(15, rows.Max(row => row.Label.Length));
         for (var i = 0; i < rows.Length; i++)
         {
             var (label, value, editable) = rows[i];
             var pointer = i == _cursors[0] ? "▶" : " ";
-            var shown = value.Length == 0 ? "(not set)" : value;
+            var shown = value.Length == 0 ? UiText.Get("SysSettings.NotSet", "(not set)") : value;
             var color = i == _cursors[0] ? Color.Yellow : editable ? (Color?)null : scheme.DisabledForeground;
-            body.Add(new($"{pointer} {label,-15}: {shown}{(editable ? string.Empty : "   (read-only)")}", color));
+            body.Add(new($"{pointer} {label.PadRight(labelWidth)}: {shown}{(editable ? string.Empty : "   " + UiText.Get("SysSettings.ReadOnly", "(read-only)"))}", color));
         }
 
         body.Add(default);
@@ -281,13 +282,13 @@ public class SystemSettingsDialog : Dialog
 
         if (!_variablesLoaded)
         {
-            body.Add(new(_loadFailed ? "  Not available" : "  Reading…", scheme.DisabledForeground));
+            body.Add(new("  " + (_loadFailed ? UiText.Get("SysSettings.NotAvailable", "Not available") : UiText.Get("SysSettings.ReadingShort", "Reading…")), scheme.DisabledForeground));
             return;
         }
 
         if (_variables.Count == 0)
         {
-            body.Add(new("  (no variables - Ins adds one)", scheme.DisabledForeground));
+            body.Add(new("  " + UiText.Get("SysSettings.NoVariables", "(no variables - Ins adds one)"), scheme.DisabledForeground));
             return;
         }
 
@@ -329,14 +330,14 @@ public class SystemSettingsDialog : Dialog
 
         if (_confirmPrompt is not null)
         {
-            return " y:yes  n:no ";
+            return " " + UiText.Get("SysSettings.YesNo", "y:yes  n:no") + " ";
         }
 
         return _section switch
         {
-            SettingsSection.Computer => " ←/→:section  Enter:edit  F5:reread  Esc:close ",
-            SettingsSection.Environment => " ←/→:section  Enter:edit  Ins:add  Del:remove  S:scope  Esc:close ",
-            _ => " ←/→:section  Enter:apply  F5:reread  Esc:close ",
+            SettingsSection.Computer => " " + UiText.Get("SysSettings.HintsComputer", "←/→:section  Enter:edit  F5:reread  Esc:close") + " ",
+            SettingsSection.Environment => " " + UiText.Get("SysSettings.HintsEnvironment", "←/→:section  Enter:edit  Ins:add  Del:remove  S:scope  Esc:close") + " ",
+            _ => " " + UiText.Get("SysSettings.HintsTimeZone", "←/→:section  Enter:apply  F5:reread  Esc:close") + " ",
         };
     }
 

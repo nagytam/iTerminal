@@ -467,8 +467,8 @@ public class DiskManagerDialog : Dialog
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
         var width = (int)ViewSize.Width;
         var hints = _driveActions.CanFormat
-            ? " E:eject  F:format  M:disk image  B:BitLocker  Esc:close "
-            : " E:eject  M:disk image  B:BitLocker  Esc:close ";
+            ? " " + UiText.Get("DiskMgr.HintsFormat", "E:eject  F:format  M:disk image  B:BitLocker  Esc:close") + " "
+            : " " + UiText.Get("DiskMgr.Hints", "E:eject  M:disk image  B:BitLocker  Esc:close") + " ";
         var footer = hints.FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);

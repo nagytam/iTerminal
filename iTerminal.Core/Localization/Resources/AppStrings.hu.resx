@@ -8881,4 +8881,73 @@
   <data name="Sort.Reversed" xml:space="preserve">
     <value>Fordított</value>
   </data>
+  <data name="Transfer.OpCopy" xml:space="preserve">
+    <value>Másolás</value>
+  </data>
+  <data name="Transfer.OpMove" xml:space="preserve">
+    <value>Áthelyezés</value>
+  </data>
+  <data name="Transfer.TitleCopyItems" xml:space="preserve">
+    <value>{0} elem másolása</value>
+  </data>
+  <data name="Transfer.TitleMoveItems" xml:space="preserve">
+    <value>{0} elem áthelyezése</value>
+  </data>
+  <data name="Transfer.TitleCopyFile" xml:space="preserve">
+    <value>Fájl másolása</value>
+  </data>
+  <data name="Transfer.TitleCopyFolder" xml:space="preserve">
+    <value>Mappa másolása</value>
+  </data>
+  <data name="Transfer.TitleMoveFile" xml:space="preserve">
+    <value>Fájl áthelyezése</value>
+  </data>
+  <data name="Transfer.TitleMoveFolder" xml:space="preserve">
+    <value>Mappa áthelyezése</value>
+  </data>
+  <data name="DiskMgr.HintsFormat" xml:space="preserve">
+    <value>E:kiadás  F:formázás  M:lemezkép  B:BitLocker  Esc:bezár</value>
+  </data>
+  <data name="DiskMgr.Hints" xml:space="preserve">
+    <value>E:kiadás  M:lemezkép  B:BitLocker  Esc:bezár</value>
+  </data>
+  <data name="SysSettings.YesNo" xml:space="preserve">
+    <value>y:igen  n:nem</value>
+  </data>
+  <data name="SysSettings.HintsComputer" xml:space="preserve">
+    <value>←/→:szakasz  Enter:szerkeszt  F5:újraolvas  Esc:bezár</value>
+  </data>
+  <data name="SysSettings.HintsEnvironment" xml:space="preserve">
+    <value>←/→:szakasz  Enter:szerkeszt  Ins:hozzáad  Del:töröl  S:hatókör  Esc:bezár</value>
+  </data>
+  <data name="SysSettings.HintsTimeZone" xml:space="preserve">
+    <value>←/→:szakasz  Enter:alkalmaz  F5:újraolvas  Esc:bezár</value>
+  </data>
+  <data name="SysSettings.RowDomain" xml:space="preserve">
+    <value>Tartomány</value>
+  </data>
+  <data name="SysSettings.RowWorkgroup" xml:space="preserve">
+    <value>Munkacsoport</value>
+  </data>
+  <data name="SysSettings.RowName" xml:space="preserve">
+    <value>Gépnév</value>
+  </data>
+  <data name="SysSettings.RowDescription" xml:space="preserve">
+    <value>Leírás</value>
+  </data>
+  <data name="SysSettings.NotSet" xml:space="preserve">
+    <value>(nincs beállítva)</value>
+  </data>
+  <data name="SysSettings.ReadOnly" xml:space="preserve">
+    <value>(csak olvasható)</value>
+  </data>
+  <data name="SysSettings.NotAvailable" xml:space="preserve">
+    <value>Nem érhető el</value>
+  </data>
+  <data name="SysSettings.ReadingShort" xml:space="preserve">
+    <value>Olvasás…</value>
+  </data>
+  <data name="SysSettings.NoVariables" xml:space="preserve">
+    <value>(nincs változó - az Ins újat vesz fel)</value>
+  </data>
 </root>

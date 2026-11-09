@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Controls.Buttons;
@@ -102,7 +103,7 @@ public abstract class TransferDialog : FormDialog
         _settingsService = settingsService;
         _contentModelService = contentModelService;
         _operationName = operationName;
-        Title = operationName;
+        Title = OperationText(operationName);
 
         AddCommand(transferCommand);
 
@@ -135,7 +136,7 @@ public abstract class TransferDialog : FormDialog
             IsEnabled = true,
             HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(iConsole.Localization.UiText.Get("Label.VerifyAfterCopy", "Verify after copy"), 'V')
         };
-        _primaryButton = new Button(operationName, transferCommand, themeService) { HotKeyChar = primaryHotKeyChar };
+        _primaryButton = new Button(OperationText(operationName), transferCommand, themeService) { HotKeyChar = iConsole.Localization.HotKeys.VisibleIn(OperationText(operationName), primaryHotKeyChar) };
         _cancelButton = new CancelDialogButton(themeService);
         AddControl(_labelSource);
         AddControl(TextBoxTarget);
@@ -147,6 +148,30 @@ public abstract class TransferDialog : FormDialog
         AddControl(_cancelButton);
     }
 
+    /// <summary>The operation's name as a person reads it: the dialogs are told "Copy" or "Move".</summary>
+    private static string OperationText(string operationName) => operationName switch
+    {
+        "Copy" => UiText.Get("Transfer.OpCopy", "Copy"),
+        "Move" => UiText.Get("Transfer.OpMove", "Move"),
+        _ => operationName,
+    };
+
+    private static string ItemsTitle(string operationName, int count) => operationName switch
+    {
+        "Copy" => string.Format(UiText.Get("Transfer.TitleCopyItems", "Copy {0} items"), count),
+        "Move" => string.Format(UiText.Get("Transfer.TitleMoveItems", "Move {0} items"), count),
+        _ => $"{operationName} {count} items",
+    };
+
+    private static string KindTitle(string operationName, bool file) => (operationName, file) switch
+    {
+        ("Copy", true) => UiText.Get("Transfer.TitleCopyFile", "Copy file"),
+        ("Copy", false) => UiText.Get("Transfer.TitleCopyFolder", "Copy folder"),
+        ("Move", true) => UiText.Get("Transfer.TitleMoveFile", "Move file"),
+        ("Move", false) => UiText.Get("Transfer.TitleMoveFolder", "Move folder"),
+        _ => $"{operationName} {(file ? "file" : "folder")}",
+    };
+
     public override async Task OnInitializeAsync()
     {
         BaseUrl = _contentModelService.Url;
@@ -167,15 +192,15 @@ public abstract class TransferDialog : FormDialog
 
         if (IsMultiple)
         {
-            Title = $"{_operationName} {SourceUrls.Count} items";
+            Title = ItemsTitle(_operationName, SourceUrls.Count);
         }
         else if (SourceUrl.PathType == PathType.File)
         {
-            Title = $"{_operationName} file";
+            Title = KindTitle(_operationName, file: true);
         }
         else
         {
-            Title = $"{_operationName} folder";
+            Title = KindTitle(_operationName, file: false);
         }
 
         await base.OnInitializeAsync();
