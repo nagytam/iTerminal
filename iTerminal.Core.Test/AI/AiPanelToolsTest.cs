@@ -28,7 +28,7 @@ public class AiPanelToolsTest
             Left.Setup(m => m.Name).Returns(Content.Left);
             Right.Setup(m => m.Name).Returns(Content.Right);
             Left.Setup(m => m.Url).Returns(new Url(Path.GetTempPath()));
-            Right.Setup(m => m.Url).Returns(new Url(Path.GetTempPath()));
+            Right.Setup(m => m.Url).Returns(new Url(Path.Combine(Path.GetTempPath(), "right") + Path.DirectorySeparatorChar));
             Left.Setup(m => m.FilteredEntries).Returns(LeftEntries);
             LeftMarks = Left.As<IMarkableContentModel>();
             LeftMarks.Setup(m => m.CanMark).Returns(true);
@@ -227,6 +227,153 @@ public class AiPanelToolsTest
 
         StringAssert.Contains(text, "already exists");
         f.Left.Verify(m => m.CopyAsync(It.IsAny<Url>(), It.IsAny<Url>(), It.IsAny<bool>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task CopyToOtherPanel_WithoutConfirmationOnlyPreviews()
+    {
+        var f = new Fixture();
+        f.AddEntry("source.txt");
+
+        string preview = await f.Tools.CopyToOtherPanel("left", "source.txt");
+
+        StringAssert.Contains(preview, "Preview, nothing changed");
+        StringAssert.Contains(preview, "source.txt");
+        f.Left.Verify(m => m.CopyAsync(It.IsAny<Url>(), It.IsAny<Url>(), It.IsAny<bool>()), Times.Never);
+        f.Approval.Verify(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task CopyToOtherPanel_Approved_CopiesOnlyTheShownTarget()
+    {
+        var f = new Fixture();
+        IEntry source = f.AddEntry("source.txt");
+        f.Left.Setup(m => m.CopyAsync(It.IsAny<Url>(), It.IsAny<Url>(), false)).Returns(Task.CompletedTask);
+        AiActionApprovalRequest? request = null;
+        f.Approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .Callback<AiActionApprovalRequest, CancellationToken>((value, _) => request = value)
+            .ReturnsAsync(true);
+
+        string result = await f.Tools.CopyToOtherPanel("left", "source.txt", confirmed: true);
+
+        StringAssert.Contains(result, "Copied");
+        f.Left.Verify(m => m.CopyAsync(source.Url!, It.Is<Url>(url => url.FullUrl.Contains("right", StringComparison.Ordinal)), false), Times.Once);
+        StringAssert.Contains(request!.Actions.Single(), source.Url!.FullUrl);
+        StringAssert.Contains(request.Actions.Single(), "right");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task MoveToOtherPanel_ConfirmedButDeclined_LeavesSourceUntouched()
+    {
+        var f = new Fixture();
+        f.AddEntry("source.txt");
+        f.Approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        string result = await f.Tools.MoveToOtherPanel("left", "source.txt", confirmed: true);
+
+        StringAssert.Contains(result, "declined or cancelled");
+        f.Left.Verify(m => m.MoveAsync(It.IsAny<Url>(), It.IsAny<Url>(), It.IsAny<bool>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task MoveToOtherPanel_Approved_MovesNamedEntry()
+    {
+        var f = new Fixture();
+        IEntry source = f.AddEntry("source.txt");
+        f.Left.Setup(m => m.MoveAsync(It.IsAny<Url>(), It.IsAny<Url>(), false)).Returns(Task.CompletedTask);
+        f.Approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        string result = await f.Tools.MoveToOtherPanel("left", "source.txt", confirmed: true);
+
+        StringAssert.Contains(result, "Moved");
+        f.Left.Verify(m => m.MoveAsync(source.Url!, It.Is<Url>(url => url.FullUrl.Contains("right", StringComparison.Ordinal)), false), Times.Once);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task CreateFolder_WithoutConfirmationOnlyPreviews()
+    {
+        var f = new Fixture();
+
+        string preview = await f.Tools.CreateFolder("new-folder", "left");
+
+        StringAssert.Contains(preview, "Preview, nothing changed");
+        StringAssert.Contains(preview, "new-folder");
+        f.Left.Verify(m => m.CreateFolderAsync(It.IsAny<Url>()), Times.Never);
+        f.Approval.Verify(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task CreateFolder_ConfirmedButDeclined_CreatesNothing()
+    {
+        var f = new Fixture();
+        f.Approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        string result = await f.Tools.CreateFolder("new-folder", "left", confirmed: true);
+
+        StringAssert.Contains(result, "declined or cancelled");
+        f.Left.Verify(m => m.CreateFolderAsync(It.IsAny<Url>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task CreateFolder_Approved_CreatesTheShownFolder()
+    {
+        var f = new Fixture();
+        f.Left.Setup(m => m.CreateFolderAsync(It.IsAny<Url>())).Returns(Task.CompletedTask);
+        AiActionApprovalRequest? request = null;
+        f.Approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .Callback<AiActionApprovalRequest, CancellationToken>((value, _) => request = value)
+            .ReturnsAsync(true);
+
+        string result = await f.Tools.CreateFolder("new-folder", "left", confirmed: true);
+
+        StringAssert.Contains(result, "Created");
+        StringAssert.Contains(request!.Actions.Single(), "new-folder");
+        f.Left.Verify(m => m.CreateFolderAsync(It.Is<Url>(url => url.FullUrl.Contains("new-folder", StringComparison.Ordinal))), Times.Once);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task RenameEntry_WithoutConfirmationOnlyPreviews()
+    {
+        var f = new Fixture();
+        f.AddEntry("old.txt");
+
+        string preview = await f.Tools.RenameEntry("new.txt", "old.txt", "left");
+
+        StringAssert.Contains(preview, "Preview, nothing changed");
+        StringAssert.Contains(preview, "old.txt");
+        StringAssert.Contains(preview, "new.txt");
+        f.Left.Verify(m => m.MoveAsync(It.IsAny<Url>(), It.IsAny<Url>(), It.IsAny<bool>()), Times.Never);
+        f.Approval.Verify(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task RenameEntry_Approved_RenamesTheShownEntry()
+    {
+        var f = new Fixture();
+        IEntry source = f.AddEntry("old.txt");
+        f.Left.Setup(m => m.MoveAsync(It.IsAny<Url>(), It.IsAny<Url>(), false)).Returns(Task.CompletedTask);
+        AiActionApprovalRequest? request = null;
+        f.Approval.Setup(s => s.ConfirmAsync(It.IsAny<AiActionApprovalRequest>(), It.IsAny<CancellationToken>()))
+            .Callback<AiActionApprovalRequest, CancellationToken>((value, _) => request = value)
+            .ReturnsAsync(true);
+
+        string result = await f.Tools.RenameEntry("new.txt", "old.txt", "left", confirmed: true);
+
+        StringAssert.Contains(result, "Renamed");
+        f.Left.Verify(m => m.MoveAsync(source.Url!, It.Is<Url>(url => url.FullUrl.Contains("new.txt", StringComparison.Ordinal)), false), Times.Once);
+        StringAssert.Contains(request!.Actions.Single(), "new.txt");
     }
 
     [Timeout(60_000)]

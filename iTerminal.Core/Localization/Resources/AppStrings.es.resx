@@ -8341,6 +8341,9 @@
   <data name="Ai.Approval.SyncSummary" xml:space="preserve">
     <value>La IA solicita sincronizar {0} con {1}. Revise el plan completo.</value>
   </data>
+  <data name="Ai.Approval.WriteSummary" xml:space="preserve">
+    <value>La IA solicita {0}. Revise todas las acciones siguientes.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>Ningún comando coincide.</value>
   </data>

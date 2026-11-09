@@ -8482,6 +8482,9 @@
   <data name="Ai.Approval.SyncSummary" xml:space="preserve">
     <value>AI requests synchronising {0} with {1}. Review the full plan below.</value>
   </data>
+  <data name="Ai.Approval.WriteSummary" xml:space="preserve">
+    <value>AI requests {0}. Review every action below.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>No command matches.</value>
   </data>
