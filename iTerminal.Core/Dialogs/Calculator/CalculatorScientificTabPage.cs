@@ -50,7 +50,7 @@ public sealed class CalculatorScientificTabPage : CalculatorGridTabPage
         AddActionButton("2", () => Engine.InputDigit('2'));
         AddActionButton("3", () => Engine.InputDigit('3'));
         AddActionButton("-", () => Engine.ApplyOperator("-"));
-        AddActionButton("Back", Engine.Backspace);
+        AddActionButton(iConsole.Localization.UiText.Get("Calc.Back", "Back"), Engine.Backspace);
 
         AddActionButton("+/-", Engine.ToggleSign);
         AddActionButton("0", () => Engine.InputDigit('0'));

@@ -8950,4 +8950,7 @@
   <data name="SysSettings.NoVariables" xml:space="preserve">
     <value>(keine Variablen - Einfg legt eine an)</value>
   </data>
+  <data name="Calc.Back" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
 </root>
