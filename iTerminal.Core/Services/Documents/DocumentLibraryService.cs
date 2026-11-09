@@ -232,8 +232,8 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
             if (string.IsNullOrWhiteSpace(folder) || !Directory.Exists(folder))
             {
                 StatusMessage = string.IsNullOrWhiteSpace(folder)
-                    ? "No documents folder is configured."
-                    : $"Documents folder not found: {folder}";
+                    ? UiText.Get("Docs.NoFolder", "No documents folder is configured.")
+                    : string.Format(UiText.Get("Docs.FolderMissing", "Documents folder not found: {0}"), folder);
                 return DocumentCount;
             }
 
@@ -368,8 +368,9 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
         LastIndexedUtc = now;
         int withText = scanned.Count(entry => entry.TextLength > 0);
         StatusMessage =
-            $"Indexed {scanned.Count} document{(scanned.Count == 1 ? string.Empty : "s")} "
-            + $"({withText} with text) from {folder}.";
+            scanned.Count == 1
+            ? string.Format(UiText.Get("Docs.IndexedOne", "Indexed 1 document ({0} with text) from {1}."), withText, folder)
+            : string.Format(UiText.Get("Docs.IndexedMany", "Indexed {0} documents ({1} with text) from {2}."), scanned.Count, withText, folder);
 
         if (changedCount > 0 || removed.Count > 0)
         {

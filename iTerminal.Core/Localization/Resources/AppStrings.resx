@@ -8053,4 +8053,112 @@
   <data name="Startup.LockInUse" xml:space="preserve">
     <value>The lock file is still in use and could not be removed.</value>
   </data>
+  <data name="Recycle.RestoringOne" xml:space="preserve">
+    <value>Restoring {0}…</value>
+  </data>
+  <data name="Recycle.RestoringMany" xml:space="preserve">
+    <value>Restoring {0} items…</value>
+  </data>
+  <data name="Recycle.RestoredOne" xml:space="preserve">
+    <value>Restored {0}</value>
+  </data>
+  <data name="Recycle.RestoredMany" xml:space="preserve">
+    <value>Restored {0} items</value>
+  </data>
+  <data name="Recycle.RestoredSome" xml:space="preserve">
+    <value>Restored {0} of {1} — {2}</value>
+  </data>
+  <data name="Launch.NothingSetUp" xml:space="preserve">
+    <value>Nothing is set up to open {0}: {1}</value>
+  </data>
+  <data name="Launch.Browser" xml:space="preserve">
+    <value>The browser could not be started: {0}</value>
+  </data>
+  <data name="Launch.CannotStart" xml:space="preserve">
+    <value>Cannot start {0}: {1}</value>
+  </data>
+  <data name="Docs.Prog.Discovering" xml:space="preserve">
+    <value>Discovering… {0} files found</value>
+  </data>
+  <data name="Docs.Prog.Indexing" xml:space="preserve">
+    <value>Indexing {0}/{1}{2}</value>
+  </data>
+  <data name="Docs.Prog.IndexingFile" xml:space="preserve">
+    <value>Indexing {0}/{1}{2} — {3}</value>
+  </data>
+  <data name="Docs.Prog.DiscoveringShort" xml:space="preserve">
+    <value>Discovering… {0}</value>
+  </data>
+  <data name="Docs.NoFolder" xml:space="preserve">
+    <value>No documents folder is configured.</value>
+  </data>
+  <data name="Docs.FolderMissing" xml:space="preserve">
+    <value>Documents folder not found: {0}</value>
+  </data>
+  <data name="Docs.IndexedOne" xml:space="preserve">
+    <value>Indexed 1 document ({0} with text) from {1}.</value>
+  </data>
+  <data name="Docs.IndexedMany" xml:space="preserve">
+    <value>Indexed {0} documents ({1} with text) from {2}.</value>
+  </data>
+  <data name="BgService.FolderIndex" xml:space="preserve">
+    <value>Folder index (folder selector)</value>
+  </data>
+  <data name="BgService.DocumentLibrary" xml:space="preserve">
+    <value>Document library (document manager)</value>
+  </data>
+  <data name="BgService.MusicLibrary" xml:space="preserve">
+    <value>Music library (music catalog)</value>
+  </data>
+  <data name="BgService.OllamaServer" xml:space="preserve">
+    <value>Local AI server (AI bar)</value>
+  </data>
+  <data name="BgService.UpdateCheck" xml:space="preserve">
+    <value>Update check (About)</value>
+  </data>
+  <data name="BgService.RuntimeDependencyCheck" xml:space="preserve">
+    <value>Runtime dependency check (Runtime dependencies)</value>
+  </data>
+  <data name="BgService.NetworkInfo" xml:space="preserve">
+    <value>Network interfaces (network manager)</value>
+  </data>
+  <data name="Elevation.CouldNotRun" xml:space="preserve">
+    <value>Could not run as administrator</value>
+  </data>
+  <data name="SysSettings.SecComputer" xml:space="preserve">
+    <value>Computer</value>
+  </data>
+  <data name="SysSettings.SecEnvironment" xml:space="preserve">
+    <value>Environment</value>
+  </data>
+  <data name="SysSettings.SecTimeZone" xml:space="preserve">
+    <value>Time zone</value>
+  </data>
+  <data name="SysSettings.IsAdmin" xml:space="preserve">
+    <value>Running as administrator.</value>
+  </data>
+  <data name="SysSettings.NotAdmin" xml:space="preserve">
+    <value>Not administrator: machine-wide changes are refused. Ctrl+Shift+A restarts iTerminal as administrator.</value>
+  </data>
+  <data name="SysSettings.ScopeUser" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="SysSettings.ScopeMachine" xml:space="preserve">
+    <value>Machine (all users)</value>
+  </data>
+  <data name="SysSettings.Scope" xml:space="preserve">
+    <value>Scope: {0}  -  {1} variables</value>
+  </data>
+  <data name="SysSettings.DomainMember" xml:space="preserve">
+    <value>This computer belongs to the domain {0}; leaving it needs a directory account.</value>
+  </data>
+  <data name="SysSettings.CannotChange" xml:space="preserve">
+    <value>This setting cannot be changed on this system.</value>
+  </data>
+  <data name="SysSettings.DescriptionPrompt" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="SysSettings.ConfirmRemove" xml:space="preserve">
+    <value>Remove {0}?</value>
+  </data>
 </root>
