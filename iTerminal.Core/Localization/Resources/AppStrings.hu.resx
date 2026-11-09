@@ -7312,6 +7312,12 @@
   <data name="DiskImage.TypePath" xml:space="preserve">
     <value>Írja be egy .iso, .vhd vagy .vhdx fájl útvonalát.</value>
   </data>
+  <data name="DiskImage.Hint" xml:space="preserve">
+    <value>Egy .iso, .vhd vagy .vhdx fájl.</value>
+  </data>
+  <data name="DiskImage.MissingFile" xml:space="preserve">
+    <value>A fájl nem található: {0}</value>
+  </data>
   <data name="Format.Already" xml:space="preserve">
     <value>A meghajtó formázása már folyamatban van.</value>
   </data>

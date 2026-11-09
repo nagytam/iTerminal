@@ -48,7 +48,7 @@ public class DiskImageDialog : FormDialog
         AddCommand(mountCommand);
 
         _textBoxPath = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.Image", "Image") };
-        _labelHint = new Label("An .iso, .vhd or .vhdx file.", themeService);
+        _labelHint = new Label(UiText.Get("DiskImage.Hint", "An .iso, .vhd or .vhdx file."), themeService);
         _errorLabels = [.. Enumerable.Range(0, ErrorRows).Select(_ => new Label(string.Empty, themeService))];
         _mountButton = new Button(iConsole.Localization.UiText.Get("Button.Mount", "Mount"), mountCommand, themeService);
         _unmountButton = new Button(iConsole.Localization.UiText.Get("Button.Unmount", "Unmount"), unmountCommand, themeService);
@@ -162,13 +162,13 @@ public class DiskImageDialog : FormDialog
 
         if (!DriveActionsService.IsImage(path))
         {
-            SetError("Only .iso, .vhd and .vhdx files can be mounted.");
+            SetError(UiText.Get("Drive.MountTypes", "Only .iso, .vhd and .vhdx files can be mounted."));
             return false;
         }
 
         if (mount && !File.Exists(path))
         {
-            SetError($"{path} does not exist.");
+            SetError(string.Format(UiText.Get("DiskImage.MissingFile", "File not found: {0}"), path));
             return false;
         }
 

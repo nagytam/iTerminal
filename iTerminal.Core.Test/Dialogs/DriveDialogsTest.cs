@@ -1,7 +1,9 @@
+using System.Resources;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iConsole.Services;
 using iConsole.Test.Core;
 using iTerminal.Core.Dialogs;
@@ -98,6 +100,45 @@ public class DriveDialogsTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public async Task Image_HintAndValidationMessagesAreLocalized_AndKeepThePath()
+    {
+        Localizer localizer = new([new ResourceLocalizationSource(new ResourceManager(
+            "iTerminal.Core.Localization.Resources.AppStrings",
+            typeof(DiskImageDialog).Assembly))]);
+        (string Code, string Hint, string MountTypes, string MissingFile)[] translations =
+        [
+            ("en", "An .iso, .vhd or .vhdx file.", "Only .iso, .vhd and .vhdx files can be mounted.", "File not found: {0}"),
+            ("de", "Eine .iso-, .vhd- oder .vhdx-Datei.", "Nur .iso-, .vhd- und .vhdx-Dateien können eingebunden werden.", "Datei nicht gefunden: {0}"),
+            ("fr", "Un fichier .iso, .vhd ou .vhdx.", "Seuls les fichiers .iso, .vhd et .vhdx peuvent être montés.", "Fichier introuvable : {0}"),
+            ("es", "Un archivo .iso, .vhd o .vhdx.", "Solo se pueden montar archivos .iso, .vhd y .vhdx.", "Archivo no encontrado: {0}"),
+            ("it", "Un file .iso, .vhd o .vhdx.", "Si possono montare solo file .iso, .vhd e .vhdx.", "File non trovato: {0}"),
+            ("hu", "Egy .iso, .vhd vagy .vhdx fájl.", "Csak .iso, .vhd és .vhdx fájlok csatolhatók.", "A fájl nem található: {0}"),
+        ];
+
+        foreach ((string code, string hint, string mountTypes, string missingFile) in translations)
+        {
+            Assert.IsTrue(localizer.SetLanguage(code), code);
+            using IDisposable language = UiText.Scope(localizer);
+            ImageRig rig = await OpenImageAsync(MakeImage());
+            AssertScreenContains(Render(rig.Root), hint);
+
+            rig.Dialog.ImagePath = Path.Combine(_folder, "notes.txt");
+            Assert.IsFalse(await rig.Dialog.RunAsync(mount: true));
+            AssertScreenContains(Render(rig.Root), mountTypes);
+            StringAssert.Contains(rig.Dialog.Error, mountTypes);
+
+            string path = Path.Combine(_folder, $"missing-{code}.iso");
+            rig.Dialog.ImagePath = path;
+            Assert.IsFalse(await rig.Dialog.RunAsync(mount: true));
+            string expected = string.Format(missingFile, path);
+            StringAssert.Contains(rig.Dialog.Error, expected);
+            AssertScreenContains(Render(rig.Root), missingFile[..missingFile.IndexOf("{0}", StringComparison.Ordinal)].TrimEnd());
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task Image_Mount_RunsTheAction_Notifies_ClosesAndRereadsLocalPanels()
     {
         string path = MakeImage();
@@ -138,7 +179,7 @@ public class DriveDialogsTest
 
         rig.Dialog.ImagePath = Path.Combine(_folder, "missing.iso");
         Assert.IsFalse(await rig.Dialog.RunAsync(true));
-        StringAssert.Contains(rig.Dialog.Error, "does not exist");
+        StringAssert.Contains(rig.Dialog.Error, "File not found");
 
         rig.Drives.Verify(d => d.MountImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         Assert.IsTrue(rig.Dialog.IsVisible);
