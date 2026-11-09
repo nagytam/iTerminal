@@ -5917,6 +5917,38 @@
   <data name="Games.Snake.Score" xml:space="preserve">
     <value>Punti {0}.</value>
   </data>
+  <data name="Games.Jass.Rules" xml:space="preserve"><value>Quattro giocatori in due squadre. Segui il seme; se non puoi, taglia e supera il taglio quando possibile. Una mano vale 157 punti.</value></data>
+  <data name="Games.Jass.CommandDescription" xml:space="preserve"><value>Gioca a Jass Schieber in quattro, a squadre, su una sola tastiera.</value></data>
+  <data name="Games.Jass.Mode" xml:space="preserve"><value>quattro giocatori (stesso dispositivo)</value></data>
+  <data name="Games.Jass.Winner" xml:space="preserve"><value>La squadra {0} vince con {1} punti. N inizia una nuova partita.</value></data>
+  <data name="Games.Jass.HandComplete" xml:space="preserve"><value>Mano completata. {0} – {1}. Invio distribuisce la mano successiva.</value></data>
+  <data name="Games.Jass.Reveal" xml:space="preserve"><value>Passa il dispositivo al giocatore {0} e premi Invio per rivelare le carte.</value></data>
+  <data name="Games.Jass.ChooseTrump" xml:space="preserve"><value>Giocatore {0}: scegli briscola: C fiori, D quadri, H cuori o S picche.</value></data>
+  <data name="Games.Jass.ChooseTrumpOrPush" xml:space="preserve"><value>Giocatore {0}: scegli briscola (C/D/H/S) o passa la scelta al compagno (P).</value></data>
+  <data name="Games.Jass.ToPlay" xml:space="preserve"><value>Giocatore {0}, tocca a te. Briscola: {1}. Squadra: {2} – {3}.</value></data>
+  <data name="Games.Jass.HandPoints" xml:space="preserve"><value>Mano completata: {0} punti. Invio distribuisce la mano successiva.</value></data>
+  <data name="Games.Jass.IllegalPlay" xml:space="preserve"><value>Segui il seme, taglia se non lo hai e supera il taglio quando possibile.</value></data>
+  <data name="Games.Jass.DealerForehandScore" xml:space="preserve"><value> mazziere: giocatore {0}   Mano: giocatore {1}   Punteggio: {2} – {3}</value></data>
+  <data name="Games.Jass.NoTrump" xml:space="preserve"><value>Briscola non scelta</value></data>
+  <data name="Games.Jass.TrumpTricks" xml:space="preserve"><value>Briscola: {0}   Prese: {1}/9   Punti mano: {2}</value></data>
+  <data name="Games.Jass.PassToReveal" xml:space="preserve"><value>Passa il dispositivo al giocatore {0}; premi Invio per rivelare.</value></data>
+  <data name="Games.Jass.HiddenHand" xml:space="preserve"><value>Le carte del giocatore {0} sono coperte.</value></data>
+  <data name="Games.Jass.PlayerHand" xml:space="preserve"><value>Mano del giocatore {0} (1–9 per giocare una carta):</value></data>
+  <data name="Games.Jass.FaceDown" xml:space="preserve"><value>{0}. [coperta]</value></data>
+  <data name="Games.Jass.EmptyCard" xml:space="preserve"><value>{0}.</value></data>
+  <data name="Games.Jass.NoCards" xml:space="preserve"><value>Nessuna carta giocata in questa presa.</value></data>
+  <data name="Games.Jass.PlayedCard" xml:space="preserve"><value>G{0}: {1}</value></data>
+  <data name="Games.Jass.TeamInstruction" xml:space="preserve"><value>Squadre: giocatori 1 + 3 contro 2 + 4. P passa la prima scelta di briscola al compagno.</value></data>
+  <data name="Games.Jass.ChooseTrumpHint" xml:space="preserve"><value>Scegli fiori, quadri, cuori o picche come briscola</value></data>
+  <data name="Games.Jass.PushHint" xml:space="preserve"><value>Passa la scelta della briscola al compagno</value></data>
+  <data name="Games.Jass.PlayHint" xml:space="preserve"><value>Gioca la carta numerata dalla tua mano</value></data>
+  <data name="Games.Jass.ActivateLabel" xml:space="preserve"><value>rivela / gioca</value></data>
+  <data name="Games.Jass.ActivateHint" xml:space="preserve"><value>Rivela la tua mano o gioca la carta selezionata</value></data>
+  <data name="Games.Jass.CardFormat" xml:space="preserve"><value>{0} di {1}</value></data>
+  <data name="Games.Jass.Suit.Clubs" xml:space="preserve"><value>fiori</value></data>
+  <data name="Games.Jass.Suit.Diamonds" xml:space="preserve"><value>quadri</value></data>
+  <data name="Games.Jass.Suit.Hearts" xml:space="preserve"><value>cuori</value></data>
+  <data name="Games.Jass.Suit.Spades" xml:space="preserve"><value>picche</value></data>
   <data name="Games.Tetris.Rules" xml:space="preserve">
     <value>Impila i pezzi che cadono in righe complete. Una riga completa scompare. La partita finisce quando i pezzi arrivano in cima.</value>
   </data>

@@ -74,8 +74,11 @@ public interface IGame
     /// <summary>Stops a game that moves on its own clock. The dialog calls it when the game is left and when the dialog closes.</summary>
     void Pause() { }
 
-    /// <summary>False for a game with no computer opponent: the mode key does not apply and the mode label reads "one player".</summary>
+    /// <summary>False for a game with no computer opponent: the mode key does not apply.</summary>
     bool OffersComputerOpponent => true;
+
+    /// <summary>A custom mode label for a game whose player mode is not represented by the computer/two-player toggle.</summary>
+    string? ModeLabel => null;
 
     /// <summary>False for a game that cannot take a move back: the undo key is not offered.</summary>
     bool OffersUndo => true;
@@ -118,6 +121,7 @@ public abstract class GameBase(Random? random) : IGame
     }
 
     public virtual bool OffersComputerOpponent => true;
+    public virtual string? ModeLabel => null;
     public virtual bool OffersUndo => true;
     public virtual string ActivateLabel => iConsole.Localization.UiText.Get("Games.HintPlay", "play");
     public virtual string ActivateHint => UiText.Get("DialogHint.PlaySelectTake", "Play, select or take a piece at the cursor");

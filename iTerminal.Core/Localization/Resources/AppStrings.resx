@@ -6052,6 +6052,102 @@
   <data name="Games.Snake.Rules" xml:space="preserve">
     <value>Steer the snake to the food. It grows with every bite. Hitting a wall or yourself ends the game.</value>
   </data>
+  <data name="Games.Jass.Rules" xml:space="preserve">
+    <value>Four players in two partnerships. Follow suit; if void, trump, and overtrump whenever possible. A hand is 157 points.</value>
+  </data>
+  <data name="Games.Jass.CommandDescription" xml:space="preserve">
+    <value>Play four-player partnership Jass (Schieber) at one keyboard.</value>
+  </data>
+  <data name="Games.Jass.Mode" xml:space="preserve">
+    <value>four players (hot-seat)</value>
+  </data>
+  <data name="Games.Jass.Winner" xml:space="preserve">
+    <value>Partnership {0} wins with {1} points. N starts a new match.</value>
+  </data>
+  <data name="Games.Jass.HandComplete" xml:space="preserve">
+    <value>Hand complete. {0} – {1}. Enter deals the next hand.</value>
+  </data>
+  <data name="Games.Jass.Reveal" xml:space="preserve">
+    <value>Pass the device to Player {0} and press Enter to reveal.</value>
+  </data>
+  <data name="Games.Jass.ChooseTrump" xml:space="preserve">
+    <value>Player {0}: choose trump: C clubs, D diamonds, H hearts or S spades.</value>
+  </data>
+  <data name="Games.Jass.ChooseTrumpOrPush" xml:space="preserve">
+    <value>Player {0}: choose trump (C/D/H/S) or push to your partner (P).</value>
+  </data>
+  <data name="Games.Jass.ToPlay" xml:space="preserve">
+    <value>Player {0} to play. Trump: {1}. Partnership: {2} – {3}.</value>
+  </data>
+  <data name="Games.Jass.HandPoints" xml:space="preserve">
+    <value>Hand complete: {0} points. Enter deals the next hand.</value>
+  </data>
+  <data name="Games.Jass.IllegalPlay" xml:space="preserve">
+    <value>Follow suit, trump if void, and overtrump when possible.</value>
+  </data>
+  <data name="Games.Jass.DealerForehandScore" xml:space="preserve">
+    <value>Dealer: Player {0}   Forehand: Player {1}   Score: {2} – {3}</value>
+  </data>
+  <data name="Games.Jass.NoTrump" xml:space="preserve">
+    <value>Trump not chosen</value>
+  </data>
+  <data name="Games.Jass.TrumpTricks" xml:space="preserve">
+    <value>Trump: {0}   Tricks: {1}/9   Hand points: {2}</value>
+  </data>
+  <data name="Games.Jass.PassToReveal" xml:space="preserve">
+    <value>Pass device to Player {0}; press Enter to reveal.</value>
+  </data>
+  <data name="Games.Jass.HiddenHand" xml:space="preserve">
+    <value>Player {0}'s cards are hidden.</value>
+  </data>
+  <data name="Games.Jass.PlayerHand" xml:space="preserve">
+    <value>Player {0}'s hand (press 1–9 to play a card):</value>
+  </data>
+  <data name="Games.Jass.FaceDown" xml:space="preserve">
+    <value>{0}. [face down]</value>
+  </data>
+  <data name="Games.Jass.EmptyCard" xml:space="preserve">
+    <value>{0}.</value>
+  </data>
+  <data name="Games.Jass.NoCards" xml:space="preserve">
+    <value>No cards played in this trick.</value>
+  </data>
+  <data name="Games.Jass.PlayedCard" xml:space="preserve">
+    <value>P{0}: {1}</value>
+  </data>
+  <data name="Games.Jass.TeamInstruction" xml:space="preserve">
+    <value>Teams: Players 1 + 3 vs. Players 2 + 4. P pushes the first trump choice to partner.</value>
+  </data>
+  <data name="Games.Jass.ChooseTrumpHint" xml:space="preserve">
+    <value>Choose clubs, diamonds, hearts or spades as trump</value>
+  </data>
+  <data name="Games.Jass.PushHint" xml:space="preserve">
+    <value>Push the trump choice to your partner</value>
+  </data>
+  <data name="Games.Jass.PlayHint" xml:space="preserve">
+    <value>Play the numbered card from your hand</value>
+  </data>
+  <data name="Games.Jass.ActivateLabel" xml:space="preserve">
+    <value>reveal / play</value>
+  </data>
+  <data name="Games.Jass.ActivateHint" xml:space="preserve">
+    <value>Reveal your hand or play the selected card</value>
+  </data>
+  <data name="Games.Jass.CardFormat" xml:space="preserve">
+    <value>{0} of {1}</value>
+  </data>
+  <data name="Games.Jass.Suit.Clubs" xml:space="preserve">
+    <value>clubs</value>
+  </data>
+  <data name="Games.Jass.Suit.Diamonds" xml:space="preserve">
+    <value>diamonds</value>
+  </data>
+  <data name="Games.Jass.Suit.Hearts" xml:space="preserve">
+    <value>hearts</value>
+  </data>
+  <data name="Games.Jass.Suit.Spades" xml:space="preserve">
+    <value>spades</value>
+  </data>
   <data name="Games.Snake.Over" xml:space="preserve">
     <value>Game over with {0} points. N to play again.</value>
   </data>

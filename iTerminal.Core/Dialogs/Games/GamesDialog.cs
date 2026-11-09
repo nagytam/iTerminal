@@ -171,17 +171,18 @@ public abstract class GamesDialog : SplitPaneDialog
             return true;
         }
 
+        if (game.TryChar(c))
+        {
+            _stuck = false;
+            return true;
+        }
+
         if (!char.IsLetter(c))
         {
             return false;
         }
 
         _stuck = false;
-        if (game.TryChar(c))
-        {
-            return true;
-        }
-
         switch (char.ToLowerInvariant(c))
         {
             case 'n':
@@ -395,9 +396,9 @@ public abstract class GamesDialog : SplitPaneDialog
             return;
         }
 
-        string mode = !game.OffersComputerOpponent
+        string mode = game.ModeLabel ?? (!game.OffersComputerOpponent
             ? UiText.Get("Games.OnePlayer", "one player")
-            : game.VsComputer ? "against the computer" : "two players";
+            : game.VsComputer ? "against the computer" : "two players");
         DrawSectionHeader(buffer, x0, iy, width, $"{game.Name} — {mode}", true, colorScheme);
 
         string status = game.Status + (_thinking ? " The computer is thinking…" : string.Empty);

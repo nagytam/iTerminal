@@ -5917,6 +5917,38 @@
   <data name="Games.Snake.Score" xml:space="preserve">
     <value>Puntos {0}.</value>
   </data>
+  <data name="Games.Jass.Rules" xml:space="preserve"><value>Cuatro jugadores en dos parejas. Hay que asistir al palo; si no se tiene, triunfar y, si se puede, superar el triunfo. Cada mano suma 157 puntos.</value></data>
+  <data name="Games.Jass.CommandDescription" xml:space="preserve"><value>Juega al Jass Schieber, con cuatro jugadores por parejas, en un mismo teclado.</value></data>
+  <data name="Games.Jass.Mode" xml:space="preserve"><value>cuatro jugadores (en el mismo dispositivo)</value></data>
+  <data name="Games.Jass.Winner" xml:space="preserve"><value>La pareja {0} gana con {1} puntos. N inicia una nueva partida.</value></data>
+  <data name="Games.Jass.HandComplete" xml:space="preserve"><value>Mano terminada. {0} – {1}. Enter reparte la siguiente mano.</value></data>
+  <data name="Games.Jass.Reveal" xml:space="preserve"><value>Pasa el dispositivo al jugador {0} y pulsa Enter para revelar.</value></data>
+  <data name="Games.Jass.ChooseTrump" xml:space="preserve"><value>Jugador {0}: elige triunfo: C tréboles, D diamantes, H corazones o S picas.</value></data>
+  <data name="Games.Jass.ChooseTrumpOrPush" xml:space="preserve"><value>Jugador {0}: elige triunfo (C/D/H/S) o pásalo a tu pareja (P).</value></data>
+  <data name="Games.Jass.ToPlay" xml:space="preserve"><value>Juega el jugador {0}. Triunfo: {1}. Pareja: {2} – {3}.</value></data>
+  <data name="Games.Jass.HandPoints" xml:space="preserve"><value>Mano terminada: {0} puntos. Enter reparte la siguiente mano.</value></data>
+  <data name="Games.Jass.IllegalPlay" xml:space="preserve"><value>Asiste al palo, juega triunfo si no tienes el palo y supéralo si puedes.</value></data>
+  <data name="Games.Jass.DealerForehandScore" xml:space="preserve"><value>Repartidor: jugador {0}   Mano: jugador {1}   Puntuación: {2} – {3}</value></data>
+  <data name="Games.Jass.NoTrump" xml:space="preserve"><value>Triunfo sin elegir</value></data>
+  <data name="Games.Jass.TrumpTricks" xml:space="preserve"><value>Triunfo: {0}   Bazas: {1}/9   Puntos de mano: {2}</value></data>
+  <data name="Games.Jass.PassToReveal" xml:space="preserve"><value>Pasa el dispositivo al jugador {0}; pulsa Enter para revelar.</value></data>
+  <data name="Games.Jass.HiddenHand" xml:space="preserve"><value>Las cartas del jugador {0} están ocultas.</value></data>
+  <data name="Games.Jass.PlayerHand" xml:space="preserve"><value>Mano del jugador {0} (1–9 para jugar una carta):</value></data>
+  <data name="Games.Jass.FaceDown" xml:space="preserve"><value>{0}. [boca abajo]</value></data>
+  <data name="Games.Jass.EmptyCard" xml:space="preserve"><value>{0}.</value></data>
+  <data name="Games.Jass.NoCards" xml:space="preserve"><value>No se han jugado cartas en esta baza.</value></data>
+  <data name="Games.Jass.PlayedCard" xml:space="preserve"><value>J{0}: {1}</value></data>
+  <data name="Games.Jass.TeamInstruction" xml:space="preserve"><value>Equipos: jugadores 1 + 3 contra 2 + 4. P pasa la primera elección de triunfo a la pareja.</value></data>
+  <data name="Games.Jass.ChooseTrumpHint" xml:space="preserve"><value>Elige tréboles, diamantes, corazones o picas como triunfo</value></data>
+  <data name="Games.Jass.PushHint" xml:space="preserve"><value>Pasa la elección del triunfo a tu pareja</value></data>
+  <data name="Games.Jass.PlayHint" xml:space="preserve"><value>Juega la carta numerada de tu mano</value></data>
+  <data name="Games.Jass.ActivateLabel" xml:space="preserve"><value>revelar / jugar</value></data>
+  <data name="Games.Jass.ActivateHint" xml:space="preserve"><value>Revela tu mano o juega la carta seleccionada</value></data>
+  <data name="Games.Jass.CardFormat" xml:space="preserve"><value>{0} de {1}</value></data>
+  <data name="Games.Jass.Suit.Clubs" xml:space="preserve"><value>tréboles</value></data>
+  <data name="Games.Jass.Suit.Diamonds" xml:space="preserve"><value>diamantes</value></data>
+  <data name="Games.Jass.Suit.Hearts" xml:space="preserve"><value>corazones</value></data>
+  <data name="Games.Jass.Suit.Spades" xml:space="preserve"><value>picas</value></data>
   <data name="Games.Tetris.Rules" xml:space="preserve">
     <value>Apila las piezas que caen en filas completas. Una fila completa desaparece. El juego termina cuando las piezas llegan arriba.</value>
   </data>

@@ -1,4 +1,5 @@
 using iConsole.Data;
+using iConsole.Localization;
 using iTerminal.Core.Dialogs.Games;
 
 namespace iTerminal.Core.Commands;
@@ -54,5 +55,14 @@ public class TetrisDialogCommand(TetrisDialog dialog) : ShowDialogCommand<Tetris
     public override string Description => "Play Tetris: stack the falling pieces into full rows.";
 
     // No hot key: every Ctrl+Shift+F-key is taken. Open it from Tools or the command palette.
+    public override Key? Key { get; init; } = null;
+}
+
+public class JassDialogCommand(JassDialog dialog) : ShowDialogCommand<JassDialog>(dialog)
+{
+    public override string Title => "Swiss Jass";
+    public override string Description => UiText.Get(
+        "Games.Jass.CommandDescription",
+        "Play four-player partnership Jass (Schieber) at one keyboard.");
     public override Key? Key { get; init; } = null;
 }
