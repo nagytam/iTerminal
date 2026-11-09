@@ -591,8 +591,8 @@ public class DuplicateFinderDialog : Dialog
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
         var width = (int)ViewSize.Width;
         var footer = (_confirming
-                ? " y:delete  any other key:cancel "
-                : " Space or click:mark  a:keep oldest  n:keep newest  u:unmark  Del:delete  Enter or g:go to  r:rescan  Esc:close ")
+                ? " " + UiText.Get("Dup.ConfirmHints", "y:delete  any other key:cancel") + " "
+                : " " + UiText.Get("Dup.Hints", "Space or click:mark  a:keep oldest  n:keep newest  u:unmark  Del:delete  Enter or g:go to  r:rescan  Esc:close") + " ")
             .FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);

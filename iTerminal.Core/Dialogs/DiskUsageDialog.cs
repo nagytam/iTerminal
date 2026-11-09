@@ -469,7 +469,7 @@ public class DiskUsageDialog : Dialog
         var colorScheme = ThemeService.CurrentColorScheme;
         GetColor(colorScheme, GetVisualState(), out var foreground, out _);
         var width = (int)ViewSize.Width;
-        var footer = " Enter:open  ←:up  g:go to panel  s:sort  r:rescan  Esc:close ".FitHints(Math.Max(0, width - 4));
+        var footer = (" " + UiText.Get("DiskUsage.Hints", "Enter:open  ←:up  g:go to panel  s:sort  r:rescan  Esc:close") + " ").FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, footer), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);

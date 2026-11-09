@@ -8257,4 +8257,85 @@
   <data name="Weather.Loading" xml:space="preserve">
     <value>Wetter {0}</value>
   </data>
+  <data name="Info.Link" xml:space="preserve">
+    <value>Link:</value>
+  </data>
+  <data name="Info.File" xml:space="preserve">
+    <value>Datei:</value>
+  </data>
+  <data name="Info.Folder" xml:space="preserve">
+    <value>Ordner:</value>
+  </data>
+  <data name="Info.FileSize" xml:space="preserve">
+    <value>Dateigröße:</value>
+  </data>
+  <data name="Ai.NoKey" xml:space="preserve">
+    <value>kein API-Schlüssel — setzen Sie {0}</value>
+  </data>
+  <data name="Ai.KeyRefused" xml:space="preserve">
+    <value>API-Schlüssel abgelehnt ({0}) — prüfen Sie {1}</value>
+  </data>
+  <data name="Ai.NoEndpoint" xml:space="preserve">
+    <value>kein Modell-Endpunkt ({0}) — prüfen Sie die API-URL</value>
+  </data>
+  <data name="Ai.RateLimited" xml:space="preserve">
+    <value>Anfragelimit erreicht (429) — später erneut versuchen</value>
+  </data>
+  <data name="Ai.ServerError" xml:space="preserve">
+    <value>Serverfehler ({0})</value>
+  </data>
+  <data name="Ai.Refused" xml:space="preserve">
+    <value>Anfrage abgelehnt ({0})</value>
+  </data>
+  <data name="Ai.Off" xml:space="preserve">
+    <value>KI ist aus (AI:Provider)</value>
+  </data>
+  <data name="Ai.ModelMissing" xml:space="preserve">
+    <value>Modell nicht gefunden: {0}</value>
+  </data>
+  <data name="Ai.Unreachable" xml:space="preserve">
+    <value>Server nicht erreichbar</value>
+  </data>
+  <data name="Ai.Timeout" xml:space="preserve">
+    <value>Server-Zeitüberschreitung</value>
+  </data>
+  <data name="Ai.Error" xml:space="preserve">
+    <value>Fehler: {0}</value>
+  </data>
+  <data name="Ai.Unavailable" xml:space="preserve">
+    <value>nicht verfügbar: {0}</value>
+  </data>
+  <data name="Ai.Hints" xml:space="preserve">
+    <value>Strg+F2: Details, Strg+B: Terminalleiste</value>
+  </data>
+  <data name="Palette.NoMatch" xml:space="preserve">
+    <value>Kein Befehl passt.</value>
+  </data>
+  <data name="Compare.FieldCompare" xml:space="preserve">
+    <value>Vergleichen</value>
+  </data>
+  <data name="Compare.FieldSync" xml:space="preserve">
+    <value>Abgleich (F5)</value>
+  </data>
+  <data name="Compare.Left" xml:space="preserve">
+    <value>Links: </value>
+  </data>
+  <data name="Compare.Right" xml:space="preserve">
+    <value>Rechts:</value>
+  </data>
+  <data name="Compare.Comparing" xml:space="preserve">
+    <value>Vergleiche… {0}</value>
+  </data>
+  <data name="Compare.Hints" xml:space="preserve">
+    <value>Enter:vergleichen  F5:abgleichen  ↑↓/Rad:scrollen  Esc:schließen</value>
+  </data>
+  <data name="DiskUsage.Hints" xml:space="preserve">
+    <value>Enter:öffnen  ←:hoch  g:zum Panel  s:sortieren  r:neu messen  Esc:schließen</value>
+  </data>
+  <data name="Dup.ConfirmHints" xml:space="preserve">
+    <value>y:löschen  andere Taste:abbrechen</value>
+  </data>
+  <data name="Dup.Hints" xml:space="preserve">
+    <value>Leertaste/Klick:markieren  a:ältestes behalten  n:neuestes behalten  u:Markierung weg  Entf:löschen  Enter/g:hin  r:neu suchen  Esc:schließen</value>
+  </data>
 </root>

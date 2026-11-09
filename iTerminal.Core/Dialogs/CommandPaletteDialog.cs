@@ -325,7 +325,7 @@ public class CommandPaletteDialog : Dialog
                 }
                 else
                 {
-                    text = index == 0 && Items.Count == 0 ? " No command matches." : string.Empty;
+                    text = index == 0 && Items.Count == 0 ? " " + UiText.Get("Palette.NoMatch", "No command matches.") : string.Empty;
                 }
 
                 // Every cell of the rectangle, every time: a shorter list must not leave old rows behind.

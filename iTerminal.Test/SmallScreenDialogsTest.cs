@@ -840,6 +840,9 @@ public class SmallScreenDialogsTest
     [DataRow("Ctrl+Shift+F10", null, "Arbeitsgruppe gilt")]
     [DataRow(null, "Map", "Pfeile:schwenken")]
     [DataRow(null, "Web Browser", "F1:Hilfe")]
+    [DataRow(null, "Compare Folders", "Enter:vergleichen")]
+    [DataRow(null, "Duplicate", "Leertaste/Klick:markieren")]
+    [DataRow(null, "Disk usage", "g:zum Panel")]
     public async Task TheDiskManagerSystemSettingsMapAndWebBrowserInGerman_AreGerman(string? chord, string? command, string expected)
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 160, height: 40);
@@ -1004,5 +1007,17 @@ public class SmallScreenDialogsTest
         {
             Assert.IsTrue(screen.Contains(item), item + " missing:" + screen.Dump());
         }
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheInfoStripAndTheAiBarInGerman_AreGerman()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+        await app.SwitchToGermanAsync();
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Datei: readme.txt") && l.Contains("Dateigröße:")), "the information strip in German");
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("nicht verfügbar")), "the AI bar in German");
     }
 }

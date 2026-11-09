@@ -1,4 +1,5 @@
-﻿using iConsole.Controls;
+﻿using iConsole.Localization;
+using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -61,10 +62,10 @@ public abstract record EntryBase : IEntry
             {
                 // The name as listed, not the folder's last path segment: for a link the two are
                 // the same thing, and the target is what there is to say about it.
-                return $"Link: {Url.DisplayName} {LinkArrow} {Url.LinkTarget}".PadRight(width);
+                return (UiText.Get("Info.Link", "Link:") + $" {Url.DisplayName} {LinkArrow} {Url.LinkTarget}").PadRight(width);
             }
 
-            var name = (Url.PathType == PathType.File) ? "File: " : "Folder: ";
+            var name = (Url.PathType == PathType.File ? UiText.Get("Info.File", "File:") : UiText.Get("Info.Folder", "Folder:")) + " ";
             name += GetName(width);
             return name;
         }
@@ -92,7 +93,7 @@ public abstract record EntryBase : IEntry
 
     public virtual string GetDisplayFileSize(int width)
     {
-        var fileSize = (Url.PathType == PathType.File) ? "File size: " : string.Empty;
+        var fileSize = (Url.PathType == PathType.File) ? UiText.Get("Info.FileSize", "File size:") + " " : string.Empty;
         fileSize += GetFileSize(width);
         return fileSize;
     }

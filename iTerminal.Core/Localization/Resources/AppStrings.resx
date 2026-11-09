@@ -8398,4 +8398,85 @@
   <data name="Weather.Loading" xml:space="preserve">
     <value>Weather {0}</value>
   </data>
+  <data name="Info.Link" xml:space="preserve">
+    <value>Link:</value>
+  </data>
+  <data name="Info.File" xml:space="preserve">
+    <value>File:</value>
+  </data>
+  <data name="Info.Folder" xml:space="preserve">
+    <value>Folder:</value>
+  </data>
+  <data name="Info.FileSize" xml:space="preserve">
+    <value>File size:</value>
+  </data>
+  <data name="Ai.NoKey" xml:space="preserve">
+    <value>no API key — set {0}</value>
+  </data>
+  <data name="Ai.KeyRefused" xml:space="preserve">
+    <value>API key refused ({0}) — check {1}</value>
+  </data>
+  <data name="Ai.NoEndpoint" xml:space="preserve">
+    <value>no models endpoint ({0}) — check the API URL</value>
+  </data>
+  <data name="Ai.RateLimited" xml:space="preserve">
+    <value>rate limited (429) — try again later</value>
+  </data>
+  <data name="Ai.ServerError" xml:space="preserve">
+    <value>server error ({0})</value>
+  </data>
+  <data name="Ai.Refused" xml:space="preserve">
+    <value>request refused ({0})</value>
+  </data>
+  <data name="Ai.Off" xml:space="preserve">
+    <value>AI is off (AI:Provider)</value>
+  </data>
+  <data name="Ai.ModelMissing" xml:space="preserve">
+    <value>model not found: {0}</value>
+  </data>
+  <data name="Ai.Unreachable" xml:space="preserve">
+    <value>server unreachable</value>
+  </data>
+  <data name="Ai.Timeout" xml:space="preserve">
+    <value>server timeout</value>
+  </data>
+  <data name="Ai.Error" xml:space="preserve">
+    <value>error: {0}</value>
+  </data>
+  <data name="Ai.Unavailable" xml:space="preserve">
+    <value>unavailable: {0}</value>
+  </data>
+  <data name="Ai.Hints" xml:space="preserve">
+    <value>Ctrl+F2: details, Ctrl+B: terminal bar</value>
+  </data>
+  <data name="Palette.NoMatch" xml:space="preserve">
+    <value>No command matches.</value>
+  </data>
+  <data name="Compare.FieldCompare" xml:space="preserve">
+    <value>Compare</value>
+  </data>
+  <data name="Compare.FieldSync" xml:space="preserve">
+    <value>Sync (F5)</value>
+  </data>
+  <data name="Compare.Left" xml:space="preserve">
+    <value>Left: </value>
+  </data>
+  <data name="Compare.Right" xml:space="preserve">
+    <value>Right:</value>
+  </data>
+  <data name="Compare.Comparing" xml:space="preserve">
+    <value>Comparing… {0}</value>
+  </data>
+  <data name="Compare.Hints" xml:space="preserve">
+    <value>Enter:compare  F5:synchronise  ↑↓/wheel:scroll  Esc:close</value>
+  </data>
+  <data name="DiskUsage.Hints" xml:space="preserve">
+    <value>Enter:open  ←:up  g:go to panel  s:sort  r:rescan  Esc:close</value>
+  </data>
+  <data name="Dup.ConfirmHints" xml:space="preserve">
+    <value>y:delete  any other key:cancel</value>
+  </data>
+  <data name="Dup.Hints" xml:space="preserve">
+    <value>Space or click:mark  a:keep oldest  n:keep newest  u:unmark  Del:delete  Enter or g:go to  r:rescan  Esc:close</value>
+  </data>
 </root>

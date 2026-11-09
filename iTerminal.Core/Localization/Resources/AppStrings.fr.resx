@@ -8257,4 +8257,85 @@
   <data name="Weather.Loading" xml:space="preserve">
     <value>Météo {0}</value>
   </data>
+  <data name="Info.Link" xml:space="preserve">
+    <value>Lien :</value>
+  </data>
+  <data name="Info.File" xml:space="preserve">
+    <value>Fichier :</value>
+  </data>
+  <data name="Info.Folder" xml:space="preserve">
+    <value>Dossier :</value>
+  </data>
+  <data name="Info.FileSize" xml:space="preserve">
+    <value>Taille du fichier :</value>
+  </data>
+  <data name="Ai.NoKey" xml:space="preserve">
+    <value>pas de clé API — définissez {0}</value>
+  </data>
+  <data name="Ai.KeyRefused" xml:space="preserve">
+    <value>clé API refusée ({0}) — vérifiez {1}</value>
+  </data>
+  <data name="Ai.NoEndpoint" xml:space="preserve">
+    <value>pas de point d’accès aux modèles ({0}) — vérifiez l’URL de l’API</value>
+  </data>
+  <data name="Ai.RateLimited" xml:space="preserve">
+    <value>limite de débit atteinte (429) — réessayez plus tard</value>
+  </data>
+  <data name="Ai.ServerError" xml:space="preserve">
+    <value>erreur du serveur ({0})</value>
+  </data>
+  <data name="Ai.Refused" xml:space="preserve">
+    <value>requête refusée ({0})</value>
+  </data>
+  <data name="Ai.Off" xml:space="preserve">
+    <value>L’IA est désactivée (AI:Provider)</value>
+  </data>
+  <data name="Ai.ModelMissing" xml:space="preserve">
+    <value>modèle introuvable : {0}</value>
+  </data>
+  <data name="Ai.Unreachable" xml:space="preserve">
+    <value>serveur injoignable</value>
+  </data>
+  <data name="Ai.Timeout" xml:space="preserve">
+    <value>délai du serveur dépassé</value>
+  </data>
+  <data name="Ai.Error" xml:space="preserve">
+    <value>erreur : {0}</value>
+  </data>
+  <data name="Ai.Unavailable" xml:space="preserve">
+    <value>indisponible : {0}</value>
+  </data>
+  <data name="Ai.Hints" xml:space="preserve">
+    <value>Ctrl+F2 : détails, Ctrl+B : barre de terminal</value>
+  </data>
+  <data name="Palette.NoMatch" xml:space="preserve">
+    <value>Aucune commande ne correspond.</value>
+  </data>
+  <data name="Compare.FieldCompare" xml:space="preserve">
+    <value>Comparer</value>
+  </data>
+  <data name="Compare.FieldSync" xml:space="preserve">
+    <value>Synchro (F5)</value>
+  </data>
+  <data name="Compare.Left" xml:space="preserve">
+    <value>Gauche : </value>
+  </data>
+  <data name="Compare.Right" xml:space="preserve">
+    <value>Droite :</value>
+  </data>
+  <data name="Compare.Comparing" xml:space="preserve">
+    <value>Comparaison… {0}</value>
+  </data>
+  <data name="Compare.Hints" xml:space="preserve">
+    <value>Entrée:comparer  F5:synchroniser  ↑↓/molette:défiler  Échap:fermer</value>
+  </data>
+  <data name="DiskUsage.Hints" xml:space="preserve">
+    <value>Entrée:ouvrir  ←:monter  g:vers le panneau  s:trier  r:remesurer  Échap:fermer</value>
+  </data>
+  <data name="Dup.ConfirmHints" xml:space="preserve">
+    <value>y:supprimer  autre touche:annuler</value>
+  </data>
+  <data name="Dup.Hints" xml:space="preserve">
+    <value>Espace/clic:marquer  a:garder le plus ancien  n:garder le plus récent  u:démarquer  Suppr:supprimer  Entrée/g:aller  r:rescanner  Échap:fermer</value>
+  </data>
 </root>
