@@ -679,11 +679,7 @@ public class SmallScreenDialogsTest
     public async Task TheFootersOfContactsFindAndDocumentsInGerman_AreGerman(string chord, string expected)
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync(chord);
 
@@ -695,11 +691,7 @@ public class SmallScreenDialogsTest
     public async Task TheContactsListInGerman_HasGermanHeadingsAndMessages()
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("Ctrl+Shift+K");
 
@@ -712,11 +704,7 @@ public class SmallScreenDialogsTest
     public async Task TheWorkspacesEmptyHelpInGerman_IsGerman()
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("Ctrl+Shift+F2");
 
@@ -728,11 +716,7 @@ public class SmallScreenDialogsTest
     public async Task TheCalendarInGerman_SaysTodayAndNoMeetingsInGerman()
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("Ctrl+D");
 
@@ -744,11 +728,7 @@ public class SmallScreenDialogsTest
     public async Task TheRemoteConnectionsListInGerman_HasGermanHeadings()
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 120, height: 30);
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("Alt+F2");
 
@@ -762,11 +742,7 @@ public class SmallScreenDialogsTest
     public async Task TheMailFormAndTheTranslatorNoteInGerman_AreGerman(string chord, string expected)
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync(chord);
 
@@ -778,11 +754,7 @@ public class SmallScreenDialogsTest
     public async Task TheCalendarInGerman_HasGermanDayNames()
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("Ctrl+D");
 
@@ -794,11 +766,7 @@ public class SmallScreenDialogsTest
     public async Task TheAiModelInformationInGerman_HasGermanSections()
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("Ctrl+F2");
 
@@ -818,11 +786,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
         await app.SelectEntryAsync("readme.txt");
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync(chord);
 
@@ -840,11 +804,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
         await app.SelectEntryAsync("readme.txt");
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("Shift+F1");
         await app.TypeAsync(command);
@@ -865,11 +825,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
         await app.SelectEntryAsync("readme.txt");
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("Shift+F1");
         await app.TypeAsync(game);
@@ -888,11 +844,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 160, height: 40);
         await app.SelectEntryAsync("readme.txt");
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         if (chord is not null)
         {
@@ -913,11 +865,7 @@ public class SmallScreenDialogsTest
     public async Task TheCommandPaletteInGerman_ListsGermanNamesAndStillFindsEnglishOnes()
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 120, height: 36);
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("Shift+F1");
         await app.TypeAsync("Ordner vergl");
@@ -935,11 +883,7 @@ public class SmallScreenDialogsTest
     public async Task TheHelpInGerman_NamesTheCommandsInGerman()
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 120, height: 36);
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("F1");
 
@@ -959,11 +903,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
         await app.SelectEntryAsync("readme.txt");
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("Shift+F1");
         await app.TypeAsync(command);
@@ -984,11 +924,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 100, height: 30);
         await app.SelectEntryAsync("readme.txt");
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync("Ctrl+F12");
 
@@ -1005,11 +941,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 120, height: 36);
         await app.SelectEntryAsync("readme.txt");
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync(key);
 
@@ -1029,11 +961,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
         await app.SelectEntryAsync("readme.txt");
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync(key);
 
@@ -1052,11 +980,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
         await app.SelectEntryAsync("readme.txt");
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
 
         await app.PressAsync(chord);
 
@@ -1069,11 +993,7 @@ public class SmallScreenDialogsTest
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
         await app.SelectEntryAsync("readme.txt");
-        await app.PressAsync("Ctrl+Shift+F3");
-        await Task.Delay(400);
-        await app.PressAsync("Down");
-        await app.PressAsync("Enter");
-        await Task.Delay(500);
+        await app.SwitchToGermanAsync();
         var screen = await app.WaitForTextAsync("readme.txt");
         var position = screen.Find("readme.txt")!;
 
