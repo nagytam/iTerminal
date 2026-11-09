@@ -99,6 +99,7 @@ public class ContentModelDeleteTask(
         {
             Description = string.Format(UiText.Get("Task.DeleteFailed", "Delete failed: {0}"), ex.Message);
             Error = ex.Message;
+            Failure = ex;
         }
     }
 

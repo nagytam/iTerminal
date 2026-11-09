@@ -66,6 +66,9 @@ public abstract class BackgroundTask : IBackgroundTask, INotifyPropertyChanged
 
     public bool IsPaused => PauseGate.IsPaused;
 
+    /// <summary>The exception that failed the task, whole: <see cref="Error"/> keeps only its message.</summary>
+    public Exception? Failure { get; protected set; }
+
     public CancellationTokenSource CancellationTokenSource { get; private set; }
     protected CancellationToken CancellationToken { get; private set; }
     protected IProgress<uint> Progress { get; private set; }

@@ -303,6 +303,21 @@ public sealed class TerminalApp : IAsyncDisposable
     }
 
     #region Driving
+    /// <summary>
+    /// Opens the language selector, picks the second language (Deutsch) and waits until the screen is German. Fixed pauses
+    /// here let the next key arrive while the selector was still closing, and the key was lost.
+    /// </summary>
+    public async Task SwitchToGermanAsync()
+    {
+        Assert.IsTrue(await PressAsync("Ctrl+Shift+F3"));
+        await WaitUntilAsync(() => Driver.FocusedModal is Core.Dialogs.LanguageDialog, "the language dialog to open");
+        await PressAsync("Down");
+        await PressAsync("Enter");
+        await WaitForNoDialogAsync();
+        await WaitUntilAsync(() => Driver.GetRequiredService<iConsole.Localization.ILocalizer>().LanguageCode == "de", "the language to change to German");
+        await WaitForNoStrayFramesAsync();
+    }
+
     public Task<bool> PressAsync(string chord) => Driver.PressAsync(chord);
     public Task PressSequenceAsync(params string[] chords) => Driver.PressSequenceAsync(chords);
     public Task TypeAsync(string text) => Driver.TypeAsync(text);
@@ -436,8 +451,23 @@ public sealed class TerminalApp : IAsyncDisposable
     }
 
     /// <summary>Waits until no dialog is open: the keys go to the screen again.</summary>
-    public Task WaitForNoDialogAsync() =>
-        WaitUntilAsync(() => Driver.FocusedModal is TerminalScreen, "every dialog to be closed");
+    public async Task WaitForNoDialogAsync()
+    {
+        try
+        {
+            await WaitUntilAsync(() => Driver.FocusedModal is TerminalScreen, "every dialog to be closed");
+        }
+        catch (AssertFailedException exception)
+        {
+            // A progress window that stays up is usually a task that failed: its message alone says too little to find the cause.
+            var failures = Driver.GetRequiredService<iConsole.Tasks.TaskManager>().Tasks
+                .OfType<iConsole.Tasks.BackgroundTask>()
+                .Where(task => task.Failure is not null)
+                .Select(task => task.Name + ": " + task.Failure);
+            string detail = string.Join(Environment.NewLine, failures);
+            throw detail.Length == 0 ? exception : new AssertFailedException(exception.Message + Environment.NewLine + detail, exception);
+        }
+    }
     #endregion
 
     private async Task DismissSplashAsync()
