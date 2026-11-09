@@ -8971,4 +8971,40 @@
   <data name="Compress.ZipCrypto" xml:space="preserve">
     <value>ZipCrypto (debole, si apre ovunque)</value>
   </data>
+  <data name="Rep.NotSha" xml:space="preserve">
+    <value>Non è uno SHA-256.</value>
+  </data>
+  <data name="Rep.Timeout" xml:space="preserve">
+    <value>La richiesta è scaduta.</value>
+  </data>
+  <data name="Rep.Unexpected" xml:space="preserve">
+    <value>Risposta inattesa da VirusTotal.</value>
+  </data>
+  <data name="Defender.Unavailable" xml:space="preserve">
+    <value>Microsoft Defender non è disponibile su questo computer.</value>
+  </data>
+  <data name="Defender.Clean" xml:space="preserve">
+    <value>Nessuna minaccia trovata.</value>
+  </data>
+  <data name="Recycle.NoRecord" xml:space="preserve">
+    <value>Il cestino di questo sistema non conserva la provenienza di un file, quindi qui non può essere elencato né ripristinato.</value>
+  </data>
+  <data name="Recycle.NoCopy" xml:space="preserve">
+    <value>Nel cestino non si copia nulla: elimina un file (F8) per metterlo lì.</value>
+  </data>
+  <data name="MusicMeta.NoFile" xml:space="preserve">
+    <value>Nessun file selezionato.</value>
+  </data>
+  <data name="MusicMeta.Gone" xml:space="preserve">
+    <value>Il file non esiste più.</value>
+  </data>
+  <data name="Video.NoPicture" xml:space="preserve">
+    <value>Non è stato possibile decodificare alcuna immagine da questo file.</value>
+  </data>
+  <data name="FolderUrl.TypePath" xml:space="preserve">
+    <value>Digita un percorso o un URL!</value>
+  </data>
+  <data name="FolderUrl.UnknownScheme" xml:space="preserve">
+    <value>Schema sconosciuto — vedi l’elenco qui sotto.</value>
+  </data>
 </root>

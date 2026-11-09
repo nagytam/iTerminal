@@ -8971,4 +8971,40 @@
   <data name="Compress.ZipCrypto" xml:space="preserve">
     <value>ZipCrypto (débil, se abre en cualquier sitio)</value>
   </data>
+  <data name="Rep.NotSha" xml:space="preserve">
+    <value>No es un SHA-256.</value>
+  </data>
+  <data name="Rep.Timeout" xml:space="preserve">
+    <value>La solicitud agotó el tiempo de espera.</value>
+  </data>
+  <data name="Rep.Unexpected" xml:space="preserve">
+    <value>Respuesta inesperada de VirusTotal.</value>
+  </data>
+  <data name="Defender.Unavailable" xml:space="preserve">
+    <value>Microsoft Defender no está disponible en este equipo.</value>
+  </data>
+  <data name="Defender.Clean" xml:space="preserve">
+    <value>No se encontraron amenazas.</value>
+  </data>
+  <data name="Recycle.NoRecord" xml:space="preserve">
+    <value>La papelera de este sistema no guarda de dónde vino un archivo, así que aquí no se puede listar ni restaurar.</value>
+  </data>
+  <data name="Recycle.NoCopy" xml:space="preserve">
+    <value>Nada se copia a la papelera: elimine un archivo (F8) para ponerlo allí.</value>
+  </data>
+  <data name="MusicMeta.NoFile" xml:space="preserve">
+    <value>Ningún archivo seleccionado.</value>
+  </data>
+  <data name="MusicMeta.Gone" xml:space="preserve">
+    <value>El archivo ya no existe.</value>
+  </data>
+  <data name="Video.NoPicture" xml:space="preserve">
+    <value>No se pudo decodificar ninguna imagen de este archivo.</value>
+  </data>
+  <data name="FolderUrl.TypePath" xml:space="preserve">
+    <value>¡Escriba una ruta o una URL!</value>
+  </data>
+  <data name="FolderUrl.UnknownScheme" xml:space="preserve">
+    <value>Esquema desconocido: vea la lista de abajo.</value>
+  </data>
 </root>

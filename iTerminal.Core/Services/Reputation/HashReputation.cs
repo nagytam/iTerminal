@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -79,7 +80,7 @@ public sealed class VirusTotalReputationService : IHashReputationService
         var hash = sha256.Trim().ToLowerInvariant();
         if (hash.Length != 64 || !hash.All(Uri.IsHexDigit))
         {
-            return new ReputationResult(ReputationStatus.Error, Message: "Not a SHA-256.");
+            return new ReputationResult(ReputationStatus.Error, Message: UiText.Get("Rep.NotSha", "Not a SHA-256."));
         }
 
         try
@@ -113,7 +114,7 @@ public sealed class VirusTotalReputationService : IHashReputationService
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
             // The client's own timeout: as good as offline.
-            return new ReputationResult(ReputationStatus.Offline, Message: "The request timed out.");
+            return new ReputationResult(ReputationStatus.Offline, Message: UiText.Get("Rep.Timeout", "The request timed out."));
         }
     }
 
@@ -146,7 +147,7 @@ public sealed class VirusTotalReputationService : IHashReputationService
         }
         catch (Exception exception) when (exception is JsonException or KeyNotFoundException or InvalidOperationException)
         {
-            return new ReputationResult(ReputationStatus.Error, Message: "Unexpected answer from VirusTotal.");
+            return new ReputationResult(ReputationStatus.Error, Message: UiText.Get("Rep.Unexpected", "Unexpected answer from VirusTotal."));
         }
     }
 }

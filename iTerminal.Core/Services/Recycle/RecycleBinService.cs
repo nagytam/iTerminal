@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -64,7 +65,7 @@ public class RecycleBinService(IRecycleBinStore store) : IRecycleBinService
 
         return OperatingSystem.IsLinux()
             ? new FreedesktopTrashStore()
-            : new UnavailableRecycleBinStore("The Trash on this system keeps no record of where a file came from, so it cannot be listed or restored here.");
+            : new UnavailableRecycleBinStore(UiText.Get("Recycle.NoRecord", "The Trash on this system keeps no record of where a file came from, so it cannot be listed or restored here."));
     }
 
     public string Unavailable => store.Unavailable;
@@ -213,7 +214,7 @@ public class RecycleBinService(IRecycleBinStore store) : IRecycleBinService
     }
 
     private static NotSupportedException NothingIsPutHere() =>
-        new("Nothing is copied into the recycle bin: delete a file (F8) to put it there.");
+        new(UiText.Get("Recycle.NoCopy", "Nothing is copied into the recycle bin: delete a file (F8) to put it there."));
 
     public Task WriteFileAsync(Url url, MemoryStream inputStream) => throw NothingIsPutHere();
 

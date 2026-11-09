@@ -9112,4 +9112,40 @@
   <data name="Compress.ZipCrypto" xml:space="preserve">
     <value>ZipCrypto (weak, opens anywhere)</value>
   </data>
+  <data name="Rep.NotSha" xml:space="preserve">
+    <value>Not a SHA-256.</value>
+  </data>
+  <data name="Rep.Timeout" xml:space="preserve">
+    <value>The request timed out.</value>
+  </data>
+  <data name="Rep.Unexpected" xml:space="preserve">
+    <value>Unexpected answer from VirusTotal.</value>
+  </data>
+  <data name="Defender.Unavailable" xml:space="preserve">
+    <value>Microsoft Defender is not available on this machine.</value>
+  </data>
+  <data name="Defender.Clean" xml:space="preserve">
+    <value>No threats found.</value>
+  </data>
+  <data name="Recycle.NoRecord" xml:space="preserve">
+    <value>The Trash on this system keeps no record of where a file came from, so it cannot be listed or restored here.</value>
+  </data>
+  <data name="Recycle.NoCopy" xml:space="preserve">
+    <value>Nothing is copied into the recycle bin: delete a file (F8) to put it there.</value>
+  </data>
+  <data name="MusicMeta.NoFile" xml:space="preserve">
+    <value>No file selected.</value>
+  </data>
+  <data name="MusicMeta.Gone" xml:space="preserve">
+    <value>The file no longer exists.</value>
+  </data>
+  <data name="Video.NoPicture" xml:space="preserve">
+    <value>No picture could be decoded from this file.</value>
+  </data>
+  <data name="FolderUrl.TypePath" xml:space="preserve">
+    <value>Type a path or a URL!</value>
+  </data>
+  <data name="FolderUrl.UnknownScheme" xml:space="preserve">
+    <value>Unknown scheme — see the list below.</value>
+  </data>
 </root>
