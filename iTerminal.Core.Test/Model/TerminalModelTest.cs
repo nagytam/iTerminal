@@ -46,7 +46,8 @@ public class TerminalModelTest
 
         gate.SetResult();
 
-        await WaitUntilAsync(() => !model.IsRunning && model.History.Count == 1, "the command to finish and reach the history");
+        // The history entry joins the history a moment before its running mark is cleared, so the mark is waited for too.
+        await WaitUntilAsync(() => !model.IsRunning && model.History.Count == 1 && model.History[0].CommandTask is null, "the command to finish, reach the history and stop reading as running");
         Assert.AreEqual("dir", model.History[0].Command);
         Assert.AreEqual("done", model.History[0].Output);
         Assert.IsNull(model.History[0].CommandTask, "a finished command is no longer marked running");
