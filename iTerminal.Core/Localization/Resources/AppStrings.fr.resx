@@ -9007,4 +9007,94 @@
   <data name="FolderUrl.UnknownScheme" xml:space="preserve">
     <value>Schéma inconnu — voir la liste ci-dessous.</value>
   </data>
+  <data name="Solution.Projects" xml:space="preserve">
+    <value>Projets</value>
+  </data>
+  <data name="Games.Header" xml:space="preserve">
+    <value>Jeux</value>
+  </data>
+  <data name="Settings.VolumeLabel" xml:space="preserve">
+    <value>Volume :</value>
+  </data>
+  <data name="ImgInfo.File" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="ImgInfo.Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="ImgInfo.Location" xml:space="preserve">
+    <value>Lieu</value>
+  </data>
+  <data name="ImgInfo.Text" xml:space="preserve">
+    <value>Texte</value>
+  </data>
+  <data name="ImgInfo.Camera" xml:space="preserve">
+    <value>Appareil</value>
+  </data>
+  <data name="ImgInfo.Capture" xml:space="preserve">
+    <value>Prise de vue</value>
+  </data>
+  <data name="ImgInfo.Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="ImgInfo.Dimensions" xml:space="preserve">
+    <value>Dimensions</value>
+  </data>
+  <data name="ImgInfo.Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="ImgInfo.Altitude" xml:space="preserve">
+    <value>Altitude</value>
+  </data>
+  <data name="ImgInfo.Position" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="ImgInfo.Comment" xml:space="preserve">
+    <value>Commentaire</value>
+  </data>
+  <data name="ImgInfo.Artist" xml:space="preserve">
+    <value>Artiste</value>
+  </data>
+  <data name="ImgInfo.Copyright" xml:space="preserve">
+    <value>Copyright</value>
+  </data>
+  <data name="ImgInfo.Modified" xml:space="preserve">
+    <value>Modifié</value>
+  </data>
+  <data name="ImgInfo.Digitised" xml:space="preserve">
+    <value>Numérisé</value>
+  </data>
+  <data name="ImgInfo.Taken" xml:space="preserve">
+    <value>Prise le</value>
+  </data>
+  <data name="ImgInfo.Exposure" xml:space="preserve">
+    <value>Exposition</value>
+  </data>
+  <data name="ImgInfo.Aperture" xml:space="preserve">
+    <value>Ouverture</value>
+  </data>
+  <data name="ImgInfo.Focallength" xml:space="preserve">
+    <value>Focale</value>
+  </data>
+  <data name="ImgInfo.Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ImgInfo.ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="ImgInfo.Lens" xml:space="preserve">
+    <value>Objectif</value>
+  </data>
+  <data name="ImgInfo.Make" xml:space="preserve">
+    <value>Marque</value>
+  </data>
+  <data name="ImgInfo.Model" xml:space="preserve">
+    <value>Modèle</value>
+  </data>
+  <data name="ImgInfo.Orientation" xml:space="preserve">
+    <value>Orientation</value>
+  </data>
+  <data name="ImgInfo.Software" xml:space="preserve">
+    <value>Logiciel</value>
+  </data>
 </root>

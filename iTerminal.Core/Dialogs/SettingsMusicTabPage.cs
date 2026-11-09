@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Controls.Tabs;
 using iConsole.Data;
@@ -50,7 +51,7 @@ public class SettingsMusicTabPage : TabPage
 
         // The playback volume, the same 0-100 the + and - keys move in steps of 5. The player persists it
         // (MusicSessionJob), so the slider only has to set it; without a player there is nothing to set.
-        _volumeLabel = new Label("Volume:", themeService) { IsVisible = _musicPlayerService is not null };
+        _volumeLabel = new Label(UiText.Get("Settings.VolumeLabel", "Volume:"), themeService) { IsVisible = _musicPlayerService is not null };
         _volumeSlider = new Slider(themeService)
         {
             Minimum = 0,

@@ -57,6 +57,31 @@ public class ImageFileViewerMetadataTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public async Task TheGroupAndFieldNamesFollowTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(ImageFileViewerDialog).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        string path = Path.Combine(Path.GetTempPath(), "meta-" + Guid.NewGuid().ToString("N") + ".png");
+        File.WriteAllBytes(path, [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0, 0, 0, 0, 0, 0, 0, 0]);
+        try
+        {
+            var dialog = new ImageFileViewerDialog(Mock.Of<IVideoDecoderFactory>(), Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme()) { FilePath = path };
+            await ShowAsync(dialog);
+
+            Assert.IsTrue(dialog.MetadataLines().Any(l => l.StartsWith("── Datei ", StringComparison.Ordinal)), string.Join("|", dialog.MetadataLines()));
+            Assert.IsTrue(dialog.MetadataLines().Any(l => l.StartsWith("  Größe ", StringComparison.Ordinal)), string.Join("|", dialog.MetadataLines()));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task E_OutsideTheMetadataView_IsNotHandled()
     {
         string path = Path.Combine(Path.GetTempPath(), "meta-" + Guid.NewGuid().ToString("N") + ".png");
