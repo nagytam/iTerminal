@@ -118,8 +118,9 @@ public class DatabaseInitializationHostedServiceTest
                 .StartAsync(CancellationToken.None);
             await SeedObsoleteWeatherAsync(factory);
 
-            // The next start-up, with the default delay: the clean-up is queued, not run on the start-up path.
-            await new DatabaseInitializationHostedService(factory, new iTerminal.Core.Services.StartupWarningService())
+            // The next start-up with a delay no stalled runner can outlast: the clean-up is queued, not run on the start-up path.
+            // (With the default 10 s a Windows runner that paused for that long ran the clean-up before the assertion.)
+            await new DatabaseInitializationHostedService(factory, new iTerminal.Core.Services.StartupWarningService(), TimeSpan.FromMinutes(10))
                 .StartAsync(CancellationToken.None);
 
             await using iTerminalDbContext context = await factory.CreateDbContextAsync();
