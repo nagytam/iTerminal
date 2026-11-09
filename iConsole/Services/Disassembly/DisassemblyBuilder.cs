@@ -24,7 +24,7 @@ internal static class DisassemblyBuilder
         catch (Exception ex)
         {
             // The input is untrusted; whatever a parser trips over must end as a note, not as a crashed viewer.
-            budget.Lines.Add($"  Disassembly stopped: {ex.Message}");
+            budget.Lines.Add(ViewerText.Format("Disassembly.Stopped", "  Disassembly stopped: {0}", ex.Message));
         }
 
         return budget.Lines;

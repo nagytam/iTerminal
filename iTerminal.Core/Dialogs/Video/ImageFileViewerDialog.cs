@@ -485,8 +485,16 @@ public class ImageFileViewerDialog : Dialog
     {
         ColorScheme colorScheme = ThemeService.CurrentColorScheme;
         var size = new Size(Math.Max(0, iw), 1);
-        var header = $" {FilePath}   {UiText.Get("Image.Metadata", "metadata")}"
-            + (ImageMetadataWriter.CanWrite(FilePath) ? "   " + UiText.Get("Image.EditText", "e:edit text") : string.Empty);
+        string metadata = UiText.Get("Image.Metadata", "metadata");
+        string editHint = ImageMetadataWriter.CanWrite(FilePath)
+            ? "   " + UiText.Get("Image.EditText", "e:edit text")
+            : string.Empty;
+        string suffix = $"   {metadata}{editHint}";
+        int pathWidth = Math.Max(0, iw - suffix.Length - 1);
+        string path = FilePath.Length <= pathWidth
+            ? FilePath
+            : pathWidth <= 1 ? new string('…', pathWidth) : "…" + FilePath[^(pathWidth - 1)..];
+        string header = $" {path}{suffix}";
         buffer.Write(ZOrder, new Position((uint)ix, (uint)iy), size, new ConxelString(Fit(header, iw), Color.Cyan, colorScheme.Background));
 
         List<string> lines = MetadataLines();

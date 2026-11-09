@@ -1213,4 +1213,175 @@
   <data name="Progress.Label" xml:space="preserve">
     <value>Fortschritt</value>
   </data>
+  <data name="Viewer.File.CouldNotRead" xml:space="preserve">
+    <value>Datei konnte nicht gelesen werden.</value>
+  </data>
+  <data name="Viewer.File.AccessLocalOnly" xml:space="preserve">
+    <value>Access-Datenbanken werden aus einer lokalen Datei gelesen</value>
+  </data>
+  <data name="Viewer.File.LinkedDocumentOutsideFolder" xml:space="preserve">
+    <value>Das verknüpfte Dokument liegt außerhalb des Ordners dieser Datei</value>
+  </data>
+  <data name="Viewer.File.LinkedDocumentMissing" xml:space="preserve">
+    <value>Das verknüpfte Dokument befindet sich nicht in diesem Ordner</value>
+  </data>
+  <data name="Viewer.File.NestedMasterNotExpanded" xml:space="preserve">
+    <value>Ein Masterdokument in einem Masterdokument wird nicht erweitert</value>
+  </data>
+  <data name="Viewer.File.FileVersionInfoUnavailable" xml:space="preserve">
+    <value>Dateiversionsinformationen nicht verfügbar: {0}</value>
+  </data>
+  <data name="Viewer.File.AssemblyIdentityUnavailable" xml:space="preserve">
+    <value>Assemblyidentität nicht verfügbar: {0}</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.File" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Size" xml:space="preserve">
+    <value>Größe</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Bytes" xml:space="preserve">
+    <value>{0:N0} Bytes</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.FileVersionInfo" xml:space="preserve">
+    <value>Dateiversionsinformationen</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.FileDescription" xml:space="preserve">
+    <value>Dateibeschreibung</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.FileVersion" xml:space="preserve">
+    <value>Dateiversion</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.ProductName" xml:space="preserve">
+    <value>Produktname</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.ProductVersion" xml:space="preserve">
+    <value>Produktversion</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.CompanyName" xml:space="preserve">
+    <value>Firmenname</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.LegalCopyright" xml:space="preserve">
+    <value>Urheberrecht</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.LegalTrademarks" xml:space="preserve">
+    <value>Markenzeichen</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Comments" xml:space="preserve">
+    <value>Kommentare</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.InternalName" xml:space="preserve">
+    <value>Interner Name</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.OriginalFilename" xml:space="preserve">
+    <value>Originaldateiname</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.AssemblyIdentity" xml:space="preserve">
+    <value>Assemblyidentität</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.AssemblyName" xml:space="preserve">
+    <value>Assemblyname</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Culture" xml:space="preserve">
+    <value>Kultur</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.PublicKeyToken" xml:space="preserve">
+    <value>Public-Key-Token</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.ContentType" xml:space="preserve">
+    <value>Inhaltstyp</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.Flags" xml:space="preserve">
+    <value>Flags</value>
+  </data>
+  <data name="Viewer.BinaryMetadata.NotManagedAssembly" xml:space="preserve">
+    <value>Hinweis: Keine verwaltete .NET-Assembly — keine CLR-Identität verfügbar.</value>
+  </data>
+  <data name="Viewer.Disassembly.IlHeading" xml:space="preserve">
+    <value>Disassemblierung (IL)</value>
+  </data>
+  <data name="Viewer.Disassembly.NativeHeading" xml:space="preserve">
+    <value>Native Disassemblierung</value>
+  </data>
+  <data name="Viewer.Disassembly.NotExecutable" xml:space="preserve">
+    <value>  Keine Windows-PE- oder Linux-ELF-Datei; nichts zu disassemblieren.</value>
+  </data>
+  <data name="Viewer.Disassembly.HeadersUnreadable" xml:space="preserve">
+    <value>  Dateikopfzeilen konnten nicht gelesen werden: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.PeImageMachine" xml:space="preserve">
+    <value>  PE-Abbild, Maschine {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.UnsupportedMachine" xml:space="preserve">
+    <value>  Nur x86- und x86-64-Code können disassembliert werden; dieser Maschinentyp wird nicht unterstützt.</value>
+  </data>
+  <data name="Viewer.Disassembly.SectionDataOutsideFile" xml:space="preserve">
+    <value>die Daten liegen außerhalb der Datei</value>
+  </data>
+  <data name="Viewer.Disassembly.ElfHeaderShort" xml:space="preserve">
+    <value>  Der ELF-Header ist abgeschnitten.</value>
+  </data>
+  <data name="Viewer.Disassembly.ElfUnknownClass" xml:space="preserve">
+    <value>  Unbekannte ELF-Klasse.</value>
+  </data>
+  <data name="Viewer.Disassembly.BigEndianNotSupported" xml:space="preserve">
+    <value>  Big-Endian-ELF-Dateien werden nicht unterstützt.</value>
+  </data>
+  <data name="Viewer.Disassembly.ElfImageMachine" xml:space="preserve">
+    <value>  {0}-Bit-ELF, Maschine {1}</value>
+  </data>
+  <data name="Viewer.Disassembly.NoSectionHeaders" xml:space="preserve">
+    <value>  Die Datei hat keine Abschnittsüberschriften (möglicherweise wurde sie bereinigt); ihr Code kann daher nicht gefunden werden.</value>
+  </data>
+  <data name="Viewer.Disassembly.MalformedSectionHeaders" xml:space="preserve">
+    <value>  Die Abschnittsüberschriften sind fehlerhaft.</value>
+  </data>
+  <data name="Viewer.Disassembly.SectionHeadersPastEnd" xml:space="preserve">
+    <value>  Die Abschnittsüberschriften reichen über das Dateiende hinaus.</value>
+  </data>
+  <data name="Viewer.Disassembly.DecodedCodeLimit" xml:space="preserve">
+    <value>das Limit von {0} MB für dekodierten Code wurde erreicht</value>
+  </data>
+  <data name="Viewer.Disassembly.Stopped" xml:space="preserve">
+    <value>  Disassemblierung angehalten: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.MetadataUnreadable" xml:space="preserve">
+    <value>  Metadaten konnten nicht weiter gelesen werden: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.NoMethodBodies" xml:space="preserve">
+    <value>  Diese Assembly enthält keine Methodenrümpfe.</value>
+  </data>
+  <data name="Viewer.Disassembly.MethodBodyUnreadable" xml:space="preserve">
+    <value>Methodenkörper nicht lesbar: {0}</value>
+  </data>
+  <data name="Viewer.Disassembly.MethodInstructionLimit" xml:space="preserve">
+    <value>    … Methode abgeschnitten: Limit für Anweisungen pro Methode erreicht</value>
+  </data>
+  <data name="Viewer.Disassembly.TruncatedMarker" xml:space="preserve">
+    <value>abgeschnitten</value>
+  </data>
+  <data name="Viewer.Disassembly.OperandPastMethod" xml:space="preserve">
+    <value>Operand reicht über das Ende der Methode hinaus</value>
+  </data>
+  <data name="Viewer.Disassembly.OutputTruncated" xml:space="preserve">
+    <value>  … Ausgabe abgeschnitten: {0}.</value>
+  </data>
+  <data name="Viewer.Disassembly.MethodLimit" xml:space="preserve">
+    <value>das Limit von {0:N0} Methoden wurde erreicht</value>
+  </data>
+  <data name="Viewer.Disassembly.LineLimit" xml:space="preserve">
+    <value>das Limit von {0:N0} Zeilen wurde erreicht</value>
+  </data>
+  <data name="Viewer.Disassembly.TimeLimit" xml:space="preserve">
+    <value>das Zeitlimit von {0:0.#} Sekunden wurde erreicht</value>
+  </data>
 </root>

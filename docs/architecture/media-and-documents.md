@@ -80,8 +80,9 @@ rather than a path, so a document on an SSH, archive or memory drive reads the s
   5,000 instructions per method, 100,000 lines, 4 MB of code and 5 s; a cut-off listing ends with a "truncated" line. Parsing is bounds-checked
   and a parser failure ends as a note. `FileViewerDialog` shows the metadata page at once, adds a "Disassembling…" line, builds the listing
   on a `Task.Run` worker and lands it from `OnIdle` with one `Lines.ReplaceAll` (the worker never touches the text model); `Close()` cancels it,
-  and a result for another `Url` is dropped. The headings are English literals, like the metadata page's. Versioned names such as `libc.so.6`,
-  `.sys`, `.ocx`, `.dylib` and Mach-O are not covered.
+  and a result for another `Url` is dropped. Metadata labels and explanatory diagnostics are localized through the six iConsole
+  `Strings*.resx` files; raw file metadata, architecture and instruction tokens, and parser or OS exception details remain unchanged.
+  Versioned names such as `libc.so.6`, `.sys`, `.ocx`, `.dylib` and Mach-O are not covered.
 
 These readers do not feed the document search index: `DocumentTextExtractorFactory` still lists only the
 extensions it always had.

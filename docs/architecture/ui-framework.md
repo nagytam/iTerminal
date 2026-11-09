@@ -44,8 +44,9 @@ The detailed write-ups, one file per subsystem:
   tab is never translated. The footer does the same with `Footer.` + the label of `F5-Copy`. An entry without a key stays English, so
   a new menu entry needs a `Menu.*` row in every `AppStrings*.resx` (the completeness test fails otherwise).
 - **Adding a string:** add the key to the neutral file and to all five language files; `LocalizationResourcesTest` fails when a
-  language lacks a key, has an extra one, or changes the `{n}` placeholders. Strings are extracted in stages: the menu bar, the hot key
-  bar and the language dialog are done; dialog bodies, the command palette and the commands' own titles are still English.
+  language lacks a key, has an extra one, or changes the `{n}` placeholders. Strings are extracted in stages: the menu bar, hot key
+  bar, language dialog, command palette, command titles and many dialog bodies are localized. Continue extracting app-authored feature
+  output in focused increments, and pair new keys with output assertions because resource completeness does not detect hard-coded literals.
 
 ### Built from the comparison
 

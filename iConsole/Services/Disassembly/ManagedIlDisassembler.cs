@@ -6,6 +6,7 @@ using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection.PortableExecutable;
 using System.Text;
+using iConsole.Services;
 
 namespace iConsole.Services.Disassembly;
 
@@ -70,7 +71,7 @@ internal static class ManagedIlDisassembler
 
         using (peReader)
         {
-            budget.Add("── Disassembly (IL) ────────────────────────────────────────────");
+            budget.Add(ViewerText.Heading("Disassembly.IlHeading", "Disassembly (IL)"));
             int methods = 0;
             try
             {
@@ -92,7 +93,10 @@ internal static class ManagedIlDisassembler
 
                         if (methods >= DisassemblyBudget.MaxMethods)
                         {
-                            budget.Truncate($"the {DisassemblyBudget.MaxMethods:N0} method limit was reached");
+                            budget.Truncate(ViewerText.Format(
+                                "Disassembly.MethodLimit",
+                                "the {0:N0} method limit was reached",
+                                DisassemblyBudget.MaxMethods));
                             break;
                         }
 
@@ -113,12 +117,12 @@ internal static class ManagedIlDisassembler
             }
             catch (Exception ex) when (ex is BadImageFormatException or InvalidOperationException or ArgumentException)
             {
-                budget.Lines.Add($"  Metadata could not be read any further: {ex.Message}");
+                budget.Lines.Add(ViewerText.Format("Disassembly.MetadataUnreadable", "  Metadata could not be read any further: {0}", ex.Message));
             }
 
             if (methods == 0 && budget.TruncatedBecause is null)
             {
-                budget.Lines.Add("  This assembly has no method bodies.");
+                budget.Lines.Add(ViewerText.Get("Disassembly.NoMethodBodies", "  This assembly has no method bodies."));
             }
 
             budget.FinishTruncation();
@@ -141,7 +145,7 @@ internal static class ManagedIlDisassembler
         catch (Exception ex) when (ex is BadImageFormatException or InvalidOperationException or ArgumentException)
         {
             budget.Add(string.Empty);
-            budget.Add($"  .method {name}  // body unreadable: {ex.Message}");
+            budget.Add($"  .method {name}  // {ViewerText.Format("Disassembly.MethodBodyUnreadable", "body unreadable: {0}", ex.Message)}");
             return;
         }
 
@@ -154,7 +158,9 @@ internal static class ManagedIlDisassembler
         {
             if (count++ >= DisassemblyBudget.MaxInstructionsPerMethod)
             {
-                budget.Add("    … method truncated: instruction limit per method reached");
+                budget.Add(ViewerText.Get(
+                    "Disassembly.MethodInstructionLimit",
+                    "    … method truncated: instruction limit per method reached"));
                 return;
             }
 
@@ -165,7 +171,7 @@ internal static class ManagedIlDisassembler
             {
                 if (position >= il.Length)
                 {
-                    budget.Add($"    IL_{start:x4}: .byte 0xfe  // truncated");
+                    budget.Add($"    IL_{start:x4}: .byte 0xfe  // {ViewerText.Get("Disassembly.TruncatedMarker", "truncated")}");
                     return;
                 }
 
@@ -185,7 +191,7 @@ internal static class ManagedIlDisassembler
             string? operand = ReadOperand(metadata, opCode, il, ref position);
             if (operand is null)
             {
-                budget.Add($"    IL_{start:x4}: {opCode.Name}  // operand runs past the end of the method");
+                budget.Add($"    IL_{start:x4}: {opCode.Name}  // {ViewerText.Get("Disassembly.OperandPastMethod", "operand runs past the end of the method")}");
                 return;
             }
 
