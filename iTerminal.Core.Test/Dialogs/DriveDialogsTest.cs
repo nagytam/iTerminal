@@ -128,12 +128,13 @@ public class DriveDialogsTest
             AssertScreenContains(Render(rig.Root), mountTypes);
             StringAssert.Contains(rig.Dialog.Error, mountTypes);
 
-            string path = Path.Combine(_folder, $"missing-{code}.iso");
+            string path = $"missing-{code}-{Guid.NewGuid():N}.iso";
             rig.Dialog.ImagePath = path;
             Assert.IsFalse(await rig.Dialog.RunAsync(mount: true));
             string expected = string.Format(missingFile, path);
             StringAssert.Contains(rig.Dialog.Error, expected);
             AssertScreenContains(Render(rig.Root), missingFile[..missingFile.IndexOf("{0}", StringComparison.Ordinal)].TrimEnd());
+            AssertScreenContains(Render(rig.Root), path);
         }
     }
 
