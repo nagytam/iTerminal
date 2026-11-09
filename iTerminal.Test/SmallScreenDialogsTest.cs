@@ -851,6 +851,7 @@ public class SmallScreenDialogsTest
     [DataRow(null, "Stocks", "Vortag")]
     [DataRow("F5", null, "Datei kopieren")]
     [DataRow("Ctrl+A", null, "Zurück")]
+    [DataRow(null, "Compress", "1 Datei")]
     [DataRow("Shift+F6", null, "Datei verschieben")]
     [DataRow("Alt+F9", null, "auswerfen")]
     [DataRow("Ctrl+Shift+F10", null, "Computername")]

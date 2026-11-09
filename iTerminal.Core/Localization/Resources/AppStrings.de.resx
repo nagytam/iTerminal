@@ -8953,4 +8953,22 @@
   <data name="Calc.Back" xml:space="preserve">
     <value>Zurück</value>
   </data>
+  <data name="Transfer.OneFile" xml:space="preserve">
+    <value>1 Datei</value>
+  </data>
+  <data name="Transfer.Files" xml:space="preserve">
+    <value>{0} Dateien</value>
+  </data>
+  <data name="Transfer.OneFolder" xml:space="preserve">
+    <value>1 Ordner</value>
+  </data>
+  <data name="Transfer.Folders" xml:space="preserve">
+    <value>{0} Ordner</value>
+  </data>
+  <data name="Compress.FormatPassword" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="Compress.ZipCrypto" xml:space="preserve">
+    <value>ZipCrypto (schwach, öffnet überall)</value>
+  </data>
 </root>

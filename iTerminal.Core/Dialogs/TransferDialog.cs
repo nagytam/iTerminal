@@ -286,11 +286,11 @@ public abstract class TransferDialog : FormDialog
         var parts = new List<string>();
         if (files > 0)
         {
-            parts.Add($"{files} file{(files == 1 ? string.Empty : "s")}");
+            parts.Add(files == 1 ? UiText.Get("Transfer.OneFile", "1 file") : string.Format(UiText.Get("Transfer.Files", "{0} files"), files));
         }
         if (folders > 0)
         {
-            parts.Add($"{folders} folder{(folders == 1 ? string.Empty : "s")}");
+            parts.Add(folders == 1 ? UiText.Get("Transfer.OneFolder", "1 folder") : string.Format(UiText.Get("Transfer.Folders", "{0} folders"), folders));
         }
 
         return string.Join(", ", parts) + ": " + string.Join(", ", sources.Select(u => iTerminal.Core.Commands.FocusedEntry.NameOf(u)));
