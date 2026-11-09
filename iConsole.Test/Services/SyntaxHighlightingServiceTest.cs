@@ -40,6 +40,8 @@ public class SyntaxHighlightingServiceTest
     [DataRow("c++", "C++")]
     [DataRow("py", "Python")]
     [DataRow("Python", "Python")]
+    [DataRow("ruby", "Ruby")]
+    [DataRow("rb", "Ruby")]
     [DataRow("PowerShell", "PowerShell")]
     [DataRow("pwsh", "PowerShell")]
     [DataRow("bash", "Shell")]
@@ -55,6 +57,16 @@ public class SyntaxHighlightingServiceTest
     public void FindByName_UnderstandsFenceNames(string name, string expected)
     {
         Assert.AreEqual(expected, new SyntaxHighlightingService().FindByName(name)?.Name);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("/src/app.RB?version=1")]
+    [DataRow("/src/Gemfile")]
+    [DataRow(@"C:\src\Rakefile")]
+    public void FindByFile_RecognizesRubyFiles(string path)
+    {
+        Assert.AreEqual("Ruby", new SyntaxHighlightingService().FindByFile(path)?.Name);
     }
 
     [Timeout(60_000)]

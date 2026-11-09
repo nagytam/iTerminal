@@ -272,6 +272,14 @@ public static class SyntaxHighlighter
     private static readonly SyntaxLanguage Python = new(
         "Python", PythonKeywords, ["#"], null, "\"'", tripleQuotes: true);
 
+    private static readonly SyntaxLanguage Ruby = new(
+        "Ruby",
+        ["BEGIN", "END", "alias", "and", "begin", "break", "case", "class", "def", "defined", "do", "else", "elsif",
+         "end", "ensure", "false", "for", "if", "in", "module", "next", "nil", "not", "or", "redo", "rescue", "retry",
+         "return", "self", "super", "then", "true", "undef", "unless", "until", "when", "while", "yield",
+         "__FILE__", "__LINE__", "__ENCODING__"],
+        ["#"], null, "\"'", variableSigils: "$@");
+
     private static readonly SyntaxLanguage Shell = new(
         "Shell", ShellKeywords, ["#"], null, "\"'", hyphenatedWords: true, variableSigils: "$");
 
@@ -377,6 +385,7 @@ public static class SyntaxHighlighter
     private static readonly Dictionary<string, SyntaxLanguage> ByFileName = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Dockerfile"] = BuildFile, ["Containerfile"] = BuildFile, ["Makefile"] = BuildFile, ["GNUmakefile"] = BuildFile,
+        ["Gemfile"] = Ruby, ["Rakefile"] = Ruby,
         [".bashrc"] = Shell, [".zshrc"] = Shell, [".profile"] = Shell, [".bash_profile"] = Shell,
         [".gitignore"] = Config, [".gitattributes"] = Config, [".dockerignore"] = Config, [".gitconfig"] = Ini, [".npmrc"] = Ini,
         ["Directory.Build.props"] = Markup, ["Directory.Build.targets"] = Markup,
@@ -395,7 +404,7 @@ public static class SyntaxHighlighter
         [".java"] = Java, [".js"] = JavaScript, [".jsx"] = JavaScript, [".mjs"] = JavaScript,
         [".ts"] = CLike, [".tsx"] = CLike, [".go"] = Go, [".rs"] = Rust, [".kt"] = CLike, [".swift"] = CLike, [".php"] = Php,
         [".scala"] = CLike, [".dart"] = CLike, [".css"] = CLike, [".scss"] = CLike,
-        [".py"] = Python, [".pyw"] = Python, [".rb"] = Python, [".pl"] = Perl, [".pm"] = Perl, [".r"] = R,
+        [".py"] = Python, [".pyw"] = Python, [".rb"] = Ruby, [".pl"] = Perl, [".pm"] = Perl, [".r"] = R,
         [".sh"] = Shell, [".bash"] = Shell, [".zsh"] = Shell,
         [".sql"] = Sql, [".ddl"] = Sql, [".psql"] = Sql, [".pgsql"] = Sql, [".mysql"] = Sql, [".tsql"] = Sql,
         [".xml"] = Markup, [".html"] = Markup, [".htm"] = Markup, [".xaml"] = Markup, [".csproj"] = Markup,
@@ -408,7 +417,7 @@ public static class SyntaxHighlighter
 
     /// <summary>Every language built in, for <see cref="iConsole.Services.ISyntaxHighlightingService"/> to list and look up by name.</summary>
     internal static IReadOnlyList<SyntaxLanguage> BuiltInLanguages { get; } =
-        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, PowerShell, Python, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, R, Perl, Php, VisualBasic, FSharp, BuildFile, Log];
+        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, PowerShell, Python, Ruby, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, R, Perl, Php, VisualBasic, FSharp, BuildFile, Log];
 
     /// <summary>The language for a file name or path, or null when there is none to colour it with.</summary>
     public static SyntaxLanguage? ForFile(string? fileName)
