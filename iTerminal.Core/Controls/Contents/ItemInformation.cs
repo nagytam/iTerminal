@@ -71,6 +71,26 @@ public class ItemInformation : iConsole.Controls.Control
         IsVisible = true;
     }
 
+    private string? _languageShown;
+
+    /// <summary>The strip composes its words once per cursor move: a language change has to make it compose them again.</summary>
+    public override void OnIdle()
+    {
+        string language = UiText.Current?.LanguageCode ?? string.Empty;
+        if (_languageShown is null)
+        {
+            _languageShown = language;
+        }
+        else if (_languageShown != language)
+        {
+            _languageShown = language;
+            _lastFocusedInformationUrl = null;
+            RefreshFocusedItemTexts();
+        }
+
+        base.OnIdle();
+    }
+
     private void OnContentModelServiceModelChanged(object? sender, EventArgs e)
     {
         FollowModelSwap();

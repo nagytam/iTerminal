@@ -27,6 +27,7 @@ public class HelpDialog : Dialog
     public override async Task OnInitializeAsync()
     {
         await base.OnInitializeAsync();
+        Title = iConsole.Localization.UiText.Get("Common.Help", "Help");
 
         var rootControl = ContextControl ?? GetRootControl();
         var focusedControl = ContextFocus ?? rootControl.GetFocusedControl();

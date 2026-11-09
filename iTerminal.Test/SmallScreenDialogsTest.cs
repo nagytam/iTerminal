@@ -1038,4 +1038,31 @@ public class SmallScreenDialogsTest
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("alpha") && l.Contains("Ordner")), "the folder mark in German");
         await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Dateien:")), "the file count in German");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task ThePanelFooterAndTheStripAfterALiveSwitchToGerman_AreGerman()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);
+        await app.SelectEntryAsync("readme.txt");
+
+        await app.SwitchToGermanAsync();
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("5 Einträge")), "the entry count in German");
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("Hoch zu:") || l.Contains("Datei: readme.txt")), "the strip in German");
+        await app.WaitUntilAsync(s => !s.Lines.Any(l => l.Contains("Up to:") || l.Contains("File size:")), "no English left in the strip");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task TheHelpTitleInGerman_IsGerman()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync(width: 80, height: 24);
+        await app.SelectEntryAsync("readme.txt");
+        await app.SwitchToGermanAsync();
+
+        await app.PressAsync("F1");
+
+        await app.WaitUntilAsync(s => s.Lines.Any(l => l.Contains("═ Hilfe ═")), "the Help title in German");
+    }
 }

@@ -1,4 +1,5 @@
-﻿using iConsole.Data;
+﻿using iConsole.Localization;
+using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Interfaces;
@@ -245,17 +246,17 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
     protected string EntryCountFooter()
     {
         var count = FilteredEntries.Count;
-        var footer = $" {count} {(count == 1 ? "entry" : "entries")} ";
+        var footer = " " + (count == 1 ? UiText.Get("Panel.EntryOne", "1 entry") : string.Format(UiText.Get("Panel.EntryMany", "{0} entries"), count)) + " ";
         var marked = GetMarkedEntries();
         if (marked.Count > 0)
         {
-            footer += $"{marked.Count} marked";
+            footer += string.Format(UiText.Get("Panel.Marked", "{0} marked"), marked.Count);
             var bytes = marked.Where(e => e.Url.PathType == PathType.File).Sum(e => Math.Max(0, e.Url.Length));
             footer += bytes > 0 ? $", {bytes.ToFileSize().Trim()} " : " ";
         }
         if (Filter is not null)
         {
-            footer += $"Filter: {Filter} ";
+            footer += string.Format(UiText.Get("Panel.Filter", "Filter: {0}"), Filter) + " ";
         }
         if (EntryFilterDescription is not null)
         {
@@ -263,7 +264,7 @@ public abstract class ContentModelBase : ScrollableModel, IContentModel, IMarkab
         }
         if (!Sort.IsAsListed)
         {
-            footer += $"Sort: {Sort.Describe()} ";
+            footer += string.Format(UiText.Get("Panel.Sort", "Sort: {0}"), Sort.Describe()) + " ";
         }
         return footer;
     }

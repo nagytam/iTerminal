@@ -8731,4 +8731,31 @@
   <data name="Listing.FolderMark" xml:space="preserve">
     <value>Doss.</value>
   </data>
+  <data name="Panel.EntryOne" xml:space="preserve">
+    <value>1 entrée</value>
+  </data>
+  <data name="Panel.EntryMany" xml:space="preserve">
+    <value>{0} entrées</value>
+  </data>
+  <data name="Panel.Marked" xml:space="preserve">
+    <value>{0} marqué(s)</value>
+  </data>
+  <data name="Panel.Filter" xml:space="preserve">
+    <value>Filtre : {0}</value>
+  </data>
+  <data name="Panel.Sort" xml:space="preserve">
+    <value>Tri : {0}</value>
+  </data>
+  <data name="Checksum.RowFile" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="Checksum.RowFailed" xml:space="preserve">
+    <value>Échec</value>
+  </data>
+  <data name="Checksum.RowReading" xml:space="preserve">
+    <value>Lecture…</value>
+  </data>
+  <data name="Checksum.RowSize" xml:space="preserve">
+    <value>Taille</value>
+  </data>
 </root>
