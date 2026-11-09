@@ -451,8 +451,23 @@ public sealed class TerminalApp : IAsyncDisposable
     }
 
     /// <summary>Waits until no dialog is open: the keys go to the screen again.</summary>
-    public Task WaitForNoDialogAsync() =>
-        WaitUntilAsync(() => Driver.FocusedModal is TerminalScreen, "every dialog to be closed");
+    public async Task WaitForNoDialogAsync()
+    {
+        try
+        {
+            await WaitUntilAsync(() => Driver.FocusedModal is TerminalScreen, "every dialog to be closed");
+        }
+        catch (AssertFailedException exception)
+        {
+            // A progress window that stays up is usually a task that failed: its message alone says too little to find the cause.
+            var failures = Driver.GetRequiredService<iConsole.Tasks.TaskManager>().Tasks
+                .OfType<iConsole.Tasks.BackgroundTask>()
+                .Where(task => task.Failure is not null)
+                .Select(task => task.Name + ": " + task.Failure);
+            string detail = string.Join(Environment.NewLine, failures);
+            throw detail.Length == 0 ? exception : new AssertFailedException(exception.Message + Environment.NewLine + detail, exception);
+        }
+    }
     #endregion
 
     private async Task DismissSplashAsync()
