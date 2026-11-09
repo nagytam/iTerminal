@@ -9217,9 +9217,6 @@
   <data name="UserGroup.RenameGroup" xml:space="preserve">
     <value>Neuer Name für {0}</value>
   </data>
-  <data name="Dialog.UserGroupTitle" xml:space="preserve">
-    <value>Benutzer- und Gruppenverwaltung</value>
-  </data>
   <data name="CmdTitle.5007140b" xml:space="preserve">
     <value>Benutzer- und Gruppenverwaltung</value>
   </data>

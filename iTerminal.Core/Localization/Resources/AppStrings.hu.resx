@@ -9217,9 +9217,6 @@
   <data name="UserGroup.RenameGroup" xml:space="preserve">
     <value>A(z) {0} új neve</value>
   </data>
-  <data name="Dialog.UserGroupTitle" xml:space="preserve">
-    <value>Felhasználó- és csoportkezelő</value>
-  </data>
   <data name="CmdTitle.5007140b" xml:space="preserve">
     <value>Felhasználó- és csoportkezelő</value>
   </data>
