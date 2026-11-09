@@ -91,9 +91,11 @@ public class GamesDialogTest
         await Press(dialog, ConsoleKey.PageDown);
         Assert.AreEqual("Snake", dialog.Current.Name);
         await Press(dialog, ConsoleKey.PageDown);
+        Assert.AreEqual("Swiss Jass", dialog.Current.Name);
+        await Press(dialog, ConsoleKey.PageDown);
         Assert.AreEqual("Tic-Tac-Toe", dialog.Current.Name, "the last game wraps to the first");
         await Press(dialog, ConsoleKey.PageUp);
-        Assert.AreEqual("Snake", dialog.Current.Name);
+        Assert.AreEqual("Swiss Jass", dialog.Current.Name);
     }
 
     [Timeout(60_000)]
