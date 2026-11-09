@@ -58,4 +58,18 @@ public class FilePropertiesServiceTest
 
         Assert.AreEqual(before, File.GetLastWriteTime(path));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DoNotParallelize]
+    public void TheByteCountFollowsTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(FilePropertiesService).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+
+        StringAssert.EndsWith(FilePropertiesService.FormatSize(40), "(40 Bytes)");
+        StringAssert.EndsWith(FilePropertiesService.FormatSize(1), "(1 Byte)");
+    }
 }

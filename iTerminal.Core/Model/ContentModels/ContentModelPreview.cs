@@ -175,7 +175,8 @@ public sealed class ContentModelPreview : ContentModelBase, IDisposable
 
     public override string GetFooter()
     {
-        var footer = _summary.Length > 0 ? $" {_summary} │ Ctrl+F3: close " : " Ctrl+F3: close ";
+        var close = UiText.Get("Preview.Close", "Ctrl+F3: close");
+        var footer = _summary.Length > 0 ? $" {_summary} │ {close} " : $" {close} ";
         return Filter is null ? footer : $"{footer}Filter: {Filter} ";
     }
 

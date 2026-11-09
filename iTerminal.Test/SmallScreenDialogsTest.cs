@@ -847,6 +847,8 @@ public class SmallScreenDialogsTest
     [DataRow("Ctrl+F9", null, "docker: Container")]
     [DataRow("Ctrl+F6", null, "git: Repositories")]
     [DataRow(null, "Stocks", "Kurs")]
+    [DataRow(null, "Stocks", "Vortag")]
+    [DataRow("Ctrl+F3", null, "Strg+F3: schließen")]
     [DataRow(null, "Passwords", "gespeichert")]
     [DataRow("Ctrl+Shift+F1", null, "Upload")]
     public async Task TheDiskManagerSystemSettingsMapAndWebBrowserInGerman_AreGerman(string? chord, string? command, string expected)
