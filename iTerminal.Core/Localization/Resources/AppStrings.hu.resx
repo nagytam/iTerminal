@@ -8347,6 +8347,9 @@
   <data name="Ai.Approval.WriteSummary" xml:space="preserve">
     <value>Az MI ezt kéri: {0}. Ellenőrizze lent az összes műveletet.</value>
   </data>
+  <data name="Ai.Approval.ReadFileSummary" xml:space="preserve">
+    <value>Az MI ezt kéri beolvasni: {0} előnézete. Az előnézet tartalma a beállított MI-szolgáltatóhoz kerül (amely távoli is lehet). Jóváhagyással folytathatja.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>Egy parancs sem felel meg.</value>
   </data>

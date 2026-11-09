@@ -8347,6 +8347,9 @@
   <data name="Ai.Approval.WriteSummary" xml:space="preserve">
     <value>La IA solicita {0}. Revise todas las acciones siguientes.</value>
   </data>
+  <data name="Ai.Approval.ReadFileSummary" xml:space="preserve">
+    <value>La IA solicita leer la vista previa de {0}. Su contenido se enviará al proveedor de IA configurado (que puede ser remoto). Apruebe para continuar.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>Ningún comando coincide.</value>
   </data>
