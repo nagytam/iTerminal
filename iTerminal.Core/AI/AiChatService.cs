@@ -56,7 +56,7 @@ public class AiChatService : IAiChatService
         if (_aiOptions.Provider == AiProvider.None)
         {
             model.IsAvailable = false;
-            model.ModelInfo = UiText.Get("Ai.Off", "AI is off (AI:Provider)");
+            model.ModelInfoSource = () => UiText.Get("Ai.ProviderOff", "AI is off (AI:Provider)");
             return;
         }
 
@@ -73,7 +73,9 @@ public class AiChatService : IAiChatService
             if (!response.IsSuccessStatusCode)
             {
                 model.IsAvailable = false;
-                model.ModelInfo = DescribeFailure((int)response.StatusCode, apiKeySet: !string.IsNullOrEmpty(apiKey), _aiOptions.ApiKeyEnvVar);
+                int statusCode = (int)response.StatusCode;
+                bool keySet = !string.IsNullOrEmpty(apiKey);
+                model.ModelInfoSource = () => DescribeFailure(statusCode, keySet, _aiOptions.ApiKeyEnvVar);
                 return;
             }
 
@@ -94,23 +96,24 @@ public class AiChatService : IAiChatService
             else
             {
                 model.IsAvailable = false;
-                model.ModelInfo = string.Format(UiText.Get("Ai.ModelMissing", "model not found: {0}"), _aiOptions.ModelId);
+                model.ModelInfoSource = () => string.Format(UiText.Get("Ai.ModelMissing", "model not found: {0}"), _aiOptions.ModelId);
             }
         }
         catch (System.Net.Http.HttpRequestException)
         {
             model.IsAvailable = false;
-            model.ModelInfo = UiText.Get("Ai.Unreachable", "server unreachable");
+            model.ModelInfoSource = () => UiText.Get("Ai.Unreachable", "server unreachable");
         }
         catch (TaskCanceledException)
         {
             model.IsAvailable = false;
-            model.ModelInfo = UiText.Get("Ai.Timeout", "server timeout");
+            model.ModelInfoSource = () => UiText.Get("Ai.Timeout", "server timeout");
         }
         catch (Exception ex)
         {
             model.IsAvailable = false;
-            model.ModelInfo = string.Format(UiText.Get("Ai.Error", "error: {0}"), ex.Message);
+            string message = ex.Message;
+            model.ModelInfoSource = () => string.Format(UiText.Get("Ai.Error", "error: {0}"), message);
         }
     }
 

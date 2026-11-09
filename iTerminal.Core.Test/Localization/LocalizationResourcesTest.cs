@@ -36,6 +36,22 @@ public class LocalizationResourcesTest
     private static int[] Placeholders(string text) =>
         [.. Regex.Matches(text, @"\{(\d+)").Select(m => int.Parse(m.Groups[1].Value)).Distinct().Order()];
 
+    /// <summary>
+    /// Two keys that differ only in case ("AI.Off" and "Ai.Off") are one key to a resource lookup: the second, newer one was
+    /// never found and the screen kept its English text. The names are compared without regard to case.
+    /// </summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    [DynamicData(nameof(Files))]
+    public void NoTwoKeysDifferOnlyInCase(string baseName, Assembly assembly)
+    {
+        Dictionary<string, string> english = Strings(baseName, assembly, Localizer.NeutralCode);
+
+        string[] clashes = [.. english.Keys.GroupBy(key => key, StringComparer.OrdinalIgnoreCase).Where(group => group.Count() > 1).Select(group => string.Join(" / ", group))];
+
+        Assert.AreEqual(0, clashes.Length, baseName + ": " + string.Join(", ", clashes));
+    }
+
     [Timeout(60_000)]
     [TestMethod]
     [DynamicData(nameof(Files))]

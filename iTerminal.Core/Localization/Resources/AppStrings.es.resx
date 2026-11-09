@@ -8287,7 +8287,7 @@
   <data name="Ai.Refused" xml:space="preserve">
     <value>solicitud rechazada ({0})</value>
   </data>
-  <data name="Ai.Off" xml:space="preserve">
+  <data name="Ai.ProviderOff" xml:space="preserve">
     <value>La IA está desactivada (AI:Provider)</value>
   </data>
   <data name="Ai.ModelMissing" xml:space="preserve">
