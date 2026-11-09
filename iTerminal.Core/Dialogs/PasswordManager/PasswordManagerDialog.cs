@@ -551,8 +551,8 @@ public class PasswordManagerDialog : Dialog
 
     private void DrawList(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
-        Put(buffer, 1, 0, iw - 2, $"{_list.Count} saved  ·  unlocked", Color.Cyan, colorScheme.Background);
-        Put(buffer, 1, 1, iw - 2, "  Category    Title                            Username", colorScheme.DisabledForeground, colorScheme.Background);
+        Put(buffer, 1, 0, iw - 2, string.Format(UiText.Get("Passwords.ListHeader", "{0} saved  ·  unlocked"), _list.Count), Color.Cyan, colorScheme.Background);
+        Put(buffer, 1, 1, iw - 2, "  " + UiText.Get("Passwords.ColCategory", "Category").PadRight(10) + "  " + UiText.Get("Passwords.ColTitle", "Title").PadRight(30) + "  " + UiText.Get("Passwords.ColUsername", "Username"), colorScheme.DisabledForeground, colorScheme.Background);
         var first = _cursor >= ListRows ? _cursor - ListRows + 1 : 0;
         for (var i = 0; i < ListRows; i++)
         {

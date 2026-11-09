@@ -289,9 +289,9 @@ public class UnitConverterDialog : SplitPaneDialog
         var categoryWidth = (int)_categoryListBox.ViewSize.Width;
         var fromWidth = (int)_fromUnitListBox.ViewSize.Width;
         var toWidth = iw - categoryWidth - fromWidth;
-        DrawSectionHeader(buffer, ix, iy + 2, categoryWidth, "Category", _categoryListBox.IsFocused, colorScheme);
-        DrawSectionHeader(buffer, ix + categoryWidth, iy + 2, fromWidth, "From", _fromUnitListBox.IsFocused, colorScheme);
-        DrawSectionHeader(buffer, ix + categoryWidth + fromWidth, iy + 2, toWidth, "To", _toUnitListBox.IsFocused, colorScheme);
+        DrawSectionHeader(buffer, ix, iy + 2, categoryWidth, UiText.Get("Units.Category", "Category"), _categoryListBox.IsFocused, colorScheme);
+        DrawSectionHeader(buffer, ix + categoryWidth, iy + 2, fromWidth, UiText.Get("Units.From", "From"), _fromUnitListBox.IsFocused, colorScheme);
+        DrawSectionHeader(buffer, ix + categoryWidth + fromWidth, iy + 2, toWidth, UiText.Get("Units.To", "To"), _toUnitListBox.IsFocused, colorScheme);
 
         var footerY = iy + ih - 1;
         WriteLine(buffer, ix, footerY, iw, KeyHints.FitHints(iw), colorScheme.Foreground, colorScheme.Background);
