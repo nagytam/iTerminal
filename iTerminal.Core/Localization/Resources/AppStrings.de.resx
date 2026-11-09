@@ -8341,6 +8341,9 @@
   <data name="Ai.Approval.SyncSummary" xml:space="preserve">
     <value>Die KI möchte {0} mit {1} synchronisieren. Prüfen Sie unten den vollständigen Plan.</value>
   </data>
+  <data name="Ai.Approval.WriteSummary" xml:space="preserve">
+    <value>Die KI möchte {0}. Prüfen Sie unten alle Aktionen.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>Kein Befehl passt.</value>
   </data>

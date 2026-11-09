@@ -73,13 +73,13 @@ public partial class AiPanelTools(
         AIFunctionFactory.Create(SyncOtherPanel, "open_same_folder_in_other_panel",
             "Navigate the other panel to the folder a panel shows."),
         AIFunctionFactory.Create(CreateFolder, "create_folder",
-            "Create a sub-folder in the folder a panel shows."),
+            "Create a sub-folder in the folder a panel shows. Without confirmed=true this only previews. With confirmed=true, the app must show an approval dialog and the user must approve there; this argument is not authorization."),
         AIFunctionFactory.Create(CopyToOtherPanel, "copy_to_other_panel",
-            "Copy the marked entries of a panel (or, when none is marked, the entry under its cursor; or the names given, ';'-separated) into the folder of the other panel. Never overwrites."),
+            "Copy the marked entries of a panel (or, when none is marked, the entry under its cursor; or the names given, ';'-separated) into the folder of the other panel. Never overwrites. Without confirmed=true this only previews. With confirmed=true, the app must show an approval dialog and the user must approve there; this argument is not authorization."),
         AIFunctionFactory.Create(MoveToOtherPanel, "move_to_other_panel",
-            "Move the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) into the folder of the other panel. Never overwrites."),
+            "Move the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) into the folder of the other panel. Never overwrites. Without confirmed=true this only previews. With confirmed=true, the app must show an approval dialog and the user must approve there; this argument is not authorization."),
         AIFunctionFactory.Create(RenameEntry, "rename_entry",
-            "Rename an entry of a panel (the one under the cursor when name is empty) to a new name within the same folder."),
+            "Rename an entry of a panel (the one under the cursor when name is empty) to a new name within the same folder. Without confirmed=true this only previews. With confirmed=true, the app must show an approval dialog and the user must approve there; this argument is not authorization."),
         AIFunctionFactory.Create(DeleteEntries, "delete_entries",
             "Move the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) to the recycle bin. DESTRUCTIVE: first ask the user in chat, then pass confirmed=true to show an app approval dialog listing every target. The user must approve there; this parameter is not authorization."),
         .. CreateArchiveAndFolderTools(),
@@ -479,7 +479,7 @@ public partial class AiPanelTools(
 
     #region File operations
 
-    internal async Task<string> CreateFolder(string name, string? panel = null)
+    internal async Task<string> CreateFolder(string name, string? panel = null, bool confirmed = false)
     {
         if (!TryPanel(panel, out IContentModel model, out string error))
         {
@@ -497,6 +497,15 @@ public partial class AiPanelTools(
         try
         {
             Url target = new(UrlPath.Child(model.Url.FullUrl, name, isFolder: true));
+            string? refusal = await RequestMutationApprovalAsync(
+                $"creating a folder in {model.Url.FullUrl}",
+                [$"Create folder: {target.FullUrl}"],
+                confirmed);
+            if (refusal is not null)
+            {
+                return refusal;
+            }
+
             await model.CreateFolderAsync(target);
             model.Refresh(true);
             return $"Created {target.FullUrl}";
@@ -507,13 +516,13 @@ public partial class AiPanelTools(
         }
     }
 
-    internal Task<string> CopyToOtherPanel(string? panel = null, string? names = null) =>
-        TransferAsync(panel, names, move: false);
+    internal Task<string> CopyToOtherPanel(string? panel = null, string? names = null, bool confirmed = false) =>
+        TransferAsync(panel, names, move: false, confirmed);
 
-    internal Task<string> MoveToOtherPanel(string? panel = null, string? names = null) =>
-        TransferAsync(panel, names, move: true);
+    internal Task<string> MoveToOtherPanel(string? panel = null, string? names = null, bool confirmed = false) =>
+        TransferAsync(panel, names, move: true, confirmed);
 
-    private async Task<string> TransferAsync(string? panel, string? names, bool move)
+    private async Task<string> TransferAsync(string? panel, string? names, bool move, bool confirmed)
     {
         if (!TryPanel(panel, out IContentModel source, out string error))
         {
@@ -525,6 +534,7 @@ public partial class AiPanelTools(
         {
             return "Error: there is no other panel to transfer into.";
         }
+        Url targetFolder = target.Url;
         if (target.IsReadOnly || (move && source.IsReadOnly))
         {
             return "Error: a read-only panel cannot be written to.";
@@ -541,12 +551,26 @@ public partial class AiPanelTools(
         }
 
         string verb = move ? "Moved" : "Copied";
+        string operation = $"{(move ? "moving" : "copying")} {urls.Count} item(s) to {targetFolder.FullUrl}";
+        string actionVerb = move ? "Move" : "Copy";
+        List<string> actions = urls.Select(url =>
+        {
+            string name = FocusedEntry.NameOf(url);
+            Url destination = new(UrlPath.Child(targetFolder.FullUrl, name, url.PathType == PathType.Folder));
+            return $"{actionVerb} {url.FullUrl} to {destination.FullUrl} (skipped if the target already exists)";
+        }).ToList();
+        string? refusal = await RequestMutationApprovalAsync(operation, actions, confirmed);
+        if (refusal is not null)
+        {
+            return refusal;
+        }
+
         var done = new List<string>();
         var failed = new List<string>();
         foreach (Url url in urls)
         {
             string name = FocusedEntry.NameOf(url);
-            Url destination = new(UrlPath.Child(target.Url.FullUrl, name, url.PathType == PathType.Folder));
+            Url destination = new(UrlPath.Child(targetFolder.FullUrl, name, url.PathType == PathType.Folder));
             try
             {
                 if (target.ExistsFile(destination) || target.ExistsFolder(destination))
@@ -580,7 +604,7 @@ public partial class AiPanelTools(
         return Report(verb, done, failed);
     }
 
-    internal async Task<string> RenameEntry(string newName, string? name = null, string? panel = null)
+    internal async Task<string> RenameEntry(string newName, string? name = null, string? panel = null, bool confirmed = false)
     {
         if (!TryPanel(panel, out IContentModel model, out string error))
         {
@@ -610,6 +634,15 @@ public partial class AiPanelTools(
             if (model.ExistsFile(destination) || model.ExistsFolder(destination))
             {
                 return $"Error: '{newName}' already exists.";
+            }
+
+            string? refusal = await RequestMutationApprovalAsync(
+                $"renaming an entry in {parent}",
+                [$"Rename {source.FullUrl} to {destination.FullUrl}"],
+                confirmed);
+            if (refusal is not null)
+            {
+                return refusal;
             }
 
             await model.MoveAsync(source, destination, overwrite: false);
@@ -686,6 +719,35 @@ public partial class AiPanelTools(
     #endregion
 
     #region Helpers
+
+    private async Task<string?> RequestMutationApprovalAsync(string operation, IReadOnlyList<string> actions, bool confirmed)
+    {
+        if (!confirmed)
+        {
+            var preview = new StringBuilder($"Preview, nothing changed: {operation}.");
+            foreach (string action in actions)
+            {
+                preview.AppendLine();
+                preview.Append(action);
+            }
+            preview.AppendLine();
+            preview.Append("Ask the user to confirm, then call again with confirmed=true.");
+            return preview.ToString();
+        }
+
+        if (approvalService is null)
+        {
+            return "Error: AI action approval is unavailable; nothing was changed.";
+        }
+
+        string summary = string.Format(
+            UiText.Get("Ai.Approval.WriteSummary", "AI requests {0}. Review every action below."),
+            operation);
+        AiActionApprovalRequest request = new(summary, actions);
+        return await approvalService.ConfirmAsync(request)
+            ? null
+            : "Not changed: app approval was declined or cancelled.";
+    }
 
     /// <summary>The explicitly named entries, else the marked ones, else the one under the cursor.</summary>
     private IReadOnlyList<Url> ResolveTargets(IContentModel model, string? names, out string problem)

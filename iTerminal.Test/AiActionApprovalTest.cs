@@ -1,6 +1,7 @@
 using iTerminal.Core.AI;
 using iTerminal.Core.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.AI;
 
 namespace iTerminal.Test;
 
@@ -30,6 +31,32 @@ public class AiActionApprovalTest
         await app.WaitForTextAsync("source.txt");
         await app.PressAsync("Esc");
         Assert.IsFalse(await rejected);
+        await app.WaitForNoDialogAsync();
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task AiFolderCreation_WaitsForTheAppApprovalDialog()
+    {
+        await using TerminalApp app = await TerminalApp.StartAsync();
+        AITool tool = app.Driver.GetRequiredService<AiPanelTools>().Create().Single(t => t.Name == "create_folder");
+        AIFunction function = (AIFunction)tool;
+        string target = Path.Combine(app.LeftRoot, "ai-approved");
+        AIFunctionArguments arguments = new()
+        {
+            ["name"] = "ai-approved",
+            ["panel"] = "left",
+            ["confirmed"] = true,
+        };
+        Task<object?> invocation = function.InvokeAsync(arguments).AsTask();
+
+        await app.Driver.WaitForModalAsync<AiActionApprovalDialog>();
+        await app.WaitForTextAsync("Create folder:");
+        Assert.IsFalse(Directory.Exists(target), "The tool must not write before the user approves in the app.");
+        await app.PressAsync("y");
+
+        StringAssert.Contains((await invocation)?.ToString() ?? string.Empty, "Created");
+        Assert.IsTrue(Directory.Exists(target));
         await app.WaitForNoDialogAsync();
     }
 }

@@ -8341,6 +8341,9 @@
   <data name="Ai.Approval.SyncSummary" xml:space="preserve">
     <value>Az MI szinkronizálná ezt: {0} ezzel: {1}. Ellenőrizze lent a teljes tervet.</value>
   </data>
+  <data name="Ai.Approval.WriteSummary" xml:space="preserve">
+    <value>Az MI ezt kéri: {0}. Ellenőrizze lent az összes műveletet.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>Egy parancs sem felel meg.</value>
   </data>

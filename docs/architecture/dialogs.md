@@ -130,10 +130,12 @@ properties; the tests cover the option keys, the preview, the second Enter for d
 services, no panel folder).
 
 ### AI action approval (`AiActionApprovalDialog`, `iTerminal.Core/AI/`)
-AI delete and folder-sync tools that reach `confirmed=true` open an app-owned approval dialog. It displays the complete
-set of delete targets or the full synchronization plan in a scrollable viewer; Y approves, while N, Esc or cancellation
-refuses the operation. The model's tool argument only requests the dialog and cannot authorize the action. Approval
-prompts are serialized so concurrent tool calls cannot stack modal dialogs.
+AI file-writing tools for folder creation, copy, move, rename, delete, archive creation/extraction and folder sync
+preview when `confirmed=false`. With `confirmed=true` they open an app-owned approval dialog; folder creation, transfers,
+rename and archive operations show their source/destination and relevant options, delete shows every target, and sync
+shows the full plan in a scrollable viewer. Y approves, while N, Esc or cancellation refuses the operation. The
+model's tool argument only requests the dialog and cannot authorize the action. Approval prompts are serialized so
+concurrent tool calls cannot stack modal dialogs.
 
 ### Web Browser (`WebBrowserDialog`, `Model/Web/`, `Services/Web/`)
 A full-screen, text-mode browser (Tools > Web Browser, Ctrl+S; Ctrl+T would open the Tools menu): tabs, address bar, back/forward, reload/stop, bookmarks, history, find in page, forms, cookies, page source (F9) and saving (F7). F1 lists the keys.

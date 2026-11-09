@@ -19,7 +19,7 @@ namespace iTerminal.Core.AI;
 /// <see cref="FolderSyncTask"/>) to completion on the calling background thread, so the result is known when the
 /// tool returns. There is no progress window.</para>
 ///
-/// <para>Synchronisation is a preview unless <c>confirmed=true</c>: the model shows the plan to the user first.</para>
+/// <para>Every write is a preview unless <c>confirmed=true</c>; the app-owned approval dialog still requires the user's explicit approval.</para>
 /// </summary>
 public partial class AiPanelTools
 {
@@ -29,9 +29,9 @@ public partial class AiPanelTools
     private IReadOnlyList<AITool> CreateArchiveAndFolderTools() =>
     [
         AIFunctionFactory.Create(CompressEntries, "compress_entries",
-            "Pack the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) into a new archive in the other panel's folder (or the same folder when intoOtherPanel=false). format: zip (default), 7z, tar.gz, tar.bz2 or tar; the archive name gets the right ending. Refuses to touch an archive that already exists unless addToExisting=true."),
+            "Pack the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) into a new archive in the other panel's folder (or the same folder when intoOtherPanel=false). format: zip (default), 7z, tar.gz, tar.bz2 or tar; the archive name gets the right ending. Refuses to touch an archive that already exists unless addToExisting=true. Without confirmed=true this only previews. With confirmed=true, the app must show an approval dialog and the user must approve there; this argument is not authorization."),
         AIFunctionFactory.Create(ExtractArchives, "extract_archives",
-            "Unpack the marked archives of a panel (or the one under the cursor; or the names given, ';'-separated) into the other panel's folder (or the same folder when intoOtherPanel=false). Each archive goes into a folder of its own unless eachIntoOwnFolder=false. Existing files are kept unless overwrite=true. Password-protected archives are reported, not opened."),
+            "Unpack the marked archives of a panel (or the one under the cursor; or the names given, ';'-separated) into the other panel's folder (or the same folder when intoOtherPanel=false). Each archive goes into a folder of its own unless eachIntoOwnFolder=false. Existing files are kept unless overwrite=true. Password-protected archives are reported, not opened. Without confirmed=true this only previews. With confirmed=true, the app must show an approval dialog and the user must approve there; this argument is not authorization."),
         AIFunctionFactory.Create(ListArchiveFormats, "list_archive_formats",
             "List the archive formats compress_entries can write on this machine, and the formats extract_archives can read."),
         AIFunctionFactory.Create(CompareFolders, "compare_panel_folders",
@@ -67,7 +67,8 @@ public partial class AiPanelTools
         string? names = null,
         string? format = null,
         bool intoOtherPanel = true,
-        bool addToExisting = false)
+        bool addToExisting = false,
+        bool confirmed = false)
     {
         if (compressionService is null || fileSystemResolver is null)
         {
@@ -107,13 +108,29 @@ public partial class AiPanelTools
         string finalName = chosen.ApplyExtension(archiveName);
         Url archiveUrl = new(UrlPath.Child(folderModel.Url.FullUrl, finalName, isFolder: false));
         IFileSystem archiveSystem = fileSystemResolver.Resolve(archiveUrl, folderModel, "Compress");
-        if (archiveSystem.ExistsFile(archiveUrl) && !addToExisting)
+        bool archiveExists = archiveSystem.ExistsFile(archiveUrl);
+        if (archiveExists && !addToExisting)
         {
             return $"Error: {finalName} already exists; choose another name or pass addToExisting=true.";
         }
         if (sources.Any(s => s.FullUrl == archiveUrl.FullUrl))
         {
             return "Error: the archive cannot contain itself.";
+        }
+
+        string operation = archiveExists
+            ? $"adding {sources.Count} item(s) to existing archive {archiveUrl.FullUrl}"
+            : $"creating archive {archiveUrl.FullUrl} from {sources.Count} item(s)";
+        List<string> actions = sources.Select(sourceUrl => $"Add {sourceUrl.FullUrl} to {archiveUrl.FullUrl}").ToList();
+        string? refusal = await RequestMutationApprovalAsync(operation, actions, confirmed);
+        if (refusal is not null)
+        {
+            return refusal;
+        }
+
+        if (!archiveExists && archiveSystem.ExistsFile(archiveUrl))
+        {
+            return $"Error: {finalName} appeared while approval was pending; nothing was compressed. Review the plan again.";
         }
 
         var task = new CompressTask(
@@ -157,7 +174,8 @@ public partial class AiPanelTools
         string? names = null,
         bool intoOtherPanel = true,
         bool eachIntoOwnFolder = true,
-        bool overwrite = false)
+        bool overwrite = false,
+        bool confirmed = false)
     {
         if (extractionService is null || fileSystemResolver is null)
         {
@@ -203,11 +221,30 @@ public partial class AiPanelTools
             return "Error: the target folder is read-only.";
         }
 
+        Url targetFolder = targetModel.Url;
+        List<string> actions = archives.Select(archive =>
+        {
+            string archiveName = FocusedEntry.NameOf(archive);
+            Url destination = ExtractTask.DestinationFor(
+                targetFolder,
+                extractionService.FolderNameFor(archiveName),
+                eachIntoOwnFolder);
+            return $"Extract {archive.FullUrl} into {destination.FullUrl} (overwrite existing files: {(overwrite ? "yes" : "no")})";
+        }).ToList();
+        string? refusal = await RequestMutationApprovalAsync(
+            $"extracting {archives.Count} archive(s) into {targetFolder.FullUrl}",
+            actions,
+            confirmed);
+        if (refusal is not null)
+        {
+            return refusal;
+        }
+
         var task = new ExtractTask(
             extractionService,
             archives,
             url => fileSystemResolver.Resolve(url, source, "Extract"),
-            targetModel.Url,
+            targetFolder,
             new ExtractionOptions(Password: null, Overwrite: overwrite),
             eachIntoOwnFolder);
         try
