@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
@@ -45,7 +46,7 @@ public sealed partial class DefenderScanService(Func<string?>? locate = null) : 
     {
         if (_locate() is not { } tool)
         {
-            return new ScanResult(ScanOutcome.Failed, "Microsoft Defender is not available on this machine.");
+            return new ScanResult(ScanOutcome.Failed, UiText.Get("Defender.Unavailable", "Microsoft Defender is not available on this machine."));
         }
 
         Process? process = null;
@@ -102,13 +103,13 @@ public sealed partial class DefenderScanService(Func<string?>? locate = null) : 
         if (found.Success)
         {
             return found.Groups[1].Value == "no"
-                ? new ScanResult(ScanOutcome.Clean, "No threats found.")
+                ? new ScanResult(ScanOutcome.Clean, UiText.Get("Defender.Clean", "No threats found."))
                 : new ScanResult(ScanOutcome.ThreatsFound, $"{found.Groups[1].Value} threat(s) found. Open Windows Security for details.");
         }
 
         if (exitCode == 0)
         {
-            return new ScanResult(ScanOutcome.Clean, "No threats found.");
+            return new ScanResult(ScanOutcome.Clean, UiText.Get("Defender.Clean", "No threats found."));
         }
 
         var detail = (standardError + "\n" + standardOutput)

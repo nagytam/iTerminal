@@ -8971,4 +8971,40 @@
   <data name="Compress.ZipCrypto" xml:space="preserve">
     <value>ZipCrypto (gyenge, mindenhol megnyílik)</value>
   </data>
+  <data name="Rep.NotSha" xml:space="preserve">
+    <value>Nem SHA-256.</value>
+  </data>
+  <data name="Rep.Timeout" xml:space="preserve">
+    <value>A kérés időtúllépéssel járt.</value>
+  </data>
+  <data name="Rep.Unexpected" xml:space="preserve">
+    <value>Váratlan válasz a VirusTotaltól.</value>
+  </data>
+  <data name="Defender.Unavailable" xml:space="preserve">
+    <value>A Microsoft Defender nem érhető el ezen a gépen.</value>
+  </data>
+  <data name="Defender.Clean" xml:space="preserve">
+    <value>Nem található fenyegetés.</value>
+  </data>
+  <data name="Recycle.NoRecord" xml:space="preserve">
+    <value>A rendszer lomtára nem jegyzi meg, honnan származik egy fájl, ezért itt nem listázható és nem állítható vissza.</value>
+  </data>
+  <data name="Recycle.NoCopy" xml:space="preserve">
+    <value>A lomtárba nem másolunk semmit: törölje a fájlt (F8), hogy odakerüljön.</value>
+  </data>
+  <data name="MusicMeta.NoFile" xml:space="preserve">
+    <value>Nincs kiválasztott fájl.</value>
+  </data>
+  <data name="MusicMeta.Gone" xml:space="preserve">
+    <value>A fájl már nem létezik.</value>
+  </data>
+  <data name="Video.NoPicture" xml:space="preserve">
+    <value>Ebből a fájlból nem sikerült képet dekódolni.</value>
+  </data>
+  <data name="FolderUrl.TypePath" xml:space="preserve">
+    <value>Írjon be egy útvonalat vagy URL-t!</value>
+  </data>
+  <data name="FolderUrl.UnknownScheme" xml:space="preserve">
+    <value>Ismeretlen séma — lásd az alábbi listát.</value>
+  </data>
 </root>

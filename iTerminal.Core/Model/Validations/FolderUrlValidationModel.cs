@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Model;
 using iConsole.Model.Validations;
@@ -62,7 +63,7 @@ public class FolderUrlValidationModel(ITextModel model, IDateTimeProviderService
         var path = Model.Lines[0]?.Trim() ?? string.Empty;
         if (string.IsNullOrEmpty(path))
         {
-            SetValidationResult(now, false, "Type a path or a URL!");
+            SetValidationResult(now, false, UiText.Get("FolderUrl.TypePath", "Type a path or a URL!"));
             return;
         }
 
@@ -74,7 +75,7 @@ public class FolderUrlValidationModel(ITextModel model, IDateTimeProviderService
 
         if (path.Contains("://"))
         {
-            SetValidationResult(now, false, "Unknown scheme — see the list below.");
+            SetValidationResult(now, false, UiText.Get("FolderUrl.UnknownScheme", "Unknown scheme — see the list below."));
             return;
         }
 

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Audio;
 using iTerminal.Core.Audio.Decoders;
 using iTerminal.Core.Data.Music;
@@ -25,12 +26,12 @@ public sealed class MusicMetadataService : IMusicMetadataService
     {
         if (string.IsNullOrWhiteSpace(path))
         {
-            return MusicFileMetadata.Empty with { Error = "No file selected." };
+            return MusicFileMetadata.Empty with { Error = UiText.Get("MusicMeta.NoFile", "No file selected.") };
         }
 
         if (!File.Exists(path))
         {
-            return MusicFileMetadata.Empty with { Path = path, Error = "The file no longer exists." };
+            return MusicFileMetadata.Empty with { Path = path, Error = UiText.Get("MusicMeta.Gone", "The file no longer exists.") };
         }
 
         var format = Path.GetExtension(path).TrimStart('.').ToUpperInvariant();

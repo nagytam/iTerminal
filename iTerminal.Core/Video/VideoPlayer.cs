@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Diagnostics;
 
 namespace iTerminal.Core.Video;
@@ -497,7 +498,7 @@ public sealed class VideoPlayer : IDisposable
         {
             if (framesRead == 0 && offset == TimeSpan.Zero)
             {
-                _error = "No picture could be decoded from this file.";
+                _error = UiText.Get("Video.NoPicture", "No picture could be decoded from this file.");
                 _state = VideoPlaybackState.Stopped;
                 _clockRunning = false;
                 _clockBase = TimeSpan.Zero;

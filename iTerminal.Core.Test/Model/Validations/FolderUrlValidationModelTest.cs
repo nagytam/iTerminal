@@ -22,6 +22,20 @@ public class FolderUrlValidationModelTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public void TheMessagesFollowTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(FolderUrlValidationModel).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+
+        Assert.AreEqual("Geben Sie einen Pfad oder eine URL ein!", Validate(string.Empty).ErrorMessage);
+        Assert.AreEqual("Unbekanntes Schema — siehe die Liste unten.", Validate("nonsense://x").ErrorMessage);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void EmptyText_IsInvalidAndSaysWhat()
     {
         var validationModel = Validate(string.Empty);
