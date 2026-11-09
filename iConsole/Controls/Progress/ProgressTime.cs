@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -9,9 +10,28 @@ namespace iConsole.Controls.Progress;
 
 public class ProgressTime : Control
 {
-    public string LabelElapsed { get; set; } = "Elapsed time";
-    public string LabelRemaining { get; set; } = "Remaining time";
-    public string LabelTotal { get; set; } = "Total time";
+    private string? _labelElapsed;
+    private string? _labelRemaining;
+    private string? _labelTotal;
+
+    /// <summary>The labels follow the chosen language unless a caller sets its own.</summary>
+    public string LabelElapsed
+    {
+        get => _labelElapsed ?? UiText.Get("Progress.Elapsed", "Elapsed time");
+        set => _labelElapsed = value;
+    }
+
+    public string LabelRemaining
+    {
+        get => _labelRemaining ?? UiText.Get("Progress.Remaining", "Remaining time");
+        set => _labelRemaining = value;
+    }
+
+    public string LabelTotal
+    {
+        get => _labelTotal ?? UiText.Get("Progress.Total", "Total time");
+        set => _labelTotal = value;
+    }
     public BackgroundTask Task { get; set; } 
 
     public ProgressTime(BackgroundTask task, IThemeService themeService) : base(themeService)

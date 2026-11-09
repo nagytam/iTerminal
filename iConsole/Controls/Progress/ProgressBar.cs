@@ -1,4 +1,5 @@
-﻿using iConsole.Buffers;
+﻿using iConsole.Localization;
+using iConsole.Buffers;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -8,7 +9,14 @@ namespace iConsole.Controls.Progress;
 
 public class ProgressBar : Control
 {
-    public string Label { get; set; } = "Progress";
+    private string? _label;
+
+    /// <summary>Follows the chosen language unless a caller sets its own.</summary>
+    public string Label
+    {
+        get => _label ?? UiText.Get("Progress.Label", "Progress");
+        set => _label = value;
+    }
     private int _current = 0;
     private readonly Lock _lock = new();
     public int Current 

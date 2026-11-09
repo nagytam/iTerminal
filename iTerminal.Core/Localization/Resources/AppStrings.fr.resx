@@ -8695,4 +8695,40 @@
   <data name="Unit.Terabyte" xml:space="preserve">
     <value>Téra-octet</value>
   </data>
+  <data name="Progress.Failed" xml:space="preserve">
+    <value>échec — {0}</value>
+  </data>
+  <data name="Progress.TaskStatus" xml:space="preserve">
+    <value>Tâche {0}</value>
+  </data>
+  <data name="Progress.StatusStarted" xml:space="preserve">
+    <value>en cours</value>
+  </data>
+  <data name="Progress.StatusCompleted" xml:space="preserve">
+    <value>terminée</value>
+  </data>
+  <data name="Progress.StatusCanceled" xml:space="preserve">
+    <value>annulée</value>
+  </data>
+  <data name="Progress.Files" xml:space="preserve">
+    <value>Fichiers : {0}/{1}</value>
+  </data>
+  <data name="Progress.SizeOf" xml:space="preserve">
+    <value>Taille : {0}/{1}</value>
+  </data>
+  <data name="Progress.Size" xml:space="preserve">
+    <value>Taille : {0}</value>
+  </data>
+  <data name="Progress.Speed" xml:space="preserve">
+    <value>Vitesse : {0}/s ({1} fichiers/s)</value>
+  </data>
+  <data name="Info.Files" xml:space="preserve">
+    <value>Fichiers : {0}</value>
+  </data>
+  <data name="Info.FilesPending" xml:space="preserve">
+    <value>Fichiers :</value>
+  </data>
+  <data name="Listing.FolderMark" xml:space="preserve">
+    <value>Doss.</value>
+  </data>
 </root>

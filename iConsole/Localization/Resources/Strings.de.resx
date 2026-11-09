@@ -1195,4 +1195,16 @@
   <data name="Status.Writable" xml:space="preserve">
     <value>Beschreibbar</value>
   </data>
+  <data name="Progress.Elapsed" xml:space="preserve">
+    <value>Verstrichene Zeit</value>
+  </data>
+  <data name="Progress.Remaining" xml:space="preserve">
+    <value>Verbleibende Zeit</value>
+  </data>
+  <data name="Progress.Total" xml:space="preserve">
+    <value>Gesamtzeit</value>
+  </data>
+  <data name="Progress.Label" xml:space="preserve">
+    <value>Fortschritt</value>
+  </data>
 </root>
