@@ -81,6 +81,32 @@ public class DialogsTest
         await OpenAndCloseAsync(chord, dialogTypeName);
     }
 
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task SwissJassOpensFromTheCommandPaletteAndPlaysAHotSeatTurn()
+    {
+        await _app.PressAsync("Shift+F1");
+        await _app.Driver.WaitForModalAsync<Core.Dialogs.CommandPaletteDialog>();
+        await _app.TypeAsync("Swiss Jass");
+        await _app.PressAsync("Enter");
+        await _app.Driver.WaitForModalAsync<Core.Dialogs.Games.JassDialog>();
+
+        await _app.WaitForTextAsync("Pass the device to Player 1");
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("choose trump");
+        await _app.TypeAsync("c");
+        await _app.WaitForTextAsync("Trump: Clubs");
+
+        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("Player 1's hand");
+        await _app.PressAsync("1");
+        await _app.WaitForTextAsync("Pass the device to Player 2");
+
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
     /// <summary>The Virtual Machine Manager opens from its chord on Linux (libvirt) and Windows (Hyper-V) and does not open anywhere else.</summary>
     [Timeout(120_000)]
     [TestMethod]

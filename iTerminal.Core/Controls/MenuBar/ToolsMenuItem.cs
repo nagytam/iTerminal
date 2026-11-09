@@ -56,7 +56,8 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Games.SnakeDialog? snakeDialog = null,
         iTerminal.Core.Dialogs.Games.TetrisDialog? tetrisDialog = null,
         iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
-        VirtualMachineManagerDialog? virtualMachineManagerDialog = null)
+        VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
+        iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -106,6 +107,7 @@ public class ToolsMenuItem : MenuItem
         if (nineMensMorrisDialog is not null) groups["games"].Add(new NineMensMorrisDialogCommand(nineMensMorrisDialog));
         if (snakeDialog is not null) groups["games"].Add(new SnakeDialogCommand(snakeDialog));
         if (tetrisDialog is not null) groups["games"].Add(new TetrisDialogCommand(tetrisDialog));
+        if (jassDialog is not null) groups["games"].Add(new JassDialogCommand(jassDialog));
         if (bluetoothDeviceManagerDialog is not null) groups["sys"].Add(new BluetoothDeviceManagerDialogCommand(bluetoothDeviceManagerDialog));
         if (remoteConnectionManagerDialog is not null) groups["net"].Add(new RemoteConnectionManagerDialogCommand(remoteConnectionManagerDialog));
         if (workspaceManagerDialog is not null) groups["sys"].Add(new WorkspaceManagerDialogCommand(workspaceManagerDialog));

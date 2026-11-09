@@ -54,6 +54,7 @@ public class UiService : IUiService
             "morris" or "nine_mens_morris" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.NineMensMorrisDialog>(),
             "snake" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.SnakeDialog>(),
             "tetris" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.TetrisDialog>(),
+            "jass" or "swiss_jass" or "schieber" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.JassDialog>(),
             "translator" or "translate" or "translation" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Translator.TranslatorDialog>(),
             _ => null
         };

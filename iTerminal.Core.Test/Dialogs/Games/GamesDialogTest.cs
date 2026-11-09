@@ -19,7 +19,7 @@ public class GamesDialogTest
         : GamesDialog(nameof(HostDialog), "Games", games, theme, time);
 
     private static GamesDialog Create(ITimeProvider? time = null) => new HostDialog(
-        [new TicTacToeGame(new Random(1)), new ChessGame(new Random(1)), new GoGame(new Random(1)), new NineMensMorrisGame(new Random(1)), new SnakeGame(new Random(1))],
+        [new TicTacToeGame(new Random(1)), new ChessGame(new Random(1)), new GoGame(new Random(1)), new NineMensMorrisGame(new Random(1)), new SnakeGame(new Random(1)), new JassGame(new Random(1))],
         TestTheme(),
         time);
 
@@ -56,7 +56,7 @@ public class GamesDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task ItListsTheFiveGamesAndDrawsTheFirstOne()
+    public async Task ItListsTheGamesAndDrawsTheFirstOne()
     {
         GamesDialog dialog = Create();
         await ShowAsync(dialog);
@@ -68,6 +68,7 @@ public class GamesDialogTest
         StringAssert.Contains(screen, "Go");
         StringAssert.Contains(screen, "Nine Men's Morris");
         StringAssert.Contains(screen, "Snake");
+        StringAssert.Contains(screen, "Swiss Jass");
         StringAssert.Contains(screen, "Tic-Tac-Toe — against the computer");
         StringAssert.Contains(screen, "X to move.");
         StringAssert.Contains(screen, "Esc:close");
@@ -228,7 +229,7 @@ public class GamesDialogTest
     {
         GamesDialog dialog = Create();
 
-        Assert.IsTrue(dialog.GetKeyHints().Any(h => h.Key == "1-5"));
+        Assert.IsTrue(dialog.GetKeyHints().Any(h => h.Key == "1-6"));
     }
 
     [Timeout(60_000)]
@@ -382,6 +383,7 @@ public class GamesDialogTest
             new NineMensMorrisDialog(TestTheme(), new VirtualTimeProvider()),
             new SnakeDialog(TestTheme(), new VirtualTimeProvider()),
             new TetrisDialog(TestTheme(), new VirtualTimeProvider()),
+            new JassDialog(TestTheme(), new VirtualTimeProvider()),
         ];
 
         foreach (GamesDialog dialog in dialogs)
@@ -395,6 +397,21 @@ public class GamesDialogTest
             await Press(dialog, ConsoleKey.PageDown);
             Assert.AreSame(dialog.Games[0], dialog.Current);
         }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task JassShowsItsWholeHandAndTrickOnAnEightyByTwentyScreen()
+    {
+        JassDialog dialog = new(TestTheme(), new VirtualTimeProvider());
+        await ShowAsync(dialog, new Size(80, 20));
+        await Press(dialog, ConsoleKey.Enter);
+
+        string screen = Drawn(dialog, 80, 20);
+
+        StringAssert.Contains(screen, "Player 1's hand");
+        StringAssert.Contains(screen, "1:");
+        StringAssert.Contains(screen, "No cards played in this trick.");
     }
 
     [Timeout(60_000)]

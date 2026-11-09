@@ -171,17 +171,18 @@ public abstract class GamesDialog : SplitPaneDialog
             return true;
         }
 
+        if (game.TryChar(c))
+        {
+            _stuck = false;
+            return true;
+        }
+
         if (!char.IsLetter(c))
         {
             return false;
         }
 
         _stuck = false;
-        if (game.TryChar(c))
-        {
-            return true;
-        }
-
         switch (char.ToLowerInvariant(c))
         {
             case 'n':

@@ -26,3 +26,7 @@ public class SnakeDialog(IThemeService themeService, ITimeProvider timeProvider)
 /// <summary>Tetris, in a dialog of its own. The position is kept while the app runs, so closing the dialog does not end the game.</summary>
 public class TetrisDialog(IThemeService themeService, ITimeProvider timeProvider)
     : GamesDialog(nameof(TetrisDialog), "Tetris", [new TetrisGame()], themeService, timeProvider);
+
+/// <summary>Swiss Jass Schieber for four players at one keyboard.</summary>
+public class JassDialog(IThemeService themeService, ITimeProvider timeProvider)
+    : GamesDialog(nameof(JassDialog), "Swiss Jass", [new JassGame()], themeService, timeProvider);

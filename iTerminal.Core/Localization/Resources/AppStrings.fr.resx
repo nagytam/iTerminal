@@ -5917,6 +5917,37 @@
   <data name="Games.Snake.Score" xml:space="preserve">
     <value>Score {0}.</value>
   </data>
+  <data name="Games.Jass.Rules" xml:space="preserve"><value>Quatre joueurs en deux équipes. Fournissez la couleur ; sans cette couleur, coupez et surcoupez si possible. Une donne vaut 157 points.</value></data>
+  <data name="Games.Jass.CommandDescription" xml:space="preserve"><value>Jouez au Jass Schieber à quatre joueurs en équipes sur un même clavier.</value></data>
+  <data name="Games.Jass.Winner" xml:space="preserve"><value>L'équipe {0} gagne avec {1} points. N commence une nouvelle partie.</value></data>
+  <data name="Games.Jass.HandComplete" xml:space="preserve"><value>Donne terminée. {0} – {1}. Entrée distribue la donne suivante.</value></data>
+  <data name="Games.Jass.Reveal" xml:space="preserve"><value>Passez l'appareil au joueur {0} et appuyez sur Entrée pour révéler les cartes.</value></data>
+  <data name="Games.Jass.ChooseTrump" xml:space="preserve"><value>Joueur {0} : choisissez l'atout : C trèfle, D carreau, H cœur ou S pique.</value></data>
+  <data name="Games.Jass.ChooseTrumpOrPush" xml:space="preserve"><value>Joueur {0} : choisissez l'atout (C/D/H/S) ou passez à votre partenaire (P).</value></data>
+  <data name="Games.Jass.ToPlay" xml:space="preserve"><value>Au joueur {0} de jouer. Atout : {1}. Équipe : {2} – {3}.</value></data>
+  <data name="Games.Jass.HandPoints" xml:space="preserve"><value>Donne terminée : {0} points. Entrée distribue la donne suivante.</value></data>
+  <data name="Games.Jass.IllegalPlay" xml:space="preserve"><value>Fournissez la couleur, coupez si vous êtes défaussé et surcoupez si possible.</value></data>
+  <data name="Games.Jass.DealerForehandScore" xml:space="preserve"><value>Donneur : joueur {0}   Main : joueur {1}   Score : {2} – {3}</value></data>
+  <data name="Games.Jass.NoTrump" xml:space="preserve"><value>Atout non choisi</value></data>
+  <data name="Games.Jass.TrumpTricks" xml:space="preserve"><value>Atout : {0}   Plis : {1}/9   Points de la donne : {2}</value></data>
+  <data name="Games.Jass.PassToReveal" xml:space="preserve"><value>Passez l'appareil au joueur {0} ; appuyez sur Entrée pour révéler.</value></data>
+  <data name="Games.Jass.HiddenHand" xml:space="preserve"><value>Les cartes du joueur {0} sont cachées.</value></data>
+  <data name="Games.Jass.PlayerHand" xml:space="preserve"><value>Main du joueur {0} (1–9 pour jouer une carte) :</value></data>
+  <data name="Games.Jass.FaceDown" xml:space="preserve"><value>{0}. [cachée]</value></data>
+  <data name="Games.Jass.EmptyCard" xml:space="preserve"><value>{0}.</value></data>
+  <data name="Games.Jass.NoCards" xml:space="preserve"><value>Aucune carte jouée dans ce pli.</value></data>
+  <data name="Games.Jass.PlayedCard" xml:space="preserve"><value>J{0} : {1}</value></data>
+  <data name="Games.Jass.TeamInstruction" xml:space="preserve"><value>Équipes : joueurs 1 + 3 contre joueurs 2 + 4. P passe le premier choix d'atout au partenaire.</value></data>
+  <data name="Games.Jass.ChooseTrumpHint" xml:space="preserve"><value>Choisir trèfle, carreau, cœur ou pique comme atout</value></data>
+  <data name="Games.Jass.PushHint" xml:space="preserve"><value>Passer le choix de l'atout au partenaire</value></data>
+  <data name="Games.Jass.PlayHint" xml:space="preserve"><value>Jouer la carte numérotée de votre main</value></data>
+  <data name="Games.Jass.ActivateLabel" xml:space="preserve"><value>révéler / jouer</value></data>
+  <data name="Games.Jass.ActivateHint" xml:space="preserve"><value>Révéler votre main ou jouer la carte sélectionnée</value></data>
+  <data name="Games.Jass.CardFormat" xml:space="preserve"><value>{0} de {1}</value></data>
+  <data name="Games.Jass.Suit.Clubs" xml:space="preserve"><value>trèfle</value></data>
+  <data name="Games.Jass.Suit.Diamonds" xml:space="preserve"><value>carreau</value></data>
+  <data name="Games.Jass.Suit.Hearts" xml:space="preserve"><value>cœur</value></data>
+  <data name="Games.Jass.Suit.Spades" xml:space="preserve"><value>pique</value></data>
   <data name="Games.Tetris.Rules" xml:space="preserve">
     <value>Empilez les pièces qui tombent en lignes complètes. Une ligne complète disparaît. La partie se termine quand les pièces atteignent le haut.</value>
   </data>

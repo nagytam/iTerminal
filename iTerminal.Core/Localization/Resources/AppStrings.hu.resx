@@ -5917,6 +5917,37 @@
   <data name="Games.Snake.Score" xml:space="preserve">
     <value>Pontszám {0}.</value>
   </data>
+  <data name="Games.Jass.Rules" xml:space="preserve"><value>Négy játékos két csapatban. Színt kell adni; ha nincs, adut kell tenni, és ha lehet, felül kell ütni. Egy leosztás 157 pont.</value></data>
+  <data name="Games.Jass.CommandDescription" xml:space="preserve"><value>Játsszatok négyen, csapatban, svájci Jass Schiebert egy billentyűzetnél.</value></data>
+  <data name="Games.Jass.Winner" xml:space="preserve"><value>A(z) {0}. csapat nyer {1} ponttal. Az N új meccset indít.</value></data>
+  <data name="Games.Jass.HandComplete" xml:space="preserve"><value>Leosztás vége. {0} – {1}. Az Enter kiosztja a következőt.</value></data>
+  <data name="Games.Jass.Reveal" xml:space="preserve"><value>Add át az eszközt a(z) {0}. játékosnak, majd az Enterrel fedje fel a lapjait.</value></data>
+  <data name="Games.Jass.ChooseTrump" xml:space="preserve"><value>{0}. játékos: válassz adut: C treff, D káró, H kőr vagy S pikk.</value></data>
+  <data name="Games.Jass.ChooseTrumpOrPush" xml:space="preserve"><value>{0}. játékos: válassz adut (C/D/H/S), vagy P-vel add át a partnerednek.</value></data>
+  <data name="Games.Jass.ToPlay" xml:space="preserve"><value>{0}. játékos következik. Adu: {1}. Csapatpontok: {2} – {3}.</value></data>
+  <data name="Games.Jass.HandPoints" xml:space="preserve"><value>Leosztás vége: {0} pont. Az Enter kiosztja a következőt.</value></data>
+  <data name="Games.Jass.IllegalPlay" xml:space="preserve"><value>Színt kell adni, színhiány esetén adut, és lehetőség szerint felül kell ütni.</value></data>
+  <data name="Games.Jass.DealerForehandScore" xml:space="preserve"><value>Osztó: {0}. játékos   Előkéz: {1}. játékos   Pontok: {2} – {3}</value></data>
+  <data name="Games.Jass.NoTrump" xml:space="preserve"><value>Még nincs adu</value></data>
+  <data name="Games.Jass.TrumpTricks" xml:space="preserve"><value>Adu: {0}   Ütések: {1}/9   Leosztás pontjai: {2}</value></data>
+  <data name="Games.Jass.PassToReveal" xml:space="preserve"><value>Add át az eszközt a(z) {0}. játékosnak; az Enter felfedi a lapokat.</value></data>
+  <data name="Games.Jass.HiddenHand" xml:space="preserve"><value>A(z) {0}. játékos lapjai rejtve vannak.</value></data>
+  <data name="Games.Jass.PlayerHand" xml:space="preserve"><value>{0}. játékos lapjai (1–9: lap kijátszása):</value></data>
+  <data name="Games.Jass.FaceDown" xml:space="preserve"><value>{0}. [lefordítva]</value></data>
+  <data name="Games.Jass.EmptyCard" xml:space="preserve"><value>{0}.</value></data>
+  <data name="Games.Jass.NoCards" xml:space="preserve"><value>Ebben az ütésben még nincs kijátszott lap.</value></data>
+  <data name="Games.Jass.PlayedCard" xml:space="preserve"><value>{0}. játékos: {1}</value></data>
+  <data name="Games.Jass.TeamInstruction" xml:space="preserve"><value>Csapatok: az 1. és 3. játékos a 2. és 4. ellen. A P átadja az első aduválasztást a partnernek.</value></data>
+  <data name="Games.Jass.ChooseTrumpHint" xml:space="preserve"><value>Treff, káró, kőr vagy pikk kiválasztása adunak</value></data>
+  <data name="Games.Jass.PushHint" xml:space="preserve"><value>Az aduválasztás átadása a partnerednek</value></data>
+  <data name="Games.Jass.PlayHint" xml:space="preserve"><value>A számozott lap kijátszása a kézből</value></data>
+  <data name="Games.Jass.ActivateLabel" xml:space="preserve"><value>felfed / kijátsz</value></data>
+  <data name="Games.Jass.ActivateHint" xml:space="preserve"><value>Fedd fel a lapjaidat, vagy játszd ki a kijelölt lapot</value></data>
+  <data name="Games.Jass.CardFormat" xml:space="preserve"><value>{1} {0}</value></data>
+  <data name="Games.Jass.Suit.Clubs" xml:space="preserve"><value>treff</value></data>
+  <data name="Games.Jass.Suit.Diamonds" xml:space="preserve"><value>káró</value></data>
+  <data name="Games.Jass.Suit.Hearts" xml:space="preserve"><value>kőr</value></data>
+  <data name="Games.Jass.Suit.Spades" xml:space="preserve"><value>pikk</value></data>
   <data name="Games.Tetris.Rules" xml:space="preserve">
     <value>Rakd a leeső elemeket teljes sorokba. A teli sor eltűnik. A játék véget ér, ha az elemek felérnek.</value>
   </data>

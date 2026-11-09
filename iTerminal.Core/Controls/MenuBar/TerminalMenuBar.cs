@@ -140,7 +140,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
         StreamsDialog? streamsDialog = null,
         iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
-        FileEncryptionDialog? fileEncryptionDialog = null
+        FileEncryptionDialog? fileEncryptionDialog = null,
+        iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null
         )
         : base([], themeService)
     {
@@ -259,7 +260,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             snakeDialog,
             tetrisDialog,
             bluetoothDeviceManagerDialog: bluetoothDeviceManagerDialog,
-            virtualMachineManagerDialog: virtualMachineManagerDialog));
+            virtualMachineManagerDialog: virtualMachineManagerDialog,
+            jassDialog: jassDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 
@@ -415,4 +417,3 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         ViewSize.Width = Math.Max(rightCursor, 1);
     }
 }
-
