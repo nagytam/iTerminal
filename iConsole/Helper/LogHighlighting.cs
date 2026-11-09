@@ -69,10 +69,12 @@ public static class LogHighlighters
         var added = new List<LogSpan>();
         foreach (LogHighlighter highlighter in highlighters)
         {
-            MatchCollection matches;
+            // Matches() is lazy: the regex runs while the collection is read, so the timeout surfaces there. The matches are
+            // taken inside the try, or a slow pattern escapes it and breaks the Append that asked.
+            List<Match> matches;
             try
             {
-                matches = highlighter.Pattern.Matches(text);
+                matches = [.. highlighter.Pattern.Matches(text).Cast<Match>()];
             }
             catch (RegexMatchTimeoutException)
             {
