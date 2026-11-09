@@ -42,11 +42,14 @@ internal sealed class DisassemblyBudget
 
             if (Lines.Count >= MaxLines)
             {
-                TruncatedBecause = $"the {MaxLines:N0} line limit was reached";
+                TruncatedBecause = ViewerText.Format("Disassembly.LineLimit", "the {0:N0} line limit was reached", MaxLines);
             }
             else if (_clock.Elapsed > _maxDuration)
             {
-                TruncatedBecause = $"the {_maxDuration.TotalSeconds:0.#} second time limit was reached";
+                TruncatedBecause = ViewerText.Format(
+                    "Disassembly.TimeLimit",
+                    "the {0:0.#} second time limit was reached",
+                    _maxDuration.TotalSeconds);
             }
 
             return TruncatedBecause is not null;
@@ -73,7 +76,7 @@ internal sealed class DisassemblyBudget
     {
         if (TruncatedBecause is not null)
         {
-            Lines.Add($"  … output truncated: {TruncatedBecause}.");
+            Lines.Add(ViewerText.Format("Disassembly.OutputTruncated", "  … output truncated: {0}.", TruncatedBecause));
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Reflection.PortableExecutable;
 using System.Text;
 using Iced.Intel;
+using iConsole.Services;
 
 namespace iConsole.Services.Disassembly;
 
@@ -18,7 +19,7 @@ internal static class NativeDisassembler
 
     public static void Disassemble(byte[] bytes, DisassemblyBudget budget)
     {
-        budget.Add("── Disassembly (native) ────────────────────────────────────────");
+        budget.Add(ViewerText.Heading("Disassembly.NativeHeading", "Disassembly (native)"));
         int nativeBytesLeft = DisassemblyBudget.MaxNativeBytes;
         try
         {
@@ -32,12 +33,14 @@ internal static class NativeDisassembler
             }
             else
             {
-                budget.Add("  Not a Windows PE or Linux ELF file; there is nothing to disassemble.");
+                budget.Add(ViewerText.Get(
+                    "Disassembly.NotExecutable",
+                    "  Not a Windows PE or Linux ELF file; there is nothing to disassemble."));
             }
         }
         catch (Exception ex) when (ex is BadImageFormatException or InvalidOperationException or ArgumentException or IOException or OverflowException)
         {
-            budget.Lines.Add($"  The file's headers could not be read: {ex.Message}");
+            budget.Lines.Add(ViewerText.Format("Disassembly.HeadersUnreadable", "  The file's headers could not be read: {0}", ex.Message));
         }
 
         budget.FinishTruncation();
@@ -54,10 +57,12 @@ internal static class NativeDisassembler
             _ => 0,
         };
 
-        budget.Add($"  PE image, machine {machine}");
+        budget.Add(ViewerText.Format("Disassembly.PeImageMachine", "  PE image, machine {0}", machine));
         if (bitness == 0)
         {
-            budget.Add("  Only x86 and x86-64 code can be disassembled; this machine type is not supported.");
+            budget.Add(ViewerText.Get(
+                "Disassembly.UnsupportedMachine",
+                "  Only x86 and x86-64 code can be disassembled; this machine type is not supported."));
             return;
         }
 
@@ -78,7 +83,7 @@ internal static class NativeDisassembler
             int size = section.VirtualSize > 0 ? Math.Min(section.SizeOfRawData, section.VirtualSize) : section.SizeOfRawData;
             if (section.PointerToRawData < 0 || size <= 0 || !InRange(bytes, (ulong)section.PointerToRawData, (ulong)size))
             {
-                budget.Add($"  ; section {section.Name}: its data lies outside the file");
+                budget.Add($"  ; section {section.Name}: {ViewerText.Get("Disassembly.SectionDataOutsideFile", "its data lies outside the file")}");
                 continue;
             }
 
@@ -91,26 +96,30 @@ internal static class NativeDisassembler
     {
         if (bytes.Length < 52)
         {
-            budget.Add("  The ELF header is cut short.");
+            budget.Add(ViewerText.Get("Disassembly.ElfHeaderShort", "  The ELF header is cut short."));
             return;
         }
 
         byte elfClass = bytes[4];
         if (elfClass is not (1 or 2))
         {
-            budget.Add("  Unknown ELF class.");
+            budget.Add(ViewerText.Get("Disassembly.ElfUnknownClass", "  Unknown ELF class."));
             return;
         }
 
         if (bytes[5] != 1)
         {
-            budget.Add("  Big-endian ELF files are not supported.");
+            budget.Add(ViewerText.Get("Disassembly.BigEndianNotSupported", "  Big-endian ELF files are not supported."));
             return;
         }
 
         bool is64 = elfClass == 2;
         ushort machine = BinaryPrimitives.ReadUInt16LittleEndian(bytes.AsSpan(0x12));
-        budget.Add($"  ELF {(is64 ? 64 : 32)}-bit, machine {ElfMachineName(machine)}");
+        budget.Add(ViewerText.Format(
+            "Disassembly.ElfImageMachine",
+            "  ELF {0}-bit, machine {1}",
+            is64 ? 64 : 32,
+            ElfMachineName(machine)));
         int bitness = machine switch
         {
             3 => 32,
@@ -120,13 +129,15 @@ internal static class NativeDisassembler
 
         if (bitness == 0)
         {
-            budget.Add("  Only x86 and x86-64 code can be disassembled; this machine type is not supported.");
+            budget.Add(ViewerText.Get(
+                "Disassembly.UnsupportedMachine",
+                "  Only x86 and x86-64 code can be disassembled; this machine type is not supported."));
             return;
         }
 
         if (is64 && bytes.Length < 64)
         {
-            budget.Add("  The ELF header is cut short.");
+            budget.Add(ViewerText.Get("Disassembly.ElfHeaderShort", "  The ELF header is cut short."));
             return;
         }
 
@@ -139,13 +150,15 @@ internal static class NativeDisassembler
         int minimumEntrySize = is64 ? 64 : 40;
         if (sectionTable == 0 || count == 0)
         {
-            budget.Add("  The file has no section headers (it may be stripped), so its code cannot be located.");
+            budget.Add(ViewerText.Get(
+                "Disassembly.NoSectionHeaders",
+                "  The file has no section headers (it may be stripped), so its code cannot be located."));
             return;
         }
 
         if (entrySize < minimumEntrySize)
         {
-            budget.Add("  The section headers are malformed.");
+            budget.Add(ViewerText.Get("Disassembly.MalformedSectionHeaders", "  The section headers are malformed."));
             return;
         }
 
@@ -160,7 +173,7 @@ internal static class NativeDisassembler
             ElfSection? section = ReadElfSection(bytes, sectionTable, entrySize, i, is64);
             if (section is null)
             {
-                budget.Add("  The section headers run past the end of the file.");
+                budget.Add(ViewerText.Get("Disassembly.SectionHeadersPastEnd", "  The section headers run past the end of the file."));
                 return;
             }
 
@@ -172,7 +185,7 @@ internal static class NativeDisassembler
             string name = ElfSectionName(bytes, nameTable, section.NameOffset);
             if (!InRange(bytes, section.Offset, section.Size))
             {
-                budget.Add($"  ; section {name}: its data lies outside the file");
+                budget.Add($"  ; section {name}: {ViewerText.Get("Disassembly.SectionDataOutsideFile", "its data lies outside the file")}");
                 continue;
             }
 
@@ -186,7 +199,10 @@ internal static class NativeDisassembler
     {
         if (nativeBytesLeft <= 0)
         {
-            budget.Truncate($"the {DisassemblyBudget.MaxNativeBytes / (1024 * 1024)} MB limit on decoded code was reached");
+            budget.Truncate(ViewerText.Format(
+                "Disassembly.DecodedCodeLimit",
+                "the {0} MB limit on decoded code was reached",
+                DisassemblyBudget.MaxNativeBytes / (1024 * 1024)));
             return;
         }
 
@@ -222,7 +238,10 @@ internal static class NativeDisassembler
         // Said only now: a flag set earlier would make the budget refuse the part of the section that does fit.
         if (take < size)
         {
-            budget.Truncate($"the {DisassemblyBudget.MaxNativeBytes / (1024 * 1024)} MB limit on decoded code was reached");
+            budget.Truncate(ViewerText.Format(
+                "Disassembly.DecodedCodeLimit",
+                "the {0} MB limit on decoded code was reached",
+                DisassemblyBudget.MaxNativeBytes / (1024 * 1024)));
         }
     }
 
