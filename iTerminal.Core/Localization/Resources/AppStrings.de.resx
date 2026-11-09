@@ -8809,4 +8809,58 @@
   <data name="Props.BytesMany" xml:space="preserve">
     <value>({0} Bytes)</value>
   </data>
+  <data name="Form.Archive" xml:space="preserve">
+    <value>Archiv</value>
+  </data>
+  <data name="Form.Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Form.Level" xml:space="preserve">
+    <value>Stufe</value>
+  </data>
+  <data name="Form.Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="Form.Confirm" xml:space="preserve">
+    <value>Wiederholen</value>
+  </data>
+  <data name="Form.Encryption" xml:space="preserve">
+    <value>Verschlüsselung</value>
+  </data>
+  <data name="Compress.LevelLine" xml:space="preserve">
+    <value>Stufe: {0}.</value>
+  </data>
+  <data name="Compress.Hint.Zip" xml:space="preserve">
+    <value>0 speichert nur, 1 ist am schnellsten, 9 am kleinsten</value>
+  </data>
+  <data name="Compress.Hint.SevenZip" xml:space="preserve">
+    <value>0 speichert nur, 1 ist am schnellsten, 9 ist Ultra</value>
+  </data>
+  <data name="Compress.Hint.Tar" xml:space="preserve">
+    <value>1 ist am schnellsten, 9 am kleinsten</value>
+  </data>
+  <data name="Compress.Hint.NoCompress" xml:space="preserve">
+    <value>TAR komprimiert nicht</value>
+  </data>
+  <data name="Form.To" xml:space="preserve">
+    <value>Nach</value>
+  </data>
+  <data name="About.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="About.Runtime" xml:space="preserve">
+    <value>Laufzeit</value>
+  </data>
+  <data name="About.System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Packages.Installed" xml:space="preserve">
+    <value>Installiert ({0})</value>
+  </data>
+  <data name="Packages.Search" xml:space="preserve">
+    <value>Suche: {0} ({1})</value>
+  </data>
+  <data name="Packages.Output" xml:space="preserve">
+    <value>Ausgabe</value>
+  </data>
 </root>

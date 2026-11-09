@@ -8950,4 +8950,58 @@
   <data name="Props.BytesMany" xml:space="preserve">
     <value>({0} bytes)</value>
   </data>
+  <data name="Form.Archive" xml:space="preserve">
+    <value>Archive</value>
+  </data>
+  <data name="Form.Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Form.Level" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="Form.Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Form.Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Form.Encryption" xml:space="preserve">
+    <value>Encryption</value>
+  </data>
+  <data name="Compress.LevelLine" xml:space="preserve">
+    <value>Level: {0}.</value>
+  </data>
+  <data name="Compress.Hint.Zip" xml:space="preserve">
+    <value>0 stores, 1 is fastest, 9 is smallest</value>
+  </data>
+  <data name="Compress.Hint.SevenZip" xml:space="preserve">
+    <value>0 stores, 1 is fastest, 9 is ultra</value>
+  </data>
+  <data name="Compress.Hint.Tar" xml:space="preserve">
+    <value>1 is fastest, 9 is smallest</value>
+  </data>
+  <data name="Compress.Hint.NoCompress" xml:space="preserve">
+    <value>TAR does not compress</value>
+  </data>
+  <data name="Form.To" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="About.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="About.Runtime" xml:space="preserve">
+    <value>Runtime</value>
+  </data>
+  <data name="About.System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Packages.Installed" xml:space="preserve">
+    <value>Installed ({0})</value>
+  </data>
+  <data name="Packages.Search" xml:space="preserve">
+    <value>Search: {0} ({1})</value>
+  </data>
+  <data name="Packages.Output" xml:space="preserve">
+    <value>Output</value>
+  </data>
 </root>

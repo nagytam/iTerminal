@@ -114,8 +114,8 @@ public class ExtractDialog : FormDialog
         _password = new PasswordBox(beepService, dateTimeProviderService, themeService);
 
         _form = new FormPanel(themeService);
-        _form.AddField("To", _textBoxTarget);
-        _form.AddField("Password", _password);
+        _form.AddField(UiText.Get("Form.To", "To"), _textBoxTarget);
+        _form.AddField(UiText.Get("Form.Password", "Password"), _password);
 
         _checkBoxOwnFolder = new CheckBox(themeService)
         {

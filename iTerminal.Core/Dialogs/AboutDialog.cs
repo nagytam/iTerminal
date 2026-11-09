@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Services.BackgroundStart;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -41,9 +42,9 @@ public class AboutDialog : Dialog
 
     internal static IReadOnlyList<(string Key, string Value)> DetailPairs =>
     [
-        ("Version", Version),
-        ("Runtime", RuntimeInformation.FrameworkDescription),
-        ("System", RuntimeInformation.OSDescription),
+        (UiText.Get("About.Version", "Version"), Version),
+        (UiText.Get("About.Runtime", "Runtime"), RuntimeInformation.FrameworkDescription),
+        (UiText.Get("About.System", "System"), RuntimeInformation.OSDescription),
     ];
 
     /// <summary>The version of the running app, as the build stamped it.</summary>

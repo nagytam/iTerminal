@@ -753,12 +753,12 @@ public class PackageManagerDialog : SplitPaneDialog
         var rightW = iw - leftW - 1;
 
         var packages = _mode == Mode.Installed ? _installed : _searchResults;
-        var leftTitle = _mode == Mode.Installed ? $"Installed ({packages.Count})" : $"Search: {_searchQuery} ({packages.Count})";
+        var leftTitle = _mode == Mode.Installed ? string.Format(UiText.Get("Packages.Installed", "Installed ({0})"), packages.Count) : string.Format(UiText.Get("Packages.Search", "Search: {0} ({1})"), _searchQuery, packages.Count);
         DrawSectionHeader(buffer, ix, midY, leftW, leftTitle, true, colorScheme);
 
         if (rightW > 0)
         {
-            DrawSectionHeader(buffer, rightX, midY, rightW, "Output", false, colorScheme);
+            DrawSectionHeader(buffer, rightX, midY, rightW, UiText.Get("Packages.Output", "Output"), false, colorScheme);
         }
     }
 
