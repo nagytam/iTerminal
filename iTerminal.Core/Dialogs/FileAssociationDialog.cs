@@ -42,7 +42,7 @@ public class FileAssociationDialog : FormDialog
         _textBoxName = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Label.Name", "Name").PadRight(10) };
         _textBoxPatterns = new TextBox(beepService, dateTimeProviderService, themeService) { Label = UiText.Get("Field.AppliesTo", "Applies to"), Placeholder = "e.g. *.txt;*.md" };
         _checkBoxTerminal = new CheckBox(themeService) { Label = UiText.Get("Field.RunsInTerminal", "Runs in the terminal (vim, nano, less…)") };
-        _hintLabel = new Label("%f file  %d folder  %n name — without %f the file goes last", themeService);
+        _hintLabel = new Label(UiText.Get("Assoc.PlaceholderHint", "%f file  %d folder  %n name — without %f the file goes last"), themeService);
         _errorLabel = new Label(string.Empty, themeService);
         _saveButton = new Button(iConsole.Localization.UiText.Get("Common.Save", "Save"), saveCommand, themeService);
         _cancelButton = new CancelDialogButton(themeService);

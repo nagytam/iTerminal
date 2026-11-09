@@ -8221,6 +8221,9 @@
   <data name="Assoc.ChangeOpen" xml:space="preserve">
     <value>A megnyitó program módosítása</value>
   </data>
+  <data name="Assoc.PlaceholderHint" xml:space="preserve">
+    <value>%f fájl  %d mappa  %n név — %f nélkül a fájl a lista végére kerül</value>
+  </data>
   <data name="DiskUsage.Measuring" xml:space="preserve">
     <value>{0} mérése</value>
   </data>

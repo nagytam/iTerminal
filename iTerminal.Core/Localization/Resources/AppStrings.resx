@@ -8362,6 +8362,9 @@
   <data name="Assoc.ChangeOpen" xml:space="preserve">
     <value>Change the program to open with</value>
   </data>
+  <data name="Assoc.PlaceholderHint" xml:space="preserve">
+    <value>%f file  %d folder  %n name — without %f the file goes last</value>
+  </data>
   <data name="DiskUsage.Measuring" xml:space="preserve">
     <value>Measuring {0}</value>
   </data>

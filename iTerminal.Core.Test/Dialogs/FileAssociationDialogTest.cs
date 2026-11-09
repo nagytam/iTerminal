@@ -1,4 +1,6 @@
+using System.Resources;
 using iConsole.Controls;
+using iConsole.Localization;
 using iConsole.Services;
 using iConsole.Test.Core;
 using iTerminal.Core.Dialogs;
@@ -48,6 +50,34 @@ public class FileAssociationDialogTest
         AssertScreenContains(screen, "e.g. code %f");
         AssertScreenContains(screen, "%f file  %d folder  %n name");
         AssertScreenContains(screen, "Runs in the terminal");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DoNotParallelize]
+    public async Task PlaceholderHintIsLocalized_AndKeepsCommandTokens()
+    {
+        Localizer localizer = new([new ResourceLocalizationSource(new ResourceManager(
+            "iTerminal.Core.Localization.Resources.AppStrings",
+            typeof(FileAssociationDialog).Assembly))]);
+        (string Code, string Hint)[] translations =
+        [
+            ("en", "%f file  %d folder  %n name — without %f the file goes last"),
+            ("de", "%f Datei  %d Ordner  %n Name — ohne %f kommt die Datei ans Ende"),
+            ("fr", "%f fichier  %d dossier  %n nom — sans %f, le fichier va à la fin"),
+            ("es", "%f archivo  %d carpeta  %n nombre — sin %f, el archivo va al final"),
+            ("it", "%f file  %d cartella  %n nome — senza %f, il file va in fondo"),
+            ("hu", "%f fájl  %d mappa  %n név — %f nélkül a fájl a lista végére kerül"),
+        ];
+
+        foreach ((string code, string hint) in translations)
+        {
+            Assert.IsTrue(localizer.SetLanguage(code), code);
+            using IDisposable language = UiText.Scope(localizer);
+            Rig rig = await OpenAsync(dialog => dialog.LoadNew(FileAssociationKind.Open, "*.md"));
+
+            AssertScreenContains(Render(rig.Root), hint);
+        }
     }
 
     [Timeout(60_000)]
