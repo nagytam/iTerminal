@@ -79,6 +79,18 @@ public class WindowsUserGroupServiceTest
     }
 
     [TestMethod]
+    public async Task AcceptsWindowsUserNamesWithSpacesAndUnicode()
+    {
+        FakeProcessRunner runner = new FakeProcessRunner().Answer("powershell.exe", string.Empty);
+        WindowsUserGroupService service = new(runner);
+
+        UserGroupActionResult result = await service.SetPasswordAsync("Zoë Smith", "secret");
+
+        Assert.IsTrue(result.Success);
+        StringAssert.Contains(runner.Calls.Single().CommandLine, "'Zoë Smith'");
+    }
+
+    [TestMethod]
     public async Task RefusesNewlinePasswordsBeforeStartingAProcess()
     {
         FakeProcessRunner runner = new();

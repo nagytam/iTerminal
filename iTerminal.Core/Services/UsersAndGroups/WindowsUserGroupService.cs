@@ -1,6 +1,5 @@
 using System.Text;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using iTerminal.Core.Services.Processes;
 
 namespace iTerminal.Core.Services.UsersAndGroups;
@@ -8,7 +7,6 @@ namespace iTerminal.Core.Services.UsersAndGroups;
 public sealed class WindowsUserGroupService(IExternalProcessRunner runner) : IUserGroupService
 {
     private const string PowerShell = "powershell.exe";
-    private static readonly Regex AccountNamePattern = new("^[A-Za-z_][A-Za-z0-9_.-]*[$]?$", RegexOptions.CultureInvariant);
     private static bool ValidGroupName(string value) =>
         !string.IsNullOrWhiteSpace(value) && !value.Any(char.IsControl) && !value.Contains('/') && !value.Contains(',');
 
@@ -182,7 +180,11 @@ public sealed class WindowsUserGroupService(IExternalProcessRunner runner) : IUs
             : string.Empty;
 
     private static bool ValidName(string value) =>
-        AccountNamePattern.IsMatch(value);
+        !string.IsNullOrWhiteSpace(value)
+        && value.Length <= 20
+        && value[^1] != '.'
+        && !value.Any(char.IsControl)
+        && !value.Any(character => "\"/\\[]:;|=,+*?<>".IndexOf(character) >= 0);
 
     private static bool ValidText(string value) => !value.Any(char.IsControl);
 
