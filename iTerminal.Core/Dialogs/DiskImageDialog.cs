@@ -184,7 +184,10 @@ public class DiskImageDialog : FormDialog
                 return false;
             }
 
-            _notifications.Notify(mount ? "Mounted" : "Unmounted", result.Message, NotificationSeverity.Success);
+            string title = mount
+                ? UiText.Get("DiskImage.Mounted", "Mounted")
+                : UiText.Get("DiskImage.Unmounted", "Unmounted");
+            _notifications.Notify(title, result.Message, NotificationSeverity.Success);
             Close();
             RefreshPanels();
             return true;
