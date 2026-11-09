@@ -72,7 +72,7 @@ public class CompareFoldersDialog : Dialog
         _comboMode = new ComboBox<CompareMode>(themeService) { DisplaySelector = DescribeMode };
         _comboMode.SetItems([CompareMode.SizeAndDate, CompareMode.SizeOnly, CompareMode.Content]);
         _form = new FormPanel(themeService);
-        _form.AddField("Compare", _comboMode);
+        _form.AddField(UiText.Get("Compare.FieldCompare", "Compare"), _comboMode);
         _checkBoxSubfolders = new CheckBox(themeService)
         {
             Label = UiText.Get("Field.IncludeSubfolders", "Include subfolders"),
@@ -82,7 +82,7 @@ public class CompareFoldersDialog : Dialog
         _comboDirection = new ComboBox<SyncDirection>(themeService) { DisplaySelector = DescribeDirection };
         _comboDirection.SetItems([SyncDirection.Both, SyncDirection.LeftToRight, SyncDirection.RightToLeft]);
         _syncForm = new FormPanel(themeService);
-        _syncForm.AddField("Sync (F5)", _comboDirection);
+        _syncForm.AddField(UiText.Get("Compare.FieldSync", "Sync (F5)"), _comboDirection);
         _checkBoxDeleteExtras = new CheckBox(themeService)
         {
             Label = UiText.Get("Field.DeleteTargetLacksSource", "Delete what the target has and the source lacks (one-way only)"),
@@ -469,17 +469,17 @@ public class CompareFoldersDialog : Dialog
             buffer.Write(ZOrder, new Position(AbsolutePosition.X + 2, AbsolutePosition.Y + row), new Size(inner, 1),
                 new ConxelString((text.Shrink(inner) ?? string.Empty).ExpandRight(inner), color, colorScheme.Background));
 
-        Line(1, "Left:  " + (LeftModel?.Url?.FullUrl ?? "—"), foreground);
-        Line(2, "Right: " + (RightModel?.Url?.FullUrl ?? "—"), foreground);
+        Line(1, UiText.Get("Compare.Left", "Left: ") + " " + (LeftModel?.Url?.FullUrl ?? "—"), foreground);
+        Line(2, UiText.Get("Compare.Right", "Right:") + " " + (RightModel?.Url?.FullUrl ?? "—"), foreground);
 
         var rule = new ConxelString(Border.Horizontal.Repeat(Math.Max(0, width - 2)), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + 8), new Size(rule.Count, 1), rule);
 
-        var status = _progress.Length > 0 ? $"Comparing… {_progress}" : _status;
+        var status = _progress.Length > 0 ? string.Format(UiText.Get("Compare.Comparing", "Comparing… {0}"), _progress) : _status;
         Line((int)ViewSize.Height - 3, status, _statusIsError ? colorScheme.Error : foreground);
         Line((int)ViewSize.Height - 2, string.Empty, foreground);
 
-        var hints = " Enter:compare  F5:synchronise  ↑↓/wheel:scroll  Esc:close ".FitHints(Math.Max(0, width - 4));
+        var hints = (" " + UiText.Get("Compare.Hints", "Enter:compare  F5:synchronise  ↑↓/wheel:scroll  Esc:close") + " ").FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
         var bottomLine = new ConxelString(StringHelper.AlignCenter(bottom, hints), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X, AbsolutePosition.Y + ViewSize.Height - 1), new Size(bottomLine.Count, 1), bottomLine);

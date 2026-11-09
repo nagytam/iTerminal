@@ -8257,4 +8257,85 @@
   <data name="Weather.Loading" xml:space="preserve">
     <value>Meteo {0}</value>
   </data>
+  <data name="Info.Link" xml:space="preserve">
+    <value>Collegamento:</value>
+  </data>
+  <data name="Info.File" xml:space="preserve">
+    <value>File:</value>
+  </data>
+  <data name="Info.Folder" xml:space="preserve">
+    <value>Cartella:</value>
+  </data>
+  <data name="Info.FileSize" xml:space="preserve">
+    <value>Dimensione del file:</value>
+  </data>
+  <data name="Ai.NoKey" xml:space="preserve">
+    <value>nessuna chiave API — imposta {0}</value>
+  </data>
+  <data name="Ai.KeyRefused" xml:space="preserve">
+    <value>chiave API rifiutata ({0}) — controlla {1}</value>
+  </data>
+  <data name="Ai.NoEndpoint" xml:space="preserve">
+    <value>nessun endpoint dei modelli ({0}) — controlla l’URL dell’API</value>
+  </data>
+  <data name="Ai.RateLimited" xml:space="preserve">
+    <value>limite di richieste raggiunto (429) — riprova più tardi</value>
+  </data>
+  <data name="Ai.ServerError" xml:space="preserve">
+    <value>errore del server ({0})</value>
+  </data>
+  <data name="Ai.Refused" xml:space="preserve">
+    <value>richiesta rifiutata ({0})</value>
+  </data>
+  <data name="Ai.Off" xml:space="preserve">
+    <value>L’IA è disattivata (AI:Provider)</value>
+  </data>
+  <data name="Ai.ModelMissing" xml:space="preserve">
+    <value>modello non trovato: {0}</value>
+  </data>
+  <data name="Ai.Unreachable" xml:space="preserve">
+    <value>server non raggiungibile</value>
+  </data>
+  <data name="Ai.Timeout" xml:space="preserve">
+    <value>timeout del server</value>
+  </data>
+  <data name="Ai.Error" xml:space="preserve">
+    <value>errore: {0}</value>
+  </data>
+  <data name="Ai.Unavailable" xml:space="preserve">
+    <value>non disponibile: {0}</value>
+  </data>
+  <data name="Ai.Hints" xml:space="preserve">
+    <value>Ctrl+F2: dettagli, Ctrl+B: barra del terminale</value>
+  </data>
+  <data name="Palette.NoMatch" xml:space="preserve">
+    <value>Nessun comando corrisponde.</value>
+  </data>
+  <data name="Compare.FieldCompare" xml:space="preserve">
+    <value>Confronta</value>
+  </data>
+  <data name="Compare.FieldSync" xml:space="preserve">
+    <value>Sincr. (F5)</value>
+  </data>
+  <data name="Compare.Left" xml:space="preserve">
+    <value>Sinistra: </value>
+  </data>
+  <data name="Compare.Right" xml:space="preserve">
+    <value>Destra:</value>
+  </data>
+  <data name="Compare.Comparing" xml:space="preserve">
+    <value>Confronto… {0}</value>
+  </data>
+  <data name="Compare.Hints" xml:space="preserve">
+    <value>Invio:confronta  F5:sincronizza  ↑↓/rotella:scorri  Esc:chiudi</value>
+  </data>
+  <data name="DiskUsage.Hints" xml:space="preserve">
+    <value>Invio:apri  ←:su  g:vai al pannello  s:ordina  r:rimisura  Esc:chiudi</value>
+  </data>
+  <data name="Dup.ConfirmHints" xml:space="preserve">
+    <value>y:elimina  altro tasto:annulla</value>
+  </data>
+  <data name="Dup.Hints" xml:space="preserve">
+    <value>Spazio/clic:segna  a:tieni il più vecchio  n:tieni il più nuovo  u:deseleziona  Canc:elimina  Invio/g:vai  r:riscansiona  Esc:chiudi</value>
+  </data>
 </root>

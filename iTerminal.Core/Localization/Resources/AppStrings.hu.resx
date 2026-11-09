@@ -8257,4 +8257,85 @@
   <data name="Weather.Loading" xml:space="preserve">
     <value>Időjárás {0}</value>
   </data>
+  <data name="Info.Link" xml:space="preserve">
+    <value>Hivatkozás:</value>
+  </data>
+  <data name="Info.File" xml:space="preserve">
+    <value>Fájl:</value>
+  </data>
+  <data name="Info.Folder" xml:space="preserve">
+    <value>Mappa:</value>
+  </data>
+  <data name="Info.FileSize" xml:space="preserve">
+    <value>Fájlméret:</value>
+  </data>
+  <data name="Ai.NoKey" xml:space="preserve">
+    <value>nincs API-kulcs — állítsa be: {0}</value>
+  </data>
+  <data name="Ai.KeyRefused" xml:space="preserve">
+    <value>az API-kulcsot elutasították ({0}) — ellenőrizze: {1}</value>
+  </data>
+  <data name="Ai.NoEndpoint" xml:space="preserve">
+    <value>nincs modellvégpont ({0}) — ellenőrizze az API URL-jét</value>
+  </data>
+  <data name="Ai.RateLimited" xml:space="preserve">
+    <value>kérési korlát elérve (429) — próbálja később</value>
+  </data>
+  <data name="Ai.ServerError" xml:space="preserve">
+    <value>kiszolgálóhiba ({0})</value>
+  </data>
+  <data name="Ai.Refused" xml:space="preserve">
+    <value>a kérést elutasították ({0})</value>
+  </data>
+  <data name="Ai.Off" xml:space="preserve">
+    <value>Az MI ki van kapcsolva (AI:Provider)</value>
+  </data>
+  <data name="Ai.ModelMissing" xml:space="preserve">
+    <value>a modell nem található: {0}</value>
+  </data>
+  <data name="Ai.Unreachable" xml:space="preserve">
+    <value>a kiszolgáló nem érhető el</value>
+  </data>
+  <data name="Ai.Timeout" xml:space="preserve">
+    <value>kiszolgáló időtúllépés</value>
+  </data>
+  <data name="Ai.Error" xml:space="preserve">
+    <value>hiba: {0}</value>
+  </data>
+  <data name="Ai.Unavailable" xml:space="preserve">
+    <value>nem érhető el: {0}</value>
+  </data>
+  <data name="Ai.Hints" xml:space="preserve">
+    <value>Ctrl+F2: részletek, Ctrl+B: terminálsáv</value>
+  </data>
+  <data name="Palette.NoMatch" xml:space="preserve">
+    <value>Egy parancs sem felel meg.</value>
+  </data>
+  <data name="Compare.FieldCompare" xml:space="preserve">
+    <value>Összehasonlítás</value>
+  </data>
+  <data name="Compare.FieldSync" xml:space="preserve">
+    <value>Szinkron (F5)</value>
+  </data>
+  <data name="Compare.Left" xml:space="preserve">
+    <value>Bal: </value>
+  </data>
+  <data name="Compare.Right" xml:space="preserve">
+    <value>Jobb:</value>
+  </data>
+  <data name="Compare.Comparing" xml:space="preserve">
+    <value>Összehasonlítás… {0}</value>
+  </data>
+  <data name="Compare.Hints" xml:space="preserve">
+    <value>Enter:összehasonlít  F5:szinkronizál  ↑↓/görgő:görgetés  Esc:bezár</value>
+  </data>
+  <data name="DiskUsage.Hints" xml:space="preserve">
+    <value>Enter:megnyit  ←:fel  g:a panelre  s:rendezés  r:újramérés  Esc:bezár</value>
+  </data>
+  <data name="Dup.ConfirmHints" xml:space="preserve">
+    <value>y:törlés  más billentyű:mégse</value>
+  </data>
+  <data name="Dup.Hints" xml:space="preserve">
+    <value>Szóköz/kattintás:jelöl  a:legrégebbi marad  n:legújabb marad  u:jelölés törlése  Del:töröl  Enter/g:ugrás  r:újrakeresés  Esc:bezár</value>
+  </data>
 </root>

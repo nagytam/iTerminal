@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iTerminal.Core.Controls.Contents;
@@ -42,12 +43,12 @@ public class AiChatService : IAiChatService
     /// </summary>
     internal static string DescribeFailure(int statusCode, bool apiKeySet, string apiKeyEnvVar) => statusCode switch
     {
-        401 or 403 when !apiKeySet => $"no API key — set {apiKeyEnvVar}",
-        401 or 403 => $"API key refused ({statusCode}) — check {apiKeyEnvVar}",
-        404 => $"no models endpoint ({statusCode}) — check the API URL",
-        429 => "rate limited (429) — try again later",
-        >= 500 => $"server error ({statusCode})",
-        _ => $"request refused ({statusCode})",
+        401 or 403 when !apiKeySet => string.Format(UiText.Get("Ai.NoKey", "no API key — set {0}"), apiKeyEnvVar),
+        401 or 403 => string.Format(UiText.Get("Ai.KeyRefused", "API key refused ({0}) — check {1}"), statusCode, apiKeyEnvVar),
+        404 => string.Format(UiText.Get("Ai.NoEndpoint", "no models endpoint ({0}) — check the API URL"), statusCode),
+        429 => UiText.Get("Ai.RateLimited", "rate limited (429) — try again later"),
+        >= 500 => string.Format(UiText.Get("Ai.ServerError", "server error ({0})"), statusCode),
+        _ => string.Format(UiText.Get("Ai.Refused", "request refused ({0})"), statusCode),
     };
 
     public async Task CheckAvailabilityAsync(AiChatModel model)
@@ -55,7 +56,7 @@ public class AiChatService : IAiChatService
         if (_aiOptions.Provider == AiProvider.None)
         {
             model.IsAvailable = false;
-            model.ModelInfo = "AI is off (AI:Provider)";
+            model.ModelInfo = UiText.Get("Ai.Off", "AI is off (AI:Provider)");
             return;
         }
 
@@ -93,23 +94,23 @@ public class AiChatService : IAiChatService
             else
             {
                 model.IsAvailable = false;
-                model.ModelInfo = $"model not found: {_aiOptions.ModelId}";
+                model.ModelInfo = string.Format(UiText.Get("Ai.ModelMissing", "model not found: {0}"), _aiOptions.ModelId);
             }
         }
         catch (System.Net.Http.HttpRequestException)
         {
             model.IsAvailable = false;
-            model.ModelInfo = "server unreachable";
+            model.ModelInfo = UiText.Get("Ai.Unreachable", "server unreachable");
         }
         catch (TaskCanceledException)
         {
             model.IsAvailable = false;
-            model.ModelInfo = "server timeout";
+            model.ModelInfo = UiText.Get("Ai.Timeout", "server timeout");
         }
         catch (Exception ex)
         {
             model.IsAvailable = false;
-            model.ModelInfo = $"error: {ex.Message}";
+            model.ModelInfo = string.Format(UiText.Get("Ai.Error", "error: {0}"), ex.Message);
         }
     }
 

@@ -407,8 +407,8 @@ public class AiPromptBar : Window
             // Say what is wrong and where to look: "[server error (401)]" alone named neither the
             // assistant nor a way to find out more.
             // The hints go first when it does not fit — the reason is the part worth the room.
-            var reason = IsCollapsed ? $" unavailable: {modelInfoStr}" : $" [{modelInfoStr}]";
-            var withHints = reason + "  —  Ctrl+F2: details, Ctrl+B: terminal bar";
+            var reason = IsCollapsed ? " " + string.Format(UiText.Get("Ai.Unavailable", "unavailable: {0}"), modelInfoStr) : $" [{modelInfoStr}]";
+            var withHints = reason + "  —  " + UiText.Get("Ai.Hints", "Ctrl+F2: details, Ctrl+B: terminal bar");
             var warning = IsCollapsed && withHints.Length <= warningModelWidth ? withHints : reason;
             _modelLabel.Text = warning.Shrink(warningModelWidth)?.ExpandRight(warningModelWidth) ?? string.Empty;
             _modelLabel.ForegroundColor = warningFg;
