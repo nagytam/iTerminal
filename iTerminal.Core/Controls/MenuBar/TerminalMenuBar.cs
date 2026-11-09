@@ -141,7 +141,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         StreamsDialog? streamsDialog = null,
         iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
         FileEncryptionDialog? fileEncryptionDialog = null,
-        iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null
+        iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null,
         iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null
         )
         : base([], themeService)
