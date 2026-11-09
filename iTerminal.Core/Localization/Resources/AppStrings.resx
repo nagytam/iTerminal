@@ -9022,4 +9022,73 @@
   <data name="Sort.Reversed" xml:space="preserve">
     <value>Reversed</value>
   </data>
+  <data name="Transfer.OpCopy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Transfer.OpMove" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="Transfer.TitleCopyItems" xml:space="preserve">
+    <value>Copy {0} items</value>
+  </data>
+  <data name="Transfer.TitleMoveItems" xml:space="preserve">
+    <value>Move {0} items</value>
+  </data>
+  <data name="Transfer.TitleCopyFile" xml:space="preserve">
+    <value>Copy file</value>
+  </data>
+  <data name="Transfer.TitleCopyFolder" xml:space="preserve">
+    <value>Copy folder</value>
+  </data>
+  <data name="Transfer.TitleMoveFile" xml:space="preserve">
+    <value>Move file</value>
+  </data>
+  <data name="Transfer.TitleMoveFolder" xml:space="preserve">
+    <value>Move folder</value>
+  </data>
+  <data name="DiskMgr.HintsFormat" xml:space="preserve">
+    <value>E:eject  F:format  M:disk image  B:BitLocker  Esc:close</value>
+  </data>
+  <data name="DiskMgr.Hints" xml:space="preserve">
+    <value>E:eject  M:disk image  B:BitLocker  Esc:close</value>
+  </data>
+  <data name="SysSettings.YesNo" xml:space="preserve">
+    <value>y:yes  n:no</value>
+  </data>
+  <data name="SysSettings.HintsComputer" xml:space="preserve">
+    <value>←/→:section  Enter:edit  F5:reread  Esc:close</value>
+  </data>
+  <data name="SysSettings.HintsEnvironment" xml:space="preserve">
+    <value>←/→:section  Enter:edit  Ins:add  Del:remove  S:scope  Esc:close</value>
+  </data>
+  <data name="SysSettings.HintsTimeZone" xml:space="preserve">
+    <value>←/→:section  Enter:apply  F5:reread  Esc:close</value>
+  </data>
+  <data name="SysSettings.RowDomain" xml:space="preserve">
+    <value>Domain</value>
+  </data>
+  <data name="SysSettings.RowWorkgroup" xml:space="preserve">
+    <value>Workgroup</value>
+  </data>
+  <data name="SysSettings.RowName" xml:space="preserve">
+    <value>Computer name</value>
+  </data>
+  <data name="SysSettings.RowDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="SysSettings.NotSet" xml:space="preserve">
+    <value>(not set)</value>
+  </data>
+  <data name="SysSettings.ReadOnly" xml:space="preserve">
+    <value>(read-only)</value>
+  </data>
+  <data name="SysSettings.NotAvailable" xml:space="preserve">
+    <value>Not available</value>
+  </data>
+  <data name="SysSettings.ReadingShort" xml:space="preserve">
+    <value>Reading…</value>
+  </data>
+  <data name="SysSettings.NoVariables" xml:space="preserve">
+    <value>(no variables - Ins adds one)</value>
+  </data>
 </root>
