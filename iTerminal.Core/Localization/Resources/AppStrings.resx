@@ -7453,6 +7453,12 @@
   <data name="DiskImage.TypePath" xml:space="preserve">
     <value>Type the path of an .iso, .vhd or .vhdx file.</value>
   </data>
+  <data name="DiskImage.Hint" xml:space="preserve">
+    <value>An .iso, .vhd or .vhdx file.</value>
+  </data>
+  <data name="DiskImage.MissingFile" xml:space="preserve">
+    <value>File not found: {0}</value>
+  </data>
   <data name="Format.Already" xml:space="preserve">
     <value>The drive is already being formatted.</value>
   </data>

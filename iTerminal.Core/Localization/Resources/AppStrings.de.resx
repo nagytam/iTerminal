@@ -7312,6 +7312,12 @@
   <data name="DiskImage.TypePath" xml:space="preserve">
     <value>Geben Sie den Pfad einer .iso-, .vhd- oder .vhdx-Datei ein.</value>
   </data>
+  <data name="DiskImage.Hint" xml:space="preserve">
+    <value>Eine .iso-, .vhd- oder .vhdx-Datei.</value>
+  </data>
+  <data name="DiskImage.MissingFile" xml:space="preserve">
+    <value>Datei nicht gefunden: {0}</value>
+  </data>
   <data name="Format.Already" xml:space="preserve">
     <value>Das Laufwerk wird bereits formatiert.</value>
   </data>

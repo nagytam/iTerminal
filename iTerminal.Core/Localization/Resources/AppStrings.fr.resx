@@ -7312,6 +7312,12 @@
   <data name="DiskImage.TypePath" xml:space="preserve">
     <value>Saisissez le chemin d’un fichier .iso, .vhd ou .vhdx.</value>
   </data>
+  <data name="DiskImage.Hint" xml:space="preserve">
+    <value>Un fichier .iso, .vhd ou .vhdx.</value>
+  </data>
+  <data name="DiskImage.MissingFile" xml:space="preserve">
+    <value>Fichier introuvable : {0}</value>
+  </data>
   <data name="Format.Already" xml:space="preserve">
     <value>Le lecteur est déjà en cours de formatage.</value>
   </data>
