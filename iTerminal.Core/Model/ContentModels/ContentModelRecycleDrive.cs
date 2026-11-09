@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
@@ -74,7 +75,7 @@ public class ContentModelRecycleDrive(
         }
 
         var url = Url;
-        StatusMessage = urls.Count == 1 ? $"Restoring {urls[0].Name}…" : $"Restoring {urls.Count} items…";
+        StatusMessage = urls.Count == 1 ? string.Format(UiText.Get("Recycle.RestoringOne", "Restoring {0}…"), urls[0].Name) : string.Format(UiText.Get("Recycle.RestoringMany", "Restoring {0} items…"), urls.Count);
         ClearMarks();
         Update();
 
@@ -111,12 +112,14 @@ public class ContentModelRecycleDrive(
     {
         if (result.Failures.Count == 0)
         {
-            return urls.Count == 1 ? $"Restored {urls[0].Name}" : $"Restored {result.Restored} items";
+            return urls.Count == 1
+            ? string.Format(UiText.Get("Recycle.RestoredOne", "Restored {0}"), urls[0].Name)
+            : string.Format(UiText.Get("Recycle.RestoredMany", "Restored {0} items"), result.Restored);
         }
 
         // One failure is said in full; several are counted, with the first as the example.
         return urls.Count == 1
             ? result.Failures[0]
-            : $"Restored {result.Restored} of {urls.Count} — {result.Failures[0]}";
+            : string.Format(UiText.Get("Recycle.RestoredSome", "Restored {0} of {1} — {2}"), result.Restored, urls.Count, result.Failures[0]);
     }
 }

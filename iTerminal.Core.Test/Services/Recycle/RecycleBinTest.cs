@@ -330,6 +330,23 @@ public class RecycleBinTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public void DescribeRestore_FollowsTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(ContentModelRecycleDrive).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        Url[] one = [new("recycle://a.txt")];
+        Url[] three = [new("recycle://a.txt"), new("recycle://b.txt"), new("recycle://c.txt")];
+
+        Assert.AreEqual("a.txt wiederhergestellt", ContentModelRecycleDrive.Describe(one, new RestoreOutcome(1, [])));
+        Assert.AreEqual("3 Elemente wiederhergestellt", ContentModelRecycleDrive.Describe(three, new RestoreOutcome(3, [])));
+        Assert.AreEqual("2 von 3 wiederhergestellt — x", ContentModelRecycleDrive.Describe(three, new RestoreOutcome(2, ["x"])));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void DescribeRestore_OneOrSeveral_WithAndWithoutFailures()
     {
         Url[] one = [new("recycle://a.txt")];

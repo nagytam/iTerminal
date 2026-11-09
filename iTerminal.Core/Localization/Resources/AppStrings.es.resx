@@ -7912,4 +7912,112 @@
   <data name="Startup.LockInUse" xml:space="preserve">
     <value>El archivo de bloqueo sigue en uso y no se pudo eliminar.</value>
   </data>
+  <data name="Recycle.RestoringOne" xml:space="preserve">
+    <value>Restaurando {0}…</value>
+  </data>
+  <data name="Recycle.RestoringMany" xml:space="preserve">
+    <value>Restaurando {0} elementos…</value>
+  </data>
+  <data name="Recycle.RestoredOne" xml:space="preserve">
+    <value>{0} restaurado</value>
+  </data>
+  <data name="Recycle.RestoredMany" xml:space="preserve">
+    <value>{0} elementos restaurados</value>
+  </data>
+  <data name="Recycle.RestoredSome" xml:space="preserve">
+    <value>{0} de {1} restaurados — {2}</value>
+  </data>
+  <data name="Launch.NothingSetUp" xml:space="preserve">
+    <value>No hay nada configurado para abrir {0}: {1}</value>
+  </data>
+  <data name="Launch.Browser" xml:space="preserve">
+    <value>No se pudo iniciar el navegador: {0}</value>
+  </data>
+  <data name="Launch.CannotStart" xml:space="preserve">
+    <value>No se puede iniciar {0}: {1}</value>
+  </data>
+  <data name="Docs.Prog.Discovering" xml:space="preserve">
+    <value>Buscando… {0} archivos encontrados</value>
+  </data>
+  <data name="Docs.Prog.Indexing" xml:space="preserve">
+    <value>Indexando {0}/{1}{2}</value>
+  </data>
+  <data name="Docs.Prog.IndexingFile" xml:space="preserve">
+    <value>Indexando {0}/{1}{2} — {3}</value>
+  </data>
+  <data name="Docs.Prog.DiscoveringShort" xml:space="preserve">
+    <value>Buscando… {0}</value>
+  </data>
+  <data name="Docs.NoFolder" xml:space="preserve">
+    <value>No hay ninguna carpeta de documentos configurada.</value>
+  </data>
+  <data name="Docs.FolderMissing" xml:space="preserve">
+    <value>No se encontró la carpeta de documentos: {0}</value>
+  </data>
+  <data name="Docs.IndexedOne" xml:space="preserve">
+    <value>1 documento indexado ({0} con texto) desde {1}.</value>
+  </data>
+  <data name="Docs.IndexedMany" xml:space="preserve">
+    <value>{0} documentos indexados ({1} con texto) desde {2}.</value>
+  </data>
+  <data name="BgService.FolderIndex" xml:space="preserve">
+    <value>Índice de carpetas (selector de carpetas)</value>
+  </data>
+  <data name="BgService.DocumentLibrary" xml:space="preserve">
+    <value>Biblioteca de documentos (gestor de documentos)</value>
+  </data>
+  <data name="BgService.MusicLibrary" xml:space="preserve">
+    <value>Biblioteca de música (catálogo de música)</value>
+  </data>
+  <data name="BgService.OllamaServer" xml:space="preserve">
+    <value>Servidor de IA local (barra de IA)</value>
+  </data>
+  <data name="BgService.UpdateCheck" xml:space="preserve">
+    <value>Búsqueda de actualizaciones (Acerca de)</value>
+  </data>
+  <data name="BgService.RuntimeDependencyCheck" xml:space="preserve">
+    <value>Comprobación de dependencias en tiempo de ejecución (Dependencias en tiempo de ejecución)</value>
+  </data>
+  <data name="BgService.NetworkInfo" xml:space="preserve">
+    <value>Interfaces de red (gestor de red)</value>
+  </data>
+  <data name="Elevation.CouldNotRun" xml:space="preserve">
+    <value>No se pudo ejecutar como administrador</value>
+  </data>
+  <data name="SysSettings.SecComputer" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="SysSettings.SecEnvironment" xml:space="preserve">
+    <value>Entorno</value>
+  </data>
+  <data name="SysSettings.SecTimeZone" xml:space="preserve">
+    <value>Zona horaria</value>
+  </data>
+  <data name="SysSettings.IsAdmin" xml:space="preserve">
+    <value>Se ejecuta como administrador.</value>
+  </data>
+  <data name="SysSettings.NotAdmin" xml:space="preserve">
+    <value>No es administrador: se rechazan los cambios de todo el equipo. Ctrl+Mayús+A reinicia iTerminal como administrador.</value>
+  </data>
+  <data name="SysSettings.ScopeUser" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="SysSettings.ScopeMachine" xml:space="preserve">
+    <value>Equipo (todos los usuarios)</value>
+  </data>
+  <data name="SysSettings.Scope" xml:space="preserve">
+    <value>Ámbito: {0}  -  {1} variables</value>
+  </data>
+  <data name="SysSettings.DomainMember" xml:space="preserve">
+    <value>Este equipo pertenece al dominio {0}; salir de él requiere una cuenta de directorio.</value>
+  </data>
+  <data name="SysSettings.CannotChange" xml:space="preserve">
+    <value>Esta configuración no se puede cambiar en este sistema.</value>
+  </data>
+  <data name="SysSettings.DescriptionPrompt" xml:space="preserve">
+    <value>Descripción</value>
+  </data>
+  <data name="SysSettings.ConfirmRemove" xml:space="preserve">
+    <value>¿Quitar {0}?</value>
+  </data>
 </root>

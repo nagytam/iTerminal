@@ -1,3 +1,4 @@
+using iConsole.Localization;
 namespace iTerminal.Core.Services.BackgroundStart;
 
 /// <summary>
@@ -15,14 +16,14 @@ public static class BackgroundServices
     public const string NetworkInfo = nameof(NetworkInfo);
 
     /// <summary>Every configurable service, in the order the settings page lists them, with the label it shows.</summary>
-    public static IReadOnlyList<(string Id, string Label)> All { get; } =
+    public static IReadOnlyList<(string Id, string Label)> All =>
     [
-        (FolderIndex, "Folder index (folder selector)"),
-        (DocumentLibrary, "Document library (document manager)"),
-        (MusicLibrary, "Music library (music catalog)"),
-        (OllamaServer, "Local AI server (AI bar)"),
-        (UpdateCheck, "Update check (About)"),
-        (RuntimeDependencyCheck, "Runtime dependency check (Runtime dependencies)"),
-        (NetworkInfo, "Network interfaces (network manager)"),
+        (FolderIndex, UiText.Get("BgService.FolderIndex", "Folder index (folder selector)")),
+        (DocumentLibrary, UiText.Get("BgService.DocumentLibrary", "Document library (document manager)")),
+        (MusicLibrary, UiText.Get("BgService.MusicLibrary", "Music library (music catalog)")),
+        (OllamaServer, UiText.Get("BgService.OllamaServer", "Local AI server (AI bar)")),
+        (UpdateCheck, UiText.Get("BgService.UpdateCheck", "Update check (About)")),
+        (RuntimeDependencyCheck, UiText.Get("BgService.RuntimeDependencyCheck", "Runtime dependency check (Runtime dependencies)")),
+        (NetworkInfo, UiText.Get("BgService.NetworkInfo", "Network interfaces (network manager)")),
     ];
 }

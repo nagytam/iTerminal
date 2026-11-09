@@ -34,7 +34,8 @@ public class SystemSettingsDialog : Dialog
         TimeZone,
     }
 
-    private static readonly string[] SectionNames = ["Computer", "Environment", "Time zone"];
+    private static string[] SectionNames =>
+        [UiText.Get("SysSettings.SecComputer", "Computer"), UiText.Get("SysSettings.SecEnvironment", "Environment"), UiText.Get("SysSettings.SecTimeZone", "Time zone")];
 
     private const int HeaderRows = 3; // Section strip, administrator banner, section caption.
     private const int FooterRows = 1; // The message.
@@ -178,8 +179,8 @@ public class SystemSettingsDialog : Dialog
         {
             new(string.Join("  ", SectionNames.Select((name, i) => i == (int)_section ? $"[{name}]" : $" {name} ")), Color.Yellow),
             _service.IsElevated
-                ? new("Running as administrator.", null)
-                : new("Not administrator: machine-wide changes are refused. Ctrl+Shift+A restarts iTerminal as administrator.", Color.DarkYellow),
+                ? new(UiText.Get("SysSettings.IsAdmin", "Running as administrator."), null)
+                : new(UiText.Get("SysSettings.NotAdmin", "Not administrator: machine-wide changes are refused. Ctrl+Shift+A restarts iTerminal as administrator."), Color.DarkYellow),
         };
 
         var body = new List<InfoLines.Line>();
@@ -192,8 +193,8 @@ public class SystemSettingsDialog : Dialog
             case SettingsSection.Environment:
                 lines.Add(new(
                     _service.SupportsEnvironment(_scope)
-                        ? $"Scope: {(_scope == EnvironmentScope.User ? "User" : "Machine (all users)")}  -  {(_variablesLoaded ? _variables.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) : "reading")} variables"
-                        : "Environment variables cannot be changed on this system.",
+                        ? string.Format(UiText.Get("SysSettings.Scope", "Scope: {0}  -  {1} variables"), (_scope == EnvironmentScope.User ? UiText.Get("SysSettings.ScopeUser", "User") : UiText.Get("SysSettings.ScopeMachine", "Machine (all users)")), (_variablesLoaded ? _variables.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) : UiText.Get("SysSettings.Reading", "reading")))
+                        : UiText.Get("SysSet.EnvUnsupported", "Environment variables cannot be changed on this system."),
                     scheme.DisabledForeground));
                 BuildEnvironment(body, scheme);
                 break;
@@ -638,12 +639,12 @@ public class SystemSettingsDialog : Dialog
                 ShowInput("Workgroup", identity.Membership, name => Run(() => _service.SetMembershipAsync(name)));
                 break;
             case 2 when identity.CanChangeDescription:
-                ShowInput("Description", identity.Description, text => Run(() => _service.SetDescriptionAsync(text)));
+                ShowInput(UiText.Get("SysSettings.DescriptionPrompt", "Description"), identity.Description, text => Run(() => _service.SetDescriptionAsync(text)));
                 break;
             default:
                 SetMessage(identity.IsDomainMember
-                    ? $"This computer belongs to the domain {identity.Membership}; leaving it needs a directory account."
-                    : "This setting cannot be changed on this system.", error: false);
+                    ? string.Format(UiText.Get("SysSettings.DomainMember", "This computer belongs to the domain {0}; leaving it needs a directory account."), identity.Membership)
+                    : UiText.Get("SysSettings.CannotChange", "This setting cannot be changed on this system."), error: false);
                 break;
         }
     }
@@ -704,7 +705,7 @@ public class SystemSettingsDialog : Dialog
         }
 
         var scope = _scope;
-        Confirm($"Remove {variable.Name}?", () => Run(() => _service.RemoveEnvironmentVariableAsync(scope, variable.Name)));
+        Confirm(string.Format(UiText.Get("SysSettings.ConfirmRemove", "Remove {0}?"), variable.Name), () => Run(() => _service.RemoveEnvironmentVariableAsync(scope, variable.Name)));
     }
 
     // ── Time zone ───────────────────────────────────────────────────────────

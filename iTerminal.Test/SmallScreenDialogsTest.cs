@@ -1047,6 +1047,7 @@ public class SmallScreenDialogsTest
     [DataRow("Ctrl+E", "Einheitenumrechner —")]
     [DataRow("Ctrl+F4", "iTerminal-Editor")]
     [DataRow("Ctrl+Shift+F10", "Der Name, unter dem")]
+    [DataRow("Ctrl+Shift+F10", "Umgebung")]
     public async Task SixMoreHeadingsAndNotesInGerman_AreGerman(string chord, string expected)
     {
         await using TerminalApp app = await TerminalApp.StartAsync(width: 140, height: 40);

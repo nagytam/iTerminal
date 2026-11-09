@@ -7912,4 +7912,112 @@
   <data name="Startup.LockInUse" xml:space="preserve">
     <value>A zárolófájl még használatban van, és nem távolítható el.</value>
   </data>
+  <data name="Recycle.RestoringOne" xml:space="preserve">
+    <value>{0} visszaállítása…</value>
+  </data>
+  <data name="Recycle.RestoringMany" xml:space="preserve">
+    <value>{0} elem visszaállítása…</value>
+  </data>
+  <data name="Recycle.RestoredOne" xml:space="preserve">
+    <value>{0} visszaállítva</value>
+  </data>
+  <data name="Recycle.RestoredMany" xml:space="preserve">
+    <value>{0} elem visszaállítva</value>
+  </data>
+  <data name="Recycle.RestoredSome" xml:space="preserve">
+    <value>{0} / {1} visszaállítva — {2}</value>
+  </data>
+  <data name="Launch.NothingSetUp" xml:space="preserve">
+    <value>Nincs beállítva program a(z) {0} megnyitásához: {1}</value>
+  </data>
+  <data name="Launch.Browser" xml:space="preserve">
+    <value>A böngésző nem indítható el: {0}</value>
+  </data>
+  <data name="Launch.CannotStart" xml:space="preserve">
+    <value>A(z) {0} nem indítható el: {1}</value>
+  </data>
+  <data name="Docs.Prog.Discovering" xml:space="preserve">
+    <value>Keresés… {0} fájl található</value>
+  </data>
+  <data name="Docs.Prog.Indexing" xml:space="preserve">
+    <value>Indexelés {0}/{1}{2}</value>
+  </data>
+  <data name="Docs.Prog.IndexingFile" xml:space="preserve">
+    <value>Indexelés {0}/{1}{2} — {3}</value>
+  </data>
+  <data name="Docs.Prog.DiscoveringShort" xml:space="preserve">
+    <value>Keresés… {0}</value>
+  </data>
+  <data name="Docs.NoFolder" xml:space="preserve">
+    <value>Nincs beállítva dokumentummappa.</value>
+  </data>
+  <data name="Docs.FolderMissing" xml:space="preserve">
+    <value>A dokumentummappa nem található: {0}</value>
+  </data>
+  <data name="Docs.IndexedOne" xml:space="preserve">
+    <value>1 dokumentum indexelve ({0} szöveggel) innen: {1}.</value>
+  </data>
+  <data name="Docs.IndexedMany" xml:space="preserve">
+    <value>{0} dokumentum indexelve ({1} szöveggel) innen: {2}.</value>
+  </data>
+  <data name="BgService.FolderIndex" xml:space="preserve">
+    <value>Mappaindex (mappaválasztó)</value>
+  </data>
+  <data name="BgService.DocumentLibrary" xml:space="preserve">
+    <value>Dokumentumtár (dokumentumkezelő)</value>
+  </data>
+  <data name="BgService.MusicLibrary" xml:space="preserve">
+    <value>Zenetár (zenei katalógus)</value>
+  </data>
+  <data name="BgService.OllamaServer" xml:space="preserve">
+    <value>Helyi MI-kiszolgáló (MI-sáv)</value>
+  </data>
+  <data name="BgService.UpdateCheck" xml:space="preserve">
+    <value>Frissítésellenőrzés (Névjegy)</value>
+  </data>
+  <data name="BgService.RuntimeDependencyCheck" xml:space="preserve">
+    <value>Futásidejű függőségek ellenőrzése (Futásidejű függőségek)</value>
+  </data>
+  <data name="BgService.NetworkInfo" xml:space="preserve">
+    <value>Hálózati adapterek (hálózatkezelő)</value>
+  </data>
+  <data name="Elevation.CouldNotRun" xml:space="preserve">
+    <value>Nem futtatható rendszergazdaként</value>
+  </data>
+  <data name="SysSettings.SecComputer" xml:space="preserve">
+    <value>Számítógép</value>
+  </data>
+  <data name="SysSettings.SecEnvironment" xml:space="preserve">
+    <value>Környezet</value>
+  </data>
+  <data name="SysSettings.SecTimeZone" xml:space="preserve">
+    <value>Időzóna</value>
+  </data>
+  <data name="SysSettings.IsAdmin" xml:space="preserve">
+    <value>Rendszergazdaként fut.</value>
+  </data>
+  <data name="SysSettings.NotAdmin" xml:space="preserve">
+    <value>Nem rendszergazda: a gépre vonatkozó módosítások elutasítva. A Ctrl+Shift+A rendszergazdaként újraindítja az iTerminalt.</value>
+  </data>
+  <data name="SysSettings.ScopeUser" xml:space="preserve">
+    <value>Felhasználó</value>
+  </data>
+  <data name="SysSettings.ScopeMachine" xml:space="preserve">
+    <value>Gép (minden felhasználó)</value>
+  </data>
+  <data name="SysSettings.Scope" xml:space="preserve">
+    <value>Hatókör: {0}  -  {1} változó</value>
+  </data>
+  <data name="SysSettings.DomainMember" xml:space="preserve">
+    <value>Ez a számítógép a(z) {0} tartományhoz tartozik; elhagyásához címtárfiók kell.</value>
+  </data>
+  <data name="SysSettings.CannotChange" xml:space="preserve">
+    <value>Ez a beállítás ezen a rendszeren nem módosítható.</value>
+  </data>
+  <data name="SysSettings.DescriptionPrompt" xml:space="preserve">
+    <value>Leírás</value>
+  </data>
+  <data name="SysSettings.ConfirmRemove" xml:space="preserve">
+    <value>{0} eltávolítása?</value>
+  </data>
 </root>

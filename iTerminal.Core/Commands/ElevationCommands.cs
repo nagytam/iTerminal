@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Interfaces;
@@ -114,7 +115,7 @@ public class RunAsAdministratorCommand(
             if (!outcome.Started && outcome.Result != ElevationResult.Cancelled)
             {
                 notificationService?.Notify(
-                    "Could not run as administrator",
+                    UiText.Get("Elevation.CouldNotRun", "Could not run as administrator"),
                     outcome.Message ?? Path.GetFileName(path),
                     NotificationSeverity.Warning);
             }

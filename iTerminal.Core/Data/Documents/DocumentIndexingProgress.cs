@@ -1,3 +1,4 @@
+using iConsole.Localization;
 namespace iTerminal.Core.Data.Documents;
 
 /// <summary>
@@ -63,10 +64,10 @@ public sealed record DocumentIndexingProgress(
     /// <summary>One line for the dialog footer. Empty when idle — nothing to report between scans.</summary>
     public string Describe() => Phase switch
     {
-        DocumentIndexingPhase.Discovering => $"Discovering… {DiscoveredFiles} files found",
+        DocumentIndexingPhase.Discovering => string.Format(UiText.Get("Docs.Prog.Discovering", "Discovering… {0} files found"), DiscoveredFiles),
         DocumentIndexingPhase.Indexing => string.IsNullOrEmpty(CurrentFile)
-            ? $"Indexing {IndexedFiles}/{DiscoveredFiles}{PercentSuffix}"
-            : $"Indexing {IndexedFiles}/{DiscoveredFiles}{PercentSuffix} — {CurrentFile}",
+            ? string.Format(UiText.Get("Docs.Prog.Indexing", "Indexing {0}/{1}{2}"), IndexedFiles, DiscoveredFiles, PercentSuffix)
+            : string.Format(UiText.Get("Docs.Prog.IndexingFile", "Indexing {0}/{1}{2} — {3}"), IndexedFiles, DiscoveredFiles, PercentSuffix, CurrentFile),
         _ => string.Empty,
     };
 
@@ -75,8 +76,8 @@ public sealed record DocumentIndexingProgress(
     /// </summary>
     public string DescribeShort() => Phase switch
     {
-        DocumentIndexingPhase.Discovering => $"Discovering… {DiscoveredFiles}",
-        DocumentIndexingPhase.Indexing => $"Indexing {IndexedFiles}/{DiscoveredFiles}{PercentSuffix}",
+        DocumentIndexingPhase.Discovering => string.Format(UiText.Get("Docs.Prog.DiscoveringShort", "Discovering… {0}"), DiscoveredFiles),
+        DocumentIndexingPhase.Indexing => string.Format(UiText.Get("Docs.Prog.Indexing", "Indexing {0}/{1}{2}"), IndexedFiles, DiscoveredFiles, PercentSuffix),
         _ => string.Empty,
     };
 

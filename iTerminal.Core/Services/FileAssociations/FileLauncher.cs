@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Services.Shell;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -84,7 +85,7 @@ public class FileLauncher(IInteractiveShellService shellService) : IFileLauncher
             }
             catch (Exception exception) when (exception is Win32Exception or InvalidOperationException or IOException)
             {
-                return LaunchOutcome.Failed($"Nothing is set up to open {Path.GetFileName(filePath)}: {exception.Message}");
+                return LaunchOutcome.Failed(string.Format(UiText.Get("Launch.NothingSetUp", "Nothing is set up to open {0}: {1}"), Path.GetFileName(filePath), exception.Message));
             }
         }, cancellationToken);
 
@@ -112,7 +113,7 @@ public class FileLauncher(IInteractiveShellService shellService) : IFileLauncher
             }
             catch (Exception exception) when (exception is Win32Exception or InvalidOperationException or IOException)
             {
-                return LaunchOutcome.Failed($"The browser could not be started: {exception.Message}");
+                return LaunchOutcome.Failed(string.Format(UiText.Get("Launch.Browser", "The browser could not be started: {0}"), exception.Message));
             }
         }, cancellationToken);
 
@@ -162,7 +163,7 @@ public class FileLauncher(IInteractiveShellService shellService) : IFileLauncher
         }
         catch (Exception exception) when (exception is Win32Exception or InvalidOperationException or IOException)
         {
-            return LaunchOutcome.Failed($"Cannot start {Path.GetFileName(program)}: {exception.Message}");
+            return LaunchOutcome.Failed(string.Format(UiText.Get("Launch.CannotStart", "Cannot start {0}: {1}"), Path.GetFileName(program), exception.Message));
         }
     }
 
