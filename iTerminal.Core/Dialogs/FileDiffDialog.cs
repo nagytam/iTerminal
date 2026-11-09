@@ -142,8 +142,8 @@ public class FileDiffDialog : Dialog
                     _hexMode = true;
                     SetStatus(
                         binary.Identical
-                            ? "Binary files — identical, byte for byte."
-                            : $"Binary files — they differ ({leftBytes.Length:N0} and {rightBytes.Length:N0} bytes): {binary.DifferingBytes:N0} bytes in {binary.Runs.Count:N0} place(s). Shift+F12 shows their checksums.",
+                            ? UiText.Get("Diff.BinarySame", "Binary files — identical, byte for byte.")
+                            : string.Format(UiText.Get("Diff.BinaryDiffer", "Binary files — they differ ({0} and {1} bytes): {2} bytes in {3} place(s). Shift+F12 shows their checksums."), leftBytes.Length.ToString("N0"), rightBytes.Length.ToString("N0"), binary.DifferingBytes.ToString("N0"), binary.Runs.Count.ToString("N0")),
                         isError: false);
                     return;
                 }

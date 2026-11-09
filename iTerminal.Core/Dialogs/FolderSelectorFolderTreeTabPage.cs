@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
 using iConsole.Controls.Experimental;
@@ -39,7 +40,7 @@ public class FolderSelectorFolderTreeTabPage : FolderSelectorTabPage
 
         var observableValue = new ObservableValue<IHierarchicalItemModel>(
             folderIndexModel,
-            (m) => $"Number of folders: {m.Count:N0}");
+            (m) => string.Format(UiText.Get("FolderTree.Count", "Number of folders: {0}"), m.Count.ToString("N0")));
         _dynamicLabel = new DynamicLabel<IHierarchicalItemModel>(observableValue, themeService);
 
         _selectFolderCommand = new SelectTreeFolderCommand(contentModelService, folderIndexModel);

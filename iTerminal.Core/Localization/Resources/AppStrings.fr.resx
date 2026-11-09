@@ -8098,4 +8098,133 @@
   <data name="Docker.Stopped" xml:space="preserve">
     <value>Le conteneur est arrêté — démarrez-le d’abord (Maj+F9 sur sa ligne).</value>
   </data>
+  <data name="Map.Help.0" xml:space="preserve">
+    <value>Carte — OpenStreetMap en art ASCII</value>
+  </data>
+  <data name="Map.Help.2" xml:space="preserve">
+    <value>Déplacement</value>
+  </data>
+  <data name="Map.Help.3" xml:space="preserve">
+    <value>  Flèches              Déplacer un peu    Maj+Flèches    Un demi-écran</value>
+  </data>
+  <data name="Map.Help.4" xml:space="preserve">
+    <value>  Clic                 Centrer la carte sur cet endroit</value>
+  </data>
+  <data name="Map.Help.5" xml:space="preserve">
+    <value>  Début                Retour au lieu d’origine (Budapest)</value>
+  </data>
+  <data name="Map.Help.7" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Map.Help.8" xml:space="preserve">
+    <value>  +  =  PgUp           Zoom avant         -  PgDn        Zoom arrière</value>
+  </data>
+  <data name="Map.Help.9" xml:space="preserve">
+    <value>  Molette              Zoom avant ou arrière au pointeur</value>
+  </data>
+  <data name="Map.Help.11" xml:space="preserve">
+    <value>Trouver des lieux</value>
+  </data>
+  <data name="Map.Help.12" xml:space="preserve">
+    <value>  /  F6  G             Chercher un nom (réseau requis) ou saisir des coordonnées : 47.5, 19.04</value>
+  </data>
+  <data name="Map.Help.13" xml:space="preserve">
+    <value>  M                    Enregistrer le centre comme lieu  B  F2   Lieux enregistrés (Suppr efface)</value>
+  </data>
+  <data name="Map.Help.15" xml:space="preserve">
+    <value>En ligne et hors ligne</value>
+  </data>
+  <data name="Map.Help.16" xml:space="preserve">
+    <value>  O                    Basculer en ligne / hors ligne. Hors ligne, aucune connexion n’est ouverte.</value>
+  </data>
+  <data name="Map.Help.17" xml:space="preserve">
+    <value>  D                    Enregistrer les tuiles de cette vue (et deux niveaux de zoom plus loin) pour le hors ligne</value>
+  </data>
+  <data name="Map.Help.18" xml:space="preserve">
+    <value>  R  F5                Redemander les tuiles qui ont échoué</value>
+  </data>
+  <data name="Map.Help.20" xml:space="preserve">
+    <value>Légende</value>
+  </data>
+  <data name="Map.Help.21" xml:space="preserve">
+    <value>  ~ eau    " espace vert    . : - = + * # % @  plus de dessin (routes, bâtiments, étiquettes)</value>
+  </data>
+  <data name="Map.Help.22" xml:space="preserve">
+    <value>  X le centre    P un lieu enregistré    / une tuile indisponible    . une tuile en cours de chargement</value>
+  </data>
+  <data name="Map.Help.24" xml:space="preserve">
+    <value>Données hors ligne</value>
+  </data>
+  <data name="Map.Help.25" xml:space="preserve">
+    <value>  Les tuiles visitées sont enregistrées sous tiles/z/x/y.png dans le dossier de la carte, et tout</value>
+  </data>
+  <data name="Map.Help.26" xml:space="preserve">
+    <value>  fichier .mbtiles raster placé là est lu aussi. Le dossier s’affiche dans la ligne d’état après avoir appuyé sur D.</value>
+  </data>
+  <data name="Map.Help.28" xml:space="preserve">
+    <value>N’importe quelle touche : retour.</value>
+  </data>
+  <data name="Map.TitleOffline" xml:space="preserve">
+    <value>Carte (hors ligne)</value>
+  </data>
+  <data name="Map.SavedPlaces" xml:space="preserve">
+    <value>Lieux enregistrés</value>
+  </data>
+  <data name="Map.SearchResults" xml:space="preserve">
+    <value>Résultats de la recherche</value>
+  </data>
+  <data name="Map.PlacesHint" xml:space="preserve">
+    <value>Entrée:aller   Suppr:retirer   Échap:retour</value>
+  </data>
+  <data name="Map.ResultsHint" xml:space="preserve">
+    <value>Entrée:aller   Échap:retour</value>
+  </data>
+  <data name="Map.SearchPrompt" xml:space="preserve">
+    <value>Recherche ou coordonnées : </value>
+  </data>
+  <data name="Map.SearchKeys" xml:space="preserve">
+    <value>Entrée:aller   Échap:annuler</value>
+  </data>
+  <data name="Map.HelpKeys" xml:space="preserve">
+    <value>Haut/Bas:défiler   autre touche:retour</value>
+  </data>
+  <data name="Diff.BinarySame" xml:space="preserve">
+    <value>Fichiers binaires — identiques, octet par octet.</value>
+  </data>
+  <data name="Diff.BinaryDiffer" xml:space="preserve">
+    <value>Fichiers binaires — ils diffèrent ({0} et {1} octets) : {2} octets à {3} endroit(s). Maj+F12 affiche leurs sommes de contrôle.</value>
+  </data>
+  <data name="Assoc.AddEdit" xml:space="preserve">
+    <value>Ajouter un programme pour modifier</value>
+  </data>
+  <data name="Assoc.AddOpen" xml:space="preserve">
+    <value>Ajouter un programme pour ouvrir</value>
+  </data>
+  <data name="Assoc.ChangeEdit" xml:space="preserve">
+    <value>Changer le programme de modification</value>
+  </data>
+  <data name="Assoc.ChangeOpen" xml:space="preserve">
+    <value>Changer le programme d’ouverture</value>
+  </data>
+  <data name="DiskUsage.Measuring" xml:space="preserve">
+    <value>Mesure de {0}</value>
+  </data>
+  <data name="DiskUsage.SoFar" xml:space="preserve">
+    <value>jusqu’ici {0} fichiers, {1}</value>
+  </data>
+  <data name="FolderTree.Count" xml:space="preserve">
+    <value>Nombre de dossiers : {0}</value>
+  </data>
+  <data name="FolderPath.TabCompletes" xml:space="preserve">
+    <value>Tab complète. Schémas : </value>
+  </data>
+  <data name="FolderPath.OrLocal" xml:space="preserve">
+    <value> — ou un simple chemin local.</value>
+  </data>
+  <data name="Strip.Result" xml:space="preserve">
+    <value>{0} nettoyé(s), {1} inchangé(s)</value>
+  </data>
+  <data name="Strip.ResultFailed" xml:space="preserve">
+    <value>, {0} en échec</value>
+  </data>
 </root>

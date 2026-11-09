@@ -169,8 +169,8 @@ public class FolderSelectorPathTabPage : FolderSelectorTabPage
     /// that list rather than written out, so the hint cannot drift from what is actually allowed.
     /// </summary>
     public static string GetSchemesHint() =>
-        "Tab completes. Schemes: " + string.Join(" ", FolderUrlValidationModel.SupportedSchemes)
-        + " — or a plain local path.";
+        UiText.Get("FolderPath.TabCompletes", "Tab completes. Schemes: ") + string.Join(" ", FolderUrlValidationModel.SupportedSchemes)
+        + UiText.Get("FolderPath.OrLocal", " — or a plain local path.");
 
     public override void OnInitializeLayout()
     {

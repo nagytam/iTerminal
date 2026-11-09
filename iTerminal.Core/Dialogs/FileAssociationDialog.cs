@@ -115,8 +115,10 @@ public class FileAssociationDialog : FormDialog
 
     public override async Task OnInitializeAsync()
     {
-        var verb = Kind == FileAssociationKind.Edit ? "edit" : "open";
-        Title = Existing is null ? $"Add a program to {verb} with" : $"Change the program to {verb} with";
+        var edit = Kind == FileAssociationKind.Edit;
+        Title = Existing is null
+            ? (edit ? UiText.Get("Assoc.AddEdit", "Add a program to edit with") : UiText.Get("Assoc.AddOpen", "Add a program to open with"))
+            : (edit ? UiText.Get("Assoc.ChangeEdit", "Change the program to edit with") : UiText.Get("Assoc.ChangeOpen", "Change the program to open with"));
         _errorLabel.Text = string.Empty;
         foreach (var textBox in new[] { _textBoxCommand, _textBoxName, _textBoxPatterns })
         {

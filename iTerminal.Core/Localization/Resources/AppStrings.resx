@@ -8239,4 +8239,133 @@
   <data name="Docker.Stopped" xml:space="preserve">
     <value>The container is stopped — start it first (Shift+F9 on its row).</value>
   </data>
+  <data name="Map.Help.0" xml:space="preserve">
+    <value>Map — OpenStreetMap as ASCII art</value>
+  </data>
+  <data name="Map.Help.2" xml:space="preserve">
+    <value>Moving</value>
+  </data>
+  <data name="Map.Help.3" xml:space="preserve">
+    <value>  Arrows               Pan a little       Shift+Arrows   Pan half a screen</value>
+  </data>
+  <data name="Map.Help.4" xml:space="preserve">
+    <value>  Click                Centre the map on that spot</value>
+  </data>
+  <data name="Map.Help.5" xml:space="preserve">
+    <value>  Home                 Back to the home place (Budapest)</value>
+  </data>
+  <data name="Map.Help.7" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Map.Help.8" xml:space="preserve">
+    <value>  +  =  PgUp           Zoom in            -  PgDn        Zoom out</value>
+  </data>
+  <data name="Map.Help.9" xml:space="preserve">
+    <value>  Mouse wheel          Zoom in or out at the pointer</value>
+  </data>
+  <data name="Map.Help.11" xml:space="preserve">
+    <value>Finding places</value>
+  </data>
+  <data name="Map.Help.12" xml:space="preserve">
+    <value>  /  F6  G             Search a name (needs the network) or type coordinates: 47.5, 19.04</value>
+  </data>
+  <data name="Map.Help.13" xml:space="preserve">
+    <value>  M                    Save the centre as a place        B  F2   Saved places (Del removes one)</value>
+  </data>
+  <data name="Map.Help.15" xml:space="preserve">
+    <value>Online and offline</value>
+  </data>
+  <data name="Map.Help.16" xml:space="preserve">
+    <value>  O                    Switch online / offline. Offline never opens a connection.</value>
+  </data>
+  <data name="Map.Help.17" xml:space="preserve">
+    <value>  D                    Save the tiles of this view (and two zoom levels in) for offline use</value>
+  </data>
+  <data name="Map.Help.18" xml:space="preserve">
+    <value>  R  F5                Ask again for tiles that failed</value>
+  </data>
+  <data name="Map.Help.20" xml:space="preserve">
+    <value>Legend</value>
+  </data>
+  <data name="Map.Help.21" xml:space="preserve">
+    <value>  ~ water    " green space    . : - = + * # % @  more drawn there (roads, buildings, labels)</value>
+  </data>
+  <data name="Map.Help.22" xml:space="preserve">
+    <value>  X the centre    P a saved place    / a tile that is not available    . a tile still loading</value>
+  </data>
+  <data name="Map.Help.24" xml:space="preserve">
+    <value>Offline data</value>
+  </data>
+  <data name="Map.Help.25" xml:space="preserve">
+    <value>  Visited tiles are saved as tiles/z/x/y.png in the map folder, and any raster .mbtiles file put there</value>
+  </data>
+  <data name="Map.Help.26" xml:space="preserve">
+    <value>  is read too. The folder is shown in the status line after pressing D.</value>
+  </data>
+  <data name="Map.Help.28" xml:space="preserve">
+    <value>Press any key to go back.</value>
+  </data>
+  <data name="Map.TitleOffline" xml:space="preserve">
+    <value>Map (offline)</value>
+  </data>
+  <data name="Map.SavedPlaces" xml:space="preserve">
+    <value>Saved places</value>
+  </data>
+  <data name="Map.SearchResults" xml:space="preserve">
+    <value>Search results</value>
+  </data>
+  <data name="Map.PlacesHint" xml:space="preserve">
+    <value>Enter:go   Del:remove   Esc:back</value>
+  </data>
+  <data name="Map.ResultsHint" xml:space="preserve">
+    <value>Enter:go   Esc:back</value>
+  </data>
+  <data name="Map.SearchPrompt" xml:space="preserve">
+    <value>Search or coordinates: </value>
+  </data>
+  <data name="Map.SearchKeys" xml:space="preserve">
+    <value>Enter:go   Esc:cancel</value>
+  </data>
+  <data name="Map.HelpKeys" xml:space="preserve">
+    <value>Up/Down:scroll   any other key:back</value>
+  </data>
+  <data name="Diff.BinarySame" xml:space="preserve">
+    <value>Binary files — identical, byte for byte.</value>
+  </data>
+  <data name="Diff.BinaryDiffer" xml:space="preserve">
+    <value>Binary files — they differ ({0} and {1} bytes): {2} bytes in {3} place(s). Shift+F12 shows their checksums.</value>
+  </data>
+  <data name="Assoc.AddEdit" xml:space="preserve">
+    <value>Add a program to edit with</value>
+  </data>
+  <data name="Assoc.AddOpen" xml:space="preserve">
+    <value>Add a program to open with</value>
+  </data>
+  <data name="Assoc.ChangeEdit" xml:space="preserve">
+    <value>Change the program to edit with</value>
+  </data>
+  <data name="Assoc.ChangeOpen" xml:space="preserve">
+    <value>Change the program to open with</value>
+  </data>
+  <data name="DiskUsage.Measuring" xml:space="preserve">
+    <value>Measuring {0}</value>
+  </data>
+  <data name="DiskUsage.SoFar" xml:space="preserve">
+    <value>{0} files, {1} so far</value>
+  </data>
+  <data name="FolderTree.Count" xml:space="preserve">
+    <value>Number of folders: {0}</value>
+  </data>
+  <data name="FolderPath.TabCompletes" xml:space="preserve">
+    <value>Tab completes. Schemes: </value>
+  </data>
+  <data name="FolderPath.OrLocal" xml:space="preserve">
+    <value> — or a plain local path.</value>
+  </data>
+  <data name="Strip.Result" xml:space="preserve">
+    <value>Stripped {0}, unchanged {1}</value>
+  </data>
+  <data name="Strip.ResultFailed" xml:space="preserve">
+    <value>, failed {0}</value>
+  </data>
 </root>

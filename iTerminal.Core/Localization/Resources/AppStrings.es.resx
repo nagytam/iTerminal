@@ -8098,4 +8098,133 @@
   <data name="Docker.Stopped" xml:space="preserve">
     <value>El contenedor está detenido — inícielo primero (Mayús+F9 en su fila).</value>
   </data>
+  <data name="Map.Help.0" xml:space="preserve">
+    <value>Mapa — OpenStreetMap como arte ASCII</value>
+  </data>
+  <data name="Map.Help.2" xml:space="preserve">
+    <value>Moverse</value>
+  </data>
+  <data name="Map.Help.3" xml:space="preserve">
+    <value>  Flechas              Desplazar un poco  Mayús+Flechas  Media pantalla</value>
+  </data>
+  <data name="Map.Help.4" xml:space="preserve">
+    <value>  Clic                 Centrar el mapa en ese punto</value>
+  </data>
+  <data name="Map.Help.5" xml:space="preserve">
+    <value>  Inicio               Volver al lugar de origen (Budapest)</value>
+  </data>
+  <data name="Map.Help.7" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Map.Help.8" xml:space="preserve">
+    <value>  +  =  RePág          Acercar            -  AvPág       Alejar</value>
+  </data>
+  <data name="Map.Help.9" xml:space="preserve">
+    <value>  Rueda del ratón      Acercar o alejar en el puntero</value>
+  </data>
+  <data name="Map.Help.11" xml:space="preserve">
+    <value>Buscar lugares</value>
+  </data>
+  <data name="Map.Help.12" xml:space="preserve">
+    <value>  /  F6  G             Buscar un nombre (requiere red) o escribir coordenadas: 47.5, 19.04</value>
+  </data>
+  <data name="Map.Help.13" xml:space="preserve">
+    <value>  M                    Guardar el centro como lugar      B  F2   Lugares guardados (Supr borra)</value>
+  </data>
+  <data name="Map.Help.15" xml:space="preserve">
+    <value>En línea y sin conexión</value>
+  </data>
+  <data name="Map.Help.16" xml:space="preserve">
+    <value>  O                    Cambiar entre en línea / sin conexión. Sin conexión nunca abre una conexión.</value>
+  </data>
+  <data name="Map.Help.17" xml:space="preserve">
+    <value>  D                    Guardar los mosaicos de esta vista (y dos niveles de zoom más) para uso sin conexión</value>
+  </data>
+  <data name="Map.Help.18" xml:space="preserve">
+    <value>  R  F5                Volver a pedir los mosaicos que fallaron</value>
+  </data>
+  <data name="Map.Help.20" xml:space="preserve">
+    <value>Leyenda</value>
+  </data>
+  <data name="Map.Help.21" xml:space="preserve">
+    <value>  ~ agua    " zona verde    . : - = + * # % @  más dibujado (carreteras, edificios, etiquetas)</value>
+  </data>
+  <data name="Map.Help.22" xml:space="preserve">
+    <value>  X el centro    P un lugar guardado    / un mosaico no disponible    . un mosaico aún cargando</value>
+  </data>
+  <data name="Map.Help.24" xml:space="preserve">
+    <value>Datos sin conexión</value>
+  </data>
+  <data name="Map.Help.25" xml:space="preserve">
+    <value>  Los mosaicos visitados se guardan como tiles/z/x/y.png en la carpeta del mapa, y cualquier</value>
+  </data>
+  <data name="Map.Help.26" xml:space="preserve">
+    <value>  archivo .mbtiles ráster colocado allí también se lee. La carpeta se muestra en la línea de estado tras pulsar D.</value>
+  </data>
+  <data name="Map.Help.28" xml:space="preserve">
+    <value>Cualquier tecla: volver.</value>
+  </data>
+  <data name="Map.TitleOffline" xml:space="preserve">
+    <value>Mapa (sin conexión)</value>
+  </data>
+  <data name="Map.SavedPlaces" xml:space="preserve">
+    <value>Lugares guardados</value>
+  </data>
+  <data name="Map.SearchResults" xml:space="preserve">
+    <value>Resultados de la búsqueda</value>
+  </data>
+  <data name="Map.PlacesHint" xml:space="preserve">
+    <value>Intro:ir   Supr:quitar   Esc:volver</value>
+  </data>
+  <data name="Map.ResultsHint" xml:space="preserve">
+    <value>Intro:ir   Esc:volver</value>
+  </data>
+  <data name="Map.SearchPrompt" xml:space="preserve">
+    <value>Búsqueda o coordenadas: </value>
+  </data>
+  <data name="Map.SearchKeys" xml:space="preserve">
+    <value>Intro:ir   Esc:cancelar</value>
+  </data>
+  <data name="Map.HelpKeys" xml:space="preserve">
+    <value>Arr/Abj:desplazar   otra tecla:volver</value>
+  </data>
+  <data name="Diff.BinarySame" xml:space="preserve">
+    <value>Archivos binarios — idénticos, byte por byte.</value>
+  </data>
+  <data name="Diff.BinaryDiffer" xml:space="preserve">
+    <value>Archivos binarios — difieren ({0} y {1} bytes): {2} bytes en {3} lugar(es). Mayús+F12 muestra sus sumas de comprobación.</value>
+  </data>
+  <data name="Assoc.AddEdit" xml:space="preserve">
+    <value>Añadir un programa para editar</value>
+  </data>
+  <data name="Assoc.AddOpen" xml:space="preserve">
+    <value>Añadir un programa para abrir</value>
+  </data>
+  <data name="Assoc.ChangeEdit" xml:space="preserve">
+    <value>Cambiar el programa para editar</value>
+  </data>
+  <data name="Assoc.ChangeOpen" xml:space="preserve">
+    <value>Cambiar el programa para abrir</value>
+  </data>
+  <data name="DiskUsage.Measuring" xml:space="preserve">
+    <value>Midiendo {0}</value>
+  </data>
+  <data name="DiskUsage.SoFar" xml:space="preserve">
+    <value>hasta ahora {0} archivos, {1}</value>
+  </data>
+  <data name="FolderTree.Count" xml:space="preserve">
+    <value>Número de carpetas: {0}</value>
+  </data>
+  <data name="FolderPath.TabCompletes" xml:space="preserve">
+    <value>Tab completa. Esquemas: </value>
+  </data>
+  <data name="FolderPath.OrLocal" xml:space="preserve">
+    <value> — o una ruta local sencilla.</value>
+  </data>
+  <data name="Strip.Result" xml:space="preserve">
+    <value>{0} limpiados, {1} sin cambios</value>
+  </data>
+  <data name="Strip.ResultFailed" xml:space="preserve">
+    <value>, {0} fallidos</value>
+  </data>
 </root>

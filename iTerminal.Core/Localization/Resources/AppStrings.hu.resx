@@ -8098,4 +8098,133 @@
   <data name="Docker.Stopped" xml:space="preserve">
     <value>A konténer le van állítva — előbb indítsa el (Shift+F9 a során).</value>
   </data>
+  <data name="Map.Help.0" xml:space="preserve">
+    <value>Térkép — az OpenStreetMap ASCII-grafikában</value>
+  </data>
+  <data name="Map.Help.2" xml:space="preserve">
+    <value>Mozgás</value>
+  </data>
+  <data name="Map.Help.3" xml:space="preserve">
+    <value>  Nyilak               Kis elmozdítás     Shift+Nyilak   Fél képernyőnyi</value>
+  </data>
+  <data name="Map.Help.4" xml:space="preserve">
+    <value>  Kattintás            A térkép ráközpontosítása arra a pontra</value>
+  </data>
+  <data name="Map.Help.5" xml:space="preserve">
+    <value>  Home                 Vissza a kiinduló helyre (Budapest)</value>
+  </data>
+  <data name="Map.Help.7" xml:space="preserve">
+    <value>Nagyítás</value>
+  </data>
+  <data name="Map.Help.8" xml:space="preserve">
+    <value>  +  =  PgUp           Nagyítás           -  PgDn        Kicsinyítés</value>
+  </data>
+  <data name="Map.Help.9" xml:space="preserve">
+    <value>  Egérgörgő            Nagyítás vagy kicsinyítés az egérmutatónál</value>
+  </data>
+  <data name="Map.Help.11" xml:space="preserve">
+    <value>Helyek keresése</value>
+  </data>
+  <data name="Map.Help.12" xml:space="preserve">
+    <value>  /  F6  G             Név keresése (hálózat kell) vagy koordináták megadása: 47.5, 19.04</value>
+  </data>
+  <data name="Map.Help.13" xml:space="preserve">
+    <value>  M                    A középpont mentése helyként      B  F2   Mentett helyek (Del töröl)</value>
+  </data>
+  <data name="Map.Help.15" xml:space="preserve">
+    <value>Online és offline</value>
+  </data>
+  <data name="Map.Help.16" xml:space="preserve">
+    <value>  O                    Váltás online / offline között. Offline módban soha nem nyit kapcsolatot.</value>
+  </data>
+  <data name="Map.Help.17" xml:space="preserve">
+    <value>  D                    E nézet csempéinek mentése (és két nagyítási szinttel beljebb) offline használatra</value>
+  </data>
+  <data name="Map.Help.18" xml:space="preserve">
+    <value>  R  F5                A sikertelen csempék újrakérése</value>
+  </data>
+  <data name="Map.Help.20" xml:space="preserve">
+    <value>Jelmagyarázat</value>
+  </data>
+  <data name="Map.Help.21" xml:space="preserve">
+    <value>  ~ víz    " zöldterület    . : - = + * # % @  több rajzolva (utak, épületek, feliratok)</value>
+  </data>
+  <data name="Map.Help.22" xml:space="preserve">
+    <value>  X a középpont    P mentett hely    / elérhetetlen csempe    . még töltődő csempe</value>
+  </data>
+  <data name="Map.Help.24" xml:space="preserve">
+    <value>Offline adatok</value>
+  </data>
+  <data name="Map.Help.25" xml:space="preserve">
+    <value>  A meglátogatott csempék tiles/z/x/y.png néven mentődnek a térképmappába, és az oda tett</value>
+  </data>
+  <data name="Map.Help.26" xml:space="preserve">
+    <value>  raszteres .mbtiles fájl is beolvasásra kerül. A mappa a D lenyomása után az állapotsorban látszik.</value>
+  </data>
+  <data name="Map.Help.28" xml:space="preserve">
+    <value>Bármely billentyű: vissza.</value>
+  </data>
+  <data name="Map.TitleOffline" xml:space="preserve">
+    <value>Térkép (offline)</value>
+  </data>
+  <data name="Map.SavedPlaces" xml:space="preserve">
+    <value>Mentett helyek</value>
+  </data>
+  <data name="Map.SearchResults" xml:space="preserve">
+    <value>Keresési találatok</value>
+  </data>
+  <data name="Map.PlacesHint" xml:space="preserve">
+    <value>Enter:ugrás   Del:töröl   Esc:vissza</value>
+  </data>
+  <data name="Map.ResultsHint" xml:space="preserve">
+    <value>Enter:ugrás   Esc:vissza</value>
+  </data>
+  <data name="Map.SearchPrompt" xml:space="preserve">
+    <value>Keresés vagy koordináták: </value>
+  </data>
+  <data name="Map.SearchKeys" xml:space="preserve">
+    <value>Enter:indít   Esc:mégse</value>
+  </data>
+  <data name="Map.HelpKeys" xml:space="preserve">
+    <value>Fel/Le:görgetés   más billentyű:vissza</value>
+  </data>
+  <data name="Diff.BinarySame" xml:space="preserve">
+    <value>Bináris fájlok — azonosak, bájtról bájtra.</value>
+  </data>
+  <data name="Diff.BinaryDiffer" xml:space="preserve">
+    <value>Bináris fájlok — eltérnek ({0} és {1} bájt): {2} bájt {3} helyen. A Shift+F12 megmutatja az ellenőrzőösszegeiket.</value>
+  </data>
+  <data name="Assoc.AddEdit" xml:space="preserve">
+    <value>Program hozzáadása a szerkesztéshez</value>
+  </data>
+  <data name="Assoc.AddOpen" xml:space="preserve">
+    <value>Program hozzáadása a megnyitáshoz</value>
+  </data>
+  <data name="Assoc.ChangeEdit" xml:space="preserve">
+    <value>A szerkesztő program módosítása</value>
+  </data>
+  <data name="Assoc.ChangeOpen" xml:space="preserve">
+    <value>A megnyitó program módosítása</value>
+  </data>
+  <data name="DiskUsage.Measuring" xml:space="preserve">
+    <value>{0} mérése</value>
+  </data>
+  <data name="DiskUsage.SoFar" xml:space="preserve">
+    <value>eddig {0} fájl, {1}</value>
+  </data>
+  <data name="FolderTree.Count" xml:space="preserve">
+    <value>Mappák száma: {0}</value>
+  </data>
+  <data name="FolderPath.TabCompletes" xml:space="preserve">
+    <value>A Tab kiegészít. Sémák: </value>
+  </data>
+  <data name="FolderPath.OrLocal" xml:space="preserve">
+    <value> — vagy egy egyszerű helyi útvonal.</value>
+  </data>
+  <data name="Strip.Result" xml:space="preserve">
+    <value>{0} megtisztítva, {1} változatlan</value>
+  </data>
+  <data name="Strip.ResultFailed" xml:space="preserve">
+    <value>, {0} sikertelen</value>
+  </data>
 </root>

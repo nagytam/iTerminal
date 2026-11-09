@@ -380,6 +380,25 @@ public class MapDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public async Task TheHelpFollowsTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(iTerminal.Core.Dialogs.Map.MapDialog).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+        var f = await OpenAsync();
+
+        await PressAsync(f, ConsoleKey.F1);
+
+        var screen = Render(f.Root);
+        AssertScreenContains(screen, "Karte — OpenStreetMap als ASCII-Grafik");
+        AssertScreenContains(screen, "Orte finden");
+        AssertScreenDoesNotContain(screen, "Finding places");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task F1ShowsHelpAndAnyKeyGoesBack()
     {
         var f = await OpenAsync();

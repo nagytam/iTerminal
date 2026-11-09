@@ -234,7 +234,7 @@ public class StripMetadataDialog : Dialog
                 if (_result is { } result)
                 {
                     lines.Add(default);
-                    lines.Add(new($"Stripped {result.Stripped}, unchanged {result.Unchanged}" + (result.Failures.Count > 0 ? $", failed {result.Failures.Count}" : string.Empty)));
+                    lines.Add(new(string.Format(UiText.Get("Strip.Result", "Stripped {0}, unchanged {1}"), result.Stripped, result.Unchanged) + (result.Failures.Count > 0 ? string.Format(UiText.Get("Strip.ResultFailed", ", failed {0}"), result.Failures.Count) : string.Empty)));
                     foreach (var failure in result.Failures.Take(3))
                     {
                         lines.Add(new(failure.Shrink(Math.Max(16, (int)_info.ViewSize.Width)) ?? string.Empty, colors.Error));
