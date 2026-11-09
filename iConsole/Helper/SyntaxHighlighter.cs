@@ -548,10 +548,20 @@ public static class SyntaxHighlighter
             if (char.IsDigit(c))
             {
                 int stop = i + 1;
+                bool decimalMantissa = true;
                 while (stop < length && (char.IsLetterOrDigit(line[stop]) || line[stop] == '.' || line[stop] == '_'
                     // C++14 digit separators: 1'000'000.
                     || line[stop] == '\'' && stop + 1 < length && char.IsLetterOrDigit(line[stop + 1])))
                 {
+                    if (decimalMantissa && (line[stop] == 'e' || line[stop] == 'E') && stop + 2 < length
+                        && (line[stop + 1] == '+' || line[stop + 1] == '-') && char.IsDigit(line[stop + 2]))
+                    {
+                        decimalMantissa = false;
+                        stop += 2;
+                        continue;
+                    }
+
+                    decimalMantissa &= char.IsDigit(line[stop]) || line[stop] == '.' || line[stop] == '_' || line[stop] == '\'';
                     stop++;
                 }
 

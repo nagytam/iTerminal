@@ -184,4 +184,32 @@ public class SyntaxLanguagesTest
         CollectionAssert.Contains(Spans("x.r", "x <- 10L + 2.5"), ("10L", SyntaxKind.Number));
         CollectionAssert.Contains(Spans("x.r", "x <- 2.5"), ("2.5", SyntaxKind.Number));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("x.ps1")]
+    [DataRow("x.py")]
+    [DataRow("x.go")]
+    [DataRow("x.java")]
+    [DataRow("x.rb")]
+    [DataRow("x.cpp")]
+    public void DecimalNumbers_IncludeSignedExponentsButNotFollowingOperators(string file)
+    {
+        List<string> numbers = Spans(file, "1e-3+4 1.5E+6-7 1e3 12 0x1e-3 1e-foo 1e3e-4")
+            .Where(s => s.Kind == SyntaxKind.Number)
+            .Select(s => s.Text)
+            .ToList();
+
+        CollectionAssert.AreEqual(
+            new[] { "1e-3", "4", "1.5E+6", "7", "1e3", "12", "0x1e", "3", "1e", "1e3e", "4" },
+            numbers);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Cpp_DecimalDigitSeparatorsDoNotSplitSignedExponents()
+    {
+        CollectionAssert.Contains(Spans("x.cpp", "1'000e-3"), ("1'000e-3", SyntaxKind.Number));
+        CollectionAssert.DoesNotContain(Spans("x.cpp", "0x1'e-3"), ("0x1'e-3", SyntaxKind.Number));
+    }
 }
