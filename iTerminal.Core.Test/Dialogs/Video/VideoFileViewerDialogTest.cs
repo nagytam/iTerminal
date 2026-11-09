@@ -120,6 +120,46 @@ public class VideoFileViewerDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task TheInformationHeaderFollowsEveryChosenLanguage()
+    {
+        foreach (string code in new[] { "de", "fr", "es", "it", "hu" })
+        {
+            iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+                new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(VideoFileViewerDialog).Assembly))]);
+            Assert.IsTrue(localizer.SetLanguage(code));
+            using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+
+            Assert.IsTrue(localizer.TryGet("Video.Info.SourceSize", out string sourceSize));
+            Assert.IsTrue(localizer.TryGet("Video.Info.ShownAsCharacters", out string shownAs));
+            if (code != "fr")
+            {
+                Assert.AreNotEqual("{0}×{1} pixels", sourceSize, code);
+            }
+            Assert.AreNotEqual("shown as {0}×{1} characters", shownAs, code);
+
+            VideoFileViewerDialog dialog = CreateDialog();
+            Control root = await ShowAsync(dialog);
+            try
+            {
+                await WaitForAsync(() => dialog.Player?.Frame is not null, "the first frame");
+                VideoFrame frame = dialog.Player!.Frame!;
+                string sizeText = localizer.Get("Video.Info.SourceSize", Info.Width, Info.Height);
+                string shownAsText = localizer.Get("Video.Info.ShownAsCharacters", frame.Columns, frame.Rows);
+                iConsole.Test.Core.ScreenBuffer screen = iConsole.Test.Core.ScreenBuffer.Render(root, 120, 40);
+
+                Assert.IsTrue(screen.Contains(sizeText), $"{code}: {screen}");
+                Assert.IsTrue(screen.Contains("fps"), $"{code}: {screen}");
+                Assert.IsTrue(screen.Contains(shownAsText), $"{code}: {screen}");
+            }
+            finally
+            {
+                dialog.Close();
+            }
+        }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task Show_FitsThePictureToTheRoomKeepingItsShape()
     {
         var dialog = CreateDialog();

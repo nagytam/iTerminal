@@ -7387,6 +7387,21 @@
   <data name="Image.NoMetadata" xml:space="preserve">
     <value>Keine Metadaten in dieser Datei.</value>
   </data>
+  <data name="Image.Metadata" xml:space="preserve">
+    <value>Metadaten</value>
+  </data>
+  <data name="Image.EditText" xml:space="preserve">
+    <value>e:Text bearbeiten</value>
+  </data>
+  <data name="Video.Info.SourceSize" xml:space="preserve">
+    <value>{0}×{1} Pixel</value>
+  </data>
+  <data name="Video.Info.ShownAsPixels" xml:space="preserve">
+    <value>dargestellt als {0}×{1} Pixel</value>
+  </data>
+  <data name="Video.Info.ShownAsCharacters" xml:space="preserve">
+    <value>angezeigt als {0}×{1} Zeichen</value>
+  </data>
   <data name="Network.ConnectOver" xml:space="preserve">
     <value>Mit {0} über {1} verbinden</value>
   </data>

@@ -7387,6 +7387,21 @@
   <data name="Image.NoMetadata" xml:space="preserve">
     <value>Nincsenek metaadatok ebben a fájlban.</value>
   </data>
+  <data name="Image.Metadata" xml:space="preserve">
+    <value>metaadatok</value>
+  </data>
+  <data name="Image.EditText" xml:space="preserve">
+    <value>e:szöveg szerkesztése</value>
+  </data>
+  <data name="Video.Info.SourceSize" xml:space="preserve">
+    <value>{0}×{1} képpont</value>
+  </data>
+  <data name="Video.Info.ShownAsPixels" xml:space="preserve">
+    <value>megjelenítés: {0}×{1} képpont</value>
+  </data>
+  <data name="Video.Info.ShownAsCharacters" xml:space="preserve">
+    <value>karakterként: {0}×{1}</value>
+  </data>
   <data name="Network.ConnectOver" xml:space="preserve">
     <value>Kapcsolódás ide: {0}, {1} használatával</value>
   </data>
