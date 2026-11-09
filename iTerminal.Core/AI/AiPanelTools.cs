@@ -1,5 +1,6 @@
 using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Helper;
@@ -22,14 +23,15 @@ namespace iTerminal.Core.AI;
 /// comes back as text the model can read and act on.</para>
 ///
 /// <para>Copy, move and delete run on the calling (background) thread and never inside a key handler. Delete
-/// moves to the recycle bin and needs <c>confirmed=true</c>, which the system prompt tells the model to
-/// obtain from the user first.</para>
+/// moves to the recycle bin and needs <c>confirmed=true</c> to show an approval dialog. Only an explicit yes
+/// in that dialog authorizes it; the model cannot approve its own action.</para>
 /// </summary>
 public partial class AiPanelTools(
     IContentModelService contentModelService,
     IArchiveCompressionService? compressionService = null,
     IArchiveExtractionService? extractionService = null,
-    FileSystemResolver? fileSystemResolver = null)
+    FileSystemResolver? fileSystemResolver = null,
+    IAiActionApprovalService? approvalService = null)
 {
     /// <summary>The most rows a listing tool returns, so a huge folder cannot swamp the model's context.</summary>
     internal const int MaxListedEntries = 200;
@@ -79,7 +81,7 @@ public partial class AiPanelTools(
         AIFunctionFactory.Create(RenameEntry, "rename_entry",
             "Rename an entry of a panel (the one under the cursor when name is empty) to a new name within the same folder."),
         AIFunctionFactory.Create(DeleteEntries, "delete_entries",
-            "Move the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) to the recycle bin. DESTRUCTIVE: ask the user in chat first and pass confirmed=true only after they said yes."),
+            "Move the marked entries of a panel (or the one under the cursor; or the names given, ';'-separated) to the recycle bin. DESTRUCTIVE: first ask the user in chat, then pass confirmed=true to show an app approval dialog listing every target. The user must approve there; this parameter is not authorization."),
         .. CreateArchiveAndFolderTools(),
     ];
 
@@ -620,7 +622,7 @@ public partial class AiPanelTools(
         }
     }
 
-    internal string DeleteEntries(string? panel = null, string? names = null, bool confirmed = false)
+    internal async Task<string> DeleteEntries(string? panel = null, string? names = null, bool confirmed = false)
     {
         if (!confirmed)
         {
@@ -639,6 +641,21 @@ public partial class AiPanelTools(
         if (urls.Count == 0)
         {
             return problem;
+        }
+
+        if (approvalService is null)
+        {
+            return "Error: AI action approval is unavailable; nothing was deleted.";
+        }
+
+        string summary = string.Format(
+            UiText.Get("Ai.Approval.DeleteSummary", "AI requests moving {0} item(s) from {1} to the recycle bin. Review every target below."),
+            urls.Count,
+            model.Url.FullUrl);
+        AiActionApprovalRequest request = new(summary, urls.Select(url => url.FullUrl).ToList());
+        if (!await approvalService.ConfirmAsync(request))
+        {
+            return "Not deleted: app approval was declined or cancelled.";
         }
 
         var done = new List<string>();

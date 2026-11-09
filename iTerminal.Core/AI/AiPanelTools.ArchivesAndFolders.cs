@@ -1,5 +1,6 @@
 using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Helper;
@@ -36,7 +37,7 @@ public partial class AiPanelTools
         AIFunctionFactory.Create(CompareFolders, "compare_panel_folders",
             "Compare the folders shown in the left and right panels. mode: size_and_date (default), size_only or content (reads every file). includeSubfolders defaults to true. Lists the differences; changes nothing."),
         AIFunctionFactory.Create(SynchronizeFolders, "synchronize_panel_folders",
-            "Synchronise the left and right panel folders. direction: both (default), left_to_right or right_to_left. deleteExtras removes what only the target has (one-way only, to the recycle bin). Without confirmed=true this only previews the plan; show it to the user, and call again with confirmed=true after they said yes."),
+            "Synchronise the left and right panel folders. direction: both (default), left_to_right or right_to_left. deleteExtras removes what only the target has (one-way only, to the recycle bin). Without confirmed=true this only previews the plan. After the user agrees in chat, confirmed=true shows an app approval dialog with the full plan; the user must approve there."),
     ];
 
     #region Archives
@@ -372,6 +373,21 @@ public partial class AiPanelTools
             }
             preview.Append("Ask the user to confirm, then call again with confirmed=true.");
             return preview.ToString();
+        }
+
+        if (approvalService is null)
+        {
+            return "Error: AI action approval is unavailable; nothing was synchronised.";
+        }
+
+        string summary = string.Format(
+            UiText.Get("Ai.Approval.SyncSummary", "AI requests synchronising {0} with {1}. Review the full plan below."),
+            pair.LeftUrl.FullUrl,
+            pair.RightUrl.FullUrl);
+        AiActionApprovalRequest request = new(summary, plan.Actions.Select(action => action.Describe()).ToList());
+        if (!await approvalService.ConfirmAsync(request))
+        {
+            return "Not synchronised: app approval was declined or cancelled.";
         }
 
         var task = new FolderSyncTask(plan, pair.LeftUrl, pair.LeftSystem, pair.RightUrl, pair.RightSystem);

@@ -8308,6 +8308,24 @@
   <data name="Ai.Hints" xml:space="preserve">
     <value>Ctrl+F2: dettagli, Ctrl+B: barra del terminale</value>
   </data>
+  <data name="Ai.Approval.Title" xml:space="preserve">
+    <value>Approva l’azione file dell’IA?</value>
+  </data>
+  <data name="Ai.Approval.Hint" xml:space="preserve">
+    <value>Y: approva    N/Esc: annulla</value>
+  </data>
+  <data name="Ai.Approval.HintApprove" xml:space="preserve">
+    <value>Approva le azioni visualizzate</value>
+  </data>
+  <data name="Ai.Approval.HintCancel" xml:space="preserve">
+    <value>Annulla senza modifiche</value>
+  </data>
+  <data name="Ai.Approval.DeleteSummary" xml:space="preserve">
+    <value>L’IA chiede di spostare {0} elementi da {1} nel cestino. Controlla tutti i percorsi qui sotto.</value>
+  </data>
+  <data name="Ai.Approval.SyncSummary" xml:space="preserve">
+    <value>L’IA chiede di sincronizzare {0} con {1}. Controlla il piano completo qui sotto.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>Nessun comando corrisponde.</value>
   </data>
