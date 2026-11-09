@@ -8950,4 +8950,7 @@
   <data name="SysSettings.NoVariables" xml:space="preserve">
     <value>(sin variables - Ins añade una)</value>
   </data>
+  <data name="Calc.Back" xml:space="preserve">
+    <value>Atrás</value>
+  </data>
 </root>

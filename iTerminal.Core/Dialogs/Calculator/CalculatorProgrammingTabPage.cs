@@ -25,7 +25,7 @@ public sealed class CalculatorProgrammingTabPage : CalculatorGridTabPage
         AddActionButton("<<", () => Engine.ApplyOperator("shl"));
         AddActionButton(">>", () => Engine.ApplyOperator("shr"));
         AddActionButton("MOD", () => Engine.ApplyOperator("mod"));
-        AddActionButton("Back", Engine.Backspace);
+        AddActionButton(iConsole.Localization.UiText.Get("Calc.Back", "Back"), Engine.Backspace);
         AddActionButton("/", () => Engine.ApplyOperator("/"));
 
         AddActionButton("A", () => Engine.InputDigit('A'), () => Engine.NumeralBase == NumeralBase.Hexadecimal);

@@ -17,7 +17,7 @@ public sealed class CalculatorBasicTabPage : CalculatorGridTabPage
 
         AddActionButton("AC", Engine.Clear);
         AddActionButton("CE", Engine.ClearEntry);
-        AddActionButton("Back", Engine.Backspace);
+        AddActionButton(iConsole.Localization.UiText.Get("Calc.Back", "Back"), Engine.Backspace);
         AddActionButton("/", () => Engine.ApplyOperator("/"));
 
         AddActionButton("7", () => Engine.InputDigit('7'));
