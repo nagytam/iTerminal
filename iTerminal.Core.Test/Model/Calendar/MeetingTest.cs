@@ -11,6 +11,21 @@ public class MeetingTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DoNotParallelize]
+    public void TheHintForMissingPartsFollowsTheChosenLanguage()
+    {
+        iConsole.Localization.Localizer localizer = new([new iConsole.Localization.ResourceLocalizationSource(
+            new System.Resources.ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(Meeting).Assembly))]);
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        using IDisposable language = iConsole.Localization.UiText.Scope(localizer);
+
+        Assert.IsFalse(Meeting.TryParse("14:30", Day, out _, out var error));
+
+        StringAssert.StartsWith(error, "Geben Sie eine Startzeit und einen Titel ein");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void AStartAndATitleMakeAnHourLongMeeting()
     {
         Assert.IsTrue(Meeting.TryParse("14:30 Standup", Day, out var meeting, out var error));

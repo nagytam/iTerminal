@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iTerminal.Core.Audio.Decoders;
 
 namespace iTerminal.Core.Audio;
@@ -121,7 +122,7 @@ public static class AudioDecoderFactory
         if (!FfmpegAudioDecoder.IsAvailable())
         {
             throw new NotSupportedException(
-                $"Playing {extension} files needs ffmpeg on PATH. Install ffmpeg, or use WAV/MP3.");
+                string.Format(UiText.Get("Audio.NeedsFfmpeg", "Playing {0} files needs ffmpeg on PATH. Install ffmpeg, or use WAV/MP3."), extension));
         }
 
         return new FfmpegAudioDecoder(path);

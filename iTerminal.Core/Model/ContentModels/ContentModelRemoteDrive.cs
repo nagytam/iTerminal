@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Helper;
@@ -35,7 +36,7 @@ public abstract class ContentModelRemoteDrive(
 
     /// <summary>Formats the log message when <see cref="Connect"/> throws.</summary>
     protected virtual string FormatConnectionError(Url url, Exception exception) =>
-        $"Connection error: {url.Host}: {exception.Message}";
+        string.Format(UiText.Get("Remote.ConnError", "Connection error: {0}: {1}"), url.Host, exception.Message);
 
     public override void ReadUrl()
     {

@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using System.Globalization;
 using System.Text.Json;
 using iTerminal.Core.Services;
@@ -28,7 +29,7 @@ public sealed record Meeting(DateOnly Date, TimeOnly Start, int DurationMinutes,
         var tokens = text.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
         if (tokens.Length < 2)
         {
-            error = "Type a start time and a title, e.g. 14:30 Standup";
+            error = UiText.Get("Meeting.TypeTime", "Type a start time and a title, e.g. 14:30 Standup");
             return false;
         }
 

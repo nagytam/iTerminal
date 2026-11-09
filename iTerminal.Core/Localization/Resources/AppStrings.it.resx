@@ -8227,4 +8227,34 @@
   <data name="Strip.ResultFailed" xml:space="preserve">
     <value>, {0} non riusciti</value>
   </data>
+  <data name="Units.TypeValue" xml:space="preserve">
+    <value>Digita un valore in {0} per convertirlo in {1}.</value>
+  </data>
+  <data name="Units.NotANumber" xml:space="preserve">
+    <value>«{0}» non è un numero.</value>
+  </data>
+  <data name="Meeting.TypeTime" xml:space="preserve">
+    <value>Digita un’ora di inizio e un titolo, ad es. 14:30 Standup</value>
+  </data>
+  <data name="Remote.ConnError" xml:space="preserve">
+    <value>Errore di connessione: {0}: {1}</value>
+  </data>
+  <data name="Search.Line" xml:space="preserve">
+    <value>Riga {0}: {1}</value>
+  </data>
+  <data name="Virtual.FileSize" xml:space="preserve">
+    <value>Dimensione del file: {0}</value>
+  </data>
+  <data name="Audio.NeedsFfmpeg" xml:space="preserve">
+    <value>Per riprodurre i file {0} serve ffmpeg nel PATH. Installa ffmpeg o usa WAV/MP3.</value>
+  </data>
+  <data name="Settings.BgHint" xml:space="preserve">
+    <value>Si applica al prossimo avvio di iTerminal. Gli avvii ritardati avvengono dopo {0} s, o prima se la funzione viene aperta.</value>
+  </data>
+  <data name="Weather.Unavailable" xml:space="preserve">
+    <value>Meteo non disponibile</value>
+  </data>
+  <data name="Weather.Loading" xml:space="preserve">
+    <value>Meteo {0}</value>
+  </data>
 </root>

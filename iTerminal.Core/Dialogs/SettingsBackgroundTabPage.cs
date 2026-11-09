@@ -1,3 +1,4 @@
+using iConsole.Localization;
 using iConsole.Controls;
 using iConsole.Controls.Tabs;
 using iConsole.Data;
@@ -45,7 +46,7 @@ public class SettingsBackgroundTabPage : TabPage
         }
 
         _hintLabel = new Label(
-            $"Applies the next time iTerminal starts. Delayed starts after {BackgroundStartService.DelayedStart.TotalSeconds:0} s, or sooner when the feature is opened.",
+            string.Format(UiText.Get("Settings.BgHint", "Applies the next time iTerminal starts. Delayed starts after {0} s, or sooner when the feature is opened."), BackgroundStartService.DelayedStart.TotalSeconds.ToString("0")),
             themeService);
         AddControl(_hintLabel);
     }

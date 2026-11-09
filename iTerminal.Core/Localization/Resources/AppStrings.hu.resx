@@ -8227,4 +8227,34 @@
   <data name="Strip.ResultFailed" xml:space="preserve">
     <value>, {0} sikertelen</value>
   </data>
+  <data name="Units.TypeValue" xml:space="preserve">
+    <value>Írjon be egy értéket {0} egységben, hogy átváltsa {1} egységre.</value>
+  </data>
+  <data name="Units.NotANumber" xml:space="preserve">
+    <value>„{0}” nem szám.</value>
+  </data>
+  <data name="Meeting.TypeTime" xml:space="preserve">
+    <value>Írjon be egy kezdési időt és egy címet, pl. 14:30 Standup</value>
+  </data>
+  <data name="Remote.ConnError" xml:space="preserve">
+    <value>Kapcsolódási hiba: {0}: {1}</value>
+  </data>
+  <data name="Search.Line" xml:space="preserve">
+    <value>{0}. sor: {1}</value>
+  </data>
+  <data name="Virtual.FileSize" xml:space="preserve">
+    <value>Fájlméret: {0}</value>
+  </data>
+  <data name="Audio.NeedsFfmpeg" xml:space="preserve">
+    <value>{0} fájlok lejátszásához ffmpeg kell a PATH-ban. Telepítse az ffmpeg-et, vagy használjon WAV/MP3-at.</value>
+  </data>
+  <data name="Settings.BgHint" xml:space="preserve">
+    <value>Az iTerminal következő indításakor lép érvénybe. A késleltetett indítás {0} s után történik, vagy korábban, ha megnyitja a funkciót.</value>
+  </data>
+  <data name="Weather.Unavailable" xml:space="preserve">
+    <value>Az időjárás nem elérhető</value>
+  </data>
+  <data name="Weather.Loading" xml:space="preserve">
+    <value>Időjárás {0}</value>
+  </data>
 </root>
