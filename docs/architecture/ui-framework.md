@@ -183,6 +183,7 @@ The first comparison above was against Terminal.Gui only. This one widens it to 
 - **Colours.** `SyntaxPalette` maps `Keyword`, `String`, `Comment` and `Number` to a colour (cyan, green, gray and magenta by default). Set `Palette` on the service to recolour all controls; a control can also be given its own service through its `Highlighting` property.
 - **Markdown code fences.** The parser keeps the first word after the fence marker (`MarkdownBlock.Language`, `MarkdownLine.Language`). A fence whose name the service knows is drawn in the language's colours, and a block comment that starts on an earlier line of the same block is followed. A fence with no name, or an unknown one, keeps the plain code colour.
 - **Ruby.** `.rb`, `Gemfile` and `Rakefile` use Ruby keywords, quoted strings and `#` comments; Ruby code fences use the same rules. The line-oriented tokenizer does not understand regex literals, heredocs, multiline strings, interpolation or embedded documents; a `#` inside a regex is treated as a comment.
+- **TypeScript.** `.ts`, `.tsx` and TypeScript code fences use JavaScript and TypeScript keywords, quoted strings and comments. Contextual words are coloured without parsing their context; JSX, regular expressions, multiline template literals and interpolation are not parsed.
 - **Not built:** more token kinds (types, functions, operators, attributes), nested languages (script in HTML, code in Markdown inside a viewer), a grammar-based tokenizer, and colour roles per theme rather than per palette.
 
 ### Statistical charts

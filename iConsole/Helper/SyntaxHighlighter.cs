@@ -269,6 +269,13 @@ public static class SyntaxHighlighter
     private static readonly SyntaxLanguage JavaScript = new(
         "JavaScript", JavaScriptKeywords, ["//"], ("/*", "*/"), "\"'`");
 
+    private static readonly SyntaxLanguage TypeScript = new(
+        "TypeScript",
+        [.. JavaScriptKeywords, "abstract", "accessor", "any", "as", "asserts", "bigint", "boolean", "declare", "enum",
+         "implements", "infer", "interface", "is", "keyof", "module", "namespace", "never", "number", "object", "out", "override",
+         "private", "protected", "public", "readonly", "satisfies", "string", "symbol", "type", "unique", "unknown", "using"],
+        ["//"], ("/*", "*/"), "\"'`");
+
     private static readonly SyntaxLanguage Python = new(
         "Python", PythonKeywords, ["#"], null, "\"'", tripleQuotes: true);
 
@@ -402,7 +409,7 @@ public static class SyntaxHighlighter
         [".vue"] = Markup, [".svelte"] = Markup, [".xhtml"] = Markup, [".resx"] = Markup, [".nuspec"] = Markup,
         [".tf"] = Config, [".tfvars"] = Config, [".gitignore"] = Config,
         [".java"] = Java, [".js"] = JavaScript, [".jsx"] = JavaScript, [".mjs"] = JavaScript,
-        [".ts"] = CLike, [".tsx"] = CLike, [".go"] = Go, [".rs"] = Rust, [".kt"] = CLike, [".swift"] = CLike, [".php"] = Php,
+        [".ts"] = TypeScript, [".tsx"] = TypeScript, [".go"] = Go, [".rs"] = Rust, [".kt"] = CLike, [".swift"] = CLike, [".php"] = Php,
         [".scala"] = CLike, [".dart"] = CLike, [".css"] = CLike, [".scss"] = CLike,
         [".py"] = Python, [".pyw"] = Python, [".rb"] = Ruby, [".pl"] = Perl, [".pm"] = Perl, [".r"] = R,
         [".sh"] = Shell, [".bash"] = Shell, [".zsh"] = Shell,
@@ -417,7 +424,7 @@ public static class SyntaxHighlighter
 
     /// <summary>Every language built in, for <see cref="iConsole.Services.ISyntaxHighlightingService"/> to list and look up by name.</summary>
     internal static IReadOnlyList<SyntaxLanguage> BuiltInLanguages { get; } =
-        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, PowerShell, Python, Ruby, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, R, Perl, Php, VisualBasic, FSharp, BuildFile, Log];
+        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, TypeScript, PowerShell, Python, Ruby, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, R, Perl, Php, VisualBasic, FSharp, BuildFile, Log];
 
     /// <summary>The language for a file name or path, or null when there is none to colour it with.</summary>
     public static SyntaxLanguage? ForFile(string? fileName)

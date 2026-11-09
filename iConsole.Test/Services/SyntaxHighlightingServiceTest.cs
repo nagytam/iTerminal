@@ -42,6 +42,9 @@ public class SyntaxHighlightingServiceTest
     [DataRow("Python", "Python")]
     [DataRow("ruby", "Ruby")]
     [DataRow("rb", "Ruby")]
+    [DataRow("typescript", "TypeScript")]
+    [DataRow("ts", "TypeScript")]
+    [DataRow("tsx", "TypeScript")]
     [DataRow("PowerShell", "PowerShell")]
     [DataRow("pwsh", "PowerShell")]
     [DataRow("bash", "Shell")]
@@ -67,6 +70,15 @@ public class SyntaxHighlightingServiceTest
     public void FindByFile_RecognizesRubyFiles(string path)
     {
         Assert.AreEqual("Ruby", new SyntaxHighlightingService().FindByFile(path)?.Name);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("/src/app.TS?version=1")]
+    [DataRow(@"C:\src\Component.tsx")]
+    public void FindByFile_RecognizesTypeScriptFiles(string path)
+    {
+        Assert.AreEqual("TypeScript", new SyntaxHighlightingService().FindByFile(path)?.Name);
     }
 
     [Timeout(60_000)]
