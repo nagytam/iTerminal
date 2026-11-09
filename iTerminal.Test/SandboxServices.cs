@@ -145,6 +145,178 @@ public static class SandboxServices
             }
         }
 
+        /// <summary>Local accounts owned entirely by the test sandbox; every management action stays in memory.</summary>
+        public sealed class UsersAndGroups : Core.Services.UsersAndGroups.IUserGroupService
+        {
+            private readonly SortedDictionary<string, string> _users = new(StringComparer.OrdinalIgnoreCase)
+            {
+                ["sandbox-user"] = "Sandbox User",
+            };
+            private readonly SortedSet<string> _groups = new(StringComparer.OrdinalIgnoreCase) { "sandbox-group" };
+            private readonly HashSet<(string User, string Group)> _memberships = [];
+            private readonly List<string> _calls = [];
+
+            public IReadOnlyList<string> Calls
+            {
+                get
+                {
+                    lock (_users)
+                    {
+                        return [.. _calls];
+                    }
+                }
+            }
+
+            public bool HasUser(string name)
+            {
+                lock (_users)
+                {
+                    return _users.ContainsKey(name);
+                }
+            }
+
+            public bool HasGroup(string name)
+            {
+                lock (_users)
+                {
+                    return _groups.Contains(name);
+                }
+            }
+
+            public Task<IReadOnlyList<Core.Services.UsersAndGroups.LocalUser>> ListUsersAsync(CancellationToken cancellationToken = default)
+            {
+                lock (_users)
+                {
+                    return Task.FromResult<IReadOnlyList<Core.Services.UsersAndGroups.LocalUser>>(
+                        [.. _users.Select(pair => new Core.Services.UsersAndGroups.LocalUser(pair.Key, pair.Value))]);
+                }
+            }
+
+            public Task<IReadOnlyList<Core.Services.UsersAndGroups.LocalGroup>> ListGroupsAsync(CancellationToken cancellationToken = default)
+            {
+                lock (_users)
+                {
+                    return Task.FromResult<IReadOnlyList<Core.Services.UsersAndGroups.LocalGroup>>(
+                        [.. _groups.Select(name => new Core.Services.UsersAndGroups.LocalGroup(name))]);
+                }
+            }
+
+            public Task<Core.Services.UsersAndGroups.UserGroupActionResult> CreateUserAsync(string name, string fullName, string password, CancellationToken cancellationToken = default)
+            {
+                lock (_users)
+                {
+                    _calls.Add("create-user");
+                    if (!_users.TryAdd(name, fullName))
+                    {
+                        return Task.FromResult(new Core.Services.UsersAndGroups.UserGroupActionResult(false, "That user already exists."));
+                    }
+                    return Task.FromResult(new Core.Services.UsersAndGroups.UserGroupActionResult(true, $"{name} was created."));
+                }
+            }
+
+            public Task<Core.Services.UsersAndGroups.UserGroupActionResult> UpdateUserAsync(string name, string fullName, CancellationToken cancellationToken = default)
+            {
+                lock (_users)
+                {
+                    _calls.Add("update-user");
+                    if (!_users.ContainsKey(name))
+                    {
+                        return Task.FromResult(new Core.Services.UsersAndGroups.UserGroupActionResult(false, "That user does not exist."));
+                    }
+                    _users[name] = fullName;
+                    return Task.FromResult(new Core.Services.UsersAndGroups.UserGroupActionResult(true, $"{name} was updated."));
+                }
+            }
+
+            public Task<Core.Services.UsersAndGroups.UserGroupActionResult> DeleteUserAsync(string name, CancellationToken cancellationToken = default)
+            {
+                lock (_users)
+                {
+                    _calls.Add("delete-user");
+                    _users.Remove(name);
+                    _memberships.RemoveWhere(item => item.User.Equals(name, StringComparison.OrdinalIgnoreCase));
+                    return Task.FromResult(new Core.Services.UsersAndGroups.UserGroupActionResult(true, $"{name} was deleted."));
+                }
+            }
+
+            public Task<Core.Services.UsersAndGroups.UserGroupActionResult> SetPasswordAsync(string name, string password, CancellationToken cancellationToken = default)
+            {
+                lock (_users)
+                {
+                    _calls.Add("set-password");
+                    return Task.FromResult(new Core.Services.UsersAndGroups.UserGroupActionResult(
+                        _users.ContainsKey(name), _users.ContainsKey(name) ? $"The password for {name} was changed." : "That user does not exist."));
+                }
+            }
+
+            public Task<Core.Services.UsersAndGroups.UserGroupActionResult> CreateGroupAsync(string name, CancellationToken cancellationToken = default)
+            {
+                lock (_users)
+                {
+                    _calls.Add("create-group");
+                    bool added = _groups.Add(name);
+                    return Task.FromResult(new Core.Services.UsersAndGroups.UserGroupActionResult(added, added ? $"{name} was created." : "That group already exists."));
+                }
+            }
+
+            public Task<Core.Services.UsersAndGroups.UserGroupActionResult> DeleteGroupAsync(string name, CancellationToken cancellationToken = default)
+            {
+                lock (_users)
+                {
+                    _calls.Add("delete-group");
+                    _groups.Remove(name);
+                    _memberships.RemoveWhere(item => item.Group.Equals(name, StringComparison.OrdinalIgnoreCase));
+                    return Task.FromResult(new Core.Services.UsersAndGroups.UserGroupActionResult(true, $"{name} was deleted."));
+                }
+            }
+
+            public Task<Core.Services.UsersAndGroups.UserGroupActionResult> RenameGroupAsync(string oldName, string newName, CancellationToken cancellationToken = default)
+            {
+                lock (_users)
+                {
+                    _calls.Add("rename-group");
+                    if (!_groups.Contains(oldName) || _groups.Contains(newName))
+                    {
+                        return Task.FromResult(new Core.Services.UsersAndGroups.UserGroupActionResult(false, "The group could not be renamed."));
+                    }
+
+                    (string User, string Group)[] members = _memberships
+                        .Where(item => item.Group.Equals(oldName, StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+                    _memberships.RemoveWhere(item => item.Group.Equals(oldName, StringComparison.OrdinalIgnoreCase));
+                    _groups.Remove(oldName);
+                    _groups.Add(newName);
+                    foreach ((string user, _) in members)
+                    {
+                        _memberships.Add((user, newName));
+                    }
+
+                    return Task.FromResult(new Core.Services.UsersAndGroups.UserGroupActionResult(true, $"{oldName} was renamed to {newName}."));
+                }
+            }
+
+            public Task<Core.Services.UsersAndGroups.UserGroupActionResult> AddMemberAsync(string userName, string groupName, CancellationToken cancellationToken = default) =>
+                ChangeMembership(userName, groupName, add: true);
+
+            public Task<Core.Services.UsersAndGroups.UserGroupActionResult> RemoveMemberAsync(string userName, string groupName, CancellationToken cancellationToken = default) =>
+                ChangeMembership(userName, groupName, add: false);
+
+            private Task<Core.Services.UsersAndGroups.UserGroupActionResult> ChangeMembership(string userName, string groupName, bool add)
+            {
+                lock (_users)
+                {
+                    _calls.Add(add ? "add-member" : "remove-member");
+                    bool valid = _users.ContainsKey(userName) && _groups.Contains(groupName);
+                    if (valid)
+                    {
+                        if (add) _memberships.Add((userName, groupName));
+                        else _memberships.Remove((userName, groupName));
+                    }
+                    return Task.FromResult(new Core.Services.UsersAndGroups.UserGroupActionResult(valid, valid ? "Membership changed." : "The user or group does not exist."));
+                }
+            }
+        }
+
         public Task<Core.Services.SystemSettings.SystemSettingResult> SetEnvironmentVariableAsync(
             Core.Services.SystemSettings.EnvironmentScope scope, string name, string value, CancellationToken cancellationToken = default)
         {

@@ -242,6 +242,8 @@ public sealed class TerminalApp : IAsyncDisposable
                 services.AddSingleton<SandboxServices.SystemSettings>();
                 services.AddSingleton<Core.Services.SystemSettings.ISessionEnvironment, SandboxServices.SessionEnvironment>();
                 services.AddSingleton<Core.Services.SystemSettings.ISystemSettingsService>(provider => provider.GetRequiredService<SandboxServices.SystemSettings>());
+                services.AddSingleton<SandboxServices.SystemSettings.UsersAndGroups>();
+                services.AddSingleton<Core.Services.UsersAndGroups.IUserGroupService>(provider => provider.GetRequiredService<SandboxServices.SystemSettings.UsersAndGroups>());
                 services.AddSingleton<SandboxServices.MalwareScanner>();
                 services.AddSingleton<Core.Services.Defender.IMalwareScanService>(provider => provider.GetRequiredService<SandboxServices.MalwareScanner>());
 

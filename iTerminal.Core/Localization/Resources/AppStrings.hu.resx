@@ -9142,4 +9142,97 @@
   <data name="ImgInfo.Software" xml:space="preserve">
     <value>Szoftver</value>
   </data>
+  <data name="Dialog.UserGroupTitle" xml:space="preserve">
+    <value>Felhasználó- és csoportkezelő</value>
+  </data>
+  <data name="UserGroup.Loading" xml:space="preserve">
+    <value>Helyi fiókok betöltése...</value>
+  </data>
+  <data name="UserGroup.HintFilter" xml:space="preserve">
+    <value>Lista szűrése</value>
+  </data>
+  <data name="UserGroup.HintKeepFilter" xml:space="preserve">
+    <value>Szűrő megtartása</value>
+  </data>
+  <data name="UserGroup.HintClearFilter" xml:space="preserve">
+    <value>Szűrő törlése</value>
+  </data>
+  <data name="UserGroup.HintSwitch" xml:space="preserve">
+    <value>Váltás felhasználók és csoportok között</value>
+  </data>
+  <data name="UserGroup.HintAdd" xml:space="preserve">
+    <value>Felhasználó vagy csoport hozzáadása</value>
+  </data>
+  <data name="UserGroup.HintEdit" xml:space="preserve">
+    <value>Kijelölt felhasználó vagy csoport szerkesztése</value>
+  </data>
+  <data name="UserGroup.HintDelete" xml:space="preserve">
+    <value>Kijelölt fiók vagy csoport törlése</value>
+  </data>
+  <data name="UserGroup.HintPassword" xml:space="preserve">
+    <value>Felhasználói jelszó beállítása</value>
+  </data>
+  <data name="UserGroup.HintMembership" xml:space="preserve">
+    <value>Csoporttagság hozzáadása vagy eltávolítása</value>
+  </data>
+  <data name="UserGroup.UsersTitle" xml:space="preserve">
+    <value>Helyi felhasználók  [Tab: csoportok]</value>
+  </data>
+  <data name="UserGroup.GroupsTitle" xml:space="preserve">
+    <value>Helyi csoportok  [Tab: felhasználók]</value>
+  </data>
+  <data name="UserGroup.Filter" xml:space="preserve">
+    <value>Szűrő</value>
+  </data>
+  <data name="UserGroup.NoMatches" xml:space="preserve">
+    <value>Nincs a szűrőnek megfelelő fiók.</value>
+  </data>
+  <data name="UserGroup.NoUsers" xml:space="preserve">
+    <value>Nincsenek helyi felhasználók.</value>
+  </data>
+  <data name="UserGroup.NoGroups" xml:space="preserve">
+    <value>Nincsenek helyi csoportok.</value>
+  </data>
+  <data name="UserGroup.Busy" xml:space="preserve">
+    <value>Kis türelmet...</value>
+  </data>
+  <data name="UserGroup.Working" xml:space="preserve">
+    <value>Fiókmódosítás végrehajtása...</value>
+  </data>
+  <data name="UserGroup.GroupName" xml:space="preserve">
+    <value>Csoportnév</value>
+  </data>
+  <data name="UserGroup.UserName" xml:space="preserve">
+    <value>Felhasználónév</value>
+  </data>
+  <data name="UserGroup.FullName" xml:space="preserve">
+    <value>Teljes név</value>
+  </data>
+  <data name="UserGroup.EditFullName" xml:space="preserve">
+    <value>{0} teljes neve</value>
+  </data>
+  <data name="UserGroup.Password" xml:space="preserve">
+    <value>Jelszó</value>
+  </data>
+  <data name="UserGroup.DeleteConfirm" xml:space="preserve">
+    <value>Törli ezt: {0} "{1}"?</value>
+  </data>
+  <data name="UserGroup.InvalidText" xml:space="preserve">
+    <value>Vezérlőkarakterek nem engedélyezettek.</value>
+  </data>
+  <data name="UserGroup.InvalidPassword" xml:space="preserve">
+    <value>A jelszó nem tartalmazhat sortörést.</value>
+  </data>
+  <data name="UserGroup.HintLine" xml:space="preserve">
+    <value>N: hozzáad  E: felhasználó szerkesztése  D: töröl  P: jelszó  A/R: csoport  /: szűr</value>
+  </data>
+  <data name="UserGroup.RenameGroup" xml:space="preserve">
+    <value>A(z) {0} új neve</value>
+  </data>
+  <data name="CmdTitle.5007140b" xml:space="preserve">
+    <value>Felhasználó- és csoportkezelő</value>
+  </data>
+  <data name="CmdDesc.980a9856" xml:space="preserve">
+    <value>Helyi felhasználók, csoportok, jelszavak és csoporttagságok kezelése.</value>
+  </data>
 </root>
