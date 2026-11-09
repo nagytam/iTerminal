@@ -8353,6 +8353,9 @@
   <data name="Ai.Approval.WriteSummary" xml:space="preserve">
     <value>Die KI möchte {0}. Prüfen Sie unten alle Aktionen.</value>
   </data>
+  <data name="Ai.Approval.ReadFileSummary" xml:space="preserve">
+    <value>Die KI möchte die Vorschau von {0} lesen. Der Vorschauinhalt wird an den konfigurierten KI-Anbieter gesendet (der remote sein kann). Bestätigen Sie, um fortzufahren.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>Kein Befehl passt.</value>
   </data>

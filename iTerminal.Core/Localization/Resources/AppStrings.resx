@@ -8494,6 +8494,9 @@
   <data name="Ai.Approval.WriteSummary" xml:space="preserve">
     <value>AI requests {0}. Review every action below.</value>
   </data>
+  <data name="Ai.Approval.ReadFileSummary" xml:space="preserve">
+    <value>AI requests reading the preview of {0}. Its preview content will be sent to the configured AI provider (which may be remote). Approve to continue.</value>
+  </data>
   <data name="Palette.NoMatch" xml:space="preserve">
     <value>No command matches.</value>
   </data>

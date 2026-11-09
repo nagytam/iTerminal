@@ -8,6 +8,7 @@ using iTerminal.Core.Model;
 using iTerminal.Core.Model.ContentModels;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Archives;
+using iTerminal.Core.Services.Preview;
 using Microsoft.Extensions.AI;
 using System.Text;
 
@@ -31,10 +32,12 @@ public partial class AiPanelTools(
     IArchiveCompressionService? compressionService = null,
     IArchiveExtractionService? extractionService = null,
     FileSystemResolver? fileSystemResolver = null,
-    IAiActionApprovalService? approvalService = null)
+    IAiActionApprovalService? approvalService = null,
+    IFilePreviewService? filePreviewService = null)
 {
     /// <summary>The most rows a listing tool returns, so a huge folder cannot swamp the model's context.</summary>
     internal const int MaxListedEntries = 200;
+    private const int MaxReadPreviewCharacters = FilePreviewService.MaxTextBytes;
 
     public IReadOnlyList<AITool> Create() =>
     [
@@ -44,6 +47,8 @@ public partial class AiPanelTools(
             "List the entries a panel shows now (after its filter and sort). Folders end in '/', '>' marks the cursor row, '*' a marked row. panel: left, right, focused or other. max defaults to 100."),
         AIFunctionFactory.Create(GetFocusedEntry, "get_focused_entry",
             "Get the name, size and date of the entry under a panel's cursor."),
+        AIFunctionFactory.Create(ReadPanelFile, "read_panel_file",
+            "Read the quick-view preview of one file in a panel. Omit name to use the cursor entry; otherwise name must exactly match a visible file. Every read requires app approval because the preview content is sent to the configured AI provider, which may be remote. panel: left, right, focused (default) or other."),
         AIFunctionFactory.Create(GetMarkedEntries, "get_marked_entries",
             "List the names of the entries marked in a panel."),
         AIFunctionFactory.Create(MoveCursorToEntry, "move_cursor_to_entry",
@@ -202,6 +207,97 @@ public partial class AiPanelTools(
         }
         IEntry? entry = model.GetFocusedEntry();
         return entry is null ? "Nothing is under the cursor." : $"{DescribeEntry(entry)}\nUrl: {entry.Url?.FullUrl}";
+    }
+
+    internal async Task<string> ReadPanelFile(string? name = null, string? panel = null, CancellationToken cancellationToken = default)
+    {
+        if (!TryPanel(panel, out IContentModel model, out string error))
+        {
+            return error;
+        }
+        if (fileSystemResolver is null || filePreviewService is null)
+        {
+            return "Error: file preview is not available.";
+        }
+        if (approvalService is null)
+        {
+            return "Error: AI action approval is unavailable; file content was not read.";
+        }
+
+        IEntry? entry;
+        if (name is null)
+        {
+            entry = model.GetFocusedEntry();
+        }
+        else
+        {
+            string wanted = name.Trim();
+            if (!IsPlainName(wanted))
+            {
+                return "Error: give an exact visible file name without path separators, or omit the name to use the cursor.";
+            }
+
+            List<IEntry> matches = [.. model.FilteredEntries
+                .Where(candidate => !FocusedEntry.IsParentEntry(candidate))
+                .Where(candidate => string.Equals(
+                    (candidate.DisplayName ?? candidate.Name ?? string.Empty).Trim(),
+                    wanted,
+                    StringComparison.OrdinalIgnoreCase))];
+            if (matches.Count == 0)
+            {
+                return $"Error: no file named '{wanted}' is listed in this panel.";
+            }
+            if (matches.Count > 1)
+            {
+                return $"Error: '{wanted}' is ambiguous in this panel.";
+            }
+
+            entry = matches[0];
+        }
+
+        if (entry?.Url is null || FocusedEntry.IsParentEntry(entry) || entry is IDriveObjectEntry)
+        {
+            return "Error: put the cursor on a file or name an exact visible file.";
+        }
+        if (entry.Url.PathType != PathType.File)
+        {
+            return $"Error: '{entry.DisplayName}' is not a file.";
+        }
+
+        Url targetUrl = new(entry.Url.FullUrl, entry.Url.DisplayName);
+        IFileSystem fileSystem;
+        try
+        {
+            fileSystem = fileSystemResolver.Resolve(targetUrl, model, "Read");
+        }
+        catch (Exception exception)
+        {
+            return $"Error: cannot read this file: {exception.Message}";
+        }
+
+        string summary = string.Format(
+            UiText.Get(
+                "Ai.Approval.ReadFileSummary",
+                "AI requests reading the preview of {0}. Its preview content will be sent to the configured AI provider (which may be remote). Approve to continue."),
+            targetUrl.FullUrl);
+        AiActionApprovalRequest request = new(summary, [$"Read preview: {targetUrl.FullUrl}"]);
+        if (!await approvalService.ConfirmAsync(request, cancellationToken))
+        {
+            return "Not read: app approval was declined or cancelled.";
+        }
+
+        VirtualDriveEntry previewEntry = new(targetUrl, entry.DisplayName, entry.FileSize)
+        {
+            Size = entry is VirtualDriveEntry virtualEntry ? virtualEntry.Size : 0,
+        };
+        FilePreview preview = await filePreviewService.BuildAsync(previewEntry, fileSystem, 512, cancellationToken);
+        string body = string.Join(Environment.NewLine, preview.Lines);
+        if (body.Length > MaxReadPreviewCharacters)
+        {
+            body = body[..MaxReadPreviewCharacters] + Environment.NewLine + "[Preview truncated at 64 KiB.]";
+        }
+
+        return $"Preview: {preview.Title}{Environment.NewLine}{preview.Summary}{Environment.NewLine}{body}";
     }
 
     internal string GetMarkedEntries(string? panel = null)
