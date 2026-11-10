@@ -38,7 +38,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '11.0.x'
 
       - name: Build the MSI
         run: dotnet build iTerminal.Installer/iTerminal.Installer.wixproj -c Release -p:Version=$env:VERSION
@@ -62,7 +62,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '11.0.x'
 
       - name: Build the packages
         run: >-
