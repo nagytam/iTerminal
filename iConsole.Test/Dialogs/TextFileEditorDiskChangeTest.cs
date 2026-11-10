@@ -93,7 +93,7 @@ public class TextFileEditorDiskChangeTest
         TextFileEditorDialog dialog = await OpenAsync();
         dialog.TextEditorControl.IsDirty = true;
 
-        File.WriteAllText(_path, "two\n");
+        File.WriteAllText(_path, "two\nchanged\n");
         await dialog.CheckDiskAsync();
         dialog.ApplyDiskChange();
 
