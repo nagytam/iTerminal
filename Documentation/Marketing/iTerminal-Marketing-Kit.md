@@ -10,7 +10,7 @@ script and an FAQ. Copy what you need and trim to the channel.
 | --- | --- |
 | Name | iTerminal (its UI framework is called iConsole) |
 | What it is | A two-panel, keyboard-driven file manager and developer toolbox for the terminal |
-| Stack | C# on .NET 10 |
+| Stack | C# on .NET 11 |
 | Platforms | Windows and Linux (self-contained packages: Windows MSI; Linux tar.gz, deb, rpm) |
 | Status | **Beta**. Say so; it builds trust. |
 | License | MIT |
@@ -66,10 +66,10 @@ developer toolbox built in.
 ## 2. Pitches
 
 ### 25 words
-iTerminal is an open-source, two-panel file manager and developer toolbox for the terminal. It treats Git, Docker, SSH, archives and cloud storage as folders. Windows and Linux, C# on .NET 10.
+iTerminal is an open-source, two-panel file manager and developer toolbox for the terminal. It treats Git, Docker, SSH, archives and cloud storage as folders. Windows and Linux, C# on .NET 11.
 
 ### 60 words
-iTerminal brings the two-panel commander workflow to modern systems. Browse local disks, SSH hosts, Docker containers, Git revisions, archives, disk images and cloud storage with the same keys, then copy between any two of them. Built in: a Git client, a full-text document index, a music player, a local AI assistant and a dozen utilities. Open source (MIT), written in C# on .NET 10, runs on Windows and Linux.
+iTerminal brings the two-panel commander workflow to modern systems. Browse local disks, SSH hosts, Docker containers, Git revisions, archives, disk images and cloud storage with the same keys, then copy between any two of them. Built in: a Git client, a full-text document index, a music player, a local AI assistant and a dozen utilities. Open source (MIT), written in C# on .NET 11, runs on Windows and Linux.
 
 ### 150 words
 If you spend your day in a terminal, you probably juggle `ls`, `scp`, `git`, `docker`, `tar`, `find` and a file browser for the odd job. iTerminal puts them side by side in one keyboard-driven, two-panel interface.
@@ -172,7 +172,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 **Subject options**
 - Introducing iTerminal: a two-panel file manager and developer toolbox for your terminal
 - iTerminal beta: browse Git tags, Docker containers and SSH hosts like folders
-- Open source: the commander-style file manager rebuilt in C# for .NET 10
+- Open source: the commander-style file manager rebuilt in C# for .NET 11
 
 **Body**
 
@@ -180,7 +180,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 >
 > I am happy to announce the first public beta of **iTerminal**, an open-source, two-panel,
 > keyboard-driven file manager and developer toolbox for the terminal. It runs on Windows and
-> Linux, it is written in C# on .NET 10, and it is MIT licensed.
+> Linux, it is written in C# on .NET 11, and it is MIT licensed.
 >
 > **The idea:** every place you work is a drive. Local disks, SSH and SMB hosts, FTP and WebDAV,
 > Docker containers, any Git revision, ZIP/7z/RAR archives and ISO/VMDK/WIM/DMG disk images, cloud
@@ -227,7 +227,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 > any other copy. Long operations run as background tasks; key handlers and drawing have a ~200 ms
 > budget, which is enforced in tests.
 >
-> It is C# / .NET 10, MIT licensed, for Windows and Linux (self-contained MSI, tar.gz, deb, rpm).
+> It is C# / .NET 11, MIT licensed, for Windows and Linux (self-contained MSI, tar.gz, deb, rpm).
 > The UI layer is a separate reusable library (iConsole) in the same repo. Optional pieces
 > (git, docker, ffmpeg, 7-Zip, Tesseract, Ollama) are used when present or downloaded on demand.
 >
@@ -238,7 +238,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 
 ### 4.3 Reddit (r/commandline, r/dotnet, r/linux, r/opensource, r/selfhosted)
 
-**Title:** I built an open-source two-panel file manager for the terminal (C#/.NET 10) where Git revisions, Docker containers and SSH hosts are just folders
+**Title:** I built an open-source two-panel file manager for the terminal (C#/.NET 11) where Git revisions, Docker containers and SSH hosts are just folders
 
 > Midnight Commander fans: this is my take on the idea with modern plumbing. Highlights: `git://`
 > browsing without checkout, `docker://` file systems and logs, archives and disk images as
@@ -251,7 +251,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 ### 4.4 Social posts
 
 **Short (X / Mastodon / Bluesky)**
-> Meet iTerminal: an open-source, two-panel file manager for your terminal. Git tags, Docker containers, SSH hosts, archives and cloud storage all open as folders. C# / .NET 10, Windows + Linux, MIT. Beta, feedback welcome. https://github.com/nagytam/iTerminal
+> Meet iTerminal: an open-source, two-panel file manager for your terminal. Git tags, Docker containers, SSH hosts, archives and cloud storage all open as folders. C# / .NET 11, Windows + Linux, MIT. Beta, feedback welcome. https://github.com/nagytam/iTerminal
 
 **Variants**
 - *Git angle:* Browse any Git commit or tag without checking it out, then copy files out with F5. That is `git://` in iTerminal. https://github.com/nagytam/iTerminal
@@ -263,7 +263,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 > Today I am releasing the first public beta of iTerminal, an open-source file manager and
 > developer toolbox for the terminal. I built it to bring the two-panel commander workflow to
 > modern systems and to make everyday infrastructure (Git, Docker, SSH, archives, cloud storage)
-> browsable like folders. It is written in C# on .NET 10, MIT licensed, and runs on Windows and
+> browsable like folders. It is written in C# on .NET 11, MIT licensed, and runs on Windows and
 > Linux. If you work in terminals, I would value your feedback: https://github.com/nagytam/iTerminal
 
 ### 4.5 Blog post outline ("Why I built iTerminal")
@@ -278,7 +278,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 
 **Title:** iTerminal needs you: good first issues for C#/.NET developers
 
-> iTerminal is an open-source terminal file manager written in C# on .NET 10, and it is now open
+> iTerminal is an open-source terminal file manager written in C# on .NET 11, and it is now open
 > for contributions. You do not need to understand all of it: the code is split into a reusable UI
 > framework (`iConsole`), the application behaviour (`iTerminal.Core`) and a thin executable, and
 > each subsystem has a write-up in `docs/architecture/`.
@@ -325,7 +325,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 > Hello `<name>`,
 >
 > I maintain iTerminal, an open-source (MIT) two-panel file manager and developer toolbox for the
-> terminal, built in C# on .NET 10 for Windows and Linux. It lets engineers browse and copy between
+> terminal, built in C# on .NET 11 for Windows and Linux. It lets engineers browse and copy between
 > SSH hosts, Docker containers, Git revisions, archives and cloud storage with one set of keys.
 >
 > I am looking for sponsors to fund AI-assisted development and maintainer time. In return:
@@ -356,7 +356,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 | 10 | Developer toolbox | Git client, Docker, solution viewer, package manager, Ctrl+O shell |
 | 11 | Search and knowledge | Full-text document index, OCR, encyclopedia, translator |
 | 12 | Local AI | Ollama assistant bar, runs on your machine |
-| 13 | Under the hood | C#/.NET 10, iConsole, layered rendering, plug-in input drivers |
+| 13 | Under the hood | C#/.NET 11, iConsole, layered rendering, plug-in input drivers |
 | 14 | Quality | Unit tests and end-to-end suite on a virtual terminal |
 | 15 | Build it with us | Contribution paths: bug fix, drive, viewer, translation; docs per subsystem; tests as a safety net |
 | 16 | Fuel it | Sponsorship: what it funds (AI budget, review time, CI and signing), tiers, transparency report |
@@ -393,7 +393,7 @@ Tic-Tac-Toe, Chess (full rules, with a computer opponent), Go (9x9 to 19x19), Ni
 - **Small, bounded entry points.** Drives, viewers, games, dialogs and translations are separate, self-contained pieces.
 - **Documented architecture.** One write-up per subsystem in `docs/architecture/`, plus a list of easy-to-break rules in `CLAUDE.md`.
 - **A real safety net.** Unit tests per project and an end-to-end suite that boots the whole app on a virtual terminal.
-- **Modern C#.** .NET 10, nullable enabled, async-first, constructor injection, an `.editorconfig`.
+- **Modern C#.** .NET 11, nullable enabled, async-first, constructor injection, an `.editorconfig`.
 - **Visible results.** A change appears in a running app within minutes, and the project is small enough for a maintainer to notice it.
 - **A reusable framework.** Work on `iConsole` benefits anyone who builds a text UI in C#.
 
@@ -506,7 +506,7 @@ infrastructure. Thank you to all [sponsors](SPONSORS.md).
 
 **Is it free?** Yes. MIT licence, free for personal and commercial use.
 
-**Which platforms?** Windows and Linux. Released packages are self-contained, so no .NET install is needed. Building from source needs the .NET 10 SDK.
+**Which platforms?** Windows and Linux. Released packages are self-contained, so no .NET install is needed. Building from source needs the .NET 11 SDK.
 
 **Is it stable?** It is in beta. Keep backups of anything you cannot afford to lose.
 

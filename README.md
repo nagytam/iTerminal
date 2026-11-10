@@ -2,7 +2,7 @@
 
 > **BETA:** iTerminal is in beta. Expect rough edges and changes between releases, and keep backups of anything you cannot afford to lose.
 
-A two-panel, keyboard-driven file manager and developer toolbox for the terminal, written in C# on .NET 10. It runs on Windows and Linux and is built on `iConsole`, a reusable text-UI framework that lives in the same repository.
+A two-panel, keyboard-driven file manager and developer toolbox for the terminal, written in C# on .NET 11. It runs on Windows and Linux and is built on `iConsole`, a reusable text-UI framework that lives in the same repository.
 
 ## Features
 
@@ -53,7 +53,7 @@ A two-panel, keyboard-driven file manager and developer toolbox for the terminal
 - Calculator, unit converter, weather, process/task/disk/network/system managers, network browser, toast notifications
 
 ## Requirements
-- .NET 10 SDK to build; released packages are self-contained
+- .NET 11 SDK to build; released packages are self-contained
 - Optional: `git`, `docker`, `ffmpeg`, 7-Zip, Tesseract for the features that use them. The AI bar's Ollama server and its model are downloaded by iTerminal (Tools > Runtime Dependencies) unless one already answers at the configured address
 
 ## Build, test and run

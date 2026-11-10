@@ -178,7 +178,7 @@ public class FilePanelRefreshTask : BackgroundTask
                     var dtos = entries.Select(e => new CachedEntryDto(e is FileSystemEntry f ? f.Url.DisplayName : e.Url.DisplayName, e.Url.FullUrl)).ToList();
                     var json = JsonSerializer.Serialize(dtos);
                     var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                    ctx.Database.ExecuteSqlInterpolated($@"
+                    ctx.Database.ExecuteSql($@"
 INSERT INTO FolderContentsCache(Path, SavedAtUtc, ContentJson)
 VALUES ({Url.Path}, {nowMs}, {json})
 ON CONFLICT(Path) DO UPDATE SET

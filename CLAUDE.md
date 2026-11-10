@@ -32,7 +32,7 @@ dotnet build iTerminal.Packaging.Linux/iTerminal.Packaging.Linux.proj -p:Version
 dotnet build iTerminal.Packaging.Linux/iTerminal.Packaging.Linux.proj -p:Version=1.2.3 -p:Runtimes="linux-x64;linux-arm64"
 ```
 
-Targets `net10.0`, nullable enabled. The `.slnx` is the source of truth for the project set; `iConsole.Inputs.Posix.Test` is marked non-building there (it only compiles on Linux). `Tools/clean.cmd` wipes all `bin`/`obj`/`TestResults` folders.
+Targets `net11.0`, nullable enabled. The `.slnx` is the source of truth for the project set; `iConsole.Inputs.Posix.Test` is marked non-building there (it only compiles on Linux). `Tools/clean.cmd` wipes all `bin`/`obj`/`TestResults` folders.
 
 Runtime state lives outside the repo: the SQLite database (settings, folder cache, music library index, document index, vault) is at `%APPDATA%/iTerminal/iTerminal.sqlite`, created on first run by `DatabaseInitializationHostedService`. The `DataDirectory` configuration key (`iTerminalApplicationBuilderExtension.DataDirectoryKey`) moves that folder — database, vault keys and playlists together; the end-to-end tests point it at a temporary folder so a run never touches the user's own.
 

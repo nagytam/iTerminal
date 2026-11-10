@@ -24,7 +24,7 @@ approach before you spend time on it.
 
 ## Getting set up
 
-You need the [.NET 10 SDK](https://dotnet.microsoft.com/download). Optional tools (`git`, `docker`,
+You need the [.NET 11 SDK](https://dotnet.microsoft.com/download). Optional tools (`git`, `docker`,
 `ffmpeg`, 7-Zip, Tesseract) are only needed for the features that use them.
 
 ```bash
