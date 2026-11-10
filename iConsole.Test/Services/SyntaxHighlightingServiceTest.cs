@@ -21,6 +21,7 @@ public class SyntaxHighlightingServiceTest
         Assert.AreEqual("Log", SyntaxHighlightingService.Default.FindByFile("server.log")?.Name);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FindByFile_FallsBackToTheBuiltInLanguages()
     {

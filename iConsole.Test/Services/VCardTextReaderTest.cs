@@ -9,6 +9,7 @@ public class VCardTextReaderTest
 {
     private static IReadOnlyList<string> Read(string text) => VCardTextReader.Read(Encoding.UTF8.GetBytes(text));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EachContact_IsAHeadedBlockOfItsProperties()
     {
@@ -37,6 +38,7 @@ public class VCardTextReaderTest
             Read(card).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AContactWithoutAFormattedName_IsNamedFromTheStructuredName()
     {
@@ -46,6 +48,7 @@ public class VCardTextReaderTest
         Assert.AreEqual("Email: richard@example.com", lines[^1]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFoldedLine_IsJoinedBeforeItIsRead()
     {
@@ -54,6 +57,7 @@ public class VCardTextReaderTest
         Assert.AreEqual("Jane Doe", lines[0]);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AGroupedProperty_IsShownUnderItsBareName()
     {
@@ -62,6 +66,7 @@ public class VCardTextReaderTest
         Assert.IsTrue(lines.Contains("Web: https://example.com"), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void APhoto_IsNotShownAsItsBase64Text()
     {
@@ -71,6 +76,7 @@ public class VCardTextReaderTest
         Assert.IsFalse(lines.Any(l => l.Contains("/9j/")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoContacts_AreSeparatedByABlankLine()
     {
@@ -79,6 +85,7 @@ public class VCardTextReaderTest
         CollectionAssert.AreEqual(new[] { "A", "---", "", "B", "---" }, lines.ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFileWithNoContacts_SaysSo()
     {

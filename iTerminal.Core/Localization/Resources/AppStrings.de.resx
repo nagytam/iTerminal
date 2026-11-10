@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1218,6 +1218,12 @@
   </data>
   <data name="DialogHint.RecallQuestions" xml:space="preserve">
     <value>Bereits gesendete Fragen abrufen</value>
+  </data>
+  <data name="DialogHint.VoiceInputStart" xml:space="preserve">
+    <value>Die Frage diktieren (Mikrofon)</value>
+  </data>
+  <data name="DialogHint.VoiceInputStop" xml:space="preserve">
+    <value>Diktat beenden (Mikrofon)</value>
   </data>
   <data name="DialogHint.ScrollAnswer" xml:space="preserve">
     <value>Die Antwort scrollen</value>
@@ -3483,5 +3489,20 @@
   </data>
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>Link</value>
+  </data>
+  <data name="Startup.StopOther" xml:space="preserve">
+    <value>K drücken, um die andere Instanz zu beenden und ihre Sperrdatei zu entfernen.</value>
+  </data>
+  <data name="Startup.StopOtherRunning" xml:space="preserve">
+    <value>Die andere Instanz wird beendet...</value>
+  </data>
+  <data name="Startup.StopOtherDone" xml:space="preserve">
+    <value>Die andere Instanz wurde beendet. iTerminal neu starten, um die gespeicherte Datenbank zu verwenden.</value>
+  </data>
+  <data name="Startup.StopOtherFailed" xml:space="preserve">
+    <value>Die andere Instanz konnte nicht beendet werden: {0}</value>
+  </data>
+  <data name="DialogHint.StopOtherInstance" xml:space="preserve">
+    <value>Die andere Instanz beenden</value>
   </data>
 </root>

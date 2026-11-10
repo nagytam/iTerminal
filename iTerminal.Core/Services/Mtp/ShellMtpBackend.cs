@@ -8,7 +8,7 @@ namespace iTerminal.Core.Services.Mtp;
 /// <summary>
 /// MTP on Windows through the shell namespace — the same view of a phone Explorer shows under
 /// This PC — driven from PowerShell's <c>Shell.Application</c>. WPD, the API underneath, is a COM
-/// interface with no managed wrapper that targets plain <c>net10.0</c> (the NuGet ones need a
+/// interface with no managed wrapper that targets plain <c>net11.0</c> (the NuGet ones need a
 /// <c>-windows</c> framework, which would end the app's cross-platform build), and the shell
 /// namespace needs nothing but what Windows ships.
 ///

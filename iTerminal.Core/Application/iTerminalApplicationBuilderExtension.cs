@@ -88,6 +88,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<AiChatModel>();
         services.AddSingleton<IUiService, UiService>();
         services.AddSingleton<IAiChatService, AiChatService>();
+        services.AddSingleton<iTerminal.Core.AI.Voice.IVoiceInputService>(_ => OperatingSystem.IsWindows()
+            ? new iTerminal.Core.AI.Voice.WindowsVoiceInputService()
+            : new iTerminal.Core.AI.Voice.NullVoiceInputService());
         services.AddTransient<AiModelDialog>();
         services.AddTransient<AiPromptBar>();
 
@@ -99,8 +102,10 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iConsole.Localization.ILanguageStore, iTerminal.Core.Services.SettingsLanguageStore>();
         services.AddTransient<LanguageDialog>();
 
-        services.AddDbContextFactory<iTerminalDbContext>(options =>
-            options.UseSqlite($"Data Source={databasePath}"));
+        // The first instance uses the database file; a second one finds it locked and gets an in-memory database.
+        services.AddSingleton(provider => new DatabaseLocation(databasePath, provider.GetRequiredService<StartupWarningService>()));
+        services.AddDbContextFactory<iTerminalDbContext>((provider, options) =>
+            options.UseSqlite(provider.GetRequiredService<DatabaseLocation>().ConnectionString));
         services.AddScoped<ICacheService, CacheService>();
         services.AddHostedService<DatabaseInitializationHostedService>();
         services.AddTransient<TerminalMenuBar>();
@@ -341,8 +346,13 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Torrents.ITorrentService>(provider => new iTerminal.Core.Services.Torrents.TorrentService(
             provider.GetRequiredService<ISettingsService>(), databaseDirectory));
         services.AddTransient<iTerminal.Core.Dialogs.Torrents.TorrentManagerDialog>();
-        // Tools > Games: Tic-Tac-Toe, Chess, Go and Nine Men's Morris. The dialog is a transient that keeps the games' positions for the run.
-        services.AddTransient<iTerminal.Core.Dialogs.Games.GamesDialog>();
+        // Tools > Games: every game opens in a dialog of its own.
+        services.AddTransient<iTerminal.Core.Dialogs.Games.TicTacToeDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.ChessDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.GoDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.NineMensMorrisDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.SnakeDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Games.TetrisDialog>();
         // Ctrl+F12 properties, Shift+F12 checksums.
         services.AddSingleton<iTerminal.Core.Services.Properties.IFilePropertiesService, iTerminal.Core.Services.Properties.FilePropertiesService>();
         services.AddSingleton<iTerminal.Core.Services.Checksums.IChecksumService, iTerminal.Core.Services.Checksums.ChecksumService>();

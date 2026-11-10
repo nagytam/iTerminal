@@ -9,6 +9,7 @@ public class ICalendarTextReaderTest
 {
     private static IReadOnlyList<string> Read(string text) => ICalendarTextReader.Read(Encoding.UTF8.GetBytes(text));
 
+    [Timeout(60_000)]
     [DataTestMethod]
     [DataRow("DTSTART:20260301", "  Start: 2026-03-01 (all day)")]
     [DataRow("DTSTART;VALUE=DATE:20260301", "  Start: 2026-03-01 (all day)")]
@@ -22,6 +23,7 @@ public class ICalendarTextReaderTest
         CollectionAssert.Contains(lines.ToArray(), expected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnEvent_ShowsItsSummaryDatesAndOrganizerWithoutMailto()
     {
@@ -56,6 +58,7 @@ public class ICalendarTextReaderTest
             Read(calendar).ToArray());
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AnAlarm_IsNestedUnderItsEvent()
     {
@@ -67,6 +70,7 @@ public class ICalendarTextReaderTest
         CollectionAssert.Contains(lines.ToArray(), "    Action: DISPLAY");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMultiLineDescription_ContinuesOnIndentedLines()
     {
@@ -78,6 +82,7 @@ public class ICalendarTextReaderTest
         CollectionAssert.Contains(lines.ToArray(), "    2. Hiring");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AllDayEventAndTask_AreHeadedByTheirKind()
     {
@@ -91,6 +96,7 @@ public class ICalendarTextReaderTest
         CollectionAssert.Contains(lines.ToArray(), "  Due: 2026-04-01 12:00");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFileWithNoCalendarItems_SaysSo()
     {

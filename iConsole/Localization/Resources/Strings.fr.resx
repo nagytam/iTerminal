@@ -865,4 +865,10 @@
   <data name="Hdf.Hint.Dimension" xml:space="preserve">
     <value>Choisir la dimension active</value>
   </data>
+  <data name="Editor.UnsavedMessage" xml:space="preserve">
+    <value>{0} contient des modifications non enregistrées.</value>
+  </data>
+  <data name="Editor.SaveBeforeClosing" xml:space="preserve">
+    <value>Les enregistrer avant de fermer ?</value>
+  </data>
 </root>

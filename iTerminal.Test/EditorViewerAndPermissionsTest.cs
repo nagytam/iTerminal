@@ -254,6 +254,7 @@ public class EditorViewerAndPermissionsTest
         await _app.WaitForTextAsync("opens ftp://ftp.example.com/");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public async Task CtrlShiftU_UpperCasesTheSelectionInTheEditor()
     {

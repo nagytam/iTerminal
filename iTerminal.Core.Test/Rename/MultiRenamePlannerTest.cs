@@ -8,6 +8,7 @@ public class MultiRenamePlannerTest
     private static IReadOnlyList<RenameRow> Plan(IEnumerable<(string Old, string New)> entries, params string[] folder) =>
         MultiRenamePlanner.Plan([.. entries], folder);
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANewNameNoOneElseHoldsIsOk()
     {
@@ -16,6 +17,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Ok, rows.Single().Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheSameNameIsUnchanged()
     {
@@ -24,6 +26,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Unchanged, rows.Single().Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ABlankNameIsEmpty()
     {
@@ -31,6 +34,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Empty, Plan([("a.txt", string.Empty)], "a.txt").Single().Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ASeparatorDotOrDotDotIsAnInvalidName()
     {
@@ -40,6 +44,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.InvalidName, Plan([("a.txt", ".")], "a.txt").Single().Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANameTheBatchVacatesIsBlocked()
     {
@@ -50,6 +55,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Blocked, rows[1].Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ANameAnotherEntryInTheFolderHoldsIsExists()
     {
@@ -58,6 +64,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Exists, rows.Single().Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TwoRowsWithOneNewNameAreDuplicates()
     {
@@ -67,6 +74,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Duplicate, rows[1].Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void DuplicatesIgnoreCase()
     {
@@ -76,6 +84,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Duplicate, rows[1].Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACaseOnlyChangeIsCaseOnlyAndNotRun()
     {
@@ -85,6 +94,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.CaseOnly, rows.Single().Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void ACaseVariantOfABatchNameDoesNotBlockAnotherName()
     {
@@ -96,6 +106,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Ok, free.Single().Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WindowsNameRulesRefuseTrailingDotsAndReservedNames()
     {
@@ -110,6 +121,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Ok, OnWindows("report.txt").Single().Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutWindowsRulesTheseNamesAreAllowed()
     {
@@ -117,6 +129,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Ok, MultiRenamePlanner.Plan([("a.txt", "report.")], ["a.txt"]).Single().Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void UnchangedWinsOverExists()
     {
@@ -126,6 +139,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Unchanged, rows.Single().Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void BlockedWinsOverDuplicate()
     {
@@ -136,6 +150,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Unchanged, rows[1].Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AProblemRowDoesNotChangeTheOtherRows()
     {
@@ -145,6 +160,7 @@ public class MultiRenamePlannerTest
         Assert.AreEqual(RenameStatus.Empty, rows[1].Status);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void RowsKeepTheBatchOrderAndTheirIndex()
     {

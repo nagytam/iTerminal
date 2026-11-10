@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace iTerminal.Core.Services;
 
 /// <summary>
@@ -8,8 +10,12 @@ public sealed class StartupWarningService : IDisposable
 {
     private readonly List<string> _warnings = [];
     private FileStream? _lockStream;
+    private string? _pidPath;
 
     public IReadOnlyList<string> Warnings => _warnings;
+
+    /// <summary>Extension of the sidecar file next to the lock that names the process holding it.</summary>
+    public const string PidFileSuffix = ".pid";
 
     /// <summary>
     /// Tries to acquire an exclusive lock on <paramref name="lockPath"/>.
@@ -25,19 +31,101 @@ public sealed class StartupWarningService : IDisposable
                 FileMode.OpenOrCreate,
                 FileAccess.ReadWrite,
                 FileShare.None);
-            return true;
         }
         catch (IOException)
         {
             return false;
         }
+
+        // The lock itself cannot be read by the instance that lost it (FileShare.None), so the owner's
+        // process id goes into a sidecar file: that is what lets a second instance offer to stop it.
+        try
+        {
+            _pidPath = lockPath + PidFileSuffix;
+            File.WriteAllText(_pidPath, Environment.ProcessId.ToString());
+        }
+        catch
+        {
+            _pidPath = null;
+        }
+
+        return true;
     }
 
     public void AddWarning(string message) => _warnings.Add(message);
+
+    /// <summary>
+    /// Stops the instance that holds <paramref name="lockPath"/> and removes the lock files, so the next
+    /// start can take the database. Only a process with this program's own name is ever killed — a stale
+    /// pid file may name a process that has since been reused by something unrelated.
+    /// Returns null on success, otherwise a sentence saying why it did not work.
+    /// </summary>
+    public static string? TryStopOtherInstance(string lockPath)
+    {
+        string pidPath = lockPath + PidFileSuffix;
+        try
+        {
+            if (!File.Exists(pidPath) || !int.TryParse(File.ReadAllText(pidPath).Trim(), out int pid))
+            {
+                return "The other instance could not be identified (no process id recorded).";
+            }
+
+            if (pid == Environment.ProcessId)
+            {
+                return "The lock belongs to this instance.";
+            }
+
+            try
+            {
+                using Process other = Process.GetProcessById(pid);
+                using Process self = Process.GetCurrentProcess();
+                if (!string.Equals(other.ProcessName, self.ProcessName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return $"Process {pid} is not an iTerminal instance ({other.ProcessName}); not stopping it.";
+                }
+
+                other.Kill();
+                if (!other.WaitForExit(5000))
+                {
+                    return $"Process {pid} did not exit.";
+                }
+            }
+            catch (ArgumentException)
+            {
+                // Not running any more: only the lock file is left over.
+            }
+
+            // The OS releases the dead process's handle a moment after it exits.
+            for (int attempt = 0; attempt < 20; attempt++)
+            {
+                try
+                {
+                    if (File.Exists(lockPath)) File.Delete(lockPath);
+                    if (File.Exists(pidPath)) File.Delete(pidPath);
+                    return null;
+                }
+                catch (IOException)
+                {
+                    Thread.Sleep(100);
+                }
+            }
+
+            return "The lock file is still in use and could not be removed.";
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
+    }
 
     public void Dispose()
     {
         _lockStream?.Dispose();
         _lockStream = null;
+        if (_pidPath is not null)
+        {
+            try { File.Delete(_pidPath); } catch { }
+            _pidPath = null;
+        }
     }
 }

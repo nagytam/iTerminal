@@ -190,6 +190,7 @@ public class DialogHintsWholeTest
         Assert.AreEqual(0, faulty.Count, string.Join(Environment.NewLine, faulty.Take(30)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDialogSweep_FindsTheDialogsOfTheApplication()
     {

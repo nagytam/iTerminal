@@ -62,6 +62,7 @@ public class DialogSizeSweepTest
         Assert.AreEqual(0, failed.Count, string.Join(Environment.NewLine, failed.Take(30)));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheDialogSizeSweep_FindsTheDialogsOfTheApplication()
     {

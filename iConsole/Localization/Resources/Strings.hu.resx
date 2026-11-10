@@ -865,4 +865,10 @@
   <data name="Hdf.Hint.Dimension" xml:space="preserve">
     <value>Az aktív dimenzió kiválasztása</value>
   </data>
+  <data name="Editor.UnsavedMessage" xml:space="preserve">
+    <value>A(z) {0} módosításai nincsenek mentve.</value>
+  </data>
+  <data name="Editor.SaveBeforeClosing" xml:space="preserve">
+    <value>Menti őket bezárás előtt?</value>
+  </data>
 </root>

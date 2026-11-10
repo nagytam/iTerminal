@@ -47,7 +47,12 @@ public class UiService : IUiService
             "encyclopedia" or "wikipedia" or "wiki" or "britannica" or "dictionary" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog>(),
             "benchmark" or "performance" or "performance_benchmark" or "speed_test" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog>(),
             "contacts" or "contact" or "contact_manager" or "address_book" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>(),
-            "games" or "game" or "chess" or "go" or "tictactoe" or "morris" or "snake" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.GamesDialog>(),
+            "games" or "game" or "tictactoe" or "tic-tac-toe" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.TicTacToeDialog>(),
+            "chess" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.ChessDialog>(),
+            "go" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.GoDialog>(),
+            "morris" or "nine_mens_morris" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.NineMensMorrisDialog>(),
+            "snake" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.SnakeDialog>(),
+            "tetris" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Games.TetrisDialog>(),
             "translator" or "translate" or "translation" => _serviceProvider.GetRequiredService<iTerminal.Core.Dialogs.Translator.TranslatorDialog>(),
             _ => null
         };

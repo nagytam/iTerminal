@@ -1,4 +1,4 @@
-using iTerminal.Core.Services.BackgroundStart;
+﻿using iTerminal.Core.Services.BackgroundStart;
 using iConsole.Localization;
 using iTerminal.Core.Helper;
 using iConsole.Buffers;
@@ -9,6 +9,7 @@ using iConsole.Display;
 using iConsole.Helper;
 using iConsole.Services;
 using iTerminal.Core.AI;
+using iTerminal.Core.AI.Voice;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Controls.Contents;
 using iTerminal.Core.Dialogs;
@@ -67,8 +68,12 @@ public class AiPromptBar : Window
         AiModelDialog aiModelDialog,
         IDateTimeProviderService dateTimeProviderService,
         IThemeService themeService,
-        IBackgroundStartService? backgroundStart = null) : base(themeService)
+        IBackgroundStartService? backgroundStart = null,
+        IVoiceInputService? voiceInput = null) : base(themeService)
     {
+        _voice = voiceInput ?? new NullVoiceInputService();
+        _voice.TextRecognized += OnVoiceText;
+        _voice.ListeningChanged += OnVoiceListeningChanged;
         _backgroundStart = backgroundStart;
         _model = model;
         _chatService = chatService;
@@ -76,6 +81,7 @@ public class AiPromptBar : Window
         _wasCollapsed = IsCollapsed;
         CanFocus = true;
         AddCommand(new AiModelDialogCommand(aiModelDialog));
+        AddCommand(new ToggleVoiceInputCommand(this));
         AddCommand(new TabForwardCommand());
         AddCommand(new TabBackwardCommand());
 
@@ -90,6 +96,54 @@ public class AiPromptBar : Window
     }
 
     private readonly IBackgroundStartService? _backgroundStart;
+    private readonly IVoiceInputService _voice;
+
+    /// <summary>Columns of the mic button on the first row, set by the last draw; empty while it is not shown.</summary>
+    private int _micLeft;
+    private int _micWidth;
+
+    /// <summary>Narrower than this and the prompt keeps the whole row: the button is not worth the room.</summary>
+    private const int MinWidthForMicButton = 40;
+
+    /// <summary>Switches dictation on or off (Ctrl+F7, or a click on the mic button).</summary>
+    public void ToggleVoiceInput()
+    {
+        if (_voice.IsListening)
+        {
+            _voice.Stop();
+        }
+        else if (!_voice.Start())
+        {
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>A recognized phrase lands at the end of the question, as pasted text does.</summary>
+    private void OnVoiceText(object? sender, string text)
+    {
+        var current = _model.Input;
+        _model.Input = current.Length == 0 || current.EndsWith(' ') ? current + text : current + " " + text;
+    }
+
+    private void OnVoiceListeningChanged(object? sender, EventArgs e) => StateHasChanged();
+
+    /// <summary>The label of the mic button: its state, and the key that flips it.</summary>
+    internal string MicButtonText()
+    {
+        if (!_voice.IsAvailable)
+        {
+            return " [Mic: n/a] ";
+        }
+
+        if (_voice.IsListening)
+        {
+            return " [● Listening - Ctrl+F7] ";
+        }
+
+        return _voice.UnavailableReason.Length > 0
+            ? $" [Mic: {_voice.UnavailableReason} - Ctrl+F7] "
+            : " [Mic - Ctrl+F7] ";
+    }
 
     /// <summary>The local AI server starts when the bar is first focused, or as configured (BackgroundStart.OllamaServer).</summary>
     protected override void OnFocusChanged()
@@ -178,6 +232,12 @@ public class AiPromptBar : Window
         yield return ("Esc", UiText.Get("DialogHint.ClearQuestionCancelAnswer", "Clear the question, or cancel the answer"));
         yield return ("Up/Down", UiText.Get("DialogHint.RecallQuestions", "Recall the questions already sent"));
         yield return ("PageUp/PageDown", UiText.Get("DialogHint.ScrollAnswer", "Scroll the answer"));
+        if (_voice.IsAvailable)
+        {
+            yield return ("Ctrl+F7", _voice.IsListening
+                ? UiText.Get("DialogHint.VoiceInputStop", "Stop dictating (microphone)")
+                : UiText.Get("DialogHint.VoiceInputStart", "Dictate the question (microphone)"));
+        }
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -295,6 +355,21 @@ public class AiPromptBar : Window
         }
     }
 
+    public override async Task<bool> HandleMouseEventAsync(MouseEvent mouseEvent)
+    {
+        var isHandled = await base.HandleMouseEventAsync(mouseEvent);
+        if (!isHandled && _model.IsAvailable && _micWidth > 0 && mouseEvent.LeftClicked && mouseEvent.WheelDelta == 0
+            && mouseEvent.Position.Y == AbsolutePosition.Y
+            && mouseEvent.Position.X >= _micLeft && mouseEvent.Position.X < _micLeft + _micWidth)
+        {
+            SetFocus();
+            ToggleVoiceInput();
+            return true;
+        }
+
+        return isHandled;
+    }
+
     private int ResponseRows => Math.Max(0, (int)ViewSize.Height - 1);
 
     /// <summary>Index of the first response line on screen.</summary>
@@ -400,7 +475,8 @@ public class AiPromptBar : Window
         // Prompt label: whatever the user has typed so far, filling the rest of the row — its *end*
         // kept in view once it no longer fits, since that is where the typing is.
         var promptColumn = ModelLabelColumn + modelWidth;
-        var promptWidth = Math.Max(0, width - promptColumn);
+        var micText = width >= MinWidthForMicButton ? MicButtonText() : string.Empty;
+        var promptWidth = Math.Max(0, width - promptColumn - micText.Length);
         _promptLabel.Text = PromptLine.Format(" ", _model.Input, promptWidth);
         _promptLabel.ForegroundColor = inputFg;
         _promptLabel.BackgroundColor = bg;
@@ -411,6 +487,16 @@ public class AiPromptBar : Window
         _spinner.Draw(buffer);
         _modelLabel.Draw(buffer);
         _promptLabel.Draw(buffer);
+
+        // The mic button, at the right end of the first row: lit while listening.
+        _micWidth = micText.Length;
+        _micLeft = (int)AbsolutePosition.X + promptColumn + promptWidth;
+        if (micText.Length > 0)
+        {
+            var micFg = _voice.IsListening ? Color.Red : _voice.IsAvailable ? inputFg : Color.DarkGray;
+            buffer.Write(ZOrder, new Position(_micLeft, AbsolutePosition.Y), new Size(micText.Length, 1),
+                new ConxelString(micText, micFg, bg));
+        }
 
         // Response rows (remaining height)
         if (ViewSize.Height > 1)

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1218,6 +1218,12 @@
   </data>
   <data name="DialogHint.RecallQuestions" xml:space="preserve">
     <value>Recall the questions already sent</value>
+  </data>
+  <data name="DialogHint.VoiceInputStart" xml:space="preserve">
+    <value>Dictate the question (microphone)</value>
+  </data>
+  <data name="DialogHint.VoiceInputStop" xml:space="preserve">
+    <value>Stop dictating (microphone)</value>
   </data>
   <data name="DialogHint.ScrollAnswer" xml:space="preserve">
     <value>Scroll the answer</value>
@@ -3483,5 +3489,20 @@
   </data>
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>link</value>
+  </data>
+  <data name="Startup.StopOther" xml:space="preserve">
+    <value>Press K to stop the other instance and remove its lock file.</value>
+  </data>
+  <data name="Startup.StopOtherRunning" xml:space="preserve">
+    <value>Stopping the other instance...</value>
+  </data>
+  <data name="Startup.StopOtherDone" xml:space="preserve">
+    <value>The other instance was stopped. Restart iTerminal to use the saved database.</value>
+  </data>
+  <data name="Startup.StopOtherFailed" xml:space="preserve">
+    <value>The other instance could not be stopped: {0}</value>
+  </data>
+  <data name="DialogHint.StopOtherInstance" xml:space="preserve">
+    <value>Stop the other instance</value>
   </data>
 </root>

@@ -39,10 +39,15 @@ public class Dialog : PopUpWindow
     {
         base.OnInitializeLayout();
 
-        if (Controls.Any(c => c.CanFocus))
-        {
-            Controls.First(c => c.CanFocus).SetFocus();
-        }
+        // The focus opens on the first control the user can act on. A disabled control takes no keys
+        // and a read-only text box (the path a Delete dialog only shows) cannot be typed into, so
+        // landing on either left a dialog that looked inert until Tab was pressed — Tab itself
+        // already passes over disabled controls. Fall back to the old rule when nothing else is left.
+        var snapshot = Controls.AsSnapshot();
+        IControl? first = snapshot.FirstOrDefault(c => c.CanFocus && c.IsEnabled && c is not TextBox { IsReadOnly: true })
+            ?? snapshot.FirstOrDefault(c => c.CanFocus && c.IsEnabled)
+            ?? snapshot.FirstOrDefault(c => c.CanFocus);
+        first?.SetFocus();
     }
 
     /// <summary>

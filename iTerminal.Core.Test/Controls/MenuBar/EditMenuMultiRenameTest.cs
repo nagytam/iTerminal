@@ -15,6 +15,7 @@ public class EditMenuMultiRenameTest
     private static IReadOnlyList<string> EntryTexts(EditMenuItem menu) =>
         [.. menu.Controls.AsSnapshot().OfType<MenuItem>().Select(item => item.Text)];
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheEditMenuOffersMultiRenameWhenItsDialogIsGiven()
     {
@@ -26,6 +27,7 @@ public class EditMenuMultiRenameTest
         CollectionAssert.Contains(EntryTexts(menu).ToList(), "Multi-rename");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void TheEntryFollowsRenameAndNamesNoShortcut()
     {
@@ -38,6 +40,7 @@ public class EditMenuMultiRenameTest
         Assert.IsFalse(texts.Single(text => text == "Multi-rename").Contains('\t'));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void WithoutTheDialogTheEntryIsAbsent()
     {

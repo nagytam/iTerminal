@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1218,6 +1218,12 @@
   </data>
   <data name="DialogHint.RecallQuestions" xml:space="preserve">
     <value>A már elküldött kérdések visszahívása</value>
+  </data>
+  <data name="DialogHint.VoiceInputStart" xml:space="preserve">
+    <value>A kérdés diktálása (mikrofon)</value>
+  </data>
+  <data name="DialogHint.VoiceInputStop" xml:space="preserve">
+    <value>A diktálás leállítása (mikrofon)</value>
   </data>
   <data name="DialogHint.ScrollAnswer" xml:space="preserve">
     <value>A válasz görgetése</value>
@@ -3483,5 +3489,20 @@
   </data>
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>hivatkozás</value>
+  </data>
+  <data name="Startup.StopOther" xml:space="preserve">
+    <value>Nyomja meg a K-t a másik példány leállításához és a zárolófájl törléséhez.</value>
+  </data>
+  <data name="Startup.StopOtherRunning" xml:space="preserve">
+    <value>A másik példány leállítása...</value>
+  </data>
+  <data name="Startup.StopOtherDone" xml:space="preserve">
+    <value>A másik példány leállt. Indítsa újra az iTerminalt a mentett adatbázis használatához.</value>
+  </data>
+  <data name="Startup.StopOtherFailed" xml:space="preserve">
+    <value>A másik példányt nem sikerült leállítani: {0}</value>
+  </data>
+  <data name="DialogHint.StopOtherInstance" xml:space="preserve">
+    <value>A másik példány leállítása</value>
   </data>
 </root>

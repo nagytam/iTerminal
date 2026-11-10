@@ -27,6 +27,7 @@ public class MboxTextReaderTest
 
     private static IReadOnlyList<string> Read(string text) => MboxTextReader.Read(Encoding.UTF8.GetBytes(text));
 
+    [Timeout(60_000)]
     [TestMethod]
     public void EachMessage_IsNumberedAndShownWithItsHeaders()
     {
@@ -38,6 +39,7 @@ public class MboxTextReaderTest
         CollectionAssert.Contains(lines.ToArray(), "Subject: Re: First");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void QuotedFromLines_AreUnquoted()
     {
@@ -47,6 +49,7 @@ public class MboxTextReaderTest
         Assert.IsFalse(lines.Any(l => l.StartsWith(">From")));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AMessageLine_IsNotMistakenForAMessageStart()
     {
@@ -56,6 +59,7 @@ public class MboxTextReaderTest
         Assert.IsTrue(lines.Contains("Message 1 of 1"), string.Join("\n", lines));
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void AFileWithNoMessages_SaysSo()
     {

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1218,6 +1218,12 @@
   </data>
   <data name="DialogHint.RecallQuestions" xml:space="preserve">
     <value>Rappeler les questions déjà envoyées</value>
+  </data>
+  <data name="DialogHint.VoiceInputStart" xml:space="preserve">
+    <value>Dicter la question (microphone)</value>
+  </data>
+  <data name="DialogHint.VoiceInputStop" xml:space="preserve">
+    <value>Arrêter la dictée (microphone)</value>
   </data>
   <data name="DialogHint.ScrollAnswer" xml:space="preserve">
     <value>Faire défiler la réponse</value>
@@ -3483,5 +3489,20 @@
   </data>
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>lien</value>
+  </data>
+  <data name="Startup.StopOther" xml:space="preserve">
+    <value>Appuyez sur K pour arrêter l&apos;autre instance et supprimer son fichier de verrou.</value>
+  </data>
+  <data name="Startup.StopOtherRunning" xml:space="preserve">
+    <value>Arrêt de l&apos;autre instance...</value>
+  </data>
+  <data name="Startup.StopOtherDone" xml:space="preserve">
+    <value>L&apos;autre instance a été arrêtée. Redémarrez iTerminal pour utiliser la base de données enregistrée.</value>
+  </data>
+  <data name="Startup.StopOtherFailed" xml:space="preserve">
+    <value>Impossible d&apos;arrêter l&apos;autre instance : {0}</value>
+  </data>
+  <data name="DialogHint.StopOtherInstance" xml:space="preserve">
+    <value>Arrêter l&apos;autre instance</value>
   </data>
 </root>

@@ -6,7 +6,7 @@
 - Prefer extending the existing dependency-injection setup in `iConsole.Application.iConsoleApplicationBuilderExtension` and `iTerminal.Core.Application.iTerminalApplicationBuilderExtension` instead of adding ad-hoc construction logic.
 
 ## C# and project conventions
-- Target modern .NET (`net10.0`) and keep nullable reference types enabled.
+- Target modern .NET (`net11.0`) and keep nullable reference types enabled.
 - Follow the root `.editorconfig`: 4 spaces, CRLF line endings, braces on new lines, accessibility modifiers on non-interface members, and PascalCase for types and members.
 - Prefer explicit types over `var` unless the type is obvious from the right-hand side.
 - Match the existing style in the touched file. The codebase commonly uses file-scoped namespaces, top-level statements for the app entry point, and primary constructors for small command classes.

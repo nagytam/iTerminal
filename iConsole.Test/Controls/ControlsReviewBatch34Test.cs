@@ -88,6 +88,20 @@ public class ControlsReviewBatch34Test
 
     [Timeout(60_000)]
     [TestMethod]
+    public void UnsavedChangesDialog_ALongPathKeepsTheFileNameAndFitsTheDialog()
+    {
+        string path = @"C:\" + string.Join(@"\", Enumerable.Repeat("a-very-long-folder-name", 6)) + @"\notes.txt";
+        UnsavedChangesDialog dialog = new(path, _theme);
+
+        string message = (string)typeof(UnsavedChangesDialog).GetField("_message", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.GetValue(dialog)!;
+
+        Assert.IsTrue(message.Length <= 72, message);
+        Assert.IsTrue(message.Contains(@"\notes.txt"), message);
+        Assert.IsTrue(message.StartsWith("…"), message);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void ContextMenu_KeyHints_AreOfferedOnlyWhileOpen()
     {
         ContextMenu menu = new(Mock.Of<IPopoverService>(), _theme);

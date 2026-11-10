@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1218,6 +1218,12 @@
   </data>
   <data name="DialogHint.RecallQuestions" xml:space="preserve">
     <value>Recuperar las preguntas ya enviadas</value>
+  </data>
+  <data name="DialogHint.VoiceInputStart" xml:space="preserve">
+    <value>Dictar la pregunta (micrófono)</value>
+  </data>
+  <data name="DialogHint.VoiceInputStop" xml:space="preserve">
+    <value>Detener el dictado (micrófono)</value>
   </data>
   <data name="DialogHint.ScrollAnswer" xml:space="preserve">
     <value>Desplazar la respuesta</value>
@@ -3483,5 +3489,20 @@
   </data>
   <data name="Listing.TypeLink" xml:space="preserve">
     <value>enlace</value>
+  </data>
+  <data name="Startup.StopOther" xml:space="preserve">
+    <value>Pulse K para detener la otra instancia y eliminar su archivo de bloqueo.</value>
+  </data>
+  <data name="Startup.StopOtherRunning" xml:space="preserve">
+    <value>Deteniendo la otra instancia...</value>
+  </data>
+  <data name="Startup.StopOtherDone" xml:space="preserve">
+    <value>Se detuvo la otra instancia. Reinicie iTerminal para usar la base de datos guardada.</value>
+  </data>
+  <data name="Startup.StopOtherFailed" xml:space="preserve">
+    <value>No se pudo detener la otra instancia: {0}</value>
+  </data>
+  <data name="DialogHint.StopOtherInstance" xml:space="preserve">
+    <value>Detener la otra instancia</value>
   </data>
 </root>

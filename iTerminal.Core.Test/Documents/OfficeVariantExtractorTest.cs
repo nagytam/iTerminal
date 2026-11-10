@@ -73,6 +73,7 @@ public class OfficeVariantExtractorTest
 
     private static readonly DocumentTextExtractorFactory Factory = new();
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(".docx")]
     [DataRow(".docm")]
@@ -116,6 +117,7 @@ public class OfficeVariantExtractorTest
         Assert.AreEqual(DocumentKind.Office, DocumentTextExtractorFactory.GetKind(path), $"{extension} is not an Office document.");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void VariantList_MatchesTheOfficeExtensionsTheIndexKnows()
     {
@@ -126,6 +128,7 @@ public class OfficeVariantExtractorTest
         }
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(".dotx", "word/document.xml", "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><w:body><w:p><w:r><w:t>Template words</w:t></w:r></w:p></w:body></w:document>")]
     [DataRow(".dotm", "word/document.xml", "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><w:body><w:p><w:r><w:t>Template words</w:t></w:r></w:p></w:body></w:document>")]
@@ -143,6 +146,7 @@ public class OfficeVariantExtractorTest
         StringAssert.Contains(result.Text, "Template words");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow(".ott")]
     [DataRow(".ots")]
@@ -160,6 +164,7 @@ public class OfficeVariantExtractorTest
         StringAssert.Contains(result.Text, "Template words");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     public void FlatOpenDocumentText_IsReadAsItsOwnXml()
     {
@@ -176,6 +181,7 @@ public class OfficeVariantExtractorTest
         StringAssert.Contains(result.Text, "Flat words");
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("sample.doc", "Sample Word Content")]
     [DataRow("sample.dot", "Sample Word Content")]
@@ -198,6 +204,7 @@ public class OfficeVariantExtractorTest
         StringAssert.Contains(result.Text, expected);
     }
 
+    [Timeout(60_000)]
     [TestMethod]
     [DataRow("bad.doc")]
     [DataRow("bad.xls")]

@@ -175,6 +175,8 @@ public sealed class TerminalApp : IAsyncDisposable
 
                 // Nothing reaches outside the machine: no network scan, no WinGet, no quote server.
                 services.AddSingleton<INetworkDiscoveryService, SandboxServices.NetworkDiscovery>();
+                // No microphone is opened by a test run.
+                services.AddSingleton<Core.AI.Voice.IVoiceInputService>(new Core.AI.Voice.NullVoiceInputService());
                 services.AddSingleton<Core.Services.PackageManager.IPackageManagerService, SandboxServices.PackageManager>();
                 services.AddSingleton<Core.Services.RuntimeDependencies.IRuntimeDependencyService, SandboxServices.Dependencies>();
                 services.AddSingleton<Core.Services.Stocks.IStockQuoteProvider, SandboxServices.StockQuotes>();

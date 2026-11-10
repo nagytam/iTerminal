@@ -10,6 +10,7 @@ using static iTerminal.Core.Test.Helper.UiTestHelper;
 namespace iTerminal.Core.Test.Dialogs.Map;
 
 [TestClass]
+[DoNotParallelize]
 public class MapDialogTest
 {
     private IDisposable _clipboardScope = null!;
