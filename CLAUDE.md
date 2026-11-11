@@ -117,6 +117,8 @@ Each improvement goes through `/incremental-improvement` (`.claude/skills/increm
 
 Two more project skills: `/fix-main` (`.claude/skills/fix-main/SKILL.md`) repairs a failing "Build and test" or "Release builds" pipeline on `main` through a branch and PR, and `/compare-console` (`.claude/skills/compare-console/SKILL.md`) adds a survey of other console UI libraries to `docs/architecture/ui-framework/tui-library-comparison.md`.
 
+`.claude/skills` also vendors the C#-relevant subset of the .NET team's [skills](https://github.com/dotnet/skills): C# language, MSBuild, NuGet, testing, diagnostics and .NET 11. `csharp-expert` is the routing entry point, and `.claude/skills/NOTICE.md` records the source commit, license and local changes.
+
 ## Further reference
 
 - [docs/architecture/key-patterns.md](docs/architecture/key-patterns.md): the full list of UI, navigation and state patterns (why a rule exists, with the bug it fixed).
