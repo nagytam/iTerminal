@@ -1,3 +1,5 @@
+using System.IO.Compression;
+
 namespace iTerminal.Test;
 
 /// <summary>
@@ -6,8 +8,7 @@ namespace iTerminal.Test;
 /// </summary>
 [TestClass]
 public class EditorViewerAndPermissionsTest
-{
-    private TerminalApp _app = null!;
+{    private TerminalApp _app = null!;
     private string LfFile => Path.Combine(_app.LeftRoot, "lf.txt");
 
     [TestInitialize]
@@ -55,7 +56,52 @@ public class EditorViewerAndPermissionsTest
         elf[18] = 62;
         File.WriteAllBytes(Path.Combine(left, "tool.elf"), elf);
         File.WriteAllBytes(Path.Combine(left, "broken.exe"), [(byte)'M', (byte)'Z']);
+        File.WriteAllBytes(Path.Combine(left, "report.xps"), XpsPackage());
     });
+
+    /// <summary>A two-page XPS package whose sequence is named through the root relationship, as a real one is.</summary>
+    private static byte[] XpsPackage()
+    {
+        const string ns = "http://schemas.microsoft.com/xps/2005/06";
+        using MemoryStream buffer = new();
+        using (ZipArchive zip = new(buffer, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            Add("_rels/.rels", """
+                <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+                  <Relationship Id="R1" Type="http://schemas.microsoft.com/xps/2005/06/fixedrepresentation" Target="/FixedDocSeq.fdseq"/>
+                </Relationships>
+                """);
+            Add("FixedDocSeq.fdseq", $"""
+                <FixedDocumentSequence xmlns="{ns}">
+                  <DocumentReference Source="Documents/1/FixedDocument.fdoc"/>
+                </FixedDocumentSequence>
+                """);
+            Add("Documents/1/FixedDocument.fdoc", $"""
+                <FixedDocument xmlns="{ns}">
+                  <PageContent Source="Pages/1.fpage"/>
+                  <PageContent Source="Pages/2.fpage"/>
+                </FixedDocument>
+                """);
+            Add("Documents/1/Pages/1.fpage", $"""
+                <FixedPage xmlns="{ns}" Width="816" Height="1056">
+                  <Glyphs OriginX="10" OriginY="50" UnicodeString="First page"/>
+                </FixedPage>
+                """);
+            Add("Documents/1/Pages/2.fpage", $"""
+                <FixedPage xmlns="{ns}" Width="816" Height="1056">
+                  <Glyphs OriginX="10" OriginY="50" UnicodeString="Second page"/>
+                </FixedPage>
+                """);
+
+            void Add(string name, string xml)
+            {
+                using StreamWriter writer = new(zip.CreateEntry(name).Open(), System.Text.Encoding.UTF8);
+                writer.Write(xml);
+            }
+        }
+
+        return buffer.ToArray();
+    }
 
     [TestCleanup]
     public async Task StopAsync() => await _app.DisposeAsync();
@@ -135,6 +181,27 @@ public class EditorViewerAndPermissionsTest
         Assert.IsTrue(_app.Driver.FocusedModal is iConsole.Dialogs.HdfViewerDialog);
         Assert.IsTrue(await _app.PressAsync("Esc"));
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.HdfViewerDialog, "the HDF5 viewer to close");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task F3OnAnXpsFileShowsItsPagesAndControlArrowsMoveBetweenThem()
+    {
+        await _app.SelectEntryAsync("report.xps");
+        Assert.IsTrue(await _app.PressAsync("F3"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.XpsViewerDialog, "the XPS viewer to open");
+        await _app.WaitForTextAsync("First page");
+        await _app.WaitForTextAsync("Page 1 of 2");
+
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Right"));
+        await _app.WaitForTextAsync("Second page");
+        await _app.WaitForTextAsync("Page 2 of 2");
+
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Left"));
+        await _app.WaitForTextAsync("First page");
+
+        Assert.IsTrue(await _app.PressAsync("Esc"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.XpsViewerDialog, "the XPS viewer to close");
     }
 
     [Timeout(120_000)]

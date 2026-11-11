@@ -210,6 +210,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<XmlViewerDialog>();
         services.AddTransient<JsonViewerDialog>();
         services.AddTransient<iConsole.Dialogs.CsvViewerDialog>();
+        services.AddTransient<iConsole.Dialogs.XpsViewerDialog>();
         // The SQLite viewer reads a database through the read-only reader; the reader holds no state.
         services.AddTransient<iConsole.Sqlite.ISqliteDatabaseReader, iTerminal.Core.Services.Sqlite.SqliteDatabaseReader>();
         services.AddTransient<iConsole.Dialogs.SqliteViewerDialog>();
