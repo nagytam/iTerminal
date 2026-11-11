@@ -38,8 +38,11 @@ rather than a path, so a document on an SSH, archive or memory drive reads the s
 - **EPUB** (`EpubTextReader`): `container.xml` names the OPF, the spine orders the XHTML chapters. The markup goes
   through `HtmlTextExtractor`, shared with the e-mail and Kindle readers.
 - **OpenDocument drawings** (`.odg`, `.otg`): one section per page, as presentations are.
-- **XPS and OpenXPS** (`XpsTextReader`, `.xps`, `.oxps`): the `FixedDocumentSequence` gives the documents, each
-  `FixedDocument` its pages, and a page's `Glyphs` runs are grouped into lines by their origin.
+- **XPS and OpenXPS** (`XpsTextReader`, `iConsole/Xps/XpsDocument.cs`, `.xps`, `.oxps`): the package's
+  `fixedrepresentation` relationship names the `FixedDocumentSequence`, which gives the documents, each
+  `FixedDocument` its pages, and a page's `Glyphs` runs are grouped into lines by their origin. Parts are matched by
+  local name, so an OpenXPS package reads the same as an XPS one. F3 opens these files in the page-aware
+  `XpsViewerDialog` (see `dialogs.md`); this reader keeps the flat text the generic viewer and the document index use.
 - **E-mail** (`MimeMessageReader`, `.eml`): the headers unfolded and their RFC 2047 words decoded, the body from
   base64 or quoted-printable in its charset, the plain part preferred over HTML. Attachments are listed by name.
 - **Outlook messages** (`OutlookMessageReader`, `.msg`): the MAPI property streams of the compound file, Unicode

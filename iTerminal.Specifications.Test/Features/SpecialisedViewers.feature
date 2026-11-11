@@ -1,6 +1,6 @@
 @ignore
 Feature: Specialised viewers chosen by F3
-  F3 picks a viewer for the file type: XML, JSON, CSV, SQLite, .NET solutions, web pages, pictures, videos and music.
+  F3 picks a viewer for the file type: XML, JSON, CSV, XPS, SQLite, .NET solutions, web pages, pictures, videos and music.
 
   Background:
     Given iTerminal has just started
@@ -80,6 +80,28 @@ Feature: Specialised viewers chosen by F3
     Given "notes.db" is a plain text file
     When I press "F3" on "notes.db"
     Then the text viewer opens "notes.db"
+
+  Scenario: F3 on an XPS package opens the page viewer
+    Given "report.xps" is under the cursor
+    When I press "F3"
+    Then the XPS viewer shows the first page's text
+    And the status line says "Page 1 of 2"
+
+  Scenario: Ctrl+Right moves to the next page of an XPS package
+    Given the XPS viewer shows "report.xps"
+    When I press "Ctrl+Right"
+    Then the second page's text is shown
+    And the status line says "Page 2 of 2"
+
+  Scenario: An OpenXPS package opens in the XPS viewer too
+    Given "report.oxps" is under the cursor
+    When I press "F3"
+    Then the XPS viewer shows its pages
+
+  Scenario: A broken XPS package says why instead of opening empty
+    Given "broken.xps" is not a zip package
+    When I press "F3"
+    Then the XPS viewer says the document could not be read
 
   Scenario: F3 on a .sln or .slnx file opens the solution viewer
     Given "App.slnx" is under the cursor

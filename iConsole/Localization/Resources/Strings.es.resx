@@ -865,6 +865,36 @@
   <data name="Hdf.Hint.Dimension" xml:space="preserve">
     <value>Elegir la dimensión activa</value>
   </data>
+  <data name="Xps.Picker.Label" xml:space="preserve">
+    <value>Página</value>
+  </data>
+  <data name="Xps.Page.Label" xml:space="preserve">
+    <value>Página {0}</value>
+  </data>
+  <data name="Xps.Page.MultiDocument" xml:space="preserve">
+    <value>Documento {0} · Página {1}</value>
+  </data>
+  <data name="Xps.Status.Page" xml:space="preserve">
+    <value>Página {0} de {1}</value>
+  </data>
+  <data name="Xps.Status.Size" xml:space="preserve">
+    <value> · {0} × {1}</value>
+  </data>
+  <data name="Xps.Page.NoText" xml:space="preserve">
+    <value>Esta página no tiene texto.</value>
+  </data>
+  <data name="Xps.NoPages" xml:space="preserve">
+    <value>Este documento no tiene páginas</value>
+  </data>
+  <data name="Xps.Title" xml:space="preserve">
+    <value>XPS</value>
+  </data>
+  <data name="Xps.Title.Hint" xml:space="preserve">
+    <value>  Ctrl+←/→:página</value>
+  </data>
+  <data name="Xps.Hint.Page" xml:space="preserve">
+    <value>Mostrar la página anterior o siguiente</value>
+  </data>
   <data name="Exe.Title" xml:space="preserve">
     <value>Análisis del ejecutable</value>
   </data>

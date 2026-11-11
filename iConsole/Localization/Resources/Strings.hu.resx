@@ -865,6 +865,36 @@
   <data name="Hdf.Hint.Dimension" xml:space="preserve">
     <value>Az aktív dimenzió kiválasztása</value>
   </data>
+  <data name="Xps.Picker.Label" xml:space="preserve">
+    <value>Oldal</value>
+  </data>
+  <data name="Xps.Page.Label" xml:space="preserve">
+    <value>Oldal {0}</value>
+  </data>
+  <data name="Xps.Page.MultiDocument" xml:space="preserve">
+    <value>Dokumentum {0} · Oldal {1}</value>
+  </data>
+  <data name="Xps.Status.Page" xml:space="preserve">
+    <value>Oldal {0} / {1}</value>
+  </data>
+  <data name="Xps.Status.Size" xml:space="preserve">
+    <value> · {0} × {1}</value>
+  </data>
+  <data name="Xps.Page.NoText" xml:space="preserve">
+    <value>Ennek az oldalnak nincs szövege.</value>
+  </data>
+  <data name="Xps.NoPages" xml:space="preserve">
+    <value>Ennek a dokumentumnak nincsenek oldalai</value>
+  </data>
+  <data name="Xps.Title" xml:space="preserve">
+    <value>XPS</value>
+  </data>
+  <data name="Xps.Title.Hint" xml:space="preserve">
+    <value>  Ctrl+←/→:oldal</value>
+  </data>
+  <data name="Xps.Hint.Page" xml:space="preserve">
+    <value>Az előző vagy a következő oldal megjelenítése</value>
+  </data>
   <data name="Exe.Title" xml:space="preserve">
     <value>Futtatható fájl elemzése</value>
   </data>

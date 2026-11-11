@@ -62,7 +62,8 @@ public class FilePanelFactory(
     iConsole.Dialogs.HdfViewerDialog? hdfViewerDialog = null,
     StreamsDialog? streamsDialog = null,
     iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
-    FileEncryptionDialog? fileEncryptionDialog = null)
+    FileEncryptionDialog? fileEncryptionDialog = null,
+    iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -84,6 +85,7 @@ public class FilePanelFactory(
             sqliteViewerDialog: sqliteViewerDialog,
             hdfViewerDialog: hdfViewerDialog,
             executableAnalysisDialog: executableAnalysisDialog,
+            xpsViewerDialog: xpsViewerDialog,
             solutionViewerDialog: solutionViewerDialog,
             contentLenses: contentLenses,
             musicFileViewerDialog: musicFileViewerDialog,

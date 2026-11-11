@@ -7,6 +7,7 @@ using iConsole.Dialogs;
 using iConsole.Json;
 using iConsole.Sqlite;
 using iConsole.Xml;
+using iConsole.Xps;
 using iConsole.Interfaces;
 using iTerminal.Core.Audio;
 using iTerminal.Core.Dialogs.Dotnet;
@@ -31,7 +32,8 @@ public class ViewFileDialogCommand(
     WebBrowserDialog? webBrowserDialog = null,
     SqliteViewerDialog? sqliteViewerDialog = null,
     HdfViewerDialog? hdfViewerDialog = null,
-    ExecutableAnalysisDialog? executableAnalysisDialog = null) : Command
+    ExecutableAnalysisDialog? executableAnalysisDialog = null,
+    XpsViewerDialog? xpsViewerDialog = null) : Command
 {
     private readonly WebBrowserDialog? _webBrowserDialog = webBrowserDialog;
     private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
@@ -46,6 +48,7 @@ public class ViewFileDialogCommand(
     private readonly SqliteViewerDialog? _sqliteViewerDialog = sqliteViewerDialog;
     private readonly HdfViewerDialog? _hdfViewerDialog = hdfViewerDialog;
     private readonly ExecutableAnalysisDialog? _executableAnalysisDialog = executableAnalysisDialog;
+    private readonly XpsViewerDialog? _xpsViewerDialog = xpsViewerDialog;
 
     public override string Title => "View";
     public override string Description => "Open the selected file in the viewer.";
@@ -157,6 +160,16 @@ public class ViewFileDialogCommand(
         {
             _csvViewerDialog.Url = focusedFileUrl;
             await (Control?.ShowDialogAsync(_csvViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // An XPS or OpenXPS package opens in the XPS viewer, from any drive: it is read as bytes like an XML document.
+        if (_xpsViewerDialog is not null
+            && focusedFileUrl is not null
+            && XpsFileTypes.IsXpsFile(focusedFileUrl.Path))
+        {
+            _xpsViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_xpsViewerDialog) ?? Task.CompletedTask);
             return;
         }
 

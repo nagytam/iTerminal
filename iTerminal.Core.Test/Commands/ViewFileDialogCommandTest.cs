@@ -844,6 +844,38 @@ public class ViewFileDialogCommandTest
         Assert.AreEqual(path, fileViewer.Url?.Path);
     }
 
+    [TestMethod]
+    [Timeout(60_000)]
+    [DataRow(".xps")]
+    [DataRow(".oxps")]
+    [DataRow(".XPS")]
+    public void ExecuteAsync_WithAnXpsPackage_PointsTheXpsViewerAtIt(string extension)
+    {
+        var themeService = CreateThemeService();
+        var xpsDialog = new iConsole.Dialogs.XpsViewerDialog(Mock.Of<IContentModelService>(), themeService);
+        var fileViewer = CreateDialog(themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}{extension}");
+        File.WriteAllBytes(path, [0x50, 0x4B, 0x03, 0x04]);
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                fileViewer,
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                xpsViewerDialog: xpsDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, xpsDialog.Url?.Path);
+            Assert.IsNull(fileViewer.Url, "an XPS package is not handed to the generic viewer");
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     private static iConsole.Dialogs.ExecutableAnalysisDialog CreateExecutableDialog(IThemeService themeService) =>
         new(Mock.Of<iConsole.Executables.IExecutableAnalyzer>(), themeService);
 
