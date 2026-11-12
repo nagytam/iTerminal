@@ -5059,8 +5059,8 @@
   <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
     <value>Renombrar los archivos y carpetas marcados, o el que está bajo el cursor, según un patrón.</value>
   </data>
-  <data name="CmdDesc.9ddb1617" xml:space="preserve">
-    <value>Abrir el archivo bajo el cursor como una carpeta (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG con 7-Zip).</value>
+  <data name="CmdDesc.6916d198" xml:space="preserve">
+    <value>Abrir el archivo bajo el cursor como una carpeta (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG con 7-Zip).</value>
   </data>
   <data name="CmdDesc.4f25d89a" xml:space="preserve">
     <value>Abrir la carpeta seleccionada o seguir la entrada superior.</value>

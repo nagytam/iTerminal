@@ -81,7 +81,7 @@ public class ViewFileDialogCommand(
         {
             "mp3" or "wav" or "ogg" or "flac" or
             "mp4" or "avi" or "mkv" or "mov" or
-            "zip" or "tar" or "gz" or "7z" or "rar" or
+            "zip" or "tar" or "gz" or "7z" or "rar" or "bz2" or "tbz2" or "tbz" or
             "bin" => false,
             _ => true
         };

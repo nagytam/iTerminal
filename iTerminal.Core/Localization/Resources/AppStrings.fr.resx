@@ -5059,8 +5059,8 @@
   <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
     <value>Renommer les fichiers et dossiers marqués, ou celui sous le curseur, selon un modèle.</value>
   </data>
-  <data name="CmdDesc.9ddb1617" xml:space="preserve">
-    <value>Ouvrir l’archive sous le curseur comme un dossier (ZIP, TAR, TAR.GZ, TAR.BZ2 ; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG avec 7-Zip).</value>
+  <data name="CmdDesc.6916d198" xml:space="preserve">
+    <value>Ouvrir l’archive sous le curseur comme un dossier (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2 ; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG avec 7-Zip).</value>
   </data>
   <data name="CmdDesc.4f25d89a" xml:space="preserve">
     <value>Ouvrir le dossier sélectionné ou suivre l’entrée parente.</value>

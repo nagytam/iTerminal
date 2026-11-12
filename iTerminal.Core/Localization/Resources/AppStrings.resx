@@ -5141,9 +5141,9 @@
     <value>Rename the marked files and folders, or the one under the cursor, by a pattern.</value>
     <comment>Rename the marked files and folders, or the one under the cursor, by a pattern.</comment>
   </data>
-  <data name="CmdDesc.9ddb1617" xml:space="preserve">
-    <value>Open the archive under the cursor as a folder (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG with 7-Zip).</value>
-    <comment>Open the archive under the cursor as a folder (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG with 7-Zip).</comment>
+  <data name="CmdDesc.6916d198" xml:space="preserve">
+    <value>Open the archive under the cursor as a folder (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG with 7-Zip).</value>
+    <comment>Open the archive under the cursor as a folder (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG with 7-Zip).</comment>
   </data>
   <data name="CmdDesc.4f25d89a" xml:space="preserve">
     <value>Open the selected folder or follow the parent entry.</value>

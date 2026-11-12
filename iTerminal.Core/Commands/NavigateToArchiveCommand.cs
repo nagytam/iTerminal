@@ -7,7 +7,7 @@ namespace iTerminal.Core.Commands;
 
 /// <summary>
 /// Enter on an archive opens it as a folder: the <c>archive://</c> drive, for ZIP, TAR, TAR.GZ,
-/// TAR.BZ2, and — through 7-Zip — 7z, RAR, CAB and the disk images ISO, IMG, VMDK, WIM and DMG. It goes through
+/// TAR.BZ2, a lone BZ2, and — through 7-Zip — 7z, RAR, CAB and the disk images ISO, IMG, VMDK, WIM and DMG. It goes through
 /// <see cref="IContentModelService.SetUrlAsync(string, Url)"/> like any navigation, which is what
 /// records the folder to come back to: the archive's top-level <c>..</c> leads there, with the
 /// cursor on the archive.
@@ -18,7 +18,7 @@ public class NavigateToArchiveCommand(
     : Command
 {
     public override string Title => "Open archive";
-    public override string Description => "Open the archive under the cursor as a folder (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG with 7-Zip).";
+    public override string Description => "Open the archive under the cursor as a folder (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG with 7-Zip).";
 
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.Enter, false, false, false);

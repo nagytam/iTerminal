@@ -113,7 +113,7 @@ Group these to suit the audience. Key bindings are those documented in the repos
 | `ssh://`, `smb://`, `ftp`/FTPS, `dav://`, `davs://` | Remote hosts, shares and WebDAV |
 | `docker://` | Container file systems and logs; start, stop, restart |
 | `git://` | Any revision, branch, tag or commit, without checking it out |
-| `archive://` | ZIP, TAR, TAR.GZ, TAR.BZ2, 7z, RAR, CAB and ISO, IMG, VMDK, WIM, DMG disk images (7-Zip) |
+| `archive://` | ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2, 7z, RAR, CAB and ISO, IMG, VMDK, WIM, DMG disk images (7-Zip) |
 | `s3://`, `onedrive://`, `gdrive://` | Cloud storage |
 | `mtp://`, `iphone://` | Phones and cameras |
 | `recycle://` | Recycle bin / Trash with restore |

@@ -1,4 +1,5 @@
 using System.Text;
+using ICSharpCode.SharpZipLib.BZip2;
 using ICSharpCode.SharpZipLib.Zip;
 using iConsole.Data;
 using iTerminal.Core.Model.ContentModels;
@@ -101,6 +102,8 @@ public class ArchiveDriveServiceTest
     [DataRow("x.tar", "TAR")]
     [DataRow("x.tar.gz", "TAR.GZ")]
     [DataRow("x.tar.bz2", "TAR.BZ2")]
+    [DataRow("x.tbz2", "TAR.BZ2")]
+    [DataRow("x.tbz", "TAR.BZ2")]
     public async Task AnArchiveIsBrowsedFolderByFolderAndReadBack(string name, string format)
     {
         var archive = await Pack(name, ArchiveFormat.All.Single(f => f.Name == format));
@@ -116,6 +119,39 @@ public class ArchiveDriveServiceTest
         Assert.AreEqual("gamma", await Read(service, ArchiveDriveUrl.Build(archive, "docs/deep/c.txt", isFolder: false)));
         Assert.AreEqual("b.md", docs[1].Url.Name, "a copy names its target after the entry");
         Assert.AreEqual(4, ((VirtualDriveEntry)docs[1]).Size);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("x.bz2")]
+    [DataRow("x.tar.bz2")]
+    [DataRow("x.tbz2")]
+    [DataRow("x.tbz")]
+    public void Bz2ArchivesAreOfferedWithoutSevenZip(string name)
+    {
+        Assert.IsTrue(ArchiveDriveService.LooksBrowsable(name));
+        Assert.IsTrue(Service().CanBrowse(name));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ALoneBz2IsBrowsedAsItsOneFile()
+    {
+        var archive = Path.Combine(_root, "notes.txt.bz2");
+        using (var bz2 = new BZip2OutputStream(FileIO.Create(archive)))
+        {
+            bz2.Write(Encoding.UTF8.GetBytes("hello bz2"));
+        }
+
+        var service = Service();
+        var rows = await service.ListAsync(ArchiveDriveUrl.Build(archive), CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { "notes.txt" }, Names(rows), "the archive's name without .bz2");
+        Assert.AreEqual(9, ((VirtualDriveEntry)rows[0]).Size, "bzip2 stores no length, so it is counted");
+        Assert.AreEqual("hello bz2", await Read(service, ArchiveDriveUrl.Build(archive, "notes.txt", isFolder: false)));
+        Assert.IsTrue(service.ExistsFolder(ArchiveDriveUrl.Build(archive)));
+        Assert.IsTrue(service.ExistsFile(ArchiveDriveUrl.Build(archive, "notes.txt", isFolder: false)));
+        Assert.IsFalse(service.ExistsFile(ArchiveDriveUrl.Build(archive, "other.txt", isFolder: false)));
     }
 
     [Timeout(60_000)]

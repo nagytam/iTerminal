@@ -34,7 +34,8 @@ public interface IArchiveDriveService : IEntryListingFileSystem
 ///
 /// <para>Three readers behind one listing. ZIP is read with SharpZipLib's <see cref="ZipFile"/>,
 /// which seeks straight to an entry. The TAR family is one stream from front to back, so a listing
-/// reads it through and a file is found by reading up to it. 7z, RAR, CAB and the disk images (ISO,
+/// reads it through and a file is found by reading up to it. A lone <c>.bz2</c> holds one file,
+/// named after the archive without its ending. 7z, RAR, CAB and the disk images (ISO,
 /// IMG, VMDK, WIM, DMG) go to the 7-Zip command-line tool (VHD and VHDX are left to the mount
 /// dialog, so Enter on them keeps its file association): <c>7z l -slt</c> to list, <c>7z x -so</c>
 /// to stream one entry to stdout.</para>
@@ -48,6 +49,7 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
 {
     private static readonly string[] ZipEndings = [".zip"];
     private static readonly string[] TarEndings = [".tar.gz", ".tar.bz2", ".tgz", ".tbz2", ".tbz", ".tar"];
+    private static readonly string[] SingleFileEndings = [".bz2"];
     private static readonly string[] SevenZipEndings = [".7z", ".rar", ".iso", ".cab", ".img", ".vmdk", ".wim", ".dmg"];
 
     private readonly Lazy<string?> _sevenZip = new(locateSevenZip ?? SevenZipArchiveWriter.FindExecutable);
@@ -66,11 +68,13 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
     public static bool LooksBrowsable(string fileName) =>
         EndingOf(fileName, ZipEndings) is not null
         || EndingOf(fileName, TarEndings) is not null
+        || EndingOf(fileName, SingleFileEndings) is not null
         || EndingOf(fileName, SevenZipEndings) is not null;
 
     public bool CanBrowse(string fileName) =>
         EndingOf(fileName, ZipEndings) is not null
         || EndingOf(fileName, TarEndings) is not null
+        || EndingOf(fileName, SingleFileEndings) is not null
         || (EndingOf(fileName, SevenZipEndings) is not null && _sevenZip.Value is not null);
 
     #region Listing
@@ -131,6 +135,7 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
 
         var entries = EndingOf(archivePath, ZipEndings) is not null ? await Task.Run(() => ReadZipIndex(archivePath), cancellationToken)
             : EndingOf(archivePath, TarEndings) is { } ending ? await Task.Run(() => ReadTarIndex(archivePath, ending, cancellationToken), cancellationToken)
+            : EndingOf(archivePath, SingleFileEndings) is { } singleEnding ? await Task.Run(() => ReadSingleFileIndex(archivePath, singleEnding, cancellationToken), cancellationToken)
             : await ReadSevenZipIndexAsync(archivePath, cancellationToken);
         var index = WithImpliedFolders(entries);
         _indexes[archivePath] = (info.Length, info.LastWriteTimeUtc, index);
@@ -196,14 +201,42 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
 
     private static TarInputStream OpenTar(Stream file, string ending)
     {
-        Stream decompressed = ending switch
-        {
-            ".tar.gz" or ".tgz" => new GZipInputStream(file) { IsStreamOwner = false },
-            ".tar.bz2" or ".tbz2" or ".tbz" => new BZip2InputStream(file) { IsStreamOwner = false },
-            _ => file,
-        };
+        var decompressed = Decompress(file, ending);
         return new TarInputStream(decompressed, Encoding.UTF8) { IsStreamOwner = decompressed != file };
     }
+
+    /// <summary>
+    /// A lone <c>.bz2</c> holds one file: the archive's own name without the ending. Its size is
+    /// counted while decompressing, since bzip2 stores no length of its own.
+    /// </summary>
+    private static List<ArchiveIndexEntry> ReadSingleFileIndex(string archivePath, string ending, CancellationToken cancellationToken)
+    {
+        var name = Path.GetFileName(archivePath)[..^ending.Length];
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            name = "extracted";
+        }
+
+        long size = 0;
+        using var file = new FileStream(archivePath, FileMode.Open, FileAccess.Read, FileShare.Read, 81920);
+        using var decompressed = Decompress(file, ending);
+        var buffer = new byte[81920];
+        int read;
+        while ((read = decompressed.Read(buffer, 0, buffer.Length)) > 0)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            size += read;
+        }
+
+        return [new ArchiveIndexEntry(name, name, IsFolder: false, size, File.GetLastWriteTime(archivePath))];
+    }
+
+    private static Stream Decompress(Stream file, string ending) => ending switch
+    {
+        ".tar.gz" or ".tgz" or ".gz" => new GZipInputStream(file) { IsStreamOwner = false },
+        ".tar.bz2" or ".tbz2" or ".tbz" or ".bz2" => new BZip2InputStream(file) { IsStreamOwner = false },
+        _ => file,
+    };
 
     /// <summary>
     /// <c>7z l -slt -ba</c>: one block of <c>Key = value</c> lines per entry. Stdin is given and closed
@@ -320,6 +353,23 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
                 }
 
                 throw new FileNotFoundException(innerPath);
+            }, cancellationToken);
+            return;
+        }
+
+        if (EndingOf(archivePath, SingleFileEndings) is { } singleEnding)
+        {
+            await Task.Run(() =>
+            {
+                using var file = new FileStream(archivePath, FileMode.Open, FileAccess.Read, FileShare.Read, 81920);
+                using var decompressed = Decompress(file, singleEnding);
+                var buffer = new byte[81920];
+                int read;
+                while ((read = decompressed.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    target.Write(buffer, 0, read);
+                }
             }, cancellationToken);
             return;
         }
