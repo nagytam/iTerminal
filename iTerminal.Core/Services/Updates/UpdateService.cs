@@ -6,7 +6,8 @@ namespace iTerminal.Core.Services.Updates;
 
 /// <summary>
 /// Compares the running version with the stable releases of the iTerminal repository. The installer is the
-/// <c>.msi</c> attached to the release; it is checked against the digest GitHub records for it before it is run.
+/// <c>.msi</c> attached to the release; it is checked against the digest GitHub records for it and against
+/// its own Authenticode signature before it is run.
 /// </summary>
 public sealed class UpdateService : IUpdateService
 {
@@ -17,6 +18,7 @@ public sealed class UpdateService : IUpdateService
 
     private readonly ISettingsService _settings;
     private readonly GitHubReleaseFeed _feed;
+    private readonly IAuthenticodeVerifier _authenticode;
     private readonly Version? _current;
     private readonly Func<string, bool> _startInstaller;
     private readonly string _downloadDirectory;
@@ -26,14 +28,15 @@ public sealed class UpdateService : IUpdateService
     private UpdateInfo? _available;
     private bool _installing;
 
-    public UpdateService(ISettingsService settings)
+    public UpdateService(ISettingsService settings, IAuthenticodeVerifier authenticode)
         : this(
             settings,
             new GitHubReleaseFeed(new HttpClient { Timeout = Timeout.InfiniteTimeSpan }),
             AboutDialog.Version,
             StartWindowsInstaller,
             Path.Combine(Path.GetTempPath(), "iTerminal-update"),
-            OperatingSystem.IsWindows())
+            OperatingSystem.IsWindows(),
+            authenticode)
     {
     }
 
@@ -43,10 +46,12 @@ public sealed class UpdateService : IUpdateService
         string currentVersion,
         Func<string, bool> startInstaller,
         string downloadDirectory,
-        bool canInstall)
+        bool canInstall,
+        IAuthenticodeVerifier? authenticode = null)
     {
         _settings = settings;
         _feed = feed;
+        _authenticode = authenticode ?? new WinVerifyTrustAuthenticodeVerifier();
         CurrentVersion = currentVersion;
         _current = ParseVersion(currentVersion);
         _startInstaller = startInstaller;
@@ -175,6 +180,11 @@ public sealed class UpdateService : IUpdateService
             string package = Path.Combine(_downloadDirectory, Path.GetFileName(asset.Name));
             await _feed.DownloadAsync(asset, package, new LineProgress(AddLog), cancellationToken);
 
+            if (!AcceptSignature(_authenticode.Verify(package), package))
+            {
+                return false;
+            }
+
             AddLog("Starting the installer. iTerminal closes so its files can be replaced.");
             if (!_startInstaller(package))
             {
@@ -199,6 +209,46 @@ public sealed class UpdateService : IUpdateService
             {
                 _installing = false;
             }
+        }
+    }
+
+    /// <summary>
+    /// Decides what to do with the downloaded installer's Authenticode verdict. A valid signature is
+    /// reported (with the signer when the verifier knows it); an unsigned installer is a warning and
+    /// still runs (release signing is not configured yet); anything else — a signature that does not
+    /// match, an untrusted chain, or a check that could not be made — stops the install, and the
+    /// download is removed so it cannot be started by hand.
+    /// </summary>
+    private bool AcceptSignature(AuthenticodeResult signature, string package)
+    {
+        switch (signature.Status)
+        {
+            case AuthenticodeStatus.Valid:
+                AddLog(string.IsNullOrEmpty(signature.Signer)
+                    ? "Installer signature verified."
+                    : $"Installer signature verified: {signature.Signer}.");
+                return true;
+
+            case AuthenticodeStatus.NotSigned:
+                AddLog("Warning: the installer is not Authenticode-signed, so its publisher cannot be verified. Its SHA-256 matches the digest GitHub publishes.");
+                return true;
+
+            default:
+                AddLog($"The installer's Authenticode signature was not accepted: {signature.Message} The installer was not started.");
+                TryDelete(package);
+                return false;
+        }
+    }
+
+    private static void TryDelete(string path)
+    {
+        try
+        {
+            File.Delete(path);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            // A file that cannot be removed is left for inspection; it was never started.
         }
     }
 
