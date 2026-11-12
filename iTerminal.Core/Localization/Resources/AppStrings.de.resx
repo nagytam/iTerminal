@@ -5059,8 +5059,8 @@
   <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
     <value>Die markierten Dateien und Ordner oder den unter dem Cursor nach einem Muster umbenennen.</value>
   </data>
-  <data name="CmdDesc.9ddb1617" xml:space="preserve">
-    <value>Das Archiv unter dem Cursor als Ordner öffnen (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG mit 7-Zip).</value>
+  <data name="CmdDesc.6916d198" xml:space="preserve">
+    <value>Das Archiv unter dem Cursor als Ordner öffnen (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG mit 7-Zip).</value>
   </data>
   <data name="CmdDesc.4f25d89a" xml:space="preserve">
     <value>Den ausgewählten Ordner öffnen oder dem übergeordneten Eintrag folgen.</value>

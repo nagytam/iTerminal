@@ -5059,8 +5059,8 @@
   <data name="CmdDesc.9f5a7c3d" xml:space="preserve">
     <value>A megjelölt fájlok és mappák (vagy a kurzor alattiak) átnevezése minta szerint.</value>
   </data>
-  <data name="CmdDesc.9ddb1617" xml:space="preserve">
-    <value>A kurzor alatti archívum megnyitása mappaként (ZIP, TAR, TAR.GZ, TAR.BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG a 7-Zippel).</value>
+  <data name="CmdDesc.6916d198" xml:space="preserve">
+    <value>A kurzor alatti archívum megnyitása mappaként (ZIP, TAR, TAR.GZ, TAR.BZ2, BZ2; 7z, RAR, CAB, ISO, IMG, VMDK, WIM, DMG a 7-Zippel).</value>
   </data>
   <data name="CmdDesc.4f25d89a" xml:space="preserve">
     <value>A kijelölt mappa megnyitása, vagy a szülőbejegyzés követése.</value>
