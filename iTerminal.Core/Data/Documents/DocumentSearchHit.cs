@@ -36,4 +36,10 @@ public enum DocumentSearchMatch
 
     /// <summary>The extracted body text matched — the hit the snippet is drawn from.</summary>
     Content,
+
+    /// <summary>
+    /// The passage was close in meaning to the query, though it may share no word with it. The snippet is the start of
+    /// that passage, not a match.
+    /// </summary>
+    Semantic,
 }

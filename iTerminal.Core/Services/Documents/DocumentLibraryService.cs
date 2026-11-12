@@ -63,6 +63,35 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
 
     private readonly SemaphoreSlim _scanGate = new(1, 1);
 
+    private readonly IDocumentEmbedder _embedder;
+    private readonly DocumentVectorIndex _vectorIndex = new();
+
+    /// <summary>One embedding run at a time. A run that finds it taken simply does not start.</summary>
+    private readonly SemaphoreSlim _embedGate = new(1, 1);
+
+    // What the meaning index reports for SemanticMessage. Written by the embedding run, read from the render path.
+    private volatile bool _semanticRunning;
+    private volatile int _semanticDone;
+    private volatile int _semanticTotal;
+    private volatile int _semanticIndexed;
+    private volatile string? _semanticFailure;
+
+    /// <summary>
+    /// Serializes the database writes of a scan and of an embedding save. SQLite answers a second writer that is already
+    /// in a transaction with a busy error at once, so a save that collided with a scan would end the embedding run.
+    /// </summary>
+    private readonly Lock _writeLock = new();
+
+    private readonly Lock _queryCacheLock = new();
+    private QueryVector? _lastQuery;
+
+    private sealed record QueryVector(string Query, string Model, float[] Vector);
+
+    /// <summary>A document's change stamp: the size and modified time its text was extracted from.</summary>
+    private sealed record DocumentStamp(long Size, DateTimeOffset ModifiedUtc);
+
+    private sealed record DocumentSnapshot(DocumentStamp Stamp, string Text);
+
     private List<DocumentEntry> _entries = [];
     private bool _isLoaded;
     private DateTimeOffset _lastLoadAttemptUtc = DateTimeOffset.MinValue;
@@ -83,7 +112,8 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
         IOcrEngine? ocrEngine = null,
         DocumentTextExtractorFactory? extractorFactory = null,
         Serilog.ILogger? logger = null,
-        IBackgroundStartService? backgroundStart = null)
+        IBackgroundStartService? backgroundStart = null,
+        IDocumentEmbedder? documentEmbedder = null)
     {
         _backgroundStart = backgroundStart;
         _dbContextFactory = dbContextFactory ?? new TemporaryDbContextFactory("DocumentLibrary");
@@ -91,6 +121,36 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
         _ocrEngine = ocrEngine;
         _extractorFactory = extractorFactory ?? new DocumentTextExtractorFactory(ocrEngine);
         _logger = logger;
+        _embedder = documentEmbedder ?? NullDocumentEmbedder.Instance;
+    }
+
+    public bool SemanticSearchAvailable => _embedder.IsConfigured;
+
+    public string SemanticMessage
+    {
+        get
+        {
+            if (!_embedder.IsConfigured)
+            {
+                return UiText.Get("Docs.SemanticOff", "Meaning search is off: set AI:EmbeddingModelId to an embedding model.");
+            }
+
+            if (_semanticRunning)
+            {
+                return string.Format(UiText.Get("Docs.SemanticProgress", "Building the meaning index: {0} of {1} documents."), _semanticDone, _semanticTotal);
+            }
+
+            string? failure = _semanticFailure;
+            if (failure is not null)
+            {
+                return string.Format(UiText.Get("Docs.SemanticFailed", "Meaning index failed: {0}"), failure);
+            }
+
+            int indexed = _semanticIndexed;
+            return indexed == 0
+                ? UiText.Get("Docs.SemanticNotBuilt", "Meaning index not built yet: it is built in the background after a scan.")
+                : string.Format(UiText.Get("Docs.SemanticReady", "Meaning index: {0} documents, embedded with {1}."), indexed, _embedder.ModelId);
+        }
     }
 
     public event EventHandler? LibraryChanged;
@@ -215,6 +275,16 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
     #region Scanning
 
     public async Task<int> RefreshAsync(CancellationToken cancellationToken = default)
+    {
+        int count = await ScanAsync(cancellationToken);
+
+        // The meaning index follows the text. It runs after the scan has let go of its gate, so a slow model never holds up
+        // the next scan, and it stops with the same token.
+        await EmbedPendingAsync(cancellationToken);
+        return count;
+    }
+
+    private async Task<int> ScanAsync(CancellationToken cancellationToken)
     {
         // One scan at a time: the periodic job and a user-triggered rescan can arrive together.
         if (!await _scanGate.WaitAsync(0, cancellationToken))
@@ -714,6 +784,254 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
         return hits;
     }
 
+    public async Task<IReadOnlyList<DocumentSearchHit>> SearchSemanticAsync(
+        string query,
+        int limit = 50,
+        CancellationToken cancellationToken = default)
+    {
+        if (!_embedder.IsConfigured || query.Trim().Length == 0 || limit <= 0)
+        {
+            return [];
+        }
+
+        EnsureLoaded();
+
+        // The query is embedded over the network and compared on a worker thread; neither runs on the key handler. The dialog
+        // re-asks on every keystroke and every index change, so the vector of the last query is kept while it still matches.
+        string model = _embedder.ModelId;
+        float[] queryVector = await QueryVectorAsync(query, model, cancellationToken);
+
+        return await Task.Run(() =>
+        {
+            using iTerminalDbContext context = _dbContextFactory.CreateDbContext();
+            context.Database.EnsureCreated();
+
+            IReadOnlyList<DocumentVectorIndex.Match> matches = _vectorIndex.Search(context, model, queryVector, limit);
+
+            Dictionary<string, DocumentEntry> byPath;
+            lock (_lock)
+            {
+                byPath = _entries.ToDictionary(entry => entry.Path, StringComparer.OrdinalIgnoreCase);
+            }
+
+            // One connection for every row: the passages were stored with their vectors, so this reads a few hundred
+            // characters per hit rather than each document's text.
+            List<DocumentSearchHit> hits = new(matches.Count);
+            foreach (DocumentVectorIndex.Match match in matches)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // A vector whose document is no longer listed is a leftover from an interrupted delete: nothing to show for it.
+                if (!byPath.TryGetValue(match.Path, out DocumentEntry? entry))
+                {
+                    continue;
+                }
+
+                string passage = _vectorIndex.ReadPassage(context, match.Path, match.ChunkStart);
+
+                // Rank is lower-first, so the best score gets the lowest rank.
+                hits.Add(new DocumentSearchHit(entry, DocumentSearchMatch.Semantic, Excerpt(passage), -match.Score));
+            }
+
+            return (IReadOnlyList<DocumentSearchHit>)hits;
+        }, cancellationToken);
+    }
+
+    private async Task<float[]> QueryVectorAsync(string query, string model, CancellationToken cancellationToken)
+    {
+        lock (_queryCacheLock)
+        {
+            if (_lastQuery is { } last && last.Query == query && last.Model == model)
+            {
+                return last.Vector;
+            }
+        }
+
+        float[] vector = (await _embedder.EmbedAsync([query], cancellationToken))[0];
+        lock (_queryCacheLock)
+        {
+            _lastQuery = new QueryVector(query, model, vector);
+        }
+
+        return vector;
+    }
+
+    /// <summary>The start of a passage as one line for a results row: whitespace collapsed, cut to <paramref name="maxLength"/>.</summary>
+    internal static string Excerpt(string passage, int maxLength = 160)
+    {
+        string collapsed = string.Join(' ', passage.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+        return collapsed.Length <= maxLength ? collapsed : DocumentChunker.TrimToCharacters(collapsed[..maxLength]) + "…";
+    }
+
+    /// <summary>
+    /// Embeds every document whose passages are missing or were made by another model. One document at a time, each
+    /// saved as soon as its vectors arrive, so an interrupted run resumes where it stopped. A model that fails stops the
+    /// run and is reported in <see cref="SemanticMessage"/>; it does not fail the scan, and it is not retried per document.
+    /// </summary>
+    private async Task EmbedPendingAsync(CancellationToken cancellationToken)
+    {
+        if (!_embedder.IsConfigured || !await _embedGate.WaitAsync(0, cancellationToken))
+        {
+            return;
+        }
+
+        bool hadWork = false;
+        try
+        {
+            string model = _embedder.ModelId;
+            _semanticFailure = null;
+
+            List<string> pending;
+            using (iTerminalDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.Database.EnsureCreated();
+                pending = _vectorIndex.Pending(context, model);
+
+                // Read now, not at the end of the run, so a library that is already embedded reads as built right after a restart.
+                _semanticIndexed = _vectorIndex.Count(context, model);
+            }
+
+            hadWork = pending.Count > 0;
+            _semanticDone = 0;
+            _semanticTotal = pending.Count;
+            _semanticRunning = hadWork;
+
+            // One refused document (a passage the model rejects, say) must not stop the rest. It is left pending and tried again
+            // on the next run; the others are embedded now.
+            int failed = 0;
+            string lastFailure = string.Empty;
+            foreach (string path in pending)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                try
+                {
+                    await EmbedDocumentAsync(path, model, cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception exception)
+                {
+                    failed++;
+                    lastFailure = exception.Message;
+                    _logger?.Warning(exception, "Could not embed {Path} for the meaning index.", path);
+                }
+
+                _semanticDone++;
+            }
+
+            if (failed > 0)
+            {
+                _semanticFailure = $"{failed} document(s) could not be embedded: {lastFailure}";
+            }
+
+            using iTerminalDbContext counted = _dbContextFactory.CreateDbContext();
+            counted.Database.EnsureCreated();
+            _semanticIndexed = _vectorIndex.Count(counted, model);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _semanticFailure = exception.Message;
+            _logger?.Warning(exception, "Building the document meaning index failed.");
+        }
+        finally
+        {
+            _semanticRunning = false;
+            _embedGate.Release();
+
+            // The meaning index changed, so a listing built on it is stale: the dialog re-runs its query.
+            if (hadWork)
+            {
+                LibraryChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
+
+    private async Task EmbedDocumentAsync(string path, string model, CancellationToken cancellationToken)
+    {
+        DocumentSnapshot? read;
+        using (iTerminalDbContext context = _dbContextFactory.CreateDbContext())
+        {
+            read = ReadSnapshot(context, path);
+        }
+
+        // No row: the file was removed since the pending list was made. Nothing to embed or record.
+        if (read is null)
+        {
+            return;
+        }
+
+        DocumentStamp stamp = read.Stamp;
+        string text = read.Text;
+
+        IReadOnlyList<int> starts = DocumentChunker.ChunkStarts(text);
+        List<(int ChunkStart, string Passage, float[] Vector)> passages = new(starts.Count);
+        if (starts.Count > 0)
+        {
+            List<string> passageTexts = [.. starts.Select(start => DocumentChunker.ChunkAt(text, start))];
+            IReadOnlyList<float[]> vectors = await _embedder.EmbedAsync(passageTexts, cancellationToken);
+            for (int index = 0; index < starts.Count; index++)
+            {
+                passages.Add((starts[index], passageTexts[index], vectors[index]));
+            }
+        }
+
+        // The file may have been re-extracted or removed while its passages were being embedded. Its stamp then differs, or
+        // is gone, so these vectors describe text that is no longer there and are dropped; a changed file is pending next run.
+        // The stamp is compared rather than the text, so a large document is not read a second time.
+        lock (_writeLock)
+        {
+            using iTerminalDbContext save = _dbContextFactory.CreateDbContext();
+            save.Database.EnsureCreated();
+            using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = save.Database.BeginTransaction();
+
+            if (stamp.Equals(ReadStamp(save, path)))
+            {
+                _vectorIndex.Replace(save, path, model, passages);
+                transaction.Commit();
+
+                // The commit is what makes the new vectors visible to a search that loads rows; see DocumentVectorIndex.Invalidate.
+                _vectorIndex.Invalidate();
+            }
+        }
+    }
+
+    /// <summary>
+    /// The stamp alone, for the save-time check. Only the metadata is read: the text is not needed to see whether the file
+    /// has changed. Safe without a join because the save runs under <see cref="_writeLock"/>, which the scan's writes share.
+    /// </summary>
+    private static DocumentStamp? ReadStamp(iTerminalDbContext context, string path)
+    {
+        var row = context.DocumentEntries
+            .AsNoTracking()
+            .Where(entry => entry.Path == path)
+            .Select(entry => new { entry.Size, entry.ModifiedUtc })
+            .FirstOrDefault();
+
+        return row is null ? null : new DocumentStamp(row.Size, row.ModifiedUtc);
+    }
+
+    /// <summary>
+    /// A document's stamp and text in one statement, so the two always describe the same extraction: read apart, a scan
+    /// committing between them would pair the new stamp with the old text. Null when the document is not listed or has no
+    /// text row (removed, or never extracted).
+    /// </summary>
+    private static DocumentSnapshot? ReadSnapshot(iTerminalDbContext context, string path)
+    {
+        var row = (from entry in context.DocumentEntries.AsNoTracking()
+                   join content in context.DocumentContentEntries.AsNoTracking() on entry.Path equals content.Path
+                   where entry.Path == path
+                   select new { entry.Size, entry.ModifiedUtc, content.Text })
+            .FirstOrDefault();
+
+        return row is null ? null : new DocumentSnapshot(new DocumentStamp(row.Size, row.ModifiedUtc), row.Text);
+    }
+
     private IReadOnlyList<DocumentSearchIndex.ContentHit> SearchContent(string query, int limit)
     {
         try
@@ -836,6 +1154,15 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
     /// </summary>
     private void Persist(IReadOnlyList<(DocumentEntry Entry, string Text)> changed, IReadOnlyList<string> removed)
     {
+        // Under the same lock as an embedding save: see _writeLock.
+        lock (_writeLock)
+        {
+            PersistLocked(changed, removed);
+        }
+    }
+
+    private void PersistLocked(IReadOnlyList<(DocumentEntry Entry, string Text)> changed, IReadOnlyList<string> removed)
+    {
         if (changed.Count == 0 && removed.Count == 0)
         {
             return;
@@ -910,7 +1237,16 @@ public sealed class DocumentLibraryService : IDocumentLibraryService
                 _searchIndex.Upsert(context, entry.Path, text);
             }
 
+            // Passages of a changed or removed file describe text that is gone. They go in this transaction; the next
+            // embedding run finds the changed ones pending and embeds the new text.
+            List<string> stale = [.. removed];
+            stale.AddRange(changed.Select(change => change.Entry.Path));
+            _vectorIndex.Remove(context, stale);
+
             transaction.Commit();
+
+            // See DocumentVectorIndex.Invalidate: the passages removed above must not survive in a snapshot cached mid-transaction.
+            _vectorIndex.Invalidate();
         }
         catch (Exception exception)
         {

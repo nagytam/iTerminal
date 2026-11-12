@@ -9276,4 +9276,31 @@
   <data name="CmdDesc.980a9856" xml:space="preserve">
     <value>Gestisci utenti locali, gruppi, password e appartenenze ai gruppi.</value>
   </data>
+  <data name="DialogHint.SearchByMeaning" xml:space="preserve">
+    <value>Cerca per significato invece che per parole</value>
+  </data>
+  <data name="DialogHint.SearchByWords" xml:space="preserve">
+    <value>Cerca per parole invece che per significato</value>
+  </data>
+  <data name="Hint.Part.Meaning" xml:space="preserve">
+    <value>Shift+Alt+F6:significato</value>
+  </data>
+  <data name="Hint.Part.Words" xml:space="preserve">
+    <value>Shift+Alt+F6:parole</value>
+  </data>
+  <data name="Docs.SemanticOff" xml:space="preserve">
+    <value>La ricerca per significato è disattivata: imposta AI:EmbeddingModelId su un modello di embedding.</value>
+  </data>
+  <data name="Docs.SemanticProgress" xml:space="preserve">
+    <value>Creazione dell'indice di significato: {0} di {1} documenti.</value>
+  </data>
+  <data name="Docs.SemanticFailed" xml:space="preserve">
+    <value>Indice di significato non riuscito: {0}</value>
+  </data>
+  <data name="Docs.SemanticNotBuilt" xml:space="preserve">
+    <value>Indice di significato non ancora creato: viene creato in background dopo una scansione.</value>
+  </data>
+  <data name="Docs.SemanticReady" xml:space="preserve">
+    <value>Indice di significato: {0} documenti, con embedding da {1}.</value>
+  </data>
 </root>

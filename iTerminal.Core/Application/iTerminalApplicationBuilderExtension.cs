@@ -15,6 +15,7 @@ using iTerminal.Core.Factories;
 using iTerminal.Core.Jobs;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Documents;
 using iTerminal.Core.Services.Labels;
 using iTerminal.Core.Services.RuntimeDependencies;
 using Microsoft.EntityFrameworkCore;
@@ -71,18 +72,54 @@ public static class iTerminalApplicationBuilderExtension
         services.AddOptions<AiOptions>();
         services.AddOptions<iTerminal.Core.Services.Cloud.CloudOptions>();
 
+        // The AI key is looked up once, on first use, and shared by the chat client and the document embedder.
+        // Not Lazy<T>: that keeps a lookup that threw (a locked password store), and every later request would fail until
+        // restart. Here a failure is not kept, so the next request asks again.
+        services.AddSingleton<Func<string?>>(sp =>
+        {
+            var aiOptions = sp.GetRequiredService<IOptions<AiOptions>>().Value;
+            Lock gate = new();
+            string? key = null;
+            bool resolved = false;
+            return () =>
+            {
+                lock (gate)
+                {
+                    if (!resolved)
+                    {
+                        key = ResolveAiApiKey(sp, aiOptions);
+                        resolved = true;
+                    }
+
+                    return key;
+                }
+            };
+        });
+
         services.AddSingleton<IChatClient>(sp =>
         {
             var aiOptions = sp.GetRequiredService<IOptions<AiOptions>>().Value;
-            string? apiKey = null;
-            if (aiOptions.Provider != AiProvider.None)
+            return AiChatClientFactory.Create(aiOptions, sp.GetRequiredService<Func<string?>>()());
+        });
+
+        // Meaning search: the embedding model the AI section names, on the endpoint the chat model uses. Without one named,
+        // nothing is sent and the document manager says meaning search is off.
+        services.AddSingleton<IDocumentEmbedder>(sp =>
+        {
+            var aiOptions = sp.GetRequiredService<IOptions<AiOptions>>().Value;
+
+            // Checked before the key is read: with no model named, the password store is not asked for a key nothing uses.
+            if (string.IsNullOrWhiteSpace(aiOptions.EmbeddingModelId))
             {
-                apiKey = Environment.GetEnvironmentVariable(aiOptions.ApiKeyEnvVar);
-                if (string.IsNullOrEmpty(apiKey))
-                    apiKey = sp.GetRequiredService<IPasswordManager>().GetSecret(AiOptions.ApiKeyPasswordId);
+                return NullDocumentEmbedder.Instance;
             }
 
-            return AiChatClientFactory.Create(aiOptions, apiKey);
+            IEmbeddingGenerator<string, Embedding<float>>? generator =
+                AiChatClientFactory.CreateEmbeddingGenerator(aiOptions, sp.GetRequiredService<Func<string?>>()());
+
+            return generator is null
+                ? NullDocumentEmbedder.Instance
+                : new DocumentEmbedder(generator, aiOptions.EmbeddingModelId);
         });
 
         services.AddSingleton<AiChatModel>();
@@ -245,7 +282,8 @@ public static class iTerminalApplicationBuilderExtension
                 serviceProvider.GetRequiredService<iTerminal.Core.Documents.IOcrEngine>(),
                 serviceProvider.GetRequiredService<iTerminal.Core.Documents.DocumentTextExtractorFactory>(),
                 serviceProvider.GetService<Serilog.ILogger>(),
-                serviceProvider.GetRequiredService<iTerminal.Core.Services.BackgroundStart.IBackgroundStartService>()));
+                serviceProvider.GetRequiredService<iTerminal.Core.Services.BackgroundStart.IBackgroundStartService>(),
+                serviceProvider.GetRequiredService<iTerminal.Core.Services.Documents.IDocumentEmbedder>()));
         services.AddSingleton<IJob, DocumentLibraryIndexJob>();
         services.AddTransient<iTerminal.Core.Dialogs.Documents.DocumentManagerDialog>();
         services.AddTransient<TextFileEditorDialog>();
@@ -608,5 +646,25 @@ public static class iTerminalApplicationBuilderExtension
             new Logger.Logger(provider.GetRequiredService<ISettingsService>(), databaseDirectory));
         services.AddSingleton<IMemoryCacheService, MemoryCacheService>();
         return services;
+    }
+
+    /// <summary>
+    /// The key for the AI endpoint: the environment variable first, then the password store. Null when AI is off, so the
+    /// store is not asked for a key nothing will use.
+    /// </summary>
+    private static string? ResolveAiApiKey(IServiceProvider sp, AiOptions aiOptions)
+    {
+        if (aiOptions.Provider == AiProvider.None)
+        {
+            return null;
+        }
+
+        string? apiKey = Environment.GetEnvironmentVariable(aiOptions.ApiKeyEnvVar);
+        if (string.IsNullOrEmpty(apiKey))
+        {
+            apiKey = sp.GetRequiredService<IPasswordManager>().GetSecret(AiOptions.ApiKeyPasswordId);
+        }
+
+        return apiKey;
     }
 }

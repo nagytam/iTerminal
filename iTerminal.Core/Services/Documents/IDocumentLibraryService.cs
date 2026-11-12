@@ -48,6 +48,18 @@ public interface IDocumentLibraryService
     /// </summary>
     string CapabilityMessage { get; }
 
+    /// <summary>
+    /// Whether an embedding model is configured, so meaning search can run at all. False means
+    /// <see cref="SearchSemanticAsync"/> returns nothing and <see cref="SemanticMessage"/> says why.
+    /// </summary>
+    bool SemanticSearchAvailable { get; }
+
+    /// <summary>
+    /// One line on the meaning index: that it is off, not built yet, how far a build has got, how many documents it
+    /// covers, or why the last build failed. Never reads the database, so it is safe to call from the render path.
+    /// </summary>
+    string SemanticMessage { get; }
+
     /// <summary>Raised after a scan changes the library. May fire on a background thread.</summary>
     event EventHandler? LibraryChanged;
 
@@ -89,6 +101,17 @@ public interface IDocumentLibraryService
     Task<IReadOnlyList<DocumentSearchHit>> SearchAsync(
         string query,
         int limit = 200,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Finds the documents closest in meaning to <paramref name="query"/>, using the embedding model. Each document is
+    /// scored by its best passage, and results are ordered by that score with no cut-off: the snippet shows the passage
+    /// that scored, which is the evidence. Empty when no model is configured or the query is blank. Keyword search is
+    /// unaffected and does not wait for it.
+    /// </summary>
+    Task<IReadOnlyList<DocumentSearchHit>> SearchSemanticAsync(
+        string query,
+        int limit = 50,
         CancellationToken cancellationToken = default);
 
     /// <summary>

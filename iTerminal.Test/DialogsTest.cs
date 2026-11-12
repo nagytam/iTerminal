@@ -81,6 +81,34 @@ public class DialogsTest
         await OpenAndCloseAsync(chord, dialogTypeName);
     }
 
+    /// <summary>
+    /// Shift+Alt+F6 in the document manager, in the real app: the footer names the other mode, and the sandbox has no embedding
+    /// model (AI:EmbeddingModelId is empty), so meaning search says it is off rather than searching.
+    /// </summary>
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task ShiftAltF6SwitchesTheDocumentManagerToMeaningSearchAndSaysWhenItIsOff()
+    {
+        Assert.IsTrue(await _app.PressAsync("Alt+F3"), "Alt+F3 is handled");
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal?.GetType().Name == "DocumentManagerDialog", "the document manager on top");
+        await _app.WaitForTextAsync("Shift+Alt+F6:meaning");
+
+        Assert.IsTrue(await _app.PressAsync("Shift+Alt+F6"), "Shift+Alt+F6 is handled by the dialog");
+        await _app.WaitForTextAsync("Shift+Alt+F6:words");
+
+        foreach (char letter in "money")
+        {
+            await _app.PressAsync(letter.ToString());
+        }
+
+        await _app.WaitForTextAsync("Meaning search is off");
+
+        await _app.PressAsync("Esc");
+        await _app.PressAsync("Esc");
+        await _app.WaitForNoDialogAsync();
+        await _app.WaitForNoStrayFramesAsync();
+    }
+
     [Timeout(120_000)]
     [TestMethod]
     public async Task SwissJassOpensFromTheCommandPaletteAndPlaysAHotSeatTurn()

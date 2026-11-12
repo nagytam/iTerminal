@@ -9481,4 +9481,31 @@
   <data name="CmdDesc.980a9856" xml:space="preserve">
     <value>Manage local users, groups, passwords and group membership.</value>
   </data>
+  <data name="DialogHint.SearchByMeaning" xml:space="preserve">
+    <value>Search by meaning instead of words</value>
+  </data>
+  <data name="DialogHint.SearchByWords" xml:space="preserve">
+    <value>Search by words instead of meaning</value>
+  </data>
+  <data name="Hint.Part.Meaning" xml:space="preserve">
+    <value>Shift+Alt+F6:meaning</value>
+  </data>
+  <data name="Hint.Part.Words" xml:space="preserve">
+    <value>Shift+Alt+F6:words</value>
+  </data>
+  <data name="Docs.SemanticOff" xml:space="preserve">
+    <value>Meaning search is off: set AI:EmbeddingModelId to an embedding model.</value>
+  </data>
+  <data name="Docs.SemanticProgress" xml:space="preserve">
+    <value>Building the meaning index: {0} of {1} documents.</value>
+  </data>
+  <data name="Docs.SemanticFailed" xml:space="preserve">
+    <value>Meaning index failed: {0}</value>
+  </data>
+  <data name="Docs.SemanticNotBuilt" xml:space="preserve">
+    <value>Meaning index not built yet: it is built in the background after a scan.</value>
+  </data>
+  <data name="Docs.SemanticReady" xml:space="preserve">
+    <value>Meaning index: {0} documents, embedded with {1}.</value>
+  </data>
 </root>

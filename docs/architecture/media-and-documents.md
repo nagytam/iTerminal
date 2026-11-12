@@ -235,6 +235,35 @@ extracts text from every file an extractor understands, and stores both the meta
   of the settings dialog), defaulting to `\users\tamas\nata\documents` — anchored to the system drive
   on Windows by `DocumentLibraryService.ResolveDocumentsFolder`, because a path that starts with a
   separator but names no drive resolves against whichever drive the process happens to be running on.
+- **Meaning search (Shift+Alt+F6 in the document manager; Ctrl+Q is not used, because the terminal driver takes it for XON flow control) is a second index beside the FTS table, not a replacement for
+  it.** `DocumentVectorIndex` keeps one float32 vector per passage in two raw SQL tables, `DocumentEmbeddings` and
+  `DocumentEmbeddingState`, created on demand like the FTS table so the EF model and its stamp are untouched. The
+  state table names the model each document was embedded with; a document is pending when it has no state row or
+  another model's, so changing `AI:EmbeddingModelId` re-embeds the library and nothing else needs a sweep.
+- **Passages are fixed windows, not sentences**: 1,000 characters with 200 overlapping, at most 24 per document
+  (`DocumentChunker`), so the first ~19,000 characters of a long document are searchable by meaning and the rest
+  are not. A document scores by its best passage, and the result snippet is the start of that passage.
+- **The embedding stage runs after the text scan, outside its gate** (`RefreshAsync` → `ScanAsync`, then
+  `EmbedPendingAsync`). One document is embedded and saved at a time, inside a transaction that re-checks the text,
+  so a file re-extracted meanwhile is dropped and pending again. A failing model sets `SemanticMessage` and stops the
+  run; it does not fail the scan or retry each document. `SemanticMessage` never reads the database, so the render
+  path may call it. Changed or removed files lose their vectors in `Persist`, in the same transaction as their text.
+- **Search is brute force and holds the vectors in memory** once a meaning query has loaded them: about 120 MB for
+  10,000 documents at four passages each and 768 dimensions. A snapshot is reused until a write invalidates it, and
+  a search that loaded its snapshot before a write does not store it. An approximate index would be the next step if
+  the library grows past that.
+- **The model is configuration, not a setting, and is never downloaded.** `AI:EmbeddingModelId` (empty = off) goes to
+  the same OpenAI-compatible endpoint as the chat model, through `AiChatClientFactory.CreateEmbeddingGenerator`, and
+  needs `/v1/embeddings`: Ollama serves it, the Anthropic API does not. Once it is set, the text of every indexed document is
+  sent there on each scan, so it is left empty unless that endpoint may see the documents. Without a model `NullDocumentEmbedder` is
+  registered, nothing is sent, and the dialog says so.
+- **The dialog shows meaning results as a separate list**: name hits are not merged in, and no score cut-off is
+  applied, so the top results are the closest passages even when none is close. A meaning search that finds nothing
+  because the index is still being built says so beside the count.
+- **Tests:** `DocumentChunkerTest`, `DocumentVectorIndexTest` (ranking, model filter, pending, removal, snapshot
+  invalidation), `DocumentMeaningSearchTest` (a topic-vector fake embedder: meaning without shared words, incremental
+  re-embedding, model change, removal, no model, failing model), `DocumentManagerDialogTest` (Shift+Alt+F6) and
+  `DialogsTest.ShiftAltF6SwitchesTheDocumentManagerToMeaningSearchAndSaysWhenItIsOff` in the real app.
 
 ### The F3 video and image viewers (`iTerminal.Core/Video/`, `Dialogs/Video/`)
 F3 on a video (`VideoFileTypes`) opens `VideoFileViewerDialog`; F3 on a picture (`ImageFileTypes`) opens `ImageFileViewerDialog`. Both draw the picture as ASCII art, both need a real local file and ffmpeg/ffprobe on PATH, and `ViewFileDialogCommand` routes video ahead of audio because `.mp4` and `.webm` are in the audio list too.
