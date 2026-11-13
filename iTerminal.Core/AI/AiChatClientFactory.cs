@@ -26,23 +26,8 @@ public static class AiChatClientFactory
             return new UnavailableChatClient();
         }
 
-        var clientOptions = new OpenAIClientOptions { Endpoint = new Uri(options.ApiBaseUrl) };
-        if (httpClient is not null)
-        {
-            clientOptions.Transport = new HttpClientPipelineTransport(httpClient);
-        }
-
         bool isOllama = options.Provider == AiProvider.Ollama;
-        if (isOllama)
-        {
-            // A local model that is still loading answers 500 at once; retrying it three times with back-off only delays
-            // the answer, and the fallback below needs the first 500 to come back directly.
-            clientOptions.RetryPolicy = new ClientRetryPolicy(maxRetries: 0);
-        }
-
-        var openAiClient = new OpenAIClient(
-            new ApiKeyCredential(string.IsNullOrEmpty(apiKey) ? NoKeyPlaceholder : apiKey),
-            clientOptions);
+        var openAiClient = CreateOpenAiClient(options, apiKey, httpClient);
 
         IChatClient inner = openAiClient.GetChatClient(options.ModelId).AsIChatClient();
         if (isOllama)
@@ -57,6 +42,48 @@ public static class AiChatClientFactory
         }
 
         return builder.UseFunctionInvocation().Build();
+    }
+
+    /// <summary>
+    /// The embedding generator for the document manager's meaning search, on the same endpoint as the chat client.
+    /// Null when AI is off or no embedding model is named: the caller then has no meaning search, and nothing is
+    /// sent anywhere.
+    /// </summary>
+    /// <param name="options">The configured provider, endpoint and embedding model.</param>
+    /// <param name="apiKey">The key for the endpoint, or null when none is configured.</param>
+    /// <param name="httpClient">Only for tests: the transport the requests are sent through.</param>
+    public static IEmbeddingGenerator<string, Embedding<float>>? CreateEmbeddingGenerator(AiOptions options, string? apiKey, HttpClient? httpClient = null)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        if (options.Provider == AiProvider.None || string.IsNullOrWhiteSpace(options.EmbeddingModelId))
+        {
+            return null;
+        }
+
+        return CreateOpenAiClient(options, apiKey, httpClient)
+            .GetEmbeddingClient(options.EmbeddingModelId)
+            .AsIEmbeddingGenerator();
+    }
+
+    private static OpenAIClient CreateOpenAiClient(AiOptions options, string? apiKey, HttpClient? httpClient)
+    {
+        var clientOptions = new OpenAIClientOptions { Endpoint = new Uri(options.ApiBaseUrl) };
+        if (httpClient is not null)
+        {
+            clientOptions.Transport = new HttpClientPipelineTransport(httpClient);
+        }
+
+        if (options.Provider == AiProvider.Ollama)
+        {
+            // A local model that is still loading answers 500 at once; retrying it three times with back-off only delays
+            // the answer, and the fallback below needs the first 500 to come back directly.
+            clientOptions.RetryPolicy = new ClientRetryPolicy(maxRetries: 0);
+        }
+
+        return new OpenAIClient(
+            new ApiKeyCredential(string.IsNullOrEmpty(apiKey) ? NoKeyPlaceholder : apiKey),
+            clientOptions);
     }
 
     /// <summary>

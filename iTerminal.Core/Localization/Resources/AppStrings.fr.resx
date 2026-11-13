@@ -9276,4 +9276,25 @@
   <data name="CmdDesc.980a9856" xml:space="preserve">
     <value>Gérer les utilisateurs locaux, les groupes, les mots de passe et les appartenances aux groupes.</value>
   </data>
+  <data name="DialogHint.SearchByMeaning" xml:space="preserve">
+    <value>Chercher par sens plutôt que par mots</value>
+  </data>
+  <data name="DialogHint.SearchByWords" xml:space="preserve">
+    <value>Chercher par mots plutôt que par sens</value>
+  </data>
+  <data name="Docs.SemanticOff" xml:space="preserve">
+    <value>La recherche par sens est désactivée : indiquez un modèle d'embedding dans AI:EmbeddingModelId.</value>
+  </data>
+  <data name="Docs.SemanticProgress" xml:space="preserve">
+    <value>Construction de l'index de sens : {0} documents sur {1}.</value>
+  </data>
+  <data name="Docs.SemanticFailed" xml:space="preserve">
+    <value>Échec de l'index de sens : {0}</value>
+  </data>
+  <data name="Docs.SemanticNotBuilt" xml:space="preserve">
+    <value>Index de sens pas encore construit : il se construit en arrière-plan après une analyse.</value>
+  </data>
+  <data name="Docs.SemanticReady" xml:space="preserve">
+    <value>Index de sens : {0} documents, encodés avec {1}.</value>
+  </data>
 </root>

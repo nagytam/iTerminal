@@ -48,6 +48,23 @@ public class DocumentManagerDialogTest
         public string CapabilityMessage => "FTS5";
         public IReadOnlyList<DocumentEntry> Entries => Documents;
 
+        public bool SemanticSearchAvailable { get; set; }
+        public string SemanticMessage { get; set; } = "Meaning search is off.";
+        public IReadOnlyList<DocumentSearchHit> SemanticHits { get; set; } = [];
+        private readonly List<string> _semanticQueries = [];
+
+        /// <summary>A snapshot of the meaning queries, for the same reason as <see cref="Queries"/>.</summary>
+        public List<string> SemanticQueries
+        {
+            get
+            {
+                lock (_semanticQueries)
+                {
+                    return [.. _semanticQueries];
+                }
+            }
+        }
+
         public event EventHandler? LibraryChanged;
         public event EventHandler<DocumentIndexingProgress>? IndexingProgressChanged;
 
@@ -92,6 +109,16 @@ public class DocumentManagerDialogTest
                 .Where(d => d.FileName.Contains(query.Trim(), StringComparison.OrdinalIgnoreCase))
                 .Select((d, i) => new DocumentSearchHit(d, DocumentSearchMatch.Name, string.Empty, i))];
             return Task.FromResult(hits);
+        }
+
+        public Task<IReadOnlyList<DocumentSearchHit>> SearchSemanticAsync(string query, int limit = 50, CancellationToken cancellationToken = default)
+        {
+            lock (_semanticQueries)
+            {
+                _semanticQueries.Add(query);
+            }
+
+            return Task.FromResult(SemanticSearchAvailable ? SemanticHits : (IReadOnlyList<DocumentSearchHit>)[]);
         }
 
         /// <summary>When set, the text is not returned until the gate opens: a preview that is still loading.</summary>
@@ -190,6 +217,47 @@ public class DocumentManagerDialogTest
 
         await SettleAsync(dialog, 0);
         Assert.AreEqual("No document matches \"zzz\".", dialog.MessageForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ShiftAltF6AsksTheMeaningIndexForTheSameWords()
+    {
+        var service = new FakeDocumentLibraryService { SemanticSearchAvailable = true };
+        DocumentEntry filing = Doc("return-2024.pdf");
+        service.Documents.Add(filing);
+        service.SemanticHits = [new DocumentSearchHit(filing, DocumentSearchMatch.Semantic, "the annual filing was submitted", -0.9)];
+        var dialog = CreateDialog(service);
+        await ShowAsync(dialog);
+        await SettleAsync(dialog, 1);
+
+        // Words: the file name does not contain "money", so the keyword search finds nothing.
+        await TypeAsync(dialog, "money");
+        await SettleAsync(dialog, 0);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F6, shift: true, alt: true));
+
+        await SettleAsync(dialog, 1);
+        CollectionAssert.Contains(service.SemanticQueries, "money");
+        Assert.AreEqual("1 match.", dialog.MessageForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task WithoutAnEmbeddingModelMeaningSearchSaysItIsOff()
+    {
+        var service = new FakeDocumentLibraryService { SemanticSearchAvailable = false, SemanticMessage = "Meaning search is off: set AI:EmbeddingModelId to an embedding model." };
+        service.Documents.Add(Doc("a.txt"));
+        var dialog = CreateDialog(service);
+        await ShowAsync(dialog);
+        await SettleAsync(dialog, 1);
+
+        await dialog.HandleKeyEventAsync(Key(ConsoleKey.F6, shift: true, alt: true));
+        await TypeAsync(dialog, "money");
+
+        await SettleAsync(dialog, 0);
+        Assert.AreEqual(service.SemanticMessage, dialog.MessageForTest);
+        CollectionAssert.AreEqual(Array.Empty<string>(), service.Queries.Where(query => query == "money").ToArray(), "the words search must not run in meaning mode");
     }
 
     [Timeout(60_000)]

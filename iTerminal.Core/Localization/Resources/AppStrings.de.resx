@@ -9340,4 +9340,25 @@
   <data name="CmdDesc.980a9856" xml:space="preserve">
     <value>Lokale Benutzer, Gruppen, Passwörter und Gruppenmitgliedschaften verwalten.</value>
   </data>
+  <data name="DialogHint.SearchByMeaning" xml:space="preserve">
+    <value>Nach Bedeutung statt nach Wörtern suchen</value>
+  </data>
+  <data name="DialogHint.SearchByWords" xml:space="preserve">
+    <value>Nach Wörtern statt nach Bedeutung suchen</value>
+  </data>
+  <data name="Docs.SemanticOff" xml:space="preserve">
+    <value>Suche nach Bedeutung ist aus: AI:EmbeddingModelId auf ein Embedding-Modell setzen.</value>
+  </data>
+  <data name="Docs.SemanticProgress" xml:space="preserve">
+    <value>Bedeutungsindex wird aufgebaut: {0} von {1} Dokumenten.</value>
+  </data>
+  <data name="Docs.SemanticFailed" xml:space="preserve">
+    <value>Bedeutungsindex fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Docs.SemanticNotBuilt" xml:space="preserve">
+    <value>Bedeutungsindex noch nicht aufgebaut: Er wird nach einem Scan im Hintergrund aufgebaut.</value>
+  </data>
+  <data name="Docs.SemanticReady" xml:space="preserve">
+    <value>Bedeutungsindex: {0} Dokumente, eingebettet mit {1}.</value>
+  </data>
 </root>

@@ -41,6 +41,9 @@ public class DocumentManagerDialog : SplitPaneDialog
 
     private const int MaxResults = 500;
 
+    /// <summary>Meaning search returns fewer rows: each one reads its passage from the database, and a rank past the first few dozen is noise.</summary>
+    private const int MaxSemanticResults = 50;
+
     /// <summary>
     /// A row of the results list. The hit is carried whole so the row can show where the match was
     /// and what it looked like, which is the difference between a list of file names and a list of
@@ -61,7 +64,7 @@ public class DocumentManagerDialog : SplitPaneDialog
         {
             DocumentEntry entry = hit.Entry;
             string folder = entry.RelativeFolder.Length > 0 ? $"  [{entry.RelativeFolder}]" : string.Empty;
-            string detail = hit.Match == DocumentSearchMatch.Content && hit.Snippet.Length > 0
+            string detail = (hit.Match == DocumentSearchMatch.Content || hit.Match == DocumentSearchMatch.Semantic) && hit.Snippet.Length > 0
                 ? $"  — {hit.Snippet}"
                 : string.Empty;
 
@@ -131,6 +134,15 @@ public class DocumentManagerDialog : SplitPaneDialog
     /// query for "in" from landing on top of the finished query for "invoice".
     /// </summary>
     private int _searchGeneration;
+
+    /// <summary>
+    /// Shift+Alt+F6: the query is matched by meaning (<see cref="IDocumentLibraryService.SearchSemanticAsync"/>) instead of by
+    /// words. Read by the search task, so volatile.
+    /// </summary>
+    private volatile bool _semanticMode;
+
+    /// <summary>The newest search's token source: a newer search cancels it. Swapped with Interlocked.Exchange.</summary>
+    private CancellationTokenSource? _searchCts;
 
     private string _query = string.Empty;
     private bool _searching;
@@ -254,6 +266,11 @@ public class DocumentManagerDialog : SplitPaneDialog
         _searching = true;
         StateHasChanged();
 
+        // A newer query cancels the older one's meaning request, so an abandoned keystroke does not still embed its text.
+        var searchCts = new CancellationTokenSource();
+        Interlocked.Exchange(ref _searchCts, searchCts)?.Cancel();
+        CancellationToken searchToken = searchCts.Token;
+
         _ = Task.Run(async () =>
         {
             try
@@ -266,9 +283,21 @@ public class DocumentManagerDialog : SplitPaneDialog
                     return;
                 }
 
-                IReadOnlyList<DocumentSearchHit> hits = query.Trim().Length == 0
-                    ? BrowseAll()
-                    : await _documentLibraryService.SearchAsync(query, MaxResults);
+                IReadOnlyList<DocumentSearchHit> hits;
+                if (query.Trim().Length == 0)
+                {
+                    hits = BrowseAll();
+                }
+                else if (_semanticMode)
+                {
+                    hits = _documentLibraryService.SemanticSearchAvailable
+                        ? await _documentLibraryService.SearchSemanticAsync(query, MaxSemanticResults, searchToken)
+                        : [];
+                }
+                else
+                {
+                    hits = await _documentLibraryService.SearchAsync(query, MaxResults);
+                }
 
                 if (generation != Volatile.Read(ref _searchGeneration))
                 {
@@ -277,7 +306,7 @@ public class DocumentManagerDialog : SplitPaneDialog
 
                 // The results first, then "done": cleared the other way round there was a moment that
                 // read as finished while the old list (and the old cursor) was still in place.
-                _message = DescribeResults(query, hits.Count);
+                _message = DescribeSearch(query, hits.Count);
                 ApplyResults(hits, preserveSelection);
                 _searching = false;
             }
@@ -311,6 +340,33 @@ public class DocumentManagerDialog : SplitPaneDialog
         }
 
         return hits;
+    }
+
+    /// <summary>
+    /// The line under the search box. In meaning mode the index's own state is said with the count: zero matches from an
+    /// index that is still being built is not "no match", and without an embedding model there is nothing to count.
+    /// </summary>
+    private string DescribeSearch(string query, int count)
+    {
+        if (!_semanticMode || query.Trim().Length == 0)
+        {
+            return DescribeResults(query, count);
+        }
+
+        if (!_documentLibraryService.SemanticSearchAvailable)
+        {
+            return _documentLibraryService.SemanticMessage;
+        }
+
+        return count == 0
+            ? DescribeResults(query, count) + " " + _documentLibraryService.SemanticMessage
+            : DescribeResults(query, count);
+    }
+
+    private void ToggleSemanticMode()
+    {
+        _semanticMode = !_semanticMode;
+        StartSearch(_query, preserveSelection: true);
     }
 
     private string DescribeResults(string query, int count)
@@ -628,6 +684,9 @@ public class DocumentManagerDialog : SplitPaneDialog
         yield return ("Ctrl+R", UiText.Get("DialogHint.ScanDocumentsAgain", "Scan the documents again"));
         yield return ("Ctrl+X", UiText.Get("DialogHint.CancelScan", "Cancel the scan"));
         yield return ("Ctrl+T", UiText.Get("DialogHint.ShowHidePreview", "Show or hide the preview"));
+        yield return ("Shift+Alt+F6", _semanticMode
+            ? UiText.Get("DialogHint.SearchByWords", "Search by words instead of meaning")
+            : UiText.Get("DialogHint.SearchByMeaning", "Search by meaning instead of words"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -655,6 +714,10 @@ public class DocumentManagerDialog : SplitPaneDialog
 
             case ConsoleKey.T when keyEvent.Control:
                 TogglePreview();
+                return true;
+
+            case ConsoleKey.F6 when keyEvent.Shift && keyEvent.Alt:
+                ToggleSemanticMode();
                 return true;
         }
 
@@ -884,6 +947,8 @@ public class DocumentManagerDialog : SplitPaneDialog
             ? UiText.Get("Hint.Part.StopScan", "Ctrl+X:stop scan")
             : _documentLibraryService.IsIndexing ? UiText.Get("Hint.Part.Scanning", "scanning…") : UiText.Get("Hint.Part.Rescan", "Ctrl+R:rescan");
         string escKey = _query.Length > 0 ? UiText.Get("Hint.Part.EscClear", "Esc:clear") : UiText.Get("Hint.Part.EscClose", "Esc:close");
+        // The meaning-search chord is listed in the Shift+F1 hints rather than here: on a 140-column
+        // screen it pushed the capability line ("Suche: … · Bilder: …") out of view.
         string keys = $"{UiText.Get("Hint.Part.Reveal", "Enter:reveal")}  {UiText.Get("Hint.Part.Preview", "Ctrl+T:preview")}  {scanKey}  {UiText.Get("Hint.Part.Focus", "Tab:focus")}  {escKey}";
 
         // The capability line is on the same row on purpose: whether search is indexed and whether
