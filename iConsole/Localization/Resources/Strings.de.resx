@@ -352,6 +352,12 @@
   <data name="Hint.DeleteCharacter" xml:space="preserve">
     <value>Ein Zeichen löschen</value>
   </data>
+  <data name="Hint.FoldAll" xml:space="preserve">
+    <value>Alle Bereiche ein- oder ausklappen</value>
+  </data>
+  <data name="Viewer.HintConvertEncoding" xml:space="preserve">
+    <value>Beim Speichern nächste Kodierung (Umschalt: vorherige)</value>
+  </data>
   <data name="Hint.MoveLines" xml:space="preserve">
     <value>Zeile (oder die markierten Zeilen) nach oben / unten verschieben</value>
   </data>

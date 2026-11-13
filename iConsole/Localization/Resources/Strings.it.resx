@@ -352,6 +352,12 @@
   <data name="Hint.DeleteCharacter" xml:space="preserve">
     <value>Elimina un carattere</value>
   </data>
+  <data name="Hint.FoldAll" xml:space="preserve">
+    <value>Ripiega o apri tutte le regioni</value>
+  </data>
+  <data name="Viewer.HintConvertEncoding" xml:space="preserve">
+    <value>Salva nella codifica successiva (Maiusc: precedente)</value>
+  </data>
   <data name="Hint.MoveLines" xml:space="preserve">
     <value>Sposta la riga (o le righe selezionate) su / giù</value>
   </data>

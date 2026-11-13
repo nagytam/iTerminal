@@ -352,6 +352,12 @@
   <data name="Hint.DeleteCharacter" xml:space="preserve">
     <value>Egy karakter törlése</value>
   </data>
+  <data name="Hint.FoldAll" xml:space="preserve">
+    <value>Az összes régió összecsukása vagy kinyitása</value>
+  </data>
+  <data name="Viewer.HintConvertEncoding" xml:space="preserve">
+    <value>Mentés a következő kódolással (Shift: előző)</value>
+  </data>
   <data name="Hint.MoveLines" xml:space="preserve">
     <value>A sor (vagy a kijelölt sorok) feljebb / lejjebb mozgatása</value>
   </data>

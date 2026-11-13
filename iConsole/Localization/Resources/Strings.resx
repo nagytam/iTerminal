@@ -352,6 +352,12 @@
   <data name="Hint.DeleteCharacter" xml:space="preserve">
     <value>Delete a character</value>
   </data>
+  <data name="Hint.FoldAll" xml:space="preserve">
+    <value>Fold or open every region</value>
+  </data>
+  <data name="Viewer.HintConvertEncoding" xml:space="preserve">
+    <value>Save in the next encoding (Shift: previous)</value>
+  </data>
   <data name="Hint.MoveLines" xml:space="preserve">
     <value>Move the line (or the selected lines) up / down</value>
   </data>

@@ -1050,6 +1050,7 @@ public partial class TextEditorControl
         if (EnableFolding)
         {
             yield return ("Alt+Left/Alt+Right", UiText.Get("Hint.FoldRegion", "Fold or unfold the region at the cursor"));
+            yield return ("Alt+Shift+Left/Alt+Shift+Right", UiText.Get("Hint.FoldAll", "Fold or open every region"));
         }
 
         if (BracketMatchingEnabled)
@@ -1188,6 +1189,21 @@ public partial class TextEditorControl
                 var beforeIndent = Capture();
                 Indent(outdent: keyEvent.Shift);
                 RecordEdit(beforeIndent, isTyping: false);
+                return true;
+            }
+        }
+
+        // Auto-close: an opening bracket or quote adds its partner, a closer already next is stepped over, and Backspace
+        // between a pair removes both halves. A selection is replaced as usual.
+        if (IsEnabled && AutoCloseBrackets && !IsReadOnly && !HasSelection && !keyEvent.Control && !keyEvent.Alt)
+        {
+            if (ConsoleKeyHelper.IsTypingKey(keyEvent) && TryAutoClose(keyEvent.KeyChar))
+            {
+                return true;
+            }
+
+            if (!keyEvent.Shift && keyEvent.ConsoleKey == ConsoleKey.Backspace && TryAutoCloseBackspace())
+            {
                 return true;
             }
         }
