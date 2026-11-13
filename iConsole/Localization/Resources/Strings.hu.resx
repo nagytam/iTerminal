@@ -352,6 +352,36 @@
   <data name="Hint.DeleteCharacter" xml:space="preserve">
     <value>Egy karakter törlése</value>
   </data>
+  <data name="Hint.MoveLines" xml:space="preserve">
+    <value>A sor (vagy a kijelölt sorok) feljebb / lejjebb mozgatása</value>
+  </data>
+  <data name="Hint.DuplicateLine" xml:space="preserve">
+    <value>A sor (vagy a kijelölt sorok) duplikálása</value>
+  </data>
+  <data name="Hint.ToggleComment" xml:space="preserve">
+    <value>A sor (vagy a kijelölt sorok) kommentelése / a komment törlése</value>
+  </data>
+  <data name="Hint.TabsToSpaces" xml:space="preserve">
+    <value>Tabulátorok szóközökre</value>
+  </data>
+  <data name="Hint.TrimTrailing" xml:space="preserve">
+    <value>Sorvégi szóközök törlése</value>
+  </data>
+  <data name="Hint.JoinLines" xml:space="preserve">
+    <value>Sorok összefűzése</value>
+  </data>
+  <data name="Hint.RemoveDuplicateLines" xml:space="preserve">
+    <value>Ismétlődő sorok törlése</value>
+  </data>
+  <data name="Hint.RemoveBlankLines" xml:space="preserve">
+    <value>Üres sorok törlése</value>
+  </data>
+  <data name="Hint.ShowWhitespace" xml:space="preserve">
+    <value>Szóközök, tabulátorok és sorvégek megjelenítése (újra: elrejtés)</value>
+  </data>
+  <data name="Hint.EdgeColumn" xml:space="preserve">
+    <value>A 80. oszlop jelölése (újra: elrejtés)</value>
+  </data>
   <data name="Hint.DeleteLine" xml:space="preserve">
     <value>A sor törlése</value>
   </data>

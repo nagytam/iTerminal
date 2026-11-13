@@ -352,6 +352,36 @@
   <data name="Hint.DeleteCharacter" xml:space="preserve">
     <value>Supprimer un caractère</value>
   </data>
+  <data name="Hint.MoveLines" xml:space="preserve">
+    <value>Déplacer la ligne (ou les lignes sélectionnées) vers le haut / le bas</value>
+  </data>
+  <data name="Hint.DuplicateLine" xml:space="preserve">
+    <value>Dupliquer la ligne (ou les lignes sélectionnées)</value>
+  </data>
+  <data name="Hint.ToggleComment" xml:space="preserve">
+    <value>Commenter ou décommenter la ligne (ou les lignes sélectionnées)</value>
+  </data>
+  <data name="Hint.TabsToSpaces" xml:space="preserve">
+    <value>Tabulations en espaces</value>
+  </data>
+  <data name="Hint.TrimTrailing" xml:space="preserve">
+    <value>Supprimer les espaces en fin de ligne</value>
+  </data>
+  <data name="Hint.JoinLines" xml:space="preserve">
+    <value>Joindre les lignes</value>
+  </data>
+  <data name="Hint.RemoveDuplicateLines" xml:space="preserve">
+    <value>Supprimer les lignes en double</value>
+  </data>
+  <data name="Hint.RemoveBlankLines" xml:space="preserve">
+    <value>Supprimer les lignes vides</value>
+  </data>
+  <data name="Hint.ShowWhitespace" xml:space="preserve">
+    <value>Afficher les espaces, tabulations et fins de ligne (à nouveau : masquer)</value>
+  </data>
+  <data name="Hint.EdgeColumn" xml:space="preserve">
+    <value>Marquer la 80e colonne (à nouveau : masquer)</value>
+  </data>
   <data name="Hint.DeleteLine" xml:space="preserve">
     <value>Supprimer la ligne</value>
   </data>

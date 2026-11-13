@@ -1051,6 +1051,8 @@ public partial class TextViewerControl : Control
                 HighlightSearchResults(conxelLine, highlightPositionX, (int)indexY);
                 HighlightSelectedPart(conxelLine, (int)indexY, TextModel.Lines[(int)indexY].Length, colorScheme);
                 MarkWhitespace(conxelLine, TextModel.Lines[(int)indexY], positionX, int.MaxValue, colorScheme);
+                MarkLineEnd(conxelLine, TextModel.Lines[(int)indexY], positionX, colorScheme);
+                MarkEdgeColumn(conxelLine, positionX, colorScheme);
                 buffer.Write(
                     ZOrder,
                     new Position(AbsolutePosition.X, (uint)(AbsolutePosition.Y + i)),
@@ -1130,6 +1132,8 @@ public partial class TextViewerControl : Control
                 ApplySpelling(conxelLine, line, start, row.Length, colorScheme);
                 DecorateText(conxelLine, row.Line, start, cursorLine, colorScheme);
                 MarkWhitespace(conxelLine, line, start, row.Length, colorScheme);
+                MarkLineEnd(conxelLine, line, start, colorScheme);
+                MarkEdgeColumn(conxelLine, start, colorScheme);
                 if (foldNote >= 0 && foldNote < width)
                 {
                     conxelLine.HighlightRange(foldNote, width, colorScheme.DisabledForeground, colorScheme.Background);
