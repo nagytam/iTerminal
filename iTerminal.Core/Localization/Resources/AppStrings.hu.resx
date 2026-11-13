@@ -9282,12 +9282,6 @@
   <data name="DialogHint.SearchByWords" xml:space="preserve">
     <value>Keresés szavak szerint jelentés helyett</value>
   </data>
-  <data name="Hint.Part.Meaning" xml:space="preserve">
-    <value>Shift+Alt+F6:jelentés</value>
-  </data>
-  <data name="Hint.Part.Words" xml:space="preserve">
-    <value>Shift+Alt+F6:szavak</value>
-  </data>
   <data name="Docs.SemanticOff" xml:space="preserve">
     <value>A jelentés szerinti keresés ki van kapcsolva: állítsa be az AI:EmbeddingModelId értékét egy beágyazó modellre.</value>
   </data>

@@ -91,10 +91,9 @@ public class DialogsTest
     {
         Assert.IsTrue(await _app.PressAsync("Alt+F3"), "Alt+F3 is handled");
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal?.GetType().Name == "DocumentManagerDialog", "the document manager on top");
-        await _app.WaitForTextAsync("Shift+Alt+F6:meaning");
 
+        // The toggle is confirmed by the message below, which only appears while meaning mode is on.
         Assert.IsTrue(await _app.PressAsync("Shift+Alt+F6"), "Shift+Alt+F6 is handled by the dialog");
-        await _app.WaitForTextAsync("Shift+Alt+F6:words");
 
         foreach (char letter in "money")
         {

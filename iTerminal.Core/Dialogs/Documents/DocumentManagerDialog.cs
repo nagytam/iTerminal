@@ -947,8 +947,9 @@ public class DocumentManagerDialog : SplitPaneDialog
             ? UiText.Get("Hint.Part.StopScan", "Ctrl+X:stop scan")
             : _documentLibraryService.IsIndexing ? UiText.Get("Hint.Part.Scanning", "scanning…") : UiText.Get("Hint.Part.Rescan", "Ctrl+R:rescan");
         string escKey = _query.Length > 0 ? UiText.Get("Hint.Part.EscClear", "Esc:clear") : UiText.Get("Hint.Part.EscClose", "Esc:close");
-        string modeKey = _semanticMode ? UiText.Get("Hint.Part.Words", "Shift+Alt+F6:words") : UiText.Get("Hint.Part.Meaning", "Shift+Alt+F6:meaning");
-        string keys = $"{UiText.Get("Hint.Part.Reveal", "Enter:reveal")}  {UiText.Get("Hint.Part.Preview", "Ctrl+T:preview")}  {modeKey}  {scanKey}  {UiText.Get("Hint.Part.Focus", "Tab:focus")}  {escKey}";
+        // The meaning-search chord is listed in the Shift+F1 hints rather than here: on a 140-column
+        // screen it pushed the capability line ("Suche: … · Bilder: …") out of view.
+        string keys = $"{UiText.Get("Hint.Part.Reveal", "Enter:reveal")}  {UiText.Get("Hint.Part.Preview", "Ctrl+T:preview")}  {scanKey}  {UiText.Get("Hint.Part.Focus", "Tab:focus")}  {escKey}";
 
         // The capability line is on the same row on purpose: whether search is indexed and whether
         // OCR ran are the two things that explain a result the user did not expect, and a row of

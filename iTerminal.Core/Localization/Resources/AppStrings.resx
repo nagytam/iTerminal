@@ -9487,12 +9487,6 @@
   <data name="DialogHint.SearchByWords" xml:space="preserve">
     <value>Search by words instead of meaning</value>
   </data>
-  <data name="Hint.Part.Meaning" xml:space="preserve">
-    <value>Shift+Alt+F6:meaning</value>
-  </data>
-  <data name="Hint.Part.Words" xml:space="preserve">
-    <value>Shift+Alt+F6:words</value>
-  </data>
   <data name="Docs.SemanticOff" xml:space="preserve">
     <value>Meaning search is off: set AI:EmbeddingModelId to an embedding model.</value>
   </data>
