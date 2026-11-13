@@ -1450,4 +1450,94 @@
   <data name="Viewer.Disassembly.TimeLimit" xml:space="preserve">
     <value>elérte a {0:0.#} másodperces időkorlátot</value>
   </data>
+  <data name="Certificate.Title" xml:space="preserve">
+    <value>Tanúsítvány</value>
+  </data>
+  <data name="Certificate.Picker.Label" xml:space="preserve">
+    <value>Tanúsítvány</value>
+  </data>
+  <data name="Certificate.Status.Loading" xml:space="preserve">
+    <value>A tanúsítvány olvasása…</value>
+  </data>
+  <data name="Certificate.Status.Count" xml:space="preserve">
+    <value>{0}. tanúsítvány, összesen: {1}</value>
+  </data>
+  <data name="Certificate.Status.Valid" xml:space="preserve">
+    <value>érvényes eddig: {0}</value>
+  </data>
+  <data name="Certificate.Status.Expired" xml:space="preserve">
+    <value>lejárt: {0}</value>
+  </data>
+  <data name="Certificate.Status.NotYetValid" xml:space="preserve">
+    <value>érvényes ettől: {0}</value>
+  </data>
+  <data name="Certificate.Status.PrivateKeys" xml:space="preserve">
+    <value> · {0} privát kulcs blokk nincs megjelenítve</value>
+  </data>
+  <data name="Certificate.Field.Subject" xml:space="preserve">
+    <value>Tárgy</value>
+  </data>
+  <data name="Certificate.Field.Issuer" xml:space="preserve">
+    <value>Kibocsátó</value>
+  </data>
+  <data name="Certificate.Field.SelfIssued" xml:space="preserve">
+    <value>Önkiállított</value>
+  </data>
+  <data name="Certificate.Field.Serial" xml:space="preserve">
+    <value>Sorozatszám</value>
+  </data>
+  <data name="Certificate.Field.NotBefore" xml:space="preserve">
+    <value>Érvényes ettől</value>
+  </data>
+  <data name="Certificate.Field.NotAfter" xml:space="preserve">
+    <value>Érvényes eddig</value>
+  </data>
+  <data name="Certificate.Field.SignatureAlgorithm" xml:space="preserve">
+    <value>Aláírás</value>
+  </data>
+  <data name="Certificate.Field.PublicKey" xml:space="preserve">
+    <value>Nyilvános kulcs</value>
+  </data>
+  <data name="Certificate.Field.Names" xml:space="preserve">
+    <value>Alternatív nevek</value>
+  </data>
+  <data name="Certificate.Field.CertificateAuthority" xml:space="preserve">
+    <value>Tanúsító hatóság</value>
+  </data>
+  <data name="Certificate.Field.PathLength" xml:space="preserve">
+    <value>Lánchossz</value>
+  </data>
+  <data name="Certificate.Field.KeyUsage" xml:space="preserve">
+    <value>Kulcshasználat</value>
+  </data>
+  <data name="Certificate.Field.ExtendedKeyUsage" xml:space="preserve">
+    <value>Bővített kulcshasználat</value>
+  </data>
+  <data name="Certificate.Field.Sha256" xml:space="preserve">
+    <value>SHA-256</value>
+  </data>
+  <data name="Certificate.Field.Sha1" xml:space="preserve">
+    <value>SHA-1</value>
+  </data>
+  <data name="Certificate.Value.Yes" xml:space="preserve">
+    <value>igen</value>
+  </data>
+  <data name="Certificate.Value.No" xml:space="preserve">
+    <value>nem</value>
+  </data>
+  <data name="Certificate.Fallback.Failed" xml:space="preserve">
+    <value>A fájl nem nyitható meg</value>
+  </data>
+  <data name="Certificate.Hint.Step" xml:space="preserve">
+    <value>Előző vagy következő tanúsítvány megjelenítése</value>
+  </data>
+  <data name="Certificate.Fallback.NoCertificate" xml:space="preserve">
+    <value>Ebben a fájlban nincs tanúsítvány</value>
+  </data>
+  <data name="Certificate.Fallback.TooLarge" xml:space="preserve">
+    <value>A fájl nagyobb 1 MiB-nál</value>
+  </data>
+  <data name="Certificate.Fallback.Unreadable" xml:space="preserve">
+    <value>A fájl nem olvasható</value>
+  </data>
 </root>

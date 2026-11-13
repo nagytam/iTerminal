@@ -1,3 +1,4 @@
+using iConsole.Certificates;
 using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Csv;
@@ -33,7 +34,8 @@ public class ViewFileDialogCommand(
     SqliteViewerDialog? sqliteViewerDialog = null,
     HdfViewerDialog? hdfViewerDialog = null,
     ExecutableAnalysisDialog? executableAnalysisDialog = null,
-    XpsViewerDialog? xpsViewerDialog = null) : Command
+    XpsViewerDialog? xpsViewerDialog = null,
+    CertificateViewerDialog? certificateViewerDialog = null) : Command
 {
     private readonly WebBrowserDialog? _webBrowserDialog = webBrowserDialog;
     private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
@@ -49,6 +51,7 @@ public class ViewFileDialogCommand(
     private readonly HdfViewerDialog? _hdfViewerDialog = hdfViewerDialog;
     private readonly ExecutableAnalysisDialog? _executableAnalysisDialog = executableAnalysisDialog;
     private readonly XpsViewerDialog? _xpsViewerDialog = xpsViewerDialog;
+    private readonly CertificateViewerDialog? _certificateViewerDialog = certificateViewerDialog;
 
     public override string Title => "View";
     public override string Description => "Open the selected file in the viewer.";
@@ -163,6 +166,23 @@ public class ViewFileDialogCommand(
             return;
         }
 
+        // A certificate file (.pem, .crt, .cer, .der) opens in the certificate viewer when it is a local file. The command does
+        // no read: the viewer reads in the background, and when the file holds no certificate its own apply step closes it and
+        // calls back here for the text viewer. A remote file, or a command with no screen, is text as before.
+        if (_certificateViewerDialog is not null
+            && focusedFileUrl is not null
+            && focusedFileUrl.ContainerType == ContainerType.FileSystem
+            && CertificateFileTypes.IsCertificateFile(focusedFileUrl.Path)
+            && File.Exists(focusedFileUrl.Path)
+            && Control is { } control)
+        {
+            Url certificateUrl = focusedFileUrl;
+            _certificateViewerDialog.Url = certificateUrl;
+            _certificateViewerDialog.OnFallback = () => ShowTextViewerAsync(certificateUrl);
+            await control.ShowDialogAsync(_certificateViewerDialog);
+            return;
+        }
+
         // An XPS or OpenXPS package opens in the XPS viewer, from any drive: it is read as bytes like an XML document.
         if (_xpsViewerDialog is not null
             && focusedFileUrl is not null
@@ -255,7 +275,13 @@ public class ViewFileDialogCommand(
             return;
         }
 
-        _fileViewerDialog.Url = focusedFileUrl;
+        await ShowTextViewerAsync(focusedFileUrl);
+    }
+
+    /// <summary>The generic text viewer: the file as text, through <see cref="FileViewerDialog"/>.</summary>
+    private async Task ShowTextViewerAsync(Url? url)
+    {
+        _fileViewerDialog.Url = url;
         await (Control?.ShowDialogAsync(_fileViewerDialog) ?? Task.CompletedTask);
     }
 }

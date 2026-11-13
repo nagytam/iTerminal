@@ -1,7 +1,9 @@
+using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iConsole.Services;
+using iTerminal.Core.Commands;
 using iTerminal.Core.Controls.MenuBar;
 using iTerminal.Core.Dialogs;
 using iTerminal.Core.Model;
@@ -55,6 +57,41 @@ public class MenuShortcutTest
         yield return new ToolsMenuItem(null!, null!, null!, null!, contentModelService, null!, null!, null!, null!, null!, theme);
         yield return new AboutMenuItem(null!, null!, theme,
             new CommandPaletteDialog(new SettingsService(), Mock.Of<IBeepService>(), new DateTimeProviderService(), theme));
+    }
+
+    /// <summary>File > View on a certificate file opens it in the certificate viewer, not the text viewer.</summary>
+    [TestMethod]
+    [Timeout(60_000)]
+    public async Task FileMenuView_OnACertificateFile_OpensTheCertificateViewer()
+    {
+        var theme = TestTheme();
+        var path = Path.Combine(Path.GetTempPath(), $"MenuView_{Guid.NewGuid():N}.pem");
+        File.WriteAllText(path, iConsole.Test.Core.Certificates.TestCertificates.SelfSignedRsaPem("menu.test"));
+
+        try
+        {
+            var contentModel = new Mock<IContentModel>();
+            contentModel.Setup(m => m.ExistsFile(It.IsAny<Url>())).Returns(true);
+            var contentModelService = new Mock<IContentModelService>();
+            contentModelService.Setup(s => s.FocusedFileUrl).Returns(new Url(path));
+            contentModelService.Setup(s => s.GetFocusedModel()).Returns(contentModel.Object);
+            var certificateDialog = new iConsole.Dialogs.CertificateViewerDialog(theme, Mock.Of<iConsole.Services.INotificationService>());
+            var fileMenu = new FileMenuItem(contentModelService.Object, null!, null!, null!, null!, null!, theme,
+                certificateViewerDialog: certificateDialog);
+            var control = new Mock<iConsole.Controls.IControl>();
+
+            var view = fileMenu.Controls.OfType<MenuItem>().Single(item => item.Text.StartsWith("View", StringComparison.Ordinal));
+            var command = (ViewFileDialogCommand)view.Commands.Single();
+            command.Control = control.Object;
+            await command.RunAsync(null);
+
+            Assert.AreEqual(path, certificateDialog.Url?.Path);
+            control.Verify(c => c.ShowDialogAsync(certificateDialog, It.IsAny<iConsole.Controls.IControl?>()), Times.Once);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 
     internal static string Describe(Key key)

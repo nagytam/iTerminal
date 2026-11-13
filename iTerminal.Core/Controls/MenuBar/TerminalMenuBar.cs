@@ -143,7 +143,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         FileEncryptionDialog? fileEncryptionDialog = null,
         iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null,
         iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null,
-        iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null
+        iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
+        iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null
         )
         : base([], themeService)
     {
@@ -180,7 +181,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             hdfViewerDialog: hdfViewerDialog,
             streamsDialog: streamsDialog,
             executableAnalysisDialog: executableAnalysisDialog,
-            xpsViewerDialog: xpsViewerDialog));
+            xpsViewerDialog: xpsViewerDialog,
+            certificateViewerDialog: certificateViewerDialog));
 
         AddMenuItem(new EditMenuItem(
             contentModelService,

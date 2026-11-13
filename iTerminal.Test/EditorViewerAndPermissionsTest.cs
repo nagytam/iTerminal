@@ -57,7 +57,18 @@ public class EditorViewerAndPermissionsTest
         File.WriteAllBytes(Path.Combine(left, "tool.elf"), elf);
         File.WriteAllBytes(Path.Combine(left, "broken.exe"), [(byte)'M', (byte)'Z']);
         File.WriteAllBytes(Path.Combine(left, "report.xps"), XpsPackage());
+        File.WriteAllText(Path.Combine(left, "server.pem"), CertificatePem());
+        File.WriteAllText(Path.Combine(left, "key.pem"), PrivateKeyPem());
     });
+
+    /// <summary>A self-signed certificate generated for the run, so no fixture holds real key material.</summary>
+    private static string CertificatePem() => iConsole.Test.Core.Certificates.TestCertificates.SelfSignedRsaPem("e2e.test");
+
+    private static string PrivateKeyPem()
+    {
+        using var key = System.Security.Cryptography.RSA.Create(2048);
+        return key.ExportPkcs8PrivateKeyPem();
+    }
 
     /// <summary>A two-page XPS package whose sequence is named through the root relationship, as a real one is.</summary>
     private static byte[] XpsPackage()
@@ -181,6 +192,33 @@ public class EditorViewerAndPermissionsTest
         Assert.IsTrue(_app.Driver.FocusedModal is iConsole.Dialogs.HdfViewerDialog);
         Assert.IsTrue(await _app.PressAsync("Esc"));
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.HdfViewerDialog, "the HDF5 viewer to close");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task F3OnACertificateFileShowsItsFieldsAndEscClosesIt()
+    {
+        await _app.SelectEntryAsync("server.pem");
+        Assert.IsTrue(await _app.PressAsync("F3"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.CertificateViewerDialog, "the certificate viewer to open");
+        await _app.WaitForTextAsync("Subject: CN=e2e.test");
+        await _app.WaitForTextAsync("Certificate 1 of 1");
+
+        Assert.IsTrue(await _app.PressAsync("Esc"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.CertificateViewerDialog, "the certificate viewer to close");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task F3OnAPrivateKeyFileOpensTheTextViewerAndShowsNoCertificate()
+    {
+        await _app.SelectEntryAsync("key.pem");
+        Assert.IsTrue(await _app.PressAsync("F3"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.FileViewerDialog, "the text viewer to open for a key file");
+        await _app.WaitForTextAsync("BEGIN PRIVATE KEY");
+
+        Assert.IsTrue(await _app.PressAsync("Esc"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.FileViewerDialog, "the text viewer to close");
     }
 
     [Timeout(120_000)]

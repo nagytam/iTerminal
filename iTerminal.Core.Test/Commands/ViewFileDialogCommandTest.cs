@@ -1,4 +1,6 @@
-﻿using iConsole.Data;
+﻿using iConsole.Certificates;
+using iConsole.Controls;
+using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Display;
 using iConsole.Interfaces;
@@ -874,6 +876,150 @@ public class ViewFileDialogCommandTest
         {
             File.Delete(path);
         }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithACertificateFile_OpensTheCertificateViewerAndNotTheTextViewer()
+    {
+        var themeService = CreateThemeService();
+        var certificateDialog = CreateCertificateDialog(themeService);
+        var fileViewer = CreateDialog(themeService);
+        var control = new Mock<IControl>();
+        var path = WriteCertificateFile(".pem");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(fileViewer, CreateServiceForFile(path), certificateViewerDialog: certificateDialog) { Control = control.Object };
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, certificateDialog.Url?.Path);
+            Assert.AreEqual(string.Empty, certificateDialog.Status, "the command does not read the file; the viewer does once it is shown");
+            Assert.IsNull(fileViewer.Url, "a certificate file is not handed to the text viewer");
+            control.Verify(c => c.ShowDialogAsync(certificateDialog, It.IsAny<IControl?>()), Times.Once);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WhenTheCertificateViewerFallsBack_OpensTheTextViewerOnTheSameScreen()
+    {
+        var themeService = CreateThemeService();
+        var certificateDialog = CreateCertificateDialog(themeService);
+        var fileViewer = CreateDialog(themeService);
+        var control = new Mock<IControl>();
+        var path = WriteCertificateFile(".der");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(fileViewer, CreateServiceForFile(path), certificateViewerDialog: certificateDialog) { Control = control.Object };
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            certificateDialog.OnFallback!().GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, fileViewer.Url?.Path, "the fallback shows the file as text");
+            control.Verify(c => c.ShowDialogAsync(fileViewer, It.IsAny<IControl?>()), Times.Once);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithACertificateFileAndNoScreen_GoesToTheTextViewer()
+    {
+        var themeService = CreateThemeService();
+        var certificateDialog = CreateCertificateDialog(themeService);
+        var fileViewer = CreateDialog(themeService);
+        var path = WriteCertificateFile(".cer");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(fileViewer, CreateServiceForFile(path), certificateViewerDialog: certificateDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.IsNull(certificateDialog.Url, "without a screen the certificate viewer is never started");
+            Assert.AreEqual(path, fileViewer.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithARemoteCertificateFile_GoesToTheTextViewer()
+    {
+        var themeService = CreateThemeService();
+        var certificateDialog = CreateCertificateDialog(themeService);
+        var fileViewer = CreateDialog(themeService);
+        var control = new Mock<IControl>();
+        var contentModelService = new Mock<IContentModelService>();
+        contentModelService.Setup(s => s.FocusedFileUrl).Returns(new Url("ftp://example.test/cert.pem"));
+        contentModelService.Setup(s => s.GetFocusedModel()).Returns(Mock.Of<IContentModel>());
+
+        var command = new ViewFileDialogCommand(fileViewer, contentModelService.Object, certificateViewerDialog: certificateDialog) { Control = control.Object };
+        command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+        Assert.IsNull(certificateDialog.Url, "a remote certificate is not read by the viewer in this change");
+        Assert.IsNotNull(fileViewer.Url);
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    [DataRow(".txt")]
+    [DataRow(".pfx")]
+    public void ExecuteAsync_WithANonCertificateExtension_NeverReachesTheCertificateViewer(string extension)
+    {
+        var themeService = CreateThemeService();
+        var certificateDialog = CreateCertificateDialog(themeService);
+        var fileViewer = CreateDialog(themeService);
+        var control = new Mock<IControl>();
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}{extension}");
+        File.WriteAllText(path, "not a certificate");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(fileViewer, CreateServiceForFile(path), certificateViewerDialog: certificateDialog) { Control = control.Object };
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.IsNull(certificateDialog.Url);
+            Assert.AreEqual(path, fileViewer.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    private static iConsole.Dialogs.CertificateViewerDialog CreateCertificateDialog(IThemeService themeService) =>
+        new(themeService, Mock.Of<INotificationService>());
+
+    /// <summary>A temp file holding a generated self-signed certificate, PEM or DER by the extension.</summary>
+    private static string WriteCertificateFile(string extension)
+    {
+        using var certificate = iConsole.Test.Core.Certificates.TestCertificates.SelfSignedRsa("route.test");
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}{extension}");
+        if (extension == ".der")
+        {
+            File.WriteAllBytes(path, certificate.RawData);
+        }
+        else
+        {
+            File.WriteAllText(path, certificate.ExportCertificatePem());
+        }
+
+        return path;
     }
 
     private static iConsole.Dialogs.ExecutableAnalysisDialog CreateExecutableDialog(IThemeService themeService) =>
