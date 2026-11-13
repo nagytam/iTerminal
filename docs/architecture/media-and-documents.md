@@ -23,8 +23,11 @@ F3 on a file that is not music, video, a picture or a solution opens `FileViewer
 `FileToTextConverterService` for lines. Each format has a reader, and every reader takes the file's bytes
 rather than a path, so a document on an SSH, archive or memory drive reads the same as one on disk:
 
-- **OpenXML and OpenDocument** (`OfficeTextRenderer`): Word, Excel, PowerPoint, and `.odt`, `.ods`, `.odp`/`.otp`.
-- **Office 97–2003** (`LegacyOfficeTextRenderer`): `.doc`, `.xls`, `.ppt`. These are OLE2 compound files, opened
+- **OpenXML and OpenDocument** (`OfficeTextRenderer`): every variant of the three families. Word covers `.docx`,
+  `.docm`, `.dotx`, `.dotm`; Excel `.xlsx`, `.xlsm`, `.xltx`, `.xltm`; PowerPoint `.pptx`, `.pptm`, `.potx`, `.potm`,
+  `.ppsx`, `.ppsm`. OpenDocument covers `.odt`/`.ott`, `.ods`/`.ots`, `.odp`/`.otp`, and the flat XML forms `.fodt`,
+  `.fods`, `.fodp`, `.fodg`, which hold the same XML with no zip around it.
+- **Office 97–2003** (`LegacyOfficeTextRenderer`): `.doc`/`.dot`, `.xls`/`.xlt`, `.ppt`/`.pot`/`.pps`. These are OLE2 compound files, opened
   with OpenMcdf. The reader takes the text streams only: the piece table and text stream of a `.doc`, the BIFF8
   cell records and shared-string table of an `.xls` (dates and stored errors shown as they are in the sheet), and
   the text atoms of a `.ppt` reached through its persist directory, with the notes list for speaker notes.
@@ -151,8 +154,9 @@ extracts text from every file an extractor understands, and stores both the meta
   Latin-1 — never to UTF-8 with replacement characters, since a token containing U+FFFD is one no
   query can match), `MarkupTextExtractor` (a scanner, not a parser: the input is whatever is in the
   folder, and a parser would reject exactly the half-saved files most in need of being searchable),
-  `OfficeTextExtractor` (OOXML and OpenDocument are zips of XML — no interop, no package), and
-  `PdfTextExtractor`. Extraction is deliberately **synchronous**: it is CPU and disk work with nothing
+  `OfficeTextExtractor` (OOXML and OpenDocument are zips of XML — no interop, no package),
+  `BinaryOfficeTextExtractor` (the 97–2003 binaries, RTF and the flat `.fod*` files, read by the same
+  renderers the F3 viewer uses, so the index and the viewer agree), and `PdfTextExtractor`. Extraction is deliberately **synchronous**: it is CPU and disk work with nothing
   to await, and what keeps it off the render thread is that only the indexing job calls it.
 - **`PdfTextExtractor` is hand-written for the same reason the ID3 and FLAC readers are.** It scans
   for `stream … endstream` pairs rather than following the xref, which reads damaged and

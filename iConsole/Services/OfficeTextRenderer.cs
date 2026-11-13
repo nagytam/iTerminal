@@ -30,12 +30,19 @@ public static class OfficeTextRenderer
 
     internal readonly record struct GridCell(string Text, bool RightAligned = false);
 
-    public static IReadOnlyList<string> RenderWord(string path)
+    public static IReadOnlyList<string> RenderWord(string path) => RenderWord(File.ReadAllBytes(path));
+
+    /// <summary>
+    /// Renders a Word document from its bytes, so a document on any drive (SFTP, SMB, archive) reads the same as a
+    /// local one. Covers .docx, .docm, .dotx and .dotm: the package is the same, only the main part's type differs.
+    /// </summary>
+    public static IReadOnlyList<string> RenderWord(byte[] content)
     {
         List<string> lines = [];
         try
         {
-            using WordprocessingDocument doc = WordprocessingDocument.Open(path, false);
+            using MemoryStream stream = new(content);
+            using WordprocessingDocument doc = WordprocessingDocument.Open(stream, false);
             MainDocumentPart? main = doc.MainDocumentPart;
 
             foreach (HeaderPart header in main?.HeaderParts ?? [])
@@ -72,26 +79,18 @@ public static class OfficeTextRenderer
     /// bullets and box-drawn tables. An ODT is a zip whose <c>content.xml</c> holds the body; it is read with
     /// the BCL's zip and XML readers.
     /// </summary>
-    public static IReadOnlyList<string> RenderOpenDocumentText(string path)
+    public static IReadOnlyList<string> RenderOpenDocumentText(string path) => RenderOpenDocumentText(File.ReadAllBytes(path));
+
+    /// <summary>
+    /// The same as <see cref="RenderOpenDocumentText(string)"/>, from the file's bytes. A flat .fodt is read too.
+    /// </summary>
+    public static IReadOnlyList<string> RenderOpenDocumentText(byte[] content)
     {
         List<string> lines = [];
         try
         {
-            using ZipArchive archive = ZipFile.OpenRead(path);
-            ZipArchiveEntry? entry = archive.GetEntry("content.xml");
-            if (entry is null)
-            {
-                lines.Add("[Could not read the document: content.xml is missing]");
-                return lines;
-            }
-
-            XDocument content;
-            using (Stream stream = entry.Open())
-            {
-                content = XDocument.Load(stream);
-            }
-
-            XElement? body = content.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "text");
+            XDocument document = LoadOpenDocumentContent(content);
+            XElement? body = document.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "text");
             if (body is not null)
             {
                 AppendOdfBlocks(lines, body, 0);
@@ -111,26 +110,18 @@ public static class OfficeTextRenderer
     /// date or a percentage looks as it does there), falling back to the stored value. Empty rows and columns,
     /// which an ODS repeats by the million to fill out a sheet, are skipped, not expanded.
     /// </summary>
-    public static IReadOnlyList<string> RenderOpenDocumentSpreadsheet(string path)
+    public static IReadOnlyList<string> RenderOpenDocumentSpreadsheet(string path) => RenderOpenDocumentSpreadsheet(File.ReadAllBytes(path));
+
+    /// <summary>
+    /// The same as <see cref="RenderOpenDocumentSpreadsheet(string)"/>, from the file's bytes. A flat .fods is read too.
+    /// </summary>
+    public static IReadOnlyList<string> RenderOpenDocumentSpreadsheet(byte[] content)
     {
         List<string> lines = [];
         try
         {
-            using ZipArchive archive = ZipFile.OpenRead(path);
-            ZipArchiveEntry? entry = archive.GetEntry("content.xml");
-            if (entry is null)
-            {
-                lines.Add("[Could not read the workbook: content.xml is missing]");
-                return lines;
-            }
-
-            XDocument content;
-            using (Stream stream = entry.Open())
-            {
-                content = XDocument.Load(stream);
-            }
-
-            XElement? spreadsheet = content.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "spreadsheet");
+            XDocument document = LoadOpenDocumentContent(content);
+            XElement? spreadsheet = document.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "spreadsheet");
             foreach (XElement table in spreadsheet?.Elements(TableNs + "table") ?? [])
             {
                 AppendHeading(lines, (string?)table.Attribute(TableNs + "name") ?? "(sheet)");
@@ -156,20 +147,7 @@ public static class OfficeTextRenderer
         List<string> lines = [];
         try
         {
-            using ZipArchive archive = new(new MemoryStream(content), ZipArchiveMode.Read);
-            ZipArchiveEntry? entry = archive.GetEntry("content.xml");
-            if (entry is null)
-            {
-                lines.Add("[Could not read the presentation: content.xml is missing]");
-                return lines;
-            }
-
-            XDocument document;
-            using (Stream stream = entry.Open())
-            {
-                document = XDocument.Load(stream);
-            }
-
+            XDocument document = LoadOpenDocumentContent(content);
             XElement? presentation = document.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "presentation");
             int number = 0;
             foreach (XElement page in presentation?.Elements(DrawNs + "page") ?? [])
@@ -195,20 +173,7 @@ public static class OfficeTextRenderer
         List<string> lines = [];
         try
         {
-            using ZipArchive archive = new(new MemoryStream(content), ZipArchiveMode.Read);
-            ZipArchiveEntry? entry = archive.GetEntry("content.xml");
-            if (entry is null)
-            {
-                lines.Add("[Could not read the drawing: content.xml is missing]");
-                return lines;
-            }
-
-            XDocument document;
-            using (Stream stream = entry.Open())
-            {
-                document = XDocument.Load(stream);
-            }
-
+            XDocument document = LoadOpenDocumentContent(content);
             XElement? drawing = document.Root?.Element(OfficeNs + "body")?.Element(OfficeNs + "drawing");
             int number = 0;
             foreach (XElement page in drawing?.Elements(DrawNs + "page") ?? [])
@@ -235,12 +200,18 @@ public static class OfficeTextRenderer
         return Trim(lines);
     }
 
-    public static IReadOnlyList<string> RenderSpreadsheet(string path)
+    public static IReadOnlyList<string> RenderSpreadsheet(string path) => RenderSpreadsheet(File.ReadAllBytes(path));
+
+    /// <summary>
+    /// Renders an Excel workbook from its bytes. Covers .xlsx, .xlsm, .xltx and .xltm.
+    /// </summary>
+    public static IReadOnlyList<string> RenderSpreadsheet(byte[] content)
     {
         List<string> lines = [];
         try
         {
-            using SpreadsheetDocument doc = SpreadsheetDocument.Open(path, false);
+            using MemoryStream stream = new(content);
+            using SpreadsheetDocument doc = SpreadsheetDocument.Open(stream, false);
             WorkbookPart? workbook = doc.WorkbookPart;
             if (workbook?.Workbook?.Sheets is null)
             {
@@ -273,12 +244,18 @@ public static class OfficeTextRenderer
         return Trim(lines);
     }
 
-    public static IReadOnlyList<string> RenderPresentation(string path)
+    public static IReadOnlyList<string> RenderPresentation(string path) => RenderPresentation(File.ReadAllBytes(path));
+
+    /// <summary>
+    /// Renders a PowerPoint presentation from its bytes. Covers .pptx, .pptm, .potx, .potm, .ppsx and .ppsm.
+    /// </summary>
+    public static IReadOnlyList<string> RenderPresentation(byte[] content)
     {
         List<string> lines = [];
         try
         {
-            using PresentationDocument doc = PresentationDocument.Open(path, false);
+            using MemoryStream stream = new(content);
+            using PresentationDocument doc = PresentationDocument.Open(stream, false);
             PresentationPart? presentation = doc.PresentationPart;
             if (presentation?.Presentation?.SlideIdList is null)
             {
@@ -305,6 +282,26 @@ public static class OfficeTextRenderer
         }
 
         return Trim(lines);
+    }
+
+    /// <summary>
+    /// The XML document an OpenDocument file holds its body in. A zipped package keeps it in <c>content.xml</c>; a
+    /// flat file (.fodt, .fods, .fodp, .fodg) is that XML itself, with no zip around it. Throws when a package has no
+    /// <c>content.xml</c>, and the caller reports that as its "could not read" line.
+    /// </summary>
+    private static XDocument LoadOpenDocumentContent(byte[] content)
+    {
+        bool isZip = content.Length >= 4 && content[0] == (byte)'P' && content[1] == (byte)'K';
+        if (!isZip)
+        {
+            return XDocument.Load(new MemoryStream(content));
+        }
+
+        using ZipArchive archive = new(new MemoryStream(content), ZipArchiveMode.Read);
+        ZipArchiveEntry entry = archive.GetEntry("content.xml")
+            ?? throw new InvalidDataException("content.xml is missing");
+        using Stream stream = entry.Open();
+        return XDocument.Load(stream);
     }
 
     #region Word

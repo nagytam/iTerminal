@@ -518,6 +518,9 @@ public partial class Url
                     _displayName = ftpPath.TrimEnd('/').Split('/').Last();
                     _name = _displayName;
                     PathType = ftpPath.EndsWith('/') ? PathType.Folder : PathType.File;
+                    // As on SMB: a file on an FTP server needs its extension for the viewer and the preview.
+                    var ftpDot = _name.LastIndexOf('.');
+                    _extension = PathType == PathType.File && ftpDot > 0 && ftpDot < _name.Length - 1 ? _name[(ftpDot + 1)..] : string.Empty;
                     ContainerType = ContainerType.FtpFileSystem;
                     _container = Data.Container.FTP;
                 }
@@ -551,6 +554,10 @@ public partial class Url
                 _displayName = smbPath.TrimEnd('/').Split('/').Last();
                 _name = _displayName;
                 PathType = smbPath.EndsWith('/') ? PathType.Folder : PathType.File;
+                // Without this a file on a share has no extension, so the viewer, the preview and the file
+                // associations would all treat an Office document as a plain text file.
+                var smbDot = _name.LastIndexOf('.');
+                _extension = PathType == PathType.File && smbDot > 0 && smbDot < _name.Length - 1 ? _name[(smbDot + 1)..] : string.Empty;
                 ContainerType = ContainerType.SmbFileSystem;
                 _container = Data.Container.SMB;
                 _directorySeparatorChar = DirectorySeparatorSlashChar;
