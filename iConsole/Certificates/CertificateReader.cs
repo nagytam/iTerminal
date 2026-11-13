@@ -240,13 +240,30 @@ public static partial class CertificateReader
             if (extension is X509EnhancedKeyUsageExtension usage)
             {
                 return usage.EnhancedKeyUsages.Cast<System.Security.Cryptography.Oid>()
-                    .Select(oid => Printable(oid.FriendlyName ?? oid.Value ?? string.Empty))
+                    .Select(EnhancedKeyUsageName)
                     .ToList();
             }
         }
 
         return [];
     }
+
+    // The friendly names of the common purposes differ by operating system (Windows says "Server Authentication", OpenSSL
+    // says "TLS Web Server Authentication"), so the common ones are named here and the rest keep the system's name.
+    private static readonly Dictionary<string, string> EnhancedKeyUsageNames = new()
+    {
+        ["1.3.6.1.5.5.7.3.1"] = "TLS Web Server Authentication",
+        ["1.3.6.1.5.5.7.3.2"] = "TLS Web Client Authentication",
+        ["1.3.6.1.5.5.7.3.3"] = "Code Signing",
+        ["1.3.6.1.5.5.7.3.4"] = "E-mail Protection",
+        ["1.3.6.1.5.5.7.3.8"] = "Time Stamping",
+        ["1.3.6.1.5.5.7.3.9"] = "OCSP Signing",
+    };
+
+    private static string EnhancedKeyUsageName(System.Security.Cryptography.Oid oid) =>
+        oid.Value is { } value && EnhancedKeyUsageNames.TryGetValue(value, out string? name)
+            ? name
+            : Printable(oid.FriendlyName ?? oid.Value ?? string.Empty);
 
     /// <summary>
     /// Replaces control and format characters (bidi overrides, zero-width joiners and the like), so text from a certificate
