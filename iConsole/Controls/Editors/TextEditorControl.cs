@@ -12,9 +12,12 @@ using System.Text;
 
 namespace iConsole.Controls.Editors;
 
-public class TextEditorControl 
+public partial class TextEditorControl
     : TextViewerControl, IDirtyModel, IDirtyReadOnlyModel, IReadOnly
 {
+    /// <summary>The column Ctrl+Shift+I marks when it turns the edge on (the old 80-column limit).</summary>
+    public const int DefaultEdgeColumn = 80;
+
     private bool _isDirty = false;
     public bool IsDirty
     {
@@ -1025,9 +1028,19 @@ public class TextEditorControl
             yield return ("Ctrl+Shift+U / Ctrl+Shift+J", UiText.Get("Hint.UpperLowerCase", "Upper / lower case"));
             yield return ("Ctrl+Shift+S / Ctrl+Shift+D", UiText.Get("Hint.SortLines", "Sort lines up / down"));
             yield return ("Ctrl+Shift+E", UiText.Get("Hint.LineEnding", "Line ending (CRLF, LF, CR)"));
+            yield return ("Alt+Up / Alt+Down", UiText.Get("Hint.MoveLines", "Move the line (or the selected lines) up / down"));
+            yield return ("Ctrl+D", UiText.Get("Hint.DuplicateLine", "Duplicate the line (or the selected lines)"));
+            yield return ("Ctrl+Q", UiText.Get("Hint.ToggleComment", "Comment or uncomment the line (or the selected lines)"));
+            yield return ("Ctrl+Shift+T", UiText.Get("Hint.TabsToSpaces", "Tabs to spaces"));
+            yield return ("Ctrl+Shift+M", UiText.Get("Hint.TrimTrailing", "Trim the trailing spaces"));
+            yield return ("Ctrl+Shift+N", UiText.Get("Hint.JoinLines", "Join the lines"));
+            yield return ("Ctrl+Shift+Q", UiText.Get("Hint.RemoveDuplicateLines", "Remove the duplicate lines"));
+            yield return ("Ctrl+Shift+B", UiText.Get("Hint.RemoveBlankLines", "Remove the blank lines"));
         }
 
         yield return ("Ctrl+Shift+H", UiText.Get("Hint.MarkAll", "Mark all matches (again: clear)"));
+        yield return ("Ctrl+Shift+L", UiText.Get("Hint.ShowWhitespace", "Show the spaces, tabs and line ends (again: hide)"));
+        yield return ("Ctrl+Shift+I", UiText.Get("Hint.EdgeColumn", "Mark the 80th column (again: hide)"));
 
         yield return ("Ctrl+S / F2", iConsole.Localization.UiText.Get("Common.Save", "Save"));
         yield return ("F5", UiText.Get("Editor.GoToLine", "Go to line"));
@@ -1082,6 +1095,50 @@ public class TextEditorControl
                 case ConsoleKey.H:
                     ToggleMarkAll();
                     return true;
+                case ConsoleKey.T:
+                    TabsToSpaces();
+                    return true;
+                case ConsoleKey.M:
+                    TrimTrailingWhitespace();
+                    return true;
+                case ConsoleKey.N:
+                    JoinLines();
+                    return true;
+                case ConsoleKey.Q:
+                    RemoveDuplicateLines();
+                    return true;
+                case ConsoleKey.B:
+                    RemoveBlankLines();
+                    return true;
+                case ConsoleKey.L:
+                    ShowWhitespace = !ShowWhitespace;
+                    return true;
+                case ConsoleKey.I:
+                    EdgeColumn = EdgeColumn == 0 ? DefaultEdgeColumn : 0;
+                    return true;
+            }
+        }
+
+        // Alt+Up and Alt+Down move the line (or the selected lines); Ctrl+D copies them below, Ctrl+Q comments them out.
+        if (IsEnabled && keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift
+            && keyEvent.ConsoleKey is ConsoleKey.UpArrow or ConsoleKey.DownArrow)
+        {
+            MoveLines(keyEvent.ConsoleKey == ConsoleKey.DownArrow);
+            return true;
+        }
+
+        if (IsEnabled && !keyEvent.Alt && keyEvent.Control && !keyEvent.Shift)
+        {
+            if (keyEvent.ConsoleKey == ConsoleKey.D)
+            {
+                DuplicateLines();
+                return true;
+            }
+
+            if (keyEvent.ConsoleKey == ConsoleKey.Q)
+            {
+                ToggleLineComment();
+                return true;
             }
         }
 
