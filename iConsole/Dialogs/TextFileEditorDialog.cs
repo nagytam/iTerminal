@@ -35,10 +35,12 @@ public class TextFileEditorDialog : Dialog
         IFileToTextConverterService fileToTextConverterService,
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
-        IThemeService themeService)
+        IThemeService themeService,
+        EditorBackupStore? backups = null)
         : base(nameof(TextFileEditorDialog), themeService)
     {
         _contentModelService = contentModelService;
+        _backups = backups;
         _fileToTextConverterService = fileToTextConverterService;
 
         TextEditorControl = new TextEditorControl(themeService);
@@ -73,6 +75,7 @@ public class TextFileEditorDialog : Dialog
         if (saved)
         {
             _pending = null;
+            DeleteBackup();
             _seenStamp = StampOf(Url);
             _changedOnDisk = false;
             StateHasChanged();
@@ -101,6 +104,24 @@ public class TextFileEditorDialog : Dialog
     private volatile PendingDiskText? _pending;
     private long _lastDiskCheck;
     private int _diskCheckRunning;
+
+    /// <summary>Where unsaved text is backed up, or null for none (the editor then keeps nothing across a crash).</summary>
+    private readonly EditorBackupStore? _backups;
+
+    /// <summary>How often unsaved text is backed up while it changes.</summary>
+    public static readonly TimeSpan BackupInterval = TimeSpan.FromSeconds(10);
+
+    private long _lastBackupTick;
+    private int _backupRunning;
+
+    /// <summary>The text the last backup holds, so an idle editor does not write the same text again.</summary>
+    private string[]? _lastBackedUp;
+
+    /// <summary>
+    /// The last backup write or removal started from the editor: nothing waits on it; it exists so a test can wait for the
+    /// disk to settle.
+    /// </summary>
+    public Task PendingBackup { get; private set; } = Task.CompletedTask;
 
     /// <summary>
     /// The stamp of a local file, or null when the file is not on this machine's disk or cannot be found. Other drives
@@ -186,6 +207,7 @@ public class TextFileEditorDialog : Dialog
     {
         base.OnIdle();
         ApplyDiskChange();
+        MaybeBackup();
 
         var now = Environment.TickCount64;
         if (now - _lastDiskCheck >= DiskCheckInterval.TotalMilliseconds
@@ -215,7 +237,9 @@ public class TextFileEditorDialog : Dialog
     {
         if (_closeConfirmed || !TextEditorControl.IsDirty || TextEditorControl.IsReadOnly)
         {
+            // Closed with nothing unsaved (or the changes discarded): the backup has nothing left to keep.
             _closeConfirmed = false;
+            DeleteBackup();
             base.Close();
             return;
         }
@@ -275,6 +299,7 @@ public class TextFileEditorDialog : Dialog
         await _fileToTextConverterService.ReadFileAsync(Url, fileSystem!, TextEditorControl.TextModel);
         _seenStamp = StampOf(Url);
         TextEditorControl.Syntax = SyntaxHighlighter.ForFile(Url is null ? null : (Url.Path.Length > 0 ? Url.Path : Url.FullUrl));
+        await RestoreBackupAsync();
 
         await base.OnInitializeAsync();
     }
@@ -284,6 +309,7 @@ public class TextFileEditorDialog : Dialog
         yield return ("Ctrl+S", UiText.Get("Viewer.HintSave", "Save the file"));
         yield return ("Tab", UiText.Get("Viewer.HintIndent", "Indent"));
         yield return ("F8", UiText.Get("Viewer.HintCodePage", "Next code page (Shift: previous)"));
+        yield return ("Ctrl+F8", UiText.Get("Viewer.HintConvertEncoding", "Save in the next encoding (Shift: previous)"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -293,6 +319,15 @@ public class TextFileEditorDialog : Dialog
             && !keyEvent.Control && !keyEvent.Alt)
         {
             SwitchEncoding(backwards: keyEvent.Shift);
+            return true;
+        }
+
+        // Ctrl+F8 changes the encoding the file is saved in, keeping the text; F8 re-reads it under another code page.
+        if (keyEvent.KeyPressType == KeyPressType.Down
+            && keyEvent.ConsoleKey == ConsoleKey.F8
+            && keyEvent.Control && !keyEvent.Alt)
+        {
+            ConvertEncoding(backwards: keyEvent.Shift);
             return true;
         }
 
@@ -337,6 +372,116 @@ public class TextFileEditorDialog : Dialog
         TextEncodings.Reinterpret(model, TextEncodings.Next(model.Encoding, backwards));
         TextEditorControl.IsDirty = true;
         TextEditorControl.Refresh();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Ctrl+F8 / Ctrl+Shift+F8: the file is saved in the next (previous) encoding. Unlike F8, the text is not read again:
+    /// what is on screen is what is written, and the file counts as changed.
+    /// </summary>
+    public void ConvertEncoding(bool backwards = false)
+    {
+        if (TextEditorControl.IsReadOnly)
+        {
+            return;
+        }
+
+        var model = TextEditorControl.TextModel;
+        model.Encoding = TextEncodings.Next(model.Encoding, backwards);
+        TextEditorControl.IsDirty = true;
+        StateHasChanged();
+    }
+
+    /// <summary>The address a backup is kept under: a local file's. Other drives (SFTP, archives, memory) are not backed up.</summary>
+    private string? BackupKey => Url is { } url && string.Equals(url.UrlScheme, Container.FILE, StringComparison.OrdinalIgnoreCase)
+        ? url.FullUrl
+        : null;
+
+    /// <summary>
+    /// Backs up the unsaved text, on a worker thread, while it keeps changing: at most once per <see cref="BackupInterval"/>,
+    /// and only when it differs from the last backup. Runs on the UI thread from <see cref="OnIdle"/>.
+    /// </summary>
+    private void MaybeBackup()
+    {
+        var store = _backups;
+        if (store is null || !TextEditorControl.IsDirty || TextEditorControl.IsReadOnly)
+        {
+            return;
+        }
+
+        var key = BackupKey;
+        var now = Environment.TickCount64;
+        if (key is null || now - _lastBackupTick < BackupInterval.TotalMilliseconds
+            || Interlocked.CompareExchange(ref _backupRunning, 1, 0) != 0)
+        {
+            return;
+        }
+
+        _lastBackupTick = now;
+        var model = TextEditorControl.TextModel;
+        var lines = model.Lines.AsSnapshot().ToArray();
+        if (_lastBackedUp is not null && lines.SequenceEqual(_lastBackedUp, StringComparer.Ordinal))
+        {
+            Interlocked.Exchange(ref _backupRunning, 0);
+            return;
+        }
+
+        _lastBackedUp = lines;
+        var backup = new EditorBackup(DateTime.UtcNow, lines, model.LineEnding, model.Encoding.WebName);
+        PendingBackup = Task.Run(() => store.Write(key, backup)).ContinueWith(task =>
+        {
+            // Observing the exception keeps a failed write from being left unobserved; the next change tries again.
+            _ = task.Exception;
+            Interlocked.Exchange(ref _backupRunning, 0);
+        }, TaskScheduler.Default);
+    }
+
+    /// <summary>Removes the backup of this file: it was saved, or closed with nothing unsaved.</summary>
+    private void DeleteBackup()
+    {
+        var store = _backups;
+        var key = BackupKey;
+        _lastBackedUp = null;
+        if (store is null || key is null)
+        {
+            return;
+        }
+
+        PendingBackup = Task.Run(() => store.Delete(key));
+    }
+
+    /// <summary>
+    /// Puts back the unsaved text of a backup that is newer than the file on disk and differs from it, as unsaved edits. An
+    /// older backup, or one that matches the file, is removed.
+    /// </summary>
+    private async Task RestoreBackupAsync()
+    {
+        var store = _backups;
+        var key = BackupKey;
+        if (store is null || key is null)
+        {
+            return;
+        }
+
+        var backup = await Task.Run(() => store.Read(key));
+        if (backup is null)
+        {
+            return;
+        }
+
+        var model = TextEditorControl.TextModel;
+        var sameAsFile = model.Lines.AsSnapshot().SequenceEqual(backup.Lines, StringComparer.Ordinal);
+        if (StampOf(Url) is not { } stamp || backup.SavedAtUtc <= stamp.Modified || sameAsFile)
+        {
+            DeleteBackup();
+            return;
+        }
+
+        var encoding = TextEncodings.Available.FirstOrDefault(e => string.Equals(e.WebName, backup.EncodingName, StringComparison.OrdinalIgnoreCase))
+            ?? model.Encoding;
+        TextEditorControl.ReplaceAllText(backup.Lines, backup.LineEnding, encoding);
+        TextEditorControl.IsDirty = true;
+        _lastBackedUp = backup.Lines;
         StateHasChanged();
     }
 

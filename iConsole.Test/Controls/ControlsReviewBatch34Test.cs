@@ -39,7 +39,7 @@ public class ControlsReviewBatch34Test
         TextFileEditorDialog dialog = new(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
             new DateTimeProviderService(), _theme);
 
-        CollectionAssert.AreEqual(new[] { "Ctrl+S", "Tab", "F8" }, Keys(dialog.GetKeyHints()));
+        CollectionAssert.AreEqual(new[] { "Ctrl+S", "Tab", "F8", "Ctrl+F8" }, Keys(dialog.GetKeyHints()));
     }
 
     [Timeout(60_000)]

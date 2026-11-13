@@ -352,6 +352,12 @@
   <data name="Hint.DeleteCharacter" xml:space="preserve">
     <value>Borrar un carácter</value>
   </data>
+  <data name="Hint.FoldAll" xml:space="preserve">
+    <value>Plegar o desplegar todas las regiones</value>
+  </data>
+  <data name="Viewer.HintConvertEncoding" xml:space="preserve">
+    <value>Guardar con la siguiente codificación (Mayús: anterior)</value>
+  </data>
   <data name="Hint.DeleteLine" xml:space="preserve">
     <value>Borrar la línea</value>
   </data>

@@ -383,13 +383,31 @@ public partial class TextViewerControl
         return marker + number;
     }
 
-    /// <summary>Alt+Left folds the region at the cursor line and Alt+Right opens it.</summary>
+    /// <summary>
+    /// Alt+Left folds the region at the cursor line and Alt+Right opens it; Alt+Shift+Left folds every region and
+    /// Alt+Shift+Right opens them all.
+    /// </summary>
     private bool HandleFoldKey(KeyEvent keyEvent)
     {
-        if (!_enableFolding || !IsEnabled || !keyEvent.Alt || keyEvent.Control || keyEvent.Shift
+        if (!_enableFolding || !IsEnabled || !keyEvent.Alt || keyEvent.Control
             || keyEvent.ConsoleKey is not (ConsoleKey.LeftArrow or ConsoleKey.RightArrow) || TextModel.Lines.Count == 0)
         {
             return false;
+        }
+
+        if (keyEvent.Shift)
+        {
+            if (keyEvent.ConsoleKey == ConsoleKey.LeftArrow)
+            {
+                FoldAll();
+            }
+            else
+            {
+                UnfoldAll();
+            }
+
+            KeepCursorInText();
+            return true;
         }
 
         int line = (int)Math.Clamp(ScrollableModel.CursorPosition.Y, 0, TextModel.Lines.Count - 1);

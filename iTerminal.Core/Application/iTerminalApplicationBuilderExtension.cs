@@ -249,6 +249,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IJob, DocumentLibraryIndexJob>();
         services.AddTransient<iTerminal.Core.Dialogs.Documents.DocumentManagerDialog>();
         services.AddTransient<TextFileEditorDialog>();
+        // Unsaved text is backed up beside the database, so a test that moves DataDirectory also moves the backups.
+        services.AddSingleton(new iConsole.Services.EditorBackupStore(Path.Combine(databaseDirectory, "backups")));
         services.AddTransient<CreateFolderDialog>();
         services.AddTransient<CreateFileDialog>();
         services.AddTransient<DeleteDialog>();
