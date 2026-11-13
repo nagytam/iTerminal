@@ -358,6 +358,36 @@
   <data name="Viewer.HintConvertEncoding" xml:space="preserve">
     <value>Save in the next encoding (Shift: previous)</value>
   </data>
+  <data name="Hint.MoveLines" xml:space="preserve">
+    <value>Move the line (or the selected lines) up / down</value>
+  </data>
+  <data name="Hint.DuplicateLine" xml:space="preserve">
+    <value>Duplicate the line (or the selected lines)</value>
+  </data>
+  <data name="Hint.ToggleComment" xml:space="preserve">
+    <value>Comment or uncomment the line (or the selected lines)</value>
+  </data>
+  <data name="Hint.TabsToSpaces" xml:space="preserve">
+    <value>Tabs to spaces</value>
+  </data>
+  <data name="Hint.TrimTrailing" xml:space="preserve">
+    <value>Trim the trailing spaces</value>
+  </data>
+  <data name="Hint.JoinLines" xml:space="preserve">
+    <value>Join the lines</value>
+  </data>
+  <data name="Hint.RemoveDuplicateLines" xml:space="preserve">
+    <value>Remove the duplicate lines</value>
+  </data>
+  <data name="Hint.RemoveBlankLines" xml:space="preserve">
+    <value>Remove the blank lines</value>
+  </data>
+  <data name="Hint.ShowWhitespace" xml:space="preserve">
+    <value>Show the spaces, tabs and line ends (again: hide)</value>
+  </data>
+  <data name="Hint.EdgeColumn" xml:space="preserve">
+    <value>Mark the 80th column (again: hide)</value>
+  </data>
   <data name="Hint.DeleteLine" xml:space="preserve">
     <value>Delete the line</value>
   </data>

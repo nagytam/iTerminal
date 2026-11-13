@@ -64,7 +64,7 @@ general knowledge of each product and are approximate.
 | Remote protocols | Y (8 + phone) | Y | Y | Y | Y | Y | P |
 | Site manager UI for saved connections | Y (SSH, PowerShell, FTP, WebDAV with a stored password; no S3/SMB form yet) | Y | Y | Y | Y | Y | P |
 | Viewer: text, hex, search, image | Y | Y | Y | Y | Y | Y | P |
-| Editor with syntax colouring (also in the viewer, wrapped or not) | Y (indent, auto-indent, undo, replace, bookmarks, save as read, unsaved-changes prompt, fold or open every region, auto-close brackets and quotes, encoding change on save, unsaved-text backups restored after a crash) | Y | P | Y | Y | - | - |
+| Editor with syntax colouring (also in the viewer, wrapped or not) | Y (indent, auto-indent, undo, replace, bookmarks, save as read, unsaved-changes prompt, move/duplicate/comment lines, trim/join/dedupe/blank-line removal, tabs to spaces, show whitespace and line ends, edge column, fold or open every region, auto-close brackets and quotes, encoding change on save, unsaved-text backups restored after a crash) | Y | P | Y | Y | - | - |
 | Internal 3-way merge | - | - | - | - | - | - | - |
 | Command-line integration | Y | Y | Y | Y | Y | Y | P |
 | User menu / custom commands | Y | Y | Y | Y | Y | Y | - |

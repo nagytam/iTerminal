@@ -358,6 +358,36 @@
   <data name="Viewer.HintConvertEncoding" xml:space="preserve">
     <value>Beim Speichern nächste Kodierung (Umschalt: vorherige)</value>
   </data>
+  <data name="Hint.MoveLines" xml:space="preserve">
+    <value>Zeile (oder die markierten Zeilen) nach oben / unten verschieben</value>
+  </data>
+  <data name="Hint.DuplicateLine" xml:space="preserve">
+    <value>Zeile (oder die markierten Zeilen) duplizieren</value>
+  </data>
+  <data name="Hint.ToggleComment" xml:space="preserve">
+    <value>Zeile (oder die markierten Zeilen) auskommentieren oder Kommentar entfernen</value>
+  </data>
+  <data name="Hint.TabsToSpaces" xml:space="preserve">
+    <value>Tabulatoren in Leerzeichen</value>
+  </data>
+  <data name="Hint.TrimTrailing" xml:space="preserve">
+    <value>Nachgestellte Leerzeichen entfernen</value>
+  </data>
+  <data name="Hint.JoinLines" xml:space="preserve">
+    <value>Zeilen zusammenfügen</value>
+  </data>
+  <data name="Hint.RemoveDuplicateLines" xml:space="preserve">
+    <value>Doppelte Zeilen entfernen</value>
+  </data>
+  <data name="Hint.RemoveBlankLines" xml:space="preserve">
+    <value>Leere Zeilen entfernen</value>
+  </data>
+  <data name="Hint.ShowWhitespace" xml:space="preserve">
+    <value>Leerzeichen, Tabulatoren und Zeilenenden anzeigen (erneut: ausblenden)</value>
+  </data>
+  <data name="Hint.EdgeColumn" xml:space="preserve">
+    <value>80. Spalte markieren (erneut: ausblenden)</value>
+  </data>
   <data name="Hint.DeleteLine" xml:space="preserve">
     <value>Die Zeile löschen</value>
   </data>

@@ -358,6 +358,36 @@
   <data name="Viewer.HintConvertEncoding" xml:space="preserve">
     <value>Salva nella codifica successiva (Maiusc: precedente)</value>
   </data>
+  <data name="Hint.MoveLines" xml:space="preserve">
+    <value>Sposta la riga (o le righe selezionate) su / giù</value>
+  </data>
+  <data name="Hint.DuplicateLine" xml:space="preserve">
+    <value>Duplica la riga (o le righe selezionate)</value>
+  </data>
+  <data name="Hint.ToggleComment" xml:space="preserve">
+    <value>Commenta o decommenta la riga (o le righe selezionate)</value>
+  </data>
+  <data name="Hint.TabsToSpaces" xml:space="preserve">
+    <value>Tabulazioni in spazi</value>
+  </data>
+  <data name="Hint.TrimTrailing" xml:space="preserve">
+    <value>Rimuovi gli spazi finali</value>
+  </data>
+  <data name="Hint.JoinLines" xml:space="preserve">
+    <value>Unisci le righe</value>
+  </data>
+  <data name="Hint.RemoveDuplicateLines" xml:space="preserve">
+    <value>Rimuovi le righe duplicate</value>
+  </data>
+  <data name="Hint.RemoveBlankLines" xml:space="preserve">
+    <value>Rimuovi le righe vuote</value>
+  </data>
+  <data name="Hint.ShowWhitespace" xml:space="preserve">
+    <value>Mostra spazi, tabulazioni e fini riga (di nuovo: nascondi)</value>
+  </data>
+  <data name="Hint.EdgeColumn" xml:space="preserve">
+    <value>Evidenzia la colonna 80 (di nuovo: nascondi)</value>
+  </data>
   <data name="Hint.DeleteLine" xml:space="preserve">
     <value>Elimina la riga</value>
   </data>
