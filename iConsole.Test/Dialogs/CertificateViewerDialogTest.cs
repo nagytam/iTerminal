@@ -268,7 +268,9 @@ public class CertificateViewerDialogTest
         await dialog.OnInitializeAsync();
 
         Assert.IsTrue(await dialog.HandleKeyEventAsync(new KeyEvent('\0', ConsoleKey.Escape, false, false, false)));
-        await dialog.LoadTask;
+        // Escape may cancel the read before its worker starts, which leaves a cancelled task. Wait for it without rethrowing:
+        // the dialog's OnIdle treats a cancelled task as a dropped read.
+        await Task.WhenAny(dialog.LoadTask);
         dialog.OnIdle();
 
         Assert.AreEqual(0, fallbacks, "a cancelled read is dropped, not shown as a fallback");
