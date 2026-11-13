@@ -1450,4 +1450,94 @@
   <data name="Viewer.Disassembly.TimeLimit" xml:space="preserve">
     <value>la limite de {0:0.#} secondes a été atteinte</value>
   </data>
+  <data name="Certificate.Title" xml:space="preserve">
+    <value>Certificat</value>
+  </data>
+  <data name="Certificate.Picker.Label" xml:space="preserve">
+    <value>Certificat</value>
+  </data>
+  <data name="Certificate.Status.Loading" xml:space="preserve">
+    <value>Lecture du certificat…</value>
+  </data>
+  <data name="Certificate.Status.Count" xml:space="preserve">
+    <value>Certificat {0} sur {1}</value>
+  </data>
+  <data name="Certificate.Status.Valid" xml:space="preserve">
+    <value>valide jusqu'au {0}</value>
+  </data>
+  <data name="Certificate.Status.Expired" xml:space="preserve">
+    <value>expiré le {0}</value>
+  </data>
+  <data name="Certificate.Status.NotYetValid" xml:space="preserve">
+    <value>non valide avant le {0}</value>
+  </data>
+  <data name="Certificate.Status.PrivateKeys" xml:space="preserve">
+    <value> · {0} bloc de clé privée non affiché</value>
+  </data>
+  <data name="Certificate.Field.Subject" xml:space="preserve">
+    <value>Sujet</value>
+  </data>
+  <data name="Certificate.Field.Issuer" xml:space="preserve">
+    <value>Émetteur</value>
+  </data>
+  <data name="Certificate.Field.SelfIssued" xml:space="preserve">
+    <value>Auto-émis</value>
+  </data>
+  <data name="Certificate.Field.Serial" xml:space="preserve">
+    <value>Numéro de série</value>
+  </data>
+  <data name="Certificate.Field.NotBefore" xml:space="preserve">
+    <value>Valide à partir du</value>
+  </data>
+  <data name="Certificate.Field.NotAfter" xml:space="preserve">
+    <value>Valide jusqu'au</value>
+  </data>
+  <data name="Certificate.Field.SignatureAlgorithm" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="Certificate.Field.PublicKey" xml:space="preserve">
+    <value>Clé publique</value>
+  </data>
+  <data name="Certificate.Field.Names" xml:space="preserve">
+    <value>Autres noms</value>
+  </data>
+  <data name="Certificate.Field.CertificateAuthority" xml:space="preserve">
+    <value>Autorité de certification</value>
+  </data>
+  <data name="Certificate.Field.PathLength" xml:space="preserve">
+    <value>Longueur de chemin</value>
+  </data>
+  <data name="Certificate.Field.KeyUsage" xml:space="preserve">
+    <value>Usage de la clé</value>
+  </data>
+  <data name="Certificate.Field.ExtendedKeyUsage" xml:space="preserve">
+    <value>Usage étendu de la clé</value>
+  </data>
+  <data name="Certificate.Field.Sha256" xml:space="preserve">
+    <value>SHA-256</value>
+  </data>
+  <data name="Certificate.Field.Sha1" xml:space="preserve">
+    <value>SHA-1</value>
+  </data>
+  <data name="Certificate.Value.Yes" xml:space="preserve">
+    <value>oui</value>
+  </data>
+  <data name="Certificate.Value.No" xml:space="preserve">
+    <value>non</value>
+  </data>
+  <data name="Certificate.Fallback.Failed" xml:space="preserve">
+    <value>Impossible d'ouvrir le fichier</value>
+  </data>
+  <data name="Certificate.Hint.Step" xml:space="preserve">
+    <value>Afficher le certificat précédent ou suivant</value>
+  </data>
+  <data name="Certificate.Fallback.NoCertificate" xml:space="preserve">
+    <value>Aucun certificat dans ce fichier</value>
+  </data>
+  <data name="Certificate.Fallback.TooLarge" xml:space="preserve">
+    <value>Le fichier dépasse 1 Mio</value>
+  </data>
+  <data name="Certificate.Fallback.Unreadable" xml:space="preserve">
+    <value>Le fichier n'a pas pu être lu</value>
+  </data>
 </root>
