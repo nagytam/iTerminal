@@ -3,6 +3,26 @@ namespace iConsole.Graphics;
 /// <summary>The emblem on the splash screen, drawn from shapes so the app carries no image file: a gradient tile with a prompt on it.</summary>
 public static class SplashLogo
 {
+    /// <summary>
+    /// The emblem as a Sixel picture, square and as tall as <paramref name="rows"/> cells, when the terminal can show pictures.
+    /// <paramref name="columns"/> is the width of the picture in cells.
+    /// </summary>
+    public static bool TryEncode(TerminalGraphics graphics, int rows, out string? sixel, out int columns)
+    {
+        sixel = null;
+        columns = 0;
+        if (!graphics.IsSixelSupported)
+        {
+            return false;
+        }
+
+        int pixelHeight = rows * graphics.CellHeight;
+        int pixelWidth = pixelHeight;
+        columns = (pixelWidth + graphics.CellWidth - 1) / graphics.CellWidth;
+        sixel = SixelEncoder.Encode(Render(pixelWidth, pixelHeight), pixelWidth, pixelHeight);
+        return true;
+    }
+
     /// <summary>Packed RGB, <paramref name="width"/> × <paramref name="height"/> pixels.</summary>
     public static byte[] Render(int width, int height)
     {
