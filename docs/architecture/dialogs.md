@@ -205,6 +205,12 @@ Tools > Contacts: name, email, phone, company and notes for the people the perso
 - **The highlight follows the contact by id**, so it survives a re-sort or a filter; a contact saved under a filter that would hide it clears the filter.
 - Also reachable from the `ui` AI tool as `contacts`.
 
+### The calendar (`CalendarDialog`, Ctrl+D, `Model/Calendar/`, `Jobs/CalendarIdentityJob.cs`)
+- A month grid with the selected day's meetings under it. N or Enter types a meeting as "HH:mm [minutes] title"; E or F2 changes the highlighted one; D or Delete removes it after a y/n question.
+- **Every meeting has an identity** (`Meeting.Uid`, a GUID). `MeetingStore.Add` gives it and returns the stored copy; `Replace` keeps it through an edit, so a changed meeting stays the same event; `Remove` matches on it alone, so a meeting that was never stored removes nothing. The dialog moves its cursor by the stored copy.
+- **Storage is the `CalendarMeetings` setting**, one JSON list, as for contacts and tasks (see the contact manager above and the Settings rule in CLAUDE.md).
+- **Identities for a list saved before they existed are given at load, in memory, and written off the render thread.** Loading never saves, since a save is a blocking settings write and the calendar is read while drawing. `CalendarIdentityJob` writes the pending list every few seconds on its own thread; a failed write is logged and tried again on the next tick, so an identity is not lost to one failure. Until that write succeeds, a restart before it would give those meetings new identities.
+
 ### The task list (`ToDoListDialog`, Ctrl+Y, `Model/ToDo/`, `Services/ToDo/`, `Jobs/ToDoReminderJob.cs`)
 Add (N or Enter), edit (E or F2), delete (D or Delete, asks first), mark done (Space), priority (P), hide done (H) and
 **remind me (R)**. The entry line reads `!Subject @yyyy-MM-dd ~time`: `~15:30` is the next time that clock reading comes round,

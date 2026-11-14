@@ -453,4 +453,31 @@ public class CalendarDialogTest
 
         Assert.AreEqual("14:30 45 Team ", fixture.Dialog.EntryForTest);
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EditingAMeetingInTheMiddleKeepsItsIdentityAndTheCursorFollowsIt()
+    {
+        var day = new DateOnly(2026, 10, 14);
+        var fixture = Create();
+        await ShowAsync(fixture.Dialog);
+        AddThree(fixture);
+        var identity = fixture.Meetings.On(day)[1].Uid;
+
+        await fixture.Dialog.HandleMouseEventAsync(AtMeeting(fixture.Dialog, 1));
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F2));
+        for (var i = 0; i < 40; i++)
+        {
+            await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Backspace));
+        }
+
+        await TypeAsync(fixture.Dialog, "10:00 Changed");
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        var meetings = fixture.Meetings.On(day);
+        Assert.AreEqual(3, meetings.Count);
+        Assert.AreEqual("Changed", meetings[1].Title);
+        Assert.AreEqual(identity, meetings[1].Uid);
+        Assert.AreEqual(1, fixture.Dialog.MeetingCursorForTest);
+    }
 }

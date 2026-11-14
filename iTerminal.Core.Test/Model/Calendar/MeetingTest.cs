@@ -118,9 +118,9 @@ public class MeetingTest
         var settings = new Mock<ISettingsService>();
         var store = new MeetingStore(settings.Object);
         var meeting = new Meeting(Day, new TimeOnly(9, 0), 60, "Gone");
-        store.Add(meeting);
+        var stored = store.Add(meeting);
 
-        store.Remove(meeting);
+        store.Remove(stored);
 
         Assert.AreEqual(0, store.On(Day).Count);
     }

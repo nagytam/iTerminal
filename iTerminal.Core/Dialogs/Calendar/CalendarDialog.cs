@@ -303,17 +303,13 @@ public class CalendarDialog : Dialog
         var date = _calendar.SelectedDate;
         if (Meeting.TryParse(_entry!, date, out var meeting, out var error) && meeting is not null)
         {
-            // Changing a meeting is removing the old one as the new one goes in, so a refused line loses nothing.
-            if (_editing is not null)
-            {
-                _meetings.Remove(_editing);
-                _editing = null;
-            }
-
-            _meetings.Add(meeting);
+            // Changing a meeting replaces it under the same identity, so a refused line loses nothing and the event stays the same.
+            Meeting stored = _editing is null ? _meetings.Add(meeting) : _meetings.Replace(_editing, meeting);
+            _editing = null;
             _entry = null;
             _entryError = null;
-            var index = _meetings.On(date).ToList().IndexOf(meeting);
+            // The cursor follows the stored copy: it carries the identity the store gave it.
+            var index = _meetings.On(date).ToList().IndexOf(stored);
             _meetingCursor = Math.Max(0, index);
         }
         else
