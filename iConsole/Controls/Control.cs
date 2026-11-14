@@ -27,6 +27,8 @@ public class Control : INotifyPropertyChanged, IControl
     public Rectangle AbsoluteBoundRect => new(AbsolutePosition, ViewSize);
     public int ZOrder { get; set; } = 0;
     public bool IsModal { get; set; } = false;
+    /// <summary>True for a control that covers the whole screen while it is shown (the screen saver). Nothing above it is drawn while it is up.</summary>
+    public virtual bool CoversScreen => false;
     public bool CanFocus { get; set; } = false;
     public bool IsFocused { get; private set; } = false;
 
@@ -321,6 +323,11 @@ public class Control : INotifyPropertyChanged, IControl
         {
             return isIdle;
         }
+        // Above a screen cover: drawn once the cover is gone. The change flag is kept, as for a hidden control.
+        if (IsAboveScreenCover(this))
+        {
+            return isIdle;
+        }
         if (HasStateChanged)
         {
             try
@@ -366,7 +373,7 @@ public class Control : INotifyPropertyChanged, IControl
             // The snapshot is already a private copy, so it is walked as it is.
             foreach (var control in Controls.AsArray())
             {
-                if (control is null || !control.IsVisible)
+                if (control is null || !control.IsVisible || IsAboveScreenCover(control))
                 {
                     continue;
                 }
@@ -1048,6 +1055,26 @@ public class Control : INotifyPropertyChanged, IControl
         }
     }
     #endregion
+
+    /// <summary>
+    /// Whether a visible control that covers the screen is up and <paramref name="control"/> is drawn above it. Such a control
+    /// draws nothing: a control that repaints on its own would otherwise write over the cover, since layers are not cleared between frames.
+    /// </summary>
+    private static bool IsAboveScreenCover(IControl control)
+    {
+        foreach (var cover in control.GetRootControl().Controls.AsArray())
+        {
+            if (cover is not null
+                && !ReferenceEquals(cover, control)
+                && cover.CoversScreen
+                && cover.IsVisible
+                && control.ZOrder > cover.ZOrder)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public int GetMaxZOrder()
     {

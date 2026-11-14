@@ -51,6 +51,9 @@ public class ScreenSaverOverlay : Control
         IsModal = false;
     }
 
+    /// <summary>The screen saver covers the whole screen while it is shown, so nothing above it is drawn.</summary>
+    public override bool CoversScreen => true;
+
     /// <summary>Whether the screen saver is covering the screen now.</summary>
     public bool IsActive
     {
@@ -126,6 +129,12 @@ public class ScreenSaverOverlay : Control
 
         Position = new Position(0, 0);
         ViewSize = size;
+        // Its own layer, above everything on the screen: a control that repaints itself draws into its own layer, which
+        // is never cleared, so anything in a layer below would show through the screen saver.
+        if (GetRootControl() is Control root)
+        {
+            ZOrder = root.GetMaxZOrder() + 1;
+        }
         IsModal = true;
         IsVisible = true;
         StateHasChanged();

@@ -203,6 +203,67 @@ public class ScreenSaverOverlayTest
 
     [TestMethod]
     [Timeout(60_000)]
+    public void WhileRunning_NothingBeneathItIsDrawnAboveIt()
+    {
+        var fixture = new Fixture();
+        // An indicator in the menu bar, as the date and the quotes are: it repaints itself when its own state changes.
+        var indicator = new CountingControl(CreateThemeService()) { ViewSize = new Size(10, 1) };
+        fixture.Root.AddControl(indicator);
+        fixture.Configure(ScreenSaverKind.Clock, minutes: 1);
+        fixture.Pass(TimeSpan.FromMinutes(2));
+        // A toast or popup is drawn above the screen saver's layer: it must not show over it.
+        indicator.ZOrder = fixture.Overlay.ZOrder + 1;
+
+        indicator.Render(new Mock<IBuffer>().Object);
+
+        Assert.AreEqual(0, indicator.Draws, "A control drawn above the screen saver must not show over it.");
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void WhileRunning_ControlsBeneathItDrawIntoALayerItCovers()
+    {
+        var fixture = new Fixture();
+        var indicator = new CountingControl(CreateThemeService()) { ViewSize = new Size(10, 1) };
+        fixture.Root.AddControl(indicator);
+        fixture.Configure(ScreenSaverKind.Clock, minutes: 1);
+        fixture.Pass(TimeSpan.FromMinutes(2));
+
+        // Such a control repaints its own layer, which the screen saver's own layer covers, so the picture stays hidden.
+        Assert.IsTrue(fixture.Overlay.ZOrder > indicator.ZOrder, "The screen saver must be drawn above the controls beneath it.");
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void WhenWoken_ControlsBeneathItRepaint()
+    {
+        var fixture = new Fixture();
+        var indicator = new CountingControl(CreateThemeService()) { ViewSize = new Size(10, 1) };
+        fixture.Root.AddControl(indicator);
+        fixture.Configure(ScreenSaverKind.Clock, minutes: 1);
+        fixture.Pass(TimeSpan.FromMinutes(2));
+        indicator.ZOrder = fixture.Overlay.ZOrder + 1;
+        indicator.Render(new Mock<IBuffer>().Object);
+
+        fixture.Overlay.Wake();
+        indicator.Render(new Mock<IBuffer>().Object);
+
+        Assert.AreEqual(1, indicator.Draws, "The control must draw again once the screen saver is gone.");
+    }
+
+    private sealed class CountingControl(IThemeService themeService) : Control(themeService)
+    {
+        public int Draws { get; private set; }
+
+        public override void Draw(IBuffer buffer)
+        {
+            Draws++;
+            base.Draw(buffer);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
     public void WhenNotRunning_DrawsNothing()
     {
         var fixture = new Fixture();
