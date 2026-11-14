@@ -74,7 +74,11 @@ internal readonly record struct JassCard(JassSuit Suit, JassRank Rank)
 
 internal readonly record struct JassPlay(int Player, JassCard Card);
 
-/// <summary>Four-player, partnership Schieber Jass, played hot-seat.</summary>
+/// <summary>
+/// Four-player, partnership Schieber Jass. Against the computer the person is Player 1 and the other three seats are the
+/// computer's (Player 3 is the partner); otherwise four people share the keyboard and pass the device. Player 1 and Player 3
+/// are one partnership, Player 2 and Player 4 the other.
+/// </summary>
 public class JassGame : GameBase
 {
     private const int TargetScore = 1000;
@@ -103,6 +107,9 @@ public class JassGame : GameBase
     private bool _handComplete;
     private string _message = string.Empty;
 
+    /// <summary>How long the computer's seats take before they play; a pause lets the person follow the trick.</summary>
+    internal TimeSpan ComputerPause { get; set; } = TimeSpan.FromMilliseconds(600);
+
     public JassGame() : this(null)
     {
     }
@@ -118,15 +125,27 @@ public class JassGame : GameBase
         "Games.Jass.Rules",
         "Four players in two partnerships. Follow suit; if void, trump, and overtrump whenever possible. A hand is 157 points.");
 
-    public override bool OffersComputerOpponent => false;
-
     public override bool OffersUndo => false;
 
-    public override string? ModeLabel => GameText.Get("Games.Jass.Mode", "four players (hot-seat)");
+    public override string? ModeLabel => VsComputer
+        ? GameText.Get("Games.Jass.VsComputer", "you and the computer players")
+        : GameText.Get("Games.Jass.Mode", "four players (hot-seat)");
 
-    public override bool IsComputerTurn => false;
+    /// <summary>A computer seat plays on its own as soon as it is its turn to play, choose trump or push.</summary>
+    public override bool IsComputerTurn => VsComputer && !IsOver && !_handComplete && IsComputerSeat(_currentPlayer);
 
     public override bool CanUndo => false;
+
+    /// <summary>Against the computer only Player 1 is the person; the rest of the table is the computer's.</summary>
+    private bool IsComputerSeat(int seat) => VsComputer && seat != 0;
+
+    /// <summary>The device is passed around only at a table of people; against the computer every hand is shown at once.</summary>
+    private bool NeedsReveal => _awaitingReveal && !VsComputer;
+
+    /// <summary>The seat whose hand is shown: the person's own, against the computer, or the player on turn at the shared keyboard.</summary>
+    private int ShownSeat => VsComputer ? 0 : _currentPlayer;
+
+    private bool IsHumanTurn => !IsComputerSeat(_currentPlayer);
 
     public override bool IsOver => _scores.Max() >= TargetScore;
 
@@ -155,7 +174,7 @@ public class JassGame : GameBase
                     _scores[1]);
             }
 
-            if (_awaitingReveal)
+            if (NeedsReveal)
             {
                 return string.Format(
                     GameText.Get("Games.Jass.Reveal", "Pass the device to Player {0} and press Enter to reveal."),
@@ -257,13 +276,13 @@ public class JassGame : GameBase
 
     public override void MoveCursor(int dx, int dy)
     {
-        if (_awaitingReveal || _trump is null || _handComplete || IsOver)
+        if (NeedsReveal || _trump is null || _handComplete || IsOver || !IsHumanTurn)
         {
             return;
         }
 
         int delta = dx != 0 ? dx : dy;
-        _cursor = Clamp(_cursor + delta, Math.Max(0, _hands[_currentPlayer].Count - 1));
+        _cursor = Clamp(_cursor + delta, Math.Max(0, _hands[ShownSeat].Count - 1));
     }
 
     public override void Activate()
@@ -276,18 +295,19 @@ public class JassGame : GameBase
 
         if (_handComplete)
         {
+            Version++;
             DealHand();
             return;
         }
 
-        if (_awaitingReveal)
+        if (NeedsReveal)
         {
             _awaitingReveal = false;
             _cursor = 0;
             return;
         }
 
-        if (_trump is not null && _hands[_currentPlayer].Count > 0)
+        if (_trump is not null && IsHumanTurn && _hands[_currentPlayer].Count > 0)
         {
             PlayCard(_cursor);
         }
@@ -296,7 +316,7 @@ public class JassGame : GameBase
     public override bool TryChar(char c)
     {
         _message = string.Empty;
-        if (_awaitingReveal || _handComplete || IsOver)
+        if (NeedsReveal || _handComplete || IsOver || !IsHumanTurn)
         {
             return false;
         }
@@ -305,9 +325,7 @@ public class JassGame : GameBase
         {
             if (!_partnerChooses && char.ToUpperInvariant(c) == 'P')
             {
-                _currentPlayer = (_forehand + 2) % 4;
-                _partnerChooses = true;
-                _awaitingReveal = true;
+                PushTrump();
                 return true;
             }
 
@@ -324,9 +342,7 @@ public class JassGame : GameBase
                 return false;
             }
 
-            _trump = suit;
-            _currentPlayer = _forehand;
-            _awaitingReveal = true;
+            ChooseTrump(suit.Value);
             return true;
         }
 
@@ -337,6 +353,24 @@ public class JassGame : GameBase
         }
 
         return false;
+    }
+
+    /// <summary>The forehand gives the trump choice to the partner, who must choose.</summary>
+    private void PushTrump()
+    {
+        Version++;
+        _currentPlayer = (_forehand + 2) % 4;
+        _partnerChooses = true;
+        _awaitingReveal = true;
+    }
+
+    /// <summary>The trump is set and the forehand leads the first trick.</summary>
+    private void ChooseTrump(JassSuit suit)
+    {
+        Version++;
+        _trump = suit;
+        _currentPlayer = _forehand;
+        _awaitingReveal = true;
     }
 
     private void PlayCard(int index)
@@ -362,7 +396,7 @@ public class JassGame : GameBase
 
         hand.RemoveAt(index);
         _trick.Add(new JassPlay(_currentPlayer, card));
-        _cursor = Math.Min(_cursor, Math.Max(0, hand.Count - 1));
+        _cursor = Math.Min(_cursor, Math.Max(0, _hands[ShownSeat].Count - 1));
         _message = string.Empty;
 
         if (_trick.Count == 4)
@@ -478,7 +512,7 @@ public class JassGame : GameBase
             .Player;
     }
 
-    private static int TrickStrength(JassCard card, JassSuit lead, JassSuit trump)
+    internal static int TrickStrength(JassCard card, JassSuit lead, JassSuit trump)
     {
         int suitStrength = card.Suit == trump ? 2 : card.Suit == lead ? 1 : 0;
         int rankStrength = card.Suit == trump ? TrumpStrength(card.Rank) : NormalStrength(card.Rank);
@@ -512,7 +546,7 @@ public class JassGame : GameBase
         };
     }
 
-    private static int TrumpStrength(JassRank rank) => rank switch
+    internal static int TrumpStrength(JassRank rank) => rank switch
     {
         JassRank.Jack => 9,
         JassRank.Nine => 8,
@@ -525,7 +559,7 @@ public class JassGame : GameBase
         _ => 1,
     };
 
-    private static int NormalStrength(JassRank rank) => rank switch
+    internal static int NormalStrength(JassRank rank) => rank switch
     {
         JassRank.Ace => 9,
         JassRank.King => 8,
@@ -553,7 +587,66 @@ public class JassGame : GameBase
         }
     }
 
-    public override Func<CancellationToken, Action?>? PlanComputerMove() => null;
+    /// <summary>
+    /// The computer's move for its seat, worked out on a background task from a copy of the table: the trump choice or the
+    /// push, or the card to play. The action applies it on the UI thread if the table has not changed since.
+    /// </summary>
+    public override Func<CancellationToken, Action?>? PlanComputerMove()
+    {
+        if (!IsComputerTurn)
+        {
+            return null;
+        }
+
+        List<JassCard>[] hands = [.. _hands.Select(hand => new List<JassCard>(hand))];
+        List<JassPlay> trick = [.. _trick];
+        JassSuit? trump = _trump;
+        int seat = _currentPlayer;
+        int forehand = _forehand;
+        bool partnerChooses = _partnerChooses;
+        int version = Version;
+        TimeSpan pause = ComputerPause;
+        return token =>
+        {
+            if (pause > TimeSpan.Zero)
+            {
+                token.WaitHandle.WaitOne(pause);
+            }
+
+            token.ThrowIfCancellationRequested();
+            if (trump is null)
+            {
+                if (seat == forehand && !partnerChooses && !JassComputer.WantsTrump(hands[seat]))
+                {
+                    return () =>
+                    {
+                        if (version == Version)
+                        {
+                            PushTrump();
+                        }
+                    };
+                }
+
+                JassSuit chosen = JassComputer.BestTrump(hands[seat]);
+                return () =>
+                {
+                    if (version == Version)
+                    {
+                        ChooseTrump(chosen);
+                    }
+                };
+            }
+
+            int index = JassComputer.ChooseCard(hands[seat], trick, trump.Value, seat);
+            return index < 0 ? null : () =>
+            {
+                if (version == Version)
+                {
+                    PlayCard(index);
+                }
+            };
+        };
+    }
 
     public override IReadOnlyList<GameCell[]> Render()
     {
@@ -572,26 +665,30 @@ public class JassGame : GameBase
                     SuitName(_trump.Value),
                     _tricksPlayed,
                     _trickPoints))],
-            [new GameCell(_awaitingReveal
+            [new GameCell(NeedsReveal
                 ? string.Format(GameText.Get("Games.Jass.PassToReveal", "Pass device to Player {0}; press Enter to reveal."), _currentPlayer + 1)
-                : string.Format(GameText.Get("Games.Jass.PlayerHand", "Player {0}'s hand (press 1–9 to play a card):"), _currentPlayer + 1))],
+                : _handComplete
+                    ? string.Empty
+                : IsComputerTurn
+                    ? string.Format(GameText.Get("Games.Jass.ComputerPlays", "Player {0} is the computer and is playing; your hand waits."), _currentPlayer + 1)
+                    : string.Format(GameText.Get("Games.Jass.PlayerHand", "Player {0}'s hand (press 1–9 to play a card):"), ShownSeat + 1))],
         ];
 
-        if (_awaitingReveal)
+        if (NeedsReveal)
         {
             rows.Add([new GameCell(string.Format(
                 GameText.Get("Games.Jass.HiddenHand", "Player {0}'s cards are hidden."),
                 _currentPlayer + 1))]);
         }
-        else
+        else if (!_handComplete)
         {
             for (int group = 0; group < 3; group++)
             {
                 string handRow = string.Join("  ", Enumerable.Range(group * 3, 3)
-                    .Where(index => index < _hands[_currentPlayer].Count)
+                    .Where(index => index < _hands[ShownSeat].Count)
                     .Select(index =>
                     {
-                        string card = $"{index + 1}:{_hands[_currentPlayer][index].ShortName}";
+                        string card = $"{index + 1}:{_hands[ShownSeat][index].ShortName}";
                         return index == _cursor ? $"[{card}]" : card;
                     }));
                 rows.Add([new GameCell(handRow)]);
@@ -608,7 +705,7 @@ public class JassGame : GameBase
         rows.Add([new GameCell(played)]);
         rows.Add([new GameCell(GameText.Get(
             "Games.Jass.TeamInstruction",
-            "Teams: Players 1 + 3 vs. Players 2 + 4. P pushes the first trump choice to partner."))]);
+            "Teams: Players 1 + 3 vs. Players 2 + 4."))]);
         return rows;
     }
 
@@ -616,6 +713,11 @@ public class JassGame : GameBase
     {
         get
         {
+            if (!IsHumanTurn || NeedsReveal)
+            {
+                yield break;
+            }
+
             if (_trump is null)
             {
                 yield return ("C / D / H / S", GameText.Get("Games.Jass.ChooseTrumpHint", "Choose clubs, diamonds, hearts or spades as trump"));
@@ -631,7 +733,10 @@ public class JassGame : GameBase
         }
     }
 
-    public override string ActivateLabel => GameText.Get("Games.Jass.ActivateLabel", "reveal / play");
+    /// <summary>Against the computer there is no device to pass, so Enter only plays.</summary>
+    public override string ActivateLabel => VsComputer
+        ? iConsole.Localization.UiText.Get("Games.HintPlay", "play")
+        : GameText.Get("Games.Jass.ActivateLabel", "reveal / play");
 
     public override string ActivateHint => GameText.Get("Games.Jass.ActivateHint", "Reveal your hand or play the selected card");
 }

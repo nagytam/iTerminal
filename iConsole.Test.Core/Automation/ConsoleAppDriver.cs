@@ -135,7 +135,9 @@ public sealed class ConsoleAppDriver : IAsyncDisposable
         try
         {
             await host.StartAsync();
-            await driver.WaitUntilAsync(screen => !screen.IsBlank, "the first frame to be drawn");
+            // Start-up is the slowest step on a loaded CI runner (a blank screen for 15 s there is not a hang), so it gets a
+            // longer wait than the per-action default. Actions after the first frame keep the default.
+            await driver.WaitUntilAsync(screen => !screen.IsBlank, "the first frame to be drawn", TimeSpan.FromSeconds(60));
         }
         catch
         {

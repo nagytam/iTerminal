@@ -5956,7 +5956,7 @@
   <data name="Games.Jass.EmptyCard" xml:space="preserve"><value>{0}.</value></data>
   <data name="Games.Jass.NoCards" xml:space="preserve"><value>Aucune carte jouée dans ce pli.</value></data>
   <data name="Games.Jass.PlayedCard" xml:space="preserve"><value>J{0} : {1}</value></data>
-  <data name="Games.Jass.TeamInstruction" xml:space="preserve"><value>Équipes : joueurs 1 + 3 contre joueurs 2 + 4. P passe le premier choix d'atout au partenaire.</value></data>
+  <data name="Games.Jass.TeamInstruction" xml:space="preserve"><value>Équipes : joueurs 1 + 3 contre 2 + 4.</value></data>
   <data name="Games.Jass.ChooseTrumpHint" xml:space="preserve"><value>Choisir trèfle, carreau, cœur ou pique comme atout</value></data>
   <data name="Games.Jass.PushHint" xml:space="preserve"><value>Passer le choix de l'atout au partenaire</value></data>
   <data name="Games.Jass.PlayHint" xml:space="preserve"><value>Jouer la carte numérotée de votre main</value></data>
@@ -9624,5 +9624,53 @@
   <data name="CmdDesc.c54795ce" xml:space="preserve">
     <value>Rechercher sur YouTube et lire une vidéo dans le visionneur vidéo.</value>
     <comment>Search YouTube and play a video in the video viewer.</comment>
+  </data>
+  <data name="Games.Snake.RulesVersus" xml:space="preserve">
+    <value>Course contre le serpent de l'ordinateur pour la nourriture. Il grandit à chaque bouchée. Un mur ou le corps d'un serpent met fin à sa course ; si les deux se percutent ensemble, c'est nul.</value>
+  </data>
+  <data name="Games.Snake.VersusScore" xml:space="preserve">
+    <value>Score {0}  Ordinateur {1}.</value>
+  </data>
+  <data name="Games.Snake.VsComputer" xml:space="preserve">
+    <value>contre l'ordinateur</value>
+  </data>
+  <data name="Games.Snake.VersusWon" xml:space="preserve">
+    <value>Vous gagnez : {0} points contre {1} pour l'ordinateur. N pour rejouer.</value>
+  </data>
+  <data name="Games.Snake.VersusLost" xml:space="preserve">
+    <value>L'ordinateur gagne : {0} points contre vos {1}. N pour rejouer.</value>
+  </data>
+  <data name="Games.Snake.VersusDraw" xml:space="preserve">
+    <value>Les deux se sont écrasés : vous {0}, l'ordinateur {1}. N pour rejouer.</value>
+  </data>
+  <data name="Games.Tetris.VersusStatus" xml:space="preserve">
+    <value>Score {0}  Lignes {1}  Niveau {2}  Suivante {3}  |  Ordinateur {4} points, {5} lignes</value>
+  </data>
+  <data name="Games.Tetris.VsComputer" xml:space="preserve">
+    <value>contre l'ordinateur</value>
+  </data>
+  <data name="Games.Tetris.RulesVersus" xml:space="preserve">
+    <value>Empilez les pièces qui tombent en lignes pleines. Le plateau de l'ordinateur tourne à côté du vôtre : celui dont la pile atteint le haut en premier perd.</value>
+  </data>
+  <data name="Games.Tetris.VersusDraw" xml:space="preserve">
+    <value>Les deux piles ont atteint le haut : {0} points contre {1} pour l'ordinateur. N pour rejouer.</value>
+  </data>
+  <data name="Games.Tetris.VersusLost" xml:space="preserve">
+    <value>L'ordinateur gagne : {0} points contre vos {1}. N pour rejouer.</value>
+  </data>
+  <data name="Games.Tetris.VersusWon" xml:space="preserve">
+    <value>Vous gagnez : {0} points contre {1} pour l'ordinateur. N pour rejouer.</value>
+  </data>
+  <data name="Games.Jass.VsComputer" xml:space="preserve">
+    <value>vous et les joueurs de l'ordinateur</value>
+  </data>
+  <data name="Games.Tetris.You" xml:space="preserve">
+    <value>Vous</value>
+  </data>
+  <data name="Games.Tetris.Computer" xml:space="preserve">
+    <value>Ordinateur</value>
+  </data>
+  <data name="Footer.Sync" xml:space="preserve">
+    <value>Synchro</value>
   </data>
 </root>

@@ -22,6 +22,7 @@ public class JassTest
     public void TheFirstPlayerCanPushTrumpChoiceToTheirPartner()
     {
         JassGame game = new(new Random(3));
+        game.VsComputer = false;
         game.Activate();
 
         Assert.IsTrue(game.TryChar('p'));
@@ -39,6 +40,7 @@ public class JassTest
     public void PausingHidesTheRevealedHandUntilThePlayerRevealsItAgain()
     {
         JassGame game = new(new Random(5));
+        game.VsComputer = false;
         game.Activate();
         Assert.IsTrue(game.Status.Contains("choose trump", StringComparison.OrdinalIgnoreCase));
 
@@ -104,6 +106,7 @@ public class JassTest
     public void ACompletedHandScoresOneHundredAndFiftySevenAndTheDealerRotates()
     {
         JassGame game = new(new Random(11));
+        game.VsComputer = false;
         bool sawCompletedTrick = false;
         while (game.TricksPlayed < 9)
         {
@@ -139,5 +142,101 @@ public class JassTest
         Assert.AreEqual(0, game.TeamOneScore);
         Assert.AreEqual(0, game.TeamTwoScore);
         Assert.AreEqual(3, game.Dealer);
+    }
+
+    [TestMethod]
+    public void TheComputerSeatsPlayAHandToTheEndAndTheScoreAddsUpTo157()
+    {
+        JassGame game = new(new Random(11)) { ComputerPause = TimeSpan.Zero };
+
+        int guard = 0;
+        while (game.TricksPlayed < 9)
+        {
+            Assert.IsTrue(++guard < 2000, "the hand stalled");
+            if (game.IsComputerTurn)
+            {
+                game.PlanComputerMove()!(CancellationToken.None)?.Invoke();
+            }
+            else if (game.Trump is null)
+            {
+                Assert.IsTrue(game.TryChar(SuitLetter(JassComputer.BestTrump(game.Hands[0]))));
+            }
+            else
+            {
+                int index = JassComputer.ChooseCard(game.Hands[0], game.Trick, game.Trump.Value, 0);
+                Assert.IsTrue(index >= 0 && game.TryChar((char)('1' + index)));
+            }
+        }
+
+        Assert.AreEqual(157, game.TeamOneScore + game.TeamTwoScore);
+    }
+
+    [TestMethod]
+    public void WhenThePersonPushesTheComputerPartnerChoosesTheTrump()
+    {
+        JassGame game = new(new Random(7)) { ComputerPause = TimeSpan.Zero };
+
+        Assert.IsTrue(game.TryChar('P'));
+        Assert.IsTrue(game.IsComputerTurn, "Player 3, the partner, is the computer");
+
+        game.PlanComputerMove()!(CancellationToken.None)?.Invoke();
+
+        Assert.IsNotNull(game.Trump);
+        Assert.AreEqual(0, game.CurrentPlayer, "the forehand leads after the choice");
+        Assert.IsFalse(game.IsComputerTurn);
+    }
+
+    [TestMethod]
+    public void WhileTheComputerPlaysTheHeaderSaysSoInsteadOfInvitingACard()
+    {
+        JassGame game = new(new Random(7));
+        Assert.IsTrue(game.TryChar('P'));
+
+        Assert.IsTrue(game.Render().Any(row => row.Any(cell => cell.Text.Contains("is the computer and is playing"))));
+        Assert.IsFalse(game.Render().Any(row => row.Any(cell => cell.Text.Contains("press 1–9"))));
+    }
+
+    [TestMethod]
+    public void ThePersonCannotPlayForTheComputerSeats()
+    {
+        JassGame game = new(new Random(7));
+        Assert.IsTrue(game.TryChar('P'));
+        Assert.IsTrue(game.IsComputerTurn);
+
+        Assert.IsFalse(game.TryChar('C'), "the partner's trump choice is not the person's to make");
+        Assert.IsNull(game.Trump);
+    }
+
+    private static char SuitLetter(JassSuit suit) => suit switch
+    {
+        JassSuit.Clubs => 'C',
+        JassSuit.Diamonds => 'D',
+        JassSuit.Hearts => 'H',
+        _ => 'S',
+    };
+
+    [TestMethod]
+    public void ANeedlessHandPromptIsNotShownOnceTheHandIsOver()
+    {
+        JassGame game = new(new Random(11)) { ComputerPause = TimeSpan.Zero };
+        int guard = 0;
+        while (game.TricksPlayed < 9 && guard++ < 2000)
+        {
+            if (game.IsComputerTurn)
+            {
+                game.PlanComputerMove()!(CancellationToken.None)?.Invoke();
+            }
+            else if (game.Trump is null)
+            {
+                game.TryChar('S');
+            }
+            else
+            {
+                int index = JassComputer.ChooseCard(game.Hands[0], game.Trick, game.Trump.Value, 0);
+                game.TryChar((char)('1' + index));
+            }
+        }
+
+        Assert.IsTrue(game.Render().All(row => row.All(cell => !cell.Text.Contains("press 1–9"))), "the hands are empty, so there is no card to play");
     }
 }

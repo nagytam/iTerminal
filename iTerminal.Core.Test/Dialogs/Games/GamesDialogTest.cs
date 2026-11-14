@@ -1,3 +1,4 @@
+using iConsole.Display;
 using iConsole.Buffers;
 using iConsole.Controls;
 using iConsole.Data;
@@ -32,7 +33,7 @@ public class GamesDialogTest
         }
     }
 
-    private static string Drawn(GamesDialog dialog, int width = 120, int height = 40)
+    private static ScreenBuffer DrawnBuffer(GamesDialog dialog, int width = 120, int height = 40)
     {
         ScreenBuffer buffer = new(width, height);
         // Twice, so text left over from the first frame would show.
@@ -42,8 +43,18 @@ public class GamesDialogTest
             DrawChildren(dialog, buffer);
         }
 
+        return buffer;
+    }
+
+    private static string Drawn(GamesDialog dialog, int width = 120, int height = 40)
+    {
+        ScreenBuffer buffer = DrawnBuffer(dialog, width, height);
         return string.Join("\n", Enumerable.Range(0, height).Select(buffer.Line));
     }
+
+    /// <summary>How many cells of the screen are painted with the colour as their background.</summary>
+    private static int CellsWithBackground(ScreenBuffer buffer, Color colour) =>
+        Enumerable.Range(0, buffer.Height).Sum(y => Enumerable.Range(0, buffer.Width).Count(x => buffer.BackgroundAt(x, y) == colour));
 
     private static Task<bool> Press(GamesDialog dialog, ConsoleKey key, char c = '\0') => dialog.HandleKeyEventAsync(Key(key, c));
 
@@ -246,7 +257,7 @@ public class GamesDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task SnakeDrawsItsTitleAndOnePlayerAndAFooterWithoutUndoOrMode()
+    public async Task SnakeDrawsItsTitleAgainstTheComputerAndAFooterWithoutUndo()
     {
         GamesDialog dialog = Create();
         await ShowAsync(dialog);
@@ -255,16 +266,16 @@ public class GamesDialogTest
         string screen = Drawn(dialog);
 
         Assert.AreEqual("Snake", dialog.Current.Name);
-        StringAssert.Contains(screen, "Snake — one player");
+        StringAssert.Contains(screen, "Snake — against the computer");
         StringAssert.Contains(screen, "Enter:pause");
         StringAssert.Contains(screen, "Esc:close");
         Assert.IsFalse(screen.Contains("U:undo"), "no undo in the footer");
-        Assert.IsFalse(screen.Contains("M:mode"), "no mode in the footer");
+        Assert.IsTrue(screen.Contains("M:mode"), "the mode switches to one player");
     }
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task SnakeHelpSaysEnterPausesAndHasNoUndoOrModeKeys()
+    public async Task SnakeHelpSaysEnterPausesAndHasNoUndoKey()
     {
         GamesDialog dialog = Create();
         await ShowAsync(dialog);
@@ -273,20 +284,21 @@ public class GamesDialogTest
         List<(string Key, string Description)> hints = [.. dialog.GetKeyHints()];
 
         StringAssert.Contains(hints.Single(h => h.Key == "Enter").Description, "Pause");
-        Assert.IsFalse(hints.Any(h => h.Key is "U" or "M"));
+        Assert.IsFalse(hints.Any(h => h.Key == "U"));
+        Assert.IsTrue(hints.Any(h => h.Key == "M"));
     }
 
     [Timeout(60_000)]
     [TestMethod]
-    public async Task UndoAndModeAreNotHandledByTheSnake()
+    public async Task UndoIsNotHandledByTheSnakeButModeIs()
     {
         GamesDialog dialog = Create();
         await ShowAsync(dialog);
         await Press(dialog, ConsoleKey.D5, '5');
 
         Assert.IsFalse(await Press(dialog, ConsoleKey.U, 'u'), "the key is left to the other controls");
-        Assert.IsFalse(await Press(dialog, ConsoleKey.M, 'm'), "the key is left to the other controls");
-        Assert.IsTrue(dialog.Current.VsComputer, "the mode is not switched");
+        Assert.IsTrue(await Press(dialog, ConsoleKey.M, 'm'), "the mode switches to one player");
+        Assert.IsFalse(dialog.Current.VsComputer);
     }
 
     [Timeout(60_000)]
@@ -413,7 +425,7 @@ public class GamesDialogTest
 
             string screen = Drawn(dialog, width, 20);
 
-            StringAssert.Contains(screen, "Swiss Jass — four players (hot-seat)");
+            StringAssert.Contains(screen, "Swiss Jass — you and the computer players");
             StringAssert.Contains(screen, "Player 1's hand");
             StringAssert.Contains(screen, "1:");
             StringAssert.Contains(screen, "9:", $"all nine cards fit at width {width}");
@@ -485,5 +497,53 @@ public class GamesDialogTest
                 };
             };
         }
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheCursorSquareIsPaintedCyanAndMovesWithTheArrows()
+    {
+        TicTacToeDialog dialog = new(TestTheme(), new VirtualTimeProvider());
+        await ShowAsync(dialog, new Size(120, 40));
+
+        ScreenBuffer before = DrawnBuffer(dialog);
+        Assert.AreEqual(5, CellsWithBackground(before, Color.Cyan), "the middle square, five cells wide, is the cursor");
+
+        await Press(dialog, ConsoleKey.LeftArrow);
+        ScreenBuffer after = DrawnBuffer(dialog);
+        Assert.AreEqual(5, CellsWithBackground(after, Color.Cyan));
+        Assert.AreNotEqual(FirstCyanCell(before), FirstCyanCell(after), "the cursor moved left");
+    }
+
+    private static (int X, int Y)? FirstCyanCell(ScreenBuffer buffer)
+    {
+        for (int y = 0; y < buffer.Height; y++)
+        {
+            for (int x = 0; x < buffer.Width; x++)
+            {
+                if (buffer.BackgroundAt(x, y) == Color.Cyan)
+                {
+                    return (x, y);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheSnakesAreDrawnTheirOwnColoursAgainstTheComputer()
+    {
+        SnakeDialog dialog = new(TestTheme(), new VirtualTimeProvider());
+        await ShowAsync(dialog, new Size(120, 40));
+
+        ScreenBuffer buffer = DrawnBuffer(dialog);
+
+        Assert.AreEqual(2, CellsWithBackground(buffer, Color.Yellow), "the person's head, two cells wide");
+        Assert.AreEqual(4, CellsWithBackground(buffer, Color.Green), "the person's two body cells");
+        Assert.AreEqual(2, CellsWithBackground(buffer, Color.Magenta), "the computer's head");
+        Assert.AreEqual(4, CellsWithBackground(buffer, Color.DarkMagenta), "the computer's two body cells");
+        Assert.AreEqual(2, CellsWithBackground(buffer, Color.Red), "the food");
     }
 }
