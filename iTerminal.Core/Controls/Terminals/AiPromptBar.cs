@@ -181,7 +181,7 @@ public class AiPromptBar : Window
     }
 
     /// <summary>The text the availability check starts with, before it has an answer.</summary>
-    private const string CheckingModelInfo = "checking...";
+    private const string CheckingModelInfo = AiChatModel.CheckingModelInfo;
 
     /// <summary>
     /// True once the check has answered "no model here". The bar then needs one row, not the

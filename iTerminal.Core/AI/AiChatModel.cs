@@ -7,11 +7,14 @@ public record AiChatMessage(string Role, string Content);
 
 public class AiChatModel : INotifyPropertyChanged
 {
+    /// <summary>What <see cref="ModelInfo"/> says until the availability check answers. The prompt bar spins while it is shown.</summary>
+    public const string CheckingModelInfo = "checking…";
+
     private string _input = string.Empty;
     private string _lastResponse = string.Empty;
     private bool _isThinking = false;
     private bool _isAvailable = false;
-    private string _modelInfo = "checking...";
+    private string _modelInfo = CheckingModelInfo;
 
     public List<AiChatMessage> History { get; } = [];
 

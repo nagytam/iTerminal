@@ -22,7 +22,7 @@ public class VoiceInputTest
     private async Task<AiChatModel> MakeTheBarAvailableAsync()
     {
         var model = _app.Driver.GetRequiredService<AiChatModel>();
-        await _app.WaitUntilAsync(() => model.ModelInfo != "checking...", "the availability check to answer");
+        await _app.WaitUntilAsync(() => model.ModelInfo != AiChatModel.CheckingModelInfo, "the availability check to answer");
         model.ModelInfo = "sandbox";
         model.IsAvailable = true;
         await _app.WaitForTextAsync("[sandbox]>");
