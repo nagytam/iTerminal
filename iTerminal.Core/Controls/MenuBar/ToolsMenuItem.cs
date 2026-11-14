@@ -48,6 +48,7 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Contacts.ContactManagerDialog? contactManagerDialog = null,
         iTerminal.Core.Dialogs.EnvVars.EnvironmentVariablesDialog? environmentVariablesDialog = null,
         iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog? encyclopediaDialog = null,
+        iTerminal.Core.Dialogs.YouTube.YouTubeDialog? youTubeDialog = null,
         iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog? performanceBenchmarkDialog = null,
         iTerminal.Core.Dialogs.Games.TicTacToeDialog? ticTacToeDialog = null,
         iTerminal.Core.Dialogs.Games.ChessDialog? chessDialog = null,
@@ -103,6 +104,7 @@ public class ToolsMenuItem : MenuItem
         if (toDoListDialog is not null) groups["office"].Add(new ToDoListDialogCommand(toDoListDialog));
         if (mailDialog is not null) groups["net"].Add(new MailDialogCommand(mailDialog));
         if (webBrowserDialog is not null) groups["net"].Add(new WebBrowserDialogCommand(webBrowserDialog));
+        if (youTubeDialog is not null) groups["net"].Add(new YouTubeDialogCommand(youTubeDialog));
         if (mapDialog is not null) groups["office"].Add(new MapDialogCommand(mapDialog));
         if (translatorDialog is not null) groups["office"].Add(new TranslatorDialogCommand(translatorDialog));
         if (currencyConverterDialog is not null) groups["office"].Add(new CurrencyConverterDialogCommand(currencyConverterDialog));

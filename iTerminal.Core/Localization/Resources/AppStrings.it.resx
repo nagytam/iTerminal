@@ -9525,4 +9525,98 @@
   <data name="DialogHint.RemindTask" xml:space="preserve">
     <value>Imposta un promemoria per l'attività</value>
   </data>
+  <data name="Menu.YouTube" xml:space="preserve">
+    <value>YouTube</value>
+  </data>
+  <data name="YouTube.Term" xml:space="preserve">
+    <value>Ricerca</value>
+  </data>
+  <data name="YouTube.TermPlaceholder" xml:space="preserve">
+    <value>un titolo, un canale o parole di un video</value>
+  </data>
+  <data name="YouTube.EmptyResults" xml:space="preserve">
+    <value> Digita una ricerca sopra e premi Invio.</value>
+  </data>
+  <data name="YouTube.HintSearchOrPlay" xml:space="preserve">
+    <value>Cerca, o riproduci il video sotto il cursore</value>
+  </data>
+  <data name="YouTube.HintPlay" xml:space="preserve">
+    <value>Riproduci il video sotto il cursore</value>
+  </data>
+  <data name="YouTube.HintOpenPage" xml:space="preserve">
+    <value>Apri la pagina del video nel browser</value>
+  </data>
+  <data name="YouTube.TypeTerm" xml:space="preserve">
+    <value>Digita qualcosa da cercare.</value>
+  </data>
+  <data name="YouTube.Searching" xml:space="preserve">
+    <value>Ricerca su YouTube…</value>
+  </data>
+  <data name="YouTube.NothingToPlay" xml:space="preserve">
+    <value>Non c'è ancora nessun video da riprodurre. Cerca prima.</value>
+  </data>
+  <data name="YouTube.Resolving" xml:space="preserve">
+    <value>Recupero il flusso di {0}…</value>
+  </data>
+  <data name="YouTube.Playing" xml:space="preserve">
+    <value>Riproduzione di {0}.</value>
+  </data>
+  <data name="YouTube.Opened" xml:space="preserve">
+    <value>{0} aperto nel browser.</value>
+  </data>
+  <data name="YouTube.OpenFailed" xml:space="preserve">
+    <value>Impossibile avviare il browser.</value>
+  </data>
+  <data name="YouTube.NothingFound" xml:space="preserve">
+    <value>Nessun risultato per "{0}".</value>
+  </data>
+  <data name="YouTube.Found" xml:space="preserve">
+    <value>{0} video trovati.</value>
+  </data>
+  <data name="YouTube.NoDetails" xml:space="preserve">
+    <value>Cerca e scegli un video per vederne i dettagli.</value>
+  </data>
+  <data name="YouTube.DetailChannel" xml:space="preserve">
+    <value>Canale: {0}</value>
+  </data>
+  <data name="YouTube.DetailDuration" xml:space="preserve">
+    <value>Durata: {0}</value>
+  </data>
+  <data name="YouTube.DetailViews" xml:space="preserve">
+    <value>Visualizzazioni: {0}</value>
+  </data>
+  <data name="YouTube.DetailPublished" xml:space="preserve">
+    <value>Pubblicato: {0}</value>
+  </data>
+  <data name="YouTube.DetailLink" xml:space="preserve">
+    <value>Link: {0}</value>
+  </data>
+  <data name="YouTube.Videos" xml:space="preserve">
+    <value>Video ({0})</value>
+  </data>
+  <data name="YouTube.Details" xml:space="preserve">
+    <value>Dettagli</value>
+  </data>
+  <data name="YouTube.SearchFailed" xml:space="preserve">
+    <value>La ricerca non è riuscita: {0}</value>
+  </data>
+  <data name="YouTube.BadId" xml:space="preserve">
+    <value>Questo non è un video di YouTube.</value>
+  </data>
+  <data name="YouTube.PlayFailed" xml:space="preserve">
+    <value>Impossibile riprodurre il video: {0}</value>
+  </data>
+  <data name="YouTube.NoStream" xml:space="preserve">
+    <value>YouTube non ha fornito alcun flusso per questo video.</value>
+  </data>
+  <data name="YouTube.Missing" xml:space="preserve">
+    <value>YouTube richiede yt-dlp. Strumenti &gt; Dipendenze di esecuzione lo installa.</value>
+  </data>
+  <data name="YouTube.UnknownError" xml:space="preserve">
+    <value>yt-dlp si è fermato senza messaggio.</value>
+  </data>
+  <data name="CmdDesc.c54795ce" xml:space="preserve">
+    <value>Cerca su YouTube e riproduci un video nel visualizzatore video.</value>
+    <comment>Search YouTube and play a video in the video viewer.</comment>
+  </data>
 </root>

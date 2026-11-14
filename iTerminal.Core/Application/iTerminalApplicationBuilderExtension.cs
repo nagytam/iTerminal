@@ -390,6 +390,8 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Encyclopedia.IEncyclopediaProvider, iTerminal.Core.Services.Encyclopedia.WikiEncyclopediaProvider>();
         services.AddSingleton<iTerminal.Core.Services.Encyclopedia.IEncyclopediaService, iTerminal.Core.Services.Encyclopedia.EncyclopediaService>();
         services.AddTransient<iTerminal.Core.Dialogs.Encyclopedia.EncyclopediaDialog>();
+        services.AddSingleton<iTerminal.Core.Services.YouTube.IYouTubeService, iTerminal.Core.Services.YouTube.YtDlpYouTubeService>();
+        services.AddTransient<iTerminal.Core.Dialogs.YouTube.YouTubeDialog>();
         // Ctrl+Shift+B: the performance benchmark. Its probes are registered in the order a run measures them; each one only reads or computes.
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.CpuSingleThreadProbe>();
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.CpuMultiThreadProbe>();
@@ -624,6 +626,7 @@ public static class iTerminalApplicationBuilderExtension
 
         // Likewise ffmpeg and ffprobe, for the video and picture viewers and the audio formats without a managed decoder.
         services.AddSingleton<IRuntimeDependency, FfmpegRuntimeDependency>();
+        services.AddSingleton<IRuntimeDependency, YtDlpRuntimeDependency>();
 
         // Ollama is a dependency only when the AI prompt is configured to use it. Registration cannot be skipped
         // from inside a factory, so the configured value is read here, once.

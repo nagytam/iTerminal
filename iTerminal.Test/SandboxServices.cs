@@ -738,6 +738,22 @@ public static class SandboxServices
     }
 
     /// <summary>Exchange rates with no network: one euro is exactly two dollars, so a conversion is easy to read.</summary>
+    /// <summary>
+    /// YouTube with no yt-dlp and no network: one fixed video for any search, and a stream address that does not resolve, so a
+    /// play attempt ends in the viewer's own error rather than in a download.
+    /// </summary>
+    public sealed class YouTube : Core.Services.YouTube.IYouTubeService
+    {
+        public Task<IReadOnlyList<Core.Services.YouTube.YouTubeVideo>> SearchAsync(string query, int count, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Core.Services.YouTube.YouTubeVideo>>(
+            [
+                new("sandbox0001", $"{query} (sandbox)", "Sandbox channel", TimeSpan.FromMinutes(3), 1234, new DateTime(2026, 1, 2)),
+            ]);
+
+        public Task<string> ResolvePlaybackUrlAsync(string videoId, CancellationToken cancellationToken = default) =>
+            Task.FromResult($"https://sandbox.invalid/{videoId}.mp4");
+    }
+
     /// <summary>Two results for any term and a short article for each: no test reaches Wikipedia.</summary>
     public sealed class Encyclopedia : Core.Services.Encyclopedia.IEncyclopediaProvider
     {
