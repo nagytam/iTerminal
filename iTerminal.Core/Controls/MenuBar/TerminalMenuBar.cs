@@ -143,6 +143,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         FileEncryptionDialog? fileEncryptionDialog = null,
         iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null,
         iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null,
+        iTerminal.Core.Dialogs.Scanning.ScannerDialog? scannerDialog = null,
         iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
         iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null
         )
@@ -267,7 +268,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             bluetoothDeviceManagerDialog: bluetoothDeviceManagerDialog,
             virtualMachineManagerDialog: virtualMachineManagerDialog,
             jassDialog: jassDialog,
-            userGroupManagerDialog: userGroupManagerDialog));
+            userGroupManagerDialog: userGroupManagerDialog,
+            scannerDialog: scannerDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 

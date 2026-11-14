@@ -9361,4 +9361,91 @@
   <data name="Docs.SemanticReady" xml:space="preserve">
     <value>Bedeutungsindex: {0} Dokumente, eingebettet mit {1}.</value>
   </data>
+  <data name="Menu.Scanner" xml:space="preserve">
+    <value>Scannen</value>
+  </data>
+  <data name="DialogHint.Scan" xml:space="preserve">
+    <value>Scannen</value>
+  </data>
+  <data name="DialogHint.ChooseScanner" xml:space="preserve">
+    <value>Scanner wählen</value>
+  </data>
+  <data name="DialogHint.SourceToggle" xml:space="preserve">
+    <value>Flachbett oder Einzug</value>
+  </data>
+  <data name="DialogHint.Resolution" xml:space="preserve">
+    <value>Auflösung</value>
+  </data>
+  <data name="DialogHint.ColorMode" xml:space="preserve">
+    <value>Farbmodus</value>
+  </data>
+  <data name="DialogHint.FileFormat" xml:space="preserve">
+    <value>Dateiformat</value>
+  </data>
+  <data name="DialogHint.PageStep" xml:space="preserve">
+    <value>Vorherige oder nächste Seite</value>
+  </data>
+  <data name="DialogHint.Save" xml:space="preserve">
+    <value>Seiten speichern</value>
+  </data>
+  <data name="DialogHint.RefreshScanners" xml:space="preserve">
+    <value>Scanner erneut suchen</value>
+  </data>
+  <data name="Scan.NoScanner" xml:space="preserve">
+    <value>Kein Scanner ausgewählt.</value>
+  </data>
+  <data name="Scan.Scanning" xml:space="preserve">
+    <value>Wird gescannt…</value>
+  </data>
+  <data name="Scan.Cancelled" xml:space="preserve">
+    <value>Der Scan wurde abgebrochen.</value>
+  </data>
+  <data name="Scan.NothingToSave" xml:space="preserve">
+    <value>Keine gescannte Seite zum Speichern.</value>
+  </data>
+  <data name="Scan.NoFolder" xml:space="preserve">
+    <value>Den Dialog in einem lokalen Ordner öffnen, um dort zu speichern.</value>
+  </data>
+  <data name="Scan.Searching" xml:space="preserve">
+    <value>Suche nach Scannern…</value>
+  </data>
+  <data name="Scan.NoScanners" xml:space="preserve">
+    <value>Kein Scanner gefunden.</value>
+  </data>
+  <data name="Scan.Feeder" xml:space="preserve">
+    <value>Einzug (alle Seiten)</value>
+  </data>
+  <data name="Scan.Flatbed" xml:space="preserve">
+    <value>Flachbett (eine Seite)</value>
+  </data>
+  <data name="Scan.Gray" xml:space="preserve">
+    <value>Graustufen</value>
+  </data>
+  <data name="Scan.BlackWhite" xml:space="preserve">
+    <value>Schwarzweiß</value>
+  </data>
+  <data name="Scan.Colour" xml:space="preserve">
+    <value>Farbe</value>
+  </data>
+  <data name="Scan.NoPages" xml:space="preserve">
+    <value>Noch keine Seite</value>
+  </data>
+  <data name="Scan.PageOf" xml:space="preserve">
+    <value>Seite {0} von {1}</value>
+  </data>
+  <data name="Scan.NoLocalFolder" xml:space="preserve">
+    <value>kein lokaler Ordner</value>
+  </data>
+  <data name="Scan.SaveTo" xml:space="preserve">
+    <value>Speichern in</value>
+  </data>
+  <data name="Scan.Empty" xml:space="preserve">
+    <value>Scanner wählen und Enter drücken.</value>
+  </data>
+  <data name="CmdTitle.ea1c510d" xml:space="preserve">
+    <value>Scannen</value>
+  </data>
+  <data name="CmdDesc.96256810" xml:space="preserve">
+    <value>Eine Seite oder den Dokumenteneinzug scannen, ansehen und speichern.</value>
+  </data>
 </root>

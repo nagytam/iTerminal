@@ -1026,6 +1026,65 @@ public static class SandboxServices
     }
 
     /// <summary>
+    /// One scanner, in memory. A scan returns generated sheets (a white page with a black bar): one for the flatbed, two
+    /// for the feeder. A test that pressed Scan in the scan dialog would otherwise drive a real scanner. Saving writes the
+    /// encoded page to the path it is given, which is always inside the test's own data folder.
+    /// </summary>
+    public sealed class Scanning : Core.Services.Scanning.IScanService
+    {
+        public static readonly Core.Services.Scanning.ScannerDevice Device = new("sandbox-scanner", "Sandbox Scanner");
+
+        private readonly List<string> _calls = [];
+
+        /// <summary>Every call so far, in order, as <c>list</c>, <c>scan Source Dpi</c>, <c>save file</c>.</summary>
+        public IReadOnlyList<string> Calls
+        {
+            get { lock (_calls) return [.. _calls]; }
+        }
+
+        public Task<Core.Services.Scanning.ScannerListing> ListScannersAsync(CancellationToken cancellationToken = default)
+        {
+            Record("list");
+            return Task.FromResult(new Core.Services.Scanning.ScannerListing(true, [Device], null));
+        }
+
+        public Task<Core.Services.Scanning.ScanResult> ScanAsync(Core.Services.Scanning.ScannerDevice scanner, Core.Services.Scanning.ScanOptions options, CancellationToken cancellationToken = default)
+        {
+            Record($"scan {options.Source} {options.Dpi}");
+            int count = options.Source == Core.Services.Scanning.ScanSource.Feeder ? 2 : 1;
+            var pages = Enumerable.Range(0, count).Select(_ => new Core.Services.Scanning.ScanPage(Sheet())).ToList();
+            return Task.FromResult(new Core.Services.Scanning.ScanResult(pages, $"Scanned {count} page(s) from {scanner.Name}."));
+        }
+
+        public Task<Core.Services.Scanning.SaveResult> SaveAsync(Core.Services.Scanning.ScanPage page, string filePath, Core.Services.Scanning.ScanFileFormat format, CancellationToken cancellationToken = default)
+        {
+            Record($"save {Path.GetFileName(filePath)}");
+            File.WriteAllBytes(filePath, Core.Services.Scanning.ScanImageCodec.Encode(page, format));
+            return Task.FromResult(new Core.Services.Scanning.SaveResult(true, $"Saved {Path.GetFileName(filePath)}."));
+        }
+
+        private void Record(string call)
+        {
+            lock (_calls) _calls.Add(call);
+        }
+
+        private static byte[] Sheet()
+        {
+            using var bitmap = new SkiaSharp.SKBitmap(200, 300);
+            using (var canvas = new SkiaSharp.SKCanvas(bitmap))
+            {
+                canvas.Clear(SkiaSharp.SKColors.White);
+                using var ink = new SkiaSharp.SKPaint { Color = SkiaSharp.SKColors.Black };
+                canvas.DrawRect(40, 60, 120, 20, ink);
+            }
+
+            using var image = SkiaSharp.SKImage.FromBitmap(bitmap);
+            using var data = image.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100);
+            return data.ToArray();
+        }
+    }
+
+    /// <summary>
     /// Two printers and a queue, all in memory: printing adds a job, hold, resume and cancel change it, and every call is
     /// recorded. A test that pressed Enter in the print dialog would otherwise send a page to a real printer.
     /// </summary>
