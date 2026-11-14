@@ -736,6 +736,56 @@ public class ViewFileDialogCommandTest
 
     [TestMethod]
     [Timeout(60_000)]
+    public void ExecuteAsync_WithAHarFile_PointsTheHarViewerAtIt()
+    {
+        var themeService = CreateThemeService();
+        var harDialog = new iConsole.Dialogs.HarViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.har");
+        File.WriteAllText(path, """{"log":{"entries":[]}}""");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                CreateDialog(themeService),
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                harViewerDialog: harDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, harDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithAHarFileAndNoHarViewer_UsesTheGenericViewer()
+    {
+        var themeService = CreateThemeService();
+        var fileViewer = CreateDialog(themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.har");
+        File.WriteAllText(path, """{"log":{"entries":[]}}""");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(fileViewer, CreateServiceForFile(path));
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, fileViewer.Url?.Path, "without a HAR viewer the file is read as text, as before");
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
     [DataRow(".h5")]
     [DataRow(".hdf5")]
     [DataRow(".hdf")]

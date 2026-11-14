@@ -1555,4 +1555,82 @@
   <data name="Certificate.Fallback.Unreadable" xml:space="preserve">
     <value>Die Datei konnte nicht gelesen werden</value>
   </data>
+  <data name="Har.Column.Number" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="Har.Column.Method" xml:space="preserve">
+    <value>Methode</value>
+  </data>
+  <data name="Har.Column.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Har.Column.Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Har.Column.Size" xml:space="preserve">
+    <value>Größe</value>
+  </data>
+  <data name="Har.Column.Time" xml:space="preserve">
+    <value>Zeit (ms)</value>
+  </data>
+  <data name="Har.Column.Url" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="Har.Grid.Empty" xml:space="preserve">
+    <value>Die Datei enthält keine Anfragen</value>
+  </data>
+  <data name="Har.Status.Requests" xml:space="preserve">
+    <value>{0:N0} Anfrage(n)</value>
+  </data>
+  <data name="Har.Status.Truncated" xml:space="preserve">
+    <value>; nur die ersten {0:N0} werden gelesen</value>
+  </data>
+  <data name="Har.Status.NotHar" xml:space="preserve">
+    <value>Keine HAR-Datei: {0}</value>
+  </data>
+  <data name="Har.Title.Details" xml:space="preserve">
+    <value>Anfrage {0}</value>
+  </data>
+  <data name="Har.Hint.Details" xml:space="preserve">
+    <value>Anfrage und Antwort anzeigen</value>
+  </data>
+  <data name="Har.Hint.Back" xml:space="preserve">
+    <value>Zurück zur Liste der Anfragen</value>
+  </data>
+  <data name="Har.Detail.Started" xml:space="preserve">
+    <value>Begonnen</value>
+  </data>
+  <data name="Har.Detail.Time" xml:space="preserve">
+    <value>Dauer</value>
+  </data>
+  <data name="Har.Detail.Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="Har.Detail.Timings" xml:space="preserve">
+    <value>Zeitmessung</value>
+  </data>
+  <data name="Har.Detail.QueryString" xml:space="preserve">
+    <value>Abfrageparameter</value>
+  </data>
+  <data name="Har.Detail.RequestHeaders" xml:space="preserve">
+    <value>Anfrage-Header</value>
+  </data>
+  <data name="Har.Detail.ResponseHeaders" xml:space="preserve">
+    <value>Antwort-Header</value>
+  </data>
+  <data name="Har.Detail.RequestBody" xml:space="preserve">
+    <value>Anfrageinhalt</value>
+  </data>
+  <data name="Har.Detail.ResponseBody" xml:space="preserve">
+    <value>Antwortinhalt</value>
+  </data>
+  <data name="Har.Detail.NoBody" xml:space="preserve">
+    <value>(kein Inhalt)</value>
+  </data>
+  <data name="Har.Detail.Binary" xml:space="preserve">
+    <value>(Binärdaten, {0:N0} Bytes, nicht angezeigt)</value>
+  </data>
+  <data name="Har.Detail.Truncated" xml:space="preserve">
+    <value>(abgeschnitten nach {0:N0} Zeichen)</value>
+  </data>
 </root>

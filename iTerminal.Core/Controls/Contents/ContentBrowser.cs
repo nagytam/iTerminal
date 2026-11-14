@@ -51,6 +51,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private iConsole.Dialogs.ExecutableAnalysisDialog? _executableAnalysisDialog { get; set; }
     private iConsole.Dialogs.XpsViewerDialog? _xpsViewerDialog { get; set; }
     private iConsole.Dialogs.CertificateViewerDialog? _certificateViewerDialog { get; set; }
+    private iConsole.Dialogs.HarViewerDialog? _harViewerDialog { get; set; }
     private iTerminal.Core.Dialogs.Web.WebBrowserDialog? _webBrowserDialog { get; set; }
     private MarkPatternDialog? _markPatternDialog { get; set; }
     private MarkPatternDialog? _unmarkPatternDialog { get; set; }
@@ -131,7 +132,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
         FileEncryptionDialog? fileEncryptionDialog = null,
         iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
-        iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null)
+        iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null,
+        iConsole.Dialogs.HarViewerDialog? harViewerDialog = null)
         : base(themeService)
     {
         _webBrowserDialog = webBrowserDialog;
@@ -142,6 +144,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _executableAnalysisDialog = executableAnalysisDialog;
         _xpsViewerDialog = xpsViewerDialog;
         _certificateViewerDialog = certificateViewerDialog;
+        _harViewerDialog = harViewerDialog;
         _editLinkDialog = editLinkDialog;
         _malwareScanService = malwareScanService;
         _notificationService = notificationService;
@@ -399,7 +402,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
         if (_fileViewerDialog is not null)
         {
-            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, _webBrowserDialog, sqliteViewerDialog: _sqliteViewerDialog, hdfViewerDialog: _hdfViewerDialog, executableAnalysisDialog: _executableAnalysisDialog, xpsViewerDialog: _xpsViewerDialog, certificateViewerDialog: _certificateViewerDialog));
+            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, _webBrowserDialog, sqliteViewerDialog: _sqliteViewerDialog, hdfViewerDialog: _hdfViewerDialog, executableAnalysisDialog: _executableAnalysisDialog, xpsViewerDialog: _xpsViewerDialog, certificateViewerDialog: _certificateViewerDialog, harViewerDialog: _harViewerDialog));
         }
         if (_textFileEditorDialog is not null)
         {

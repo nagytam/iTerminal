@@ -4,6 +4,7 @@ using iConsole.Data;
 using iConsole.Csv;
 using iConsole.Executables;
 using iConsole.Hdf;
+using iConsole.Har;
 using iConsole.Dialogs;
 using iConsole.Json;
 using iConsole.Sqlite;
@@ -35,8 +36,10 @@ public class ViewFileDialogCommand(
     HdfViewerDialog? hdfViewerDialog = null,
     ExecutableAnalysisDialog? executableAnalysisDialog = null,
     XpsViewerDialog? xpsViewerDialog = null,
-    CertificateViewerDialog? certificateViewerDialog = null) : Command
+    CertificateViewerDialog? certificateViewerDialog = null,
+    HarViewerDialog? harViewerDialog = null) : Command
 {
+    private readonly HarViewerDialog? _harViewerDialog = harViewerDialog;
     private readonly WebBrowserDialog? _webBrowserDialog = webBrowserDialog;
     private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
     private readonly ImageFileViewerDialog? _imageFileViewerDialog = imageFileViewerDialog;
@@ -163,6 +166,16 @@ public class ViewFileDialogCommand(
         {
             _csvViewerDialog.Url = focusedFileUrl;
             await (Control?.ShowDialogAsync(_csvViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // A HAR file (a browser's network log) opens in the request viewer, from any drive, like JSON: it is read through the file system.
+        if (_harViewerDialog is not null
+            && focusedFileUrl is not null
+            && HarFileTypes.IsHarFile(focusedFileUrl.Path))
+        {
+            _harViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_harViewerDialog) ?? Task.CompletedTask);
             return;
         }
 
