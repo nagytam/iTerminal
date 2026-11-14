@@ -255,7 +255,7 @@ public class AiPromptBarTest
     public void WhileCheckingTheBarKeepsItsHeight()
     {
         var (bar, model, _) = Create(available: false);
-        model.ModelInfo = "checking...";
+        model.ModelInfo = AiChatModel.CheckingModelInfo;
 
         Assert.IsFalse(bar.IsCollapsed);
         Assert.AreEqual(5, bar.PreferredHeight(5));
@@ -275,7 +275,7 @@ public class AiPromptBarTest
     public void TheParentHearsWhenTheBarCollapsesAndExpands()
     {
         var (bar, model, _) = Create(available: false);
-        model.ModelInfo = "checking...";
+        model.ModelInfo = AiChatModel.CheckingModelInfo;
         var changes = 0;
         bar.PreferredHeightChanged += (_, _) => changes++;
 
