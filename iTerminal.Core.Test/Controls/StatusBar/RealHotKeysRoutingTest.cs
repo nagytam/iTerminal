@@ -1,11 +1,14 @@
 using iConsole.Controls;
+using iConsole.Controls.Buttons;
 using iConsole.Data;
 using iConsole.Display;
 using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Controls.StatusBar;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Model.Git;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Git;
 using Moq;
 
 namespace iTerminal.Core.Test.Controls.StatusBar;
@@ -32,7 +35,7 @@ public class RealHotKeysRoutingTest
         Mock<IContentModelService> ContentModelService,
         IPhoneBrowserDialog IPhoneDialog);
 
-    private static async Task<Harness> BuildAsync()
+    private static async Task<Harness> BuildAsync(IGitService? gitService = null)
     {
         var themeService = CreateThemeService();
         var contentModelService = new Mock<IContentModelService>();
@@ -49,7 +52,7 @@ public class RealHotKeysRoutingTest
         var hotKeys = new HotKeys(
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
             null!, iPhoneDialog, null!, null!, null!, null!, null!, null!,
-            contentModelService.Object, null!, null!, null!, null!, null!, NullSettingsService.Instance, null!, themeService);
+            contentModelService.Object, null!, null!, null!, null!, null!, NullSettingsService.Instance, null!, themeService, gitService: gitService);
 
         var statusBar = new iConsole.Controls.StatusBar.StatusBar(themeService) { ViewSize = new Size(120, 1) };
         statusBar.AddControl(hotKeys);
@@ -160,5 +163,96 @@ public class RealHotKeysRoutingTest
             s => s.SetUrlAsync("RightPanel", It.Is<Url>(url => url.ContainerType == ContainerType.MusicPlaylist)),
             Times.Once,
             "The playlist belongs in the right panel");
+    }
+
+    /// <summary>Ctrl+Y runs the git sync in the focused panel's working tree, pulling first and then pushing.</summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ControlD_SyncsTheFocusedWorkingTree()
+    {
+        string root = Path.Combine(Path.GetTempPath(), "iTerminal-hotkey-sync-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(Path.Combine(root, ".git"));
+        try
+        {
+            int pulls = 0;
+            int pushes = 0;
+            Mock<IGitService> git = new();
+            git.Setup(g => g.GetRepositoryRootAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(root);
+            git.Setup(g => g.GetStatusAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GitRepositoryStatus("main", "origin/main", 0, 0, [], []));
+            git.Setup(g => g.PullRebaseAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Callback(() => Interlocked.Increment(ref pulls)).ReturnsAsync(GitResult.Ok());
+            git.Setup(g => g.PushAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+                .Callback(() => Interlocked.Increment(ref pushes)).ReturnsAsync(GitResult.Ok());
+
+            var harness = await BuildAsync(git.Object);
+            Mock<IContentModel> model = new();
+            model.SetupGet(m => m.Url).Returns(new Url(root));
+            harness.ContentModelService.Setup(s => s.GetFocusedModel()).Returns(model.Object);
+
+            await harness.Root.HandleKeyEventAsync(new KeyEvent('\u0004', ConsoleKey.D, false, false, true));
+
+            await WaitUntilAsync(() => Volatile.Read(ref pushes) == 1);
+            Assert.AreEqual(1, Volatile.Read(ref pulls), "the pull runs first");
+            Assert.AreEqual(1, Volatile.Read(ref pushes), "and the push after it");
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    /// <summary>Outside a working tree the key does nothing: there is no repository to sync.</summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ControlD_OutsideAWorkingTree_PullsNothing()
+    {
+        string plain = Path.Combine(Path.GetTempPath(), "iTerminal-hotkey-plain-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(plain);
+        try
+        {
+            int pulls = 0;
+            Mock<IGitService> git = new();
+            git.Setup(g => g.PullRebaseAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Callback(() => Interlocked.Increment(ref pulls)).ReturnsAsync(GitResult.Ok());
+
+            var harness = await BuildAsync(git.Object);
+            Mock<IContentModel> model = new();
+            model.SetupGet(m => m.Url).Returns(new Url(plain));
+            harness.ContentModelService.Setup(s => s.GetFocusedModel()).Returns(model.Object);
+
+            await harness.Root.HandleKeyEventAsync(new KeyEvent('\u0004', ConsoleKey.D, false, false, true));
+            await Task.Delay(300);
+
+            Assert.AreEqual(0, Volatile.Read(ref pulls));
+        }
+        finally
+        {
+            Directory.Delete(plain, recursive: true);
+        }
+    }
+
+    private static async Task WaitUntilAsync(Func<bool> condition, int timeoutMs = 15000)
+    {
+        DateTime deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
+        while (!condition() && DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(20);
+        }
+    }
+
+    /// <summary>The bottom bar has the git sync as Ctrl-D-Sync when it has a git service, and no such key without one.</summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheBottomBarOffersGitSyncOnCtrlDOnlyWhenGitIsAvailable()
+    {
+        Mock<IGitService> git = new();
+        var withGit = await BuildAsync(git.Object);
+        var without = await BuildAsync();
+
+        var sync = withGit.HotKeys.Controls.AsSnapshot().OfType<Button>().Single(b => b.Title == "Ctrl-D-Sync");
+        Assert.AreEqual(ConsoleKey.D, sync.Commands.First().Key!.ConsoleKey);
+        Assert.IsTrue(sync.Commands.First().Key!.Control);
+        Assert.IsFalse(without.HotKeys.Controls.AsSnapshot().OfType<Button>().Any(b => b.Title == "Ctrl-D-Sync"));
     }
 }

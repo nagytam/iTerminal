@@ -9670,4 +9670,7 @@
   <data name="Games.Tetris.Computer" xml:space="preserve">
     <value>Ordenador</value>
   </data>
+  <data name="Footer.Sync" xml:space="preserve">
+    <value>Sincr.</value>
+  </data>
 </root>
