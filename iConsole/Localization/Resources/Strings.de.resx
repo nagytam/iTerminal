@@ -388,6 +388,18 @@
   <data name="Hint.EdgeColumn" xml:space="preserve">
     <value>80. Spalte markieren (erneut: ausblenden)</value>
   </data>
+  <data name="Hint.FollowFile" xml:space="preserve">
+    <value>Datei beim Wachsen verfolgen</value>
+  </data>
+  <data name="Hint.StopFollowing" xml:space="preserve">
+    <value>Verfolgen der Datei beenden</value>
+  </data>
+  <data name="Hint.FindNext" xml:space="preserve">
+    <value>Nächsten Treffer suchen</value>
+  </data>
+  <data name="Hint.FindPrevious" xml:space="preserve">
+    <value>Vorherigen Treffer suchen</value>
+  </data>
   <data name="Hint.DeleteLine" xml:space="preserve">
     <value>Die Zeile löschen</value>
   </data>

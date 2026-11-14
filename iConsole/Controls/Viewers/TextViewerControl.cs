@@ -1006,6 +1006,8 @@ public partial class TextViewerControl : Control
             return; // TODO
         }
 
+        _verticalScrollBar.Marks = SearchMarks();
+
         if (RowMode)
         {
             // The rows are laid out from the text, so an edit since the last frame has to reach them first.
@@ -1180,6 +1182,34 @@ public partial class TextViewerControl : Control
                 conxelLine.HighlightRange((int)(from - row.Start), (int)(to - row.Start), colorScheme.SelectedForeground, colorScheme.SelectedFocusedBackground);
             }
         }
+    }
+
+    private IReadOnlyList<long> _searchMarks = [];
+    private (int Hits, string Search, long Lines, long FirstLine)? _searchMarksKey;
+
+    /// <summary>
+    /// The lines of the search hits, once each, for the scrollbar. Recomputed only when the number of hits, the search, the
+    /// number of lines or the first hit changes, so a frame does not walk every hit.
+    /// </summary>
+    private IReadOnlyList<long> SearchMarks()
+    {
+        var hits = SearchModel.Hits;
+        var count = hits.Count;
+        if (count == 0)
+        {
+            _searchMarks = [];
+            _searchMarksKey = null;
+            return _searchMarks;
+        }
+
+        var key = (count, SearchModel.Search, (long)TextModel.Lines.Count, hits.First().Y);
+        if (_searchMarksKey != key)
+        {
+            _searchMarks = hits.Select(hit => hit.Y).Distinct().OrderBy(line => line).ToArray();
+            _searchMarksKey = key;
+        }
+
+        return _searchMarks;
     }
 
     private void HighlightSearchResults(ConxelString conxelLine, int x, int y)

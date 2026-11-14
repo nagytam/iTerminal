@@ -388,6 +388,18 @@
   <data name="Hint.EdgeColumn" xml:space="preserve">
     <value>A 80. oszlop jelölése (újra: elrejtés)</value>
   </data>
+  <data name="Hint.FollowFile" xml:space="preserve">
+    <value>A fájl követése növekedés közben</value>
+  </data>
+  <data name="Hint.StopFollowing" xml:space="preserve">
+    <value>A fájl követésének leállítása</value>
+  </data>
+  <data name="Hint.FindNext" xml:space="preserve">
+    <value>Következő találat keresése</value>
+  </data>
+  <data name="Hint.FindPrevious" xml:space="preserve">
+    <value>Előző találat keresése</value>
+  </data>
   <data name="Hint.DeleteLine" xml:space="preserve">
     <value>A sor törlése</value>
   </data>
