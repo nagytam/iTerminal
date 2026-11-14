@@ -153,7 +153,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iConsole.Dialogs.MarkdownViewerDialog? markdownViewerDialog = null,
         iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
         iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
-        iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null
+        iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
+        iTerminal.Core.Jobs.UpdateCheckJob? updateCheckJob = null
         )
         : base([], themeService)
     {
@@ -287,7 +288,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             scannerDialog: scannerDialog,
             networkToolsDialog: networkToolsDialog));
 
-        AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
+        AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog, updateCheckJob));
 
         _localizer = localizer;
         if (localizer is not null)

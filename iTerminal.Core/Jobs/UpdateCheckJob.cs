@@ -25,6 +25,24 @@ public class UpdateCheckJob(
     internal static readonly TimeSpan Interval = TimeSpan.FromHours(12);
 
     private string? _announced;
+    private readonly object _gate = new();
+    private TaskCompletionSource _wake = NewWake();
+    private bool _manualRequested;
+
+    private static TaskCompletionSource NewWake() => new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    /// <summary>
+    /// Checks for a release now, as Help > Check for Updates asks. Returns at once: the check runs on this job's thread,
+    /// and the result is shown from there (the dialog, or a toast saying there is nothing newer).
+    /// </summary>
+    public void CheckNow()
+    {
+        lock (_gate)
+        {
+            _manualRequested = true;
+            _wake.TrySetResult();
+        }
+    }
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
     {
@@ -33,17 +51,54 @@ public class UpdateCheckJob(
         bool first = true;
         while (!cancellationToken.IsCancellationRequested)
         {
+            bool manual;
+            lock (_gate)
+            {
+                manual = _manualRequested;
+                _manualRequested = false;
+            }
+
             await updates.CheckAsync(cancellationToken);
-            await OfferAsync(first, cancellationToken);
+            await OfferAsync(first || manual, manual, cancellationToken);
             first = false;
-            await Task.Delay(Interval, cancellationToken);
+
+            Task wait;
+            lock (_gate)
+            {
+                // A request that arrived during the check is honoured at once, not after the interval.
+                wait = _manualRequested ? Task.CompletedTask : WaitForNextCheck(cancellationToken);
+            }
+
+            await wait;
         }
     }
 
-    internal async Task OfferAsync(bool openDialog, CancellationToken cancellationToken)
+    /// <summary>Waits for the interval, or for <see cref="CheckNow"/>, whichever comes first. Called under <see cref="_gate"/>.</summary>
+    private Task WaitForNextCheck(CancellationToken cancellationToken)
+    {
+        _wake = NewWake();
+        var wake = _wake.Task;
+        return Task.WhenAny(Task.Delay(Interval, cancellationToken), wake);
+    }
+
+    internal Task OfferAsync(bool openDialog, CancellationToken cancellationToken) =>
+        OfferAsync(openDialog, manual: false, cancellationToken);
+
+    private async Task OfferAsync(bool openDialog, bool manual, CancellationToken cancellationToken)
     {
         UpdateInfo? update = updates.Available;
-        if (update is null || updates.IsSkipped || update.Version == _announced)
+        if (update is null || updates.IsSkipped)
+        {
+            if (manual)
+            {
+                notifications.Notify(UiText.Get("Notify.UpToDate", "iTerminal is up to date"), string.Format(UiText.Get("Notify.UpToDateDetail", "No release newer than {0} was found."), updates.CurrentVersion));
+            }
+
+            return;
+        }
+
+        // A release already announced is not offered again by the scheduled checks, but a request the person made is answered.
+        if (!manual && update.Version == _announced)
         {
             return;
         }

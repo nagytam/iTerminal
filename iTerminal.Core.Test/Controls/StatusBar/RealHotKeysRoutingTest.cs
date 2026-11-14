@@ -168,7 +168,7 @@ public class RealHotKeysRoutingTest
     /// <summary>Ctrl+Y runs the git sync in the focused panel's working tree, pulling first and then pushing.</summary>
     [Timeout(60_000)]
     [TestMethod]
-    public async Task ControlD_SyncsTheFocusedWorkingTree()
+    public async Task ControlShiftG_SyncsTheFocusedWorkingTree()
     {
         string root = Path.Combine(Path.GetTempPath(), "iTerminal-hotkey-sync-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(Path.Combine(root, ".git"));
@@ -190,7 +190,7 @@ public class RealHotKeysRoutingTest
             model.SetupGet(m => m.Url).Returns(new Url(root));
             harness.ContentModelService.Setup(s => s.GetFocusedModel()).Returns(model.Object);
 
-            await harness.Root.HandleKeyEventAsync(new KeyEvent('\u0004', ConsoleKey.D, false, false, true));
+            await harness.Root.HandleKeyEventAsync(new KeyEvent('\u0007', ConsoleKey.G, true, false, true));
 
             await WaitUntilAsync(() => Volatile.Read(ref pushes) == 1);
             Assert.AreEqual(1, Volatile.Read(ref pulls), "the pull runs first");
@@ -221,7 +221,7 @@ public class RealHotKeysRoutingTest
             model.SetupGet(m => m.Url).Returns(new Url(plain));
             harness.ContentModelService.Setup(s => s.GetFocusedModel()).Returns(model.Object);
 
-            await harness.Root.HandleKeyEventAsync(new KeyEvent('\u0004', ConsoleKey.D, false, false, true));
+            await harness.Root.HandleKeyEventAsync(new KeyEvent('\u0007', ConsoleKey.G, true, false, true));
             await Task.Delay(300);
 
             Assert.AreEqual(0, Volatile.Read(ref pulls));
@@ -241,18 +241,17 @@ public class RealHotKeysRoutingTest
         }
     }
 
-    /// <summary>The bottom bar has the git sync as Ctrl-D-Sync when it has a git service, and no such key without one.</summary>
+    /// <summary>The bottom bar has the git sync as Ctrl-Shift-G-Sync when it has a git service, and no such key without one.</summary>
     [Timeout(60_000)]
     [TestMethod]
-    public async Task TheBottomBarOffersGitSyncOnCtrlDOnlyWhenGitIsAvailable()
+    public async Task TheBottomBarOffersGitSyncOnCtrlShiftGOnlyWhenGitIsAvailable()
     {
         Mock<IGitService> git = new();
         var withGit = await BuildAsync(git.Object);
         var without = await BuildAsync();
 
-        var sync = withGit.HotKeys.Controls.AsSnapshot().OfType<Button>().Single(b => b.Title == "Ctrl-D-Sync");
-        Assert.AreEqual(ConsoleKey.D, sync.Commands.First().Key!.ConsoleKey);
-        Assert.IsTrue(sync.Commands.First().Key!.Control);
-        Assert.IsFalse(without.HotKeys.Controls.AsSnapshot().OfType<Button>().Any(b => b.Title == "Ctrl-D-Sync"));
+        var sync = withGit.HotKeys.Controls.AsSnapshot().OfType<Button>().Single(b => b.Title == "Ctrl-Shift-G-Sync");
+        Assert.AreEqual(new iConsole.Data.Key(ConsoleKey.G, true, false, true), sync.Commands.First().Key);
+        Assert.IsFalse(without.HotKeys.Controls.AsSnapshot().OfType<Button>().Any(b => b.Title == "Ctrl-Shift-G-Sync"));
     }
 }

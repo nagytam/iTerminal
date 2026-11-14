@@ -21,8 +21,9 @@ public class GitSyncCommand(
 {
     public override string Title => "Git sync";
 
-    // Key ctor is (consoleKey, shift, alt, control): Ctrl+D, the bottom bar's "Ctrl-D-Sync". Ctrl+Y is the ToDo list.
-    public override Key? Key { get; init; } = new Key(ConsoleKey.D, false, false, true);
+    // Key ctor is (consoleKey, shift, alt, control): Ctrl+Shift+G, the bottom bar's "Ctrl-Shift-G-Sync". Ctrl+D is the calendar
+    // (a global command), so the sync cannot share it; Ctrl+G opens the Git client beside it.
+    public override Key? Key { get; init; } = new Key(ConsoleKey.G, true, false, true);
     public override string Description => "Pull the current branch's upstream with a rebase, then push the local commits (the panel's folder is a git working tree).";
 
     /// <summary>The sync started last. Nothing waits on it; it exists so a test can.</summary>
