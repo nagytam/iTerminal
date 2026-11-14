@@ -276,3 +276,25 @@ For the record, so a later run does not add them again: tty-pie and BigText / tt
 1. Item 124 (property grid): the settings pages are the largest repeated code in `iTerminal.Core`.
 2. Item 127 (whole-screen fuzz tests): extends the guard tests that already exist and needs no product change.
 3. Items 125 and 126: small, and both only when a user asks for them.
+
+#### Status after the pull of 2026-11-14 (Spectre.Console)
+
+Checked again against `iConsole` at `1a7e135` and Spectre.Console 0.57.2 (the latest release, 2 July 2026). Spectre's side was read from its source tree (`src/Spectre.Console/`: `Widgets`, `Prompts`, `Live`, `Rendering`, `Extensions`), not its run-time behaviour. The Spectre section of `ui-framework.md` has the full table.
+
+Built since the last check, so no longer missing:
+
+- **94 for the prompt kinds.** `IPromptService` has `AskAsync<T>`, `SelectAsync<T>`, `MultiSelectAsync<T>` and `ConfirmAsync`, each shown as a dialog. Message and wait dialogs were not re-checked, so the item stays open for them.
+- **119 for prompts only.** The prompt methods return the typed value, so the prompt path is built. `ShowDialogAsync<T>` for other dialogs is still missing.
+- **Wide characters and braille plots** were listed as gaps in the earlier Spectre notes in `ui-framework.md`. Both are built (`TextWidth`, `BufferLayer.RepairWideCharacters`, `LineChart`, `ChartCanvas`), and the refreshed Spectre section records them.
+
+Still missing, confirmed by grep:
+
+- **3:** `NO_COLOR` and `COLORTERM` are not read. `TERM` is read, but only for other features.
+- **29:** partly built. `ProgressGroup` and `LiveTable` exist. A general live display (any renderable) and a status spinner with a message do not.
+- **38** (FIGlet), **47** (markup strings), **71** (`Spinner` has one frame set), **96** (emoji shortcodes) and **102** (no `Status` helper): no match.
+- **48:** `ErrorMessage` shows one line; no trace view.
+- **123:** `ScreenRecorder` captures the screen buffer; it does not render a single control without a terminal.
+
+New item:
+
+128. **`Columns`, `Rows` and `Padder` layout.** Not found (grep for `class Columns`, `class Rows`, `class Padder` and a margin or padding property on `Control` gave nothing; `AlignPanel` and `BoxPanel` exist). A one-line helper that lays children out side by side or stacked with a gap, and padding around a control. Spectre has all three in `Widgets/` (`Columns.cs`, `Rows.cs`, `Padder.cs`). Lip Gloss has the same idea as `JoinHorizontal` and `Place`. The existing `SizeSolver` and `StackPanel` (item 9) can carry it, so it is a small addition.
