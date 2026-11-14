@@ -16,6 +16,7 @@ using iTerminal.Core.Dialogs.Git;
 using iTerminal.Core.Dialogs.PackageManager;
 using iTerminal.Core.Model;
 using iTerminal.Core.Services;
+using iTerminal.Core.Services.Git;
 
 namespace iTerminal.Core.Controls.StatusBar;
 
@@ -91,7 +92,8 @@ public class HotKeys : StatusBarItem
         iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
         iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null,
         iConsole.Dialogs.HarViewerDialog? harViewerDialog = null,
-        iConsole.Dialogs.ParquetViewerDialog? parquetViewerDialog = null)
+        iConsole.Dialogs.ParquetViewerDialog? parquetViewerDialog = null,
+        IGitService? gitService = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -331,6 +333,18 @@ public class HotKeys : StatusBarItem
         };
         AddControl(gitClientDialogButton);
 
+        // Git sync: pull --rebase, then push. Shown in the Ctrl layer only while the focused folder is in a working tree.
+        if (gitService is not null)
+        {
+            var gitSyncButton = new Button("Ctrl-D-Sync", new GitSyncCommand(contentModelService, gitService, notificationService), themeService)
+            {
+                Position = new Position(0, 0),
+                ViewSize = new Size(11, 1),
+                IsVisible = false
+            };
+            AddControl(gitSyncButton);
+        }
+
         var calculatorDialogButton = new Button("Ctrl-A-Calc", new CalculatorDialogCommand(calculatorDialog), themeService)
         {
             Position = new Position(0, 0),
@@ -546,6 +560,9 @@ public class HotKeys : StatusBarItem
             var command = button.Commands.FirstOrDefault();
             var match = command?.Key is Key k
                 && CommandKeyMatchesModifierLayer(k, IsShiftActive, IsControlActive, IsAltActive);
+            // The sync has nothing to do outside a working tree, so its key is not offered there.
+            if (match && command is GitSyncCommand sync && !sync.CanExecute())
+                match = false;
             if (match == true)
                 visible.Add(button);
         }

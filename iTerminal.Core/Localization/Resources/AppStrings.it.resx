@@ -9625,4 +9625,7 @@
     <value>Cerca su YouTube e riproduci un video nel visualizzatore video.</value>
     <comment>Search YouTube and play a video in the video viewer.</comment>
   </data>
+  <data name="Footer.Sync" xml:space="preserve">
+    <value>Sincr.</value>
+  </data>
 </root>
