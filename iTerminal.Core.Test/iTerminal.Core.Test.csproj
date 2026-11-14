@@ -53,6 +53,12 @@
     <None Include="..\Test\FileTypes\example.apk" Link="FileTypes\example.apk" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\Test\FileTypes\example.nupkg" Link="FileTypes\example.nupkg" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\Test\FileTypes\example.vsix" Link="FileTypes\example.vsix" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.war" Link="FileTypes\example.war" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.msix" Link="FileTypes\example.msix" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.appx" Link="FileTypes\example.appx" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.epub" Link="FileTypes\example.epub" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.zst" Link="FileTypes\example.zst" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.tar.zst" Link="FileTypes\example.tar.zst" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

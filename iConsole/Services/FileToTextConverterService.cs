@@ -20,6 +20,7 @@ using iConsole.IWork;
 using iConsole.Fonts;
 using iConsole.Photoshop;
 using iConsole.Cad;
+using iConsole.Wasm;
 
 namespace iConsole.Services;
 
@@ -45,7 +46,7 @@ public class FileToTextConverterService : IFileToTextConverterService
         new(StringComparer.OrdinalIgnoreCase) { "svg" };
 
     private static readonly HashSet<string> FontExtensions =
-        new(StringComparer.OrdinalIgnoreCase) { "ttf", "otf" };
+        new(StringComparer.OrdinalIgnoreCase) { "ttf", "otf", "woff" };
 
     private static readonly HashSet<string> PhotoshopExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "psd" };
@@ -174,6 +175,7 @@ public class FileToTextConverterService : IFileToTextConverterService
         && !ImageExtensions.Contains(url.Extension)
         && !SvgExtensions.Contains(url.Extension)
         && !FontExtensions.Contains(url.Extension)
+        && !WasmModuleSummary.Extensions.Contains(url.Extension)
         && !PhotoshopExtensions.Contains(url.Extension)
         && !AssemblyExtensions.Contains(url.Extension);
 
@@ -231,6 +233,10 @@ public class FileToTextConverterService : IFileToTextConverterService
             else if (ModelFileSummary.Extensions.Contains(url.Extension))
             {
                 await ReadModelFileAsync(url, fileSystem, textModel);
+            }
+            else if (WasmModuleSummary.Extensions.Contains(url.Extension))
+            {
+                await ReadWasmFileAsync(url, fileSystem, textModel);
             }
             else if (AssemblyExtensions.Contains(url.Extension))
             {
@@ -769,10 +775,13 @@ public class FileToTextConverterService : IFileToTextConverterService
         if (memoryFile?.Content is null)
             return;
 
-        byte[] content = memoryFile.Content;
+        // A WOFF web font is read as the sfnt font it wraps, so its names and its preview are those of the installed font.
+        byte[] raw = memoryFile.Content;
+        byte[] content = raw;
         FontInfo info;
         try
         {
+            content = await Task.Run(() => WoffFile.Unwrap(raw));
             info = await Task.Run(() => FontFileReader.Read(content));
         }
         catch (FormatException)
@@ -792,6 +801,29 @@ public class FileToTextConverterService : IFileToTextConverterService
         textModel.Lines.Add(string.Empty);
         AddHeading(textModel, ViewerText.Get("Font.Preview", "Preview"));
         AppendAsciiArt(sample, textModel);
+    }
+
+    private static async Task ReadWasmFileAsync(Url url, IFileSystem fileSystem, ITextModel textModel)
+    {
+        var memoryFile = await fileSystem.ReadFileAsync(url);
+        if (memoryFile?.Content is null)
+        {
+            return;
+        }
+
+        byte[] content = memoryFile.Content;
+        IReadOnlyList<string> lines;
+        try
+        {
+            lines = await Task.Run(() => WasmModuleSummary.Summarize(content));
+        }
+        catch (FormatException)
+        {
+            await ReadTextFileAsync(url, fileSystem, textModel);
+            return;
+        }
+
+        AddLines(textModel, lines);
     }
 
     private static void AddFontLines(FontInfo info, ITextModel textModel)

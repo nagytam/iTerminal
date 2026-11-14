@@ -11,6 +11,7 @@ using iTerminal.Core.Services.Processes;
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text;
+using ZstdSharp;
 
 namespace iTerminal.Core.Services.Archives;
 
@@ -48,10 +49,13 @@ public interface IArchiveDriveService : IEntryListingFileSystem
 public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<string?>? locateSevenZip = null) : IArchiveDriveService
 {
     // Comic-book archives are the same containers under other names: .cbz is ZIP, .cbt is TAR, .cbr and .cb7 are RAR and 7z.
-    // JAR, APK, NUPKG and VSIX are ZIP files with their own names: a Java archive, an Android package, a NuGet package and a Visual Studio extension.
-    private static readonly string[] ZipEndings = [".zip", ".cbz", ".jar", ".apk", ".nupkg", ".vsix"];
-    private static readonly string[] TarEndings = [".tar.gz", ".tar.bz2", ".tgz", ".tbz2", ".tbz", ".tar", ".cbt"];
-    private static readonly string[] SingleFileEndings = [".bz2"];
+    // JAR, APK, NUPKG, VSIX, WAR, MSIX, APPX and EPUB are ZIP files with their own names: a Java archive, an Android package,
+    // a NuGet package, a Visual Studio extension, a Java web application, a Windows app package and an e-book.
+    private static readonly string[] ZipEndings = [".zip", ".cbz", ".jar", ".apk", ".nupkg", ".vsix", ".war", ".msix", ".appx", ".epub"];
+    private static readonly string[] TarEndings = [".tar.gz", ".tar.bz2", ".tar.zst", ".tgz", ".tbz2", ".tbz", ".tzst", ".tar", ".cbt"];
+
+    // A lone .bz2 or .zst holds one file, named after the archive.
+    private static readonly string[] SingleFileEndings = [".bz2", ".zst"];
 
     // Debian and RPM packages are 7-Zip's ar and rpm handlers, CHM is a Windows help file, ARJ an old DOS archive and LZMA a single compressed file.
     private static readonly string[] SevenZipEndings = [".7z", ".rar", ".iso", ".cab", ".img", ".vmdk", ".wim", ".dmg", ".cbr", ".cb7", ".deb", ".rpm", ".chm", ".arj", ".lzma"];
@@ -239,6 +243,7 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
     {
         ".tar.gz" or ".tgz" or ".gz" => new GZipInputStream(file) { IsStreamOwner = false },
         ".tar.bz2" or ".tbz2" or ".tbz" or ".bz2" => new BZip2InputStream(file) { IsStreamOwner = false },
+        ".tar.zst" or ".tzst" or ".zst" => new DecompressionStream(file),
         _ => file,
     };
 

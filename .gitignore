@@ -493,3 +493,5 @@ CoverageReport/
 # Sample files for the build-time copies in the test projects (example.obj and example.nupkg are otherwise ignored).
 !Test/FileTypes/example.obj
 !Test/FileTypes/example.nupkg
+!Test/FileTypes/example.msix
+!Test/FileTypes/example.appx
