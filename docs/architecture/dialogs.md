@@ -368,8 +368,8 @@ The document is parsed on a background task when the dialog opens, and a query r
 applied on the idle pass, on the thread that owns the controls. The tree is the dialog's first focusable control, since
 `Dialog` gives the keyboard to the first one that can take it.
 
-### The JSON viewer (`JsonViewerDialog`, F3 on a `.json` file, `iConsole/Json/`)
-F3 on a `.json` file opens the document as a tree. `JsonTree` builds one `JsonNodeItem` per member or item: a
+### The JSON viewer (`JsonViewerDialog`, F3 on a `.json`, `.ipynb` or `.geojson` file, `iConsole/Json/`)
+F3 on a `.json` file (and a Jupyter notebook or GeoJSON document, which are JSON under their own names; `JsonFileTypes.Extensions`) opens the document as a tree. JSON Lines (`.jsonl`) is one document per line and stays in the text viewer. `JsonTree` builds one `JsonNodeItem` per member or item: a
 property shows as `"key": value`, an array item as `[0]: value`, and a container shows how many members it has. Objects
 and arrays with contents expand and collapse with the `TreeView`'s own keys; `*` expands every node.
 

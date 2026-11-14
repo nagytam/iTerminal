@@ -37,6 +37,14 @@
     <None Include="Services\TestFiles\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <!-- The drawing and model examples in Test/FileTypes, copied beside the tests so they read the same files a user does. -->
+  <ItemGroup>
+    <None Include="..\Test\FileTypes\example.dxf" Link="FileTypes\example.dxf" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.obj" Link="FileTypes\example.obj" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.stl" Link="FileTypes\example.stl" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example-binary.stl" Link="FileTypes\example-binary.stl" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <ItemGroup>
     <Folder Include="Controls\Experimental\MenuBar\" />
     <Folder Include="Inputs\Posix\" />

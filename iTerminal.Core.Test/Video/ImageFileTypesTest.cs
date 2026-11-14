@@ -31,6 +31,28 @@ public class ImageFileTypesTest
     }
 
     [TestMethod]
+    [DataRow("sheet.ppm")]
+    [DataRow("mask.PGM")]
+    [DataRow("mono.pbm")]
+    [DataRow("alpha.pam")]
+    [DataRow("scan.pcx")]
+    [DataRow("old.sgi")]
+    [DataRow("icon.xbm")]
+    [DataRow("badge.xpm")]
+    [DataRow("frame.tga")]
+    [DataRow("render.exr")]
+    [DataRow("sky.hdr")]
+    [DataRow("film.dpx")]
+    [DataRow("quick.qoi")]
+    [DataRow("mobile.wbmp")]
+    [DataRow("photo.jxl")]
+    [DataRow("photo.avif")]
+    public void FfmpegBitmaps_OpenInThePictureViewer(string name)
+    {
+        Assert.IsTrue(ImageFileTypes.IsImageFile(name));
+    }
+
+    [TestMethod]
     public void EachFamily_IsRecognisedByItsOwnTest()
     {
         Assert.IsTrue(ImageFileTypes.IsPhotoshopFile("a.psd"));

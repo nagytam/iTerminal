@@ -19,6 +19,7 @@ using System.Reflection;
 using iConsole.IWork;
 using iConsole.Fonts;
 using iConsole.Photoshop;
+using iConsole.Cad;
 
 namespace iConsole.Services;
 
@@ -226,6 +227,10 @@ public class FileToTextConverterService : IFileToTextConverterService
             else if (PhotoshopExtensions.Contains(url.Extension))
             {
                 await ReadPhotoshopFileAsync(url, fileSystem, textModel);
+            }
+            else if (ModelFileSummary.Extensions.Contains(url.Extension))
+            {
+                await ReadModelFileAsync(url, fileSystem, textModel);
             }
             else if (AssemblyExtensions.Contains(url.Extension))
             {
@@ -718,6 +723,43 @@ public class FileToTextConverterService : IFileToTextConverterService
         {
             // Untrusted input: any failure of the renderer means the file is shown as text.
             return null;
+        }
+    }
+
+    /// <summary>
+    /// A drawing or 3D model: its summary first (<see cref="ModelFileSummary"/>), then, for a text format, its own text as
+    /// before. A file the summary cannot read is shown as text.
+    /// </summary>
+    private static async Task ReadModelFileAsync(Url url, IFileSystem fileSystem, ITextModel textModel)
+    {
+        var memoryFile = await fileSystem.ReadFileAsync(url);
+        if (memoryFile?.Content is null)
+        {
+            return;
+        }
+
+        byte[] content = memoryFile.Content;
+        ModelFileSummary.Result summary;
+        try
+        {
+            summary = await Task.Run(() => ModelFileSummary.Summarize(url.Extension, content));
+        }
+        catch (FormatException)
+        {
+            await ReadTextFileAsync(url, fileSystem, textModel);
+            return;
+        }
+
+        foreach (string line in summary.Lines)
+        {
+            textModel.Lines.Add(line);
+        }
+
+        if (summary.ShowSource)
+        {
+            textModel.Lines.Add(string.Empty);
+            textModel.Lines.Add(ViewerText.Get("Model.Source", "Source text"));
+            await ReadTextFileAsync(url, fileSystem, textModel);
         }
     }
 

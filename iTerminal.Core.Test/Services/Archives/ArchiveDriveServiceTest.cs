@@ -156,6 +156,45 @@ public class ArchiveDriveServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DataRow("issue-01.cbz")]
+    [DataRow("issue-01.CBT")]
+    public void ComicBookZipAndTarOpenWithoutSevenZip(string name)
+    {
+        Assert.IsTrue(ArchiveDriveService.LooksBrowsable(name));
+        Assert.IsTrue(Service().CanBrowse(name));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("issue-01.cbr")]
+    [DataRow("issue-01.cb7")]
+    public void ComicBookRarAndSevenZipNeedSevenZip(string name)
+    {
+        Assert.IsTrue(ArchiveDriveService.LooksBrowsable(name), "offered even without 7-Zip, so the footer can say what is missing");
+        Assert.IsFalse(Service().CanBrowse(name));
+        Assert.IsTrue(Service(() => "7z").CanBrowse(name));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AComicBookZipIsListedAndReadLikeAZip()
+    {
+        var archive = Path.Combine(_root, "issue-01.cbz");
+        using (var zip = new ZipOutputStream(FileIO.Create(archive)))
+        {
+            zip.PutNextEntry(new ZipEntry("page-01.jpg"));
+            zip.Write(Encoding.UTF8.GetBytes("pixels"));
+            zip.CloseEntry();
+        }
+
+        var service = Service();
+
+        CollectionAssert.AreEqual(new[] { "page-01.jpg" }, Names(await service.ListAsync(ArchiveDriveUrl.Build(archive), CancellationToken.None)));
+        Assert.AreEqual("pixels", await Read(service, ArchiveDriveUrl.Build(archive, "page-01.jpg", isFolder: false)));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task FoldersAZipOnlyImpliesAreListedToo()
     {
         // Most ZIPs store no entries for their folders, only "x/y/z.txt".
@@ -279,6 +318,25 @@ public class ArchiveDriveServiceTest
         await writer.WriteAsync(locked, Items(), new CompressionOptions(ArchiveFormat.SevenZip, 5, "s3cret", EncryptNames: true), null, CancellationToken.None);
         var exception = await Assert.ThrowsExactlyAsync<IOException>(() => service.ListAsync(ArchiveDriveUrl.Build(locked), CancellationToken.None)).WaitAsync(TimeSpan.FromSeconds(30));
         StringAssert.Contains(exception.Message, "password");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ARealSevenZipComicArchiveIsBrowsedAndRead()
+    {
+        var writer = new SevenZipArchiveWriter(new ExternalProcessRunner());
+        if (!writer.IsAvailable)
+        {
+            Assert.Inconclusive("7-Zip is not installed on this machine.");
+        }
+
+        // A .cb7 is a 7z archive under a comic-book name: same listing, same reads.
+        var archive = Path.Combine(_root, "issue-01.cb7");
+        await writer.WriteAsync(archive, Items(), new CompressionOptions(ArchiveFormat.SevenZip, 5), null, CancellationToken.None);
+        var service = new ArchiveDriveService(new ExternalProcessRunner());
+
+        CollectionAssert.AreEqual(new[] { "docs", "a.txt" }, Names(await service.ListAsync(ArchiveDriveUrl.Build(archive), CancellationToken.None)));
+        Assert.AreEqual("gamma", await Read(service, ArchiveDriveUrl.Build(archive, "docs/deep/c.txt", isFolder: false)));
     }
 
     [Timeout(60_000)]

@@ -1810,4 +1810,67 @@
   <data name="Viewer.Psd.NotDrawn" xml:space="preserve">
     <value>L'immagine non viene disegnata per questa modalità colore o profondità.</value>
   </data>
+  <data name="Viewer.Model.Heading" xml:space="preserve">
+    <value>Riepilogo del modello</value>
+  </data>
+  <data name="Viewer.Model.BinaryDxf" xml:space="preserve">
+    <value>Questo è un file DXF binario, quindi le sue entità non sono elencate.</value>
+  </data>
+  <data name="Viewer.Model.Version" xml:space="preserve">
+    <value>Versione</value>
+  </data>
+  <data name="Viewer.Model.Extents" xml:space="preserve">
+    <value>Estensione</value>
+  </data>
+  <data name="Viewer.Model.Layers" xml:space="preserve">
+    <value>Livelli</value>
+  </data>
+  <data name="Viewer.Model.Entities" xml:space="preserve">
+    <value>Entità</value>
+  </data>
+  <data name="Viewer.Model.Vertices" xml:space="preserve">
+    <value>Vertici</value>
+  </data>
+  <data name="Viewer.Model.TextureCoordinates" xml:space="preserve">
+    <value>Coordinate texture</value>
+  </data>
+  <data name="Viewer.Model.Normals" xml:space="preserve">
+    <value>Normali</value>
+  </data>
+  <data name="Viewer.Model.Faces" xml:space="preserve">
+    <value>Facce</value>
+  </data>
+  <data name="Viewer.Model.Groups" xml:space="preserve">
+    <value>Gruppi</value>
+  </data>
+  <data name="Viewer.Model.Objects" xml:space="preserve">
+    <value>Oggetti</value>
+  </data>
+  <data name="Viewer.Model.Materials" xml:space="preserve">
+    <value>Materiali</value>
+  </data>
+  <data name="Viewer.Model.MaterialLibraries" xml:space="preserve">
+    <value>Librerie di materiali</value>
+  </data>
+  <data name="Viewer.Model.Bounds" xml:space="preserve">
+    <value>Limiti</value>
+  </data>
+  <data name="Viewer.Model.Format" xml:space="preserve">
+    <value>Formato</value>
+  </data>
+  <data name="Viewer.Model.Ascii" xml:space="preserve">
+    <value>ASCII</value>
+  </data>
+  <data name="Viewer.Model.Binary" xml:space="preserve">
+    <value>binario</value>
+  </data>
+  <data name="Viewer.Model.Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Viewer.Model.Triangles" xml:space="preserve">
+    <value>Triangoli</value>
+  </data>
+  <data name="Viewer.Model.Source" xml:space="preserve">
+    <value>Testo sorgente</value>
+  </data>
 </root>
