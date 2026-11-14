@@ -758,6 +758,32 @@ public static class SandboxServices
                 full));
     }
 
+    /// <summary>The network tools with fixed answers: the same lines a run prints, but nothing is pinged, resolved or queried.</summary>
+    public sealed class NetworkToolRunner : Core.Services.NetworkTools.INetworkToolService
+    {
+        public Task RunAsync(Core.Services.NetworkTools.NetworkToolKind kind, string target, Action<string> writeLine, CancellationToken cancellationToken = default)
+        {
+            foreach (string line in Lines(kind, target))
+            {
+                writeLine(line);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private static IEnumerable<string> Lines(Core.Services.NetworkTools.NetworkToolKind kind, string target) => kind switch
+        {
+            Core.Services.NetworkTools.NetworkToolKind.Ping =>
+            [
+                $"Pinging {target} with 4 echo requests:",
+                "Reply from 192.0.2.10: time=12 ms TTL=64",
+                "Sent 4, received 4, lost 0 (0%).",
+            ],
+            Core.Services.NetworkTools.NetworkToolKind.Whois => [$"Sandbox whois answer for {target}."],
+            _ => [$"Sandbox answer for {target}."],
+        };
+    }
+
     /// <summary>The benchmark's probes with fixed figures: the same ids, names and categories, but nothing is measured.</summary>
     public static class BenchmarkProbes
     {

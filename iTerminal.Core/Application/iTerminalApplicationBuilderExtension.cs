@@ -399,6 +399,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.TimerWakeupProbe>();
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IPerformanceBenchmarkService, iTerminal.Core.Services.Benchmark.PerformanceBenchmarkService>();
         services.AddTransient<iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog>();
+        // Tools > Network tools: ping, traceroute, DNS, whois, a port check and web headers. Each one contacts only the target the user typed.
+        services.AddSingleton<iTerminal.Core.Services.NetworkTools.INetworkToolService, iTerminal.Core.Services.NetworkTools.NetworkToolService>();
+        services.AddTransient<iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog>();
         // Ctrl+Shift+F1: the BitTorrent manager. The engine starts on first use, so a run that never adds a torrent opens no sockets.
         services.AddSingleton<iTerminal.Core.Services.Torrents.ITorrentService>(provider => new iTerminal.Core.Services.Torrents.TorrentService(
             provider.GetRequiredService<ISettingsService>(), databaseDirectory));

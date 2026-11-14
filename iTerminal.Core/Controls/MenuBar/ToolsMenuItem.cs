@@ -59,7 +59,8 @@ public class ToolsMenuItem : MenuItem
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
         iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null,
         iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null,
-        iTerminal.Core.Dialogs.Scanning.ScannerDialog? scannerDialog = null)
+        iTerminal.Core.Dialogs.Scanning.ScannerDialog? scannerDialog = null,
+        iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog? networkToolsDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -91,6 +92,7 @@ public class ToolsMenuItem : MenuItem
         if (gitClientDialog is not null) groups["files"].Add(new GitClientDialogCommand(gitClientDialog));
         if (documentManagerDialog is not null) groups["files"].Add(new DocumentManagerDialogCommand(documentManagerDialog));
         if (networkBrowserDialog is not null) groups["net"].Add(new NetworkBrowserDialogCommand(networkBrowserDialog));
+        if (networkToolsDialog is not null) groups["net"].Add(new NetworkToolsDialogCommand(networkToolsDialog));
         if (packageManagerDialog is not null) groups["files"].Add(new PackageManagerDialogCommand(packageManagerDialog));
         if (stockBrowserDialog is not null) groups["office"].Add(new StockBrowserDialogCommand(stockBrowserDialog));
         if (calculatorDialog is not null) groups["office"].Add(new CalculatorDialogCommand(calculatorDialog));
