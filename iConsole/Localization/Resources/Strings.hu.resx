@@ -1633,4 +1633,22 @@
   <data name="Har.Detail.Truncated" xml:space="preserve">
     <value>({0:N0} karakter után levágva)</value>
   </data>
+  <data name="Parquet.Title" xml:space="preserve">
+    <value>Parquet</value>
+  </data>
+  <data name="Parquet.Grid.Empty" xml:space="preserve">
+    <value>Ez a fájl nem tartalmaz sorokat</value>
+  </data>
+  <data name="Parquet.Status.Summary" xml:space="preserve">
+    <value>{0:N0} sor, {1:N0} oszlop</value>
+  </data>
+  <data name="Parquet.Status.RowsCut" xml:space="preserve">
+    <value>; csak az első {0:N0} sor látszik</value>
+  </data>
+  <data name="Parquet.Status.ColumnsCut" xml:space="preserve">
+    <value>; csak az első {0:N0} oszlop látszik</value>
+  </data>
+  <data name="Parquet.Error.Unexpected" xml:space="preserve">
+    <value>A fájl nem olvasható: {0}</value>
+  </data>
 </root>

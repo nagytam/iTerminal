@@ -260,6 +260,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<iConsole.Dialogs.HdfViewerDialog>();
         // The HAR viewer reads a network log through the file system; it holds no state of its own.
         services.AddTransient<iConsole.Dialogs.HarViewerDialog>();
+        // The Parquet viewer reads the first rows through the read-only reader; the reader holds no state.
+        services.AddTransient<iConsole.Parquet.IParquetFileReader, iTerminal.Core.Services.ParquetFiles.ParquetFileReader>();
+        services.AddTransient<iConsole.Dialogs.ParquetViewerDialog>();
         // The executable analysis view parses a PE, ELF or Mach-O file in-process; the analyzer holds no state.
         services.AddTransient<iConsole.Executables.IExecutableAnalyzer, iTerminal.Core.Services.Executables.ExecutableAnalyzer>();
         services.AddTransient<iConsole.Dialogs.ExecutableAnalysisDialog>();

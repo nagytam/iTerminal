@@ -25,6 +25,7 @@ What is here:
   recipient), fb2, epub, mobi and azw (an uncompressed MOBI book, the same bytes under both names).
 - **Databases:** sqlite, sqlite3, db and db3 (a SQLite file with one table of two rows).
 - **Network logs:** har (an HTTP Archive 1.2 export: a page, a JSON API call with a query string, a failed login POST, a base64 PNG, a 404 and a stylesheet; F3 shows it as a list of requests).
+- **Columnar data:** parquet (an Apache Parquet file written by pyarrow: five rows, with an integer, a string with a null, a float with a null, a boolean, a date and a list column; F3 shows it as a grid of its first rows).
 - **Scientific data:** h5, hdf5, hdf, he5 (the same HDF5 file under each extension: an HDF5 file with a 3 x 4 x 5 cube whose cells are `100 i + 10 j + k`, an integer vector, two strings and a matrix in a group; F3 shows it as a grid).
 - **Binaries:** dll and exe (a small .NET library and console program), and so (a small ELF shared library).
 - **Text, code and markup:** the plain text and source formats the text extractor reads (txt, md, csv, json, yaml,

@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using Parquet.Serialization;
 
 namespace iTerminal.Test;
 
@@ -42,6 +43,11 @@ public class EditorViewerAndPermissionsTest
         }
 
         new PureHDF.H5File { ["cube"] = cube }.Write(Path.Combine(left, "cube.h5"));
+
+        // A Parquet file with two rows, and a null in each nullable column of the second.
+        ParquetSerializer.SerializeAsync(
+            new[] { new ParquetRow { Id = 1, Name = "alpha", Score = 1.5 }, new ParquetRow { Id = 2, Name = null, Score = null } },
+            Path.Combine(left, "table.parquet")).GetAwaiter().GetResult();
 
         // A bare ELF64 header (x86-64, little-endian, executable) and an "executable" cut off after its magic.
         byte[] elf = new byte[64];
@@ -192,6 +198,23 @@ public class EditorViewerAndPermissionsTest
         Assert.IsTrue(_app.Driver.FocusedModal is iConsole.Dialogs.HdfViewerDialog);
         Assert.IsTrue(await _app.PressAsync("Esc"));
         await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.HdfViewerDialog, "the HDF5 viewer to close");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task F3OnAParquetFileShowsItsRowsWithTheSchemaAndEscClosesIt()
+    {
+        await _app.SelectEntryAsync("table.parquet");
+        Assert.IsTrue(await _app.PressAsync("F3"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is iConsole.Dialogs.ParquetViewerDialog, "the Parquet viewer to open");
+        await _app.WaitForTextAsync("2 rows, 3 columns");
+        await WaitForGridAsync("Id (int64)", present: true);
+        await WaitForGridAsync("alpha", present: true);
+
+        // The viewer is still the modal, and Esc closes it.
+        Assert.IsTrue(_app.Driver.FocusedModal is iConsole.Dialogs.ParquetViewerDialog);
+        Assert.IsTrue(await _app.PressAsync("Esc"));
+        await _app.WaitUntilAsync(() => _app.Driver.FocusedModal is not iConsole.Dialogs.ParquetViewerDialog, "the Parquet viewer to close");
     }
 
     [Timeout(120_000)]
@@ -436,5 +459,14 @@ public class EditorViewerAndPermissionsTest
         File.WriteAllText(LfFile, "written elsewhere\n");
 
         await _app.WaitForTextAsync("written elsewhere");
+    }
+
+    public sealed class ParquetRow
+    {
+        public long Id { get; set; }
+
+        public string? Name { get; set; }
+
+        public double? Score { get; set; }
     }
 }

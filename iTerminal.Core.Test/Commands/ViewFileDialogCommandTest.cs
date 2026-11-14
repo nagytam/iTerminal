@@ -731,6 +731,67 @@ public class ViewFileDialogCommandTest
         Assert.AreEqual(path, fileViewer.Url?.Path);
     }
 
+    private static iConsole.Dialogs.ParquetViewerDialog CreateParquetDialog(IThemeService themeService) =>
+        new(Mock.Of<iConsole.Parquet.IParquetFileReader>(), themeService);
+
+    [TestMethod]
+    [Timeout(60_000)]
+    [DataRow(".parquet")]
+    [DataRow(".parq")]
+    public void ExecuteAsync_WithALocalParquetFile_PointsTheParquetViewerAtIt(string extension)
+    {
+        var themeService = CreateThemeService();
+        var parquetDialog = CreateParquetDialog(themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}{extension}");
+        File.WriteAllBytes(path, [.. iConsole.Parquet.ParquetFileTypes.Signature, 0, 0, 0, 0]);
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                CreateDialog(themeService),
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                parquetViewerDialog: parquetDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, parquetDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithAParquetNameThatIsNotParquet_UsesTheGenericViewer()
+    {
+        var themeService = CreateThemeService();
+        var parquetDialog = CreateParquetDialog(themeService);
+        var fileViewer = CreateDialog(themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.parquet");
+        File.WriteAllText(path, "name,value\na,1\n");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(
+                fileViewer,
+                CreateServiceForFile(path),
+                solutionViewerDialog: null,
+                parquetViewerDialog: parquetDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.IsNull(parquetDialog.Url, "a file without the PAR1 magic is not handed to the Parquet viewer");
+            Assert.AreEqual(path, fileViewer.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     private static iConsole.Dialogs.HdfViewerDialog CreateHdfDialog(IThemeService themeService) =>
         new(Mock.Of<iConsole.Hdf.IHdfFileReader>(), themeService);
 

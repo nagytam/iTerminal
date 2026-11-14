@@ -148,7 +148,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog? networkToolsDialog = null,
         iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
         iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null,
-        iConsole.Dialogs.HarViewerDialog? harViewerDialog = null
+        iConsole.Dialogs.HarViewerDialog? harViewerDialog = null,
+        iConsole.Dialogs.ParquetViewerDialog? parquetViewerDialog = null
         )
         : base([], themeService)
     {
@@ -187,7 +188,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             executableAnalysisDialog: executableAnalysisDialog,
             xpsViewerDialog: xpsViewerDialog,
             certificateViewerDialog: certificateViewerDialog,
-            harViewerDialog: harViewerDialog));
+            harViewerDialog: harViewerDialog,
+            parquetViewerDialog: parquetViewerDialog));
 
         AddMenuItem(new EditMenuItem(
             contentModelService,
