@@ -49,12 +49,13 @@ public class FileMenuItem : MenuItem
         iConsole.Dialogs.ExecutableAnalysisDialog? executableAnalysisDialog = null,
         FileEncryptionDialog? fileEncryptionDialog = null,
         iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
-        iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null)
+        iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null,
+        iConsole.Dialogs.HarViewerDialog? harViewerDialog = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
 
-        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog), [], themeService));
+        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog), [], themeService));
         AddMenuItem(new MenuItem("Quick View\tCtrl+F3", new iTerminal.Core.Commands.Drives.TogglePreviewCommand(contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Edit\tF4",   new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations), [], themeService));
         if (openWithDialogFactory is not null)
