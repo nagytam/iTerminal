@@ -10,6 +10,7 @@ public enum NetworkToolKind
     Whois,
     PortCheck,
     HttpHeaders,
+    Scan,
 }
 
 /// <summary>

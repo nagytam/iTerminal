@@ -9501,6 +9501,12 @@
   <data name="NetworkTools.Tool.HttpHeaders.Description" xml:space="preserve">
     <value>Richiede un indirizzo web e mostra le intestazioni di risposta.</value>
   </data>
+  <data name="NetworkTools.Tool.Scan" xml:space="preserve">
+    <value>Scansione sottorete</value>
+  </data>
+  <data name="NetworkTools.Tool.Scan.Description" xml:space="preserve">
+    <value>Esegue ping su ogni indirizzo di una sottorete come 192.168.1.0/24 ed elenca gli host che rispondono.</value>
+  </data>
   <data name="CmdTitle.1af59ce9" xml:space="preserve">
     <value>Strumenti di rete</value>
   </data>

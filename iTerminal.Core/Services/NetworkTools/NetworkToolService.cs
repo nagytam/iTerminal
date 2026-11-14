@@ -25,6 +25,35 @@ public sealed class NetworkToolService : INetworkToolService
     private static readonly TimeSpan WhoisTimeout = TimeSpan.FromSeconds(10);
     private static readonly TimeSpan HttpTimeout = TimeSpan.FromSeconds(10);
 
+    internal const int ScanMaxProbes = 32;
+    internal const int ScanMaxLookups = 8;
+    internal const int ScanProgressEvery = 64;
+    internal const int ReverseLookupTimeoutMilliseconds = 2000;
+
+    private readonly Func<IPAddress, CancellationToken, Task<TimeSpan?>> _probe;
+    private readonly Func<IPAddress, CancellationToken, Task<string?>> _reverseLookup;
+    private readonly TimeSpan _reverseLookupTimeout;
+
+    // Shared by every scan this service runs. A lookup holds its slot until the DNS call returns, even after it was given up,
+    // because the call cannot be cancelled; so at most ScanMaxLookups lookup calls exist at once.
+    private readonly SemaphoreSlim _lookupGate = new(ScanMaxLookups, ScanMaxLookups);
+
+    public NetworkToolService()
+        : this(ProbeAsync, ReverseLookupAsync, TimeSpan.FromMilliseconds(ReverseLookupTimeoutMilliseconds))
+    {
+    }
+
+    /// <summary>The service with its probe and reverse lookup supplied, so a test can stand in for ICMP and DNS.</summary>
+    internal NetworkToolService(
+        Func<IPAddress, CancellationToken, Task<TimeSpan?>> probe,
+        Func<IPAddress, CancellationToken, Task<string?>> reverseLookup,
+        TimeSpan reverseLookupTimeout)
+    {
+        _probe = probe;
+        _reverseLookup = reverseLookup;
+        _reverseLookupTimeout = reverseLookupTimeout;
+    }
+
     public async Task RunAsync(NetworkToolKind kind, string target, Action<string> writeLine, CancellationToken cancellationToken = default)
     {
         // The target is checked before anything is sent, so a bad one throws ArgumentException to the caller.
@@ -41,6 +70,7 @@ public sealed class NetworkToolService : INetworkToolService
                 return PortCheckAsync(host, port, writeLine, ct);
             },
             NetworkToolKind.HttpHeaders => ct => HttpHeadersAsync(NetworkToolTargets.ParseWebAddress(target), writeLine, ct),
+            NetworkToolKind.Scan => ct => ScanAsync(NetworkToolTargets.ParseSubnet(target), writeLine, ct),
             _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null),
         };
 
@@ -233,6 +263,182 @@ public sealed class NetworkToolService : INetworkToolService
         {
             writeLine($"{header.Key}: {string.Join(", ", header.Value)}");
         }
+    }
+
+    /// <summary>
+    /// Pings every usable address of the subnet, at most <see cref="ScanMaxProbes"/> at a time. A live host's line waits for its
+    /// reverse lookup (at most <c>_reverseLookupTimeout</c>), so each line is written once, with its name if one arrived in time.
+    /// The summary follows the last line. A cancelled scan returns at once and writes nothing after it returns.
+    /// </summary>
+    private async Task ScanAsync(IReadOnlyList<IPAddress> addresses, Action<string> writeLine, CancellationToken cancellationToken)
+    {
+        var output = new ScanOutput(writeLine);
+        var counts = new ScanCounts();
+        var probeGate = new SemaphoreSlim(ScanMaxProbes, ScanMaxProbes);
+        var hosts = new List<Task>(addresses.Count);
+        var stopped = new TaskCompletionSource();
+        // Closing the output on cancel, not only on return, means no line can follow the cancel request. The registration is
+        // released when the scan returns, so a long-lived token does not keep one per scan.
+        using CancellationTokenRegistration closeOnCancel = cancellationToken.Register(() =>
+        {
+            output.Close();
+            stopped.TrySetResult();
+        });
+        try
+        {
+            foreach (IPAddress address in addresses)
+            {
+                await probeGate.WaitAsync(cancellationToken);
+                hosts.Add(ScanHostAsync(address, probeGate, output, counts, addresses.Count, cancellationToken));
+            }
+
+            // Waiting for the held lines stops at Esc: a probe still in flight is left to finish on its own.
+            Task all = Task.WhenAll(hosts);
+            await Task.WhenAny(all, stopped.Task);
+            cancellationToken.ThrowIfCancellationRequested();
+            await all;
+            output.Write($"Scanned {addresses.Count} addresses, {Volatile.Read(ref counts.Answered)} hosts answered. Hosts that block ping do not appear.");
+        }
+        finally
+        {
+            output.Close();
+        }
+    }
+
+    private async Task ScanHostAsync(IPAddress address, SemaphoreSlim probeGate, ScanOutput output, ScanCounts counts, int total, CancellationToken cancellationToken)
+    {
+        try
+        {
+            TimeSpan? roundTrip = await ProbeOnceAsync(address, cancellationToken);
+            probeGate.Release();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            int completed = Interlocked.Increment(ref counts.Completed);
+            if (completed % ScanProgressEvery == 0 && completed < total)
+            {
+                output.Write($"Scanned {completed} of {total} addresses.");
+            }
+
+            if (roundTrip is not { } time)
+            {
+                return;
+            }
+
+            string? name = await LookupNameAsync(address, cancellationToken);
+            Interlocked.Increment(ref counts.Answered);
+            output.Write(FormatHost(address, time, name));
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // The scan was cancelled: this host's line is dropped, and nothing is written after the scan returned.
+        }
+    }
+
+    /// <summary>A probe that fails (a refusal to send ICMP, or anything else) is no reply for that host.</summary>
+    private async Task<TimeSpan?> ProbeOnceAsync(IPAddress address, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await _probe(address, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// The name for a live host, or null. No free lookup slot means no name, at once; a lookup that is not done within the timeout
+    /// means no name, and its slot stays taken until the DNS call really returns.
+    /// </summary>
+    private async Task<string?> LookupNameAsync(IPAddress address, CancellationToken cancellationToken)
+    {
+        if (!_lookupGate.Wait(0))
+        {
+            return null;
+        }
+
+        Task<string?> lookup = LookupOnceAsync(address, cancellationToken);
+        try
+        {
+            return await lookup.WaitAsync(_reverseLookupTimeout, cancellationToken);
+        }
+        catch (TimeoutException)
+        {
+            return null;
+        }
+    }
+
+    private async Task<string?> LookupOnceAsync(IPAddress address, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await _reverseLookup(address, cancellationToken);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+        finally
+        {
+            _lookupGate.Release();
+        }
+    }
+
+    private static string FormatHost(IPAddress address, TimeSpan roundTrip, string? name)
+    {
+        string line = $"{address.ToString().PadRight(15)} time={(long)roundTrip.TotalMilliseconds} ms";
+        return name is null ? line : $"{line}  {name}";
+    }
+
+    private static async Task<TimeSpan?> ProbeAsync(IPAddress address, CancellationToken cancellationToken)
+    {
+        using var ping = new Ping();
+        PingReply reply = await ping.SendPingAsync(address, PingTimeoutMilliseconds);
+        return reply.Status == IPStatus.Success ? TimeSpan.FromMilliseconds(reply.RoundtripTime) : null;
+    }
+
+    private static async Task<string?> ReverseLookupAsync(IPAddress address, CancellationToken cancellationToken)
+    {
+        // Given an address as text, GetHostEntryAsync looks it up in reverse.
+        IPHostEntry entry = await Dns.GetHostEntryAsync(address.ToString(), cancellationToken);
+        return entry.HostName == address.ToString() ? null : entry.HostName;
+    }
+
+    /// <summary>Writes lines to the output until the scan has returned; after <see cref="Close"/> a late line is dropped.</summary>
+    private sealed class ScanOutput(Action<string> writeLine)
+    {
+        private readonly object _lock = new();
+        private bool _closed;
+
+        public void Write(string line)
+        {
+            lock (_lock)
+            {
+                if (!_closed)
+                {
+                    writeLine(line);
+                }
+            }
+        }
+
+        public void Close()
+        {
+            lock (_lock)
+            {
+                _closed = true;
+            }
+        }
+    }
+
+    private sealed class ScanCounts
+    {
+        public int Completed;
+        public int Answered;
     }
 
     internal static string DescribePingStatus(IPStatus status) => status switch

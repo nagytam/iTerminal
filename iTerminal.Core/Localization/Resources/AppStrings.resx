@@ -9706,6 +9706,12 @@
   <data name="NetworkTools.Tool.HttpHeaders.Description" xml:space="preserve">
     <value>Request a web address and show the response headers.</value>
   </data>
+  <data name="NetworkTools.Tool.Scan" xml:space="preserve">
+    <value>Subnet scan</value>
+  </data>
+  <data name="NetworkTools.Tool.Scan.Description" xml:space="preserve">
+    <value>Ping every address in a subnet such as 192.168.1.0/24 and list the hosts that answer.</value>
+  </data>
   <data name="CmdTitle.1af59ce9" xml:space="preserve">
     <value>Network tools</value>
   </data>

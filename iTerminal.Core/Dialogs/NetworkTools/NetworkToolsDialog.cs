@@ -283,6 +283,7 @@ public class NetworkToolsDialog : Dialog
         NetworkToolKind.Whois => UiText.Get("NetworkTools.Tool.Whois", "Whois"),
         NetworkToolKind.PortCheck => UiText.Get("NetworkTools.Tool.PortCheck", "Port check"),
         NetworkToolKind.HttpHeaders => UiText.Get("NetworkTools.Tool.HttpHeaders", "HTTP headers"),
+        NetworkToolKind.Scan => UiText.Get("NetworkTools.Tool.Scan", "Subnet scan"),
         _ => kind.ToString(),
     };
 
@@ -295,6 +296,7 @@ public class NetworkToolsDialog : Dialog
         NetworkToolKind.Whois => UiText.Get("NetworkTools.Tool.Whois.Description", "Ask the registry who holds a domain or an address."),
         NetworkToolKind.PortCheck => UiText.Get("NetworkTools.Tool.PortCheck.Description", "See whether a TCP port on a host accepts connections. Type host:port."),
         NetworkToolKind.HttpHeaders => UiText.Get("NetworkTools.Tool.HttpHeaders.Description", "Request a web address and show the response headers."),
+        NetworkToolKind.Scan => UiText.Get("NetworkTools.Tool.Scan.Description", "Ping every address in a subnet such as 192.168.1.0/24 and list the hosts that answer."),
         _ => string.Empty,
     };
 }

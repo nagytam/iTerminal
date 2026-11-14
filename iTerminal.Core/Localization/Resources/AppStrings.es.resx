@@ -9501,6 +9501,12 @@
   <data name="NetworkTools.Tool.HttpHeaders.Description" xml:space="preserve">
     <value>Pide una dirección web y muestra los encabezados de respuesta.</value>
   </data>
+  <data name="NetworkTools.Tool.Scan" xml:space="preserve">
+    <value>Escaneo de subred</value>
+  </data>
+  <data name="NetworkTools.Tool.Scan.Description" xml:space="preserve">
+    <value>Hace ping a cada dirección de una subred como 192.168.1.0/24 y lista los equipos que responden.</value>
+  </data>
   <data name="CmdTitle.1af59ce9" xml:space="preserve">
     <value>Herramientas de red</value>
   </data>

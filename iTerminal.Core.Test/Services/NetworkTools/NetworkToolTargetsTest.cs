@@ -1,3 +1,4 @@
+using System.Net;
 using iTerminal.Core.Services.NetworkTools;
 
 namespace iTerminal.Core.Test.Services.NetworkTools;
@@ -84,5 +85,28 @@ public class NetworkToolTargetsTest
     public void AWhoisAnswerWithoutARefersLineAnswersTheQuestionItself()
     {
         Assert.IsNull(NetworkToolTargets.ParseWhoisReferral("Domain Name: EXAMPLE.ORG\nRegistrar: X\n"));
+    }
+
+    [TestMethod]
+    public void ASubnetListsItsUsableAddresses()
+    {
+        IReadOnlyList<IPAddress> subnet = NetworkToolTargets.ParseSubnet("192.168.1.0/24");
+        Assert.AreEqual(254, subnet.Count, "a /24 has 256 addresses, less the network and broadcast ones");
+        Assert.AreEqual("192.168.1.1", subnet[0].ToString());
+        Assert.AreEqual("192.168.1.254", subnet[^1].ToString());
+        Assert.AreEqual(2, NetworkToolTargets.ParseSubnet("10.0.0.0/31").Count, "a /31 keeps both addresses");
+        Assert.AreEqual("10.0.0.7", NetworkToolTargets.ParseSubnet("10.0.0.7/32").Single().ToString(), "a /32 is its one address");
+    }
+
+    [TestMethod]
+    public void ASubnetThatIsNotIPv4CIDROrTooLargeIsRefused()
+    {
+        foreach (string text in new[] { "192.168.1.0/21", "192.168.1.0/33", "192.168.1/24", "2001:db8::/64", "example.com", "192.168.1.0", "" })
+        {
+            Assert.ThrowsExactly<ArgumentException>(() => NetworkToolTargets.ParseSubnet(text), text);
+        }
+
+        ArgumentException hostBits = Assert.ThrowsExactly<ArgumentException>(() => NetworkToolTargets.ParseSubnet("192.168.1.77/24"));
+        StringAssert.Contains(hostBits.Message, "192.168.1.0/24", "the refusal names the network address");
     }
 }
