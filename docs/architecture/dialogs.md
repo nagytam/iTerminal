@@ -247,6 +247,14 @@ Tools > Encyclopedia: a term to type, a source to look it up in, the matching ar
 - **Tests never reach the network:** `TerminalApp` replaces `IEncyclopediaProvider` with `SandboxServices.Encyclopedia`.
 - Also reachable from the `ui` AI tool as `encyclopedia`, `wikipedia` or `britannica`.
 
+### The YouTube client (`YouTubeDialog`, Tools > YouTube, `Services/YouTube/`)
+Tools > YouTube: a search to type, the videos it finds on the left and the details of the one under the cursor on the right (channel, duration, views, upload date, link). Enter on the search runs it; Enter on a video, or F3, plays it in the F3 video viewer (`VideoFileViewerDialog`, with the video's title as its name); F2 opens the video's page in the browser. There is no global hot key.
+
+- **`YtDlpYouTubeService` runs yt-dlp, and no API key is needed.** A search is `yt-dlp --flat-playlist --dump-json -- ytsearchN:<term>` (one JSON object per line; a line without an id or a title is skipped). Playback is `yt-dlp -g -f "b[height<=720]/b"` for the address of one combined stream, which `FfmpegVideoDecoder` then opens like a file. The term is passed as one argument after `--`, and a video id must match the eleven-character shape before it reaches the command line.
+- **yt-dlp is the `yt-dlp` runtime dependency** (`YtDlpRuntimeDependency`): installed by the system's package manager like ffmpeg, and compatible within the year of its version (`2025.09.26` is the year 2025), because YouTube changes often enough that a dated yt-dlp stops working. A missing yt-dlp is reported by the dialog, not by a crash, with a pointer to Tools > Runtime Dependencies.
+- **Nothing waits on the network in the dialog.** A search and a stream lookup run on background tasks; the outcome is parked and applied by the next idle pass, and only the newest request may land. The details pane follows the cursor from the list itself, so it needs no fetch.
+- **Tests never run yt-dlp:** `TerminalApp` replaces `IYouTubeService` with `SandboxServices.YouTube` (one fixed video, and a stream address that does not resolve).
+
 ### The workspace manager (`iTerminal.Core/Dialogs/Workspaces/`, `Services/Workspaces/`, `Model/Workspaces/`)
 Ctrl+Shift+F2 (Tools > Workspaces) opens `WorkspaceManagerDialog`: named screen layouts. A workspace is a
 `WorkspaceLayout` — the left and right panel locations, each panel's sort order, what is under the panels

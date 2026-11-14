@@ -62,6 +62,12 @@ public class VideoFileViewerDialog : Dialog
     /// <summary>Absolute path of the file to view. Set by the caller before the dialog is shown.</summary>
     public string FilePath { get; set; } = string.Empty;
 
+    /// <summary>
+    /// The name the title shows instead of the file's name, for a stream that has no file name (the YouTube dialog sets the video's title).
+    /// Empty means the file name is shown.
+    /// </summary>
+    public string DisplayName { get; set; } = string.Empty;
+
     public VideoFileViewerDialog(IVideoDecoderFactory decoderFactory, IThemeService themeService)
         : base(nameof(VideoFileViewerDialog), themeService)
     {
@@ -117,7 +123,7 @@ public class VideoFileViewerDialog : Dialog
         _openError = string.Empty;
         _ascii = null;
         _asciiSource = null;
-        Title = string.Format(UiText.Get("Dialog.VideoTitle", "Video — {0}"), Path.GetFileName(FilePath));
+        Title = string.Format(UiText.Get("Dialog.VideoTitle", "Video — {0}"), DisplayName.Length > 0 ? DisplayName : Path.GetFileName(FilePath));
 
         StartOpening();
         StateHasChanged();

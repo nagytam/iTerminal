@@ -14,7 +14,7 @@ public class CommandTitleLanguageTest
 
     /// <summary>Names that are the same word in every language (products and games).</summary>
     private static readonly HashSet<string> SameInEveryLanguage =
-        ["BitTorrent", "Git", "Git pull --rebase", "Go", "Shell", "Swiss Jass", "Tetris", "Terminal", "Tic-Tac-Toe", "Contacts", "Documents", "Signatures", "Type"];
+        ["BitTorrent", "Git", "Git pull --rebase", "Go", "Shell", "Swiss Jass", "Tetris", "Terminal", "Tic-Tac-Toe", "YouTube", "Contacts", "Documents", "Signatures", "Type"];
 
     private static IEnumerable<Type> CommandTypes() =>
         new[] { typeof(iTerminal.Core.Dialogs.SortDialog).Assembly, typeof(Command).Assembly }

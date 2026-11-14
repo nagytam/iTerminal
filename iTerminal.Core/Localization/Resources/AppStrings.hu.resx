@@ -9525,4 +9525,98 @@
   <data name="DialogHint.RemindTask" xml:space="preserve">
     <value>Emlékeztető beállítása a feladathoz</value>
   </data>
+  <data name="Menu.YouTube" xml:space="preserve">
+    <value>YouTube</value>
+  </data>
+  <data name="YouTube.Term" xml:space="preserve">
+    <value>Keresés</value>
+  </data>
+  <data name="YouTube.TermPlaceholder" xml:space="preserve">
+    <value>egy cím, egy csatorna vagy egy videó szavai</value>
+  </data>
+  <data name="YouTube.EmptyResults" xml:space="preserve">
+    <value> Írjon be fent egy keresést, és nyomja meg az Entert.</value>
+  </data>
+  <data name="YouTube.HintSearchOrPlay" xml:space="preserve">
+    <value>Keresés, vagy a kurzor alatti videó lejátszása</value>
+  </data>
+  <data name="YouTube.HintPlay" xml:space="preserve">
+    <value>A kurzor alatti videó lejátszása</value>
+  </data>
+  <data name="YouTube.HintOpenPage" xml:space="preserve">
+    <value>A videó oldalának megnyitása a böngészőben</value>
+  </data>
+  <data name="YouTube.TypeTerm" xml:space="preserve">
+    <value>Írjon be valamit a kereséshez.</value>
+  </data>
+  <data name="YouTube.Searching" xml:space="preserve">
+    <value>Keresés a YouTube-on…</value>
+  </data>
+  <data name="YouTube.NothingToPlay" xml:space="preserve">
+    <value>Még nincs lejátszható videó. Előbb keressen.</value>
+  </data>
+  <data name="YouTube.Resolving" xml:space="preserve">
+    <value>A(z) {0} folyamának lekérése…</value>
+  </data>
+  <data name="YouTube.Playing" xml:space="preserve">
+    <value>{0} lejátszása.</value>
+  </data>
+  <data name="YouTube.Opened" xml:space="preserve">
+    <value>A(z) {0} megnyitva a böngészőben.</value>
+  </data>
+  <data name="YouTube.OpenFailed" xml:space="preserve">
+    <value>A böngészőt nem lehetett elindítani.</value>
+  </data>
+  <data name="YouTube.NothingFound" xml:space="preserve">
+    <value>Nincs találat erre: „{0}”.</value>
+  </data>
+  <data name="YouTube.Found" xml:space="preserve">
+    <value>{0} videó található.</value>
+  </data>
+  <data name="YouTube.NoDetails" xml:space="preserve">
+    <value>Keressen, majd válasszon egy videót a részletek megtekintéséhez.</value>
+  </data>
+  <data name="YouTube.DetailChannel" xml:space="preserve">
+    <value>Csatorna: {0}</value>
+  </data>
+  <data name="YouTube.DetailDuration" xml:space="preserve">
+    <value>Hossz: {0}</value>
+  </data>
+  <data name="YouTube.DetailViews" xml:space="preserve">
+    <value>Megtekintések: {0}</value>
+  </data>
+  <data name="YouTube.DetailPublished" xml:space="preserve">
+    <value>Közzétéve: {0}</value>
+  </data>
+  <data name="YouTube.DetailLink" xml:space="preserve">
+    <value>Hivatkozás: {0}</value>
+  </data>
+  <data name="YouTube.Videos" xml:space="preserve">
+    <value>Videók ({0})</value>
+  </data>
+  <data name="YouTube.Details" xml:space="preserve">
+    <value>Részletek</value>
+  </data>
+  <data name="YouTube.SearchFailed" xml:space="preserve">
+    <value>A keresés nem sikerült: {0}</value>
+  </data>
+  <data name="YouTube.BadId" xml:space="preserve">
+    <value>Ez nem YouTube-videó.</value>
+  </data>
+  <data name="YouTube.PlayFailed" xml:space="preserve">
+    <value>A videót nem lehetett lejátszani: {0}</value>
+  </data>
+  <data name="YouTube.NoStream" xml:space="preserve">
+    <value>A YouTube nem adott folyamot ehhez a videóhoz.</value>
+  </data>
+  <data name="YouTube.Missing" xml:space="preserve">
+    <value>A YouTube-hoz yt-dlp kell. Az Eszközök &gt; Futtatási függőségek telepíti.</value>
+  </data>
+  <data name="YouTube.UnknownError" xml:space="preserve">
+    <value>A yt-dlp üzenet nélkül leállt.</value>
+  </data>
+  <data name="CmdDesc.c54795ce" xml:space="preserve">
+    <value>Keresés a YouTube-on, és videó lejátszása a videónézegetőben.</value>
+    <comment>Search YouTube and play a video in the video viewer.</comment>
+  </data>
 </root>
