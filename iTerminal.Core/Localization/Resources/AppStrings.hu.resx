@@ -9625,4 +9625,7 @@
     <value>Keresés a YouTube-on, és videó lejátszása a videónézegetőben.</value>
     <comment>Search YouTube and play a video in the video viewer.</comment>
   </data>
+  <data name="Footer.Sync" xml:space="preserve">
+    <value>Szink.</value>
+  </data>
 </root>

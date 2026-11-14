@@ -9830,4 +9830,7 @@
     <value>Search YouTube and play a video in the video viewer.</value>
     <comment>Search YouTube and play a video in the video viewer.</comment>
   </data>
+  <data name="Footer.Sync" xml:space="preserve">
+    <value>Sync</value>
+  </data>
 </root>
