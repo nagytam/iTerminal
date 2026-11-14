@@ -185,12 +185,13 @@ public class HotKeysTest
     [TestMethod]
     public void ShorteningCutsTheLongWordsAndKeepsTheShortOnes()
     {
-        string[] titles = ["F1-Help", "F2-Terminal", "F3-View", "F12-Screens"];
+        // Keys that may be left out (F2, F4, F9, F11, F12) are not used here: dropping one of those is tried first.
+        string[] titles = ["F1-Help", "F8-Terminal", "F3-View", "F10-Screens"];
         var naturals = titles.Select(t => t.Length + 2).ToList();
 
         var widths = HotKeys.FitTitlesToBudget(titles, naturals, naturals.Sum() - 4);
 
-        CollectionAssert.AreEqual(new[] { 9, 10, 9, 11 }, widths, "[F1-Help][F2-Termi][F3-View][F12-Scree]");
+        CollectionAssert.AreEqual(new[] { 9, 10, 9, 11 }, widths, "[F1-Help][F8-Termi][F3-View][F10-Scree]");
     }
 
     [Timeout(60_000)]
@@ -258,6 +259,22 @@ public class HotKeysTest
 
         Assert.AreNotEqual(0, widths[0], "Help stays");
         Assert.AreNotEqual(0, widths[9], "Quit stays");
+    }
+
+    /// <summary>At 80 columns "Rename" and "Delete" were cut to "Rena" and "Dele". Edit is the least needed of the
+    /// base keys (F4 still works), so it gives way and the words stay whole.</summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void At80ColumnsEditGivesWayRatherThanCuttingRenameAndDelete()
+    {
+        var (hotKeys, _) = Create(screenWidth: 80);
+
+        hotKeys.LayoutHotKeysRow();
+
+        var titles = Visible(hotKeys).Select(b => b.Title).ToList();
+        CollectionAssert.Contains(titles, "F6-Rename");
+        CollectionAssert.Contains(titles, "F8-Delete");
+        CollectionAssert.DoesNotContain(titles, "F4-Edit");
     }
 
     [Timeout(60_000)]

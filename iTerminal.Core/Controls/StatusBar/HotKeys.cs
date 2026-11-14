@@ -633,6 +633,28 @@ public class HotKeys : StatusBarItem
         List<int> Widths(int wordLength) =>
             parts.Select((p, i) => included[i] ? 2 + p.Key + Math.Min(p.Word, wordLength) : 0).ToList();
 
+        // 0. Whole words beat keys that are only a convenience. If leaving out the expendable buttons, in their order,
+        // lets every word be shown whole, leave them out: "[F6-Rename]" is worth more than "[F4-Edit]", whose key still
+        // works, and "[F6-Rena]" reads as a typo. If even that does not fit, nothing is left out and step 1 applies.
+        if (Widths(longestWord).Sum() > budget)
+        {
+            var dropped = new List<int>();
+            foreach (var index in DropOrder(titles).Where(i => included[i] && IsExpendable(titles[i])))
+            {
+                included[index] = false;
+                dropped.Add(index);
+                if (Widths(longestWord).Sum() <= budget)
+                {
+                    return Widths(longestWord);
+                }
+            }
+
+            foreach (var index in dropped)
+            {
+                included[index] = true;
+            }
+        }
+
         // 1. Shorten the longest words, never below a readable length.
         for (var wordLength = longestWord; wordLength >= readable; wordLength--)
         {
@@ -688,6 +710,9 @@ public class HotKeys : StatusBarItem
 
         return FitWidthsToBudget(naturals, budget);
     }
+
+    private static bool IsExpendable(string title) =>
+        ExpendableFirst.Any(prefix => title.StartsWith(prefix, StringComparison.Ordinal));
 
     private static List<int> DropOrder(IReadOnlyList<string> titles)
     {
