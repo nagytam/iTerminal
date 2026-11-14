@@ -92,7 +92,7 @@ public class DialogKeyHintsBatch21Test
     {
         ToDoListDialog dialog = new(new DateTimeProviderService(), new ToDoStore(Mock.Of<ISettingsService>()), TestTheme());
 
-        CollectionAssert.IsSubsetOf(new[] { "Enter/Insert", "F2", "Space", "Delete" }, Keys(dialog.GetKeyHints()));
+        CollectionAssert.IsSubsetOf(new[] { "Enter/Insert", "F2", "R", "Space", "Delete" }, Keys(dialog.GetKeyHints()));
     }
 
     [Timeout(60_000)]

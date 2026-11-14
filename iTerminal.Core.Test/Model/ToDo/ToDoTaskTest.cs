@@ -7,11 +7,13 @@ namespace iTerminal.Core.Test.Model.ToDo;
 [TestClass]
 public class ToDoTaskTest
 {
+    private static readonly DateTime Now = new(2026, 11, 14, 10, 0, 0);
+
     [Timeout(60_000)]
     [TestMethod]
     public void ASubjectAloneIsANormalOpenTaskWithNoDueDate()
     {
-        Assert.IsTrue(ToDoTask.TryParse("Buy milk", Guid.Empty, out var task, out var error));
+        Assert.IsTrue(ToDoTask.TryParse("Buy milk", Guid.Empty, Now, out var task, out var error));
 
         Assert.AreEqual(string.Empty, error);
         Assert.AreEqual("Buy milk", task!.Subject);
@@ -24,7 +26,7 @@ public class ToDoTaskTest
     [TestMethod]
     public void ABangMakesItHighPriorityAndATrailingDateSetsTheDueDate()
     {
-        Assert.IsTrue(ToDoTask.TryParse("!Renew passport @2026-11-01", Guid.Empty, out var task, out _));
+        Assert.IsTrue(ToDoTask.TryParse("!Renew passport @2026-11-01", Guid.Empty, Now, out var task, out _));
 
         Assert.AreEqual("Renew passport", task!.Subject);
         Assert.AreEqual(ToDoPriority.High, task.Priority);
@@ -40,7 +42,7 @@ public class ToDoTaskTest
     [DataRow("Pay rent @2026-13-01")]
     public void AnEmptyOrBadlyDatedTaskIsRefused(string text)
     {
-        Assert.IsFalse(ToDoTask.TryParse(text, Guid.Empty, out var task, out var error));
+        Assert.IsFalse(ToDoTask.TryParse(text, Guid.Empty, Now, out var task, out var error));
         Assert.IsNull(task);
         Assert.IsFalse(string.IsNullOrWhiteSpace(error));
     }
@@ -53,11 +55,69 @@ public class ToDoTaskTest
         Assert.AreEqual(ToDoPriority.Low, ToDoTask.NextPriority(ToDoPriority.High));
         Assert.AreEqual(ToDoPriority.Normal, ToDoTask.NextPriority(ToDoPriority.Low));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ATimeOfDayIsTodayWhenItIsStillAheadAndTomorrowWhenItHasPassed()
+    {
+        Assert.IsTrue(ToDoTask.TryParse("Call the bank ~15:30", Guid.Empty, Now, out var later, out _));
+        Assert.AreEqual(new DateTime(2026, 11, 14, 15, 30, 0), later!.RemindAt);
+
+        Assert.IsTrue(ToDoTask.TryParse("Call the bank ~09:00", Guid.Empty, Now, out var tomorrow, out _));
+        Assert.AreEqual(new DateTime(2026, 11, 15, 9, 0, 0), tomorrow!.RemindAt);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AFullTimestampIsTheExactReminderTime()
+    {
+        Assert.IsTrue(ToDoTask.TryParse("Pay rent @2026-11-01 ~2026-11-20T08:15", Guid.Empty, Now, out var task, out _));
+
+        Assert.AreEqual("Pay rent", task!.Subject);
+        Assert.AreEqual(new DateOnly(2026, 11, 1), task.DueDate);
+        Assert.AreEqual(new DateTime(2026, 11, 20, 8, 15, 0), task.RemindAt);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheDueDateAndTheReminderMayComeInEitherOrder()
+    {
+        Assert.IsTrue(ToDoTask.TryParse("Pay rent ~09:00 @2026-11-01", Guid.Empty, Now, out var task, out _));
+
+        Assert.AreEqual("Pay rent", task!.Subject);
+        Assert.AreEqual(new DateOnly(2026, 11, 1), task.DueDate);
+        Assert.AreEqual(new DateTime(2026, 11, 15, 9, 0, 0), task.RemindAt);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("Pay rent ~2026-11-14T09:00")]
+    [DataRow("Pay rent ~noon")]
+    [DataRow("Pay rent ~")]
+    [DataRow("Pay rent ~09:00 ~10:00")]
+    [DataRow("Pay rent @2026-11-01 @2026-11-02")]
+    public void AnUnusableReminderIsRefused(string text)
+    {
+        Assert.IsFalse(ToDoTask.TryParse(text, Guid.Empty, Now, out var task, out var error));
+        Assert.IsNull(task);
+        Assert.IsFalse(string.IsNullOrWhiteSpace(error));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AnEmptyReminderTextClearsTheReminder()
+    {
+        Assert.IsTrue(ToDoTask.TryParseReminder("   ", Now, out var remindAt, out var error));
+
+        Assert.IsNull(remindAt);
+        Assert.AreEqual(string.Empty, error);
+    }
 }
 
-[TestClass]
 public class ToDoStoreTest
 {
+    private static readonly DateTime Now = new(2026, 11, 14, 10, 0, 0);
+
     private static ToDoTask Task(string subject, DateOnly? due = null, ToDoPriority priority = ToDoPriority.Normal, bool done = false) =>
         new(Guid.NewGuid(), subject, due, priority, done);
 
@@ -144,5 +204,41 @@ public class ToDoStoreTest
         settings.Setup(s => s.Get(ToDoStore.SettingsKey)).Returns("[oops");
 
         Assert.AreEqual(0, new ToDoStore(settings.Object).Visible(true).Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TakeDueRemindersGivesEachOpenReminderOnceAndLeavesTheRest()
+    {
+        var store = new ToDoStore(new Mock<ISettingsService>().Object);
+        var due = new ToDoTask(Guid.NewGuid(), "Due", null, ToDoPriority.Normal, false, Now.AddMinutes(-1));
+        var later = new ToDoTask(Guid.NewGuid(), "Later", null, ToDoPriority.Normal, false, Now.AddHours(1));
+        var done = new ToDoTask(Guid.NewGuid(), "Done", null, ToDoPriority.Normal, true, Now.AddMinutes(-1));
+        store.Add(due);
+        store.Add(later);
+        store.Add(done);
+
+        var given = store.TakeDueReminders(Now);
+
+        Assert.AreEqual(1, given.Count);
+        Assert.AreEqual("Due", given[0].Subject);
+        Assert.IsNull(store.Visible(true).Single(t => t.Id == due.Id).RemindAt);
+        Assert.AreEqual(later.RemindAt, store.Visible(true).Single(t => t.Id == later.Id).RemindAt);
+        Assert.AreEqual(0, store.TakeDueReminders(Now).Count);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void AReminderGivenBeforeARestartIsNotGivenAgainAfterIt()
+    {
+        var settings = new Mock<ISettingsService>();
+        string? saved = null;
+        settings.Setup(s => s.Set(ToDoStore.SettingsKey, It.IsAny<string>())).Callback<string, string>((_, value) => saved = value);
+        settings.Setup(s => s.Get(ToDoStore.SettingsKey)).Returns(() => saved);
+        var store = new ToDoStore(settings.Object);
+        store.Add(new ToDoTask(Guid.NewGuid(), "Due", null, ToDoPriority.Normal, false, Now.AddMinutes(-1)));
+        Assert.AreEqual(1, store.TakeDueReminders(Now).Count);
+
+        Assert.AreEqual(0, new ToDoStore(settings.Object).TakeDueReminders(Now).Count);
     }
 }

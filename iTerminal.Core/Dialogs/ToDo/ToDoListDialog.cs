@@ -1,3 +1,4 @@
+using System.Globalization;
 using iConsole.Helper;
 using iConsole.Localization;
 using iTerminal.Core.Helper;
@@ -14,11 +15,13 @@ namespace iTerminal.Core.Dialogs.ToDo;
 /// The task list, after Outlook's: subject, due date and priority, with done tasks kept below the open ones.
 /// N (or Enter) types a new task (<c>!Subject @yyyy-MM-dd</c>); Space marks one done or open; P steps its
 /// priority; D removes it; H hides or shows the done ones. A task that is open and past its due date is
-/// drawn in the error colour. The highlight follows the task itself, so it stays on it when it moves.
+/// drawn in the error colour. R sets a reminder time (<c>15:30</c> or <c>2026-11-01T09:00</c>; empty clears it), and
+/// the reminder job posts a notification when it comes due. Completing a task clears its reminder. The highlight
+/// follows the task itself, so it stays on it when it moves.
 /// </summary>
 public class ToDoListDialog : Dialog
 {
-    private const int DialogWidth = 76;
+    private const int DialogWidth = 80;
     private const int DialogHeight = 24;
     private const int MaxListRows = 16;
 
@@ -28,6 +31,7 @@ public class ToDoListDialog : Dialog
     private static string DoneColumn => iConsole.Localization.UiText.Get("ToDo.Done", "Done").PadRight(6);
     private static string PriorityColumn => iConsole.Localization.UiText.Get("ToDo.Priority", "Priority").PadRight(9);
     private static string DueColumn => iConsole.Localization.UiText.Get("ToDo.Due", "Due").PadRight(11);
+    private static string RemindColumn => iConsole.Localization.UiText.Get("ToDo.Remind", "Remind").PadRight(12);
 
     private readonly IDateTimeProviderService _dateTimeProviderService;
     private readonly ToDoStore _store;
@@ -44,6 +48,9 @@ public class ToDoListDialog : Dialog
 
     /// <summary>The task the entry line is changing, or null when it is typing a new one.</summary>
     private ToDoTask? _editing;
+
+    /// <summary>The task whose reminder time the entry line is setting, or null. The entry then reads a time, not a task.</summary>
+    private ToDoTask? _reminding;
 
     /// <summary>True while "Delete this task? (y/n)" is up: the next key answers it.</summary>
     private bool _confirmingDelete;
@@ -66,6 +73,7 @@ public class ToDoListDialog : Dialog
         _entry = null;
         _entryError = null;
         _editing = null;
+        _reminding = null;
         _confirmingDelete = false;
         await base.ShowAsync();
     }
@@ -95,7 +103,9 @@ public class ToDoListDialog : Dialog
     {
         if (_entry is not null)
         {
-            yield return ("Enter", UiText.Get("DialogHint.SaveTask", "Save the task"));
+            yield return ("Enter", _reminding is null
+                ? UiText.Get("DialogHint.SaveTask", "Save the task")
+                : UiText.Get("DialogHint.SetReminder", "Set the reminder"));
             yield return ("Esc", UiText.Get("DialogHint.DiscardEntry", "Discard the entry"));
             yield break;
         }
@@ -112,6 +122,7 @@ public class ToDoListDialog : Dialog
         yield return ("Home/End", UiText.Get("DialogHint.JumpFirstLastTask", "Jump to the first or last task"));
         yield return ("Enter/Insert", UiText.Get("DialogHint.AddTask", "Add a task"));
         yield return ("F2", UiText.Get("DialogHint.EditTask", "Edit the task"));
+        yield return ("R", UiText.Get("DialogHint.RemindTask", "Set a reminder for the task"));
         yield return ("Space", UiText.Get("DialogHint.MarkTaskDoneOrOpen", "Mark the task done or open"));
         yield return ("Delete", UiText.Get("DialogHint.DeleteTaskAsks", "Delete the task (asks first)"));
     }
@@ -184,6 +195,9 @@ public class ToDoListDialog : Dialog
                 case 'e':
                     EditSelected();
                     return true;
+                case 'r':
+                    OpenReminder();
+                    return true;
                 case 'p':
                     CyclePriority();
                     return true;
@@ -235,6 +249,7 @@ public class ToDoListDialog : Dialog
                 _entry = null;
                 _entryError = null;
                 _editing = null;
+                _reminding = null;
                 break;
             case ConsoleKey.Enter:
                 CommitEntry();
@@ -329,12 +344,66 @@ public class ToDoListDialog : Dialog
         }
 
         _editing = task;
+        _reminding = null;
         _entry = (task.Priority == ToDoPriority.High ? "!" : string.Empty)
             + task.Subject
-            + (task.DueDate is { } due ? " @" + due.ToString("yyyy-MM-dd") : string.Empty);
+            + (task.DueDate is { } due ? " @" + due.ToString("yyyy-MM-dd") : string.Empty)
+            + (task.RemindAt is { } at ? " ~" + at.ToString(ToDoTask.ReminderFormat, CultureInfo.InvariantCulture) : string.Empty);
         _entryError = null;
         StateHasChanged();
     }
+
+    /// <summary>R: the entry line takes a reminder time for the highlighted task, pre-filled with the one it has, if any.</summary>
+    private void OpenReminder()
+    {
+        if (Selected is not { } task)
+        {
+            return;
+        }
+
+        _reminding = task;
+        _editing = null;
+        _entry = task.RemindAt is { } at ? at.ToString(ToDoTask.ReminderFormat, CultureInfo.InvariantCulture) : string.Empty;
+        _entryError = task.IsComplete ? UiText.Get("ToDo.ReminderNeedsOpenTask", "Mark the task open to remind you of it") : null;
+        StateHasChanged();
+    }
+
+    /// <summary>Sets, or with an empty entry clears, the reminder of the task <see cref="OpenReminder"/> was opened for.</summary>
+    private void CommitReminder(ToDoTask reminded)
+    {
+        var current = _store.Visible(true).FirstOrDefault(t => t.Id == reminded.Id);
+        if (current is null)
+        {
+            _reminding = null;
+            _entry = null;
+            StateHasChanged();
+            return;
+        }
+
+        if (current.IsComplete)
+        {
+            _entryError = UiText.Get("ToDo.ReminderNeedsOpenTask", "Mark the task open to remind you of it");
+        }
+        else if (ToDoTask.TryParseReminder(_entry!, _dateTimeProviderService.Now, out var remindAt, out var error))
+        {
+            _store.Update(current with { RemindAt = remindAt });
+            _selectedId = current.Id;
+            _reminding = null;
+            _entry = null;
+            _entryError = null;
+        }
+        else
+        {
+            _entryError = error;
+        }
+
+        StateHasChanged();
+    }
+
+    /// <summary>When the task's reminder is, as the list shows it: the time alone when it is today, else the date and time.</summary>
+    private string ReminderText(ToDoTask task) => task.RemindAt is not { } at ? string.Empty
+        : DateOnly.FromDateTime(at) == _today ? at.ToString("HH:mm", CultureInfo.InvariantCulture)
+        : at.ToString("MM-dd HH:mm", CultureInfo.InvariantCulture);
 
     private void AskToDelete()
     {
@@ -354,8 +423,14 @@ public class ToDoListDialog : Dialog
 
     private void CommitEntry()
     {
+        if (_reminding is { } reminded)
+        {
+            CommitReminder(reminded);
+            return;
+        }
+
         var id = _editing?.Id ?? Guid.NewGuid();
-        if (ToDoTask.TryParse(_entry!, id, out var task, out var error) && task is not null)
+        if (ToDoTask.TryParse(_entry!, id, _dateTimeProviderService.Now, out var task, out var error) && task is not null)
         {
             if (_editing is { } original)
             {
@@ -391,7 +466,8 @@ public class ToDoListDialog : Dialog
             return;
         }
 
-        _store.Update(task with { IsComplete = !task.IsComplete });
+        // A done task is not reminded of anything, so completing one clears its reminder; reopening it leaves none behind.
+        _store.Update(task with { IsComplete = !task.IsComplete, RemindAt = task.IsComplete ? task.RemindAt : null });
         _selectedId = task.Id;
         StateHasChanged();
     }
@@ -472,13 +548,13 @@ public class ToDoListDialog : Dialog
         DrawHeader(buffer, iw, colorScheme);
         DrawRows(buffer, iw, colorScheme);
         DrawEntry(buffer, iw, colorScheme);
-        Put(buffer, 1, ih - 1, iw - 2, iConsole.Localization.UiText.Get("ToDo.Hint", "Space done  N new  E edit  P priority  D delete  H show done  Esc close").FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
+        Put(buffer, 1, ih - 1, iw - 2, iConsole.Localization.UiText.Get("ToDo.Hint", "Space done  N new  E edit  R remind  P priority  D delete  H done  Esc close").FitHints(iw - 2), colorScheme.Foreground, colorScheme.Background);
     }
 
     private void DrawHeader(IBuffer buffer, int iw, ColorScheme colorScheme)
     {
         var open = _store.Visible(false).Count;
-        var heading = DoneColumn + PriorityColumn + DueColumn + iConsole.Localization.UiText.Get("ToDo.Subject", "Subject");
+        var heading = DoneColumn + PriorityColumn + DueColumn + RemindColumn + iConsole.Localization.UiText.Get("ToDo.Subject", "Subject");
         Put(buffer, 1, 0, iw - 2, heading, Color.Cyan, colorScheme.Background);
 
         // The counts sit at the right edge; where the full text would run into the heading, only the open count, else none.
@@ -533,7 +609,7 @@ public class ToDoListDialog : Dialog
                 _ => "         ",
             };
             var dueText = task.DueDate?.ToString("yyyy-MM-dd") ?? string.Empty;
-            var line = done + priority + dueText.PadRight(DueColumn.Length) + task.Subject;
+            var line = done + priority + dueText.PadRight(DueColumn.Length) + ReminderText(task).PadRight(RemindColumn.Length) + task.Subject;
             Put(buffer, 1, y, iw - 2, line, foreground, background);
         }
     }
@@ -544,6 +620,14 @@ public class ToDoListDialog : Dialog
         if (_confirmingDelete && Selected is { } doomed)
         {
             Put(buffer, 1, y, iw - 2, string.Format(iConsole.Localization.UiText.Get("Prompt.DeleteNamed", "Delete \"{0}\"? (y/n)"), doomed.Subject), colorScheme.Error, colorScheme.Background);
+        }
+        else if (_reminding is not null)
+        {
+            Put(buffer, 1, y, iw - 2, string.Format(iConsole.Localization.UiText.Get("ToDo.ReminderEntry", "Remind me at: {0}_"), _entry), colorScheme.SelectedFocusedForeground, colorScheme.Background);
+            if (_entryError is not null)
+            {
+                Put(buffer, 1, y + 1, iw - 2, _entryError, colorScheme.Error, colorScheme.Background);
+            }
         }
         else if (_entry is not null)
         {

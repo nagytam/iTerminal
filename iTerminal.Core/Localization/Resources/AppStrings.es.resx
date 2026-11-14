@@ -2582,7 +2582,7 @@
     <value>Despertar del temporizador</value>
   </data>
   <data name="ToDo.Hint" xml:space="preserve">
-    <value>Espacio hecha  N nueva  E editar  P prioridad  D eliminar  H mostrar hechas  Esc cerrar</value>
+    <value>Espacio hecha  N nueva  E editar  R recordar  P prioridad  D eliminar  H mostrar hechas  Esc cerrar</value>
   </data>
   <data name="ToDo.Done" xml:space="preserve">
     <value>Hech</value>
@@ -9401,5 +9401,23 @@
   </data>
   <data name="CmdDesc.96256810" xml:space="preserve">
     <value>Escanear una página o el alimentador, verla y guardarla.</value>
+  </data>
+  <data name="ToDo.Remind" xml:space="preserve">
+    <value>Recordatorio</value>
+  </data>
+  <data name="ToDo.ReminderTitle" xml:space="preserve">
+    <value>Recordatorio</value>
+  </data>
+  <data name="ToDo.ReminderEntry" xml:space="preserve">
+    <value>Recordar a las: {0}_</value>
+  </data>
+  <data name="ToDo.ReminderNeedsOpenTask" xml:space="preserve">
+    <value>Marque la tarea como pendiente para recordarla</value>
+  </data>
+  <data name="DialogHint.SetReminder" xml:space="preserve">
+    <value>Poner el recordatorio</value>
+  </data>
+  <data name="DialogHint.RemindTask" xml:space="preserve">
+    <value>Poner un recordatorio a la tarea</value>
   </data>
 </root>
