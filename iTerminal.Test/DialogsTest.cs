@@ -110,7 +110,7 @@ public class DialogsTest
 
     [Timeout(120_000)]
     [TestMethod]
-    public async Task SwissJassOpensFromTheCommandPaletteAndPlaysAHotSeatTurn()
+    public async Task SwissJassOpensFromTheCommandPaletteAndPlaysAHandAgainstTheComputer()
     {
         await _app.PressAsync("Shift+F1");
         await _app.Driver.WaitForModalAsync<Core.Dialogs.CommandPaletteDialog>();
@@ -118,16 +118,13 @@ public class DialogsTest
         await _app.PressAsync("Enter");
         await _app.Driver.WaitForModalAsync<Core.Dialogs.Games.JassDialog>();
 
-        await _app.WaitForTextAsync("Pass the device to Player 1");
-        await _app.PressAsync("Enter");
+        await _app.WaitForTextAsync("Player 1's hand");
         await _app.WaitForTextAsync("choose trump");
         await _app.TypeAsync("c");
         await _app.WaitForTextAsync("Trump: clubs");
 
-        await _app.PressAsync("Enter");
-        await _app.WaitForTextAsync("Player 1's hand");
         await _app.PressAsync("1");
-        await _app.WaitForTextAsync("Pass the device to Player 2");
+        await _app.WaitForTextAsync("P1:");
 
         await _app.PressAsync("Esc");
         await _app.WaitForNoDialogAsync();

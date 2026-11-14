@@ -1,13 +1,18 @@
 using iConsole.Display;
+using iConsole.Localization;
 
 namespace iTerminal.Core.Services.Games;
 
 /// <summary>
-/// Tetris on a 10 x 20 board, for one person. The pieces fall on the clock the dialog passes to <see cref="Tick"/>; the
+/// Tetris on a 10 x 20 board. The pieces fall on the clock the dialog passes to <see cref="Tick"/>; the
 /// left and right arrows slide the piece, the down arrow drops it one row faster, the up arrow (or X) turns it clockwise,
 /// Z turns it back and D drops it at once. A full row is cleared; every ten rows raise the level and the fall speeds up.
 /// The pieces come from a shuffled bag of all seven, so a long wait for one shape cannot happen. Enter pauses and
 /// resumes, and leaving the game pauses it.
+///
+/// <para>Against the computer a second board runs beside the first on the same clock. Its pieces are placed by a planner that
+/// scores every turn and column with the usual stack measures (height, holes, bumpiness, rows cleared), with a little noise so
+/// it can be beaten, and it walks each piece there one action at a time. The first stack to reach the top loses.</para>
 /// </summary>
 public class TetrisGame : GameBase
 {
@@ -15,6 +20,7 @@ public class TetrisGame : GameBase
     internal const int Rows = 20;
 
     private const int NoPiece = -1;
+    private static readonly TimeSpan RivalActionInterval = TimeSpan.FromMilliseconds(100);
 
     // Each piece as the cells of its first turn in a square box; turning rotates the box, so the I and O pieces need no special case.
     private static readonly (int Size, (int X, int Y)[] Cells, Color Color)[] Pieces =
@@ -32,6 +38,8 @@ public class TetrisGame : GameBase
 
     private readonly int[,] _board = new int[Rows, Columns];
     private readonly Queue<int> _bag = new();
+    private readonly bool _isRival;
+    private readonly TetrisGame? _rival;
     private int _piece = NoPiece;
     private int _next;
     private (int X, int Y)[] _cells = [];
@@ -39,14 +47,28 @@ public class TetrisGame : GameBase
     private int _left;
     private int _top;
     private TimeSpan _accumulator;
+    private TimeSpan _actionClock;
     private TetrisState _state;
+    private bool _topped;
+    private int _plannedRotations;
+    private int _targetLeft;
 
     public TetrisGame() : this(null)
     {
     }
 
-    internal TetrisGame(Random? random) : base(random)
+    internal TetrisGame(Random? random) : this(random, isRival: false)
     {
+    }
+
+    private TetrisGame(Random? random, bool isRival) : base(random)
+    {
+        _isRival = isRival;
+        if (!isRival)
+        {
+            _rival = new TetrisGame(new Random(Random.Next()), isRival: true);
+        }
+
         NewGame();
     }
 
@@ -60,13 +82,18 @@ public class TetrisGame : GameBase
 
     public override string Name => "Tetris";
 
-    public override string Rules => GameText.Get("Games.Tetris.Rules", "Stack the falling pieces into full rows. A full row disappears. The game ends when the pieces reach the top.");
+    public override string Rules => VsComputer && _rival is not null
+        ? GameText.Get("Games.Tetris.RulesVersus", "Stack the falling pieces into full rows. The computer's board runs beside yours: whoever's stack reaches the top first loses.")
+        : GameText.Get("Games.Tetris.Rules", "Stack the falling pieces into full rows. A full row disappears. The game ends when the pieces reach the top.");
 
     public override string Status => _state switch
     {
         TetrisState.Stopped => GameText.Get("Games.PressArrow", "Press an arrow key to start."),
         TetrisState.Paused => GameText.Get("Games.Paused", "Paused. Enter to go on."),
-        TetrisState.Over => string.Format(GameText.Get("Games.Tetris.Over", "Game over with {0} points and {1} rows. N to play again."), Score, Lines),
+        TetrisState.Over => OverText(),
+        _ when VsComputer && _rival is not null => string.Format(
+            GameText.Get("Games.Tetris.VersusStatus", "Score {0}  Rows {1}  Level {2}  Next {3}  |  Computer {4} points, {5} rows"),
+            Score, Lines, Level, PieceNames[_next], _rival.Score, _rival.Lines),
         _ => string.Format(GameText.Get("Games.Tetris.Status", "Score {0}  Rows {1}  Level {2}  Next {3}"), Score, Lines, Level, PieceNames[_next]),
     };
 
@@ -76,9 +103,11 @@ public class TetrisGame : GameBase
 
     public override bool IsComputerTurn => false;
 
-    public override bool OffersComputerOpponent => false;
-
     public override bool OffersUndo => false;
+
+    public override string? ModeLabel => VsComputer
+        ? GameText.Get("Games.Tetris.VsComputer", "against the computer")
+        : UiText.Get("Games.OnePlayer", "one player");
 
     public override string ActivateLabel => iConsole.Localization.UiText.Get("Games.Snake.Pause", "pause");
 
@@ -95,7 +124,13 @@ public class TetrisGame : GameBase
 
     public int Lines { get; private set; }
 
+    /// <summary>How many pieces have come to rest on this board; with the rows cleared it accounts for every filled cell.</summary>
+    internal int PiecesLocked { get; private set; }
+
     public int Level => Lines / 10 + 1;
+
+    /// <summary>The computer's board, when the computer opponent is on; null on the rival itself.</summary>
+    internal TetrisGame? Rival => _rival;
 
     internal bool IsFalling => _state == TetrisState.Falling;
 
@@ -137,10 +172,15 @@ public class TetrisGame : GameBase
         _bag.Clear();
         Score = 0;
         Lines = 0;
+        PiecesLocked = 0;
         _accumulator = TimeSpan.Zero;
-        _state = TetrisState.Stopped;
+        _actionClock = TimeSpan.Zero;
+        _topped = false;
+        // The computer's board has no start key: it is already falling when the person starts theirs, and it waits for the clock.
+        _state = _isRival ? TetrisState.Falling : TetrisState.Stopped;
         _next = DrawFromBag();
         Spawn();
+        _rival?.NewGame();
     }
 
     public override void MoveCursor(int dx, int dy)
@@ -245,12 +285,28 @@ public class TetrisGame : GameBase
             return false;
         }
 
+        bool moved = Fall(elapsed);
+        if (VsComputer && _rival is not null && _state == TetrisState.Falling)
+        {
+            moved |= _rival.AdvanceRival(elapsed);
+            // The computer's stack reaching the top ends the match for the person too.
+            if (_rival._topped)
+            {
+                _state = TetrisState.Over;
+            }
+        }
+
+        return moved;
+    }
+
+    /// <summary>The piece falls on the clock; the remainder carries over, so a steady stream of short ticks drops it as often as one long one.</summary>
+    private bool Fall(TimeSpan elapsed)
+    {
         if (elapsed > TimeSpan.Zero)
         {
             _accumulator += elapsed;
         }
 
-        // The remainder carries over, so a steady stream of short ticks drops the piece as often as one long one.
         bool moved = false;
         while (_state == TetrisState.Falling && _accumulator >= FallInterval)
         {
@@ -266,28 +322,136 @@ public class TetrisGame : GameBase
         return moved;
     }
 
+    /// <summary>
+    /// Plays the computer's board on its own clock: one action (a turn or a slide towards the planned column) every 100 ms,
+    /// and the piece falls at the level's speed. Returns true when it acted.
+    /// </summary>
+    internal bool AdvanceRival(TimeSpan elapsed)
+    {
+        if (!_isRival || _topped || elapsed <= TimeSpan.Zero)
+        {
+            return false;
+        }
+
+        _actionClock += elapsed;
+        bool acted = false;
+        while (_actionClock >= RivalActionInterval && !_topped)
+        {
+            _actionClock -= RivalActionInterval;
+            if (_plannedRotations > 0)
+            {
+                _plannedRotations--;
+                Rotate(clockwise: true);
+            }
+            else if (_left != _targetLeft && !TryMove(Math.Sign(_targetLeft - _left), 0))
+            {
+                _targetLeft = _left;
+            }
+
+            _accumulator += RivalActionInterval;
+            while (!_topped && _accumulator >= FallInterval)
+            {
+                _accumulator -= FallInterval;
+                if (!TryMove(0, 1))
+                {
+                    Lock();
+                    break;
+                }
+            }
+
+            acted = true;
+        }
+
+        return acted;
+    }
+
+    /// <summary>
+    /// The board, two rows of cells to a text row: half-block characters show the upper cell in the foreground and the lower
+    /// one in the background, so the 20-row well takes 10 rows and fits a 24-row terminal.
+    /// </summary>
     public override IReadOnlyList<GameCell[]> Render()
+    {
+        List<GameCell[]> own = RenderBoard();
+        if (!VsComputer || _rival is null)
+        {
+            return own;
+        }
+
+        List<GameCell[]> rival = _rival.RenderBoard();
+        int width = (Columns + 2) * 2 - 2;
+        List<GameCell[]> rows =
+        [
+            [new GameCell(GameText.Get("Games.Tetris.You", "You").PadRight(width), Color.Cyan), new GameCell("   "), new GameCell(GameText.Get("Games.Tetris.Computer", "Computer"), Color.Yellow)],
+        ];
+        for (int r = 0; r < own.Count; r++)
+        {
+            rows.Add([.. own[r], new GameCell("   "), .. rival[r]]);
+        }
+
+        return rows;
+    }
+
+    private List<GameCell[]> RenderBoard()
     {
         HashSet<(int X, int Y)> falling = _state == TetrisState.Over ? [] : [.. PieceCells];
         List<GameCell[]> rows = [];
-        for (int y = 0; y < Rows; y++)
+        for (int y = 0; y < Rows; y += 2)
         {
             GameCell[] row = new GameCell[Columns + 2];
             row[0] = new GameCell("│", Color.DarkGray);
             for (int x = 0; x < Columns; x++)
             {
-                row[x + 1] = falling.Contains((x, y))
-                    ? new GameCell("  ", null, Pieces[_piece].Color)
-                    : _board[y, x] != 0
-                        ? new GameCell("  ", null, Pieces[_board[y, x] - 1].Color)
-                        : new GameCell(" ·", Color.DarkGray);
+                Color? upper = CellColour(falling, x, y);
+                Color? lower = CellColour(falling, x, y + 1);
+                row[x + 1] = (upper, lower) switch
+                {
+                    (null, null) => new GameCell(" ·", Color.DarkGray),
+                    (Color top, null) => new GameCell("▀▀", top),
+                    (null, Color bottom) => new GameCell("▄▄", bottom),
+                    (Color top, Color bottom) when top == bottom => new GameCell("  ", null, top),
+                    (Color top, Color bottom) => new GameCell("▀▀", top, bottom),
+                };
             }
 
             row[Columns + 1] = new GameCell("│", Color.DarkGray);
             rows.Add(row);
         }
 
+        GameCell[] floor = new GameCell[Columns + 2];
+        floor[0] = new GameCell("└", Color.DarkGray);
+        for (int x = 0; x < Columns; x++)
+        {
+            floor[x + 1] = new GameCell("──", Color.DarkGray);
+        }
+
+        floor[Columns + 1] = new GameCell("┘", Color.DarkGray);
+        rows.Add(floor);
         return rows;
+    }
+
+    private Color? CellColour(HashSet<(int X, int Y)> falling, int x, int y)
+    {
+        if (falling.Contains((x, y)))
+        {
+            return Pieces[_piece].Color;
+        }
+
+        return _board[y, x] != 0 ? Pieces[_board[y, x] - 1].Color : null;
+    }
+
+    private string OverText()
+    {
+        if (VsComputer && _rival is not null)
+        {
+            return (_topped, _rival._topped) switch
+            {
+                (true, true) => string.Format(GameText.Get("Games.Tetris.VersusDraw", "Both stacks reached the top: {0} points to the computer's {1}. N to play again."), Score, _rival.Score),
+                (true, false) => string.Format(GameText.Get("Games.Tetris.VersusLost", "The computer wins: {0} points to your {1}. N to play again."), _rival.Score, Score),
+                _ => string.Format(GameText.Get("Games.Tetris.VersusWon", "You win: {0} points to the computer's {1}. N to play again."), Score, _rival.Score),
+            };
+        }
+
+        return string.Format(GameText.Get("Games.Tetris.Over", "Game over with {0} points and {1} rows. N to play again."), Score, Lines);
     }
 
     public override Func<CancellationToken, Action?>? PlanComputerMove() => null;
@@ -327,9 +491,108 @@ public class TetrisGame : GameBase
         _top = 0;
         if (Collides(_cells, _left, _top))
         {
+            _topped = true;
             _state = TetrisState.Over;
+            return;
+        }
+
+        if (_isRival)
+        {
+            PlanRival();
         }
     }
+
+    /// <summary>
+    /// Finds the turn and column that leave the best board after the piece drops, as the planner's score sees it. Every turn
+    /// is tried from the piece's spawn orientation, and every column it fits in.
+    /// </summary>
+    private void PlanRival()
+    {
+        double bestScore = double.MinValue;
+        int bestRotation = 0;
+        int bestLeft = _left;
+        (int X, int Y)[] cells = _cells;
+        for (int rotation = 0; rotation < 4; rotation++)
+        {
+            for (int left = -2; left <= Columns; left++)
+            {
+                if (Collides(cells, left, 0))
+                {
+                    continue;
+                }
+
+                int top = 0;
+                while (!Collides(cells, left, top + 1))
+                {
+                    top++;
+                }
+
+                double score = Evaluate(cells, left, top) + Random.NextDouble() * 0.2;
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    bestRotation = rotation;
+                    bestLeft = left;
+                }
+            }
+
+            cells = TurnClockwise(cells, _size);
+        }
+
+        _plannedRotations = bestRotation;
+        _targetLeft = bestLeft;
+    }
+
+    /// <summary>The stack measures after the piece lands: rows it completes, height, holes and bumpiness, weighted as the usual Tetris planners do.</summary>
+    private double Evaluate((int X, int Y)[] cells, int left, int top)
+    {
+        int[,] grid = (int[,])_board.Clone();
+        foreach ((int X, int Y) cell in cells)
+        {
+            grid[top + cell.Y, left + cell.X] = 1;
+        }
+
+        int completed = 0;
+        for (int y = 0; y < Rows; y++)
+        {
+            bool full = true;
+            for (int x = 0; x < Columns && full; x++)
+            {
+                full = grid[y, x] != 0;
+            }
+
+            completed += full ? 1 : 0;
+        }
+
+        int[] heights = new int[Columns];
+        int holes = 0;
+        for (int x = 0; x < Columns; x++)
+        {
+            int highest = Array.FindIndex(Enumerable.Range(0, Rows).Select(y => grid[y, x]).ToArray(), v => v != 0);
+            if (highest < 0)
+            {
+                continue;
+            }
+
+            heights[x] = Rows - highest;
+            for (int y = highest + 1; y < Rows; y++)
+            {
+                holes += grid[y, x] == 0 ? 1 : 0;
+            }
+        }
+
+        int aggregate = heights.Sum();
+        int bumpiness = 0;
+        for (int x = 0; x + 1 < Columns; x++)
+        {
+            bumpiness += Math.Abs(heights[x] - heights[x + 1]);
+        }
+
+        return -0.51 * aggregate + 0.76 * completed - 0.36 * holes - 0.18 * bumpiness;
+    }
+
+    private static (int X, int Y)[] TurnClockwise((int X, int Y)[] cells, int size) =>
+        cells.Select(c => (X: size - 1 - c.Y, Y: c.X)).ToArray();
 
     private bool Collides((int X, int Y)[] cells, int left, int top)
     {
@@ -392,6 +655,7 @@ public class TetrisGame : GameBase
     /// <summary>The piece comes to rest: it joins the stack, full rows go, and the next piece enters.</summary>
     private void Lock()
     {
+        PiecesLocked++;
         foreach ((int X, int Y) cell in PieceCells)
         {
             if (cell.Y >= 0)

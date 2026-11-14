@@ -8,7 +8,8 @@ public class SnakeGameTest
 {
     private static readonly TimeSpan Step = TimeSpan.FromMilliseconds(120);
 
-    private static SnakeGame Create() => new(new Random(1));
+    /// <summary>A single-player game; the versus tests build their own.</summary>
+    private static SnakeGame Create() => new(new Random(1)) { VsComputer = false };
 
     [Timeout(60_000)]
     [TestMethod]
@@ -243,12 +244,12 @@ public class SnakeGameTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void TheSnakeHasNoUndoNoComputerAndDrawsItsHeadAndFood()
+    public void TheSnakeHasNoUndoButAComputerOpponentAndDrawsItsHeadAndFood()
     {
-        SnakeGame game = Create();
+        SnakeGame game = new(new Random(1));
 
         Assert.IsFalse(game.OffersUndo);
-        Assert.IsFalse(game.OffersComputerOpponent);
+        Assert.IsTrue(game.OffersComputerOpponent);
         Assert.IsFalse(game.CanUndo);
         Assert.IsFalse(game.IsComputerTurn);
         Assert.IsNull(game.PlanComputerMove());
@@ -259,5 +260,79 @@ public class SnakeGameTest
         Assert.AreEqual(Color.Yellow, rows[6][5].Background, "the head");
         Assert.AreEqual(Color.Green, rows[6][4].Background, "the body");
         Assert.AreEqual(Color.Red, rows[game.Food.Y][game.Food.X].Background, "the food");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheComputersSnakeMovesOnTheSameClockAsThePerson()
+    {
+        SnakeGame game = new(new Random(1));
+        (int X, int Y) rivalStart = game.Rival[0];
+
+        game.MoveCursor(1, 0);
+        game.Tick(Step);
+
+        (int X, int Y) rivalNow = game.Rival[0];
+        Assert.AreEqual(1, Math.Abs(rivalNow.X - rivalStart.X) + Math.Abs(rivalNow.Y - rivalStart.Y));
+        Assert.IsFalse(game.IsOver);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheRivalRunningOffTheBoardLetsThePersonWin()
+    {
+        SnakeGame game = new(new Random(1));
+        // The rival's head is in the corner and its own body blocks both turns; its only way on is off the board.
+        game.PutRivalForTest([(19, 0), (18, 0), (18, 1), (19, 1)], (1, 0));
+
+        game.MoveCursor(1, 0);
+        game.Tick(Step);
+
+        Assert.IsTrue(game.IsOver);
+        StringAssert.StartsWith(game.Status, "You win");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void RunningIntoTheRivalsBodyLetsTheComputerWin()
+    {
+        SnakeGame game = new(new Random(1));
+        // The person's next cell is the middle of the rival's body, and the rival turns away from it.
+        game.PutRivalForTest([(6, 5), (6, 6), (6, 7)], (0, -1));
+
+        game.MoveCursor(1, 0);
+        game.Tick(Step);
+
+        Assert.IsTrue(game.IsOver);
+        StringAssert.StartsWith(game.Status, "The computer wins");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TwoSnakesRunningIntoEachOtherAtTheSameCellIsADraw()
+    {
+        SnakeGame game = new(new Random(1));
+        // The rival's only free cell is the person's next cell, so it moves there while the person does too.
+        game.PutRivalForTest([(7, 6), (7, 5), (7, 7)], (-1, 0));
+
+        game.MoveCursor(1, 0);
+        game.Tick(Step);
+
+        Assert.IsTrue(game.IsOver);
+        StringAssert.StartsWith(game.Status, "Both crashed");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TurningTheComputerOffRemovesItsSnakeFromTheBoard()
+    {
+        SnakeGame game = new(new Random(1));
+        game.VsComputer = false;
+
+        game.MoveCursor(1, 0);
+        game.Tick(Step);
+
+        Assert.AreEqual(0, game.Rival.Count);
+        Assert.AreEqual("Score 0.", game.Status);
     }
 }
