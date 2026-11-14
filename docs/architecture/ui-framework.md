@@ -303,42 +303,47 @@ A control that wants a real bitmap rather than characters (today: the F3 image v
 
 ### Comparison with Spectre.Console
 
-Spectre.Console 0.57.2 (its public API and XML docs, not its runtime behaviour) is an output and prompt library. It has no full-screen loop, focus or key routing, so only the overlapping areas are compared. The "not found" notes are grep-based.
+Refreshed on 2026-11-14 against Spectre.Console 0.57.2 (the latest release, 2 July 2026) and `iConsole` at `1a7e135`. The Spectre side is its public API, read from the source tree (`src/Spectre.Console/`: `Widgets`, `Prompts`, `Live`, `Rendering`, `Extensions`), not its run-time behaviour. Spectre is an output and prompt library with no full-screen loop, focus or key routing, so only the overlapping areas are compared. The "not found" notes are grep-based over `iConsole/`. Where a Spectre feature was not re-checked in this refresh, the table says so.
 
 | Area | iConsole | Spectre.Console |
 | --- | --- | --- |
-| Colour depth | 16 ANSI colours only (`Color` enum) | Profile detection: 16, 256 or truecolour, with downsampling |
-| Environment detection | `ITERMINAL_RENDER_DUMPS`, `ITERMINAL_KEY_TRACE` only | `NO_COLOR`, `COLORTERM`, `TERM`, redirected output |
-| Styled text | Built by hand from `ConxelString` runs | Markup strings (`[bold red]…[/]`) with `Markup.Escape` |
-| Prompts | Dialogs, `ComboBox`, `CheckList`, y/n in footers | `TextPrompt` (validation, secret, choices), `SelectionPrompt` (search, paging), `MultiSelectionPrompt`, `ConfirmationPrompt` |
-| Tables, trees, calendars, charts | Present | Present, with more border and alignment options |
-| Progress | `ProgressBar`, `ProgressTime`, Task Manager | `ProgressContext` with several tasks and columns: spinner, percent, elapsed, remaining, transfer speed, downloaded size |
-| Layout | `Layout` helpers, `Window`, `GroupBox` | `Grid`, `Columns`, `Rows`, `Panel` with header, `Padder`, `Align` |
-| Charts | Block bar, line, gauge, heatmap, sparkline | `Canvas` with Braille dots for plots |
-| Exceptions | `ErrorMessage` control | Pretty-printed traces: trimmed frames, file links, colours |
-| Recording and tests | `ScreenBuffer` for assertions; HTML render dumps | `Recorder` exports text, HTML or SVG; `TestConsole` |
-| Emoji and wide characters | Not handled (see the Terminal.Gui section) | Emoji tables and cell widths |
+| Colour depth | 16 ANSI colours only (`Color` enum, mapped to `ConsoleColor`) | Profiles for 16, 256 and truecolour (`Profile.cs`, `Capabilities.cs`) |
+| Environment detection | `TERM` is read by the ANSI renderer, synchronised output, cursor shape and focus reporting; `NO_COLOR` and `COLORTERM` are not read | Capability detection (`Capabilities.cs`, `InteractionDetector.cs`) |
+| Styled text | Built by hand from `ConxelString` runs; a user's `[` is not escaped | Markup strings (`Markup.cs`, `AnsiConsole.Markup.cs`) with escaping |
+| Prompts | `IPromptService` with `AskAsync<T>`, `SelectAsync<T>`, `MultiSelectAsync<T>` and `ConfirmAsync`, each shown as a dialog; `TextPrompt<T>` (validation, secret), `SelectionPrompt<T>` (search as you type), `MultiSelectionPrompt<T>`, `ConfirmationPrompt` | `TextPrompt`, `SelectionPrompt`, `MultiSelectionPrompt`, `ConfirmationPrompt` (`Prompts/`) |
+| Tables, trees, calendars | `Table`, `TreeView` (interactive), `JsonTree`, `XmlTree`, `Calendar` | `Table`, `Tree` (output only), `Calendar` (`Widgets/`) |
+| Charts | `BarChart`, `BreakdownChart`, `LineChart` (braille), `PieChart`, `ScatterChart`, `Histogram`, `CandlestickChart`, `Sparkline`, `Heatmap`, `Gauge` | `Canvas` (`Widgets/Canvas.cs`); the other chart widgets were not re-checked |
+| Progress | `ProgressBar`, `ProgressTime`, `ProgressGroup` (several tasks with a marker, percent, speed, elapsed and remaining); no downloaded-size column | Progress with a `Columns/` folder of columns (`Live/Progress/`); the downloaded-size column was not re-checked |
+| Live display and status | `LiveTable` (a table only); `Spinner` with one frame set | `LiveDisplay` redraws any renderable; `Status` is a spinner with a message (`Live/`, `Live/Status/`) |
+| Layout | `Grid`, `StackPanel`, `Splitter`, `AlignPanel`, `BoxPanel`, `BorderedGrid` | `Grid`, `Columns`, `Rows`, `Panel` with `PanelHeader`, `Padder`, `Align`, `Paragraph` (`Widgets/`) |
+| Borders | `BorderStyle` (single, double, rounded, thick, dashed and others) | `BoxBorder.Known`, `TableBorder.Known`, `TreeGuide.Known` (`Rendering/`); 0.57.0 added more box styles (release notes) |
+| Text paths | Not found (no middle ellipsis) | `TextPath` (`Widgets/TextPath.cs`) |
+| Exceptions | `ErrorMessage` shows one line | `AnsiConsole.Exceptions` pretty-prints traces (`AnsiConsole.Exceptions.cs`) |
+| Emoji | Wide-character widths (`TextWidth`); no shortcode table | `Emoji.cs` with shortcodes |
+| Recording and tests | `ScreenRecorder` (text, HTML, SVG) and `ScreenBuffer` assertions | `Recorder` and `AnsiConsole.Recording.cs` (export) |
+| Images | Sixel overlay (`SixelOverlay`); the image viewer falls back to cell art | Not re-checked in this refresh |
+| FIGlet text | Not found | `FigletText`; not re-checked in this refresh (see item 38 in `tui-library-comparison.md`) |
 
 **Built from this comparison**
 
 - **Prompts.** `IPromptService` (`AskAsync`, `SelectAsync`, `MultiSelectAsync`, `ConfirmAsync`) shows a dialog per prompt on the first screen, one at a time. `TextPrompt<T>` converts with the type's invariant converter and runs `Validate` rules; `SelectionPrompt<T>` filters as you type; `MultiSelectionPrompt<T>` marks with Space and enforces `MinimumSelections`; `ConfirmationPrompt` answers Y or N, and Enter takes `DefaultValue`. Esc or cancellation returns null. Choice state lives in `ChoiceList<T>`, which has no drawing.
 - **Grid.** `Grid` places children in rows and columns with `Place`, with `GridLength.Cells`, `Auto` and `Star` tracks and spans. It arranges on layout and when its size changes.
 - **Screen recorder.** `ScreenRecorder.Capture` copies the merged frame; `ToText`, `ToHtml`, `ToSvg` and `Save` (by extension) write it out. Wide characters keep their columns in every format.
-- **Wide characters and emoji.** `TextWidth` gives the column count of text. A wide BMP character takes its cell and a continuation cell that is never written to the terminal; an emoji takes a surrogate pair. `BufferLayer.RepairWideCharacters` blanks a half that lost its partner when layers are merged. Zero-width characters are dropped; the width table covers the common East Asian and emoji ranges, not all of Unicode.
+- **Wide characters.** `TextWidth` gives the column count of text. A wide BMP character takes its cell and a continuation cell that is never written to the terminal; an emoji takes a surrogate pair. `BufferLayer.RepairWideCharacters` blanks a half that lost its partner when layers are merged. Zero-width characters are dropped; the width table covers the common East Asian and emoji ranges, not all of Unicode.
+- **Braille plots.** `LineChart` and `ChartCanvas` draw 2x4 dots per cell, which doubles the vertical resolution of line plots over block charts.
 
 **Suggested improvements, in priority order**
 
-1. **Colour profile and environment detection.** Detect `NO_COLOR`, `COLORTERM=truecolor` and `TERM`, and map colours to the terminal's depth. The `Color` enum can't express 256-colour or truecolour themes, so a profile type (and an RGB colour) is needed before theme work. Same gap as Terminal.Gui item 3.
-2. **Markup for styled strings.** A small `[bold red]…[/]` parser with an `Escape` helper would simplify status messages, dialog text and help screens, and stop user text such as a file name containing `[` being read as styling. Build it on `ConxelString`.
-3. **A prompt facade.** An `IPromptService` with `Ask<T>`, `Select<T>`, `MultiSelect<T>` and `Confirm`, built on the existing controls, gives dialog flows one API and makes them testable. Start with search-as-you-type selection, which Spectre's `SelectionPrompt` has.
-4. **Recording the screen.** Expose the `ScreenBuffer` as a text, HTML or SVG recording. `BufferHelper.DumpBufferToHtml` already produces HTML. An end-to-end test could attach the screen on failure.
-5. **Progress columns for transfers.** Optional columns for transfer speed, remaining time and downloaded size on `ProgressBar` or a multi-task progress control. Check the copy and sync dialogs first: if they lack speed and ETA, this is the cheapest visible win.
-6. **Grid and columns layout.** A `Grid` with ratio and auto columns, and a `Columns` control, for cases `Layout.StackVertical` and manual positioning handle awkwardly. Overlaps Terminal.Gui item 7.
-7. **Canvas with Braille dots.** Doubles the vertical resolution of line and scatter plots over block charts. Lower priority.
-8. **Exception view.** Trimmed frames and file links in the `ErrorMessage` control. Low priority.
-9. **Figlet banners** for splash and about screens. Low priority and cosmetic.
+1. **Colour profile and environment detection.** Read `NO_COLOR` and `COLORTERM`, and map colours to the terminal's depth. The `Color` enum can't express 256-colour or truecolour themes, so a profile type and an RGB colour are needed before theme work. Same gap as Terminal.Gui item 3 in `tui-library-comparison.md`.
+2. **Markup for styled strings.** A small `[bold red]…[/]` parser with an `Escape` helper would simplify status messages, dialog text and help screens, and stop user text such as a file name containing `[` being read as styling. Build it on `ConxelString`. Item 47.
+3. **`Columns`, `Rows` and `Padder` layout.** `Grid` covers two dimensions; a one-line `Columns` or `Rows` helper and padding around a control are missing (`Control` has no margin or padding property). The existing `SizeSolver` and `StackPanel` can carry it. Item 128.
+4. **A live display for any renderable, and a status spinner.** `LiveTable` is the only live control. `Status` is a spinner with a message that runs while a task does. Items 29 and 102.
+5. **Progress: downloaded-size column.** Speed, elapsed and remaining exist on `ProgressGroup`; a downloaded-size column does not. Cheapest visible win for the copy and sync dialogs.
+6. **Exception view.** Trimmed frames and file links in the `ErrorMessage` control. Item 48. Low priority.
+7. **Emoji shortcodes** such as `:check_mark:` in labels and Markdown. Item 96.
+8. **FIGlet banners** for splash and about screens. Item 38. Low priority and cosmetic.
 
-Items 1 and 2 are the largest gaps: item 1 blocks theme work, and item 2 removes repetitive `ConxelString` code.
+Items 1 and 2 are still the largest gaps: item 1 blocks theme work, and item 2 removes repetitive `ConxelString` code.
 
 ### Main-loop watchdog and terminal clipboard
 
