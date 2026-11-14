@@ -2728,6 +2728,24 @@
   <data name="Svg.NotReadable" xml:space="preserve">
     <value>Ce dessin SVG n'a pas pu être lu.</value>
   </data>
+  <data name="DialogHint.RotateRightLeft" xml:space="preserve">
+    <value>Faire pivoter l&apos;image dans le sens horaire ou antihoraire</value>
+  </data>
+  <data name="DialogHint.FlipHorizontalVertical" xml:space="preserve">
+    <value>Refléter l&apos;image horizontalement ou verticalement</value>
+  </data>
+  <data name="DialogHint.PreviousNextPicture" xml:space="preserve">
+    <value>Afficher l&apos;image précédente ou suivante du dossier</value>
+  </data>
+  <data name="Picture.PsdUnsupported" xml:space="preserve">
+    <value>Ce fichier Photoshop utilise une structure que la visionneuse ne lit pas.</value>
+  </data>
+  <data name="Picture.RawUnreadable" xml:space="preserve">
+    <value>Ce fichier brut n&apos;a pas pu être lu.</value>
+  </data>
+  <data name="Picture.RawNoPreview" xml:space="preserve">
+    <value>Ce fichier brut ne contient pas d&apos;aperçu JPEG que la visionneuse peut afficher.</value>
+  </data>
   <data name="Icon.NotReadable" xml:space="preserve">
     <value>Ce fichier d'icône n'a pas pu être lu.</value>
   </data>
@@ -4256,7 +4274,7 @@
     <value>r:réanalyser  Enter:ouvrir  Esc:fermer</value>
   </data>
   <data name="Hints.ImageViewer" xml:space="preserve">
-    <value> c:couleur  i:infos  Esc:fermer</value>
+    <value> c:couleur  i:info  r/l:pivoter  h/v:miroir  ←/→:préc/suiv  Esc:fermer</value>
   </data>
   <data name="Hints.Calculator" xml:space="preserve">
     <value>0-9 . + - * / ^ %  Enter:=  Bksp:retour  Del/c:effacer  Space:appuyer sur la touche  Ctrl+←/→:mode  Esc:fermer</value>
