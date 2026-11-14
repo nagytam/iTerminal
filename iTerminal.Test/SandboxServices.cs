@@ -779,6 +779,11 @@ public static class SandboxServices
                 "Reply from 192.0.2.10: time=12 ms TTL=64",
                 "Sent 4, received 4, lost 0 (0%).",
             ],
+            Core.Services.NetworkTools.NetworkToolKind.Scan =>
+            [
+                "192.0.2.10     time=12 ms",
+                "Scanned 254 addresses, 1 hosts answered. Hosts that block ping do not appear.",
+            ],
             Core.Services.NetworkTools.NetworkToolKind.Whois => [$"Sandbox whois answer for {target}."],
             _ => [$"Sandbox answer for {target}."],
         };

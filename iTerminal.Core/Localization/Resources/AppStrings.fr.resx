@@ -9501,6 +9501,12 @@
   <data name="NetworkTools.Tool.HttpHeaders.Description" xml:space="preserve">
     <value>Demande une adresse web et affiche les en-têtes de réponse.</value>
   </data>
+  <data name="NetworkTools.Tool.Scan" xml:space="preserve">
+    <value>Analyse de sous-réseau</value>
+  </data>
+  <data name="NetworkTools.Tool.Scan.Description" xml:space="preserve">
+    <value>Envoie un ping à chaque adresse d’un sous-réseau comme 192.168.1.0/24 et liste les hôtes qui répondent.</value>
+  </data>
   <data name="CmdTitle.1af59ce9" xml:space="preserve">
     <value>Outils réseau</value>
   </data>

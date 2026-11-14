@@ -9501,6 +9501,12 @@
   <data name="NetworkTools.Tool.HttpHeaders.Description" xml:space="preserve">
     <value>Lekér egy webcímet, és megmutatja a válaszfejléceket.</value>
   </data>
+  <data name="NetworkTools.Tool.Scan" xml:space="preserve">
+    <value>Alhálózat-vizsgálat</value>
+  </data>
+  <data name="NetworkTools.Tool.Scan.Description" xml:space="preserve">
+    <value>Megpingeli az alhálózat (például 192.168.1.0/24) minden címét, és listázza a válaszoló gépeket.</value>
+  </data>
   <data name="CmdTitle.1af59ce9" xml:space="preserve">
     <value>Hálózati eszközök</value>
   </data>

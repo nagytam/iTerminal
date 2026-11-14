@@ -9565,6 +9565,12 @@
   <data name="NetworkTools.Tool.HttpHeaders.Description" xml:space="preserve">
     <value>Ruft eine Webadresse ab und zeigt die Antwortkopfzeilen.</value>
   </data>
+  <data name="NetworkTools.Tool.Scan" xml:space="preserve">
+    <value>Subnetz-Scan</value>
+  </data>
+  <data name="NetworkTools.Tool.Scan.Description" xml:space="preserve">
+    <value>Pingt jede Adresse eines Subnetzes wie 192.168.1.0/24 an und listet die antwortenden Rechner auf.</value>
+  </data>
   <data name="CmdTitle.1af59ce9" xml:space="preserve">
     <value>Netzwerkwerkzeuge</value>
   </data>
