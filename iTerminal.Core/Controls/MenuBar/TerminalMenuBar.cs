@@ -144,6 +144,7 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null,
         iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null,
         iTerminal.Core.Dialogs.Scanning.ScannerDialog? scannerDialog = null,
+        iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog? networkToolsDialog = null,
         iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
         iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null
         )
@@ -269,7 +270,8 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             virtualMachineManagerDialog: virtualMachineManagerDialog,
             jassDialog: jassDialog,
             userGroupManagerDialog: userGroupManagerDialog,
-            scannerDialog: scannerDialog));
+            scannerDialog: scannerDialog,
+            networkToolsDialog: networkToolsDialog));
 
         AddMenuItem(new AboutMenuItem(helpDialog, aboutDialog, themeService, commandPaletteDialog));
 

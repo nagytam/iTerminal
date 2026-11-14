@@ -443,7 +443,106 @@ public class ToDoListDialogTest
         await ShowAsync(fixture.Dialog);
 
         // The last words used to be cut off at the frame ("Esc clos").
-        AssertScreenContains(Render(fixture.Dialog), "H show done  Esc close");
+        AssertScreenContains(Render(fixture.Dialog), "H done  Esc close");
     }
 
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task RSetsTheReminderTimeTypedOnTheEntryLine()
+    {
+        var fixture = Create();
+        fixture.Store.Add(new ToDoTask(Guid.NewGuid(), "Call the bank", null, ToDoPriority.Normal, false));
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('r'));
+        await TypeAsync(fixture.Dialog, "15:30");
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        Assert.AreEqual(new DateTime(2026, 10, 14, 15, 30, 0), fixture.Store.Visible(true).Single().RemindAt);
+        Assert.IsNull(fixture.Dialog.EntryForTest);
+        AssertScreenContains(Render(fixture.Dialog), "15:30");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AReminderTimeThatHasPassedIsRefusedAndTheEntryStaysOpen()
+    {
+        var fixture = Create();
+        fixture.Store.Add(new ToDoTask(Guid.NewGuid(), "Call the bank", null, ToDoPriority.Normal, false));
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('r'));
+        await TypeAsync(fixture.Dialog, "2026-10-14T09:00");
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        Assert.IsNull(fixture.Store.Visible(true).Single().RemindAt);
+        Assert.IsNotNull(fixture.Dialog.EntryErrorForTest);
+        Assert.IsNotNull(fixture.Dialog.EntryForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AnEmptyReminderEntryClearsTheReminder()
+    {
+        var fixture = Create();
+        fixture.Store.Add(new ToDoTask(Guid.NewGuid(), "Call the bank", null, ToDoPriority.Normal, false, new DateTime(2026, 10, 14, 15, 30, 0)));
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('r'));
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.U, 'u', control: true));
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        Assert.IsNull(fixture.Store.Visible(true).Single().RemindAt);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task CompletingATaskClearsItsReminder()
+    {
+        var fixture = Create();
+        fixture.Store.Add(new ToDoTask(Guid.NewGuid(), "Call the bank", null, ToDoPriority.Normal, false, new DateTime(2026, 10, 14, 15, 30, 0)));
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Spacebar, ' '));
+
+        var task = fixture.Store.Visible(true).Single();
+        Assert.IsTrue(task.IsComplete);
+        Assert.IsNull(task.RemindAt);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task AReminderCannotBeSetOnADoneTask()
+    {
+        var fixture = Create();
+        fixture.Store.Add(new ToDoTask(Guid.NewGuid(), "Call the bank", null, ToDoPriority.Normal, true));
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Char('r'));
+        await TypeAsync(fixture.Dialog, "15:30");
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        Assert.IsNull(fixture.Store.Visible(true).Single().RemindAt);
+        Assert.IsNotNull(fixture.Dialog.EntryErrorForTest);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task EditingKeepsTheReminderOnTheEntryLine()
+    {
+        var fixture = Create();
+        var reminder = new DateTime(2026, 10, 14, 15, 30, 0);
+        fixture.Store.Add(new ToDoTask(Guid.NewGuid(), "Call the bank", new DateOnly(2026, 10, 20), ToDoPriority.High, false, reminder));
+        await ShowAsync(fixture.Dialog);
+
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.F2));
+        StringAssert.Contains(fixture.Dialog.EntryForTest!, "~2026-10-14T15:30");
+        await fixture.Dialog.HandleKeyEventAsync(Key(ConsoleKey.Enter, '\r'));
+
+        var task = fixture.Store.Visible(true).Single();
+        Assert.AreEqual(reminder, task.RemindAt);
+        Assert.AreEqual(new DateOnly(2026, 10, 20), task.DueDate);
+        Assert.AreEqual(ToDoPriority.High, task.Priority);
+    }
 }

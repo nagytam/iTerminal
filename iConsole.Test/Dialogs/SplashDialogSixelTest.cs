@@ -43,7 +43,7 @@ public class SplashDialogSixelTest
         Assert.IsNotNull(overlay.Current);
         Assert.AreEqual(7, overlay.Current.Rows);
         Assert.AreEqual(14, overlay.Current.Columns, "7 rows of 20 pixels, square, in cells of 10 pixels");
-        Assert.AreEqual(22, (int)splash.ViewSize.Height, "the text makes room for the emblem");
+        Assert.AreEqual(23, (int)splash.ViewSize.Height, "the text makes room for the emblem");
         Assert.IsTrue(overlay.Current.Data.StartsWith("\u001bP", StringComparison.Ordinal));
     }
 
@@ -72,7 +72,24 @@ public class SplashDialogSixelTest
         splash.Draw(new MockBuffer(new Size(100, 40)));
 
         Assert.IsNull(overlay.Current);
-        Assert.AreEqual(15, (int)splash.ViewSize.Height);
+        Assert.AreEqual(16, (int)splash.ViewSize.Height);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheSplash_ShowsTheMottoBetweenTheWelcomeAndTheCopyright()
+    {
+        TerminalGraphics.Current = new TerminalGraphics(false);
+        var splash = await CreateAsync(new SixelOverlay());
+        var buffer = new MockBuffer(new Size(100, 40));
+
+        splash.Draw(buffer);
+
+        string text = buffer.ContentAsString;
+        int welcome = text.IndexOf("Welcome to iTerminal", StringComparison.Ordinal);
+        int motto = text.IndexOf("Swiss Army Terminal Knife", StringComparison.Ordinal);
+        int copyright = text.IndexOf("Copyright (C) Tamas Nagy", StringComparison.Ordinal);
+        Assert.IsTrue(welcome >= 0 && motto > welcome && copyright > motto, text);
     }
 
     [Timeout(60_000)]

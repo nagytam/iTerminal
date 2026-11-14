@@ -2582,7 +2582,7 @@
     <value>Risveglio del timer</value>
   </data>
   <data name="ToDo.Hint" xml:space="preserve">
-    <value>Spazio fatto  N nuovo  E modifica  P priorità  D elimina  H mostra fatti  Esc chiudi</value>
+    <value>Spazio fatto  N nuovo  E modifica  R promemoria  P priorità  D elimina  H mostra fatti  Esc chiudi</value>
   </data>
   <data name="ToDo.Done" xml:space="preserve">
     <value>Fatto</value>
@@ -2727,6 +2727,24 @@
   </data>
   <data name="Svg.NotReadable" xml:space="preserve">
     <value>Impossibile leggere questo disegno SVG.</value>
+  </data>
+  <data name="DialogHint.RotateRightLeft" xml:space="preserve">
+    <value>Ruota l&apos;immagine in senso orario o antiorario</value>
+  </data>
+  <data name="DialogHint.FlipHorizontalVertical" xml:space="preserve">
+    <value>Rispecchia l&apos;immagine orizzontalmente o verticalmente</value>
+  </data>
+  <data name="DialogHint.PreviousNextPicture" xml:space="preserve">
+    <value>Mostra l&apos;immagine precedente o successiva della cartella</value>
+  </data>
+  <data name="Picture.PsdUnsupported" xml:space="preserve">
+    <value>Questo file Photoshop usa un formato che il visualizzatore non legge.</value>
+  </data>
+  <data name="Picture.RawUnreadable" xml:space="preserve">
+    <value>Questo file raw non è stato letto.</value>
+  </data>
+  <data name="Picture.RawNoPreview" xml:space="preserve">
+    <value>Questo file raw non contiene un&apos;anteprima JPEG che il visualizzatore possa mostrare.</value>
   </data>
   <data name="Icon.NotReadable" xml:space="preserve">
     <value>Impossibile leggere questo file di icona.</value>
@@ -4256,7 +4274,7 @@
     <value>r:ripeti scansione  Enter:apri  Esc:chiudi</value>
   </data>
   <data name="Hints.ImageViewer" xml:space="preserve">
-    <value> c:colore  i:info  Esc:chiudi</value>
+    <value> c:colore  i:info  r/l:ruota  h/v:specchia  ←/→:prec/succ  Esc:chiudi</value>
   </data>
   <data name="Hints.Calculator" xml:space="preserve">
     <value>0-9 . + - * / ^ %  Enter:=  Bksp:indietro  Del/c:cancella  Space:premi il tasto  Ctrl+←/→:modalità  Esc:chiudi</value>
@@ -9407,5 +9425,104 @@
   </data>
   <data name="ScreenSaver.Wake" xml:space="preserve">
     <value>Riattiva lo schermo</value>
+    </data>
+  <data name="Dialog.NetworkTools" xml:space="preserve">
+    <value>Strumenti di rete</value>
+  </data>
+  <data name="NetworkTools.Field.Tool" xml:space="preserve">
+    <value>Strumento</value>
+  </data>
+  <data name="NetworkTools.Field.Target" xml:space="preserve">
+    <value>Destinazione</value>
+  </data>
+  <data name="NetworkTools.Hint.Run" xml:space="preserve">
+    <value>Esegui lo strumento</value>
+  </data>
+  <data name="NetworkTools.Hint.Stop" xml:space="preserve">
+    <value>Interrompi</value>
+  </data>
+  <data name="NetworkTools.Empty" xml:space="preserve">
+    <value>Scegli uno strumento, digita una destinazione e premi Invio.</value>
+  </data>
+  <data name="NetworkTools.Status.NeedTarget" xml:space="preserve">
+    <value>Digita prima un nome host o un indirizzo.</value>
+  </data>
+  <data name="NetworkTools.Status.Running" xml:space="preserve">
+    <value>In corso…</value>
+  </data>
+  <data name="NetworkTools.Status.Done" xml:space="preserve">
+    <value>Completato.</value>
+  </data>
+  <data name="NetworkTools.Status.Stopped" xml:space="preserve">
+    <value>Interrotto.</value>
+  </data>
+  <data name="NetworkTools.Output.Cut" xml:space="preserve">
+    <value>… l'output è più lungo; si conservano le prime righe.</value>
+  </data>
+  <data name="NetworkTools.Tool.Ping" xml:space="preserve">
+    <value>Ping</value>
+  </data>
+  <data name="NetworkTools.Tool.Traceroute" xml:space="preserve">
+    <value>Traccia percorso</value>
+  </data>
+  <data name="NetworkTools.Tool.DnsLookup" xml:space="preserve">
+    <value>Ricerca DNS</value>
+  </data>
+  <data name="NetworkTools.Tool.ReverseDns" xml:space="preserve">
+    <value>DNS inverso</value>
+  </data>
+  <data name="NetworkTools.Tool.Whois" xml:space="preserve">
+    <value>Whois</value>
+  </data>
+  <data name="NetworkTools.Tool.PortCheck" xml:space="preserve">
+    <value>Controllo porta</value>
+  </data>
+  <data name="NetworkTools.Tool.HttpHeaders" xml:space="preserve">
+    <value>Intestazioni HTTP</value>
+  </data>
+  <data name="NetworkTools.Tool.Ping.Description" xml:space="preserve">
+    <value>Invia richieste di eco a un host e misura le risposte.</value>
+  </data>
+  <data name="NetworkTools.Tool.Traceroute.Description" xml:space="preserve">
+    <value>Mostra i router tra questo computer e un host.</value>
+  </data>
+  <data name="NetworkTools.Tool.DnsLookup.Description" xml:space="preserve">
+    <value>Risolve un nome host nei suoi indirizzi.</value>
+  </data>
+  <data name="NetworkTools.Tool.ReverseDns.Description" xml:space="preserve">
+    <value>Trova il nome host di un indirizzo IP.</value>
+  </data>
+  <data name="NetworkTools.Tool.Whois.Description" xml:space="preserve">
+    <value>Chiede al registro chi detiene un dominio o un indirizzo.</value>
+  </data>
+  <data name="NetworkTools.Tool.PortCheck.Description" xml:space="preserve">
+    <value>Verifica se una porta TCP di un host accetta connessioni. Digita host:porta.</value>
+  </data>
+  <data name="NetworkTools.Tool.HttpHeaders.Description" xml:space="preserve">
+    <value>Richiede un indirizzo web e mostra le intestazioni di risposta.</value>
+  </data>
+  <data name="CmdTitle.1af59ce9" xml:space="preserve">
+    <value>Strumenti di rete</value>
+  </data>
+  <data name="CmdDesc.4021bbd3" xml:space="preserve">
+    <value>Ping, traceroute, ricerche DNS e DNS inverso, whois, controllo porta e intestazioni web, per un host digitato.</value>
+    </data>
+  <data name="ToDo.Remind" xml:space="preserve">
+    <value>Promemoria</value>
+  </data>
+  <data name="ToDo.ReminderTitle" xml:space="preserve">
+    <value>Promemoria</value>
+  </data>
+  <data name="ToDo.ReminderEntry" xml:space="preserve">
+    <value>Ricorda alle: {0}_</value>
+  </data>
+  <data name="ToDo.ReminderNeedsOpenTask" xml:space="preserve">
+    <value>Riapri l'attività per ricevere un promemoria</value>
+  </data>
+  <data name="DialogHint.SetReminder" xml:space="preserve">
+    <value>Imposta il promemoria</value>
+  </data>
+  <data name="DialogHint.RemindTask" xml:space="preserve">
+    <value>Imposta un promemoria per l'attività</value>
   </data>
 </root>

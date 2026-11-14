@@ -205,6 +205,27 @@ Tools > Contacts: name, email, phone, company and notes for the people the perso
 - **The highlight follows the contact by id**, so it survives a re-sort or a filter; a contact saved under a filter that would hide it clears the filter.
 - Also reachable from the `ui` AI tool as `contacts`.
 
+### The task list (`ToDoListDialog`, Ctrl+Y, `Model/ToDo/`, `Services/ToDo/`, `Jobs/ToDoReminderJob.cs`)
+Add (N or Enter), edit (E or F2), delete (D or Delete, asks first), mark done (Space), priority (P), hide done (H) and
+**remind me (R)**. The entry line reads `!Subject @yyyy-MM-dd ~time`: `~15:30` is the next time that clock reading comes round,
+and `~2026-11-01T09:00` is that exact moment, which must still be ahead. R opens the same line for the highlighted task
+alone, pre-filled with its reminder; an empty entry clears it.
+
+- **The reminder is one field on the task (`RemindAt`, local time), and the job is what gives it.** `ToDoReminderJob` checks
+  every five seconds on its own thread, so a reminder comes whether or not the list is open, and one that fell due while the
+  app was closed is given on the first check after start-up. The check goes through `ToDoStore.TakeDueReminders`, which clears
+  each reminder and saves in the same step under the store's lock, so a reminder is never given twice.
+- **A reminder stays on screen until it is dismissed** (`Timeout.InfiniteTimeSpan`), because the person is often away from the
+  keyboard when it falls due.
+- **Completing a task clears its reminder**, and the job skips done tasks, so a reopened task does not fire for a time that has
+  long passed.
+- **The edit line carries the reminder**, so editing a task and saving it round-trips the time. Saving an edit without a `~`
+  token clears the reminder, the same way it clears a due date that is left out.
+- **Times in the past are refused on the entry line** (`~2026-…` in the past), while a bare `~HH:mm` that has already passed
+  means tomorrow at that time.
+- Like the other lists, the tasks live in the `ToDoTasks` setting and not in a table, for the schema-stamp reason in
+  `ContactStore`.
+
 ### The environment variables editor (`EnvironmentVariablesDialog`, Ctrl+Shift+H, `Services/SystemSettings/`)
 Tools > Environment variables: the variables of one scope, name and value, with the highlighted one shown in full under the list. **S** cycles the scopes the system offers: *Session*, *User* and *Machine*. N or Insert adds (name, then value; Enter on the value saves), E, F2 or Enter changes the value (the name is fixed), D or Delete asks y/n, `/` filters by name or value, R reads again. A one-line note under the scope strip says how far the scope reaches.
 
@@ -377,6 +398,15 @@ Tools > Performance benchmark measures this machine in eleven probes, in five gr
 - **A probe that fails never stops the run.** `PerformanceBenchmarkService` catches a probe's exception and records it as unavailable; cancellation is the only thing that ends a run early, and it returns the scores so far with `IsComplete` false.
 - **The dialog never waits on a measurement.** The run is a background task that reports each probe's start and result through an `IProgress`; the result lands in a snapshot under a lock, and `Draw` reads only that snapshot. Closing the dialog cancels the run.
 - **The end-to-end suite replaces the probes** (`SandboxServices.BenchmarkProbes`), with the same ids and categories and fixed figures, so no run measures the machine it runs on.
+
+### Network tools (`NetworkToolsDialog`, Tools > Network tools, `Services/NetworkTools/`)
+Tools > Network tools opens a tool (a combo box), a target (a text box) and the output below them. The tools are ping, traceroute, DNS lookup, reverse DNS, whois, a TCP port check and the headers of a web address. Enter runs the tool on the target; Esc stops a run that is going and closes the dialog otherwise.
+
+- **The tools are in .NET, not in external programs.** `NetworkToolService` pings with `System.Net.NetworkInformation.Ping`, resolves with `Dns`, asks whois over TCP port 43 (following the `refer:` lines, at most two referrals) and checks ports with `TcpClient`, so the same output appears on Windows and Linux. An ICMP ping that the OS refuses to send reports the refusal as its output.
+- **A target is checked before anything is sent.** `NetworkToolTargets` rejects a host with a scheme, a path or a space, a port outside 1 to 65535, an IPv6 address without brackets, and a web address that is not http or https. The dialog shows that reason on the status line; nothing is contacted.
+- **Nothing waits on the network.** A run is a background task. Each line goes into a queue, and `OnIdle` moves the queued lines into the output (capped at 2000 lines) and applies the outcome. The status line says "Running…" until then; a failure says why on the status line.
+- **The end-to-end suite replaces the service** (`SandboxServices.NetworkToolRunner`, fixed answers), so no run pings or queries anything.
+- **Tests:** `NetworkToolTargetsTest` (target rules, whois referrals), `NetworkToolServiceTest` (port check against a loopback listener and a closed port, refused targets) and `NetworkToolsDialogTest` (the tool and target reach the service, output lands on the idle pass, a refused target and Esc).
 
 ### CSV viewer (`CsvViewerDialog`, F3 on a `.csv` or `.tsv` file, `iConsole/Csv/`, `iConsole/Controls/CsvGrid.cs`)
 F3 opens a delimited file as a grid: the header on top, the rows below, and the columns scroll sideways to keep the cursor cell on screen. The query line above the grid takes a small SQL-like query, `SELECT name, amount WHERE amount > 10 AND city = 'Pécs' ORDER BY amount DESC LIMIT 20`, and the status line says how many rows matched. F4 switches to the file's text, as in the JSON and XML viewers.

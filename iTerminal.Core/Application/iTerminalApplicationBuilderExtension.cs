@@ -163,6 +163,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Model.Calendar.MeetingStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Calendar.CalendarDialog>();
         services.AddSingleton<iTerminal.Core.Model.ToDo.ToDoStore>();
+        services.AddSingleton<iTerminal.Core.Services.ToDo.ToDoReminderService>();
         services.AddTransient<iTerminal.Core.Dialogs.ToDo.ToDoListDialog>();
         services.AddSingleton<iTerminal.Core.Model.Contacts.ContactStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>();
@@ -401,6 +402,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IBenchmarkProbe, iTerminal.Core.Services.Benchmark.TimerWakeupProbe>();
         services.AddSingleton<iTerminal.Core.Services.Benchmark.IPerformanceBenchmarkService, iTerminal.Core.Services.Benchmark.PerformanceBenchmarkService>();
         services.AddTransient<iTerminal.Core.Dialogs.Benchmark.PerformanceBenchmarkDialog>();
+        // Tools > Network tools: ping, traceroute, DNS, whois, a port check and web headers. Each one contacts only the target the user typed.
+        services.AddSingleton<iTerminal.Core.Services.NetworkTools.INetworkToolService, iTerminal.Core.Services.NetworkTools.NetworkToolService>();
+        services.AddTransient<iTerminal.Core.Dialogs.NetworkTools.NetworkToolsDialog>();
         // Ctrl+Shift+F1: the BitTorrent manager. The engine starts on first use, so a run that never adds a torrent opens no sockets.
         services.AddSingleton<iTerminal.Core.Services.Torrents.ITorrentService>(provider => new iTerminal.Core.Services.Torrents.TorrentService(
             provider.GetRequiredService<ISettingsService>(), databaseDirectory));
@@ -485,6 +489,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IJob, FolderIndexJob>();
         services.AddSingleton<IJob, OnlineQuoteJob>();
         services.AddSingleton<IJob, WeatherJob>();
+        services.AddSingleton<IJob, iTerminal.Core.Jobs.ToDoReminderJob>();
         services.AddSingleton<DriveInfoModel>();
         services.AddTransient<CopyDialog>();
         services.AddTransient<MoveDialog>();

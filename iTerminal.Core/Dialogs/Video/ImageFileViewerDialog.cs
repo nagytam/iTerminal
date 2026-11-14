@@ -25,7 +25,7 @@ namespace iTerminal.Core.Dialogs.Video;
 /// </summary>
 public class ImageFileViewerDialog : Dialog
 {
-    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.ImageViewer", " c:colour  i:info  Esc:close");
+    internal static string KeyHints => iConsole.Localization.UiText.Get("Hints.ImageViewer", " c:colour  i:info  r/l:rotate  h/v:flip  ←/→:prev/next  Esc:close");
 
     /// <summary>A metadata group or field name in the chosen language; the reader names them in English, and the writer finds them by that name.</summary>
     private static string InfoLabel(string english) => UiText.Get("ImgInfo." + System.Text.RegularExpressions.Regex.Replace(english, "[^A-Za-z]", string.Empty), english);
@@ -46,6 +46,8 @@ public class ImageFileViewerDialog : Dialog
     private string _error = string.Empty;
     private bool _isLoading;
     private (int Columns, int Rows) _requested;
+    private PictureOrientation _orientation = PictureOrientation.None;
+    private Task<IReadOnlyList<string>> _folderTask = Task.FromResult<IReadOnlyList<string>>([]);
 
     private AsciiColorMode _colorMode = AsciiColorMode.Color;
     private AsciiFrame? _ascii;
@@ -178,6 +180,18 @@ public class ImageFileViewerDialog : Dialog
     {
         await base.OnInitializeAsync();
 
+        ShowFile();
+        // The metadata is at the front of the file: it is read here, off the render thread, so i shows it at once.
+        await ReloadMetadataAsync(FilePath);
+    }
+
+    /// <summary>
+    /// Resets everything the dialog shows for the picture in <see cref="FilePath"/> and starts the folder listing that
+    /// previous and next step through. A decode still running for the last picture is left to finish; its result is
+    /// dropped by the generation check.
+    /// </summary>
+    private void ShowFile()
+    {
         lock (_lock)
         {
             Interlocked.Increment(ref _generation);
@@ -185,7 +199,9 @@ public class ImageFileViewerDialog : Dialog
             _picture = null;
             _sixel = null;
             _error = string.Empty;
+            _isLoading = false;
             _requested = (0, 0);
+            _orientation = PictureOrientation.None;
         }
 
         _ascii = null;
@@ -193,10 +209,45 @@ public class ImageFileViewerDialog : Dialog
         _metadataLines = null;
         _metadataScroll = 0;
         Title = string.Format(UiText.Get("Dialog.ImageTitle", "Image — {0}"), Path.GetFileName(FilePath));
-        // The metadata is at the front of the file: it is read here, off the render thread, so i shows it at once.
-        _metadata = await Task.Run(() => ImageInfoReader.ReadFile(FilePath));
+        string path = FilePath;
+        _folderTask = Task.Run(() => PictureFolder.PicturesBeside(path));
+    }
+
+    /// <summary>
+    /// Shows the picture before (<paramref name="step"/> -1) or after (+1) this one in its folder, wrapping at either end.
+    /// A folder with one picture, or a picture that is not in its own folder, beeps.
+    /// </summary>
+    private async Task StepAsync(int step)
+    {
+        IReadOnlyList<string> pictures = await _folderTask;
+        int index = PictureFolder.IndexOf(pictures, FilePath);
+        if (pictures.Count < 2 || index < 0)
+        {
+            _beepService.Beep();
+            return;
+        }
+
+        FilePath = pictures[(index + step + pictures.Count) % pictures.Count];
+        ShowFile();
+        await ReloadMetadataAsync(FilePath);
         StateHasChanged();
     }
+
+    /// <summary>Turns the picture as the viewer shows it. A new turn redoes the decode, so the picture is drawn turned from the file.</summary>
+    private void Turn(PictureOrientation orientation)
+    {
+        lock (_lock)
+        {
+            _orientation = orientation;
+            _requested = (0, 0);
+        }
+
+        StateHasChanged();
+    }
+
+    /// <summary>The aspect ratio of the picture as it is shown: a quarter turn trades the width and the height.</summary>
+    private static double ShownAspect(double aspect, PictureOrientation orientation) =>
+        orientation.SwapsAxes && aspect > 0 ? 1 / aspect : aspect;
 
     public override void Close()
     {
@@ -237,7 +288,8 @@ public class ImageFileViewerDialog : Dialog
         lock (_lock)
         {
             // A Sixel picture is fitted in pixels while loading, so it is the room itself that is compared.
-            var wanted = _info is null || UseSixel ? (areaColumns, areaRows) : AsciiArt.Fit(_info.AspectRatio, areaColumns, areaRows);
+            var orientation = _orientation;
+            var wanted = _info is null || UseSixel ? (areaColumns, areaRows) : AsciiArt.Fit(ShownAspect(_info.AspectRatio, orientation), areaColumns, areaRows);
             if (_requested == wanted || !string.IsNullOrEmpty(_error) || areaColumns <= 0 || areaRows <= 0)
             {
                 return;
@@ -249,11 +301,11 @@ public class ImageFileViewerDialog : Dialog
             var generation = Interlocked.Increment(ref _generation);
             var path = FilePath;
             _isLoading = true;
-            _loadTask = Task.Run(() => Load(path, generation, areaColumns, areaRows));
+            _loadTask = Task.Run(() => Load(path, generation, areaColumns, areaRows, orientation));
         }
     }
 
-    private void Load(string path, int generation, int areaColumns, int areaRows)
+    private void Load(string path, int generation, int areaColumns, int areaRows, PictureOrientation orientation)
     {
         try
         {
@@ -265,20 +317,23 @@ public class ImageFileViewerDialog : Dialog
             using IVideoDecoder decoder = _decoderFactory.Create(path);
             if (UseSixel)
             {
-                LoadSixel(decoder, generation, areaColumns, areaRows);
+                LoadSixel(decoder, generation, areaColumns, areaRows, orientation);
                 StateHasChanged();
                 return;
             }
 
-            var (columns, rows) = AsciiArt.Fit(decoder.Info.AspectRatio, areaColumns, areaRows);
-            decoder.Open(TimeSpan.Zero, columns, rows);
+            var (columns, rows) = AsciiArt.Fit(ShownAspect(decoder.Info.AspectRatio, orientation), areaColumns, areaRows);
+            // The decoder draws the picture before it is turned, so it is asked for the box the turn ends in, transposed.
+            var (decodeColumns, decodeRows) = orientation.SwapsAxes ? (rows, columns) : (columns, rows);
+            decoder.Open(TimeSpan.Zero, decodeColumns, decodeRows);
 
-            var rgb = new byte[columns * rows * 3];
+            var rgb = new byte[decodeColumns * decodeRows * 3];
             if (!decoder.ReadFrame(rgb))
             {
                 throw new InvalidOperationException("No picture could be decoded from this file.");
             }
 
+            rgb = orientation.Apply(rgb, decodeColumns, decodeRows);
             lock (_lock)
             {
                 if (generation != Volatile.Read(ref _generation))
@@ -309,18 +364,21 @@ public class ImageFileViewerDialog : Dialog
     }
 
     /// <summary>Decodes at the pixel size that fills the room, and encodes the result for the terminal.</summary>
-    private void LoadSixel(IVideoDecoder decoder, int generation, int areaColumns, int areaRows)
+    private void LoadSixel(IVideoDecoder decoder, int generation, int areaColumns, int areaRows, PictureOrientation orientation)
     {
-        SixelFit fit = TerminalGraphics.Current.Fit(decoder.Info.AspectRatio, areaColumns, areaRows);
-        decoder.Open(TimeSpan.Zero, fit.PixelWidth, fit.PixelHeight);
+        SixelFit fit = TerminalGraphics.Current.Fit(ShownAspect(decoder.Info.AspectRatio, orientation), areaColumns, areaRows);
+        var (decodeWidth, decodeHeight) = orientation.SwapsAxes ? (fit.PixelHeight, fit.PixelWidth) : (fit.PixelWidth, fit.PixelHeight);
+        decoder.Open(TimeSpan.Zero, decodeWidth, decodeHeight);
 
-        var rgb = new byte[fit.PixelWidth * fit.PixelHeight * 3];
+        var rgb = new byte[decodeWidth * decodeHeight * 3];
         if (!decoder.ReadFrame(rgb))
         {
             throw new InvalidOperationException("No picture could be decoded from this file.");
         }
 
-        string data = SixelEncoder.Encode(SixelPixels(rgb, _colorMode), fit.PixelWidth, fit.PixelHeight);
+        rgb = orientation.Apply(rgb, decodeWidth, decodeHeight);
+        var (width, height) = orientation.SwapsAxes ? (decodeHeight, decodeWidth) : (decodeWidth, decodeHeight);
+        string data = SixelEncoder.Encode(SixelPixels(rgb, _colorMode), width, height);
         lock (_lock)
         {
             if (generation != Volatile.Read(ref _generation))
@@ -329,7 +387,7 @@ public class ImageFileViewerDialog : Dialog
             }
 
             _info = decoder.Info;
-            _picture = new VideoFrame(rgb, fit.PixelWidth, fit.PixelHeight, TimeSpan.Zero);
+            _picture = new VideoFrame(rgb, width, height, TimeSpan.Zero);
             _sixel = new SixelPicture(data, fit.Columns, fit.Rows);
             _isLoading = false;
             _requested = (areaColumns, areaRows);
@@ -340,6 +398,9 @@ public class ImageFileViewerDialog : Dialog
     {
         yield return ("C", UiText.Get("DialogHint.SwitchColour", "Switch colour on or off"));
         yield return ("I", UiText.Get("DialogHint.ShowHideImageInfo", "Show or hide the image information"));
+        yield return ("R / L", UiText.Get("DialogHint.RotateRightLeft", "Rotate the picture clockwise or anticlockwise"));
+        yield return ("H / V", UiText.Get("DialogHint.FlipHorizontalVertical", "Mirror the picture horizontally or vertically"));
+        yield return ("Left / Right", UiText.Get("DialogHint.PreviousNextPicture", "Show the previous or next picture in the folder"));
         if (_showMetadata)
         {
             yield return ("Up/Down", UiText.Get("DialogHint.ScrollInformation", "Scroll the information"));
@@ -368,6 +429,35 @@ public class ImageFileViewerDialog : Dialog
             _showMetadata = !_showMetadata;
             StateHasChanged();
             return true;
+        }
+
+        if (keyEvent.KeyPressType == KeyPressType.Down && !keyEvent.Control && !keyEvent.Alt)
+        {
+            PictureOrientation? turned = keyEvent.KeyChar switch
+            {
+                'r' or 'R' => _orientation.RotateClockwise(),
+                'l' or 'L' => _orientation.RotateCounterclockwise(),
+                'h' or 'H' => _orientation.MirrorHorizontal(),
+                'v' or 'V' => _orientation.MirrorVertical(),
+                _ => null,
+            };
+            if (turned is PictureOrientation next)
+            {
+                Turn(next);
+                return true;
+            }
+
+            int? direction = keyEvent.ConsoleKey switch
+            {
+                ConsoleKey.RightArrow or ConsoleKey.Spacebar => 1,
+                ConsoleKey.LeftArrow or ConsoleKey.Backspace => -1,
+                _ => null,
+            };
+            if (direction is int stepBy)
+            {
+                await StepAsync(stepBy);
+                return true;
+            }
         }
 
         if (_showMetadata && keyEvent.KeyPressType == KeyPressType.Down
@@ -556,6 +646,16 @@ public class ImageFileViewerDialog : Dialog
         }
 
         var header = $" {FilePath}";
+        if (_folderTask.IsCompletedSuccessfully)
+        {
+            IReadOnlyList<string> pictures = _folderTask.Result;
+            int index = PictureFolder.IndexOf(pictures, FilePath);
+            if (index >= 0 && pictures.Count > 1)
+            {
+                header += $"   {index + 1}/{pictures.Count}";
+            }
+        }
+
         if (info is not null)
         {
             header += $"   {string.Format(UiText.Get("Video.Info.SourceSize", "{0}×{1} pixels"), info.Width, info.Height)}";

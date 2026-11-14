@@ -14,6 +14,7 @@ namespace iConsole.Dialogs;
 public class SplashDialog : Dialog
 {
     private Label _welcomeLabel { get; set; }
+    private Label _mottoLabel { get; set; }
     private Label _copyrightLabel { get; set; }
     private Label _userLabel { get; set; }
     private Label _systemInfoLabel { get; set; }
@@ -34,12 +35,14 @@ public class SplashDialog : Dialog
     {
         _sixelOverlay = sixelOverlay;
         _welcomeLabel = new Label(string.Empty, themeService);
+        _mottoLabel = new Label(string.Empty, themeService);
         _copyrightLabel = new Label(string.Empty, themeService);
         _userLabel = new Label(string.Empty, themeService);
         _systemInfoLabel = new Label(string.Empty, themeService);
         _colorMap = new ColorMap(themeService);
 
         AddControl(_welcomeLabel);
+        AddControl(_mottoLabel);
         AddControl(_copyrightLabel);
         AddControl(_userLabel);
         AddControl(_systemInfoLabel);
@@ -84,7 +87,7 @@ public class SplashDialog : Dialog
     {
         int top = HasLogo ? LogoRows : 0;
         int x = (int)AbsolutePosition.X + 1;
-        int y = (int)AbsolutePosition.Y + 7 + top;
+        int y = (int)AbsolutePosition.Y + 8 + top;
         int inner = (int)ViewSize.Width - 2;
         string on = UiText.Get("Splash.StateOn", "on");
         string off = UiText.Get("Splash.StateOff", "off");
@@ -178,8 +181,8 @@ public class SplashDialog : Dialog
 
         if (Parent != null)
         {
-            // The text, the colour map and the list of protocols (a heading and five rows).
-            ViewSize = new Size(50, (uint)(15 + top));
+            // The text, the motto, the colour map and the list of protocols (a heading and five rows).
+            ViewSize = new Size(50, (uint)(16 + top));
             Position = new Position(
                 Math.Max(0, (Parent.ViewSize.Width - ViewSize.Width) / 2),
                 Math.Max(0, (Parent.ViewSize.Height - ViewSize.Height) / 2));
@@ -194,24 +197,31 @@ public class SplashDialog : Dialog
         _welcomeLabel.Position = new Position(1, 1 + top);
         _welcomeLabel.ViewSize = new Size(_welcomeLabel.Text.Length, 1);
 
+        string motto = UiText.Get("Splash.Motto", "Swiss Army Terminal Knife");
+        _mottoLabel.Text = StringHelper.AlignCenter(
+            " ".Repeat((int)ViewSize.Width - 2),
+            motto);
+        _mottoLabel.Position = new Position(1, 2 + top);
+        _mottoLabel.ViewSize = new Size(_mottoLabel.Text.Length, 1);
+
         _copyrightLabel.Text = StringHelper.AlignCenter(
             " ".Repeat((int)ViewSize.Width - 2),
             "Copyright (C) Tamas Nagy, 2024-2026");
-        _copyrightLabel.Position = new Position(1, 2 + top);
+        _copyrightLabel.Position = new Position(1, 3 + top);
         _copyrightLabel.ViewSize = new Size(_copyrightLabel.Text.Length, 1);
 
         _userLabel.Text = StringHelper.AlignCenter(
             " ".Repeat((int)ViewSize.Width - 2),
             $"{Environment.UserName} @ {Environment.MachineName}");
-        _userLabel.Position = new Position(1, 3 + top);
+        _userLabel.Position = new Position(1, 4 + top);
         _userLabel.ViewSize = new Size(_userLabel.Text.Length, 1);
 
         _systemInfoLabel.Text = StringHelper.AlignCenter(
             " ".Repeat((int)ViewSize.Width - 2),
             string.Format(UiText.Get("Splash.SystemInfo", "CPU: {0} cores, Memory: {1} GBs"), Environment.ProcessorCount, SystemHelper.GetAvailableMemoryInMBs() / 1000));
-        _systemInfoLabel.Position = new Position(1, 4 + top);
+        _systemInfoLabel.Position = new Position(1, 5 + top);
         _systemInfoLabel.ViewSize = new Size(_systemInfoLabel.Text.Length, 1);
 
-        _colorMap.Position = new Position((ViewSize.Width - 16) / 2, 5 + top);
+        _colorMap.Position = new Position((ViewSize.Width - 16) / 2, 6 + top);
     }
 }
