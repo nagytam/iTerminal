@@ -1044,6 +1044,8 @@ public partial class TextEditorControl
 
         yield return ("Ctrl+S / F2", iConsole.Localization.UiText.Get("Common.Save", "Save"));
         yield return ("F5", UiText.Get("Editor.GoToLine", "Go to line"));
+        yield return ("F3", UiText.Get("Hint.FindNext", "Find the next match"));
+        yield return ("Ctrl+F3", UiText.Get("Hint.FindPrevious", "Find the previous match"));
         yield return ("Ctrl+F2", UiText.Get("Hint.ToggleBookmark", "Toggle bookmark"));
         yield return ("F9", UiText.Get("Hint.NextBookmark", "Next bookmark"));
         yield return ("Shift+F9", UiText.Get("Hint.PreviousBookmark", "Previous bookmark"));

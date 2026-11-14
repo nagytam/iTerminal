@@ -29,7 +29,7 @@ public class ControlsReviewBatch34Test
         FileViewerDialog dialog = new(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), Mock.Of<IBeepService>(),
             new DateTimeProviderService(), _theme);
 
-        CollectionAssert.AreEqual(new[] { "Esc", "F4", "F8" }, Keys(dialog.GetKeyHints()));
+        CollectionAssert.AreEqual(new[] { "Esc", "F4", "F8", "F3", "Ctrl+F3", "F6" }, Keys(dialog.GetKeyHints()));
     }
 
     [Timeout(60_000)]

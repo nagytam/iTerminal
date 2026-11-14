@@ -174,6 +174,37 @@ public class ScrollBar(IThemeService themeService)
         }
     }
 
+    /// <summary>
+    /// The lines the vertical bar marks, as line numbers in the units of the cursor (the search hits, in the viewer). Each is a
+    /// dot on the track at the height the thumb would be at for that line; a mark under the thumb is hidden by it.
+    /// </summary>
+    public IReadOnlyList<long> Marks { get; set; } = [];
+
+    /// <summary>The dot drawn on the track for a mark.</summary>
+    public const char MarkCharacter = '\u2022';
+
+    private void DrawMarks(IBuffer buffer, Position position, long scrollHeight, long thumbY, ColorScheme colorScheme)
+    {
+        if (Marks.Count == 0 || ScrollableModel is null || ScrollableModel.ScrollableSize.Height <= 1)
+        {
+            return;
+        }
+
+        var lastLine = ScrollableModel.ScrollableSize.Height - 1;
+        var drawn = new HashSet<int>();
+        var mark = new ConxelString(MarkCharacter.ToString(), Color.Yellow, colorScheme.Background);
+        foreach (var line in Marks)
+        {
+            var y = 1 + (int)(scrollHeight * Math.Clamp(line, 0, lastLine) / lastLine);
+            if (y == thumbY || !drawn.Add(y))
+            {
+                continue;
+            }
+
+            buffer.Write(ZOrder, new Position(position.X, (uint)(position.Y + y)), SizeHelper.Size1x1, mark);
+        }
+    }
+
     private void DrawVerticalScrollBar(IBuffer buffer)
     {
         ArgumentNullException.ThrowIfNull(ScrollableModel, nameof(ScrollableModel));
@@ -218,6 +249,7 @@ public class ScrollBar(IThemeService themeService)
             buffer.Write(ZOrder, new Position(position.X, (uint)(position.Y + y)), SizeHelper.Size1x1,
                 c);
         }
+        DrawMarks(buffer, position, scrollHeight, scrollPosition + 1, colorScheme);
         c = new ConxelString(Border.ArrowDown, colorScheme.Foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(position.X, position.Y + ViewSize.Height - 1), SizeHelper.Size1x1,
             c);

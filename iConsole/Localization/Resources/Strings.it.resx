@@ -388,6 +388,18 @@
   <data name="Hint.EdgeColumn" xml:space="preserve">
     <value>Evidenzia la colonna 80 (di nuovo: nascondi)</value>
   </data>
+  <data name="Hint.FollowFile" xml:space="preserve">
+    <value>Segui il file mentre cresce</value>
+  </data>
+  <data name="Hint.StopFollowing" xml:space="preserve">
+    <value>Smetti di seguire il file</value>
+  </data>
+  <data name="Hint.FindNext" xml:space="preserve">
+    <value>Trova la corrispondenza successiva</value>
+  </data>
+  <data name="Hint.FindPrevious" xml:space="preserve">
+    <value>Trova la corrispondenza precedente</value>
+  </data>
   <data name="Hint.DeleteLine" xml:space="preserve">
     <value>Elimina la riga</value>
   </data>
