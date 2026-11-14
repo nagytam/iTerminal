@@ -248,19 +248,38 @@ public class DatePopUpWindowTest
 
         dateWindow.OnInitializeLayout();
 
-        Assert.AreEqual(new Size(80, 7), dateWindow.ViewSize);
+        Assert.AreEqual(new Size(80, 22), dateWindow.ViewSize);
     }
 
     [Timeout(60_000)]
     [TestMethod]
-    public void DatePopUpWindowInitializeLayoutSetsPosition()
+    public void DatePopUpWindowInitializeLayoutCentersInItsParent()
     {
         var mockThemeService = new Mock<IThemeService>();
+        mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
+        var parent = new Window(mockThemeService.Object) { ViewSize = new Size(120, 40) };
         var dateWindow = new DatePopUpWindow(mockThemeService.Object);
+        parent.AddControl(dateWindow);
 
         dateWindow.OnInitializeLayout();
 
-        Assert.AreEqual(new Position(10, 10), dateWindow.Position);
+        Assert.AreEqual(new Position(20, 9), dateWindow.Position);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void DatePopUpWindowInitializeLayoutFitsASmallerParent()
+    {
+        var mockThemeService = new Mock<IThemeService>();
+        mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
+        var parent = new Window(mockThemeService.Object) { ViewSize = new Size(60, 20) };
+        var dateWindow = new DatePopUpWindow(mockThemeService.Object);
+        parent.AddControl(dateWindow);
+
+        dateWindow.OnInitializeLayout();
+
+        Assert.AreEqual(new Size(60, 20), dateWindow.ViewSize);
+        Assert.AreEqual(new Position(0, 0), dateWindow.Position);
     }
 
     [Timeout(60_000)]
@@ -269,11 +288,11 @@ public class DatePopUpWindowTest
     {
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
-        var buffer = new MockBuffer(new Size(80, 7));
+        var buffer = new MockBuffer(new Size(80, 22));
         var dateWindow = new DatePopUpWindow(mockThemeService.Object)
         {
             Position = new Position(0, 0),
-            ViewSize = new Size(80, 7),
+            ViewSize = new Size(80, 22),
             IsVisible = true
         };
 
@@ -290,11 +309,11 @@ public class DatePopUpWindowTest
     {
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
-        var buffer = new MockBuffer(new Size(80, 7));
+        var buffer = new MockBuffer(new Size(80, 22));
         var dateWindow = new DatePopUpWindow(mockThemeService.Object)
         {
             Position = new Position(0, 0),
-            ViewSize = new Size(80, 7),
+            ViewSize = new Size(80, 22),
             IsVisible = true
         };
 
@@ -311,11 +330,11 @@ public class DatePopUpWindowTest
     {
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
-        var buffer = new MockBuffer(new Size(80, 7));
+        var buffer = new MockBuffer(new Size(80, 22));
         var dateWindow = new DatePopUpWindow(mockThemeService.Object)
         {
             Position = new Position(0, 0),
-            ViewSize = new Size(80, 7),
+            ViewSize = new Size(80, 22),
             IsVisible = true
         };
 
@@ -345,11 +364,11 @@ public class DatePopUpWindowTest
     {
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
-        var buffer = new MockBuffer(new Size(80, 7));
+        var buffer = new MockBuffer(new Size(80, 22));
         var dateWindow = new DatePopUpWindow(mockThemeService.Object)
         {
             Position = new Position(0, 0),
-            ViewSize = new Size(80, 7),
+            ViewSize = new Size(80, 22),
             IsVisible = true
         };
 
@@ -396,11 +415,11 @@ public class DatePopUpWindowTest
     {
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
-        var buffer = new MockBuffer(new Size(80, 7));
+        var buffer = new MockBuffer(new Size(80, 22));
         var dateWindow = new DatePopUpWindow(mockThemeService.Object)
         {
             Position = new Position(0, 0),
-            ViewSize = new Size(80, 7),
+            ViewSize = new Size(80, 22),
             IsVisible = true
         };
 

@@ -23,7 +23,7 @@ public class FolderSelectorBatch76LanguageTest
         "FolderSelector.Hint.GoAnywhere", "FolderSelector.Hint.AddFavourite", "FolderSelector.Hint.RemoveFavourite",
         "Button.SelectFolder", "Button.SelectDrive", "Button.SelectFavourite", "Button.AddToFavourites", "Button.DeleteFavourite", "Button.Go",
         "Dialog.CreateFolder", "Dialog.CreateFile", "Dialog.MarkFiles", "Dialog.UnmarkFiles", "Button.InstallUpdates",
-        "Dialog.DateTimeTimeZone", "Dialog.ImageText", "Field.SaveTo", "Dialog.AddTorrent",
+        "Dialog.DateTimeTimeZone", "Dialog.DateTimeTimeZone.Date", "Dialog.DateTimeTimeZone.Time", "Dialog.DateTimeTimeZone.TimeZone", "Dialog.DateTimeTimeZone.DateUtc", "Dialog.DateTimeTimeZone.TimeUtc", "Dialog.DateTimeTimeZone.UtcOffset", "Dialog.DateTimeTimeZone.SummerTime", "Dialog.DateTimeTimeZone.StandardTime", "Dialog.ImageText", "Field.SaveTo", "Dialog.AddTorrent",
     ];
 
     private IDisposable? _language;

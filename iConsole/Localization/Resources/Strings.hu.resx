@@ -745,6 +745,30 @@
   <data name="Dialog.DateTimeTimeZone" xml:space="preserve">
     <value>Dátum, idő és időzóna</value>
   </data>
+  <data name="Dialog.DateTimeTimeZone.Date" xml:space="preserve">
+    <value>Dátum:</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.Time" xml:space="preserve">
+    <value>Idő:</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.TimeZone" xml:space="preserve">
+    <value>Időzóna:</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.DateUtc" xml:space="preserve">
+    <value>Dátum (UTC):</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.TimeUtc" xml:space="preserve">
+    <value>Idő (UTC):</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.UtcOffset" xml:space="preserve">
+    <value>UTC-eltolás: {0} ({1})</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.SummerTime" xml:space="preserve">
+    <value>nyári időszámítás</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.StandardTime" xml:space="preserve">
+    <value>téli időszámítás</value>
+  </data>
   <data name="Hint.MoveDivider" xml:space="preserve">
     <value>Elválasztó áthelyezése</value>
   </data>

@@ -745,6 +745,30 @@
   <data name="Dialog.DateTimeTimeZone" xml:space="preserve">
     <value>Date, Time and TimeZone</value>
   </data>
+  <data name="Dialog.DateTimeTimeZone.Date" xml:space="preserve">
+    <value>Date:</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.Time" xml:space="preserve">
+    <value>Time:</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.TimeZone" xml:space="preserve">
+    <value>Time zone:</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.DateUtc" xml:space="preserve">
+    <value>Date (UTC):</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.TimeUtc" xml:space="preserve">
+    <value>Time (UTC):</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.UtcOffset" xml:space="preserve">
+    <value>UTC offset: {0} ({1})</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.SummerTime" xml:space="preserve">
+    <value>summer time</value>
+  </data>
+  <data name="Dialog.DateTimeTimeZone.StandardTime" xml:space="preserve">
+    <value>standard time</value>
+  </data>
   <data name="Hint.MoveDivider" xml:space="preserve">
     <value>Move the divider</value>
   </data>
