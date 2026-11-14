@@ -43,6 +43,15 @@ public class RawPreviewVideoDecoderTest
     }
 
     [TestMethod]
+    public void HasJpegHeader_AcceptsARealJpegAndRejectsAFalseMatch()
+    {
+        Assert.IsTrue(RawPreviewVideoDecoder.HasJpegHeader(Jpeg(8, 8)));
+        Assert.IsFalse(RawPreviewVideoDecoder.HasJpegHeader(FalseStart));
+        Assert.IsFalse(RawPreviewVideoDecoder.HasJpegHeader([0xFF, 0xD8, 0xFF, 0xD9]), "an end marker before the scan");
+        Assert.IsFalse(RawPreviewVideoDecoder.HasJpegHeader([0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x00]), "a segment length below 2");
+    }
+
+    [TestMethod]
     public void Decoder_ShowsTheEmbeddedPreviewAtItsOwnSize()
     {
         byte[] preview = Jpeg(40, 20);

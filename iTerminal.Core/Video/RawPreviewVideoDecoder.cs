@@ -52,11 +52,58 @@ public sealed class RawPreviewVideoDecoder : BitmapStillDecoder
             }
 
             int length = start + JpegStart.Length + end + JpegEnd.Length - start;
-            found.Add((start, length));
+            // A false match in the sensor data is rejected here, before a native decoder is asked to read it: its header is not a JPEG's.
+            if (HasJpegHeader(bytes.Slice(start, length)))
+            {
+                found.Add((start, length));
+            }
             at = start + 1;
         }
 
         return found.OrderByDescending(f => f.Length).ToList();
+    }
+
+    /// <summary>
+    /// True when the bytes start with a well-formed JPEG header: the start-of-image marker, then marker segments, each with
+    /// its length, up to the start of the scan. The scan itself is not checked.
+    /// </summary>
+    internal static bool HasJpegHeader(ReadOnlySpan<byte> jpeg)
+    {
+        if (jpeg.Length < 4 || jpeg[0] != 0xFF || jpeg[1] != 0xD8)
+        {
+            return false;
+        }
+
+        int at = 2;
+        while (at + 4 <= jpeg.Length)
+        {
+            if (jpeg[at] != 0xFF)
+            {
+                return false;
+            }
+
+            byte marker = jpeg[at + 1];
+            if (marker == 0xDA)
+            {
+                return true;
+            }
+
+            // Only segments with a length may come before the scan: a fill byte, a stuffed 00, or a standalone marker (restart, SOI, EOI) does not.
+            if (marker is < 0xC0 or 0xFF || marker is >= 0xD0 and <= 0xD9)
+            {
+                return false;
+            }
+
+            int length = (jpeg[at + 2] << 8) | jpeg[at + 3];
+            if (length < 2)
+            {
+                return false;
+            }
+
+            at += 2 + length;
+        }
+
+        return false;
     }
 
     private static SKBitmap Preview(string path)

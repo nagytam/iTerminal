@@ -78,9 +78,12 @@ public class ImageFileViewerTurnAndStepTest
         await dialog.HandleKeyEventAsync(Key(ConsoleKey.R, 'r'));
         await DrawUntilLoadedAsync(dialog);
 
+        // Cells are about twice as tall as wide (AsciiArt.CellAspect), so the shape is judged in physical units:
+        // columns are one unit wide and rows two units tall.
         var after = dialog.Picture!;
-        Assert.IsTrue(after.Columns < after.Rows, "a wide picture turned a quarter is tall");
-        Assert.IsTrue(before.Columns > before.Rows);
+        static double Physical(VideoFrame frame) => frame.Columns / (frame.Rows / AsciiArt.CellAspect);
+        Assert.IsGreaterThan(1.0, Physical(before), $"before={before.Columns}x{before.Rows}");
+        Assert.IsLessThan(1.0, Physical(after), $"after={after.Columns}x{after.Rows}");
     }
 
     [Timeout(60_000)]
