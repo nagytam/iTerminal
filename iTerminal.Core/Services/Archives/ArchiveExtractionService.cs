@@ -56,10 +56,13 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
     private readonly Lazy<string?> _sevenZip = new(locate ?? SevenZipArchiveWriter.FindExecutable);
 
     /// <summary>Endings read in-process, longest first so <c>.tar.gz</c> is not taken for <c>.gz</c>.</summary>
-    private static readonly string[] ManagedEndings = [".tar.bz2", ".tar.gz", ".tbz2", ".tgz", ".tbz", ".tar", ".zip", ".gz", ".bz2"];
+    // .cbz, .cbt, .cbr and .cb7 are comic-book names for ZIP, TAR, RAR and 7z, so they unpack like their containers.
+    // .cbz, .cbt, .cbr and .cb7 are comic-book names for ZIP, TAR, RAR and 7z, so they unpack like their containers.
+    // .jar, .apk, .nupkg and .vsix are ZIP files under their own names.
+    private static readonly string[] ManagedEndings = [".tar.bz2", ".tar.gz", ".tbz2", ".tgz", ".tbz", ".tar", ".cbt", ".zip", ".cbz", ".jar", ".apk", ".nupkg", ".vsix", ".gz", ".bz2"];
 
     /// <summary>Endings only 7-Zip reads.</summary>
-    private static readonly string[] SevenZipEndings = [".tar.xz", ".txz", ".7z", ".rar", ".xz", ".iso", ".cab", ".lzma", ".img", ".vmdk", ".wim", ".dmg"];
+    private static readonly string[] SevenZipEndings = [".tar.xz", ".txz", ".7z", ".cb7", ".rar", ".cbr", ".xz", ".iso", ".cab", ".lzma", ".img", ".vmdk", ".wim", ".dmg", ".deb", ".rpm", ".chm", ".arj"];
 
     public string? SevenZipExecutable => _sevenZip.Value;
 
@@ -109,8 +112,8 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
         var ending = ManagedEnding(archivePath);
         return ending switch
         {
-            ".zip" => await Task.Run(() => ExtractZip(archivePath, targetFolder, options, progress, cancellationToken), cancellationToken),
-            ".tar" or ".tar.gz" or ".tgz" or ".tar.bz2" or ".tbz2" or ".tbz" =>
+            ".zip" or ".cbz" or ".jar" or ".apk" or ".nupkg" or ".vsix" => await Task.Run(() => ExtractZip(archivePath, targetFolder, options, progress, cancellationToken), cancellationToken),
+            ".tar" or ".tar.gz" or ".tgz" or ".tar.bz2" or ".tbz2" or ".tbz" or ".cbt" =>
                 await Task.Run(() => ExtractTar(archivePath, ending, targetFolder, options, progress, cancellationToken), cancellationToken),
             ".gz" or ".bz2" => await Task.Run(() => ExtractSingle(archivePath, ending, targetFolder, options, progress, cancellationToken), cancellationToken),
             _ => await ExtractWithSevenZipAsync(archivePath, targetFolder, options, progress, cancellationToken),

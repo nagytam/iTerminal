@@ -42,4 +42,17 @@
     <None Include="Audio\TestFiles\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <!-- The archive examples in Test/FileTypes, copied beside the tests so they read the same files a user does. -->
+  <ItemGroup>
+    <None Include="..\Test\FileTypes\example.deb" Link="FileTypes\example.deb" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.rpm" Link="FileTypes\example.rpm" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.chm" Link="FileTypes\example.chm" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.arj" Link="FileTypes\example.arj" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.lzma" Link="FileTypes\example.lzma" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.jar" Link="FileTypes\example.jar" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.apk" Link="FileTypes\example.apk" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.nupkg" Link="FileTypes\example.nupkg" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Test\FileTypes\example.vsix" Link="FileTypes\example.vsix" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

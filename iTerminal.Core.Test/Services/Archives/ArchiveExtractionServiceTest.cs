@@ -225,6 +225,27 @@ public class ArchiveExtractionServiceTest
 
     [Timeout(60_000)]
     [TestMethod]
+    [DataRow("issue-01.cbz")]
+    [DataRow("issue-01.cbt")]
+    public void ComicBookZipAndTarUnpackWithoutSevenZip(string name)
+    {
+        Assert.IsTrue(Service().IsArchive(name));
+        Assert.IsNull(Service().WhyCannotExtract(name));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    [DataRow("issue-01.cbr", ".cbr")]
+    [DataRow("issue-01.cb7", ".cb7")]
+    public void ComicBookRarAndSevenZipNeedSevenZipToUnpack(string name, string ending)
+    {
+        Assert.IsTrue(Service().IsArchive(name));
+        Assert.AreEqual($"{ending} archives need 7-Zip installed.", Service().WhyCannotExtract(name));
+        Assert.IsNull(Service(() => "7z").WhyCannotExtract(name));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task SevenZipIsGivenThePasswordOnStdinAndTheOverwriteRule()
     {
         var runner = new FakeProcessRunner().AnswerBytes("7z x", Encoding.UTF8.GetBytes("Everything is Ok\n"));

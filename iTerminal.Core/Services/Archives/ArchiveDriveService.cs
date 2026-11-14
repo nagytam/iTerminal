@@ -47,10 +47,14 @@ public interface IArchiveDriveService : IEntryListingFileSystem
 /// </summary>
 public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<string?>? locateSevenZip = null) : IArchiveDriveService
 {
-    private static readonly string[] ZipEndings = [".zip"];
-    private static readonly string[] TarEndings = [".tar.gz", ".tar.bz2", ".tgz", ".tbz2", ".tbz", ".tar"];
+    // Comic-book archives are the same containers under other names: .cbz is ZIP, .cbt is TAR, .cbr and .cb7 are RAR and 7z.
+    // JAR, APK, NUPKG and VSIX are ZIP files with their own names: a Java archive, an Android package, a NuGet package and a Visual Studio extension.
+    private static readonly string[] ZipEndings = [".zip", ".cbz", ".jar", ".apk", ".nupkg", ".vsix"];
+    private static readonly string[] TarEndings = [".tar.gz", ".tar.bz2", ".tgz", ".tbz2", ".tbz", ".tar", ".cbt"];
     private static readonly string[] SingleFileEndings = [".bz2"];
-    private static readonly string[] SevenZipEndings = [".7z", ".rar", ".iso", ".cab", ".img", ".vmdk", ".wim", ".dmg"];
+
+    // Debian and RPM packages are 7-Zip's ar and rpm handlers, CHM is a Windows help file, ARJ an old DOS archive and LZMA a single compressed file.
+    private static readonly string[] SevenZipEndings = [".7z", ".rar", ".iso", ".cab", ".img", ".vmdk", ".wim", ".dmg", ".cbr", ".cb7", ".deb", ".rpm", ".chm", ".arj", ".lzma"];
 
     private readonly Lazy<string?> _sevenZip = new(locateSevenZip ?? SevenZipArchiveWriter.FindExecutable);
     private readonly ConcurrentDictionary<string, (long Size, DateTime Time, IReadOnlyList<ArchiveIndexEntry> Index)> _indexes = new(StringComparer.OrdinalIgnoreCase);
@@ -254,17 +258,22 @@ public sealed class ArchiveDriveService(IExternalProcessRunner runner, Func<stri
             throw new IOException(DescribeSevenZipFailure(result, text, Path.GetFileName(archivePath)));
         }
 
-        return ParseSevenZipListing(text);
+        // A lone LZMA or XZ stream has no path of its own: 7-Zip names its one file after the archive, without its ending.
+        return ParseSevenZipListing(text, Path.GetFileNameWithoutExtension(archivePath));
     }
 
-    internal static List<ArchiveIndexEntry> ParseSevenZipListing(string text)
+    /// <param name="singleStreamName">The name for a stream that has a method but no path (a lone compressed file); null to skip such blocks.</param>
+    internal static List<ArchiveIndexEntry> ParseSevenZipListing(string text, string? singleStreamName = null)
     {
         var entries = new List<ArchiveIndexEntry>();
         var fields = new Dictionary<string, string>(StringComparer.Ordinal);
 
         void Flush()
         {
-            if (fields.TryGetValue("Path", out var path) && path.Length > 0)
+            var path = fields.TryGetValue("Path", out var listed) && listed.Length > 0 ? listed
+                : singleStreamName is not null && fields.ContainsKey("Method") ? singleStreamName
+                : null;
+            if (path is not null)
             {
                 var isFolder = fields.TryGetValue("Folder", out var folder) ? folder == "+"
                     : fields.TryGetValue("Attributes", out var attributes) && attributes.StartsWith('D');

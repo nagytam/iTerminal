@@ -1810,4 +1810,67 @@
   <data name="Viewer.Psd.NotDrawn" xml:space="preserve">
     <value>A kép ezzel a színmóddal vagy mélységgel nem rajzolható ki.</value>
   </data>
+  <data name="Viewer.Model.Heading" xml:space="preserve">
+    <value>A modell összegzése</value>
+  </data>
+  <data name="Viewer.Model.BinaryDxf" xml:space="preserve">
+    <value>Ez bináris DXF fájl, ezért elemei nincsenek felsorolva.</value>
+  </data>
+  <data name="Viewer.Model.Version" xml:space="preserve">
+    <value>Verzió</value>
+  </data>
+  <data name="Viewer.Model.Extents" xml:space="preserve">
+    <value>Kiterjedés</value>
+  </data>
+  <data name="Viewer.Model.Layers" xml:space="preserve">
+    <value>Rétegek</value>
+  </data>
+  <data name="Viewer.Model.Entities" xml:space="preserve">
+    <value>Elemek</value>
+  </data>
+  <data name="Viewer.Model.Vertices" xml:space="preserve">
+    <value>Csúcsok</value>
+  </data>
+  <data name="Viewer.Model.TextureCoordinates" xml:space="preserve">
+    <value>Textúrakoordináták</value>
+  </data>
+  <data name="Viewer.Model.Normals" xml:space="preserve">
+    <value>Normálvektorok</value>
+  </data>
+  <data name="Viewer.Model.Faces" xml:space="preserve">
+    <value>Lapok</value>
+  </data>
+  <data name="Viewer.Model.Groups" xml:space="preserve">
+    <value>Csoportok</value>
+  </data>
+  <data name="Viewer.Model.Objects" xml:space="preserve">
+    <value>Objektumok</value>
+  </data>
+  <data name="Viewer.Model.Materials" xml:space="preserve">
+    <value>Anyagok</value>
+  </data>
+  <data name="Viewer.Model.MaterialLibraries" xml:space="preserve">
+    <value>Anyagkönyvtárak</value>
+  </data>
+  <data name="Viewer.Model.Bounds" xml:space="preserve">
+    <value>Határok</value>
+  </data>
+  <data name="Viewer.Model.Format" xml:space="preserve">
+    <value>Formátum</value>
+  </data>
+  <data name="Viewer.Model.Ascii" xml:space="preserve">
+    <value>ASCII</value>
+  </data>
+  <data name="Viewer.Model.Binary" xml:space="preserve">
+    <value>bináris</value>
+  </data>
+  <data name="Viewer.Model.Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Viewer.Model.Triangles" xml:space="preserve">
+    <value>Háromszögek</value>
+  </data>
+  <data name="Viewer.Model.Source" xml:space="preserve">
+    <value>Forrásszöveg</value>
+  </data>
 </root>

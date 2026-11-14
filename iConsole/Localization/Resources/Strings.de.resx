@@ -1810,4 +1810,67 @@
   <data name="Viewer.Psd.NotDrawn" xml:space="preserve">
     <value>Das Bild wird für diesen Farbmodus oder diese Farbtiefe nicht gezeichnet.</value>
   </data>
+  <data name="Viewer.Model.Heading" xml:space="preserve">
+    <value>Modellübersicht</value>
+  </data>
+  <data name="Viewer.Model.BinaryDxf" xml:space="preserve">
+    <value>Dies ist eine binäre DXF-Datei; ihre Objekte werden nicht aufgelistet.</value>
+  </data>
+  <data name="Viewer.Model.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Viewer.Model.Extents" xml:space="preserve">
+    <value>Ausdehnung</value>
+  </data>
+  <data name="Viewer.Model.Layers" xml:space="preserve">
+    <value>Ebenen</value>
+  </data>
+  <data name="Viewer.Model.Entities" xml:space="preserve">
+    <value>Objekte</value>
+  </data>
+  <data name="Viewer.Model.Vertices" xml:space="preserve">
+    <value>Eckpunkte</value>
+  </data>
+  <data name="Viewer.Model.TextureCoordinates" xml:space="preserve">
+    <value>Texturkoordinaten</value>
+  </data>
+  <data name="Viewer.Model.Normals" xml:space="preserve">
+    <value>Normalen</value>
+  </data>
+  <data name="Viewer.Model.Faces" xml:space="preserve">
+    <value>Flächen</value>
+  </data>
+  <data name="Viewer.Model.Groups" xml:space="preserve">
+    <value>Gruppen</value>
+  </data>
+  <data name="Viewer.Model.Objects" xml:space="preserve">
+    <value>Objekte</value>
+  </data>
+  <data name="Viewer.Model.Materials" xml:space="preserve">
+    <value>Materialien</value>
+  </data>
+  <data name="Viewer.Model.MaterialLibraries" xml:space="preserve">
+    <value>Materialbibliotheken</value>
+  </data>
+  <data name="Viewer.Model.Bounds" xml:space="preserve">
+    <value>Begrenzung</value>
+  </data>
+  <data name="Viewer.Model.Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Viewer.Model.Ascii" xml:space="preserve">
+    <value>ASCII</value>
+  </data>
+  <data name="Viewer.Model.Binary" xml:space="preserve">
+    <value>binär</value>
+  </data>
+  <data name="Viewer.Model.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Viewer.Model.Triangles" xml:space="preserve">
+    <value>Dreiecke</value>
+  </data>
+  <data name="Viewer.Model.Source" xml:space="preserve">
+    <value>Quelltext</value>
+  </data>
 </root>
