@@ -48,6 +48,17 @@ public class WeatherIndicatorTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public void ANarrowCachedReadingKeepsThePlaceAndTheTemperature()
+    {
+        // "[cached] Budapest 21.5°C" is 24 columns; a 19-column slot used to show "[cached]...ch 4.8°C", losing the place.
+        var (indicator, service) = Create(Budapest());
+        service.IsFromCache = true;
+
+        Assert.AreEqual("* Budapest 21.5°C".PadRight(19), indicator.Describe(19));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public void TheTextFitsItsWidth()
     {
         var (indicator, service) = Create(new WeatherInfo { LocationName = "Llanfairpwllgwyngyll station", TemperatureC = 9 });
