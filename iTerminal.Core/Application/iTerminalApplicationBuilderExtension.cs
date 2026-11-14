@@ -123,6 +123,8 @@ public static class iTerminalApplicationBuilderExtension
         });
 
         services.AddSingleton<AiChatModel>();
+        // The screen saver: the terminal screen adds it last, and the idle check runs from its idle pass.
+        services.AddSingleton<ScreenSavers.ScreenSaverOverlay>();
         services.AddSingleton<IUiService, UiService>();
         services.AddSingleton<IAiActionApprovalService, AiActionApprovalService>();
         services.AddSingleton<AiPanelTools>();

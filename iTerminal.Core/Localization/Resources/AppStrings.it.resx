@@ -9402,6 +9402,30 @@
   <data name="CmdDesc.96256810" xml:space="preserve">
     <value>Scansiona una pagina o l'alimentatore, visualizzala e salvala.</value>
   </data>
+  <data name="ScreenSaver.Effect" xml:space="preserve">
+    <value>Effetto</value>
+  </data>
+  <data name="ScreenSaver.Delay" xml:space="preserve">
+    <value>Avvia dopo (minuti)</value>
+  </data>
+  <data name="ScreenSaver.Hint" xml:space="preserve">
+    <value>Un tasto o un clic riattiva lo schermo. Non si avvia mentre una shell usa il terminale.</value>
+  </data>
+  <data name="ScreenSaver.Off" xml:space="preserve">
+    <value>Disattivato</value>
+  </data>
+  <data name="ScreenSaver.Starfield" xml:space="preserve">
+    <value>Campo stellare</value>
+  </data>
+  <data name="ScreenSaver.MatrixRain" xml:space="preserve">
+    <value>Pioggia Matrix</value>
+  </data>
+  <data name="ScreenSaver.Clock" xml:space="preserve">
+    <value>Orologio rimbalzante</value>
+  </data>
+  <data name="ScreenSaver.Wake" xml:space="preserve">
+    <value>Riattiva lo schermo</value>
+    </data>
   <data name="Dialog.NetworkTools" xml:space="preserve">
     <value>Strumenti di rete</value>
   </data>

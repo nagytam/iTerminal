@@ -45,7 +45,8 @@ public class TerminalScreen : iConsole.Screens.Screen
         RuntimeDependencyDialog? runtimeDependencyDialog = null,
         ToolTipHost? toolTipHost = null,
         iConsole.Graphics.SixelOverlay? sixelOverlay = null,
-        DatabaseLocation? databaseLocation = null)
+        DatabaseLocation? databaseLocation = null,
+        ScreenSavers.ScreenSaverOverlay? screenSaverOverlay = null)
         : base(consoleDriver, themeService)
     {
         _databaseLocation = databaseLocation;
@@ -83,6 +84,11 @@ public class TerminalScreen : iConsole.Screens.Screen
         if (toolTipHost is not null)
         {
             AddControl(toolTipHost);
+        }
+        // Last of all: the screen saver covers everything, and while it runs it is the control that takes the keys.
+        if (screenSaverOverlay is not null)
+        {
+            AddControl(screenSaverOverlay);
         }
     }
 
