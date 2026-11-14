@@ -2582,7 +2582,7 @@
     <value>Risveglio del timer</value>
   </data>
   <data name="ToDo.Hint" xml:space="preserve">
-    <value>Spazio fatto  N nuovo  E modifica  P priorità  D elimina  H mostra fatti  Esc chiudi</value>
+    <value>Spazio fatto  N nuovo  E modifica  R promemoria  P priorità  D elimina  H mostra fatti  Esc chiudi</value>
   </data>
   <data name="ToDo.Done" xml:space="preserve">
     <value>Fatto</value>
@@ -9401,5 +9401,23 @@
   </data>
   <data name="CmdDesc.96256810" xml:space="preserve">
     <value>Scansiona una pagina o l'alimentatore, visualizzala e salvala.</value>
+  </data>
+  <data name="ToDo.Remind" xml:space="preserve">
+    <value>Promemoria</value>
+  </data>
+  <data name="ToDo.ReminderTitle" xml:space="preserve">
+    <value>Promemoria</value>
+  </data>
+  <data name="ToDo.ReminderEntry" xml:space="preserve">
+    <value>Ricorda alle: {0}_</value>
+  </data>
+  <data name="ToDo.ReminderNeedsOpenTask" xml:space="preserve">
+    <value>Riapri l'attività per ricevere un promemoria</value>
+  </data>
+  <data name="DialogHint.SetReminder" xml:space="preserve">
+    <value>Imposta il promemoria</value>
+  </data>
+  <data name="DialogHint.RemindTask" xml:space="preserve">
+    <value>Imposta un promemoria per l'attività</value>
   </data>
 </root>

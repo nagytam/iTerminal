@@ -65,7 +65,7 @@ public class ParserFuzzGuardTest
     {
         foreach (string text in Inputs())
         {
-            bool ok = ToDoTask.TryParse(text, Guid.NewGuid(), out ToDoTask? task, out string error);
+            bool ok = ToDoTask.TryParse(text, Guid.NewGuid(), new DateTime(2026, 11, 14, 10, 0, 0), out ToDoTask? task, out string error);
 
             if (ok)
             {
