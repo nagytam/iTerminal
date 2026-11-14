@@ -715,6 +715,9 @@
   <data name="Xml.NodeCount" xml:space="preserve">
     <value>{0} · {1:N0} nodi</value>
   </data>
+  <data name="Splash.Motto" xml:space="preserve">
+    <value>Coltellino svizzero del terminale</value>
+  </data>
   <data name="Splash.Protocols" xml:space="preserve">
     <value>Protocolli del terminale</value>
   </data>

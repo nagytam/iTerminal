@@ -715,6 +715,9 @@
   <data name="Xml.NodeCount" xml:space="preserve">
     <value>{0} · {1:N0} Knoten</value>
   </data>
+  <data name="Splash.Motto" xml:space="preserve">
+    <value>Schweizer Taschenmesser fürs Terminal</value>
+  </data>
   <data name="Splash.Protocols" xml:space="preserve">
     <value>Terminal-Protokolle</value>
   </data>
