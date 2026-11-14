@@ -10,7 +10,7 @@ public class ICalendarTextReaderTest
     private static IReadOnlyList<string> Read(string text) => ICalendarTextReader.Read(Encoding.UTF8.GetBytes(text));
 
     [Timeout(60_000)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("DTSTART:20260301", "  Start: 2026-03-01 (all day)")]
     [DataRow("DTSTART;VALUE=DATE:20260301", "  Start: 2026-03-01 (all day)")]
     [DataRow("DTSTART:20260301T090000Z", "  Start: 2026-03-01 09:00 UTC")]

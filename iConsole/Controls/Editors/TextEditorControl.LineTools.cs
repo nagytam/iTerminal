@@ -140,7 +140,7 @@ public partial class TextEditorControl
             last,
             segment => [JoinSegment(segment)],
             cursorDelta: 0,
-            selectRows: null);
+            selectRows: _ => null);
     }
 
     // ---- Helpers ----

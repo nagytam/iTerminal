@@ -114,6 +114,7 @@ public class ToDoTaskTest
     }
 }
 
+[TestClass]
 public class ToDoStoreTest
 {
     private static readonly DateTime Now = new(2026, 11, 14, 10, 0, 0);

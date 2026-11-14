@@ -145,7 +145,7 @@ public class DialogHintsWholeTest
 
     [TestMethod]
     [Timeout(120_000)]
-    [DynamicData(nameof(DialogTypes), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(DialogTypes))]
     public async Task EveryDialog_HasATitle_AndDrawsOnASmallAndANormalScreen(Type type)
     {
         List<string> faulty = [];

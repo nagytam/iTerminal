@@ -23,7 +23,7 @@ public class DialogTitleFitsLanguageTest
 
     [TestMethod]
     [Timeout(300_000)]
-    [DynamicData(nameof(LanguageCodes), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(LanguageCodes))]
     public async Task EveryDialog_DrawsItsWholeTitle_InEveryLanguage(string code)
     {
         List<string> clipped = [];

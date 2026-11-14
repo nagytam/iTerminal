@@ -104,7 +104,7 @@ public class ControlPropertySweepTest
 
     [Timeout(60_000)]
     [TestMethod]
-    [DynamicData(nameof(NoSetting_ThrowsOrBreaksTheNextDraw_ForAnAwkwardValueCases), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(NoSetting_ThrowsOrBreaksTheNextDraw_ForAnAwkwardValueCases))]
     public void NoSetting_ThrowsOrBreaksTheNextDraw_ForAnAwkwardValue(Type type)
     {
         List<string> failures = [];

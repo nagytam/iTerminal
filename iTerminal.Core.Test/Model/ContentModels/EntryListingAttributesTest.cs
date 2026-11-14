@@ -17,6 +17,7 @@ public class EntryListingAttributesTest
         if (OperatingSystem.IsWindows())
         {
             Assert.Inconclusive("Unix permission bits are read on Linux and macOS only.");
+            return;
         }
 
         var path = Path.Combine(Path.GetTempPath(), $"listing-mode-{Guid.NewGuid():N}.txt");

@@ -704,7 +704,7 @@ public class GitClientDialogTest
     }
 
     [Timeout(60_000)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(' ', ConsoleKey.Enter, "vorgemerkt")]
     [DataRow('f', ConsoleKey.F, "Abgerufen")]
     [DataRow('p', ConsoleKey.P, "Pull abgeschlossen")]
