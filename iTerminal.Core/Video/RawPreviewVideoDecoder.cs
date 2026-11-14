@@ -70,7 +70,15 @@ public sealed class RawPreviewVideoDecoder : BitmapStillDecoder
         byte[] bytes = File.ReadAllBytes(path);
         foreach ((int start, int length) in FindJpegs(bytes).Take(CandidatesTried))
         {
-            SKBitmap? bitmap = SKBitmap.Decode(bytes.AsSpan(start, length).ToArray());
+            // SKBitmap.Decode throws on a codec it cannot make, so the codec is checked first: a false match is skipped, not fatal.
+            using SKData data = SKData.CreateCopy(bytes.AsSpan(start, length));
+            using SKCodec? codec = SKCodec.Create(data);
+            if (codec is null)
+            {
+                continue;
+            }
+
+            SKBitmap? bitmap = SKBitmap.Decode(codec);
             if (bitmap is not null)
             {
                 return bitmap;

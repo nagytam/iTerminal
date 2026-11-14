@@ -34,9 +34,15 @@ public class ImageFileViewerTurnAndStepTest
     }
 
     /// <summary>Draws, which starts the load, and waits for the picture to arrive.</summary>
+    /// <remarks>
+    /// Two draws, each awaited: the first may only record the room (before layout it draws nothing), and the load that the
+    /// second one starts must finish before the picture is read. After a turn the old picture stays up until the new one lands.
+    /// </remarks>
     private static async Task DrawUntilLoadedAsync(ImageFileViewerDialog dialog)
     {
         var buffer = new iConsole.Test.Core.MockBuffer(new Size(120, 40));
+        dialog.Draw(buffer);
+        await dialog.LoadTask;
         dialog.Draw(buffer);
         await dialog.LoadTask;
         buffer = new iConsole.Test.Core.MockBuffer(new Size(120, 40));

@@ -111,7 +111,7 @@ public class DialogKeyHintsBatch22Test
     {
         ImageFileViewerDialog dialog = new(Mock.Of<IVideoDecoderFactory>(), Mock.Of<IBeepService>(), new DateTimeProviderService(), TestTheme());
 
-        CollectionAssert.AreEqual(new[] { "C", "I" }, Keys(dialog.GetKeyHints()));
+        CollectionAssert.AreEqual(new[] { "C", "I", "R / L", "H / V", "Left / Right" }, Keys(dialog.GetKeyHints()));
     }
 
     [Timeout(60_000)]
