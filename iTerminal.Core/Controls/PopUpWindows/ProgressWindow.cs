@@ -164,14 +164,14 @@ public class ProgressWindow : PopUpWindow
 
     internal string CancelButtonTitleForTest => _cancelButton.Title;
 
-    private static string StatusText(iConsole.Data.TaskStatus status) => status switch
-    {
-        iConsole.Data.TaskStatus.Started => UiText.Get("Progress.StatusStarted", "Started"),
-        iConsole.Data.TaskStatus.Completed => UiText.Get("Progress.StatusCompleted", "Completed"),
-        iConsole.Data.TaskStatus.Canceled => UiText.Get("Progress.StatusCanceled", "Canceled"),
-        _ => status.ToString(),
-    };
-
+    private static string StatusText(iConsole.Data.TaskStatus status) => status switch
+    {
+        iConsole.Data.TaskStatus.Started => UiText.Get("Progress.StatusStarted", "Started"),
+        iConsole.Data.TaskStatus.Completed => UiText.Get("Progress.StatusCompleted", "Completed"),
+        iConsole.Data.TaskStatus.Canceled => UiText.Get("Progress.StatusCanceled", "Canceled"),
+        _ => status.ToString(),
+    };
+
     private static string FormatStatistics(TransferTask task)
     {
         var files = string.Format(UiText.Get("Progress.Files", "Files: {0}/{1}"), task.ItemsProcessed, task.TotalItems);
