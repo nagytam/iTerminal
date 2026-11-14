@@ -32,6 +32,18 @@ public class HotKeyCollisionTest
         Assert.AreNotEqual(signatures.Key, manifest.Key);
     }
 
+    /// <summary>The calendar is a global command on Ctrl+D; git sync is offered in the panel and must not share it.</summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void GitSyncAndTheCalendarHaveDifferentChords()
+    {
+        var sync = new GitSyncCommand(Mock.Of<iConsole.Interfaces.IContentModelService>(), Mock.Of<iTerminal.Core.Services.Git.IGitService>());
+        var calendar = new CalendarDialogCommand(null!);
+
+        Assert.AreEqual(new Key(ConsoleKey.G, true, false, true), sync.Key);
+        Assert.AreEqual(new Key(ConsoleKey.D, false, false, true), calendar.Key);
+    }
+
     /// <summary>
     /// Print is Ctrl+P: not Ctrl+Shift+P, which Windows Terminal keeps for its own command palette. Alt+P walks the command
     /// history, so the two must stay different chords.

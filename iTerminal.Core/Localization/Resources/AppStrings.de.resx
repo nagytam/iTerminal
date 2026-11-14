@@ -2035,6 +2035,12 @@
   <data name="Empty.Themes" xml:space="preserve">
     <value> Keine Designs verfügbar.</value>
   </data>
+  <data name="Notify.UpToDate" xml:space="preserve">
+    <value>iTerminal ist aktuell</value>
+  </data>
+  <data name="Notify.UpToDateDetail" xml:space="preserve">
+    <value>Keine neuere Version als {0} gefunden.</value>
+  </data>
   <data name="Notify.UpdateAvailable" xml:space="preserve">
     <value>iTerminal {0} ist verfügbar</value>
   </data>
@@ -3192,6 +3198,9 @@
   </data>
   <data name="Menu.Print" xml:space="preserve">
     <value>Drucken</value>
+  </data>
+  <data name="Menu.CheckForUpdates" xml:space="preserve">
+    <value>Nach Updates suchen</value>
   </data>
   <data name="Menu.PrintItem" xml:space="preserve">
     <value>Drucken…</value>
@@ -9736,5 +9745,12 @@
   </data>
   <data name="Footer.Sync" xml:space="preserve">
     <value>Sync</value>
+  </data>
+  <data name="CmdTitle.f26f3275" xml:space="preserve">
+    <value>Nach Updates suchen</value>
+  </data>
+  <data name="CmdDesc.d178d788" xml:space="preserve">
+    <value>Jetzt nach einer neueren iTerminal-Version suchen und die Installation anbieten.</value>
+    <comment>Jetzt nach einer neueren iTerminal-Version suchen und die Installation anbieten.</comment>
   </data>
 </root>

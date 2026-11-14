@@ -2035,6 +2035,12 @@
   <data name="Empty.Themes" xml:space="preserve">
     <value> Nincs elérhető téma.</value>
   </data>
+  <data name="Notify.UpToDate" xml:space="preserve">
+    <value>Az iTerminal naprakész</value>
+  </data>
+  <data name="Notify.UpToDateDetail" xml:space="preserve">
+    <value>A(z) {0} verziónál újabb kiadás nem található.</value>
+  </data>
   <data name="Notify.UpdateAvailable" xml:space="preserve">
     <value>Elérhető az iTerminal {0}</value>
   </data>
@@ -3192,6 +3198,9 @@
   </data>
   <data name="Menu.Print" xml:space="preserve">
     <value>Nyomtatás</value>
+  </data>
+  <data name="Menu.CheckForUpdates" xml:space="preserve">
+    <value>Frissítések keresése</value>
   </data>
   <data name="Menu.PrintItem" xml:space="preserve">
     <value>Nyomtatás…</value>
@@ -9672,5 +9681,12 @@
   </data>
   <data name="Footer.Sync" xml:space="preserve">
     <value>Szink.</value>
+  </data>
+  <data name="CmdTitle.f26f3275" xml:space="preserve">
+    <value>Frissítések keresése</value>
+  </data>
+  <data name="CmdDesc.d178d788" xml:space="preserve">
+    <value>Újabb iTerminal-kiadás keresése most, és telepítésének felajánlása.</value>
+    <comment>Újabb iTerminal-kiadás keresése most, és telepítésének felajánlása.</comment>
   </data>
 </root>

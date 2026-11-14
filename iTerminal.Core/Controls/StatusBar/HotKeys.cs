@@ -340,10 +340,10 @@ public class HotKeys : StatusBarItem
         // Git sync: pull --rebase, then push. Shown in the Ctrl layer only while the focused folder is in a working tree.
         if (gitService is not null)
         {
-            var gitSyncButton = new Button("Ctrl-D-Sync", new GitSyncCommand(contentModelService, gitService, notificationService), themeService)
+            var gitSyncButton = new Button("Ctrl-Shift-G-Sync", new GitSyncCommand(contentModelService, gitService, notificationService), themeService)
             {
                 Position = new Position(0, 0),
-                ViewSize = new Size(11, 1),
+                ViewSize = new Size(18, 1),
                 IsVisible = false
             };
             AddControl(gitSyncButton);

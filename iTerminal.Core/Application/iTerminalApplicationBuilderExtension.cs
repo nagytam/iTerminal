@@ -664,7 +664,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<RuntimeDependencyDialog>();
         services.AddSingleton<iTerminal.Core.Services.Updates.IAuthenticodeVerifier, iTerminal.Core.Services.Updates.WinVerifyTrustAuthenticodeVerifier>();
         services.AddSingleton<iTerminal.Core.Services.Updates.IUpdateService, iTerminal.Core.Services.Updates.UpdateService>();
-        services.AddSingleton<IJob, UpdateCheckJob>();
+        // Also resolved as itself: the Help menu asks it to check now (Check for Updates).
+        services.AddSingleton<UpdateCheckJob>();
+        services.AddSingleton<IJob>(sp => sp.GetRequiredService<UpdateCheckJob>());
         services.AddTransient<UpdateDialog>();
         services.AddSingleton<WeatherService>();
         services.AddSingleton<FolderIndexModel>();

@@ -1,9 +1,11 @@
 using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Dialogs;
+using iConsole.Localization;
 using iConsole.Services;
 using iTerminal.Core.Commands;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Jobs;
 
 namespace iTerminal.Core.Controls.MenuBar;
 
@@ -13,7 +15,8 @@ public class AboutMenuItem : MenuItem
         HelpDialog helpDialog,
         AboutDialog aboutDialog,
         IThemeService themeService,
-        CommandPaletteDialog? commandPaletteDialog = null)
+        CommandPaletteDialog? commandPaletteDialog = null,
+        UpdateCheckJob? updateCheckJob = null)
         : base("Help", null, [], themeService)
     {
         HotKeyChar = 'H';
@@ -23,6 +26,11 @@ public class AboutMenuItem : MenuItem
             AddMenuItem(new MenuItem("Command Palette\tShift+F1", new CommandPaletteDialogCommand(commandPaletteDialog), [], themeService));
         }
         AddMenuItem(new MenuItem("-", null, [], themeService));
+        if (updateCheckJob is not null)
+        {
+            AddMenuItem(new MenuItem(UiText.Get("Menu.CheckForUpdates", "Check for Updates"), new CheckForUpdatesCommand(updateCheckJob), [], themeService));
+            AddMenuItem(new MenuItem("-", null, [], themeService));
+        }
         AddMenuItem(new MenuItem("About\tCtrl+Shift+Alt+F1", new AboutDialogCommand(aboutDialog), [], themeService));
     }
 }
