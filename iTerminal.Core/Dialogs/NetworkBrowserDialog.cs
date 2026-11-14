@@ -129,10 +129,11 @@ public class NetworkBrowserDialog : SplitPaneDialog
         // Control.ShowAsync runs OnInitializeAsync (which enters browse mode and hides the connect
         // form) and only *then* makes every child visible — so the username, password and share
         // boxes and the Connect/Back buttons were all on screen over the host list from the moment
-        // the dialog opened. Re-entering browse mode puts them back where they belong.
+        // the dialog opened. Hiding them again puts them back where they belong. This must not
+        // clear the status: a scan that failed fast has already reported its error by now.
         if (_mode == Mode.Browse)
         {
-            BeginBrowse();
+            ShowBrowseControls();
         }
     }
 
@@ -318,7 +319,15 @@ public class NetworkBrowserDialog : SplitPaneDialog
     {
         _mode = Mode.Browse;
         _pendingRow = null;
+        ShowBrowseControls();
 
+        _status = string.Empty;
+        _statusIsError = false;
+        StateHasChanged();
+    }
+
+    private void ShowBrowseControls()
+    {
         _hostListBox.IsVisible = true;
         _hostListBox.CanFocus = true;
         _hostListBox.SetFocus();
@@ -335,10 +344,6 @@ public class NetworkBrowserDialog : SplitPaneDialog
         _connectButton.CanFocus = false;
         _backButton.IsVisible = false;
         _backButton.CanFocus = false;
-
-        _status = string.Empty;
-        _statusIsError = false;
-        StateHasChanged();
     }
 
     private async Task SelectAsync()

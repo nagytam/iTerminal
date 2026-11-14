@@ -156,7 +156,8 @@ public class MailDialogTest
 
         await WaitUntilAsync(() => fixture.Mail.Sent.Count == 1, "the message to be sent");
         Assert.AreEqual("ada@example.test|Hi|Body text", fixture.Mail.Sent[0]);
-        Assert.AreEqual("List", fixture.Dialog.ModeForTest);
+        // The fake records the message before the dialog's send continuation returns to the list.
+        await WaitUntilAsync(() => fixture.Dialog.ModeForTest == "List", "the dialog to return to the list");
     }
 
     [Timeout(60_000)]
