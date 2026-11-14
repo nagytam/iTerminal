@@ -5993,7 +5993,7 @@
     <value>S{0}: {1}</value>
   </data>
   <data name="Games.Jass.TeamInstruction" xml:space="preserve">
-    <value>Teams: Spieler 1 + 3 gegen Spieler 2 + 4. P schiebt die erste Trumpfwahl zum Partner.</value>
+    <value>Teams: Spieler 1 + 3 gegen Spieler 2 + 4.</value>
   </data>
   <data name="Games.Jass.ChooseTrumpHint" xml:space="preserve">
     <value>Kreuz, Karo, Herz oder Pik als Trumpf wählen</value>
@@ -9688,6 +9688,51 @@
   <data name="CmdDesc.c54795ce" xml:space="preserve">
     <value>YouTube durchsuchen und ein Video im Videobetrachter abspielen.</value>
     <comment>Search YouTube and play a video in the video viewer.</comment>
+  </data>
+  <data name="Games.Snake.RulesVersus" xml:space="preserve">
+    <value>Wettlauf mit der Schlange des Computers um das Futter. Sie wächst mit jedem Bissen. Eine Wand oder der Körper einer Schlange beendet deren Lauf; stoßen beide gleichzeitig zusammen, ist es ein Unentschieden.</value>
+  </data>
+  <data name="Games.Snake.VersusScore" xml:space="preserve">
+    <value>Punkte {0}  Computer {1}.</value>
+  </data>
+  <data name="Games.Snake.VsComputer" xml:space="preserve">
+    <value>gegen den Computer</value>
+  </data>
+  <data name="Games.Snake.VersusWon" xml:space="preserve">
+    <value>Du gewinnst: {0} Punkte gegen {1} des Computers. N für ein neues Spiel.</value>
+  </data>
+  <data name="Games.Snake.VersusLost" xml:space="preserve">
+    <value>Der Computer gewinnt: {0} Punkte gegen deine {1}. N für ein neues Spiel.</value>
+  </data>
+  <data name="Games.Snake.VersusDraw" xml:space="preserve">
+    <value>Beide sind zusammengestoßen: du {0}, der Computer {1}. N für ein neues Spiel.</value>
+  </data>
+  <data name="Games.Tetris.VersusStatus" xml:space="preserve">
+    <value>Punkte {0}  Reihen {1}  Stufe {2}  Nächstes {3}  |  Computer {4} Punkte, {5} Reihen</value>
+  </data>
+  <data name="Games.Tetris.VsComputer" xml:space="preserve">
+    <value>gegen den Computer</value>
+  </data>
+  <data name="Games.Tetris.RulesVersus" xml:space="preserve">
+    <value>Staple die fallenden Teile zu vollen Reihen. Das Feld des Computers läuft neben deinem: Wer zuerst mit dem Stapel die Oberkante erreicht, verliert.</value>
+  </data>
+  <data name="Games.Tetris.VersusDraw" xml:space="preserve">
+    <value>Beide Stapel haben die Oberkante erreicht: {0} Punkte gegen {1} des Computers. N für ein neues Spiel.</value>
+  </data>
+  <data name="Games.Tetris.VersusLost" xml:space="preserve">
+    <value>Der Computer gewinnt: {0} Punkte gegen deine {1}. N für ein neues Spiel.</value>
+  </data>
+  <data name="Games.Tetris.VersusWon" xml:space="preserve">
+    <value>Du gewinnst: {0} Punkte gegen {1} des Computers. N für ein neues Spiel.</value>
+  </data>
+  <data name="Games.Jass.VsComputer" xml:space="preserve">
+    <value>du und die Computerspieler</value>
+  </data>
+  <data name="Games.Tetris.You" xml:space="preserve">
+    <value>Du</value>
+  </data>
+  <data name="Games.Tetris.Computer" xml:space="preserve">
+    <value>Computer</value>
   </data>
   <data name="Footer.Sync" xml:space="preserve">
     <value>Sync</value>

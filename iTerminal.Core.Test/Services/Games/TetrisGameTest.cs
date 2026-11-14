@@ -10,7 +10,7 @@ public class TetrisGameTest
 
     private static TetrisGame Falling(int piece = O)
     {
-        TetrisGame game = new(new Random(1));
+        TetrisGame game = new(new Random(1)) { VsComputer = false };
         game.SpawnForTest(piece);
         return game;
     }
@@ -19,7 +19,7 @@ public class TetrisGameTest
     [TestMethod]
     public void ItWaitsForAKeyAndDoesNotFallUntilStarted()
     {
-        TetrisGame game = new(new Random(1));
+        TetrisGame game = new(new Random(1)) { VsComputer = false };
 
         Assert.IsFalse(game.Tick(TimeSpan.FromSeconds(5)));
         game.MoveCursor(1, 0);
@@ -116,7 +116,7 @@ public class TetrisGameTest
     [TestMethod]
     public void TheGameEndsWhenANewPieceHasNoRoom()
     {
-        TetrisGame game = new(new Random(1));
+        TetrisGame game = new(new Random(1)) { VsComputer = false };
         for (int x = 0; x < TetrisGame.Columns; x++)
         {
             game.FillForTest(x, 0);
@@ -150,7 +150,7 @@ public class TetrisGameTest
     [TestMethod]
     public void TheBagGivesEachOfTheSevenPiecesOnceBeforeRepeating()
     {
-        TetrisGame game = new(new Random(3));
+        TetrisGame game = new(new Random(3)) { VsComputer = false };
         List<int> pieces = [game.CurrentPiece, game.NextPiece];
         for (int i = 0; i < 5; i++)
         {
@@ -169,8 +169,79 @@ public class TetrisGameTest
 
         IReadOnlyList<GameCell[]> rows = game.Render();
 
-        Assert.AreEqual(TetrisGame.Rows, rows.Count);
+        Assert.AreEqual(TetrisGame.Rows / 2 + 1, rows.Count, "the rows in pairs, and the floor");
         Assert.IsTrue(rows.All(r => r.Length == TetrisGame.Columns + 2));
-        Assert.AreEqual(4, rows.SelectMany(r => r).Count(c => c.Background is not null));
+        // The O piece is two cells by two, which the half-block board shows as two coloured cells in one text row.
+        Assert.AreEqual(2, rows.SelectMany(r => r).Count(c => c.Background is not null));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheComputersBoardPlaysOnItsOwnClockAndDropsItsPiecesToTheFloor()
+    {
+        TetrisGame game = new(new Random(5));
+        game.Activate();
+
+        for (int i = 0; i < 400; i++)
+        {
+            game.Tick(TimeSpan.FromMilliseconds(100));
+        }
+
+        TetrisGame rival = game.Rival!;
+        Assert.IsFalse(game.IsOver, "a planned board does not top out in forty seconds");
+        Assert.IsTrue(Enumerable.Range(0, TetrisGame.Columns).Any(x => rival.IsFilled(x, TetrisGame.Rows - 1)), "the first piece lands on the floor");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheComputersStackToppingOutFirstLetsThePersonWin()
+    {
+        TetrisGame game = new(new Random(5));
+        TetrisGame rival = game.Rival!;
+        // Every column but the last is full, so the rival's next piece has no room at the top; the person's board stays open.
+        for (int y = 0; y < TetrisGame.Rows; y++)
+        {
+            for (int x = 0; x < TetrisGame.Columns - 1; x++)
+            {
+                rival.FillForTest(x, y);
+            }
+        }
+
+        game.Activate();
+        for (int i = 0; i < 300 && !game.IsOver; i++)
+        {
+            game.Tick(TimeSpan.FromMilliseconds(100));
+        }
+
+        Assert.IsTrue(game.IsOver);
+        StringAssert.StartsWith(game.Status, "You win");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheComputersBoardWaitsUntilThePersonStarts()
+    {
+        TetrisGame game = new(new Random(5));
+
+        for (int i = 0; i < 50; i++)
+        {
+            game.Tick(TimeSpan.FromMilliseconds(100));
+        }
+
+        Assert.IsFalse(Enumerable.Range(0, TetrisGame.Columns).Any(x => game.Rival!.IsFilled(x, TetrisGame.Rows - 1)));
+        Assert.AreEqual(0, game.Rival!.Score);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheVersusBoardsAreDrawnSideBySide()
+    {
+        TetrisGame game = new(new Random(2));
+
+        IReadOnlyList<GameCell[]> rows = game.Render();
+
+        Assert.AreEqual(TetrisGame.Rows / 2 + 2, rows.Count, "a label row, the boards, and the floor");
+        Assert.AreEqual(3, rows[0].Length, "the labels: You, a gap, Computer");
+        Assert.IsTrue(rows.Skip(1).All(r => r.Length == 2 * (TetrisGame.Columns + 2) + 1), "two boards and a gap between them");
     }
 }

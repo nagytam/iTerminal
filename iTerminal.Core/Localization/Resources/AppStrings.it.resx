@@ -5956,7 +5956,7 @@
   <data name="Games.Jass.EmptyCard" xml:space="preserve"><value>{0}.</value></data>
   <data name="Games.Jass.NoCards" xml:space="preserve"><value>Nessuna carta giocata in questa presa.</value></data>
   <data name="Games.Jass.PlayedCard" xml:space="preserve"><value>G{0}: {1}</value></data>
-  <data name="Games.Jass.TeamInstruction" xml:space="preserve"><value>Squadre: giocatori 1 + 3 contro 2 + 4. P passa la prima scelta di briscola al compagno.</value></data>
+  <data name="Games.Jass.TeamInstruction" xml:space="preserve"><value>Squadre: giocatori 1 + 3 contro 2 + 4.</value></data>
   <data name="Games.Jass.ChooseTrumpHint" xml:space="preserve"><value>Scegli fiori, quadri, cuori o picche come briscola</value></data>
   <data name="Games.Jass.PushHint" xml:space="preserve"><value>Passa la scelta della briscola al compagno</value></data>
   <data name="Games.Jass.PlayHint" xml:space="preserve"><value>Gioca la carta numerata dalla tua mano</value></data>
@@ -9624,6 +9624,51 @@
   <data name="CmdDesc.c54795ce" xml:space="preserve">
     <value>Cerca su YouTube e riproduci un video nel visualizzatore video.</value>
     <comment>Search YouTube and play a video in the video viewer.</comment>
+  </data>
+  <data name="Games.Snake.RulesVersus" xml:space="preserve">
+    <value>Gareggia con il serpente del computer per il cibo. Cresce a ogni morso. Un muro o il corpo di un serpente pone fine alla sua corsa; se si schiantano insieme è un pareggio.</value>
+  </data>
+  <data name="Games.Snake.VersusScore" xml:space="preserve">
+    <value>Punteggio {0}  Computer {1}.</value>
+  </data>
+  <data name="Games.Snake.VsComputer" xml:space="preserve">
+    <value>contro il computer</value>
+  </data>
+  <data name="Games.Snake.VersusWon" xml:space="preserve">
+    <value>Hai vinto: {0} punti contro {1} del computer. N per giocare di nuovo.</value>
+  </data>
+  <data name="Games.Snake.VersusLost" xml:space="preserve">
+    <value>Vince il computer: {0} punti contro i tuoi {1}. N per giocare di nuovo.</value>
+  </data>
+  <data name="Games.Snake.VersusDraw" xml:space="preserve">
+    <value>Si sono schiantati entrambi: tu {0}, il computer {1}. N per giocare di nuovo.</value>
+  </data>
+  <data name="Games.Tetris.VersusStatus" xml:space="preserve">
+    <value>Punti {0}  Righe {1}  Livello {2}  Prossimo {3}  |  Computer {4} punti, {5} righe</value>
+  </data>
+  <data name="Games.Tetris.VsComputer" xml:space="preserve">
+    <value>contro il computer</value>
+  </data>
+  <data name="Games.Tetris.RulesVersus" xml:space="preserve">
+    <value>Impila i pezzi che cadono in righe piene. La griglia del computer scorre accanto alla tua: perde chi per primo fa arrivare la pila in cima.</value>
+  </data>
+  <data name="Games.Tetris.VersusDraw" xml:space="preserve">
+    <value>Entrambe le pile sono arrivate in cima: {0} punti contro {1} del computer. N per giocare di nuovo.</value>
+  </data>
+  <data name="Games.Tetris.VersusLost" xml:space="preserve">
+    <value>Vince il computer: {0} punti contro i tuoi {1}. N per giocare di nuovo.</value>
+  </data>
+  <data name="Games.Tetris.VersusWon" xml:space="preserve">
+    <value>Hai vinto: {0} punti contro {1} del computer. N per giocare di nuovo.</value>
+  </data>
+  <data name="Games.Jass.VsComputer" xml:space="preserve">
+    <value>tu e i giocatori del computer</value>
+  </data>
+  <data name="Games.Tetris.You" xml:space="preserve">
+    <value>Tu</value>
+  </data>
+  <data name="Games.Tetris.Computer" xml:space="preserve">
+    <value>Computer</value>
   </data>
   <data name="Footer.Sync" xml:space="preserve">
     <value>Sincr.</value>

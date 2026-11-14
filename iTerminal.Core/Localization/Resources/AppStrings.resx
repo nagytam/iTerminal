@@ -6134,7 +6134,7 @@
     <value>P{0}: {1}</value>
   </data>
   <data name="Games.Jass.TeamInstruction" xml:space="preserve">
-    <value>Teams: Players 1 + 3 vs. Players 2 + 4. P pushes the first trump choice to partner.</value>
+    <value>Teams: Players 1 + 3 vs. Players 2 + 4.</value>
   </data>
   <data name="Games.Jass.ChooseTrumpHint" xml:space="preserve">
     <value>Choose clubs, diamonds, hearts or spades as trump</value>
@@ -9829,6 +9829,51 @@
   <data name="CmdDesc.c54795ce" xml:space="preserve">
     <value>Search YouTube and play a video in the video viewer.</value>
     <comment>Search YouTube and play a video in the video viewer.</comment>
+  </data>
+  <data name="Games.Snake.RulesVersus" xml:space="preserve">
+    <value>Race the computer's snake to the food. It grows with every bite. A wall or a snake's body ends that snake's run; if both crash together it is a draw.</value>
+  </data>
+  <data name="Games.Snake.VersusScore" xml:space="preserve">
+    <value>Score {0}  Computer {1}.</value>
+  </data>
+  <data name="Games.Snake.VsComputer" xml:space="preserve">
+    <value>against the computer</value>
+  </data>
+  <data name="Games.Snake.VersusWon" xml:space="preserve">
+    <value>You win: {0} points to the computer's {1}. N to play again.</value>
+  </data>
+  <data name="Games.Snake.VersusLost" xml:space="preserve">
+    <value>The computer wins: {0} points to your {1}. N to play again.</value>
+  </data>
+  <data name="Games.Snake.VersusDraw" xml:space="preserve">
+    <value>Both crashed: you {0}, the computer {1}. N to play again.</value>
+  </data>
+  <data name="Games.Tetris.VersusStatus" xml:space="preserve">
+    <value>Score {0}  Rows {1}  Level {2}  Next {3}  |  Computer {4} points, {5} rows</value>
+  </data>
+  <data name="Games.Tetris.VsComputer" xml:space="preserve">
+    <value>against the computer</value>
+  </data>
+  <data name="Games.Tetris.RulesVersus" xml:space="preserve">
+    <value>Stack the falling pieces into full rows. The computer's board runs beside yours: whoever's stack reaches the top first loses.</value>
+  </data>
+  <data name="Games.Tetris.VersusDraw" xml:space="preserve">
+    <value>Both stacks reached the top: {0} points to the computer's {1}. N to play again.</value>
+  </data>
+  <data name="Games.Tetris.VersusLost" xml:space="preserve">
+    <value>The computer wins: {0} points to your {1}. N to play again.</value>
+  </data>
+  <data name="Games.Tetris.VersusWon" xml:space="preserve">
+    <value>You win: {0} points to the computer's {1}. N to play again.</value>
+  </data>
+  <data name="Games.Jass.VsComputer" xml:space="preserve">
+    <value>you and the computer players</value>
+  </data>
+  <data name="Games.Tetris.You" xml:space="preserve">
+    <value>You</value>
+  </data>
+  <data name="Games.Tetris.Computer" xml:space="preserve">
+    <value>Computer</value>
   </data>
   <data name="Footer.Sync" xml:space="preserve">
     <value>Sync</value>

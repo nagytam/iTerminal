@@ -5956,7 +5956,7 @@
   <data name="Games.Jass.EmptyCard" xml:space="preserve"><value>{0}.</value></data>
   <data name="Games.Jass.NoCards" xml:space="preserve"><value>Ebben az ütésben még nincs kijátszott lap.</value></data>
   <data name="Games.Jass.PlayedCard" xml:space="preserve"><value>{0}. játékos: {1}</value></data>
-  <data name="Games.Jass.TeamInstruction" xml:space="preserve"><value>Csapatok: az 1. és 3. játékos a 2. és 4. ellen. A P átadja az első aduválasztást a partnernek.</value></data>
+  <data name="Games.Jass.TeamInstruction" xml:space="preserve"><value>Csapatok: 1 + 3. játékos a 2 + 4. ellen.</value></data>
   <data name="Games.Jass.ChooseTrumpHint" xml:space="preserve"><value>Treff, káró, kőr vagy pikk kiválasztása adunak</value></data>
   <data name="Games.Jass.PushHint" xml:space="preserve"><value>Az aduválasztás átadása a partnerednek</value></data>
   <data name="Games.Jass.PlayHint" xml:space="preserve"><value>A számozott lap kijátszása a kézből</value></data>
@@ -9624,6 +9624,51 @@
   <data name="CmdDesc.c54795ce" xml:space="preserve">
     <value>Keresés a YouTube-on, és videó lejátszása a videónézegetőben.</value>
     <comment>Search YouTube and play a video in the video viewer.</comment>
+  </data>
+  <data name="Games.Snake.RulesVersus" xml:space="preserve">
+    <value>Versenyezz a számítógép kígyójával az ételért. Minden falatnál nő. Fal vagy kígyótest véget vet annak a kígyónak a futásának; ha mindketten egyszerre ütköznek, döntetlen.</value>
+  </data>
+  <data name="Games.Snake.VersusScore" xml:space="preserve">
+    <value>Pontszám {0}  Számítógép {1}.</value>
+  </data>
+  <data name="Games.Snake.VsComputer" xml:space="preserve">
+    <value>a számítógép ellen</value>
+  </data>
+  <data name="Games.Snake.VersusWon" xml:space="preserve">
+    <value>Nyertél: {0} pont a számítógép {1} pontja ellen. N: új játék.</value>
+  </data>
+  <data name="Games.Snake.VersusLost" xml:space="preserve">
+    <value>A számítógép nyert: {0} pont a te {1} pontoddal szemben. N: új játék.</value>
+  </data>
+  <data name="Games.Snake.VersusDraw" xml:space="preserve">
+    <value>Mindketten nekiütköztetek: te {0}, a számítógép {1}. N: új játék.</value>
+  </data>
+  <data name="Games.Tetris.VersusStatus" xml:space="preserve">
+    <value>Pontszám {0}  Sorok {1}  Szint {2}  Következő {3}  |  Számítógép {4} pont, {5} sor</value>
+  </data>
+  <data name="Games.Tetris.VsComputer" xml:space="preserve">
+    <value>a számítógép ellen</value>
+  </data>
+  <data name="Games.Tetris.RulesVersus" xml:space="preserve">
+    <value>Rakd a lehulló elemeket teli sorokba. A számítógép táblája a tiéd mellett fut: az veszít, akinek a torony előbb éri el a tetejét.</value>
+  </data>
+  <data name="Games.Tetris.VersusDraw" xml:space="preserve">
+    <value>Mindkét torony elérte a tetejét: {0} pont a számítógép {1} pontja ellen. N: új játék.</value>
+  </data>
+  <data name="Games.Tetris.VersusLost" xml:space="preserve">
+    <value>A számítógép nyert: {0} pont a te {1} pontoddal szemben. N: új játék.</value>
+  </data>
+  <data name="Games.Tetris.VersusWon" xml:space="preserve">
+    <value>Nyertél: {0} pont a számítógép {1} pontja ellen. N: új játék.</value>
+  </data>
+  <data name="Games.Jass.VsComputer" xml:space="preserve">
+    <value>te és a számítógépes játékosok</value>
+  </data>
+  <data name="Games.Tetris.You" xml:space="preserve">
+    <value>Te</value>
+  </data>
+  <data name="Games.Tetris.Computer" xml:space="preserve">
+    <value>Számítógép</value>
   </data>
   <data name="Footer.Sync" xml:space="preserve">
     <value>Szink.</value>
