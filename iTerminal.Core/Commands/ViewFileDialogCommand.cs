@@ -8,6 +8,10 @@ using iConsole.Har;
 using iConsole.Dialogs;
 using iConsole.Json;
 using iConsole.Parquet;
+using iConsole.Markdown;
+using iConsole.Dbf;
+using iConsole.Yaml;
+using iConsole.Toml;
 using iConsole.Sqlite;
 using iConsole.Xml;
 using iConsole.Xps;
@@ -39,9 +43,17 @@ public class ViewFileDialogCommand(
     XpsViewerDialog? xpsViewerDialog = null,
     CertificateViewerDialog? certificateViewerDialog = null,
     HarViewerDialog? harViewerDialog = null,
-    ParquetViewerDialog? parquetViewerDialog = null) : Command
+    ParquetViewerDialog? parquetViewerDialog = null,
+    iConsole.Dialogs.MarkdownViewerDialog? markdownViewerDialog = null,
+    iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
+    iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
+    iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null) : Command
 {
     private readonly HarViewerDialog? _harViewerDialog = harViewerDialog;
+    private readonly iConsole.Dialogs.MarkdownViewerDialog? _markdownViewerDialog = markdownViewerDialog;
+    private readonly iConsole.Dialogs.YamlViewerDialog? _yamlViewerDialog = yamlViewerDialog;
+    private readonly iConsole.Dialogs.TomlViewerDialog? _tomlViewerDialog = tomlViewerDialog;
+    private readonly iConsole.Dialogs.DbfViewerDialog? _dbfViewerDialog = dbfViewerDialog;
     private readonly WebBrowserDialog? _webBrowserDialog = webBrowserDialog;
     private readonly VideoFileViewerDialog? _videoFileViewerDialog = videoFileViewerDialog;
     private readonly ImageFileViewerDialog? _imageFileViewerDialog = imageFileViewerDialog;
@@ -264,6 +276,45 @@ public class ViewFileDialogCommand(
         {
             _executableAnalysisDialog.Url = focusedFileUrl;
             await (Control?.ShowDialogAsync(_executableAnalysisDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // Markdown opens in the rendered viewer, from any drive: it is read through the file system like text.
+        if (_markdownViewerDialog is not null
+            && focusedFileUrl is not null
+            && MarkdownFileTypes.IsMarkdownFile(focusedFileUrl.Path))
+        {
+            _markdownViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_markdownViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // YAML and TOML documents open as trees, like JSON, from any drive.
+        if (_yamlViewerDialog is not null
+            && focusedFileUrl is not null
+            && YamlFileTypes.IsYamlFile(focusedFileUrl.Path))
+        {
+            _yamlViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_yamlViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        if (_tomlViewerDialog is not null
+            && focusedFileUrl is not null
+            && TomlFileTypes.IsTomlFile(focusedFileUrl.Path))
+        {
+            _tomlViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_tomlViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // A dBase table opens in the grid viewer, from any drive: it is read as bytes like the other binary formats.
+        if (_dbfViewerDialog is not null
+            && focusedFileUrl is not null
+            && DbfFileTypes.IsDbfFile(focusedFileUrl.Path))
+        {
+            _dbfViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_dbfViewerDialog) ?? Task.CompletedTask);
             return;
         }
 

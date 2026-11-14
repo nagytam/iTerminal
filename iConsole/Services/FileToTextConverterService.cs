@@ -17,6 +17,8 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Presentation;
 using System.Reflection;
 using iConsole.IWork;
+using iConsole.Fonts;
+using iConsole.Photoshop;
 
 namespace iConsole.Services;
 
@@ -36,6 +38,16 @@ public class FileToTextConverterService : IFileToTextConverterService
     // Native binary extensions whose metadata is displayed rather than raw bytes.
     private static readonly HashSet<string> AssemblyExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "dll", "exe", "so" };
+
+    // Vector drawings are rendered as text art like the pictures; the renderer reads the document, never a path.
+    private static readonly HashSet<string> SvgExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "svg" };
+
+    private static readonly HashSet<string> FontExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "ttf", "otf" };
+
+    private static readonly HashSet<string> PhotoshopExtensions =
+        new(StringComparer.OrdinalIgnoreCase) { "psd" };
 
     private static readonly HashSet<string> WordExtensions =
         new(StringComparer.OrdinalIgnoreCase) { "docx", "docm", "dotx", "dotm" };
@@ -159,6 +171,9 @@ public class FileToTextConverterService : IFileToTextConverterService
         && !url.Extension.Equals("pdf", StringComparison.OrdinalIgnoreCase)
         && !IsStructuredExtension(url.Extension)
         && !ImageExtensions.Contains(url.Extension)
+        && !SvgExtensions.Contains(url.Extension)
+        && !FontExtensions.Contains(url.Extension)
+        && !PhotoshopExtensions.Contains(url.Extension)
         && !AssemblyExtensions.Contains(url.Extension);
 
     /// <summary>True for the binaries whose F3 view adds a disassembly after the metadata page.</summary>
@@ -199,6 +214,18 @@ public class FileToTextConverterService : IFileToTextConverterService
             else if (ImageExtensions.Contains(url.Extension))
             {
                 await ReadImageFileAsync(url, fileSystem, textModel);
+            }
+            else if (SvgExtensions.Contains(url.Extension))
+            {
+                await ReadSvgFileAsync(url, fileSystem, textModel);
+            }
+            else if (FontExtensions.Contains(url.Extension))
+            {
+                await ReadFontFileAsync(url, fileSystem, textModel);
+            }
+            else if (PhotoshopExtensions.Contains(url.Extension))
+            {
+                await ReadPhotoshopFileAsync(url, fileSystem, textModel);
             }
             else if (AssemblyExtensions.Contains(url.Extension))
             {
@@ -556,6 +583,15 @@ public class FileToTextConverterService : IFileToTextConverterService
         if (bitmap == null)
             return;
 
+        AppendAsciiArt(bitmap, textModel);
+    }
+
+    /// <summary>
+    /// Draws a bitmap as text art: at most 120 columns, each cell the average of the pixels under it, shaded by luminance. The
+    /// bitmap is disposed when this returns; every caller hands its bitmap over.
+    /// </summary>
+    internal static void AppendAsciiArt(SKBitmap bitmap, ITextModel textModel)
+    {
         // Target width: cap at 120 columns; height is halved to compensate for
         // the ~2:1 character cell aspect ratio (tall characters, narrow pixels).
         const int maxColumns = 120;
@@ -630,6 +666,200 @@ public class FileToTextConverterService : IFileToTextConverterService
         {
             try { bitmap.Dispose(); } catch { }
         }
+    }
+
+    private static async Task ReadSvgFileAsync(Url url, IFileSystem fileSystem, ITextModel textModel)
+    {
+        var memoryFile = await fileSystem.ReadFileAsync(url);
+        if (memoryFile?.Content is null)
+            return;
+
+        SKBitmap? bitmap = await Task.Run(() => RenderSvg(memoryFile.Content));
+        if (bitmap is null)
+        {
+            // A document the renderer rejects is shown as its text, as it was before SVG rendering.
+            await ReadTextFileAsync(url, fileSystem, textModel);
+            return;
+        }
+
+        AppendAsciiArt(bitmap, textModel);
+    }
+
+    /// <summary>
+    /// Draws an SVG document on white, about 480 pixels wide (a taller one is kept under 4,000 pixels high). Null when the
+    /// renderer rejects the document. The text art is at most 120 columns, so the extra pixels only sharpen the averages.
+    /// </summary>
+    internal static SKBitmap? RenderSvg(byte[] content)
+    {
+        try
+        {
+            using var stream = new MemoryStream(content);
+            using var svg = new Svg.Skia.SKSvg();
+            SKPicture? picture = svg.Load(stream);
+            if (picture is null)
+                return null;
+
+            SKRect bounds = picture.CullRect;
+            if (bounds.Width <= 0 || bounds.Height <= 0)
+                return null;
+
+            float scale = Math.Min(480f / bounds.Width, 4000f / bounds.Height);
+            int width = Math.Max(1, (int)Math.Round(bounds.Width * scale));
+            int height = Math.Max(1, (int)Math.Round(bounds.Height * scale));
+            var bitmap = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Opaque));
+            using var canvas = new SKCanvas(bitmap);
+            canvas.Clear(SKColors.White);
+            canvas.Scale(scale);
+            canvas.Translate(-bounds.Left, -bounds.Top);
+            canvas.DrawPicture(picture);
+            return bitmap;
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            // Untrusted input: any failure of the renderer means the file is shown as text.
+            return null;
+        }
+    }
+
+    private static async Task ReadFontFileAsync(Url url, IFileSystem fileSystem, ITextModel textModel)
+    {
+        var memoryFile = await fileSystem.ReadFileAsync(url);
+        if (memoryFile?.Content is null)
+            return;
+
+        byte[] content = memoryFile.Content;
+        FontInfo info;
+        try
+        {
+            info = await Task.Run(() => FontFileReader.Read(content));
+        }
+        catch (FormatException)
+        {
+            await ReadTextFileAsync(url, fileSystem, textModel);
+            return;
+        }
+
+        AddFontLines(info, textModel);
+        SKBitmap? sample = await Task.Run(() => RenderFontSample(content));
+        if (sample is null)
+        {
+            textModel.Lines.Add(ViewerText.Get("Font.NoPreview", "The font could not be drawn for a preview."));
+            return;
+        }
+
+        textModel.Lines.Add(string.Empty);
+        AddHeading(textModel, ViewerText.Get("Font.Preview", "Preview"));
+        AppendAsciiArt(sample, textModel);
+    }
+
+    private static void AddFontLines(FontInfo info, ITextModel textModel)
+    {
+        AddHeading(textModel, ViewerText.Get("Font.Names", "Names"));
+        AddField(textModel, ViewerText.Get("Font.Family", "Family"), info.FamilyName);
+        AddField(textModel, ViewerText.Get("Font.Style", "Style"), info.SubfamilyName);
+        AddField(textModel, ViewerText.Get("Font.FullName", "Full name"), info.FullName);
+        AddField(textModel, ViewerText.Get("Font.PostScript", "PostScript name"), info.PostScriptName);
+        AddField(textModel, ViewerText.Get("Font.Version", "Version"), info.Version);
+        AddField(textModel, ViewerText.Get("Font.Copyright", "Copyright"), info.Copyright);
+        AddField(textModel, ViewerText.Get("Font.Designer", "Designer"), info.Designer);
+        AddField(textModel, ViewerText.Get("Font.Manufacturer", "Manufacturer"), info.Manufacturer);
+        AddField(textModel, ViewerText.Get("Font.License", "License"), info.License);
+        textModel.Lines.Add(string.Empty);
+
+        AddHeading(textModel, ViewerText.Get("Font.Design", "Design"));
+        AddField(textModel, ViewerText.Get("Font.Format", "Outlines"), info.Outlines);
+        AddField(textModel, ViewerText.Get("Font.UnitsPerEm", "Units per em"), info.UnitsPerEm > 0 ? info.UnitsPerEm.ToString("N0", CultureInfo.CurrentCulture) : null);
+        AddField(textModel, ViewerText.Get("Font.Glyphs", "Glyphs"), info.GlyphCount.ToString("N0", CultureInfo.CurrentCulture));
+        AddField(textModel, ViewerText.Get("Font.Characters", "Characters in the map"), info.CharacterCount.ToString("N0", CultureInfo.CurrentCulture));
+        AddField(textModel, ViewerText.Get("Font.Weight", "Weight class"), info.Weight > 0 ? info.Weight.ToString(CultureInfo.InvariantCulture) : null);
+        AddField(textModel, ViewerText.Get("Font.WidthClass", "Width class"), info.WidthClass > 0 ? info.WidthClass.ToString(CultureInfo.InvariantCulture) : null);
+        AddField(textModel, ViewerText.Get("Font.Created", "Created"), info.Created?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+        AddField(textModel, ViewerText.Get("Font.Modified", "Modified"), info.Modified?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+        AddField(textModel, ViewerText.Get("Font.Embedding", "Embedding"), info.Embedding);
+        textModel.Lines.Add(string.Empty);
+    }
+
+    /// <summary>The font drawn in two lines of sample text, wide enough for the text art. A font the system cannot load gives null.</summary>
+    internal static SKBitmap? RenderFontSample(byte[] content)
+    {
+        try
+        {
+            using SKTypeface? typeface = SKTypeface.FromData(SKData.CreateCopy(content));
+            if (typeface is null)
+                return null;
+
+            string[] lines = ["Aa Bb Cc 0123", "ABC ABC"];
+            using var font = new SKFont(typeface, 110);
+            float widest = lines.Max(line => font.MeasureText(line));
+            float size = widest > 0 ? Math.Min(110f, 940f / widest * 110f) : 110f;
+            font.Size = size;
+            float step = size * 1.7f;
+            int height = (int)(step * lines.Length) + 20;
+            var bitmap = new SKBitmap(new SKImageInfo(1000, height, SKColorType.Rgba8888, SKAlphaType.Opaque));
+            using var paint = new SKPaint { Color = SKColors.Black, IsAntialias = true };
+            using var canvas = new SKCanvas(bitmap);
+            canvas.Clear(SKColors.White);
+            float y = size * 1.3f;
+            foreach (string line in lines)
+            {
+                canvas.DrawText(line, 30f, y, font, paint);
+                y += step;
+            }
+
+            return bitmap;
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            return null;
+        }
+    }
+
+    private static async Task ReadPhotoshopFileAsync(Url url, IFileSystem fileSystem, ITextModel textModel)
+    {
+        var memoryFile = await fileSystem.ReadFileAsync(url);
+        if (memoryFile?.Content is null)
+            return;
+
+        byte[] content = memoryFile.Content;
+        PsdDocument document;
+        try
+        {
+            document = await Task.Run(() => PsdDocument.Parse(content));
+        }
+        catch (FormatException)
+        {
+            await ReadTextFileAsync(url, fileSystem, textModel);
+            return;
+        }
+
+        AddHeading(textModel, ViewerText.Get("Psd.Heading", "Photoshop file"));
+        AddField(textModel, ViewerText.Get("Psd.Format", "Format"), document.Version == 2 ? "PSB" : "PSD");
+        AddField(textModel, ViewerText.Get("Psd.Size", "Size"),
+            ViewerText.Format("Psd.Pixels", "{0:N0} × {1:N0} pixels", document.Width, document.Height));
+        AddField(textModel, ViewerText.Get("Psd.ColorMode", "Colour mode"), document.ColorMode);
+        AddField(textModel, ViewerText.Get("Psd.Depth", "Depth"),
+            ViewerText.Format("Psd.Bits", "{0} bits per channel", document.Depth));
+        AddField(textModel, ViewerText.Get("Psd.Channels", "Channels"), document.Channels.ToString(CultureInfo.InvariantCulture));
+        AddField(textModel, ViewerText.Get("Psd.Layers", "Layers"),
+            document.LayerCount is { } layers ? layers.ToString("N0", CultureInfo.CurrentCulture) : ViewerText.Get("Psd.NoLayers", "none"));
+        AddField(textModel, ViewerText.Get("Psd.Compression", "Compression"), document.Compression);
+        textModel.Lines.Add(string.Empty);
+
+        AddHeading(textModel, ViewerText.Get("Psd.Picture", "Merged picture"));
+        if (document.Picture is { } picture)
+        {
+            // AppendAsciiArt disposes the bitmap; it is the only holder of it.
+            AppendAsciiArt(picture, textModel);
+            return;
+        }
+
+        textModel.Lines.Add("  " + document.PictureStatus switch
+        {
+            PsdPictureStatus.Compressed => ViewerText.Get("Psd.Compressed", "The picture is ZIP compressed, which this viewer does not read."),
+            PsdPictureStatus.TooLarge => ViewerText.Get("Psd.TooLarge", "The picture is too large to draw."),
+            PsdPictureStatus.Truncated => ViewerText.Get("Psd.Truncated", "The picture data ends before the picture does."),
+            _ => ViewerText.Get("Psd.NotDrawn", "The picture is not drawn for this colour mode or depth."),
+        });
     }
 
     private static async Task ReadAssemblyMetadataAsync(Url url, IFileSystem fileSystem, ITextModel textModel)

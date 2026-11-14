@@ -52,13 +52,16 @@ public class ProgressWindow : PopUpWindow
 
         IsModal = true;
         _task = task;
-        _task.PropertyChanged += OnTaskChanged;
         _progressBar = new ProgressBar(themeService);
         AddControl(_progressBar);
         _progressTime = new ProgressTime(_task, themeService);
         AddControl(_progressTime);
         _cancelButton = new Button(new CancelOrCloseCommand(task), themeService) { HotKeyChar = 'c' };
         AddControl(_cancelButton);
+        // Subscribed last: the task can fail on its own thread at any moment, and OnTaskChanged reads the controls above.
+        // Subscribing first let a fast failure reach the handler before _progressBar was set (a NullReferenceException
+        // that left the progress window stuck on screen).
+        _task.PropertyChanged += OnTaskChanged;
     }
 
     private void OnTaskChanged(object? sender, PropertyChangedEventArgs e)

@@ -1333,4 +1333,102 @@ public class ViewFileDialogCommandTest
 
         Assert.IsNotNull(panel);
     }
+
+    // ── Markdown, YAML, TOML and dBase ──────────────────────────────────────
+
+    [TestMethod]
+    [Timeout(60_000)]
+    [DataRow("md")]
+    [DataRow("markdown")]
+    public void ExecuteAsync_WithAMarkdownFile_PointsTheMarkdownViewerAtIt(string extension)
+    {
+        var themeService = CreateThemeService();
+        var markdownDialog = new iConsole.Dialogs.MarkdownViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.{extension}");
+        File.WriteAllText(path, "# Title\n");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(CreateDialog(themeService), CreateServiceForFile(path), markdownViewerDialog: markdownDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, markdownDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    [DataRow("yaml")]
+    [DataRow("yml")]
+    public void ExecuteAsync_WithAYamlFile_PointsTheYamlViewerAtIt(string extension)
+    {
+        var themeService = CreateThemeService();
+        var yamlDialog = new iConsole.Dialogs.YamlViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.{extension}");
+        File.WriteAllText(path, "a: 1\n");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(CreateDialog(themeService), CreateServiceForFile(path), yamlViewerDialog: yamlDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, yamlDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithATomlFile_PointsTheTomlViewerAtIt()
+    {
+        var themeService = CreateThemeService();
+        var tomlDialog = new iConsole.Dialogs.TomlViewerDialog(Mock.Of<IContentModelService>(), Mock.Of<IFileToTextConverterService>(), themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.toml");
+        File.WriteAllText(path, "a = 1\n");
+
+        try
+        {
+            var command = new ViewFileDialogCommand(CreateDialog(themeService), CreateServiceForFile(path), tomlViewerDialog: tomlDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, tomlDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    [Timeout(60_000)]
+    public void ExecuteAsync_WithADbfFile_PointsTheDbfViewerAtIt()
+    {
+        var themeService = CreateThemeService();
+        var dbfDialog = new iConsole.Dialogs.DbfViewerDialog(Mock.Of<IContentModelService>(), themeService);
+        var path = Path.Combine(Path.GetTempPath(), $"ViewCommandTest_{Guid.NewGuid():N}.dbf");
+        File.WriteAllBytes(path, new byte[64]);
+
+        try
+        {
+            var command = new ViewFileDialogCommand(CreateDialog(themeService), CreateServiceForFile(path), dbfViewerDialog: dbfDialog);
+
+            command.ExecuteAsync(null).GetAwaiter().GetResult();
+
+            Assert.AreEqual(path, dbfDialog.Url?.Path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
 }

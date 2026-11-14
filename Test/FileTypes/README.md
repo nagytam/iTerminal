@@ -31,6 +31,11 @@ What is here:
 - **Text, code and markup:** the plain text and source formats the text extractor reads (txt, md, csv, json, yaml,
   srt, vtt, the programming languages listed in `PlainTextExtractor`, and so on), and the markup formats (html, xml,
   xaml, rss, atom, csproj, slnx, config, xsd, xsl, xslt, props, targets, nuspec, resx, plist, sln).
+- **Fonts:** ttf (TrueType outlines) and otf (CFF outlines), each a font named Sample Sans with three glyphs (A, B and a space)
+  made for these tests by fontTools, so no third-party font is redistributed. F3 shows its names, metrics and a preview.
+- **Photoshop:** psd, a 6 x 4 RGB picture, 8-bit, RLE compressed, with one layer. F3 shows its header and the picture as text art.
+- **dBase tables:** dbf, a dBase III table with text, number, date, logical and memo fields, a Windows-1252 language byte, and
+  one record marked deleted (not shown). F3 shows the records as a grid.
 - **Playlists:** m3u, m3u8.
 - **Checksums and signatures:** `example.zip.md5`, `.sha1`, `.sha256`, and detached signatures of `example.txt`
   (`.asc`, `.sig`, `.gpg`, `.sign`). The signing key was temporary, so the signatures cannot be verified by a keyring.

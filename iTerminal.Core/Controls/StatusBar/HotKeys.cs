@@ -93,6 +93,10 @@ public class HotKeys : StatusBarItem
         iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null,
         iConsole.Dialogs.HarViewerDialog? harViewerDialog = null,
         iConsole.Dialogs.ParquetViewerDialog? parquetViewerDialog = null,
+        iConsole.Dialogs.MarkdownViewerDialog? markdownViewerDialog = null,
+        iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
+        iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
+        iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
         IGitService? gitService = null)
         : base(themeService)
     {
@@ -112,7 +116,7 @@ public class HotKeys : StatusBarItem
             AddCommand(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
         }
         var screenManagerDialogCommand = new ScreenManagerDialogCommand(themeService);
-        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, sqliteViewerDialog: sqliteViewerDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog);
+        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, sqliteViewerDialog: sqliteViewerDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog, markdownViewerDialog: markdownViewerDialog, yamlViewerDialog: yamlViewerDialog, tomlViewerDialog: tomlViewerDialog, dbfViewerDialog: dbfViewerDialog);
         var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations);
         var createFolderDialogCommand = new CreateFolderDialogCommand(createFolderDialog, contentModelService);
         var createFileDialogCommand = new CreateFileDialogCommand(createFileDialog, contentModelService);

@@ -23,6 +23,9 @@
     <PackageReference Include="PdfPig" Version="0.1.16" />
     <PackageReference Include="SkiaSharp" Version="4.156.0" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.156.0" />
+    <PackageReference Include="Svg.Skia" Version="3.0.0" />
+    <PackageReference Include="Tomlyn" Version="2.2.0" />
+    <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 
 </Project>

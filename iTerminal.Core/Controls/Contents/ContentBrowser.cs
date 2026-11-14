@@ -53,6 +53,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private iConsole.Dialogs.CertificateViewerDialog? _certificateViewerDialog { get; set; }
     private iConsole.Dialogs.HarViewerDialog? _harViewerDialog { get; set; }
     private iConsole.Dialogs.ParquetViewerDialog? _parquetViewerDialog { get; set; }
+    private iConsole.Dialogs.MarkdownViewerDialog? _markdownViewerDialog { get; set; }
+    private iConsole.Dialogs.YamlViewerDialog? _yamlViewerDialog { get; set; }
+    private iConsole.Dialogs.TomlViewerDialog? _tomlViewerDialog { get; set; }
+    private iConsole.Dialogs.DbfViewerDialog? _dbfViewerDialog { get; set; }
     private iTerminal.Core.Dialogs.Web.WebBrowserDialog? _webBrowserDialog { get; set; }
     private MarkPatternDialog? _markPatternDialog { get; set; }
     private MarkPatternDialog? _unmarkPatternDialog { get; set; }
@@ -135,7 +139,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
         iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null,
         iConsole.Dialogs.HarViewerDialog? harViewerDialog = null,
-        iConsole.Dialogs.ParquetViewerDialog? parquetViewerDialog = null)
+        iConsole.Dialogs.ParquetViewerDialog? parquetViewerDialog = null,
+        iConsole.Dialogs.MarkdownViewerDialog? markdownViewerDialog = null,
+        iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
+        iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
+        iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null)
         : base(themeService)
     {
         _webBrowserDialog = webBrowserDialog;
@@ -148,6 +156,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _certificateViewerDialog = certificateViewerDialog;
         _harViewerDialog = harViewerDialog;
         _parquetViewerDialog = parquetViewerDialog;
+        _markdownViewerDialog = markdownViewerDialog;
+        _yamlViewerDialog = yamlViewerDialog;
+        _tomlViewerDialog = tomlViewerDialog;
+        _dbfViewerDialog = dbfViewerDialog;
         _editLinkDialog = editLinkDialog;
         _malwareScanService = malwareScanService;
         _notificationService = notificationService;
@@ -405,7 +417,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         }
         if (_fileViewerDialog is not null)
         {
-            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, _webBrowserDialog, sqliteViewerDialog: _sqliteViewerDialog, hdfViewerDialog: _hdfViewerDialog, executableAnalysisDialog: _executableAnalysisDialog, xpsViewerDialog: _xpsViewerDialog, certificateViewerDialog: _certificateViewerDialog, harViewerDialog: _harViewerDialog, parquetViewerDialog: _parquetViewerDialog));
+            AddCommand(new ViewFileDialogCommand(_fileViewerDialog, ContentModelService, _solutionViewerDialog, _musicFileViewerDialog, _videoFileViewerDialog, _imageFileViewerDialog, _xmlViewerDialog, _jsonViewerDialog, _csvViewerDialog, _webBrowserDialog, sqliteViewerDialog: _sqliteViewerDialog, hdfViewerDialog: _hdfViewerDialog, executableAnalysisDialog: _executableAnalysisDialog, xpsViewerDialog: _xpsViewerDialog, certificateViewerDialog: _certificateViewerDialog, harViewerDialog: _harViewerDialog, parquetViewerDialog: _parquetViewerDialog, markdownViewerDialog: _markdownViewerDialog, yamlViewerDialog: _yamlViewerDialog, tomlViewerDialog: _tomlViewerDialog, dbfViewerDialog: _dbfViewerDialog));
         }
         if (_textFileEditorDialog is not null)
         {

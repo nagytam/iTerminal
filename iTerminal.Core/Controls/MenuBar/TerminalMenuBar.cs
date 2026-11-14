@@ -149,7 +149,11 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
         iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null,
         iConsole.Dialogs.HarViewerDialog? harViewerDialog = null,
-        iConsole.Dialogs.ParquetViewerDialog? parquetViewerDialog = null
+        iConsole.Dialogs.ParquetViewerDialog? parquetViewerDialog = null,
+        iConsole.Dialogs.MarkdownViewerDialog? markdownViewerDialog = null,
+        iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
+        iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
+        iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null
         )
         : base([], themeService)
     {
@@ -189,7 +193,11 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             xpsViewerDialog: xpsViewerDialog,
             certificateViewerDialog: certificateViewerDialog,
             harViewerDialog: harViewerDialog,
-            parquetViewerDialog: parquetViewerDialog));
+            parquetViewerDialog: parquetViewerDialog,
+            markdownViewerDialog: markdownViewerDialog,
+            yamlViewerDialog: yamlViewerDialog,
+            tomlViewerDialog: tomlViewerDialog,
+            dbfViewerDialog: dbfViewerDialog));
 
         AddMenuItem(new EditMenuItem(
             contentModelService,
