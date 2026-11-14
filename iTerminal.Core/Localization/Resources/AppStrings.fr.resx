@@ -9625,4 +9625,7 @@
     <value>Rechercher sur YouTube et lire une vidéo dans le visionneur vidéo.</value>
     <comment>Search YouTube and play a video in the video viewer.</comment>
   </data>
+  <data name="Footer.Sync" xml:space="preserve">
+    <value>Synchro</value>
+  </data>
 </root>

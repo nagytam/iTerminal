@@ -1,6 +1,7 @@
-using iConsole.Localization;
 using iConsole.Commands;
+using iConsole.Data;
 using iConsole.Interfaces;
+using iConsole.Localization;
 using iConsole.Services;
 using iTerminal.Core.Model.Git;
 using iTerminal.Core.Services.Git;
@@ -19,6 +20,9 @@ public class GitSyncCommand(
     INotificationService? notificationService = null) : Command
 {
     public override string Title => "Git sync";
+
+    // Key ctor is (consoleKey, shift, alt, control): Ctrl+D, the bottom bar's "Ctrl-D-Sync". Ctrl+Y is the ToDo list.
+    public override Key? Key { get; init; } = new Key(ConsoleKey.D, false, false, true);
     public override string Description => "Pull the current branch's upstream with a rebase, then push the local commits (the panel's folder is a git working tree).";
 
     /// <summary>The sync started last. Nothing waits on it; it exists so a test can.</summary>
