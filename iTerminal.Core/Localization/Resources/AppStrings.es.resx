@@ -9297,4 +9297,91 @@
   <data name="Docs.SemanticReady" xml:space="preserve">
     <value>Índice de significado: {0} documentos, incrustados con {1}.</value>
   </data>
+  <data name="Menu.Scanner" xml:space="preserve">
+    <value>Escanear</value>
+  </data>
+  <data name="DialogHint.Scan" xml:space="preserve">
+    <value>Escanear</value>
+  </data>
+  <data name="DialogHint.ChooseScanner" xml:space="preserve">
+    <value>Elegir el escáner</value>
+  </data>
+  <data name="DialogHint.SourceToggle" xml:space="preserve">
+    <value>Cama plana o alimentador</value>
+  </data>
+  <data name="DialogHint.Resolution" xml:space="preserve">
+    <value>Resolución</value>
+  </data>
+  <data name="DialogHint.ColorMode" xml:space="preserve">
+    <value>Modo de color</value>
+  </data>
+  <data name="DialogHint.FileFormat" xml:space="preserve">
+    <value>Formato de archivo</value>
+  </data>
+  <data name="DialogHint.PageStep" xml:space="preserve">
+    <value>Página anterior o siguiente</value>
+  </data>
+  <data name="DialogHint.Save" xml:space="preserve">
+    <value>Guardar las páginas</value>
+  </data>
+  <data name="DialogHint.RefreshScanners" xml:space="preserve">
+    <value>Volver a leer los escáneres</value>
+  </data>
+  <data name="Scan.NoScanner" xml:space="preserve">
+    <value>No hay ningún escáner seleccionado.</value>
+  </data>
+  <data name="Scan.Scanning" xml:space="preserve">
+    <value>Escaneando…</value>
+  </data>
+  <data name="Scan.Cancelled" xml:space="preserve">
+    <value>El escaneado se ha cancelado.</value>
+  </data>
+  <data name="Scan.NothingToSave" xml:space="preserve">
+    <value>No hay ninguna página escaneada que guardar.</value>
+  </data>
+  <data name="Scan.NoFolder" xml:space="preserve">
+    <value>Abra el diálogo en una carpeta local para guardar.</value>
+  </data>
+  <data name="Scan.Searching" xml:space="preserve">
+    <value>Buscando escáneres…</value>
+  </data>
+  <data name="Scan.NoScanners" xml:space="preserve">
+    <value>No se ha encontrado ningún escáner.</value>
+  </data>
+  <data name="Scan.Feeder" xml:space="preserve">
+    <value>Alimentador (todas las páginas)</value>
+  </data>
+  <data name="Scan.Flatbed" xml:space="preserve">
+    <value>Cama plana (una página)</value>
+  </data>
+  <data name="Scan.Gray" xml:space="preserve">
+    <value>Gris</value>
+  </data>
+  <data name="Scan.BlackWhite" xml:space="preserve">
+    <value>Blanco y negro</value>
+  </data>
+  <data name="Scan.Colour" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="Scan.NoPages" xml:space="preserve">
+    <value>Aún no hay páginas</value>
+  </data>
+  <data name="Scan.PageOf" xml:space="preserve">
+    <value>Página {0} de {1}</value>
+  </data>
+  <data name="Scan.NoLocalFolder" xml:space="preserve">
+    <value>no es una carpeta local</value>
+  </data>
+  <data name="Scan.SaveTo" xml:space="preserve">
+    <value>Guardar en</value>
+  </data>
+  <data name="Scan.Empty" xml:space="preserve">
+    <value>Elija un escáner y pulse Intro.</value>
+  </data>
+  <data name="CmdTitle.ea1c510d" xml:space="preserve">
+    <value>Escanear</value>
+  </data>
+  <data name="CmdDesc.96256810" xml:space="preserve">
+    <value>Escanear una página o el alimentador, verla y guardarla.</value>
+  </data>
 </root>

@@ -58,7 +58,8 @@ public class ToolsMenuItem : MenuItem
         iTerminal.Core.Dialogs.Bluetooth.BluetoothDeviceManagerDialog? bluetoothDeviceManagerDialog = null,
         VirtualMachineManagerDialog? virtualMachineManagerDialog = null,
         iTerminal.Core.Dialogs.Games.JassDialog? jassDialog = null,
-        iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null)
+        iTerminal.Core.Dialogs.UsersAndGroups.UserGroupManagerDialog? userGroupManagerDialog = null,
+        iTerminal.Core.Dialogs.Scanning.ScannerDialog? scannerDialog = null)
         : base("Tools", null, [], themeService)
     {
         HotKeyChar = 'T';
@@ -76,6 +77,11 @@ public class ToolsMenuItem : MenuItem
         AddMenuItem(new MenuItem("Task Manager\tF9",           new TaskManagerDialogCommand(taskManagerDialog), [], themeService));
         AddMenuItem(new MenuItem("Process Manager\tAlt+F12", new ProcessManagerDialogCommand(processManagerDialog), [], themeService));
         AddMenuItem(new MenuItem("-", null, [], themeService));
+        if (scannerDialog is not null)
+        {
+            AddMenuItem(new MenuItem("Scan…\tCtrl+Shift+I", new iTerminal.Core.Commands.ScannerDialogCommand(scannerDialog, contentModelService), [], themeService));
+        }
+
         AddMenuItem(new MenuItem("System Info\tCtrl+F11",      new SystemInfoDialogCommand(systemInfoDialog), [], themeService));
 
         // The app's larger features were reachable only through hot keys nothing listed — no menu

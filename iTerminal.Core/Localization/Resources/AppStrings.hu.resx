@@ -9297,4 +9297,91 @@
   <data name="Docs.SemanticReady" xml:space="preserve">
     <value>Jelentésindex: {0} dokumentum, beágyazva ezzel: {1}.</value>
   </data>
+  <data name="Menu.Scanner" xml:space="preserve">
+    <value>Beolvasás</value>
+  </data>
+  <data name="DialogHint.Scan" xml:space="preserve">
+    <value>Beolvasás</value>
+  </data>
+  <data name="DialogHint.ChooseScanner" xml:space="preserve">
+    <value>Szkenner kiválasztása</value>
+  </data>
+  <data name="DialogHint.SourceToggle" xml:space="preserve">
+    <value>Síkágy vagy adagoló</value>
+  </data>
+  <data name="DialogHint.Resolution" xml:space="preserve">
+    <value>Felbontás</value>
+  </data>
+  <data name="DialogHint.ColorMode" xml:space="preserve">
+    <value>Színmód</value>
+  </data>
+  <data name="DialogHint.FileFormat" xml:space="preserve">
+    <value>Fájlformátum</value>
+  </data>
+  <data name="DialogHint.PageStep" xml:space="preserve">
+    <value>Előző vagy következő oldal</value>
+  </data>
+  <data name="DialogHint.Save" xml:space="preserve">
+    <value>Oldalak mentése</value>
+  </data>
+  <data name="DialogHint.RefreshScanners" xml:space="preserve">
+    <value>Szkennerek újraolvasása</value>
+  </data>
+  <data name="Scan.NoScanner" xml:space="preserve">
+    <value>Nincs kiválasztott szkenner.</value>
+  </data>
+  <data name="Scan.Scanning" xml:space="preserve">
+    <value>Beolvasás…</value>
+  </data>
+  <data name="Scan.Cancelled" xml:space="preserve">
+    <value>A beolvasás megszakadt.</value>
+  </data>
+  <data name="Scan.NothingToSave" xml:space="preserve">
+    <value>Nincs mentendő beolvasott oldal.</value>
+  </data>
+  <data name="Scan.NoFolder" xml:space="preserve">
+    <value>Nyissa meg a párbeszédablakot helyi mappában a mentéshez.</value>
+  </data>
+  <data name="Scan.Searching" xml:space="preserve">
+    <value>Szkennerek keresése…</value>
+  </data>
+  <data name="Scan.NoScanners" xml:space="preserve">
+    <value>Nem található szkenner.</value>
+  </data>
+  <data name="Scan.Feeder" xml:space="preserve">
+    <value>Adagoló (minden oldal)</value>
+  </data>
+  <data name="Scan.Flatbed" xml:space="preserve">
+    <value>Síkágy (egy oldal)</value>
+  </data>
+  <data name="Scan.Gray" xml:space="preserve">
+    <value>Szürke</value>
+  </data>
+  <data name="Scan.BlackWhite" xml:space="preserve">
+    <value>Fekete-fehér</value>
+  </data>
+  <data name="Scan.Colour" xml:space="preserve">
+    <value>Színes</value>
+  </data>
+  <data name="Scan.NoPages" xml:space="preserve">
+    <value>Még nincs oldal</value>
+  </data>
+  <data name="Scan.PageOf" xml:space="preserve">
+    <value>Oldal: {0} / {1}</value>
+  </data>
+  <data name="Scan.NoLocalFolder" xml:space="preserve">
+    <value>nem helyi mappa</value>
+  </data>
+  <data name="Scan.SaveTo" xml:space="preserve">
+    <value>Mentés ide</value>
+  </data>
+  <data name="Scan.Empty" xml:space="preserve">
+    <value>Válasszon szkennert, majd nyomja meg az Entert.</value>
+  </data>
+  <data name="CmdTitle.ea1c510d" xml:space="preserve">
+    <value>Beolvasás</value>
+  </data>
+  <data name="CmdDesc.96256810" xml:space="preserve">
+    <value>Egy oldal vagy az adagoló beolvasása, előnézete és mentése.</value>
+  </data>
 </root>
