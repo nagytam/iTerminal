@@ -263,6 +263,11 @@ public static class iTerminalApplicationBuilderExtension
         // The Parquet viewer reads the first rows through the read-only reader; the reader holds no state.
         services.AddTransient<iConsole.Parquet.IParquetFileReader, iTerminal.Core.Services.ParquetFiles.ParquetFileReader>();
         services.AddTransient<iConsole.Dialogs.ParquetViewerDialog>();
+        // Markdown, YAML, TOML and dBase viewers: each reads its file through the file system and holds no state of its own.
+        services.AddTransient<iConsole.Dialogs.MarkdownViewerDialog>();
+        services.AddTransient<iConsole.Dialogs.YamlViewerDialog>();
+        services.AddTransient<iConsole.Dialogs.TomlViewerDialog>();
+        services.AddTransient<iConsole.Dialogs.DbfViewerDialog>();
         // The executable analysis view parses a PE, ELF or Mach-O file in-process; the analyzer holds no state.
         services.AddTransient<iConsole.Executables.IExecutableAnalyzer, iTerminal.Core.Services.Executables.ExecutableAnalyzer>();
         services.AddTransient<iConsole.Dialogs.ExecutableAnalysisDialog>();

@@ -1651,4 +1651,139 @@
   <data name="Parquet.Error.Unexpected" xml:space="preserve">
     <value>A fájl nem olvasható: {0}</value>
   </data>
+  <data name="Viewer.NotValidFormat" xml:space="preserve">
+    <value>Érvénytelen {0}: {1}</value>
+  </data>
+  <data name="Dbf.Grid.Empty" xml:space="preserve">
+    <value>A táblázat nem tartalmaz rekordot</value>
+  </data>
+  <data name="Dbf.NotDbase" xml:space="preserve">
+    <value>Nem dBase-tábla: {0}</value>
+  </data>
+  <data name="Dbf.Status" xml:space="preserve">
+    <value>{0:N0} rekord, {1:N0} mező, {2}</value>
+  </data>
+  <data name="Dbf.Updated" xml:space="preserve">
+    <value>frissítve: {0:yyyy-MM-dd}</value>
+  </data>
+  <data name="Dbf.Deleted" xml:space="preserve">
+    <value>{0:N0} törölt, nincs megjelenítve</value>
+  </data>
+  <data name="Dbf.Truncated" xml:space="preserve">
+    <value>csak az első {0:N0} rekord látszik</value>
+  </data>
+  <data name="Viewer.Font.NoPreview" xml:space="preserve">
+    <value>A betűkészletet nem lehetett előnézetként kirajzolni.</value>
+  </data>
+  <data name="Viewer.Font.Preview" xml:space="preserve">
+    <value>Előnézet</value>
+  </data>
+  <data name="Viewer.Font.Names" xml:space="preserve">
+    <value>Nevek</value>
+  </data>
+  <data name="Viewer.Font.Family" xml:space="preserve">
+    <value>Család</value>
+  </data>
+  <data name="Viewer.Font.Style" xml:space="preserve">
+    <value>Stílus</value>
+  </data>
+  <data name="Viewer.Font.FullName" xml:space="preserve">
+    <value>Teljes név</value>
+  </data>
+  <data name="Viewer.Font.PostScript" xml:space="preserve">
+    <value>PostScript-név</value>
+  </data>
+  <data name="Viewer.Font.Version" xml:space="preserve">
+    <value>Verzió</value>
+  </data>
+  <data name="Viewer.Font.Copyright" xml:space="preserve">
+    <value>Szerzői jog</value>
+  </data>
+  <data name="Viewer.Font.Designer" xml:space="preserve">
+    <value>Tervező</value>
+  </data>
+  <data name="Viewer.Font.Manufacturer" xml:space="preserve">
+    <value>Gyártó</value>
+  </data>
+  <data name="Viewer.Font.License" xml:space="preserve">
+    <value>Licenc</value>
+  </data>
+  <data name="Viewer.Font.Design" xml:space="preserve">
+    <value>Kialakítás</value>
+  </data>
+  <data name="Viewer.Font.Format" xml:space="preserve">
+    <value>Körvonalak</value>
+  </data>
+  <data name="Viewer.Font.UnitsPerEm" xml:space="preserve">
+    <value>Egység em-enként</value>
+  </data>
+  <data name="Viewer.Font.Glyphs" xml:space="preserve">
+    <value>Glifek</value>
+  </data>
+  <data name="Viewer.Font.Characters" xml:space="preserve">
+    <value>Karakterek a térképen</value>
+  </data>
+  <data name="Viewer.Font.Weight" xml:space="preserve">
+    <value>Vastagsági osztály</value>
+  </data>
+  <data name="Viewer.Font.WidthClass" xml:space="preserve">
+    <value>Szélességi osztály</value>
+  </data>
+  <data name="Viewer.Font.Created" xml:space="preserve">
+    <value>Létrehozva</value>
+  </data>
+  <data name="Viewer.Font.Modified" xml:space="preserve">
+    <value>Módosítva</value>
+  </data>
+  <data name="Viewer.Font.Embedding" xml:space="preserve">
+    <value>Beágyazás</value>
+  </data>
+  <data name="Viewer.Psd.Heading" xml:space="preserve">
+    <value>Photoshop-fájl</value>
+  </data>
+  <data name="Viewer.Psd.Format" xml:space="preserve">
+    <value>Formátum</value>
+  </data>
+  <data name="Viewer.Psd.Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="Viewer.Psd.Pixels" xml:space="preserve">
+    <value>{0:N0} × {1:N0} képpont</value>
+  </data>
+  <data name="Viewer.Psd.ColorMode" xml:space="preserve">
+    <value>Színmód</value>
+  </data>
+  <data name="Viewer.Psd.Depth" xml:space="preserve">
+    <value>Mélység</value>
+  </data>
+  <data name="Viewer.Psd.Bits" xml:space="preserve">
+    <value>{0} bit csatornánként</value>
+  </data>
+  <data name="Viewer.Psd.Channels" xml:space="preserve">
+    <value>Csatornák</value>
+  </data>
+  <data name="Viewer.Psd.Layers" xml:space="preserve">
+    <value>Rétegek</value>
+  </data>
+  <data name="Viewer.Psd.NoLayers" xml:space="preserve">
+    <value>nincs</value>
+  </data>
+  <data name="Viewer.Psd.Compression" xml:space="preserve">
+    <value>Tömörítés</value>
+  </data>
+  <data name="Viewer.Psd.Picture" xml:space="preserve">
+    <value>Összevont kép</value>
+  </data>
+  <data name="Viewer.Psd.Compressed" xml:space="preserve">
+    <value>A kép ZIP-tömörítésű, ezt a megjelenítő nem olvassa.</value>
+  </data>
+  <data name="Viewer.Psd.TooLarge" xml:space="preserve">
+    <value>A kép túl nagy a kirajzoláshoz.</value>
+  </data>
+  <data name="Viewer.Psd.Truncated" xml:space="preserve">
+    <value>A kép adatai hamarabb érnek véget, mint maga a kép.</value>
+  </data>
+  <data name="Viewer.Psd.NotDrawn" xml:space="preserve">
+    <value>A kép ezzel a színmóddal vagy mélységgel nem rajzolható ki.</value>
+  </data>
 </root>

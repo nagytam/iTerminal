@@ -73,6 +73,9 @@ rather than a path, so a document on an SSH, archive or memory drive reads the s
   `From ` lines, quoting undone, and each message read by `MimeMessageReader`.
 - **Log files** (`.log`) are plain text, coloured by the `Log` syntax language (severity words as keywords). YAML, TOML and
   INI files were already coloured by extension in the highlighter.
+- **SVG** (`.svg`): drawn by `Svg.Skia` onto white at about 480 pixels across (`FileToTextConverterService.RenderSvg`) and shown as text art by the same `AppendAsciiArt` the pictures use. A document the renderer rejects is shown as its text.
+- **TrueType and OpenType** (`.ttf`, `.otf`): `FontFileReader` reads the name, head, maxp, OS/2 and cmap tables by hand (names, outline type, glyph count, character-map coverage, weight, width class, dates, embedding rights). The metadata page is followed by a preview: two lines of sample text drawn by SkiaSharp and shown as text art. The font is never installed or run.
+- **Photoshop** (`.psd`, and `.psb` headers): `PsdDocument` reads the header, the layer count and the merged picture. The picture is drawn for 8- and 16-bit RGB and grayscale data that is raw or RLE compressed (PackBits, `UnpackBits`). ZIP, CMYK, Lab, indexed and the rest are reported on the page, not decompressed. Layers are counted, not read.
 - **HTML, PDF, plain text and images as ASCII art** are read as before. **.dll, .exe and .so** show the metadata page as before
   (`ReadFileAsync`, which the preview and the F4 editor also use), and F3 adds a **Disassembly** section below it.
 - **Disassembly of binaries** (`iConsole/Services/Disassembly/`, F3 only): `IFileToTextConverterService.BuildDisassemblyAsync` reads

@@ -71,6 +71,27 @@ public static class TextEncodings
         return list;
     }
 
+    /// <summary>
+    /// The encoding of a Windows code page number (437, 1250, 1252…), or null when this platform has none. The legacy pages are
+    /// registered by the field initializer above, which this reads so that it has run first.
+    /// </summary>
+    public static Encoding? ForCodePage(int page)
+    {
+        if (!ProviderRegistered)
+        {
+            return null;
+        }
+
+        try
+        {
+            return Encoding.GetEncoding(page);
+        }
+        catch (Exception ex) when (ex is ArgumentException or NotSupportedException)
+        {
+            return null;
+        }
+    }
+
     /// <summary>What a person reads in the status bar: "UTF-8", "windows-1250"…</summary>
     public static string DisplayName(Encoding encoding) => encoding.WebName.ToUpperInvariant();
 

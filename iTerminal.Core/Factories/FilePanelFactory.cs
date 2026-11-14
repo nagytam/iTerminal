@@ -66,7 +66,11 @@ public class FilePanelFactory(
     iConsole.Dialogs.XpsViewerDialog? xpsViewerDialog = null,
     iConsole.Dialogs.CertificateViewerDialog? certificateViewerDialog = null,
     iConsole.Dialogs.HarViewerDialog? harViewerDialog = null,
-    iConsole.Dialogs.ParquetViewerDialog? parquetViewerDialog = null)
+    iConsole.Dialogs.ParquetViewerDialog? parquetViewerDialog = null,
+    iConsole.Dialogs.MarkdownViewerDialog? markdownViewerDialog = null,
+    iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
+    iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
+    iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -92,6 +96,10 @@ public class FilePanelFactory(
             certificateViewerDialog: certificateViewerDialog,
             harViewerDialog: harViewerDialog,
             parquetViewerDialog: parquetViewerDialog,
+            markdownViewerDialog: markdownViewerDialog,
+            yamlViewerDialog: yamlViewerDialog,
+            tomlViewerDialog: tomlViewerDialog,
+            dbfViewerDialog: dbfViewerDialog,
             solutionViewerDialog: solutionViewerDialog,
             contentLenses: contentLenses,
             musicFileViewerDialog: musicFileViewerDialog,

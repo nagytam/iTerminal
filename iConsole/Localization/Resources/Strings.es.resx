@@ -1651,4 +1651,139 @@
   <data name="Parquet.Error.Unexpected" xml:space="preserve">
     <value>No se pudo leer el archivo: {0}</value>
   </data>
+  <data name="Viewer.NotValidFormat" xml:space="preserve">
+    <value>No es {0} válido: {1}</value>
+  </data>
+  <data name="Dbf.Grid.Empty" xml:space="preserve">
+    <value>La tabla no tiene registros</value>
+  </data>
+  <data name="Dbf.NotDbase" xml:space="preserve">
+    <value>No es una tabla dBase: {0}</value>
+  </data>
+  <data name="Dbf.Status" xml:space="preserve">
+    <value>{0:N0} registro(s), {1:N0} campo(s), {2}</value>
+  </data>
+  <data name="Dbf.Updated" xml:space="preserve">
+    <value>actualizado {0:yyyy-MM-dd}</value>
+  </data>
+  <data name="Dbf.Deleted" xml:space="preserve">
+    <value>{0:N0} eliminado(s), no mostrado(s)</value>
+  </data>
+  <data name="Dbf.Truncated" xml:space="preserve">
+    <value>solo se muestran los primeros {0:N0} registros</value>
+  </data>
+  <data name="Viewer.Font.NoPreview" xml:space="preserve">
+    <value>No se pudo dibujar la fuente para la vista previa.</value>
+  </data>
+  <data name="Viewer.Font.Preview" xml:space="preserve">
+    <value>Vista previa</value>
+  </data>
+  <data name="Viewer.Font.Names" xml:space="preserve">
+    <value>Nombres</value>
+  </data>
+  <data name="Viewer.Font.Family" xml:space="preserve">
+    <value>Familia</value>
+  </data>
+  <data name="Viewer.Font.Style" xml:space="preserve">
+    <value>Estilo</value>
+  </data>
+  <data name="Viewer.Font.FullName" xml:space="preserve">
+    <value>Nombre completo</value>
+  </data>
+  <data name="Viewer.Font.PostScript" xml:space="preserve">
+    <value>Nombre PostScript</value>
+  </data>
+  <data name="Viewer.Font.Version" xml:space="preserve">
+    <value>Versión</value>
+  </data>
+  <data name="Viewer.Font.Copyright" xml:space="preserve">
+    <value>Copyright</value>
+  </data>
+  <data name="Viewer.Font.Designer" xml:space="preserve">
+    <value>Diseñador</value>
+  </data>
+  <data name="Viewer.Font.Manufacturer" xml:space="preserve">
+    <value>Fabricante</value>
+  </data>
+  <data name="Viewer.Font.License" xml:space="preserve">
+    <value>Licencia</value>
+  </data>
+  <data name="Viewer.Font.Design" xml:space="preserve">
+    <value>Diseño</value>
+  </data>
+  <data name="Viewer.Font.Format" xml:space="preserve">
+    <value>Contornos</value>
+  </data>
+  <data name="Viewer.Font.UnitsPerEm" xml:space="preserve">
+    <value>Unidades por em</value>
+  </data>
+  <data name="Viewer.Font.Glyphs" xml:space="preserve">
+    <value>Glifos</value>
+  </data>
+  <data name="Viewer.Font.Characters" xml:space="preserve">
+    <value>Caracteres en el mapa</value>
+  </data>
+  <data name="Viewer.Font.Weight" xml:space="preserve">
+    <value>Clase de grosor</value>
+  </data>
+  <data name="Viewer.Font.WidthClass" xml:space="preserve">
+    <value>Clase de anchura</value>
+  </data>
+  <data name="Viewer.Font.Created" xml:space="preserve">
+    <value>Creada</value>
+  </data>
+  <data name="Viewer.Font.Modified" xml:space="preserve">
+    <value>Modificada</value>
+  </data>
+  <data name="Viewer.Font.Embedding" xml:space="preserve">
+    <value>Incrustación</value>
+  </data>
+  <data name="Viewer.Psd.Heading" xml:space="preserve">
+    <value>Archivo de Photoshop</value>
+  </data>
+  <data name="Viewer.Psd.Format" xml:space="preserve">
+    <value>Formato</value>
+  </data>
+  <data name="Viewer.Psd.Size" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
+  <data name="Viewer.Psd.Pixels" xml:space="preserve">
+    <value>{0:N0} × {1:N0} píxeles</value>
+  </data>
+  <data name="Viewer.Psd.ColorMode" xml:space="preserve">
+    <value>Modo de color</value>
+  </data>
+  <data name="Viewer.Psd.Depth" xml:space="preserve">
+    <value>Profundidad</value>
+  </data>
+  <data name="Viewer.Psd.Bits" xml:space="preserve">
+    <value>{0} bits por canal</value>
+  </data>
+  <data name="Viewer.Psd.Channels" xml:space="preserve">
+    <value>Canales</value>
+  </data>
+  <data name="Viewer.Psd.Layers" xml:space="preserve">
+    <value>Capas</value>
+  </data>
+  <data name="Viewer.Psd.NoLayers" xml:space="preserve">
+    <value>ninguna</value>
+  </data>
+  <data name="Viewer.Psd.Compression" xml:space="preserve">
+    <value>Compresión</value>
+  </data>
+  <data name="Viewer.Psd.Picture" xml:space="preserve">
+    <value>Imagen combinada</value>
+  </data>
+  <data name="Viewer.Psd.Compressed" xml:space="preserve">
+    <value>La imagen está comprimida con ZIP, que este visor no lee.</value>
+  </data>
+  <data name="Viewer.Psd.TooLarge" xml:space="preserve">
+    <value>La imagen es demasiado grande para dibujarla.</value>
+  </data>
+  <data name="Viewer.Psd.Truncated" xml:space="preserve">
+    <value>Los datos de la imagen terminan antes que la imagen.</value>
+  </data>
+  <data name="Viewer.Psd.NotDrawn" xml:space="preserve">
+    <value>La imagen no se dibuja para este modo de color o profundidad.</value>
+  </data>
 </root>
