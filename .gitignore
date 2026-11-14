@@ -489,3 +489,7 @@ CoverageReport/
 
 # Reqnroll generates a .feature.cs beside each feature file at build time
 *.feature.cs
+
+# Sample files for the build-time copies in the test projects (example.obj and example.nupkg are otherwise ignored).
+!Test/FileTypes/example.obj
+!Test/FileTypes/example.nupkg
