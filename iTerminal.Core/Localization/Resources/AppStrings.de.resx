@@ -2728,6 +2728,24 @@
   <data name="Svg.NotReadable" xml:space="preserve">
     <value>Diese SVG-Zeichnung konnte nicht gelesen werden.</value>
   </data>
+  <data name="DialogHint.RotateRightLeft" xml:space="preserve">
+    <value>Bild im Uhrzeigersinn oder gegen den Uhrzeigersinn drehen</value>
+  </data>
+  <data name="DialogHint.FlipHorizontalVertical" xml:space="preserve">
+    <value>Bild waagerecht oder senkrecht spiegeln</value>
+  </data>
+  <data name="DialogHint.PreviousNextPicture" xml:space="preserve">
+    <value>Das vorherige oder nächste Bild im Ordner zeigen</value>
+  </data>
+  <data name="Picture.PsdUnsupported" xml:space="preserve">
+    <value>Diese Photoshop-Datei verwendet einen Aufbau, den der Viewer nicht liest.</value>
+  </data>
+  <data name="Picture.RawUnreadable" xml:space="preserve">
+    <value>Diese Rohdatei konnte nicht gelesen werden.</value>
+  </data>
+  <data name="Picture.RawNoPreview" xml:space="preserve">
+    <value>Diese Rohdatei enthält keine JPEG-Vorschau, die der Viewer anzeigen kann.</value>
+  </data>
   <data name="Icon.NotReadable" xml:space="preserve">
     <value>Diese Symboldatei konnte nicht gelesen werden.</value>
   </data>
@@ -4256,7 +4274,7 @@
     <value>r:neu suchen  Enter:öffnen  Esc:schließen</value>
   </data>
   <data name="Hints.ImageViewer" xml:space="preserve">
-    <value> c:Farbe  i:Info  Esc:schließen</value>
+    <value> c:Farbe  i:Info  r/l:drehen  h/v:spiegeln  ←/→:zurück/weiter  Esc:schließen</value>
   </data>
   <data name="Hints.Calculator" xml:space="preserve">
     <value>0-9 . + - * / ^ %  Enter:=  Bksp:zurück  Del/c:löschen  Space:Taste drücken  Ctrl+←/→:Modus  Esc:schließen</value>

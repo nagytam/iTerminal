@@ -2728,6 +2728,24 @@
   <data name="Svg.NotReadable" xml:space="preserve">
     <value>This SVG drawing could not be read.</value>
   </data>
+  <data name="DialogHint.RotateRightLeft" xml:space="preserve">
+    <value>Rotate the picture clockwise or anticlockwise</value>
+  </data>
+  <data name="DialogHint.FlipHorizontalVertical" xml:space="preserve">
+    <value>Mirror the picture horizontally or vertically</value>
+  </data>
+  <data name="DialogHint.PreviousNextPicture" xml:space="preserve">
+    <value>Show the previous or next picture in the folder</value>
+  </data>
+  <data name="Picture.PsdUnsupported" xml:space="preserve">
+    <value>This Photoshop file uses a layout the viewer does not read.</value>
+  </data>
+  <data name="Picture.RawUnreadable" xml:space="preserve">
+    <value>This raw file could not be read.</value>
+  </data>
+  <data name="Picture.RawNoPreview" xml:space="preserve">
+    <value>This raw file has no JPEG preview the viewer can show.</value>
+  </data>
   <data name="Icon.NotReadable" xml:space="preserve">
     <value>This icon file could not be read.</value>
   </data>
@@ -4256,7 +4274,7 @@
     <value>r:rescan  Enter:open  Esc:close</value>
   </data>
   <data name="Hints.ImageViewer" xml:space="preserve">
-    <value> c:colour  i:info  Esc:close</value>
+    <value> c:colour  i:info  r/l:rotate  h/v:flip  ←/→:prev/next  Esc:close</value>
   </data>
   <data name="Hints.Calculator" xml:space="preserve">
     <value>0-9 . + - * / ^ %  Enter:=  Bksp:back  Del/c:clear  Space:press button  Ctrl+←/→:mode  Esc:close</value>

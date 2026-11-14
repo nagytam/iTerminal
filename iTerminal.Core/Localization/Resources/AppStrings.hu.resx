@@ -2728,6 +2728,24 @@
   <data name="Svg.NotReadable" xml:space="preserve">
     <value>Ezt az SVG-rajzot nem lehetett beolvasni.</value>
   </data>
+  <data name="DialogHint.RotateRightLeft" xml:space="preserve">
+    <value>A kép forgatása az óramutató járásával egyező vagy ellentétes irányban</value>
+  </data>
+  <data name="DialogHint.FlipHorizontalVertical" xml:space="preserve">
+    <value>A kép tükrözése vízszintesen vagy függőlegesen</value>
+  </data>
+  <data name="DialogHint.PreviousNextPicture" xml:space="preserve">
+    <value>A mappa előző vagy következő képének megjelenítése</value>
+  </data>
+  <data name="Picture.PsdUnsupported" xml:space="preserve">
+    <value>Ez a Photoshop-fájl olyan elrendezést használ, amelyet a megjelenítő nem olvas.</value>
+  </data>
+  <data name="Picture.RawUnreadable" xml:space="preserve">
+    <value>Ezt a nyers fájlt nem lehetett beolvasni.</value>
+  </data>
+  <data name="Picture.RawNoPreview" xml:space="preserve">
+    <value>Ebben a nyers fájlban nincs olyan JPEG-előnézet, amelyet a megjelenítő meg tudna jeleníteni.</value>
+  </data>
   <data name="Icon.NotReadable" xml:space="preserve">
     <value>Ezt az ikonfájlt nem lehetett beolvasni.</value>
   </data>
@@ -4256,7 +4274,7 @@
     <value>r:újrakeresés  Enter:megnyitás  Esc:bezár</value>
   </data>
   <data name="Hints.ImageViewer" xml:space="preserve">
-    <value> c:szín  i:infó  Esc:bezár</value>
+    <value> c:szín  i:infó  r/l:forgat  h/v:tükröz  ←/→:előző/követ  Esc:bezár</value>
   </data>
   <data name="Hints.Calculator" xml:space="preserve">
     <value>0-9 . + - * / ^ %  Enter:=  Bksp:vissza  Del/c:törlés  Space:gomb megnyomása  Ctrl+←/→:mód  Esc:bezár</value>
