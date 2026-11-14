@@ -399,6 +399,15 @@ Tools > Performance benchmark measures this machine in eleven probes, in five gr
 - **The dialog never waits on a measurement.** The run is a background task that reports each probe's start and result through an `IProgress`; the result lands in a snapshot under a lock, and `Draw` reads only that snapshot. Closing the dialog cancels the run.
 - **The end-to-end suite replaces the probes** (`SandboxServices.BenchmarkProbes`), with the same ids and categories and fixed figures, so no run measures the machine it runs on.
 
+### Network tools (`NetworkToolsDialog`, Tools > Network tools, `Services/NetworkTools/`)
+Tools > Network tools opens a tool (a combo box), a target (a text box) and the output below them. The tools are ping, traceroute, DNS lookup, reverse DNS, whois, a TCP port check and the headers of a web address. Enter runs the tool on the target; Esc stops a run that is going and closes the dialog otherwise.
+
+- **The tools are in .NET, not in external programs.** `NetworkToolService` pings with `System.Net.NetworkInformation.Ping`, resolves with `Dns`, asks whois over TCP port 43 (following the `refer:` lines, at most two referrals) and checks ports with `TcpClient`, so the same output appears on Windows and Linux. An ICMP ping that the OS refuses to send reports the refusal as its output.
+- **A target is checked before anything is sent.** `NetworkToolTargets` rejects a host with a scheme, a path or a space, a port outside 1 to 65535, an IPv6 address without brackets, and a web address that is not http or https. The dialog shows that reason on the status line; nothing is contacted.
+- **Nothing waits on the network.** A run is a background task. Each line goes into a queue, and `OnIdle` moves the queued lines into the output (capped at 2000 lines) and applies the outcome. The status line says "Running…" until then; a failure says why on the status line.
+- **The end-to-end suite replaces the service** (`SandboxServices.NetworkToolRunner`, fixed answers), so no run pings or queries anything.
+- **Tests:** `NetworkToolTargetsTest` (target rules, whois referrals), `NetworkToolServiceTest` (port check against a loopback listener and a closed port, refused targets) and `NetworkToolsDialogTest` (the tool and target reach the service, output lands on the idle pass, a refused target and Esc).
+
 ### CSV viewer (`CsvViewerDialog`, F3 on a `.csv` or `.tsv` file, `iConsole/Csv/`, `iConsole/Controls/CsvGrid.cs`)
 F3 opens a delimited file as a grid: the header on top, the rows below, and the columns scroll sideways to keep the cursor cell on screen. The query line above the grid takes a small SQL-like query, `SELECT name, amount WHERE amount > 10 AND city = 'Pécs' ORDER BY amount DESC LIMIT 20`, and the status line says how many rows matched. F4 switches to the file's text, as in the JSON and XML viewers.
 

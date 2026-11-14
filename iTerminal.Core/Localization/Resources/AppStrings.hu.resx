@@ -9402,6 +9402,87 @@
   <data name="CmdDesc.96256810" xml:space="preserve">
     <value>Egy oldal vagy az adagoló beolvasása, előnézete és mentése.</value>
   </data>
+  <data name="Dialog.NetworkTools" xml:space="preserve">
+    <value>Hálózati eszközök</value>
+  </data>
+  <data name="NetworkTools.Field.Tool" xml:space="preserve">
+    <value>Eszköz</value>
+  </data>
+  <data name="NetworkTools.Field.Target" xml:space="preserve">
+    <value>Cél</value>
+  </data>
+  <data name="NetworkTools.Hint.Run" xml:space="preserve">
+    <value>Eszköz indítása</value>
+  </data>
+  <data name="NetworkTools.Hint.Stop" xml:space="preserve">
+    <value>Leállítás</value>
+  </data>
+  <data name="NetworkTools.Empty" xml:space="preserve">
+    <value>Válasszon eszközt, írjon be egy célt, majd nyomjon Entert.</value>
+  </data>
+  <data name="NetworkTools.Status.NeedTarget" xml:space="preserve">
+    <value>Előbb írjon be egy gépnevet vagy címet.</value>
+  </data>
+  <data name="NetworkTools.Status.Running" xml:space="preserve">
+    <value>Fut…</value>
+  </data>
+  <data name="NetworkTools.Status.Done" xml:space="preserve">
+    <value>Kész.</value>
+  </data>
+  <data name="NetworkTools.Status.Stopped" xml:space="preserve">
+    <value>Leállítva.</value>
+  </data>
+  <data name="NetworkTools.Output.Cut" xml:space="preserve">
+    <value>… a kimenet hosszabb; az első sorok megmaradnak.</value>
+  </data>
+  <data name="NetworkTools.Tool.Ping" xml:space="preserve">
+    <value>Ping</value>
+  </data>
+  <data name="NetworkTools.Tool.Traceroute" xml:space="preserve">
+    <value>Útvonalkövetés</value>
+  </data>
+  <data name="NetworkTools.Tool.DnsLookup" xml:space="preserve">
+    <value>DNS-lekérdezés</value>
+  </data>
+  <data name="NetworkTools.Tool.ReverseDns" xml:space="preserve">
+    <value>Fordított DNS</value>
+  </data>
+  <data name="NetworkTools.Tool.Whois" xml:space="preserve">
+    <value>Whois</value>
+  </data>
+  <data name="NetworkTools.Tool.PortCheck" xml:space="preserve">
+    <value>Portellenőrzés</value>
+  </data>
+  <data name="NetworkTools.Tool.HttpHeaders" xml:space="preserve">
+    <value>HTTP-fejlécek</value>
+  </data>
+  <data name="NetworkTools.Tool.Ping.Description" xml:space="preserve">
+    <value>Visszhangkérések küldése egy gépnek, a válaszok idejének mérésével.</value>
+  </data>
+  <data name="NetworkTools.Tool.Traceroute.Description" xml:space="preserve">
+    <value>Megmutatja a köztes útválasztókat ez és egy gép között.</value>
+  </data>
+  <data name="NetworkTools.Tool.DnsLookup.Description" xml:space="preserve">
+    <value>Gépnevet old fel címekre.</value>
+  </data>
+  <data name="NetworkTools.Tool.ReverseDns.Description" xml:space="preserve">
+    <value>Megkeresi az IP-címhez tartozó gépnevet.</value>
+  </data>
+  <data name="NetworkTools.Tool.Whois.Description" xml:space="preserve">
+    <value>Lekérdezi, kihez tartozik egy domain vagy cím.</value>
+  </data>
+  <data name="NetworkTools.Tool.PortCheck.Description" xml:space="preserve">
+    <value>Megnézi, fogad-e kapcsolatot egy gép TCP-portja. Írja be: gép:port.</value>
+  </data>
+  <data name="NetworkTools.Tool.HttpHeaders.Description" xml:space="preserve">
+    <value>Lekér egy webcímet, és megmutatja a válaszfejléceket.</value>
+  </data>
+  <data name="CmdTitle.1af59ce9" xml:space="preserve">
+    <value>Hálózati eszközök</value>
+  </data>
+  <data name="CmdDesc.4021bbd3" xml:space="preserve">
+    <value>Ping, útvonalkövetés, DNS- és fordított DNS-lekérdezés, whois, portellenőrzés és webfejlécek a megadott géphez.</value>
+    </data>
   <data name="ToDo.Remind" xml:space="preserve">
     <value>Emlékeztető</value>
   </data>
