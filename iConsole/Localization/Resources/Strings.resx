@@ -1649,4 +1649,22 @@
   <data name="Har.Detail.Truncated" xml:space="preserve">
     <value>(cut at {0:N0} characters)</value>
   </data>
+  <data name="Parquet.Title" xml:space="preserve">
+    <value>Parquet</value>
+  </data>
+  <data name="Parquet.Grid.Empty" xml:space="preserve">
+    <value>This file has no rows</value>
+  </data>
+  <data name="Parquet.Status.Summary" xml:space="preserve">
+    <value>{0:N0} rows, {1:N0} columns</value>
+  </data>
+  <data name="Parquet.Status.RowsCut" xml:space="preserve">
+    <value>; only the first {0:N0} rows are shown</value>
+  </data>
+  <data name="Parquet.Status.ColumnsCut" xml:space="preserve">
+    <value>; only the first {0:N0} columns are shown</value>
+  </data>
+  <data name="Parquet.Error.Unexpected" xml:space="preserve">
+    <value>The file could not be read: {0}</value>
+  </data>
 </root>

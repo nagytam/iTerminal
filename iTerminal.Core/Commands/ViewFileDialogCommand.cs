@@ -7,6 +7,7 @@ using iConsole.Hdf;
 using iConsole.Har;
 using iConsole.Dialogs;
 using iConsole.Json;
+using iConsole.Parquet;
 using iConsole.Sqlite;
 using iConsole.Xml;
 using iConsole.Xps;
@@ -37,7 +38,8 @@ public class ViewFileDialogCommand(
     ExecutableAnalysisDialog? executableAnalysisDialog = null,
     XpsViewerDialog? xpsViewerDialog = null,
     CertificateViewerDialog? certificateViewerDialog = null,
-    HarViewerDialog? harViewerDialog = null) : Command
+    HarViewerDialog? harViewerDialog = null,
+    ParquetViewerDialog? parquetViewerDialog = null) : Command
 {
     private readonly HarViewerDialog? _harViewerDialog = harViewerDialog;
     private readonly WebBrowserDialog? _webBrowserDialog = webBrowserDialog;
@@ -55,6 +57,7 @@ public class ViewFileDialogCommand(
     private readonly ExecutableAnalysisDialog? _executableAnalysisDialog = executableAnalysisDialog;
     private readonly XpsViewerDialog? _xpsViewerDialog = xpsViewerDialog;
     private readonly CertificateViewerDialog? _certificateViewerDialog = certificateViewerDialog;
+    private readonly ParquetViewerDialog? _parquetViewerDialog = parquetViewerDialog;
 
     public override string Title => "View";
     public override string Description => "Open the selected file in the viewer.";
@@ -232,6 +235,21 @@ public class ViewFileDialogCommand(
         {
             _hdfViewerDialog.Url = focusedFileUrl;
             await (Control?.ShowDialogAsync(_hdfViewerDialog) ?? Task.CompletedTask);
+            return;
+        }
+
+        // A Parquet file opens in the Parquet viewer, only when it is a local file: the reader opens a path, and a remote file
+        // with the same path must not open the local one. A file with the ending that does not start with the PAR1 magic (an
+        // encrypted one starts with PARE) is read by the generic viewer. The magic read runs on a worker thread.
+        if (_parquetViewerDialog is not null
+            && focusedFileUrl is not null
+            && focusedFileUrl.ContainerType == ContainerType.FileSystem
+            && ParquetFileTypes.IsParquetFile(focusedFileUrl.Path)
+            && File.Exists(focusedFileUrl.Path)
+            && await Task.Run(() => ParquetFileTypes.FileHasSignature(focusedFileUrl.Path)))
+        {
+            _parquetViewerDialog.Url = focusedFileUrl;
+            await (Control?.ShowDialogAsync(_parquetViewerDialog) ?? Task.CompletedTask);
             return;
         }
 
