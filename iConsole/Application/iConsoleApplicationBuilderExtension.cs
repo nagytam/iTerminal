@@ -117,6 +117,8 @@ public static class iConsoleApplicationBuilderExtension
         // Tooltips: the input consumer reports the pointer to the service, and a ToolTipHost on the screen's root shows
         // the tip for the control under it. Time comes from ITimeProvider, so tests can move past the delay.
         services.AddSingleton<ITimeProvider, SystemTimeProvider>();
+        // Keyboard and mouse activity, read by the screen saver. The input consumers record it.
+        services.AddSingleton<IUserActivityService, UserActivityService>();
         services.AddSingleton<IToolTipService, ToolTipService>();
         services.AddTransient<ToolTipHost>();
         // Popovers: one open at a time, placed on screen. Context menus open through it.

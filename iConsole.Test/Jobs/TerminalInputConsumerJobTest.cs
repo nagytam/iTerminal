@@ -63,5 +63,43 @@ public class TerminalInputConsumerJobTest
         cancellation.Cancel();
         await running;
     }
+
+    /// <summary>The screen saver's idle clock: a key press counts as activity, whether or not anything handles it.</summary>
+    [TestMethod]
+    [Timeout(10_000)]
+    public async Task AKeyPress_NotesActivity()
+    {
+        Mock<IUserActivityService> activity = new();
+        TerminalInputConsumerJob job = new(Mock.Of<ITerminalInputSource>(), Mock.Of<IBeepService>(), userActivityService: activity.Object);
+
+        await job.HandleKeyEventAsync(new iConsole.Data.KeyEvent('a', ConsoleKey.A, false, false, false));
+
+        activity.Verify(a => a.NoteActivity(), Times.Once);
+    }
+
+    [TestMethod]
+    [Timeout(10_000)]
+    public async Task AClick_NotesActivity()
+    {
+        Mock<IUserActivityService> activity = new();
+        TerminalInputConsumerJob job = new(Mock.Of<ITerminalInputSource>(), Mock.Of<IBeepService>(), userActivityService: activity.Object);
+
+        await job.HandleMouseEventAsync(new iConsole.Data.MouseEvent { LeftClicked = true });
+
+        activity.Verify(a => a.NoteActivity(), Times.Once);
+    }
+
+    /// <summary>A pointer that only moves is not someone at the screen, so it must not keep the screen saver away.</summary>
+    [TestMethod]
+    [Timeout(10_000)]
+    public async Task APointerHover_DoesNotNoteActivity()
+    {
+        Mock<IUserActivityService> activity = new();
+        TerminalInputConsumerJob job = new(Mock.Of<ITerminalInputSource>(), Mock.Of<IBeepService>(), userActivityService: activity.Object);
+
+        await job.HandleMouseEventAsync(new iConsole.Data.MouseEvent { IsHover = true });
+
+        activity.Verify(a => a.NoteActivity(), Times.Never);
+    }
 }
 

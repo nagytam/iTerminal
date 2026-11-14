@@ -9384,4 +9384,28 @@
   <data name="CmdDesc.96256810" xml:space="preserve">
     <value>Egy oldal vagy az adagoló beolvasása, előnézete és mentése.</value>
   </data>
+  <data name="ScreenSaver.Effect" xml:space="preserve">
+    <value>Effekt</value>
+  </data>
+  <data name="ScreenSaver.Delay" xml:space="preserve">
+    <value>Indítás után (perc)</value>
+  </data>
+  <data name="ScreenSaver.Hint" xml:space="preserve">
+    <value>Billentyű vagy kattintás felébreszti a képernyőt. Nem indul, amíg a terminált shell használja.</value>
+  </data>
+  <data name="ScreenSaver.Off" xml:space="preserve">
+    <value>Ki</value>
+  </data>
+  <data name="ScreenSaver.Starfield" xml:space="preserve">
+    <value>Csillagmező</value>
+  </data>
+  <data name="ScreenSaver.MatrixRain" xml:space="preserve">
+    <value>Matrix-eső</value>
+  </data>
+  <data name="ScreenSaver.Clock" xml:space="preserve">
+    <value>Pattogó óra</value>
+  </data>
+  <data name="ScreenSaver.Wake" xml:space="preserve">
+    <value>Képernyő felébresztése</value>
+  </data>
 </root>

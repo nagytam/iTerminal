@@ -37,6 +37,8 @@ public class SettingsDialog : Dialog
         _tab.AddTabPage(tabPagePanels);
         var tabPageBackground = new SettingsBackgroundTabPage(settingsService, themeService);
         _tab.AddTabPage(tabPageBackground);
+        var tabPageScreenSaver = new SettingsScreenSaverTabPage(settingsService, themeService);
+        _tab.AddTabPage(tabPageScreenSaver);
     }
 
     public override void OnInitializeLayout()

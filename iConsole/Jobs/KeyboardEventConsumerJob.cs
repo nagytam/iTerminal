@@ -9,7 +9,8 @@ namespace iConsole.Jobs;
 
 public class KeyboardEventConsumerJob(
     IBeepService beepService,
-    HelpDialog helpDialog
+    HelpDialog helpDialog,
+    IUserActivityService? userActivityService = null
     ) : Job
 {
     private KeyboardEventPublisherJob _keyboardEventPublisherJob = null!;
@@ -43,6 +44,7 @@ public class KeyboardEventConsumerJob(
 
     public async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
+        userActivityService?.NoteActivity();
         bool isHandled = false;
         var modalControl = Desktop?.GetModalChildControl();
         if (modalControl is not null)

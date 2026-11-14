@@ -64,4 +64,13 @@ public static class Settings
     /// next time a picture is drawn.
     /// </summary>
     public const string SixelEnabled = nameof(SixelEnabled);
+
+    /// <summary>
+    /// The screen saver chosen in the Settings tab: <c>Starfield</c> (the default), <c>Off</c>, <c>MatrixRain</c> or <c>Clock</c>.
+    /// Read by the overlay each time it checks for idleness, so a change applies without a restart.
+    /// </summary>
+    public const string ScreenSaverEffect = nameof(ScreenSaverEffect);
+
+    /// <summary>Minutes without a key press or a click before the screen saver starts. Five by default, between 1 and 240.</summary>
+    public const string ScreenSaverIdleMinutes = nameof(ScreenSaverIdleMinutes);
 }

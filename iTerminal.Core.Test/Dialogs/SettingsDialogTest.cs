@@ -24,7 +24,7 @@ public class SettingsDialogTest
         var tab = dialog.Controls.AsSnapshot().OfType<Tab>().Single();
 
         CollectionAssert.AreEqual(
-            new[] { "1-Global ", "2-Network", "3-Indicators ", "4-Music ", "5-Documents ", "6-Panels ", "7-Background" },
+            new[] { "1-Global ", "2-Network", "3-Indicators ", "4-Music ", "5-Documents ", "6-Panels ", "7-Background", "8-Screen saver" },
             tab.TabPages.Select(p => p.Name).ToArray());
     }
 

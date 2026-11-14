@@ -13,12 +13,14 @@ public class TerminalInputConsumerJob(
     ITerminalInputSource inputSource,
     IBeepService beepService,
     IToolTipService? toolTipService = null,
-    MainLoopWatchDog? watchDog = null
+    MainLoopWatchDog? watchDog = null,
+    IUserActivityService? userActivityService = null
 ) : Job
 {
     private readonly ITerminalInputSource _inputSource = inputSource;
     private readonly IToolTipService? _toolTipService = toolTipService;
     private readonly MainLoopWatchDog? _watchDog = watchDog;
+    private readonly IUserActivityService? _userActivityService = userActivityService;
     public override JobPriority Priority => JobPriority.Input;
 
     protected override async Task RunAsync(CancellationToken cancellationToken)
@@ -78,6 +80,7 @@ public class TerminalInputConsumerJob(
         else
         {
             _toolTipService?.Dismiss();
+            _userActivityService?.NoteActivity();
         }
 
         var modalControl = Desktop?.GetModalChildControl();
@@ -92,6 +95,7 @@ public class TerminalInputConsumerJob(
     public async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
     {
         _toolTipService?.Dismiss();
+        _userActivityService?.NoteActivity();
 
         var modalControl = Desktop?.GetModalChildControl();
         if (modalControl is null)
