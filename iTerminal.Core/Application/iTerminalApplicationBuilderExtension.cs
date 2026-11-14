@@ -161,6 +161,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<iTerminal.Core.Model.Calendar.MeetingStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Calendar.CalendarDialog>();
         services.AddSingleton<iTerminal.Core.Model.ToDo.ToDoStore>();
+        services.AddSingleton<iTerminal.Core.Services.ToDo.ToDoReminderService>();
         services.AddTransient<iTerminal.Core.Dialogs.ToDo.ToDoListDialog>();
         services.AddSingleton<iTerminal.Core.Model.Contacts.ContactStore>();
         services.AddTransient<iTerminal.Core.Dialogs.Contacts.ContactManagerDialog>();
@@ -486,6 +487,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IJob, FolderIndexJob>();
         services.AddSingleton<IJob, OnlineQuoteJob>();
         services.AddSingleton<IJob, WeatherJob>();
+        services.AddSingleton<IJob, iTerminal.Core.Jobs.ToDoReminderJob>();
         services.AddSingleton<DriveInfoModel>();
         services.AddTransient<CopyDialog>();
         services.AddTransient<MoveDialog>();

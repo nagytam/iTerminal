@@ -2582,7 +2582,7 @@
     <value>Timer-Aufwachzeit</value>
   </data>
   <data name="ToDo.Hint" xml:space="preserve">
-    <value>Leertaste erledigt  N neu  E bearbeiten  P Priorität  D löschen  H erledigte zeigen  Esc schließen</value>
+    <value>Leertaste erledigt  N neu  E bearbeiten  R erinnern  P Priorität  D löschen  H erledigte zeigen  Esc schließen</value>
   </data>
   <data name="ToDo.Done" xml:space="preserve">
     <value>Erl.</value>
@@ -9546,5 +9546,23 @@
   </data>
   <data name="CmdDesc.4021bbd3" xml:space="preserve">
     <value>Ping, Traceroute, DNS- und umgekehrte DNS-Abfragen, Whois, eine Portprüfung und Web-Kopfzeilen für einen Rechner, den Sie eingeben.</value>
+    </data>
+  <data name="ToDo.Remind" xml:space="preserve">
+    <value>Erinnerung</value>
+  </data>
+  <data name="ToDo.ReminderTitle" xml:space="preserve">
+    <value>Erinnerung</value>
+  </data>
+  <data name="ToDo.ReminderEntry" xml:space="preserve">
+    <value>Erinnern um: {0}_</value>
+  </data>
+  <data name="ToDo.ReminderNeedsOpenTask" xml:space="preserve">
+    <value>Markieren Sie die Aufgabe als offen, um daran zu erinnern</value>
+  </data>
+  <data name="DialogHint.SetReminder" xml:space="preserve">
+    <value>Erinnerung setzen</value>
+  </data>
+  <data name="DialogHint.RemindTask" xml:space="preserve">
+    <value>Erinnerung für die Aufgabe setzen</value>
   </data>
 </root>

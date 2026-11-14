@@ -2582,7 +2582,7 @@
     <value>Réveil du minuteur</value>
   </data>
   <data name="ToDo.Hint" xml:space="preserve">
-    <value>Espace fait  N nouveau  E modifier  P priorité  D supprimer  H afficher faits  Échap fermer</value>
+    <value>Espace fait  N nouveau  E modifier  R rappel  P priorité  D supprimer  H afficher faits  Échap fermer</value>
   </data>
   <data name="ToDo.Done" xml:space="preserve">
     <value>Fait</value>
@@ -9482,5 +9482,23 @@
   </data>
   <data name="CmdDesc.4021bbd3" xml:space="preserve">
     <value>Ping, traceroute, recherches DNS et DNS inverse, whois, test de port et en-têtes web, pour un hôte que vous saisissez.</value>
+    </data>
+  <data name="ToDo.Remind" xml:space="preserve">
+    <value>Rappel</value>
+  </data>
+  <data name="ToDo.ReminderTitle" xml:space="preserve">
+    <value>Rappel</value>
+  </data>
+  <data name="ToDo.ReminderEntry" xml:space="preserve">
+    <value>Rappeler à : {0}_</value>
+  </data>
+  <data name="ToDo.ReminderNeedsOpenTask" xml:space="preserve">
+    <value>Rouvrez la tâche pour être rappelé</value>
+  </data>
+  <data name="DialogHint.SetReminder" xml:space="preserve">
+    <value>Définir le rappel</value>
+  </data>
+  <data name="DialogHint.RemindTask" xml:space="preserve">
+    <value>Définir un rappel pour la tâche</value>
   </data>
 </root>

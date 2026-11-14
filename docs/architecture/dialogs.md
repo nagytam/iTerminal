@@ -205,6 +205,27 @@ Tools > Contacts: name, email, phone, company and notes for the people the perso
 - **The highlight follows the contact by id**, so it survives a re-sort or a filter; a contact saved under a filter that would hide it clears the filter.
 - Also reachable from the `ui` AI tool as `contacts`.
 
+### The task list (`ToDoListDialog`, Ctrl+Y, `Model/ToDo/`, `Services/ToDo/`, `Jobs/ToDoReminderJob.cs`)
+Add (N or Enter), edit (E or F2), delete (D or Delete, asks first), mark done (Space), priority (P), hide done (H) and
+**remind me (R)**. The entry line reads `!Subject @yyyy-MM-dd ~time`: `~15:30` is the next time that clock reading comes round,
+and `~2026-11-01T09:00` is that exact moment, which must still be ahead. R opens the same line for the highlighted task
+alone, pre-filled with its reminder; an empty entry clears it.
+
+- **The reminder is one field on the task (`RemindAt`, local time), and the job is what gives it.** `ToDoReminderJob` checks
+  every five seconds on its own thread, so a reminder comes whether or not the list is open, and one that fell due while the
+  app was closed is given on the first check after start-up. The check goes through `ToDoStore.TakeDueReminders`, which clears
+  each reminder and saves in the same step under the store's lock, so a reminder is never given twice.
+- **A reminder stays on screen until it is dismissed** (`Timeout.InfiniteTimeSpan`), because the person is often away from the
+  keyboard when it falls due.
+- **Completing a task clears its reminder**, and the job skips done tasks, so a reopened task does not fire for a time that has
+  long passed.
+- **The edit line carries the reminder**, so editing a task and saving it round-trips the time. Saving an edit without a `~`
+  token clears the reminder, the same way it clears a due date that is left out.
+- **Times in the past are refused on the entry line** (`~2026-…` in the past), while a bare `~HH:mm` that has already passed
+  means tomorrow at that time.
+- Like the other lists, the tasks live in the `ToDoTasks` setting and not in a table, for the schema-stamp reason in
+  `ContactStore`.
+
 ### The environment variables editor (`EnvironmentVariablesDialog`, Ctrl+Shift+H, `Services/SystemSettings/`)
 Tools > Environment variables: the variables of one scope, name and value, with the highlighted one shown in full under the list. **S** cycles the scopes the system offers: *Session*, *User* and *Machine*. N or Insert adds (name, then value; Enter on the value saves), E, F2 or Enter changes the value (the name is fixed), D or Delete asks y/n, `/` filters by name or value, R reads again. A one-line note under the scope strip says how far the scope reaches.
 
