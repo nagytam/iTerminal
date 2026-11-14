@@ -35,9 +35,15 @@ public class WeatherIndicator(WeatherService weatherService, IThemeService theme
         else
         {
             // "[cached]" as the quotes say it — it used to shout "[CACHED]" beside the quotes' "[C]".
-            var cached = _weatherService.IsFromCache ? QuoteIndicator.CachedMarker + " " : string.Empty;
             var refreshing = _weatherService.IsRefreshing ? $" {ProgressChar()}" : string.Empty;
-            text = $"{cached}{weather.LocationName} {weather.TemperatureC:0.#}°C{refreshing}";
+            var reading = $"{weather.LocationName} {weather.TemperatureC:0.#}°C{refreshing}";
+
+            // Longest first, as the quotes do: a narrow slot keeps the place and the temperature and says
+            // "cached" with the quotes' "*". A middle cut ("[cached]...ch 4.8°C") loses the place and the marker.
+            string[] candidates = _weatherService.IsFromCache
+                ? [$"{QuoteIndicator.CachedMarker} {reading}", $"* {reading}"]
+                : [reading];
+            text = candidates.FirstOrDefault(c => c.Length <= width) ?? candidates[^1];
         }
 
         return (text.Shrink(width) ?? string.Empty).ExpandRight(width);
