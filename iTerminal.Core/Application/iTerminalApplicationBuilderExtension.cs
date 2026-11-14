@@ -444,6 +444,12 @@ public static class iTerminalApplicationBuilderExtension
         // Ctrl+P: print the file under the cursor and manage the print queue.
         services.AddSingleton<iTerminal.Core.Services.Printing.IPrintService, iTerminal.Core.Services.Printing.PrintService>();
         services.AddTransient<PrintDialog>();
+        // Ctrl+Shift+I: scan a page or the document feeder, preview it and save it. TWAIN on Windows, SANE elsewhere.
+        services.AddSingleton<iTerminal.Core.Services.Scanning.IScanService>(provider =>
+            new iTerminal.Core.Services.Scanning.ScanService(
+                iTerminal.Core.Services.Scanning.ScannerBackends.Create(
+                    provider.GetRequiredService<iTerminal.Core.Services.Processes.IExternalProcessRunner>())));
+        services.AddTransient<iTerminal.Core.Dialogs.Scanning.ScannerDialog>();
         // Streams and attributes: NTFS alternate data streams (Windows) or extended attributes (Linux, macOS) of the entry under the cursor.
         services.AddSingleton<iTerminal.Core.Services.Streams.IStreamAttributeService, iTerminal.Core.Services.Streams.StreamAttributeService>();
         services.AddTransient<StreamsDialog>();

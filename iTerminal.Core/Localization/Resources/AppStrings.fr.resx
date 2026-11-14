@@ -9315,4 +9315,91 @@
   <data name="Docs.SemanticReady" xml:space="preserve">
     <value>Index de sens : {0} documents, encodés avec {1}.</value>
   </data>
+  <data name="Menu.Scanner" xml:space="preserve">
+    <value>Numériser</value>
+  </data>
+  <data name="DialogHint.Scan" xml:space="preserve">
+    <value>Numériser</value>
+  </data>
+  <data name="DialogHint.ChooseScanner" xml:space="preserve">
+    <value>Choisir le scanner</value>
+  </data>
+  <data name="DialogHint.SourceToggle" xml:space="preserve">
+    <value>Plateau ou chargeur</value>
+  </data>
+  <data name="DialogHint.Resolution" xml:space="preserve">
+    <value>Résolution</value>
+  </data>
+  <data name="DialogHint.ColorMode" xml:space="preserve">
+    <value>Mode couleur</value>
+  </data>
+  <data name="DialogHint.FileFormat" xml:space="preserve">
+    <value>Format de fichier</value>
+  </data>
+  <data name="DialogHint.PageStep" xml:space="preserve">
+    <value>Page précédente ou suivante</value>
+  </data>
+  <data name="DialogHint.Save" xml:space="preserve">
+    <value>Enregistrer les pages</value>
+  </data>
+  <data name="DialogHint.RefreshScanners" xml:space="preserve">
+    <value>Relire les scanners</value>
+  </data>
+  <data name="Scan.NoScanner" xml:space="preserve">
+    <value>Aucun scanner sélectionné.</value>
+  </data>
+  <data name="Scan.Scanning" xml:space="preserve">
+    <value>Numérisation…</value>
+  </data>
+  <data name="Scan.Cancelled" xml:space="preserve">
+    <value>Le scan a été annulé.</value>
+  </data>
+  <data name="Scan.NothingToSave" xml:space="preserve">
+    <value>Aucune page numérisée à enregistrer.</value>
+  </data>
+  <data name="Scan.NoFolder" xml:space="preserve">
+    <value>Ouvrez la boîte de dialogue dans un dossier local pour enregistrer.</value>
+  </data>
+  <data name="Scan.Searching" xml:space="preserve">
+    <value>Recherche de scanners…</value>
+  </data>
+  <data name="Scan.NoScanners" xml:space="preserve">
+    <value>Aucun scanner trouvé.</value>
+  </data>
+  <data name="Scan.Feeder" xml:space="preserve">
+    <value>Chargeur (toutes les pages)</value>
+  </data>
+  <data name="Scan.Flatbed" xml:space="preserve">
+    <value>Plateau (une page)</value>
+  </data>
+  <data name="Scan.Gray" xml:space="preserve">
+    <value>Gris</value>
+  </data>
+  <data name="Scan.BlackWhite" xml:space="preserve">
+    <value>Noir et blanc</value>
+  </data>
+  <data name="Scan.Colour" xml:space="preserve">
+    <value>Couleur</value>
+  </data>
+  <data name="Scan.NoPages" xml:space="preserve">
+    <value>Pas encore de page</value>
+  </data>
+  <data name="Scan.PageOf" xml:space="preserve">
+    <value>Page {0} sur {1}</value>
+  </data>
+  <data name="Scan.NoLocalFolder" xml:space="preserve">
+    <value>pas un dossier local</value>
+  </data>
+  <data name="Scan.SaveTo" xml:space="preserve">
+    <value>Enregistrer dans</value>
+  </data>
+  <data name="Scan.Empty" xml:space="preserve">
+    <value>Choisissez un scanner puis appuyez sur Entrée.</value>
+  </data>
+  <data name="CmdTitle.ea1c510d" xml:space="preserve">
+    <value>Numériser</value>
+  </data>
+  <data name="CmdDesc.96256810" xml:space="preserve">
+    <value>Numériser une page ou le chargeur, la visualiser et l'enregistrer.</value>
+  </data>
 </root>
