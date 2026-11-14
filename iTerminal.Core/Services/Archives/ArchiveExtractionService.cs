@@ -5,6 +5,7 @@ using ICSharpCode.SharpZipLib.Tar;
 using ICSharpCode.SharpZipLib.Zip;
 using iTerminal.Core.Services.Processes;
 using System.Text;
+using ZstdSharp;
 
 namespace iTerminal.Core.Services.Archives;
 
@@ -58,8 +59,9 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
     /// <summary>Endings read in-process, longest first so <c>.tar.gz</c> is not taken for <c>.gz</c>.</summary>
     // .cbz, .cbt, .cbr and .cb7 are comic-book names for ZIP, TAR, RAR and 7z, so they unpack like their containers.
     // .cbz, .cbt, .cbr and .cb7 are comic-book names for ZIP, TAR, RAR and 7z, so they unpack like their containers.
-    // .jar, .apk, .nupkg and .vsix are ZIP files under their own names.
-    private static readonly string[] ManagedEndings = [".tar.bz2", ".tar.gz", ".tbz2", ".tgz", ".tbz", ".tar", ".cbt", ".zip", ".cbz", ".jar", ".apk", ".nupkg", ".vsix", ".gz", ".bz2"];
+    // .jar, .apk, .nupkg, .vsix, .war, .msix, .appx and .epub are ZIP files under their own names.
+    // .tar.zst, .tzst and .zst are Zstandard, read by ZstdSharp.
+    private static readonly string[] ManagedEndings = [".tar.bz2", ".tar.gz", ".tar.zst", ".tbz2", ".tgz", ".tbz", ".tzst", ".tar", ".cbt", ".zip", ".cbz", ".jar", ".apk", ".nupkg", ".vsix", ".war", ".msix", ".appx", ".epub", ".gz", ".bz2", ".zst"];
 
     /// <summary>Endings only 7-Zip reads.</summary>
     private static readonly string[] SevenZipEndings = [".tar.xz", ".txz", ".7z", ".cb7", ".rar", ".cbr", ".xz", ".iso", ".cab", ".lzma", ".img", ".vmdk", ".wim", ".dmg", ".deb", ".rpm", ".chm", ".arj"];
@@ -112,10 +114,10 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
         var ending = ManagedEnding(archivePath);
         return ending switch
         {
-            ".zip" or ".cbz" or ".jar" or ".apk" or ".nupkg" or ".vsix" => await Task.Run(() => ExtractZip(archivePath, targetFolder, options, progress, cancellationToken), cancellationToken),
-            ".tar" or ".tar.gz" or ".tgz" or ".tar.bz2" or ".tbz2" or ".tbz" or ".cbt" =>
+            ".zip" or ".cbz" or ".jar" or ".apk" or ".nupkg" or ".vsix" or ".war" or ".msix" or ".appx" or ".epub" => await Task.Run(() => ExtractZip(archivePath, targetFolder, options, progress, cancellationToken), cancellationToken),
+            ".tar" or ".tar.gz" or ".tgz" or ".tar.bz2" or ".tbz2" or ".tbz" or ".tar.zst" or ".tzst" or ".cbt" =>
                 await Task.Run(() => ExtractTar(archivePath, ending, targetFolder, options, progress, cancellationToken), cancellationToken),
-            ".gz" or ".bz2" => await Task.Run(() => ExtractSingle(archivePath, ending, targetFolder, options, progress, cancellationToken), cancellationToken),
+            ".gz" or ".bz2" or ".zst" => await Task.Run(() => ExtractSingle(archivePath, ending, targetFolder, options, progress, cancellationToken), cancellationToken),
             _ => await ExtractWithSevenZipAsync(archivePath, targetFolder, options, progress, cancellationToken),
         };
     }
@@ -275,6 +277,7 @@ public sealed class ArchiveExtractionService(IExternalProcessRunner runner, Func
     {
         ".tar.gz" or ".tgz" or ".gz" => new GZipInputStream(file) { IsStreamOwner = false },
         ".tar.bz2" or ".tbz2" or ".tbz" or ".bz2" => new BZip2InputStream(file) { IsStreamOwner = false },
+        ".tar.zst" or ".tzst" or ".zst" => new DecompressionStream(file),
         _ => new NonClosingStream(file),
     };
 

@@ -33,6 +33,10 @@ public class PackageFormatSamplesTest
     [DataRow("example.apk")]
     [DataRow("example.nupkg")]
     [DataRow("example.vsix")]
+    [DataRow("example.war")]
+    [DataRow("example.msix")]
+    [DataRow("example.appx")]
+    [DataRow("example.epub")]
     public void ZipBasedPackages_BrowseAndUnpackWithoutSevenZip(string name)
     {
         Assert.IsTrue(ArchiveDriveService.LooksBrowsable(name));
@@ -165,5 +169,100 @@ public class PackageFormatSamplesTest
         using var buffer = new MemoryStream();
         await service.StreamToAsync(url, buffer, null, CancellationToken.None);
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Msix_ListsTheManifestAndReadsIt()
+    {
+        var service = Browser();
+        string package = Sample("example.msix");
+
+        var rows = await service.ListAsync(ArchiveDriveUrl.Build(package), CancellationToken.None);
+        CollectionAssert.Contains(Names(rows).ToList(), "AppxManifest.xml");
+        StringAssert.Contains(await Read(service, ArchiveDriveUrl.Build(package, "AppxManifest.xml", isFolder: false)), "Name=\"Example.App\"");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Appx_ListsTheSamePackageContents()
+    {
+        var rows = await Browser().ListAsync(ArchiveDriveUrl.Build(Sample("example.appx")), CancellationToken.None);
+
+        CollectionAssert.Contains(Names(rows).ToList(), "AppxManifest.xml");
+        CollectionAssert.Contains(Names(rows).ToList(), "ExampleApp.exe");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task War_ListsTheWebDescriptorFolder()
+    {
+        var rows = await Browser().ListAsync(ArchiveDriveUrl.Build(Sample("example.war")), CancellationToken.None);
+
+        CollectionAssert.Contains(Names(rows).ToList(), "WEB-INF");
+        CollectionAssert.Contains(Names(rows).ToList(), "index.html");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Epub_BrowsesItsContainerAsAnArchive()
+    {
+        var rows = await Browser().ListAsync(ArchiveDriveUrl.Build(Sample("example.epub")), CancellationToken.None);
+
+        CollectionAssert.Contains(Names(rows).ToList(), "META-INF");
+        CollectionAssert.Contains(Names(rows).ToList(), "OEBPS");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Zst_ReadsTheSingleFileNamedAfterTheArchive()
+    {
+        var service = Browser();
+        string archive = Sample("example.zst");
+
+        var rows = await service.ListAsync(ArchiveDriveUrl.Build(archive), CancellationToken.None);
+        CollectionAssert.AreEqual(new[] { "example" }, Names(rows).ToList(), "the archive's name without .zst");
+        StringAssert.StartsWith(await Read(service, ArchiveDriveUrl.Build(archive, "example", isFolder: false)), "Hello from a Zstandard file.");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TarZst_ListsAndReadsTheTarInside()
+    {
+        var service = Browser();
+        string archive = Sample("example.tar.zst");
+
+        var rows = await service.ListAsync(ArchiveDriveUrl.Build(archive), CancellationToken.None);
+        CollectionAssert.Contains(Names(rows).ToList(), "readme.txt");
+        CollectionAssert.Contains(Names(rows).ToList(), "docs");
+        Assert.AreEqual("Inside a TAR.ZST.\n", await Read(service, ArchiveDriveUrl.Build(archive, "readme.txt", isFolder: false)));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Zst_ExtractsWithoutSevenZip()
+    {
+        string target = Path.Combine(Path.GetTempPath(), "iterminal-zst-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var extraction = new ArchiveExtractionService(new ExternalProcessRunner(), () => null);
+            Assert.IsNull(extraction.WhyCannotExtract("example.tar.zst"));
+
+            var result = await extraction.ExtractAsync(Sample("example.tar.zst"), target, new ExtractionOptions(), null, CancellationToken.None);
+            Assert.AreEqual(2, result.Extracted);
+            Assert.AreEqual("Nested file.\n", await File.ReadAllTextAsync(Path.Combine(target, "docs", "notes.txt")));
+
+            var single = Path.Combine(target, "single");
+            Directory.CreateDirectory(single);
+            await extraction.ExtractAsync(Sample("example.zst"), single, new ExtractionOptions(), null, CancellationToken.None);
+            StringAssert.StartsWith(await File.ReadAllTextAsync(Path.Combine(single, "example")), "Hello from a Zstandard file.");
+        }
+        finally
+        {
+            if (Directory.Exists(target))
+            {
+                Directory.Delete(target, recursive: true);
+            }
+        }
     }
 }

@@ -1873,4 +1873,58 @@
   <data name="Viewer.Model.Source" xml:space="preserve">
     <value>Forrásszöveg</value>
   </data>
+  <data name="Viewer.Wasm.Heading" xml:space="preserve">
+    <value>WebAssembly-modul</value>
+  </data>
+  <data name="Viewer.Wasm.Version" xml:space="preserve">
+    <value>Verzió</value>
+  </data>
+  <data name="Viewer.Wasm.Sections" xml:space="preserve">
+    <value>Szakaszok</value>
+  </data>
+  <data name="Viewer.Wasm.Types" xml:space="preserve">
+    <value>Típusok</value>
+  </data>
+  <data name="Viewer.Wasm.Imports" xml:space="preserve">
+    <value>Importok</value>
+  </data>
+  <data name="Viewer.Wasm.Functions" xml:space="preserve">
+    <value>Függvények (definiáltak és importáltak)</value>
+  </data>
+  <data name="Viewer.Wasm.Tables" xml:space="preserve">
+    <value>Táblázatok</value>
+  </data>
+  <data name="Viewer.Wasm.Memories" xml:space="preserve">
+    <value>Memóriák</value>
+  </data>
+  <data name="Viewer.Wasm.Globals" xml:space="preserve">
+    <value>Globálisok</value>
+  </data>
+  <data name="Viewer.Wasm.Exports" xml:space="preserve">
+    <value>Exportok</value>
+  </data>
+  <data name="Viewer.Wasm.Start" xml:space="preserve">
+    <value>Indító függvény</value>
+  </data>
+  <data name="Viewer.Wasm.None" xml:space="preserve">
+    <value>nincs</value>
+  </data>
+  <data name="Viewer.Wasm.DataSegments" xml:space="preserve">
+    <value>Adatszegmensek</value>
+  </data>
+  <data name="Viewer.Wasm.Custom" xml:space="preserve">
+    <value>Egyéni szakaszok</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.function" xml:space="preserve">
+    <value>függvény</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.table" xml:space="preserve">
+    <value>tábla</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.memory" xml:space="preserve">
+    <value>memória</value>
+  </data>
+  <data name="Viewer.Wasm.Kind.global" xml:space="preserve">
+    <value>globális</value>
+  </data>
 </root>
