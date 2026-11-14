@@ -120,17 +120,17 @@ public class SplashDialog : Dialog
     private void PrepareLogo()
     {
         _logoSixel = null;
-        TerminalGraphics graphics = TerminalGraphics.Current;
-        if (_sixelOverlay is null || !graphics.IsSixelSupported)
+        if (_sixelOverlay is null)
         {
             return;
         }
 
         // Square, as tall as the rows set aside for it.
-        int pixelHeight = LogoRows * graphics.CellHeight;
-        int pixelWidth = pixelHeight;
-        _logoColumns = (pixelWidth + graphics.CellWidth - 1) / graphics.CellWidth;
-        _logoSixel = SixelEncoder.Encode(SplashLogo.Render(pixelWidth, pixelHeight), pixelWidth, pixelHeight);
+        if (SplashLogo.TryEncode(TerminalGraphics.Current, LogoRows, out string? sixel, out int columns))
+        {
+            _logoSixel = sixel;
+            _logoColumns = columns;
+        }
     }
 
     public override void Draw(IBuffer buffer)
