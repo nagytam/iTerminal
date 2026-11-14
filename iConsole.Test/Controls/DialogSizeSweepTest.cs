@@ -24,7 +24,7 @@ public class DialogSizeSweepTest
     }
 
     [TestMethod]
-    [DynamicData(nameof(EveryDialog_OpensDrawsAndTakesKeys_OnEveryScreenSizeCases), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(EveryDialog_OpensDrawsAndTakesKeys_OnEveryScreenSizeCases))]
     [Timeout(120_000)]
     public async Task EveryDialog_OpensDrawsAndTakesKeys_OnEveryScreenSize(Type type)
     {

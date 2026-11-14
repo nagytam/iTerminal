@@ -802,7 +802,7 @@ public class FileToTextConverterService : IFileToTextConverterService
             float y = size * 1.3f;
             foreach (string line in lines)
             {
-                canvas.DrawText(line, 30f, y, font, paint);
+                canvas.DrawText(line, 30f, y, SKTextAlign.Left, font, paint);
                 y += step;
             }
 

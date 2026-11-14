@@ -39,7 +39,7 @@ public static class TomlDocumentReader
 
             case TomlTable table:
                 var members = new JsonObject();
-                foreach (KeyValuePair<string, object?> pair in table)
+                foreach (KeyValuePair<string, object> pair in table)
                 {
                     members[pair.Key] = Convert(pair.Value, depth + 1, ref count);
                 }

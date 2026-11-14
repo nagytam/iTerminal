@@ -75,7 +75,7 @@ public class CoreControlSweepTest
 
     [Timeout(60_000)]
     [TestMethod]
-    [DynamicData(nameof(EveryCoreControl_SurvivesAwkwardSizes_Keys_AndClicksCases), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(EveryCoreControl_SurvivesAwkwardSizes_Keys_AndClicksCases))]
     public async Task EveryCoreControl_SurvivesAwkwardSizes_Keys_AndClicks(Type type)
     {
         List<string> failed = [];
@@ -128,7 +128,7 @@ public class CoreControlSweepTest
 
     [Timeout(60_000)]
     [TestMethod]
-    [DynamicData(nameof(EveryCoreControl_AcceptsNullAndHugeSettingsCases), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(EveryCoreControl_AcceptsNullAndHugeSettingsCases))]
     public void EveryCoreControl_AcceptsNullAndHugeSettings(Type type)
     {
         List<string> failed = [];

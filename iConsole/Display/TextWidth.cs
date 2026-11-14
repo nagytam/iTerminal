@@ -104,6 +104,7 @@ public static class TextWidth
 
         var builder = new StringBuilder();
         var used = 0;
+        Span<char> units = stackalloc char[2];
         foreach (var rune in text.EnumerateRunes())
         {
             var width = Width(rune);
@@ -115,7 +116,6 @@ public static class TextWidth
             {
                 break;
             }
-            Span<char> units = stackalloc char[2];
             builder.Append(units[..rune.EncodeToUtf16(units)]);
             used += width;
         }

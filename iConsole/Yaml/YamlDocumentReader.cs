@@ -96,13 +96,13 @@ public static class YamlDocumentReader
             var result = new JsonObject();
             foreach (KeyValuePair<YamlNode, YamlNode> pair in mapping.Children)
             {
-                if (pair.Key is not YamlScalarNode key)
+                if (pair.Key is not YamlScalarNode { Value: { } key })
                 {
                     throw new FormatException("a key that is not text is not supported");
                 }
 
                 // The last of two equal keys wins, as it does in most YAML readers.
-                result[key.Value] = Convert(pair.Value, depth + 1);
+                result[key] = Convert(pair.Value, depth + 1);
             }
 
             return result;

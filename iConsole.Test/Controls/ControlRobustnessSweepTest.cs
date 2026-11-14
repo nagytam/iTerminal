@@ -104,7 +104,7 @@ public class ControlRobustnessSweepTest
 
     [Timeout(60_000)]
     [TestMethod]
-    [DynamicData(nameof(EveryControl_SurvivesDrawKeysAndClicks_AtAwkwardSizesCases), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(EveryControl_SurvivesDrawKeysAndClicks_AtAwkwardSizesCases))]
     public async Task EveryControl_SurvivesDrawKeysAndClicks_AtAwkwardSizes(Type type)
     {
         List<string> failures = [];
