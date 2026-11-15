@@ -158,6 +158,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddSingleton<IFileLabelService, FileLabelService>();
         services.AddSingleton<iTerminal.Core.Services.Security.FileDisguiseChecker>();
         services.AddTransient<iTerminal.Core.Dialogs.Git.GitClientDialog>();
+        services.AddTransient<iTerminal.Core.Dialogs.Git.GitSyncDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.Calculator.CalculatorDialog>();
         services.AddTransient<iTerminal.Core.Dialogs.UnitConverter.UnitConverterDialog>();
         services.AddSingleton<iTerminal.Core.Model.Calendar.MeetingStore>();

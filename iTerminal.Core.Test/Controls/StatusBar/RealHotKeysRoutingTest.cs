@@ -6,6 +6,7 @@ using iConsole.Interfaces;
 using iConsole.Services;
 using iTerminal.Core.Controls.StatusBar;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Dialogs.Git;
 using iTerminal.Core.Model.Git;
 using iTerminal.Core.Services;
 using iTerminal.Core.Services.Git;
@@ -33,7 +34,8 @@ public class RealHotKeysRoutingTest
         Control Root,
         HotKeys HotKeys,
         Mock<IContentModelService> ContentModelService,
-        IPhoneBrowserDialog IPhoneDialog);
+        IPhoneBrowserDialog IPhoneDialog,
+        GitSyncDialog? GitSyncDialog);
 
     private static async Task<Harness> BuildAsync(IGitService? gitService = null)
     {
@@ -49,10 +51,11 @@ public class RealHotKeysRoutingTest
 
         // The real HotKeys, built positionally exactly as TerminalStatusBar's fallback does. Only
         // the dialog under test and the services HotKeys dereferences need to be real.
+        var gitSyncDialog = gitService is null ? null : new GitSyncDialog(gitService, contentModelService.Object, themeService);
         var hotKeys = new HotKeys(
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
             null!, iPhoneDialog, null!, null!, null!, null!, null!, null!,
-            contentModelService.Object, null!, null!, null!, null!, null!, NullSettingsService.Instance, null!, themeService, gitService: gitService);
+            contentModelService.Object, null!, null!, null!, null!, null!, NullSettingsService.Instance, null!, themeService, gitService: gitService, gitSyncDialog: gitSyncDialog);
 
         var statusBar = new iConsole.Controls.StatusBar.StatusBar(themeService) { ViewSize = new Size(120, 1) };
         statusBar.AddControl(hotKeys);
@@ -66,7 +69,7 @@ public class RealHotKeysRoutingTest
         panel.SetFocus();
         Assert.IsTrue(panel.IsFocused, "Precondition: the panel must hold focus");
 
-        return new Harness(root, hotKeys, contentModelService, iPhoneDialog);
+        return new Harness(root, hotKeys, contentModelService, iPhoneDialog, gitSyncDialog);
     }
 
     [Timeout(60_000)]
@@ -180,7 +183,7 @@ public class RealHotKeysRoutingTest
             git.Setup(g => g.GetRepositoryRootAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(root);
             git.Setup(g => g.GetStatusAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new GitRepositoryStatus("main", "origin/main", 0, 0, [], []));
-            git.Setup(g => g.PullRebaseAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            git.Setup(g => g.PullAsync(It.IsAny<string>(), It.IsAny<GitPullMode>(), It.IsAny<CancellationToken>()))
                 .Callback(() => Interlocked.Increment(ref pulls)).ReturnsAsync(GitResult.Ok());
             git.Setup(g => g.PushAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
                 .Callback(() => Interlocked.Increment(ref pushes)).ReturnsAsync(GitResult.Ok());
@@ -190,9 +193,15 @@ public class RealHotKeysRoutingTest
             model.SetupGet(m => m.Url).Returns(new Url(root));
             harness.ContentModelService.Setup(s => s.GetFocusedModel()).Returns(model.Object);
 
+            // Ctrl+Shift+G opens the sync dialog for the focused working tree, and runs no git on its own.
             await harness.Root.HandleKeyEventAsync(new KeyEvent('\u0007', ConsoleKey.G, true, false, true));
+            GitSyncDialog dialog = harness.GitSyncDialog!;
+            await WaitUntilAsync(() => dialog.Repository.Branch == "main");
+            Assert.AreEqual(0, Volatile.Read(ref pulls), "opening the dialog pulls nothing");
 
-            await WaitUntilAsync(() => Volatile.Read(ref pushes) == 1);
+            // The dialog's sync pulls first and then pushes.
+            await dialog.SyncAsync();
+            await dialog.SyncTask;
             Assert.AreEqual(1, Volatile.Read(ref pulls), "the pull runs first");
             Assert.AreEqual(1, Volatile.Read(ref pushes), "and the push after it");
         }
@@ -241,7 +250,7 @@ public class RealHotKeysRoutingTest
         }
     }
 
-    /// <summary>The bottom bar has the git sync as Ctrl-Shift-G-Sync when it has a git service, and no such key without one.</summary>
+    /// <summary>The bottom bar has the git sync as Ctrl-Shift-G-Sync when it has the sync dialog, and no such key without one.</summary>
     [Timeout(60_000)]
     [TestMethod]
     public async Task TheBottomBarOffersGitSyncOnCtrlShiftGOnlyWhenGitIsAvailable()

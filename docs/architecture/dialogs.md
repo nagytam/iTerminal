@@ -41,6 +41,7 @@ appear on. `GitLens` shares the same service.
 - **The inline input (commit / amend / new branch / stash message) tracks `_inputActive`, not the text
   box's `IsVisible`.** `Control.ShowAsync` makes every child visible on the way in, so a footer that
   reads `IsVisible` as "the input is up" never draws its key hints at all.
+- **Git sync (Ctrl+Shift+G) opens `GitSyncDialog`** (`Dialogs/Git/GitSyncDialog.cs`), not a one-key pull and push. It lists the current branch and its upstream (ahead/behind), the conflicted files, and the local and remote branches, and offers the pull mode (`GitPullMode`: rebase, merge, fast-forward only) and a push-after-pull tick. Enter runs the sync: pull, then push if ticked; a failed step stops there and the conflicts it left are listed. `GitSyncCommand` only opens the dialog, and is offered only inside a working tree.
 - Not built: in-pane conflict resolution (a 3-way view; resolving today means editing, staging and
   committing), tags, rebase, cherry-pick, and a multi-line commit body.
 

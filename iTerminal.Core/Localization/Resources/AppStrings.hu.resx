@@ -9689,4 +9689,85 @@
     <value>Újabb iTerminal-kiadás keresése most, és telepítésének felajánlása.</value>
     <comment>Újabb iTerminal-kiadás keresése most, és telepítésének felajánlása.</comment>
   </data>
+  <data name="Sync.Title" xml:space="preserve">
+    <value>Git-szinkronizálás</value>
+  </data>
+  <data name="Sync.FieldPull" xml:space="preserve">
+    <value>Pull (lehúzás)</value>
+  </data>
+  <data name="Sync.FieldPush" xml:space="preserve">
+    <value>Push a lehúzás után</value>
+  </data>
+  <data name="Sync.Mode.Rebase" xml:space="preserve">
+    <value>A helyi commitok rebase-elése az upstreamre</value>
+  </data>
+  <data name="Sync.Mode.Merge" xml:space="preserve">
+    <value>Upstream beolvasztása (szükség esetén merge-commit)</value>
+  </data>
+  <data name="Sync.Mode.FastForward" xml:space="preserve">
+    <value>Csak fast-forward (elszáll, ha az ágak szétváltak)</value>
+  </data>
+  <data name="Sync.HeaderConflicts" xml:space="preserve">
+    <value>Ütközések (feloldás, előkészítés, majd újra szinkronizálás)</value>
+  </data>
+  <data name="Sync.NoConflicts" xml:space="preserve">
+    <value>Nincs ütközés.</value>
+  </data>
+  <data name="Sync.HeaderLocal" xml:space="preserve">
+    <value>Helyi ágak</value>
+  </data>
+  <data name="Sync.HeaderRemote" xml:space="preserve">
+    <value>Távoli ágak</value>
+  </data>
+  <data name="Sync.Status.Enter" xml:space="preserve">
+    <value>Enter szinkronizál: lehúzás, majd push, ha be van jelölve.</value>
+  </data>
+  <data name="Sync.Status.Syncing" xml:space="preserve">
+    <value>Szinkronizálás a távoli tárolóval…</value>
+  </data>
+  <data name="Sync.Status.Synced" xml:space="preserve">
+    <value>Szinkronizálva a távoli tárolóval.</value>
+  </data>
+  <data name="Sync.Status.NotRepo" xml:space="preserve">
+    <value>Ez a mappa nem git-tárolóban van.</value>
+  </data>
+  <data name="Sync.Status.NoUpstream" xml:space="preserve">
+    <value>Az ágnak nincs upstreamje, amivel szinkronizálni lehetne.</value>
+  </data>
+  <data name="Sync.Status.PullFailed" xml:space="preserve">
+    <value>A lehúzás nem sikerült: {0} (Semmi nem lett feltöltve. Ha a git rebase-t vagy merge-t kezdett, az félbemaradt.)</value>
+  </data>
+  <data name="Sync.Status.PushFailed" xml:space="preserve">
+    <value>A feltöltés nem sikerült: {0}</value>
+  </data>
+  <data name="Sync.Hint.Sync" xml:space="preserve">
+    <value>Lehúzás, majd push: lefuttatja a szinkronizálást</value>
+  </data>
+  <data name="Sync.Hint.Reload" xml:space="preserve">
+    <value>Ágak és ütközések újratöltése</value>
+  </data>
+  <data name="Sync.Hint.Scroll" xml:space="preserve">
+    <value>Ágak és ütközések görgetése</value>
+  </data>
+  <data name="Sync.Hints" xml:space="preserve">
+    <value>Enter:szink  F5:újratölt  ↑↓:görgetés  Esc:bezár</value>
+  </data>
+  <data name="Sync.NoUpstreamShort" xml:space="preserve">
+    <value>nincs upstream</value>
+  </data>
+  <data name="Sync.RepositoryLine" xml:space="preserve">
+    <value>Tároló: {0}</value>
+  </data>
+  <data name="Sync.BranchLine" xml:space="preserve">
+    <value>Ág: {0}  ({1})</value>
+  </data>
+  <data name="CmdTitle.8d261a37" xml:space="preserve">
+    <value>Szinkronizálás</value>
+  </data>
+  <data name="CmdDesc.09c78802" xml:space="preserve">
+    <value>Git-szinkronizálás megnyitása: az ágak, a lehúzás és a feltöltés beállításai, valamint az ütközések.</value>
+  </data>
+  <data name="CmdDesc.e6858340" xml:space="preserve">
+    <value>Lehúzás, majd feltöltés: a git-szinkronizálás.</value>
+  </data>
 </root>

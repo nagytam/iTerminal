@@ -84,6 +84,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private iTerminal.Core.Services.Defender.IMalwareScanService? _malwareScanService { get; set; }
     private INotificationService? _notificationService { get; set; }
     private iTerminal.Core.Services.Git.IGitService? _gitService { get; set; }
+    private iTerminal.Core.Dialogs.Git.GitSyncDialog? _gitSyncDialog { get; set; }
 
     public ContentBrowser(
         string name,
@@ -143,11 +144,13 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iConsole.Dialogs.MarkdownViewerDialog? markdownViewerDialog = null,
         iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
         iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
-        iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null)
+        iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
+        iTerminal.Core.Dialogs.Git.GitSyncDialog? gitSyncDialog = null)
         : base(themeService)
     {
         _webBrowserDialog = webBrowserDialog;
         _gitService = gitService;
+        _gitSyncDialog = gitSyncDialog;
         _csvViewerDialog = csvViewerDialog;
         _sqliteViewerDialog = sqliteViewerDialog;
         _hdfViewerDialog = hdfViewerDialog;
@@ -393,7 +396,10 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         if (_gitService is not null)
         {
             AddCommand(new GitPullRebaseCommand(ContentModelService, _gitService, _notificationService));
-            AddCommand(new GitSyncCommand(ContentModelService, _gitService, _notificationService));
+            if (_gitSyncDialog is not null)
+            {
+                AddCommand(new GitSyncCommand(_gitSyncDialog, ContentModelService));
+            }
         }
         if (_fileDiffDialog is not null)
         {
