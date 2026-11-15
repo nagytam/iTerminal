@@ -233,6 +233,15 @@ public sealed class GitService : IGitService
     public Task<GitResult> PullRebaseAsync(string repositoryRoot, CancellationToken cancellationToken = default) =>
         RunWriteAsync(repositoryRoot, cancellationToken, "pull", "--rebase");
 
+    public Task<GitResult> PullAsync(string repositoryRoot, GitPullMode mode, CancellationToken cancellationToken = default) =>
+        mode switch
+        {
+            GitPullMode.Rebase => RunWriteAsync(repositoryRoot, cancellationToken, "pull", "--rebase"),
+            GitPullMode.Merge => RunWriteAsync(repositoryRoot, cancellationToken, "pull", "--no-rebase"),
+            GitPullMode.FastForwardOnly => RunWriteAsync(repositoryRoot, cancellationToken, "pull", "--ff-only"),
+            _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
+        };
+
     public async Task<GitResult> PushAsync(string repositoryRoot, bool setUpstream = false, CancellationToken cancellationToken = default)
     {
         if (!setUpstream)

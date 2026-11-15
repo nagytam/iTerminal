@@ -37,7 +37,9 @@ public class HotKeyCollisionTest
     [TestMethod]
     public void GitSyncAndTheCalendarHaveDifferentChords()
     {
-        var sync = new GitSyncCommand(Mock.Of<iConsole.Interfaces.IContentModelService>(), Mock.Of<iTerminal.Core.Services.Git.IGitService>());
+        var sync = new GitSyncCommand(
+            new iTerminal.Core.Dialogs.Git.GitSyncDialog(Mock.Of<iTerminal.Core.Services.Git.IGitService>(), Mock.Of<iConsole.Interfaces.IContentModelService>(), Mock.Of<iConsole.Services.IThemeService>()),
+            Mock.Of<iConsole.Interfaces.IContentModelService>());
         var calendar = new CalendarDialogCommand(null!);
 
         Assert.AreEqual(new Key(ConsoleKey.G, true, false, true), sync.Key);

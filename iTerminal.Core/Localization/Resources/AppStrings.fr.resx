@@ -9689,4 +9689,85 @@
     <value>Rechercher maintenant une version plus récente d'iTerminal et proposer son installation.</value>
     <comment>Rechercher maintenant une version plus récente d'iTerminal et proposer son installation.</comment>
   </data>
+  <data name="Sync.Title" xml:space="preserve">
+    <value>Synchronisation Git</value>
+  </data>
+  <data name="Sync.FieldPull" xml:space="preserve">
+    <value>Pull (récupération)</value>
+  </data>
+  <data name="Sync.FieldPush" xml:space="preserve">
+    <value>Pousser après le pull</value>
+  </data>
+  <data name="Sync.Mode.Rebase" xml:space="preserve">
+    <value>Rebaser les commits locaux sur l'amont</value>
+  </data>
+  <data name="Sync.Mode.Merge" xml:space="preserve">
+    <value>Fusionner l'amont (commit de fusion si besoin)</value>
+  </data>
+  <data name="Sync.Mode.FastForward" xml:space="preserve">
+    <value>Avance rapide uniquement (échoue si les branches ont divergé)</value>
+  </data>
+  <data name="Sync.HeaderConflicts" xml:space="preserve">
+    <value>Conflits (résoudre, indexer, puis resynchroniser)</value>
+  </data>
+  <data name="Sync.NoConflicts" xml:space="preserve">
+    <value>Aucun conflit.</value>
+  </data>
+  <data name="Sync.HeaderLocal" xml:space="preserve">
+    <value>Branches locales</value>
+  </data>
+  <data name="Sync.HeaderRemote" xml:space="preserve">
+    <value>Branches distantes</value>
+  </data>
+  <data name="Sync.Status.Enter" xml:space="preserve">
+    <value>Entrée synchronise : pull, puis push si coché.</value>
+  </data>
+  <data name="Sync.Status.Syncing" xml:space="preserve">
+    <value>Synchronisation avec le dépôt distant…</value>
+  </data>
+  <data name="Sync.Status.Synced" xml:space="preserve">
+    <value>Synchronisé avec le dépôt distant.</value>
+  </data>
+  <data name="Sync.Status.NotRepo" xml:space="preserve">
+    <value>Ce dossier n'est pas dans un dépôt git.</value>
+  </data>
+  <data name="Sync.Status.NoUpstream" xml:space="preserve">
+    <value>La branche n'a pas d'amont avec lequel synchroniser.</value>
+  </data>
+  <data name="Sync.Status.PullFailed" xml:space="preserve">
+    <value>Échec du pull : {0} (Rien n'a été poussé. Si git a commencé un rebase ou une fusion, il reste inachevé.)</value>
+  </data>
+  <data name="Sync.Status.PushFailed" xml:space="preserve">
+    <value>Échec du push : {0}</value>
+  </data>
+  <data name="Sync.Hint.Sync" xml:space="preserve">
+    <value>Pull puis push : lance la synchronisation</value>
+  </data>
+  <data name="Sync.Hint.Reload" xml:space="preserve">
+    <value>Recharger les branches et les conflits</value>
+  </data>
+  <data name="Sync.Hint.Scroll" xml:space="preserve">
+    <value>Faire défiler les branches et les conflits</value>
+  </data>
+  <data name="Sync.Hints" xml:space="preserve">
+    <value>Entrée:sync  F5:recharger  ↑↓:défiler  Échap:fermer</value>
+  </data>
+  <data name="Sync.NoUpstreamShort" xml:space="preserve">
+    <value>pas d'amont</value>
+  </data>
+  <data name="Sync.RepositoryLine" xml:space="preserve">
+    <value>Dépôt : {0}</value>
+  </data>
+  <data name="Sync.BranchLine" xml:space="preserve">
+    <value>Branche : {0}  ({1})</value>
+  </data>
+  <data name="CmdTitle.8d261a37" xml:space="preserve">
+    <value>Synchroniser</value>
+  </data>
+  <data name="CmdDesc.09c78802" xml:space="preserve">
+    <value>Ouvrir la synchronisation git : les branches, les options de pull et de push, et les conflits éventuels.</value>
+  </data>
+  <data name="CmdDesc.e6858340" xml:space="preserve">
+    <value>Pull puis push : la synchronisation git.</value>
+  </data>
 </root>

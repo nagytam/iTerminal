@@ -9894,4 +9894,85 @@
     <value>Look for a newer iTerminal release now and offer to install it.</value>
     <comment>Look for a newer iTerminal release now and offer to install it.</comment>
   </data>
+  <data name="Sync.Title" xml:space="preserve">
+    <value>Git sync</value>
+  </data>
+  <data name="Sync.FieldPull" xml:space="preserve">
+    <value>Pull</value>
+  </data>
+  <data name="Sync.FieldPush" xml:space="preserve">
+    <value>Push after the pull</value>
+  </data>
+  <data name="Sync.Mode.Rebase" xml:space="preserve">
+    <value>Rebase the local commits onto the upstream</value>
+  </data>
+  <data name="Sync.Mode.Merge" xml:space="preserve">
+    <value>Merge the upstream in (a merge commit when needed)</value>
+  </data>
+  <data name="Sync.Mode.FastForward" xml:space="preserve">
+    <value>Fast-forward only (fails when the branches diverged)</value>
+  </data>
+  <data name="Sync.HeaderConflicts" xml:space="preserve">
+    <value>Conflicts (resolve, stage, then sync again)</value>
+  </data>
+  <data name="Sync.NoConflicts" xml:space="preserve">
+    <value>No conflicts.</value>
+  </data>
+  <data name="Sync.HeaderLocal" xml:space="preserve">
+    <value>Local branches</value>
+  </data>
+  <data name="Sync.HeaderRemote" xml:space="preserve">
+    <value>Remote branches</value>
+  </data>
+  <data name="Sync.Status.Enter" xml:space="preserve">
+    <value>Enter syncs: pull, then push when it is ticked.</value>
+  </data>
+  <data name="Sync.Status.Syncing" xml:space="preserve">
+    <value>Syncing with the remote…</value>
+  </data>
+  <data name="Sync.Status.Synced" xml:space="preserve">
+    <value>Synced with the remote.</value>
+  </data>
+  <data name="Sync.Status.NotRepo" xml:space="preserve">
+    <value>This folder is not in a git repository.</value>
+  </data>
+  <data name="Sync.Status.NoUpstream" xml:space="preserve">
+    <value>The branch has no upstream branch to sync with.</value>
+  </data>
+  <data name="Sync.Status.PullFailed" xml:space="preserve">
+    <value>Pull failed: {0} (Nothing was pushed. If git started a rebase or merge, it is left unfinished.)</value>
+  </data>
+  <data name="Sync.Status.PushFailed" xml:space="preserve">
+    <value>Push failed: {0}</value>
+  </data>
+  <data name="Sync.Hint.Sync" xml:space="preserve">
+    <value>Pull, then push: runs the sync</value>
+  </data>
+  <data name="Sync.Hint.Reload" xml:space="preserve">
+    <value>Reload the branches and conflicts</value>
+  </data>
+  <data name="Sync.Hint.Scroll" xml:space="preserve">
+    <value>Scroll the branches and conflicts</value>
+  </data>
+  <data name="Sync.Hints" xml:space="preserve">
+    <value>Enter:sync  F5:reload  ↑↓:scroll  Esc:close</value>
+  </data>
+  <data name="Sync.NoUpstreamShort" xml:space="preserve">
+    <value>no upstream</value>
+  </data>
+  <data name="Sync.RepositoryLine" xml:space="preserve">
+    <value>Repository: {0}</value>
+  </data>
+  <data name="Sync.BranchLine" xml:space="preserve">
+    <value>Branch: {0}  ({1})</value>
+  </data>
+  <data name="CmdTitle.8d261a37" xml:space="preserve">
+    <value>Sync</value>
+  </data>
+  <data name="CmdDesc.09c78802" xml:space="preserve">
+    <value>Open the git sync: the branches, the pull and push options, and any conflicts.</value>
+  </data>
+  <data name="CmdDesc.e6858340" xml:space="preserve">
+    <value>Pull, then push: the git sync.</value>
+  </data>
 </root>

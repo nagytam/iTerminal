@@ -97,7 +97,8 @@ public class HotKeys : StatusBarItem
         iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
         iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
         iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
-        IGitService? gitService = null)
+        IGitService? gitService = null,
+        iTerminal.Core.Dialogs.Git.GitSyncDialog? gitSyncDialog = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -337,10 +338,10 @@ public class HotKeys : StatusBarItem
         };
         AddControl(gitClientDialogButton);
 
-        // Git sync: pull --rebase, then push. Shown in the Ctrl layer only while the focused folder is in a working tree.
-        if (gitService is not null)
+        // Git sync: opens the sync dialog. Shown in the Ctrl layer only while the focused folder is in a working tree.
+        if (gitSyncDialog is not null)
         {
-            var gitSyncButton = new Button("Ctrl-Shift-G-Sync", new GitSyncCommand(contentModelService, gitService, notificationService), themeService)
+            var gitSyncButton = new Button("Ctrl-Shift-G-Sync", new GitSyncCommand(gitSyncDialog, contentModelService), themeService)
             {
                 Position = new Position(0, 0),
                 ViewSize = new Size(18, 1),
