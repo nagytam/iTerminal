@@ -94,6 +94,21 @@ public interface IGitService
     Task<GitResult> StashApplyAsync(string repositoryRoot, int index, CancellationToken cancellationToken = default);
 
     Task<GitResult> StashDropAsync(string repositoryRoot, int index, CancellationToken cancellationToken = default);
+
+    /// <summary>Every worktree of the repository, the main working tree first (<c>git worktree list --porcelain</c>).</summary>
+    Task<IReadOnlyList<GitWorktree>> GetWorktreesAsync(string repositoryRoot, CancellationToken cancellationToken = default);
+
+    /// <summary>Removes a linked worktree. Without force git refuses one with changes in it, which is what keeps cleaning safe.</summary>
+    Task<GitResult> RemoveWorktreeAsync(string repositoryRoot, string worktreePath, CancellationToken cancellationToken = default);
+
+    /// <summary>Drops the bookkeeping of worktrees whose folder has gone (<c>git worktree prune</c>).</summary>
+    Task<GitResult> PruneWorktreesAsync(string repositoryRoot, CancellationToken cancellationToken = default);
+
+    /// <summary>The branch new work is meant to land on: the remote's default branch, else a local main or master, or null.</summary>
+    Task<string?> GetDefaultBranchAsync(string repositoryRoot, CancellationToken cancellationToken = default);
+
+    /// <summary>Names of the local branches already merged into <paramref name="baseBranch"/>.</summary>
+    Task<IReadOnlyList<string>> GetMergedBranchesAsync(string repositoryRoot, string baseBranch, CancellationToken cancellationToken = default);
 }
 
 /// <summary>Outcome of a mutating git command.</summary>

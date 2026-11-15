@@ -9744,13 +9744,13 @@
     <value>Pull puis push : lance la synchronisation</value>
   </data>
   <data name="Sync.Hint.Reload" xml:space="preserve">
-    <value>Recharger les branches et les conflits</value>
+    <value>Recharger les branches, worktrees et conflits</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Faire défiler les branches et les conflits</value>
+    <value>Faire défiler les branches, worktrees et conflits</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Entrée:sync  F5:recharger  ↑↓:défiler  Échap:fermer</value>
+    <value>Entrée:sync  F5:recharger  F6:nettoyer  ↑↓:défiler  Échap:fermer</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>pas d'amont</value>
@@ -9769,5 +9769,53 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull puis push : la synchronisation git.</value>
+  </data>
+  <data name="Sync.HeaderWorktrees" xml:space="preserve">
+    <value>Worktrees</value>
+  </data>
+  <data name="Sync.WorktreeMain" xml:space="preserve">
+    <value>principal</value>
+  </data>
+  <data name="Sync.WorktreeLinked" xml:space="preserve">
+    <value>lié</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>fusionnée</value>
+  </data>
+  <data name="Sync.Locked" xml:space="preserve">
+    <value>verrouillé</value>
+  </data>
+  <data name="Sync.Detached" xml:space="preserve">
+    <value>détaché</value>
+  </data>
+  <data name="Sync.Clean.Running" xml:space="preserve">
+    <value>Nettoyage…</value>
+  </data>
+  <data name="Sync.Clean.NoBase" xml:space="preserve">
+    <value>Aucune branche main ou master pour juger des fusions.</value>
+  </data>
+  <data name="Sync.Clean.Nothing" xml:space="preserve">
+    <value>Rien de fusionné dans {0} à nettoyer.</value>
+  </data>
+  <data name="Sync.Clean.Plan" xml:space="preserve">
+    <value>Supprimera {0} worktree(s) et {1} branche(s) : {2}. F6 à nouveau pour le faire, toute autre touche annule.</value>
+  </data>
+  <data name="Sync.Clean.Cancelled" xml:space="preserve">
+    <value>Nettoyage annulé — rien n'a été supprimé.</value>
+  </data>
+  <data name="Sync.Clean.Done" xml:space="preserve">
+    <value>Nettoyé : {0} worktree(s) supprimé(s), {1} branche(s) supprimée(s).</value>
+  </data>
+  <data name="Sync.Clean.Failed" xml:space="preserve">
+    <value>Non nettoyé : {0}</value>
+  </data>
+  <data name="Sync.Hint.Clean" xml:space="preserve">
+    <value>Nettoyer les branches et worktrees fusionnés dans main (deux fois)</value>
+  </data>
+  <data name="CmdTitle.a92a8418" xml:space="preserve">
+    <value>Nettoyer les fusionnés</value>
+  </data>
+  <data name="CmdDesc.8e3c1eb7" xml:space="preserve">
+    <value>Supprimer les worktrees et branches fusionnés dans la branche par défaut (appuyer deux fois pour confirmer).</value>
   </data>
 </root>

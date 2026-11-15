@@ -9744,13 +9744,13 @@
     <value>Pull y luego push: ejecuta la sincronización</value>
   </data>
   <data name="Sync.Hint.Reload" xml:space="preserve">
-    <value>Recargar ramas y conflictos</value>
+    <value>Recargar ramas, worktrees y conflictos</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Desplazar ramas y conflictos</value>
+    <value>Desplazar ramas, worktrees y conflictos</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Intro:sync  F5:recargar  ↑↓:desplazar  Esc:cerrar</value>
+    <value>Intro:sync  F5:recargar  F6:limpiar  ↑↓:desplazar  Esc:cerrar</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>sin remoto</value>
@@ -9769,5 +9769,53 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull y luego push: la sincronización de git.</value>
+  </data>
+  <data name="Sync.HeaderWorktrees" xml:space="preserve">
+    <value>Worktrees</value>
+  </data>
+  <data name="Sync.WorktreeMain" xml:space="preserve">
+    <value>principal</value>
+  </data>
+  <data name="Sync.WorktreeLinked" xml:space="preserve">
+    <value>vinculado</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>fusionada</value>
+  </data>
+  <data name="Sync.Locked" xml:space="preserve">
+    <value>bloqueado</value>
+  </data>
+  <data name="Sync.Detached" xml:space="preserve">
+    <value>separado</value>
+  </data>
+  <data name="Sync.Clean.Running" xml:space="preserve">
+    <value>Limpiando…</value>
+  </data>
+  <data name="Sync.Clean.NoBase" xml:space="preserve">
+    <value>No hay rama main ni master con la que comparar las fusiones.</value>
+  </data>
+  <data name="Sync.Clean.Nothing" xml:space="preserve">
+    <value>Nada fusionado en {0} que limpiar.</value>
+  </data>
+  <data name="Sync.Clean.Plan" xml:space="preserve">
+    <value>Eliminará {0} worktree(s) y {1} rama(s): {2}. F6 de nuevo para hacerlo, cualquier otra tecla cancela.</value>
+  </data>
+  <data name="Sync.Clean.Cancelled" xml:space="preserve">
+    <value>Limpieza cancelada: no se eliminó nada.</value>
+  </data>
+  <data name="Sync.Clean.Done" xml:space="preserve">
+    <value>Limpiado: {0} worktree(s) eliminado(s), {1} rama(s) borrada(s).</value>
+  </data>
+  <data name="Sync.Clean.Failed" xml:space="preserve">
+    <value>No limpiado: {0}</value>
+  </data>
+  <data name="Sync.Hint.Clean" xml:space="preserve">
+    <value>Limpiar ramas y worktrees fusionados en main (pulsar dos veces)</value>
+  </data>
+  <data name="CmdTitle.a92a8418" xml:space="preserve">
+    <value>Limpiar fusionados</value>
+  </data>
+  <data name="CmdDesc.8e3c1eb7" xml:space="preserve">
+    <value>Eliminar los worktrees y ramas fusionados en la rama predeterminada (pulsar dos veces para confirmar).</value>
   </data>
 </root>

@@ -9808,13 +9808,13 @@
     <value>Pull, dann Push: führt die Synchronisierung aus</value>
   </data>
   <data name="Sync.Hint.Reload" xml:space="preserve">
-    <value>Branches und Konflikte neu laden</value>
+    <value>Branches, Worktrees und Konflikte neu laden</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Branches und Konflikte scrollen</value>
+    <value>Branches, Worktrees und Konflikte scrollen</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Enter:sync  F5:neu laden  ↑↓:scrollen  Esc:schließen</value>
+    <value>Enter:sync  F5:neu laden  F6:bereinigen  ↑↓:scrollen  Esc:schließen</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>kein Upstream</value>
@@ -9833,5 +9833,53 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull, dann Push: die Git-Synchronisierung.</value>
+  </data>
+  <data name="Sync.HeaderWorktrees" xml:space="preserve">
+    <value>Worktrees</value>
+  </data>
+  <data name="Sync.WorktreeMain" xml:space="preserve">
+    <value>Haupt</value>
+  </data>
+  <data name="Sync.WorktreeLinked" xml:space="preserve">
+    <value>verknüpft</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>zusammengeführt</value>
+  </data>
+  <data name="Sync.Locked" xml:space="preserve">
+    <value>gesperrt</value>
+  </data>
+  <data name="Sync.Detached" xml:space="preserve">
+    <value>losgelöst</value>
+  </data>
+  <data name="Sync.Clean.Running" xml:space="preserve">
+    <value>Bereinige…</value>
+  </data>
+  <data name="Sync.Clean.NoBase" xml:space="preserve">
+    <value>Kein Branch main oder master, um Merges zu beurteilen.</value>
+  </data>
+  <data name="Sync.Clean.Nothing" xml:space="preserve">
+    <value>Nichts in {0} Zusammengeführtes zum Aufräumen.</value>
+  </data>
+  <data name="Sync.Clean.Plan" xml:space="preserve">
+    <value>Entfernt {0} Worktree(s) und löscht {1} Branch(es): {2}. F6 erneut zum Ausführen, jede andere Taste bricht ab.</value>
+  </data>
+  <data name="Sync.Clean.Cancelled" xml:space="preserve">
+    <value>Bereinigung abgebrochen — nichts wurde entfernt.</value>
+  </data>
+  <data name="Sync.Clean.Done" xml:space="preserve">
+    <value>Bereinigt: {0} Worktree(s) entfernt, {1} Branch(es) gelöscht.</value>
+  </data>
+  <data name="Sync.Clean.Failed" xml:space="preserve">
+    <value>Nicht bereinigt: {0}</value>
+  </data>
+  <data name="Sync.Hint.Clean" xml:space="preserve">
+    <value>Branches und Worktrees bereinigen, die in main zusammengeführt sind (zweimal drücken)</value>
+  </data>
+  <data name="CmdTitle.a92a8418" xml:space="preserve">
+    <value>Zusammengeführtes bereinigen</value>
+  </data>
+  <data name="CmdDesc.8e3c1eb7" xml:space="preserve">
+    <value>Die in den Standard-Branch zusammengeführten Worktrees und Branches entfernen (zweimal drücken zum Bestätigen).</value>
   </data>
 </root>

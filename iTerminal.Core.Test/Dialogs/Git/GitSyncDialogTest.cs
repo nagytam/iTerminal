@@ -10,7 +10,7 @@ using Moq;
 
 namespace iTerminal.Core.Dialogs.Git.Test;
 
-/// <summary>The git sync dialog: pull with the chosen reconciliation, then push when ticked; a failed step stops the sync there.</summary>
+/// <summary>The git sync dialog: pull with the chosen reconciliation, then push when ticked; a failed step stops the sync there. F6 cleans what is merged.</summary>
 [TestClass]
 public class GitSyncDialogTest
 {
@@ -28,7 +28,13 @@ public class GitSyncDialogTest
     [TestCleanup]
     public void Cleanup() => Directory.Delete(_root, recursive: true);
 
-    private (GitSyncDialog Dialog, Mock<IGitService> Git) Create(string? upstream = "origin/main", IReadOnlyList<GitFileStatus>? unstaged = null)
+    private (GitSyncDialog Dialog, Mock<IGitService> Git) Create(
+        string? upstream = "origin/main",
+        IReadOnlyList<GitFileStatus>? unstaged = null,
+        IReadOnlyList<GitWorktree>? worktrees = null,
+        IReadOnlyList<string>? merged = null,
+        IReadOnlyList<GitBranch>? branches = null,
+        string currentBranch = "main")
     {
         Mock<IContentModel> model = new();
         model.SetupGet(m => m.Url).Returns(new Url(Path.Combine(_root, "repo")));
@@ -40,13 +46,20 @@ public class GitSyncDialogTest
         Mock<IGitService> git = new();
         git.Setup(g => g.GetRepositoryRootAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync("/the/root");
         git.Setup(g => g.GetStatusAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GitRepositoryStatus("main", upstream, 1, 1, [], unstaged ?? []));
+            .ReturnsAsync(new GitRepositoryStatus(currentBranch, upstream, 1, 1, [], unstaged ?? []));
         git.Setup(g => g.GetBranchesAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync([new GitBranch("main", true, "origin/main"), new GitBranch("origin/dev", false, null, IsRemote: true)]);
+            .ReturnsAsync(branches ?? [new GitBranch("main", true, "origin/main"), new GitBranch("origin/dev", false, null, IsRemote: true)]);
+        git.Setup(g => g.GetWorktreesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(worktrees ?? [new GitWorktree("/the/root", "main", IsMain: true, IsLocked: false, IsPrunable: false)]);
+        git.Setup(g => g.GetDefaultBranchAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync("main");
+        git.Setup(g => g.GetMergedBranchesAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(merged ?? []);
         git.Setup(g => g.PullAsync(It.IsAny<string>(), It.IsAny<GitPullMode>(), It.IsAny<CancellationToken>()))
             .Callback<string, GitPullMode, CancellationToken>((_, mode, _) => _calls.Add("pull:" + mode)).ReturnsAsync(GitResult.Ok());
         git.Setup(g => g.PushAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
             .Callback(() => _calls.Add("push")).ReturnsAsync(GitResult.Ok());
+        git.Setup(g => g.PruneWorktreesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Callback(() => _calls.Add("prune")).ReturnsAsync(GitResult.Ok());
 
         return (new GitSyncDialog(git.Object, content.Object, theme.Object), git);
     }
@@ -151,5 +164,124 @@ public class GitSyncDialogTest
         await OpenAsync(dialog);
 
         Assert.AreEqual("This folder is not in a git repository.", dialog.Status);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Refresh_ListsTheWorktreesAndTheMergedBranches()
+    {
+        var worktrees = new[]
+        {
+            new GitWorktree("/the/root", "main", IsMain: true, IsLocked: false, IsPrunable: false),
+            new GitWorktree("/wt/old", "old", IsMain: false, IsLocked: false, IsPrunable: false),
+        };
+        var (dialog, _) = Create(worktrees: worktrees, merged: ["main", "old"]);
+
+        await OpenAsync(dialog);
+
+        Assert.AreEqual(2, dialog.Worktrees.Count);
+        Assert.AreEqual("/wt/old", dialog.Worktrees[1].Path);
+        CollectionAssert.AreEqual(new[] { "main", "old" }, dialog.MergedBranches.ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Clean_FirstPressProposes_SecondPressRemovesWorktreesAndBranches()
+    {
+        var worktrees = new[]
+        {
+            new GitWorktree("/the/root", "main", IsMain: true, IsLocked: false, IsPrunable: false),
+            new GitWorktree("/wt/old", "old", IsMain: false, IsLocked: false, IsPrunable: false),
+            new GitWorktree("/wt/wip", "wip", IsMain: false, IsLocked: false, IsPrunable: false),
+        };
+        var (dialog, git) = Create(worktrees: worktrees, merged: ["main", "old", "gone"]);
+        await OpenAsync(dialog);
+        git.Setup(g => g.DeleteBranchAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            .Callback<string, string, bool, CancellationToken>((_, name, _, _) => _calls.Add("delete:" + name)).ReturnsAsync(GitResult.Ok());
+        git.Setup(g => g.RemoveWorktreeAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Callback<string, string, CancellationToken>((_, path, _) => _calls.Add("remove:" + path)).ReturnsAsync(GitResult.Ok());
+
+        // The first press only proposes: "wip" is not merged, so its worktree stays out of the plan.
+        await dialog.CleanAsync();
+        Assert.IsNotNull(dialog.PendingClean);
+        CollectionAssert.AreEqual(new[] { "/wt/old" }, dialog.PendingClean!.Worktrees.Select(w => w.Path).ToList());
+        CollectionAssert.AreEqual(new[] { "old", "gone" }, dialog.PendingClean.Branches.ToList());
+        Assert.AreEqual(0, _calls.Count, "nothing is removed before the second press");
+
+        await dialog.CleanAsync();
+        await dialog.CleanTask;
+
+        CollectionAssert.AreEqual(new[] { "remove:/wt/old", "delete:old", "delete:gone", "prune" }, _calls);
+        Assert.IsNull(dialog.PendingClean);
+        Assert.AreEqual("Cleaned: removed 1 worktree(s), deleted 2 branch(es).", dialog.Status);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Clean_ADirtyWorktree_IsRefused_AndItsBranchIsKept()
+    {
+        var worktrees = new[]
+        {
+            new GitWorktree("/the/root", "main", IsMain: true, IsLocked: false, IsPrunable: false),
+            new GitWorktree("/wt/dirty", "dirty", IsMain: false, IsLocked: false, IsPrunable: false),
+        };
+        var (dialog, git) = Create(worktrees: worktrees, merged: ["main", "dirty"]);
+        await OpenAsync(dialog);
+        git.Setup(g => g.RemoveWorktreeAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(GitResult.Fail("fatal: '/wt/dirty' contains modified or untracked files"));
+
+        await dialog.CleanAsync();
+        await dialog.CleanAsync();
+        await dialog.CleanTask;
+
+        git.Verify(g => g.DeleteBranchAsync(It.IsAny<string>(), "dirty", It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Never);
+        StringAssert.Contains(dialog.Status, "Not cleaned: /wt/dirty");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Clean_LeavesLockedWorktrees_AndTheBranchesAnotherWorktreeHolds()
+    {
+        var worktrees = new[]
+        {
+            new GitWorktree("/the/root", "main", IsMain: true, IsLocked: false, IsPrunable: false),
+            new GitWorktree("/wt/locked", "locked-branch", IsMain: false, IsLocked: true, IsPrunable: false),
+        };
+        var (dialog, _) = Create(worktrees: worktrees, merged: ["main", "locked-branch"]);
+        await OpenAsync(dialog);
+
+        await dialog.CleanAsync();
+
+        Assert.IsNull(dialog.PendingClean, "a locked worktree is not removed, and the branch it holds stays with it");
+        Assert.AreEqual("Nothing merged into main to clean.", dialog.Status);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Clean_WithNothingMerged_ProposesNothing()
+    {
+        var (dialog, _) = Create(merged: ["main"]);
+        await OpenAsync(dialog);
+
+        await dialog.CleanAsync();
+
+        Assert.IsNull(dialog.PendingClean);
+        Assert.AreEqual("Nothing merged into main to clean.", dialog.Status);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Clean_AnyKeyOtherThanF6OrEscape_WithdrawsTheProposal()
+    {
+        var (dialog, git) = Create(merged: ["main", "old"], worktrees: [new GitWorktree("/the/root", "main", IsMain: true, IsLocked: false, IsPrunable: false)]);
+        await OpenAsync(dialog);
+
+        await dialog.CleanAsync();
+        Assert.IsNotNull(dialog.PendingClean);
+
+        await dialog.HandleKeyEventAsync(new KeyEvent('x', ConsoleKey.X, false, false, false));
+
+        Assert.IsNull(dialog.PendingClean);
+        git.Verify(g => g.DeleteBranchAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }

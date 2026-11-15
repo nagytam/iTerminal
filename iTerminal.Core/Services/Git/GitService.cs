@@ -301,6 +301,103 @@ public sealed class GitService : IGitService
     public Task<GitResult> StashDropAsync(string repositoryRoot, int index, CancellationToken cancellationToken = default) =>
         RunWriteAsync(repositoryRoot, cancellationToken, "stash", "drop", $"stash@{{{index}}}");
 
+    public async Task<IReadOnlyList<GitWorktree>> GetWorktreesAsync(string repositoryRoot, CancellationToken cancellationToken = default)
+    {
+        // --porcelain prints one block per worktree, blocks separated by a blank line; the first block is the main working tree.
+        var result = await RunAsync(repositoryRoot, cancellationToken, "worktree", "list", "--porcelain");
+        if (!result.Success)
+        {
+            return [];
+        }
+
+        var worktrees = new List<GitWorktree>();
+        string? path = null;
+        string? branch = null;
+        var locked = false;
+        var prunable = false;
+
+        void Flush()
+        {
+            if (path is not null)
+            {
+                worktrees.Add(new GitWorktree(path, branch, IsMain: worktrees.Count == 0, IsLocked: locked, IsPrunable: prunable));
+            }
+
+            path = null;
+            branch = null;
+            locked = false;
+            prunable = false;
+        }
+
+        foreach (var raw in result.StandardOutput.Split('\n'))
+        {
+            var line = raw.TrimEnd('\r');
+            if (line.Length == 0)
+            {
+                Flush();
+            }
+            else if (line.StartsWith("worktree ", StringComparison.Ordinal))
+            {
+                Flush();
+                path = line["worktree ".Length..];
+            }
+            else if (line.StartsWith("branch refs/heads/", StringComparison.Ordinal))
+            {
+                branch = line["branch refs/heads/".Length..];
+            }
+            else if (line == "locked" || line.StartsWith("locked ", StringComparison.Ordinal))
+            {
+                locked = true;
+            }
+            else if (line == "prunable" || line.StartsWith("prunable ", StringComparison.Ordinal))
+            {
+                prunable = true;
+            }
+        }
+
+        Flush();
+        return worktrees;
+    }
+
+    public Task<GitResult> RemoveWorktreeAsync(string repositoryRoot, string worktreePath, CancellationToken cancellationToken = default) =>
+        RunWriteAsync(repositoryRoot, cancellationToken, "worktree", "remove", worktreePath);
+
+    public Task<GitResult> PruneWorktreesAsync(string repositoryRoot, CancellationToken cancellationToken = default) =>
+        RunWriteAsync(repositoryRoot, cancellationToken, "worktree", "prune");
+
+    public async Task<string?> GetDefaultBranchAsync(string repositoryRoot, CancellationToken cancellationToken = default)
+    {
+        // The remote's HEAD names the default branch when the clone recorded it; otherwise a local main or master will do.
+        var remoteHead = await RunAsync(repositoryRoot, cancellationToken, "symbolic-ref", "--quiet", "--short", "refs/remotes/origin/HEAD");
+        if (remoteHead.Success)
+        {
+            var name = remoteHead.StandardOutput.Trim();
+            if (name.StartsWith("origin/", StringComparison.Ordinal) && name.Length > "origin/".Length)
+            {
+                return name["origin/".Length..];
+            }
+        }
+
+        foreach (var candidate in new[] { "main", "master" })
+        {
+            var exists = await RunAsync(repositoryRoot, cancellationToken, "rev-parse", "--verify", "--quiet", "refs/heads/" + candidate);
+            if (exists.Success)
+            {
+                return candidate;
+            }
+        }
+
+        return null;
+    }
+
+    public async Task<IReadOnlyList<string>> GetMergedBranchesAsync(string repositoryRoot, string baseBranch, CancellationToken cancellationToken = default)
+    {
+        var result = await RunAsync(repositoryRoot, cancellationToken, "for-each-ref", "--merged", baseBranch, "--format=%(refname:short)", "refs/heads");
+        return result.Success
+            ? result.StandardOutput.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList()
+            : [];
+    }
+
     private static string NullDevice => OperatingSystem.IsWindows() ? "NUL" : "/dev/null";
 
     private async Task<GitResult> RunWriteAsync(string repositoryRoot, CancellationToken cancellationToken, params string[] args)

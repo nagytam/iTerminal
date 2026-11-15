@@ -9744,13 +9744,13 @@
     <value>Pull, poi push: esegue la sincronizzazione</value>
   </data>
   <data name="Sync.Hint.Reload" xml:space="preserve">
-    <value>Ricarica rami e conflitti</value>
+    <value>Ricarica rami, worktree e conflitti</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Scorri rami e conflitti</value>
+    <value>Scorri rami, worktree e conflitti</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Invio:sync  F5:ricarica  ↑↓:scorri  Esc:chiudi</value>
+    <value>Invio:sync  F5:ricarica  F6:pulisci  ↑↓:scorri  Esc:chiudi</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>nessun upstream</value>
@@ -9769,5 +9769,53 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull, poi push: la sincronizzazione git.</value>
+  </data>
+  <data name="Sync.HeaderWorktrees" xml:space="preserve">
+    <value>Worktree</value>
+  </data>
+  <data name="Sync.WorktreeMain" xml:space="preserve">
+    <value>principale</value>
+  </data>
+  <data name="Sync.WorktreeLinked" xml:space="preserve">
+    <value>collegato</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>unita</value>
+  </data>
+  <data name="Sync.Locked" xml:space="preserve">
+    <value>bloccato</value>
+  </data>
+  <data name="Sync.Detached" xml:space="preserve">
+    <value>staccato</value>
+  </data>
+  <data name="Sync.Clean.Running" xml:space="preserve">
+    <value>Pulizia…</value>
+  </data>
+  <data name="Sync.Clean.NoBase" xml:space="preserve">
+    <value>Nessun ramo main o master con cui confrontare le unioni.</value>
+  </data>
+  <data name="Sync.Clean.Nothing" xml:space="preserve">
+    <value>Nulla di unito in {0} da pulire.</value>
+  </data>
+  <data name="Sync.Clean.Plan" xml:space="preserve">
+    <value>Rimuoverà {0} worktree e eliminerà {1} ramo/i: {2}. F6 di nuovo per eseguire, qualsiasi altro tasto annulla.</value>
+  </data>
+  <data name="Sync.Clean.Cancelled" xml:space="preserve">
+    <value>Pulizia annullata — non è stato rimosso nulla.</value>
+  </data>
+  <data name="Sync.Clean.Done" xml:space="preserve">
+    <value>Pulito: {0} worktree rimossi, {1} rami eliminati.</value>
+  </data>
+  <data name="Sync.Clean.Failed" xml:space="preserve">
+    <value>Non pulito: {0}</value>
+  </data>
+  <data name="Sync.Hint.Clean" xml:space="preserve">
+    <value>Pulire rami e worktree uniti in main (premere due volte)</value>
+  </data>
+  <data name="CmdTitle.a92a8418" xml:space="preserve">
+    <value>Pulisci uniti</value>
+  </data>
+  <data name="CmdDesc.8e3c1eb7" xml:space="preserve">
+    <value>Rimuovere i worktree e i rami uniti nel ramo predefinito (premere due volte per confermare).</value>
   </data>
 </root>

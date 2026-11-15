@@ -117,6 +117,11 @@ public class GitClientDialogTest
 
         public Task<GitResult> PullAsync(string repositoryRoot, GitPullMode mode, CancellationToken cancellationToken = default)
             => Record("pull:" + mode.ToString().ToLowerInvariant());
+        public Task<IReadOnlyList<GitWorktree>> GetWorktreesAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<GitWorktree>>([]);
+        public Task<GitResult> RemoveWorktreeAsync(string repositoryRoot, string worktreePath, CancellationToken cancellationToken = default) => Task.FromResult(GitResult.Ok());
+        public Task<GitResult> PruneWorktreesAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult(GitResult.Ok());
+        public Task<string?> GetDefaultBranchAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult<string?>(null);
+        public Task<IReadOnlyList<string>> GetMergedBranchesAsync(string repositoryRoot, string baseBranch, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<string>>([]);
 
 
         public Task<GitResult> PushAsync(string repositoryRoot, bool setUpstream = false, CancellationToken cancellationToken = default)

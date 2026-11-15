@@ -9949,13 +9949,13 @@
     <value>Pull, then push: runs the sync</value>
   </data>
   <data name="Sync.Hint.Reload" xml:space="preserve">
-    <value>Reload the branches and conflicts</value>
+    <value>Reload the branches, worktrees and conflicts</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Scroll the branches and conflicts</value>
+    <value>Scroll the branches, worktrees and conflicts</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Enter:sync  F5:reload  ↑↓:scroll  Esc:close</value>
+    <value>Enter:sync  F5:reload  F6:clean  ↑↓:scroll  Esc:close</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>no upstream</value>
@@ -9974,5 +9974,53 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull, then push: the git sync.</value>
+  </data>
+  <data name="Sync.HeaderWorktrees" xml:space="preserve">
+    <value>Worktrees</value>
+  </data>
+  <data name="Sync.WorktreeMain" xml:space="preserve">
+    <value>main</value>
+  </data>
+  <data name="Sync.WorktreeLinked" xml:space="preserve">
+    <value>linked</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>merged</value>
+  </data>
+  <data name="Sync.Locked" xml:space="preserve">
+    <value>locked</value>
+  </data>
+  <data name="Sync.Detached" xml:space="preserve">
+    <value>detached</value>
+  </data>
+  <data name="Sync.Clean.Running" xml:space="preserve">
+    <value>Cleaning…</value>
+  </data>
+  <data name="Sync.Clean.NoBase" xml:space="preserve">
+    <value>No main or master branch to judge merges against.</value>
+  </data>
+  <data name="Sync.Clean.Nothing" xml:space="preserve">
+    <value>Nothing merged into {0} to clean.</value>
+  </data>
+  <data name="Sync.Clean.Plan" xml:space="preserve">
+    <value>Will remove {0} worktree(s) and delete {1} branch(es): {2}. F6 again to do it, any other key cancels.</value>
+  </data>
+  <data name="Sync.Clean.Cancelled" xml:space="preserve">
+    <value>Cleaning cancelled — nothing was removed.</value>
+  </data>
+  <data name="Sync.Clean.Done" xml:space="preserve">
+    <value>Cleaned: removed {0} worktree(s), deleted {1} branch(es).</value>
+  </data>
+  <data name="Sync.Clean.Failed" xml:space="preserve">
+    <value>Not cleaned: {0}</value>
+  </data>
+  <data name="Sync.Hint.Clean" xml:space="preserve">
+    <value>Clean the branches and worktrees merged into main (press twice)</value>
+  </data>
+  <data name="CmdTitle.a92a8418" xml:space="preserve">
+    <value>Clean merged</value>
+  </data>
+  <data name="CmdDesc.8e3c1eb7" xml:space="preserve">
+    <value>Remove the worktrees and branches merged into the default branch (press twice to confirm).</value>
   </data>
 </root>

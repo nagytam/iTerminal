@@ -9744,13 +9744,13 @@
     <value>Lehúzás, majd push: lefuttatja a szinkronizálást</value>
   </data>
   <data name="Sync.Hint.Reload" xml:space="preserve">
-    <value>Ágak és ütközések újratöltése</value>
+    <value>Ágak, munkafák és ütközések újratöltése</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Ágak és ütközések görgetése</value>
+    <value>Ágak, munkafák és ütközések görgetése</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Enter:szink  F5:újratölt  ↑↓:görgetés  Esc:bezár</value>
+    <value>Enter:szink  F5:újratölt  F6:tisztít  ↑↓:görgetés  Esc:bezár</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>nincs upstream</value>
@@ -9769,5 +9769,53 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Lehúzás, majd feltöltés: a git-szinkronizálás.</value>
+  </data>
+  <data name="Sync.HeaderWorktrees" xml:space="preserve">
+    <value>Munkafák</value>
+  </data>
+  <data name="Sync.WorktreeMain" xml:space="preserve">
+    <value>főmunkafa</value>
+  </data>
+  <data name="Sync.WorktreeLinked" xml:space="preserve">
+    <value>csatolt</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>beolvasztva</value>
+  </data>
+  <data name="Sync.Locked" xml:space="preserve">
+    <value>zárolva</value>
+  </data>
+  <data name="Sync.Detached" xml:space="preserve">
+    <value>leválasztott</value>
+  </data>
+  <data name="Sync.Clean.Running" xml:space="preserve">
+    <value>Tisztítás…</value>
+  </data>
+  <data name="Sync.Clean.NoBase" xml:space="preserve">
+    <value>Nincs main vagy master ág, amihez a beolvasztásokat mérni lehetne.</value>
+  </data>
+  <data name="Sync.Clean.Nothing" xml:space="preserve">
+    <value>Nincs {0}-be beolvasztott, takarítandó elem.</value>
+  </data>
+  <data name="Sync.Clean.Plan" xml:space="preserve">
+    <value>{0} munkafa eltávolítása és {1} ág törlése: {2}. F6 újra a végrehajtáshoz, bármely más billentyű megszakít.</value>
+  </data>
+  <data name="Sync.Clean.Cancelled" xml:space="preserve">
+    <value>A tisztítás megszakítva — semmi nem lett eltávolítva.</value>
+  </data>
+  <data name="Sync.Clean.Done" xml:space="preserve">
+    <value>Megtisztítva: {0} munkafa eltávolítva, {1} ág törölve.</value>
+  </data>
+  <data name="Sync.Clean.Failed" xml:space="preserve">
+    <value>Nem tisztítva: {0}</value>
+  </data>
+  <data name="Sync.Hint.Clean" xml:space="preserve">
+    <value>Main-be beolvasztott ágak és munkafák tisztítása (kétszer nyomja meg)</value>
+  </data>
+  <data name="CmdTitle.a92a8418" xml:space="preserve">
+    <value>Beolvasztottak tisztítása</value>
+  </data>
+  <data name="CmdDesc.8e3c1eb7" xml:space="preserve">
+    <value>Az alapértelmezett ágba beolvasztott munkafák és ágak eltávolítása (kétszer nyomja meg a megerősítéshez).</value>
   </data>
 </root>
