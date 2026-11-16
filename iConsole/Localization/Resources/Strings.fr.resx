@@ -76,6 +76,21 @@
   <data name="Help.CloseHint" xml:space="preserve">
     <value>Échap : fermer l’aide   ↑↓ PgPréc PgSuiv : défiler</value>
   </data>
+  <data name="Hint.PromptAccept" xml:space="preserve">
+    <value>Valider la valeur</value>
+  </data>
+  <data name="Hint.PromptCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Hint.PromptMove" xml:space="preserve">
+    <value>Déplacer la sélection</value>
+  </data>
+  <data name="Hint.PromptYesNo" xml:space="preserve">
+    <value>Répondre oui ou non</value>
+  </data>
+  <data name="Hint.PromptDefault" xml:space="preserve">
+    <value>Prendre la valeur par défaut</value>
+  </data>
   <data name="Common.Back" xml:space="preserve">
     <value>Retour</value>
   </data>

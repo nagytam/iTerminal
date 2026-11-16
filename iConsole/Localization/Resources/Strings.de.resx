@@ -76,6 +76,21 @@
   <data name="Help.CloseHint" xml:space="preserve">
     <value>Esc: Hilfe schließen   ↑↓ BildAuf/BildAb: scrollen</value>
   </data>
+  <data name="Hint.PromptAccept" xml:space="preserve">
+    <value>Wert übernehmen</value>
+  </data>
+  <data name="Hint.PromptCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Hint.PromptMove" xml:space="preserve">
+    <value>Auswahl bewegen</value>
+  </data>
+  <data name="Hint.PromptYesNo" xml:space="preserve">
+    <value>Mit Ja oder Nein antworten</value>
+  </data>
+  <data name="Hint.PromptDefault" xml:space="preserve">
+    <value>Standard übernehmen</value>
+  </data>
   <data name="Common.Back" xml:space="preserve">
     <value>Zurück</value>
   </data>
