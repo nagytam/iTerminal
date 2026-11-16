@@ -2654,7 +2654,7 @@
     <value>Note: {0}</value>
   </data>
   <data name="Remote.Empty" xml:space="preserve">
-    <value>Ancora nulla di salvato. N aggiunge una connessione SSH, PowerShell, FTP o WebDAV.</value>
+    <value>Nulla di salvato. N aggiunge una connessione SSH, PowerShell, FTP o WebDAV.</value>
   </data>
   <data name="Remote.Runs" xml:space="preserve">
     <value>Esegue: {0}</value>
@@ -5648,7 +5648,7 @@
     <value>Invio o Ctrl+S salva, Esc torna indietro.</value>
   </data>
   <data name="Remote.Summary" xml:space="preserve">
-    <value>{0} salvate  ·  le shell chiedono una password; FTP/WebDAV usano il gestore password</value>
+    <value>{0} salvate  ·  le shell chiedono password; FTP/WebDAV: gestore password</value>
   </data>
   <data name="Remote.ListHeader" xml:space="preserve">
     <value>  Tipo  Nome                          Destinazione</value>

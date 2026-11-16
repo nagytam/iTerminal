@@ -2654,7 +2654,7 @@
     <value>Megjegyzés: {0}</value>
   </data>
   <data name="Remote.Empty" xml:space="preserve">
-    <value>Még nincs mentve semmi. Az N SSH-, PowerShell-, FTP- vagy WebDAV-kapcsolatot ad hozzá.</value>
+    <value>Még nincs mentve semmi. N: SSH-, PowerShell-, FTP- vagy WebDAV-kapcsolat.</value>
   </data>
   <data name="Remote.Runs" xml:space="preserve">
     <value>Futtatja: {0}</value>
@@ -5648,7 +5648,7 @@
     <value>Az Enter vagy a Ctrl+S ment, az Esc visszalép.</value>
   </data>
   <data name="Remote.Summary" xml:space="preserve">
-    <value>{0} mentve  ·  a shellek jelszót kérnek; az FTP/WebDAV a jelszókezelőt használja</value>
+    <value>{0} mentve  ·  shellek: jelszót kérnek; FTP/WebDAV: jelszókezelő</value>
   </data>
   <data name="Remote.ListHeader" xml:space="preserve">
     <value>  Típ.  Név                           Cél</value>

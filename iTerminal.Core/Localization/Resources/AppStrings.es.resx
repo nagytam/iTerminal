@@ -5648,7 +5648,7 @@
     <value>Intro o Ctrl+S guarda, Esc vuelve.</value>
   </data>
   <data name="Remote.Summary" xml:space="preserve">
-    <value>{0} guardadas  ·  los shells piden una contraseña; FTP/WebDAV usan el gestor de contraseñas</value>
+    <value>{0} guardadas  ·  shells: pide contraseña; FTP/WebDAV: gestor de contraseñas</value>
   </data>
   <data name="Remote.ListHeader" xml:space="preserve">
     <value>  Tipo  Nombre                        Destino</value>

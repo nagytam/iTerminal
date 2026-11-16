@@ -2654,7 +2654,7 @@
     <value>Notizen: {0}</value>
   </data>
   <data name="Remote.Empty" xml:space="preserve">
-    <value>Noch nichts gespeichert. N fügt eine SSH-, PowerShell-, FTP- oder WebDAV-Verbindung hinzu.</value>
+    <value>Noch nichts gespeichert. N fügt SSH-, FTP- oder WebDAV-Verbindungen hinzu.</value>
   </data>
   <data name="Remote.Runs" xml:space="preserve">
     <value>Ausführen: {0}</value>
@@ -5648,7 +5648,7 @@
     <value>Enter oder Ctrl+S speichert, Esc geht zurück.</value>
   </data>
   <data name="Remote.Summary" xml:space="preserve">
-    <value>{0} gespeichert  ·  Shells fragen nach einem Passwort; FTP/WebDAV nutzen den Passwortmanager</value>
+    <value>{0} gespeichert  ·  Shells fragen nach Passwort; FTP/WebDAV: Passwortmanager</value>
   </data>
   <data name="Remote.ListHeader" xml:space="preserve">
     <value>  Typ   Name                          Ziel</value>
