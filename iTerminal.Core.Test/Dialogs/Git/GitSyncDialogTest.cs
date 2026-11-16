@@ -28,7 +28,7 @@ public class GitSyncDialogTest
     [TestCleanup]
     public void Cleanup() => Directory.Delete(_root, recursive: true);
 
-    private (GitSyncDialog Dialog, Mock<IGitService> Git) Create(string? upstream = "origin/main", IReadOnlyList<GitFileStatus>? unstaged = null)
+    private (GitSyncDialog Dialog, Mock<IGitService> Git) Create(string? upstream = "origin/main", IReadOnlyList<GitFileStatus>? unstaged = null, INotificationService? notifications = null)
     {
         Mock<IContentModel> model = new();
         model.SetupGet(m => m.Url).Returns(new Url(Path.Combine(_root, "repo")));
@@ -48,7 +48,7 @@ public class GitSyncDialogTest
         git.Setup(g => g.PushAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
             .Callback(() => _calls.Add("push")).ReturnsAsync(GitResult.Ok());
 
-        return (new GitSyncDialog(git.Object, content.Object, theme.Object), git);
+        return (new GitSyncDialog(git.Object, content.Object, theme.Object, notifications), git);
     }
 
     private static async Task<GitSyncDialog> OpenAsync(GitSyncDialog dialog)
@@ -72,6 +72,36 @@ public class GitSyncDialogTest
         CollectionAssert.AreEqual(new[] { "pull:Merge", "push" }, _calls);
         git.Verify(g => g.PullAsync("/the/root", GitPullMode.Merge, It.IsAny<CancellationToken>()), Times.Once);
         Assert.AreEqual("Synced with the remote.", dialog.Status);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Sync_ReportsSuccessAsAToast()
+    {
+        Mock<INotificationService> notifications = new();
+        var (dialog, _) = Create(notifications: notifications.Object);
+        await OpenAsync(dialog);
+
+        await dialog.SyncAsync();
+        await dialog.SyncTask;
+
+        notifications.Verify(n => n.Notify("Git sync", "Synced with the remote.", NotificationSeverity.Success), Times.Once);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Sync_ReportsAFailedPullAsAnErrorToast()
+    {
+        Mock<INotificationService> notifications = new();
+        var (dialog, git) = Create(notifications: notifications.Object);
+        await OpenAsync(dialog);
+        git.Setup(g => g.PullAsync(It.IsAny<string>(), It.IsAny<GitPullMode>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(GitResult.Fail("error: could not apply 1a2b3c4"));
+
+        await dialog.SyncAsync();
+        await dialog.SyncTask;
+
+        notifications.Verify(n => n.Notify("Git sync", "Pull failed: error: could not apply 1a2b3c4 Nothing was pushed. If git started a rebase or merge, it is left unfinished.", NotificationSeverity.Error), Times.Once);
     }
 
     [Timeout(60_000)]

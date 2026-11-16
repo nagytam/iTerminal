@@ -9725,6 +9725,9 @@
   <data name="Sync.Status.Syncing" xml:space="preserve">
     <value>Szinkronizálás a távoli tárolóval…</value>
   </data>
+  <data name="Sync.Notify.Title" xml:space="preserve">
+    <value>Git-szinkronizálás</value>
+  </data>
   <data name="Sync.Status.Synced" xml:space="preserve">
     <value>Szinkronizálva a távoli tárolóval.</value>
   </data>
