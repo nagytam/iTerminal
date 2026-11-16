@@ -37,6 +37,8 @@ public class GitSyncDialog : Dialog
     private GitRepositoryStatus _repository = GitRepositoryStatus.Empty;
     private IReadOnlyList<GitBranch> _branches = [];
     private IReadOnlyList<string> _conflicts = [];
+    private string? _mainBranch;
+    private IReadOnlySet<string> _mergedRefs = new HashSet<string>(StringComparer.Ordinal);
 
     public GitSyncDialog(
         IGitService gitService,
@@ -111,9 +113,8 @@ public class GitSyncDialog : Dialog
     {
         if (Parent is not null)
         {
-            var width = Math.Clamp((int)Parent.ViewSize.Width - 8, 60, 110);
-            var height = Math.Clamp((int)Parent.ViewSize.Height - 4, 18, 34);
-            CenterInParent(new Size(width, height));
+            // Opens maximized: the branch and conflict lists get the whole screen.
+            CenterInParent(Parent.ViewSize);
         }
 
         var inner = Math.Max(1, ViewSize.Width - 4);
@@ -156,6 +157,48 @@ public class GitSyncDialog : Dialog
             }
         });
         return RefreshTask;
+    }
+
+    /// <summary>F6: checks out the local main branch (main, else master), then reloads. Waits for a running sync to finish.</summary>
+    public Task SwitchToMainAsync()
+    {
+        if (!SyncTask.IsCompleted)
+        {
+            return SyncTask;
+        }
+
+        SetStatus(Say("Sync.Status.SwitchingToMain", "Switching to the main branch…"), isError: false);
+        SyncTask = Task.Run(async () =>
+        {
+            try
+            {
+                var root = await ResolveRootAsync();
+                if (root is null)
+                {
+                    SetStatus(Say("Sync.Status.NotRepo", "This folder is not in a git repository."), isError: true);
+                    return;
+                }
+
+                await RefreshTask;
+                var main = await _gitService.GetMainBranchAsync(root);
+                if (main is null)
+                {
+                    SetStatus(Say("Sync.Status.NoMain", "This repository has no local main or master branch."), isError: true);
+                    return;
+                }
+
+                var checkout = await _gitService.CheckoutBranchAsync(root, main);
+                await LoadAsync(root);
+                SetStatus(checkout.Success
+                    ? Say("Sync.Status.OnMain", "On {0}.", main)
+                    : Say("Sync.Status.SwitchFailed", "Switch failed: {0}", FirstLine(checkout.Output)), isError: !checkout.Success);
+            }
+            catch (Exception exception) when (exception is not OperationCanceledException)
+            {
+                SetStatus(exception.Message, isError: true);
+            }
+        });
+        return SyncTask;
     }
 
     /// <summary>Enter: pull with the chosen reconciliation, then push when ticked. A failed step stops the sync there.</summary>
@@ -237,6 +280,10 @@ public class GitSyncDialog : Dialog
     {
         _repository = await _gitService.GetStatusAsync(root);
         _branches = await _gitService.GetBranchesAsync(root, includeRemotes: true);
+        _mainBranch = await _gitService.GetMainBranchAsync(root);
+        _mergedRefs = _mainBranch is null
+            ? new HashSet<string>(StringComparer.Ordinal)
+            : await _gitService.GetMergedRefsAsync(root, _mainBranch) ?? new HashSet<string>(StringComparer.Ordinal);
         _conflicts = _repository.Unstaged.Where(file => file.IsConflicted).Select(file => file.Path).ToList();
         _list.SetRows(BuildRows());
         StateHasChanged();
@@ -257,13 +304,22 @@ public class GitSyncDialog : Dialog
         }
 
         rows.Add((string.Empty, colorScheme.Foreground));
-        rows.Add((Say("Sync.HeaderLocal", "Local branches"), colorScheme.Foreground));
+        rows.Add((_mainBranch is null
+            ? Say("Sync.HeaderLocal", "Local branches")
+            : Say("Sync.HeaderLocalMerged", "Local branches  (merged = already in {0})", _mainBranch), colorScheme.Foreground));
         rows.AddRange(_branches.Where(branch => !branch.IsRemote)
-            .Select(branch => ($" {(branch.IsCurrent ? "*" : " ")} {branch.Name}{(branch.Upstream is null ? string.Empty : "  → " + branch.Upstream)}", branch.IsCurrent ? Color.Green : colorScheme.Foreground)));
+            .Select(branch => ($" {(branch.IsCurrent ? "*" : " ")} {branch.Name}{(branch.Upstream is null ? string.Empty : "  → " + branch.Upstream)}{MergedTag(branch)}", branch.IsCurrent ? Color.Green : colorScheme.Foreground)));
         rows.Add((string.Empty, colorScheme.Foreground));
         rows.Add((Say("Sync.HeaderRemote", "Remote branches"), colorScheme.Foreground));
-        rows.AddRange(_branches.Where(branch => branch.IsRemote).Select(branch => ($"   {branch.Name}", Color.DarkGray)));
+        rows.AddRange(_branches.Where(branch => branch.IsRemote).Select(branch => ($"   {branch.Name}{MergedTag(branch)}", Color.DarkGray)));
         return rows;
+    }
+
+    /// <summary>"  (merged)" when the branch's tip is already in the main branch; empty otherwise.</summary>
+    private string MergedTag(GitBranch branch)
+    {
+        var fullName = branch.IsRemote ? "refs/remotes/" + branch.Name : "refs/heads/" + branch.Name;
+        return _mergedRefs.Contains(fullName) ? "  " + Say("Sync.Merged", "(merged)") : string.Empty;
     }
 
     private void SetStatus(string status, bool isError)
@@ -286,8 +342,13 @@ public class GitSyncDialog : Dialog
     public override IEnumerable<(string Key, string Description)> GetKeyHints()
     {
         yield return ("Enter", UiText.Get("Sync.Hint.Sync", "Pull, then push: runs the sync"));
+        yield return ("Tab", UiText.Get("Sync.Hint.Tab", "Move between the pull mode, the push option and the branch list"));
+        yield return ("Space", UiText.Get("Sync.Hint.Push", "Tick or untick the push after the pull"));
         yield return ("F5", UiText.Get("Sync.Hint.Reload", "Reload the branches and conflicts"));
-        yield return ("Up/Down", UiText.Get("Sync.Hint.Scroll", "Scroll the branches and conflicts"));
+        yield return ("F6", UiText.Get("Sync.Hint.Main", "Switch to the main branch"));
+        yield return ("Up/Down", UiText.Get("Sync.Hint.Scroll", "Scroll the branches and conflicts (chooses the pull mode when it has focus)"));
+        yield return ("PgUp/PgDn", UiText.Get("Sync.Hint.Page", "Scroll the branches and conflicts a page at a time"));
+        yield return ("Esc", UiText.Get("Sync.Hint.Close", "Close the dialog"));
     }
 
     public override async Task<bool> HandleKeyEventAsync(KeyEvent keyEvent)
@@ -295,6 +356,12 @@ public class GitSyncDialog : Dialog
         if (keyEvent.ConsoleKey == ConsoleKey.F5 && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)
         {
             _ = RefreshAsync();
+            return true;
+        }
+
+        if (keyEvent.ConsoleKey == ConsoleKey.F6 && !keyEvent.Alt && !keyEvent.Control && !keyEvent.Shift)
+        {
+            _ = SwitchToMainAsync();
             return true;
         }
 

@@ -9747,10 +9747,10 @@
     <value>Ágak és ütközések újratöltése</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Ágak és ütközések görgetése</value>
+    <value>Ágak és ütközések görgetése (ha a pull-mód van fókuszban, azt választja)</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Enter:szink  F5:újratölt  ↑↓:görgetés  Esc:bezár</value>
+    <value>Enter:szinkron  F5:frissítés  F6:főág  Tab:mező  Szóköz:push  ↑↓:görgetés  Esc:bezár</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>nincs upstream</value>
@@ -9769,5 +9769,38 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Lehúzás, majd feltöltés: a git-szinkronizálás.</value>
+  </data>
+  <data name="Sync.Hint.Tab" xml:space="preserve">
+    <value>Váltás a pull-mód, a push-opció és az ágak listája között</value>
+  </data>
+  <data name="Sync.Hint.Push" xml:space="preserve">
+    <value>A push be- vagy kikapcsolása a pull után</value>
+  </data>
+  <data name="Sync.Hint.Main" xml:space="preserve">
+    <value>Váltás a főágra</value>
+  </data>
+  <data name="Sync.Status.OnMain" xml:space="preserve">
+    <value>Ezen: {0}.</value>
+  </data>
+  <data name="Sync.Hint.Page" xml:space="preserve">
+    <value>Ágak és ütközések görgetése oldalanként</value>
+  </data>
+  <data name="Sync.Status.SwitchingToMain" xml:space="preserve">
+    <value>Váltás a főágra…</value>
+  </data>
+  <data name="Sync.Status.NoMain" xml:space="preserve">
+    <value>Ebben a tárolóban nincs helyi main vagy master ág.</value>
+  </data>
+  <data name="Sync.HeaderLocalMerged" xml:space="preserve">
+    <value>Helyi ágak  (merged = már benne van: {0})</value>
+  </data>
+  <data name="Sync.Hint.Close" xml:space="preserve">
+    <value>Párbeszédablak bezárása</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>(merged)</value>
+  </data>
+  <data name="Sync.Status.SwitchFailed" xml:space="preserve">
+    <value>A váltás sikertelen: {0}</value>
   </data>
 </root>

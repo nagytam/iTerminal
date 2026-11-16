@@ -9952,10 +9952,10 @@
     <value>Reload the branches and conflicts</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Scroll the branches and conflicts</value>
+    <value>Scroll the branches and conflicts (chooses the pull mode when it has focus)</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Enter:sync  F5:reload  ↑↓:scroll  Esc:close</value>
+    <value>Enter:sync  F5:reload  F6:main  Tab:field  Space:push  ↑↓:scroll  Esc:close</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>no upstream</value>
@@ -9974,5 +9974,38 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull, then push: the git sync.</value>
+  </data>
+  <data name="Sync.Hint.Tab" xml:space="preserve">
+    <value>Move between the pull mode, the push option and the branch list</value>
+  </data>
+  <data name="Sync.Hint.Push" xml:space="preserve">
+    <value>Tick or untick the push after the pull</value>
+  </data>
+  <data name="Sync.Hint.Main" xml:space="preserve">
+    <value>Switch to the main branch</value>
+  </data>
+  <data name="Sync.Status.OnMain" xml:space="preserve">
+    <value>On {0}.</value>
+  </data>
+  <data name="Sync.Hint.Page" xml:space="preserve">
+    <value>Scroll the branches and conflicts a page at a time</value>
+  </data>
+  <data name="Sync.Status.SwitchingToMain" xml:space="preserve">
+    <value>Switching to the main branch…</value>
+  </data>
+  <data name="Sync.Status.NoMain" xml:space="preserve">
+    <value>This repository has no local main or master branch.</value>
+  </data>
+  <data name="Sync.HeaderLocalMerged" xml:space="preserve">
+    <value>Local branches  (merged = already in {0})</value>
+  </data>
+  <data name="Sync.Hint.Close" xml:space="preserve">
+    <value>Close the dialog</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>(merged)</value>
+  </data>
+  <data name="Sync.Status.SwitchFailed" xml:space="preserve">
+    <value>Switch failed: {0}</value>
   </data>
 </root>

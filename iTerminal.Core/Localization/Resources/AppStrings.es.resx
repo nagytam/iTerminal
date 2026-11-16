@@ -9747,10 +9747,10 @@
     <value>Recargar ramas y conflictos</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Desplazar ramas y conflictos</value>
+    <value>Desplazar ramas y conflictos (elige el modo de pull si tiene el foco)</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Intro:sync  F5:recargar  ↑↓:desplazar  Esc:cerrar</value>
+    <value>Intro:sync  F5:recargar  F6:main  Tab:campo  Espacio:push  ↑↓:desplazar  Esc:cerrar</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>sin remoto</value>
@@ -9769,5 +9769,38 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull y luego push: la sincronización de git.</value>
+  </data>
+  <data name="Sync.Hint.Tab" xml:space="preserve">
+    <value>Cambiar entre el modo de pull, la opción de push y la lista de ramas</value>
+  </data>
+  <data name="Sync.Hint.Push" xml:space="preserve">
+    <value>Marcar o desmarcar el push tras el pull</value>
+  </data>
+  <data name="Sync.Hint.Main" xml:space="preserve">
+    <value>Cambiar a la rama principal</value>
+  </data>
+  <data name="Sync.Status.OnMain" xml:space="preserve">
+    <value>En {0}.</value>
+  </data>
+  <data name="Sync.Hint.Page" xml:space="preserve">
+    <value>Desplazar ramas y conflictos por página</value>
+  </data>
+  <data name="Sync.Status.SwitchingToMain" xml:space="preserve">
+    <value>Cambiando a la rama principal…</value>
+  </data>
+  <data name="Sync.Status.NoMain" xml:space="preserve">
+    <value>Este repositorio no tiene una rama local main ni master.</value>
+  </data>
+  <data name="Sync.HeaderLocalMerged" xml:space="preserve">
+    <value>Ramas locales  (merged = ya en {0})</value>
+  </data>
+  <data name="Sync.Hint.Close" xml:space="preserve">
+    <value>Cerrar el diálogo</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>(fusionada)</value>
+  </data>
+  <data name="Sync.Status.SwitchFailed" xml:space="preserve">
+    <value>Error al cambiar: {0}</value>
   </data>
 </root>

@@ -42,6 +42,15 @@ public interface IGitService
     /// <summary>Local branches, plus the remote-tracking branches when <paramref name="includeRemotes"/> is set.</summary>
     Task<IReadOnlyList<GitBranch>> GetBranchesAsync(string repositoryRoot, bool includeRemotes = false, CancellationToken cancellationToken = default);
 
+    /// <summary>The local main branch: <c>main</c>, else <c>master</c>; null when the repository has neither.</summary>
+    Task<string?> GetMainBranchAsync(string repositoryRoot, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// The full ref names (<c>refs/heads/x</c>, <c>refs/remotes/origin/x</c>) whose tip is already contained in
+    /// <paramref name="branchName"/>, so they count as merged into it.
+    /// </summary>
+    Task<IReadOnlySet<string>> GetMergedRefsAsync(string repositoryRoot, string branchName, CancellationToken cancellationToken = default);
+
     Task<GitResult> CheckoutBranchAsync(string repositoryRoot, string branchName, CancellationToken cancellationToken = default);
 
     /// <summary>
