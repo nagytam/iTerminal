@@ -3,6 +3,7 @@ using iConsole.Data;
 using iConsole.Layouts;
 using iConsole.Services;
 using iTerminal.Core.Controls.Terminals;
+using iTerminal.Core.Services;
 using iTerminal.Core.Factories;
 using iTerminal.Core.Commands;
 using System.Diagnostics;
@@ -35,7 +36,9 @@ public class Content : Window, IContent
         IContentModelService contentModelService,
         IThemeService themeService,
         Microsoft.Extensions.Options.IOptions<AI.AiOptions> aiOptions,
-        InteractiveShellCommand? shellCommand = null)
+        InteractiveShellCommand? shellCommand = null,
+        ISettingsService? settingsService = null,
+        INotificationService? notificationService = null)
         : base(themeService)
     {
         Name = nameof(Content);
@@ -56,6 +59,10 @@ public class Content : Window, IContent
 
         AddCommand(new SwitchPanelsCommand(contentModelService));
         AddCommand(new SameFolderInOtherPanelCommand(contentModelService));
+        if (settingsService is not null)
+        {
+            AddCommand(new ToggleHiddenFilesCommand(contentModelService, settingsService, notificationService));
+        }
         AddCommand(new ToggleTerminalCommand(this));
         AddCommand(new TogglePanelZoomCommand(this));
         if (shellCommand is not null)
