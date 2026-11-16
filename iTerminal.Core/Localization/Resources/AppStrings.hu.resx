@@ -9735,7 +9735,16 @@
     <value>Az ágnak nincs upstreamje, amivel szinkronizálni lehetne.</value>
   </data>
   <data name="Sync.Status.PullFailed" xml:space="preserve">
-    <value>A lehúzás nem sikerült: {0} (Semmi nem lett feltöltve. Ha a git rebase-t vagy merge-t kezdett, az félbemaradt.)</value>
+    <value>A lehúzás nem sikerült: {0}</value>
+  </data>
+  <data name="Sync.Status.PullFailedDetail" xml:space="preserve">
+    <value>Semmi nem lett feltöltve. Ha a git rebase-t vagy merge-t kezdett, az félbemaradt.</value>
+  </data>
+  <data name="Sync.Status.Busy" xml:space="preserve">
+    <value>Szinkron vagy ágváltás még fut.</value>
+  </data>
+  <data name="Sync.Position" xml:space="preserve">
+    <value>{0}–{1} / {2}</value>
   </data>
   <data name="Sync.Status.PushFailed" xml:space="preserve">
     <value>A feltöltés nem sikerült: {0}</value>

@@ -9799,7 +9799,16 @@
     <value>Der Branch hat keinen Upstream zum Synchronisieren.</value>
   </data>
   <data name="Sync.Status.PullFailed" xml:space="preserve">
-    <value>Pull fehlgeschlagen: {0} (Nichts wurde gepusht. Wenn Git ein Rebase oder Merge begonnen hat, bleibt es unvollständig.)</value>
+    <value>Pull fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Sync.Status.PullFailedDetail" xml:space="preserve">
+    <value>Nichts wurde gepusht. Wenn Git ein Rebase oder Merge begonnen hat, bleibt es unvollständig.</value>
+  </data>
+  <data name="Sync.Status.Busy" xml:space="preserve">
+    <value>Ein Sync oder Branch-Wechsel läuft noch.</value>
+  </data>
+  <data name="Sync.Position" xml:space="preserve">
+    <value>{0}–{1} von {2}</value>
   </data>
   <data name="Sync.Status.PushFailed" xml:space="preserve">
     <value>Push fehlgeschlagen: {0}</value>
