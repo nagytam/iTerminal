@@ -41,6 +41,8 @@ public class GitLensTest
         public Task<GitResult> CommitAsync(string repositoryRoot, string message, bool amend, CancellationToken cancellationToken = default) => Task.FromResult(GitResult.Ok());
         public Task<string> GetLastCommitMessageAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult(string.Empty);
         public Task<IReadOnlyList<GitBranch>> GetBranchesAsync(string repositoryRoot, bool includeRemotes = false, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<GitBranch>>([]);
+        public Task<string?> GetMainBranchAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult<string?>(null);
+        public Task<IReadOnlySet<string>> GetMergedRefsAsync(string repositoryRoot, string branchName, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlySet<string>>(new HashSet<string>());
         public Task<GitResult> CheckoutBranchAsync(string repositoryRoot, string branchName, CancellationToken cancellationToken = default) => Task.FromResult(GitResult.Ok());
         public Task<GitResult> CheckoutRemoteBranchAsync(string repositoryRoot, string remoteBranchName, CancellationToken cancellationToken = default) => Task.FromResult(GitResult.Ok());
         public Task<GitResult> CreateBranchAsync(string repositoryRoot, string branchName, CancellationToken cancellationToken = default) => Task.FromResult(GitResult.Ok());

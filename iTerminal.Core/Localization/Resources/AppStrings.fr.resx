@@ -9747,10 +9747,10 @@
     <value>Recharger les branches et les conflits</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Faire défiler les branches et les conflits</value>
+    <value>Faire défiler branches et conflits (choisit le mode de pull s&apos;il a le focus)</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Entrée:sync  F5:recharger  ↑↓:défiler  Échap:fermer</value>
+    <value>Entrée:sync  F5:recharger  F6:main  Tab:champ  Espace:push  ↑↓:défiler  Échap:fermer</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>pas d'amont</value>
@@ -9769,5 +9769,38 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull puis push : la synchronisation git.</value>
+  </data>
+  <data name="Sync.Hint.Tab" xml:space="preserve">
+    <value>Passer entre le mode de pull, l&apos;option push et la liste des branches</value>
+  </data>
+  <data name="Sync.Hint.Push" xml:space="preserve">
+    <value>Cocher ou décocher le push après le pull</value>
+  </data>
+  <data name="Sync.Hint.Main" xml:space="preserve">
+    <value>Passer à la branche principale</value>
+  </data>
+  <data name="Sync.Status.OnMain" xml:space="preserve">
+    <value>Sur {0}.</value>
+  </data>
+  <data name="Sync.Hint.Page" xml:space="preserve">
+    <value>Faire défiler branches et conflits page par page</value>
+  </data>
+  <data name="Sync.Status.SwitchingToMain" xml:space="preserve">
+    <value>Passage à la branche principale…</value>
+  </data>
+  <data name="Sync.Status.NoMain" xml:space="preserve">
+    <value>Ce dépôt n&apos;a pas de branche locale main ni master.</value>
+  </data>
+  <data name="Sync.HeaderLocalMerged" xml:space="preserve">
+    <value>Branches locales  (merged = déjà dans {0})</value>
+  </data>
+  <data name="Sync.Hint.Close" xml:space="preserve">
+    <value>Fermer la boîte de dialogue</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>(fusionné)</value>
+  </data>
+  <data name="Sync.Status.SwitchFailed" xml:space="preserve">
+    <value>Échec du changement : {0}</value>
   </data>
 </root>

@@ -83,6 +83,8 @@ public class GitClientDialogTest
         public Task<IReadOnlyList<GitBranch>> GetBranchesAsync(string repositoryRoot, bool includeRemotes = false, CancellationToken cancellationToken = default)
             => Task.FromResult(Branches);
 
+        public Task<string?> GetMainBranchAsync(string repositoryRoot, CancellationToken cancellationToken = default) => Task.FromResult<string?>(null);
+        public Task<IReadOnlySet<string>> GetMergedRefsAsync(string repositoryRoot, string branchName, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlySet<string>>(new HashSet<string>());
         public Task<GitResult> CheckoutBranchAsync(string repositoryRoot, string branchName, CancellationToken cancellationToken = default)
             => Record($"checkout:{branchName}");
 

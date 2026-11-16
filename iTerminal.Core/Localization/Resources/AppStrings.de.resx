@@ -9811,10 +9811,10 @@
     <value>Branches und Konflikte neu laden</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Branches und Konflikte scrollen</value>
+    <value>Branches und Konflikte scrollen (wählt den Pull-Modus, wenn er den Fokus hat)</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Enter:sync  F5:neu laden  ↑↓:scrollen  Esc:schließen</value>
+    <value>Enter:sync  F5:neu laden  F6:main  Tab:feld  Leer:push  ↑↓:scrollen  Esc:schließen</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>kein Upstream</value>
@@ -9833,5 +9833,38 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull, dann Push: die Git-Synchronisierung.</value>
+  </data>
+  <data name="Sync.Hint.Tab" xml:space="preserve">
+    <value>Zwischen Pull-Modus, Push-Option und Branch-Liste wechseln</value>
+  </data>
+  <data name="Sync.Hint.Push" xml:space="preserve">
+    <value>Push nach dem Pull an- oder abwählen</value>
+  </data>
+  <data name="Sync.Hint.Main" xml:space="preserve">
+    <value>Zum Hauptbranch wechseln</value>
+  </data>
+  <data name="Sync.Status.OnMain" xml:space="preserve">
+    <value>Auf {0}.</value>
+  </data>
+  <data name="Sync.Hint.Page" xml:space="preserve">
+    <value>Branches und Konflikte seitenweise scrollen</value>
+  </data>
+  <data name="Sync.Status.SwitchingToMain" xml:space="preserve">
+    <value>Wechsle zum Hauptbranch…</value>
+  </data>
+  <data name="Sync.Status.NoMain" xml:space="preserve">
+    <value>Dieses Repository hat keinen lokalen Branch main oder master.</value>
+  </data>
+  <data name="Sync.HeaderLocalMerged" xml:space="preserve">
+    <value>Lokale Branches  (merged = bereits in {0})</value>
+  </data>
+  <data name="Sync.Hint.Close" xml:space="preserve">
+    <value>Dialog schließen</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>(merged)</value>
+  </data>
+  <data name="Sync.Status.SwitchFailed" xml:space="preserve">
+    <value>Wechsel fehlgeschlagen: {0}</value>
   </data>
 </root>

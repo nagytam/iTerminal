@@ -9747,10 +9747,10 @@
     <value>Ricarica rami e conflitti</value>
   </data>
   <data name="Sync.Hint.Scroll" xml:space="preserve">
-    <value>Scorri rami e conflitti</value>
+    <value>Scorre branch e conflitti (sceglie la modalità di pull se ha il focus)</value>
   </data>
   <data name="Sync.Hints" xml:space="preserve">
-    <value>Invio:sync  F5:ricarica  ↑↓:scorri  Esc:chiudi</value>
+    <value>Invio:sync  F5:ricarica  F6:main  Tab:campo  Spazio:push  ↑↓:scorri  Esc:chiudi</value>
   </data>
   <data name="Sync.NoUpstreamShort" xml:space="preserve">
     <value>nessun upstream</value>
@@ -9769,5 +9769,38 @@
   </data>
   <data name="CmdDesc.e6858340" xml:space="preserve">
     <value>Pull, poi push: la sincronizzazione git.</value>
+  </data>
+  <data name="Sync.Hint.Tab" xml:space="preserve">
+    <value>Passa tra modalità di pull, opzione di push ed elenco dei branch</value>
+  </data>
+  <data name="Sync.Hint.Push" xml:space="preserve">
+    <value>Attiva o disattiva il push dopo il pull</value>
+  </data>
+  <data name="Sync.Hint.Main" xml:space="preserve">
+    <value>Passa al branch principale</value>
+  </data>
+  <data name="Sync.Status.OnMain" xml:space="preserve">
+    <value>Su {0}.</value>
+  </data>
+  <data name="Sync.Hint.Page" xml:space="preserve">
+    <value>Scorre branch e conflitti una pagina alla volta</value>
+  </data>
+  <data name="Sync.Status.SwitchingToMain" xml:space="preserve">
+    <value>Passaggio al branch principale…</value>
+  </data>
+  <data name="Sync.Status.NoMain" xml:space="preserve">
+    <value>Questo repository non ha un branch locale main o master.</value>
+  </data>
+  <data name="Sync.HeaderLocalMerged" xml:space="preserve">
+    <value>Branch locali  (merged = già in {0})</value>
+  </data>
+  <data name="Sync.Hint.Close" xml:space="preserve">
+    <value>Chiudi la finestra</value>
+  </data>
+  <data name="Sync.Merged" xml:space="preserve">
+    <value>(merged)</value>
+  </data>
+  <data name="Sync.Status.SwitchFailed" xml:space="preserve">
+    <value>Cambio non riuscito: {0}</value>
   </data>
 </root>

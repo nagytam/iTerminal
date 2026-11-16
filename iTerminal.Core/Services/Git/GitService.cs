@@ -146,6 +146,35 @@ public sealed class GitService : IGitService
         ];
     }
 
+    public async Task<string?> GetMainBranchAsync(string repositoryRoot, CancellationToken cancellationToken = default)
+    {
+        foreach (var candidate in new[] { "main", "master" })
+        {
+            var result = await RunAsync(repositoryRoot, cancellationToken, "rev-parse", "--verify", "--quiet", "refs/heads/" + candidate);
+            if (result.Success)
+            {
+                return candidate;
+            }
+        }
+
+        return null;
+    }
+
+    public async Task<IReadOnlySet<string>> GetMergedRefsAsync(string repositoryRoot, string branchName, CancellationToken cancellationToken = default)
+    {
+        // The "=" form is required: "--merged <commit>" would read the commit as a pattern.
+        var result = await RunAsync(repositoryRoot, cancellationToken,
+            "for-each-ref", "--merged=refs/heads/" + branchName, "--format=%(refname)", "refs/heads", "refs/remotes");
+        if (!result.Success)
+        {
+            return new HashSet<string>(StringComparer.Ordinal);
+        }
+
+        return result.StandardOutput
+            .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .ToHashSet(StringComparer.Ordinal);
+    }
+
     private static async Task<List<GitBranch>> ReadBranchRefsAsync(string repositoryRoot, string refSpace, bool isRemote, CancellationToken cancellationToken)
     {
         // %(HEAD) is '*' for the current branch, ' ' otherwise; NUL separates name from upstream.
