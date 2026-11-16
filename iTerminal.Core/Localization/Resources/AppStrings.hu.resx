@@ -9833,4 +9833,13 @@
   <data name="Undo.RenameNameTaken" xml:space="preserve">
     <value>A régi név mostanra foglalt, ezért az átnevezést nem lehetett visszavonni.</value>
   </data>
+  <data name="CmdTitle.19b314a4" xml:space="preserve">
+    <value>Aktív panel nagyítása</value>
+  </data>
+  <data name="CmdDesc.48466450" xml:space="preserve">
+    <value>A fókuszban lévő fájlpanelt a teljes szélességben mutatja, vagy újra mindkét panelt.</value>
+  </data>
+  <data name="Menu.ZoomPanel" xml:space="preserve">
+    <value>Panel nagyítása</value>
+  </data>
 </root>

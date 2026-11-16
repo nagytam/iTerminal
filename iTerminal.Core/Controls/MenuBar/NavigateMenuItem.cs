@@ -43,6 +43,7 @@ public class NavigateMenuItem : MenuItem
 
         AddMenuItem(new MenuItem("Go To Folder\tCtrl+F1",  folderSelectorCommand, [], themeService));
         AddMenuItem(new MenuItem("Switch Panels\tCtrl+U",  new SwitchPanelsCommand(contentModelService), [], themeService));
+        AddMenuItem(new MenuItem("Zoom Panel\tCtrl+Shift+Z", new iTerminal.Core.Commands.TogglePanelZoomCommand(content), [], themeService));
         if (sortDialog is not null)
         {
             AddMenuItem(new MenuItem("Sort By…\tShift+F11", new SortDialogCommand(sortDialog, contentModelService), [], themeService));

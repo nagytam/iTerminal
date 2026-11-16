@@ -10038,4 +10038,13 @@
   <data name="Undo.RenameNameTaken" xml:space="preserve">
     <value>The old name is taken now, so the rename was not undone.</value>
   </data>
+  <data name="CmdTitle.19b314a4" xml:space="preserve">
+    <value>Zoom the focused panel</value>
+  </data>
+  <data name="CmdDesc.48466450" xml:space="preserve">
+    <value>Show the focused file panel across the whole width, or both panels again.</value>
+  </data>
+  <data name="Menu.ZoomPanel" xml:space="preserve">
+    <value>Zoom Panel</value>
+  </data>
 </root>

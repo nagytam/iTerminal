@@ -9833,4 +9833,13 @@
   <data name="Undo.RenameNameTaken" xml:space="preserve">
     <value>El nombre anterior ya está ocupado, así que el cambio de nombre no se deshizo.</value>
   </data>
+  <data name="CmdTitle.19b314a4" xml:space="preserve">
+    <value>Ampliar el panel activo</value>
+  </data>
+  <data name="CmdDesc.48466450" xml:space="preserve">
+    <value>Mostrar el panel de archivos activo a lo ancho completo, o de nuevo ambos paneles.</value>
+  </data>
+  <data name="Menu.ZoomPanel" xml:space="preserve">
+    <value>Ampliar panel</value>
+  </data>
 </root>
