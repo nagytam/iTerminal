@@ -55,7 +55,9 @@ public class FileMenuItem : MenuItem
         iConsole.Dialogs.MarkdownViewerDialog? markdownViewerDialog = null,
         iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
         iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
-        iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null)
+        iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
+        iConsole.Tasks.TaskManager? taskManager = null,
+        iConsole.Services.IPromptService? promptService = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
@@ -128,7 +130,7 @@ public class FileMenuItem : MenuItem
             AddMenuItem(new MenuItem("Properties\tCtrl+F12", new PropertiesDialogCommand(propertiesDialog, contentModelService), [], themeService));
         }
         AddMenuItem(new MenuItem("-", null, [], themeService));
-        AddMenuItem(new MenuItem("Quit\tF10",  new QuitCommand(), [], themeService));
+        AddMenuItem(new MenuItem("Quit\tF10",  new iTerminal.Core.Commands.QuitWithConfirmationCommand(taskManager, promptService), [], themeService));
     }
 }
 

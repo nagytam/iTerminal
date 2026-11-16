@@ -9879,4 +9879,7 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Wechsel fehlgeschlagen: {0}</value>
   </data>
+  <data name="Quit.ConfirmTasks" xml:space="preserve">
+    <value>{0} Hintergrundaufgabe(n) laufen noch. Trotzdem beenden?</value>
+  </data>
 </root>

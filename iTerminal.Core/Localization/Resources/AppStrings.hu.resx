@@ -9815,4 +9815,7 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>A váltás sikertelen: {0}</value>
   </data>
+  <data name="Quit.ConfirmTasks" xml:space="preserve">
+    <value>{0} hÃ¡ttÃ©rfeladat mÃ©g fut. KilÃ©pjen mÃ©gis?</value>
+  </data>
 </root>
