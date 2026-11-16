@@ -98,7 +98,9 @@ public class HotKeys : StatusBarItem
         iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
         iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
         IGitService? gitService = null,
-        iTerminal.Core.Dialogs.Git.GitSyncDialog? gitSyncDialog = null)
+        iTerminal.Core.Dialogs.Git.GitSyncDialog? gitSyncDialog = null,
+        iConsole.Tasks.TaskManager? taskManager = null,
+        IPromptService? promptService = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -141,7 +143,7 @@ public class HotKeys : StatusBarItem
         }
         AddCommand(new IPhoneBrowserDialogCommand(iPhoneBrowserDialog));
         AddCommand(new iTerminal.Core.Commands.Music.MusicPanelsCommand(contentModelService));
-        var quitCommand = new QuitCommand();
+        var quitCommand = new QuitWithConfirmationCommand(taskManager, promptService);
         var copyDialogCommand = new CopyDialogCommand(copyDialog, contentModelService);
         var aboutDialogCommand = new AboutDialogCommand(aboutDialog);
         var systemInfoDialogCommand = new SystemInfoDialogCommand(systemInfoDialog);

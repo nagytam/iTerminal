@@ -9815,4 +9815,7 @@
   <data name="Sync.Status.SwitchFailed" xml:space="preserve">
     <value>Échec du changement : {0}</value>
   </data>
+  <data name="Quit.ConfirmTasks" xml:space="preserve">
+    <value>{0} tÃ¢che(s) en arriÃ¨re-plan sont encore en cours. Quitter quand mÃªme ?</value>
+  </data>
 </root>
