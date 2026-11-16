@@ -9860,4 +9860,10 @@
   <data name="Menu.SameFolderInOtherPanel" xml:space="preserve">
     <value>Même dossier dans l'autre panneau</value>
   </data>
+  <data name="CmdTitle.3d69cc49" xml:space="preserve">
+    <value>Copier le nom de l'élément</value>
+  </data>
+  <data name="CmdDesc.e5215e9d" xml:space="preserve">
+    <value>Placer le nom de l'élément sous le curseur dans le presse-papiers, sans son dossier.</value>
+  </data>
 </root>

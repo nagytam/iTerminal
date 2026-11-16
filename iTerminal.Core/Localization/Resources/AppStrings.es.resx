@@ -9860,4 +9860,10 @@
   <data name="Menu.SameFolderInOtherPanel" xml:space="preserve">
     <value>Misma carpeta en el otro panel</value>
   </data>
+  <data name="CmdTitle.3d69cc49" xml:space="preserve">
+    <value>Copiar el nombre de la entrada</value>
+  </data>
+  <data name="CmdDesc.e5215e9d" xml:space="preserve">
+    <value>Poner el nombre de la entrada bajo el cursor en el portapapeles, sin su carpeta.</value>
+  </data>
 </root>

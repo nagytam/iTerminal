@@ -9860,4 +9860,10 @@
   <data name="Menu.SameFolderInOtherPanel" xml:space="preserve">
     <value>Ugyanaz a mappa a másik panelban</value>
   </data>
+  <data name="CmdTitle.3d69cc49" xml:space="preserve">
+    <value>Az elem nevének másolása</value>
+  </data>
+  <data name="CmdDesc.e5215e9d" xml:space="preserve">
+    <value>A kurzor alatti elem nevét a mappája nélkül a vágólapra teszi.</value>
+  </data>
 </root>

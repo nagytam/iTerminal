@@ -9924,4 +9924,10 @@
   <data name="Menu.SameFolderInOtherPanel" xml:space="preserve">
     <value>Gleicher Ordner im anderen Panel</value>
   </data>
+  <data name="CmdTitle.3d69cc49" xml:space="preserve">
+    <value>Namen des Eintrags kopieren</value>
+  </data>
+  <data name="CmdDesc.e5215e9d" xml:space="preserve">
+    <value>Den Namen des Eintrags unter dem Cursor ohne seinen Ordner in die Zwischenablage legen.</value>
+  </data>
 </root>

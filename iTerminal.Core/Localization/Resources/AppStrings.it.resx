@@ -9860,4 +9860,10 @@
   <data name="Menu.SameFolderInOtherPanel" xml:space="preserve">
     <value>Stessa cartella nell'altro pannello</value>
   </data>
+  <data name="CmdTitle.3d69cc49" xml:space="preserve">
+    <value>Copia il nome della voce</value>
+  </data>
+  <data name="CmdDesc.e5215e9d" xml:space="preserve">
+    <value>Mette il nome della voce sotto il cursore negli appunti, senza la sua cartella.</value>
+  </data>
 </root>

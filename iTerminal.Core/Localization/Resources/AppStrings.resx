@@ -10065,4 +10065,10 @@
   <data name="Menu.SameFolderInOtherPanel" xml:space="preserve">
     <value>Same Folder in Other Panel</value>
   </data>
+  <data name="CmdTitle.3d69cc49" xml:space="preserve">
+    <value>Copy the name of the entry</value>
+  </data>
+  <data name="CmdDesc.e5215e9d" xml:space="preserve">
+    <value>Put the name of the entry under the cursor on the clipboard, without its folder.</value>
+  </data>
 </root>
