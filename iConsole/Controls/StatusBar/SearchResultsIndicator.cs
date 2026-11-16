@@ -39,6 +39,11 @@ public class SearchResultsIndicator : StatusBarItem
     public string HitText()
     {
         var hits = _searchModel.Hits.AsSnapshot();
+        if (hits.Count == 0 && string.IsNullOrEmpty(_searchModel.Search))
+        {
+            // Nothing has been searched for, so there is no count to show. "Hit 0/0" read as a failed search.
+            return string.Empty;
+        }
         if (_scrollableModel is null)
         {
             return string.Format(UiText.Get("Status.Search", "Search: {0}"), hits.Count);
@@ -52,7 +57,11 @@ public class SearchResultsIndicator : StatusBarItem
     public override void Draw(IBuffer buffer)
     {
         base.Draw(buffer);
-        var s = new ConxelString(HitText(), Color.Green, Color.Blue);
+        var text = HitText();
+        // The row is not cleared between frames, so an empty count is painted as blanks in the bar's own colours.
+        var s = text.Length == 0
+            ? new ConxelString(new string(' ', (int)ViewSize.Width), ThemeService.CurrentColorScheme.Foreground, ThemeService.CurrentColorScheme.Background)
+            : new ConxelString(text, Color.Green, Color.Blue);
         buffer.Write(ZOrder, AbsolutePosition, ViewSize, s);
     }
 }

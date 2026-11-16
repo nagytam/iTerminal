@@ -38,7 +38,7 @@ public class SearchResultsIndicatorTest
 
     [Timeout(60_000)]
     [TestMethod]
-    public void Draw_ShowsSearchHitCount()
+    public void Draw_BeforeAnySearch_ShowsNoCount()
     {
         var mockThemeService = new Mock<IThemeService>();
         mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
@@ -52,7 +52,22 @@ public class SearchResultsIndicatorTest
 
         indicator.Draw(buffer);
 
-        Assert.IsTrue(buffer.ContentAsString.Contains("Search:") || buffer.ContentAsString.Contains("0"));
+        // Nothing has been searched for: "Hit 0/0" used to show here, which read as a search that found nothing.
+        Assert.IsFalse(buffer.ContentAsString.Contains("0"), buffer.ContentAsString);
+        Assert.IsFalse(buffer.ContentAsString.Contains("Hit"), buffer.ContentAsString);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void HitText_ASearchWithNoHits_SaysSo()
+    {
+        var mockThemeService = new Mock<IThemeService>();
+        mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
+        var searchModel = new SearchModel { Search = "missing" };
+        var indicator = new SearchResultsIndicator(searchModel, mockThemeService.Object);
+
+        // Without a cursor to go by the count is the total alone.
+        Assert.AreEqual("Search: 0", indicator.HitText());
     }
 
     [Timeout(60_000)]
