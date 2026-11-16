@@ -199,4 +199,18 @@ public class PanelNavigationTest
 
         await _app.WaitUntilAsync(s => _app.LeftPanelLists("readme.txt", s), "the listing to come back");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task CtrlShiftZZoomsTheFocusedPanelAndAgainShowsBoth()
+    {
+        Assert.IsTrue(_app.LeftPanelLists("notes.md") && _app.RightPanelLists("right_only.txt"));
+
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+Z"));
+        await _app.WaitUntilAsync(s => !s.Contains("right_only") && s.Contains("notes.md"),
+            "the right panel to hide while the focused left panel keeps its listing");
+
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+Z"));
+        await _app.WaitUntilAsync(s => s.Contains("right_only") && s.Contains("notes.md"), "both panels to come back");
+    }
 }

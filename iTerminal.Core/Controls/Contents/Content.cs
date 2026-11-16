@@ -21,6 +21,8 @@ public class Content : Window, IContent
     private readonly TerminalPanel? _terminalPanel;
     private readonly int _barHeight;
     private bool _showTerminalPanel = false;
+    private bool _panelZoomed;
+    private FilePanel? _zoomedPanel;
     private BottomBarMode _bottomBarMode = BottomBarMode.Ai;
 
     /// <summary>What had focus when the full-screen terminal was opened, so closing it goes back there.</summary>
@@ -54,6 +56,7 @@ public class Content : Window, IContent
 
         AddCommand(new SwitchPanelsCommand(contentModelService));
         AddCommand(new ToggleTerminalCommand(this));
+        AddCommand(new TogglePanelZoomCommand(this));
         if (shellCommand is not null)
         {
             AddCommand(shellCommand);
@@ -191,6 +194,37 @@ public class Content : Window, IContent
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Ctrl+Shift+Z: the focused file panel takes the whole width and the other is hidden (its listing is kept). Toggled
+    /// again, both come back. Focus moves to the panel that stays, if it was on the hidden one.
+    /// </summary>
+    public void ToggleZoomedPanel()
+    {
+        if (_leftPanel is null || _rightPanel is null)
+        {
+            return;
+        }
+
+        _panelZoomed = !_panelZoomed;
+        if (_panelZoomed)
+        {
+            _zoomedPanel = _rightPanel.IsFocused ? _rightPanel : _leftPanel;
+        }
+        else
+        {
+            _zoomedPanel = null;
+        }
+
+        ApplyVisibility();
+        if (_panelZoomed && _zoomedPanel is not null && !_zoomedPanel.IsFocused)
+        {
+            _zoomedPanel.SetFocus();
+        }
+
+        OnInitializeLayout();
+        StateHasChanged();
+    }
+
     public void FocusLeftPanel() => _leftPanel?.SetFocus();
     public void FocusRightPanel() => _rightPanel?.SetFocus();
     public void FocusAiBar() => _aiPromptBar?.SetFocus();
@@ -207,8 +241,8 @@ public class Content : Window, IContent
         }
         else
         {
-            if (_leftPanel is not null) _leftPanel.IsVisible = true;
-            if (_rightPanel is not null) _rightPanel.IsVisible = true;
+            if (_leftPanel is not null) _leftPanel.IsVisible = !_panelZoomed || _zoomedPanel == _leftPanel;
+            if (_rightPanel is not null) _rightPanel.IsVisible = !_panelZoomed || _zoomedPanel == _rightPanel;
             if (_aiPromptBar is not null) _aiPromptBar.IsVisible = _bottomBarMode == BottomBarMode.Ai;
             if (_terminalPanel is not null) _terminalPanel.IsVisible = _bottomBarMode == BottomBarMode.Terminal;
         }
@@ -243,6 +277,8 @@ public class Content : Window, IContent
             // nobody, and nothing ever repainted it.
             if (_rightPanel is not null)
                 _rightPanel.ViewSize = new Size(ViewSize.Width - ViewSize.Width / 2, panelHeight);
+            if (_panelZoomed && _zoomedPanel is not null)
+                _zoomedPanel.ViewSize = new Size(ViewSize.Width, panelHeight);
 
             var barPosition = new Position(0, panelHeight);
             var barSize = new Size(ViewSize.Width, barHeight);
@@ -257,7 +293,9 @@ public class Content : Window, IContent
                 _terminalPanel.ViewSize = barSize;
                 _terminalPanel.Position = barPosition;
             }
-            if (_leftPanel is not null && _rightPanel is not null)
+            if (_panelZoomed && _zoomedPanel is not null)
+                Layout.StackHorizontal([_zoomedPanel]);
+            else if (_leftPanel is not null && _rightPanel is not null)
                 Layout.StackHorizontal([_leftPanel, _rightPanel]);
         }
 

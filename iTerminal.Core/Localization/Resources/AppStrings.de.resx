@@ -9897,4 +9897,13 @@
   <data name="Undo.RenameNameTaken" xml:space="preserve">
     <value>Der alte Name ist inzwischen vergeben, daher wurde das Umbenennen nicht rückgängig gemacht.</value>
   </data>
+  <data name="CmdTitle.19b314a4" xml:space="preserve">
+    <value>Aktives Panel vergrößern</value>
+  </data>
+  <data name="CmdDesc.48466450" xml:space="preserve">
+    <value>Das aktive Dateipanel über die gesamte Breite zeigen oder wieder beide Panels.</value>
+  </data>
+  <data name="Menu.ZoomPanel" xml:space="preserve">
+    <value>Panel vergrößern</value>
+  </data>
 </root>
