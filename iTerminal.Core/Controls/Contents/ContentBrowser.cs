@@ -549,6 +549,12 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
                     ? contentModel.FormatLongItemName(null, width, false, colorScheme, visualState)
                     : contentModel.FormatItemName(null, width, false, colorScheme, visualState);
                 DecorateRow(contentModel, null, text, false, colorScheme, visualState);
+                if (y == 0 && filteredEntries.Count == 0)
+                {
+                    // An empty listing used to be a blank panel; say so, and why nothing is listed.
+                    text = EmptyListingText(colorScheme);
+                    PadRow(text, (int)size.Width, colorScheme);
+                }
                 buffer.Write(ZOrder,
                     new Position(positionX, positionY + y),
                     size,
@@ -564,6 +570,13 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     /// never cleared between frames — so whatever an entry formats, the row is padded to the full
     /// width, in the colours of its last cell so a cursor row stays one bar.
     /// </summary>
+    /// <summary>
+    /// The one line a panel shows when its listing has no entries (a memory drive starts empty, and a '..' row
+    /// is not always there). The quick filter moves the cursor and never hides entries, so it is not a reason here.
+    /// </summary>
+    private static ConxelString EmptyListingText(ColorScheme colorScheme) =>
+        new(UiText.Get("Panel.Empty", " (empty)"), colorScheme.Foreground, colorScheme.Background);
+
     internal static void PadRow(ConxelString row, int width, ColorScheme colorScheme)
     {
         if (row.Count >= width)
