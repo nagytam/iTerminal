@@ -26,6 +26,7 @@ public class GitSyncDialog : Dialog
 {
     private readonly IGitService _gitService;
     private readonly IContentModelService _contentModelService;
+    private readonly INotificationService? _notifications;
     private readonly FormPanel _form;
     private readonly ComboBox<GitPullMode> _comboPull;
     private readonly CheckBox _checkBoxPush;
@@ -44,11 +45,13 @@ public class GitSyncDialog : Dialog
     public GitSyncDialog(
         IGitService gitService,
         IContentModelService contentModelService,
-        IThemeService themeService)
+        IThemeService themeService,
+        INotificationService? notifications = null)
         : base(nameof(GitSyncDialog), themeService)
     {
         _gitService = gitService;
         _contentModelService = contentModelService;
+        _notifications = notifications;
         Title = Say("Sync.Title", "Git sync");
 
         _comboPull = new ComboBox<GitPullMode>(themeService) { DisplaySelector = DescribePull };
@@ -225,7 +228,7 @@ public class GitSyncDialog : Dialog
                 var root = await ResolveRootAsync();
                 if (root is null)
                 {
-                    SetStatus(Say("Sync.Status.NotRepo", "This folder is not in a git repository."), isError: true);
+                    ReportSyncResult(Say("Sync.Status.NotRepo", "This folder is not in a git repository."), isError: true);
                     return;
                 }
 
@@ -236,7 +239,7 @@ public class GitSyncDialog : Dialog
                 var status = await _gitService.GetStatusAsync(root);
                 if (status.Upstream is null)
                 {
-                    SetStatus(Say("Sync.Status.NoUpstream", "The branch has no upstream branch to sync with."), isError: true);
+                    ReportSyncResult(Say("Sync.Status.NoUpstream", "The branch has no upstream branch to sync with."), isError: true);
                     return;
                 }
 
@@ -244,7 +247,7 @@ public class GitSyncDialog : Dialog
                 if (!pull.Success)
                 {
                     await LoadAsync(root);
-                    SetStatus(Say("Sync.Status.PullFailed", "Pull failed: {0}", FirstLine(pull.Output)), isError: true,
+                    ReportSyncResult(Say("Sync.Status.PullFailed", "Pull failed: {0}", FirstLine(pull.Output)), isError: true,
                         detail: Say("Sync.Status.PullFailedDetail", "Nothing was pushed. If git started a rebase or merge, it is left unfinished."));
                     return;
                 }
@@ -255,20 +258,33 @@ public class GitSyncDialog : Dialog
                     if (!pushed.Success)
                     {
                         await LoadAsync(root);
-                        SetStatus(Say("Sync.Status.PushFailed", "Push failed: {0}", FirstLine(pushed.Output)), isError: true);
+                        ReportSyncResult(Say("Sync.Status.PushFailed", "Push failed: {0}", FirstLine(pushed.Output)), isError: true);
                         return;
                     }
                 }
 
                 await LoadAsync(root);
-                SetStatus(Say("Sync.Status.Synced", "Synced with the remote."), isError: false);
+                ReportSyncResult(Say("Sync.Status.Synced", "Synced with the remote."), isError: false);
             }
             catch (Exception exception) when (exception is not OperationCanceledException)
             {
-                SetStatus(exception.Message, isError: true);
+                ReportSyncResult(exception.Message, isError: true);
             }
         });
         return SyncTask;
+    }
+
+    /// <summary>
+    /// The outcome of an Enter sync: the status line in the dialog, and a toast so the result is seen even when the
+    /// dialog is closed while the sync runs. The toast carries the status line's text and, on failure, its guidance.
+    /// </summary>
+    private void ReportSyncResult(string status, bool isError, string detail = "")
+    {
+        SetStatus(status, isError, detail);
+        _notifications?.Notify(
+            Say("Sync.Notify.Title", "Git sync"),
+            string.IsNullOrEmpty(detail) ? status : status + " " + detail,
+            isError ? NotificationSeverity.Error : NotificationSeverity.Success);
     }
 
     /// <summary>The repository root for the folder the panel showed when the dialog opened, or null outside a working tree.</summary>
