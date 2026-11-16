@@ -76,6 +76,21 @@
   <data name="Help.CloseHint" xml:space="preserve">
     <value>Esc: cerrar la ayuda   ↑↓ AvPág/RePág: desplazar</value>
   </data>
+  <data name="Hint.PromptAccept" xml:space="preserve">
+    <value>Aceptar el valor</value>
+  </data>
+  <data name="Hint.PromptCancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Hint.PromptMove" xml:space="preserve">
+    <value>Mover la selección</value>
+  </data>
+  <data name="Hint.PromptYesNo" xml:space="preserve">
+    <value>Responder sí o no</value>
+  </data>
+  <data name="Hint.PromptDefault" xml:space="preserve">
+    <value>Usar el valor predeterminado</value>
+  </data>
   <data name="Common.Back" xml:space="preserve">
     <value>Atrás</value>
   </data>
