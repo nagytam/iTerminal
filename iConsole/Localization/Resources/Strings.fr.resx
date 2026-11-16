@@ -76,6 +76,12 @@
   <data name="Help.CloseHint" xml:space="preserve">
     <value>Échap : fermer l’aide   ↑↓ PgPréc PgSuiv : défiler</value>
   </data>
+  <data name="Control.Name.LeftPanel" xml:space="preserve">
+    <value>Panneau gauche</value>
+  </data>
+  <data name="Control.Name.RightPanel" xml:space="preserve">
+    <value>Panneau droit</value>
+  </data>
   <data name="Hint.PromptAccept" xml:space="preserve">
     <value>Valider la valeur</value>
   </data>

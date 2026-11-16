@@ -248,4 +248,14 @@ public class HelpDialogTest
 
         Assert.IsTrue(lines.Any(l => l.Contains("Open or run")));
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ReadableName_SplitsAnInternalNameIntoWords()
+    {
+        // "LeftPanel" is the panels' internal name; the help shows the words, and a translated name when there is one.
+        Assert.AreEqual("Left panel", HelpDialog.ReadableName("LeftPanel"));
+        Assert.AreEqual("Focused panel", HelpDialog.ReadableName("Focused panel"));
+        Assert.AreEqual("Grid", HelpDialog.ReadableName("Grid"));
+    }
 }

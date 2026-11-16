@@ -76,6 +76,12 @@
   <data name="Help.CloseHint" xml:space="preserve">
     <value>Esc: close this help   ↑↓ PgUp PgDn: scroll it</value>
   </data>
+  <data name="Control.Name.LeftPanel" xml:space="preserve">
+    <value>Left panel</value>
+  </data>
+  <data name="Control.Name.RightPanel" xml:space="preserve">
+    <value>Right panel</value>
+  </data>
   <data name="Hint.PromptAccept" xml:space="preserve">
     <value>Accept the value</value>
   </data>

@@ -76,6 +76,12 @@
   <data name="Help.CloseHint" xml:space="preserve">
     <value>Esc: chiudi l’aiuto   ↑↓ PgSu PgGiù: scorri</value>
   </data>
+  <data name="Control.Name.LeftPanel" xml:space="preserve">
+    <value>Pannello sinistro</value>
+  </data>
+  <data name="Control.Name.RightPanel" xml:space="preserve">
+    <value>Pannello destro</value>
+  </data>
   <data name="Hint.PromptAccept" xml:space="preserve">
     <value>Accetta il valore</value>
   </data>
