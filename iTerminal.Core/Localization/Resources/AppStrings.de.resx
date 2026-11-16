@@ -9945,4 +9945,10 @@
   <data name="Notify.HiddenFilesHidden" xml:space="preserve">
     <value>In beiden Panels ausgeblendet</value>
   </data>
+  <data name="CmdTitle.5e93e56e" xml:space="preserve">
+    <value>Sortierreihenfolge umkehren</value>
+  </data>
+  <data name="CmdDesc.88871244" xml:space="preserve">
+    <value>Die Sortierrichtung des aktiven Panels umkehren, für den nächsten Start gespeichert.</value>
+  </data>
 </root>
