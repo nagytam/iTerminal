@@ -73,6 +73,9 @@
   <data name="Common.Help" xml:space="preserve">
     <value>Aide</value>
   </data>
+  <data name="Help.CloseHint" xml:space="preserve">
+    <value>Échap : fermer l’aide   ↑↓ PgPréc PgSuiv : défiler</value>
+  </data>
   <data name="Common.Back" xml:space="preserve">
     <value>Retour</value>
   </data>

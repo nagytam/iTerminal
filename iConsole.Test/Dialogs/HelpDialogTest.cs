@@ -90,6 +90,7 @@ public class HelpDialogTest
         var textViewer = dialog.Controls.OfType<TextViewerControl>().Single();
         var helpText = string.Join(Environment.NewLine, Available(textViewer.TextModel.Lines));
 
+        StringAssert.Contains(helpText, "Esc: close this help");
         StringAssert.Contains(helpText, "Focused control: Focused panel");
         StringAssert.Contains(helpText, "Enter              Open item");
         StringAssert.Contains(helpText, "Open the selected item.");

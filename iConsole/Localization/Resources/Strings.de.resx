@@ -73,6 +73,9 @@
   <data name="Common.Help" xml:space="preserve">
     <value>Hilfe</value>
   </data>
+  <data name="Help.CloseHint" xml:space="preserve">
+    <value>Esc: Hilfe schließen   ↑↓ BildAuf/BildAb: scrollen</value>
+  </data>
   <data name="Common.Back" xml:space="preserve">
     <value>Zurück</value>
   </data>

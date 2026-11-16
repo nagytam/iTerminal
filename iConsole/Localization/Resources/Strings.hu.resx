@@ -73,6 +73,9 @@
   <data name="Common.Help" xml:space="preserve">
     <value>Súgó</value>
   </data>
+  <data name="Help.CloseHint" xml:space="preserve">
+    <value>Esc: súgó bezárása   ↑↓ PgUp PgDn: görgetés</value>
+  </data>
   <data name="Common.Back" xml:space="preserve">
     <value>Vissza</value>
   </data>
