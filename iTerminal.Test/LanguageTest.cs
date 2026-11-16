@@ -57,4 +57,20 @@ public class LanguageTest
         Assert.AreEqual("de", _app.Driver.GetRequiredService<ILocalizer>().LanguageCode);
         Assert.AreEqual("de", _app.Driver.GetRequiredService<ISettingsService>().Get(Settings.Language));
     }
+
+    /// <summary>
+    /// A German application must leave nothing behind for the next one in the same test process: the application started
+    /// after it speaks English (its own saved language), not the German of the application that ran before.
+    /// </summary>
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task AnApplicationStartedAfterAGermanOneSpeaksEnglish()
+    {
+        await _app.SwitchToGermanAsync();
+
+        await using TerminalApp next = await TerminalApp.StartAsync();
+        await next.WaitForTextAsync("F1-Help");
+
+        Assert.AreEqual("en", next.Driver.GetRequiredService<ILocalizer>().LanguageCode);
+    }
 }
