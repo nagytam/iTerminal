@@ -246,4 +246,16 @@ public class ClipboardAndDriveActionsTest
         await _app.WaitUntilAsync(() => iConsole.Services.TextClipboard.Current.GetTextAsync().GetAwaiter().GetResult() == Path.Combine(_app.LeftRoot, "notes.md"),
             "the path of notes.md on the text clipboard");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task CtrlShiftNCopiesTheFocusedEntryNameToTheTextClipboard()
+    {
+        await _app.SelectEntryAsync("notes.md");
+
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+N"));
+
+        await _app.WaitUntilAsync(() => iConsole.Services.TextClipboard.Current.GetTextAsync().GetAwaiter().GetResult() == "notes.md",
+            "the name notes.md on the text clipboard");
+    }
 }

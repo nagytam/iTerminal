@@ -18,6 +18,10 @@ public class CopyPathCommand(IContentModelService contentModelService, INotifica
 
     public override Key? Key { get; init; } = new Key(ConsoleKey.P, true, false, true);
 
+    /// <summary>The text put on the clipboard for an entry: its path, or its full address on another drive.</summary>
+    protected virtual string TextFor(Url url) =>
+        url.ContainerType == ContainerType.FileSystem ? url.Path : url.FullUrl;
+
     private IContentModel? SourceModel =>
         contentModelService.GetFocusedModel() ?? contentModelService.GetLastContentModel();
 
@@ -32,7 +36,7 @@ public class CopyPathCommand(IContentModelService contentModelService, INotifica
             return;
         }
 
-        string text = url.ContainerType == ContainerType.FileSystem ? url.Path : url.FullUrl;
+        string text = TextFor(url);
         await TextClipboard.Current.SetTextAsync(text);
         notificationService?.Notify(
             UiText.Get("Notify.PathCopiedTitle", "Path copied"),
