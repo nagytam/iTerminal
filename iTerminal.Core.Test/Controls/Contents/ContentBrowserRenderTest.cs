@@ -133,4 +133,19 @@ public class ContentBrowserRenderTest
             Assert.AreEqual(background, screen.BackgroundAt(x, 1), $"cell {x} of the cursor row:{Environment.NewLine}{screen}");
         }
     }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void Draw_EmptyListing_SaysItIsEmpty()
+    {
+        var model = CreateModel();
+        var sut = CreateBrowser(model);
+        var screen = new ScreenBuffer(PanelWidth, PanelHeight);
+
+        ShowEntries(model);
+        sut.Draw(screen);
+
+        // A memory drive starts empty; the panel used to be blank with no word about why.
+        UiTestHelper.AssertScreenContains(screen, "(empty)", "an empty listing should say so");
+    }
 }

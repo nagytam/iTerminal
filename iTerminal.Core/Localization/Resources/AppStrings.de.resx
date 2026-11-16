@@ -400,6 +400,9 @@
   <data name="HotKey.CalendarShort" xml:space="preserve">
     <value>Kal</value>
   </data>
+  <data name="Panel.Empty" xml:space="preserve">
+    <value> (leer)</value>
+  </data>
   <data name="Dialog.Commands" xml:space="preserve">
     <value>Befehle</value>
   </data>
