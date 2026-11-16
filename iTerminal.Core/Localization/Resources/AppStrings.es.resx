@@ -9887,4 +9887,10 @@
   <data name="CmdDesc.88871244" xml:space="preserve">
     <value>Invertir el sentido de clasificación del panel activo, guardado para el próximo inicio.</value>
   </data>
+  <data name="Menu.CopyPath" xml:space="preserve">
+    <value>Copiar ruta</value>
+  </data>
+  <data name="Menu.CopyName" xml:space="preserve">
+    <value>Copiar nombre</value>
+  </data>
 </root>

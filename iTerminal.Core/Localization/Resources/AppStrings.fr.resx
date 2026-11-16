@@ -9887,4 +9887,10 @@
   <data name="CmdDesc.88871244" xml:space="preserve">
     <value>Inverser le sens de tri du panneau actif, enregistré pour le prochain démarrage.</value>
   </data>
+  <data name="Menu.CopyPath" xml:space="preserve">
+    <value>Copier le chemin</value>
+  </data>
+  <data name="Menu.CopyName" xml:space="preserve">
+    <value>Copier le nom</value>
+  </data>
 </root>

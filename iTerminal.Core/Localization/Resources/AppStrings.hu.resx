@@ -9887,4 +9887,10 @@
   <data name="CmdDesc.88871244" xml:space="preserve">
     <value>A fókuszban lévő panel rendezési irányát megfordítja, a következő indításig megőrzi.</value>
   </data>
+  <data name="Menu.CopyPath" xml:space="preserve">
+    <value>Elérési út másolása</value>
+  </data>
+  <data name="Menu.CopyName" xml:space="preserve">
+    <value>Név másolása</value>
+  </data>
 </root>
