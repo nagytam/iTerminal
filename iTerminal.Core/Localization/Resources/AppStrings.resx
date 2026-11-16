@@ -10071,4 +10071,19 @@
   <data name="CmdDesc.e5215e9d" xml:space="preserve">
     <value>Put the name of the entry under the cursor on the clipboard, without its folder.</value>
   </data>
+  <data name="CmdTitle.4a187db4" xml:space="preserve">
+    <value>Show or hide hidden files</value>
+  </data>
+  <data name="CmdDesc.94cb2b96" xml:space="preserve">
+    <value>Show or hide hidden files and folders in both panels.</value>
+  </data>
+  <data name="Notify.HiddenFilesTitle" xml:space="preserve">
+    <value>Hidden files</value>
+  </data>
+  <data name="Notify.HiddenFilesShown" xml:space="preserve">
+    <value>Shown in both panels</value>
+  </data>
+  <data name="Notify.HiddenFilesHidden" xml:space="preserve">
+    <value>Hidden in both panels</value>
+  </data>
 </root>

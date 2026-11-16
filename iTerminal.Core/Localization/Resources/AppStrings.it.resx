@@ -9866,4 +9866,19 @@
   <data name="CmdDesc.e5215e9d" xml:space="preserve">
     <value>Mette il nome della voce sotto il cursore negli appunti, senza la sua cartella.</value>
   </data>
+  <data name="CmdTitle.4a187db4" xml:space="preserve">
+    <value>Mostra o nascondi i file nascosti</value>
+  </data>
+  <data name="CmdDesc.94cb2b96" xml:space="preserve">
+    <value>Mostra o nasconde i file e le cartelle nascosti in entrambi i pannelli.</value>
+  </data>
+  <data name="Notify.HiddenFilesTitle" xml:space="preserve">
+    <value>File nascosti</value>
+  </data>
+  <data name="Notify.HiddenFilesShown" xml:space="preserve">
+    <value>Mostrati in entrambi i pannelli</value>
+  </data>
+  <data name="Notify.HiddenFilesHidden" xml:space="preserve">
+    <value>Nascosti in entrambi i pannelli</value>
+  </data>
 </root>

@@ -222,4 +222,16 @@ public class PanelNavigationTest
         await _app.WaitUntilAsync(s => _app.RightPanelLists("notes.md", s) && _app.LeftPanelLists("notes.md", s),
             "the right panel to show the left panel's folder");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task CtrlShiftSShowsAndHidesHiddenFilesInBothPanels()
+    {
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+S"));
+        await _app.WaitUntilAsync(() => !_app.Driver.GetRequiredService<Core.Services.ISettingsService>().GetAsBool("Panels.ShowHidden", true).GetValueOrDefault(true),
+            "hidden files to be hidden");
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+S"));
+        await _app.WaitUntilAsync(() => _app.Driver.GetRequiredService<Core.Services.ISettingsService>().GetAsBool("Panels.ShowHidden", true).GetValueOrDefault(true),
+            "hidden files to be shown again");
+    }
 }

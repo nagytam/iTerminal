@@ -9866,4 +9866,19 @@
   <data name="CmdDesc.e5215e9d" xml:space="preserve">
     <value>A kurzor alatti elem nevét a mappája nélkül a vágólapra teszi.</value>
   </data>
+  <data name="CmdTitle.4a187db4" xml:space="preserve">
+    <value>Rejtett fájlok megjelenítése vagy elrejtése</value>
+  </data>
+  <data name="CmdDesc.94cb2b96" xml:space="preserve">
+    <value>A rejtett fájlokat és mappákat megjeleníti vagy elrejti mindkét panelben.</value>
+  </data>
+  <data name="Notify.HiddenFilesTitle" xml:space="preserve">
+    <value>Rejtett fájlok</value>
+  </data>
+  <data name="Notify.HiddenFilesShown" xml:space="preserve">
+    <value>Mindkét panelben megjelenítve</value>
+  </data>
+  <data name="Notify.HiddenFilesHidden" xml:space="preserve">
+    <value>Mindkét panelben elrejtve</value>
+  </data>
 </root>

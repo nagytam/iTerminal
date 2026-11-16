@@ -9866,4 +9866,19 @@
   <data name="CmdDesc.e5215e9d" xml:space="preserve">
     <value>Placer le nom de l'élément sous le curseur dans le presse-papiers, sans son dossier.</value>
   </data>
+  <data name="CmdTitle.4a187db4" xml:space="preserve">
+    <value>Afficher ou masquer les fichiers cachés</value>
+  </data>
+  <data name="CmdDesc.94cb2b96" xml:space="preserve">
+    <value>Afficher ou masquer les fichiers et dossiers cachés dans les deux panneaux.</value>
+  </data>
+  <data name="Notify.HiddenFilesTitle" xml:space="preserve">
+    <value>Fichiers cachés</value>
+  </data>
+  <data name="Notify.HiddenFilesShown" xml:space="preserve">
+    <value>Affichés dans les deux panneaux</value>
+  </data>
+  <data name="Notify.HiddenFilesHidden" xml:space="preserve">
+    <value>Masqués dans les deux panneaux</value>
+  </data>
 </root>

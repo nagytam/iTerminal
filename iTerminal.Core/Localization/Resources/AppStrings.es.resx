@@ -9866,4 +9866,19 @@
   <data name="CmdDesc.e5215e9d" xml:space="preserve">
     <value>Poner el nombre de la entrada bajo el cursor en el portapapeles, sin su carpeta.</value>
   </data>
+  <data name="CmdTitle.4a187db4" xml:space="preserve">
+    <value>Mostrar u ocultar archivos ocultos</value>
+  </data>
+  <data name="CmdDesc.94cb2b96" xml:space="preserve">
+    <value>Mostrar u ocultar archivos y carpetas ocultos en ambos paneles.</value>
+  </data>
+  <data name="Notify.HiddenFilesTitle" xml:space="preserve">
+    <value>Archivos ocultos</value>
+  </data>
+  <data name="Notify.HiddenFilesShown" xml:space="preserve">
+    <value>Mostrados en ambos paneles</value>
+  </data>
+  <data name="Notify.HiddenFilesHidden" xml:space="preserve">
+    <value>Ocultos en ambos paneles</value>
+  </data>
 </root>
