@@ -34,6 +34,7 @@ public class GitSyncDialog : Dialog
     private string? _root;
     private volatile string _status = string.Empty;
     private volatile bool _statusIsError;
+    private volatile string _statusDetail = string.Empty;
     private GitRepositoryStatus _repository = GitRepositoryStatus.Empty;
     private IReadOnlyList<GitBranch> _branches = [];
     private IReadOnlyList<string> _conflicts = [];
@@ -93,6 +94,9 @@ public class GitSyncDialog : Dialog
     public IReadOnlyList<string> Conflicts => _conflicts;
 
     public string Status => _status;
+
+    /// <summary>The second status line: guidance under a failed step, empty otherwise.</summary>
+    public string StatusDetail => _statusDetail;
 
     /// <summary>The reload started last — nothing waits on it; it exists so a test can.</summary>
     public Task RefreshTask { get; private set; } = Task.CompletedTask;
@@ -164,6 +168,7 @@ public class GitSyncDialog : Dialog
     {
         if (!SyncTask.IsCompleted)
         {
+            SetStatus(Say("Sync.Status.Busy", "A sync or branch switch is still running."), isError: false);
             return SyncTask;
         }
 
@@ -206,6 +211,7 @@ public class GitSyncDialog : Dialog
     {
         if (!SyncTask.IsCompleted)
         {
+            SetStatus(Say("Sync.Status.Busy", "A sync or branch switch is still running."), isError: false);
             return SyncTask;
         }
 
@@ -238,7 +244,8 @@ public class GitSyncDialog : Dialog
                 if (!pull.Success)
                 {
                     await LoadAsync(root);
-                    SetStatus(Say("Sync.Status.PullFailed", "Pull failed: {0} (Nothing was pushed. If git started a rebase or merge, it is left unfinished.)", FirstLine(pull.Output)), isError: true);
+                    SetStatus(Say("Sync.Status.PullFailed", "Pull failed: {0}", FirstLine(pull.Output)), isError: true,
+                        detail: Say("Sync.Status.PullFailedDetail", "Nothing was pushed. If git started a rebase or merge, it is left unfinished."));
                     return;
                 }
 
@@ -300,7 +307,7 @@ public class GitSyncDialog : Dialog
         }
         else
         {
-            rows.AddRange(_conflicts.Select(path => ($" ! {path}", Color.Red)));
+            rows.AddRange(_conflicts.Select(path => ($" ! {path}", colorScheme.Error)));
         }
 
         rows.Add((string.Empty, colorScheme.Foreground));
@@ -311,7 +318,7 @@ public class GitSyncDialog : Dialog
             .Select(branch => ($" {(branch.IsCurrent ? "*" : " ")} {branch.Name}{(branch.Upstream is null ? string.Empty : "  → " + branch.Upstream)}{MergedTag(branch)}", branch.IsCurrent ? Color.Green : colorScheme.Foreground)));
         rows.Add((string.Empty, colorScheme.Foreground));
         rows.Add((Say("Sync.HeaderRemote", "Remote branches"), colorScheme.Foreground));
-        rows.AddRange(_branches.Where(branch => branch.IsRemote).Select(branch => ($"   {branch.Name}{MergedTag(branch)}", Color.DarkGray)));
+        rows.AddRange(_branches.Where(branch => branch.IsRemote).Select(branch => ($"   {branch.Name}{MergedTag(branch)}", colorScheme.DisabledForeground)));
         return rows;
     }
 
@@ -322,10 +329,12 @@ public class GitSyncDialog : Dialog
         return _mergedRefs.Contains(fullName) ? "  " + Say("Sync.Merged", "(merged)") : string.Empty;
     }
 
-    private void SetStatus(string status, bool isError)
+    /// <summary>Sets the one-line status; <paramref name="detail"/> is an optional second line of guidance under it.</summary>
+    private void SetStatus(string status, bool isError, string detail = "")
     {
         _status = status;
         _statusIsError = isError;
+        _statusDetail = detail;
         StateHasChanged();
     }
 
@@ -408,14 +417,28 @@ public class GitSyncDialog : Dialog
         var upstream = _repository.Upstream is null
             ? Say("Sync.NoUpstreamShort", "no upstream")
             : $"{_repository.Upstream}  ↑{_repository.Ahead} ↓{_repository.Behind}";
-        Line(1, Say("Sync.RepositoryLine", "Repository: {0}", _folder ?? "—"), foreground);
+        // The root is what the sync acts on; the panel's folder may be a sub-folder of it.
+        Line(1, Say("Sync.RepositoryLine", "Repository: {0}", _root ?? _folder ?? "—"), foreground);
         Line(2, Say("Sync.BranchLine", "Branch: {0}  ({1})", branch, upstream), foreground);
 
         var rule = new ConxelString(Border.Horizontal.Repeat(Math.Max(0, width - 2)), foreground, colorScheme.Background);
         buffer.Write(ZOrder, new Position(AbsolutePosition.X + 1, AbsolutePosition.Y + 7), new Size(rule.Count, 1), rule);
 
+        // When the list scrolls, its visible range sits at the right end of the rule.
+        var window = _list.Window;
+        if (window.Total > window.Visible)
+        {
+            var label = " " + Say("Sync.Position", "{0}–{1} of {2}", window.First, window.Last, window.Total) + " ";
+            if (label.Length <= rule.Count)
+            {
+                var labelOffset = rule.Count - label.Length;
+                buffer.Write(ZOrder, new Position(AbsolutePosition.X + 1 + labelOffset, AbsolutePosition.Y + 7), new Size(label.Length, 1),
+                    new ConxelString(label, foreground, colorScheme.Background));
+            }
+        }
+
         Line((int)ViewSize.Height - 3, _status, _statusIsError ? colorScheme.Error : foreground);
-        Line((int)ViewSize.Height - 2, string.Empty, foreground);
+        Line((int)ViewSize.Height - 2, _statusDetail, foreground);
 
         var hints = (" " + Say("Sync.Hints", "Enter:sync  F5:reload  ↑↓:scroll  Esc:close") + " ").FitHints(Math.Max(0, width - 4));
         var bottom = Border.BottomLeft + Border.Horizontal.Repeat(width - 2) + Border.BottomRight;
@@ -445,6 +468,22 @@ public class GitSyncDialog : Dialog
         private int _top;
 
         public int PageSize => Math.Max(1, (int)ViewSize.Height - 1);
+
+        /// <summary>The rows on screen as 1-based numbers (First..Last) out of Total, with the number the screen holds (Visible).</summary>
+        public (int First, int Last, int Total, int Visible) Window
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    var visible = Math.Max(1, (int)ViewSize.Height);
+                    var total = _rows.Count;
+                    var first = total == 0 ? 0 : _top + 1;
+                    var last = Math.Min(_top + visible, total);
+                    return (first, last, total, visible);
+                }
+            }
+        }
 
         public void SetRows(IReadOnlyList<(string Text, Color Color)> rows)
         {

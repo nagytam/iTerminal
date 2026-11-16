@@ -102,8 +102,33 @@ public class GitSyncDialogTest
         await dialog.SyncTask;
 
         CollectionAssert.AreEqual(new[] { "pull" }, _calls);
-        StringAssert.StartsWith(dialog.Status, "Pull failed: error: could not apply 1a2b3c4");
+        Assert.AreEqual("Pull failed: error: could not apply 1a2b3c4", dialog.Status);
+        Assert.AreEqual("Nothing was pushed. If git started a rebase or merge, it is left unfinished.", dialog.StatusDetail);
         CollectionAssert.AreEqual(new[] { "src/a.cs" }, dialog.Conflicts.ToList());
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task Sync_WhileOneIsRunning_SaysSoAndStartsNoSecondPull()
+    {
+        var (dialog, git) = Create();
+        await OpenAsync(dialog);
+        var release = new TaskCompletionSource();
+        git.Setup(g => g.PullAsync(It.IsAny<string>(), It.IsAny<GitPullMode>(), It.IsAny<CancellationToken>()))
+            .Returns(async () =>
+            {
+                await release.Task;
+                return GitResult.Ok();
+            });
+
+        // Not awaited: SyncAsync returns the running task, which waits for the gate.
+        _ = dialog.SyncAsync();
+        _ = dialog.SyncAsync();
+
+        Assert.AreEqual("A sync or branch switch is still running.", dialog.Status);
+        release.SetResult();
+        await dialog.SyncTask;
+        git.Verify(g => g.PullAsync(It.IsAny<string>(), It.IsAny<GitPullMode>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Timeout(60_000)]

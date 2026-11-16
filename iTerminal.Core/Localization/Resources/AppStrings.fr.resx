@@ -9735,7 +9735,16 @@
     <value>La branche n'a pas d'amont avec lequel synchroniser.</value>
   </data>
   <data name="Sync.Status.PullFailed" xml:space="preserve">
-    <value>Échec du pull : {0} (Rien n'a été poussé. Si git a commencé un rebase ou une fusion, il reste inachevé.)</value>
+    <value>Échec du pull : {0}</value>
+  </data>
+  <data name="Sync.Status.PullFailedDetail" xml:space="preserve">
+    <value>Rien n'a été poussé. Si git a commencé un rebase ou une fusion, il reste inachevé.</value>
+  </data>
+  <data name="Sync.Status.Busy" xml:space="preserve">
+    <value>Une synchronisation ou un changement de branche est encore en cours.</value>
+  </data>
+  <data name="Sync.Position" xml:space="preserve">
+    <value>{0}–{1} sur {2}</value>
   </data>
   <data name="Sync.Status.PushFailed" xml:space="preserve">
     <value>Échec du push : {0}</value>

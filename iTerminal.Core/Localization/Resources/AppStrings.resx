@@ -9940,7 +9940,16 @@
     <value>The branch has no upstream branch to sync with.</value>
   </data>
   <data name="Sync.Status.PullFailed" xml:space="preserve">
-    <value>Pull failed: {0} (Nothing was pushed. If git started a rebase or merge, it is left unfinished.)</value>
+    <value>Pull failed: {0}</value>
+  </data>
+  <data name="Sync.Status.PullFailedDetail" xml:space="preserve">
+    <value>Nothing was pushed. If git started a rebase or merge, it is left unfinished.</value>
+  </data>
+  <data name="Sync.Status.Busy" xml:space="preserve">
+    <value>A sync or branch switch is still running.</value>
+  </data>
+  <data name="Sync.Position" xml:space="preserve">
+    <value>{0}–{1} of {2}</value>
   </data>
   <data name="Sync.Status.PushFailed" xml:space="preserve">
     <value>Push failed: {0}</value>

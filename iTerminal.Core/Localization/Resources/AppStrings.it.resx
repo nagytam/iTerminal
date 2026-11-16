@@ -9735,7 +9735,16 @@
     <value>Il ramo non ha un upstream con cui sincronizzare.</value>
   </data>
   <data name="Sync.Status.PullFailed" xml:space="preserve">
-    <value>Pull non riuscito: {0} (Nulla è stato inviato. Se git ha avviato un rebase o un merge, resta incompleto.)</value>
+    <value>Pull non riuscito: {0}</value>
+  </data>
+  <data name="Sync.Status.PullFailedDetail" xml:space="preserve">
+    <value>Nulla è stato inviato. Se git ha avviato un rebase o un merge, resta incompleto.</value>
+  </data>
+  <data name="Sync.Status.Busy" xml:space="preserve">
+    <value>Una sincronizzazione o un cambio di ramo è ancora in corso.</value>
+  </data>
+  <data name="Sync.Position" xml:space="preserve">
+    <value>{0}–{1} di {2}</value>
   </data>
   <data name="Sync.Status.PushFailed" xml:space="preserve">
     <value>Push non riuscito: {0}</value>

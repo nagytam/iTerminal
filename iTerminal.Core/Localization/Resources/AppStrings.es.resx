@@ -9735,7 +9735,16 @@
     <value>La rama no tiene remoto con el que sincronizar.</value>
   </data>
   <data name="Sync.Status.PullFailed" xml:space="preserve">
-    <value>Pull fallido: {0} (No se envió nada. Si git inició un rebase o merge, queda sin terminar.)</value>
+    <value>Pull fallido: {0}</value>
+  </data>
+  <data name="Sync.Status.PullFailedDetail" xml:space="preserve">
+    <value>No se envió nada. Si git inició un rebase o merge, queda sin terminar.</value>
+  </data>
+  <data name="Sync.Status.Busy" xml:space="preserve">
+    <value>Todavía hay una sincronización o un cambio de rama en curso.</value>
+  </data>
+  <data name="Sync.Position" xml:space="preserve">
+    <value>{0}–{1} de {2}</value>
   </data>
   <data name="Sync.Status.PushFailed" xml:space="preserve">
     <value>Push fallido: {0}</value>
