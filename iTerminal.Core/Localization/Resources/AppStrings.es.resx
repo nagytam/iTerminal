@@ -5522,7 +5522,7 @@
     <value>     # Nombre                    Panel izq.  →  Panel der.</value>
   </data>
   <data name="Workspaces.Empty1" xml:space="preserve">
-    <value>Aún no hay espacios de trabajo. S guarda la pantalla tal como está: ambos paneles,</value>
+    <value>Aún no hay espacios de trabajo. S guarda la pantalla: ambos paneles,</value>
   </data>
   <data name="Workspaces.Empty2" xml:space="preserve">
     <value>su orden y lo que hay debajo. Intro recupera uno.</value>

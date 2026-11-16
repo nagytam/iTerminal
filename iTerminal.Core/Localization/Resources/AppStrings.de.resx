@@ -5522,10 +5522,10 @@
     <value>     # Name                      Linkes Panel  →  Rechtes Panel</value>
   </data>
   <data name="Workspaces.Empty1" xml:space="preserve">
-    <value>Noch keine Arbeitsbereiche. S speichert den Bildschirm, wie er ist: beide Panels,</value>
+    <value>Noch keine Arbeitsbereiche. S speichert den Bildschirm samt beiden Panels,</value>
   </data>
   <data name="Workspaces.Empty2" xml:space="preserve">
-    <value>ihre Sortierung und was darunter liegt. Enter holt einen zurück.</value>
+    <value>deren Sortierung und Inhalt. Enter holt einen zurück.</value>
   </data>
   <data name="Workspaces.LeftLine" xml:space="preserve">
     <value>Links   {0}{1}</value>

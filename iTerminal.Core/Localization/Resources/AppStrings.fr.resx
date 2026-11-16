@@ -5522,7 +5522,7 @@
     <value>     # Nom                       Panneau gauche  →  Panneau droit</value>
   </data>
   <data name="Workspaces.Empty1" xml:space="preserve">
-    <value>Aucun espace de travail. S enregistre l&apos;écran tel qu&apos;il est : les deux panneaux,</value>
+    <value>Aucun espace de travail. S enregistre l&apos;écran : les deux panneaux,</value>
   </data>
   <data name="Workspaces.Empty2" xml:space="preserve">
     <value>leur tri et ce qu&apos;il y a dessous. Entrée en rétablit un.</value>

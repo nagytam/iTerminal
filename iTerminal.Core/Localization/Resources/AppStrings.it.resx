@@ -5522,7 +5522,7 @@
     <value>     # Nome                      Pannello sin.  →  Pannello des.</value>
   </data>
   <data name="Workspaces.Empty1" xml:space="preserve">
-    <value>Nessuno spazio di lavoro. S salva lo schermo così com&apos;è: entrambi i pannelli,</value>
+    <value>Nessuno spazio di lavoro. S salva lo schermo: entrambi i pannelli,</value>
   </data>
   <data name="Workspaces.Empty2" xml:space="preserve">
     <value>il loro ordinamento e ciò che sta sotto. Invio ne ripristina uno.</value>
