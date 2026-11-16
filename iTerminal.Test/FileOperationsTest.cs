@@ -384,6 +384,29 @@ public class FileOperationsTest
 
     [Timeout(120_000)]
     [TestMethod]
+    public async Task CtrlZPutsTheRenamedFileBack()
+    {
+        await _app.SelectEntryAsync("notes.md");
+        await _app.PressAsync("F6");
+        await _app.WaitForTextAsync("notes.md");
+        await _app.PressAsync("End");
+        foreach (var _ in "notes.md")
+        {
+            await _app.PressAsync("Backspace");
+        }
+        await _app.TypeAsync("journal.md");
+        await _app.PressAsync("Enter");
+        await _app.WaitUntilAsync(() => File.Exists(Path.Combine(_app.LeftRoot, "journal.md")), "the file under its new name");
+
+        await _app.PressAsync("Ctrl+Z");
+
+        await _app.WaitUntilAsync(() => File.Exists(Path.Combine(_app.LeftRoot, "notes.md")), "the old name to come back");
+        Assert.IsFalse(File.Exists(Path.Combine(_app.LeftRoot, "journal.md")));
+        await _app.WaitUntilAsync(s => _app.LeftPanelLists("notes.md", s) && !_app.LeftPanelLists("journal.md", s), "the panel to show the old name again");
+    }
+
+    [Timeout(120_000)]
+    [TestMethod]
     public async Task F8DeletesAFilePermanentlyWhenTheRecycleBinIsUnticked()
     {
         if (!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux())

@@ -9818,4 +9818,19 @@
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} tarea(s) en segundo plano siguen en curso. Â¿Salir de todos modos?</value>
   </data>
+  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
+    <value>Deshacer cambio de nombre</value>
+  </data>
+  <data name="CmdDesc.e5781ae9" xml:space="preserve">
+    <value>Restaurar el nombre que cambió el último cambio de nombre.</value>
+  </data>
+  <data name="Undo.RenameTitle" xml:space="preserve">
+    <value>Deshacer cambio de nombre</value>
+  </data>
+  <data name="Undo.RenameGone" xml:space="preserve">
+    <value>El elemento renombrado ya no está, así que no hay nada que restaurar.</value>
+  </data>
+  <data name="Undo.RenameNameTaken" xml:space="preserve">
+    <value>El nombre anterior ya está ocupado, así que el cambio de nombre no se deshizo.</value>
+  </data>
 </root>

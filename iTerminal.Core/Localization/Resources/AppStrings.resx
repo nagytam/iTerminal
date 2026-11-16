@@ -10023,4 +10023,19 @@
   <data name="Quit.ConfirmTasks" xml:space="preserve">
     <value>{0} background task(s) are still running. Quit anyway?</value>
   </data>
+  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
+    <value>Undo rename</value>
+  </data>
+  <data name="CmdDesc.e5781ae9" xml:space="preserve">
+    <value>Put back the name the last rename changed.</value>
+  </data>
+  <data name="Undo.RenameTitle" xml:space="preserve">
+    <value>Undo rename</value>
+  </data>
+  <data name="Undo.RenameGone" xml:space="preserve">
+    <value>The renamed entry is no longer there, so there is nothing to put back.</value>
+  </data>
+  <data name="Undo.RenameNameTaken" xml:space="preserve">
+    <value>The old name is taken now, so the rename was not undone.</value>
+  </data>
 </root>

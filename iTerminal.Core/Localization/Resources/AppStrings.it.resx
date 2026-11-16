@@ -9816,6 +9816,21 @@
     <value>Cambio non riuscito: {0}</value>
   </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
-    <value>{0} attivitÃ  in background sono ancora in corso. Uscire comunque?</value>
+    <value>{0} attività in background sono ancora in corso. Uscire comunque?</value>
+  </data>
+  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
+    <value>Annulla rinomina</value>
+  </data>
+  <data name="CmdDesc.e5781ae9" xml:space="preserve">
+    <value>Ripristina il nome modificato dall'ultima rinomina.</value>
+  </data>
+  <data name="Undo.RenameTitle" xml:space="preserve">
+    <value>Annulla rinomina</value>
+  </data>
+  <data name="Undo.RenameGone" xml:space="preserve">
+    <value>La voce rinominata non c'è più, quindi non c'è nulla da ripristinare.</value>
+  </data>
+  <data name="Undo.RenameNameTaken" xml:space="preserve">
+    <value>Il vecchio nome è ora occupato, quindi la rinomina non è stata annullata.</value>
   </data>
 </root>

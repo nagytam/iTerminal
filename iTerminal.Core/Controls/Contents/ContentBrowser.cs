@@ -74,6 +74,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
     private UserMenuDialog? _userMenuDialog { get; set; }
     private FileDiffDialog? _fileDiffDialog { get; set; }
     private iTerminal.Core.Services.Clipboard.FileClipboardOperations? _clipboard { get; set; }
+    private iTerminal.Core.Services.RenameUndoService? _renameUndo;
     private DiskImageDialog? _diskImageDialog { get; set; }
     private SecureWipeDialog? _secureWipeDialog { get; set; }
     private FileEncryptionDialog? _fileEncryptionDialog { get; set; }
@@ -145,7 +146,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
         iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
         iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
-        iTerminal.Core.Dialogs.Git.GitSyncDialog? gitSyncDialog = null)
+        iTerminal.Core.Dialogs.Git.GitSyncDialog? gitSyncDialog = null,
+        iTerminal.Core.Services.RenameUndoService? renameUndoService = null)
         : base(themeService)
     {
         _webBrowserDialog = webBrowserDialog;
@@ -174,6 +176,7 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
         _printDialog = printDialog;
         _streamsDialog = streamsDialog;
         _clipboard = clipboardOperations;
+        _renameUndo = renameUndoService;
         _fileDiffDialog = fileDiffDialog;
         Name = name;
         _sortDialog = sortDialog;
@@ -302,6 +305,11 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
             AddCommand(new Commands.Clipboard.ClipboardCutCommand(_clipboard, ContentModelService, ContentModel, new Key(ConsoleKey.Delete, true, false, false)));
             AddCommand(new Commands.Clipboard.ClipboardPasteCommand(_clipboard, ContentModelService, ContentModel));
             AddCommand(new Commands.Clipboard.ClipboardPasteCommand(_clipboard, ContentModelService, ContentModel, new Key(ConsoleKey.Insert, true, false, false)));
+        }
+
+        if (_renameUndo is not null)
+        {
+            AddCommand(new Commands.UndoRenameCommand(_renameUndo, _notificationService));
         }
 
         // Enter on the recycle drive restores; inert anywhere else, and on that drive's ".." row.

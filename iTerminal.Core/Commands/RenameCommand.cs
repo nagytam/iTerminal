@@ -3,10 +3,11 @@ using iConsole.Commands;
 using iConsole.Data;
 using iConsole.Interfaces;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Services;
 
 namespace iTerminal.Core.Commands;
 
-public class RenameCommand(IContentModelService contentModelService) 
+public class RenameCommand(IContentModelService contentModelService, RenameUndoService? renameUndo = null) 
     : Command
 {
     public override Key? Key { get; init; } =
@@ -44,6 +45,8 @@ public class RenameCommand(IContentModelService contentModelService)
                 try
                 {
                     await contentModel.MoveAsync(sourceUrl!, targetUrl, overwrite);
+
+                    renameUndo?.Remember(contentModel, sourceUrl!, targetUrl);
 
                     renameDialog.Refresh();
                     renameDialog.Close();
