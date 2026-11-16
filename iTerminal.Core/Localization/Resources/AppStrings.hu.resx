@@ -9816,6 +9816,21 @@
     <value>A váltás sikertelen: {0}</value>
   </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
-    <value>{0} hÃ¡ttÃ©rfeladat mÃ©g fut. KilÃ©pjen mÃ©gis?</value>
+    <value>{0} háttérfeladat még fut. Kilépjen mégis?</value>
+  </data>
+  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
+    <value>Átnevezés visszavonása</value>
+  </data>
+  <data name="CmdDesc.e5781ae9" xml:space="preserve">
+    <value>Visszaállítja az utolsó átnevezés által módosított nevet.</value>
+  </data>
+  <data name="Undo.RenameTitle" xml:space="preserve">
+    <value>Átnevezés visszavonása</value>
+  </data>
+  <data name="Undo.RenameGone" xml:space="preserve">
+    <value>Az átnevezett elem már nincs meg, így nincs mit visszaállítani.</value>
+  </data>
+  <data name="Undo.RenameNameTaken" xml:space="preserve">
+    <value>A régi név mostanra foglalt, ezért az átnevezést nem lehetett visszavonni.</value>
   </data>
 </root>

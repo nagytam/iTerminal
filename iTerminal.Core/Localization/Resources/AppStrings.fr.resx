@@ -9816,6 +9816,21 @@
     <value>Échec du changement : {0}</value>
   </data>
   <data name="Quit.ConfirmTasks" xml:space="preserve">
-    <value>{0} tÃ¢che(s) en arriÃ¨re-plan sont encore en cours. Quitter quand mÃªme ?</value>
+    <value>{0} tâche(s) en arrière-plan sont encore en cours. Quitter quand même ?</value>
+  </data>
+  <data name="CmdTitle.4e0f79b8" xml:space="preserve">
+    <value>Annuler le renommage</value>
+  </data>
+  <data name="CmdDesc.e5781ae9" xml:space="preserve">
+    <value>Remettre le nom modifié par le dernier renommage.</value>
+  </data>
+  <data name="Undo.RenameTitle" xml:space="preserve">
+    <value>Annuler le renommage</value>
+  </data>
+  <data name="Undo.RenameGone" xml:space="preserve">
+    <value>L'élément renommé n'est plus là, il n'y a donc rien à remettre en place.</value>
+  </data>
+  <data name="Undo.RenameNameTaken" xml:space="preserve">
+    <value>L'ancien nom est maintenant pris, le renommage n'a donc pas été annulé.</value>
   </data>
 </root>

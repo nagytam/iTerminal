@@ -7,6 +7,7 @@ using iConsole.Interfaces;
 using iConsole.Layouts;
 using iConsole.Services;
 using iTerminal.Core.Commands;
+using iTerminal.Core.Services;
 
 namespace iTerminal.Core.Dialogs;
 
@@ -77,14 +78,15 @@ public class RenameDialog : FormDialog
         IBeepService beepService,
         IDateTimeProviderService dateTimeProviderService,
         IContentModelService contentModelService,
-        IThemeService themeService
+        IThemeService themeService,
+        RenameUndoService? renameUndo = null
         ) 
         : base(nameof(RenameDialog), themeService)
     {
         _contentModelService = contentModelService;
         Title = iConsole.Localization.UiText.Get("Menu.Rename", "Rename");
 
-        _renameCommand = new RenameCommand(contentModelService);
+        _renameCommand = new RenameCommand(contentModelService, renameUndo);
         AddCommand(_renameCommand);
 
         _textBoxName = new TextBox(beepService, dateTimeProviderService, themeService) 

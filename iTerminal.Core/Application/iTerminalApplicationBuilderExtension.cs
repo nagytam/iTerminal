@@ -149,6 +149,7 @@ public static class iTerminalApplicationBuilderExtension
         services.AddHostedService<iTerminal.Core.Commands.DialogRefreshHostedService>();
         services.AddTransient<TerminalMenuBar>();
         services.AddSingleton<Content>();
+        services.AddSingleton<iTerminal.Core.Services.RenameUndoService>();
         services.AddSingleton<FilePanelFactory>();
         services.AddTransient<HotKeys>();
         services.AddTransient<ContentBrowser>();
