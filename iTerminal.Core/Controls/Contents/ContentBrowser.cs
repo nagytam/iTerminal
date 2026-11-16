@@ -312,6 +312,8 @@ public class ContentBrowser : iConsole.Controls.Control, IContentBrowser
             AddCommand(new Commands.UndoRenameCommand(_renameUndo, _notificationService));
         }
 
+        AddCommand(new Commands.CopyPathCommand(ContentModelService, _notificationService));
+
         // Enter on the recycle drive restores; inert anywhere else, and on that drive's ".." row.
         AddCommand(new Commands.Drives.RestoreRecycledCommand(ContentModelService));
 

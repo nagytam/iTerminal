@@ -9906,4 +9906,13 @@
   <data name="Menu.ZoomPanel" xml:space="preserve">
     <value>Panel vergrößern</value>
   </data>
+  <data name="CmdTitle.bc5351a6" xml:space="preserve">
+    <value>Pfad des Eintrags kopieren</value>
+  </data>
+  <data name="CmdDesc.3829d5fc" xml:space="preserve">
+    <value>Den Pfad des Eintrags unter dem Cursor in die Zwischenablage legen, zum Einfügen woanders.</value>
+  </data>
+  <data name="Notify.PathCopiedTitle" xml:space="preserve">
+    <value>Pfad kopiert</value>
+  </data>
 </root>
