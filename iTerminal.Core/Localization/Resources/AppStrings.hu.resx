@@ -9842,4 +9842,13 @@
   <data name="Menu.ZoomPanel" xml:space="preserve">
     <value>Panel nagyítása</value>
   </data>
+  <data name="CmdTitle.bc5351a6" xml:space="preserve">
+    <value>Az elem elérési útjának másolása</value>
+  </data>
+  <data name="CmdDesc.3829d5fc" xml:space="preserve">
+    <value>A kurzor alatti elem elérési útját a vágólapra teszi, hogy máshol be lehessen illeszteni.</value>
+  </data>
+  <data name="Notify.PathCopiedTitle" xml:space="preserve">
+    <value>Elérési út másolva</value>
+  </data>
 </root>

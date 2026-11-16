@@ -10047,4 +10047,13 @@
   <data name="Menu.ZoomPanel" xml:space="preserve">
     <value>Zoom Panel</value>
   </data>
+  <data name="CmdTitle.bc5351a6" xml:space="preserve">
+    <value>Copy the path of the entry</value>
+  </data>
+  <data name="CmdDesc.3829d5fc" xml:space="preserve">
+    <value>Put the path of the entry under the cursor on the clipboard, to paste it elsewhere.</value>
+  </data>
+  <data name="Notify.PathCopiedTitle" xml:space="preserve">
+    <value>Path copied</value>
+  </data>
 </root>

@@ -9842,4 +9842,13 @@
   <data name="Menu.ZoomPanel" xml:space="preserve">
     <value>Ampliar panel</value>
   </data>
+  <data name="CmdTitle.bc5351a6" xml:space="preserve">
+    <value>Copiar la ruta de la entrada</value>
+  </data>
+  <data name="CmdDesc.3829d5fc" xml:space="preserve">
+    <value>Poner la ruta de la entrada bajo el cursor en el portapapeles, para pegarla en otro lugar.</value>
+  </data>
+  <data name="Notify.PathCopiedTitle" xml:space="preserve">
+    <value>Ruta copiada</value>
+  </data>
 </root>
