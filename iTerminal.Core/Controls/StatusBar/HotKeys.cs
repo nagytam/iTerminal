@@ -547,7 +547,8 @@ public class HotKeys : StatusBarItem
     /// </summary>
     public void LayoutHotKeysRow()
     {
-        const uint reservedTrailing = 4;
+        // Room for the date button after the row (TerminalStatusBar.DateOpenButtonWidth).
+        const uint reservedTrailing = (uint)TerminalStatusBar.DateOpenButtonWidth + 1;
         var budget = Parent is not null && Parent.ViewSize.Width > reservedTrailing
             ? (uint)((int)Parent.ViewSize.Width - (int)reservedTrailing)
             : uint.MaxValue;

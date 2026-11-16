@@ -10,6 +10,11 @@ namespace iTerminal.Core.Controls.StatusBar;
 
 public class TerminalStatusBar : iConsole.Controls.StatusBar.StatusBar
 {
+    /// <summary>Columns the date button takes: its bracketed label, "[Cal]". The hot key row leaves this room.</summary>
+    public const int DateOpenButtonWidth = 5;
+
+    private static string DateOpenButtonLabel => iConsole.Localization.UiText.Get("HotKey.CalendarShort", "Cal");
+
     private readonly HotKeys _hotKeys;
     private readonly Button _dateOpenButton;
     protected DatePopUpWindow _datePopUpWindow { get; private set; }
@@ -36,9 +41,10 @@ public class TerminalStatusBar : iConsole.Controls.StatusBar.StatusBar
         AddCommand(command);
 
         AddControl(_datePopUpWindow);
-        _dateOpenButton = new Button("*", command, themeService)
+        // A named button, not a bare "*": the footer has to say what the button opens.
+        _dateOpenButton = new Button(DateOpenButtonLabel, command, themeService)
         {
-            ViewSize = new Size(3, 1)
+            ViewSize = new Size(DateOpenButtonWidth, 1)
         };
         AddControl(_dateOpenButton);
     }
@@ -64,6 +70,8 @@ public class TerminalStatusBar : iConsole.Controls.StatusBar.StatusBar
     public override void Draw(IBuffer buffer)
     {
         _hotKeys.LayoutHotKeysRow();
+        // Read on every draw, so a language change relabels it as it does the hot keys.
+        _dateOpenButton.Title = DateOpenButtonLabel;
         LayoutDateOpenButton();
         base.Draw(buffer);
     }

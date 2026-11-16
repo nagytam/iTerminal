@@ -397,6 +397,9 @@
   <data name="Dialog.Calendar" xml:space="preserve">
     <value>Calendar</value>
   </data>
+  <data name="HotKey.CalendarShort" xml:space="preserve">
+    <value>Cal</value>
+  </data>
   <data name="Dialog.Commands" xml:space="preserve">
     <value>Commands</value>
   </data>
