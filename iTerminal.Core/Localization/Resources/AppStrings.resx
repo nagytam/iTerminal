@@ -10098,4 +10098,7 @@
   <data name="Menu.CopyName" xml:space="preserve">
     <value>Copy Name</value>
   </data>
+  <data name="Menu.ShowHiddenFiles" xml:space="preserve">
+    <value>Show Hidden Files</value>
+  </data>
 </root>
