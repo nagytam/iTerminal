@@ -9893,4 +9893,7 @@
   <data name="Menu.CopyName" xml:space="preserve">
     <value>Copier le nom</value>
   </data>
+  <data name="Menu.ShowHiddenFiles" xml:space="preserve">
+    <value>Afficher les fichiers cachés</value>
+  </data>
 </root>

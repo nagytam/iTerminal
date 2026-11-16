@@ -9893,4 +9893,7 @@
   <data name="Menu.CopyName" xml:space="preserve">
     <value>Név másolása</value>
   </data>
+  <data name="Menu.ShowHiddenFiles" xml:space="preserve">
+    <value>Rejtett fájlok megjelenítése</value>
+  </data>
 </root>
