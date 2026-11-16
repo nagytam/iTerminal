@@ -9881,4 +9881,10 @@
   <data name="Notify.HiddenFilesHidden" xml:space="preserve">
     <value>Ocultos en ambos paneles</value>
   </data>
+  <data name="CmdTitle.5e93e56e" xml:space="preserve">
+    <value>Invertir el orden de clasificación</value>
+  </data>
+  <data name="CmdDesc.88871244" xml:space="preserve">
+    <value>Invertir el sentido de clasificación del panel activo, guardado para el próximo inicio.</value>
+  </data>
 </root>

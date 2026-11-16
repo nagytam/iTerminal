@@ -143,4 +143,18 @@ public class PanelSortTest
         Assert.AreEqual("notes.md", _app.FocusedEntryName);
         await _app.WaitForTextAsync("1 marked");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task CtrlShiftUStartsANameSortAndThenFlipsIt()
+    {
+        await StartAsync();
+        await WaitForOrderAsync("notes.md", "readme.txt", "zeta.bin");
+
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+U"));
+        await WaitForOrderAsync("notes.md", "readme.txt", "zeta.bin");
+
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+U"));
+        await WaitForOrderAsync("zeta.bin", "readme.txt", "notes.md");
+    }
 }

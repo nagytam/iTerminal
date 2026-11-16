@@ -63,6 +63,10 @@ public class Content : Window, IContent
         {
             AddCommand(new ToggleHiddenFilesCommand(contentModelService, settingsService, notificationService));
         }
+        if (settingsService is not null)
+        {
+            AddCommand(new ReverseSortCommand(contentModelService, settingsService));
+        }
         AddCommand(new ToggleTerminalCommand(this));
         AddCommand(new TogglePanelZoomCommand(this));
         if (shellCommand is not null)
