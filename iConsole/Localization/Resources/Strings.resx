@@ -73,6 +73,9 @@
   <data name="Common.Help" xml:space="preserve">
     <value>Help</value>
   </data>
+  <data name="Help.CloseHint" xml:space="preserve">
+    <value>Esc: close this help   ↑↓ PgUp PgDn: scroll it</value>
+  </data>
   <data name="Common.Back" xml:space="preserve">
     <value>Back</value>
   </data>

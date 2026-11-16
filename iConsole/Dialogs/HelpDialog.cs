@@ -91,6 +91,9 @@ public class HelpDialog : Dialog
 
         var lines = new List<string>
         {
+            // The help is a long list with no footer, so it says how to leave it and how to read it.
+            UiText.Get("Help.CloseHint", "Esc: close this help   ↑↓ PgUp PgDn: scroll it"),
+            string.Empty,
             focusedControl is not null
                 ? string.Format(UiText.Get("Help.FocusedControl", "Focused control: {0}"), focusedControl.Name)
                 : UiText.Get("Help.FocusedControlNone", "Focused control: n/a"),

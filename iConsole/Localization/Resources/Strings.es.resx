@@ -73,6 +73,9 @@
   <data name="Common.Help" xml:space="preserve">
     <value>Ayuda</value>
   </data>
+  <data name="Help.CloseHint" xml:space="preserve">
+    <value>Esc: cerrar la ayuda   ↑↓ AvPág/RePág: desplazar</value>
+  </data>
   <data name="Common.Back" xml:space="preserve">
     <value>Atrás</value>
   </data>
