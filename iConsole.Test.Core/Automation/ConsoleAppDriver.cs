@@ -131,6 +131,11 @@ public sealed class ConsoleAppDriver : IAsyncDisposable
             })
             .Build();
 
+        // The words of the interface come from UiText.Current, a process-wide static that the localizer factory sets only when
+        // the ILocalizer singleton is first resolved. Resolve it now, so this application's words are its own, not the German
+        // (or any other) left behind by an application that ran earlier in the same test process.
+        _ = host.Services.GetRequiredService<iConsole.Localization.ILocalizer>();
+
         var driver = new ConsoleAppDriver(host, console, input, commandLogger, screenLogger, options);
         try
         {
