@@ -50,8 +50,38 @@ public class TerminalStatusBarTest
         bar.Draw(new iConsole.Test.Core.ScreenBuffer(200, 30));
 
         var hotKeys = bar.Controls.AsSnapshot().OfType<HotKeys>().Single();
-        var dateButton = bar.Controls.AsSnapshot().OfType<Button>().Single(b => b.Title == "*");
+        var dateButton = bar.Controls.AsSnapshot().OfType<Button>().Single(b => b.Title == "Cal");
         Assert.AreEqual(hotKeys.Position.X + hotKeys.ViewSize.Width, dateButton.Position.X);
         Assert.AreEqual(hotKeys.Position.Y, dateButton.Position.Y);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheDateButtonSaysWhatItOpens()
+    {
+        var (bar, _) = Create(width: 120);
+        bar.OnInitializeLayout();
+        var buffer = new iConsole.Test.Core.ScreenBuffer(120, 30);
+
+        bar.Draw(buffer);
+
+        // The button used to be a bare "[*]" that gave no hint of its calendar.
+        StringAssert.Contains(buffer.Line((int)bar.Position.Y), "[Cal]");
+        Assert.IsFalse(buffer.Line((int)bar.Position.Y).Contains("[*]"));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void TheDateButtonStaysWholeWhenTheRowIsNarrow()
+    {
+        var (bar, _) = Create(width: 60);
+        bar.OnInitializeLayout();
+        var buffer = new iConsole.Test.Core.ScreenBuffer(60, 30);
+
+        bar.Draw(buffer);
+
+        var dateButton = bar.Controls.AsSnapshot().OfType<Button>().Single(b => b.Title == "Cal");
+        Assert.IsTrue(dateButton.Position.X + dateButton.ViewSize.Width <= 60, "the date button must stay on screen");
+        StringAssert.Contains(buffer.Line((int)bar.Position.Y), "[Cal]");
     }
 }
