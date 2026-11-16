@@ -40,6 +40,8 @@ public class EditMenuItem : MenuItem
             AddMenuItem(new MenuItem("-", null, [], themeService));
         }
 
+        AddMenuItem(new MenuItem("Copy Path	Ctrl+Shift+P", new iTerminal.Core.Commands.CopyPathCommand(contentModelService), [], themeService));
+        AddMenuItem(new MenuItem("Copy Name	Ctrl+Shift+N", new iTerminal.Core.Commands.CopyNameCommand(contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Copy\tF5",        new CopyDialogCommand(copyDialog, contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Move\tShift+F6",  new MoveDialogCommand(moveDialog, contentModelService), [], themeService));
         AddMenuItem(new MenuItem("Rename\tF6",      new RenameDialogCommand(renameDialog, contentModelService), [], themeService));

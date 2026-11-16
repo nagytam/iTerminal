@@ -9951,4 +9951,10 @@
   <data name="CmdDesc.88871244" xml:space="preserve">
     <value>Die Sortierrichtung des aktiven Panels umkehren, für den nächsten Start gespeichert.</value>
   </data>
+  <data name="Menu.CopyPath" xml:space="preserve">
+    <value>Pfad kopieren</value>
+  </data>
+  <data name="Menu.CopyName" xml:space="preserve">
+    <value>Namen kopieren</value>
+  </data>
 </root>

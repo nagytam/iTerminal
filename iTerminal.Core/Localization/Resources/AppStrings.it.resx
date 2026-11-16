@@ -9887,4 +9887,10 @@
   <data name="CmdDesc.88871244" xml:space="preserve">
     <value>Inverte il senso di ordinamento del pannello attivo, salvato per il prossimo avvio.</value>
   </data>
+  <data name="Menu.CopyPath" xml:space="preserve">
+    <value>Copia percorso</value>
+  </data>
+  <data name="Menu.CopyName" xml:space="preserve">
+    <value>Copia nome</value>
+  </data>
 </root>

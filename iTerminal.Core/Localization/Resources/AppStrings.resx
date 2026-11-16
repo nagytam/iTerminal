@@ -10092,4 +10092,10 @@
   <data name="CmdDesc.88871244" xml:space="preserve">
     <value>Flip the sort direction of the focused panel, saved for the next start-up.</value>
   </data>
+  <data name="Menu.CopyPath" xml:space="preserve">
+    <value>Copy Path</value>
+  </data>
+  <data name="Menu.CopyName" xml:space="preserve">
+    <value>Copy Name</value>
+  </data>
 </root>
