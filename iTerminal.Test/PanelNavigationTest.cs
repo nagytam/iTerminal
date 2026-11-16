@@ -213,4 +213,13 @@ public class PanelNavigationTest
         Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+Z"));
         await _app.WaitUntilAsync(s => s.Contains("right_only") && s.Contains("notes.md"), "both panels to come back");
     }
+
+    [Timeout(120_000)]
+    [TestMethod]
+    public async Task CtrlShiftDShowsTheFocusedFolderInTheOtherPanel()
+    {
+        Assert.IsTrue(await _app.PressAsync("Ctrl+Shift+D"));
+        await _app.WaitUntilAsync(s => _app.RightPanelLists("notes.md", s) && _app.LeftPanelLists("notes.md", s),
+            "the right panel to show the left panel's folder");
+    }
 }

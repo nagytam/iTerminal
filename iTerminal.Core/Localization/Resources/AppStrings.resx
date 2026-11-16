@@ -10056,4 +10056,13 @@
   <data name="Notify.PathCopiedTitle" xml:space="preserve">
     <value>Path copied</value>
   </data>
+  <data name="CmdTitle.391e3d3a" xml:space="preserve">
+    <value>Same folder in the other panel</value>
+  </data>
+  <data name="CmdDesc.f9bca138" xml:space="preserve">
+    <value>Show the folder of the focused panel in the other panel too.</value>
+  </data>
+  <data name="Menu.SameFolderInOtherPanel" xml:space="preserve">
+    <value>Same Folder in Other Panel</value>
+  </data>
 </root>

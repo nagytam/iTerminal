@@ -55,6 +55,7 @@ public class Content : Window, IContent
         if (terminalPanel is not null) AddControl(terminalPanel);
 
         AddCommand(new SwitchPanelsCommand(contentModelService));
+        AddCommand(new SameFolderInOtherPanelCommand(contentModelService));
         AddCommand(new ToggleTerminalCommand(this));
         AddCommand(new TogglePanelZoomCommand(this));
         if (shellCommand is not null)

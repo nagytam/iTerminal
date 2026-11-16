@@ -221,7 +221,7 @@ public class ContentModelFileSystem(
                 task?.CancellationTokenSource.Cancel();
             }
         }
-        var hasTask = _taskManager.GetTasks<FilePanelRefreshTask>(t => t.Url.FullUrl == Url.FullUrl && !t.CancellationTokenSource.IsCancellationRequested).Any();
+        var hasTask = _taskManager.GetTasks<FilePanelRefreshTask>(t => t.ContentModelName == Name && t.Url.FullUrl == Url.FullUrl && !t.CancellationTokenSource.IsCancellationRequested).Any();
         if (!hasTask)
         {
             logger.Information($"Refresh task is started for {Url.FullUrl}");

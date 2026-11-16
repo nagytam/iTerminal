@@ -9851,4 +9851,13 @@
   <data name="Notify.PathCopiedTitle" xml:space="preserve">
     <value>Elérési út másolva</value>
   </data>
+  <data name="CmdTitle.391e3d3a" xml:space="preserve">
+    <value>Ugyanaz a mappa a másik panelban</value>
+  </data>
+  <data name="CmdDesc.f9bca138" xml:space="preserve">
+    <value>A fókuszban lévő panel mappáját a másik panelban is megmutatja.</value>
+  </data>
+  <data name="Menu.SameFolderInOtherPanel" xml:space="preserve">
+    <value>Ugyanaz a mappa a másik panelban</value>
+  </data>
 </root>

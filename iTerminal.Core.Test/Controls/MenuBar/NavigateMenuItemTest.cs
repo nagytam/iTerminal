@@ -19,6 +19,6 @@ public class NavigateMenuItemTest
             .Select(m => m.Text.Split('\t')[0])
             .ToArray();
 
-        CollectionAssert.AreEqual(new[] { "Go To Folder", "Switch Panels", "Zoom Panel", "Sort By…", "Git History", "Docker Containers", "Recycle Bin", "Shell", "Command Log" }, entries);
+        CollectionAssert.AreEqual(new[] { "Go To Folder", "Switch Panels", "Zoom Panel", "Same Folder in Other Panel", "Sort By…", "Git History", "Docker Containers", "Recycle Bin", "Shell", "Command Log" }, entries);
     }
 }
