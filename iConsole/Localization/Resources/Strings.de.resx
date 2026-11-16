@@ -76,6 +76,12 @@
   <data name="Help.CloseHint" xml:space="preserve">
     <value>Esc: Hilfe schließen   ↑↓ BildAuf/BildAb: scrollen</value>
   </data>
+  <data name="Control.Name.LeftPanel" xml:space="preserve">
+    <value>Linkes Fenster</value>
+  </data>
+  <data name="Control.Name.RightPanel" xml:space="preserve">
+    <value>Rechtes Fenster</value>
+  </data>
   <data name="Hint.PromptAccept" xml:space="preserve">
     <value>Wert übernehmen</value>
   </data>

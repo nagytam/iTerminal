@@ -82,6 +82,16 @@ public class HelpDialog : Dialog
         base.OnInitializeLayout();
     }
 
+    /// <summary>
+    /// A control's name as a reader sees it: a translated name when the resources have one, otherwise the
+    /// name with its words split in sentence case ("LeftPanel" reads "Left panel"). The internal name used to be shown as it is.
+    /// </summary>
+    internal static string ReadableName(string name)
+    {
+        var words = string.Concat(name.Select((c, i) => i > 0 && char.IsUpper(c) && !char.IsUpper(name[i - 1]) ? " " + char.ToLowerInvariant(c) : c.ToString()));
+        return UiText.Get("Control.Name." + name, words);
+    }
+
     private static string GetAvailableCommandsHelp(IControl rootControl, IControl? focusedControl, int width)
     {
         var commands = GetAvailableCommands(rootControl)
@@ -95,7 +105,7 @@ public class HelpDialog : Dialog
             UiText.Get("Help.CloseHint", "Esc: close this help   ↑↓ PgUp PgDn: scroll it"),
             string.Empty,
             focusedControl is not null
-                ? string.Format(UiText.Get("Help.FocusedControl", "Focused control: {0}"), focusedControl.Name)
+                ? string.Format(UiText.Get("Help.FocusedControl", "Focused control: {0}"), ReadableName(focusedControl.Name))
                 : UiText.Get("Help.FocusedControlNone", "Focused control: n/a"),
             string.Empty,
             UiText.Get("Help.AvailableCommands", "Available commands:"),

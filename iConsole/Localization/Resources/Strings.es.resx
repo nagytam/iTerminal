@@ -76,6 +76,12 @@
   <data name="Help.CloseHint" xml:space="preserve">
     <value>Esc: cerrar la ayuda   ↑↓ AvPág/RePág: desplazar</value>
   </data>
+  <data name="Control.Name.LeftPanel" xml:space="preserve">
+    <value>Panel izquierdo</value>
+  </data>
+  <data name="Control.Name.RightPanel" xml:space="preserve">
+    <value>Panel derecho</value>
+  </data>
   <data name="Hint.PromptAccept" xml:space="preserve">
     <value>Aceptar el valor</value>
   </data>
