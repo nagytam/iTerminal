@@ -23,7 +23,10 @@ public class TaskManagerDialogTest
         var dialog = new TaskManagerDialog(taskManager, TestTheme());
         await ShowAsync(dialog);
 
-        AssertScreenContains(Render(dialog), "No background tasks are running.");
+        var screen = Render(dialog);
+        AssertScreenContains(screen, "No background tasks are running.");
+        // The dialog has no footer of its own, so the empty frame names the key that closes it.
+        AssertScreenContains(screen, "Esc:close");
     }
 
     [Timeout(60_000)]

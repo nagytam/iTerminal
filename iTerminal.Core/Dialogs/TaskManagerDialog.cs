@@ -32,7 +32,8 @@ public class TaskManagerDialog : Dialog
         _listBox = new ListBox<IBackgroundTask>(_listModel, themeService)
         {
             // An empty frame read as "the list failed to load"; most of the time nothing is running.
-            EmptyText = UiText.Get("Empty.Tasks", " No background tasks are running."),
+            // The dialog has no footer; with nothing running, its empty frame also names the key that leaves it.
+            EmptyText = UiText.Get("Empty.Tasks", " No background tasks are running.") + "  " + UiText.Get("Hint.Part.EscClose", "Esc:close"),
         };
         _scrollBar = new ScrollBar(themeService)
         {
