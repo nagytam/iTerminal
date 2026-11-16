@@ -95,7 +95,7 @@ public class EditorStatusBar : StatusBar
         _searchTextDialogButton.ViewSize = ForTitle(_searchTextDialogButton, 11);
         if (_replaceButton is not null)
         {
-            _replaceButton.ViewSize = ForTitle(_replaceButton, 13);
+            _replaceButton.ViewSize = ForTitle(_replaceButton, 12);
         }
 
         _encodingIndicator.ViewSize = new Size(10, 1);

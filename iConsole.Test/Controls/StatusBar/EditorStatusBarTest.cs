@@ -6,6 +6,8 @@ using iConsole.Model;
 using iConsole.Services;
 using iConsole.Test.Core;
 using iConsole.Controls;
+using iConsole.Controls.Editors;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace iConsole.Test.Controls.StatusBar;
@@ -130,5 +132,39 @@ public class EditorStatusBarTest
         var statusBar = CreateEditorStatusBar();
 
         Assert.IsFalse(statusBar.CanFocus);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public void ReplaceButton_IsExactlyItsLabel()
+    {
+        var mockThemeService = new Mock<IThemeService>();
+        mockThemeService.Setup(m => m.CurrentColorScheme).Returns(new ColorScheme());
+        var editor = new TextEditorControl(mockThemeService.Object);
+        var mockDateTimeService = new Mock<IDateTimeProviderService>();
+        mockDateTimeService.Setup(m => m.Now).Returns(DateTime.Now);
+        var statusBar = new EditorStatusBar(
+            new Mock<IReadOnly>().Object,
+            new Mock<IDirtyModel>().Object,
+            new Mock<IDirtyReadOnlyModel>().Object,
+            new ScrollableModel(),
+            new SearchModel(),
+            new TextModel(),
+            new Mock<IContentModelService>().Object,
+            new Mock<IBeepService>().Object,
+            mockDateTimeService.Object,
+            mockThemeService.Object,
+            editor)
+        {
+            Position = new Position(0, 0),
+            ViewSize = new Size(120, 1)
+        };
+        statusBar.OnInitializeLayout();
+        var buffer = new MockBuffer(new Size(120, 1));
+
+        statusBar.Draw(buffer);
+
+        // "^R-Replace" is 10 columns; with its brackets the button is 12. It used to be 13, which drew a stray space: "[^R-Replace ]".
+        Assert.IsTrue(buffer.ContentAsString.Contains("[^R-Replace]"), buffer.ContentAsString);
     }
 }
