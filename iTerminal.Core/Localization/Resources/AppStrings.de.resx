@@ -9915,4 +9915,13 @@
   <data name="Notify.PathCopiedTitle" xml:space="preserve">
     <value>Pfad kopiert</value>
   </data>
+  <data name="CmdTitle.391e3d3a" xml:space="preserve">
+    <value>Gleicher Ordner im anderen Panel</value>
+  </data>
+  <data name="CmdDesc.f9bca138" xml:space="preserve">
+    <value>Den Ordner des aktiven Panels auch im anderen Panel zeigen.</value>
+  </data>
+  <data name="Menu.SameFolderInOtherPanel" xml:space="preserve">
+    <value>Gleicher Ordner im anderen Panel</value>
+  </data>
 </root>

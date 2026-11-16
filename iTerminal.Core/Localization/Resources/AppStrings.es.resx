@@ -9851,4 +9851,13 @@
   <data name="Notify.PathCopiedTitle" xml:space="preserve">
     <value>Ruta copiada</value>
   </data>
+  <data name="CmdTitle.391e3d3a" xml:space="preserve">
+    <value>Misma carpeta en el otro panel</value>
+  </data>
+  <data name="CmdDesc.f9bca138" xml:space="preserve">
+    <value>Mostrar también la carpeta del panel activo en el otro panel.</value>
+  </data>
+  <data name="Menu.SameFolderInOtherPanel" xml:space="preserve">
+    <value>Misma carpeta en el otro panel</value>
+  </data>
 </root>

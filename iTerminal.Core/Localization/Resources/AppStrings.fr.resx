@@ -9851,4 +9851,13 @@
   <data name="Notify.PathCopiedTitle" xml:space="preserve">
     <value>Chemin copié</value>
   </data>
+  <data name="CmdTitle.391e3d3a" xml:space="preserve">
+    <value>Même dossier dans l'autre panneau</value>
+  </data>
+  <data name="CmdDesc.f9bca138" xml:space="preserve">
+    <value>Afficher le dossier du panneau actif aussi dans l'autre panneau.</value>
+  </data>
+  <data name="Menu.SameFolderInOtherPanel" xml:space="preserve">
+    <value>Même dossier dans l'autre panneau</value>
+  </data>
 </root>
