@@ -1,4 +1,4 @@
-using iConsole.Controls.StatusBar;
+﻿using iConsole.Controls.StatusBar;
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Interfaces;
@@ -155,7 +155,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
         iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
         iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
         iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
-        iTerminal.Core.Jobs.UpdateCheckJob? updateCheckJob = null
+        iTerminal.Core.Jobs.UpdateCheckJob? updateCheckJob = null,
+        iConsole.Viewers.FileViewerRegistry? fileViewers = null,
+        iConsole.Viewers.FileEditorRegistry? fileEditors = null
         )
         : base([], themeService)
     {
@@ -199,7 +201,9 @@ public class TerminalMenuBar : iConsole.Controls.MenuBar
             markdownViewerDialog: markdownViewerDialog,
             yamlViewerDialog: yamlViewerDialog,
             tomlViewerDialog: tomlViewerDialog,
-            dbfViewerDialog: dbfViewerDialog));
+            dbfViewerDialog: dbfViewerDialog,
+            fileViewers: fileViewers,
+            fileEditors: fileEditors));
 
         AddMenuItem(new EditMenuItem(
             contentModelService,

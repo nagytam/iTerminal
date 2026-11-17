@@ -16,6 +16,7 @@ using iConsole.Sqlite;
 using iConsole.Xml;
 using iConsole.Xps;
 using iConsole.Interfaces;
+using iConsole.Viewers;
 using iTerminal.Core.Audio;
 using iTerminal.Core.Dialogs.Dotnet;
 using iTerminal.Core.Dialogs.Music;
@@ -47,8 +48,10 @@ public class ViewFileDialogCommand(
     iConsole.Dialogs.MarkdownViewerDialog? markdownViewerDialog = null,
     iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
     iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
-    iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null) : Command
+    iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
+    FileViewerRegistry? fileViewers = null) : Command
 {
+    private readonly FileViewerRegistry? _fileViewers = fileViewers;
     private readonly HarViewerDialog? _harViewerDialog = harViewerDialog;
     private readonly iConsole.Dialogs.MarkdownViewerDialog? _markdownViewerDialog = markdownViewerDialog;
     private readonly iConsole.Dialogs.YamlViewerDialog? _yamlViewerDialog = yamlViewerDialog;
@@ -87,7 +90,8 @@ public class ViewFileDialogCommand(
                 var model = _contentModelService.GetFocusedModel();
                 if (url is not null && model is not null && model.ExistsFile(url))
                 {
-                    return IsVideoFile(url) || IsImageFile(url) || IsMusicFile(url) || IsSupportedFileType(url.Extension);
+                    return IsVideoFile(url) || IsImageFile(url) || IsMusicFile(url) || IsSupportedFileType(url.Extension)
+                        || _fileViewers?.HasCandidate(url) == true;
                 }
             }
             catch
@@ -139,6 +143,12 @@ public class ViewFileDialogCommand(
         }
 
         var focusedFileUrl = _contentModelService.FocusedFileUrl;
+
+        // A registered viewer plug-in is offered the file first, so it can take over a format the built-in viewers below read.
+        if (focusedFileUrl is not null && await TryOpenWithPluginAsync(focusedFileUrl))
+        {
+            return;
+        }
 
         // Solution files open in the solution viewer (project list + dotnet build/test/run),
         // but only when they resolve to a real local file — dotnet can't act on a remote path.
@@ -358,6 +368,31 @@ public class ViewFileDialogCommand(
         }
 
         await ShowTextViewerAsync(focusedFileUrl);
+    }
+
+    /// <summary>
+    /// Offers the file to the registered viewer plug-ins in order. The first one that is a candidate and confirms the file
+    /// shows it; false when none does, and the built-in viewers take over.
+    /// </summary>
+    private async Task<bool> TryOpenWithPluginAsync(Url url)
+    {
+        if (_fileViewers is null)
+        {
+            return false;
+        }
+
+        foreach (IFileViewer viewer in _fileViewers.Handlers)
+        {
+            if (viewer.IsCandidate(url) && await viewer.CanOpenAsync(url))
+            {
+                await viewer.OpenAsync(url, new FileOpenHost(
+                    dialog => Control?.ShowDialogAsync(dialog) ?? Task.CompletedTask,
+                    ShowTextViewerAsync));
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>The generic text viewer: the file as text, through <see cref="FileViewerDialog"/>.</summary>

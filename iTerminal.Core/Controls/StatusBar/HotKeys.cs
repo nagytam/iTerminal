@@ -1,4 +1,4 @@
-using iConsole.Buffers;
+﻿using iConsole.Buffers;
 using iConsole.Commands;
 using iConsole.Controls.Buttons;
 using iConsole.Controls.StatusBar;
@@ -100,7 +100,9 @@ public class HotKeys : StatusBarItem
         IGitService? gitService = null,
         iTerminal.Core.Dialogs.Git.GitSyncDialog? gitSyncDialog = null,
         iConsole.Tasks.TaskManager? taskManager = null,
-        IPromptService? promptService = null)
+        IPromptService? promptService = null,
+        iConsole.Viewers.FileViewerRegistry? fileViewers = null,
+        iConsole.Viewers.FileEditorRegistry? fileEditors = null)
         : base(themeService)
     {
         ViewSize = new Size(1, 1);
@@ -119,8 +121,8 @@ public class HotKeys : StatusBarItem
             AddCommand(new VirtualMachineManagerDialogCommand(virtualMachineManagerDialog));
         }
         var screenManagerDialogCommand = new ScreenManagerDialogCommand(themeService);
-        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, sqliteViewerDialog: sqliteViewerDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog, markdownViewerDialog: markdownViewerDialog, yamlViewerDialog: yamlViewerDialog, tomlViewerDialog: tomlViewerDialog, dbfViewerDialog: dbfViewerDialog);
-        var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations);
+        var viewTextFileCommand = new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, sqliteViewerDialog: sqliteViewerDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog, markdownViewerDialog: markdownViewerDialog, yamlViewerDialog: yamlViewerDialog, tomlViewerDialog: tomlViewerDialog, dbfViewerDialog: dbfViewerDialog, fileViewers: fileViewers);
+        var editTextFileCommand = new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations, fileEditors);
         var createFolderDialogCommand = new CreateFolderDialogCommand(createFolderDialog, contentModelService);
         var createFileDialogCommand = new CreateFileDialogCommand(createFileDialog, contentModelService);
         var deleteDialogCommand = new DeleteDialogCommand(deleteDialog, contentModelService, notificationService);
@@ -632,7 +634,7 @@ public class HotKeys : StatusBarItem
     /// Fits the labels into <paramref name="budget"/> the way a reader can still use them, in this
     /// order: cut only the longest words, to a common length, keeping short words whole and the key
     /// ("F2-", "Ctrl-F5-") always; once that would leave words shorter than
-    /// <see cref="ReadableWordLength"/>, leave out the least important buttons instead (at most half
+    /// <see cref="ReadableWordLength"/>, leave out the least important buttons instead (keeping at least two
     /// of them); and only on a screen too narrow even for that, cut the remaining words further.
     /// A width of 0 means the button is left out.
     ///
@@ -689,10 +691,12 @@ public class HotKeys : StatusBarItem
             }
         }
 
-        // 2. Leave buttons out, the expendable ones first, keeping at least half of them.
+        // 2. Leave buttons out, the expendable ones first, keeping at least two. Below a readable word length a button goes
+        // before its word is cut further: at 60 columns seven keys with two-letter words ("[F5-Co][F6-Re][F7-Fi]") read as
+        // nothing, where four with whole words do.
         foreach (var index in DropOrder(titles))
         {
-            if (included.Count(i => i) <= (parts.Count + 1) / 2)
+            if (included.Count(i => i) <= 2)
             {
                 break;
             }

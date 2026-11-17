@@ -228,6 +228,34 @@ public class HotKeysTest
         Assert.AreEqual(0, widths[3], "F7, the rightmost of the rest, gives way instead");
     }
 
+    /// <summary>On a narrow row a button goes before a word is cut below readable: four keys with whole words, not seven with "Co" and "Re".</summary>
+    [Timeout(60_000)]
+    [TestMethod]
+    public void OnANarrowRowAButtonGoesBeforeItsWordIsCutBelowReadable()
+    {
+        string[] titles = ["F1-Help", "F2-Terminal", "F3-View", "F4-Edit", "F5-Copy", "F6-Rename", "F7-Find", "F8-Delete", "F9-Tasks", "F10-Quit", "F12-Screens"];
+        var naturals = titles.Select(t => t.Length + 2).ToList();
+
+        for (int budget = 40; budget <= 60; budget++)
+        {
+            var widths = HotKeys.FitTitlesToBudget(titles, naturals, budget);
+
+            Assert.IsTrue(widths.Sum() <= budget, $"budget {budget}: {string.Join(",", widths)}");
+            for (int i = 0; i < titles.Length; i++)
+            {
+                if (widths[i] == 0)
+                {
+                    continue;
+                }
+                int key = titles[i].IndexOf('-') + 1;
+                int word = titles[i].Length - key;
+                int shown = widths[i] - 2 - key;
+                Assert.IsTrue(shown >= Math.Min(4, word), $"budget {budget}: {titles[i]} keeps a readable word, was {widths[i]}");
+            }
+            Assert.IsTrue(widths.Count(w => w > 0) >= 2, $"budget {budget}: at least two buttons stay");
+        }
+    }
+
     [Timeout(60_000)]
     [TestMethod]
     public void OnATinyScreenTheKeysThatAreLeftAreKeptDownToALetter()

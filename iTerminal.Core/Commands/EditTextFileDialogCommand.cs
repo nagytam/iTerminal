@@ -1,20 +1,23 @@
 using iConsole.Data;
 using iConsole.Dialogs;
 using iConsole.Interfaces;
+using iConsole.Viewers;
 using iTerminal.Core.Services.FileAssociations;
 
 namespace iTerminal.Core.Commands;
 
 /// <summary>
 /// F4: the selected file in the editor — the one the user chose for files like it ("Edit with…",
-/// Ctrl+F4) when there is one, which can then be any kind of file, and the built-in text editor
-/// otherwise. The choice is made here rather than by a second command ahead of this one, so the
-/// panel, the hot key bar's button and the File menu's entry cannot disagree about what F4 does.
+/// Ctrl+F4) when there is one, which can then be any kind of file. Otherwise the first registered
+/// editor plug-in that takes the file, and the built-in text editor when none does. The choice is
+/// made here rather than by a second command ahead of this one, so the panel, the hot key bar's
+/// button and the File menu's entry cannot disagree about what F4 does.
 /// </summary>
 public class EditTextFileDialogCommand(
     TextFileEditorDialog textFileEditorDialog,
     IContentModelService contentModelService,
-    FileAssociationRunner? fileAssociations = null)
+    FileAssociationRunner? fileAssociations = null,
+    FileEditorRegistry? fileEditors = null)
     : ShowDialogCommand<TextFileEditorDialog>(textFileEditorDialog)
 {
     public override string Title => "Edit";
@@ -35,7 +38,7 @@ public class EditTextFileDialogCommand(
         if (url is not null && model is not null && model.ExistsFile(url))
         {
             var extension = url.Extension;
-            if (IsSupportedFileType(extension))
+            if (IsSupportedFileType(extension) || fileEditors?.HasCandidate(url) == true)
             {
                 return true;
             }
@@ -77,7 +80,20 @@ public class EditTextFileDialogCommand(
             return;
         }
 
-        await base.ExecuteAsync(args);
+        if (url is not null && fileEditors?.FirstCandidate(url) is { } plugin)
+        {
+            await plugin.OpenAsync(url, new FileOpenHost(
+                dialog => Control?.ShowDialogAsync(dialog) ?? Task.CompletedTask,
+                fallbackUrl =>
+                {
+                    textFileEditorDialog.Url = fallbackUrl;
+                    return Control?.ShowDialogAsync(textFileEditorDialog) ?? Task.CompletedTask;
+                }));
+        }
+        else
+        {
+            await base.ExecuteAsync(args);
+        }
 
         // The editor may have changed the file's size and date; the panel only notices on a re-read.
         try
