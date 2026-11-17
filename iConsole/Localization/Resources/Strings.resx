@@ -1299,7 +1299,7 @@
     <value>Menu navigation:</value>
   </data>
   <data name="Viewer.TitleHints" xml:space="preserve">
-    <value>  F2:Wrap{0}  F4:Hex  F5:Line  F8:Codepage</value>
+    <value>  F2:Wrap{0}  F4:Hex  F5:Line  F8:Codepage  Esc:close</value>
   </data>
   <data name="Viewer.Disassembling" xml:space="preserve">
     <value>Disassembling…</value>
@@ -1978,5 +1978,9 @@
   <data name="CmdTitle.77b9c680" xml:space="preserve">
     <value>Date pop-up</value>
     <comment>Date pop-up</comment>
+  </data>
+  <data name="Viewer.HexTitleHints" xml:space="preserve">
+    <value> [HEX]  F4:Text  F5:Offset  Esc:close</value>
+    <comment>The title hints of the viewer's hex dump: the way back to the text, the offset key and how to close.</comment>
   </data>
 </root>
