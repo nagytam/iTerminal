@@ -71,7 +71,9 @@ public class FilePanelFactory(
     iConsole.Dialogs.YamlViewerDialog? yamlViewerDialog = null,
     iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
     iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
-    Services.RenameUndoService? renameUndoService = null)
+    Services.RenameUndoService? renameUndoService = null,
+    iConsole.Viewers.FileViewerRegistry? fileViewers = null,
+    iConsole.Viewers.FileEditorRegistry? fileEditors = null)
 {
     private TaskManager _taskManager { get; set; } = taskManager;
 
@@ -101,6 +103,8 @@ public class FilePanelFactory(
             yamlViewerDialog: yamlViewerDialog,
             tomlViewerDialog: tomlViewerDialog,
             dbfViewerDialog: dbfViewerDialog,
+            fileViewers: fileViewers,
+            fileEditors: fileEditors,
             solutionViewerDialog: solutionViewerDialog,
             contentLenses: contentLenses,
             musicFileViewerDialog: musicFileViewerDialog,
