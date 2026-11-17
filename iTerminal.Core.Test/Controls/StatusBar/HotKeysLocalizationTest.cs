@@ -15,7 +15,7 @@ public class HotKeysLocalizationTest
     private sealed class TestHotKeys(ILocalizer localizer) : HotKeys(
         null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
         null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
-        NullSettingsService.Instance, null!, TestTheme(), localizer: localizer);
+        NullSettingsService.Instance, null!, TestTheme(), null!, null!, localizer: localizer);
 
     private static Localizer CreateLocalizer() =>
         new([new ResourceLocalizationSource(new ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(HotKeys).Assembly))]);

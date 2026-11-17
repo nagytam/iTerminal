@@ -10180,4 +10180,37 @@
   <data name="Compress.Hint.Rar" xml:space="preserve">
     <value>0 tárol, 1 a leggyorsabb, 5 a legkisebb</value>
   </data>
+  <data name="FolderSelector.Tab7" xml:space="preserve">
+    <value>7-SMB</value>
+  </data>
+  <data name="FolderSelector.Select.Smb" xml:space="preserve">
+    <value>A kurzor alatti gép megnyitása, vagy a kurzor alatti megosztásra ugrás.</value>
+  </data>
+  <data name="FolderSelector.Smb.Looking" xml:space="preserve">
+    <value> SMB-gépek keresése a helyi hálózaton…</value>
+  </data>
+  <data name="FolderSelector.Smb.Hosts" xml:space="preserve">
+    <value>SMB-gépek ({0})</value>
+  </data>
+  <data name="FolderSelector.Smb.Shares" xml:space="preserve">
+    <value>Megosztások itt: {0} ({1}) — Backspace: gépek</value>
+  </data>
+  <data name="FolderSelector.Smb.Scanning" xml:space="preserve">
+    <value>keresés…</value>
+  </data>
+  <data name="FolderSelector.Smb.NoShares" xml:space="preserve">
+    <value>A(z) {0} gépen bejelentkezés nélkül nem látszanak megosztások. Előbb mentsen egy kapcsolatot a hálózati böngészőben (Ctrl+N).</value>
+  </data>
+  <data name="FolderSelector.Smb.Saved" xml:space="preserve">
+    <value>mentett</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbBack" xml:space="preserve">
+    <value>Vissza a gép megosztásaiból a gépek listájához.</value>
+  </data>
+  <data name="FolderSelector.Hint.SmbRescan" xml:space="preserve">
+    <value>SMB-gépek keresése újra a hálózaton.</value>
+  </data>
+  <data name="CmdTitle.8cca504b" xml:space="preserve">
+    <value>SMB-gép vagy megosztás kiválasztása</value>
+  </data>
 </root>

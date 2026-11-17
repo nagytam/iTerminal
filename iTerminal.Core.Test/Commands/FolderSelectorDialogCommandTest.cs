@@ -24,6 +24,8 @@ public class FolderSelectorDialogCommandTest
             harness.SettingsService,
             harness.FrequentExecutionGuardService,
             harness.ThemeService,
+            harness.NetworkDiscoveryService,
+            harness.NetworkProfileService,
             helpDialog);
     }
 

@@ -47,6 +47,8 @@ public class FolderSelectorDialog : Dialog
         ISettingsService settingsService,
         IFrequentExecutionGuardService frequentExecutionGuardService,
         IThemeService themeService,
+        INetworkDiscoveryService networkDiscoveryService,
+        INetworkProfileService networkProfileService,
         HelpDialog? helpDialog = null)
         : base(nameof(FolderSelectorDialog), themeService)
     {
@@ -64,6 +66,7 @@ public class FolderSelectorDialog : Dialog
             new FolderSelectorFolderTreeTabPage(contentModelService, folderIndexModel, frequentExecutionGuardService, themeService),
             new FolderSelectorRemoteShellTabPage(contentModelService, beepService, dateTimeProviderService, settingsService, frequentExecutionGuardService, themeService),
             new FolderSelectorPathTabPage(contentModelService, folderHistoryService, beepService, dateTimeProviderService, settingsService, themeService),
+            new FolderSelectorSmbTabPage(networkDiscoveryService, networkProfileService, contentModelService, themeService),
         ];
 
         foreach (var tabPage in TabPages)
@@ -151,7 +154,7 @@ public class FolderSelectorDialog : Dialog
         yield return ("Enter", iConsole.Localization.UiText.Get("FolderSelector.Hint.Enter", "Go to the folder the focused page has under its cursor, and close."));
         yield return ("Esc", iConsole.Localization.UiText.Get("FolderSelector.Hint.Esc", "Dismiss the suggestion list if one is up, otherwise close without navigating."));
         yield return ("Ctrl+Up / Ctrl+Down", iConsole.Localization.UiText.Get("FolderSelector.Hint.PageSwitch", "Move to the previous / next page of the selector."));
-        yield return ("Ctrl+0 … Ctrl+6", iConsole.Localization.UiText.Get("FolderSelector.Hint.JumpPage", "Jump straight to a page by the number in its name, cursor on its first control."));
+        yield return ("Ctrl+0 … Ctrl+7",iConsole.Localization.UiText.Get("FolderSelector.Hint.JumpPage", "Jump straight to a page by the number in its name, cursor on its first control."));
         yield return ("Tab / Shift+Tab", iConsole.Localization.UiText.Get("FolderSelector.Hint.TabFocusedPage", "Move between the focused page's list and its buttons."));
     }
 }

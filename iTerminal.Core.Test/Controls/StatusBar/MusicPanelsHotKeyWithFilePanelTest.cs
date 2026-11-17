@@ -96,7 +96,7 @@ public class MusicPanelsHotKeyWithFilePanelTest
         var hotKeys = new iTerminal.Core.Controls.StatusBar.HotKeys(
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
             null!, null!, null!, null!, null!, null!, null!, null!, null!, null!,
-            contentModelService, folderHistory, null!, null!, null!, null!, settingsService, null!, themeService);
+            contentModelService, folderHistory, null!, null!, null!, null!, settingsService, null!, themeService, Mock.Of<INetworkDiscoveryService>(), Mock.Of<INetworkProfileService>());
         var statusBar = new iTerminal.Core.Controls.StatusBar.TerminalStatusBar(
             new iConsole.Controls.PopUpWindows.DatePopUpWindow(themeService), hotKeys, themeService);
 

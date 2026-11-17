@@ -19,6 +19,8 @@ public class FolderSelectorDialogCommand(
     ISettingsService settingsService,
     IFrequentExecutionGuardService frequentExecutionGuardService,
     IThemeService themeService,
+    INetworkDiscoveryService networkDiscoveryService,
+    INetworkProfileService networkProfileService,
     HelpDialog? helpDialog = null
     )
     : Command
@@ -43,6 +45,8 @@ public class FolderSelectorDialogCommand(
                 settingsService,
                 frequentExecutionGuardService,
                 themeService,
+                networkDiscoveryService,
+                networkProfileService,
                 helpDialog);
             await Control.ShowDialogAsync(dialog);
         }
