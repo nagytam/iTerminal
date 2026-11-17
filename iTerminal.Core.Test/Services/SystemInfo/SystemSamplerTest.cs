@@ -2,6 +2,7 @@ using System.Diagnostics;
 using iConsole.Services;
 using iTerminal.Core.Services.SystemInfo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Serilog;
 
 namespace iTerminal.Core.Services.SystemInfo.Test;
 
@@ -182,7 +183,7 @@ public class SystemSamplerTest
     // The fake clock tells the sample interval apart from the probe budgets by their length, so no budget may equal the
     // interval: the identity budget is 750 ms here, not one second.
     private SystemSampler Create(TimeSpan liveBudget) =>
-        new(new FakeProbeFactory(_probes), _focus, _clock, _time, Interval, liveBudget, TimeSpan.FromMilliseconds(750));
+        new(new FakeProbeFactory(_probes), _focus, _clock, _time, Log.Logger, Interval, liveBudget, TimeSpan.FromMilliseconds(750));
 
     /// <summary>Waits for the sampler to publish a snapshot other than <paramref name="previous"/>.</summary>
     private async Task<SystemSnapshot> NextSnapshotAsync(SystemSnapshot? previous)

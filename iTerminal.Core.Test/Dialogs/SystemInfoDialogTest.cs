@@ -100,6 +100,40 @@ public class SystemInfoDialogTest
 
     [Timeout(60_000)]
     [TestMethod]
+    public async Task AFailedSample_ShowsAStaleNotice_UntilTheNextGoodSample()
+    {
+        var sampler = new FakeSampler { Current = Sample() };
+        var dialog = new SystemInfoDialog(TestTheme(), sampler, Localizer("en"));
+        await ShowAsync(dialog);
+        dialog.OnIdle();
+        Assert.IsFalse(dialog.LinesForTest.Any(line => line.Contains("out of date")));
+
+        sampler.PassFailing = true;
+        dialog.OnIdle();
+        Assert.IsTrue(dialog.LinesForTest.Any(line => line.Contains("out of date")), "the values may be old, and the report says so");
+
+        sampler.PassFailing = false;
+        dialog.OnIdle();
+        Assert.IsFalse(dialog.LinesForTest.Any(line => line.Contains("out of date")));
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task PassesFailingBeforeAnySnapshot_ShowTheNoticeUnderThePlaceholder()
+    {
+        var sampler = new FakeSampler { PassFailing = true };
+        var dialog = new SystemInfoDialog(TestTheme(), sampler, Localizer("en"));
+        await ShowAsync(dialog);
+
+        dialog.OnIdle();
+
+        var lines = dialog.LinesForTest;
+        CollectionAssert.Contains(lines.ToList(), SystemInfoDialog.CollectingText);
+        Assert.IsTrue(lines.Any(line => line.Contains("out of date")), "the failure is shown, not left as 'collecting' for good");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
     public async Task WithoutASnapshot_TheDialogKeepsItsPlaceholder()
     {
         var dialog = new SystemInfoDialog(TestTheme(), new FakeSampler(), Localizer("en"));
@@ -167,6 +201,8 @@ public class SystemInfoDialogTest
             }
             set => _current = value;
         }
+
+        public bool PassFailing { get; set; }
 
         public int Watching { get; private set; }
 

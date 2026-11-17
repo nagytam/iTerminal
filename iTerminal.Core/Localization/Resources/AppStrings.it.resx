@@ -647,6 +647,12 @@
   <data name="SysInfo.Io.Sent" xml:space="preserve">
     <value>Inviato {0}</value>
   </data>
+  <data name="SysInfo.Collecting" xml:space="preserve">
+    <value>Raccolta delle informazioni di sistema…</value>
+  </data>
+  <data name="SysInfo.Stale" xml:space="preserve">
+    <value>L'ultima misurazione non è riuscita; i valori mostrati potrebbero non essere aggiornati.</value>
+  </data>
   <data name="Dialog.SystemSettings" xml:space="preserve">
     <value>Impostazioni di sistema</value>
   </data>
@@ -1897,9 +1903,6 @@
   </data>
   <data name="Field.Key" xml:space="preserve">
     <value>Chiave</value>
-  </data>
-  <data name="Field.MemoryThisProcess" xml:space="preserve">
-    <value>Memoria (questo processo)</value>
   </data>
   <data name="Field.Engine" xml:space="preserve">
     <value>Motore</value>

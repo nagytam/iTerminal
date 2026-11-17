@@ -647,6 +647,12 @@
   <data name="SysInfo.Io.Sent" xml:space="preserve">
     <value>Küldve {0}</value>
   </data>
+  <data name="SysInfo.Collecting" xml:space="preserve">
+    <value>Rendszerinformációk gyűjtése…</value>
+  </data>
+  <data name="SysInfo.Stale" xml:space="preserve">
+    <value>Az utolsó mérés sikertelen volt; a megjelenített értékek elavultak lehetnek.</value>
+  </data>
   <data name="Dialog.SystemSettings" xml:space="preserve">
     <value>Rendszerbeállítások</value>
   </data>
@@ -1897,9 +1903,6 @@
   </data>
   <data name="Field.Key" xml:space="preserve">
     <value>Kulcs</value>
-  </data>
-  <data name="Field.MemoryThisProcess" xml:space="preserve">
-    <value>Memória (ez a folyamat)</value>
   </data>
   <data name="Field.Engine" xml:space="preserve">
     <value>Motor</value>

@@ -647,6 +647,12 @@
   <data name="SysInfo.Io.Sent" xml:space="preserve">
     <value>Sent {0}</value>
   </data>
+  <data name="SysInfo.Collecting" xml:space="preserve">
+    <value>Collecting system information…</value>
+  </data>
+  <data name="SysInfo.Stale" xml:space="preserve">
+    <value>The last sample failed; the values shown may be out of date.</value>
+  </data>
   <data name="Dialog.SystemSettings" xml:space="preserve">
     <value>System Settings</value>
   </data>
@@ -1897,9 +1903,6 @@
   </data>
   <data name="Field.Key" xml:space="preserve">
     <value>Key</value>
-  </data>
-  <data name="Field.MemoryThisProcess" xml:space="preserve">
-    <value>Memory (this process)</value>
   </data>
   <data name="Field.Engine" xml:space="preserve">
     <value>Engine</value>
