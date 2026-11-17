@@ -1,4 +1,4 @@
-using iConsole.Commands;
+﻿using iConsole.Commands;
 using iConsole.Controls;
 using iConsole.Dialogs;
 using iConsole.Interfaces;
@@ -57,14 +57,16 @@ public class FileMenuItem : MenuItem
         iConsole.Dialogs.TomlViewerDialog? tomlViewerDialog = null,
         iConsole.Dialogs.DbfViewerDialog? dbfViewerDialog = null,
         iConsole.Tasks.TaskManager? taskManager = null,
-        iConsole.Services.IPromptService? promptService = null)
+        iConsole.Services.IPromptService? promptService = null,
+        iConsole.Viewers.FileViewerRegistry? fileViewers = null,
+        iConsole.Viewers.FileEditorRegistry? fileEditors = null)
     : base("File", null, [], themeService)
     {
         HotKeyChar = 'F';
 
-        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog, markdownViewerDialog: markdownViewerDialog, yamlViewerDialog: yamlViewerDialog, tomlViewerDialog: tomlViewerDialog, dbfViewerDialog: dbfViewerDialog), [], themeService));
+        AddMenuItem(new MenuItem("View\tF3",   new ViewFileDialogCommand(fileViewerDialog, contentModelService, solutionViewerDialog, musicFileViewerDialog, videoFileViewerDialog, imageFileViewerDialog, xmlViewerDialog, jsonViewerDialog, csvViewerDialog, webBrowserDialog, hdfViewerDialog: hdfViewerDialog, executableAnalysisDialog: executableAnalysisDialog, xpsViewerDialog: xpsViewerDialog, certificateViewerDialog: certificateViewerDialog, harViewerDialog: harViewerDialog, parquetViewerDialog: parquetViewerDialog, markdownViewerDialog: markdownViewerDialog, yamlViewerDialog: yamlViewerDialog, tomlViewerDialog: tomlViewerDialog, dbfViewerDialog: dbfViewerDialog, fileViewers: fileViewers), [], themeService));
         AddMenuItem(new MenuItem("Quick View\tCtrl+F3", new iTerminal.Core.Commands.Drives.TogglePreviewCommand(contentModelService), [], themeService));
-        AddMenuItem(new MenuItem("Edit\tF4",   new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations), [], themeService));
+        AddMenuItem(new MenuItem("Edit\tF4",   new EditTextFileDialogCommand(textFileEditorDialog, contentModelService, fileAssociations, fileEditors), [], themeService));
         if (openWithDialogFactory is not null)
         {
             AddMenuItem(new MenuItem("Open With…\tShift+F3", new OpenWithDialogCommand(openWithDialogFactory(), contentModelService, iTerminal.Core.Services.FileAssociations.FileAssociationKind.Open), [], themeService));

@@ -570,3 +570,12 @@ Ctrl+P (also File > Print…, the right-click menu on a local file and the comma
 - **It never covers a shell.** It does not start while `ConsoleOwnership.IsLent` (Ctrl+O, an editor, ssh): the child has to see the keys and paint its own screen.
 - **Effects** implement `IScreenSaverEffect` and paint into a `ScreenSaverCanvas` that is cleared before each frame. A canvas of a new size rebuilds the effect's state.
 - **Tests:** `ScreenSaverOverlayTest` (start after the idle time, wake on a key, hover absorbed, no start while lent, drawing), `ScreenSaverEffectsTest`, `ScreenSaverSettingsTest`, `UserActivityServiceTest` and the activity cases in `TerminalInputConsumerJobTest`.
+
+### Viewer and editor plug-ins (`iConsole/Viewers/`, F3 and F4)
+F3 and F4 offer the file to plug-ins before the built-in code. `IFileViewer` and `IFileEditor` both extend `IFileHandler`: `Priority` (higher first, the built-ins use 0) and `IsCandidate(Url)`, which judges the name or path only, because it runs on the key path and in `CanExecute`. Register an implementation in the container (`iTerminalApplicationBuilderExtension`) and it is picked up with no other wiring; `FileViewerRegistry` and `FileEditorRegistry` order them by priority, keeping registration order within a priority.
+
+- **F3** (`ViewFileDialogCommand`): the first viewer that is a candidate and whose `CanOpenAsync` says yes gets `OpenAsync`. `CanOpenAsync` may read the file's header, so it runs on a worker thread. When no plug-in takes the file, the built-in chain runs as before, ending in the text viewer. A plug-in makes F3 available for a file the built-in viewers refuse (`CanExecute`).
+- **F4** (`EditTextFileDialogCommand`): the "Edit with…" association still comes first. Then the first editor candidate, then the built-in text editor.
+- **Dialogs go through `IFileOpenHost`**, never through a control: `ShowDialogAsync` shows the dialog on the screen that asked, and `ShowTextViewerAsync` is the fallback for a handler that only finds out after it has started (as the certificate viewer does).
+- The built-in viewers are still the hand-written chain in `ViewFileDialogCommand`, not plug-ins. Moving them behind `IFileViewer` is the follow-up; the registry and the dispatch are already in place for it.
+- **Tests:** `FileHandlerRegistryTest` (ordering, candidates, the host) and `FilePluginDispatchTest` (F3 and F4 offering, fall-through, `CanExecute`).
