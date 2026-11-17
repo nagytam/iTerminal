@@ -1959,4 +1959,8 @@
     <value>Die fokussierte Schaltfläche drücken oder das fokussierte Kontrollkästchen an- oder abwählen.</value>
     <comment>Die fokussierte Schaltfläche drücken oder das fokussierte Kontrollkästchen an- oder abwählen.</comment>
   </data>
+  <data name="CmdTitle.77b9c680" xml:space="preserve">
+    <value>Datums-Popup</value>
+    <comment>Date pop-up</comment>
+  </data>
 </root>

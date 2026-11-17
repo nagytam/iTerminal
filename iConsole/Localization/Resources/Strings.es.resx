@@ -1959,4 +1959,8 @@
     <value>Pulsa el botón enfocado o marca o desmarca la casilla enfocada.</value>
     <comment>Pulsa el botón enfocado o marca o desmarca la casilla enfocada.</comment>
   </data>
+  <data name="CmdTitle.77b9c680" xml:space="preserve">
+    <value>Ventana de fecha</value>
+    <comment>Date pop-up</comment>
+  </data>
 </root>

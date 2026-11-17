@@ -1959,4 +1959,8 @@
     <value>Appuie sur le bouton ayant le focus, ou coche ou décoche la case ayant le focus.</value>
     <comment>Appuie sur le bouton ayant le focus, ou coche ou décoche la case ayant le focus.</comment>
   </data>
+  <data name="CmdTitle.77b9c680" xml:space="preserve">
+    <value>Fenêtre de date</value>
+    <comment>Date pop-up</comment>
+  </data>
 </root>

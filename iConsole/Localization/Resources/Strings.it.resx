@@ -1959,4 +1959,8 @@
     <value>Premi il pulsante a fuoco, o spunta o togli la spunta alla casella a fuoco.</value>
     <comment>Premi il pulsante a fuoco, o spunta o togli la spunta alla casella a fuoco.</comment>
   </data>
+  <data name="CmdTitle.77b9c680" xml:space="preserve">
+    <value>Finestra della data</value>
+    <comment>Date pop-up</comment>
+  </data>
 </root>
