@@ -1304,7 +1304,7 @@
     <value>F2-Speichern</value>
   </data>
   <data name="Key.Replace" xml:space="preserve">
-    <value>^R-Ersetzen</value>
+    <value>Ctrl-R-Ersetzen</value>
   </data>
   <data name="Key.Writable" xml:space="preserve">
     <value>F6-Schreibb.</value>

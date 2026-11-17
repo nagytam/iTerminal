@@ -164,7 +164,7 @@ public class EditorStatusBarTest
 
         statusBar.Draw(buffer);
 
-        // "^R-Replace" is 10 columns; with its brackets the button is 12. It used to be 13, which drew a stray space: "[^R-Replace ]".
-        Assert.IsTrue(buffer.ContentAsString.Contains("[^R-Replace]"), buffer.ContentAsString);
+        // The label names the key the way the find buttons do ("Ctrl-F3-FindPrev"), not with a caret ("^R").
+        Assert.IsTrue(buffer.ContentAsString.Contains("[Ctrl-R-Replace]"), buffer.ContentAsString);
     }
 }

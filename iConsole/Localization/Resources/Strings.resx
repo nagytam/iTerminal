@@ -1320,7 +1320,7 @@
     <value>F2-Save</value>
   </data>
   <data name="Key.Replace" xml:space="preserve">
-    <value>^R-Replace</value>
+    <value>Ctrl-R-Replace</value>
   </data>
   <data name="Key.Writable" xml:space="preserve">
     <value>F6-Writable</value>

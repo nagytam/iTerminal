@@ -1304,7 +1304,7 @@
     <value>F2-Mentés</value>
   </data>
   <data name="Key.Replace" xml:space="preserve">
-    <value>^R-Csere</value>
+    <value>Ctrl-R-Csere</value>
   </data>
   <data name="Key.Writable" xml:space="preserve">
     <value>F6-Írható</value>
