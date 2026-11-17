@@ -632,7 +632,7 @@ public class HotKeys : StatusBarItem
     /// Fits the labels into <paramref name="budget"/> the way a reader can still use them, in this
     /// order: cut only the longest words, to a common length, keeping short words whole and the key
     /// ("F2-", "Ctrl-F5-") always; once that would leave words shorter than
-    /// <see cref="ReadableWordLength"/>, leave out the least important buttons instead (at most half
+    /// <see cref="ReadableWordLength"/>, leave out the least important buttons instead (keeping at least two
     /// of them); and only on a screen too narrow even for that, cut the remaining words further.
     /// A width of 0 means the button is left out.
     ///
