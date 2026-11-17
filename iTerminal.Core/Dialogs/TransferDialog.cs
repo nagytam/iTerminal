@@ -148,30 +148,30 @@ public abstract class TransferDialog : FormDialog
         AddControl(_cancelButton);
     }
 
-    /// <summary>The operation's name as a person reads it: the dialogs are told "Copy" or "Move".</summary>
-    private static string OperationText(string operationName) => operationName switch
-    {
-        "Copy" => UiText.Get("Transfer.OpCopy", "Copy"),
-        "Move" => UiText.Get("Transfer.OpMove", "Move"),
-        _ => operationName,
-    };
-
-    private static string ItemsTitle(string operationName, int count) => operationName switch
-    {
-        "Copy" => string.Format(UiText.Get("Transfer.TitleCopyItems", "Copy {0} items"), count),
-        "Move" => string.Format(UiText.Get("Transfer.TitleMoveItems", "Move {0} items"), count),
-        _ => $"{operationName} {count} items",
-    };
-
-    private static string KindTitle(string operationName, bool file) => (operationName, file) switch
-    {
-        ("Copy", true) => UiText.Get("Transfer.TitleCopyFile", "Copy file"),
-        ("Copy", false) => UiText.Get("Transfer.TitleCopyFolder", "Copy folder"),
-        ("Move", true) => UiText.Get("Transfer.TitleMoveFile", "Move file"),
-        ("Move", false) => UiText.Get("Transfer.TitleMoveFolder", "Move folder"),
-        _ => $"{operationName} {(file ? "file" : "folder")}",
-    };
-
+    /// <summary>The operation's name as a person reads it: the dialogs are told "Copy" or "Move".</summary>
+    private static string OperationText(string operationName) => operationName switch
+    {
+        "Copy" => UiText.Get("Transfer.OpCopy", "Copy"),
+        "Move" => UiText.Get("Transfer.OpMove", "Move"),
+        _ => operationName,
+    };
+
+    private static string ItemsTitle(string operationName, int count) => operationName switch
+    {
+        "Copy" => string.Format(UiText.Get("Transfer.TitleCopyItems", "Copy {0} items"), count),
+        "Move" => string.Format(UiText.Get("Transfer.TitleMoveItems", "Move {0} items"), count),
+        _ => $"{operationName} {count} items",
+    };
+
+    private static string KindTitle(string operationName, bool file) => (operationName, file) switch
+    {
+        ("Copy", true) => UiText.Get("Transfer.TitleCopyFile", "Copy file"),
+        ("Copy", false) => UiText.Get("Transfer.TitleCopyFolder", "Copy folder"),
+        ("Move", true) => UiText.Get("Transfer.TitleMoveFile", "Move file"),
+        ("Move", false) => UiText.Get("Transfer.TitleMoveFolder", "Move folder"),
+        _ => $"{operationName} {(file ? "file" : "folder")}",
+    };
+
     public override async Task OnInitializeAsync()
     {
         BaseUrl = _contentModelService.Url;
@@ -185,7 +185,7 @@ public abstract class TransferDialog : FormDialog
         SourceUrl = url;
         SourceUrls = sources.Count > 0 ? sources : [url];
         TargetUrl = IsMultiple ? new Url(targetFolder!) : new Url(targetFolder!).Combine(iTerminal.Core.Commands.FocusedEntry.NameOf(url));
-        TextBoxTarget.Text = TargetUrl.FullUrl;
+        TextBoxTarget.Text = DisplayTextOf(TargetUrl);
         TextBoxTarget.ScrollableModel.Reset();
         TextBoxTarget.ScrollableModel.ScrollableSize = new Size(TextBoxTarget.Text.Length, 1);
         TextBoxTarget.ScrollableModel.ViewSize = TextBoxTarget.ViewSize;
@@ -259,7 +259,7 @@ public abstract class TransferDialog : FormDialog
         string target;
         try
         {
-            target = TargetUrl?.FullUrl ?? string.Empty;
+            target = TargetUrl is null ? string.Empty : DisplayTextOf(TargetUrl);
         }
         catch
         {
@@ -275,6 +275,13 @@ public abstract class TransferDialog : FormDialog
     }
 
     internal string TargetPreviewForTest => _labelTarget.Text;
+
+    /// <summary>
+    /// A destination as the user reads it. A local one is shown as its path, as the source above it is; the file:// prefix
+    /// stays for remote and archive destinations, whose path alone does not say where they are.
+    /// </summary>
+    internal static string DisplayTextOf(Url url) =>
+        url.UrlScheme == "file://" ? url.Path : url.FullUrl;
 
     internal string SourceLabelForTest => _labelSource.Text;
 
