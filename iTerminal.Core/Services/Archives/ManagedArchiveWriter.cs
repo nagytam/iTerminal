@@ -8,7 +8,8 @@ using System.Text;
 namespace iTerminal.Core.Services.Archives;
 
 /// <summary>
-/// ZIP, TAR, TAR.GZ and TAR.BZ2, written in-process with SharpZipLib.
+/// ZIP, TAR, TAR.GZ and TAR.BZ2, written in-process with SharpZipLib, and the single-file GZIP and
+/// BZIP2 streams (<see cref="WriteSingleStreamAsync"/>, which replaces its target rather than adding to it).
 ///
 /// <para>SharpZipLib rather than <c>System.IO.Compression</c> for one reason: the BCL cannot write
 /// an encrypted ZIP. SharpZipLib writes both AES-256 and the old ZipCrypto, and its TAR and BZip2
@@ -111,6 +112,62 @@ public static class ManagedArchiveWriter
 
             File.Move(temp, archivePath, overwrite: true);
             return new CompressionResult(added, kept, skipped);
+        }
+        catch
+        {
+            TryDelete(temp);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// GZIP and BZIP2 hold one file, compressed as a single stream. Nothing is read from an existing
+    /// target: a compressed stream cannot take new entries, so the new file replaces it. It is written
+    /// to a temporary sibling and moved over the target only once complete.
+    /// </summary>
+    public static async Task<CompressionResult> WriteSingleStreamAsync(
+        string archivePath,
+        IReadOnlyList<ArchiveItem> items,
+        CompressionOptions options,
+        IProgress<ArchiveProgress>? progress,
+        CancellationToken cancellationToken)
+    {
+        if (items.Count != 1 || items[0].IsFolder)
+        {
+            throw new NotSupportedException($"{options.Format.Name} holds one file.");
+        }
+
+        var item = items[0];
+        var folder = Path.GetDirectoryName(Path.GetFullPath(archivePath))!;
+        var temp = Path.Combine(folder, $".{Path.GetFileName(archivePath)}.{Guid.NewGuid():N}.tmp");
+        var tracker = new ProgressTracker(items, progress);
+        try
+        {
+            await using (var output = new FileStream(temp, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 81920, useAsync: false))
+            {
+                GZipOutputStream? gzip = null;
+                BZip2OutputStream? bzip2 = null;
+                if (options.Format == ArchiveFormat.Gzip)
+                {
+                    gzip = new GZipOutputStream(output) { IsStreamOwner = false };
+                    gzip.SetLevel(Math.Clamp(options.Level, 1, 9));
+                }
+                else
+                {
+                    bzip2 = new BZip2OutputStream(output, Math.Clamp(options.Level, 1, 9)) { IsStreamOwner = false };
+                }
+
+                Stream compressor = (Stream?)gzip ?? bzip2!;
+                tracker.Start(item);
+                await item.WriteToAsync(new ProgressStream(compressor, tracker.BytesOf(item)), cancellationToken);
+
+                // Closing finishes the stream (the gzip footer, or bzip2's last block) and leaves the output open.
+                compressor.Close();
+                tracker.Finish(item);
+            }
+
+            File.Move(temp, archivePath, overwrite: true);
+            return new CompressionResult(1, 0, 0);
         }
         catch
         {

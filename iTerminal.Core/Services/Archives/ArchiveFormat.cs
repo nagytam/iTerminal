@@ -18,6 +18,12 @@ public enum ArchiveWriterKind
 
     /// <summary>Written by the 7-Zip command-line tool, which has to be installed.</summary>
     SevenZip,
+
+    /// <summary>A single compressed file (GZIP, BZIP2), written in-process with SharpZipLib. Replaces the target.</summary>
+    SingleStream,
+
+    /// <summary>A compressed stream (XZ, TAR.XZ) written by the 7-Zip command-line tool, which has to be installed. Replaces the target.</summary>
+    SevenZipStream,
 }
 
 /// <summary>
@@ -32,6 +38,8 @@ public enum ArchiveWriterKind
 /// <param name="LevelHint">What the levels mean, for the dialog's hint line.</param>
 /// <param name="Encryptions">The ciphers a password can use; empty when the format takes no password.</param>
 /// <param name="CanEncryptNames">Whether the listing itself can be hidden behind the password (7z's header encryption).</param>
+/// <param name="OneFileOnly">A single compressed file: exactly one item, and no folder, can go into it.</param>
+/// <param name="AddsToExisting">Whether writing to an existing archive adds to it. False means the existing file is replaced.</param>
 public sealed record ArchiveFormat(
     string Name,
     IReadOnlyList<string> Extensions,
@@ -41,7 +49,9 @@ public sealed record ArchiveFormat(
     int DefaultLevel,
     string LevelHint,
     IReadOnlyList<ArchiveEncryption> Encryptions,
-    bool CanEncryptNames)
+    bool CanEncryptNames,
+    bool OneFileOnly = false,
+    bool AddsToExisting = true)
 {
     public string Extension => Extensions[0];
 
@@ -74,8 +84,32 @@ public sealed record ArchiveFormat(
         "TAR does not compress",
         [], CanEncryptNames: false);
 
+    /// <summary>A single file compressed with gzip. Holds exactly one file; a new file replaces an old one.</summary>
+    public static readonly ArchiveFormat Gzip = new(
+        "GZIP", [".gz"], ArchiveWriterKind.SingleStream, 1, 9, 6,
+        "1 is fastest, 9 is smallest",
+        [], CanEncryptNames: false, OneFileOnly: true, AddsToExisting: false);
+
+    /// <summary>A single file compressed with bzip2. Holds exactly one file; a new file replaces an old one.</summary>
+    public static readonly ArchiveFormat Bzip2 = new(
+        "BZIP2", [".bz2"], ArchiveWriterKind.SingleStream, 1, 9, 9,
+        "1 is fastest, 9 is smallest",
+        [], CanEncryptNames: false, OneFileOnly: true, AddsToExisting: false);
+
+    /// <summary>A single file compressed with XZ, by 7-Zip. Holds exactly one file; a new file replaces an old one.</summary>
+    public static readonly ArchiveFormat Xz = new(
+        "XZ", [".xz"], ArchiveWriterKind.SevenZipStream, 1, 9, 6,
+        "1 is fastest, 9 is smallest",
+        [], CanEncryptNames: false, OneFileOnly: true, AddsToExisting: false);
+
+    /// <summary>A TAR compressed with XZ, by 7-Zip. Replaces an old one: a compressed stream cannot take new entries.</summary>
+    public static readonly ArchiveFormat TarXz = new(
+        "TAR.XZ", [".tar.xz", ".txz"], ArchiveWriterKind.SevenZipStream, 1, 9, 6,
+        "1 is fastest, 9 is smallest",
+        [], CanEncryptNames: false, AddsToExisting: false);
+
     /// <summary>Every format the app can write, the default first.</summary>
-    public static IReadOnlyList<ArchiveFormat> All { get; } = [Zip, SevenZip, TarGz, TarBz2, Tar];
+    public static IReadOnlyList<ArchiveFormat> All { get; } = [Zip, SevenZip, TarGz, TarBz2, Tar, TarXz, Gzip, Bzip2, Xz];
 
     /// <summary>
     /// The format a file name says it is, or null. Longest ending first, so <c>x.tar.gz</c> is a
