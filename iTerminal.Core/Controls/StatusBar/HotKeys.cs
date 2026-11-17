@@ -632,7 +632,7 @@ public class HotKeys : StatusBarItem
     /// Fits the labels into <paramref name="budget"/> the way a reader can still use them, in this
     /// order: cut only the longest words, to a common length, keeping short words whole and the key
     /// ("F2-", "Ctrl-F5-") always; once that would leave words shorter than
-    /// <see cref="ReadableWordLength"/>, leave out the least important buttons instead (at most half
+    /// <see cref="ReadableWordLength"/>, leave out the least important buttons instead (keeping at least two
     /// of them); and only on a screen too narrow even for that, cut the remaining words further.
     /// A width of 0 means the button is left out.
     ///
@@ -689,10 +689,12 @@ public class HotKeys : StatusBarItem
             }
         }
 
-        // 2. Leave buttons out, the expendable ones first, keeping at least half of them.
+        // 2. Leave buttons out, the expendable ones first, keeping at least two. Below a readable word length a button goes
+        // before its word is cut further: at 60 columns seven keys with two-letter words ("[F5-Co][F6-Re][F7-Fi]") read as
+        // nothing, where four with whole words do.
         foreach (var index in DropOrder(titles))
         {
-            if (included.Count(i => i) <= (parts.Count + 1) / 2)
+            if (included.Count(i => i) <= 2)
             {
                 break;
             }
