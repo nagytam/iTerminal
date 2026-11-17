@@ -4508,6 +4508,15 @@
   <data name="Update.ClosesDuring" xml:space="preserve">
     <value>iTerminal si chiude mentre il programma di installazione è in esecuzione.</value>
   </data>
+  <data name="Update.NoPortableArchive" xml:space="preserve">
+    <value>Questa versione non ha ancora un archivio portatile.</value>
+  </data>
+  <data name="Update.ClosesDuringPortable" xml:space="preserve">
+    <value>iTerminal si chiude mentre i suoi file vengono sostituiti, poi si riavvia.</value>
+  </data>
+  <data name="Update.PortableDescription" xml:space="preserve">
+    <value>Scarica la nuova versione e sostituisci con essa questa copia di iTerminal.</value>
+  </data>
   <data name="Update.DownloadFrom" xml:space="preserve">
     <value>Scaricala da {0}</value>
   </data>
@@ -8964,6 +8973,15 @@
   </data>
   <data name="Form.To" xml:space="preserve">
     <value>A</value>
+  </data>
+  <data name="About.Release" xml:space="preserve">
+    <value>Edizione</value>
+  </data>
+  <data name="About.ReleasePackage" xml:space="preserve">
+    <value>Pacchetto</value>
+  </data>
+  <data name="About.ReleasePortable" xml:space="preserve">
+    <value>Portatile</value>
   </data>
   <data name="About.Version" xml:space="preserve">
     <value>Versione</value>

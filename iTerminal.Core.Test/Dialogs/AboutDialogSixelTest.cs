@@ -32,7 +32,7 @@ public class AboutDialogSixelTest
         Assert.IsNotNull(overlay.Current);
         Assert.AreEqual(7, overlay.Current.Rows);
         Assert.AreEqual(14, overlay.Current.Columns, "7 rows of 20 pixels, square, in cells of 10 pixels");
-        Assert.AreEqual(23, (int)dialog.ViewSize.Height, "the text makes room for the emblem, as on the splash");
+        Assert.AreEqual(24, (int)dialog.ViewSize.Height, "the text makes room for the emblem, as on the splash");
     }
 
     [Timeout(60_000)]
@@ -62,7 +62,7 @@ public class AboutDialogSixelTest
         Render(dialog);
 
         Assert.IsNull(overlay.Current);
-        Assert.AreEqual(17, (int)dialog.ViewSize.Height);
+        Assert.AreEqual(18, (int)dialog.ViewSize.Height); // one row more than before: the Release line
     }
 
     [Timeout(60_000)]

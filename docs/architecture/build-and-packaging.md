@@ -15,6 +15,9 @@ A WiX Toolset 5 project (`WixToolset.Sdk` from NuGet — nothing to install on t
 - Most of the size is the .NET runtime. The Playwright driver is not in the package: the app downloads it on first start (see *Runtime dependencies*).
 - **To check an MSI without installing it**, extract it: `msiexec /a <msi> /qn TARGETDIR=<short path>` — a short path, since Windows Installer refuses paths over 260 characters and the Playwright files are deep. The ICE60 warnings in the build are about four font-like files without a language and are harmless.
 
+### The Windows portable archive (`release.yml`, not a project)
+`iTerminal-<v>-x64-portable.zip` is the app without setup: the same self-contained `dotnet publish -r win-x64` as the MSI, into a `portable` folder, plus an empty `iTerminal.portable` marker, zipped with `ZipFile.CreateFromDirectory` (forward slashes, no wrapping folder) into `iTerminal.Installer/bin/Release` so the Windows job uploads it with the MSI. The marker is what makes a copy portable: the app reads it to pick the archive for its updates and to show "Portable" in About (see *Runtime dependencies*, Self-update). It is added after the publish and never by the project, so an ordinary build is never portable.
+
 ### `iTerminal.Packaging.Linux` — tar.gz, deb and rpm
 One command produces, per runtime, `iterminal-<v>-linux-x64.tar.gz`, `iterminal_<v>_amd64.deb` and `iterminal-<v>-0.x86_64.rpm` in `iTerminal.Packaging.Linux/bin/Release` — all self-contained, so the target needs no .NET runtime. The packages install to `/usr/share/iterminal` with `/usr/local/bin/iTerminal` linking to the executable; the tarball unpacks to `iterminal-<v>/`, run `./iTerminal` from it.
 

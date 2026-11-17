@@ -1,5 +1,6 @@
 using iConsole.Localization;
 using iTerminal.Core.Services.BackgroundStart;
+using iTerminal.Core.Services.Updates;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using iConsole.Buffers;
@@ -24,7 +25,7 @@ public class AboutDialog : Dialog
     private const int DetailStart = 4;
 
     /// <summary>Index, in <see cref="Lines"/>, of the first of the two rows the colour map takes.</summary>
-    private const int ColorMapStart = 8;
+    private static int ColorMapStart => DetailStart + DetailPairs.Count + 1;
 
     private const int DetailGap = 3;
 
@@ -65,7 +66,16 @@ public class AboutDialog : Dialog
         (UiText.Get("About.Version", "Version"), Version),
         (UiText.Get("About.Runtime", "Runtime"), RuntimeInformation.FrameworkDescription),
         (UiText.Get("About.System", "System"), RuntimeInformation.OSDescription),
+        (UiText.Get("About.Release", "Release"), ReleaseType),
     ];
+
+    /// <summary>
+    /// "Portable" for an unzipped copy (it carries the portable marker that only the portable archive has), "Package" for
+    /// one installed from the package: the Windows MSI, or a Linux package.
+    /// </summary>
+    internal static string ReleaseType => UpdateService.IsPortable(AppContext.BaseDirectory)
+        ? UiText.Get("About.ReleasePortable", "Portable")
+        : UiText.Get("About.ReleasePackage", "Package");
 
     /// <summary>The version of the running app, as the build stamped it.</summary>
     internal static string Version

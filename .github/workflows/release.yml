@@ -1,6 +1,6 @@
 name: Release builds
 
-# Builds the Windows installer and the Linux packages. Merging a pull request into main runs it
+# Builds the Windows installer, the Windows portable archive and the Linux packages. Merging a pull request into main runs it
 # and publishes the packages as a GitHub Release tagged v<version>; a manual run only attaches
 # them to the run as artifacts.
 
@@ -27,7 +27,7 @@ env:
 
 jobs:
   windows:
-    name: Windows installer (MSI)
+    name: Windows installer (MSI) and portable archive
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
     runs-on: windows-latest
     timeout-minutes: 45
@@ -43,11 +43,23 @@ jobs:
       - name: Build the MSI
         run: dotnet build iTerminal.Installer/iTerminal.Installer.wixproj -c Release -p:Version=$env:VERSION
 
-      - name: Upload the MSI
+      - name: Build the portable archive
+        shell: pwsh
+        run: |
+          # The same self-contained build as the MSI, zipped with the marker file that tells the app it is a portable copy.
+          dotnet publish iTerminal/iTerminal.csproj -c Release -r win-x64 --self-contained -p:Version=$env:VERSION -o portable
+          New-Item -ItemType File -Path portable/iTerminal.portable | Out-Null
+          New-Item -ItemType Directory -Force iTerminal.Installer/bin/Release | Out-Null
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          [System.IO.Compression.ZipFile]::CreateFromDirectory((Resolve-Path portable).Path, (Join-Path (Get-Location) "iTerminal.Installer/bin/Release/iTerminal-$env:VERSION-x64-portable.zip"))
+
+      - name: Upload the MSI and the portable archive
         uses: actions/upload-artifact@v7
         with:
           name: iTerminal-${{ env.VERSION }}-windows-x64
-          path: iTerminal.Installer/bin/Release/*.msi
+          path: |
+            iTerminal.Installer/bin/Release/*.msi
+            iTerminal.Installer/bin/Release/*-portable.zip
           if-no-files-found: error
 
   linux:

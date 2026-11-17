@@ -4508,6 +4508,15 @@
   <data name="Update.ClosesDuring" xml:space="preserve">
     <value>iTerminal closes while the installer runs.</value>
   </data>
+  <data name="Update.NoPortableArchive" xml:space="preserve">
+    <value>This release has no portable archive yet.</value>
+  </data>
+  <data name="Update.ClosesDuringPortable" xml:space="preserve">
+    <value>iTerminal closes while its files are replaced, then starts again.</value>
+  </data>
+  <data name="Update.PortableDescription" xml:space="preserve">
+    <value>Download the new release and replace this copy of iTerminal with it.</value>
+  </data>
   <data name="Update.DownloadFrom" xml:space="preserve">
     <value>Download it from {0}</value>
   </data>
@@ -9169,6 +9178,15 @@
   </data>
   <data name="Form.To" xml:space="preserve">
     <value>To</value>
+  </data>
+  <data name="About.Release" xml:space="preserve">
+    <value>Release</value>
+  </data>
+  <data name="About.ReleasePackage" xml:space="preserve">
+    <value>Package</value>
+  </data>
+  <data name="About.ReleasePortable" xml:space="preserve">
+    <value>Portable</value>
   </data>
   <data name="About.Version" xml:space="preserve">
     <value>Version</value>
