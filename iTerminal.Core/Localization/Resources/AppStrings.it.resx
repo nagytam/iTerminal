@@ -397,8 +397,9 @@
   <data name="Dialog.Calendar" xml:space="preserve">
     <value>Calendario</value>
   </data>
-  <data name="HotKey.CalendarShort" xml:space="preserve">
-    <value>Cal</value>
+  <data name="HotKey.Calendar" xml:space="preserve">
+    <value>Calendario</value>
+    <comment>Label of the date button in the footer, which opens the calendar.</comment>
   </data>
   <data name="Panel.Empty" xml:space="preserve">
     <value> (vuoto)</value>

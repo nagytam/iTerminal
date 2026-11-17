@@ -10,10 +10,13 @@ namespace iTerminal.Core.Controls.StatusBar;
 
 public class TerminalStatusBar : iConsole.Controls.StatusBar.StatusBar
 {
-    /// <summary>Columns the date button takes: its bracketed label, "[Cal]". The hot key row leaves this room.</summary>
-    public const int DateOpenButtonWidth = 5;
+    /// <summary>
+    /// Columns the date button may take: its bracketed label of up to ten letters ("[Calendar]"). The hot key row
+    /// leaves this room, so the label is never cut.
+    /// </summary>
+    public const int DateOpenButtonWidth = 12;
 
-    private static string DateOpenButtonLabel => iConsole.Localization.UiText.Get("HotKey.CalendarShort", "Cal");
+    private static string DateOpenButtonLabel => iConsole.Localization.UiText.Get("HotKey.Calendar", "Calendar");
 
     private readonly HotKeys _hotKeys;
     private readonly Button _dateOpenButton;
@@ -42,10 +45,7 @@ public class TerminalStatusBar : iConsole.Controls.StatusBar.StatusBar
 
         AddControl(_datePopUpWindow);
         // A named button, not a bare "*": the footer has to say what the button opens.
-        _dateOpenButton = new Button(DateOpenButtonLabel, command, themeService)
-        {
-            ViewSize = new Size(DateOpenButtonWidth, 1)
-        };
+        _dateOpenButton = new Button(DateOpenButtonLabel, command, themeService);
         AddControl(_dateOpenButton);
     }
 
@@ -78,6 +78,8 @@ public class TerminalStatusBar : iConsole.Controls.StatusBar.StatusBar
 
     private void LayoutDateOpenButton()
     {
+        // As wide as its label and its brackets, so a language with a longer word still shows all of it.
+        _dateOpenButton.ViewSize = new Size(_dateOpenButton.Title.Length + 2, 1);
         _dateOpenButton.Position = new Position(
             _hotKeys.Position.X + _hotKeys.ViewSize.Width,
             _hotKeys.Position.Y);
