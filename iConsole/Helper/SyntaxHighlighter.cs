@@ -311,6 +311,62 @@ public static class SyntaxHighlighter
         "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "w0", "w1", "w2", "w3", "sp", "lr", "pc",
     ];
 
+    /// <summary>MATLAB keywords: the control flow, the block words of functions and classes, and the logical constants. MATLAB is case-sensitive.</summary>
+    private static readonly string[] MatlabKeywords =
+    [
+        "break", "case", "catch", "classdef", "continue", "else", "elseif", "end", "enumeration", "events", "for", "function",
+        "global", "if", "methods", "otherwise", "parfor", "persistent", "properties", "return", "spmd", "switch", "try",
+        "while", "arguments", "true", "false",
+    ];
+
+    /// <summary>Swift keywords: the declarations, statements and expressions, the contextual words such as <c>get</c>, <c>weak</c> and <c>override</c>, and the common types.</summary>
+    private static readonly string[] SwiftKeywords =
+    [
+        "associatedtype", "class", "deinit", "enum", "extension", "fileprivate", "func", "import", "init", "inout", "internal",
+        "let", "open", "operator", "private", "precedencegroup", "protocol", "public", "rethrows", "static", "struct",
+        "subscript", "typealias", "var", "break", "case", "catch", "continue", "default", "defer", "do", "else", "fallthrough",
+        "for", "guard", "if", "in", "repeat", "return", "throw", "switch", "where", "while", "Any", "as", "async", "await",
+        "false", "is", "nil", "self", "Self", "super", "throws", "true", "try", "convenience", "didSet", "dynamic", "final",
+        "get", "indirect", "infix", "lazy", "mutating", "nonmutating", "optional", "override", "postfix", "prefix", "required",
+        "set", "some", "unowned", "weak", "willSet", "Int", "UInt", "Double", "Float", "Bool", "String", "Character", "Void",
+    ];
+
+    /// <summary>Dart keywords, the built-in identifiers that read as keywords (<c>get</c>, <c>late</c>, <c>mixin</c>), and the common built-in types.</summary>
+    private static readonly string[] DartKeywords =
+    [
+        "abstract", "as", "assert", "async", "await", "break", "case", "catch", "class", "const", "continue", "covariant",
+        "default", "deferred", "do", "dynamic", "else", "enum", "export", "extends", "extension", "external", "factory", "false",
+        "final", "finally", "for", "Function", "get", "hide", "if", "implements", "import", "in", "interface", "is", "late",
+        "library", "mixin", "new", "null", "on", "operator", "part", "required", "rethrow", "return", "set", "show", "static",
+        "super", "switch", "sync", "this", "throw", "true", "try", "typedef", "var", "void", "while", "with", "yield",
+        "bool", "double", "int", "num", "String",
+    ];
+
+    /// <summary>
+    /// Standard Pascal and Free Pascal reserved words and the unit structure (<c>unit</c>, <c>uses</c>, <c>interface</c>).
+    /// Pascal is case-insensitive, so the list is matched without regard to case.
+    /// </summary>
+    private static readonly string[] PascalKeywords =
+    [
+        "and", "array", "asm", "begin", "break", "case", "const", "continue", "div", "do", "downto", "else", "end", "except",
+        "file", "finally", "for", "function", "goto", "if", "in", "inherited", "label", "mod", "nil", "not", "object", "of",
+        "or", "packed", "procedure", "program", "raise", "record", "repeat", "set", "shl", "shr", "string", "then", "to", "try",
+        "type", "until", "var", "while", "with", "xor", "unit", "uses", "interface", "implementation", "initialization",
+        "finalization", "true", "false",
+    ];
+
+    /// <summary>
+    /// Delphi (Object Pascal) keywords: the Pascal words plus the class, property, visibility and exception words, and the
+    /// directives that read as keywords (<c>override</c>, <c>virtual</c>, <c>reintroduce</c>). Case-insensitive.
+    /// </summary>
+    private static readonly string[] DelphiKeywords =
+    [
+        .. PascalKeywords, "absolute", "abstract", "as", "class", "constructor", "default", "destructor", "dispinterface", "exports",
+        "helper", "index", "inline", "is", "library", "operator", "out", "overload", "override", "private", "property",
+        "protected", "public", "published", "reintroduce", "resourcestring", "sealed", "stored", "strict", "threadvar", "virtual",
+        "on",
+    ];
+
     private static readonly string[] MarkupKeywords = [];
 
     private static readonly string[] DataKeywords = ["true", "false", "null", "yes", "no", "on", "off"];
@@ -388,6 +444,97 @@ public static class SyntaxHighlighter
     private static readonly SyntaxLanguage Sql = new(
         "SQL", SqlKeywords, ["--"], ("/*", "*/"), "\"'`", ignoreCase: true, doubledQuotes: true);
 
+    /// <summary>
+    /// T-SQL (Microsoft SQL Server): the statements, the batch separator <c>GO</c>, the flow words (<c>BEGIN TRY</c>, <c>WHILE</c>)
+    /// and the common data types. Matched without regard to case.
+    /// </summary>
+    private static readonly string[] TSqlKeywords =
+    [
+        "add", "all", "alter", "and", "any", "as", "asc", "backup", "begin", "between", "break", "by", "case", "catch", "check",
+        "close", "clustered", "coalesce", "collate", "column", "commit", "constraint", "continue", "convert", "create", "cross",
+        "cursor", "database", "deallocate", "declare", "default", "delete", "desc", "distinct", "drop", "else", "end", "exec",
+        "execute", "exists", "exit", "fetch", "for", "foreign", "from", "full", "function", "go", "goto", "group", "having",
+        "identity", "if", "in", "index", "inner", "insert", "intersect", "into", "is", "join", "key", "left", "like", "merge",
+        "not", "null", "nullif", "of", "off", "on", "open", "option", "or", "order", "outer", "over", "pivot", "primary", "print",
+        "procedure", "raiserror", "references", "return", "revoke", "right", "rollback", "rowcount", "save", "schema", "select",
+        "set", "table", "then", "throw", "to", "top", "tran", "transaction", "trigger", "truncate", "try", "union", "unique",
+        "unpivot", "update", "use", "values", "view", "waitfor", "when", "where", "while", "with", "within",
+        "bigint", "binary", "bit", "char", "date", "datetime", "datetime2", "decimal", "float", "int", "money", "nchar", "ntext",
+        "numeric", "nvarchar", "real", "smallint", "text", "tinyint", "uniqueidentifier", "varbinary", "varchar", "xml",
+    ];
+
+    /// <summary>
+    /// Oracle PL/SQL: the block structure (<c>DECLARE</c>, <c>BEGIN</c>, <c>EXCEPTION</c>), the package and procedure words, the
+    /// control statements and the Oracle types. Matched without regard to case.
+    /// </summary>
+    private static readonly string[] PlSqlKeywords =
+    [
+        "all", "and", "any", "as", "asc", "autonomous_transaction", "begin", "between", "binary_integer", "blob", "body", "boolean",
+        "bulk", "by", "case", "clob", "close", "collect", "commit", "constant", "create", "cursor", "date", "declare", "default",
+        "delete", "desc", "distinct", "else", "elsif", "end", "exception", "execute", "exists", "exit", "false", "fetch", "for",
+        "forall", "from", "function", "goto", "group", "having", "if", "immediate", "in", "insert", "integer", "into", "is", "join",
+        "loop", "merge", "mod", "nocopy", "not", "null", "number", "of", "on", "open", "or", "order", "out", "package", "pipe",
+        "pipelined", "pls_integer", "pragma", "procedure", "raise", "record", "ref", "rem", "return", "reverse", "rollback",
+        "rowid", "savepoint", "select", "set", "subtype", "table", "then", "timestamp", "to", "trigger", "true", "type", "update",
+        "using", "values", "varchar2", "nvarchar2", "varray", "when", "where", "while", "with",
+    ];
+
+    /// <summary>
+    /// PostgreSQL: the SQL words with the PostgreSQL extensions (<c>RETURNING</c>, <c>ILIKE</c>, <c>ON CONFLICT</c>, <c>LATERAL</c>),
+    /// the procedural words of PL/pgSQL and the common types. Matched without regard to case.
+    /// </summary>
+    private static readonly string[] PostgreSqlKeywords =
+    [
+        "abort", "all", "alter", "analyze", "and", "any", "array", "as", "asc", "begin", "between", "by", "case", "cast", "check",
+        "close", "cluster", "collate", "column", "commit", "concurrently", "conflict", "constraint", "copy", "create", "cross",
+        "cursor", "declare", "default", "delete", "desc", "distinct", "do", "drop", "else", "end", "except", "excluded", "exists",
+        "explain", "extension", "false", "fetch", "for", "foreign", "from", "full", "function", "grant", "group", "having", "if",
+        "ilike", "in", "index", "inner", "insert", "intersect", "into", "is", "join", "language", "lateral", "left", "like", "limit",
+        "listen", "materialized", "not", "notify", "nothing", "null", "offset", "on", "only", "or", "order", "outer", "over",
+        "partition", "perform", "plpgsql", "primary", "procedure", "raise", "recursive", "references", "returning", "returns",
+        "revoke", "right", "rollback", "schema", "select", "sequence", "set", "setof", "similar", "some", "table", "then", "to",
+        "transaction", "trigger", "true", "truncate", "union", "unique", "update", "using", "vacuum", "values", "view", "when",
+        "where", "window", "with", "bigint", "bigserial", "boolean", "date", "integer", "json", "jsonb", "numeric", "serial",
+        "text", "timestamp", "timestamptz", "uuid", "varchar",
+    ];
+
+    /// <summary>
+    /// MySQL and MariaDB: the statements, the storage and column options (<c>ENGINE</c>, <c>AUTO_INCREMENT</c>, <c>UNSIGNED</c>),
+    /// <c>DELIMITER</c> and the stored-routine words. Matched without regard to case.
+    /// </summary>
+    private static readonly string[] MySqlKeywords =
+    [
+        "add", "all", "alter", "analyze", "and", "as", "asc", "auto_increment", "begin", "between", "blob", "by", "call", "case",
+        "change", "character", "charset", "check", "collate", "column", "commit", "constraint", "create", "cross", "database",
+        "date", "datetime", "decimal", "default", "delete", "delimiter", "desc", "describe", "distinct", "double", "drop",
+        "duplicate", "else", "elseif", "end", "engine", "enum", "exists", "explain", "false", "float", "for", "foreign", "from",
+        "full", "function", "group", "having", "if", "ignore", "in", "index", "inner", "insert", "int", "integer", "interval",
+        "into", "is", "join", "json", "key", "left", "like", "limit", "lock", "loop", "not", "null", "on", "or", "order", "outer",
+        "primary", "procedure", "references", "rename", "repeat", "replace", "return", "revoke", "right", "rollback", "select",
+        "set", "show", "signal", "table", "then", "timestamp", "tinyint", "smallint", "bigint", "to", "transaction", "trigger",
+        "true", "truncate", "unique", "unlock", "unsigned", "until", "update", "use", "using", "values", "varchar", "view",
+        "when", "where", "while", "with", "zerofill",
+    ];
+
+    // T-SQL: a single quote is a string (N'…' is a Unicode string), '' is a quote inside it, and a name after @ is a variable,
+    // so @count and @@ROWCOUNT are not keywords. [Bracketed] names are not coloured as strings.
+    private static readonly SyntaxLanguage TSql = new(
+        "T-SQL", TSqlKeywords, ["--"], ("/*", "*/"), "'", ignoreCase: true, stringEscape: '\0', doubledQuotes: true,
+        variableSigils: "@");
+
+    // PL/SQL: '--' and '/* */' comments, and '' inside a string. A ':' bind variable is an ordinary name.
+    private static readonly SyntaxLanguage PlSql = new(
+        "PL/SQL", PlSqlKeywords, ["--"], ("/*", "*/"), "'", ignoreCase: true, stringEscape: '\0', doubledQuotes: true);
+
+    // PostgreSQL: standard strings have no backslash escapes (E'…' is not told apart), and a double-quoted name is coloured as
+    // a string. Dollar-quoted $$ bodies are not recognised, so the code inside them is coloured as plain SQL.
+    private static readonly SyntaxLanguage PostgreSql = new(
+        "PostgreSQL", PostgreSqlKeywords, ["--"], ("/*", "*/"), "'\"", ignoreCase: true, stringEscape: '\0', doubledQuotes: true);
+
+    // MySQL: '#' and '--' start comments, strings take backslash escapes, and a backtick names a column or table.
+    private static readonly SyntaxLanguage MySql = new(
+        "MySQL", MySqlKeywords, ["--", "#"], ("/*", "*/"), "'\"`", ignoreCase: true, doubledQuotes: true);
+
     private static readonly SyntaxLanguage Markup = new(
         "Markup", MarkupKeywords, [], ("<!--", "-->"), "\"'");
 
@@ -414,8 +561,9 @@ public static class SyntaxHighlighter
 
     private static readonly SyntaxLanguage R = new(
         "R",
-        ["if", "else", "repeat", "while", "function", "for", "in", "next", "break", "TRUE", "FALSE", "NULL", "NA",
-         "NA_integer_", "NA_real_", "NA_character_", "Inf", "NaN"],
+        ["if", "else", "repeat", "while", "function", "for", "in", "next", "break", "return", "TRUE", "FALSE", "NULL", "NA",
+         "NA_integer_", "NA_real_", "NA_character_", "Inf", "NaN", "library", "require", "source", "invisible", "switch",
+         "missing", "stop", "warning", "tryCatch", "on.exit", "stopifnot"],
         ["#"], null, "\"'");
 
     private static readonly SyntaxLanguage Perl = new(
@@ -453,22 +601,55 @@ public static class SyntaxHighlighter
     private static readonly SyntaxLanguage Fortran = new(
         "FORTRAN", FortranKeywords, ["!"], null, "\"'", ignoreCase: true, stringEscape: '\0', doubledQuotes: true);
 
+    // Visual Basic (VB.NET): case-insensitive, a quote starts a comment, and "" is a quote inside a literal.
     private static readonly SyntaxLanguage VisualBasic = new(
         "Visual Basic",
         ["AddHandler", "As", "Boolean", "ByRef", "ByVal", "Case", "Catch", "Class", "Const", "Dim", "Do", "Double", "Each", "Else",
          "ElseIf", "End", "Enum", "Exit", "False", "Finally", "For", "Function", "If", "Imports", "In", "Integer", "Interface",
          "Is", "Loop", "Me", "Module", "Namespace", "New", "Next", "Nothing", "Not", "Of", "Option", "Or", "OrElse", "And",
          "AndAlso", "Private", "Property", "Protected", "Public", "Return", "Select", "Shared", "Step", "String", "Structure",
-         "Sub", "Then", "Throw", "To", "True", "Try", "Using", "Wend", "While", "With"],
+         "Sub", "Then", "Throw", "To", "True", "Try", "Using", "Wend", "While", "With", "Friend", "Optional", "ParamArray",
+         "Overloads", "Overrides", "Overridable", "MustOverride", "MustInherit", "NotInheritable", "NotOverridable",
+         "Inherits", "Implements", "Handles", "WithEvents", "MyBase", "MyClass", "Declare", "Lib", "Static", "Call", "Let",
+         "Get", "Set", "ReDim", "Preserve", "Event", "RaiseEvent", "Delegate", "Operator", "Mod", "Like", "GetType", "TypeOf",
+         "Async", "Await", "Iterator", "Yield", "Continue", "Goto", "On", "Error", "Resume", "SyncLock", "Byte", "Short", "Long",
+         "Single", "Decimal", "Object", "Date", "Char", "Variant", "Global", "Partial"],
         ["'", "rem "], null, "\"", ignoreCase: true, stringEscape: '\0', doubledQuotes: true);
 
+    // F# is case-sensitive; "//" starts a line comment and "(* *)" a block comment. Only double-quoted strings are coloured,
+    // because a single quote is also the start of a character literal ('a').
     private static readonly SyntaxLanguage FSharp = new(
         "F#",
-        ["abstract", "and", "as", "async", "begin", "do", "done", "downto", "elif", "else", "end", "exception", "false", "finally",
-         "for", "fun", "function", "if", "in", "inherit", "inline", "interface", "let", "match", "member", "module", "mutable",
-         "namespace", "new", "not", "null", "of", "open", "or", "override", "rec", "return", "then", "to", "true", "try", "type",
-         "use", "val", "when", "while", "with", "yield", "task"],
+        ["abstract", "and", "as", "assert", "async", "base", "begin", "class", "const", "default", "delegate", "do", "done",
+         "downcast", "downto", "elif", "else", "end", "exception", "extern", "false", "finally", "for", "fun", "function",
+         "global", "if", "in", "inherit", "inline", "interface", "internal", "lazy", "let", "match", "member", "module",
+         "mutable", "namespace", "new", "not", "null", "of", "open", "or", "override", "private", "public", "rec", "return",
+         "static", "struct", "then", "to", "true", "try", "type", "upcast", "use", "val", "void", "when", "while", "with", "yield",
+         "task"],
         ["//"], ("(*", "*)"), "\"");
+
+    // MATLAB is case-sensitive; '%' starts a comment and '%{ %}' a block. Strings take "" or '' for a quote and no backslash
+    // escapes. A single quote after a name is the transpose operator, not a string, but this colouring cannot tell them
+    // apart: the rest of that line is coloured as a string.
+    private static readonly SyntaxLanguage Matlab = new(
+        "MATLAB", MatlabKeywords, ["%"], ("%{", "%}"), "\"'", stringEscape: '\0', doubledQuotes: true);
+
+    // Swift: strings take backslash escapes and \( ) interpolation, "//" and "/* */" comments, and a line can start a """ string.
+    // A '#' at the start of a line is a compiler directive (#if, #available).
+    private static readonly SyntaxLanguage Swift = new(
+        "Swift", SwiftKeywords, ["//"], ("/*", "*/"), "\"", tripleQuotes: true, preprocessorDirectives: true);
+
+    // Dart: single and double quoted strings with backslash escapes, ''' and """ strings, and "//" or "/* */" comments.
+    private static readonly SyntaxLanguage Dart = new(
+        "Dart", DartKeywords, ["//"], ("/*", "*/"), "\"'", tripleQuotes: true);
+
+    // Pascal and Delphi are case-insensitive. A '{ }' comment is the one block form recognised ('(* *)' is not), '//' is a
+    // line comment, and a quote is doubled inside a literal; there are no backslash escapes.
+    private static readonly SyntaxLanguage Pascal = new(
+        "Pascal", PascalKeywords, ["//"], ("{", "}"), "'", ignoreCase: true, stringEscape: '\0', doubledQuotes: true);
+
+    private static readonly SyntaxLanguage Delphi = new(
+        "Delphi", DelphiKeywords, ["//"], ("{", "}"), "'", ignoreCase: true, stringEscape: '\0', doubledQuotes: true);
 
     private static readonly SyntaxLanguage BuildFile = new(
         "Build file",
@@ -491,21 +672,23 @@ public static class SyntaxHighlighter
     {
         [".lua"] = Lua, [".vb"] = VisualBasic, [".fs"] = FSharp, [".fsx"] = FSharp, [".fsi"] = FSharp,
         [".mk"] = BuildFile, [".dockerfile"] = BuildFile,
-        [".gradle"] = CLike, [".groovy"] = CLike, [".kts"] = CLike, [".proto"] = CLike, [".m"] = CLike, [".mm"] = CLike,
+        [".gradle"] = CLike, [".groovy"] = CLike, [".kts"] = CLike, [".proto"] = CLike, [".m"] = Matlab, [".mm"] = CLike,
         [".cs"] = CSharp, [".csx"] = CSharp,
         [".c"] = C, [".h"] = Cpp, [".cpp"] = Cpp, [".cc"] = Cpp, [".cxx"] = Cpp, [".hpp"] = Cpp, [".hh"] = Cpp, [".hxx"] = Cpp,
         [".ps1"] = PowerShell, [".psm1"] = PowerShell, [".psd1"] = PowerShell,
         [".vue"] = Markup, [".svelte"] = Markup, [".xhtml"] = Markup, [".resx"] = Markup, [".nuspec"] = Markup,
         [".tf"] = Config, [".tfvars"] = Config, [".gitignore"] = Config,
         [".java"] = Java, [".js"] = JavaScript, [".jsx"] = JavaScript, [".mjs"] = JavaScript,
-        [".ts"] = TypeScript, [".tsx"] = TypeScript, [".go"] = Go, [".rs"] = Rust, [".kt"] = CLike, [".swift"] = CLike, [".php"] = Php,
+        [".ts"] = TypeScript, [".tsx"] = TypeScript, [".go"] = Go, [".rs"] = Rust, [".kt"] = CLike, [".swift"] = Swift, [".php"] = Php,
         [".cob"] = Cobol, [".cbl"] = Cobol, [".cobol"] = Cobol, [".cpy"] = Cobol,
         [".asm"] = Assembly, [".s"] = Assembly, [".nasm"] = Assembly,
+        [".pas"] = Pascal, [".pp"] = Pascal, [".lpr"] = Pascal, [".dpr"] = Delphi, [".dpk"] = Delphi,
         [".f"] = Fortran, [".for"] = Fortran, [".f77"] = Fortran, [".f90"] = Fortran, [".f95"] = Fortran, [".f03"] = Fortran, [".f08"] = Fortran, [".ftn"] = Fortran,
-        [".scala"] = CLike, [".dart"] = CLike, [".css"] = CLike, [".scss"] = CLike,
+        [".scala"] = CLike, [".dart"] = Dart, [".css"] = CLike, [".scss"] = CLike,
         [".py"] = Python, [".pyw"] = Python, [".rb"] = Ruby, [".pl"] = Perl, [".pm"] = Perl, [".r"] = R,
         [".sh"] = Shell, [".bash"] = Shell, [".zsh"] = Shell,
-        [".sql"] = Sql, [".ddl"] = Sql, [".psql"] = Sql, [".pgsql"] = Sql, [".mysql"] = Sql, [".tsql"] = Sql,
+        [".sql"] = Sql, [".ddl"] = Sql, [".tsql"] = TSql, [".plsql"] = PlSql, [".pls"] = PlSql, [".pkb"] = PlSql, [".pks"] = PlSql,
+        [".psql"] = PostgreSql, [".pgsql"] = PostgreSql, [".mysql"] = MySql,
         [".xml"] = Markup, [".html"] = Markup, [".htm"] = Markup, [".xaml"] = Markup, [".csproj"] = Markup,
         [".props"] = Markup, [".targets"] = Markup, [".svg"] = Markup, [".slnx"] = Markup, [".wxs"] = Markup,
         [".json"] = Json, [".jsonc"] = Json,
@@ -516,7 +699,7 @@ public static class SyntaxHighlighter
 
     /// <summary>Every language built in, for <see cref="iConsole.Services.ISyntaxHighlightingService"/> to list and look up by name.</summary>
     internal static IReadOnlyList<SyntaxLanguage> BuiltInLanguages { get; } =
-        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, TypeScript, PowerShell, Python, Ruby, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, R, Perl, Php, VisualBasic, FSharp, BuildFile, Log, Cobol, Fortran, Assembly];
+        [CLike, CSharp, Java, C, Cpp, Go, Rust, JavaScript, TypeScript, PowerShell, Python, Ruby, Shell, Yaml, Toml, Ini, DotEnv, Properties, Sql, Markup, Json, Config, Batch, Lua, R, Perl, Php, VisualBasic, FSharp, BuildFile, Log, Cobol, Fortran, Assembly, Matlab, Swift, Dart, Pascal, Delphi, TSql, PlSql, PostgreSql, MySql];
 
     /// <summary>The language for a file name or path, or null when there is none to colour it with.</summary>
     public static SyntaxLanguage? ForFile(string? fileName)
