@@ -1,5 +1,8 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Resources;
+using iConsole.Localization;
 using iTerminal.Core.Dialogs;
+using iTerminal.Core.Services.SystemInfo;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static iTerminal.Core.Test.Helper.UiTestHelper;
 
 namespace iTerminal.Core.Dialogs.Test;
@@ -9,43 +12,185 @@ public class SystemInfoDialogTest
 {
     [Timeout(60_000)]
     [TestMethod]
-    public async Task OpensAtOnceAndFillsInTheReportInTheBackground()
+    public async Task OpensAtOnce_ShowsThePlaceholder_AndWatchesTheSampler()
     {
-        // The report walks every drive and network interface; a disconnected network drive can
-        // hold that for seconds, and it used to hold the dialog from appearing at all.
-        var dialog = new SystemInfoDialog(TestTheme());
+        var sampler = new FakeSampler();
+        var dialog = new SystemInfoDialog(TestTheme(), sampler, Localizer("en"));
 
         await ShowAsync(dialog);
-        await dialog.InfoTask;
+
+        CollectionAssert.Contains(dialog.LinesForTest.ToList(), SystemInfoDialog.CollectingText);
+        Assert.AreEqual(1, sampler.Watching);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheReport_ShowsEachLabelOnce()
+    {
+        var sampler = new FakeSampler { Current = Sample() };
+        var dialog = new SystemInfoDialog(TestTheme(), sampler, Localizer("en"));
+
+        await ShowAsync(dialog);
+        dialog.OnIdle();
 
         var lines = dialog.LinesForTest;
-        Assert.IsFalse(lines.Contains(SystemInfoDialog.CollectingText), "the placeholder is replaced");
-        Assert.IsTrue(lines.Any(l => l.Contains("Operating System")));
-        Assert.IsTrue(lines.Any(l => l.Contains("Processor Count")));
+        Assert.AreEqual(1, lines.Count(line => line.StartsWith("  OS Description", StringComparison.Ordinal)));
+        Assert.AreEqual(1, lines.Count(line => line.StartsWith("  Logical processors", StringComparison.Ordinal)));
+        Assert.AreEqual(1, lines.Count(line => line.StartsWith("  Available Memory", StringComparison.Ordinal)));
+        Assert.AreEqual(1, lines.Count(line => line.StartsWith("  Physical Memory (total)", StringComparison.Ordinal)));
+        Assert.IsTrue(lines.Any(line => line.Contains("Test OS")));
+        Assert.IsTrue(lines.Any(line => line.Contains("Disk I/O")));
+        Assert.IsTrue(lines.Any(line => line.Contains("Network I/O")));
+        Assert.IsTrue(lines.Any(line => line.Contains("Environment Variables")));
     }
 
     [Timeout(60_000)]
     [TestMethod]
-    public void TheReportCoversEachSection()
+    public async Task Close_DropsTheWatchHandle_OnlyOnce()
     {
-        var report = SystemInfoDialog.BuildSystemInfo();
+        var sampler = new FakeSampler();
+        var dialog = new SystemInfoDialog(TestTheme(), sampler, Localizer("en"));
+        await ShowAsync(dialog);
 
-        foreach (var section in new[] { "Operating System", "Hardware", "Runtime", "Current User", "Drives", "Network Interfaces", "Environment Variables" })
+        dialog.Close();
+        dialog.Close();
+
+        Assert.AreEqual(0, sampler.Watching);
+        Assert.AreEqual(1, sampler.HandlesDisposed);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task ALanguageChange_ReformatsTheSnapshot_WithoutAnotherProbe()
+    {
+        var localizer = Localizer("en");
+        var sampler = new FakeSampler { Current = Sample() with { CpuModel = Probed<string>.NotReported } };
+        var dialog = new SystemInfoDialog(TestTheme(), sampler, localizer);
+        await ShowAsync(dialog);
+        dialog.OnIdle();
+        Assert.IsTrue(dialog.LinesForTest.Any(line => line.Contains("not reported")), "the English status word");
+
+        Assert.IsTrue(localizer.SetLanguage("de"));
+        dialog.OnIdle();
+
+        var lines = dialog.LinesForTest;
+        Assert.IsTrue(lines.Any(line => line.Contains("Betriebssystem")), "the German section header");
+        Assert.IsTrue(lines.Any(line => line.Contains("nicht gemeldet")), "the German status word");
+        Assert.AreEqual(1, sampler.Watching, "the language change does not start or stop the watch");
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task TheMemoryStrip_IsFedFromSnapshotsOnly()
+    {
+        var sampler = new FakeSampler { Current = Sample() };
+        var dialog = new SystemInfoDialog(TestTheme(), sampler, Localizer("en"));
+        await ShowAsync(dialog);
+
+        dialog.OnIdle();
+        dialog.OnIdle();
+        Assert.AreEqual(1, dialog.MemoryHistoryForTest.Count, "the same snapshot is not counted twice");
+        Assert.AreEqual(0.5, dialog.MemoryHistoryForTest[0], 0.0001, "half of the memory is in use");
+
+        sampler.Current = Sample() with { PhysicalMemoryAvailable = Probed<ulong>.Ok(4UL * 1024 * 1024 * 1024) };
+        dialog.OnIdle();
+        Assert.AreEqual(2, dialog.MemoryHistoryForTest.Count);
+        Assert.AreEqual(0.75, dialog.MemoryHistoryForTest[1], 0.0001);
+    }
+
+    [Timeout(60_000)]
+    [TestMethod]
+    public async Task WithoutASnapshot_TheDialogKeepsItsPlaceholder()
+    {
+        var dialog = new SystemInfoDialog(TestTheme(), new FakeSampler(), Localizer("en"));
+        await ShowAsync(dialog);
+
+        dialog.OnIdle();
+
+        CollectionAssert.Contains(dialog.LinesForTest.ToList(), SystemInfoDialog.CollectingText);
+    }
+
+    private static ILocalizer Localizer(string code)
+    {
+        var localizer = new iConsole.Localization.Localizer(
+        [
+            new ResourceLocalizationSource(new ResourceManager("iConsole.Localization.Resources.Strings", typeof(iConsole.Localization.Localizer).Assembly)),
+            new ResourceLocalizationSource(new ResourceManager("iTerminal.Core.Localization.Resources.AppStrings", typeof(SystemInfoDialog).Assembly)),
+        ]);
+        Assert.IsTrue(localizer.SetLanguage(code), code);
+        return localizer;
+    }
+
+    private static SystemSnapshot Sample()
+    {
+        Probed<T> Ok<T>(T value) => Probed<T>.Ok(value);
+        Probed<T> None<T>() => Probed<T>.NotReported;
+
+        return new SystemSnapshot(
+            Ok("Test OS"),
+            Ok("X64"),
+            Ok(".NET test"),
+            Ok("tester"),
+            Ok("TESTS"),
+            Ok("/home/tester"),
+            Ok<IReadOnlyList<KeyValuePair<string, string>>>([new("PATH", "/bin")]),
+            Ok("Test CPU"),
+            Ok(4),
+            Ok(12.5),
+            Ok(16UL * 1024 * 1024 * 1024),
+            Ok(8UL * 1024 * 1024 * 1024),
+            None<IReadOnlyList<GpuReading>>(),
+            None<double>(),
+            Ok<IReadOnlyList<string>>([]),
+            [],
+            None<IReadOnlyList<InterfaceReading>>(),
+            Ok<IReadOnlyList<string>>([]),
+            [],
+            Ok<IReadOnlyList<string>>([]),
+            [],
+            Ok<IReadOnlyList<string>>([]),
+            []);
+    }
+
+    /// <summary>A sampler the test fills in: it holds one snapshot, and counts the watches it hands out and releases.</summary>
+    private sealed class FakeSampler : ISystemSampler
+    {
+        private int _snapshotReads;
+        private SystemSnapshot? _current;
+
+        public SystemSnapshot? Current
         {
-            StringAssert.Contains(report, section);
+            get
+            {
+                _snapshotReads++;
+                return _current;
+            }
+            set => _current = value;
         }
-    }
 
-    [Timeout(60_000)]
-    [TestMethod]
-    public async Task EscapeClosesIt()
-    {
-        var dialog = new SystemInfoDialog(TestTheme());
-        var root = await ShowAsync(dialog);
+        public int Watching { get; private set; }
 
-        await dialog.HandleKeyEventAsync(Key(ConsoleKey.Escape));
+        public int HandlesDisposed { get; private set; }
 
-        Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
-        await dialog.InfoTask;
+        public int SnapshotReads => _snapshotReads;
+
+        public IDisposable Watch()
+        {
+            Watching++;
+            return new Handle(this);
+        }
+
+        public void Dispose()
+        {
+        }
+
+        private sealed class Handle(FakeSampler owner) : IDisposable
+        {
+            public void Dispose()
+            {
+                owner.Watching--;
+                owner.HandlesDisposed++;
+            }
+        }
     }
 }

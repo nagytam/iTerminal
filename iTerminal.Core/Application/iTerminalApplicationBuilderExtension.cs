@@ -516,6 +516,9 @@ public static class iTerminalApplicationBuilderExtension
         services.AddTransient<MoveDialog>();
         services.AddTransient<MultiRenameDialog>();
         services.AddTransient<AboutDialog>();
+        services.AddSingleton<iTerminal.Core.Services.SystemInfo.ISystemProbeFactory, iTerminal.Core.Services.SystemInfo.SystemProbeFactory>();
+        services.AddSingleton<iTerminal.Core.Services.SystemInfo.ISampleClock, iTerminal.Core.Services.SystemInfo.SystemSampleClock>();
+        services.AddSingleton<iTerminal.Core.Services.SystemInfo.ISystemSampler, iTerminal.Core.Services.SystemInfo.SystemSampler>();
         services.AddTransient<SystemInfoDialog>();
         services.AddSingleton<iTerminal.Core.Services.SystemSettings.ISystemSettingsService, iTerminal.Core.Services.SystemSettings.SystemSettingsService>();
         services.AddTransient<SystemSettingsDialog>();
