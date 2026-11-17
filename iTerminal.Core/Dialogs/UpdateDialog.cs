@@ -13,8 +13,8 @@ namespace iTerminal.Core.Dialogs;
 
 /// <summary>
 /// Offers a newer release of iTerminal. On Windows the Install updates button, focused when the dialog opens,
-/// downloads the installer and starts it; elsewhere the dialog only says where the release is. S skips that
-/// release, Esc asks again at the next start.
+/// downloads the release for this copy (its installer, or the portable archive) and applies it; elsewhere the
+/// dialog only says where the release is. S skips that release, Esc asks again at the next start.
 /// </summary>
 public partial class UpdateDialog : FormDialog
 {
@@ -166,7 +166,7 @@ public partial class UpdateDialog : FormDialog
         [
             (string.Format(iConsole.Localization.UiText.Get("Update.Available", "iTerminal {0} is available. You have {1}."), latest, _service.CurrentVersion), scheme.Foreground),
             (_service.CanInstall
-                ? _service.Available?.Installer is null ? iConsole.Localization.UiText.Get("Update.NoInstaller", "This release has no Windows installer yet.") : iConsole.Localization.UiText.Get("Update.ClosesDuring", "iTerminal closes while the installer runs.")
+                ? _service.Available?.Installer is null ? NoDownloadText() : ClosesDuringText()
                 : string.Format(iConsole.Localization.UiText.Get("Update.DownloadFrom", "Download it from {0}"), _service.ReleasesAddress), scheme.DisabledForeground),
             (string.Empty, scheme.Foreground),
         ];
@@ -195,6 +195,14 @@ public partial class UpdateDialog : FormDialog
 
         return rows.Select(row => (row.Text.Length > innerWidth ? row.Text.Cut(innerWidth) : row.Text, row.Color)).ToList();
     }
+
+    private string NoDownloadText() => _service.InstallKind == UpdateInstallKind.PortableArchive
+        ? iConsole.Localization.UiText.Get("Update.NoPortableArchive", "This release has no portable archive yet.")
+        : iConsole.Localization.UiText.Get("Update.NoInstaller", "This release has no Windows installer yet.");
+
+    private string ClosesDuringText() => _service.InstallKind == UpdateInstallKind.PortableArchive
+        ? iConsole.Localization.UiText.Get("Update.ClosesDuringPortable", "iTerminal closes while its files are replaced, then starts again.")
+        : iConsole.Localization.UiText.Get("Update.ClosesDuring", "iTerminal closes while the installer runs.");
 
     /// <summary>"Working..." while something runs and nothing can be shown as progress yet; the bar says it all otherwise.</summary>
     internal string Hint => _service.IsBusy && ParseProgress(_service.Log) is null ? "Working..." : string.Empty;
@@ -286,7 +294,9 @@ public partial class UpdateDialog : FormDialog
     private sealed class InstallCommand : Command
     {
         public override string Title => iConsole.Localization.UiText.Get("Button.InstallUpdates", "Install updates");
-        public override string Description => iConsole.Localization.UiText.Get("Update.InstallDescription", "Download the new release and run its installer.");
+        public override string Description => (Control as UpdateDialog ?? Control?.Parent as UpdateDialog)?._service.InstallKind == UpdateInstallKind.PortableArchive
+            ? iConsole.Localization.UiText.Get("Update.PortableDescription", "Download the new release and replace this copy of iTerminal with it.")
+            : iConsole.Localization.UiText.Get("Update.InstallDescription", "Download the new release and run its installer.");
 
         public override Task ExecuteAsync(object? args)
         {
