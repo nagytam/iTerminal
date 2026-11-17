@@ -9998,4 +9998,37 @@
   <data name="Menu.CopyFiles" xml:space="preserve">
     <value>Dateien kopieren</value>
   </data>
+  <data name="Dialog.MarketTerminal" xml:space="preserve">
+    <value>Marktterminal</value>
+  </data>
+  <data name="Hints.MarketTerminal" xml:space="preserve">
+    <value>Enter:suchen oder Zeile zeigen  ↑↓:Liste  F5:aktualisieren  Esc:schließen</value>
+  </data>
+  <data name="Market.Prompt" xml:space="preserve">
+    <value>Suchen  ›</value>
+  </data>
+  <data name="Market.Placeholder" xml:space="preserve">
+    <value>AAPL, VOD.L oder ein Firmenname, dann Enter</value>
+  </data>
+  <data name="Market.Security" xml:space="preserve">
+    <value>Wertpapier</value>
+  </data>
+  <data name="Market.NoSecurity" xml:space="preserve">
+    <value>Symbol oder Firmennamen eingeben und Enter drücken.</value>
+  </data>
+  <data name="Market.Looking" xml:space="preserve">
+    <value>Suche {0}…</value>
+  </data>
+  <data name="Market.NotFound" xml:space="preserve">
+    <value>Kein Kurs für {0}. Symbol prüfen; andere Börsen haben ein Suffix, z. B. VOD.L.</value>
+  </data>
+  <data name="Market.LookUp" xml:space="preserve">
+    <value>Symbol suchen oder gewählte Zeile zeigen</value>
+  </data>
+  <data name="CmdTitle.231d197e" xml:space="preserve">
+    <value>Marktterminal</value>
+  </data>
+  <data name="CmdDesc.76098275" xml:space="preserve">
+    <value>Öffnet das Marktterminal: eine Kommandozeile für jede Aktie, ein Kursband und die Beobachtungsliste als Monitor.</value>
+  </data>
 </root>

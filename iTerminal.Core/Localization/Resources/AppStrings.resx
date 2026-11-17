@@ -10139,4 +10139,38 @@
   <data name="Menu.CopyFiles" xml:space="preserve">
     <value>Copy Files</value>
   </data>
+  <data name="Dialog.MarketTerminal" xml:space="preserve">
+    <value>Market Terminal</value>
+  </data>
+  <data name="Hints.MarketTerminal" xml:space="preserve">
+    <value>Enter:look up or show the row  ↑↓:monitor  F5:refresh  Esc:close</value>
+  </data>
+  <data name="Market.Prompt" xml:space="preserve">
+    <value>Look up  ›</value>
+  </data>
+  <data name="Market.Placeholder" xml:space="preserve">
+    <value>AAPL, VOD.L or a company name, then Enter</value>
+  </data>
+  <data name="Market.Security" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="Market.NoSecurity" xml:space="preserve">
+    <value>Type a symbol or company name and press Enter.</value>
+  </data>
+  <data name="Market.Looking" xml:space="preserve">
+    <value>Looking up {0}…</value>
+  </data>
+  <data name="Market.NotFound" xml:space="preserve">
+    <value>No quote for {0}. Check the symbol; other exchanges add a suffix, such as VOD.L.</value>
+  </data>
+  <data name="Market.LookUp" xml:space="preserve">
+    <value>Look up the symbol, or show the chosen row</value>
+  </data>
+  <data name="CmdTitle.231d197e" xml:space="preserve">
+    <value>Market Terminal</value>
+  </data>
+  <data name="CmdDesc.76098275" xml:space="preserve">
+    <value>Open the market terminal: a command line to look up any stock, a ticker tape and the watchlist as a monitor.</value>
+    <comment>Open the market terminal: a command line to look up any stock, a ticker tape and the watchlist as a monitor.</comment>
+  </data>
 </root>

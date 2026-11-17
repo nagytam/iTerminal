@@ -9934,4 +9934,37 @@
   <data name="Menu.CopyFiles" xml:space="preserve">
     <value>Copia file</value>
   </data>
+  <data name="Dialog.MarketTerminal" xml:space="preserve">
+    <value>Terminale di mercato</value>
+  </data>
+  <data name="Hints.MarketTerminal" xml:space="preserve">
+    <value>Invio:cerca o mostra la riga  ↑↓:monitor  F5:aggiorna  Esc:chiudi</value>
+  </data>
+  <data name="Market.Prompt" xml:space="preserve">
+    <value>Cerca  ›</value>
+  </data>
+  <data name="Market.Placeholder" xml:space="preserve">
+    <value>AAPL, VOD.L o un nome di società, poi Invio</value>
+  </data>
+  <data name="Market.Security" xml:space="preserve">
+    <value>Titolo</value>
+  </data>
+  <data name="Market.NoSecurity" xml:space="preserve">
+    <value>Digita un simbolo o un nome di società e premi Invio.</value>
+  </data>
+  <data name="Market.Looking" xml:space="preserve">
+    <value>Ricerca di {0}…</value>
+  </data>
+  <data name="Market.NotFound" xml:space="preserve">
+    <value>Nessuna quotazione per {0}. Controlla il simbolo; le altre borse aggiungono un suffisso, come VOD.L.</value>
+  </data>
+  <data name="Market.LookUp" xml:space="preserve">
+    <value>Cerca il simbolo, o mostra la riga scelta</value>
+  </data>
+  <data name="CmdTitle.231d197e" xml:space="preserve">
+    <value>Terminale di mercato</value>
+  </data>
+  <data name="CmdDesc.76098275" xml:space="preserve">
+    <value>Apre il terminale di mercato: una riga di comando per cercare qualsiasi titolo, un nastro delle quotazioni e la lista di controllo come monitor.</value>
+  </data>
 </root>

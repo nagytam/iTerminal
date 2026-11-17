@@ -167,6 +167,14 @@ Tools > Translator: a text box, a From language (or *Detect language*), a To lan
 - **Layout gotcha.** `TextViewerControl` (and the editor) centre themselves in their parent on every layout, so two side by side need the position-preserving `PaneEditor`/`PaneViewer` subclasses, and both must be `CanFocus` for Tab to reach them. Tab only moves among siblings, so they are direct children of the dialog, not of a wrapper pane.
 - **The end-to-end suite replaces the providers** (`SandboxServices.Translation`): no run reaches the network or the model.
 
+### Market terminal (`MarketTerminalDialog`, Alt+Shift+F7, `Dialogs/Terminal/`)
+A full-screen, command-line market view in the style of a trading terminal, on the same stock services as the stock browser (Tools > Office). The top line is a command line: type a symbol (`VOD.L`) or a company name and press Enter, and the security screen below the monitor shows its name, exchange and currency, the last price with its change, the previous close and volume, the day's range, where the price sits in the year's range, and the last trade. Enter on an empty line shows the monitor's cursor row; Up/Down move through the monitor; F5 refreshes both. A ticker tape across the second line lists every watched stock.
+
+- **A lookup never joins the watchlist.** `IStockService.QuoteAsync` asks the source for one symbol and keeps nothing. A name that has no quote of its own is looked up through its best search hit, and the screen says so when nothing is found.
+- **Lookups are parked, like the currency converter's.** The lookup runs on a background task and parks its result; `OnIdle` applies it on the UI thread. Only the newest lookup may land, so an older one that finishes late is dropped. Tests have no idle job, so they pump `OnIdle` themselves.
+- **Reuses the stock browser's rows.** The monitor is the browser's `StockListBox` and its column formatting, so the two always agree on prices and colours.
+- **The end-to-end suite needs no sandbox replacement:** the lookups go through `IStockService`, which the suite already replaces with `SandboxServices.StockQuotes`.
+
 ### Currency converter (`CurrencyConverterDialog`, Ctrl+Shift+F5, `Services/Currency/`)
 Tools > Currency Converter: an amount, a From and a To currency; the result and the rate both ways are shown as you type. F5 downloads the rates again, F6 swaps the currencies. The choices are kept in the `CurrencyConverter.*` settings.
 
@@ -562,3 +570,12 @@ Ctrl+P (also File > Print…, the right-click menu on a local file and the comma
 - **It never covers a shell.** It does not start while `ConsoleOwnership.IsLent` (Ctrl+O, an editor, ssh): the child has to see the keys and paint its own screen.
 - **Effects** implement `IScreenSaverEffect` and paint into a `ScreenSaverCanvas` that is cleared before each frame. A canvas of a new size rebuilds the effect's state.
 - **Tests:** `ScreenSaverOverlayTest` (start after the idle time, wake on a key, hover absorbed, no start while lent, drawing), `ScreenSaverEffectsTest`, `ScreenSaverSettingsTest`, `UserActivityServiceTest` and the activity cases in `TerminalInputConsumerJobTest`.
+
+### Viewer and editor plug-ins (`iConsole/Viewers/`, F3 and F4)
+F3 and F4 offer the file to plug-ins before the built-in code. `IFileViewer` and `IFileEditor` both extend `IFileHandler`: `Priority` (higher first, the built-ins use 0) and `IsCandidate(Url)`, which judges the name or path only, because it runs on the key path and in `CanExecute`. Register an implementation in the container (`iTerminalApplicationBuilderExtension`) and it is picked up with no other wiring; `FileViewerRegistry` and `FileEditorRegistry` order them by priority, keeping registration order within a priority.
+
+- **F3** (`ViewFileDialogCommand`): the first viewer that is a candidate and whose `CanOpenAsync` says yes gets `OpenAsync`. `CanOpenAsync` may read the file's header, so it runs on a worker thread. When no plug-in takes the file, the built-in chain runs as before, ending in the text viewer. A plug-in makes F3 available for a file the built-in viewers refuse (`CanExecute`).
+- **F4** (`EditTextFileDialogCommand`): the "Edit with…" association still comes first. Then the first editor candidate, then the built-in text editor.
+- **Dialogs go through `IFileOpenHost`**, never through a control: `ShowDialogAsync` shows the dialog on the screen that asked, and `ShowTextViewerAsync` is the fallback for a handler that only finds out after it has started (as the certificate viewer does).
+- The built-in viewers are still the hand-written chain in `ViewFileDialogCommand`, not plug-ins. Moving them behind `IFileViewer` is the follow-up; the registry and the dispatch are already in place for it.
+- **Tests:** `FileHandlerRegistryTest` (ordering, candidates, the host) and `FilePluginDispatchTest` (F3 and F4 offering, fall-through, `CanExecute`).
