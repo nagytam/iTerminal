@@ -5,6 +5,10 @@ namespace iConsole.Commands;
 
 public class SpaceCommand : Command
 {
+    public override string Title => "Press or tick";
+
+    public override string Description => "Press the focused button, or tick or untick the focused check box.";
+
     public override Key? Key { get; init; } =
         new Key(ConsoleKey.Spacebar, false, false, false);
 
