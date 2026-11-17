@@ -19,6 +19,6 @@ public class EditMenuItemTest
             .Select(m => m.Text.Split('\t')[0])
             .ToArray();
 
-        CollectionAssert.AreEqual(new[] { "Copy Path", "Copy Name", "Copy", "Move", "Rename", "Delete", "Mark", "Mark by Pattern", "Unmark by Pattern", "Invert Marks", "Mark All", "Unmark All", "Compare Folders" }, entries);
+        CollectionAssert.AreEqual(new[] { "Copy Path", "Copy Name", "Copy Files", "Move", "Rename", "Delete", "Mark", "Mark by Pattern", "Unmark by Pattern", "Invert Marks", "Mark All", "Unmark All", "Compare Folders" }, entries);
     }
 }
