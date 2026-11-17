@@ -4691,6 +4691,15 @@
   <data name="Update.ClosesDuring" xml:space="preserve">
     <value>iTerminal closes while the installer runs.</value>
   </data>
+  <data name="Update.NoPortableArchive" xml:space="preserve">
+    <value>This release has no portable archive yet.</value>
+  </data>
+  <data name="Update.ClosesDuringPortable" xml:space="preserve">
+    <value>iTerminal closes while its files are replaced, then starts again.</value>
+  </data>
+  <data name="Update.PortableDescription" xml:space="preserve">
+    <value>Download the new release and replace this copy of iTerminal with it.</value>
+  </data>
   <data name="Update.DownloadFrom" xml:space="preserve">
     <value>Download it from {0}</value>
   </data>
@@ -9353,6 +9362,15 @@
   <data name="Form.To" xml:space="preserve">
     <value>To</value>
   </data>
+  <data name="About.Release" xml:space="preserve">
+    <value>Release</value>
+  </data>
+  <data name="About.ReleasePackage" xml:space="preserve">
+    <value>Package</value>
+  </data>
+  <data name="About.ReleasePortable" xml:space="preserve">
+    <value>Portable</value>
+  </data>
   <data name="About.Version" xml:space="preserve">
     <value>Version</value>
   </data>
@@ -10303,5 +10321,39 @@
   </data>
   <data name="Menu.CopyFiles" xml:space="preserve">
     <value>Copy Files</value>
+  </data>
+  <data name="Dialog.MarketTerminal" xml:space="preserve">
+    <value>Market Terminal</value>
+  </data>
+  <data name="Hints.MarketTerminal" xml:space="preserve">
+    <value>Enter:look up or show the row  ↑↓:monitor  F5:refresh  Esc:close</value>
+  </data>
+  <data name="Market.Prompt" xml:space="preserve">
+    <value>Look up  ›</value>
+  </data>
+  <data name="Market.Placeholder" xml:space="preserve">
+    <value>AAPL, VOD.L or a company name, then Enter</value>
+  </data>
+  <data name="Market.Security" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="Market.NoSecurity" xml:space="preserve">
+    <value>Type a symbol or company name and press Enter.</value>
+  </data>
+  <data name="Market.Looking" xml:space="preserve">
+    <value>Looking up {0}…</value>
+  </data>
+  <data name="Market.NotFound" xml:space="preserve">
+    <value>No quote for {0}. Check the symbol; other exchanges add a suffix, such as VOD.L.</value>
+  </data>
+  <data name="Market.LookUp" xml:space="preserve">
+    <value>Look up the symbol, or show the chosen row</value>
+  </data>
+  <data name="CmdTitle.231d197e" xml:space="preserve">
+    <value>Market Terminal</value>
+  </data>
+  <data name="CmdDesc.76098275" xml:space="preserve">
+    <value>Open the market terminal: a command line to look up any stock, a ticker tape and the watchlist as a monitor.</value>
+    <comment>Open the market terminal: a command line to look up any stock, a ticker tape and the watchlist as a monitor.</comment>
   </data>
 </root>

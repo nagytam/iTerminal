@@ -52,4 +52,12 @@ public class AboutDialogTest
 
         Assert.IsFalse(root.Controls.AsSnapshot().Contains(dialog));
     }
+
+    [TestMethod]
+    public void TheReleaseRowSaysPackageForAnInstalledCopy()
+    {
+        // The test host is not a portable copy: nothing beside its program is the portable marker.
+        Assert.AreEqual("Package", AboutDialog.ReleaseType);
+        Assert.IsTrue(AboutDialog.DetailPairs.Any(pair => pair.Value == "Package"));
+    }
 }

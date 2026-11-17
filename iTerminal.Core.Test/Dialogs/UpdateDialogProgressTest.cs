@@ -23,6 +23,8 @@ public class UpdateDialogProgressTest
 
         public bool IsSkipped => false;
 
+        public UpdateInstallKind InstallKind => UpdateInstallKind.Installer;
+
         public bool CanInstall => true;
 
         public bool IsBusy { get; set; }

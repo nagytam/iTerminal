@@ -1970,4 +1970,7 @@
   <data name="Viewer.CloseHint" xml:space="preserve">
     <value>  Esc:bezár</value>
   </data>
+  <data name="Status.LineColumn" xml:space="preserve">
+    <value>Sor {0}/{1} Oszl {2}/{3}</value>
+  </data>
 </root>

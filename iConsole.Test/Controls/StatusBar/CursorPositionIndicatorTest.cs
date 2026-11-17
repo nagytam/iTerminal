@@ -69,7 +69,7 @@ public class CursorPositionIndicatorTest
         indicator.Draw(buffer);
 
         var content = buffer.ContentAsString;
-        Assert.IsTrue(content.Contains("X:") || content.Contains("3"));
+        Assert.IsTrue(content.Contains("Ln 6/200 Col 4/100"), content);
     }
 
     [Timeout(60_000)]
